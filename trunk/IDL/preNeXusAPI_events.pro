@@ -50,14 +50,27 @@ readu,2,data1
 ;data1=swap_endian(data1)   ;only for mac
 close,2
 
+; time_bin we want
+time_bin_number = 0     ; by default
+read, time_bin_number, prompt='Enter time bin desired:'
+
+offset_start = data1[2*time_bin_number + 1]
+offset_end = data1[2*time_bin_number + 3]
+
+big_array=lonarr(256,304)     ; big_array(x,y)
+
+; *** Regroup only the positionID of the offset of interest and plot it ***
+for i = offset_start, offset_end do begin
+    big_array[data[2*i+1]] = big_array[data[2*i+1]]+1
+endfor
+
 ; ******************************************************************
 ; **** Regroup all the positionID into a same array and plot it ****
 ; ******************************************************************
 
-big_array=lonarr(256,304)     ; big_array(x,y)
-for i=0L,((N/2)-1) do begin
-    big_array[data[2*i+1]] = big_array[data[2*i+1]]+1
-endfor
+;for i=0L,((N/2)-1) do begin
+;    big_array[data[2*i+1]] = big_array[data[2*i+1]]+1
+;endfor
 
 ; graphical part
 xtitle = "pixel X"
