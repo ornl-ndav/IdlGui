@@ -4,7 +4,7 @@
 
 ; Non Interactive Part
 file_name = "DAS_3_neutron_event.dat"
-file = "c:\Documents and Settings\j35\Desktop\HistoTool\DAS_event_1\DAS_3\" + file_name
+file = "/Users/j35/SVN/HistoTool/trunk/c++/" + file_name
 
 ;; ******* Pickup Dialog Box **************
 ; file = dialog_pickfile(/must_exist, $
@@ -15,7 +15,7 @@ file = "c:\Documents and Settings\j35\Desktop\HistoTool\DAS_event_1\DAS_3\" + fi
 ; ****************************************
 
 ; to get only the last part of the name
-file_list = strsplit(file,'\',/extract, count=length)
+file_list = strsplit(file,'/',/extract, count=length)
 file_name = file_list[length-1]
 
 openr,1,file
@@ -27,6 +27,7 @@ N = fs.size/Nbytes
 data = lonarr(N)    ; create a longword integer array of N elements
 readu,1,data
 close,1
+if !cpu.hw_vector EQ 1 then data = swap_endian(data)    ;swap endian because PC -> Mac
 
 ; ##Information from xxx_runnumber_runinfo.xml###
 Nx = 256L
