@@ -51,6 +51,7 @@ int main(int argc, char *argv[])
   int file_size;
   int pixelID;
   int time_stamp;
+  int Histo_size;
   
   int Nx = 256;
   int Ny = 304;
@@ -79,10 +80,10 @@ int main(int argc, char *argv[])
   if (stat("DAS_3_neutron_event.dat",&results)==0)
     {
       file_size = results.st_size/sizeof(binary_type);
-  }
+    }
   else
-    cout << "Cannot determine size of file"<<endl;
-  
+    throw std::logic_error("Can't determine the size of the file");
+
   // check that open was successful
   if (BinaryFile==NULL)
     //  throw invalid_argument("Could not open file: " + file_name);
@@ -90,7 +91,6 @@ int main(int argc, char *argv[])
   
   //allocate memory for the binary Array
   GlobalArraySize = file_size;
-  
   binary_type * BinaryArray = new binary_type [GlobalArraySize];
 
   //transfer the data from the binary file into the GlobalArray
@@ -99,19 +99,14 @@ int main(int argc, char *argv[])
   // swap endian (PC <-> Mac)
   SwapEndian (file_size, BinaryArray);
   
-  new_Nt = int(floor((Nt*100)/rebin_value));   //rebin_value =200 => Nt=83
+  new_Nt = int(floor((Nt*100)/rebin_value));   //rebin_value=200 => Nt=83
   
-  int Histo_size = Nx*Ny*new_Nt;
+  Histo_size = Nx*Ny*new_Nt;
   binary_type *data_histo = new binary_type[Histo_size];
   
   //initialize array
   InitializeArray(data_histo, Nx, Ny, new_Nt);
   
-  pixelID = BinaryArray[1];
-  time_stamp = int(floor((BinaryArray[0]/1000)/rebin_value));
-  
-  data_histo[time_stamp+pixelID*new_Nt]+=1;
-
   for (int i=0; i<GlobalArraySize/2; i++)
     {
       pixelID = BinaryArray[2*i+1];
@@ -119,9 +114,10 @@ int main(int argc, char *argv[])
       data_histo[time_stamp+pixelID*new_Nt]+=1;      
     }
   
+  // write new histogram file
   std::ofstream file("DAS_3_neutron_histo.dat", std::ios::binary);
   file.write((char*)(data_histo),sizeof(data_histo)*Histo_size);  
-file.close();
+  file.close();
   
   return 0;
 }
