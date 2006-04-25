@@ -34,9 +34,17 @@ void InitializeArray(binary_type  * data_histo,
                      int Ny,
                      int new_nt);
 
-// Genearate the name of the output file
+// Generate the name of the output file
 void produce_output_file_name(string & file_name,
                               string & output_file);
+
+// Generate histogram
+void Generate_data_histo(binary_type * data_histo,
+                         binary_type * BinaryArray, 
+                         int GlobalArraySize, 
+                         char type_of_rebining,
+                         float rebin_value,
+                         int new_Nt);
 
 /*
   argv[1] : Name of file entered
@@ -58,11 +66,27 @@ int main(int argc, char *argv[])
   int Nt = 167;
   int new_Nt;
 
-  // Name of file
-  string file_name;
+  char type_of_rebining = 'l';
+
+  //Help option --help or --h
+
+  if (argc>1)
+    {
+      if (argv[1][0]=='-' && argv[1][1]=='-' && argv[1][2]=='h')
+        {
+          cout << "usage: Event_to_Histo input_file_name -[ l | b | log]rebin_value"<<endl;
+          cout << "\nArguments:\n\t -l: linear rebining\n\t\tex: Event_to_Histo Input_file_name -l200\n\t\tEach bin will be 200microseconds wide."<<endl;
+          cout << "\t -d: double rebinning\n\t\tex: Event_to_Histo Input_file_name -d500\n\t\tThe first time bin will be 500microseconds wide and the second \n\t\ttime bin will contain the rest of the data. "<<endl;
+          cout << "\t -log: logarithmic rebining\n\t\tex: Event_to_Histo Input_file_name -log350\n\t\tEach time bin width will be defined by delta(t)/t"<<endl;
+          cout << endl;
+          cout << "NB: The output file generated will have the same name as the input file with \n'event' replaced by 'histogram'"<<endl;
+        }
+    }
+      // Name of file
+      string file_name;
   string output_file_name;
   file_name = "DAS_3_neutron_event.dat";   //REMOVE
-  
+
   produce_output_file_name(file_name,output_file_name);
 
   //  file_name = argv[1];   //REMOVE Comments
@@ -98,7 +122,7 @@ int main(int argc, char *argv[])
 
   // swap endian (PC <-> Mac)
   SwapEndian (file_size, BinaryArray);
-  
+
   new_Nt = int(floor((Nt*100)/rebin_value));   //rebin_value=200 => Nt=83
   
   Histo_size = Nx*Ny*new_Nt;
@@ -107,6 +131,14 @@ int main(int argc, char *argv[])
   //initialize array
   InitializeArray(data_histo, Nx, Ny, new_Nt);
   
+  Generate_data_histo(data_histo,
+                      BinaryArray, 
+                      GlobalArraySize, 
+                      type_of_rebining,
+                      rebin_value,
+                      new_Nt);
+
+
   for (int i=0; i<GlobalArraySize/2; i++)
     {
       pixelID = BinaryArray[2*i+1];
@@ -183,3 +215,34 @@ void produce_output_file_name(string & file_name,
   return;
 }
 
+
+void Generate_data_histo(binary_type * data_histo,
+                         binary_type * BinaryArray, 
+                         int GlobalArraySize, 
+                         char type_of_rebining,
+                         float rebin_value,
+                         int new_Nt)
+{
+  int pixelID;
+  int time_stamp;
+
+  switch(type_of_rebining)
+    {
+    case 'l':   
+      for (int i=0; i<GlobalArraySize/2; i++)
+        {
+          pixelID = BinaryArray[2*i+1];
+          time_stamp = int(floor((BinaryArray[2*i]/1000)/rebin_value));
+          data_histo[time_stamp+pixelID*new_Nt]+=1;      
+        }
+      break;
+    case 'd':
+      break;
+    case 'L':
+      break;
+    default:
+      cout << "type of rebining not defined"<<endl;
+    }
+     
+  return;
+}
