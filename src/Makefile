@@ -1,4 +1,4 @@
-#Id#
+# $Id$
 SRCS=Event_to_Histo
 CC=g++
 MAKEFLAGS=c
