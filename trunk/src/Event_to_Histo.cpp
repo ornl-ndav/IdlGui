@@ -7,6 +7,8 @@
 #include <vector>
 #include <time.h>
 
+// $Id$
+
 using std::cout;
 using std::endl;
 using std::string;
@@ -29,7 +31,8 @@ void InitializeArray(binary_type  * data_histo,
 
 // Generate the name of the output file
 void produce_output_file_name(string & file_name,
-                              string & output_file);
+                              string & output_file,
+                              string & path);
 
 // Generate histogram
 void Generate_data_histo(binary_type * data_histo,
@@ -44,6 +47,11 @@ void print_help();
 
 // Get the rebin value
 float get_rebin_value(char *argv[]);
+
+// Isolate file_name from path+file_name
+void isolate_file_name(string & path_file_name,
+                       string & file_name,
+                       string & path);
 
 //  argv[1] : Name of file entered
 //  argv[2] : time bin width desired
@@ -67,15 +75,17 @@ int main(int argc, char *argv[])
   char type_of_rebining;
 
   // Name of file
+  string path_file_name;
   string file_name;
   string output_file_name;
-  string path="../pre-NeXus/DAS_event_1/DAS_3/";
-  
+  string path;
+
   if (argc>1)  //if there is at least one argument
     {
       if (argv[1][0]=='-' && argv[1][1]=='-' && argv[1][2]=='h')
         {
           print_help();
+          return 0;
         }
       else
         {
@@ -85,21 +95,24 @@ int main(int argc, char *argv[])
     }
 
   //file_name = "DAS_3_neutron_event.dat";   //REMOVE
-  file_name = argv[1];   //REMOVE Comments
-  file_name = path + file_name;
+  path_file_name = argv[1];
+  isolate_file_name(path_file_name,file_name,path);
+
+  // file_name = argv[1];   //REMOVE
+  // file_name = path + file_name;  //REMOVE
   
-  produce_output_file_name(file_name,output_file_name);
-  
+  produce_output_file_name(file_name,output_file_name, path);
+
   // Rebining value (in microSeconds)
   //rebin_value =2;   // REMOVE
   
   // Open and Read binary file
   FILE *BinaryFile;
-  BinaryFile=fopen(file_name.c_str(),"rb");
+  BinaryFile=fopen(path_file_name.c_str(),"rb");
   
   // Get the size of the binary file
   //  if (stat("../pre-NeXus/DAS_event_1/DAS_3/DAS_3_neutron_event.dat",&results)==0)
-  if (stat(file_name.c_str(),&results)==0)
+  if (stat(path_file_name.c_str(),&results)==0)
     {
       file_size = results.st_size/sizeof(binary_type);
     }
@@ -153,6 +166,8 @@ int main(int argc, char *argv[])
     }
   
   // write new histogram file
+  
+  //  cout << "output_file_name= " << output_file_name <<endl;  //REMOVE
   
   std::ofstream file(output_file_name.c_str(), std::ios::binary);
   file.write((char*)(data_histo),sizeof(data_histo)*Histo_size);  
@@ -209,7 +224,8 @@ void InitializeArray(binary_type * data_histo,
 /Generate the name of the output file
 /*******************************************/
 void produce_output_file_name(string & file_name,
-                              string & output_file)
+                              string & output_file,
+                              string & path)
 {
   int file_name_size = file_name.size();
   string local_file_name = file_name;
@@ -217,7 +233,7 @@ void produce_output_file_name(string & file_name,
 
   index = file_name.find("event");
   
-  output_file = local_file_name.substr(0,index) + "histogram" + \
+  output_file = path + local_file_name.substr(0,index) + "histogram" + \
     file_name.substr(index+5,file_name_size);
 
   return;
@@ -262,7 +278,7 @@ void Generate_data_histo(binary_type * data_histo,
 /*******************************************/
 void print_help()
 {
-  cout << "usage: Event_to_Histo input_file_name -[ l | b | L]rebin_value"<<endl;
+  cout << "usage: Event_to_Histo input_file_name(relative path) -[ l | b | L]rebin_value"<<endl;
   cout << "\nArguments:\n\t -l: linear rebining\n\t\tex: \
 Event_to_Histo Input_file_name -l2\n\t\tEach bin will be 2 microseconds \
 wide."<<endl;
@@ -290,5 +306,38 @@ float get_rebin_value(char *argv[])
   rebin_value = atof(my_string.c_str());
 
   return rebin_value;
+}
+
+/*******************************************
+/ Isolate file_name from path+file_name
+/*******************************************/
+void isolate_file_name(string & path_file_name,
+                       string & file_name,
+                       string & path)
+{
+  //int file_name_size = file_name.size();
+  string local_file_name = path_file_name;
+  vector<int> index;
+  int i=0;
+  
+  index.push_back(local_file_name.find("/",0));
+  if (index[0]<0)
+    {
+      path = "./";
+      file_name = path_file_name;
+    }
+  else
+    {
+      while(index[i]>=0)
+        {
+          index.push_back(local_file_name.find("/",index[i]+1));
+          i++;
+        }
+    }
+  
+  path = path_file_name.substr(0,index[i-1]+1);
+  file_name = path_file_name.substr(index[i-1]+1,path_file_name.size());
+      
+  return;
 }
 
