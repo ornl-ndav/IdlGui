@@ -1,11 +1,4 @@
-#include <cmath>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <string>
-#include <sys/stat.h>
-#include <vector>
-#include <time.h>
+#include "Event_to_Histo.hpp"
 
 // $Id$
 
@@ -16,42 +9,6 @@ using std::vector;
 
 //Type of binary file
 typedef int binary_type;
-
-//to swap from little to big endian
-inline void endian_swap(binary_type & x);  
-
-void SwapEndian (int file_size, 
-                 binary_type * BinaryArray);
-
-// Initialize Array
-void InitializeArray(binary_type  * data_histo, 
-                     int Nx, 
-                     int Ny,
-                     int new_nt);
-
-// Generate the name of the output file
-void produce_output_file_name(string & file_name,
-                              string & output_file,
-                              string & path);
-
-// Generate histogram
-void Generate_data_histo(binary_type * data_histo,
-                         binary_type * BinaryArray, 
-                         int GlobalArraySize, 
-                         char type_of_rebining,
-                         float rebin_value,
-                         int new_Nt);
-
-// Print the help menu
-void print_help();
-
-// Get the rebin value
-float get_rebin_value(char *argv[]);
-
-// Isolate file_name from path+file_name
-void isolate_file_name(string & path_file_name,
-                       string & file_name,
-                       string & path);
 
 int main(int argc, char *argv[])
 {
@@ -216,7 +173,7 @@ void produce_output_file_name(string & file_name,
 
   index = file_name.find("event");
   
-  output_file = path + local_file_name.substr(0,index) + "histogram" + \
+  output_file = path + local_file_name.substr(0,index) + "histo" + \
     file_name.substr(index+5,file_name_size);
 
   return;
@@ -273,7 +230,7 @@ wide and the second \n\t\ttime bin will contain the rest of the data. "<<endl;
  delta(t)/t=3.5"<<endl;
   cout << endl;
   cout << "NB: The output file generated will have the same name\
- as the input file with \n'event' replaced by 'histogram'"<<endl;
+ as the input file with \n'event' replaced by 'histo'"<<endl;
   return;
 }
 
