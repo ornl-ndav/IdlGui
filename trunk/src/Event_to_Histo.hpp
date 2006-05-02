@@ -9,6 +9,11 @@
 
 // $Id$
 
+typedef int binary_type;
+
+using std::string;
+using std::vector;
+
 //to swap from little to big endian
 inline void endian_swap(binary_type & x);  
 
