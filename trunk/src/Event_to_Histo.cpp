@@ -53,9 +53,6 @@ void isolate_file_name(string & path_file_name,
                        string & file_name,
                        string & path);
 
-//  argv[1] : Name of file entered
-//  argv[2] : time bin width desired
-
 int main(int argc, char *argv[])
 {
   struct stat results;
@@ -94,24 +91,16 @@ int main(int argc, char *argv[])
         }
     }
 
-  //file_name = "DAS_3_neutron_event.dat";   //REMOVE
   path_file_name = argv[1];
   isolate_file_name(path_file_name,file_name,path);
 
-  // file_name = argv[1];   //REMOVE
-  // file_name = path + file_name;  //REMOVE
-  
   produce_output_file_name(file_name,output_file_name, path);
 
-  // Rebining value (in microSeconds)
-  //rebin_value =2;   // REMOVE
-  
   // Open and Read binary file
   FILE *BinaryFile;
   BinaryFile=fopen(path_file_name.c_str(),"rb");
   
   // Get the size of the binary file
-  //  if (stat("../pre-NeXus/DAS_event_1/DAS_3/DAS_3_neutron_event.dat",&results)==0)
   if (stat(path_file_name.c_str(),&results)==0)
     {
       file_size = results.st_size/sizeof(binary_type);
@@ -160,20 +149,14 @@ int main(int argc, char *argv[])
   for (int i=0; i<GlobalArraySize/2; i++)
     {
       pixelID = BinaryArray[2*i+1];
-      // "/10" to be in micro_seconds
       time_stamp = int(floor((BinaryArray[2*i]/10)/rebin_value)); 
       data_histo[time_stamp+pixelID*new_Nt]+=1;      
     }
   
   // write new histogram file
-  
-  //  cout << "output_file_name= " << output_file_name <<endl;  //REMOVE
-  
   std::ofstream file(output_file_name.c_str(), std::ios::binary);
   file.write((char*)(data_histo),sizeof(data_histo)*Histo_size);  
   file.close();
-  
-  //  cout << "It took " << clock()<<" to run it"<<endl;
   
   return 0;
 }
@@ -302,7 +285,7 @@ float get_rebin_value(char *argv[])
   string my_string = argv[2];
   float rebin_value;
 
-  my_string = my_string.substr(2,5);  //remove "-l"
+  my_string = my_string.substr(2,5); 
   rebin_value = atof(my_string.c_str());
 
   return rebin_value;
@@ -315,7 +298,6 @@ void isolate_file_name(string & path_file_name,
                        string & file_name,
                        string & path)
 {
-  //int file_name_size = file_name.size();
   string local_file_name = path_file_name;
   vector<int> index;
   int i=0;
