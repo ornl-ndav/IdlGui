@@ -4,11 +4,6 @@
 
 using std::cout;
 using std::endl;
-using std::string;
-using std::vector;
-
-//Type of binary file
-typedef int binary_type;
 
 int main(int argc, char *argv[])
 {
