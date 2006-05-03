@@ -36,15 +36,17 @@ Nt = 167L
 read, time_bin_width, prompt='Enter time bin width desired (us):'
 ; ###############################################
 
+;strt_time  = systime(1)
+
 ;new size of data_histo
-new_Nt = floor((167*100)/time_bin_width)
+new_Nt = floor((16667)/time_bin_width)+1
 
 data_histo = lonarr(new_Nt,Nx*Ny)
 
 for i=0L,((N/2-1)) do begin
     pixelId = data(2*i+1)
-    time_stamp_index = floor((data(2*i)/1000L)/time_bin_width)
-    data_histo[time_stamp_index, pixelId]=data_histo[time_stamp_index,pixelId]+1
+    time_stamp_index = floor((data(2*i)/10L)/time_bin_width)
+    data_histo[time_stamp_index,pixelId]=data_histo[time_stamp_index,pixelId]+1
 endfor
 
 indx = where(data_histo GT 0, Ngt0)
@@ -73,8 +75,9 @@ endif
 ;******end of color part****
 xoff=100
 yoff=80
-Nx=256
-Ny=304
+Nx=256L
+Ny=304L
+Nt=167L
 
 tvscl, simg, xoff, yoff, /device,xsize=Nx,ysize=Ny     ;plot data
 
@@ -84,47 +87,22 @@ xstyle=1,pos=[xoff,yoff,xoff+Nx,yoff+Ny],$
 charthick=1.6
 wshow
 
-; ***** Create histogram binary output file *****
+;;;;end_time = systime(1)
+;;;;print, end_time-strt_time
 
-; Non Interactive Part
-file_name = "DAS_3_neutron_histo.dat"
-file = "c:\Documents and Settings\j35\Desktop\HistoTool\DAS_event_1\DAS_3\" + file_name
-
-openw,3,file
-writeu,3,data_histo
-close,3
-
-; to get only the last part of the name
-file_list = strsplit(file,'\',/extract, count=length)
-file_name = file_list[length-1]
-
-openr,1,file
-fs = fstat(1)
-N=fs.size        ;size of file
-
-Nbytes = 4       ;data are Uint32 = 4 bytes
-N = fs.size/Nbytes
-data = lonarr(N)
-readu,1,data
-close,1                     ;close file
-
-;#########################################################
-Nx = 256       ;information from xxx_runnumber_runinfo.xml
-Ny = 304
-Nt = new_Nt
-;#########################################################
-
-read, Tbin_wanted, prompt='Which time bin do you want to see (0-'+string(Nt)+'):'
-;Tbin_wanted = 1
+read, Tbin_wanted, prompt='Which time bin do you want to see (0-'+string(new_Nt-1)+'):'
 
 ;find the non-null elements
-indx1 = where(data GT 0, Ngt0)
-img = intarr(Nt,Nx,Ny)
-img(indx1) = data(indx1)
-
-new_img = intarr(1,Nx,Ny)
-
+new_img = lonarr(new_Nt,Nx,Ny)
 new_img(0,*,*)=img(Tbin_wanted,*,*)
+
+;indx1 = where(data GT 0, Ngt0)
+;img = intarr(new_Nt,Nx,Ny)
+;img(indx1) = data(indx1)
+;
+;new_img = intarr(1,Nx,Ny)
+;
+;new_img(0,*,*)=img(Tbin_wanted,*,*)
 new_img = total(new_img,1)
 
 ;format of graph
