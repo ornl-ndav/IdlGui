@@ -29,13 +29,43 @@
  */
 
 #include "Map_Data.hpp"
-#include <iostream>
 
 using namespace std;
+using namespace TCLAP;
 
 int main(int argc, char **argv)
 {
-  cout << "Hello World!" << endl;
+  
+  try
+    {
+      CmdLine cmd("Command line description message", ' ', VERSION_TAG);
 
+      ValueArg<string> neutronArg("n","neutron",
+                                  "Name of neutron binary data file",
+                                  true, "duh.dat", "filename");
+      cmd.add(neutronArg);
+
+      ValueArg<string> mapArg("m", "mapping", "Name of the mapping file", 
+                              true, "map.dat", "filename");
+      cmd.add(mapArg);
+
+      ValueArg<int> pixelArg("p", "pixel", "Number of detector pixels", true,
+                             -1, "# of pixels");
+      cmd.add(pixelArg);
+
+      ValueArg<int> tofArg("t", "tof", "Number of tof bins", true, -1, 
+                           "# of tof bins");
+      cmd.add(tofArg);
+
+      cmd.parse(argc, argv);
+
+      
+      
+    } 
+  catch(ArgException &e)
+    {
+      cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
+    }
+  
   return 0;
 }

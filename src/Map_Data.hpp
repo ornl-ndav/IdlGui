@@ -31,5 +31,11 @@
 #ifndef _MAP_DATA_HPP
 #define _MAP_DATA_HPP 1
 
+#include <iostream>
+#include <string>
+#include <tclap/CmdLine.h>
+
+const std::string MAP_FILE_POSTFIX("_mapped");
+const std::string VERSION_TAG = "1.0.0itc2";
 
 #endif // _MAP_DATA_HPP
