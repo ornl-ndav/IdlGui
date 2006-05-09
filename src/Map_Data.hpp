@@ -62,9 +62,8 @@ const std::string VERSION_TAG = "1.0.0itc2";
 const std::string make_mapped_filename(const std::string full_path,
                                        bool debug)
 {
-  int index = full_path.rfind('.');
   std::string outfile = full_path;
-  outfile.insert(index, MAP_FILE_POSTFIX);
+  outfile.insert(full_path.rfind('.'), MAP_FILE_POSTFIX);
 
   if(debug)
     {
