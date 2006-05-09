@@ -35,31 +35,42 @@ using namespace TCLAP;
 
 int main(int argc, char **argv)
 {
-  
   try
     {
+      // Setup the command-line parser object
       CmdLine cmd("Command line description message", ' ', VERSION_TAG);
 
+      // Add command-line options
       ValueArg<string> neutronArg("n","neutron",
                                   "Name of neutron binary data file",
-                                  true, "duh.dat", "filename");
-      cmd.add(neutronArg);
+                                  true, "duh.dat", "filename", cmd);
 
       ValueArg<string> mapArg("m", "mapping", "Name of the mapping file", 
-                              true, "map.dat", "filename");
-      cmd.add(mapArg);
+                              true, "map.dat", "filename", cmd);
 
       ValueArg<int> pixelArg("p", "pixel", "Number of detector pixels", true,
-                             -1, "# of pixels");
-      cmd.add(pixelArg);
+                             -1, "# of pixels", cmd);
 
       ValueArg<int> tofArg("t", "tof", "Number of tof bins", true, -1, 
-                           "# of tof bins");
-      cmd.add(tofArg);
+                           "# of tof bins", cmd);
 
+      SwitchArg debugSwitch("d", "debug", "Flag for debugging program", 
+                              false, cmd);
+
+      // Parse the command-line
       cmd.parse(argc, argv);
 
-      
+      // Create the pixel map
+      map<int32_t, int32_t> pixel_map;
+      make_pixel_map(mapArg.getValue(), pixelArg.getValue(), pixel_map,
+                     debugSwitch.getValue());
+
+      // Create the mapped binary data
+      create_mapped_data(neutronArg.getValue(),
+                         make_mapped_filename(neutronArg.getValue(),
+                                              debugSwitch.getValue()),
+                         tofArg.getValue(), pixel_map, 
+                         debugSwitch.getValue());
       
     } 
   catch(ArgException &e)
