@@ -40,10 +40,13 @@
 
 // This is a string that contains the extra file name tag for the mapped 
 // neutron histogram binary data
-const std::string MAP_FILE_POSTFIX("_mapped");
+static const std::string MAP_FILE_POSTFIX("_mapped");
 
 // This is a string that contains the software tag version
-const std::string VERSION_TAG = "1.0.0itc2";
+static const std::string VERSION_TAG = "1.0.0itc2";
+
+// This is a constant to hold the size of an int32_t
+static const int SIZEOF_INT32_T = sizeof(int32_t);
 
 /**
  * \brief This function creates an output file name from a given file name.
@@ -101,8 +104,6 @@ void make_pixel_map(const std::string mapfile,
   // Create the pixel map
   for(size_t i = 0; i < num_pixels; ++i)
     {
-      // WHICH WAY?
-      //pixel_map[i] = pm_buffer[i];
       pixel_map[pm_buffer[i]] = i;
     }
   
@@ -174,16 +175,16 @@ void create_mapped_data(const std::string neutronfile,
         {
           std::cout << "Position: " << iter->second << std::endl;
           std::cout << "Offset  : " ;
-          std::cout << iter->second * num_tof_bins * sizeof(int32_t);
+          std::cout << iter->second * num_tof_bins * SIZEOF_INT32_T;
           std::cout << std::endl;
         }
       
       // Move to proper read location
-      neutron_data.seekg(iter->second*num_tof_bins*sizeof(int32_t), 
+      neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_INT32_T, 
                          std::ios::beg);
       // Read data from file
       neutron_data.read(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*sizeof(int32_t));
+                        num_tof_bins*SIZEOF_INT32_T);
       
       if(debug)
         {
@@ -192,9 +193,8 @@ void create_mapped_data(const std::string neutronfile,
       
       // Write data to mapped file
       mapped_data.write(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*sizeof(int32_t));
+                        num_tof_bins*SIZEOF_INT32_T);
     }
 }
-
 
 #endif // _MAP_DATA_HPP
