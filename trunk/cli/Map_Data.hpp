@@ -44,7 +44,7 @@
 static const std::string MAP_FILE_POSTFIX("_mapped");
 
 // This is a string that contains the software tag version
-static const std::string VERSION_TAG = "1.0.0itc2";
+static const std::string VERSION_TAG("1.0.0itc2");
 
 // This is a constant to hold the size of an int32_t
 static const int SIZEOF_INT32_T = sizeof(int32_t);
