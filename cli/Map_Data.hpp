@@ -34,6 +34,7 @@
 #include <fstream>
 #include <iostream>
 #include <map>
+#include <stdexcept>
 #include <stdint.h>
 #include <string>
 #include <tclap/CmdLine.h>
@@ -110,6 +111,10 @@ void make_pixel_map(const std::string mapfile,
 {
   // Read in the mapping file
   std::ifstream m_data(mapfile.c_str(), std::ios::binary);
+  if(!m_data.is_open())
+    {
+      throw std::runtime_error("Failed opening mapping file");
+    }
 
   int32_t pm_buffer[num_pixels];
   m_data.read(reinterpret_cast<char *>(pm_buffer), 
@@ -176,9 +181,17 @@ void create_mapped_data(const std::string neutronfile,
 {
   // Open binary data file
   std::ifstream neutron_data(neutronfile.c_str(), std::ios::binary);
-  
+  if(!neutron_data.is_open())
+    {
+      throw std::runtime_error("Failed opening original binary file");
+    }
+
   // Open mapped binary data file
   std::ofstream mapped_data(mappedfile.c_str(), std::ios::binary);
+  if(!mapped_data.is_open())
+    {
+      throw std::runtime_error("Failed opening mapped binary file");
+    }
   
   int32_t data_buffer[num_tof_bins];
   
