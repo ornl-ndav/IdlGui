@@ -57,6 +57,10 @@ int main(int argc, char **argv)
       SwitchArg debugSwitch("d", "debug", "Flag for debugging program", 
                               false, cmd);
 
+      ValueArg<string> altOutPath("o", "output", 
+                                  "Alternate path for output file", 
+                                  false, "", "path", cmd);
+
       // Parse the command-line
       cmd.parse(argc, argv);
 
@@ -68,6 +72,7 @@ int main(int argc, char **argv)
       // Create the mapped binary data
       create_mapped_data(neutronArg.getValue(),
                          make_mapped_filename(neutronArg.getValue(),
+                                              altOutPath.getValue(),
                                               debugSwitch.getValue()),
                          tofArg.getValue(), pixel_map, 
                          debugSwitch.getValue());

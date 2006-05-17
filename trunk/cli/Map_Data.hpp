@@ -57,22 +57,37 @@ static const int SIZEOF_INT32_T = sizeof(int32_t);
  *
  * \param full_path (INPUT) is the string containing the path and file name 
  *        of the neutron histogram binary data file
+ * \param alt_path (INPUT) is a string containing an alternate path where to 
+ *        save the resulting file
  * \param debug (INPUT) is a flag for printing debugging info
  *
  * \return A string containing the filename for the mapped neutron histogram 
  *         binary data 
  */
 const std::string make_mapped_filename(const std::string full_path,
+                                       const std::string alt_path,
                                        bool debug)
 {
-  std::string outfile = full_path;
-  outfile.insert(full_path.rfind('.'), MAP_FILE_POSTFIX);
+  std::string outfile("");
+  if(alt_path != "")
+    {
+      std::string file = full_path.substr(full_path.rfind('/')+1);
+      outfile.append(alt_path);
+      outfile.append("/");
+      outfile.append(file);
+    }
+  else
+    {
+      outfile.append(full_path);
+    }
+
+  outfile.insert(outfile.rfind('.'), MAP_FILE_POSTFIX);
 
   if(debug)
     {
       std::cout << "Output File = " << outfile << std::endl;
     }
-
+  
   return outfile;
 }
 
