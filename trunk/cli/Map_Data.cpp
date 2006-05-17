@@ -25,7 +25,7 @@
 /**
  * $Id: Map_Data.cpp 36 2006-05-09 19:36:11Z 2zr $
  *
- * \file src/Map_Data.cpp
+ * \file cli/Map_Data.cpp
  */
 
 #include "Map_Data.hpp"
@@ -33,6 +33,28 @@
 using namespace std;
 using namespace TCLAP;
 
+/**
+ * \brief This program takes a binary data file, a mapping file and creates 
+ *        a mapped binary data file.
+ *
+ * This program takes a neutron binary data file, a pixel mapping file and 
+ * creates a mapped neutron binary data file. The number of detector pixels 
+ * and number of time-of-flight channels must be provided to the program. An 
+ * alternate path for the create binary data file can be provided. For usage 
+ * of the program do
+ * <code>
+ * Map_Data -h 
+ * </code>
+ * or
+ * <code>
+ * Map_Data --help 
+ * </code>
+ *
+ * \param argc
+ * \param **argv
+ * 
+ * \return An integer status number
+ */
 int main(int argc, char **argv)
 {
   try
