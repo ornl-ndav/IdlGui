@@ -23,7 +23,7 @@
  */
 
 /**
- * $Id: Map_Data.hpp 38 2006-05-10 14:26:57Z 2zr $
+ * $Id$
  *
  * \file cli/Map_Data.hpp
  */

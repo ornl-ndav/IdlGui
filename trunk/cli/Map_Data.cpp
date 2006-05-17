@@ -23,7 +23,7 @@
  */
 
 /**
- * $Id: Map_Data.cpp 36 2006-05-09 19:36:11Z 2zr $
+ * $Id$
  *
  * \file cli/Map_Data.cpp
  */
