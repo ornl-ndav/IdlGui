@@ -25,9 +25,8 @@
 /**
  * $Id: Map_Data.hpp 38 2006-05-10 14:26:57Z 2zr $
  *
- * \file src/Map_Data.hpp
+ * \file cli/Map_Data.hpp
  */
-
 #ifndef _MAP_DATA_HPP
 #define _MAP_DATA_HPP 1
 
@@ -48,6 +47,11 @@ static const std::string VERSION_TAG("1.0.0itc2");
 
 // This is a constant to hold the size of an int32_t
 static const int SIZEOF_INT32_T = sizeof(int32_t);
+
+/**
+ * \defgroup make_mapped_filename Map_Data::make_mapped_filename
+ * \{
+ */
 
 /**
  * \brief This function creates an output file name from a given file name.
@@ -91,6 +95,15 @@ const std::string make_mapped_filename(const std::string full_path,
   
   return outfile;
 }
+
+/**
+ * \} // end of make_mapped_filename group
+ */
+
+/**
+ * \defgroup make_pixel_map Map_Data::make_pixel_map
+ * \{
+ */
 
 /**
  * \brief This function creates a pixel map from a mapping file
@@ -139,6 +152,15 @@ void make_pixel_map(const std::string mapfile,
 }
 
 /**
+ * \} // end of make_pixel_map group
+ */
+
+/**
+ * \defgroup print_data_block Map_Data::print_data_block
+ * \{
+ */
+
+/**
  * \brief This function prints out the contents of a data block.
  *
  * This function takes a data block and its size and prints out the contents 
@@ -158,6 +180,15 @@ void print_data_block(const int32_t size, const int32_t *block)
 }
 
 /**
+ * \} // end of print_data_block group
+ */
+
+/**
+ * \defgroup create_mapped_data Map_Data::create_mapped_data
+ * \{
+ */
+
+/**
  * \brief This function creates the mapped binary histogram data file.
  *
  * This function takes in the name of the neutron histogram binary data file, 
@@ -167,7 +198,7 @@ void print_data_block(const int32_t size, const int32_t *block)
  *
  * \param neutronfile (INPUT) is the string containing the neutron histogram 
  *        binary data filename
- * \param neutronfile (INPUT) is the string containing the mapped neutron 
+ * \param mappedfile (INPUT) is the string containing the mapped neutron 
  *        histogram binary data filename
  * \param num_tof_bins (INPUT) is the number of time-of-flight bins
  * \param pixel_map (INPUT) is the pixel map structure
@@ -224,5 +255,10 @@ void create_mapped_data(const std::string neutronfile,
                         num_tof_bins*SIZEOF_INT32_T);
     }
 }
+
+/**
+ * \} // end of create_mapped_data group
+ */
+
 
 #endif // _MAP_DATA_HPP
