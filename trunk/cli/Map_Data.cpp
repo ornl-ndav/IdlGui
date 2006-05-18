@@ -33,14 +33,14 @@
 using namespace std;
 using namespace TCLAP;
 
-const std::string make_mapped_filename(const std::string full_path,
-                                       const std::string alt_path,
-                                       bool debug)
+const string make_mapped_filename(const string full_path,
+                                  const string alt_path,
+                                  bool debug)
 {
-  std::string outfile("");
+  string outfile("");
   if(alt_path != "")
     {
-      std::string file = full_path.substr(full_path.rfind('/')+1);
+      string file = full_path.substr(full_path.rfind('/')+1);
       outfile.append(alt_path);
       outfile.append("/");
       outfile.append(file);
@@ -54,21 +54,21 @@ const std::string make_mapped_filename(const std::string full_path,
 
   if(debug)
     {
-      std::cout << "Output File = " << outfile << std::endl;
+      cout << "Output File = " << outfile << endl;
     }
   
   return outfile;
 }
 
-std::map<int32_t, int32_t> make_pixel_map(const std::string mapfile, 
-                                          const int32_t num_pixels, 
-                                          bool debug)
+map<int32_t, int32_t> make_pixel_map(const string mapfile, 
+                                     const int32_t num_pixels, 
+                                     bool debug)
 {
   // Read in the mapping file
-  std::ifstream m_data(mapfile.c_str(), std::ios::binary);
+  ifstream m_data(mapfile.c_str(), ios::binary);
   if(!m_data.is_open())
     {
-      throw std::runtime_error("Failed opening mapping file");
+      throw runtime_error("Failed opening mapping file");
     }
 
   map<int32_t, int32_t> pixel_map;
@@ -86,11 +86,11 @@ std::map<int32_t, int32_t> make_pixel_map(const std::string mapfile,
   
   if(debug)
     {
-      std::cout << "Pixel Map:" << std::endl;
-      std::map<int32_t, int32_t>::iterator iter;
+      cout << "Pixel Map:" << endl;
+      map<int32_t, int32_t>::iterator iter;
       for(iter = pixel_map.begin(); iter != pixel_map.end(); ++iter)
         {
-          std::cout << iter->first << "\t" << iter->second << std::endl;
+          cout << iter->first << "\t" << iter->second << endl;
         }
     }
 
@@ -101,49 +101,49 @@ void print_data_block(const int32_t size, const uint32_t *block)
 {
   for(size_t i = 0; i < size; ++i)
     {
-      std::cout << i << "\t" << block[i] << std::endl;
+      cout << i << "\t" << block[i] << endl;
     }
 
   return;
 }
 
-void create_mapped_data(const std::string neutronfile, 
-                        const std::string mappedfile,
+void create_mapped_data(const string neutronfile, 
+                        const string mappedfile,
                         const int32_t num_tof_bins,
-                        const std::map<int32_t, int32_t> & pixel_map,
+                        const map<int32_t, int32_t> & pixel_map,
                         bool debug)
 {
   // Open binary data file
-  std::ifstream neutron_data(neutronfile.c_str(), std::ios::binary);
+  ifstream neutron_data(neutronfile.c_str(), ios::binary);
   if(!neutron_data.is_open())
     {
-      throw std::runtime_error("Failed opening original binary file");
+      throw runtime_error("Failed opening original binary file");
     }
 
   // Open mapped binary data file
-  std::ofstream mapped_data(mappedfile.c_str(), std::ios::binary);
+  ofstream mapped_data(mappedfile.c_str(), ios::binary);
   if(!mapped_data.is_open())
     {
-      throw std::runtime_error("Failed opening mapped binary file");
+      throw runtime_error("Failed opening mapped binary file");
     }
 
   uint32_t data_buffer[num_tof_bins];
   
   // Iterate over the pixel map
-  std::map<int32_t, int32_t>::const_iterator iter;
+  map<int32_t, int32_t>::const_iterator iter;
   for(iter = pixel_map.begin(); iter != pixel_map.end(); ++iter)
     {
       if(debug)
         {
-          std::cout << "Position: " << iter->second << std::endl;
-          std::cout << "Offset  : " ;
-          std::cout << iter->second * num_tof_bins * SIZEOF_UINT32_T;
-          std::cout << std::endl;
+          cout << "Position: " << iter->second << endl;
+          cout << "Offset  : " ;
+          cout << iter->second * num_tof_bins * SIZEOF_UINT32_T;
+          cout << endl;
         }
       
       // Move to proper read location
       neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_UINT32_T, 
-                         std::ios::beg);
+                         ios::beg);
       // Read data from file
       neutron_data.read(reinterpret_cast<char *>(data_buffer), 
                         num_tof_bins*SIZEOF_UINT32_T);
