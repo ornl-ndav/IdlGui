@@ -45,8 +45,8 @@ static const std::string MAP_FILE_POSTFIX("_mapped");
 // This is a string that contains the software tag version
 static const std::string VERSION_TAG("1.0.0itc2");
 
-// This is a constant to hold the size of an int32_t
-static const int SIZEOF_INT32_T = sizeof(int32_t);
+// This is a constant to hold the size of an uint32_t
+static const int SIZEOF_UINT32_T = sizeof(uint32_t);
 
 /**
  * \defgroup make_mapped_filename Map_Data::make_mapped_filename
@@ -115,7 +115,7 @@ void make_pixel_map(const std::string mapfile,
  * \param size (INPUT) is the size of the data block
  * \param block (INPUT) is the pointer to the data block
  */
-void print_data_block(const int32_t size, const int32_t *block);
+void print_data_block(const int32_t size, const uint32_t *block);
 
 /**
  * \} // end of print_data_block group

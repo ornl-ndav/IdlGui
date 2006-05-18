@@ -94,7 +94,7 @@ void make_pixel_map(const std::string mapfile,
     }
 }
 
-void print_data_block(const int32_t size, const int32_t *block)
+void print_data_block(const int32_t size, const uint32_t *block)
 {
   for(size_t i = 0; i < size; ++i)
     {
@@ -124,7 +124,7 @@ void create_mapped_data(const std::string neutronfile,
       throw std::runtime_error("Failed opening mapped binary file");
     }
   
-  int32_t data_buffer[num_tof_bins];
+  uint32_t data_buffer[num_tof_bins];
   
   // Iterate over the pixel map
   std::map<int32_t, int32_t>::const_iterator iter;
@@ -134,16 +134,16 @@ void create_mapped_data(const std::string neutronfile,
         {
           std::cout << "Position: " << iter->second << std::endl;
           std::cout << "Offset  : " ;
-          std::cout << iter->second * num_tof_bins * SIZEOF_INT32_T;
+          std::cout << iter->second * num_tof_bins * SIZEOF_UINT32_T;
           std::cout << std::endl;
         }
       
       // Move to proper read location
-      neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_INT32_T, 
+      neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_UINT32_T, 
                          std::ios::beg);
       // Read data from file
       neutron_data.read(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*SIZEOF_INT32_T);
+                        num_tof_bins*SIZEOF_UINT32_T);
       
       if(debug)
         {
@@ -152,7 +152,7 @@ void create_mapped_data(const std::string neutronfile,
       
       // Write data to mapped file
       mapped_data.write(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*SIZEOF_INT32_T);
+                        num_tof_bins*SIZEOF_UINT32_T);
     }
 }
 
@@ -193,11 +193,11 @@ int main(int argc, char **argv)
       ValueArg<string> mapArg("m", "mapping", "Name of the mapping file", 
                               true, "map.dat", "filename", cmd);
 
-      ValueArg<int> pixelArg("p", "pixel", "Number of detector pixels", true,
-                             -1, "# of pixels", cmd);
-
-      ValueArg<int> tofArg("t", "tof", "Number of tof bins", true, -1, 
-                           "# of tof bins", cmd);
+      ValueArg<int32_t> pixelArg("p", "pixel", "Number of detector pixels", 
+                                 true, -1, "# of pixels", cmd);
+      
+      ValueArg<int32_t> tofArg("t", "tof", "Number of tof bins", true, -1, 
+                               "# of tof bins", cmd);
 
       SwitchArg debugSwitch("d", "debug", "Flag for debugging program", 
                               false, cmd);
