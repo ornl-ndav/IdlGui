@@ -93,10 +93,9 @@ const std::string make_mapped_filename(const std::string full_path,
  * \param pixel_map (OUTPUT) is the resulting pixel map
  * \param debug (INPUT) is a flag for printing debugging info
  */
-void make_pixel_map(const std::string mapfile, 
-                    const int32_t num_pixels, 
-                    std::map<int32_t, int32_t> & pixel_map,
-                    bool debug);
+std::map<int32_t, int32_t> make_pixel_map(const std::string mapfile, 
+                                          const int32_t num_pixels, 
+                                          bool debug);
 /**
  * \} // end of make_pixel_map group
  */

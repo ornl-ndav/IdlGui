@@ -60,10 +60,9 @@ const std::string make_mapped_filename(const std::string full_path,
   return outfile;
 }
 
-void make_pixel_map(const std::string mapfile, 
-                    const int32_t num_pixels, 
-                    std::map<int32_t, int32_t> & pixel_map,
-                    bool debug)
+std::map<int32_t, int32_t> make_pixel_map(const std::string mapfile, 
+                                          const int32_t num_pixels, 
+                                          bool debug)
 {
   // Read in the mapping file
   std::ifstream m_data(mapfile.c_str(), std::ios::binary);
@@ -71,6 +70,8 @@ void make_pixel_map(const std::string mapfile,
     {
       throw std::runtime_error("Failed opening mapping file");
     }
+
+  map<int32_t, int32_t> pixel_map;
 
   int32_t pm_buffer[num_pixels];
   m_data.read(reinterpret_cast<char *>(pm_buffer), 
@@ -92,6 +93,8 @@ void make_pixel_map(const std::string mapfile,
           std::cout << iter->first << "\t" << iter->second << std::endl;
         }
     }
+
+  return pixel_map;
 }
 
 void print_data_block(const int32_t size, const uint32_t *block)
@@ -123,7 +126,7 @@ void create_mapped_data(const std::string neutronfile,
     {
       throw std::runtime_error("Failed opening mapped binary file");
     }
-  
+
   uint32_t data_buffer[num_tof_bins];
   
   // Iterate over the pixel map
@@ -211,8 +214,8 @@ int main(int argc, char **argv)
 
       // Create the pixel map
       map<int32_t, int32_t> pixel_map;
-      make_pixel_map(mapArg.getValue(), pixelArg.getValue(), pixel_map,
-                     debugSwitch.getValue());
+      pixel_map = make_pixel_map(mapArg.getValue(), pixelArg.getValue(), 
+                                 debugSwitch.getValue());
 
       // Create the mapped binary data
       create_mapped_data(neutronArg.getValue(),
