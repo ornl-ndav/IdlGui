@@ -71,6 +71,15 @@ map<int32_t, int32_t> make_pixel_map(const string mapfile,
       throw runtime_error("Failed opening mapping file");
     }
 
+  // check the file size
+  m_data.seekg(0,ios::end);
+  size_t file_size=m_data.tellg();
+  if(file_size<sizeof(int32_t)*num_pixels)
+    {
+      throw runtime_error("Requested more pixels than mapping file contains");
+    }
+  m_data.seekg(0,ios::beg);
+
   map<int32_t, int32_t> pixel_map;
 
   int32_t pm_buffer[num_pixels];
@@ -127,6 +136,11 @@ void create_mapped_data(const string neutronfile,
       throw runtime_error("Failed opening mapped binary file");
     }
 
+  // determine the file size
+  neutron_data.seekg(0,ios::end);
+  size_t file_size=neutron_data.tellg();
+  neutron_data.seekg(0,ios::beg);
+
   uint32_t data_buffer[num_tof_bins];
   
   // Iterate over the pixel map
@@ -144,6 +158,13 @@ void create_mapped_data(const string neutronfile,
       // Move to proper read location
       neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_UINT32_T, 
                          ios::beg);
+      // check that the read won't go past the end of file
+      size_t pos=neutron_data.tellg();
+      if(pos+num_tof_bins*SIZEOF_UINT32_T>file_size)
+        {
+          throw runtime_error("Tried to read past end of data file");
+        }
+
       // Read data from file
       neutron_data.read(reinterpret_cast<char *>(data_buffer), 
                         num_tof_bins*SIZEOF_UINT32_T);
