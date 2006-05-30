@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
   int GlobalArraySize;
   int Nx = 256;
   int Ny = 304;
-  int Nt = 167;
+  int Nt = 16667;
   int new_Nt;
   
   float rebin_value;
@@ -104,7 +104,7 @@ int main(int argc, char *argv[])
       time_stamp = int(floor((BinaryArray[2*i]/10)/rebin_value)); 
       data_histo[time_stamp+pixelID*new_Nt]+=1;      
     }
-  
+
   // write new histogram file
   std::ofstream file(output_file_name.c_str(), std::ios::binary);
   file.write((char*)(data_histo),sizeof(data_histo)*Histo_size);  
