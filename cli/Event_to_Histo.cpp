@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
   int time_stamp;
   int Histo_size;
   int GlobalArraySize;
-  int Nx = 256;
-  int Ny = 304;
-  int Nt = 16667;
+  int Nx = 256;  //Nx of the histo array
+  int Ny = 304; //Ny of the histo array
+  int Nt = 167;  //Number of time bin of the histo array
   int new_Nt;
   
   float rebin_value;
@@ -73,11 +73,11 @@ int main(int argc, char *argv[])
   
   // swap endian (PC <-> Mac)
   SwapEndian (file_size, BinaryArray);
-  
+
   switch (type_of_rebining)
     {
     case 'l':
-      new_Nt = int(floor((Nt)/rebin_value));   //rebin_value=2 => Nt=83
+      new_Nt = int(floor((Nt*100)/rebin_value)); //rebin_value=200=>new_Nt=83
       break;
     case 'd':
       break;
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
                       type_of_rebining,
                       rebin_value,
                       new_Nt);
-  
+
   for (int i=0; i<GlobalArraySize/2; i++)
     {
       pixelID = BinaryArray[2*i+1];
@@ -186,15 +186,18 @@ void Generate_data_histo(binary_type * data_histo,
 {
   int pixelID;
   int time_stamp;
-  
   switch(type_of_rebining)
     {
     case 'l':   
       for (int i=0; i<GlobalArraySize/2; i++)
         {
+          //          cout << "i= "<<i<<endl;
           pixelID = BinaryArray[2*i+1];
+          //cout << "\tBinaryArray["<<2*i+1<<"]= "<<BinaryArray[2*i+1]<<endl;
           time_stamp = int(floor((BinaryArray[2*i]/10)/rebin_value));
+          //cout << "\ttime_stamp= " << time_stamp<<endl;
           data_histo[time_stamp+pixelID*new_Nt]+=1;      
+          //cout << "\ttime_stamp+pixelID*new_Nt= " <<time_stamp+pixelID*new_Nt<<endl;
         }
       break;
     case 'd':
