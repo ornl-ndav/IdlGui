@@ -26,7 +26,9 @@ void generate_histo(const int file_size,
                     const int new_Nt,
                     const int32_t pixelnumber,
                     const int32_t time_rebin,
+                    const int32_t time_bin,
                     const int32_t * binary_array,
+                    const int32_t bin_width,
                     int32_t * histo_array,
                     const bool debug)
 {
@@ -37,6 +39,14 @@ void generate_histo(const int file_size,
     {
       pixelid = binary_array[2*i+1];
       time_stamp = int(floor((binary_array[2*i]/10)/time_rebin));
+      
+      if (pixelid<0 || 
+          pixelid>pixelnumber ||
+          time_stamp<0 ||
+          time_stamp>(time_bin*bin_width))
+        {
+          continue;
+        }
       histo_array[time_stamp+pixelid*new_Nt]+=1;
     }
   
@@ -77,6 +87,10 @@ int main(int argc, char *argv[])
       ValueArg<int32_t> timerebin("l","linear",
                                    "size of rebin linear time bin",
                                    true, -1, "new linear time bin", cmd);
+
+      ValueArg<int32_t> binwidth("w", "bin_width",
+                                 "input binary file time bin width",
+                                 false, 100, "width of time bin", cmd);
 
       UnlabeledMultiArg<string> event_file_vector("event_file",
                                             "Name of the event file",
@@ -171,8 +185,10 @@ int main(int argc, char *argv[])
       generate_histo(file_size,
                      new_Nt,
                      pixelnumber.getValue(),
+                     time_bin,
                      time_rebin,
                      binary_array,
+                     binwidth.getValue(),
                      histo_array,
                      debug);
 
