@@ -10,3 +10,6 @@ all: $(SRCS)
 $(SRCS): 
 	$(CXX) $(CFLAGS) $@ -I$(EINC) $@.cpp
 
+clean: 
+	rm -f $(SRCS)
+
