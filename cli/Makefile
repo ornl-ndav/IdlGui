@@ -1,9 +1,12 @@
 #$Id$
-SRC1=Event_to_Histo
-SRC2=Map_Data
-EINC=../inc
-CC=g++
-MAKEFLAGS=c
-$(MAKEFLAGS):
-	$(CXX) -o $(SRC1) -I$(EINC) $(SRC1).cpp
-	$(CXX) -o $(SRC2) -I$(EINC) $(SRC2).cpp
+
+CFLAGS = -o
+CXX = g++
+EINC = ../inc
+SRCS = Event_to_Histo Map_Data
+
+all: $(SRCS)
+
+$(SRCS): 
+	$(CXX) $(CFLAGS) $@ -I$(EINC) $@.cpp
+
