@@ -87,5 +87,14 @@ void produce_output_file_name(std::string & filename,
                               std::string & output_filename,
                               bool debug);
 
+/*******************************************
+/ Read event file and create binary_array
+/*******************************************/
+int32_t read_event_file_and_populate_binary_array(const std::string & input_file,
+                                                  const std::string & input_filename,
+                                                  const bool swap_input,
+                                                  const bool debug,
+                                                  const int32_t n_disp,
+                                                  int32_t * &binary_array);
 
 #endif // _UTILS_HPP
