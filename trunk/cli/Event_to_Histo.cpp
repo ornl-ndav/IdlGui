@@ -10,7 +10,7 @@ using namespace TCLAP;
 /*******************************************
 /Initialize the array
 /*******************************************/
-void initialize_array(int32_t * histo_array, 
+void initialize_array(int * histo_array, 
                       const int size)
 {
   for (int i=0 ; i<size ; ++i)
@@ -24,12 +24,12 @@ void initialize_array(int32_t * histo_array,
 // create histo binary data array
 void generate_histo(const int file_size,
                     const int new_Nt,
-                    const int32_t pixelnumber,
-                    const int32_t time_rebin,
-                    const int32_t time_bin,
-                    const int32_t * binary_array,
-                    const int32_t bin_width,
-                    int32_t * histo_array,
+                    const int pixelnumber,
+                    const int time_rebin,
+                    const int time_bin,
+                    const int * binary_array,
+                    const int bin_width,
+                    int * histo_array,
                     const bool debug)
 {
   int pixelid;
@@ -76,19 +76,19 @@ int main(int argc, char *argv[])
                              "Flag for swapping data of output file",
                              false, cmd);
 
-      ValueArg<int32_t> pixelnumber ("p", "number_of_pixels",
+      ValueArg<int> pixelnumber ("p", "number_of_pixels",
                                      "Number of pixels for this run",
                                      true, -1, "pixel number", cmd);
 
-      ValueArg<int32_t> timebin("t", "time_bin", 
+      ValueArg<int> timebin("t", "time_bin", 
                                 "Number of time bin in event file",
                                 true, -1, "time bin number", cmd);
 
-      ValueArg<int32_t> timerebin("l","linear",
+      ValueArg<int> timerebin("l","linear",
                                    "size of rebin linear time bin",
                                    true, -1, "new linear time bin", cmd);
 
-      ValueArg<int32_t> binwidth("w", "bin_width",
+      ValueArg<int> binwidth("w", "bin_width",
                                  "input binary file time bin width",
                                  false, 100, "width of time bin", cmd);
 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[])
       SwitchArg showDataArg("o", "showdata", "Print the values in the file",
                             false, cmd);
       
-      ValueArg<int32_t> n_values("n", "input_file_values",
+      ValueArg<int> n_values("n", "input_file_values",
                                "number of values of input files to print out",
                                  false, 5, "values to output", cmd);
 
@@ -132,10 +132,10 @@ int main(int argc, char *argv[])
           throw runtime_error("Failed to determine size of event binary file");
         }
       
-      int file_size = results.st_size/sizeof(int32_t);
+      int file_size = results.st_size/sizeof(int);
 
       // allocate memory for the binary array
-      int32_t * binary_array = new int32_t [file_size];
+      int * binary_array = new int [file_size];
       
       // transfer the data from the event binary file into binary_array
       fread(&binary_array[0], 
@@ -169,14 +169,14 @@ int main(int argc, char *argv[])
         }
     
       // allocate memory for the histo array
-      int32_t time_bin = timebin.getValue();
-      int32_t time_rebin = timerebin.getValue();
-      int32_t pixel_number = pixelnumber.getValue();
+      int time_bin = timebin.getValue();
+      int time_rebin = timerebin.getValue();
+      int pixel_number = pixelnumber.getValue();
 
       //initialize array
       int new_Nt = int(floor((time_bin*100)/time_rebin));
-      int32_t histo_array_size = new_Nt * pixel_number;
-      int32_t * histo_array = new int32_t [histo_array_size];
+      int histo_array_size = new_Nt * pixel_number;
+      int * histo_array = new int [histo_array_size];
 
       initialize_array(histo_array,
                        histo_array_size);
@@ -206,7 +206,12 @@ int main(int argc, char *argv[])
       std::ofstream histo_file(output_filename.c_str(),
                                std::ios::binary);
       histo_file.write((char*)(histo_array),
-                       sizeof(histo_array)*histo_array_size);
+                       sizeof(int)*histo_array_size);
+
+      cout << sizeof(int)<<endl;
+      cout << sizeof(histo_array) << endl;
+      cout << histo_array_size<<endl;
+
       histo_file.close();
 
     }
