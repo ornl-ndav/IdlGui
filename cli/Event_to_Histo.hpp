@@ -70,11 +70,11 @@ void parse_input_file_name(string & path_filename,
 
 // Initialize Array
 void initialize_array(int32_t * data_histo, 
-                      const int size);
+                      const int32_t size);
 
 // create histo binary data array
-void generate_histo(const int file_size,
-                    const int new_Nt,
+void generate_histo(const int32_t file_size,
+                    const int32_t new_Nt,
                     const int32_t pixel_number,
                     const int32_t time_rebin,
                     const int32_t time_bin,

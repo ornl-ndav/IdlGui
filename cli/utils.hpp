@@ -38,14 +38,14 @@ static const std::string HISTO_FILE_TAG("histo.dat");
 static const std::string VERSION_TAG("1.0.0itc1");
 
 // This is a constant to hold the size of an uint32_t
-static const int SIZEOF_INT32_T = sizeof(int32_t);
+static const int32_t SIZEOF_INT32_T = sizeof(int32_t);
 
 
 
 /*********************************************
 / loop through BinaryArray to swap all endians
 /********************************************/
-void swap_endian (int file_size, int32_t * BinaryArray);
+void swap_endian (int32_t file_size, int32_t * BinaryArray);
 
 /*******************************************
 / to swap from little endian to big endian
@@ -55,8 +55,8 @@ inline void swap_digit (int32_t & x);
 /*************************************************
 / to plot the n first data of the specified array
 /*************************************************/
-void print_n_first_data(const int32_t * binary_array,
-                        const int n_disp,
+void print32_t_n_first_data(const int32_t * binary_array,
+                        const int32_t n_disp,
                         const std::string message);
 
 /*******************************************
