@@ -96,11 +96,11 @@ int32_t main(int32_t argc, char *argv[])
                                             "Name of the event file",
                                             "filename", cmd);
 
-      SwitchArg showDataArg("o", "showdata", "Print32_t the values in the file",
+      SwitchArg showDataArg("o", "showdata", "Print the values in the file",
                             false, cmd);
       
       ValueArg<int32_t> n_values("n", "input_file_values",
-                               "number of values of input files to print32_t out",
+                               "number of values of input files to print out",
                                  false, 5, "values to output", cmd);
 
       // Parse the command-line
@@ -121,53 +121,15 @@ int32_t main(int32_t argc, char *argv[])
                                    output_filename,
                                    debug);
 
-      // read event binary array
-      FILE *e_file;
-      e_file = fopen(input_file.c_str(), "rb");
+      int32_t file_size;
+      int32_t * binary_array;
+      file_size = read_event_file_and_populate_binary_array(input_file,
+                                                            input_filename,
+                                                            swapiSwitch.getValue(),
+                                                            debug,
+                                                            n_values.getValue(),
+                                                            binary_array);
 
-      struct stat results;
-
-      if (!stat(input_file.c_str(), &results)==0)
-        {
-          throw runtime_error("Failed to determine size of event binary file");
-        }
-      
-      int32_t file_size = results.st_size/sizeof(int32_t);
-
-      // allocate memory for the binary array
-      int32_t * binary_array = new int32_t [file_size];
-      
-      // transfer the data from the event binary file int32_to binary_array
-      fread(&binary_array[0], 
-            sizeof(binary_array[0]),
-            file_size,
-            e_file);
-
-      // displays the n_disp first values of the event binary file
-      int32_t n_disp = n_values.getValue();
-      string message;
-
-      if(swapiSwitch.getValue())
-        {
-          if(debug)
-            {
-              message="\nBefore swapping the data\n";
-              print32_t_n_first_data(binary_array, n_disp, message);
-            }
-
-          swap_endian(file_size, binary_array);
-
-          if(debug)
-            {
-              message="\nAfter swapping the data\n";
-              print32_t_n_first_data(binary_array, n_disp, message);
-            }
-        }
-      else
-        {
-          message=n_disp+" first values of " + input_filename + "\n";
-        }
-    
       // allocate memory for the histo array
       int32_t time_bin = timebin.getValue();
       int32_t time_rebin = timerebin.getValue();
@@ -206,14 +168,18 @@ int32_t main(int32_t argc, char *argv[])
       std::ofstream histo_file(output_filename.c_str(),
                                std::ios::binary);
       histo_file.write((char*)(histo_array),
-                       sizeof(int32_t)*histo_array_size);
+                       SIZEOF_INT32_T*histo_array_size);
       histo_file.close();
+
+      delete histo_array;
+      delete binary_array;
+
     }
   catch (ArgException &e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
-
+  
   return 0;
 }
 
