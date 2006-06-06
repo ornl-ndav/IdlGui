@@ -47,32 +47,30 @@
 using std::string;
 using std::vector;
 
-// Isolate file_name from path+file_name
-void path_input_output_file_names(string & path_file_name,
-                                  string & file_name,
-                                  string & path,
-                                  string & alternate_output_path,
-                                  string & output_file_name,
-                                  bool debug);
-
-// Generate the name of the output file
-void produce_output_file_name(string & filename,
-                              string & path,
-                              string & alternate_path,
-                              string & output_filename,
-                              bool debug);
-
-// Isolate path and file_name from command line argument
-void parse_input_file_name(string & path_filename,
-                           string & filename,
-                           string & path,
-                           bool debug);
-
-// Initialize Array
+/**
+ * \brief This function initializes an array
+ * 
+ * \param histo_array the array to be initialized
+ * \param size the size of the array
+ *
+ */
 void initialize_array(int32_t * data_histo, 
                       const int32_t size);
 
-// create histo binary data array
+/**
+ * \brief This function generates the final histogram array
+ *
+ * \param file_size the size of the file to be read
+ * \param new_Nt the new number of time bins
+ * \param pixelnumber the number of pixelids
+ * \param time_rebin the new time bin width
+ * \param time_bin the number of time bins in the event binary file
+ * \param binary_array the array of values coming from the event binary file
+ * \param bin_width the width of the time bins in the event binary file
+ * \param histo_array the histogram array
+ * \param debug switch that trigger or not the debugging tools
+ *
+ */
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixel_number,
