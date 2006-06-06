@@ -72,7 +72,7 @@ void path_input_output_file_names(string & path_filename,
                            alternate_path,
                            output_filename,
                            debug);
-
+  
   return;
 }
 
@@ -142,58 +142,59 @@ void produce_output_file_name(string & filename,
 / Read event file and create binary_array
 /*******************************************/
 int32_t read_event_file_and_populate_binary_array(const string & input_file,
-                                                  const string & input_filename,
+                                                  const string & 
+                                                  input_filename,
                                                   const bool swap_input,
                                                   const bool debug,
                                                   const int32_t n_disp,
                                                   int32_t * &binary_array)
 {
+  // read event binary array
+  FILE *e_file;
+  e_file = fopen(input_file.c_str(), "rb");
+  
+  struct stat results;
+  
+  if (!stat(input_file.c_str(), &results)==0)
+    {
+      throw runtime_error("Failed to determine size of event binary file");
+    }
+  
+  int32_t file_size = results.st_size/SIZEOF_INT32_T;
+  
+  // allocate memory for the binary array
+  binary_array = new int32_t [file_size];
+  
+  // transfer the data from the event binary file int32_to binary_array
+  fread(&binary_array[0], 
+        sizeof(binary_array[0]),
+        file_size,
+        e_file);
+  
+  // displays the n_disp first values of the event binary file
+  string message;
 
-      // read event binary array
-      FILE *e_file;
-      e_file = fopen(input_file.c_str(), "rb");
-
-      struct stat results;
-
-      if (!stat(input_file.c_str(), &results)==0)
+  if(swap_input)
+    {
+      if(debug)
         {
-          throw runtime_error("Failed to determine size of event binary file");
+          message="\nBefore swapping the data\n";
+          print32_t_n_first_data(binary_array, n_disp, message);
         }
+
+      swap_endian(file_size, binary_array);
       
-      int32_t file_size = results.st_size/SIZEOF_INT32_T;
-
-      // allocate memory for the binary array
-      binary_array = new int32_t [file_size];
-      
-      // transfer the data from the event binary file int32_to binary_array
-      fread(&binary_array[0], 
-            sizeof(binary_array[0]),
-            file_size,
-            e_file);
-
-      // displays the n_disp first values of the event binary file
-      string message;
-      if(swap_input)
+      if(debug)
         {
-          if(debug)
-            {
-              message="\nBefore swapping the data\n";
-              print32_t_n_first_data(binary_array, n_disp, message);
-            }
-
-          swap_endian(file_size, binary_array);
-
-          if(debug)
-            {
-              message="\nAfter swapping the data\n";
-              print32_t_n_first_data(binary_array, n_disp, message);
-            }
+          message="\nAfter swapping the data\n";
+          print32_t_n_first_data(binary_array, n_disp, message);
         }
-      else
-        {
-          message=n_disp+" first values of " + input_filename + "\n";
-        }
-
+    }
+  else
+    {
+      message=n_disp+" first values of " + input_filename + "\n";
+    }
+  
   return file_size;
 }
 
