@@ -38,19 +38,19 @@ void generate_histo(const int32_t file_size,
   int32_t time_stamp;
 
   for (size_t i=0 ; i<file_size/2; i++)
-    {
+  {
       pixelid = binary_array[2*i+1];
       time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin));
-      
+
       if (pixelid<0 || 
           pixelid>pixelnumber ||
           time_stamp<0 ||
-          time_stamp>(time_bin*bin_width))
+          time_stamp>(time_rebin*new_Nt))
         {
           continue;
         }
       histo_array[time_stamp+pixelid*new_Nt]+=1;
-    }
+  }
   
   return;
 }
@@ -137,7 +137,7 @@ int32_t main(int32_t argc, char *argv[])
                                                             binary_array);
 
       // allocate memory for the histo array
-      int32_t time_bin = timebin.getValue();
+      int32_t time_bin = timebin.getValue(); //nbre of time bins in event file
       int32_t time_rebin = timerebin.getValue();
       int32_t pixel_number = pixelnumber.getValue();
 
@@ -153,8 +153,8 @@ int32_t main(int32_t argc, char *argv[])
       generate_histo(file_size,
                      new_Nt,
                      pixelnumber.getValue(),
-                     time_bin,
                      time_rebin,
+                     time_bin,
                      binary_array,
                      binwidth.getValue(),
                      histo_array,
