@@ -105,7 +105,12 @@ void parse_input_file_name(string & path_filename,
 {
   filename = path_filename.substr(path_filename.rfind('/')+1);
   path = path_filename.substr(0,path_filename.rfind('/')+1);
- 
+  
+  if (path.empty())
+    {
+      path = ".";
+    }
+
   if(debug)
     {
       cout << "******************************"<<endl;
