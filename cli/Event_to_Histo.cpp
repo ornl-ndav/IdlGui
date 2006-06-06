@@ -7,9 +7,9 @@
 using namespace std;
 using namespace TCLAP;
 
-/*******************************************
-/Initialize the array
-/*******************************************/
+/**
+ * \brief This function initializes an array
+ */
 void initialize_array(int32_t * histo_array, 
                       const int size)
 {
@@ -21,7 +21,9 @@ void initialize_array(int32_t * histo_array,
   return;   
 }
 
-// create histo binary data array
+/**
+ * \brief This function generates the final histogram array
+ */
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixelnumber,
@@ -53,6 +55,10 @@ void generate_histo(const int32_t file_size,
   return;
 }
 
+/**
+ * \brief This program takes an event binary file and according to the 
+ * arguments provided, creates a histo binary file.
+ */
 int32_t main(int32_t argc, char *argv[])
 {
   try
