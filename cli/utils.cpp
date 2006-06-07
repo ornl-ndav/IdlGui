@@ -204,12 +204,20 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
 
   if (!file.is_open())
     {
-      throw runtime_error("Failed opening " + input_file + "\n");
+      throw runtime_error("Failed opening event binary file: \"" + 
+                          input_file + "\"\n");
     }
   
   file_size = file.tellg();
-  binary_array = new int32_t [file_size];
-  
+  try
+    {
+      binary_array = new int32_t [file_size];
+    }
+  catch (exception& e)
+    {
+      cerr << "Standard exception: " << e.what() << endl;
+      //      cerr << "Error: can't allocate memory to binary_array." << endl;
+    }
   file.seekg(0,ios::beg);
   
   // transfer the data from the event binary file int32_to binary_array
