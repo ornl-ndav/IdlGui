@@ -156,77 +156,83 @@ int32_t main(int32_t argc, char *argv[])
       
       // Parse the command-line
       cmd.parse(argc, argv);
-      
 
       // isolate path from file name and create output file name
-      string input_filename;
-      string output_filename("");
-      string path; 
       vector<string> input_file_vector = event_file_vector.getValue();
-      string input_file = input_file_vector[0];
-      bool debug = debugSwitch.getValue();
-      
-      path_input_output_file_names(input_file,
-                                   input_filename,
-                                   path,
-                                   altoutpath.getValue(),
-                                   output_filename,
-                                   debug);
 
-
-      // read input file and populate the binary array 
-      int32_t file_size;
-      int32_t * binary_array;
-
-      file_size = 
-        read_event_file_and_populate_binary_array(input_file,
-                                                  input_filename,
-                                                  swapiSwitch.getValue(),
-                                                  debug,
-                                                  n_values.getValue(),
-                                                  binary_array);
-
-      int32_t time_bin_number = timebinnumber.getValue(); 
-      int32_t time_rebin_width = timerebinwidth.getValue();
-      int32_t pixel_number = pixelnumber.getValue();
-      int32_t new_Nt = int32_t(floor((time_bin_number*timebinwidth.getValue())
-                                     /time_rebin_width));
-      int32_t histo_array_size = new_Nt * pixel_number;
-      int32_t * histo_array = new int32_t [histo_array_size];
-      
-
-      //generate histo binary data array
-      generate_histo(file_size,
-                     new_Nt,
-                     pixelnumber.getValue(),
-                     time_rebin_width,
-                     binary_array,
-                     histo_array,
-                     histo_array_size,
-                     debug);
-
-      // swap endian of output array (histo_array)
-      if(swapoSwitch.getValue())
+      // loop over all input files names
+      for (size_t i=0 ; i<input_file_vector.size() ; ++i)
         {
-          swap_endian(histo_array_size, histo_array);
+          string input_filename;
+          string output_filename("");
+          string path; 
+          
+          string input_file = input_file_vector[i];
+          bool debug = debugSwitch.getValue();
+          
+          path_input_output_file_names(input_file,
+                                       input_filename,
+                                       path,
+                                       altoutpath.getValue(),
+                                       output_filename,
+                                       debug);
+          
+          
+          // read input file and populate the binary array 
+          int32_t file_size;
+          int32_t * binary_array;
+          
+          file_size = 
+            read_event_file_and_populate_binary_array(input_file,
+                                                      input_filename,
+                                                      swapiSwitch.getValue(),
+                                                      debug,
+                                                      n_values.getValue(),
+                                                      binary_array);
+          
+          int32_t time_bin_number = timebinnumber.getValue(); 
+          int32_t time_rebin_width = timerebinwidth.getValue();
+          int32_t pixel_number = pixelnumber.getValue();
+          int32_t new_Nt = int32_t(floor((time_bin_number*
+                                          timebinwidth.getValue())
+                                         /time_rebin_width));
+          int32_t histo_array_size = new_Nt * pixel_number;
+          int32_t * histo_array = new int32_t [histo_array_size];
+          
+          
+          //generate histo binary data array
+          generate_histo(file_size,
+                         new_Nt,
+                         pixelnumber.getValue(),
+                         time_rebin_width,
+                         binary_array,
+                         histo_array,
+                         histo_array_size,
+                         debug);
+          
+          // swap endian of output array (histo_array)
+          if(swapoSwitch.getValue())
+            {
+              swap_endian(histo_array_size, histo_array);
+            }
+          
+          // print out value of histo_array into a file (ASCII format)
+          if(showDataArg.getValue())
+            {
+              //not implemented yet
+            }
+          
+          // write new histogram file
+          std::ofstream histo_file(output_filename.c_str(),
+                                   std::ios::binary);
+          histo_file.write((char*)(histo_array),
+                           SIZEOF_INT32_T*histo_array_size);
+          histo_file.close();
+          
+          // free memory allocated to arrays
+          delete histo_array;
+          delete binary_array;
         }
-
-      // print out value of histo_array into a file (ASCII format)
-      if(showDataArg.getValue())
-        {
-          //not implemented yet
-        }
-
-      // write new histogram file
-      std::ofstream histo_file(output_filename.c_str(),
-                               std::ios::binary);
-      histo_file.write((char*)(histo_array),
-                       SIZEOF_INT32_T*histo_array_size);
-      histo_file.close();
-
-      // free memory allocated to arrays
-      delete histo_array;
-      delete binary_array;
     }
   catch (ArgException &e)
     {
