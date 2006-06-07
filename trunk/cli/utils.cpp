@@ -194,17 +194,18 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
                                                   int32_t * &binary_array)
 {
   // read event binary array
-  FILE *e_file;
-  e_file = fopen(input_file.c_str(), "rb");
+  FILE *e_file;    //REMOVE if it works
+  e_file = fopen(input_file.c_str(), "rb");  //REMOVE if it works
   
-  struct stat results;
+  struct stat results; //REMOVE if it works
+
+    if (!stat(input_file.c_str(), &results)==0)
+  {
+  throw runtime_error("Failed to determine size of event binary file");
+  }
   
-  if (!stat(input_file.c_str(), &results)==0)
-    {
-      throw runtime_error("Failed to determine size of event binary file");
-    }
-  
-  int32_t file_size = results.st_size/SIZEOF_INT32_T;
+  // check the file size
+  int32_t file_size = results.st_size/SIZEOF_INT32_T;   //REMOVE if it works
   
   // allocate memory for the binary array
   binary_array = new int32_t [file_size];
@@ -215,7 +216,8 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
         file_size,
         e_file);
   
-  // displays the n_disp first values of the event binary file
+  
+// displays the n_disp first values of the event binary file
   string message;
 
   if(swap_input)

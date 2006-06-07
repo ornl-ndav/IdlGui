@@ -9,6 +9,10 @@ using namespace TCLAP;
 
 /**
  * \brief This function initializes an array
+ * 
+ * \param histo_array the array to be initialized
+ * \param size the size of the array
+ *
  */
 void initialize_array(int32_t * histo_array, 
                       const int size)
@@ -23,32 +27,48 @@ void initialize_array(int32_t * histo_array,
 
 /**
  * \brief This function generates the final histogram array
+ *
+ * \param file_size (INPUT) is the size of the file to be read
+ * \param new_Nt (INPUT) is the new number of time bins
+ * \param pixel_number (INPUT) is the number of pixelids
+ * \param time_rebin_width (INPUT) is the new time bin width
+ * \param binary_array (INPUT) is the array of values coming from the event
+ *  binary file
+ * \param histo_array (OUTPUT) is the histogram array
+ * \param histo_array_size (INPUT) is the size of the histogram array
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixelnumber,
-                    const int32_t time_rebin,
-                    const int32_t time_bin,
+                    const int32_t time_rebin_width,
                     const int32_t * binary_array,
-                    const int32_t bin_width,
                     int32_t * histo_array,
+                    const int32_t histo_array_size,
                     const bool debug)
 {
   int32_t pixelid;
   int32_t time_stamp;
 
+  //initialize histo array
+  initialize_array(histo_array,
+                   histo_array_size);
+
+  //loop over entire binary file data
   for (size_t i=0 ; i<file_size/2; i++)
   {
       pixelid = binary_array[2*i+1];
-      time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin));
+      time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
 
+      //remove data that are oustide the scope of range
       if (pixelid<0 || 
           pixelid>pixelnumber ||
           time_stamp<0 ||
-          time_stamp>(time_rebin*new_Nt))
+          time_stamp>(time_rebin_width*(new_Nt-1)))
         {
           continue;
         }
+      //record data that is inside the scope of range
       histo_array[time_stamp+pixelid*new_Nt]+=1;
   }
   
@@ -86,29 +106,30 @@ int32_t main(int32_t argc, char *argv[])
                                      "Number of pixels for this run",
                                      true, -1, "pixel number", cmd);
 
-      ValueArg<int32_t> timebin("t", "time_bin", 
-                                "Number of time bin in event file",
-                                true, -1, "time bin number", cmd);
+      ValueArg<int32_t> timebinnumber("t", "time_bin_number", 
+                                      "Number of time bin in event file",
+                                      true, -1, "time bin number", cmd);
 
-      ValueArg<int32_t> timerebin("l","linear",
-                                   "size of rebin linear time bin",
-                                   true, -1, "new linear time bin", cmd);
-
-      ValueArg<int32_t> binwidth("w", "bin_width",
-                                 "input binary file time bin width",
-                                 false, 100, "width of time bin", cmd);
-
+      ValueArg<int32_t> timerebinwidth("l","linear",
+                                       "width of rebin linear time bin",
+                                       true, -1, "new linear time bin", cmd);
+      
+      ValueArg<int32_t> timebinwidth("w", "time_bin_width",
+                                     "input binary file time bin width",
+                                     false, 100, 
+                                     "width of event file time bin", cmd);
+      
       UnlabeledMultiArg<string> event_file_vector("event_file",
-                                            "Name of the event file",
-                                            "filename", cmd);
-
+                                                  "Name of the event file",
+                                                  "filename", cmd);
+      
       SwitchArg showDataArg("o", "showdata", "Print the values in the file",
                             false, cmd);
       
       ValueArg<int32_t> n_values("n", "input_file_values",
                                "number of values of input files to print out",
                                  false, 5, "values to output", cmd);
-
+      
       // Parse the command-line
       cmd.parse(argc, argv);
       
@@ -129,35 +150,31 @@ int32_t main(int32_t argc, char *argv[])
 
       int32_t file_size;
       int32_t * binary_array;
-      file_size = read_event_file_and_populate_binary_array(input_file,
-                                                            input_filename,
-                                                            swapiSwitch.getValue(),
-                                                            debug,
-                                                            n_values.getValue(),
-                                                            binary_array);
 
-      // allocate memory for the histo array
-      int32_t time_bin = timebin.getValue(); //nbre of time bins in event file
-      int32_t time_rebin = timerebin.getValue();
+      file_size = 
+        read_event_file_and_populate_binary_array(input_file,
+                                                  input_filename,
+                                                  swapiSwitch.getValue(),
+                                                  debug,
+                                                  n_values.getValue(),
+                                                  binary_array);
+
+      int32_t time_bin_number = timebinnumber.getValue(); 
+      int32_t time_rebin_width = timerebinwidth.getValue();
       int32_t pixel_number = pixelnumber.getValue();
-
-      //initialize array
-      int32_t new_Nt = int32_t(floor((time_bin*100)/time_rebin));
+      int32_t new_Nt = int32_t(floor((time_bin_number*timebinwidth.getValue())
+                                     /time_rebin_width));
       int32_t histo_array_size = new_Nt * pixel_number;
       int32_t * histo_array = new int32_t [histo_array_size];
-
-      initialize_array(histo_array,
-                       histo_array_size);
       
-      // and create histo binary data array
+      //generate histo binary data array
       generate_histo(file_size,
                      new_Nt,
                      pixelnumber.getValue(),
-                     time_rebin,
-                     time_bin,
+                     time_rebin_width,
                      binary_array,
-                     binwidth.getValue(),
                      histo_array,
+                     histo_array_size,
                      debug);
 
       if(swapoSwitch.getValue())
