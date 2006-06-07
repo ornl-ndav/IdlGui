@@ -60,25 +60,23 @@ void initialize_array(int32_t * data_histo,
 /**
  * \brief This function generates the final histogram array
  *
- * \param file_size the size of the file to be read
- * \param new_Nt the new number of time bins
- * \param pixelnumber the number of pixelids
- * \param time_rebin the new time bin width
- * \param time_bin the number of time bins in the event binary file
- * \param binary_array the array of values coming from the event binary file
- * \param bin_width the width of the time bins in the event binary file
- * \param histo_array the histogram array
- * \param debug switch that trigger or not the debugging tools
- *
+ * \param file_size (INPUT) is the size of the file to be read
+ * \param new_Nt (INPUT) is the new number of time bins
+ * \param pixel_number (INPUT) is the number of pixelids
+ * \param time_rebin_width (INPUT) is the new time bin width
+ * \param binary_array (INPUT) is the array of values coming from the event
+ *  binary file
+ * \param histo_array (OUTPUT) is the histogram array
+ * \param histo_array_size (INPUT) is the size of the histogram array
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixel_number,
-                    const int32_t time_rebin,
-                    const int32_t time_bin,
+                    const int32_t time_rebin_width,
                     const int32_t * binary_array,
-                    const int32_t bin_width,
                     int32_t * histo_array,
+                    const int32_t histo_array_size,
                     const bool debug);
 
 #endif // _EVENT_TO_HISTO_HPP
