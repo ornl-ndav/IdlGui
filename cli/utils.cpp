@@ -199,32 +199,26 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
                                                   int32_t * &binary_array)
 {
   // read event binary array
-  FILE *e_file;    //REMOVE if it works
-  e_file = fopen(input_file.c_str(), "rb");  //REMOVE if it works
-  
-  struct stat results; //REMOVE if it works
+  ifstream file(input_file.c_str(), ios::in|ios::binary|ios::ate);
+  ifstream::pos_type file_size;
 
-    if (!stat(input_file.c_str(), &results)==0)
-  {
-  throw runtime_error("Failed to determine size of event binary file");
-  }
+  if (!file.is_open())
+    {
+      throw runtime_error("Failed opening " + input_file + "\n");
+    }
   
-  // check the file size
-  int32_t file_size = results.st_size/SIZEOF_INT32_T;   //REMOVE if it works
-  
-  // allocate memory for the binary array
+  file_size = file.tellg();
   binary_array = new int32_t [file_size];
   
+  file.seekg(0,ios::beg);
+  
   // transfer the data from the event binary file int32_to binary_array
-  fread(&binary_array[0], 
-        sizeof(binary_array[0]),
-        file_size,
-        e_file);
+  file.read(reinterpret_cast<char *>(binary_array),file_size);
+  file.close();
   
-  
-// displays the n_disp first values of the event binary file
+  // displays the n_disp first values of the event binary file
   string message;
-
+  
   if(swap_input)
     {
       if(debug)
@@ -232,7 +226,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
           message="\nBefore swapping the data\n";
           print32_t_n_first_data(binary_array, n_disp, message);
         }
-
+      
       swap_endian(file_size, binary_array);
       
       if(debug)
