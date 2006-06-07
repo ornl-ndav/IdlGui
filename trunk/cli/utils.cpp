@@ -7,23 +7,28 @@
 using namespace std;
 using namespace TCLAP;
 
-/*********************************************
-/Loop through BinaryArray to swap all endians
-/********************************************/
+/**
+ * \brief This function swap endians of an array
+ * 
+ * \param file_size (INPUT) is the size of the array
+ * \param array (INPUT/OUTPUT) is the array to be swapped
+*/
 void swap_endian (int32_t file_size, 
-                  int32_t * BinaryArray)
+                  int32_t * array)
 {
   for (int32_t j=0; j<file_size; ++j)
     {
-      swap_digit(BinaryArray[j]);
+      swap_digit(array[j]);
     }
   
   return;
 }
 
-/*******************************************
-/To swap from little endian to big endian
-/*******************************************/
+/**
+ * \brief This function swap endians of digits
+ *
+ * \param x (INPUT/OUTPUT) is the digit to be swapped
+ */
 inline void swap_digit (int32_t & x)
 {
   x = ((x>>24) & 0x000000FF) |
@@ -35,20 +40,20 @@ inline void swap_digit (int32_t & x)
 /**
  * \brief This function displays the n first element of an array
  *
- * \param binary_array (INPUT) is the array for which we need to display
+ * \param array (INPUT) is the array for which we need to display
  * the first n elements
  * \param n_disp (INPUT) is the number of element to display
  * \param string_message (INPUT) is the message to display before the n_disp
  * elements
  */
-void print32_t_n_first_data(const int32_t * binary_array,
+void print32_t_n_first_data(const int32_t * array,
                         const int32_t n_disp,
                         const string message)
 {
   cout << message << endl;
   for (size_t i=0 ; i<n_disp ; ++i)
     {
-      cout << "\tdata[" << i << "]= " << binary_array[i]<<endl;
+      cout << "\tdata[" << i << "]= " << array[i]<<endl;
     }
   
   return;
