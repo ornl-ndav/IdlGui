@@ -147,36 +147,30 @@ int32_t main(int32_t argc, char *argv[])
                                                   "Name of the event file",
                                                   "filename", cmd);
       
-      SwitchArg showDataArg("o", "showdata", "Print the values in the file",
-                            false, cmd);
-      
-      ValueArg<int32_t> n_values("n", "input_file_values",
-                               "number of values of input files to print out",
-                                 false, 5, "values to output", cmd);
-      
       // Parse the command-line
       cmd.parse(argc, argv);
 
-      // isolate path from file name and create output file name
+      // Create string vector of all input file names
       vector<string> input_file_vector = event_file_vector.getValue();
+
+      bool debug = debugSwitch.getValue();
 
       // loop over all input files names
       for (size_t i=0 ; i<input_file_vector.size() ; ++i)
         {
           string input_filename;
           string output_filename("");
+          string output_debug_filename("");
           string path; 
-          
           string input_file = input_file_vector[i];
-          bool debug = debugSwitch.getValue();
           
           path_input_output_file_names(input_file,
                                        input_filename,
                                        path,
                                        altoutpath.getValue(),
                                        output_filename,
+                                       output_debug_filename,
                                        debug);
-          
           
           // read input file and populate the binary array 
           int32_t file_size;
@@ -187,7 +181,6 @@ int32_t main(int32_t argc, char *argv[])
                                                       input_filename,
                                                       swapiSwitch.getValue(),
                                                       debug,
-                                                      n_values.getValue(),
                                                       binary_array);
           
           int32_t time_bin_number = timebinnumber.getValue(); 
@@ -214,12 +207,6 @@ int32_t main(int32_t argc, char *argv[])
           if(swapoSwitch.getValue())
             {
               swap_endian(histo_array_size, histo_array);
-            }
-          
-          // print out value of histo_array into a file (ASCII format)
-          if(showDataArg.getValue())
-            {
-              //not implemented yet
             }
           
           // write new histogram file

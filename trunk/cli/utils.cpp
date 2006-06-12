@@ -37,7 +37,7 @@ using namespace TCLAP;
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
-void swap_endian (int32_t file_size, 
+void swap_endian (const int32_t file_size, 
                   int32_t * array)
 {
   for (int32_t j=0; j<file_size; ++j)
@@ -71,8 +71,8 @@ inline void swap_digit (int32_t & x)
  * elements
  */
 void print32_t_n_first_data(const int32_t * array,
-                        const int32_t n_disp,
-                        const string message)
+                            const int32_t n_disp,
+                            const string message)
 {
   cout << message << endl;
   for (size_t i=0 ; i<n_disp ; ++i)
@@ -92,6 +92,8 @@ void print32_t_n_first_data(const int32_t * array,
  * \param path (INPUT) is the path to the file (without the name part)
  * \param alternate_path (INPUT) is the alternate path for the output file
  * \param output_filename (OUTPUT) is the output file name with its path
+ * \param output_debug_filename (OUTPUT) is the output file name of the
+ * debugging file
  * \param debug (INPUT) is a flag for printing debugging info
 */
 void path_input_output_file_names(string & path_filename,
@@ -99,9 +101,9 @@ void path_input_output_file_names(string & path_filename,
                                   string & path,
                                   string & alternate_path,
                                   string & output_filename,
-                                  bool debug)
+                                  string & output_debug_filename,
+                                  const bool debug)
 {
-  
   // Parse input file name (path + input_file_name)
   parse_input_file_name(path_filename,
                         filename,
@@ -114,7 +116,7 @@ void path_input_output_file_names(string & path_filename,
                            alternate_path,
                            output_filename,
                            debug);
-  
+               
   return;
 }
 
@@ -130,7 +132,7 @@ void path_input_output_file_names(string & path_filename,
 void parse_input_file_name(string & path_filename,
                            string & filename,
                            string & path,
-                           bool debug)
+                           const bool debug)
 {
   filename = path_filename.substr(path_filename.rfind('/')+1);
   path = path_filename.substr(0,path_filename.rfind('/')+1);
@@ -168,7 +170,7 @@ void produce_output_file_name(string & filename,
                               string & path,
                               string & alternate_path,
                               string & output_filename,
-                              bool debug)
+                              const bool debug)
 {
   string outfile = filename.substr(0,filename.rfind("event"));
   outfile = outfile.append(HISTO_FILE_TAG);
@@ -219,7 +221,6 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
                                                   input_filename,
                                                   const bool swap_input,
                                                   const bool debug,
-                                                  const int32_t n_disp,
                                                   int32_t * &binary_array)
 {
   // read event binary array
@@ -240,7 +241,6 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
   catch (exception& e)
     {
       cerr << "Standard exception: " << e.what() << endl;
-      //      cerr << "Error: can't allocate memory to binary_array." << endl;
     }
   file.seekg(0,ios::beg);
   
@@ -256,7 +256,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
       if(debug)
         {
           message="\nBefore swapping the data\n";
-          print32_t_n_first_data(binary_array, n_disp, message);
+          print32_t_n_first_data(binary_array, 10, message);
         }
       
       swap_endian(file_size, binary_array);
@@ -264,16 +264,15 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
       if(debug)
         {
           message="\nAfter swapping the data\n";
-          print32_t_n_first_data(binary_array, n_disp, message);
+          print32_t_n_first_data(binary_array, 10, message);
         }
     }
   else
     {
-      message=n_disp+" first values of " + input_filename + "\n";
+      message="10 first values of " + input_filename + "\n";
     }
   
   return file_size;
 }
-
 
                                            

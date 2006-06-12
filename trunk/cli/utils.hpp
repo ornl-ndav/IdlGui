@@ -46,8 +46,8 @@ static const int32_t SIZEOF_INT32_T = sizeof(int32_t);
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
-void swap_endian (int32_t file_size, int32_t * array);
-
+void swap_endian (const int32_t file_size, 
+                  int32_t * array);
 
 /**
  * \brief This function swap endians of digits
@@ -67,8 +67,8 @@ inline void swap_digit (int32_t & x);
  * elements
  */
 void print32_t_n_first_data(const int32_t * array,
-                        const int32_t n_disp,
-                        const std::string message);
+                            const int32_t n_disp,
+                            const std::string message);
 
 /**
  * \brief This function parse the name of the event binary file and 
@@ -79,6 +79,8 @@ void print32_t_n_first_data(const int32_t * array,
  * \param path (INPUT) is the path to the file (without the name part)
  * \param alternate_path (INPUT) is the alternate path for the output file
  * \param output_filename (OUTPUT) is the output file name with its path
+ * \param output_debug_filename (OUTPUT) is the output file name of the 
+ * debugging file
  * \param debug (INPUT) is a flag for printing debugging info
 */
 void path_input_output_file_names(std::string & path_filename,
@@ -86,7 +88,8 @@ void path_input_output_file_names(std::string & path_filename,
                                   std::string & path,
                                   std::string & alternate_path,
                                   std::string & output_filename,
-                                  bool debug);
+                                  std::string & output_debug_filename,
+                                  const bool debug);
 
 /**
  * \brief This function isolate the path from the file name
@@ -100,7 +103,7 @@ void path_input_output_file_names(std::string & path_filename,
 void parse_input_file_name(std::string & path_filename,
                            std::string & filename,
                            std::string & path,
-                           bool debug);
+                           const bool debug);
 
 /**
  * \brief This function produce the complete name of the output file
@@ -117,7 +120,7 @@ void produce_output_file_name(std::string & filename,
                               std::string & path,
                               std::string & alternate_path,
                               std::string & output_filename,
-                              bool debug);
+                              const bool debug);
 
 /**
  * \brief This function read the event binary file and populate the 
@@ -138,7 +141,7 @@ int32_t read_event_file_and_populate_binary_array(const
                                                   std::string & input_filename,
                                                   const bool swap_input,
                                                   const bool debug,
-                                                  const int32_t n_disp,
                                                   int32_t * &binary_array);
+
 
 #endif // _UTILS_HPP
