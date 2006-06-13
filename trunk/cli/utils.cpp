@@ -238,9 +238,9 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
     {
       binary_array = new int32_t [file_size];
     }
-  catch (exception& e)
+  catch (bad_alloc &)
     {
-      cerr << "Standard exception: " << e.what() << endl;
+      cerr << "Error allocating memory." << endl;
     }
   file.seekg(0,ios::beg);
   
