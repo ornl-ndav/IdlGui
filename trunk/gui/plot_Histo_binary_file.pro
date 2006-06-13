@@ -15,7 +15,7 @@
  title='Select a binary file', $
  filter = ['*.dat'],$
  ;path = 'c:\Documents and Settings\j35\Desktop\HistoTool\DAS_3\DAS_event_1\', $
- path = "/Users/j35/SVN/HistoTool/trunk/c++/",$
+ path = "/Users/j35/CD4/BSS/",$
  get_path = path)
 ;****************************************************************
 
@@ -35,15 +35,19 @@ readu,1,data
 close,1            ;close file
 
 ;################################
-Nx = 256       ;information from xxx_runnumber_runinfo.xml
-Ny = 304
+;Nx = 256       ;information from xxx_runnumber_runinfo.xml
+;Ny = 304
 ;Nt = 167
-Nt = 83
+;Nt = 83
+Nx=56L
+Ny=128L
+Nt=1
 ;#################################
 
 ;find the non-null elements
 indx1 = where(data GT 0, Ngt0)
-img = intarr(Nt,Nx,Ny)
+;img = intarr(Nt,Nx,Ny)
+img=intarr(Nt,Ny,Nx)
 
 img(indx1) = data(indx1)
 simg = total(img,1)     ;sum over time bins
@@ -72,8 +76,7 @@ endif
 ;*********end of color part***********************
 xoff=100
 yoff=80
-Nx=256
-Ny=304
+
 
 tvscl, simg, xoff, yoff, /device,xsize=Nx,ysize=Ny     ;plot data
 
@@ -82,17 +85,6 @@ xstyle=1,pos=[xoff,yoff,xoff+Nx,yoff+Ny],$
 /noerase,xtitle=xtitle, ytitle=ytitle,title=title, charsize=1.4,$
 charthick=1.6
 wshow
-
-;for t=0,166 do begin
-t=0
-   for x = 0,255 do begin
-       for y = 0,303 do begin
-          if img(t,x,y) > 0 and x>130 and y>150 then begin
-       print, 't,x,y= ', t,x,y
-       endif
-    endfor
-   endfor
-;endfor
 
 end_time = systime(1)
 
