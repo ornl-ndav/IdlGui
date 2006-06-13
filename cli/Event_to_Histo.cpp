@@ -83,7 +83,7 @@ void generate_histo(const int32_t file_size,
   {
       pixelid = binary_array[2*i+1];
       time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
-
+      
       //remove data that are oustide the scope of range
       if (pixelid<0 || 
           pixelid>pixelnumber ||
@@ -109,12 +109,12 @@ int32_t main(int32_t argc, char *argv[])
     {
       // Setup the command-line parser object
       CmdLine cmd("Command line description message", ' ', VERSION_TAG);
-
+      
       // Add command-line options
       ValueArg<string> altoutpath("a", "alternate_output", 
                                   "Alternate path for output file",
                                   false, "", "path", cmd);
-
+      
       SwitchArg debugSwitch("d", "debug", "Flag for debugging program",
                             false, cmd);
 
