@@ -186,9 +186,9 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_bin_number = timebinnumber.getValue(); 
           int32_t time_rebin_width = timerebinwidth.getValue();
           int32_t pixel_number = pixelnumber.getValue();
-          int32_t new_Nt = int32_t(floor((time_bin_number*
+          int32_t new_Nt = int32_t(floor(((time_bin_number-1)*
                                           timebinwidth.getValue())
-                                         /time_rebin_width));
+                                         /time_rebin_width)+1);
           int32_t histo_array_size = new_Nt * pixel_number;
           int32_t * histo_array = new int32_t [histo_array_size];
           
