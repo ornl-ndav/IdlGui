@@ -1,15 +1,12 @@
 #$Id$
-
-CFLAGS = -o
 CXX = g++
-EINC = ../inc
-SRCS = Event_to_Histo Map_Data
+CXXFLAGS = -I../inc
+LDFLAGS = 
 
-all: $(SRCS)
+ALL = Event_to_Histo Map_Data
 
-$(SRCS): 
-	$(CXX) $(CFLAGS) $@ -I$(EINC) $@.cpp
+all: $(ALL)
 
 clean: 
-	rm -f $(SRCS)
+	rm -f $(ALL)
 
