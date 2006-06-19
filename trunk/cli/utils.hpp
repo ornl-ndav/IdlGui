@@ -37,8 +37,11 @@ static const std::string HISTO_FILE_TAG("histo.dat");
 // this is a string that contains the software tag version
 static const std::string VERSION_TAG("1.0.0itc1");
 
-// This is a constant to hold the size of an uint32_t
+// This is a constant to hold the size of an int32_t
 static const int32_t SIZEOF_INT32_T = sizeof(int32_t);
+
+// This is a constant to hold the size of an uint32_t
+static const int32_t SIZEOF_UINT32_T = sizeof(uint32_t);
 
 /**
  * \brief This function swap endians of an array
@@ -46,15 +49,22 @@ static const int32_t SIZEOF_INT32_T = sizeof(int32_t);
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
-void swap_endian (const int32_t file_size, 
+
+/*void swap_endian (const int32_t file_size, 
                   int32_t * array);
+*/
+
+template <typename NumT>
+void swap_endian(const int32_t file_size,
+                 NumT * array);
 
 /**
  * \brief This function swap endians of digits
  *
  * \param x (INPUT/OUTPUT) is the digit to be swapped
  */
-inline void swap_digit (int32_t & x);
+template <typename NumT>
+inline void swap_digit (NumT & x);
 
 
 /**
@@ -141,7 +151,7 @@ int32_t read_event_file_and_populate_binary_array(const
                                                   std::string & input_filename,
                                                   const bool swap_input,
                                                   const bool debug,
-                                                  int32_t * &binary_array);
+                                                  uint32_t * &binary_array);
 
 
 #endif // _UTILS_HPP
