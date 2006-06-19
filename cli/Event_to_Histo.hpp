@@ -54,7 +54,7 @@ using std::vector;
  * \param size the size of the array
  *
  */
-void initialize_array(int32_t * data_histo, 
+void initialize_array(uint32_t * data_histo, 
                       const int32_t size);
 
 /**
@@ -75,7 +75,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t pixel_number,
                     const int32_t time_rebin_width,
                     const int32_t * binary_array,
-                    int32_t * histo_array,
+                    uint32_t * histo_array,
                     const int32_t histo_array_size,
                     const bool debug);
 

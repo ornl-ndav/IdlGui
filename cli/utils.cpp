@@ -37,8 +37,9 @@ using namespace TCLAP;
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
+template <typename NumT>
 void swap_endian (const int32_t file_size, 
-                  int32_t * array)
+                  NumT * array)
 {
   for (int32_t j=0; j<file_size; ++j)
     {
@@ -53,7 +54,8 @@ void swap_endian (const int32_t file_size,
  *
  * \param x (INPUT/OUTPUT) is the digit to be swapped
  */
-inline void swap_digit (int32_t & x)
+template <typename NumT>
+inline void swap_digit (NumT & x)
 {
   x = ((x>>24) & 0x000000FF) |
     ((x<<8) & 0x00FF0000) |

@@ -38,7 +38,7 @@ using namespace TCLAP;
  * \param size the size of the array
  *
  */
-void initialize_array(int32_t * histo_array, 
+void initialize_array(uint32_t * histo_array, 
                       const int size)
 {
   for (int32_t i=0 ; i<size ; ++i)
@@ -67,7 +67,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t pixelnumber,
                     const int32_t time_rebin_width,
                     const int32_t * binary_array,
-                    int32_t * histo_array,
+                    uint32_t * histo_array,
                     const int32_t histo_array_size,
                     const bool debug)
 {
@@ -83,7 +83,7 @@ void generate_histo(const int32_t file_size,
   {
       pixelid = binary_array[2*i+1];
       time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
-      
+
       //remove data that are oustide the scope of range
       if (pixelid<0 || 
           pixelid>pixelnumber ||
@@ -190,7 +190,7 @@ int32_t main(int32_t argc, char *argv[])
                                           timebinwidth.getValue())
                                          /time_rebin_width)+1);
           int32_t histo_array_size = new_Nt * pixel_number;
-          int32_t * histo_array = new int32_t [histo_array_size];
+          uint32_t * histo_array = new uint32_t [histo_array_size];
           
           
           //generate histo binary data array
@@ -213,7 +213,7 @@ int32_t main(int32_t argc, char *argv[])
           std::ofstream histo_file(output_filename.c_str(),
                                    std::ios::binary);
           histo_file.write((char*)(histo_array),
-                           SIZEOF_INT32_T*histo_array_size);
+                           SIZEOF_UINT32_T*histo_array_size);
           histo_file.close();
           
           // free memory allocated to arrays
