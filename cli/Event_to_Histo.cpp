@@ -136,7 +136,14 @@ int32_t main(int32_t argc, char *argv[])
 
       ValueArg<int32_t> timerebinwidth("l","linear",
                                        "width of rebin linear time bin",
-                                       true, -1, "new linear time bin", cmd);
+                                       true, -1, "new linear time bin");
+
+      ValueArg<int32_t> logrebinpercent("L","logarithmic",
+                                        "delta_t/t percentage",
+                                        true, -1, 
+                                        "logarithmic rebinning percentage"); 
+
+      cmd.xorAdd(timerebinwidth, logrebinpercent);
       
       ValueArg<int32_t> timebinwidth("w", "time_bin_width",
                                      "input binary file time bin width",
@@ -184,7 +191,22 @@ int32_t main(int32_t argc, char *argv[])
                                                       binary_array);
           
           int32_t time_bin_number = timebinnumber.getValue(); 
-          int32_t time_rebin_width = timerebinwidth.getValue();
+          int32_t time_rebin_width;
+          int32_t log_rebin_percent;
+
+          if (timerebinwidth.isSet())
+            {
+              time_rebin_width = timerebinwidth.getValue();
+            }
+          else if (logrebinpercent.isSet())
+            {
+              log_rebin_percent = logrebinpercent.getValue();
+            }
+          else
+            {
+              cerr << "Rebin parameter not supported" << endl;
+            }
+
           int32_t pixel_number = pixelnumber.getValue();
           int32_t new_Nt = int32_t(floor(((time_bin_number-1)*
                                           timebinwidth.getValue())
