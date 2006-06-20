@@ -193,14 +193,17 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_bin_number = timebinnumber.getValue(); 
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
+          //vector<uint32_t> time_bin_vector;
 
           if (timerebinwidth.isSet())
             {
               time_rebin_width = timerebinwidth.getValue();
+              //time_bin_vector = generate_linear_time_bin_vector();
             }
           else if (logrebinpercent.isSet())
             {
               log_rebin_percent = logrebinpercent.getValue();
+              //time_bin_vector = generate_log_time_bin_vector();
             }
           else
             {
@@ -214,6 +217,8 @@ int32_t main(int32_t argc, char *argv[])
           int32_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
           
+          //generate vector of time bin widths
+          //vector<uint32_t> time_bin_vector;
           
           //generate histo binary data array
           generate_histo(file_size,
