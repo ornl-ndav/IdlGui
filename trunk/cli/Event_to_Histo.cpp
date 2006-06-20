@@ -69,6 +69,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
+                    const vector<uint32_t> time_bin_vector,
                     const bool debug)
 {
   int32_t pixelid;
@@ -77,13 +78,13 @@ void generate_histo(const int32_t file_size,
   //initialize histo array
   initialize_array(histo_array,
                    histo_array_size);
-
+  
   //loop over entire binary file data
   for (size_t i=0 ; i<file_size/2; i++)
   {
       pixelid = binary_array[2*i+1];
       time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
-
+      
       //remove data that are oustide the scope of range
       if (pixelid<0 || 
           pixelid>pixelnumber ||
@@ -97,6 +98,54 @@ void generate_histo(const int32_t file_size,
   }
   
   return;
+}
+
+/**
+ * \brief This function creates the vector of a linear time bins widths
+ * For example, for a time bin of 25micros, the first values of the vector
+ * will be 0, 25, 50, 75....
+ *
+ * \param time_bin_number (INPUT) is the number of time bins in input event file
+ * \param time_bin_width (INPUT) is the width of time bins in input event file
+ * \param time_rebin_width (INPUT) is the rebin value
+ *
+ * \return
+ * A vector of the time bin values.
+ */
+vector<uint32_t> generate_linear_time_bin_vector(const int32_t time_bin_number,
+                                                 const int32_t time_bin_width,
+                                                 const int32_t time_rebin_width)
+{
+  vector<uint32_t> time_bin_vector;
+  int32_t max_time_bin = ((time_bin_number-1) * time_bin_width);
+  cout << "max_time_bin= " << max_time_bin << endl;
+  int32_t i=0;
+
+  for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
+    {
+      time_bin_vector.push_back(static_cast<int32_t>(t_bin));
+      ++i;
+    }
+  return time_bin_vector;
+}
+
+/**
+ * \brief This function creates the vector of a logarithmic time bins percentage
+ *
+ * \param time_bin_number (INPUT) is the number of time bins in input event file
+ * \param time_bin_width (INPUT) is the width of time bins in input event file
+ * \param log_rebin_percent (INPUT) is the rebin percentage
+ *
+ * \return
+ * A vector of the time bin values.
+ */
+vector<uint32_t> generate_log_time_bin_vector(const int32_t time_bin_number,
+                                              const int32_t time_bin_width,
+                                              const int32_t log_rebin_percent)
+{
+  vector<uint32_t> time_bin_vector;
+
+  return time_bin_vector;
 }
 
 /**
@@ -191,19 +240,24 @@ int32_t main(int32_t argc, char *argv[])
                                                       binary_array);
           
           int32_t time_bin_number = timebinnumber.getValue(); 
+          int32_t time_bin_width = timebinwidth.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
-          //vector<uint32_t> time_bin_vector;
+          vector<uint32_t> time_bin_vector;
 
           if (timerebinwidth.isSet())
             {
               time_rebin_width = timerebinwidth.getValue();
-              //time_bin_vector = generate_linear_time_bin_vector();
+              time_bin_vector = generate_linear_time_bin_vector(time_bin_number,
+                                                                time_bin_width,
+                                                                time_rebin_width);
             }
           else if (logrebinpercent.isSet())
             {
               log_rebin_percent = logrebinpercent.getValue();
-              //time_bin_vector = generate_log_time_bin_vector();
+              time_bin_vector = generate_log_time_bin_vector(time_bin_number,
+                                                             time_bin_width,
+                                                             log_rebin_percent);
             }
           else
             {
@@ -212,13 +266,10 @@ int32_t main(int32_t argc, char *argv[])
 
           int32_t pixel_number = pixelnumber.getValue();
           int32_t new_Nt = int32_t(floor(((time_bin_number-1)*
-                                          timebinwidth.getValue())
+                                          time_bin_width)
                                          /time_rebin_width)+1);
           int32_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
-          
-          //generate vector of time bin widths
-          //vector<uint32_t> time_bin_vector;
           
           //generate histo binary data array
           generate_histo(file_size,
@@ -228,8 +279,9 @@ int32_t main(int32_t argc, char *argv[])
                          binary_array,
                          histo_array,
                          histo_array_size,
+                         time_bin_vector,
                          debug);
-          
+
           // swap endian of output array (histo_array)
           if(swapoSwitch.getValue())
             {
