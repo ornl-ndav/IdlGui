@@ -124,17 +124,20 @@ void generate_histo(const int32_t file_size,
   initialize_array(histo_array,
                    histo_array_size);
   
-  //loop over entire binary file data
-  for (size_t i=0 ; i<file_size/2; i++)
+  //loop over entire binary file data (from 0 to file_size/2 because we use
+  //the variable 2*i into the for loop. Like this, the all file is covered.
+  for (size_t i=0 ; i<file_size/2; i++) 
   {
       pixelid = binary_array[2*i+1];
+      //We need to divide by 10 to go from 100ns to micros
       time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
       
       //remove data that are oustide the scope of range
-      if (pixelid<0 || 
+      if (pixelid<0 ||                             
           pixelid>pixelnumber ||
           time_stamp<0 ||
-          time_stamp>(time_rebin_width*(new_Nt-1)))
+          time_stamp>(time_rebin_width*(new_Nt-1)))  //time_stamp that are 
+        // higher the higher time bin possible
         {
           continue;
         }
@@ -198,7 +201,7 @@ vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
   
   while (t2 < max_time_bin)
     {
-      t2 = t1 * (log_rebin + 1);
+      t2 = t1 * (log_rebin + 1);  //delta_t/t = log_rebin
       time_bin_vector.push_back(static_cast<float>(t2));
     }
   return time_bin_vector;
@@ -301,26 +304,28 @@ int32_t main(int32_t argc, char *argv[])
           int32_t log_rebin_percent;
           vector<float> time_bin_vector;
 
-          if (timerebinwidth.isSet())
+          if (timerebinwidth.isSet())  //if we selected a linear rebinning
             {
               time_rebin_width = timerebinwidth.getValue();
               time_bin_vector = generate_linear_time_bin_vector(time_bin_number,
                                                                 time_bin_width,
                                                                 time_rebin_width);
             }
-          else if (logrebinpercent.isSet())
+          else if (logrebinpercent.isSet()) //if we selected a log rebinning
             {
               log_rebin_percent = logrebinpercent.getValue();
               time_bin_vector = generate_log_time_bin_vector(time_bin_number,
                                                              time_bin_width,
                                                              log_rebin_percent);
             }
-          else
+          else  
             {
-              cerr << "Rebin parameter not supported" << endl;
+              cerr << "#1: Rebin parameter not supported\n";
+              cerr << "#2: If you reach this, see Steve Miller for your price";
             }
 
           int32_t pixel_number = pixelnumber.getValue();
+          //This is the new number of time bins in the histo file
           int32_t new_Nt = int32_t(floor(((time_bin_number-1)*
                                           time_bin_width)
                                          /time_rebin_width)+1);
