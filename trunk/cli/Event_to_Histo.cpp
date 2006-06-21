@@ -189,7 +189,18 @@ vector<uint32_t> generate_log_time_bin_vector(const int32_t time_bin_number,
                                               const int32_t log_rebin_percent)
 {
   vector<uint32_t> time_bin_vector;
+  time_bin_vector.push_back(static_cast<int32_t>(0));
 
+  int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
+  float log_rebin = log_rebin_percent / 100;
+  float t1=SMALLEST_TIME_BIN;
+  float t2=SMALLEST_TIME_BIN;
+  
+  while (t2 < max_time_bin)
+    {
+      t2 = t1 * (log_rebin + 1);
+      time_bin_vector.push_back(static_cast<uint32_t>(t2));
+    }
   return time_bin_vector;
 }
 

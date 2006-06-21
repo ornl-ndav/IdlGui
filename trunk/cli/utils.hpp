@@ -35,13 +35,16 @@
 static const std::string HISTO_FILE_TAG("histo.dat");
 
 // this is a string that contains the software tag version
-static const std::string VERSION_TAG("1.0.0itc1");
+static const std::string VERSION_TAG("1.0.0iqc1");
 
 // This is a constant to hold the size of an int32_t
 static const int32_t SIZEOF_INT32_T = sizeof(int32_t);
 
 // This is a constant to hold the size of an uint32_t
 static const int32_t SIZEOF_UINT32_T = sizeof(uint32_t);
+
+// This is a constant to hold the "zero" value for the DAS
+static const float SMALLEST_TIME_BIN = 0.01;
 
 /**
  * \brief This function swap endians of an array
