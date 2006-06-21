@@ -72,7 +72,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
-                    const std::vector<uint32_t> time_bin_vector,
+                    const std::vector<float> time_bin_vector,
                     const bool debug);
 
 /**
@@ -89,8 +89,40 @@ void generate_histo(const int32_t file_size,
  * \returns It returns the position of the data or of the closest inferior value
  * found in sortedArray. Returns -1 if the data is out of range.
 */
-int binarySearch(int sortedArray[], 
+int binarySearch(float sortedArray[], 
                  int sortedArray_size, 
                  float key);
+
+/**
+ * \brief This function creates the vector of a linear time bins widths
+ * For example, for a time bin of 25micros, the first values of the vector
+ * will be 0, 25, 50, 75....
+ *
+ * \param time_bin_number (INPUT) is the number of time bins in input event file
+ * \param time_bin_width (INPUT) is the width of time bins in input event file
+ * \param time_rebin_width (INPUT) is the rebin value
+ *
+ * \return
+ * A vector of the time bin values.
+ */
+vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
+                                              const int32_t time_bin_width,
+                                              const int32_t time_rebin_width);
+
+
+/**
+ * \brief This function creates the vector of a logarithmic time bins percentage
+ *
+ * \param time_bin_number (INPUT) is the number of time bins in input event file
+ * \param time_bin_width (INPUT) is the width of time bins in input event file
+ * \param log_rebin_percent (INPUT) is the rebin percentage
+ *
+ * \return
+ * A vector of the time bin values.
+ */
+vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
+                                           const int32_t time_bin_width,
+                                           const int32_t log_rebin_percent);
+
 
 #endif // _EVENT_TO_HISTO_HPP
