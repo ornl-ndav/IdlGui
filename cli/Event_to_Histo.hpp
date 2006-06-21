@@ -45,9 +45,6 @@
 #include <stdint.h>
 #include "utils.cpp"
 
-using std::string;
-using std::vector;
-
 /**
  * \brief This function initializes an array
  * 
@@ -78,7 +75,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
-                    const vector<uint32_t> time_bin_vector,
+                    const std::vector<uint32_t> time_bin_vector,
                     const bool debug);
 
 #endif // _EVENT_TO_HISTO_HPP
