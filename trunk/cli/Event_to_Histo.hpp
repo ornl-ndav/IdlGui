@@ -35,14 +35,11 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-#include <map>
 #include <stdexcept>
+#include <stdint.h>
 #include <string>
-#include <sys/stat.h>
 #include <tclap/CmdLine.h>
 #include <vector>
-#include <time.h>
-#include <stdint.h>
 #include "utils.cpp"
 
 /**
