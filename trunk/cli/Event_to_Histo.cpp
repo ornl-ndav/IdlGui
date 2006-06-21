@@ -32,6 +32,51 @@ using namespace std;
 using namespace TCLAP;
 
 /**
+ * \brief This function does a binary search of a variable into a given
+ * array. It returns the position of the data into the sortedArray or the 
+ * closest value inferior to the data. It returns -1 if the data is out of 
+ * range.
+ *
+ * \param sortedArray (INPUT) is the sorted array where to look for the location
+ * of the key
+ * \param sortedArray_size (INPUT) is the size of the sorted array
+ * \param key (INPUT) is the data to look for
+ *
+ * \returns It returns the position of the data or of the closest inferior value
+ * found in sortedArray. Returns -1 if the data is out of range.
+*/
+int binarySearch(int sortedArray[], 
+                 int sortedArray_size, 
+                 float key)
+{
+  int first = 0;
+  int last = sortedArray_size;
+  //check first if the value is out of range
+  if (key > sortedArray[sortedArray_size-1])
+    {
+      return -1;
+    }
+
+  while (first < last-1)
+    {
+      int mid = (first + last) / 2;
+      if (key > sortedArray[mid])
+        {
+          first = mid;
+        }
+      else if (key < sortedArray[mid])
+       {
+         last = mid;
+       }
+      else
+        {
+          return mid;
+        }
+    }
+  return (first);
+}
+
+/**
  * \brief This function initializes an array
  * 
  * \param histo_array the array to be initialized
