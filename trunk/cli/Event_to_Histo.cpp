@@ -45,7 +45,7 @@ using namespace TCLAP;
  * \returns It returns the position of the data or of the closest inferior value
  * found in sortedArray. Returns -1 if the data is out of range.
 */
-int binarySearch(int sortedArray[], 
+int binarySearch(float sortedArray[], 
                  int sortedArray_size, 
                  float key)
 {
@@ -114,7 +114,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
-                    const vector<uint32_t> time_bin_vector,
+                    const vector<float> time_bin_vector,
                     const bool debug)
 {
   int32_t pixelid;
@@ -157,18 +157,18 @@ void generate_histo(const int32_t file_size,
  * \return
  * A vector of the time bin values.
  */
-vector<uint32_t> generate_linear_time_bin_vector(const int32_t time_bin_number,
-                                                 const int32_t time_bin_width,
-                                                 const int32_t time_rebin_width)
+vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
+                                              const int32_t time_bin_width,
+                                              const int32_t time_rebin_width)
 {
-  vector<uint32_t> time_bin_vector;
+  vector<float> time_bin_vector;
   int32_t max_time_bin = ((time_bin_number-1) * time_bin_width);
   cout << "max_time_bin= " << max_time_bin << endl;
   int32_t i=0;
 
   for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
     {
-      time_bin_vector.push_back(static_cast<int32_t>(t_bin));
+      time_bin_vector.push_back(static_cast<float>(t_bin));
       ++i;
     }
   return time_bin_vector;
@@ -184,11 +184,11 @@ vector<uint32_t> generate_linear_time_bin_vector(const int32_t time_bin_number,
  * \return
  * A vector of the time bin values.
  */
-vector<uint32_t> generate_log_time_bin_vector(const int32_t time_bin_number,
-                                              const int32_t time_bin_width,
-                                              const int32_t log_rebin_percent)
+vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
+                                           const int32_t time_bin_width,
+                                           const int32_t log_rebin_percent)
 {
-  vector<uint32_t> time_bin_vector;
+  vector<float> time_bin_vector;
   time_bin_vector.push_back(static_cast<int32_t>(0));
 
   int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
@@ -199,7 +199,7 @@ vector<uint32_t> generate_log_time_bin_vector(const int32_t time_bin_number,
   while (t2 < max_time_bin)
     {
       t2 = t1 * (log_rebin + 1);
-      time_bin_vector.push_back(static_cast<uint32_t>(t2));
+      time_bin_vector.push_back(static_cast<float>(t2));
     }
   return time_bin_vector;
 }
@@ -299,7 +299,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_bin_width = timebinwidth.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
-          vector<uint32_t> time_bin_vector;
+          vector<float> time_bin_vector;
 
           if (timerebinwidth.isSet())
             {
