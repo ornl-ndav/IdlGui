@@ -75,4 +75,22 @@ void generate_histo(const int32_t file_size,
                     const std::vector<uint32_t> time_bin_vector,
                     const bool debug);
 
+/**
+ * \brief This function does a binary search of a variable into a given
+ * array. It returns the position of the data into the sortedArray or the 
+ * closest value inferior to the data. It returns -1 if the data is out of 
+ * range.
+ *
+ * \param sortedArray (INPUT) is the sorted array where to look for the location
+ * of the key
+ * \param sortedArray_size (INPUT) is the size of the sorted array
+ * \param key (INPUT) is the data to look for
+ *
+ * \returns It returns the position of the data or of the closest inferior value
+ * found in sortedArray. Returns -1 if the data is out of range.
+*/
+int binarySearch(int sortedArray[], 
+                 int sortedArray_size, 
+                 float key);
+
 #endif // _EVENT_TO_HISTO_HPP
