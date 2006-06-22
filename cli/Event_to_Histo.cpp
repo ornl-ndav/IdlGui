@@ -156,22 +156,31 @@ void generate_histo(const int32_t file_size,
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param time_rebin_width (INPUT) is the rebin value
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
- * \return
- * A vector of the time bin values.
+ * \return A vector of the time bin values.
  */
 vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
                                               const int32_t time_bin_width,
-                                              const int32_t time_rebin_width)
+                                              const int32_t time_rebin_width,
+                                              const bool debug)
 {
   vector<float> time_bin_vector;
   int32_t max_time_bin = ((time_bin_number-1) * time_bin_width);
-  cout << "max_time_bin= " << max_time_bin << endl;
-  int32_t i=0;
+  int32_t i=0;  //use for debugging tool only
+
+  if (debug)
+    {
+      cout << "\nGenerate linear time bin vector:\n";
+    } 
 
   for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
     {
       time_bin_vector.push_back(static_cast<float>(t_bin));
+      if (debug)
+        {
+          cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
+        }
       ++i;
     }
   return time_bin_vector;
@@ -183,27 +192,41 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param log_rebin_percent (INPUT) is the rebin percentage
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
- * \return
- * A vector of the time bin values.
+ * \return A vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
                                            const int32_t time_bin_width,
-                                           const int32_t log_rebin_percent)
+                                           const int32_t log_rebin_percent,
+                                           const bool debug)
 {
   vector<float> time_bin_vector;
   time_bin_vector.push_back(static_cast<int32_t>(0));
 
   int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
-  float log_rebin = log_rebin_percent / 100;
-  float t1=SMALLEST_TIME_BIN;
-  float t2=SMALLEST_TIME_BIN;
+  float log_rebin = static_cast<float>(log_rebin_percent) / 100;
+  float t1;
+  float t2= SMALLEST_TIME_BIN;
+  int32_t i=0;  //use for debugging tool only
+  
+  if (debug)
+    {
+      cout << "\nGenerate logarithmic time bin vector:\n";
+    }
   
   while (t2 < max_time_bin)
     {
-      t2 = t1 * (log_rebin + 1);  //delta_t/t = log_rebin
+      t1=t2;
+      t2 = t1 * (log_rebin + 1.);  //delta_t/t = log_rebin
       time_bin_vector.push_back(static_cast<float>(t2));
-    }
+      if (debug)
+        {
+          cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
+        }
+      ++i;
+     }
+
   return time_bin_vector;
 }
 
@@ -307,22 +330,26 @@ int32_t main(int32_t argc, char *argv[])
           if (timerebinwidth.isSet())  //if we selected a linear rebinning
             {
               time_rebin_width = timerebinwidth.getValue();
-              time_bin_vector = generate_linear_time_bin_vector(time_bin_number,
-                                                                time_bin_width,
-                                                                time_rebin_width);
+              time_bin_vector=generate_linear_time_bin_vector(time_bin_number,
+                                                              time_bin_width,
+                                                              time_rebin_width,
+                                                              debug);
             }
           else if (logrebinpercent.isSet()) //if we selected a log rebinning
             {
               log_rebin_percent = logrebinpercent.getValue();
               time_bin_vector = generate_log_time_bin_vector(time_bin_number,
                                                              time_bin_width,
-                                                             log_rebin_percent);
+                                                             log_rebin_percent,
+                                                             debug);
             }
           else  
             {
               cerr << "#1: Rebin parameter not supported\n";
               cerr << "#2: If you reach this, see Steve Miller for your price";
             }
+
+          /*
 
           int32_t pixel_number = pixelnumber.getValue();
           //This is the new number of time bins in the histo file
@@ -359,6 +386,7 @@ int32_t main(int32_t argc, char *argv[])
           // free memory allocated to arrays
           delete histo_array;
           delete binary_array;
+          */
         }
     }
   catch (ArgException &e)
