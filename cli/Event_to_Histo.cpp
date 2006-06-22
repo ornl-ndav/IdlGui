@@ -33,47 +33,47 @@ using namespace TCLAP;
 
 /**
  * \brief This function does a binary search of a variable into a given
- * array. It returns the position of the data into the sortedArray or the 
+ * array. It returns the position of the data into the sortedVector or the 
  * closest value inferior to the data. It returns -1 if the data is out of 
  * range.
  *
- * \param sortedArray (INPUT) is the sorted array where to look for the location
- * of the key
- * \param sortedArray_size (INPUT) is the size of the sorted array
+ * \param sortedVector (INPUT) is the sorted array where to look for the 
+ * location of the key
+ * \param sortedVector_size (INPUT) is the size of the sorted array
  * \param key (INPUT) is the data to look for
  *
  * \returns It returns the position of the data or of the closest inferior value
- * found in sortedArray. Returns -1 if the data is out of range.
+ * found in sortedVector. Returns -1 if the data is out of range.
 */
-int binarySearch(float sortedArray[], 
-                 int sortedArray_size, 
-                 float key)
+int32_t binarySearch(const vector<float> sortedVector, 
+                     const float key)
 {
+  int sortedVector_size = sortedVector.size();
   int first = 0;
-  int last = sortedArray_size;
+  int last = sortedVector_size;
+
   //check first if the value is out of range
-  if (key > sortedArray[sortedArray_size-1])
+  if (key > sortedVector[sortedVector_size-1])
     {
       return -1;
     }
-
   while (first < last-1)
     {
       int mid = (first + last) / 2;
-      if (key > sortedArray[mid])
+      if (key > sortedVector[mid])
         {
           first = mid;
         }
-      else if (key < sortedArray[mid])
+      else if (key < sortedVector[mid])
        {
          last = mid;
        }
       else
         {
-          return mid;
+          return (static_cast<int>(floor(sortedVector[mid])));
         }
     }
-  return (first);
+  return (static_cast<int>(floor(sortedVector[first])));
 }
 
 /**
@@ -105,6 +105,7 @@ void initialize_array(uint32_t * histo_array,
  *  binary file
  * \param histo_array (OUTPUT) is the histogram array
  * \param histo_array_size (INPUT) is the size of the histogram array
+ * \param time_bin_vector (INPUT)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
@@ -123,15 +124,31 @@ void generate_histo(const int32_t file_size,
   //initialize histo array
   initialize_array(histo_array,
                    histo_array_size);
-  
+
+  if (debug)
+    {
+      cout << "\n\n**In generate_histo**\n\n";
+      cout << "Legend:\nPid : PixelID\t\t";
+      cout << "t_ms : time in micro seconds\t\t";
+      cout << "tstamp : time_stamp\n\n";
+    }
+
   //loop over entire binary file data (from 0 to file_size/2 because we use
   //the variable 2*i into the for loop. Like this, the all file is covered.
   for (size_t i=0 ; i<file_size/2; i++) 
   {
       pixelid = binary_array[2*i+1];
       //We need to divide by 10 to go from 100ns to micros
-      time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
-      
+      //time_stamp = int32_t(floor((binary_array[2*i]/10)/time_rebin_width));
+      time_stamp = binarySearch(time_bin_vector,
+                                static_cast<float>(binary_array[2*i]/10.));
+      if (debug)
+        {
+          cout << "Pid= " << pixelid <<"\t\t";
+          cout << "t_ms= " << static_cast<float>(binary_array[2*i]/10.)<<"\t\t";
+          cout << "tstamp= " << time_stamp;
+        }
+
       //remove data that are oustide the scope of range
       if (pixelid<0 ||                             
           pixelid>pixelnumber ||
@@ -139,10 +156,21 @@ void generate_histo(const int32_t file_size,
           time_stamp>(time_rebin_width*(new_Nt-1)))  //time_stamp that are 
         // higher the higher time bin possible
         {
+          if (debug)
+            {
+              cout << "......OUT OF RANGE\n";
+            }
           continue;
         }
-      //record data that is inside the scope of range
-      histo_array[time_stamp+pixelid*new_Nt]+=1;
+      else
+        {
+          if (debug)
+            {
+              cout << "......OK\n";
+            }
+          //record data that is inside the scope of range
+          histo_array[time_stamp+pixelid*new_Nt]+=1;
+        }
   }
   
   return;
@@ -171,7 +199,7 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
 
   if (debug)
     {
-      cout << "\nGenerate linear time bin vector:\n";
+      cout << "\n**Generate linear time bin vector**\n\n";
     } 
 
   for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
@@ -202,18 +230,20 @@ vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
                                            const bool debug)
 {
   vector<float> time_bin_vector;
+  int32_t i=0;  //use for debugging tool only
   time_bin_vector.push_back(static_cast<int32_t>(0));
 
+  if (debug)
+    {
+      cout << "\n**Generate logarithmic time bin vector**\n\n";
+      cout << "\ttime_bin_vector["<<i<<"]= " << time_bin_vector[i]<<endl;
+    }
+
+  ++i;
   int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
   float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
   float t2= SMALLEST_TIME_BIN;
-  int32_t i=0;  //use for debugging tool only
-  
-  if (debug)
-    {
-      cout << "\nGenerate logarithmic time bin vector:\n";
-    }
   
   while (t2 < max_time_bin)
     {
@@ -226,6 +256,7 @@ vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
         }
       ++i;
      }
+  //  cout << "size is: " << time_bin_vector.size()<<endl;
 
   return time_bin_vector;
 }
@@ -292,6 +323,19 @@ int32_t main(int32_t argc, char *argv[])
       vector<string> input_file_vector = event_file_vector.getValue();
 
       bool debug = debugSwitch.getValue();
+      if (debug)
+        {
+          // Table of contents of debug tool
+          cout << "\t**** TABLE OF CONTENTS ****\n\n";
+          cout << "\t- In parse_input_file_name\n";
+          cout << "\t- In produce_output_file_name\n";
+          cout << "\t- Before swapping the data [if swap_input]\n";
+          cout << "\t- After swapping the data [if swap_input]\n";
+          cout << "\t- 10 first values of [if no swap_input]\n";
+          cout << "\t- Generate linear time bin vector\n";
+          cout << "\t- In generate_histo\n\n";
+          cout << "\t****************************\n\n";
+        }
 
       // loop over all input files names
       for (size_t i=0 ; i<input_file_vector.size() ; ++i)
@@ -349,8 +393,6 @@ int32_t main(int32_t argc, char *argv[])
               cerr << "#2: If you reach this, see Steve Miller for your price";
             }
 
-          /*
-
           int32_t pixel_number = pixelnumber.getValue();
           //This is the new number of time bins in the histo file
           int32_t new_Nt = int32_t(floor(((time_bin_number-1)*
@@ -386,7 +428,6 @@ int32_t main(int32_t argc, char *argv[])
           // free memory allocated to arrays
           delete histo_array;
           delete binary_array;
-          */
         }
     }
   catch (ArgException &e)
