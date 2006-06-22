@@ -63,6 +63,7 @@ void initialize_array(uint32_t * data_histo,
  *  binary file
  * \param histo_array (OUTPUT) is the histogram array
  * \param histo_array_size (INPUT) is the size of the histogram array
+ * \param time_bin_vector (INPUT)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
@@ -81,17 +82,15 @@ void generate_histo(const int32_t file_size,
  * closest value inferior to the data. It returns -1 if the data is out of 
  * range.
  *
- * \param sortedArray (INPUT) is the sorted array where to look for the location
- * of the key
- * \param sortedArray_size (INPUT) is the size of the sorted array
+ * \param sortedVector (INPUT) is the sorted array where to look for the
+ * location of the key
  * \param key (INPUT) is the data to look for
  *
  * \returns It returns the position of the data or of the closest inferior value
- * found in sortedArray. Returns -1 if the data is out of range.
+ * found in sortedVector. Returns -1 if the data is out of range.
 */
-int binarySearch(float sortedArray[], 
-                 int sortedArray_size, 
-                 float key);
+int32_t binarySearch(const std::vector<float> sortedVector, 
+                     const float key);
 
 /**
  * \brief This function creates the vector of a linear time bins widths

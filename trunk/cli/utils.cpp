@@ -146,12 +146,10 @@ void parse_input_file_name(string & path_filename,
 
   if(debug)
     {
-      cout << "******************************"<<endl;
-      cout << "In parse_input_file_name " << endl;
+      cout << "**In parse_input_file_name**\n\n";
       cout << "   path_filename : " << path_filename << endl;
       cout << "   filename      : " << filename << endl;
-      cout << "   path          : " << path << endl;
-      cout << "******************************" << endl;
+      cout << "   path          : " << path << endl<<endl;
     }
 
   return;
@@ -194,12 +192,10 @@ void produce_output_file_name(string & filename,
   if (debug)
     {
       cout << endl;
-      cout << "*********************************"<<endl;
-      cout << "In produce_output_file_name " << endl;
+      cout << "**In produce_output_file_name**\n\n";
       cout << "   outfile         : " << outfile << endl;
       cout << "   local_path      : " << local_path << endl;
-      cout << "   output_filename : " << output_filename << endl;
-      cout << "*********************************"<<endl;      
+      cout << "   output_filename : " << output_filename << endl<<endl;
     }
 
   return;
@@ -257,7 +253,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
     {
       if(debug)
         {
-          message="\nBefore swapping the data\n";
+          message="\n**Before swapping the data**\n";
           print32_t_n_first_data(binary_array, 10, message);
         }
       
@@ -265,13 +261,13 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
       
       if(debug)
         {
-          message="\nAfter swapping the data\n";
+          message="\n**After swapping the data**\n";
           print32_t_n_first_data(binary_array, 10, message);
         }
     }
   else
     {
-      message="10 first values of " + input_filename + "\n";
+      message="**10 first values of " + input_filename + "\n";
     }
   
   return file_size;
