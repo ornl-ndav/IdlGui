@@ -22,11 +22,13 @@
  *
  */
 
-#include "utils.hpp"
-
 /*
  * $Id$
+ * 
+ * \file utils.cpp
  */
+
+#include "utils.hpp"
 
 using namespace std;
 using namespace TCLAP;
