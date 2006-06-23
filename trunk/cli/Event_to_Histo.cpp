@@ -22,11 +22,13 @@
  *
  */
 
-#include "Event_to_Histo.hpp"
-
 /*
  * $Id: Event_to_Histo.cpp 28 2006-05-02 17:45:45Z j35 $
+ *
+ * \file Event_to_Histo.cpp
  */
+
+#include "Event_to_Histo.hpp"
 
 using namespace std;
 using namespace TCLAP;
