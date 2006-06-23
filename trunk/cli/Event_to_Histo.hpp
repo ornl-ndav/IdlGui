@@ -100,16 +100,12 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  * will be 0, 25, 50, 75....
  *
  * \param max_time_bin (INPUT) 
- * \param time_bin_number (INPUT) is the number of time bins in input event file
- * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param time_rebin_width (INPUT) is the rebin value
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_linear_time_bin_vector(const float max_time_bin,
-                                              const int32_t time_bin_number,
-                                              const int32_t time_bin_width,
                                               const int32_t time_rebin_width,
                                               const bool debug);
 
@@ -118,16 +114,12 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  * \brief This function creates the vector of a logarithmic time bins percentage
  *
  * \param max_time_bin (INPUT)
- * \param time_bin_number (INPUT) is the number of time bins in input event file
- * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param log_rebin_percent (INPUT) is the rebin percentage
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
-                                           const int32_t time_bin_number,
-                                           const int32_t time_bin_width,
                                            const int32_t log_rebin_percent,
                                            const bool debug);
 
