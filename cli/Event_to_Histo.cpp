@@ -116,6 +116,7 @@ void generate_histo(const int32_t file_size,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
                     const vector<float> time_bin_vector,
+                    const float max_time_bin,
                     const bool debug)
 {
   int32_t pixelid;
@@ -128,10 +129,17 @@ void generate_histo(const int32_t file_size,
   if (debug)
     {
       cout << "\n\n**In generate_histo**\n\n";
-      cout << "Legend:\nPid : PixelID\t\t";
-      cout << "t_ms : time in micro seconds\t\t";
-      cout << "tstamp : time_stamp\n\n";
+      cout << "\tfile_size= " << file_size << endl;
+      cout << "\t(time_rebin_width*(new_Nt-1))= ";
+      cout << (time_rebin_width*(new_Nt-1))<<endl<<endl;   
+      
+      cout << "Legend:\n";
+      cout << "#: index number\t";
+      cout << "Pid: PixelID\t";
+      cout << "t_ms: time in micro seconds\t";
+      cout << "tstamp: time_stamp\n\n";
     }
+
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
   //the variable 2*i into the for loop. Like this, the all file is covered.
@@ -144,6 +152,7 @@ void generate_histo(const int32_t file_size,
                                 static_cast<float>(binary_array[2*i]/10.));
       if (debug)
         {
+          cout << "#" << i << "\t";
           cout << "Pid= " << pixelid <<"\t\t";
           cout << "t_ms= " << static_cast<float>(binary_array[2*i]/10.)<<"\t\t";
           cout << "tstamp= " << time_stamp;
@@ -153,8 +162,9 @@ void generate_histo(const int32_t file_size,
       if (pixelid<0 ||                             
           pixelid>pixelnumber ||
           time_stamp<0 ||
-          time_stamp>(time_rebin_width*(new_Nt-1)))  //time_stamp that are 
-        // higher the higher time bin possible
+          time_stamp>(max_time_bin))
+          //time_stamp>(time_rebin_width*(new_Nt-1)))  
+          //time_stamp that are out of range
         {
           if (debug)
             {
@@ -181,6 +191,7 @@ void generate_histo(const int32_t file_size,
  * For example, for a time bin of 25micros, the first values of the vector
  * will be 0, 25, 50, 75....
  *
+ * \param max_time_bin (INPUT)
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param time_rebin_width (INPUT) is the rebin value
@@ -188,18 +199,23 @@ void generate_histo(const int32_t file_size,
  *
  * \return A vector of the time bin values.
  */
-vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
+vector<float> generate_linear_time_bin_vector(const float max_time_bin,
+                                              const int32_t time_bin_number,
                                               const int32_t time_bin_width,
                                               const int32_t time_rebin_width,
                                               const bool debug)
 {
   vector<float> time_bin_vector;
-  int32_t max_time_bin = ((time_bin_number-1) * time_bin_width);
+  //int32_t max_time_bin = ((time_bin_number-1) * time_bin_width);
   int32_t i=0;  //use for debugging tool only
 
   if (debug)
     {
       cout << "\n**Generate linear time bin vector**\n\n";
+      cout << "\tmax_time_bin= " << max_time_bin<<endl;
+      cout << "\ttime_bin_number= " << time_bin_number << endl;
+      cout << "\ttime_bin_width= " << time_bin_width << endl;
+      cout << "\ttime_rebin_width= " << time_rebin_width << endl<<endl;
     } 
 
   for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
@@ -217,6 +233,7 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
 /**
  * \brief This function creates the vector of a logarithmic time bins percentage
  *
+ * \param max_time_bin (INPUT)
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param log_rebin_percent (INPUT) is the rebin percentage
@@ -224,7 +241,8 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
  *
  * \return A vector of the time bin values.
  */
-vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
+vector<float> generate_log_time_bin_vector(const float max_time_bin,
+                                           const int32_t time_bin_number,
                                            const int32_t time_bin_width,
                                            const int32_t log_rebin_percent,
                                            const bool debug)
@@ -239,12 +257,12 @@ vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
       cout << "\ttime_bin_vector["<<i<<"]= " << time_bin_vector[i]<<endl;
     }
 
-  ++i;
-  int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
+  //int32_t max_time_bin = ((time_bin_number -1) * time_bin_width);
   float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
   float t2= SMALLEST_TIME_BIN;
   
+  ++i;
   while (t2 < max_time_bin)
     {
       t1=t2;
@@ -295,6 +313,10 @@ int32_t main(int32_t argc, char *argv[])
       ValueArg<int32_t> timebinnumber("t", "time_bin_number", 
                                       "Number of time bin in event file",
                                       true, -1, "time bin number", cmd);
+
+      ValueArg<float> maxtimebin("M", "max_time_stamp", 
+                                      "Maximum value of time stamp",
+                                      true, -1, "Max time bin", cmd);
 
       ValueArg<int32_t> timerebinwidth("l","linear",
                                        "width of rebin linear time bin",
@@ -365,8 +387,12 @@ int32_t main(int32_t argc, char *argv[])
                                                       debug,
                                                       binary_array);
           
+          // now file_size is the number of element in the file
+          file_size = file_size / sizeof(uint32_t);
+          
           int32_t time_bin_number = timebinnumber.getValue(); 
           int32_t time_bin_width = timebinwidth.getValue();
+          float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
           vector<float> time_bin_vector;
@@ -374,7 +400,8 @@ int32_t main(int32_t argc, char *argv[])
           if (timerebinwidth.isSet())  //if we selected a linear rebinning
             {
               time_rebin_width = timerebinwidth.getValue();
-              time_bin_vector=generate_linear_time_bin_vector(time_bin_number,
+              time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
+                                                              time_bin_number,
                                                               time_bin_width,
                                                               time_rebin_width,
                                                               debug);
@@ -382,7 +409,8 @@ int32_t main(int32_t argc, char *argv[])
           else if (logrebinpercent.isSet()) //if we selected a log rebinning
             {
               log_rebin_percent = logrebinpercent.getValue();
-              time_bin_vector = generate_log_time_bin_vector(time_bin_number,
+              time_bin_vector = generate_log_time_bin_vector(max_time_bin,
+                                                             time_bin_number,
                                                              time_bin_width,
                                                              log_rebin_percent,
                                                              debug);
@@ -410,6 +438,7 @@ int32_t main(int32_t argc, char *argv[])
                          histo_array,
                          histo_array_size,
                          time_bin_vector,
+                         max_time_bin,
                          debug);
 
           // swap endian of output array (histo_array)

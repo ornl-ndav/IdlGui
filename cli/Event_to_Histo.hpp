@@ -64,6 +64,7 @@ void initialize_array(uint32_t * data_histo,
  * \param histo_array (OUTPUT) is the histogram array
  * \param histo_array_size (INPUT) is the size of the histogram array
  * \param time_bin_vector (INPUT)
+ * \param max_time_bin (INPUT)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
@@ -74,6 +75,7 @@ void generate_histo(const int32_t file_size,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
                     const std::vector<float> time_bin_vector,
+                    const float max_time_bin,
                     const bool debug);
 
 /**
@@ -97,6 +99,7 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  * For example, for a time bin of 25micros, the first values of the vector
  * will be 0, 25, 50, 75....
  *
+ * \param max_time_bin (INPUT) 
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param time_rebin_width (INPUT) is the rebin value
@@ -104,7 +107,8 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  *
  * \return A vector of the time bin values.
  */
-vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
+vector<float> generate_linear_time_bin_vector(const float max_time_bin,
+                                              const int32_t time_bin_number,
                                               const int32_t time_bin_width,
                                               const int32_t time_rebin_width,
                                               const bool debug);
@@ -113,6 +117,7 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
 /**
  * \brief This function creates the vector of a logarithmic time bins percentage
  *
+ * \param max_time_bin (INPUT)
  * \param time_bin_number (INPUT) is the number of time bins in input event file
  * \param time_bin_width (INPUT) is the width of time bins in input event file
  * \param log_rebin_percent (INPUT) is the rebin percentage
@@ -120,7 +125,8 @@ vector<float> generate_linear_time_bin_vector(const int32_t time_bin_number,
  *
  * \return A vector of the time bin values.
  */
-vector<float> generate_log_time_bin_vector(const int32_t time_bin_number,
+vector<float> generate_log_time_bin_vector(const float max_time_bin,
+                                           const int32_t time_bin_number,
                                            const int32_t time_bin_width,
                                            const int32_t log_rebin_percent,
                                            const bool debug);
