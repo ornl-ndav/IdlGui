@@ -107,6 +107,7 @@ void initialize_array(uint32_t * histo_array,
  * \param histo_array (OUTPUT) is the histogram array
  * \param histo_array_size (INPUT) is the size of the histogram array
  * \param time_bin_vector (INPUT)
+ * \param time_offset (INPUT) is the time offset
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
@@ -117,6 +118,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t histo_array_size,
                     const vector<float> time_bin_vector,
                     const float max_time_bin,
+                    const int32_t time_offset,
                     const bool debug)
 {
   int32_t pixelid;
@@ -132,6 +134,7 @@ void generate_histo(const int32_t file_size,
       cout << "\tfile_size= " << file_size << endl;
       cout << "\tnew_Nt= " << new_Nt << endl;
       cout << "\tmax_time_bin= " << max_time_bin << endl;
+      cout << "\ttime_offset= " << time_offset << endl;
       cout << "\nLegend:";
       cout << "\t\t#     : index number\n";
       cout << "------\t\t";
@@ -306,7 +309,7 @@ int32_t main(int32_t argc, char *argv[])
                                        "width of rebin linear time bin",
                                        true, -1, "new linear time bin");
 
-      ValueArg<int32_t> timeoffset("", "offset",
+      ValueArg<int32_t> timeoffset("", "time_offset",
                                    "initial offset time (microS)",
                                    false, 0, "time offset (microS)");
 
@@ -417,6 +420,7 @@ int32_t main(int32_t argc, char *argv[])
                          histo_array_size,
                          time_bin_vector,
                          max_time_bin,
+                         time_offset,
                          debug);
 
           // swap endian of output array (histo_array)
