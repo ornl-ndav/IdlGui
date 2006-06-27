@@ -64,6 +64,7 @@ void initialize_array(uint32_t * data_histo,
  * \param histo_array_size (INPUT) is the size of the histogram array
  * \param time_bin_vector (INPUT)
  * \param max_time_bin (INPUT)
+ * \param time_offset (INPUT) is the time offset
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const int32_t file_size,
@@ -74,6 +75,7 @@ void generate_histo(const int32_t file_size,
                     const int32_t histo_array_size,
                     const std::vector<float> time_bin_vector,
                     const float max_time_bin,
+                    const int32_t time_offset,
                     const bool debug);
 
 /**
