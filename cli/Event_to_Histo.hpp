@@ -58,7 +58,6 @@ void initialize_array(uint32_t * data_histo,
  * \param file_size (INPUT) is the size of the file to be read
  * \param new_Nt (INPUT) is the new number of time bins
  * \param pixel_number (INPUT) is the number of pixelids
- * \param time_rebin_width (INPUT) is the new time bin width
  * \param binary_array (INPUT) is the array of values coming from the event
  *  binary file
  * \param histo_array (OUTPUT) is the histogram array
@@ -70,7 +69,6 @@ void initialize_array(uint32_t * data_histo,
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixel_number,
-                    const int32_t time_rebin_width,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const int32_t histo_array_size,
