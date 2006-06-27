@@ -304,6 +304,10 @@ int32_t main(int32_t argc, char *argv[])
                                        "width of rebin linear time bin",
                                        true, -1, "new linear time bin");
 
+      ValueArg<int32_t> timeoffset("", "offset",
+                                   "initial offset time (* 100ns)",
+                                   false, 0, "time offset (* 100ns)");
+
       ValueArg<int32_t> logrebinpercent("L","logarithmic",
                                         "delta_t/t percentage",
                                         true, -1, 
