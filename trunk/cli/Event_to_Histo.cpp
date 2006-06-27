@@ -163,7 +163,7 @@ void generate_histo(const int32_t file_size,
       //remove data that are oustide the scope of range
       if (pixelid<0 ||                             
           pixelid>pixelnumber ||
-          time_stamp<0 ||
+          time_stamp<0 ||              //change 0 -> offset here !!!!!!
           time_stamp>(max_time_bin))
         {
           if (debug)
@@ -192,12 +192,14 @@ void generate_histo(const int32_t file_size,
  *
  * \param max_time_bin (INPUT)
  * \param time_rebin_width (INPUT) is the rebin value
+ * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_linear_time_bin_vector(const float max_time_bin,
                                               const int32_t time_rebin_width,
+                                              const int32_t time_offset,
                                               const bool debug)
 {
   vector<float> time_bin_vector;
@@ -209,15 +211,15 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
       cout << "\tmax_time_bin= " << max_time_bin<<endl;
       cout << "\ttime_rebin_width= " << time_rebin_width << endl<<endl;
     } 
-
+  // change t_bin=0 to t_bin=t_bin_offset here !!!!!
   for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
     {
       time_bin_vector.push_back(static_cast<float>(t_bin));
       if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
+          ++i;
         }
-      ++i;
     }
   return time_bin_vector;
 }
@@ -227,12 +229,14 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  *
  * \param max_time_bin (INPUT)
  * \param log_rebin_percent (INPUT) is the rebin percentage
+ * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
+                                           const int32_t time_offset,
                                            const bool debug)
 {
   vector<float> time_bin_vector;
@@ -305,8 +309,8 @@ int32_t main(int32_t argc, char *argv[])
                                        true, -1, "new linear time bin");
 
       ValueArg<int32_t> timeoffset("", "offset",
-                                   "initial offset time (* 100ns)",
-                                   false, 0, "time offset (* 100ns)");
+                                   "initial offset time (microS)",
+                                   false, 0, "time offset (microS)");
 
       ValueArg<int32_t> logrebinpercent("L","logarithmic",
                                         "delta_t/t percentage",
@@ -333,7 +337,7 @@ int32_t main(int32_t argc, char *argv[])
           cout << "|\t - In produce_output_file_name               |\n";
           cout << "|\t - Before swapping the data [if swap_input]  |\n";
           cout << "|\t - After swapping the data [if swap_input]   |\n";
-          cout << "|\t - 10 first values of [if no swap_input]     |\n";
+          cout << "|\t - 10 first values [if no swap_input]        |\n";
           cout << "|\t - Generate linear time bin vector           |\n";
           cout << "|\t - In generate_histo                         |\n";
           cout << "*************************************************\n\n";
@@ -373,6 +377,7 @@ int32_t main(int32_t argc, char *argv[])
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
+          int32_t time_offset = timeoffset.getValue();
           vector<float> time_bin_vector;
 
           if (timerebinwidth.isSet())  //if we selected a linear rebinning
@@ -380,6 +385,7 @@ int32_t main(int32_t argc, char *argv[])
               time_rebin_width = timerebinwidth.getValue();
               time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
                                                               time_rebin_width,
+                                                              time_offset,
                                                               debug);
             }
           else if (logrebinpercent.isSet()) //if we selected a log rebinning
@@ -387,6 +393,7 @@ int32_t main(int32_t argc, char *argv[])
               log_rebin_percent = logrebinpercent.getValue();
               time_bin_vector = generate_log_time_bin_vector(max_time_bin,
                                                              log_rebin_percent,
+                                                             time_offset,
                                                              debug);
             }
           else  

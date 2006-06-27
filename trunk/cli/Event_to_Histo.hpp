@@ -101,12 +101,14 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  *
  * \param max_time_bin (INPUT) 
  * \param time_rebin_width (INPUT) is the rebin value
+ * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_linear_time_bin_vector(const float max_time_bin,
                                               const int32_t time_rebin_width,
+                                              const int32_t time_offset,
                                               const bool debug);
 
 
@@ -115,12 +117,14 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  *
  * \param max_time_bin (INPUT)
  * \param log_rebin_percent (INPUT) is the rebin percentage
+ * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \return A vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
+                                           const int32_t time_offset,
                                            const bool debug);
 
 
