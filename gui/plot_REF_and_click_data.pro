@@ -1,4 +1,4 @@
-transpose_ok = 1
+transpose_ok = 0
 
 ;****************************************************************
 ;******** HISTOGRAMMING API FOR IDL *****************************
@@ -140,7 +140,7 @@ endif else begin
 		getvals = 0
 		print,'Terminating return data'
 ;	endif else begin
-;		print,'x['+i+' = '+strcompress(x[i],/rem)+'  y['+i+' = '+strcompress(y[i],/rem)+'  val = '+strcompress(simg[x[i],y[i]],/rem)
+;		print, 'pixelID#:'+strcompress(x[i]*304+y[i])+'  (x['+strcompress(i,/rem)+'] = '+strcompress(x[i],/rem)+'; y['+strcompress(i,/rem)+']= '+strcompress(y[i],/rem)+'; val = '+strcompress(simg[x[i],y[i]],/rem)+')'
 ;	endelse
 	endif
 
@@ -184,11 +184,18 @@ tlb = widget_base(column=1,$
 ;**Create the labels that will receive the information from the pixelID selected
 ; *Initialization of text boxes
 pixel_label = 'The two corners are defined by:'
-first_point = '  pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
-second_point = '  pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
+
+if transpose_ok EQ 1 then begin
+	first_point = '  pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
+	second_point = '  pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
+endif else begin
+	first_point = '  pixelID#: '+strcompress(x[0]*304+y[0])+' (x= '+strcompress(x[0],/rem)+'; y= '+strcompress(y[0],/rem)+'; intensity= '+strcompress(simg[x[0],y[0]],/rem)+')'
+	second_point = '  pixelID#: '+strcompress(x[1]*304+y[1])+' (x= '+strcompress(x[1],/rem)+'; y= '+strcompress(y[1],/rem)+'; intensity= '+strcompress(simg[x[1],y[1]],/rem)+')'
+endelse
 
 y12 = abs(y[1]-y[0])
 x12 = abs(x[1]-x[0])
+
 selection_label= 'The characteristics of the selection are: '
 number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
 x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
