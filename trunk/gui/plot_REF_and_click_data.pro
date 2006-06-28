@@ -129,7 +129,7 @@ if transpose_ok EQ 1 then begin
 		getvals = 0
 		print,'Terminating return data'
 	endif else begin
-		print, 'pixelID#:'+strcompress(y[i]*304+x[i])+'  (x['+strcompress(i,/rem)+'] = '+strcompress(y[i],/rem)+'; y['+strcompress(i,/rem)+' = '+strcompress(x[i],/rem)+'; val = '+strcompress(simg[x[i],y[i]],/rem)+')'
+		print, 'pixelID#:'+strcompress(y[i]*304+x[i])+'  (x['+strcompress(i,/rem)+'] = '+strcompress(y[i],/rem)+'; y['+strcompress(i,/rem)+']= '+strcompress(x[i],/rem)+'; val = '+strcompress(simg[y[i],x[i]],/rem)+')'
 	endelse
 
 endif else begin
@@ -151,15 +151,41 @@ r=255L  ;red max
 g=0L    ;no green
 b=255L  ;blue max
 
+x_plot = lonarr(2)
+y_plot = lonarr(2)
+
 for i=0,1 do begin
-	x[i]=x[i]+xoff
-	y[i]=y[i]+yoff
+	x_plot[i]=x[i]+xoff
+	y_plot[i]=y[i]+yoff
 endfor
 
-plots, x[0], y[0], /device, color=800
-plots, x[0], y[1], /device, /continue, color=r+(g*256L)+(b*256L^2)
-plots, x[1], y[1], /device, /continue, color=r+(g*256L)+(b*256L^2)
-plots, x[1], y[0], /device, /continue, color=r+(g*256L)+(b*256L^2)
-plots, x[0], y[0], /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, x_plot[0], y_plot[0], /device, color=800
+plots, x_plot[0], y_plot[1], /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, x_plot[1], y_plot[1], /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, x_plot[1], y_plot[0], /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, x_plot[0], y_plot[0], /device, /continue, color=r+(g*256L)+(b*256L^2)
+
+;***************
+
+;**Create the main window
+title = "Information about the surface selected"
+tlb = widget_base(column=1,$
+		  mbar=mbar,$
+	          title=title,$
+		  tlb_frame_attr=1,$
+	          xsize=400,$ 
+	          ysize=400,$
+		  xoffset=200,$  ;offset relative to left border
+		  yoffset=200)   ;offset relative to top border
+
+;**Create the labels that will receive the information from the pixelID selected
+; *Initialization of text boxes
+first_point = 'pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
+second_point = 'pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
+
+value_group = [first_point, second_point]
+text = widget_text(tlb, value=value_group, ysize=2)
+
+widget_control, tlb, /realize
 
 end
