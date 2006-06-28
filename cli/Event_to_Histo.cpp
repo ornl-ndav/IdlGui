@@ -164,7 +164,7 @@ void generate_histo(const int32_t file_size,
       //remove data that are oustide the scope of range
       if (pixelid<0 ||                             
           pixelid>pixelnumber ||
-          time_stamp<0 ||              //change 0 -> offset here !!!!!!
+          time_stamp<time_offset ||
           time_stamp>(max_time_bin))
         {
           if (debug)
@@ -212,8 +212,8 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
       cout << "\tmax_time_bin= " << max_time_bin<<endl;
       cout << "\ttime_rebin_width= " << time_rebin_width << endl<<endl;
     } 
-  // change t_bin=0 to t_bin=t_bin_offset here !!!!!
-  for (size_t t_bin=0; t_bin<=max_time_bin; t_bin+=time_rebin_width)
+
+  for (size_t t_bin=time_offset; t_bin<=max_time_bin; t_bin+=time_rebin_width)
     {
       time_bin_vector.push_back(static_cast<float>(t_bin));
       if (debug)
@@ -242,7 +242,7 @@ vector<float> generate_log_time_bin_vector(const float max_time_bin,
 {
   vector<float> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
-  time_bin_vector.push_back(static_cast<int32_t>(0));
+  time_bin_vector.push_back(static_cast<int32_t>(time_offset));
 
   if (debug)
     {
@@ -252,7 +252,7 @@ vector<float> generate_log_time_bin_vector(const float max_time_bin,
 
   float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
-  float t2= SMALLEST_TIME_BIN;
+  float t2= SMALLEST_TIME_BIN + time_offset;
   
   ++i;
   while (t2 < max_time_bin)
@@ -301,7 +301,7 @@ int32_t main(int32_t argc, char *argv[])
                                      "Number of pixels for this run",
                                      true, -1, "pixel number", cmd);
 
-      ValueArg<float> maxtimebin("M", "max_time_stamp", 
+      ValueArg<float> maxtimebin("M", "max_time_bin", 
                                       "Maximum value of time stamp",
                                       true, -1, "Max time bin", cmd);
 
@@ -402,6 +402,7 @@ int32_t main(int32_t argc, char *argv[])
               cerr << "#1: Rebin parameter not supported\n";
               cerr << "#2: If you reach this, see Steve Miller for your price";
             }
+
 
           int32_t pixel_number = pixelnumber.getValue();
 
