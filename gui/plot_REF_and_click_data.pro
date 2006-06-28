@@ -44,16 +44,17 @@ if transpose_ok EQ 1 then begin
 endif
 
 ;format of graph
-xtitle="pixel x"
-ytitle="pixel y"
 if transpose_ok EQ 1 then begin
 	xtitle = "pixel y"
 	ytitle = "pixel x"
-endif
-;title=file
+endif else begin
+	xtitle="pixel x"
+	ytitle="pixel y"
+endelse
+
 title=""
 
-window,1,xsize=600,ysize=400,xpos=250,ypos=250
+window,1,xsize=500,ysize=400,xpos=50,ypos=250
 
 ;***************color*************
 
@@ -128,18 +129,20 @@ if transpose_ok EQ 1 then begin
 	if ((x[i] LT 0) OR (x[i] GT Ny) OR (y[i] LT 0) OR (y[i] GT Nx) OR (!mouse.button EQ 4)) then begin
 		getvals = 0
 		print,'Terminating return data'
-	endif else begin
-		print, 'pixelID#:'+strcompress(y[i]*304+x[i])+'  (x['+strcompress(i,/rem)+'] = '+strcompress(y[i],/rem)+'; y['+strcompress(i,/rem)+']= '+strcompress(x[i],/rem)+'; val = '+strcompress(simg[y[i],x[i]],/rem)+')'
-	endelse
+;	endif else begin
+;		print, 'pixelID#:'+strcompress(y[i]*304+x[i])+'  (x['+strcompress(i,/rem)+'] = '+strcompress(y[i],/rem)+'; y['+strcompress(i,/rem)+']= '+strcompress(x[i],/rem)+'; val = '+strcompress(simg[y[i],x[i]],/rem)+')'
+;	endelse
+	endif
 
 endif else begin
 
 	if ((x[i] LT 0) OR (x[i] GT Nx) OR (y[i] LT 0) OR (y[i] GT Ny) OR (!mouse.button EQ 4)) then begin
 		getvals = 0
 		print,'Terminating return data'
-	endif else begin
-		print,'x['+i+' = '+strcompress(x[i],/rem)+'  y['+i+' = '+strcompress(y[i],/rem)+'  val = '+strcompress(simg[x[i],y[i]],/rem)
-	endelse
+;	endif else begin
+;		print,'x['+i+' = '+strcompress(x[i],/rem)+'  y['+i+' = '+strcompress(y[i],/rem)+'  val = '+strcompress(simg[x[i],y[i]],/rem)
+;	endelse
+	endif
 
 endelse
 
@@ -175,16 +178,24 @@ tlb = widget_base(column=1,$
 		  tlb_frame_attr=1,$
 	          xsize=400,$ 
 	          ysize=400,$
-		  xoffset=200,$  ;offset relative to left border
+		  xoffset=500,$  ;offset relative to left border
 		  yoffset=200)   ;offset relative to top border
 
 ;**Create the labels that will receive the information from the pixelID selected
 ; *Initialization of text boxes
-first_point = 'pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
-second_point = 'pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
+pixel_label = 'The two corners are defined by:'
+first_point = '  pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
+second_point = '  pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
 
-value_group = [first_point, second_point]
-text = widget_text(tlb, value=value_group, ysize=2)
+y12 = abs(y[1]-y[0])
+x12 = abs(x[1]-x[0])
+selection_label= 'The characteristics of the selection are: '
+number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
+x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
+y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+
+value_group = [pixel_label,first_point, second_point, selection_label, number_pixelid, x_wide, y_wide]
+text = widget_text(tlb, value=value_group, ysize=7)
 
 widget_control, tlb, /realize
 
