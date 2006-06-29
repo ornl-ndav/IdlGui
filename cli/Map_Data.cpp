@@ -64,7 +64,7 @@ map<int32_t, int32_t> make_pixel_map(const string mapfile,
                                      const int32_t num_pixels, 
                                      bool debug)
 {
-  // Read in the mapping file
+  // Read in the mapping file: m_data becomes the array of the mapping file
   ifstream m_data(mapfile.c_str(), ios::binary);
   if(!m_data.is_open())
     {
@@ -74,19 +74,30 @@ map<int32_t, int32_t> make_pixel_map(const string mapfile,
   // check the file size
   m_data.seekg(0,ios::end);
   size_t file_size=m_data.tellg();
+  
+  if(debug)
+    {
+      cout << "***Info about mapping file***"<<endl;
+      cout << "Name of file is: " << mapfile.c_str()<<endl;
+      cout << "Size of file is: " << file_size << endl;
+      cout << "Number of pixels: " << num_pixels << endl;
+      cout << "*****************************"<<endl;
+    }
+
   if(file_size<sizeof(int32_t)*num_pixels)
     {
       throw runtime_error("Requested more pixels than mapping file contains");
     }
+
   m_data.seekg(0,ios::beg);
 
   map<int32_t, int32_t> pixel_map;
 
-  int32_t pm_buffer[num_pixels];
+    int32_t pm_buffer[num_pixels];
   m_data.read(reinterpret_cast<char *>(pm_buffer), 
-              num_pixels*sizeof(pm_buffer));
+              num_pixels*sizeof(int32_t));
   m_data.close();
-  
+
   // Create the pixel map
   for(size_t i = 0; i < num_pixels; ++i)
     {
