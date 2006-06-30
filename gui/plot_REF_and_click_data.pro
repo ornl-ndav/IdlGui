@@ -1,4 +1,4 @@
-transpose_ok = 0
+transpose_ok = 1
 
 ;****************************************************************
 ;******** HISTOGRAMMING API FOR IDL *****************************
@@ -177,7 +177,7 @@ tlb = widget_base(column=1,$
 	          title=title,$
 		  tlb_frame_attr=1,$
 	          xsize=400,$ 
-	          ysize=400,$
+	          ysize=220,$
 		  xoffset=500,$  ;offset relative to left border
 		  yoffset=200)   ;offset relative to top border
 
@@ -185,24 +185,57 @@ tlb = widget_base(column=1,$
 ; *Initialization of text boxes
 pixel_label = 'The two corners are defined by:'
 
+y_min = min(y)
+y_max = max(y)
+x_min = min(x)
+x_max = max(x)
+
+y12 = y_max-y_min
+x12 = x_max-x_min
+total_pixel_inside = x12*y12
+total_pixel_outside = Nx*Ny - total_pixel_inside
+
 if transpose_ok EQ 1 then begin
-	first_point = '  pixelID#: '+strcompress(y[0]*304+x[0])+' (x= '+strcompress(y[0],/rem)+'; y= '+strcompress(x[0],/rem)+'; intensity= '+strcompress(simg[y[0],x[0]],/rem)+')'
-	second_point = '  pixelID#: '+strcompress(y[1]*304+x[1])+' (x= '+strcompress(y[1],/rem)+'; y= '+strcompress(x[1],/rem)+'; intensity= '+strcompress(simg[y[1],x[1]],/rem)+')'
+
+	first_point = '  pixelID#: '+strcompress(y_min*304+x_min)+' (x= '+strcompress(y_min,/rem)+'; y= '+strcompress(x_min,/rem)+'; intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
+	second_point = '  pixelID#: '+strcompress(y_max*304+x_max)+' (x= '+strcompress(y_max,/rem)+'; y= '+strcompress(x_max,/rem)+'; intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+
+	;calculation of inside region total counts
+	inside_total = total(simg(x_min:x_max, y_min:y_max))
+	outside_total = total(simg)-inside_total
+	inside_average = inside_total/total_pixel_inside
+	outside_average = outside_total/total_pixel_outside
+		
 endif else begin
-	first_point = '  pixelID#: '+strcompress(x[0]*304+y[0])+' (x= '+strcompress(x[0],/rem)+'; y= '+strcompress(y[0],/rem)+'; intensity= '+strcompress(simg[x[0],y[0]],/rem)+')'
-	second_point = '  pixelID#: '+strcompress(x[1]*304+y[1])+' (x= '+strcompress(x[1],/rem)+'; y= '+strcompress(y[1],/rem)+'; intensity= '+strcompress(simg[x[1],y[1]],/rem)+')'
+	
+	first_point = '  pixelID#: '+strcompress(x_min*304+y_min)+' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'; intensity= '+strcompress(simg[y_min,x_min],/rem)+')'
+	second_point = '  pixelID#: '+strcompress(x_max*304+y_max)+' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'; intensity= '+strcompress(simg[y_max,x_max],/rem)+')'
+
+	;calculation of inside region total counts
+	inside_total = total(simg(y_min:y_max, x_min:x_max))
+	outside_total = total(simg)-inside_total
+	inside_average = inside_total/total_pixel_inside
+	outside_average = outside_total/total_pixel_outside
+
 endelse
 
-y12 = abs(y[1]-y[0])
-x12 = abs(x[1]-x[0])
-
+blank_line = ""
 selection_label= 'The characteristics of the selection are: '
 number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
 x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
 y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
 
-value_group = [pixel_label,first_point, second_point, selection_label, number_pixelid, x_wide, y_wide]
-text = widget_text(tlb, value=value_group, ysize=7)
+total_counts = 'Total counts:'
+total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
+total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
+average_counts = 'Average counts:'
+average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
+average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+
+value_group = [pixel_label,first_point, second_point, blank_line, selection_label, number_pixelid,$
+	 x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
+	average_counts, average_inside_region, average_outside_region]
+text = widget_text(tlb, value=value_group, ysize=15)
 
 widget_control, tlb, /realize
 
