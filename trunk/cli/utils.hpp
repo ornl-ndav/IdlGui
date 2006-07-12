@@ -48,7 +48,8 @@ static const float SMALLEST_TIME_BIN = 0.01;
 
 /**
  * \brief This function swap endians of an array
- * 
+ * This function only works for primatives that are 32 bits in size.
+ *
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
@@ -57,7 +58,7 @@ void swap_endian(const int32_t file_size,
                  NumT * array);
 
 /**
- * \brief This function swap endians of digits
+ * \brief This function swap endians of digits (only for 32 bits digits)
  *
  * \param x (INPUT/OUTPUT) is the digit to be swapped
  */
