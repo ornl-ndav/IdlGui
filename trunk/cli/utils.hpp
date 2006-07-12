@@ -52,11 +52,6 @@ static const float SMALLEST_TIME_BIN = 0.01;
  * \param file_size (INPUT) is the size of the array
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
-
-/*void swap_endian (const int32_t file_size, 
-                  int32_t * array);
-*/
-
 template <typename NumT>
 void swap_endian(const int32_t file_size,
                  NumT * array);
