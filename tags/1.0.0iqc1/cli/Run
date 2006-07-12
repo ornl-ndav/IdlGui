@@ -1,0 +1,14 @@
+#!/bin/sh
+# this scripts allows to speed up the process of making a histo file
+# while waiting for the 1.0.0iqc2 release and the multi input files feature
+
+if [ ! -z $1 ]
+then
+	echo "....processing $1....please wait"
+	./Event_to_Histo ~/CD4/BSS/2006_1_2_SCI/$1/$1_neutron_event.dat -p 9216 -l 25 -t 2001 --swap_input
+	echo ".....DONE"
+else
+	echo "HELP:"
+	echo "     ./Run BSS_20      default path is ~/CD4/BSS/2006_1_2_SCI/"
+fi
+
