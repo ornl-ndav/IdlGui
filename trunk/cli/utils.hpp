@@ -99,7 +99,7 @@ void print32_t_n_first_data(const int32_t * array,
  * debugging file
  * \param debug (INPUT) is a flag for printing debugging info
 */
-void path_input_output_file_names(std::string & path_filename,
+void path_input_output_file_names(const std::string & path_filename,
                                   std::string & filename,
                                   std::string & path,
                                   std::string & alternate_path,
@@ -116,7 +116,7 @@ void path_input_output_file_names(std::string & path_filename,
  * \param path (OUTPUT) is the path name only of the input file
  * \param debug (INPUT) is a flag for printing debugging info
  */
-void parse_input_file_name(std::string & path_filename,
+void parse_input_file_name(const std::string & path_filename,
                            std::string & filename,
                            std::string & path,
                            const bool debug);
@@ -132,9 +132,9 @@ void parse_input_file_name(std::string & path_filename,
  * output file
  * \param debug (INPUT) is a flag for printing debugging info
 */
-void produce_output_file_name(std::string & filename,
-                              std::string & path,
-                              std::string & alternate_path,
+void produce_output_file_name(const std::string & filename,
+                              const std::string & path,
+                              const std::string & alternate_path,
                               std::string & output_filename,
                               const bool debug);
 

@@ -84,7 +84,7 @@ void print32_t_n_first_data(const int32_t * array,
 }
 
 
-void path_input_output_file_names(string & path_filename,
+void path_input_output_file_names(const string & path_filename,
                                   string & filename,
                                   string & path,
                                   string & alternate_path,
@@ -109,7 +109,7 @@ void path_input_output_file_names(string & path_filename,
 }
 
 
-void parse_input_file_name(string & path_filename,
+void parse_input_file_name(const string & path_filename,
                            string & filename,
                            string & path,
                            const bool debug)
@@ -134,9 +134,9 @@ void parse_input_file_name(string & path_filename,
 }
 
 
-void produce_output_file_name(string & filename,
-                              string & path,
-                              string & alternate_path,
+void produce_output_file_name(const string & filename,
+                              const string & path,
+                              const string & alternate_path,
                               string & output_filename,
                               const bool debug)
 {
