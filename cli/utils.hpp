@@ -32,11 +32,11 @@
 #define _UTILS_HPP 1
 
 
-///this is a string that contains the new part of the binary data file
-static const std::string HISTO_FILE_TAG("histo.dat");
+/// This is a string that contains the new part of the binary data file
+static const std::string HISTO_FILE_TAG = "histo.dat";
 
-///this is a string that contains the software tag version
-static const std::string VERSION_TAG("1.0.0iqc1");
+///This is a string that contains the software tag version
+static const std::string VERSION_TAG = "1.0.0iqc1";
 
 ///This is a constant to hold the size of an int32_t
 static const size_t SIZEOF_INT32_T = sizeof(int32_t);
