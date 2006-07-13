@@ -143,6 +143,8 @@ void produce_output_file_name(std::string & filename,
  * \param n_disp (INPUT) is the number of element to display for debugging
  * purpose only
  * \param binary_array (OUTPUT) is the array of the event binary data
+ *
+ * \returns The size (in bytes) of the input file
  */
 int32_t read_event_file_and_populate_binary_array(const 
                                                   std::string & input_file,

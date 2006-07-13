@@ -88,7 +88,8 @@ void generate_histo(const int32_t file_size,
  * location of the key
  * \param key (INPUT) is the data to look for
  *
- * \returns It returns the position of the data or of the closest inferior value
+ * \returns 
+ * It returns the position of the data or of the closest inferior value
  * found in sortedVector. Returns -1 if the data is out of range.
 */
 int32_t binarySearch(const std::vector<float> sortedVector, 
@@ -104,7 +105,7 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
- * \return A vector of the time bin values.
+ * \returns A vector of the time bin values.
  */
 vector<float> generate_linear_time_bin_vector(const float max_time_bin,
                                               const int32_t time_rebin_width,
@@ -120,7 +121,7 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
- * \return A vector of the time bin values.
+ * \returns A vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
