@@ -76,12 +76,14 @@ inline void swap_digit (NumT & x);
  *
  * \param array (INPUT) is the array for which we need to display
  * the first n elements
+ * \param array_size (INPUT) is the size of the array
  * \param n_disp (INPUT) is the number of element to display
  * \param string_message (INPUT) is the message to display before the n_disp
  * elements
  */
 void print32_t_n_first_data(const int32_t * array,
-                            const int32_t n_disp,
+                            const size_t array_size,
+                            const size_t n_disp,
                             const std::string message);
 
 /**
@@ -142,6 +144,7 @@ void produce_output_file_name(std::string & filename,
  * 
  * \param input_file (INPUT) is the name of the event binary file
  * \param input_filename (INPUT) is the complete name of the event binary file
+ * \param n_disp (INPUT) is the number of element to display
  * \param swap_input (INPUT) is a flag that trigger the swapping of the data
  * coming from the event binary file
  * \param debug (INPUT) is a flag for printing debugging info
@@ -155,6 +158,7 @@ int32_t read_event_file_and_populate_binary_array(const
                                                   std::string & input_file,
                                                   const 
                                                   std::string & input_filename,
+                                                  const size_t n_disp,
                                                   const bool swap_input,
                                                   const bool debug,
                                                   uint32_t * &binary_array);

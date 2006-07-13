@@ -227,6 +227,10 @@ int32_t main(int32_t argc, char *argv[])
       CmdLine cmd("Command line description message", ' ', VERSION_TAG);
       
       // Add command-line options
+      ValueArg<size_t> n_disp_cmd("n","data_displayed",
+                               "number of element to display",
+                               false, 10, "element to display", cmd);
+
       ValueArg<string> altoutpath("a", "alternate_output", 
                                   "Alternate path for output file",
                                   false, "", "path", cmd);
@@ -275,17 +279,21 @@ int32_t main(int32_t argc, char *argv[])
       vector<string> input_file_vector = event_file_vector.getValue();
 
       bool debug = debugSwitch.getValue();
+
+      int32_t n_disp;
+      n_disp = n_disp_cmd.getValue();
+
       if (debug)
         {
           // Table of contents of debug tool
           cout << "************* TABLE OF CONTENTS ******************\n";
-          cout << "|\t - In parse_input_file_name                  |\n";
-          cout << "|\t - In produce_output_file_name               |\n";
-          cout << "|\t - Before swapping the data [if swap_input]  |\n";
-          cout << "|\t - After swapping the data [if swap_input]   |\n";
-          cout << "|\t - 10 first values [if no swap_input]        |\n";
-          cout << "|\t - Generate linear time bin vector           |\n";
-          cout << "|\t - In generate_histo                         |\n";
+          cout << "|\t - In parse_input_file_name                  \n";
+          cout << "|\t - In produce_output_file_name               \n";
+          cout << "|\t - Before swapping the data [if swap_input]  \n";
+          cout << "|\t - After swapping the data [if swap_input]  \n";
+          cout << "|\t - n first values [if no swap_input]\n";
+          cout << "|\t - Generate linear time bin vector           \n";
+          cout << "|\t - In generate_histo                         \n";
           cout << "*************************************************\n\n";
         }
 
@@ -313,6 +321,7 @@ int32_t main(int32_t argc, char *argv[])
           file_size = 
             read_event_file_and_populate_binary_array(input_file,
                                                       input_filename,
+                                                      n_disp,
                                                       swapiSwitch.getValue(),
                                                       debug,
                                                       binary_array);
