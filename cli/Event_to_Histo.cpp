@@ -33,20 +33,7 @@
 using namespace std;
 using namespace TCLAP;
 
-/**
- * \brief This function does a binary search of a variable into a given
- * array. It returns the position of the data into the sortedVector or the 
- * closest value inferior to the data. It returns -1 if the data is out of 
- * range.
- *
- * \param sortedVector (INPUT) is the sorted array where to look for the 
- * location of the key
- * \param sortedVector_size (INPUT) is the size of the sorted array
- * \param key (INPUT) is the data to look for
- *
- * \returns It returns the position of the data or of the closest inferior value
- * found in sortedVector. Returns -1 if the data is out of range.
-*/
+
 int32_t binarySearch(const vector<float> sortedVector, 
                      const float key)
 {
@@ -78,13 +65,7 @@ int32_t binarySearch(const vector<float> sortedVector,
   return (first);
 }
 
-/**
- * \brief This function initializes an array
- * 
- * \param histo_array the array to be initialized
- * \param size the size of the array
- *
- */
+
 void initialize_array(uint32_t * histo_array, 
                       const int size)
 {
@@ -96,20 +77,7 @@ void initialize_array(uint32_t * histo_array,
   return;   
 }
 
-/**
- * \brief This function generates the final histogram array
- *
- * \param file_size (INPUT) is the size of the file to be read
- * \param new_Nt (INPUT) is the new number of time bins
- * \param pixel_number (INPUT) is the number of pixelids
- * \param binary_array (INPUT) is the array of values coming from the event
- *  binary file
- * \param histo_array (OUTPUT) is the histogram array
- * \param histo_array_size (INPUT) is the size of the histogram array
- * \param time_bin_vector (INPUT)
- * \param time_offset (INPUT) is the time offset
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- */
+
 void generate_histo(const int32_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixelnumber,
@@ -186,18 +154,7 @@ void generate_histo(const int32_t file_size,
   return;
 }
 
-/**
- * \brief This function creates the vector of a linear time bins widths
- * For example, for a time bin of 25micros, the first values of the vector
- * will be 0, 25, 50, 75....
- *
- * \param max_time_bin (INPUT)
- * \param time_rebin_width (INPUT) is the rebin value
- * \param time_offset (INPUT) is the starting offset time
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- *
- * \return A vector of the time bin values.
- */
+
 vector<float> generate_linear_time_bin_vector(const float max_time_bin,
                                               const int32_t time_rebin_width,
                                               const int32_t time_offset,
@@ -225,16 +182,7 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
   return time_bin_vector;
 }
 
-/**
- * \brief This function creates the vector of a logarithmic time bins percentage
- *
- * \param max_time_bin (INPUT)
- * \param log_rebin_percent (INPUT) is the rebin percentage
- * \param time_offset (INPUT) is the starting offset time
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- *
- * \return A vector of the time bin values.
- */
+
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
                                            const int32_t time_offset,
@@ -270,10 +218,7 @@ vector<float> generate_log_time_bin_vector(const float max_time_bin,
   return time_bin_vector;
 }
 
-/**
- * \brief This program takes an event binary file and according to the 
- * arguments provided, creates a histo binary file.
- */
+
 int32_t main(int32_t argc, char *argv[])
 {
   try
