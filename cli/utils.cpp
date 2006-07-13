@@ -31,7 +31,6 @@
 #include "utils.hpp"
 
 using namespace std;
-using namespace TCLAP;
 
 /**
  * \brief This function swap endians of an array
