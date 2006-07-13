@@ -31,19 +31,24 @@
 #ifndef _UTILS_HPP
 #define _UTILS_HPP 1
 
-// this is a string that contains the new part of the binary data file
+
+///this is a string that contains the new part of the binary data file
 static const std::string HISTO_FILE_TAG("histo.dat");
 
-// this is a string that contains the software tag version
+///this is a string that contains the software tag version
 static const std::string VERSION_TAG("1.0.0iqc1");
 
-// This is a constant to hold the size of an int32_t
+///This is a constant to hold the size of an int32_t
 static const size_t SIZEOF_INT32_T = sizeof(int32_t);
 
-// This is a constant to hold the size of an uint32_t
+///This is a constant to hold the size of an uint32_t
 static const size_t SIZEOF_UINT32_T = sizeof(uint32_t);
 
-// This is a constant to hold the "zero" value for the DAS
+/** This is a constant used for the logarithmic rebinning case
+ * that holds the "zero" value for the DAS. Because the smallest time
+ * bin that can be received is 0.1 microS, any number smaller than 0.1,
+ * like 0.01 in this case, becomes a "virtual zero".
+ */
 static const float SMALLEST_TIME_BIN = 0.01;
 
 /**
