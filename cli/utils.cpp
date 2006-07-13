@@ -57,13 +57,27 @@ inline void swap_digit (NumT & x)
 
 
 void print32_t_n_first_data(const int32_t * array,
-                            const int32_t n_disp,
+                            const size_t array_size,
+                            const size_t n_disp,
                             const string message)
 {
   cout << message << endl;
-  for (size_t i=0 ; i<n_disp ; ++i)
+  if (n_disp < array_size)
     {
-      cout << "\tdata[" << i << "]= " << array[i]<<endl;
+      for (size_t i=0 ; i<n_disp ; ++i)
+        {
+          cout << "\tarray[" << i << "]= " << array[i]<<endl;
+        }
+      cout << "\t... \n";
+      cout << "\tarray["<<array_size-1<<"]= " << array[array_size-1]<<endl;
+    }
+  else
+    {
+      for (size_t i=0 ; i<array_size ; ++i)
+        {
+          cout << "\tarray[" << i << "]= " << array[i]<<endl;
+        }
+      
     }
   
   return;
@@ -159,6 +173,7 @@ void produce_output_file_name(string & filename,
 int32_t read_event_file_and_populate_binary_array(const string & input_file,
                                                   const string & 
                                                   input_filename,
+                                                  const size_t n_disp,
                                                   const bool swap_input,
                                                   const bool debug,
                                                   int32_t * &binary_array)
@@ -174,6 +189,8 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
     }
   
   file_size = file.tellg();
+  size_t array_size = file_size / SIZEOF_INT32_T;
+
   try
     {
       binary_array = new int32_t [file_size];
@@ -196,7 +213,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
       if(debug)
         {
           message="\n**Before swapping the data**\n";
-          print32_t_n_first_data(binary_array, 10, message);
+          print32_t_n_first_data(binary_array, array_size, n_disp, message);
         }
       
       swap_endian(file_size, binary_array);
@@ -204,12 +221,12 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
       if(debug)
         {
           message="\n**After swapping the data**\n";
-          print32_t_n_first_data(binary_array, 10, message);
+          print32_t_n_first_data(binary_array, array_size, n_disp, message);
         }
     }
   else
     {
-      message="**10 first values of " + input_filename + "\n";
+      message="**n first values of " + input_filename + "\n";
     }
   
   return file_size;
