@@ -58,10 +58,8 @@ inline void swap_digit (NumT & x)
 
 void print32_t_n_first_data(const int32_t * array,
                             const size_t array_size,
-                            const size_t n_disp,
-                            const string message)
+                            const size_t n_disp)
 {
-  cout << message << endl;
   if (n_disp < array_size)
     {
       for (size_t i=0 ; i<n_disp ; ++i)
@@ -77,9 +75,8 @@ void print32_t_n_first_data(const int32_t * array,
         {
           cout << "\tarray[" << i << "]= " << array[i]<<endl;
         }
-      
     }
-  
+
   return;
 }
 
@@ -210,25 +207,21 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
   // displays the n_disp first values of the event binary file
   string message;
   
+  if(debug)
+    {
+      cout << "\n**" << n_disp;
+      cout << " first values and last value of binary_array**\n";
+      print32_t_n_first_data(binary_array, array_size, n_disp);
+    }
+
   if(swap_input)
     {
-      if(debug)
-        {
-          message="\n**Before swapping the data**\n";
-          print32_t_n_first_data(binary_array, array_size, n_disp, message);
-        }
-      
       swap_endian(array_size, binary_array);
-      
       if(debug)
         {
-          message="\n**After swapping the data**\n";
-          print32_t_n_first_data(binary_array, array_size, n_disp, message);
+          cout << "\n**After swapping the data**\n";
+          print32_t_n_first_data(binary_array, array_size, n_disp);
         }
-    }
-  else
-    {
-      message="**n first values of " + input_filename + "\n";
     }
 
   return file_size;

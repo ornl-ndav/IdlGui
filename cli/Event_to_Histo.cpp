@@ -289,9 +289,8 @@ int32_t main(int32_t argc, char *argv[])
           cout << "************* TABLE OF CONTENTS ******************\n";
           cout << "|\t - In parse_input_file_name                  \n";
           cout << "|\t - In produce_output_file_name               \n";
-          cout << "|\t - Before swapping the data [if swap_input]  \n";
-          cout << "|\t - After swapping the data [if swap_input]  \n";
-          cout << "|\t - n first values [if no swap_input]\n";
+          cout << "|\t - first values and last value of binary_array\n";
+          cout << "|\t - After swapping the data\n";
           cout << "|\t - Generate linear time bin vector           \n";
           cout << "|\t - In generate_histo                         \n";
           cout << "*************************************************\n\n";

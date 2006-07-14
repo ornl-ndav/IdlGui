@@ -78,13 +78,10 @@ inline void swap_digit (NumT & x);
  * the first n elements
  * \param array_size (INPUT) is the size of the array
  * \param n_disp (INPUT) is the number of element to display
- * \param string_message (INPUT) is the message to display before the n_disp
- * elements
  */
 void print32_t_n_first_data(const int32_t * array,
                             const size_t array_size,
-                            const size_t n_disp,
-                            const std::string message);
+                            const size_t n_disp);
 
 /**
  * \brief This function parse the name of the event binary file and 
