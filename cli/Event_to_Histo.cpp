@@ -278,7 +278,7 @@ int32_t main(int32_t argc, char *argv[])
       // Create string vector of all input file names
       vector<string> input_file_vector = event_file_vector.getValue();
 
-      bool debug = debugSwitch.getValue();
+      const bool debug = debugSwitch.getValue();
 
       int32_t n_disp;
       n_disp = n_disp_cmd.getValue();
