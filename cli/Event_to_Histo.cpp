@@ -78,7 +78,7 @@ void initialize_array(uint32_t * histo_array,
 }
 
 
-void generate_histo(const int32_t file_size,
+void generate_histo(const int32_t array_size,
                     const int32_t new_Nt,
                     const int32_t pixelnumber,
                     const int32_t * binary_array,
@@ -99,7 +99,7 @@ void generate_histo(const int32_t file_size,
   if (debug)
     {
       cout << "\n\n**In generate_histo**\n\n";
-      cout << "\tfile_size= " << file_size << endl;
+      cout << "\tarray_size= " << array_size << endl;
       cout << "\tnew_Nt= " << new_Nt << endl;
       cout << "\tmax_time_bin= " << max_time_bin << endl;
       cout << "\ttime_offset= " << time_offset << endl;
@@ -113,7 +113,7 @@ void generate_histo(const int32_t file_size,
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
   //the variable 2*i into the for loop. Like this, the all file is covered.
-  for (size_t i=0 ; i<file_size/2; i++) 
+  for (size_t i=0 ; i<array_size/2; i++) 
   {
       pixelid = binary_array[2*i+1];
       //We need to divide by 10 to go from 100ns to micros
@@ -327,7 +327,8 @@ int32_t main(int32_t argc, char *argv[])
 
           // now file_size is the number of element in the file
 
-          file_size = file_size / sizeof(uint32_t);
+          int32_t array_size;
+          array_size = file_size / sizeof(uint32_t);
 
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
@@ -367,7 +368,7 @@ int32_t main(int32_t argc, char *argv[])
           uint32_t * histo_array = new uint32_t [histo_array_size];
           
           //generate histo binary data array
-          generate_histo(file_size,
+          generate_histo(array_size,
                          new_Nt,
                          pixelnumber.getValue(),
                          binary_array,
