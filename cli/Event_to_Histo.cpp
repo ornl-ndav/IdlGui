@@ -325,10 +325,11 @@ int32_t main(int32_t argc, char *argv[])
                                                       swapiSwitch.getValue(),
                                                       debug,
                                                       binary_array);
-          
+
           // now file_size is the number of element in the file
+
           file_size = file_size / sizeof(uint32_t);
-          
+
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;

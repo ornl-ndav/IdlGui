@@ -193,18 +193,20 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
 
   try
     {
-      binary_array = new int32_t [file_size];
+      binary_array = new int32_t [array_size];
     }
   catch (bad_alloc &)
     {
       cerr << "Error allocating memory." << endl;
     }
+
   file.seekg(0,ios::beg);
-  
+
   // transfer the data from the event binary file int32_to binary_array
-  file.read(reinterpret_cast<char *>(binary_array),file_size);
+  //  file.read(reinterpret_cast<char *>(binary_array),file_size);
+  file.read(reinterpret_cast<char *>(binary_array),array_size);
   file.close();
-  
+
   // displays the n_disp first values of the event binary file
   string message;
   
@@ -216,7 +218,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
           print32_t_n_first_data(binary_array, array_size, n_disp, message);
         }
       
-      swap_endian(file_size, binary_array);
+      swap_endian(array_size, binary_array);
       
       if(debug)
         {
@@ -228,7 +230,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
     {
       message="**n first values of " + input_filename + "\n";
     }
-  
+
   return file_size;
 }
 
