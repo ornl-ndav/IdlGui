@@ -201,7 +201,7 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
 
   // transfer the data from the event binary file int32_to binary_array
   //  file.read(reinterpret_cast<char *>(binary_array),file_size);
-  file.read(reinterpret_cast<char *>(binary_array),array_size);
+  file.read(reinterpret_cast<char *>(binary_array),file_size);
   file.close();
 
   // displays the n_disp first values of the event binary file
