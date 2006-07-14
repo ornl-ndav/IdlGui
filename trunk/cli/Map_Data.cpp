@@ -29,6 +29,7 @@
  */
 
 #include "Map_Data.hpp"
+#include "Event_to_Histo.hpp"
 
 using namespace std;
 using namespace TCLAP;
@@ -90,13 +91,20 @@ map<int32_t, int32_t> make_pixel_map(const string mapfile,
     }
 
   m_data.seekg(0,ios::beg);
-
   map<int32_t, int32_t> pixel_map;
 
-    int32_t pm_buffer[num_pixels];
+  int32_t pm_buffer[num_pixels];
   m_data.read(reinterpret_cast<char *>(pm_buffer), 
-              num_pixels*sizeof(int32_t));
+              num_pixels*SIZEOF_INT32_T);
   m_data.close();
+
+  // check lowest key value (should be 0)
+
+  // check highest key value (should be num_pixels-1)
+
+  // Check unicity of pixelids from mapping file (size == num_pixels)
+
+
 
   // Create the pixel map
   for(size_t i = 0; i < num_pixels; ++i)
