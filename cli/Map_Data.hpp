@@ -42,11 +42,6 @@
 // neutron histogram binary data
 static const std::string MAP_FILE_POSTFIX("_mapped");
 
-// This is a constant to hold the size of an uint32_t
-static const int SIZEOF_UINT32_T = sizeof(uint32_t);
-
-// This is a constant to hold the size of an int32_t
-static const int SIZEOF_INT32_T = sizeof(int32_t);
 /**
  * \defgroup make_mapped_filename Map_Data::make_mapped_filename
  * \{
