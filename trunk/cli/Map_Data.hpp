@@ -84,7 +84,6 @@ const std::string make_mapped_filename(const std::string full_path,
  *
  * \param mapfile (INPUT) is the string containing the map filename
  * \param num_pixels (INPUT) is the number of expceted detector pixels
- * \param pixel_map (OUTPUT) is the resulting pixel map
  * \param debug (INPUT) is a flag for printing debugging info
  */
 std::map<int32_t, int32_t> make_pixel_map(const std::string mapfile, 

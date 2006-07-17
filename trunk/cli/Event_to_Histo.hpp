@@ -45,8 +45,8 @@
 /**
  * \brief This function initializes an array
  * 
- * \param histo_array the array to be initialized
- * \param size the size of the array
+ * \param data_histo (INPUT) the array to be initialized
+ * \param size (INPUT) the size of the array
  *
  */
 void initialize_array(uint32_t * data_histo, 
@@ -121,7 +121,7 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  * \param time_offset (INPUT) is the starting offset time
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
- * \returns A vector of the time bin values.
+ * \returns vector of the time bin values.
  */
 vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
