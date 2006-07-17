@@ -378,6 +378,9 @@ int32_t main(int32_t argc, char *argv[])
                          max_time_bin,
                          time_offset,
                          debug);
+          
+          // free memory allocated to binary_array
+          delete binary_array;
 
           // swap endian of output array (histo_array)
           if(swapoSwitch.getValue())
@@ -392,9 +395,8 @@ int32_t main(int32_t argc, char *argv[])
                            SIZEOF_UINT32_T*histo_array_size);
           histo_file.close();
           
-          // free memory allocated to arrays
+          // free memory allocated to histo_array
           delete histo_array;
-          delete binary_array;
         }
     }
   catch (ArgException &e)
