@@ -31,16 +31,9 @@
 #ifndef _EVENT_TO_HISTO_HPP
 #define _EVENT_TO_HISTO_HPP 1
 
-#include <algorithm>
 #include <cmath>
-#include <fstream>
-#include <iostream>
-#include <stdexcept>
-#include <stdint.h>
-#include <string>
 #include <tclap/CmdLine.h>
-#include <vector>
-#include "utils.cpp"
+#include "utils.hpp"
 
 /**
  * \brief This function initializes an array
@@ -107,7 +100,7 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  *
  * \returns A vector of the time bin values.
  */
-vector<float> generate_linear_time_bin_vector(const float max_time_bin,
+std::vector<float> generate_linear_time_bin_vector(const float max_time_bin,
                                               const int32_t time_rebin_width,
                                               const int32_t time_offset,
                                               const bool debug);
@@ -123,7 +116,7 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  *
  * \returns vector of the time bin values.
  */
-vector<float> generate_log_time_bin_vector(const float max_time_bin,
+std::vector<float> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
                                            const int32_t time_offset,
                                            const bool debug);

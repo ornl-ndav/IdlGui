@@ -31,6 +31,9 @@
 #ifndef _UTILS_HPP
 #define _UTILS_HPP 1
 
+#include <fstream>
+#include <iostream>
+#include <stdexcept>
 
 /// This is a string that contains the new part of the binary data file
 static const std::string HISTO_FILE_TAG = "histo.dat";
@@ -60,7 +63,15 @@ static const float SMALLEST_TIME_BIN = 0.01;
 */
 template <typename NumT>
 void swap_endian(const int32_t file_size,
-                 NumT * array);
+                 NumT * array)
+{
+  for (int32_t j=0; j<file_size; ++j)
+    {
+      swap_digit(array[j]);
+    }
+  
+  return;
+}
 
 /**
  * \brief This function swap endians of digits (only for 32 bits digits)
@@ -68,8 +79,13 @@ void swap_endian(const int32_t file_size,
  * \param x (INPUT/OUTPUT) is the digit to be swapped
  */
 template <typename NumT>
-inline void swap_digit (NumT & x);
-
+inline void swap_digit (NumT & x)
+{
+  x = ((x>>24) & 0x000000FF) |
+    ((x<<8) & 0x00FF0000) |
+    ((x>>8) & 0x0000FF00) |
+    ((x<<24) & 0xFF000000);
+}
 
 /**
  * \brief This function displays the n first element of an array
@@ -158,7 +174,7 @@ int32_t read_event_file_and_populate_binary_array(const
                                                   const size_t n_disp,
                                                   const bool swap_input,
                                                   const bool debug,
-                                                  uint32_t * &binary_array);
+                                                  int32_t * &binary_array);
 
 
 #endif // _UTILS_HPP
