@@ -389,9 +389,9 @@ int32_t main(int32_t argc, char *argv[])
             }
           
           // write new histogram file
-          std::ofstream histo_file(output_filename.c_str(),
-                                   std::ios::binary);
-          histo_file.write((char*)(histo_array),
+          ofstream histo_file(output_filename.c_str(),
+                                   ios::binary);
+          histo_file.write(reinterpret_cast<char*>(histo_array),
                            SIZEOF_UINT32_T*histo_array_size);
           histo_file.close();
           
