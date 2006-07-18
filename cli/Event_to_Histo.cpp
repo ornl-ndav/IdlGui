@@ -35,34 +35,55 @@ using namespace TCLAP;
 
 
 int32_t binarySearch(const vector<float> sortedVector, 
-                     const float key)
+                    const float key)
 {
   size_t sortedVector_size = sortedVector.size();
   size_t first = 0;
   size_t last = sortedVector_size;
+  int32_t result; //-1,0,1
 
   //check first if the value is out of range
-  if (key > sortedVector[sortedVector_size-1])
+  if (key > sortedVector[sortedVector_size-1] ||
+      key < sortedVector[0])
     {
       return -1;
     }
+
   while (first < last-1)
     {
       size_t mid = (first + last) / 2;
-      if (key > sortedVector[mid])
+      result = compare(sortedVector, key, mid);
+
+      switch (result)
         {
-          first = mid;
-        }
-      else if (key < sortedVector[mid])
-       {
-         last = mid;
-       }
-      else
-        {
-          return (mid);
+        case -1: last=mid;
+          break;
+        case 1: first=mid;
+          break;
+        case 0: return(mid);
         }
     }
   return (first);
+}
+
+int32_t compare(const vector<float> sortedVector,
+                const float key,
+                const size_t index)
+{
+  int32_t answer;
+  if (key < sortedVector[index])
+    {
+      answer = -1;
+    }
+  else if (key > sortedVector[index])
+    {
+      answer = 1;
+    }
+  else
+    {
+      answer = 0;
+    }
+  return answer;
 }
 
 

@@ -88,6 +88,20 @@ void generate_histo(const size_t file_size,
 int32_t binarySearch(const std::vector<float> sortedVector, 
                      const float key);
 
+
+/**
+ * \brief
+ *
+ * \param sortedVector (INPUT) is the sorted array where to look for the
+ * location of the key
+ * \param key (INPUT) is the data to look for
+ * \param index (INPUT) is the position within the sorted array of the
+ * reference value
+ */
+int32_t compare(const std::vector<float> sortedVector,
+                const float key,
+                const size_t index);
+
 /**
  * \brief This function creates the vector of a linear time bins widths
  * For example, for a time bin of 25micros, the first values of the vector
