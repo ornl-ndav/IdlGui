@@ -43,7 +43,7 @@
  *
  */
 void initialize_array(uint32_t * data_histo, 
-                      const int32_t size);
+                      const size_t size);
 
 /**
  * \brief This function generates the final histogram array
@@ -60,12 +60,12 @@ void initialize_array(uint32_t * data_histo,
  * \param time_offset (INPUT) is the time offset
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
-void generate_histo(const int32_t file_size,
+void generate_histo(const size_t file_size,
                     const int32_t new_Nt,
                     const int32_t pixel_number,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
-                    const int32_t histo_array_size,
+                    const size_t histo_array_size,
                     const std::vector<float> time_bin_vector,
                     const float max_time_bin,
                     const int32_t time_offset,

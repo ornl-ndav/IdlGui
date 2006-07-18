@@ -37,9 +37,9 @@ using namespace TCLAP;
 int32_t binarySearch(const vector<float> sortedVector, 
                      const float key)
 {
-  int sortedVector_size = sortedVector.size();
-  int first = 0;
-  int last = sortedVector_size;
+  size_t sortedVector_size = sortedVector.size();
+  size_t first = 0;
+  size_t last = sortedVector_size;
 
   //check first if the value is out of range
   if (key > sortedVector[sortedVector_size-1])
@@ -48,7 +48,7 @@ int32_t binarySearch(const vector<float> sortedVector,
     }
   while (first < last-1)
     {
-      int mid = (first + last) / 2;
+      size_t mid = (first + last) / 2;
       if (key > sortedVector[mid])
         {
           first = mid;
@@ -67,9 +67,9 @@ int32_t binarySearch(const vector<float> sortedVector,
 
 
 void initialize_array(uint32_t * histo_array, 
-                      const int size)
+                      const size_t size)
 {
-  for (int32_t i=0 ; i<size ; ++i)
+  for (size_t i=0 ; i<size ; ++i)
     {
       histo_array[i]=0;
      }
@@ -78,12 +78,12 @@ void initialize_array(uint32_t * histo_array,
 }
 
 
-void generate_histo(const int32_t array_size,
+void generate_histo(const size_t array_size,
                     const int32_t new_Nt,
                     const int32_t pixelnumber,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
-                    const int32_t histo_array_size,
+                    const size_t histo_array_size,
                     const vector<float> time_bin_vector,
                     const float max_time_bin,
                     const int32_t time_offset,
@@ -313,7 +313,7 @@ int32_t main(int32_t argc, char *argv[])
                                        debug);
           
           // read input file and populate the binary array 
-          int32_t file_size;
+          size_t file_size;
           int32_t * binary_array;
           
           file_size = 
@@ -361,9 +361,9 @@ int32_t main(int32_t argc, char *argv[])
           int32_t pixel_number = pixelnumber.getValue();
 
           //This is the new number of time bins in the histo file
-          int32_t new_Nt = time_bin_vector.size();
+          size_t new_Nt = time_bin_vector.size();
 
-          int32_t histo_array_size = new_Nt * pixel_number;
+          size_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
           
           //generate histo binary data array
