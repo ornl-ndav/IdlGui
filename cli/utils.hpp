@@ -166,6 +166,9 @@ void produce_output_file_name(const std::string & filename,
  * \param binary_array (OUTPUT) is the array of the event binary data
  *
  * \returns The size (in bytes) of the input file
+ *
+ * \exception std::bad_alloc is the program can not allocate memory to 
+ * binary_array
  */
 size_t read_event_file_and_populate_binary_array(const 
                                                   std::string & input_file,
