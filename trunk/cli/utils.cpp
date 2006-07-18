@@ -32,30 +32,6 @@
 
 using namespace std;
 
-
-template <typename NumT>
-void swap_endian (const int32_t file_size, 
-                  NumT * array)
-{
-  for (int32_t j=0; j<file_size; ++j)
-    {
-      swap_digit(array[j]);
-    }
-  
-  return;
-}
-
-
-template <typename NumT>
-inline void swap_digit (NumT & x)
-{
-  x = ((x>>24) & 0x000000FF) |
-    ((x<<8) & 0x00FF0000) |
-    ((x>>8) & 0x0000FF00) |
-    ((x<<24) & 0xFF000000);
-}
-
-
 void print32_t_n_first_data(const int32_t * array,
                             const size_t array_size,
                             const size_t n_disp)
@@ -227,4 +203,3 @@ int32_t read_event_file_and_populate_binary_array(const string & input_file,
   return file_size;
 }
 
-                                           
