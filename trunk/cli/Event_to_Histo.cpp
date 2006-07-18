@@ -306,13 +306,13 @@ int32_t main(int32_t argc, char *argv[])
       if (debug)
         {
           // Table of contents of debug tool
-          cout << "************* TABLE OF CONTENTS ******************\n";
-          cout << "|\t - In parse_input_file_name                  \n";
-          cout << "|\t - In produce_output_file_name               \n";
-          cout << "|\t - first values and last value of binary_array\n";
-          cout << "|\t - After swapping the data\n";
-          cout << "|\t - Generate linear time bin vector           \n";
-          cout << "|\t - In generate_histo                         \n";
+          cout << "************* TABLE OF CONTENTS *******************\n";
+          cout << "|\t - In parse_input_file_name                     \n";
+          cout << "|\t - In produce_output_file_name                  \n";
+          cout << "|\t - first values and last value of binary_array  \n";
+          cout << "|\t - After swapping the data                      \n";
+          cout << "|\t - Generate linear time bin vector              \n";
+          cout << "|\t - In generate_histo                            \n";
           cout << "*************************************************\n\n";
         }
 
@@ -347,7 +347,7 @@ int32_t main(int32_t argc, char *argv[])
 
           // now file_size is the number of element in the file
 
-          size_t array_size = file_size / sizeof(uint32_t);
+          size_t array_size = file_size / SIZEOF_UINT32_T;
 
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
@@ -355,7 +355,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_offset = timeoffset.getValue();
           vector<float> time_bin_vector;
 
-          if (timerebinwidth.isSet())  //if we selected a linear rebinning
+          if (timerebinwidth.isSet())  //linear rebinning
             {
               time_rebin_width = timerebinwidth.getValue();
               time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
@@ -363,7 +363,7 @@ int32_t main(int32_t argc, char *argv[])
                                                               time_offset,
                                                               debug);
             }
-          else if (logrebinpercent.isSet()) //if we selected a log rebinning
+          else if (logrebinpercent.isSet()) //log rebinning
             {
               log_rebin_percent = logrebinpercent.getValue();
               time_bin_vector = generate_log_time_bin_vector(max_time_bin,
