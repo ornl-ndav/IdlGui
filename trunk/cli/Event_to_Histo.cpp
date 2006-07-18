@@ -355,7 +355,8 @@ int32_t main(int32_t argc, char *argv[])
           else  
             {
               cerr << "#1: Rebin parameter not supported\n";
-              cerr << "#2: If you reach this, see Steve Miller for your price";
+              cerr << "#2: If you reach this, see Steve Miller for your award";
+              exit(-1);
             }
 
 
