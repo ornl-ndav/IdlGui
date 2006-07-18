@@ -34,8 +34,8 @@ using namespace std;
 using namespace TCLAP;
 
 
-int32_t binarySearch(const vector<float> sortedVector, 
-                    const float key)
+int32_t binarySearch(const vector<int32_t> sortedVector, 
+                    const int32_t key)
 {
   size_t sortedVector_size = sortedVector.size();
   size_t first = 0;
@@ -66,8 +66,8 @@ int32_t binarySearch(const vector<float> sortedVector,
   return (first);
 }
 
-int32_t compare(const vector<float> sortedVector,
-                const float key,
+int32_t compare(const vector<int32_t> sortedVector,
+                const int32_t key,
                 const size_t index)
 {
   int32_t answer;
@@ -105,13 +105,17 @@ void generate_histo(const size_t array_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
-                    const vector<float> time_bin_vector,
+                    const vector<int32_t> time_bin_vector,
                     const float max_time_bin,
                     const int32_t time_offset,
                     const bool debug)
 {
   int32_t pixelid;
+  int32_t time_bin;
   int32_t time_stamp;
+
+  int32_t time_offset_100ns = time_offset * 10;
+  int32_t max_time_bin_100ns = static_cast<int>(max_time_bin) * 10;
 
   //initialize histo array
   initialize_array(histo_array,
@@ -122,14 +126,16 @@ void generate_histo(const size_t array_size,
       cout << "\n\n**In generate_histo**\n\n";
       cout << "\tarray_size= " << array_size << endl;
       cout << "\tnew_Nt= " << new_Nt << endl;
-      cout << "\tmax_time_bin= " << max_time_bin << endl;
-      cout << "\ttime_offset= " << time_offset << endl;
+      cout << "\tmax_time_bin(microS)= " << max_time_bin << endl;
+      cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
+      cout << "\ttime_offset(microS)= " << time_offset << endl;
+      cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
       cout << "\nLegend:";
       cout << "\t\t#     : index number\n";
       cout << "------\t\t";
       cout << "Pid   : PixelID\n";
       cout << "\t\t    t_ms  : time in micro seconds\n";
-      cout << "\t\t    tstamp: time_stamp\n\n";
+      cout << "\t\t    tbin: time_bin\n\n";
     }
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
@@ -137,24 +143,24 @@ void generate_histo(const size_t array_size,
   for (size_t i=0 ; i<array_size/2; i++) 
   {
       pixelid = binary_array[2*i+1];
-      //We need to divide by 10 to go from 100ns to micros
-      time_stamp = binarySearch(time_bin_vector,
-                                static_cast<float>(binary_array[2*i]/10.));
+      time_stamp = binary_array[2*i];
+      time_bin = binarySearch(time_bin_vector,time_stamp);
+
       if (debug)
         {
           cout << "#" << i << "\t";
           cout << "Pid= " << pixelid <<"\t";
-          cout << "t_ms= " << static_cast<float>(binary_array[2*i]/10.)<<"\t";
+          cout << "t_ms= " << time_stamp <<"\t";
           cout << "tstamp_value= ";
-          cout << static_cast<int>(floor(time_bin_vector[time_stamp]));
-          cout << "\ttstamp_position= " << time_stamp;
+          cout << floor(time_bin_vector[time_bin]);
+          cout << "\ttbin_position= " << time_bin;
         }
 
       //remove data that are oustide the scope of range
-      if (pixelid<0 ||                             
-          pixelid>pixelnumber ||
-          time_stamp<time_offset ||
-          time_stamp>(max_time_bin))
+      if (pixelid < 0 ||                             
+          pixelid > pixelnumber ||
+          time_stamp < time_offset_100ns ||
+          time_stamp > max_time_bin_100ns)
         {
           if (debug)
             {
@@ -169,31 +175,43 @@ void generate_histo(const size_t array_size,
               cout << "......OK\n";
             }
           //record data that is inside the scope of range
-          histo_array[time_stamp+pixelid*new_Nt]+=1;
+          histo_array[time_bin+pixelid*new_Nt]+=1;
         }
   }
   return;
 }
 
 
-vector<float> generate_linear_time_bin_vector(const float max_time_bin,
-                                              const int32_t time_rebin_width,
-                                              const int32_t time_offset,
-                                              const bool debug)
+vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
+                                            const int32_t time_rebin_width,
+                                            const int32_t time_offset,
+                                            const bool debug)
 {
-  vector<float> time_bin_vector;
+  vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
+
+  //to go from microS to x100ns
+  int32_t max_time_bin_100ns = static_cast<int32_t>(max_time_bin * 10);
+  int32_t time_rebin_width_100ns = time_rebin_width * 10;
+  int32_t time_offset_100ns = time_offset * 10;
 
   if (debug)
     {
       cout << "\n**Generate linear time bin vector**\n\n";
-      cout << "\tmax_time_bin= " << max_time_bin<<endl;
-      cout << "\ttime_rebin_width= " << time_rebin_width << endl<<endl;
+      cout << "\ttime_offset(microS)= " << time_offset<<endl;
+      cout << "\ttime_offset(x100ns)= " << time_offset_100ns<<endl;
+      cout << "\tmax_time_bin(microS)= " << max_time_bin<<endl;
+      cout << "\ttime_rebin_width(microS)= " << time_rebin_width << endl;
+      cout << "\tmax_time_bin(x100ns)= " << max_time_bin_100ns << endl;
+      cout << "\ttime_rebin_width(x100ns)= " << time_rebin_width_100ns <<endl;
+      cout << endl;
     } 
 
-  for (size_t t_bin=time_offset; t_bin<=max_time_bin; t_bin+=time_rebin_width)
+  for (size_t t_bin=time_offset_100ns; 
+       t_bin<=max_time_bin_100ns; 
+       t_bin+=time_rebin_width_100ns)
     {
-      time_bin_vector.push_back(static_cast<float>(t_bin));
+      time_bin_vector.push_back(static_cast<int32_t>(t_bin));
       if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
@@ -204,14 +222,18 @@ vector<float> generate_linear_time_bin_vector(const float max_time_bin,
 }
 
 
-vector<float> generate_log_time_bin_vector(const float max_time_bin,
+vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
                                            const int32_t log_rebin_percent,
                                            const int32_t time_offset,
                                            const bool debug)
 {
-  vector<float> time_bin_vector;
+  vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
-  time_bin_vector.push_back(static_cast<int32_t>(time_offset));
+
+  //to go from microS to x100ns
+  int32_t time_offset_100ns = time_offset * 10;
+
+  time_bin_vector.push_back(static_cast<int32_t>(time_offset_100ns));
 
   if (debug)
     {
@@ -226,9 +248,9 @@ vector<float> generate_log_time_bin_vector(const float max_time_bin,
   ++i;
   while (t2 < max_time_bin)
     {
-      t1=t2;
+      t1 = t2;
       t2 = t1 * (log_rebin + 1.);  //delta_t/t = log_rebin
-      time_bin_vector.push_back(static_cast<float>(t2));
+      time_bin_vector.push_back(static_cast<int32_t>(t2));
       if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
@@ -353,7 +375,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
           int32_t time_offset = timeoffset.getValue();
-          vector<float> time_bin_vector;
+          vector<int32_t> time_bin_vector;
 
           if (timerebinwidth.isSet())  //linear rebinning
             {

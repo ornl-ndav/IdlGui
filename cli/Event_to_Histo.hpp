@@ -66,7 +66,7 @@ void generate_histo(const size_t file_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
-                    const std::vector<float> time_bin_vector,
+                    const std::vector<int32_t> time_bin_vector,
                     const float max_time_bin,
                     const int32_t time_offset,
                     const bool debug);
@@ -85,8 +85,8 @@ void generate_histo(const size_t file_size,
  * It returns the position of the data or of the closest inferior value
  * found in sortedVector. Returns -1 if the data is out of range.
 */
-int32_t binarySearch(const std::vector<float> sortedVector, 
-                     const float key);
+int32_t binarySearch(const std::vector<int32_t> sortedVector, 
+                     const int32_t key);
 
 
 /**
@@ -98,14 +98,16 @@ int32_t binarySearch(const std::vector<float> sortedVector,
  * \param index (INPUT) is the position within the sorted array of the
  * reference value
  */
-int32_t compare(const std::vector<float> sortedVector,
-                const float key,
+int32_t compare(const std::vector<int32_t> sortedVector,
+                const int32_t key,
                 const size_t index);
 
 /**
- * \brief This function creates the vector of a linear time bins widths
+ * \brief This function creates the vector of a linear time bins widths (units
+ * is x100ns).
  * For example, for a time bin of 25micros, the first values of the vector
- * will be 0, 25, 50, 75....
+ * will be 0, 250, 500, 750....
+ * 
  *
  * \param max_time_bin (INPUT) 
  * \param time_rebin_width (INPUT) is the rebin value
@@ -114,10 +116,10 @@ int32_t compare(const std::vector<float> sortedVector,
  *
  * \returns A vector of the time bin values.
  */
-std::vector<float> generate_linear_time_bin_vector(const float max_time_bin,
-                                              const int32_t time_rebin_width,
-                                              const int32_t time_offset,
-                                              const bool debug);
+std::vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
+                                               const int32_t time_rebin_width,
+                                               const int32_t time_offset,
+                                               const bool debug);
 
 
 /**
@@ -130,10 +132,10 @@ std::vector<float> generate_linear_time_bin_vector(const float max_time_bin,
  *
  * \returns vector of the time bin values.
  */
-std::vector<float> generate_log_time_bin_vector(const float max_time_bin,
-                                           const int32_t log_rebin_percent,
-                                           const int32_t time_offset,
-                                           const bool debug);
+std::vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
+                                             const int32_t log_rebin_percent,
+                                             const int32_t time_offset,
+                                             const bool debug);
 
 
 #endif // _EVENT_TO_HISTO_HPP
