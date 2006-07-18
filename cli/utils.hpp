@@ -31,6 +31,7 @@
 #ifndef _UTILS_HPP
 #define _UTILS_HPP 1
 
+#include <cstdlib>
 #include <fstream>
 #include <iostream>
 #include <stdexcept>
