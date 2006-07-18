@@ -143,7 +143,7 @@ void produce_output_file_name(const string & filename,
 }
 
 
-int32_t read_event_file_and_populate_binary_array(const string & input_file,
+size_t read_event_file_and_populate_binary_array(const string & input_file,
                                                   const string & 
                                                   input_filename,
                                                   const size_t n_disp,

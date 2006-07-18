@@ -62,10 +62,10 @@ static const float SMALLEST_TIME_BIN = 0.01;
  * \param array (INPUT/OUTPUT) is the array to be swapped
 */
 template <typename NumT>
-void swap_endian(const int32_t file_size,
+void swap_endian(const size_t file_size,
                  NumT * array)
 {
-  for (int32_t j=0; j<file_size; ++j)
+  for (size_t j=0; j<file_size; ++j)
     {
       swap_digit(array[j]);
     }
@@ -167,7 +167,7 @@ void produce_output_file_name(const std::string & filename,
  *
  * \returns The size (in bytes) of the input file
  */
-int32_t read_event_file_and_populate_binary_array(const 
+size_t read_event_file_and_populate_binary_array(const 
                                                   std::string & input_file,
                                                   const 
                                                   std::string & input_filename,
