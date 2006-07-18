@@ -164,14 +164,7 @@ size_t read_event_file_and_populate_binary_array(const string & input_file,
   file_size = file.tellg();
   size_t array_size = file_size / SIZEOF_INT32_T;
 
-  try
-    {
-      binary_array = new int32_t [array_size];
-    }
-  catch (bad_alloc &)
-    {
-      cerr << "Error allocating memory." << endl;
-    }
+  binary_array = new int32_t [array_size];
 
   file.seekg(0,ios::beg);
 
