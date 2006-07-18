@@ -327,8 +327,7 @@ int32_t main(int32_t argc, char *argv[])
 
           // now file_size is the number of element in the file
 
-          int32_t array_size;
-          array_size = file_size / sizeof(uint32_t);
+          size_t array_size = file_size / sizeof(uint32_t);
 
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
