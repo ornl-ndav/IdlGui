@@ -280,8 +280,7 @@ int32_t main(int32_t argc, char *argv[])
 
       const bool debug = debugSwitch.getValue();
 
-      int32_t n_disp;
-      n_disp = n_disp_cmd.getValue();
+      size_t n_disp = n_disp_cmd.getValue();
 
       if (debug)
         {
