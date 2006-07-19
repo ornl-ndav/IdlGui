@@ -107,16 +107,13 @@ void generate_histo(const size_t array_size,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
                     const vector<int32_t> time_bin_vector,
-                    const float max_time_bin,
-                    const int32_t time_offset,
+                    const int32_t max_time_bin_100ns,
+                    const int32_t time_offset_100ns,
                     const bool debug)
 {
   int32_t pixelid;
   int32_t time_bin;
   int32_t time_stamp;
-
-  int32_t time_offset_100ns = time_offset * 10;
-  int32_t max_time_bin_100ns = static_cast<int>(max_time_bin) * 10;
 
   //initialize histo array
   initialize_array(histo_array,
@@ -127,9 +124,7 @@ void generate_histo(const size_t array_size,
       cout << "\n\n**In generate_histo**\n\n";
       cout << "\tarray_size= " << array_size << endl;
       cout << "\tnew_Nt= " << new_Nt << endl;
-      cout << "\tmax_time_bin(microS)= " << max_time_bin << endl;
       cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
-      cout << "\ttime_offset(microS)= " << time_offset << endl;
       cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
       cout << "\nLegend:";
       cout << "\t\t#     : index number\n";
@@ -183,26 +178,19 @@ void generate_histo(const size_t array_size,
 }
 
 
-vector<int32_t> generate_linear_time_bin_vector(const int32_t max_time_bin,
-                                                const int32_t time_rebin_width,
-                                                const int32_t time_offset,
-                                                const bool debug)
+vector<int32_t> 
+generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
+                                const int32_t time_rebin_width_100ns,
+                                const int32_t time_offset_100ns,
+                                const bool debug)
 {
   vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
 
-  //to go from microS to x100ns
-  int32_t max_time_bin_100ns = max_time_bin * 10;
-  int32_t time_rebin_width_100ns = time_rebin_width * 10;
-  int32_t time_offset_100ns = time_offset * 10;
-
   if (debug)
     {
       cout << "\n**Generate linear time bin vector**\n\n";
-      cout << "\ttime_offset(microS)= " << time_offset<<endl;
       cout << "\ttime_offset(x100ns)= " << time_offset_100ns<<endl;
-      cout << "\tmax_time_bin(microS)= " << max_time_bin<<endl;
-      cout << "\ttime_rebin_width(microS)= " << time_rebin_width << endl;
       cout << "\tmax_time_bin(x100ns)= " << max_time_bin_100ns << endl;
       cout << "\ttime_rebin_width(x100ns)= " << time_rebin_width_100ns <<endl;
       cout << endl;
@@ -410,27 +398,29 @@ int32_t main(int32_t argc, char *argv[])
 
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
 
-          int32_t max_time_bin = maxtimebin.getValue();
-          int32_t time_rebin_width;
+          int32_t max_time_bin_100ns = maxtimebin.getValue() * 10;
+          int32_t time_rebin_width_100ns;
           int32_t log_rebin_percent;
-          int32_t time_offset = timeoffset.getValue();
+          int32_t time_offset_100ns = timeoffset.getValue() * 10;
           vector<int32_t> time_bin_vector;
 
           if (timerebinwidth.isSet())  //linear rebinning
             {
-              time_rebin_width = timerebinwidth.getValue();
-              time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
-                                                            time_rebin_width,
-                                                            time_offset,
-                                                            debug);
+              time_rebin_width_100ns = timerebinwidth.getValue() * 10;
+              time_bin_vector=generate_linear_time_bin_vector(
+                                                        max_time_bin_100ns,
+                                                        time_rebin_width_100ns,
+                                                        time_offset_100ns,
+                                                        debug);
             }
           else if (logrebinpercent.isSet()) //log rebinning
             {
               log_rebin_percent = logrebinpercent.getValue();
-              time_bin_vector = generate_log_time_bin_vector(max_time_bin,
-                                                             log_rebin_percent,
-                                                             time_offset,
-                                                             debug);
+              time_bin_vector = generate_log_time_bin_vector(
+                                                        max_time_bin_100ns,
+                                                        log_rebin_percent,
+                                                        time_offset_100ns,
+                                                        debug);
             }
           else  
             {
@@ -460,8 +450,8 @@ int32_t main(int32_t argc, char *argv[])
                          histo_array,
                          histo_array_size,
                          time_bin_vector,
-                         max_time_bin,
-                         time_offset,
+                         max_time_bin_100ns,
+                         time_offset_100ns,
                          debug);
           
           // free memory allocated to binary_array
