@@ -71,20 +71,25 @@ int32_t compare(const vector<int32_t> sortedVector,
                 const int32_t key,
                 const size_t index)
 {
-  int32_t answer;
   if (key < sortedVector[index])
     {
-      answer = -1;
+      return -1;
     }
-  else if (key > sortedVector[index])
+  else if (key >= sortedVector[index+1])
     {
-      answer = 1;
+      if ((index+1)==sortedVector.size() && key==sortedVector[index+1])
+          {
+            return 0;
+          }
+          else
+          {
+            return 1;
+          }
     }
   else
     {
-      answer = 0;
+      return 0;
     }
-  return answer;
 }
 
 
