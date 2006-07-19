@@ -39,18 +39,18 @@ int32_t binarySearch(const vector<int32_t> sortedVector,
 {
   size_t sortedVector_size = sortedVector.size();
   size_t first = 0;
-  size_t last = sortedVector_size;
+  size_t last = sortedVector_size-1;
   int32_t result; //-1,0,1
 
   //check first if the value is out of range
-  if (key > sortedVector[sortedVector_size-1] ||
+  if (key > sortedVector[last] ||
       key < sortedVector[0])
     {
       return -1;
     }
 
   size_t mid;
-  while (first < last-1)
+  while (first < last)
     {
       mid = (first + last) / 2;
       result = compare(sortedVector, key, mid);
