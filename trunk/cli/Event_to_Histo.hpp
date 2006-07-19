@@ -107,7 +107,11 @@ int32_t compare(const std::vector<int32_t> sortedVector,
  * is x100ns).
  * For example, for a time bin of 25micros, the first values of the vector
  * will be 0, 250, 500, 750....
- * 
+ *
+ * The time bin boundaries are calculated according to the equation
+ * \f[
+ * T[i]=T_{offset}+\delta T*i
+ * \f]
  *
  * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
  * \param time_rebin_width_100ns (INPUT) is the rebin value (x100ns)
@@ -124,10 +128,17 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
 
 
 /**
- * \brief This function creates the vector of a logarithmic time bins percentage
+ * \brief This function creates the vector of a logarithmic time bins 
+ * percentage
+ *
+ * The time bin boundaries are calculated according to the equation
+ * \f[
+ * T_0 = T_{offset}
+ * T_i = T_{i-1}(coeff+1)
+ * \f]
  *
  * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
- * \param log_rebin_percent (INPUT) is the rebin percentage
+ * \param log_rebin_coeff (INPUT) is the rebin coefficient
  * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
@@ -135,7 +146,7 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
  */
 std::vector<int32_t> 
 generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                             const int32_t log_rebin_percent,
+                             const int32_t log_rebin_coeff,
                              const int32_t time_offset_100ns,
                              const bool debug);
 
