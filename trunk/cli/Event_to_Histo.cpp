@@ -215,9 +215,20 @@ vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
       if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
-          ++i;
+        }
+      ++i;
+    }
+  
+  //check if last time_bin is equal to max_time_bin
+  if (time_bin_vector[i-1] < max_time_bin_100ns)
+    {
+      time_bin_vector.push_back(static_cast<int32_t>(max_time_bin_100ns));
+      if (debug)
+        {
+          cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
         }
     }
+  
   return time_bin_vector;
 }
 
