@@ -49,9 +49,10 @@ int32_t binarySearch(const vector<int32_t> sortedVector,
       return -1;
     }
 
+  size_t mid;
   while (first < last-1)
     {
-      size_t mid = (first + last) / 2;
+      mid = (first + last) / 2;
       result = compare(sortedVector, key, mid);
 
       switch (result)
