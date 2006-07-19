@@ -138,7 +138,8 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
  * \f]
  *
  * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
- * \param log_rebin_coeff (INPUT) is the rebin coefficient
+ * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
+ * the coefficient from the command line in order to work with x100ns data
  * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
@@ -146,7 +147,7 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
  */
 std::vector<int32_t> 
 generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                             const int32_t log_rebin_coeff,
+                             const float log_rebin_coeff_100ns,
                              const int32_t time_offset_100ns,
                              const bool debug);
 
