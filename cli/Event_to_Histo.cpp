@@ -254,7 +254,7 @@ vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
 
   float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
-  float t2= SMALLEST_TIME_BIN + time_offset;
+  float t2= EventHisto::SMALLEST_TIME_BIN + time_offset;
   
   ++i;
   while (t2 < max_time_bin)
@@ -278,7 +278,8 @@ int32_t main(int32_t argc, char *argv[])
   try
     {
       // Setup the command-line parser object
-      CmdLine cmd("Command line description message", ' ', VERSION_TAG);
+      CmdLine cmd("Command line description message", ' ', 
+                  EventHisto::VERSION_TAG);
       
       // Add command-line options
       ValueArg<size_t> n_disp_cmd("n","data_displayed",
@@ -358,29 +359,29 @@ int32_t main(int32_t argc, char *argv[])
           string path; 
           string input_file = input_file_vector[i];
           
-          path_input_output_file_names(input_file,
-                                       input_filename,
-                                       path,
-                                       altoutpath.getValue(),
-                                       output_filename,
-                                       output_debug_filename,
-                                       debug);
+          EventHisto::path_input_output_file_names(input_file,
+                                                   input_filename,
+                                                   path,
+                                                   altoutpath.getValue(),
+                                                   output_filename,
+                                                   output_debug_filename,
+                                                   debug);
           
           // read input file and populate the binary array 
           size_t file_size;
           int32_t * binary_array;
           
           file_size = 
-            read_event_file_and_populate_binary_array(input_file,
-                                                      input_filename,
-                                                      n_disp,
-                                                      swapiSwitch.getValue(),
-                                                      debug,
-                                                      binary_array);
+            EventHisto::read_event_file_and_populate_binary_array(input_file,
+                                                        input_filename,
+                                                        n_disp,
+                                                        swapiSwitch.getValue(),
+                                                        debug,
+                                                        binary_array);
 
           // now file_size is the number of element in the file
 
-          size_t array_size = file_size / SIZEOF_UINT32_T;
+          size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
 
           float max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
@@ -438,14 +439,14 @@ int32_t main(int32_t argc, char *argv[])
           // swap endian of output array (histo_array)
           if(swapoSwitch.getValue())
             {
-              swap_endian(histo_array_size, histo_array);
+              EventHisto::swap_endian(histo_array_size, histo_array);
             }
           
           // write new histogram file
           ofstream histo_file(output_filename.c_str(),
                                    ios::binary);
           histo_file.write(reinterpret_cast<char*>(histo_array),
-                           SIZEOF_UINT32_T*histo_array_size);
+                           EventHisto:: SIZEOF_UINT32_T*histo_array_size);
           histo_file.close();
           
           // free memory allocated to histo_array

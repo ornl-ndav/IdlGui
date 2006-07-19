@@ -95,7 +95,7 @@ map<int32_t, int32_t> make_pixel_map(const string mapfile,
 
   int32_t pm_buffer[num_pixels];
   m_data.read(reinterpret_cast<char *>(pm_buffer), 
-              num_pixels*SIZEOF_INT32_T);
+              num_pixels*EventHisto::SIZEOF_INT32_T);
   m_data.close();
 
   // check lowest key value (should be 0)
@@ -170,23 +170,24 @@ void create_mapped_data(const string neutronfile,
         {
           cout << "Position: " << iter->second << endl;
           cout << "Offset  : " ;
-          cout << iter->second * num_tof_bins * SIZEOF_UINT32_T;
+          cout << iter->second * num_tof_bins * EventHisto::SIZEOF_UINT32_T;
           cout << endl;
         }
       
       // Move to proper read location
-      neutron_data.seekg(iter->second*num_tof_bins*SIZEOF_UINT32_T, 
+      neutron_data.seekg(iter->second*num_tof_bins*
+                         EventHisto::SIZEOF_UINT32_T, 
                          ios::beg);
       // check that the read won't go past the end of file
       size_t pos=neutron_data.tellg();
-      if(pos+num_tof_bins*SIZEOF_UINT32_T>file_size)
+      if(pos+num_tof_bins*EventHisto::SIZEOF_UINT32_T>file_size)
         {
           throw runtime_error("Tried to read past end of data file");
         }
 
       // Read data from file
       neutron_data.read(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*SIZEOF_UINT32_T);
+                        num_tof_bins*EventHisto::SIZEOF_UINT32_T);
       
       if(debug)
         {
@@ -195,7 +196,7 @@ void create_mapped_data(const string neutronfile,
       
       // Write data to mapped file
       mapped_data.write(reinterpret_cast<char *>(data_buffer), 
-                        num_tof_bins*SIZEOF_UINT32_T);
+                        num_tof_bins*EventHisto::SIZEOF_UINT32_T);
     }
 }
 
@@ -226,7 +227,8 @@ int main(int argc, char **argv)
   try
     {
       // Setup the command-line parser object
-      CmdLine cmd("Command line description message", ' ', VERSION_TAG);
+      CmdLine cmd("Command line description message", ' ', 
+                  EventHisto::VERSION_TAG);
 
       // Add command-line options
       ValueArg<string> neutronArg("n","neutron",
