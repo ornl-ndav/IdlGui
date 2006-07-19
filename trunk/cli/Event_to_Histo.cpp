@@ -183,7 +183,7 @@ void generate_histo(const size_t array_size,
 }
 
 
-vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
+vector<int32_t> generate_linear_time_bin_vector(const int32_t max_time_bin,
                                                 const int32_t time_rebin_width,
                                                 const int32_t time_offset,
                                                 const string tof_info_filename,
@@ -193,7 +193,7 @@ vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
   int32_t i=0;  //use for debugging tool only
 
   //to go from microS to x100ns
-  int32_t max_time_bin_100ns = static_cast<int32_t>(max_time_bin * 10);
+  int32_t max_time_bin_100ns = max_time_bin * 10;
   int32_t time_rebin_width_100ns = time_rebin_width * 10;
   int32_t time_offset_100ns = time_offset * 10;
 
@@ -252,7 +252,7 @@ vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
 }
 
 
-vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
+vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
                                              const int32_t log_rebin_percent,
                                              const int32_t time_offset,
                                              const string tof_info_filename,
@@ -325,7 +325,7 @@ int32_t main(int32_t argc, char *argv[])
                                      "Number of pixels for this run",
                                      true, -1, "pixel number", cmd);
 
-      ValueArg<float> maxtimebin("M", "max_time_bin", 
+      ValueArg<int32_t> maxtimebin("M", "max_time_bin", 
                                       "Maximum value of time stamp",
                                       true, -1, "Max time bin", cmd);
 
@@ -405,7 +405,7 @@ int32_t main(int32_t argc, char *argv[])
 
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
 
-          float max_time_bin = maxtimebin.getValue();
+          int32_t max_time_bin = maxtimebin.getValue();
           int32_t time_rebin_width;
           int32_t log_rebin_percent;
           int32_t time_offset = timeoffset.getValue();

@@ -117,11 +117,12 @@ int32_t compare(const std::vector<int32_t> sortedVector,
  *
  * \returns A vector of the time bin values.
  */
-std::vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
-                                           const int32_t time_rebin_width,
-                                           const int32_t time_offset,
-                                           const std::string tof_info_filename,
-                                           const bool debug);
+std::vector<int32_t> 
+generate_linear_time_bin_vector(const int32_t max_time_bin,
+                                const int32_t time_rebin_width,
+                                const int32_t time_offset,
+                                const std::string tof_info_filename,
+                                const bool debug);
 
 
 /**
@@ -135,11 +136,12 @@ std::vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
  *
  * \returns vector of the time bin values.
  */
-std::vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
-                                           const int32_t log_rebin_percent,
-                                           const int32_t time_offset,
-                                           const std::string tof_info_filename,
-                                           const bool debug);
+std::vector<int32_t> 
+generate_log_time_bin_vector(const int32_t max_time_bin,
+                             const int32_t log_rebin_percent,
+                             const int32_t time_offset,
+                             const std::string tof_info_filename,
+                             const bool debug);
 
 
 #endif // _EVENT_TO_HISTO_HPP
