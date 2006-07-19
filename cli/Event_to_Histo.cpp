@@ -228,8 +228,8 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
 }
 
 
-vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
-                                             const int32_t log_rebin_percent,
+vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
+                                             const int32_t log_rebin_coeff,
                                              const int32_t time_offset_100ns,
                                              const bool debug)
 {
@@ -241,18 +241,20 @@ vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
   if (debug)
     {
       cout << "\n**Generate logarithmic time bin vector**\n\n";
+      cout << "\t log_rebin_coeff= " << log_rebin_coeff << endl;
+      cout << "\t max_time_bin(100ns)= " << max_time_bin_100ns << endl;
+      cout << "\t time_offset(100ns)= " << time_offset_100ns << "\n\n";
       cout << "\ttime_bin_vector["<<i<<"]= " << time_bin_vector[i]<<endl;
     }
 
-  float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
   float t2= EventHisto::SMALLEST_TIME_BIN + time_offset_100ns;
   
   ++i;
-  while (t2 < max_time_bin)
+  while (t2 < max_time_bin_100ns)
     {
       t1 = t2;
-      t2 = t1 * (log_rebin + 1.);  //delta_t/t = log_rebin
+      t2 = t1 * (log_rebin_coeff + 1.);  //delta_t/t = log_rebin_coeff
       time_bin_vector.push_back(static_cast<int32_t>(t2));
       if (debug)
         {
