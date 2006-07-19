@@ -273,17 +273,17 @@ void output_time_bin_vector(const vector<int32_t> time_bin_vector,
   size_t time_bin_vector_size = time_bin_vector.size();
   
   //reconvert axis in microS
-  int32_t * time_bin_array = new int32_t [time_bin_vector_size];
+  float * time_bin_array = new float [time_bin_vector_size];
   for (size_t i=0 ; i<time_bin_vector_size ; ++i)
     {
-      time_bin_array[i] = time_bin_vector[i]/10;
+      time_bin_array[i] = static_cast<float>(time_bin_vector[i])/10.;
     }
 
   //write time_bin_vector into tof_info_filename
   ofstream tof_info_file(tof_info_filename.c_str(),
                          ios::binary);
   tof_info_file.write(reinterpret_cast<char*>(time_bin_array),
-                EventHisto::SIZEOF_INT32_T*time_bin_vector_size);
+                sizeof(float)*time_bin_vector_size);
   tof_info_file.close();
 
   return;
