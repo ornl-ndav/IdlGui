@@ -65,7 +65,7 @@ namespace EventHisto
                                     string & path,
                                     string & alternate_path,
                                     string & output_filename,
-                                    string & output_debug_filename,
+                                    string & tof_info_filename,
                                     const bool debug)
   {
     // Parse input file name (path + input_file_name)
@@ -81,6 +81,13 @@ namespace EventHisto
                              output_filename,
                              debug);
     
+    // Produce tof_info_filename (path or alternate_path + tof_file_name)
+    produce_tof_info_file_name(filename,
+                               path,
+                               alternate_path,
+                               tof_info_filename,
+                               debug);
+
     return;
   }
   
@@ -146,6 +153,42 @@ namespace EventHisto
   }
   
   
+  void produce_tof_info_file_name(const string & filename,
+                                  const string & path,
+                                  const string & alternate_path,
+                                  string & tof_info_filename,
+                                  const bool debug)
+  {
+    string outfile = filename.substr(0,filename.rfind("event"));
+    outfile = outfile.append(TOF_INFO_FILE_TAG);
+    string local_path("");
+    
+    if (alternate_path != "")
+      {
+        local_path = alternate_path;
+      }
+    else
+      {
+        local_path = path;
+      }
+    
+    tof_info_filename.append(local_path);
+    tof_info_filename.append("/");
+    tof_info_filename.append(outfile);
+    
+    if (debug)
+      {
+        cout << endl;
+        cout << "**In produce_TOF_info_file_name**\n\n";
+        cout << "   outfile           : " << outfile << endl;
+        cout << "   local_path        : " << local_path << endl;
+        cout << "   tof_info_filename : " << tof_info_filename << endl<<endl;
+      }
+
+    return;
+  }
+
+
   size_t read_event_file_and_populate_binary_array(const string & input_file,
                                                    const string & 
                                                    input_filename,
