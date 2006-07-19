@@ -186,7 +186,6 @@ void generate_histo(const size_t array_size,
 vector<int32_t> generate_linear_time_bin_vector(const int32_t max_time_bin,
                                                 const int32_t time_rebin_width,
                                                 const int32_t time_offset,
-                                                const string tof_info_filename,
                                                 const bool debug)
 {
   vector<int32_t> time_bin_vector;
@@ -231,22 +230,6 @@ vector<int32_t> generate_linear_time_bin_vector(const int32_t max_time_bin,
         }
     }
   
-  size_t time_bin_vector_size = i;
-  cout << "time_bin_vector_size= " << time_bin_vector_size << endl; //remove_me
-  
-  //reconvert axis in microS
-  int32_t * time_bin_array = new int32_t [ time_bin_vector_size];
-  for (size_t i=0 ; i<time_bin_vector_size ; ++i)
-    {
-      time_bin_array[i] = time_bin_vector[i]/10;
-    }
-
-  //write time_bin_vector into tof_info_filename
-  ofstream tof_info_file(tof_info_filename.c_str(),
-                         ios::binary);
-  tof_info_file.write(reinterpret_cast<char*>(time_bin_array),
-                EventHisto::SIZEOF_INT32_T*time_bin_vector_size);
-  tof_info_file.close();
 
   return time_bin_vector;
 }
@@ -255,7 +238,6 @@ vector<int32_t> generate_linear_time_bin_vector(const int32_t max_time_bin,
 vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
                                              const int32_t log_rebin_percent,
                                              const int32_t time_offset,
-                                             const string tof_info_filename,
                                              const bool debug)
 {
   vector<int32_t> time_bin_vector;
@@ -290,6 +272,29 @@ vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
      }
 
   return time_bin_vector;
+}
+
+void output_time_bin_vector(const vector<int32_t> time_bin_vector,
+                            const string tof_info_filename,
+                            const bool debug)
+{
+  size_t time_bin_vector_size = time_bin_vector.size();
+  
+  //reconvert axis in microS
+  int32_t * time_bin_array = new int32_t [time_bin_vector_size];
+  for (size_t i=0 ; i<time_bin_vector_size ; ++i)
+    {
+      time_bin_array[i] = time_bin_vector[i]/10;
+    }
+
+  //write time_bin_vector into tof_info_filename
+  ofstream tof_info_file(tof_info_filename.c_str(),
+                         ios::binary);
+  tof_info_file.write(reinterpret_cast<char*>(time_bin_array),
+                EventHisto::SIZEOF_INT32_T*time_bin_vector_size);
+  tof_info_file.close();
+
+  return;
 }
 
 
@@ -417,7 +422,6 @@ int32_t main(int32_t argc, char *argv[])
               time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
                                                             time_rebin_width,
                                                             time_offset,
-                                                            tof_info_filename,
                                                             debug);
             }
           else if (logrebinpercent.isSet()) //log rebinning
@@ -426,7 +430,6 @@ int32_t main(int32_t argc, char *argv[])
               time_bin_vector = generate_log_time_bin_vector(max_time_bin,
                                                              log_rebin_percent,
                                                              time_offset,
-                                                             tof_info_filename,
                                                              debug);
             }
           else  
@@ -436,10 +439,14 @@ int32_t main(int32_t argc, char *argv[])
               exit(-1);
             }
 
+          //output the time bin vector data
+          output_time_bin_vector(time_bin_vector,
+                                 tof_info_filename,
+                                 debug);
 
           int32_t pixel_number = pixelnumber.getValue();
 
-          //This is the new number of time bins in the histo file
+          //this is the new number of time bins in the histo file
           size_t new_Nt = time_bin_vector.size()-1;
 
           size_t histo_array_size = new_Nt * pixel_number;

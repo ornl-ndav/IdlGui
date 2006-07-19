@@ -112,7 +112,6 @@ int32_t compare(const std::vector<int32_t> sortedVector,
  * \param max_time_bin (INPUT) 
  * \param time_rebin_width (INPUT) is the rebin value
  * \param time_offset (INPUT) is the starting offset time
- * \param tof_info_filename (INPUT) is the name of the tof info file
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \returns A vector of the time bin values.
@@ -121,7 +120,6 @@ std::vector<int32_t>
 generate_linear_time_bin_vector(const int32_t max_time_bin,
                                 const int32_t time_rebin_width,
                                 const int32_t time_offset,
-                                const std::string tof_info_filename,
                                 const bool debug);
 
 
@@ -131,7 +129,6 @@ generate_linear_time_bin_vector(const int32_t max_time_bin,
  * \param max_time_bin (INPUT)
  * \param log_rebin_percent (INPUT) is the rebin percentage
  * \param time_offset (INPUT) is the starting offset time
- * \param tof_info_filename (INPUT) is the name of the tof info file
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \returns vector of the time bin values.
@@ -140,8 +137,23 @@ std::vector<int32_t>
 generate_log_time_bin_vector(const int32_t max_time_bin,
                              const int32_t log_rebin_percent,
                              const int32_t time_offset,
-                             const std::string tof_info_filename,
                              const bool debug);
 
+
+/**
+ * \brief This function output of the time_bin_vector into a file called
+ * tof_info_filename
+ *
+ * \param time_bin_vector (INPUT) is the vector of the time bin values
+ * \param tof_info_filename (INPUT) is the name of the file that will
+ * contain the time bin values
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
+ *
+ * \returns vector of the time bin values.
+ */
+void 
+output_time_bin_vector(const std::vector<int32_t> time_bin_vector,
+                       const std::string tof_info_filename,
+                       const bool debug);
 
 #endif // _EVENT_TO_HISTO_HPP
