@@ -53,6 +53,9 @@ namespace EventHisto
   /// This is a string that contains the new part of the binary data file
   static const std::string HISTO_FILE_TAG = "histo.dat";
   
+  /// This is a string that contains the new part of the tof info file
+  static const std::string TOF_INFO_FILE_TAG = "timemap.dat";
+  
   ///This is a string that contains the software tag version
   static const std::string VERSION_TAG = "1.0.0iqc1";
   
@@ -152,8 +155,8 @@ namespace EventHisto
    * \param path (INPUT) is the path to the file (without the name part)
    * \param alternate_path (INPUT) is the alternate path for the output file
    * \param output_filename (OUTPUT) is the output file name with its path
-   * \param output_debug_filename (OUTPUT) is the output file name of the 
-   * debugging file
+   * \param tof_info_filename (OUTPUT) is the name of the time_of_flight
+   * info file that will contain the time bin axis
    * \param debug (INPUT) is a flag for printing debugging info
    */
   void path_input_output_file_names(const std::string & path_filename,
@@ -161,7 +164,7 @@ namespace EventHisto
                                     std::string & path,
                                     std::string & alternate_path,
                                     std::string & output_filename,
-                                    std::string & output_debug_filename,
+                                    std::string & tof_info_filename,
                                     const bool debug);
   /**
    * \}
@@ -214,6 +217,31 @@ namespace EventHisto
    * \}
    */ // end of produce_output_file_name group
 
+  /**
+   *\defgroup produce_tof_info_file_name EventHisto::produce_tof_info_file_name
+   *\{
+   */
+
+  /**
+   * \brief This function produce the complete name of the tof_info file
+   * 
+   * \param filename (INPUT) is the name part only of the input file
+   * \param path (INPUT) is the path part only of the input file
+   * \param alternate_path (INPUT) is the alternate path provided on the 
+   * command line for the output file name
+   * \param tof_info_filename (OUTPUT) is  the complete name (path + name) 
+   * of the tof_info_filename
+   * \param debug (INPUT) is a flag for printing debugging info
+   */
+  void produce_tof_info_file_name(const std::string & filename,
+                                  const std::string & path,
+                                  const std::string & alternate_path,
+                                  std::string & tof_info_filename,
+                                  const bool debug);
+  /**
+   * \}
+   */ // end of produce_tof_info_file_name group
+  
   /**
    * \defgroup read_event_file_and_populate_binary_array
    * EventHisto::read_event_file_and_populate_binary_array

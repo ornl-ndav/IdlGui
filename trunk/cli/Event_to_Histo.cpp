@@ -183,9 +183,10 @@ void generate_histo(const size_t array_size,
 
 
 vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
-                                            const int32_t time_rebin_width,
-                                            const int32_t time_offset,
-                                            const bool debug)
+                                                const int32_t time_rebin_width,
+                                                const int32_t time_offset,
+                                                const string tof_info_filename,
+                                                const bool debug)
 {
   vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
@@ -223,20 +224,38 @@ vector<int32_t> generate_linear_time_bin_vector(const float max_time_bin,
   if (time_bin_vector[i-1] < max_time_bin_100ns)
     {
       time_bin_vector.push_back(static_cast<int32_t>(max_time_bin_100ns));
-      if (debug)
+        if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
         }
     }
   
+  size_t time_bin_vector_size = i;
+  cout << "time_bin_vector_size= " << time_bin_vector_size << endl; //remove_me
+  
+  //reconvert axis in microS
+  int32_t * time_bin_array = new int32_t [ time_bin_vector_size];
+  for (size_t i=0 ; i<time_bin_vector_size ; ++i)
+    {
+      time_bin_array[i] = time_bin_vector[i]/10;
+    }
+
+  //write time_bin_vector into tof_info_filename
+  ofstream tof_info_file(tof_info_filename.c_str(),
+                         ios::binary);
+  tof_info_file.write(reinterpret_cast<char*>(time_bin_array),
+                EventHisto::SIZEOF_INT32_T*time_bin_vector_size);
+  tof_info_file.close();
+
   return time_bin_vector;
 }
 
 
 vector<int32_t> generate_log_time_bin_vector(const float max_time_bin,
-                                           const int32_t log_rebin_percent,
-                                           const int32_t time_offset,
-                                           const bool debug)
+                                             const int32_t log_rebin_percent,
+                                             const int32_t time_offset,
+                                             const string tof_info_filename,
+                                             const bool debug)
 {
   vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
@@ -343,6 +362,7 @@ int32_t main(int32_t argc, char *argv[])
           cout << "************* TABLE OF CONTENTS *******************\n";
           cout << "|\t - In parse_input_file_name                     \n";
           cout << "|\t - In produce_output_file_name                  \n";
+          cout << "|\t - In produce_tof_info_file_name                \n";
           cout << "|\t - first values and last value of binary_array  \n";
           cout << "|\t - After swapping the data                      \n";
           cout << "|\t - Generate linear time bin vector              \n";
@@ -355,18 +375,19 @@ int32_t main(int32_t argc, char *argv[])
         {
           string input_filename;
           string output_filename("");
-          string output_debug_filename("");
+          string tof_info_filename("");
           string path; 
           string input_file = input_file_vector[i];
+
           
           EventHisto::path_input_output_file_names(input_file,
                                                    input_filename,
                                                    path,
                                                    altoutpath.getValue(),
                                                    output_filename,
-                                                   output_debug_filename,
+                                                   tof_info_filename,
                                                    debug);
-          
+
           // read input file and populate the binary array 
           size_t file_size;
           int32_t * binary_array;
@@ -393,9 +414,10 @@ int32_t main(int32_t argc, char *argv[])
             {
               time_rebin_width = timerebinwidth.getValue();
               time_bin_vector=generate_linear_time_bin_vector(max_time_bin,
-                                                              time_rebin_width,
-                                                              time_offset,
-                                                              debug);
+                                                            time_rebin_width,
+                                                            time_offset,
+                                                            tof_info_filename,
+                                                            debug);
             }
           else if (logrebinpercent.isSet()) //log rebinning
             {
@@ -403,6 +425,7 @@ int32_t main(int32_t argc, char *argv[])
               time_bin_vector = generate_log_time_bin_vector(max_time_bin,
                                                              log_rebin_percent,
                                                              time_offset,
+                                                             tof_info_filename,
                                                              debug);
             }
           else  
@@ -446,7 +469,7 @@ int32_t main(int32_t argc, char *argv[])
           ofstream histo_file(output_filename.c_str(),
                                    ios::binary);
           histo_file.write(reinterpret_cast<char*>(histo_array),
-                           EventHisto:: SIZEOF_UINT32_T*histo_array_size);
+                           EventHisto::SIZEOF_UINT32_T*histo_array_size);
           histo_file.close();
           
           // free memory allocated to histo_array
