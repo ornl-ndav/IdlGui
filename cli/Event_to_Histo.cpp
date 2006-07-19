@@ -249,20 +249,24 @@ generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
     }
 
   float t1;
-  float t2= EventHisto::SMALLEST_TIME_BIN + time_offset_100ns;
+  float t2= EventHisto::SMALLEST_TIME_BIN_100ns + time_offset_100ns;
   
   ++i;
   while (t2 < max_time_bin_100ns)
     {
       t1 = t2;
       t2 = t1 * (log_rebin_coeff_100ns + 1.);//delta_t/t=log_rebin_coeff_100ns
+      if (t2 > max_time_bin_100ns)
+        {
+          t2 = max_time_bin_100ns;
+        }
       time_bin_vector.push_back(static_cast<int32_t>(t2));
       if (debug)
         {
           cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
         }
       ++i;
-     }
+    }
 
   return time_bin_vector;
 }
@@ -421,11 +425,11 @@ int32_t main(int32_t argc, char *argv[])
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
               log_rebin_coeff_100ns = log_rebin_coeff_cmd.getValue() * 10;
-              //check if log_rebin_coeff_100ns is greater or equal to 1
+              //check if log_rebin_coeff_100ns is greater or equal to 0.5
               //otherwise forces a value of 1
-              if (log_rebin_coeff_100ns < 1)
+              if (log_rebin_coeff_100ns < 0.5)
                 {
-                  log_rebin_coeff_100ns = 1;
+                  log_rebin_coeff_100ns = 0.5;
                 }
               time_bin_vector = generate_log_time_bin_vector(
                                                         max_time_bin_100ns,
