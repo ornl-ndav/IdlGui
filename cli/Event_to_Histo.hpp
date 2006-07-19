@@ -56,8 +56,8 @@ void initialize_array(uint32_t * data_histo,
  * \param histo_array (OUTPUT) is the histogram array
  * \param histo_array_size (INPUT) is the size of the histogram array
  * \param time_bin_vector (INPUT)
- * \param max_time_bin (INPUT)
- * \param time_offset (INPUT) is the time offset
+ * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
+ * \param time_offset_100ns (INPUT) is the time offset (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  */
 void generate_histo(const size_t file_size,
@@ -67,8 +67,8 @@ void generate_histo(const size_t file_size,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
                     const std::vector<int32_t> time_bin_vector,
-                    const float max_time_bin,
-                    const int32_t time_offset,
+                    const int32_t max_time_bin_100ns,
+                    const int32_t time_offset_100ns,
                     const bool debug);
 
 /**
@@ -109,34 +109,34 @@ int32_t compare(const std::vector<int32_t> sortedVector,
  * will be 0, 250, 500, 750....
  * 
  *
- * \param max_time_bin (INPUT) 
- * \param time_rebin_width (INPUT) is the rebin value
- * \param time_offset (INPUT) is the starting offset time
+ * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
+ * \param time_rebin_width_100ns (INPUT) is the rebin value (x100ns)
+ * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \returns A vector of the time bin values.
  */
 std::vector<int32_t> 
-generate_linear_time_bin_vector(const int32_t max_time_bin,
-                                const int32_t time_rebin_width,
-                                const int32_t time_offset,
+generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
+                                const int32_t time_rebin_width_100ns,
+                                const int32_t time_offset_100ns,
                                 const bool debug);
 
 
 /**
  * \brief This function creates the vector of a logarithmic time bins percentage
  *
- * \param max_time_bin (INPUT)
+ * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
  * \param log_rebin_percent (INPUT) is the rebin percentage
- * \param time_offset (INPUT) is the starting offset time
+ * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
  *
  * \returns vector of the time bin values.
  */
 std::vector<int32_t> 
-generate_log_time_bin_vector(const int32_t max_time_bin,
+generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
                              const int32_t log_rebin_percent,
-                             const int32_t time_offset,
+                             const int32_t time_offset_100ns,
                              const bool debug);
 
 
