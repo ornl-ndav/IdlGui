@@ -228,10 +228,11 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
 }
 
 
-vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                                             const int32_t log_rebin_coeff,
-                                             const int32_t time_offset_100ns,
-                                             const bool debug)
+vector<int32_t> 
+generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
+                             const float log_rebin_coeff_100ns,
+                             const int32_t time_offset_100ns,
+                             const bool debug)
 {
   vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
@@ -241,10 +242,10 @@ vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
   if (debug)
     {
       cout << "\n**Generate logarithmic time bin vector**\n\n";
-      cout << "\t log_rebin_coeff= " << log_rebin_coeff << endl;
+      cout << "\t log_rebin_coeff(100ns)= " << log_rebin_coeff_100ns << endl;
       cout << "\t max_time_bin(100ns)= " << max_time_bin_100ns << endl;
       cout << "\t time_offset(100ns)= " << time_offset_100ns << "\n\n";
-      cout << "\ttime_bin_vector["<<i<<"]= " << time_bin_vector[i]<<endl;
+      cout << "\ttime_bin_vector[0]= " << time_bin_vector[i]<<endl;
     }
 
   float t1;
@@ -254,7 +255,7 @@ vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
   while (t2 < max_time_bin_100ns)
     {
       t1 = t2;
-      t2 = t1 * (log_rebin_coeff + 1.);  //delta_t/t = log_rebin_coeff
+      t2 = t1 * (log_rebin_coeff_100ns + 1.);//delta_t/t=log_rebin_coeff_100ns
       time_bin_vector.push_back(static_cast<int32_t>(t2));
       if (debug)
         {
@@ -334,10 +335,10 @@ int32_t main(int32_t argc, char *argv[])
                                         "initial offset time (microS)",
                                         false, 0, "time offset (microS)");
 
-      ValueArg<int32_t> log_rebin_coeff_cmd("L","logarithmic",
-                                        "delta_t/t coefficient",
-                                        true, -1, 
-                                        "logarithmic rebinning coefficient"); 
+      ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
+                                          "delta_t/t coefficient (>=0.1)",
+                                          true, 1, 
+                                  "logarithmic rebinning coefficient (>=0.1)"); 
 
       cmd.xorAdd(time_rebin_width_cmd, log_rebin_coeff_cmd);
       
@@ -404,7 +405,7 @@ int32_t main(int32_t argc, char *argv[])
 
           int32_t max_time_bin_100ns = max_time_bin_cmd.getValue() * 10;
           int32_t time_rebin_width_100ns;
-          int32_t log_rebin_coeff;
+          float log_rebin_coeff_100ns;
           int32_t time_offset_100ns = time_offset_cmd.getValue() * 10;
           vector<int32_t> time_bin_vector;
 
@@ -419,10 +420,16 @@ int32_t main(int32_t argc, char *argv[])
             }
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
-              log_rebin_coeff = log_rebin_coeff_cmd.getValue();
+              log_rebin_coeff_100ns = log_rebin_coeff_cmd.getValue() * 10;
+              //check if log_rebin_coeff_100ns is greater or equal to 1
+              //otherwise forces a value of 1
+              if (log_rebin_coeff_100ns < 1)
+                {
+                  log_rebin_coeff_100ns = 1;
+                }
               time_bin_vector = generate_log_time_bin_vector(
                                                         max_time_bin_100ns,
-                                                        log_rebin_coeff,
+                                                        log_rebin_coeff_100ns,
                                                         time_offset_100ns,
                                                         debug);
             }
