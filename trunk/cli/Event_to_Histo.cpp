@@ -415,7 +415,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t pixel_number = pixelnumber.getValue();
 
           //This is the new number of time bins in the histo file
-          size_t new_Nt = time_bin_vector.size();
+          size_t new_Nt = time_bin_vector.size()-1;
 
           size_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
