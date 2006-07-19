@@ -107,7 +107,7 @@ void initialize_array(uint32_t * histo_array,
 
 void generate_histo(const size_t array_size,
                     const int32_t new_Nt,
-                    const int32_t pixelnumber,
+                    const int32_t pixel_number,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
@@ -159,7 +159,7 @@ void generate_histo(const size_t array_size,
 
       //remove data that are oustide the scope of range
       if (pixelid < 0 ||                             
-          pixelid > pixelnumber ||
+          pixelid > pixel_number ||
           time_stamp < time_offset_100ns ||
           time_stamp > max_time_bin_100ns)
         {
@@ -230,14 +230,11 @@ generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
 
 vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
                                              const int32_t log_rebin_percent,
-                                             const int32_t time_offset,
+                                             const int32_t time_offset_100ns,
                                              const bool debug)
 {
   vector<int32_t> time_bin_vector;
   int32_t i=0;  //use for debugging tool only
-
-  //to go from microS to x100ns
-  int32_t time_offset_100ns = time_offset * 10;
 
   time_bin_vector.push_back(static_cast<int32_t>(time_offset_100ns));
 
@@ -249,7 +246,7 @@ vector<int32_t> generate_log_time_bin_vector(const int32_t max_time_bin,
 
   float log_rebin = static_cast<float>(log_rebin_percent) / 100;
   float t1;
-  float t2= EventHisto::SMALLEST_TIME_BIN + time_offset;
+  float t2= EventHisto::SMALLEST_TIME_BIN + time_offset_100ns;
   
   ++i;
   while (t2 < max_time_bin)
@@ -301,57 +298,57 @@ int32_t main(int32_t argc, char *argv[])
       
       // Add command-line options
       ValueArg<size_t> n_disp_cmd("n","data_displayed",
-                               "number of element to display",
-                               false, 10, "element to display", cmd);
+                                  "number of element to display",
+                                  false, 10, "element to display", cmd);
 
-      ValueArg<string> altoutpath("a", "alternate_output", 
-                                  "Alternate path for output file",
-                                  false, "", "path", cmd);
+      ValueArg<string> alt_out_path_cmd("a", "alternate_output", 
+                                        "Alternate path for output file",
+                                        false, "", "path", cmd);
       
-      SwitchArg debugSwitch("d", "debug", "Flag for debugging program",
-                            false, cmd);
+      SwitchArg debug_cmd("d", "debug", "Flag for debugging program",
+                          false, cmd);
 
-      SwitchArg swapiSwitch ("", "swap_input", 
+      SwitchArg swap_i_cmd ("", "swap_input", 
                             "Flag for swapping data of input file",
                             false, cmd);
       
-      SwitchArg swapoSwitch ("", "swap_output",
-                             "Flag for swapping data of output file",
+      SwitchArg swap_o_cmd ("", "swap_output",
+                            "Flag for swapping data of output file",
                              false, cmd);
 
-      ValueArg<int32_t> pixelnumber ("p", "number_of_pixels",
-                                     "Number of pixels for this run",
-                                     true, -1, "pixel number", cmd);
+      ValueArg<int32_t> pixel_number_cmd ("p", "number_of_pixels",
+                                          "Number of pixels for this run",
+                                          true, -1, "pixel number", cmd);
 
-      ValueArg<int32_t> maxtimebin("M", "max_time_bin", 
-                                      "Maximum value of time stamp",
-                                      true, -1, "Max time bin", cmd);
+      ValueArg<int32_t> max_time_bin_cmd("M", "max_time_bin", 
+                                         "Maximum value of time stamp",
+                                         true, -1, "Max time bin", cmd);
 
-      ValueArg<int32_t> timerebinwidth("l","linear",
-                                       "width of rebin linear time bin",
-                                       true, -1, "new linear time bin");
+      ValueArg<int32_t> time_rebin_width_cmd("l","linear",
+                                             "width of rebin linear time bin",
+                                             true, -1, "new linear time bin");
 
-      ValueArg<int32_t> timeoffset("", "time_offset",
-                                   "initial offset time (microS)",
-                                   false, 0, "time offset (microS)");
+      ValueArg<int32_t> time_offset_cmd("", "time_offset",
+                                        "initial offset time (microS)",
+                                        false, 0, "time offset (microS)");
 
-      ValueArg<int32_t> logrebinpercent("L","logarithmic",
-                                        "delta_t/t percentage",
+      ValueArg<int32_t> log_rebin_coeff_cmd("L","logarithmic",
+                                        "delta_t/t coefficient",
                                         true, -1, 
-                                        "logarithmic rebinning percentage"); 
+                                        "logarithmic rebinning coefficient"); 
 
-      cmd.xorAdd(timerebinwidth, logrebinpercent);
+      cmd.xorAdd(time_rebin_width_cmd, log_rebin_coeff_cmd);
       
-      UnlabeledMultiArg<string> event_file_vector("event_file",
-                                                  "Name of the event file",
-                                                  "filename", cmd);
+      UnlabeledMultiArg<string> event_file_vector_cmd("event_file",
+                                                      "Name of the event file",
+                                                      "filename", cmd);
       // Parse the command-line
       cmd.parse(argc, argv);
 
       // Create string vector of all input file names
-      vector<string> input_file_vector = event_file_vector.getValue();
+      vector<string> input_file_vector = event_file_vector_cmd.getValue();
 
-      const bool debug = debugSwitch.getValue();
+      const bool debug = debug_cmd.getValue();
 
       size_t n_disp = n_disp_cmd.getValue();
 
@@ -382,7 +379,7 @@ int32_t main(int32_t argc, char *argv[])
           EventHisto::path_input_output_file_names(input_file,
                                                    input_filename,
                                                    path,
-                                                   altoutpath.getValue(),
+                                                   alt_out_path_cmd.getValue(),
                                                    output_filename,
                                                    tof_info_filename,
                                                    debug);
@@ -395,7 +392,7 @@ int32_t main(int32_t argc, char *argv[])
             EventHisto::read_event_file_and_populate_binary_array(input_file,
                                                         input_filename,
                                                         n_disp,
-                                                        swapiSwitch.getValue(),
+                                                        swap_i_cmd.getValue(),
                                                         debug,
                                                         binary_array);
 
@@ -403,27 +400,27 @@ int32_t main(int32_t argc, char *argv[])
 
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
 
-          int32_t max_time_bin_100ns = maxtimebin.getValue() * 10;
+          int32_t max_time_bin_100ns = max_time_bin_cmd.getValue() * 10;
           int32_t time_rebin_width_100ns;
-          int32_t log_rebin_percent;
-          int32_t time_offset_100ns = timeoffset.getValue() * 10;
+          int32_t log_rebin_coeff;
+          int32_t time_offset_100ns = time_offset_cmd.getValue() * 10;
           vector<int32_t> time_bin_vector;
 
-          if (timerebinwidth.isSet())  //linear rebinning
+          if (time_rebin_width_cmd.isSet())  //linear rebinning
             {
-              time_rebin_width_100ns = timerebinwidth.getValue() * 10;
+              time_rebin_width_100ns = time_rebin_width_cmd.getValue() * 10;
               time_bin_vector=generate_linear_time_bin_vector(
                                                         max_time_bin_100ns,
                                                         time_rebin_width_100ns,
                                                         time_offset_100ns,
                                                         debug);
             }
-          else if (logrebinpercent.isSet()) //log rebinning
+          else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
-              log_rebin_percent = logrebinpercent.getValue();
+              log_rebin_coeff = log_rebin_coeff_cmd.getValue();
               time_bin_vector = generate_log_time_bin_vector(
                                                         max_time_bin_100ns,
-                                                        log_rebin_percent,
+                                                        log_rebin_coeff,
                                                         time_offset_100ns,
                                                         debug);
             }
@@ -439,7 +436,7 @@ int32_t main(int32_t argc, char *argv[])
                                  tof_info_filename,
                                  debug);
 
-          int32_t pixel_number = pixelnumber.getValue();
+          int32_t pixel_number = pixel_number_cmd.getValue();
 
           //this is the new number of time bins in the histo file
           size_t new_Nt = time_bin_vector.size()-1;
@@ -450,7 +447,7 @@ int32_t main(int32_t argc, char *argv[])
           //generate histo binary data array
           generate_histo(array_size,
                          new_Nt,
-                         pixelnumber.getValue(),
+                         pixel_number,
                          binary_array,
                          histo_array,
                          histo_array_size,
@@ -463,7 +460,7 @@ int32_t main(int32_t argc, char *argv[])
           delete binary_array;
 
           // swap endian of output array (histo_array)
-          if(swapoSwitch.getValue())
+          if(swap_o_cmd.getValue())
             {
               EventHisto::swap_endian(histo_array_size, histo_array);
             }
