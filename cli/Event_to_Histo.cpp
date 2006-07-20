@@ -340,9 +340,9 @@ int32_t main(int32_t argc, char *argv[])
                                         false, 0, "time offset (microS)");
 
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
-                                          "delta_t/t coefficient (>=0.1)",
+                                          "delta_t/t coefficient (>=0.05)",
                                           true, 1, 
-                                  "logarithmic rebinning coefficient (>=0.1)"); 
+                                "logarithmic rebinning coefficient (>=0.05)"); 
 
       cmd.xorAdd(time_rebin_width_cmd, log_rebin_coeff_cmd);
       
@@ -410,7 +410,14 @@ int32_t main(int32_t argc, char *argv[])
           int32_t max_time_bin_100ns = max_time_bin_cmd.getValue() * 10;
           int32_t time_rebin_width_100ns;
           float log_rebin_coeff_100ns;
+          
+          //check that the time_offset in 100ns scale is at least 1
           int32_t time_offset_100ns = time_offset_cmd.getValue() * 10;
+          if (time_offset_100ns !=0 && time_offset_100ns < 1)
+                {
+                  time_offset_100ns = 1;
+                }
+             
           vector<int32_t> time_bin_vector;
 
           if (time_rebin_width_cmd.isSet())  //linear rebinning
