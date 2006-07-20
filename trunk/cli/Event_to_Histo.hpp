@@ -34,6 +34,7 @@
 #include <cmath>
 #include <tclap/CmdLine.h>
 #include "utils.hpp"
+#include "bin_vector_utils.hpp"
 
 /**
  * \brief This function initializes an array
@@ -101,71 +102,5 @@ int32_t binarySearch(const std::vector<int32_t> sortedVector,
 int32_t compare(const std::vector<int32_t> sortedVector,
                 const int32_t key,
                 const size_t index);
-
-/**
- * \brief This function creates the vector of a linear time bins widths (units
- * is x100ns).
- * For example, for a time bin of 25micros, the first values of the vector
- * will be 0, 250, 500, 750....
- *
- * The time bin boundaries are calculated according to the equation
- * \f[
- * T[i]=T_{offset}+\delta T*i
- * \f]
- *
- * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
- * \param time_rebin_width_100ns (INPUT) is the rebin value (x100ns)
- * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- *
- * \returns A vector of the time bin values.
- */
-std::vector<int32_t> 
-generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
-                                const int32_t time_rebin_width_100ns,
-                                const int32_t time_offset_100ns,
-                                const bool debug);
-
-
-/**
- * \brief This function creates the vector of a logarithmic time bins 
- * percentage
- *
- * The time bin boundaries are calculated according to the equation
- * \f[
- * T_0 = T_{offset}
- * T_i = T_{i-1}(coeff+1)
- * \f]
- *
- * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
- * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
- * the coefficient from the command line in order to work with x100ns data
- * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- *
- * \returns vector of the time bin values.
- */
-std::vector<int32_t> 
-generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                             const float log_rebin_coeff_100ns,
-                             const int32_t time_offset_100ns,
-                             const bool debug);
-
-
-/**
- * \brief This function output of the time_bin_vector into a file called
- * tof_info_filename
- *
- * \param time_bin_vector (INPUT) is the vector of the time bin values
- * \param tof_info_filename (INPUT) is the name of the file that will
- * contain the time bin values
- * \param debug (INPUT) is a switch that trigger or not the debugging tools
- *
- * \returns vector of the time bin values.
- */
-void 
-output_time_bin_vector(const std::vector<int32_t> time_bin_vector,
-                       const std::string tof_info_filename,
-                       const bool debug);
 
 #endif // _EVENT_TO_HISTO_HPP
