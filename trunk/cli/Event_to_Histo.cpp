@@ -300,9 +300,10 @@ int32_t main(int32_t argc, char *argv[])
           
           //check that the time_offset in 100ns scale is at least 1
           int32_t time_offset_100ns = time_offset_cmd.getValue() * 10;
-          if (time_offset_100ns !=0 && time_offset_100ns < 1)
+          if (time_offset_100ns !=0 && 
+              time_offset_100ns < EventHisto::SMALLEST_TIME_BIN_100NS)
                 {
-                  time_offset_100ns = 1;
+                  time_offset_100ns = EventHisto::SMALLEST_TIME_BIN_100NS;
                 }
              
           vector<int32_t> time_bin_vector;
