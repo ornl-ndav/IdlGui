@@ -71,7 +71,7 @@ namespace EventHisto
    * time bin must be greater different from 0, this number becomes
    * our "virtual zero".
    */
-  static const float SMALLEST_TIME_BIN = 0.00001;
+  static const float SMALLEST_TIME_BIN_100ns = 1;
   
   /**
    * \brief This function swap endians of an array
@@ -253,7 +253,8 @@ namespace EventHisto
    * binary_array with its values
    * 
    * \param input_file (INPUT) is the name of the event binary file
-   * \param input_filename (INPUT) is the complete name of the event binary file
+   * \param input_filename (INPUT) is the complete name of the event binary 
+   * file
    * \param n_disp (INPUT) is the number of element to display
    * \param swap_input (INPUT) is a flag that trigger the swapping of the data
    * coming from the event binary file
