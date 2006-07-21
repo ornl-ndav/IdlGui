@@ -101,7 +101,7 @@ namespace BinVectorUtils
       }
     
     float t1;
-    float t2= EventHisto::SMALLEST_TIME_BIN_100ns + time_offset_100ns;
+    float t2= EventHisto::SMALLEST_TIME_BIN_100NS + time_offset_100ns;
     
     ++i;
     while (t2 < max_time_bin_100ns)
