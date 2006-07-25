@@ -217,7 +217,7 @@ int32_t main(int32_t argc, char *argv[])
 
       ValueArg<int32_t> time_offset_cmd("", "time_offset",
                                         "initial offset time (microS)",
-                                        false, 0, "time offset (microS)");
+                                        false, 0, "time offset (microS)",cmd);
 
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
                                           "delta_t/t coefficient (>=0.05)",
