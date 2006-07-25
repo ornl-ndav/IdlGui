@@ -21,4 +21,4 @@ Create_Tbin_File.o: Create_Tbin_File.cpp
 	$(CXX) -c -I ../inc Create_Tbin_File.cpp
 
 clean:
-	rm Event_to_Histo event_to_Histo.o utils.o bin_vector_utils.o Map_Data
+	rm -f ${all} *.o
