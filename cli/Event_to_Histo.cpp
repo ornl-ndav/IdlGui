@@ -135,7 +135,6 @@ void generate_histo(const size_t array_size,
   //the variable 2*i into the for loop. Like this, the all file is covered.
   for (size_t i=0 ; i<array_size/2; i++) 
   {
-    cout << " " << i;
       pixelid = binary_array[2*i+1];
       time_stamp = binary_array[2*i];
       time_bin = binarySearch(time_bin_vector,time_stamp);
