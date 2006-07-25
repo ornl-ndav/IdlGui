@@ -35,61 +35,53 @@ using namespace TCLAP;
 using namespace BinVectorUtils;
 
 int32_t binarySearch(const vector<int32_t> sortedVector, 
-                    const int32_t key)
+                    const int32_t value)
 {
-  size_t sortedVector_size = sortedVector.size();
-  size_t first = 0;
-  size_t last = sortedVector_size-1;
-  int32_t result; //-1,0,1
+  size_t vector_size = sortedVector.size();
 
   //check first if the value is out of range
-  if (key > sortedVector[last] ||
-      key < sortedVector[0])
+  if (value > sortedVector[vector_size-1] ||
+      value < sortedVector[0])
     {
       return -1;
     }
 
-  size_t mid;
-  while (first < last)
+  size_t first = 0;
+  size_t last = vector_size-1;
+  size_t mid = 0;
+
+  while (first <= last)
     {
       mid = (first + last) / 2;
-      result = compare(sortedVector, key, mid);
-
-      switch (result)
+      // search first half of current subvector
+      if (value < sortedVector[mid]) 
         {
-        case -1: last=mid;
-          break;
-        case 1: first=mid;
-          break;
-        case 0: return(mid);
+          last = mid -1;
+        }
+      // search second half of current subvector
+      else if (value > sortedVector[mid])
+        {
+          first = mid + 1;
+        }
+      // we got it
+      else
+        {
+          // value is on last boundary
+          if (value == sortedVector[vector_size-1])
+            {
+              return (mid - 1);
+            }
+          // value is in earlier bin boundary
+          else
+            {
+              return (mid);
+            }
         }
     }
-  return (first);
-}
-
-int32_t compare(const vector<int32_t> sortedVector,
-                const int32_t key,
-                const size_t index)
-{
-  if (key < sortedVector[index])
-    {
-      return -1;
-    }
-  else if (key >= sortedVector[index+1])
-    {
-      if ((index+2)==sortedVector.size() && key==sortedVector[index+1])
-          {
-            return 0;
-          }
-          else
-          {
-            return 1;
-          }
-    }
-  else
-    {
-      return 0;
-    }
+  
+  // the indices crossed, so the value is not in the list
+  // but we can determine which bin it is in.
+  return last;
 }
 
 
