@@ -50,15 +50,15 @@ int32_t main(int32_t argc, char *argv[])
       SwitchArg debug_cmd("d", "debug", "Flag for debugging program",
                           false, cmd);
 
-      ValueArg<int32_t> max_time_bin_cmd("M", "max_time_bin", 
+      ValueArg<float> max_time_bin_cmd("M", "max_time_bin", 
                                          "Maximum value of time stamp",
                                          true, -1, "Max time bin", cmd);
 
-      ValueArg<int32_t> time_rebin_width_cmd("l","linear",
+      ValueArg<float> time_rebin_width_cmd("l","linear",
                                              "width of rebin linear time bin",
                                              true, -1, "new linear time bin");
 
-      ValueArg<int32_t> time_offset_cmd("", "time_offset",
+      ValueArg<float> time_offset_cmd("", "time_offset",
                                         "initial offset time (microS)",
                                         false, 0, "time offset (microS)",cmd);
 
@@ -77,12 +77,14 @@ int32_t main(int32_t argc, char *argv[])
       // Parse the command-line
       cmd.parse(argc, argv);
 
-      int32_t max_time_bin_100ns = max_time_bin_cmd.getValue() * 10;
+      int32_t max_time_bin_100ns
+        = static_cast<int32_t>(max_time_bin_cmd.getValue() * 10.);
 
       const bool debug = debug_cmd.getValue();
 
       //check that the time_offset in 100ns scale is at least 1
-      int32_t time_offset_100ns = time_offset_cmd.getValue() * 10;
+      int32_t time_offset_100ns
+        = static_cast<int32_t>(time_offset_cmd.getValue() * 10.);
       if (time_offset_100ns !=0 && 
           time_offset_100ns < EventHisto::SMALLEST_TIME_BIN_100NS)
         {
@@ -93,7 +95,8 @@ int32_t main(int32_t argc, char *argv[])
       
       if (time_rebin_width_cmd.isSet())  //linear rebinning
         {
-          int32_t time_rebin_width_100ns = time_rebin_width_cmd.getValue()*10;
+          int32_t time_rebin_width_100ns
+            = static_cast<int32_t>(time_rebin_width_cmd.getValue()*10.);
           time_bin_vector=generate_linear_time_bin_vector(
                                                       max_time_bin_100ns,
                                                       time_rebin_width_100ns,
@@ -102,7 +105,8 @@ int32_t main(int32_t argc, char *argv[])
         }
       else if (log_rebin_coeff_cmd.isSet()) //log rebinning
         {
-          float log_rebin_coeff_100ns = log_rebin_coeff_cmd.getValue()*10;
+          float log_rebin_coeff_100ns
+            = static_cast<int32_t>(log_rebin_coeff_cmd.getValue()*10.);
 
           //check if log_rebin_coeff_100ns is greater or equal to 0.5
           //otherwise forces a value of 1
