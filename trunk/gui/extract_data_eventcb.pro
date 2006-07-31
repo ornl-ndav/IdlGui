@@ -110,7 +110,9 @@ WIDGET_CONTROL, view_info, SET_VALUE="MODE: 1 click"
 
 	;get data
 	img = (*(*global).img_ptr)
-	data = (*(*global).data_ptr)
+;	data = (*(*global).data_ptr)
+	tmp_tof = (*(*global).data_assoc)
+	Nx= (*global).Nx
 
 	x = Event.x
 	y = Event.y
@@ -119,6 +121,12 @@ WIDGET_CONTROL, view_info, SET_VALUE="MODE: 1 click"
 	(*global).x = x
 	(*global).y = y
 
+	;put x and y into cursor x and y labels position
+	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION')
+	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
+	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
+	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
+	
 	;get window numbers - x
 	view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X')
 	WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
@@ -148,7 +156,13 @@ WIDGET_CONTROL, view_info, SET_VALUE="MODE: 1 click"
 	WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
 	wset,view_win_num_tof
 	;remember, img is transposed versus data...not sure this is right yet ************
-	plot,reform(data(*,y,x)),title='TOF Axis'
+	pixelid=y*Nx+x
+;	tof_arr=swap_endian(tmp_tof[pixelid])
+
+	tof_arr=(tmp_tof[pixelid])
+	plot, tof_arr,title='TOF Axis'	
+;	plot,reform(data(*,y,x)),title='TOF Axis'
+
 
 endif
 
@@ -162,7 +176,7 @@ WIDGET_CONTROL, view_info, SET_VALUE="MODE: selection"
 	;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
 	;widget_control,rb_id,sensitive=0
 
-	print,'right button press'
+	;print,'right button press'
 
 	;get window numbers
 	view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
@@ -288,8 +302,21 @@ blank_line = ""
 data = (*(*global).data_ptr)
 simg = (*(*global).img_ptr)
 
-first_point = '  pixelID#: '+strcompress(y_min*304+x_min)+' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'; intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
-second_point = '  pixelID#: '+strcompress(y_max*304+x_max)+' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'; intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+starting_id = (y_min*304+x_min)
+starting_id_string = strcompress(starting_id)
+(*global).starting_id_x = x_min
+(*global).starting_id_y = y_min
+
+ending_id = (y_max*304+x_max)
+ending_id_string = strcompress(ending_id)
+(*global).ending_id_x = x_max
+(*global).ending_id_y = y_max
+
+first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'
+first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
+
+second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'
+second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
 
 ;calculation of inside region total counts
 inside_total = total(simg(x_min:x_max, y_min:y_max))
@@ -308,11 +335,12 @@ average_counts = 'Average counts:'
 average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
 average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
 
-value_group = [pixel_label,first_point, second_point, blank_line, selection_label, number_pixelid,$
+value_group = [selection_label, number_pixelid,$
 	 x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
-	average_counts, average_inside_region, average_outside_region]
+	average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
+	first_point_2,second_point,second_point_2]
 
-;text = widget_text(, value=value_group, ysize=15)
+;text = widget_text(, value=value_group, ysize=17)
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
 WIDGET_CONTROL, view_info, SET_VALUE=""
@@ -320,40 +348,32 @@ WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
 
 ;end of part from the rubber_band program
 
-;	Q = CW_DEFROI(view_id)
-;	if Q[0] NE -1 then begin
-;	print,'Storing Indicies'
-;
-;	save_id = widget_info(Event.top,FIND_BY_UNAME='SAVE_BUTTON')
-;	WIDGET_CONTROL, save_id, sensitive=1
-;
-;	;store indicies
-;	(*(*global).indicies) = Q
-;	(*global).have_indicies = 1
-;
-;	endif
-
 endif else begin
 
 endelse
 
-rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
-widget_control,rb_id,sensitive=1
-
-selection = data(*,y_min:y_max,x_min:x_max)  
-selection = total(selection,2)
-selection = total(selection,2)
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
-WIDGET_CONTROL, view_info, GET_VALUE = view_num_info
-wset, view_num_info
-plot, selection
+;;;UNCOMMENT THIS PART TO MAKE COUNTS vs TBIN ACTIVE AGAIN
+;;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
+;;widget_control,rb_id,sensitive=1
+;;
+;;selection = data(*,y_min:y_max,x_min:x_max)  
+;;selection = total(selection,2)
+;;selection = total(selection,2)
+;;
+;;view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
+;;WIDGET_CONTROL, view_info, GET_VALUE = view_num_info
+;;wset, view_num_info
+;;plot, selection
+;;
+;;;enable save button once a selection is done
+;;rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
+;;widget_control,rb_id,sensitive=1
+;;
+;;(*(*global).selection_ptr) = selection
 
 ;enable save button once a selection is done
 rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
 widget_control,rb_id,sensitive=1
-
-(*(*global).selection_ptr) = selection
 
 endelse ;click_outside
 click_outside = 0
@@ -386,8 +406,9 @@ if outfile NE '' then begin
 	selection = (*(*global).selection_ptr)
 
 	view_main=widget_info(Event.top, FIND_BY_UNAME='TBIN_TXT')
-	WIDGET_CONTROL, view_main, GET_VALUE=id
-	tbin = float(id)
+	WIDGET_CONTROL, view_main, GET_VALUE=tbin
+	tbin = float(tbin)
+	(*global).time_bin = tbin  
 
 	;get region indicies
 	indicies = (*(*global).indicies)
@@ -471,11 +492,15 @@ PRO REFRESH, Event
 	view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
 	WIDGET_CONTROL, view_info, SET_VALUE=""
 
-	;remove counts vs tof plot
-	view_infof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
-	WIDGET_CONTROL, view_info, GET_VALUE=id
-	wset, id
-	ERASE
+	;disable save button after refreshing selection
+	rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
+	widget_control,rb_id,sensitive=0
+
+;	;remove counts vs tof plot
+;	view_infof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
+;	WIDGET_CONTROL, view_info, GET_VALUE=id
+;	wset, id
+;	ERASE
 
 end
 ; end of REPRESH
@@ -484,6 +509,11 @@ end
 ;
 ; \argument Event (INPUT)
 pro EXIT_PROGRAM, Event
+
+if (N_ELEMENTS(U)) NE 0 then begin
+	close, u
+	free_lun,u
+endif 
 
 widget_control,Event.top,/destroy
 
@@ -496,54 +526,89 @@ end
 ; \argument Event (INPUT)
 pro OPEN_FILE, Event
 
+;first close previous file if there is one
+if (N_ELEMENTS(U)) NE 0 then begin
+	close, u
+	free_lun,u
+endif 
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-
 ;retrieve data parameters
 Nx 		= (*global).Nx
 Ny 		= (*global).Ny
-Ntof 	= (*global).Ntof
-filter = (*global).filter
+filter = (*global).filter_histo
 
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
 
 ;open file
-
 path="/users/j35/CD4/REF_M/REF_M_7/"
 file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
-
 
 ;only read data if valid file given
 if file NE '' then begin
 
 	(*global).filename = file ; store input filename
+	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	text = "Open histogram file: " + strcompress(file,/remove_all)
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
+	;get only the last part of the file (its name)
+	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
+	filename_only=file_list[length-1]	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_TEXT')
+	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
+	(*global).filename_only = filename_only ; store only name of the file (without the path)
+
+	;determine path	
+	path_list=strsplit(file,filename_only,/reg,/extract)
+	path=path_list[0]
+;	;display path
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
+;	WIDGET_CONTROL, view_info, SET_VALUE=path
+	(*global).path = path
+	
 	print,'Reading in data  ',systime(0)
 
 	openr,u,file,/get
 	;find out file info
 	fs = fstat(u)
-	Ntof = fs.size/(Ny*Nx*4L)
+	Nimg = Nx*Ny
+	Ntof = fs.size/(Nimg*4L)
 	(*global).Ntof = Ntof	;set back in global structure
-	data = lonarr(Ntof,Nx,Ny)
-	readu,u,data
 
-	;data = swap_endian(data)
+	;using assoc
+	;(assoc defines a template structure for reading data. Since data are ordered Ntof, Ny, Nx, Ntof
+	;varie the fastest. This being the case, it's not convenient to define an y,x data plane, and it's more
+	;convenient to define the data structure to be an individual TOF array.
+	data_assoc = assoc(u,lonarr(Ntof))
+	
+	;make the image array
+	img = lonarr(Nx,Ny)
+	for i=0L,Nimg-1 do begin
+		x = i MOD Nx
+		y = i/Nx
+;		img[y,x] = total(swap_endian(data_assoc[i]))
+		img[x,y] = total(data_assoc[i])
+	endfor
 
-;	img=total(data,1)
-	img = transpose(total(data,1))
+	img=transpose(img)
+
+	;old fashion way
+;	data = lonarr(Ntof,Nx,Ny)
+;	readu,u,data
+;	;data = swap_endian(data)
+;	img = transpose(total(data,1))
+;	(*(*global).data_ptr) = data
 
 	;load data up in global ptr array
-	(*(*global).data_ptr) = data
 	(*(*global).img_ptr) = img
-
-	close,u
-	free_lun,u
-
-
+	(*(*global).data_assoc) = data_assoc
+	
 	;now turn hourglass back off
 	widget_control,hourglass=0
 
@@ -555,11 +620,326 @@ if file NE '' then begin
 	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
 	widget_control,rb_id,sensitive=1
 
-
 	print,'Complete  ',systime(0)
 
 endif;valid file
 
-
 end
 ; end of OPEN_FILE
+
+
+;**********
+pro DATA_REDUCTION, Event
+
+;first disable GO button during calculation
+go_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
+widget_control,go_id,sensitive=0
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters from different text boxes
+
+;wavelength minimum
+  view_wave_min=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_MIN_TEXT')
+  WIDGET_CONTROL, view_wave_min, GET_VALUE=wavelength_min
+  wavelength_min = float(wavelength_min)
+  (*global).wavelength_min = wavelength_min  
+
+;wavelength maximum
+  view_wave_max=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_MAX_TEXT')
+  WIDGET_CONTROL, view_wave_max, GET_VALUE=wavelength_max
+  wavelength_max = float(wavelength_max)
+  (*global).wavelength_max = wavelength_max  
+
+;wavelength width
+  view_wave_width=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_WIDTH_TEXT')
+  WIDGET_CONTROL, view_wave_width, GET_VALUE=wavelength_width
+  wavelength_width = float(wavelength_width)
+  (*global).wavelength_width = wavelength_width  
+
+;detector angle
+;value
+  view_det_angle=widget_info(Event.top, FIND_BY_UNAME='DETECTOR_ANGLE_VALUE')
+  WIDGET_CONTROL, view_det_angle, GET_VALUE=detector_angle
+  detector_angle = float(detector_angle)
+;error
+  view_det_angle_err=widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_ERR')
+  WIDGET_CONTROL, view_det_angle_err, GET_VALUE=detector_angle_err
+  detector_angle_err = float(detector_angle_err)
+
+;convert angle into radians
+;check units selected
+  view_angle_units=widget_info(Event.top, FIND_BY_UNAME='DETECTOR_ANGLE_UNITS',/droplist_select)
+  WIDGET_CONTROL, view_angle_units, get_value=detector_angle_units
+  index=widget_info(view_angle_units,/droplist_select)
+  detector_angle_units = detector_angle_units[index]	  
+
+  if (index EQ 1) then begin
+	coeff = ((2*!pi)/180)
+	detector_angle_rad = coeff*detector_angle 
+	detector_angle_err_rad = coeff*detector_angle_err
+  endif else begin
+	detector_angle_rad = detector_angle
+	detector_angle_err_rad = detector_angle_err
+  endelse
+  (*global).detector_angle = detector_angle_rad
+  (*global).detector_angle_err = detector_angle_err_rad
+
+;determine name of nexus file according to histogram file name
+filename_full= (*global).filename
+file_list=strsplit(filename_full,'_neutron_histo_mapped.dat',/REGEX,/extract,count=length) ;to remove last part of the name
+filename_short=file_list[0]	
+nexus_filename = filename_short + '.nxs'
+(*global).nexus_filename=nexus_filename
+
+;get starting and ending pixelIDs
+starting_id_x = (*global).starting_id_x
+starting_id_y = (*global).starting_id_y
+ending_id_x = (*global).ending_id_x
+ending_id_y = (*global).ending_id_y
+
+;check switch background
+  view_back_switch=widget_info(Event.top, FIND_BY_UNAME='BACKGROUND_SWITCH',/button_set)
+  WIDGET_CONTROL, view_back_switch, get_uvalue=switch_value
+  index=widget_info(view_back_switch,/button_set)
+  if (index EQ 1) then begin
+	with_back = 1
+	background_flag = ""
+  endif else begin
+	with_back = 0
+	background_flag = "--no-bkg"
+  endelse
+  (*global).with_background = with_back
+	
+;check switch normalization
+  view_norm_switch=widget_info(Event.top, FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
+  WIDGET_CONTROL, view_norm_switch, get_uvalue=switch_value
+  index=widget_info(view_norm_switch,/button_set)
+  if (index EQ 1) then begin
+	with_norm = 1
+	norm_file = (*global).norm_filename
+	normalization_flag = "--norm=" + norm_file
+  endif else begin
+	with_norm = 0
+	normalization_flag = ""
+  endelse
+  (*global).with_normalization = with_norm
+
+;define command line to run data reduction
+space = " "
+cmd_line= "reflect_reduction " ;program to run
+cmd_line += nexus_filename    ;data NeXus file
+cmd_line += " --l-bins="       ;wavelength
+cmd_line += strcompress(wavelength_min,/remove_all) + "," + $
+	strcompress(wavelength_max,/remove_all) + "," + $
+	strcompress(wavelength_width,/remove_all)  ;parameters of --l-bins
+cmd_line += " --starting-ids=" ;starting selection x and y
+cmd_line += strcompress(starting_id_x,/remove_all) + "," + $
+	strcompress(starting_id_y,/remove_all)      ;xmin and ymin
+cmd_line += " --ending_ids="   ;ending selection x and y
+cmd_line += strcompress(ending_id_x,/remove_all) + "," + $
+	strcompress(ending_id_y,/remove_all)	     ;xmax and ymax
+cmd_line += " det-angle="      ;detector angle
+cmd_line += strcompress(detector_angle_rad,/remove_all) + "," + $
+	strcompress(detector_angle_err,/remove_all)   ;value and error
+;cmd_line += "," + detector_angle_units		      ;units
+cmd_line += "," + "radians"   ;radians all the time because we are doing the conversion from deg to rad
+cmd_line += space
+cmd_line += background_flag	;"" if with back; "--no-bkg" if without back
+cmd_line += space
+cmd_line += normalization_flag   ;--norm=<name of file> if with normalization; "" if without
+
+cmd_line_displayed = "> " + cmd_line
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+
+;launch data_reduction
+str_time = systime(1)
+text = "Processing....."
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;spawn, cmd_line, listening
+
+end_time = systime(1)
+text = "Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;;plot resulting data reduction plot
+;plot_reduction
+
+;reactivate GO button once calculation is done
+widget_control,go_id,sensitive=1
+
+end 
+;end of DATA_REDUCTION
+;*********
+
+FUNCTION plot_reduction
+
+strt_time = systime(1)
+
+file = 'REF_M_7.txt'
+
+print,' '
+print,'****************************** BEGIN ****************************'
+print,' '
+print,'Reading File: ',file
+print,' Printing comment lines...'
+openr,u,file,/get
+fs = fstat(u)
+
+;define an empty string variable to hold results from reading the file
+tmp  = ''
+tmp0 = ''
+tmp1 = ''
+tmp2 = ''
+
+flt0 = -1.0
+flt1 = -1.0
+flt2 = -1.0
+
+Nndlines = 0L
+Ndlines = 0L
+onebyte = 0b
+
+while (NOT eof(u)) do begin
+
+	readu,u,onebyte;,format='(a1)'
+	fs = fstat(u)
+	;print,'onebyte: ',onebyte
+
+	;rewinded file pointer one character
+	if fs.cur_ptr EQ 0 then begin
+		point_lun,u,0
+	endif else begin
+		point_lun,u,fs.cur_ptr - 1
+	endelse
+
+	true = 1
+	case true of
+
+	((onebyte LT 48) OR (onebyte GT 57)): begin
+		;case where we have non-numbers
+		Nelines = Nelines + 1
+		;print,'Non-data Line: ',Nndlines
+		readf,u,tmp
+		print,tmp
+	end
+
+	else: begin
+		;case where we (should) have data
+		Ndlines = Ndlines + 1
+		;print,'Data Line: ',Ndlines
+
+		catch, Error_Status
+		if Error_status NE 0 then begin
+			Print, 'Handling case where we only have the wavelength bin and no data...'
+			print, 'This case occurs in the last line of the data file.'
+     		PRINT, 'Error index: ', Error_status
+      		PRINT, 'Error message: ', !ERROR_STATE.MSG
+			Print, 'Handling Error Now'
+			;do something to handle error condition...
+			;append the last number to flt0
+ 			flt0 = [flt0,float(tmp0)]
+ 			;strip -1 from beginning of each array
+ 			flt0 = flt0[1:*]
+ 			flt1 = flt1[1:*]
+ 			flt2 = flt2[1:*]
+ 			;you're done now...
+ 			Print,'Error Handling Complete'
+      		CATCH, /CANCEL
+		endif else begin
+			readf,u,tmp0,tmp1,tmp2,format='(3F0)';
+			flt0 = [flt0,float(tmp0)]
+			flt1 = [flt1,float(tmp1)]
+			flt2 = [flt2,float(tmp2)]
+
+		endelse
+
+	end
+	endcase
+
+endwhile
+
+print,'Number of non-data lines: ',Nndlines
+print,'Number of data lines: ',Ndlines
+
+window,0
+!p.multi=[0,2,2]
+plot,flt0,title='Wavelength'
+plot,flt1,title='Intensity'
+plot,flt2,title='Sigma'
+plot,flt0,flt1,title='Intensity vs. Wavelength'
+errplot,flt0,flt1 - flt2, flt1 + flt2,color = 230;'0xff00ffxl'
+!p.multi=0
+
+
+close,u
+free_lun,u
+stop_time = systime(1)
+
+print,'Run Time: ',stop_time - strt_time,' seconds'
+print,' '
+print,'**************************** END ******************************'
+
+end
+
+
+; \brief
+;
+; \argument Event (INPUT)
+pro OPEN_NORMALIZATION, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;check first if button was on or off
+  view_norm_switch=widget_info(Event.top, FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
+  WIDGET_CONTROL, view_norm_switch, get_uvalue=switch_value
+  index=widget_info(view_norm_switch,/button_set)
+  if (index EQ 0) then begin
+	;remove text from normalization text box
+	view_info = widget_info(Event.top,FIND_BY_UNAME='NORM_FILE_TEXT')
+	WIDGET_CONTROL, view_info, SET_VALUE=""
+  endif else begin
+	
+;retrieve data parameters
+filter = (*global).filter_normalization
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;open file
+path="/users/j35/CD4/REF_M/REF_M_7/"
+file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
+
+
+;save name of file only if valid file given
+
+if file NE '' then begin
+
+	(*global).norm_filename=file
+
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	text = "Open normalization file: " + strcompress(file,/remove_all)
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	;get only the last part of the file (its name)
+	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
+	filename_only=file_list[length-1]	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='NORM_FILE_TEXT')
+	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
+
+endif else begin
+  ;change status of switch to off
+  view_norm_switch=widget_info(Event.top, FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
+  WIDGET_CONTROL, view_norm_switch, set_button=0
+endelse
+
+endelse
+end
+; end of OPEN_NORMALIZATION
