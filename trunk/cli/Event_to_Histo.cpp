@@ -34,6 +34,8 @@ using namespace std;
 using namespace TCLAP;
 using namespace BinVectorUtils;
 
+const size_t MAX_BLOCK_SIZE=2048;
+
 int32_t binarySearch(const vector<int32_t> sortedVector, 
                     const int32_t value)
 {
@@ -96,6 +98,11 @@ void initialize_array(uint32_t * histo_array,
   return;   
 }
 
+
+template <typename NumT>
+void write_data_block(ofstream &outfile, NumT *data, size_t offset, size_t num_ele, size_t sizeof_NumT){
+  outfile.write(reinterpret_cast<char *>(data+offset),sizeof_NumT*num_ele);
+}
 
 void generate_histo(const size_t array_size,
                     const int32_t new_Nt,
@@ -372,8 +379,19 @@ int32_t main(int32_t argc, char *argv[])
           // write new histogram file
           ofstream histo_file(output_filename.c_str(),
                                    ios::binary);
-          histo_file.write(reinterpret_cast<char*>(histo_array),
-                           EventHisto::SIZEOF_UINT32_T*histo_array_size);
+          size_t block_size=MAX_BLOCK_SIZE;
+          if(histo_array_size<block_size){
+            block_size=histo_array_size;
+          }
+          size_t offset=0;
+          while(offset<histo_array_size){
+            write_data_block(histo_file,histo_array,offset,block_size,
+                             EventHisto::SIZEOF_UINT32_T);
+            offset+=block_size;
+            if(offset+block_size>histo_array_size){
+              block_size=histo_array_size-offset;
+            }
+          }
           histo_file.close();
           
           // free memory allocated to histo_array
