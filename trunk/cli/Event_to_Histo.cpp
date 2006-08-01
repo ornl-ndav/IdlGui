@@ -36,7 +36,7 @@ using namespace BinVectorUtils;
 
 const size_t MAX_BLOCK_SIZE=2048;
 
-int32_t binarySearch(const vector<int32_t> sortedVector, 
+int32_t binarySearch(const vector<int32_t> &sortedVector, 
                     const int32_t value)
 {
   size_t vector_size = sortedVector.size();
