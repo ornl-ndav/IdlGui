@@ -578,6 +578,30 @@ widget_control,Event.top,/destroy
 end
 ; end of EXIT_PROGRAM
 
+pro OPEN_HISTO_MAPPED, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+	
+  (*global).histo_map_index = 1
+  (*global).filter_histo = '*_histo_mapped.dat'
+
+  OPEN_FILE, Event
+
+end
+
+pro OPEN_HISTO_UNMAPPED, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+	
+  (*global).histo_map_index = 0
+  (*global).filter_histo = '*_histo.dat'
+
+  OPEN_FILE, Event
+
+end
+
 
 ; \brief
 ;
@@ -621,9 +645,12 @@ if file NE '' then begin
 	(*global).filename_only = filename_only ; store only name of the file (without the path)
 
 	;determine name of nexus file according to histogram file name
-	view_histo_map_switch=widget_info(Event.top, FIND_BY_UNAME='HISTO_MAP_SWITCH',/button_set)
-	WIDGET_CONTROL, view_histo_map_switch, get_uvalue=switch_value
-	index=widget_info(view_histo_map_switch,/button_set)
+;	view_histo_map_switch=widget_info(Event.top, FIND_BY_UNAME='HISTO_MAP_SWITCH',/button_set)
+;	WIDGET_CONTROL, view_histo_map_switch, get_uvalue=switch_value
+;	index=widget_info(view_histo_map_switch,/button_set)
+	
+	index = (*global).histo_map_index	
+
 	if (index EQ 1) then begin
 		file_list=strsplit(file,'_neutron_histo_mapped.dat',$
 		/REGEX,/extract,count=length) ;to remove last part of the name
@@ -633,9 +660,10 @@ if file NE '' then begin
 	endelse
 
 	 filename_short=file_list[0]	
+	print, "filename_short= " , filename_short	
 	nexus_filename = filename_short + '.nxs'
 	(*global).nexus_filename = nexus_filename
-
+	
 	view_nexus = widget_info(Event.top, FIND_BY_UNAME='FILE_NAME_TEXT')
 	WIDGET_CONTROL, view_nexus, SET_VALUE=nexus_filename
 
@@ -721,7 +749,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;retrieve name of nexus file
-nexus_filename = (*global).nexus_filename=nexus_filename
+nexus_filename = (*global).nexus_filename
 
 ;retrieve parameters from different text boxes
 
