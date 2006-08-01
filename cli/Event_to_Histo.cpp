@@ -158,7 +158,7 @@ void generate_histo(const size_t array_size,
 
       //remove data that are oustide the scope of range
       if (pixelid < 0 ||                             
-          pixelid > pixel_number ||
+          pixelid >= pixel_number ||
           time_stamp < time_offset_100ns ||
           time_stamp > max_time_bin_100ns)
         {
