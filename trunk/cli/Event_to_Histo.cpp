@@ -131,11 +131,11 @@ void generate_histo(const size_t array_size,
       cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
       cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
       cout << "\nLegend:";
-      cout << "\t\t#     : index number\n";
+      cout << "\t\t#     : index number" << endl;
       cout << "------\t\t";
-      cout << "Pid   : PixelID\n";
-      cout << "\t\t    t_ms  : time in micro seconds\n";
-      cout << "\t\t    tbin: time_bin\n\n";
+      cout << "Pid   : PixelID" << endl;
+      cout << "\t\t    t_ms  : time in micro seconds" << endl;
+      cout << "\t\t    tbin: time_bin" << endl << endl;
     }
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
@@ -164,7 +164,7 @@ void generate_histo(const size_t array_size,
         {
           if (debug)
             {
-              cout << "......OUT OF RANGE\n";
+              cout << "......OUT OF RANGE" << endl;
             }
           continue;
         }
@@ -172,7 +172,7 @@ void generate_histo(const size_t array_size,
         {
           if (debug)
             {
-              cout << "......OK\n";
+              cout << "......OK" << endl;
             }
           //record data that is inside the scope of range
           histo_array[time_bin+pixelid*new_Nt]+=1;
