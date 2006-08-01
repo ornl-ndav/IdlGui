@@ -71,11 +71,11 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 
-	;get window numbers
-	view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
-	WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
+;get window numbers
+view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
+WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
 
-	;Decomposed=0 causes the least-significant 8 bits of the color index value
+;Decomposed=0 causes the least-significant 8 bits of the color index value
 	;to be interpreted as a PseudoColor index.
 	DEVICE, DECOMPOSED = 0
 
@@ -390,12 +390,14 @@ endelse
 rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
 widget_control,rb_id,sensitive=1
 
+rb_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
+widget_control,rb_id,sensitive=1
+
 endelse ;click_outside
+
 click_outside = 0
 
 endif
-
-;display_info = 0
 
 end
 
@@ -406,9 +408,43 @@ end
 ; \argument Event INPUT)
 pro SAVE_REGION, Event
 
-;;;get global structure
-;;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-;;widget_control,id,get_uvalue=global
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve data
+nexus_file = (*global).nexus_filename
+x_min =(*global).starting_id_x
+y_min =(*global).starting_id_y
+x_max =(*global).ending_id_x
+y_max=(*global).ending_id_y
+
+cmd_line = "tof_slicer -v "
+cmd_line += "--starting-ids=" + strcompress(x_min,/remove_all) $
+	+ ',' + strcompress(y_min,/remove_all)
+cmd_line += " --ending-ids=" + strcompress(x_max,/remove_all) $
+	 + ',' + strcompress(y_max,/remove_all)
+cmd_line += " --data=" + nexus_file
+
+cmd_line_displayed = "> " + cmd_line
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+
+;launch data_reduction
+str_time = systime(1)
+text = "Processing....."
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+spawn, cmd_line, listening
+
+;display message from data reduction verbose flag
+WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+
+end_time = systime(1)
+text = "Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 ;;
 ;;regionfile = GetRegionFile((*global).filename, (*global).filename_index)
 ;;
@@ -504,17 +540,21 @@ end
 PRO REFRESH, Event
 ;refresh image plot
 
-	SHOW_DATA,event
+SHOW_DATA,event
 	
-	;remove data from info text box
-	view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
-	WIDGET_CONTROL, view_info, SET_VALUE=""
+;remove data from info text box
+view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
+WIDGET_CONTROL, view_info, SET_VALUE=""
 
-	;disable save button after refreshing selection
-	rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
-	widget_control,rb_id,sensitive=0
+;disable save button after refreshing selection
+rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
+widget_control,rb_id,sensitive=0
 
-;	;remove counts vs tof plot
+;disalble GO button after refreshing selection
+rb_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
+widget_control,rb_id,sensitive=0
+
+;remove counts vs tof plot
 ;	view_infof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
 ;	WIDGET_CONTROL, view_info, GET_VALUE=id
 ;	wset, id
@@ -580,17 +620,37 @@ if file NE '' then begin
 	filename_only=file_list[length-1]	
 	(*global).filename_only = filename_only ; store only name of the file (without the path)
 
+	;determine name of nexus file according to histogram file name
+	view_histo_map_switch=widget_info(Event.top, FIND_BY_UNAME='HISTO_MAP_SWITCH',/button_set)
+	WIDGET_CONTROL, view_histo_map_switch, get_uvalue=switch_value
+	index=widget_info(view_histo_map_switch,/button_set)
+	if (index EQ 1) then begin
+		file_list=strsplit(file,'_neutron_histo_mapped.dat',$
+		/REGEX,/extract,count=length) ;to remove last part of the name
+	endif else begin
+		file_list=strsplit(file,'_neutron_histo.dat',$
+		/REGEX,/extract,count=length) ;to remove last part of the name
+	endelse
+
+	 filename_short=file_list[0]	
+	nexus_filename = filename_short + '.nxs'
+	(*global).nexus_filename = nexus_filename
+
+	view_nexus = widget_info(Event.top, FIND_BY_UNAME='FILE_NAME_TEXT')
+	WIDGET_CONTROL, view_nexus, SET_VALUE=nexus_filename
+
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
 	path=path_list[0]
-	print, "path= ", path
 
 ;	;display path
 ;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
 ;	WIDGET_CONTROL, view_info, SET_VALUE=path
 	(*global).path = path
 	
-	print,'Reading in data  ',systime(0)
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data ', /APPEND
+	strtime = systime(1)
 
 	openr,u,file,/get
 	;find out file info
@@ -638,8 +698,11 @@ if file NE '' then begin
 	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
 	widget_control,rb_id,sensitive=1
 
-	print,'Complete  ',systime(0)
-
+	endtime = systime(1)
+	tt_time = string(endtime - strtime)
+	text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	
 endif;valid file
 
 end
@@ -657,15 +720,8 @@ widget_control,go_id,sensitive=0
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;determine name of nexus file according to histogram file name
-filename_full= (*global).filename
-file_list=strsplit(filename_full,'_neutron_histo_mapped.dat',/REGEX,/extract,count=length) ;to remove last part of the name
-filename_short=file_list[0]	
-nexus_filename = filename_short + '.nxs'
-(*global).nexus_filename=nexus_filename
-
-view_nexus = widget_info(Event.top, FIND_BY_UNAME='FILE_NAME_TEXT')
-WIDGET_CONTROL, view_nexus, SET_VALUE=nexus_filename
+;retrieve name of nexus file
+nexus_filename = (*global).nexus_filename=nexus_filename
 
 ;retrieve parameters from different text boxes
 
@@ -772,6 +828,7 @@ cmd_line += space
 cmd_line += background_flag	;"" if with back; "--no-bkg" if without back
 cmd_line += space
 cmd_line += normalization_flag   ;--norm=<name of file> if with normalization; "" if without
+cmd_line += " -v"
 
 cmd_line_displayed = "> " + cmd_line
 
@@ -783,6 +840,9 @@ str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 spawn, cmd_line, listening
+
+;display message from data reduction verbose flag
+WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
 
 end_time = systime(1)
 text = "Done"
@@ -803,14 +863,24 @@ pro plot_reduction, Event
 
 strt_time = systime(1)
 
-file = 'REF_M_7.txt'
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
-print,' '
-print,'****************************** BEGIN ****************************'
-print,' '
-print,'Reading File: ',file
-print,' Printing comment lines...'
-openr,u,file,/get
+nexus_file = (*global).nexus_filename
+file_list=strsplit(nexus_file,'nxs$',/REGEX,/extract,count=length) ;to remove last part of the name
+filename_short=file_list[0]	
+data_reduction_file = filename_short + 'txt'
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = 'Entering Data Reduction plot:'
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = 'Reading file: ' + data_reduction_file
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;print,' Printing comment lines...'
+
+openr,u,data_reduction_file,/get
 fs = fstat(u)
 
 ;define an empty string variable to hold results from reading the file
@@ -887,8 +957,11 @@ while (NOT eof(u)) do begin
 
 endwhile
 
-print,'Number of non-data lines: ',Nndlines
-print,'Number of data lines: ',Ndlines
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = 'Number of non-data lines: ' + strcompress(Nndlines,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = 'Number of data lines: ' + strcompress(Ndlines,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 ;window,0
 ;!p.multi=[0,2,2]
@@ -901,8 +974,6 @@ WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
 wset,view_win_num_tof
 plot,flt0,flt1,title='Intensity vs. Wavelength'
 errplot,flt0,flt1 - flt2, flt1 + flt2,color = 230;'0xff00ffxl'
-
-
 
 ;!p.multi=0
 

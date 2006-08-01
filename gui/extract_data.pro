@@ -386,7 +386,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	XOFFSET=600,$
 	YOFFSET=330,$
 	VALUE='',$
-	SCR_XSIZE=250)
+	SCR_XSIZE=250,$
+	/align_right)
 	
    ;big GO button
    START_CALCULATION = widget_button(MAIN_BASE,$
@@ -405,28 +406,16 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME="BACKGROUND_SWITCH",$
 	VALUE="Background")
 
-;    ;path
-;    PATH_LABEL = widget_label(MAIN_BASE,$
-;	XOFFSET=602,$
-;	YOFFSET=365,$
-;	VALUE="Path:")
-;
-;    PATH_TEXT = widget_label(MAIN_BASE,$
-;	UNAME="PATH_TEXT",$
-;	XOFFSET=636,$
-;	YOFFSET=365,$
-;	SCR_XSIZE=210,$
-;	SCR_YSIZE=19,$
-;	value="",$
-;	/align_left)
-;
-;    PATH_WHOLE_LABEL = widget_label(MAIN_BASE,$
-;	XOFFSET=600,$
-;	YOFFSET=363,$
-;	SCR_XSIZE=245,$
-;	SCR_YSIZE=20,$
-;	FRAME=1)
-	
+   ;histo_mapped switch part
+    HISTO_MAP_BASE = widget_base(MAIN_BASE,$
+	row=1, /nonexclusive,$
+	XOFFSET=602,$
+	YOFFSET=360)
+    HISTO_MAP_SWITCH = widget_button(HISTO_MAP_BASE,$
+	UNAME="HISTO_MAP_SWITCH",$
+	VALUE="Histogram file mapped",$
+	tooltip="ON: _histo_mapped.dat   OFF: _histo.dat")
+
     FILE_NORM_BASE = widget_base(MAIN_BASE,$
 	row=1, /nonexclusive,$
 	XOFFSET=490,$
@@ -475,6 +464,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
   Widget_Control, SAVE_BUTTON, sensitive=0
   Widget_Control, REFRESH_BUTTON, sensitive=0
+  Widget_Control, START_CALCULATION, sensitive=0
+  Widget_Control, HISTO_MAP_SWITCH, set_button=1
 
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
