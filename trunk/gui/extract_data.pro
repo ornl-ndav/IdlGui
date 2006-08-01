@@ -92,12 +92,13 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;define initial global values - these could be input via external file or other means
 
 global = ptr_new({ $
+	idl_path		: '/',$
 	filename		: '',$
 	norm_filename		: '',$
 	filename_only		: '',$
 	nexus_filename		: '',$
 	filename_index		: 0, $
-	path			: '',$
+	path			: '/users/j35/CD4/REF_M/REF_M_7/',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
 	ctrl_x			: ctrl_x,$
@@ -201,7 +202,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
    MODE_INFOS = widget_text(MAIN_BASE, UNAME='MODE_INFOS', $
 	XOFFSET= draw_offset_x+plot_length+15, $
-	YOFFSET= 95, SCR_XSIZE= 134, SCR_YSIZE= 30, value= '   MODE: INFOS') 
+	YOFFSET= 95, SCR_XSIZE= 134, SCR_YSIZE= 30, value= 'MODE: INFOS') 
 
   FRAME1 = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
 	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
@@ -299,7 +300,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
  	XOFFSET=max_x_offset+30,$
 	YOFFSET=max_y_offset-5,$
 	SCR_XSIZE=50,$
-	VALUE='0', /editable)
+	VALUE='10', /editable)
 
    WAVELENGTH_MAX_A_LABEL= widget_label(MAIN_BASE,$
  	XOFFSET=max_x_offset+80,$
@@ -319,7 +320,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
  	XOFFSET=width_x_offset+40,$
 	YOFFSET=width_y_offset-5,$
 	SCR_XSIZE=50,$
-	VALUE='0', /editable)
+	VALUE='0.1', /editable)
 
    WAVELENGTH_WIDTH_A_LABEL= widget_label(MAIN_BASE,$
  	XOFFSET=width_x_offset+90,$
@@ -375,9 +376,9 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
    ;file name part
    FILE_NAME_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=500,$
-	YOFFSET=335,$
-	VALUE='Histogram file')
+	XOFFSET=495,$
+	YOFFSET=337,$
+	VALUE='NeXus file name')
 
    FILE_NAME_TEXT = widget_text(MAIN_BASE,$
 	UNAME="FILE_NAME_TEXT",$
@@ -465,8 +466,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   CTOOL_MENU = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU'  $
       ,VALUE='Color Tool')
 
-  CTOOL_MENU = Widget_Button(UTILS_MENU, UNAME='SWAP_ENDIAN'  $
-      ,VALUE='Swap Endian')
+;  CTOOL_MENU = Widget_Button(UTILS_MENU, UNAME='SWAP_ENDIAN'  $
+;      ,VALUE='Swap Endian')
 
   Widget_Control, /REALIZE, MAIN_BASE
 
