@@ -233,6 +233,7 @@ while (getvals EQ 0) do begin
 		print,'Terminating return data'
 		view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
 		WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
+		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 		text = " Mode: INFOS"
 		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
@@ -759,10 +760,10 @@ cmd_line += strcompress(wavelength_min,/remove_all) + "," + $
 cmd_line += " --starting-ids=" ;starting selection x and y
 cmd_line += strcompress(starting_id_x,/remove_all) + "," + $
 	strcompress(starting_id_y,/remove_all)      ;xmin and ymin
-cmd_line += " --ending_ids="   ;ending selection x and y
+cmd_line += " --ending-ids="   ;ending selection x and y
 cmd_line += strcompress(ending_id_x,/remove_all) + "," + $
 	strcompress(ending_id_y,/remove_all)	     ;xmax and ymax
-cmd_line += " det-angle="      ;detector angle
+cmd_line += " --det-angle="      ;detector angle
 cmd_line += strcompress(detector_angle_rad,/remove_all) + "," + $
 	strcompress(detector_angle_err,/remove_all)   ;value and error
 ;cmd_line += "," + detector_angle_units		      ;units
@@ -789,7 +790,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 ;;plot resulting data reduction plot
-;plot_reduction
+plot_reduction, event
 
 ;reactivate GO button once calculation is done
 widget_control,go_id,sensitive=1
@@ -798,7 +799,7 @@ end
 ;end of DATA_REDUCTION
 ;*********
 
-FUNCTION plot_reduction
+pro plot_reduction, Event
 
 strt_time = systime(1)
 
@@ -822,6 +823,7 @@ flt0 = -1.0
 flt1 = -1.0
 flt2 = -1.0
 
+Nelines = 0L
 Nndlines = 0L
 Ndlines = 0L
 onebyte = 0b
@@ -888,14 +890,21 @@ endwhile
 print,'Number of non-data lines: ',Nndlines
 print,'Number of data lines: ',Ndlines
 
-window,0
-!p.multi=[0,2,2]
-plot,flt0,title='Wavelength'
-plot,flt1,title='Intensity'
-plot,flt2,title='Sigma'
+;window,0
+;!p.multi=[0,2,2]
+;plot,flt0,title='Wavelength'
+;plot,flt1,title='Intensity'
+;plot,flt2,title='Sigma'
+
+view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REDUCTION')
+WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
+wset,view_win_num_tof
 plot,flt0,flt1,title='Intensity vs. Wavelength'
 errplot,flt0,flt1 - flt2, flt1 + flt2,color = 230;'0xff00ffxl'
-!p.multi=0
+
+
+
+;!p.multi=0
 
 
 close,u

@@ -98,7 +98,7 @@ global = ptr_new({ $
 	filename_only		: '',$
 	nexus_filename		: '',$
 	filename_index		: 0, $
-	path			: '/users/j35/CD4/REF_M/REF_M_7/',$
+	path			: '/SNS/users/j35/data/REF_M/REF_M_7/',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
 	ctrl_x			: ctrl_x,$
@@ -161,7 +161,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   VIEW_DRAW_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y' ,XOFFSET=2*draw_offset_x+draw_x+ctrl_x  $
       ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
 
-  VIEW_DRAW_REDUCTION = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REDUCTION',$
+  VIEW_DRAW_REDUCTION = Widget_Draw(MAIN_BASE,$
+	UNAME='VIEW_DRAW_REDUCTION',$
 	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
 	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
 	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)
