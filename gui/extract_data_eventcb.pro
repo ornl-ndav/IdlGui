@@ -4,9 +4,9 @@
 ;
 ; \argument file_name (INPUT) the name of the input file
 ; \argument file_index (INPUT) the index of the last input file created
-FUNCTION GetRegionFile, file_name, file_index
-	file_name = strsplit(file_name,'.dat',/extract,/regex,count=length)     ;to remove the '.dat' part of the name
-	file_name = file_name + '_' + strcompress(file_index,/rem) + '.txt'     ;replaced by _#.txt
+FUNCTION GetRegionFile, file_name, file_index, part_to_remove, file_extension
+	file_name = strsplit(file_name,part_to_remove,/extract,/regex,count=length)     ;to remove the part_to_remove part of the name
+	file_name = file_name + '_' + strcompress(file_index,/rem) + file_extension     ;replaced by _#.nxs
 	++file_index
 	return, file_name
 end
@@ -106,7 +106,7 @@ widget_control,id,get_uvalue=global
 IF (event.press EQ 1) then begin
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE="MODE: 1 click"
+WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
 
 	;get data
 	img = (*(*global).img_ptr)
@@ -169,8 +169,16 @@ endif
 ;right mouse button
 IF (event.press EQ 4) then begin
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "Mode: SELECTION"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = " left click to select first corner or
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = " right click to quit SELECTION mode"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
 view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE="MODE: selection"
+WIDGET_CONTROL, view_info, SET_VALUE="MODE: SELECTION"
 
 	;;disable refresh button during ctool
 	;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
@@ -224,7 +232,9 @@ while (getvals EQ 0) do begin
 		getvals = 1
 		print,'Terminating return data'
 		view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-		WIDGET_CONTROL, view_info, SET_VALUE="MODE: 1 click"
+		WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
+		text = " Mode: INFOS"
+		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 	endif else begin
 	
@@ -232,6 +242,10 @@ while (getvals EQ 0) do begin
 		X1=x
 		Y1=y
 		first_round = 1
+		text = " Rigth click to select other corner"		
+		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
 	endif else begin
 		X2=x
 		Y2=y
@@ -391,66 +405,69 @@ end
 ; \argument Event INPUT)
 pro SAVE_REGION, Event
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+;;;get global structure
+;;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+;;widget_control,id,get_uvalue=global
+;;
+;;regionfile = GetRegionFile((*global).filename, (*global).filename_index)
+;;
+;;path="~/CD4/REF_M/REF_M_7/"   ;need to automatically determine path according to open file location
+;;
+;;outfile = dialog_pickfile(file=regionfile,PATH=path,title='Select Output Data File',/write,filter="*.txt")
+;;
+;;if outfile NE '' then begin
+;;	
+;;	selection = (*(*global).selection_ptr)
+;;
+;;	view_main=widget_info(Event.top, FIND_BY_UNAME='TBIN_TXT')
+;;	WIDGET_CONTROL, view_main, GET_VALUE=tbin
+;;	tbin = float(tbin)
+;;	(*global).time_bin = tbin  
+;;
+;;	;get region indicies
+;;	indicies = (*(*global).indicies)
+;;	;remember, indicies are of the 2D image in (x,y) - need to convert to 3D indicies
+;;	;to get TOF info...
+;;
+;;	Nselection = n_elements(selection)
+;;
+;;	if Nselection GT 0 then begin
+;;
+;;	data = fltarr(2,Nselection)
+;;	for i=0L, Nselection-1 do begin
+;;		data[0,i]=tbin*i
+;;	endfor
+;;	
+;;	data(1,*)=selection	
+;;		
+;;;		;get data
+;;;		data = (*(*global).data_ptr)
+;;;
+;;;		Nx = (*global).Nx
+;;;		Ny = (*global).Ny
+;;;		Ntof = (*global).Ntof
+;;;
+;;;		;will need to figure out how to format output data as it is required to be
+;;;		;just giving it a start for now... ***********************
+;;;		tmpdata = lonarr(Nindicies,Ntof)
+;;;		for i=0L,Nindicies-1 do begin
+;;;			x = indicies[i] MOD Ny
+;;;			y = indicies[i] / Ny
+;;;
+;;;			tmpdata[i,*] = data[*,y,x]
+;;;		endfor
+;;		
+;;		openw,u,outfile,/get_lun
+;;		printf,u,data
+;;		close,u
+;;		free_lun,u
+;;
+;;	endif;Nselection
+;;
+;;endif
 
-regionfile = GetRegionFile((*global).filename, (*global).filename_index)
 
-path="~/CD4/REF_M/REF_M_7/"   ;need to automatically determine path according to open file location
 
-outfile = dialog_pickfile(file=regionfile,PATH=path,title='Select Output Data File',/write,filter="*.txt")
-
-if outfile NE '' then begin
-	
-	selection = (*(*global).selection_ptr)
-
-	view_main=widget_info(Event.top, FIND_BY_UNAME='TBIN_TXT')
-	WIDGET_CONTROL, view_main, GET_VALUE=tbin
-	tbin = float(tbin)
-	(*global).time_bin = tbin  
-
-	;get region indicies
-	indicies = (*(*global).indicies)
-	;remember, indicies are of the 2D image in (x,y) - need to convert to 3D indicies
-	;to get TOF info...
-
-	Nselection = n_elements(selection)
-
-	if Nselection GT 0 then begin
-
-	data = fltarr(2,Nselection)
-	for i=0L, Nselection-1 do begin
-		data[0,i]=tbin*i
-	endfor
-	
-	data(1,*)=selection	
-		
-;		;get data
-;		data = (*(*global).data_ptr)
-;
-;		Nx = (*global).Nx
-;		Ny = (*global).Ny
-;		Ntof = (*global).Ntof
-;
-;		;will need to figure out how to format output data as it is required to be
-;		;just giving it a start for now... ***********************
-;		tmpdata = lonarr(Nindicies,Ntof)
-;		for i=0L,Nindicies-1 do begin
-;			x = indicies[i] MOD Ny
-;			y = indicies[i] / Ny
-;
-;			tmpdata[i,*] = data[*,y,x]
-;		endfor
-		
-		openw,u,outfile,/get_lun
-		printf,u,data
-		close,u
-		free_lun,u
-
-	endif;Nselection
-
-endif
 
 end
 ; end of SAVE_REGION
@@ -545,7 +562,7 @@ filter = (*global).filter_histo
 widget_control,/hourglass
 
 ;open file
-path="/users/j35/CD4/REF_M/REF_M_7/"
+path = (*global).path
 file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
 
 ;only read data if valid file given
@@ -560,13 +577,13 @@ if file NE '' then begin
 	;get only the last part of the file (its name)
 	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
 	filename_only=file_list[length-1]	
-	view_info = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_TEXT')
-	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
 	(*global).filename_only = filename_only ; store only name of the file (without the path)
 
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
 	path=path_list[0]
+	print, "path= ", path
+
 ;	;display path
 ;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
 ;	WIDGET_CONTROL, view_info, SET_VALUE=path
@@ -639,6 +656,16 @@ widget_control,go_id,sensitive=0
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;determine name of nexus file according to histogram file name
+filename_full= (*global).filename
+file_list=strsplit(filename_full,'_neutron_histo_mapped.dat',/REGEX,/extract,count=length) ;to remove last part of the name
+filename_short=file_list[0]	
+nexus_filename = filename_short + '.nxs'
+(*global).nexus_filename=nexus_filename
+
+view_nexus = widget_info(Event.top, FIND_BY_UNAME='FILE_NAME_TEXT')
+WIDGET_CONTROL, view_nexus, SET_VALUE=nexus_filename
+
 ;retrieve parameters from different text boxes
 
 ;wavelength minimum
@@ -687,12 +714,6 @@ widget_control,id,get_uvalue=global
   (*global).detector_angle = detector_angle_rad
   (*global).detector_angle_err = detector_angle_err_rad
 
-;determine name of nexus file according to histogram file name
-filename_full= (*global).filename
-file_list=strsplit(filename_full,'_neutron_histo_mapped.dat',/REGEX,/extract,count=length) ;to remove last part of the name
-filename_short=file_list[0]	
-nexus_filename = filename_short + '.nxs'
-(*global).nexus_filename=nexus_filename
 
 ;get starting and ending pixelIDs
 starting_id_x = (*global).starting_id_x
@@ -760,7 +781,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;spawn, cmd_line, listening
+spawn, cmd_line, listening
 
 end_time = systime(1)
 text = "Done"
