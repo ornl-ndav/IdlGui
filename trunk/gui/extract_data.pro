@@ -23,9 +23,15 @@ pro MAIN_BASE_event, Event
     end
 
     ;Open widget in the top toolbar
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MENU'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_MAPPED'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_FILE, Event
+        OPEN_HISTO_MAPPED, Event
+    end
+
+    ;Open widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_UNMAPPED'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_HISTO_UNMAPPED, Event
     end
 
     ;Open widget in the top toolbar
@@ -94,6 +100,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 global = ptr_new({ $
 	idl_path		: '/',$
 	filename		: '',$
+	histo_map_index		: 1L,$
 	norm_filename		: '',$
 	filename_only		: '',$
 	nexus_filename		: '',$
@@ -109,7 +116,7 @@ global = ptr_new({ $
 	draw_offset_y		: draw_offset_y,$
 	plot_height		: plot_height,$
 	plot_length		: plot_length,$
-	filter_histo		: '*mapped.dat',$
+	filter_histo		: '',$
 	filter_normalization	: '*.nxs',$
 	filter_nexus		: '*.nxs',$
 	with_background		: 0, $
@@ -406,15 +413,15 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME="BACKGROUND_SWITCH",$
 	VALUE="Background")
 
-   ;histo_mapped switch part
-    HISTO_MAP_BASE = widget_base(MAIN_BASE,$
-	row=1, /nonexclusive,$
-	XOFFSET=602,$
-	YOFFSET=360)
-    HISTO_MAP_SWITCH = widget_button(HISTO_MAP_BASE,$
-	UNAME="HISTO_MAP_SWITCH",$
-	VALUE="Histogram file mapped",$
-	tooltip="ON: _histo_mapped.dat   OFF: _histo.dat")
+;   ;histo_mapped switch part
+;    HISTO_MAP_BASE = widget_base(MAIN_BASE,$
+;	row=1, /nonexclusive,$
+;	XOFFSET=602,$
+;	YOFFSET=360)
+;    HISTO_MAP_SWITCH = widget_button(HISTO_MAP_BASE,$
+;	UNAME="HISTO_MAP_SWITCH",$
+;	VALUE="Histogram file mapped",$
+;	tooltip="ON: _histo_mapped.dat   OFF: _histo.dat")
 
     FILE_NORM_BASE = widget_base(MAIN_BASE,$
 	row=1, /nonexclusive,$
@@ -441,11 +448,11 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
 
-  OPEN_MENU = Widget_Button(FILE_MENU, UNAME='OPEN_MENU'  $
-      ,VALUE='Open Histogram')
+  OPEN_HISTO_MAPPED = Widget_Button(FILE_MENU, UNAME='OPEN_HISTO_MAPPED'  $
+      ,VALUE='Open Mapped Histogram')
 
-;  OPEN_NORMALIZATION = Widget_Button(FILE_MENU, UNAME='OPEN_NORMALIZATION'  $
-;      ,VALUE='Open Normalization')
+  OPEN_HISTO_UNMAPPED = Widget_Button(FILE_MENU, UNAME='OPEN_HISTO_UNMAPPED'  $
+      ,VALUE='Open Histogram')
 
   EXIT_MENU = Widget_Button(FILE_MENU, UNAME='EXIT_MENU'  $
       ,VALUE='Exit')
@@ -465,7 +472,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   Widget_Control, SAVE_BUTTON, sensitive=0
   Widget_Control, REFRESH_BUTTON, sensitive=0
   Widget_Control, START_CALCULATION, sensitive=0
-  Widget_Control, HISTO_MAP_SWITCH, set_button=1
+;  Widget_Control, HISTO_MAP_SWITCH, set_button=1
 
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
