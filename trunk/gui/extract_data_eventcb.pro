@@ -50,6 +50,11 @@ pro MAIN_REALIZE, wWidget
 
 tlb = get_tlb(wWidget)
 
+;to make Michael's code working
+text = "source /etc/profile.d/SNS/all-sns"
+spawn, text, listening
+print, "bonjour"
+ 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
