@@ -90,7 +90,7 @@ void generate_histo(const size_t file_size,
  * found in sortedVector. Returns -1 if the data is out of range.
 */
 int32_t binarySearch(const std::vector<int32_t> &sortedVector, 
-                     const int32_t value);
+                     const int32_t value, const size_t vector_size);
 
 
 #endif // _EVENT_TO_HISTO_HPP
