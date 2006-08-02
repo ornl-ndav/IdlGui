@@ -37,10 +37,8 @@ using namespace BinVectorUtils;
 const size_t MAX_BLOCK_SIZE=2048;
 
 int32_t binarySearch(const vector<int32_t> &sortedVector, 
-                    const int32_t value)
+                     const int32_t value, const size_t vector_size)
 {
-  size_t vector_size = sortedVector.size();
-
   //check first if the value is out of range
   if (value > sortedVector[vector_size-1] ||
       value < sortedVector[0])
@@ -140,11 +138,12 @@ void generate_histo(const size_t array_size,
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
   //the variable 2*i into the for loop. Like this, the all file is covered.
+  size_t time_bin_vector_size=time_bin_vector.size();
   for (size_t i=0 ; i<array_size/2; i++) 
   {
       pixelid = binary_array[2*i+1];
       time_stamp = binary_array[2*i];
-      time_bin = binarySearch(time_bin_vector,time_stamp);
+      time_bin = binarySearch(time_bin_vector,time_stamp,time_bin_vector_size);
 
       if (debug)
         {
@@ -260,7 +259,8 @@ int32_t main(int32_t argc, char *argv[])
         }
 
       // loop over all input files names
-      for (size_t i=0 ; i<input_file_vector.size() ; ++i)
+      size_t input_file_vector_size=input_file_vector.size();
+      for (size_t i=0 ; i<input_file_vector_size ; ++i)
         {
           string input_filename;
           string output_filename("");
