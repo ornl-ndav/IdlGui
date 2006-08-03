@@ -2,8 +2,6 @@ pro MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
 
-;stop
-
   case Event.id of
 
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
@@ -25,7 +23,7 @@ pro MAIN_BASE_event, Event
     ;Open widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_MAPPED'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_HISTO_MAPPED, Event
+	 OPEN_HISTO_MAPPED, Event
     end
 
     ;Open widget in the top toolbar
@@ -74,6 +72,7 @@ pro MAIN_BASE_event, Event
 
 end
 
+
 pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;define parameters
@@ -90,11 +89,6 @@ plot_length = 304			;plot box length
 
 Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,XOFFSET=100 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Extract Data Tool'  $
-      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
-
 ;define initial global values - these could be input via external file or other means
 
 global = ptr_new({ $
@@ -105,7 +99,8 @@ global = ptr_new({ $
 	filename_only		: '',$
 	nexus_filename		: '',$
 	filename_index		: 0, $
-	path			: '/SNS/users/j35/data/REF_M/REF_M_7/',$
+;	path			: '/SNS/users/j35/data/REF_M/REF_M_7/',$
+	path			: '~/CD4/REF_M/REF_M_7/',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
 	ctrl_x			: ctrl_x,$
@@ -149,6 +144,12 @@ global = ptr_new({ $
 	tlb			: 0, $
 	window_counter		: 0L $
 	})
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
+      ,XOFFSET=250 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Extract Data Tool'  $
+      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+
 
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
@@ -474,7 +475,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   Widget_Control, START_CALCULATION, sensitive=0
 ;  Widget_Control, HISTO_MAP_SWITCH, set_button=1
 
-  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
 

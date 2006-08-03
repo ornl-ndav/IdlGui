@@ -50,11 +50,6 @@ pro MAIN_REALIZE, wWidget
 
 tlb = get_tlb(wWidget)
 
-;to make Michael's code working
-text = "source /etc/profile.d/SNS/all-sns"
-spawn, text, listening
-print, "bonjour"
- 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
@@ -74,7 +69,6 @@ pro SHOW_DATA,event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 
 ;get window numbers
 view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
@@ -160,8 +154,9 @@ WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
 	view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF')
 	WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
 	wset,view_win_num_tof
-	;remember, img is transposed versus data...not sure this is right yet ************
-	pixelid=y*Nx+x
+	;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
+	pixelid=x*Nx+y     
+
 ;	tof_arr=swap_endian(tmp_tof[pixelid])
 
 	tof_arr=(tmp_tof[pixelid])
@@ -508,14 +503,8 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 ;;
 ;;endif
 
-
-
-
 end
 ; end of SAVE_REGION
-
-
-
 
 ; \brief 
 ;
@@ -583,29 +572,30 @@ widget_control,Event.top,/destroy
 end
 ; end of EXIT_PROGRAM
 
-pro OPEN_HISTO_MAPPED, Event
-  ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-	
-  (*global).histo_map_index = 1
-  (*global).filter_histo = '*_histo_mapped.dat'
 
-  OPEN_FILE, Event
-
-end
-
-pro OPEN_HISTO_UNMAPPED, Event
-  ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-	
-  (*global).histo_map_index = 0
-  (*global).filter_histo = '*_histo.dat'
-
-  OPEN_FILE, Event
-
-end
+;;;***************************
+;;pro OPEN_HISTO_EVENT, Event
+;;;***************************
+;;
+;;;get global structure
+;;id=widget_info(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
+;;widget_control,id,get_uvalue=global1
+;;
+;;;open file
+;;filter = "*_event.dat"
+;;print, (*global1).path
+;;path=(*global1).path
+;;stop
+;;file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
+;;
+;;(*global).event_filename = file
+;;
+;;view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS_wT1')
+;;text = "Event file to histogram: " + strcompress(file,/remove_all)
+;;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;;
+;;
+;;end
 
 
 ; \brief
@@ -740,6 +730,31 @@ endif;valid file
 
 end
 ; end of OPEN_FILE
+
+pro OPEN_HISTO_MAPPED, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+
+  (*global).histo_map_index = 1
+  (*global).filter_histo = '*_histo_mapped.dat'
+
+  OPEN_FILE, Event
+
+end
+
+pro OPEN_HISTO_UNMAPPED, Event
+
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+	
+  (*global).histo_map_index = 0
+  (*global).filter_histo = '*_histo.dat'
+
+  OPEN_FILE, Event
+
+end
 
 
 ;**********
