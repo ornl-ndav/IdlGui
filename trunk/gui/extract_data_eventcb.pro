@@ -655,7 +655,7 @@ if file NE '' then begin
 	endelse
 
 	 filename_short=file_list[0]	
-	print, "filename_short= " , filename_short	
+;	print, "filename_short= " , filename_short	
 	nexus_filename = filename_short + '.nxs'
 	(*global).nexus_filename = nexus_filename
 	
@@ -665,6 +665,7 @@ if file NE '' then begin
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
 	path=path_list[0]
+	cd, path
 
 ;	;display path
 ;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
