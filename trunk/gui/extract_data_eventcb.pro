@@ -256,7 +256,7 @@ WIDGET_CONTROL, text_id, GET_VALUE=ucams
 
 (*global).ucams = ucams
 
-working_path = default_path + strcompress(ucams,/remove_all)
+working_path = default_path + strcompress(ucams,/remove_all)+ '/'
 (*global).working_path = working_path
 
 text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
@@ -869,29 +869,38 @@ if file NE '' then begin
 	filename_only=file_list[length-1]	
 	(*global).filename_only = filename_only ; store only name of the file (without the path)
 
+	print, "filenameonly= " , filename_only
+
 	;determine name of nexus file according to histogram file name
-;	view_histo_map_switch=widget_info(Event.top, FIND_BY_UNAME='HISTO_MAP_SWITCH',/button_set)
-;	WIDGET_CONTROL, view_histo_map_switch, get_uvalue=switch_value
-;	index=widget_info(view_histo_map_switch,/button_set)
 	
 	index = (*global).histo_map_index	
 
 	if (index EQ 1) then begin
 		file_list=strsplit(file,'_neutron_histo_mapped.dat',$
 		/REGEX,/extract,count=length) ;to remove last part of the name
+		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
+		run_number=run_number[length-1]
 	endif else begin
 		file_list=strsplit(file,'_neutron_histo.dat',$
 		/REGEX,/extract,count=length) ;to remove last part of the name
+		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
+		run_number=run_number[length-1]
 	endelse
 
-	 filename_short=file_list[0]	
-;	print, "filename_short= " , filename_short	
-	nexus_filename = filename_short + '.nxs'
-	(*global).nexus_filename = nexus_filename
-	
-	view_nexus = widget_info(Event.top, FIND_BY_UNAME='FILE_NAME_TEXT')
-	WIDGET_CONTROL, view_nexus, SET_VALUE=nexus_filename
+	filename_short=file_list[0]	
+	file_list=strsplit(filename_short,'/',/REGEX,/extract,count=length) ;to remove last part of the name
+	short_nexus_filename = file_list[length-1]
+	nexus_path = (*global).nexus_path
 
+	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
+	print, "nexus filename: " , nexus_filename	
+
+	(*global).nexus_filename = nexus_filename
+
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Nexus file: ', /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE=nexus_filename, /APPEND
+		
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
 	path=path_list[0]
@@ -903,7 +912,7 @@ if file NE '' then begin
 	(*global).path = path
 	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data ', /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data....', /APPEND
 	strtime = systime(1)
 
 	openr,u,file,/get
@@ -998,6 +1007,10 @@ widget_control,go_id,sensitive=0
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;set up working path
+working_path = (*global).working_path
+cd, working_path
 
 ;retrieve name of nexus file
 nexus_filename = (*global).nexus_filename
@@ -1146,18 +1159,23 @@ strt_time = systime(1)
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+working_path = (*global).working_path
 nexus_file = (*global).nexus_filename
-file_list=strsplit(nexus_file,'nxs$',/REGEX,/extract,count=length) ;to remove last part of the name
+
+nexus_filename_list=strsplit(nexus_file,'/',/extract,count=length)  ;to get only the nexus filename
+nexus_filename_only = nexus_filename_list[length-1]
+(*global).nexus_filename_only = nexus_filename_only
+print, "nexus_filename_only= " , nexus_filename_only
+
+file_list=strsplit(nexus_filename_only,'nxs$',/REGEX,/extract,count=length) ;to remove last part of the name
 filename_short=file_list[0]	
-data_reduction_file = filename_short + 'txt'
+data_reduction_file = working_path + filename_short + 'txt'
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = 'Entering Data Reduction plot:'
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = 'Reading file: ' + data_reduction_file
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-;print,' Printing comment lines...'
 
 openr,u,data_reduction_file,/get
 fs = fstat(u)
@@ -1252,7 +1270,7 @@ view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REDUCTION')
 WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
 wset,view_win_num_tof
 plot,flt0,flt1,title='Intensity vs. Wavelength'
-errplot,flt0,flt1 - flt2, flt1 + flt2,color = 230;'0xff00ffxl'
+errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100;'0xff00ffxl'
 
 ;!p.multi=0
 

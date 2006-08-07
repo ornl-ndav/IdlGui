@@ -128,11 +128,13 @@ global = ptr_new({ $
 	norm_filename		: '',$
 	filename_only		: '',$
 	nexus_filename		: '',$
+	nexus_filename_only	: '',$
+	nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
 	filename_index		: 0, $
-;	path			: '/SNS/users/j35/data/REF_M/REF_M_7/',$
-	path			: '~/CD4/REF_M/REF_M_7/',$
-;	default_path		: '/SNS/users/',$
-	default_path		: '/Users/',$
+	path			: '/SNSlocal/tmp/',$
+	default_output_path	: '/SNS/users/j35/',$
+	default_path		: '/SNS/users/',$
+;	default_path		: '/Users/',$
 	working_path		: '',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
@@ -488,15 +490,16 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME='FILE_NAME_LABEL',$
 	XOFFSET=495,$
 	YOFFSET=337,$
-	VALUE='NeXus file name')
+	VALUE='Output path')
 
    FILE_NAME_TEXT = widget_text(MAIN_BASE,$
 	UNAME="FILE_NAME_TEXT",$
-	XOFFSET=600,$
+	XOFFSET=570,$
 	YOFFSET=330,$
-	VALUE='',$
-	SCR_XSIZE=250,$
-	/align_right)
+	VALUE=(*global).default_output_path,$
+	SCR_XSIZE=280,$
+	/align_right,$
+	/editable)
 	
    ;big GO button
    START_CALCULATION = widget_button(MAIN_BASE,$
@@ -578,7 +581,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
       ,VALUE='About')
 
   Widget_Control, /REALIZE, MAIN_BASE
-
 
   Widget_Control, SAVE_BUTTON, sensitive=0
   Widget_Control, REFRESH_BUTTON, sensitive=0
