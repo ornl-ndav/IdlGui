@@ -51,6 +51,18 @@ pro MAIN_BASE_event, Event
         EXIT_PROGRAM, Event
     end
 
+    ;Exit widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='ABOUT'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        ABOUT_cb, Event
+    end
+
+    ;default path button
+    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        DEFAULT_PATH_cb, Event
+    end
+
     ;Widget to change the color of graph
     Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -66,6 +78,21 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         SAVE_REGION, Event
     end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_GO'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        IDENTIFICATION_GO_cb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        DEFAULT_PATH_BUTTON_cb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
+    	IDENTIFICATION_TEXT_CB, Event
+    end
+
 
     else:
   endcase
@@ -92,7 +119,10 @@ Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callbac
 ;define initial global values - these could be input via external file or other means
 
 global = ptr_new({ $
+	character_id		: '',$
 	idl_path		: '/',$
+	ucams			: '',$
+	name			: '',$
 	filename		: '',$
 	histo_map_index		: 1L,$
 	norm_filename		: '',$
@@ -101,6 +131,9 @@ global = ptr_new({ $
 	filename_index		: 0, $
 ;	path			: '/SNS/users/j35/data/REF_M/REF_M_7/',$
 	path			: '~/CD4/REF_M/REF_M_7/',$
+;	default_path		: '/SNS/users/',$
+	default_path		: '/Users/',$
+	working_path		: '',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
 	ctrl_x			: ctrl_x,$
@@ -142,17 +175,71 @@ global = ptr_new({ $
 	have_indicies		: 0,$
 	indicies		: ptr_new(0L),$
 	tlb			: 0, $
-	window_counter		: 0L $
+	window_counter		: 0L$
 	})
 
+;ABOUT_BASE = Widget_Base(GROUP_LEADER=wGroup, UNAME='ABOUT_BASE',$
+;	SCR_XSIZE=200, SCR_YSIZE=200, XOFFSET=100, YOFFSET=100,$
+;	TITLE="About miniReflPak", /column,MBAR=WID_BASE_0_MBAR)	
+;
+;ABOUT_TEXT = widget_text(ABOUT_BASE, SCR_XSIZE=200, SCR_YSIZE=200,$
+;	XOFFSET=0, YOFFSET=0, UNAME="ABOUT_TEXT", VALUE="BLABLBBABABABAB")
+
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,XOFFSET=250 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Extract Data Tool'  $
+      ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
       ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
 
 
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
+
+IDENTIFICATION_BASE= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
+	UNAME='IDENTIFICATION_BASE',$
+	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
+	SPACE=4, XPAD=3, YPAD=3)
+
+IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
+		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
+
+IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
+		XOFFSET=100, YOFFSET=20, VALUE='',$
+		SCR_XSIZE=37, /editable,$
+		UNAME='IDENTIFICATION_TEXT',/ALL_EVENTS)
+
+ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
+		XOFFSET=5, YOFFSET=25, VALUE='',$
+		SCR_XSIZE=90, SCR_YSIZE=20, $
+		UNAME='ERROR_IDENTIFICATION_LEFT')
+
+ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
+		XOFFSET=140, YOFFSET=25, VALUE='',$
+		SCR_XSIZE=90, SCR_YSIZE=20, $
+		UNAME='ERROR_IDENTIFICATION_RIGHT')
+
+DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
+		XOFFSET=0, YOFFSET=55, VALUE='Working path',$
+		SCR_XSIZE=80, SCR_YSIZE=30,$
+		UNAME='DEFAULT_PATH_BUTTON')
+
+DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
+		XOFFSET=83, YOFFSET=55, VALUE=(*global).default_path,$
+		UNAME='DEFAULT_PATH_TEXT',/editable,$
+		SCR_XSIZE=160)
+
+IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
+		XOFFSET=67, YOFFSET=90,$
+		SCR_XSIZE=130, SCR_YSIZE=30,$
+		VALUE="E N T E R",$
+		UNAME='IDENTIFICATION_GO')		
+
+;LABEL_IDENTIFICATION = widget_label(MAIN_BASE,$
+;
+;FRAME_IDENTIFICATION = widget_label(MAIN_BASE,$
+;	XOFFSET=300,$
+;	YOFFSET=300,$
+;	SCR_XSIZE=180,$
+;	SCR_YSIZE=55,FRAME=3, value="")
 
 VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl_x  $
       ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
@@ -250,6 +337,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	SCR_YSIZE=27,FRAME=3, value="")
 
    SELECTION_INFOS = widget_label(MAIN_BASE,$
+	UNAME="SELECTION_INFOS",$
 	XOFFSET=draw_offset_x+ctrl_x,$
 	YOFFSET = 2*plot_height+draw_y+33, $
 	value="Information about selection")  
@@ -263,12 +351,14 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
   ;Data reduction space
   MICHAEL_SPACE_LABEL = widget_label(MAIN_BASE,$
+	UNAME='MICHAEL_SPACE_LABEL',$
 	XOFFSET=490,$
 	YOFFSET=187,$
 	VALUE="Data Reduction Interface")
 	
   ;Wavelength part (min, max, width)
    WAVELENGTH_LABEL = widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_LABEL',$
  	XOFFSET=500,$
 	YOFFSET=205,$
 	VALUE="Wavelength")
@@ -280,6 +370,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
    min_y_offset = wavelength_frame_y_offset
    min_x_offset = wavelength_frame_x_offset
    WAVELENGTH_MIN_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_MIN_LABEL',$
  	XOFFSET=min_x_offset,$
 	YOFFSET=min_y_offset,$
 	VALUE="min")
@@ -292,6 +383,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	VALUE='0', /editable)
 
    WAVELENGTH_MIN_A_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_MIN_A_LABEL',$
  	XOFFSET=min_x_offset+80,$
 	YOFFSET=min_y_offset,$
 	VALUE="Angstroms")
@@ -300,6 +392,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
    max_y_offset = wavelength_frame_y_offset+30
    max_x_offset = wavelength_frame_x_offset   
    WAVELENGTH_MAX_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_MAX_LABEL',$
  	XOFFSET=max_x_offset,$
 	YOFFSET=max_y_offset,$
 	VALUE="max")
@@ -312,6 +405,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	VALUE='10', /editable)
 
    WAVELENGTH_MAX_A_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_MAX_A_LABEL',$
  	XOFFSET=max_x_offset+80,$
 	YOFFSET=max_y_offset,$
 	VALUE="Angstroms")
@@ -320,6 +414,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
    width_y_offset =  wavelength_frame_y_offset +60
    width_x_offset = wavelength_frame_x_offset - 10
    WAVELENGTH_WIDTH_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_WIDTH_LABEL',$
  	XOFFSET=width_x_offset,$
 	YOFFSET=width_y_offset,$
 	VALUE="width")
@@ -332,11 +427,13 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	VALUE='0.1', /editable)
 
    WAVELENGTH_WIDTH_A_LABEL= widget_label(MAIN_BASE,$
+	UNAME='WAVELENGTH_WIDTH_A_LABEL',$
  	XOFFSET=width_x_offset+90,$
 	YOFFSET=width_y_offset,$
 	VALUE="Angstroms")
 
    FRAME_WAVELENGTH = widget_label(MAIN_BASE, $
+	UNAME='FRAME_WAVELENGTH',$
 	XOFFSET=495,$
 	YOFFSET=213,$
 	SCR_XSIZE=160,$
@@ -344,6 +441,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
    ;detector angle part
    DETECTOR_LABEL = widget_label(MAIN_BASE,$
+	UNAME='DETECTOR_LABEL',$
  	XOFFSET=675,$
 	YOFFSET=205,$
 	VALUE="Detector angle/error")
@@ -357,6 +455,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	/editable)
 
    DETECTOR_ANGLE_PLUS_MINUS = widget_label(MAIN_BASE,$
+	UNAME='DETECTOR_ANGLE_PLUS_MINUS',$
 	XOFFSET=711,$
 	YOFFSET=236,$
 	VALUE='+/-')
@@ -378,13 +477,15 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	title='')
 
    FRAME_DETECTOR = widget_label(MAIN_BASE,$
+	UNAME='FRAME_DETECTOR',$
 	XOFFSET=670,$
 	YOFFSET=213,$
 	SCR_XSIZE=180,$
 	SCR_YSIZE=55,FRAME=3, value="")
 
    ;file name part
-   FILE_NAME_LABEL = widget_label(MAIN_BASE,$
+   FILE_NAME_LABEL = widget_label(MAIN_BASE,$	
+	UNAME='FILE_NAME_LABEL',$
 	XOFFSET=495,$
 	YOFFSET=337,$
 	VALUE='NeXus file name')
@@ -461,11 +562,20 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   UTILS_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU'  $
       ,/MENU ,VALUE='Utils')
 
+  DEFAULT_PATH = Widget_Button(UTILS_MENU, UNAME='DEFAULT_PATH'  $
+      ,VALUE='Path to working directory')
+
   CTOOL_MENU = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU'  $
       ,VALUE='Color Tool')
 
 ;  CTOOL_MENU = Widget_Button(UTILS_MENU, UNAME='SWAP_ENDIAN'  $
 ;      ,VALUE='Swap Endian')
+
+  MINI_REFLPACK_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU'  $
+      ,/MENU ,VALUE='mini ReflPak')
+
+  ABOUT_MENU = Widget_Button(MINI_REFLPACK_MENU, UNAME='ABOUT'  $
+      ,VALUE='About')
 
   Widget_Control, /REALIZE, MAIN_BASE
 
@@ -473,7 +583,43 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   Widget_Control, SAVE_BUTTON, sensitive=0
   Widget_Control, REFRESH_BUTTON, sensitive=0
   Widget_Control, START_CALCULATION, sensitive=0
-;  Widget_Control, HISTO_MAP_SWITCH, set_button=1
+
+  ;disabled background buttons/draw/text/labels
+  Widget_Control, UTILS_MENU, sensitive=0
+  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
+  Widget_Control, OPEN_HISTO_UNMAPPED, sensitive=0
+  Widget_Control, TBIN_UNITS_LABEL, sensitive=0
+  Widget_Control, TBIN_LABEL, sensitive=0
+  Widget_Control, TBIN_TXT, sensitive=0
+  Widget_Control, MODE_INFOS, sensitive=0
+  Widget_Control, CURSOR_X_LABEL, sensitive=0
+  Widget_Control, CURSOR_X_POSITION, sensitive=0
+  Widget_Control, CURSOR_Y_LABEL, sensitive=0
+  Widget_Control, CURSOR_Y_POSITION, sensitive=0
+  Widget_Control, SELECTION_INFOS, sensitive=0
+  Widget_Control, PIXELID_INFOS, sensitive=0
+  Widget_Control, MICHAEL_SPACE_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_MIN_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_MIN_TEXT, sensitive=0
+  Widget_Control, WAVELENGTH_MIN_A_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_MAX_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_MAX_TEXT, sensitive=0
+  Widget_Control, WAVELENGTH_MAX_A_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_WIDTH_LABEL, sensitive=0
+  Widget_Control, WAVELENGTH_WIDTH_TEXT, sensitive=0
+  Widget_Control, WAVELENGTH_WIDTH_A_LABEL, sensitive=0
+  Widget_Control, FRAME_WAVELENGTH, sensitive=0
+  Widget_Control, DETECTOR_LABEL, sensitive=0
+  Widget_Control, DETECTOR_ANGLE_VALUE, sensitive=0
+  Widget_Control, DETECTOR_ANGLE_PLUS_MINUS, sensitive=0
+  Widget_Control, DETECTOR_ANGLE_ERR, sensitive=0
+  Widget_Control, DETECTOR_ANGLE_UNITS, sensitive=0
+  Widget_Control, FILE_NAME_LABEL, sensitive=0
+  Widget_Control, FILE_NAME_TEXT, sensitive=0
+  Widget_Control, BACKGROUND_SWITCH, sensitive=0
+  Widget_Control, NORMALIZATION_SWITCH, sensitive=0
+  Widget_Control, NORM_FILE_TEXT, sensitive=0
 
  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
