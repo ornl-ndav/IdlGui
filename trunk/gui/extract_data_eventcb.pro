@@ -35,6 +35,236 @@ return,tlb
 end
 ;end of get_tlb
 
+pro ABOUT_cb, Event
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+about_text = " "
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = " ***** mini ReflPak  v3.0 *****"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = " "
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = " Developers:"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = "     Steve Miller (millersd@ornl.gov)"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = "     Peter Peterson (petersonpf@ornl.gov)"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = "     Michael Reuter (reuterma@ornl.gov)"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = "     Jean Bilheux (bilheuxjm@ornl.gov)"
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+about_text = " "
+WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
+
+end
+
+pro DEFAULT_PATH_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_path = (*global).working_path
+working_path = dialog_pickfile(path=working_path,/directory)
+(*global).working_path = working_path
+
+name = (*global).name
+
+welcome = "Welcome " + strcompress(name,/remove_all)
+welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, view_id, base_set_title= welcome	
+
+end
+
+pro DEFAULT_PATH_BUTTON_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+default_path = (*global).default_path
+
+working_path = dialog_pickfile(path=default_path,/directory)
+(*global).working_path = working_path
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
+WIDGET_CONTROL, text_id, SET_VALUE=working_path
+
+end
+
+pro IDENTIFICATION_GO_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='IDENTIFICATION_TEXT')
+WIDGET_CONTROL, text_id, GET_VALUE=character_id
+(*global).character_id = character_id
+
+;check 3 characters id
+ucams=(*global).ucams
+
+name = ''
+case ucams of
+ 	'1gq': name = 'Richard Goyette'
+	'2zr': name = 'Michael Reuter'
+	'ele': name = 'Eugene Mamontov'
+	'ha9': name = 'hailemariam Ambaye'
+	'pf9': name = 'Peter Peterson'
+	'vyi': name = 'Frank Klose'
+	'j35': name = 'Zizou'
+	'mid': name = 'Steve Miller'
+	else : name = ''
+endcase
+
+if (name EQ '') then begin
+
+;put a message saying that it's an invalid 3 character id
+
+   error_message = "INVALID UCAMS"
+   view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
+   WIDGET_CONTROL, view_id, set_value= error_message	
+   view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT')
+   WIDGET_CONTROL, view_id, set_value= error_message	
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "Invalid 3 characters id... please try another user identification id"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   
+endif else begin
+
+   (*global).name = name
+   working_path = (*global).working_path
+
+   welcome = "Welcome " + strcompress(name,/remove_all)
+   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+   view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+   WIDGET_CONTROL, view_id, base_set_title= welcome	
+
+   view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
+   WIDGET_CONTROL, view_id, destroy=1
+
+   ;working path is set
+   cd, working_path
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "LOGIN parameters:"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "User id           : " + ucams
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "Name              : " + name
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "Working directory : " + working_path
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+
+  ;disabled background buttons/draw/text/labels
+  id = widget_info(Event.top,FIND_BY_UNAME='UTILS_MENU')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_MAPPED')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_UNMAPPED')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_UNITS_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_TXT')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='SELECTION_INFOS')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='MICHAEL_SPACE_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_TEXT')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_A_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_TEXT')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_A_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_TEXT')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_A_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='FRAME_WAVELENGTH')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_VALUE')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_PLUS_MINUS')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_ERR')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_UNITS')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_LABEL')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_TEXT')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='BACKGROUND_SWITCH')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='NORMALIZATION_SWITCH')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='NORM_FILE_TEXT')
+  Widget_Control, id, sensitive=1
+
+endelse
+
+end
+
+pro IDENTIFICATION_TEXT_cb, Event
+
+view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
+WIDGET_CONTROL, view_id, set_value= ''	
+view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT')
+WIDGET_CONTROL, view_id, set_value= ''	
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+default_path = (*global).default_path
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='IDENTIFICATION_TEXT')
+WIDGET_CONTROL, text_id, GET_VALUE=ucams
+
+(*global).ucams = ucams
+
+working_path = default_path + strcompress(ucams,/remove_all)
+(*global).working_path = working_path
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
+WIDGET_CONTROL, text_id, SET_VALUE=working_path
+
+
+end
+
 ; \brief Empty stub procedure used for autoloading.
 ;
 pro extract_data_eventcb
