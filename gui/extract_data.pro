@@ -176,8 +176,9 @@ global = ptr_new({ $
 	pass			: 0,$
 	have_indicies		: 0,$
 	indicies		: ptr_new(0L),$
-	tlb			: 0, $
-	window_counter		: 0L$
+	tlb			: 0,$
+	window_counter		: 0L,$
+	quit			: 0L$
 	})
 
 ;ABOUT_BASE = Widget_Base(GROUP_LEADER=wGroup, UNAME='ABOUT_BASE',$

@@ -1100,7 +1100,7 @@ ending_id_y = (*global).ending_id_y
 ;define command line to run data reduction
 space = " "
 cmd_line= "reflect_reduction " ;program to run
-cmd_line += nexus_filename    ;data NeXus file
+cmd_line += nexus_filename     ;data NeXus file
 cmd_line += " --l-bins="       ;wavelength
 cmd_line += strcompress(wavelength_min,/remove_all) + "," + $
 	strcompress(wavelength_max,/remove_all) + "," + $
@@ -1131,21 +1131,40 @@ WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-spawn, cmd_line, listening
 
-;display message from data reduction verbose flag
-WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+CATCH, wrong_nexus_file
 
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;;plot resulting data reduction plot
-plot_reduction, event
+if (wrong_nexus_file ne 0) then begin
 
-;reactivate GO button once calculation is done
-widget_control,go_id,sensitive=1
+	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid NeXus or .txt file", /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+
+endif else begin
+			
+	;indicate initialization with hourglass icon
+	widget_control,/hourglass
+
+	spawn, cmd_line, listening
+
+	;turn off hourglass
+	widget_control,hourglass=0
+
+	;display message from data reduction verbose flag
+	WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+
+	end_time = systime(1)
+	text = "Done"
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	;plot resulting data reduction plot
+	plot_reduction, event
+
+	;reactivate GO button once calculation is done
+	widget_control,go_id,sensitive=1
+
+endelse
 
 end 
 ;end of DATA_REDUCTION
@@ -1172,6 +1191,7 @@ filename_short=file_list[0]
 data_reduction_file = working_path + filename_short + 'txt'
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
 text = 'Entering Data Reduction plot:'
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = 'Reading file: ' + data_reduction_file
@@ -1339,5 +1359,6 @@ endif else begin
 endelse
 
 endelse
+
 end
 ; end of OPEN_NORMALIZATION
