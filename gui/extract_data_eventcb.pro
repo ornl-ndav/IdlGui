@@ -1132,19 +1132,21 @@ str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-CATCH, wrong_nexus_file
-
-if (wrong_nexus_file ne 0) then begin
-
-	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid NeXus or .txt file", /APPEND
-	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-
-endif else begin
+;CATCH, wrong_nexus_file
+;
+;if (wrong_nexus_file ne 0) then begin
+;
+;	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid NeXus", /APPEND
+;	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+;
+;endif else begin
 			
 	;indicate initialization with hourglass icon
 	widget_control,/hourglass
 
-	spawn, cmd_line, listening
+	spawn, cmd_line, listening, /stderr
+
+;	CATCH, /CANCEL
 
 	;turn off hourglass
 	widget_control,hourglass=0
@@ -1164,7 +1166,7 @@ endif else begin
 	;reactivate GO button once calculation is done
 	widget_control,go_id,sensitive=1
 
-endelse
+;endelse
 
 end 
 ;end of DATA_REDUCTION
@@ -1197,7 +1199,18 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = 'Reading file: ' + data_reduction_file
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
+CATCH, wrong_text_file
+
+if (wrong_text_file ne 0) then begin
+
+	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid .txt file", /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+
+endif else begin
+
 openr,u,data_reduction_file,/get
+
+
 fs = fstat(u)
 
 ;define an empty string variable to hold results from reading the file
@@ -1302,6 +1315,10 @@ stop_time = systime(1)
 print,'Run Time: ',stop_time - strt_time,' seconds'
 print,' '
 print,'**************************** END ******************************'
+
+endelse
+
+CATCH, /CANCEL
 
 end
 
