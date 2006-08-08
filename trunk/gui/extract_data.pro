@@ -1,5 +1,9 @@
 pro MAIN_BASE_event, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
   wWidget =  Event.top  ;widget id
 
   case Event.id of
@@ -89,18 +93,52 @@ pro MAIN_BASE_event, Event
         DEFAULT_PATH_BUTTON_cb, Event
     end
 
+
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
     	IDENTIFICATION_TEXT_CB, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+	id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+	WIDGET_control, id, GET_VALUE=result
+	portal_value = result
+
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	WIDGET_CONTROL, id, /destroy
+
+	if (portal_value EQ 1) then begin
+	REF_M_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+	endif else begin
+	REF_L_BASE, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_
+	endelse
+
+    end
+
+    ;Exit widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        EXIT_PROGRAM_REF_L, Event
+    end
+
+    ;Open widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_MAPPED_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+	 OPEN_HISTO_MAPPED_REF_L, Event
+    end
+
+    ;Open widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_UNMAPPED_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_HISTO_UNMAPPED_REF_L, Event
+    end
 
     else:
   endcase
 
 end
 
-
-pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro PORTAL_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;define parameters
 scr_x 	= 880				;main window width
@@ -116,8 +154,68 @@ plot_length = 304			;plot box length
 
 Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
-;define initial global values - these could be input via external file or other means
+;ABOUT_BASE = Widget_Base(GROUP_LEADER=wGroup, UNAME='ABOUT_BASE',$
+;	SCR_XSIZE=200, SCR_YSIZE=200, XOFFSET=100, YOFFSET=100,$
+;	TITLE="About miniReflPak", /column,MBAR=WID_BASE_0_MBAR)	
+;
+;ABOUT_TEXT = widget_text(ABOUT_BASE, SCR_XSIZE=200, SCR_YSIZE=200,$
+;	XOFFSET=0, YOFFSET=0, UNAME="ABOUT_TEXT", VALUE="BLABLBBABABABAB")
 
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
+      ,SCR_XSIZE=265 ,SCR_YSIZE=150, XOFFSET=450 ,YOFFSET=50 $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
+      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+
+;attach global data structure with widget ID of widget main base widget ID
+widget_control,MAIN_BASE,set_uvalue=global
+
+PORTAL_BASE= widget_base(MAIN_BASE, $
+	UNAME='PORTAL_BASE',$
+	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
+	SPACE=4, XPAD=3, YPAD=3,column=1)
+
+PORTAL_LABEL = widget_label(PORTAL_BASE,$
+	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
+
+
+INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE, $
+	['Liquid Reflectometer', 'Magnetic Reflectometer'], $
+    	/exclusive,/RETURN_NAME,$
+	XOFFSET=30, YOFFSET=25,$
+	SET_VALUE=0.0,$
+	UNAME='INSTRUMENT_TYPE_GROUP')
+
+PORTAL_GO = widget_button(PORTAL_BASE,$
+	XOFFSET=80, YOFFSET=85, $
+	SCR_XSIZE=60, SCR_YSIZE=30,$
+	UNAME="PORTAL_GO",$
+	VALUE="ENTER")
+
+  Widget_Control, /REALIZE, MAIN_BASE
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+end
+
+pro REF_M_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+
+;define parameters
+scr_x 	= 880				;main window width
+scr_y 	= 750				;main window height 
+ctrl_x	= 1				;width of left box - control
+ctrl_y	= scr_y				;height of lect box - control
+draw_x 	= 304				;main width of draw area
+draw_y 	= 256				;main heigth of draw area
+draw_offset_x = 10			;draw x offset within widget
+draw_offset_y = 10			;draw y offset within widget
+plot_height = 150			;plot box height
+plot_length = 304			;plot box length
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
+      ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
+      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+
+;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
 	character_id		: '',$
 	idl_path		: '/',$
@@ -133,8 +231,8 @@ global = ptr_new({ $
 	filename_index		: 0, $
 	path			: '/SNSlocal/tmp/',$
 	default_output_path	: '/SNS/users/j35/',$
-	default_path		: '/SNS/users/',$
-;	default_path		: '/Users/',$
+;	default_path		: '/SNS/users/',$
+	default_path		: '/Users/',$
 	working_path		: '',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
@@ -181,21 +279,13 @@ global = ptr_new({ $
 	quit			: 0L$
 	})
 
-;ABOUT_BASE = Widget_Base(GROUP_LEADER=wGroup, UNAME='ABOUT_BASE',$
-;	SCR_XSIZE=200, SCR_YSIZE=200, XOFFSET=100, YOFFSET=100,$
-;	TITLE="About miniReflPak", /column,MBAR=WID_BASE_0_MBAR)	
-;
-;ABOUT_TEXT = widget_text(ABOUT_BASE, SCR_XSIZE=200, SCR_YSIZE=200,$
-;	XOFFSET=0, YOFFSET=0, UNAME="ABOUT_TEXT", VALUE="BLABLBBABABABAB")
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
 
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
-      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
-
-;attach global data structure with widget ID of widget main base widget ID
-widget_control,MAIN_BASE,set_uvalue=global
+;;get global structure
+;widget_control,MAIN_BASE,get_uvalue=global
 
 IDENTIFICATION_BASE= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
 	UNAME='IDENTIFICATION_BASE',$
@@ -226,7 +316,7 @@ DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
 		UNAME='DEFAULT_PATH_BUTTON')
 
 DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
-		XOFFSET=83, YOFFSET=55, VALUE=(*global).default_path,$
+		XOFFSET=83, YOFFSET=55, VALUE=default_path,$
 		UNAME='DEFAULT_PATH_TEXT',/editable,$
 		SCR_XSIZE=160)
 
@@ -263,7 +353,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME='VIEW_DRAW_REDUCTION',$
 	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
 	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
-	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)
+	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)d
 
   GENERAL_INFOS = widget_text(MAIN_BASE, $
 	UNAME='GENERAL_INFOS', $
@@ -497,7 +587,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME="FILE_NAME_TEXT",$
 	XOFFSET=570,$
 	YOFFSET=330,$
-	VALUE=(*global).default_output_path,$
+	VALUE=default_output_path,$
 	SCR_XSIZE=280,$
 	/align_right,$
 	/editable)
@@ -628,9 +718,219 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
 end
 
+
+
+pro REF_L_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+
+;define parameters
+scr_x 	= 880				;main window width
+scr_y 	= 750				;main window height 
+ctrl_x	= 1				;width of left box - control
+ctrl_y	= scr_y				;height of lect box - control
+draw_x 	= 256				;main width of draw area
+draw_y 	= 304				;main heigth of draw area
+draw_offset_x = 10			;draw x offset within widget
+draw_offset_y = 10			;draw y offset within widget
+plot_height = 130			;plot box height
+plot_length = 256			;plot box length
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
+      ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
+      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+
+;define initial global values - these could be input via external file or other means
+global = ptr_new({ $
+	character_id		: '',$
+	idl_path		: '/',$
+	ucams			: '',$
+	name			: '',$
+	filename		: '',$
+	histo_map_index		: 1L,$
+	norm_filename		: '',$
+	filename_only		: '',$
+	nexus_filename		: '',$
+	nexus_filename_only	: '',$
+	nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
+	filename_index		: 0, $
+	path			: '/SNSlocal/tmp/',$
+	default_output_path	: '/SNS/users/j35/',$
+;	default_path		: '/SNS/users/',$
+	default_path		: '/Users/',$
+	working_path		: '',$
+	scr_x			: scr_x,$
+	scr_y			: scr_y,$
+	ctrl_x			: ctrl_x,$
+	ctrl_y			: ctrl_y,$
+	draw_x			: draw_x,$
+	draw_y			: draw_y,$
+	draw_offset_x		: draw_offset_x,$
+	draw_offset_y		: draw_offset_y,$
+	plot_height		: plot_height,$
+	plot_length		: plot_length,$
+	filter_histo		: '',$
+	filter_normalization	: '*.nxs',$
+	filter_nexus		: '*.nxs',$
+	with_background		: 0, $
+	with_normalization	: 0, $
+	wavelength_min		: 0L,$
+	wavelength_max		: 0L,$
+	wavelength_width	: 0L,$
+	detector_angle		: 0L,$
+	detector_angle_err	: 0L,$
+	detector_angle_units	: '',$
+	time_bin		: 0L,$
+	Nx			: 256L,$
+	Ny			: 304L,$
+	Ntof			: 0L,$
+	starting_id_x		: 0L,$
+	starting_id_y		: 0L,$
+	ending_id_x		: 0L,$
+	ending_id_y		: 0L,$
+	data_ptr		: ptr_new(0L),$
+	data_assoc		: ptr_new(0L),$
+	img_ptr			: ptr_new(0L),$
+	selection_ptr		: ptr_new(OL),$
+	x			: 0L,$
+	y			: 0L,$
+	tof			: 0L,$
+	ct			: 5,$
+	pass			: 0,$
+	have_indicies		: 0,$
+	indicies		: ptr_new(0L),$
+	tlb			: 0,$
+	window_counter		: 0L,$
+	quit			: 0L,$
+	nana			: 'test to be removed'$
+	})
+
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
+
+Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+
+VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl_x  $
+      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
+      /BUTTON_EVENTS,/MOTION_EVENTS)
+
+;draw boxes for plot windows
+;TOF
+  VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF' ,XOFFSET=draw_offset_x+ctrl_x  $
+      ,YOFFSET=draw_offset_y ,SCR_XSIZE=plot_length ,SCR_YSIZE=130 ,RETAIN=2)
+;X
+  VIEW_DRAW_X = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X' ,XOFFSET=draw_offset_x+ctrl_x  $
+      ,YOFFSET=3*draw_offset_y+draw_y+plot_height ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
+
+;SUM_X
+  VIEW_DRAW_SUM_X = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_X' ,XOFFSET=draw_offset_x + ctrl_x $
+      ,YOFFSET=605 ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
+
+  VIEW_DRAW_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y' ,XOFFSET=420  $
+      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
+
+  VIEW_DRAW_SUM_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_Y' ,XOFFSET=2*draw_offset_x+draw_x+ctrl_x  $
+      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
+
+  VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE,$
+	UNAME='VIEW_DRAW_TOF',$
+	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
+	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
+	SCR_XSIZE= 590, SCR_YSIZE= 270, RETAIN=2)
+
+  TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+95, $
+	YOFFSET=draw_offset_y+10, VALUE="microS")
+
+  TBIN_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_LABEL',XOFFSET=draw_offset_x+plot_length+15, YOFFSET=draw_offset_y+10, $
+	VALUE="Tbin:")
+
+  TBIN_TXT = widget_text(MAIN_BASE, UNAME='TBIN_TXT', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
+	SCR_XSIZE=45, SCR_YSIZE=30, /editable, VALUE='25')
+
+  REFRESH_BUTTON = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON', XOFFSET=draw_offset_x+plot_length+10,$
+      YOFFSET=50,VALUE='Refresh Selection',SCR_XSIZE=130)
+
+  SAVE_BUTTON = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON', XOFFSET=draw_offset_x+plot_length+10,$
+      YOFFSET=80,VALUE='Save Region',SCR_XSIZE=130)
+
+   FRAME1_REF_L = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
+	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
+
+   cursor_y_offset = 117
+   ;x position of cursor in Infos mode	
+   CURSOR_X_LABEL_REF_L = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL_REF_L',$
+	XOFFSET=2*draw_offset_x+plot_length+5,$
+	YOFFSET=cursor_y_offset,$
+	value="x= ")
+
+   CURSOR_X_POSITION_REF_L = Widget_label(MAIN_BASE,UNAME='CURSOR_X_POSITION_REF_L',$
+	XOFFSET=2*draw_offset_x+plot_length+15,$
+	YOFFSET=cursor_y_offset-5,$
+	VALUE="N/A",$
+	SCR_XSIZE=45,$
+	SCR_YSIZE=28)
+	
+   ;y position of cursor in Infos mode	
+   CURSOR_Y_LABEL_REF_L= Widget_label(MAIN_BASE, UNAME='CURSOR_Y_LABEL_REF_L',$
+	XOFFSET=2*draw_offset_x+plot_length+65,$
+	YOFFSET=cursor_y_offset,$
+	value="y= ")
+
+   CURSOR_Y_POSITION_REF_L = Widget_label(MAIN_BASE,UNAME='CURSOR_Y_POSITION_REF_L',$
+	XOFFSET=2*draw_offset_x+plot_length+75,$
+	YOFFSET=cursor_y_offset-5,$
+	VALUE="N/A",$
+	SCR_XSIZE=45,$
+	SCR_YSIZE=28)
+
+ SELECTION_INFOS_REF_L = widget_label(MAIN_BASE,$
+	UNAME="SELECTION_INFOS_REF_L",$
+	XOFFSET=430,$
+	YOFFSET = 2, $
+	value="Information about selection")  
+
+  PIXELID_INFOS_REF_L = widget_text(MAIN_BASE, UNAME='PIXELID_INFOS_REF_L', $
+	XOFFSET= 420,$
+	YOFFSET= 10,$
+	SCR_XSIZE=300, $
+	SCR_YSIZE=130,$
+	/SCROLL)
+
+  ;frame3 of x= and y= for infos mode
+  FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
+	XOFFSET=2*draw_offset_x+plot_length,$
+	YOFFSET=110,$
+	SCR_XSIZE=plot_height-5,$
+	SCR_YSIZE=27,FRAME=3, value="")
+
+  GENERAL_INFOS_REF_L = widget_text(MAIN_BASE, $
+	UNAME='GENERAL_INFOS_REF_L',$
+	XOFFSET=560,$
+	YOFFSET= 150,$
+	SCR_XSIZE=300, $
+	SCR_YSIZE=300,$
+	/WRAP,$
+	/SCROLL)
+
+  FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
+      ,VALUE='File')
+
+  OPEN_HISTO_MAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_MAPPED_REF_L'  $
+      ,VALUE='Open Mapped Histogram')
+
+  OPEN_HISTO_UNMAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_UNMAPPED_REF_L'  $
+      ,VALUE='Open Histogram')
+
+  EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
+      ,VALUE='Exit')
+
+Widget_Control, /REALIZE, MAIN_BASE
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+end
+
 ;
 ; Empty stub procedure used for autoloading.
 ;
 pro extract_data, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end

@@ -746,7 +746,7 @@ pro CTOOL, Event
 	widget_control,rb_id,sensitive=0
 
 	;get global structure
-	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	id=widget_info(Event.top, FIND_BY_UNAME='REF_L_BASE')
 	widget_control,id,get_uvalue=global
 
 	xloadct,/MODAL,GROUP=id
@@ -803,30 +803,7 @@ end
 ; end of EXIT_PROGRAM
 
 
-;;;***************************
-;;pro OPEN_HISTO_EVENT, Event
-;;;***************************
-;;
-;;;get global structure
-;;id=widget_info(MAIN_BASE, FIND_BY_UNAME='MAIN_BASE')
-;;widget_control,id,get_uvalue=global1
-;;
-;;;open file
-;;filter = "*_event.dat"
-;;print, (*global1).path
-;;path=(*global1).path
-;;stop
-;;file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
-;;
-;;(*global).event_filename = file
-;;
-;;view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS_wT1')
-;;text = "Event file to histogram: " + strcompress(file,/remove_all)
-;;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;;
-;;
-;;end
-
+;*******************************************
 
 ; \brief
 ;
@@ -1349,9 +1326,8 @@ filter = (*global).filter_normalization
 widget_control,/hourglass
 
 ;open file
-path="/users/j35/CD4/REF_M/REF_M_7/"
+path=(*global).working_path
 file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
-
 
 ;save name of file only if valid file given
 
@@ -1379,3 +1355,192 @@ endelse
 
 end
 ; end of OPEN_NORMALIZATION
+
+;*********************************************************
+
+; \brief
+;
+; \argument Event (INPUT)
+pro OPEN_FILE_REF_L, Event
+
+;first close previous file if there is one
+if (N_ELEMENTS(U)) NE 0 then begin
+	close, u
+	free_lun,u
+endif 
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve data parameters
+Nx 		= (*global).Nx
+Ny 		= (*global).Ny
+filter = (*global).filter_histo
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;open file
+path = (*global).path
+file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
+
+;only read data if valid file given
+if file NE '' then begin
+
+	(*global).filename = file ; store input filename
+	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	text = "Open histogram file: " + strcompress(file,/remove_all)
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	;get only the last part of the file (its name)
+	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
+	filename_only=file_list[length-1]	
+	(*global).filename_only = filename_only ; store only name of the file (without the path)
+
+;	print, "filenameonly= " , filename_only
+
+	;determine name of nexus file according to histogram file name
+	
+	index = (*global).histo_map_index	
+
+	if (index EQ 1) then begin
+		file_list=strsplit(file,'_neutron_histo_mapped.dat',$
+		/REGEX,/extract,count=length) ;to remove last part of the name
+		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
+		run_number=run_number[length-1]
+	endif else begin
+		file_list=strsplit(file,'_neutron_histo.dat',$
+		/REGEX,/extract,count=length) ;to remove last part of the name
+		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
+		run_number=run_number[length-1]
+	endelse
+
+	filename_short=file_list[0]	
+	file_list=strsplit(filename_short,'/',/REGEX,/extract,count=length) ;to remove last part of the name
+	short_nexus_filename = file_list[length-1]
+	nexus_path = (*global).nexus_path
+
+	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
+	print, "nexus filename: " , nexus_filename	
+
+	(*global).nexus_filename = nexus_filename
+
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Nexus file: ', /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE=nexus_filename, /APPEND
+		
+	;determine path	
+	path_list=strsplit(file,filename_only,/reg,/extract)
+	path=path_list[0]
+	cd, path
+
+;	;display path
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
+;	WIDGET_CONTROL, view_info, SET_VALUE=path
+	(*global).path = path
+	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data....', /APPEND
+	strtime = systime(1)
+
+	openr,u,file,/get
+	;find out file info
+	fs = fstat(u)
+	Nimg = Nx*Ny
+	Ntof = fs.size/(Nimg*4L)
+	(*global).Ntof = Ntof	;set back in global structure
+
+	;using assoc
+	;(assoc defines a template structure for reading data. Since data are ordered Ntof, Ny, Nx, Ntof
+	;varie the fastest. This being the case, it's not convenient to define an y,x data plane, and it's more
+	;convenient to define the data structure to be an individual TOF array.
+	data_assoc = assoc(u,lonarr(Ntof))
+	
+	;make the image array
+	img = lonarr(Nx,Ny)
+	for i=0L,Nimg-1 do begin
+		x = i MOD Nx
+		y = i/Nx
+;		img[y,x] = total(swap_endian(data_assoc[i]))
+		img[x,y] = total(data_assoc[i])
+	endfor
+
+	img=transpose(img)
+
+	;old fashion way
+;	data = lonarr(Ntof,Nx,Ny)
+;	readu,u,data
+;	;data = swap_endian(data)
+;	img = transpose(total(data,1))
+;	(*(*global).data_ptr) = data
+
+	;load data up in global ptr array
+	(*(*global).img_ptr) = img
+	(*(*global).data_assoc) = data_assoc
+	
+	;now turn hourglass back off
+	widget_control,hourglass=0
+
+	;put image data in main draw window
+	SHOW_DATA,event
+	
+	;now we can activate 'Refresh' button
+	;disable refresh button during ctool
+	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
+	widget_control,rb_id,sensitive=1
+
+	endtime = systime(1)
+	tt_time = string(endtime - strtime)
+	text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	
+endif;valid file
+
+end
+; end of OPEN_FILE
+
+pro OPEN_HISTO_MAPPED_REF_L, Event
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+
+  (*global).histo_map_index = 1
+  (*global).filter_histo = '*_histo_mapped.dat'
+
+  OPEN_FILE_REF_L, Event
+
+end
+
+pro OPEN_HISTO_UNMAPPED_REF_L, Event
+
+  ;get global structure
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+	
+  (*global).histo_map_index = 0
+  (*global).filter_histo = '*_histo.dat'
+
+  OPEN_FILE_REF_L, Event
+
+end
+
+;*******************************************
+
+; \brief
+;
+; \argument Event (INPUT)
+pro EXIT_PROGRAM_REF_L, Event
+
+if (N_ELEMENTS(U)) NE 0 then begin
+	close, u
+	free_lun,u
+endif 
+
+widget_control,Event.top,/destroy
+
+end
+; end of EXIT_PROGRAM_REF_L
+
+
