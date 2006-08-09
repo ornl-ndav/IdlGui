@@ -133,6 +133,23 @@ widget_control,id,get_uvalue=global
         OPEN_HISTO_UNMAPPED_REF_L, Event
     end
 
+    ;Widget to change the color of graph
+    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        CTOOL_REF_L, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='REFRESH_BUTTON_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        REFRESH_REF_L, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='VIEW_DRAW_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+        if( Event.type eq 0 )then $
+          VIEW_ONBUTTON_REF_L, Event
+    end
+
     else:
   endcase
 
@@ -231,8 +248,8 @@ global = ptr_new({ $
 	filename_index		: 0, $
 	path			: '/SNSlocal/tmp/',$
 	default_output_path	: '/SNS/users/j35/',$
-;	default_path		: '/SNS/users/',$
-	default_path		: '/Users/',$
+	default_path		: '/SNS/users/',$
+;	default_path		: '/Users/',$
 	working_path		: '',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
@@ -353,7 +370,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	UNAME='VIEW_DRAW_REDUCTION',$
 	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
 	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
-	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)d
+	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)
 
   GENERAL_INFOS = widget_text(MAIN_BASE, $
 	UNAME='GENERAL_INFOS', $
@@ -754,6 +771,7 @@ global = ptr_new({ $
 	nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
 	filename_index		: 0, $
 	path			: '/SNSlocal/tmp/',$
+;	path 			: '~/data/REF_L/',$		;REMOVE ME
 	default_output_path	: '/SNS/users/j35/',$
 ;	default_path		: '/SNS/users/',$
 	default_path		: '/Users/',$
@@ -780,8 +798,8 @@ global = ptr_new({ $
 	detector_angle_err	: 0L,$
 	detector_angle_units	: '',$
 	time_bin		: 0L,$
-	Nx			: 256L,$
-	Ny			: 304L,$
+	Ny			: 256L,$
+	Nx			: 304L,$
 	Ntof			: 0L,$
 	starting_id_x		: 0L,$
 	starting_id_y		: 0L,$
@@ -809,30 +827,41 @@ widget_control, MAIN_BASE, set_uvalue=global
 
 Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
-VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl_x  $
+VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_offset_x+ctrl_x  $
       ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
       /BUTTON_EVENTS,/MOTION_EVENTS)
 
 ;draw boxes for plot windows
 ;TOF
-  VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=draw_offset_y ,SCR_XSIZE=plot_length ,SCR_YSIZE=130 ,RETAIN=2)
+  VIEW_DRAW_TOF_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF_REF_L',$
+	XOFFSET=draw_offset_x+ctrl_x,$
+	YOFFSET=draw_offset_y,$
+	SCR_XSIZE=plot_length,$
+	SCR_YSIZE=130 ,RETAIN=2)
 ;X
-  VIEW_DRAW_X = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=3*draw_offset_y+draw_y+plot_height ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
+  VIEW_DRAW_X_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X_REF_L',$
+	XOFFSET=draw_offset_x+ctrl_x,$
+      	YOFFSET=3*draw_offset_y+draw_y+plot_height,$
+	SCR_XSIZE=plot_length,$
+	SCR_YSIZE=plot_height ,RETAIN=2)
 
 ;SUM_X
-  VIEW_DRAW_SUM_X = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_X' ,XOFFSET=draw_offset_x + ctrl_x $
-      ,YOFFSET=605 ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
+  VIEW_DRAW_SUM_X_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_X_REF_L',$
+	XOFFSET=draw_offset_x + ctrl_x,$
+      	YOFFSET=605 ,SCR_XSIZE=plot_length,$
+	SCR_YSIZE=plot_height ,RETAIN=2)
 
-  VIEW_DRAW_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y' ,XOFFSET=420  $
-      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
+  VIEW_DRAW_Y_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y_REF_L',$
+	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, YOFFSET=2*draw_offset_y+plot_height,$
+	SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
 
-  VIEW_DRAW_SUM_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_Y' ,XOFFSET=2*draw_offset_x+draw_x+ctrl_x  $
-      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
+  VIEW_DRAW_SUM_Y_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_Y_REF_L',$
+	XOFFSET=420,$
+      	YOFFSET=2*draw_offset_y+plot_height,$
+	SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
 
-  VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE,$
-	UNAME='VIEW_DRAW_TOF',$
+  VIEW_DRAW_COUNTS_TOF_REF_L = Widget_Draw(MAIN_BASE,$
+	UNAME='VIEW_DRAW_COUNTS_TOF_REF_L',$
 	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
 	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
 	SCR_XSIZE= 590, SCR_YSIZE= 270, RETAIN=2)
@@ -846,11 +875,11 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   TBIN_TXT = widget_text(MAIN_BASE, UNAME='TBIN_TXT', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
 	SCR_XSIZE=45, SCR_YSIZE=30, /editable, VALUE='25')
 
-  REFRESH_BUTTON = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON', XOFFSET=draw_offset_x+plot_length+10,$
-      YOFFSET=50,VALUE='Refresh Selection',SCR_XSIZE=130)
+  REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
+      YOFFSET=50,VALUE='Refresh Selection',SCR_XSIZE=126)
 
-  SAVE_BUTTON = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON', XOFFSET=draw_offset_x+plot_length+10,$
-      YOFFSET=80,VALUE='Save Region',SCR_XSIZE=130)
+  SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
+      YOFFSET=80,VALUE='Save Region',SCR_XSIZE=126)
 
    FRAME1_REF_L = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
 	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
@@ -891,7 +920,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   PIXELID_INFOS_REF_L = widget_text(MAIN_BASE, UNAME='PIXELID_INFOS_REF_L', $
 	XOFFSET= 420,$
 	YOFFSET= 10,$
-	SCR_XSIZE=300, $
+	SCR_XSIZE=438, $
 	SCR_YSIZE=130,$
 	/SCROLL)
 
@@ -923,7 +952,20 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
       ,VALUE='Exit')
 
+  UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
+      ,/MENU ,VALUE='Utils')
+
+;  DEFAULT_PATH = Widget_Button(UTILS_MENU, UNAME='DEFAULT_PATH'  $
+;     ,VALUE='Path to working directory')
+
+  CTOOL_MENU_REF_L = Widget_Button(UTILS_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
+      ,VALUE='Color Tool')
+
 Widget_Control, /REALIZE, MAIN_BASE
+
+Widget_Control, SAVE_BUTTON_REF_L, sensitive=0
+Widget_Control, REFRESH_BUTTON_REF_L, sensitive=0
+
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end

@@ -140,6 +140,8 @@ endif else begin
    (*global).name = name
    working_path = (*global).working_path
 
+ 
+
    welcome = "Welcome " + strcompress(name,/remove_all)
    welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
    view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
@@ -149,8 +151,9 @@ endif else begin
    WIDGET_CONTROL, view_id, destroy=1
 
    ;working path is set
-   cd, working_path
 
+   cd, working_path
+ 
    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
    text = "LOGIN parameters:"
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -261,7 +264,6 @@ working_path = default_path + strcompress(ucams,/remove_all)+ '/'
 
 text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
 WIDGET_CONTROL, text_id, SET_VALUE=working_path
-
 
 end
 
@@ -449,7 +451,6 @@ if (window_counter GE 1) then begin
 endif
 
 display_info =0	
-print, "Nx= " , Nx
 
 click_outside = 0
 while (getvals EQ 0) do begin
@@ -511,10 +512,10 @@ x[1]=X2
 y[0]=Y1
 y[1]=Y2
 
-print, "x[0]= ", X1
-print, "y[0]= " ,Y1
-print, "x[1]= ", X2
-print, "y[1]= " ,Y2
+;print, "x[0]= ", X1
+;print, "y[0]= " ,Y1
+;print, "x[1]= ", X2
+;print, "y[1]= " ,Y2
 
 
 ;**Create the main window
@@ -642,6 +643,8 @@ pro SAVE_REGION, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+cd, (*global).working_path
+
 ;retrieve data
 nexus_file = (*global).nexus_filename
 x_min =(*global).starting_id_x
@@ -746,7 +749,7 @@ pro CTOOL, Event
 	widget_control,rb_id,sensitive=0
 
 	;get global structure
-	id=widget_info(Event.top, FIND_BY_UNAME='REF_L_BASE')
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 	widget_control,id,get_uvalue=global
 
 	xloadct,/MODAL,GROUP=id
@@ -846,7 +849,7 @@ if file NE '' then begin
 	filename_only=file_list[length-1]	
 	(*global).filename_only = filename_only ; store only name of the file (without the path)
 
-	print, "filenameonly= " , filename_only
+;	print, "filenameonly= " , filename_only
 
 	;determine name of nexus file according to histogram file name
 	
@@ -870,7 +873,7 @@ if file NE '' then begin
 	nexus_path = (*global).nexus_path
 
 	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
-	print, "nexus filename: " , nexus_filename	
+;	print, "nexus filename: " , nexus_filename	
 
 	(*global).nexus_filename = nexus_filename
 
@@ -987,6 +990,7 @@ widget_control,id,get_uvalue=global
 
 ;set up working path
 working_path = (*global).working_path
+
 cd, working_path
 
 ;retrieve name of nexus file
@@ -1205,6 +1209,12 @@ Nndlines = 0L
 Ndlines = 0L
 onebyte = 0b
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+space = ''
+WIDGET_CONTROL, view_info, SET_VALUE=space, /APPEND
+intro="*** Infos about file generated ***
+WIDGET_CONTROL, view_info, SET_VALUE=intro, /APPEND
+
 while (NOT eof(u)) do begin
 
 	readu,u,onebyte;,format='(a1)'
@@ -1226,7 +1236,8 @@ while (NOT eof(u)) do begin
 		Nelines = Nelines + 1
 		;print,'Non-data Line: ',Nndlines
 		readf,u,tmp
-		print,tmp
+;		print,tmp
+		WIDGET_CONTROL, view_info, SET_VALUE=tmp, /APPEND
 	end
 
 	else: begin
@@ -1236,11 +1247,11 @@ while (NOT eof(u)) do begin
 
 		catch, Error_Status
 		if Error_status NE 0 then begin
-			Print, 'Handling case where we only have the wavelength bin and no data...'
-			print, 'This case occurs in the last line of the data file.'
-     		PRINT, 'Error index: ', Error_status
-      		PRINT, 'Error message: ', !ERROR_STATE.MSG
-			Print, 'Handling Error Now'
+;			Print, 'Handling case where we only have the wavelength bin and no data...'
+;			print, 'This case occurs in the last line of the data file.'
+;     		PRINT, 'Error index: ', Error_status
+;      		PRINT, 'Error message: ', !ERROR_STATE.MSG
+;			Print, 'Handling Error Now'
 			;do something to handle error condition...
 			;append the last number to flt0
  			flt0 = [flt0,float(tmp0)]
@@ -1249,7 +1260,7 @@ while (NOT eof(u)) do begin
  			flt1 = flt1[1:*]
  			flt2 = flt2[1:*]
  			;you're done now...
- 			Print,'Error Handling Complete'
+; 			Print,'Error Handling Complete'
       		CATCH, /CANCEL
 		endif else begin
 			readf,u,tmp0,tmp1,tmp2,format='(3F0)';
@@ -1390,7 +1401,7 @@ if file NE '' then begin
 
 	(*global).filename = file ; store input filename
 	
-	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 	text = "Open histogram file: " + strcompress(file,/remove_all)
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
@@ -1422,26 +1433,22 @@ if file NE '' then begin
 	short_nexus_filename = file_list[length-1]
 	nexus_path = (*global).nexus_path
 
-	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
-	print, "nexus filename: " , nexus_filename	
+;	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
 
-	(*global).nexus_filename = nexus_filename
+;	(*global).nexus_filename = nexus_filename
 
-	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-	WIDGET_CONTROL, view_info, SET_VALUE='Nexus file: ', /APPEND
-	WIDGET_CONTROL, view_info, SET_VALUE=nexus_filename, /APPEND
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+;	WIDGET_CONTROL, view_info, SET_VALUE='Nexus file: ', /APPEND
+;	WIDGET_CONTROL, view_info, SET_VALUE=nexus_filename, /APPEND
 		
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
 	path=path_list[0]
 	cd, path
 
-;	;display path
-;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
-;	WIDGET_CONTROL, view_info, SET_VALUE=path
 	(*global).path = path
 	
-	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data....', /APPEND
 	strtime = systime(1)
 
@@ -1467,7 +1474,25 @@ if file NE '' then begin
 		img[x,y] = total(data_assoc[i])
 	endfor
 
+;*********************************************************
+;*********************************************************
+
 	img=transpose(img)
+	
+  	img_tof = lonarr(Ntof)	
+	for j=0L, Ntof-1 do begin
+		for i=0L, Nx*Ny-1 do begin
+			img_tof[j] += data_assoc[j,i]
+		endfor
+	endfor
+
+	view_counts_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_COUNTS_TOF_REF_L')
+	WIDGET_CONTROL, view_counts_tof, GET_VALUE = view_win_counts_tof_ref_l
+	wset,view_win_counts_tof_ref_l
+	plot, img_tof, title = 'Integrated counts vs tof'
+
+; ********************************************************
+; ********************************************************
 
 	;old fashion way
 ;	data = lonarr(Ntof,Nx,Ny)
@@ -1480,15 +1505,35 @@ if file NE '' then begin
 	(*(*global).img_ptr) = img
 	(*(*global).data_assoc) = data_assoc
 	
+	;plot sum_x and sum_y in their window
+
+	view_sum_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SUM_X_REF_L')
+	WIDGET_CONTROL, view_sum_x, GET_VALUE = view_win_num_sum_x
+	view_sum_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SUM_Y_REF_L')
+	WIDGET_CONTROL, view_sum_y, GET_VALUE = view_win_num_sum_y
+	
+	wset,view_win_num_sum_x
+	sum_y = total(img,1)
+	plot,sum_y,/xstyle,title='SUM Y Axis',XMARGIN=[10,10]
+	tmp_img = tvrd()
+	tmp_img = reverse(transpose(tmp_img),1)
+	tmp_img = congrid(tmp_img,120,350,/INTERP)
+	wset,view_win_num_sum_y
+	tv,tmp_img
+		
+	wset,view_win_num_sum_x
+	sum_x = total(img,2)
+	plot,sum_x,/xstyle,title='SUM X Axis',XMARGIN=[10,10]
+
 	;now turn hourglass back off
 	widget_control,hourglass=0
 
 	;put image data in main draw window
-	SHOW_DATA,event
+	SHOW_DATA_REF_L,event
 	
 	;now we can activate 'Refresh' button
 	;disable refresh button during ctool
-	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
+	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON_REF_L')
 	widget_control,rb_id,sensitive=1
 
 	endtime = systime(1)
@@ -1543,4 +1588,375 @@ widget_control,Event.top,/destroy
 end
 ; end of EXIT_PROGRAM_REF_L
 
+; \brief 
+;
+; \argument Event (INPUT)
+pro CTOOL_REF_L, Event
 
+	;disable refresh button during ctool
+	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON_REF_L')
+	widget_control,rb_id,sensitive=0
+
+	;get global structure
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	widget_control,id,get_uvalue=global
+
+	xloadct,/MODAL,GROUP=id
+
+	SHOW_DATA_REF_L,event
+
+	;turn refresh button back on
+	widget_control,rb_id,sensitive=1
+end
+;end of CTOOL
+
+; \brief procedure to image the data
+;
+; \argument event (INPUT)
+;
+pro SHOW_DATA_REF_L,event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Nx = (*global).Nx
+Ny = (*global).Ny
+
+;get window numbers
+view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REF_L')
+WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
+
+;Decomposed=0 causes the least-significant 8 bits of the color index value
+	;to be interpreted as a PseudoColor index.
+	DEVICE, DECOMPOSED = 0
+
+	if (*global).pass EQ 0 then begin
+		;load the default color table on first pass thru SHOW_DATA
+		loadct,(*global).ct
+		(*global).pass = 1 ;clear the flag...
+	endif
+
+	wset,view_win_num
+	tvscl,(*(*global).img_ptr)
+
+
+end
+; end of SHOW_DATA_REF_L
+
+;\brief 
+;
+; \argument Event (INPUT) 
+PRO REFRESH_REF_L, Event
+;refresh image plot
+
+SHOW_DATA_REF_L,event
+	
+;remove data from info text box
+view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
+WIDGET_CONTROL, view_info, SET_VALUE=""
+
+;disable save button after refreshing selection
+rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
+widget_control,rb_id,sensitive=0
+
+;remove counts vs tof plot
+;	view_infof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
+;	WIDGET_CONTROL, view_info, GET_VALUE=id
+;	wset, id
+;	ERASE
+
+end
+; end of REPRESH
+
+; \brief 
+;
+; \argument event (INPUT) 
+;
+pro VIEW_ONBUTTON_REF_L,event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;left mouse button
+IF (event.press EQ 1) then begin
+
+	;get data
+	img = (*(*global).img_ptr)
+;	data = (*(*global).data_ptr)
+	tmp_tof = (*(*global).data_assoc)
+	Nx= (*global).Nx
+
+	x = Event.x
+	y = Event.y
+
+	;set data
+	(*global).x = x
+	(*global).y = y
+
+	;put x and y into cursor x and y labels position
+	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION_REF_L')
+	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
+	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION_REF_L')
+	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
+	
+	;get window numbers - x
+	view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L')
+	WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
+
+	;get window numbers - y
+	view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y_REF_L')
+	WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
+
+	;do funky stuff since can't figure out how to plot along y axis...
+	;plot y in x window
+	;read this data into a temporary file
+	;then image this plot in the window it belongs in...
+	wset,view_win_num_x
+	plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
+	tmp_img = tvrd()
+	tmp_img = reverse(transpose(tmp_img),1)
+	tmp_img = congrid(tmp_img,120,350,/INTERP)
+	wset,view_win_num_y
+	tv,tmp_img
+
+	;now plot,x
+	wset,view_win_num_x
+	plot,img(*,y),/xstyle,title='X Axis'
+
+	;now plot tof
+	;get window numbers - tof
+	view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF_REF_L')
+	WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
+	wset,view_win_num_tof
+	;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
+	pixelid=x*Nx+y     
+
+	tof_arr=(tmp_tof[pixelid])
+	plot, tof_arr,title='TOF Axis'	
+;	plot,reform(data(*,y,x)),title='TOF Axis'
+
+
+endif
+
+;right mouse button
+IF (event.press EQ 4) then begin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+text = "Mode: SELECTION"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = " left click to select first corner or
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = " right click to quit SELECTION mode"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	;get window numbers
+	view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REF_L')
+	WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
+
+;from the rubber_band program
+
+getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
+
+;continue to loop getting values while mouse clicks occur within the image window
+
+view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW_REF_L')
+WIDGET_CONTROL, view_main, GET_VALUE = id
+wset,id
+
+Nx = (*global).Nx
+Ny = (*global).Ny
+window_counter = (*global).window_counter
+
+x = lonarr(2)
+y = lonarr(2)
+
+first_round=0
+r=255L  ;red max
+g=0L    ;no green
+b=255L  ;blue max
+
+cursor, x,y,/down,/device
+
+if (window_counter GE 1) then begin
+;	widget_control, my_tlb, /destroy
+endif
+
+display_info =0	
+;print, "Nx= " , Nx
+
+click_outside = 0
+while (getvals EQ 0) do begin
+
+	cursor,x,y,/nowait,/device
+	
+	if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
+		click_outside = 1
+		getvals = 1
+		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+		text = " Mode: INFOS"
+		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	endif else begin
+	
+	if (first_round EQ 0) then begin
+		X1=x
+		Y1=y
+		first_round = 1
+		text = " Rigth click to select other corner"		
+		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	endif else begin
+		X2=x
+		Y2=y
+		SHOW_DATA_REF_L,event
+		plots, X1, Y1, /device, color=800
+		plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+		plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+		plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+		plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	
+		if (!mouse.button EQ 4) then begin    ;stop the process
+			getvals = 1
+			display_info = 1
+		endif
+	endelse
+
+	endelse
+endwhile
+
+if (click_outside EQ 1) then begin
+	;do nothing
+endif else begin
+
+
+if (display_info EQ 1) then begin
+
+x=lonarr(2)
+y=lonarr(2)
+
+x[0]=X1
+x[1]=X2
+y[0]=Y1
+y[1]=Y2
+
+;print, "x[0]= ", X1
+;print, "y[0]= " ,Y1
+;print, "x[1]= ", X2
+;print, "y[1]= " ,Y2
+
+
+;**Create the main window
+;title = "Information about the surface selected"
+;tlb = widget_base(column=1,$
+;		  mbar=mbar,$
+;	          title=title,$
+;		  tlb_frame_attr=1,$
+;	          xsize=400,$ 
+;	          ysize=220,$
+;		  xoffset=800,$  ;offset relative to left border
+;		  yoffset=200)   ;offset relative to top border
+
+;**Create the labels that will receive the information from the pixelID selected
+; *Initialization of text boxes
+pixel_label = 'The two corners are defined by:'
+
+y_min = min(y)
+y_max = max(y)
+x_min = min(x)
+x_max = max(x)
+
+y12 = y_max-y_min
+x12 = x_max-x_min
+total_pixel_inside = x12*y12
+total_pixel_outside = Nx*Ny - total_pixel_inside
+
+blank_line = ""
+
+data = (*(*global).data_ptr)
+simg = (*(*global).img_ptr)
+
+starting_id = (y_min*304+x_min)
+starting_id_string = strcompress(starting_id)
+(*global).starting_id_x = x_min
+(*global).starting_id_y = y_min
+
+ending_id = (y_max*304+x_max)
+ending_id_string = strcompress(ending_id)
+(*global).ending_id_x = x_max
+(*global).ending_id_y = y_max
+
+first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'
+first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
+
+second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'
+second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+
+;calculation of inside region total counts
+inside_total = total(simg(x_min:x_max, y_min:y_max))
+outside_total = total(simg)-inside_total
+inside_average = inside_total/total_pixel_inside
+outside_average = outside_total/total_pixel_outside
+selection_label= 'The characteristics of the selection are: '
+number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
+x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
+y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+	
+total_counts = 'Total counts:'
+total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
+total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
+average_counts = 'Average counts:'
+average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
+average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+
+value_group = [selection_label, number_pixelid,$
+	 x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
+	average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
+	first_point_2,second_point,second_point_2]
+
+;text = widget_text(, value=value_group, ysize=17)
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
+WIDGET_CONTROL, view_info, SET_VALUE=""
+WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+
+;end of part from the rubber_band program
+
+endif else begin
+
+endelse
+
+;;;UNCOMMENT THIS PART TO MAKE COUNTS vs TBIN ACTIVE AGAIN
+;;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON_REF_L')
+;;widget_control,rb_id,sensitive=1
+;;
+;;selection = data(*,y_min:y_max,x_min:x_max)  
+;;selection = total(selection,2)
+;;selection = total(selection,2)
+;;
+;;view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION')
+;;WIDGET_CONTROL, view_info, GET_VALUE = view_num_info
+;;wset, view_num_info
+;;plot, selection
+;;
+;;;enable save button once a selection is done
+;;rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
+;;widget_control,rb_id,sensitive=1
+;;
+;;(*(*global).selection_ptr) = selection
+
+;enable save button once a selection is done
+rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
+widget_control,rb_id,sensitive=1
+
+endelse ;click_outside
+
+click_outside = 0
+
+endif
+
+end
+
+; end of VIEW_ONBUTTON_REF_L
