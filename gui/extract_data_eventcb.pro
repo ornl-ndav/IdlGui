@@ -1477,19 +1477,19 @@ if file NE '' then begin
 ;*********************************************************
 ;*********************************************************
 
-	img=transpose(img)
-	
-  	img_tof = lonarr(Ntof)	
-	for j=0L, Ntof-1 do begin
-		for i=0L, Nx*Ny-1 do begin
-			img_tof[j] += data_assoc[j,i]
-		endfor
-	endfor
-
-	view_counts_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_COUNTS_TOF_REF_L')
-	WIDGET_CONTROL, view_counts_tof, GET_VALUE = view_win_counts_tof_ref_l
-	wset,view_win_counts_tof_ref_l
-	plot, img_tof, title = 'Integrated counts vs tof'
+;	img=transpose(img)
+;	
+;  	img_tof = lonarr(Ntof)	
+;	for j=0L, Ntof-1 do begin
+;		for i=0L, Nx*Ny-1 do begin
+;			img_tof[j] += data_assoc[j,i]
+;		endfor
+;	endfor
+;
+;	view_counts_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_COUNTS_TOF_REF_L')
+;	WIDGET_CONTROL, view_counts_tof, GET_VALUE = view_win_counts_tof_ref_l
+;	wset,view_win_counts_tof_ref_l
+;	plot, img_tof, title = 'Integrated counts vs tof'
 
 ; ********************************************************
 ; ********************************************************
