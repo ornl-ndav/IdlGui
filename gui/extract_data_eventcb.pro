@@ -1463,43 +1463,37 @@ if file NE '' then begin
 	;(assoc defines a template structure for reading data. Since data are ordered Ntof, Ny, Nx, Ntof
 	;varie the fastest. This being the case, it's not convenient to define an y,x data plane, and it's more
 	;convenient to define the data structure to be an individual TOF array.
+	data_assoc_tof = assoc(u,lonarr(Ntof,Nx))
 	data_assoc = assoc(u,lonarr(Ntof))
-	
+
 	;make the image array
 	img = lonarr(Nx,Ny)
 	for i=0L,Nimg-1 do begin
-		x = i MOD Nx
-		y = i/Nx
+		y = i MOD Ny
+		x = i/Ny
 ;		img[y,x] = total(swap_endian(data_assoc[i]))
 		img[x,y] = total(data_assoc[i])
+	endfor			
+
+	img=transpose(img)
+
+;*********************************************************
+;*********************************************************
+
+	counts_vs_tof=lonarr(Ntof)
+	for i=0L, 50 do begin
+		counts_vs_tof += total(data_assoc_tof[i],2)
 	endfor
 
-;*********************************************************
-;*********************************************************
+	help, counts_vs_tof
 
-;	img=transpose(img)
-;	
-;  	img_tof = lonarr(Ntof)	
-;	for j=0L, Ntof-1 do begin
-;		for i=0L, Nx*Ny-1 do begin
-;			img_tof[j] += data_assoc[j,i]
-;		endfor
-;	endfor
-;
-;	view_counts_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_COUNTS_TOF_REF_L')
-;	WIDGET_CONTROL, view_counts_tof, GET_VALUE = view_win_counts_tof_ref_l
-;	wset,view_win_counts_tof_ref_l
-;	plot, img_tof, title = 'Integrated counts vs tof'
+	view_counts_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_COUNTS_TOF_REF_L')
+	WIDGET_CONTROL, view_counts_tof, GET_VALUE = view_win_counts_tof_ref_l
+	wset,view_win_counts_tof_ref_l
+	plot, counts_vs_tof, title = 'Integrated counts vs tof'
 
 ; ********************************************************
 ; ********************************************************
-
-	;old fashion way
-;	data = lonarr(Ntof,Nx,Ny)
-;	readu,u,data
-;	;data = swap_endian(data)
-;	img = transpose(total(data,1))
-;	(*(*global).data_ptr) = data
 
 	;load data up in global ptr array
 	(*(*global).img_ptr) = img
