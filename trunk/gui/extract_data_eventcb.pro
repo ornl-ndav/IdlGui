@@ -88,10 +88,13 @@ widget_control,id,get_uvalue=global
 default_path = (*global).default_path
 
 working_path = dialog_pickfile(path=default_path,/directory)
-(*global).working_path = working_path
 
 text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
-WIDGET_CONTROL, text_id, SET_VALUE=working_path
+
+if (working_path NE '') then begin
+	(*global).working_path = working_path
+	WIDGET_CONTROL, text_id, SET_VALUE=working_path
+endif
 
 end
 
@@ -139,8 +142,6 @@ endif else begin
 
    (*global).name = name
    working_path = (*global).working_path
-
- 
 
    welcome = "Welcome " + strcompress(name,/remove_all)
    welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
