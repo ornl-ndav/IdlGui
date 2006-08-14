@@ -55,16 +55,28 @@ widget_control,id,get_uvalue=global
         EXIT_PROGRAM, Event
     end
 
-    ;Exit widget in the top toolbar
+    ;Exit widget in the top toolbar for REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        ABOUT_cb, Event
+        ABOUT_cb, Event;-----------------------------------------------------------------------------
+    end
+
+    ;Exit widget in the top toolbar for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        ABOUT_MENU_REF_L_cb, Event
     end
 
     ;default path button
     Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         DEFAULT_PATH_cb, Event
+    end
+
+    ;default path button
+    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        DEFAULT_PATH_REF_L_cb, Event
     end
 
     ;Widget to change the color of graph
@@ -77,6 +89,9 @@ widget_control,id,get_uvalue=global
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         REFRESH, Event
     end
+
+
+    ;##### REF_M #####
 
     Widget_Info(wWidget, FIND_BY_UNAME='SAVE_BUTTON'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -93,9 +108,30 @@ widget_control,id,get_uvalue=global
         DEFAULT_PATH_BUTTON_cb, Event
     end
 
-
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
     	IDENTIFICATION_TEXT_CB, Event
+    end
+
+    ;##### REF_L #####
+
+    Widget_Info(wWidget, FIND_BY_UNAME='SAVE_BUTTON_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        SAVE_REGION_REF_L, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_GO_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        IDENTIFICATION_GO_REF_L_cb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_BUTTON_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        DEFAULT_PATH_BUTTON_REF_L_cb, Event
+    end
+
+
+    Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT_REF_L'): begin
+    	IDENTIFICATION_TEXT_REF_L_CB, Event
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
@@ -293,6 +329,7 @@ global = ptr_new({ $
 	indicies		: ptr_new(0L),$
 	tlb			: 0,$
 	window_counter		: 0L,$
+	overflow_number		: 500L,$
 	quit			: 0L$
 	})
 
@@ -372,24 +409,49 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
 	SCR_XSIZE= 540, SCR_YSIZE= 2*plot_height, RETAIN=2)
 
-  GENERAL_INFOS = widget_text(MAIN_BASE, $
+  CONTENTS_FILE_INFO_TAB = WIDGET_TAB(MAIN_BASE, $
+	LOCATION=0,$
+	XOFFSET=480,$
+	YOFFSET=0,$
+	SCR_XSIZE=385,$
+	SCR_YSIZE=180)
+
+  FIRST_TAB = WIDGET_BASE(CONTENTS_FILE_INFO_TAB,$
+	TITLE= "Program Infos",SCR_XSIZE=380,SCR_YSIZE=170)
+
+  GENERAL_INFOS = widget_text(FIRST_TAB, $
 	UNAME='GENERAL_INFOS', $
-	XOFFSET=3*draw_offset_x+ctrl_x+plot_height+plot_length, $
-	YOFFSET= 20+draw_offset_y, $
-	SCR_XSIZE=2.5*plot_height, $
-	SCR_YSIZE=plot_height,$
+	XOFFSET=0,$
+	YOFFSET= 0,$
+	SCR_XSIZE=380,$
+	SCR_YSIZE=150,$
 	/WRAP,$
 	/SCROLL)
 	
-   GENERAL_INFOS_LABEL = widget_label(MAIN_BASE, $
-	XOFFSET=3*draw_offset_x+ctrl_x+plot_height+plot_length,$
-	YOFFSET= draw_offset_y, $
-	value="General Informations")
+  SECOND_TAB = WIDGET_BASE(CONTENTS_FILE_INFO_TAB,$
+	TITLE= "NeXus file Infos",SCR_XSIZE=380,SCR_YSIZE=170)
 
-;  VIEW_DRAW_SELECTION = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SELECTION', $
-;	XOFFSET=3*draw_offset_x+ctrl_x+plot_height+plot_length, $
-;	YOFFSET=2*draw_offset_y+1.3*plot_height+60, SCR_XSIZE=2.5*plot_height, $
-;	SCR_YSIZE=plot_height, RETAIN=2)
+  NEXUS_INFOS = widget_text(SECOND_TAB, $
+	UNAME='NEXUS_INFOS', $
+	XOFFSET=0,$
+	YOFFSET= 0,$
+	SCR_XSIZE=380,$
+	SCR_YSIZE=150,$
+	/WRAP,$
+	/SCROLL)
+
+;  THIRD_TAB = WIDGET_BASE(CONTENTS_FILE_INFO_TAB,$
+;	TITLE= "XML file Infos",SCR_XSIZE=380,SCR_YSIZE=170)
+;
+;  XML_INFOS = widget_text(SECOND_TAB, $
+;	UNAME='XML_INFOS', $
+;	XOFFSET=0,$
+;	YOFFSET= 0,$
+;	SCR_XSIZE=380,$
+;	SCR_YSIZE=150,$
+;	/WRAP,$
+;	/SCROLL)
+
 
   TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+100, $
 	YOFFSET=draw_offset_y+10, VALUE="microS")
@@ -773,8 +835,8 @@ global = ptr_new({ $
 	path			: '/SNSlocal/tmp/',$
 ;	path 			: '~/data/REF_L/',$		;REMOVE ME
 	default_output_path	: '/SNS/users/j35/',$
-;	default_path		: '/SNS/users/',$
-	default_path		: '/Users/',$
+	default_path		: '/SNS/users/',$
+;	default_path		: '/Users/',$
 	working_path		: '',$
 	scr_x			: scr_x,$
 	scr_y			: scr_y,$
@@ -809,6 +871,7 @@ global = ptr_new({ $
 	data_assoc		: ptr_new(0L),$
 	img_ptr			: ptr_new(0L),$
 	selection_ptr		: ptr_new(OL),$
+	counts_vs_tof		: ptr_new(0L),$
 	x			: 0L,$
 	y			: 0L,$
 	tof			: 0L,$
@@ -819,6 +882,7 @@ global = ptr_new({ $
 	tlb			: 0,$
 	window_counter		: 0L,$
 	quit			: 0L,$
+	overflow_number		: 500L,$
 	nana			: 'test to be removed'$
 	})
 
@@ -826,6 +890,45 @@ global = ptr_new({ $
 widget_control, MAIN_BASE, set_uvalue=global
 
 Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+
+IDENTIFICATION_BASE_REF_L= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
+	UNAME='IDENTIFICATION_BASE_REF_L',$
+	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
+	SPACE=4, XPAD=3, YPAD=3)
+
+IDENTIFICATION_LABEL_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
+
+IDENTIFICATION_TEXT_REF_L = widget_text(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=100, YOFFSET=20, VALUE='',$
+		SCR_XSIZE=37, /editable,$
+		UNAME='IDENTIFICATION_TEXT_REF_L',/ALL_EVENTS)
+
+ERROR_IDENTIFICATION_left_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=5, YOFFSET=25, VALUE='',$
+		SCR_XSIZE=90, SCR_YSIZE=20, $
+		UNAME='ERROR_IDENTIFICATION_LEFT_REF_L')
+
+ERROR_IDENTIFICATION_right_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=140, YOFFSET=25, VALUE='',$
+		SCR_XSIZE=90, SCR_YSIZE=20, $
+		UNAME='ERROR_IDENTIFICATION_RIGHT_REF_L')
+
+DEFAULT_PATH_BUTTON_REF_L = widget_button(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=0, YOFFSET=55, VALUE='Working path',$
+		SCR_XSIZE=80, SCR_YSIZE=30,$
+		UNAME='DEFAULT_PATH_BUTTON_REF_L')
+
+DEFAULT_PATH_TEXT_REF_L = widget_text(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=83, YOFFSET=55, VALUE=default_path,$
+		UNAME='DEFAULT_PATH_TEXT_REF_L',/editable,$
+		SCR_XSIZE=160)
+
+IDENTIFICATION_GO_REF_L = widget_button(IDENTIFICATION_BASE_REF_L,$
+		XOFFSET=67, YOFFSET=90,$
+		SCR_XSIZE=130, SCR_YSIZE=30,$
+		VALUE="E N T E R",$
+		UNAME='IDENTIFICATION_GO_REF_L')		
 
 VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_offset_x+ctrl_x  $
       ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
@@ -872,14 +975,14 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
   TBIN_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_LABEL',XOFFSET=draw_offset_x+plot_length+15, YOFFSET=draw_offset_y+10, $
 	VALUE="Tbin:")
 
-  TBIN_TXT = widget_text(MAIN_BASE, UNAME='TBIN_TXT', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
+  TBIN_TXT_REF_L = widget_text(MAIN_BASE, UNAME='TBIN_TXT_REF_L', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
 	SCR_XSIZE=45, SCR_YSIZE=30, /editable, VALUE='25')
 
   REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
       YOFFSET=50,VALUE='Refresh Selection',SCR_XSIZE=126)
 
   SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
-      YOFFSET=80,VALUE='Save Region',SCR_XSIZE=126)
+      YOFFSET=80,VALUE='Save I vs tof graph',SCR_XSIZE=126)
 
    FRAME1_REF_L = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
 	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
@@ -961,10 +1064,24 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
   CTOOL_MENU_REF_L = Widget_Button(UTILS_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
       ,VALUE='Color Tool')
 
+  DEFAULT_PATH = Widget_Button(UTILS_MENU_REF_L, UNAME='DEFAULT_PATH_REF_L'  $
+      ,VALUE='Path to working directory')
+
+  MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU_REF_L'  $
+      ,/MENU ,VALUE='mini ReflPak')
+
+  ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
+      ,VALUE='About')
+
 Widget_Control, /REALIZE, MAIN_BASE
 
 Widget_Control, SAVE_BUTTON_REF_L, sensitive=0
 Widget_Control, REFRESH_BUTTON_REF_L, sensitive=0
+
+;disabled before the user has been identified
+Widget_Control, CTOOL_MENU_REF_L, sensitive=0
+Widget_Control, OPEN_HISTO_MAPPED_REF_L, sensitive=0
+Widget_Control, OPEN_HISTO_UNMAPPED_REF_L, sensitive=0
 
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
