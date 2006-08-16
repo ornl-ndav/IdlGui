@@ -33,6 +33,13 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
+
+
+
+
+
+
+
 end
 
 
@@ -68,7 +75,6 @@ pro OPEN_FILE, Event
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
-
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -175,15 +181,18 @@ title = file
 if ((*global).do_color EQ 1) then begin
    
    DEVICE, DECOMPOSED=0
-   loadct, 5
+   loadct, 2
 
 endif
 
 Ny_pixels = (*global).Ny_pixels
 Nx_tubes = (*global).Nx_tubes
 
-New_Ny = 3.9*Ny_pixels
-New_Nx = 12.5*Nx_tubes
+x_coeff = 12.5
+y_coeff = 3.9
+
+New_Ny = y_coeff*Ny_pixels
+New_Nx = x_coeff*Nx_tubes
 xoff = 10
 yoff = 10
 
@@ -195,6 +204,15 @@ wset, id
 tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
 tvscl, tvimg, /device
 
+;plot grid
+for i=1,63 do begin
+  plots, i*x_coeff, 0, /device, color=300
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+
+  plots, 0,i*x_coeff, /device,color=300
+  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+endfor
+
 ;bottom bank
 view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_BOTTOM_BANK')
 WIDGET_CONTROL, view_info, GET_VALUE=id
@@ -202,6 +220,15 @@ wset, id
 
 tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
 tvscl, tvimg, /device
+
+;plot grid
+for i=1,63 do begin
+  plots, i*x_coeff, 0, /device, color=300
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+
+  plots, 0,i*x_coeff, /device,color=300
+  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+endfor
 
 ;plot scales
 ;tubes axis
@@ -243,6 +270,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " ....Plotting COMPLETED "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
+ 
 endif else begin
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
@@ -282,12 +310,12 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 end
 
 
+
 pro EXIT_PROGRAM, Event
 
 widget_control,Event.top,/destroy
 
 end
-
 
 
 
