@@ -52,7 +52,7 @@ draw_offset_y = 10			;draw y offset within widget
 plot_height = 150			;plot box height
 plot_length = 304			;plot box length
 
-Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'plot_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
       ,XOFFSET=100 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
@@ -62,10 +62,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;define initial global values - these could be input via external file or other means
 
 global = ptr_new({$
-		path			:'~/CD4/BSS/2006_1_2_SCI/BSS_22/',$
+		path			:'/SNSlocal/tmp/',$
 		filter_histo		:'',$
 		nbytes			:4L,$
-		swap_endian		:1,$
+		swap_endian		:0,$
 		Nx			:64L,$
 		Ny			:144L,$
 		Nx_tubes		:64L,$
