@@ -66,6 +66,10 @@ end
 
 pro OPEN_FILE, Event
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -84,6 +88,9 @@ file = dialog_pickfile(/must_exist,$
 	path = path,$
 	get_path = path)
 
+;check if there is really a file
+if (file NE '') then begin
+
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
 if (path NE '') then begin
@@ -99,6 +106,9 @@ endif else begin
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 endelse
+
+text = " Opening/Reading file.......... "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 openr,1,file
 fs=fstat(1)
@@ -229,6 +239,21 @@ plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
 	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
 
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = " ....Plotting COMPLETED "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endif else begin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = " No new file loaded "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
 end
 
 
@@ -257,6 +282,11 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 end
 
 
+pro EXIT_PROGRAM, Event
+
+widget_control,Event.top,/destroy
+
+end
 
 
 
