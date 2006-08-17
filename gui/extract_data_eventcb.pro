@@ -284,7 +284,7 @@ ucams=(*global).ucams
 
 name = ''
 case ucams of
- 	'1gq': name = 'Richard Goyette'
+ 	'1qg': name = 'Richard Goyette'
 	'2zr': name = 'Michael Reuter'
 	'ha9': name = 'hailemariam Ambaye'
 	'pf9': name = 'Peter Peterson'
