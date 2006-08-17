@@ -97,6 +97,8 @@ file = dialog_pickfile(/must_exist,$
 ;check if there is really a file
 if (file NE '') then begin
 
+(*global).file = file
+
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
 if (path NE '') then begin
@@ -113,7 +115,35 @@ endif else begin
 
 endelse
 
+  PLOT_HISTO_FILE, Event
+
+endif else begin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = " No new file loaded "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+;------------------------------------------------------------------------
+pro PLOT_HISTO_FILE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file = (*global).file 
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " Opening/Reading file.......... "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = file
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 openr,1,file
@@ -265,23 +295,34 @@ plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
 	ymargin=[1,1], yticks=8, color=2,$
 	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
 
+;plot of top scale
+view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+max_top = max(top_bank)
+print, max_top
+cscl = lindgen(20,New_Ny-10)
+tvscl,cscl,40,5,/device
+plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
+	xticks=1,xtickv=1
+
+;plot of bottom scale
+view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+max_bottom = max(bottom_bank)
+print, max_bottom
+cscl = lindgen(20,New_Ny-10)
+tvscl,cscl,40,5,/device
+plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
+	xticks=1,xtickv=1
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " ....Plotting COMPLETED "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
  
-endif else begin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = " No new file loaded "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
 end
 
 
@@ -310,24 +351,356 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 end
 
 
-
+;--------------------------------------------------------------------------------
 pro EXIT_PROGRAM, Event
 
 widget_control,Event.top,/destroy
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+;---------------------------------------------------------------------------------
+pro IDENTIFICATION_TEXT_cb, Event  
+
+view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
+WIDGET_CONTROL, view_id, set_value= ''	
+view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT')
+WIDGET_CONTROL, view_id, set_value= ''	
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+default_path = (*global).default_path
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='IDENTIFICATION_TEXT')
+WIDGET_CONTROL, text_id, GET_VALUE=ucams
+
+(*global).ucams = ucams
+
+working_path = default_path + strcompress(ucams,/remove_all)+ '/'
+(*global).working_path = working_path
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
+WIDGET_CONTROL, text_id, SET_VALUE=working_path
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
+;--------------------------------------------------------------------------------------------
+pro IDENTIFICATION_GO_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+text_id=widget_info(Event.top, FIND_BY_UNAME='IDENTIFICATION_TEXT')
+WIDGET_CONTROL, text_id, GET_VALUE=character_id
+(*global).character_id = character_id
+
+;check 3 characters id
+ucams=(*global).ucams
+
+name = ''
+case ucams of
+	'ele': name = 'Eugene Mamontov'
+	'eg9': name = 'Stephanie Hammons'
+	'2zr': name = 'Michael Reuter'
+	'pf9': name = 'Peter Peterson'
+	'j35': name = 'Zizou'
+	'mid': name = 'Steve Miller'
+	else : name = ''
+endcase
+
+if (name EQ '') then begin
+
+;put a message saying that it's an invalid 3 character id
+
+   error_message = "INVALID UCAMS"
+   view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
+   WIDGET_CONTROL, view_id, set_value= error_message	
+   view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT')
+   WIDGET_CONTROL, view_id, set_value= error_message	
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "Invalid 3 characters id... please try another user identification id"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   
+endif else begin
+
+   (*global).name = name
+   working_path = (*global).working_path
+
+   welcome = "Welcome " + strcompress(name,/remove_all)
+   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+   view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+   WIDGET_CONTROL, view_id, base_set_title= welcome	
+
+   view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
+   WIDGET_CONTROL, view_id, destroy=1
+
+   view_id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH_NAME')
+   WIDGET_CONTROL, view_id, set_value=working_path
+
+   ;working path is set
+   cd, working_path
+ 
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "LOGIN parameters:"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "User id           : " + ucams
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "Name              : " + name
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "Working directory : " + working_path
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+  ;enabled background buttons/draw/text/labels
+  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_MAPPED_HISTOGRAM')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTOGRAM')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='EVENT_FILE')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='MAX_TIMEBIN_VALUE')
+  Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='TIME_BIN_VALUE')
+  Widget_Control, id, sensitive=1
+  
+endelse
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
+;----------------------------------------------------------------------------------------
+pro OUTPUT_PATH_cb, Event 
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_path = (*global).working_path
+working_path = dialog_pickfile(path=working_path,/directory)
+(*global).working_path = working_path
+
+name = (*global).name
+
+welcome = "Welcome " + strcompress(name,/remove_all)
+welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, view_id, base_set_title= welcome	
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "Working directory set to:"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = working_path
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+view_info = widget_info(Event.top,FIND_BY_UNAME="OUTPUT_PATH_NAME")
+WIDGET_CONTROL, view_info, set_value=working_path
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
+;-----------------------------------------------------------------------------------------
+pro EVENT_FILE_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+event_file_path= (*global).event_file_path
+
+file = dialog_pickfile(/must_exist,$
+	title="Select an event file for BSS",$
+	filter= (*global).filter_event,$
+	path = event_file_path,$
+	get_path = path)
+
+;check if there is really a file
+if (file NE '') then begin
+
+(*global).event_filename = file
+
+;isolate only name
+view_info = widget_info(Event.top,FIND_BY_UNAME='EVENT_FILENAME')
+file_list = strsplit(file,'/',/extract,COUNT=nbr)
+
+(*global).event_filename_only = file_list[nbr-1]
+
+WIDGET_CONTROL, view_info, set_value=file_list[nbr-1]
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "Event file name:"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = file
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
+Widget_Control, id, sensitive=1
+
+endif else begin
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "No file openned"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+;--------------------------------------------------------------------------------------
+pro DEFAULT_PATH_BUTTON_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_path = (*global).working_path
+working_path = dialog_pickfile(path=working_path,/directory)
+(*global).working_path = working_path
+
+name = (*global).name
+
+welcome = "Welcome " + strcompress(name,/remove_all)
+welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, view_id, base_set_title= welcome	
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "Working directory set to:"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = working_path
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_PATH_TEXT')
+text = working_path
+WIDGET_CONTROL, view_info, SET_VALUE=text
+
+
+
+
+end
+;**************************************************************************************
+
+
+
+;--------------------------------------------------------------------------------------
+pro EVENT_TO_HISTO_cb, Event
+
+widget_control,hourglass=1
+
+id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
+Widget_Control, id, sensitive=0
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+output_path = (*global).working_path
+event_filename = (*global).event_filename
+pixelids = (*global).pixelids
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='TIME_BIN_VALUE')
+WIDGET_CONTROL, view_info, GET_VALUE=tbin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='MAX_TIMEBIN_VALUE')
+WIDGET_CONTROL, view_info, GET_VALUE=max_tbin
+
+cmd = "Event_to_Histo"
+cmd += " -p " + strcompress(pixelids,/remove_all)
+cmd += " -l " + strcompress(tbin,/remove_all)
+cmd += " -M " + strcompress(max_tbin,/remove_all)
+cmd += " " + event_filename
+cmd += " -a " + output_path
+
+cmd_display = "Histogramming......"
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
+cmd_display = "> " + cmd
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
+
+str_time = systime(1)
+text = "Processing....."
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+spawn, cmd, listening
+
+WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+
+end_time = systime(1)
+text = "Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;generate name of histogram file
+event_filename_only = (*global).event_filename_only
+file_name = strsplit(event_filename_only,"event.dat",/extract,/regex,count=length) 
+histogram_filename_only = file_name + "histo.dat"
+(*global).histogram_filename_only = histogram_filename_only
+
+histogram_filename = (*global).working_path + histogram_filename_only
+
+(*global).file = histogram_filename
+
+nbr_tbin = long(max_tbin) / long(tbin)
+cmd = "Map_Data"
+cmd += " -p " + strcompress(pixelids,/remove_all)
+cmd += " -t " + strcompress(nbr_tbin,/remove_all)
+cmd += " -n " + histogram_filename
+cmd += " -m " + (*global).mapping_filename
+cmd += " -o " + output_path
+
+cmd_display = "Mapping......"
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
+cmd_display = "> " + cmd
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
+
+str_time = systime(1)
+text = "Processing....."
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+spawn, cmd, listening
+
+WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+
+end_time = systime(1)
+text = "Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+histo_mapped_filename = file_name + "histo_mapped.at"
+text = "File generated is"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = histo_mapped_filename
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+PLOT_HISTO_FILE, Event
+
+id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
+Widget_Control, id, sensitive=1
+
+end
