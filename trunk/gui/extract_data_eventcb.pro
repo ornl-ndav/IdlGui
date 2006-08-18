@@ -857,10 +857,18 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
          WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y_selection
 
          img = (*(*global).img_ptr)
+         img_total = img(x_min:x_max,y_min:y_max)
+	 img_total_x = total(img_total,2)
+         img_total_y = total(img_total,1)
+
+	 true_img_total_x = lonarr(x_max)
+	 true_img_total_y = lonarr(y_max)
+	 true_img_total_x(x_min-1) = img_total_x
+	 true_img_total_y(y_min-1) = img_total_y
 
 	 ;for y via hidden_x
          wset,view_win_num_x_hidding
-         plot,img(x,y_min:y_max),/xstyle,title='Y Axis',xrange=[y_min,y_max],XMARGIN=[10,10]
+	 plot,true_img_total_y,title='Y Axis',XMARGIN=[10,10],/xstyle,xrange=[y_min,y_max]
          tmp_img = tvrd()
          tmp_img = reverse(transpose(tmp_img),1)
          wset,view_win_num_y_selection
@@ -868,7 +876,7 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
 
          ;now plot,x
          wset,view_win_num_x_selection
-         plot,img(x_min:x_max,y),/xstyle,title='X Axis',xrange=[x_min,x_max]
+         plot,true_img_total_x,/xstyle,title='X Axis',xrange=[x_min,x_max]
 
          blank_line = ""
 
