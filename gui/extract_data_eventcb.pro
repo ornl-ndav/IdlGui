@@ -640,276 +640,256 @@ end
 ;
 ; \argument event (INPUT) 
 ;---------------------------------------------------------------------------------------------
-pro VIEW_ONBUTTON,event
+pro VIEW_ONBUTTON, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+file_already_opened = (*global).file_already_opened
+
 ;left mouse button
-IF (event.press EQ 1) then begin
+IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
+   view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
+   WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
 
-	;get data
-	img = (*(*global).img_ptr)
-;	data = (*(*global).data_ptr)
-	tmp_tof = (*(*global).data_assoc)
-	Nx= (*global).Nx
+   ;get data
+   img = (*(*global).img_ptr)
+   ;data = (*(*global).data_ptr)
+   tmp_tof = (*(*global).data_assoc)
+   Nx= (*global).Nx
 
-	x = Event.x
-	y = Event.y
+   x = Event.x
+   y = Event.y
 
-	;set data
-	(*global).x = x
-	(*global).y = y
+   ;set data
+   (*global).x = x
+   (*global).y = y
 
-	;put x and y into cursor x and y labels position
-	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION')
-	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
-	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
-	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
+   ;put x and y into cursor x and y labels position
+   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
+   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
-	;get window numbers - x
-	view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X')
-	WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
+   ;get window numbers - x
+   view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X')
+   WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
 
-	;get window numbers - y
-	view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y')
-	WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
+   ;get window numbers - y
+   view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y')
+   WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
 	
-	;do funky stuff since can't figure out how to plot along y axis...
-	;plot y in x window
-	;read this data into a temporary file
-	;then image this plot in the window it belongs in...
-	wset,view_win_num_x
-	plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
-	tmp_img = tvrd()
-	tmp_img = reverse(transpose(tmp_img),1)
-	wset,view_win_num_y
-	tv,tmp_img
+   ;do funky stuff since can't figure out how to plot along y axis...
+   ;plot y in x window
+   ;read this data into a temporary file
+   ;then image this plot in the window it belongs in...
+   wset,view_win_num_x
+   plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
+   tmp_img = tvrd()
+   tmp_img = reverse(transpose(tmp_img),1)
+   wset,view_win_num_y
+   tv,tmp_img
 
-	;now plot,x
-	wset,view_win_num_x
-	plot,img(*,y),/xstyle,title='X Axis'
+   ;now plot,x
+   wset,view_win_num_x
+   plot,img(*,y),/xstyle,title='X Axis'
 
-	;now plot tof
-	;get window numbers - tof
-	view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF')
-	WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
-	wset,view_win_num_tof
-	;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
-	pixelid=x*Nx+y     
+   ;now plot tof
+   ;get window numbers - tof
+   view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF')
+   WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
+   wset,view_win_num_tof
+   ;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
+   pixelid=x*Nx+y     
 
-;	tof_arr=swap_endian(tmp_tof[pixelid])
+   ;tof_arr=swap_endian(tmp_tof[pixelid])
 
-	tof_arr=(tmp_tof[pixelid])
-	plot, tof_arr,title='TOF Axis'	
-;	plot,reform(data(*,y,x)),title='TOF Axis'
-
+   tof_arr=(tmp_tof[pixelid])
+   plot, tof_arr,title='TOF Axis'	
+   ;plot,reform(data(*,y,x)),title='TOF Axis'
 
 endif
 
 ;right mouse button
-IF (event.press EQ 4) then begin
+IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = "Mode: SELECTION"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = " left click to select first corner or
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = " right click to quit SELECTION mode"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+   text = "Mode: SELECTION"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = " left click to select first corner or
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = " right click to quit SELECTION mode"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE="MODE: SELECTION"
+   view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
+   WIDGET_CONTROL, view_info, SET_VALUE="MODE: SELECTION"
 
-	;;disable refresh button during ctool
-	;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
-	;widget_control,rb_id,sensitive=0
+   ;get window numbers
+   view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
+   WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
 
-	;print,'right button press'
+   ;from the rubber_band program
 
-	;get window numbers
-	view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW')
-	WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
+   getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
 
-;from the rubber_band program
+   ;continue to loop getting values while mouse clicks occur within the image window
 
-getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
+   view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW')
+   WIDGET_CONTROL, view_main, GET_VALUE = id
+   wset,id
 
-;continue to loop getting values while mouse clicks occur within the image window
+   Nx = (*global).Nx
+   Ny = (*global).Ny
+   window_counter = (*global).window_counter
 
-view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW')
-WIDGET_CONTROL, view_main, GET_VALUE = id
-wset,id
+   x = lonarr(2)
+   y = lonarr(2)
 
-Nx = (*global).Nx
-Ny = (*global).Ny
-window_counter = (*global).window_counter
+   first_round=0
+   r=255L  ;red max
+   g=0L    ;no green
+   b=255L  ;blue max
 
-x = lonarr(2)
-y = lonarr(2)
+   cursor, x,y,/down,/device
 
-first_round=0
-r=255L  ;red max
-g=0L    ;no green
-b=255L  ;blue max
+   display_info =0	
+   click_outside = 0
 
-cursor, x,y,/down,/device
+   while (getvals EQ 0) do begin
 
-if (window_counter GE 1) then begin
-;	widget_control, my_tlb, /destroy
-endif
+      cursor,x,y,/nowait,/device
 
-display_info =0	
+      if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
 
-click_outside = 0
-while (getvals EQ 0) do begin
+         click_outside = 1
+         getvals = 1
+         print,'Terminating return data'
+         view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
+         WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
+         view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+         text = " Mode: INFOS"
+         WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-	cursor,x,y,/nowait,/device
-
-
-	if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
-		click_outside = 1
-		getvals = 1
-		print,'Terminating return data'
-		view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-		WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
-		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-		text = " Mode: INFOS"
-		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-	endif else begin
+      endif else begin
 	
-	if (first_round EQ 0) then begin
-		X1=x
-		Y1=y
-		first_round = 1
-		text = " Rigth click to select other corner"		
-		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+         if (first_round EQ 0) then begin
 
-	endif else begin
-		X2=x
-		Y2=y
-		SHOW_DATA,event
-		plots, X1, Y1, /device, color=800
-		plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+            X1=x
+   	    Y1=y
+	    first_round = 1
+	    text = " Rigth click to select other corner"		
+	    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+ 	    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-		if (!mouse.button EQ 4) then begin    ;stop the process
-			getvals = 1
-			display_info = 1
-		endif
-	endelse
+         endif else begin
 
-	endelse
-endwhile
+   	    X2=x
+	    Y2=y
+	    SHOW_DATA,event
+	    plots, X1, Y1, /device, color=800
+	    plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
 
-if (click_outside EQ 1) then begin
-	;do nothing
-endif else begin
+            if (!mouse.button EQ 4) then begin    ;stop the process
 
-
-if (display_info EQ 1) then begin
-
-x=lonarr(2)
-y=lonarr(2)
-
-x[0]=X1
-x[1]=X2
-y[0]=Y1
-y[1]=Y2
-
-;print, "x[0]= ", X1
-;print, "y[0]= " ,Y1
-;print, "x[1]= ", X2
-;print, "y[1]= " ,Y2
-
-
-;**Create the main window
-;title = "Information about the surface selected"
-;tlb = widget_base(column=1,$
-;		  mbar=mbar,$
-;	          title=title,$
-;		  tlb_frame_attr=1,$
-;	          xsize=400,$ 
-;	          ysize=220,$
-;		  xoffset=800,$  ;offset relative to left border
-;		  yoffset=200)   ;offset relative to top border
-
-;**Create the labels that will receive the information from the pixelID selected
-; *Initialization of text boxes
-pixel_label = 'The two corners are defined by:'
-
-y_min = min(y)
-y_max = max(y)
-x_min = min(x)
-x_max = max(x)
-
-y12 = y_max-y_min
-x12 = x_max-x_min
-total_pixel_inside = x12*y12
-total_pixel_outside = Nx*Ny - total_pixel_inside
-
-blank_line = ""
-
-data = (*(*global).data_ptr)
-simg = (*(*global).img_ptr)
-
-starting_id = (y_min*304+x_min)
-starting_id_string = strcompress(starting_id)
-(*global).starting_id_x = x_min
-(*global).starting_id_y = y_min
-
-ending_id = (y_max*304+x_max)
-ending_id_string = strcompress(ending_id)
-(*global).ending_id_x = x_max
-(*global).ending_id_y = y_max
-
-first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'
-first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
-
-second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'
-second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
-
-;calculation of inside region total counts
-inside_total = total(simg(x_min:x_max, y_min:y_max))
-outside_total = total(simg)-inside_total
-inside_average = inside_total/total_pixel_inside
-outside_average = outside_total/total_pixel_outside
-selection_label= 'The characteristics of the selection are: '
-number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
-x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
-y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+  	       getvals = 1
+	       display_info = 1
 	
-total_counts = 'Total counts:'
-total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
-total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
-average_counts = 'Average counts:'
-average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
-average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+            endif
 
-value_group = [selection_label, number_pixelid,$
-	 x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
-	average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
-	first_point_2,second_point,second_point_2]
+         endelse
 
-;text = widget_text(, value=value_group, ysize=17)
+      endelse
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE=""
-WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+   endwhile
 
-;end of part from the rubber_band program
+   if (click_outside EQ 1) then begin
+   
+      ;do nothing
+   
+   endif else begin
 
-endif else begin
+      if (display_info EQ 1) then begin
 
-endelse
+         x=lonarr(2)
+         y=lonarr(2)
+
+         x[0]=X1
+         x[1]=X2
+         y[0]=Y1
+         y[1]=Y2
+
+
+         ;**Create the labels that will receive the information from the pixelID selected
+         ; *Initialization of text boxes
+         pixel_label = 'The two corners are defined by:'
+
+         y_min = min(y)
+         y_max = max(y)
+         x_min = min(x)
+         x_max = max(x)
+
+         y12 = y_max-y_min
+         x12 = x_max-x_min
+         total_pixel_inside = x12*y12
+         total_pixel_outside = Nx*Ny - total_pixel_inside
+
+         blank_line = ""
+
+         data = (*(*global).data_ptr)
+         simg = (*(*global).img_ptr)
+
+         starting_id = (y_min*304+x_min)
+         starting_id_string = strcompress(starting_id)
+         (*global).starting_id_x = x_min
+         (*global).starting_id_y = y_min
+
+         ending_id = (y_max*304+x_max)
+         ending_id_string = strcompress(ending_id)
+         (*global).ending_id_x = x_max
+         (*global).ending_id_y = y_max
+
+         first_point = '  pixelID#: '+ starting_id_string + $
+	  '(x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)
+         first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
+
+         second_point = '  pixelID#: '+ ending_id_string + $
+	  '(x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)
+         second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+
+         ;calculation of inside region total counts
+         inside_total = total(simg(x_min:x_max, y_min:y_max))
+         outside_total = total(simg)-inside_total
+         inside_average = inside_total/total_pixel_inside
+         outside_average = outside_total/total_pixel_outside
+         selection_label= 'The characteristics of the selection are: '
+         number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
+         x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
+         y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+	
+         total_counts = 'Total counts:'
+         total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
+         total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
+         average_counts = 'Average counts:'
+         average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
+         average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+
+         value_group = [selection_label, number_pixelid,$
+	  x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
+	  average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
+	  first_point_2,second_point,second_point_2]
+
+         view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
+         WIDGET_CONTROL, view_info, SET_VALUE=""
+         WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+
+         ;end of part from the rubber_band program
+
+      endif
 
 ;;;UNCOMMENT THIS PART TO MAKE COUNTS vs TBIN ACTIVE AGAIN
 ;;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
@@ -930,16 +910,16 @@ endelse
 ;;
 ;;(*(*global).selection_ptr) = selection
 
-;enable save button once a selection is done
-rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
-widget_control,rb_id,sensitive=1
+      ;enable save button once a selection is done
+      rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
+      widget_control,rb_id,sensitive=1
 
-rb_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
-widget_control,rb_id,sensitive=1
+      rb_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
+      widget_control,rb_id,sensitive=1
 
-endelse ;click_outside
+   endelse ;click_outside
 
-click_outside = 0
+   click_outside = 0
 
 endif
 
@@ -1151,6 +1131,8 @@ endif
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+if ((*global).file_already_opened EQ 0) then (*global).file_already_opened = 1
 
 ;retrieve data parameters
 Nx 		= (*global).Nx
@@ -1761,6 +1743,8 @@ file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=f
 ;only read data if valid file given
 if file NE '' then begin
 
+	(*global).file_already_opened = 1
+
 	(*global).filename = file ; store input filename
 	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
@@ -2124,254 +2108,239 @@ pro VIEW_ONBUTTON_REF_L,event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+file_already_opened = (*global).file_already_opened
+
 ;left mouse button
-IF (event.press EQ 1) then begin
+IF ((event.press EQ 1) AND (file_already_opened EQ 1)) then begin
 
-	;get data
-	img = (*(*global).img_ptr)
-;	data = (*(*global).data_ptr)
-	tmp_tof = (*(*global).data_assoc)
-	Nx= (*global).Nx
+   ;get data
+   img = (*(*global).img_ptr)
+   ;data = (*(*global).data_ptr)
+   tmp_tof = (*(*global).data_assoc)
+   Nx= (*global).Nx
 
-	x = Event.x
-	y = Event.y
+   x = Event.x
+   y = Event.y
 
-	;set data
-	(*global).x = x
-	(*global).y = y
+   ;set data
+   (*global).x = x
+   (*global).y = y
 
-	;put x and y into cursor x and y labels position
-	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION_REF_L')
-	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
-	view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION_REF_L')
-	WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
+   ;put x and y into cursor x and y labels position
+   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION_REF_L')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
+   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION_REF_L')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
-	;get window numbers - x
-	view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L')
-	WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
+   ;get window numbers - x
+   view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L')
+   WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
 
-	;get window numbers - y
-	view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y_REF_L')
-	WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
+   ;get window numbers - y
+   view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y_REF_L')
+   WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
 
-	;do funky stuff since can't figure out how to plot along y axis...
-	;plot y in x window
-	;read this data into a temporary file
-	;then image this plot in the window it belongs in...
-	wset,view_win_num_x
-	plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
-	tmp_img = tvrd()
-	tmp_img = reverse(transpose(tmp_img),1)
-	tmp_img = congrid(tmp_img,120,350,/INTERP)
-	wset,view_win_num_y
-	tv,tmp_img
+   ;do funky stuff since can't figure out how to plot along y axis...
+   ;plot y in x window
+   ;read this data into a temporary file
+   ;then image this plot in the window it belongs in...
+   wset,view_win_num_x
+   plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
+   tmp_img = tvrd()
+   tmp_img = reverse(transpose(tmp_img),1)
+   tmp_img = congrid(tmp_img,120,350,/INTERP)
+   wset,view_win_num_y
+   tv,tmp_img
 
-	;now plot,x
-	wset,view_win_num_x
-	plot,img(*,y),/xstyle,title='X Axis'
+   ;now plot,x
+   wset,view_win_num_x
+   plot,img(*,y),/xstyle,title='X Axis'
 
-	;now plot tof
-	;get window numbers - tof
-	view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF_REF_L')
-	WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
-	wset,view_win_num_tof
-	;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
-	pixelid=x*Nx+y     
+   ;now plot tof
+   ;get window numbers - tof
+   view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF_REF_L')
+   WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
+   wset,view_win_num_tof
+   ;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
+   pixelid=x*Nx+y     
 
-	tof_arr=(tmp_tof[pixelid])
-	plot, tof_arr,title='TOF Axis'	
-;	plot,reform(data(*,y,x)),title='TOF Axis'
-
+   tof_arr=(tmp_tof[pixelid])
+   plot, tof_arr,title='TOF Axis'	
+   ;plot,reform(data(*,y,x)),title='TOF Axis'
 
 endif
 
 ;right mouse button
-IF (event.press EQ 4) then begin
+IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-text = "Mode: SELECTION"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = " left click to select first corner or
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = " right click to quit SELECTION mode"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+   text = "Mode: SELECTION"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = " left click to select first corner or
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = " right click to quit SELECTION mode"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-	;get window numbers
-	view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REF_L')
-	WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
+   ;get window numbers
+   view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REF_L')
+   WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
 
-;from the rubber_band program
+   ;from the rubber_band program
 
-getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
+   getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
 
-;continue to loop getting values while mouse clicks occur within the image window
+   ;continue to loop getting values while mouse clicks occur within the image window
 
-view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW_REF_L')
-WIDGET_CONTROL, view_main, GET_VALUE = id
-wset,id
+   view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW_REF_L')
+   WIDGET_CONTROL, view_main, GET_VALUE = id
+   wset,id
 
-Nx = (*global).Nx
-Ny = (*global).Ny
-window_counter = (*global).window_counter
+   Nx = (*global).Nx
+   Ny = (*global).Ny
+   window_counter = (*global).window_counter
 
-x = lonarr(2)
-y = lonarr(2)
+   x = lonarr(2)
+   y = lonarr(2)
 
-first_round=0
-r=255L  ;red max
-g=0L    ;no green
-b=255L  ;blue max
+   first_round=0
+   r=255L  ;red max
+   g=0L    ;no green
+   b=255L  ;blue max
 
-cursor, x,y,/down,/device
+   cursor, x,y,/down,/device
 
-if (window_counter GE 1) then begin
-;	widget_control, my_tlb, /destroy
-endif
+   display_info =0	
 
-display_info =0	
-;print, "Nx= " , Nx
+   click_outside = 0
 
-click_outside = 0
-while (getvals EQ 0) do begin
+   while (getvals EQ 0) do begin
 
-	cursor,x,y,/nowait,/device
+      cursor,x,y,/nowait,/device
 	
-	if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
-		click_outside = 1
-		getvals = 1
-		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-		text = " Mode: INFOS"
-		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+      if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
 
-	endif else begin
+	 click_outside = 1
+	 getvals = 1
+	 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+	 text = " Mode: INFOS"
+	 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+      endif else begin
 	
-	if (first_round EQ 0) then begin
-		X1=x
-		Y1=y
-		first_round = 1
-		text = " Rigth click to select other corner"		
-		view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-		WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	 if (first_round EQ 0) then begin
+	    
+            X1=x
+	    Y1=y
+	    first_round = 1
+	    text = " Rigth click to select other corner"		
+	    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+	    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-	endif else begin
-		X2=x
-		Y2=y
-		SHOW_DATA_REF_L,event
-		plots, X1, Y1, /device, color=800
-		plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
-		plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	 endif else begin
+		
+            X2=x
+	    Y2=y
+	    SHOW_DATA_REF_L,event
+	    plots, X1, Y1, /device, color=800
+	    plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+	    plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
 	
-		if (!mouse.button EQ 4) then begin    ;stop the process
-			getvals = 1
-			display_info = 1
-		endif
-	endelse
-
-	endelse
-endwhile
-
-if (click_outside EQ 1) then begin
-	;do nothing
-endif else begin
-
-
-if (display_info EQ 1) then begin
-
-x=lonarr(2)
-y=lonarr(2)
-
-x[0]=X1
-x[1]=X2
-y[0]=Y1
-y[1]=Y2
-
-;print, "x[0]= ", X1
-;print, "y[0]= " ,Y1
-;print, "x[1]= ", X2
-;print, "y[1]= " ,Y2
-
-
-;**Create the main window
-;title = "Information about the surface selected"
-;tlb = widget_base(column=1,$
-;		  mbar=mbar,$
-;	          title=title,$
-;		  tlb_frame_attr=1,$
-;	          xsize=400,$ 
-;	          ysize=220,$
-;		  xoffset=800,$  ;offset relative to left border
-;		  yoffset=200)   ;offset relative to top border
-
-;**Create the labels that will receive the information from the pixelID selected
-; *Initialization of text boxes
-pixel_label = 'The two corners are defined by:'
-
-y_min = min(y)
-y_max = max(y)
-x_min = min(x)
-x_max = max(x)
-
-y12 = y_max-y_min
-x12 = x_max-x_min
-total_pixel_inside = x12*y12
-total_pixel_outside = Nx*Ny - total_pixel_inside
-
-blank_line = ""
-
-data = (*(*global).data_ptr)
-simg = (*(*global).img_ptr)
-
-starting_id = (y_min*304+x_min)
-starting_id_string = strcompress(starting_id)
-(*global).starting_id_x = x_min
-(*global).starting_id_y = y_min
-
-ending_id = (y_max*304+x_max)
-ending_id_string = strcompress(ending_id)
-(*global).ending_id_x = x_max
-(*global).ending_id_y = y_max
-
-first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+'; y= '+strcompress(y_min,/rem)+'
-first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
-
-second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+'; y= '+strcompress(y_max,/rem)+'
-second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
-
-;calculation of inside region total counts
-inside_total = total(simg(x_min:x_max, y_min:y_max))
-outside_total = total(simg)-inside_total
-inside_average = inside_total/total_pixel_inside
-outside_average = outside_total/total_pixel_outside
-selection_label= 'The characteristics of the selection are: '
-number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
-x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
-y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+	    if (!mouse.button EQ 4) then begin    ;stop the process
 	
-total_counts = 'Total counts:'
-total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
-total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
-average_counts = 'Average counts:'
-average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
-average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+               getvals = 1
+	       display_info = 1
+		
+            endif
+	
+         endelse
 
-value_group = [selection_label, number_pixelid,$
-	 x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
-	average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
-	first_point_2,second_point,second_point_2]
+      endelse
 
-;text = widget_text(, value=value_group, ysize=17)
+   endwhile
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
-WIDGET_CONTROL, view_info, SET_VALUE=""
-WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+   if (click_outside EQ 1) then begin
 
-;end of part from the rubber_band program
+      ;do nothing
+  
+   endif else begin
 
-endif else begin
+      if (display_info EQ 1) then begin
 
-endelse
+         x=lonarr(2)
+         y=lonarr(2)
+
+         x[0]=X1
+         x[1]=X2
+         y[0]=Y1
+         y[1]=Y2
+
+         ;**Create the labels that will receive the information from the pixelID selected
+         ;*Initialization of text boxes
+         pixel_label = 'The two corners are defined by:'
+
+         y_min = min(y)
+         y_max = max(y)
+         x_min = min(x)
+         x_max = max(x)
+
+         y12 = y_max-y_min
+         x12 = x_max-x_min
+         total_pixel_inside = x12*y12
+         total_pixel_outside = Nx*Ny - total_pixel_inside
+
+         blank_line = ""
+
+         data = (*(*global).data_ptr)
+         simg = (*(*global).img_ptr)
+
+         starting_id = (y_min*304+x_min)
+         starting_id_string = strcompress(starting_id)
+         (*global).starting_id_x = x_min
+         (*global).starting_id_y = y_min
+
+         ending_id = (y_max*304+x_max)
+         ending_id_string = strcompress(ending_id)
+         (*global).ending_id_x = x_max
+         (*global).ending_id_y = y_max
+
+         first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+$
+          '; y= '+strcompress(y_min,/rem)
+         first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
+         second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+$
+          '; y= '+strcompress(y_max,/rem)+'
+         second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+
+         ;calculation of inside region total counts
+         inside_total = total(simg(x_min:x_max, y_min:y_max))
+         outside_total = total(simg)-inside_total
+         inside_average = inside_total/total_pixel_inside
+         outside_average = outside_total/total_pixel_outside
+         selection_label= 'The characteristics of the selection are: '
+         number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
+         x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
+         y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
+	
+         total_counts = 'Total counts:'
+         total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
+         total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
+         average_counts = 'Average counts:'
+         average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
+         average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
+
+         value_group = [selection_label, number_pixelid,$
+          x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
+          average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
+          first_point_2,second_point,second_point_2]
+
+         ;text = widget_text(, value=value_group, ysize=17)
+
+         view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
+         WIDGET_CONTROL, view_info, SET_VALUE=""
+         WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+
+      endif 
 
 ;;;UNCOMMENT THIS PART TO MAKE COUNTS vs TBIN ACTIVE AGAIN
 ;;rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON_REF_L')
@@ -2392,13 +2361,13 @@ endelse
 ;;
 ;;(*(*global).selection_ptr) = selection
 
-;enable save button once a selection is done
-rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
-widget_control,rb_id,sensitive=1
+      ;enable save button once a selection is done
+      rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
+      widget_control,rb_id,sensitive=1
 
-endelse ;click_outside
+   endelse ;click_outside
 
-click_outside = 0
+   click_outside = 0
 
 endif
 
