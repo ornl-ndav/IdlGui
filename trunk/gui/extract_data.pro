@@ -330,6 +330,7 @@ global = ptr_new({ $
 	tlb			: 0,$
 	window_counter		: 0L,$
 	overflow_number		: 500L,$
+	file_already_opened	: 0L,$
 	quit			: 0L$
 	})
 
@@ -396,12 +397,51 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 ;TOF
   VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF' ,XOFFSET=draw_offset_x+ctrl_x  $
       ,YOFFSET=draw_offset_y ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
-;X
-  VIEW_DRAW_X = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=3*draw_offset_y+draw_y+plot_height ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
-;Y
-  VIEW_DRAW_Y = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y' ,XOFFSET=2*draw_offset_x+draw_x+ctrl_x  $
-      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
+
+  ;xxxxxxxxxxxxxxxxxxxxxxx
+
+  X_PLOT_TAB = WIDGET_TAB(MAIN_BASE, $
+	LOCATION=1,$
+	XOFFSET=draw_offset_x+ctrl_x,$
+	YOFFSET=3*draw_offset_y+draw_y+plot_height,$
+	SCR_XSIZE=plot_length,$
+	SCR_YSIZE=plot_height-5)
+
+  X_TOTAL_TAB_PLOT = WIDGET_BASE(X_PLOT_TAB,$
+	TITLE= "Total",SCR_XSIZE=plot_length,SCR_YSIZE=plot_height-15)
+
+  VIEW_DRAW_X = Widget_Draw(X_TOTAL_TAB_PLOT, UNAME='VIEW_DRAW_X',$
+   	SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height-15 ,RETAIN=2)
+
+  X_SELECTION_TAB_PLOT = WIDGET_BASE(X_PLOT_TAB,$
+	TITLE= "Selection",SCR_XSIZE=plot_length,SCR_YSIZE=plot_height-15)
+
+  VIEW_DRAW_SELECTION_X = Widget_Draw(X_SELECTION_TAB_PLOT, UNAME='VIEW_DRAW_SELECTION_X',$
+   	SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height-15 ,RETAIN=2)
+
+  ;yyyyyyyyyyyyyyyyyyyyyyy
+
+  Y_PLOT_TAB = WIDGET_TAB(MAIN_BASE, $
+	LOCATION=3,$
+	XOFFSET=2*draw_offset_x+draw_x+ctrl_x,$
+	YOFFSET=2*draw_offset_y+plot_height,$
+	SCR_XSIZE=plot_height-5,$
+	SCR_YSIZE=draw_y)
+
+  Y_TOTAL_TAB_PLOT = WIDGET_BASE(Y_PLOT_TAB,$
+	TITLE= "Total",SCR_XSIZE=plot_height-5,SCR_YSIZE=draw_y)
+
+  VIEW_DRAW_Y = Widget_Draw(Y_TOTAL_TAB_PLOT, UNAME='VIEW_DRAW_Y',$
+	SCR_XSIZE=plot_height-15 ,SCR_YSIZE=draw_y,RETAIN=2)
+
+  Y_SELECTION_TAB_PLOT = WIDGET_BASE(Y_PLOT_TAB,$
+	TITLE= "Selection",SCR_XSIZE=plot_height-5,SCR_YSIZE=draw_y)
+
+  VIEW_DRAW_SELECTION_Y = Widget_Draw(Y_SELECTION_TAB_PLOT, UNAME='VIEW_DRAW_SELECTION_Y',$
+	SCR_XSIZE=plot_height-15 ,SCR_YSIZE=draw_y,RETAIN=2)
+
+
+
 
   VIEW_DRAW_REDUCTION = Widget_Draw(MAIN_BASE,$
 	UNAME='VIEW_DRAW_REDUCTION',$
@@ -883,7 +923,7 @@ global = ptr_new({ $
 	window_counter		: 0L,$
 	quit			: 0L,$
 	overflow_number		: 500L,$
-	nana			: 'test to be removed'$
+	file_already_opened	: 0L$
 	})
 
 ;attach global structure with widget ID of widget main base widget ID
