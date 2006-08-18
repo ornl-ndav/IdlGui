@@ -673,7 +673,11 @@ IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
    view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
    WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
-   ;get window numbers - x
+   ;get window numbers - x (hidding)
+   view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_M_HIDDING')
+   WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x_hidding
+
+   ;get window numbers - x 
    view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X')
    WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
 
@@ -685,7 +689,7 @@ IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
    ;plot y in x window
    ;read this data into a temporary file
    ;then image this plot in the window it belongs in...
-   wset,view_win_num_x
+   wset,view_win_num_x_hidding
    plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
    tmp_img = tvrd()
    tmp_img = reverse(transpose(tmp_img),1)
@@ -837,6 +841,34 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
          x12 = x_max-x_min
          total_pixel_inside = x12*y12
          total_pixel_outside = Nx*Ny - total_pixel_inside
+
+	 ;plot integrated x and y of selection
+  
+         ;get window numbers - x (selection hidding)
+         view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_M_HIDDING')
+         WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x_hidding
+
+	 ;get window numbers - x (selection)
+         view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION_X')
+         WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x_selection
+
+         ;get window numbers - y (selection)
+         view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SELECTION_Y')
+         WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y_selection
+
+         img = (*(*global).img_ptr)
+
+	 ;for y via hidden_x
+         wset,view_win_num_x_hidding
+         plot,img(x,y_min:y_max),/xstyle,title='Y Axis',xrange=[y_min,y_max],XMARGIN=[10,10]
+         tmp_img = tvrd()
+         tmp_img = reverse(transpose(tmp_img),1)
+         wset,view_win_num_y_selection
+         tv,tmp_img
+
+         ;now plot,x
+         wset,view_win_num_x_selection
+         plot,img(x_min:x_max,y),/xstyle,title='X Axis',xrange=[x_min,x_max]
 
          blank_line = ""
 
@@ -1851,19 +1883,21 @@ if file NE '' then begin
 	WIDGET_CONTROL, view_sum_x, GET_VALUE = view_win_num_sum_x
 	view_sum_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_SUM_Y_REF_L')
 	WIDGET_CONTROL, view_sum_y, GET_VALUE = view_win_num_sum_y
-	
-	wset,view_win_num_sum_x
+	view_sum_x_hidding = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L_HIDDING')
+	WIDGET_CONTROL, view_sum_x_hidding, GET_VALUE = view_win_num_sum_x_hidding
+
+	wset,view_win_num_sum_x_hidding
 	sum_y = total(img,1)
-	plot,sum_y,/xstyle,title='SUM Y Axis',XMARGIN=[10,10]
+	plot,sum_y,/xstyle,title='SUM Y Axis'
 	tmp_img = tvrd()
 	tmp_img = reverse(transpose(tmp_img),1)
-	tmp_img = congrid(tmp_img,120,350,/INTERP)
+;	tmp_img = congrid(tmp_img,120,350,/INTERP)
 	wset,view_win_num_sum_y
 	tv,tmp_img
 		
 	wset,view_win_num_sum_x
 	sum_x = total(img,2)
-	plot,sum_x,/xstyle,title='SUM X Axis',XMARGIN=[10,10]
+	plot,sum_x,/xstyle,title='SUM X Axis'
 
 	;now turn hourglass back off
 	widget_control,hourglass=0
@@ -2140,15 +2174,19 @@ IF ((event.press EQ 1) AND (file_already_opened EQ 1)) then begin
    view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y_REF_L')
    WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
 
+   ;get window numbers - x hidding
+   view_x_hidding = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L_HIDDING')
+   WIDGET_CONTROL, view_x_hidding, GET_VALUE = view_win_num_sum_x_hidding
+
    ;do funky stuff since can't figure out how to plot along y axis...
    ;plot y in x window
    ;read this data into a temporary file
    ;then image this plot in the window it belongs in...
-   wset,view_win_num_x
-   plot,img(x,*),/xstyle,title='Y Axis',XMARGIN=[10,10]
+   wset,view_win_num_sum_x_hidding
+   plot,img(x,*),/xstyle,title='Y Axis'
    tmp_img = tvrd()
    tmp_img = reverse(transpose(tmp_img),1)
-   tmp_img = congrid(tmp_img,120,350,/INTERP)
+;   tmp_img = congrid(tmp_img,120,350,/INTERP)
    wset,view_win_num_y
    tv,tmp_img
 

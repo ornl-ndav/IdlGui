@@ -419,6 +419,14 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
   VIEW_DRAW_SELECTION_X = Widget_Draw(X_SELECTION_TAB_PLOT, UNAME='VIEW_DRAW_SELECTION_X',$
    	SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height-15 ,RETAIN=2)
 
+  ; hidding xxxxxxxx
+
+  VIEW_DRAW_X_REF_M_HIDDING = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X_REF_M_HIDDING',$
+	XOFFSET=draw_offset_x+ctrl_x,$
+      	YOFFSET=3*draw_offset_y+draw_y+plot_height,$
+	SCR_XSIZE=plot_length,$
+	SCR_YSIZE=plot_height-10 ,RETAIN=2)
+
   ;yyyyyyyyyyyyyyyyyyyyyyy
 
   Y_PLOT_TAB = WIDGET_TAB(MAIN_BASE, $
@@ -439,8 +447,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl
 
   VIEW_DRAW_SELECTION_Y = Widget_Draw(Y_SELECTION_TAB_PLOT, UNAME='VIEW_DRAW_SELECTION_Y',$
 	SCR_XSIZE=plot_height-15 ,SCR_YSIZE=draw_y,RETAIN=2)
-
-
 
 
   VIEW_DRAW_REDUCTION = Widget_Draw(MAIN_BASE,$
@@ -983,6 +989,14 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
 	SCR_YSIZE=130 ,RETAIN=2)
 ;X
   VIEW_DRAW_X_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X_REF_L',$
+	XOFFSET=draw_offset_x+ctrl_x,$
+      	YOFFSET=3*draw_offset_y+draw_y+plot_height,$
+	SCR_XSIZE=plot_length,$
+	SCR_YSIZE=plot_height ,RETAIN=2)
+
+  ; hidding xxxxxxxx
+
+  VIEW_DRAW_X_REF_M_HIDDING = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X_REF_L_HIDDING',$
 	XOFFSET=draw_offset_x+ctrl_x,$
       	YOFFSET=3*draw_offset_y+draw_y+plot_height,$
 	SCR_XSIZE=plot_length,$
