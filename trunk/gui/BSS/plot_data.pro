@@ -9,6 +9,18 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='VIEW_DRAW_TOP_BANK'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+        if( Event.type eq 0 )then $
+          VIEW_ONBUTTON_top, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='VIEW_DRAW_BOTTOM_BANK'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+        if( Event.type eq 0 )then $
+          VIEW_ONBUTTON_bottom, Event
+    end
+
     ;Open widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTOGRAM'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -95,6 +107,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 global = ptr_new({$
 		file			:'',$
+		file_already_opened	:0,$
 		path			:'/SNSlocal/tmp/',$
 		working_path		:'',$
 		default_path		:'/SNS/users/',$
@@ -114,10 +127,16 @@ global = ptr_new({$
 		pixelids		:9216L,$
 		Nx			:64L,$
 		Ny			:144L,$
+		y_coeff			:0L,$
+		x_coeff			:0L,$
 		Nx_tubes		:64L,$
 		Ny_pixels		:64L,$
+		pixel_offset		:4096L,$
 		xtitle			:'tubes',$
 		ytitle			:'pixels',$
+		top_bank		: ptr_new(0L),$
+		bottom_bank		: ptr_new(0L),$
+		overflow_number		: 500L,$	
 		do_color		:1$ 
 })
 
@@ -169,20 +188,23 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
   VIEW_DRAW_TOP_BANK = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOP_BANK',$
 	XOFFSET=10,$
         YOFFSET=150,$
-	SCR_XSIZE=800,$
-	SCR_YSIZE=250 ,RETAIN=2)
+	SCR_XSIZE=769,$
+	SCR_YSIZE=257 ,RETAIN=2,$
+	/BUTTON_EVENTS,/MOTION_EVENTS)
 
 ;BOTTOM_BANK
   VIEW_DRAW_BOTTOM_BANK = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_BOTTOM_BANK',$
 	XOFFSET=10,$
-        YOFFSET=405,$
-	SCR_XSIZE=800,$
-	SCR_YSIZE=250 ,RETAIN=2)
+        YOFFSET=415,$
+	SCR_XSIZE=769,$
+	SCR_YSIZE=250 ,$
+	/BUTTON_EVENTS,/MOTION_EVENTS,$
+	RETAIN=2)
 
 ;SCALE_TOP_PLOT
   SCALE_VIEW = Widget_Draw(MAIN_BASE,$
 	UNAME='SCALE_TOP_PLOT',$
-	XOFFSET=850,$
+	XOFFSET=840,$
 	YOFFSET=150,$
 	SCR_XSIZE=70,$
 	SCR_YSIZE=250)
@@ -190,25 +212,25 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 ;SCALE_BOTTOM_PLOT
   SCALE_VIEW = Widget_Draw(MAIN_BASE,$
 	UNAME='SCALE_BOTTOM_PLOT',$
-	XOFFSET=850,$
-	YOFFSET=405,$
+	XOFFSET=840,$
+	YOFFSET=410,$
 	SCR_XSIZE=70,$
 	SCR_YSIZE=250)
 
  X_SCALE = Widget_Draw(MAIN_BASE, UNAME='X_SCALE',$
-	XOFFSET=4,$
-	YOFFSET=660,$
-	SCR_XSIZE=812,$
+	XOFFSET=9,$
+	YOFFSET=670,$
+	SCR_XSIZE=780,$
 	SCR_YSIZE=30)
 
  Y_SCALE_TOP_BANK = Widget_Draw(MAIN_BASE, UNAME='Y_SCALE_TOP_BANK',$
-	XOFFSET=815,$
+	XOFFSET=790,$
 	YOFFSET=144,$
 	SCR_XSIZE=30,$
 	SCR_YSIZE=262)
 
  Y_SCALE_BOTTOM_BANK = Widget_Draw(MAIN_BASE, UNAME='Y_SCALE_BOTTOM_BANK',$
-	XOFFSET=815,$
+	XOFFSET=790,$
 	YOFFSET=399,$
 	SCR_XSIZE=30,$
 	SCR_YSIZE=262)
@@ -260,7 +282,7 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 	VALUE="")
   
   TIME_BIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=530,$
+	XOFFSET=525,$
 	YOFFSET=85,$
 	SCR_XSIZE=30,$
 	SCR_YSIZE=30,$
@@ -268,14 +290,14 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 
   TIME_BIN_VALUE = widget_text(MAIN_BASE,$
 	UNAME="TIME_BIN_VALUE",$
-	XOFFSET=560,$
+	XOFFSET=555,$
 	YOFFSET=85,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
 	/editable,VALUE='25') 
 
   TIME_BIN_UNITS = widget_label(MAIN_BASE,$
-	XOFFSET=558,$
+	XOFFSET=553,$
 	YOFFSET=105,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
@@ -283,22 +305,59 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 
 
   MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=630,$
+	XOFFSET=610,$
 	YOFFSET=85,$
-	SCR_XSIZE=50,$
+	SCR_XSIZE=40,$
+	SCR_YSIZE=20,$
+	VALUE="Max")
+
+  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
+	XOFFSET=610,$
+	YOFFSET=95,$
+	SCR_XSIZE=40,$
 	SCR_YSIZE=30,$
-	VALUE="Max Tbin")
+	VALUE="Tbin")
 
   MAX_TIMEBIN_VALUE = widget_text(MAIN_BASE,$
 	UNAME="MAX_TIMEBIN_VALUE",$
-	XOFFSET=680,$
+	XOFFSET=650,$
 	YOFFSET=85,$
 	SCR_XSIZE=60,$
 	SCR_YSIZE=30,$
 	/editable,VALUE='200000') 
 
   MAX_TIMEBIN_UNITS = widget_label(MAIN_BASE,$
-	XOFFSET=680,$
+	XOFFSET=650,$
+	YOFFSET=105,$
+	SCR_XSIZE=50,$
+	SCR_YSIZE=30,$
+	VALUE="microS")
+
+
+  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
+	XOFFSET=710,$
+	YOFFSET=85,$
+	SCR_XSIZE=40,$
+	SCR_YSIZE=20,$
+	VALUE="Min")
+
+  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
+	XOFFSET=710,$
+	YOFFSET=95,$
+	SCR_XSIZE=40,$
+	SCR_YSIZE=30,$
+	VALUE="Tbin")
+
+  OFFSET_TIMEBIN_VALUE = widget_text(MAIN_BASE,$
+	UNAME="OFFSET_TIMEBIN_VALUE",$
+	XOFFSET=750,$
+	YOFFSET=85,$
+	SCR_XSIZE=60,$
+	SCR_YSIZE=30,$
+	/editable,VALUE='0') 
+
+  OFFSET_TIMEBIN_UNITS = widget_label(MAIN_BASE,$
+	XOFFSET=750,$
 	YOFFSET=105,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
@@ -306,11 +365,11 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 
   EVENT_TO_HISTO = widget_button(MAIN_BASE,$
 	UNAME="EVENT_TO_HISTO",$
-	XOFFSET=750,$
+	XOFFSET=815,$
 	YOFFSET=85,$
-	SCR_XSIZE=150,$
+	SCR_XSIZE=100,$
 	SCR_YSIZE=50,$
-	VALUE="HISTOGRAMMING/MAPPING")
+	VALUE="HISTO / MAP")
 
 
   TRANSLATION_LABEL = Widget_label(MAIN_BASE,$
@@ -353,6 +412,7 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
   Widget_Control, EVENT_TO_HISTO, sensitive=0
   Widget_Control, MAX_TIMEBIN_VALUE, sensitive=0
   Widget_Control, TIME_BIN_VALUE, sensitive=0
+  Widget_Control, OFFSET_TIMEBIN_VALUE, sensitive=0
     
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
