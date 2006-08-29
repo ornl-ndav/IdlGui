@@ -201,8 +201,12 @@ simg=total(img,1)	;sum over time bins
 top_bank = simg(0:63,0:63)
 bottom_bank = simg(0:63,64:127)
 
+(*(*global).top_bank) = top_bank
+(*(*global).bottom_bank) = bottom_bank
+
 top_bank = transpose(top_bank)
 bottom_bank = transpose(bottom_bank)
+
 
 xtitle = (*global).xtitle
 ytitle = (*global).ytitle
@@ -218,8 +222,10 @@ endif
 Ny_pixels = (*global).Ny_pixels
 Nx_tubes = (*global).Nx_tubes
 
-x_coeff = 12.5
-y_coeff = 3.9
+x_coeff = 12
+(*global).x_coeff = x_coeff
+y_coeff = 4
+(*global).y_coeff = y_coeff
 
 New_Ny = y_coeff*Ny_pixels
 New_Nx = x_coeff*Nx_tubes
@@ -231,7 +237,8 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOP_BANK')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
+;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device
 
 ;plot grid
@@ -248,7 +255,8 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_BOTTOM_BANK')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
+;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
 tvscl, tvimg, /device
 
 ;plot grid
@@ -267,9 +275,9 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes],$
+plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes-1],$
 	xstyle=1+8, ystyle=4, /noerase, charsize=1.0, charthick=1.6,$
-	xmargin=[1,1], xticks=8, xtitle=xtitle, color=2,$
+	xmargin=[1,3], xticks=8, xtitle=xtitle, color=2,$
 	xTickLen=.5, XGridStyle=2, xminor=7, xtickinterval=4
 
 ;top pixels axis
@@ -313,7 +321,6 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 max_bottom = max(bottom_bank)
-print, max_bottom
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
@@ -322,6 +329,8 @@ plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " ....Plotting COMPLETED "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+(*global).file_already_opened = 1
  
 end
 
@@ -475,6 +484,8 @@ endif else begin
   Widget_Control, id, sensitive=1
   id = widget_info(Event.top,FIND_BY_UNAME='TIME_BIN_VALUE')
   Widget_Control, id, sensitive=1
+  id = widget_info(Event.top,FIND_BY_UNAME='OFFSET_TIMEBIN_VALUE')
+  Widget_Control, id, sensitive=1
   
 endelse
 
@@ -627,10 +638,14 @@ WIDGET_CONTROL, view_info, GET_VALUE=tbin
 view_info = widget_info(Event.top,FIND_BY_UNAME='MAX_TIMEBIN_VALUE')
 WIDGET_CONTROL, view_info, GET_VALUE=max_tbin
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='OFFSET_TIMEBIN_VALUE')
+WIDGET_CONTROL, view_info, GET_VALUE=min_tbin
+
 cmd = "Event_to_Histo"
 cmd += " -p " + strcompress(pixelids,/remove_all)
 cmd += " -l " + strcompress(tbin,/remove_all)
 cmd += " -M " + strcompress(max_tbin,/remove_all)
+cmd += " --time_offset " + strcompress(min_tbin,/remove_all)
 cmd += " " + event_filename
 cmd += " -a " + output_path
 
@@ -702,5 +717,115 @@ PLOT_HISTO_FILE, Event
 
 id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
 Widget_Control, id, sensitive=1
+
+end
+
+
+
+
+
+pro VIEW_ONBUTTON_top, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file_already_opened = (*global).file_already_opened
+Ny = (*global).Ny_pixels
+
+;left mouse button
+IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
+
+   top_bank = (*(*global).top_bank)
+
+   x = Event.x
+   y = Event.y
+
+   x=x/12
+   y=y/4
+   pixelid= x*(Ny)+y
+   counts = top_bank(pixelid)
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "---- TOP BANK ---- "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             tube # : " + strcompress(x,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             pixel #: " + strcompress(y,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             PixelID: " + strcompress(pixelid,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             Counts : " + strcompress(counts,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	
+info_overflow_BSS, Event
+
+endif
+
+end
+
+
+pro VIEW_ONBUTTON_bottom, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file_already_opened = (*global).file_already_opened
+Ny = (*global).Ny_pixels
+pixel_offset = (*global).pixel_offset
+
+;left mouse button
+IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
+
+   bottom_bank = (*(*global).bottom_bank)
+
+   x = Event.x
+   y = Event.y
+
+   x=x/12
+   y=y/4
+   true_pixelid= x*(Ny)+y + pixel_offset
+   pixelid = x*(Ny)+y
+   counts = bottom_bank(pixelid)
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "---- BOTTOM BANK ---- "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             tube # : " + strcompress(x,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             pixel #: " + strcompress(y,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             PixelID: " + strcompress(true_pixelid,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "             Counts : " + strcompress(counts,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	
+info_overflow_BSS, Event
+
+endif
+
+end
+
+
+
+pro info_overflow_BSS, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+overflow_number = (*global).overflow_number
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+WIDGET_CONTROL, view_info, GET_VALUE=text
+
+num_lines = n_elements(text)
+
+if (num_lines gt overflow_number) then begin
+	text = text(50:*)
+        num_lines = num_lines - 50
+	WIDGET_CONTROL, view_info, SET_VALUE=text
+endif
 
 end
