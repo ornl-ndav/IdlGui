@@ -160,7 +160,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;spawn, cmd_line, listening
+spawn, cmd_line, listening
 
 ;determine name of histo file
 event_filename = (*global).event_filename
@@ -254,7 +254,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 str_time = systime(1)
 text = "Processing merging....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;spawn, cmd_line, listening
+spawn, cmd_line, listening
 
 ;determine name of merge file
 file_list=strsplit(histo_filename,'_neutron_histo.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
@@ -288,7 +288,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 str_time = systime(1)
 text = "Processing translation....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;spawn, cmd_line, listening
+spawn, cmd_line, listening
 
 ;determine name of nexus file
 file_list=strsplit(new_translation_filename,'t$',/REGEX,/extract,count=length) ;to remove last part of the name

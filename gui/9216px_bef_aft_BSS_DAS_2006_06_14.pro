@@ -15,7 +15,7 @@
 		Ny = 72         ; Number of tubes per tube                  |
 		Nt = 1          ; Number of time bins                       |
 		swap_endian = 0 ; swap_endian 0=NO, 1=YES                   |
-		path='/Users/j35/CD4/DAS/2006_1_7_SCI/BSS_22/' ;default path|
+		path='/SNSlocal/tmp/' ;default path|
 		do_color = 1    ; If you want graph in color 0=NO, 1=YES    |
 		;___________________________________________________________|
 		;############################################################
@@ -45,7 +45,10 @@ Nbytes = 4       ;data are Uint32 = 4 bytes
 N = fs.size/Nbytes
 data = lonarr(N)
 readu,1,data
-data = swap_endian(data)    ;swap endian because PC -> Mac
+if (swap_endian EQ 1) then begin
+    data = swap_endian(data)    ;swap endian because PC -> Mac
+endif
+
 close,1			    ;close file
 
 ;find the non-null elements

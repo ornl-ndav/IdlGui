@@ -12,7 +12,7 @@ transpose_ok = 1
  file = dialog_pickfile(/must_exist, $
  title='Select a binary file', $
  filter = ['*.dat'],$
- path='/Users/j35/CD4/BSS/2006_1_2_SCI/BSS_22/',$
+ path='/SNSlocal/tmp/',$
  get_path = path)
 ;****************************************************************
 
@@ -24,7 +24,7 @@ Nbytes = 4       ;data are Uint32 = 4 bytes
 N = fs.size/Nbytes
 data = lonarr(N)
 readu,1,data
-data = swap_endian(data)    ;swap endian because PC -> Mac
+;data = swap_endian(data)    ;swap endian because PC -> Mac
 close,1			    ;close file
 
 ;################################
@@ -42,7 +42,7 @@ simg = total(img,1)     ;sum over time bins
 
 bottom_bank = simg(0:63, 0:63)
 top_bank = simg(0:63, 64:127)
-;diffraction_bank = simg(0:63, 127:143)  ;useless because no data
+diffraction_bank = simg(0:63, 127:143)  ;useless because no data
 
 ;transpose or not
 if transpose_ok EQ 1 then begin
@@ -112,7 +112,7 @@ endif
 ;endelse
 ;wshow
 
-if transpose_ok EQ 1 then begin
+;if transpose_ok EQ 1 then begin
 
 ;********************
 ;plot of second part
@@ -193,6 +193,6 @@ endif else begin
 endelse
 wshow
 
-endif
+;endif
 
 end

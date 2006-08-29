@@ -1,19 +1,20 @@
-transpose_ok = 1
+transpose_ok = 0
+debug = 0
 
 ;****************************************************************
 ;******** HISTOGRAMMING API FOR IDL *****************************
 ;******** version with axis on the plot  ************************
 ;****************************************************************
 
-;;**** pickup dialog box******************************************
-; file = dialog_pickfile(/must_exist, $
-; title='Select a binary file', $
-; filter = ['*.dat'],$
-; path='/Users/j35/CD4/DAS/REF/',$
-; get_path = path)
-;;****************************************************************
+;**** pickup dialog box******************************************
+ file = dialog_pickfile(/must_exist, $
+ title='Select a binary file', $
+ filter = ['*.dat'],$
+ path='/SNS/users/j35/data/REF_M/REF_M_7/',$
+ get_path = path)
+;****************************************************************
 
-file = "/Users/j35/CD4/DAS/REF/DAS_60_neutron_histo.dat"
+;file = "/SNS/users/j35/preNeXus/DAS/DAS_60_neutron_histo.dat"
 openr,1,file
 fs = fstat(1)
 N=fs.size        ;size of file
@@ -22,14 +23,15 @@ Nbytes = 4       ;data are Uint32 = 4 bytes
 N = fs.size/Nbytes
 data = lonarr(N)
 readu,1,data
-data = swap_endian(data)    ;swap endian because PC -> Mac
+;data = swap_endian(data)    ;swap endian because PC -> Mac
 close,1			    ;close file
 
 ;################################
 Nx = 256L  	;information from xxx_runnumber_runinfo.xml
 Ny = 304L
 ;Nt = 834L
-Nt=84
+;Nt=5000L
+Nt=N/(Nx*Ny)
 ;#################################
 
 ;find the non-null elements
@@ -107,17 +109,19 @@ help_window = widget_base(column=1,$
 	        	  title=title,$
 			  tlb_frame_attr=1,$
 		          xsize=400,$ 
-	        	  ysize=50,$
+	        	  ysize=80,$
 			  xoffset=500,$  ;offset relative to left border
 			  yoffset=100)   ;offset relative to top border
 
 ;**Create the labels that will receive the information from the pixelID selected
 ; *Initialization of text boxes
-help_menu_1 = 'To select the area of interest, left click to start drawing the rectangle'
-help_menu_2 = 'and then right click to finish up the selection.'
+help_menu_1 = 'To select the area of interest, left click the first '
+help_menu_2 = 'corner of the zone then set the selection by left'
+help_menu_3 = 'clicking the other corner up to its final position,'
+help_menu_4 = 'and then right click to finish up the selection.'
 
-value_group = [help_menu_1, help_menu_2]
-text = widget_text(help_window, value=value_group, ysize=2)
+value_group = [help_menu_1, help_menu_2, help_menu_3, help_menu_4]
+text = widget_text(help_window, value=value_group, ysize=4)
 
 widget_control, help_window, /realize
 
@@ -140,21 +144,43 @@ r=255L  ;red max
 g=0L    ;no green
 b=255L  ;blue max
 
-cursor, x,y,/down,/device
+
+;cursor, x,y,/down,/device
+;if (debug EQ 1) then begin
+;	print, "** Before while statement **"
+;	print, "x= ", x
+;	print, "y= ", y
+;endif
+
+print, "Select first corner!"
 while (getvals EQ 0) do begin
-	cursor,x,y,/nowait,/device
+	cursor,x,y,/down,/device
 	if (first_round EQ 0) then begin
 		X1=x
 		Y1=y
 		first_round = 1
+		if (debug EQ 1) then begin
+			print, "**** Step 1 ****"
+			print, "X1= ", X1
+			print, "Y1= ", Y1
+		endif
 	endif else begin
 		X2=x
 		Y2=y
+		if (debug EQ 1) then begin
+			print, "**** Step 2 ****"
+			print, "X2= ", X2
+			print, "Y2= ", Y2
+		endif
 
 		if transpose_ok EQ 1 then begin
 	
 			if ((X2-xoff LT 0) OR (X2-xoff GT Ny) OR (Y2-yoff LT 0) OR (Y2-yoff GT Nx) OR (!mouse.button EQ 4)) then begin
 				getvals = 1
+				print, "X2= " , X2
+				print, "xoff= ", xoff
+				print, "Y2= " , Y2
+				print, "yoff= " , yoff
 				print,'Terminating return data'
 			endif else begin
 				tvscl,simg,xoff,yoff,/device,xsize=Ny,ysize=Nx              
