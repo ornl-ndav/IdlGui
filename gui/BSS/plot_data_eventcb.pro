@@ -33,13 +33,6 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
-
-
-
-
-
-
-
 end
 
 
@@ -138,65 +131,117 @@ pro PLOT_HISTO_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-file = (*global).file 
+if ((*global).refresh_histo EQ 0) then begin
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = " Opening/Reading file.......... "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = file
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+  file = (*global).file 
 
-openr,1,file
-fs=fstat(1)
+  view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+  text = " Opening/Reading file.......... "
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+  text = file
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-;to get the size of the file
-file_size=fs.size
+  openr,1,file
+  fs=fstat(1)
 
-text = "Infos about file" 
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "  Size of file : " + strcompress(file_size,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+  ;to get the size of the file
+  file_size=fs.size
 
-Nbytes = (*global).nbytes
-N = long(file_size) / Nbytes  ;number of elements
+  text = "Infos about file" 
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+  text = "  Size of file : " + strcompress(file_size,/remove_all)
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-text = "  Nbre of elements : " + strcompress(N,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+  Nbytes = (*global).nbytes
+  N = long(file_size) / Nbytes  ;number of elements
 
-data = lonarr(N)
-readu,1,data
+  text = "  Nbre of elements : " + strcompress(N,/remove_all)
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-if ((*global).swap_endian EQ 1) then begin
+  data = lonarr(N)
+  readu,1,data
 
-   data=swap_endian(data)
-   text = "true"
+  if ((*global).swap_endian EQ 1) then begin
+
+     data=swap_endian(data)
+     text = "true"
+
+  endif else begin
+
+     text = "false"
+
+  endelse
+
+  text1 = "  Swap endian : " + text
+  WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
+
+  close,1
+
+  Nx=(*global).Nx
+  Ny=(*global).Ny
+  Nt = long(N)/(long(Nx*Ny))
+
+  (*global).Nt = Nt
+
+  ;update Tbin_interaction
+  max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+  min_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
+  max_tbin_text_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
+  widget_control, max_tbin_slider_id, SET_SLIDER_MAX=Nt-1
+  widget_control, max_tbin_slider_id, SET_VALUE=Nt-1
+  widget_control, min_tbin_slider_id, SET_SLIDER_MAX=Nt-1
+  widget_control, max_tbin_text_id, SET_VALUE=strcompress(Nt-1,/remove_all)
+
+  text = "  Nt : " + strcompress(Nt,/remove_all)
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+  ;find the non-null elements
+  indx1 = where(data GT 0, Ngt0)
+  text = "  Number of non-null elements : " + strcompress(Ngt0,/remove_all)
+  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+  img = intarr(Nt,Nx,Ny)
+  img(indx1)=data(indx1)
+
+  (*(*global).img) = img 
+	
+  simg = total(img,1) 	;sum over time bins
+
+  max_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+  WIDGET_CONTROL, max_tbin_slider_id, sensitive=1
+  max_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
+  WIDGET_CONTROL, max_tbin_text_id, sensitive=1
+  min_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
+  WIDGET_CONTROL, min_tbin_slider_id, sensitive=1
+  min_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_TEXT')
+  WIDGET_CONTROL, min_tbin_text_id, sensitive=1
 
 endif else begin
 
-   text = "false"
+   img = (*(*global).img)
+
+   ;get value of min_tbin and max_tbin
+   min_tbin = long((*global).min_tbin)   
+   max_tbin = long((*global).max_tbin)
+   Nx = (*global).Nx
+   Ny = (*global).Ny
+     
+   new_Nt = max_tbin - min_tbin
+ 
+   if (new_Nt EQ 0) then begin
+ 
+      new_Nt = 1
+       
+   endif   
+
+   new_img = intarr(new_Nt,Nx,Ny)
+   new_img = img(min_tbin:max_tbin,*,*)
+   simg = total(new_img,1)
+
+   tbin_refresh_button_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='TBIN_REFRESH_BUTTON')
+   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=0
 
 endelse
-
-text1 = "  Swap endian : " + text
-WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
-
-close,1
-
-Nx=(*global).Nx
-Ny=(*global).Ny
-Nt = long(N)/(long(Nx*Ny))
-
-text = "  Nt : " + strcompress(Nt,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-;find the non-null elements
-indx1 = where(data GT 0, Ngt0)
-text = "  Number of non-null elements : " + strcompress(Ngt0,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-img = intarr(Nt,Nx,Ny)
-img(indx1)=data(indx1)
-simg=total(img,1)	;sum over time bins
 
 top_bank = simg(0:63,0:63)
 bottom_bank = simg(0:63,64:127)
@@ -207,10 +252,9 @@ bottom_bank = simg(0:63,64:127)
 top_bank = transpose(top_bank)
 bottom_bank = transpose(bottom_bank)
 
-
 xtitle = (*global).xtitle
 ytitle = (*global).ytitle
-title = file
+title = (*global).file
 
 if ((*global).do_color EQ 1) then begin
    
@@ -284,10 +328,11 @@ plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes-1],$
 view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_TOP_BANK')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
+erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
 plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
-	ystyle=1+8, xstyle=4, /noerase, charsize=1.0, charthick=1.6,$
+	ystyle=1+8, xstyle=4, charsize=1.0, charthick=1.6,$
 	ymargin=[1,1], yticks=8, color=2,$
 	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
 
@@ -296,10 +341,11 @@ plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
 view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_BOTTOM_BANK')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
+erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
 plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
-	ystyle=1+8, xstyle=4, /noerase, charsize=1.0, charthick=1.6,$
+	ystyle=1+8, xstyle=4, charsize=1.0, charthick=1.6,$
 	ymargin=[1,1], yticks=8, color=2,$
 	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
 
@@ -307,6 +353,7 @@ plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
+erase
 
 max_top = max(top_bank)
 print, max_top
@@ -319,6 +366,7 @@ plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
+erase
 
 max_bottom = max(bottom_bank)
 cscl = lindgen(20,New_Ny-10)
@@ -331,6 +379,7 @@ text = " ....Plotting COMPLETED "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 (*global).file_already_opened = 1
+(*global).refresh_histo = 0
  
 end
 
@@ -827,5 +876,155 @@ if (num_lines gt overflow_number) then begin
         num_lines = num_lines - 50
 	WIDGET_CONTROL, view_info, SET_VALUE=text
 endif
+
+end
+
+
+
+
+
+
+
+pro min_tbin_slider, Event
+
+min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
+WIDGET_CONTROL, min_tbin_slider_id, GET_VALUE=min_tbin
+
+;to fix minimum value of max tbin slider
+max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+widget_control, max_tbin_slider_id, SET_SLIDER_MIN=min_tbin
+
+min_tbin=strcompress(min_tbin,/remove_all)
+min_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
+WIDGET_CONTROL, min_tbin_text_id, SET_VALUE=min_tbin
+
+check_validity, Event
+
+end
+
+pro min_tbin_text, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+min_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
+WIDGET_CONTROL, min_tbin_text_id, GET_VALUE=min_tbin
+
+Nt = (*global).Nt
+
+if (min_tbin LE Nt) then begin
+
+   min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
+   widget_control, min_tbin_slider_id, SET_VALUE=min_tbin
+
+   minimum_of_max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+   widget_control, minimum_of_max_tbin_slider_id, SET_SLIDER_MIN=min_tbin
+
+endif else begin
+
+   min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
+   widget_control, min_tbin_slider_id, SET_VALUE=Nt
+
+   min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
+   widget_control, min_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
+
+endelse   
+
+end
+
+
+
+
+pro max_tbin_slider, Event
+
+max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
+WIDGET_CONTROL, max_tbin_slider_id, GET_VALUE=max_tbin
+
+max_tbin=strcompress(max_tbin,/remove_all)
+max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
+WIDGET_CONTROL, max_tbin_text_id, SET_VALUE=max_tbin
+
+check_validity, Event
+
+end
+
+
+pro max_tbin_text, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
+WIDGET_CONTROL, max_tbin_text_id, GET_VALUE=max_tbin
+
+Nt=(*global).Nt
+
+if (max_tbin LE Nt) then begin
+
+   max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
+   widget_control, max_tbin_slider_id, SET_VALUE=max_tbin
+
+endif else begin
+
+   max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
+   widget_control, max_tbin_slider_id, SET_VALUE=Nt
+
+   max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
+   WIDGET_CONTROL, max_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
+   
+endelse
+  
+end
+
+
+pro tbin_refresh_button, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+max_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
+widget_control, max_tbin_text_id, GET_VALUE=max_tbin
+
+min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
+widget_control, min_tbin_text_id, GET_VALUE=min_tbin
+
+if (min_tbin GT max_tbin) then begin
+   max_tbin = min_tbin
+endif
+
+(*global).max_tbin = max_tbin
+(*global).min_tbin = min_tbin
+
+PLOT_HISTO_FILE, Event
+
+end
+
+
+pro check_validity, Event
+
+;get global structure
+id = widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control, id, get_uvalue=global
+
+min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
+max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+tbin_refresh_button_id = widget_info(Event.top, FIND_BY_UNAME='TBIN_REFRESH_BUTTON')
+
+WIDGET_CONTROL, min_tbin_slider_id, GET_VALUE=min_tbin_value
+WIDGET_CONTROL, max_tbin_slider_id, GET_VALUE=max_tbin_value
+
+if (min_tbin_value GT max_tbin_value) then begin
+
+   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=0
+
+endif else begin
+
+   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=1
+   (*global).refresh_histo = 1
+   
+endelse
 
 end

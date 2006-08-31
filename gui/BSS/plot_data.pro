@@ -77,6 +77,16 @@ pro MAIN_BASE_event, Event
         EVENT_TO_HISTO_cb, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='MIN_TBIN_TEXT'): begin
+	min_tbin_text, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='MAX_TBIN_TEXT'): begin
+  	max_tbin_text, Event
+    end
+
+
+
     else:
   endcase
 
@@ -127,15 +137,22 @@ global = ptr_new({$
 		pixelids		:9216L,$
 		Nx			:64L,$
 		Ny			:144L,$
+		Nt			:500L,$
 		y_coeff			:0L,$
 		x_coeff			:0L,$
 		Nx_tubes		:64L,$
 		Ny_pixels		:64L,$
+		minimum_tbin		:0L,$
+		min_tbin		:0L,$
+		maximum_tbin		:500L,$
+		max_tbin		:500L,$
+		refresh_histo		:0,$
 		pixel_offset		:4096L,$
 		xtitle			:'tubes',$
 		ytitle			:'pixels',$
 		top_bank		: ptr_new(0L),$
 		bottom_bank		: ptr_new(0L),$
+		img			: ptr_new(0L),$
 		overflow_number		: 500L,$	
 		do_color		:1$ 
 })
@@ -204,17 +221,17 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 ;SCALE_TOP_PLOT
   SCALE_VIEW = Widget_Draw(MAIN_BASE,$
 	UNAME='SCALE_TOP_PLOT',$
-	XOFFSET=840,$
+	XOFFSET=835,$
 	YOFFSET=150,$
-	SCR_XSIZE=70,$
+	SCR_XSIZE=80,$
 	SCR_YSIZE=250)
 
 ;SCALE_BOTTOM_PLOT
   SCALE_VIEW = Widget_Draw(MAIN_BASE,$
 	UNAME='SCALE_BOTTOM_PLOT',$
-	XOFFSET=840,$
+	XOFFSET=835,$
 	YOFFSET=410,$
-	SCR_XSIZE=70,$
+	SCR_XSIZE=80,$
 	SCR_YSIZE=250)
 
  X_SCALE = Widget_Draw(MAIN_BASE, UNAME='X_SCALE',$
@@ -244,145 +261,226 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 	/WRAP,$
 	/SCROLL)
 	
-   GENERAL_INFOS_LABEL = widget_label(MAIN_BASE,$
+  GENERAL_INFOS_LABEL = widget_label(MAIN_BASE,$
 	XOFFSET=10,$
 	YOFFSET= draw_offset_y, $
 	value="General Informations")
 
-  EVENT_FILE = widget_button(MAIN_BASE,$
+
+  TRANSLATION_DISPLAY_HISTO_FRAME = WIDGET_TAB(MAIN_BASE,$
+	LOCATION=0,$
+	XOFFSET=520,$
+	YOFFSET=5,$
+	SCR_XSIZE=395,$
+	SCR_YSIZE=140)
+
+   TRANSLATION_FRAME = WIDGET_BASE(TRANSLATION_DISPLAY_HISTO_FRAME,$
+	TITLE="Event to Histo",$
+	SCR_XSIZE=395,$
+	SCR_YSIZE=140)
+
+  x_offset = 524
+  y_offset = 20
+
+  EVENT_FILE = widget_button(TRANSLATION_FRAME,$
 	UNAME="EVENT_FILE",$
-	XOFFSET=527,$
-	YOFFSET=23,$
+	XOFFSET=527-x_offset,$
+	YOFFSET=23-y_offset,$
 	SCR_XSIZE=80,$
 	SCR_YSIZE=25,$
 	VALUE="Event file")
 
-  EVENT_FILENAME = widget_text(MAIN_BASE,$
+  EVENT_FILENAME = widget_text(TRANSLATION_FRAME,$
 	UNAME="EVENT_FILENAME",$
-	XOFFSET=610,$
-	YOFFSET=20,$
+	XOFFSET=610-x_offset,$
+	YOFFSET=20-y_offset,$
 	SCR_XSIZE=300,$
 	SCR_YSIZE=30,$
 	VALUE="")
 
-  OUTPUT_PATH = widget_button(MAIN_BASE,$
+  OUTPUT_PATH = widget_button(TRANSLATION_FRAME,$
 	UNAME="OUTPUT_PATH",$
-	XOFFSET=527,$
-	YOFFSET=53,$
+	XOFFSET=527-x_offset,$
+	YOFFSET=53-y_offset,$
 	SCR_XSIZE=80,$
 	SCR_YSIZE=25,$
 	VALUE="Output path")
 
-  OUTPUT_PATH_NAME = widget_text(MAIN_BASE,$
+  OUTPUT_PATH_NAME = widget_text(TRANSLATION_FRAME,$
 	UNAME="OUTPUT_PATH_NAME",$
-	XOFFSET=610,$
-	YOFFSET=50,$
+	XOFFSET=610-x_offset,$
+	YOFFSET=50-y_offset,$
 	SCR_XSIZE=300,$
 	SCR_YSIZE=30,$
 	VALUE="")
   
-  TIME_BIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=525,$
-	YOFFSET=85,$
+  TIME_BIN_LABEL = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=525-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=30,$
 	SCR_YSIZE=30,$
 	VALUE="Tbin")
 
-  TIME_BIN_VALUE = widget_text(MAIN_BASE,$
+  TIME_BIN_VALUE = widget_text(TRANSLATION_FRAME,$
 	UNAME="TIME_BIN_VALUE",$
-	XOFFSET=555,$
-	YOFFSET=85,$
+	XOFFSET=555-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
 	/editable,VALUE='25') 
 
-  TIME_BIN_UNITS = widget_label(MAIN_BASE,$
-	XOFFSET=553,$
-	YOFFSET=105,$
+  TIME_BIN_UNITS = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=553-x_offset,$
+	YOFFSET=105-y_offset,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
 	VALUE="microS")
 
-
-  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=610,$
-	YOFFSET=85,$
+  MAX_TIMEBIN_LABEL = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=610-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=40,$
 	SCR_YSIZE=20,$
 	VALUE="Max")
 
-  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=610,$
-	YOFFSET=95,$
+  MAX_TIMEBIN_LABEL = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=610-x_offset,$
+	YOFFSET=95-y_offset,$
 	SCR_XSIZE=40,$
 	SCR_YSIZE=30,$
 	VALUE="Tbin")
 
-  MAX_TIMEBIN_VALUE = widget_text(MAIN_BASE,$
+  MAX_TIMEBIN_VALUE = widget_text(TRANSLATION_FRAME,$
 	UNAME="MAX_TIMEBIN_VALUE",$
-	XOFFSET=650,$
-	YOFFSET=85,$
+	XOFFSET=650-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=60,$
 	SCR_YSIZE=30,$
 	/editable,VALUE='200000') 
 
-  MAX_TIMEBIN_UNITS = widget_label(MAIN_BASE,$
-	XOFFSET=650,$
-	YOFFSET=105,$
+  MAX_TIMEBIN_UNITS = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=650-x_offset,$
+	YOFFSET=105-y_offset,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
 	VALUE="microS")
 
 
-  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=710,$
-	YOFFSET=85,$
+  MAX_TIMEBIN_LABEL = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=710-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=40,$
 	SCR_YSIZE=20,$
 	VALUE="Min")
 
-  MAX_TIMEBIN_LABEL = widget_label(MAIN_BASE,$
-	XOFFSET=710,$
-	YOFFSET=95,$
+  MAX_TIMEBIN_LABEL = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=710-x_offset,$
+	YOFFSET=95-y_offset,$
 	SCR_XSIZE=40,$
 	SCR_YSIZE=30,$
 	VALUE="Tbin")
 
-  OFFSET_TIMEBIN_VALUE = widget_text(MAIN_BASE,$
+  OFFSET_TIMEBIN_VALUE = widget_text(TRANSLATION_FRAME,$
 	UNAME="OFFSET_TIMEBIN_VALUE",$
-	XOFFSET=750,$
-	YOFFSET=85,$
+	XOFFSET=750-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=60,$
 	SCR_YSIZE=30,$
 	/editable,VALUE='0') 
 
-  OFFSET_TIMEBIN_UNITS = widget_label(MAIN_BASE,$
-	XOFFSET=750,$
-	YOFFSET=105,$
+  OFFSET_TIMEBIN_UNITS = widget_label(TRANSLATION_FRAME,$
+	XOFFSET=750-x_offset,$
+	YOFFSET=105-y_offset,$
 	SCR_XSIZE=50,$
 	SCR_YSIZE=30,$
 	VALUE="microS")
 
-  EVENT_TO_HISTO = widget_button(MAIN_BASE,$
+  EVENT_TO_HISTO = widget_button(TRANSLATION_FRAME,$
 	UNAME="EVENT_TO_HISTO",$
-	XOFFSET=815,$
-	YOFFSET=85,$
+	XOFFSET=815-x_offset,$
+	YOFFSET=85-y_offset,$
 	SCR_XSIZE=100,$
 	SCR_YSIZE=50,$
 	VALUE="HISTO / MAP")
 
 
-  TRANSLATION_LABEL = Widget_label(MAIN_BASE,$
-	XOFFSET=527,$
-	YOFFSET=6,$
-	VALUE="Event to Histo")
+;Frame to play with tbins in display
 
-  TRANSLATION_FRAME = Widget_label(MAIN_BASE,$
-	XOFFSET=520,$
-	YOFFSET=5+draw_offset_y,$
+   y_offset_1 = 10
+   y_offset_2 = 45
+   y_offset_3 = 70
+
+   TBIN_FRAME = WIDGET_BASE(TRANSLATION_DISPLAY_HISTO_FRAME,$
+	TITLE="Time Bin interaction (microS)",$
 	SCR_XSIZE=395,$
-	SCR_YSIZE=120,$
-	FRAME=2,VALUE='')
+	SCR_YSIZE=140)
+
+   MIN_TBIN = WIDGET_LABEL(TBIN_FRAME,$
+	VALUE="Min Tbin ",$
+	XOFFSET= 5,$
+	YOFFSET= y_offset_1,$
+	SCR_XSIZE=60,$
+	SCR_YSIZE=35)
+
+   MIN_TBIN_SLIDER = WIDGET_SLIDER(TBIN_FRAME,$
+	UNAME="MIN_TBIN_SLIDER",$
+	XOFFSET= 70,$
+	YOFFSET= y_offset_1-5,$
+	SCR_XSIZE=250,$
+	SCR_YSIZE=35,$
+	MINIMUM=(*global).minimum_tbin,$
+	MAXIMUM=(*global).maximum_tbin,$
+	/DRAG,$
+	VALUE=0,$
+	EVENT_PRO="min_tbin_slider")
+
+   MIN_TBIN_TEXT = WIDGET_TEXT(TBIN_FRAME,$
+	UNAME="MIN_TBIN_TEXT",$
+	XOFFSET=325,$
+	YOFFSET=y_offset_1+2,$
+	SCR_XSIZE=55,$
+	SCR_YSIZE=30,$
+	VALUE='0',$
+	/EDITABLE,$
+	/ALL_EVENTS)
+
+   MAX_TBIN = WIDGET_LABEL(TBIN_FRAME,$
+	VALUE="Max Tbin ",$
+	XOFFSET= 5,$
+	YOFFSET= y_offset_2,$
+	SCR_XSIZE=60,$
+	SCR_YSIZE=35)
+
+   MAX_TBIN_SLIDER = WIDGET_SLIDER(TBIN_FRAME,$
+	UNAME="MAX_TBIN_SLIDER",$
+	XOFFSET= 70,$
+	YOFFSET= y_offset_2-5,$
+	SCR_XSIZE=250,$
+	SCR_YSIZE=35,$
+	MINIMUM=(*global).minimum_tbin,$
+	MAXIMUM=(*global).maximum_tbin,$
+	VALUE=(*global).Nt,$
+	/DRAG,$
+	EVENT_PRO="max_tbin_slider")
+
+   MAX_TBIN_TEXT = WIDGET_TEXT(TBIN_FRAME,$
+	UNAME="MAX_TBIN_TEXT",$
+	XOFFSET=325,$
+	YOFFSET=y_offset_2+2,$
+	SCR_XSIZE=55,$
+	SCR_YSIZE=30,$
+	VALUE='0',$
+	/EDITABLE,$
+	/ALL_EVENTS)
+
+   TBIN_REFRESH_BUTTON = WIDGET_BUTTON(TBIN_FRAME,$
+	UNAME="TBIN_REFRESH_BUTTON",$
+	XOFFSET=10,$
+	YOFFSET=y_offset_3+10,$
+	SCR_XSIZE=370,$
+	SCR_YSIZE=30,$
+	VALUE="R E F R E S H   P L O T",$
+	EVENT_PRO="tbin_refresh_button")
 
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
@@ -413,7 +511,12 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
   Widget_Control, MAX_TIMEBIN_VALUE, sensitive=0
   Widget_Control, TIME_BIN_VALUE, sensitive=0
   Widget_Control, OFFSET_TIMEBIN_VALUE, sensitive=0
-    
+  Widget_Control, TBIN_REFRESH_BUTTON, sensitive=0    
+  Widget_Control, MAX_TBIN_SLIDER, sensitive=0
+  Widget_Control, MAX_TBIN_TEXT, sensitive=0
+  Widget_Control, MIN_TBIN_SLIDER, sensitive=0
+  Widget_Control, MIN_TBIN_TEXT, sensitive=0
+  
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
