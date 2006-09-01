@@ -137,7 +137,7 @@ global = ptr_new({$
 		pixelids		:9216L,$
 		Nx			:64L,$
 		Ny			:144L,$
-		Nt			:500L,$
+		Nt			:10L,$
 		y_coeff			:0L,$
 		x_coeff			:0L,$
 		Nx_tubes		:64L,$
