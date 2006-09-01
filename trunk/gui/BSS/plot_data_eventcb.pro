@@ -729,6 +729,10 @@ histogram_filename = (*global).working_path + histogram_filename_only
 (*global).file = histogram_filename
 
 nbr_tbin = long(max_tbin) / long(tbin)
+print, "max_tbin= " , max_tbin
+print, "tbin= ", tbin
+print, "nbr_tbin= ", nbr_tbin
+
 cmd = "Map_Data"
 cmd += " -p " + strcompress(pixelids,/remove_all)
 cmd += " -t " + strcompress(nbr_tbin,/remove_all)
@@ -931,6 +935,8 @@ endif else begin
 
 endelse   
 
+check_validity, Event
+
 end
 
 
@@ -976,6 +982,8 @@ endif else begin
    
 endelse
   
+check_validity, Event
+
 end
 
 
