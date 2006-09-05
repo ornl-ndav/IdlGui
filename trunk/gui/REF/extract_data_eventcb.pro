@@ -1867,7 +1867,7 @@ if file NE '' then begin
 ;*********************************************************
 
 	counts_vs_tof=lonarr(Ntof)
-	for i=0L, 50 do begin
+	for i=0L, Nx*Ny do begin
 		counts_vs_tof += total(data_assoc_tof[i],2)
 	endfor
 	
