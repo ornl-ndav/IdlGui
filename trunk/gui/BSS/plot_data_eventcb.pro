@@ -391,7 +391,7 @@ pro ABOUT_MENU, Event
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = "" 
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "**** plotBSS ****"
+text = "**** plotBSS (v.090506)****"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = ""
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -726,8 +726,6 @@ histogram_filename_only = file_name + "histo.dat"
 
 histogram_filename = (*global).working_path + histogram_filename_only
 
-(*global).file = histogram_filename
-
 nbr_tbin = long(max_tbin) / long(tbin)
 print, "max_tbin= " , max_tbin
 print, "tbin= ", tbin
@@ -760,11 +758,13 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-histo_mapped_filename = file_name + "histo_mapped.at"
+histo_mapped_filename = file_name + "histo_mapped.dat"
 text = "File generated is"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = histo_mapped_filename
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+(*global).file = (*global).working_path + histo_mapped_filename
 
 PLOT_HISTO_FILE, Event
 
