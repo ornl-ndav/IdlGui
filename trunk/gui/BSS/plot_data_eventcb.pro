@@ -726,10 +726,12 @@ histogram_filename_only = file_name + "histo.dat"
 
 histogram_filename = (*global).working_path + histogram_filename_only
 
-nbr_tbin = long(max_tbin) / long(tbin)
+
+nbr_tbin = (long(max_tbin) - long(min_tbin)) / long(tbin)
 print, "max_tbin= " , max_tbin
 print, "tbin= ", tbin
 print, "nbr_tbin= ", nbr_tbin
+print, "min_tbin= ", min_tbin
 
 cmd = "Map_Data"
 cmd += " -p " + strcompress(pixelids,/remove_all)
