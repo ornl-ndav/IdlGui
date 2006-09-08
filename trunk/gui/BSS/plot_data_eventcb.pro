@@ -331,10 +331,10 @@ wset, id
 erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
-	ystyle=1+8, xstyle=4, charsize=1.0, charthick=1.6,$
-	ymargin=[1,1], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
+plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
+	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+	ymargin=[0,0], yticks=8, color=2,$
+	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
 
 
 ;bottom pixels axis
@@ -344,10 +344,10 @@ wset, id
 erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Ny_pixels],/nodata,/device,yrange=[0,Ny_pixels],$
-	ystyle=1+8, xstyle=4, charsize=1.0, charthick=1.6,$
-	ymargin=[1,1], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=4
+plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
+	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+	ymargin=[0,0], yticks=8, color=2,$
+	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
 
 ;plot of top scale
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
