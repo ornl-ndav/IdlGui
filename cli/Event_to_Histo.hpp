@@ -60,6 +60,7 @@ void initialize_array(uint32_t * data_histo,
  * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
  * \param time_offset_100ns (INPUT) is the time offset (x100ns)
  * \param debug (INPUT) is a switch that trigger or not the debugging tools
+ * \param verbose (INPUT) is a flag for printing processing info
  */
 void generate_histo(const size_t file_size,
                     const int32_t new_Nt,
@@ -70,7 +71,8 @@ void generate_histo(const size_t file_size,
                     const std::vector<int32_t> time_bin_vector,
                     const int32_t max_time_bin_100ns,
                     const int32_t time_offset_100ns,
-                    const bool debug);
+                    const bool debug,
+                    const bool verbose);
 
 /**
  * \brief This function does a binary search of a variable into a given
@@ -88,9 +90,13 @@ void generate_histo(const size_t file_size,
  * \returns 
  * It returns the position of the data or of the closest inferior value
  * found in sortedVector. Returns -1 if the data is out of range.
-*/
+ */
 int32_t binarySearch(const std::vector<int32_t> &sortedVector, 
-                     const int32_t value, const size_t vector_size);
+                     const int32_t value, 
+                     const size_t vector_size);
+
+
+
 
 
 #endif // _EVENT_TO_HISTO_HPP

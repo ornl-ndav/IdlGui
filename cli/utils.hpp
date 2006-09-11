@@ -158,6 +158,7 @@ namespace EventHisto
    * \param tof_info_filename (OUTPUT) is the name of the time_of_flight
    * info file that will contain the time bin axis
    * \param debug (INPUT) is a flag for printing debugging info
+   * \param verbose (INPUT) is a flag for printing processing info
    */
   void path_input_output_file_names(const std::string & path_filename,
                                     std::string & filename,
@@ -165,7 +166,8 @@ namespace EventHisto
                                     std::string & alternate_path,
                                     std::string & output_filename,
                                     std::string & tof_info_filename,
-                                    const bool debug);
+                                    const bool debug,
+                                    const bool verbose);
   /**
    * \}
    */ // end of path_input_output_file_names group
@@ -259,6 +261,7 @@ namespace EventHisto
    * \param swap_input (INPUT) is a flag that trigger the swapping of the data
    * coming from the event binary file
    * \param debug (INPUT) is a flag for printing debugging info
+   * \param verbose (INPUT) is a flag for printing processing info
    * \param n_disp (INPUT) is the number of element to display for debugging
    * purpose only
    * \param binary_array (OUTPUT) is the array of the event binary data
@@ -275,6 +278,7 @@ namespace EventHisto
                                                    const size_t n_disp,
                                                    const bool swap_input,
                                                    const bool debug,
+                                                   const bool verbose,
                                                    int32_t * &binary_array);
   /**
    * \}

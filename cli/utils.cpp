@@ -66,14 +66,20 @@ namespace EventHisto
                                     string & alternate_path,
                                     string & output_filename,
                                     string & tof_info_filename,
-                                    const bool debug)
+                                    const bool debug,
+                                    const bool verbose)
   {
+
+    if (verbose  || debug) { cout << ".";}  //2nd
+
     // Parse input file name (path + input_file_name)
     parse_input_file_name(path_filename,
                           filename,
                           path,
                           debug);
     
+    if (verbose  || debug) { cout << ".";}  //3rd
+
     // Produce output file name (path or alternate_path + output_file_name)
     produce_output_file_name(filename,
                              path,
@@ -81,12 +87,16 @@ namespace EventHisto
                              output_filename,
                              debug);
     
+    if (verbose  || debug) { cout << ".";}  //4th
+
     // Produce tof_info_filename (path or alternate_path + tof_file_name)
     produce_tof_info_file_name(filename,
                                path,
                                alternate_path,
                                tof_info_filename,
                                debug);
+
+    if (verbose  || debug) { cout << ".";}  //5th
 
     return;
   }
@@ -195,30 +205,42 @@ namespace EventHisto
                                                    const size_t n_disp,
                                                    const bool swap_input,
                                                    const bool debug,
+                                                   const bool verbose,
                                                    int32_t * &binary_array)
   {
     // read event binary array
     ifstream file(input_file.c_str(), ios::in|ios::binary|ios::ate);
     ifstream::pos_type file_size;
     
+    if (verbose  && !debug) { cout << ".";}  //2nd
+
     if (!file.is_open())
       {
         throw runtime_error("Failed opening event binary file: \"" + 
                             input_file + "\"\n");
       }
     
+    if (verbose  && !debug) { cout << ".";}  //3rd
+
     file_size = file.tellg();
     size_t array_size = file_size / SIZEOF_INT32_T;
     
+    if (verbose  && !debug) { cout << ".";}  //4th
+
     binary_array = new int32_t [array_size];
     
+    if (verbose  && !debug) { cout << ".";} //5th
+
     file.seekg(0,ios::beg);
     
+    if (verbose  && !debug) { cout << ".";} //6th
+
     // transfer the data from the event binary file int32_to binary_array
     //  file.read(reinterpret_cast<char *>(binary_array),file_size);
     file.read(reinterpret_cast<char *>(binary_array),file_size);
     file.close();
     
+   
     // displays the n_disp first values of the event binary file
     string message;
     
