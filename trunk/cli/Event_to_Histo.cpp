@@ -36,6 +36,8 @@ using namespace BinVectorUtils;
 
 const size_t MAX_BLOCK_SIZE=2048;
 
+
+
 int32_t binarySearch(const vector<int32_t> &sortedVector, 
                      const int32_t value, const size_t vector_size)
 {
@@ -98,7 +100,12 @@ void initialize_array(uint32_t * histo_array,
 
 
 template <typename NumT>
-void write_data_block(ofstream &outfile, NumT *data, size_t offset, size_t num_ele, size_t sizeof_NumT){
+void write_data_block(ofstream &outfile, 
+                      NumT *data, 
+                      size_t offset, 
+                      size_t num_ele, 
+                      size_t sizeof_NumT)
+{
   outfile.write(reinterpret_cast<char *>(data+offset),sizeof_NumT*num_ele);
 }
 
@@ -111,12 +118,14 @@ void generate_histo(const size_t array_size,
                     const vector<int32_t> time_bin_vector,
                     const int32_t max_time_bin_100ns,
                     const int32_t time_offset_100ns,
-                    const bool debug)
+                    const bool debug,
+                    const bool verbose)
 {
   int32_t pixelid;
   int32_t time_bin;
   int32_t time_stamp;
-
+  int32_t processing_percent = 0;
+  
   //initialize histo array
   initialize_array(histo_array,
                    histo_array_size);
@@ -138,9 +147,15 @@ void generate_histo(const size_t array_size,
 
   //loop over entire binary file data (from 0 to file_size/2 because we use
   //the variable 2*i into the for loop. Like this, the all file is covered.
-  size_t time_bin_vector_size=time_bin_vector.size();
+  size_t time_bin_vector_size = time_bin_vector.size();
   for (size_t i=0 ; i<array_size/2; i++) 
   {
+    if (verbose && !debug)
+      {
+        processing_percent = (2*i*100/array_size);
+        cout << "\r" << processing_percent << "%";
+      }
+    
       pixelid = binary_array[2*i+1];
       time_stamp = binary_array[2*i];
       time_bin = binarySearch(time_bin_vector,time_stamp,time_bin_vector_size);
@@ -148,7 +163,7 @@ void generate_histo(const size_t array_size,
       if (debug)
         {
           cout << "#" << i << "\t";
-          cout << "Pid= " << pixelid <<"\t";
+          cout << "Pid= " << pixelid << "\t";
           cout << "t_ms= " << time_stamp <<"\t";
           cout << "tstamp_value= ";
           cout << floor(time_bin_vector[time_bin]);
@@ -177,6 +192,11 @@ void generate_histo(const size_t array_size,
           histo_array[time_bin+pixelid*new_Nt]+=1;
         }
   }
+  if (verbose && !debug)
+    {
+      cout << "\r    generate_histo.done\n";
+    }
+  
   return;
 }
 
@@ -199,6 +219,9 @@ int32_t main(int32_t argc, char *argv[])
       
       SwitchArg debug_cmd("d", "debug", "Flag for debugging program",
                           false, cmd);
+
+      SwitchArg verbose_cmd("", "verbose", "Gives processing information", 
+                            false, cmd);
 
       SwitchArg swap_i_cmd ("", "swap_input", 
                             "Flag for swapping data of input file",
@@ -241,6 +264,7 @@ int32_t main(int32_t argc, char *argv[])
       vector<string> input_file_vector = event_file_vector_cmd.getValue();
 
       const bool debug = debug_cmd.getValue();
+      const bool verbose = verbose_cmd.getValue();
 
       size_t n_disp = n_disp_cmd.getValue();
 
@@ -268,6 +292,11 @@ int32_t main(int32_t argc, char *argv[])
           string path; 
           string input_file = input_file_vector[i];
 
+          if (verbose || debug)
+            {
+              cout << "**** file name: " << input_file << " ****\n";
+              cout << "--> path_input_output_file_names.";  //1st
+            }
           
           EventHisto::path_input_output_file_names(input_file,
                                                    input_filename,
@@ -275,11 +304,19 @@ int32_t main(int32_t argc, char *argv[])
                                                    alt_out_path_cmd.getValue(),
                                                    output_filename,
                                                    tof_info_filename,
-                                                   debug);
+                                                   debug,
+                                                   verbose);
+
+          if (verbose || !debug) { cout << "done\n"; }
 
           // read input file and populate the binary array 
           size_t file_size;
           int32_t * binary_array;
+          
+          if (verbose || debug)
+            {
+              cout << "--> read_event_file_and_populate_binary_array.";  //1st
+            }
           
           file_size = 
             EventHisto::read_event_file_and_populate_binary_array(input_file,
@@ -287,7 +324,13 @@ int32_t main(int32_t argc, char *argv[])
                                                         n_disp,
                                                         swap_i_cmd.getValue(),
                                                         debug,
+                                                        verbose,
                                                         binary_array);
+
+          if (verbose && !debug)
+            {
+              cout << "done\n";
+            }
 
           // now file_size is the number of element in the file
 
@@ -313,27 +356,66 @@ int32_t main(int32_t argc, char *argv[])
             {
               time_rebin_width_100ns
                 = static_cast<int32_t>(time_rebin_width_cmd.getValue() * 10.);
+              
+              if (verbose || debug)
+                {
+                  cout << "--> generate_linear_time_bin_vector.";  //1st
+                }
               time_bin_vector=generate_linear_time_bin_vector(
                                                         max_time_bin_100ns,
                                                         time_rebin_width_100ns,
                                                         time_offset_100ns,
-                                                        debug);
+                                                        debug,
+                                                        verbose);
+              if (verbose && !debug)
+                {
+                  cout << "done\n";
+                }
+
             }
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
               log_rebin_coeff_100ns
                 = static_cast<int32_t>(log_rebin_coeff_cmd.getValue() * 10.);
               //check if log_rebin_coeff_100ns is greater or equal to 0.5
-              //otherwise forces a value of 1
+              //otherwise forces a value of 0.5
+              /*
               if (log_rebin_coeff_100ns < 0.5)
                 {
                   log_rebin_coeff_100ns = 0.5;
                 }
+              */
+              
+              if (verbose || debug)
+                {
+                  cout << "--> get_minimum_time_bin.";  //1st
+                }
+
+              int32_t minimum_time_bin_100ns;
+              minimum_time_bin_100ns = BinVectorUtils::get_minimum_time_bin(binary_array,
+                                                                            array_size);
+              if (verbose && !debug)
+                {
+                  cout << "done\n"; 
+                }
+
+              if (verbose || debug)
+                {
+                  cout << "--> generate_log_time_bin_vector.";  //1st
+                }
+
               time_bin_vector = generate_log_time_bin_vector(
-                                                        max_time_bin_100ns,
-                                                        log_rebin_coeff_100ns,
-                                                        time_offset_100ns,
-                                                        debug);
+                                                             max_time_bin_100ns,
+                                                             log_rebin_coeff_100ns,
+                                                             time_offset_100ns,
+                                                             minimum_time_bin_100ns,
+                                                             debug,
+                                                             verbose);
+
+              if (verbose && !debug)
+                {
+                  cout << "done\n";
+                }
             }
           else  
             {
@@ -342,10 +424,20 @@ int32_t main(int32_t argc, char *argv[])
               exit(-1);
             }
 
+          if (debug || verbose)
+            {
+              cout << "--> output_time_bin_vector.";  //1st
+            }
           //output the time bin vector data
           output_time_bin_vector(time_bin_vector,
                                  tof_info_filename,
-                                 debug);
+                                 debug,
+                                 verbose);
+
+          if (verbose && !debug)
+            {
+              cout << "done\n";
+            }
 
           int32_t pixel_number = pixel_number_cmd.getValue();
 
@@ -355,6 +447,11 @@ int32_t main(int32_t argc, char *argv[])
           size_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
           
+          if (verbose || debug)
+            {
+              cout << "--> generate_histo...(processing)...\n"; 
+            }
+
           //generate histo binary data array
           generate_histo(array_size,
                          new_Nt,
@@ -365,17 +462,31 @@ int32_t main(int32_t argc, char *argv[])
                          time_bin_vector,
                          max_time_bin_100ns,
                          time_offset_100ns,
-                         debug);
-          
+                         debug,
+                         verbose);
+
           // free memory allocated to binary_array
           delete binary_array;
 
           // swap endian of output array (histo_array)
           if(swap_o_cmd.getValue())
             {
+              if (verbose || debug)
+                {
+                  cout << "--> swap_endian.";  //1st
+                }
               EventHisto::swap_endian(histo_array_size, histo_array);
+              if (verbose || debug)
+                {
+                  cout << "done\n";
+                }
             }
           
+          if (debug || verbose)
+            {
+              cout << "--> write_data_block.";  //1st
+            }
+
           // write new histogram file
           ofstream histo_file(output_filename.c_str(),
                                    ios::binary);
@@ -384,18 +495,34 @@ int32_t main(int32_t argc, char *argv[])
             block_size=histo_array_size;
           }
           size_t offset=0;
-          while(offset<histo_array_size){
-            write_data_block(histo_file,histo_array,offset,block_size,
-                             EventHisto::SIZEOF_UINT32_T);
-            offset+=block_size;
-            if(offset+block_size>histo_array_size){
-              block_size=histo_array_size-offset;
+          while(offset<histo_array_size)
+            {
+              write_data_block(histo_file,
+                               histo_array,
+                               offset,block_size,
+                               EventHisto::SIZEOF_UINT32_T);
+              offset+=block_size;
+              if(offset+block_size>histo_array_size)
+                {
+                  block_size=histo_array_size-offset;
+                }
             }
-          }
+
+          if (verbose || debug)
+            {
+              cout << "done\n"; 
+            }
+
           histo_file.close();
           
           // free memory allocated to histo_array
           delete histo_array;
+
+          if (verbose || debug)
+            {
+              cout << "**** file name: " << input_file << " ****(end of processing)\n";
+              
+            }
         }
     }
   catch (ArgException &e)
