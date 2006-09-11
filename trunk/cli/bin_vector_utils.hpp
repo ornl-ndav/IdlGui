@@ -48,6 +48,18 @@
 namespace BinVectorUtils
 {
   /**
+   * \brief This function determine the minimum time bin from the input array
+   *
+   * \param binary_array (INPUT) is the input binary array
+   * \param size_array (INPUT) is the size of the binary array
+   *
+   * \returns
+   * It returns the minimum time bin
+   */
+  int32_t get_minimum_time_bin(const int32_t * binary_array,
+                               const size_t size_array);
+
+  /**
    * \defgroup generate_linear_time_bin_vector
    * BinVectorUtils::generate_linear_time_bin
    * \{
@@ -68,6 +80,7 @@ namespace BinVectorUtils
    * \param time_rebin_width_100ns (INPUT) is the rebin value (x100ns)
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
+   * \param verbose (INPUT) is a flag for printing processing info
    *
    * \returns A vector of the time bin values.
    */
@@ -75,7 +88,8 @@ namespace BinVectorUtils
   generate_linear_time_bin_vector(const int32_t max_time_bin_100ns,
                                   const int32_t time_rebin_width_100ns,
                                   const int32_t time_offset_100ns,
-                                  const bool debug);
+                                  const bool debug,
+                                  const bool verbose);
 
   /**
    * \}
@@ -101,7 +115,10 @@ namespace BinVectorUtils
    * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
    * the coefficient from the command line in order to work with x100ns data
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
+   * \param minimum_time_bin_100ns (INPUT) is the minimum time bin from the 
+   * binary data file (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
+   * \param verbose (INPUT) is a flag for printing processing info
    *
    * \returns vector of the time bin values.
    */
@@ -109,7 +126,9 @@ namespace BinVectorUtils
   generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
                                const float log_rebin_coeff_100ns,
                                const int32_t time_offset_100ns,
-                               const bool debug);
+                               const int32_t minimum_time_bin_100ns,
+                               const bool debug,
+                               const bool verbose);
   /**
    * \}
    */ // end of generate_log_time_bin_vector
@@ -127,13 +146,15 @@ namespace BinVectorUtils
    * \param tof_info_filename (INPUT) is the name of the file that will
    * contain the time bin values
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
+   * \param verbose (INPUT) is a flat for printing processing info
    *
    * \returns vector of the time bin values.
    */
   void 
   output_time_bin_vector(const std::vector<int32_t> time_bin_vector,
                          const std::string tof_info_filename,
-                         const bool debug);
+                         const bool debug,
+                         const bool verbose);
   /**
    * \}
    */ // end of output_time_bin_vector
