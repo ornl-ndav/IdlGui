@@ -219,7 +219,7 @@ if ((*global).refresh_histo EQ 0) then begin
 endif else begin
 
    img = (*(*global).img)
-
+	
    ;get value of min_tbin and max_tbin
    min_tbin = long((*global).min_tbin)   
    max_tbin = long((*global).max_tbin)
@@ -227,14 +227,13 @@ endif else begin
    Ny = (*global).Ny
      
    new_Nt = max_tbin - min_tbin
- 
-   if (new_Nt EQ 0) then begin
- 
-      new_Nt = 1
-       
-   endif   
+   print, "new_Nt= ", new_Nt           ;REMOVE_ME
 
-   new_img = intarr(new_Nt,Nx,Ny)
+   if (new_Nt EQ 0) then begin
+       new_Nt = 1
+   endif   
+   
+   new_img = intarr(new_Nt+1,Nx,Ny)
    new_img = img(min_tbin:max_tbin,*,*)
    simg = total(new_img,1)
 
@@ -360,7 +359,7 @@ print, max_top
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1
+	xticks=1,xtickv=1,charsize=0.8
 
 ;plot of bottom scale
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
@@ -372,7 +371,7 @@ max_bottom = max(bottom_bank)
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1
+	xticks=1,xtickv=1,charsize=0.8
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " ....Plotting COMPLETED "
@@ -1001,7 +1000,8 @@ widget_control, max_tbin_text_id, GET_VALUE=max_tbin
 min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
 widget_control, min_tbin_text_id, GET_VALUE=min_tbin
 
-if (min_tbin GT max_tbin) then begin
+if (long(min_tbin) GT long(max_tbin)) then begin
+   print, "inside min_tbin GT max_tbin"
    max_tbin = min_tbin
 endif
 
