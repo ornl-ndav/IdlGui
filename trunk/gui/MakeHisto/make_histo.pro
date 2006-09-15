@@ -58,8 +58,6 @@ pro MAIN_BASE_event, Event
 	id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
 	WIDGET_control, id, GET_VALUE=user
 
-	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-	WIDGET_CONTROL, id, /destroy
 
 	CASE instrument OF
 		0: print, "portal_value= ", instrument
@@ -67,8 +65,27 @@ pro MAIN_BASE_event, Event
 		2: print, "portal_value= ", instrument
 	ENDCASE
 
-	wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_
-	SAVE_PARAMETERS, Event, instrument, user
+	if (check_access(Event, instrument, user) NE -1) then begin
+		id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+		WIDGET_CONTROL, id, /destroy
+		wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user
+	endif else begin
+		access = "!ACCESS!"
+		denied = "!DENIED!"		
+		id=widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
+		WIDGET_control, id, set_value=access
+		id=widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
+		WIDGET_control, id, set_value=denied
+		id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
+		WIDGET_control, id, set_value=access
+		id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
+		WIDGET_control, id, set_value=denied
+		id=widget_info(Event.top,FIND_BY_UNAME="USER_TEXT")
+		WIDGET_control, id, set_value=""
+			
+	endelse
+
+
 
      end
 
@@ -111,8 +128,10 @@ PORTAL_BASE= widget_base(MAIN_BASE, $
 PORTAL_LABEL = widget_label(PORTAL_BASE,$
 	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
 
-INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE, $
-	['Liquid Reflectometer', 'Magnetic Reflectometer', 'Backscattering Spectrometer'], $
+instrument_list = ['Liquid Reflectometer', 'Magnetic Reflectometer', 'Backscattering Spectrometer']
+
+INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
+	instrument_list,$
     	/exclusive,/RETURN_NAME,$
 	XOFFSET=30, YOFFSET=25,$
 	SET_VALUE=0.0,$
@@ -137,6 +156,38 @@ USER_TEXT = widget_text(USER_BASE,$
 	VALUE='',/EDITABLE)
 	
 
+LEFT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
+	UNAME='LEFT_TOP_ACCESS_DENIED',$
+	XOFFSET=5,$
+	YOFFSET=20,$
+	SCR_XSIZE=80,$
+	SCR_YSIZE=25,$
+	VALUE="")
+
+LEFT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
+	UNAME='LEFT_BOTTOM_ACCESS_DENIED',$
+	XOFFSET=5,$
+	YOFFSET=40,$
+	SCR_XSIZE=80,$
+	SCR_YSIZE=25,$
+	VALUE="")
+
+RIGHT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
+	UNAME='RIGHT_TOP_ACCESS_DENIED',$
+	XOFFSET=135,$
+	YOFFSET=20,$	
+	SCR_XSIZE=80,$
+	SCR_YSIZE=25,$
+	VALUE="")
+
+RIGHT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
+	UNAME='RIGHT_BOTTOM_ACCESS_DENIED',$
+	XOFFSET=135,$
+	YOFFSET=40,$	
+	SCR_XSIZE=80,$
+	SCR_YSIZE=25,$
+	VALUE="")
+
 PORTAL_GO = widget_button(MAIN_BASE,$
 	XOFFSET=3, YOFFSET=250, $
 	SCR_XSIZE=260, SCR_YSIZE=30,$
@@ -148,16 +199,19 @@ PORTAL_GO = widget_button(MAIN_BASE,$
 
 end
 
-
-pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
 Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
+instrument_list = ['REF_L', 'REF_M', 'BSS']
+;instrument1 = instrument_list[instrument]
+
 global = ptr_new({$
 		path			: '~/CD4/REF_M/REF_M_7/',$
-		instrument		: '',$
+		instrument		: instrument_list[instrument],$
+		user			: user,$
 		filter_event		: '*_event.dat',$
 		event_filename  	: '',$
 		event_filename_only	: '',$
@@ -360,8 +414,8 @@ global = ptr_new({$
   Widget_Control, CREATE_NEXUS, sensitive=0
   Widget_Control, GO_HISTOGRAM_BUTTON_wT1, sensitive=0
   Widget_Control, DEFAULT_PATH_BUTTON_tab2, sensitive=0
- XMANAGER, 'wTLB', MAIN_BASE, /NO_BLOCK
-
+  XMANAGER, 'wTLB', MAIN_BASE, /NO_BLOCK
+    
 end
 
 ;
