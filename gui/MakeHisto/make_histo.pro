@@ -1,10 +1,10 @@
-pro wTLB_event, Event
+pro MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
 
   case Event.id of
 
-    Widget_Info(wWidget, FIND_BY_UNAME='wTLB'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_EVENT_FILE_BUTTON_tab1'): begin
@@ -48,8 +48,103 @@ pro wTLB_event, Event
         CREATE_NEXUS_CB, Event
     end
 
+    ;portal_go
+	
+    Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+	id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+	WIDGET_control, id, GET_VALUE=instrument
+
+	id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
+	WIDGET_control, id, GET_VALUE=user
+
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	WIDGET_CONTROL, id, /destroy
+
+	CASE instrument OF
+		0: print, "portal_value= ", instrument
+		1: print, "portal_value= ", instrument
+		2: print, "portal_value= ", instrument
+	ENDCASE
+
+	wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_
+	SAVE_PARAMETERS, Event, instrument, user
+
+     end
+
     else:
+
   endcase
+
+end
+
+
+pro PORTAL_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+
+;define parameters
+scr_x 	= 880				;main window width
+scr_y 	= 750				;main window height 
+ctrl_x	= 1				;width of left box - control
+ctrl_y	= scr_y				;height of lect box - control
+draw_x 	= 304				;main width of draw area
+draw_y 	= 256				;main heigth of draw area
+draw_offset_x = 10			;draw x offset within widget
+draw_offset_y = 10			;draw y offset within widget
+plot_height = 150			;plot box height
+plot_length = 304			;plot box length
+
+Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
+      ,SCR_XSIZE=265 ,SCR_YSIZE=280, XOFFSET=450 ,YOFFSET=50 $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Make NeXus'  $
+      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+
+;attach global data structure with widget ID of widget main base widget ID
+widget_control,MAIN_BASE,set_uvalue=global
+
+PORTAL_BASE= widget_base(MAIN_BASE, $
+	UNAME='PORTAL_BASE',$
+	SCR_XSIZE=240, SCR_YSIZE=110, FRAME=10,$
+	SPACE=4, XPAD=3, YPAD=3,column=1)
+
+PORTAL_LABEL = widget_label(PORTAL_BASE,$
+	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
+
+INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE, $
+	['Liquid Reflectometer', 'Magnetic Reflectometer', 'Backscattering Spectrometer'], $
+    	/exclusive,/RETURN_NAME,$
+	XOFFSET=30, YOFFSET=25,$
+	SET_VALUE=0.0,$
+	UNAME='INSTRUMENT_TYPE_GROUP')
+
+USER_BASE = widget_base(MAIN_BASE,$
+	UNAME="USER_BASE",$
+	SCR_XSIZE=240,$
+	SCR_YSIZE=70,$
+	XOFFSET=3,$
+	YOFFSET=150,$
+	FRAME=10,$
+	SPACE=4, XPAD=3, YPAD=3)
+
+USER_LABEL = Widget_label(USER_BASE,$
+	XOFFSET=65, YOFFSET=3, VALUE="ENTER YOUR UCAMS")
+
+USER_TEXT = widget_text(USER_BASE,$
+	UNAME='USER_TEXT',$
+	XOFFSET=90, YOFFSET=25,$
+	SCR_XSIZE=40, SCR_YSIZE=35,$
+	VALUE='',/EDITABLE)
+	
+
+PORTAL_GO = widget_button(MAIN_BASE,$
+	XOFFSET=3, YOFFSET=250, $
+	SCR_XSIZE=260, SCR_YSIZE=30,$
+	UNAME="PORTAL_GO",$
+	VALUE="E N T E R")
+
+  Widget_Control, /REALIZE, MAIN_BASE
+  XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
 
@@ -62,6 +157,7 @@ Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 
 global = ptr_new({$
 		path			: '~/CD4/REF_M/REF_M_7/',$
+		instrument		: '',$
 		filter_event		: '*_event.dat',$
 		event_filename  	: '',$
 		event_filename_only	: '',$
@@ -80,9 +176,10 @@ global = ptr_new({$
 		 })
 
   ; Create the top-level base and the tab.
-  wTLB = WIDGET_BASE(GROUP_LEADER=wGroup,UNAME='wTLB',/COLUMN, XOFFSET=50, YOFFSET=450, $
+  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='wTLB',/COLUMN, XOFFSET=50, YOFFSET=450, $
 	SCR_XSIZE=500, SCR_YSIZE=310, title="Histogramming - Mapping - Translation")
-   wTab = WIDGET_TAB(wTLB, LOCATION=location)
+
+  wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
 
   ; Create the first tab base, containing a label and two
   ; button groups.
@@ -250,7 +347,7 @@ global = ptr_new({$
 
 ;   Create a base widget to hold the 'Create NeXus' button, and
 ;   the button itself.
-  wControl = WIDGET_BASE(wTLB)
+  wControl = WIDGET_BASE(MAIN_BASE)
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='C R E A T E    N E X U S',$
 	UNAME = "CREATE_NEXUS",$
 	XOFFSET=10, YOFFSET=5,$
@@ -258,12 +355,12 @@ global = ptr_new({$
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
-  WIDGET_CONTROL, wTLB, /REALIZE
-  WIDGET_CONTROL, wTLB, SET_UVALUE=global ;we've used global, not stash as the structure name
+  WIDGET_CONTROL, MAIN_BASE, /REALIZE
+  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
   Widget_Control, CREATE_NEXUS, sensitive=0
   Widget_Control, GO_HISTOGRAM_BUTTON_wT1, sensitive=0
   Widget_Control, DEFAULT_PATH_BUTTON_tab2, sensitive=0
- XMANAGER, 'wTLB', wTLB, /NO_BLOCK
+ XMANAGER, 'wTLB', MAIN_BASE, /NO_BLOCK
 
 end
 
@@ -271,5 +368,5 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro make_histo, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-  wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end

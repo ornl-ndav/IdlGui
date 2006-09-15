@@ -1,3 +1,20 @@
+pro SAVE_PARAMETERS, Event, instrument, user
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
+widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top, FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+widget_control,id,get_value=list_instrument
+
+
+print, "instrument #2 is: ", list_instrument[2]
+
+end
+
+
+
+
 ; \brief Empty stub procedure used for autoloading.
 ;
 pro make_histo_eventcb
