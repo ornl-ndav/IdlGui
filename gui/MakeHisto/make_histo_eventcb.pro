@@ -1,16 +1,90 @@
-pro SAVE_PARAMETERS, Event, instrument, user
+function check_access, Event, instrument, user
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
-widget_control,id,get_uvalue=global
+list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 
-id = widget_info(Event.top, FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
-widget_control,id,get_value=list_instrument
+list_of_users = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele']
+
+user_index=-1
+for i =0, 9 do begin
+	if (user EQ list_of_users[i]) then begin
+		user_index = i
+		break
+	endif
+endfor
+
+print, "user_index is: ", user_index
 
 
-print, "instrument #2 is: ", list_instrument[2]
+;if (instrument EQ 0) then begin 	;REF_L
+;	if user
+
+
+RETURN, user_index
 
 end
+
+
+;------------------------------------------------------------------------------------------
+; \brief function to obtain the top level base widget given an arbitrary widget ID.
+;
+; \argument wWidget (INPUT)
+;------------------------------------------------------------------------------------------
+function get_tlb,wWidget
+
+id = wWidget
+cntr = 0
+while id NE 0 do begin
+
+	tlb = id
+	id = widget_info(id,/parent)
+	cntr = cntr + 1
+	if cntr GT 10 then begin
+		print,'Top Level Base not found...'
+		tlb = -1
+	endif
+endwhile
+
+return,tlb
+
+end
+
+
+
+
+
+;--------------------------------------------------------------------------------
+; \brief main function that plot the window
+;
+; \argument wWidget (INPUT) 
+;--------------------------------------------------------------------------------
+pro MAIN_REALIZE, wWidget
+
+tlb = get_tlb(wWidget)
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+;pro SAVE_PARAMETERS, Event, instrument, user
+;
+;;get global structure
+;id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
+;widget_control,id,get_uvalue=global
+;
+;id = widget_info(Event.top, FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+;widget_control,id,get_value=list_instrument
+;
+;
+;print, "instrument #2 is: ", list_instrument[2]
+;
+;end
 
 
 
