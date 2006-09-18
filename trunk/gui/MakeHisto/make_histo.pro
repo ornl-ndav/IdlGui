@@ -50,6 +50,10 @@ pro MAIN_BASE_event, Event
 
     ;portal_go
 	
+    Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
+    	USER_TEXT_CB, Event
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
 	id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
@@ -70,22 +74,19 @@ pro MAIN_BASE_event, Event
 		WIDGET_CONTROL, id, /destroy
 		wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 	endif else begin
-		access = "!ACCESS!"
-		denied = "!DENIED!"		
-		id=widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-		WIDGET_control, id, set_value=access
-		id=widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-		WIDGET_control, id, set_value=denied
-		id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-		WIDGET_control, id, set_value=access
-		id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-		WIDGET_control, id, set_value=denied
-		id=widget_info(Event.top,FIND_BY_UNAME="USER_TEXT")
-		WIDGET_control, id, set_value=""
-			
+	       access = "!ACCESS!"
+               denied = "!DENIED!"		
+   	       id=widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
+	       WIDGET_control, id, set_value=access
+     	       id=widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
+	       WIDGET_control, id, set_value=denied
+	       id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
+	       WIDGET_control, id, set_value=access
+	       id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
+               WIDGET_control, id, set_value=denied
+      	       id=widget_info(Event.top,FIND_BY_UNAME="USER_TEXT")
+	       WIDGET_control, id, set_value=""
 	endelse
-
-
 
      end
 
@@ -153,7 +154,7 @@ USER_TEXT = widget_text(USER_BASE,$
 	UNAME='USER_TEXT',$
 	XOFFSET=90, YOFFSET=25,$
 	SCR_XSIZE=40, SCR_YSIZE=35,$
-	VALUE='',/EDITABLE)
+	VALUE='',/EDITABLE,/ALL_EVENTS)
 	
 
 LEFT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
@@ -206,7 +207,6 @@ Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
-;instrument1 = instrument_list[instrument]
 
 global = ptr_new({$
 		path			: '~/CD4/REF_M/REF_M_7/',$
@@ -230,11 +230,11 @@ global = ptr_new({$
 		 })
 
   ; Create the top-level base and the tab.
-  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='wTLB',/COLUMN, XOFFSET=50, YOFFSET=450, $
+  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='MAIN_BASE',/COLUMN, XOFFSET=50, YOFFSET=450, $
 	SCR_XSIZE=500, SCR_YSIZE=310, title="Histogramming - Mapping - Translation")
 
   wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
-
+ 
   ; Create the first tab base, containing a label and two
   ; button groups.
   wT1 = WIDGET_BASE(wTab, TITLE='Histogramming',$
@@ -347,12 +347,6 @@ global = ptr_new({$
 	/wrap,$
 	UNAME='HISTOGRAM_STATUS')
 
-;  wLabel = WIDGET_LABEL(wT1, VALUE='Choose values')
-;  wBgroup1 = CW_BGROUP(wT1, ['one', 'two', 'three'], $
-;    /ROW, /NONEXCLUSIVE, /RETURN_NAME)
-;  wBgroup2 = CW_BGROUP(wT1, ['red', 'green', 'blue'], $
-;    /ROW, /EXCLUSIVE, /RETURN_NAME)
-
   wT2 = WIDGET_BASE(wTab, TITLE='Mapping and Default Path')
 
   OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
@@ -388,6 +382,17 @@ global = ptr_new({$
 	SCR_XSIZE=358, SCR_YSIZE=32, $
 	value = '')
 
+  wT3 = WIDGET_BASE(wTab, TITLE='Event file information')
+
+  FILE_INFO_TEXT = WIDGET_TEXT(wT3,$
+	UNAME='FILE_INFO_TEXT',$
+	XOFFSET=5, YOFFSET=5,$
+	SCR_XSIZE= 485,$
+	SCR_YSIZE=235,$
+	VALUE='')
+
+
+
 ;   Create the second tab base, containing a label and
 ;  a slider.
 ;  wLabel = WIDGET_LABEL(wT2, VALUE='Move the Slider')
@@ -414,7 +419,7 @@ global = ptr_new({$
   Widget_Control, CREATE_NEXUS, sensitive=0
   Widget_Control, GO_HISTOGRAM_BUTTON_wT1, sensitive=0
   Widget_Control, DEFAULT_PATH_BUTTON_tab2, sensitive=0
-  XMANAGER, 'wTLB', MAIN_BASE, /NO_BLOCK
+  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
     
 end
 

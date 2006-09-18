@@ -1,24 +1,84 @@
+;---------------------------------------------------------------------------------
+pro USER_TEXT_cb, Event   ;for REF_M
+
+view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
+WIDGET_CONTROL, view_id, set_value= ''	
+view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
+WIDGET_CONTROL, view_id, set_value= ''	
+view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
+WIDGET_CONTROL, view_id, set_value= ''	
+view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
+WIDGET_CONTROL, view_id, set_value= ''	
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
 function check_access, Event, instrument, user
 
 list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 
+;0:j35:jean / 1:pf9:pete / 2:2zr:michael / 3:mid:steve / 4:1qg:rick / 5:ha9:haile / 6:vyi:frank / 7:vuk:john 
+;8:x4t:xiadong / 9:ele:eugene
 list_of_users = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele']
 
+;check if ucams is in the list
 user_index=-1
 for i =0, 9 do begin
-	if (user EQ list_of_users[i]) then begin
-		user_index = i
-		break
-	endif
+   if (user EQ list_of_users[i]) then begin
+     user_index = i
+     break 
+   endif
 endfor
 
-print, "user_index is: ", user_index
-
-
-;if (instrument EQ 0) then begin 	;REF_L
-;	if user
-
-
+;check if user is autorized for this instrument
+CASE instrument OF		
+   ;REF_L
+   0: CASE user_index OF
+        -1:
+	0: 		;authorized
+	1: 		;authorized
+	2: 		;authorized
+	3: 		;authorized
+	4: user_index=-1	;unauthorized
+	5: user_index=-1	;unauthorized
+	6: user_index=-1	;unauthorized
+	7: 		;authorized
+	8: 		;authorized
+	9: user_index=-1	;unauthorized
+      ENDCASE
+   ;REF_M
+   1: CASE user_index OF
+	-1:
+	0: 
+	1: 
+	2: 
+	3: 
+	4: 
+	5: 
+	6: 
+	7: user_index=-1
+	8: user_index=-1
+	9: user_index=-1
+      ENDCASE
+   ;BSS
+   2: CASE user_index OF
+	-1:
+	0: 
+	1: 
+	2: 
+	3: 
+	4: user_index=-1
+	5: user_index=-1
+	6: user_index=-1
+	7: user_index=-1
+	8: user_index=-1
+	9: 
+      ENDCASE
+ENDCASE	 
+	
 RETURN, user_index
 
 end
@@ -72,23 +132,6 @@ end
 
 
 
-;pro SAVE_PARAMETERS, Event, instrument, user
-;
-;;get global structure
-;id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
-;widget_control,id,get_uvalue=global
-;
-;id = widget_info(Event.top, FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
-;widget_control,id,get_value=list_instrument
-;
-;
-;print, "instrument #2 is: ", list_instrument[2]
-;
-;end
-
-
-
-
 ; \brief Empty stub procedure used for autoloading.
 ;
 pro make_histo_eventcb
@@ -115,7 +158,7 @@ pro OPEN_EVENT_FILE_CB, event
 widget_control,/hourglass
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;open file
@@ -211,7 +254,7 @@ pro  OPEN_MAPPING_FILE_BUTTON_CB, event
 widget_control,/hourglass
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='wTLB')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;open file
@@ -250,7 +293,7 @@ pro  GO_HISTOGRAM_CB, event
 wWidget = event.top
 
 ;get the global data structure
-id=widget_info(wWidget, FIND_BY_UNAME='wTLB')
+id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 txt = "*** HISTOGRAMMING ***"
@@ -323,7 +366,7 @@ pro CREATE_NEXUS_CB, event
 wWidget = event.top
 
 ;get the global data structure
-id=widget_info(wWidget, FIND_BY_UNAME='wTLB')
+id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 txt = "*** TRANSLATION SERVICE ***"
