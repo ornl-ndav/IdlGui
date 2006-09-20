@@ -161,6 +161,9 @@ widget_control,/hourglass
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+widget_control,rb_id,sensitive=0
+
 ;open file
 filter = (*global).filter_histo_event
 
@@ -190,18 +193,24 @@ if file NE '' then begin
 	(*global).histo_event_filename_only = filename_only    ;store only name of the file (without the path)
 
 	;check if histo or event file
-	is_file_histo = strsplit(filename_only,'histo',/regex)
-	print, "is_file_histo= ", is_file_histo , " (",filename_only,")"
+	print, "filename_only= " , filename_only
+	is_file_histo = strmatch(filename_only,'*histo*')       ;1: yes        0: no
 
-
-
-	das_mount_point = file_list[0]
-	print, "das_mount_point= ", das_mount_point
+	(*global).das_mount_point = file_list[0]
+	;print, "das_mount_point= ", das_mount_point
 
 	proposal_number = file_list[1]
-	print, "proposal_number= ", proposal_number
+	(*global).proposal_number = proposal_number
+	;print, "proposal_number= ", proposal_number
 
+	instrument_run_number = file_list[2]
+	(*global).instrument_run_number = instrument_run_number
+	;print, "instrument_run_number= ", instrument_run_number
 		
+	instrument = (*global).instrument
+	run_number = strsplit(instrument_run_number,instrument,/extract)
+	(*global).run_number = run_number
+	;print, "run_number is ", run_number
 
 	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTO_EVENT_FILE_LABEL_tab1')
 	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
@@ -223,43 +232,95 @@ if file NE '' then begin
 	;ex: /BSS-DAS-FS/2006_1_2_SCI/BSS_23/....
 	;###########################################
 
-	;parse file
+	;location where to look for run already archived or not
+	archive_run_number_location = "/SNS/" + instrument + "/" + proposal_number + "/" + run_number
+	command = "ls -d " + archive_run_number_location	
+	spawn, command, listening ;listening ="" when not found
 
+;	id=widget_info(EVent.top,FIND_BY_UNAME='ARCHIVE_FRAME')
+;	;check if file has already been archived, if no, show archive or not label box
+;	if (listening EQ '') then begin
+;	   WIDGET_CONTROL, id, destroy
+;	endif else begin	;if yes, do the following one
+;	   WIDGET_CONTROL, id, show=1
+;	   WIDGET_CONTROL, id, SET_VALUE="** ALREADY ARCHIVED **"
+;	endelse
 
-	;extract the run number
-
-
-	
 	;get info from xml files that go with histo/event file
 
-	;now we can activate "GO_HISTOGRAM
-	button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
-	widget_control,button1,sensitive=1
+	;now we can activate "GO_HISTOGRAM" if file is event file ONLY
+	if (is_file_histo NE 1) then begin
+
+	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
+	   widget_control, id, map=0
+
+;	   button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
+;	   widget_control,button1,sensitive=1
+;	
+;	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_LABEL_tab1")
+;   	   widget_control,id,sensitive=1
+;
+;   	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+;	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_LABEL_wT1")
+;	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_TEXT_wT1")
+;	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_LABEL_wT1")
+;	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
+; 	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_LABEL_wT1")
+;	   widget_control,id,sensitive=1
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
+;	   widget_control,id,sensitive=1
 	
-	id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_LABEL_tab1")
-	widget_control,id,sensitive=1
+ 	endif else begin
 
-	id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-	widget_control,id,sensitive=1
+	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
+	   widget_control, id, map=1
 
-	id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_LABEL_wT1")
-	widget_control,id,sensitive=1
+;	   button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
+;	   widget_control,button1,sensitive=0
+;	
+;	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_LABEL_tab1")
+;   	   widget_control,id,sensitive=0
+;
+;   	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+;	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_LABEL_wT1")
+;	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_TEXT_wT1")
+;	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_LABEL_wT1")
+;	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
+; 	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_LABEL_wT1")
+;	   widget_control,id,sensitive=0
+;
+;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
+;	   widget_control,id,sensitive=0
 
-	id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_TEXT_wT1")
-	widget_control,id,sensitive=1
 
-	id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_LABEL_wT1")
-	widget_control,id,sensitive=1
-
-	id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
-	widget_control,id,sensitive=1
-
-	id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_LABEL_wT1")
-	widget_control,id,sensitive=1
-	id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
-	widget_control,id,sensitive=1
-		
+	endelse
+	
   endif
+
+;activate GO_NEXUS button
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+widget_control,rb_id,sensitive=1
 
 end
 
@@ -397,6 +458,10 @@ end
 pro CREATE_NEXUS_CB, event
 
 wWidget = event.top
+
+;activate GO_NEXUS button
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+widget_control,rb_id,sensitive=0
 
 ;get the global data structure
 id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
