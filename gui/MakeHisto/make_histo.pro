@@ -154,7 +154,7 @@ USER_TEXT = widget_text(USER_BASE,$
 	UNAME='USER_TEXT',$
 	XOFFSET=90, YOFFSET=25,$
 	SCR_XSIZE=40, SCR_YSIZE=35,$
-	VALUE='',/EDITABLE,/ALL_EVENTS)
+	VALUE='j35',/EDITABLE,/ALL_EVENTS)				;REMOVE j35 (ONLY FOR SPEEDING UP THINGS)
 	
 
 LEFT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
@@ -221,6 +221,10 @@ global = ptr_new({$
 		translation_filename	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_03.nxt',$
 		nexus_filename		: '',$
 		new_translation_filename: '',$
+		das_mount_point		: '',$
+		proposal_number		: '',$
+		instrument_run_number	: '',$
+		run_number		: '',$
 		lin_log			: 0L,$
 		number_pixels		: 0L,$
 		rebinning		: 0L,$
@@ -230,14 +234,15 @@ global = ptr_new({$
 		 })
 
   ; Create the top-level base and the tab.
-  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='MAIN_BASE',/COLUMN, XOFFSET=350, YOFFSET=350, $
-	SCR_XSIZE=500, SCR_YSIZE=310, title="Histogramming - Mapping - Translation")
+  title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ")"
+  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='MAIN_BASE', XOFFSET=350, YOFFSET=350, $
+	SCR_XSIZE=500, SCR_YSIZE=310, title=title)
 
   wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
  
   ; Create the first tab base, containing a label and two
   ; button groups.
-  wT1 = WIDGET_BASE(wTab, TITLE='Histogramming',$
+  wT1 = WIDGET_BASE(wTab, TITLE='Input file',$
 	UNAME="wT1",$
 	SCR_XSIZE=500, SCR_YSIZE=250)
 
@@ -251,6 +256,19 @@ global = ptr_new({$
 	XOFFSET=154, YOFFSET=5,$
 	SCR_XSIZE=340, SCR_YSIZE=30, $
 	value = '')
+
+  ;****************LEFT FRAME
+
+  HIDE_HISTO_BASE = WIDGET_BASE(wT1,$
+	UNAME='HIDE_HISTO_BASE',$
+	XOFFSET=5, YOFFSET=37,$
+	SCR_XSIZE=205, SCR_YSIZE=175)
+
+  HIDE_HISTO_FRAME = WIDGET_LABEL(HIDE_HISTO_BASE,$
+	UNAME='HIDE_HISTO_FRAME',$
+	XOFFSET=5, YOFFSET=37,$
+	SCR_XSIZE=205, SCR_YSIZE=175,$
+	VALUE="")
 
   NUMBER_PIXELIDS_LABEL_tab1 = WIDGET_LABEL(wT1,$
 	UNAME="NUMBER_PIXELIDS_LABEL_tab1",$
@@ -331,14 +349,16 @@ global = ptr_new({$
   LEFT_FRAME_wT1 = WIDGET_LABEL(wT1,$
 	XOFFSET=5, YOFFSET=37,$
 	SCR_XSIZE=200, SCR_YSIZE=170,$
-	FRAME=2, value ='')
+	FRAME=2, value ='',$
+	sensitive=0)
 
   GO_HISTOGRAM_BUTTON_wT1 = WIDGET_BUTTON(wT1,$
 	XOFFSET=3, $
 	YOFFSET=top_offset+115,$
 	SCR_XSIZE=208, SCR_YSIZE=30,$
 	VALUE='Histogram Data',$
-	UNAME='GO_HISTOGRAM_BUTTON_wT1')
+	UNAME='GO_HISTOGRAM_BUTTON_wT1',$
+	sensitive=0)
 
   HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(wT1,$
 	XOFFSET=215, YOFFSET=37,$
@@ -346,6 +366,25 @@ global = ptr_new({$
 	VALUE='Select a file.', /scroll,$
 	/wrap,$
 	UNAME='HISTOGRAM_STATUS')
+
+
+  wT3 = WIDGET_BASE(wTab, TITLE='File information')
+
+  FILE_INFO_TEXT = WIDGET_TEXT(wT3,$
+	UNAME='FILE_INFO_TEXT',$
+	XOFFSET=5, YOFFSET=5,$
+	SCR_XSIZE= 485,$
+	SCR_YSIZE=235,$
+	VALUE='')
+
+  wT4 = WIDGET_BASE(wTab, TITLE='Display')
+
+  PLOT_DATA = widget_draw(wT4,$
+	UNAME = 'PLOT_DATA',$
+	XOFFSET=5, YOFFSET=5,$
+	SCR_XSIZE=485,$
+	SCR_YSIZE=235,$
+	RETAIN=2)	
 
   wT2 = WIDGET_BASE(wTab, TITLE='Mapping and Default Path')
 
@@ -382,24 +421,6 @@ global = ptr_new({$
 	SCR_XSIZE=358, SCR_YSIZE=32, $
 	value = '')
 
-  wT3 = WIDGET_BASE(wTab, TITLE='Event file information')
-
-  FILE_INFO_TEXT = WIDGET_TEXT(wT3,$
-	UNAME='FILE_INFO_TEXT',$
-	XOFFSET=5, YOFFSET=5,$
-	SCR_XSIZE= 485,$
-	SCR_YSIZE=235,$
-	VALUE='')
-
-  wT4 = WIDGET_BASE(wTab, TITLE='Display')
-
-  PLOT_DATA = widget_draw(wT4,$
-	UNAME = 'PLOT_DATA',$
-	XOFFSET=5, YOFFSET=5,$
-	SCR_XSIZE=485,$
-	SCR_YSIZE=235,$
-	RETAIN=2)	
-
 ;   Create the second tab base, containing a label and
 ;  a slider.
 ;  wLabel = WIDGET_LABEL(wT2, VALUE='Move the Slider')
@@ -416,8 +437,29 @@ global = ptr_new({$
   wControl = WIDGET_BASE(MAIN_BASE)
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='C R E A T E    N E X U S',$
 	UNAME = "CREATE_NEXUS",$
-	XOFFSET=10, YOFFSET=5,$
-	SCR_XSIZE=480, SCR_YSIZE=30)
+	XOFFSET=3, YOFFSET=277,$
+	SCR_XSIZE=200, SCR_YSIZE=30)
+
+  archive_frame = WIDGET_LABEL(MAIN_BASE,$
+	UNAME="ARCHIVE_FRAME",$
+	XOFFSET=205,$
+	YOFFSET=277,$
+	SCR_XSIZE=290,$
+	SCR_YSIZE=25,$
+	frame=0,value="")
+
+  archive_it_or_not_label = WIDGET_LABEL(MAIN_BASE,$
+	XOFFSET=220, YOFFSET=277,$
+	SCR_XSIZE=140, SCR_YSIZE=30,$
+	VALUE="Archive this run ?")
+
+  archive_it_or_not = CW_BGROUP(MAIN_BASE, ['YES', 'NO'], $
+    	/ROW, /EXCLUSIVE, /RETURN_NAME,$
+	XOFFSET=360, YOFFSET=277,$
+	SET_VALUE=0.0,$
+	UNAME='archive_it_or_not')
+  
+  
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
