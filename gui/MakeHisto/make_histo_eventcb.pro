@@ -152,7 +152,7 @@ endif
 
 end
 
-pro OPEN_EVENT_FILE_CB, event
+pro OPEN_HISTO_EVENT_FILE_CB, event
 
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
@@ -162,17 +162,24 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;open file
-filter = (*global).filter_event
-path = (*global).path
-file = dialog_pickfile(path=path,get_path=path,title='Select event file',filter=filter)
+filter = (*global).filter_histo_event
+
+;use first statement on mac, second one on heater...
+if (!cpu.hw_vector EQ 0) then begin
+   path = "/"+(*global).instrument+"-DAS-FS/"
+endif else begin
+   path = (*global).path				
+endelse
+
+file = dialog_pickfile(path=path,get_path=path,title='Select input file',filter=filter)
 
 ;only read data if valid file given
 if file NE '' then begin
 
-	(*global).event_filename = file ; store input filename
+	(*global).histo_event_filename = file ; store input filename
 	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-	text = "Select event file: "
+	text = "File selected: "
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 	text = strcompress(file,/remove_all)
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -180,9 +187,23 @@ if file NE '' then begin
 	;get only the last part of the file (its name)
 	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
 	filename_only=file_list[length-1]	
-	(*global).event_filename_only = filename_only ; store only name of the file (without the path)
+	(*global).histo_event_filename_only = filename_only    ;store only name of the file (without the path)
 
-	view_info = widget_info(Event.top,FIND_BY_UNAME='EVENT_FILE_LABEL_tab1')
+	;check if histo or event file
+	is_file_histo = strsplit(filename_only,'histo',/regex)
+	print, "is_file_histo= ", is_file_histo , " (",filename_only,")"
+
+
+
+	das_mount_point = file_list[0]
+	print, "das_mount_point= ", das_mount_point
+
+	proposal_number = file_list[1]
+	print, "proposal_number= ", proposal_number
+
+		
+
+	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTO_EVENT_FILE_LABEL_tab1')
 	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
 
 	;determine path	
@@ -194,6 +215,22 @@ if file NE '' then begin
 	;display path
 	view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
 	WIDGET_CONTROL, view_info, SET_VALUE=path
+
+	;###########################################
+	;for BSS   -> BSS-DAS-FS
+	;for REF_L -> REF_L-DAS-FS
+	;for REF_M -> REF_M-DAS-FS
+	;ex: /BSS-DAS-FS/2006_1_2_SCI/BSS_23/....
+	;###########################################
+
+	;parse file
+
+
+	;extract the run number
+
+
+	
+	;get info from xml files that go with histo/event file
 
 	;now we can activate "GO_HISTOGRAM
 	button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
@@ -222,10 +259,6 @@ if file NE '' then begin
 	id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
 	widget_control,id,sensitive=1
 		
-		
-
-
-
   endif
 
 end
@@ -500,3 +533,30 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
+
+;--------------------------------------------------------
+pro display_xml_info, Event, filename
+
+filename ="/Users/j35/IDL/XML/REF_L_97_cvinfo.xml"
+oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+
+oDocList = oDoc->GetElementsByTagName('das')
+obj1 = oDocList->item(0)
+
+obj3 = obj1->GetElementsByTagName('das.counts')
+obj4 = obj3->item(0)
+
+obj4b = obj4->getattributes()
+obj4c = obj4b->getnameditem('deviceID')
+obj4d = obj4b->getnameditem('value')
+obj4e = obj4b->getnameditem('timestamp')
+
+print,obj4c->getname()
+print,obj4c->getvalue()
+print,obj4d->getname()
+print,obj4d->getvalue()
+print,obj4e->getname()
+print,obj4e->getvalue()
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

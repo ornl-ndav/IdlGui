@@ -7,9 +7,9 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_EVENT_FILE_BUTTON_tab1'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_EVENT_FILE_BUTTON_tab1'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_EVENT_FILE_CB, Event
+        OPEN_HISTO_EVENT_FILE_CB, Event
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXEL_IDS'): begin
@@ -209,12 +209,12 @@ Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 
 global = ptr_new({$
-		path			: '~/CD4/REF_M/REF_M_7/',$
+		path			: '~/CD4/REF_M/REF_M_7/',$ 
 		instrument		: instrument_list[instrument],$
 		user			: user,$
-		filter_event		: '*_event.dat',$
-		event_filename  	: '',$
-		event_filename_only	: '',$
+		filter_histo_event	: '*.dat',$
+		histo_event_filename  	: '',$
+		histo_event_filename_only	: '',$
 		histo_filename		: '',$
 		histo_mapped_filename	: '',$
 		mapping_filename	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
@@ -230,7 +230,7 @@ global = ptr_new({$
 		 })
 
   ; Create the top-level base and the tab.
-  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='MAIN_BASE',/COLUMN, XOFFSET=50, YOFFSET=450, $
+  MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, UNAME='MAIN_BASE',/COLUMN, XOFFSET=350, YOFFSET=350, $
 	SCR_XSIZE=500, SCR_YSIZE=310, title="Histogramming - Mapping - Translation")
 
   wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
@@ -241,15 +241,15 @@ global = ptr_new({$
 	UNAME="wT1",$
 	SCR_XSIZE=500, SCR_YSIZE=250)
 
-  OPEN_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
-	UNAME="OPEN_EVENT_FILE_BUTTON_tab1",$
-	XOFFSET= 10, YOFFSET = 5, $
-	SCR_XSIZE=120, SCR_YSIZE=30, $
-	VALUE= "Select Event file")
-  EVENT_FILE_LABEL_tab1 = WIDGET_TEXT(wT1,$
-	UNAME='EVENT_FILE_LABEL_tab1',$
-	XOFFSET=135, YOFFSET=5,$
-	SCR_XSIZE=358, SCR_YSIZE=30, $
+  OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
+	UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
+	XOFFSET= 3, YOFFSET = 5, $
+	SCR_XSIZE=150, SCR_YSIZE=30, $
+	VALUE= "Select Event/histo file")
+  HISTO_EVENT_FILE_LABEL_tab1 = WIDGET_TEXT(wT1,$
+	UNAME='HISTO_EVENT_FILE_LABEL_tab1',$
+	XOFFSET=154, YOFFSET=5,$
+	SCR_XSIZE=340, SCR_YSIZE=30, $
 	value = '')
 
   NUMBER_PIXELIDS_LABEL_tab1 = WIDGET_LABEL(wT1,$
@@ -343,7 +343,7 @@ global = ptr_new({$
   HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(wT1,$
 	XOFFSET=215, YOFFSET=37,$
 	SCR_XSIZE=275, SCR_YSIZE=210,$
-	VALUE='First, select an event file.', /scroll,$
+	VALUE='Select a file.', /scroll,$
 	/wrap,$
 	UNAME='HISTOGRAM_STATUS')
 
@@ -391,7 +391,14 @@ global = ptr_new({$
 	SCR_YSIZE=235,$
 	VALUE='')
 
+  wT4 = WIDGET_BASE(wTab, TITLE='Display')
 
+  PLOT_DATA = widget_draw(wT4,$
+	UNAME = 'PLOT_DATA',$
+	XOFFSET=5, YOFFSET=5,$
+	SCR_XSIZE=485,$
+	SCR_YSIZE=235,$
+	RETAIN=2)	
 
 ;   Create the second tab base, containing a label and
 ;  a slider.
