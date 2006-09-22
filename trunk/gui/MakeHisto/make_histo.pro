@@ -256,15 +256,15 @@ global = ptr_new({$
 		xsize			: 850,$	   
 		ysize			: 310,$	
 		xsize_dislay_REF_L	: 850 + 265,$
-		xsize_display_REF_M	: 850 + 304,$
+		xsize_display_REF_M	: 850 + 314,$
 		xsize_display_BSS	: 850 + 64,$
 		xsize_display		: 0L,$
 		ysize_display		: 700L,$
-		NX_REF_L		: 256L,$
-		NY_REF_L		: 304L,$
+		NX_REF_L		: 304L,$
+		NY_REF_L		: 256L,$
 		Nimg_REF_L		: 77824L,$
-		NX_REF_M		: 304L,$
-		NY_REF_M		: 256L,$
+		NX_REF_M		: 256L,$
+		NY_REF_M		: 304L,$
 		Nimg_REF_M		: 77824L,$
 		Nimg_BSS		: 9216L,$
 		Ntof			: 0L,$
