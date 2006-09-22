@@ -1,3 +1,152 @@
+pro CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
+
+print, "in close_complete....."
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+widget_control, id, scr_ysize=(*global).ysize
+
+end
+
+
+pro COMPLETE_RUNINFO_FILE_event, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument =  (*global).instrument
+
+id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+widget_control, id, scr_ysize=(*global).ysize_display
+   
+cmd = "less " + (*global).runinfo_xml_filename
+spawn, cmd, listening
+  
+id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_XML_DISPLAY_TEXT")
+widget_control, id, set_value = listening
+
+end
+
+
+
+pro COMPLETE_CVINFO_FILE_event, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument =  (*global).instrument
+
+id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+widget_control, id, scr_ysize=(*global).ysize_display
+   
+cmd = "less " + (*global).cvinfo_xml_filename
+spawn, cmd, listening
+  
+id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_XML_DISPLAY_TEXT")
+widget_control, id, set_value = listening
+
+end
+
+
+
+;____________________________________________________________________________________
+
+function display_xml_info, filename, item_name
+
+oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+
+oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+obj1 = oDocList->item(0)
+
+obj2=obj1->GetElementsByTagName('Scattering')
+obj3=obj2->item(0)
+
+obj4=obj3->GetElementsByTagName('NumTimeChannels')
+obj5=obj4->item(0)
+
+obj5b=obj5->getattributes()
+obj5c=obj5b->getnameditem(item_name)
+
+return, obj5c->getvalue()
+
+end
+
+
+PRO xml_object_recurse, oNode, match, return_value
+
+;check to see if this node matches the one we're looking for
+if oNode->GetNodeName() EQ match then begin
+;case where we find a match
+;now we have to get the first child of this node to get the value
+;for this node
+   		oSibling = oNode->GetFirstChild()
+;now that we found the sibling, save the result and pass it all the way back
+;to the top
+		if OBJ_VALID(oSibling) then return_value = oSibling->GetNodeValue()
+end
+   ; Visit children - process of recursing deeper into the object tree
+   oSibling = oNode->GetFirstChild()
+   WHILE OBJ_VALID(oSibling) DO BEGIN
+      xml_object_recurse, oSibling, match, return_value
+      oSibling = oSibling->GetNextSibling()
+   ENDWHILE
+END
+
+;function that creates the XML object
+function get_xml_value, NodeName, filename
+;create XML object and load file
+   oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+;now load it with our xml file of interest
+;   oDoc->Load, filename
+;initiate the variable that will contain the data we're interested in
+   return_value = ''
+;recurse the object tree and find what we're looking for
+   xml_object_recurse, oDoc, NodeName, return_value
+;	print,'Return Value: ',return_value
+;send the findings back to the calling program
+	return, return_value
+;cleanup memory and destroy the object
+   OBJ_DESTROY, oDoc
+END
+
+
+function read_xml_file, filename, nodename
+
+filename = filename[0]
+;and the nodename (xml key) for the data they want
+;call the function to get the value we're looking for from the xml file
+xml_node_value = get_xml_value(NodeName,filename)
+
+return, xml_node_value
+
+end
+
+pro DISPLAY_BUTTON, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument =  (*global).instrument
+
+if (Event.select EQ 1) then begin 	;if button is pressed
+
+   id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+   widget_control, id, scr_xsize=(*global).xsize_display
+
+endif else begin			;if button released
+   id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+   widget_control, id, scr_xsize=(*global).xsize
+endelse
+
+end
+
+
 ;---------------------------------------------------------------------------------
 pro USER_TEXT_cb, Event   ;for REF_M
 
@@ -237,82 +386,98 @@ if file NE '' then begin
 	command = "ls -d " + archive_run_number_location	
 	spawn, command, listening ;listening ="" when not found
 
-;	id=widget_info(EVent.top,FIND_BY_UNAME='ARCHIVE_FRAME')
-;	;check if file has already been archived, if no, show archive or not label box
-;	if (listening EQ '') then begin
-;	   WIDGET_CONTROL, id, destroy
-;	endif else begin	;if yes, do the following one
-;	   WIDGET_CONTROL, id, show=1
-;	   WIDGET_CONTROL, id, SET_VALUE="** ALREADY ARCHIVED **"
-;	endelse
+	id=widget_info(Event.top,FIND_BY_UNAME='ARCHIVE_LABEL')
+	;check if file has already been archived, if no, show archive or not label box
+	if (listening EQ '') then begin
+	   WIDGET_CONTROL, id, map=0
+	endif else begin	;if yes, do the following one
+ 	   WIDGET_CONTROL, id, map=1
+	   WIDGET_CONTROL, id, SET_VALUE= '** ALREADY ARCHIVED **'
+	endelse
 
 	;get info from xml files that go with histo/event file
+	;determine name of xml file (cvinfo)	
 
-	;now we can activate "GO_HISTOGRAM" if file is event file ONLY
+	general_xml_filename = path + instrument + "_" + run_number + "_"
+	cvinfo_xml_filename = general_xml_filename + "cvinfo.xml"
+	runinfo_xml_filename = general_xml_filename + "runinfo.xml"
+	
+	runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
+	widget_control, runinfo_id, sensitive=1
+
+	cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
+	widget_control, cvinfo_id, sensitive=1
+
+
+
+
+
+
+
+
+
+	(*global).cvinfo_xml_filename = cvinfo_xml_filename
+	(*global).runinfo_xml_filename = runinfo_xml_filename
+
+	;name of xml file
+	id = widget_info(Event.top, FIND_BY_UNAME = "XML_FILE_TEXT")
+	text = runinfo_xml_filename
+	widget_control, id, set_value=text	
+
+	;Title
+	id = widget_info(Event.top, FIND_BY_UNAME = "TITLE_TEXT")
+	text = read_xml_file(runinfo_xml_filename, "Title")
+	widget_control, id, set_value=text
+	
+	;Notes
+	id = widget_info(Event.top, FIND_BY_UNAME = "NOTES_TEXT")
+	text = read_xml_file(runinfo_xml_filename, "Notes")
+	widget_control, id, set_value=text
+
+	;SpecialDesignation
+	id = widget_info(Event.top, FIND_BY_UNAME = "SPECIAL_DESIGNATION")
+	text = read_xml_file(runinfo_xml_filename, "SpecialDesignation")
+	widget_control, id, set_value=text
+
+	;Script ID
+	id = widget_info(Event.top, FIND_BY_UNAME = "SCRIPT_ID_TEXT")
+	text = read_xml_file(runinfo_xml_filename, "SCRIPTID")
+	widget_control, id, set_value=text
+
+	;if file is an event file, we activate the  "GO_HISTOGRAM" part
 	if (is_file_histo NE 1) then begin
+
+	   ;get number of pixels
+	   pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+	   id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+	   widget_control, id, set_value=pixel_number	
+
+	   item_value = display_xml_info(runinfo_xml_filename, "startbin")
+	   id = widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
+	   widget_control, id, set_value=item_value
+
+	   item_value = display_xml_info(runinfo_xml_filename, "endbin")
+	   id = widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
+	   widget_control, id, set_value=item_value
+	
+
+
 
 	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
 	   widget_control, id, map=0
 
-;	   button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
-;	   widget_control,button1,sensitive=1
-;	
-;	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_LABEL_tab1")
-;   	   widget_control,id,sensitive=1
-;
-;   	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-;	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_LABEL_wT1")
-;	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_TEXT_wT1")
-;	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_LABEL_wT1")
-;	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
-; 	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_LABEL_wT1")
-;	   widget_control,id,sensitive=1
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
-;	   widget_control,id,sensitive=1
-	
- 	endif else begin
+	   ;desactivate display button
+	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+	   widget_control, id_display, sensitive=0
 
+ 	endif else begin   ;if file is an histogram, we can activate the display button
+	
 	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
 	   widget_control, id, map=1
-
-;	   button1=widget_info(Event.top, FIND_BY_UNAME="GO_HISTOGRAM_BUTTON_wT1")
-;	   widget_control,button1,sensitive=0
-;	
-;	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_LABEL_tab1")
-;   	   widget_control,id,sensitive=0
-;
-;   	   id=widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-;	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_LABEL_wT1")
-;	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="REBINNING_TEXT_wT1")
-;	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_LABEL_wT1")
-;	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
-; 	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_LABEL_wT1")
-;	   widget_control,id,sensitive=0
-;
-;	   id=widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
-;	   widget_control,id,sensitive=0
-
+		
+	   ;activate display button
+	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+	   widget_control, id_display, sensitive=1
 
 	endelse
 	
@@ -599,29 +764,9 @@ widget_control,hourglass=0
 
 end
 
-;--------------------------------------------------------
-pro display_xml_info, Event, filename
 
-filename ="/Users/j35/IDL/XML/REF_L_97_cvinfo.xml"
-oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
 
-oDocList = oDoc->GetElementsByTagName('das')
-obj1 = oDocList->item(0)
 
-obj3 = obj1->GetElementsByTagName('das.counts')
-obj4 = obj3->item(0)
 
-obj4b = obj4->getattributes()
-obj4c = obj4b->getnameditem('deviceID')
-obj4d = obj4b->getnameditem('value')
-obj4e = obj4b->getnameditem('timestamp')
 
-print,obj4c->getname()
-print,obj4c->getvalue()
-print,obj4d->getname()
-print,obj4d->getvalue()
-print,obj4e->getname()
-print,obj4e->getvalue()
 
-end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
