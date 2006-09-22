@@ -1,3 +1,67 @@
+pro plot_data_REF_M, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+print, "herererre"
+
+;retrieve data parameters
+Nx = (*global).Nx_REF_M
+Ny = (*global).Ny_REF_M
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;file to open
+file = (*global).histo_event_filename
+print, "file is: ", file
+
+;only read data if valid file given
+if file NE '' then begin
+
+   openr,u,file,/get
+   ;find out file info
+   fs = fstat(u)
+
+   Nimg = Nx*Ny
+   Ntof = fs.size/(Nimg*4L)
+   (*global).Ntof = Ntof	;set back in global structure
+
+   data_assoc = assoc(u,lonarr(Ntof))
+	
+   ;make the image array
+   img = lonarr(Nx,Ny)
+   for i=0L,Nimg-1 do begin
+	x = i MOD Nx
+	y = i/Nx
+	img[x,y] = total(data_assoc[i])
+   endfor
+
+   img=transpose(img)
+
+   ;load data up in global ptr array
+   (*(*global).img_ptr) = img
+   (*(*global).data_assoc) = data_assoc
+	
+   ;now turn hourglass back off
+   widget_control,hourglass=0
+
+   ;put image data in the display window
+   id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+   WIDGET_CONTROL, id, GET_VALUE = view_plot   
+   wset,view_plot
+   tvscl,img
+
+   close, u
+   free_lun, u
+	
+endif;valid file
+
+end
+
+
+
 pro open_plot_data_REF_L, Event
 
 ;get global structure
@@ -5,8 +69,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;retrieve data parameters
-Ny = (*global).Nx_REF_L
-Nx = (*global).Ny_REF_L
+Nx = (*global).Nx_REF_L
+Ny = (*global).Ny_REF_L
 
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
@@ -58,12 +122,16 @@ endif;valid file
 end
 
 
+
+
+
+
+
 pro DISPLAY_BUTTON, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 
 instrument =  (*global).instrument
 
@@ -84,14 +152,23 @@ if (Event.select EQ 1) then begin 	;if button is pressed
 		  widget_control, id, scr_xsize=(*global).xsize_display
 
 		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
-		  widget_control, id1, scr_xsize=(*global).NX_REF_L
-		  widget_control, id1, scr_ysize=(*global).NY_REF_L
+		  widget_control, id1, scr_xsize=(*global).NY_REF_L
+		  widget_control, id1, scr_ysize=(*global).NX_REF_L
 
-		  open_plot_data_REF_L, event
+ 		  open_plot_data_REF_L, event
+
 	       end
       "REF_M": begin
 	 	 (*global).xsize_display = (*global).xsize_display_REF_M
-	      	 open_plot_data_REF_M, event      
+		  id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+		  widget_control, id, scr_xsize=(*global).xsize_display
+
+		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
+		  widget_control, id1, scr_xsize=(*global).NY_REF_M
+		  widget_control, id1, scr_ysize=(*global).NX_REF_M
+		
+		  plot_data_REF_M, event      
+
 	       end
       "BSS"  : begin
 		 (*global).xsize_display = (*global).xsize_display_BSS
@@ -591,7 +668,7 @@ if file NE '' then begin
 			   Nimg = (*global).Nimg_REF_L
 			end
 	      "REF_M": 	begin
-			   Nimg = (*gloabl).Nimg_REF_M
+			   Nimg = (*global).Nimg_REF_M
 			end
 	      "BSS": 	Nimg = (*global).Nimg_BSs
 	   endcase
@@ -905,6 +982,5 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-
 
 
