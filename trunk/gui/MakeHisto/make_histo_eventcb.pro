@@ -1,3 +1,142 @@
+pro open_plot_data_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve data parameters
+Ny = (*global).Nx_REF_L
+Nx = (*global).Ny_REF_L
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;file to open
+file = (*global).histo_event_filename
+
+;only read data if valid file given
+if file NE '' then begin
+
+   openr,u,file,/get
+   ;find out file info
+   fs = fstat(u)
+
+   Nimg = Nx*Ny
+   Ntof = fs.size/(Nimg*4L)
+   (*global).Ntof = Ntof	;set back in global structure
+
+   data_assoc = assoc(u,lonarr(Ntof))
+	
+   ;make the image array
+   img = lonarr(Nx,Ny)
+   for i=0L,Nimg-1 do begin
+	y = i MOD Ny
+	x = i/Ny
+	img[x,y] = total(data_assoc[i])
+   endfor
+
+   img=transpose(img)
+
+   ;load data up in global ptr array
+   (*(*global).img_ptr) = img
+   (*(*global).data_assoc) = data_assoc
+	
+   ;now turn hourglass back off
+   widget_control,hourglass=0
+
+   ;put image data in the display window
+   id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+   WIDGET_CONTROL, id, GET_VALUE = view_plot   
+   wset,view_plot
+   tvscl,img
+
+   close, u
+   free_lun, u
+	
+endif;valid file
+
+end
+
+
+pro DISPLAY_BUTTON, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+
+instrument =  (*global).instrument
+
+if (Event.select EQ 1) then begin 	;if button is pressed
+
+   id=widget_info(Event.top,FIND_BY_UNAME="HISTOGRAM_STATUS")
+   text = "Plotting......"
+   widget_control, id, set_value = text, /append 
+
+   ;plot data according to instrument type
+
+   case instrument of
+
+   
+      "REF_L": begin
+		  (*global).xsize_display = (*global).xsize_dislay_REF_L
+		  id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+		  widget_control, id, scr_xsize=(*global).xsize_display
+
+		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
+		  widget_control, id1, scr_xsize=(*global).NX_REF_L
+		  widget_control, id1, scr_ysize=(*global).NY_REF_L
+
+		  open_plot_data_REF_L, event
+	       end
+      "REF_M": begin
+	 	 (*global).xsize_display = (*global).xsize_display_REF_M
+	      	 open_plot_data_REF_M, event      
+	       end
+      "BSS"  : begin
+		 (*global).xsize_display = (*global).xsize_display_BSS
+                 open_plot_data_BSS, event
+	       end
+   endcase
+
+   id=widget_info(Event.top,FIND_BY_UNAME="HISTOGRAM_STATUS")
+   text = "done"
+   widget_control, id, set_value = text, /append 
+  
+endif else begin			;if button released
+
+   id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+   widget_control, id, scr_xsize=(*global).xsize
+
+endelse
+
+
+end
+
+
+
+
+
+
+
+pro open_plot_data_REF_M, Event
+
+
+end
+
+
+
+
+
+pro open_plot_data_BSS, Event
+
+end
+
+
+
+
+
+
 pro CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
 
 print, "in close_complete....."
@@ -126,25 +265,6 @@ return, xml_node_value
 
 end
 
-pro DISPLAY_BUTTON, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-instrument =  (*global).instrument
-
-if (Event.select EQ 1) then begin 	;if button is pressed
-
-   id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-   widget_control, id, scr_xsize=(*global).xsize_display
-
-endif else begin			;if button released
-   id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-   widget_control, id, scr_xsize=(*global).xsize
-endelse
-
-end
 
 
 ;---------------------------------------------------------------------------------
@@ -332,7 +452,7 @@ if file NE '' then begin
 	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 	text = "File selected: "
-	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE=text
 	text = strcompress(file,/remove_all)
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
@@ -408,14 +528,6 @@ if file NE '' then begin
 	cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
 	widget_control, cvinfo_id, sensitive=1
 
-
-
-
-
-
-
-
-
 	(*global).cvinfo_xml_filename = cvinfo_xml_filename
 	(*global).runinfo_xml_filename = runinfo_xml_filename
 
@@ -447,6 +559,9 @@ if file NE '' then begin
 	;if file is an event file, we activate the  "GO_HISTOGRAM" part
 	if (is_file_histo NE 1) then begin
 
+	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
+	   widget_control, id, map=0
+
 	   ;get number of pixels
 	   pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
 	   id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
@@ -460,9 +575,6 @@ if file NE '' then begin
 	   id = widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
 	   widget_control, id, set_value=item_value
 	
-
-
-
 	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
 	   widget_control, id, map=0
 
@@ -470,9 +582,39 @@ if file NE '' then begin
 	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
 	   widget_control, id_display, sensitive=0
 
- 	endif else begin   ;if file is an histogram, we can activate the display button
+ 	endif else begin   ;if file is an histogram
 	
+	   ;get number of pixels and number of tof from file
+
+	   case (*global).instrument of
+	      "REF_L": 	begin
+			   Nimg = (*global).Nimg_REF_L
+			end
+	      "REF_M": 	begin
+			   Nimg = (*gloabl).Nimg_REF_M
+			end
+	      "BSS": 	Nimg = (*global).Nimg_BSs
+	   endcase
+
+           openr,u,file,/get
+           ;find out file info
+           fs = fstat(u)
+           Ntof = fs.size/(Nimg*4L)
+ 	   close, u
+	   free_lun, u
+
+	   id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT")
+	   widget_control, id, set_value = strcompress(Nimg,/remove_all)
+
+	   id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
+	   widget_control, id, set_value = strcompress(NTOF,/remove_all)
+
+	   ;activate histo_file_infos main_base
 	   id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
+	   widget_control, id, map=1
+
+	   ;hide event file interaction box
+	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
 	   widget_control, id, map=1
 		
 	   ;activate display button
@@ -763,10 +905,6 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-
-
-
-
 
 
 

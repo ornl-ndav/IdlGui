@@ -12,7 +12,7 @@ pro MAIN_BASE_event, Event
         OPEN_HISTO_EVENT_FILE_CB, Event
     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXEL_IDS'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXEL_IDS_TEXT_tab1'): begin
     	NUMBER_PIXEL_IDS_CB, Event
     end
 	
@@ -67,7 +67,6 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
 	end
-
 
 
     ;portal_go
@@ -254,11 +253,24 @@ global = ptr_new({$
 		max_time_bin		: 0L,$
 		filter_mapping		: 'REF_M_TS_*.dat',$
 		path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
-		xsize			: 850,$   
+		xsize			: 850,$	   
 		ysize			: 310,$	
-		xsize_display		: 1250,$
-		ysize_display		: 700$
-		 })
+		xsize_dislay_REF_L	: 850 + 265,$
+		xsize_display_REF_M	: 850 + 304,$
+		xsize_display_BSS	: 850 + 64,$
+		xsize_display		: 0L,$
+		ysize_display		: 700L,$
+		NX_REF_L		: 256L,$
+		NY_REF_L		: 304L,$
+		Nimg_REF_L		: 77824L,$
+		NX_REF_M		: 304L,$
+		NY_REF_M		: 256L,$
+		Nimg_REF_M		: 77824L,$
+		Nimg_BSS		: 9216L,$
+		Ntof			: 0L,$
+		img_ptr 		: ptr_new(0L),$
+		data_assoc		: ptr_new(0L)$
+	})
 
   
   ; Create the top-level base and the tab.
@@ -298,18 +310,77 @@ global = ptr_new({$
 	SCR_YSIZE=30,$
 	VALUE="Preview",$
 	/tracking_events,$
-	/pushbutton_events)
-;	sensitive=0)
+	/pushbutton_events,$
+	sensitive=0)
 
   DISPLAY_WINDOW = widget_draw(MAIN_BASE,$
 	UNAME = "DISPLAY_WINDOW",$
 	XOFFSET=850,$
-	YOFFSET=10,$
+	YOFFSET=20,$
 	SCR_XSIZE=356,$
 	SCR_YSIZE=280)
 
 
-  ;****************LEFT FRAME
+  ;****************LEFT FRAME (info about histo file)
+
+  HISTO_INFO_BASE = WIDGET_BASE(wT1,$
+	UNAME='HISTO_INFO_BASE',$
+	XOFFSET=5, YOFFSET=37,$
+	SCR_XSIZE=205, SCR_YSIZE=208,$
+	map=0)
+  	
+  xoffset = 35
+  yoffset = 35
+  HISTO_INFO_NUMBER_PIXELIDS = widget_label(HISTO_INFO_BASE,$
+	XOFFSET = xoffset,$
+	YOFFSET = yoffset,$
+	SCR_XSIZE = 60,$	
+	SCR_YSIZE = 30,$
+	VALUE = "Pixel IDs: ",$
+	/align_left)
+
+  HISTO_INFO_NUMBER_PIXELIDS_TEXT = widget_text(HISTO_INFO_BASE,$
+	UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT",$
+	XOFFSET = xoffset + 70,$
+	YOFFSET = yoffset,$
+	SCR_XSIZE = 60,$
+	SCR_YSIZE = 30,$
+	value="")
+
+  yoffset += 40
+  HISTO_INFO_NUMBER_BINS = widget_label(HISTO_INFO_BASE,$
+	XOFFSET = xoffset,$
+	YOFFSET = yoffset,$
+	SCR_XSIZE = 60,$	
+	SCR_YSIZE = 30,$
+	VALUE = "Bins nbr: ",$
+	/align_left)
+
+  HISTO_INFO_NUMBER_BINS_TEXT = widget_text(HISTO_INFO_BASE,$
+	UNAME = "HISTO_INFO_NUMBER_BINS_TEXT",$
+	XOFFSET = xoffset + 70,$
+	YOFFSET = yoffset,$
+	SCR_XSIZE = 60,$
+	SCR_YSIZE = 30)
+
+  HISTO_INFO_LABLE = WIDGET_LABEL(HISTO_INFO_BASE,$
+	XOFFSET= 13,$
+	YOFFSET= 0,$
+	SCR_XSIZE=130,$
+	SCR_YSIZE=30,$
+	VALUE = " Histogram file infos")
+
+  HISTO_INFO_FRAME = WIDGET_LABEL(HISTO_INFO_BASE,$
+	XOFFSET=10, YOFFSET=15,$
+	SCR_XSIZE=180, SCR_YSIZE=170,$
+	FRAME=2, value ='')
+
+
+
+
+
+
+  ;****************LEFT FRAME (to histo a event file)
 
   HIDE_HISTO_BASE = WIDGET_BASE(wT1,$
 	UNAME='HIDE_HISTO_BASE',$
@@ -402,6 +473,18 @@ global = ptr_new({$
 	VALUE='Histogram Data',$
 	UNAME='GO_HISTOGRAM_BUTTON_wT1')
 
+
+
+
+
+
+
+
+
+
+
+
+
   ;general info that is outside the tabs
   HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(Main_base,$
 	XOFFSET=565, YOFFSET=25,$
@@ -414,6 +497,9 @@ global = ptr_new({$
 	XOFFSET=565, YOFFSET=02,$
 	SCR_XSIZE=90, SCR_YSIZE=30,$
 	VALUE="General infos:")
+
+
+
 
   ;file info that is part of the first tab
  FILE_INFO_BASE = widget_base(wT1,$
