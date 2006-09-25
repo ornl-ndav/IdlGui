@@ -68,7 +68,6 @@ pro MAIN_BASE_event, Event
         CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
 	end
 
-
     ;portal_go
 	
     Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
@@ -213,7 +212,8 @@ PORTAL_GO = widget_button(MAIN_BASE,$
 	XOFFSET=3, YOFFSET=250, $
 	SCR_XSIZE=260, SCR_YSIZE=30,$
 	UNAME="PORTAL_GO",$
-	VALUE="E N T E R")
+	VALUE="E N T E R",$
+	tooltip="Press to enter main program")
 
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
@@ -253,7 +253,7 @@ global = ptr_new({$
 		max_time_bin		: 0L,$
 		filter_mapping		: 'REF_M_TS_*.dat',$
 		path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
-		xsize			: 850,$	   
+		xsize			: 1250,$	  ;850 
 		ysize			: 310,$	
 		xsize_dislay_REF_L	: 850 + 265,$
 		xsize_display_REF_M	: 850 + 314,$
@@ -267,6 +267,8 @@ global = ptr_new({$
 		NY_REF_M		: 304L,$
 		Nimg_REF_M		: 77824L,$
 		Nimg_BSS		: 9216L,$
+		NX_BSS			: 256L,$
+		NY_BSS			: 140L,$
 		Ntof			: 0L,$
 		img_ptr 		: ptr_new(0L),$
 		data_assoc		: ptr_new(0L)$
@@ -294,7 +296,8 @@ global = ptr_new({$
 	UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
 	XOFFSET= 3, YOFFSET = 5, $
 	SCR_XSIZE=50, SCR_YSIZE=30, $
-	VALUE= "File")
+	VALUE= "File",$
+	tooltip="Binary file to load")
 
   HISTO_EVENT_FILE_LABEL_tab1 = WIDGET_TEXT(wT1,$
 	UNAME='HISTO_EVENT_FILE_LABEL_tab1',$
@@ -311,15 +314,29 @@ global = ptr_new({$
 	VALUE="Preview",$
 	/tracking_events,$
 	/pushbutton_events,$
-	sensitive=0)
+	sensitive=0,$
+	tooltip="Preview of the data")
 
   DISPLAY_WINDOW = widget_draw(MAIN_BASE,$
 	UNAME = "DISPLAY_WINDOW",$
 	XOFFSET=850,$
 	YOFFSET=20,$
-	SCR_XSIZE=356,$
-	SCR_YSIZE=280)
+	SCR_XSIZE=356,$		
+	SCR_YSIZE=280)		
 
+  DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$
+	UNAME="DISPLAY_WINDOW_1_BASE",$
+	XOFFSET=850,$
+	YOFFSET=165,$
+	SCR_XSIZE=256,$
+	SCR_YSIZE=140)
+
+  DISPLAY_WINDOW_1 = widget_draw(DISPLAY_WINDOW_1_BASE,$
+	UNAME = "DISPLAY_WINDOW_1",$
+	XOFFSET=0,$
+	YOFFSET=0,$
+	SCR_XSIZE=256,$
+	SCR_YSIZE=140)
 
   ;****************LEFT FRAME (info about histo file)
 
@@ -471,7 +488,8 @@ global = ptr_new({$
 	YOFFSET=top_offset+115,$
 	SCR_XSIZE=208, SCR_YSIZE=30,$
 	VALUE='Histogram Data',$
-	UNAME='GO_HISTOGRAM_BUTTON_wT1')
+	UNAME='GO_HISTOGRAM_BUTTON_wT1',$
+	tooltip="Histogram data")
 
 
 
@@ -578,7 +596,8 @@ global = ptr_new({$
 	SCR_YSIZE=20,$
 	VALUE="runinfo.xml",$
 	/tracking_events,$
-	/pushbutton_events)
+	/pushbutton_events,$
+	tooltip="Display full runinfo.xml file")
  
  complete_infofile_offset_y += 22
  COMPLETE_CVINFO_FILE = widget_button(file_info_base,$
@@ -588,7 +607,8 @@ global = ptr_new({$
 	SCR_XSIZE=100,$
 	SCR_YSIZE=20,$
 	VALUE="cvinfo.xml",$
-	/tracking_events)
+	/tracking_events,$
+	tooltip="Display full cvinfo.xml file")
 
   FILE_INFO_wT1 = WIDGET_label(file_info_base,$
 	XOFFSET=0, YOFFSET=15,$	
@@ -613,14 +633,8 @@ global = ptr_new({$
 	SCR_XSIZE=150,$
 	SCR_YSIZE=30,$
 	VALUE = "CLOSE XML WINDOW",$
-	/tracking_events)
-
-
-
-
-
-
-
+	/tracking_events,$
+	tooltip="Remove xml extension window")
 
 
   
@@ -686,7 +700,8 @@ global = ptr_new({$
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='C R E A T E    N E X U S',$
 	UNAME = "CREATE_NEXUS",$
 	XOFFSET=9, YOFFSET=277,$
-	SCR_XSIZE=200, SCR_YSIZE=30)
+	SCR_XSIZE=200, SCR_YSIZE=30,$
+	tooltip="Create NeXus")
 
   archive_frame = WIDGET_BASE(MAIN_BASE, $
 	UNAME="ARCHIVE_FRAME",$
@@ -712,7 +727,8 @@ global = ptr_new({$
     	/ROW, /EXCLUSIVE, /RETURN_NAME,$
 	XOFFSET=390, YOFFSET=277,$
 	SET_VALUE=0.0,$
-	UNAME='archive_it_or_not')
+	UNAME='archive_it_or_not',$
+	event_func = "CHANGE_MESSAGE")
   
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
@@ -720,6 +736,7 @@ global = ptr_new({$
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
   Widget_Control, CREATE_NEXUS, sensitive=0
   Widget_Control, DEFAULT_PATH_BUTTON_tab2, sensitive=0
+  Widget_control, DISPLAY_WINDOW_1_BASE, map=0
   XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
     
   if ((*global).runinfo_xml_filename EQ '') then begin
