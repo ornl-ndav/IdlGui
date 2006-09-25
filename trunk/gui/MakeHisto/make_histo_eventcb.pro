@@ -1,10 +1,24 @@
+function CHANGE_MESSAGE, Event
+
+id = widget_info(Event.top, FIND_BY_UNAME="archive_it_or_not")
+WIDGET_CONTROL, id, get_value=archive_value
+
+id1=widget_info(Event.top,FIND_BY_UNAME='CREATE_NEXUS')
+if (Event.value EQ "YES") then begin
+   widget_control, id1, SET_VALUE='CREATE and ARCHIVE NeXus'
+endif else begin
+   widget_control, id1, SET_VALUE='CREATE NeXus'
+endelse
+
+end
+
+
+
 pro plot_data_REF_M, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-print, "herererre"
 
 ;retrieve data parameters
 Nx = (*global).Nx_REF_M
@@ -125,6 +139,106 @@ end
 
 
 
+pro open_plot_data_BSS, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve data parameters
+Nx = (*global).Nx_BSS
+Ny = (*global).Ny_BSS
+
+;file to open
+file = (*global).histo_event_filename
+
+;only read data if valid file given
+if file NE '' then begin
+
+   openr,1,file
+   fs=fstat(1)
+
+   ;to get the size of the file
+   file_size=fs.size
+
+   N = long(file_size) / 4L  ;number of elements
+
+   data = lonarr(N)
+   readu,1,data
+
+   close,1
+   free_lun, 1
+
+   Nx=(*global).Nx
+   Ny=(*global).Ny
+   Nt = long(N)/(long(Nx*Ny))
+
+   ;find the non-null elements
+   indx1 = where(data GT 0, Ngt0)
+
+   img = intarr(Nt,Nx,Ny)
+   img(indx1)=data(indx1)
+
+   (*(*global).img) = img 
+   simg = total(img,1) 	;sum over time bins
+
+   top_bank = simg(0:63,0:63)
+   bottom_bank = simg(0:63,64:127)
+
+   top_bank = transpose(top_bank)
+   bottom_bank = transpose(bottom_bank)
+
+x_coeff = 12
+y_coeff = 4
+
+New_Ny = y_coeff*Ny
+New_Nx = x_coeff*Nx
+
+xoff = 10
+yoff = 10
+
+;top bank
+view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
+tvscl, tvimg, /device
+
+;;plot grid
+;for i=1,63 do begin
+;  plots, i*x_coeff, 0, /device, color=300
+;  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+;
+;  plots, 0,i*x_coeff, /device,color=300
+;  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+;endfor
+
+;bottom bank
+view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
+tvscl, tvimg, /device
+
+;;plot grid
+;for i=1,63 do begin
+;  plots, i*x_coeff, 0, /device, color=300
+;  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+;
+;  plots, 0,i*x_coeff, /device,color=300
+;  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+;endfor
+
+endif
+
+
+end
+
+
 
 
 pro DISPLAY_BUTTON, Event
@@ -172,7 +286,20 @@ if (Event.select EQ 1) then begin 	;if button is pressed
 	       end
       "BSS"  : begin
 		 (*global).xsize_display = (*global).xsize_display_BSS
+		  id = widget_info(Event.top, find_by_uname="MAIN_BASE")
+		  widget_control, id, scr_xsize=(*global).xsize_display
+
+		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
+		  widget_control, id1, scr_xsize=(*global).NX_BSS
+		  widget_control, id1, scr_ysize=(*global).NY_BSS
+		  		
+		  id2 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW_1")
+		  widget_control, id2, map=1
+		  widget_control, id2, scr_xsize=(*global).NX_BSS
+		  widget_control, id2, scr_ysize=(*global).NY_BSS
+
                  open_plot_data_BSS, event
+
 	       end
    endcase
 
@@ -189,26 +316,6 @@ endelse
 
 
 end
-
-
-
-
-
-
-
-pro open_plot_data_REF_M, Event
-
-
-end
-
-
-
-
-
-pro open_plot_data_BSS, Event
-
-end
-
 
 
 
@@ -584,9 +691,11 @@ if file NE '' then begin
 	spawn, command, listening ;listening ="" when not found
 
 	id=widget_info(Event.top,FIND_BY_UNAME='ARCHIVE_LABEL')
+	id1=widget_info(Event.top,FIND_BY_UNAME='CREATE_NEXUS')
 	;check if file has already been archived, if no, show archive or not label box
 	if (listening EQ '') then begin
 	   WIDGET_CONTROL, id, map=0
+	   widget_control, id1, SET_VALUE='CREATE and ARCHIVE NeXus'
 	endif else begin	;if yes, do the following one
  	   WIDGET_CONTROL, id, map=1
 	   WIDGET_CONTROL, id, SET_VALUE= '** ALREADY ARCHIVED **'
@@ -982,5 +1091,4 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-
 
