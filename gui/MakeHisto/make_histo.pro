@@ -28,10 +28,10 @@ pro MAIN_BASE_event, Event
     	MAX_TIME_BIN_TEXT_CB, Event
     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_MAPPING_FILE_BUTTON_CB, Event
-	end
+;    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
+;      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+;        OPEN_MAPPING_FILE_BUTTON_CB, Event
+;	end
 
     Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_BUTTON'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -209,7 +209,7 @@ RIGHT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
 	VALUE="")
 
 PORTAL_GO = widget_button(MAIN_BASE,$
-	XOFFSET=3, YOFFSET=250, $
+	XOFFSET=3, YOFFSET=245, $
 	SCR_XSIZE=260, SCR_YSIZE=30,$
 	UNAME="PORTAL_GO",$
 	VALUE="E N T E R",$
@@ -230,6 +230,7 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 
 global = ptr_new({$
 		path			: '~/CD4/REF_M/REF_M_7/',$ 
+		output_path		: '~/',$
 		instrument		: instrument_list[instrument],$
 		user			: user,$
 		filter_histo_event	: '*neutron*.dat',$
@@ -237,19 +238,27 @@ global = ptr_new({$
 		histo_event_filename_only	: '',$
 		histo_filename		: '',$
 		histo_mapped_filename	: '',$
-		mapping_filename	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
-		translation_filename	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_03.nxt',$
+		mapping_filename_REF_M		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
+		translation_filename_REF_M	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_25.nxt',$
+		mapping_filename_REF_L		: '/SNS/REF_M/2006_1_4B_CAL/calibrations/REF_L_TS_2006_08_10.dat',$
+		translation_filename_REF_L	: '/SNS/REF_M/2006_1_4B_CAL/calibrations/REF_L_2006_08_25.nxt',$
+		mapping_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
+		translation_filename_BSS	: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
 		nexus_filename		: '',$
 		cvinfo_xml_filename	: '',$
 		runinfo_xml_filename	: '',$
 		new_translation_filename: '',$
 		das_mount_point		: '',$
 		proposal_number		: '',$
+		proposal_number_BSS	: '2006_1_2_SCI/',$
+		proposal_number_REF_L	: '2006_1_4B_SCI/',$
+		proposal_number_REF_M	: '2006_1_4A_SCI/',$
 		instrument_run_number	: '',$
 		run_number		: '',$
 		lin_log			: 0L,$
 		number_pixels		: 0L,$
 		rebinning		: 0L,$
+		min_time_bin		: 0L,$
 		max_time_bin		: 0L,$
 		filter_mapping		: 'REF_M_TS_*.dat',$
 		path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
@@ -275,7 +284,21 @@ global = ptr_new({$
 		data_assoc		: ptr_new(0L)$
 	})
 
-  
+case instrument OF
+   0: begin 
+	mapping_file = (*global).mapping_filename_REF_L
+	translation_file = (*global).translation_filename_REF_L
+      end
+   1: begin 
+	mapping_file = (*global).mapping_filename_REF_M
+	translation_file = (*global).translation_filename_REF_M
+      end
+   2: begin 
+	mapping_file = (*global).mapping_filename_BSS
+	translation_file = (*global).translation_filename_BSS
+      end
+endcase
+
   ; Create the top-level base and the tab.
   title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ")"
   MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -300,11 +323,40 @@ global = ptr_new({$
 	VALUE= "File",$
 	tooltip="Binary file to load")
 
-  HISTO_EVENT_FILE_LABEL_tab1 = WIDGET_TEXT(wT1,$
+  HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
+	UNAME='HISTO_EVENT_FILE_RUN_NUMBER',$
+	XOFFSET=64,$
+	YOFFSET=5,$
+	SCR_XSIZE=80,$
+	SCR_YSIZE=30,$
+	VALUE='Run number: ')
+
+  ;where to put the run number
+  HISTO_EVENT_FILE_LABEL_tab1 = WIDGET_label(wT1,$
 	UNAME='HISTO_EVENT_FILE_LABEL_tab1',$
-	XOFFSET=54, YOFFSET=5,$
-	SCR_XSIZE=350, SCR_YSIZE=30, $
+	XOFFSET=144, YOFFSET=5,$
+	SCR_XSIZE=50, SCR_YSIZE=25,$
+	frame=1,$
 	value = '')
+
+  HISTO_EVENT_FILE_TYPE = widget_label(wt1,$
+	UNAME='HISTO_EVENT_FILE_TYPE',$
+	XOFFSET=220,$
+	YOFFSET=5,$
+	SCR_XSIZE=80,$
+	SCR_YSIZE=30,$
+	VALUE='File type: ')
+
+  ;where to put the file type (histogram or event)
+  HISTO_EVENT_FILE_TYPE_RESULT = widget_label(wt1,$
+	UNAME='HISTO_EVENT_FILE_TYPE_RESULT',$
+	XOFFSET=300,$
+	YOFFSET=5,$
+	SCR_XSIZE=100,$
+	SCR_YSIZE=25,$
+	VALUE='',$
+	FRAME=1)
+
 
   DISPLAY_BUTTON = WIDGET_BUTTON(wt1,$
 	UNAME="DISPLAY_BUTTON",$
@@ -513,16 +565,6 @@ global = ptr_new({$
 
 
 
-
-
-
-
-
-
-
-
-
-
   ;general info that is outside the tabs
   HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(Main_base,$
 	XOFFSET=565, YOFFSET=25,$
@@ -556,43 +598,61 @@ global = ptr_new({$
 	XOFFSET=x_offset, YOFFSET=y_offset,$
 	SCR_XSIZE=70, SCR_YSIZE=25,$
 	VALUE = "XML FILE: ",/align_left)
- XML_FILE_TEXT = widget_text(file_info_base,$
+ XML_FILE_TEXT = widget_label(file_info_base,$
 	UNAME="XML_FILE_TEXT",$
 	XOFFSET=x_offset + 70, YOFFSET=y_offset,$
-	SCR_XSIZE=240, SCR_YSIZE=32,$
+	SCR_XSIZE=240, SCR_YSIZE=25,$
+	frame=1,$
+	/align_left,$
 	VALUE = "")
 
  y_offset += delta_y
  TITLE_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset, YOFFSET=y_offset,$
-	SCR_XSIZE=50, SCR_YSIZE=25,$
-	VALUE = "Title: ",/align_left)
- TITLE_TEXT = widget_text(file_info_base,$
+	XOFFSET=x_offset,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=50,$
+	SCR_YSIZE=25,$
+	VALUE = "Title: ",$
+	/align_left)
+ TITLE_TEXT = widget_label(file_info_base,$
 	UNAME="TITLE_TEXT",$
-	XOFFSET=x_offset + 50, YOFFSET=y_offset,$
-	SCR_XSIZE=260, SCR_YSIZE=32,$
-	VALUE = "",/align_right)
+	XOFFSET=x_offset + 50,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=260,$
+	SCR_YSIZE=25,$
+	VALUE = "",$
+	frame=1,$
+	/align_left)
 
  y_offset += delta_y
  NOTES_LABEL = widget_label(file_info_base,$
 	XOFFSET=x_offset, YOFFSET=y_offset,$
 	SCR_XSIZE=50, SCR_YSIZE=25,$
 	VALUE = "Notes: ",/align_left)
- NOTES_TEXT = widget_text(file_info_base,$
+ NOTES_TEXT = widget_label(file_info_base,$
 	UNAME="NOTES_TEXT",$
-	XOFFSET=x_offset + 50, YOFFSET=y_offset,$
-	SCR_XSIZE=260, SCR_YSIZE=32,$
+	XOFFSET=x_offset + 50,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=260, SCR_YSIZE=25,$
+	frame=1,$
+	/align_left,$
 	VALUE = "")
 
  y_offset += delta_y
  SPECIAL_DESIGNATION_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset, YOFFSET=y_offset,$
-	SCR_XSIZE=85, SCR_YSIZE=25,$
+	XOFFSET=x_offset,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=85,$
+	SCR_YSIZE=25,$
 	VALUE = "Special notes: ",/align_left)
- NOTES_TEXT = widget_text(file_info_base,$
+ NOTES_TEXT = widget_label(file_info_base,$
 	UNAME="SPECIAL_DESIGNATION",$
-	XOFFSET=x_offset + 90, YOFFSET=y_offset,$
-	SCR_XSIZE=220, SCR_YSIZE=32,$
+	XOFFSET=x_offset + 90,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=220,$
+	SCR_YSIZE=25,$
+	frame=1,$
+	/align_left,$
 	VALUE = "")
 
  y_offset += delta_y
@@ -600,10 +660,14 @@ global = ptr_new({$
 	XOFFSET=x_offset, YOFFSET=y_offset,$
 	SCR_XSIZE=70, SCR_YSIZE=25,$
 	VALUE = "Script ID: ",/align_left)
- SCRIPT_ID_TEXT = widget_text(file_info_base,$
+ SCRIPT_ID_TEXT = widget_label(file_info_base,$
 	UNAME="SCRIPT_ID_TEXT",$
-	XOFFSET=x_offset + 70, YOFFSET=y_offset,$
-	SCR_XSIZE=140, SCR_YSIZE=32,$
+	XOFFSET=x_offset + 70,$
+	YOFFSET=y_offset,$
+	SCR_XSIZE=140,$ 
+	SCR_YSIZE=25,$
+	frame=1,$
+	/align_left,$
 	VALUE = "")
 
  complete_infofile_offset_x = 220
@@ -669,39 +733,46 @@ global = ptr_new({$
 
   wT2 = WIDGET_BASE(wTab, TITLE='Settings')
 
-  OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+  OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_label(wT2, $
 	XOFFSET= 5, YOFFSET = 5, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
 	VALUE= "Mapping file",$
 	UNAME='OPEN_MAPPING_FILE_BUTTON')
-  MAPPING_FILE_LABEL_tab2 = WIDGET_TEXT(wT2,$
-	UNAME='MAPPING_FILE_LABEL_tab1',$
+
+  MAPPING_FILE_LABEL_tab2 = WIDGET_label(wT2,$
+	UNAME='MAPPING_FILE_LABEL',$
 	XOFFSET=135, YOFFSET=5,$
 	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = (*global).mapping_filename)
+	value = mapping_file,$
+	frame=1,$
+	/align_left)
 
-  DEFAULT_TRANSLATION_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+  DEFAULT_TRANSLATION_BUTTON_tab2 = WIDGET_label(wT2, $
 	XOFFSET= 5, YOFFSET = 45, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
 	VALUE= "Translation file",$
 	UNAME='DEFAULT_TRANSLATION_BUTTON')
 
-  DEFAULT_TRANSLATION_FILE_tab2 = WIDGET_TEXT(wT2,$
-	UNAME='DEFAULT_TRANSLATION_FILE_tab2',$
+  DEFAULT_TRANSLATION_FILE_tab2 = WIDGET_label(wT2,$
+	UNAME='DEFAULT_TRANSLATION_FILE',$
 	XOFFSET=135, YOFFSET=45,$
 	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = (*global).translation_filename)
+	value = translation_file,$
+	frame=1,$
+	/align_left)
 
   DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
 	XOFFSET= 5, YOFFSET = 85, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Default final path",$
+	VALUE= "Output path",$
 	UNAME='DEFAULT_PATH_BUTTON')
+
   DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
 	UNAME='DEFAULT_FINAL_PATH_tab2',$
 	XOFFSET=135, YOFFSET=85,$
 	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = '')
+	value = (*global).output_path,$
+	/editable)
 
 ;   Create the second tab base, containing a label and
 ;  a slider.
@@ -719,7 +790,7 @@ global = ptr_new({$
   wControl = WIDGET_BASE(MAIN_BASE)
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='C R E A T E    N E X U S',$
 	UNAME = "CREATE_NEXUS",$
-	XOFFSET=9, YOFFSET=277,$
+	XOFFSET=5, YOFFSET=277,$
 	SCR_XSIZE=200, SCR_YSIZE=30,$
 	tooltip="Create NeXus")
 
@@ -755,7 +826,6 @@ global = ptr_new({$
   WIDGET_CONTROL, MAIN_BASE, /REALIZE
   WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
   Widget_Control, CREATE_NEXUS, sensitive=0
-  Widget_Control, DEFAULT_PATH_BUTTON_tab2, sensitive=0
   Widget_control, DISPLAY_WINDOW_1_BASE, map=0
   XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
     
