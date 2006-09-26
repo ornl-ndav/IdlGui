@@ -253,11 +253,11 @@ global = ptr_new({$
 		max_time_bin		: 0L,$
 		filter_mapping		: 'REF_M_TS_*.dat',$
 		path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
-		xsize			: 1250,$	  ;850 
+		xsize			: 850L,$	
 		ysize			: 310,$	
 		xsize_dislay_REF_L	: 850 + 265,$
 		xsize_display_REF_M	: 850 + 314,$
-		xsize_display_BSS	: 850 + 64,$
+		xsize_display_BSS	: 850 + 300,$   			
 		xsize_display		: 0L,$
 		ysize_display		: 700L,$
 		NX_REF_L		: 304L,$
@@ -267,8 +267,9 @@ global = ptr_new({$
 		NY_REF_M		: 304L,$
 		Nimg_REF_M		: 77824L,$
 		Nimg_BSS		: 9216L,$
-		NX_BSS			: 256L,$
-		NY_BSS			: 140L,$
+		pixel_number		: '',$
+		NX_BSS			: 190L,$
+		NY_BSS			: 130L,$
 		Ntof			: 0L,$
 		img_ptr 		: ptr_new(0L),$
 		data_assoc		: ptr_new(0L)$
@@ -317,26 +318,45 @@ global = ptr_new({$
 	sensitive=0,$
 	tooltip="Preview of the data")
 
-  DISPLAY_WINDOW = widget_draw(MAIN_BASE,$
-	UNAME = "DISPLAY_WINDOW",$
-	XOFFSET=850,$
-	YOFFSET=20,$
-	SCR_XSIZE=356,$		
-	SCR_YSIZE=280)		
-
-  DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$
+  DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$	;draw windows for BSS
 	UNAME="DISPLAY_WINDOW_1_BASE",$
 	XOFFSET=850,$
-	YOFFSET=165,$
-	SCR_XSIZE=256,$
-	SCR_YSIZE=140)
+	YOFFSET=10,$
+	SCR_XSIZE=290,$
+	SCR_YSIZE=290)
 
+  DISPLAY_WINDOW_0 = widget_draw(DISPLAY_WINDOW_1_BASE,$
+	UNAME = "DISPLAY_WINDOW_0",$
+	XOFFSET=0,$
+	YOFFSET=0,$
+	SCR_XSIZE=290,$	
+	SCR_YSIZE=140)
+  
   DISPLAY_WINDOW_1 = widget_draw(DISPLAY_WINDOW_1_BASE,$
 	UNAME = "DISPLAY_WINDOW_1",$
 	XOFFSET=0,$
-	YOFFSET=0,$
-	SCR_XSIZE=256,$
+	YOFFSET=145,$
+	SCR_XSIZE=290,$	
 	SCR_YSIZE=140)
+
+  DISPLAY_WINDOW_BASE = widget_base(MAIN_BASE,$		;draw windows for REF
+	UNAME="DISPLAY_WINDOW_BASE",$
+	XOFFSET=850,$
+	YOFFSET=20,$
+	SCR_XSIZE=356,$
+	SCR_YSIZE=280,$
+	map=0)
+
+  DISPLAY_WINDOW = widget_draw(DISPLAY_WINDOW_BASE,$
+	UNAME = "DISPLAY_WINDOW",$
+	XOFFSET=0,$
+	YOFFSET=0,$
+	SCR_XSIZE=356,$		
+	SCR_YSIZE=280)		
+
+
+
+
 
   ;****************LEFT FRAME (info about histo file)
 

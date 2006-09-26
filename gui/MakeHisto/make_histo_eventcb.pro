@@ -29,7 +29,7 @@ widget_control,/hourglass
 
 ;file to open
 file = (*global).histo_event_filename
-print, "file is: ", file
+;print, "file is: ", file
 
 ;only read data if valid file given
 if file NE '' then begin
@@ -146,8 +146,10 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;retrieve data parameters
-Nx = (*global).Nx_BSS
-Ny = (*global).Ny_BSS
+;Nx = (*global).Nx_BSS
+;Ny = (*global).Ny_BSS
+Nx = 64L
+Ny= 128L
 
 ;file to open
 file = (*global).histo_event_filename
@@ -162,16 +164,13 @@ if file NE '' then begin
    file_size=fs.size
 
    N = long(file_size) / 4L  ;number of elements
-
    data = lonarr(N)
    readu,1,data
 
    close,1
    free_lun, 1
 
-   Nx=(*global).Nx
-   Ny=(*global).Ny
-   Nt = long(N)/(long(Nx*Ny))
+   Nt = N/(long((*global).pixel_number))
 
    ;find the non-null elements
    indx1 = where(data GT 0, Ngt0)
@@ -179,7 +178,6 @@ if file NE '' then begin
    img = intarr(Nt,Nx,Ny)
    img(indx1)=data(indx1)
 
-   (*(*global).img) = img 
    simg = total(img,1) 	;sum over time bins
 
    top_bank = simg(0:63,0:63)
@@ -188,8 +186,8 @@ if file NE '' then begin
    top_bank = transpose(top_bank)
    bottom_bank = transpose(bottom_bank)
 
-x_coeff = 12
-y_coeff = 4
+x_coeff = 5
+y_coeff = 1
 
 New_Ny = y_coeff*Ny
 New_Nx = x_coeff*Nx
@@ -198,22 +196,13 @@ xoff = 10
 yoff = 10
 
 ;top bank
-view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW')
+view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 ;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
 tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device
-
-;;plot grid
-;for i=1,63 do begin
-;  plots, i*x_coeff, 0, /device, color=300
-;  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-;
-;  plots, 0,i*x_coeff, /device,color=300
-;  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
-;endfor
 
 ;bottom bank
 view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
@@ -223,15 +212,6 @@ wset, id
 ;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
 tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
 tvscl, tvimg, /device
-
-;;plot grid
-;for i=1,63 do begin
-;  plots, i*x_coeff, 0, /device, color=300
-;  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-;
-;  plots, 0,i*x_coeff, /device,color=300
-;  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
-;endfor
 
 endif
 
@@ -285,18 +265,15 @@ if (Event.select EQ 1) then begin 	;if button is pressed
 
 	       end
       "BSS"  : begin
+		  id = widget_info(Event.top, find_by_uname = "DISPLAY_WINDOW_BASE")
+		  widget_control, id, map=0
+
 		 (*global).xsize_display = (*global).xsize_display_BSS
 		  id = widget_info(Event.top, find_by_uname="MAIN_BASE")
 		  widget_control, id, scr_xsize=(*global).xsize_display
 
-		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
-		  widget_control, id1, scr_xsize=(*global).NX_BSS
-		  widget_control, id1, scr_ysize=(*global).NY_BSS
-		  		
-		  id2 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW_1")
-		  widget_control, id2, map=1
-		  widget_control, id2, scr_xsize=(*global).NX_BSS
-		  widget_control, id2, scr_ysize=(*global).NY_BSS
+		  id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW_1")
+		  widget_control, id1, map=1		
 
                  open_plot_data_BSS, event
 
@@ -322,8 +299,6 @@ end
 
 
 pro CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
-
-print, "in close_complete....."
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -644,13 +619,13 @@ if file NE '' then begin
 	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
 	filename_only=file_list[length-1]	
 	(*global).histo_event_filename_only = filename_only    ;store only name of the file (without the path)
-
+	
 	;check if histo or event file
-	print, "filename_only= " , filename_only
+	;print, "filename_only= " , filename_only
 	is_file_histo = strmatch(filename_only,'*histo*')       ;1: yes        0: no
-
+	
 	(*global).das_mount_point = file_list[0]
-	;print, "das_mount_point= ", das_mount_point
+	;print, "das_mount_point= ", (*global).das_mount_point
 
 	proposal_number = file_list[1]
 	(*global).proposal_number = proposal_number
@@ -661,7 +636,8 @@ if file NE '' then begin
 	;print, "instrument_run_number= ", instrument_run_number
 		
 	instrument = (*global).instrument
-	run_number = strsplit(instrument_run_number,instrument,/extract)
+	instrument_search = instrument + "_"
+	run_number = strsplit(instrument_run_number,instrument_search,/extract)
 	(*global).run_number = run_number
 	;print, "run_number is ", run_number
 
@@ -722,6 +698,12 @@ if file NE '' then begin
 	text = runinfo_xml_filename
 	widget_control, id, set_value=text	
 
+	;get number of pixels
+	pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+	(*global).pixel_number = pixel_number
+	id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+	widget_control, id, set_value=pixel_number	
+
 	;Title
 	id = widget_info(Event.top, FIND_BY_UNAME = "TITLE_TEXT")
 	text = read_xml_file(runinfo_xml_filename, "Title")
@@ -779,7 +761,9 @@ if file NE '' then begin
 	      "REF_M": 	begin
 			   Nimg = (*global).Nimg_REF_M
 			end
-	      "BSS": 	Nimg = (*global).Nimg_BSs
+	      "BSS": 	begin
+			   Nimg = long(strcompress(pixel_number))
+			end
 	   endcase
 
            openr,u,file,/get
@@ -1091,4 +1075,3 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-
