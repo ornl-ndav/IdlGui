@@ -594,10 +594,17 @@ widget_control,rb_id,sensitive=0
 
 ;open file
 filter = (*global).filter_histo_event
+instrument = (*global).instrument
+case instrument of
+   'BSS':   proposal_number = (*global).proposal_number_BSS
+   'REF_L': proposal_number = (*global).proposal_number_REF_L
+   'REF_M': proposal_number = (*global).proposal_number_REF_M
+endcase
 
 ;use first statement on mac, second one on heater...
 if (!cpu.hw_vector EQ 0) then begin
-   path = "/"+(*global).instrument+"-DAS-FS/"
+   path = "/"+instrument+"-DAS-FS/" + proposal_number
+   print, "path: ", path
 endif else begin
    path = (*global).path				
 endelse
@@ -634,15 +641,15 @@ if file NE '' then begin
 	instrument_run_number = file_list[2]
 	(*global).instrument_run_number = instrument_run_number
 	;print, "instrument_run_number= ", instrument_run_number
-		
+
 	instrument = (*global).instrument
 	instrument_search = instrument + "_"
 	run_number = strsplit(instrument_run_number,instrument_search,/extract)
 	(*global).run_number = run_number
-	;print, "run_number is ", run_number
+	print, "run_number is ", run_number
 
-	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTO_EVENT_FILE_LABEL_tab1')
-	WIDGET_CONTROL, view_info, SET_VALUE=filename_only
+	id = widget_info(Event.top, FIND_BY_UNAME='HISTO_EVENT_FILE_LABEL_tab1')
+	widget_control, id, set_value=strcompress(string(run_number[0]))
 
 	;determine path	
 	path_list=strsplit(file,filename_only,/reg,/extract)
@@ -695,37 +702,55 @@ if file NE '' then begin
 
 	;name of xml file
 	id = widget_info(Event.top, FIND_BY_UNAME = "XML_FILE_TEXT")
-	text = runinfo_xml_filename
-	widget_control, id, set_value=text	
+	text = instrument + "_" + run_number
+	widget_control, id, set_value=string(text[0])	
 
 	;get number of pixels
 	pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
 	(*global).pixel_number = pixel_number
 	id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-	widget_control, id, set_value=pixel_number	
+	widget_control, id, set_value=string(pixel_number)
 
 	;Title
 	id = widget_info(Event.top, FIND_BY_UNAME = "TITLE_TEXT")
 	text = read_xml_file(runinfo_xml_filename, "Title")
-	widget_control, id, set_value=text
-	
+	if (strlen(text) GT 40) then begin
+	   text = strmid(text,0,38) + "[...]"
+	widget_control, id, set_value=string(text)
+	endif
+
 	;Notes
 	id = widget_info(Event.top, FIND_BY_UNAME = "NOTES_TEXT")
 	text = read_xml_file(runinfo_xml_filename, "Notes")
-	widget_control, id, set_value=text
+	if (strlen(text) GT 40) then begin
+	   text = strmid(text,0,38) + "[...]"
+	widget_control, id, set_value=string(text)
+	endif
+	widget_control, id, set_value=string(text)
 
 	;SpecialDesignation
 	id = widget_info(Event.top, FIND_BY_UNAME = "SPECIAL_DESIGNATION")
 	text = read_xml_file(runinfo_xml_filename, "SpecialDesignation")
+	if (strlen(text) GT 30) then begin
+	   text = strmid(text,0,28) + "[...]"
+	widget_control, id, set_value=string(text)
+	endif
 	widget_control, id, set_value=text
 
 	;Script ID
 	id = widget_info(Event.top, FIND_BY_UNAME = "SCRIPT_ID_TEXT")
 	text = read_xml_file(runinfo_xml_filename, "SCRIPTID")
+	if (strlen(text) GT 20) then begin
+	   text = strmid(text,0,18) + "[...]"
+	widget_control, id, set_value=string(text)
+	endif
 	widget_control, id, set_value=text
 
 	;if file is an event file, we activate the  "GO_HISTOGRAM" part
 	if (is_file_histo NE 1) then begin
+
+	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
+	   widget_control, id, set_value="event"
 
 	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
 	   widget_control, id, map=0
@@ -752,6 +777,9 @@ if file NE '' then begin
 
  	endif else begin   ;if file is an histogram
 	
+	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
+	   widget_control, id, set_value="histogram"
+
 	   ;get number of pixels and number of tof from file
 
 	   case (*global).instrument of
@@ -819,45 +847,58 @@ print,'MAX_TIME_BIN_TEXT_CB'
 
 end
 
-pro  OPEN_MAPPING_FILE_BUTTON_CB, event
+;pro  OPEN_MAPPING_FILE_BUTTON_CB, event
+;
+;;indicate reading data with hourglass icon
+;widget_control,/hourglass
+;
+;;get global structure
+;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+;widget_control,id,get_uvalue=global
+;
+;;open file
+;filter = (*global).filter_mapping
+;path = (*global).path_mapping
+;file = dialog_pickfile(path=path,get_path=path,title='Select mapping file',filter=filter)
+;
+;;only read data if valid file given
+;if file NE '' then begin
+;
+;	(*global).mapping_filename = file ; store input filename
+;	
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+;	text = "Mapping file selected: "
+;	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;	text = strcompress(file,/remove_all)
+;	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;
+;	;display path
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='MAPPING_FILE_LABEL_tab1')
+;	WIDGET_CONTROL, view_info, SET_VALUE=path
+;
+;  endif
+;
+;print,'OPEN_MAPPING_FILE_BUTTON_CB'
+;
+;end
 
-;indicate reading data with hourglass icon
-widget_control,/hourglass
+
+
+pro  DEFAULT_PATH_BUTTON_CB, event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;open file
-filter = (*global).filter_mapping
-path = (*global).path_mapping
-file = dialog_pickfile(path=path,get_path=path,title='Select mapping file',filter=filter)
+path = (*global).output_path
+output_path = dialog_pickfile(path=path, /directory, title="Select the output file")
 
-;only read data if valid file given
-if file NE '' then begin
-
-	(*global).mapping_filename = file ; store input filename
-	
-	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-	text = "Mapping file selected: "
-	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-	text = strcompress(file,/remove_all)
-	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-	;display path
-	view_info = widget_info(Event.top,FIND_BY_UNAME='MAPPING_FILE_LABEL_tab1')
-	WIDGET_CONTROL, view_info, SET_VALUE=path
-
-  endif
-
-print,'OPEN_MAPPING_FILE_BUTTON_CB'
+id = widget_info(Event.top, FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
+widget_control, id, set_value=output_path
 
 end
 
-pro  DEFAULT_PATH_BUTTON_CB, event
-print,'DEFAULT_PATH_BUTTON_CB'
 
-end
 
 pro  GO_HISTOGRAM_CB, event
 
@@ -876,22 +917,33 @@ WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
 	WIDGET_CONTROL, id_0, GET_VALUE = lin_log
 
-id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXEL_IDS')
+id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
 	WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
 
-id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT')
+id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
 	WIDGET_CONTROL, id_2, GET_VALUE =rebinning_text
 
-id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT')
+id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
 	WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
+
+id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
+	WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
 
 (*global).lin_log = lin_log
 (*global).number_pixels = number_pixels
 (*global).rebinning = rebinning_text
 (*global).max_time_bin = max_time_bin
+(*global).min_time_bin = min_time_bin
 
-event_filename = (*global).event_filename
+event_filename = (*global).histo_event_filename
 path = (*global).path
+
+print, "output_path: ", (*global).output_path
+
+print, "event_filename is: ", event_filename
+print, "path: ", path
+
+
 
 cmd_line = "Event_to_Histo "
 cmd_line += "-l " + strcompress(rebinning_text,/remove_all)
