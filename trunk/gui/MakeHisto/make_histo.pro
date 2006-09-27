@@ -240,10 +240,13 @@ global = ptr_new({$
 		histo_mapped_filename	: '',$
 		mapping_filename_REF_M		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
 		translation_filename_REF_M	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_25.nxt',$
-		mapping_filename_REF_L		: '/SNS/REF_M/2006_1_4B_CAL/calibrations/REF_L_TS_2006_08_10.dat',$
-		translation_filename_REF_L	: '/SNS/REF_M/2006_1_4B_CAL/calibrations/REF_L_2006_08_25.nxt',$
+		geometry_filename_REF_M		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_geom_2006_09_18.nxs',$
+		mapping_filename_REF_L		: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_TS_2006_08_10.dat',$
+		translation_filename_REF_L	: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_2006_08_25.nxt',$
+		geometry_filename_REF_L		: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_geom_2006_09_18.nxs',$
 		mapping_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
 		translation_filename_BSS	: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
+		geometry_filename_BSS		: '',$
 		nexus_filename		: '',$
 		cvinfo_xml_filename	: '',$
 		runinfo_xml_filename	: '',$
@@ -288,14 +291,17 @@ case instrument OF
    0: begin 
 	mapping_file = (*global).mapping_filename_REF_L
 	translation_file = (*global).translation_filename_REF_L
+	geometry_file = (*global).geometry_filename_REF_L
       end
    1: begin 
 	mapping_file = (*global).mapping_filename_REF_M
 	translation_file = (*global).translation_filename_REF_M
+	geometry_file = (*global).geometry_filename_REF_M
       end
    2: begin 
 	mapping_file = (*global).mapping_filename_BSS
 	translation_file = (*global).translation_filename_BSS
+	geometry_file = (*global).geometry_filename_BSS
       end
 endcase
 
@@ -761,15 +767,29 @@ endcase
 	frame=1,$
 	/align_left)
 
-  DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+  DEFAULT_GEOMETRY_BUTTON_tab2 = WIDGET_label(wT2, $
 	XOFFSET= 5, YOFFSET = 85, $
+	SCR_XSIZE=130, SCR_YSIZE=30, $
+	VALUE= "Geometry file",$
+	UNAME='DEFAULT_GEOMETRY_BUTTON')
+
+  DEFAULT_GEOMETRY_FILE_tab2 = WIDGET_label(wT2,$
+	UNAME='DEFAULT_GEOMETRY_FILE',$
+	XOFFSET=135, YOFFSET=85,$
+	SCR_XSIZE=408, SCR_YSIZE=32, $
+	value = geometry_file,$
+	frame=1,$
+	/align_left)
+
+  DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+	XOFFSET= 5, YOFFSET = 125, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
 	VALUE= "Output path",$
 	UNAME='DEFAULT_PATH_BUTTON')
 
   DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
 	UNAME='DEFAULT_FINAL_PATH_tab2',$
-	XOFFSET=135, YOFFSET=85,$
+	XOFFSET=135, YOFFSET=125,$
 	SCR_XSIZE=408, SCR_YSIZE=32, $
 	value = (*global).output_path,$
 	/editable)
