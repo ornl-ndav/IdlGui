@@ -657,10 +657,6 @@ if file NE '' then begin
 	cd, path
 	(*global).path = path
 
-;	;display path
-;	view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
-;	WIDGET_CONTROL, view_info, SET_VALUE=path
-
 	;###########################################
 	;for BSS   -> BSS-DAS-FS
 	;for REF_L -> REF_L-DAS-FS
@@ -671,17 +667,19 @@ if file NE '' then begin
 	;location where to look for run already archived or not
 	archive_run_number_location = "/SNS/" + instrument + "/" + proposal_number + "/" + run_number
 	command = "ls -d " + archive_run_number_location	
-	spawn, command, listening ;listening ="" when not found
+	spawn, command, listening 	;listening ="" when not found
 
 	id=widget_info(Event.top,FIND_BY_UNAME='ARCHIVE_LABEL')
 	id1=widget_info(Event.top,FIND_BY_UNAME='CREATE_NEXUS')
 	;check if file has already been archived, if no, show archive or not label box
-	if (listening EQ '') then begin
+	if (listening EQ '') then begin	 ;file not archived yet
 	   WIDGET_CONTROL, id, map=0
 	   widget_control, id1, SET_VALUE='CREATE and ARCHIVE NeXus'
-	endif else begin	;if yes, do the following one
+	   (*global).already_archived = 0
+	endif else begin		 ;file already archived
  	   WIDGET_CONTROL, id, map=1
 	   WIDGET_CONTROL, id, SET_VALUE= '** ALREADY ARCHIVED **'
+	   (*global).already_archived = 1	
 	endelse
 
 	;get info from xml files that go with histo/event file
@@ -947,17 +945,40 @@ id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
 event_filename = (*global).histo_event_filename
 path = (*global).path
 
-print, "output_path: ", (*global).output_path
+;get output_path from output_path text box
+id = widget_info(Event.top, FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
+widget_control, id, get_value=output_path
+(*global).output_path = output_path
+print, "output_path: ", output_path
 
 print, "event_filename is: ", event_filename
 print, "path: ", path
 
+;create directory where the histo file is going to live
+output_path_for_this_file = output_path + (*global).instrument + "_" + (*global).run_number + "/"
+(*global).output_path_for_this_file = output_path_for_this_file
 
+;determine name of histo file
+event_filename = (*global).histo_event_filename_only
+file_list=strsplit(event_filename,'event.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
+filename_short=file_list[0]	
+histo_filename = output_path_for_this_file + filename_short + 'histo.dat'
+(*global).histo_filename = histo_filename
+
+;check if repertory already exists
+command = "ls -d " + output_path_for_this_file
+spawn, command, listening 	;listening ="" when not found
+
+if (listening EQ '') then begin	 ;folder does not exist yet
+   cmd = "mkdir " + output_path_for_this_file
+   spawn, cmd
+endif 
 
 cmd_line = "Event_to_Histo "
 cmd_line += "-l " + strcompress(rebinning_text,/remove_all)
 cmd_line += " -M " + strcompress(max_time_bin,/remove_all)
 cmd_line += " -p " + strcompress(number_pixels,/remove_all)
+cmd_line += " -a " + strcompress(output_path_for_this_file,/remove_all)
 cmd_line += " " + event_filename
 
 cmd_line_displayed = "> " + cmd_line
@@ -969,13 +990,8 @@ str_time = systime(1)
 text = "Processing....."
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 spawn, cmd_line, listening
-
-;determine name of histo file
-event_filename = (*global).event_filename
-file_list=strsplit(event_filename,'event.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
-filename_short=file_list[0]	
-histo_filename = filename_short + 'histo.dat'
-(*global).histo_filename = histo_filename
+text = "....Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 text = "New file created: "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
