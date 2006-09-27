@@ -657,9 +657,9 @@ if file NE '' then begin
 	cd, path
 	(*global).path = path
 
-	;display path
-	view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
-	WIDGET_CONTROL, view_info, SET_VALUE=path
+;	;display path
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
+;	WIDGET_CONTROL, view_info, SET_VALUE=path
 
 	;###########################################
 	;for BSS   -> BSS-DAS-FS
@@ -775,6 +775,10 @@ if file NE '' then begin
 	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
 	   widget_control, id_display, sensitive=0
 
+	   ;activate GO_NEXUS button
+ 	   rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+	   widget_control,rb_id,sensitive=0
+
  	endif else begin   ;if file is an histogram
 	
 	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
@@ -819,13 +823,14 @@ if file NE '' then begin
 	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
 	   widget_control, id_display, sensitive=1
 
+	   ;activate GO_NEXUS button
+ 	   rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+	   widget_control,rb_id,sensitive=1
+
 	endelse
 	
   endif
 
-;activate GO_NEXUS button
-rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
-widget_control,rb_id,sensitive=1
 
 end
 
@@ -892,6 +897,10 @@ widget_control,id,get_uvalue=global
 
 path = (*global).output_path
 output_path = dialog_pickfile(path=path, /directory, title="Select the output file")
+
+if (output_path EQ '') then begin
+  output_path = (*global).output_path
+endif
 
 id = widget_info(Event.top, FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
 widget_control, id, set_value=output_path
