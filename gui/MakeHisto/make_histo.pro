@@ -229,8 +229,11 @@ Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 
 global = ptr_new({$
+		already_archived	: 0,$
+		do_u_want_to_archive_it : 0,$
 		path			: '~/CD4/REF_M/REF_M_7/',$ 
 		output_path		: '~/',$
+		output_path_for_this_file: '',$
 		instrument		: instrument_list[instrument],$
 		user			: user,$
 		filter_histo_event	: '*neutron*.dat',$
@@ -521,7 +524,7 @@ endcase
 	XOFFSET=left_offset+132,$
 	YOFFSET=top_offset+2,$
 	SCR_XSIZE=65, SCR_YSIZE=30,$
-	VALUE='25', /editable,$
+	VALUE='2000', /editable,$			;change that to the default instrument one when openning a file
 	/ALL_EVENTS)
 
   MIN_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
@@ -837,7 +840,7 @@ endcase
   archive_it_or_not = CW_BGROUP(MAIN_BASE, ['YES', 'NO'], $
     	/ROW, /EXCLUSIVE, /RETURN_NAME,$
 	XOFFSET=390, YOFFSET=277,$
-	SET_VALUE=0.0,$
+	SET_VALUE=1.0,$
 	UNAME='archive_it_or_not',$
 	event_func = "CHANGE_MESSAGE")
   
