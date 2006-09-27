@@ -928,7 +928,7 @@ id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
 	WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
 
 id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
-	WIDGET_CONTROL, id_2, GET_VALUE =rebinning_text
+	WIDGET_CONTROL, id_2, GET_VALUE =rebinning
 
 id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
 	WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
@@ -938,7 +938,7 @@ id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
 
 (*global).lin_log = lin_log
 (*global).number_pixels = number_pixels
-(*global).rebinning = rebinning_text
+(*global).rebinning = rebinning
 (*global).max_time_bin = max_time_bin
 (*global).min_time_bin = min_time_bin
 
@@ -975,7 +975,7 @@ if (listening EQ '') then begin	 ;folder does not exist yet
 endif 
 
 cmd_line = "Event_to_Histo "
-cmd_line += "-l " + strcompress(rebinning_text,/remove_all)
+cmd_line += "-l " + strcompress(rebinning,/remove_all)
 cmd_line += " -M " + strcompress(max_time_bin,/remove_all)
 cmd_line += " -p " + strcompress(number_pixels,/remove_all)
 cmd_line += " -a " + strcompress(output_path_for_this_file,/remove_all)
@@ -1004,35 +1004,11 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
-widget_control,rb_id,sensitive=1
+;MAPPING OF HISTO FILE
+number_tbin = (*global).max_time_bin / (*global).rebinning
 
-end
-
-pro CREATE_NEXUS_CB, event
-
-wWidget = event.top
-
-;activate GO_NEXUS button
-rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
-widget_control,rb_id,sensitive=0
-
-;get the global data structure
-id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-txt = "*** TRANSLATION SERVICE ***"
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-;retrieve constant
-number_pixels = (*global).number_pixels
-rebinning_text = (*global).rebinning
-max_time_bin = (*global).max_time_bin
-number_tbin = max_time_bin / rebinning_text
-mapping_filename = (*global).mapping_filename
-histo_filename = (*global).histo_filename
-path = (*global).path
+id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
+widget_control, id, get_value=mapping_filename
 
 cmd_line = "Map_Data "
 cmd_line += "-m " + mapping_filename
@@ -1067,6 +1043,49 @@ text = "Done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+widget_control,rb_id,sensitive=1
+
+end
+
+pro CREATE_NEXUS_CB, event
+
+wWidget = event.top
+
+;activate GO_NEXUS button
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
+widget_control,rb_id,sensitive=0
+
+;get the global data structure
+id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+txt = "*** TRANSLATION SERVICE ***"
+view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+
 
 ;making translation file now
 translation_filename = (*global).translation_filename
