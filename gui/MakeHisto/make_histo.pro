@@ -230,6 +230,7 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 
 global = ptr_new({$
 		already_archived	: 0,$
+		file_type_is_event	: 1,$
 		do_u_want_to_archive_it : 0,$
 		path			: '~/CD4/REF_M/REF_M_7/',$ 
 		output_path		: '~/',$
@@ -266,6 +267,7 @@ global = ptr_new({$
 		rebinning		: 0L,$
 		min_time_bin		: 0L,$
 		max_time_bin		: 0L,$
+		number_tbin		: 0L,$
 		filter_mapping		: 'REF_M_TS_*.dat',$
 		path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
 		xsize			: 850L,$	
@@ -813,8 +815,10 @@ endcase
   wControl = WIDGET_BASE(MAIN_BASE)
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='C R E A T E    N E X U S',$
 	UNAME = "CREATE_NEXUS",$
-	XOFFSET=5, YOFFSET=277,$
-	SCR_XSIZE=200, SCR_YSIZE=30,$
+	XOFFSET=5,$
+	YOFFSET=277,$
+	SCR_XSIZE=200,$
+	SCR_YSIZE=30,$
 	tooltip="Create NeXus")
 
   archive_frame = WIDGET_BASE(MAIN_BASE, $
@@ -827,19 +831,25 @@ endcase
   archive_label = WIDGET_LABEL(archive_frame,$
 	UNAME="ARCHIVE_LABEL",$
 	XOFFSET=30,$
-	YOFFSET=0,$
+	YOFFSET=3,$
 	SCR_XSIZE=380,$
-	SCR_YSIZE=25,$
+	SCR_YSIZE=55,$
 	frame=0,value="")
 
-  archive_it_or_not_label = WIDGET_LABEL(MAIN_BASE,$
-	XOFFSET=240, YOFFSET=277,$
+  archive_it_or_not_base = WIDGET_BASE(MAIN_BASE,$
+	XOFFSET=240,$
+	YOFFSET=277,$
+	SCR_XSIZE=140,$
+	SCR_YSIZE=30)
+
+  archive_it_or_not_label = WIDGET_LABEL(archive_it_or_not_base,$
+	XOFFSET=0, YOFFSET=0,$
 	SCR_XSIZE=140, SCR_YSIZE=30,$
 	VALUE="Archive this run :")
 
-  archive_it_or_not = CW_BGROUP(MAIN_BASE, ['YES', 'NO'], $
+  archive_it_or_not = CW_BGROUP(archive_it_or_not_base, ['YES', 'NO'], $
     	/ROW, /EXCLUSIVE, /RETURN_NAME,$
-	XOFFSET=390, YOFFSET=277,$
+	XOFFSET=150, YOFFSET=0,$
 	SET_VALUE=1.0,$
 	UNAME='archive_it_or_not',$
 	event_func = "CHANGE_MESSAGE")

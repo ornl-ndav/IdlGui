@@ -671,13 +671,17 @@ if file NE '' then begin
 
 	id=widget_info(Event.top,FIND_BY_UNAME='ARCHIVE_LABEL')
 	id1=widget_info(Event.top,FIND_BY_UNAME='CREATE_NEXUS')
+	id2=widget_info(Event.top,FIND_BY_UNAME='archive_it_or_not')
+
 	;check if file has already been archived, if no, show archive or not label box
 	if (listening EQ '') then begin	 ;file not archived yet
 	   WIDGET_CONTROL, id, map=0
+	   widget_control, id2, map=1
 	   widget_control, id1, SET_VALUE='CREATE and ARCHIVE NeXus'
 	   (*global).already_archived = 0
 	endif else begin		 ;file already archived
  	   WIDGET_CONTROL, id, map=1
+	   WIDGET_CONTROL, id2, map=0
 	   WIDGET_CONTROL, id, SET_VALUE= '** ALREADY ARCHIVED **'
 	   (*global).already_archived = 1	
 	endelse
@@ -747,6 +751,8 @@ if file NE '' then begin
 	;if file is an event file, we activate the  "GO_HISTOGRAM" part
 	if (is_file_histo NE 1) then begin
 
+	   (*global).file_type_is_event = 1
+
 	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
 	   widget_control, id, set_value="event"
 
@@ -779,6 +785,8 @@ if file NE '' then begin
 
  	endif else begin   ;if file is an histogram
 	
+	   (*global).file_type_is_event = 0
+
 	   id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
 	   widget_control, id, set_value="histogram"
 
@@ -949,10 +957,6 @@ path = (*global).path
 id = widget_info(Event.top, FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
 widget_control, id, get_value=output_path
 (*global).output_path = output_path
-print, "output_path: ", output_path
-
-print, "event_filename is: ", event_filename
-print, "path: ", path
 
 ;create directory where the histo file is going to live
 output_path_for_this_file = output_path + (*global).instrument + "_" + (*global).run_number + "/"
@@ -1005,7 +1009,8 @@ text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 ;MAPPING OF HISTO FILE
-number_tbin = (*global).max_time_bin / (*global).rebinning
+number_tbin = ((*global).max_time_bin - (*global).min_time_bin) / (*global).rebinning
+(*global).number_tbin = number_tbin
 
 id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
 widget_control, id, get_value=mapping_filename
@@ -1044,37 +1049,18 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
 widget_control,rb_id,sensitive=1
 
 end
 
+
 pro CREATE_NEXUS_CB, event
+
 
 wWidget = event.top
 
-;activate GO_NEXUS button
+;desactivate GO_NEXUS button
 rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
 widget_control,rb_id,sensitive=0
 
@@ -1082,9 +1068,122 @@ widget_control,rb_id,sensitive=0
 id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-txt = "*** TRANSLATION SERVICE ***"
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+txt = ""
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+txt = "*** TRANSLATION SERVICE ***"
+WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+
+;if input file is histo, copy that file into home directory and map it
+if ((*global).file_type_is_event EQ 0) then begin
+
+
+   id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
+	WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
+   (*global).number_pixels = number_pixels
+
+   id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
+	WIDGET_CONTROL, id_2, GET_VALUE =rebinning
+   (*global).rebinning = rebinning
+
+   id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
+	WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
+   (*global).max_time_bin = max_time_bin
+
+   id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
+	WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
+   (*global).min_time_bin = min_time_bin
+
+   number_tbin = (long(max_time_bin) - long(min_time_bin)) / long(rebinning)
+  
+
+
+   (*global).number_tbin = number_tbin
+
+   histo_event_filename = (*global).histo_event_filename   
+   ;need to check if folder already exists
+
+   output_path_for_this_file = (*global).output_path + (*global).instrument + "_" + (*global).run_number + "/"
+   (*global).output_path_for_this_file = output_path_for_this_file
+   print, "output_path_for_this_file: ", output_path_for_this_file
+
+   command = "ls -d " + output_path_for_this_file
+   spawn, command, listening 	;listening ="" when not found
+
+   if (listening EQ '') then begin	 ;folder does not exist yet
+      cmd = "mkdir " + output_path_for_this_file
+      spawn, cmd
+
+      cmd = "cp " + histo_event_filename
+      cmd += " " + output_path_for_this_file
+      spawn, cmd, listening
+
+   endif 
+
+   ;map file
+   id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
+   widget_control, id, get_value=mapping_filename
+
+print, "number_tbin: ", number_tbin
+print, "number_pixels: ", number_pixels
+
+stop   
+
+   ;new location of histo_file_name gives histo_filename
+   histo_event_filename_only = (*global).histo_event_filename_only
+   histo_filename = output_path_for_this_file + histo_event_filename_only
+   
+   cmd_line = "Map_Data "
+   cmd_line += "-m " + mapping_filename
+   cmd_line += " -n " + histo_filename
+   cmd_line += " -p " + strcompress(number_pixels, /remove_all)
+   cmd_line += " -t " + strcompress(number_tbin, /remove_all)
+
+   cmd_line_displayed = "> " + cmd_line
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+   WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+
+   ;launch mapping
+   str_time = systime(1)
+   text = "Processing mapping....."
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   spawn, cmd_line, listening
+
+   ;determine name of histo_mapped file
+   file_list=strsplit(histo_filename,'histo.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
+   filename_short=file_list[0]	
+   histo_mapped_filename = filename_short + 'histo_mapped.dat'
+   (*global).histo_mapped_filename = histo_mapped_filename
+
+   text = "New file created: "
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = histo_mapped_filename
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+   end_time = systime(1)
+   text = "Done"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+
+
+
+
+
+
+
+endif else begin   ;if input file is event
+
+
+endelse
+
+
+
+
+stop
+
 
 
 ;making translation file now
