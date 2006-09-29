@@ -63,6 +63,7 @@ if file NE '' then begin
 
    ;put image data in the display window
    id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+   WIDGET_CONTROL, id, map=1
    WIDGET_CONTROL, id, GET_VALUE = view_plot   
    wset,view_plot
    tvscl,img
@@ -124,6 +125,7 @@ if file NE '' then begin
 
    ;put image data in the display window
    id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+   WIDGET_CONTROL, id, map=1
    WIDGET_CONTROL, id, GET_VALUE = view_plot   
    wset,view_plot
    tvscl,img
@@ -1074,33 +1076,20 @@ WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 txt = "*** TRANSLATION SERVICE ***"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-;if input file is histo, copy that file into home directory and map it
+;if input file is histo, check if mapped file already exist in final destination
+;if so, remove it
+;if not, go ahead and give alternative path to output in map_data
 if ((*global).file_type_is_event EQ 0) then begin
 
-
-   id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
+   id_1 = Widget_Info(wWidget, FIND_BY_UNAME='HISTO_INFO_NUMBER_PIXELIDS_TEXT')
 	WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
    (*global).number_pixels = number_pixels
 
-   id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
-	WIDGET_CONTROL, id_2, GET_VALUE =rebinning
-   (*global).rebinning = rebinning
-
-   id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
-	WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
-   (*global).max_time_bin = max_time_bin
-
-   id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
-	WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
-   (*global).min_time_bin = min_time_bin
-
-   number_tbin = (long(max_time_bin) - long(min_time_bin)) / long(rebinning)
-  
-
-
+   id_2 = Widget_Info(wWidget, FIND_BY_UNAME='HISTO_INFO_NUMBER_BINS_TEXT')
+	WIDGET_CONTROL, id_2, GET_VALUE = number_tbin
    (*global).number_tbin = number_tbin
 
-   histo_event_filename = (*global).histo_event_filename   
+    histo_event_filename = (*global).histo_event_filename   
    ;need to check if folder already exists
 
    output_path_for_this_file = (*global).output_path + (*global).instrument + "_" + (*global).run_number + "/"
@@ -1110,52 +1099,61 @@ if ((*global).file_type_is_event EQ 0) then begin
    command = "ls -d " + output_path_for_this_file
    spawn, command, listening 	;listening ="" when not found
 
-   if (listening EQ '') then begin	 ;folder does not exist yet
-      cmd = "mkdir " + output_path_for_this_file
-      spawn, cmd
-
-      cmd = "cp " + histo_event_filename
-      cmd += " " + output_path_for_this_file
-      spawn, cmd, listening
-
-   endif 
-
-   ;map file
-   id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
-   widget_control, id, get_value=mapping_filename
-
-print, "number_tbin: ", number_tbin
-print, "number_pixels: ", number_pixels
-
-stop   
-
    ;new location of histo_file_name gives histo_filename
    histo_event_filename_only = (*global).histo_event_filename_only
    histo_filename = output_path_for_this_file + histo_event_filename_only
-   
-   cmd_line = "Map_Data "
-   cmd_line += "-m " + mapping_filename
-   cmd_line += " -n " + histo_filename
-   cmd_line += " -p " + strcompress(number_pixels, /remove_all)
-   cmd_line += " -t " + strcompress(number_tbin, /remove_all)
-
-   cmd_line_displayed = "> " + cmd_line
-
-   view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-   WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
-
-   ;launch mapping
-   str_time = systime(1)
-   text = "Processing mapping....."
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-   spawn, cmd_line, listening
 
    ;determine name of histo_mapped file
    file_list=strsplit(histo_filename,'histo.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
    filename_short=file_list[0]	
    histo_mapped_filename = filename_short + 'histo_mapped.dat'
    (*global).histo_mapped_filename = histo_mapped_filename
+ 
+   if (listening EQ '') then begin	 ;folder does not exist yet
+      cmd = "mkdir " + output_path_for_this_file
+      spawn, cmd
 
+;      cmd = "cp " + histo_event_filename
+;      cmd += " " + output_path_for_this_file
+;      spawn, cmd, listening
+
+   endif else begin	;folder already exists, so we need to check if mapping
+			;file already exist  
+	cmd = "ls " + histo_mapped_filename
+	spawn, cmd, listening		;listening="" => file not found
+
+	if (listening NE "") then begin  ;remove just that file if already there
+		
+	   cmd_remove_histo_mapped = "rm -rf " + histo_mapped_filename
+	   print, "cmd_remove_histo_mapped: ", cmd_remove_histo_mapped
+
+	endif
+
+    endelse
+
+   ;map file
+   id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
+   widget_control, id, get_value=mapping_filename
+
+   cmd_line = "Map_Data "
+   cmd_line += "-m " + mapping_filename
+   cmd_line += " -n " + histo_event_filename
+   cmd_line += " -p " + strcompress(number_pixels, /remove_all)
+   cmd_line += " -t " + strcompress(number_tbin, /remove_all)
+   cmd_line += " -o " + output_path_for_this_file
+   cmd_line_displayed = "> " + cmd_line
+
+   view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+   WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+
+   print, "cmd_line: ", cmd_line
+
+   ;launch mapping
+   str_time = systime(1)
+   text = "Processing mapping....."
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   spawn, cmd_line, listening
+  
    text = "New file created: "
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
    text = histo_mapped_filename

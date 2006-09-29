@@ -439,13 +439,15 @@ endcase
 	VALUE = "Pixel IDs: ",$
 	/align_left)
 
-  HISTO_INFO_NUMBER_PIXELIDS_TEXT = widget_text(HISTO_INFO_BASE,$
+  HISTO_INFO_NUMBER_PIXELIDS_TEXT = widget_label(HISTO_INFO_BASE,$
 	UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT",$
 	XOFFSET = xoffset + 70,$
 	YOFFSET = yoffset,$
 	SCR_XSIZE = 60,$
 	SCR_YSIZE = 30,$
-	value="")
+	value="",$
+	frame=1,$
+	/align_left)
 
   yoffset += 40
   HISTO_INFO_NUMBER_BINS = widget_label(HISTO_INFO_BASE,$
@@ -456,12 +458,14 @@ endcase
 	VALUE = "Bins nbr: ",$
 	/align_left)
 
-  HISTO_INFO_NUMBER_BINS_TEXT = widget_text(HISTO_INFO_BASE,$
+  HISTO_INFO_NUMBER_BINS_TEXT = widget_label(HISTO_INFO_BASE,$
 	UNAME = "HISTO_INFO_NUMBER_BINS_TEXT",$
 	XOFFSET = xoffset + 70,$
 	YOFFSET = yoffset,$
 	SCR_XSIZE = 60,$
-	SCR_YSIZE = 30)
+	SCR_YSIZE = 30,$
+	frame=1,$
+	/align_left)
 
   HISTO_INFO_LABLE = WIDGET_LABEL(HISTO_INFO_BASE,$
 	XOFFSET= 13,$
