@@ -250,7 +250,7 @@ global = ptr_new({$
 		geometry_filename_REF_L		: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_geom_2006_09_18.nxs',$
 		mapping_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
 		translation_filename_BSS	: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
-		geometry_filename_BSS		: '',$
+		geometry_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
 		nexus_filename		: '',$
 		cvinfo_xml_filename	: '',$
 		runinfo_xml_filename	: '',$
