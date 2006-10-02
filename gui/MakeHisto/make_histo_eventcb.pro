@@ -1113,10 +1113,6 @@ if ((*global).file_type_is_event EQ 0) then begin
       cmd = "mkdir " + output_path_for_this_file
       spawn, cmd
 
-;      cmd = "cp " + histo_event_filename
-;      cmd += " " + output_path_for_this_file
-;      spawn, cmd, listening
-
    endif else begin	;folder already exists, so we need to check if mapping
 			;file already exist  
 	cmd = "ls " + histo_mapped_filename
@@ -1146,8 +1142,6 @@ if ((*global).file_type_is_event EQ 0) then begin
    view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
    WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 
-   print, "cmd_line: ", cmd_line
-
    ;launch mapping
    str_time = systime(1)
    text = "Processing mapping....."
@@ -1165,15 +1159,8 @@ if ((*global).file_type_is_event EQ 0) then begin
    text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-
-
-
-
-
-
-
-endif else begin   ;if input file is event
-
+endif else begin   ;if input file is event, the histogram is already in 
+		   ;the right place, so nothing to do here
 
 endelse
 
@@ -1182,6 +1169,7 @@ endelse
 
 stop
 
+;copy geometry file and translation file into final destination
 
 
 ;making translation file now
