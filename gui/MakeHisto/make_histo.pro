@@ -233,6 +233,7 @@ global = ptr_new({$
 		file_type_is_event	: 1,$
 		do_u_want_to_archive_it : 0,$
 		path			: '~/CD4/REF_M/REF_M_7/',$ 
+   		path_to_DAS_proposal_number : '',$
 		output_path		: '~/',$
 		output_path_for_this_file: '',$
 		instrument		: instrument_list[instrument],$
@@ -843,13 +844,15 @@ endcase
   archive_it_or_not_base = WIDGET_BASE(MAIN_BASE,$
 	XOFFSET=240,$
 	YOFFSET=277,$
-	SCR_XSIZE=140,$
-	SCR_YSIZE=30)
+	SCR_XSIZE=240,$
+	SCR_YSIZE=30,$
+	UNAME="archive_it_or_not_base")
 
   archive_it_or_not_label = WIDGET_LABEL(archive_it_or_not_base,$
-	XOFFSET=0, YOFFSET=0,$
-	SCR_XSIZE=140, SCR_YSIZE=30,$
-	VALUE="Archive this run :")
+	XOFFSET=10, YOFFSET=0,$
+	SCR_XSIZE=120, SCR_YSIZE=30,$
+	VALUE="Archive this run :",$
+	/align_left)
 
   archive_it_or_not = CW_BGROUP(archive_it_or_not_base, ['YES', 'NO'], $
     	/ROW, /EXCLUSIVE, /RETURN_NAME,$

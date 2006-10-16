@@ -831,6 +831,13 @@ if file NE '' then begin
 	   id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
 	   widget_control, id_display, sensitive=1
 
+	   ;activate archive_it_or_not
+	   id = widget_info(Event.top, FIND_BY_UNAME="archive_it_or_not_base")
+	   widget_control, id, map=1
+	
+	   id1 = widget_info(Event.top, FIND_BY_UNAME="archive_it_or_not")
+	   widget_control, id1, map=1
+
 	   ;activate GO_NEXUS button
  	   rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
 	   widget_control,rb_id,sensitive=1
@@ -1059,7 +1066,6 @@ end
 
 pro CREATE_NEXUS_CB, event
 
-
 wWidget = event.top
 
 ;desactivate GO_NEXUS button
@@ -1164,18 +1170,27 @@ endif else begin   ;if input file is event, the histogram is already in
 
 endelse
 
+;collecting name of translation file
+id = widget_info(Event.top, FIND_BY_UNAME="DEFAULT_TRANSLATION_FILE")
+widget_control, id, get_value=translation_filename
 
+;copy geometry file and mapping file into final destination
+id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
+widget_control, id, get_value=mapping_filename
+cmd = "cp " + mapping_filename
+cmd += " " + output_path_for_this_file
+spawn, cmd, listening
 
-
-stop
-
-;copy geometry file and translation file into final destination
-
+id = widget_info(Event.top, FIND_BY_UNAME="DEFAULT_GEOMETRY_FILE")
+widget_control, id, get_value=geometry_filename
+cmd = "cp " + geometry_filename
+cmd += " " + output_path_for_this_file
+spawn, cmd, listening
 
 ;making translation file now
-translation_filename = (*global).translation_filename
 cmd_line = "TS_merge_preNeXus.sh "
 cmd_line += translation_filename
+cmd_line += " " + output_path_for_this_file
 
 cmd_line_displayed = "> " + cmd_line
 
@@ -1192,6 +1207,8 @@ spawn, cmd_line, listening
 file_list=strsplit(histo_filename,'_neutron_histo.dat$',/REGEX,/extract,count=length) ;to remove last part of the name
 filename_short=file_list[0]	
 new_translation_filename = filename_short + '.nxt'
+print, "new_translation_filename: ", new_translation_filename
+
 (*global).new_translation_filename = new_translation_filename
 
 text = "New file created: "
@@ -1205,39 +1222,40 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-
-;making NeXus file now
-new_translation_filename = (*global).new_translation_filename
-cmd_line = "nxtranslate "
-cmd_line += new_translation_filename
-
-cmd_line_displayed = "> " + cmd_line
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
-
-;launch translation
-str_time = systime(1)
-text = "Processing translation....."
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-spawn, cmd_line, listening
-
-;determine name of nexus file
-file_list=strsplit(new_translation_filename,'t$',/REGEX,/extract,count=length) ;to remove last part of the name
-filename_short=file_list[0]	
-nexus_filename = filename_short + 's'
-(*global).nexus_filename = nexus_filename
-
-text = "New file created: "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = nexus_filename
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;
+;
+;;making NeXus file now
+;new_translation_filename = (*global).new_translation_filename
+;cmd_line = "nxtranslate "
+;cmd_line += new_translation_filename
+;
+;cmd_line_displayed = "> " + cmd_line
+;
+;view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+;WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+;
+;;launch translation
+;str_time = systime(1)
+;text = "Processing translation....."
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;spawn, cmd_line, listening
+;
+;;determine name of nexus file
+;file_list=strsplit(new_translation_filename,'t$',/REGEX,/extract,count=length) ;to remove last part of the name
+;filename_short=file_list[0]	
+;nexus_filename = filename_short + 's'
+;(*global).nexus_filename = nexus_filename
+;
+;text = "New file created: "
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;text = nexus_filename
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;
+;end_time = systime(1)
+;text = "Done"
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
 
