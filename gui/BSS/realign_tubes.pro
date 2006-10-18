@@ -49,7 +49,8 @@ if doread EQ 1 then begin
 
 print,'reading data...'
 
-file = '/SNS/users/j35/BSS_36_neutron_histo_mapped.dat'
+;file = '/SNS/users/j35/BSS_36_neutron_histo_mapped.dat'
+file = '~/CD4/BSS/BSS_37_neutron_histo_mapped.dat'
 ;file = '/SNS/users/j35/BSS_36_neutron_histo.dat'
 ;file = '/SNS/users/j35/BSS_31_neutron_histo_mapped.dat'
 
@@ -68,6 +69,7 @@ readu,u,image1
 
 diff = ulonarr(Ntof,128,8)
 readu,u,diff
+diff = swap_endian(diff)
 ;readu,u,image2
 
 ;close all open file units

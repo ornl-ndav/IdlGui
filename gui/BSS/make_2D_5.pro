@@ -25,6 +25,8 @@ dooffs 	 = 1		;create 2D map of re-mapped data
 doalign  = 1		;align the full 3D data set
 dosave 	 = 1		;save tube endpoints to text file
 
+SW_Endian = 1       ;swap endian
+
 ;example use cases
 ; first pass: set doread, dooffs, doalign, and dosave = 1
 ; second pass: only set dogetep, doofs, doalign = 1 - should use saved results to align data
@@ -39,7 +41,7 @@ if doread EQ 1 then begin
 
 print,'reading data...'
 
-file = 'BSS_31_neutron_histo_mapped.dat'
+file = '~/CD4/BSS/BSS_31_neutron_histo_mapped.dat'
 ;file = 'BSS_22_neutron_histo_mapped.dat'
 
 openr,u,file,/get
@@ -51,7 +53,6 @@ sz = fs.size
 ;figure out number of TOF bins
 ;Ntof = 1;8000 ;
 
-
 Ntof = (sz)/(Npix*(Ntubes+Ndtubes)*4L) ;need to add Ntubes + 8 diffraction det tubes
 
 print,'Ntof',Ntof
@@ -60,6 +61,8 @@ image1 = ulonarr(Ntof, 128,64)
 ;image2 = ulonarr(Ntof, Npix/2, Ntubes)
 
 readu,u,image1
+
+if (SW_Endian EQ 1) then image1 = swap_endian(image1)
 
 diff = ulonarr(Ntof,128,8)
 readu,u,diff
@@ -80,13 +83,23 @@ tmp = reverse(tmp,1)
 image_2d_1[64:*,32:*] = tmp
 
 erase
-tvscl,hist_equal(image_2d_1)
+;plot data as in (before doing anything on it)
+window,1
+;tvscl,hist_equal(image_2d_1)
+tvimg = congrid(hist_equal(image_2d_1),200,350)
+tvscl, tvimg,/device
 
 endif;doread
 
 
 
+
+
+
+
+;brief This function runs only if we already have a mapping file to test with
 if dogetep EQ 1 then begin
+
 ;get tube points saved previously.
 tube_file = 'BSS_31_neutron_histo_mapped_tube_points.txt'
 
@@ -116,6 +129,10 @@ for i=0,Ntubes-1 do begin
 
 endfor;i
 
+
+
+
+;brief In this part, we are going to generate the mapping text file
 endif else begin
 
 off2 = 45
@@ -132,18 +149,28 @@ i1 = intarr(Ntubes)
 i2 = intarr(Ntubes)
 i3 = intarr(Ntubes)
 i4 = intarr(Ntubes)
-
 i5 = intarr(Ntubes)
 
 len1 = intarr(Ntubes)
 len2 = intarr(Ntubes)
 
 ;find rising edges
-for i=0,Ntubes-1 do begin
+;for i=0,Ntubes-1 do begin
+for i=0,0 do begin      ;REMOVE_ME
+
 	tube_pair = image_2d_1[*,i]; - smooth(0.75*image_2d_1[*,i],5)
+
+    print, "tube_pair: ", tube_pair
+    plot, tube_pair
+stop
 
 	diff_rise = tube_pair - shift(tube_pair,1)
 	diff_fall = tube_pair - shift(tube_pair,-1)
+
+    print, "diff_rise: ", diff_rise
+    print, "diff_fall: ", diff_fall
+
+stop
 
 	tmp0 = min(image_2d_1[50:85,i],cntr)
 
