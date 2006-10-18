@@ -13,12 +13,14 @@ transpose_ok = 1
 ;file = "~/nexus/applications/NXtranslate/" + file_name
 
 ;**** pickup dialog box******************************************
- file = dialog_pickfile(/must_exist, $
- title='Select a binary file', $
- filter = ['*.dat'],$
- path='/Users/j35/CD4/BSS/2006_1_2_SCI/BSS_7/',$
- get_path = path)
+;  file = dialog_pickfile(/must_exist, $
+;  title='Select a binary file', $
+;  filter = ['*.dat'],$
+;  path='/Users/j35/CD4/BSS/2006_1_2_SCI/BSS_22/',$
+;  get_path = path)
 ;****************************************************************
+
+file = '~/CD4/BSS/BSS_37_neutron_histo.dat'
 
 openr,1,file
 fs = fstat(1)
@@ -37,7 +39,7 @@ Ny=72
 ;Ny=56L
 ;Nx = 64L  	;information from xxx_runnumber_runinfo.xml
 ;Ny = long(N/64)
-Nt = 2001
+Nt = 1
 ;#################################
 
 ;find the non-null elements
@@ -63,7 +65,7 @@ if transpose_ok EQ 1 then begin
 	ytitle = "pixels"
 endif
 
-title="Before mapping file"
+title="After mapping"
 window,1,xsize=1000,ysize=600,xpos=350,ypos=150
 
 ;***************color*************
