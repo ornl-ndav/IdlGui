@@ -1,11 +1,11 @@
 ;make 2D - program to do the following:
 ;
+; * read the histo_mapped binary file
 ; * locate tube endpoints
 ; * remap 2D data to view quality
 ; * align 3D data set
 ; * save out tube endpoint values
 ; * restore tube endpoints for use with aligining data
-
 
 ;the primary result of this program is to create 5 arrays
 ;i1 - first tube starting pixel
@@ -19,19 +19,22 @@
 ;y_pixel_offset_pixel_63 = 0.0738 meter
 ;it's up to us to figure out the position of the other ones
 ;distance from one border to the other is 0.1476m = 14.76cm
+y_left_offset = -0.0738
+y_right_offset = 0.0738
 
 ;processing flags
 doread 	 = 1           ;read in BSS data - generally need to do this the first time thru
 dogetep  = 0           ;get tube endpoints from text file
-doplot 	 = 0           ;plot tube endpoints composite results
+doplot 	 = 0           ;plot tube endpoints composite results (3 graphs)
 dostop 	 = 0           ;stop to single step thru finding endpoints
 dolog  	 = 1           ;show data in linear scale (0) or log scale (1)
 dooffs 	 = 1           ;create 2D map of re-mapped data
 doalign  = 1           ;align the full 3D data set
-dosave 	 = 1           ;save tube endpoints to text file
+dosave 	 = 0           ;save tube endpoints to text file
 debug    = 0           ;debug print statement
-debug_tmp = 1          ;temporary debug statement
+debug_map = 0          ;debug statement of remapping part of program (array_offset...)
 verbose = 1            ;display position of start,end....
+print_data_per_tube = 1 ;display counts for each tube, one at a time
 
 ;example use cases
 ; first pass: set doread, dooffs, doalign, and dosave = 1
@@ -42,62 +45,60 @@ Npix = 128L	 ;number of pixels per tube
 Ntubes = 64L ;number of inelastic tubes
 Ndtubes = 8L ;number of diffraction tubes
 
+array_offset = fltarr(Ntubes+8,Npix)
+!p.multi=[0,1,1]
+;#######################################################################################
 
-;##############################################################################################
-
+;read histo_mapped input file
 if doread EQ 1 then begin
 
-print,'reading data...'
-
-;file = '/SNS/users/j35/BSS_36_neutron_histo_mapped.dat'
-file = '~/CD4/BSS/BSS_37_neutron_histo_mapped.dat'
+    print,'reading data...'
+    
+    file = '/SNS/users/j35/BSS_35_neutron_histo_mapped.dat'
+;file = '~/CD4/BSS/BSS_37_neutron_histo_mapped.dat'
 ;file = '/SNS/users/j35/BSS_36_neutron_histo.dat'
 ;file = '/SNS/users/j35/BSS_31_neutron_histo_mapped.dat'
-
-openr,u,file,/get
+    
+    openr,u,file,/get
 ;TOF_data = assoc(unit,uintarr(8000))
-
-fs = fstat(u)
-sz = fs.size
-
-Ntof = (sz)/(Npix*(Ntubes+Ndtubes)*4L) ;need to add Ntubes + 8 diffraction det tubes
-
-image1 = ulonarr(Ntof,128,64)
+    
+    fs = fstat(u)
+    sz = fs.size
+    
+    Ntof = (sz)/(Npix*(Ntubes+Ndtubes)*4L) ;need to add Ntubes + 8 diffraction det tubes
+    
+    image1 = ulonarr(Ntof,128,64)
 ;image2 = ulonarr(Ntof, Npix/2, Ntubes)
-
-readu,u,image1
-
-diff = ulonarr(Ntof,128,8)
-readu,u,diff
-diff = swap_endian(diff)
+    
+    readu,u,image1
+    
+    diff = ulonarr(Ntof,128,8)
+    readu,u,diff
 ;readu,u,image2
-
+    
 ;close all open file units
-close,/all  
-
-image_2d_1 = total(image1,1)
-orig = image_2d_1
+    close,/all  
+    
+    image_2d_1 = total(image1,1)
+    orig = image_2d_1
 ;image_2d_2 = total(image2,1)
+    
+    tmp = image_2d_1[0:63,0:31]
+    tmp = reverse(tmp,1)
+    image_2d_1[0:63,0:31] = tmp
+    
+    tmp = image_2d_1[64:*,32:*]
+    tmp = reverse(tmp,1)
+    image_2d_1[64:*,32:*] = tmp
+    
+endif                           ;doread
 
-tmp = image_2d_1[0:63,0:31]
-tmp = reverse(tmp,1)
-image_2d_1[0:63,0:31] = tmp
 
-tmp = image_2d_1[64:*,32:*]
-tmp = reverse(tmp,1)
-image_2d_1[64:*,32:*] = tmp
 
-if (debug EQ 1) then begin
-;tvscl,hist_equal(image_2d_1)
-    tvimg = congrid(hist_equal(image_2d_1),200,350)
-    tvscl, tvimg,/device
-endif
 
-endif;doread
 
-;get endpoints from text files
-if dogetep EQ 1 then begin
-;get tube points saved previously.
+if dogetep EQ 1 then begin      ;get tube points saved previously.
+
     tube_file = 'BSS_31_neutron_histo_mapped_tube_points.txt'
     
     i1 = intarr(Ntubes)         ;tube 1 start values
@@ -126,38 +127,33 @@ if dogetep EQ 1 then begin
         
     endfor                     
     
-endif else begin
+endif else begin                ;calculate endpoints
     
-    off1 = 25                   ;max position for start of first part of tube
-    off2 = 45                   ;min position of end of first part of tube 
-    off3 = 90                   ;max position of start of second part of tube      
-    off4 = 100                  ;min position of end of second part of tube
+    off1 = 25                   ;max position of first part tube start
+    off2 = 50                   ;min position of first part tube end 
+    off3 = 80                   ;max position of second part tube start     
+    off4 = 110                  ;min position of second part tube end
     
     Npad = 10
     pad = lonarr(Npad)
     
-    i1 = intarr(Ntubes)         ;start of first part of tube
-    i2 = intarr(Ntubes)         ;end of first part of tube
-    i3 = intarr(Ntubes)         ;start of second part of tube
-    i4 = intarr(Ntubes)         ;end of second part of tube
+    i1 = intarr(Ntubes)         ;first part of tube start
+    i2 = intarr(Ntubes)         ;first part of tube end
+    i3 = intarr(Ntubes)         ;second part of tube start
+    i4 = intarr(Ntubes)         ;second part of tube end
     i5 = intarr(Ntubes)         ;central position between the two parts
     
     len1 = intarr(Ntubes)       ;length of first part of tube
     len2 = intarr(Ntubes)       ;length of second part of tube
     
 ;find rising edges
-    if (verbose EQ 1) then begin
-        print, "tube#: left_0, right_0, center, left_1, right_1"
-        print, "_______________________________________________"
-    endif
-
+    
     for i=0,Ntubes-1 do begin
-       
-        ;check if there are counts for that tube
-        sum_tube = total(image_2d_1[*,i])
+                                        
+        sum_tube = total(image_2d_1[*,i]) ;check if there are counts for that tube
         
-        if (sum_tube EQ 0) then begin
-
+        if (sum_tube EQ 0) then begin ;if there is no data in tube
+            
             indx1=0
             indx2=62
             cntr=63
@@ -170,11 +166,6 @@ endif else begin
             
             diff_rise = tube_pair - shift(tube_pair,1)
             diff_fall = tube_pair - shift(tube_pair,-1)
-            
-            if (debug EQ 1) then begin
-                print, tube_pair
-                plot, tube_pair
-            endif
             
             tmp0 = min(image_2d_1[off2:off3,i],cntr)
             cntr += off2
@@ -189,36 +180,89 @@ endif else begin
             
         endelse
 
-        stop_value = ""
-        read, stop_value, prompt="continue (y/n): "
-        if(stop_value EQ 'y') then begin 
-            title = "tube # " + strcompress(i)
-            plot, image_2d_1[*,i], title=title
-            plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
-            plots,[indx2,image_2d_1[indx2,i]],psym=4,color=130,thick=3
-            plots,[cntr,image_2d_1[cntr,i]],psym=4,color=130,thick=3
-            plots,[indx3,image_2d_1[indx3,i]],psym=4,color=130,thick=3
-            plots,[indx4,image_2d_1[indx4,i]],psym=4,color=130,thick=3
-        endif else begin
-            stop
-        endelse
-       
-        if (verbose EQ 1) then begin
-            print, i, " :", strcompress(indx1), ", " ,$
-              strcompress(indx2), ", ",$
-              strcompress(cntr), ", ",$
-              strcompress(indx3), ", ",$
+        ;Print indexes of extremities of tube and central position
+        if (print_data_per_tube EQ 1) then begin
+            text =   strcompress(indx1) + ", " + $
+              strcompress(indx2)+ ", "+ $
+              strcompress(cntr)+ ", "+ $
+              strcompress(indx3)+ ", "+ $
               strcompress(indx4)
+        
+        ;This part displays the plot of each tube one by one
+            stop_value = ""
+            read, stop_value, prompt="continue (y/n): "
+
+            if(stop_value EQ 'y') then begin 
+
+                title = text + " | tube # " + strcompress(i)
+                window, 0, xsize=500,ysize=400,xpos=550,ypos=250
+                plot, image_2d_1[*,i], title=title
+                plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
+                plots,[indx2,image_2d_1[indx2,i]],psym=4,color=130,thick=3
+                plots,[cntr,image_2d_1[cntr,i]],psym=4,color=130,thick=3
+                plots,[indx3,image_2d_1[indx3,i]],psym=4,color=130,thick=3
+                plots,[indx4,image_2d_1[indx4,i]],psym=4,color=130,thick=3
+                
+            endif else begin
+                stop
+            endelse
+            
         endif
 
+        ;store the indexes in an array i
         i1[i] = indx1
 	i2[i] = indx2
 	i3[i] = indx3
 	i4[i] = indx4
 	i5[i] = cntr
 
+        ;store the size of each size of the tube in len1 and len2
 	len1[i] = i2[i] - i1[i]
 	len2[i] = i4[i] - i3[i]
+        
+        ;offset of first part of tube0
+        for j=0,i1[i]-1 do begin
+            array_offset[i,j] = -1
+        endfor
+        
+        delta_offset_tube0 = (2*y_right_offset)/(i2[i]-i1[i])
+
+        ;offset of central part of tube0
+        for j=i1[i],i2[i] do begin
+            array_offset[i,j] = y_right_offset - (j-i1[i])*delta_offset_tube0
+        endfor
+
+        ;offset of part between tube0 and tube1
+        for j=i2[i]+1,i3[i]-1 do begin
+            array_offset[i,j] = -1
+        endfor
+
+        delta_offset_tube1 = (2*y_right_offset)/(i4[i]-i3[i])        
+        
+        ;offset of central part of tube1
+        for j=i3[i],i4[i] do begin
+            array_offset[i,j] = y_left_offset + (j-i3[i])*delta_offset_tube1
+        endfor
+
+        ;offset of last part of tube1
+        for j=i4[i]+1, 127L do begin
+            array_offset[i,j] = -1
+        endfor        
+
+        if (debug_map EQ 1) then begin
+            
+            for j=0,127 do begin
+                print, "array_offset[",strcompress(i),",",strcompress(j),"]: ", $
+                  array_offset[i,j]
+            endfor
+            
+        endif
+            
+        
+
+
+
+
 
         if (debug EQ 1) then begin
             print, "len1[",strcompress(i),"]= ", strcompress(len1[i])
@@ -227,85 +271,109 @@ endif else begin
 
         if doplot EQ 1 then begin
             
-            print,'***********************************'
-            print,'Loop: ',i,' of ',Ntubes-1
-            print,off2+indx2 - indx1
-            print,cntr+50
-            print,(off4+indx4) - (off3+indx3)
+            stop_value = ""
+            read, stop_value, prompt="continue (y/n): "
             
-            
-            wset,0
-            !p.multi=[0,1,2]
-            
-            if i LT 32 then bank = 1 else bank = 2
-            titl = 'Tube-pair'+strcompress(i)+'   Bank'+strcompress(bank)
-            xtitle='Pixel'
-            ytitle='Magnitude - Linear'
-            cs = 1.5
-            plot,image_2d_1[*,i],color=0,back=255,title=titl,xtitle=xtitle,ytitle=ytitle,$
-              charsize=cs,xrange=[0,128],xstyle=1
-            oplot,image_2d_1[*,i],psym=4,color=0
-            plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
-            plots,[off2+indx2,image_2d_1[off2+indx2,i]],psym=4,color=130,thick=3
-            plots,[off3+indx3,image_2d_1[off3+indx3,i]],psym=4,color=130,thick=3
-            plots,[off4+indx4,image_2d_1[off4+indx4,i]],psym=4,color=130,thick=3
-            
-            plots,[50+cntr,image_2d_1[50+cntr,i]],psym=4,color=160,thick=3
-            
-;now show in log scale
-            eps = 0.1
-            ytitle='Magnitude - Log'
-            plot,image_2d_1[*,i]+eps,/ylog,$
-              color=0,back=255,title=titl,xtitle=xtitle,ytitle=ytitle,$
-              charsize=cs,xrange=[0,128],xstyle=1
-            oplot,image_2d_1[*,i],psym=4,color=0
-            plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
-            plots,[off2+indx2,image_2d_1[off2+indx2,i]],psym=4,color=130,thick=3
-            plots,[off3+indx3,image_2d_1[off3+indx3,i]],psym=4,color=130,thick=3
-            plots,[off4+indx4,image_2d_1[off4+indx4,i]],psym=4,color=130,thick=3
-            
-            plots,[50+cntr,image_2d_1[50+cntr,i]],psym=4,color=160,thick=3
-            
-;
-;pad and give ourselves some room to shift data
-            tube_pair_pad = [pad,tube_pair,pad]
-            indx_cntr = 64+Npad
-            
-            cntr_offset = indx_cntr - (Npad+cntr+50)
+            if (stop_value EQ 'y') then begin
+                
+                print,'***********************************'
+                print,'Tube # ',strcompress(i),'/',strcompress(Ntubes-1)
+                
+                wset,0
+                !p.multi=[0,2,2]
+                
+                if i LT 32 then bank = 1 else bank = 2
+                
+                text =   strcompress(indx1) + ", " + $
+                  strcompress(indx2)+ ", "+ $
+                  strcompress(cntr)+ ", "+ $
+                  strcompress(indx3)+ ", "+ $
+                  strcompress(indx4)+ " (tube #" +$
+                  strcompress(i,/remove_all) + "/" + "bank #" +$
+                  strcompress(bank,/remove_all) + ")"
+                xtitle='Pixel'
+                ytitle='Magnitude - Linear'
+                cs = 1.5
+                
+                plot,image_2d_1[*,i],title=text,xtitle=xtitle,ytitle=ytitle,$
+                  charsize=cs,xrange=[0,128],xstyle=1
+                oplot,image_2d_1[*,i],psym=4,color=255
+                
+                plots,[indx1,image_2d_1[indx1,i]],psym=4,color=255,thick=3
+                plots,[indx2,image_2d_1[indx2,i]],psym=4,color=255,thick=3
+                plots,[indx3,image_2d_1[indx3,i]],psym=4,color=255,thick=3
+                plots,[indx4,image_2d_1[indx4,i]],psym=4,color=255,thick=3
+                plots,[cntr,image_2d_1[cntr,i]],psym=4,color=200,thick=3
+                
+                                ;now show in log scale
+                eps = 0.1
+                ytitle='Magnitude - Log'
+                plot,image_2d_1[*,i]+eps,/ylog,$
+                  xtitle=xtitle,ytitle=ytitle,$
+                  charsize=cs,xrange=[0,128],xstyle=1
+                oplot,image_2d_1[*,i],psym=4,color=255
+                plots,[indx1,image_2d_1[indx1,i]],psym=4,color=255,thick=3
+                plots,[indx2,image_2d_1[indx2,i]],psym=4,color=255,thick=3
+                plots,[indx3,image_2d_1[indx3,i]],psym=4,color=255,thick=3
+                plots,[indx4,image_2d_1[indx4,i]],psym=4,color=255,thick=3            
+                plots,[cntr,image_2d_1[cntr,i]],psym=4,color=200,thick=3
+                
+;pad and give ourselves some room to shift data (10 + 127 + 10)
+                tube_pair_pad = [pad,tube_pair,pad]
+                indx_cntr = 64+Npad ;74            
+                                ;cntr offset relative to cntr
+                cntr_offset = indx_cntr - (Npad+cntr) ;74 - (10 + cntr) 
+                
+                
 ;dial out center offset
-            tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
-            
-            !p.multi=0
-            wset,1
-            plot,tube_pair_pad_shft
+                tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
+                
+                plot,tube_pair_pad_shft+0.2
+                
+            endif else begin
+                stop
+            endelse
+
             if dostop EQ 1 then stop
             
         endif                   ;doplot
         
+
+
+
+
+
+
+
+
+
+
+
     endfor                      ;i
     
-    
-stop
 
-
-if doplot EQ 1 then begin
+    if doplot EQ 1 then begin
 ;plot mean values of the first 16 tubes
-    m1_1 = mean(i1[0:15])
-    m2_1 = mean(i2[0:15])
-    m3_1 = mean(i3[0:15])
-    m4_1 = mean(i4[0:15])
-    m5_1 = mean(i5[0:15])
+        m1_1 = mean(i1[0:15])
+        m2_1 = mean(i2[0:15])
+        m3_1 = mean(i3[0:15])
+        m4_1 = mean(i4[0:15])
+        m5_1 = mean(i5[0:15])
+        
+        plot,i1 - m1_1
+    endif     ;doplot
     
-    plot,i1 - m1_1
-    
-endif                           ;doplot
+endelse       ;dogetep
 
-endelse                         ;dogetep
+
+
 
 ;Create 2D map of re-mapped data
 if dooffs EQ 1 then begin
     outfile = 'tmp.txt'
     
+
+
 ;define ranges of tube responses
     
 ;first tube in the pair
@@ -318,34 +386,101 @@ if dooffs EQ 1 then begin
     t3 = 125
     length_tube1 = t3 - t2
     
+;new remap array(Npix, Ntubes)
     remap = dblarr(Npix,Ntubes)
     
     for i=0,Ntubes-1 do begin
 
-        if (debug_tmp EQ 1) then begin
-            print, "Tube # ", strcompress(i)
+        if (debug_map EQ 1) then begin
+            print, "#######################################"
+            print, "Tube #", strcompress(i,/remove_all)
         endif
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+stop
+
+
         if ((i LT 16) OR ((i GT 32) AND (i LT 48))) then begin
-
-            mid = Npix/2
-                                
+            
+            mid = Npix/2  ;64
+            
 ;remap tube end data
-            if (debug_tmp EQ 1) then begin
-                print, "i1= ", i1[i]
-                print, "i2= ", i2[i]
-                print, "i3= ", i3[i]
-                print, "i4= ", i4[i]
-                print, "i5= ", i5[i]
+            if (debug_map EQ 1) then begin
+                txt = " (i1,i2,i3,i4,i5)= (" + strcompress(i1[i],/remove_all)
+                txt += "," + strcompress(i2[i],/remove_all)
+                txt += "," + strcompress(i3[i],/remove_all)
+                txt += "," + strcompress(i4[i],/remove_all)
+                txt += "," + strcompress(i5[i],/remove_all) + ")"
+                print, txt
             endif
-
-;remap tube0 data
+            
             len_meas_tube0 = i2[i] - i1[i]
 
-            if (debug_tmp EQ 1) then begin
-                print, "len_meas_tube0= ", len_meas_tube0
+            if (debug_map EQ 1) then begin
+                print, " len_meas_tube0= ", strcompress(len_meas_tube0,/remove_all)
             endif
 
+;remap (rebin) tube0 data
             d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
             
 ;remap (rebin) tube start data (junk)
@@ -355,34 +490,82 @@ if dooffs EQ 1 then begin
  
             d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
 
+;new tube remapped
             tube0_new = [d0_0,d0,d0_1]
 
-            if (debug_tmp EQ 1) then begin
-                print, "d0= ", d0
-                print, "d0_0= ", d0_0
-                print, "d0_1= ", d0_1
-                help, d0_0
-                help, d0
-                help, d0_1
+            if (debug_map EQ 1) then begin
+                d0_size = size(d0)
+                text_d0 = " d0=["
+                for i=0, 5 do begin
+                    text_d0 += strcompress(d0[i],/remove_all) + ","
+                endfor
+                text_d0 += "...,"
+                for i=(d0_size[1]-6),(d0_size[1]-1)  do begin
+                    text_d0 += strcompress(d0[i],/remove_all) + ","
+                endfor
+                text_d0 += + "]" + ": " + strcompress(d0_size[1],/remove_all) + $
+                  " elements"
+
+                d0_0_size = size(d0_0)
+                text_d0_0 = " d0_0=["
+                for i=0, (d0_0_size[1]-2) do begin
+                    text_d0_0 += strcompress(d0_0[i],/remove_all) + ","
+                endfor
+                text_d0_0 += strcompress(d0_0[d0_0_size[1]-1],/remove_all) + $
+                  "]" + ": " + strcompress(d0_0_size[1],/remove_all) + $
+                  " elements"
+
+                d0_1_size = size(d0_1)
+                text_d0_1 = " d0_1=["
+                for i=0, (d0_1_size[1]-2) do begin
+                    text_d0_1 += strcompress(d0_1[i],/remove_all) + ","
+                endfor
+                text_d0_1 += strcompress(d0_1[d0_1_size[1]-1],/remove_all) + $
+                  "]" + ": " + strcompress(d0_1_size[1],/remove_all) + $
+                  " elements"
+                  
+
+                print, text_d0_0
+                print, text_d0
+                print, text_d0_1
+                print
+                
             endif
             
 ;reshape middle section of tube
-;             mn0 = min(d0) ;2
-;             print, "minimum of d0, mn0= ", mn0
-;             mx0 = min([max(d0),Npix-1]) 
-;             print, "maximum of d0, mx0= ", mx0
-;             print, "sizeo of d0 is: ", size(d0)
-;             del0 = mx0 - mn0 + 1
-;             print, "del0= ", del0
-;             rindx1 = indgen(del0)+mn0
-             rindx1 = indgen(length_tube0)+mn0
-;             print, "rindx1= ", rindx1
-;            dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
-            dat = congrid(image_2d_1[i1[i]:i2[i],i],length_tube0,/interp)
+
+             mn0 = min(d0) ;2
+             mx0 = min([max(d0),Npix-1]) 
+             del0 = mx0 - mn0 + 1
+             rindx1 = indgen(del0-1)+mn0
+
+            if (debug_map EQ 1) then begin             
+                print, "--> Work on middle section of tube (d0_0)"
+                print, " (min,max) = (", strcompress(mn0,/remove_all), $
+                  "," , strcompress(mx0,/remove_all),")"
+                rindx1_size = size(rindx1)
+                text = "rindx1=["
+                for i=0,5 do begin
+                    text += strcompress(rindx1[i],/remove_all) + ","
+                endfor
+                text += "..."
+                for i=(rindx1_size[1]-6),(rindx1_size[1]-2) do begin
+                    text += strcompress(rindx1[i],/remove_all) + ","
+                endfor
+                text += strcompress(rindx1[rindx1_size[1]-1],/remove_all) + "]"
+                print, text
+            endif
+            
+            dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp)
+;            dat = congrid(image_2d_1[i1[i]:i2[i],i],length_tube0,/interp)
+
             remap[rindx1,i] = dat ;new array of the middle section
 ;            plot, remap[rindx1,0]
             
-;print,'***',rindx1
+stop
+
+
+
 
 ;remap endpoints and middle section
 ;one end
@@ -405,7 +588,7 @@ stop
 ;print,'***',rindx0
             
 ;stop
-                                ;finally the middle
+              ;finally the middle
             mn0 = t1+1
             mx0 = t2-1
             del0 = (mx0 - mn0) + 1
@@ -415,18 +598,18 @@ stop
             remap[rindx0,i] = dat * scl
 ;print,'***',rindx0
 ;stop
-                                ;remap tube1 data
+              ;remap tube1 data
             len_meas_tube1 = i4[i] - i3[i]
             d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
             
-                                ;remap tube start data (junk)
+              ;remap tube start data (junk)
             d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
             
-                                ;remap tube end data
+              ;remap tube end data
             d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
             
 ;stop
-                                ;now the other tube end
+              ;now the other tube end
             mn0 = min(d1_1)
             mx0 = min([max(d1_1),Npix-1])
             del0 = (mx0 - mn0) + 1
@@ -435,7 +618,6 @@ stop
             scl = float(del0)/(Npix-i4[i])
             remap[rindx0,i] = dat * scl
 ;print,'***',rindx0
-            
             
             mn1 = min(d1)
             mx1 = min([max(d1),Npix-1])
