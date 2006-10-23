@@ -86,7 +86,6 @@ pro MAIN_BASE_event, Event
     end
 
 
-
     else:
   endcase
 
