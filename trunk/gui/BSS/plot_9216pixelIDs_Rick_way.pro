@@ -20,7 +20,7 @@ transpose_ok = 1
 ;  get_path = path)
 ;****************************************************************
 
-file = '~/CD4/BSS/BSS_37_neutron_histo.dat'
+file = '/SNS/users/j35/BSS_41_neutron_histo.dat'
 
 openr,1,file
 fs = fstat(1)
@@ -30,7 +30,7 @@ Nbytes = 4       ;data are Uint32 = 4 bytes
 N = fs.size/Nbytes
 data = lonarr(N)
 readu,1,data
-data = swap_endian(data)    ;swap endian because PC -> Mac
+;data = swap_endian(data)    ;swap endian because PC -> Mac
 close,1			    ;close file
 
 ;################################
@@ -39,7 +39,7 @@ Ny=72
 ;Ny=56L
 ;Nx = 64L  	;information from xxx_runnumber_runinfo.xml
 ;Ny = long(N/64)
-Nt = 1
+Nt = 8000
 ;#################################
 
 ;find the non-null elements

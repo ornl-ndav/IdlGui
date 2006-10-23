@@ -25,7 +25,8 @@ y_right_offset = 0.0738
 ;processing flags
 doread 	 = 1           ;read in BSS data - generally need to do this the first time thru
 dogetep  = 0           ;get tube endpoints from text file
-doplot 	 = 0           ;plot tube endpoints composite results (3 graphs)
+doplot 	 = 1           ;plot tube endpoints composite results (3 graphs)
+doplot_1 = 0           ;plot standard deviation of the 64 tubes
 dostop 	 = 0           ;stop to single step thru finding endpoints
 dolog  	 = 1           ;show data in linear scale (0) or log scale (1)
 dooffs 	 = 1           ;create 2D map of re-mapped data
@@ -35,10 +36,12 @@ debug    = 0           ;debug print statement
 debug_map = 0          ;debug statement of remapping part of program (array_offset...)
 verbose = 1            ;display position of start,end....
 print_data_per_tube = 1 ;display counts for each tube, one at a time
+print_tube = 1         ;plot position of edges for each tube
 
 ;example use cases
 ; first pass: set doread, dooffs, doalign, and dosave = 1
-; second pass: only set dogetep, doofs, doalign = 1 - should use saved results to align data
+; second pass: only set dogetep, doofs, doalign = 1 - should use
+; saved results to align data
 
 ;global variables
 Npix = 128L	 ;number of pixels per tube
@@ -49,12 +52,14 @@ array_offset = fltarr(Ntubes+8,Npix)
 !p.multi=[0,1,1]
 ;#######################################################################################
 
+
+if doread EQ 1 then begin    ;read input histo_mapped file
+
 ;read histo_mapped input file
-if doread EQ 1 then begin
 
     print,'reading data...'
     
-    file = '/SNS/users/j35/BSS_35_neutron_histo_mapped.dat'
+    file = '/SNS/users/j35/BSS_37_neutron_histo_mapped.dat'
 ;file = '~/CD4/BSS/BSS_37_neutron_histo_mapped.dat'
 ;file = '/SNS/users/j35/BSS_36_neutron_histo.dat'
 ;file = '/SNS/users/j35/BSS_31_neutron_histo_mapped.dat'
@@ -90,9 +95,8 @@ if doread EQ 1 then begin
     tmp = image_2d_1[64:*,32:*]
     tmp = reverse(tmp,1)
     image_2d_1[64:*,32:*] = tmp
-    
-endif                           ;doread
 
+endif
 
 
 
@@ -127,8 +131,14 @@ if dogetep EQ 1 then begin      ;get tube points saved previously.
         
     endfor                     
     
+
+
+
+
 endif else begin                ;calculate endpoints
     
+
+
     off1 = 25                   ;max position of first part tube start
     off2 = 50                   ;min position of first part tube end 
     off3 = 80                   ;max position of second part tube start     
@@ -163,6 +173,8 @@ endif else begin                ;calculate endpoints
         endif else begin
 
             tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
+
+            ;place where I'm going to remove counts in file
             
             diff_rise = tube_pair - shift(tube_pair,1)
             diff_fall = tube_pair - shift(tube_pair,-1)
@@ -179,9 +191,105 @@ endif else begin                ;calculate endpoints
             indx4 += off4
             
         endelse
+        
+        case i of
+            9: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i] = 1
+                image_2d_1[63,i] = 1
+                image_2d_1[64,i] = 1
+                indx2 = 60
+                indx1 = 10
+                cntr = 63
+            end
+            10: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx1 = 10
+                indx3 = 66
+                cntr = 63
+            end
+            11: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx1 = 10
+                indx2 = 60
+                indx3 = 66
+                cntr = 63
+            end
+            12: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx1 = 10
+                indx2 = 60
+                indx3 = 66
+                cntr = 63
+            end
+            13: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx2 = 60
+                indx3 = 67
+                cntr = 63
+            end
+            14: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx2 = 59
+                indx3 = 67
+                cntr = 63
+            end
+            15: begin
+                image_2d_1[61,i]=1
+                image_2d_1[62,i]=1
+                image_2d_1[63,i]=1
+                image_2d_1[64,i]=1
+                image_2d_1[65,i]=1
+                indx2 = 59
+                indx3 = 67
+                cntr = 63
+            end
+            55: begin
+                for k=0,127 do begin
+                    image_2d_1[k,i] = image_2d_1[k,i-1]
+                    indx2 = 58
+                    indx3 = 68
+                    cntr = 64
+                    indx4 = 120
+                endfor
+            end
 
+            else:
+        endcase
+        
+        if (i EQ -1) then begin
+
+        ;print counts for that tube
+        print, "Counts of tube #", strcompress(i-1)," , ", strcompress(i)
+        for j=50,80 do begin
+;            print, "image_2d_1[",strcompress(j),",",strcompress(i),"]=",$
+        print, "pixelID #",strcompress(j),":", strcompress(image_2d_1[j,i-1])," , ",$
+          strcompress(image_2d_1[j,i])
+        endfor
+
+        
         ;Print indexes of extremities of tube and central position
-        if (print_data_per_tube EQ 1) then begin
+        if (print_tube EQ 1) then begin
             text =   strcompress(indx1) + ", " + $
               strcompress(indx2)+ ", "+ $
               strcompress(cntr)+ ", "+ $
@@ -208,6 +316,8 @@ endif else begin                ;calculate endpoints
             endelse
             
         endif
+
+    endif  ;if (i=8) then begin
 
         ;store the indexes in an array i
         i1[i] = indx1
@@ -258,12 +368,6 @@ endif else begin                ;calculate endpoints
             
         endif
             
-        
-
-
-
-
-
         if (debug EQ 1) then begin
             print, "len1[",strcompress(i),"]= ", strcompress(len1[i])
             print, "len2[",strcompress(i),"]= ", strcompress(len2[i])
@@ -339,33 +443,31 @@ endif else begin                ;calculate endpoints
         endif                   ;doplot
         
 
-
-
-
-
-
-
-
-
-
-
     endfor                      ;i
-    
 
-    if doplot EQ 1 then begin
-;plot mean values of the first 16 tubes
-        m1_1 = mean(i1[0:15])
+
+    if doplot_1 EQ 1 then begin
+
+;plot mean values of the 64 tubes
+     
+        title = "Standard deviation of the 64 tubes"
+        window, 0, xsize=800, ysize=800, xpos=1800, ypos=350, title=title
+        !p.multi=[6,2,3]
+        m1_1 = mean(i1[0:63])
         m2_1 = mean(i2[0:15])
         m3_1 = mean(i3[0:15])
         m4_1 = mean(i4[0:15])
         m5_1 = mean(i5[0:15])
-        
-        plot,i1 - m1_1
-    endif     ;doplot
+
+        plot,i1 - m1_1, title="start of tube0 (i1 - m1_1)", charsize=3
+        plot,i2 - m2_1, title="end of tube0 (i2 - m2_1)", charsize=3
+        plot,i3 - m3_1, title="start of tube1 (i3 - m3_1)", charsize=3
+        plot,i4 - m4_1, title="end of tube1 (i4 - m4_1)", charsize=3
+        plot,i5 - m5_1, title="center (i5 - m5_1)", charsize=3
+
+    endif     ;doplot_1
     
 endelse       ;dogetep
-
-
 
 
 ;Create 2D map of re-mapped data
@@ -398,66 +500,6 @@ if dooffs EQ 1 then begin
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-stop
 
 
         if ((i LT 16) OR ((i GT 32) AND (i LT 48))) then begin
@@ -821,11 +863,23 @@ if dosave EQ 1 then begin
     
 endif                           ;dosave
 
-
-
-
-
-
-
-
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
