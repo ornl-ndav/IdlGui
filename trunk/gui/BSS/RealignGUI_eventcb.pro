@@ -35,21 +35,10 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
-end
-
-
-
-
-pro OPEN_HISTOGRAM, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-(*global).filter_histo = '*_histo.dat'
-OPEN_FILE, Event
 
 end
+
+
 
 
 
@@ -59,7 +48,6 @@ pro OPEN_MAPPED_HISTOGRAM, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-(*global).filter_histo = '*_histo_mapped.dat'
 OPEN_FILE, Event
 
 end
@@ -80,9 +68,10 @@ spawn, "pwd",listening
 if ((*global).path EQ '') then begin
    path = listening
 endif else begin
-   path = (*global).path
+   path = (*global).working_path
 endelse
 
+path = "/SNS/users/j35/" ;REMOVE_ME
 file = dialog_pickfile(/must_exist,$
 	title="Select a histogram file for BSS",$
 	filter= (*global).filter_histo,$
@@ -94,14 +83,16 @@ if (file NE '') then begin
 
 (*global).file = file
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 
 if (path NE '') then begin
    (*global).path = path
-   text = "file openned:" 
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = "File: " 
+   WIDGET_CONTROL, view_info, SET_VALUE=text
    text = file
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+   (*global).file_already_opened = 1
 
 endif else begin
 
@@ -110,11 +101,11 @@ endif else begin
 
 endelse
 
-  PLOT_HISTO_FILE, Event
+PLOT_HISTO_FILE, Event
 
 endif else begin
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = " No new file loaded "
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
@@ -126,6 +117,10 @@ widget_control,hourglass=0
 end
 
 
+
+
+
+
 ;------------------------------------------------------------------------
 pro PLOT_HISTO_FILE, Event
 
@@ -133,256 +128,177 @@ pro PLOT_HISTO_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-if ((*global).refresh_histo EQ 0) then begin
+file = (*global).file 
 
-  file = (*global).file 
-
-  view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-  text = " Opening/Reading file.......... "
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-  text = file
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  openr,1,file
-  fs=fstat(1)
-
-  ;to get the size of the file
-  file_size=fs.size
-
-  text = "Infos about file" 
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-  text = "  Size of file : " + strcompress(file_size,/remove_all)
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  Nbytes = (*global).nbytes
-  N = long(file_size) / Nbytes  ;number of elements
-
-  text = "  Nbre of elements : " + strcompress(N,/remove_all)
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  data = lonarr(N)
-  readu,1,data
-
-  if ((*global).swap_endian EQ 1) then begin
-
-     data=swap_endian(data)
-     text = "true"
-
-  endif else begin
-
-     text = "false"
-
-  endelse
-
-  text1 = "  Swap endian : " + text
-  WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
-
-  close,1
-
-  Nx=(*global).Nx
-  Ny=(*global).Ny
-  Nt = long(N)/(long(Nx*Ny))
-
-  (*global).Nt = Nt
-
-  ;update Tbin_interaction
-  max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-  min_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
-  max_tbin_text_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
-  widget_control, max_tbin_slider_id, SET_SLIDER_MAX=Nt-1
-  widget_control, max_tbin_slider_id, SET_VALUE=Nt-1
-  widget_control, min_tbin_slider_id, SET_SLIDER_MAX=Nt-1
-  widget_control, max_tbin_text_id, SET_VALUE=strcompress(Nt-1,/remove_all)
-
-  text = "  Nt : " + strcompress(Nt,/remove_all)
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  ;find the non-null elements
-  indx1 = where(data GT 0, Ngt0)
-  text = "  Number of non-null elements : " + strcompress(Ngt0,/remove_all)
-  WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  img = intarr(Nt,Nx,Ny)
-  img(indx1)=data(indx1)
-
-  (*(*global).img) = img 
-	
-  simg = total(img,1) 	;sum over time bins
-
-  max_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-  WIDGET_CONTROL, max_tbin_slider_id, sensitive=1
-  max_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
-  WIDGET_CONTROL, max_tbin_text_id, sensitive=1
-  min_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
-  WIDGET_CONTROL, min_tbin_slider_id, sensitive=1
-  min_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_TEXT')
-  WIDGET_CONTROL, min_tbin_text_id, sensitive=1
-
-endif else begin
-
-   img = (*(*global).img)
-	
-   ;get value of min_tbin and max_tbin
-   min_tbin = long((*global).min_tbin)   
-   max_tbin = long((*global).max_tbin)
-   Nx = (*global).Nx
-   Ny = (*global).Ny
-     
-   new_Nt = max_tbin - min_tbin
-   print, "new_Nt= ", new_Nt           ;REMOVE_ME
-
-   if (new_Nt EQ 0) then begin
-       new_Nt = 1
-   endif   
-   
-   new_img = intarr(new_Nt+1,Nx,Ny)
-   new_img = img(min_tbin:max_tbin,*,*)
-   simg = total(new_img,1)
-
-   tbin_refresh_button_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='TBIN_REFRESH_BUTTON')
-   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=0
-
-endelse
-
-top_bank = simg(0:63,0:63)
-bottom_bank = simg(0:63,64:127)
-
-(*(*global).top_bank) = top_bank
-(*(*global).bottom_bank) = bottom_bank
-
-top_bank = transpose(top_bank)
-bottom_bank = transpose(bottom_bank)
-
-xtitle = (*global).xtitle
-ytitle = (*global).ytitle
-title = (*global).file
-
-if ((*global).do_color EQ 1) then begin
-   
-   DEVICE, DECOMPOSED=0
-   loadct, 2
-
-endif
-
-Ny_pixels = (*global).Ny_pixels
-Nx_tubes = (*global).Nx_tubes
-
-x_coeff = 12
-(*global).x_coeff = x_coeff
-y_coeff = 4
-(*global).y_coeff = y_coeff
-
-New_Ny = y_coeff*Ny_pixels
-New_Nx = x_coeff*Nx_tubes
-xoff = 10
-yoff = 10
-
-;top bank
-view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOP_BANK')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-
-;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
-tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
-tvscl, tvimg, /device
-
-;plot grid
-for i=1,63 do begin
-  plots, i*x_coeff, 0, /device, color=300
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-
-  plots, 0,i*x_coeff, /device,color=300
-  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
-endfor
-
-;bottom bank
-view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_BOTTOM_BANK')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-
-;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
-tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
-tvscl, tvimg, /device
-
-;plot grid
-for i=1,63 do begin
-  plots, i*x_coeff, 0, /device, color=300
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-
-  plots, 0,i*x_coeff, /device,color=300
-  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
-endfor
-
-;plot scales
-;tubes axis
-view_info = widget_info(Event.top,FIND_BY_UNAME='X_SCALE')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-
-TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes-1],$
-	xstyle=1+8, ystyle=4, /noerase, charsize=1.0, charthick=1.6,$
-	xmargin=[1,3], xticks=8, xtitle=xtitle, color=2,$
-	xTickLen=.5, XGridStyle=2, xminor=7, xtickinterval=4
-
-;top pixels axis
-view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_TOP_BANK')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-erase
-
-TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
-	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
-	ymargin=[0,0], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
-
-
-;bottom pixels axis
-view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_BOTTOM_BANK')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-erase
-
-TvLCT, [70,255,0],[70,255,255],[70,0,0],1
-plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
-	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
-	ymargin=[0,0], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
-
-;plot of top scale
-view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-erase
-
-max_top = max(top_bank)
-print, max_top
-cscl = lindgen(20,New_Ny-10)
-tvscl,cscl,40,5,/device
-plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1,charsize=0.8
-
-;plot of bottom scale
-view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
-WIDGET_CONTROL, view_info, GET_VALUE=id
-wset, id
-erase
-
-max_bottom = max(bottom_bank)
-cscl = lindgen(20,New_Ny-10)
-tvscl,cscl,40,5,/device
-plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1,charsize=0.8
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = " ....Plotting COMPLETED "
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = " Opening/Reading file.......... "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = file
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-(*global).file_already_opened = 1
-(*global).refresh_histo = 0
- 
+openr,u,file,/get
+
+;to get the size of the file
+fs=fstat(u)
+file_size=fs.size
+
+text = "Infos about file:" 
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "  - Size of file : " + strcompress(file_size,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+Nbytes = (*global).nbytes
+N = long(file_size) / Nbytes    ;number of elements
+
+text = "  - Nbre of elements : " + strcompress(N,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+Nx = (*global).Nx
+Ny_diff = (*global).Ny_diff
+Ny_scat = (*global).Ny_scat
+
+Nt = long(N)/(long(Nx*(Ny_diff + Ny_scat)))
+(*global).Nt = Nt
+
+image1 = ulonarr(Nt,Nx,Ny_scat)
+readu,u,image1
+diff = ulonarr(Nt,Nx,Ny_diff)
+readu,u,diff
+close,/all
+
+if ((*global).swap_endian EQ 1) then begin
+    
+    image1=swap_endian(image1)
+    diff=swap_endian(diff)
+    text = "true"
+    
+endif else begin
+    
+    text = "false"
+    
+endelse
+
+text1 = "  - Swap endian : " + text
+WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
+
+text = "  - Number of Tbins : " + strcompress(Nt,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+image_2d_1 = total(image1,1)
+(*(*global).image_2d_1) = image_2d_1 
+;orig = image_2d_1
+
+tmp = image_2d_1[0:63,0:31]
+tmp = reverse(tmp,1)
+image_2d_1[0:63,0:31] = tmp
+
+tmp = image_2d_1[64:*,32:*]
+tmp = reverse(tmp,1)
+image_2d_1[64:*,32:*] = tmp
+
+draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+
+plot,image_2d_1[*,1],xtitle=xtitle,ytitle=ytitle,$
+                  charsize=cs,xrange=[0,128],xstyle=1
+oplot,image_2d_1[*,1],psym=4,color=255
+
+;fill pixelids counts in right table
+pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
+widget_control, pixelIDs_info_id, set_value=text
+for i=1,127 do begin
+    text = strcompress(i) + ': ' + strcompress(image_2d_1[i,0],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text, /append
+endfor
+
+;color
+DEVICE, DECOMPOSED = 0
+loadct,5
+
+;plot DAS'plot
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+
+xoff=5
+yoff=5
+x_size=400
+y_size=100
+New_Nx = 530
+New_Ny = 200
+image_2d_1 = transpose(image_2d_1)
+tvimg = congrid(image_2d_1,New_Nx,New_Ny,/interp)
+tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
+
+DEVICE, DECOMPOSED = 1
+
 end
+
+
+
+pro plot_tubes_pixels, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).file_already_opened EQ 1) then begin
+
+    slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+    widget_control, slider_id, get_value=tube_number
+    
+    image_2d_1 =(*(*global).image_2d_1)
+    
+    if (tube_number LE 31) then begin
+        tmp = image_2d_1[0:63,tube_number]
+        tmp = reverse(tmp,1)
+        image_2d_1[0:63,tube_number] = tmp
+    endif else begin
+        tmp = image_2d_1[64:*,tube_number]
+        tmp = reverse(tmp,1)
+        image_2d_1[64:*,tube_number] = tmp
+    endelse
+    
+    pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+    text = ' 0: ' + strcompress(image_2d_1[0,tube_number],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text
+    for i=1,127 do begin
+        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,tube_number],/remove_all)
+        widget_control, pixelIDs_info_id, set_value=text, /append
+    endfor
+    
+    draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
+    widget_control, draw_info, get_value=draw_id
+    wset, draw_id
+    
+    plot,image_2d_1[*,tube_number],xtitle=xtitle,ytitle=ytitle,$
+      charsize=cs,xrange=[0,128],xstyle=1
+    oplot,image_2d_1[*,tube_number],psym=4,color=255
+    
+endif
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
