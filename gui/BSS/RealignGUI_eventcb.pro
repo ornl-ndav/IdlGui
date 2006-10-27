@@ -185,8 +185,7 @@ text = "  - Number of Tbins : " + strcompress(Nt,/remove_all)
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 image_2d_1 = total(image1,1)
-(*(*global).image_2d_1) = image_2d_1 
-;orig = image_2d_1
+
 
 tmp = image_2d_1[0:63,0:31]
 tmp = reverse(tmp,1)
@@ -196,13 +195,25 @@ tmp = image_2d_1[64:*,32:*]
 tmp = reverse(tmp,1)
 image_2d_1[64:*,32:*] = tmp
 
+(*(*global).image_2d_1) = image_2d_1 
+
 draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
 
-plot,image_2d_1[*,1],xtitle=xtitle,ytitle=ytitle,$
-                  charsize=cs,xrange=[0,128],xstyle=1
-oplot,image_2d_1[*,1],psym=4,color=255
+;plot,image_2d_1[*,1],xtitle=xtitle,ytitle=ytitle,$
+ ;                 charsize=cs,xrange=[0,128],xstyle=1
+;oplot,image_2d_1[*,1],psym=4,color=255
+
+;calculate i1,i2,i3,i4 and i5 for all the tubes
+calculate_ix, Event
+
+;display i1,i2,i3,i4 and i5 for tube 0
+display_ix, Event, 0
+
+
+
+
 
 ;fill pixelids counts in right table
 pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
@@ -235,6 +246,143 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 DEVICE, DECOMPOSED = 1
 
 end
+
+
+
+
+
+
+
+
+
+pro calculate_ix, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+image_2d_1 = (*(*global).image_2d_1)
+Ntubes = (*global).Ny_scat      ;Number of tubes
+
+i1 = intarr(Ntubes)             ;first part of tube start
+i2 = intarr(Ntubes)             ;first part of tube end
+i3 = intarr(Ntubes)             ;second part of tube start
+i4 = intarr(Ntubes)             ;second part of tube end
+i5 = intarr(Ntubes)             ;central position between the two parts
+
+len1 = intarr(Ntubes)           ;length of first part of tube
+len2 = intarr(Ntubes)           ;length of second part of tube
+
+off1 = 25                       ;max position of first part tube start
+off2 = 50                       ;min position of first part tube end 
+off3 = 80                 ;max position of second part tube start     
+off4 = 110                      ;min position of second part tube end
+
+for i=0,Ntubes-1 do begin
+    
+    sum_tube = total(image_2d_1[*,i]) ;check if there are counts for that tube
+    
+    if (sum_tube EQ 0) then begin ;if there is no data in tube
+        
+        indx1=0
+        indx2=62
+        cntr=63
+        indx3=65
+        indx4=127
+        
+    endif else begin
+        
+        tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
+        
+                                ;place where I'm going to remove counts in file
+        
+        diff_rise = tube_pair - shift(tube_pair,1)
+        diff_fall = tube_pair - shift(tube_pair,-1)
+        
+        tmp0 = min(image_2d_1[off2:off3,i],cntr)
+        cntr += off2
+        
+        tmp1 = max(diff_rise[0:off1],indx1)
+        tmp2 = max(diff_fall[off2:cntr],indx2)
+        indx2 += off2
+        tmp3 = max(diff_rise[cntr:off3],indx3)
+        indx3 += cntr
+        tmp4 = max(diff_fall[off4:*],indx4)
+        indx4 += off4
+        
+    endelse
+    
+    
+                                ;store the indexes in an array i
+    i1[i] = indx1
+    i2[i] = indx2
+    i3[i] = indx3
+    i4[i] = indx4
+    i5[i] = cntr
+    
+                                ;store the size of each size of the tube in len1 and len2
+    len1[i] = i2[i] - i1[i]
+    len2[i] = i4[i] - i3[i]
+    
+endfor
+
+(*(*global).i1) = i1
+(*(*global).i2) = i2
+(*(*global).i3) = i3
+(*(*global).i4) = i3
+(*(*global).i5) = i5
+
+(*(*global).len1) = len1
+(*(*global).len2) = len2
+
+end
+
+
+
+pro display_ix, Event, i
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+image_2d_1 = (*(*global).image_2d_1)
+
+i1=(*(*global).i1)
+i2=(*(*global).i2)
+i3=(*(*global).i3)
+i4=(*(*global).i4)
+i5=(*(*global).i5)
+
+indx1 = i1[i]
+indx2 = i2[i]
+indx3 = i3[i]
+indx4 = i4[i]
+cntr = i5[i]
+
+draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+
+print, i1[0]
+
+ plots,[30,image_2d_1[30,0]],psym=4,color=130,thick=3
+; plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
+; plots,[indx2,image_2d_1[indx2,i]],psym=4,color=130,thick=3
+; plots,[cntr,image_2d_1[cntr,i]],psym=4,color=130,thick=3
+; plots,[indx3,image_2d_1[indx3,i]],psym=4,color=130,thick=3
+; plots,[indx4,image_2d_1[indx4,i]],psym=4,color=130,thick=3
+
+end
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -280,6 +428,20 @@ if ((*global).file_already_opened EQ 1) then begin
 endif
 
 end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
