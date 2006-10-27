@@ -160,7 +160,14 @@ global = ptr_new({$
 ; 		ytitle			:'pixels',$
 ; 		top_bank		: ptr_new(0L),$
 ; 		bottom_bank		: ptr_new(0L),$
- 		image_2d_1		: ptr_new(0L)$
+ 		image_2d_1		: ptr_new(0L),$
+                i1                      : ptr_new(0L),$
+                i2                      : ptr_new(0L),$
+                i3                      : ptr_new(0L),$
+                i4                      : ptr_new(0L),$
+                i5                      : ptr_new(0L),$
+                len1                    : ptr_new(0L),$
+                len2                    : ptr_new(0L)$
 ; 		overflow_number		: 500L,$	
 ;		do_color		:1$ 
 })
