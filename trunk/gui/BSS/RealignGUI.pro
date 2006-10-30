@@ -40,16 +40,87 @@ pro MAIN_BASE_event, Event
     end
 
 
-
-
-
-
-
     ;Widget to change the color of graph
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        ABOUT_MENU, Event
+         print, ""
+;        ABOUT_MENU, Event
     end
+
+    ;slider tube
+    Widget_Info(wWidget, FIND_BY_UNAME='get_pixels_infos'): begin
+        get_pixels_infos, Event
+    end
+
+;MOVE EDGES OF TUBES
+;tube0
+    ;tube0_left_minus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube0_left_minus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 0, "left", "minus"
+    end
+
+    ;tube0_left_plus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube0_left_plus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 0, "left", "plus"
+    end
+
+    ;tube0_right_minus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube0_right_minus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 0, "right", "minus"
+    end
+
+    ;tube0_right_plus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube0_right_plus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 0, "right", "plus"
+    end
+
+;CENTER
+
+    ;center_minus button
+    Widget_Info(wWidget, FIND_BY_UNAME='center_minus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, "center", "" , "minus"
+    end
+
+    ;center_plus button
+    Widget_Info(wWidget, FIND_BY_UNAME='center_plus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, "center", "", "plus"
+    end
+
+;tube1
+    ;right1_left_minus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube1_left_minus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 1, "left", "minus"
+    end
+
+    ;tube1_left_plus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube1_left_plus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 1, "left", "plus"
+    end
+
+    ;tube1_right_minus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube1_right_minus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 1, "right", "minus"
+    end
+
+    ;tube1_right_plus button
+    Widget_Info(wWidget, FIND_BY_UNAME='tube1_right_plus'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        move_tube_edges, Event, 1, "right", "plus"
+    end
+
+
+
+
+
 
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
     	IDENTIFICATION_TEXT_CB, Event
@@ -125,6 +196,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 global = ptr_new({$
 		file			:'',$
 		file_already_opened	:0,$
+                new_tube                :1,$
 		path			:'/SNSlocal/tmp/',$
 		working_path		:'',$
 		default_path		:'/SNS/users/',$
@@ -341,36 +413,36 @@ pixel_value = widget_label(ptb_info_base,$
                            scr_xsize=35,$
                            scr_ysize=20,$
                            value='8888',$
-                          /align_left,$
-                          uname='pixel_value')
+                           /align_left,$
+                           uname='pixel_value')
 
 tube_label = widget_label(ptb_info_base,$
-                           xoffset=10+120,$
-                           yoffset=5,$
-                           scr_xsize=50,$
-                           scr_ysize=20,$
-                           value="Tube #:",$
-                         uname='tube_label')
+                          xoffset=10+120,$
+                          yoffset=5,$
+                          scr_xsize=50,$
+                          scr_ysize=20,$
+                          value="Tube #:",$
+                          uname='tube_label')
 
 tube_value = widget_label(ptb_info_base,$
-                           xoffset=70+110,$
-                           yoffset=5,$
-                           scr_xsize=35,$
-                           scr_ysize=20,$
-                           value='63',$
+                          xoffset=70+110,$
+                          yoffset=5,$
+                          scr_xsize=35,$
+                          scr_ysize=20,$
+                          value='63',$
                           /align_left,$
-                            uname='tube_value')
+                          uname='tube_value')
 
 bank_label = widget_label(ptb_info_base,$
-                           xoffset=10+230,$
-                           yoffset=5,$
-                           scr_xsize=50,$
-                           scr_ysize=20,$
-                           value="Bank #:",$
-                         uname='bank_label')
+                          xoffset=10+230,$
+                          yoffset=5,$
+                          scr_xsize=50,$
+                          scr_ysize=20,$
+                          value="Bank #:",$
+                          uname='bank_label')
 
 bank_value = widget_label(ptb_info_base,$
-                           xoffset=70+220,$
+                          xoffset=70+220,$
                           yoffset=5,$
                           scr_xsize=10,$
                           scr_ysize=20,$
@@ -534,13 +606,14 @@ tube0_left_minus = widget_button(tube0_base,$
                                  UNAME='tube0_left_minus')
 
 tube0_left_text = widget_text(tube0_base,$
-                                XOFFSET=40,$
-                                YOFFSET=32,$
-                                SCR_XSIZE=30,$
-                                SCR_YSIZE=30,$
-                                VALUE='99',$
-                                /editable,$
-                                UNAME='tube0_left_text')
+                              XOFFSET=40,$
+                              YOFFSET=32,$
+                              SCR_XSIZE=30,$
+                              SCR_YSIZE=30,$
+                              VALUE='99',$
+                              /editable,$
+                              UNAME='tube0_left_text',$
+                              /align_left)
 
 tube0_left_plus = widget_button(tube0_base,$
                                  XOFFSET=69,$
@@ -575,13 +648,14 @@ tube0_right_minus = widget_button(tube0_base,$
                                  UNAME='tube0_right_minus')
 
 tube0_right_text = widget_text(tube0_base,$
-                                XOFFSET=40+105,$
-                                YOFFSET=32,$
-                                SCR_XSIZE=30,$
-                                SCR_YSIZE=30,$
-                                VALUE='99',$
-                                /editable,$
-                                UNAME='tube0_right_text')
+                               XOFFSET=40+105,$
+                               YOFFSET=32,$
+                               SCR_XSIZE=30,$
+                               SCR_YSIZE=30,$
+                               VALUE='99',$
+                               /editable,$
+                               UNAME='tube0_right_text',$
+                               /align_left)
 
 tube0_right_plus = widget_button(tube0_base,$
                                  XOFFSET=69+105,$
@@ -589,7 +663,7 @@ tube0_right_plus = widget_button(tube0_base,$
                                  SCR_XSIZE=30,$
                                  SCR_YSIZE=30,$
                                  VALUE='+',$
-                                 UNAME='tube0_left_plus')
+                                 UNAME='tube0_right_plus')
 
 tube0_right_title = widget_label(tube0_base,$
                                 XOFFSET=125,$
@@ -626,29 +700,30 @@ center_base = widget_base(main_base,$
                          SCR_YSIZE=y_dim-10)
 
 center_minus = widget_button(center_base,$
-                                 XOFFSET=6,$
-                                 YOFFSET=32,$
-                                 SCR_XSIZE=30,$
-                                 SCR_YSIZE=30,$
-                                 VALUE='-',$
-                                 UNAME='center_minus')
+                             XOFFSET=6,$
+                             YOFFSET=32,$
+                             SCR_XSIZE=30,$
+                             SCR_YSIZE=30,$
+                             VALUE='-',$
+                             UNAME='center_minus')
 
 center_text = widget_text(center_base,$
-                                XOFFSET=37,$
-                                YOFFSET=32,$
-                                SCR_XSIZE=30,$
-                                SCR_YSIZE=30,$
-                                VALUE='99',$
-                                /editable,$
-                                UNAME='center_text')
+                          XOFFSET=37,$
+                          YOFFSET=32,$
+                          SCR_XSIZE=30,$
+                          SCR_YSIZE=30,$
+                          VALUE='99',$
+                          /editable,$
+                          UNAME='center_text',$
+                          /align_left)
 
 center_plus = widget_button(center_base,$
-                                 XOFFSET=69,$
-                                 YOFFSET=32,$
-                                 SCR_XSIZE=30,$
-                                 SCR_YSIZE=30,$
-                                 VALUE='+',$
-                                 UNAME='center_plus')
+                            XOFFSET=69,$
+                            YOFFSET=32,$
+                            SCR_XSIZE=30,$
+                            SCR_YSIZE=30,$
+                            VALUE='+',$
+                            UNAME='center_plus')
 
 center_title = widget_label(center_base,$
                            xoffset=3,$
@@ -694,13 +769,14 @@ tube1_left_minus = widget_button(tube1_base,$
                                  UNAME='tube1_left_minus')
 
 tube1_left_text = widget_text(tube1_base,$
-                                XOFFSET=40,$
-                                YOFFSET=32,$
-                                SCR_XSIZE=30,$
-                                SCR_YSIZE=30,$
-                                VALUE='99',$
-                                /editable,$
-                                UNAME='tube1_left_text')
+                              XOFFSET=40,$
+                              YOFFSET=32,$
+                              SCR_XSIZE=30,$
+                              SCR_YSIZE=30,$
+                              VALUE='99',$
+                              /editable,$
+                              UNAME='tube1_left_text',$
+                              /align_left)
 
 tube1_left_plus = widget_button(tube1_base,$
                                  XOFFSET=69,$
@@ -718,30 +794,31 @@ tube1_left_title = widget_label(tube1_base,$
                                 VALUE="Left")
 
 tube1_left_label = widget_label(tube1_base,$
-                                 XOFFSET=5,$
-                                 YOFFSET=y_off,$
-                                 SCR_XSIZE=x_size,$
-                                 SCR_YSIZE=y_size,$
-                                 FRAME=1,$
-                                 VALUE='')
+                                XOFFSET=5,$
+                                YOFFSET=y_off,$
+                                SCR_XSIZE=x_size,$
+                                SCR_YSIZE=y_size,$
+                                FRAME=1,$
+                                VALUE='')
 
 ;right
 tube1_right_minus = widget_button(tube1_base,$
-                                 XOFFSET=111,$
-                                 YOFFSET=32,$
-                                 SCR_XSIZE=30,$
-                                 SCR_YSIZE=30,$
-                                 VALUE='-',$
-                                 UNAME='tube1_right_minus')
+                                  XOFFSET=111,$
+                                  YOFFSET=32,$
+                                  SCR_XSIZE=30,$
+                                  SCR_YSIZE=30,$
+                                  VALUE='-',$
+                                  UNAME='tube1_right_minus')
 
 tube1_right_text = widget_text(tube1_base,$
-                                XOFFSET=36+105,$
-                                YOFFSET=32,$
-                                SCR_XSIZE=36,$
-                                SCR_YSIZE=30,$
-                                VALUE='123',$
-                                /editable,$
-                                UNAME="tube1_right_text")
+                               XOFFSET=36+105,$
+                               YOFFSET=32,$
+                               SCR_XSIZE=36,$
+                               SCR_YSIZE=30,$
+                               VALUE='123',$
+                               /editable,$
+                               UNAME="tube1_right_text",$
+                               /align_left)
 
 tube1_right_plus = widget_button(tube1_base,$
                                  XOFFSET=72+105,$
@@ -749,14 +826,14 @@ tube1_right_plus = widget_button(tube1_base,$
                                  SCR_XSIZE=30,$
                                  SCR_YSIZE=30,$
                                  VALUE='+',$
-                                 UNAME="tube1_left_plus")
+                                 UNAME="tube1_right_plus")
 
 tube1_right_title = widget_label(tube1_base,$
-                                XOFFSET=125,$
-                                YOFFSET=15,$
-                                SCR_XSIZE=30,$
-                                SCR_YSIZE=20,$
-                                VALUE="Right")
+                                 XOFFSET=125,$
+                                 YOFFSET=15,$
+                                 SCR_XSIZE=30,$
+                                 SCR_YSIZE=20,$
+                                 VALUE="Right")
 
 tube1_right_label = widget_label(tube1_base,$
                                  XOFFSET=110,$
@@ -797,12 +874,12 @@ DAS_plot_title = widget_label(DAS_plot_base,$
                              YOFFSET=30)
 
 DAS_plot_frame = widget_label(DAS_plot_base,$
-                            UNAME='DAS_plot_frame',$
-                            SCR_XSIZE=547,$
-                            SCR_YSIZE=225,$
-                            XOFFSET=0,$
-                            YOFFSET=20,$
-                             FRAME=1)
+                              UNAME='DAS_plot_frame',$
+                              SCR_XSIZE=547,$
+                              SCR_YSIZE=225,$
+                              XOFFSET=0,$
+                              YOFFSET=20,$
+                              FRAME=1)
 
 
 ;draw boxes for plot windows

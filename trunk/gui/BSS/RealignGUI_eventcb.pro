@@ -201,19 +201,11 @@ draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
 
-;plot,image_2d_1[*,1],xtitle=xtitle,ytitle=ytitle,$
- ;                 charsize=cs,xrange=[0,128],xstyle=1
-;oplot,image_2d_1[*,1],psym=4,color=255
-
 ;calculate i1,i2,i3,i4 and i5 for all the tubes
 calculate_ix, Event
 
 ;display i1,i2,i3,i4 and i5 for tube 0
 display_ix, Event, 0
-
-
-
-
 
 ;fill pixelids counts in right table
 pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
@@ -311,8 +303,7 @@ for i=0,Ntubes-1 do begin
         indx4 += off4
         
     endelse
-    
-    
+        
                                 ;store the indexes in an array i
     i1[i] = indx1
     i2[i] = indx2
@@ -329,13 +320,17 @@ endfor
 (*(*global).i1) = i1
 (*(*global).i2) = i2
 (*(*global).i3) = i3
-(*(*global).i4) = i3
+(*(*global).i4) = i4
 (*(*global).i5) = i5
 
 (*(*global).len1) = len1
 (*(*global).len2) = len2
 
 end
+
+
+
+
 
 
 
@@ -363,24 +358,45 @@ draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
 
-print, i1[0]
+;loadct,0
+plot, image_2d_1[*,i]
+oplot,image_2d_1[*,i],psym=4,color=255
+plots,[indx1,image_2d_1[indx1,i]],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx2,image_2d_1[indx2,i]],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[cntr,image_2d_1[cntr,i]],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx3,image_2d_1[indx3,i]],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx4,image_2d_1[indx4,i]],psym=4,color=255+(256*0)+(150*256),thick=3
 
- plots,[30,image_2d_1[30,0]],psym=4,color=130,thick=3
-; plots,[indx1,image_2d_1[indx1,i]],psym=4,color=130,thick=3
-; plots,[indx2,image_2d_1[indx2,i]],psym=4,color=130,thick=3
-; plots,[cntr,image_2d_1[cntr,i]],psym=4,color=130,thick=3
-; plots,[indx3,image_2d_1[indx3,i]],psym=4,color=130,thick=3
-; plots,[indx4,image_2d_1[indx4,i]],psym=4,color=130,thick=3
+tube_number = i
+
+if ((*global).new_tube EQ 1) then begin
+
+    (*global).new_tube = 0
+    pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+    text = ' 0: ' + strcompress(image_2d_1[0,tube_number],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text
+    for i=1,127 do begin
+        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,tube_number],/remove_all)
+        widget_control, pixelIDs_info_id, set_value=text, /append
+    endfor
+
+endif
+
+;show the values of indx1, indx2....etc into their own spaces
+indx1_id = widget_info(Event.top, find_by_uname="tube0_left_text")
+indx2_id = widget_info(Event.top, find_by_uname="tube0_right_text")
+cntr_id = widget_info(Event.top, find_by_uname="center_text")
+indx3_id = widget_info(Event.top, find_by_uname="tube1_left_text")
+indx4_id = widget_info(Event.top, find_by_uname="tube1_right_text")
+
+widget_control, indx1_id, set_value=strcompress(indx1,/remove_all)
+widget_control, indx2_id, set_value=strcompress(indx2,/remove_all)
+widget_control, cntr_id, set_value=strcompress(cntr,/remove_all)
+widget_control, indx3_id, set_value=strcompress(indx3,/remove_all)
+widget_control, indx4_id, set_value=strcompress(indx4,/remove_all)
+
 
 end
-
-
-
-
-
-
-
-
 
 
 
@@ -392,40 +408,18 @@ pro plot_tubes_pixels, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-if ((*global).file_already_opened EQ 1) then begin
+slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, slider_id, get_value=tube_number
 
-    slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
-    widget_control, slider_id, get_value=tube_number
-    
-    image_2d_1 =(*(*global).image_2d_1)
-    
-    if (tube_number LE 31) then begin
-        tmp = image_2d_1[0:63,tube_number]
-        tmp = reverse(tmp,1)
-        image_2d_1[0:63,tube_number] = tmp
-    endif else begin
-        tmp = image_2d_1[64:*,tube_number]
-        tmp = reverse(tmp,1)
-        image_2d_1[64:*,tube_number] = tmp
-    endelse
-    
-    pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
-    text = ' 0: ' + strcompress(image_2d_1[0,tube_number],/remove_all)
-    widget_control, pixelIDs_info_id, set_value=text
-    for i=1,127 do begin
-        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,tube_number],/remove_all)
-        widget_control, pixelIDs_info_id, set_value=text, /append
-    endfor
-    
-    draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
-    widget_control, draw_info, get_value=draw_id
-    wset, draw_id
-    
-    plot,image_2d_1[*,tube_number],xtitle=xtitle,ytitle=ytitle,$
-      charsize=cs,xrange=[0,128],xstyle=1
-    oplot,image_2d_1[*,tube_number],psym=4,color=255
-    
-endif
+(*global).new_tube = 1
+display_ix, Event, tube_number
+
+end
+
+
+
+pro get_pixels_infos, Event
+
 
 end
 
@@ -433,12 +427,79 @@ end
 
 
 
+pro move_tube_edges, Event, tube_side, left_right, minus_plus
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
+slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, slider_id, get_value=tube_number
 
+case tube_side of
+    0: begin
+        if (left_right EQ "left") then begin
+            i1=(*(*global).i1)
+            if (minus_plus EQ "minus") then begin
+                i1[tube_number]-=1
+            endif else begin
+                i1[tube_number]+=1
+            endelse
+            (*(*global).i1)=i1
+            id=widget_info(Event.top,find_by_uname="tube0_left_text")
+            widget_control, id, set_value=strcompress(i1[tube_number],/remove_all)
+        endif else begin
+            i2=(*(*global).i2)
+            if (minus_plus EQ "minus") then begin
+                i2[tube_number]-=1
+            endif else begin
+                i2[tube_number]+=1
+            endelse
+            (*(*global).i2)=i2
+            id=widget_info(Event.top,find_by_uname="tube0_right_text")
+            widget_control, id, set_value=strcompress(i2[tube_number],/remove_all)
+        endelse
+    end
+    1: begin
+        if (left_right EQ "left") then begin
+            i3=(*(*global).i3)
+            if (minus_plus EQ "minus") then begin
+                i3[tube_number]-=1
+            endif else begin
+                i3[tube_number]+=1
+            endelse
+            (*(*global).i3)=i3
+            id=widget_info(Event.top,find_by_uname="tube1_left_text")
+            widget_control, id, set_value=strcompress(i3[tube_number],/remove_all)
+        endif else begin
+            i4=(*(*global).i4)
+            if (minus_plus EQ "minus") then begin
+                i4[tube_number]-=1
+            endif else begin
+                i4[tube_number]+=1
+            endelse
+            (*(*global).i4)=i4
+            id=widget_info(Event.top,find_by_uname="tube1_right_text")
+            widget_control, id, set_value=strcompress(i4[tube_number],/remove_all)
+        endelse
+    end
+    "center": begin
+            i5=(*(*global).i5)
+            if (minus_plus EQ "minus") then begin
+                i5[tube_number]-=1
+            endif else begin
+                i5[tube_number]+=1
+            endelse
+            (*(*global).i5)=i5
+            id=widget_info(Event.top,find_by_uname="center_text")
+            widget_control, id, set_value=strcompress(i5[tube_number],/remove_all)
+        end
+endcase
 
+;display i1,i2,i3,i4 and i5 for given tube (tube_number) 
+display_ix, Event, tube_number
 
-
+end
 
 
 
