@@ -47,7 +47,7 @@ pro MAIN_BASE_event, Event
 ;        ABOUT_MENU, Event
     end
 
-    ;slider tube
+    ;slider pixels
     Widget_Info(wWidget, FIND_BY_UNAME='get_pixels_infos'): begin
         get_pixels_infos, Event
     end
@@ -116,6 +116,10 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         move_tube_edges, Event, 1, "right", "plus"
     end
+
+
+
+
 
 
 
@@ -546,7 +550,7 @@ remove_pixelid_group = cw_bgroup(pixel_and_tube_base, $
 
 remove_tube_label = widget_label(pixel_and_tube_base,$
                                  xoffset=10,$
-                                 yoffset=100,$
+                                 yoffset=105,$
                                  scr_xsize=120,$
                                  scr_ysize=20,$
                                  value='Remove this tube:',$
@@ -558,7 +562,7 @@ remove_tube_group = cw_bgroup(pixel_and_tube_base, $
                               /row,$
                               /RETURN_NAME,$
                               XOFFSET=130, $
-                              YOFFSET=95,$
+                              YOFFSET=100,$
                               SET_VALUE=1.0,$
                               UNAME='remove_tube_group')
 

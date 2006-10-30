@@ -420,6 +420,24 @@ end
 
 pro get_pixels_infos, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
+widget_control, pixel_slider_id, get_value=pixel_number
+
+tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, tube_slider_id, get_value=tube_number
+
+draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+
+display_ix, Event, tube_number
+
+image_2d_1 = (*(*global).image_2d_1)
+plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,color=(0*256)+(256*0)+(150*256),thick=3
 
 end
 
@@ -500,9 +518,6 @@ endcase
 display_ix, Event, tube_number
 
 end
-
-
-
 
 
 
