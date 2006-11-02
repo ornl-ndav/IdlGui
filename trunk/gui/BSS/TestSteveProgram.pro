@@ -36,9 +36,9 @@ array_offset = fltarr(Ntubes+8,Npix)
 !p.multi=[0,1,1]
 ;#######################################################################################
 
-debug_map = 1
+debug_map = 0
 doread = 1
-
+dolog = 0
 
 
 
@@ -106,8 +106,8 @@ len1 = intarr(Ntubes)       ;length of first part of tube
 len2 = intarr(Ntubes)       ;length of second part of tube
     
 ;find rising edges
-for i=0,Ntubes-1 do begin
-                	                        
+ for i=0,Ntubes-1 do begin 
+
    sum_tube = total(image_2d_1[*,i]) ;check if there are counts for that tube
         
    if (sum_tube EQ 0) then begin ;if there is no data in tube
@@ -192,7 +192,8 @@ length_tube1 = t3 - t2
 remap = dblarr(Npix,Ntubes)          ;Npix=128, Ntubes=64
 
 
-for i=0,Ntubes-1 do begin
+; for i=0,Ntubes-1 do begin  ;REMOVE_COMMENTS
+for i=0, 10 do begin
 
    ;REMOVE_ME
    if (i EQ 0) then begin
@@ -204,6 +205,9 @@ for i=0,Ntubes-1 do begin
    endif
 
    mid = Npix/2  ;64
+
+
+   ;REMAP TUBE0
             
    ;remap tube end data
    len_meas_tube0 = i2[i] - i1[i]    ;DAS length of first tube
@@ -233,12 +237,6 @@ for i=0,Ntubes-1 do begin
        text_d0 += + "]" + ": " + strcompress(d0_size[1],/remove_all) + $
          " elements"
        
-                                ;REMOVE_ME
-       if (i EQ 0) then begin
-           print, ""
-           print, text_d0
-       endif
-       
        d0_0_size = size(d0_0)
        text_d0_0 = " d0_0=["
        for j=0, (d0_0_size[1]-2) do begin
@@ -247,11 +245,6 @@ for i=0,Ntubes-1 do begin
        text_d0_0 += strcompress(d0_0[d0_0_size[1]-1],/remove_all) + $
          "]" + ": " + strcompress(d0_0_size[1],/remove_all) + $
          " elements"
-       
-                                ;REMOVE_ME
-       if (i EQ 0) then begin
-           print, text_d0_0
-       endif
        
        d0_1_size = size(d0_1)
        text_d0_1 = " d0_1=["
@@ -262,11 +255,6 @@ for i=0,Ntubes-1 do begin
        text_d0_1 += strcompress(d0_1[d0_1_size[1]-1],/remove_all) + $
          "]" + ": " + strcompress(d0_1_size[1],/remove_all) + $
          " elements"
-       
-                                ;REMOVE_ME
-       if (i EQ 0) then begin
-           print, text_d0_1
-       endif
        
    endif
    
@@ -285,12 +273,12 @@ for i=0,Ntubes-1 do begin
          "," , strcompress(mx0,/remove_all),")"
        rindx1_size = size(rindx1)
        text = "rindx1=["
-       for i=0,5 do begin
-           text += strcompress(rindx1[i],/remove_all) + ","
+       for j=0,5 do begin
+           text += strcompress(rindx1[j],/remove_all) + ","
        endfor
        text += "..."
-       for i=(rindx1_size[1]-6),(rindx1_size[1]-2) do begin
-           text += strcompress(rindx1[i],/remove_all) + ","
+       for k=(rindx1_size[1]-6),(rindx1_size[1]-2) do begin
+           text += strcompress(rindx1[k],/remove_all) + ","
        endfor
        text += strcompress(rindx1[rindx1_size[1]-1],/remove_all) + "]"
        print, text
@@ -301,81 +289,78 @@ for i=0,Ntubes-1 do begin
 ;     ;dat = congrid(image_2d_1[i1[i]:i2[i],i],length_tube0,/interp)
 ;
    remap[rindx1,i] = dat        ;new array of the middle section
-   help, rindx1
-  if (i EQ 0) then begin
-       plot, remap[rindx1,0]
-   endif
-   
-;
-;;remap endpoints and middle section
-;;one end
-;
-;     mn0 = min(d0_0); 0
-;     mx0 = min([max(d0_0),Npix-1])
-;     del0 = fix(mx0 - mn0) + 1
-;     rindx0 = indgen(del0)+mn0
-;     rindx0 = indgen(2)
-;     dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
-;     ;dat = congrid(image_2d_1[0:i1[i],i],2,/interp)
+
+
+;remap endpoints and middle section
+;one end
+
+     mn0 = min(d0_0); 0
+     mx0 = min([max(d0_0),Npix-1])
+     del0 = fix(mx0 - mn0) + 1
+     rindx0 = indgen(del0)+mn0
+     rindx0 = indgen(2)
+     dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+     ;dat = congrid(image_2d_1[0:i1[i],i],2,/interp)
 ;     print, image_2d_1[0:i1[i],0]
 ;     print, dat[0]
 ;     print, dat[1]
-;     scl = float(2)/i1[i]
-;     remap[rindx0,i] = dat * scl
-;
-;     ;finally the middle
-;     mn0 = t1+1
-;     mx0 = t2-1
-;     del0 = (mx0 - mn0) + 1
-;     rindx0 = indgen(del0)+mn0
-;     dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
-;     scl = float(del0)/(i3[i] - i2[i])
-;     remap[rindx0,i] = dat * scl
-;
-;     ;remap tube1 data
-;     len_meas_tube1 = i4[i] - i3[i]
-;     d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
-;            
-;     ;remap tube start data (junk)
-;     d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
-;            
-;     ;remap tube end data
-;     d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
-;            
-;     ;now the other tube end
-;     mn0 = min(d1_1)
-;     mx0 = min([max(d1_1),Npix-1])
-;     del0 = (mx0 - mn0) + 1
-;     rindx0 = indgen(del0)+mn0
-;     dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
-;     scl = float(del0)/(Npix-i4[i])
-;     remap[rindx0,i] = dat * scl
-;
-;     mn1 = min(d1)
-;     mx1 = min([max(d1),Npix-1])
-;     del1 = mx1 - mn1 + 1
-;     rindx1 = indgen(del1)+mn1
-;     dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
-;     remap[rindx1,i] = dat
-;            
-;        
-;    endfor                      ;i
-;    
-;    Ninterp = 7
-;    window,4,xsize = Ninterp*Npix, ysize = Ninterp*Ntubes
-;    tmp0 = remap
-;    
-;    tmp1 = rebin(tmp0,Ninterp*Npix,Ninterp*Ntubes,/samp)
-;    
-;    if dolog EQ 1 then begin
-;        tvscl,(alog10(tmp1>1))
-;    endif else begin
-;        tvscl,hist_equal(tmp1)
-;    endelse
-;endif                           ;dooffs
-;
-;
-;
+     scl = float(2)/i1[i]
+     remap[rindx0,i] = dat * scl
+
+
+     ;finally the middle
+     mn0 = t1+1
+     mx0 = t2-1
+     del0 = (mx0 - mn0) + 1
+     rindx0 = indgen(del0)+mn0
+     dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
+     scl = float(del0)/(i3[i] - i2[i])
+     remap[rindx0,i] = dat * scl
+
+     ;REMAP TUBE1
+
+
+     ;remap tube1 data
+     len_meas_tube1 = i4[i] - i3[i]
+     d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
+            
+     ;remap tube start data (junk)
+     d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
+            
+     ;remap tube end data
+     d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
+            
+     ;now the other tube end
+     mn0 = min(d1_1)
+     mx0 = min([max(d1_1),Npix-1])
+     del0 = (mx0 - mn0) + 1
+     rindx0 = indgen(del0)+mn0
+     dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
+     scl = float(del0)/(Npix-i4[i])
+     remap[rindx0,i] = dat * scl
+
+     mn1 = min(d1)
+     mx1 = min([max(d1),Npix-1])
+     del1 = mx1 - mn1 + 1
+     rindx1 = indgen(del1)+mn1
+     dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
+     remap[rindx1,i] = dat
+
+ endfor                         ;i
+ 
+ Ninterp = 7
+ window,4,xsize = Ninterp*Npix, ysize = Ninterp*Ntubes
+ tmp0 = remap
+ 
+ tmp1 = rebin(tmp0,Ninterp*Npix,Ninterp*Ntubes,/samp)
+ 
+ if dolog EQ 1 then begin
+     tvscl,(alog10(tmp1>1))
+ endif else begin
+     tvscl,hist_equal(tmp1)
+ endelse
+ 
+
 ;;doalign
 ;if doalign EQ 1 then begin
 ;    
@@ -549,7 +534,6 @@ for i=0,Ntubes-1 do begin
 ;    
 ;endif                           ;dosave
 
-   endfor
 
 end
 
