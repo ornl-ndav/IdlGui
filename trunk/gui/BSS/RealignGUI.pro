@@ -124,7 +124,13 @@ pro MAIN_BASE_event, Event
         plot_mapped_data, Event
     end
 
-
+;validate changes
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='save_changes_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        save_changes, Event
+    end
+    
 
 
 
@@ -343,7 +349,7 @@ pixels_counts_base = widget_base(main_base,$
                                  XOFFSET=920,$
                                  YOFFSET=10,$
                                  SCR_XSIZE=200,$
-                                 SCR_YSIZE=410)
+                                 SCR_YSIZE=445)
 
 pixels_counts_title = widget_label(pixels_counts_base,$
                                    xoffset=8,$
@@ -356,7 +362,7 @@ pixels_counts_values = widget_text(pixels_counts_base,$
                                    XOFFSET=6,$
                                    YOFFSET=20,$
                                    SCR_XSIZE=173,$
-                                   SCR_YSIZE=380,$
+                                   SCR_YSIZE=420,$
                                    /wrap,$
                                    /scroll,$
                                    value = '',$
@@ -366,7 +372,7 @@ pixels_counts_frame = widget_label(pixels_counts_base,$
                                    XOFFSET=0,$
                                    YOFFSET=10,$
                                    SCR_XSIZE=185,$
-                                   SCR_YSIZE=390,$
+                                   SCR_YSIZE=430,$
                                    FRAME=1)
                               
 
@@ -439,10 +445,9 @@ infos_frame = widget_label(pixelID_info_base,$
 ;pixelID, tube and bank info
  ptb_info_base = widget_base(main_base,$
                              XOFFSET=810,$
-                             YOFFSET=160,$
+                             YOFFSET=150,$
                              SCR_XSIZE=140,$
                              SCR_YSIZE=80)
-
 
  pixel_label = widget_label(ptb_info_base,$
                             xoffset=5,$
@@ -457,7 +462,7 @@ infos_frame = widget_label(pixelID_info_base,$
                             yoffset=15,$
                             scr_xsize=25,$
                             scr_ysize=20,$
-                            value='127',$
+                            value='0',$
                             /align_left,$
                             uname='pixel_value')
 
@@ -469,12 +474,12 @@ infos_frame = widget_label(pixelID_info_base,$
                            value="  Tube #:",$
                            uname='tube_label')
 
- tube_value = widget_label(ptb_info_base,$
+tube_value = widget_label(ptb_info_base,$
                            xoffset=70,$
                            yoffset=35,$
                            scr_xsize=20,$
                            scr_ysize=20,$
-                           value='63',$
+                           value='0',$
                            /align_left,$
                            uname='tube_value')
 
@@ -491,7 +496,7 @@ infos_frame = widget_label(pixelID_info_base,$
                            yoffset=55,$
                            scr_xsize=10,$
                            scr_ysize=20,$
-                           value='2',$
+                           value='1',$
                            /align_left,$
                            uname='bank_value')
 
@@ -500,7 +505,7 @@ infos_frame = widget_label(pixelID_info_base,$
                                YOFFSET=10,$
                                SCR_XSIZE=100,$
                                SCR_YSIZE=65,$
-                               frame=1,$
+                               frame=4,$
                                value='')
 
 
@@ -569,6 +574,32 @@ pixel_and_tube_frame = widget_label(pixel_base,$
                                     frame=1,$
                                     value='')
 
+;tube removed window
+removed_tube_base = widget_base(main_base,$
+                                XOFFSET=810,$
+                                YOFFSET=240,$
+                                SCR_XSIZE=110,$
+                                SCR_YSIZE=220)
+
+removed_tube_title = widget_label(removed_tube_base,$
+                                  xoffset=5,$
+                                  yoffset=0,$
+                                  value="Tubes removed")
+
+removed_tube_text = widget_text(removed_tube_base,$
+                                uname="removed_tube_text",$
+                                xoffset=5,$
+                                yoffset=15,$
+                                scr_xsize=95,$
+                                scr_ysize=195)
+                                
+
+removed_tube_frame = widget_label(removed_tube_base,$
+                                  xoffset=0,$
+                                  yoffset=9,$
+                                  scr_xsize=100,$
+                                  scr_ysize=200,$
+                                  frame=1)
 
 ;tube interaction window
 tube_base = widget_base(main_base,$
@@ -618,7 +649,7 @@ RESET_ALL_button = widget_button(main_base,$
                                  yoffset=380,$
                                  scr_xsize=120,$
                                  scr_ysize=30,$
-                                 value="RESET ALL")
+                                 value="RESET CHANGE")
 
 SAVE_CHANGES_button = widget_button(main_base,$
                                     UNAME="save_changes_button",$
@@ -626,7 +657,7 @@ SAVE_CHANGES_button = widget_button(main_base,$
                                     yoffset=380,$
                                     scr_xsize=120,$
                                     scr_ysize=30,$
-                                    value="SAVES CHANGES")
+                                    value="VALIDATE CHANGE")
 
 
 
@@ -950,7 +981,7 @@ DAS_plot_frame = widget_label(DAS_plot_base,$
 plot_mapped_data = widget_button(MAIN_BASE,$
                                  XOFFSET=560,$
                                  YOFFSET=420,$
-                                 SCR_XSIZE=130,$
+                                 SCR_XSIZE=240,$
                                  SCR_YSIZE=30,$
                                  VALUE="PLOT MAPPED DATA",$
                                  UNAME='plot_mapped_data')
