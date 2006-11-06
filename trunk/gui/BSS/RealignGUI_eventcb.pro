@@ -20,7 +20,7 @@ return,tlb
 end
 
 
-
+                    
 pro RealignGUI_eventcb
 end
 
@@ -246,7 +246,6 @@ end
 
 
 
-
 pro calculate_ix, Event
 
 ;get global structure
@@ -327,6 +326,200 @@ endfor
 (*(*global).len2) = len2
 
 end
+
+
+
+
+
+
+
+
+
+
+pro plot_mapped_data, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+i1=(*(*global).i1)
+i2=(*(*global).i2)
+i3=(*(*global).i3)
+i4=(*(*global).i4)
+i5=(*(*global).i5)
+
+len1 = (*(*global).len1)
+len2 = (*(*global).len2)
+
+Npix = (*global).Nx
+Ntubes = (*global).Ny_scat
+mid = Npix/2                    ;64
+
+Npad = 10
+pad = lonarr(Npad)
+
+image_2d_1 = (*(*global).image_2d_1)
+
+;Define Ranges of tube responses
+    
+;first tube in the pair
+t0 = 2
+t1 = 61
+length_tube0 = t1 - t0
+    
+;second tube in the pair
+t2 = 66
+t3 = 125
+length_tube1 = t3 - t2
+
+;new remap array(Npix, Ntubes)
+remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
+
+for i=0,Ntubes-1 do begin
+;for i=0, 10 do begin
+
+    if (i LE 27 OR (i GE 32 AND i LE 59)) then begin
+
+    tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
+    tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
+    indx_cntr = 64+Npad         ;74            
+    
+;cntr offset relative to cntr
+    cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
+    
+;dial out center offset
+    tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
+    
+;REMAP TUBE0
+    
+;remap tube end data
+    len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
+    
+;remap (rebin) tube0 data 
+;size of DAS_length of first tube
+    d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
+    
+;remap (rebin) first part of tube (less than i2) (junk)
+    d0_0 = findgen(i1[i])/(i1[i])*t0
+    
+;remap (rebin) tube end data (junk)
+    d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
+    
+;new tube remapped
+    tube0_new = [d0_0,d0,d0_1]
+    
+    mn0 = min(d0)               ;2
+    mx0 = min([max(d0),Npix-1]) 
+    del0 = mx0 - mn0 + 1
+    rindx1 = indgen(del0-1)+mn0
+    
+    dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp)
+
+    remap[rindx1,i] = dat       ;new array of the middle section
+
+;remap endpoints and middle section
+;one end
+
+    mn0 = min(d0_0)             ; 0
+    mx0 = min([max(d0_0),Npix-1])
+    del0 = fix(mx0 - mn0) + 1
+    rindx0 = indgen(del0)+mn0
+    rindx0 = indgen(2)
+    dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+    scl = float(2)/i1[i]
+    remap[rindx0,i] = dat * scl
+    
+;finally the middle
+    mn0 = t1+1
+    mx0 = t2-1
+    del0 = (mx0 - mn0) + 1
+    rindx0 = indgen(del0)+mn0
+    dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
+    scl = float(del0)/(i3[i] - i2[i])
+    remap[rindx0,i] = dat * scl
+    
+;REMAP TUBE1
+
+;remap tube1 data
+    len_meas_tube1 = i4[i] - i3[i]
+    d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
+    
+;remap tube start data (junk)
+    d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
+            
+;remap tube end data
+    d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
+            
+;now the other tube end
+    mn0 = min(d1_1)
+    mx0 = min([max(d1_1),Npix-1])
+    del0 = (mx0 - mn0) + 1
+    rindx0 = indgen(del0)+mn0
+    dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
+    scl = float(del0)/(Npix-i4[i])
+    remap[rindx0,i] = dat * scl
+    
+    mn1 = min(d1)
+    mx1 = min([max(d1),Npix-1])
+    del1 = mx1 - mn1 + 1
+    rindx1 = indgen(del1)+mn1
+    dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
+    remap[rindx1,i] = dat
+
+    endif
+endfor
+
+draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+
+Ninterp = 1
+;window,4,xsize = Ninterp*Npix, ysize = Ninterp*Ntubes
+tmp0 = remap
+tmp1 = rebin(tmp0,Ninterp*Npix,Ninterp*Ntubes,/samp)
+tmp1 = transpose(tmp1)
+
+;if dolog EQ 1 then begin
+;    tvscl,(alog10(tmp1>1))
+;endif else begin
+
+DEVICE, DECOMPOSED = 0
+loadct,5
+
+xoff=5
+yoff=5
+x_size=400
+y_size=100
+New_Nx=530
+New_Ny=200
+tvimg = congrid(hist_equal(tmp1), New_Nx, New_Ny,/interp)
+tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
+;tvscl,hist_equal(tmp1)
+;endelse
+
+DEVICE, DECOMPOSED = 1
+
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -541,6 +734,12 @@ end
 
 
 
+
+
+
+
+
+
 pro ABOUT_MENU, Event
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
@@ -716,464 +915,3 @@ end
 
 
 
-
-;-----------------------------------------------------------------------------------------
-pro EVENT_FILE_cb, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-event_file_path= (*global).event_file_path
-
-file = dialog_pickfile(/must_exist,$
-	title="Select an event file for BSS",$
-	filter= (*global).filter_event,$
-	path = event_file_path,$
-	get_path = path)
-
-;check if there is really a file
-if (file NE '') then begin
-
-(*global).event_filename = file
-
-;isolate only name
-view_info = widget_info(Event.top,FIND_BY_UNAME='EVENT_FILENAME')
-file_list = strsplit(file,'/',/extract,COUNT=nbr)
-
-(*global).event_filename_only = file_list[nbr-1]
-
-WIDGET_CONTROL, view_info, set_value=file_list[nbr-1]
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = "Event file name:"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = file
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
-Widget_Control, id, sensitive=1
-
-endif else begin
-
-   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-   text = "No file openned"
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
-;--------------------------------------------------------------------------------------
-pro DEFAULT_PATH_BUTTON_cb, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-working_path = (*global).working_path
-working_path = dialog_pickfile(path=working_path,/directory)
-(*global).working_path = working_path
-
-name = (*global).name
-
-welcome = "Welcome " + strcompress(name,/remove_all)
-welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
-view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, view_id, base_set_title= welcome	
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = "Working directory set to:"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = working_path
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='DEFAULT_PATH_TEXT')
-text = working_path
-WIDGET_CONTROL, view_info, SET_VALUE=text
-
-
-
-
-end
-;**************************************************************************************
-
-
-
-;--------------------------------------------------------------------------------------
-pro EVENT_TO_HISTO_cb, Event
-
-widget_control,hourglass=1
-
-id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
-Widget_Control, id, sensitive=0
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-output_path = (*global).working_path
-event_filename = (*global).event_filename
-pixelids = (*global).pixelids
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='TIME_BIN_VALUE')
-WIDGET_CONTROL, view_info, GET_VALUE=tbin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='MAX_TIMEBIN_VALUE')
-WIDGET_CONTROL, view_info, GET_VALUE=max_tbin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='OFFSET_TIMEBIN_VALUE')
-WIDGET_CONTROL, view_info, GET_VALUE=min_tbin
-
-cmd = "Event_to_Histo"
-cmd += " -p " + strcompress(pixelids,/remove_all)
-cmd += " -l " + strcompress(tbin,/remove_all)
-cmd += " -M " + strcompress(max_tbin,/remove_all)
-cmd += " --time_offset " + strcompress(min_tbin,/remove_all)
-cmd += " " + event_filename
-cmd += " -a " + output_path
-
-cmd_display = "Histogramming......"
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
-cmd_display = "> " + cmd
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
-
-str_time = systime(1)
-text = "Processing....."
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-spawn, cmd, listening
-
-WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
-
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-;generate name of histogram file
-event_filename_only = (*global).event_filename_only
-file_name = strsplit(event_filename_only,"event.dat",/extract,/regex,count=length) 
-histogram_filename_only = file_name + "histo.dat"
-(*global).histogram_filename_only = histogram_filename_only
-
-histogram_filename = (*global).working_path + histogram_filename_only
-
-
-nbr_tbin = (long(max_tbin) - long(min_tbin)) / long(tbin)
-print, "max_tbin= " , max_tbin
-print, "tbin= ", tbin
-print, "nbr_tbin= ", nbr_tbin
-print, "min_tbin= ", min_tbin
-
-cmd = "Map_Data"
-cmd += " -p " + strcompress(pixelids,/remove_all)
-cmd += " -t " + strcompress(nbr_tbin,/remove_all)
-cmd += " -n " + histogram_filename
-cmd += " -m " + (*global).mapping_filename
-cmd += " -o " + output_path
-
-cmd_display = "Mapping......"
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
-cmd_display = "> " + cmd
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_display, /APPEND
-
-str_time = systime(1)
-text = "Processing....."
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-spawn, cmd, listening
-
-WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
-
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-histo_mapped_filename = file_name + "histo_mapped.dat"
-text = "File generated is"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = histo_mapped_filename
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-(*global).file = (*global).working_path + histo_mapped_filename
-
-PLOT_HISTO_FILE, Event
-
-id = widget_info(Event.top,FIND_BY_UNAME='EVENT_TO_HISTO')
-Widget_Control, id, sensitive=1
-
-end
-
-
-
-
-
-pro VIEW_ONBUTTON_top, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-file_already_opened = (*global).file_already_opened
-Ny = (*global).Ny_pixels
-
-;left mouse button
-IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
-
-   top_bank = (*(*global).top_bank)
-
-   x = Event.x
-   y = Event.y
-
-   x=x/12
-   y=y/4
-   pixelid= x*(Ny)+y
-   counts = top_bank(pixelid)
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = "---- TOP BANK ---- "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             tube # : " + strcompress(x,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             pixel #: " + strcompress(y,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             PixelID: " + strcompress(pixelid,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             Counts : " + strcompress(counts,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-	
-info_overflow_BSS, Event
-
-endif
-
-end
-
-
-pro VIEW_ONBUTTON_bottom, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-file_already_opened = (*global).file_already_opened
-Ny = (*global).Ny_pixels
-pixel_offset = (*global).pixel_offset
-
-;left mouse button
-IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
-
-   bottom_bank = (*(*global).bottom_bank)
-
-   x = Event.x
-   y = Event.y
-
-   x=x/12
-   y=y/4
-   true_pixelid= x*(Ny)+y + pixel_offset
-   pixelid = x*(Ny)+y
-   counts = bottom_bank(pixelid)
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-text = "---- BOTTOM BANK ---- "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             tube # : " + strcompress(x,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             pixel #: " + strcompress(y,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             PixelID: " + strcompress(true_pixelid,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "             Counts : " + strcompress(counts,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-	
-info_overflow_BSS, Event
-
-endif
-
-end
-
-
-
-pro info_overflow_BSS, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-overflow_number = (*global).overflow_number
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-WIDGET_CONTROL, view_info, GET_VALUE=text
-
-num_lines = n_elements(text)
-
-if (num_lines gt overflow_number) then begin
-	text = text(50:*)
-        num_lines = num_lines - 50
-	WIDGET_CONTROL, view_info, SET_VALUE=text
-endif
-
-end
-
-
-
-
-
-
-
-pro min_tbin_slider, Event
-
-min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
-WIDGET_CONTROL, min_tbin_slider_id, GET_VALUE=min_tbin
-
-;to fix minimum value of max tbin slider
-max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-widget_control, max_tbin_slider_id, SET_SLIDER_MIN=min_tbin
-
-min_tbin=strcompress(min_tbin,/remove_all)
-min_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
-WIDGET_CONTROL, min_tbin_text_id, SET_VALUE=min_tbin
-
-check_validity, Event
-
-end
-
-pro min_tbin_text, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-min_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
-WIDGET_CONTROL, min_tbin_text_id, GET_VALUE=min_tbin
-
-Nt = (*global).Nt
-
-if (min_tbin LE Nt) then begin
-
-   min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
-   widget_control, min_tbin_slider_id, SET_VALUE=min_tbin
-
-   minimum_of_max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-   widget_control, minimum_of_max_tbin_slider_id, SET_SLIDER_MIN=min_tbin
-
-endif else begin
-
-   min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
-   widget_control, min_tbin_slider_id, SET_VALUE=Nt
-
-   min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
-   widget_control, min_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
-
-endelse   
-
-check_validity, Event
-
-end
-
-
-
-
-pro max_tbin_slider, Event
-
-max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
-WIDGET_CONTROL, max_tbin_slider_id, GET_VALUE=max_tbin
-
-max_tbin=strcompress(max_tbin,/remove_all)
-max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
-WIDGET_CONTROL, max_tbin_text_id, SET_VALUE=max_tbin
-
-check_validity, Event
-
-end
-
-
-pro max_tbin_text, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
-WIDGET_CONTROL, max_tbin_text_id, GET_VALUE=max_tbin
-
-Nt=(*global).Nt
-
-if (max_tbin LE Nt) then begin
-
-   max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
-   widget_control, max_tbin_slider_id, SET_VALUE=max_tbin
-
-endif else begin
-
-   max_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_SLIDER')
-   widget_control, max_tbin_slider_id, SET_VALUE=Nt
-
-   max_tbin_text_id=widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
-   WIDGET_CONTROL, max_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
-   
-endelse
-  
-check_validity, Event
-
-end
-
-
-pro tbin_refresh_button, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-max_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MAX_TBIN_TEXT')
-widget_control, max_tbin_text_id, GET_VALUE=max_tbin
-
-min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
-widget_control, min_tbin_text_id, GET_VALUE=min_tbin
-
-if (long(min_tbin) GT long(max_tbin)) then begin
-   print, "inside min_tbin GT max_tbin"
-   max_tbin = min_tbin
-endif
-
-(*global).max_tbin = max_tbin
-(*global).min_tbin = min_tbin
-
-PLOT_HISTO_FILE, Event
-
-end
-
-
-pro check_validity, Event
-
-;get global structure
-id = widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control, id, get_uvalue=global
-
-min_tbin_slider_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_SLIDER')
-max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-tbin_refresh_button_id = widget_info(Event.top, FIND_BY_UNAME='TBIN_REFRESH_BUTTON')
-
-WIDGET_CONTROL, min_tbin_slider_id, GET_VALUE=min_tbin_value
-WIDGET_CONTROL, max_tbin_slider_id, GET_VALUE=max_tbin_value
-
-if (min_tbin_value GT max_tbin_value) then begin
-
-   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=0
-
-endif else begin
-
-   WIDGET_CONTROL, tbin_refresh_button_id, sensitive=1
-   (*global).refresh_histo = 1
-   
-endelse
-
-end
