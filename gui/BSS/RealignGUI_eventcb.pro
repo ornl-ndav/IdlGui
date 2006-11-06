@@ -467,6 +467,7 @@ for i=0,Ntubes-1 do begin
     remap[rindx1,i] = dat
 
     endif
+
 endfor
 
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
@@ -604,11 +605,55 @@ widget_control,id,get_uvalue=global
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
 
+tube_number_info_id = widget_info(Event.top, find_by_uname='tube_value')
+text = strcompress(tube_number,/remove_all)
+widget_control, tube_number_info_id, $
+  set_value=text
+
+bank_info_id = widget_info(Event.top, find_by_uname='bank_value')
+if (tube_number LE 31) then begin
+    bank_number = strcompress(1,/remove_all)
+endif else begin
+    bank_number = strcompress(2,/remove_all)
+endelse
+
+widget_control, bank_info_id, set_value=bank_number
+
+pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
+initialization_pixel = 0
+widget_control, pixel_slider_id, set_value=initialization_pixel
+
+pixel_info_id = widget_info(Event.top, find_by_uname='pixel_value')
+pixel_number = 0
+pixel_value = strcompress(pixel_number,/remove_all)
+widget_control, pixel_info_id, set_value=pixel_value
+
+
 (*global).new_tube = 1
 display_ix, Event, tube_number
 
+
+
 end
 
+
+pro save_changes, Event
+
+; 0 means tube has to be removed
+; 1 means tube must stay in place
+remove_tube_group_id = widget_info(Event.top, $
+                                   find_by_uname='remove_tube_group')
+widget_control, remove_tube_group_id, get_value=tube_removed
+
+;value of actif tube
+slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, slider_id, get_value=tube_number
+
+
+print, "Tube number: ", tube_number
+print, "Removed tube (0:yes, 1:no): ", tube_removed
+
+end
 
 
 pro get_pixels_infos, Event
@@ -619,6 +664,10 @@ widget_control,id,get_uvalue=global
 
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
+
+pixel_info_id = widget_info(Event.top, find_by_uname='pixel_value')
+pixel_value = strcompress(pixel_number,/remove_all)
+widget_control, pixel_info_id, set_value=pixel_value
 
 tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, tube_slider_id, get_value=tube_number
@@ -631,6 +680,7 @@ display_ix, Event, tube_number
 
 image_2d_1 = (*(*global).image_2d_1)
 plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,color=(0*256)+(256*0)+(150*256),thick=3
+
 
 end
 
