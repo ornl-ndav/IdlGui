@@ -78,7 +78,7 @@ pro MAIN_BASE_event, Event
         move_tube_edges, Event, 0, "right", "plus"
     end
 
-;CENTER
+;center
 
     ;center_minus button
     Widget_Info(wWidget, FIND_BY_UNAME='center_minus'): begin
@@ -117,7 +117,12 @@ pro MAIN_BASE_event, Event
         move_tube_edges, Event, 1, "right", "plus"
     end
 
+;plot mapped data
 
+    Widget_Info(wWidget, FIND_BY_UNAME='plot_mapped_data'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        plot_mapped_data, Event
+    end
 
 
 
@@ -176,7 +181,7 @@ end
 pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;define parameters
-scr_x 	= 1100				;main window width
+scr_x 	= 1118				;main window width
 scr_y 	= 700				;main window height 
 ctrl_x	= 1				;width of left box - control
 ctrl_y	= scr_y				;height of lect box - control
@@ -337,8 +342,8 @@ draw_tube_pixels_frame = widget_label(draw_tube_pixels_base,$
 pixels_counts_base = widget_base(main_base,$
                                  XOFFSET=920,$
                                  YOFFSET=10,$
-                                 SCR_XSIZE=170,$
-                                 SCR_YSIZE=690)
+                                 SCR_XSIZE=200,$
+                                 SCR_YSIZE=410)
 
 pixels_counts_title = widget_label(pixels_counts_base,$
                                    xoffset=8,$
@@ -350,8 +355,8 @@ pixels_counts_title = widget_label(pixels_counts_base,$
 pixels_counts_values = widget_text(pixels_counts_base,$
                                    XOFFSET=6,$
                                    YOFFSET=20,$
-                                   SCR_XSIZE=150,$
-                                   SCR_YSIZE=650,$
+                                   SCR_XSIZE=173,$
+                                   SCR_YSIZE=380,$
                                    /wrap,$
                                    /scroll,$
                                    value = '',$
@@ -360,8 +365,8 @@ pixels_counts_values = widget_text(pixels_counts_base,$
 pixels_counts_frame = widget_label(pixels_counts_base,$
                                    XOFFSET=0,$
                                    YOFFSET=10,$
-                                   SCR_XSIZE=170,$
-                                   SCR_YSIZE=665,$
+                                   SCR_XSIZE=185,$
+                                   SCR_YSIZE=390,$
                                    FRAME=1)
                               
 
@@ -396,69 +401,25 @@ infos_frame = widget_label(infos_base,$
                            scr_ysize=130,$
                            frame=1)
 
-;pixel, tube and bank info
-ptb_info_base = widget_base(main_base,$
+;pixelID slider
+pixelID_info_base = widget_base(main_base,$
                             XOFFSET=560,$
                             YOFFSET=160,$
-                            SCR_XSIZE=355,$
-                            SCR_YSIZE=80)
+                            SCR_XSIZE=245,$
+                            SCR_YSIZE=65)
 
-pixel_label = widget_label(ptb_info_base,$
-                           xoffset=10,$
-                           yoffset=5,$
-                           scr_xsize=60,$
-                           scr_ysize=20,$
-                           value="Pixel ID:",$
-                           uname='pixel_label')
+pixelID_text = widget_label(pixelID_info_base,$
+                            XOFFSET=5,$
+                            YOFFSET=0,$
+                            SCR_XSIZE=60,$
+                            SCR_YSIZE=20,$
+                            VALUE="Pixel ID")
 
-pixel_value = widget_label(ptb_info_base,$
-                           xoffset=70,$
-                           yoffset=5,$
-                           scr_xsize=35,$
-                           scr_ysize=20,$
-                           value='8888',$
-                           /align_left,$
-                           uname='pixel_value')
-
-tube_label = widget_label(ptb_info_base,$
-                          xoffset=10+120,$
-                          yoffset=5,$
-                          scr_xsize=50,$
-                          scr_ysize=20,$
-                          value="Tube #:",$
-                          uname='tube_label')
-
-tube_value = widget_label(ptb_info_base,$
-                          xoffset=70+110,$
-                          yoffset=5,$
-                          scr_xsize=35,$
-                          scr_ysize=20,$
-                          value='63',$
-                          /align_left,$
-                          uname='tube_value')
-
-bank_label = widget_label(ptb_info_base,$
-                          xoffset=10+230,$
-                          yoffset=5,$
-                          scr_xsize=50,$
-                          scr_ysize=20,$
-                          value="Bank #:",$
-                          uname='bank_label')
-
-bank_value = widget_label(ptb_info_base,$
-                          xoffset=70+220,$
-                          yoffset=5,$
-                          scr_xsize=10,$
-                          scr_ysize=20,$
-                          value='2',$
-                          /align_left,$
-                          uname='bank_value')
-
-pixels_slider = WIDGET_SLIDER(ptb_info_base,$
+pixels_slider = WIDGET_SLIDER(pixelID_info_base,$
                               UNAME="pixels_slider",$
                               XOFFSET= 7,$
-                              YOFFSET= 25,$
-                              SCR_XSIZE=340,$
+                              YOFFSET= 18,$
+                              SCR_XSIZE=230,$
                               SCR_YSIZE=35,$
                               MINIMUM=0,$
                               MAXIMUM=127,$
@@ -466,114 +427,213 @@ pixels_slider = WIDGET_SLIDER(ptb_info_base,$
                               VALUE=0,$
                               EVENT_PRO="get_pixels_infos")
 
-infos_frame = widget_label(ptb_info_base,$
+infos_frame = widget_label(pixelID_info_base,$
                            xoffset=0,$
-                           yoffset=0,$
-                           scr_xsize=355,$
-                           scr_ysize=70,$
-                           frame=4,$
+                           yoffset=10,$
+                           scr_xsize=250,$
+                           scr_ysize=50,$
+                           frame=1,$
                            value='')
 
-;pixelID and tube interaction window
-pixel_and_tube_base = widget_base(main_base,$
-                                  XOFFSET=560,$
-                                  YOFFSET=240,$
-                                  SCR_XSIZE=355,$
-                                  SCR_YSIZE=180)
 
-pixel_and_tube_title = widget_label(pixel_and_tube_base,$
-                                    xoffset=5,$
-                                    yoffset=0,$
-                                    scr_xsize=180,$
-                                    scr_ysize=20,$
-                                    value='PixelID and tube interaction')
+;pixelID, tube and bank info
+ ptb_info_base = widget_base(main_base,$
+                             XOFFSET=810,$
+                             YOFFSET=160,$
+                             SCR_XSIZE=140,$
+                             SCR_YSIZE=80)
 
-pixelid_counts_label = widget_label(pixel_and_tube_base,$
+
+ pixel_label = widget_label(ptb_info_base,$
+                            xoffset=5,$
+                            yoffset=15,$
+                            scr_xsize=60,$
+                            scr_ysize=20,$
+                            value="Pixel ID:",$
+                            uname='pixel_label')
+
+ pixel_value = widget_label(ptb_info_base,$
+                            xoffset=70,$
+                            yoffset=15,$
+                            scr_xsize=25,$
+                            scr_ysize=20,$
+                            value='127',$
+                            /align_left,$
+                            uname='pixel_value')
+
+ tube_label = widget_label(ptb_info_base,$
+                           xoffset=5,$
+                           yoffset=35,$
+                           scr_xsize=60,$
+                           scr_ysize=20,$
+                           value="  Tube #:",$
+                           uname='tube_label')
+
+ tube_value = widget_label(ptb_info_base,$
+                           xoffset=70,$
+                           yoffset=35,$
+                           scr_xsize=20,$
+                           scr_ysize=20,$
+                           value='63',$
+                           /align_left,$
+                           uname='tube_value')
+
+ bank_label = widget_label(ptb_info_base,$
+                           xoffset=5,$
+                           yoffset=55,$
+                           scr_xsize=60,$
+                           scr_ysize=20,$
+                           value="  Bank #:",$
+                           uname='bank_label')
+
+ bank_value = widget_label(ptb_info_base,$
+                           xoffset=70,$
+                           yoffset=55,$
+                           scr_xsize=10,$
+                           scr_ysize=20,$
+                           value='2',$
+                           /align_left,$
+                           uname='bank_value')
+
+ ptb_info_label = widget_label(ptb_info_base,$
+                               XOFFSET=0,$
+                               YOFFSET=10,$
+                               SCR_XSIZE=100,$
+                               SCR_YSIZE=65,$
+                               frame=1,$
+                               value='')
+
+
+;pixelID interaction window
+pixel_base = widget_base(main_base,$
+                         XOFFSET=560,$
+                         YOFFSET=225,$
+                         SCR_XSIZE=245,$
+                         SCR_YSIZE=90)
+
+pixel_title = widget_label(pixel_base,$
+                           xoffset=5,$
+                           yoffset=0,$
+                           scr_xsize=130,$
+                           scr_ysize=20,$
+                           value='PixelID interaction')
+
+pixelid_counts_label = widget_label(pixel_base,$
                                     xoffset=10,$
                                     yoffset=20,$
                                     scr_xsize=90,$
                                     scr_ysize=20,$
                                     value='PixelID counts:',$
-                                   /align_left)
+                                    /align_left)
 
-pixelid_counts_value = widget_label(pixel_and_tube_base,$
-                                    xoffset=110,$
+pixelid_counts_value = widget_label(pixel_base,$
+                                    xoffset=115,$
                                     yoffset=20,$
-                                    scr_xsize=150,$
+                                    scr_xsize=110,$
                                     scr_ysize=20,$
                                     value='',$
-                                   /align_left)
+                                    /align_left)
 
-pixelid_new_counts_label = widget_label(pixel_and_tube_base,$
+pixelid_new_counts_label = widget_label(pixel_base,$
                                         xoffset=10,$
                                         yoffset=45,$
-                                        scr_xsize=114,$
+                                        scr_xsize=115,$
                                         scr_ysize=20,$
                                         value='New PixelID counts:',$
-                                       /align_left)
+                                        /align_left)
 
-pixelid_new_counts_value = widget_text(pixel_and_tube_base,$
+pixelid_new_counts_value = widget_text(pixel_base,$
                                        uname='pixelid_new_counts_value',$
-                                        xoffset=130,$
-                                        yoffset=40,$
-                                        scr_xsize=140,$
-                                        scr_ysize=30,$
-                                        value='1',$
-                                        /align_left,$
+                                       xoffset=130,$
+                                       yoffset=40,$
+                                       scr_xsize=40,$
+                                       scr_ysize=30,$
+                                       value='1',$
+                                       /align_left,$
                                        /editable)
 
-pixelid_new_counts_validation = widget_button(pixel_and_tube_base,$
-                                              uname='pixelid_new_counts_validation',$
-                                              xoffset=275,$
-                                              yoffset=20,$
-                                              scr_xsize=70,$
-                                              scr_ysize=50,$
-                                              value="Validate")
+pixelid_new_counts_reset = $
+  widget_button(pixel_base,$
+                uname='pixelid_new_counts_reset',$
+                xoffset=175,$
+                yoffset=40,$
+                scr_xsize=60,$
+                scr_ysize=30,$
+                value="RESET")
 
-remove_pixelid_label = widget_label(pixel_and_tube_base,$
-                                    xoffset=10,$
-                                    yoffset=75,$
-                                    scr_xsize=120,$
-                                    scr_ysize=20,$
-                                    value='Remove this pixel:',$
-                                   /align_left)
+pixel_and_tube_frame = widget_label(pixel_base,$
+                                    xoffset=0,$
+                                    yoffset=10,$
+                                    scr_xsize=355,$
+                                    scr_ysize=70,$
+                                    frame=1,$
+                                    value='')
 
-remove_pixelid_group = cw_bgroup(pixel_and_tube_base, $
-                                 ['Yes', 'No'], $
-                                 /exclusive,$
-                                 /row,$
-                                 /RETURN_NAME,$
-                                 XOFFSET=130, $
-                                 YOFFSET=70,$
-                                 SET_VALUE=1.0,$
-                                 UNAME='remove_pixelid_group')
 
-remove_tube_label = widget_label(pixel_and_tube_base,$
+;tube interaction window
+tube_base = widget_base(main_base,$
+                        XOFFSET=560,$
+                        YOFFSET=310,$
+                        SCR_XSIZE=245,$
+                        SCR_YSIZE=60)
+
+tube_title = widget_label(tube_base,$
+                          xoffset=5,$
+                          yoffset=0,$
+                          scr_xsize=105,$
+                          scr_ysize=20,$
+                          value='Tube interaction')
+
+remove_tube_label = widget_label(tube_base,$
                                  xoffset=10,$
-                                 yoffset=105,$
+                                 yoffset=25,$
                                  scr_xsize=120,$
                                  scr_ysize=20,$
                                  value='Remove this tube:',$
                                  /align_left)
 
-remove_tube_group = cw_bgroup(pixel_and_tube_base, $
+remove_tube_group = cw_bgroup(tube_base, $
                               ['Yes', 'No'], $
                               /exclusive,$
                               /row,$
                               /RETURN_NAME,$
                               XOFFSET=130, $
-                              YOFFSET=100,$
+                              YOFFSET=20,$
                               SET_VALUE=1.0,$
                               UNAME='remove_tube_group')
 
+tube_frame = widget_label(tube_base,$
+                          xoffset=0,$
+                          yoffset=10,$
+                          scr_xsize=245,$
+                          scr_ysize=45,$
+                          frame=1,$
+                          value='')
 
-pixel_and_tube_frame = widget_label(pixel_and_tube_base,$
-                                    xoffset=0,$
-                                    yoffset=10,$
-                                    scr_xsize=355,$
-                                    scr_ysize=160,$
-                                    frame=1,$
-                                    value='')
+
+;reset and save buttons
+RESET_ALL_button = widget_button(main_base,$
+                                 UNAME="reset_all_button",$
+                                 xoffset=560,$
+                                 yoffset=380,$
+                                 scr_xsize=120,$
+                                 scr_ysize=30,$
+                                 value="RESET ALL")
+
+SAVE_CHANGES_button = widget_button(main_base,$
+                                    UNAME="save_changes_button",$
+                                    xoffset=680,$
+                                    yoffset=380,$
+                                    scr_xsize=120,$
+                                    scr_ysize=30,$
+                                    value="SAVES CHANGES")
+
+
+
+
+
+
+
 
 
 y_offset = 375
@@ -879,6 +939,50 @@ DAS_plot_title = widget_label(DAS_plot_base,$
 
 DAS_plot_frame = widget_label(DAS_plot_base,$
                               UNAME='DAS_plot_frame',$
+                              SCR_XSIZE=547,$
+                              SCR_YSIZE=225,$
+                              XOFFSET=0,$
+                              YOFFSET=20,$
+                              FRAME=1)
+
+
+;Get Mapped Plot
+plot_mapped_data = widget_button(MAIN_BASE,$
+                                 XOFFSET=560,$
+                                 YOFFSET=420,$
+                                 SCR_XSIZE=130,$
+                                 SCR_YSIZE=30,$
+                                 VALUE="PLOT MAPPED DATA",$
+                                 UNAME='plot_mapped_data')
+                                 
+
+
+
+
+
+
+;Mapped plot
+map_plot_base = widget_base(MAIN_BASE,$
+                            XOFFSET=560,$
+                            YOFFSET=440,$
+                            SCR_XSIZE=550,$
+                            SCR_YSIZE=250)
+
+map_plot_title = widget_label(map_plot_base,$
+                              SCR_XSIZE=70,$
+                              SCR_YSIZE=15,$
+                              XOFFSET=5,$
+                              YOFFSET=12,$
+                              VALUE="Mapped plot")
+
+map_plot_draw = widget_draw(map_plot_base,$
+                            UNAME='map_plot_draw',$
+                            SCR_XSIZE=536,$
+                            SCR_YSIZE=213,$
+                            XOFFSET=6,$
+                            YOFFSET=30)
+
+map_plot_frame = widget_label(map_plot_base,$
                               SCR_XSIZE=547,$
                               SCR_YSIZE=225,$
                               XOFFSET=0,$
