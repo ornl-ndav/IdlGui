@@ -193,7 +193,7 @@ remap = dblarr(Npix,Ntubes)          ;Npix=128, Ntubes=64
 
 
 ; for i=0,Ntubes-1 do begin  ;REMOVE_COMMENTS
-for i=0, 10 do begin
+for i=0, 5 do begin
 
    ;REMOVE_ME
    if (i EQ 0) then begin

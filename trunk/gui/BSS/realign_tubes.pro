@@ -25,18 +25,18 @@ y_right_offset = 0.0738
 ;processing flags
 doread 	 = 1           ;read in BSS data - generally need to do this the first time thru
 dogetep  = 0           ;get tube endpoints from text file
-doplot 	 = 1           ;plot tube endpoints composite results (3 graphs)
+doplot 	 = 0           ;plot tube endpoints composite results (3 graphs)
 doplot_1 = 0           ;plot standard deviation of the 64 tubes
 dostop 	 = 0           ;stop to single step thru finding endpoints
-dolog  	 = 1           ;show data in linear scale (0) or log scale (1)
-dooffs 	 = 1           ;create 2D map of re-mapped data
+dolog  	 = 0           ;show data in linear scale (0) or log scale (1)
+dooffs 	 = 0           ;create 2D map of re-mapped data
 doalign  = 1           ;align the full 3D data set
 dosave 	 = 0           ;save tube endpoints to text file
 debug    = 0           ;debug print statement
 debug_map = 0          ;debug statement of remapping part of program (array_offset...)
 verbose = 1            ;display position of start,end....
-print_data_per_tube = 1 ;display counts for each tube, one at a time
-print_tube = 1         ;plot position of edges for each tube
+print_data_per_tube = 0 ;display counts for each tube, one at a time
+print_tube = 0         ;plot position of edges for each tube
 
 ;example use cases
 ; first pass: set doread, dooffs, doalign, and dosave = 1
