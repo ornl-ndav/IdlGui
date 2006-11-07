@@ -704,7 +704,20 @@ for i=0,((*global).Ny_scat-1) do begin
     endif
 endfor
 
-;pixelid counts part
+(*global).new_tube = 1 
+display_ix, Event, tube_number
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+pro save_pixelid_changes, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 ;update number of counts for that pixel
 image_2d_1 = (*(*global).image_2d_1)
@@ -714,6 +727,9 @@ widget_control, pixel_slider_id, get_value=pixel_number
 
 new_pixel_counts_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_value')
 widget_control, new_pixel_counts_id, get_value=new_pixel_counts
+
+slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, slider_id, get_value=tube_number
 
 new_pixel_counts = float(new_pixel_counts[0])
 
@@ -728,12 +744,6 @@ widget_control, pixelid_counts_value_id, set_value=text
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
-
-
 
 
 ;--------------------------------------------------------------------------------
@@ -744,9 +754,9 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;initialize removed_tube (removed #28,29,30,31,60-67)
-removed_tube = (*(*global).tube_removed)
 tube_to_remove=[indgen(4)+28,indgen(4)+60]
 size=size(tube_to_remove)
+removed_tube=lonarr((*global).Ny_scat)
 
 for i=0, (size[1]-1) do begin
     removed_tube[tube_to_remove[i]]=1
@@ -767,6 +777,36 @@ for i=0,((*global).Ny_scat-1) do begin
         endelse
     endif
 endfor
+
+;reset pixelid counts
+image_2d_1_untouched = (*(*global).image_2d_1_untouched)
+image_2d_1 = image_2d_1_untouched
+(*(*global).image_2d_1) = image_2d_1
+
+;get tube_number
+tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, tube_slider_id, get_value=tube_number
+
+;get pixel_value
+pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
+widget_control, pixel_slider_id, get_value=pixel_number
+
+value_displayed = strcompress(image_2d_1_untouched[pixel_number,tube_number],/remove_all)
+
+pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
+widget_control, pixelid_counts_value_id, set_value=value_displayed
+
+get_pixels_infos, Event
+
+;fill pixelids counts in right table
+pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
+widget_control, pixelIDs_info_id, set_value=text
+for i=1,127 do begin
+    text = strcompress(i) + ': ' + strcompress(image_2d_1[i,0],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text, /append
+endfor
+
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
