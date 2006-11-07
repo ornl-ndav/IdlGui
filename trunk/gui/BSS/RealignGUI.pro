@@ -125,12 +125,19 @@ pro MAIN_BASE_event, Event
     end
 
 ;validate changes
-    
+    ;for tube
     Widget_Info(wWidget, FIND_BY_UNAME='save_changes_button'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         save_changes, Event
     end
     
+    ;for pixelid
+    Widget_Info(wWidget, FIND_BY_UNAME='save_pixelid_changes_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        save_pixelid_changes, Event
+    end
+
+
 ;reset all changes
     
     Widget_Info(wWidget, FIND_BY_UNAME='reset_all_changes'): begin
@@ -684,18 +691,25 @@ RESET_ALL_button = widget_button(main_base,$
                                  UNAME="reset_all_changes",$
                                  xoffset=560,$
                                  yoffset=380,$
-                                 scr_xsize=120,$
+                                 scr_xsize=80,$
                                  scr_ysize=30,$
-                                 value="RESET ALL CHANGES")
+                                 value="RESET ALL")
 
 SAVE_CHANGES_button = widget_button(main_base,$
                                     UNAME="save_changes_button",$
-                                    xoffset=680,$
+                                    xoffset=644,$
                                     yoffset=380,$
-                                    scr_xsize=120,$
+                                    scr_xsize=80,$
                                     scr_ysize=30,$
-                                    value="VALIDATE CHANGE")
+                                    value="CHANGE TUBE")
 
+SAVE_PIXELID_changes_button = widget_button(main_base,$
+                                            UNAME="save_pixelid_changes_button",$
+                                            xoffset=726,$
+                                            yoffset=380,$
+                                            scr_xsize=80,$
+                                            scr_ysize=30,$
+                                            value="CHANGE PIXEL")
 
 
 
