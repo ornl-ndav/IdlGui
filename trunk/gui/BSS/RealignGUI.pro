@@ -131,6 +131,25 @@ pro MAIN_BASE_event, Event
         save_changes, Event
     end
     
+;reset all changes
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_changes'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        reset_all_changes, Event
+    end
+
+;reset pixelid counts
+
+    Widget_Info(wWidget, FIND_BY_UNAME='pixelid_new_counts_reset'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        pixelid_new_counts_reset, Event
+    end
+
+
+
+
+
+
 
 
 
@@ -145,6 +164,19 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         IDENTIFICATION_GO_cb, Event
     end
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ;output path button
     Widget_Info(wWidget, FIND_BY_UNAME='OUTPUT_PATH'): begin
@@ -248,6 +280,8 @@ global = ptr_new({$
 ; 		top_bank		: ptr_new(0L),$
 ; 		bottom_bank		: ptr_new(0L),$
  		image_2d_1		: ptr_new(0L),$
+ 		image_2d_1_untouched	: ptr_new(0L),$   
+                tube_removed            : ptr_new(0L),$
                 i1                      : ptr_new(0L),$
                 i2                      : ptr_new(0L),$
                 i3                      : ptr_new(0L),$
@@ -330,7 +364,7 @@ draw_tube_pixels_slider = WIDGET_SLIDER(draw_tube_pixels_base,$
                                         SCR_XSIZE=536,$
                                         SCR_YSIZE=35,$
                                         MINIMUM=0,$
-                                        MAXIMUM=67,$
+                                        MAXIMUM=63,$
                                         /DRAG,$
                                         VALUE=0,$
                                         EVENT_PRO="plot_tubes_pixels")
@@ -532,6 +566,7 @@ pixelid_counts_label = widget_label(pixel_base,$
                                     /align_left)
 
 pixelid_counts_value = widget_label(pixel_base,$
+                                    uname='pixelid_counts_value',$
                                     xoffset=115,$
                                     yoffset=20,$
                                     scr_xsize=110,$
@@ -591,8 +626,10 @@ removed_tube_text = widget_text(removed_tube_base,$
                                 xoffset=5,$
                                 yoffset=15,$
                                 scr_xsize=95,$
-                                scr_ysize=195)
-                                
+                                scr_ysize=195,$
+                                /wrap,$
+                                /scroll)
+
 
 removed_tube_frame = widget_label(removed_tube_base,$
                                   xoffset=0,$
@@ -644,12 +681,12 @@ tube_frame = widget_label(tube_base,$
 
 ;reset and save buttons
 RESET_ALL_button = widget_button(main_base,$
-                                 UNAME="reset_all_button",$
+                                 UNAME="reset_all_changes",$
                                  xoffset=560,$
                                  yoffset=380,$
                                  scr_xsize=120,$
                                  scr_ysize=30,$
-                                 value="RESET CHANGE")
+                                 value="RESET ALL CHANGES")
 
 SAVE_CHANGES_button = widget_button(main_base,$
                                     UNAME="save_changes_button",$
