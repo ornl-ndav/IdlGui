@@ -1,3 +1,4 @@
+;--------------------------------------------------------------------------------
 function get_tlb,wWidget
 
 id = wWidget
@@ -13,18 +14,24 @@ while id NE 0 do begin
 	endif
 endwhile
 
-
-
 return,tlb
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-                    
+
+
+
+;--------------------------------------------------------------------------------
 pro RealignGUI_eventcb
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
+
+
+;--------------------------------------------------------------------------------
 pro MAIN_REALIZE, wWidget
 
 tlb = get_tlb(wWidget)
@@ -35,25 +42,28 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
-
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-
-
+;--------------------------------------------------------------------------------
 pro OPEN_MAPPED_HISTOGRAM, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+tube_removed = lonarr((*global).Ny_scat)
+(*(*global).tube_removed) = tube_removed
+
 OPEN_FILE, Event
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-
+;--------------------------------------------------------------------------------
 pro OPEN_FILE, Event
 
 ;indicate initialization with hourglass icon
@@ -115,7 +125,7 @@ endelse
 widget_control,hourglass=0
 
 end
-
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
@@ -129,6 +139,33 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 file = (*global).file 
+
+;initialize removed_tube (removed #28,29,30,31,60-67)
+removed_tube = (*(*global).tube_removed)
+tube_to_remove=[indgen(4)+28,indgen(4)+60]
+size=size(tube_to_remove)
+
+for i=0, (size[1]-1) do begin
+    removed_tube[tube_to_remove[i]]=1
+endfor
+
+(*(*global).tube_removed) = removed_tube
+
+removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
+
+first_update = 0
+for i=0,((*global).Ny_scat-1) do begin
+    if (removed_tube[i] EQ 1) then begin
+        text = strcompress(i,/remove_all)+ ": OFF"
+        if (first_update EQ 0) then begin
+            widget_control, removed_tube_text_id, set_value=text        
+            first_update=1
+        endif else begin
+            widget_control, removed_tube_text_id, set_value=text,/append
+        endelse
+    endif
+endfor
+
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = " Opening/Reading file.......... "
@@ -186,7 +223,6 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 image_2d_1 = total(image1,1)
 
-
 tmp = image_2d_1[0:63,0:31]
 tmp = reverse(tmp,1)
 image_2d_1[0:63,0:31] = tmp
@@ -196,6 +232,7 @@ tmp = reverse(tmp,1)
 image_2d_1[64:*,32:*] = tmp
 
 (*(*global).image_2d_1) = image_2d_1 
+(*(*global).image_2d_1_untouched) = image_2d_1
 
 draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
@@ -238,14 +275,12 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 DEVICE, DECOMPOSED = 1
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
-
-
-
+;--------------------------------------------------------------------------------
 pro calculate_ix, Event
 
 ;get global structure
@@ -326,16 +361,11 @@ endfor
 (*(*global).len2) = len2
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-
-
-
-
-
-
-
+;--------------------------------------------------------------------------------
 pro plot_mapped_data, Event
 
 ;get global structure
@@ -375,97 +405,98 @@ length_tube1 = t3 - t2
 ;new remap array(Npix, Ntubes)
 remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
 
+tube_removed = (*(*global).tube_removed)
+
 for i=0,Ntubes-1 do begin
-;for i=0, 10 do begin
 
-    if (i LE 27 OR (i GE 32 AND i LE 59)) then begin
+    if (tube_removed[i] EQ 0) then begin
 
-    tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
-    tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
-    indx_cntr = 64+Npad         ;74            
-    
+        tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
+        tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
+        indx_cntr = 64+Npad     ;74            
+        
 ;cntr offset relative to cntr
-    cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
-    
+        cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
+        
 ;dial out center offset
-    tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
-    
+        tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
+        
 ;REMAP TUBE0
-    
+        
 ;remap tube end data
-    len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
-    
+        len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
+        
 ;remap (rebin) tube0 data 
 ;size of DAS_length of first tube
-    d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
-    
+        d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
+        
 ;remap (rebin) first part of tube (less than i2) (junk)
-    d0_0 = findgen(i1[i])/(i1[i])*t0
-    
+        d0_0 = findgen(i1[i])/(i1[i])*t0
+        
 ;remap (rebin) tube end data (junk)
-    d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
-    
+        d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
+        
 ;new tube remapped
-    tube0_new = [d0_0,d0,d0_1]
-    
-    mn0 = min(d0)               ;2
-    mx0 = min([max(d0),Npix-1]) 
-    del0 = mx0 - mn0 + 1
-    rindx1 = indgen(del0-1)+mn0
-    
-    dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp)
-
-    remap[rindx1,i] = dat       ;new array of the middle section
-
+        tube0_new = [d0_0,d0,d0_1]
+        
+        mn0 = min(d0)           ;2
+        mx0 = min([max(d0),Npix-1]) 
+        del0 = mx0 - mn0 + 1
+        rindx1 = indgen(del0-1)+mn0
+        
+        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp)
+        
+        remap[rindx1,i] = dat   ;new array of the middle section
+        
 ;remap endpoints and middle section
 ;one end
-
-    mn0 = min(d0_0)             ; 0
-    mx0 = min([max(d0_0),Npix-1])
-    del0 = fix(mx0 - mn0) + 1
-    rindx0 = indgen(del0)+mn0
-    rindx0 = indgen(2)
-    dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
-    scl = float(2)/i1[i]
-    remap[rindx0,i] = dat * scl
-    
+        
+        mn0 = min(d0_0)         ; 0
+        mx0 = min([max(d0_0),Npix-1])
+        del0 = fix(mx0 - mn0) + 1
+        rindx0 = indgen(del0)+mn0
+        rindx0 = indgen(2)
+        dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+        scl = float(2)/i1[i]
+        remap[rindx0,i] = dat * scl
+        
 ;finally the middle
-    mn0 = t1+1
-    mx0 = t2-1
-    del0 = (mx0 - mn0) + 1
-    rindx0 = indgen(del0)+mn0
-    dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
-    scl = float(del0)/(i3[i] - i2[i])
-    remap[rindx0,i] = dat * scl
-    
+        mn0 = t1+1
+        mx0 = t2-1
+        del0 = (mx0 - mn0) + 1
+        rindx0 = indgen(del0)+mn0
+        dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
+        scl = float(del0)/(i3[i] - i2[i])
+        remap[rindx0,i] = dat * scl
+        
 ;REMAP TUBE1
-
+        
 ;remap tube1 data
-    len_meas_tube1 = i4[i] - i3[i]
-    d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
-    
+        len_meas_tube1 = i4[i] - i3[i]
+        d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
+        
 ;remap tube start data (junk)
-    d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
-            
+        d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
+        
 ;remap tube end data
-    d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
-            
+        d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
+        
 ;now the other tube end
-    mn0 = min(d1_1)
-    mx0 = min([max(d1_1),Npix-1])
-    del0 = (mx0 - mn0) + 1
-    rindx0 = indgen(del0)+mn0
-    dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
-    scl = float(del0)/(Npix-i4[i])
-    remap[rindx0,i] = dat * scl
-    
-    mn1 = min(d1)
-    mx1 = min([max(d1),Npix-1])
-    del1 = mx1 - mn1 + 1
-    rindx1 = indgen(del1)+mn1
-    dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
-    remap[rindx1,i] = dat
-
+        mn0 = min(d1_1)
+        mx0 = min([max(d1_1),Npix-1])
+        del0 = (mx0 - mn0) + 1
+        rindx0 = indgen(del0)+mn0
+        dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
+        scl = float(del0)/(Npix-i4[i])
+        remap[rindx0,i] = dat * scl
+        
+        mn1 = min(d1)
+        mx1 = min([max(d1),Npix-1])
+        del1 = mx1 - mn1 + 1
+        rindx1 = indgen(del1)+mn1
+        dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
+        remap[rindx1,i] = dat
+        
     endif
 
 endfor
@@ -500,34 +531,15 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 
 DEVICE, DECOMPOSED = 1
 
-
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;--------------------------------------------------------------------------------
 pro display_ix, Event, i
 
 ;get global structure
@@ -589,18 +601,23 @@ widget_control, cntr_id, set_value=strcompress(cntr,/remove_all)
 widget_control, indx3_id, set_value=strcompress(indx3,/remove_all)
 widget_control, indx4_id, set_value=strcompress(indx4,/remove_all)
 
-
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
+;--------------------------------------------------------------------------------
 pro plot_tubes_pixels, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+remove_tube_group_id = widget_info(Event.top, $
+                                   find_by_uname='remove_tube_group')
+widget_control, remove_tube_group_id, set_value=1
+
 
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
@@ -632,30 +649,174 @@ widget_control, pixel_info_id, set_value=pixel_value
 (*global).new_tube = 1
 display_ix, Event, tube_number
 
-
-
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
+
+
+
+;--------------------------------------------------------------------------------
 pro save_changes, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 ; 0 means tube has to be removed
 ; 1 means tube must stay in place
 remove_tube_group_id = widget_info(Event.top, $
                                    find_by_uname='remove_tube_group')
-widget_control, remove_tube_group_id, get_value=tube_removed
+widget_control, remove_tube_group_id, get_value=tube_removed_boolean
 
 ;value of actif tube
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
 
+tube_removed_array = (*(*global).tube_removed)
 
-print, "Tube number: ", tube_number
-print, "Removed tube (0:yes, 1:no): ", tube_removed
+if (tube_removed_boolean EQ 0) then begin
+    
+    tube_removed_array[tube_number]=1
+
+endif else begin
+
+    tube_removed_array[tube_number]=0
+
+endelse
+
+(*(*global).tube_removed) = tube_removed_array
+
+;update text box of tubes removed
+
+removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
+
+first_update = 0
+for i=0,((*global).Ny_scat-1) do begin
+    if (tube_removed_array[i] EQ 1) then begin
+        text = strcompress(i,/remove_all)+ ": OFF"
+        if (first_update EQ 0) then begin
+            widget_control, removed_tube_text_id, set_value=text        
+            first_update=1
+        endif else begin
+            widget_control, removed_tube_text_id, set_value=text,/append
+        endelse
+    endif
+endfor
+
+;pixelid counts part
+
+;update number of counts for that pixel
+image_2d_1 = (*(*global).image_2d_1)
+
+pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
+widget_control, pixel_slider_id, get_value=pixel_number
+
+new_pixel_counts_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_value')
+widget_control, new_pixel_counts_id, get_value=new_pixel_counts
+
+new_pixel_counts = float(new_pixel_counts[0])
+
+image_2d_1[pixel_number,tube_number]=new_pixel_counts
+(*(*global).image_2d_1)=image_2d_1
+
+pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
+text = strcompress(new_pixel_counts, /remove_all)
+widget_control, pixelid_counts_value_id, set_value=text
+
+(*global).new_tube = 1 
+display_ix, Event, tube_number
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
+
+
+
+
+
+;--------------------------------------------------------------------------------
+pro reset_all_changes, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;initialize removed_tube (removed #28,29,30,31,60-67)
+removed_tube = (*(*global).tube_removed)
+tube_to_remove=[indgen(4)+28,indgen(4)+60]
+size=size(tube_to_remove)
+
+for i=0, (size[1]-1) do begin
+    removed_tube[tube_to_remove[i]]=1
+endfor
+
+(*(*global).tube_removed) = removed_tube
+
+removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
+first_update = 0
+for i=0,((*global).Ny_scat-1) do begin
+    if (removed_tube[i] EQ 1) then begin
+        text = strcompress(i,/remove_all)+ ": OFF"
+        if (first_update EQ 0) then begin
+            widget_control, removed_tube_text_id, set_value=text        
+            first_update=1
+        endif else begin
+            widget_control, removed_tube_text_id, set_value=text,/append
+        endelse
+    endif
+endfor
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+;--------------------------------------------------------------------------------
+pro pixelid_new_counts_reset, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+image_2d_1 = (*(*global).image_2d_1)
+image_2d_1_untouched = (*(*global).image_2d_1_untouched)
+
+;get tube_number
+tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, tube_slider_id, get_value=tube_number
+
+;get pixel_value
+pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
+widget_control, pixel_slider_id, get_value=pixel_number
+
+image_2d_1[pixel_number,tube_number]=image_2d_1_untouched[pixel_number,tube_number]
+(*(*global).image_2d_1) = image_2d_1
+
+get_pixels_infos, Event
+
+;fill pixelids counts in right table
+pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
+widget_control, pixelIDs_info_id, set_value=text
+for i=1,127 do begin
+    text = strcompress(i) + ': ' + strcompress(image_2d_1[i,0],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text, /append
+endfor
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+;--------------------------------------------------------------------------------
 pro get_pixels_infos, Event
 
 ;get global structure
@@ -672,22 +833,30 @@ widget_control, pixel_info_id, set_value=pixel_value
 tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, tube_slider_id, get_value=tube_number
 
+;update number of counts for that pixel
+image_2d_1 = (*(*global).image_2d_1)
+
+pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
+value = image_2d_1[pixel_number,tube_number]
+
+widget_control, pixelid_counts_value_id, set_value = strcompress(value,/remove_all)
+
 draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
 
 display_ix, Event, tube_number
 
-image_2d_1 = (*(*global).image_2d_1)
 plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,color=(0*256)+(256*0)+(150*256),thick=3
 
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
+;--------------------------------------------------------------------------------
 pro move_tube_edges, Event, tube_side, left_right, minus_plus
 
 ;get global structure
@@ -702,7 +871,9 @@ case tube_side of
         if (left_right EQ "left") then begin
             i1=(*(*global).i1)
             if (minus_plus EQ "minus") then begin
-                i1[tube_number]-=1
+                if (i1[tube_number] GT 0) then begin
+                    i1[tube_number]-=1
+                endif
             endif else begin
                 i1[tube_number]+=1
             endelse
@@ -737,7 +908,9 @@ case tube_side of
             if (minus_plus EQ "minus") then begin
                 i4[tube_number]-=1
             endif else begin
-                i4[tube_number]+=1
+                if (i4[tube_number] LT 126) then begin
+                    i4[tube_number]+=1
+                endif
             endelse
             (*(*global).i4)=i4
             id=widget_info(Event.top,find_by_uname="tube1_right_text")
@@ -761,35 +934,12 @@ endcase
 display_ix, Event, tube_number
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;--------------------------------------------------------------------------------
 pro ABOUT_MENU, Event
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
@@ -811,6 +961,10 @@ text = " Jean Bilheux (bilheuxjm@ornl.gov)"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 ;--------------------------------------------------------------------------------
