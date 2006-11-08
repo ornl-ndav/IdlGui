@@ -43,7 +43,6 @@ pro MAIN_BASE_event, Event
     ;Widget to change the color of graph
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-         print, ""
         ABOUT_MENU, Event
     end
 
@@ -140,7 +139,7 @@ pro MAIN_BASE_event, Event
 
 ;reset all changes
     
-    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_changes'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         reset_all_changes, Event
     end
@@ -299,6 +298,7 @@ global = ptr_new({$
  		image_2d_1_untouched	: ptr_new(0L),$   
                 remap                   : ptr_new(0L),$
                 tube_removed            : ptr_new(0L),$
+                pixel_removed           : ptr_new(0L),$
                 i1                      : ptr_new(0L),$
                 i2                      : ptr_new(0L),$
                 i3                      : ptr_new(0L),$
@@ -636,7 +636,7 @@ removed_tube_base = widget_base(main_base,$
 removed_tube_title = widget_label(removed_tube_base,$
                                   xoffset=5,$
                                   yoffset=0,$
-                                  value="Tubes removed")
+                                  value="Data removed")
 
 removed_tube_text = widget_text(removed_tube_base,$
                                 uname="removed_tube_text",$
