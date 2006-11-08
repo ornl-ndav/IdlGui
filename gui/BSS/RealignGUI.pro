@@ -44,7 +44,7 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
          print, ""
-;        ABOUT_MENU, Event
+        ABOUT_MENU, Event
     end
 
     ;slider pixels
@@ -152,8 +152,17 @@ pro MAIN_BASE_event, Event
         pixelid_new_counts_reset, Event
     end
 
+;Widget to change the color of graph of DAS
+    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_DAS'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        CTOOL_DAS, Event
+    end
 
-
+;Widget to change the color of graph of realign data
+    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_realign'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        CTOOL_realign, Event
+    end
 
 
 
@@ -272,8 +281,8 @@ global = ptr_new({$
                 Ny_scat			:64L,$
                 Ny_diff                 :8L,$
  		Nt			:1L,$
-; 		y_coeff			:0L,$
-; 		x_coeff			:0L,$
+ 		y_coeff			:10L,$
+ 		x_coeff			:8.4,$
 ; 		Nx_tubes		:64L,$
 ; 		Ny_pixels		:64L,$
 ; 		minimum_tbin		:0L,$
@@ -288,6 +297,7 @@ global = ptr_new({$
 ; 		bottom_bank		: ptr_new(0L),$
  		image_2d_1		: ptr_new(0L),$
  		image_2d_1_untouched	: ptr_new(0L),$   
+                remap                   : ptr_new(0L),$
                 tube_removed            : ptr_new(0L),$
                 i1                      : ptr_new(0L),$
                 i2                      : ptr_new(0L),$
@@ -688,7 +698,7 @@ tube_frame = widget_label(tube_base,$
 
 ;reset and save buttons
 RESET_ALL_button = widget_button(main_base,$
-                                 UNAME="reset_all_changes",$
+                                 UNAME="reset_all_button",$
                                  xoffset=560,$
                                  yoffset=380,$
                                  scr_xsize=80,$
@@ -1032,15 +1042,20 @@ DAS_plot_frame = widget_label(DAS_plot_base,$
 plot_mapped_data = widget_button(MAIN_BASE,$
                                  XOFFSET=560,$
                                  YOFFSET=420,$
-                                 SCR_XSIZE=240,$
+                                 SCR_XSIZE=130,$
                                  SCR_YSIZE=30,$
                                  VALUE="PLOT MAPPED DATA",$
                                  UNAME='plot_mapped_data')
                                  
 
-
-
-
+;Procude output file
+output_new_histo_mapped_file = widget_button(MAIN_BASE,$
+                                             XOFFSET=690,$
+                                             YOFFSET=420,$
+                                             SCR_XSIZE=115,$
+                                             SCR_YSIZE=30,$
+                                             VALUE="CREATE OUTPUT",$
+                                             UNAME='output_new_histo_mapped_file')
 
 
 ;Mapped plot
@@ -1092,10 +1107,41 @@ map_plot_frame = widget_label(map_plot_base,$
   ABOUT_MENU = Widget_Button(UTILS_MENU, UNAME='ABOUT_MENU'  $
       ,VALUE='about RealignGUI')
 
+  CTOOL_MENU_DAS = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU_DAS'  $
+      ,VALUE='Color Tool for DAS')
+
+  CTOOL_MENU_realign = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU_realign'  $
+      ,VALUE='Color Tool for realign data')
+
   Widget_Control, /REALIZE, MAIN_BASE
 
   ;disabled background buttons/draw/text/labels
-;  Widget_Control, OPEN_MAPPED_HISTOGRAM, sensitive=0
+  Widget_Control, draw_tube_pixels_slider, sensitive=0
+  Widget_Control, pixels_slider, sensitive=0
+  Widget_Control, pixelid_new_counts_value, sensitive=0
+  Widget_Control, pixelid_new_counts_reset, sensitive=0
+  Widget_Control, remove_tube_group, sensitive=0
+  Widget_Control, RESET_ALL_button, sensitive=0
+  Widget_Control, SAVE_CHANGES_button, sensitive=0
+  Widget_Control, SAVE_PIXELID_changes_button, sensitive=0
+  Widget_Control, tube0_left_minus, sensitive=0
+  Widget_Control, tube0_left_text, sensitive=0  
+  Widget_Control, tube0_left_plus, sensitive=0
+  Widget_Control, tube0_right_minus, sensitive=0
+  Widget_Control, tube0_right_text, sensitive=0
+  Widget_Control, tube0_right_plus, sensitive=0
+  Widget_Control, center_minus, sensitive=0
+  Widget_Control, center_text, sensitive=0
+  Widget_Control, center_plus, sensitive=0
+  Widget_Control, tube1_left_minus, sensitive=0
+  Widget_Control, tube1_left_text, sensitive=0
+  Widget_Control, tube1_left_plus, sensitive=0
+  Widget_Control, tube1_right_minus, sensitive=0
+  Widget_Control, tube1_right_text, sensitive=0
+  Widget_Control, tube1_right_plus, sensitive=0
+  Widget_Control, plot_mapped_data, sensitive=0  
+  Widget_Control, output_new_histo_mapped_file, sensitive=0
+
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
