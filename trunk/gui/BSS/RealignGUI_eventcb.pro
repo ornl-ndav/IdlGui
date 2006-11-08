@@ -95,7 +95,6 @@ end
 
 
 
-
 ;--------------------------------------------------------------------------------
 pro OPEN_MAPPED_HISTOGRAM, Event
 
@@ -164,6 +163,7 @@ PLOT_HISTO_FILE, Event
 
 ;enable background buttons/draw/text/labels
 id_list=['reset_all_button',$
+         'pixelid_new_counts_reset',$
          'save_changes_button',$
          'save_pixelid_changes_button',$
          'draw_tube_pixels_slider',$
@@ -231,21 +231,8 @@ endfor
 
 (*(*global).tube_removed) = removed_tube
 
-removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
-
-first_update = 0
-for i=0,((*global).Ny_scat-1) do begin
-    if (removed_tube[i] EQ 1) then begin
-        text = strcompress(i,/remove_all)+ ": OFF"
-        if (first_update EQ 0) then begin
-            widget_control, removed_tube_text_id, set_value=text        
-            first_update=1
-        endif else begin
-            widget_control, removed_tube_text_id, set_value=text,/append
-        endelse
-    endif
-endfor
-
+;reinitialize DATA_REMOVED box
+refresh_data_removed_text, Event
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = " Opening/Reading file.......... "
@@ -694,7 +681,7 @@ end
 
 
 
-
+;----------------------------------------------------------------
 pro plot_realign_data, Event
 
 ;get global structure
@@ -903,22 +890,7 @@ endelse
 (*(*global).tube_removed) = tube_removed_array
 
 ;update text box of tubes removed
-
-removed_tube_text_id = widget_info(Event.top, $
-                                   FIND_BY_UNAME="removed_tube_text")
-
-first_update = 0
-for i=0,((*global).Ny_scat-1) do begin
-    if (tube_removed_array[i] EQ 1) then begin
-        text = strcompress(i,/remove_all)+ ": OFF"
-        if (first_update EQ 0) then begin
-            widget_control, removed_tube_text_id, set_value=text        
-            first_update=1
-        endif else begin
-            widget_control, removed_tube_text_id, set_value=text,/append
-        endelse
-    endif
-endfor
+refresh_data_removed_text, Event
 
 (*global).new_tube = 1 
 display_ix, Event, tube_number
@@ -929,6 +901,8 @@ end
 
 
 
+
+;-------------------------------------------------------------------
 pro save_pixelid_changes, Event
 
 ;get global structure
@@ -950,18 +924,90 @@ widget_control, slider_id, get_value=tube_number
 
 new_pixel_counts = float(new_pixel_counts[0])
 
-image_2d_1[pixel_number,tube_number]=new_pixel_counts
-(*(*global).image_2d_1)=image_2d_1
+;add this pixel to the list of pixels to removed
+if (new_pixel_counts NE image_2d_1[pixel_number,tube_number]) then begin
+    image_2d_1[pixel_number,tube_number]=new_pixel_counts
+    (*(*global).image_2d_1)=image_2d_1
+
+    
+    removed_tube_text_id = widget_info(Event.top, $
+                                       FIND_BY_UNAME="removed_tube_text")
+
+    
+    text = "P" + strcompress(pixel_number,/remove_all)+ ": OFF"
+    widget_control, removed_tube_text_id, set_value=text,/append
+
+endif
 
 pixelid_counts_value_id = widget_info(Event.top, $
                                       find_by_uname='pixelid_counts_value')
 text = strcompress(new_pixel_counts, /remove_all)
 widget_control, pixelid_counts_value_id, set_value=text
 
+
+
 (*global).new_tube = 1 
 display_ix, Event, tube_number
 
 end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;-------------------------------------------------------------------------
+pro refresh_data_removed_text, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+removed_tube = (*(*global).tube_removed)
+
+removed_tube_text_id = widget_info(Event.top, $
+                                   FIND_BY_UNAME="removed_tube_text")
+first_update = 0
+for i=0,((*global).Ny_scat-1) do begin
+    if (removed_tube[i] EQ 1) then begin
+        text = "T" + strcompress(i,/remove_all)+ ": OFF"
+        if (first_update EQ 0) then begin
+            widget_control, removed_tube_text_id, set_value=text        
+            first_update=1
+        endif else begin
+            widget_control, removed_tube_text_id, set_value=text,/append
+        endelse
+    endif
+endfor
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ;--------------------------------------------------------------------------
@@ -975,27 +1021,16 @@ widget_control,id,get_uvalue=global
 tube_to_remove=[indgen(4)+28,indgen(4)+60]
 size=size(tube_to_remove)
 removed_tube=lonarr((*global).Ny_scat)
-
+print, "tube to removed are: "
 for i=0, (size[1]-1) do begin
+    print, tube_to_remove[i]
     removed_tube[tube_to_remove[i]]=1
 endfor
 
 (*(*global).tube_removed) = removed_tube
 
-removed_tube_text_id = widget_info(Event.top, $
-                                   FIND_BY_UNAME="removed_tube_text")
-first_update = 0
-for i=0,((*global).Ny_scat-1) do begin
-    if (removed_tube[i] EQ 1) then begin
-        text = strcompress(i,/remove_all)+ ": OFF"
-        if (first_update EQ 0) then begin
-            widget_control, removed_tube_text_id, set_value=text        
-            first_update=1
-        endif else begin
-            widget_control, removed_tube_text_id, set_value=text,/append
-        endelse
-    endif
-endfor
+;reinitialize DATA_REMOVED box
+refresh_data_removed_text, Event
 
 ;reset pixelid counts
 image_2d_1_untouched = (*(*global).image_2d_1_untouched)
@@ -1033,6 +1068,17 @@ end
 
 
 
+function give_real_pixelid_value, pixel_number, tube_number
+
+print, "pixel_number is: ", pixel_number
+print, "tube_number is: ", tube_number
+
+return, real_pixelid
+
+end
+
+
+
 
 ;-------------------------------------------------------------------------
 pro pixelid_new_counts_reset, Event
@@ -1043,6 +1089,16 @@ widget_control,id,get_uvalue=global
 
 image_2d_1 = (*(*global).image_2d_1)
 image_2d_1_untouched = (*(*global).image_2d_1_untouched)
+tube_removed = (*(*global).tube_removed)
+pixel_removed = (*(*global).pixel_removed)
+
+;refresh DATA_REMOVED (that will removed the current pixel_number
+refresh_data_removed_text, Event
+
+;update list of PIXELID_removed
+
+
+
 
 ;get tube_number
 tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
@@ -1057,7 +1113,7 @@ image_2d_1[pixel_number,tube_number]=image_2d_1_untouched[pixel_number,tube_numb
 
 get_pixels_infos, Event
 
-;fill pixelids counts in right table
+;fill pixelids counts in the table on the right
 pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
 text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
 widget_control, pixelIDs_info_id, set_value=text
