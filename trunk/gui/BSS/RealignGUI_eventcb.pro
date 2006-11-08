@@ -47,6 +47,55 @@ end
 
 
 
+;--------------------------------------------------------------------------
+; \brief 
+;
+; \argument Event (INPUT)
+;--------------------------------------------------------------------------
+pro CTOOL_DAS, Event
+
+	;get global structure
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	widget_control,id,get_uvalue=global
+
+	xloadct,/MODAL,GROUP=id
+
+	plot_das,event
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+;--------------------------------------------------------------------------
+; \brief 
+;
+; \argument Event (INPUT)
+;--------------------------------------------------------------------------
+pro CTOOL_realign, Event
+
+	;get global structure
+	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+	widget_control,id,get_uvalue=global
+
+	xloadct,/MODAL,GROUP=id
+
+        plot_realign_data, Event
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
 ;--------------------------------------------------------------------------------
 pro OPEN_MAPPED_HISTOGRAM, Event
 
@@ -112,6 +161,37 @@ endif else begin
 endelse
 
 PLOT_HISTO_FILE, Event
+
+;enable background buttons/draw/text/labels
+id_list=['reset_all_button',$
+         'save_changes_button',$
+         'save_pixelid_changes_button',$
+         'draw_tube_pixels_slider',$
+         'pixels_slider',$
+         'pixelid_new_counts_value',$
+         'remove_tube_group',$
+         'tube0_left_minus',$
+         'tube0_left_text',$
+         'tube0_left_plus',$
+         'tube0_right_minus',$
+         'tube0_right_text',$
+         'tube0_right_plus',$
+         'center_minus',$
+         'center_text',$
+         'center_plus',$
+         'tube1_left_minus',$
+         'tube1_left_text',$
+         'tube1_left_plus',$
+         'tube1_right_minus',$
+         'tube1_right_text',$
+         'tube1_right_plus',$
+         'plot_mapped_data']
+
+id_list_size = size(id_list)
+for i=0,(id_list_size[1]-1) do begin
+    id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+    Widget_Control, id, sensitive=1
+endfor
 
 endif else begin
 
@@ -253,6 +333,78 @@ for i=1,127 do begin
     widget_control, pixelIDs_info_id, set_value=text, /append
 endfor
 
+plot_das, Event
+
+;plot on DAS'plot an indication of the position of the tube
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+x_coeff = (*global).x_coeff
+y_coeff = (*global).y_coeff
+for i=0, 63 do begin
+    plots, i*x_coeff, 0, /device, color=200
+    plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
+endfor
+
+plot_tube_box, Event, 0
+
+draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+erase
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+;--------------------------------------------------------------------------
+pro plot_das, EVEnt
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;color
+DEVICE, DECOMPOSED = 0
+;loadct,5
+
+;plot DAS'plot
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+
+image_2d_1 = (*(*global).image_2d_1)
+
+xoff=5
+yoff=5
+x_size=400
+y_size=100
+New_Nx = 530
+New_Ny = 200
+image_2d_1 = transpose(image_2d_1)
+tvimg = congrid(image_2d_1,New_Nx,New_Ny,/interp)
+tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
+
+DEVICE, DECOMPOSED = 1
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+;--------------------------------------------------------------------------
+pro plot_tube_box, Event, tube_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;color
 DEVICE, DECOMPOSED = 0
 loadct,5
@@ -268,19 +420,31 @@ x_size=400
 y_size=100
 New_Nx = 530
 New_Ny = 200
+image_2d_1 =(*(*global).image_2d_1)
 image_2d_1 = transpose(image_2d_1)
 tvimg = congrid(image_2d_1,New_Nx,New_Ny,/interp)
 tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 
 DEVICE, DECOMPOSED = 1
 
+;plot on DAS'plot
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+x_coeff = (*global).x_coeff
+y_coeff = (*global).y_coeff
+plots, tube_number*x_coeff, 0, /device, color=200
+plots, tube_number*x_coeff, 64*y_coeff, /device, /continue, color=200
+
+
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-;--------------------------------------------------------------------------------
+
+;--------------------------------------------------------------------------
 pro calculate_ix, Event
 
 ;get global structure
@@ -372,6 +536,10 @@ pro plot_mapped_data, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text="Plotting mapped data....."
+widget_control, view_info, set_value=text,/append
+
 i1=(*(*global).i1)
 i2=(*(*global).i2)
 i3=(*(*global).i3)
@@ -406,6 +574,17 @@ length_tube1 = t3 - t2
 remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
 
 tube_removed = (*(*global).tube_removed)
+
+CATCH, error_status
+
+if (error_status NE 0) then begin
+
+    text="ERROR !"
+    widget_control, view_info, set_value=text,/append
+    text="Warning ! Objects plotted are messier than they appear!"
+    widget_control, view_info, set_value=text,/append
+
+endif else begin
 
 for i=0,Ntubes-1 do begin
 
@@ -501,6 +680,33 @@ for i=0,Ntubes-1 do begin
 
 endfor
 
+(*(*global).remap) = remap
+plot_realign_data, Event
+
+endelse
+
+
+end
+
+
+
+
+
+
+
+
+pro plot_realign_data, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+Ntubes = (*global).Ny_scat
+Npix = (*global).Nx
+remap = (*(*global).remap)
+
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
@@ -516,7 +722,7 @@ tmp1 = transpose(tmp1)
 ;endif else begin
 
 DEVICE, DECOMPOSED = 0
-loadct,5
+;loadct,5
 
 xoff=5
 yoff=5
@@ -530,6 +736,13 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 ;endelse
 
 DEVICE, DECOMPOSED = 1
+
+text="DONE"
+widget_control, view_info, set_value=text,/append
+
+id = widget_info(Event.top,FIND_BY_UNAME='output_new_histo_mapped_file')
+Widget_Control, id, sensitive=1
+
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -578,7 +791,8 @@ tube_number = i
 if ((*global).new_tube EQ 1) then begin
 
     (*global).new_tube = 0
-    pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+    pixelIDs_info_id = widget_info(Event.top, $
+                                   FIND_BY_UNAME='pixels_counts_values')
     text = ' 0: ' + strcompress(image_2d_1[0,tube_number],/remove_all)
     widget_control, pixelIDs_info_id, set_value=text
     for i=1,127 do begin
@@ -602,12 +816,12 @@ widget_control, indx3_id, set_value=strcompress(indx3,/remove_all)
 widget_control, indx4_id, set_value=strcompress(indx4,/remove_all)
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-;--------------------------------------------------------------------------------
+;----------------------------------------------------------------------------
 pro plot_tubes_pixels, Event
 
 ;get global structure
@@ -645,18 +859,19 @@ pixel_number = 0
 pixel_value = strcompress(pixel_number,/remove_all)
 widget_control, pixel_info_id, set_value=pixel_value
 
-
+my_tube_number = tube_number
 (*global).new_tube = 1
 display_ix, Event, tube_number
 
+plot_tube_box, Event, my_tube_number
+
+
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-
-
-;--------------------------------------------------------------------------------
+;----------------------------------------------------------------------------
 pro save_changes, Event
 
 ;get global structure
@@ -689,7 +904,8 @@ endelse
 
 ;update text box of tubes removed
 
-removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
+removed_tube_text_id = widget_info(Event.top, $
+                                   FIND_BY_UNAME="removed_tube_text")
 
 first_update = 0
 for i=0,((*global).Ny_scat-1) do begin
@@ -708,7 +924,7 @@ endfor
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
@@ -725,7 +941,8 @@ image_2d_1 = (*(*global).image_2d_1)
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
 
-new_pixel_counts_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_value')
+new_pixel_counts_id = widget_info(Event.top, $
+                                  find_by_uname='pixelid_new_counts_value')
 widget_control, new_pixel_counts_id, get_value=new_pixel_counts
 
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
@@ -736,7 +953,8 @@ new_pixel_counts = float(new_pixel_counts[0])
 image_2d_1[pixel_number,tube_number]=new_pixel_counts
 (*(*global).image_2d_1)=image_2d_1
 
-pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
+pixelid_counts_value_id = widget_info(Event.top, $
+                                      find_by_uname='pixelid_counts_value')
 text = strcompress(new_pixel_counts, /remove_all)
 widget_control, pixelid_counts_value_id, set_value=text
 
@@ -746,7 +964,7 @@ display_ix, Event, tube_number
 end
 
 
-;--------------------------------------------------------------------------------
+;--------------------------------------------------------------------------
 pro reset_all_changes, Event
 
 ;get global structure
@@ -764,7 +982,8 @@ endfor
 
 (*(*global).tube_removed) = removed_tube
 
-removed_tube_text_id = widget_info(Event.top, FIND_BY_UNAME="removed_tube_text")
+removed_tube_text_id = widget_info(Event.top, $
+                                   FIND_BY_UNAME="removed_tube_text")
 first_update = 0
 for i=0,((*global).Ny_scat-1) do begin
     if (removed_tube[i] EQ 1) then begin
@@ -809,14 +1028,13 @@ endfor
 
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-
-;--------------------------------------------------------------------------------
+;-------------------------------------------------------------------------
 pro pixelid_new_counts_reset, Event
 
 ;get global structure
@@ -849,14 +1067,13 @@ for i=1,127 do begin
 endfor
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-
-;--------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro get_pixels_infos, Event
 
 ;get global structure
@@ -870,16 +1087,19 @@ pixel_info_id = widget_info(Event.top, find_by_uname='pixel_value')
 pixel_value = strcompress(pixel_number,/remove_all)
 widget_control, pixel_info_id, set_value=pixel_value
 
-tube_slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+tube_slider_id = widget_info(Event.top, $
+                             find_by_uname='draw_tube_pixels_slider')
 widget_control, tube_slider_id, get_value=tube_number
 
 ;update number of counts for that pixel
 image_2d_1 = (*(*global).image_2d_1)
 
-pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
+pixelid_counts_value_id = widget_info(Event.top, $
+                                      find_by_uname='pixelid_counts_value')
 value = image_2d_1[pixel_number,tube_number]
 
-widget_control, pixelid_counts_value_id, set_value = strcompress(value,/remove_all)
+widget_control, pixelid_counts_value_id, $
+  set_value = strcompress(value,/remove_all)
 
 draw_info= widget_info(Event.top, find_by_uname='draw_tube_pixels_draw')
 widget_control, draw_info, get_value=draw_id
@@ -887,16 +1107,17 @@ wset, draw_id
 
 display_ix, Event, tube_number
 
-plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,color=(0*256)+(256*0)+(150*256),thick=3
+plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,$
+  color=(0*256)+(256*0)+(150*256),thick=3
 
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-;--------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro move_tube_edges, Event, tube_side, left_right, minus_plus
 
 ;get global structure
@@ -919,7 +1140,8 @@ case tube_side of
             endelse
             (*(*global).i1)=i1
             id=widget_info(Event.top,find_by_uname="tube0_left_text")
-            widget_control, id, set_value=strcompress(i1[tube_number],/remove_all)
+            widget_control, id, set_value=strcompress(i1[tube_number],$
+                                                      /remove_all)
         endif else begin
             i2=(*(*global).i2)
             if (minus_plus EQ "minus") then begin
@@ -929,7 +1151,8 @@ case tube_side of
             endelse
             (*(*global).i2)=i2
             id=widget_info(Event.top,find_by_uname="tube0_right_text")
-            widget_control, id, set_value=strcompress(i2[tube_number],/remove_all)
+            widget_control, id, set_value=strcompress(i2[tube_number],$
+                                                      /remove_all)
         endelse
     end
     1: begin
@@ -942,7 +1165,8 @@ case tube_side of
             endelse
             (*(*global).i3)=i3
             id=widget_info(Event.top,find_by_uname="tube1_left_text")
-            widget_control, id, set_value=strcompress(i3[tube_number],/remove_all)
+            widget_control, id, set_value=strcompress(i3[tube_number],$
+                                                      /remove_all)
         endif else begin
             i4=(*(*global).i4)
             if (minus_plus EQ "minus") then begin
@@ -954,7 +1178,8 @@ case tube_side of
             endelse
             (*(*global).i4)=i4
             id=widget_info(Event.top,find_by_uname="tube1_right_text")
-            widget_control, id, set_value=strcompress(i4[tube_number],/remove_all)
+            widget_control, id, set_value=strcompress(i4[tube_number],$
+                                                      /remove_all)
         endelse
     end
     "center": begin
@@ -966,7 +1191,8 @@ case tube_side of
             endelse
             (*(*global).i5)=i5
             id=widget_info(Event.top,find_by_uname="center_text")
-            widget_control, id, set_value=strcompress(i5[tube_number],/remove_all)
+            widget_control, id, set_value=strcompress(i5[tube_number],$
+                                                      /remove_all)
         end
 endcase
 
@@ -982,10 +1208,10 @@ end
 ;--------------------------------------------------------------------------------
 pro ABOUT_MENU, Event
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = "" 
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "**** plotBSS (v.090506)****"
+text = "**** realignBSS (v.110806)****"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = ""
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
