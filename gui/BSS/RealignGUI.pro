@@ -513,7 +513,7 @@ infos_frame = widget_label(pixelID_info_base,$
                             yoffset=15,$
                             scr_xsize=25,$
                             scr_ysize=20,$
-                            value='0',$
+                            value='63',$
                             /align_left,$
                             uname='pixel_value')
 
