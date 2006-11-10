@@ -254,7 +254,8 @@ id_list=['reset_all_button',$
          'tube1_right_minus',$
          'tube1_right_text',$
          'tube1_right_plus',$
-         'plot_mapped_data']
+         'plot_mapped_data',$
+         'CTOOL_MENU_DAS']
 
 id_list_size = size(id_list)
 for i=0,(id_list_size[1]-1) do begin
@@ -408,6 +409,9 @@ draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
 erase
+
+ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
+widget_control, ctool_id, sensitive=0
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -631,7 +635,8 @@ remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
 
 tube_removed = (*(*global).tube_removed)
 
-CATCH, error_status
+error_status = 0 ;remove_me
+;CATCH, error_status
 
 if (error_status NE 0) then begin
 
@@ -646,13 +651,14 @@ for i=0,Ntubes-1 do begin
 
     if (tube_removed[i] EQ 0) then begin
 
-        tube_pair = image_2d_1[*,i] ; - smooth(0.75*image_2d_1[*,i],5)
+        tube_pair = image_2d_1[*,i]
         tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
+        
         indx_cntr = 64+Npad     ;74            
         
 ;cntr offset relative to cntr
         cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
-        
+
 ;dial out center offset
         tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
         
@@ -660,38 +666,38 @@ for i=0,Ntubes-1 do begin
         
 ;remap tube end data
         len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
-        
+
 ;remap (rebin) tube0 data 
 ;size of DAS_length of first tube
         d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
         
 ;remap (rebin) first part of tube (less than i2) (junk)
         d0_0 = findgen(i1[i])/(i1[i])*t0
-        
+
 ;remap (rebin) tube end data (junk)
         d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
-        
 ;new tube remapped
         tube0_new = [d0_0,d0,d0_1]
-        
-        mn0 = min(d0)           ;2
-        mx0 = min([max(d0),Npix-1]) 
-        del0 = mx0 - mn0 + 1
-        rindx1 = indgen(del0-1)+mn0
-        
-        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp)
-        
+        mn0 = min(d0)                     ;always 2
+        mx0 = min([max(d0),Npix-1])       ;max(d0) or 127 
+        del0 = 59
+;        rindx1 = indgen(del0-1)+mn0
+        rindx1 = indgen(del0)+mn0
+;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp) ;steve
+;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)   ;jean
+        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
         remap[rindx1,i] = dat   ;new array of the middle section
-        
 ;remap endpoints and middle section
 ;one end
-        
-        mn0 = min(d0_0)         ; 0
-        mx0 = min([max(d0_0),Npix-1])
+        mn0 = min(d0_0)                   ; always 0
+        mx0 = min([max(d0_0),Npix-1])     ; always max(d0_0)
         del0 = fix(mx0 - mn0) + 1
-        rindx0 = indgen(del0)+mn0
+
+;        rindx0 = indgen(del0)+mn0
         rindx0 = indgen(2)
+
         dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+        
         scl = float(2)/i1[i]
         remap[rindx0,i] = dat * scl
         
@@ -731,7 +737,7 @@ for i=0,Ntubes-1 do begin
         rindx1 = indgen(del1)+mn1
         dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
         remap[rindx1,i] = dat
-        
+
     endif
 
 endfor
@@ -799,6 +805,8 @@ widget_control, view_info, set_value=text,/append
 id = widget_info(Event.top,FIND_BY_UNAME='output_new_histo_mapped_file')
 Widget_Control, id, sensitive=1
 
+ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
+widget_control, ctool_id, sensitive=1
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -900,11 +908,6 @@ pixel_value_info_id = widget_info(Event.top, find_by_uname='pixel_value')
 real_pixelid_text = strcompress(real_pixelid,/remove_all)
 widget_control, pixel_value_info_id, set_value=real_pixelid_text
 
-
-
-
-
-
 tube_number_info_id = widget_info(Event.top, find_by_uname='tube_value')
 text = strcompress(tube_number,/remove_all)
 widget_control, tube_number_info_id, $
@@ -925,10 +928,8 @@ widget_control, pixel_slider_id, set_value=initialization_pixel
 
 my_tube_number = tube_number
 (*global).new_tube = 1
-display_ix, Event, tube_number
-
 plot_tube_box, Event, my_tube_number
-
+display_ix, Event, tube_number
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -1005,7 +1006,6 @@ new_pixel_counts = float(new_pixel_counts[0])
 
 real_pixelid =  give_real_pixelid_value(Event, pixel_number, tube_number)
 update_list_of_pixelid_to_removed, Event,real_pixelid, 1
-print, "real_pixelid to removed: ", real_pixelid  ;REMOVE_ME
 
 ;add this pixel to the list of pixels to removed
 if (new_pixel_counts NE image_2d_1[pixel_number,tube_number]) then begin
@@ -1090,7 +1090,7 @@ pixel_removed = (*(*global).pixel_removed)
 removed_tube_text_id = widget_info(Event.top, find_by_uname="removed_tube_text")
 
 pixel_to_removed_indeces = where(pixel_removed GT 0, nbr)
-print, "nbr: ", nbr ;REMOVE_ME
+
 if (nbr GT 0) then begin
     for i=0,nbr-1 do begin
         text = "Pix:"+strcompress(pixel_to_removed_indeces[i],/remove_all)
@@ -1449,7 +1449,6 @@ WIDGET_CONTROL, text_id, GET_VALUE=character_id
 ;check 3 characters id
 ucams=(*global).ucams
 
-print, ucams ;REMOVE_ME
 
 name = ''
 case ucams of
@@ -1525,7 +1524,8 @@ working_path = dialog_pickfile(path=working_path,/directory)
 name = (*global).name
 
 welcome = "Welcome " + strcompress(name,/remove_all)
-welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+welcome += "  (working directory: " + strcompress(working_path,/remove_all) + $
+  ")"	
 view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, view_id, base_set_title= welcome	
 
@@ -1539,8 +1539,57 @@ view_info = widget_info(Event.top,FIND_BY_UNAME="OUTPUT_PATH_NAME")
 WIDGET_CONTROL, view_info, set_value=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
+;--------------------------------------
+pro output_new_histo_mapped_file, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file = (*global).file
+working_path = (*global).working_path
+
+print, "file is: ", file
+print, "working path: ", working_path
+
+;determine name of output file according to input file
+
+
+;    tmp = byte(file)
+;    Nbytes = n_elements(tmp)
+;    if Nbytes GT 5 then begin
+;        tmp = tmp[0:Nbytes-1-4]
+;        outfile = string([tmp,byte('_aligned_1.dat')])
+;        tube_file = string([tmp,byte('_tube_points.txt')])
+;    endif else begin
+;        outfile = 'tmp.dat'
+;        tube_file = 'tube_points.txt'
+;        print,'Using default output filename: ',outfile
+;    endelse
+;    
+;;write out aligned, mapped data
+;    openw,u1,outfile,/get
+;    writeu,u1,align
+;    
+;;close it up...
+;    close,u1
+;    free_lun,u1
+;    
+;;now write out tube endpoints data
+;    openw,u2,tube_file,/get
+;    for i=0,Ntubes-1 do begin
+;        printf,u2,format='(5I8)',i1[i],i2[i],i5[i],i3[i],i4[i]
+;    endfor                      ;i
+;    close,u2
+;    free_lun,u2
+;    
+;    
+;endif                           ;dosave
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

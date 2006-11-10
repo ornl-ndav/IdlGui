@@ -163,6 +163,19 @@ pro MAIN_BASE_event, Event
         CTOOL_realign, Event
     end
 
+;Widget to output histo_mapped_realigned data
+    Widget_Info(wWidget, FIND_BY_UNAME='output_new_histo_mapped_file'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        output_new_histo_mapped_file, Event
+    end
+
+
+
+
+
+
+
+
 
 
 
@@ -179,19 +192,6 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         IDENTIFICATION_GO_cb, Event
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     ;output path button
     Widget_Info(wWidget, FIND_BY_UNAME='OUTPUT_PATH'): begin
@@ -1141,6 +1141,8 @@ map_plot_frame = widget_label(map_plot_base,$
   Widget_Control, tube1_right_plus, sensitive=0
   Widget_Control, plot_mapped_data, sensitive=0  
   Widget_Control, output_new_histo_mapped_file, sensitive=0
+  Widget_Control, CTOOL_MENU_DAS, sensitive=0
+  Widget_Control, CTOOL_MENU_realign, sensitive=0
 
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
