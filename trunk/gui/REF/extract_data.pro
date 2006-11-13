@@ -1008,20 +1008,58 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
       	YOFFSET=605 ,SCR_XSIZE=plot_length,$
 	SCR_YSIZE=plot_height ,RETAIN=2)
 
-  VIEW_DRAW_Y_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_Y_REF_L',$
-	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, YOFFSET=2*draw_offset_y+plot_height,$
-	SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
 
-  VIEW_DRAW_SUM_Y_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_Y_REF_L',$
-	XOFFSET=420,$
-      	YOFFSET=2*draw_offset_y+plot_height,$
-	SCR_XSIZE=plot_height ,SCR_YSIZE=draw_y,RETAIN=2)
 
-  VIEW_DRAW_COUNTS_TOF_REF_L = Widget_Draw(MAIN_BASE,$
-	UNAME='VIEW_DRAW_COUNTS_TOF_REF_L',$
-	XOFFSET=2*draw_offset_x+draw_x+ctrl_x, $
-	YOFFSET=3*draw_offset_y+draw_y+plot_height, $
-	SCR_XSIZE= 590, SCR_YSIZE= 270, RETAIN=2)
+
+
+
+  big_TAB = WIDGET_TAB(MAIN_BASE, $
+	LOCATION=0,$
+	XOFFSET=2*draw_offset_x + draw_x + ctrl_x,$
+	YOFFSET=2*draw_offset_y + plot_height,$
+	SCR_XSIZE=580,$
+	SCR_YSIZE=300)
+
+  tab_1 = WIDGET_BASE(big_tab,$
+                      TITLE= "plots and infos",$
+                      SCR_XSIZE=580,$
+                      SCR_YSIZE=300)
+
+  VIEW_DRAW_Y_REF_L = Widget_Draw(tab_1, UNAME='VIEW_DRAW_Y_REF_L',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0,$
+                                  SCR_XSIZE=plot_height,$
+                                  SCR_YSIZE=draw_y,RETAIN=2)
+
+  VIEW_DRAW_SUM_Y_REF_L = Widget_Draw(tab_1, $
+                                      UNAME='VIEW_DRAW_SUM_Y_REF_L',$
+                                      XOFFSET=140,$
+                                      YOFFSET=0,$
+                                      SCR_XSIZE=plot_height,$
+                                      SCR_YSIZE=draw_y,RETAIN=2)
+  
+  GENERAL_INFOS_REF_L = widget_text(tab_1, $
+	UNAME='GENERAL_INFOS_REF_L',$
+	XOFFSET=280,$
+	YOFFSET= 0,$
+	SCR_XSIZE=300, $
+	SCR_YSIZE=280,$
+	/WRAP,$
+	/SCROLL)
+
+
+  tab_2 = WIDGET_BASE(big_tab,$
+                      TITLE= "Counts vs TOF",$
+                      SCR_XSIZE=580,$
+                      SCR_YSIZE=300)
+
+  VIEW_DRAW_COUNTS_TOF_REF_L = Widget_Draw(tab_2,$
+                                           UNAME='VIEW_DRAW_COUNTS_TOF_REF_L',$
+                                           XOFFSET=0,$
+                                           YOFFSET=0,$
+                                           SCR_XSIZE= 580, SCR_YSIZE= 270, RETAIN=2)
+  
+
 
   TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+95, $
 	YOFFSET=draw_offset_y+10, VALUE="microS")
@@ -1088,14 +1126,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
 	SCR_XSIZE=plot_height-5,$
 	SCR_YSIZE=27,FRAME=3, value="")
 
-  GENERAL_INFOS_REF_L = widget_text(MAIN_BASE, $
-	UNAME='GENERAL_INFOS_REF_L',$
-	XOFFSET=560,$
-	YOFFSET= 150,$
-	SCR_XSIZE=300, $
-	SCR_YSIZE=300,$
-	/WRAP,$
-	/SCROLL)
 
   FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
       ,VALUE='File')
