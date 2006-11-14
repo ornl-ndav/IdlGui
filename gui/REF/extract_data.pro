@@ -280,7 +280,7 @@ global = ptr_new({ $
 	filename_only		: '',$
 	nexus_filename		: '',$
 	nexus_filename_only	: '',$
-	nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
+	nexus_path		: '/SNS/REF_M/2006_2_4A_SCI/',$
 	filename_index		: 0, $
 	path			: '/SNSlocal/tmp/',$
 	default_output_path	: '/SNS/users/j35/',$
