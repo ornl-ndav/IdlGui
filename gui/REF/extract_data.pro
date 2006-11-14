@@ -909,6 +909,7 @@ global = ptr_new({ $
 	Ny			: 256L,$
 	Nx			: 304L,$
 	Ntof			: 0L,$
+        end_bin                 : 150000L,$
 	starting_id_x		: 0L,$
 	starting_id_y		: 0L,$
 	ending_id_x		: 0L,$
@@ -1061,119 +1062,139 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
   
 
 
-  TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+95, $
-	YOFFSET=draw_offset_y+10, VALUE="microS")
+  TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+120, $
+	YOFFSET=draw_offset_y+10, VALUE="uS")
 
-  TBIN_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_LABEL',XOFFSET=draw_offset_x+plot_length+15, YOFFSET=draw_offset_y+10, $
-	VALUE="Tbin:")
+  TBIN_LABEL = widget_label(MAIN_BASE, $
+                            UNAME='TBIN_LABEL',$
+                            XOFFSET=draw_offset_x+plot_length+12, $
+                            YOFFSET=draw_offset_y+10, $
+                            VALUE="End bin")
 
-  TBIN_TXT_REF_L = widget_text(MAIN_BASE, UNAME='TBIN_TXT_REF_L', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
-	SCR_XSIZE=45, SCR_YSIZE=30, /editable, VALUE='25')
+  TBIN_TXT_REF_L = widget_text(MAIN_BASE, $
+                               UNAME='TBIN_TXT_REF_L', $
+                               XOFFSET=draw_offset_x+plot_length+58, $
+                               YOFFSET=draw_offset_y+5,$
+                               SCR_XSIZE=60, $
+                               SCR_YSIZE=30, $
+                               /editable, VALUE='')
 
-  REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
-      YOFFSET=50,VALUE='Refresh Selection',SCR_XSIZE=126)
+  REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
+                                       UNAME='REFRESH_BUTTON_REF_L', $
+                                       XOFFSET=draw_offset_x+plot_length+12,$
+                                       YOFFSET=50,$
+                                       VALUE='Refresh Selection',$
+                                       SCR_XSIZE=126)
 
-  SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON_REF_L', XOFFSET=draw_offset_x+plot_length+12,$
-      YOFFSET=80,VALUE='Save I vs tof graph',SCR_XSIZE=126)
+  SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
+                                    UNAME='SAVE_BUTTON_REF_L', $
+                                    XOFFSET=draw_offset_x+plot_length+12,$
+                                    YOFFSET=80,$
+                                    VALUE='Save I vs tof graph',$
+                                    SCR_XSIZE=126)
 
-   FRAME1_REF_L = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
-	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
+   FRAME1_REF_L = widget_label(MAIN_BASE, $
+                               XOFFSET=2*draw_offset_x+plot_length,$
+                               YOFFSET=draw_offset_y,$
+                               SCR_XSIZE=plot_height-5, $
+                               SCR_YSIZE=plot_height-35,$
+                               FRAME=3, value="")
 
    cursor_y_offset = 117
-   ;x position of cursor in Infos mode	
+                                ;x position of cursor in Infos mode	
    CURSOR_X_LABEL_REF_L = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL_REF_L',$
-	XOFFSET=2*draw_offset_x+plot_length+5,$
-	YOFFSET=cursor_y_offset,$
-	value="x= ")
-
+                                       XOFFSET=2*draw_offset_x+plot_length+5,$
+                                       YOFFSET=cursor_y_offset,$
+                                       value="x= ")
+   
    CURSOR_X_POSITION_REF_L = Widget_label(MAIN_BASE,UNAME='CURSOR_X_POSITION_REF_L',$
-	XOFFSET=2*draw_offset_x+plot_length+15,$
-	YOFFSET=cursor_y_offset-5,$
-	VALUE="N/A",$
-	SCR_XSIZE=45,$
-	SCR_YSIZE=28)
-	
-   ;y position of cursor in Infos mode	
+                                          XOFFSET=2*draw_offset_x+plot_length+15,$
+                                          YOFFSET=cursor_y_offset-5,$
+                                          VALUE="N/A",$
+                                          SCR_XSIZE=45,$
+                                          SCR_YSIZE=28)
+   
+                                ;y position of cursor in Infos mode	
    CURSOR_Y_LABEL_REF_L= Widget_label(MAIN_BASE, UNAME='CURSOR_Y_LABEL_REF_L',$
-	XOFFSET=2*draw_offset_x+plot_length+65,$
-	YOFFSET=cursor_y_offset,$
-	value="y= ")
-
+                                      XOFFSET=2*draw_offset_x+plot_length+65,$
+                                      YOFFSET=cursor_y_offset,$
+                                      value="y= ")
+   
    CURSOR_Y_POSITION_REF_L = Widget_label(MAIN_BASE,UNAME='CURSOR_Y_POSITION_REF_L',$
-	XOFFSET=2*draw_offset_x+plot_length+75,$
-	YOFFSET=cursor_y_offset-5,$
-	VALUE="N/A",$
-	SCR_XSIZE=45,$
-	SCR_YSIZE=28)
-
- SELECTION_INFOS_REF_L = widget_label(MAIN_BASE,$
-	UNAME="SELECTION_INFOS_REF_L",$
-	XOFFSET=430,$
-	YOFFSET = 2, $
-	value="Information about selection")  
-
-  PIXELID_INFOS_REF_L = widget_text(MAIN_BASE, UNAME='PIXELID_INFOS_REF_L', $
-	XOFFSET= 420,$
-	YOFFSET= 10,$
-	SCR_XSIZE=438, $
-	SCR_YSIZE=130,$
-	/SCROLL)
-
-  ;frame3 of x= and y= for infos mode
-  FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
-	XOFFSET=2*draw_offset_x+plot_length,$
-	YOFFSET=110,$
-	SCR_XSIZE=plot_height-5,$
-	SCR_YSIZE=27,FRAME=3, value="")
-
-
-  FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
-      ,VALUE='File')
-
-  OPEN_HISTO_MAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_MAPPED_REF_L'  $
-      ,VALUE='Open Mapped Histogram')
-
-  OPEN_HISTO_UNMAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_UNMAPPED_REF_L'  $
-      ,VALUE='Open Histogram')
-
-  EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
-      ,VALUE='Exit')
-
-  UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
-      ,/MENU ,VALUE='Utils')
-
+                                          XOFFSET=2*draw_offset_x+plot_length+75,$
+                                          YOFFSET=cursor_y_offset-5,$
+                                          VALUE="N/A",$
+                                          SCR_XSIZE=45,$
+                                          SCR_YSIZE=28)
+   
+   SELECTION_INFOS_REF_L = widget_label(MAIN_BASE,$
+                                        UNAME="SELECTION_INFOS_REF_L",$
+                                        XOFFSET=430,$
+                                        YOFFSET = 2, $
+                                        value="Information about selection")  
+   
+   PIXELID_INFOS_REF_L = widget_text(MAIN_BASE, UNAME='PIXELID_INFOS_REF_L', $
+                                     XOFFSET= 420,$
+                                     YOFFSET= 10,$
+                                     SCR_XSIZE=438, $
+                                     SCR_YSIZE=130,$
+                                     /SCROLL)
+   
+                                ;frame3 of x= and y= for infos mode
+   FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
+                               XOFFSET=2*draw_offset_x+plot_length,$
+                               YOFFSET=110,$
+                               SCR_XSIZE=plot_height-5,$
+                               SCR_YSIZE=27,FRAME=3, value="")
+   
+   
+   FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
+                                   ,VALUE='File')
+   
+   OPEN_HISTO_MAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_MAPPED_REF_L'  $
+                                           ,VALUE='Open Mapped Histogram')
+   
+   OPEN_HISTO_UNMAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_UNMAPPED_REF_L'  $
+                                             ,VALUE='Open Histogram')
+   
+   EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
+                                   ,VALUE='Exit')
+   
+   UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
+                                    ,/MENU ,VALUE='Utils')
+   
 ;  DEFAULT_PATH = Widget_Button(UTILS_MENU, UNAME='DEFAULT_PATH'  $
 ;     ,VALUE='Path to working directory')
-
-  CTOOL_MENU_REF_L = Widget_Button(UTILS_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
-      ,VALUE='Color Tool')
-
-  DEFAULT_PATH = Widget_Button(UTILS_MENU_REF_L, UNAME='DEFAULT_PATH_REF_L'  $
-      ,VALUE='Path to working directory')
-
-  MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU_REF_L'  $
-      ,/MENU ,VALUE='mini ReflPak')
-
-  ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
-      ,VALUE='About')
-
-Widget_Control, /REALIZE, MAIN_BASE
-
-Widget_Control, SAVE_BUTTON_REF_L, sensitive=0
-Widget_Control, REFRESH_BUTTON_REF_L, sensitive=0
-
+   
+   CTOOL_MENU_REF_L = Widget_Button(UTILS_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
+                                    ,VALUE='Color Tool')
+   
+   DEFAULT_PATH = Widget_Button(UTILS_MENU_REF_L, UNAME='DEFAULT_PATH_REF_L'  $
+                                ,VALUE='Path to working directory')
+   
+   MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU_REF_L'  $
+                                            ,/MENU ,VALUE='mini ReflPak')
+   
+   ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
+                                    ,VALUE='About')
+   
+   Widget_Control, /REALIZE, MAIN_BASE
+   
+   Widget_Control, SAVE_BUTTON_REF_L, sensitive=0
+   Widget_Control, REFRESH_BUTTON_REF_L, sensitive=0
+   
 ;disabled before the user has been identified
-Widget_Control, CTOOL_MENU_REF_L, sensitive=0
-Widget_Control, OPEN_HISTO_MAPPED_REF_L, sensitive=0
-Widget_Control, OPEN_HISTO_UNMAPPED_REF_L, sensitive=0
-
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
+   Widget_Control, CTOOL_MENU_REF_L, sensitive=0
+   Widget_Control, OPEN_HISTO_MAPPED_REF_L, sensitive=0
+   Widget_Control, OPEN_HISTO_UNMAPPED_REF_L, sensitive=0
+   
+   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+   
 end
 
 ;
 ; Empty stub procedure used for autoloading.
 ;
 pro extract_data, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end

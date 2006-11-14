@@ -1843,6 +1843,7 @@ if file NE '' then begin
 	fs = fstat(u)
 	Nimg = Nx*Ny
 	Ntof = fs.size/(Nimg*4L)
+        print, "Ntof= ", Ntof
 	(*global).Ntof = Ntof	;set back in global structure
 
 	;using assoc
@@ -1974,8 +1975,24 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='TBIN_TXT_REF_L')
-WIDGET_CONTROL, view_info, GET_VALUE = TBIN
+WIDGET_CONTROL, view_info, GET_VALUE = end_bin_1
 
+tof=(*global).Ntof
+
+if (end_bin_1 EQ "" ) then begin
+
+    print, "here"
+    end_bin = (*global).end_bin
+    print, "end_bin= " ,end_bin
+endif else begin
+
+    print, "there"
+    end_bin = end_bin_1
+
+endelse
+
+TBIN = end_bin / tof
+print, "tbin= ", TBIN
 path = (*global).working_path
 counts_vs_tof = (*(*global).counts_vs_tof)
 index = (*global).histo_map_index
