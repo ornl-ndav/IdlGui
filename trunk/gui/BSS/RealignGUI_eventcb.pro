@@ -1,5 +1,70 @@
+;---------------------------------------------------------------------
+function get_file_name_only, file
+
+;to remove the part_to_remove part of the name
+part_to_remove="/"
+file_name = strsplit(file,part_to_remove,/extract,/regex,count=length) 
+file_name_only = file_name[length-1]
+
+return, file_name_only
+
+end
+
+
+
+
+;---------------------------------------------------------------------
+function modified_file_name, Event, file_name_only
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+remapped_file_name = (*global).remapped_file_name
+
+part_to_remove = '_mapped.dat'
+first_part_of_file_name = strsplit(file_name_only,$
+                                   part_to_remove,$
+                                   /extract,$
+                                   /regex,$
+                                   count=length)
+output_file_name = first_part_of_file_name[0] + '.dat'
+
+return, output_file_name
+
+end
+
+
+
+
 ;--------------------------------------------------------------------
 function give_real_pixelid_value, Event, pixel_number, tube_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+look_up = (*(*global).look_up)
+
+return, look_up[pixel_number,tube_number]
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;--------------------------------------------------------------------
+pro generate_look_up_table_of_real_pixelid_value, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -21,14 +86,14 @@ for tube=32,63 do begin
         look_up[pixel,tube]=(pixel+tube*128)
     endfor
     for pixel=64,127 do begin
-        look_up[pixel,tube]=(63-pixel)+tube*128
+        look_up[pixel,tube]=(191-pixel)+tube*128
     endfor
 endfor
 
-return, look_up[pixel_number,tube_number]
+(*(*global).look_up) = look_up
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 
@@ -55,19 +120,19 @@ endif else begin
 
 endelse
 
-print, "where(pixel_removed GT 0): ", where(pixel_removed GT 0)
-
-    (*(*global).pixel_removed) = pixel_removed
+(*(*global).pixel_removed) = pixel_removed
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
 
-;----------------------------------------------------------------------------
+
+
+
+;--------------------------------------------------------------------
 function get_tlb,wWidget
 
 id = wWidget
@@ -86,16 +151,21 @@ endwhile
 return,tlb
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;----------------------------------------------------------------------------
+
+
+;--------------------------------------------------------------------
 pro RealignGUI_eventcb
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
 
 
 
@@ -112,7 +182,7 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 
@@ -132,7 +202,7 @@ pro CTOOL_DAS, Event
 	plot_das,event
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 
@@ -155,7 +225,7 @@ pro CTOOL_realign, Event
         plot_realign_data, Event
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 
@@ -177,10 +247,14 @@ tube_removed = lonarr((*global).Ny_scat)
 OPEN_FILE, Event
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-;--------------------------------------------------------------------------------
+
+
+
+
+
+;--------------------------------------------------------------------
 pro OPEN_FILE, Event
 
 ;indicate initialization with hourglass icon
@@ -198,7 +272,9 @@ endif else begin
    path = (*global).working_path
 endelse
 
-path = "/SNS/users/j35/" ;REMOVE_ME
+path = "/SNSlocal/users/j35/" ;REMOVE_ME
+(*global).working_path = path
+
 file = dialog_pickfile(/must_exist,$
 	title="Select a histogram file for BSS",$
 	filter= (*global).filter_histo,$
@@ -263,6 +339,8 @@ for i=0,(id_list_size[1]-1) do begin
     Widget_Control, id, sensitive=1
 endfor
 
+generate_look_up_table_of_real_pixelid_value, Event
+
 endif else begin
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
@@ -275,7 +353,9 @@ endelse
 widget_control,hourglass=0
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -414,7 +494,11 @@ ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
 
 
 
@@ -451,7 +535,9 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 DEVICE, DECOMPOSED = 1
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -498,7 +584,10 @@ plots, tube_number*x_coeff, 64*y_coeff, /device, /continue, color=200
 
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
 
 
 
@@ -585,7 +674,13 @@ endfor
 (*(*global).len2) = len2
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
 
 
 
@@ -747,7 +842,6 @@ plot_realign_data, Event
 
 endelse
 
-
 end
 
 
@@ -768,6 +862,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 Ntubes = (*global).Ny_scat
 Npix = (*global).Nx
 remap = (*(*global).remap)
+
 
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
@@ -809,7 +904,9 @@ ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=1
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -860,7 +957,8 @@ if ((*global).new_tube EQ 1) then begin
     text = ' 0: ' + strcompress(image_2d_1[0,tube_number],/remove_all)
     widget_control, pixelIDs_info_id, set_value=text
     for i=1,127 do begin
-        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,tube_number],/remove_all)
+        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,tube_number],$
+                                                   /remove_all)
         widget_control, pixelIDs_info_id, set_value=text, /append
     endfor
 
@@ -880,7 +978,11 @@ widget_control, indx3_id, set_value=strcompress(indx3,/remove_all)
 widget_control, indx4_id, set_value=strcompress(indx4,/remove_all)
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
 
 
 
@@ -932,7 +1034,12 @@ plot_tube_box, Event, my_tube_number
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
 
 
 
@@ -976,13 +1083,14 @@ refresh_pixel_removed_text, Event
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;-------------------------------------------------------------------
+
+
+;-------------------------------------------------------------------------
 pro save_pixelid_changes, Event
 
 ;get global structure
@@ -1029,10 +1137,6 @@ widget_control, pixelid_counts_value_id, set_value=text
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
 
 
 
@@ -1072,12 +1176,15 @@ for i=0,((*global).Ny_scat-1) do begin
 endfor
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
+
+
+
+;-------------------------------------------------------------------------
 ;update list of pixels removed
 pro refresh_pixel_removed_text, Event
 
@@ -1122,9 +1229,9 @@ widget_control,id,get_uvalue=global
 tube_to_remove=[indgen(4)+28,indgen(4)+60]
 size=size(tube_to_remove)
 removed_tube=lonarr((*global).Ny_scat)
-print, "tube to removed are: "
+
+;tube to removed are
 for i=0, (size[1]-1) do begin
-    print, tube_to_remove[i]
     removed_tube[tube_to_remove[i]]=1
 endfor
 
@@ -1146,7 +1253,8 @@ widget_control, tube_slider_id, get_value=tube_number
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
 
-value_displayed = strcompress(image_2d_1_untouched[pixel_number,tube_number],/remove_all)
+value_displayed = strcompress(image_2d_1_untouched[pixel_number,tube_number],$
+                              /remove_all)
 
 pixelid_counts_value_id = widget_info(Event.top, find_by_uname='pixelid_counts_value')
 widget_control, pixelid_counts_value_id, set_value=value_displayed
@@ -1164,7 +1272,7 @@ endfor
 
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 
@@ -1224,7 +1332,10 @@ for i=1,127 do begin
 endfor
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
 
 
 
@@ -1269,9 +1380,10 @@ display_ix, Event, tube_number
 plots,[pixel_number,image_2d_1[pixel_number,tube_number]],psym=4,$
   color=(0*256)+(256*0)+(150*256),thick=3
 
-
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -1359,7 +1471,9 @@ endcase
 display_ix, Event, tube_number
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -1386,7 +1500,8 @@ text = " Jean Bilheux (bilheuxjm@ornl.gov)"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
 
 
 
@@ -1398,7 +1513,10 @@ pro EXIT_PROGRAM, Event
 widget_control,Event.top,/destroy
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
 
 
 
@@ -1429,13 +1547,15 @@ text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
 WIDGET_CONTROL, text_id, SET_VALUE=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;--------------------------------------------------------------------------------------------
+
+
+
+;------------------------------------------------------------------------------
 pro IDENTIFICATION_GO_cb, Event
 
 ;get global structure
@@ -1464,6 +1584,7 @@ endcase
 if (name EQ '') then begin
 
 ;put a message saying that it's an invalid 3 character id
+xb
 
    error_message = "INVALID UCAMS"
    view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
@@ -1477,7 +1598,8 @@ endif else begin
    working_path = (*global).working_path
 
    welcome = "Welcome " + strcompress(name,/remove_all)
-   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+   welcome += "  (working directory: " $
+     + strcompress(working_path,/remove_all) + ")"	
    view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
    WIDGET_CONTROL, view_id, base_set_title= welcome	
 
@@ -1504,13 +1626,14 @@ endif else begin
 endelse
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;----------------------------------------------------------------------------------------
+
+
+;-----------------------------------------------------
 pro OUTPUT_PATH_cb, Event 
 
 ;get global structure
@@ -1529,7 +1652,7 @@ welcome += "  (working directory: " + strcompress(working_path,/remove_all) + $
 view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, view_id, base_set_title= welcome	
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = "Working directory set to:"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = working_path
@@ -1539,46 +1662,188 @@ view_info = widget_info(Event.top,FIND_BY_UNAME="OUTPUT_PATH_NAME")
 WIDGET_CONTROL, view_info, set_value=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-;--------------------------------------
+
+
+
+
+;--------------------------------------------------------------------------
+function get_path_to_prenexus, run_number
+
+path_to_findnexus = "~/SVN/ASGIntegration/trunk/utilities/"
+cmd = path_to_findnexus + "findnexus -iBSS " + $
+  strcompress(run_number,/remove_all) + " --prenexus"
+spawn, cmd, path
+
+return, path
+
+end
+
+
+
+
+;-------------------------------------------------------------------------
+function isolate_run_number, file
+
+part_1 = '/'
+first_part = strsplit(file,part_1,/extract,/regex,count=length)
+
+part_2 = '_neutron_histo_mapped.dat'
+second_part = strsplit(first_part[length-1],part_2,/extract,/regex,count=length)
+
+part_3 = 'BSS_'
+run_number = strsplit(second_part[length-1],part_3,/extract,/regex)
+
+return, run_number[0]
+
+end
+
+
+
+
+
+
+
+;-------------------------------------------------------------------------
+pro create_output_folder, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file=(*global).file
+run_number = isolate_run_number(file)
+(*global).run_number = run_number
+
+; get path to NeXus file
+path_to_preNeXus = get_path_to_prenexus(run_number)
+
+;remove last part of path_name (to get only the path)
+string_to_remove = "BSS_"+strcompress(run_number,/remove_all)+"_cvinfo.xml"
+path=strsplit(path_to_preNeXus,string_to_remove,/regex,/extract)
+path_to_preNeXus=path[0]
+(*global).path_to_preNeXus = path_to_preNeXus
+
+;get proposal number
+proposal_number_array=strsplit(path_to_preNeXus,'/',/regex,/extract)
+proposal_number = proposal_number_array[2]
+(*global).proposal_number = proposal_number
+
+; create inst_run# folder into own space
+working_path = (*global).working_path
+folder_to_create = "BSS/" + proposal_number + "/" + $
+  strcompress(run_number,/remove_all) 
+
+(*global).path_up_to_proposal_number = working_path + folder_to_create
+
+folder_to_create += "/preNeXus"
+
+full_folder_name_to_create = working_path + folder_to_create
+(*global).full_output_folder_name  = full_folder_name_to_create
+cmd_check = "ls -d " + full_folder_name_to_create
+spawn, cmd_check, listening
+
+if (listening NE '') then begin
+;remove it
+    cmd_remove = 'rm -r '+ full_folder_name_to_create
+    spawn, cmd_remove
+endif
+
+cmd = "mkdir -p " + full_folder_name_to_create
+spawn, cmd
+
+end
+
+
+
+
+
+
+;--------------------------------------------------------------------------
 pro output_new_histo_mapped_file, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-file = (*global).file
-working_path = (*global).working_path
-
-print, "file is: ", file
-print, "working path: ", working_path
-
 ;determine name of output file according to input file
+file = (*global).file
+file_name_only = get_file_name_only(file)
+working_path = (*global).working_path
+;output_file_name = modified_file_name(Event, file_name_only)
+output_file_name = file_name_only
 
+;create folder that will contain output_remapped file
+create_output_folder, Event
 
-;    tmp = byte(file)
-;    Nbytes = n_elements(tmp)
-;    if Nbytes GT 5 then begin
-;        tmp = tmp[0:Nbytes-1-4]
-;        outfile = string([tmp,byte('_aligned_1.dat')])
-;        tube_file = string([tmp,byte('_tube_points.txt')])
-;    endif else begin
-;        outfile = 'tmp.dat'
-;        tube_file = 'tube_points.txt'
-;        print,'Using default output filename: ',outfile
-;    endelse
-;    
-;;write out aligned, mapped data
-;    openw,u1,outfile,/get
-;    writeu,u1,align
-;    
-;;close it up...
-;    close,u1
-;    free_lun,u1
+run_number = (*global).run_number
+full_output_folder_name = (*global).full_output_folder_name
+
+full_output_file_name = full_output_folder_name + "/" + output_file_name
+(*global).full_output_file_name = full_output_file_name
+(*global).full_output_folder_name = full_output_folder_name
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = "Create output histogram file: " + full_output_file_name
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+data = (*(*global).remap)
+;add 8*128 '0' of the diffraction tube to have same format of histo
+;files
+
+output_data = lonarr(128L,72L)
+output_data(*,0:63L) = data(*,*)
+
+look_up = (*(*global).look_up)
+
+reorder_data, Event, output_data
+new_output_data = (*(*global).reorder_array)
+
+reshape_data = lonarr(64L,144L)
+reshape_data(*,*)=new_output_data
+
+;write out data
+openw,u1,full_output_file_name,/get
+writeu,u1,new_output_data
+
+;close it up...
+close,u1
+free_lun,u1
+
+text = "...Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+create_nexus_file, Event
+
+;debugging part
+
+;     openr,u,full_output_file_name,/get
+
+;     ;remove_me
+;     fs=fstat(u)
+;     file_size=fs.sizebx
+;     print, "file_size is: ", file_size
+;     print, "number of elements is: ", file_size/4
+    
+; ;    input_data = lonarr(128L,72L)
+;     input_data = lonarr(64L,144L)
+
+;     readu,u,input_data
+
+;     print, "input_data:"
+;     print, input_data(*,63)
+
+;     window,0
+;     help, input_data
+;     plot_data = rebin(input_data,4*128L,10*72L,/samp)
+;     plot_data = transpose(plot_data)
+;     DEVICE, DECOMPOSED = 0
+;     loadct,5
+;     tvscl, plot_data
+
 ;    
 ;;now write out tube endpoints data
 ;    openw,u2,tube_file,/get
@@ -1592,4 +1857,124 @@ print, "working path: ", working_path
 ;endif                           ;dosave
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+;-------------------------------------------------------------------------
+pro create_nexus_file, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+path_to_preNeXus = (*global).path_to_preNeXus
+full_output_file_name = (*global).full_output_file_name
+full_output_folder_name = (*global).full_output_folder_name
+working_path = (*global).working_path
+
+;copy data
+files_to_copy = ["*.xml","*.nxt"]
+for i=0,1 do begin
+    cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
+      full_output_folder_name
+    spawn, cmd_copy
+endfor
+
+
+run_number = (*global).run_number
+;create timemap file "Create_Tbin_file -l 150000 -M 150000 -o
+; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
+cmd = "Create_Tbin_File -l 150000 -M 150000 -o "
+cmd += full_output_folder_name + "/BSS_" + $
+  strcompress(run_number,/remove_all)
+cmd += "_neutron_timemap.dat"
+
+spawn, cmd
+
+;import geometry and mapping file into same directory
+cmd_copy = "cp " + (*global).mapping_file 
+cmd_copy += " " + (*global).geometry_file
+cmd_copy += " " + full_output_folder_name
+
+spawn, cmd_copy
+
+;merge files
+cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
+cmd_merge += " " + full_output_folder_name
+
+spawn, cmd_merge
+
+;create nexus file
+cd, (*global).full_output_folder_name
+
+cmd_translate = "nxtranslate " + full_output_folder_name
+cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
+cmd_translate += ".nxt"
+
+spawn, cmd_translate
+
+;create nexus folder and copy nexus file into new folder
+path_up_to_proposal_number = (*global).path_up_to_proposal_number
+
+path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
+cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
+spawn, cmd_nexus_folder
+
+name_of_nexus_file = full_output_folder_name + "/BSS_" 
+name_of_nexus_file += strcompress(run_number,/remove_all)
+name_of_nexus_file += ".nxs"
+
+cmd_copy = "cp -r " + name_of_nexus_file + " " + path_up_to_nexus_folder
+
+spawn, cmd_copy
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+;--------------------------------------------------------------------------
+pro reorder_data, Event, data
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Nx=(*global).Nx
+Ny=(*global).Ny_scat
+Ny_diff=(*global).Ny_diff
+
+look_up=(*(*global).look_up)
+
+size_reorder_array = (Nx * (Ny + (*global).Ny_diff))
+reorder_pixelids = lonarr(size_reorder_array)
+
+for i=0,Nx-1 do begin
+    for j=0,Ny-1 do begin
+        reorder_pixelids(look_up(i, j))=data(i,j)
+    endfor
+endfor
+
+(*(*global).reorder_array) = reorder_pixelids
+
+end
+
+
+
+
+
+
+
+
+

@@ -245,7 +245,8 @@ draw_offset_y = 10			;draw y offset within widget
 plot_height = 150			;plot box height
 plot_length = 304			;plot box length
 
-Resolve_Routine, 'RealignGUI_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'RealignGUI_eventcb',/COMPILE_FULL_FILE 
+;Load event callback routines
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
       ,XOFFSET=100 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
@@ -256,32 +257,50 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;or other means
 
 global = ptr_new({$
-		file			:'',$
-		file_already_opened	:0,$
-                new_tube                :1,$
-		path			:'/SNSlocal/tmp/',$
-		working_path		:'',$
-		default_path		:'/SNS/users/',$
-;		event_file_path		:'/SNS/BSS/2006_1_2_SCI/',$
-;		event_filename		:'',$
-;		event_filename_only	:'',$
-;		histogram_filename	:'',$
-;		histogram_filename_only :'',$
-;		mapping_filename	:'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
-;		filter_event		:'*_event.dat',$
-                ucams	                :'',$
-		name			:'',$
- 		character_id		:'',$
-		filter_histo		:'*_histo_mapped.dat',$
-		nbytes			:4L,$
-		swap_endian		:0,$
-; 		pixelids		:9216L,$
- 		Nx			:128L,$
-                Ny_scat			:64L,$
-                Ny_diff                 :8L,$
- 		Nt			:1L,$
- 		y_coeff			:10L,$
- 		x_coeff			:8.4,$
+                   file			      :'',$
+                   full_output_file_name      :'',$  
+                   file_already_opened	      :0,$
+                   new_tube                   :1,$
+                   path			      :'/SNSlocal/tmp/',$
+                   working_path		      :'',$
+                   default_path		      :'/SNSlocal/users/',$
+                   remapped_file_name         :'mapped.dat',$
+                   mapping_file  :'/SNS/users/j35/BSS/BSS_TS_2006_11_16.dat',$
+                   geometry_file  :'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
+                   translation_file :'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
+                   path_to_preNeXus           :'',$
+                   full_output_folder_name    :'',$
+                   path_up_to_proposal_number :'',$
+                   proposal_number            :'',$
+                   run_number                 :0,$ 
+                   ucams	              :'',$
+                   name			      :'',$
+                   character_id		      :'',$
+                   filter_histo		      :'*_histo_mapped.dat',$
+                   nbytes	              :4L,$
+                   swap_endian		      :0,$
+                   Nx			      :128L,$
+                   Ny_scat		      :64L,$
+                   Ny_diff                    :8L,$
+                   Nt			      :1L,$
+                   y_coeff		      :10L,$
+                   x_coeff		      :8.4,$
+                   image_2d_1		      : ptr_new(0L),$
+                   image_2d_1_untouched	      : ptr_new(0L),$   
+                   remap                      : ptr_new(0L),$
+                   reorder_array              : ptr_new(0L),$
+                   tube_removed               : ptr_new(0L),$
+                   pixel_removed              : ptr_new(0L),$
+                   look_up                    : ptr_new(0L),$
+                   i1                         : ptr_new(0L),$
+                   i2                         : ptr_new(0L),$
+                   i3                         : ptr_new(0L),$
+                   i4                         : ptr_new(0L),$
+                   i5                         : ptr_new(0L),$
+                   len1                       : ptr_new(0L),$
+                   len2                       : ptr_new(0L)$
+; 		overflow_number		: 500L,$	
+;		do_color		:1$ 
 ; 		Nx_tubes		:64L,$
 ; 		Ny_pixels		:64L,$
 ; 		minimum_tbin		:0L,$
@@ -294,20 +313,6 @@ global = ptr_new({$
 ; 		ytitle			:'pixels',$
 ; 		top_bank		: ptr_new(0L),$
 ; 		bottom_bank		: ptr_new(0L),$
- 		image_2d_1		: ptr_new(0L),$
- 		image_2d_1_untouched	: ptr_new(0L),$   
-                remap                   : ptr_new(0L),$
-                tube_removed            : ptr_new(0L),$
-                pixel_removed           : ptr_new(0L),$
-                i1                      : ptr_new(0L),$
-                i2                      : ptr_new(0L),$
-                i3                      : ptr_new(0L),$
-                i4                      : ptr_new(0L),$
-                i5                      : ptr_new(0L),$
-                len1                    : ptr_new(0L),$
-                len2                    : ptr_new(0L)$
-; 		overflow_number		: 500L,$	
-;		do_color		:1$ 
 })
 
 ;attach global data structure with widget ID of widget main base widget ID
@@ -1042,7 +1047,7 @@ DAS_plot_frame = widget_label(DAS_plot_base,$
 plot_mapped_data = widget_button(MAIN_BASE,$
                                  XOFFSET=560,$
                                  YOFFSET=420,$
-                                 SCR_XSIZE=130,$
+                                 SCR_XSIZE=110,$
                                  SCR_YSIZE=30,$
                                  VALUE="PLOT MAPPED DATA",$
                                  UNAME='plot_mapped_data')
@@ -1050,11 +1055,11 @@ plot_mapped_data = widget_button(MAIN_BASE,$
 
 ;Procude output file
 output_new_histo_mapped_file = widget_button(MAIN_BASE,$
-                                             XOFFSET=690,$
+                                             XOFFSET=670,$
                                              YOFFSET=420,$
-                                             SCR_XSIZE=115,$
+                                             SCR_XSIZE=135,$
                                              SCR_YSIZE=30,$
-                                             VALUE="CREATE OUTPUT",$
+                                             VALUE="CREATE histo/NeXus",$
                                              UNAME='output_new_histo_mapped_file')
 
 
