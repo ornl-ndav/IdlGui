@@ -461,7 +461,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                   YOFFSET=10,$
                                   SCR_XSIZE=80,$
                                   SCR_YSIZE=30,$
-                                  VALUE='OPEN NeXus')
+                                  VALUE='O P E N')
   
   
   OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
@@ -472,6 +472,13 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             FRAME=1,$
                             VALUE='')
   
+  OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
+                                    XOFFSET=5,$
+                                    YOFFSET=48,$
+                                    SCR_XSIZE=plot_length-15,$
+                                    SCR_YSIZE=67,$
+                                    FRAME=1,$
+                                    VALUE='UNDER CONSTRUCTION')
   
 
 
@@ -879,11 +886,13 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
 
-  OPEN_HISTO_MAPPED = Widget_Button(FILE_MENU, UNAME='OPEN_HISTO_MAPPED'  $
-      ,VALUE='Open Mapped Histogram')
+;  OPEN_HISTO_MAPPED = Widget_Button(FILE_MENU, $
+;                                    UNAME='OPEN_HISTO_MAPPED'  $
+;                                    ,VALUE='Open Mapped Histogram')
 
-  OPEN_HISTO_UNMAPPED = Widget_Button(FILE_MENU, UNAME='OPEN_HISTO_UNMAPPED'  $
-      ,VALUE='Open Histogram')
+;  OPEN_HISTO_UNMAPPED = Widget_Button(FILE_MENU, $
+;                                      UNAME='OPEN_HISTO_UNMAPPED'  $
+;                                      ,VALUE='Open Histogram')
 
   EXIT_MENU = Widget_Button(FILE_MENU, UNAME='EXIT_MENU'  $
       ,VALUE='Exit')
@@ -914,8 +923,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
 
   ;disabled background buttons/draw/text/labels
   Widget_Control, UTILS_MENU, sensitive=0
-  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
-  Widget_Control, OPEN_HISTO_UNMAPPED, sensitive=0
+;  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
+;  Widget_Control, OPEN_HISTO_UNMAPPED, sensitive=0
   Widget_Control, TBIN_UNITS_LABEL, sensitive=0
   Widget_Control, TBIN_LABEL, sensitive=0
   Widget_Control, TBIN_TXT, sensitive=0

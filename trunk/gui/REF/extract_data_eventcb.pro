@@ -588,10 +588,10 @@ endif else begin
   Widget_Control, id, sensitive=1
   id = widget_info(Event.top,FIND_BY_UNAME='CTOOL_MENU')
   Widget_Control, id, sensitive=0
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_MAPPED')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_UNMAPPED')
-  Widget_Control, id, sensitive=1
+;  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_MAPPED')
+;  Widget_Control, id, sensitive=1
+;  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_UNMAPPED')
+;  Widget_Control, id, sensitive=1
   id = widget_info(Event.top,FIND_BY_UNAME='TBIN_UNITS_LABEL')
   Widget_Control, id, sensitive=1
   id = widget_info(Event.top,FIND_BY_UNAME='TBIN_LABEL')
@@ -1798,7 +1798,7 @@ nexus_file = (*global).full_nexus_name
 print, "nexus_filename_only= " + (*global).nexus_file_name_only
 
 data_reduction_file = working_path +  "REF_M_" + $
-  strcompress((*global).run_number,/remove_all) + 'txt'
+  strcompress((*global).run_number,/remove_all) + '.txt'
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
@@ -1926,10 +1926,6 @@ errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100;'0xff00ffxl'
 close,u
 free_lun,u
 stop_time = systime(1)
-
-print,'Run Time: ',stop_time - strt_time,' seconds'
-print,' '
-print,'**************************** END ******************************'
 
 endelse
 
