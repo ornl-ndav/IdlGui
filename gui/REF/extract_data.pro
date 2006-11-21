@@ -93,6 +93,11 @@ widget_control,id,get_uvalue=global
 
     ;##### REF_M #####
 
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_NEXUS_FILE, Event
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='SAVE_BUTTON'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         SAVE_REGION, Event
@@ -249,6 +254,21 @@ PORTAL_GO = widget_button(PORTAL_BASE,$
 
 end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 pro REF_M_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;define parameters
@@ -270,69 +290,74 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
-	character_id		: '',$
-	idl_path		: '/',$
-	ucams			: '',$
-	name			: '',$
-	filename		: '',$
-	histo_map_index		: 1L,$
-	norm_filename		: '',$
-	filename_only		: '',$
-	nexus_filename		: '',$
-	nexus_filename_only	: '',$
-	nexus_path		: '/SNS/REF_M/2006_2_4A_SCI/',$
-	filename_index		: 0, $
-	path			: '/SNSlocal/tmp/',$
-	default_output_path	: '/SNS/users/j35/',$
-	default_path		: '/SNS/users/',$
+                   run_number   : 0L,$
+                   character_id		: '',$
+                   idl_path		: '/',$
+                   ucams			: '',$
+                   name			: '',$
+                   filename		: '',$
+                   histo_map_index		: 1L,$
+                   norm_filename		: '',$
+                   filename_only		: '',$
+                   full_nexus_name : '',$
+                   nexus_filename		: '',$
+                   nexus_file_name_only	: '',$
+                   nexus_path		: '/SNS/REF_M/2006_2_4A_SCI/',$
+                   filename_index		: 0, $
+                   full_histo_mapped_name : '',$
+                   path			: '/SNSlocal/tmp/',$
+                   default_output_path	: '/SNSlocal/users/j35/',$
+                   default_path		: '/SNSlocal/users/',$
 ;	default_path		: '/Users/',$
-	working_path		: '',$
-	scr_x			: scr_x,$
-	scr_y			: scr_y,$
-	ctrl_x			: ctrl_x,$
-	ctrl_y			: ctrl_y,$
-	draw_x			: draw_x,$
-	draw_y			: draw_y,$
-	draw_offset_x		: draw_offset_x,$
-	draw_offset_y		: draw_offset_y,$
-	plot_height		: plot_height,$
-	plot_length		: plot_length,$
-	filter_histo		: '',$
-	filter_normalization	: '*.nxs',$
-	filter_nexus		: '*.nxs',$
-	with_background		: 0, $
-	with_normalization	: 0, $
-	wavelength_min		: 0L,$
-	wavelength_max		: 0L,$
-	wavelength_width	: 0L,$
-	detector_angle		: 0L,$
-	detector_angle_err	: 0L,$
-	detector_angle_units	: '',$
-	time_bin		: 0L,$
-	Nx			: 256L,$
-	Ny			: 304L,$
-	Ntof			: 0L,$
-	starting_id_x		: 0L,$
-	starting_id_y		: 0L,$
-	ending_id_x		: 0L,$
-	ending_id_y		: 0L,$
-	data_ptr		: ptr_new(0L),$
-	data_assoc		: ptr_new(0L),$
-	img_ptr			: ptr_new(0L),$
-	selection_ptr		: ptr_new(OL),$
-	x			: 0L,$
-	y			: 0L,$
-	tof			: 0L,$
-	ct			: 5,$
-	pass			: 0,$
-	have_indicies		: 0,$
-	indicies		: ptr_new(0L),$
-	tlb			: 0,$
-	window_counter		: 0L,$
-	overflow_number		: 500L,$
-	file_already_opened	: 0L,$
-	quit			: 0L$
-	})
+                   working_path		: '',$
+                     tmp_working_path        : '',$
+                     tmp_working_path_extenstion: 'miniReflPak_M_tmp/',$
+                     scr_x			: scr_x,$
+                     scr_y			: scr_y,$
+                     ctrl_x			: ctrl_x,$
+                     ctrl_y			: ctrl_y,$
+                     draw_x			: draw_x,$
+                     draw_y			: draw_y,$
+                     draw_offset_x		: draw_offset_x,$
+                     draw_offset_y		: draw_offset_y,$
+                     plot_height		: plot_height,$
+                     plot_length		: plot_length,$
+                     filter_histo		: '',$
+                     filter_normalization	: '*.nxs',$
+                     filter_nexus		: '*.nxs',$
+                     with_background		: 0, $
+                     with_normalization	: 0, $
+                     wavelength_min		: 0L,$
+                     wavelength_max		: 0L,$
+                     wavelength_width	: 0L,$
+                     detector_angle		: 0L,$
+                     detector_angle_err	: 0L,$
+                     detector_angle_units	: '',$
+                     time_bin		: 0L,$
+                     Nx			: 256L,$
+                     Ny			: 304L,$
+                     Ntof			: 0L,$
+                     starting_id_x		: 0L,$
+                     starting_id_y		: 0L,$
+                     ending_id_x		: 0L,$
+                     ending_id_y		: 0L,$
+                     data_ptr		: ptr_new(0L),$
+                     data_assoc		: ptr_new(0L),$
+                     img_ptr			: ptr_new(0L),$
+                     selection_ptr		: ptr_new(OL),$
+                     x			: 0L,$
+                     y			: 0L,$
+                     tof			: 0L,$
+                     ct			: 5,$
+                     pass			: 0,$
+                     have_indicies		: 0,$
+                     indicies		: ptr_new(0L),$
+                     tlb			: 0,$
+                     window_counter		: 0L,$
+                     overflow_number		: 500L,$
+                     file_already_opened	: 0L,$
+                     quit			: 0L$
+                   })
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
@@ -389,14 +414,99 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
 ;	SCR_XSIZE=180,$
 ;	SCR_YSIZE=55,FRAME=3, value="")
 
-VIEW_DRAW = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
-      /BUTTON_EVENTS,/MOTION_EVENTS)
+VIEW_DRAW = Widget_Draw(MAIN_BASE,$
+                        UNAME='VIEW_DRAW',$
+                        XOFFSET=draw_offset_x+ctrl_x,$
+                        YOFFSET=2*draw_offset_y+plot_height,$
+                        SCR_XSIZE=draw_x,$
+                        SCR_YSIZE=draw_y,$
+                        RETAIN=2,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS)
 
 ;draw boxes for plot windows
-;TOF
-  VIEW_DRAW_TOF = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=draw_offset_y ,SCR_XSIZE=plot_length ,SCR_YSIZE=plot_height ,RETAIN=2)
+;TOF_tab
+  OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB = WIDGET_TAB(MAIN_BASE, $
+                                                LOCATION=0,$
+                                                XOFFSET=11,$
+                                                YOFFSET=10,$
+                                                SCR_XSIZE=plot_length,$
+                                                SCR_YSIZE=plot_height)
+  
+  OPEN_NEXUS_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                TITLE='Open Run number',$
+                                XOFFSET=0,$
+                                YOFFSET=0)
+  
+  RUN_NUMBER_TEXT = widget_label(OPEN_NEXUS_BASE,$
+                                 XOFFSET=10,$
+                                 YOFFSET=10,$
+                                 SCR_XSIZE=40,$
+                                 SCR_YSIZE=30,$
+                                 VALUE="RUN #")
+
+  RUN_NUMBER_BOX = widget_text(OPEN_NEXUS_BASE,$
+                               UNAME='RUN_NUMBER_BOX',$
+                               XOFFSET=50,$
+                               YOFFSET=10,$
+                               SCR_XSIZE=50,$
+                               SCR_YSIZE=30,$
+                               VALUE='',$
+                               /editable,$
+                               /align_left)
+
+  OPEN_RUN_NUMBER = widget_button(OPEN_NEXUS_BASE,$
+                                  UNAME='OPEN_RUN_NUMBER',$
+                                  XOFFSET=105,$
+                                  YOFFSET=10,$
+                                  SCR_XSIZE=80,$
+                                  SCR_YSIZE=30,$
+                                  VALUE='OPEN NeXus')
+  
+  
+  OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
+                            XOFFSET=5,$
+                            YOFFSET=5,$
+                            SCR_XSIZE=plot_length-15,$
+                            SCR_YSIZE=38,$
+                            FRAME=1,$
+                            VALUE='')
+  
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                   Title = "TOF of selected pixel",$
+                                   XOFFSET=0,$
+                                   YOFFSET=0,$
+                                   SCR_XSIZE=plot_length,$
+                                   SCR_YSIZE=plot_height)
+  
+
+  VIEW_DRAW_TOF = Widget_Draw(VIEW_DRAW_TOF_BASE, $
+                              UNAME='VIEW_DRAW_TOF',$
+                              XOFFSET=0,$
+                              YOFFSET=0,$
+                              SCR_XSIZE=plot_length-5,$
+                              SCR_YSIZE=plot_height-25,$
+                              RETAIN=2)
+  
+
+
 
   ;xxxxxxxxxxxxxxxxxxxxxxx
 

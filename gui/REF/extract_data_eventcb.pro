@@ -1,5 +1,222 @@
-;-----------------------------------------------------------------------------------------
-pro info_overflow_REF_M, Event
+FUNCTION find_full_nexus_name, Event, run_number    
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd = "findnexus " + strcompress(run_number,/remove_all)
+spawn, cmd, full_nexus_name
+
+return, full_nexus_name
+
+end
+
+
+
+FUNCTION get_name_of_tmp_output_file, Event, tmp_working_path   ;REF_M
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+run_number = (*global).run_number
+
+(*global).nexus_file_name_only = "REF_M_" + strcompress(run_number,/remove_all) + $
+  ".nxs"
+
+tmp_output_file_name = tmp_working_path
+tmp_output_file_name += "REF_M_" + strcompress(run_number,/remove_all)
+tmp_output_file_name += "_neutron_histo_mapped.dat"
+
+return, tmp_output_file_name
+
+end
+
+
+
+
+PRO dump_binary_data, Event, full_nexus_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_working_path = (*global).tmp_working_path
+
+cmd_dump = "nxdir " + full_nexus_name
+cmd_dump += " -p /entry/bank1/data/ --dump "
+
+;get tmp_output_file_name
+tmp_output_file_name = get_name_of_tmp_output_file(Event, tmp_working_path)
+cmd_dump += tmp_output_file_name
+
+(*global).full_histo_mapped_name = tmp_output_file_name
+
+;display command
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text= cmd_dump
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+
+spawn, cmd_dump, listening
+
+;display result of command
+;text= listening
+text="Done"
+widget_control, view_info, set_value=text, /append
+
+end
+
+
+
+
+PRO OPEN_NEXUS_FILE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+;get run#
+id_run_number = widget_info(Event.top, FIND_BY_UNAME='RUN_NUMBER_BOX')
+widget_control, id_run_number, get_value=run_number
+
+(*global).run_number = run_number
+
+text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+
+;get path to nexus run #
+full_nexus_name = find_full_nexus_name(Event, run_number)
+(*global).full_nexus_name = full_nexus_name
+
+text_nexus = "(" + full_nexus_name + ")"
+WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+
+;dump binary data of NeXus file into tmp_working_path
+dump_binary_data, Event, full_nexus_name
+
+;read and plot nexus file
+read_and_plot_nexus_file, Event
+
+end
+
+
+
+
+pro read_and_plot_nexus_file, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;first close previous file if there is one
+if (N_ELEMENTS(U)) NE 0 then begin
+	close, u
+	free_lun,u
+endif 
+
+if ((*global).file_already_opened EQ 0) then (*global).file_already_opened = 1
+
+;retrieve data parameters
+Nx 		= (*global).Nx
+Ny 		= (*global).Ny
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+file = (*global).full_histo_mapped_name
+
+;only read data if valid file given
+if file NE '' then begin
+
+	(*global).filename = file ; store input filename
+	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	text = "Read and plot NeXus file: " + strcompress(file,/remove_all)
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+	;put info from NeXus file name
+        nexus_filename = (*global).full_nexus_name
+        
+	view_info = widget_info(Event.top,FIND_BY_UNAME='NEXUS_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Title:'
+	cmd = "nxdir " + nexus_filename + " -p /entry/title -o"
+	spawn, cmd, listening
+	WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+	
+	WIDGET_CONTROL, view_info, SET_VALUE='Notes:', /APPEND
+	cmd = "nxdir " + nexus_filename + " -p /entry/notes -o"
+	spawn, cmd, listening
+	WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
+	
+	;determine path	
+	path = "/SNSlocal/users/j35/"   ;REMOVE_ME
+        cd, path
+
+;	;display path
+;	view_info = widget_info(Event.top,FIND_BY_UNAME='PATH_TEXT')
+;	WIDGET_CONTROL, view_info, SET_VALUE=path
+	(*global).path = path
+	
+	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data....', /APPEND
+	strtime = systime(1)
+
+	openr,u,file,/get
+
+	;find out file info
+	fs = fstat(u)
+	Nimg = Nx*Ny
+	Ntof = fs.size/(Nimg*4L)
+	(*global).Ntof = Ntof	;set back in global structure
+
+	data_assoc = assoc(u,lonarr(Ntof))
+	
+	;make the image array
+	img = lonarr(Nx,Ny)
+	for i=0L,Nimg-1 do begin
+		x = i MOD Nx
+		y = i/Nx
+;		img[y,x] = total(swap_endian(data_assoc[i]))
+		img[x,y] = total(data_assoc[i])
+	endfor
+
+	img=transpose(img)
+
+	;load data up in global ptr array
+	(*(*global).img_ptr) = img
+	(*(*global).data_assoc) = data_assoc
+	
+	;now turn hourglass back off
+	widget_control,hourglass=0
+
+	;put image data in main draw window
+	SHOW_DATA,event
+	
+	;now we can activate 'Refresh' button
+	;disable refresh button during ctool
+	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
+	widget_control,rb_id,sensitive=1
+
+	endtime = systime(1)
+	tt_time = string(endtime - strtime)
+	text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
+	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+	
+endif;valid file
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+;---------------------------------------------------------------------
+PRO info_overflow_REF_M, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -19,11 +236,18 @@ if (num_lines gt overflow_number) then begin
 endif
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-;-----------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+;---------------------------------------------------------------------
 pro info_overflow_REF_L, Event
 
 ;get global structure
@@ -44,20 +268,20 @@ if (num_lines gt overflow_number) then begin
 endif
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;-----------------------------------------------------------------------------------------
+;---------------------------------------------------------------------
 ; \brief function that parse the input file name and produced the output file name
 ; if the output file name exists already, an increment index is added at the end of the 
 ; name, just before the extension ".txt"
 ;
 ; \argument file_name (INPUT) the name of the input file
 ; \argument file_index (INPUT) the index of the last input file created
-;------------------------------------------------------------------------------------------
+;---------------------------------------------------------------------
 FUNCTION GetRegionFile, file_name, file_index, part_to_remove, file_extension
 	file_name = strsplit(file_name,part_to_remove,/extract,/regex,count=length)     ;to remove the part_to_remove part of the name
 	file_name = file_name + '_' + strcompress(file_index,/rem) + file_extension     ;replaced by _#.nxs
@@ -68,11 +292,11 @@ end
 
 
 
-;------------------------------------------------------------------------------------------
+;------------------------------------------------------------------------
 ; \brief function to obtain the top level base widget given an arbitrary widget ID.
 ;
 ; \argument wWidget (INPUT)
-;------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------
 function get_tlb,wWidget
 
 id = wWidget
@@ -121,7 +345,7 @@ WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
 info_overflow_REF_M, Event
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
@@ -154,13 +378,12 @@ WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
 info_overflow_REF_L, Event
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
-;----------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro DEFAULT_PATH_cb, Event    ;for REF_M
 
 ;get global structure
@@ -185,10 +408,13 @@ text = working_path
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-;----------------------------------------------------------------------------------------
+
+
+
+;----------------------------------------------------------------------------
 pro DEFAULT_PATH_REF_L_cb, Event    ;for REF_L
 
 ;get global structure
@@ -213,11 +439,12 @@ text = working_path
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-;-----------------------------------------------------------------------------------------
+
+;-----------------------------------------------------------------------------
 pro DEFAULT_PATH_BUTTON_cb, Event   ;for REF_M
 
 ;get global structure
@@ -236,13 +463,12 @@ if (working_path NE '') then begin
 endif
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
-;-----------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro DEFAULT_PATH_BUTTON_REF_L_cb, Event   ;for REF_L
 
 ;get global structure
@@ -261,14 +487,14 @@ if (working_path NE '') then begin
 endif
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
 
-;--------------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro IDENTIFICATION_GO_cb, Event   ;for REF_M
 
 ;get global structure
@@ -312,9 +538,16 @@ endif else begin
 
    (*global).name = name
    working_path = (*global).working_path
+   
+   tmp_working_path = working_path + (*global).tmp_working_path_extenstion
+   (*global).tmp_working_path = tmp_working_path
+
+   tmp_message = "temporary working folder is set to: " + $
+     tmp_working_path
 
    welcome = "Welcome " + strcompress(name,/remove_all)
-   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+   welcome += "  (working directory: " + $
+     strcompress(working_path,/remove_all) + ")"	
    view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
    WIDGET_CONTROL, view_id, base_set_title= welcome	
 
@@ -322,9 +555,21 @@ endif else begin
    WIDGET_CONTROL, view_id, destroy=1
 
    ;working path is set
-
    cd, working_path
- 
+
+   ;check if temporary folder exists (if yes, remove it and recreate it)
+   cmd_check = "ls -d " + tmp_working_path
+   spawn, cmd_check, listening
+
+   if (listening NE '') then begin
+       cmd_remove = "rm -r " + tmp_working_path
+       spawn, cmd_remove
+   endif
+
+   ;now create tmp folder
+   cmd_create = "mkdir " + tmp_working_path
+   spawn, cmd_create,  listening
+
    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
    text = "LOGIN parameters:"
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -334,6 +579,9 @@ endif else begin
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
    text = "Working directory : " + working_path
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   text = ""
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+   WIDGET_CONTROL, view_info, SET_VALUE=tmp_message, /APPEND
 
   ;disabled background buttons/draw/text/labels
   id = widget_info(Event.top,FIND_BY_UNAME='UTILS_MENU')
@@ -418,7 +666,7 @@ end
 
 
 
-;--------------------------------------------------------------------------------------------
+;-----------------------------------------------------------------------------
 pro IDENTIFICATION_GO_REF_L_cb, Event   ;for REF_L
 
 ;get global structure
@@ -450,7 +698,8 @@ if (name EQ '') then begin
    error_message = "INVALID UCAMS"
    view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT_REF_L')
    WIDGET_CONTROL, view_id, set_value= error_message	
-   view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT_REF_L')
+   view_id = widget_info(Event.top,$
+                         FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT_REF_L')
    WIDGET_CONTROL, view_id, set_value= error_message	
 
    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
@@ -463,7 +712,8 @@ endif else begin
    working_path = (*global).working_path
 
    welcome = "Welcome " + strcompress(name,/remove_all)
-   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+   welcome += "  (working directory: " + $
+     strcompress(working_path,/remove_all) + ")"	
    view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
    WIDGET_CONTROL, view_id, base_set_title= welcome	
 
@@ -471,7 +721,6 @@ endif else begin
    WIDGET_CONTROL, view_id, destroy=1
 
    ;working path is set
-
    cd, working_path
  
    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
@@ -528,13 +777,13 @@ text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
 WIDGET_CONTROL, text_id, SET_VALUE=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;---------------------------------------------------------------------------------
+;--------------------------------------------------------------------------
 pro IDENTIFICATION_TEXT_REF_L_cb, Event   ;for REF_L
 
 view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT_REF_L')
@@ -560,7 +809,7 @@ text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT_REF_L')
 WIDGET_CONTROL, text_id, SET_VALUE=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
@@ -595,15 +844,16 @@ widget_control,/hourglass
 widget_control,hourglass=0
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
-;-----------------------------------------------------------------------------------
+
+;------------------------------------------------------------------------------
 ; \brief procedure to image the data
 ;
 ; \argument event (INPUT)
-;------------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 pro SHOW_DATA,event
 
 ;get global structure
@@ -631,15 +881,14 @@ id = widget_info(Event.top,FIND_BY_UNAME='CTOOL_MENU')
 Widget_Control, id, sensitive=1
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-
-;--------------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 ; \brief 
 ;
 ; \argument event (INPUT) 
-;---------------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro VIEW_ONBUTTON, Event
 
 ;get global structure
@@ -1177,7 +1426,7 @@ if ((*global).file_already_opened EQ 0) then (*global).file_already_opened = 1
 ;retrieve data parameters
 Nx 		= (*global).Nx
 Ny 		= (*global).Ny
-filter = (*global).filter_histo
+filter = (*global).filter_histo  
 
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
@@ -1355,17 +1604,19 @@ pro DATA_REDUCTION, Event
 go_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
 widget_control,go_id,sensitive=0
 
+print, "In data_reduction"  ;REMOVE_ME
+
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;set up working path
 working_path = (*global).working_path
-
 cd, working_path
 
 ;retrieve name of nexus file
-nexus_filename = (*global).nexus_filename
+nexus_filename = (*global).full_nexus_name
+;nexus_filename = (*global).nexus_filename
 
 ;retrieve parameters from different text boxes
 
@@ -1423,7 +1674,8 @@ ending_id_x = (*global).ending_id_x
 ending_id_y = (*global).ending_id_y
 
 ;check switch background
-  view_back_switch=widget_info(Event.top, FIND_BY_UNAME='BACKGROUND_SWITCH',/button_set)
+  view_back_switch=widget_info(Event.top, $
+                               FIND_BY_UNAME='BACKGROUND_SWITCH',/button_set)
   WIDGET_CONTROL, view_back_switch, get_uvalue=switch_value
   index=widget_info(view_back_switch,/button_set)
   if (index EQ 1) then begin
@@ -1436,7 +1688,8 @@ ending_id_y = (*global).ending_id_y
   (*global).with_background = with_back
 	
 ;check switch normalization
-  view_norm_switch=widget_info(Event.top, FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
+  view_norm_switch=widget_info(Event.top, $
+                               FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
   WIDGET_CONTROL, view_norm_switch, get_uvalue=switch_value
   index=widget_info(view_norm_switch,/button_set)
   if (index EQ 1) then begin
@@ -1509,7 +1762,8 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 	end_time = systime(1)
 	text = "Done"
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-	text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+	text = "Processing_time: " + $
+          strcompress((end_time-str_time),/remove_all) + " s"
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 	;plot resulting data reduction plot
@@ -1538,16 +1792,13 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 working_path = (*global).working_path
-nexus_file = (*global).nexus_filename
+;nexus_file = (*global).nexus_filename
+nexus_file = (*global).full_nexus_name
 
-nexus_filename_list=strsplit(nexus_file,'/',/extract,count=length)  ;to get only the nexus filename
-nexus_filename_only = nexus_filename_list[length-1]
-(*global).nexus_filename_only = nexus_filename_only
-print, "nexus_filename_only= " , nexus_filename_only
+print, "nexus_filename_only= " + (*global).nexus_file_name_only
 
-file_list=strsplit(nexus_filename_only,'nxs$',/REGEX,/extract,count=length) ;to remove last part of the name
-filename_short=file_list[0]	
-data_reduction_file = working_path + filename_short + 'txt'
+data_reduction_file = working_path +  "REF_M_" + $
+  strcompress((*global).run_number,/remove_all) + 'txt'
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
