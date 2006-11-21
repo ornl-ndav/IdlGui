@@ -21,7 +21,8 @@ widget_control,id,get_uvalue=global
 
 run_number = (*global).run_number
 
-(*global).nexus_file_name_only = "REF_M_" + strcompress(run_number,/remove_all) + $
+(*global).nexus_file_name_only = "REF_M_" + $
+  strcompress(run_number,/remove_all) + $
   ".nxs"
 
 tmp_output_file_name = tmp_working_path
@@ -1232,7 +1233,7 @@ widget_control,id,get_uvalue=global
 cd, (*global).working_path
 
 ;retrieve data
-nexus_file = (*global).nexus_filename
+nexus_file = (*global).full_nexus_name
 x_min =(*global).starting_id_x
 y_min =(*global).starting_id_y
 x_max =(*global).ending_id_x
