@@ -90,7 +90,6 @@ widget_control,id,get_uvalue=global
         REFRESH, Event
     end
 
-
     ;##### REF_M #####
 
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER'): begin
@@ -118,6 +117,11 @@ widget_control,id,get_uvalue=global
     end
 
     ;##### REF_L #####
+
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_NEXUS_FILE_REf_L, Event
+    end
 
     Widget_Info(wWidget, FIND_BY_UNAME='SAVE_BUTTON_REF_L'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -258,17 +262,6 @@ end
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 pro REF_M_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;define parameters
@@ -290,6 +283,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
+                   find_nexus : 0,$
                    run_number   : 0L,$
                    character_id		: '',$
                    idl_path		: '/',$
@@ -480,21 +474,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                     FRAME=1,$
                                     VALUE='UNDER CONSTRUCTION')
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
                                    Title = "TOF of selected pixel",$
@@ -985,128 +964,228 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
-	character_id		: '',$
-	idl_path		: '/',$
-	ucams			: '',$
-	name			: '',$
-	filename		: '',$
-	histo_map_index		: 1L,$
-	norm_filename		: '',$
-	filename_only		: '',$
-	nexus_filename		: '',$
-	nexus_filename_only	: '',$
-	nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
-	filename_index		: 0, $
-	path			: '/SNSlocal/tmp/',$
-;	path 			: '~/data/REF_L/',$		;REMOVE ME
-	default_output_path	: '/SNS/users/j35/',$
-	default_path		: '/SNS/users/',$
-;	default_path		: '/Users/',$
-	working_path		: '',$
-	scr_x			: scr_x,$
-	scr_y			: scr_y,$
-	ctrl_x			: ctrl_x,$
-	ctrl_y			: ctrl_y,$
-	draw_x			: draw_x,$
-	draw_y			: draw_y,$
-	draw_offset_x		: draw_offset_x,$
-	draw_offset_y		: draw_offset_y,$
-	plot_height		: plot_height,$
-	plot_length		: plot_length,$
-	filter_histo		: '',$
-	filter_normalization	: '*.nxs',$
-	filter_nexus		: '*.nxs',$
-	with_background		: 0, $
-	with_normalization	: 0, $
-	wavelength_min		: 0L,$
-	wavelength_max		: 0L,$
-	wavelength_width	: 0L,$
-	detector_angle		: 0L,$
-	detector_angle_err	: 0L,$
-	detector_angle_units	: '',$
-	time_bin		: 0L,$
-	Ny			: 256L,$
-	Nx			: 304L,$
-	Ntof			: 0L,$
-        end_bin                 : 150000L,$
-	starting_id_x		: 0L,$
-	starting_id_y		: 0L,$
-	ending_id_x		: 0L,$
-	ending_id_y		: 0L,$
-	data_ptr		: ptr_new(0L),$
-	data_assoc		: ptr_new(0L),$
-	img_ptr			: ptr_new(0L),$
-	selection_ptr		: ptr_new(OL),$
-	counts_vs_tof		: ptr_new(0L),$
-	x			: 0L,$
-	y			: 0L,$
-	tof			: 0L,$
-	ct			: 5,$
-	pass			: 0,$
-	have_indicies		: 0,$
-	indicies		: ptr_new(0L),$
-	tlb			: 0,$
-	window_counter		: 0L,$
-	quit			: 0L,$
-	overflow_number		: 500L,$
-	file_already_opened	: 0L$
-	})
+                   find_nexus : 0,$
+                   run_number   : 0L,$
+                   character_id		: '',$
+                   idl_path		: '/',$
+                   ucams			: '',$
+                   name			: '',$
+                   filename		: '',$
+                   histo_map_index		: 1L,$
+                   norm_filename		: '',$
+                   filename_only		: '',$
+                   nexus_filename		: '',$
+                   full_nexus_name : '',$
+                   nexus_filename_only	: '',$
+                   nexus_file_name_only : '',$
+                   nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
+                   filename_index		: 0, $
+                   path			: '/SNSlocal/tmp/',$
+                   default_output_path	: '/SNSlocal/users/j35/',$
+                   default_path		: '/SNSlocal/users/',$
+                   working_path		: '',$
+                   tmp_working_path        : '',$
+                   tmp_working_path_extenstion: 'miniReflPak_L_tmp/',$
+                   full_histo_mapped_name : '',$
+                   scr_x			: scr_x,$
+                   scr_y			: scr_y,$
+                   ctrl_x			: ctrl_x,$
+                   ctrl_y			: ctrl_y,$
+                   draw_x			: draw_x,$
+                   draw_y			: draw_y,$
+                   draw_offset_x		: draw_offset_x,$
+                   draw_offset_y		: draw_offset_y,$
+                   plot_height		: plot_height,$
+                   plot_length		: plot_length,$
+                   filter_histo		: '',$
+                   filter_normalization	: '*.nxs',$
+                   filter_nexus		: '*.nxs',$
+                   with_background		: 0, $
+                   with_normalization	: 0, $
+                   wavelength_min		: 0L,$
+                   wavelength_max		: 0L,$
+                   wavelength_width	: 0L,$
+                   detector_angle		: 0L,$
+                   detector_angle_err	: 0L,$
+                   detector_angle_units	: '',$
+                   time_bin		: 0L,$
+                   Ny			: 256L,$
+                   Nx			: 304L,$
+                   Ntof			: 0L,$
+                   end_bin                 : 150000L,$
+                   starting_id_x		: 0L,$
+                   starting_id_y		: 0L,$
+                   ending_id_x		: 0L,$
+                   ending_id_y		: 0L,$
+                   data_ptr		: ptr_new(0L),$
+                   data_assoc		: ptr_new(0L),$
+                   img_ptr			: ptr_new(0L),$
+                   selection_ptr		: ptr_new(OL),$
+                   counts_vs_tof		: ptr_new(0L),$
+                   x			: 0L,$
+                   y			: 0L,$
+                   tof			: 0L,$
+                   ct			: 5,$
+                   pass			: 0,$
+                   have_indicies		: 0,$
+                   indicies		: ptr_new(0L),$
+                   tlb			: 0,$
+                   window_counter		: 0L,$
+                   quit			: 0L,$
+                   overflow_number		: 500L,$
+                   file_already_opened	: 0L$
+})
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-Resolve_Routine, 'extract_data_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'extract_data_eventcb',$
+  /COMPILE_FULL_FILE            ; Load event callback routines
 
 IDENTIFICATION_BASE_REF_L= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
-	UNAME='IDENTIFICATION_BASE_REF_L',$
-	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
-	SPACE=4, XPAD=3, YPAD=3)
+                                       UNAME='IDENTIFICATION_BASE_REF_L',$
+                                       SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
+                                       SPACE=4, XPAD=3, YPAD=3)
 
 IDENTIFICATION_LABEL_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
+                                          XOFFSET=40, $
+                                          YOFFSET=3, $
+                                          VALUE="ENTER YOUR 3 CHARACTERS ID")
 
 IDENTIFICATION_TEXT_REF_L = widget_text(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=100, YOFFSET=20, VALUE='',$
-		SCR_XSIZE=37, /editable,$
-		UNAME='IDENTIFICATION_TEXT_REF_L',/ALL_EVENTS)
+                                        XOFFSET=100, $
+                                        YOFFSET=20, $
+                                        VALUE='',$
+                                        SCR_XSIZE=37, /editable,$
+                                        UNAME='IDENTIFICATION_TEXT_REF_L',$
+                                        /ALL_EVENTS)
 
 ERROR_IDENTIFICATION_left_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=5, YOFFSET=25, VALUE='',$
-		SCR_XSIZE=90, SCR_YSIZE=20, $
-		UNAME='ERROR_IDENTIFICATION_LEFT_REF_L')
+                                               XOFFSET=5, $
+                                               YOFFSET=25, VALUE='',$
+                                               SCR_XSIZE=90, SCR_YSIZE=20, $
+                                               UNAME='ERROR_IDENTIFICATION_LEFT_REF_L')
 
 ERROR_IDENTIFICATION_right_REF_L = widget_label(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=140, YOFFSET=25, VALUE='',$
-		SCR_XSIZE=90, SCR_YSIZE=20, $
-		UNAME='ERROR_IDENTIFICATION_RIGHT_REF_L')
+                                                XOFFSET=140, $
+                                                YOFFSET=25, $
+                                                VALUE='',$
+                                                SCR_XSIZE=90, $
+                                                SCR_YSIZE=20, $
+                                                UNAME='ERROR_IDENTIFICATION_RIGHT_REF_L')
 
 DEFAULT_PATH_BUTTON_REF_L = widget_button(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=0, YOFFSET=55, VALUE='Working path',$
-		SCR_XSIZE=80, SCR_YSIZE=30,$
-		UNAME='DEFAULT_PATH_BUTTON_REF_L')
+                                          XOFFSET=0, $
+                                          YOFFSET=55, $
+                                          VALUE='Working path',$
+                                          SCR_XSIZE=80, $
+                                          SCR_YSIZE=30,$
+                                          UNAME='DEFAULT_PATH_BUTTON_REF_L')
 
 DEFAULT_PATH_TEXT_REF_L = widget_text(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=83, YOFFSET=55, VALUE=default_path,$
-		UNAME='DEFAULT_PATH_TEXT_REF_L',/editable,$
-		SCR_XSIZE=160)
+                                      XOFFSET=83, $
+                                      YOFFSET=55, $
+                                      VALUE=default_path,$
+                                      UNAME='DEFAULT_PATH_TEXT_REF_L',$
+                                      /editable,$
+                                      SCR_XSIZE=160)
 
 IDENTIFICATION_GO_REF_L = widget_button(IDENTIFICATION_BASE_REF_L,$
-		XOFFSET=67, YOFFSET=90,$
-		SCR_XSIZE=130, SCR_YSIZE=30,$
-		VALUE="E N T E R",$
-		UNAME='IDENTIFICATION_GO_REF_L')		
+                                        XOFFSET=67, YOFFSET=90,$
+                                        SCR_XSIZE=130, SCR_YSIZE=30,$
+                                        VALUE="E N T E R",$
+                                        UNAME='IDENTIFICATION_GO_REF_L')
 
-VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_offset_x+ctrl_x  $
-      ,YOFFSET=2*draw_offset_y+plot_height ,SCR_XSIZE=draw_x ,SCR_YSIZE=draw_y ,RETAIN=2 ,$
-      /BUTTON_EVENTS,/MOTION_EVENTS)
+VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
+                              UNAME='VIEW_DRAW_REF_L' ,$
+                              XOFFSET=draw_offset_x+ctrl_x  $
+                              ,YOFFSET=2*draw_offset_y+plot_height ,$
+                              SCR_XSIZE=draw_x ,$
+                              SCR_YSIZE=draw_y ,RETAIN=2 ,$
+                              /BUTTON_EVENTS,/MOTION_EVENTS)
 
 ;draw boxes for plot windows
 ;TOF
-  VIEW_DRAW_TOF_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF_REF_L',$
-	XOFFSET=draw_offset_x+ctrl_x,$
-	YOFFSET=draw_offset_y,$
-	SCR_XSIZE=plot_length,$
-	SCR_YSIZE=130 ,RETAIN=2)
+;   VIEW_DRAW_TOF_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_TOF_REF_L',$
+; 	XOFFSET=draw_offset_x+ctrl_x,$
+; 	YOFFSET=draw_offset_y,$
+; 	SCR_XSIZE=plot_length,$
+; 	SCR_YSIZE=130 ,RETAIN=2)
+
+
+;draw boxes for plot windows
+;TOF_tab
+  OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB = WIDGET_TAB(MAIN_BASE, $
+                                                LOCATION=0,$
+                                                XOFFSET=11,$
+                                                YOFFSET=10,$
+                                                SCR_XSIZE=plot_length,$
+                                                SCR_YSIZE=plot_height)
+  
+  OPEN_NEXUS_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                TITLE='Open Run number',$
+                                XOFFSET=0,$
+                                YOFFSET=0)
+  
+  RUN_NUMBER_TEXT = widget_label(OPEN_NEXUS_BASE,$
+                                 XOFFSET=10,$
+                                 YOFFSET=10,$
+                                 SCR_XSIZE=40,$
+                                 SCR_YSIZE=30,$
+                                 VALUE="RUN #")
+
+  RUN_NUMBER_BOX = widget_text(OPEN_NEXUS_BASE,$
+                               UNAME='RUN_NUMBER_BOX_REF_L',$
+                               XOFFSET=50,$
+                               YOFFSET=10,$
+                               SCR_XSIZE=50,$
+                               SCR_YSIZE=30,$
+                               VALUE='',$
+                               /editable,$
+                               /align_left)
+
+  OPEN_RUN_NUMBER = widget_button(OPEN_NEXUS_BASE,$
+                                  UNAME='OPEN_RUN_NUMBER_REF_L',$
+                                  XOFFSET=105,$
+                                  YOFFSET=10,$
+                                  SCR_XSIZE=80,$
+                                  SCR_YSIZE=30,$
+                                  VALUE='O P E N')
+  
+  
+  OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
+                            XOFFSET=5,$
+                            YOFFSET=5,$
+                            SCR_XSIZE=plot_length-15,$
+                            SCR_YSIZE=38,$
+                            FRAME=1,$
+                            VALUE='')
+  
+;    OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
+;                                     XOFFSET=5,$
+;                                     YOFFSET=48,$
+;                                     SCR_XSIZE=plot_length-15,$
+;                                     SCR_YSIZE=50,$
+;                                     FRAME=1,$
+;                                     VALUE='UNDER CONSTRUCTION')
+  
+
+  VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                   Title = "TOF of selected pixel",$
+                                   XOFFSET=0,$
+                                   YOFFSET=0,$
+                                   SCR_XSIZE=plot_length,$
+                                   SCR_YSIZE=plot_height)
+  
+
+  VIEW_DRAW_TOF = Widget_Draw(VIEW_DRAW_TOF_BASE, $
+                              UNAME='VIEW_DRAW_TOF_REF_L',$
+                              XOFFSET=0,$
+                              YOFFSET=0,$
+                              SCR_XSIZE=plot_length-5,$
+                              SCR_YSIZE=plot_height-25,$
+                              RETAIN=2)
+  
 ;X
   VIEW_DRAW_X_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_X_REF_L',$
 	XOFFSET=draw_offset_x+ctrl_x,$
@@ -1127,11 +1206,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
 	XOFFSET=draw_offset_x + ctrl_x,$
       	YOFFSET=605 ,SCR_XSIZE=plot_length,$
 	SCR_YSIZE=plot_height ,RETAIN=2)
-
-
-
-
-
 
   big_TAB = WIDGET_TAB(MAIN_BASE, $
 	LOCATION=0,$
@@ -1270,12 +1344,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
    FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
                                    ,VALUE='File')
    
-   OPEN_HISTO_MAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_MAPPED_REF_L'  $
-                                           ,VALUE='Open Mapped Histogram')
-   
-   OPEN_HISTO_UNMAPPED_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='OPEN_HISTO_UNMAPPED_REF_L'  $
-                                             ,VALUE='Open Histogram')
-   
    EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                    ,VALUE='Exit')
    
@@ -1304,8 +1372,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_REF_L' ,XOFFSET=draw_o
    
 ;disabled before the user has been identified
    Widget_Control, CTOOL_MENU_REF_L, sensitive=0
-   Widget_Control, OPEN_HISTO_MAPPED_REF_L, sensitive=0
-   Widget_Control, OPEN_HISTO_UNMAPPED_REF_L, sensitive=0
    
    XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
    
