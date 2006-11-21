@@ -1,3 +1,53 @@
+pro erase_plots, Event, instr
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if (instr EQ "REF_L") then begin
+
+    id=lonarr(7)
+    id[0] = widget_info(Event.top, find_by_uname="VIEW_DRAW_COUNTS_TOF_REF_L")
+    id[1] = widget_info(Event.top, find_by_uname="VIEW_DRAW_SUM_Y_REF_L")
+    id[2] = widget_info(Event.top, find_by_uname="VIEW_DRAW_Y_REF_L")
+    id[3] = widget_info(Event.top, find_by_uname="VIEW_DRAW_SUM_X_REF_L")
+    id[4] = widget_info(Event.top, find_by_uname="VIEW_DRAW_X_REF_L")
+    id[5] = widget_info(Event.top, find_by_uname="VIEW_DRAW_TOF_REF_L")
+    id[6] = widget_info(Event.top, find_by_uname="VIEW_DRAW_REF_L")
+
+    for i=0,6 do begin
+	WIDGET_CONTROL, id[i], GET_VALUE=id_value
+        wset, id_value
+        erase
+    endfor
+    
+endif else begin
+    
+    id=lonarr(8)
+    id[0] = widget_info(Event.top, find_by_uname="VIEW_DRAW")
+    id[1] = widget_info(Event.top, find_by_uname="VIEW_DRAW_TOF")
+    id[2] = widget_info(Event.top, find_by_uname="VIEW_DRAW_X")
+    id[3] = widget_info(Event.top, find_by_uname="VIEW_DRAW_SELECTION_X")
+    id[4] = widget_info(Event.top, find_by_uname="VIEW_DRAW_X_REF_M_HIDDING")
+    id[5] = widget_info(Event.top, find_by_uname="VIEW_DRAW_Y")
+    id[6] = widget_info(Event.top, find_by_uname="VIEW_DRAW_SELECTION_Y")
+    id[7] = widget_info(Event.top, find_by_uname="VIEW_DRAW_REDUCTION")
+
+    for i=0,7 do begin
+	WIDGET_CONTROL, id[i], GET_VALUE=id_value
+        wset, id_value
+        erase
+    endfor
+    
+endelse
+
+
+end
+
+
+
+
+
 FUNCTION find_full_nexus_name, Event, run_number    
 
 ;get global structure
@@ -7,13 +57,26 @@ widget_control,id,get_uvalue=global
 cmd = "findnexus " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name
 
+;check if nexus exists
+result = strmatch(full_nexus_name,"ERROR*")
+
+if (result GE 1) then begin
+    find_nexus = 0
+endif else begin
+    find_nexus = 1
+endelse
+
+(*global).find_nexus = find_nexus
+
 return, full_nexus_name
 
 end
 
 
 
-FUNCTION get_name_of_tmp_output_file, Event, tmp_working_path   ;REF_M
+
+
+FUNCTION get_name_of_tmp_output_file, Event, tmp_working_path, instr
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -21,17 +84,55 @@ widget_control,id,get_uvalue=global
 
 run_number = (*global).run_number
 
-(*global).nexus_file_name_only = "REF_M_" + $
+(*global).nexus_file_name_only = instr + "_" + $
   strcompress(run_number,/remove_all) + $
   ".nxs"
 
 tmp_output_file_name = tmp_working_path
-tmp_output_file_name += "REF_M_" + strcompress(run_number,/remove_all)
+tmp_output_file_name += instr + "_" + strcompress(run_number,/remove_all)
 tmp_output_file_name += "_neutron_histo_mapped.dat"
 
 return, tmp_output_file_name
 
 end
+
+
+
+
+PRO dump_binary_data_REF_L, Event, full_nexus_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_working_path = (*global).tmp_working_path
+
+cmd_dump = "nxdir " + full_nexus_name
+cmd_dump += " -p /entry/bank1/data/ --dump "
+
+;get tmp_output_file_name
+instr="REF_L"
+tmp_output_file_name = get_name_of_tmp_output_file(Event, tmp_working_path, instr)
+cmd_dump += tmp_output_file_name
+
+(*global).full_histo_mapped_name = tmp_output_file_name
+
+;display command
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+text= cmd_dump
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+
+spawn, cmd_dump, listening
+
+;display result of command
+;text= listening
+text="Done"
+widget_control, view_info, set_value=text, /append
+
+end
+
 
 
 
@@ -48,7 +149,8 @@ cmd_dump = "nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
 
 ;get tmp_output_file_name
-tmp_output_file_name = get_name_of_tmp_output_file(Event, tmp_working_path)
+instr = "REF_M"
+tmp_output_file_name = get_name_of_tmp_output_file(Event, tmp_working_path, instr)
 cmd_dump += tmp_output_file_name
 
 (*global).full_histo_mapped_name = tmp_output_file_name
@@ -72,11 +174,67 @@ end
 
 
 
+
+
+
+PRO OPEN_NEXUS_FILE_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;erase all the plots
+erase_plots, Event, "REF_L"
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+
+;get run#
+id_run_number = widget_info(Event.top, FIND_BY_UNAME='RUN_NUMBER_BOX_REF_L')
+widget_control, id_run_number, get_value=run_number
+
+(*global).run_number = run_number
+
+text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+
+;get path to nexus run #
+full_nexus_name = find_full_nexus_name(Event, run_number)
+
+;check result of search
+find_nexus = (*global).find_nexus
+if (find_nexus EQ 0) then begin
+    text_nexus = "Warning! NeXus file does not exist"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+endif else begin
+    (*global).full_nexus_name = full_nexus_name
+    text_nexus = "(" + full_nexus_name + ")"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+
+;dump binary data of NeXus file into tmp_working_path
+    dump_binary_data_REF_L, Event, full_nexus_name
+
+;read and plot nexus file
+    read_and_plot_nexus_file_REF_L, Event
+endelse
+
+end
+
+
+
+
+
+
+
+
+
 PRO OPEN_NEXUS_FILE, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;erase all the plots
+erase_plots, Event, "REF_M"
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
@@ -91,18 +249,28 @@ WIDGET_CONTROL, view_info, SET_VALUE=text,/append
 
 ;get path to nexus run #
 full_nexus_name = find_full_nexus_name(Event, run_number)
-(*global).full_nexus_name = full_nexus_name
 
-text_nexus = "(" + full_nexus_name + ")"
-WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+;check result of search
+find_nexus = (*global).find_nexus
+if (find_nexus EQ 0) then begin
+    text_nexus = "WARNING! NeXus file does not exist"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+endif else begin
+    (*global).full_nexus_name = full_nexus_name
+    text_nexus = "(" + full_nexus_name + ")"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
 
 ;dump binary data of NeXus file into tmp_working_path
-dump_binary_data, Event, full_nexus_name
+    dump_binary_data, Event, full_nexus_name
 
 ;read and plot nexus file
-read_and_plot_nexus_file, Event
+    read_and_plot_nexus_file, Event
+
+endelse
 
 end
+
+
 
 
 
@@ -154,7 +322,8 @@ if file NE '' then begin
 	WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
 	
 	;determine path	
-	path = "/SNSlocal/users/j35/"   ;REMOVE_ME
+;	path = "/SNSlocal/users/j35/"   ;REMOVE_ME
+        path = (*global).working_path
         cd, path
 
 ;	;display path
@@ -326,7 +495,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
 about_text = " "
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
-about_text = " ***** mini ReflPak  v3.0 *****"
+about_text = " ***** mini ReflPak  v4.0 *****"
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
 about_text = " "
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
@@ -359,7 +528,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 
 about_text = " "
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
-about_text = " ***** mini ReflPak  v3.0 *****"
+about_text = " ***** mini ReflPak  v4.0 *****"
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
 about_text = " "
 WIDGET_CONTROL, view_info, SET_VALUE=about_text, /APPEND
@@ -712,6 +881,9 @@ endif else begin
    (*global).name = name
    working_path = (*global).working_path
 
+   tmp_working_path = working_path + (*global).tmp_working_path_extenstion
+   (*global).tmp_working_path = tmp_working_path
+
    welcome = "Welcome " + strcompress(name,/remove_all)
    welcome += "  (working directory: " + $
      strcompress(working_path,/remove_all) + ")"	
@@ -724,6 +896,19 @@ endif else begin
    ;working path is set
    cd, working_path
  
+   ;check if temporary folder exists (if yes, remove it and recreate it)
+   cmd_check = "ls -d " + tmp_working_path
+   spawn, cmd_check, listening
+
+   if (listening NE '') then begin
+       cmd_remove = "rm -r " + tmp_working_path
+       spawn, cmd_remove
+   endif
+
+   ;now create tmp folder
+   cmd_create = "mkdir " + tmp_working_path
+   spawn, cmd_create,  listening
+
    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
    text = "LOGIN parameters:"
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -734,14 +919,6 @@ endif else begin
    text = "Working directory : " + working_path
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-
-  ;disabled background buttons/draw/text/labels
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_MAPPED_REF_L')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_UNMAPPED_REF_L')
-  Widget_Control, id, sensitive=1
-
-  
 endelse
 
 end
@@ -1019,7 +1196,6 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
 
          click_outside = 1
          getvals = 1
-         print,'Terminating return data'
          view_info = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
          WIDGET_CONTROL, view_info, SET_VALUE="MODE: INFOS"
          view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
@@ -2004,7 +2180,11 @@ end
 ;
 ; \argument Event (INPUT)
 ;--------------------------------------------------------------------------
-pro OPEN_FILE_REF_L, Event
+pro read_and_plot_nexus_file_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 ;first close previous file if there is one
 if (N_ELEMENTS(U)) NE 0 then begin
@@ -2012,76 +2192,29 @@ if (N_ELEMENTS(U)) NE 0 then begin
 	free_lun,u
 endif 
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
 ;retrieve data parameters
 Nx 		= (*global).Nx
 Ny 		= (*global).Ny
-filter = (*global).filter_histo
 
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
 
-;open file
-path = (*global).path
-file = dialog_pickfile(path=path,get_path=path,title='Select Data File',filter=filter)
+file = (*global).full_histo_mapped_name
+nexus_file_name_only = (*global).nexus_file_name_only
 
 ;only read data if valid file given
 if file NE '' then begin
 
 	(*global).file_already_opened = 1
 
-	(*global).filename = file ; store input filename
-	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-	text = "Open histogram file: " + strcompress(file,/remove_all)
+	text = "Plot NeXus file: " + nexus_file_name_only
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-	;get only the last part of the file (its name)
-	file_list=strsplit(file,'/',/extract,count=length)     ;to get only the last part of the name
-	filename_only=file_list[length-1]	
-	(*global).filename_only = filename_only ; store only name of the file (without the path)
-
-;	print, "filenameonly= " , filename_only
-
-	;determine name of nexus file according to histogram file name
 	
-	index = (*global).histo_map_index	
-
-	if (index EQ 1) then begin
-		file_list=strsplit(file,'_neutron_histo_mapped.dat',$
-		/REGEX,/extract,count=length) ;to remove last part of the name
-		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
-		run_number=run_number[length-1]
-	endif else begin
-		file_list=strsplit(file,'_neutron_histo.dat',$
-		/REGEX,/extract,count=length) ;to remove last part of the name
-		run_number=strsplit(file_list[0],'_',/regex,/extract,count=length)
-		run_number=run_number[length-1]
-	endelse
-
-	filename_short=file_list[0]	
-	file_list=strsplit(filename_short,'/',/REGEX,/extract,count=length) ;to remove last part of the name
-	short_nexus_filename = file_list[length-1]
-	nexus_path = (*global).nexus_path
-
-;	nexus_filename = nexus_path + run_number + "/NeXus/" + short_nexus_filename + ".nxs"
-
-;	(*global).nexus_filename = nexus_filename
-
-;	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-;	WIDGET_CONTROL, view_info, SET_VALUE='Nexus file: ', /APPEND
-;	WIDGET_CONTROL, view_info, SET_VALUE=nexus_filename, /APPEND
-		
 	;determine path	
-	path_list=strsplit(file,filename_only,/reg,/extract)
-	path=path_list[0]
-	cd, path
+        path = (*global).working_path
+        cd, path
 
-	(*global).path = path
-	
 	view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 	WIDGET_CONTROL, view_info, SET_VALUE='Reading in data....', /APPEND
 	strtime = systime(1)
@@ -2091,7 +2224,6 @@ if file NE '' then begin
 	fs = fstat(u)
 	Nimg = Nx*Ny
 	Ntof = fs.size/(Nimg*4L)
-        print, "Ntof= ", Ntof
 	(*global).Ntof = Ntof	;set back in global structure
 
 	;using assoc
@@ -2106,7 +2238,6 @@ if file NE '' then begin
 	for i=0L,Nimg-1 do begin
 		y = i MOD Ny
 		x = i/Ny
-;		img[y,x] = total(swap_endian(data_assoc[i]))
 		img[x,y] = total(data_assoc[i])
 	endfor			
 
@@ -2228,36 +2359,20 @@ WIDGET_CONTROL, view_info, GET_VALUE = end_bin_1
 tof=(*global).Ntof
 
 if (end_bin_1 EQ "" ) then begin
-
-    print, "here"
     end_bin = (*global).end_bin
-    print, "end_bin= " ,end_bin
 endif else begin
-
-    print, "there"
     end_bin = end_bin_1
-
 endelse
 
 TBIN = end_bin / tof
-print, "tbin= ", TBIN
 path = (*global).working_path
 counts_vs_tof = (*(*global).counts_vs_tof)
-index = (*global).histo_map_index
-file = (*global).filename_only
+file = (*global).nexus_file_name_only
 
-if (index EQ 1) then begin
-	file_list=strsplit(file,'_neutron_histo_mapped.dat',$
-	/REGEX,/extract,count=length) ;to remove last part of the name
-endif else begin
-	file_list=strsplit(file,'_neutron_histo.dat',$
-	/REGEX,/extract,count=length) ;to remove last part of the name
-endelse
+file_list=strsplit(file,".nxs",/extract,/regex)
 
 output_filename = path + file_list[0] + ".txt"
  
-print, "output_filename= ", output_filename
-
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 WIDGET_CONTROL, view_info, SET_VALUE='Output file name: ', /APPEND
 WIDGET_CONTROL, view_info, SET_VALUE=output_filename, /APPEND
