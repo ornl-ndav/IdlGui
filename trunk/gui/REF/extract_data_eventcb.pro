@@ -1,3 +1,28 @@
+pro get_run_number_from_full_nexus_name,event, full_nexus_name,instr
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;split by "/"
+split_full_name = strsplit(full_nexus_name,'/',/extract,/regex,count=length)
+nexus_name = split_full_name[length-1]
+
+;remove instr name
+instr_slash = instr + "_"
+run_number_nxs = strsplit(nexus_name,instr_slash,/extract,/regex)
+
+;remoe nxs extension
+nxs_extension = ".nxs"
+help, run_number_nxs
+
+run_number = strsplit(run_number_nxs,nxs_extension,/extract,/regex)
+
+(*global).run_number = run_number[0]
+
+end
+
+
 pro erase_plots, Event, instr
 
 ;get global structure
@@ -48,13 +73,13 @@ end
 
 
 
-FUNCTION find_full_nexus_name, Event, run_number    
+FUNCTION find_full_nexus_name, Event, run_number, instrument    
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-cmd = "findnexus " + strcompress(run_number,/remove_all)
+cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name
 
 ;check if nexus exists
@@ -192,29 +217,39 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
 id_run_number = widget_info(Event.top, FIND_BY_UNAME='RUN_NUMBER_BOX_REF_L')
 widget_control, id_run_number, get_value=run_number
 
-(*global).run_number = run_number
+if (run_number EQ '') then begin
 
-text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text,/append
-
-;get path to nexus run #
-full_nexus_name = find_full_nexus_name(Event, run_number)
-
-;check result of search
-find_nexus = (*global).find_nexus
-if (find_nexus EQ 0) then begin
-    text_nexus = "Warning! NeXus file does not exist"
-    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
 endif else begin
-    (*global).full_nexus_name = full_nexus_name
-    text_nexus = "(" + full_nexus_name + ")"
-    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
 
+    (*global).run_number = run_number
+    
+    text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
+;get path to nexus run #
+    instrument="REF_L"
+    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+    
+;check result of search
+    find_nexus = (*global).find_nexus
+    if (find_nexus EQ 0) then begin
+        text_nexus = "Warning! NeXus file does not exist"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    endif else begin
+        (*global).full_nexus_name = full_nexus_name
+        text_nexus = "(" + full_nexus_name + ")"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+        
 ;dump binary data of NeXus file into tmp_working_path
-    dump_binary_data_REF_L, Event, full_nexus_name
-
+        dump_binary_data_REF_L, Event, full_nexus_name
+        
 ;read and plot nexus file
-    read_and_plot_nexus_file_REF_L, Event
+        read_and_plot_nexus_file_REF_L, Event
+    endelse
+
 endelse
 
 end
@@ -242,33 +277,93 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 id_run_number = widget_info(Event.top, FIND_BY_UNAME='RUN_NUMBER_BOX')
 widget_control, id_run_number, get_value=run_number
 
-(*global).run_number = run_number
+if (run_number EQ '') then begin
 
-text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    text = "No run number specified" + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
 
+endif else begin 
+
+    (*global).run_number = run_number
+    
+    text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
 ;get path to nexus run #
-full_nexus_name = find_full_nexus_name(Event, run_number)
-
+    instrument = "REF_M"
+    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+    
 ;check result of search
-find_nexus = (*global).find_nexus
-if (find_nexus EQ 0) then begin
-    text_nexus = "WARNING! NeXus file does not exist"
-    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
-endif else begin
-    (*global).full_nexus_name = full_nexus_name
-    text_nexus = "(" + full_nexus_name + ")"
-    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
-
+    find_nexus = (*global).find_nexus
+    if (find_nexus EQ 0) then begin
+        text_nexus = "WARNING! NeXus file does not exist"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    endif else begin
+        (*global).full_nexus_name = full_nexus_name
+        text_nexus = "(" + full_nexus_name + ")"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+        
 ;dump binary data of NeXus file into tmp_working_path
-    dump_binary_data, Event, full_nexus_name
-
+        dump_binary_data, Event, full_nexus_name
+        
 ;read and plot nexus file
-    read_and_plot_nexus_file, Event
+        read_and_plot_nexus_file, Event
+        
+    endelse
 
 endelse
 
 end
+
+
+
+
+
+
+PRO OPEN_USERS_DEFINED_NEXUS_FILE_, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;erase all the plots
+erase_plots, Event, "REF_L"
+
+;get general_infos window id
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+nexus_path = (*global).nexus_path
+filter = "*.nxs"
+
+;open file
+full_nexus_name = dialog_pickfile(path=nexus_path,$
+                                  get_path=path,$
+                                  title='Select Data File',$
+                                  filter=filter)
+
+if full_nexus_name NE '' then begin
+
+	(*global).full_nexus_name = full_nexus_name ; store input filename
+
+;get run_number
+        instr="REF_L"
+        get_run_number_from_full_nexus_name, Event, full_nexus_name, instr
+
+;dump binary data of NeXus file into tmp_working_path
+        dump_binary_data_REF_L, Event, full_nexus_name
+
+;read and plot nexus file
+        read_and_plot_nexus_file_REF_L, Event
+
+endif
+
+
+END
+
+
+
+
+
 
 
 
@@ -582,6 +677,26 @@ end
 
 
 
+;-----------------------------
+pro SET_DEFAULT_NEXUS_PATH_REF_L, Event    ;for REF_L
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nexus_path = (*global).nexus_path
+nexus_path = dialog_pickfile(path=working_path,/directory)
+(*global).nexus_path = nexus_path
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
+text = "Working NeXus directory set to:"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = nexus_path
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
 
 
 ;----------------------------------------------------------------------------
@@ -753,79 +868,44 @@ endif else begin
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
    WIDGET_CONTROL, view_info, SET_VALUE=tmp_message, /APPEND
 
-  ;disabled background buttons/draw/text/labels
-  id = widget_info(Event.top,FIND_BY_UNAME='UTILS_MENU')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='CTOOL_MENU')
-  Widget_Control, id, sensitive=0
-;  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_MAPPED')
-;  Widget_Control, id, sensitive=1
-;  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTO_UNMAPPED')
-;  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_UNITS_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='TBIN_TXT')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='MODE_INFOS')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='SELECTION_INFOS')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='MICHAEL_SPACE_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_TEXT')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MIN_A_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_TEXT')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_MAX_A_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_TEXT')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='WAVELENGTH_WIDTH_A_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='FRAME_WAVELENGTH')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_VALUE')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_PLUS_MINUS')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_ERR')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_UNITS')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_LABEL')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='FILE_NAME_TEXT')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='BACKGROUND_SWITCH')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='NORMALIZATION_SWITCH')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='NORM_FILE_TEXT')
-  Widget_Control, id, sensitive=1
+;enable background buttons/draw/text/labels
+id_list=['UTILS_MENU',$
+         'CTOOL_MENU',$
+         'MODE_INFOS',$
+         'CURSOR_X_LABEL',$
+         'CURSOR_X_POSITION',$
+         'CURSOR_Y_LABEL',$
+         'CURSOR_Y_POSITION',$
+         'SELECTION_INFOS',$
+         'PIXELID_INFOS',$
+         'MICHAEL_SPACE_LABEL',$
+         'WAVELENGTH_LABEL',$
+         'WAVELENGTH_MIN_LABEL',$
+         'WAVELENGTH_MIN_TEXT',$
+         'WAVELENGTH_MIN_A_LABEL',$
+         'WAVELENGTH_MAX_LABEL',$
+         'WAVELENGTH_MAX_TEXT',$
+         'WAVELENGTH_MAX_A_LABEL',$
+         'WAVELENGTH_WIDTH_LABEL',$
+         'WAVELENGTH_WIDTH_TEXT',$
+         'WAVELENGTH_WIDTH_A_LABEL',$
+         'FRAME_WAVELENGTH',$
+         'DETECTOR_LABEL',$
+         'DETECTOR_ANGLE_VALUE',$
+         'DETECTOR_ANGLE_PLUS_MINUS',$
+         'DETECTOR_ANGLE_ERR',$
+         'DETECTOR_ANGLE_UNITS',$
+         'FILE_NAME_LABEL',$
+         'FILE_NAME_TEXT',$
+         'BACKGROUND_SWITCH',$
+         'NORMALIZATION_SWITCH',$
+         'NORM_FILE_TEXT']
+
+id_list_size = size(id_list)
+for i=0,(id_list_size[1]-1) do begin
+    id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+    Widget_Control, id, sensitive=1
+endfor
 
 endelse
 
@@ -880,6 +960,7 @@ endif else begin
 
    (*global).name = name
    working_path = (*global).working_path
+   (*global).nexus_path = working_path
 
    tmp_working_path = working_path + (*global).tmp_working_path_extenstion
    (*global).tmp_working_path = tmp_working_path
@@ -918,6 +999,17 @@ endif else begin
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
    text = "Working directory : " + working_path
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;enable background buttons/draw/text/labels
+id_list=['OPEN_NEXUS_FILE_BUTTON',$
+         'RUN_NUMBER_BOX_REF_L',$
+         'OPEN_RUN_NUMBER_REF_L']
+
+id_list_size = size(id_list)
+for i=0,(id_list_size[1]-1) do begin
+    id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+    Widget_Control, id, sensitive=1
+endfor
 
 endelse
 
@@ -1344,10 +1436,21 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
          average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
          average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
 
-         value_group = [selection_label, number_pixelid,$
-	  x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
-	  average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
-	  first_point_2,second_point,second_point_2]
+         value_group = [selection_label,$
+                        number_pixelid,$
+                        x_wide, y_wide,$
+                        blank_line,total_counts,$
+                        total_inside_region,$
+                        total_outside_region,$
+                        average_counts,$
+                        average_inside_region,$
+                        average_outside_region,$
+                        blank_line,$
+                        pixel_label,$
+                        first_point,$
+                        first_point_2,$
+                        second_point,$
+                        second_point_2]
 
          view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
          WIDGET_CONTROL, view_info, SET_VALUE=""
@@ -2353,48 +2456,41 @@ pro SAVE_REGION_REF_L, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-view_info = widget_info(Event.top,FIND_BY_UNAME='TBIN_TXT_REF_L')
-WIDGET_CONTROL, view_info, GET_VALUE = end_bin_1
+cd, (*global).working_path
 
-tof=(*global).Ntof
+;retrive data 
+nexus_file = (*global).full_nexus_name
+x_min =(*global).starting_id_x
+y_min =(*global).starting_id_y
+x_max =(*global).ending_id_x
+y_max=(*global).ending_id_y
 
-if (end_bin_1 EQ "" ) then begin
-    end_bin = (*global).end_bin
-endif else begin
-    end_bin = end_bin_1
-endelse
+cmd_line = "tof_slicer -v "
+cmd_line += "--starting-ids=" + strcompress(x_min,/remove_all) $
+	+ ',' + strcompress(y_min,/remove_all)
+cmd_line += " --ending-ids=" + strcompress(x_max,/remove_all) $
+	 + ',' + strcompress(y_max,/remove_all)
+cmd_line += " --data=" + nexus_file
 
-TBIN = end_bin / tof
-path = (*global).working_path
-counts_vs_tof = (*(*global).counts_vs_tof)
-file = (*global).nexus_file_name_only
+cmd_line_displayed = "> " + cmd_line
 
-file_list=strsplit(file,".nxs",/extract,/regex)
-
-output_filename = path + file_list[0] + ".txt"
- 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS_REF_L')
-WIDGET_CONTROL, view_info, SET_VALUE='Output file name: ', /APPEND
-WIDGET_CONTROL, view_info, SET_VALUE=output_filename, /APPEND
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 
-Nbr_elements = n_elements(counts_vs_tof)
+;launch data_reduction
+str_time = systime(1)
+text = "Processing....."
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+spawn, cmd_line, listening
 
-if (Nbr_elements GT 0) then begin
+;display message from data reduction verbose flag
+WIDGET_CONTROL, view_info, SET_VALUE=listening, /APPEND
 
-   data = fltarr(2,Nbr_elements)
-
-   for i=0L, Nbr_elements-1 do begin
-      data[0,i]= TBIN * i
-   endfor
-
-   data(1,*) = counts_vs_tof
-
-   openw,u,output_filename,/get_lun
-   printf,u,data
-   close,u
-   free_lun,u
-
-endif 
+end_time = systime(1)
+text = "Done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 info_overflow_REF_L, Event
 
