@@ -58,7 +58,10 @@ widget_control,id,get_uvalue=global
     ;Exit widget in the top toolbar for REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        ABOUT_cb, Event;-----------------------------------------------------------------------------
+        ABOUT_cb, Event
+
+
+;-----------------------------------------------------------------------------
     end
 
     ;Exit widget in the top toolbar for REF_L
@@ -95,6 +98,11 @@ widget_control,id,get_uvalue=global
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         OPEN_NEXUS_FILE, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_NEXUS_FILE_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_USERS_DEFINED_NEXUS_FILE_, Event
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='SAVE_BUTTON'): begin
@@ -165,6 +173,13 @@ widget_control,id,get_uvalue=global
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         EXIT_PROGRAM_REF_L, Event
     end
+
+    ;Exit widget in the top toolbar
+    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_NEXUS_PATH_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        SET_DEFAULT_NEXUS_PATH_REF_L, Event
+    end
+
 
     ;Open widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_MAPPED_REF_L'): begin
@@ -278,7 +293,7 @@ plot_length = 304			;plot box length
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
       ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
+      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak (REF_M)'  $
       ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
 
 ;define initial global values - these could be input via external file or other means
@@ -461,7 +476,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                             XOFFSET=5,$
                             YOFFSET=5,$
-                            SCR_XSIZE=plot_length-15,$
+                            SCR_XSIZE=190,$
                             SCR_YSIZE=38,$
                             FRAME=1,$
                             VALUE='')
@@ -469,14 +484,14 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                                     XOFFSET=5,$
                                     YOFFSET=48,$
-                                    SCR_XSIZE=plot_length-15,$
+                                    SCR_XSIZE=190,$
                                     SCR_YSIZE=67,$
                                     FRAME=1,$
                                     VALUE='UNDER CONSTRUCTION')
   
 
   VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
-                                   Title = "TOF of selected pixel",$
+                                   Title = "PixelID TOF",$
                                    XOFFSET=0,$
                                    YOFFSET=0,$
                                    SCR_XSIZE=plot_length,$
@@ -491,6 +506,61 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                               SCR_YSIZE=plot_height-25,$
                               RETAIN=2)
   
+  SELECT_RUN_NUMBERS = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                   Title = "Select runs numbers",$
+                                   XOFFSET=0,$
+                                   YOFFSET=0,$
+                                   SCR_XSIZE=plot_length,$
+                                   SCR_YSIZE=plot_height)
+
+  select_run_numbers_text = widget_label(SELECT_RUN_NUMBERS,$
+                                         VALUE="Apply mask to runs # from ",$
+                                         XOFFSET=5,$
+                                         YOFFSET=5,$
+                                         SCR_XSIZE=155,$
+                                         SCR_YSIZE=30)
+
+  select_run_numbers_from = widget_text(SELECT_RUN_NUMBERS,$
+                                        uname='select_run_numbers_from',$
+                                        xoffset=162,$
+                                        yoffset=5,$
+                                        scr_xsize=50,$
+                                        scr_ysize=30,$
+                                        value='',$
+                                        /align_left,$
+                                        /editable)
+
+  select_and = widget_label(SELECT_RUN_NUMBERS,$
+                            xoffset=215,$
+                            yoffset=5,$
+                            scr_xsize=10,$
+                            scr_ysize=30,$
+                            value="to")
+
+  select_run_numbers_to = widget_text(SELECT_RUN_NUMBERS,$
+                                      uname='select_run_numbers_to',$
+                                      xoffset=230,$
+                                      yoffset=5,$
+                                      scr_xsize=50,$
+                                      scr_ysize=30,$
+                                      value='',$
+                                      /align_left,$
+                                      /editable)
+  
+  label_1 = widget_label(SELECT_RUN_NUMBERS,$
+                         xoffset=2,$
+                         yoffset=2,$
+                         scr_xsize=plot_length-15,$
+                         scr_ysize=34,$
+                         frame=1)
+
+
+  run_number_to_add_text = widget_label(SELECT_RUN_NUMBERS,$
+                                        xoffset=5,$
+                                        yoffset=40,$
+                                        scr_xsize=120,$
+                                        scr_ysize=30,$
+                                        value='Run number to add or remove')
 
 
 
@@ -595,28 +665,28 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
 ;	/SCROLL)
 
 
-  TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+100, $
-	YOFFSET=draw_offset_y+10, VALUE="microS")
+  REFRESH_BUTTON = Widget_Button(MAIN_BASE,$
+                                 UNAME='REFRESH_BUTTON',$
+                                 XOFFSET=draw_offset_x+plot_length+15,$
+                                 YOFFSET=15,$
+                                 VALUE='Refresh Selection',$
+                                 SCR_XSIZE=134)
 
-  TBIN_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_LABEL',XOFFSET=draw_offset_x+plot_length+15, YOFFSET=draw_offset_y+10, $
-	VALUE="Tbin:")
+  SAVE_BUTTON = Widget_Button(MAIN_BASE,$
+                              UNAME='SAVE_BUTTON',$
+                              XOFFSET=draw_offset_x+plot_length+15,$
+                              YOFFSET=50,$
+                              VALUE='Save Region',$
+                              SCR_XSIZE=134)
 
-  TBIN_TXT = widget_text(MAIN_BASE, UNAME='TBIN_TXT', XOFFSET=draw_offset_x+plot_length+50, YOFFSET=draw_offset_y+5,$
-	SCR_XSIZE=50, SCR_YSIZE=30, /editable, VALUE='25')
+   MODE_INFOS = widget_text(MAIN_BASE,$
+                            UNAME='MODE_INFOS',$
+                            XOFFSET= draw_offset_x+plot_length+15,$
+                            YOFFSET= 90,$
+                            SCR_XSIZE= 134,$
+                            SCR_YSIZE= 30,$
+                            value= 'MODE: INFOS') 
 
-  REFRESH_BUTTON = Widget_Button(MAIN_BASE, UNAME='REFRESH_BUTTON', XOFFSET=draw_offset_x+plot_length+15,$
-      YOFFSET=45,VALUE='Refresh Selection',SCR_XSIZE=134)
-
-  SAVE_BUTTON = Widget_Button(MAIN_BASE, UNAME='SAVE_BUTTON', XOFFSET=draw_offset_x+plot_length+15,$
-      YOFFSET=70,VALUE='Save Region',SCR_XSIZE=134)
-
-   MODE_INFOS = widget_text(MAIN_BASE, UNAME='MODE_INFOS', $
-	XOFFSET= draw_offset_x+plot_length+15, $
-	YOFFSET= 95, SCR_XSIZE= 134, SCR_YSIZE= 30, value= 'MODE: INFOS') 
-
-  FRAME1 = widget_label(MAIN_BASE, XOFFSET=2*draw_offset_x+plot_length,$
-	YOFFSET=draw_offset_y,SCR_XSIZE=plot_height-5, SCR_YSIZE=plot_height-35,FRAME=3, value="")
-	
    ;x position of cursor in Infos mode	
    CURSOR_X_LABEL = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL',$
 	XOFFSET=2*draw_offset_x+plot_length+5,$
@@ -904,9 +974,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   Widget_Control, UTILS_MENU, sensitive=0
 ;  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
 ;  Widget_Control, OPEN_HISTO_UNMAPPED, sensitive=0
-  Widget_Control, TBIN_UNITS_LABEL, sensitive=0
-  Widget_Control, TBIN_LABEL, sensitive=0
-  Widget_Control, TBIN_TXT, sensitive=0
   Widget_Control, MODE_INFOS, sensitive=0
   Widget_Control, CURSOR_X_LABEL, sensitive=0
   Widget_Control, CURSOR_X_POSITION, sensitive=0
@@ -957,10 +1024,18 @@ draw_offset_y = 10			;draw y offset within widget
 plot_height = 130			;plot box height
 plot_length = 256			;plot box length
 
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y, XOFFSET=250 ,YOFFSET=22 $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='mini ReflPak'  $
-      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
+                         UNAME='MAIN_BASE',$
+                         SCR_XSIZE=scr_x,$
+                         SCR_YSIZE=scr_y-140,$
+                         XOFFSET=250,$
+                         YOFFSET=22,$
+                         NOTIFY_REALIZE='MAIN_REALIZE',$
+                         TITLE='mini ReflPak (REF_L)',$
+                         SPACE=3,$
+                         XPAD=3,$
+                         YPAD=3,$
+                         MBAR=WID_BASE_0_MBAR)
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
@@ -978,7 +1053,7 @@ global = ptr_new({ $
                    full_nexus_name : '',$
                    nexus_filename_only	: '',$
                    nexus_file_name_only : '',$
-                   nexus_path		: '/SNS/REF_M/2006_1_4A_SCI/',$
+                   nexus_path		: '/SNS/REF_L/2006_1_4A_SCI/',$
                    filename_index		: 0, $
                    path			: '/SNSlocal/tmp/',$
                    default_output_path	: '/SNSlocal/users/j35/',$
@@ -1203,9 +1278,10 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
 
 ;SUM_X
   VIEW_DRAW_SUM_X_REF_L = Widget_Draw(MAIN_BASE, UNAME='VIEW_DRAW_SUM_X_REF_L',$
-	XOFFSET=draw_offset_x + ctrl_x,$
-      	YOFFSET=605 ,SCR_XSIZE=plot_length,$
-	SCR_YSIZE=plot_height ,RETAIN=2)
+                                      XOFFSET=2*draw_offset_x + draw_x+ctrl_x,$
+                                      YOFFSET=3*draw_offset_y+draw_y+plot_height ,$
+                                      SCR_XSIZE=plot_length,$
+                                      SCR_YSIZE=plot_height ,RETAIN=2)
 
   big_TAB = WIDGET_TAB(MAIN_BASE, $
 	LOCATION=0,$
@@ -1253,45 +1329,36 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                            YOFFSET=0,$
                                            SCR_XSIZE= 580, SCR_YSIZE= 270, RETAIN=2)
   
+;   TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+120, $
+; 	YOFFSET=draw_offset_y+10, VALUE="uS")
 
+;   TBIN_LABEL = widget_label(MAIN_BASE, $
+;                             UNAME='TBIN_LABEL',$
+;                             XOFFSET=draw_offset_x+plot_length+12, $
+;                             YOFFSET=draw_offset_y+10, $
+;                             VALUE="End bin")
 
-  TBIN_UNITS_LABEL = widget_label(MAIN_BASE, UNAME='TBIN_UNITS_LABEL',XOFFSET=draw_offset_x+plot_length+120, $
-	YOFFSET=draw_offset_y+10, VALUE="uS")
-
-  TBIN_LABEL = widget_label(MAIN_BASE, $
-                            UNAME='TBIN_LABEL',$
-                            XOFFSET=draw_offset_x+plot_length+12, $
-                            YOFFSET=draw_offset_y+10, $
-                            VALUE="End bin")
-
-  TBIN_TXT_REF_L = widget_text(MAIN_BASE, $
-                               UNAME='TBIN_TXT_REF_L', $
-                               XOFFSET=draw_offset_x+plot_length+58, $
-                               YOFFSET=draw_offset_y+5,$
-                               SCR_XSIZE=60, $
-                               SCR_YSIZE=30, $
-                               /editable, VALUE='')
+;   TBIN_TXT_REF_L = widget_text(MAIN_BASE, $
+;                                UNAME='TBIN_TXT_REF_L', $
+;                                XOFFSET=draw_offset_x+plot_length+58, $
+;                                YOFFSET=draw_offset_y+5,$
+;                                SCR_XSIZE=60, $
+;                                SCR_YSIZE=30, $
+;                                /editable, VALUE='')
 
   REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
                                        UNAME='REFRESH_BUTTON_REF_L', $
                                        XOFFSET=draw_offset_x+plot_length+12,$
-                                       YOFFSET=50,$
+                                       YOFFSET=30,$
                                        VALUE='Refresh Selection',$
                                        SCR_XSIZE=126)
 
   SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
                                     UNAME='SAVE_BUTTON_REF_L', $
                                     XOFFSET=draw_offset_x+plot_length+12,$
-                                    YOFFSET=80,$
+                                    YOFFSET=65,$
                                     VALUE='Save I vs tof graph',$
                                     SCR_XSIZE=126)
-
-   FRAME1_REF_L = widget_label(MAIN_BASE, $
-                               XOFFSET=2*draw_offset_x+plot_length,$
-                               YOFFSET=draw_offset_y,$
-                               SCR_XSIZE=plot_height-5, $
-                               SCR_YSIZE=plot_height-35,$
-                               FRAME=3, value="")
 
    cursor_y_offset = 117
                                 ;x position of cursor in Infos mode	
@@ -1344,9 +1411,16 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
                                    ,VALUE='File')
    
+
+   OPEN_NEXUS_FILE_BUTTON = widget_button(FILE_MENU_REF_L,$
+                                          UNAME='OPEN_NEXUS_FILE_BUTTON',$
+                                          VALUE='Open NeXus file...')
+
    EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                    ,VALUE='Exit')
-   
+
+
+
    UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
                                     ,/MENU ,VALUE='Utils')
    
@@ -1357,10 +1431,16 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                     ,VALUE='Color Tool')
    
    DEFAULT_PATH = Widget_Button(UTILS_MENU_REF_L, UNAME='DEFAULT_PATH_REF_L'  $
-                                ,VALUE='Path to working directory')
+                                ,VALUE='Path to working directory...')
    
-   MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU_REF_L'  $
-                                            ,/MENU ,VALUE='mini ReflPak')
+   DEFAULT_NEXUS_PATH_REF_L = widget_button(UTILS_MENU_REF_L,$
+                                            UNAME='DEFAULT_NEXUS_PATH_REF_L',$
+                                            VALUE='Path to NeXus files...')
+
+   MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
+                                            UNAME='MINI_REFLPAK_MENU_REF_L',$
+                                            /MENU,$
+                                            VALUE='mini ReflPak')
    
    ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
                                     ,VALUE='About')
@@ -1369,6 +1449,9 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    
    Widget_Control, SAVE_BUTTON_REF_L, sensitive=0
    Widget_Control, REFRESH_BUTTON_REF_L, sensitive=0
+   Widget_Control, OPEN_NEXUS_FILE_BUTTON, sensitive=0
+   Widget_Control, RUN_NUMBER_BOX, sensitive=0
+   Widget_Control, OPEN_RUN_NUMBER, sensitive=0
    
 ;disabled before the user has been identified
    Widget_Control, CTOOL_MENU_REF_L, sensitive=0
