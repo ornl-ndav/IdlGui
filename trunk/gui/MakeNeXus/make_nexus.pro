@@ -130,7 +130,7 @@ draw_offset_y = 10			;draw y offset within widget
 plot_height = 150			;plot box height
 plot_length = 304			;plot box length
 
-Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'make_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
       ,SCR_XSIZE=265 ,SCR_YSIZE=280, XOFFSET=450 ,YOFFSET=50 $
@@ -222,7 +222,7 @@ end
 
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
-Resolve_Routine, 'make_histo_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'make_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -331,22 +331,21 @@ endcase
   OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
 	UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
 	XOFFSET= 3, YOFFSET = 5, $
-	SCR_XSIZE=50, SCR_YSIZE=30, $
-	VALUE= "File",$
-	tooltip="Binary file to load")
+	SCR_XSIZE=60, SCR_YSIZE=30, $
+	VALUE= "O P E N",$
+	tooltip="NeXus file to load")
 
   HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
 	UNAME='HISTO_EVENT_FILE_RUN_NUMBER',$
-	XOFFSET=64,$
+	XOFFSET=40,$
 	YOFFSET=5,$
 	SCR_XSIZE=80,$
 	SCR_YSIZE=30,$
-	VALUE='Run number: ')
-
+	VALUE='Run #')
   ;where to put the run number
   HISTO_EVENT_FILE_LABEL_tab1 = WIDGET_label(wT1,$
 	UNAME='HISTO_EVENT_FILE_LABEL_tab1',$
-	XOFFSET=144, YOFFSET=5,$
+	XOFFSET=110, YOFFSET=5,$
 	SCR_XSIZE=50, SCR_YSIZE=25,$
 	frame=1,$
 	value = '')
@@ -884,6 +883,6 @@ end
 ;
 ; Empty stub procedure used for autoloading.
 ;
-pro make_histo, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro make_nexus, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
    PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end

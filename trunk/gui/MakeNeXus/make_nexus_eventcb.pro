@@ -564,7 +564,7 @@ end
 
 ; \brief Empty stub procedure used for autoloading.
 ;
-pro make_histo_eventcb
+pro make_nexus_eventcb
 end
 
 pro REBINNING_TYPE_GROUP_CP, Event
