@@ -1513,10 +1513,10 @@ cd, (*global).working_path
 
 ;retrieve data
 nexus_file = (*global).full_nexus_name
-x_min =(*global).starting_id_x
-y_min =(*global).starting_id_y
-x_max =(*global).ending_id_x
-y_max=(*global).ending_id_y
+y_min =(*global).starting_id_x
+x_min =(*global).starting_id_y
+y_max =(*global).ending_id_x
+x_max=(*global).ending_id_y
 
 cmd_line = "tof_slicer -v "
 cmd_line += "--starting-ids=" + strcompress(x_min,/remove_all) $
@@ -1605,6 +1605,15 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
+
+
+
+
+
+
+
+
+
 ;--------------------------------------------------------------------------
 ; \brief 
 ;
@@ -1628,6 +1637,9 @@ pro CTOOL, Event
 	widget_control,rb_id,sensitive=1
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 
@@ -2460,10 +2472,11 @@ cd, (*global).working_path
 
 ;retrive data 
 nexus_file = (*global).full_nexus_name
-x_min =(*global).starting_id_x
-y_min =(*global).starting_id_y
-x_max =(*global).ending_id_x
-y_max=(*global).ending_id_y
+
+y_min =(*global).starting_id_x
+x_min =(*global).starting_id_y
+y_max =(*global).ending_id_x
+x_max=(*global).ending_id_y
 
 cmd_line = "tof_slicer -v "
 cmd_line += "--starting-ids=" + strcompress(x_min,/remove_all) $
