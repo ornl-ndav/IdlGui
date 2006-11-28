@@ -472,7 +472,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                   SCR_YSIZE=30,$
                                   VALUE='O P E N')
   
-  
   OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                             XOFFSET=5,$
                             YOFFSET=5,$
@@ -481,14 +480,130 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             FRAME=1,$
                             VALUE='')
   
+  list_of_files_to_process = widget_text(OPEN_NEXUS_BASE,$
+                                         XOFFSET=205,$
+                                         YOFFSET=5,$
+                                         SCR_XSIZE=85,$
+                                         SCR_YSIZE=136,$
+                                         VALUE='',$
+                                         /SCROLL)
+
+  actual_run_number_displayed = widget_label(OPEN_NEXUS_BASE,$
+                                             XOFFSET=5,$
+                                             YOFFSET=50,$
+                                             SCR_XSIZE=135,$
+                                             SCR_YSIZE=30,$
+                                             VALUE="Actual run displayed: ",$
+                                             /align_left)
+
+
+  remove_run_number_from_list = widget_button(OPEN_NEXUS_BASE,$
+                                              XOFFSET=5,$
+                                              YOFFSET=85,$
+                                              SCR_XSIZE=190,$
+                                              SCR_YSIZE=30,$
+                                              VALUE="REMOVED SELECTED RUN")
+  
   OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                                     XOFFSET=5,$
                                     YOFFSET=48,$
                                     SCR_XSIZE=190,$
                                     SCR_YSIZE=67,$
-                                    FRAME=1,$
-                                    VALUE='UNDER CONSTRUCTION')
+                                    VALUE='')
   
+  
+  SELECT_RUN_NUMBERS = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                   Title = "Select runs numbers",$
+                                   XOFFSET=0,$
+                                   YOFFSET=0,$
+                                   SCR_XSIZE=plot_length,$
+                                   SCR_YSIZE=plot_height)
+
+  select_run_numbers_text = widget_label(SELECT_RUN_NUMBERS,$
+                                         VALUE="Work on runs from",$
+                                         XOFFSET=5,$
+                                         YOFFSET=5,$
+                                         SCR_XSIZE=105,$
+                                         SCR_YSIZE=30,$
+                                        /align_left)
+
+  select_run_numbers_from = widget_text(SELECT_RUN_NUMBERS,$
+                                        uname='select_run_numbers_from',$
+                                        xoffset=110,$
+                                        yoffset=5,$
+                                        scr_xsize=50,$
+                                        scr_ysize=30,$
+                                        value='',$
+                                        /align_left,$
+                                        /editable)
+
+  select_and = widget_label(SELECT_RUN_NUMBERS,$
+                            xoffset=162,$
+                            yoffset=5,$
+                            scr_xsize=10,$
+                            scr_ysize=30,$
+                            value="to")
+
+  select_run_numbers_to = widget_text(SELECT_RUN_NUMBERS,$
+                                      uname='select_run_numbers_to',$
+                                      xoffset=175,$
+                                      yoffset=5,$
+                                      scr_xsize=50,$
+                                      scr_ysize=30,$
+                                      value='',$
+                                      /align_left,$
+                                      /editable)
+  
+  select_from_to_button = widget_button(SELECT_RUN_NUMBERS,$
+                                        UNAME='select_from_to_button',$
+                                        xoffset=225,$
+                                        yoffset=5,$
+                                        scr_xsize=65,$
+                                        scr_ysize=30,$
+                                        value='VALIDATE')
+
+  label_1 = widget_label(SELECT_RUN_NUMBERS,$
+                         xoffset=2,$
+                         yoffset=2,$
+                         scr_xsize=plot_length-15,$
+                         scr_ysize=34,$
+                         frame=1,$
+                         value='')
+
+  list_of_runs_add_text = widget_TEXT(SELECT_RUN_NUMBERS,$
+                                      uname='list_of_runs_add_text',$
+                                      XOFFSET=5,$
+                                      YOFFSET=60,$
+                                      SCR_XSIZE=50,$
+                                      SCR_YSIZE=30,$
+                                      VALUE='',$
+                                      /editable,$
+                                     /align_left)
+
+  list_of_runs_add_button = widget_button(SELECT_RUN_NUMBERS,$
+                                          uname='list_of_runs_add_button',$
+                                          xoffset=60,$
+                                          yoffset=60,$
+                                          scr_xsize=50,$
+                                          scr_ysize=30,$
+                                          value='ADD ->')
+
+  list_of_runs_remove_button = widget_button(SELECT_RUN_NUMBERS,$
+                                          uname='list_of_runs_remove_button',$
+                                          xoffset=210,$
+                                          yoffset=60,$
+                                          scr_xsize=70,$
+                                          scr_ysize=30,$
+                                          value='-> REMOVE')
+
+  list_of_runs = widget_text(SELECT_RUN_NUMBERS,$
+                             XOFFSET=115,$
+                             YOFFSET=40,$
+                             SCR_XSIZE=90,$
+                             SCR_YSIZE=103,$
+                             VALUE='',$
+                             /ALIGN_LEFT,$
+                             /scroll)
 
   VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
                                    Title = "PixelID TOF",$
@@ -505,64 +620,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                               SCR_XSIZE=plot_length-5,$
                               SCR_YSIZE=plot_height-25,$
                               RETAIN=2)
-  
-  SELECT_RUN_NUMBERS = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
-                                   Title = "Select runs numbers",$
-                                   XOFFSET=0,$
-                                   YOFFSET=0,$
-                                   SCR_XSIZE=plot_length,$
-                                   SCR_YSIZE=plot_height)
-
-  select_run_numbers_text = widget_label(SELECT_RUN_NUMBERS,$
-                                         VALUE="Apply mask to runs # from ",$
-                                         XOFFSET=5,$
-                                         YOFFSET=5,$
-                                         SCR_XSIZE=155,$
-                                         SCR_YSIZE=30)
-
-  select_run_numbers_from = widget_text(SELECT_RUN_NUMBERS,$
-                                        uname='select_run_numbers_from',$
-                                        xoffset=162,$
-                                        yoffset=5,$
-                                        scr_xsize=50,$
-                                        scr_ysize=30,$
-                                        value='',$
-                                        /align_left,$
-                                        /editable)
-
-  select_and = widget_label(SELECT_RUN_NUMBERS,$
-                            xoffset=215,$
-                            yoffset=5,$
-                            scr_xsize=10,$
-                            scr_ysize=30,$
-                            value="to")
-
-  select_run_numbers_to = widget_text(SELECT_RUN_NUMBERS,$
-                                      uname='select_run_numbers_to',$
-                                      xoffset=230,$
-                                      yoffset=5,$
-                                      scr_xsize=50,$
-                                      scr_ysize=30,$
-                                      value='',$
-                                      /align_left,$
-                                      /editable)
-  
-  label_1 = widget_label(SELECT_RUN_NUMBERS,$
-                         xoffset=2,$
-                         yoffset=2,$
-                         scr_xsize=plot_length-15,$
-                         scr_ysize=34,$
-                         frame=1)
-
-
-  run_number_to_add_text = widget_label(SELECT_RUN_NUMBERS,$
-                                        xoffset=5,$
-                                        yoffset=40,$
-                                        scr_xsize=120,$
-                                        scr_ysize=30,$
-                                        value='Run number to add or remove')
-
-
 
   ;xxxxxxxxxxxxxxxxxxxxxxx
 
@@ -959,7 +1016,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
 ;      ,VALUE='Swap Endian')
 
   MINI_REFLPACK_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='MINI_REFLPAK_MENU'  $
-      ,/MENU ,VALUE='mini ReflPak')
+      ,/MENU ,VALUE='mini ReflPak (REF_M)')
 
   ABOUT_MENU = Widget_Button(MINI_REFLPACK_MENU, UNAME='ABOUT'  $
       ,VALUE='About')
@@ -1204,7 +1261,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
   
   RUN_NUMBER_TEXT = widget_label(OPEN_NEXUS_BASE,$
                                  XOFFSET=10,$
-                                 YOFFSET=10,$
+                                 YOFFSET=40,$
                                  SCR_XSIZE=40,$
                                  SCR_YSIZE=30,$
                                  VALUE="RUN #")
@@ -1212,7 +1269,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
   RUN_NUMBER_BOX = widget_text(OPEN_NEXUS_BASE,$
                                UNAME='RUN_NUMBER_BOX_REF_L',$
                                XOFFSET=50,$
-                               YOFFSET=10,$
+                               YOFFSET=40,$
                                SCR_XSIZE=50,$
                                SCR_YSIZE=30,$
                                VALUE='',$
@@ -1222,19 +1279,10 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
   OPEN_RUN_NUMBER = widget_button(OPEN_NEXUS_BASE,$
                                   UNAME='OPEN_RUN_NUMBER_REF_L',$
                                   XOFFSET=105,$
-                                  YOFFSET=10,$
-                                  SCR_XSIZE=80,$
+                                  YOFFSET=40,$
+                                  SCR_XSIZE=120,$
                                   SCR_YSIZE=30,$
-                                  VALUE='O P E N')
-  
-  
-  OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
-                            XOFFSET=5,$
-                            YOFFSET=5,$
-                            SCR_XSIZE=plot_length-15,$
-                            SCR_YSIZE=38,$
-                            FRAME=1,$
-                            VALUE='')
+                                  VALUE='O  P  E  N')
   
 ;    OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
 ;                                     XOFFSET=5,$
@@ -1440,7 +1488,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    MINI_REFLPACK_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                             UNAME='MINI_REFLPAK_MENU_REF_L',$
                                             /MENU,$
-                                            VALUE='mini ReflPak')
+                                            VALUE='mini ReflPak (REF_L)')
    
    ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
                                     ,VALUE='About')
