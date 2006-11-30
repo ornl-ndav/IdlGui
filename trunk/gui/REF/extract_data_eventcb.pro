@@ -876,6 +876,8 @@ id_list=['UTILS_MENU',$
          'CURSOR_X_POSITION',$
          'CURSOR_Y_LABEL',$
          'CURSOR_Y_POSITION',$
+         'NUMBER_OF_COUNTS_VALUE',$
+         'NUMBER_OF_COUNTS_LABEL',$
          'SELECTION_INFOS',$
          'PIXELID_INFOS',$
          'MICHAEL_SPACE_LABEL',$
@@ -1192,6 +1194,7 @@ IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
    view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
    WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
+
    ;get window numbers - x (hidding)
    view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_M_HIDDING')
    WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x_hidding
@@ -1513,10 +1516,10 @@ cd, (*global).working_path
 
 ;retrieve data
 nexus_file = (*global).full_nexus_name
-y_min =(*global).starting_id_x
-x_min =(*global).starting_id_y
-y_max =(*global).ending_id_x
-x_max=(*global).ending_id_y
+x_min =(*global).starting_id_x
+y_min =(*global).starting_id_y
+x_max =(*global).ending_id_x
+y_max=(*global).ending_id_y
 
 cmd_line = "tof_slicer -v "
 cmd_line += "--starting-ids=" + strcompress(x_min,/remove_all) $
@@ -2663,6 +2666,10 @@ IF ((event.press EQ 1) AND (file_already_opened EQ 1)) then begin
    view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION_REF_L')
    WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
+   ;put number of counts in number_of_counts label position
+   view_info = widget_info(Event.top,FIND_BY_UNAME='NUMBER_OF_COUNTS_VALUE')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(img(x,y))
+
    ;get window numbers - x
    view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L')
    WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x

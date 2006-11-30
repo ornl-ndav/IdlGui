@@ -1397,18 +1397,18 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
   REFRESH_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
                                        UNAME='REFRESH_BUTTON_REF_L', $
                                        XOFFSET=draw_offset_x+plot_length+12,$
-                                       YOFFSET=30,$
+                                       YOFFSET=10,$
                                        VALUE='Refresh Selection',$
                                        SCR_XSIZE=126)
 
   SAVE_BUTTON_REF_L = Widget_Button(MAIN_BASE, $
                                     UNAME='SAVE_BUTTON_REF_L', $
                                     XOFFSET=draw_offset_x+plot_length+12,$
-                                    YOFFSET=65,$
+                                    YOFFSET=45,$
                                     VALUE='Save I vs tof graph',$
                                     SCR_XSIZE=126)
 
-   cursor_y_offset = 117
+   cursor_y_offset = 90
                                 ;x position of cursor in Infos mode	
    CURSOR_X_LABEL_REF_L = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL_REF_L',$
                                        XOFFSET=2*draw_offset_x+plot_length+5,$
@@ -1448,12 +1448,30 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                      SCR_YSIZE=130,$
                                      /SCROLL)
    
+
+   NUMBER_OF_COUNTS_LABEL= Widget_label(MAIN_BASE, $
+                                        UVALUE='NUMBER_OF_COUNTS_LABEL',$
+                                        XOFFSET=2*DRAW_OFFSET_X+PLOT_LENGTH+5,$
+                                        YOFFSET=cursor_y_offset+20,$
+                                        value="Counts= ")
+   
+  NUMBER_OF_COUNTS_VALUE = Widget_label(MAIN_BASE,$
+                                        UNAME='NUMBER_OF_COUNTS_VALUE',$
+                                        XOFFSET=2*draw_offset_x+plot_length+55,$
+                                        YOFFSET=cursor_y_offset+15,$
+                                        VALUE='123456789',$
+                                        SCR_XSIZE=65,$
+                                        SCR_YSIZE=28,$
+                                        /align_left)
+
+
+
                                 ;frame3 of x= and y= for infos mode
    FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
                                XOFFSET=2*draw_offset_x+plot_length,$
-                               YOFFSET=110,$
+                               YOFFSET=cursor_y_offset-7,$
                                SCR_XSIZE=plot_height-5,$
-                               SCR_YSIZE=27,FRAME=3, value="")
+                               SCR_YSIZE=47,FRAME=3, value="")
    
    
    FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
@@ -1514,3 +1532,4 @@ end
 pro extract_data, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end
+
