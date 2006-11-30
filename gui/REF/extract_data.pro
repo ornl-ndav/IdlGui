@@ -725,34 +725,36 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   REFRESH_BUTTON = Widget_Button(MAIN_BASE,$
                                  UNAME='REFRESH_BUTTON',$
                                  XOFFSET=draw_offset_x+plot_length+15,$
-                                 YOFFSET=15,$
+                                 YOFFSET=10,$
                                  VALUE='Refresh Selection',$
                                  SCR_XSIZE=134)
 
   SAVE_BUTTON = Widget_Button(MAIN_BASE,$
                               UNAME='SAVE_BUTTON',$
                               XOFFSET=draw_offset_x+plot_length+15,$
-                              YOFFSET=50,$
+                              YOFFSET=35,$
                               VALUE='Save Region',$
                               SCR_XSIZE=134)
 
    MODE_INFOS = widget_text(MAIN_BASE,$
                             UNAME='MODE_INFOS',$
                             XOFFSET= draw_offset_x+plot_length+15,$
-                            YOFFSET= 90,$
+                            YOFFSET= 60,$
                             SCR_XSIZE= 134,$
                             SCR_YSIZE= 30,$
                             value= 'MODE: INFOS') 
 
+   cursor_y_offset = 100
+
    ;x position of cursor in Infos mode	
    CURSOR_X_LABEL = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL',$
 	XOFFSET=2*draw_offset_x+plot_length+5,$
-	YOFFSET=draw_offset_y+130,$
+	YOFFSET=cursor_y_offset+2,$
 	value="x= ")
 
    CURSOR_X_POSITION = Widget_label(MAIN_BASE,UNAME='CURSOR_X_POSITION',$
 	XOFFSET=2*draw_offset_x+plot_length+15,$
-	YOFFSET=draw_offset_y+125,$
+	YOFFSET=cursor_y_offset-3,$
 	VALUE="N/A",$
 	SCR_XSIZE=45,$
 	SCR_YSIZE=28)
@@ -760,24 +762,39 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
    ;y position of cursor in Infos mode	
    CURSOR_Y_LABEL= Widget_label(MAIN_BASE, UNAME='CURSOR_Y_LABEL',$
 	XOFFSET=2*draw_offset_x+plot_length+75,$
-	YOFFSET=draw_offset_y+130,$
+	YOFFSET=cursor_y_offset+2,$
 	value="y= ")
 
    CURSOR_Y_POSITION = Widget_label(MAIN_BASE,UNAME='CURSOR_Y_POSITION',$
 	XOFFSET=2*draw_offset_x+plot_length+85,$
-	YOFFSET=draw_offset_y+125,$
+	YOFFSET=cursor_y_offset-3,$
 	VALUE="N/A",$
 	SCR_XSIZE=45,$
 	SCR_YSIZE=28)
 
+   NUMBER_OF_COUNTS_LABEL= Widget_label(MAIN_BASE,$
+                                        UNAME='NUMBER_OF_COUNTS_LABEL_REF_M',$
+                                        XOFFSET=2*DRAW_OFFSET_X+PLOT_LENGTH+5,$
+                                        YOFFSET=cursor_y_offset+25,$
+                                        value="Counts= ")
+   
+  NUMBER_OF_COUNTS_VALUE = Widget_label(MAIN_BASE,$
+                                        UNAME='NUMBER_OF_COUNTS_VALUE_REF_M',$
+                                        XOFFSET=2*draw_offset_x+plot_length+55,$
+                                        YOFFSET=cursor_y_offset+20,$
+                                        VALUE='N/A',$
+                                        SCR_XSIZE=65,$
+                                        SCR_YSIZE=28,$
+                                        /align_left)
+  
   ;frame3 of x= and y= for infos mode
   FRAME3 = widget_label(MAIN_BASE, UNAME='FRAME3', $
-	XOFFSET=2*draw_offset_x+plot_length,$
-	YOFFSET=draw_offset_y+123,$
-	SCR_XSIZE=plot_height-5,$
-	SCR_YSIZE=27,FRAME=3, value="")
-
-   SELECTION_INFOS = widget_label(MAIN_BASE,$
+                        XOFFSET=2*draw_offset_x+plot_length,$
+                        YOFFSET=cursor_y_offset-5,$
+                        SCR_XSIZE=plot_height-5,$
+                        SCR_YSIZE=52,FRAME=3, value="")
+  
+  SELECTION_INFOS = widget_label(MAIN_BASE,$
 	UNAME="SELECTION_INFOS",$
 	XOFFSET=draw_offset_x+ctrl_x,$
 	YOFFSET = 2*plot_height+draw_y+33, $
@@ -1036,6 +1053,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   Widget_Control, CURSOR_X_POSITION, sensitive=0
   Widget_Control, CURSOR_Y_LABEL, sensitive=0
   Widget_Control, CURSOR_Y_POSITION, sensitive=0
+  Widget_Control, NUMBER_OF_COUNTS_VALUE, sensitive=0 
+  Widget_Control, NUMBER_OF_COUNTS_LABEL, sensitive=0
   Widget_Control, SELECTION_INFOS, sensitive=0
   Widget_Control, PIXELID_INFOS, sensitive=0
   Widget_Control, MICHAEL_SPACE_LABEL, sensitive=0
@@ -1410,7 +1429,8 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
 
    cursor_y_offset = 90
                                 ;x position of cursor in Infos mode	
-   CURSOR_X_LABEL_REF_L = Widget_label(MAIN_BASE, UNAME='CURSOR_X_LABEL_REF_L',$
+   CURSOR_X_LABEL_REF_L = Widget_label(MAIN_BASE, $
+                                       UNAME='CURSOR_X_LABEL_REF_L',$
                                        XOFFSET=2*draw_offset_x+plot_length+5,$
                                        YOFFSET=cursor_y_offset,$
                                        value="x= ")
@@ -1450,7 +1470,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    
 
    NUMBER_OF_COUNTS_LABEL= Widget_label(MAIN_BASE, $
-                                        UVALUE='NUMBER_OF_COUNTS_LABEL',$
+                                        UNAME='NUMBER_OF_COUNTS_LABEL',$
                                         XOFFSET=2*DRAW_OFFSET_X+PLOT_LENGTH+5,$
                                         YOFFSET=cursor_y_offset+20,$
                                         value="Counts= ")
@@ -1459,7 +1479,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                         UNAME='NUMBER_OF_COUNTS_VALUE',$
                                         XOFFSET=2*draw_offset_x+plot_length+55,$
                                         YOFFSET=cursor_y_offset+15,$
-                                        VALUE='123456789',$
+                                        VALUE='',$
                                         SCR_XSIZE=65,$
                                         SCR_YSIZE=28,$
                                         /align_left)
@@ -1518,7 +1538,13 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    Widget_Control, OPEN_NEXUS_FILE_BUTTON, sensitive=0
    Widget_Control, RUN_NUMBER_BOX, sensitive=0
    Widget_Control, OPEN_RUN_NUMBER, sensitive=0
-   
+   Widget_Control, NUMBER_OF_COUNTS_VALUE, sensitive=0 
+   Widget_Control, NUMBER_OF_COUNTS_LABEL, sensitive=0 
+   Widget_Control, CURSOR_X_LABEL_REF_L, sensitive=0 
+   Widget_Control, CURSOR_X_POSITION_REF_L, sensitive=0 
+   Widget_Control, CURSOR_Y_LABEL_REF_L, sensitive=0 
+   Widget_Control, CURSOR_Y_POSITION_REF_L, sensitive=0 
+
 ;disabled before the user has been identified
    Widget_Control, CTOOL_MENU_REF_L, sensitive=0
    
