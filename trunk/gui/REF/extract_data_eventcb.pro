@@ -876,8 +876,8 @@ id_list=['UTILS_MENU',$
          'CURSOR_X_POSITION',$
          'CURSOR_Y_LABEL',$
          'CURSOR_Y_POSITION',$
-         'NUMBER_OF_COUNTS_VALUE',$
-         'NUMBER_OF_COUNTS_LABEL',$
+         'NUMBER_OF_COUNTS_VALUE_REF_M',$
+         'NUMBER_OF_COUNTS_LABEL_REF_M',$
          'SELECTION_INFOS',$
          'PIXELID_INFOS',$
          'MICHAEL_SPACE_LABEL',$
@@ -1194,6 +1194,9 @@ IF ((event.press EQ 1 ) AND (file_already_opened EQ 1)) then begin
    view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION')
    WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
 	
+   ;put number of counts in number_of_counts label position
+   view_info = widget_info(Event.top,FIND_BY_UNAME='NUMBER_OF_COUNTS_VALUE_REF_M')
+   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(img(x,y))
 
    ;get window numbers - x (hidding)
    view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_M_HIDDING')
@@ -2424,6 +2427,21 @@ if file NE '' then begin
 	;disable save button after refreshing selection
 	rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
 	widget_control,rb_id,sensitive=1
+
+        ;disable x, y and counts buttons
+        id_list = ['NUMBER_OF_COUNTS_VALUE',$
+                   'NUMBER_OF_COUNTS_LABEL',$
+                   'CURSOR_X_LABEL_REF_L',$
+                   'CURSOR_X_POSITION_REF_L',$
+                   'CURSOR_Y_POSITION_REF_L',$
+                   'CURSOR_Y_LABEL_REF_L']
+        id_list_size = size(id_list)
+        for i=0,(id_list_size[1]-1) do begin
+            print, id_list[i]
+            id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+            Widget_Control, id, sensitive=1
+            print, id_list[i]
+        endfor
 
 endif;valid file
 
