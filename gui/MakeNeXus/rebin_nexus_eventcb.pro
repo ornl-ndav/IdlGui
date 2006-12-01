@@ -912,283 +912,304 @@ run_number_id = widget_info(Event.top, FIND_BY_UNAME='HISTO_EVENT_FILE_TEXT_BOX'
 widget_control, run_number_id, get_value=run_number
 (*global).run_number = run_number
 
-;get full preNeXus path
-cmd_findnexus = "~/SVN/ASGIntegration/trunk/utilities/findnexus -i" + instrument
-cmd_findnexus += " " + strcompress(run_number, /remove_all)
-cmd_findnexus += " --prenexus"
-spawn, cmd_findnexus, listening
+CATCH, wrong_run_number_format
 
-;get only path up to preNeXus path
-full_path_to_prenexus = get_full_path_to_preNeXus_path(listening,instrument,run_number)
+if (wrong_run_number_format ne 0) then begin
 
-;check if nexus exists
-result = strmatch(full_path_to_prenexus,"ERROR*")
+        view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid run number", /APPEND
+	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
 
-if (result[0] GE 1) then begin
+        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+        widget_control, id_display, sensitive=0
 
-    find_nexus = 0  ;run# does not exist in archive
+        runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
+        widget_control, runinfo_id, sensitive=0
+        
+        cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
+        widget_control, cvinfo_id, sensitive=0
 
 endif else begin
 
-    find_nexus = 1  ;run# exist in archive
-
-    ;check if full_path_to_preNeXus is not on DAS
-    match = "*" + instrument + "-DAS-FS/*"
-    result_of_find_prenexus_on_DAS = strmatch(full_path_to_prenexus,match)
-
-    if (result_of_find_prenexus_on_DAS[0] GE 1) then begin
-        find_prenexus_on_das = 1
-    endif else begin
-        find_prenexus_on_das = 0
-        endelse
-
-endelse
-
-;run# does not exist or only on DAS (not archive) so we stop here
-if (find_nexus EQ 0 OR find_prenexus_on_das EQ 1) then begin   
-
-;activate archive_it_or_not
-    id = widget_info(Event.top, FIND_BY_UNAME="exist_or_not_base")
-    widget_control, id, map=1
-
-    ;desactivate display button here
-    id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-    widget_control, id_display, sensitive=0
-
-endif else begin ;run# exists
-
-    (*global).full_path_to_prenexus = full_path_to_prenexus
-
-    ;get full nexus path name
+;get full preNeXus path
     cmd_findnexus = "~/SVN/ASGIntegration/trunk/utilities/findnexus -i" + instrument
-    cmd_findnexus += " " + strcompress(run_number,/remove_all)
+    cmd_findnexus += " " + strcompress(run_number, /remove_all)
+    cmd_findnexus += " --prenexus"
     spawn, cmd_findnexus, listening
-
-    (*global).full_path_to_nexus = listening
-
-    ;check if file is event or histo
-    full_path_instr_run_number = full_path_to_prenexus + instrument + "_"
-    full_path_instr_run_number += strcompress(run_number,/remove_all)
-    (*global).full_path_instr_run_number = full_path_instr_run_number
-    name_if_event = full_path_instr_run_number + "_neutron_event.dat"
-    name_if_histogram = full_path_instr_run_number + "_neutron_histo.dat"
-    main_file_is_event = check_if_file_is_event(name_if_event,name_if_histogram)
     
-    if (main_file_is_event EQ 1) then begin ;file is an event file
+;get only path up to preNeXus path
+    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening,instrument,run_number)
+    
+;check if nexus exists
+    result = strmatch(full_path_to_prenexus,"ERROR*")
+    
+    if (result[0] GE 1) then begin
         
-        is_file_histo = 0 ;file is an event
-        ;produce name of main file
-        full_histo_event_filename = name_if_event
-        (*global).histo_event_filename = full_histo_event_filename
+        find_nexus = 0          ;run# does not exist in archive
+        
     endif else begin
-
-        if (main_file_is_event EQ 0) then begin ;file is a histogram file
-            
-            is_file_histo = 1   ;file is a histogram
-                                ;produce name of main file
-            full_histo_event_filename = full_path_instr_run_number + "_neutron_histo.dat"
-            (*global).histo_event_filename = full_histo_event_filename            
-        endif else begin ;there is no event or histogram file
-            
-            is_file_histo = -1
-            
+        
+        find_nexus = 1          ;run# exist in archive
+        
+                                ;check if full_path_to_preNeXus is not on DAS
+        match = "*" + instrument + "-DAS-FS/*"
+        result_of_find_prenexus_on_DAS = strmatch(full_path_to_prenexus,match)
+        
+        if (result_of_find_prenexus_on_DAS[0] GE 1) then begin
+            find_prenexus_on_das = 1
+        endif else begin
+            find_prenexus_on_das = 0
         endelse
         
     endelse
+    
+;run# does not exist or only on DAS (not archive) so we stop here
+    if (find_nexus EQ 0 OR find_prenexus_on_das EQ 1) then begin   
+        
+;activate archive_it_or_not
+        id = widget_info(Event.top, FIND_BY_UNAME="exist_or_not_base")
+        widget_control, id, map=1
+        
+                                ;desactivate display button here
+        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+        widget_control, id_display, sensitive=0
+        
+    endif else begin            ;run# exists
+        
+        (*global).full_path_to_prenexus = full_path_to_prenexus
+        
+                                ;get full nexus path name
+        cmd_findnexus = "~/SVN/ASGIntegration/trunk/utilities/findnexus -i" + instrument
+        cmd_findnexus += " " + strcompress(run_number,/remove_all)
+        spawn, cmd_findnexus, listening
+        
+        (*global).full_path_to_nexus = listening
+        
+                                ;check if file is event or histo
+        full_path_instr_run_number = full_path_to_prenexus + instrument + "_"
+        full_path_instr_run_number += strcompress(run_number,/remove_all)
+        (*global).full_path_instr_run_number = full_path_instr_run_number
+        name_if_event = full_path_instr_run_number + "_neutron_event.dat"
+        name_if_histogram = full_path_instr_run_number + "_neutron_histo.dat"
+        main_file_is_event = check_if_file_is_event(name_if_event,name_if_histogram)
+        
+        if (main_file_is_event EQ 1) then begin ;file is an event file
+            
+            is_file_histo = 0   ;file is an event
+                                ;produce name of main file
+            full_histo_event_filename = name_if_event
+            (*global).histo_event_filename = full_histo_event_filename
+        endif else begin
+            
+            if (main_file_is_event EQ 0) then begin ;file is a histogram file
+                
+                is_file_histo = 1 ;file is a histogram
+                                ;produce name of main file
+                full_histo_event_filename = full_path_instr_run_number + "_neutron_histo.dat"
+                (*global).histo_event_filename = full_histo_event_filename            
+            endif else begin    ;there is no event or histogram file
+                
+                is_file_histo = -1
+                
+            endelse
+            
+        endelse
         
 ;get info from xml files
 ;determine name of xml files
-    cvinfo_xml_filename = full_path_instr_run_number + "_cvinfo.xml"
-    runinfo_xml_filename = full_path_instr_run_number + "_runinfo.xml"
-    
-    runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
-    widget_control, runinfo_id, sensitive=1
-    
-    cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
-    widget_control, cvinfo_id, sensitive=1
-    
-    (*global).cvinfo_xml_filename = cvinfo_xml_filename
-    (*global).runinfo_xml_filename = runinfo_xml_filename
-    
+        cvinfo_xml_filename = full_path_instr_run_number + "_cvinfo.xml"
+        runinfo_xml_filename = full_path_instr_run_number + "_runinfo.xml"
+        
+        runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
+        widget_control, runinfo_id, sensitive=1
+        
+        cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
+        widget_control, cvinfo_id, sensitive=1
+        
+        (*global).cvinfo_xml_filename = cvinfo_xml_filename
+        (*global).runinfo_xml_filename = runinfo_xml_filename
+        
 ;name of xml file
-    id = widget_info(Event.top, FIND_BY_UNAME = "XML_FILE_TEXT")
-    text = instrument + "_" + run_number
-    widget_control, id, set_value=string(text[0])	
-
+        id = widget_info(Event.top, FIND_BY_UNAME = "XML_FILE_TEXT")
+        text = instrument + "_" + run_number
+        widget_control, id, set_value=string(text[0])	
+        
 ;get number of pixels
-    pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
-    (*global).pixel_number = pixel_number
-    id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-    widget_control, id, set_value=string(pixel_number)
-    
+        pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+        (*global).pixel_number = pixel_number
+        id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+        widget_control, id, set_value=string(pixel_number)
+        
 ;Title
-    id = widget_info(Event.top, FIND_BY_UNAME = "TITLE_TEXT")
-    text = read_xml_file(runinfo_xml_filename, "Title")
-    if (strlen(text) GT 40) then begin
-        text = strmid(text,0,38) + "[...]"
-        print, "in title: text is : ", text           
-    endif
-    widget_control, id, set_value=string(text)
-    
+        id = widget_info(Event.top, FIND_BY_UNAME = "TITLE_TEXT")
+        text = read_xml_file(runinfo_xml_filename, "Title")
+        if (strlen(text) GT 40) then begin
+            text = strmid(text,0,38) + "[...]"
+            print, "in title: text is : ", text           
+        endif
+        widget_control, id, set_value=string(text)
+        
 ;Notes
-    id = widget_info(Event.top, FIND_BY_UNAME = "NOTES_TEXT")
-    text = read_xml_file(runinfo_xml_filename, "Notes")
-    if (strlen(text) GT 40) then begin
-        text = strmid(text,0,38) + "[...]"
-    endif
-    widget_control, id, set_value=string(text)
-    
+        id = widget_info(Event.top, FIND_BY_UNAME = "NOTES_TEXT")
+        text = read_xml_file(runinfo_xml_filename, "Notes")
+        if (strlen(text) GT 40) then begin
+            text = strmid(text,0,38) + "[...]"
+        endif
+        widget_control, id, set_value=string(text)
+        
 ;SpecialDesignation
-    id = widget_info(Event.top, FIND_BY_UNAME = "SPECIAL_DESIGNATION")
-    text = read_xml_file(runinfo_xml_filename, "SpecialDesignation")
-    if (strlen(text) GT 30) then begin
-        text = strmid(text,0,28) + "[...]"
-    endif
-    widget_control, id, set_value=text
-    
+        id = widget_info(Event.top, FIND_BY_UNAME = "SPECIAL_DESIGNATION")
+        text = read_xml_file(runinfo_xml_filename, "SpecialDesignation")
+        if (strlen(text) GT 30) then begin
+            text = strmid(text,0,28) + "[...]"
+        endif
+        widget_control, id, set_value=text
+        
 ;Script ID
-    id = widget_info(Event.top, FIND_BY_UNAME = "SCRIPT_ID_TEXT")
-    text = read_xml_file(runinfo_xml_filename, "scriptID")
-    if (strlen(text) GT 20) then begin
-        text = strmid(text,0,18) + "[...]"
-    endif
-    widget_control, id, set_value=text
-    
-    if (is_file_histo EQ 1) then begin ;file is histogram
+        id = widget_info(Event.top, FIND_BY_UNAME = "SCRIPT_ID_TEXT")
+        text = read_xml_file(runinfo_xml_filename, "scriptID")
+        if (strlen(text) GT 20) then begin
+            text = strmid(text,0,18) + "[...]"
+        endif
+        widget_control, id, set_value=text
         
-        id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
-        widget_control, id, set_value="histogram"
-        
-                                ;activate histo_file_infos main_base
-        id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
-        widget_control, id, map=1
-        
-                                ;hide event file interaction box
-        id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
-        widget_control, id, map=1
-        
-;get number of pixels and number of tof from file
-        
-        case (*global).instrument of
-            "REF_L": 	begin
-                Nimg = (*global).Nimg_REF_L
-            end
-            "REF_M": 	begin
-                Nimg = (*global).Nimg_REF_M
-            end
-            "BSS": 	begin
-                Nimg = long(strcompress(pixel_number))
-            end
-        endcase
-        
-        file = full_histo_event_filename
-        
-        openr,u,file,/get
-        
-;find out file info
-        fs = fstat(u)
-        Ntof = fs.size/(Nimg*4L)
-        close, u
-        free_lun, u
-        
-        id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT")
-        widget_control, id, set_value = strcompress(Nimg,/remove_all)
-        
-        id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
-        widget_control, id, set_value = strcompress(NTOF,/remove_all)
-        
-
-    endif else begin            ;file is event file
-
-        if (is_file_histo EQ 0) then begin
-
-;activate "Create local NeXus" button
-            id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
-            widget_control, id_create_nexus, sensitive=1
+        if (is_file_histo EQ 1) then begin ;file is histogram
             
             id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
-            widget_control, id, set_value="event"
+            widget_control, id, set_value="histogram"
             
-            id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
-            widget_control, id, map=0
-            
-;get number of pixels
-            pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
-            id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
-            widget_control, id, set_value=pixel_number	
-            
-            item_value = display_xml_info(runinfo_xml_filename, "startbin")
-            id = widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
-            widget_control, id, set_value=item_value
-            
-            item_value = display_xml_info(runinfo_xml_filename, "endbin")
-            id = widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
-            widget_control, id, set_value=item_value
-            
+                                ;activate histo_file_infos main_base
             id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
-            widget_control, id, map=0
+            widget_control, id, map=1
             
+                                ;hide event file interaction box
+            id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
+            widget_control, id, map=1
+            
+;get number of pixels and number of tof from file
+            
+            case (*global).instrument of
+                "REF_L": 	begin
+                    Nimg = (*global).Nimg_REF_L
+                end
+                "REF_M": 	begin
+                    Nimg = (*global).Nimg_REF_M
+                end
+                "BSS": 	begin
+                    Nimg = long(strcompress(pixel_number))
+                end
+            endcase
+            
+            file = full_histo_event_filename
+            
+            openr,u,file,/get
+            
+;find out file info
+            fs = fstat(u)
+            Ntof = fs.size/(Nimg*4L)
+            close, u
+            free_lun, u
+            
+            id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT")
+            widget_control, id, set_value = strcompress(Nimg,/remove_all)
+            
+            id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
+            widget_control, id, set_value = strcompress(NTOF,/remove_all)
+            
+            
+        endif else begin        ;file is event file
+            
+            if (is_file_histo EQ 0) then begin
+                
+;activate "Create local NeXus" button
+                id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
+                widget_control, id_create_nexus, sensitive=1
+                
+                id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
+                widget_control, id, set_value="event"
+                
+                id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
+                widget_control, id, map=0
+                
+;get number of pixels
+                pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+                id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
+                widget_control, id, set_value=pixel_number	
+                
+                item_value = display_xml_info(runinfo_xml_filename, "startbin")
+                id = widget_info(Event.top, FIND_BY_UNAME="MIN_TIME_BIN_TEXT_wT1")
+                widget_control, id, set_value=item_value
+                
+                item_value = display_xml_info(runinfo_xml_filename, "endbin")
+                id = widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
+                widget_control, id, set_value=item_value
+                
+                id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
+                widget_control, id, map=0
+                
 ;desactivate display button
-            id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-            widget_control, id_display, sensitive=0
+                id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+                widget_control, id_display, sensitive=0
+                
+            endif else begin
+                
+                txt = "No event or histogram files detected"
+                view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+                WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+                
+            endelse
             
-        endif else begin
-
-            txt = "No event or histogram files detected"
-            view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-            WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
         endelse
         
-    endelse
-    
-    if ((*global).display_button_activate EQ 1) then begin
-
-        case instrument of        
+        if ((*global).display_button_activate EQ 1) then begin
             
-            "REF_L": begin
-                view_info = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
-                WIDGET_CONTROL, view_info, GET_VALUE=id
-                wset, id
-                erase
-                if (is_file_histo NE -1) then begin
-                    create_local_copy_of_histo_mapped, Event
-                    plot_data_REF_L, event
-                endif 
-            end
+            case instrument of        
+                
+                "REF_L": begin
+                    view_info = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+                    WIDGET_CONTROL, view_info, GET_VALUE=id
+                    wset, id
+                    erase
+                    if (is_file_histo NE -1) then begin
+                        create_local_copy_of_histo_mapped, Event
+                        plot_data_REF_L, event
+                    endif 
+                end
+                
+                "REF_M": begin
+                    view_info= widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
+                    WIDGET_CONTROL, view_info, GET_VALUE=id
+                    wset, id
+                    erase
+                    if (is_file_histo NE -1) then begin
+                        create_local_copy_of_histo_mapped, Event
+                        plot_data_REF_M, event      
+                    endif
+                end
+                
+                "BSS"  : begin
+                    view_info_0 = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
+                    view_info_1 = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
+                    WIDGET_CONTROL, view_info_0, GET_VALUE=id_0
+                    WIDGET_CONTROL, view_info_1, GET_VALUE=id_1
+                    wset,id_0
+                    erase
+                    wset,id_1 
+                    erase
+                    if (is_file_histo NE -1) then begin
+                        create_local_copy_of_histo_mapped, Event
+                        plot_data_BSS, event
+                    endif
+                end
+            endcase
             
-            "REF_M": begin
-                view_info= widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
-                WIDGET_CONTROL, view_info, GET_VALUE=id
-                wset, id
-                erase
-                if (is_file_histo NE -1) then begin
-                    create_local_copy_of_histo_mapped, Event
-                    plot_data_REF_M, event      
-                endif
-            end
-            
-            "BSS"  : begin
-                view_info_0 = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
-                view_info_1 = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
-                WIDGET_CONTROL, view_info_0, GET_VALUE=id_0
-                WIDGET_CONTROL, view_info_1, GET_VALUE=id_1
-                wset,id_0
-                erase
-                wset,id_1 
-                erase
-                if (is_file_histo NE -1) then begin
-                    create_local_copy_of_histo_mapped, Event
-                    plot_data_BSS, event
-                endif
-            end
-        endcase
+        endif
         
-    endif
-    
 ;activate display button
-    id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-    widget_control, id_display, sensitive=1
+        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+        widget_control, id_display, sensitive=1
+        
+    endelse
 
 endelse
 
