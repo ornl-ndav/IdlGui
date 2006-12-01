@@ -2348,8 +2348,10 @@ if file NE '' then begin
 	(*global).Ntof = Ntof	;set back in global structure
 
 	;using assoc
-	;(assoc defines a template structure for reading data. Since data are ordered Ntof, Ny, Nx, Ntof
-	;varie the fastest. This being the case, it's not convenient to define an y,x data plane, and it's more
+	;(assoc defines a template structure for reading data. 
+        ;Since data are ordered Ntof, Ny, Nx, Ntof
+	;varie the fastest. This being the case, it's not convenient 
+        ;to define an y,x data plane, and it's more
 	;convenient to define the data structure to be an individual TOF array.
 	data_assoc_tof = assoc(u,lonarr(Ntof,Nx))
 	data_assoc = assoc(u,lonarr(Ntof))
@@ -2357,8 +2359,8 @@ if file NE '' then begin
 	;make the image array
 	img = lonarr(Nx,Ny)
 	for i=0L,Nimg-1 do begin
-		y = i MOD Ny
-		x = i/Ny
+		x = i MOD Nx  ;Nx=304
+		y = i/Nx
 		img[x,y] = total(data_assoc[i])
 	endfor			
 
@@ -2437,10 +2439,8 @@ if file NE '' then begin
                    'CURSOR_Y_LABEL_REF_L']
         id_list_size = size(id_list)
         for i=0,(id_list_size[1]-1) do begin
-            print, id_list[i]
             id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
             Widget_Control, id, sensitive=1
-            print, id_list[i]
         endfor
 
 endif;valid file
