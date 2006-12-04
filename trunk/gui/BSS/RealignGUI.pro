@@ -16,18 +16,31 @@ pro MAIN_BASE_event, Event
     end
 
     ;Open widget in the top toolbar
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTOGRAM'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_HISTOGRAM, Event
-    end
-
-    ;Open widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPED_HISTOGRAM'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         OPEN_MAPPED_HISTOGRAM, Event
     end
 
+    ;Open widget in the top toolbar - OPEN RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_NEXUS_menu'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_NEXUS_INTERFACE, Event
+    end
+
+    ;Open widget in the top toolbar - OPEN RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_NEXUS, Event
+    end
+
+    ;Cancel open_run_number - OPEN RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='CANCEL_OPEN_RUN_NUMBER_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        CANCEL_OPEN_NEXUS, Event
+    end
     
+    
+
     ;Exit widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -176,14 +189,6 @@ pro MAIN_BASE_event, Event
 
 
 
-
-
-
-
-
-
-
-
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
     	IDENTIFICATION_TEXT_CB, Event
     end
@@ -257,6 +262,13 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;or other means
 
 global = ptr_new({$
+                   tmp_nxdir_folder : '/realignGUI_tmp/',$
+                   file_type : '',$
+                   file_to_plot_top : '',$
+                   file_to_plot_bottom : '',$
+                   full_tmp_nxdir_folder_path : '',$
+                   find_nexus : 0,$
+                   full_nexus_name : '',$
                    file			      :'',$
                    full_output_file_name      :'',$  
                    file_already_opened	      :0,$
@@ -318,87 +330,140 @@ global = ptr_new({$
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
-;  IDENTIFICATION_BASE= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
-;  	UNAME='IDENTIFICATION_BASE',$
-;  	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
-;  	SPACE=4, XPAD=3, YPAD=3)
+  IDENTIFICATION_BASE= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
+  	UNAME='IDENTIFICATION_BASE',$
+  	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
+  	SPACE=4, XPAD=3, YPAD=3)
 
-;  IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
-;  		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
+  IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
+  		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
 
-;  IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
-;  		XOFFSET=100, YOFFSET=20, VALUE='',$
-;  		SCR_XSIZE=37, /editable,$
-;  		UNAME='IDENTIFICATION_TEXT',/ALL_EVENTS)
+  IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
+                                    XOFFSET=100,$
+                                    YOFFSET=20,$
+                                    VALUE='',$ ;
+                                    SCR_XSIZE=37,$
+                                    /editable,$
+                                    UNAME='IDENTIFICATION_TEXT',$
+                                    /ALL_EVENTS)
+  
+  ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
+                                           XOFFSET=5, YOFFSET=25, VALUE='',$
+                                           SCR_XSIZE=90, SCR_YSIZE=20, $
+                                           UNAME='ERROR_IDENTIFICATION_LEFT')
+  
+  ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
+                                            XOFFSET=140, YOFFSET=25, VALUE='',$
+                                            SCR_XSIZE=90, SCR_YSIZE=20, $
+                                            UNAME='ERROR_IDENTIFICATION_RIGHT')
+  
+  DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
+                                      XOFFSET=0, YOFFSET=55, VALUE='Working path',$
+                                      SCR_XSIZE=80, SCR_YSIZE=30,$
+                                      UNAME='DEFAULT_PATH_BUTTON')
+  
+  DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
+                                  XOFFSET=83, YOFFSET=55, VALUE=(*global).default_path,$
+                                  UNAME='DEFAULT_PATH_TEXT',/editable,$
+                                  SCR_XSIZE=150)
+  
+  IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
+                                    XOFFSET=67, YOFFSET=90,$
+                                    SCR_XSIZE=130, SCR_YSIZE=30,$
+                                    VALUE="E N T E R",$
+                                    UNAME='IDENTIFICATION_GO')		
+  
 
-;  ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
-;  		XOFFSET=5, YOFFSET=25, VALUE='',$
-;  		SCR_XSIZE=90, SCR_YSIZE=20, $
-;  		UNAME='ERROR_IDENTIFICATION_LEFT')
+;open nexus_file window
+  OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
+                               XOFFSET=90,$
+                               YOFFSET=60,$
+                               UNAME='OPEN_NEXUS_BASE',$
+                               SCR_XSIZE=300,$
+                               SCR_YSIZE=50,$
+                               FRAME=10,$
+                               SPACE=4,$
+                               XPAD=3,$
+                               YPAD=3,$
+                               MAP=0)
+  
+  OPEN_RUN_NUMBER_LABEL = widget_label(OPEN_NEXUS_BASE,$
+                                       xoffset=5,$
+                                       yoffset=8,$
+                                       uname='OPEN_RUN_NUMBER_LABEL',$
+                                       scr_xsize=65,$
+                                       scr_ysize=30,$
+                                       value='Run number ')
+  
+  OPEN_RUN_NUMBER_TEXT = widget_text(OPEN_NEXUS_BASE,$
+                                     xoffset=70,$
+                                     yoffset=8,$
+                                     scr_xsize=80,$
+                                     scr_ysize=30,$
+                                     value='31',$
+                                     uname='OPEN_RUN_NUMBER_TEXT',$
+                                     /editable,$
+                                     /align_left)
 
-;  ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
-;  		XOFFSET=140, YOFFSET=25, VALUE='',$
-;  		SCR_XSIZE=90, SCR_YSIZE=20, $
-;  		UNAME='ERROR_IDENTIFICATION_RIGHT')
+  OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
+                                         xoffset=160,$
+                                         yoffset=8,$
+                                         scr_xsize=60,$
+                                         scr_ysize=30,$
+                                         value='OPEN',$
+                                         uname='OPEN_RUN_NUMBER_BUTTON')
 
-;  DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
-;  		XOFFSET=0, YOFFSET=55, VALUE='Working path',$
-;  		SCR_XSIZE=80, SCR_YSIZE=30,$
-;  		UNAME='DEFAULT_PATH_BUTTON')
+  CANCEL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
+                                                xoffset=230,$
+                                                yoffset=8,$
+                                                scr_xsize=60,$
+                                                scr_ysize=30,$
+                                                value='CANCEL',$
+                                                uname='CANCEL_OPEN_RUN_NUMBER_BUTTON')
 
-;  DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
-;  		XOFFSET=83, YOFFSET=55, VALUE=(*global).default_path,$
-;  		UNAME='DEFAULT_PATH_TEXT',/editable,$
-;  		SCR_XSIZE=150)
-
-;  IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
-;  		XOFFSET=67, YOFFSET=90,$
-;  		SCR_XSIZE=130, SCR_YSIZE=30,$
-;  		VALUE="E N T E R",$
-;  		UNAME='IDENTIFICATION_GO')		
 
 ;top-left frame (display of counts vs pixelID for each tube
 ;one at a time
-draw_tube_pixels_base = widget_base(MAIN_BASE,$
-                                    SCR_XSIZE=550,$
-                                    SCR_YSIZE=370,$
-                                    XOFFSET=5,$
-                                    YOFFSET=10)
-
-draw_tube_pixels_frame_title = widget_label(draw_tube_pixels_base,$
-                                            SCR_XSIZE=120,$
-                                            SCR_YSIZE=20,$
-                                            XOFFSET=5,$
-                                            YOFFSET=0,$
-                                            VALUE="Tube per tube plot")
-
-draw_tube_pixels_draw = widget_draw(draw_tube_pixels_base,$
-                                    UNAME='draw_tube_pixels_draw',$
-                                    SCR_XSIZE=536,$
-                                    SCR_YSIZE=300,$
-                                    XOFFSET=6,$
-                                    YOFFSET=20)
-
-draw_tube_pixels_slider = WIDGET_SLIDER(draw_tube_pixels_base,$
-                                        UNAME="draw_tube_pixels_slider",$
-                                        XOFFSET= 6,$
-                                        YOFFSET= 320,$
-                                        SCR_XSIZE=536,$
-                                        SCR_YSIZE=35,$
-                                        MINIMUM=0,$
-                                        MAXIMUM=63,$
-                                        /DRAG,$
-                                        VALUE=0,$
-                                        EVENT_PRO="plot_tubes_pixels")
-
-draw_tube_pixels_frame = widget_label(draw_tube_pixels_base,$
-                                      UNAME="draw_tube_pixels_frame",$
+  draw_tube_pixels_base = widget_base(MAIN_BASE,$
                                       SCR_XSIZE=550,$
-                                      SCR_YSIZE=350,$
-                                      XOFFSET=0,$
-                                      YOFFSET=10,$
-                                      FRAME=1,$
-                                      VALUE="")
+                                      SCR_YSIZE=370,$
+                                      XOFFSET=5,$
+                                      YOFFSET=10)
+  
+  draw_tube_pixels_frame_title = widget_label(draw_tube_pixels_base,$
+                                              SCR_XSIZE=120,$
+                                              SCR_YSIZE=20,$
+                                              XOFFSET=5,$
+                                              YOFFSET=0,$
+                                              VALUE="Tube per tube plot")
+  
+  draw_tube_pixels_draw = widget_draw(draw_tube_pixels_base,$
+                                      UNAME='draw_tube_pixels_draw',$
+                                      SCR_XSIZE=536,$
+                                      SCR_YSIZE=300,$
+                                      XOFFSET=6,$
+                                      YOFFSET=20)
+  
+  draw_tube_pixels_slider = WIDGET_SLIDER(draw_tube_pixels_base,$
+                                          UNAME="draw_tube_pixels_slider",$
+                                          XOFFSET= 6,$
+                                          YOFFSET= 320,$
+                                          SCR_XSIZE=536,$
+                                          SCR_YSIZE=35,$
+                                          MINIMUM=0,$
+                                          MAXIMUM=63,$
+                                          /DRAG,$
+                                          VALUE=0,$
+                                          EVENT_PRO="plot_tubes_pixels")
+  
+  draw_tube_pixels_frame = widget_label(draw_tube_pixels_base,$
+                                        UNAME="draw_tube_pixels_frame",$
+                                        SCR_XSIZE=550,$
+                                        SCR_YSIZE=350,$
+                                        XOFFSET=0,$
+                                        YOFFSET=10,$
+                                        FRAME=1,$
+                                        VALUE="")
 
 ;Pixels counts vertical window info
 pixels_counts_base = widget_base(main_base,$
@@ -1096,9 +1161,15 @@ map_plot_frame = widget_label(map_plot_base,$
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
 
+  OPEN_NEXUS_menu = widget_button(FILE_MENU,$
+                                  value="Open Run #...",$
+                                  uname="OPEN_NEXUS_menu",$
+                                  sensitive=0)
+  
   OPEN_MAPPED_HISTOGRAM = Widget_Button(FILE_MENU, $
                                         UNAME='OPEN_MAPPED_HISTOGRAM',$
-                                        VALUE='Open Mapped Histogram')
+                                        VALUE='Open Mapped Histogram',$
+                                        sensitive=0)
 
 ;  OPEN_HISTOGRAM = Widget_Button(FILE_MENU, UNAME='OPEN_HISTOGRAM'  $
 ;      ,VALUE='Open Histogram')
