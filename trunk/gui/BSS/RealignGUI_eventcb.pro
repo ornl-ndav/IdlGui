@@ -582,9 +582,38 @@ file = dialog_pickfile(/must_exist,$
 ;check if there is really a file
 if (file NE '') then begin
 
-(*global).file = file
+    (*global).file = file
+    
+    OPEN_FILE_STEP_2, EVENT
+
+endif else begin
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = " No new file loaded "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+
+
+pro OPEN_FILE_STEP_2, EVENT
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+file = (*global).file
+path = (*global).working_path
 
 if (path NE '') then begin
    (*global).path = path
@@ -609,17 +638,6 @@ ENABLED_PROCEDURE, Event
 
 generate_look_up_table_of_real_pixelid_value, Event
 
-endif else begin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-text = " No new file loaded "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
 end
 
 
@@ -635,13 +653,12 @@ widget_control,id,get_uvalue=global
 
 ;enabled background buttons/draw/text/labels
 id_list=['reset_all_button',$
-         'pixelid_new_counts_reset',$
-         'save_changes_button',$
-         'save_pixelid_changes_button',$
+         'remove_pixelid',$
+;         'save_changes_button',$
+;         'save_pixelid_changes_button',$
          'draw_tube_pixels_slider',$
          'pixels_slider',$
-         'pixelid_new_counts_value',$
-         'remove_tube_group',$
+         'remove_tube_button',$
          'tube0_left_minus',$
          'tube0_left_text',$
          'tube0_left_plus',$
@@ -1557,7 +1574,7 @@ if (file_type EQ 'nexus') then begin
 
 endif else begin
 
-    OPEN_FILE, Event
+    OPEN_FILE_STEP_2, Event
 
 endelse
 
@@ -1825,13 +1842,13 @@ end
 
 
 
-;--------------------------------------------------------------------------------
+;-----------------------------------------------------------------------
 pro ABOUT_MENU, Event
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text = "" 
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "**** realignBSS (v.110806)****"
+text = "**** RealignBSS (v.120106)****"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = ""
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -1854,7 +1871,7 @@ end
 
 
 
-;--------------------------------------------------------------------------------
+;-------------------------------------------------------------------------
 pro EXIT_PROGRAM, Event
 
 widget_control,Event.top,/destroy
@@ -1868,7 +1885,7 @@ end
 
 
 
-;---------------------------------------------------------------------------------
+;--------------------------------------------------------------------------
 pro IDENTIFICATION_TEXT_cb, Event  
 
 view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
@@ -1902,7 +1919,7 @@ end
 
 
 
-;------------------------------------------------------------------------------
+;-------------------------------------------------------------------------
 pro IDENTIFICATION_GO_cb, Event
 
 ;get global structure
