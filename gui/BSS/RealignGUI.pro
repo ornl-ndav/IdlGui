@@ -144,7 +144,7 @@ pro MAIN_BASE_event, Event
     end
     
     ;for pixelid
-    Widget_Info(wWidget, FIND_BY_UNAME='save_pixelid_changes_button'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='remove_pixelid'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         save_pixelid_changes, Event
     end
@@ -529,20 +529,20 @@ infos_frame = widget_label(infos_base,$
                            frame=1)
 
 ;pixelID slider
-pixelID_info_base = widget_base(main_base,$
+pixelID_base = widget_base(main_base,$
                             XOFFSET=560,$
                             YOFFSET=160,$
                             SCR_XSIZE=245,$
-                            SCR_YSIZE=65)
+                            SCR_YSIZE=120)
 
-pixelID_text = widget_label(pixelID_info_base,$
+pixelID_text = widget_label(pixelID_base,$
                             XOFFSET=5,$
                             YOFFSET=0,$
                             SCR_XSIZE=60,$
                             SCR_YSIZE=20,$
                             VALUE="Pixel ID")
 
-pixels_slider = WIDGET_SLIDER(pixelID_info_base,$
+pixels_slider = WIDGET_SLIDER(pixelID_base,$
                               UNAME="pixels_slider",$
                               XOFFSET= 7,$
                               YOFFSET= 18,$
@@ -554,14 +554,73 @@ pixels_slider = WIDGET_SLIDER(pixelID_info_base,$
                               VALUE=0,$
                               EVENT_PRO="get_pixels_infos")
 
-infos_frame = widget_label(pixelID_info_base,$
-                           xoffset=0,$
-                           yoffset=10,$
-                           scr_xsize=250,$
-                           scr_ysize=50,$
-                           frame=1,$
-                           value='')
 
+;pixelID interaction window
+y_off_counts = 55
+y_off_buttons = 80
+pixelid_counts_label = widget_label(pixelID_base,$
+                                    xoffset=10,$
+                                    yoffset=y_off_counts,$
+                                    scr_xsize=50,$
+                                    scr_ysize=20,$
+                                    value='Counts:',$
+                                    /align_left)
+
+pixelid_counts_value = widget_label(pixelID_base,$
+                                    uname='pixelid_counts_value',$
+                                    xoffset=65,$
+                                    yoffset=y_off_counts,$
+                                    scr_xsize=150,$
+                                    scr_ysize=20,$
+                                    value='1234567890123456',$
+                                    /align_left)
+
+
+remove_pixel_id = widget_button(pixelID_base,$
+                                uname='remove_pixelid',$
+                                xoffset=5,$
+                                yoffset=y_off_buttons,$
+                                scr_xsize=120,$
+                                scr_ysize=30,$
+                                value='R E M O V E',$
+                                sensitive=0)
+
+;pixelid_new_counts_label = widget_label(pixel_base,$
+;                                        xoffset=10,$
+;                                        yoffset=45,$
+;                                        scr_xsize=115,$
+;                                        scr_ysize=20,$
+;                                        value='New PixelID counts:',$
+;                                        /align_left)
+
+;pixelid_new_counts_value = widget_text(pixel_base,$
+;                                       uname='pixelid_new_counts_value',$
+;                                       xoffset=130,$
+;                                       yoffset=40,$
+;                                      scr_xsize=40,$
+;                                       scr_ysize=30,$
+;                                       value='1',$
+;                                       /align_left,$
+;                                       /editable)
+
+pixelid_new_counts_reset = $
+  widget_button(pixelID_base,$
+                uname='pixelid_new_counts_reset',$
+                xoffset=125,$
+                yoffset=y_off_buttons,$
+                scr_xsize=115,$
+                scr_ysize=30,$
+                value='A D D',$
+               sensitive=0)
+
+
+pixel_and_tube_frame = widget_label(pixelID_base,$
+                                    xoffset=0,$
+                                    yoffset=8,$
+                                    scr_xsize=355,$
+                                    scr_ysize=105,$
+                                    frame=1,$
+                                    value='')
 
 ;pixelID, tube and bank info
  ptb_info_base = widget_base(main_base,$
@@ -630,71 +689,6 @@ tube_value = widget_label(ptb_info_base,$
                                value='')
 
 
-;pixelID interaction window
-pixel_base = widget_base(main_base,$
-                         XOFFSET=560,$
-                         YOFFSET=225,$
-                         SCR_XSIZE=245,$
-                         SCR_YSIZE=90)
-
-pixel_title = widget_label(pixel_base,$
-                           xoffset=5,$
-                           yoffset=0,$
-                           scr_xsize=130,$
-                           scr_ysize=20,$
-                           value='PixelID interaction')
-
-pixelid_counts_label = widget_label(pixel_base,$
-                                    xoffset=10,$
-                                    yoffset=20,$
-                                    scr_xsize=90,$
-                                    scr_ysize=20,$
-                                    value='PixelID counts:',$
-                                    /align_left)
-
-pixelid_counts_value = widget_label(pixel_base,$
-                                    uname='pixelid_counts_value',$
-                                    xoffset=115,$
-                                    yoffset=20,$
-                                    scr_xsize=110,$
-                                    scr_ysize=20,$
-                                    value='',$
-                                    /align_left)
-
-pixelid_new_counts_label = widget_label(pixel_base,$
-                                        xoffset=10,$
-                                        yoffset=45,$
-                                        scr_xsize=115,$
-                                        scr_ysize=20,$
-                                        value='New PixelID counts:',$
-                                        /align_left)
-
-pixelid_new_counts_value = widget_text(pixel_base,$
-                                       uname='pixelid_new_counts_value',$
-                                       xoffset=130,$
-                                       yoffset=40,$
-                                       scr_xsize=40,$
-                                       scr_ysize=30,$
-                                       value='1',$
-                                       /align_left,$
-                                       /editable)
-
-pixelid_new_counts_reset = $
-  widget_button(pixel_base,$
-                uname='pixelid_new_counts_reset',$
-                xoffset=175,$
-                yoffset=40,$
-                scr_xsize=60,$
-                scr_ysize=30,$
-                value="RESET")
-
-pixel_and_tube_frame = widget_label(pixel_base,$
-                                    xoffset=0,$
-                                    yoffset=10,$
-                                    scr_xsize=355,$
-                                    scr_ysize=70,$
-                                    frame=1,$
-                                    value='')
 
 ;tube removed window
 removed_tube_base = widget_base(main_base,$
@@ -715,7 +709,8 @@ removed_tube_text = widget_text(removed_tube_base,$
                                 scr_xsize=95,$
                                 scr_ysize=195,$
                                 /wrap,$
-                                /scroll)
+                                /scroll,$
+                                sensitive=0)
 
 
 removed_tube_frame = widget_label(removed_tube_base,$
@@ -728,74 +723,87 @@ removed_tube_frame = widget_label(removed_tube_base,$
 ;tube interaction window
 tube_base = widget_base(main_base,$
                         XOFFSET=560,$
-                        YOFFSET=310,$
+                        YOFFSET=280,$   ;310
                         SCR_XSIZE=245,$
                         SCR_YSIZE=60)
 
 tube_title = widget_label(tube_base,$
                           xoffset=5,$
                           yoffset=0,$
-                          scr_xsize=105,$
+                          scr_xsize=30,$
                           scr_ysize=20,$
-                          value='Tube interaction')
+                          value='Tube')
 
-remove_tube_label = widget_label(tube_base,$
-                                 xoffset=10,$
-                                 yoffset=25,$
-                                 scr_xsize=120,$
-                                 scr_ysize=20,$
-                                 value='Remove this tube:',$
-                                 /align_left)
+remove_tube_button = widget_button(tube_base,$
+                                   uname='remove_tube_button',$
+                                   xoffset=5,$
+                                   yoffset=20,$
+                                   scr_xsize=120,$
+                                   scr_ysize=30,$
+                                   value='R E M O V E',$
+                                   sensitive=0)
 
-remove_tube_group = cw_bgroup(tube_base, $
-                              ['Yes', 'No'], $
-                              /exclusive,$
-                              /row,$
-                              /RETURN_NAME,$
-                              XOFFSET=130, $
-                              YOFFSET=20,$
-                              SET_VALUE=1.0,$
-                              UNAME='remove_tube_group')
+cancel_remove_tube_button = widget_button(tube_base,$
+                                          uname='cancel_remove_tube_button',$
+                                          xoffset=125,$
+                                          yoffset=20,$
+                                          scr_xsize=115,$
+                                          scr_ysize=30,$
+                                          value='A D D',$
+                                          sensitive=0)
 
-tube_frame = widget_label(tube_base,$
-                          xoffset=0,$
-                          yoffset=10,$
-                          scr_xsize=245,$
-                          scr_ysize=45,$
-                          frame=1,$
-                          value='')
 
+;remove_tube_label = widget_label(tube_base,$
+;                                 xoffset=10,$
+;                                 yoffset=25,$
+;                                 scr_xsize=120,$
+;                                 scr_ysize=20,$
+;                                 value='Remove this tube:',$
+;                                 /align_left)
+
+; remove_tube_group = cw_bgroup(tube_base, $
+;                               ['Yes', 'No'], $
+;                               /exclusive,$
+;                               /row,$
+;                               /RETURN_NAME,$
+;                               XOFFSET=130, $
+;                               YOFFSET=20,$
+;                               SET_VALUE=1.0,$
+;                               UNAME='remove_tube_group')
+
+ Tube_frame = widget_label(tube_base,$
+                           xoffset=0,$
+                           yoffset=10,$
+                           scr_xsize=245,$
+                           scr_ysize=45,$
+                           frame=1,$
+                           value='')
 
 ;reset and save buttons
 RESET_ALL_button = widget_button(main_base,$
                                  UNAME="reset_all_button",$
-                                 xoffset=560,$
-                                 yoffset=380,$
-                                 scr_xsize=80,$
+                                 xoffset=565,$
+                                 yoffset=360,$
+                                 scr_xsize=235,$
                                  scr_ysize=30,$
-                                 value="RESET ALL")
-
-SAVE_CHANGES_button = widget_button(main_base,$
-                                    UNAME="save_changes_button",$
-                                    xoffset=644,$
-                                    yoffset=380,$
-                                    scr_xsize=80,$
-                                    scr_ysize=30,$
-                                    value="CHANGE TUBE")
-
-SAVE_PIXELID_changes_button = widget_button(main_base,$
-                                            UNAME="save_pixelid_changes_button",$
-                                            xoffset=726,$
-                                            yoffset=380,$
-                                            scr_xsize=80,$
-                                            scr_ysize=30,$
-                                            value="CHANGE PIXEL")
+                                 value="REINITIALIZE ALL VARIABLES")
 
 
+; SAVE_CHANGES_button = widget_button(main_base,$
+;                                     UNAME="save_changes_button",$
+;                                     xoffset=644,$
+;                                     yoffset=380,$
+;                                     scr_xsize=80,$
+;                                     scr_ysize=30,$
+;                                     value="CHANGE TUBE")
 
-
-
-
+; SAVE_PIXELID_changes_button = widget_button(main_base,$
+;                                             UNAME="save_pixelid_changes_button",$
+;                                             xoffset=726,$
+;                                             yoffset=380,$
+;                                             scr_xsize=80,$
+;                                             scr_ysize=30,$
+;                                             value="CHANGE PIXEL")
 
 
 y_offset = 375
@@ -1194,12 +1202,7 @@ map_plot_frame = widget_label(map_plot_base,$
   ;disabled background buttons/draw/text/labels
   Widget_Control, draw_tube_pixels_slider, sensitive=0
   Widget_Control, pixels_slider, sensitive=0
-  Widget_Control, pixelid_new_counts_value, sensitive=0
-  Widget_Control, pixelid_new_counts_reset, sensitive=0
-  Widget_Control, remove_tube_group, sensitive=0
   Widget_Control, RESET_ALL_button, sensitive=0
-  Widget_Control, SAVE_CHANGES_button, sensitive=0
-  Widget_Control, SAVE_PIXELID_changes_button, sensitive=0
   Widget_Control, tube0_left_minus, sensitive=0
   Widget_Control, tube0_left_text, sensitive=0  
   Widget_Control, tube0_left_plus, sensitive=0
