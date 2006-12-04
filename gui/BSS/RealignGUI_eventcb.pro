@@ -13,6 +13,9 @@ end
 
 
 
+
+
+
 ;---------------------------------------------------------------------
 function modified_file_name, Event, file_name_only
 
@@ -37,6 +40,8 @@ end
 
 
 
+
+
 ;--------------------------------------------------------------------
 function give_real_pixelid_value, Event, pixel_number, tube_number
 
@@ -54,6 +59,298 @@ end
 
 
 
+
+
+pro OPEN_NEXUS_INTERFACE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+widget_control, open_nexus_id, map=1
+
+end
+
+
+
+
+
+
+
+
+FUNCTION find_full_nexus_name, Event, run_number, instrument    
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
+spawn, cmd, full_nexus_name
+
+;check if nexus exists
+result = strmatch(full_nexus_name,"ERROR*")
+
+if (result GE 1) then begin
+    find_nexus = 0
+endif else begin
+    find_nexus = 1
+endelse
+
+(*global).find_nexus = find_nexus
+
+return, full_nexus_name
+
+end
+
+
+
+
+
+
+
+pro create_local_copy_of_histo_mapped, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+full_nexus_name = (*global).full_nexus_name
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+cmd_dump = "nxdir " + full_nexus_name
+cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
+cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
+
+;get name of output_file
+tmp_output_file = (*global).full_tmp_nxdir_folder_path 
+tmp_output_file += "/BSS"
+tmp_output_file += "_" + strcompress((*global).run_number,/remove_all)
+
+tmp_output_file_top = tmp_output_file + "_top.dat"
+tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
+(*global).file_to_plot_top = tmp_output_file_top
+(*global).file_to_plot_bottom = tmp_output_file_bottom
+
+cmd_dump_top += tmp_output_file_top 
+cmd_dump_bottom += tmp_output_file_bottom
+
+;display command
+
+text= cmd_dump_top
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+spawn, cmd_dump_top, listening
+
+text= cmd_dump_bottom
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+
+spawn, cmd_dump_bottom, listening
+
+;display result of command
+;text= listening
+text="Done"
+widget_control, view_info, set_value=text, /append
+
+end
+
+
+
+
+
+
+
+
+
+pro create_tmp_folder, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_nxdir_folder = (*global).tmp_nxdir_folder
+full_tmp_nxdir_folder_path = (*global).working_path + tmp_nxdir_folder
+(*global).full_tmp_nxdir_folder_path = full_tmp_nxdir_folder_path
+
+cmd_check = "ls -d " + full_tmp_nxdir_folder_path
+spawn, cmd_check, listening
+
+if (listening NE '') then begin
+    cmd_remove = "rm -r " + full_tmp_nxdir_folder_path
+    spawn, cmd_remove
+endif
+
+;now create tmp folder
+cmd_create = "mkdir " + full_tmp_nxdir_folder_path
+spawn, cmd_create,  listening
+
+end
+
+
+
+pro CANCEL_OPEN_NEXUS, Event
+
+;hide open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+widget_control, open_nexus_id, map=0
+
+end
+
+
+
+
+
+
+pro OPEN_NEXUS, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).file_type='nexus'
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;initialized arrays
+tube_removed = lonarr((*global).Ny_scat)
+(*(*global).tube_removed) = tube_removed
+(*(*global).pixel_removed) = lonarr((*global).Ny_scat * (*global).Nx)
+
+;hide open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+widget_control, open_nexus_id, map=0
+
+;retrieve run_number
+run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
+widget_control, run_number_id, get_value=run_number
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+if (run_number EQ '') then begin
+    
+    text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
+endif else begin
+    
+    (*global).run_number = run_number
+    
+    text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
+    WIDGET_CONTROL, view_info, SET_VALUE=text
+    
+;get path to nexus run #
+    instrument="BSS"
+    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+    
+;check result of search
+    find_nexus = (*global).find_nexus
+    if (find_nexus EQ 0) then begin
+        text_nexus = "Warning! NeXus file does not exist"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    endif else begin
+        (*global).full_nexus_name = full_nexus_name
+        text_nexus = "(" + full_nexus_name + ")"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+        
+;dump binary data of NeXus file into tmp_working_path
+        create_local_copy_of_histo_mapped, Event
+        
+;read and plot nexus file
+        READ_NEXUS_FILE, Event
+
+;procedure to enable most of the buttons/text boxes..
+        ENABLED_PROCEDURE, Event
+        
+        generate_look_up_table_of_real_pixelid_value, Event
+
+    endelse
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+pro READ_NEXUS_FILE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;initialize removed_tube (removed #28,29,30,31,60-67)
+removed_tube = (*(*global).tube_removed)
+tube_to_remove=[indgen(4)+28,indgen(4)+60]
+size=size(tube_to_remove)
+
+for i=0, (size[1]-1) do begin
+    removed_tube[tube_to_remove[i]]=1
+endfor
+
+(*(*global).tube_removed) = removed_tube
+
+;reinitialize DATA_REMOVED box
+refresh_data_removed_text, Event
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = "- Opening and Reading run # " + strcompress((*global).run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;global parameters
+Nx = (*global).Nx
+Ny_scat = (*global).Ny_scat
+Ny_scat_bank = Ny_scat / 2
+
+;opening top part
+file_top = (*global).file_to_plot_top
+openr,u,file_top,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+Nbytes = (*global).nbytes
+N = long(file_size) / Nbytes    ;number of elements
+
+Nt = long(N)/(long(Nx*(Ny_scat_bank)))
+(*global).Nt = Nt
+image_top = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_top
+close,u
+
+;opening bottom part
+file_bottom = (*global).file_to_plot_bottom
+openr,u,file_bottom,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_bottom
+close,u
+
+;combining image_top and image_bottom into image1
+
+image1 = ulonarr(Nt,Nx,Ny_scat)
+image1(*,*,0:Ny_scat_bank-1) = image_top
+image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
+
+PLOT_HISTO_FILE, Event, image1
+
+text = "...done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+end
 
 
 
@@ -264,6 +561,8 @@ widget_control,/hourglass
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+(*global).file_type='histo'
+
 spawn, "pwd",listening
 
 if ((*global).path EQ '') then begin
@@ -272,7 +571,6 @@ endif else begin
    path = (*global).working_path
 endelse
 
-path = "/SNSlocal/users/j35/" ;REMOVE_ME
 (*global).working_path = path
 
 file = dialog_pickfile(/must_exist,$
@@ -304,9 +602,38 @@ endif else begin
 
 endelse
 
-PLOT_HISTO_FILE, Event
+READ_HISTO_FILE, Event
 
-;enable background buttons/draw/text/labels
+;procedure to enable most of the buttons/text boxes..
+ENABLED_PROCEDURE, Event
+
+generate_look_up_table_of_real_pixelid_value, Event
+
+endif else begin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = " No new file loaded "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+
+
+pro ENABLED_PROCEDURE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;enabled background buttons/draw/text/labels
 id_list=['reset_all_button',$
          'pixelid_new_counts_reset',$
          'save_changes_button',$
@@ -339,30 +666,14 @@ for i=0,(id_list_size[1]-1) do begin
     Widget_Control, id, sensitive=1
 endfor
 
-generate_look_up_table_of_real_pixelid_value, Event
-
-endif else begin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-text = " No new file loaded "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
 end
 
 
 
 
 
-
-
-
 ;------------------------------------------------------------------------
-pro PLOT_HISTO_FILE, Event
+pro READ_HISTO_FILE, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -437,6 +748,19 @@ WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
 
 text = "  - Number of Tbins : " + strcompress(Nt,/remove_all)
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+PLOT_HISTO_FILE, Event, image1
+
+end
+
+
+
+
+pro PLOT_HISTO_FILE, Event, image1
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 image_2d_1 = total(image1,1)
 
@@ -1225,6 +1549,29 @@ pro reset_all_changes, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+file_type = (*global).file_type
+
+if (file_type EQ 'nexus') then begin
+    
+    OPEN_NEXUS, Event
+
+endif else begin
+
+    OPEN_FILE, Event
+
+endelse
+
+end
+
+
+
+
+
+
+
+
+pro old_reset_all_changes, Event
+
 ;initialize removed_tube (removed #28,29,30,31,60-67)
 tube_to_remove=[indgen(4)+28,indgen(4)+60]
 size=size(tube_to_remove)
@@ -1271,7 +1618,7 @@ for i=1,127 do begin
 endfor
 
 
-end
+End
 
 
 
@@ -1584,7 +1931,6 @@ endcase
 if (name EQ '') then begin
 
 ;put a message saying that it's an invalid 3 character id
-xb
 
    error_message = "INVALID UCAMS"
    view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
@@ -1597,21 +1943,41 @@ endif else begin
    (*global).name = name
    working_path = (*global).working_path
 
-   welcome = "Welcome " + strcompress(name,/remove_all)
-   welcome += "  (working directory: " $
-     + strcompress(working_path,/remove_all) + ")"	
-   view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
-   WIDGET_CONTROL, view_id, base_set_title= welcome	
+   ;working path is set
+   CATCH, change_directory
 
-   view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
-   WIDGET_CONTROL, view_id, destroy=1
+   if (change_directory ne 0) then begin ;there is a problem with the permission
 
+       view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+       Message = "Unable to change current directory to "
+       Message += workingPath
+       widget_control, view_info, set_value=Message, /append
+       Message = "Permission denied"
+       widget_control, view_info, set_value=Message, /append
+
+   catch, /cancel
+
+   endif else begin
+       
+       cd, working_path
+       
+       welcome = "Welcome " + strcompress(name,/remove_all)
+       welcome += "  (working directory: " $
+         + strcompress(working_path,/remove_all) + ")"	
+       view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+       WIDGET_CONTROL, view_id, base_set_title= welcome	
+       
+       view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
+       WIDGET_CONTROL, view_id, destroy=1
+       
+                                ;activate open_mapped_histo
+       view_id = widget_info(Event.top,FIND_BY_UNAME='OPEN_MAPPED_HISTOGRAM')
+       WIDGET_CONTROL, view_id, sensitive=1
+       
 ;   view_id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH_NAME')
 ;   WIDGET_CONTROL, view_id, set_value=working_path
-
-   ;working path is set
-   cd, working_path
- 
+       
+       
 ;    view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 ;    text = "LOGIN parameters:"
 ;    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -1621,8 +1987,20 @@ endif else begin
 ;    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 ;    text = "Working directory : " + working_path
 ;    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-; 
-  
+       
+                                ;only for administrator 
+       if (ucams EQ 'j35') then begin
+           
+           id = widget_info(Event.top, find_by_uname='OPEN_NEXUS_menu')
+           widget_control, id, sensitive=1
+           
+       endif 
+       
+;create temporary folder for nxdir
+       create_tmp_folder, Event
+       
+   endelse
+
 endelse
 
 end
@@ -1818,44 +2196,6 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 create_nexus_file, Event
 
-;debugging part
-
-;     openr,u,full_output_file_name,/get
-
-;     ;remove_me
-;     fs=fstat(u)
-;     file_size=fs.sizebx
-;     print, "file_size is: ", file_size
-;     print, "number of elements is: ", file_size/4
-    
-; ;    input_data = lonarr(128L,72L)
-;     input_data = lonarr(64L,144L)
-
-;     readu,u,input_data
-
-;     print, "input_data:"
-;     print, input_data(*,63)
-
-;     window,0
-;     help, input_data
-;     plot_data = rebin(input_data,4*128L,10*72L,/samp)
-;     plot_data = transpose(plot_data)
-;     DEVICE, DECOMPOSED = 0
-;     loadct,5
-;     tvscl, plot_data
-
-;    
-;;now write out tube endpoints data
-;    openw,u2,tube_file,/get
-;    for i=0,Ntubes-1 do begin
-;        printf,u2,format='(5I8)',i1[i],i2[i],i5[i],i3[i],i4[i]
-;    endfor                      ;i
-;    close,u2
-;    free_lun,u2
-;    
-;    
-;endif                           ;dosave
-
 end
 
 
@@ -1874,6 +2214,11 @@ path_to_preNeXus = (*global).path_to_preNeXus
 full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
 working_path = (*global).working_path
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text="Create NeXus file....."
+widget_control, view_info, set_value=text,/append
+
 
 ;copy data
 files_to_copy = ["*.xml","*.nxt"]
@@ -1929,7 +2274,15 @@ name_of_nexus_file += ".nxs"
 
 cmd_copy = "cp -r " + name_of_nexus_file + " " + path_up_to_nexus_folder
 
+full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
+full_nexus_filename += strcompress(run_number,/remove_all)
+text="Name of NeXus file: " + full_nexus_filename
+widget_control, view_info, set_value=text,/append
+
 spawn, cmd_copy
+
+text="Done"
+widget_control, view_info, set_value=text,/append
 
 end
 
