@@ -210,6 +210,22 @@ widget_control,id,get_uvalue=global
           VIEW_ONBUTTON_REF_L, Event
     end
 
+;tab#2
+    Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        VALIDATE_SELECTED_RUNS, Event
+    end
+
+
+
+
+
+
+
+
+
+
+
     else:
   endcase
 
@@ -298,6 +314,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
+                   selected_runs_from : 0L,$
+                   selected_runs_to : 0L,$
                    find_nexus : 0,$
                    run_number   : 0L,$
                    character_id		: '',$
@@ -433,8 +451,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                         /BUTTON_EVENTS,$
                         /MOTION_EVENTS)
 
-;draw boxes for plot windows
-;TOF_tab
+;top left tab
   OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB = WIDGET_TAB(MAIN_BASE, $
                                                 LOCATION=0,$
                                                 XOFFSET=11,$
@@ -442,6 +459,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                                 SCR_XSIZE=plot_length,$
                                                 SCR_YSIZE=plot_height)
   
+;first tab
   OPEN_NEXUS_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
                                 TITLE='Open Run number',$
                                 XOFFSET=0,$
@@ -479,30 +497,30 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             SCR_YSIZE=38,$
                             FRAME=1,$
                             VALUE='')
-  
-  list_of_files_to_process = widget_text(OPEN_NEXUS_BASE,$
-                                         XOFFSET=205,$
-                                         YOFFSET=5,$
-                                         SCR_XSIZE=85,$
-                                         SCR_YSIZE=136,$
-                                         VALUE='',$
-                                         /SCROLL)
 
-  actual_run_number_displayed = widget_label(OPEN_NEXUS_BASE,$
-                                             XOFFSET=5,$
-                                             YOFFSET=50,$
-                                             SCR_XSIZE=135,$
-                                             SCR_YSIZE=30,$
-                                             VALUE="Actual run displayed: ",$
-                                             /align_left)
+  run_number_title = widget_label(OPEN_NEXUS_BASE,$
+                                  xoffset=205,$
+                                  yoffset=5,$
+                                  scr_xsize=90,$
+                                  scr_ysize=30,$
+                                  value='Selected Runs:',$
+                                  /align_left)
 
+  droplist_value = [string(1220),string(1330),string(1440)]
+  run_number_droplist = widget_droplist(OPEN_NEXUS_BASE,$
+                                        xoffset=195,$
+                                        yoffset=30,$
+                                        /dynamic_resize,$
+;                                        scr_xsize=85,$
+;                                        scr_ysize=130,$
+                                        value=droplist_value)
 
   remove_run_number_from_list = widget_button(OPEN_NEXUS_BASE,$
                                               XOFFSET=5,$
-                                              YOFFSET=85,$
+                                              YOFFSET=65,$
                                               SCR_XSIZE=190,$
-                                              SCR_YSIZE=30,$
-                                              VALUE="REMOVED SELECTED RUN")
+                                              SCR_YSIZE=40,$
+                                              VALUE="REMOVED CURRENT RUN")
   
   OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                                     XOFFSET=5,$
@@ -512,6 +530,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                     VALUE='')
   
   
+;tab #2
   SELECT_RUN_NUMBERS = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
                                    Title = "Select runs numbers",$
                                    XOFFSET=0,$
@@ -570,15 +589,24 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                          frame=1,$
                          value='')
 
-  list_of_runs_add_text = widget_TEXT(SELECT_RUN_NUMBERS,$
-                                      uname='list_of_runs_add_text',$
-                                      XOFFSET=5,$
-                                      YOFFSET=60,$
-                                      SCR_XSIZE=50,$
-                                      SCR_YSIZE=30,$
-                                      VALUE='',$
-                                      /editable,$
-                                     /align_left)
+  list_of_runs = ['']
+  list_of_run_numbers_droplist = widget_droplist(SELECT_RUN_NUMBERS,$
+                                                 uname='list_of_run_numbers_droplist',$
+                                                 xoffset=110,$
+                                                 yoffset=40,$
+;                                                 /dynamic_resize,$
+                                                 scr_xsize=80,$
+                                                 value=list_of_runs)
+  
+  list_of_runs_add_text = widget_text(SELECT_RUN_NUMBERS,$
+                                  uname='list_of_runs_add_text',$
+                                  XOFFSET=5,$
+                                  YOFFSET=60,$
+                                  SCR_XSIZE=50,$
+                                  SCR_YSIZE=30,$
+                                  VALUE='',$
+                                  /editable,$
+                                  /align_left)
 
   list_of_runs_add_button = widget_button(SELECT_RUN_NUMBERS,$
                                           uname='list_of_runs_add_button',$
@@ -590,20 +618,12 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
 
   list_of_runs_remove_button = widget_button(SELECT_RUN_NUMBERS,$
                                           uname='list_of_runs_remove_button',$
-                                          xoffset=210,$
+                                          xoffset=230,$
                                           yoffset=60,$
-                                          scr_xsize=70,$
+                                          scr_xsize=65,$
                                           scr_ysize=30,$
                                           value='-> REMOVE')
 
-  list_of_runs = widget_text(SELECT_RUN_NUMBERS,$
-                             XOFFSET=115,$
-                             YOFFSET=40,$
-                             SCR_XSIZE=90,$
-                             SCR_YSIZE=103,$
-                             VALUE='',$
-                             /ALIGN_LEFT,$
-                             /scroll)
 
   VIEW_DRAW_TOF_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
                                    Title = "PixelID TOF",$
@@ -1115,6 +1135,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
+                   limit_of_run_numbers_to_display : 20,$       
                    find_nexus : 0,$
                    run_number   : 0L,$
                    character_id		: '',$
