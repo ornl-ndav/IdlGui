@@ -143,26 +143,38 @@ pro MAIN_BASE_event, Event
         save_changes, Event
     end
     
-    ;for pixelid
+;reset all changes
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button_validate_yes'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        reset_all_changes, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button_validate_cancel'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        cancel_reset_all, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        validate_reset_all_changes, Event
+    end
+
+;--pixelID-- 
+;REMOVE pixelid
     Widget_Info(wWidget, FIND_BY_UNAME='remove_pixelid'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         save_pixelid_changes, Event
     end
 
-
-;reset all changes
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        reset_all_changes, Event
-    end
-
-;reset pixelid counts
-
+;ADD pixelid 
     Widget_Info(wWidget, FIND_BY_UNAME='pixelid_new_counts_reset'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         pixelid_new_counts_reset, Event
     end
+
+
+
 
 ;Widget to change the color of graph of DAS
     Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_DAS'): begin
@@ -303,6 +315,7 @@ global = ptr_new({$
                    reorder_array              : ptr_new(0L),$
                    tube_removed               : ptr_new(0L),$
                    pixel_removed              : ptr_new(0L),$
+                   IDL_pixelid_removed        : ptr_new(0L),$
                    look_up                    : ptr_new(0L),$
                    i1                         : ptr_new(0L),$
                    i2                         : ptr_new(0L),$
@@ -330,11 +343,17 @@ global = ptr_new({$
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
-  IDENTIFICATION_BASE= widget_base(MAIN_BASE, XOFFSET=300, YOFFSET=300,$
-  	UNAME='IDENTIFICATION_BASE',$
-  	SCR_XSIZE=240, SCR_YSIZE=120, FRAME=10,$
-  	SPACE=4, XPAD=3, YPAD=3)
-
+  IDENTIFICATION_BASE= widget_base(MAIN_BASE,$
+                                   XOFFSET=150,$
+                                   YOFFSET=120,$
+                                   UNAME='IDENTIFICATION_BASE',$
+                                   SCR_XSIZE=240,$
+                                   SCR_YSIZE=120,$
+                                   FRAME=10,$
+                                   SPACE=4,$
+                                   XPAD=3,$
+                                   YPAD=3)
+  
   IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
   		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
 
@@ -572,7 +591,7 @@ pixelid_counts_value = widget_label(pixelID_base,$
                                     yoffset=y_off_counts,$
                                     scr_xsize=150,$
                                     scr_ysize=20,$
-                                    value='1234567890123456',$
+                                    value='',$
                                     /align_left)
 
 
@@ -783,11 +802,44 @@ cancel_remove_tube_button = widget_button(tube_base,$
 RESET_ALL_button = widget_button(main_base,$
                                  UNAME="reset_all_button",$
                                  xoffset=565,$
-                                 yoffset=360,$
+                                 yoffset=348,$
                                  scr_xsize=235,$
                                  scr_ysize=30,$
-                                 value="REINITIALIZE ALL VARIABLES")
+                                 value="REINITIALIZE ALL VARIABLES",$
+                                 sensitive=0)
 
+RESET_ALL_BUTTON_VALIDATE_BASE = WIDGET_BASE(main_base,$
+                                             uname='RESET_ALL_BUTTON_VALIDATE_BASE',$
+                                             xoffset=565,$
+                                             yoffset=378,$
+                                             scr_xsize=235,$
+                                             scr_ysize=40,$
+                                             map=0)
+
+RESET_ALL_BUTTON_VALIDATE_TEXT = widget_label(RESET_ALL_BUTTON_VALIDATE_BASE,$
+                                              uname='reset_all_button_validate_text',$
+                                              xoffset=15,$
+                                              yoffset=5,$
+                                              scr_xsize=90,$
+                                              scr_ysize=30,$
+                                              value='Are you sure? ',$
+                                             /align_left)
+
+RESET_ALL_BUTTON_VALIDATE_YES = WIDGET_BUTTON(RESET_ALL_BUTTON_VALIDATE_BASE,$
+                                              uname='reset_all_button_validate_yes',$
+                                              xoffset=110,$
+                                              yoffset=5,$
+                                              scr_xsize=40,$
+                                              scr_ysize=25,$
+                                              value='YES')
+
+RESET_ALL_BUTTON_VALIDATE_CANCEL = WIDGET_BUTTON(RESET_ALL_BUTTON_VALIDATE_BASE,$
+                                              uname='reset_all_button_validate_cancel',$
+                                              xoffset=150,$
+                                              yoffset=5,$
+                                              scr_xsize=85,$
+                                              scr_ysize=25,$
+                                              value='CANCEL')
 
 ; SAVE_CHANGES_button = widget_button(main_base,$
 ;                                     UNAME="save_changes_button",$
@@ -1202,7 +1254,6 @@ map_plot_frame = widget_label(map_plot_base,$
   ;disabled background buttons/draw/text/labels
   Widget_Control, draw_tube_pixels_slider, sensitive=0
   Widget_Control, pixels_slider, sensitive=0
-  Widget_Control, RESET_ALL_button, sensitive=0
   Widget_Control, tube0_left_minus, sensitive=0
   Widget_Control, tube0_left_text, sensitive=0  
   Widget_Control, tube0_left_plus, sensitive=0
