@@ -227,149 +227,6 @@ end
 
 
 
-pro OPEN_NEXUS, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-(*global).file_type='nexus'
-
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-
-;initialized arrays
-initialization_of_arrays, Event
-
-;hide open_nexus interface
-open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
-widget_control, open_nexus_id, map=0
-
-;retrieve run_number
-run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
-widget_control, run_number_id, get_value=run_number
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-
-if (run_number EQ '') then begin
-    
-    text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
-    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
-    
-endif else begin
-    
-    (*global).run_number = run_number
-    
-    text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
-    WIDGET_CONTROL, view_info, SET_VALUE=text
-    
-;get path to nexus run #
-    instrument="BSS"
-    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
-    
-;check result of search
-    find_nexus = (*global).find_nexus
-    if (find_nexus EQ 0) then begin
-        text_nexus = "Warning! NeXus file does not exist"
-        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
-    endif else begin
-        (*global).full_nexus_name = full_nexus_name
-        text_nexus = "(" + full_nexus_name + ")"
-        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
-        
-;dump binary data of NeXus file into tmp_working_path
-        create_local_copy_of_histo_mapped, Event
-        
-;read and plot nexus file
-        READ_NEXUS_FILE, Event
-
-;procedure to enable most of the buttons/text boxes..
-        ENABLED_PROCEDURE, Event
-        
-        generate_look_up_table_of_real_pixelid_value, Event
-
-    endelse
-
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
-end
-
-
-
-
-pro READ_NEXUS_FILE, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;initialize removed_tube (removed #28,29,30,31,60-67)
-removed_tube = (*(*global).tube_removed)
-tube_to_remove=[indgen(4)+28,indgen(4)+60]
-size=size(tube_to_remove)
-
-for i=0, (size[1]-1) do begin
-    removed_tube[tube_to_remove[i]]=1
-endfor
-
-(*(*global).tube_removed) = removed_tube
-
-;reinitialize DATA_REMOVED box
-refresh_data_removed_text, Event
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-text = "- Opening and Reading run # " + strcompress((*global).run_number,/remove_all)
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-;global parameters
-Nx = (*global).Nx
-Ny_scat = (*global).Ny_scat
-Ny_scat_bank = Ny_scat / 2
-
-;opening top part
-file_top = (*global).file_to_plot_top
-openr,u,file_top,/get
-
-fs=fstat(u)
-file_size=fs.size
-
-Nbytes = (*global).nbytes
-N = long(file_size) / Nbytes    ;number of elements
-
-Nt = long(N)/(long(Nx*(Ny_scat_bank)))
-(*global).Nt = Nt
-image_top = ulonarr(Nt, Nx, Ny_scat_bank)
-
-readu,u,image_top
-close,u
-
-;opening bottom part
-file_bottom = (*global).file_to_plot_bottom
-openr,u,file_bottom,/get
-
-fs=fstat(u)
-file_size=fs.size
-
-image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
-
-readu,u,image_bottom
-close,u
-
-;combining image_top and image_bottom into image1
-
-image1 = ulonarr(Nt,Nx,Ny_scat)
-image1(*,*,0:Ny_scat_bank-1) = image_top
-image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
-
-PLOT_HISTO_FILE, Event, image1
-
-text = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-end
 
 
 
@@ -564,115 +421,6 @@ end
 
 
 
-;---------------------------------------------------------------------------
-pro OPEN_MAPPED_HISTOGRAM, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;initialized arrays
-initialization_of_arrays, Event
-
-OPEN_FILE, Event
-
-end
-
-
-
-
-
-
-
-;--------------------------------------------------------------------
-pro OPEN_FILE, Event
-
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-(*global).file_type='histo'
-
-spawn, "pwd",listening
-
-if ((*global).path EQ '') then begin
-   path = listening
-endif else begin
-   path = (*global).working_path
-endelse
-
-(*global).working_path = path
-
-file = dialog_pickfile(/must_exist,$
-	title="Select a histogram file for BSS",$
-	filter= (*global).filter_histo,$
-	path = path,$
-	get_path = path)
-
-;check if there is really a file
-if (file NE '') then begin
-
-    (*global).file = file
-    
-    OPEN_FILE_STEP_2, EVENT
-
-endif else begin
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-text = " No new file loaded "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-;turn off hourglass
-widget_control,hourglass=0
-
-end
-
-
-
-
-
-
-pro OPEN_FILE_STEP_2, EVENT
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
-
-file = (*global).file
-path = (*global).working_path
-
-if (path NE '') then begin
-   (*global).path = path
-   text = "File: " 
-   WIDGET_CONTROL, view_info, SET_VALUE=text
-   text = file
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-   (*global).file_already_opened = 1
-
-endif else begin
-
-   text = "No file openned"
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-endelse
-
-READ_HISTO_FILE, Event
-
-;procedure to enable most of the buttons/text boxes..
-ENABLED_PROCEDURE, Event
-
-generate_look_up_table_of_real_pixelid_value, Event
-
-end
-
 
 
 
@@ -690,6 +438,7 @@ id_list=['reset_all_button',$
          'draw_tube_pixels_slider',$
          'pixels_slider',$
          'remove_tube_button',$
+         'removed_tube_text',$
          'tube0_left_minus',$
          'tube0_left_text',$
          'tube0_left_plus',$
@@ -713,6 +462,9 @@ for i=0,(id_list_size[1]-1) do begin
     id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
     Widget_Control, id, sensitive=1
 endfor
+
+id = widget_info(Event.top,FIND_BY_UNAME='output_new_histo_mapped_file')
+Widget_Control, id, sensitive=0
 
 end
 
@@ -1103,7 +855,7 @@ remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
 tube_removed = (*(*global).tube_removed)
 
 error_status = 0 ;remove_me
-;CATCH, error_status
+CATCH, error_status
 
 if (error_status NE 0) then begin
 
@@ -1365,12 +1117,28 @@ pro plot_tubes_pixels, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-remove_tube_group_id = widget_info(Event.top, $
-                                   find_by_uname='remove_tube_group')
-widget_control, remove_tube_group_id, set_value=1
-
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
+
+;check if tube_number is in the list of tube removed
+;if yes, validate ADD button and unvalidate REMOVE button
+tube_removed = (*(*global).tube_removed)
+remove_id = widget_info(Event.top, find_by_uname='remove_tube_button')
+add_id = widget_info(Event.top, find_by_uname='cancel_remove_tube_button')
+
+if (tube_removed(tube_number) EQ 1) then begin
+
+    ;validate ADD and unvalidate REMOVE
+    widget_control, remove_id, sensitive=0
+    widget_control, add_id, sensitive=1
+
+endif else begin
+
+    ;validate REMOVE and unvalidate ADD
+    widget_control, remove_id, sensitive=1
+    widget_control, add_id, sensitive=0
+
+endelse
 
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
@@ -1410,6 +1178,17 @@ end
 
 
 
+pro update_tube_removed_array, Event, tube_number, value
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tube_removed_array = (*(*global).tube_removed)
+tube_removed_array[tube_number]=value
+(*(*global).tube_removed) = tube_removed_array
+
+end
 
 
 
@@ -1422,23 +1201,17 @@ pro save_changes, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;unvalidate REMOVE button and validate ADD
+remove_id = widget_info(Event.top, find_by_uname='cancel_remove_tube_button')
+widget_control, remove_id, sensitive=1
+add_id = widget_info(Event.top, find_by_uname='remove_tube_button')
+widget_control, add_id, sensitive=0
+
 ;value of actif tube
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
 
-tube_removed_array = (*(*global).tube_removed)
-
-if (tube_removed_boolean EQ 0) then begin
-    
-    tube_removed_array[tube_number]=1
-
-endif else begin
-
-    tube_removed_array[tube_number]=0
-
-endelse
-
-(*(*global).tube_removed) = tube_removed_array
+update_tube_removed_array, Event, tube_number, 1
 
 ;update text box of tubes and pixel to be removed
 refresh_data_removed_text, Event
@@ -1449,6 +1222,35 @@ display_ix, Event, tube_number
 
 end
 
+
+
+;bring back to life tube
+pro add_tube, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;unvalidate REMOVE button and validate ADD
+remove_id = widget_info(Event.top, find_by_uname='cancel_remove_tube_button')
+widget_control, remove_id, sensitive=0
+add_id = widget_info(Event.top, find_by_uname='remove_tube_button')
+widget_control, add_id, sensitive=1
+
+;value of actif tube
+slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
+widget_control, slider_id, get_value=tube_number
+
+update_tube_removed_array, Event, tube_number, 0
+
+;update text box of tubes and pixel to be removed
+refresh_data_removed_text, Event
+refresh_pixel_removed_text, Event
+
+(*global).new_tube = 1 
+display_ix, Event, tube_number
+
+end
 
 
 
@@ -1534,7 +1336,6 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 removed_tube = (*(*global).tube_removed)
-
 removed_tube_text_id = widget_info(Event.top, $
                                    FIND_BY_UNAME="removed_tube_text")
 first_update = 0
@@ -1568,7 +1369,6 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_removed = (*(*global).pixel_removed)
-
 removed_tube_text_id = widget_info(Event.top, find_by_uname="removed_tube_text")
 
 pixel_to_removed_indeces = where(pixel_removed GT 0, nbr)
@@ -1599,6 +1399,9 @@ pro reset_all_changes, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top, find_by_uname='reset_all_button_validate_yes')
+widget_control, id, map=0
 
 file_type = (*global).file_type
 
@@ -1773,17 +1576,14 @@ if (IDL_pixelid_removed(tube_number, pixel_number) EQ 1) then begin
     ;validate ADD and unvalidate REMOVE
     widget_control, remove_id, sensitive=0
     widget_control, add_id, sensitive=1
-    print, "valide add and unvalidate REMOVE"
 
 endif else begin
 
     ;validate REMOVE and unvalidate ADD
     widget_control, remove_id, sensitive=1
     widget_control, add_id, sensitive=0
-    print, "unvalidate REMOVE and validate ADD"
 
 endelse
-
 
 pixel_info_id = widget_info(Event.top, find_by_uname='pixel_value')
 real_pixel_value = strcompress(give_real_pixelid_value(Event, pixel_number, $
@@ -2176,8 +1976,13 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 file=(*global).file
-run_number = isolate_run_number(file)
-(*global).run_number = run_number
+
+if ((*global).file_type eq 'histo') then begin
+    run_number = isolate_run_number(file)
+    (*global).run_number = run_number
+endif else begin
+    run_number = (*global).run_number
+endelse
 
 ; get path to NeXus file
 path_to_preNeXus = get_path_to_prenexus(run_number)
@@ -2232,6 +2037,7 @@ widget_control,id,get_uvalue=global
 
 ;determine name of output file according to input file
 file = (*global).file
+
 file_name_only = get_file_name_only(file)
 working_path = (*global).working_path
 ;output_file_name = modified_file_name(Event, file_name_only)
@@ -2302,7 +2108,6 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 text="Create NeXus file....."
 widget_control, view_info, set_value=text,/append
 
-
 ;copy data
 files_to_copy = ["*.xml","*.nxt"]
 for i=0,1 do begin
@@ -2355,7 +2160,7 @@ name_of_nexus_file = full_output_folder_name + "/BSS_"
 name_of_nexus_file += strcompress(run_number,/remove_all)
 name_of_nexus_file += ".nxs"
 
-cmd_copy = "cp -r " + name_of_nexus_file + " " + path_up_to_nexus_folder
+cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
 
 full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
 full_nexus_filename += strcompress(run_number,/remove_all)
@@ -2436,9 +2241,273 @@ widget_control,id,get_uvalue=global
 id = widget_info(Event.top, find_by_uname='RESET_ALL_BUTTON_VALIDATE_BASE')
 widget_control, id, map=1
 
+end
 
 
+
+
+
+;========================OPEN NEXUS============================
+
+pro OPEN_NEXUS, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).file_type='nexus'
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;initialized arrays
+initialization_of_arrays, Event
+
+;hide open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+widget_control, open_nexus_id, map=0
+
+;retrieve run_number
+run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
+widget_control, run_number_id, get_value=run_number
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+if (run_number EQ '') then begin
+    
+    text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
+endif else begin
+    
+    (*global).run_number = run_number
+    
+    text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
+    WIDGET_CONTROL, view_info, SET_VALUE=text
+    
+;get path to nexus run #
+    instrument="BSS"
+    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+    
+;check result of search
+    find_nexus = (*global).find_nexus
+    if (find_nexus EQ 0) then begin
+        text_nexus = "Warning! NeXus file does not exist"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    endif else begin
+        (*global).full_nexus_name = full_nexus_name
+        text_nexus = "(" + full_nexus_name + ")"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+        
+;dump binary data of NeXus file into tmp_working_path
+        create_local_copy_of_histo_mapped, Event
+        
+;read and plot nexus file
+        READ_NEXUS_FILE, Event
+
+;procedure to enable most of the buttons/text boxes..
+        ENABLED_PROCEDURE, Event
+        
+        generate_look_up_table_of_real_pixelid_value, Event
+
+    endelse
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
 
 end
 
+
+
+
+pro READ_NEXUS_FILE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;initialize removed_tube (removed #28,29,30,31,60-67)
+removed_tube = (*(*global).tube_removed)
+tube_to_remove=[indgen(4)+28,indgen(4)+60]
+size=size(tube_to_remove)
+
+for i=0, (size[1]-1) do begin
+    removed_tube[tube_to_remove[i]]=1
+endfor
+
+(*(*global).tube_removed) = removed_tube
+run_number = (*global).run_number
+
+;reinitialize DATA_REMOVED box
+refresh_data_removed_text, Event
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = "- Opening and Reading run # " + strcompress(run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+file = "/BSS_" + strcompress(run_number, /remove_all)
+file += "_neutron_histo_mapped.dat"
+(*global).file = file
+
+;global parameters
+Nx = (*global).Nx
+Ny_scat = (*global).Ny_scat
+Ny_scat_bank = Ny_scat / 2
+
+;opening top part
+file_top = (*global).file_to_plot_top
+openr,u,file_top,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+Nbytes = (*global).nbytes
+N = long(file_size) / Nbytes    ;number of elements
+
+Nt = long(N)/(long(Nx*(Ny_scat_bank)))
+(*global).Nt = Nt
+image_top = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_top
+close,u
+
+;opening bottom part
+file_bottom = (*global).file_to_plot_bottom
+openr,u,file_bottom,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_bottom
+close,u
+
+;combining image_top and image_bottom into image1
+
+image1 = ulonarr(Nt,Nx,Ny_scat)
+image1(*,*,0:Ny_scat_bank-1) = image_top
+image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
+
+PLOT_HISTO_FILE, Event, image1
+
+text = "...done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+end
+
+
+;=================OPEN HISTO========================
+
+
+
+;---------------------------------------------------------------------------
+pro OPEN_MAPPED_HISTOGRAM, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;initialized arrays
+initialization_of_arrays, Event
+
+OPEN_FILE, Event
+
+end
+
+
+
+
+
+
+
+;--------------------------------------------------------------------
+pro OPEN_FILE, Event
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).file_type='histo'
+
+spawn, "pwd",listening
+
+if ((*global).path EQ '') then begin
+   path = listening
+endif else begin
+   path = (*global).working_path
+endelse
+
+(*global).working_path = path
+
+file = dialog_pickfile(/must_exist,$
+	title="Select a histogram file for BSS",$
+	filter= (*global).filter_histo,$
+	path = path,$
+	get_path = path)
+
+;check if there is really a file
+if (file NE '') then begin
+
+    (*global).file = file
+    OPEN_FILE_STEP_2, EVENT
+
+endif else begin
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+text = " No new file loaded "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+
+
+pro OPEN_FILE_STEP_2, EVENT
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
+
+file = (*global).file
+path = (*global).working_path
+
+if (path NE '') then begin
+   (*global).path = path
+   text = "File: " 
+   WIDGET_CONTROL, view_info, SET_VALUE=text
+   text = file
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+   (*global).file_already_opened = 1
+
+endif else begin
+
+   text = "No file openned"
+   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+endelse
+
+READ_HISTO_FILE, Event
+
+;procedure to enable most of the buttons/text boxes..
+ENABLED_PROCEDURE, Event
+
+generate_look_up_table_of_real_pixelid_value, Event
+
+end
 

@@ -21,6 +21,7 @@ pro MAIN_BASE_event, Event
         OPEN_MAPPED_HISTOGRAM, Event
     end
 
+;open_nexus
     ;Open widget in the top toolbar - OPEN RUN #
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_NEXUS_menu'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -136,15 +137,20 @@ pro MAIN_BASE_event, Event
         plot_mapped_data, Event
     end
 
-;validate changes
-    ;for tube
-    Widget_Info(wWidget, FIND_BY_UNAME='save_changes_button'): begin
+;--tube--
+;REMOVE tube
+    Widget_Info(wWidget, FIND_BY_UNAME='remove_tube_button'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         save_changes, Event
     end
     
+    Widget_Info(wWidget, FIND_BY_UNAME='cancel_remove_tube_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        add_tube, Event
+    end
+
+
 ;reset all changes
-    
     Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button_validate_yes'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         reset_all_changes, Event
@@ -419,7 +425,7 @@ widget_control,MAIN_BASE,set_uvalue=global
                                      yoffset=8,$
                                      scr_xsize=80,$
                                      scr_ysize=30,$
-                                     value='31',$
+                                     value='53',$
                                      uname='OPEN_RUN_NUMBER_TEXT',$
                                      /editable,$
                                      /align_left)
