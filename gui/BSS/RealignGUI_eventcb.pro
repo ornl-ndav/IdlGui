@@ -193,6 +193,8 @@ end
 
 
 
+
+
 pro CANCEL_OPEN_NEXUS, Event
 
 ;hide open_nexus interface
@@ -201,6 +203,25 @@ widget_control, open_nexus_id, map=0
 
 end
 
+
+
+
+
+
+pro initialization_of_arrays, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Ny_scat = (*global).Ny_scat
+Nx = (*global).Nx
+tube_removed = lonarr(Ny_scat)
+(*(*global).tube_removed) = tube_removed
+(*(*global).pixel_removed) = lonarr(Ny_scat * Nx)
+(*(*global).IDL_pixelid_removed) = lonarr(Ny_scat, Nx)
+
+end
 
 
 
@@ -218,9 +239,7 @@ widget_control,id,get_uvalue=global
 widget_control,/hourglass
 
 ;initialized arrays
-tube_removed = lonarr((*global).Ny_scat)
-(*(*global).tube_removed) = tube_removed
-(*(*global).pixel_removed) = lonarr((*global).Ny_scat * (*global).Nx)
+initialization_of_arrays, Event
 
 ;hide open_nexus interface
 open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
@@ -394,11 +413,25 @@ end
 
 
 
+;value = 1 means removed
+;value = 0 means do not removed
+pro update_list_of_IDL_pixelid_to_removed, Event, pixelid, tube, value
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+IDL_pixelid_removed = (*(*global).IDL_pixelid_removed)
+IDL_pixelid_removed(tube, pixelid) = value
+(*(*global).IDL_pixelid_removed) = IDL_pixelid_removed
+
+end
 
 
 
 ;---------------------------------------------------------------
-;value=0 means do not removed 1 means removed me
+;value=0 means do not removed
+;value=1 means removed
 pro update_list_of_pixelid_to_removed, Event, real_pixelid, value
 
 ;get global structure
@@ -538,9 +571,9 @@ pro OPEN_MAPPED_HISTOGRAM, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-tube_removed = lonarr((*global).Ny_scat)
-(*(*global).tube_removed) = tube_removed
-(*(*global).pixel_removed) = lonarr((*global).Ny_scat * (*global).Nx)
+;initialized arrays
+initialization_of_arrays, Event
+
 OPEN_FILE, Event
 
 end
@@ -654,8 +687,6 @@ widget_control,id,get_uvalue=global
 ;enabled background buttons/draw/text/labels
 id_list=['reset_all_button',$
          'remove_pixelid',$
-;         'save_changes_button',$
-;         'save_pixelid_changes_button',$
          'draw_tube_pixels_slider',$
          'pixels_slider',$
          'remove_tube_button',$
@@ -1204,7 +1235,6 @@ Ntubes = (*global).Ny_scat
 Npix = (*global).Nx
 remap = (*(*global).remap)
 
-
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
@@ -1392,12 +1422,6 @@ pro save_changes, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-; 0 means tube has to be removed
-; 1 means tube must stay in place
-remove_tube_group_id = widget_info(Event.top, $
-                                   find_by_uname='remove_tube_group')
-widget_control, remove_tube_group_id, get_value=tube_removed_boolean
-
 ;value of actif tube
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
@@ -1438,15 +1462,23 @@ pro save_pixelid_changes, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;unvalidate REMOVE button and validate ADD
+remove_id = widget_info(Event.top, find_by_uname='remove_pixelid')
+widget_control, remove_id, sensitive=0
+add_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_reset')
+widget_control, add_id, sensitive=1
+
 ;update number of counts for that pixel
 image_2d_1 = (*(*global).image_2d_1)
 
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
 
-new_pixel_counts_id = widget_info(Event.top, $
-                                  find_by_uname='pixelid_new_counts_value')
-widget_control, new_pixel_counts_id, get_value=new_pixel_counts
+new_pixel_counts = 0
+
+;new_pixel_counts_id = widget_info(Event.top, $
+;                                  find_by_uname='pixelid_new_counts_value')
+;widget_control, new_pixel_counts_id, get_value=new_pixel_counts
 
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
@@ -1455,8 +1487,10 @@ new_pixel_counts = float(new_pixel_counts[0])
 
 real_pixelid =  give_real_pixelid_value(Event, pixel_number, tube_number)
 update_list_of_pixelid_to_removed, Event,real_pixelid, 1
+update_list_of_IDL_pixelid_to_removed, Event, pixel_number, tube_number, 1
 
-;add this pixel to the list of pixels to removed
+;add this pixel to the list of pixel to removed
+
 if (new_pixel_counts NE image_2d_1[pixel_number,tube_number]) then begin
     image_2d_1[pixel_number,tube_number]=new_pixel_counts
     (*(*global).image_2d_1)=image_2d_1
@@ -1651,6 +1685,12 @@ pro pixelid_new_counts_reset, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;unvalidate REMOVE button and validate ADD
+remove_id = widget_info(Event.top, find_by_uname='remove_pixelid')
+widget_control, remove_id, sensitive=1
+add_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_reset')
+widget_control, add_id, sensitive=0
+
 image_2d_1 = (*(*global).image_2d_1)
 image_2d_1_untouched = (*(*global).image_2d_1_untouched)
 tube_removed = (*(*global).tube_removed)
@@ -1667,6 +1707,9 @@ widget_control, tube_slider_id, get_value=tube_number
 ;get pixel_value
 pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 widget_control, pixel_slider_id, get_value=pixel_number
+
+;update list of IDL pixelid to removed
+update_list_of_IDL_pixelid_to_removed, Event, pixel_number, tube_number, 0
 
 ;determine real pixelID number
 real_pixelid =  give_real_pixelid_value(Event, pixel_number, tube_number)
@@ -1718,6 +1761,29 @@ widget_control, pixel_slider_id, get_value=pixel_number
 tube_slider_id = widget_info(Event.top, $
                              find_by_uname='draw_tube_pixels_slider')
 widget_control, tube_slider_id, get_value=tube_number
+
+;check if pixel_number of that tube_number is in the list of pixelid
+;to removed, if yes, validate ADD button and unvalidate REMOVE button
+IDL_pixelid_removed = (*(*global).IDL_pixelid_removed)
+remove_id = widget_info(Event.top, find_by_uname='remove_pixelid')
+add_id = widget_info(Event.top, find_by_uname='pixelid_new_counts_reset')
+
+if (IDL_pixelid_removed(tube_number, pixel_number) EQ 1) then begin
+
+    ;validate ADD and unvalidate REMOVE
+    widget_control, remove_id, sensitive=0
+    widget_control, add_id, sensitive=1
+    print, "valide add and unvalidate REMOVE"
+
+endif else begin
+
+    ;validate REMOVE and unvalidate ADD
+    widget_control, remove_id, sensitive=1
+    widget_control, add_id, sensitive=0
+    print, "unvalidate REMOVE and validate ADD"
+
+endelse
+
 
 pixel_info_id = widget_info(Event.top, find_by_uname='pixel_value')
 real_pixel_value = strcompress(give_real_pixelid_value(Event, pixel_number, $
@@ -2345,6 +2411,34 @@ end
 
 
 
+pro cancel_reset_all, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top, find_by_uname='RESET_ALL_BUTTON_VALIDATE_BASE')
+widget_control, id, map=0
+
+end
+
+
+
+
+
+
+pro validate_reset_all_changes, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top, find_by_uname='RESET_ALL_BUTTON_VALIDATE_BASE')
+widget_control, id, map=1
+
+
+
+
+end
 
 
