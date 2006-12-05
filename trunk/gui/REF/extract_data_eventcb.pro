@@ -1550,6 +1550,7 @@ text = "Done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
 ;;
 ;;regionfile = GetRegionFile((*global).filename, (*global).filename_index)
 ;;
@@ -1902,8 +1903,6 @@ pro DATA_REDUCTION, Event
 go_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
 widget_control,go_id,sensitive=0
 
-print, "In data_reduction"  ;REMOVE_ME
-
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -2115,7 +2114,6 @@ if (wrong_text_file ne 0) then begin
 endif else begin
 
 openr,u,data_reduction_file,/get
-
 
 fs = fstat(u)
 
@@ -2878,7 +2876,8 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
          inside_average = inside_total/total_pixel_inside
          outside_average = outside_total/total_pixel_outside
          selection_label= 'The characteristics of the selection are: '
-         number_pixelID = "  Number of pixelIDs inside the surface: "+strcompress(x12*y12,/rem)
+         number_pixelID = "  Number of pixelIDs inside the surface: "+$
+           strcompress(x12*y12,/rem)
          x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
          y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
 	
@@ -2889,10 +2888,23 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
          average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
          average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
 
-         value_group = [selection_label, number_pixelid,$
-          x_wide, y_wide, blank_line,total_counts, total_inside_region, total_outside_region,$
-          average_counts, average_inside_region, average_outside_region,blank_line,pixel_label,first_point,$
-          first_point_2,second_point,second_point_2]
+         value_group = [selection_label,$
+                        number_pixelid,$
+                        x_wide,$
+                        y_wide,$
+                        blank_line,$
+                        total_counts,$
+                        total_inside_region,$
+                        total_outside_region,$
+                        average_counts,$
+                        average_inside_region,$
+                        average_outside_region,$
+                        blank_line,$
+                        pixel_label,$
+                        first_point,$
+                        first_point_2,$
+                        second_point,$
+                        second_point_2]
 
          ;text = widget_text(, value=value_group, ysize=17)
 
@@ -2933,3 +2945,177 @@ endif
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+PRO VALIDATE_SELECTED_RUNS, Event
+
+check_validity_of_input, Event
+
+END
+
+
+
+
+
+
+
+
+;VALIDATE BUTTON
+pro check_validity_of_input, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;check to text_box
+id = widget_info(Event.top, find_by_uname='select_run_numbers_from')
+widget_control, id, get_value=selected_runs_value_from
+
+;set to 1 to tell the program not to check the order of the selected value
+do_not_check_order=0 
+
+CATCH, error
+
+IF (error NE 0) then begin
+    
+    widget_control, id, set_value=''
+    do_not_check_order = 1
+
+ENDIF ELSE BEGIN
+
+    test_value = long(selected_runs_value_from)
+    a=lonarr(test_value) ;used to test validity of value
+
+ENDELSE
+
+catch, /cancel
+
+;check from text_box
+id = widget_info(Event.top, find_by_uname='select_run_numbers_to')
+widget_control, id, get_value=selected_runs_value_to
+
+CATCH, error
+
+IF (error NE 0) then begin
+    
+    widget_control, id, set_value=''
+    do_not_check_order = 1
+
+ENDIF ELSE BEGIN
+
+    test_value = long(selected_runs_value_to)
+    a=lonarr(test_value) ;used to test validity of value
+
+ENDELSE
+
+catch, /cancel
+
+;check that from_value is <= to_value 
+if (do_not_check_order EQ 0) then begin
+    if (selected_runs_value_from LE selected_runs_value_to) then begin
+        (*global).selected_runs_from = selected_runs_value_from
+        (*global).selected_runs_to = selected_runs_value_to
+    endif else begin
+        (*global).selected_runs_from = selected_runs_value_to
+        (*global).selected_runs_to = selected_runs_value_from
+    endelse
+    
+;limit the number of elements to be (*global).limit_of_run_numbers_to_display
+    diff =long(selected_runs_value_to) - long(selected_runs_value_from)
+
+    limit_up = (*global).limit_of_run_numbers_to_display
+    if (diff GT limit_up) then begin
+        diff = limit_up
+    endif
+
+    list_index = lindgen(diff+1)
+    long_value = long(selected_runs_value_from)
+    long_value = long_value[0]
+    list_of_run_numbers = list_index + long_value
+    
+    list_of_run_numbers_string = strcompress(list_of_run_numbers,/remove_all)
+    
+;update droplist of tab1 and tab2
+    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+    widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
+    
+    
+
+
+
+
+
+
+endif else begin
+    
+    (*global).selected_runs_from = ''
+    (*global).selected_runs_to = ''
+
+endelse
+
+
+
+end
+
+
+
+
+
+pro demo, Event
+
+
+if (uname_of_label EQ 'select_run_numbers_from') then begin
+
+;    CATCH, error_status
+    
+    if (error_status NE 0) then begin
+        
+        print, "in error_status"
+        new_value = (*global).previous_value_of_from
+        selected_runs_value = new_value
+        CATCH, /cancel        
+
+    endif
+    
+    test_value = long(selected_runs_value) ;simple operation to check if value is a integer
+    help, test_value
+
+    (*global).previous_value_of_from = test_value
+
+endif else begin
+    
+ ;   CATCH, error_status
+
+    if (error_status NE 0) then begin
+    
+        new_value = (*global).previous_value_of_to
+        selected_runs_value = new_value
+
+    endif
+
+    test_value = long(selected_runs_value)
+    (*global).previous_value_of_to = test_value
+        
+    CATCH, /cancel
+        
+endelse
+
+widget_control, id, set_value=strcompress(test_value,/remove_all)
+
+print, "(*global).previous_value_of_from= " , (*global).previous_value_of_from
+
+end
+    
+    
+    
+
+
+
+
+
+
+
+
+
