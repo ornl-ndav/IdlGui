@@ -200,26 +200,34 @@ widget_control,id,get_uvalue=global
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='REFRESH_BUTTON_REF_L'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        REFRESH_REF_L, Event
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          REFRESH_REF_L, Event
     end
-
+    
     Widget_Info(wWidget, FIND_BY_UNAME='VIEW_DRAW_REF_L'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
-        if( Event.type eq 0 )then $
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+          if( Event.type eq 0 )then $
           VIEW_ONBUTTON_REF_L, Event
     end
-
+    
 ;tab#2
     Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        VALIDATE_SELECTED_RUNS, Event
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          VALIDATE_SELECTED_RUNS, Event
     end
-
-
-
-
-
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='list_of_runs_add_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          add_button_tab_2, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='list_of_runs_remove_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          remove_button_tab_2, Event
+    end
+    
+    
+    
 
 
 
@@ -314,6 +322,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
+                   limit_of_run_numbers_to_display: 20,$
                    selected_runs_from : 0L,$
                    selected_runs_to : 0L,$
                    find_nexus : 0,$
@@ -335,7 +344,7 @@ global = ptr_new({ $
                    path			: '/SNSlocal/tmp/',$
                    default_output_path	: '/SNSlocal/users/j35/',$
                    default_path		: '/SNSlocal/users/',$
-;	default_path		: '/Users/',$
+; default_path		: '/Users/',$
                    working_path		: '',$
                      tmp_working_path        : '',$
                      tmp_working_path_extenstion: 'miniReflPak_M_tmp/',$
@@ -498,29 +507,33 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             FRAME=1,$
                             VALUE='')
 
-  run_number_title = widget_label(OPEN_NEXUS_BASE,$
-                                  xoffset=205,$
-                                  yoffset=5,$
-                                  scr_xsize=90,$
-                                  scr_ysize=30,$
-                                  value='Selected Runs:',$
-                                  /align_left)
-
-  droplist_value = [string(1220),string(1330),string(1440)]
-  run_number_droplist = widget_droplist(OPEN_NEXUS_BASE,$
-                                        xoffset=195,$
-                                        yoffset=30,$
-                                        /dynamic_resize,$
-;                                        scr_xsize=85,$
-;                                        scr_ysize=130,$
-                                        value=droplist_value)
 
   remove_run_number_from_list = widget_button(OPEN_NEXUS_BASE,$
                                               XOFFSET=5,$
                                               YOFFSET=65,$
-                                              SCR_XSIZE=190,$
+                                              SCR_XSIZE=160,$
                                               SCR_YSIZE=40,$
                                               VALUE="REMOVED CURRENT RUN")
+
+
+  droplist_value = ['']
+  run_number_droplist = widget_droplist(OPEN_NEXUS_BASE,$
+                                        uname='run_number_droplist_tab1',$
+                                        xoffset=170,$
+                                        yoffset=70,$
+                                        /dynamic_resize,$
+;                                       scr_xsize=85,$
+;                                       scr_ysize=30,$
+                                        value=droplist_value)
+
+  run_number_title = widget_label(OPEN_NEXUS_BASE,$
+                                  xoffset=190,$
+                                  yoffset=45,$
+                                  scr_xsize=90,$
+                                  scr_ysize=30,$
+                                  value='Selected Runs',$
+                                  /align_left)
+
   
   OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                                     XOFFSET=5,$
@@ -592,8 +605,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   list_of_runs = ['']
   list_of_run_numbers_droplist = widget_droplist(SELECT_RUN_NUMBERS,$
                                                  uname='list_of_run_numbers_droplist',$
-                                                 xoffset=110,$
-                                                 yoffset=40,$
+                                                 xoffset=105,$
+                                                 yoffset=58,$
 ;                                                 /dynamic_resize,$
                                                  scr_xsize=80,$
                                                  value=list_of_runs)
@@ -610,7 +623,7 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
 
   list_of_runs_add_button = widget_button(SELECT_RUN_NUMBERS,$
                                           uname='list_of_runs_add_button',$
-                                          xoffset=60,$
+                                          xoffset=55,$
                                           yoffset=60,$
                                           scr_xsize=50,$
                                           scr_ysize=30,$
