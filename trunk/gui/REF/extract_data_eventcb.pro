@@ -3014,24 +3014,25 @@ catch, /cancel
 
 ;check that from_value is <= to_value 
 if (do_not_check_order EQ 0) then begin
-    if (selected_runs_value_from LE selected_runs_value_to) then begin
-        (*global).selected_runs_from = selected_runs_value_from
-        (*global).selected_runs_to = selected_runs_value_to
+
+    if (long(selected_runs_value_from) LE long(selected_runs_value_to)) then begin
+        selected_runs_from = selected_runs_value_from
+        selected_runs_to = selected_runs_value_to
     endif else begin
-        (*global).selected_runs_from = selected_runs_value_to
-        (*global).selected_runs_to = selected_runs_value_from
+        selected_runs_from = selected_runs_value_to
+        selected_runs_to = selected_runs_value_from
     endelse
     
 ;limit the number of elements to be (*global).limit_of_run_numbers_to_display
-    diff =long(selected_runs_value_to) - long(selected_runs_value_from)
-
+    diff =long(selected_runs_to) - long(selected_runs_from)
+    
     limit_up = (*global).limit_of_run_numbers_to_display
     if (diff GT limit_up) then begin
         diff = limit_up
     endif
 
     list_index = lindgen(diff+1)
-    long_value = long(selected_runs_value_from)
+    long_value = long(selected_runs_from)
     long_value = long_value[0]
     list_of_run_numbers = list_index + long_value
     
@@ -3043,6 +3044,15 @@ if (do_not_check_order EQ 0) then begin
     
     id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
     widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+
+    id = widget_info(Event.top, find_by_uname='tab2_bottom_right_base')
+    widget_control, id, map=0
+
+    id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
+    widget_control, id, map=1
+
+    (*global).selected_runs_from = selected_runs_value_from
+    (*global).selected_runs_to = selected_runs_value_to
 
 endif else begin
     
@@ -3067,66 +3077,149 @@ widget_control, id_text, get_value=run_to_add
 id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
 widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
 
+;check integrity of inptu
+CATCH, error
+
+do_not_check_order =0
+IF (error NE 0) then begin
+    
+    widget_control, id_text, set_value=''
+    do_not_check_order = 1
+    
+ENDIF ELSE BEGIN
+    
+    test_value = long(run_to_add)
+    a=lonarr(test_value)        ;used to test validity of value
+    
+ENDELSE
+
+catch, /cancel
+
+if (do_not_check_order EQ 0) then begin
+    
+;check the size of the list before starting
+    size1 = size(list_of_run_numbers_string)
+    size1 = size1[1]
+    
+    if (size1 EQ 1) then begin
+
+        if (list_of_run_numbers_string NE "") then begin
+        
 ;add new element into list
-list_of_run_numbers_string = [list_of_run_numbers_string,strcompress(run_to_add,/remove_all)]
-
+            list_of_run_numbers_string = [list_of_run_numbers_string,$
+                                          strcompress(run_to_add,/remove_all)]
+            
 ;reorder list
-size_of_list = size(list_of_run_numbers_string)
-size_of_list = size_of_list[1]
-array_of_runs = lonarr(size_of_list)
-for i=0,(size_of_list-1) do begin
-       array_of_runs[i]=long(list_of_run_numbers_string[i])
-endfor
-
-reorder_array = array_of_runs[sort(array_of_runs)]
-
+            size_of_list = size(list_of_run_numbers_string)
+            size_of_list = size_of_list[1]
+            array_of_runs = lonarr(size_of_list)
+            for i=0,(size_of_list-1) do begin
+                array_of_runs[i]=long(list_of_run_numbers_string[i])
+            endfor
+            
+            reorder_array = array_of_runs[sort(array_of_runs)]
+            
 ;check that there is no duplicated elements
-list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
-list_of_run_numbers_string = string(list_of_run_no_duplicated)
-
+            list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+            list_of_run_numbers_string = string(list_of_run_no_duplicated)
+        
+        endif else begin
+        
+            run_to_add=long(run_to_add)
+            list_of_run_numbers_string = string(run_to_add)
+            
+        endelse
+        
+    endif else begin
+        
+;add new element into list
+        list_of_run_numbers_string = [list_of_run_numbers_string,$
+                                      strcompress(run_to_add,/remove_all)]
+        
+;reorder list
+        size_of_list = size(list_of_run_numbers_string)
+        size_of_list = size_of_list[1]
+        array_of_runs = lonarr(size_of_list)
+        for i=0,(size_of_list-1) do begin
+            array_of_runs[i]=long(list_of_run_numbers_string[i])
+        endfor
+        
+        reorder_array = array_of_runs[sort(array_of_runs)]
+        
+;check that there is no duplicated elements
+        list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+        list_of_run_numbers_string = string(list_of_run_no_duplicated)
+        
+    endelse
+    
 ;update droplist of tab1 and tab2
-id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
-widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
-
-id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
-widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
-
+    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+    widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
+    
+    id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+    widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+    
 ;remove value in add_text_box
-widget_control, id_text, set_value=""
+    widget_control, id_text, set_value=""
+    
+endif
+
+id = widget_info(Event.top, find_by_uname='tab2_bottom_right_base')
+widget_control, id, map=0
+
+id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
+widget_control, id, map=1
 
 end
 
 
 
-
-pro remove_button_tab_2, Event    
+pro remove_button_tab, Event, uname
 
 ;get list of runs from droplist
-id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist',$
+id_droplist_tab = widget_info(Event.top, find_by_uname=uname,$
                                /droplist_select)
-widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
+widget_control, id_droplist_tab, get_value=list_of_run_numbers_string
 
 ;get value of run selected
-index = widget_info(id_droplist_tab2, /droplist_select)
-;current_value = list_of_run_numbers_string[index] 
+index = widget_info(id_droplist_tab, /droplist_select)
+;current_value = list_of_run_numbersxb_string[index] 
 
 ;remove element from list
 ;get number of elements
 array_size_of_list = size(list_of_run_numbers_string)
 size_of_list = array_size_of_list[1]
 
-if (index EQ 0) then begin
-    start_index = 1
-endif else begin
-    start_index =0
-endelse
+if (size_of_list EQ 1) then begin
+    
+    id = widget_info(Event.top, find_by_uname='tab2_bottom_right_base')
+    widget_control, id, map=1
+    
+    id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
+    widget_control, id, map=0
 
-updated_list=list_of_run_numbers_string[start_index]
-for i=start_index+1,(size_of_list-1) do begin
-    if(i NE index) then begin
-        updated_list = [updated_list,list_of_run_numbers_string[i]]
-    endif
-endfor
+endif
+
+if (size_of_list GE 2) then begin
+    
+    if (index EQ 0) then begin
+        start_index = 1
+    endif else begin
+        start_index =0
+    endelse
+    
+    updated_list=list_of_run_numbers_string[start_index]
+    for i=start_index+1,(size_of_list-1) do begin
+        if(i NE index) then begin
+            updated_list = [updated_list,list_of_run_numbers_string[i]]
+        endif
+    endfor
+    
+endif else begin
+
+    updated_list=""
+
+endelse
 
 ;update droplist of tab1 and tab2
 id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
@@ -3134,6 +3227,7 @@ widget_control, id_droplist_tab2, set_value=updated_list
 
 id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
 widget_control, id_droplist_tab1, set_value=updated_list
+
 
 end
 
