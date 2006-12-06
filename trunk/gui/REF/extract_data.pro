@@ -217,6 +217,12 @@ widget_control,id,get_uvalue=global
           remove_button_tab, Event, 'run_number_droplist_tab1'
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='plot_run_number_from_list_tab1'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          plot_selected_run, Event
+    end
+
+
 ;tab#2
     Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -380,10 +386,14 @@ global = ptr_new({ $
                      Nx			: 256L,$
                      Ny			: 304L,$
                      Ntof			: 0L,$
-                     starting_id_x		: 0L,$
-                     starting_id_y		: 0L,$
-                     ending_id_x		: 0L,$
-                     ending_id_y		: 0L,$
+                     starting_id_x		: 50L,$ ;REMOVE_ME
+                     starting_id_y		: 100L,$ ;REMOVE_ME
+                     ending_id_x		: 100L,$ ;REMOVE_ME
+                     ending_id_y		: 200L,$ ;REMOVE_ME
+;                     starting_id_x		: 0L,$
+;                     starting_id_y		: 0L,$
+;                     ending_id_x		: 0L,$
+;                     ending_id_y		: 0L,$
                      data_ptr		: ptr_new(0L),$
                      data_assoc		: ptr_new(0L),$
                      img_ptr			: ptr_new(0L),$
@@ -523,17 +533,26 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                  yoffset=50,$
                                  scr_xsize=304,$
                                  scr_ysize=150,$
-                                 map=0)
+                                 map=1) ;remove 1 and put 0      REMOVE_ME
 
   remove_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
                                                    uname='remove_run_number_from_list_tab1',$
                                                    XOFFSET=0,$
                                                    YOFFSET=15,$
-                                                   SCR_XSIZE=160,$
+                                                   SCR_XSIZE=120,$
                                                    SCR_YSIZE=40,$
-                                                   VALUE="REMOVED CURRENT RUN")
+                                                   VALUE="REMOVE CURRENT RUN")
 
-  droplist_value = ['']
+  plot_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
+                                                 uname='plot_run_number_from_list_tab1',$
+                                                 xoffset=125,$
+                                                 yoffset=15,$
+                                                 scr_xsize=50,$
+                                                 scr_ysize=40,$
+                                                 value='PLOT')
+
+  droplist_value = ['2','3']    ;REMOVE_ME
+;  droplist_value = ['']
   run_number_droplist = widget_droplist(bottom_tab1_base,$
                                         uname='run_number_droplist_tab1',$
                                         xoffset=165,$

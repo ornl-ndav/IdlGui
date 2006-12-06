@@ -307,8 +307,76 @@ endif else begin
         dump_binary_data, Event, full_nexus_name
         
 ;read and plot nexus file
-        read_and_plot_nexus_file, Event
+        read_and_plot_nexus_file, Event        
+
+;add run_number_to_list_of_selected_runs
+
+;get list of runs from droplist
+run_to_add = run_number
+id_droplist_tab2 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
+
+size1 = size(list_of_run_numbers_string)
+size1 = size1[1]
+    
+    if (size1 EQ 1) then begin
+
+        if (list_of_run_numbers_string NE "") then begin
         
+;add new element into list
+            list_of_run_numbers_string = [list_of_run_numbers_string,$
+                                          strcompress(run_to_add,/remove_all)]
+            
+;reorder list
+            size_of_list = size(list_of_run_numbers_string)
+            size_of_list = size_of_list[1]
+            array_of_runs = lonarr(size_of_list)
+            for i=0,(size_of_list-1) do begin
+                array_of_runs[i]=long(list_of_run_numbers_string[i])
+            endfor
+            
+            reorder_array = array_of_runs[sort(array_of_runs)]
+            
+;check that there is no duplicated elements
+            list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+            list_of_run_numbers_string = string(list_of_run_no_duplicated)
+        
+        endif else begin
+        
+            run_to_add=long(run_to_add)
+            list_of_run_numbers_string = string(run_to_add)
+            
+        endelse
+        
+    endif else begin
+        
+;add new element into list
+        list_of_run_numbers_string = [list_of_run_numbers_string,$
+                                      strcompress(run_to_add,/remove_all)]
+        
+;reorder list
+        size_of_list = size(list_of_run_numbers_string)
+        size_of_list = size_of_list[1]
+        array_of_runs = lonarr(size_of_list)
+        for i=0,(size_of_list-1) do begin
+            array_of_runs[i]=long(list_of_run_numbers_string[i])
+        endfor
+        
+        reorder_array = array_of_runs[sort(array_of_runs)]
+        
+;check that there is no duplicated elements
+        list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+        list_of_run_numbers_string = string(list_of_run_no_duplicated)
+        
+    endelse
+    
+;update droplist of tab1 and tab2
+    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+    widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
+    
+    id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+    widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+
     endelse
 
 endelse
@@ -3027,8 +3095,13 @@ if (do_not_check_order EQ 0) then begin
     diff =long(selected_runs_to) - long(selected_runs_from)
     
     limit_up = (*global).limit_of_run_numbers_to_display
-    if (diff GT limit_up) then begin
+    if (diff GE limit_up) then begin
         diff = limit_up
+        ;inform user that size was limited
+        view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+        text = "Number of runs to process has been limited to " +$
+          strcompress(limit_up,/remove_all)
+        widget_control, view_info, set_value=text, /append
     endif
 
     list_index = lindgen(diff+1)
@@ -3228,6 +3301,32 @@ widget_control, id_droplist_tab2, set_value=updated_list
 id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
 widget_control, id_droplist_tab1, set_value=updated_list
 
+end
+
+
+pro plot_selected_run, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+
+;get current selected run
+;get list of runs from droplist
+id_droplist_tab = widget_info(Event.top, find_by_uname='run_number_droplist_tab1',$
+                               /droplist_select)
+widget_control, id_droplist_tab, get_value=list_of_run_numbers_string
+
+;get value of run selected
+index = widget_info(id_droplist_tab, /droplist_select)
+
+selected_run = long(list_of_run_numbers_string[index])
+
+
+OPEN_SELECTED_NEXUS_RUN, Event, selected_run
+
+;apply selection to selected run
+APPLY_SELECTION_TO_CURRENT_RUN, Event
 
 end
 
@@ -3235,3 +3334,72 @@ end
 
 
 
+
+PRO OPEN_SELECTED_NEXUS_RUN, Event, run_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;erase all the plots
+erase_plots, Event, "REF_M"
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+
+;get path to nexus run #
+instrument = "REF_M"
+full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+
+;check result of search
+find_nexus = (*global).find_nexus
+if (find_nexus EQ 0) then begin
+    text_nexus = "WARNING! NeXus file does not exist"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+endif else begin
+    (*global).full_nexus_name = full_nexus_name
+    text_nexus = "(" + full_nexus_name + ")"
+    WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    
+;dump binary data of NeXus file into tmp_working_path
+    dump_binary_data, Event, full_nexus_name
+    
+;read and plot nexus file
+    read_and_plot_nexus_file, Event
+    
+endelse
+
+end
+
+
+
+
+pro APPLY_SELECTION_TO_CURRENT_RUN, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_main=widget_info(Event.top, FIND_BY_UNAME='VIEW_DRAW')
+WIDGET_CONTROL, view_main, GET_VALUE = id
+wset,id
+
+;retrieve value of xmin, xmax, ymin and ymax (selection)
+x1 =(*global).starting_id_x
+y1 =(*global).starting_id_y
+x2 =(*global).ending_id_x
+y2=(*global).ending_id_y
+
+r=255L                          ;red max
+g=0L                            ;no green
+b=255L                          ;blue max
+
+plots, X1, Y1, /device, color=800
+plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+
+end
