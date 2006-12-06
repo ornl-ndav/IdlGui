@@ -210,6 +210,13 @@ widget_control,id,get_uvalue=global
           VIEW_ONBUTTON_REF_L, Event
     end
     
+;tab#1
+
+    Widget_Info(wWidget, FIND_BY_UNAME='remove_run_number_from_list_tab1'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          remove_button_tab, Event, 'run_number_droplist_tab1'
+    end
+
 ;tab#2
     Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -223,7 +230,7 @@ widget_control,id,get_uvalue=global
     
     Widget_Info(wWidget, FIND_BY_UNAME='list_of_runs_remove_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-          remove_button_tab_2, Event
+          remove_button_tab, Event, 'list_of_run_numbers_droplist'
     end
     
     
@@ -508,39 +515,49 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             VALUE='')
 
 
-  remove_run_number_from_list = widget_button(OPEN_NEXUS_BASE,$
-                                              XOFFSET=5,$
-                                              YOFFSET=65,$
-                                              SCR_XSIZE=160,$
-                                              SCR_YSIZE=40,$
-                                              VALUE="REMOVED CURRENT RUN")
+;bottom part of tab1
 
+  bottom_tab1_base = widget_base(OPEN_NEXUS_BASE,$
+                                 uname='bottom_tab1_base',$
+                                 xoffset=5,$
+                                 yoffset=50,$
+                                 scr_xsize=304,$
+                                 scr_ysize=150,$
+                                 map=0)
+
+  remove_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
+                                                   uname='remove_run_number_from_list_tab1',$
+                                                   XOFFSET=0,$
+                                                   YOFFSET=15,$
+                                                   SCR_XSIZE=160,$
+                                                   SCR_YSIZE=40,$
+                                                   VALUE="REMOVED CURRENT RUN")
 
   droplist_value = ['']
-  run_number_droplist = widget_droplist(OPEN_NEXUS_BASE,$
+  run_number_droplist = widget_droplist(bottom_tab1_base,$
                                         uname='run_number_droplist_tab1',$
-                                        xoffset=170,$
-                                        yoffset=70,$
+                                        xoffset=165,$
+                                        yoffset=20,$
                                         /dynamic_resize,$
 ;                                       scr_xsize=85,$
 ;                                       scr_ysize=30,$
                                         value=droplist_value)
 
-  run_number_title = widget_label(OPEN_NEXUS_BASE,$
-                                  xoffset=190,$
-                                  yoffset=45,$
+  run_number_title = widget_label(bottom_tab1_base,$
+                                  xoffset=185,$
+                                  yoffset=0,$
                                   scr_xsize=90,$
                                   scr_ysize=30,$
                                   value='Selected Runs',$
                                   /align_left)
 
   
-  OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
-                                    XOFFSET=5,$
-                                    YOFFSET=48,$
-                                    SCR_XSIZE=190,$
-                                    SCR_YSIZE=67,$
-                                    VALUE='')
+;  OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
+;                                    XOFFSET=5,$
+;                                    YOFFSET=48,$
+;                                    SCR_XSIZE=190,$
+;                                    SCR_YSIZE=67,$
+;                                    VALUE='')
   
   
 ;tab #2
@@ -602,7 +619,15 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                          frame=1,$
                          value='')
 
-  list_of_runs = ['']
+;add a base on top of bottom right part to make it disapear
+  tab2_bottom_right_base = widget_base(SELECT_RUN_NUMBERS,$
+                                       uname="tab2_bottom_right_base",$
+                                       xoffset=105,$
+                                       yoffset=50,$
+                                       scr_xsize=190,$
+                                       scr_ysize=60)
+
+list_of_runs = ['']
   list_of_run_numbers_droplist = widget_droplist(SELECT_RUN_NUMBERS,$
                                                  uname='list_of_run_numbers_droplist',$
                                                  xoffset=105,$
@@ -1076,7 +1101,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   Widget_Control, SAVE_BUTTON, sensitive=0
   Widget_Control, REFRESH_BUTTON, sensitive=0
   Widget_Control, START_CALCULATION, sensitive=0
-
   ;disabled background buttons/draw/text/labels
   Widget_Control, UTILS_MENU, sensitive=0
 ;  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
@@ -1580,7 +1604,8 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    Widget_Control, CURSOR_Y_POSITION_REF_L, sensitive=0 
 
 ;disabled before the user has been identified
-   Widget_Control, CTOOL_MENU_REF_L, sensitive=0
+  Widget_Control, CTOOL_MENU_REF_L, sensitive=0
+
    
    XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
    
