@@ -227,6 +227,12 @@ widget_control,id,get_uvalue=global
           run_reduction_on_all_selected_runs, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='image_background_minireflpak'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          ABOUT_cb , Event
+    end
+
+
 
 
 ;tab#2
@@ -244,14 +250,6 @@ widget_control,id,get_uvalue=global
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           remove_button_tab, Event, 'list_of_run_numbers_droplist'
     end
-    
-    
-    
-
-
-
-
-
 
     else:
   endcase
@@ -341,7 +339,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
-                   list_of_runs_GT_1 : 0,$
                    selection_has_been_made : 0,$
                    number_of_runs : 0,$
                    base_nexus_file : 0,$
@@ -493,16 +490,20 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   
 ;first tab
   OPEN_NEXUS_BASE = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
+                                uname='OPEN_NEXUS_BASE',$
                                 TITLE='Open Run number',$
                                 XOFFSET=0,$
                                 YOFFSET=0)
   
   RUN_NUMBER_TEXT = widget_label(OPEN_NEXUS_BASE,$
+                                 uname='run_number_text',$
                                  XOFFSET=10,$
                                  YOFFSET=10,$
                                  SCR_XSIZE=40,$
                                  SCR_YSIZE=30,$
-                                 VALUE="RUN #")
+                                 VALUE="RUN #",$
+                                sensitive=0)
+
 
   RUN_NUMBER_BOX = widget_text(OPEN_NEXUS_BASE,$
                                UNAME='RUN_NUMBER_BOX',$
@@ -512,7 +513,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                SCR_YSIZE=30,$
                                VALUE='',$
                                /editable,$
-                               /align_left)
+                               /align_left,$
+                              sensitive=0)
 
   OPEN_RUN_NUMBER = widget_button(OPEN_NEXUS_BASE,$
                                   UNAME='OPEN_RUN_NUMBER',$
@@ -520,7 +522,8 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                   YOFFSET=10,$
                                   SCR_XSIZE=80,$
                                   SCR_YSIZE=30,$
-                                  VALUE='O P E N')
+                                  VALUE='O P E N',$
+                                 sensitive=0)
   
   OPEN_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
                             XOFFSET=5,$
@@ -547,16 +550,18 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             scr_xsize=50,$
                             scr_ysize=48,$
                             uname='go_button',$
-                            value='go1.bmp',$
+                            value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/go1.bmp',$
                             /bitmap,$
                             frame=2)
                             
   image_background = widget_button(OPEN_NEXUS_BASE,$
-                                  xoffset=15,$
-                                  yoffset=54,$
-                                  scr_xsize=270,$
-                                  scr_ysize=70,$
-                                  value='miniReflPak_logo.bmp',$
+                                   uname='image_background_minireflpak',$
+                                   value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
+                                   xoffset=15,$
+                                   yoffset=54,$
+                                   scr_xsize=270,$
+                                   scr_ysize=70,$
+                                   
                                   /bitmap)
                                 
 
@@ -612,11 +617,13 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   
 ;tab #2
   SELECT_RUN_NUMBERS = widget_base(OPEN_NEXUS_and_VIEW_DRAW_TOF_TAB,$
-                                   Title = "Select runs numbers",$
+                                   uname='select_run_numbers',$
+                                   Title = "Select runs",$
                                    XOFFSET=0,$
                                    YOFFSET=0,$
                                    SCR_XSIZE=plot_length,$
-                                   SCR_YSIZE=plot_height)
+                                   SCR_YSIZE=plot_height,$
+                                  sensitive=0)
 
   select_run_numbers_text = widget_label(SELECT_RUN_NUMBERS,$
                                          VALUE="Work on runs from",$

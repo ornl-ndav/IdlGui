@@ -377,6 +377,10 @@ endif else begin
             
         endelse
         
+        ;activate second tab
+        second_tab_id = widget_info(Event.top, find_by_uname='select_run_numbers')
+        widget_control, second_tab_id, sensitive=1
+
 ;update droplist of tab1 and tab2
         id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
         widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
@@ -995,7 +999,10 @@ id_list=['UTILS_MENU',$
          'FILE_NAME_TEXT',$
          'BACKGROUND_SWITCH',$
          'NORMALIZATION_SWITCH',$
-         'NORM_FILE_TEXT']
+         'NORM_FILE_TEXT',$
+         'run_number_text',$
+         'RUN_NUMBER_BOX',$         
+         'OPEN_RUN_NUMBER']
 
 id_list_size = size(id_list)
 for i=0,(id_list_size[1]-1) do begin
