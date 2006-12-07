@@ -2205,8 +2205,6 @@ working_path = (*global).working_path
 ;nexus_file = (*global).nexus_filename
 nexus_file = (*global).full_nexus_name
 
-print, "nexus_filename_only= " + (*global).nexus_file_name_only
-
 data_reduction_file = working_path +  "REF_M_" + $
   strcompress((*global).run_number,/remove_all) + '.txt'
 
@@ -2248,7 +2246,7 @@ onebyte = 0b
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 space = ''
 WIDGET_CONTROL, view_info, SET_VALUE=space, /APPEND
-intro="*** Infos about file generated ***
+intro="*** Infos about file generated ***"
 WIDGET_CONTROL, view_info, SET_VALUE=intro, /APPEND
 
 while (NOT eof(u)) do begin
@@ -3551,6 +3549,7 @@ for i=0,(number_of_runs-1) do begin
     
 ;get full_nexus_name according to run#
     run_number = list_of_run_numbers_string[i]
+    (*global).run_number = run_number
     
     text = "Run # " + strcompress(run_number,/remove_all)
     widget_control, view_info, set_value=text, /append
@@ -3584,6 +3583,8 @@ pro data_reduction_on_selected_runs, Event, full_nexus_name
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+nexus_filename = full_nexus_name
 
 ;set up working path
 working_path = (*global).working_path
@@ -3672,6 +3673,8 @@ ending_id_y = (*global).ending_id_y
   endelse
   (*global).with_normalization = with_norm
 
+print, "nexus_filename: ", nexus_filename
+
 ;define command line to run data reduction
 space = " "
 cmd_line= "reflect_reduction " ;program to run
@@ -3698,10 +3701,10 @@ cmd_line += space
 cmd_line += normalization_flag   ;--norm=<name of file> if with normalization; "" if without
 cmd_line += " -v"
 
-spawn, cmd_line, listening, /stderr
+spawn, cmd_line, listening, /stderr      
 
 ;plot resulting data reduction plot
-plot_reduction, event
+plot_reduction, event                      
 
 info_overflow_REF_M, Event
 
