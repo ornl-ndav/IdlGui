@@ -38,7 +38,7 @@ pro MAIN_BASE_event, Event
     ;Open widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_NEXUS'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        OPEN_NEXUS, Event
+        OPEN_NEXUS_INTERFACE, Event
     end
 
     ;Exit widget in the top toolbar
@@ -172,7 +172,8 @@ global = ptr_new({$
                    swap_endian		:0,$
                    pixelids		:9216L,$
                    Nx			:64L,$
-                   Ny_scat			:128L,$
+                   Ny_scat		:128L,$
+                   Ny                   :144L,$
                    Nt			:10L,$
                    y_coeff			:0L,$
                    x_coeff			:0L,$
@@ -249,7 +250,7 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
                                SPACE=4,$
                                XPAD=3,$
                                YPAD=3,$
-                               MAP=1)    ;REMOVE_ME, PUT 0 INSTEAD
+                               MAP=0)    ;REMOVE_ME, PUT 0 INSTEAD
   
   OPEN_RUN_NUMBER_LABEL = widget_label(OPEN_NEXUS_BASE,$
                                        xoffset=5,$
@@ -370,9 +371,11 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
    y_offset_3 = 70
 
    TBIN_FRAME = WIDGET_BASE(TRANSLATION_DISPLAY_HISTO_FRAME,$
-	TITLE="Time Bin interaction (microS)",$
-	SCR_XSIZE=395,$
-	SCR_YSIZE=140)
+                            uname='tbin_frame',$
+                            TITLE="Time Bin interaction (microS)",$
+                            SCR_XSIZE=395,$
+                            SCR_YSIZE=140,$
+                           sensitive=0)
 
    MIN_TBIN = WIDGET_LABEL(TBIN_FRAME,$
 	VALUE="Min Tbin ",$
@@ -602,11 +605,6 @@ IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
   Widget_Control, OPEN_MAPPED_HISTOGRAM, sensitive=0
   Widget_Control, OPEN_HISTOGRAM, sensitive=0
   Widget_Control, OUTPUT_PATH, sensitive=0
-  Widget_Control, TBIN_REFRESH_BUTTON, sensitive=0    
-  Widget_Control, MAX_TBIN_SLIDER, sensitive=0
-  Widget_Control, MAX_TBIN_TEXT, sensitive=0
-  Widget_Control, MIN_TBIN_SLIDER, sensitive=0
-  Widget_Control, MIN_TBIN_TEXT, sensitive=0
   
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
