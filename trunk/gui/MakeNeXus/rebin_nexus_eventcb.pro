@@ -800,7 +800,6 @@ pro reinitialize_display, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-
 ;hide histo_file_infos main_base
 id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
 widget_control, id, map=1
@@ -938,7 +937,9 @@ endif else begin
     spawn, cmd_findnexus, listening
     
 ;get only path up to preNeXus path
-    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening,instrument,run_number)
+    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening,$
+                                                           instrument,$
+                                                           run_number)
     
 ;check if nexus exists
     result = strmatch(full_path_to_prenexus,"ERROR*")
@@ -1045,7 +1046,6 @@ endif else begin
         text = read_xml_file(runinfo_xml_filename, "Title")
         if (strlen(text) GT 40) then begin
             text = strmid(text,0,38) + "[...]"
-            print, "in title: text is : ", text           
         endif
         widget_control, id, set_value=string(text)
         
@@ -1428,7 +1428,12 @@ end
 function get_proposal_number, file
 
 file_parsed = strsplit(file,"/",/regex,/extract,count=length)
-proposal_number = file_parsed[length-4]
+
+if (length EQ 6) then begin
+    proposal_number = file_parsed[length-4]
+endif else begin
+    proposal_number = file_parsed[length-5]+"/"+file_parsed[length-4]
+endelse
 
 return, proposal_number
 
