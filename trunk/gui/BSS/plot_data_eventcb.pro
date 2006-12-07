@@ -235,14 +235,8 @@ if ((*global).refresh_histo EQ 0) then begin
 	
   simg = total(img,1) 	;sum over time bins
 
-  max_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
-  WIDGET_CONTROL, max_tbin_slider_id, sensitive=1
-  max_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
-  WIDGET_CONTROL, max_tbin_text_id, sensitive=1
-  min_tbin_slider_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
-  WIDGET_CONTROL, min_tbin_slider_id, sensitive=1
-  min_tbin_text_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='MIN_TBIN_TEXT')
-  WIDGET_CONTROL, min_tbin_text_id, sensitive=1
+  tbin_frame_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tbin_frame')
+  WIDGET_CONTROL, tbin_frame_id, sensitive=1
 
 endif else begin
 
@@ -255,7 +249,6 @@ endif else begin
    Ny = (*global).Ny
      
    new_Nt = max_tbin - min_tbin
-   print, "new_Nt= ", new_Nt           ;REMOVE_ME
 
    if (new_Nt EQ 0) then begin
        new_Nt = 1
@@ -991,6 +984,9 @@ check_validity, Event
 end
 
 
+
+
+
 pro max_tbin_text, Event
 
 ;get global structure
@@ -1022,6 +1018,9 @@ check_validity, Event
 end
 
 
+
+
+
 pro tbin_refresh_button, Event
 
 ;get global structure
@@ -1045,6 +1044,9 @@ endif
 PLOT_HISTO_FILE, Event
 
 end
+
+
+
 
 
 pro check_validity, Event
@@ -1076,7 +1078,17 @@ end
 
 
 
+
+
 ;========================OPEN NEXUS============================
+
+pro OPEN_NEXUS_INTERFACE, Event
+
+nexus_base_id = widget_info(Event.top, find_by_uname='OPEN_NEXUS_BASE')
+widget_control, nexus_base_id, map=1
+
+end
+
 
 PRO OPEN_RUN_NUMBER, Event
 
@@ -1086,6 +1098,8 @@ widget_control, run_number_txt_id, get_value=run_number
 OPEN_NEXUS, Event, run_number
 
 END
+
+
 
 
 
@@ -1179,10 +1193,6 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = "- Opening and Reading run # " + strcompress(run_number,/remove_all)
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-file = "/BSS_" + strcompress(run_number, /remove_all)
-file += "_neutron_histo_mapped.dat"
-(*global).file = file
-
 ;global parameters
 Nx = (*global).Nx
 Ny_scat = (*global).Ny_scat
@@ -1217,13 +1227,7 @@ image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
 readu,u,image_bottom
 close,u
 
-;combining image_top and image_bottom into image1
-
-image1 = ulonarr(Nt,Nx,Ny_scat)
-image1(*,*,0:Ny_scat_bank-1) = image_top
-image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
-
-;PLOT_NEXUS_FILE, Event, image1
+PLOT_NEXUS_FILE, Event, image_top, image_bottom
 
 text = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
@@ -1310,5 +1314,182 @@ endif
 ;now create tmp folder
 cmd_create = "mkdir " + full_tmp_nxdir_folder_path
 spawn, cmd_create,  listening
+
+end
+
+
+
+
+pro PLOT_NEXUS_FILE, Event, data_top, data_bottom
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Nx=(*global).Nx
+Ny=(*global).Ny_scat
+
+if ((*global).refresh_histo EQ 0) then begin
+
+Nt=(*global).Nt
+
+;update Tbin_interaction interface
+max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
+min_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
+max_tbin_text_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
+widget_control, max_tbin_slider_id, SET_SLIDER_MAX=Nt
+widget_control, max_tbin_slider_id, SET_VALUE=Nt
+widget_control, min_tbin_slider_id, SET_SLIDER_MAX=Nt
+widget_control, max_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
+
+;find the non-null elements
+indx1 = where(data_top GT 0, Ngt0)
+indx2 = where(data_bottom GT 0, Ngt1)
+img_top = lonarr(Nt, Nx, Ny/2)
+img_bottom = lonarr(Nt, Nx, Ny/2)
+img_top(indx1) = data_top(indx1)
+img_bottom(indx2) = data_bottom(indx2)
+
+;sum over time bins
+top_bank = total(img_top,1)
+bottom_bank = total(img_bottom,1)
+
+tbin_frame_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='tbin_frame')
+WIDGET_CONTROL, tbin_frame_id, sensitive=1
+
+endif else begin ;if file has already been opened
+
+endelse
+
+(*(*global).top_bank) = top_bank
+(*(*global).bottom_bank) = bottom_bank
+
+top_bank = transpose(top_bank)
+bottom_bank = transpose(bottom_bank)
+
+if ((*global).do_color EQ 1) then begin
+   
+   DEVICE, DECOMPOSED=0
+   loadct, 2
+
+endif
+
+Ny_pixels = (*global).Ny_pixels
+Nx_tubes = (*global).Nx_tubes
+
+x_coeff = 12
+(*global).x_coeff = x_coeff
+y_coeff = 4
+(*global).y_coeff = y_coeff
+
+New_Ny = y_coeff*Ny_pixels
+New_Nx = x_coeff*Nx_tubes
+xoff = 10
+yoff = 10
+
+;top bank
+view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOP_BANK')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
+tvscl, tvimg, /device
+
+;plot grid
+for i=1,63 do begin
+  plots, i*x_coeff, 0, /device, color=300
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+
+  plots, 0,i*x_coeff, /device,color=300
+  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+endfor
+
+;bottom bank
+view_info = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_BOTTOM_BANK')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
+tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
+tvscl, tvimg, /device
+
+;plot grid
+for i=1,63 do begin
+  plots, i*x_coeff, 0, /device, color=300
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+
+  plots, 0,i*x_coeff, /device,color=300
+  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+endfor
+
+;plot scales
+;tubes axis
+view_info = widget_info(Event.top,FIND_BY_UNAME='X_SCALE')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+TvLCT, [70,255,0],[70,255,255],[70,0,0],1
+plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes-1],$
+	xstyle=1+8, ystyle=4, /noerase, charsize=1.0, charthick=1.6,$
+	xmargin=[1,3], xticks=8, xtitle=xtitle, color=2,$
+	xTickLen=.5, XGridStyle=2, xminor=7, xtickinterval=4
+
+;top pixels axis
+view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_TOP_BANK')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+erase
+
+TvLCT, [70,255,0],[70,255,255],[70,0,0],1
+plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
+	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+	ymargin=[0,0], yticks=8, color=2,$
+	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
+
+
+;bottom pixels axis
+view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_BOTTOM_BANK')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+erase
+
+TvLCT, [70,255,0],[70,255,255],[70,0,0],1
+plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
+	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+	ymargin=[0,0], yticks=8, color=2,$
+	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
+
+;plot of top scale
+view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+erase
+
+max_top = max(top_bank)
+print, max_top
+cscl = lindgen(20,New_Ny-10)
+tvscl,cscl,40,5,/device
+plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
+	xticks=1,xtickv=1,charsize=0.8
+
+;plot of bottom scale
+view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+erase
+
+max_bottom = max(bottom_bank)
+cscl = lindgen(20,New_Ny-10)
+tvscl,cscl,40,5,/device
+plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
+	xticks=1,xtickv=1,charsize=0.8
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = " ....Plotting COMPLETED "
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+(*global).file_already_opened = 1
+(*global).refresh_histo = 0
 
 end
