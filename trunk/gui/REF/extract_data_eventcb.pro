@@ -223,7 +223,7 @@ if (run_number EQ '') then begin
     WIDGET_CONTROL, view_info, SET_VALUE=text,/append
     
 endif else begin
-
+    
     (*global).run_number = run_number
     
     text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
@@ -249,7 +249,7 @@ endif else begin
 ;read and plot nexus file
         read_and_plot_nexus_file_REF_L, Event
     endelse
-
+    
 endelse
 
 end
@@ -268,6 +268,9 @@ PRO OPEN_NEXUS_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;tell the program that there is no selection
+(*global).selection_has_been_made = 0
+
 ;erase all the plots
 erase_plots, Event, "REF_M"
 
@@ -278,12 +281,12 @@ id_run_number = widget_info(Event.top, FIND_BY_UNAME='RUN_NUMBER_BOX')
 widget_control, id_run_number, get_value=run_number
 
 if (run_number EQ '') then begin
-
+    
     text = "No run number specified" + strcompress(run_number,/remove_all)
     WIDGET_CONTROL, view_info, SET_VALUE=text,/append
-
+    
 endif else begin 
-
+    
     (*global).run_number = run_number
     
     text = "Open NeXus file of run number " + strcompress(run_number,/remove_all)
@@ -303,26 +306,57 @@ endif else begin
         text_nexus = "(" + full_nexus_name + ")"
         WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
         
+;tell the program that a base nexus files has been loaded to run on
+;all the other selected runs
+        (*global).base_nexus_file = 1
+        
 ;dump binary data of NeXus file into tmp_working_path
         dump_binary_data, Event, full_nexus_name
         
 ;read and plot nexus file
         read_and_plot_nexus_file, Event        
-
-;add run_number_to_list_of_selected_runs
-
-;get list of runs from droplist
-run_to_add = run_number
-id_droplist_tab2 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
-widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
-
-size1 = size(list_of_run_numbers_string)
-size1 = size1[1]
-    
-    if (size1 EQ 1) then begin
-
-        if (list_of_run_numbers_string NE "") then begin
         
+;add run_number_to_list_of_selected_runs
+        
+;get list of runs from droplist
+        run_to_add = run_number
+        id_droplist_tab2 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+        widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
+        
+        size1 = size(list_of_run_numbers_string)
+        size1 = size1[1]
+        
+        if (size1 EQ 1) then begin
+            
+            if (list_of_run_numbers_string NE "") then begin
+                
+;add new element into list
+                list_of_run_numbers_string = [list_of_run_numbers_string,$
+                                              strcompress(run_to_add,/remove_all)]
+                
+;reorder list
+                size_of_list = size(list_of_run_numbers_string)
+                size_of_list = size_of_list[1]
+                array_of_runs = lonarr(size_of_list)
+                for i=0,(size_of_list-1) do begin
+                    array_of_runs[i]=long(list_of_run_numbers_string[i])
+                endfor
+                
+                reorder_array = array_of_runs[sort(array_of_runs)]
+                
+;check that there is no duplicated elements
+                list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+                list_of_run_numbers_string = string(list_of_run_no_duplicated)
+                
+            endif else begin
+                
+                run_to_add=long(run_to_add)
+                list_of_run_numbers_string = string(run_to_add)
+                
+            endelse
+            
+        endif else begin
+            
 ;add new element into list
             list_of_run_numbers_string = [list_of_run_numbers_string,$
                                           strcompress(run_to_add,/remove_all)]
@@ -340,45 +374,37 @@ size1 = size1[1]
 ;check that there is no duplicated elements
             list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
             list_of_run_numbers_string = string(list_of_run_no_duplicated)
-        
-        endif else begin
-        
-            run_to_add=long(run_to_add)
-            list_of_run_numbers_string = string(run_to_add)
             
         endelse
         
-    endif else begin
-        
-;add new element into list
-        list_of_run_numbers_string = [list_of_run_numbers_string,$
-                                      strcompress(run_to_add,/remove_all)]
-        
-;reorder list
-        size_of_list = size(list_of_run_numbers_string)
-        size_of_list = size_of_list[1]
-        array_of_runs = lonarr(size_of_list)
-        for i=0,(size_of_list-1) do begin
-            array_of_runs[i]=long(list_of_run_numbers_string[i])
-        endfor
-        
-        reorder_array = array_of_runs[sort(array_of_runs)]
-        
-;check that there is no duplicated elements
-        list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
-        list_of_run_numbers_string = string(list_of_run_no_duplicated)
-        
-    endelse
-    
 ;update droplist of tab1 and tab2
-    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
-    widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
-    
-    id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
-    widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+        id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+        widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
+        
+        id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+        widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+        
+;if list_of_runs > 1 then activate go_button
+        id_droplist_tab = widget_info(Event.top, find_by_uname='run_number_droplist_tab1',$
+                                      /droplist_select)
+        widget_control, id_droplist_tab, get_value=list_of_run_numbers_string
+        
+        number_of_runs = size(list_of_run_numbers_string)
+        number_of_runs = number_of_runs[1]
+        
+        (*global).number_of_runs = number_of_runs
 
+;activate go_button_base if a few runs have been selected
+;and if a region have been selected too
+        if (number_of_runs GT 1) then begin
+                        
+            id = widget_info(Event.top, find_by_uname='go_button_base')
+            widget_control, id, map=1
+            
+        endif
+        
     endelse
-
+    
 endelse
 
 end
@@ -1390,6 +1416,15 @@ IF ((event.press EQ 4) AND (file_already_opened EQ 1)) then begin
 	    plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
 	    plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
 
+            (*global).selection_has_been_made = 1
+
+            if ((*global).base_nexus_file EQ 1 AND (*global).number_of_runs GT 1) then begin
+                
+                id = widget_info(Event.top, find_by_uname='go_button_base')
+                widget_control, id, map=1
+    
+            endif
+
             if (!mouse.button EQ 4) then begin    ;stop the process
 
   	       getvals = 1
@@ -1696,20 +1731,21 @@ end
 ;--------------------------------------------------------------------------
 pro CTOOL, Event
 
-	;disable refresh button during ctool
-	rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
-	widget_control,rb_id,sensitive=0
+;disable refresh button during ctool
+rb_id=widget_info(Event.top, FIND_BY_UNAME='REFRESH_BUTTON')
+widget_control,rb_id,sensitive=0
 
-	;get global structure
-	id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-	widget_control,id,get_uvalue=global
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
-	xloadct,/MODAL,GROUP=id
+xloadct,/MODAL,GROUP=id
 
-	SHOW_DATA,event
+SHOW_DATA,event
 
-	;turn refresh button back on
-	widget_control,rb_id,sensitive=1
+;turn refresh button back on
+widget_control,rb_id,sensitive=1
+
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -1727,17 +1763,27 @@ end
 PRO REFRESH, Event
 ;refresh image plot
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 SHOW_DATA,event
 	
 ;remove data from info text box
 view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS')
 WIDGET_CONTROL, view_info, SET_VALUE=""
 
+;tell the program that there is no selection and map=0 GO button
+(*global).selection_has_been_made = 0 
+
+id = widget_info(Event.top, find_by_uname='go_button_base')
+widget_control, id, map=0
+
 ;disable save button after refreshing selection
 rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON')
 widget_control,rb_id,sensitive=0
 
-;disalble GO button after refreshing selection
+;disable GO button after refreshing selection
 rb_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
 widget_control,rb_id,sensitive=0
 
@@ -2030,7 +2076,6 @@ nexus_filename = (*global).full_nexus_name
   endelse
   (*global).detector_angle = detector_angle_rad
   (*global).detector_angle_err = detector_angle_err_rad
-
 
 ;get starting and ending pixelIDs
 starting_id_x = (*global).starting_id_x
@@ -3090,27 +3135,71 @@ if (do_not_check_order EQ 0) then begin
         selected_runs_from = selected_runs_value_to
         selected_runs_to = selected_runs_value_from
     endelse
+
+;number of elements to add
+    diff =long(selected_runs_to) - long(selected_runs_from)
+
+;limit of number of elements we can have in the same time
+    limit_up = (*global).limit_of_run_numbers_to_display
+
+;get elements already in th list
+    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+    widget_control, id_droplist_tab2, get_value=list_of_run_numbers_already_in_the_list
+    
+;check the size of 
+    size_list_already_in_place = size(list_of_run_numbers_already_in_the_list)
+    size_list_already_in_place = size_list_already_in_place[1]
+
+    if (size_list_already_in_place EQ 1) then begin
+        if (list_of_run_numbers_already_in_the_list NE "") then begin
+            size_list = 1
+        endif else begin
+            size_list =0
+        endelse
+    endif else begin
+        size_list = size_list_already_in_place
+    endelse
     
 ;limit the number of elements to be (*global).limit_of_run_numbers_to_display
-    diff =long(selected_runs_to) - long(selected_runs_from)
-    
-    limit_up = (*global).limit_of_run_numbers_to_display
-    if (diff GE limit_up) then begin
-        diff = limit_up
+    if ((diff+size_list) GE limit_up) then begin
+        diff = (limit_up-size_list)
         ;inform user that size was limited
         view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
         text = "Number of runs to process has been limited to " +$
-          strcompress(limit_up,/remove_all)
+          strcompress(diff,/remove_all)
         widget_control, view_info, set_value=text, /append
     endif
-
+    
     list_index = lindgen(diff+1)
     long_value = long(selected_runs_from)
     long_value = long_value[0]
     list_of_run_numbers = list_index + long_value
     
+    if (size_list GE 1) then begin
+        list_of_run_numbers = [list_of_run_numbers_already_in_the_list,list_of_run_numbers]
+    endif
+       
     list_of_run_numbers_string = string(list_of_run_numbers)
+
+;sort list in increasing order
+;reorder list
+    size_of_list = size(list_of_run_numbers_string)
+    size_of_list = size_of_list[1]
+    array_of_runs = lonarr(size_of_list)
+    for i=0,(size_of_list-1) do begin
+        array_of_runs[i]=long(list_of_run_numbers_string[i])
+    endfor
     
+    reorder_array = array_of_runs[sort(array_of_runs)]
+    
+;check that there is no duplicated elements
+    list_of_run_no_duplicated=reorder_array[uniq(reorder_array)]
+    list_of_run_numbers_string = string(list_of_run_no_duplicated)
+    
+;store number of elements in list_of_run_numbers_string
+number_of_runs = size(list_of_run_numbers_string)
+(*global).number_of_runs = number_of_runs[1]
+
 ;update droplist of tab1 and tab2
     id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
     widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
@@ -3124,6 +3213,13 @@ if (do_not_check_order EQ 0) then begin
     id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
     widget_control, id, map=1
 
+    if ((*global).base_nexus_file EQ 1) AND ((*global).selection_has_been_made EQ 1) then begin
+        
+        id = widget_info(Event.top, find_by_uname='go_button_base')
+        widget_control, id, map=1
+        
+    endif
+    
     (*global).selected_runs_from = selected_runs_value_from
     (*global).selected_runs_to = selected_runs_value_to
 
@@ -3142,6 +3238,10 @@ end
 
 pro add_button_tab_2, Event    
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;get value to add
 id_text = widget_info(Event.top, find_by_uname='list_of_runs_add_text')
 widget_control, id_text, get_value=run_to_add
@@ -3150,7 +3250,7 @@ widget_control, id_text, get_value=run_to_add
 id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
 widget_control, id_droplist_tab2, get_value=list_of_run_numbers_string
 
-;check integrity of inptu
+;check integrity of input
 CATCH, error
 
 do_not_check_order =0
@@ -3225,6 +3325,10 @@ if (do_not_check_order EQ 0) then begin
         
     endelse
     
+;store number of elements in list_of_run_numbers_string
+    number_of_runs = size(list_of_run_numbers_string)
+    (*global).number_of_runs = number_of_runs[1]
+
 ;update droplist of tab1 and tab2
     id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
     widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
@@ -3243,7 +3347,17 @@ widget_control, id, map=0
 id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
 widget_control, id, map=1
 
+if ((*global).base_nexus_file EQ 1 AND (*global).number_of_runs GE 1) then begin
+    
+    id = widget_info(Event.top, find_by_uname='go_button_base')
+    widget_control, id, map=1
+    
+endif
+
 end
+
+
+
 
 
 
@@ -3269,6 +3383,9 @@ if (size_of_list EQ 1) then begin
     widget_control, id, map=1
     
     id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
+    widget_control, id, map=0
+
+    id = widget_info(Event.top, find_by_uname='go_button_base')
     widget_control, id, map=0
 
 endif
@@ -3309,7 +3426,6 @@ pro plot_selected_run, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 
 ;get current selected run
 ;get list of runs from droplist
@@ -3401,5 +3517,192 @@ plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
 plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
 plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
 plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
+
+end
+
+
+
+
+pro run_reduction_on_all_selected_runs, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+widget_control,/hourglass
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = " **** Running reduction on all selected nexus files **** "
+widget_control, view_info, set_value=text, /append
+
+;retrieve list of runs to process
+;get list of runs from droplist
+id_droplist_tab = widget_info(Event.top, find_by_uname='run_number_droplist_tab1',$
+                               /droplist_select)
+widget_control, id_droplist_tab, get_value=list_of_run_numbers_string
+
+number_of_runs = size(list_of_run_numbers_string)
+number_of_runs = number_of_runs[1]
+
+go_id=widget_info(Event.top, FIND_BY_UNAME='START_CALCULATION')
+widget_control,go_id,sensitive=0
+
+for i=0,(number_of_runs-1) do begin
+    
+;get full_nexus_name according to run#
+    run_number = list_of_run_numbers_string[i]
+    
+    text = "Run # " + strcompress(run_number,/remove_all)
+    widget_control, view_info, set_value=text, /append
+    text = "processing......"
+    widget_control, view_info, set_value=text, /append
+
+    instrument="REF_M"
+    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)    
+    
+;start data_reduction
+    data_reduction_on_selected_runs, Event, full_nexus_name
+
+    text = "...done"
+    widget_control, view_info, set_value=text, /append
+        
+endfor
+
+widget_control,go_id,sensitive=1
+widget_control,hourglass=0
+
+end
+
+
+
+
+
+
+
+pro data_reduction_on_selected_runs, Event, full_nexus_name
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;set up working path
+working_path = (*global).working_path
+cd, working_path
+
+;retrieve parameters from different text boxes
+
+;wavelength minimum
+  view_wave_min=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_MIN_TEXT')
+  WIDGET_CONTROL, view_wave_min, GET_VALUE=wavelength_min
+  wavelength_min = float(wavelength_min)
+  (*global).wavelength_min = wavelength_min  
+
+;wavelength maximum
+  view_wave_max=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_MAX_TEXT')
+  WIDGET_CONTROL, view_wave_max, GET_VALUE=wavelength_max
+  wavelength_max = float(wavelength_max)
+  (*global).wavelength_max = wavelength_max  
+
+;wavelength width
+  view_wave_width=widget_info(Event.top, FIND_BY_UNAME='WAVELENGTH_WIDTH_TEXT')
+  WIDGET_CONTROL, view_wave_width, GET_VALUE=wavelength_width
+  wavelength_width = float(wavelength_width)
+  (*global).wavelength_width = wavelength_width  
+
+;detector angle
+;value
+  view_det_angle=widget_info(Event.top, FIND_BY_UNAME='DETECTOR_ANGLE_VALUE')
+  WIDGET_CONTROL, view_det_angle, GET_VALUE=detector_angle
+  detector_angle = float(detector_angle)
+;error
+  view_det_angle_err=widget_info(Event.top,FIND_BY_UNAME='DETECTOR_ANGLE_ERR')
+  WIDGET_CONTROL, view_det_angle_err, GET_VALUE=detector_angle_err
+  detector_angle_err = float(detector_angle_err)
+
+;convert angle into radians
+;check units selected
+  view_angle_units=widget_info(Event.top, FIND_BY_UNAME='DETECTOR_ANGLE_UNITS',/droplist_select)
+  WIDGET_CONTROL, view_angle_units, get_value=detector_angle_units
+  index=widget_info(view_angle_units,/droplist_select)
+  detector_angle_units = detector_angle_units[index]	  
+
+  if (index EQ 1) then begin
+	coeff = ((2*!pi)/180)
+	detector_angle_rad = coeff*detector_angle 
+	detector_angle_err_rad = coeff*detector_angle_err
+  endif else begin
+	detector_angle_rad = detector_angle
+	detector_angle_err_rad = detector_angle_err
+  endelse
+  (*global).detector_angle = detector_angle_rad
+  (*global).detector_angle_err = detector_angle_err_rad
+
+;get starting and ending pixelIDs
+starting_id_x = (*global).starting_id_x
+starting_id_y = (*global).starting_id_y
+ending_id_x = (*global).ending_id_x
+ending_id_y = (*global).ending_id_y
+
+;check switch background
+  view_back_switch=widget_info(Event.top, $
+                               FIND_BY_UNAME='BACKGROUND_SWITCH',/button_set)
+  WIDGET_CONTROL, view_back_switch, get_uvalue=switch_value
+  index=widget_info(view_back_switch,/button_set)
+  if (index EQ 1) then begin
+	with_back = 1
+	background_flag = ""
+  endif else begin
+	with_back = 0
+	background_flag = "--no-bkg"
+  endelse
+  (*global).with_background = with_back
+	
+;check switch normalization
+  view_norm_switch=widget_info(Event.top, $
+                               FIND_BY_UNAME='NORMALIZATION_SWITCH',/button_set)
+  WIDGET_CONTROL, view_norm_switch, get_uvalue=switch_value
+  index=widget_info(view_norm_switch,/button_set)
+  if (index EQ 1) then begin
+	with_norm = 1
+	norm_file = (*global).norm_filename
+	normalization_flag = "--norm=" + norm_file
+  endif else begin
+	with_norm = 0
+	normalization_flag = ""
+  endelse
+  (*global).with_normalization = with_norm
+
+;define command line to run data reduction
+space = " "
+cmd_line= "reflect_reduction " ;program to run
+cmd_line += nexus_filename     ;data NeXus file
+cmd_line += " --l-bins="       ;wavelength
+cmd_line += strcompress(wavelength_min,/remove_all) + "," + $
+	strcompress(wavelength_max,/remove_all) + "," + $
+	strcompress(wavelength_width,/remove_all)  ;parameters of --l-bins
+cmd_line += " --starting-ids=" ;starting selection x and y
+cmd_line += strcompress(starting_id_x,/remove_all) + "," + $
+	strcompress(starting_id_y,/remove_all)      ;xmin and ymin
+cmd_line += " --ending-ids="   ;ending selection x and y
+cmd_line += strcompress(ending_id_x,/remove_all) + "," + $
+	strcompress(ending_id_y,/remove_all)	     ;xmax and ymax
+cmd_line += " --det-angle="      ;detector angle
+cmd_line += strcompress(detector_angle_rad,/remove_all) + "," + $
+	strcompress(detector_angle_err,/remove_all)   ;value and error
+;cmd_line += "," + detector_angle_units		      ;units
+cmd_line += "," + "radians"   
+;radians all the time because we are doing the conversion from deg to rad
+cmd_line += space
+cmd_line += background_flag	;"" if with back; "--no-bkg" if without back
+cmd_line += space
+cmd_line += normalization_flag   ;--norm=<name of file> if with normalization; "" if without
+cmd_line += " -v"
+
+spawn, cmd_line, listening, /stderr
+
+;plot resulting data reduction plot
+plot_reduction, event
+
+info_overflow_REF_M, Event
 
 end

@@ -222,6 +222,12 @@ widget_control,id,get_uvalue=global
           plot_selected_run, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='go_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          run_reduction_on_all_selected_runs, Event
+    end
+
+
 
 ;tab#2
     Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
@@ -335,6 +341,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 
 ;define initial global values - these could be input via external file or other means
 global = ptr_new({ $
+                   list_of_runs_GT_1 : 0,$
+                   selection_has_been_made : 0,$
+                   number_of_runs : 0,$
+                   base_nexus_file : 0,$
                    limit_of_run_numbers_to_display: 20,$
                    selected_runs_from : 0L,$
                    selected_runs_to : 0L,$
@@ -386,14 +396,10 @@ global = ptr_new({ $
                      Nx			: 256L,$
                      Ny			: 304L,$
                      Ntof			: 0L,$
-                     starting_id_x		: 50L,$ ;REMOVE_ME
-                     starting_id_y		: 100L,$ ;REMOVE_ME
-                     ending_id_x		: 100L,$ ;REMOVE_ME
-                     ending_id_y		: 200L,$ ;REMOVE_ME
-;                     starting_id_x		: 0L,$
-;                     starting_id_y		: 0L,$
-;                     ending_id_x		: 0L,$
-;                     ending_id_y		: 0L,$
+                     starting_id_x		: 0L,$
+                     starting_id_y		: 0L,$
+                     ending_id_x		: 0L,$
+                     ending_id_y		: 0L,$
                      data_ptr		: ptr_new(0L),$
                      data_assoc		: ptr_new(0L),$
                      img_ptr			: ptr_new(0L),$
@@ -525,15 +531,42 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             VALUE='')
 
 
-;bottom part of tab1
+;bottom and right part of tab1
+
+  go_button_base = widget_base(OPEN_NEXUS_BASE,$
+                               xoffset=220,$
+                               yoffset=0,$
+                               scr_xsize=60,$
+                               scr_ysize=58,$
+                               uname='go_button_base',$
+                              map=0)
+
+  go_button = widget_button(go_button_base,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            scr_xsize=50,$
+                            scr_ysize=48,$
+                            uname='go_button',$
+                            value='go1.bmp',$
+                            /bitmap,$
+                            frame=2)
+                            
+  image_background = widget_button(OPEN_NEXUS_BASE,$
+                                  xoffset=15,$
+                                  yoffset=54,$
+                                  scr_xsize=270,$
+                                  scr_ysize=70,$
+                                  value='miniReflPak_logo.bmp',$
+                                  /bitmap)
+                                
 
   bottom_tab1_base = widget_base(OPEN_NEXUS_BASE,$
                                  uname='bottom_tab1_base',$
                                  xoffset=5,$
-                                 yoffset=50,$
+                                 yoffset=55,$
                                  scr_xsize=304,$
                                  scr_ysize=150,$
-                                 map=1) ;remove 1 and put 0      REMOVE_ME
+                                 map=0)
 
   remove_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
                                                    uname='remove_run_number_from_list_tab1',$
@@ -543,33 +576,31 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                                    SCR_YSIZE=40,$
                                                    VALUE="REMOVE CURRENT RUN")
 
-  plot_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
-                                                 uname='plot_run_number_from_list_tab1',$
-                                                 xoffset=125,$
-                                                 yoffset=15,$
-                                                 scr_xsize=50,$
-                                                 scr_ysize=40,$
-                                                 value='PLOT')
-
-  droplist_value = ['2','3']    ;REMOVE_ME
-;  droplist_value = ['']
+  droplist_value = ['']
   run_number_droplist = widget_droplist(bottom_tab1_base,$
                                         uname='run_number_droplist_tab1',$
-                                        xoffset=165,$
-                                        yoffset=20,$
+                                        xoffset=115,$
+                                        yoffset=22,$
                                         /dynamic_resize,$
 ;                                       scr_xsize=85,$
 ;                                       scr_ysize=30,$
                                         value=droplist_value)
 
   run_number_title = widget_label(bottom_tab1_base,$
-                                  xoffset=185,$
-                                  yoffset=0,$
+                                  xoffset=135,$
+                                  yoffset=2,$
                                   scr_xsize=90,$
                                   scr_ysize=30,$
                                   value='Selected Runs',$
                                   /align_left)
 
+  plot_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
+                                                 uname='plot_run_number_from_list_tab1',$
+                                                 xoffset=240,$
+                                                 yoffset=15,$
+                                                 scr_xsize=50,$
+                                                 scr_ysize=40,$
+                                                 value='PLOT')
   
 ;  OPEN_SEVERAL_NEXUS = WIDGET_LABEL(OPEN_NEXUS_BASE,$
 ;                                    XOFFSET=5,$
