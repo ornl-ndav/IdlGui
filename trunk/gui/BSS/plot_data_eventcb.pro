@@ -1,3 +1,31 @@
+FUNCTION find_full_nexus_name, Event, run_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd = "findnexus -iBSS" + " " + strcompress(run_number,/remove_all)
+spawn, cmd, full_nexus_name
+
+;check if nexus exists
+result = strmatch(full_nexus_name,"ERROR*")
+
+if (result GE 1) then begin
+    find_nexus = 0
+endif else begin
+    find_nexus = 1
+endelse
+
+(*global).find_nexus = find_nexus
+
+return, full_nexus_name
+
+end
+
+
+
+
+
 function get_tlb,wWidget
 
 id = wWidget
@@ -200,9 +228,9 @@ if ((*global).refresh_histo EQ 0) then begin
   text = "  Number of non-null elements : " + strcompress(Ngt0,/remove_all)
   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
-  img = intarr(Nt,Nx,Ny)
+;  img = intarr(Nt,Nx,Ny)
+  img = lonarr(Nt, Nx, Ny)
   img(indx1)=data(indx1)
-
   (*(*global).img) = img 
 	
   simg = total(img,1) 	;sum over time bins
@@ -520,21 +548,27 @@ endif else begin
    WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
   ;enabled background buttons/draw/text/labels
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_MAPPED_HISTOGRAM')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='OPEN_HISTOGRAM')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='EVENT_FILE')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='MAX_TIMEBIN_VALUE')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='TIME_BIN_VALUE')
-  Widget_Control, id, sensitive=1
-  id = widget_info(Event.top,FIND_BY_UNAME='OFFSET_TIMEBIN_VALUE')
-  Widget_Control, id, sensitive=1
-  
+   list_id = ['OUTPUT_PATH',$
+              'OPEN_NEXUS']
+   list_id_size = size(list_id)
+   for i=0, (list_id_size[1]-1) do begin
+          id = widget_info(Event.top, find_by_uname=list_id[i])
+          widget_control, id, sensitive=1
+   endfor
+   
+  if (ucams EQ 'j35') then begin
+      list_id=['OPEN_MAPPED_HISTOGRAM',$
+               'OPEN_HISTOGRAM',$
+               'TRANSLATION_FRAME']
+      size_list=size(list_id)
+      for i=0,(size_list[1]-1) do begin
+          id = widget_info(Event.top, find_by_uname=list_id[i])
+          widget_control, id, sensitive=1
+      endfor
+  endif
+
+create_tmp_folder, Event
+
 endelse
 
 end
@@ -1036,5 +1070,245 @@ endif else begin
    (*global).refresh_histo = 1
    
 endelse
+
+end
+
+
+
+
+;========================OPEN NEXUS============================
+
+PRO OPEN_RUN_NUMBER, Event
+
+run_number_txt_id = widget_info(Event.top, find_by_uname='OPEN_RUN_NUMBER_TEXT')
+widget_control, run_number_txt_id, get_value=run_number
+
+OPEN_NEXUS, Event, run_number
+
+END
+
+
+
+
+pro CANCEL_OPEN_RUN_NUMBER, Event
+
+id_open_nexus_base = widget_info(Event.top, find_by_uname='OPEN_NEXUS_BASE')
+widget_control, id_open_nexus_base, map=0
+
+run_number_txt_id = widget_info(Event.top, find_by_uname='OPEN_RUN_NUMBER_TEXT')
+widget_control, run_number_txt_id, set_value=""
+
+end
+
+
+
+
+
+
+
+
+
+
+pro OPEN_NEXUS, Event, run_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;hide open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+widget_control, open_nexus_id, map=0
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+if (run_number EQ '') then begin
+    
+    text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
+    WIDGET_CONTROL, view_info, SET_VALUE=text,/append
+    
+endif else begin
+    
+    (*global).run_number = run_number
+
+    text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
+    WIDGET_CONTROL, view_info, SET_VALUE=text
+    
+;get path to nexus run #
+    full_nexus_name = find_full_nexus_name(Event, run_number)
+
+;check result of search
+    find_nexus = (*global).find_nexus
+    if (find_nexus EQ 0) then begin
+        text_nexus = "Warning! NeXus file does not exist"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+    endif else begin
+        (*global).full_nexus_name = full_nexus_name
+        text_nexus = "(" + full_nexus_name + ")"
+        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
+        
+;dump binary data of NeXus file into tmp_working_path
+        create_local_copy_of_histo_mapped, Event
+        
+;read and plot nexus file
+        READ_NEXUS_FILE, Event
+
+    endelse
+
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+pro READ_NEXUS_FILE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+run_number = (*global).run_number
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+text = "- Opening and Reading run # " + strcompress(run_number,/remove_all)
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+file = "/BSS_" + strcompress(run_number, /remove_all)
+file += "_neutron_histo_mapped.dat"
+(*global).file = file
+
+;global parameters
+Nx = (*global).Nx
+Ny_scat = (*global).Ny_scat
+Ny_scat_bank = Ny_scat / 2
+
+;opening top part
+file_top = (*global).file_to_plot_top
+openr,u,file_top,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+Nbytes = (*global).nbytes
+N = long(file_size) / Nbytes    ;number of elements
+
+Nt = long(N)/(long(Nx*(Ny_scat_bank)))
+(*global).Nt = Nt
+image_top = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_top
+close,u
+
+;opening bottom part
+file_bottom = (*global).file_to_plot_bottom
+openr,u,file_bottom,/get
+
+fs=fstat(u)
+file_size=fs.size
+
+image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
+
+readu,u,image_bottom
+close,u
+
+;combining image_top and image_bottom into image1
+
+image1 = ulonarr(Nt,Nx,Ny_scat)
+image1(*,*,0:Ny_scat_bank-1) = image_top
+image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
+
+;PLOT_NEXUS_FILE, Event, image1
+
+text = "...done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+end
+
+
+
+
+
+
+
+pro create_local_copy_of_histo_mapped, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+full_nexus_name = (*global).full_nexus_name
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+
+cmd_dump = "nxdir " + full_nexus_name
+cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
+cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
+
+;get name of output_file
+tmp_output_file = (*global).full_tmp_nxdir_folder_path 
+tmp_output_file += "/BSS"
+tmp_output_file += "_" + strcompress((*global).run_number,/remove_all)
+
+tmp_output_file_top = tmp_output_file + "_top.dat"
+tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
+(*global).file_to_plot_top = tmp_output_file_top
+(*global).file_to_plot_bottom = tmp_output_file_bottom
+
+cmd_dump_top += tmp_output_file_top 
+cmd_dump_bottom += tmp_output_file_bottom
+
+;display command
+
+text= cmd_dump_top
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+spawn, cmd_dump_top, listening
+
+text= cmd_dump_bottom
+widget_control, view_info, set_value=text, /append
+text= "Processing....."
+widget_control, view_info, set_value=text, /append
+
+spawn, cmd_dump_bottom, listening
+
+;display result of command
+;text= listening
+text="Done"
+widget_control, view_info, set_value=text, /append
+
+end
+
+
+
+
+
+pro create_tmp_folder, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_nxdir_folder = (*global).tmp_nxdir_folder
+full_tmp_nxdir_folder_path = (*global).working_path + tmp_nxdir_folder
+(*global).full_tmp_nxdir_folder_path = full_tmp_nxdir_folder_path
+
+cmd_check = "ls -d " + full_tmp_nxdir_folder_path
+spawn, cmd_check, listening
+
+if (listening NE '') then begin
+    cmd_remove = "rm -r " + full_tmp_nxdir_folder_path
+    spawn, cmd_remove
+endif
+
+;now create tmp folder
+cmd_create = "mkdir " + full_tmp_nxdir_folder_path
+spawn, cmd_create,  listening
 
 end
