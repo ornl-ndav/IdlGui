@@ -200,13 +200,6 @@ pro MAIN_BASE_event, Event
         output_new_histo_mapped_file, Event
     end
 
-
-
-
-
-
-
-
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
     	IDENTIFICATION_TEXT_CB, Event
     end
@@ -284,7 +277,7 @@ global = ptr_new({$
                    file_type : '',$
                    file_to_plot_top : '',$
                    file_to_plot_bottom : '',$
-                   full_tmp_nxdir_folder_path : '',$
+                   full_tmp_nxdir_folder_path : '',$  ;/working_path/tmp_nxdir_folder
                    find_nexus : 0,$
                    full_nexus_name : '',$
                    file			      :'',$
@@ -330,20 +323,6 @@ global = ptr_new({$
                    i5                         : ptr_new(0L),$
                    len1                       : ptr_new(0L),$
                    len2                       : ptr_new(0L)$
-; 		overflow_number		: 500L,$	
-;		do_color		:1$ 
-; 		Nx_tubes		:64L,$
-; 		Ny_pixels		:64L,$
-; 		minimum_tbin		:0L,$
-; 		min_tbin		:0L,$
-; 		maximum_tbin		:500L,$
-; 		max_tbin		:500L,$
-; 		refresh_histo		:0,$
-; 		pixel_offset		:4096L,$
-; 		xtitle			:'tubes',$
-; 		ytitle			:'pixels',$
-; 		top_bank		: ptr_new(0L),$
-; 		bottom_bank		: ptr_new(0L),$
 })
 
 ;attach global data structure with widget ID of widget main base widget ID
@@ -361,8 +340,10 @@ widget_control,MAIN_BASE,set_uvalue=global
                                    YPAD=3)
   
   IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
-  		XOFFSET=40, YOFFSET=3, VALUE="ENTER YOUR 3 CHARACTERS ID")
-
+                                      XOFFSET=40,$
+                                      YOFFSET=3,$
+                                      VALUE="ENTER YOUR 3 CHARACTERS ID")
+  
   IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
                                     XOFFSET=100,$
                                     YOFFSET=20,$
@@ -373,28 +354,42 @@ widget_control,MAIN_BASE,set_uvalue=global
                                     /ALL_EVENTS)
   
   ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
-                                           XOFFSET=5, YOFFSET=25, VALUE='',$
-                                           SCR_XSIZE=90, SCR_YSIZE=20, $
+                                           XOFFSET=5,$
+                                           YOFFSET=25,$
+                                           VALUE='',$
+                                           SCR_XSIZE=90,$
+                                           SCR_YSIZE=20, $
                                            UNAME='ERROR_IDENTIFICATION_LEFT')
   
   ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
-                                            XOFFSET=140, YOFFSET=25, VALUE='',$
-                                            SCR_XSIZE=90, SCR_YSIZE=20, $
+                                            XOFFSET=140,$
+                                            YOFFSET=25,$
+                                            VALUE='',$
+                                            SCR_XSIZE=90,$
+                                            SCR_YSIZE=20, $
                                             UNAME='ERROR_IDENTIFICATION_RIGHT')
   
   DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
-                                      XOFFSET=0, YOFFSET=55, VALUE='Working path',$
-                                      SCR_XSIZE=80, SCR_YSIZE=30,$
+                                      XOFFSET=0,$
+                                      YOFFSET=55,$
+                                      VALUE='Working path',$
+                                      SCR_XSIZE=80,$
+                                      SCR_YSIZE=30,$
                                       UNAME='DEFAULT_PATH_BUTTON')
   
   DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
-                                  XOFFSET=83, YOFFSET=55, VALUE=(*global).default_path,$
-                                  UNAME='DEFAULT_PATH_TEXT',/editable,$
+                                  XOFFSET=83,$
+                                  YOFFSET=55,$
+                                  VALUE=(*global).default_path,$
+                                  UNAME='DEFAULT_PATH_TEXT',$
+                                  /editable,$
                                   SCR_XSIZE=150)
   
   IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
-                                    XOFFSET=67, YOFFSET=90,$
-                                    SCR_XSIZE=130, SCR_YSIZE=30,$
+                                    XOFFSET=67,$
+                                    YOFFSET=90,$
+                                    SCR_XSIZE=130,$
+                                    SCR_YSIZE=30,$
                                     VALUE="E N T E R",$
                                     UNAME='IDENTIFICATION_GO')		
   
@@ -425,11 +420,11 @@ widget_control,MAIN_BASE,set_uvalue=global
                                      yoffset=8,$
                                      scr_xsize=80,$
                                      scr_ysize=30,$
-                                     value='53',$
+                                     value='',$
                                      uname='OPEN_RUN_NUMBER_TEXT',$
                                      /editable,$
                                      /align_left)
-
+  
   OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
                                          xoffset=160,$
                                          yoffset=8,$
@@ -437,7 +432,7 @@ widget_control,MAIN_BASE,set_uvalue=global
                                          scr_ysize=30,$
                                          value='OPEN',$
                                          uname='OPEN_RUN_NUMBER_BUTTON')
-
+  
   CANCEL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
                                                 xoffset=230,$
                                                 yoffset=8,$
@@ -445,7 +440,6 @@ widget_control,MAIN_BASE,set_uvalue=global
                                                 scr_ysize=30,$
                                                 value='CANCEL',$
                                                 uname='CANCEL_OPEN_RUN_NUMBER_BUTTON')
-
 
 ;top-left frame (display of counts vs pixelID for each tube
 ;one at a time
@@ -1240,24 +1234,29 @@ map_plot_frame = widget_label(map_plot_base,$
 ;  OPEN_HISTOGRAM = Widget_Button(FILE_MENU, UNAME='OPEN_HISTOGRAM'  $
 ;      ,VALUE='Open Histogram')
 
-  EXIT_MENU = Widget_Button(FILE_MENU, UNAME='EXIT_MENU'  $
-      ,VALUE='Exit')
+  EXIT_MENU = Widget_Button(FILE_MENU,$
+                            UNAME='EXIT_MENU',$
+                            VALUE='Exit')
 
-  UTILS_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU'  $
-      ,/MENU ,VALUE='RealignGUI')
+  UTILS_MENU = Widget_Button(WID_BASE_0_MBAR,$
+                             UNAME='UTILS_MENU',$
+                             /MENU ,VALUE='RealignGUI')
 
-  ABOUT_MENU = Widget_Button(UTILS_MENU, UNAME='ABOUT_MENU'  $
-      ,VALUE='about RealignGUI')
+  ABOUT_MENU = Widget_Button(UTILS_MENU,$
+                             UNAME='ABOUT_MENU',$
+                             VALUE='about RealignGUI')
 
-  CTOOL_MENU_DAS = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU_DAS'  $
-      ,VALUE='Color Tool for DAS')
+  CTOOL_MENU_DAS = Widget_Button(UTILS_MENU,$
+                                 UNAME='CTOOL_MENU_DAS',$
+                                 VALUE='Color Tool for DAS')
 
-  CTOOL_MENU_realign = Widget_Button(UTILS_MENU, UNAME='CTOOL_MENU_realign'  $
-      ,VALUE='Color Tool for realign data')
+  CTOOL_MENU_realign = Widget_Button(UTILS_MENU,$
+                                     UNAME='CTOOL_MENU_realign',$
+                                     VALUE='Color Tool for realign data')
 
   Widget_Control, /REALIZE, MAIN_BASE
-
-  ;disabled background buttons/draw/text/labels
+  
+                                ;disabled background buttons/draw/text/labels
   Widget_Control, draw_tube_pixels_slider, sensitive=0
   Widget_Control, pixels_slider, sensitive=0
   Widget_Control, tube0_left_minus, sensitive=0

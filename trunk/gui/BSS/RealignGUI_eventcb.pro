@@ -286,6 +286,11 @@ end
 
 
 
+
+
+
+
+
 ;---------------------------------------------------------------
 ;value=0 means do not removed
 ;value=1 means removed
@@ -467,6 +472,9 @@ id = widget_info(Event.top,FIND_BY_UNAME='output_new_histo_mapped_file')
 Widget_Control, id, sensitive=0
 
 end
+
+
+
 
 
 
@@ -1189,6 +1197,9 @@ tube_removed_array[tube_number]=value
 (*(*global).tube_removed) = tube_removed_array
 
 end
+
+
+
 
 
 
@@ -2288,7 +2299,7 @@ endif else begin
 ;get path to nexus run #
     instrument="BSS"
     full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
-    
+
 ;check result of search
     find_nexus = (*global).find_nexus
     if (find_nexus EQ 0) then begin
