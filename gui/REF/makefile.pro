@@ -16,5 +16,6 @@ resolve_routine, "congrid",/either
 resolve_routine, "loadct",/either
 resolve_routine, "xregistered",/either
 resolve_routine, "errplot",/either
+resolve_routine, "uniq",/either
 save,/routines,filename="extract_data.sav"
 exit
