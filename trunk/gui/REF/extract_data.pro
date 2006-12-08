@@ -64,8 +64,14 @@ widget_control,id,get_uvalue=global
 ;-----------------------------------------------------------------------------
     end
 
-    ;Exit widget in the top toolbar for REF_L
+    ;About widget in the top toolbar for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU_REF_L'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        ABOUT_MENU_REF_L_cb, Event
+    end
+
+    ;logo  button widget in the top toolbar for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='logo_button'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         ABOUT_MENU_REF_L_cb, Event
     end
@@ -569,8 +575,6 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                                    scr_ysize=70,$
                                   /bitmap)
                                     
-                                
-
   bottom_tab1_base = widget_base(OPEN_NEXUS_BASE,$
                                  uname='bottom_tab1_base',$
                                  xoffset=5,$
@@ -1513,7 +1517,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
 	/WRAP,$
 	/SCROLL)
 
-
   tab_2 = WIDGET_BASE(big_tab,$
                       TITLE= "Counts vs TOF",$
                       SCR_XSIZE=580,$
@@ -1613,18 +1616,27 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                         SCR_YSIZE=28,$
                                         /align_left)
 
+;frame3 of x= and y= for infos mode
+  FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
+                              XOFFSET=2*draw_offset_x+plot_length,$
+                              YOFFSET=cursor_y_offset-7,$
+                              SCR_XSIZE=plot_height-5,$
+                              SCR_YSIZE=47,FRAME=3, value="")
+  
+;logo on bottom right
+  logo_button = widget_button(MAIN_BASE,$
+                              uname='logo_button',$
+                              xoffset=560,$
+                              yoffset=480,$
+                              scr_xsize=280,$
+                              scr_ysize=100,$
+                              value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
+                              /bitmap)
 
-
-                                ;frame3 of x= and y= for infos mode
-   FRAME3_REF_L = widget_label(MAIN_BASE, UNAME='FRAME3_REF_L', $
-                               XOFFSET=2*draw_offset_x+plot_length,$
-                               YOFFSET=cursor_y_offset-7,$
-                               SCR_XSIZE=plot_height-5,$
-                               SCR_YSIZE=47,FRAME=3, value="")
-   
-   
-   FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU_REF_L' ,/MENU  $
-                                   ,VALUE='File')
+  FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
+                                  UNAME='FILE_MENU_REF_L',$
+                                  /MENU,$
+                                  VALUE='File')
    
 
    OPEN_NEXUS_FILE_BUTTON = widget_button(FILE_MENU_REF_L,$
@@ -1633,8 +1645,6 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
 
    EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                    ,VALUE='Exit')
-
-
 
    UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
                                     ,/MENU ,VALUE='Utils')
@@ -1675,11 +1685,10 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    Widget_Control, CURSOR_Y_POSITION_REF_L, sensitive=0 
 
 ;disabled before the user has been identified
-  Widget_Control, CTOOL_MENU_REF_L, sensitive=0
-
+   Widget_Control, CTOOL_MENU_REF_L, sensitive=0
    
    XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-   
+
 end
 
 ;
