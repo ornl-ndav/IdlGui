@@ -12,7 +12,7 @@ nexus_name = split_full_name[length-1]
 instr_slash = instr + "_"
 run_number_nxs = strsplit(nexus_name,instr_slash,/extract,/regex)
 
-;remoe nxs extension
+;remove nxs extension
 nxs_extension = ".nxs"
 help, run_number_nxs
 
@@ -333,7 +333,6 @@ endif else begin
 ;add new element into list
                 list_of_run_numbers_string = [list_of_run_numbers_string,$
                                               strcompress(run_to_add,/remove_all)]
-                
 ;reorder list
                 size_of_list = size(list_of_run_numbers_string)
                 size_of_list = size_of_list[1]
@@ -400,12 +399,12 @@ endif else begin
 
 ;activate go_button_base if a few runs have been selected
 ;and if a region have been selected too
-        if (number_of_runs GT 1) then begin
-                        
-            id = widget_info(Event.top, find_by_uname='go_button_base')
-            widget_control, id, map=1
-            
-        endif
+;        if (number_of_runs GT 1 AND ) then begin
+;                        
+;            id = widget_info(Event.top, find_by_uname='go_button_base')
+;            widget_control, id, map=1
+;            
+;        endif
         
     endelse
     
@@ -1888,7 +1887,8 @@ if file NE '' then begin
 	endelse
 
 	filename_short=file_list[0]	
-	file_list=strsplit(filename_short,'/',/REGEX,/extract,count=length) ;to remove last part of the name
+	file_list=strsplit(filename_short,'/',$
+                           /REGEX,/extract,count=length) ;to remove last part of the name
 	short_nexus_filename = file_list[length-1]
 	nexus_path = (*global).nexus_path
 
@@ -3335,11 +3335,15 @@ if (do_not_check_order EQ 0) then begin
     (*global).number_of_runs = number_of_runs[1]
 
 ;update droplist of tab1 and tab2
-    id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
-    widget_control, id_droplist_tab2, set_value=list_of_run_numbers_string
+    id_droplist_tab2 = widget_info(Event.top, $
+                                   find_by_uname='list_of_run_numbers_droplist')
+    widget_control, id_droplist_tab2, $
+      set_value=list_of_run_numbers_string
     
-    id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
-    widget_control, id_droplist_tab1, set_value=list_of_run_numbers_string
+    id_droplist_tab1 = widget_info(Event.top, $
+                                   find_by_uname='run_number_droplist_tab1')
+    widget_control, id_droplist_tab1, $
+      set_value=list_of_run_numbers_string
     
 ;remove value in add_text_box
     widget_control, id_text, set_value=""
@@ -3352,7 +3356,8 @@ widget_control, id, map=0
 id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
 widget_control, id, map=1
 
-if ((*global).base_nexus_file EQ 1 AND (*global).number_of_runs GE 1) then begin
+if ((*global).base_nexus_file EQ 1 AND $
+    (*global).number_of_runs GE 1) then begin
     
     id = widget_info(Event.top, find_by_uname='go_button_base')
     widget_control, id, map=1
@@ -3361,6 +3366,29 @@ endif
 
 end
 
+
+;remove all_runs except base one
+pro remove_all_run, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+bottom_tab1_base_id = widget_info(Event.top, find_by_uname='bottom_tab1_base')
+widget_control, bottom_tab1_base_id, map=0
+
+;get run_number
+run_number = string((*global).run_number)
+updated_list = [run_number]
+
+;update droplist of tab1 and tab2
+id_droplist_tab2 = widget_info(Event.top, find_by_uname='list_of_run_numbers_droplist')
+widget_control, id_droplist_tab2, set_value=updated_list
+
+id_droplist_tab1 = widget_info(Event.top, find_by_uname='run_number_droplist_tab1')
+widget_control, id_droplist_tab1, set_value=updated_list
+
+end
 
 
 
