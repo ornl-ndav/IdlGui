@@ -1142,13 +1142,15 @@ list_of_runs = ['']
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
 
-;  OPEN_HISTO_MAPPED = Widget_Button(FILE_MENU, $
-;                                    UNAME='OPEN_HISTO_MAPPED'  $
-;                                    ,VALUE='Open Mapped Histogram')
+  OPEN_HISTO_MAPPED = Widget_Button(FILE_MENU, $
+                                    UNAME='OPEN_HISTO_MAPPED'  $
+                                    ,VALUE='Open Mapped Histogram',$
+                                   sensitive=0)
 
-;  OPEN_HISTO_UNMAPPED = Widget_Button(FILE_MENU, $
-;                                      UNAME='OPEN_HISTO_UNMAPPED'  $
-;                                      ,VALUE='Open Histogram')
+  OPEN_HISTO_UNMAPPED = Widget_Button(FILE_MENU, $
+                                      UNAME='OPEN_HISTO_UNMAPPED'  $
+                                      ,VALUE='Open Histogram',$
+                                     sensitive=0)
 
   EXIT_MENU = Widget_Button(FILE_MENU, UNAME='EXIT_MENU'  $
       ,VALUE='Exit')
@@ -1178,8 +1180,6 @@ list_of_runs = ['']
   Widget_Control, START_CALCULATION, sensitive=0
   ;disabled background buttons/draw/text/labels
   Widget_Control, UTILS_MENU, sensitive=0
-;  Widget_Control, OPEN_HISTO_MAPPED, sensitive=0
-;  Widget_Control, OPEN_HISTO_UNMAPPED, sensitive=0
   Widget_Control, MODE_INFOS, sensitive=0
   Widget_Control, CURSOR_X_LABEL, sensitive=0
   Widget_Control, CURSOR_X_POSITION, sensitive=0
@@ -1644,17 +1644,17 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                                           UNAME='OPEN_NEXUS_FILE_BUTTON',$
                                           VALUE='Open NeXus file...')
 
-  OPEN_HISTO_MAPPED_REF_L = widget_button(FILE_MENU_REF_L,$
-                                    Uname='OPEN_HISTO_MAPPED_REF_L',$
-                                    VALUE='Open Histo mapped...',$
-                                         sensitive=0)
-
+   OPEN_HISTO_MAPPED_REF_L = widget_button(FILE_MENU_REF_L,$
+                                           Uname='OPEN_HISTO_MAPPED_REF_L',$
+                                           VALUE='Open Histo mapped...',$
+                                           sensitive=0)
+  
   
   OPEN_HISTO_REF_L = widget_button(FILE_MENU_REF_L,$
-                                    Uname='OPEN_HISTO_REF_L',$
-                                    VALUE='Open Histo...',$
-                                  sensitive=0)
-
+                                   Uname='OPEN_HISTO_REF_L',$
+                                   VALUE='Open Histo...',$
+                                   sensitive=0)
+  
 
    EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                    ,VALUE='Exit')
