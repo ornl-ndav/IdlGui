@@ -1113,6 +1113,18 @@ for i=0,(id_list_size[1]-1) do begin
     Widget_Control, id, sensitive=1
 endfor
 
+if ((*global).ucams EQ 'j35') then begin
+
+    id_list=['OPEN_HISTO_MAPPED_REF_L',$
+             'OPEN_HISTO_REF_L']
+    id_list_size=size(id_list)
+    for i=0,(id_list_size[1]-1) do begin
+        id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+        Widget_Control, id, sensitive=1
+    endfor
+endif
+
+
 endelse
 
 end
@@ -1982,6 +1994,154 @@ endif;valid file
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+pro OPEN_FILE_REF_L, Event
+
+;first close previous file if there is one 
+if (N_ELEMENTS(U)) NE 0 then begin
+    close, u
+    free_lun, u
+endif
+
+;get global structure
+id=widget_info(Event.top, find_by_uname='MAIN_BASE')
+widget_control, id, get_uvalue=global
+
+;retrieve data parameters
+Nx = (*global).Nx
+Ny = (*global).Ny
+filter = (*global).filter_histo
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;open file
+path = (*global).path
+file = dialog_pickfile(path=path,$
+                       get_path=path,$
+                       title='Select Data file',$
+                       filter=filter)
+
+;only read data if valid gile is given
+if file NE '' then begin
+    (*global).file_already_opened = 1
+    (*global).filename = file
+    
+    view_info = widget_info(Event.top, find_by_uname='GENERAL_INFOS_REF_L')
+    text = "Open histogram file: " + strcompress(file, /remove_all)
+    widget_control, view_info, set_value=text,/append
+
+    ;get only the last part of the file (its name)
+    file_list = strsplit(file,'/',/extract,count=length)
+    filename_only = file_list[length-1]
+    (*global).filename_only = filename_only
+
+    if ((*global).histo_map_index EQ 1) then begin
+        word_to_search = '_neutron_histo_mapped.dat'
+    endif else begin
+        word_to_search = '_neutron_histo.dat'
+    endelse
+    file_list=strsplit(file,word_to_search,$
+                       /regex,/extract,count=length)
+    run_number = strsplit(file_list[0],'_',/regex,/extract,count=length)
+    run_number = run_number[length-1]
+    
+    filename_short = file_list[0]
+
+    ;determine path
+    path_list = strsplit(file, filename_only,/reg,/extract)
+    path=path_list[0]
+    cd, path
+    (*global).path = path
+
+    view_info = widget_info(Event.top, find_by_uname='GENERAL_INFOS_REF_L')
+    widget_control, view_info, set_value='Reading data.....',/append
+    strtime = systime(1)
+
+    openr,u,file,/get
+    fs=fstat(u)
+    Nimg=Nx*Ny
+    Ntof=fs.size/(Nimg*4L)
+    (*global).Ntof=Ntof
+
+    data_assoc_tof = assoc(u,lonarr(Ntof,Nx))
+    data_assoc = assoc(u,lonarr(Ntof))
+
+    img=lonarr(Nx,Ny)
+    for i=0L, Nimg-1 do begin
+        x=i MOD Nx
+        y = i/Nx
+        img[x,y] = total(data_assoc[i])
+   endfor
+
+   img=transpose(img)
+
+   counts_vs_tof=lonarr(Ntof)
+   for i=0L, Ny-1 do begin
+       counts_vs_tof += total(data_assoc_tof[i],2)
+   endfor
+
+   (*(*global).counts_vs_tof) = counts_vs_tof
+
+   view_counts_tof = widget_info(Event.top, $
+                                 find_by_uname='VIEW_DRAW_COUNTS_TOF_REF_L')
+   widget_control, view_counts_tof, get_value=view_win_counts_tof_ref_L
+   wset, view_win_counts_tof_ref_l
+   plot, counts_vs_tof, title='Integrated counts vs tof'
+
+   (*(*global).img_ptr) = img
+   (*(*global).data_assoc) = data_assoc
+
+   view_sum_x = widget_info(Event.top, find_by_uname='VIEW_DRAW_SUM_X_REF_L')
+   widget_control, view_sum_x, GET_VALUE=view_win_num_sum_x
+   view_sum_y = widget_info(Event.top, find_by_uname='VIEW_DRAW_SUM_Y_REF_L')
+   widget_control, view_sum_y, GET_VALUE=view_win_num_sum_y
+   view_sum_x_hidding = widget_info(Event.top, $
+                       find_by_uname='VIEW_DRAW_X_REF_L_HIDDING')
+   widget_control, view_sum_x_hidding, GET_VALUE=view_win_num_sum_x_hidding
+
+   wset,view_win_num_sum_x_hidding
+   sum_y = total(img,1)
+   plot, sum_y,/xstyle,title='SUM Y axis'
+   tmp_img = tvrd()
+   tmp_img = reverse(transpose(tmp_img),1)
+   wset,view_win_num_sum_y
+   tv,tmp_img
+
+   wset,view_win_num_sum_x
+   sum_x = total(img,2)
+   plot,sum_x,/xstyle,title='SUM X axis'
+   
+   widget_control, hourglass=0
+
+   SHOW_DATA_REF_L, event
+
+   rb_id=widget_info(Event.top, find_by_uname='REFRESH_BUTTON_REF_L')
+   widget_control, rb_id, sensitive=1
+   
+   endtime=systime(1)
+   tt_time=string(endtime-strtime)
+   text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
+   widget_control, view_info, set_value=text, /append
+
+   rb_id=widget_info(Event.top, find_by_uname='SAVE_BUTTON_REF_L')
+   widget_control, rb_id,sensitive=1
+
+endif
+
+id=widget_info(Event.top, find_by_uname='CTOOL_MENU_REF_L')
+widget_control, id, sensitive=1
+
+end
+
+
+
+
+
+
+
+
 
 
 ;--------------------------------------------------------------------------

@@ -194,7 +194,7 @@ widget_control,id,get_uvalue=global
     end
 
     ;Open widget in the top toolbar
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_UNMAPPED_REF_L'): begin
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_REF_L'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         OPEN_HISTO_UNMAPPED_REF_L, Event
     end
@@ -1633,18 +1633,33 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                               value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
                               /bitmap)
 
+
   FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
                                   VALUE='File')
-   
+
 
    OPEN_NEXUS_FILE_BUTTON = widget_button(FILE_MENU_REF_L,$
                                           UNAME='OPEN_NEXUS_FILE_BUTTON',$
                                           VALUE='Open NeXus file...')
 
+  OPEN_HISTO_MAPPED_REF_L = widget_button(FILE_MENU_REF_L,$
+                                    Uname='OPEN_HISTO_MAPPED_REF_L',$
+                                    VALUE='Open Histo mapped...',$
+                                         sensitive=0)
+
+  
+  OPEN_HISTO_REF_L = widget_button(FILE_MENU_REF_L,$
+                                    Uname='OPEN_HISTO_REF_L',$
+                                    VALUE='Open Histo...',$
+                                  sensitive=0)
+
+
    EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                    ,VALUE='Exit')
+
+
 
    UTILS_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, UNAME='UTILS_MENU_REF_L'  $
                                     ,/MENU ,VALUE='Utils')
