@@ -217,6 +217,11 @@ widget_control,id,get_uvalue=global
           remove_button_tab, Event, 'run_number_droplist_tab1'
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='remove_all_run_number_from_list_tab1'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          remove_all_run, Event
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='plot_run_number_from_list_tab1'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           plot_selected_run, Event
@@ -553,16 +558,17 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/go1.bmp',$
                             /bitmap,$
                             frame=2)
-                            
+         
+
   image_background = widget_button(OPEN_NEXUS_BASE,$
                                    uname='image_background_minireflpak',$
-                                   value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
+                         value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
                                    xoffset=15,$
                                    yoffset=54,$
                                    scr_xsize=270,$
                                    scr_ysize=70,$
-                                   
                                   /bitmap)
+                                    
                                 
 
   bottom_tab1_base = widget_base(OPEN_NEXUS_BASE,$
@@ -576,10 +582,18 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
   remove_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
                                                    uname='remove_run_number_from_list_tab1',$
                                                    XOFFSET=0,$
-                                                   YOFFSET=15,$
+                                                   YOFFSET=5,$
                                                    SCR_XSIZE=120,$
-                                                   SCR_YSIZE=40,$
+                                                   SCR_YSIZE=25,$
                                                    VALUE="REMOVE CURRENT RUN")
+
+  remove_all_run_number_from_list_tab1 = widget_button(bottom_tab1_base,$
+                                                   uname='remove_all_run_number_from_list_tab1',$
+                                                   XOFFSET=0,$
+                                                   YOFFSET=30,$
+                                                   SCR_XSIZE=120,$
+                                                   SCR_YSIZE=25,$
+                                                   VALUE="REMOVE ALL RUNS")
 
   droplist_value = ['']
   run_number_droplist = widget_droplist(bottom_tab1_base,$
