@@ -1009,6 +1009,18 @@ for i=0,(id_list_size[1]-1) do begin
     Widget_Control, id, sensitive=1
 endfor
 
+if ((*global).ucams EQ 'j35') then begin
+
+    id_list=['OPEN_HISTO_MAPPED',$
+             'OPEN_HISTO_UNMAPPED']
+    id_list_size=size(id_list)
+    for i=0,(id_list_size[1]-1) do begin
+        id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+        Widget_Control, id, sensitive=1
+    endfor
+endif
+
+
 endelse
 
 end
