@@ -25,7 +25,6 @@ end
 
 
 
-
 function get_tlb,wWidget
 
 id = wWidget
@@ -119,7 +118,7 @@ file = dialog_pickfile(/must_exist,$
 if (file NE '') then begin
 
 (*global).file = file
-
+(*global).file_open = 'histo'
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 
 if (path NE '') then begin
@@ -565,13 +564,12 @@ create_tmp_folder, Event
 endelse
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
-
-;----------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------
 pro OUTPUT_PATH_cb, Event 
 
 ;get global structure
@@ -585,7 +583,8 @@ working_path = dialog_pickfile(path=working_path,/directory)
 name = (*global).name
 
 welcome = "Welcome " + strcompress(name,/remove_all)
-welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+welcome += "  (working directory: " + $
+  strcompress(working_path,/remove_all) + ")"	
 view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, view_id, base_set_title= welcome	
 
@@ -599,13 +598,13 @@ view_info = widget_info(Event.top,FIND_BY_UNAME="OUTPUT_PATH_NAME")
 WIDGET_CONTROL, view_info, set_value=working_path
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
 
 
-;-----------------------------------------------------------------------------------------
+;-------------------------------------------------------------------------
 pro EVENT_FILE_cb, Event
 
 ;get global structure
@@ -651,11 +650,10 @@ endif else begin
 endelse
 
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-
-;--------------------------------------------------------------------------------------
+;--------------------------------------------------------------------------
 pro DEFAULT_PATH_BUTTON_cb, Event
 
 ;get global structure
@@ -1034,14 +1032,18 @@ min_tbin_text_id = widget_info(Event.top, FIND_BY_UNAME='MIN_TBIN_TEXT')
 widget_control, min_tbin_text_id, GET_VALUE=min_tbin
 
 if (long(min_tbin) GT long(max_tbin)) then begin
-   print, "inside min_tbin GT max_tbin"
    max_tbin = min_tbin
 endif
 
 (*global).max_tbin = max_tbin
 (*global).min_tbin = min_tbin
 
-PLOT_HISTO_FILE, Event
+;check if we opened an histo or a NeXus file
+if ((*global).file_open EQ 'histo') then begin
+    PLOT_HISTO_FILE, Event
+endif else begin
+    PLOT_NEXUS_FILE, Event
+endelse
 
 end
 
@@ -1146,6 +1148,7 @@ if (run_number EQ '') then begin
 endif else begin
     
     (*global).run_number = run_number
+    (*global).file_open = 'nexus'
 
     text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
     WIDGET_CONTROL, view_info, SET_VALUE=text
@@ -1227,14 +1230,15 @@ image_bottom = ulonarr(Nt, Nx, Ny_scat_bank)
 readu,u,image_bottom
 close,u
 
-PLOT_NEXUS_FILE, Event, image_top, image_bottom
+(*(*global).image_top) = image_top
+(*(*global).image_bottom) = image_bottom
+
+PLOT_NEXUS_FILE, Event
 
 text = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 end
-
-
 
 
 
@@ -1320,11 +1324,15 @@ end
 
 
 
-pro PLOT_NEXUS_FILE, Event, data_top, data_bottom
+pro PLOT_NEXUS_FILE, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+data_top = (*(*global).image_top)
+data_bottom = (*(*global).image_bottom)
+
 
 Nx=(*global).Nx
 Ny=(*global).Ny_scat
@@ -1337,10 +1345,10 @@ Nt=(*global).Nt
 max_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_SLIDER')
 min_tbin_slider_id = widget_info(Event.top,FIND_BY_UNAME='MIN_TBIN_SLIDER')
 max_tbin_text_id = widget_info(Event.top,FIND_BY_UNAME='MAX_TBIN_TEXT')
-widget_control, max_tbin_slider_id, SET_SLIDER_MAX=Nt
-widget_control, max_tbin_slider_id, SET_VALUE=Nt
-widget_control, min_tbin_slider_id, SET_SLIDER_MAX=Nt
-widget_control, max_tbin_text_id, SET_VALUE=strcompress(Nt,/remove_all)
+widget_control, max_tbin_slider_id, SET_SLIDER_MAX=Nt-1
+widget_control, max_tbin_slider_id, SET_VALUE=Nt-1
+widget_control, min_tbin_slider_id, SET_SLIDER_MAX=Nt-1
+widget_control, max_tbin_text_id, SET_VALUE=strcompress(Nt-1,/remove_all)
 
 ;find the non-null elements
 indx1 = where(data_top GT 0, Ngt0)
@@ -1359,6 +1367,30 @@ WIDGET_CONTROL, tbin_frame_id, sensitive=1
 
 endif else begin ;if file has already been opened
 
+;get value of min_tbin and max_tbin
+    min_tbin = long((*global).min_tbin)   
+    max_tbin = long((*global).max_tbin)
+    Nx = (*global).Nx
+    Ny = (*global).Ny
+     
+    new_Nt = max_tbin - min_tbin
+
+    if (new_Nt EQ 0) then begin
+        new_Nt = 1
+    endif   
+   
+    new_img_top = intarr(new_Nt+1,Nx,Ny)
+    new_img_bottom = intarr(new_Nt+1,Nx,Ny)
+
+    new_img_top = data_top(min_tbin:max_tbin,*,*)
+    new_img_bottom = data_bottom(min_tbin:max_tbin,*,*)
+    
+    top_bank = total(new_img_top,1)
+    bottom_bank = total(new_img_bottom,1)
+
+    tbin_refresh_button_id = WIDGET_INFO(Event.top, FIND_BY_UNAME='TBIN_REFRESH_BUTTON')
+    WIDGET_CONTROL, tbin_refresh_button_id, sensitive=0
+
 endelse
 
 (*(*global).top_bank) = top_bank
@@ -1368,10 +1400,10 @@ top_bank = transpose(top_bank)
 bottom_bank = transpose(bottom_bank)
 
 if ((*global).do_color EQ 1) then begin
-   
-   DEVICE, DECOMPOSED=0
-   loadct, 2
-
+    
+    DEVICE, DECOMPOSED=0
+    loadct, 2
+    
 endif
 
 Ny_pixels = (*global).Ny_pixels
@@ -1398,11 +1430,11 @@ tvscl, tvimg, /device
 
 ;plot grid
 for i=1,63 do begin
-  plots, i*x_coeff, 0, /device, color=300
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-
-  plots, 0,i*x_coeff, /device,color=300
-  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+    plots, i*x_coeff, 0, /device, color=300
+    plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+    
+    plots, 0,i*x_coeff, /device,color=300
+    plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
 endfor
 
 ;bottom bank
@@ -1416,11 +1448,11 @@ tvscl, tvimg, /device
 
 ;plot grid
 for i=1,63 do begin
-  plots, i*x_coeff, 0, /device, color=300
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
-
-  plots, 0,i*x_coeff, /device,color=300
-  plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
+    plots, i*x_coeff, 0, /device, color=300
+    plots, i*x_coeff, 64*y_coeff, /device, /continue, color=300
+    
+    plots, 0,i*x_coeff, /device,color=300
+    plots, 64*x_coeff, i*x_coeff, /device, /continue, color=300
 endfor
 
 ;plot scales
@@ -1431,9 +1463,9 @@ wset, id
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
 plot, [0,Nx_tubes],/nodata,/device,xrange=[0,Nx_tubes-1],$
-	xstyle=1+8, ystyle=4, /noerase, charsize=1.0, charthick=1.6,$
-	xmargin=[1,3], xticks=8, xtitle=xtitle, color=2,$
-	xTickLen=.5, XGridStyle=2, xminor=7, xtickinterval=4
+  xstyle=1+8, ystyle=4, /noerase, charsize=1.0, charthick=1.6,$
+  xmargin=[1,3], xticks=8, xtitle=xtitle, color=2,$
+  xTickLen=.5, XGridStyle=2, xminor=7, xtickinterval=4
 
 ;top pixels axis
 view_info = widget_info(Event.top,FIND_BY_UNAME='Y_SCALE_TOP_BANK')
@@ -1443,9 +1475,9 @@ erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
 plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
-	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
-	ymargin=[0,0], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
+  ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+  ymargin=[0,0], yticks=8, color=2,$
+  yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
 
 
 ;bottom pixels axis
@@ -1456,9 +1488,9 @@ erase
 
 TvLCT, [70,255,0],[70,255,255],[70,0,0],1
 plot, [0,Ny_pixels-1],/nodata,/device,yrange=[0,Ny_pixels-1],$
-	ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
-	ymargin=[0,0], yticks=8, color=2,$
-	yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
+  ystyle=1+8, xstyle=4, charsize=0.8, charthick=1.3,$
+  ymargin=[0,0], yticks=8, color=2,$
+  yTickLen=-.1, YGridStyle=2, Yminor=7, Ytickinterval=3
 
 ;plot of top scale
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_TOP_PLOT')
@@ -1471,7 +1503,7 @@ print, max_top
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1,charsize=0.8
+  xticks=1,xtickv=1,charsize=0.8
 
 ;plot of bottom scale
 view_info = widget_info(Event.top,FIND_BY_UNAME='SCALE_BOTTOM_PLOT')
@@ -1483,7 +1515,7 @@ max_bottom = max(bottom_bank)
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_bottom*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
-	xticks=1,xtickv=1,charsize=0.8
+  xticks=1,xtickv=1,charsize=0.8
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
 text = " ....Plotting COMPLETED "

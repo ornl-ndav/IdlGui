@@ -145,6 +145,9 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;define initial global values - these could be input via external file or other means
 
 global = ptr_new({$
+                   image_top : ptr_new(0L),$
+                   image_bottom : ptr_new(0L),$
+                   file_open : '',$
                    run_number : 0,$
                    find_nexus : 0,$
                    full_nexus_name : '',$
