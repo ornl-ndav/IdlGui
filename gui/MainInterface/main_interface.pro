@@ -15,18 +15,16 @@ case Event.id of
         idl_tool_droplist_cb, Event
     end
     
+    Widget_Info(wWidget, FIND_BY_UNAME='IDL_GO'): begin
+       idl_go, Event
+       end
+
 ;    Widget_Info(wWidget, FIND_BY_UNAME=$
 ;                'OPEN_HISTO_EVENT_FILE_BUTTON_tab1'): begin
 ;        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
 ;          OPEN_HISTO_EVENT_FILE_CB, Event
 ;    end
     
-
-
-
-
-
-
 
     Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -87,9 +85,18 @@ plot_length = 304			;plot box length
 Resolve_Routine, 'main_interface_eventcb',/COMPILE_FULL_FILE
 
 global = ptr_new({$
+                   active_idl_tool : '',$
+                   host : '',$
                    tmp_nxdir_folder : 'makeNeXus_tmp',$
                    full_tmp_nxdir_folder_path : ''$
 })
+
+
+;comamnd to find name of host
+cd_host = "/bin/hostname -s"
+spawn, cd_host, host
+
+(*global).host = host
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
