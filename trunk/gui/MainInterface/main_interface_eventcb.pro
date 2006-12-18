@@ -6,6 +6,10 @@ end
 
 pro idl_tool_droplist_cb, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;get value of IDL tool selected
 id_droplist = widget_info(Event.top,find_by_uname="idl_tool_droplist",$
                          /droplist_select)
@@ -13,16 +17,12 @@ widget_control, id_droplist, get_value=idl_list
 list_index = widget_info(id_droplist,/droplist_select)
 tool_selected=idl_list[list_index]
 
-;activate launch button is there is an tool selected
-launch_id = widget_info(Event.top, find_by_uname='IDL_GO')
-if (list_index NE 0) then begin
-    widget_control, launch_id, sensitive=1
-endif else begin
-    widget_control, launch_id, sensitive=0
-endelse
+host = (*global).host
 
 ;Info text to display
 erase
+launch_activation = 0
+
 case list_index of
     0: begin
         text='No tool selected'
@@ -32,24 +32,34 @@ case list_index of
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/miniReflPak_REF_L.bmp"
         x=0
         y=0
+        if (host EQ 'heater' OR $
+        host EQ 'mrac' or $
+        host EQ 'lrac') then launch_activation = 1
+        (*global).active_idl_tool = 'miniReflPak'
     end
     2: begin 
         text='plotBSS'          ;plotBSS
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/plotBSS.bmp"
         x=15
         y=0
+        if (host EQ 'bac') then launch_activation = 1
+        (*global).active_idl_tool = 'plotBSS'
     end
     3: begin
         text='RealignBSS'       ;RealignBSS
        picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/RealignBSS.bmp"
        x=0
        y=0
+       if (host EQ 'bac') then launch_activation = 1       
+        (*global).active_idl_tool = 'RealignBSS'
     end
     4: begin
         text='rebinNeXus'       ;rebinNeXus
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/rebinNeXus.bmp"
         x=0
         y=70
+        launch_activation = 1
+        (*global).active_idl_tool = 'rebinNeXus'
     end
 endcase
 
@@ -61,7 +71,73 @@ endif
 info_id = widget_info(Event.top, find_by_uname='info_description')
 widget_control, info_id, set_value=text
 
+;activate launch button is there is an tool selected with the right hostname
+launch_id = widget_info(Event.top, find_by_uname='IDL_GO')
+if (launch_activation EQ 1) then begin
+    widget_control, launch_id, sensitive=1
+endif else begin
+    widget_control, launch_id, sensitive=0
+endelse
+
 end
+
+pro idl_go, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+active_idl_tool = (*global).active_idl_tool
+
+;kill current window
+id = widget_info(EVent.top, find_by_uname='MAIN_BASE')
+widget_control, id, /destroy
+
+case active_idl_tool of
+
+    'miniReflPak': begin
+        spawn, 'miniReflPak'
+    end
+    'plotBSS': begin
+        spawn, 'plotBSS'
+    end
+    'RealignBSS': begin
+        spawn, 'RealignBSS'
+    end
+    'rebinNeXus': begin
+        spawn, 'rebinNeXus'
+    end
+endcase
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
