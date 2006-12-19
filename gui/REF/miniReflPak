@@ -1,2 +1,1 @@
-cd /SNS/users/j35/IDL/REF/
-idl -vm /SNS/users/j35/IDL/REF/extract.data.sav
+idl -vm=/SNS/users/j35/IDL/REF/extract.data.sav

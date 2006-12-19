@@ -1,2 +1,1 @@
-cd /SNS/users/j35/IDL/RebinNeXus/
-idl -vm /SNS/users/j35/IDL/RebinNeXus/rebin_nexus.sav
+idl -vm=/SNS/users/j35/IDL/RebinNeXus/rebin_nexus.sav
