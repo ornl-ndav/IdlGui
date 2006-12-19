@@ -332,11 +332,15 @@ widget_control,id,get_uvalue=global
 id_display = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
 widget_control, id_display, sensitive=0
 
-if ((*global).display_button_activate EQ 0) then begin
+if ((*global).display_button_activate EQ 0) then begin ;button not activated
 
     (*global).display_button_activate = 1
     instrument =  (*global).instrument    
     
+;change label of button
+    id_button = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
+    widget_control, id_button, set_value='Desactivate preview'
+
 ;file to open
     create_local_copy_of_histo_mapped, Event
     
@@ -397,6 +401,9 @@ endif else begin                ;if button released
     id = widget_info(Event.top, find_by_uname="MAIN_BASE")
     widget_control, id, scr_xsize=(*global).xsize
     
+    id_button = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
+    widget_control, id_button, set_value='Activate preview'
+
     (*global).display_button_activate = 0
 
 endelse
@@ -931,7 +938,7 @@ if (wrong_run_number_format ne 0) then begin
 endif else begin
 
 ;get full preNeXus path
-    cmd_findnexus = "~/SVN/ASGIntegration/trunk/utilities/findnexus -i" + instrument
+    cmd_findnexus = "findnexus -i" + instrument
     cmd_findnexus += " " + strcompress(run_number, /remove_all)
     cmd_findnexus += " --prenexus"
     spawn, cmd_findnexus, listening
@@ -980,7 +987,7 @@ endif else begin
         (*global).full_path_to_prenexus = full_path_to_prenexus
         
                                 ;get full nexus path name
-        cmd_findnexus = "~/SVN/ASGIntegration/trunk/utilities/findnexus -i" + instrument
+        cmd_findnexus = "findnexus -i" + instrument
         cmd_findnexus += " " + strcompress(run_number,/remove_all)
         spawn, cmd_findnexus, listening
         
@@ -1313,7 +1320,6 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 ;in GO_HISTOGRAM, we need to get widget values of tab 1 to do our work
-
 id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
 	WIDGET_CONTROL, id_0, GET_VALUE = lin_log
 
@@ -1334,7 +1340,6 @@ id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
 (*global).rebinning = rebinning
 (*global).max_time_bin = max_time_bin
 (*global).min_time_bin = min_time_bin
-
 event_filename = (*global).histo_event_filename
 path = full_folder_name_preNeXus
 
@@ -1353,7 +1358,6 @@ cmd_line_histo += " -a " + strcompress(path,/remove_all)
 cmd_line_histo += " " + event_filename
 
 cmd_line_displayed = "> " + cmd_line_histo
-
 WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
 
 ;launch histogramming
@@ -1374,19 +1378,16 @@ text = "Done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
 ;MAPPING OF HISTO FILE
 txt = " MAPPING:"
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
 
 number_tbin = ((*global).max_time_bin - (*global).min_time_bin) / (*global).rebinning
 (*global).number_tbin = number_tbin
 
 id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
 widget_control, id, get_value=mapping_filename
-
 cmd_line_mapping = "Map_Data "
 cmd_line_mapping += "-m " + mapping_filename
 cmd_line_mapping += " -n " + full_histo_file_name
@@ -1425,17 +1426,20 @@ end
 
 
 
-function get_proposal_number, file
+function get_proposal_experiment_number, file
 
 file_parsed = strsplit(file,"/",/regex,/extract,count=length)
 
-if (length EQ 6) then begin
-    proposal_number = file_parsed[length-4]
+if (length EQ 7) then begin
+    proposal_number = file_parsed[length-5]
+    experiment_number = file_parsed[length-4]
 endif else begin
-    proposal_number = file_parsed[length-5]+"/"+file_parsed[length-4]
+    proposal_number = file_parsed[length-4]
+    experiment_number = "/"
 endelse
 
-return, proposal_number
+result = [proposal_number, experiment_number]
+return, result
 
 end
 
@@ -1471,11 +1475,16 @@ WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 file=(*global).histo_event_filename ;full name of event file
 run_number = (*global).run_number ;run number 
-proposal_number = get_proposal_number(file) ;isolate proposal number from full file name
+result = get_proposal_experiment_number(file) ;isolate proposal number from full file name
+proposal_number = result[0]
+experiment_number = result[1]
+
 (*global).proposal_number = proposal_number
+(*global).experiment_number = experiment_number
 
 parent_folder_name = (*global).output_path + (*global).instrument
 full_folder_name = parent_folder_name + "/" + proposal_number 
+full_folder_name += "/" + experiment_number
 full_folder_name += "/" + run_number
 full_folder_name_preNeXus = full_folder_name + "/preNeXus/"
 full_folder_name_NeXus = full_folder_name + "/NeXus/"
@@ -1486,7 +1495,8 @@ spawn, cmd_folder_exist, listening
 
 if (listening NE '') then begin ;folder exists, we need to remove it first
 
-    cmd_remove_folder = "rm -r " + parent_folder_name
+    cmd_remove_folder = "rm -r " + full_folder_name
+    cd, (*global).output_path
     spawn, cmd_remove_folder
 
 endif 
@@ -1531,7 +1541,7 @@ spawn, cmd_copy
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-txt = "-> Merge xml files"
+txt = "-> Merge xml files..."
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 ;merge files
@@ -1542,7 +1552,7 @@ spawn, cmd_merge
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-txt = "-> translate files"
+txt = "-> translate files..."
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 ;create nexus file
@@ -1557,7 +1567,7 @@ spawn, cmd_translate
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-txt = "-> Move NeXus file to its final location"
+txt = "-> Move NeXus file to its final location..."
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 ;move new nexus file into its own location
