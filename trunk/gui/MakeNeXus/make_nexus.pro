@@ -272,7 +272,8 @@ global = ptr_new({$
                    new_translation_filename: '',$
                    das_mount_point		: '',$
                    proposal_number		: '',$
-                   proposal_number_BSS	: '2006_1_2_SCI/',$
+        	   experiment_number	        : 0L,$
+	           proposal_number_BSS	: '2006_1_2_SCI/',$
                    proposal_number_REF_L	: '2006_1_4B_SCI/',$
                    proposal_number_REF_M	: '2006_1_4A_SCI/',$
                    instrument_run_number	: '',$
