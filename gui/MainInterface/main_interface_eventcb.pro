@@ -96,16 +96,16 @@ widget_control, id, /destroy
 case active_idl_tool of
 
     'miniReflPak': begin
-        spawn, 'miniReflPak'
+        spawn, '/SNS/users/j35/IDL/REF/miniReflPak'
     end
     'plotBSS': begin
-        spawn, 'plotBSS'
+        spawn, '/SNS/users/j35/IDL/BSS/plotBSS'
     end
     'RealignBSS': begin
-        spawn, 'RealignBSS'
+        spawn, '/SNS/users/j35/IDL/BSS/RealignGUI/RealignBSS'
     end
     'rebinNeXus': begin
-        spawn, 'rebinNeXus'
+        spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinNeXus'
     end
 endcase
 
