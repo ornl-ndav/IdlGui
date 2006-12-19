@@ -130,6 +130,12 @@ widget_control,id,get_uvalue=global
     	IDENTIFICATION_TEXT_CB, Event
     end
 
+;3d_button
+    Widget_Info(wWidget, FIND_BY_UNAME='plot_3d_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        plot_3d_button_cb, Event
+    end
+
     ;##### REF_L #####
 
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER_REF_L'): begin
@@ -753,6 +759,15 @@ list_of_runs = ['']
                               SCR_XSIZE=plot_length-5,$
                               SCR_YSIZE=plot_height-25,$
                               RETAIN=2)
+
+;plot 3d button
+  plot_3d_button = widget_button(MAIN_BASE,$
+                                 uname='plot_3d_button',$
+                                 xoffset=120,$
+                                 yoffset=565,$
+                                 value='3d view of full detector signal',$
+                                 sensitive=0)
+
 
   ;xxxxxxxxxxxxxxxxxxxxxxx
 
