@@ -58,6 +58,10 @@ endif else begin
     id[6] = widget_info(Event.top, find_by_uname="VIEW_DRAW_SELECTION_Y")
     id[7] = widget_info(Event.top, find_by_uname="VIEW_DRAW_REDUCTION")
 
+    ;disable 3d view button
+    id_3d = widget_info(Event.top, find_by_uname='plot_3d_button')
+    widget_control, id_3d, sensitive=0
+
     for i=0,7 do begin
 	WIDGET_CONTROL, id[i], GET_VALUE=id_value
         wset, id_value
@@ -406,6 +410,11 @@ endif else begin
 ;            
 ;        endif
         
+        if ((*global).ucams EQ 'j35') then begin
+            id_3d = widget_info(Event.top, find_by_uname='plot_3d_button')
+            widget_control, id_3d, sensitive=1
+        endif
+
     endelse
     
 endelse
@@ -1273,6 +1282,7 @@ WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
 	wset,view_win_num
 	tvscl,(*(*global).img_ptr)
 
+
 id = widget_info(Event.top,FIND_BY_UNAME='CTOOL_MENU')
 Widget_Control, id, sensitive=1
 
@@ -1852,7 +1862,7 @@ end
 ;
 ; \argument Event (INPUT)
 ;--------------------------------------------------------------------------
-pro OPEN_FILE, Event
+pro OPEN_FILE, Event    ;for REF_M
 
 ;first close previous file if there is one
 if (N_ELEMENTS(U)) NE 0 then begin
@@ -2001,7 +2011,8 @@ if file NE '' then begin
 	tt_time = string(endtime - strtime)
 	text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
 	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-	
+        
+
 endif;valid file
 
 end
@@ -3914,5 +3925,25 @@ spawn, cmd_line, listening, /stderr
 plot_reduction, event                      
 
 info_overflow_REF_M, Event
+
+end
+
+
+
+
+pro plot_3d_button_cb, Event
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+isurface, (*(*global).img_ptr),$
+  /NO_SAVEPROMPT,$
+  /DISABLE_SPLASH_SCREEN,$
+  BACKGROUND_COLOR=[0,0,0],$
+  xtext_color=[255,255,255],$
+  ytext_color=[255,255,255],$
+  ztext_color=[255,255,255],$
+  color=[200,50,50]
 
 end
