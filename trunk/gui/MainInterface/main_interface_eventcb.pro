@@ -28,7 +28,8 @@ case list_index of
         text='No tool selected'
     end
     1: begin
-        text='miniReflPak'      ;miniReflPak
+;miniReflPak
+        text='Visualization and data reduction tool for both Reflectometers'
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/miniReflPak_REF_L.bmp"
         x=0
         y=0
@@ -38,7 +39,9 @@ case list_index of
         (*global).active_idl_tool = 'miniReflPak'
     end
     2: begin 
-        text='plotBSS'          ;plotBSS
+;plotBSS
+        text ='This program plots data for the BackScattering instrument. '
+        text += 'It is also possible to display the range of time bins desired'
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/plotBSS.bmp"
         x=15
         y=0
@@ -46,15 +49,21 @@ case list_index of
         (*global).active_idl_tool = 'plotBSS'
     end
     3: begin
-        text='RealignBSS'       ;RealignBSS
-       picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/RealignBSS.bmp"
+;RealignBSS
+        text ='Program used to align the pixelID for the BackScattering '
+        text += 'instrument. A NeXus file is then produced based on the '
+        text += 'new position of these pixels.'
+        picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/RealignBSS.bmp"
        x=0
        y=0
        if (host EQ 'bac') then launch_activation = 1       
         (*global).active_idl_tool = 'RealignBSS'
     end
     4: begin
-        text='rebinNeXus'       ;rebinNeXus
+;rebinNeXus
+        text = 'Program used to visualize the data of any NeXus file. '
+        text += 'Can also be used to rebin the data (when DAS has been run in '
+        text += 'event mode) and create the final NeXus file'
         picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/rebinNeXus.bmp"
         x=0
         y=70
