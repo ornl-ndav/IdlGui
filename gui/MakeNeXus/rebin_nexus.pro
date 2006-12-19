@@ -81,11 +81,11 @@ case Event.id of
             id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
             WIDGET_control, id, GET_VALUE=user
             
-            CASE instrument OF
-                0: print, "portal_value= ", instrument
-                1: print, "portal_value= ", instrument
-                2: print, "portal_value= ", instrument
-            ENDCASE
+;            CASE instrument OF
+;                0: print, "portal_value= ", instrument
+;                1: print, "portal_value= ", instrument
+;                2: print, "portal_value= ", instrument
+;            ENDCASE
             
             if (check_access(Event, instrument, user) NE -1) then begin
                 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -147,7 +147,9 @@ PORTAL_BASE= widget_base(MAIN_BASE, $
 PORTAL_LABEL = widget_label(PORTAL_BASE,$
 	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
 
-instrument_list = ['Liquid Reflectometer', 'Magnetic Reflectometer', 'Backscattering Spectrometer']
+instrument_list = ['Liquid Reflectometer',$
+                   'Magnetic Reflectometer',$
+                   'Backscattering Spectrometer']
 
 INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
 	instrument_list,$
@@ -271,6 +273,7 @@ global = ptr_new({$
                    runinfo_xml_filename	: '',$
                    new_translation_filename: '',$
                    das_mount_point		: '',$
+                     experiment_number : '',$
                    proposal_number		: '',$
                    proposal_number_BSS	: '2006_1_2_SCI/',$
                    proposal_number_REF_L	: '2006_1_4B_SCI/',$
