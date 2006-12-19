@@ -1359,7 +1359,6 @@ txt = " MAPPING:"
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-
 number_tbin = ((*global).max_time_bin - (*global).min_time_bin) / (*global).rebinning
 (*global).number_tbin = number_tbin
 
@@ -1404,16 +1403,16 @@ end
 
 
 
-function get_proposal_number, file
+function get_proposal_experiment_number, file
 
 file_parsed = strsplit(file,"/",/regex,/extract,count=length)
 proposal_number = file_parsed[length-4]
+experiment_number = file_parsed[length-5]
 
-return, proposal_number
+result = [proposal_number,experiment_number]
+return, result
 
 end
-
-
 
 
 
@@ -1438,31 +1437,43 @@ WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 txt = "Create NeXus process:"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
-;create folder into working_path directory
+
+
+
+
+
+
+
+;create folder into working_path directory if not existing
 
 txt = "-> Create folder in working path...."
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
 file=(*global).histo_event_filename ;full name of event file
 run_number = (*global).run_number ;run number 
-proposal_number = get_proposal_number(file) ;isolate proposal number from full file name
+pro_run_number = get_proposal_experiment_number(file) ;isolate proposal number and experiment number from full file name
+
+proposal_number = pro_run_number[0]
+experiment_number = pro_run_number[1]
+
 (*global).proposal_number = proposal_number
+(*global).experiment_number = experiment_number
 
 parent_folder_name = (*global).output_path + (*global).instrument
 full_folder_name = parent_folder_name + "/" + proposal_number 
+full_folder_name += "/" + experiment_number
 full_folder_name += "/" + run_number
 full_folder_name_preNeXus = full_folder_name + "/preNeXus/"
 full_folder_name_NeXus = full_folder_name + "/NeXus/"
 
-;;check if folder exists already, if yes, remove it
-cmd_folder_exist = "ls -d " + parent_folder_name
+;check if folder of run number exists already, 
+;if yes, remove only the folder of that run
+cmd_folder_exist = "ls -d " + full_folder_name
 spawn, cmd_folder_exist, listening
 
 if (listening NE '') then begin ;folder exists, we need to remove it first
-
-    cmd_remove_folder = "rm -r " + parent_folder_name
-    spawn, cmd_remove_folder
-
+	cmd_remove_folder = "rm -r " + full_folder_name
+  	spawn, cmd_remove_folder
 endif 
 
 ;create folders
