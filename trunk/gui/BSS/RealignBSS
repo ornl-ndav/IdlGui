@@ -1,2 +1,1 @@
-cd /SNS/users/j35/IDL/BSS/RealignGUI/
-idl -vm /SNS/users/j35/IDL/BSS/RealignGUI/
+idl -vm=/SNS/users/j35/IDL/BSS/RealignGUI/
