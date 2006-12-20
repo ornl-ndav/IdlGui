@@ -71,7 +71,7 @@ namespace EventHisto
    * time bin must be greater different from 0, this number becomes
    * our "virtual zero".
    */
-  static const int32_t SMALLEST_TIME_BIN_100NS = 1;
+  static const int32_t SMALLEST_TIME_BIN_100NS = 100;
   
   /**
    * \brief This function swap endians of an array
