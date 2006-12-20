@@ -314,7 +314,7 @@ PORTAL_LABEL = widget_label(PORTAL_BASE,$
 
 
 INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE, $
-	['Liquid Reflectometer', 'Magnetic Reflectometer'], $
+	['Liquids Reflectometer', 'Magnetism Reflectometer'], $
     	/exclusive,/RETURN_NAME,$
 	XOFFSET=30, YOFFSET=25,$
 	SET_VALUE=0.0,$
