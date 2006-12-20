@@ -256,15 +256,24 @@ global = ptr_new({$
                    file_to_plot_top     : '',$
                    file_to_plot_bottom  : '',$
 
-                   mapping_filename_REF_M       : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
-                   translation_filename_REF_M	: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_25.nxt',$
-                   geometry_filename_REF_M		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_geom_2006_09_18.nxs',$
-                   mapping_filename_REF_L		: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_TS_2006_12_01.dat',$
-                   translation_filename_REF_L	: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_2006_08_25.nxt',$
-                   geometry_filename_REF_L		: '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_geom_2006_09_18.nxs',$
-                   mapping_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
-                   translation_filename_BSS	: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
-                   geometry_filename_BSS		: '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
+                   mapping_filename_REF_M       : $
+                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
+                   translation_filename_REF_M	: $
+                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_25.nxt',$
+                   geometry_filename_REF_M		: $
+                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_geom_2006_11_03.nxs',$
+                   mapping_filename_REF_L		: $
+                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_TS_2006_12_01.dat',$
+                   translation_filename_REF_L	: $
+                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_2006_11_29.nxt',$
+                   geometry_filename_REF_L		: $
+                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_geom_2006_11_29.nxs',$
+                   mapping_filename_BSS		: $
+                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
+                   translation_filename_BSS	: $
+                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
+                   geometry_filename_BSS		: $
+                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
                    translation_file : '',$
                    geometry_file : '',$
                    mapping_file : '',$
