@@ -34,6 +34,7 @@
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <math.h>
 #include <stdexcept>
 #include "utils.hpp"
 #include <vector>
@@ -47,18 +48,6 @@
  */
 namespace BinVectorUtils
 {
-  /**
-   * \brief This function determine the minimum time bin from the input array
-   *
-   * \param binary_array (INPUT) is the input binary array
-   * \param size_array (INPUT) is the size of the binary array
-   *
-   * \returns
-   * It returns the minimum time bin
-   */
-  int32_t get_minimum_time_bin(const int32_t * binary_array,
-                               const size_t size_array);
-
   /**
    * \defgroup generate_linear_time_bin_vector
    * BinVectorUtils::generate_linear_time_bin
@@ -103,20 +92,18 @@ namespace BinVectorUtils
   
   /**
    * \brief This function creates the vector of a logarithmic time bins 
-   * percentage
+   * percentage using the ASG algorithm (no truncation of time bins)
    *
    * The time bin boundaries are calculated according to the equation
    * \f[
    * T_0 = T_{offset}
-   * T_i = T_{i-1}(coeff+1)
+   * T_i = INT(T_{i-1}(coeff+1))
    * \f]
    *
    * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
    * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
    * the coefficient from the command line in order to work with x100ns data
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
-   * \param minimum_time_bin_100ns (INPUT) is the minimum time bin from the 
-   * binary data file (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
    * \param verbose (INPUT) is a flag for printing processing info
    *
@@ -126,12 +113,46 @@ namespace BinVectorUtils
   generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
                                const float log_rebin_coeff_100ns,
                                const int32_t time_offset_100ns,
-                               const int32_t minimum_time_bin_100ns,
                                const bool debug,
                                const bool verbose);
   /**
    * \}
    */ // end of generate_log_time_bin_vector
+
+  /**
+   * \defgroup generate_das_log_time_bin_vector 
+   * BinVectorUtils::generate_das_log_time_bin_vector
+   * \{
+   */
+  
+  /**
+   * \brief This function creates the vector of a logarithmic time bins 
+   * percentage using the DAS algorithm (truncation of the DAS bins)
+   *
+   * The time bin boundaries are calculated according to the equation
+   * \f[
+   * T_0 = T_{offset}
+   * T_i = FLOOR(T_{i-1}(coeff+1))
+   * \f]
+   *
+   * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
+   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
+   * the coefficient from the command line in order to work with x100ns data
+   * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
+   * \param debug (INPUT) is a switch that trigger or not the debugging tools
+   * \param verbose (INPUT) is a flag for printing processing info
+   *
+   * \returns vector of the time bin values.
+   */
+  std::vector<int32_t> 
+  generate_das_log_time_bin_vector(const int32_t max_time_bin_100ns,
+                                   const float log_rebin_coeff_100ns,
+                                   const int32_t time_offset_100ns,
+                                   const bool debug,
+                                   const bool verbose);
+  /**
+   * \}
+   */ // end of generate_das_log_time_bin_vector
 
   /** 
    * /defgroup output_time_bin_vector BinVectorUtils::output_time_bin_vector
