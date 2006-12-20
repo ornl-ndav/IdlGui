@@ -231,6 +231,10 @@ int32_t main(int32_t argc, char *argv[])
                             "Flag for swapping data of output file",
                              false, cmd);
 
+      SwitchArg das_log_method_cmd("", "das", 
+                                   "Use DAS logarithmic rebinning algorithm",
+                                   false, cmd);
+
       ValueArg<int32_t> pixel_number_cmd ("p", "number_of_pixels",
                                           "Number of pixels for this run",
                                           true, -1, "pixel number", cmd);
@@ -248,12 +252,12 @@ int32_t main(int32_t argc, char *argv[])
                                         false, 0, "time offset (microS)",cmd);
 
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
-                                          "delta_t/t coefficient (>=0.05)",
+                                          "delta_t/t coefficient",
                                           true, 1, 
                                 "logarithmic rebinning coefficient (>=0.05)"); 
 
       cmd.xorAdd(time_rebin_width_cmd, log_rebin_coeff_cmd);
-      
+
       UnlabeledMultiArg<string> event_file_vector_cmd("event_file",
                                                       "Name of the event file",
                                                       "filename", cmd);
@@ -333,7 +337,6 @@ int32_t main(int32_t argc, char *argv[])
             }
 
           // now file_size is the number of element in the file
-
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
 
           int32_t max_time_bin_100ns
@@ -386,32 +389,39 @@ int32_t main(int32_t argc, char *argv[])
                 }
               */
               
-              if (verbose || debug)
+              if (das_log_method_cmd.getValue())
                 {
-                  cout << "--> get_minimum_time_bin.";  //1st
+                  //DAS way
+                  if (verbose || debug)
+                    {
+                      cout << "--> generate_das_log_time_bin_vector.";  //1st
+                    }
+                  
+                  time_bin_vector = 
+                    generate_das_log_time_bin_vector(
+                                                     max_time_bin_100ns,
+                                                     log_rebin_coeff_100ns,
+                                                     time_offset_100ns,
+                                                     debug,
+                                                     verbose);
                 }
-
-              int32_t minimum_time_bin_100ns;
-              minimum_time_bin_100ns = BinVectorUtils::get_minimum_time_bin(binary_array,
-                                                                            array_size);
-              if (verbose && !debug)
+              else
                 {
-                  cout << "done\n"; 
+                  //ASG way
+                  if (verbose || debug)
+                    {
+                      cout << "--> generate_log_time_bin_vector.";  //1st
+                    }
+                  
+                  time_bin_vector = 
+                    generate_log_time_bin_vector(
+                                                 max_time_bin_100ns,
+                                                 log_rebin_coeff_100ns,
+                                                 time_offset_100ns,
+                                                 debug,
+                                                 verbose);
                 }
-
-              if (verbose || debug)
-                {
-                  cout << "--> generate_log_time_bin_vector.";  //1st
-                }
-
-              time_bin_vector = generate_log_time_bin_vector(
-                                                             max_time_bin_100ns,
-                                                             log_rebin_coeff_100ns,
-                                                             time_offset_100ns,
-                                                             minimum_time_bin_100ns,
-                                                             debug,
-                                                             verbose);
-
+              
               if (verbose && !debug)
                 {
                   cout << "done\n";
