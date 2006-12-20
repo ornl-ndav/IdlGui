@@ -147,8 +147,8 @@ PORTAL_BASE= widget_base(MAIN_BASE, $
 PORTAL_LABEL = widget_label(PORTAL_BASE,$
 	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
 
-instrument_list = ['Liquid Reflectometer',$
-                   'Magnetic Reflectometer',$
+instrument_list = ['Liquids Reflectometer',$
+                   'Magnetism Reflectometer',$
                    'Backscattering Spectrometer']
 
 INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
@@ -272,7 +272,7 @@ global = ptr_new({$
                    cvinfo_xml_filename	: '',$
                    runinfo_xml_filename	: '',$
                    new_translation_filename: '',$
-                   das_mount_point		: '',$
+                     das_mount_point		: '',$
                      experiment_number : '',$
                    proposal_number		: '',$
                    proposal_number_BSS	: '2006_1_2_SCI/',$
