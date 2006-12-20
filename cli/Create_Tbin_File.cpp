@@ -50,6 +50,13 @@ int32_t main(int32_t argc, char *argv[])
       SwitchArg debug_cmd("d", "debug", "Flag for debugging program",
                           false, cmd);
 
+      SwitchArg verbose_cmd("", "verbose", "Gives processing information",
+                            false, cmd);
+      
+      SwitchArg das_log_method_cmd("", "das", 
+                                   "Use DAS logarithmic rebinning algorithm",
+                                   false, cmd);
+
       ValueArg<float> max_time_bin_cmd("M", "max_time_bin", 
                                          "Maximum value of time stamp",
                                          true, -1, "Max time bin", cmd);
@@ -77,10 +84,16 @@ int32_t main(int32_t argc, char *argv[])
       // Parse the command-line
       cmd.parse(argc, argv);
 
+      const bool debug = debug_cmd.getValue();
+      const bool verbose = verbose_cmd.getValue();
+
+      if (verbose && !debug) 
+        {
+          cout << "Create_Tbin_File:\n";
+        }
+
       int32_t max_time_bin_100ns
         = static_cast<int32_t>(max_time_bin_cmd.getValue() * 10.);
-
-      const bool debug = debug_cmd.getValue();
 
       //check that the time_offset in 100ns scale is at least 1
       int32_t time_offset_100ns
@@ -91,35 +104,69 @@ int32_t main(int32_t argc, char *argv[])
           time_offset_100ns = EventHisto::SMALLEST_TIME_BIN_100NS;
         }
       
+      if (verbose && !debug) 
+        {
+          cout << "time_offset_100ns= " << time_offset_100ns << endl;
+        }
+
       vector<int32_t> time_bin_vector;
       
       if (time_rebin_width_cmd.isSet())  //linear rebinning
         {
           int32_t time_rebin_width_100ns
             = static_cast<int32_t>(time_rebin_width_cmd.getValue()*10.);
-          time_bin_vector=generate_linear_time_bin_vector(
-                                                      max_time_bin_100ns,
-                                                      time_rebin_width_100ns,
-                                                      time_offset_100ns,
-                                                      debug);
+          if (verbose && !debug) 
+            {
+              cout << "Linear rebinning" << endl;
+              cout << "time_rebin_width_100ns: "<< time_rebin_width_100ns<<endl;
+              cout << "--> generate_linear_time_bin_vector.";  //1st
+            }
+
+          time_bin_vector=generate_linear_time_bin_vector(max_time_bin_100ns,
+                                                          time_rebin_width_100ns,
+                                                          time_offset_100ns,
+                                                          debug,
+                                                          verbose);
         }
       else if (log_rebin_coeff_cmd.isSet()) //log rebinning
         {
-          float log_rebin_coeff_100ns
-            = static_cast<int32_t>(log_rebin_coeff_cmd.getValue()*10.);
-
-          //check if log_rebin_coeff_100ns is greater or equal to 0.5
-          //otherwise forces a value of 1
-          if (log_rebin_coeff_100ns < 0.5)
+          float log_rebin_coeff
+            = static_cast<float>(log_rebin_coeff_cmd.getValue());
+          
+          if (verbose && !debug) 
             {
-              log_rebin_coeff_100ns = 0.5;
+              cout << "Logarithmic rebinning" << endl;
+              cout << "log_rebin_coeff: "<<log_rebin_coeff<<endl;
             }
-
-          time_bin_vector = generate_log_time_bin_vector(
-                                                      max_time_bin_100ns,
-                                                      log_rebin_coeff_100ns,
-                                                      time_offset_100ns,
-                                                      debug);
+          
+          if (das_log_method_cmd.getValue())
+            {
+              //DAS way
+              if (verbose && !debug)
+                {
+                  cout << "--> generate_das_log_time_bin_vector.";  //1st
+                }
+              
+              time_bin_vector = generate_das_log_time_bin_vector(max_time_bin_100ns,
+                                                                 log_rebin_coeff,
+                                                                 time_offset_100ns,
+                                                                 debug,
+                                                                 verbose);
+            }
+          else
+            {
+              //ASG way
+              if (verbose && !debug)
+                {
+                  cout << "--> generate_log_time_bin_vector.";  //1st
+                }
+              
+              time_bin_vector = generate_log_time_bin_vector(max_time_bin_100ns,
+                                                             log_rebin_coeff,
+                                                             time_offset_100ns,
+                                                             debug,
+                                                             verbose);
+            }
         }
       else  
         {
@@ -128,16 +175,26 @@ int32_t main(int32_t argc, char *argv[])
           exit(-1);
         }
       
+      if (verbose && !debug)
+        {
+          cout << endl << "--> output_time_bin_vector.";   //1st
+        }
+
       //output the time bin vector data
       output_time_bin_vector(time_bin_vector,
                              output_file_name_cmd.getValue(),
-                             debug);
+                             debug,
+                             verbose);
+
+      if (verbose && !debug)
+        {
+          cout << endl;
+        }
       
     }
   catch (ArgException &e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
-  
   return 0;
 }
