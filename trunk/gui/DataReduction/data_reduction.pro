@@ -21,29 +21,16 @@ case Event.id of
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
               id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
             WIDGET_control, id, GET_VALUE=instrument
-            
-            id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
-            WIDGET_control, id, GET_VALUE=user
-            
-            if (check_access(Event, instrument, user) NE -1) then begin
-                id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-                WIDGET_CONTROL, id, /destroy
-                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user
-            endif else begin
-                access = "!ACCESS!"
-                denied = "!DENIED!"		
-                id=widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-                WIDGET_control, id, set_value=access
-                id=widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-                WIDGET_control, id, set_value=denied
-                id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-                WIDGET_control, id, set_value=access
-                id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-                WIDGET_control, id, set_value=denied
-                id=widget_info(Event.top,FIND_BY_UNAME="USER_TEXT")
-                WIDGET_control, id, set_value=""
-            endelse
-            
+           ucams = get_ucams()
+
+           if (check_access(Event, instrument, ucams) NE -1) then begin
+               id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+               WIDGET_CONTROL, id, /destroy
+               wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
+           endif else begin
+               print, "access denied"
+           endelse
+           
         end
         
         else:
@@ -112,7 +99,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   SET_VALUE=0.0,$
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
-USER_BASE = widget_base(MAIN_BASE,$
+LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
                         UNAME="USER_BASE",$
                         SCR_XSIZE=265,$
                         SCR_YSIZE=70,$
@@ -123,52 +110,14 @@ USER_BASE = widget_base(MAIN_BASE,$
                         XPAD=3,$
                         YPAD=3)
 
-USER_LABEL = Widget_label(USER_BASE,$
-                          XOFFSET=65,$
-                          YOFFSET=3,$
-                          VALUE="ENTER YOUR UCAMS")
-
-USER_TEXT = widget_text(USER_BASE,$
-                        UNAME='USER_TEXT',$
-                        XOFFSET=90,$
-                        YOFFSET=25,$
-                        SCR_XSIZE=40,$
-                        SCR_YSIZE=35,$
-                        VALUE='',$
-                        /EDITABLE,$
-                        /ALL_EVENTS)
-
-LEFT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
-                                      UNAME='LEFT_TOP_ACCESS_DENIED',$
-                                      XOFFSET=5,$
-                                      YOFFSET=20,$
-                                      SCR_XSIZE=80,$
-                                      SCR_YSIZE=25,$
-                                      VALUE="")
-
-LEFT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
-                                         UNAME='LEFT_BOTTOM_ACCESS_DENIED',$
-                                         XOFFSET=5,$
-                                         YOFFSET=40,$
-                                         SCR_XSIZE=80,$
-                                         SCR_YSIZE=25,$
-                                         VALUE="")
-
-RIGHT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
-                                       UNAME='RIGHT_TOP_ACCESS_DENIED',$
-                                       XOFFSET=135,$
-                                       YOFFSET=20,$	
-                                       SCR_XSIZE=80,$
-                                       SCR_YSIZE=25,$
-                                       VALUE="")
-
-RIGHT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
-                                          UNAME='RIGHT_BOTTOM_ACCESS_DENIED',$
-                                          XOFFSET=135,$
-                                          YOFFSET=40,$	
-                                          SCR_XSIZE=80,$
-                                          SCR_YSIZE=25,$
-                                          VALUE="")
+logo_message_draw = widget_draw(logo_message_base,$
+                                uname='logo_message_draw',$
+                                xoffset=5,$
+                                yoffset=5,$
+                                scr_xsize=235,$
+                                scr_ysize=60,$
+                                uvalue=0)
+                                
 
 PORTAL_GO = widget_button(MAIN_BASE,$
                           XOFFSET=3,$
@@ -213,11 +162,11 @@ endcase
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=500,$
-                         SCR_YSIZE=500,$
+                         SCR_XSIZE=1000,$
+                         SCR_YSIZE=450,$
                          XOFFSET=250,$
                          YOFFSET=22,$
-                         NOTIFY_REALIZE='MAIN_REALIZE',$
+                         NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
                          TITLE='Data Reduction GUI for REF_L',$
                          SPACE=3,$
                          XPAD=3,$
@@ -262,19 +211,208 @@ select_signal_base = widget_base(MAIN_BASE,$
                                  xoffset=5,$
                                  yoffset=360,$
                                  scr_xsize=253,$
-                                 scr_ysize=50,$
+                                 scr_ysize=70,$
                                  frame=1)
+selection_title = widget_label(select_signal_base,$
+                               xoffset=5,$
+                               yoffset=9,$
+                               value='Selection: ')
 selection_list = ['Signal',$
                   'Background']
+selection_list_group = CW_BGROUP(select_signal_base,$ 
+                                 selection_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=80,$
+                                 YOFFSET=3,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 UNAME='selection_list_group')
+clear_selection_button = widget_button(select_signal_base,$
+                                       uname='clear_selection_button',$
+                                              xoffset=5,$
+                                              yoffset=35,$
+                                              scr_xsize=120,$
+                                              value='CLEAR SELECTION')
+save_selection_button = widget_button(select_signal_base,$
+                                      uname='save_selection_button',$
+                                      xoffset=125,$
+                                      yoffset=35,$
+                                      scr_xsize=120,$
+                                      value='SAVE SELECTION')
 
-selection_list_group = CW_BGROUP(MAIN_BASE,$ 
-                                  selection_list,$
+;data_reduction and other_plots tab
+;DATA REDUCTION and PLOTS BASE
+xsize_of_tabs = 730
+ysize_of_tabs = 430
+data_reduction_plots_base = widget_base(MAIN_BASE,$
+                                        xoffset=265,$
+                                        yoffset=5,$
+                                        scr_xsize=xsize_of_tabs,$
+                                        scr_ysize=ysize_of_tabs)
+
+data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                location=0,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                scr_xsize=xsize_of_tabs,$
+                                scr_ysize=ysize_of_tabs)
+  
+;data reduction tab
+first_tab_base = widget_base(data_reduction_tab,$
+                                  uname='data_reduction_base',$
+                                  TITLE='Data Reduction',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+data_reduction_base = widget_base(first_tab_base,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  scr_xsize=305,$
+                                  scr_ysize=390,$
+                                  frame=1)
+
+signal_pid_file_button = widget_button(data_reduction_base,$
+                                      uname='signal_pid_file_button',$
+                                      xoffset=5,$
+                                      yoffset=7,$
+                                      value='Signal Pid file')
+signal_pid_file_text = widget_text(data_reduction_base,$
+                                   uname='signal_pid_file_text',$
+                                   xoffset=110,$
+                                   yoffset=5,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable)
+background_title = widget_label(data_reduction_base,$
+                                xoffset=8,$
+                                yoffset=47,$
+                                value='Background:')
+background_list = ['Yes',$
+                  'No']
+background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                  background_list,$
                                   /exclusive,$
                                   /RETURN_NAME,$
-                                  XOFFSET=5,$
-                                  YOFFSET=5,$
+                                  XOFFSET=100,$
+                                  YOFFSET=40,$
                                   SET_VALUE=0.0,$
-                                  UNAME='selection_list_group')
+                                  row=1,$
+                                  uname='background_list_group')
+
+background_file_base = widget_base(data_reduction_base,$
+                                   uname='background_file_base',$
+                                   xoffset=0,$
+                                   yoffset=75,$
+                                   scr_xsize=xsize_of_tabs,$
+                                   scr_ysize=40,$
+                                   frame=0)
+background_file_button = widget_button(background_file_base,$
+                                       uname='background_file_button',$
+                                       xoffset=5,$
+                                       yoffset=7,$
+                                       value='Background file')
+background_file_text = widget_text(background_file_base,$
+                                   uname='background_file_text',$
+                                   xoffset=110,$
+                                   yoffset=5,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable)
+
+normalization_label = widget_label(data_reduction_base,$
+                                   xoffset=5,$
+                                   yoffset=130,$
+                                   value='Normalization - Run number:')
+normalization_text = widget_text(data_reduction_base,$
+                                 xoffset=180,$
+                                 yoffset=123,$
+                                 scr_xsize=120,$
+                                 value='',$
+                                 uname='normalization_text',$
+                                /editable,$
+                                /align_left)
+
+runs_to_process_label = widget_label(data_reduction_base,$
+                                     xoffset=5,$
+                                     yoffset=172,$
+                                     value='Runs #')
+runs_to_process_text = widget_text(data_reduction_base,$
+                                   xoffset=50,$
+                                   yoffset=165,$
+                                   scr_xsize=250,$
+                                   value='',$
+                                   uname='runs_to_process_text',$
+                                   /editable,$
+                                   /align_left)
+
+intermediate_file_label = widget_label(data_reduction_base,$
+                                       xoffset=5,$
+                                       yoffset=206,$
+                                       value='Intermediate file output:')
+
+intermediate_file_output_list = ['Yes',$
+                  'No']
+intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$ 
+                                                intermediate_file_output_list,$
+                                                /exclusive,$
+                                                /RETURN_NAME,$
+                                                XOFFSET=170,$
+                                                YOFFSET=200,$
+                                                SET_VALUE=1.0,$
+                                                row=1,$
+                                                uname='intermediate_file_output_list_group')
+
+start_data_reduction_button = widget_button(data_reduction_base,$
+                                            xoffset=5,$
+                                            yoffset=232,$
+                                            scr_xsize=295,$
+                                            value='START DATA REDUCTION',$
+                                            uname='start_data_reduction_button')
+
+info_text = widget_text(data_reduction_base,$
+                        xoffset=5,$
+                        yoffset=265,$
+                        scr_xsize=295,$
+                        scr_ysize=120,$
+                        /scroll,$
+                        /wrap,$
+                       uname='info_text')
+
+data_reduction_plot = widget_draw(first_tab_base,$
+                                  xoffset=315,$
+                                  yoffset=5,$
+                                  scr_xsize=405,$
+                                  scr_ysize=393,$
+                                  uname='data_reduction_plot')
+
+
+;other plots tab
+other_plots_base = widget_base(data_reduction_tab,$
+                                uname='other_plots_base',$
+                                TITLE='Extra plots',$
+                                XOFFSET=0,$
+                                YOFFSET=0)
+
+
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                         uname='log_book_base',$
+                         TITLE='Log book',$
+                         XOFFSET=0,$
+                         YOFFSET=0)
+
+log_book_text = widget_text(log_book_base,$
+                            uname='log_book_text',$
+                            scr_xsize=720,$
+                            scr_ysize=395,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            value='',$
+                            /scroll,$
+                            /wrap)
+
 
 
 
@@ -288,6 +426,6 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro data_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-;   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra    ;REMOVE_COMMENTS
-wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 0, "j35"     ;REMOVE_ME
+   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra    ;REMOVE_COMMENTS
+;wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 0, "j35"     ;REMOVE_ME
 end
