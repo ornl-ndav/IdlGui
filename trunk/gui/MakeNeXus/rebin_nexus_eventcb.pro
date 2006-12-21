@@ -1,3 +1,51 @@
+function get_up_to_date_map_geo_tran_files, instrument
+
+case instrument of
+    'REF_L':beam_line='4B'
+    'REF_M':beam_line='4A'
+    'BSS':beam_line='2'
+endcase
+
+path_to_files_of_interest = "/SNS/" + instrument
+path_to_files_of_interest += "/2006_1_" + beam_line + "_CAL/calibrations/"
+
+;generic file names
+mapping_file = instrument + "_TS_*.dat"
+geometry_file = instrument + "_geom_*.nxs"
+translation_file = instrument + "_*.nxt"
+
+;get up-to-date mapping_file
+ls_cmd = path_to_files_of_interest + mapping_file
+spawn, "ls " + ls_cmd, mapping_list
+
+mapping_file = reverse(mapping_list[sort(mapping_list)])
+
+;get up-to-date geometry_file
+ls_cmd = path_to_files_of_interest + geometry_file
+spawn, "ls " + ls_cmd, geometry_list
+
+geometry_file = reverse(geometry_list[sort(geometry_list)])
+
+;get up-to-date translation_file
+ls_cmd = path_to_files_of_interest + translation_file
+spawn, "ls " + ls_cmd, translation_list
+
+translation_file = reverse(translation_list[sort(translation_list)])
+
+;combine results
+array_result=[mapping_file[0], geometry_file[0], translation_file[0]]
+
+return, array_result
+
+end
+
+
+
+
+
+
+
+
 function CHANGE_MESSAGE, Event
 
 id = widget_info(Event.top, FIND_BY_UNAME="archive_it_or_not")
