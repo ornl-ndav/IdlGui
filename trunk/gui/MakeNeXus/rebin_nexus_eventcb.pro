@@ -1310,7 +1310,7 @@ path = (*global).output_path
 output_path = dialog_pickfile(path=path, /directory, title="Select the output file")
 
 if (output_path EQ '') then begin
-    output_path = (*global).output_path + (*global).user
+    output_path = (*global).output_path
 endif
 
 id = widget_info(Event.top, FIND_BY_UNAME='DEFAULT_FINAL_PATH_tab2')
