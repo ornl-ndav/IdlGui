@@ -5,7 +5,6 @@ spawn, cmd_pwd, listening
 print, "listening is: ", listening
 array_listening=strsplit(listening,'/',count=length,/extract)
 ucams = array_listening[2]
-
 return, ucams
 end
 
