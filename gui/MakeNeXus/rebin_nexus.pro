@@ -81,12 +81,6 @@ case Event.id of
             id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
             WIDGET_control, id, GET_VALUE=user
             
-;            CASE instrument OF
-;                0: print, "portal_value= ", instrument
-;                1: print, "portal_value= ", instrument
-;                2: print, "portal_value= ", instrument
-;            ENDCASE
-            
             if (check_access(Event, instrument, user) NE -1) then begin
                 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
                 WIDGET_CONTROL, id, /destroy
@@ -229,6 +223,8 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 
+combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
+
 global = ptr_new({$
                    tmp_nxdir_folder : 'makeNeXus_tmp',$
                    full_tmp_nxdir_folder_path : '',$
@@ -255,28 +251,9 @@ global = ptr_new({$
                    histo_mapped_file_name_only : '',$
                    file_to_plot_top     : '',$
                    file_to_plot_bottom  : '',$
-
-                   mapping_filename_REF_M       : $
-                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_04.dat',$
-                   translation_filename_REF_M	: $
-                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_08_25.nxt',$
-                   geometry_filename_REF_M		: $
-                     '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_geom_2006_11_03.nxs',$
-                   mapping_filename_REF_L		: $
-                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_TS_2006_12_01.dat',$
-                   translation_filename_REF_L	: $
-                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_2006_11_29.nxt',$
-                   geometry_filename_REF_L		: $
-                     '/SNS/REF_L/2006_1_4B_CAL/calibrations/REF_L_geom_2006_11_29.nxs',$
-                   mapping_filename_BSS		: $
-                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
-                   translation_filename_BSS	: $
-                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
-                   geometry_filename_BSS		: $
-                     '/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
-                   translation_file : '',$
-                   geometry_file : '',$
-                   mapping_file : '',$
+                   translation_file : combine_results[2],$
+                   geometry_file : combine_results[0],$
+                   mapping_file : combine_results[1],$
                    nexus_filename		: '',$
                    cvinfo_xml_filename	: '',$
                    runinfo_xml_filename	: '',$
@@ -320,28 +297,9 @@ global = ptr_new({$
                    display_button_activate : 0$
 	})
 
-case instrument OF
-   0: begin 
-	mapping_file = (*global).mapping_filename_REF_L
-	translation_file = (*global).translation_filename_REF_L
-	geometry_file = (*global).geometry_filename_REF_L
-      end
-   1: begin 
-	mapping_file = (*global).mapping_filename_REF_M
-	translation_file = (*global).translation_filename_REF_M
-	geometry_file = (*global).geometry_filename_REF_M
-      end
-   2: begin 
-	mapping_file = (*global).mapping_filename_BSS
-	translation_file = (*global).translation_filename_BSS
-	geometry_file = (*global).geometry_filename_BSS
-      end
-endcase
-
-
-(*global).mapping_file = mapping_file
-(*global).geometry_file = geometry_file
-(*global).translation_file = translation_file
+mapping_file = (*global).mapping_file 
+geometry_file = (*global).geometry_file
+translation_file = (*global).translation_file
 
 (*global).output_path = (*global).output_path + user + "/"
 output_path = (*global).output_path 
