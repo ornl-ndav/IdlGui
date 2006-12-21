@@ -28,7 +28,12 @@ case Event.id of
                WIDGET_CONTROL, id, /destroy
                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
            endif else begin
-               print, "access denied"
+             image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
+             id = widget_info(wWidget,find_by_uname="logo_message_draw")
+             WIDGET_CONTROL, id, GET_VALUE=id_value
+             wset, id_value
+             image = read_bmp(image_logo)
+             tv, image,0,0,/true
            endelse
            
         end
@@ -117,7 +122,6 @@ logo_message_draw = widget_draw(logo_message_base,$
                                 scr_xsize=235,$
                                 scr_ysize=60,$
                                 uvalue=0)
-                                
 
 PORTAL_GO = widget_button(MAIN_BASE,$
                           XOFFSET=3,$
@@ -412,9 +416,6 @@ log_book_text = widget_text(log_book_base,$
                             value='',$
                             /scroll,$
                             /wrap)
-
-
-
 
 
 Widget_Control, /REALIZE, MAIN_BASE
