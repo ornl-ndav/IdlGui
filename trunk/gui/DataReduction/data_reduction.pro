@@ -16,7 +16,7 @@ case Event.id of
         Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
             USER_TEXT_CB, Event
         end
-        
+
         Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
               id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
@@ -45,9 +45,19 @@ case Event.id of
            
        end
        
-       
+;Exit widget in the top toolbar for REF_L
+        Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_L'): begin
+            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+              EXIT_PROGRAM_REF_L, Event
+        end
+        
+;Widget to change the color of graph
+        Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_REF_L'): begin
+            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+              CTOOL_REF_L, Event
+        end
+        
        else:
-       
        
            endcase
     
@@ -146,7 +156,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
 
-pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
+pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;for REF_L
 
 Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
@@ -167,6 +177,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   ct                   : 5,$
+                   pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
                    find_nexus           : 0L,$
                    full_histo_mapped_name : '',$
@@ -439,6 +451,22 @@ log_book_text = widget_text(log_book_base,$
                             yoffset=5,$
                             /scroll,$
                             /wrap)
+
+
+FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
+                                  UNAME='FILE_MENU_REF_L',$
+                                  /MENU,$
+                                  VALUE='MENU')
+
+CTOOL_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
+                                 ,VALUE='Color Tool...')
+
+
+EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
+                                ,VALUE='Exit')
+
+
+
 
 
 Widget_Control, /REALIZE, MAIN_BASE
