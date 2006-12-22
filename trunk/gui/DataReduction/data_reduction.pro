@@ -35,12 +35,21 @@ case Event.id of
              image = read_bmp(image_logo)
              tv, image,0,0,/true
            endelse
+
+       end
+
+;open nexus file button
+       Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go'): begin
+           if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+             open_nexus_file, Event
            
-        end
-        
-        else:
-        
-    endcase
+       end
+       
+       
+       else:
+       
+       
+           endcase
     
 end
 
@@ -145,25 +154,6 @@ Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callba
 
 instrument_list = ['REF_L', 'REF_M']
 
-global = ptr_new({$
-                   output_path		: '/SNSlocal/users/',$
-                   instrument		: instrument_list[instrument],$
-                   user			: user,$
-                   run_number		: '',$
-                   img_ptr 		: ptr_new(0L),$
-                   data_assoc		: ptr_new(0L)$
-	})
-
-case instrument OF
-   0: begin 
-      end
-   1: begin 
-      end
-endcase
-
-
-(*global).output_path = (*global).output_path + user + "/"
-
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1000,$
@@ -176,6 +166,39 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          XPAD=3,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
+global = ptr_new({$
+                   data_assoc		: ptr_new(0L),$
+                   find_nexus           : 0L,$
+                   full_histo_mapped_name : '',$
+                   full_nexus_name      : '',$
+                   img_ptr 		: ptr_new(0L),$
+                   instrument		: instrument_list[instrument],$
+                   nexus_file_name_only : '',$
+                   Nx                   : 0L,$
+                   Ny                   : 0L,$
+                   Ntof                 : 0L,$
+                   output_path		: '/SNSlocal/users/',$
+                   run_number		: '',$
+                   tmp_folder           : '',$
+                   tmp_working_path     : '.tmp_data_reduction',$
+                   ucams                : user $
+                 })
+
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
+
+case instrument OF
+    0: begin ;REF_L
+        (*global).Nx = 304L
+        (*global).Ny = 256L
+    end
+    1: begin ;REF_M
+        (*global).Nx = 256L
+        (*global).Ny = 304L
+    end
+endcase
+
+(*global).output_path = (*global).output_path + user + "/"
 
 ;TOP LEFT BOX - OPEN NEXUS
 nexus_run_number_base = widget_base(MAIN_BASE,$
@@ -375,6 +398,7 @@ start_data_reduction_button = widget_button(data_reduction_base,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button')
 
+;info text box 
 info_text = widget_text(data_reduction_base,$
                         xoffset=5,$
                         yoffset=265,$
@@ -413,7 +437,6 @@ log_book_text = widget_text(log_book_base,$
                             scr_ysize=395,$
                             xoffset=5,$
                             yoffset=5,$
-                            value='',$
                             /scroll,$
                             /wrap)
 
