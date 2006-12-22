@@ -235,7 +235,7 @@ id_run_number = widget_info(Event.top, FIND_BY_UNAME='nexus_run_number_box')
 widget_control, id_run_number, get_value=run_number
 
 ;erase all displays
-erase_displays, Event
+reset_and_erase_displays, Event
 
 if (run_number EQ '') then begin
 
@@ -290,7 +290,14 @@ end
 
 
 
-pro erase_displays, Event
+pro reset_and_erase_displays, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).selection_signal = 0
+(*global).selection_background = 0
 
 id_draw = widget_info(Event.top, find_by_uname='display_data_base')
 widget_control, id_draw, get_value=id_value
@@ -494,6 +501,46 @@ DEVICE, DECOMPOSED = 0
 wset, id
 tvscl,(*(*global).img_ptr)
 
+selection_value = (*global).selection_value
+selection_signal = (*global).selection_signal
+selection_background = (*global).selection_background
+
+if (selection_value EQ 0 AND selection_background EQ 1) then begin
+    
+    color_line = (*global).color_line_background
+
+    x1 = (*global).x1_back
+    x2 = (*global).x2_back
+    y1 = (*global).y1_back
+    y2 = (*global).y2_back
+    
+    plots, X1, Y1, /device, color=color_line
+    plots, X1, Y2, /device, /continue, color=color_line
+    plots, X2, Y2, /device, /continue, color=color_line
+    plots, X2, Y1, /device, /continue, color=color_line
+    plots, X1, Y1, /device, /continue, color=color_line
+    
+endif else begin
+    
+    if (selection_value EQ 1 AND selection_signal EQ 1) then begin
+        
+        color_line = (*global).color_line_signal
+        
+        x1 = (*global).x1_signal
+        x2 = (*global).x2_signal
+        y1 = (*global).y1_signal
+        y2 = (*global).y2_signal
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+        
+    endif
+
+endelse
+
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -533,11 +580,11 @@ widget_control,id,get_uvalue=global
 
 file_opened = (*global).file_opened
 
+;working on signal or background ? (0 for signal, 1 for background)
+signal_or_background = (*global).selection_value
+
 ;left mouse button
 IF ((event.press EQ 1) AND (file_opened EQ 1)) then begin
-
-print, "in left click"
-
 
 ;   ;get data
 ;   img = (*(*global).img_ptr)
@@ -607,8 +654,6 @@ endif
 ;right mouse button
 IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 
-print, "in right click"
-
    ;get window numbers
     id_draw = widget_info(Event.top, find_by_uname='display_data_base')
     WIDGET_CONTROL, id_draw, GET_VALUE = id
@@ -627,9 +672,6 @@ print, "in right click"
    y = lonarr(2)
 
    first_round=0
-   r=255L  ;red max
-   g=0L    ;no green
-   b=255L  ;blue max
 
    cursor, x,y,/down,/device
    display_info =0	
@@ -647,28 +689,63 @@ print, "in right click"
       endif else begin
 	
 	 if (first_round EQ 0) then begin
-	    
-            X1=x
-	    Y1=y
-	    first_round = 1
-	    text = " Rigth click to select other corner"		
+             
+             X1=x
+             Y1=y
+             
+             if (signal_or_background EQ 0) then begin
+                 
+                 (*global).x1_signal = x
+                 (*global).y1_signal = y
+                 
+             endif else begin
 
-	 endif else begin
-		
+                 (*global).x1_back = x
+                 (*global).y1_back = y
+
+             endelse
+             
+             first_round = 1
+             text = " Rigth click to select other corner"		
+
+         endif else begin
+             
             X2=x
 	    Y2=y
 	    SHOW_DATA_REF_L,event
-	    plots, X1, Y1, /device, color=800
-	    plots, X1, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-	    plots, X2, Y2, /device, /continue, color=r+(g*256L)+(b*256L^2)
-	    plots, X2, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
-	    plots, X1, Y1, /device, /continue, color=r+(g*256L)+(b*256L^2)
-	
+
+            if (signal_or_background EQ 0) then begin
+                color_line = (*global).color_line_signal
+                (*global).selection_signal = 1
+            endif else begin
+                color_line = (*global).color_line_background
+                (*global).selection_background = 1
+            endelse
+
+            plots, X1, Y1, /device, color=color_line
+	    plots, X1, Y2, /device, /continue, color=color_line
+	    plots, X2, Y2, /device, /continue, color=color_line
+	    plots, X2, Y1, /device, /continue, color=color_line
+	    plots, X1, Y1, /device, /continue, color=color_line
+
+             if (signal_or_background EQ 0) then begin
+                 
+                 (*global).x2_signal = x
+                 (*global).y2_signal = y
+                 
+             endif else begin
+
+                 (*global).x2_back = x
+                 (*global).y2_back = y
+
+             endelse
+
 	    if (!mouse.button EQ 4) then begin    ;stop the process
 	
-               getvals = 1
-	       display_info = 1
-		
+                getvals = 1
+                display_info = 1
+                goto, Exit_me
+                		
             endif
 	
          endelse
@@ -687,6 +764,7 @@ print, "in right click"
    
 endif
 
+Exit_me: ;exit
 
 end
 
@@ -695,6 +773,18 @@ end
 
 
 
+pro clear_selection_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).selection_background = 0 
+(*global).selection_signal = 0
+
+SHOW_DATA_REF_L,event
+
+end
 
 
 
