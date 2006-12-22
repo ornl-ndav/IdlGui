@@ -64,11 +64,16 @@ case Event.id of
 
 ;draw_interaction
     Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
-      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
-        if( Event.type eq 0 )then $
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+          if( Event.type eq 0 )then $
           selection, Event
     end
-
+;clear selection button
+        Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
+            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+              clear_selection_cb, Event
+        end
+        
        else:
        
            endcase
@@ -205,9 +210,21 @@ global = ptr_new({$
                    output_path		: '/SNSlocal/users/',$
                    run_number		: '',$
                    selection_value      : 0,$
+                   selection_signal     : 0,$
+                   selection_background : 0,$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
-                   ucams                : user $
+                   ucams                : user,$
+                   x1_back              : 0L,$
+                   x2_back              : 0L,$
+                   y1_back              : 0L,$
+                   y2_back              : 0L,$
+                   x1_signal            : 0L,$
+                   x2_signal            : 0L,$
+                   y1_signal            : 0L,$
+                   y2_signal            : 0L,$
+                   color_line_signal    : 100L,$
+                   color_line_background: 300L $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -286,10 +303,10 @@ selection_list_group = CW_BGROUP(select_signal_base,$
 
 clear_selection_button = widget_button(select_signal_base,$
                                        uname='clear_selection_button',$
-                                              xoffset=5,$
-                                              yoffset=35,$
-                                              scr_xsize=120,$
-                                              value='CLEAR SELECTION')
+                                       xoffset=5,$
+                                       yoffset=35,$
+                                       scr_xsize=120,$
+                                       value='CLEAR SELECTION')
 save_selection_button = widget_button(select_signal_base,$
                                       uname='save_selection_button',$
                                       xoffset=125,$
