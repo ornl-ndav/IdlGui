@@ -73,6 +73,14 @@ case Event.id of
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
               clear_selection_cb, Event
         end
+
+;save selection button
+        Widget_Info(wWidget, FIND_BY_UNAME='save_selection_button'): begin
+            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+              save_selection_cb, Event
+        end
+
+
         
        else:
        
@@ -306,13 +314,15 @@ clear_selection_button = widget_button(select_signal_base,$
                                        xoffset=5,$
                                        yoffset=35,$
                                        scr_xsize=120,$
-                                       value='CLEAR SELECTION')
+                                       value='CLEAR SELECTION',$
+                                      sensitive=0)
 save_selection_button = widget_button(select_signal_base,$
                                       uname='save_selection_button',$
                                       xoffset=125,$
                                       yoffset=35,$
                                       scr_xsize=120,$
-                                      value='SAVE SELECTION')
+                                      value='SAVE SELECTION',$
+                                     sensitive=0)
 
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE

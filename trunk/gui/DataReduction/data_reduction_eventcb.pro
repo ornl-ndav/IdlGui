@@ -580,75 +580,34 @@ widget_control,id,get_uvalue=global
 
 file_opened = (*global).file_opened
 
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
 ;working on signal or background ? (0 for signal, 1 for background)
 signal_or_background = (*global).selection_value
 
 ;left mouse button
 IF ((event.press EQ 1) AND (file_opened EQ 1)) then begin
 
-;   ;get data
-;   img = (*(*global).img_ptr)
-;   ;data = (*(*global).data_ptr)
-;   tmp_tof = (*(*global).data_assoc)
-;   Nx= (*global).Nx
+   ;get data
+   img = (*(*global).img_ptr)
+   ;data = (*(*global).data_ptr)
+   tmp_tof = (*(*global).data_assoc)
+   Nx = (*global).Nx
 
-;   x = Event.x
-;   y = Event.y
+   x = Event.x
+   y = Event.y
 
    ;set data
-;   (*global).x = x
-;   (*global).y = y
 
-   ;put x and y into cursor x and y labels position
-;   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_X_POSITION_REF_L')
-;   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(x)
-;   view_info = widget_info(Event.top,FIND_BY_UNAME='CURSOR_Y_POSITION_REF_L')
-;   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(y)
-	
-   ;put number of counts in number_of_counts label position
-;   view_info = widget_info(Event.top,FIND_BY_UNAME='NUMBER_OF_COUNTS_VALUE')
-;   WIDGET_CONTROL, view_info, SET_VALUE=strcompress(img(x,y))
+   text = " x= " + strcompress(x,/remove_all)
+   text += " y= " + strcompress(y,/remove_all)
 
-   ;get window numbers - x
-;   view_x = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L')
-;   WIDGET_CONTROL, view_x, GET_VALUE = view_win_num_x
-
-   ;get window numbers - y
-;   view_y = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_Y_REF_L')
-;   WIDGET_CONTROL, view_y, GET_VALUE = view_win_num_y
-
-   ;get window numbers - x hidding
-;   view_x_hidding = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_X_REF_L_HIDDING')
-;   WIDGET_CONTROL, view_x_hidding, GET_VALUE = view_win_num_sum_x_hidding
-
-   ;do funky stuff since can't figure out how to plot along y axis...
-   ;plot y in x window
-   ;read this data into a temporary file
-   ;then image this plot in the window it belongs in...
-;   wset,view_win_num_sum_x_hidding
-;   plot,img(x,*),/xstyle,title='Y Axis'
-;   tmp_img = tvrd()
-;   tmp_img = reverse(transpose(tmp_img),1)
-;;   tmp_img = congrid(tmp_img,120,350,/INTERP)
-;   wset,view_win_num_y
-;   tv,tmp_img
-
-   ;now plot,x
-;   wset,view_win_num_x
-;   plot,img(*,y),/xstyle,title='X Axis'
-
-   ;now plot tof
-   ;get window numbers - tof
-;   view_tof = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_TOF_REF_L')
-;   WIDGET_CONTROL, view_tof, GET_VALUE = view_win_num_tof
-;   wset,view_win_num_tof
-;   ;remember that img is transposed, tmp_tof is not so this is why we switch x<->y
-;   pixelid=x*Nx+y     
-
-;   tof_arr=(tmp_tof[pixelid])
-;   plot, tof_arr,title='TOF Axis'	
-   ;plot,reform(data(*,y,x)),title='TOF Axis'
-
+;put number of counts in number_of_counts label position
+   text += " counts= " + strcompress(img(x,y))
+   full_text = "PixelID infos : " + text
+   widget_control, view_info, set_value=text, /append
+   widget_control, full_view_info, set_value=full_text, /append
 endif
 
 ;right mouse button
@@ -705,6 +664,11 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 
              endelse
              
+             id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
+             widget_control, id_save_selection, sensitive=1
+             id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
+             widget_control, id_save_selection, sensitive=1
+
              first_round = 1
              text = " Rigth click to select other corner"		
 
@@ -744,7 +708,6 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 	
                 getvals = 1
                 display_info = 1
-                goto, Exit_me
                 		
             endif
 	
@@ -756,74 +719,31 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 
    if (click_outside EQ 1) then begin
 
-       
-   endif else begin
-       
-       
-   endelse
-   
-endif
-
-Exit_me: ;exit
-
-end
-
-
-
-
-
-
-pro clear_selection_cb, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-(*global).selection_background = 0 
-(*global).selection_signal = 0
-
-SHOW_DATA_REF_L,event
-
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-; pro temporary, Event
-
-
 ;       if (display_info EQ 1) then begin
+       
+       x=lonarr(2)
+       y=lonarr(2)
 
-;          x=lonarr(2)
-;          y=lonarr(2)
+       if ((*global).selection_signal EQ 1) then begin
+          
+           full_text_selection_1 = "Selection infos:"
 
-;          x[0]=X1
-;          x[1]=X2
-;          y[0]=Y1
-;          y[1]=Y2
+           x[0]=(*global).x1_signal
+           x[1]=(*global).x2_signal
+           y[0]=(*global).y1_signal
+           y[1]=(*global).y2_signal
 
-;          ;**Create the labels that will receive the information from the pixelID selected
-;          ;*Initialization of text boxes
-;          pixel_label = 'The two corners are defined by:'
+          ;*Initialization of text boxes
+          full_text_selection_2 = 'The two corners are defined by:'
+          y_min = min(y)
+          y_max = max(y)
+          x_min = min(x)
+          x_max = max(x)
 
-;          y_min = min(y)
-;          y_max = max(y)
-;          x_min = min(x)
-;          x_max = max(x)
-
-;          y12 = y_max-y_min
-;          x12 = x_max-x_min
-;          total_pixel_inside = x12*y12
-;          total_pixel_outside = Nx*Ny - total_pixel_inside
+          y12 = y_max-y_min
+          x12 = x_max-x_min
+          total_pixel_inside = x12*y12
+          total_pixel_outside = Nx*Ny - total_pixel_inside
 
 ;          blank_line = ""
 
@@ -886,10 +806,9 @@ end
 ;          ;text = widget_text(, value=value_group, ysize=17)
 
 ;          view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
-;          WIDGET_CONTROL, view_info, SET_VALUE=""
-;          WIDGET_CONTROL, view_info, SET_VALUE=value_group, /APPEND
+           widget_control, full_view_info, set_value=full_text, /append
 
-;       endif 
+       endif 
 
 ;       ;enable save button once a selection is done
 ;       rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
@@ -903,5 +822,118 @@ end
 
 ; end
 ; ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   endif else begin
+       
+       
+   endelse
+   
+endif
+
+end
+
+
+
+
+
+
+pro clear_selection_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+value = (*global).selection_value
+
+if (value EQ 0) then begin
+    (*global).selection_signal = 0
+    text = "Clear signal selection"
+    full_text = "Clear signal selection"
+endif else begin
+    (*global).selection_background = 0 
+    text = "Clear background selection"
+    full_text = "Clear background selection"
+endelse
+
+id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
+widget_control, id_save_selection, sensitive=0
+
+if ((*global).selection_signal EQ 0 AND (*global).selection_background EQ 0) then begin
+    
+    id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
+    widget_control, id_save_selection, sensitive=0
+
+endif
+
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=full_text, /append
+
+SHOW_DATA_REF_L,event
+
+end
+
+
+
+
+pro save_selection_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+if ((*global).selection_signal EQ 1) then begin
+    if ((*global).selection_background EQ 1) then begin
+        full_text = "Signal and background selection have been saved"
+        text = "Signal & background selection - SAVED"
+        widget_control, view_info, set_value=text, /append
+        widget_control, full_view_info, set_value=full_text, /append
+    endif else begin
+        full_text = "Signal selection has been saved"
+        text = "Signal selection - SAVED"
+        widget_control, view_info, set_value=text, /append
+        widget_control, full_view_info, set_value=full_text, /append
+    endelse
+endif else begin
+    if ((*global).selection_background EQ 1) then begin
+        full_text = "Background selection has been saved"
+        text = "Background selection - SAVED"
+        widget_control, view_info, set_value=text, /append
+        widget_control, full_view_info, set_value=full_text, /append
+    endif 
+endelse
+
+end
+
+
+
+
+
+
+
+
+
+
+; pro temporary, Event
+
 
 
