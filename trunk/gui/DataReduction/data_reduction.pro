@@ -57,6 +57,18 @@ case Event.id of
               CTOOL_REF_L, Event
         end
         
+;signal or background selection zone
+    widget_info(wWidget, FIND_BY_UNAME='selection_list_group'): begin
+        selection_list_group_cb, Event
+    end
+
+;draw_interaction
+    Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
+        if( Event.type eq 0 )then $
+          selection, Event
+    end
+
        else:
        
            endcase
@@ -180,6 +192,7 @@ global = ptr_new({$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
+                   file_opened          : 0,$
                    find_nexus           : 0L,$
                    full_histo_mapped_name : '',$
                    full_nexus_name      : '',$
@@ -191,6 +204,7 @@ global = ptr_new({$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
                    run_number		: '',$
+                   selection_value      : 0,$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    ucams                : user $
@@ -243,7 +257,9 @@ display_data_base = widget_draw(MAIN_BASE,$
                                 yoffset=50,$
                                 scr_xsize=256,$
                                 scr_ysize=304,$
-                                uname='display_data_base')
+                                uname='display_data_base',$
+                                retain=2,$
+                                /BUTTON_EVENTS,/MOTION_EVENTS)
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
@@ -267,6 +283,7 @@ selection_list_group = CW_BGROUP(select_signal_base,$
                                  SET_VALUE=0.0,$
                                  row=1,$
                                  UNAME='selection_list_group')
+
 clear_selection_button = widget_button(select_signal_base,$
                                        uname='clear_selection_button',$
                                               xoffset=5,$
