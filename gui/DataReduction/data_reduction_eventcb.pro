@@ -231,6 +231,9 @@ full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 id_run_number = widget_info(Event.top, FIND_BY_UNAME='nexus_run_number_box')
 widget_control, id_run_number, get_value=run_number
 
+;erase all displays
+erase_displays, Event
+
 if (run_number EQ '') then begin
 
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
@@ -280,8 +283,14 @@ end
 
 
 
+pro erase_displays, Event
 
+id_draw = widget_info(Event.top, find_by_uname='display_data_base')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
 
+end
 
 
 PRO dump_binary_data, Event, full_nexus_name
@@ -395,6 +404,12 @@ img=transpose(img)
 ;now turn hourglass back off
 widget_control,hourglass=0
 
+if (*global).pass EQ 0 then begin
+;load the default color table on first pass thru SHOW_DATA
+    loadct,(*global).ct
+    (*global).pass = 1          ;clear the flag...
+endif
+
 ;put image data in main draw window
 id_draw = widget_info(Event.top, find_by_uname='display_data_base')
 widget_control, id_draw, get_value=id_value
@@ -409,6 +424,57 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 text = "...Done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+pro EXIT_PROGRAM_REF_L, Event
+
+widget_control,Event.top,/destroy
+
+end
+
+
+
+
+
+
+pro CTOOL_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;xloadct,/MODAL,GROUP=id
+xloadct,/modal,group=id
+
+SHOW_DATA_REF_L,event
+
+end
+
+
+
+
+
+pro SHOW_DATA_REF_L,event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get window numbers
+id_draw = widget_info(Event.top, find_by_uname='display_data_base')
+WIDGET_CONTROL, id_draw, GET_VALUE = id
+
+;Decomposed=0 causes the least-significant 8 bits of the color index value
+	;to be interpreted as a PseudoColor index.
+DEVICE, DECOMPOSED = 0
+
+wset, id
+erase
+tvscl,(*(*global).img_ptr)
+print, "I'm here"
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
