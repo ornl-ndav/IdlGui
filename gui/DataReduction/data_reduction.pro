@@ -264,16 +264,16 @@ global = ptr_new({$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-case instrument OF
-    0: begin ;REF_L
-        (*global).Nx = 304L
-        (*global).Ny = 256L
-    end
-    1: begin ;REF_M
-        (*global).Nx = 256L
-        (*global).Ny = 304L
-    end
-endcase
+;case instrument OF
+;    0: begin ;REF_L
+(*global).Nx = 304L
+(*global).Ny = 256L
+;    end
+;    1: begin ;REF_M
+;        (*global).Nx = 256L
+;        (*global).Ny = 304L
+;    end
+;endcase
 
 (*global).output_path = (*global).output_path + user + "/"
 
@@ -594,7 +594,7 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1000,$
+                         SCR_XSIZE=1200,$
                          SCR_YSIZE=450,$
                          XOFFSET=250,$
                          YOFFSET=22,$
@@ -641,16 +641,9 @@ global = ptr_new({$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-case instrument OF
-    0: begin ;REF_L
-        (*global).Nx = 304L
-        (*global).Ny = 256L
-    end
-    1: begin ;REF_M
-        (*global).Nx = 256L
-        (*global).Ny = 304L
-    end
-endcase
+(*global).Nx = 256L
+(*global).Ny = 304L
+
 
 (*global).output_path = (*global).output_path + user + "/"
 
@@ -658,48 +651,308 @@ endcase
 nexus_run_number_base = widget_base(MAIN_BASE,$
                                     xoffset=5,$
                                     yoffset=5,$
-                                    scr_xsize=253,$
+                                    scr_xsize=300,$
                                     scr_ysize=40,$
-                                   frame=1)
+                                    frame=1)
 nexus_run_number_title = widget_label(nexus_run_number_base,$
                                       xoffset=5,$
                                       yoffset=10,$
                                       value='Run number')
-nexus_run_number_box = widget_text(nexus_run_number_base,$
+nexus_run_number_box_REF_M = widget_text(nexus_run_number_base,$
                                    xoffset=80,$
                                    yoffset=5,$
                                    /editable,$
                                    /align_left,$
                                    scr_xsize=80,$
                                    scr_ysize=30,$
-                                   uname='nexus_run_number_box')
-nexus_run_number_go = widget_button(nexus_run_number_base,$
+                                   uname='nexus_run_number_box_REF_M')
+nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
                                     xoffset=180,$
                                     yoffset=7,$
+                                    scr_xsize=100,$
                                     value='O P E N',$
-                                    uname='nexus_run_number_go')
+                                    uname='nexus_run_number_go_REF_M')
 
 ;BOTTOM LEFT BOX - DISPLAY DATA
-display_data_base = widget_draw(MAIN_BASE,$
+display_data_base_REF_M = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
-                                yoffset=50,$
+                                yoffset=70,$  
                                 scr_xsize=304,$
                                 scr_ysize=256,$
-                                uname='display_data_base',$
+                                uname='display_data_base_REF_M',$
                                 retain=2,$
                                 /BUTTON_EVENTS,/MOTION_EVENTS)
 
-FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
+
+;SELECT SIGNAL and BACKGROUND INTERFACE
+select_signal_base = widget_base(MAIN_BASE,$
+                                 xoffset=5,$
+                                 yoffset=360,$
+                                 scr_xsize=300,$
+                                 scr_ysize=70,$
+                                 frame=1)
+selection_title = widget_label(select_signal_base,$
+                               xoffset=5,$
+                               yoffset=9,$
+                               value='Selection: ')
+selection_list = ['Signal   ',$
+                  'Background']
+selection_list_group_REF_M = CW_BGROUP(select_signal_base,$ 
+                                 selection_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=100,$
+                                 YOFFSET=3,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 UNAME='selection_list_group_REF_M')
+
+clear_selection_button_REF_M = widget_button(select_signal_base,$
+                                       uname='clear_selection_button_REF_M',$
+                                       xoffset=15,$
+                                       yoffset=35,$
+                                       scr_xsize=120,$
+                                       value='CLEAR SELECTION',$
+                                       sensitive=0)
+save_selection_button_REF_M = widget_button(select_signal_base,$
+                                      uname='save_selection_button_REF_M',$
+                                      xoffset=155,$
+                                      yoffset=35,$
+                                      scr_xsize=120,$
+                                      value='SAVE SELECTION',$
+                                      sensitive=0)
+
+
+
+;data_reduction and other_plots tab
+;DATA REDUCTION and PLOTS BASE
+xsize_of_tabs = 730
+ysize_of_tabs = 430
+data_reduction_plots_base = widget_base(MAIN_BASE,$
+                                        xoffset=315,$
+                                        yoffset=5,$
+                                        scr_xsize=xsize_of_tabs,$
+                                        scr_ysize=ysize_of_tabs)
+
+data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                location=0,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                scr_xsize=xsize_of_tabs,$
+                                scr_ysize=ysize_of_tabs)
+  
+;data reduction tab
+first_tab_base = widget_base(data_reduction_tab,$
+                                  uname='first_tab_base',$
+                                  TITLE='Data Reduction',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+data_reduction_base = widget_base(first_tab_base,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  scr_xsize=305,$
+                                  scr_ysize=390,$
+                                  frame=1)
+
+signal_pid_file_button_REF_M = widget_button(data_reduction_base,$
+                                      uname='signal_pid_file_button_REF_M',$
+                                      xoffset=5,$
+                                      yoffset=7,$
+                                      value='Signal Pid file')
+signal_pid_file_text_REF_M = widget_text(data_reduction_base,$
+                                   uname='signal_pid_file_text_REF_M',$
+                                   xoffset=110,$
+                                   yoffset=5,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable)
+background_title = widget_label(data_reduction_base,$
+                                xoffset=8,$
+                                yoffset=47,$
+                                value='Background:')
+background_list = ['Yes',$
+                  'No']
+background_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
+                                  background_list,$
+                                  /exclusive,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=100,$
+                                  YOFFSET=40,$
+                                  SET_VALUE=0.0,$
+                                  row=1,$
+                                  uname='background_list_group_REF_M')
+
+background_file_base = widget_base(data_reduction_base,$
+                                   uname='background_file_base',$
+                                   xoffset=0,$
+                                   yoffset=75,$
+                                   scr_xsize=xsize_of_tabs,$
+                                   scr_ysize=40,$
+                                   frame=0)
+
+background_file_button_REF_M = widget_button(background_file_base,$
+                                       uname='background_file_button_REF_M',$
+                                       xoffset=5,$
+                                       yoffset=7,$
+                                       value='Background file')
+
+background_file_text_REF_M = widget_text(background_file_base,$
+                                   uname='background_file_text_REF_M',$
+                                   xoffset=110,$
+                                   yoffset=5,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable)
+
+normalization_label = widget_label(data_reduction_base,$
+                                   xoffset=5,$
+                                   yoffset=130,$
+                                   value='Normalization - Run number:')
+normalization_text = widget_text(data_reduction_base,$
+                                 xoffset=180,$
+                                 yoffset=123,$
+                                 scr_xsize=120,$
+                                 value='',$
+                                 uname='normalization_text',$
+                                /editable,$
+                                /align_left)
+
+runs_to_process_label = widget_label(data_reduction_base,$
+                                     xoffset=5,$
+                                     yoffset=172,$
+                                     value='Runs #')
+runs_to_process_text_REF_M = widget_text(data_reduction_base,$
+                                   xoffset=50,$
+                                   yoffset=165,$
+                                   scr_xsize=250,$
+                                   value='',$
+                                   uname='runs_to_process_text_REF_M',$
+                                   /editable,$
+                                   /align_left)
+
+intermediate_file_label = widget_label(data_reduction_base,$
+                                       xoffset=5,$
+                                       yoffset=206,$
+                                       value='Intermediate file output:')
+
+intermediate_file_output_list = ['Yes',$
+                                 'No']
+intermediate_file_output_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
+                                                intermediate_file_output_list,$
+                                                /exclusive,$
+                                                /RETURN_NAME,$
+                                                XOFFSET=170,$
+                                                YOFFSET=200,$
+                                                SET_VALUE=1.0,$
+                                                row=1,$
+                                                uname='intermediate_file_output_list_group_REF_M')
+
+start_data_reduction_button_REF_M = widget_button(data_reduction_base,$
+                                            xoffset=5,$
+                                            yoffset=232,$
+                                            scr_xsize=295,$
+                                            value='START DATA REDUCTION',$
+                                            uname='start_data_reduction_button_REF_M')
+
+;info text box 
+info_text_REF_M = widget_text(data_reduction_base,$
+                        xoffset=5,$
+                        yoffset=265,$
+                        scr_xsize=295,$
+                        scr_ysize=120,$
+                        /scroll,$
+                        /wrap,$
+                       uname='info_text_REF_M')
+
+data_reduction_plot_REF_M = widget_draw(first_tab_base,$
+                                  xoffset=315,$
+                                  yoffset=5,$
+                                  scr_xsize=405,$
+                                  scr_ysize=393,$
+                                  uname='data_reduction_plot_REF_M')
+
+
+
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                         uname='log_book_base',$
+                         TITLE='Log book',$
+                         XOFFSET=0,$
+                         YOFFSET=0)
+
+log_book_text_REF_M = widget_text(log_book_base,$
+                            uname='log_book_text_REF_M',$
+                            scr_xsize=720,$
+                            scr_ysize=395,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            /scroll,$
+                            /wrap)
+
+
+;selection boxes info tab
+fourth_tab_base = widget_base(data_reduction_tab,$
+                                  uname='fourth_tab_base',$
+                                  TITLE='Selection infos',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+signal_info_label = widget_label(fourth_tab_base,$
+                                 value='S I G N A L',$
+                                 xoffset=150,$
+                                 yoffset=5)
+
+signal_info_REF_M = widget_text(fourth_tab_base,$
+                          uname='signal_info_REF_M',$
+                          xoffset=5,$
+                          yoffset=25,$
+                          scr_xsize=350,$
+                          scr_ysize=375,$
+                          /wrap,$
+                         /scroll)
+
+background_info_label = widget_label(fourth_tab_base,$
+                                     value='B A C K G R O U N D',$
+                                     xoffset=500,$
+                                     yoffset=5)
+
+background_info_REF_M = widget_text(fourth_tab_base,$
+                              uname='background_info_REF_M',$
+                              xoffset=370,$
+                              yoffset=25,$
+                              scr_xsize=350,$
+                              scr_ysize=375,$
+                              /wrap,$
+                             /scroll)
+
+;other plots tab
+other_plots_base = widget_base(data_reduction_tab,$
+                               uname='other_plots_base',$
+                               TITLE='Extra plots',$
+                               XOFFSET=0,$
+                               YOFFSET=0)
+
+
+FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                   UNAME='FILE_MENU_REF_M',$
                                   /MENU,$
                                   VALUE='MENU')
 
-CTOOL_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU_REF_M'  $
+CTOOL_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU_REF_M'  $
                                  ,VALUE='Color Tool...')
 
 
-EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_M'  $
+EXIT_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='EXIT_MENU_REF_M'  $
                                 ,VALUE='Exit')
+
+
+
+
+
+
+
 
 
 
