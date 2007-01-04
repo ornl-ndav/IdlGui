@@ -683,8 +683,8 @@ nexus_run_number_go = widget_button(nexus_run_number_base,$
 display_data_base = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
                                 yoffset=50,$
-                                scr_xsize=256,$
-                                scr_ysize=304,$
+                                scr_xsize=304,$
+                                scr_ysize=256,$
                                 uname='display_data_base',$
                                 retain=2,$
                                 /BUTTON_EVENTS,/MOTION_EVENTS)
