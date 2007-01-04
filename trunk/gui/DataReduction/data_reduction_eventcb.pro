@@ -445,22 +445,6 @@ end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
-pro EXIT_PROGRAM_REF_L, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;remove temporary file
-tmp_folder = (*global).tmp_folder
-if (tmp_folder NE '') then begin
-    cmd_remove = "rm -r " + tmp_folder
-    spawn, cmd_remove
-endif
-
-widget_control,Event.top,/destroy
-
-end
 
 
 
@@ -726,114 +710,119 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 
        if ((*global).selection_signal EQ 1) then begin
           
-           full_text_selection_1 = "Selection infos:"
+          if (signal_or_background EQ 0) then begin
 
-           x[0]=(*global).x1_signal
-           x[1]=(*global).x2_signal
-           y[0]=(*global).y1_signal
-           y[1]=(*global).y2_signal
+              x[0]=(*global).x1_signal
+              x[1]=(*global).x2_signal
+              y[0]=(*global).y1_signal
+              y[1]=(*global).y2_signal
+              
+          endif else begin
+              
+              x[0]=(*global).x1_back
+              x[1]=(*global).x2_back
+              y[0]=(*global).y1_back
+              y[1]=(*global).y2_back
+              
+          endelse
 
-          ;*Initialization of text boxes
-          full_text_selection_2 = 'The two corners are defined by:'
-          y_min = min(y)
-          y_max = max(y)
-          x_min = min(x)
-          x_max = max(x)
-
-          y12 = y_max-y_min
-          x12 = x_max-x_min
-          total_pixel_inside = x12*y12
-          total_pixel_outside = Nx*Ny - total_pixel_inside
-
-;          blank_line = ""
-
-;          data = (*(*global).data_ptr)
-;          simg = (*(*global).img_ptr)
-
-;          starting_id = (y_min*304+x_min)
-;          starting_id_string = strcompress(starting_id)
+                                ;*Initialization of text boxes
+           full_text_selection_1 = ''
+           full_text_selection_2 = 'The two corners are defined by:'
+           
+           y_min = min(y)
+           y_max = max(y)
+           x_min = min(x)
+           x_max = max(x)
+           
+           y12 = y_max-y_min
+           x12 = x_max-x_min
+           total_pixel_inside = x12*y12
+           total_pixel_outside = Nx*Ny - total_pixel_inside
+           
+           simg = (*(*global).img_ptr)
+           
+           starting_id = (y_min*304+x_min)
+           starting_id_string = strcompress(starting_id)
 ;          (*global).starting_id_x = x_min
 ;          (*global).starting_id_y = y_min
-
-;          ending_id = (y_max*304+x_max)
-;          ending_id_string = strcompress(ending_id)
+           
+           ending_id = (y_max*304+x_max)
+           ending_id_string = strcompress(ending_id)
 ;          (*global).ending_id_x = x_max
 ;          (*global).ending_id_y = y_max
+           
+          full_text_selection_3 = '    Bottom left corner:  '
+          full_text_selection_3_1 = '      pixelID#: ' + starting_id_string + $
+            ' (x= '+strcompress(x_min,/rem) + $
+            '; y= '+strcompress(y_min,/rem) + $
+            ' intensity= ' + strcompress(simg[x_min,y_min],/rem)+')'
+          
+          full_text_selection_4 = '    Top right corner:  '
+          full_text_selection_4_1 = '      pixelID#: ' + ending_id_string + $
+            ' (x= '+strcompress(x_max,/rem) + $
+            '; y= '+strcompress(y_max,/rem) + $
+            ' intensity= ' + strcompress(simg[x_max,y_max],/rem)+')'
+          
+                                ;calculation of inside region total counts
+          inside_total = total(simg(x_min:x_max, y_min:y_max))
+          outside_total = total(simg)-inside_total
+          inside_average = inside_total/total_pixel_inside
+          outside_average = outside_total/total_pixel_outside
+          
+          full_text_selection_5 = ""
+          full_text_selection_6 = 'General infos about selection: '
+          full_text_selection_7 = "   - Number of pixelIDs inside the surface: " + $
+            strcompress(x12*y12,/rem)
+          full_text_selection_8 = "   - Selection width: " + strcompress(x12,/rem) + $
+            ' pixels'
+          full_text_selection_9 = "   - Selection height: " + strcompress(y12,/rem) + $
+            ' pixels
+          full_text_selection_10 = "   - Total inside selection counts: " + $
+            strcompress(inside_total,/rem)
+          full_text_selection_11 = ""
+          full_text_selection_12 = "   - Total outside selection counts: " + $
+            strcompress(outside_total,/rem)
+          full_text_selection_13 = "   - Average inside selection counts: " + $
+            strcompress(inside_average,/rem)
+          full_text_selection_14 = "   - Average outside selection counts: " + $
+            strcompress(outside_average,/rem) 
 
-;          first_point = '  pixelID#: '+ starting_id_string +' (x= '+strcompress(x_min,/rem)+$
-;           '; y= '+strcompress(y_min,/rem)
-;          first_point_2= '           intensity= '+strcompress(simg[x_min,y_min],/rem)+')'
-;          second_point = '  pixelID#: '+ ending_id_string +' (x= '+strcompress(x_max,/rem)+$
-;           '; y= '+strcompress(y_max,/rem)+'
-;          second_point_2= '           intensity= '+strcompress(simg[x_max,y_max],/rem)+')'
+          value_group = [full_text_selection_2,$
+                         full_text_selection_1,$
+                         full_text_selection_3,$
+                         full_text_selection_3_1,$
+                         full_text_selection_4,$
+                         full_text_selection_4_1,$
+                         full_text_selection_5,$
+                         full_text_selection_6,$
+                         full_text_selection_1,$
+                         full_text_selection_7,$
+                         full_text_selection_8,$
+                         full_text_selection_9,$
+                         full_text_selection_10,$
+                         full_text_selection_11,$
+                         full_text_selection_12,$
+                         full_text_selection_13,$
+                         full_text_selection_14]
 
-;          ;calculation of inside region total counts
-;          inside_total = total(simg(x_min:x_max, y_min:y_max))
-;          outside_total = total(simg)-inside_total
-;          inside_average = inside_total/total_pixel_inside
-;          outside_average = outside_total/total_pixel_outside
-;          selection_label= 'The characteristics of the selection are: '
-;          number_pixelID = "  Number of pixelIDs inside the surface: "+$
-;            strcompress(x12*y12,/rem)
-;          x_wide = '  Selection is '+strcompress(x12,/rem)+' pixels wide in the x direction'
-;          y_wide = '  Selection is '+strcompress(y12,/rem)+' pixels wide in the y direction'
-	
-;          total_counts = 'Total counts:'
-;          total_inside_region = ' Inside region : ' +strcompress(inside_total,/rem)
-;          total_outside_region = ' Outside region : ' +strcompress(outside_total,/rem)
-;          average_counts = 'Average counts:'
-;          average_inside_region = ' Inside region : ' +strcompress(inside_average,/rem)
-;          average_outside_region = ' Outside region : ' +strcompress(outside_average,/rem) 
 
-;          value_group = [selection_label,$
-;                         number_pixelid,$
-;                         x_wide,$
-;                         y_wide,$
-;                         blank_line,$
-;                         total_counts,$
-;                         total_inside_region,$
-;                         total_outside_region,$
-;                         average_counts,$
-;                         average_inside_region,$
-;                         average_outside_region,$
-;                         blank_line,$
-;                         pixel_label,$
-;                         first_point,$
-;                         first_point_2,$
-;                         second_point,$
-;                         second_point_2]
+;check if selection is for signal of for background
+          if (signal_or_background EQ 0) then begin
+              view_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
+              WIDGET_CONTROL, view_info, SET_VALUE=value_group
+          endif else begin
+              view_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
+              WIDGET_CONTROL, view_info, SET_VALUE=value_group
+          endelse
+          
 
-;          ;text = widget_text(, value=value_group, ysize=17)
+;       endif 
 
-;          view_info = widget_info(Event.top,FIND_BY_UNAME='PIXELID_INFOS_REF_L')
-           widget_control, full_view_info, set_value=full_text, /append
-
-       endif 
-
-;       ;enable save button once a selection is done
-;       rb_id=widget_info(Event.top, FIND_BY_UNAME='SAVE_BUTTON_REF_L')
-;       widget_control,rb_id,sensitive=1
-
-;    endelse ;click_outside
-
-;    click_outside = 0
-
-; endif
+ endif
 
 ; end
 ; ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
-
-
-
-
-
-
-
-
-
 
 
    endif else begin
@@ -865,10 +854,12 @@ if (value EQ 0) then begin
     (*global).selection_signal = 0
     text = "Clear signal selection"
     full_text = "Clear signal selection"
+    selection_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
 endif else begin
     (*global).selection_background = 0 
     text = "Clear background selection"
     full_text = "Clear background selection"
+    selection_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
 endelse
 
 id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
@@ -883,6 +874,7 @@ endif
 
 widget_control, view_info, set_value=text, /append
 widget_control, full_view_info, set_value=full_text, /append
+widget_control, selection_info, set_value=''
 
 SHOW_DATA_REF_L,event
 
@@ -926,6 +918,37 @@ end
 
 
 
+pro background_list_group_eventcb, Event
+
+;check value of selection
+id = widget_info(Event.top, FIND_BY_UNAME='background_list_group')
+WIDGET_CONTROL, id, GET_VALUE = value
+
+back_info = widget_info(Event.top, find_by_uname='background_file_base')
+
+if (value EQ 0) then begin 
+    widget_control, back_info, map=1
+endif else begin
+    widget_control, back_info, map=0
+endelse
+
+end
+
+
+
+pro intermediate_file_output_list_group_eventcb, Event
+
+;check value of intermediate file output
+id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
+widget_control, id, get_value = value
+
+if (value EQ 0) then begin ;display other plots
+
+endif else begin ;remove other plots 
+
+endelse
+
+end 
 
 
 
@@ -933,7 +956,38 @@ end
 
 
 
-; pro temporary, Event
+
+pro EXIT_PROGRAM_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;remove temporary file
+tmp_folder = (*global).tmp_folder
+if (tmp_folder NE '') then begin
+    cmd_remove = "rm -r " + tmp_folder
+    spawn, cmd_remove
+endif
+
+widget_control,Event.top,/destroy
+
+end
 
 
+pro EXIT_PROGRAM_REF_M, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;remove temporary file
+tmp_folder = (*global).tmp_folder
+if (tmp_folder NE '') then begin
+    cmd_remove = "rm -r " + tmp_folder
+    spawn, cmd_remove
+endif
+
+widget_control,Event.top,/destroy
+
+end
