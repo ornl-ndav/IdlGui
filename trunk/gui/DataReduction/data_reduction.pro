@@ -218,7 +218,7 @@ instrument_list = ['REF_L', 'REF_M']
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1000,$
-                         SCR_YSIZE=450,$
+                         SCR_YSIZE=440,$
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -421,12 +421,12 @@ background_file_button = widget_button(background_file_base,$
                                        uname='background_file_button',$
                                        xoffset=5,$
                                        yoffset=7,$
-                                       value='Background file')
+                                       value='Back. Pid file')
 
 background_file_text = widget_text(background_file_base,$
                                    uname='background_file_text',$
                                    xoffset=110,$
-                                   yoffset=5,$
+                                   yoffset=4,$
                                    scr_xsize=190,$
                                    value='',$
                                    /align_left,$
@@ -501,22 +501,6 @@ data_reduction_plot = widget_draw(first_tab_base,$
 
 
 
-;log book tab
-log_book_base = widget_base(data_reduction_tab,$
-                         uname='log_book_base',$
-                         TITLE='Log book',$
-                         XOFFSET=0,$
-                         YOFFSET=0)
-
-log_book_text = widget_text(log_book_base,$
-                            uname='log_book_text',$
-                            scr_xsize=720,$
-                            scr_ysize=395,$
-                            xoffset=5,$
-                            yoffset=5,$
-                            /scroll,$
-                            /wrap)
-
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$
@@ -561,6 +545,23 @@ other_plots_base = widget_base(data_reduction_tab,$
                                YOFFSET=0)
 
 
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                         uname='log_book_base',$
+                         TITLE='Log book',$
+                         XOFFSET=0,$
+                         YOFFSET=0)
+
+log_book_text = widget_text(log_book_base,$
+                            uname='log_book_text',$
+                            scr_xsize=720,$
+                            scr_ysize=395,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            /scroll,$
+                            /wrap)
+
+
 FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
@@ -594,8 +595,8 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1200,$
-                         SCR_YSIZE=450,$
+                         SCR_XSIZE=1050,$
+                         SCR_YSIZE=442,$
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -754,117 +755,258 @@ data_reduction_base = widget_base(first_tab_base,$
                                   scr_ysize=390,$
                                   frame=1)
 
-signal_pid_file_button_REF_M = widget_button(data_reduction_base,$
-                                      uname='signal_pid_file_button_REF_M',$
-                                      xoffset=5,$
-                                      yoffset=7,$
-                                      value='Signal Pid file')
-signal_pid_file_text_REF_M = widget_text(data_reduction_base,$
-                                   uname='signal_pid_file_text_REF_M',$
-                                   xoffset=110,$
-                                   yoffset=5,$
-                                   scr_xsize=190,$
-                                   value='',$
-                                   /align_left,$
+
+;Wavelength part (min, max, width)
+wavelength_label = widget_label(data_reduction_base,$
+                                uname='wavelength_label',$
+                                xoffset=10,$
+                                yoffset=3,$
+                                value='Wavelength')
+
+WAVELENGTH_base = widget_base(data_reduction_base,$
+                              UNAME='WAVELENGTH_LABEL',$
+                              XOFFSET=5,$
+                              YOFFSET=12,$
+                              scr_xsize=150,$
+                              scr_ysize=115,$
+                              frame=1)
+
+wavelength_frame_x_offset = 5
+wavelength_frame_y_offset = 20 
+
+;min
+min_y_offset = wavelength_frame_y_offset
+min_x_offset = wavelength_frame_x_offset
+WAVELENGTH_MIN_LABEL= widget_label(wavelength_base,$
+                                   UNAME='WAVELENGTH_MIN_LABEL',$
+                                   XOFFSET=min_x_offset,$
+                                   YOFFSET=min_y_offset,$
+                                   VALUE="min")
+
+WAVELENGTH_MIN_TEXT = widget_text(wavelength_base,$
+                                  UNAME='WAVELENGTH_MIN_TEXT',$
+                                  XOFFSET=min_x_offset+30,$
+                                  YOFFSET=min_y_offset-10,$
+                                  SCR_XSIZE=50,$
+                                  VALUE='0', /editable)
+
+WAVELENGTH_MIN_A_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_MIN_A_LABEL',$
+                                     XOFFSET=min_x_offset+80,$
+                                     YOFFSET=min_y_offset,$
+                                     VALUE="Angstroms")
+
+; max
+max_y_offset = wavelength_frame_y_offset+30
+max_x_offset = wavelength_frame_x_offset   
+WAVELENGTH_MAX_LABEL= widget_label(wavelength_base,$
+                                   UNAME='WAVELENGTH_MAX_LABEL',$
+                                   XOFFSET=max_x_offset,$
+                                   YOFFSET=max_y_offset,$
+                                   VALUE="max")
+
+WAVELENGTH_MAX_TEXT = widget_text(wavelength_base,$
+                                  UNAME='WAVELENGTH_MAX_TEXT',$
+                                  XOFFSET=max_x_offset+30,$
+                                  YOFFSET=max_y_offset-5,$
+                                  SCR_XSIZE=50,$
+                                  VALUE='10', /editable)
+
+WAVELENGTH_MAX_A_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_MAX_A_LABEL',$
+                                     XOFFSET=max_x_offset+80,$
+                                     YOFFSET=max_y_offset,$
+                                     VALUE="Angstroms")
+
+; width
+width_y_offset =  wavelength_frame_y_offset +65
+width_x_offset = wavelength_frame_x_offset - 10
+WAVELENGTH_WIDTH_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_WIDTH_LABEL',$
+                                     XOFFSET=width_x_offset,$
+                                     YOFFSET=width_y_offset,$
+                                     VALUE="width")
+
+WAVELENGTH_WIDTH_TEXT = widget_text(wavelength_base,$
+                                    UNAME='WAVELENGTH_WIDTH_TEXT',$
+                                    XOFFSET=width_x_offset+40,$
+                                    YOFFSET=width_y_offset-5,$
+                                    SCR_XSIZE=50,$
+                                    VALUE='0.1', /editable)
+
+WAVELENGTH_WIDTH_A_LABEL= widget_label(wavelength_base,$
+                                       UNAME='WAVELENGTH_WIDTH_A_LABEL',$
+                                       XOFFSET=width_x_offset+90,$
+                                       YOFFSET=width_y_offset,$
+                                       VALUE="Angstroms")
+
+;detector angle base
+detector_label = widget_label(data_reduction_base,$
+                              xoffset=165,$
+                              yoffset=3,$
+                              value='Detector angle')
+
+detector_base = widget_base(data_reduction_base,$
+                            uname='detector_base',$
+                            xoffset=160,$
+                            yoffset=12,$
+                            scr_xsize=135,$
+                            scr_ysize=75,$
+                            frame=1)
+
+DETECTOR_ANGLE_VALUE = widget_text(detector_base,$
+                                   UNAME="DETECTOR_ANGLE_VALUE",$
+                                   XOFFSET=0,$
+                                   YOFFSET=10,$
+                                   SCR_XSIZE=50,$
+                                   VALUE='0',$
                                    /editable)
+
+DETECTOR_ANGLE_ERR = widget_text(detector_base,$
+                                 UNAME="DETECTOR_ANGLE_ERR",$
+                                 XOFFSET=80,$
+                                 YOFFSET=10,$
+                                 SCR_XSIZE=50,$
+                                 VALUE='0',$
+                                 /editable)
+
+DETECTOR_ANGLE_PLUS_MINUS = widget_label(detector_base,$
+                                         UNAME='DETECTOR_ANGLE_PLUS_MINUS',$
+                                         XOFFSET=55,$
+                                         YOFFSET=15,$
+                                         VALUE='+/-')
+
+angle_units = ["radians","degres"]
+DETECTOR_ANGLE_UNITS = widget_droplist(detector_base,$
+                                       UNAME='DETECTOR_ANGLE_UNITS',$
+                                       XOFFSET=15,$
+                                       YOFFSET=40,$
+                                       VALUE=angle_units, $
+                                       title='')
+
+;signal Pid file
+signal_pid_base = widget_base(data_reduction_base,$
+                              uname='signal_pid_base',$
+                              xoffset=160,$
+                              yoffset=95,$
+                              frame=1)
+
+signal_pid_button = widget_button(signal_pid_base,$
+                                  uname='signal_pid_button',$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                 value='Signal - Pid file',$
+                                 scr_xsize=135)
+
+signal_pid_text = widget_text(signal_pid_base,$
+                              uname='signal_pid_text',$
+                              xoffset=0,$
+                              yoffset=25,$
+                              scr_xsize=135,$
+                              /editable)
+                              
+;background Pid file
+back_y_offset = 135
 background_title = widget_label(data_reduction_base,$
-                                xoffset=8,$
-                                yoffset=47,$
+                                xoffset=3,$
+                                yoffset=back_y_offset,$
                                 value='Background:')
 background_list = ['Yes',$
-                  'No']
+                   'No']
 background_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
-                                  background_list,$
-                                  /exclusive,$
-                                  /RETURN_NAME,$
-                                  XOFFSET=100,$
-                                  YOFFSET=40,$
-                                  SET_VALUE=0.0,$
-                                  row=1,$
-                                  uname='background_list_group_REF_M')
+                                        background_list,$
+                                        /exclusive,$
+                                        /RETURN_NAME,$
+                                        XOFFSET=70,$
+                                        YOFFSET=back_y_offset-5,$
+                                        SET_VALUE=0.0,$
+                                        row=1,$
+                                        uname='background_list_group_REF_M')
 
 background_file_base = widget_base(data_reduction_base,$
                                    uname='background_file_base',$
                                    xoffset=0,$
-                                   yoffset=75,$
+                                   yoffset=back_y_offset+20,$
                                    scr_xsize=xsize_of_tabs,$
-                                   scr_ysize=40,$
                                    frame=0)
 
 background_file_button_REF_M = widget_button(background_file_base,$
-                                       uname='background_file_button_REF_M',$
-                                       xoffset=5,$
-                                       yoffset=7,$
-                                       value='Background file')
+                                             uname='background_file_button_REF_M',$
+                                             xoffset=3,$
+                                             yoffset=7,$
+                                             value='Background - Pid file')
 
 background_file_text_REF_M = widget_text(background_file_base,$
-                                   uname='background_file_text_REF_M',$
-                                   xoffset=110,$
-                                   yoffset=5,$
-                                   scr_xsize=190,$
-                                   value='',$
-                                   /align_left,$
-                                   /editable)
+                                         uname='background_file_text_REF_M',$
+                                         xoffset=155,$
+                                         yoffset=5,$
+                                         scr_xsize=143,$
+                                         value='',$
+                                         /align_left,$
+                                         /editable)
 
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
-                                   yoffset=130,$
+                                   yoffset=200,$
                                    value='Normalization - Run number:')
 normalization_text = widget_text(data_reduction_base,$
-                                 xoffset=180,$
-                                 yoffset=123,$
+                                 xoffset=178,$
+                                 yoffset=190,$
                                  scr_xsize=120,$
                                  value='',$
                                  uname='normalization_text',$
-                                /editable,$
-                                /align_left)
+                                 /editable,$
+                                 /align_left)
+
 
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=172,$
+                                     yoffset=231,$
                                      value='Runs #')
 runs_to_process_text_REF_M = widget_text(data_reduction_base,$
-                                   xoffset=50,$
-                                   yoffset=165,$
-                                   scr_xsize=250,$
-                                   value='',$
-                                   uname='runs_to_process_text_REF_M',$
-                                   /editable,$
-                                   /align_left)
+                                         xoffset=50,$
+                                         yoffset=221,$
+                                         scr_xsize=248,$
+                                         value='',$
+                                         uname='runs_to_process_text_REF_M',$
+                                         /editable,$
+                                         /align_left)
 
+;intermediate files/plots
 intermediate_file_label = widget_label(data_reduction_base,$
                                        xoffset=5,$
-                                       yoffset=206,$
+                                       yoffset=257,$
                                        value='Intermediate file output:')
 
-intermediate_file_output_list = ['Yes',$
-                                 'No']
+intermediate_file_output_list = ['Yes   ',$
+                                 'No   ']
 intermediate_file_output_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
-                                                intermediate_file_output_list,$
-                                                /exclusive,$
-                                                /RETURN_NAME,$
-                                                XOFFSET=170,$
-                                                YOFFSET=200,$
-                                                SET_VALUE=1.0,$
-                                                row=1,$
-                                                uname='intermediate_file_output_list_group_REF_M')
-
-start_data_reduction_button_REF_M = widget_button(data_reduction_base,$
-                                            xoffset=5,$
-                                            yoffset=232,$
-                                            scr_xsize=295,$
-                                            value='START DATA REDUCTION',$
-                                            uname='start_data_reduction_button_REF_M')
+                                                      intermediate_file_output_list,$
+                                                      /exclusive,$
+                                                      /RETURN_NAME,$
+                                                      XOFFSET=170,$
+                                                      YOFFSET=250,$
+                                                      SET_VALUE=1.0,$
+                                                      row=1,$
+                                                      uname='intermediate_file_output_list_group_REF_M')
+ start_data_reduction_button_REF_M = widget_button(data_reduction_base,$
+                                             xoffset=5,$
+                                             yoffset=283,$
+                                             scr_xsize=295,$
+                                             value='START DATA REDUCTION',$
+                                             uname='start_data_reduction_button_REF_M')
 
 ;info text box 
 info_text_REF_M = widget_text(data_reduction_base,$
                         xoffset=5,$
-                        yoffset=265,$
+                        yoffset=265+50,$
                         scr_xsize=295,$
-                        scr_ysize=120,$
+                        scr_ysize=70,$
                         /scroll,$
                         /wrap,$
                        uname='info_text_REF_M')
+
+
 
 data_reduction_plot_REF_M = widget_draw(first_tab_base,$
                                   xoffset=315,$
@@ -874,22 +1016,6 @@ data_reduction_plot_REF_M = widget_draw(first_tab_base,$
                                   uname='data_reduction_plot_REF_M')
 
 
-
-;log book tab
-log_book_base = widget_base(data_reduction_tab,$
-                         uname='log_book_base',$
-                         TITLE='Log book',$
-                         XOFFSET=0,$
-                         YOFFSET=0)
-
-log_book_text_REF_M = widget_text(log_book_base,$
-                            uname='log_book_text_REF_M',$
-                            scr_xsize=720,$
-                            scr_ysize=395,$
-                            xoffset=5,$
-                            yoffset=5,$
-                            /scroll,$
-                            /wrap)
 
 
 ;selection boxes info tab
@@ -933,6 +1059,31 @@ other_plots_base = widget_base(data_reduction_tab,$
                                TITLE='Extra plots',$
                                XOFFSET=0,$
                                YOFFSET=0)
+
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                         uname='log_book_base',$
+                         TITLE='Log book',$
+                         XOFFSET=0,$
+                         YOFFSET=0)
+
+log_book_text_REF_M = widget_text(log_book_base,$
+                            uname='log_book_text_REF_M',$
+                            scr_xsize=720,$
+                            scr_ysize=395,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            /scroll,$
+                            /wrap)
+
+
+
+
+
+
+
+
+
 
 
 FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
