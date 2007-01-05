@@ -160,6 +160,8 @@ return,tlb
 end
 
 
+
+
 ;main_realize of the front door interface (instrument selection)
 pro MAIN_REALIZE, wWidget
 
@@ -180,6 +182,9 @@ tv, image,0,0,/true
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 ;main_realize of main data_reduction display
@@ -216,6 +221,7 @@ end
 
 
 
+
 ;OPEN NEXUS FILE
 pro open_nexus_file, Event
 
@@ -235,12 +241,13 @@ id_run_number = widget_info(Event.top, FIND_BY_UNAME='nexus_run_number_box')
 widget_control, id_run_number, get_value=run_number
 
 ;erase all displays
-reset_and_erase_displays, Event
+reset_and_erase_displays, Event    
 
 if (run_number EQ '') then begin
 
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
     WIDGET_CONTROL, view_info, SET_VALUE=text
+    widget_control, full_view_info, set_value=text
     
 endif else begin
     
@@ -271,12 +278,12 @@ endif else begin
 ;dump binary data of NeXus file into tmp_working_path
         text = " - dump binary data......."
         WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
-        dump_binary_data, Event, full_nexus_name
+        dump_binary_data, Event, full_nexus_name       
         text = " - dump binary data.......done" 
         WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
 
 ;read and plot nexus file
-        read_and_plot_nexus_file, Event
+        read_and_plot_nexus_file, Event         ;remove_comments
 
 ;tell the program that data are displayed
         (*global).file_opened = 1
@@ -305,6 +312,9 @@ wset,id_value
 erase
 
 end
+
+
+
 
 
 PRO dump_binary_data, Event, full_nexus_name
@@ -399,7 +409,6 @@ Nimg = Nx*Ny
 Ntof = fs.size/(Nimg*4L)
 (*global).Ntof = Ntof           ;set back in global structure
 
-data_assoc_tof = assoc(u,lonarr(Ntof,Nx))
 data_assoc = assoc(u,lonarr(Ntof))
 
 ;make the image array
@@ -557,6 +566,8 @@ end
 ; \argument event (INPUT) 
 ;--------------------------------------------------------------------------
 pro selection, event
+
+print, "in selection"
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -933,6 +944,26 @@ endif else begin
 endelse
 
 end
+
+
+
+pro background_list_group_eventcb_REF_M, Event
+
+;check value of selection
+id = widget_info(Event.top, FIND_BY_UNAME='background_list_group_REF_M')
+WIDGET_CONTROL, id, GET_VALUE = value
+
+back_info = widget_info(Event.top, find_by_uname='background_file_base_REF_M')
+
+if (value EQ 0) then begin 
+    widget_control, back_info, map=1
+endif else begin
+    widget_control, back_info, map=0
+endelse
+
+end
+
+
 
 
 

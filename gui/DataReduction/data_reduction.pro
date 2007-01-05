@@ -12,69 +12,74 @@ case Event.id of
     end
     
 ;portal_go
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
+        USER_TEXT_CB, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+        WIDGET_control, id, GET_VALUE=instrument
+        ucams = get_ucams()
         
-        Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
-            USER_TEXT_CB, Event
-        end
-
-        Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
-            WIDGET_control, id, GET_VALUE=instrument
-            ucams = get_ucams()
-            
-            if (check_access(Event, instrument, ucams) NE -1) then begin
-                id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-                WIDGET_CONTROL, id, /destroy
-                if (instrument EQ 0) then begin
-                    wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
-                endif else begin
-                    wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
-                endelse
-                
+        if (check_access(Event, instrument, ucams) NE -1) then begin
+            id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            WIDGET_CONTROL, id, /destroy
+            if (instrument EQ 0) then begin
+                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
             endif else begin
-                image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
-                id = widget_info(wWidget,find_by_uname="logo_message_draw")
-                WIDGET_CONTROL, id, GET_VALUE=id_value
-                wset, id_value
-                image = read_bmp(image_logo)
-                tv, image,0,0,/true
+                wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
             endelse
             
-        end
+        endif else begin
+            image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
+            id = widget_info(wWidget,find_by_uname="logo_message_draw")
+            WIDGET_CONTROL, id, GET_VALUE=id_value
+            wset, id_value
+            image = read_bmp(image_logo)
+            tv, image,0,0,/true
+        endelse
         
-
-
+    end
+    
+    
+    
 ;open nexus file button for REF_L
-        Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              open_nexus_file, Event
-            
-        end
-        
-;Exit widget in the top toolbar for REF_L
-        Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_L'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              EXIT_PROGRAM_REF_L, Event
-        end
-        
-;Exit widget in the top toolbar for REF_M
-        Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_M'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              EXIT_PROGRAM_REF_M, Event
-        end
+    Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          open_nexus_file, Event
+    end
+    
+;open nexus file button for REF_M
+    Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go_REF_M'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          open_nexus_file, Event
+    end
 
+;Exit widget in the top toolbar for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_L'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          EXIT_PROGRAM_REF_L, Event
+    end
+    
+;Exit widget in the top toolbar for REF_M
+    Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_M'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          EXIT_PROGRAM_REF_M, Event
+    end
+    
 ;Widget to change the color of graph for REF_L
-        Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_REF_L'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              CTOOL_REF_L, Event
-        end
-        
-;signal or background selection zone for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_REF_L'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          CTOOL_REF_L, Event
+    end
+    
+;signal or background selection zone for REF_L and REF_M
     widget_info(wWidget, FIND_BY_UNAME='selection_list_group'): begin
         selection_list_group_cb, Event
     end
-
+    
 ;draw_interaction for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
@@ -82,36 +87,39 @@ case Event.id of
           selection, Event
     end
 ;clear selection button for REF_L
-        Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              clear_selection_cb, Event
-        end
-
+    Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          clear_selection_cb, Event
+    end
+    
 ;save selection button for REF_L
-        Widget_Info(wWidget, FIND_BY_UNAME='save_selection_button'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              save_selection_cb, Event
-        end
-
+    Widget_Info(wWidget, FIND_BY_UNAME='save_selection_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          save_selection_cb, Event
+    end
+    
 ;INSIDE DATA_REDUCTION_WINDOW
 ;with or without background for REF_L
-
+    
     widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
         background_list_group_eventcb, Event
     end
+
+;with or without background for REF_M
+
+    widget_info(wWidget, FIND_BY_UNAME='background_list_group_REF_M'): begin
+        background_list_group_eventcb_REF_M, Event
+    end
+
 ;intermediate file output for REF_L
     widget_info(wWidget, FIND_BY_UNAME='intermediate_file_output_list_group'):begin
         intermediate_file_output_list_group_eventcb,Event
     end
-
-
-
-
-        
-       else:
-       
-           endcase
     
+    else:
+    
+endcase
+
 end
 
 
@@ -310,7 +318,8 @@ display_data_base = widget_draw(MAIN_BASE,$
                                 scr_ysize=304,$
                                 uname='display_data_base',$
                                 retain=2,$
-                                /BUTTON_EVENTS,/MOTION_EVENTS)
+                                /BUTTON_EVENTS,$
+                                /MOTION_EVENTS)
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
@@ -635,8 +644,8 @@ global = ptr_new({$
                    x2_signal            : 0L,$
                    y1_signal            : 0L,$
                    y2_signal            : 0L,$
-                   color_line_signal    : 100L,$
-                   color_line_background: 300L $
+                   color_line_signal    : 200L,$
+                   color_line_background: 150L $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -659,14 +668,14 @@ nexus_run_number_title = widget_label(nexus_run_number_base,$
                                       xoffset=5,$
                                       yoffset=10,$
                                       value='Run number')
-nexus_run_number_box_REF_M = widget_text(nexus_run_number_base,$
+nexus_run_number_box = widget_text(nexus_run_number_base,$
                                    xoffset=80,$
                                    yoffset=5,$
                                    /editable,$
                                    /align_left,$
                                    scr_xsize=80,$
                                    scr_ysize=30,$
-                                   uname='nexus_run_number_box_REF_M')
+                                   uname='nexus_run_number_box')
 nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
                                     xoffset=180,$
                                     yoffset=7,$
@@ -675,14 +684,15 @@ nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
                                     uname='nexus_run_number_go_REF_M')
 
 ;BOTTOM LEFT BOX - DISPLAY DATA
-display_data_base_REF_M = widget_draw(MAIN_BASE,$
+display_data_base = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
                                 yoffset=70,$  
                                 scr_xsize=304,$
                                 scr_ysize=256,$
-                                uname='display_data_base_REF_M',$
+                                uname='display_data_base',$
                                 retain=2,$
-                                /BUTTON_EVENTS,/MOTION_EVENTS)
+                                /BUTTON_EVENTS,$
+                                /MOTION_EVENTS)
 
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
@@ -698,25 +708,25 @@ selection_title = widget_label(select_signal_base,$
                                value='Selection: ')
 selection_list = ['Signal   ',$
                   'Background']
-selection_list_group_REF_M = CW_BGROUP(select_signal_base,$ 
-                                 selection_list,$
-                                 /exclusive,$
-                                 /RETURN_NAME,$
-                                 XOFFSET=100,$
-                                 YOFFSET=3,$
-                                 SET_VALUE=0.0,$
-                                 row=1,$
-                                 UNAME='selection_list_group_REF_M')
+selection_list_group= CW_BGROUP(select_signal_base,$ 
+                                selection_list,$
+                                /exclusive,$
+                                /RETURN_NAME,$
+                                XOFFSET=100,$
+                                YOFFSET=3,$
+                                SET_VALUE=0.0,$
+                                row=1,$
+                                UNAME='selection_list_group')
 
-clear_selection_button_REF_M = widget_button(select_signal_base,$
-                                       uname='clear_selection_button_REF_M',$
+clear_selection_button = widget_button(select_signal_base,$
+                                       uname='clear_selection_button',$
                                        xoffset=15,$
                                        yoffset=35,$
                                        scr_xsize=120,$
                                        value='CLEAR SELECTION',$
                                        sensitive=0)
-save_selection_button_REF_M = widget_button(select_signal_base,$
-                                      uname='save_selection_button_REF_M',$
+save_selection_button = widget_button(select_signal_base,$
+                                      uname='save_selection_button',$
                                       xoffset=155,$
                                       yoffset=35,$
                                       scr_xsize=120,$
@@ -923,20 +933,20 @@ background_list_group_REF_M = CW_BGROUP(data_reduction_base,$
                                         row=1,$
                                         uname='background_list_group_REF_M')
 
-background_file_base = widget_base(data_reduction_base,$
-                                   uname='background_file_base',$
-                                   xoffset=0,$
-                                   yoffset=back_y_offset+20,$
-                                   scr_xsize=xsize_of_tabs,$
-                                   frame=0)
+background_file_base_REF_M = widget_base(data_reduction_base,$
+                                         uname='background_file_base_REF_M',$
+                                         xoffset=0,$
+                                         yoffset=back_y_offset+20,$
+                                         scr_xsize=xsize_of_tabs,$
+                                         frame=0)
 
-background_file_button_REF_M = widget_button(background_file_base,$
+background_file_button_REF_M = widget_button(background_file_base_REF_M,$
                                              uname='background_file_button_REF_M',$
                                              xoffset=3,$
                                              yoffset=7,$
                                              value='Background - Pid file')
 
-background_file_text_REF_M = widget_text(background_file_base,$
+background_file_text_REF_M = widget_text(background_file_base_REF_M,$
                                          uname='background_file_text_REF_M',$
                                          xoffset=155,$
                                          yoffset=5,$
@@ -990,30 +1000,30 @@ intermediate_file_output_list_group_REF_M = CW_BGROUP(data_reduction_base,$
                                                       row=1,$
                                                       uname='intermediate_file_output_list_group_REF_M')
  start_data_reduction_button_REF_M = widget_button(data_reduction_base,$
-                                             xoffset=5,$
-                                             yoffset=283,$
-                                             scr_xsize=295,$
-                                             value='START DATA REDUCTION',$
-                                             uname='start_data_reduction_button_REF_M')
-
+                                                   xoffset=5,$
+                                                   yoffset=283,$
+                                                   scr_xsize=295,$
+                                                   value='START DATA REDUCTION',$
+                                                   uname='start_data_reduction_button_REF_M')
+ 
 ;info text box 
-info_text_REF_M = widget_text(data_reduction_base,$
-                        xoffset=5,$
-                        yoffset=265+50,$
-                        scr_xsize=295,$
-                        scr_ysize=70,$
-                        /scroll,$
-                        /wrap,$
-                       uname='info_text_REF_M')
-
-
-
+ info_text_REF_M = widget_text(data_reduction_base,$
+                               xoffset=5,$
+                               yoffset=265+50,$
+                               scr_xsize=295,$
+                               scr_ysize=70,$
+                               /scroll,$
+                               /wrap,$
+                               uname='info_text')
+ 
+ 
+ 
 data_reduction_plot_REF_M = widget_draw(first_tab_base,$
-                                  xoffset=315,$
-                                  yoffset=5,$
-                                  scr_xsize=405,$
-                                  scr_ysize=393,$
-                                  uname='data_reduction_plot_REF_M')
+                                        xoffset=315,$
+                                        yoffset=5,$
+                                        scr_xsize=405,$
+                                        scr_ysize=393,$
+                                        uname='data_reduction_plot_REF_M')
 
 
 
@@ -1030,8 +1040,8 @@ signal_info_label = widget_label(fourth_tab_base,$
                                  xoffset=150,$
                                  yoffset=5)
 
-signal_info_REF_M = widget_text(fourth_tab_base,$
-                          uname='signal_info_REF_M',$
+signal_info= widget_text(fourth_tab_base,$
+                          uname='signal_info',$
                           xoffset=5,$
                           yoffset=25,$
                           scr_xsize=350,$
@@ -1044,8 +1054,8 @@ background_info_label = widget_label(fourth_tab_base,$
                                      xoffset=500,$
                                      yoffset=5)
 
-background_info_REF_M = widget_text(fourth_tab_base,$
-                              uname='background_info_REF_M',$
+background_info = widget_text(fourth_tab_base,$
+                              uname='background_info',$
                               xoffset=370,$
                               yoffset=25,$
                               scr_xsize=350,$
@@ -1068,7 +1078,7 @@ log_book_base = widget_base(data_reduction_tab,$
                          YOFFSET=0)
 
 log_book_text_REF_M = widget_text(log_book_base,$
-                            uname='log_book_text_REF_M',$
+                            uname='log_book_text',$
                             scr_xsize=720,$
                             scr_ysize=395,$
                             xoffset=5,$
