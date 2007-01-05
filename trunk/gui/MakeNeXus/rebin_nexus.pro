@@ -252,8 +252,8 @@ global = ptr_new({$
                    file_to_plot_top     : '',$
                    file_to_plot_bottom  : '',$
                    translation_file : combine_results[2],$
-                   geometry_file : combine_results[0],$
-                   mapping_file : combine_results[1],$
+                   geometry_file : combine_results[1],$
+                   mapping_file : combine_results[0],$
                    nexus_filename		: '',$
                    cvinfo_xml_filename	: '',$
                    runinfo_xml_filename	: '',$
@@ -803,7 +803,7 @@ output_path = (*global).output_path
   DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
 	XOFFSET= 5, YOFFSET = 125, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Output path",$
+	VALUE= "Working path",$
 	UNAME='DEFAULT_PATH_BUTTON')
 
   DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
