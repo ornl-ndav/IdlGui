@@ -1632,6 +1632,9 @@ text += full_folder_name_NeXus + (*global).instrument
 text += "_" + (*global).run_number + ".nxs"
 widget_control, view_info, set_value=text,/append
 
+text = "...REBIN COMPLETED"
+widget_control, view_info, set_value=text,/append
+
 ;activate "Create local NeXus" button
 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
 widget_control, id_create_nexus, sensitive=1
