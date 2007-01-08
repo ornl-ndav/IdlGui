@@ -4,6 +4,22 @@ pro main_interface_eventcb
 end
 
 
+
+
+function get_ucams
+
+cmd_pwd = "pwd"
+spawn, cmd_pwd, listening
+print, "listening is: ", listening
+array_listening=strsplit(listening,'/',count=length,/extract)
+ucams = array_listening[2]
+return, ucams
+end
+
+
+
+
+
 pro idl_tool_droplist_cb, Event
 
 ;get global structure
@@ -22,6 +38,8 @@ host = (*global).host
 ;Info text to display
 erase
 launch_activation = 0
+
+ucams = get_ucams()
 
 case list_index of
     0: begin
@@ -72,8 +90,13 @@ case list_index of
     end
     5: begin
 ;DataReduction
+
+        if (ucams EQ 'j35') then launch_activation = 1
         text = 'Program that performs basics data_reduction for'
         text += ' the two reflectometers.'
+        text += '                   '
+        text += ' COMING SOON IN YOUR AREA '
+        (*global).active_idl_tool = 'DataReduction'
     end
 endcase
 
@@ -124,6 +147,9 @@ case active_idl_tool of
     end
     'rebinNeXus': begin
         spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinNeXus'
+    end
+    'DataReduction': begin
+        spawn, '/SNS/users/j35/IDL/DataReduction/data_reduction'
     end
 endcase
 
