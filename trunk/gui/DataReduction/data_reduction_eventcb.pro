@@ -13,8 +13,8 @@ end
 
 
 
-;Create the output array
-pro create_pid_array_file, XY, file_name
+;Create the output array for signal selection
+pro create_signal_pid_array_file, XY, file_name
 
 xmin = XY[0]
 xmax = XY[1]
@@ -37,6 +37,50 @@ close, 1
 free_lun, 1
 
 end
+
+
+
+
+
+
+
+;Create the output array for background selection
+pro create_background_pid_array_file, XYsignal, XYbackground, file_name
+
+xmin_signal = XYsignal[0]
+xmax_signal = XYsignal[1]
+ymin_signal = XYsignal[2]
+ymax_signal = XYsignal[3]
+
+xmin_back = XYbackground[0]
+xmax_back = XYbackground[1]
+ymin_back = XYbackground[2]
+ymax_back = XYbackground[3]
+
+openw, 1, file_name
+
+i=0
+for x=xmin_back, xmax_back do begin
+    for y=ymin_back, ymax_back do begin
+        if (x GE xmin_signal AND $
+            x LE xmax_signal AND $
+            y GE ymin_signal AND $
+            y LE ymax_signal) then begin
+            ;pass
+        endif else begin
+            text = '1_' + strcompress(x,/remove_all)
+            text += '_' + strcompress(y,/remove_all)
+            printf, 1,text
+            ++i
+        endelse
+    endfor
+endfor
+
+close, 1
+free_lun, 1
+
+end
+
 
 
 
@@ -730,8 +774,6 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 
              endelse
              
-             id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
-             widget_control, id_save_selection, sensitive=1
              id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
              widget_control, id_save_selection, sensitive=1
 
@@ -752,6 +794,13 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 (*global).selection_background = 1
             endelse
 
+;validate save_selection button if signal and background region are there
+             
+            if ((*global).selection_signal EQ 1 AND (*global).selection_background EQ 1) then begin
+                id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
+                widget_control, id_save_selection, sensitive=1
+                endif
+            
             plots, X1, Y1, /device, color=color_line
 	    plots, X1, Y2, /device, /continue, color=color_line
 	    plots, X2, Y2, /device, /continue, color=color_line
@@ -979,30 +1028,23 @@ signal_background_pid_file_names = get_signal_background_pid_file_name(Event)
 signal_pid_file_name = signal_background_pid_file_names[0]
 background_pid_file_name = signal_background_pid_file_names[1]
 
-if ((*global).selection_signal EQ 1) then begin
-    if ((*global).selection_background EQ 1) then begin ;signal and background saved
-        full_text = "Signal and background selection have been saved"
-        text = "Signal & background selection - SAVED"
-        widget_control, view_info, set_value=text, /append
-        widget_control, full_view_info, set_value=full_text, /append
-        ;produce the ascii files of the selection
-        produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
-    endif else begin            ;signal saved
-        full_text = "Signal selection has been saved"
-        text = "Signal selection - SAVED"
-        widget_control, view_info, set_value=text, /append
-        widget_control, full_view_info, set_value=full_text, /append
-        produce_pid_files, Event, signal_pid_file_name, ""
-    endelse
-endif else begin ;background saved
-    if ((*global).selection_background EQ 1) then begin
-        full_text = "Background selection has been saved"
-        text = "Background selection - SAVED"
-        widget_control, view_info, set_value=text, /append
-        widget_control, full_view_info, set_value=full_text, /append
-        produce_pid_files, Event, "", background_pid_file_name
-    endif 
-endelse
+signal_id = widget_info(Event.top, find_by_uname='signal_pid_text')
+background_id = widget_info(Event.top, find_by_uname='background_pid_text')
+
+full_text = "Signal and background selection have been saved"
+text = "Signal & background selection - SAVED"
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=full_text, /append
+
+;produce the ascii files of the selection
+produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
+
+;populate signal and backgound pid file name in data reduction tab
+widget_control, signal_id, set_value=signal_pid_file_name
+widget_control, background_id, set_value=background_pid_file_name
+
+;populate signal and backgound pid file name in data reduction tab
+widget_control, background_id, set_value=background_pid_file_name
 
 end
 
@@ -1016,47 +1058,31 @@ pro produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;there is a signal selection
-if (signal_pid_file_name NE "") then begin
+;signal selection
+x1_signal = (*global).x1_signal
+x2_signal = (*global).x2_signal
+y1_signal = (*global).y1_signal
+y2_signal = (*global).y2_signal
 
-    x1_signal = (*global).x1_signal
-    x2_signal = (*global).x2_signal
-    y1_signal = (*global).y1_signal
-    y2_signal = (*global).y2_signal
-
-    XY = reorder(x1_signal, x2_signal, y1_signal, y2_signal)
-
-    xmin = XY[0]
-    xmax = XY[1]
-    ymin = XY[2]
-    ymax = XY[3]
+XYsignal = reorder(x1_signal, x2_signal, y1_signal, y2_signal)
 
 ;create output file
-create_pid_array_file, XY, signal_pid_file_name
+create_signal_pid_array_file, XYsignal, signal_pid_file_name
 
-endif
+;background selection
+x1_back = (*global).x1_back
+x2_back = (*global).x2_back
+y1_back = (*global).y1_back
+y2_back = (*global).y2_back
 
-;there is a signal selection
-if (background_pid_file_name NE "") then begin
-
-    x1_back = (*global).x1_back
-    x2_back = (*global).x2_back
-    y1_back = (*global).y1_back
-    y2_back = (*global).y2_back
-
-    XY = reorder(x1_back, x2_back, y1_back, y2_back)
-
-    xmin = XY[0]
-    xmax = XY[1]
-    ymin = XY[2]
-    ymax = XY[3]
+XYbackground = reorder(x1_back, x2_back, y1_back, y2_back)
 
 ;create output file
-create_pid_array_file, XY, background_pid_file_name
-
-endif
+create_background_pid_array_file, XYsignal, XYbackground, background_pid_file_name
 
 end
+
+
 
 
 
