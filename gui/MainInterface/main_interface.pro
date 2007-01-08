@@ -132,7 +132,8 @@ IDL_tool_list = ['                      ',$
                  'miniReflPak',$
                  'PlotBSS',$
                  'RealignBSS',$
-                 'rebinNeXus']
+                 'rebinNeXus',$
+                 'DataReduction']
 IDL_tool_droplist = widget_droplist(PORTAL_BASE,$
                                     xoffset=20,$
                                     yoffset=25,$
