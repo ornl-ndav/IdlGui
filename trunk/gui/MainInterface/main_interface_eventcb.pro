@@ -70,11 +70,20 @@ case list_index of
         launch_activation = 1
         (*global).active_idl_tool = 'rebinNeXus'
     end
+    5: begin
+;DataReduction
+        text = 'Program that performs basics data_reduction for'
+        text += ' the two reflectometers.'
+    end
 endcase
 
 if (list_index NE 0) then begin
-    image = read_bmp(picture)
-    tv, image,x,y,/true
+    if (list_index EQ 5) then begin
+        ;don't display anything yet for data_reduction
+    endif else begin
+        image = read_bmp(picture)
+        tv, image,x,y,/true
+        endelse
 endif
 
 info_id = widget_info(Event.top, find_by_uname='info_description')
