@@ -614,26 +614,50 @@ tvscl,(*(*global).img_ptr)
 selection_value = (*global).selection_value
 selection_signal = (*global).selection_signal
 selection_background = (*global).selection_background
+selection_background_2 = (*global).selection_background_2
 
-if (selection_value EQ 0 AND selection_background EQ 1) then begin
-    
-    color_line = (*global).color_line_background
+if (selection_value EQ 0) then begin
 
-    x1 = (*global).x1_back
-    x2 = (*global).x2_back
-    y1 = (*global).y1_back
-    y2 = (*global).y2_back
+    if (selection_background EQ 1) then begin
     
-    plots, X1, Y1, /device, color=color_line
-    plots, X1, Y2, /device, /continue, color=color_line
-    plots, X2, Y2, /device, /continue, color=color_line
-    plots, X2, Y1, /device, /continue, color=color_line
-    plots, X1, Y1, /device, /continue, color=color_line
-    
-endif else begin
-    
-    if (selection_value EQ 1 AND selection_signal EQ 1) then begin
+        color_line = (*global).color_line_background
         
+        x1 = (*global).x1_back
+        x2 = (*global).x2_back
+        y1 = (*global).y1_back
+        y2 = (*global).y2_back
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+        
+    endif 
+
+    if (selection_background_2 EQ 1) then begin
+
+        color_line = (*global).color_line_background_2
+
+        x1 = (*global).x1_back_2
+        x2 = (*global).x2_back_2
+        y1 = (*global).y1_back_2
+        y2 = (*global).y2_back_2
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+
+    endif
+
+endif
+
+if (selection_value EQ 1) then begin
+
+    if (selection_signal EQ 1) then begin
+    
         color_line = (*global).color_line_signal
         
         x1 = (*global).x1_signal
@@ -647,9 +671,64 @@ endif else begin
         plots, X2, Y1, /device, /continue, color=color_line
         plots, X1, Y1, /device, /continue, color=color_line
         
+    endif 
+
+    if (selection_background_2 EQ 1) then begin
+
+        color_line = (*global).color_line_background_2
+
+        x1 = (*global).x1_back_2
+        x2 = (*global).x2_back_2
+        y1 = (*global).y1_back_2
+        y2 = (*global).y2_back_2
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+
     endif
 
-endelse
+endif
+
+if (selection_value EQ 2) then begin
+
+    if (selection_background EQ 1) then begin
+    
+        color_line = (*global).color_line_background
+        
+        x1 = (*global).x1_back
+        x2 = (*global).x2_back
+        y1 = (*global).y1_back
+        y2 = (*global).y2_back
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+        
+    endif 
+
+    if (selection_signal EQ 1) then begin
+    
+        color_line = (*global).color_line_signal
+        
+        x1 = (*global).x1_signal
+        x2 = (*global).x2_signal
+        y1 = (*global).y1_signal
+        y2 = (*global).y2_signal
+        
+        plots, X1, Y1, /device, color=color_line
+        plots, X1, Y2, /device, /continue, color=color_line
+        plots, X2, Y2, /device, /continue, color=color_line
+        plots, X2, Y1, /device, /continue, color=color_line
+        plots, X1, Y1, /device, /continue, color=color_line
+        
+    endif 
+
+endif
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -693,274 +772,315 @@ file_opened = (*global).file_opened
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
-;working on signal or background ? (0 for signal, 1 for background)
+;working on signal or background ? (0 for signal, 1 for background_1
+;and 2 for background_2)
 signal_or_background = (*global).selection_value
 
 ;left mouse button
 IF ((event.press EQ 1) AND (file_opened EQ 1)) then begin
-
-   ;get data
-   img = (*(*global).img_ptr)
-   ;data = (*(*global).data_ptr)
-   tmp_tof = (*(*global).data_assoc)
-   Nx = (*global).Nx
-
-   x = Event.x
-   y = Event.y
-
-   ;set data
-
-   text = " x= " + strcompress(x,/remove_all)
-   text += " y= " + strcompress(y,/remove_all)
-
+    
+                                ;get data
+    img = (*(*global).img_ptr)
+                                ;data = (*(*global).data_ptr)
+    tmp_tof = (*(*global).data_assoc)
+    Nx = (*global).Nx
+    
+    x = Event.x
+    y = Event.y
+                                    ;set data
+    
+    text = " x= " + strcompress(x,/remove_all)
+    text += " y= " + strcompress(y,/remove_all)
+    
 ;put number of counts in number_of_counts label position
-   text += " counts= " + strcompress(img(x,y))
-   full_text = "PixelID infos : " + text
-   widget_control, view_info, set_value=text, /append
-   widget_control, full_view_info, set_value=full_text, /append
+    text += " counts= " + strcompress(img(x,y))
+    full_text = "PixelID infos : " + text
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
 endif
 
 ;right mouse button
 IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
-
-   ;get window numbers
+    
+                                ;get window numbers
     id_draw = widget_info(Event.top, find_by_uname='display_data_base')
     WIDGET_CONTROL, id_draw, GET_VALUE = id
     wset, id
-
-   ;from the rubber_band program
-   getvals = 0	;while getvals is GT 0, continue to check mouse down clicks
-
-   ;continue to loop getting values while mouse clicks occur within the image window
-
-   Nx = (*global).Nx
-   Ny = (*global).Ny
+    
+                                ;from the rubber_band program
+    getvals = 0 ;while getvals is GT 0, continue to check mouse down clicks
+    
+                                ;continue to loop getting values while mouse clicks occur within the image window
+    
+    Nx = (*global).Nx
+    Ny = (*global).Ny
 ;   window_counter = (*global).window_counter
-
-   x = lonarr(2)
-   y = lonarr(2)
-
-   first_round=0
-
-   cursor, x,y,/down,/device
-   display_info =0	
-   click_outside = 0
-
-   while (getvals EQ 0) do begin
-
-      cursor,x,y,/nowait,/device
-	
-      if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
-
-	 click_outside = 1
-	 getvals = 1
-
-      endif else begin
-	
-	 if (first_round EQ 0) then begin
-             
-             X1=x
-             Y1=y
-             
-             if (signal_or_background EQ 0) then begin
-                 
-                 (*global).x1_signal = x
-                 (*global).y1_signal = y
-                 
-             endif else begin
-
-                 (*global).x1_back = x
-                 (*global).y1_back = y
-
-             endelse
-             
-             id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
-             widget_control, id_save_selection, sensitive=1
-
-             first_round = 1
-             text = " Rigth click to select other corner"		
-
-         endif else begin
-             
-            X2=x
-	    Y2=y
-	    SHOW_DATA_REF_L,event
-
-            if (signal_or_background EQ 0) then begin
-                color_line = (*global).color_line_signal
-                (*global).selection_signal = 1
-            endif else begin
-                color_line = (*global).color_line_background
-                (*global).selection_background = 1
-            endelse
-
-;validate save_selection button if signal and background region are there
-             
-            if ((*global).selection_signal EQ 1 AND (*global).selection_background EQ 1) then begin
-                id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
-                widget_control, id_save_selection, sensitive=1
-                endif
+    
+    x = lonarr(2)
+    y = lonarr(2)
+    
+    first_round=0
+    
+    cursor, x,y,/down,/device
+    display_info =0	
+    click_outside = 0
+    
+    while (getvals EQ 0) do begin
+        
+        cursor,x,y,/nowait,/device
+        
+        if ((x LT 0) OR (x GT Ny) OR (y LT 0) OR (y GT Nx)) then begin
             
-            plots, X1, Y1, /device, color=color_line
-	    plots, X1, Y2, /device, /continue, color=color_line
-	    plots, X2, Y2, /device, /continue, color=color_line
-	    plots, X2, Y1, /device, /continue, color=color_line
-	    plots, X1, Y1, /device, /continue, color=color_line
+            click_outside = 1
+            getvals = 1
+            
+        endif else begin
+            
+            if (first_round EQ 0) then begin
+                
+                X1=x
+                Y1=y
+                
+                if (signal_or_background EQ 0) then begin
+                    
+                    (*global).x1_signal = x
+                    (*global).y1_signal = y
+                    
+                endif 
+                    
+                if (signal_or_background EQ 1) then begin
+                    
+                    (*global).x1_back = x
+                    (*global).y1_back = y
+                        
+                endif 
+                      
+                if (signal_or_background EQ 2) then begin
 
-             if (signal_or_background EQ 0) then begin
-                 
-                 (*global).x2_signal = x
-                 (*global).y2_signal = y
-                 
-             endif else begin
+                    (*global).x1_back_2 = x
+                    (*global).y1_back_2 = y
+                        
+                endif
+                    
+                id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
+                widget_control, id_save_selection, sensitive=1
+                
+                first_round = 1
+                text = " Rigth click to select other corner"		
+                
+            endif else begin
+                
+                X2=x
+                Y2=y
+                SHOW_DATA_REF_L,event
+                
+                if (signal_or_background EQ 0) then begin
+                    color_line = (*global).color_line_signal
+                    (*global).selection_signal = 1
+                endif 
+                
+                if (signal_or_background EQ 1) then begin
+                    color_line = (*global).color_line_background
+                    (*global).selection_background = 1
+                endif
+                
+                if (signal_or_background EQ 2) then begin
+                    color_line = (*global).color_line_background_2
+                    (*global).selection_background_2 = 1
+                endif
+                
+;validate save_selection button if signal and background region are there
+                
+                if ((*global).selection_signal EQ 1 AND $
+                    (*global).selection_background EQ 1 AND $
+                    (*global).selection_background_2 EQ 1) then begin
+                    id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
+                    widget_control, id_save_selection, sensitive=1
+                endif
+                
+                plots, X1, Y1, /device, color=color_line
+                plots, X1, Y2, /device, /continue, color=color_line
+                plots, X2, Y2, /device, /continue, color=color_line
+                plots, X2, Y1, /device, /continue, color=color_line
+                plots, X1, Y1, /device, /continue, color=color_line
+                
+                if (signal_or_background EQ 0) then begin
+                    
+                    (*global).x2_signal = x
+                    (*global).y2_signal = y
+                    
+                endif 
+                
+                if (signal_or_background EQ 1) then begin
+                    
+                    (*global).x2_back = x
+                    (*global).y2_back = y
+                    
+                endif 
+                        
+                if (signal_or_background EQ 2) then begin      
 
-                 (*global).x2_back = x
-                 (*global).y2_back = y
+                    (*global).x2_back_2 = x
+                    (*global).y2_back_2 = y
+                    
+                endif    
 
-             endelse
-
-	    if (!mouse.button EQ 4) then begin    ;stop the process
-	
-                getvals = 1
-                display_info = 1
-                		
-            endif
-	
-         endelse
-
-      endelse
-
-   endwhile
-
-   if (click_outside EQ 1) then begin
-
+                if (!mouse.button EQ 4) then begin ;stop the process
+                    
+                    getvals = 1
+                    display_info = 1
+                    
+                endif
+                
+            endelse
+            
+        endelse
+        
+    endwhile
+    
+    if (click_outside EQ 1) then begin
+        
 ;       if (display_info EQ 1) then begin
-       
-       x=lonarr(2)
-       y=lonarr(2)
+        
+        x=lonarr(2)
+        y=lonarr(2)
+        
+;        if ((*global).selection_signal EQ 1) then begin
+            
+            if (signal_or_background EQ 0) then begin
 
-       if ((*global).selection_signal EQ 1) then begin
-          
-          if (signal_or_background EQ 0) then begin
-
-              x[0]=(*global).x1_signal
-              x[1]=(*global).x2_signal
-              y[0]=(*global).y1_signal
-              y[1]=(*global).y2_signal
-              
-          endif else begin
-              
-              x[0]=(*global).x1_back
-              x[1]=(*global).x2_back
-              y[0]=(*global).y1_back
-              y[1]=(*global).y2_back
-              
-          endelse
-
+                x[0]=(*global).x1_signal
+                x[1]=(*global).x2_signal
+                y[0]=(*global).y1_signal
+                y[1]=(*global).y2_signal
+                
+            endif 
+        
+            if (signal_or_background EQ 1) then begin
+                
+                x[0]=(*global).x1_back
+                x[1]=(*global).x2_back
+                y[0]=(*global).y1_back
+                y[1]=(*global).y2_back
+                
+            endif
+            
+            if (signal_or_background EQ 2) then begin
+    
+                x[0]=(*global).x1_back_2
+                x[1]=(*global).x2_back_2
+                y[0]=(*global).y1_back_2
+                y[1]=(*global).y2_back_2
+                
+            endif
+            
                                 ;*Initialization of text boxes
-           full_text_selection_1 = ''
-           full_text_selection_2 = 'The two corners are defined by:'
-           
-           y_min = min(y)
-           y_max = max(y)
-           x_min = min(x)
-           x_max = max(x)
-           
-           y12 = y_max-y_min
-           x12 = x_max-x_min
-           total_pixel_inside = x12*y12
-           total_pixel_outside = Nx*Ny - total_pixel_inside
-           
-           simg = (*(*global).img_ptr)
-           
-           starting_id = (y_min*304+x_min)
-           starting_id_string = strcompress(starting_id)
+            full_text_selection_1 = ''
+            full_text_selection_2 = 'The two corners are defined by:'
+            
+            y_min = min(y)
+            y_max = max(y)
+            x_min = min(x)
+            x_max = max(x)
+            
+            y12 = y_max-y_min
+            x12 = x_max-x_min
+            total_pixel_inside = x12*y12
+            total_pixel_outside = Nx*Ny - total_pixel_inside
+            
+            simg = (*(*global).img_ptr)
+            
+            starting_id = (y_min*304+x_min)
+            starting_id_string = strcompress(starting_id)
 ;          (*global).starting_id_x = x_min
 ;          (*global).starting_id_y = y_min
-           
-           ending_id = (y_max*304+x_max)
-           ending_id_string = strcompress(ending_id)
+            
+            ending_id = (y_max*304+x_max)
+            ending_id_string = strcompress(ending_id)
 ;          (*global).ending_id_x = x_max
 ;          (*global).ending_id_y = y_max
-           
-          full_text_selection_3 = '    Bottom left corner:  '
-          full_text_selection_3_1 = '      pixelID#: ' + starting_id_string + $
-            ' (x= '+strcompress(x_min,/rem) + $
-            '; y= '+strcompress(y_min,/rem) + $
-            ' intensity= ' + strcompress(simg[x_min,y_min],/rem)+')'
-          
-          full_text_selection_4 = '    Top right corner:  '
-          full_text_selection_4_1 = '      pixelID#: ' + ending_id_string + $
-            ' (x= '+strcompress(x_max,/rem) + $
-            '; y= '+strcompress(y_max,/rem) + $
-            ' intensity= ' + strcompress(simg[x_max,y_max],/rem)+')'
-          
+            
+            full_text_selection_3 = '    Bottom left corner:  '
+            full_text_selection_3_1 = '      pixelID#: ' + starting_id_string + $
+              ' (x= '+strcompress(x_min,/rem) + $
+              '; y= '+strcompress(y_min,/rem) + $
+              ' intensity= ' + strcompress(simg[x_min,y_min],/rem)+')'
+            
+            full_text_selection_4 = '    Top right corner:  '
+            full_text_selection_4_1 = '      pixelID#: ' + ending_id_string + $
+              ' (x= '+strcompress(x_max,/rem) + $
+              '; y= '+strcompress(y_max,/rem) + $
+              ' intensity= ' + strcompress(simg[x_max,y_max],/rem)+')'
+            
                                 ;calculation of inside region total counts
-          inside_total = total(simg(x_min:x_max, y_min:y_max))
-          outside_total = total(simg)-inside_total
-          inside_average = inside_total/total_pixel_inside
-          outside_average = outside_total/total_pixel_outside
-          
-          full_text_selection_5 = ""
-          full_text_selection_6 = 'General infos about selection: '
-          full_text_selection_7 = "   - Number of pixelIDs inside the surface: " + $
-            strcompress(x12*y12,/rem)
-          full_text_selection_8 = "   - Selection width: " + strcompress(x12,/rem) + $
-            ' pixels'
-          full_text_selection_9 = "   - Selection height: " + strcompress(y12,/rem) + $
-            ' pixels
-          full_text_selection_10 = "   - Total inside selection counts: " + $
-            strcompress(inside_total,/rem)
-          full_text_selection_11 = ""
-          full_text_selection_12 = "   - Total outside selection counts: " + $
-            strcompress(outside_total,/rem)
-          full_text_selection_13 = "   - Average inside selection counts: " + $
-            strcompress(inside_average,/rem)
-          full_text_selection_14 = "   - Average outside selection counts: " + $
-            strcompress(outside_average,/rem) 
-
-          value_group = [full_text_selection_2,$
-                         full_text_selection_1,$
-                         full_text_selection_3,$
-                         full_text_selection_3_1,$
-                         full_text_selection_4,$
-                         full_text_selection_4_1,$
-                         full_text_selection_5,$
-                         full_text_selection_6,$
-                         full_text_selection_1,$
-                         full_text_selection_7,$
-                         full_text_selection_8,$
-                         full_text_selection_9,$
-                         full_text_selection_10,$
-                         full_text_selection_11,$
-                         full_text_selection_12,$
-                         full_text_selection_13,$
-                         full_text_selection_14]
-
-
+            inside_total = total(simg(x_min:x_max, y_min:y_max))
+            outside_total = total(simg)-inside_total
+            inside_average = inside_total/total_pixel_inside
+            outside_average = outside_total/total_pixel_outside
+            
+            full_text_selection_5 = ""
+            full_text_selection_6 = 'General infos about selection: '
+            full_text_selection_7 = "   - Number of pixelIDs inside the surface: " + $
+              strcompress(x12*y12,/rem)
+            full_text_selection_8 = "   - Selection width: " + strcompress(x12,/rem) + $
+              ' pixels'
+            full_text_selection_9 = "   - Selection height: " + strcompress(y12,/rem) + $
+              ' pixels
+            full_text_selection_10 = "   - Total inside selection counts: " + $
+              strcompress(inside_total,/rem)
+            full_text_selection_11 = ""
+            full_text_selection_12 = "   - Total outside selection counts: " + $
+              strcompress(outside_total,/rem)
+            full_text_selection_13 = "   - Average inside selection counts: " + $
+              strcompress(inside_average,/rem)
+            full_text_selection_14 = "   - Average outside selection counts: " + $
+              strcompress(outside_average,/rem) 
+            
+            value_group = [full_text_selection_2,$
+                           full_text_selection_1,$
+                           full_text_selection_3,$
+                           full_text_selection_3_1,$
+                           full_text_selection_4,$
+                           full_text_selection_4_1,$
+                           full_text_selection_5,$
+                           full_text_selection_6,$
+                           full_text_selection_1,$
+                           full_text_selection_7,$
+                           full_text_selection_8,$
+                           full_text_selection_9,$
+                           full_text_selection_10,$
+                           full_text_selection_11,$
+                           full_text_selection_12,$
+                           full_text_selection_13,$
+                           full_text_selection_14]
+            
 ;check if selection is for signal of for background
-          if (signal_or_background EQ 0) then begin
-              view_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
-              WIDGET_CONTROL, view_info, SET_VALUE=value_group
-          endif else begin
-              view_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
-              WIDGET_CONTROL, view_info, SET_VALUE=value_group
-          endelse
-          
-
-;       endif 
-
- endif
-
-; end
-; ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-   endif else begin
-       
-       
-   endelse
-   
+            if (signal_or_background EQ 0) then begin
+                view_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
+                WIDGET_CONTROL, view_info, SET_VALUE=value_group
+                    view_info_tab = widget_info(Event.top, find_by_uname='signal_tab_base')
+                    widget_control, view_info_tab, base_set_title="Signal (white)"
+            endif else begin
+                if (signal_or_background EQ 1) then begin
+                    view_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
+                    WIDGET_CONTROL, view_info, SET_VALUE=value_group
+                    view_info_tab = widget_info(Event.top, find_by_uname='background_1_tab_base')
+                    widget_control, view_info_tab, base_set_title="Background #1 (blue)"
+                endif else begin
+                    view_info = widget_info(Event.top,FIND_BY_UNAME='background_2_info')
+                    WIDGET_CONTROL, view_info, SET_VALUE=value_group
+                    view_info_tab = widget_info(Event.top, find_by_uname='background_2_tab_base')
+                    widget_control, view_info_tab, base_set_title="Background #2 (red)"
+                endelse
+                
+            endelse        
+            
+;        endif
+        
+    endif else begin
+        
+    endelse
+    
 endif
 
 end
@@ -986,27 +1106,39 @@ if (value EQ 0) then begin
     text = "Clear signal selection"
     full_text = "Clear signal selection"
     selection_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
+    view_info_tab = widget_info(Event.top, find_by_uname='signal_tab_base')
 endif else begin
-    (*global).selection_background = 0 
-    text = "Clear background selection"
-    full_text = "Clear background selection"
-    selection_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
+    if (value EQ 1) then begin
+        (*global).selection_background = 0 
+        text = "Clear background selection"
+        full_text = "Clear background selection"
+        selection_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
+        view_info_tab = widget_info(Event.top, find_by_uname='background_1_tab_base')
+    endif else begin
+        (*global).selection_background_2 = 0
+        text = "Clear background selection #2"
+        full_text = "Clear background selection #2"
+        selection_info = widget_info(Event.top,FIND_BY_UNAME='background_2_info')
+        view_info_tab = widget_info(Event.top, find_by_uname='background_2_tab_base')
+    endelse
 endelse
 
 id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
 widget_control, id_save_selection, sensitive=0
 
-if ((*global).selection_signal EQ 0 AND (*global).selection_background EQ 0) then begin
+if ((*global).selection_signal EQ 0 AND $
+    (*global).selection_background EQ 0 AND $
+    (*global).selection_background_2 EQ 0) then begin
     
     id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
     widget_control, id_save_selection, sensitive=0
-
+    
 endif
 
 widget_control, view_info, set_value=text, /append
 widget_control, full_view_info, set_value=full_text, /append
 widget_control, selection_info, set_value=''
-
+widget_control, view_info_tab, base_set_title=''
 SHOW_DATA_REF_L,event
 
 end
@@ -1189,7 +1321,7 @@ end
 
 pro start_data_reduction_button_REF_L_eventcb, Event
 
-print, "in start_data_reductio for REF_L"
+print, "in start_data_reduction for REF_L"
 
 end
 
@@ -1200,6 +1332,6 @@ end
 
 pro start_data_reduction_button_REF_M_eventcb, Event
 
-print, "in start_data_reductio for REF_M"
+print, "in start_data_reduction for REF_M"
 
 end
