@@ -1,4 +1,76 @@
- function get_ucams
+;this function reorder two numbers
+function  reorder, x1, x2, y1, y2 
+
+X=[x1,x2]
+xmin = min(X, max=xmax)
+
+Y=[y1,y2]
+ymin = min(Y, max=ymax)
+
+return, [xmin, xmax, ymin, ymax]
+end
+
+
+
+
+;Create the output array
+pro create_pid_array_file, XY, file_name
+
+xmin = XY[0]
+xmax = XY[1]
+ymin = XY[2]
+ymax = XY[3]
+
+openw, 1, file_name
+
+i=0
+for x=xmin, xmax do begin
+    for y=ymin, ymax do begin
+        text = '1_' + strcompress(x,/remove_all)
+        text += '_' + strcompress(y,/remove_all)
+        printf, 1,text
+        ++i
+    endfor
+endfor
+
+close, 1
+free_lun, 1
+
+end
+
+
+
+
+
+
+
+
+function get_signal_background_pid_file_name, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_folder = (*global).tmp_folder
+pid_file_extension = (*global).pid_file_extension
+first_part = tmp_folder + (*global).instrument
+first_part += "_" + (*global).run_number
+
+signal_pid_file_name = first_part + "_signal_" + pid_file_extension
+background_pid_file_name = first_part + "_background_" + pid_file_extension
+
+signal_background_pid_file_names = [signal_pid_file_name,$
+                                    background_pid_file_name]
+
+return, signal_background_pid_file_names
+end
+
+
+
+
+
+
+function get_ucams
 
 cmd_pwd = "pwd"
 spawn, cmd_pwd, listening
@@ -251,6 +323,9 @@ if (run_number EQ '') then begin
     
 endif else begin
     
+;indicate reading data with hourglass icon
+    widget_control,/hourglass
+
     (*global).run_number = run_number
     
     text = "Searching for NeXus file of run number " + strcompress(run_number,/remove_all)
@@ -385,8 +460,6 @@ widget_control,id,get_uvalue=global
 Nx = (*global).Nx
 Ny = (*global).Ny
 
-;indicate reading data with hourglass icon
-widget_control,/hourglass
 
 file = (*global).full_histo_mapped_name
 nexus_file_name_only = (*global).nexus_file_name_only
@@ -425,9 +498,6 @@ img=transpose(img)
 (*(*global).img_ptr) = img
 (*(*global).data_assoc) = data_assoc
 	
-;now turn hourglass back off
-widget_control,hourglass=0
-
 DEVICE, DECOMPOSED = 0
 if (*global).pass EQ 0 then begin
 ;load the default color table on first pass thru SHOW_DATA
@@ -449,6 +519,9 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 text = "...Done"
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;now turn hourglass back off
+widget_control,hourglass=0
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -566,8 +639,6 @@ end
 ; \argument event (INPUT) 
 ;--------------------------------------------------------------------------
 pro selection, event
-
-print, "in selection"
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -904,28 +975,91 @@ widget_control,id,get_uvalue=global
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
+signal_background_pid_file_names = get_signal_background_pid_file_name(Event)
+signal_pid_file_name = signal_background_pid_file_names[0]
+background_pid_file_name = signal_background_pid_file_names[1]
+
 if ((*global).selection_signal EQ 1) then begin
-    if ((*global).selection_background EQ 1) then begin
+    if ((*global).selection_background EQ 1) then begin ;signal and background saved
         full_text = "Signal and background selection have been saved"
         text = "Signal & background selection - SAVED"
         widget_control, view_info, set_value=text, /append
         widget_control, full_view_info, set_value=full_text, /append
-    endif else begin
+        ;produce the ascii files of the selection
+        produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
+    endif else begin            ;signal saved
         full_text = "Signal selection has been saved"
         text = "Signal selection - SAVED"
         widget_control, view_info, set_value=text, /append
         widget_control, full_view_info, set_value=full_text, /append
+        produce_pid_files, Event, signal_pid_file_name, ""
     endelse
-endif else begin
+endif else begin ;background saved
     if ((*global).selection_background EQ 1) then begin
         full_text = "Background selection has been saved"
         text = "Background selection - SAVED"
         widget_control, view_info, set_value=text, /append
         widget_control, full_view_info, set_value=full_text, /append
+        produce_pid_files, Event, "", background_pid_file_name
     endif 
 endelse
 
 end
+
+
+
+
+
+pro produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;there is a signal selection
+if (signal_pid_file_name NE "") then begin
+
+    x1_signal = (*global).x1_signal
+    x2_signal = (*global).x2_signal
+    y1_signal = (*global).y1_signal
+    y2_signal = (*global).y2_signal
+
+    XY = reorder(x1_signal, x2_signal, y1_signal, y2_signal)
+
+    xmin = XY[0]
+    xmax = XY[1]
+    ymin = XY[2]
+    ymax = XY[3]
+
+;create output file
+create_pid_array_file, XY, signal_pid_file_name
+
+endif
+
+;there is a signal selection
+if (background_pid_file_name NE "") then begin
+
+    x1_back = (*global).x1_back
+    x2_back = (*global).x2_back
+    y1_back = (*global).y1_back
+    y2_back = (*global).y2_back
+
+    XY = reorder(x1_back, x2_back, y1_back, y2_back)
+
+    xmin = XY[0]
+    xmax = XY[1]
+    ymin = XY[2]
+    ymax = XY[3]
+
+;create output file
+create_pid_array_file, XY, background_pid_file_name
+
+endif
+
+end
+
+
+
 
 
 
@@ -1020,5 +1154,26 @@ if (tmp_folder NE '') then begin
 endif
 
 widget_control,Event.top,/destroy
+
+end
+
+
+
+
+
+pro start_data_reduction_button_REF_L_eventcb, Event
+
+print, "in start_data_reductio for REF_L"
+
+end
+
+
+
+
+
+
+pro start_data_reduction_button_REF_M_eventcb, Event
+
+print, "in start_data_reductio for REF_M"
 
 end
