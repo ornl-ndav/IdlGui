@@ -100,13 +100,11 @@ case Event.id of
     
 ;INSIDE DATA_REDUCTION_WINDOW
 ;with or without background for REF_L
-    
     widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
         background_list_group_eventcb, Event
     end
 
 ;with or without background for REF_M
-
     widget_info(wWidget, FIND_BY_UNAME='background_list_group_REF_M'): begin
         background_list_group_eventcb_REF_M, Event
     end
@@ -116,6 +114,25 @@ case Event.id of
         intermediate_file_output_list_group_eventcb,Event
     end
     
+;start data reduction for REF_L
+    widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button_REF_L'): begin
+        start_data_reduction_button_REF_L_eventcb, Event
+    end
+
+;start data reduction for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button_REF_M'): begin
+        start_data_reduction_button_REF_M_eventcb, Event
+    end
+
+
+
+
+
+
+
+
+
+
     else:
     
 endcase
@@ -250,6 +267,7 @@ global = ptr_new({$
                    Ny                   : 0L,$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
+                   pid_file_extension   : 'Pid.txt',$
                    run_number		: '',$
                    selection_value      : 0,$
                    selection_signal     : 0,$
@@ -484,12 +502,12 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 row=1,$
                                                 uname='intermediate_file_output_list_group')
 
-start_data_reduction_button = widget_button(data_reduction_base,$
+start_data_reduction_button_REF_L = widget_button(data_reduction_base,$
                                             xoffset=5,$
                                             yoffset=232,$
                                             scr_xsize=295,$
                                             value='START DATA REDUCTION',$
-                                            uname='start_data_reduction_button')
+                                            uname='start_data_reduction_button_REF_L')
 
 ;info text box 
 info_text = widget_text(data_reduction_base,$
@@ -629,6 +647,7 @@ global = ptr_new({$
                    Ny                   : 0L,$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
+                   pid_file_extension   : 'Pid.txt',$
                    run_number		: '',$
                    selection_value      : 0,$
                    selection_signal     : 0,$
@@ -644,8 +663,8 @@ global = ptr_new({$
                    x2_signal            : 0L,$
                    y1_signal            : 0L,$
                    y2_signal            : 0L,$
-                   color_line_signal    : 200L,$
-                   color_line_background: 150L $
+                   color_line_signal    : 50L,$
+                   color_line_background: 0L $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
