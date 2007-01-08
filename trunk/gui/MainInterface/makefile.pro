@@ -9,5 +9,6 @@ resolve_routine, "main_interface_eventcb", /either
 resolve_routine, "main_interface", /either
 resolve_routine, "READ_BMP",/either
 resolve_routine, "xmanager",/either
+resolve_routine, "strsplit",/either
 save,/routines,filename="main_interface.sav"
 exit
