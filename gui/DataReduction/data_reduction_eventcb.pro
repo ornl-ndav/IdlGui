@@ -1,3 +1,19 @@
+function get_last_part_of_pid_file_names, signal_pid, background_pid
+
+array_name_signal = strsplit(signal_pid,'/',count=length,/extract)
+pid_name = array_name_signal[length-1]
+
+array_name_background = strsplit(background_pid,'/',count=length,/extract)
+background_name = array_name_background[length-1]
+
+last_part_of_pid_file_name = [pid_name, background_name]
+
+return, last_part_of_pid_file_name
+end
+
+
+
+
 ;this function reorder two numbers
 function  reorder, x1, x2, y1, y2 
 
@@ -45,7 +61,11 @@ end
 
 
 ;Create the output array for background selection
-pro create_background_pid_array_file, XYsignal, XYbackground, file_name
+pro create_background_pid_array_file, Event, XYsignal, XYbackground, XYbackground_2, file_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 xmin_signal = XYsignal[0]
 xmax_signal = XYsignal[1]
@@ -57,22 +77,69 @@ xmax_back = XYbackground[1]
 ymin_back = XYbackground[2]
 ymax_back = XYbackground[3]
 
+
+;define arrays
+Nx = (*global).Nx
+Ny = (*global).Ny
+signal_array=intarr(Nx, Ny)
+background_1_array = intarr(Nx, Ny)
+
+;create signal array
+for x=xmin_signal, xmax_signal do begin
+    for y=ymin_signal, ymax_signal do begin
+        signal_array[x,y]=1
+    endfor
+endfor
+
+;create background arraay
+
+for x=xmin_back, xmax_back do begin
+    for y=ymin_back, ymax_back do begin
+        background_1_array[x,y]=1
+    endfor
+endfor
+
+;if there is a second background selection
+if ((*global).selection_background_2 EQ 1) then begin  
+    xmin_back_2 = XYbackground_2[0]
+    xmax_back_2 = XYbackground_2[1]
+    ymin_back_2 = XYbackground_2[2]
+    ymax_back_2 = XYbackground_2[3]
+
+    background_2_array = intarr(Nx, Ny)
+    
+    for x=xmin_back_2,xmax_back_2 do begin
+        for y=ymin_back_2, ymax_back_2 do begin
+            background_2_array[x,y]=1
+        endfor
+    endfor
+
+;create new background array
+ 
+    background_1_array += background_2_array
+   
+endif
+
+;remove from background array, pixel already in signal array
+
+for x=xmin_signal,xmax_signal do begin
+    for y=ymin_signal, ymax_signal do begin
+        background_1_array[x,y] = 0
+    endfor
+endfor
+
+
 openw, 1, file_name
 
 i=0
-for x=xmin_back, xmax_back do begin
-    for y=ymin_back, ymax_back do begin
-        if (x GE xmin_signal AND $
-            x LE xmax_signal AND $
-            y GE ymin_signal AND $
-            y LE ymax_signal) then begin
-            ;pass
-        endif else begin
+for x=0, Nx-1 do begin
+    for y=0, Ny-1 do begin
+        if (background_1_array[x,y] NE 0) then begin
             text = '1_' + strcompress(x,/remove_all)
             text += '_' + strcompress(y,/remove_all)
             printf, 1,text
             ++i
-        endelse
+        endif
     endfor
 endfor
 
@@ -892,8 +959,7 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
 ;validate save_selection button if signal and background region are there
                 
                 if ((*global).selection_signal EQ 1 AND $
-                    (*global).selection_background EQ 1 AND $
-                    (*global).selection_background_2 EQ 1) then begin
+                    (*global).selection_background EQ 1) then begin
                     id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
                     widget_control, id_save_selection, sensitive=1
                 endif
@@ -1146,6 +1212,8 @@ end
 
 
 
+
+
 pro save_selection_cb, Event
 
 ;get global structure
@@ -1171,13 +1239,17 @@ widget_control, full_view_info, set_value=full_text, /append
 ;produce the ascii files of the selection
 produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 
-;populate signal and backgound pid file name in data reduction tab
-widget_control, signal_id, set_value=signal_pid_file_name
-widget_control, background_id, set_value=background_pid_file_name
+;populate signal and background pid file name in data reduction tab
+pid_file_names = get_last_part_of_pid_file_names(signal_pid_file_name, $
+                                                 background_pid_file_name)
+widget_control, signal_id, set_value=pid_file_names[0]
+widget_control, background_id, set_value=pid_file_names[1]
 
-;populate signal and backgound pid file name in data reduction tab
-widget_control, background_id, set_value=background_pid_file_name
-
+;output name of pid files in log-book
+full_text = " - signal Pid file name is: " + signal_pid_file_name
+widget_control, full_view_info, set_value=full_text, /append
+full_text = " - background Pid file name is: " + background_pid_file_name
+widget_control, full_view_info, set_value=full_text, /append
 end
 
 
@@ -1209,8 +1281,21 @@ y2_back = (*global).y2_back
 
 XYbackground = reorder(x1_back, x2_back, y1_back, y2_back)
 
+;background selection #2
+x1_back_2 = (*global).x1_back_2
+x2_back_2 = (*global).x2_back_2
+y1_back_2 = (*global).y1_back_2
+y2_back_2 = (*global).y2_back_2
+
+XYbackground_2 = reorder(x1_back_2, x2_back_2, y1_back_2, y2_back_2)
+
 ;create output file
-create_background_pid_array_file, XYsignal, XYbackground, background_pid_file_name
+create_background_pid_array_file, $
+  Event, $  
+  XYsignal, $
+  XYbackground, $
+  XYbackground_2, $
+  background_pid_file_name
 
 end
 

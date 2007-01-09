@@ -1096,33 +1096,61 @@ fourth_tab_base = widget_base(data_reduction_tab,$
                                   XOFFSET=0,$
                                   YOFFSET=0)
 
-signal_info_label = widget_label(fourth_tab_base,$
-                                 value='S I G N A L',$
-                                 xoffset=150,$
-                                 yoffset=5)
 
-signal_info= widget_text(fourth_tab_base,$
+selection_tab = widget_tab(fourth_tab_base,$
+                                  location=0,$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=xsize_of_tabs-10,$
+                                  scr_ysize=ysize_of_tabs-30)
+  
+;signal_selection_tab
+signal_tab_base = widget_base(selection_tab,$
+                              uname='signal_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_info = widget_text(signal_tab_base,$
                           uname='signal_info',$
-                          xoffset=5,$
-                          yoffset=25,$
-                          scr_xsize=350,$
-                          scr_ysize=375,$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
                           /wrap,$
-                         /scroll)
+                          /scroll)
 
-background_info_label = widget_label(fourth_tab_base,$
-                                     value='B A C K G R O U N D',$
-                                     xoffset=500,$
-                                     yoffset=5)
+;background_1_selection_tab
+background_1_tab_base = widget_base(selection_tab,$
+                                    uname='background_1_tab_base',$
+                                    TITLE='',$
+                                    XOFFSET=0,$
+                                    YOFFSET=0)
 
-background_info = widget_text(fourth_tab_base,$
-                              uname='background_info',$
-                              xoffset=370,$
-                              yoffset=25,$
-                              scr_xsize=350,$
-                              scr_ysize=375,$
-                              /wrap,$
-                             /scroll)
+background_1_info = widget_text(background_1_tab_base,$
+                          uname='background_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;background_2_selection_tab
+background_2_tab_base = widget_base(selection_tab,$
+                                  uname='background_2_tab_base',$
+                                  TITLE='',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+background_2_info = widget_text(background_2_tab_base,$
+                          uname='background_2_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
 
 ;other plots tab
 other_plots_base = widget_base(data_reduction_tab,$
