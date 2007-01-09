@@ -14,6 +14,30 @@ end
 
 
 
+
+function get_list_of_runs, runs_to_process
+
+array_of_runs = strsplit(runs_to_process,',',count=length,/extract)
+
+return, array_of_runs
+end
+
+
+
+
+function get_last_part_of_pid_file_name, full_pid_file_name
+
+array_pid_file_name = strsplit(full_pid_file_name,'/',count=length,/extract)
+pid_file_name = array_pid_file_name[length-1]
+
+
+return, pid_file_name
+end
+
+
+
+
+
 ;this function reorder two numbers
 function  reorder, x1, x2, y1, y2 
 
@@ -25,6 +49,86 @@ ymin = min(Y, max=ymax)
 
 return, [xmin, xmax, ymin, ymax]
 end
+
+
+
+
+
+pro open_pid_file, Event, type
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+title = 'Select ' + type + ' Pid file'
+filter= '*_' + type + '_' + (*global).pid_file_extension
+pid_path = (*global).tmp_folder
+;open file
+full_pid_file = dialog_pickfile(path=pid_path,$
+                                 get_path=path,$
+                                 title=title,$
+                                 filter=filter)
+
+if (full_pid_file NE '') then begin
+
+    last_part_of_Pid_name = get_last_part_of_pid_file_name(full_pid_file)
+
+    if (type EQ 'signal') then begin
+        text_box_id = widget_info(Event.top, find_by_uname='signal_pid_text')
+        (*global).signal_pid_file_name = full_pid_file
+    endif else begin
+        text_box_id = widget_info(Event.top, find_by_uname='background_pid_text')
+        (*global).background_pid_file_name = full_pid_file
+    endelse
+    
+    widget_control, text_box_id, set_value=last_part_of_Pid_name
+    
+;put info into log_book
+    full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+    text = type + ' Pid file has been loaded: '
+    widget_control, full_view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=full_pid_file, /append
+
+endif
+
+end
+
+
+
+
+pro help_runs_to_process, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+push_button = (*global).push_button
+id_text_box = widget_info(Event.top, find_by_uname='runs_to_process_text')
+
+
+if (push_button EQ 0) then begin
+
+;save previous contains of text box
+    widget_control, id_text_box, get_value=previous_text
+    (*global).previous_text = previous_text
+
+;put help contains
+    (*global).push_button = 1
+    text = '1924,1925,1930,1946,1947,1950'
+
+endif else begin
+
+;put back previous contain of text box
+    (*global).push_button = 0
+    text = (*global).previous_text
+
+endelse
+
+widget_control, id_text_box, set_value=text
+
+end
+
+
 
 
 
@@ -79,8 +183,10 @@ ymax_back = XYbackground[3]
 
 
 ;define arrays
-Nx = (*global).Nx
-Ny = (*global).Ny
+;Nx = (*global).Nx
+;Ny = (*global).Ny
+Nx = (*global).Ny
+Ny = (*global).Nx
 signal_array=intarr(Nx, Ny)
 background_1_array = intarr(Nx, Ny)
 
@@ -393,6 +499,8 @@ end
 ;
 pro data_reduction_eventcb
 end
+
+
 
 
 pro wTLB_REALIZE, wWidget
@@ -846,16 +954,16 @@ signal_or_background = (*global).selection_value
 ;left mouse button
 IF ((event.press EQ 1) AND (file_opened EQ 1)) then begin
     
-                                ;get data
+;get data
     img = (*(*global).img_ptr)
-                                ;data = (*(*global).data_ptr)
+
     tmp_tof = (*(*global).data_assoc)
     Nx = (*global).Nx
     
     x = Event.x
     y = Event.y
-                                    ;set data
-    
+
+;set data
     text = " x= " + strcompress(x,/remove_all)
     text += " y= " + strcompress(y,/remove_all)
     
@@ -869,19 +977,18 @@ endif
 ;right mouse button
 IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
     
-                                ;get window numbers
+;get window numbers
     id_draw = widget_info(Event.top, find_by_uname='display_data_base')
     WIDGET_CONTROL, id_draw, GET_VALUE = id
     wset, id
     
-                                ;from the rubber_band program
+;from the rubber_band program
     getvals = 0 ;while getvals is GT 0, continue to check mouse down clicks
     
-                                ;continue to loop getting values while mouse clicks occur within the image window
+;continue to loop getting values while mouse clicks occur within the image window
     
     Nx = (*global).Nx
     Ny = (*global).Ny
-;   window_counter = (*global).window_counter
     
     x = lonarr(2)
     y = lonarr(2)
@@ -929,7 +1036,8 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                         
                 endif
                     
-                id_save_selection = widget_info(Event.top, find_by_uname='clear_selection_button')
+                id_save_selection = widget_info(Event.top, $
+                                                find_by_uname='clear_selection_button')
                 widget_control, id_save_selection, sensitive=1
                 
                 first_round = 1
@@ -960,7 +1068,8 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 
                 if ((*global).selection_signal EQ 1 AND $
                     (*global).selection_background EQ 1) then begin
-                    id_save_selection = widget_info(Event.top, find_by_uname='save_selection_button')
+                    id_save_selection = widget_info(Event.top, $
+                                                    find_by_uname='save_selection_button')
                     widget_control, id_save_selection, sensitive=1
                 endif
                 
@@ -1006,13 +1115,9 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
     
     if (click_outside EQ 1) then begin
         
-;       if (display_info EQ 1) then begin
-        
         x=lonarr(2)
         y=lonarr(2)
         
-;        if ((*global).selection_signal EQ 1) then begin
-            
             if (signal_or_background EQ 0) then begin
 
                 x[0]=(*global).x1_signal
@@ -1040,7 +1145,7 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 
             endif
             
-                                ;*Initialization of text boxes
+;Initialization of text boxes
             full_text_selection_1 = ''
             full_text_selection_2 = 'The two corners are defined by:'
             
@@ -1058,13 +1163,9 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
             
             starting_id = (y_min*304+x_min)
             starting_id_string = strcompress(starting_id)
-;          (*global).starting_id_x = x_min
-;          (*global).starting_id_y = y_min
             
             ending_id = (y_max*304+x_max)
             ending_id_string = strcompress(ending_id)
-;          (*global).ending_id_x = x_max
-;          (*global).ending_id_y = y_max
             
             full_text_selection_3 = '    Bottom left corner:  '
             full_text_selection_3_1 = '      pixelID#: ' + starting_id_string + $
@@ -1141,14 +1242,12 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 
             endelse        
             
-;        endif
+        endif else begin
+            
+        endelse
         
-    endif else begin
-        
-    endelse
+    endif
     
-endif
-
 end
 
 
@@ -1245,11 +1344,15 @@ pid_file_names = get_last_part_of_pid_file_names(signal_pid_file_name, $
 widget_control, signal_id, set_value=pid_file_names[0]
 widget_control, background_id, set_value=pid_file_names[1]
 
-;output name of pid files in log-book
+;output full name of pid files in log-book
 full_text = " - signal Pid file name is: " + signal_pid_file_name
 widget_control, full_view_info, set_value=full_text, /append
 full_text = " - background Pid file name is: " + background_pid_file_name
 widget_control, full_view_info, set_value=full_text, /append
+
+(*global).signal_pid_file_name = signal_pid_file_name
+(*global).background_pid_file_name = background_pid_file_name
+
 end
 
 
@@ -1406,7 +1509,99 @@ end
 
 pro start_data_reduction_button_REF_L_eventcb, Event
 
-print, "in start_data_reduction for REF_L"
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+;retrieve values of all input
+full_signal_pid_file_name = (*global).signal_pid_file_name
+
+;retrieve value of background if WITH background has been selected
+background_list_id = widget_info(Event.top, find_by_uname='background_list_group')
+widget_control, background_list_id, get_value=value
+;value = 0 -> with background
+;value = 1 -> without background
+if (value EQ 0) then begin
+    full_background_pid_file_name = (*global).background_pid_file_name
+endif
+
+;get normalization run number
+normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
+widget_control, normalization_text_id, get_value=run_number_normalization
+
+if (run_number_normalization NE '') then begin
+    
+;verify format 
+    wrong_format = 0
+    CATCH, wrong_run_number_format
+    
+    if (wrong_run_number_format ne 0) then begin
+        
+        WIDGET_CONTROL, view_info, SET_VALUE="ERROR: normalization run number invalid", /APPEND
+        WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+        text = 'ERROR: normalization run number invalid - ' + run_number_normalization
+        WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+        WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
+        wrong_format = 1
+        
+    endif else begin
+        
+;routine use to test format of normalization run number
+        a=lonarr(float(run_number_normalization))
+        
+        if (wrong_format EQ 0) then begin
+            
+;get full preNeXus path
+            cmd_findnexus = "findnexus -i" + (*global).instrument
+            cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
+            spawn, cmd_findnexus, full_path_to_nexus
+            
+;check if nexus exists
+            result = strmatch(full_path_to_nexus,"ERROR*")
+            
+            if (result[0] GE 1) then begin
+                
+                find_nexus = 0  ;run# does not exist in archive
+                text = 'Normalization file does not exist'
+                full_text = 'Normalization run number file does not exist (' + $
+                  full_path_to_nexus + ')'
+                
+            endif else begin
+                
+                find_nexus = 1  ;run# exist in archive
+                text = 'Normalization file: OK'
+                full_text = 'Normalization file used: ' + full_path_to_nexus        
+                
+            endelse
+            
+            widget_control, view_info, set_value=text, /append
+            widget_control, full_view_info, set_value=full_text, /append
+            
+        endif
+        
+    endelse
+    
+    catch, /cancel
+
+endif else begin
+
+    text = 'Please specify a normalization run number'
+    full_text = 'Normalization run number: MISSING'
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
+
+endelse
+
+;get runs_to_process list of files
+runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+widget_control, runs_to_process_text_id, get_value=runs_to_process
+
+runs_array = get_list_of_runs(runs_to_process)
+
 
 end
 
