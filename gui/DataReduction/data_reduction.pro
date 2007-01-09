@@ -44,7 +44,6 @@ case Event.id of
     end
     
     
-    
 ;open nexus file button for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -55,6 +54,24 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go_REF_M'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           open_nexus_file, Event
+    end
+
+;open signal pid file
+    Widget_Info(wWidget, FIND_BY_UNAME='signal_pid_file_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          open_pid_file, Event, "signal"
+    end
+
+;open back pid file
+    Widget_Info(wWidget, FIND_BY_UNAME='background_pid_file_button'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          open_pid_file, Event, "background"
+    end
+
+;help on format input of runs to process
+    Widget_Info(wWidget, FIND_BY_UNAME='runs_to_process_help'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          help_runs_to_process, Event
     end
 
 ;Exit widget in the top toolbar for REF_L
@@ -196,7 +213,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=1.0,$          ;REMOVE_ME, put 0.0 back
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -253,6 +270,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   signal_pid_file_name : '',$
+                   background_pid_file_name : '',$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
@@ -268,6 +287,8 @@ global = ptr_new({$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
                    pid_file_extension   : 'Pid.txt',$
+                   previous_text        : '',$
+                   push_button          : 0,$
                    run_number		: '',$
                    selection_value      : 0,$
                    selection_signal     : 0,$
@@ -446,13 +467,13 @@ background_list_group = CW_BGROUP(data_reduction_base,$
 background_file_base = widget_base(data_reduction_base,$
                                    uname='background_file_base',$
                                    xoffset=0,$
-                                   yoffset=75,$
+                                   yoffset=70,$
                                    scr_xsize=xsize_of_tabs,$
                                    scr_ysize=40,$
                                    frame=0)
 
-background_file_button = widget_button(background_file_base,$
-                                       uname='background_file_button',$
+background_pid_file_button = widget_button(background_file_base,$
+                                       uname='background_pid_file_button',$
                                        xoffset=5,$
                                        yoffset=7,$
                                        value='Back. Pid file')
@@ -468,33 +489,59 @@ background_file_text = widget_text(background_file_base,$
 
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
-                                   yoffset=130,$
+                                   yoffset=117,$
                                    value='Normalization - Run number:')
 normalization_text = widget_text(data_reduction_base,$
                                  xoffset=180,$
-                                 yoffset=123,$
+                                 yoffset=110,$
                                  scr_xsize=120,$
                                  value='',$
                                  uname='normalization_text',$
                                 /editable,$
                                 /align_left)
 
+norm_background_title = widget_label(data_reduction_base,$
+                                     xoffset=8,$
+                                     yoffset=145,$
+                                     value='normalize bkg:')
+
+norm_background_list = ['Yes',$
+                        'No']
+norm_background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                       norm_background_list,$
+                                       /exclusive,$
+                                       /RETURN_NAME,$
+                                       XOFFSET=100,$
+                                       YOFFSET=140,$
+                                       SET_VALUE=0.0,$
+                                       row=1,$
+                                       uname='norm_background_list_group')
+
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=172,$
+                                     yoffset=183,$
                                      value='Runs #')
 runs_to_process_text = widget_text(data_reduction_base,$
                                    xoffset=50,$
-                                   yoffset=165,$
-                                   scr_xsize=250,$
+                                   yoffset=173,$
+                                   scr_xsize=230,$
                                    value='',$
                                    uname='runs_to_process_text',$
                                    /editable,$
                                    /align_left)
+runs_to_process_help = widget_button(data_reduction_base,$
+                                     uname='runs_to_process_help',$
+                                     xoffset=280,$
+                                     yoffset=173,$
+                                     scr_xsize=20,$
+                                     scr_ysize=30,$
+                                     value='?',$
+                                    /pushbutton_events,$
+                                    tooltip='Click to see the format of input to use')
 
 intermediate_file_label = widget_label(data_reduction_base,$
                                        xoffset=5,$
-                                       yoffset=206,$
+                                       yoffset=210,$
                                        value='Intermediate file output:')
 
 intermediate_file_output_list = ['Yes',$
@@ -504,14 +551,14 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 /exclusive,$
                                                 /RETURN_NAME,$
                                                 XOFFSET=170,$
-                                                YOFFSET=200,$
+                                                YOFFSET=204,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
                                                 uname='intermediate_file_output_list_group')
 
 start_data_reduction_button_REF_L = widget_button(data_reduction_base,$
                                             xoffset=5,$
-                                            yoffset=232,$
+                                            yoffset=235,$
                                             scr_xsize=295,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button_REF_L')
@@ -668,6 +715,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   signal_pid_file_name : '',$
+                   background_pid_file_name : '',$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
@@ -682,6 +731,8 @@ global = ptr_new({$
                    Ny                   : 0L,$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
+                   previous_text        : '',$
+                   push_button          : 0,$
                    pid_file_extension   : 'Pid.txt',$
                    run_number		: '',$
                    selection_value      : 0,$
@@ -962,12 +1013,12 @@ signal_pid_base = widget_base(data_reduction_base,$
                               yoffset=95,$
                               frame=1)
 
-signal_pid_button = widget_button(signal_pid_base,$
-                                  uname='signal_pid_button',$
-                                  xoffset=0,$
-                                  yoffset=0,$
-                                 value='Signal - Pid file',$
-                                 scr_xsize=135)
+signal_pid_file_button = widget_button(signal_pid_base,$
+                                       uname='signal_pid_file_button',$
+                                       xoffset=0,$
+                                       yoffset=0,$
+                                       value='Signal - Pid file',$
+                                       scr_xsize=135)
 
 signal_pid_text = widget_text(signal_pid_base,$
                               uname='signal_pid_text',$
@@ -975,7 +1026,7 @@ signal_pid_text = widget_text(signal_pid_base,$
                               yoffset=25,$
                               scr_xsize=135,$
                               /editable)
-                              
+
 ;background Pid file
 back_y_offset = 135
 background_title = widget_label(data_reduction_base,$
@@ -1001,8 +1052,8 @@ background_file_base_REF_M = widget_base(data_reduction_base,$
                                          scr_xsize=xsize_of_tabs,$
                                          frame=0)
 
-background_file_button_REF_M = widget_button(background_file_base_REF_M,$
-                                             uname='background_file_button_REF_M',$
+background_pid_file_button = widget_button(background_file_base_REF_M,$
+                                             uname='background_pid_file_button',$
                                              xoffset=3,$
                                              yoffset=7,$
                                              value='Background - Pid file')
@@ -1034,28 +1085,62 @@ runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=231,$
                                      value='Runs #')
-runs_to_process_text_REF_M = widget_text(data_reduction_base,$
+runs_to_process_text= widget_text(data_reduction_base,$
                                          xoffset=50,$
                                          yoffset=221,$
-                                         scr_xsize=248,$
+                                         scr_xsize=228,$
                                          value='',$
-                                         uname='runs_to_process_text_REF_M',$
+                                         uname='runs_to_process_text',$
                                          /editable,$
                                          /align_left)
 
+runs_to_process_help = widget_button(data_reduction_base,$
+                                     uname='runs_to_process_help',$
+                                     xoffset=278,$
+                                     yoffset=221,$
+                                     scr_xsize=20,$
+                                     scr_ysize=30,$
+                                     value='?',$
+                                    /pushbutton_events,$
+                                    tooltip='Click to see the format of input to use')
+
+
+;norm-bkg
+norm_background_title = widget_label(data_reduction_base,$
+                                     xoffset=5,$
+                                     yoffset=257,$
+                                     value='norm bkg:')
+
+norm_background_list = ['Y',$
+                        'N']
+norm_background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                       norm_background_list,$
+                                       /exclusive,$
+                                       /RETURN_NAME,$
+                                       XOFFSET=60,$
+                                       YOFFSET=250,$
+                                       SET_VALUE=0.0,$
+                                       row=1,$
+                                       uname='norm_background_list_group')
+
+
+
+
+
+
 ;intermediate files/plots
 intermediate_file_label = widget_label(data_reduction_base,$
-                                       xoffset=5,$
+                                       xoffset=140,$
                                        yoffset=257,$
-                                       value='Intermediate file output:')
+                                       value='Interm. plots:')
 
-intermediate_file_output_list = ['Yes   ',$
-                                 'No   ']
+intermediate_file_output_list = ['Y',$
+                                 'N']
 intermediate_file_output_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
                                                       intermediate_file_output_list,$
                                                       /exclusive,$
                                                       /RETURN_NAME,$
-                                                      XOFFSET=170,$
+                                                      XOFFSET=230,$
                                                       YOFFSET=250,$
                                                       SET_VALUE=1.0,$
                                                       row=1,$
