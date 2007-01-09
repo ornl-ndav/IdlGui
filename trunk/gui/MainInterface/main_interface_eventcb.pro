@@ -91,22 +91,21 @@ case list_index of
     5: begin
 ;DataReduction
 
-        if (ucams EQ 'j35') then launch_activation = 1
+        if (ucams EQ 'j35' OR ucams EQ '2zr') then launch_activation = 1
         text = 'Program that performs basics data_reduction for'
         text += ' the two reflectometers.'
         text += '                   '
         text += ' COMING SOON IN YOUR AREA '
+        picture = '/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/DataReduction.bmp'
+        x=0
+        y=0
         (*global).active_idl_tool = 'DataReduction'
     end
 endcase
 
 if (list_index NE 0) then begin
-    if (list_index EQ 5) then begin
-        ;don't display anything yet for data_reduction
-    endif else begin
-        image = read_bmp(picture)
-        tv, image,x,y,/true
-        endelse
+    image = read_bmp(picture)
+    tv, image,x,y,/true
 endif
 
 info_id = widget_info(Event.top, find_by_uname='info_description')
