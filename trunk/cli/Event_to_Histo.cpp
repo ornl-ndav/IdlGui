@@ -254,7 +254,7 @@ int32_t main(int32_t argc, char *argv[])
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
                                           "delta_t/t coefficient",
                                           true, 1, 
-                                "logarithmic rebinning coefficient (>=0.05)"); 
+                                "logarithmic rebinning coefficient."); 
 
       cmd.xorAdd(time_rebin_width_cmd, log_rebin_coeff_cmd);
 
@@ -342,7 +342,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t max_time_bin_100ns
             = static_cast<int32_t>(max_time_bin_cmd.getValue() * 10.);
           int32_t time_rebin_width_100ns;
-          float log_rebin_coeff_100ns;
+
           
           //check that the time_offset in 100ns scale is at least 1
           int32_t time_offset_100ns
@@ -378,16 +378,8 @@ int32_t main(int32_t argc, char *argv[])
             }
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
-              log_rebin_coeff_100ns
-                = static_cast<int32_t>(log_rebin_coeff_cmd.getValue() * 10.);
-              //check if log_rebin_coeff_100ns is greater or equal to 0.5
-              //otherwise forces a value of 0.5
-              /*
-              if (log_rebin_coeff_100ns < 0.5)
-                {
-                  log_rebin_coeff_100ns = 0.5;
-                }
-              */
+              float log_rebin_coeff
+                = static_cast<float>(log_rebin_coeff_cmd.getValue());
               
               if (das_log_method_cmd.getValue())
                 {
@@ -400,7 +392,7 @@ int32_t main(int32_t argc, char *argv[])
                   time_bin_vector = 
                     generate_das_log_time_bin_vector(
                                                      max_time_bin_100ns,
-                                                     log_rebin_coeff_100ns,
+                                                     log_rebin_coeff,
                                                      time_offset_100ns,
                                                      debug,
                                                      verbose);
@@ -416,7 +408,7 @@ int32_t main(int32_t argc, char *argv[])
                   time_bin_vector = 
                     generate_log_time_bin_vector(
                                                  max_time_bin_100ns,
-                                                 log_rebin_coeff_100ns,
+                                                 log_rebin_coeff,
                                                  time_offset_100ns,
                                                  debug,
                                                  verbose);
