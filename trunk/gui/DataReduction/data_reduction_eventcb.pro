@@ -1969,6 +1969,10 @@ endelse
 end
 
 
+
+
+
+
 pro intermediate_plots_list_cancel_eventcb, Event
 
 ;get global structure
@@ -1995,5 +1999,385 @@ if (value_selection[0] EQ 0 AND $
     widget_control, inter_id, set_value=1
 
 endif
+
+end
+
+
+
+
+;plot routine that can plot the main plot or any of the intermediate plots
+pro plot_reduction, Event, plot_file_name, draw_id, title
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;log book ids (full and simple)
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+strt_time = systime(1)
+
+full_text = 'Plotting: ' + plot_file_name + '....'
+text = 'Plotting....'
+
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=full_text, /append
+
+;CATCH, wrong_text_file
+
+;if (wrong_text_file ne 0) then begin
+
+;	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid .txt file", /APPEND
+;	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+
+;endif else begin
+
+openr,u,plot_file_name,/get
+fs = fstat(u)
+
+;define an empty string variable to hold results from reading the file
+tmp  = ''
+tmp0 = ''
+tmp1 = ''
+tmp2 = ''
+
+flt0 = -1.0
+flt1 = -1.0
+flt2 = -1.0
+
+Nelines = 0L
+Nndlines = 0L
+Ndlines = 0L
+onebyte = 0b
+
+while (NOT eof(u)) do begin
+    
+    readu,u,onebyte             ;,format='(a1)'
+    fs = fstat(u)
+                                ;print,'onebyte: ',onebyte
+    
+                                ;rewinded file pointer one character
+    if fs.cur_ptr EQ 0 then begin
+        point_lun,u,0
+    endif else begin
+        point_lun,u,fs.cur_ptr - 1
+    endelse
+    
+    true = 1
+    case true of
+        
+        ((onebyte LT 48) OR (onebyte GT 57)): begin
+                                ;case where we have non-numbers
+            Nelines = Nelines + 1
+                                ;print,'Non-data Line: ',Nndlines
+            readf,u,tmp
+        end
+        
+        else: begin
+                                ;case where we (should) have data
+            Ndlines = Ndlines + 1
+                                ;print,'Data Line: ',Ndlines
+            
+            catch, Error_Status
+            if Error_status NE 0 then begin
+;			Print, 'Handling case where we only have the wavelength bin and no data...'
+;			print, 'This case occurs in the last line of the data file.'
+;     		PRINT, 'Error index: ', Error_status
+;      		PRINT, 'Error message: ', !ERROR_STATE.MSG
+;			Print, 'Handling Error Now'
+                                ;do something to handle error condition...
+                                ;append the last number to flt0
+                flt0 = [flt0,float(tmp0)]
+                                ;strip -1 from beginning of each array
+                flt0 = flt0[1:*]
+                flt1 = flt1[1:*]
+                flt2 = flt2[1:*]
+                                ;you're done now...
+; 			Print,'Error Handling Complete'
+                CATCH, /CANCEL
+            endif else begin
+                readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
+                flt0 = [flt0,float(tmp0)]
+                flt1 = [flt1,float(tmp1)]
+                flt2 = [flt2,float(tmp2)]
+                
+            endelse
+            
+        end
+    endcase
+    
+endwhile
+
+;view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+;text = 'Number of non-data lines: ' + strcompress(Nndlines,/remove_all)
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+;text = 'Number of data lines: ' + strcompress(Ndlines,/remove_all)
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+
+;window,0
+;!p.multi=[0,2,2]
+;plot,flt0,title='Wavelength'
+;plot,flt1,title='Intensity'
+;plot,flt2,title='Sigma'
+
+view_plot = widget_info(Event.top,FIND_BY_UNAME=' draw_id')
+WIDGET_CONTROL, view_plot, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+plot,flt0,flt1,title=title
+errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
+
+;!p.multi=0
+
+close,u
+free_lun,u
+stop_time = systime(1)
+
+;endelse
+
+;CATCH, /CANCEL
+
+end
+;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
+
+
+
+
+
+
+
+
+
+;get interm. window
+pro access_to_list_of_intermediate_plots_eventcb, Event
+
+list_of_plots_id = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, list_of_plots_id, map=1
+
+end
+
+
+;cancel button inside inter. window
+pro intermediate_plots_list_cancel_eventcb_REF_M, Event   
+
+list_of_plots_id = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, list_of_plots_id, map=0
+
+end
+
+
+;when selection yes or no
+pro intermediate_file_output_list_group_eventcb_REF_M, Event   
+
+;check value of intermediate file output
+id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group_REF_M')
+widget_control, id, get_value = value
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;log book ids (full and simple)
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
+
+    if (value EQ 0) then begin  ;display other plots
+
+;display labels on tabs
+        intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+        widget_control, intermediate_plot_base, map=1
+
+        ;save status of buttons
+        plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+        widget_control, plots_selection_id, get_value=value_selection
+
+        (*global).plots_selected = value_selection
+        
+        
+    endif else begin            ;remove other plots 
+        
+        intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+        widget_control, intermediate_plot_base, map=0
+        
+                                ;remove labels on tabs
+        tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+        tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+        tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+        tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+        tab_5_id = widget_info(Event.top, $
+                               find_by_uname='background_region_from_normalization_region_summed_tof_base')
+        widget_control, tab_1_id, base_set_title=''
+        widget_control, tab_2_id, base_set_title=''
+        widget_control, tab_3_id, base_set_title=''
+        widget_control, tab_4_id, base_set_title=''
+        widget_control, tab_5_id, base_set_title=''
+        
+        full_text = 'No intermediate files will be produced'
+        text = 'No intermediate plot'
+        widget_control, full_view_info, set_value=full_text, /append
+        widget_control, view_info, set_value=text, /append
+        
+    endelse
+
+    (*global).entering_intermediate_file_output_for_first_time = 0
+
+endif else begin
+
+    (*global).entering_intermediate_file_output_for_first_time = 1
+
+endelse
+
+end 
+
+
+pro intermediate_plots_list_validate_eventcb,Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+list_of_plots_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+widget_control, list_of_plots_id, get_value=value
+
+;log book ids (full and simple)
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+;index 1 of array: .sdc (signal region summed TOF)
+;index 2 of array: .bkg (background summed TOL)
+;index 3 of array: .sub (signal region summed TOF)
+;index 4 of array: .nom (normalization region summed TOF)
+;index 5 of array: .bnk (background region normalization summed TOF)
+
+indx0 = value[0]
+indx1 = value[1]
+indx2 = value[2]
+indx3 = value[3]
+indx4 = value[4]
+
+number_of_plots_selected = 0
+
+full_text = 'Name of intermediate plots that will be plotted:'
+widget_control, full_view_info, set_value=full_text, /append
+
+
+tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+if (indx0 EQ 1) then begin ;signal region summed TOF
+
+    widget_control, tab_1_id, base_set_title='Signal'
+    number_of_plots_selected += 1
+    
+    full_text = ' - Signal region summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    widget_control, tab_1_id, base_set_title=''
+
+endelse
+
+back_id = widget_info(Event.top, find_by_uname='background_list_group')
+widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
+
+tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+if (indx1 EQ 1 AND bkg_flag EQ 0) then begin
+
+    widget_control, tab_2_id, base_set_title='Background'
+    number_of_plots_selected += 1
+
+    full_text = ' - Background summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    ;remove this plot from the list of selected plots
+    indx1 = 0
+    new_value = [indx0, indx1, indx2, indx3, indx4]
+    
+    widget_control,list_of_plots_id,set_value=new_value
+    widget_control, tab_2_id, base_set_title=''
+
+endelse
+
+tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+if (indx2 EQ 1) then begin ;signal region summed TOF
+
+    widget_control, tab_3_id, base_set_title='Signal region with background'
+    number_of_plots_selected += 1
+
+    full_text = ' - Signal region summed TOF after subtracting the background'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    widget_control, tab_3_id, base_set_title=''
+
+endelse
+
+norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+widget_control, norm_id, get_value=norm_flag  ;0:with norm    1:no normalization
+
+tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+if (indx3 EQ 1 AND norm_flag EQ 0) then begin
+
+    widget_control, tab_4_id, base_set_title='Normalization'
+    number_of_plots_selected += 1
+
+    full_text = ' - Normalization region summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    indx3 = 0
+    widget_control, tab_4_id, base_set_title=''
+
+endelse
+
+tab_5_id = widget_info(Event.top, $
+                       find_by_uname='background_region_from_normalization_region_summed_tof_base')
+if (indx4 EQ 1 AND norm_flag EQ 0) then begin
+
+    widget_control, tab_5_id, base_set_title='Background from normalization'
+    number_of_plots_selected += 1
+
+    full_text = ' - Background region from normalization summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    indx4 = 0
+    widget_control, tab_5_id, base_set_title=''
+
+endelse
+
+intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, intermediate_plot_base, map=0
+
+;if none of the plots have been selected change status of intermediate
+;plots to NO
+if (number_of_plots_selected EQ 0) then begin
+
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+    widget_control, inter_id, set_value=1
+    full_text = ' NONE'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+    
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+    widget_control, inter_id, set_value=0
+    
+endelse
+
+    text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
+    widget_control, view_info, set_value=text, /append
+
+(*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
 
 end
