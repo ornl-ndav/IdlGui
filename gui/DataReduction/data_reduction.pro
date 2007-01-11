@@ -132,9 +132,19 @@ case Event.id of
         background_list_group_eventcb_REF_M, Event
     end
 
-;intermediate file output for REF_L
+;intermediate file output for REF_L (yes/no)
     widget_info(wWidget, FIND_BY_UNAME='intermediate_file_output_list_group'):begin
         intermediate_file_output_list_group_eventcb,Event
+    end
+
+;intermediate file output for REF_M (yes/no)
+    widget_info(wWidget, FIND_BY_UNAME='intermediate_file_output_list_group_REF_M'):begin
+        intermediate_file_output_list_group_eventcb_REF_M,Event
+    end
+
+;intermediate file output for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='access_to_list_of_intermediate_plots_button'):begin
+        access_to_list_of_intermediate_plots_eventcb,Event
     end
 
 ;display list of intermediate plots
@@ -151,6 +161,11 @@ case Event.id of
 ;cancel list of intermediate file output for REF_L
     widget_info(wWidget, Find_by_uname='intermediate_plots_list_cancel'):begin
         intermediate_plots_list_cancel_eventcb,Event
+    end
+
+;cancel list of intermediate file output for REF_M
+    widget_info(wWidget, Find_by_uname='intermediate_plots_list_cancel_REF_M'):begin
+        intermediate_plots_list_cancel_eventcb_REF_M,Event
     end
 
 ;start data reduction for REF_L and REF_M
@@ -221,7 +236,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=1.0,$          ;REMOVE_ME, put 0.0 back
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -738,7 +753,6 @@ other_plots_tab = widget_tab(other_plots_base,$
                                   scr_xsize=xsize_of_tabs-10,$
                                   scr_ysize=ysize_of_tabs-30)
 
-
 ;signal region plot
 signal_region_tab_base = widget_base(other_plots_tab,$
                               uname='signal_region_tab_base',$
@@ -874,6 +888,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   entering_intermediate_file_output_for_first_time : 0,$
                    signal_pid_file_name : '',$
                    background_pid_file_name : '',$
                    ct                   : 5,$
@@ -915,7 +930,8 @@ global = ptr_new({$
                    y2_signal            : 0L,$
                    color_line_signal    : 50L,$
                    color_line_background: 0L,$
-                   color_line_background_2: 25L $
+                   color_line_background_2: 25L,$
+                   plots_selected : [1,1,1,1,1] $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -927,6 +943,62 @@ widget_control, MAIN_BASE, set_uvalue=global
 
 (*global).output_path = (*global).output_path + user + "/"
 
+;#########################
+;intermediate plots window
+list_of_plots_base = widget_base(MAIN_BASE,$
+                                 uname='list_of_plots_base',$
+                                 xoffset=450,$
+                                 yoffset=200,$
+                                 scr_xsize=330,$
+                                 scr_ysize=220,$
+                                 xpad=5,$
+                                 ypad=5,$
+                                 frame=2,$
+                                 map=0)
+
+list_of_intermediate_plots_base = widget_base(list_of_plots_base,$
+                                              uname='list_of_intermediate_plots_base',$
+                                              xoffset=0,$
+                                              yoffset=0,$
+                                              scr_xsize=330,$
+                                              scr_ysize=180,$
+                                              column=1)
+
+list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,$
+                                                value='List of intermediate plots',$
+                                                frame=2)
+
+intermediate_plots_list = ['Signal region summed TOF',$
+                           'Background summed TOL',$
+                           'Signal region summed TOF',$
+                           'Normalization region summed TOF',$
+                           'Background region from normalization summed TOF']
+
+intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$ 
+                                          intermediate_plots_list,$
+                                          /RETURN_NAME,$
+                                          /nonexclusive,$
+                                          XOFFSET=30,$
+                                          YOFFSET=25,$
+                                          UNAME='intermediate_plots_list_group',$
+                                          set_value=[1,1,1,1,1])
+
+intermediate_plots_list_validate = widget_button(list_of_plots_base,$
+                                                 uname='intermediate_plots_list_validate',$
+                                                 value='Validate',$
+                                                 scr_xsize=150,$
+                                                 xoffset=30,$
+                                                 yoffset=180)
+
+intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
+                                               uname='intermediate_plots_list_cancel_REF_M',$
+                                               value='Cancel',$
+                                               scr_xsize=100,$
+                                               xoffset=200,$
+                                               yoffset=180)
+                                               
+
+
 ;TOP LEFT BOX - OPEN NEXUS
 nexus_run_number_base = widget_base(MAIN_BASE,$
                                     xoffset=5,$
@@ -934,6 +1006,7 @@ nexus_run_number_base = widget_base(MAIN_BASE,$
                                     scr_xsize=300,$
                                     scr_ysize=40,$
                                     frame=1)
+
 nexus_run_number_title = widget_label(nexus_run_number_base,$
                                       xoffset=5,$
                                       yoffset=10,$
@@ -1265,7 +1338,6 @@ runs_to_process_help = widget_button(data_reduction_base,$
                                     /pushbutton_events,$
                                     tooltip='Click to see the format of input to use')
 
-
 ;norm-bkg
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
@@ -1284,16 +1356,12 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        row=1,$
                                        uname='norm_background_list_group')
 
-
-
-
-
-
 ;intermediate files/plots
-intermediate_file_label = widget_label(data_reduction_base,$
+intermediate_file_label = widget_button(data_reduction_base,$
                                        xoffset=140,$
-                                       yoffset=257,$
-                                       value='Interm. plots:')
+                                       yoffset=253,$
+                                       value='Interm. plots',$
+                                       uname='access_to_list_of_intermediate_plots_button')
 
 intermediate_file_output_list = ['Y',$
                                  'N']
@@ -1305,7 +1373,8 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 YOFFSET=250,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
-                                                uname='intermediate_file_output_list_group')
+                                                uname='intermediate_file_output_list_group_REF_M')
+
  start_data_reduction_button = widget_button(data_reduction_base,$
                                              xoffset=5,$
                                              yoffset=283,$
@@ -1350,6 +1419,7 @@ selection_tab = widget_tab(fourth_tab_base,$
                                   scr_xsize=xsize_of_tabs-10,$
                                   scr_ysize=ysize_of_tabs-30)
   
+
 ;signal_selection_tab
 signal_tab_base = widget_base(selection_tab,$
                               uname='signal_tab_base',$
@@ -1405,6 +1475,84 @@ other_plots_base = widget_base(data_reduction_tab,$
                                XOFFSET=0,$
                                YOFFSET=0)
 
+other_plots_tab = widget_tab(other_plots_base,$
+                                  location=0,$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=xsize_of_tabs-10,$
+                                  scr_ysize=ysize_of_tabs-30)
+
+;signal region plot
+signal_region_tab_base = widget_base(other_plots_tab,$
+                              uname='signal_region_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_region_draw = widget_draw(signal_region_tab_base,$
+                                 uname='signal_region_draw',$
+                                 xoffset=2,$
+                                 yoffset=2,$
+                                 scr_xsize=710,$
+                                 scr_ysize=383)
+
+;background summed TOF plot
+background_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='background_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
+                                         uname='background_summed_tof_draw',$
+                                         xoffset=2,$
+                                         yoffset=2,$
+                                         scr_xsize=710,$
+                                         scr_ysize=383)
+
+;signal region summed tof plot
+signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='signal_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
+                                            uname='signal_region_summed_tof_draw',$
+                                            xoffset=2,$
+                                            yoffset=2,$
+                                            scr_xsize=710,$
+                                            scr_ysize=383)
+
+;normalization region summed tof plot
+normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='normalization_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
+                                                   uname='normalization_region_summed_tof_draw',$
+                                                   xoffset=2,$
+                                                   yoffset=2,$
+                                                   scr_xsize=710,$
+                                                   scr_ysize=383)
+
+;background region from normalization summed tof
+background_region_from_normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='background_region_from_normalization_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+background_region_from_normalization_region_summed_tof_draw = widget_draw($
+                              background_region_from_normalization_region_summed_tof_tab_base,$
+                              uname='background_region_from_normalization_region_summed_tof_draw',$
+                              xoffset=2,$
+                              yoffset=2,$
+                              scr_xsize=710,$
+                              scr_ysize=383)
+
 ;log book tab
 log_book_base = widget_base(data_reduction_tab,$
                          uname='log_book_base',$
@@ -1421,16 +1569,6 @@ log_book_text_REF_M = widget_text(log_book_base,$
                             /scroll,$
                             /wrap)
 
-
-
-
-
-
-
-
-
-
-
 FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                   UNAME='FILE_MENU_REF_M',$
                                   /MENU,$
@@ -1442,16 +1580,6 @@ CTOOL_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU_REF_M'  $
 
 EXIT_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='EXIT_MENU_REF_M'  $
                                 ,VALUE='Exit')
-
-
-
-
-
-
-
-
-
-
 
 
 Widget_Control, /REALIZE, MAIN_BASE
