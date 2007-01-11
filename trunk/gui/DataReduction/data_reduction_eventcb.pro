@@ -1,3 +1,52 @@
+function retrieve_REF_M_parameters, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+wave_min_id = widget_info(Event.top, find_by_uname='WAVELENGTH_MIN_TEXT')
+wave_max_id = widget_info(Event.top, find_by_uname='WAVELENGTH_MAX_TEXT')
+wave_width_id = widget_info(Event.top, find_by_uname='WAVELENGTH_WIDTH_TEXT')
+
+widget_control, wave_min_id, get_value=wave_min
+widget_control, wave_max_id, get_value=wave_max
+widget_control, wave_width_id, get_value=wave_width
+
+det_angle_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_VALUE')
+det_angle_err_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_ERR')
+
+widget_control, det_angle_id, get_value=detector_angle
+widget_control, det_angle_err_id, get_value=detector_angle_err
+
+det_angle_units_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_UNITS')
+widget_control, det_angle_units_id, get_value=det_angle_units
+
+print, "det_angle_units: ", det_angle_units
+
+if (det_angle_units EQ 'degres') then begin
+    coeff = ((2*!pi)/180)
+    detector_angle_rad = coeff*detector_angle 
+    detector_angle_err_rad = coeff*detector_angle_err
+endif else begin
+    detector_angle_rad = detector_angle
+    detector_angle_err_rad = detector_angle_err
+endelse
+
+array_of_parameters = [wave_min, wave_max, wave_width, detector_angle_rad, detector_angle_err]
+return, array_of_parameters
+
+end
+
+
+
+
+
+
+
 function get_last_part_of_pid_file_names, signal_pid, background_pid
 
 array_name_signal = strsplit(signal_pid,'/',count=length,/extract)
@@ -1453,15 +1502,72 @@ pro intermediate_file_output_list_group_eventcb, Event
 id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
 widget_control, id, get_value = value
 
-if (value EQ 0) then begin ;display other plots
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
-endif else begin ;remove other plots 
+;log book ids (full and simple)
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
+
+    if (value EQ 0) then begin  ;display other plots
+
+;display labels on tabs
+        intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+        widget_control, intermediate_plot_base, map=1
+
+        ;save status of buttons
+        plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+        widget_control, plots_selection_id, get_value=value_selection
+
+        (*global).plots_selected = value_selection
+        
+        
+    endif else begin            ;remove other plots 
+        
+        intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+        widget_control, intermediate_plot_base, map=0
+        
+                                ;remove labels on tabs
+        tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+        tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+        tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+        tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+        tab_5_id = widget_info(Event.top, $
+                               find_by_uname='background_region_from_normalization_region_summed_tof_base')
+        widget_control, tab_1_id, base_set_title=''
+        widget_control, tab_2_id, base_set_title=''
+        widget_control, tab_3_id, base_set_title=''
+        widget_control, tab_4_id, base_set_title=''
+        widget_control, tab_5_id, base_set_title=''
+        
+        full_text = 'No intermediate files will be produced'
+        text = 'No intermediate plot'
+        widget_control, full_view_info, set_value=full_text, /append
+        widget_control, view_info, set_value=text, /append
+        
+    endelse
+
+    (*global).entering_intermediate_file_output_for_first_time = 0
+
+endif else begin
+
+    (*global).entering_intermediate_file_output_for_first_time = 1
 
 endelse
 
 end 
 
 
+
+pro access_to_list_of_intermediate_plots_eventcb, Event
+
+intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, intermediate_plot_base, map=1
+
+end
 
 
 
@@ -1507,7 +1613,7 @@ end
 
 
 
-pro start_data_reduction_button_REF_L_eventcb, Event
+pro start_data_reduction_button_eventcb, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1529,6 +1635,7 @@ if (value EQ 0) then begin
     full_background_pid_file_name = (*global).background_pid_file_name
 endif
 
+;*****************************
 ;get normalization run number
 normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
 widget_control, normalization_text_id, get_value=run_number_normalization
@@ -1596,11 +1703,114 @@ endif else begin
 
 endelse
 
+;*****************************
 ;get runs_to_process list of files
 runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
 widget_control, runs_to_process_text_id, get_value=runs_to_process
 
-runs_array = get_list_of_runs(runs_to_process)
+if (runs_to_process NE '') then begin
+
+    runs_array = get_list_of_runs(runs_to_process)
+    array_size = size(runs_array)
+    array_size = array_size[1]
+    array_of_nexus_files = strarr(array_size)
+    runs_to_use_array = lonarr(array_size)
+    nbr_runs_to_use = 0
+    
+    for i=0,(array_size-1) do begin
+        
+        cmd_findnexus = "findnexus -i" + (*global).instrument
+        cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
+        spawn, cmd_findnexus, full_path_to_nexus
+        array_of_nexus_files[i]=full_path_to_nexus
+        
+;create message for view_info
+        
+        result = strmatch(array_of_nexus_files[i],"ERROR*")
+        
+        if (result[0] GE 1 or full_path_to_nexus EQ '') then begin
+            
+;        text = 'runs # ' + runs_array[i] + '(input # ' + strcompress(i+1) +'): INVALID'
+            full_text = array_of_nexus_files[i] + '(input # ' + $
+              strcompress(i+1) + $
+              ') does not exist'
+            
+        endif else begin
+            
+;        text = 'runs # ' + runs_array[i] + ': OK'
+            full_text = 'runs # ' + runs_array[i] + ' OK (' +$
+              array_of_nexus_files[i] + ')'
+            runs_to_use_array[i]=1
+            nbr_runs_to_use += 1
+            
+        endelse
+        
+;    widget_control, view_info, set_value=text,/append
+        widget_control, full_view_info, set_value=full_text,/append
+        
+    endfor
+    
+;produce final list of runs to use
+    if (nbr_runs_to_use GT 0) then begin
+        runs_number = lonarr(nbr_runs_to_use)
+        j=0
+        for i=0,(array_size-1) do begin
+            if (runs_to_use_array[i] EQ 1) then begin
+                runs_number[j]=runs_array[i]
+                j+=1
+            endif
+        endfor
+        
+        text = strcompress(j) + ' valid run numbers'
+        full_text = 'data_reduction will use ' + strcompress(j) + ' run numbers:'
+        full_text_2 = "   * " + strcompress(runs_number,/remove_all)
+    endif else begin
+        
+        text = '0 valid run number to use'
+        full_text = text
+        
+    endelse
+    
+    widget_control, view_info, set_value=text,/append
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, full_view_info, set_value=full_text_2,/append
+
+endif else begin
+
+    text = 'Please specify at least one run number'
+    full_text = 'No Run number has been specified'
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
+    
+endelse
+
+;*****************************
+;check status of normalize bkg
+norm_bkg_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+widget_control, norm_bkg_id, get_value=norm_bkg_value
+
+;*****************************
+;check status of intermediate outputs
+interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
+widget_control, interm_id, get_value=interm_status
+
+if ((*global).instrument EQ 'REF_M') then begin
+
+    array_of_parameters = retrieve_REF_M_parameters(Event)
+    wave_min = array_of_parameters[0]
+    wave_max = array_of_parameters[1]
+    wave_width = array_of_parameters[2]
+    detector_angle_rad = array_of_parameters[3]
+    detector_angle_err = array_of_parameters[4]
+
+    print, "wave_min is: " , wave_min
+    print, "wave_max is: " , wave_max
+    print, "wave_width is: ", wave_width
+    print, "detector_angle_rad: ", detector_angle_rad
+    print, "detector_angle_err: ", detector_angle_err
+
+endif
+
 
 
 end
@@ -1610,8 +1820,180 @@ end
 
 
 
-pro start_data_reduction_button_REF_M_eventcb, Event
 
-print, "in start_data_reduction for REF_M"
+pro intermediate_plots_list_validate_eventcb,Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+list_of_plots_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+widget_control, list_of_plots_id, get_value=value
+
+;log book ids (full and simple)
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+;index 1 of array: .sdc (signal region summed TOF)
+;index 2 of array: .bkg (background summed TOL)
+;index 3 of array: .sub (signal region summed TOF)
+;index 4 of array: .nom (normalization region summed TOF)
+;index 5 of array: .bnk (background region normalization summed TOF)
+
+indx0 = value[0]
+indx1 = value[1]
+indx2 = value[2]
+indx3 = value[3]
+indx4 = value[4]
+
+number_of_plots_selected = 0
+
+full_text = 'Name of intermediate plots that will be plotted:'
+widget_control, full_view_info, set_value=full_text, /append
+
+
+tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+if (indx0 EQ 1) then begin ;signal region summed TOF
+
+    widget_control, tab_1_id, base_set_title='Signal'
+    number_of_plots_selected += 1
+    
+    full_text = ' - Signal region summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    widget_control, tab_1_id, base_set_title=''
+
+endelse
+
+back_id = widget_info(Event.top, find_by_uname='background_list_group')
+widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
+
+tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+if (indx1 EQ 1 AND bkg_flag EQ 0) then begin
+
+    widget_control, tab_2_id, base_set_title='Background'
+    number_of_plots_selected += 1
+
+    full_text = ' - Background summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    ;remove this plot from the list of selected plots
+    indx1 = 0
+    new_value = [indx0, indx1, indx2, indx3, indx4]
+    
+    widget_control,list_of_plots_id,set_value=new_value
+    widget_control, tab_2_id, base_set_title=''
+
+endelse
+
+tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+if (indx2 EQ 1) then begin ;signal region summed TOF
+
+    widget_control, tab_3_id, base_set_title='Signal region with background'
+    number_of_plots_selected += 1
+
+    full_text = ' - Signal region summed TOF after subtracting the background'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    widget_control, tab_3_id, base_set_title=''
+
+endelse
+
+norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+widget_control, norm_id, get_value=norm_flag  ;0:with norm    1:no normalization
+
+tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+if (indx3 EQ 1 AND norm_flag EQ 0) then begin
+
+    widget_control, tab_4_id, base_set_title='Normalization'
+    number_of_plots_selected += 1
+
+    full_text = ' - Normalization region summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    indx3 = 0
+    widget_control, tab_4_id, base_set_title=''
+
+endelse
+
+tab_5_id = widget_info(Event.top, $
+                       find_by_uname='background_region_from_normalization_region_summed_tof_base')
+if (indx4 EQ 1 AND norm_flag EQ 0) then begin
+
+    widget_control, tab_5_id, base_set_title='Background from normalization'
+    number_of_plots_selected += 1
+
+    full_text = ' - Background region from normalization summed TOF'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+
+    indx4 = 0
+    widget_control, tab_5_id, base_set_title=''
+
+endelse
+
+intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, intermediate_plot_base, map=0
+
+;if none of the plots have been selected change status of intermediate
+;plots to NO
+if (number_of_plots_selected EQ 0) then begin
+
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+    widget_control, inter_id, set_value=1
+    full_text = ' NONE'
+    widget_control, full_view_info, set_value=full_text, /append
+
+endif else begin
+    
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+    widget_control, inter_id, set_value=0
+    
+endelse
+
+    text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
+    widget_control, view_info, set_value=text, /append
+
+(*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
+
+
+end
+
+
+pro intermediate_plots_list_cancel_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, intermediate_plot_base, map=0
+
+;reinitialize status of plots
+value_selection = (*global).plots_selected
+                            
+plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+widget_control, plots_selection_id, set_value=value_selection
+
+;turn off plot selection if previous array was [0,0,0,0,0]
+if (value_selection[0] EQ 0 AND $
+    value_selection[1] EQ 0 AND $
+    value_selection[2] EQ 0 AND $
+    value_selection[3] EQ 0 AND $
+    value_selection[4] EQ 0) then begin
+
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+    widget_control, inter_id, set_value=1
+
+endif
 
 end
