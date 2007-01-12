@@ -86,10 +86,10 @@ case Event.id of
           EXIT_PROGRAM_REF_M, Event
     end
     
-;Widget to change the color of graph for REF_L
-    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_REF_L'): begin
+;Widget to change the color of graph for REF_L and REF_M
+    Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-          CTOOL_REF_L, Event
+          CTOOL, Event
     end
     
 ;signal or background selection zone for REF_L and REF_M
@@ -156,6 +156,11 @@ case Event.id of
 ;validate list of intermediate file output for REF_L
     widget_info(wWidget, FIND_BY_UNAME='intermediate_plots_list_validate'):begin
         intermediate_plots_list_validate_eventcb,Event
+    end
+
+;validate list of intermediate file output for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='intermediate_plots_list_validate_REF_M'):begin
+        intermediate_plots_list_validate_eventcb_REF_M,Event
     end
 
 ;cancel list of intermediate file output for REF_L
@@ -849,8 +854,8 @@ FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
                                   /MENU,$
                                   VALUE='MENU')
 
-CTOOL_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU_REF_L'  $
-                                 ,VALUE='Color Tool...')
+CTOOL_MENU = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU'  $
+                           ,VALUE='Color Tool...')
 
 
 EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
@@ -984,7 +989,7 @@ intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$
                                           set_value=[1,1,1,1,1])
 
 intermediate_plots_list_validate = widget_button(list_of_plots_base,$
-                                                 uname='intermediate_plots_list_validate',$
+                                                 uname='intermediate_plots_list_validate_REF_M',$
                                                  value='Validate',$
                                                  scr_xsize=150,$
                                                  xoffset=30,$
@@ -1574,7 +1579,7 @@ FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                   /MENU,$
                                   VALUE='MENU')
 
-CTOOL_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU_REF_M'  $
+CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
                                  ,VALUE='Color Tool...')
 
 
