@@ -137,6 +137,8 @@ if (full_pid_file NE '') then begin
     widget_control, full_view_info, set_value=text, /append
     widget_control, full_view_info, set_value=full_pid_file, /append
 
+    check_status_to_validate_go, Event
+
 endif
 
 end
@@ -652,11 +654,21 @@ endif else begin
         (*global).file_opened = 1
 
 ;validate signal and background pid file
-signal_pid_file_button_id = widget_info(Event.top, find_by_uname='signal_pid_file_button')
-background_pid_file_button_id = widget_info(Event.top, $
-                                            find_by_uname='background_pid_file_button')
-widget_control, signal_pid_file_button_id, sensitive=1
-widget_control, background_pid_file_button_id, sensitive=1
+        signal_pid_file_button_id = widget_info(Event.top, find_by_uname='signal_pid_file_button')
+        background_pid_file_button_id = widget_info(Event.top, $
+                                                    find_by_uname='background_pid_file_button')
+        widget_control, signal_pid_file_button_id, sensitive=1
+        widget_control, background_pid_file_button_id, sensitive=1
+        
+        ;put nexus run number into list of nexus runs
+        runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+        widget_control, runs_to_process_text_id, get_value=previous_text
+        new_text = strcompress(run_number,/remove_all) + ',' + previous_text
+        widget_control, runs_to_process_text_id, set_value=new_text
+
+        if (instrument EQ 'REF_L') then begin
+            check_status_to_validate_go, Event
+        endif
 
     endelse
     
@@ -1349,6 +1361,9 @@ if (value EQ 0) then begin
     full_text = "Clear signal selection"
     selection_info = widget_info(Event.top,FIND_BY_UNAME='signal_info')
     view_info_tab = widget_info(Event.top, find_by_uname='signal_tab_base')
+    ;remove text from signal pid text
+    signal_id = widget_info(Event.top, find_by_uname='signal_pid_text')
+    widget_control, signal_id, set_value = ''
 endif else begin
     if (value EQ 1) then begin
         (*global).selection_background = 0 
@@ -1356,12 +1371,16 @@ endif else begin
         full_text = "Clear background selection"
         selection_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
         view_info_tab = widget_info(Event.top, find_by_uname='background_1_tab_base')
+        background_id = widget_info(Event.top, find_by_uname='background_pid_text')
+        widget_control, background_id, set_value = ''
     endif else begin
         (*global).selection_background_2 = 0
         text = "Clear background selection #2"
         full_text = "Clear background selection #2"
         selection_info = widget_info(Event.top,FIND_BY_UNAME='background_2_info')
         view_info_tab = widget_info(Event.top, find_by_uname='background_2_tab_base')
+        background_id = widget_info(Event.top, find_by_uname='background_pid_text')
+        widget_control, background_id, set_value = ''
     endelse
 endelse
 
@@ -1433,6 +1452,8 @@ widget_control, view_info, set_value=text, /append
 widget_control, full_view_info, set_value=full_text, /append
 
 widget_control, signal_id, set_value=pid_file_names[0]
+
+check_status_to_validate_go, Event
 
 end
 
@@ -1539,6 +1560,8 @@ endif else begin
     widget_control, norm_info, map=0
 endelse
 
+check_status_to_validate_go, Event
+
 end
 
 
@@ -1556,6 +1579,8 @@ if (value EQ 0) then begin
 endif else begin
     widget_control, norm_info, map=0
 endelse
+
+check_status_to_validate_go, Event
 
 end
 
@@ -1699,17 +1724,9 @@ full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
 ;retrieve values of all input
 
-;retrieve value of signal pid file
+;retrieve value of signal and background pid file
 full_signal_pid_file_name = (*global).signal_pid_file_name
-
-;retrieve value of background if WITH background has been selected
-background_list_id = widget_info(Event.top, find_by_uname='background_list_group')
-widget_control, background_list_id, get_value=bkg_flag
-;bkg_flag = 0 -> with background
-;bkg_flag = 1 -> without background
-if (bkg_flag EQ 0) then begin
-    full_background_pid_file_name = (*global).background_pid_file_name
-endif
+full_background_pid_file_name = (*global).background_pid_file_name
 
 ;*****************************
 ;get normalization run number
@@ -1930,10 +1947,8 @@ signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
 REF_L_cmd_line += signal_pid_cmd
 
 ;background Pid file flag
-if (bkg_flag EQ 0) then begin
-    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-    REF_L_cmd_line += bkg_pid_cmd
-endif
+bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+REF_L_cmd_line += bkg_pid_cmd
 
 ;--no-norm-bkg
 if (norm_bkg_value EQ 1) then begin
@@ -2543,25 +2558,103 @@ endelse
 
 end
 
+
+
+
+
 ;check status of all text boxes and buttons to validate or not GO Data
 ;Reduction
 pro check_status_to_validate_go, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 status=0
+instrument = (*global).instrument
 start_data_reduction_button_id = widget_info(Event.top,$
                                              find_by_uname='start_data_reduction_button')
-;check that there is a background pid file if 
 
+;check if there is a signal pid file 
+signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
+widget_control, signal_pid_text_id, get_value=signal_pid_text
 
+;check if there is background pid file
+bkg_pid_text_id = widget_info(Event.top,find_by_uname='background_pid_text')
+widget_control, bkg_pid_text_id, get_value=bkg_pid_text
 
+;check status of normalization flag
+if (instrument EQ 'REF_L') then begin
+    norm_list_group_id = widget_info(Event.top, $
+                                     find_by_uname='normalization_list_group_REF_L')
+endif else begin
+    norm_list_group_id = widget_info(Event.top, $
+                                     find_by_uname='normalization_list_group_REF_M')
+endelse
 
+widget_control, norm_list_group_id, get_value=norm_list_group
+normalization_text = "anything"
+if (norm_list_group EQ 0) then begin
+    normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
+    widget_control, normalization_text_id, get_value=normalization_text
+endif
 
+;check if runs number not empty
+runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+widget_control, runs_to_process_text_id, get_value=runs_to_process_text
 
+if (instrument EQ 'REF_M') then begin
 
+wave_min_id = widget_info(Event.top, find_by_uname='wavelength_min_text')
+widget_control, wave_min_id, get_value=wave_min
 
+wave_max_id = widget_info(Event.top, find_by_uname='wavelength_max_text')
+widget_control, wave_max_id, get_value=wave_max
 
+wave_width_id = widget_info(Event.top, find_by_uname='wavelength_width_text')
+widget_control, wave_width_id, get_value=wave_width
 
+det_angle_value_id = widget_info(Event.top, find_by_uname='detector_angle_value')
+widget_control, det_angle_value_id, get_value=det_angle_value
 
+det_angle_err_id = widget_info(Event.top, find_by_uname='detector_angle_err')
+widget_control, det_angle_err_id, get_value=det_angle_err
+
+endif
+
+if (strcompress(signal_pid_text,/remove_all) NE '' AND $
+    strcompress(bkg_pid_text,/remove_all) NE '' AND $
+    strcompress(normalization_text,/remove_all) NE '' AND $
+    strcompress(runs_to_process_text,/remove_all)) then begin
+
+    status = 1
+
+    if (instrument EQ 'REF_M') then begin
+        
+
+        wave_min = strcompress(wave_min[0],/remove_all)
+        wave_max = strcompress(wave_max[0],/remove_all)
+        wave_width = strcompress(wave_width[0],/remove_all)
+        det_angle_value = strcompress(det_angle_value[0],/remove_all)
+        det_angle_err = strcompress(det_angle_err[0],/remove_all)
+
+        if (wave_min NE '' AND $
+            wave_max NE '' AND $
+            wave_width NE '' AND $
+            det_angle_value NE '' AND $
+            det_angle_err NE '') then begin
+            
+            status = 1
+
+        endif else begin
+
+            status = 0
+
+        endelse
+        
+    endif
+    
+endif
 
 if (status EQ 1) then begin
 
@@ -2575,3 +2668,46 @@ endelse
 
 end
 
+
+
+
+;reach when various text boxes are reached
+pro normalization_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro wavelength_min_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro wavelength_max_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro wavelength_width_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro detector_angle_value_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro detector_angle_err_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro signal_pid_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro background_pid_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro nexus_run_number_box_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+pro runs_to_process_text_eventcb, Event
+check_status_to_validate_go, Event
+end
