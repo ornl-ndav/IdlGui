@@ -188,6 +188,59 @@ case Event.id of
         start_data_reduction_button_eventcb, Event
     end
 
+;normalization run number text box
+    widget_info(wWidget, FIND_BY_UNAME='normalization_text'): begin
+        normalization_text_eventcb, Event
+    end
+
+;wavelength min text box
+    widget_info(wWidget, FIND_BY_UNAME='wavelength_min_text'): begin
+        wavelength_min_text_eventcb, Event
+    end
+
+;wavelength max text box
+    widget_info(wWidget, FIND_BY_UNAME='wavelength_max_text'): begin
+        wavelength_max_text_eventcb, Event
+    end
+
+;wavelength width text box
+    widget_info(wWidget, FIND_BY_UNAME='wavelength_width_text'): begin
+        wavelength_width_text_eventcb, Event
+    end
+
+;detector angle value text box
+    widget_info(wWidget, FIND_BY_UNAME='detector_angle_value'): begin
+        detector_angle_value_eventcb, Event
+    end
+
+;detector angle value error text box
+    widget_info(wWidget, FIND_BY_UNAME='detector_angle_err'): begin
+        detector_angle_err_eventcb, Event
+    end
+
+;signal pid text box
+    widget_info(wWidget, FIND_BY_UNAME='signal_pid_text'): begin
+        signal_pid_text_eventcb, Event
+    end
+
+;background pid text box
+    widget_info(wWidget, FIND_BY_UNAME='background_pid_text'): begin
+        background_pid_text_eventcb, Event
+    end
+
+;open nexus file
+    widget_info(wWidget, FIND_BY_UNAME='nexus_run_number_box'): begin
+        nexus_run_number_box_eventcb, Event
+    end
+
+;list of run to process text box
+    widget_info(wWidget, FIND_BY_UNAME='runs_to_process_text'): begin
+        runs_to_process_text_eventcb, Event
+    end
+
+
+
+
     else:
     
 endcase
@@ -432,7 +485,7 @@ nexus_run_number_base = widget_base(MAIN_BASE,$
                                     yoffset=5,$
                                     scr_xsize=253,$
                                     scr_ysize=40,$
-                                   frame=1)
+                                    frame=1)
 nexus_run_number_title = widget_label(nexus_run_number_base,$
                                       xoffset=5,$
                                       yoffset=10,$
@@ -444,7 +497,8 @@ nexus_run_number_box = widget_text(nexus_run_number_base,$
                                    /align_left,$
                                    scr_xsize=80,$
                                    scr_ysize=30,$
-                                   uname='nexus_run_number_box')
+                                   uname='nexus_run_number_box',$
+                                  /all_events)
 nexus_run_number_go = widget_button(nexus_run_number_base,$
                                     xoffset=180,$
                                     yoffset=7,$
@@ -492,14 +546,14 @@ clear_selection_button = widget_button(select_signal_base,$
                                        yoffset=35,$
                                        scr_xsize=120,$
                                        value='CLEAR SELECTION',$
-                                      sensitive=0)
+                                       sensitive=0)
 save_selection_button = widget_button(select_signal_base,$
                                       uname='save_selection_button',$
                                       xoffset=125,$
                                       yoffset=35,$
                                       scr_xsize=120,$
                                       value='SAVE SELECTION',$
-                                     sensitive=0)
+                                      sensitive=0)
 
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
@@ -545,50 +599,54 @@ signal_pid_file_text = widget_text(data_reduction_base,$
                                    scr_xsize=190,$
                                    value='',$
                                    /align_left,$
-                                   /editable)
-background_title = widget_label(data_reduction_base,$
-                                xoffset=8,$
-                                yoffset=47,$
-                                value='Background:')
-background_list = ['Yes',$
-                  'No']
-background_list_group = CW_BGROUP(data_reduction_base,$ 
-                                  background_list,$
-                                  /exclusive,$
-                                  /RETURN_NAME,$
-                                  XOFFSET=100,$
-                                  YOFFSET=40,$
-                                  SET_VALUE=0.0,$
-                                  row=1,$
-                                  uname='background_list_group')
+                                   /editable,$
+                                   /all_events)
 
-background_file_base = widget_base(data_reduction_base,$
-                                   uname='background_file_base',$
-                                   xoffset=0,$
-                                   yoffset=70,$
-                                   scr_xsize=xsize_of_tabs,$
-                                   scr_ysize=40,$
-                                   frame=0)
+;background_title = widget_label(data_reduction_base,$
+;                                xoffset=8,$
+;                                yoffset=47,$
+;                                value='Background:')
+; background_list = ['Yes',$
+;                   'No']
+; background_list_group = CW_BGROUP(data_reduction_base,$ 
+;                                   background_list,$
+;                                   /exclusive,$
+;                                   /RETURN_NAME,$
+;                                   XOFFSET=100,$
+;                                   YOFFSET=40,$
+;                                   SET_VALUE=0.0,$
+;                                   row=1,$
+;                                   uname='background_list_group')
 
-background_pid_file_button = widget_button(background_file_base,$
+; background_file_base = widget_base(data_reduction_base,$
+;                                    uname='background_file_base',$
+;                                    xoffset=0,$
+;                                    yoffset=70,$
+;                                    scr_xsize=xsize_of_tabs,$
+;                                    scr_ysize=40,$
+;                                    frame=0)
+
+background_pid_file_button = widget_button(data_reduction_base,$
                                            uname='background_pid_file_button',$
                                            xoffset=5,$
-                                           yoffset=7,$
+                                           yoffset=47,$
                                            value='Back. Pid file',$
                                            sensitive=0)
 
-background_file_text = widget_text(background_file_base,$
+background_file_text = widget_text(data_reduction_base,$
                                    uname='background_pid_text',$
                                    xoffset=110,$
-                                   yoffset=4,$
+                                   yoffset=47,$
                                    scr_xsize=190,$
                                    value='',$
                                    /align_left,$
-                                   /editable)
+                                   /editable,$
+                                   /all_events)
 
+norm_y_offset = 20
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
-                                   yoffset=117,$
+                                   yoffset=117-norm_y_offset,$
                                    value='Normalization:')
 
 normalization_list = ['Yes',$
@@ -598,7 +656,7 @@ normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$
                                            /exclusive,$
                                            /RETURN_NAME,$
                                            XOFFSET=90,$
-                                           YOFFSET=110,$
+                                           YOFFSET=110-norm_y_offset,$
                                            SET_VALUE=0.0,$
                                            row=1,$
                                            uname='normalization_list_group_REF_L')
@@ -606,7 +664,7 @@ normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$
 norm_run_number_base = widget_base(data_reduction_base,$
                                    uname='norm_run_number_base',$
                                    xoffset=175,$
-                                   yoffset=110,$
+                                   yoffset=110-norm_y_offset,$
                                    scr_xsize=150,$
                                    scr_ysize=34)
 
@@ -622,11 +680,13 @@ normalization_text = widget_text(norm_run_number_base,$
                                  value='',$
                                  uname='normalization_text',$
                                  /editable,$
-                                 /align_left)
+                                 /align_left,$
+                                /all_events)
 
+norm_bkg_offset = 10
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=145,$
+                                     yoffset=145-norm_bkg_offset,$
                                      value='Normalize bkg:')
 
 norm_background_list = ['Yes',$
@@ -636,32 +696,33 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        /exclusive,$
                                        /RETURN_NAME,$
                                        XOFFSET=90,$
-                                       YOFFSET=140,$
+                                       YOFFSET=140-norm_bkg_offset,$
                                        SET_VALUE=0.0,$
                                        row=1,$
                                        uname='norm_background_list_group')
 
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=183,$
+                                     yoffset=183-norm_bkg_offset,$
                                      value='Runs #')
 runs_to_process_text = widget_text(data_reduction_base,$
                                    xoffset=50,$
-                                   yoffset=173,$
+                                   yoffset=173-norm_bkg_offset,$
                                    scr_xsize=230,$
                                    value='',$
                                    uname='runs_to_process_text',$
                                    /editable,$
-                                   /align_left)
+                                   /align_left,$
+                                   /all_events)
 runs_to_process_help = widget_button(data_reduction_base,$
                                      uname='runs_to_process_help',$
                                      xoffset=280,$
-                                     yoffset=173,$
+                                     yoffset=173-norm_bkg_offset,$
                                      scr_xsize=20,$
                                      scr_ysize=30,$
                                      value='?',$
                                     /pushbutton_events,$
-                                    tooltip='Click to see the format of input to use')
+                                     tooltip='Click to see the format of input to use')
 
 intermediate_file_label = widget_label(data_reduction_base,$
                                        xoffset=5,$
@@ -686,18 +747,13 @@ acces_to_list_of_intermediate_plots = widget_button(data_reduction_base,$
                                                     yoffset=207,$
                                                     value='Plots')
                                                   
-
-
-
-
 start_data_reduction_button = widget_button(data_reduction_base,$
                                             xoffset=5,$
                                             yoffset=235,$
                                             scr_xsize=295,$
                                             value='START DATA REDUCTION',$
-                                            uname='start_data_reduction_button')
-
-
+                                            uname='start_data_reduction_button',$
+                                            sensitive=0)
 
 ;info text box 
 info_text = widget_text(data_reduction_base,$
@@ -707,7 +763,7 @@ info_text = widget_text(data_reduction_base,$
                         scr_ysize=120,$
                         /scroll,$
                         /wrap,$
-                       uname='info_text')
+                        uname='info_text')
 
 data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
@@ -715,9 +771,6 @@ data_reduction_plot = widget_draw(first_tab_base,$
                                   scr_xsize=405,$
                                   scr_ysize=393,$
                                   uname='data_reduction_plot')
-
-
-
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$
@@ -1061,7 +1114,8 @@ nexus_run_number_box = widget_text(nexus_run_number_base,$
                                    /align_left,$
                                    scr_xsize=80,$
                                    scr_ysize=30,$
-                                   uname='nexus_run_number_box')
+                                   uname='nexus_run_number_box',$
+                                  /all_events)
 nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
                                     xoffset=180,$
                                     yoffset=7,$
@@ -1094,7 +1148,7 @@ selection_title = widget_label(select_signal_base,$
                                value='Selection:')
 selection_list = ['Signal ',$
                   'Back_1 ',$
-                 'Back_2']
+                  'Back_2']
 selection_list_group= CW_BGROUP(select_signal_base,$ 
                                 selection_list,$
                                 /exclusive,$
@@ -1174,18 +1228,20 @@ wavelength_frame_y_offset = 20
 min_y_offset = wavelength_frame_y_offset
 min_x_offset = wavelength_frame_x_offset
 WAVELENGTH_MIN_LABEL= widget_label(wavelength_base,$
-                                   UNAME='WAVELENGTH_MIN_LABEL',$
+                                   UNAME='wavelength_min_label',$
                                    XOFFSET=min_x_offset,$
                                    YOFFSET=min_y_offset,$
                                    VALUE="min")
 
 WAVELENGTH_MIN_TEXT = widget_text(wavelength_base,$
-                                  UNAME='WAVELENGTH_MIN_TEXT',$
+                                  UNAME='wavelength_min_text',$
                                   XOFFSET=min_x_offset+30,$
                                   YOFFSET=min_y_offset-10,$
                                   SCR_XSIZE=50,$
                                   VALUE='0',$
-                                  /editable)
+                                  /editable,$
+                                  /all_events,$
+                                 /no_newline)
 
 WAVELENGTH_MIN_A_LABEL= widget_label(wavelength_base,$
                                      UNAME='WAVELENGTH_MIN_A_LABEL',$
@@ -1203,12 +1259,13 @@ WAVELENGTH_MAX_LABEL= widget_label(wavelength_base,$
                                    VALUE="max")
 
 WAVELENGTH_MAX_TEXT = widget_text(wavelength_base,$
-                                  UNAME='WAVELENGTH_MAX_TEXT',$
+                                  UNAME='wavelength_max_text',$
                                   XOFFSET=max_x_offset+30,$
                                   YOFFSET=max_y_offset-5,$
                                   SCR_XSIZE=50,$
                                   VALUE='10',$
-                                  /editable)
+                                  /editable,$
+                                  /all_events)
 
 WAVELENGTH_MAX_A_LABEL= widget_label(wavelength_base,$
                                      UNAME='WAVELENGTH_MAX_A_LABEL',$
@@ -1226,12 +1283,13 @@ WAVELENGTH_WIDTH_LABEL= widget_label(wavelength_base,$
                                      VALUE="width")
 
 WAVELENGTH_WIDTH_TEXT = widget_text(wavelength_base,$
-                                    UNAME='WAVELENGTH_WIDTH_TEXT',$
+                                    UNAME='wavelength_width_text',$
                                     XOFFSET=width_x_offset+40,$
                                     YOFFSET=width_y_offset-5,$
                                     SCR_XSIZE=50,$
                                     VALUE='0.1',$
-                                    /editable)
+                                    /editable,$
+                                    /all_events)
 
 WAVELENGTH_WIDTH_A_LABEL= widget_label(wavelength_base,$
                                        UNAME='WAVELENGTH_WIDTH_A_LABEL',$
@@ -1254,20 +1312,22 @@ detector_base = widget_base(data_reduction_base,$
                             frame=1)
 
 DETECTOR_ANGLE_VALUE = widget_text(detector_base,$
-                                   UNAME='DETECTOR_ANGLE_VALUE',$
+                                   UNAME='detector_angle_value',$
                                    XOFFSET=0,$
                                    YOFFSET=10,$
                                    SCR_XSIZE=50,$
                                    VALUE='0',$
-                                   /editable)
+                                   /editable,$
+                                   /all_events)
 
 DETECTOR_ANGLE_ERR = widget_text(detector_base,$
-                                 UNAME="DETECTOR_ANGLE_ERR",$
+                                 UNAME='detector_angle_err',$
                                  XOFFSET=80,$
                                  YOFFSET=10,$
                                  SCR_XSIZE=50,$
                                  VALUE='0',$
-                                 /editable)
+                                 /editable,$
+                                 /all_events)
 
 DETECTOR_ANGLE_PLUS_MINUS = widget_label(detector_base,$
                                          UNAME='DETECTOR_ANGLE_PLUS_MINUS',$
@@ -1284,65 +1344,60 @@ DETECTOR_ANGLE_UNITS = widget_droplist(detector_base,$
                                        title='')
 
 ;signal Pid file
-signal_pid_base = widget_base(data_reduction_base,$
-                              uname='signal_pid_base',$
-                              xoffset=160,$
-                              yoffset=95,$
-                              frame=1)
-
-signal_pid_file_button = widget_button(signal_pid_base,$
+signal_pid_file_button = widget_button(data_reduction_base,$
                                        uname='signal_pid_file_button',$
-                                       xoffset=0,$
-                                       yoffset=0,$
+                                       xoffset=5,$
+                                       yoffset=135,$
                                        value='Signal - Pid file',$
-                                       scr_xsize=135)
+                                       scr_xsize=137)
 
-signal_pid_text = widget_text(signal_pid_base,$
+signal_pid_text = widget_text(data_reduction_base,$
                               uname='signal_pid_text',$
-                              xoffset=0,$
-                              yoffset=25,$
-                              scr_xsize=135,$
-                              /editable)
+                              xoffset=160,$
+                              yoffset=130,$
+                              scr_xsize=140,$
+                              /editable,$
+                              /all_events)
 
 ;background Pid file
-back_y_offset = 135
-background_title = widget_label(data_reduction_base,$
-                                xoffset=3,$
-                                yoffset=back_y_offset,$
-                                value='Background:')
-background_list = ['Yes',$
-                   'No']
-background_list_group = CW_BGROUP(data_reduction_base,$ 
-                                  background_list,$
-                                  /exclusive,$
-                                  /RETURN_NAME,$
-                                  XOFFSET=70,$
-                                  YOFFSET=back_y_offset-5,$
-                                  SET_VALUE=0.0,$
-                                  row=1,$
-                                  uname='background_list_group')
+; background_title = widget_label(data_reduction_base,$
+;                                 xoffset=3,$
+;                                 yoffset=back_y_offset,$
+;                                value='Background:')
+; background_list = ['Yes',$
+;                    'No']
+; background_list_group = CW_BGROUP(data_reduction_base,$ 
+;                                   background_list,$
+;                                   /exclusive,$
+;                                   /RETURN_NAME,$
+;                                   XOFFSET=70,$
+;                                   YOFFSET=back_y_offset-5,$
+;                                   SET_VALUE=0.0,$
+;                                   row=1,$
+;                                   uname='background_list_group')
 
-background_file_base = widget_base(data_reduction_base,$
-                                   uname='background_file_base',$
-                                   xoffset=0,$
-                                   yoffset=back_y_offset+23,$
-                                   scr_xsize=xsize_of_tabs,$
-                                   frame=0)
+; background_file_base = widget_base(data_reduction_base,$
+;                                    uname='background_file_base',$
+;                                    xoffset=0,$
+;                                    yoffset=back_y_offset+23,$
+;                                    scr_xsize=xsize_of_tabs,$
+;                                    frame=0)
 
-background_pid_file_button = widget_button(background_file_base,$
+background_pid_file_button = widget_button(data_reduction_base,$
                                              uname='background_pid_file_button',$
-                                             xoffset=3,$
-                                             yoffset=3,$
+                                             xoffset=5,$
+                                             yoffset=164,$
                                              value='Background - Pid file')
 
-background_pid_text = widget_text(background_file_base,$
-                                         uname='background_pid_text',$
-                                         xoffset=155,$
-                                         yoffset=0,$
-                                         scr_xsize=143,$
-                                         value='',$
-                                         /align_left,$
-                                         /editable)
+background_pid_text = widget_text(data_reduction_base,$
+                                  uname='background_pid_text',$
+                                  xoffset=160,$
+                                  yoffset=160,$
+                                  scr_xsize=140,$
+                                  value='',$
+                                  /align_left,$
+                                  /editable,$
+                                  /all_events)
 
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
@@ -1376,25 +1431,26 @@ normalization_label = widget_label(norm_run_number_base,$
 normalization_text = widget_text(norm_run_number_base,$
                                  xoffset=52,$
                                  yoffset=0,$
-                                 scr_xsize=70,$
+                                 scr_xsize=73,$
                                  value='',$
                                  uname='normalization_text',$
                                  /editable,$
-                                 /align_left)
-
+                                 /align_left,$
+                                 /all_events)
 
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=229,$
                                      value='Run number:')
 runs_to_process_text= widget_text(data_reduction_base,$
-                                         xoffset=75,$
-                                         yoffset=221,$
-                                         scr_xsize=100,$
-                                         value='',$
-                                         uname='runs_to_process_text',$
-                                         /editable,$
-                                         /align_left)
+                                  xoffset=75,$
+                                  yoffset=221,$
+                                  scr_xsize=100,$
+                                  value='',$
+                                  uname='runs_to_process_text',$
+                                  /editable,$
+                                  /align_left,$
+                                  /all_events)
 
 ;norm-bkg
 norm_background_title = widget_label(data_reduction_base,$
@@ -1447,7 +1503,8 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                              yoffset=283,$
                                              scr_xsize=295,$
                                              value='START DATA REDUCTION',$
-                                             uname='start_data_reduction_button')
+                                             uname='start_data_reduction_button',$
+                                             sensitive=0)
  
 ;info text box 
  info_text_REF_M = widget_text(data_reduction_base,$
@@ -1459,17 +1516,12 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                /wrap,$
                                uname='info_text')
  
- 
- 
 data_reduction_plot_REF_M = widget_draw(first_tab_base,$
                                         xoffset=315,$
                                         yoffset=5,$
                                         scr_xsize=405,$
                                         scr_ysize=393,$
                                         uname='data_reduction_plot_REF_M')
-
-
-
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$
