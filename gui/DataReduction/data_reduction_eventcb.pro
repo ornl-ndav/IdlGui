@@ -22,10 +22,10 @@ det_angle_err_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_ERR')
 widget_control, det_angle_id, get_value=detector_angle
 widget_control, det_angle_err_id, get_value=detector_angle_err
 
-det_angle_units_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_UNITS')
-widget_control, det_angle_units_id, get_value=det_angle_units
-
-print, "det_angle_units: ", det_angle_units
+det_angle_units_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_UNITS',/droplist_select)
+widget_control, det_angle_units_id, get_value=all_det_angle_units
+index = widget_info(det_angle_units_id, /droplist_select)
+det_angle_units = all_det_angle_units[index]
 
 if (det_angle_units EQ 'degres') then begin
     coeff = ((2*!pi)/180)
@@ -801,7 +801,7 @@ end
 
 
 
-pro CTOOL_REF_L, Event
+pro CTOOL, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -810,7 +810,7 @@ widget_control,id,get_uvalue=global
 ;xloadct,/MODAL,GROUP=id
 xloadct,/modal,group=id
 
-SHOW_DATA_REF_L,event
+SHOW_DATA,event
 
 end
 
@@ -818,7 +818,7 @@ end
 
 
 
-pro SHOW_DATA_REF_L,event
+pro SHOW_DATA,event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1096,7 +1096,7 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 
                 X2=x
                 Y2=y
-                SHOW_DATA_REF_L,event
+                SHOW_DATA,event
                 
                 if (signal_or_background EQ 0) then begin
                     color_line = (*global).color_line_signal
@@ -1353,7 +1353,7 @@ widget_control, view_info, set_value=text, /append
 widget_control, full_view_info, set_value=full_text, /append
 widget_control, selection_info, set_value=''
 widget_control, view_info_tab, base_set_title=''
-SHOW_DATA_REF_L,event
+SHOW_DATA,event
 
 end
 
@@ -1619,6 +1619,8 @@ pro start_data_reduction_button_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 ;info_box id
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -1791,8 +1793,17 @@ widget_control, norm_bkg_id, get_value=norm_bkg_value
 
 ;*****************************
 ;check status of intermediate outputs
-interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
-widget_control, interm_id, get_value=interm_status
+if (instrument EQ 'REF_L') then begin
+
+    interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
+
+endif else begin
+
+    interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group_REF_M')
+
+endelse
+
+    widget_control, interm_id, get_value=interm_status
 
 if ((*global).instrument EQ 'REF_M') then begin
 
@@ -2236,7 +2247,7 @@ endelse
 end 
 
 
-pro intermediate_plots_list_validate_eventcb,Event
+pro intermediate_plots_list_validate_eventcb_REF_M,Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
