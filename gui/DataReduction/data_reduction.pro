@@ -1322,40 +1322,30 @@ normalization_text = widget_text(data_reduction_base,$
 
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=231,$
-                                     value='Runs #')
+                                     yoffset=229,$
+                                     value='Run number:')
 runs_to_process_text= widget_text(data_reduction_base,$
-                                         xoffset=50,$
+                                         xoffset=75,$
                                          yoffset=221,$
-                                         scr_xsize=228,$
+                                         scr_xsize=100,$
                                          value='',$
                                          uname='runs_to_process_text',$
                                          /editable,$
                                          /align_left)
 
-runs_to_process_help = widget_button(data_reduction_base,$
-                                     uname='runs_to_process_help',$
-                                     xoffset=278,$
-                                     yoffset=221,$
-                                     scr_xsize=20,$
-                                     scr_ysize=30,$
-                                     value='?',$
-                                    /pushbutton_events,$
-                                    tooltip='Click to see the format of input to use')
-
 ;norm-bkg
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=257,$
-                                     value='norm bkg:')
+                                     value='Norm. bkg.:')
 
-norm_background_list = ['Y',$
-                        'N']
+norm_background_list = ['Yes',$
+                        'No']
 norm_background_list_group = CW_BGROUP(data_reduction_base,$ 
                                        norm_background_list,$
                                        /exclusive,$
                                        /RETURN_NAME,$
-                                       XOFFSET=60,$
+                                       XOFFSET=80,$
                                        YOFFSET=250,$
                                        SET_VALUE=0.0,$
                                        row=1,$
@@ -1363,23 +1353,32 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
 
 ;intermediate files/plots
 intermediate_file_label = widget_button(data_reduction_base,$
-                                       xoffset=140,$
-                                       yoffset=253,$
-                                       value='Interm. plots',$
+                                       xoffset=180,$
+                                       yoffset=223,$
+                                       value='Intermediate plots',$
                                        uname='access_to_list_of_intermediate_plots_button')
 
-intermediate_file_output_list = ['Y',$
-                                 'N']
+intermediate_file_output_list = ['Yes',$
+                                 'No ']
 intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$ 
                                                 intermediate_file_output_list,$
                                                 /exclusive,$
                                                 /RETURN_NAME,$
-                                                XOFFSET=230,$
-                                                YOFFSET=250,$
+                                                XOFFSET=190,$
+                                                YOFFSET=245,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
                                                 uname='intermediate_file_output_list_group_REF_M')
 
+intermediate_file_frame = widget_base(data_reduction_base,$
+                                      xoffset=177,$
+                                      yoffset=222,$
+                                      scr_xsize=122,$
+                                      scr_ysize=55,$
+                                      frame=1)
+
+
+;start data reduction button
  start_data_reduction_button = widget_button(data_reduction_base,$
                                              xoffset=5,$
                                              yoffset=283,$
