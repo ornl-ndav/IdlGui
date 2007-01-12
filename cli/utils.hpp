@@ -57,7 +57,7 @@ namespace EventHisto
   static const std::string TOF_INFO_FILE_TAG = "timemap.dat";
   
   ///This is a string that contains the software tag version
-  static const std::string VERSION_TAG = "1.0.0itc4";
+  static const std::string VERSION_TAG = "1.0.0iqc4";
   
   ///This is a constant to hold the size of an int32_t
   static const size_t SIZEOF_INT32_T = sizeof(int32_t);
