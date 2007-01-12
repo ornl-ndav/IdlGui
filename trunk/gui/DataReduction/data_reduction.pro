@@ -132,6 +132,16 @@ case Event.id of
         background_list_group_eventcb_REF_M, Event
     end
 
+;with or without normalization for REF_L
+    widget_info(wWidget, FIND_BY_UNAME='normalization_list_group_REF_L'): begin
+        normalization_list_group_eventcb_REF_L, Event
+    end
+
+;with or without normalization for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='normalization_list_group_REF_M'): begin
+        normalization_list_group_eventcb_REF_M, Event
+    end
+
 ;intermediate file output for REF_L (yes/no)
     widget_info(wWidget, FIND_BY_UNAME='intermediate_file_output_list_group'):begin
         intermediate_file_output_list_group_eventcb,Event
@@ -241,7 +251,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=1.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -525,7 +535,9 @@ signal_pid_file_button = widget_button(data_reduction_base,$
                                       uname='signal_pid_file_button',$
                                       xoffset=5,$
                                       yoffset=7,$
-                                      value='Signal Pid file')
+                                      value='Signal Pid file',$
+                                      sensitive=0)
+
 signal_pid_file_text = widget_text(data_reduction_base,$
                                    uname='signal_pid_text',$
                                    xoffset=110,$
@@ -559,10 +571,11 @@ background_file_base = widget_base(data_reduction_base,$
                                    frame=0)
 
 background_pid_file_button = widget_button(background_file_base,$
-                                       uname='background_pid_file_button',$
-                                       xoffset=5,$
-                                       yoffset=7,$
-                                       value='Back. Pid file')
+                                           uname='background_pid_file_button',$
+                                           xoffset=5,$
+                                           yoffset=7,$
+                                           value='Back. Pid file',$
+                                           sensitive=0)
 
 background_file_text = widget_text(background_file_base,$
                                    uname='background_pid_text',$
@@ -576,20 +589,45 @@ background_file_text = widget_text(background_file_base,$
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
                                    yoffset=117,$
-                                   value='Normalization - Run number:')
-normalization_text = widget_text(data_reduction_base,$
-                                 xoffset=180,$
-                                 yoffset=110,$
-                                 scr_xsize=120,$
+                                   value='Normalization:')
+
+normalization_list = ['Yes',$
+                      'No']
+normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$ 
+                                           normalization_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=90,$
+                                           YOFFSET=110,$
+                                           SET_VALUE=0.0,$
+                                           row=1,$
+                                           uname='normalization_list_group_REF_L')
+
+norm_run_number_base = widget_base(data_reduction_base,$
+                                   uname='norm_run_number_base',$
+                                   xoffset=175,$
+                                   yoffset=110,$
+                                   scr_xsize=150,$
+                                   scr_ysize=34)
+
+normalization_label = widget_label(norm_run_number_base,$
+                                   xoffset=0,$
+                                   yoffset=7,$
+                                   value='-> Run #')
+
+normalization_text = widget_text(norm_run_number_base,$
+                                 xoffset=55,$
+                                 yoffset=2,$
+                                 scr_xsize=70,$
                                  value='',$
                                  uname='normalization_text',$
-                                /editable,$
-                                /align_left)
+                                 /editable,$
+                                 /align_left)
 
 norm_background_title = widget_label(data_reduction_base,$
-                                     xoffset=8,$
+                                     xoffset=5,$
                                      yoffset=145,$
-                                     value='normalize bkg:')
+                                     value='Normalize bkg:')
 
 norm_background_list = ['Yes',$
                         'No']
@@ -597,7 +635,7 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        norm_background_list,$
                                        /exclusive,$
                                        /RETURN_NAME,$
-                                       XOFFSET=100,$
+                                       XOFFSET=90,$
                                        YOFFSET=140,$
                                        SET_VALUE=0.0,$
                                        row=1,$
@@ -1284,23 +1322,23 @@ background_list_group = CW_BGROUP(data_reduction_base,$
                                   row=1,$
                                   uname='background_list_group')
 
-background_file_base_REF_M = widget_base(data_reduction_base,$
-                                         uname='background_file_base_REF_M',$
-                                         xoffset=0,$
-                                         yoffset=back_y_offset+20,$
-                                         scr_xsize=xsize_of_tabs,$
-                                         frame=0)
+background_file_base = widget_base(data_reduction_base,$
+                                   uname='background_file_base',$
+                                   xoffset=0,$
+                                   yoffset=back_y_offset+23,$
+                                   scr_xsize=xsize_of_tabs,$
+                                   frame=0)
 
-background_pid_file_button = widget_button(background_file_base_REF_M,$
+background_pid_file_button = widget_button(background_file_base,$
                                              uname='background_pid_file_button',$
                                              xoffset=3,$
-                                             yoffset=7,$
+                                             yoffset=3,$
                                              value='Background - Pid file')
 
-background_pid_text = widget_text(background_file_base_REF_M,$
+background_pid_text = widget_text(background_file_base,$
                                          uname='background_pid_text',$
                                          xoffset=155,$
-                                         yoffset=5,$
+                                         yoffset=0,$
                                          scr_xsize=143,$
                                          value='',$
                                          /align_left,$
@@ -1308,12 +1346,37 @@ background_pid_text = widget_text(background_file_base_REF_M,$
 
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
-                                   yoffset=200,$
-                                   value='Normalization - Run number:')
-normalization_text = widget_text(data_reduction_base,$
-                                 xoffset=178,$
-                                 yoffset=190,$
-                                 scr_xsize=120,$
+                                   yoffset=196,$
+                                   value='Normalization:')
+
+normalization_list = ['Yes',$
+                      'No']
+normalization_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
+                                           normalization_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=90,$
+                                           YOFFSET=190,$
+                                           SET_VALUE=0.0,$
+                                           row=1,$
+                                           uname='normalization_list_group_REF_M')
+
+norm_run_number_base = widget_base(data_reduction_base,$
+                                   uname='norm_run_number_base',$
+                                   xoffset=175,$
+                                   yoffset=190,$
+                                   scr_xsize=200,$
+                                   scr_ysize=30)
+
+normalization_label = widget_label(norm_run_number_base,$
+                                   xoffset=0,$
+                                   yoffset=7,$
+                                   value='-> Run #')
+
+normalization_text = widget_text(norm_run_number_base,$
+                                 xoffset=52,$
+                                 yoffset=0,$
+                                 scr_xsize=70,$
                                  value='',$
                                  uname='normalization_text',$
                                  /editable,$
