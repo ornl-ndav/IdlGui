@@ -34,7 +34,7 @@ using namespace std;
 using namespace TCLAP;
 using namespace BinVectorUtils;
 
-const size_t MAX_BLOCK_SIZE=2048;
+const size_t MAX_BLOCK_SIZE = 2048;
 
 
 
@@ -42,14 +42,14 @@ int32_t binarySearch(const vector<int32_t> &sortedVector,
                      const int32_t value, const size_t vector_size)
 {
   //check first if the value is out of range
-  if (value > sortedVector[vector_size-1] ||
+  if (value > sortedVector[vector_size - 1] ||
       value < sortedVector[0])
     {
       return -1;
     }
 
   size_t first = 0;
-  size_t last = vector_size-1;
+  size_t last = vector_size - 1;
   size_t mid = 0;
 
   while (first <= last)
@@ -58,7 +58,7 @@ int32_t binarySearch(const vector<int32_t> &sortedVector,
       // search first half of current subvector
       if (value < sortedVector[mid]) 
         {
-          last = mid -1;
+          last = mid - 1;
         }
       // search second half of current subvector
       else if (value > sortedVector[mid])
@@ -106,7 +106,7 @@ void write_data_block(ofstream &outfile,
                       size_t num_ele, 
                       size_t sizeof_NumT)
 {
-  outfile.write(reinterpret_cast<char *>(data+offset),sizeof_NumT*num_ele);
+  outfile.write(reinterpret_cast<char *>(data + offset),sizeof_NumT * num_ele);
 }
 
 void generate_histo(const size_t array_size,
@@ -156,8 +156,8 @@ void generate_histo(const size_t array_size,
         cout << "\r" << processing_percent << "%";
       }
     
-      pixelid = binary_array[2*i+1];
-      time_stamp = binary_array[2*i];
+      pixelid = binary_array[2 * i + 1];
+      time_stamp = binary_array[2 * i];
       time_bin = binarySearch(time_bin_vector,time_stamp,time_bin_vector_size);
 
       if (debug)
@@ -189,7 +189,7 @@ void generate_histo(const size_t array_size,
               cout << "......OK" << endl;
             }
           //record data that is inside the scope of range
-          histo_array[time_bin+pixelid*new_Nt]+=1;
+          histo_array[time_bin + pixelid * new_Nt] += 1;
         }
   }
   if (verbose && !debug)
@@ -444,7 +444,7 @@ int32_t main(int32_t argc, char *argv[])
           int32_t pixel_number = pixel_number_cmd.getValue();
 
           //this is the new number of time bins in the histo file
-          size_t new_Nt = time_bin_vector.size()-1;
+          size_t new_Nt = time_bin_vector.size() - 1;
 
           size_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
