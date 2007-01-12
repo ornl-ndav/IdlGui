@@ -79,7 +79,6 @@ function get_last_part_of_pid_file_name, full_pid_file_name
 array_pid_file_name = strsplit(full_pid_file_name,'/',count=length,/extract)
 pid_file_name = array_pid_file_name[length-1]
 
-
 return, pid_file_name
 end
 
@@ -383,7 +382,7 @@ cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name
 
 ;check if nexus exists
-result = strmatch(full_nexus_name,"ERROR*")
+result = strmatch(full_nexus_name,"*ERROR*")
 
 if (result GE 1) then begin
     find_nexus = 0
@@ -400,6 +399,27 @@ end
 
 
 
+Function find_nexus_path, NeXus_runs_array, length, instrument
+
+NeXus_path_array = strarr(length)
+j=0
+
+for i=0,length-1 do begin
+    cmd = "findnexus -i" + instrument + " " + strcompress(NeXus_runs_array[i],/remove_all)
+    spawn, cmd, full_nexus_name
+
+;check if nexus exist
+result = strmatch(full_nexus_name,"*ERROR*")
+
+if (result EQ 0) then begin
+    NeXus_path_array[j] = full_nexus_name
+    ++j
+endif
+
+endfor
+
+return, [j, NeXus_path_array] 
+end
 
 
 
@@ -630,6 +650,13 @@ endif else begin
 
 ;tell the program that data are displayed
         (*global).file_opened = 1
+
+;validate signal and background pid file
+signal_pid_file_button_id = widget_info(Event.top, find_by_uname='signal_pid_file_button')
+background_pid_file_button_id = widget_info(Event.top, $
+                                            find_by_uname='background_pid_file_button')
+widget_control, signal_pid_file_button_id, sensitive=1
+widget_control, background_pid_file_button_id, sensitive=1
 
     endelse
     
@@ -1115,8 +1142,9 @@ IF ((event.press EQ 4) AND (file_opened EQ 1)) then begin
                 
 ;validate save_selection button if signal and background region are there
                 
-                if ((*global).selection_signal EQ 1 AND $
-                    (*global).selection_background EQ 1) then begin
+                if (((*global).selection_signal EQ 1 AND $
+                ((*global).selection_background EQ 1) OR $
+                  (*global).selection_background_2 EQ 1)) then begin
                     id_save_selection = widget_info(Event.top, $
                                                     find_by_uname='save_selection_button')
                     widget_control, id_save_selection, sensitive=1
@@ -1379,28 +1407,32 @@ background_pid_file_name = signal_background_pid_file_names[1]
 signal_id = widget_info(Event.top, find_by_uname='signal_pid_text')
 background_id = widget_info(Event.top, find_by_uname='background_pid_text')
 
+background_selection = (*global).selection_background
+background_2_selection = (*global).selection_background_2
+
 full_text = "Signal and background selection have been saved"
 text = "Signal & background selection - SAVED"
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=full_text, /append
-
-;produce the ascii files of the selection
-produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 
 ;populate signal and background pid file name in data reduction tab
 pid_file_names = get_last_part_of_pid_file_names(signal_pid_file_name, $
                                                  background_pid_file_name)
-widget_control, signal_id, set_value=pid_file_names[0]
-widget_control, background_id, set_value=pid_file_names[1]
+
+produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 
 ;output full name of pid files in log-book
 full_text = " - signal Pid file name is: " + signal_pid_file_name
 widget_control, full_view_info, set_value=full_text, /append
-full_text = " - background Pid file name is: " + background_pid_file_name
-widget_control, full_view_info, set_value=full_text, /append
 
 (*global).signal_pid_file_name = signal_pid_file_name
+
+full_text = " - background Pid file name is: " + background_pid_file_name
+widget_control, background_id, set_value=pid_file_names[1]
 (*global).background_pid_file_name = background_pid_file_name
+
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=full_text, /append
+
+widget_control, signal_id, set_value=pid_file_names[0]
 
 end
 
@@ -1475,7 +1507,6 @@ endelse
 end
 
 
-
 pro background_list_group_eventcb_REF_M, Event
 
 ;check value of selection
@@ -1491,6 +1522,44 @@ endif else begin
 endelse
 
 end
+
+
+
+pro normalization_list_group_eventcb_REF_L, Event
+
+;check value of selection
+id = widget_info(Event.top, FIND_BY_UNAME='normalization_list_group_REF_L')
+WIDGET_CONTROL, id, GET_VALUE = value
+
+norm_info = widget_info(Event.top, find_by_uname='norm_run_number_base')
+
+if (value EQ 0) then begin 
+    widget_control, norm_info, map=1
+endif else begin
+    widget_control, norm_info, map=0
+endelse
+
+end
+
+
+
+pro normalization_list_group_eventcb_REF_M, Event
+
+;check value of selection
+id = widget_info(Event.top, FIND_BY_UNAME='normalization_list_group_REF_M')
+WIDGET_CONTROL, id, GET_VALUE = value
+
+norm_info = widget_info(Event.top, find_by_uname='norm_run_number_base')
+
+if (value EQ 0) then begin 
+    widget_control, norm_info, map=1
+endif else begin
+    widget_control, norm_info, map=0
+endelse
+
+end
+
+
 
 
 
@@ -1613,6 +1682,8 @@ end
 
 
 
+
+
 pro start_data_reduction_button_eventcb, Event
 
 ;get global structure
@@ -1620,90 +1691,106 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
+stop_reduction = 0
 
 ;info_box id
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
 ;retrieve values of all input
+
+;retrieve value of signal pid file
 full_signal_pid_file_name = (*global).signal_pid_file_name
 
 ;retrieve value of background if WITH background has been selected
 background_list_id = widget_info(Event.top, find_by_uname='background_list_group')
-widget_control, background_list_id, get_value=value
-;value = 0 -> with background
-;value = 1 -> without background
-if (value EQ 0) then begin
+widget_control, background_list_id, get_value=bkg_flag
+;bkg_flag = 0 -> with background
+;bkg_flag = 1 -> without background
+if (bkg_flag EQ 0) then begin
     full_background_pid_file_name = (*global).background_pid_file_name
 endif
 
 ;*****************************
 ;get normalization run number
-normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
-widget_control, normalization_text_id, get_value=run_number_normalization
+;check if we want normalization or not
+normalization_status_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_L')
+widget_control, normalization_status_id, get_value=norm_flag
 
-if (run_number_normalization NE '') then begin
+;norm_flag=0 means with normalization
+if (norm_flag EQ 0) then begin 
+
+    normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
+    widget_control, normalization_text_id, get_value=run_number_normalization
     
-;verify format 
-    wrong_format = 0
-    CATCH, wrong_run_number_format
-    
-    if (wrong_run_number_format ne 0) then begin
+    if (run_number_normalization NE '') then begin
         
-        WIDGET_CONTROL, view_info, SET_VALUE="ERROR: normalization run number invalid", /APPEND
-        WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-        text = 'ERROR: normalization run number invalid - ' + run_number_normalization
-        WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
-        WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
-        wrong_format = 1
+                                ;verify format 
+        wrong_format = 0
+        CATCH, wrong_run_number_format
+        
+        if (wrong_run_number_format ne 0) then begin
+            
+            WIDGET_CONTROL, view_info, $
+              SET_VALUE="ERROR: normalization run number invalid", /APPEND
+            WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+            text = 'ERROR: normalization run number invalid - ' + run_number_normalization
+            WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+            WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
+            wrong_format = 1
+            stop_reduction = 1
+            
+        endif else begin
+            
+;routine use to test format of normalization run number
+            a=lonarr(float(run_number_normalization))
+            
+            if (wrong_format EQ 0) then begin
+                
+;get full NeXus path
+                cmd_findnexus = "findnexus -i" + (*global).instrument
+                cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
+                spawn, cmd_findnexus, full_path_to_nexus
+                
+;check if nexus exists
+                result = strmatch(full_path_to_nexus,"ERROR*")
+                
+                if (result[0] GE 1) then begin
+                    
+                    find_nexus = 0 ;run# does not exist in archive
+                    text = 'Normalization file does not exist'
+                    full_text = 'Normalization run number file does not exist (' + $
+                      full_path_to_nexus + ')'
+                    stop_reduction = 1
+                    
+                endif else begin
+                    
+                    find_nexus = 1 ;run# exist in archive
+                    text = 'Normalization file: OK'
+                    full_text = 'Normalization file used: ' + full_path_to_nexus        
+                    
+                endelse
+                
+                widget_control, view_info, set_value=text, /append
+                widget_control, full_view_info, set_value=full_text, /append
+                
+            endif
+            
+        endelse
+        
+        catch, /cancel
         
     endif else begin
         
-;routine use to test format of normalization run number
-        a=lonarr(float(run_number_normalization))
-        
-        if (wrong_format EQ 0) then begin
-            
-;get full preNeXus path
-            cmd_findnexus = "findnexus -i" + (*global).instrument
-            cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
-            spawn, cmd_findnexus, full_path_to_nexus
-            
-;check if nexus exists
-            result = strmatch(full_path_to_nexus,"ERROR*")
-            
-            if (result[0] GE 1) then begin
-                
-                find_nexus = 0  ;run# does not exist in archive
-                text = 'Normalization file does not exist'
-                full_text = 'Normalization run number file does not exist (' + $
-                  full_path_to_nexus + ')'
-                
-            endif else begin
-                
-                find_nexus = 1  ;run# exist in archive
-                text = 'Normalization file: OK'
-                full_text = 'Normalization file used: ' + full_path_to_nexus        
-                
-            endelse
-            
-            widget_control, view_info, set_value=text, /append
-            widget_control, full_view_info, set_value=full_text, /append
-            
-        endif
+        text = 'Please specify a normalization run number'
+        full_text = 'Normalization run number: MISSING'
+        widget_control, view_info, set_value=text, /append
+        widget_control, full_view_info, set_value=full_text, /append
+        stop_reduction = 1
         
     endelse
-    
-    catch, /cancel
 
-endif else begin
-
-    text = 'Please specify a normalization run number'
-    full_text = 'Normalization run number: MISSING'
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=full_text, /append
-
-endelse
+endif
 
 ;*****************************
 ;get runs_to_process list of files
@@ -1716,20 +1803,20 @@ if (runs_to_process NE '') then begin
     array_size = size(runs_array)
     array_size = array_size[1]
     array_of_nexus_files = strarr(array_size)
+    runs_full_path = strarr(array_size)
     runs_to_use_array = lonarr(array_size)
     nbr_runs_to_use = 0
     
     for i=0,(array_size-1) do begin
         
-        cmd_findnexus = "findnexus -i" + (*global).instrument
+        cmd_findnexus = "findnexus -i" + instrument
         cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
         spawn, cmd_findnexus, full_path_to_nexus
         array_of_nexus_files[i]=full_path_to_nexus
         
 ;create message for view_info
-        
         result = strmatch(array_of_nexus_files[i],"ERROR*")
-        
+
         if (result[0] GE 1 or full_path_to_nexus EQ '') then begin
             
 ;        text = 'runs # ' + runs_array[i] + '(input # ' + strcompress(i+1) +'): INVALID'
@@ -1759,13 +1846,15 @@ if (runs_to_process NE '') then begin
         for i=0,(array_size-1) do begin
             if (runs_to_use_array[i] EQ 1) then begin
                 runs_number[j]=runs_array[i]
-                j+=1
+                runs_full_path[j]=array_of_nexus_files[i]
+            j+=1
             endif
         endfor
         
+        valid_run_number = j
         text = strcompress(j) + ' valid run numbers'
         full_text = 'data_reduction will use ' + strcompress(j) + ' run numbers:'
-        full_text_2 = "   * " + strcompress(runs_number,/remove_all)
+        full_text_2 = "   - run number  " + strcompress(runs_number,/remove_all)
     endif else begin
         
         text = '0 valid run number to use'
@@ -1776,9 +1865,9 @@ if (runs_to_process NE '') then begin
     widget_control, view_info, set_value=text,/append
     widget_control, full_view_info, set_value=full_text,/append
     widget_control, full_view_info, set_value=full_text_2,/append
-
+    
 endif else begin
-
+    
     text = 'Please specify at least one run number'
     full_text = 'No Run number has been specified'
     widget_control, view_info, set_value=text, /append
@@ -1794,35 +1883,96 @@ widget_control, norm_bkg_id, get_value=norm_bkg_value
 ;*****************************
 ;check status of intermediate outputs
 if (instrument EQ 'REF_L') then begin
-
+    
     interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
-
+    
 endif else begin
-
+    
     interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group_REF_M')
-
+    
 endelse
 
-    widget_control, interm_id, get_value=interm_status
+widget_control, interm_id, get_value=interm_status
 
 if ((*global).instrument EQ 'REF_M') then begin
-
+    
     array_of_parameters = retrieve_REF_M_parameters(Event)
     wave_min = array_of_parameters[0]
     wave_max = array_of_parameters[1]
     wave_width = array_of_parameters[2]
     detector_angle_rad = array_of_parameters[3]
     detector_angle_err = array_of_parameters[4]
+    
+endif
 
-    print, "wave_min is: " , wave_min
-    print, "wave_max is: " , wave_max
-    print, "wave_width is: ", wave_width
-    print, "detector_angle_rad: ", detector_angle_rad
-    print, "detector_angle_err: ", detector_angle_err
+;if (stop_reduction EQ 0) then begin
+
+;start command line for REF_L
+    REF_L_cmd_line = "reflect_tofred_batch "
+
+;add list of NeXus run numbers
+runs_text = ""
+for i=0,(nbr_runs_to_use-1) do begin
+    runs_text += strcompress(runs_number[i],/remove_all) + " "
+endfor
+REF_L_cmd_line += runs_text
+
+;normalization
+if (norm_flag EQ 0) then begin
+    
+    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+    REF_L_cmd_line += norm_cmd
 
 endif
 
+;signal Pid file flag
+signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+REF_L_cmd_line += signal_pid_cmd
 
+;background Pid file flag
+if (bkg_flag EQ 0) then begin
+    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+    REF_L_cmd_line += bkg_pid_cmd
+endif
+
+;--no-norm-bkg
+if (norm_bkg_value EQ 1) then begin
+    norm_bkg_cmd = " --no-norm-bkg"
+    REF_L_cmd_line += norm_bkg_cmd
+endif
+
+;--dump_all or various plots
+if (interm_status EQ 0) then begin
+    list_of_plots = (*global).plots_selected
+
+    interm_plot_cmd = ""
+;.sdc 
+    if (list_of_plots[0] EQ 1) then begin
+        interm_plot_cmd += " --dump-specular"
+    endif
+    
+;.sub
+    if (list_of_plots[2] EQ 1) then begin
+        interm_plot_cmd += " --dump-sub"
+    endif
+    
+;.norm
+    if (list_of_plots[3] EQ 1) then begin
+        interm_plot_cmd += " --dump-norm"
+    endif
+    
+    REF_L_cmd_line += interm_plot_cmd
+endif    
+
+text = "Processing data reduction....."
+widget_control, view_info, set_value=text,/append
+full_text = " Data Reduction is running using the following command line:"
+widget_control, full_view_info, set_value=full_text,/append
+full_text = "> " + REF_L_cmd_line
+widget_control, full_view_info, set_value=full_text,/append
+
+
+;endif
 
 end
 
@@ -2392,3 +2542,36 @@ endelse
 (*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
 
 end
+
+;check status of all text boxes and buttons to validate or not GO Data
+;Reduction
+pro check_status_to_validate_go, Event
+
+status=0
+start_data_reduction_button_id = widget_info(Event.top,$
+                                             find_by_uname='start_data_reduction_button')
+;check that there is a background pid file if 
+
+
+
+
+
+
+
+
+
+
+
+
+if (status EQ 1) then begin
+
+    widget_control,start_data_reduction_button_id, sensitive=1
+
+endif else begin
+
+    widget_control,start_data_reduction_button_id, sensitive=0
+
+endelse
+
+end
+
