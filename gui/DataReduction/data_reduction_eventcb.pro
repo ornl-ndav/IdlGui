@@ -1,3 +1,18 @@
+function produce_output_file_name, Event, run_number, extension
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_folder = (*global).tmp_folder
+
+output_file_name = tmp_folder + (*global).instrument 
+output_file_name += "_" + run_number + extension
+
+return, output_file_name 
+end
+
+
 function retrieve_REF_M_parameters, Event
 
 ;get global structure
@@ -196,7 +211,7 @@ openw, 1, file_name
 i=0
 for x=xmin, xmax do begin
     for y=ymin, ymax do begin
-        text = '1_' + strcompress(x,/remove_all)
+        text = 'bank1_' + strcompress(x,/remove_all)
         text += '_' + strcompress(y,/remove_all)
         printf, 1,text
         ++i
@@ -291,7 +306,7 @@ i=0
 for x=0, Nx-1 do begin
     for y=0, Ny-1 do begin
         if (background_1_array[x,y] NE 0) then begin
-            text = '1_' + strcompress(x,/remove_all)
+            text = 'bank1_' + strcompress(x,/remove_all)
             text += '_' + strcompress(y,/remove_all)
             printf, 1,text
             ++i
@@ -339,6 +354,7 @@ end
 
 function get_ucams
 
+cd , "~/"
 cmd_pwd = "pwd"
 spawn, cmd_pwd, listening
 print, "listening is: ", listening
@@ -648,7 +664,7 @@ endif else begin
         WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
 
 ;read and plot nexus file
-        read_and_plot_nexus_file, Event         ;remove_comments
+        read_and_plot_nexus_file, Event      
 
 ;tell the program that data are displayed
         (*global).file_opened = 1
@@ -1714,7 +1730,6 @@ end
 
 
 
-
 pro start_data_reduction_button_eventcb, Event
 
 ;get global structure
@@ -1942,8 +1957,8 @@ endif
 if (instrument EQ 'REF_L') then begin
 
 ;start command line for REF_L
-    REF_L_cmd_line = "reflect_tofred_batch "
-    
+    REF_L_cmd_line = "reflect_tofred_batch " 
+   
 ;add list of NeXus run numbers
     runs_text = ""
     for i=0,(nbr_runs_to_use-1) do begin
@@ -1959,6 +1974,8 @@ if (instrument EQ 'REF_L') then begin
         
     endif
     
+REF_L_cmd_line += " -- "
+
 ;signal Pid file flag
     signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
     REF_L_cmd_line += signal_pid_cmd
@@ -2092,12 +2109,13 @@ endelse
 
 widget_control, full_view_info, set_value=full_text,/append
 
-starting_time = strtime(1)
+starting_time = systime(1)
 
-;spawn, cmd_line, listening
+widget_control,/hourglass
+spawn, cmd_line, listening   ;REMOVE_ME
 
 text = "...DONE"
-ending_time = strtime(1)
+ending_time = systime(1)
 
 total_processing_time = ending_time - starting_time
 full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
@@ -2105,12 +2123,150 @@ full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s
 widget_control, full_view_info, set_value=full_text,/append
 widget_control, view_info, set_value=text,/append
 
+text = 'Plotting output main output file....'
+main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+(*global).main_output_file_name = main_output_file_name
+full_text = 'Plotting main output file: ' + main_output_file_name
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, view_info, set_value=text,/append
+
+;plot main .txt file
+draw_id = widget_info(Event.top, find_by_uname='data_reduction_plot')
+plot_reduction, $
+  Event, $
+  main_output_file_name, $
+  draw_id, $
+  "Intensity vs. Wavelength"
+
+text = '...done'
+full_text = '...done'
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, view_info, set_value=text,/append
+
+widget_control,hourglass=0
+
+;reactivate appropriate refresh buttons and plot data
+refresh_main_plot_id = widget_info(Event.top, find_by_uname='refresh_main_plot_button')
+widget_control, refresh_main_plot_id, sensitive=1
+
+;remove_me
+print, 'list_of_plots: ', list_of_plots
+
+if (list_of_plots[0] EQ 1) then begin ;tab_1
+    tab_1_refresh_button = widget_info(Event.top,find_by_uname='signal_region_refresh_plot_button')
+    draw_id = widget_info(Event.top, find_by_uname='signal_region_draw')
+    
+    widget_control, tab_1_refresh_button, sensitive=1
+    output_1_file_name = produce_output_file_name(Event, (*global).run_number, '.sdc')
+    plot_reduction, $
+      Event, $
+      output_1_file_name, $
+      draw_id, $
+      "plot #1"
+endif
+
+if (list_of_plots[1] EQ 1) then begin ;tab_2
+    tab_2_refresh_button = widget_info(Event.top,find_by_uname='background_refresh_plot_button')
+    draw_id = widget_info(Event.top, find_by_uname='background_summed_tof_draw')
+
+    widget_control, tab_2_refresh_button, sensitive=1
+    output_2_file_name = produce_output_file_name(Event, (*global).run_number, '.bkg')
+    plot_reduction, $
+      Event, $
+      output_2_file_name, $
+      draw_id, $
+      "plot #2"
+endif
+
+if (list_of_plots[2] EQ 1) then begin ;tab_3
+    tab_3_refresh_button = widget_info(Event.top,find_by_uname='signal_refresh_plot_button')
+    draw_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_draw')
+
+    widget_control, tab_3_refresh_button, sensitive=1
+    output_3_file_name = produce_output_file_name(Event, (*global).run_number, '.sub')
+    plot_reduction, $
+      Event, $
+      output_3_file_name, $
+      draw_id, $
+      "plot #3"
+endif
+
+if (list_of_plots[3] EQ 1) then begin ;tab_4
+    tab_4_refresh_button = widget_info(Event.top,find_by_uname='normalization_refresh_plot_button')
+    draw_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_draw')
+
+    widget_control, tab_4_refresh_button, sensitive=1
+    output_4_file_name = produce_output_file_name(Event, (*global).run_number, '.nom')
+    plot_reduction, $
+      Event, $
+      output_4_file_name, $
+      draw_id, $
+      "plot #4"
+endif
+
+if (list_of_plots[4] EQ 1) then begin ;tab_5
+    tab_5_refresh_button = widget_info(Event.top,find_by_uname='background_2_refresh_plot_button')
+    draw_id = widget_info(Event.top,$
+                          find_by_uname='background_region_from_normalization_region_summed_tof_draw')
+
+    widget_control, tab_5_refresh_button, sensitive=1
+    output_5_file_name = produce_output_file_name(Event, (*global).run_number, '.bnk')
+    plot_reduction, $
+      Event, $
+      output_5_file_name, $
+      draw_id, $
+      "plot #5"
+endif
+
 end
 
 
 
 
+pro refresh_plot_button_eventcb, Event, drawing_uname
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+draw_id = widget_info(Event.top, find_by_uname=drawing_uname)
+
+case drawing_uname of
+    
+    'data_reduction_plot': begin
+        title='Intensity vs. Wavelength'
+        print, 'title is: ', title
+    end
+    'signal_region_draw' : begin
+        title=''
+        print, 'inside signal_region_draw'
+    end
+    'background_summed_tof_draw' : begin
+        title=''
+        print, 'background_summed_tof_draw'
+    end
+    'signal_region_summed_tof_draw' : begin
+        title=''
+        print, 'signal_region_summed_tof_draw'
+    end
+    'normalization_region_summed_tof_draw' : begin
+        title=''
+        print, 'normalization_region_summed_tof_draw'    
+    end
+    'background_region_from_normalization_region_summed_tof_draw' : begin
+        title = ''
+        print, 'background_region_from_normalization_region_summed_tof_draw'
+    end
+
+endcase
+
+plot_reduction, $
+  Event, $
+  (*global).main_output_file_name, $
+  draw_id, $
+  title
+
+end
 
 
 pro intermediate_plots_list_validate_eventcb,Event
@@ -2142,7 +2298,6 @@ number_of_plots_selected = 0
 
 full_text = 'Name of intermediate plots that will be plotted:'
 widget_control, full_view_info, set_value=full_text, /append
-
 
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
 if (indx0 EQ 1) then begin ;signal region summed TOF
@@ -2197,7 +2352,11 @@ endif else begin
 
 endelse
 
-norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+if (instrument EQ 'REF_L') then begin
+    norm_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_L')
+endif else begin
+    norm_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_M')
+endelse
 widget_control, norm_id, get_value=norm_flag  ;0:with norm    1:no normalization
 
 tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
@@ -2313,18 +2472,6 @@ pro plot_reduction, Event, plot_file_name, draw_id, title
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;log book ids (full and simple)
-view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
-full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
-
-strt_time = systime(1)
-
-full_text = 'Plotting: ' + plot_file_name + '....'
-text = 'Plotting....'
-
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=full_text, /append
-
 ;CATCH, wrong_text_file
 
 ;if (wrong_text_file ne 0) then begin
@@ -2422,8 +2569,7 @@ endwhile
 ;plot,flt1,title='Intensity'
 ;plot,flt2,title='Sigma'
 
-view_plot = widget_info(Event.top,FIND_BY_UNAME=' draw_id')
-WIDGET_CONTROL, view_plot, GET_VALUE = view_plot_id
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
 plot,flt0,flt1,title=title
@@ -2433,7 +2579,6 @@ errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
 
 close,u
 free_lun,u
-stop_time = systime(1)
 
 ;endelse
 
