@@ -304,7 +304,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=1.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -682,13 +682,14 @@ normalization_text = widget_text(norm_run_number_base,$
                                  uname='normalization_text',$
                                  /editable,$
                                  /align_left,$
-                                /all_events)
+                                 /all_events)
 
 norm_bkg_offset = 10
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=145-norm_bkg_offset,$
-                                     value='Normalize bkg:')
+                                     value='Norm. bkg.:')
+
 
 norm_background_list = ['Yes',$
                         'No']
@@ -696,11 +697,49 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        norm_background_list,$
                                        /exclusive,$
                                        /RETURN_NAME,$
-                                       XOFFSET=90,$
-                                       YOFFSET=140-norm_bkg_offset,$
+                                       XOFFSET=75,$
+                                       YOFFSET=138-norm_bkg_offset,$
                                        SET_VALUE=0.0,$
                                        row=1,$
                                        uname='norm_background_list_group')
+
+norm_frame = widget_base(data_reduction_base,$
+                          xoffset=0,$
+                          yoffset=136-norm_bkg_offset,$
+                          scr_xsize=162,$
+                          scr_ysize=31,$
+                          frame=1)
+
+bkg_offset = 10
+background_title = widget_label(data_reduction_base,$
+                                     xoffset=175,$
+                                     yoffset=145-bkg_offset,$
+                                     value='Bkg.:')
+
+background_list = ['Yes',$
+                   'No']
+background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                  background_list,$
+                                  /exclusive,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=210,$
+                                  YOFFSET=138-bkg_offset,$
+                                  SET_VALUE=0.0,$
+                                  row=1,$
+                                  uname='background_list_group')
+
+back_frame = widget_base(data_reduction_base,$
+                         xoffset=170,$
+                         yoffset=136-norm_bkg_offset,$
+                         scr_xsize=130,$
+                         scr_ysize=31,$
+                         frame=1)
+
+
+
+
+
+
 
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
@@ -1176,8 +1215,6 @@ save_selection_button = widget_button(select_signal_base,$
                                       value='SAVE SELECTION',$
                                       sensitive=0)
 
-
-
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
 xsize_of_tabs = 730
@@ -1361,29 +1398,21 @@ signal_pid_text = widget_text(data_reduction_base,$
                               /editable,$
                               /all_events)
 
-;background Pid file
-; background_title = widget_label(data_reduction_base,$
-;                                 xoffset=3,$
-;                                 yoffset=back_y_offset,$
-;                                value='Background:')
-; background_list = ['Yes',$
-;                    'No']
-; background_list_group = CW_BGROUP(data_reduction_base,$ 
-;                                   background_list,$
-;                                   /exclusive,$
-;                                   /RETURN_NAME,$
-;                                   XOFFSET=70,$
-;                                   YOFFSET=back_y_offset-5,$
-;                                   SET_VALUE=0.0,$
-;                                   row=1,$
-;                                   uname='background_list_group')
-
-; background_file_base = widget_base(data_reduction_base,$
-;                                    uname='background_file_base',$
-;                                    xoffset=0,$
-;                                    yoffset=back_y_offset+23,$
-;                                    scr_xsize=xsize_of_tabs,$
-;                                    frame=0)
+ background_title = widget_label(data_reduction_base,$
+                                 xoffset=160,$
+                                 yoffse=100,$
+                                value='Background:')
+ background_list = ['Y',$
+                    'N']
+ background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                   background_list,$
+                                   /exclusive,$
+                                   /RETURN_NAME,$
+                                   XOFFSET=230,$
+                                   YOFFSET=95,$
+                                   SET_VALUE=0.0,$
+                                   row=1,$
+                                   uname='background_list_group')
 
 background_pid_file_button = widget_button(data_reduction_base,$
                                              uname='background_pid_file_button',$
