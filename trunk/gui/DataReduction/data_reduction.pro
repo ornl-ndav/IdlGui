@@ -188,6 +188,39 @@ case Event.id of
         start_data_reduction_button_eventcb, Event
     end
 
+;refresh main plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='refresh_main_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'data_reduction_plot'
+    end
+
+;refresh signal region plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='signal_region_refresh_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'signal_region_draw'
+    end
+
+;refresh background plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='background_refresh_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'background_summed_tof_draw'
+    end
+
+;refresh signal region summed tof  plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='signal_refresh_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'signal_region_summed_tof_draw'
+    end
+
+;refresh normalization region summed tof  plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='normalization_refresh_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'normalization_region_summed_tof_draw'
+    end
+
+;refresh background region from normalization summed tof plot button for REF_L and REF_M
+    widget_info(Event.top,find_by_uname='background_2_refresh_plot_button'): begin
+        refresh_plot_button_eventcb, Event, 'background_region_from_normalization_region_summed_tof_draw'
+    end
+
+
+
+
 ;normalization run number text box
     widget_info(wWidget, FIND_BY_UNAME='normalization_text'): begin
         normalization_text_eventcb, Event
@@ -237,9 +270,6 @@ case Event.id of
     widget_info(wWidget, FIND_BY_UNAME='runs_to_process_text'): begin
         runs_to_process_text_eventcb, Event
     end
-
-
-
 
     else:
     
@@ -374,6 +404,7 @@ global = ptr_new({$
                    full_nexus_name      : '',$
                    img_ptr 		: ptr_new(0L),$
                    instrument		: instrument_list[instrument],$
+                   main_output_file_name : '',$
                    nexus_file_name_only : '',$
                    Nx                   : 0L,$
                    Ny                   : 0L,$
@@ -735,12 +766,6 @@ back_frame = widget_base(data_reduction_base,$
                          scr_ysize=31,$
                          frame=1)
 
-
-
-
-
-
-
 runs_to_process_label = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=183-norm_bkg_offset,$
@@ -804,6 +829,16 @@ info_text = widget_text(data_reduction_base,$
                         /scroll,$
                         /wrap,$
                         uname='info_text')
+
+;refresh button 
+refresh_main_plot_button = widget_button(first_tab_base,$
+                                         xoffset=675,$
+                                         yoffset=375,$
+                                         scr_xsize=50,$
+                                         scr_ysize=30,$
+                                         value='Refresh',$
+                                         uname='refresh_main_plot_button',$
+                                         sensitive=0)
 
 data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
@@ -896,6 +931,15 @@ signal_region_tab_base = widget_base(other_plots_tab,$
                               XOFFSET=0,$
                               YOFFSET=0)
 
+signal_region_refresh_plot_button = widget_button(signal_region_tab_base,$
+                                                  xoffset=665,$
+                                                  yoffset=355,$
+                                                  scr_xsize=50,$
+                                                  scr_ysize=30,$
+                                                  value='Refresh',$
+                                                  uname='signal_region_refresh_plot_button',$
+                                                  sensitive=0)
+
 signal_region_draw = widget_draw(signal_region_tab_base,$
                                  uname='signal_region_draw',$
                                  xoffset=2,$
@@ -909,6 +953,15 @@ background_summed_tof_tab_base = widget_base(other_plots_tab,$
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
+
+background_refresh_plot_button = widget_button(background_summed_tof_tab_base,$
+                                              xoffset=665,$
+                                              yoffset=355,$
+                                              scr_xsize=50,$
+                                              scr_ysize=30,$
+                                              value='Refresh',$
+                                              uname='background_refresh_plot_button',$
+                                              sensitive=0)
 
 background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
                                          uname='background_summed_tof_draw',$
@@ -924,6 +977,15 @@ signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               XOFFSET=0,$
                               YOFFSET=0)
 
+signal_refresh_plot_button = widget_button(signal_region_summed_tof_tab_base,$
+                                              xoffset=665,$
+                                              yoffset=355,$
+                                              scr_xsize=50,$
+                                              scr_ysize=30,$
+                                              value='Refresh',$
+                                              uname='signal_refresh_plot_button',$
+                                              sensitive=0)
+
 signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
                                             uname='signal_region_summed_tof_draw',$
                                             xoffset=2,$
@@ -937,6 +999,15 @@ normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
+
+normalization_refresh_plot_button = widget_button(normalization_region_summed_tof_tab_base,$
+                                                  xoffset=665,$
+                                                  yoffset=355,$
+                                                  scr_xsize=50,$
+                                                  scr_ysize=30,$
+                                                  value='Refresh',$
+                                                  uname='normalization_refresh_plot_button',$
+                                                  sensitive=0)
 
 normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
                                                    uname='normalization_region_summed_tof_draw',$
@@ -952,6 +1023,15 @@ background_region_from_normalization_region_summed_tof_tab_base = widget_base(ot
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
+
+background_2_refresh_plot_button = widget_button(background_region_from_normalization_region_summed_tof_tab_base,$
+                                                 xoffset=665,$
+                                                 yoffset=355,$
+                                                 scr_xsize=50,$
+                                                 scr_ysize=30,$
+                                                 value='Refresh',$
+                                                 uname='background_2_refresh_plot_button',$
+                                                 sensitive=0)
 
 background_region_from_normalization_region_summed_tof_draw = widget_draw($
                               background_region_from_normalization_region_summed_tof_tab_base,$
@@ -977,8 +1057,6 @@ log_book_text = widget_text(log_book_base,$
                             yoffset=5,$
                             /scroll,$
                             /wrap)
-
-
 
 FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
                                   UNAME='FILE_MENU_REF_L',$
