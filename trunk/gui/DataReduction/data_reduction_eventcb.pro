@@ -8,21 +8,21 @@ widget_control,id,get_uvalue=global
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
-wave_min_id = widget_info(Event.top, find_by_uname='WAVELENGTH_MIN_TEXT')
-wave_max_id = widget_info(Event.top, find_by_uname='WAVELENGTH_MAX_TEXT')
-wave_width_id = widget_info(Event.top, find_by_uname='WAVELENGTH_WIDTH_TEXT')
+wave_min_id = widget_info(Event.top, find_by_uname='wavelength_min_text')
+wave_max_id = widget_info(Event.top, find_by_uname='wavelength_max_text')
+wave_width_id = widget_info(Event.top, find_by_uname='wavelength_width_text')
 
 widget_control, wave_min_id, get_value=wave_min
 widget_control, wave_max_id, get_value=wave_max
 widget_control, wave_width_id, get_value=wave_width
 
-det_angle_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_VALUE')
-det_angle_err_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_ERR')
+det_angle_id = widget_info(Event.top, find_by_uname='detector_angle_value')
+det_angle_err_id = widget_info(Event.top, find_by_uname='detector_angle_err')
 
 widget_control, det_angle_id, get_value=detector_angle
 widget_control, det_angle_err_id, get_value=detector_angle_err
 
-det_angle_units_id = widget_info(Event.top, find_by_uname='DETECTOR_ANGLE_UNITS',/droplist_select)
+det_angle_units_id = widget_info(Event.top, find_by_uname='detector_angle_units',/droplist_select)
 widget_control, det_angle_units_id, get_value=all_det_angle_units
 index = widget_info(det_angle_units_id, /droplist_select)
 det_angle_units = all_det_angle_units[index]
@@ -660,11 +660,16 @@ endif else begin
         widget_control, signal_pid_file_button_id, sensitive=1
         widget_control, background_pid_file_button_id, sensitive=1
         
-        ;put nexus run number into list of nexus runs
+        ;put nexus run number into list of nexus runs if REF_L
         runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
-        widget_control, runs_to_process_text_id, get_value=previous_text
-        new_text = strcompress(run_number,/remove_all) + ',' + previous_text
-        widget_control, runs_to_process_text_id, set_value=new_text
+        if (instrument EQ 'REF_L') then begin
+            widget_control, runs_to_process_text_id, get_value=previous_text
+            new_text = strcompress(run_number,/remove_all) + ',' + previous_text
+            widget_control, runs_to_process_text_id, set_value=new_text
+        endif else begin ;only copy run number into run to process if REF_M
+            new_text = strcompress(run_number,/remove_all)
+            widget_control, runs_to_process_text_id, set_value=new_text
+        endelse
 
         if (instrument EQ 'REF_L') then begin
             check_status_to_validate_go, Event
@@ -1617,8 +1622,8 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         widget_control, plots_selection_id, get_value=value_selection
 
         (*global).plots_selected = value_selection
-        
-        
+        (*global).entering_selection_of_plots_by_yes_button = 1
+
     endif else begin            ;remove other plots 
         
         intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
@@ -1641,6 +1646,7 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         text = 'No intermediate plot'
         widget_control, full_view_info, set_value=full_text, /append
         widget_control, view_info, set_value=text, /append
+        (*global).entering_selection_of_plots_by_yes_button = 0
         
     endelse
 
@@ -1731,7 +1737,13 @@ full_background_pid_file_name = (*global).background_pid_file_name
 ;*****************************
 ;get normalization run number
 ;check if we want normalization or not
-normalization_status_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_L')
+if (instrument EQ 'REF_L') then begin
+    normalization_status_id = widget_info(Event.top, $
+                                          find_by_uname='normalization_list_group_REF_L')
+endif else begin
+    normalization_status_id = widget_info(Event.top, $
+                                          find_by_uname='normalization_list_group_REF_M')
+endelse
 widget_control, normalization_status_id, get_value=norm_flag
 
 ;norm_flag=0 means with normalization
@@ -1767,24 +1779,24 @@ if (norm_flag EQ 0) then begin
 ;get full NeXus path
                 cmd_findnexus = "findnexus -i" + (*global).instrument
                 cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
-                spawn, cmd_findnexus, full_path_to_nexus
+                spawn, cmd_findnexus, full_path_to_nexus_normalization
                 
 ;check if nexus exists
-                result = strmatch(full_path_to_nexus,"ERROR*")
+                result = strmatch(full_path_to_nexus_normalization,"ERROR*")
                 
                 if (result[0] GE 1) then begin
                     
                     find_nexus = 0 ;run# does not exist in archive
                     text = 'Normalization file does not exist'
                     full_text = 'Normalization run number file does not exist (' + $
-                      full_path_to_nexus + ')'
+                      full_path_to_nexus_normalization + ')'
                     stop_reduction = 1
                     
                 endif else begin
                     
                     find_nexus = 1 ;run# exist in archive
                     text = 'Normalization file: OK'
-                    full_text = 'Normalization file used: ' + full_path_to_nexus        
+                    full_text = 'Normalization file used: ' + full_path_to_nexus_normalization  
                     
                 endelse
                 
@@ -1911,7 +1923,7 @@ endelse
 
 widget_control, interm_id, get_value=interm_status
 
-if ((*global).instrument EQ 'REF_M') then begin
+if (instrument EQ 'REF_M') then begin
     
     array_of_parameters = retrieve_REF_M_parameters(Event)
     wave_min = array_of_parameters[0]
@@ -1920,40 +1932,94 @@ if ((*global).instrument EQ 'REF_M') then begin
     detector_angle_rad = array_of_parameters[3]
     detector_angle_err = array_of_parameters[4]
     
-endif
+endif 
 
-;if (stop_reduction EQ 0) then begin
+if (instrument EQ 'REF_L') then begin
 
 ;start command line for REF_L
     REF_L_cmd_line = "reflect_tofred_batch "
+    
+;add list of NeXus run numbers
+    runs_text = ""
+    for i=0,(nbr_runs_to_use-1) do begin
+        runs_text += strcompress(runs_number[i],/remove_all) + " "
+    endfor
+    REF_L_cmd_line += runs_text
+    
+;normalization
+    if (norm_flag EQ 0) then begin
+        
+        norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+        REF_L_cmd_line += norm_cmd
+        
+    endif
+    
+;signal Pid file flag
+    signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+    REF_L_cmd_line += signal_pid_cmd
+    
+;background Pid file flag
+    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+    REF_L_cmd_line += bkg_pid_cmd
+    
+;--no-norm-bkg
+    if (norm_bkg_value EQ 1) then begin
+        norm_bkg_cmd = " --no-norm-bkg"
+        REF_L_cmd_line += norm_bkg_cmd
+    endif
+    
+;--dump_all or various plots
+    if (interm_status EQ 0) then begin
+        list_of_plots = (*global).plots_selected
+        
+        interm_plot_cmd = ""
+;.sdc 
+        if (list_of_plots[0] EQ 1) then begin
+            interm_plot_cmd += " --dump-specular"
+        endif
+        
+;.sub
+        if (list_of_plots[2] EQ 1) then begin
+            interm_plot_cmd += " --dump-sub"
+        endif
+        
+;.norm
+        if (list_of_plots[3] EQ 1) then begin
+            interm_plot_cmd += " --dump-norm"
+        endif
+        
+        REF_L_cmd_line += interm_plot_cmd
+    endif    
+    
+endif else begin ;for REF_M
+
+;start command line for REF_M
+    REF_M_cmd_line = "reflect_reduction "
 
 ;add list of NeXus run numbers
-runs_text = ""
-for i=0,(nbr_runs_to_use-1) do begin
-    runs_text += strcompress(runs_number[i],/remove_all) + " "
-endfor
-REF_L_cmd_line += runs_text
-
+    runs_text = ""
+    REF_M_cmd_line += full_path_to_nexus_normalization
+    
 ;normalization
-if (norm_flag EQ 0) then begin
+    if (norm_flag EQ 0) then begin
     
     norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
-    REF_L_cmd_line += norm_cmd
+    REF_M_cmd_line += norm_cmd
 
 endif
 
 ;signal Pid file flag
 signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
-REF_L_cmd_line += signal_pid_cmd
+REF_M_cmd_line += signal_pid_cmd
 
 ;background Pid file flag
 bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-REF_L_cmd_line += bkg_pid_cmd
+REF_M_cmd_line += bkg_pid_cmd
 
 ;--no-norm-bkg
 if (norm_bkg_value EQ 1) then begin
     norm_bkg_cmd = " --no-norm-bkg"
-    REF_L_cmd_line += norm_bkg_cmd
+    REF_M_cmd_line += norm_bkg_cmd
 endif
 
 ;--dump_all or various plots
@@ -1975,15 +2041,38 @@ if (interm_status EQ 0) then begin
     if (list_of_plots[3] EQ 1) then begin
         interm_plot_cmd += " --dump-norm"
     endif
+
+    REF_M_cmd_line += interm_plot_cmd
+
+endif
+
+;min, max and width angles
+    l_bins_cmd = " --l-bins=" + strcompress(wave_min,/remove_all)
+    l_bins_cmd += "," + strcompress(wave_max,/remove_all)
+    l_bins_cmd += "," + strcompress(wave_width,/remove_all)
     
-    REF_L_cmd_line += interm_plot_cmd
-endif    
+    REF_M_cmd_line += l_bins_cmd    
+    
+;detector_angle
+    det_angle_cmd = " --det-angle="      
+    det_angle_cmd += strcompress(detector_angle_rad,/remove_all)
+    det_angle_cmd += "," + strcompress(detector_angle_err,/remove_all)
+    
+    REF_M_cmd_line += det_angle_cmd
+    
+endelse
 
 text = "Processing data reduction....."
 widget_control, view_info, set_value=text,/append
 full_text = " Data Reduction is running using the following command line:"
 widget_control, full_view_info, set_value=full_text,/append
-full_text = "> " + REF_L_cmd_line
+
+if (instrument EQ 'REF_L') then begin
+    full_text = "> " + REF_L_cmd_line
+endif else begin
+    full_text = "> " + REF_M_cmd_line
+endelse
+
 widget_control, full_view_info, set_value=full_text,/append
 
 
@@ -2043,11 +2132,11 @@ endif else begin
 
 endelse
 
-back_id = widget_info(Event.top, find_by_uname='background_list_group')
-widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
+;back_id = widget_info(Event.top, find_by_uname='background_list_group')
+;widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
 
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-if (indx1 EQ 1 AND bkg_flag EQ 0) then begin
+if (indx1 EQ 1) then begin
 
     widget_control, tab_2_id, base_set_title='Background'
     number_of_plots_selected += 1
@@ -2175,6 +2264,15 @@ if (value_selection[0] EQ 0 AND $
     widget_control, inter_id, set_value=1
 
 endif
+
+if ((*global).entering_selection_of_plots_by_yes_button EQ 1) then begin
+ 
+    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+    widget_control, inter_id, set_value=1
+
+endif   
+  
+(*global).entering_selection_of_plots_by_yes_button = 0
 
 end
 
@@ -2340,8 +2438,39 @@ end
 ;cancel button inside inter. window
 pro intermediate_plots_list_cancel_eventcb_REF_M, Event   
 
-list_of_plots_id = widget_info(Event.top, find_by_uname='list_of_plots_base')
-widget_control, list_of_plots_id, map=0
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+widget_control, intermediate_plot_base, map=0
+
+;reinitialize status of plots
+value_selection = (*global).plots_selected
+                            
+plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+widget_control, plots_selection_id, set_value=value_selection
+
+inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+
+;turn off plot selection if previous array was [0,0,0,0,0]
+if (value_selection[0] EQ 0 AND $
+    value_selection[1] EQ 0 AND $
+    value_selection[2] EQ 0 AND $
+    value_selection[3] EQ 0 AND $
+    value_selection[4] EQ 0) then begin
+
+    widget_control, inter_id, set_value=1
+
+endif
+
+if ((*global).entering_selection_of_plots_by_yes_button EQ 1) then begin
+ 
+    widget_control, inter_id, set_value=1
+
+endif   
+  
+(*global).entering_selection_of_plots_by_yes_button = 0
 
 end
 
@@ -2374,7 +2503,7 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         widget_control, plots_selection_id, get_value=value_selection
 
         (*global).plots_selected = value_selection
-        
+        (*global).entering_selection_of_plots_by_yes_button = 1        
         
     endif else begin            ;remove other plots 
         
@@ -2398,7 +2527,9 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         text = 'No intermediate plot'
         widget_control, full_view_info, set_value=full_text, /append
         widget_control, view_info, set_value=text, /append
-        
+
+        (*global).entering_selection_of_plots_by_yes_button = 0        
+
     endelse
 
     (*global).entering_intermediate_file_output_for_first_time = 0
@@ -2458,11 +2589,11 @@ endif else begin
 
 endelse
 
-back_id = widget_info(Event.top, find_by_uname='background_list_group')
-widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
+;back_id = widget_info(Event.top, find_by_uname='background_list_group')
+;widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
 
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-if (indx1 EQ 1 AND bkg_flag EQ 0) then begin
+if (indx1 EQ 1) then begin
 
     widget_control, tab_2_id, base_set_title='Background'
     number_of_plots_selected += 1

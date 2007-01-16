@@ -123,14 +123,14 @@ case Event.id of
     
 ;INSIDE DATA_REDUCTION_WINDOW
 ;with or without background for REF_L
-    widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
-        background_list_group_eventcb, Event
-    end
+;    widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
+;        background_list_group_eventcb, Event
+;    end
 
 ;with or without background for REF_M
-    widget_info(wWidget, FIND_BY_UNAME='background_list_group_REF_M'): begin
-        background_list_group_eventcb_REF_M, Event
-    end
+;    widget_info(wWidget, FIND_BY_UNAME='background_list_group_REF_M'): begin
+;        background_list_group_eventcb_REF_M, Event
+;    end
 
 ;with or without normalization for REF_L
     widget_info(wWidget, FIND_BY_UNAME='normalization_list_group_REF_L'): begin
@@ -304,7 +304,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=1.0,$          ;REMOVE_ME, put 0.0 back
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -367,6 +367,7 @@ global = ptr_new({$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
+                   entering_selection_of_plots_by_yes_button : 0,$
                    file_opened          : 0,$
                    find_nexus           : 0L,$
                    full_histo_mapped_name : '',$
@@ -990,6 +991,7 @@ global = ptr_new({$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
+                   entering_selection_of_plots_by_yes_button : 0,$
                    file_opened          : 0,$
                    find_nexus           : 0L,$
                    full_histo_mapped_name : '',$
@@ -1337,7 +1339,7 @@ DETECTOR_ANGLE_PLUS_MINUS = widget_label(detector_base,$
 
 angle_units = ["radians","degres"]
 DETECTOR_ANGLE_UNITS = widget_droplist(detector_base,$
-                                       UNAME='DETECTOR_ANGLE_UNITS',$
+                                       UNAME='detector_angle_units',$
                                        XOFFSET=15,$
                                        YOFFSET=40,$
                                        VALUE=angle_units, $
