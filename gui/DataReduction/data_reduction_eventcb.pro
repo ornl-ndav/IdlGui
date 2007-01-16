@@ -1821,6 +1821,11 @@ if (norm_flag EQ 0) then begin
 
 endif
 
+;****************************
+;check status of bkg flag
+bkg_flag_id = widget_info(Event.top, find_by_uname='background_list_group')
+widget_control, bkg_flag_id, get_value=bkg_flag
+
 ;*****************************
 ;get runs_to_process list of files
 runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
@@ -1962,6 +1967,11 @@ if (instrument EQ 'REF_L') then begin
     bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
     REF_L_cmd_line += bkg_pid_cmd
     
+;background flag
+if (bkg_flag EQ 1) then begin
+    REF_L_cmd_line += " --no-bkg"
+endif
+
 ;--no-norm-bkg
     if (norm_bkg_value EQ 1) then begin
         norm_bkg_cmd = " --no-norm-bkg"
@@ -2015,6 +2025,11 @@ REF_M_cmd_line += signal_pid_cmd
 ;background Pid file flag
 bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
 REF_M_cmd_line += bkg_pid_cmd
+
+;background flag
+if (bkg_flag EQ 1) then begin
+    REF_M_cmd_line += " --no-bkg"
+endif
 
 ;--no-norm-bkg
 if (norm_bkg_value EQ 1) then begin
