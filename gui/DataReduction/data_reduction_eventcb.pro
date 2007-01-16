@@ -2084,14 +2084,26 @@ widget_control, full_view_info, set_value=full_text,/append
 
 if (instrument EQ 'REF_L') then begin
     full_text = "> " + REF_L_cmd_line
+    cmd_line = REF_L_cmd_line
 endif else begin
     full_text = "> " + REF_M_cmd_line
+    cmd_line = REF_M_cmd_line
 endelse
 
 widget_control, full_view_info, set_value=full_text,/append
 
+starting_time = strtime(1)
 
-;endif
+;spawn, cmd_line, listening
+
+text = "...DONE"
+ending_time = strtime(1)
+
+total_processing_time = ending_time - starting_time
+full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
+
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, view_info, set_value=text,/append
 
 end
 
