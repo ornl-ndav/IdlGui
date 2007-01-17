@@ -14,5 +14,6 @@ resolve_routine, "read_bmp",/either
 resolve_routine, "loadct",/either
 resolve_routine, "xloadct",/either
 resolve_routine, "xregistered",/either
+resolve_routine, "errplot",/either
 save,/routines,filename="data_reduction.sav"
 exit
