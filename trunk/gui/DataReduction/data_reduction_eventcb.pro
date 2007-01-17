@@ -692,10 +692,6 @@ widget_control, id_run_number, get_value=run_number
 ;erase all displays
 reset_and_erase_displays, Event    
 
-;remove sensitivy of refresh button 
-refresh_main_plot_button_id = widget_info(Event.top, find_by_uname='refresh_main_plot_button')
-widget_control, refresh_main_plot_button_id, sensitive=0
-
 if (run_number EQ '') then begin
 
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
@@ -766,9 +762,9 @@ endif else begin
             widget_control, runs_to_process_text_id, set_value=new_text
         endelse
 
-        if (instrument EQ 'REF_L') then begin
+;        if (instrument EQ 'REF_L') then begin
             check_status_to_validate_go, Event
-        endif
+;        endif
 
     endelse
     
@@ -785,11 +781,21 @@ pro reset_and_erase_displays, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 (*global).selection_signal = 0
 (*global).selection_background = 0
 
 ;no data reduction plot available
 (*global).data_reduction_done = 0
+
+;put intermediate output back to NO
+if (instrument EQ 'REF_M') then begin
+    list_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+endif else begin
+    list_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+endelse
+widget_control, list_id, set_value=1
 
 ;erase main plot (left box)
 id_draw = widget_info(Event.top, find_by_uname='display_data_base')
@@ -819,15 +825,21 @@ widget_control, runs_to_process_text_id, set_value=''
 ;reset label of all intermediate plots
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
 tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
 tab_5_id = widget_info(Event.top, $
                        find_by_uname='background_region_from_normalization_region_summed_tof_base')
 widget_control, tab_1_id, base_set_title=''
 widget_control, tab_2_id, base_set_title=''
-widget_control, tab_3_id, base_set_title=''
 widget_control, tab_4_id, base_set_title=''
 widget_control, tab_5_id, base_set_title=''
+
+if (instrument EQ 'REF_L') then begin
+    tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+    widget_control, tab_3_id, base_set_title=''
+    (*global).plots_selected = [0,0,0,0,0]
+endif else begin
+        (*global).plots_selected = [0,0,0,0]
+endelse
 
 end
 
@@ -1732,6 +1744,8 @@ pro intermediate_file_output_list_group_eventcb, Event
 id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
 widget_control, id, get_value = value
 
+instrument = (*global).instrument
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -1763,16 +1777,19 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
                                 ;remove labels on tabs
         tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
         tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-        tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
         tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
         tab_5_id = widget_info(Event.top, $
                                find_by_uname='background_region_from_normalization_region_summed_tof_base')
         widget_control, tab_1_id, base_set_title=''
         widget_control, tab_2_id, base_set_title=''
-        widget_control, tab_3_id, base_set_title=''
         widget_control, tab_4_id, base_set_title=''
         widget_control, tab_5_id, base_set_title=''
         
+        if (instrument EQ 'REF_L') then begin
+            tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+            widget_control, tab_3_id, base_set_title=''
+        endif
+
         full_text = 'No intermediate files will be produced'
         text = 'No intermediate plot'
         widget_control, full_view_info, set_value=full_text, /append
@@ -2016,7 +2033,12 @@ if (runs_to_process NE '') then begin
         endfor
         
         valid_run_number = j
-        text = strcompress(j) + ' valid run numbers'
+        if (instrument eq 'REF_L') then begin
+            text = strcompress(j) + ' valid run number(s)'
+        endif else begin
+            text = 'Run number valid'
+        endelse
+
         full_text = 'data_reduction will use ' + strcompress(j) + ' run numbers:'
         full_text_2 = "   - run number  " + strcompress(runs_number,/remove_all)
     endif else begin
@@ -2145,12 +2167,14 @@ endif else begin ;for REF_M
 
 ;add list of NeXus run numbers
     runs_text = ""
-    REF_M_cmd_line += full_path_to_nexus_normalization
-    
+;    REF_M_cmd_line += full_path_to_nexus_normalization
+    REF_M_cmd_line += array_of_nexus_files[0]
+
 ;normalization
     if (norm_flag EQ 0) then begin
     
-    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+;    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+    norm_cmd = "  --norm=" + strcompress(full_path_to_nexus_normalization,/remove_all)
     REF_M_cmd_line += norm_cmd
 
 endif
@@ -2184,18 +2208,13 @@ if (interm_status EQ 0) then begin
         interm_plot_cmd += " --dump-specular"
     endif
     
-;.sub
-    if (list_of_plots[2] EQ 1) then begin
-        interm_plot_cmd += " --dump-sub"
-    endif
-    
 ;.norm
-    if (list_of_plots[3] EQ 1) then begin
+    if (list_of_plots[2] EQ 1) then begin
         interm_plot_cmd += " --dump-norm"
     endif
 
 ;.bnk
-    if (list_of_plots[4] EQ 1) then begin
+    if (list_of_plots[3] EQ 1) then begin
         interm_plot_cmd += " --dump-norm-bkg"
     endif
 
@@ -2237,6 +2256,11 @@ widget_control, full_view_info, set_value=full_text,/append
 starting_time = systime(1)
 
 widget_control,/hourglass
+
+;desactive run_reduction_button
+start_data_reduction_button_id = widget_info(Event.top,find_by_uname='start_data_reduction_button')
+widget_control, start_data_reduction_button_id, sensitive=0
+
 spawn, cmd_line, listening  
 
 (*global).data_reduction_done = 1             
@@ -2270,10 +2294,6 @@ full_text = '...done'
 widget_control, full_view_info, set_value=full_text,/append
 widget_control, view_info, set_value=text,/append
 
-;activate refresh button
-refresh_id = widget_info(Event.top,find_by_uname='refresh_main_plot_button')
-widget_control, refresh_id, sensitive=1
-
 widget_control,hourglass=0
 
 end
@@ -2289,20 +2309,13 @@ widget_control,id,get_uvalue=global
 
 main_output_file_name = (*global).main_output_file_name
 
-if ((*global).instrument EQ 'REF_L') then begin
-    draw_id = 'data_reduction_plot'
-endif else begin
-    draw_id = 'data_reduction_plot_REF_M'
-endelse
+draw_id = 'data_reduction_plot'
 
 plot_reduction, $
   Event, $
   main_output_file_name, $
   draw_id, $
   "Intensity vs. Wavelength"
-
-refresh_main_plot_button_id = widget_info(Event.top, find_by_uname='refresh_main_plot_button')
-widget_control, refresh_main_plot_button_id, sensitive=1
 
 end
 
@@ -2384,58 +2397,54 @@ endif else begin
 endelse
 
 tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
-if (indx2 EQ 1) then begin ;signal region summed TOF
-
+if (indx2 EQ 1) then begin      ;signal region summed TOF
+    
     widget_control, tab_3_id, base_set_title='Signal region with background'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Signal region summed TOF after subtracting the background'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
+    
     widget_control, tab_3_id, base_set_title=''
-
+    
 endelse
 
-if (instrument EQ 'REF_L') then begin
-    norm_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_L')
-endif else begin
-    norm_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_M')
-endelse
-widget_control, norm_id, get_value=norm_flag  ;0:with norm    1:no normalization
+norm_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_L')
+widget_control, norm_id, get_value=norm_flag ;0:with norm    1:no normalization
 
 tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
 if (indx3 EQ 1 AND norm_flag EQ 0) then begin
-
+    
     widget_control, tab_4_id, base_set_title='Normalization'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Normalization region summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
+    
     indx3 = 0
     widget_control, tab_4_id, base_set_title=''
-
+    
 endelse
 
 tab_5_id = widget_info(Event.top, $
                        find_by_uname='background_region_from_normalization_region_summed_tof_base')
 if (indx4 EQ 1 AND norm_flag EQ 0) then begin
-
+    
     widget_control, tab_5_id, base_set_title='Background from normalization'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Background region from normalization summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
+    
     indx4 = 0
     widget_control, tab_5_id, base_set_title=''
-
+    
 endelse
 
 intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
@@ -2672,12 +2681,11 @@ widget_control, plots_selection_id, set_value=value_selection
 
 inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
 
-;turn off plot selection if previous array was [0,0,0,0,0]
+;turn off plot selection if previous array was [0,0,0,0]
 if (value_selection[0] EQ 0 AND $
     value_selection[1] EQ 0 AND $
     value_selection[2] EQ 0 AND $
-    value_selection[3] EQ 0 AND $
-    value_selection[4] EQ 0) then begin
+    value_selection[3] EQ 0 ) then begin
 
     widget_control, inter_id, set_value=1
 
@@ -2732,15 +2740,13 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
                                 ;remove labels on tabs
         tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
         tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-        tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
-        tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-        tab_5_id = widget_info(Event.top, $
+        tab_3_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+        tab_4_id = widget_info(Event.top, $
                                find_by_uname='background_region_from_normalization_region_summed_tof_base')
         widget_control, tab_1_id, base_set_title=''
         widget_control, tab_2_id, base_set_title=''
         widget_control, tab_3_id, base_set_title=''
         widget_control, tab_4_id, base_set_title=''
-        widget_control, tab_5_id, base_set_title=''
         
         full_text = 'No intermediate files will be produced'
         text = 'No intermediate plot'
@@ -2777,15 +2783,13 @@ full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
 ;index 1 of array: .sdc (signal region summed TOF)
 ;index 2 of array: .bkg (background summed TOL)
-;index 3 of array: .sub (signal region summed TOF)
-;index 4 of array: .nom (normalization region summed TOF)
-;index 5 of array: .bnk (background region normalization summed TOF)
+;index 3 of array: .nom (normalization region summed TOF)
+;index 4 of array: .bnk (background region normalization summed TOF)
 
-indx0 = value[0]
-indx1 = value[1]
-indx2 = value[2]
-indx3 = value[3]
-indx4 = value[4]
+indx0 = value[0]                ;.sdc
+indx1 = value[1]                ;.bkg
+indx2 = value[2]                ;.nom
+indx3 = value[3]                ;.bnm
 
 number_of_plots_selected = 0
 
@@ -2800,11 +2804,11 @@ if (indx0 EQ 1) then begin ;signal region summed TOF
     
     full_text = ' - Signal region summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
+    
     widget_control, tab_1_id, base_set_title=''
-
+    
 endelse
 
 ;back_id = widget_info(Event.top, find_by_uname='background_list_group')
@@ -2812,73 +2816,58 @@ endelse
 
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
 if (indx1 EQ 1) then begin
-
+    
     widget_control, tab_2_id, base_set_title='Background'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Background summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
-    ;remove this plot from the list of selected plots
+    
+                                ;remove this plot from the list of selected plots
     indx1 = 0
     new_value = [indx0, indx1, indx2, indx3, indx4]
     
     widget_control,list_of_plots_id,set_value=new_value
     widget_control, tab_2_id, base_set_title=''
-
-endelse
-
-tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
-if (indx2 EQ 1) then begin ;signal region summed TOF
-
-    widget_control, tab_3_id, base_set_title='Signal region with background'
-    number_of_plots_selected += 1
-
-    full_text = ' - Signal region summed TOF after subtracting the background'
-    widget_control, full_view_info, set_value=full_text, /append
-
-endif else begin
-
-    widget_control, tab_3_id, base_set_title=''
-
+    
 endelse
 
 norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
-widget_control, norm_id, get_value=norm_flag  ;0:with norm    1:no normalization
+widget_control, norm_id, get_value=norm_flag ;0:with norm    1:no normalization
 
-tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-if (indx3 EQ 1 AND norm_flag EQ 0) then begin
-
-    widget_control, tab_4_id, base_set_title='Normalization'
+tab_3_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+if (indx2 EQ 1 AND norm_flag EQ 0) then begin
+    
+    widget_control, tab_3_id, base_set_title='Normalization'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Normalization region summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
-    indx3 = 0
-    widget_control, tab_4_id, base_set_title=''
-
+    
+    indx2 = 0
+    widget_control, tab_3_id, base_set_title=''
+    
 endelse
 
-tab_5_id = widget_info(Event.top, $
+tab_4_id = widget_info(Event.top, $
                        find_by_uname='background_region_from_normalization_region_summed_tof_base')
-if (indx4 EQ 1 AND norm_flag EQ 0) then begin
-
-    widget_control, tab_5_id, base_set_title='Background from normalization'
+if (indx3 EQ 1 AND norm_flag EQ 0) then begin
+    
+    widget_control, tab_4_id, base_set_title='Background from normalization'
     number_of_plots_selected += 1
-
+    
     full_text = ' - Background region from normalization summed TOF'
     widget_control, full_view_info, set_value=full_text, /append
-
+    
 endif else begin
-
-    indx4 = 0
-    widget_control, tab_5_id, base_set_title=''
-
+    
+    indx3 = 0
+    widget_control, tab_4_id, base_set_title=''
+    
 endelse
 
 intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
@@ -2903,9 +2892,11 @@ endelse
     text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
     widget_control, view_info, set_value=text, /append
 
-(*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
+    (*global).plots_selected = [indx0,indx1,indx2,indx3]
 
 end
+
+
 
 
 
