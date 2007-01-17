@@ -103,6 +103,16 @@ case Event.id of
           save_selection_cb, Event
     end
 
+;tracking events for intermediate file tabs of REF_L
+    widget_info(wWidget, FIND_BY_UNAME='other_plots_tab'): begin
+        other_plots_tab_cb, Event
+    end
+
+;tracking events for main tab
+    widget_info(wWidget, FIND_BY_UNAME='data_reduction_tab'): begin
+        data_reduction_tab_cb, Event
+    end
+
 ;draw_interaction for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
@@ -190,36 +200,8 @@ case Event.id of
 
 ;refresh main plot button for REF_L and REF_M
     widget_info(Event.top,find_by_uname='refresh_main_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'data_reduction_plot'
+        refresh_plot_button_eventcb, Event
     end
-
-;refresh signal region plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='signal_region_refresh_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'signal_region_draw'
-    end
-
-;refresh background plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='background_refresh_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'background_summed_tof_draw'
-    end
-
-;refresh signal region summed tof  plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='signal_refresh_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'signal_region_summed_tof_draw'
-    end
-
-;refresh normalization region summed tof  plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='normalization_refresh_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'normalization_region_summed_tof_draw'
-    end
-
-;refresh background region from normalization summed tof plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='background_2_refresh_plot_button'): begin
-        refresh_plot_button_eventcb, Event, 'background_region_from_normalization_region_summed_tof_draw'
-    end
-
-
-
 
 ;normalization run number text box
     widget_info(wWidget, FIND_BY_UNAME='normalization_text'): begin
@@ -397,6 +379,21 @@ global = ptr_new({$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
+                   tab_drawing_ids      : ['signal_region_draw',$
+                                           'background_summed_tof_draw',$
+                                           'signal_region_summed_tof_draw',$
+                                           'normalization_region_summed_tof_draw',$
+                                     'background_region_from_normalization_region_summed_tof_draw'],$
+                   intermediate_file_ext: ['.sdc',$
+                                           '.bkg',$
+                                           '.sub',$
+                                           '.nom',$
+                                           '.bnm'],$
+                   intermediate_plots_title: ['Summed signal region',$
+                                              'Summed background region',$
+                                              'Summed signal region with background subtraction',$
+                                              'Summed normalization signal region',$
+                                              'Summed normalization background'],$
                    entering_selection_of_plots_by_yes_button : 0,$
                    file_opened          : 0,$
                    find_nexus           : 0L,$
@@ -436,6 +433,7 @@ global = ptr_new({$
                    color_line_signal    : 250L,$
                    color_line_background: 300L,$
                    color_line_background_2: 100L,$
+                   data_reduction_done : 0,$
                    plots_selected : [1,1,1,1,1] $
                  })
 
@@ -598,11 +596,13 @@ data_reduction_plots_base = widget_base(MAIN_BASE,$
                                         scr_ysize=ysize_of_tabs)
 
 data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                uname='data_reduction_tab',$
                                 location=0,$
                                 xoffset=0,$
                                 yoffset=0,$
                                 scr_xsize=xsize_of_tabs,$
-                                scr_ysize=ysize_of_tabs)
+                                scr_ysize=ysize_of_tabs,$
+                                /tracking_events)
   
 ;data reduction tab
 first_tab_base = widget_base(data_reduction_tab,$
@@ -854,7 +854,6 @@ fourth_tab_base = widget_base(data_reduction_tab,$
                                   XOFFSET=0,$
                                   YOFFSET=0)
 
-
 selection_tab = widget_tab(fourth_tab_base,$
                                   location=0,$
                                   xoffset=0,$
@@ -918,11 +917,13 @@ other_plots_base = widget_base(data_reduction_tab,$
                                YOFFSET=0)
 
 other_plots_tab = widget_tab(other_plots_base,$
-                                  location=0,$
-                                  xoffset=0,$
-                                  yoffset=0,$
-                                  scr_xsize=xsize_of_tabs-10,$
-                                  scr_ysize=ysize_of_tabs-30)
+                             uname='other_plots_tab',$                             
+                             location=0,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=xsize_of_tabs-10,$
+                             scr_ysize=ysize_of_tabs-30,$
+                             /tracking_events)
 
 ;signal region plot
 signal_region_tab_base = widget_base(other_plots_tab,$
@@ -930,15 +931,6 @@ signal_region_tab_base = widget_base(other_plots_tab,$
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
-
-signal_region_refresh_plot_button = widget_button(signal_region_tab_base,$
-                                                  xoffset=665,$
-                                                  yoffset=355,$
-                                                  scr_xsize=50,$
-                                                  scr_ysize=30,$
-                                                  value='Refresh',$
-                                                  uname='signal_region_refresh_plot_button',$
-                                                  sensitive=0)
 
 signal_region_draw = widget_draw(signal_region_tab_base,$
                                  uname='signal_region_draw',$
@@ -954,15 +946,6 @@ background_summed_tof_tab_base = widget_base(other_plots_tab,$
                               XOFFSET=0,$
                               YOFFSET=0)
 
-background_refresh_plot_button = widget_button(background_summed_tof_tab_base,$
-                                              xoffset=665,$
-                                              yoffset=355,$
-                                              scr_xsize=50,$
-                                              scr_ysize=30,$
-                                              value='Refresh',$
-                                              uname='background_refresh_plot_button',$
-                                              sensitive=0)
-
 background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
                                          uname='background_summed_tof_draw',$
                                          xoffset=2,$
@@ -976,15 +959,6 @@ signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
-
-signal_refresh_plot_button = widget_button(signal_region_summed_tof_tab_base,$
-                                              xoffset=665,$
-                                              yoffset=355,$
-                                              scr_xsize=50,$
-                                              scr_ysize=30,$
-                                              value='Refresh',$
-                                              uname='signal_refresh_plot_button',$
-                                              sensitive=0)
 
 signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
                                             uname='signal_region_summed_tof_draw',$
@@ -1000,15 +974,6 @@ normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               XOFFSET=0,$
                               YOFFSET=0)
 
-normalization_refresh_plot_button = widget_button(normalization_region_summed_tof_tab_base,$
-                                                  xoffset=665,$
-                                                  yoffset=355,$
-                                                  scr_xsize=50,$
-                                                  scr_ysize=30,$
-                                                  value='Refresh',$
-                                                  uname='normalization_refresh_plot_button',$
-                                                  sensitive=0)
-
 normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
                                                    uname='normalization_region_summed_tof_draw',$
                                                    xoffset=2,$
@@ -1023,15 +988,6 @@ background_region_from_normalization_region_summed_tof_tab_base = widget_base(ot
                               TITLE='',$
                               XOFFSET=0,$
                               YOFFSET=0)
-
-background_2_refresh_plot_button = widget_button(background_region_from_normalization_region_summed_tof_tab_base,$
-                                                 xoffset=665,$
-                                                 yoffset=355,$
-                                                 scr_xsize=50,$
-                                                 scr_ysize=30,$
-                                                 value='Refresh',$
-                                                 uname='background_2_refresh_plot_button',$
-                                                 sensitive=0)
 
 background_region_from_normalization_region_summed_tof_draw = widget_draw($
                               background_region_from_normalization_region_summed_tof_tab_base,$
@@ -1113,8 +1069,24 @@ global = ptr_new({$
                    find_nexus           : 0L,$
                    full_histo_mapped_name : '',$
                    full_nexus_name      : '',$
+                   tab_drawing_ids      : ['signal_region_draw',$
+                                           'background_summed_tof_draw',$
+                                           'signal_region_summed_tof_draw',$
+                                           'normalization_region_summed_tof_draw',$
+                                     'background_region_from_normalization_region_summed_tof_draw'],$
+                   intermediate_file_ext: ['.sdc',$
+                                           '.bkg',$
+                                           '.sub',$
+                                           '.nom',$
+                                           '.bnm'],$
+                   intermediate_plots_title: ['Summed signal region',$
+                                              'Summed background region',$
+                                              'Summed signal region with background subtraction',$
+                                              'Summed normalization signal region',$
+                                              'Summed normalization background'],$
                    img_ptr 		: ptr_new(0L),$
                    instrument		: instrument_list[instrument],$
+                   main_output_file_name: '',$
                    nexus_file_name_only : '',$
                    Nx                   : 0L,$
                    Ny                   : 0L,$
@@ -1146,6 +1118,7 @@ global = ptr_new({$
                    color_line_signal    : 50L,$
                    color_line_background: 0L,$
                    color_line_background_2: 25L,$
+                   data_reduction_done : 0,$
                    plots_selected : [1,1,1,1,1] $
                  })
 
@@ -1625,6 +1598,16 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                /wrap,$
                                uname='info_text')
  
+;refresh button 
+refresh_main_plot_button = widget_button(first_tab_base,$
+                                         xoffset=675,$
+                                         yoffset=375,$
+                                         scr_xsize=50,$
+                                         scr_ysize=30,$
+                                         value='Refresh',$
+                                         uname='refresh_main_plot_button',$
+                                         sensitive=0)
+
 data_reduction_plot_REF_M = widget_draw(first_tab_base,$
                                         xoffset=315,$
                                         yoffset=5,$
@@ -1704,11 +1687,13 @@ other_plots_base = widget_base(data_reduction_tab,$
                                YOFFSET=0)
 
 other_plots_tab = widget_tab(other_plots_base,$
-                                  location=0,$
-                                  xoffset=0,$
-                                  yoffset=0,$
-                                  scr_xsize=xsize_of_tabs-10,$
-                                  scr_ysize=ysize_of_tabs-30)
+                             uname='other_plots_tab',$
+                             location=0,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=xsize_of_tabs-10,$
+                             scr_ysize=ysize_of_tabs-30,$
+                             /tracking_events)
 
 ;signal region plot
 signal_region_tab_base = widget_base(other_plots_tab,$
