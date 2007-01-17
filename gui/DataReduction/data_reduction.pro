@@ -198,11 +198,6 @@ case Event.id of
         start_data_reduction_button_eventcb, Event
     end
 
-;refresh main plot button for REF_L and REF_M
-    widget_info(Event.top,find_by_uname='refresh_main_plot_button'): begin
-        refresh_plot_button_eventcb, Event
-    end
-
 ;normalization run number text box
     widget_info(wWidget, FIND_BY_UNAME='normalization_text'): begin
         normalization_text_eventcb, Event
@@ -434,7 +429,7 @@ global = ptr_new({$
                    color_line_background: 300L,$
                    color_line_background_2: 100L,$
                    data_reduction_done : 0,$
-                   plots_selected : [1,1,1,1,1] $
+                   plots_selected : [0,0,0,0,0] $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -830,16 +825,6 @@ info_text = widget_text(data_reduction_base,$
                         /wrap,$
                         uname='info_text')
 
-;refresh button 
-refresh_main_plot_button = widget_button(first_tab_base,$
-                                         xoffset=675,$
-                                         yoffset=375,$
-                                         scr_xsize=50,$
-                                         scr_ysize=30,$
-                                         value='Refresh',$
-                                         uname='refresh_main_plot_button',$
-                                         sensitive=0)
-
 data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
                                   yoffset=5,$
@@ -1071,17 +1056,14 @@ global = ptr_new({$
                    full_nexus_name      : '',$
                    tab_drawing_ids      : ['signal_region_draw',$
                                            'background_summed_tof_draw',$
-                                           'signal_region_summed_tof_draw',$
                                            'normalization_region_summed_tof_draw',$
                                      'background_region_from_normalization_region_summed_tof_draw'],$
                    intermediate_file_ext: ['.sdc',$
                                            '.bkg',$
-                                           '.sub',$
                                            '.nom',$
                                            '.bnm'],$
                    intermediate_plots_title: ['Summed signal region',$
                                               'Summed background region',$
-                                              'Summed signal region with background subtraction',$
                                               'Summed normalization signal region',$
                                               'Summed normalization background'],$
                    img_ptr 		: ptr_new(0L),$
@@ -1115,11 +1097,11 @@ global = ptr_new({$
                    x2_signal            : 0L,$
                    y1_signal            : 0L,$
                    y2_signal            : 0L,$
-                   color_line_signal    : 50L,$
-                   color_line_background: 0L,$
-                   color_line_background_2: 25L,$
+                   color_line_signal    : 250L,$
+                   color_line_background: 3000L,$
+                   color_line_background_2: 100L,$
                    data_reduction_done : 0,$
-                   plots_selected : [1,1,1,1,1] $
+                   plots_selected : [0,0,0,0] $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -1158,7 +1140,6 @@ list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,
 
 intermediate_plots_list = ['Signal region summed TOF',$
                            'Background summed TOL',$
-                           'Signal region summed TOF',$
                            'Normalization region summed TOF',$
                            'Background region from normalization summed TOF']
 
@@ -1169,7 +1150,7 @@ intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$
                                           XOFFSET=30,$
                                           YOFFSET=25,$
                                           UNAME='intermediate_plots_list_group',$
-                                          set_value=[1,1,1,1,1])
+                                          set_value=[1,1,1,1])
 
 intermediate_plots_list_validate = widget_button(list_of_plots_base,$
                                                  uname='intermediate_plots_list_validate_REF_M',$
@@ -1185,7 +1166,6 @@ intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
                                                xoffset=200,$
                                                yoffset=180)
                                                
-
 
 ;TOP LEFT BOX - OPEN NEXUS
 nexus_run_number_base = widget_base(MAIN_BASE,$
@@ -1277,11 +1257,13 @@ data_reduction_plots_base = widget_base(MAIN_BASE,$
                                         scr_ysize=ysize_of_tabs)
 
 data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                uname='data_reduction_tab',$
                                 location=0,$
                                 xoffset=0,$
                                 yoffset=0,$
                                 scr_xsize=xsize_of_tabs,$
-                                scr_ysize=ysize_of_tabs)
+                                scr_ysize=ysize_of_tabs,$
+                                /tracking_events)
   
 ;data reduction tab
 first_tab_base = widget_base(data_reduction_tab,$
@@ -1598,22 +1580,12 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                /wrap,$
                                uname='info_text')
  
-;refresh button 
-refresh_main_plot_button = widget_button(first_tab_base,$
-                                         xoffset=675,$
-                                         yoffset=375,$
-                                         scr_xsize=50,$
-                                         scr_ysize=30,$
-                                         value='Refresh',$
-                                         uname='refresh_main_plot_button',$
-                                         sensitive=0)
-
-data_reduction_plot_REF_M = widget_draw(first_tab_base,$
-                                        xoffset=315,$
-                                        yoffset=5,$
-                                        scr_xsize=405,$
-                                        scr_ysize=393,$
-                                        uname='data_reduction_plot_REF_M')
+data_reduction_plot = widget_draw(first_tab_base,$
+                                  xoffset=315,$
+                                  yoffset=5,$
+                                  scr_xsize=405,$
+                                  scr_ysize=393,$
+                                  uname='data_reduction_plot')
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$
@@ -1723,19 +1695,19 @@ background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
                                          scr_xsize=710,$
                                          scr_ysize=383)
 
-;signal region summed tof plot
-signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
-                              uname='signal_region_summed_tof_base',$
-                              TITLE='',$
-                              XOFFSET=0,$
-                              YOFFSET=0)
+; ;signal region summed tof plot
+; signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+;                               uname='signal_region_summed_tof_base',$
+;                               TITLE='',$
+;                               XOFFSET=0,$
+;                               YOFFSET=0)
 
-signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
-                                            uname='signal_region_summed_tof_draw',$
-                                            xoffset=2,$
-                                            yoffset=2,$
-                                            scr_xsize=710,$
-                                            scr_ysize=383)
+; signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
+;                                             uname='signal_region_summed_tof_draw',$
+;                                             xoffset=2,$
+;                                             yoffset=2,$
+;                                             scr_xsize=710,$
+;                                             scr_ysize=383)
 
 ;normalization region summed tof plot
 normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
