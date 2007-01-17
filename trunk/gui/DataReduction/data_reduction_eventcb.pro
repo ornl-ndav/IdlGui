@@ -1744,8 +1744,6 @@ pro intermediate_file_output_list_group_eventcb, Event
 id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
 widget_control, id, get_value = value
 
-instrument = (*global).instrument
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
