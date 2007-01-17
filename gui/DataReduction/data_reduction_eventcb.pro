@@ -14,6 +14,8 @@ end
 
 
 
+
+
 pro data_reduction_tab_cb, Event
 
 ;get global structure
@@ -38,6 +40,8 @@ case value of
 endcase
 
 end
+
+
 
 
 
@@ -457,6 +461,8 @@ tmp_output_file_name += "_neutron_histo_mapped.dat"
 return, tmp_output_file_name
 
 end
+
+
 
 
 
@@ -2626,10 +2632,21 @@ draw_id = widget_info(Event.top, find_by_uname=draw_uname)
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
-plot,flt0,flt1,title=title
-errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
+catch, error_plot_status
+if (error_plot_status NE 0) then begin
+    text = 'Not enough data to plot'
+    CATCH,/cancel
+;log book ids (full and simple)
+    view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+    full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+    widget_control, view_info, set_value=text,/append
+    widget_control, full_view_info, set_value=text,/append
+endif else begin
+    plot,flt0,flt1,title=title
+    errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
+endelse
 
-;!p.multi=0
+
 
 close,u
 free_lun,u
