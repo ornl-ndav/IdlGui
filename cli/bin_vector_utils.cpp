@@ -102,7 +102,6 @@ namespace BinVectorUtils
                                const bool verbose)
   {
     vector<int32_t> time_bin_vector;
-    int32_t i=0;  //use for debugging tool only
 
     if (verbose && !debug) 
       {
@@ -133,14 +132,13 @@ namespace BinVectorUtils
         cout << "\t max_time_bin(100ns)= " << max_time_bin_100ns << "\n";
         cout << "\t time_offset(100ns)= " << time_offset_100ns << "\n";
         cout << "\t minimum_time_bin(100ns)= " << minimum_time_bin_100ns_local << "\n\n";
-        cout << "\ttime_bin_vector[0]= " << time_bin_vector[i] << "\n";
+        cout << "\ttime_bin_vector[0]= " << time_bin_vector[0] << "\n";
       }
     
     int32_t t1;
     //    float t2= EventHisto::SMALLEST_TIME_BIN_100NS + time_offset_100ns;
     int32_t t2 = time_bin_vector[0];
 
-    ++i;
     while (t2 < max_time_bin_100ns)
       {
         t1 = t2;
@@ -157,9 +155,9 @@ namespace BinVectorUtils
         time_bin_vector.push_back(static_cast<int32_t>(t2));
         if (debug)
           {
-            cout << "\ttime_bin_vector["<<i<<"]= "<<time_bin_vector[i]<<endl;
+            cout << "\ttime_bin_vector["<<time_bin_vector.size()-1 << \
+              "]= "<<time_bin_vector[time_bin_vector.size()-1]<<endl;
           }
-        ++i;
       }
     
     if (verbose && !debug) 
