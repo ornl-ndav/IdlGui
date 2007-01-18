@@ -101,8 +101,7 @@ namespace BinVectorUtils
    * \f]
    *
    * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
-   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
-   * the coefficient from the command line in order to work with x100ns data
+   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient 
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
    * \param verbose (INPUT) is a flag for printing processing info
@@ -111,7 +110,7 @@ namespace BinVectorUtils
    */
   std::vector<int32_t> 
   generate_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                               const float log_rebin_coeff_100ns,
+                               const float log_rebin_coeff,
                                const int32_t time_offset_100ns,
                                const bool debug,
                                const bool verbose);
@@ -136,8 +135,7 @@ namespace BinVectorUtils
    * \f]
    *
    * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
-   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient (10 times
-   * the coefficient from the command line in order to work with x100ns data
+   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient 
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
    * \param verbose (INPUT) is a flag for printing processing info
@@ -146,7 +144,7 @@ namespace BinVectorUtils
    */
   std::vector<int32_t> 
   generate_das_log_time_bin_vector(const int32_t max_time_bin_100ns,
-                                   const float log_rebin_coeff_100ns,
+                                   const float log_rebin_coeff,
                                    const int32_t time_offset_100ns,
                                    const bool debug,
                                    const bool verbose);
