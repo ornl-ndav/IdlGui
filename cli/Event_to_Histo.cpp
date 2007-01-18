@@ -378,8 +378,7 @@ int32_t main(int32_t argc, char *argv[])
             }
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
-              float log_rebin_coeff
-                = static_cast<float>(log_rebin_coeff_cmd.getValue());
+              float log_rebin_coeff = log_rebin_coeff_cmd.getValue();
               
               if (das_log_method_cmd.getValue())
                 {
