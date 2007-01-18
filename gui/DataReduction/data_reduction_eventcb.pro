@@ -2979,7 +2979,7 @@ endif
 if (strcompress(signal_pid_text,/remove_all) NE '' AND $
     strcompress(bkg_pid_text,/remove_all) NE '' AND $
     strcompress(normalization_text,/remove_all) NE '' AND $
-    strcompress(runs_to_process_text,/remove_all)) then begin
+    strcompress(runs_to_process_text,/remove_all) NE '') then begin
 
     status = 1
 
