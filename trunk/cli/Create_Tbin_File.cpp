@@ -70,9 +70,9 @@ int32_t main(int32_t argc, char *argv[])
                                         false, 0, "time offset (microS)",cmd);
 
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
-                                          "delta_t/t coefficient (>=0.05)",
+                                          "delta_t/t coefficient",
                                           true, 1, 
-                                "logarithmic rebinning coefficient (>=0.05)"); 
+                                "logarithmic rebinning coefficient"); 
 
       ValueArg<string> output_file_name_cmd("o","output_file_name",
                                             "Binary output file name",
