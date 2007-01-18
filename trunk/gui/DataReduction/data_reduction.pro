@@ -311,7 +311,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          ;REMOVE_ME, put 0.0 back
+                                  SET_VALUE=0.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -474,7 +474,7 @@ list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,
                                                 frame=2)
 
 intermediate_plots_list = ['Signal region summed TOF',$
-                           'Background summed TOL',$
+                           'Background summed TOF',$
                            'Signal region summed TOF',$
                            'Normalization region summed TOF',$
                            'Background region from normalization summed TOF']
@@ -1139,7 +1139,7 @@ list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,
                                                 frame=2)
 
 intermediate_plots_list = ['Signal region summed TOF',$
-                           'Background summed TOL',$
+                           'Background summed TOF',$
                            'Normalization region summed TOF',$
                            'Background region from normalization summed TOF']
 
