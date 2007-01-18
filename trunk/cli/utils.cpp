@@ -70,7 +70,10 @@ namespace EventHisto
                                     const bool verbose)
   {
 
-    if (verbose  || debug) { cout << ".";}  //2nd
+    if (verbose  || debug) 
+      { 
+        cout << ".";
+      }  //2nd
 
     // Parse input file name (path + input_file_name)
     parse_input_file_name(path_filename,
@@ -87,7 +90,10 @@ namespace EventHisto
                              output_filename,
                              debug);
     
-    if (verbose  || debug) { cout << ".";}  //4th
+    if (verbose  || debug) 
+      { 
+        cout << ".";
+      }  //4th
 
     // Produce tof_info_filename (path or alternate_path + tof_file_name)
     produce_tof_info_file_name(filename,
@@ -96,7 +102,10 @@ namespace EventHisto
                                tof_info_filename,
                                debug);
 
-    if (verbose  || debug) { cout << ".";}  //5th
+    if (verbose  || debug) 
+      { 
+        cout << ".";
+      }  //5th
 
     return;
   }
@@ -212,7 +221,10 @@ namespace EventHisto
     ifstream file(input_file.c_str(), ios::in|ios::binary|ios::ate);
     ifstream::pos_type file_size;
     
-    if (verbose  && !debug) { cout << ".";}  //2nd
+    if (verbose  && !debug) 
+      { 
+        cout << ".";
+      }  //2nd
 
     if (!file.is_open())
       {
@@ -220,20 +232,32 @@ namespace EventHisto
                             input_file + "\"\n");
       }
     
-    if (verbose  && !debug) { cout << ".";}  //3rd
+    if (verbose  && !debug) 
+      { 
+        cout << ".";
+      }  //3rd
 
     file_size = file.tellg();
     size_t array_size = file_size / SIZEOF_INT32_T;
     
-    if (verbose  && !debug) { cout << ".";}  //4th
+    if (verbose  && !debug) 
+      { 
+        cout << ".";
+      }  //4th
 
     binary_array = new int32_t [array_size];
     
-    if (verbose  && !debug) { cout << ".";} //5th
+    if (verbose  && !debug) 
+      {
+        cout << ".";
+      } //5th
 
     file.seekg(0,ios::beg);
     
-    if (verbose  && !debug) { cout << ".";} //6th
+    if (verbose  && !debug) 
+      { 
+        cout << ".";
+      } //6th
 
     // transfer the data from the event binary file int32_to binary_array
     //  file.read(reinterpret_cast<char *>(binary_array),file_size);

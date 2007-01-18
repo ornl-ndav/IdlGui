@@ -311,7 +311,10 @@ int32_t main(int32_t argc, char *argv[])
                                                    debug,
                                                    verbose);
 
-          if (verbose || !debug) { cout << "done\n"; }
+          if (verbose || !debug) 
+            { 
+              cout << "done\n"; 
+            }
 
           // read input file and populate the binary array 
           size_t file_size;
