@@ -101,7 +101,7 @@ namespace BinVectorUtils
    * \f]
    *
    * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
-   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient 
+   * \param log_rebin_coeff (INPUT) is the rebin coefficient 
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
    * \param verbose (INPUT) is a flag for printing processing info
@@ -135,7 +135,7 @@ namespace BinVectorUtils
    * \f]
    *
    * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
-   * \param log_rebin_coeff_100ns (INPUT) is the rebin coefficient 
+   * \param log_rebin_coeff (INPUT) is the rebin coefficient 
    * \param time_offset_100ns (INPUT) is the starting offset time (x100ns)
    * \param debug (INPUT) is a switch that trigger or not the debugging tools
    * \param verbose (INPUT) is a flag for printing processing info
