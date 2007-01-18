@@ -44,7 +44,10 @@ namespace BinVectorUtils
     vector<int32_t> time_bin_vector;
     int32_t i=0;  //use for debugging tool only
     
-    if (verbose && !debug) {cout << ".";}  //2nd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //2nd
 
     if (debug)
       {
@@ -67,7 +70,10 @@ namespace BinVectorUtils
         ++i;
       }
     
-    if (verbose && !debug) {cout << ".";}  //3rd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //3rd
     
     //check if last time_bin is equal to max_time_bin
     if (time_bin_vector[i-1] < max_time_bin_100ns)
@@ -79,7 +85,10 @@ namespace BinVectorUtils
           }
       }
     
-    if (verbose && !debug) {cout << "done";}  //done
+    if (verbose && !debug) 
+      {
+        cout << "done";
+      }  //done
     
     return time_bin_vector;
   }
@@ -95,7 +104,10 @@ namespace BinVectorUtils
     vector<int32_t> time_bin_vector;
     int32_t i=0;  //use for debugging tool only
 
-    if (verbose && !debug) {cout << ".";}  //2nd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //2nd
 
     float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN_100NS;
 
@@ -109,7 +121,10 @@ namespace BinVectorUtils
         time_bin_vector.push_back(static_cast<int32_t>(minimum_time_bin_100ns_local));
       }
 
-    if (verbose && !debug) {cout << ".";}  //3rd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //3rd
 
     if (debug)
       {
@@ -143,7 +158,10 @@ namespace BinVectorUtils
         ++i;
       }
     
-    if (verbose && !debug) {cout << "done";}  //done
+    if (verbose && !debug) 
+      {
+        cout << "done";
+      }  //done
 
     return time_bin_vector;
   }
@@ -162,7 +180,10 @@ namespace BinVectorUtils
     vector<int32_t> time_bin_vector;
     int32_t i=0;  //use by debugging tool only
 
-    if (verbose && !debug) {cout << ".";}  //2nd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //2nd
     
     float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN_100NS;
 
@@ -176,7 +197,10 @@ namespace BinVectorUtils
         time_bin_vector.push_back(static_cast<int32_t>(minimum_time_bin_100ns_local));
       }
 
-    if (verbose && !debug) {cout << ".";}  //3rd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //3rd
 
     if (debug)
       {
@@ -213,7 +237,10 @@ namespace BinVectorUtils
         ++i;
       }
     
-    if (verbose && !debug) {cout << "done";}  //done
+    if (verbose && !debug) 
+      {
+        cout << "done";
+      }  //done
 
     return time_bin_vector;
   }
@@ -231,7 +258,10 @@ namespace BinVectorUtils
   {
     size_t time_bin_vector_size = time_bin_vector.size();
     
-    if (verbose && !debug) {cout << ".";}  //2nd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //2nd
 
     //reconvert axis in microS
     float * time_bin_array = new float [time_bin_vector_size];
@@ -240,22 +270,34 @@ namespace BinVectorUtils
         time_bin_array[i] = static_cast<float>(time_bin_vector[i])/10.;
       }
     
-    if (verbose && !debug) {cout << ".";}  //3rd
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //3rd
 
     //write time_bin_vector into tof_info_filename
     ofstream tof_info_file(tof_info_filename.c_str(),
                            ios::binary);
 
-    if (verbose && !debug) {cout << ".";}  //4th
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //4th
 
     tof_info_file.write(reinterpret_cast<char*>(time_bin_array),
                         sizeof(float)*time_bin_vector_size);
 
-    if (verbose && !debug) {cout << ".";}  //5th
+    if (verbose && !debug) 
+      {
+        cout << ".";
+      }  //5th
 
     tof_info_file.close();
     
-    if (verbose && !debug) {cout << "done";} //done
+    if (verbose && !debug) 
+      {
+        cout << "done";
+      } //done
 
     return;
   }
