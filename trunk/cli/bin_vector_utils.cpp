@@ -145,6 +145,7 @@ namespace BinVectorUtils
       {
         t1 = t2;
         //delta_t/t=log_rebin_coeff
+        //0.5 argument is to make sure the correct int is determined at cast
         t2 = static_cast<int32_t>((static_cast<float>(t1) * 
                                    (log_rebin_coeff + 
                                     static_cast<float>(1.)) + 
