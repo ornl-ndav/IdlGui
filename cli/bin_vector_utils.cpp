@@ -136,16 +136,19 @@ namespace BinVectorUtils
         cout << "\ttime_bin_vector[0]= " << time_bin_vector[i] << "\n";
       }
     
-    float t1;
+    int32_t t1;
     //    float t2= EventHisto::SMALLEST_TIME_BIN_100NS + time_offset_100ns;
-    float t2 = time_bin_vector[0];
+    int32_t t2 = time_bin_vector[0];
 
     ++i;
     while (t2 < max_time_bin_100ns)
       {
         t1 = t2;
         //delta_t/t=log_rebin_coeff
-        t2 = (float(t1) * (log_rebin_coeff + 1.)+0.5);
+        t2 = static_cast<int32_t>((static_cast<float>(t1) * 
+                                   (log_rebin_coeff + 
+                                    static_cast<float>(1.)) + 
+                                   static_cast<float>(0.5)));
         if (t2 > max_time_bin_100ns)
           {
             t2 = max_time_bin_100ns;
