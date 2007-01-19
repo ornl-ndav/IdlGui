@@ -108,7 +108,7 @@ namespace BinVectorUtils
         cout << ".";
       }  //2nd
 
-    float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN_100NS;
+    float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN;
 
     //first value of time_bin_vector is time_offset_100ns if time_offset_100ns is greater
     if (minimum_time_bin_100ns_local < time_offset_100ns)
@@ -136,7 +136,7 @@ namespace BinVectorUtils
       }
     
     int32_t t1;
-    //    float t2= EventHisto::SMALLEST_TIME_BIN_100NS + time_offset_100ns;
+    //    float t2= EventHisto::SMALLEST_TIME_BIN + time_offset_100ns;
     int32_t t2 = time_bin_vector[0];
 
     while (t2 < max_time_bin_100ns)
@@ -187,7 +187,7 @@ namespace BinVectorUtils
         cout << ".";
       }  //2nd
     
-    float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN_100NS;
+    float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN;
 
     //first value of time_bin_vector is time_offset_100ns if time_offset_100ns is greater
     if (minimum_time_bin_100ns_local < time_offset_100ns)
