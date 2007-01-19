@@ -248,6 +248,11 @@ case Event.id of
         runs_to_process_text_eventcb, Event
     end
 
+;combobox to run several NeXus files
+    Widget_Info(wWidget, FIND_BY_UNAME='several_nexus_combobox'): begin
+        several_nexus_combobox_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -311,7 +316,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          
+                                  SET_VALUE=1.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -1074,10 +1079,12 @@ global = ptr_new({$
                    Ny                   : 0L,$
                    Ntof                 : 0L,$
                    output_path		: '/SNSlocal/users/',$
+                   output_plots         : 1,$
                    previous_text        : '',$
                    push_button          : 0,$
                    pid_file_extension   : 'Pid.txt',$
                    run_number		: '',$
+                   runs_to_process      : 0,$
                    selection_value      : 0,$
                    selection_signal     : 0,$
                    selection_background : 0,$
@@ -1101,7 +1108,9 @@ global = ptr_new({$
                    color_line_background: 3000L,$
                    color_line_background_2: 100L,$
                    data_reduction_done : 0,$
-                   plots_selected : [0,0,0,0] $
+                   plots_selected : [0,0,0,0],$
+                   list_of_runs : ptr_new(0L),$
+                   initial_list_of_runs : [' '] $
                  })
 
 ;attach global structure with widget ID of widget main base widget ID
@@ -1110,6 +1119,9 @@ widget_control, MAIN_BASE, set_uvalue=global
 (*global).Nx = 256L
 (*global).Ny = 304L
 
+list_of_runs = strarr(1)
+list_of_runs[0] = ' '
+(*(*global).list_of_runs) = list_of_runs
 
 (*global).output_path = (*global).output_path + user + "/"
 
@@ -1135,6 +1147,7 @@ list_of_intermediate_plots_base = widget_base(list_of_plots_base,$
                                               column=1)
 
 list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,$
+                                                uname='list_of_intermediate_plots_title',$
                                                 value='List of intermediate plots',$
                                                 frame=2)
 
@@ -1502,24 +1515,37 @@ normalization_text = widget_text(norm_run_number_base,$
                                  /align_left,$
                                  /all_events)
 
+;one or several runs to process in the same time
 runs_to_process_label = widget_label(data_reduction_base,$
+                                     uname='runs_to_process_label',$
                                      xoffset=5,$
-                                     yoffset=229,$
-                                     value='Run number:')
-runs_to_process_text= widget_text(data_reduction_base,$
-                                  xoffset=75,$
-                                  yoffset=221,$
-                                  scr_xsize=100,$
-                                  value='',$
-                                  uname='runs_to_process_text',$
-                                  /editable,$
-                                  /align_left,$
-                                  /all_events)
+                                     yoffset=233,$
+                                     value=' 0 run #')
+
+list_value = (*global).initial_list_of_runs
+several_nexus_combobox = widget_combobox(data_reduction_base,$
+                                         uname='several_nexus_combobox',$
+                                          xoffset=65,$
+                                          yoffset=225,$
+                                          scr_ysize=30,$
+                                          scr_xsize=110,$
+                                          /editable,$
+                                          value=list_value)
+
+; runs_to_process_text= widget_text(data_reduction_base,$
+;                                   xoffset=75,$
+;                                   yoffset=225,$
+;                                   scr_xsize=100,$
+;                                   value='',$
+;                                   uname='runs_to_process_text',$
+;                                   /editable,$
+;                                   /align_left,$
+;                                   /all_events)
 
 ;norm-bkg
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
-                                     yoffset=257,$
+                                     yoffset=270,$
                                      value='Norm. bkg.:')
 
 norm_background_list = ['Yes',$
@@ -1529,7 +1555,7 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        /exclusive,$
                                        /RETURN_NAME,$
                                        XOFFSET=80,$
-                                       YOFFSET=250,$
+                                       YOFFSET=263,$
                                        SET_VALUE=0.0,$
                                        row=1,$
                                        uname='norm_background_list_group')
@@ -1537,7 +1563,7 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
 ;intermediate files/plots
 intermediate_file_label = widget_button(data_reduction_base,$
                                        xoffset=180,$
-                                       yoffset=223,$
+                                       yoffset=233,$
                                        value='Intermediate plots',$
                                        uname='access_to_list_of_intermediate_plots_button')
 
@@ -1548,7 +1574,7 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 /exclusive,$
                                                 /RETURN_NAME,$
                                                 XOFFSET=190,$
-                                                YOFFSET=245,$
+                                                YOFFSET=255,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
                                                 uname='intermediate_file_output_list_group_REF_M')
@@ -1557,29 +1583,82 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                       xoffset=177,$
                                       yoffset=222,$
                                       scr_xsize=122,$
-                                      scr_ysize=55,$
+                                      scr_ysize=65,$
                                       frame=1)
 
 
-;start data reduction button
- start_data_reduction_button = widget_button(data_reduction_base,$
-                                             xoffset=5,$
-                                             yoffset=283,$
-                                             scr_xsize=295,$
-                                             value='START DATA REDUCTION',$
-                                             uname='start_data_reduction_button',$
-                                             sensitive=0)
- 
+;start data reduction base
+start_data_reduction_base = widget_base(data_reduction_base,$
+                                        xoffset=5,$
+                                        yoffset=290,$
+                                        scr_xsize=295,$
+                                        scr_ysize=40)
+
+start_data_reduction_button = widget_button(start_data_reduction_base,$
+                                            xoffset=0,$
+                                            yoffset=5,$
+                                            scr_xsize=295,$
+                                            scr_ysize=35,$
+                                            value='START DATA REDUCTION',$
+                                            uname='start_data_reduction_button',$
+                                            sensitive=0)
+
+; start_data_reduction_tab = widget_tab(start_data_reduction_base,$
+;                                       uname='start_data_reduction_tab',$
+;                                       location=2,$
+;                                       xoffset=0,$
+;                                       yoffset=0,$
+;                                       scr_xsize=295,$
+;                                       scr_ysize=40,$
+;                                       /tracking_events)
+
+;;work on 1 NeXus file at a time
+;one_nexus_file_base = widget_base(start_data_reduction_tab,$
+;                                  uname='one_nexus_file_base',$
+;                                  xoffset=0,$
+;                                  yoffset=0,$
+;                                  title='1')
+
+
+;; work on several NeXus file at a time
+; several_nexus_file_base = widget_base(start_data_reduction_tab,$
+;                                       uname='several_nexus_file_base',$
+;                                       xoffset=0,$
+;                                       yoffset=0,$
+;                                       title='..')
+
+; list_value = (*global).initial_list_of_runs
+; several_nexus_combobox = widget_combobox(several_nexus_file_base,$
+;                                          uname='several_nexus_combobox',$
+;                                          xoffset=5,$
+;                                          yoffset=3,$
+;                                          scr_ysize=30,$
+;                                          scr_xsize=110,$
+;                                          /editable,$
+;                                          value=list_value)
+
+; start_data_reduction_several_nexus_button = widget_button(several_nexus_file_base,$
+;                                                           xoffset=115,$
+;                                                           yoffset=0,$
+;                                                           scr_xsize=155,$
+;                                                           scr_ysize=35,$
+;                                                           value='START DATA REDUCTION',$
+;                                                  uname='start_data_reduction_several_nexus_button',$
+;                                                           sensitive=0)
+
+
+
+
 ;info text box 
- info_text_REF_M = widget_text(data_reduction_base,$
-                               xoffset=5,$
-                               yoffset=265+50,$
-                               scr_xsize=295,$
-                               scr_ysize=70,$
-                               /scroll,$
-                               /wrap,$
-                               uname='info_text')
- 
+info_text_REF_M = widget_text(data_reduction_base,$
+                              xoffset=5,$
+                              yoffset=265+65,$
+                              scr_xsize=295,$
+                              scr_ysize=55,$
+                              /scroll,$
+                              /wrap,$
+                              uname='info_text')
+
 data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
                                   yoffset=5,$
@@ -1657,6 +1736,15 @@ other_plots_base = widget_base(data_reduction_tab,$
                                TITLE='Extra plots',$
                                XOFFSET=0,$
                                YOFFSET=0)
+
+screen_base = widget_base(other_plots_base,$
+                          uname='screen_base',$
+                          xoffset=0,$
+                          yoffset=0,$
+                          scr_xsize=730,$
+                          scr_ysize=400,$
+                          map=1)
+
 
 other_plots_tab = widget_tab(other_plots_base,$
                              uname='other_plots_tab',$
