@@ -1,3 +1,92 @@
+function parse_current_text, current_text_local, symbol
+
+new_text_array = strsplit(current_text_local,symbol,/regex,/extract,count=length)
+
+if (length GT 1) then begin ;create array of elements
+    size_of_array = fix(new_text_array[1]) - fix(new_text_array[0])
+    array_of_elements_to_add_local = indgen(size_of_array+1)+new_text_array[0]
+endif else begin
+    array_of_elements_to_add_local = new_text_array
+endelse
+
+return, array_of_elements_to_add_local
+
+end
+
+
+
+
+
+pro several_nexus_combobox_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+list_of_runs = (*(*global).list_of_runs)
+
+;get info about combobox
+combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
+widget_control, combobox_id, get_value=value
+current_text = widget_info(combobox_id, /combobox_gettext)
+
+array_of_elements_to_add = parse_current_text(current_text,":")
+size_of_array = size(array_of_elements_to_add)
+size_of_array = size_of_array[1]
+
+for i=0,size_of_array-1 do begin
+
+;    current_text = strcompress(array_of_elements_to_add[i],/remove_all)
+    current_text = string(array_of_elements_to_add[i])
+
+    if (strcompress(current_text,/remove_all) NE '') then begin
+        list_of_runs = [list_of_runs,strcompress(current_text,/remove_all)]
+        list_of_runs = list_of_runs(sort(list_of_runs))
+        list_of_runs_uniq = list_of_runs(uniq(list_of_runs, sort(list_of_runs)))
+        
+        size_before = size(list_of_runs)
+        size_after = size(list_of_runs_uniq)
+        
+        if (size_after[1] NE size_before[1]) then begin
+                                ;remove new entry from list
+            result = where(list_of_runs_uniq NE strcompress(current_text,/remove_all),index)
+            new_list_of_runs_uniq = list_of_runs_uniq[result]
+            list_of_runs = new_list_of_runs_uniq
+            
+        endif else begin
+            
+            list_of_runs = list_of_runs_uniq
+            
+        endelse
+        
+        if (current_text NE 'N/A') then begin
+            widget_control, combobox_id, set_value=list_of_runs
+        endif
+        
+        (*(*global).list_of_runs) = list_of_runs
+
+    endif        
+
+endfor
+
+new_size_array = size(list_of_runs)
+new_size = new_size_array[1]
+(*global).runs_to_process = (new_size-1)
+case new_size of
+    1: text=' 0 run #'
+    2: text=' 1 run #'
+    else: text = strcompress(new_size-1,/remove_all) + " runs #"
+endcase
+
+runs_to_process_label_id = widget_info(Event.top, find_by_uname='runs_to_process_label')
+widget_control, runs_to_process_label_id, set_value=text
+
+check_status_to_validate_go, Event
+
+end
+
+
+
 function produce_output_file_name, Event, run_number, extension
 
 ;get global structure
@@ -11,8 +100,6 @@ output_file_name += "_" + run_number + extension
 
 return, output_file_name 
 end
-
-
 
 
 
@@ -651,6 +738,8 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
+
+
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
@@ -764,12 +853,21 @@ endif else begin
             new_text = strcompress(run_number,/remove_all)
             widget_control, runs_to_process_text_id, set_value=new_text
         endif else begin ;only copy run number into run to process if REF_M
-            new_text = strcompress(run_number,/remove_all)
-            widget_control, runs_to_process_text_id, set_value=new_text
+            combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
+            new_text = strcompress(run_number,/remove_all)            
+            list_of_runs = strarr(1)
+            list_of_runs[0] = ' '
+            array_text = [list_of_runs,new_text]
+            (*(*global).list_of_runs) = array_text
+            widget_control, combobox_id, set_value=array_text
+            ;update label to '1 run #:'
+            text = ' 1 run #'
+            runs_to_process_label_id = widget_info(Event.top, find_by_uname='runs_to_process_label')
+            widget_control, runs_to_process_label_id, set_value=text
         endelse
-
+        
 ;        if (instrument EQ 'REF_L') then begin
-            check_status_to_validate_go, Event
+        check_status_to_validate_go, Event
 ;        endif
 
     endelse
@@ -825,8 +923,13 @@ widget_control, background_pid_text_id, set_value=''
 normalization_text_id = widget_info(Event.top,find_by_uname='normalization_text')
 widget_control, normalization_text_id, set_value=''
 
-runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
-widget_control, runs_to_process_text_id, set_value=''
+if (instrument EQ 'REF_L') then begin
+    runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+    widget_control, runs_to_process_text_id, set_value=''
+endif else begin
+    combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
+    widget_control, combobox_id, set_value=(*global).initial_list_of_runs
+endelse
 
 ;reset label of all intermediate plots
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
@@ -1754,6 +1857,8 @@ widget_control, id, get_value = value
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 ;log book ids (full and simple)
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -2470,8 +2575,8 @@ endif else begin
     
 endelse
 
-    text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
-    widget_control, view_info, set_value=text, /append
+text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
+widget_control, view_info, set_value=text, /append
 
 (*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
 
@@ -2808,7 +2913,13 @@ indx3 = value[3]                ;.bnm
 
 number_of_plots_selected = 0
 
-full_text = 'Name of intermediate plots that will be plotted:'
+runs_to_process = (*global).runs_to_process
+if (runs_to_process LE 1) then begin
+    full_text = 'Name of intermediate plots that will be plotted:'
+endif else begin
+    full_text = 'Name of intermediate files that will be produced for each of the ' + $
+      strcompress(runs_to_process,/remove_all) + ' runs number:'
+endelse
 widget_control, full_view_info, set_value=full_text, /append
 
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
@@ -2904,10 +3015,15 @@ endif else begin
     
 endelse
 
+if ((*global).runs_to_process LE 1) then begin
     text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
-    widget_control, view_info, set_value=text, /append
+endif else begin
+    text = 'Number of files selected: '+ strcompress(number_of_plots_selected,/remove_all)
+endelse
 
-    (*global).plots_selected = [indx0,indx1,indx2,indx3]
+widget_control, view_info, set_value=text, /append
+
+(*global).plots_selected = [indx0,indx1,indx2,indx3]
 
 end
 
@@ -2939,8 +3055,8 @@ widget_control, bkg_pid_text_id, get_value=bkg_pid_text
 
 ;check status of normalization flag
 if (instrument EQ 'REF_L') then begin
-    norm_list_group_id = widget_info(Event.top, $
-                                     find_by_uname='normalization_list_group_REF_L')
+    norm_list_group_id = widget_info(Event.find, $
+                                     top_by_uname='normalization_list_group_REF_L')
 endif else begin
     norm_list_group_id = widget_info(Event.top, $
                                      find_by_uname='normalization_list_group_REF_M')
@@ -2954,8 +3070,58 @@ if (norm_list_group EQ 0) then begin
 endif
 
 ;check if runs number not empty
-runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
-widget_control, runs_to_process_text_id, get_value=runs_to_process_text
+if (instrument EQ 'REF_L') then begin
+    runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+    widget_control, runs_to_process_text_id, get_value=runs_to_process_text
+endif else begin ; REF_M
+    combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
+    widget_control, combobox_id, get_value=value
+    size_value_array = size(value)
+    runs_to_process = size_value_array[1]-1
+    (*global).runs_to_process = runs_to_process
+    case runs_to_process of 
+        0: begin
+            runs_to_process_text = '' ;0 run number
+                                ;bring base that hide intermediate plots
+            screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+            widget_control, screen_base_id, map=1
+            end
+        1: begin
+            runs_to_process_text = 'anything' ;1 run number
+           list_of_intermediate_plots_title_id = $
+             widget_info(Event.top,$
+                         find_by_uname='list_of_intermediate_plots_title')
+           widget_control, $
+             list_of_intermediate_plots_title_id, $
+             set_value='List of intermediate plots'
+            other_plots_base_id = $
+              widget_info(Event.top,$
+                          find_by_uname='access_to_list_of_intermediate_plots_button')
+            widget_control, other_plots_base_id, set_value='Intermediate plots'
+                                ;bring base that hide intermediate plots
+            screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+            widget_control, screen_base_id, map=0
+            end
+        else: begin
+            runs_to_process_text = 'anything' ;2 or more runs number
+                                ;change title of intermediate plots label
+           list_of_intermediate_plots_title_id = $
+             widget_info(Event.top,$
+                         find_by_uname='list_of_intermediate_plots_title')
+           widget_control, $
+             list_of_intermediate_plots_title_id, $
+             set_value='List of intermediate files'
+                                ;change title inside intermediate window
+            other_plots_base_id = $
+              widget_info(Event.top,$
+                          find_by_uname='access_to_list_of_intermediate_plots_button')
+            widget_control, other_plots_base_id, set_value='Intermediate files'
+                                ;bring base that hide intermediate plots
+            screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+            widget_control, screen_base_id, map=1
+        end
+    endcase
+endelse
 
 if (instrument EQ 'REF_M') then begin
 
@@ -3009,14 +3175,10 @@ if (strcompress(signal_pid_text,/remove_all) NE '' AND $
     
 endif
 
-if (status EQ 1) then begin
-
+if (status EQ 1) then begin 
     widget_control,start_data_reduction_button_id, sensitive=1
-
 endif else begin
-
     widget_control,start_data_reduction_button_id, sensitive=0
-
 endelse
 
 end
