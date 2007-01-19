@@ -351,9 +351,9 @@ int32_t main(int32_t argc, char *argv[])
           int32_t time_offset_100ns
             = static_cast<int32_t>(time_offset_cmd.getValue() * 10.);
           if (time_offset_100ns !=0 && 
-              time_offset_100ns < EventHisto::SMALLEST_TIME_BIN_100NS)
+              time_offset_100ns < EventHisto::SMALLEST_TIME_BIN)
                 {
-                  time_offset_100ns = EventHisto::SMALLEST_TIME_BIN_100NS;
+                  time_offset_100ns = EventHisto::SMALLEST_TIME_BIN;
                 }
              
           vector<int32_t> time_bin_vector;
