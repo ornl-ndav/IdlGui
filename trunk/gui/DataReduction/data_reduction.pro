@@ -1745,7 +1745,6 @@ screen_base = widget_base(other_plots_base,$
                           scr_ysize=400,$
                           map=1)
 
-
 other_plots_tab = widget_tab(other_plots_base,$
                              uname='other_plots_tab',$
                              location=0,$

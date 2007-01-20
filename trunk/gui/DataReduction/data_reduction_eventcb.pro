@@ -1,3 +1,123 @@
+function get_list_of_runs, instrument, runs_to_process
+
+if (instrument EQ 'REF_L') then begin
+    array_of_runs = strsplit(runs_to_process,',',count=length,/extract)
+endif else begin
+    size_array = size(runs_to_process)
+    size_is = size_array[1]
+    array_of_runs = runs_to_process[1:size_is]
+    print, "here"
+    
+endelse
+
+help, array_of_runs
+print, "array_of_runs: ", array_of_runs
+print, "runs_to_process: ", runs_to_process
+
+return, array_of_runs
+end
+
+
+
+
+function get_final_list_of_runs, Event, runs_to_process
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument = (*global).instrument
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+runs_array = get_list_of_runs(instrument, runs_to_process)
+
+array_size = size(runs_array)
+array_size = array_size[1]
+array_of_nexus_files = strarr(array_size)
+runs_full_path = strarr(array_size)
+runs_to_use_array = lonarr(array_size)
+nbr_runs_to_use = 0
+
+for i=0,(array_size-1) do begin
+        
+    cmd_findnexus = "findnexus -i" + instrument
+    cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
+    print, "cmd is: ", cmd_findnexus
+    spawn, cmd_findnexus, full_path_to_nexus
+
+    array_of_nexus_files[i]=full_path_to_nexus
+    
+stop
+
+;create message for view_info
+    result = strmatch(array_of_nexus_files[i],"ERROR*")
+    
+    if (result[0] GE 1 or full_path_to_nexus EQ '') then begin
+        
+        full_text = array_of_nexus_files[i] + '(input # ' + $
+          strcompress(i+1) + $
+          'does not exist'
+        
+    endif else begin
+        
+        full_text = 'runs # ' + runs_array[i] + ' OK (' +$
+          array_of_nexus_files[i] + ')'
+        runs_to_use_array[i]=1
+        nbr_runs_to_use += 1
+        
+    endelse
+    
+    widget_control, full_view_info, set_value=full_text,/append
+    
+endfor
+
+;produce final list of runs to use
+if (nbr_runs_to_use GT 0) then begin
+    runs_number = lonarr(nbr_runs_to_use)
+    j=0
+    for i=0,(array_size-1) do begin
+        if (runs_to_use_array[i] EQ 1) then begin
+            runs_number[j]=runs_array[i]
+            runs_full_path[j]=array_of_nexus_files[i]
+            j+=1
+        endif
+    endfor
+    
+    valid_run_number = j
+    text = strcompress(j) + ' valid run number(s)'
+    
+;create the runs_and_full_path array
+    runs_and_full_path = strarr(j,2)
+
+    for i=0,j-1 do begin
+        runs_and_full_path[i,0] = runs_number[i]
+        runs_and_full_path[i,1] = runs_full_path[i]
+    endfor
+        
+    full_text = 'data_reduction will use ' + strcompress(j) + $
+      ' run numbers:'
+    full_text_2 = "   - run number  " + $
+      strcompress(runs_number,/remove_all)
+    
+endif else begin
+    
+    text = '0 valid run number to use'
+    full_text = text
+    
+endelse
+
+widget_control, view_info, set_value=text,/append
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, full_view_info, set_value=full_text_2,/append
+
+return, runs_and_full_path
+end
+
+
+
 function parse_current_text, current_text_local, symbol
 
 new_text_array = strsplit(current_text_local,symbol,/regex,/extract,count=length)
@@ -241,12 +361,6 @@ end
 
 
 
-function get_list_of_runs, runs_to_process
-
-array_of_runs = strsplit(runs_to_process,',',count=length,/extract)
-
-return, array_of_runs
-end
 
 
 
@@ -2084,90 +2198,18 @@ widget_control, bkg_flag_id, get_value=bkg_flag
 
 ;*****************************
 ;get runs_to_process list of files
-runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
-widget_control, runs_to_process_text_id, get_value=runs_to_process
+if (instrument eq 'REF_L') then begin ;REF_L
+    runs_to_process_text_id = widget_info(Event.top, $
+                                          find_by_uname='runs_to_process_text')
+    widget_control, runs_to_process_text_id, get_value=runs_to_process
+    runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
+endif else begin                ;REF_M
+    several_nexus_combobox_id = $
+      widget_info(Event.top,$
+                  find_by_uname='several_nexus_combobox')
+    widget_control, several_nexus_combobox_id, get_value=runs_to_process
+    runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
 
-if (runs_to_process NE '') then begin
-
-    runs_array = get_list_of_runs(runs_to_process)
-    array_size = size(runs_array)
-    array_size = array_size[1]
-    array_of_nexus_files = strarr(array_size)
-    runs_full_path = strarr(array_size)
-    runs_to_use_array = lonarr(array_size)
-    nbr_runs_to_use = 0
-    
-    for i=0,(array_size-1) do begin
-        
-        cmd_findnexus = "findnexus -i" + instrument
-        cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
-        spawn, cmd_findnexus, full_path_to_nexus
-        array_of_nexus_files[i]=full_path_to_nexus
-        
-;create message for view_info
-        result = strmatch(array_of_nexus_files[i],"ERROR*")
-
-        if (result[0] GE 1 or full_path_to_nexus EQ '') then begin
-            
-;        text = 'runs # ' + runs_array[i] + '(input # ' + strcompress(i+1) +'): INVALID'
-            full_text = array_of_nexus_files[i] + '(input # ' + $
-              strcompress(i+1) + $
-              ') does not exist'
-            
-        endif else begin
-            
-;        text = 'runs # ' + runs_array[i] + ': OK'
-            full_text = 'runs # ' + runs_array[i] + ' OK (' +$
-              array_of_nexus_files[i] + ')'
-            runs_to_use_array[i]=1
-            nbr_runs_to_use += 1
-            
-        endelse
-        
-;    widget_control, view_info, set_value=text,/append
-        widget_control, full_view_info, set_value=full_text,/append
-        
-    endfor
-    
-;produce final list of runs to use
-    if (nbr_runs_to_use GT 0) then begin
-        runs_number = lonarr(nbr_runs_to_use)
-        j=0
-        for i=0,(array_size-1) do begin
-            if (runs_to_use_array[i] EQ 1) then begin
-                runs_number[j]=runs_array[i]
-                runs_full_path[j]=array_of_nexus_files[i]
-            j+=1
-            endif
-        endfor
-        
-        valid_run_number = j
-        if (instrument eq 'REF_L') then begin
-            text = strcompress(j) + ' valid run number(s)'
-        endif else begin
-            text = 'Run number valid'
-        endelse
-
-        full_text = 'data_reduction will use ' + strcompress(j) + ' run numbers:'
-        full_text_2 = "   - run number  " + strcompress(runs_number,/remove_all)
-    endif else begin
-        
-        text = '0 valid run number to use'
-        full_text = text
-        
-    endelse
-    
-    widget_control, view_info, set_value=text,/append
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, full_view_info, set_value=full_text_2,/append
-    
-endif else begin
-    
-    text = 'Please specify at least one run number'
-    full_text = 'No Run number has been specified'
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=full_text, /append
-    
 endelse
 
 ;*****************************
@@ -2178,13 +2220,9 @@ widget_control, norm_bkg_id, get_value=norm_bkg_value
 ;*****************************
 ;check status of intermediate outputs
 if (instrument EQ 'REF_L') then begin
-    
     interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
-    
 endif else begin
-    
     interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group_REF_M')
-    
 endelse
 
 widget_control, interm_id, get_value=interm_status
@@ -2200,211 +2238,216 @@ if (instrument EQ 'REF_M') then begin
     
 endif 
 
-if (instrument EQ 'REF_L') then begin
+nbr_runs_to_use_size = size(runs_and_full_path)
+nbr_runs_to_use = nbr_runs_to_use_size[1]
 
+for i=0,(nbr_runs_to_use-1) do begin
+    
+    if (instrument EQ 'REF_L') then begin
+        
 ;start command line for REF_L
-    REF_L_cmd_line = "reflect_tofred_batch " 
-   
+        REF_L_cmd_line = "reflect_tofred_batch " 
+        
 ;add list of NeXus run numbers
-    runs_text = ""
-    for i=0,(nbr_runs_to_use-1) do begin
-        runs_text += strcompress(runs_number[i],/remove_all) + " "
-    endfor
-    REF_L_cmd_line += runs_text
-    
+        runs_text = ""
+        for i=0,(nbr_runs_to_use-1) do begin
+            runs_text += strcompress(runs_and_full_path[i,0],/remove_all) + " "
+        endfor
+        REF_L_cmd_line += runs_text
+        
 ;normalization
-    if (norm_flag EQ 0) then begin
-        
-        norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
-        REF_L_cmd_line += norm_cmd
-        
-    endif
-    
-REF_L_cmd_line += " -- "
-
-;signal Pid file flag
-    signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
-    REF_L_cmd_line += signal_pid_cmd
-    
-;background Pid file flag
-    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-    REF_L_cmd_line += bkg_pid_cmd
-    
-;background flag
-if (bkg_flag EQ 1) then begin
-    REF_L_cmd_line += " --no-bkg"
-endif
-
-;--no-norm-bkg
-    if (norm_bkg_value EQ 1) then begin
-        norm_bkg_cmd = " --no-norm-bkg"
-        REF_L_cmd_line += norm_bkg_cmd
-    endif
-    
-;--dump_all or various plots
-    if (interm_status EQ 0) then begin
-        list_of_plots = (*global).plots_selected
-        
-        interm_plot_cmd = ""
-;.sdc 
-        if (list_of_plots[0] EQ 1) then begin
-            interm_plot_cmd += " --dump-specular"
+        if (norm_flag EQ 0) then begin
+            
+            norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+            REF_L_cmd_line += norm_cmd
+            
         endif
         
+        REF_L_cmd_line += " -- "
+        
+;signal Pid file flag
+        signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+        REF_L_cmd_line += signal_pid_cmd
+        
+;background Pid file flag
+        bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+        REF_L_cmd_line += bkg_pid_cmd
+        
+;background flag
+        if (bkg_flag EQ 1) then begin
+            REF_L_cmd_line += " --no-bkg"
+        endif
+        
+;--no-norm-bkg
+        if (norm_bkg_value EQ 1) then begin
+            norm_bkg_cmd = " --no-norm-bkg"
+            REF_L_cmd_line += norm_bkg_cmd
+        endif
+        
+;--dump_all or various plots
+        if (interm_status EQ 0) then begin
+            list_of_plots = (*global).plots_selected
+            
+            interm_plot_cmd = ""
+;.sdc 
+            if (list_of_plots[0] EQ 1) then begin
+                interm_plot_cmd += " --dump-specular"
+            endif
+            
 ;.sub
-        if (list_of_plots[2] EQ 1) then begin
-            interm_plot_cmd += " --dump-sub"
-        endif
-        
+            if (list_of_plots[2] EQ 1) then begin
+                interm_plot_cmd += " --dump-sub"
+            endif
+            
 ;.norm
-        if (list_of_plots[3] EQ 1) then begin
-            interm_plot_cmd += " --dump-norm"
-        endif
-        
+            if (list_of_plots[3] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm"
+            endif
+            
 ;.bnk
-    if (list_of_plots[4] EQ 1) then begin
-        interm_plot_cmd += " --dump-norm-bkg"
-    endif
-
-        REF_L_cmd_line += interm_plot_cmd
-    endif    
-    
-endif else begin ;for REF_M
-
+            if (list_of_plots[4] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm-bkg"
+            endif
+            
+            REF_L_cmd_line += interm_plot_cmd
+        endif    
+        
+    endif else begin            ;for REF_M
+        
 ;start command line for REF_M
-    REF_M_cmd_line = "reflect_reduction "
-
+        REF_M_cmd_line = "reflect_reduction "
+        
 ;add list of NeXus run numbers
-    runs_text = ""
+        runs_text = ""
 ;    REF_M_cmd_line += full_path_to_nexus_normalization
-    REF_M_cmd_line += array_of_nexus_files[0]
-
+        REF_M_cmd_line += runs_and_full_path[i,1]
+        
 ;normalization
-    if (norm_flag EQ 0) then begin
-    
+        if (norm_flag EQ 0) then begin
+            
 ;    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
-    norm_cmd = "  --norm=" + strcompress(full_path_to_nexus_normalization,/remove_all)
-    REF_M_cmd_line += norm_cmd
-
-endif
-
+            norm_cmd = "  --norm=" + strcompress(full_path_to_nexus_normalization,/remove_all)
+            REF_M_cmd_line += norm_cmd
+            
+        endif
+        
 ;signal Pid file flag
-signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
-REF_M_cmd_line += signal_pid_cmd
-
+        signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+        REF_M_cmd_line += signal_pid_cmd
+        
 ;background Pid file flag
-bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-REF_M_cmd_line += bkg_pid_cmd
-
+        bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+        REF_M_cmd_line += bkg_pid_cmd
+        
 ;background flag
-if (bkg_flag EQ 1) then begin
-    REF_M_cmd_line += " --no-bkg"
-endif
-
+        if (bkg_flag EQ 1) then begin
+            REF_M_cmd_line += " --no-bkg"
+        endif
+        
 ;--no-norm-bkg
-if (norm_bkg_value EQ 1) then begin
-    norm_bkg_cmd = " --no-norm-bkg"
-    REF_M_cmd_line += norm_bkg_cmd
-endif
-
+        if (norm_bkg_value EQ 1) then begin
+            norm_bkg_cmd = " --no-norm-bkg"
+            REF_M_cmd_line += norm_bkg_cmd
+        endif
+        
 ;--dump_all or various plots
-if (interm_status EQ 0) then begin
-    list_of_plots = (*global).plots_selected
-
-    interm_plot_cmd = ""
+        if (interm_status EQ 0) then begin
+            list_of_plots = (*global).plots_selected
+            
+            interm_plot_cmd = ""
 ;.sdc 
-    if (list_of_plots[0] EQ 1) then begin
-        interm_plot_cmd += " --dump-specular"
-    endif
-    
+            if (list_of_plots[0] EQ 1) then begin
+                interm_plot_cmd += " --dump-specular"
+            endif
+            
 ;.norm
-    if (list_of_plots[2] EQ 1) then begin
-        interm_plot_cmd += " --dump-norm"
-    endif
-
+            if (list_of_plots[2] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm"
+            endif
+            
 ;.bnk
-    if (list_of_plots[3] EQ 1) then begin
-        interm_plot_cmd += " --dump-norm-bkg"
-    endif
-
-    REF_M_cmd_line += interm_plot_cmd
-
-endif
-
+            if (list_of_plots[3] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm-bkg"
+            endif
+            
+            REF_M_cmd_line += interm_plot_cmd
+            
+        endif
+        
 ;min, max and width angles
-    l_bins_cmd = " --l-bins=" + strcompress(wave_min,/remove_all)
-    l_bins_cmd += "," + strcompress(wave_max,/remove_all)
-    l_bins_cmd += "," + strcompress(wave_width,/remove_all)
-    
-    REF_M_cmd_line += l_bins_cmd    
-    
+        l_bins_cmd = " --l-bins=" + strcompress(wave_min,/remove_all)
+        l_bins_cmd += "," + strcompress(wave_max,/remove_all)
+        l_bins_cmd += "," + strcompress(wave_width,/remove_all)
+        
+        REF_M_cmd_line += l_bins_cmd    
+        
 ;detector_angle
-    det_angle_cmd = " --det-angle="      
-    det_angle_cmd += strcompress(detector_angle_rad,/remove_all)
-    det_angle_cmd += "," + strcompress(detector_angle_err,/remove_all)
+        det_angle_cmd = " --det-angle="      
+        det_angle_cmd += strcompress(detector_angle_rad,/remove_all)
+        det_angle_cmd += "," + strcompress(detector_angle_err,/remove_all)
+        
+        REF_M_cmd_line += det_angle_cmd
+        
+    endelse                     ;end of REF_M part
     
-    REF_M_cmd_line += det_angle_cmd
+    text = "Processing data reduction....."
+    widget_control, view_info, set_value=text,/append
+    full_text = " Data Reduction is running using the following command line:"
+    widget_control, full_view_info, set_value=full_text,/append
     
-endelse
-
-text = "Processing data reduction....."
-widget_control, view_info, set_value=text,/append
-full_text = " Data Reduction is running using the following command line:"
-widget_control, full_view_info, set_value=full_text,/append
-
-if (instrument EQ 'REF_L') then begin
-    full_text = "> " + REF_L_cmd_line
-    cmd_line = REF_L_cmd_line
-endif else begin
-    full_text = "> " + REF_M_cmd_line
-    cmd_line = REF_M_cmd_line
-endelse
-
-widget_control, full_view_info, set_value=full_text,/append
-
-starting_time = systime(1)
-
-widget_control,/hourglass
-
+    if (instrument EQ 'REF_L') then begin
+        full_text = "> " + REF_L_cmd_line
+        cmd_line = REF_L_cmd_line
+    endif else begin
+        full_text = "> " + REF_M_cmd_line
+        cmd_line = REF_M_cmd_line
+    endelse
+    
+    widget_control, full_view_info, set_value=full_text,/append
+    starting_time = systime(1)
+    
+    widget_control,/hourglass
+    
 ;desactive run_reduction_button
-start_data_reduction_button_id = widget_info(Event.top,find_by_uname='start_data_reduction_button')
-widget_control, start_data_reduction_button_id, sensitive=0
-
-spawn, cmd_line, listening  
-
-(*global).data_reduction_done = 1             
-
-text = "...DONE"
-ending_time = systime(1)
-
-total_processing_time = ending_time - starting_time
-full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
-
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, view_info, set_value=text,/append
-
-text = 'Plotting output main output file....'
-main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
-(*global).main_output_file_name = main_output_file_name
-full_text = 'Plotting main output file: ' + main_output_file_name
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, view_info, set_value=text,/append
-
+    start_data_reduction_button_id = widget_info(Event.top,find_by_uname='start_data_reduction_button')
+    widget_control, start_data_reduction_button_id, sensitive=0
+    
+    spawn, cmd_line, listening  
+    
+    (*global).data_reduction_done = 1             
+    
+    text = "...DONE"
+    ending_time = systime(1)
+    
+    total_processing_time = ending_time - starting_time
+    full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
+    
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
+    text = 'Plotting output main output file....'
+    main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+    (*global).main_output_file_name = main_output_file_name
+    full_text = 'Plotting main output file: ' + main_output_file_name
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
 ;plot main .txt file
-draw_id = 'data_reduction_plot'
-plot_reduction, $
-  Event, $
-  main_output_file_name, $
-  draw_id, $
-  "Intensity vs. Wavelength"
+    draw_id = 'data_reduction_plot'
+    plot_reduction, $
+      Event, $
+      main_output_file_name, $
+      draw_id, $
+      "Intensity vs. Wavelength"
+    
+    text = '...done'
+    full_text = '...done'
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
+    widget_control,hourglass=0
 
-text = '...done'
-full_text = '...done'
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, view_info, set_value=text,/append
-
-widget_control,hourglass=0
-
+endfor    
 end
 
 
@@ -3055,8 +3098,8 @@ widget_control, bkg_pid_text_id, get_value=bkg_pid_text
 
 ;check status of normalization flag
 if (instrument EQ 'REF_L') then begin
-    norm_list_group_id = widget_info(Event.find, $
-                                     top_by_uname='normalization_list_group_REF_L')
+    norm_list_group_id = widget_info(Event.top, $
+                                     find_by_uname='normalization_list_group_REF_L')
 endif else begin
     norm_list_group_id = widget_info(Event.top, $
                                      find_by_uname='normalization_list_group_REF_M')
