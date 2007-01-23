@@ -5,14 +5,8 @@ if (instrument EQ 'REF_L') then begin
 endif else begin
     size_array = size(runs_to_process)
     size_is = size_array[1]
-    array_of_runs = runs_to_process[1:size_is]
-    print, "here"
-    
+    array_of_runs = runs_to_process[1:size_is-1]
 endelse
-
-help, array_of_runs
-print, "array_of_runs: ", array_of_runs
-print, "runs_to_process: ", runs_to_process
 
 return, array_of_runs
 end
@@ -50,8 +44,6 @@ for i=0,(array_size-1) do begin
 
     array_of_nexus_files[i]=full_path_to_nexus
     
-stop
-
 ;create message for view_info
     result = strmatch(array_of_nexus_files[i],"ERROR*")
     
@@ -2188,7 +2180,7 @@ if (norm_flag EQ 0) then begin
         stop_reduction = 1
         
     endelse
-
+    
 endif
 
 ;****************************
@@ -2241,6 +2233,8 @@ endif
 nbr_runs_to_use_size = size(runs_and_full_path)
 nbr_runs_to_use = nbr_runs_to_use_size[1]
 
+(*global).processing_run_number = runs_and_full_path[i,0]
+
 for i=0,(nbr_runs_to_use-1) do begin
     
     if (instrument EQ 'REF_L') then begin
@@ -2257,10 +2251,8 @@ for i=0,(nbr_runs_to_use-1) do begin
         
 ;normalization
         if (norm_flag EQ 0) then begin
-            
             norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
             REF_L_cmd_line += norm_cmd
-            
         endif
         
         REF_L_cmd_line += " -- "
@@ -2310,7 +2302,10 @@ for i=0,(nbr_runs_to_use-1) do begin
             endif
             
             REF_L_cmd_line += interm_plot_cmd
-        endif    
+            
+        endif
+        
+        text = "Processing data reduction...."
         
     endif else begin            ;for REF_M
         
@@ -2370,8 +2365,8 @@ for i=0,(nbr_runs_to_use-1) do begin
                 interm_plot_cmd += " --dump-norm-bkg"
             endif
             
-            REF_M_cmd_line += interm_plot_cmd
-            
+        REF_M_cmd_line += interm_plot_cmd
+
         endif
         
 ;min, max and width angles
@@ -2388,11 +2383,15 @@ for i=0,(nbr_runs_to_use-1) do begin
         
         REF_M_cmd_line += det_angle_cmd
         
+        text = "Processing data reduction of run # " + $
+          strcompress(runs_and_full_path[i,0],/remove_all)
+        text += " ..."
+        
     endelse                     ;end of REF_M part
     
-    text = "Processing data reduction....."
     widget_control, view_info, set_value=text,/append
-    full_text = " Data Reduction is running using the following command line:"
+    full_text = " Data Reduction is working on run # " + strcompress(runs_and_full_path[i,0])
+    full_text += " running using the following command line:"
     widget_control, full_view_info, set_value=full_text,/append
     
     if (instrument EQ 'REF_L') then begin
@@ -2434,11 +2433,13 @@ for i=0,(nbr_runs_to_use-1) do begin
     
 ;plot main .txt file
     draw_id = 'data_reduction_plot'
+    title = "Intensity vs. Wavelength (run # " + $
+      strcompress(runs_and_full_path[i,0],/remove_all) + ")"
     plot_reduction, $
       Event, $
       main_output_file_name, $
       draw_id, $
-      "Intensity vs. Wavelength"
+      title
     
     text = '...done'
     full_text = '...done'
@@ -2463,6 +2464,8 @@ main_output_file_name = (*global).main_output_file_name
 
 draw_id = 'data_reduction_plot'
 
+    title = "Intensity vs. Wavelength (run # " + $
+      strcompress((*global).processing_run_number,/remove_all) + ")"
 plot_reduction, $
   Event, $
   main_output_file_name, $

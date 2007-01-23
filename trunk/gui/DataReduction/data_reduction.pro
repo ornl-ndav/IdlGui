@@ -409,6 +409,7 @@ global = ptr_new({$
                    output_path		: '/SNSlocal/users/',$
                    pid_file_extension   : 'Pid.txt',$
                    previous_text        : '',$
+                   processing_run_number : 0,$
                    push_button          : 0,$
                    run_number		: '',$
                    selection_value      : 0,$
@@ -452,6 +453,11 @@ widget_control, MAIN_BASE, set_uvalue=global
 ;endcase
 
 (*global).output_path = (*global).output_path + user + "/"
+
+tmp_working_path = (*global).tmp_working_path
+tmp_working_path += "_" + (*global).instrument + "/"
+tmp_folder = (*global).output_path + tmp_working_path
+(*global).tmp_folder = tmp_folder
 
 ;#########################
 ;intermediate plots window
@@ -1081,6 +1087,7 @@ global = ptr_new({$
                    output_path		: '/SNSlocal/users/',$
                    output_plots         : 1,$
                    previous_text        : '',$
+                   processing_run_number : 0,$
                    push_button          : 0,$
                    pid_file_extension   : 'Pid.txt',$
                    run_number		: '',$
@@ -1124,6 +1131,10 @@ list_of_runs[0] = ' '
 (*(*global).list_of_runs) = list_of_runs
 
 (*global).output_path = (*global).output_path + user + "/"
+tmp_working_path = (*global).tmp_working_path
+tmp_working_path += "_" + (*global).instrument + "/"
+tmp_folder = (*global).output_path + tmp_working_path
+(*global).tmp_folder = tmp_folder
 
 ;#########################
 ;intermediate plots window
