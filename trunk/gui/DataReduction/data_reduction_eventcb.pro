@@ -198,6 +198,12 @@ widget_control,id,get_uvalue=global
 selection_mode_group_id = widget_info(Event.top, find_by_uname='selection_mode_group')
 widget_control, selection_mode_group_id, get_value=selection_status
 
+if (selection_status EQ 0) then begin
+    selection_status = 1
+endif else begin
+    selection_status = 0
+endelse
+
 (*global).selection_mode = selection_status
 
 end
@@ -523,6 +529,37 @@ end
 
 
 
+
+
+
+pro several_nexus_combobox_help_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+push_button = (*global).push_button
+id_help_base = widget_info(Event.top, find_by_uname='help_base')
+
+if (push_button EQ 0) then begin
+    
+;put help contents
+    widget_control, id_help_base, map=1
+    (*global).push_button = 1
+
+endif else begin
+    
+;remove help contents
+    widget_control, id_help_base, map=0
+    (*global).push_button = 0
+endelse
+
+end
+
+
+
+
+
 pro help_runs_to_process, Event
 
 ;get global structure
@@ -531,7 +568,6 @@ widget_control,id,get_uvalue=global
 
 push_button = (*global).push_button
 id_text_box = widget_info(Event.top, find_by_uname='runs_to_process_text')
-
 
 if (push_button EQ 0) then begin
 
@@ -860,20 +896,25 @@ RETURN, ucams_index
  
 end
 
-;---------------------------------------------------------------------------------
-pro USER_TEXT_cb, Event   ;for REF_M
 
-view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
 
-end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+;; ---------------------------------------------------------------------------------
+; pro USER_TEXT_cb, Event   for REF_M
+
+; view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
+; WIDGET_CONTROL, view_id, set_value= ''	
+; view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
+; WIDGET_CONTROL, view_id, set_value= ''	
+; view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
+; WIDGET_CONTROL, view_id, set_value= ''	
+; view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
+; WIDGET_CONTROL, view_id, set_value= ''	
+
+; end
+;;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
+
 
 
 ;------------------------------------------------------------------------------------------
@@ -1568,11 +1609,13 @@ pro selection_press, event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+instrument = (*global).instrument
 
 ;retrieve global parameters
 file_opened = (*global).file_opened
-;1: for selection mode      0: for info mode
-selection_mode= (*global).selection_mode  
+;1: for selection mode      0: for info mode for REF_L
+selection_mode= (*global).selection_mode
+print, "selection mode is: (0 for info) ", selection_mode
 
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -1809,7 +1852,7 @@ widget_control,id,get_uvalue=global
 ;retrieve global parameters
 file_opened = (*global).file_opened
 ;1: for selection mode      0: for info mode
-selection_mode= (*global).selection_mode  
+selection_mode = (*global).selection_mode  
 
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -2415,10 +2458,10 @@ endif
 nbr_runs_to_use_size = size(runs_and_full_path)
 nbr_runs_to_use = nbr_runs_to_use_size[1]
 
-(*global).processing_run_number = runs_and_full_path[i,0]
-
 for i=0,(nbr_runs_to_use-1) do begin
     
+(*global).processing_run_number = runs_and_full_path[i,0]
+
     if (instrument EQ 'REF_L') then begin
         
 ;start command line for REF_L

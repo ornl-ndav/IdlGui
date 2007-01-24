@@ -72,12 +72,18 @@ case Event.id of
           open_pid_file, Event, "background"
     end
 
-;help on format input of runs to process
+;help on input format of runs to process for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='runs_to_process_help'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           help_runs_to_process, Event
     end
 
+;help on input format of runs to process for REF_M
+    Widget_Info(wWidget, FIND_BY_UNAME='several_nexus_combobox_help'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          several_nexus_combobox_help_eventcb, Event
+    end
+    
 ;Exit widget in the top toolbar for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU_REF_L'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -278,7 +284,6 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='several_nexus_combobox'): begin
         several_nexus_combobox_eventcb, Event
     end
-
 
     else:
     
@@ -826,7 +831,7 @@ back_frame = widget_base(data_reduction_base,$
                          frame=1)
 
 runs_to_process_label = widget_label(data_reduction_base,$
-                                     xoffset=5,$
+                                     xoffset=6,$
                                      yoffset=183-norm_bkg_offset,$
                                      value='Runs #')
 runs_to_process_text = widget_text(data_reduction_base,$
@@ -1640,11 +1645,28 @@ normalization_text = widget_text(norm_run_number_base,$
                                  /align_left,$
                                  /all_events)
 
+;help window
+help_base = widget_base(data_reduction_base,$
+                        uname='help_base',$
+                        xoffset=3,$
+                        yoffset=223,$
+                        scr_xsize=140,$
+                        scr_ysize=30,$
+                        frame=1,$
+                        map=0)
+
+help_label = widget_label(help_base,$
+                          xoffset=5,$
+                          yoffset=5,$
+                          value='1600   or   1600:1620')
+
+
 ;one or several runs to process in the same time
 runs_to_process_label = widget_label(data_reduction_base,$
                                      uname='runs_to_process_label',$
-                                     xoffset=5,$
+                                     xoffset=3,$
                                      yoffset=233,$
+                                     scr_xsize=60,$
                                      value=' 0 run #')
 
 list_value = (*global).initial_list_of_runs
@@ -1653,9 +1675,19 @@ several_nexus_combobox = widget_combobox(data_reduction_base,$
                                           xoffset=65,$
                                           yoffset=225,$
                                           scr_ysize=30,$
-                                          scr_xsize=110,$
+                                          scr_xsize=80,$
                                           /editable,$
                                           value=list_value)
+
+several_nexus_combobox_help = widget_button(data_reduction_base,$
+                                            uname='several_nexus_combobox_help',$
+                                            xoffset=148,$
+                                            yoffset=225,$
+                                            scr_xsize=25,$
+                                            scr_ysize=30,$
+                                            value='?',$
+                                            /pushbutton_events,$
+                                            tooltip='Click to see the format of input to use')
 
 ; runs_to_process_text= widget_text(data_reduction_base,$
 ;                                   xoffset=75,$
