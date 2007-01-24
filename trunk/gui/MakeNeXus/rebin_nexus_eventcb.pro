@@ -1,3 +1,17 @@
+function get_ucams
+
+cd , "~/"
+cmd_pwd = "pwd"
+spawn, cmd_pwd, listening
+;print, "listening is: ", listening
+array_listening=strsplit(listening,'/',count=length,/extract)
+ucams = array_listening[2]
+return, ucams
+end
+
+
+
+
 function get_up_to_date_map_geo_tran_files, instrument
 
 case instrument of
@@ -627,30 +641,6 @@ end
 
 
 
-
-
-;---------------------------------------------------------------------------------
-pro USER_TEXT_cb, Event   ;for REF_M
-
-view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-WIDGET_CONTROL, view_id, set_value= ''	
-
-end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
-
-
-
-
-
-
-
 function check_access, Event, instrument, user
 
 list_of_instrument = ['REF_L', 'REF_M', 'BSS']
@@ -673,16 +663,13 @@ CASE instrument OF
    ;REF_L
    0: CASE user_index OF
         -1:
-	0: 		;authorized
-	1: 		;authorized
-	2: 		;authorized
-	3: 		;authorized
-	4: user_index=-1	;unauthorized
-	5: user_index=-1	;unauthorized
-	6: user_index=-1	;unauthorized
-	7: 		;authorized
-	8: 		;authorized
-	9: user_index=-1	;unauthorized
+        0:                      ;authorized
+        1:                      ;authorized
+        2:                      ;authorized
+        3:                      ;authorized
+        7:                      ;authorized
+        8:                      ;authorized
+        else: user_index=-1	;unauthorized
       ENDCASE
    ;REF_M
    1: CASE user_index OF
@@ -694,9 +681,7 @@ CASE instrument OF
 	4: 
 	5: 
 	6: 
-	7: user_index=-1
-	8: user_index=-1
-	9: user_index=-1
+	else: user_index=-1
       ENDCASE
    ;BSS
    2: CASE user_index OF
@@ -705,12 +690,7 @@ CASE instrument OF
 	1: 
 	2: 
 	3: 
-	4: user_index=-1
-	5: user_index=-1
-	6: user_index=-1
-	7: user_index=-1
-	8: user_index=-1
-	9: 
+	else: user_index=-1
       ENDCASE
 ENDCASE	 
 	
@@ -763,6 +743,13 @@ tlb = get_tlb(wWidget)
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
+
+image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/rebin_nexus_gui_logo.bmp"
+id = widget_info(wWidget,find_by_uname="logo_message_draw")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(image_logo)
+tv, image,0,0,/true
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -1586,6 +1573,8 @@ cmd_copy += " " + (*global).geometry_file
 cmd_copy += " " + full_folder_name_preNeXus
 spawn, cmd_copy
 
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_copy, /APPEND
+
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
@@ -1596,6 +1585,8 @@ WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
 cmd_merge += " " + full_folder_name_preNeXus
 spawn, cmd_merge
+
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_merge, /APPEND
 
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
@@ -1612,6 +1603,8 @@ full_nxt_file_name = full_nx_file_name + ".nxt"
 cmd_translate = "nxtranslate " + full_nxt_file_name
 spawn, cmd_translate
 
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_translate, /APPEND
+
 txt = "...done"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
 
@@ -1623,6 +1616,8 @@ full_name_of_nexus_file = full_nx_file_name + ".nxs"
 cmd_move_NeXus = "mv " + full_name_of_nexus_file 
 cmd_move_NeXus += " " + full_folder_name_NeXus
 spawn, cmd_move_NeXus
+
+WIDGET_CONTROL, view_info, SET_VALUE=cmd_move_NeXus, /APPEND
 
 text="....done"
 widget_control, view_info, set_value=text,/append
