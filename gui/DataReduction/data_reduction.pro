@@ -43,7 +43,11 @@ case Event.id of
         
     end
     
-    
+;selection or info mode
+    widget_info(wWidget, FIND_BY_UNAME='selection_mode_group'): begin
+        selection_mode_group_eventcb, Event
+    end
+
 ;open nexus file button for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_go'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -85,7 +89,19 @@ case Event.id of
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           EXIT_PROGRAM_REF_M, Event
     end
-    
+
+;Selection mode button for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='selection_mode_REF_L'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          selection_mode_REF_L_eventcb, Event
+    end
+
+;Info mode button for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='info_mode_REF_L'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          info_mode_REF_L_eventcb, Event
+    end
+
 ;Widget to change the color of graph for REF_L and REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -116,8 +132,10 @@ case Event.id of
 ;draw_interaction for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
-          if( Event.type eq 0 )then $
-          selection, Event
+          if( Event.type EQ 0 )then $   ;press
+          selection_press, Event
+          if (Event.type EQ 2) then $   ;release
+            selection_release, Event
     end
 ;clear selection button for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
@@ -125,11 +143,19 @@ case Event.id of
           clear_selection_cb, Event
     end
     
-;save selection button for REF_L
+;save selection button for REF_L and REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='save_selection_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           save_selection_cb, Event
     end
+
+;keep signal and/or background selection
+;intermediate file output for REF_M (yes/no)
+    widget_info(wWidget, FIND_BY_UNAME='keep_selection_list_group'):begin
+        keep_selection_list_group_eventcb,Event
+    end
+
+
     
 ;INSIDE DATA_REDUCTION_WINDOW
 ;with or without background for REF_L
@@ -252,6 +278,7 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='several_nexus_combobox'): begin
         several_nexus_combobox_eventcb, Event
     end
+
 
     else:
     
@@ -401,6 +428,9 @@ global = ptr_new({$
                    full_nexus_name      : '',$
                    img_ptr 		: ptr_new(0L),$
                    instrument		: instrument_list[instrument],$
+                   keep_signal_selection: 0,$
+                   keep_back_selection : 0,$
+                   left_click_number    :0,$
                    main_output_file_name : '',$
                    nexus_file_name_only : '',$
                    Nx                   : 0L,$
@@ -416,6 +446,7 @@ global = ptr_new({$
                    selection_signal     : 0,$
                    selection_background : 0,$
                    selection_background_2 : 0,$
+                   selection_mode       : 1,$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    ucams                : user,$
@@ -519,15 +550,15 @@ intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
 nexus_run_number_base = widget_base(MAIN_BASE,$
                                     xoffset=5,$
                                     yoffset=5,$
-                                    scr_xsize=253,$
+                                    scr_xsize=180,$
                                     scr_ysize=40,$
                                     frame=1)
 nexus_run_number_title = widget_label(nexus_run_number_base,$
                                       xoffset=5,$
                                       yoffset=10,$
-                                      value='Run number')
+                                      value='Run #')
 nexus_run_number_box = widget_text(nexus_run_number_base,$
-                                   xoffset=80,$
+                                   xoffset=40,$
                                    yoffset=5,$
                                    /editable,$
                                    /align_left,$
@@ -536,10 +567,32 @@ nexus_run_number_box = widget_text(nexus_run_number_base,$
                                    uname='nexus_run_number_box',$
                                   /all_events)
 nexus_run_number_go = widget_button(nexus_run_number_base,$
-                                    xoffset=180,$
+                                    xoffset=120,$
                                     yoffset=7,$
                                     value='O P E N',$
                                     uname='nexus_run_number_go')
+
+;current mode
+current_mode_base = widget_base(MAIN_BASE,$
+                                xoffset=190,$
+                                yoffset=5,$
+                                scr_xsize=68,$
+                                scr_ysize=40,$
+                                frame=1)
+
+current_mode_label = widget_label(current_mode_base,$
+                                  xoffset=10,$
+                                  yoffset=0,$
+                                  value='M O D E',$
+                                  font='lucidasans-bold-10')
+
+current_mode_status_label = widget_label(current_mode_base,$
+                                         uname='current_mode_status_label',$
+                                         xoffset=5,$
+                                         yoffset=20,$
+                                         value='SELECTION',$
+                                         /align_center)
+
 
 ;BOTTOM LEFT BOX - DISPLAY DATA
 display_data_base = widget_draw(MAIN_BASE,$
@@ -1018,13 +1071,21 @@ FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU'  $
                            ,VALUE='Color Tool...')
 
-
 EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
                                 ,VALUE='Exit')
 
+MODE_MENU_REF_L = widget_button(WID_BASE_0_MBAR, $
+                                uname='mode_menu_REF_L',$
+                                /menu,$
+                                value='MODE')
 
+SELECTION_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
+                                     uname='selection_mode_REF_L',$
+                                     value='*Selection')
 
-
+INFO_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
+                                uname='info_mode_REF_L',$
+                                value=' Info')
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
@@ -1033,7 +1094,7 @@ end
 
 
 
-pro wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user
+pro wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;GUI for REF_M
 
 Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
@@ -1079,6 +1140,9 @@ global = ptr_new({$
                                               'Summed normalization background'],$
                    img_ptr 		: ptr_new(0L),$
                    instrument		: instrument_list[instrument],$
+                   keep_signal_selection: 0,$
+                   keep_back_selection : 0,$
+                   left_click_number    : 0,$
                    main_output_file_name: '',$
                    nexus_file_name_only : '',$
                    Nx                   : 0L,$
@@ -1096,6 +1160,7 @@ global = ptr_new({$
                    selection_signal     : 0,$
                    selection_background : 0,$
                    selection_background_2 : 0,$
+                   selection_mode       : 1,$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    ucams                : user,$
@@ -1222,7 +1287,7 @@ nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
 ;BOTTOM LEFT BOX - DISPLAY DATA
 display_data_base = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
-                                yoffset=70,$  
+                                yoffset=50,$  
                                 scr_xsize=304,$
                                 scr_ysize=256,$
                                 uname='display_data_base',$
@@ -1234,13 +1299,13 @@ display_data_base = widget_draw(MAIN_BASE,$
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
                                  xoffset=5,$
-                                 yoffset=360,$
-                                 scr_xsize=300,$
-                                 scr_ysize=70,$
+                                 yoffset=308,$
+                                 scr_xsize=301,$
+                                 scr_ysize=60,$
                                  frame=1)
 selection_title = widget_label(select_signal_base,$
                                xoffset=5,$
-                               yoffset=9,$
+                               yoffset=5,$
                                value='Selection:')
 selection_list = ['Signal ',$
                   'Back_1 ',$
@@ -1250,7 +1315,7 @@ selection_list_group= CW_BGROUP(select_signal_base,$
                                 /exclusive,$
                                 /RETURN_NAME,$
                                 XOFFSET=80,$
-                                YOFFSET=3,$
+                                YOFFSET=0,$
                                 SET_VALUE=0.0,$
                                 row=1,$
                                 UNAME='selection_list_group')
@@ -1258,17 +1323,66 @@ selection_list_group= CW_BGROUP(select_signal_base,$
 clear_selection_button = widget_button(select_signal_base,$
                                        uname='clear_selection_button',$
                                        xoffset=15,$
-                                       yoffset=35,$
+                                       yoffset=32,$
                                        scr_xsize=120,$
                                        value='CLEAR SELECTION',$
                                        sensitive=0)
 save_selection_button = widget_button(select_signal_base,$
                                       uname='save_selection_button',$
                                       xoffset=155,$
-                                      yoffset=35,$
+                                      yoffset=32,$
                                       scr_xsize=120,$
                                       value='SAVE SELECTION',$
                                       sensitive=0)
+
+;keep current pid when opening other run number
+keep_current_selection_base = widget_base(MAIN_BASE,$
+                                          uname='keep_current_selection_base',$
+                                          xoffset=5,$
+                                          yoffset=372,$
+                                          scr_xsize=220,$
+                                          scr_ysize=58,$
+                                          frame=1,$
+                                          map=1)
+
+keep_selection_list = ['Signal ',$
+                       'Background']
+keep_selection_list_group= CW_BGROUP(keep_current_selection_base,$
+                                     keep_selection_list,$
+                                     /RETURN_NAME,$
+                                     /nonexclusive,$
+                                     XOFFSET=30,$
+                                     YOFFSET=25,$
+                                     row=1,$
+                                     set_value=[0,0],$
+                                     UNAME='keep_selection_list_group')
+
+keep_selection_label = widget_label(keep_current_selection_base,$
+                                    xoffset=5,$
+                                    yoffset=5,$
+                                    value='Selection(s) to keep:')
+
+
+;Selection or Info mode
+selection_mode_base = widget_base(MAIN_BASE,$
+                                  xoffset=229,$
+                                  yoffset=372,$
+                                  scr_xsize=77,$
+                                  scr_ysize=58,$
+                                  frame=1)
+
+ selection_mode_list = ['Select.',$
+                        'Info']
+ selection_mode_group = CW_BGROUP(selection_mode_base,$ 
+                                  selection_mode_list,$
+                                  /exclusive,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=0,$
+                                  YOFFSET=0,$
+                                  SET_VALUE=0.0,$
+                                  uname='selection_mode_group')
+                                    
+
 
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
