@@ -67,8 +67,7 @@ case Event.id of
               CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
         end
         
-                                ;portal_go
-        
+;portal_go
         Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
             USER_TEXT_CB, Event
         end
@@ -77,31 +76,24 @@ case Event.id of
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
               id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
             WIDGET_control, id, GET_VALUE=instrument
+            ucams = get_ucams()
+
             
-            id=widget_info(Event.top,FIND_BY_UNAME='USER_TEXT')
-            WIDGET_control, id, GET_VALUE=user
-            
-            if (check_access(Event, instrument, user) NE -1) then begin
+            if (check_access(Event, instrument, ucams) NE -1) then begin
                 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
                 WIDGET_CONTROL, id, /destroy
-                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user
+                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
             endif else begin
-                access = "!ACCESS!"
-                denied = "!DENIED!"		
-                id=widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-                WIDGET_control, id, set_value=access
-                id=widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-                WIDGET_control, id, set_value=denied
-                id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-                WIDGET_control, id, set_value=access
-                id=widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-                WIDGET_control, id, set_value=denied
-                id=widget_info(Event.top,FIND_BY_UNAME="USER_TEXT")
-                WIDGET_control, id, set_value=""
+                image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/access_denied.bmp"
+                id = widget_info(wWidget,find_by_uname="logo_message_draw")
+                WIDGET_CONTROL, id, GET_VALUE=id_value
+                wset, id_value
+                image = read_bmp(image_logo)
+                tv, image,0,0,/true
             endelse
             
         end
-        
+
         else:
         
     endcase
@@ -126,7 +118,7 @@ plot_length = 304			;plot box length
 Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,SCR_XSIZE=265 ,SCR_YSIZE=280, XOFFSET=450 ,YOFFSET=50 $
+      ,SCR_XSIZE=265 ,SCR_YSIZE=270, XOFFSET=450 ,YOFFSET=50 $
       ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Make NeXus'  $
       ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
 
@@ -144,7 +136,6 @@ PORTAL_LABEL = widget_label(PORTAL_BASE,$
 instrument_list = ['Liquids Reflectometer',$
                    'Magnetism Reflectometer',$
                    'Backscattering Spectrometer']
-
 INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
 	instrument_list,$
     	/exclusive,/RETURN_NAME,$
@@ -152,63 +143,33 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
 	SET_VALUE=0.0,$
 	UNAME='INSTRUMENT_TYPE_GROUP')
 
-USER_BASE = widget_base(MAIN_BASE,$
-	UNAME="USER_BASE",$
-	SCR_XSIZE=240,$
-	SCR_YSIZE=70,$
-	XOFFSET=3,$
-	YOFFSET=150,$
-	FRAME=10,$
-	SPACE=4, XPAD=3, YPAD=3)
+LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
+                        UNAME="logo_message_base",$
+                        SCR_XSIZE=265,$
+                        SCR_YSIZE=70,$
+                        XOFFSET=0,$
+                        YOFFSET=140,$
+                        FRAME=10,$
+                        SPACE=4,$
+                        XPAD=3,$
+                        YPAD=3)
 
-USER_LABEL = Widget_label(USER_BASE,$
-	XOFFSET=65, YOFFSET=3, VALUE="ENTER YOUR UCAMS")
+logo_message_draw = widget_draw(logo_message_base,$
+                                uname='logo_message_draw',$
+                                xoffset=5,$
+                                yoffset=5,$
+                                scr_xsize=235,$
+                                scr_ysize=60,$
+                                uvalue=0)
 
-USER_TEXT = widget_text(USER_BASE,$
-	UNAME='USER_TEXT',$
-	XOFFSET=90, YOFFSET=25,$
-	SCR_XSIZE=40, SCR_YSIZE=35,$
-	VALUE='',/EDITABLE,/ALL_EVENTS)
-	
-
-LEFT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
-	UNAME='LEFT_TOP_ACCESS_DENIED',$
-	XOFFSET=5,$
-	YOFFSET=20,$
-	SCR_XSIZE=80,$
-	SCR_YSIZE=25,$
-	VALUE="")
-
-LEFT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
-	UNAME='LEFT_BOTTOM_ACCESS_DENIED',$
-	XOFFSET=5,$
-	YOFFSET=40,$
-	SCR_XSIZE=80,$
-	SCR_YSIZE=25,$
-	VALUE="")
-
-RIGHT_TOP_ACCESS_DENIED = widget_label(USER_BASE,$
-	UNAME='RIGHT_TOP_ACCESS_DENIED',$
-	XOFFSET=135,$
-	YOFFSET=20,$	
-	SCR_XSIZE=80,$
-	SCR_YSIZE=25,$
-	VALUE="")
-
-RIGHT_BOTTOM_ACCESS_DENIED = widget_label(USER_BASE,$
-	UNAME='RIGHT_BOTTOM_ACCESS_DENIED',$
-	XOFFSET=135,$
-	YOFFSET=40,$	
-	SCR_XSIZE=80,$
-	SCR_YSIZE=25,$
-	VALUE="")
 
 PORTAL_GO = widget_button(MAIN_BASE,$
-	XOFFSET=3, YOFFSET=245, $
-	SCR_XSIZE=260, SCR_YSIZE=30,$
-	UNAME="PORTAL_GO",$
-	VALUE="E N T E R",$
-	tooltip="Press to enter main program")
+                          XOFFSET=3, YOFFSET=235, $
+                          SCR_XSIZE=260, SCR_YSIZE=30,$
+                          UNAME="PORTAL_GO",$
+                          VALUE="E N T E R",$
+                          tooltip="Press to enter main program",$
+                          font='rk24')
 
   Widget_Control, /REALIZE, MAIN_BASE
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
