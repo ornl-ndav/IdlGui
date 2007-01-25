@@ -1,3 +1,67 @@
+
+function get_event_file_name_only, event_filename
+event_filename_list = strsplit(event_filename,'/',/regex,/extract,count=length)
+event_filename_only = event_filename_list[length-1]
+return, event_filename_only
+end
+
+
+
+
+
+function get_histo_event_file_name_only,Event, neutron_event_file_name_only
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file_list=strsplit(neutron_event_file_name_only,'event.dat$',/regex,/extract,count=length)
+histo_file_name_only = file_list[0] + 'histo.dat'
+histo_mapped_file_name_only = file_list[0] + 'histo_mapped.dat'
+(*global).histo_mapped_file_name_only = histo_mapped_file_name_only
+(*global).full_histo_mapped_file_name = (*global).full_path_to_preNeXus + $
+  histo_mapped_file_name_only
+
+return, histo_file_name_only
+end
+
+
+pro get_histo_mapped_file_name, Event, neutron_event_file_name_only
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+file_list = strsplit(neutron_event_file_name_only,'.dat$',/regex,/extract,count=length)
+histo_mapped_file_name_only = file_list[0] + '_mapped.dat'
+(*global).histo_mapped_file_name_only = histo_mapped_file_name_only
+
+end
+
+
+
+
+pro archive_type_group_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+archive_id = widget_info(Event.top,find_by_uname='archive_type_group')
+widget_control, archive_id, get_value = archive_status
+
+if (archive_status EQ 0) then begin
+    (*global).do_u_want_to_archive_it  = 1
+endif else begin
+    (*global).do_u_want_to_archive_it  = 0
+endelse
+
+end
+
+
+
+
+
 function get_ucams
 
 cd , "~/"
@@ -8,6 +72,8 @@ array_listening=strsplit(listening,'/',count=length,/extract)
 ucams = array_listening[2]
 return, ucams
 end
+
+
 
 
 
@@ -306,80 +372,166 @@ end
 
 
 
-pro create_local_copy_of_histo_mapped, Event
+pro create_local_copy_of_histo_mapped, Event, on_das, is_file_histo
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-full_nexus_name = (*global).full_path_to_nexus
-
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 
-if ((*global).instrument EQ "BSS") then begin
-
-    cmd_dump = "nxdir " + full_nexus_name
-    cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
-    cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
+if (on_das EQ 0) then begin
+    
+    full_nexus_name = (*global).full_path_to_nexus
+    
+    if ((*global).instrument EQ "BSS") then begin
+        
+        cmd_dump = "nxdir " + full_nexus_name
+        cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
+        cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
 ;get name of output_file
-    tmp_output_file = (*global).full_tmp_nxdir_folder_path 
-    tmp_output_file += "/" + (*global).instrument
-    tmp_output_file += "_" + (*global).run_number
-
-    tmp_output_file_top = tmp_output_file + "_top.dat"
-    tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
-    (*global).file_to_plot_top = tmp_output_file_top
-    (*global).file_to_plot_bottom = tmp_output_file_bottom
-
-    cmd_dump_top += tmp_output_file_top 
-    cmd_dump_bottom += tmp_output_file_bottom
-
+        tmp_output_file = (*global).full_tmp_nxdir_folder_path 
+        tmp_output_file += "/" + (*global).instrument
+        tmp_output_file += "_" + (*global).run_number
+        
+        tmp_output_file_top = tmp_output_file + "_top.dat"
+        tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
+        (*global).file_to_plot_top = tmp_output_file_top
+        (*global).file_to_plot_bottom = tmp_output_file_bottom
+        
+        cmd_dump_top += tmp_output_file_top 
+        cmd_dump_bottom += tmp_output_file_bottom
+        
 ;display command
-
-    text= cmd_dump_top
-    widget_control, view_info, set_value=text, /append
-    text= "Processing....."
-    widget_control, view_info, set_value=text, /append
-    spawn, cmd_dump_top, listening
-    
-    text= cmd_dump_bottom
-    widget_control, view_info, set_value=text, /append
-    text= "Processing....."
-    widget_control, view_info, set_value=text, /append
-    
-    spawn, cmd_dump_bottom, listening
-
-endif else begin
-
-    cmd_dump = "nxdir " + full_nexus_name
-    cmd_dump += " -p /entry/bank1/data/ --dump "
-    
+        text= cmd_dump_top
+        widget_control, view_info, set_value=text, /append
+        text= "Processing....."
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Create local copy of the histo mapped data: '
+        widget_control, full_view_info, set_value=full_text, /append
+        full_text = '(top part) > ' + cmd_dump_top
+        widget_control, full_view_info, set_value=full_text, /append
+        
+        spawn, cmd_dump_top, listening
+        
+        text= "..done"
+        widget_control, view_info, set_value=text, /append
+                
+        text= cmd_dump_bottom
+        widget_control, view_info, set_value=text, /append
+        text= "Processing....."
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Create local copy of the histo mapped data: '
+        widget_control, full_view_info, set_value=full_text, /append
+        full_text = '(bottom part) > ' + cmd_dump_bottom
+        widget_control, full_view_info, set_value=full_text, /append
+        
+        spawn, cmd_dump_bottom, listening
+        
+        text= "..done"
+        widget_control, view_info, set_value=text, /append
+        
+    endif else begin
+        
+        cmd_dump = "nxdir " + full_nexus_name
+        cmd_dump += " -p /entry/bank1/data/ --dump "
+        
 ;get name of output_file
-    tmp_output_file = (*global).full_tmp_nxdir_folder_path 
-    tmp_output_file += "/" + (*global).instrument
-    tmp_output_file += "_" + (*global).run_number
+        tmp_output_file = (*global).full_tmp_nxdir_folder_path 
+        tmp_output_file += "/" + (*global).instrument
+        tmp_output_file += "_" + (*global).run_number
+        
+        tmp_output_file += ".dat"
+        (*global).file_to_plot = tmp_output_file
+        cmd_dump += tmp_output_file
+        
+;display command
+        text= cmd_dump
+        widget_control, view_info, set_value=text, /append
+        text= "Processing....."
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Create local copy of the histo mapped data: '
+        widget_control, full_view_info, set_value=full_text, /append
+        full_text = '> ' + cmd_dump
+        widget_control, full_view_info, set_value=full_text, /append
+        
+        spawn, cmd_dump, listening
+
+        text= "..done"
+        widget_control, view_info, set_value=text, /append
+        
+    endelse
     
-    tmp_output_file += ".dat"
+endif else begin                ;file is on das
+    
+    histo_event_filename = (*global).histo_event_filename
+    max_time_bin = strcompress((*global).max_time_bin,/remove_all)
+    pixel_number = strcompress((*global).pixel_number,/remove_all)
+    full_tmp_nxdir_folder_path = (*global).full_tmp_nxdir_folder_path
+    
+;nothing to do if binary file is histogrma file
+    if ((*global).is_file_histo EQ 0) then begin ;event binary file
+        
+;create local copy  of histo (1 time bin)
+        cmd_Event_to_Histo = 'Event_to_Histo '
+        cmd_Event_to_Histo += histo_event_filename
+        cmd_Event_to_Histo += ' -l ' + max_time_bin
+        cmd_Event_to_Histo += ' -p ' + pixel_number
+        cmd_Event_to_Histo += ' -M ' + max_time_bin
+        cmd_Event_to_Histo += ' -a ' + (*global).full_tmp_nxdir_folder_path
+        full_text = "Create local histogram binary file"
+        widget_control, full_view_info, set_value=full_text, /append
+        full_text = '> ' + cmd_Event_to_Histo
+        widget_control, full_view_info, set_value=full_text, /append
+        
+        spawn, cmd_Event_to_Histo, listening
+        
+        neutron_event_file_name_only = get_event_file_name_only(histo_event_filename)
+        histo_file_name = get_histo_event_file_name_only(Event, neutron_event_file_name_only)
+        full_histo_file_name = full_tmp_nxdir_folder_path + '/' + histo_file_name
+
+        output_folder = full_tmp_nxdir_folder_path
+
+    endif else begin
+        
+        neutron_event_file_name_only = get_event_file_name_only(histo_event_filename)
+        get_histo_mapped_file_name, Event, neutron_event_file_name_only
+        full_histo_file_name = histo_event_filename
+        full_histo_mapped_file_name_only = full_tmp_nxdir_folder_path + '/' + $
+          (*global).histo_mapped_file_name_only 
+
+        output_folder = full_tmp_nxdir_folder_path
+
+    endelse
+    
+    id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
+    widget_control, id, get_value=mapping_filename
+
+    cmd_Map_Data = 'Map_Data '
+    cmd_Map_Data += ' -t 1 -p ' + pixel_number
+    cmd_Map_Data += ' -m ' + mapping_filename
+    cmd_Map_Data += ' -n ' + full_histo_file_name
+    cmd_Map_Data += ' -o ' + output_folder
+
+    full_text = "Create local mapped histogram binary file"
+    widget_control, full_view_info, set_value=full_text, /append
+    full_text = '> ' + cmd_Map_Data
+    widget_control, full_view_info, set_value=full_text, /append
+    
+    spawn, cmd_Map_Data, listening
+    
+    tmp_output_file = (*global).histo_mapped_file_name_only
+    tmp_output_file = full_tmp_nxdir_folder_path + '/' + tmp_output_file
     (*global).file_to_plot = tmp_output_file
-    cmd_dump += tmp_output_file
-
-;display command
-    text= cmd_dump
-    widget_control, view_info, set_value=text, /append
-    text= "Processing....."
-    widget_control, view_info, set_value=text, /append
+    full_text = 'local file created: '
+    widget_control, full_view_info, set_value=full_text, /append
+    full_text = '> ' + tmp_output_file
+    widget_control, full_view_info, set_value=full_text, /append
     
-    spawn, cmd_dump, listening
-
 endelse
 
-;display result of command
-;text= listening
-text="Done"
-widget_control, view_info, set_value=text, /append
-
 end
-
 
 
 
@@ -404,7 +556,10 @@ if ((*global).display_button_activate EQ 0) then begin ;button not activated
     widget_control, id_button, set_value='Desactivate preview'
 
 ;file to open
-    create_local_copy_of_histo_mapped, Event
+    create_local_copy_of_histo_mapped, $
+      Event, $
+      (*global).find_prenexus_on_das, $
+      (*global).is_file_histo
     
     id=widget_info(Event.top,FIND_BY_UNAME="HISTOGRAM_STATUS")
     text = "Plotting......"
@@ -933,19 +1088,20 @@ pro OPEN_HISTO_EVENT_FILE_CB, event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+
 ;indicate reading data with hourglass icon
 widget_control,/hourglass
 
 ;reinitialize window
 reinitialize_display, Event
 
-id = widget_info(Event.top, FIND_BY_UNAME="exist_or_not_base")
-widget_control, id, map=0
-
+;desactive 'CREATE_NEXUS' button
 rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
 widget_control,rb_id,sensitive=0
 
-;open file
+;name of current instrument
 instrument = (*global).instrument  ;REF_M, REF_L or BSS
 
 ;store run_number
@@ -953,111 +1109,173 @@ run_number_id = widget_info(Event.top, FIND_BY_UNAME='HISTO_EVENT_FILE_TEXT_BOX'
 widget_control, run_number_id, get_value=run_number
 (*global).run_number = run_number
 
-CATCH, wrong_run_number_format
+wrong_run_number_format = 0
+;CATCH, wrong_run_number_format
 
-if (wrong_run_number_format ne 0) then begin
-
-        view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid run number", /APPEND
-	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-
-        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-        widget_control, id_display, sensitive=0
-
-        runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
-        widget_control, runinfo_id, sensitive=0
-        
-        cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
-        widget_control, cvinfo_id, sensitive=0
-
-endif else begin
-
-;get full preNeXus path
-    cmd_findnexus = "findnexus -i" + instrument
-    cmd_findnexus += " " + strcompress(run_number, /remove_all)
-    cmd_findnexus += " --prenexus"
-    spawn, cmd_findnexus, listening
+if (wrong_run_number_format ne 0) then begin ;run number is not a number
     
+    widget_control, view_info, SET_VALUE="ERROR: Invalid run number"
+    widget_control, full_view_info, set_value='!! Program terminated: invalid run number !!',/append
+    
+    id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+    widget_control, id_display, sensitive=0
+    
+    runinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_RUNINFO_FILE")
+    widget_control, runinfo_id, sensitive=0
+    
+    cvinfo_id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_CVINFO_FILE")
+    widget_control, cvinfo_id, sensitive=0
+    
+    archive_nexus_base_id = widget_info(Event.top, find_by_uname='archive_nexus_base')
+    widget_control, archive_nexus_base_id, map=0
+
+    already_archived_base_id = widget_info(Event.top, find_by_uname='already_archived_base')
+    widget_control, already_archived_base_id, map=0
+    
+endif else begin
+    
+;Display button becomes sensitive
+    id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
+    widget_control, id_display, sensitive=1
+
+;get full preNeXus and NeXus path
+    run_number = strcompress(run_number,/remove_all)
+    full_text = 'Opening run # ' + run_number
+    widget_control, full_view_info, set_value=full_text
+
+    cmd_findnexus = "findnexus -i" + instrument
+    cmd_findnexus += " " + run_number
+    cmd_findprenexus = cmd_findnexus + " --prenexus"
+
+    full_text = 'Find NeXus path: >' + cmd_findnexus
+    widget_control, full_view_info, set_value=full_text, /append
+    spawn, cmd_findnexus, listening_nexus
+    full_text = '--> ' + listening_nexus
+    widget_control, full_view_info, set_value=full_text, /append
+
+    full_text = 'Find preNeXus path: >' + cmd_findprenexus
+    widget_control, full_view_info, set_value=full_text, /append
+    spawn, cmd_findprenexus, listening_prenexus
+    full_text = '--> ' + listening_prenexus
+    widget_control, full_view_info, set_value=full_text, /append
+    
+;check if nexus exist, if yes, it has been archived
+    full_path_to_nexus = get_full_path_to_preNeXus_path(listening_nexus,$
+                                                        instrument,$
+                                                        run_number)
+    (*global).full_path_to_nexus = full_path_to_nexus
+    
+    result_archived = strmatch(full_path_to_nexus,"ERROR*")
+    archive_nexus_base_id = widget_info(Event.top,find_by_uname='archive_nexus_base')
+    already_archived_base_id = widget_info(Event.top,find_by_uname='already_archived_base')
+
+    if (result_archived[0] EQ 0) then begin ;file already archived
+
+        (*global).already_archived = 1
+        widget_control, archive_nexus_base_id, map=0
+        widget_control, already_archived_base_id, map=1
+        full_text = 'File has already been archived'
+        widget_control, full_view_info, set_value=full_text, /append
+        find_nexus = 1
+
+    endif else begin ;file not archived yet
+
+        (*global).already_archived = 0
+        widget_control, archive_nexus_base_id, map=1
+        widget_control, already_archived_base_id, map=0
+        full_text = 'File has not been archived yet'
+        widget_control, full_view_info, set_value=full_text, /append
+        find_nexus = 0
+
+    endelse
+
 ;get only path up to preNeXus path
-    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening,$
+    full_text = 'Get full path to preNeXus folder:'
+    widget_control, full_view_info, set_value=full_text, /append
+    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening_prenexus,$
                                                            instrument,$
                                                            run_number)
-    
-;check if nexus exists
+    (*global).full_path_to_prenexus = full_path_to_prenexus
+
+    full_text = '--> ' + full_path_to_prenexus
+    widget_control, full_view_info, set_value=full_text, /append
+
+;check if prenexus exists
     result = strmatch(full_path_to_prenexus,"ERROR*")
-    
-    if (result[0] GE 1) then begin
-        
-        find_nexus = 0          ;run# does not exist in archive
-        
-    endif else begin
-        
-        find_nexus = 1          ;run# exist in archive
-        
-                                ;check if full_path_to_preNeXus is not on DAS
+    if (result[0] GE 1) then begin ;preNeXus does not exist
+
+        full_text = 'This run number (' + run_number + ') does not exist'
+        widget_control, full_view_info, set_value=full_text, /append
+        find_prenexus = 0
+
+    endif else begin ;preNeXus exist
+
+        find_prenexus = 1
+;check if full_path_to_preNeXus is not on DAS
         match = "*" + instrument + "-DAS-FS/*"
         result_of_find_prenexus_on_DAS = strmatch(full_path_to_prenexus,match)
         
-        if (result_of_find_prenexus_on_DAS[0] GE 1) then begin
+        if (result_of_find_prenexus_on_DAS[0] GE 1) then begin ;preNeXus exist only on DAS
             find_prenexus_on_das = 1
-        endif else begin
+            (*global).find_prenexus_on_das = find_prenexus_on_das
+            full_text = 'This run number only exists on the DAS system'
+            widget_control, full_view_info, set_value=full_text, /append
+        endif else begin ;preNeXus exist other than on DAS (= has been archived)
             find_prenexus_on_das = 0
+            full_text = 'This run number was found in another place than the DAS'
+            widget_control, full_view_info, set_value=full_text, /append
+            (*global).find_prenexus_on_das = find_prenexus_on_das
         endelse
         
     endelse
     
-;run# does not exist or only on DAS (not archive) so we stop here
-    if (find_nexus EQ 0 OR find_prenexus_on_das EQ 1) then begin   
+    if (find_prenexus EQ 0) then begin ;run number does not exist
         
-;activate archive_it_or_not
-        id = widget_info(Event.top, FIND_BY_UNAME="exist_or_not_base")
-        widget_control, id, map=1
+    endif else begin ;run number exists
         
-                                ;desactivate display button here
-        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-        widget_control, id_display, sensitive=0
-        
-    endif else begin            ;run# exists
-        
-        (*global).full_path_to_prenexus = full_path_to_prenexus
-        
-                                ;get full nexus path name
-        cmd_findnexus = "findnexus -i" + instrument
-        cmd_findnexus += " " + strcompress(run_number,/remove_all)
-        spawn, cmd_findnexus, listening
-        
-        (*global).full_path_to_nexus = listening
-        
-                                ;check if file is event or histo
+;check if file is event or histo
         full_path_instr_run_number = full_path_to_prenexus + instrument + "_"
         full_path_instr_run_number += strcompress(run_number,/remove_all)
         (*global).full_path_instr_run_number = full_path_instr_run_number
         name_if_event = full_path_instr_run_number + "_neutron_event.dat"
         name_if_histogram = full_path_instr_run_number + "_neutron_histo.dat"
         main_file_is_event = check_if_file_is_event(name_if_event,name_if_histogram)
+        full_text = 'Check if binary file is event or histo:'
+        widget_control, full_view_info, set_value=full_text, /append
         
         if (main_file_is_event EQ 1) then begin ;file is an event file
             
             is_file_histo = 0   ;file is an event
                                 ;produce name of main file
+            (*global).is_file_histo = is_file_histo
             full_histo_event_filename = name_if_event
             (*global).histo_event_filename = full_histo_event_filename
+            full_text = '-> EVENT file'
+            widget_control, full_view_info, set_value=full_text, /append
+            
         endif else begin
             
             if (main_file_is_event EQ 0) then begin ;file is a histogram file
                 
                 is_file_histo = 1 ;file is a histogram
                                 ;produce name of main file
+                (*global).is_file_histo = is_file_histo
                 full_histo_event_filename = full_path_instr_run_number + "_neutron_histo.dat"
                 (*global).histo_event_filename = full_histo_event_filename            
+                full_text = '-> HISTOGRAM file'
+                widget_control, full_view_info, set_value=full_text, /append
+                
             endif else begin    ;there is no event or histogram file
                 
                 is_file_histo = -1
+                (*global).is_file_histo = is_file_histo
+                full_text = '-> UNKNOWN file '
+                widget_control, full_view_info, set_value=full_text, /append
                 
             endelse
             
         endelse
-        
+
 ;get info from xml files
 ;determine name of xml files
         cvinfo_xml_filename = full_path_instr_run_number + "_cvinfo.xml"
@@ -1079,6 +1297,7 @@ endif else begin
         
 ;get number of pixels
         pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+        pixel_number = strcompress(pixel_number,/remove_all)
         (*global).pixel_number = pixel_number
         id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
         widget_control, id, set_value=string(pixel_number)
@@ -1115,53 +1334,58 @@ endif else begin
         endif
         widget_control, id, set_value=text
         
-        if (is_file_histo EQ 1) then begin ;file is histogram
+        case is_file_histo of
             
-            id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
-            widget_control, id, set_value="histogram"
-            
-                                ;activate histo_file_infos main_base
-            id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
-            widget_control, id, map=1
-            
-                                ;hide event file interaction box
-            id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
-            widget_control, id, map=1
-            
+            1: begin            ;file is histogram
+                
+                id = widget_info(Event.top, $
+                                 FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
+                widget_control, id, set_value="histogram"
+                
+;activate histo_file_infos main_base
+                id = widget_info(Event.top, $
+                                 FIND_BY_UNAME="HIDE_HISTO_BASE")
+                widget_control, id, map=1
+                
+;hide event file interaction box
+                id = widget_info(Event.top, FIND_BY_UNAME="HISTO_INFO_BASE")
+                widget_control, id, map=1
+                
 ;get number of pixels and number of tof from file
-            
-            case (*global).instrument of
-                "REF_L": 	begin
-                    Nimg = (*global).Nimg_REF_L
-                end
-                "REF_M": 	begin
-                    Nimg = (*global).Nimg_REF_M
-                end
-                "BSS": 	begin
-                    Nimg = long(strcompress(pixel_number))
-                end
-            endcase
-            
-            file = full_histo_event_filename
-            
-            openr,u,file,/get
-            
+                
+                case (*global).instrument of
+                    "REF_L": 	begin
+                        Nimg = (*global).Nimg_REF_L
+                    end
+                    "REF_M": 	begin
+                        Nimg = (*global).Nimg_REF_M
+                    end
+                    "BSS": 	begin
+                        Nimg = long(strcompress(pixel_number))
+                    end
+                endcase
+                (*global).pixel_number = Nimg
+                
+                file = full_histo_event_filename
+                full_text = 'Open file to collect infos: ' + file
+                widget_control, full_view_info, set_value=full_text,/append
+                openr,u,file,/get
+                
 ;find out file info
-            fs = fstat(u)
-            Ntof = fs.size/(Nimg*4L)
-            close, u
-            free_lun, u
+                fs = fstat(u)
+                Ntof = fs.size/(Nimg*4L)
+                close, u
+                free_lun, u
+                
+                id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT")
+                widget_control, id, set_value = strcompress(Nimg,/remove_all)
+                
+                id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
+                widget_control, id, set_value = strcompress(NTOF,/remove_all)
+                
+            end
             
-            id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT")
-            widget_control, id, set_value = strcompress(Nimg,/remove_all)
-            
-            id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
-            widget_control, id, set_value = strcompress(NTOF,/remove_all)
-            
-            
-        endif else begin        ;file is event file
-            
-            if (is_file_histo EQ 0) then begin
+            0: begin            ;file is event
                 
 ;activate "Create local NeXus" button
                 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
@@ -1175,6 +1399,7 @@ endif else begin
                 
 ;get number of pixels
                 pixel_number = read_xml_file(runinfo_xml_filename, "MaxScatPixelID")
+                pixel_number = strcompress(pixel_number,/remove_all)
                 id = widget_info(Event.top, FIND_BY_UNAME="NUMBER_PIXELIDS_TEXT_tab1")
                 widget_control, id, set_value=pixel_number	
                 
@@ -1185,23 +1410,22 @@ endif else begin
                 item_value = display_xml_info(runinfo_xml_filename, "endbin")
                 id = widget_info(Event.top, FIND_BY_UNAME="MAX_TIME_BIN_TEXT_wT1")
                 widget_control, id, set_value=item_value
+                (*global).max_time_bin = strcompress(item_value,/remove_all)
                 
                 id = widget_info(Event.top, FIND_BY_UNAME="HIDE_HISTO_BASE")
                 widget_control, id, map=0
                 
-;desactivate display button
-                id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-                widget_control, id_display, sensitive=0
-                
-            endif else begin
+            end
+            
+            else: begin         ;there is no histogram or event file
                 
                 txt = "No event or histogram files detected"
                 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
                 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
                 
-            endelse
+            end
             
-        endelse
+        endcase
         
         if ((*global).display_button_activate EQ 1) then begin
             
@@ -1213,7 +1437,11 @@ endif else begin
                     wset, id
                     erase
                     if (is_file_histo NE -1) then begin
-                        create_local_copy_of_histo_mapped, Event
+                        create_local_copy_of_histo_mapped, $
+                          Event, $
+                          find_prenexus_on_das,$
+                          if_file_histo
+                        
                         plot_data_REF_L, event
                     endif 
                 end
@@ -1224,7 +1452,11 @@ endif else begin
                     wset, id
                     erase
                     if (is_file_histo NE -1) then begin
-                        create_local_copy_of_histo_mapped, Event
+                        create_local_copy_of_histo_mapped, $
+                          Event, $
+                          find_prenexus_on_das,$
+                          is_file_histo
+
                         plot_data_REF_M, event      
                     endif
                 end
@@ -1239,7 +1471,11 @@ endif else begin
                     wset,id_1 
                     erase
                     if (is_file_histo NE -1) then begin
-                        create_local_copy_of_histo_mapped, Event
+                        create_local_copy_of_histo_mapped, $
+                          Event, $
+                          find_prenexus_on_das, $
+                          is_file_histo
+
                         plot_data_BSS, event
                     endif
                 end
@@ -1247,12 +1483,8 @@ endif else begin
             
         endif
         
-;activate display button
-        id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-        widget_control, id_display, sensitive=1
-        
     endelse
-
+    
 endelse
 
 end
@@ -1308,35 +1540,6 @@ widget_control, id, set_value=output_path
 end
 
 
-
-
-
-
-function get_event_file_name_only, event_filename
-event_filename_list = strsplit(event_filename,'/',/regex,/extract,count=length)
-event_filename_only = event_filename_list[length-1]
-return, event_filename_only
-end
-
-
-
-
-
-function get_histo_event_file_name_only,Event, neutron_event_file_name_only
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-file_list=strsplit(neutron_event_file_name_only,'event.dat$',/regex,/extract,count=length)
-histo_file_name_only = file_list[0] + 'histo.dat'
-histo_mapped_file_name_only = file_list[0] + 'histo_mapped.dat'
-(*global).histo_mapped_file_name_only = histo_mapped_file_name_only
-(*global).full_histo_mapped_file_name = (*global).full_path_to_preNeXus + $
-  histo_mapped_file_name_only
-
-return, histo_file_name_only
-end
 
 
 

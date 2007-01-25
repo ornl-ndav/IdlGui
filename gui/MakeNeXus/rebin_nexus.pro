@@ -67,6 +67,10 @@ case Event.id of
               CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
         end
         
+    Widget_Info(wWidget, FIND_BY_UNAME='archive_type_group'): begin
+        archive_type_group_eventcb, Event
+    end
+
 ;portal_go
         Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
             USER_TEXT_CB, Event
@@ -162,7 +166,6 @@ logo_message_draw = widget_draw(logo_message_base,$
                                 scr_ysize=60,$
                                 uvalue=0)
 
-
 PORTAL_GO = widget_button(MAIN_BASE,$
                           XOFFSET=3, YOFFSET=235, $
                           SCR_XSIZE=260, SCR_YSIZE=30,$
@@ -187,7 +190,7 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
-                   tmp_nxdir_folder : 'makeNeXus_tmp',$
+                   tmp_nxdir_folder : '.makeNeXus_tmp',$
                    full_tmp_nxdir_folder_path : '',$
                    already_archived	: 0,$
                    file_to_plot : '',$
@@ -201,8 +204,10 @@ global = ptr_new({$
                    full_path_to_nexus : '',$
                    output_path_for_this_file: '',$
                    instrument		: instrument_list[instrument],$
+                   is_file_histo        : 0,$
                    user			: user,$
                    filter_histo_event	: '*neutron*.dat',$
+                   find_prenexus_on_das : 0,$
                    histo_event_filename  	: '',$
                    histo_event_filename_only	: '',$
                    histo_file_name_only: '',$
@@ -219,8 +224,8 @@ global = ptr_new({$
                    cvinfo_xml_filename	: '',$
                    runinfo_xml_filename	: '',$
                    new_translation_filename: '',$
-                     das_mount_point		: '',$
-                     experiment_number : '',$
+                   das_mount_point		: '',$
+                   experiment_number : '',$
                    proposal_number		: '',$
                    proposal_number_BSS	: '2006_1_2_SCI/',$
                    proposal_number_REF_L	: '2006_1_4B_SCI/',$
@@ -273,6 +278,20 @@ output_path = (*global).output_path
 	SCR_XSIZE=(*global).xsize, $
 	SCR_YSIZE=(*global).ysize, $
 	title=title)
+
+if (user EQ 'j35') then begin
+    map_hide_log_book_tab = 0
+endif else begin
+    map_hide_log_book_tab = 1
+endelse
+
+hide_log_book_tab_blocker = widget_base(MAIN_BASE,$
+                                        xoffset=130,$
+                                        yoffset=0,$
+                                        scr_xsize=60,$
+                                        scr_ysize=20,$
+                                        frame=0,$
+                                        map=map_hide_log_book_tab)
 
   wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
  
@@ -478,7 +497,8 @@ output_path = (*global).output_path
                                           SCR_YSIZE=30,$
                                           VALUE='',$
                                           /editable,$
-                                          /ALL_EVENTS)
+                                          /ALL_EVENTS,$
+                                         /align_left)
   
   REBINNING_TYPE_GROUP_wT1 = CW_BGROUP(wT1, ['linear', 'logarithmic'], $
                                        /ROW, /EXCLUSIVE, /RETURN_NAME,$
@@ -504,7 +524,8 @@ output_path = (*global).output_path
                                    SCR_YSIZE=30,$
                                    VALUE='200',$
                                    /editable,$ ;change that to the default instrument one when openning a file
-                                   /ALL_EVENTS)
+                                   /ALL_EVENTS,$
+                                   /align_left)
   
   MIN_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
                                         UNAME="MIN_TIME_BIN_LABEL_wT1",$
@@ -522,7 +543,8 @@ output_path = (*global).output_path
                                       SCR_YSIZE=30,$
                                       VALUE='',$
                                       /editable,$
-                                      /ALL_EVENTS)
+                                      /ALL_EVENTS,$
+                                      /align_left)
   
   MAX_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
                                         UNAME="MAX_TIME_BIN_LABEL_wT1",$
@@ -540,7 +562,8 @@ output_path = (*global).output_path
                                       SCR_YSIZE=30,$
                                       VALUE='',$
                                       /editable,$
-                                      /ALL_EVENTS)
+                                      /ALL_EVENTS,$
+                                      /align_left)
   
   LEFT_FRAME_wT1 = WIDGET_LABEL(wT1,$
                                 XOFFSET=5,$
@@ -706,19 +729,8 @@ output_path = (*global).output_path
 	/tracking_events,$
 	tooltip="Remove xml extension window")
 
-
-  
-;  wT4 = WIDGET_BASE(wTab, TITLE='Display')
-;
-;  PLOT_DATA = widget_draw(wT4,$
-;	UNAME = 'PLOT_DATA',$
-;	XOFFSET=5, YOFFSET=5,$
-;	SCR_XSIZE=485,$
-;	SCR_YSIZE=235,$
-;	RETAIN=2)	
-
   wT2 = WIDGET_BASE(wTab, TITLE='Settings')
-
+  
   OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_label(wT2, $
 	XOFFSET= 5, YOFFSET = 5, $
 	SCR_XSIZE=130, SCR_YSIZE=30, $
@@ -774,55 +786,104 @@ output_path = (*global).output_path
 	value = output_path,$
 	/editable)
 
-;   Create the second tab base, containing a label and
-;  a slider.
-;  wLabel = WIDGET_LABEL(wT2, VALUE='Move the Slider')
-;  wSlider = WIDGET_SLIDER(wT2)
-
-;   Create the third tab base, containing a label and
-;  a text-entry field.
-;  wT3 = WIDGET_BASE(wTab, TITLE='Default Path', /COLUMN)
-;  wLabel = WIDGET_LABEL(wT3, VALUE='Enter some text')
-;  wText= WIDGET_TEXT(wT3, /EDITABLE, /ALL_EVENTS)
-
 ;   Create a base widget to hold the 'Create NeXus' button, and
 ;   the button itself.
   wControl = WIDGET_BASE(MAIN_BASE)
   CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus file',$
-	UNAME = "CREATE_NEXUS",$
-	XOFFSET=5,$
-	YOFFSET=277,$
-	SCR_XSIZE=200,$
-	SCR_YSIZE=30,$
-	tooltip="Create NeXus")
-
+                               UNAME = "CREATE_NEXUS",$
+                               XOFFSET=5,$
+                               YOFFSET=277,$
+                               SCR_XSIZE=200,$
+                               SCR_YSIZE=30,$
+                               tooltip="Create NeXus")
+  
   exist_frame = WIDGET_BASE(MAIN_BASE, $
-	UNAME="exist_FRAME",$
-	XOFFSET=215,$
-	YOFFSET=277,$
-	SCR_XSIZE=290,$
-	SCR_YSIZE=35)
-
+                            UNAME="exist_FRAME",$
+                            XOFFSET=215,$
+                            YOFFSET=277,$
+                            SCR_XSIZE=290,$
+                            SCR_YSIZE=35,$
+                           map=0)
+  
   exist_label = WIDGET_LABEL(exist_frame,$
-	UNAME="exist_LABEL",$
-	XOFFSET=30,$
-	YOFFSET=3,$
-	SCR_XSIZE=380,$
-	SCR_YSIZE=65,$
-	frame=0,value="")
+                             UNAME="exist_LABEL",$
+                             XOFFSET=30,$
+                             YOFFSET=3,$
+                             SCR_XSIZE=380,$
+                             SCR_YSIZE=65,$
+                             frame=0,value="")
+  
+;  exist_or_not_base;  = WIDGET_BASE(MAIN_BASE,$
+;                                   XOFFSET=240,$
+;                                   YOFFSET=277,$
+;                                   SCR_XSIZE=240,$
+;                                   SCR_YSIZE=30,$
+;                                   UNAME="exist_or_not_base",$
+;                                  map=0)
+  
+;   exist_or_not_label = WIDGET_LABEL(exist_or_not_base,$
+;                                     XOFFSET=60, YOFFSET=0,$
+;                                     SCR_XSIZE=160, SCR_YSIZE=30,$
+;                                     VALUE="NEXUS FILE DOES NOT EXIST",$
+;                                     FRAME=2)
 
-  exist_or_not_base = WIDGET_BASE(MAIN_BASE,$
-                                  XOFFSET=240,$
-                                  YOFFSET=277,$
-                                  SCR_XSIZE=240,$
-                                  SCR_YSIZE=30,$
-                                  UNAME="exist_or_not_base")
+  ;archive or not
+already_archived_base = widget_base(MAIN_BASE,$
+                                    uname='already_archived_base',$
+                                    xoffset=240,$
+                                    yoffset=275,$
+                                    scr_xsize=270,$
+                                    scr_ysize=30,$
+                                    frame=2,$
+                                    map=0)
 
-  exist_or_not_label = WIDGET_LABEL(exist_or_not_base,$
-                                    XOFFSET=60, YOFFSET=0,$
-                                    SCR_XSIZE=160, SCR_YSIZE=30,$
-                                    VALUE="NEXUS FILE DOES NOT EXIST",$
-                                    FRAME=2)
+already_archived_label = widget_label(already_archived_base,$
+                                      xoffset=35,$
+                                      yoffset=5,$
+                                      value='Run number already archived',$
+                                      /align_center)
+
+archive_nexus_base = widget_base(MAIN_BASE,$
+                                 uname='archive_nexus_base',$
+                                 xoffset=240,$
+                                   yoffset=275,$
+                                 scr_xsize=270,$
+                                 scr_ysize=30,frame=2,$
+                                  map=0)
+
+archive_list = ['Yes',$
+                   'No']
+archive_type_group = CW_BGROUP(archive_nexus_base,$ 
+                               archive_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=160,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=1.0,$
+                                 row=1,$
+                                 UNAME='archive_type_group')
+  archive_label = widget_label(archive_nexus_base,$
+                               xoffset=5,$
+                               yoffset=5,$
+                               value='Archive this run number: ',$
+                               /align_left)
+  
+
+  log_book_base = WIDGET_BASE(wTab, TITLE='Log book',$
+                              UNAME="log_book_base",$
+                              SCR_XSIZE=550, SCR_YSIZE=250)
+                             
+
+  log_book_text = widget_text(log_book_base,$
+                              uname='log_book_text',$
+                              scr_xsize=550,$
+                              scr_ysize=250,$
+                              xoffset=0,$
+                              yoffset=0,$
+                             /scroll,$
+                             /wrap)
+
+  
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
