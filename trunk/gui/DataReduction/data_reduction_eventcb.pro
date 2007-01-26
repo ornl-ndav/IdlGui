@@ -39,7 +39,6 @@ for i=0,(array_size-1) do begin
         
     cmd_findnexus = "findnexus -i" + instrument
     cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
-    print, "cmd is: ", cmd_findnexus
     spawn, cmd_findnexus, full_path_to_nexus
 
     array_of_nexus_files[i]=full_path_to_nexus
@@ -1615,7 +1614,6 @@ instrument = (*global).instrument
 file_opened = (*global).file_opened
 ;1: for selection mode      0: for info mode for REF_L
 selection_mode= (*global).selection_mode
-print, "selection mode is: (0 for info) ", selection_mode
 
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -2469,8 +2467,8 @@ for i=0,(nbr_runs_to_use-1) do begin
         
 ;add list of NeXus run numbers
         runs_text = ""
-        for i=0,(nbr_runs_to_use-1) do begin
-            runs_text += strcompress(runs_and_full_path[i,0],/remove_all) + " "
+        for j=0,(nbr_runs_to_use-1) do begin
+            runs_text += strcompress(runs_and_full_path[j,0],/remove_all) + " "
         endfor
         REF_L_cmd_line += runs_text
         
@@ -2615,6 +2613,7 @@ for i=0,(nbr_runs_to_use-1) do begin
     endelse                     ;end of REF_M part
     
     widget_control, view_info, set_value=text,/append
+
     full_text = " Data Reduction is working on run # " + strcompress(runs_and_full_path[i,0])
     full_text += " running using the following command line:"
     widget_control, full_view_info, set_value=full_text,/append
