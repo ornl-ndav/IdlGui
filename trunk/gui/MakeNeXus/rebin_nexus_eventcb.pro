@@ -1,9 +1,84 @@
+function get_archive_run_dir, file
+
+archive_run_list = strsplit(file,'/',/regex,/extract,count=length)
+archive_run_dir = '/'
+for i=0,length-2 do begin
+    archive_run_dir += archive_run_list[i] + '/'
+endfor
+return, archive_run_dir
+end
+
+
+
+
+
+function get_proposal_experiment_number, event, file, archived
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+DAS_has_experiment_number=(*global).DAS_has_experiment_number
+
+file_parsed = strsplit(file,"/",/regex,/extract,count=length)
+
+if (archived EQ 0) then begin  ;file is on DAS
+    if (DAS_has_experiment_number EQ 1) then begin ;no experiment number
+        proposal_number = file_parsed[length-4]
+        experiment_number = file_parsed[length-3]
+    endif else begin            ;DAS has experiment number
+        proposal_number = file_parsed[length-3]
+        experiment_number = "/"
+    endelse 
+
+endif else begin ;file has been archived
+
+    if (length EQ 7) then begin
+        proposal_number = file_parsed[length-5]
+        experiment_number = file_parsed[length-4]
+    endif else begin
+        proposal_number = file_parsed[length-4]
+        experiment_number = "/"
+    endelse
+
+endelse
+
+result = [proposal_number, experiment_number]
+return, result
+
+end
+
+
+
+
+
+
+
+function get_das_run_dir, parent_folder_name
+
+das_run_list = strsplit(parent_folder_name,'/',/regex,/extract,count=length)
+das_run_dir = '/'
+for i=0,length-2 do begin
+    das_run_dir += das_run_list[i] + '/'
+endfor
+
+return, das_run_dir
+end
+
+
+
+
+
+
+
 
 function get_event_file_name_only, event_filename
 event_filename_list = strsplit(event_filename,'/',/regex,/extract,count=length)
 event_filename_only = event_filename_list[length-1]
 return, event_filename_only
 end
+
+
 
 
 
@@ -26,6 +101,9 @@ return, histo_file_name_only
 end
 
 
+
+
+
 pro get_histo_mapped_file_name, Event, neutron_event_file_name_only
 
 ;get global structure
@@ -41,22 +119,25 @@ end
 
 
 
-pro archive_type_group_eventcb, Event
+; pro archive_type_group_eventcb, Event
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+; ;get global structure
+; id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+; widget_control,id,get_uvalue=global
 
-archive_id = widget_info(Event.top,find_by_uname='archive_type_group')
-widget_control, archive_id, get_value = archive_status
+; archive_id = widget_info(Event.top,find_by_uname='archive_type_group')
+; widget_control, archive_id, get_value = archive_status
+; CREATE_NEXUS_id = widget_info(Event.top, find_by_uname='CREATE_NEXUS')
 
-if (archive_status EQ 0) then begin
-    (*global).do_u_want_to_archive_it  = 1
-endif else begin
-    (*global).do_u_want_to_archive_it  = 0
-endelse
+; if (archive_status EQ 0) then begin
+;     (*global).do_u_want_to_archive_it  = 1
+;     widget_control, CREATE_NEXUS_id, set_value='Create NeXus and archive'
+; endif else begin
+;     (*global).do_u_want_to_archive_it  = 0
+;     widget_control, CREATE_NEXUS_id, set_value='Create NeXus and do not archive'
+; endelse
 
-end
+; end
 
 
 
@@ -287,17 +368,17 @@ widget_control,id,get_uvalue=global
 Nx = 64L
 Ny = 64L
 
-;file to open
+file = (*global).file_to_plot
 file_top = (*global).file_to_plot_top
 file_bottom = (*global).file_to_plot_bottom
 
 ;only read data if valid file given
-if (file_top NE '' and file_bottom NE '')  then begin
-
+if ((*global).find_prenexus_on_das EQ 1 AND file NE '') then begin
+    
 ;top bank
-    openr,1,file_top
+    openr,1,file
     fs=fstat(1)
-
+    
 ;to get the size of the file
     file_size=fs.size
     
@@ -308,7 +389,7 @@ if (file_top NE '' and file_bottom NE '')  then begin
     close,1
     free_lun, 1
     
-    pixel_number = 64*64
+    pixel_number = 64*64*2
     Nt = N/(pixel_number)
     
 ;find the non-null elements
@@ -317,55 +398,78 @@ if (file_top NE '' and file_bottom NE '')  then begin
     img = intarr(Nt,Nx,Ny)
     img(indx1)=data(indx1)
     
-    top_bank = total(img,1) 	;sum over time bins
-   
-;bottom bank
-    openr,1,file_bottom
-    fs=fstat(1)
-
-    close,1
-    free_lun, 1
+    simg = total(img,1) 	;sum over time bins
     
-;find the non-null elements
-    indx1 = where(data GT 0, Ngt0)
+    top_bank = simg(0:63,0:63)
+    bottom_bank = simg(0:63,64:127)
     
-    img = intarr(Nt,Nx,Ny)
-    img(indx1)=data(indx1)
+endif else begin                ;using NeXus file
     
-    bottom_bank = total(img,1) 	;sum over time bins
+    if (file_top NE '' AND file_bottom NE '') then begin
+        
+;top_bank
+        file_name = [file_top, file_bottom]
+        
+        for i=0,1 do begin
+            
+            openr,1,file_name[i]
+            fs=fstat(1)
+            file_size=fs.size
+            N=long(file_size)/4L
+            data=lonarr(N)
+            readu,1,data
+            close,1
+            free_lun,1
+            pixel_number = 64*64
+            Nt=N/(pixel_number)
+            
+            indx1 = where(data GT 0,Ngt0)
+            img=intarr(Nt,Nx,Ny)
+            img(indx1) = data(indx1)
+            
+            simg = total(img,1)
+            case i of 
+                0: top_bank = img
+                1: bottom_bank = img
+                else:
+            endcase
+            
+        endfor
+        
+    endif
+    
+endelse
 
 ;work on top and bottom banks
-    top_bank = transpose(top_bank)
-    bottom_bank = transpose(bottom_bank)
-    
-    x_coeff = 5
-    y_coeff = 2
-   
-    New_Ny = y_coeff*Ny
-    New_Nx = x_coeff*Nx
-    
-    xoff = 10
-    yoff = 10
-    
+top_bank = transpose(top_bank)
+bottom_bank = transpose(bottom_bank)
+
+x_coeff = 5
+y_coeff = 2
+
+New_Ny = y_coeff*Ny
+New_Nx = x_coeff*Nx
+
+xoff = 10
+yoff = 10
+
 ;top bank
-    view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
-    WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
-    
+view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
 ;tvimg = congrid(top_bank, New_Nx, New_Ny, /interp)
-    tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
-    tvscl, tvimg, /device
-    
+tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
+tvscl, tvimg, /device
+
 ;bottom bank
-    view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
-    WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
-    
+view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
 ;tvimg = congrid(bottom_bank, New_Nx, New_Ny, /interp)
-    tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
-    tvscl, tvimg, /device
-    
-endif
+tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
+tvscl, tvimg, /device
 
 end
 
@@ -926,16 +1030,27 @@ end
 
 pro REBINNING_TYPE_GROUP_CP, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 id = widget_info(Event.top, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
 WIDGET_CONTROL, id, GET_VALUE = value
 
-if (value EQ 1) then begin
-	WIDGET_CONTROL, id, SET_VALUE=0
-	view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-	text = "!!!Logarithmic rebinning not supported yet!!!"
-	WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-endif	
+REBINNING_LABEL_wT1_id = widget_info(Event.top,find_by_uname='REBINNING_LABEL_wT1')
+REBINNING_TEXT_wT1_id = widget_info(Event.top,find_by_uname='REBINNING_TEXT_wT1')
+
+if (value EQ 0) then begin
+    text = 'Rebin value (microS)'
+    value = strcompress((*global).default_rebin_coeff,/remove_all)
+endif else begin
+    text = 'Rebin coefficient'
+    value = strcompress((*global).default_log_rebin_coeff,/remove_all)
+endelse
 	
+widget_control, REBINNING_LABEL_wT1_id, set_value=text
+widget_control, REBINNING_TEXT_wT1_id, set_value=value
+
 end
 
 
@@ -1064,6 +1179,9 @@ endif
 cmd_create = "mkdir " + full_tmp_nxdir_folder_path
 spawn, cmd_create,  listening
 
+already_archived_base_id = widget_info(Event.top,find_by_uname='already_archived_base')
+widget_control, already_archived_base_id, map=0
+
 end
 
 
@@ -1166,28 +1284,31 @@ endif else begin
     (*global).full_path_to_nexus = full_path_to_nexus
     
     result_archived = strmatch(full_path_to_nexus,"ERROR*")
-    archive_nexus_base_id = widget_info(Event.top,find_by_uname='archive_nexus_base')
+;    archive_nexus_base_id = widget_info(Event.top,find_by_uname='archive_nexus_base')
+    already_archived_label_id = widget_info(Event.top,find_by_uname='already_archived_label')
     already_archived_base_id = widget_info(Event.top,find_by_uname='already_archived_base')
+    CREATE_NEXUS_id = widget_info(Event.top, find_by_uname='CREATE_NEXUS')
 
     if (result_archived[0] EQ 0) then begin ;file already archived
 
         (*global).already_archived = 1
-        widget_control, archive_nexus_base_id, map=0
-        widget_control, already_archived_base_id, map=1
-        full_text = 'File has already been archived'
+        full_text = 'Run number already archived'
         widget_control, full_view_info, set_value=full_text, /append
+        widget_control, already_archived_label_id, set_value=full_text
         find_nexus = 1
+        widget_control, CREATE_NEXUS_id, set_value='Create local NeXus file'
+        widget_control, already_archived_base_id, map=1
 
     endif else begin ;file not archived yet
 
         (*global).already_archived = 0
-        widget_control, archive_nexus_base_id, map=1
-        widget_control, already_archived_base_id, map=0
-        full_text = 'File has not been archived yet'
+        full_text = 'Run number has not been archived yet'
         widget_control, full_view_info, set_value=full_text, /append
+        widget_control, already_archived_label_id, set_value=full_text
         find_nexus = 0
 
     endelse
+    widget_control, already_archived_base_id, map=1
 
 ;get only path up to preNeXus path
     full_text = 'Get full path to preNeXus folder:'
@@ -1383,6 +1504,9 @@ endif else begin
                 id = widget_info(Event.top, FIND_BY_UNAME = "HISTO_INFO_NUMBER_BINS_TEXT")
                 widget_control, id, set_value = strcompress(NTOF,/remove_all)
                 
+;will create a local nexus file
+                id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
+                widget_control, id_create_nexus, sensitive=1
             end
             
             0: begin            ;file is event
@@ -1545,85 +1669,101 @@ end
 
 
 
-pro  GO_HISTOGRAM_CB, event, full_folder_name_preNeXus
-
-wWidget = event.top
+pro GO_HISTOGRAM_CB, event, full_folder_name_preNeXus, file
 
 ;get the global data structure
-id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-txt = " HISTOGRAMMING:"
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+
+;linear or log rebinning
+id = widget_info(Event.top, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
+WIDGET_CONTROL, id, GET_VALUE = linear_rebinning
+
+if (linear_rebinning EQ 0) then begin ;linear rebinning
 
 ;in GO_HISTOGRAM, we need to get widget values of tab 1 to do our work
-id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
-	WIDGET_CONTROL, id_0, GET_VALUE = lin_log
+    id_0 = Widget_Info(event.top, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
+    WIDGET_CONTROL, id_0, GET_VALUE = lin_log
+    
+    id_1 = Widget_Info(event.top, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
+    WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
+    
+    id_2 = Widget_Info(event.top, FIND_BY_UNAME='REBINNING_TEXT_wT1')
+    WIDGET_CONTROL, id_2, GET_VALUE =rebinning
+    
+    id_3 = Widget_Info(event.top, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
+    WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
+    
+    id_4 = Widget_Info(event.top, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
+    WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
+    
+    (*global).lin_log = lin_log
+    (*global).number_pixels = number_pixels
+    (*global).rebinning = rebinning
+    (*global).max_time_bin = max_time_bin
+    (*global).min_time_bin = min_time_bin
 
-id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
-	WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
+    cmd_line_histo = "Event_to_Histo "
+    cmd_line_histo += "-l " + strcompress(rebinning,/remove_all)
+    cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
+    cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
+    cmd_line_histo += " -a " + strcompress(full_folder_name_preNeXus,$
+                                           /remove_all)
+    cmd_line_histo += " " + file
+    
+;launch histogramming
+    full_text = "Processing histogramming....."
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+    full_text = "   > " + cmd_line_histo
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
-id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
-	WIDGET_CONTROL, id_2, GET_VALUE =rebinning
+    str_time = systime(1)
+    spawn, cmd_line_histo, listening
+    end_time = systime(1)
+    full_time = (end_time - str_time)
+    full_text = "....Done in " + strcompress(full_time,/remove_all) + 's'
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
-id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
-	WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
+endif else begin ;log rebinning
 
-id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
-	WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
 
-(*global).lin_log = lin_log
-(*global).number_pixels = number_pixels
-(*global).rebinning = rebinning
-(*global).max_time_bin = max_time_bin
-(*global).min_time_bin = min_time_bin
-event_filename = (*global).histo_event_filename
-path = full_folder_name_preNeXus
+
+
+endelse
 
 ;determine name of histo file
+full_text = '   * Full name of event file: ' + file
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+event_filename = file
+
+full_text = '   * Name of event file: '
 neutron_event_file_name_only = get_event_file_name_only(event_filename)
-histo_file_name_only = get_histo_event_file_name_only(Event, neutron_event_file_name_only)
+full_text += neutron_event_file_name_only
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+
+full_text = '   * Name of histo file: '
+histo_file_name_only = get_histo_event_file_name_only(Event,$
+                                                      neutron_event_file_name_only)
 (*global).histo_file_name_only = histo_file_name_only
+full_text += histo_file_name_only
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+
+path = (*global).full_local_folder_name_preNeXus
 full_histo_file_name = path + histo_file_name_only
 full_histo_mapped_file_name = path + (*global).histo_mapped_file_name_only
-
-cmd_line_histo = "Event_to_Histo "
-cmd_line_histo += "-l " + strcompress(rebinning,/remove_all)
-cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
-cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
-cmd_line_histo += " -a " + strcompress(path,/remove_all)
-cmd_line_histo += " " + event_filename
-
-cmd_line_displayed = "> " + cmd_line_histo
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
-
-;launch histogramming
-str_time = systime(1)
-text = "Processing....."
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-spawn, cmd_line_histo, listening
-text = "....Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-text = "New file created: "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = full_histo_file_name
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+full_text = '   * Full histo file name (NEW FILE CREATED): ' + full_histo_file_name
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+full_text = '   * Full histo mapped file name: ' + full_histo_mapped_file_name
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+    
 ;MAPPING OF HISTO FILE
-txt = " MAPPING:"
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-number_tbin = ((*global).max_time_bin - (*global).min_time_bin) / (*global).rebinning
+number_tbin = ((*global).max_time_bin - $
+               (*global).min_time_bin) / (*global).rebinning
 (*global).number_tbin = number_tbin
-
+    
 id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
 widget_control, id, get_value=mapping_filename
 cmd_line_mapping = "Map_Data "
@@ -1632,54 +1772,34 @@ cmd_line_mapping += " -n " + full_histo_file_name
 cmd_line_mapping += " -p " + strcompress(number_pixels, /remove_all)
 cmd_line_mapping += " -t " + strcompress(number_tbin, /remove_all)
 
+text = "Processing mapping....."
+WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 cmd_line_displayed = "> " + cmd_line_mapping
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_line_displayed, /APPEND
+WIDGET_CONTROL, full_view_info, SET_VALUE=cmd_line_displayed, /APPEND
 
 ;launch mapping
 str_time = systime(1)
-text = "Processing mapping....."
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 spawn, cmd_line_mapping, listening
+end_time = systime(1)    
+full_time = end_time - str_time
+full_text = '...done in ' + strcompress(full_time,/remove_all) + 's'
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
-text = "New file created: "
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = full_histo_mapped_file_name
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-end_time = systime(1)
-text = "Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-text = "Processing_time: " + strcompress((end_time-str_time),/remove_all) + " s"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
+full_text = '    * Full histo mapped file name: ' + full_histo_mapped_file_name
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+    
 ;remove histo_file name
+full_text = 'Removed histo file name (' + full_histo_file_name + ')...'
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 cmd_remove_histo = "rm -r " + full_histo_file_name
 spawn, cmd_remove_histo
+full_done = '...removed done'
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_done, /APPEND
 
 end
 
 
 
-
-
-function get_proposal_experiment_number, file
-
-file_parsed = strsplit(file,"/",/regex,/extract,count=length)
-
-if (length EQ 7) then begin
-    proposal_number = file_parsed[length-5]
-    experiment_number = file_parsed[length-4]
-endif else begin
-    proposal_number = file_parsed[length-4]
-    experiment_number = "/"
-endelse
-
-result = [proposal_number, experiment_number]
-return, result
-
-end
 
 
 
@@ -1701,19 +1821,190 @@ widget_control,rb_id,sensitive=0
 
 ;display what is going on
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-txt = ""
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-txt = "Create NeXus process:"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+
+text = "Create NeXus..."
+full_text = "Create NeXus:"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+widget_control, full_view_info, set_value=full_text, /append
+
+file = (*global).histo_event_filename
+run_number = (*global).run_number
+
+if ((*global).already_archived EQ 1) then begin ;file has already been archived
+
+    if ((*global).is_file_histo EQ 1) then begin ;file is histogram
+
+        archive_run_dir = get_archive_run_dir(file)
+
+        cmd_translate = 'TS_translate.sh '
+        cmd_translate += archive_run_dir
+;tmp directory
+        cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
+        
+        parent_folder_name = (*global).output_path
+        cmd_translate += ' --archiveRoot ' + parent_folder_name
+        cmd_translate += ' --no_archive'
+        
+        full_text = ' > ' + cmd_translate
+        widget_control, full_view_info, set_value=full_text, /append
+        spawn, cmd_translate, listening
+        
+        text = '..done'
+        widget_control, view_info, set_value=text, /append
+        text = 'Location of NeXus: ' + parent_folder_name
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+        full_text += '/' + (*global).instrument
+        widget_control, full_view_info, set_value=full_text, /append
+        
+    endif else begin
+        
+        print, "Event archived file"
+        create_nexus_the_old_way, event
+
+    endelse
+    
+endif else begin                ; file is on DAS
+    
+    if ((*global).is_file_histo EQ 1) then begin ;file is histogram
+        
+;isolate proposal number from full file name
+        result = get_proposal_experiment_number(event, $
+                                                file,$
+                                                (*global).already_archived) 
+        proposal_number = result[0]
+        experiment_number = result[1]
+        
+        (*global).proposal_number = proposal_number
+        (*global).experiment_number = experiment_number
+        
+        parent_folder_name = (*global).output_path
+        
+        das_run_dir = get_das_run_dir(file)
+        
+        full_text = ' ->das run dir: ' + das_run_dir
+        widget_control, full_view_info, set_value=full_text, /append
+
+        cmd_translate = 'TS_translate.sh '
+        cmd_translate += das_run_dir
+        
+;tmp directory
+        cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
+        
+        cmd_translate += ' --no_archive'
+        cmd_translate += ' --archiveRoot ' + parent_folder_name
+                
+        full_text = ' > ' + cmd_translate
+        widget_control, full_view_info, set_value=full_text, /append
+        spawn, cmd_translate, listening
+       
+        text = '..done'
+        widget_control, view_info, set_value=text, /append
+        text = 'Location of NeXus: ' + parent_folder_name
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+        full_text += '/' + (*global).instrument
+        widget_control, full_view_info, set_value=full_text, /append
+
+    endif else begin
+        
+        id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
+        WIDGET_CONTROL, id_0, GET_VALUE = lin_log
+        
+        id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
+        WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
+        
+        id_2 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT_wT1')
+        WIDGET_CONTROL, id_2, GET_VALUE =rebinning
+        
+        id_3 = Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT_wT1')
+        WIDGET_CONTROL, id_3, GET_VALUE =max_time_bin
+        
+        id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
+        WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
+        
+        (*global).lin_log = lin_log
+        (*global).number_pixels = number_pixels
+        (*global).rebinning = rebinning
+        (*global).max_time_bin = max_time_bin
+        (*global).min_time_bin = min_time_bin
+        event_filename = (*global).histo_event_filename
+        
+        das_run_dir = get_das_run_dir(event_filename)
+        
+        if (lin_log EQ 0) then begin ;linear rebinning
+            (*global).default_rebin_coeff = rebinning
+            cmd_translate = 'TS_translate.sh '
+            cmd_translate += das_run_dir
+            cmd_translate += ' --time_width ' + rebinning
+            cmd_translate += ' --max_time_bin ' + max_time_bin
+            cmd_translate += ' --time_offset ' + min_time_bin
+            
+        endif else begin        ;log rebinning
+            (*global).default_log_rebin_coeff = rebinning
+        endelse
+        
+;tmp directory
+        cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
+
+        parent_folder_name = (*global).output_path
+        cmd_translate += ' --archiveRoot ' + parent_folder_name
+        cmd_translate += ' --no_archive'
+
+        full_text = ' > ' + cmd_translate
+        widget_control, full_view_info, set_value=full_text, /append
+        spawn, cmd_translate, listening
+       
+        text = '..done'
+        widget_control, view_info, set_value=text, /append
+        text = 'Location of NeXus: ' + parent_folder_name
+        widget_control, view_info, set_value=text, /append
+        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+        full_text += '/' + (*global).instrument
+        widget_control, full_view_info, set_value=full_text, /append
+        
+    endelse
+    
+endelse
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pro create_nexus_the_old_way, event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 
 ;create folder into working_path directory
+full_text = " -> Create folder in working path:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
-txt = "-> Create folder in working path...."
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-file=(*global).histo_event_filename ;full name of event file
+file=(*global).histo_event_filename ;full name of event or histo file
 run_number = (*global).run_number ;run number 
-result = get_proposal_experiment_number(file) ;isolate proposal number from full file name
+is_file_histo = (*global).is_file_histo
+
+;isolate proposal number from full file name
+result = get_proposal_experiment_number(event, $
+                                        file,$
+                                        (*global).already_archived) 
 proposal_number = result[0]
 experiment_number = result[1]
 
@@ -1722,42 +2013,55 @@ experiment_number = result[1]
 
 parent_folder_name = (*global).output_path + (*global).instrument
 full_folder_name = parent_folder_name + "/" + proposal_number 
-full_folder_name += "/" + experiment_number
+
+if ((*global).translate_use_experiment_number EQ 1) then begin
+    full_folder_name += "/" + experiment_number
+endif
+
 full_folder_name += "/" + run_number
 full_folder_name_preNeXus = full_folder_name + "/preNeXus/"
 full_folder_name_NeXus = full_folder_name + "/NeXus/"
 
+(*global).full_local_folder_name = full_folder_name + '/'
+(*global).full_local_folder_name_preNeXus = full_folder_name_preNeXus
+(*global).full_local_folder_name_NeXus = full_folder_name_NeXus
+
 ;;check if folder exists already, if yes, remove it
-cmd_folder_exist = "ls -d " + parent_folder_name
+cmd_folder_exist = "ls -d " + full_folder_name
+full_text = "   > " + cmd_folder_exist
+widget_control, full_view_info, set_value=full_text, /append
+
 spawn, cmd_folder_exist, listening
 
 if (listening NE '') then begin ;folder exists, we need to remove it first
-
-    cmd_remove_folder = "rm -r " + full_folder_name
+    
+    cmd_remove_folder = "rm -f -r " + full_folder_name
     cd, (*global).output_path
     spawn, cmd_remove_folder
-
+    full_text = "   > " + cmd_remove_folder
+    widget_control, full_view_info, set_value=full_text, /append
+    
 endif 
 
 ;create folders
 cmd_create_preNeXus_folder = "mkdir -p " + full_folder_name_preNeXus
 cmd_create_NeXus_folder = "mkdir -p " + full_folder_name_NeXus
 
+full_text = "   > " + cmd_create_preNeXus_folder
+widget_control, full_view_info, set_value=full_text, /append
 spawn, cmd_create_preNeXus_folder
+
+full_text = '   > ' + cmd_create_NeXus_folder 
+widget_control, full_view_info, set_value=full_text, /append
 spawn, cmd_create_NeXus_folder
 
-txt = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
 ;histogrammed and mapped event file and put histo_mapped file in preNeXus folder
-txt = "-> Create histo_mapped file..."
+full_text = " -> Create histo_mapped file:"
 WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-GO_HISTOGRAM_CB, event, full_folder_name_preNeXus
-txt = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+GO_HISTOGRAM_CB, event, full_folder_name_preNeXus, file
 
-txt = "-> Move files of interest into final location..."
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_text = " -> Move files of interest into final location:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 ;copy files of interest into preNeXus folders
 full_path_to_preNeXus = (*global).full_path_to_preNeXus
@@ -1767,6 +2071,8 @@ files_to_copy = ["*.xml","*.nxt"]
 for i=0,1 do begin
     cmd_copy = "cp " + full_path_to_preNeXus + files_to_copy[i] + " " + $
       full_folder_name_preNeXus
+    text_cmd_copy = '> ' + cmd_copy
+    widget_control,full_view_info,set_value=text_cmd_copy,/append
     spawn, cmd_copy
 endfor
 
@@ -1774,28 +2080,26 @@ endfor
 cmd_copy = "cp " + (*global).mapping_file 
 cmd_copy += " " + (*global).geometry_file
 cmd_copy += " " + full_folder_name_preNeXus
+text_cmd_copy = '> ' + cmd_copy
+widget_control, full_view_info, set_value=text_cmd_copy, /append
 spawn, cmd_copy
+text_done = '...copy done'
+widget_control, full_view_info, set_value=text_done, /append
 
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_copy, /APPEND
-
-txt = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-txt = "-> Merge xml files..."
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_text = "-> Merge xml files:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 ;merge files
 cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
 cmd_merge += " " + full_folder_name_preNeXus
+text_cmd_merge = '> ' + cmd_merge
+widget_control, full_view_info, set_value=text_cmd_merge,/append
 spawn, cmd_merge
+text_done = '...merge done'
+widget_control, full_view_info, set_value=text_done, /append
 
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_merge, /APPEND
-
-txt = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-txt = "-> translate files..."
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_text = "-> translate files:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 ;create nexus file
 cd, full_folder_name_preNeXus
@@ -1804,38 +2108,39 @@ full_nx_file_name += "_" + run_number
 full_nxt_file_name = full_nx_file_name + ".nxt"
 
 cmd_translate = "nxtranslate " + full_nxt_file_name
+text_cmd_translate = '> ' + cmd_translate
+widget_control, full_view_info, set_value=text_cmd_translate,/append
 spawn, cmd_translate
+text_done = '... translation done'
+widget_control, full_view_info, set_value=text_done, /append
 
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_translate, /APPEND
-
-txt = "...done"
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
-
-txt = "-> Move NeXus file to its final location..."
-WIDGET_CONTROL, view_info, SET_VALUE=txt, /APPEND
+full_text = "-> Move NeXus file to its final location:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 ;move new nexus file into its own location
 full_name_of_nexus_file = full_nx_file_name + ".nxs"
 cmd_move_NeXus = "mv " + full_name_of_nexus_file 
 cmd_move_NeXus += " " + full_folder_name_NeXus
+text_cmd_move_NeXus = '> ' + cmd_move_NeXus
+WIDGET_CONTROL, full_view_info, SET_VALUE=text_cmd_move_NeXus, /APPEND
 spawn, cmd_move_NeXus
+text_done = '... move done'
+widget_control, full_view_info, set_value=text_done, /append
 
-WIDGET_CONTROL, view_info, SET_VALUE=cmd_move_NeXus, /APPEND
-
-text="....done"
-widget_control, view_info, set_value=text,/append
-
-text = "->Location of NeXus file: "
-text += full_folder_name_NeXus + (*global).instrument
-text += "_" + (*global).run_number + ".nxs"
-widget_control, view_info, set_value=text,/append
-
-text = "...REBIN COMPLETED"
-widget_control, view_info, set_value=text,/append
+full_text = "   * NeXus file:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+full_text = full_folder_name_NeXus + (*global).instrument
+full_text += "_" + (*global).run_number + ".nxs"
+widget_control, full_view_info, set_value=full_text,/append
 
 ;activate "Create local NeXus" button
 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
 widget_control, id_create_nexus, sensitive=1
+
+text = "... done"
+full_text = "... create NeXus is done"
+WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+widget_control, full_view_info, set_value=full_text, /append
 
 end
 

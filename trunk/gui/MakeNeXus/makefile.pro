@@ -11,5 +11,6 @@ resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 resolve_routine, "STRSPLIT", /either
 resolve_routine, "REVERSE",/either
+resolve_routine, "read_bmp",/either
 save,/routines,filename="rebin_nexus.sav"
 exit
