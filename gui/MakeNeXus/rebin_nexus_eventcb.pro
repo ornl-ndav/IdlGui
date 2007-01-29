@@ -103,6 +103,19 @@ end
 
 
 
+function get_full_timemap_file_name, full_histo_file_name
+
+full_histo_file_name_array = strsplit(full_histo_file_name,'histo.dat',/regex,/extract)
+full_timemap_file_name = full_histo_file_name_array[0] + 'timemap.dat'
+
+return, full_timemap_file_name
+end
+
+
+
+
+
+
 
 pro get_histo_mapped_file_name, Event, neutron_event_file_name_only
 
@@ -517,8 +530,9 @@ if (on_das EQ 0) then begin
         full_text = '(top part) > ' + cmd_dump_top
         widget_control, full_view_info, set_value=full_text, /append
         
-        spawn, cmd_dump_top, listening
-        
+        spawn, cmd_dump_top, listening, err_listening
+        output_error, Event, err_listening
+
         text= "..done"
         widget_control, view_info, set_value=text, /append
                 
@@ -531,8 +545,9 @@ if (on_das EQ 0) then begin
         full_text = '(bottom part) > ' + cmd_dump_bottom
         widget_control, full_view_info, set_value=full_text, /append
         
-        spawn, cmd_dump_bottom, listening
-        
+        spawn, cmd_dump_bottom, listening, err_listening
+        output_error, Event, err_listening
+
         text= "..done"
         widget_control, view_info, set_value=text, /append
         
@@ -560,7 +575,8 @@ if (on_das EQ 0) then begin
         full_text = '> ' + cmd_dump
         widget_control, full_view_info, set_value=full_text, /append
         
-        spawn, cmd_dump, listening
+        spawn, cmd_dump, listening, err_listening
+        output_error, Event, err_listening
 
         text= "..done"
         widget_control, view_info, set_value=text, /append
@@ -589,8 +605,9 @@ endif else begin                ;file is on das
         full_text = '> ' + cmd_Event_to_Histo
         widget_control, full_view_info, set_value=full_text, /append
         
-        spawn, cmd_Event_to_Histo, listening
-        
+        spawn, cmd_Event_to_Histo, listening, err_listening
+        output_error, Event, err_listening
+
         neutron_event_file_name_only = get_event_file_name_only(histo_event_filename)
         histo_file_name = get_histo_event_file_name_only(Event, neutron_event_file_name_only)
         full_histo_file_name = full_tmp_nxdir_folder_path + '/' + histo_file_name
@@ -623,8 +640,9 @@ endif else begin                ;file is on das
     full_text = '> ' + cmd_Map_Data
     widget_control, full_view_info, set_value=full_text, /append
     
-    spawn, cmd_Map_Data, listening
-    
+    spawn, cmd_Map_Data, listening, err_listening
+    output_error, Event, err_listening
+
     tmp_output_file = (*global).histo_mapped_file_name_only
     tmp_output_file = full_tmp_nxdir_folder_path + '/' + tmp_output_file
     (*global).file_to_plot = tmp_output_file
@@ -769,8 +787,9 @@ id = widget_info(Event.top, find_by_uname="MAIN_BASE")
 widget_control, id, scr_ysize=(*global).ysize_display
    
 cmd = "less " + (*global).runinfo_xml_filename
-spawn, cmd, listening
-  
+spawn, cmd, listening, err_listening
+output_error, Event, err_listening
+
 id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_XML_DISPLAY_TEXT")
 widget_control, id, set_value = listening
 
@@ -794,8 +813,9 @@ id = widget_info(Event.top, find_by_uname="MAIN_BASE")
 widget_control, id, scr_ysize=(*global).ysize_display
    
 cmd = "less " + (*global).cvinfo_xml_filename
-spawn, cmd, listening
-  
+spawn, cmd, listening, err_listening
+output_error, Event, err_listening
+
 id = widget_info(Event.top, FIND_BY_UNAME="COMPLETE_XML_DISPLAY_TEXT")
 widget_control, id, set_value = listening
 
@@ -1168,16 +1188,19 @@ full_tmp_nxdir_folder_path = (*global).output_path + tmp_nxdir_folder
 (*global).full_tmp_nxdir_folder_path = full_tmp_nxdir_folder_path
 
 cmd_check = "ls -d " + full_tmp_nxdir_folder_path
-spawn, cmd_check, listening
+spawn, cmd_check, listening, err_listening
+output_error, Event, err_listening
 
 if (listening NE '') then begin
     cmd_remove = "rm -r " + full_tmp_nxdir_folder_path
-    spawn, cmd_remove
+    spawn, cmd_remove, listening, err_listening
+    output_error, Event, err_listening
 endif
 
 ;now create tmp folder
 cmd_create = "mkdir " + full_tmp_nxdir_folder_path
-spawn, cmd_create,  listening
+spawn, cmd_create,  listening, err_listening
+output_error, Event, err_listening
 
 already_archived_base_id = widget_info(Event.top,find_by_uname='already_archived_base')
 widget_control, already_archived_base_id, map=0
@@ -1267,13 +1290,17 @@ endif else begin
 
     full_text = 'Find NeXus path: >' + cmd_findnexus
     widget_control, full_view_info, set_value=full_text, /append
-    spawn, cmd_findnexus, listening_nexus
+    spawn, cmd_findnexus, listening_nexus, err_listening
+    output_error, Event, err_listening
+
     full_text = '--> ' + listening_nexus
     widget_control, full_view_info, set_value=full_text, /append
 
     full_text = 'Find preNeXus path: >' + cmd_findprenexus
     widget_control, full_view_info, set_value=full_text, /append
-    spawn, cmd_findprenexus, listening_prenexus
+    spawn, cmd_findprenexus, listening_prenexus, err_listening
+    output_error, Event, err_listening
+
     full_text = '--> ' + listening_prenexus
     widget_control, full_view_info, set_value=full_text, /append
     
@@ -1682,8 +1709,6 @@ full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 id = widget_info(Event.top, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
 WIDGET_CONTROL, id, GET_VALUE = linear_rebinning
 
-if (linear_rebinning EQ 0) then begin ;linear rebinning
-
 ;in GO_HISTOGRAM, we need to get widget values of tab 1 to do our work
     id_0 = Widget_Info(event.top, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
     WIDGET_CONTROL, id_0, GET_VALUE = lin_log
@@ -1706,6 +1731,8 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
     (*global).max_time_bin = max_time_bin
     (*global).min_time_bin = min_time_bin
 
+if (linear_rebinning EQ 0) then begin ;linear rebinning
+
     cmd_line_histo = "Event_to_Histo "
     cmd_line_histo += "-l " + strcompress(rebinning,/remove_all)
     cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
@@ -1715,13 +1742,14 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
     cmd_line_histo += " " + file
     
 ;launch histogramming
-    full_text = "Processing histogramming....."
+    full_text = "Processing histogramming (linear)....."
     WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
     full_text = "   > " + cmd_line_histo
     WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
     str_time = systime(1)
-    spawn, cmd_line_histo, listening
+    spawn, cmd_line_histo, listening, err_listening
+    output_error, Event, err_listening
     end_time = systime(1)
     full_time = (end_time - str_time)
     full_text = "....Done in " + strcompress(full_time,/remove_all) + 's'
@@ -1729,8 +1757,27 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
 
 endif else begin ;log rebinning
 
+    cmd_line_histo = "~/SVN/HistoTool/trunk/cli/Event_to_Histo "
+    cmd_line_histo += "-L " + strcompress(rebinning,/remove_all)
+    cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
+    cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
+    cmd_line_histo += " -a " + strcompress(full_folder_name_preNeXus,$
+                                           /remove_all)
+    cmd_line_histo += " " + file
+    
+;launch histogramming
+    full_text = "Processing histogramming (logarithmic)....."
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+    full_text = "   > " + cmd_line_histo
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
-
+    str_time = systime(1)
+    spawn, cmd_line_histo, listening, err_listening
+    output_error, Event, err_listening
+    end_time = systime(1)
+    full_time = (end_time - str_time)
+    full_text = "....Done in " + strcompress(full_time,/remove_all) + 's'
+    WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 endelse
 
@@ -1760,8 +1807,17 @@ full_text = '   * Full histo mapped file name: ' + full_histo_mapped_file_name
 WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
     
 ;MAPPING OF HISTO FILE
-number_tbin = ((*global).max_time_bin - $
-               (*global).min_time_bin) / (*global).rebinning
+
+;get full_name of timemap.dat file
+full_timemap_file_name = get_full_timemap_file_name(full_histo_file_name)
+openr,u,full_timemap_file_name,/get
+fs = fstat(u)
+number_tbin = fs.size/(4L)-1
+close, u
+free_lun, u
+
+;number_tbin = ((*global).max_time_bin - $
+;               (*global).min_time_bin) / (*global).rebinning
 (*global).number_tbin = number_tbin
     
 id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
@@ -1779,7 +1835,8 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=cmd_line_displayed, /APPEND
 
 ;launch mapping
 str_time = systime(1)
-spawn, cmd_line_mapping, listening
+spawn, cmd_line_mapping, listening, err_listening
+output_error, Event, err_listening
 end_time = systime(1)    
 full_time = end_time - str_time
 full_text = '...done in ' + strcompress(full_time,/remove_all) + 's'
@@ -1787,12 +1844,13 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 
 full_text = '    * Full histo mapped file name: ' + full_histo_mapped_file_name
 WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
-    
+
 ;remove histo_file name
 full_text = 'Removed histo file name (' + full_histo_file_name + ')...'
 WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 cmd_remove_histo = "rm -r " + full_histo_file_name
-spawn, cmd_remove_histo
+spawn, cmd_remove_histo, listening, err_listening
+output_error, Event, err_listening
 full_done = '...removed done'
 WIDGET_CONTROL, full_view_info, SET_VALUE=full_done, /APPEND
 
@@ -1848,8 +1906,9 @@ if ((*global).already_archived EQ 1) then begin ;file has already been archived
         
         full_text = ' > ' + cmd_translate
         widget_control, full_view_info, set_value=full_text, /append
-        spawn, cmd_translate, listening
-        
+        spawn, cmd_translate, listening, err_listening
+        output_error, Event, err_listening
+
         text = '..done'
         widget_control, view_info, set_value=text, /append
         text = 'Location of NeXus: ' + parent_folder_name
@@ -1860,7 +1919,6 @@ if ((*global).already_archived EQ 1) then begin ;file has already been archived
         
     endif else begin
         
-        print, "Event archived file"
         create_nexus_the_old_way, event
 
     endelse
@@ -1897,8 +1955,9 @@ endif else begin                ; file is on DAS
                 
         full_text = ' > ' + cmd_translate
         widget_control, full_view_info, set_value=full_text, /append
-        spawn, cmd_translate, listening
-       
+        spawn, cmd_translate, listening, err_listening
+        output_error, Event, err_listening
+
         text = '..done'
         widget_control, view_info, set_value=text, /append
         text = 'Location of NeXus: ' + parent_folder_name
@@ -1954,8 +2013,9 @@ endif else begin                ; file is on DAS
 
         full_text = ' > ' + cmd_translate
         widget_control, full_view_info, set_value=full_text, /append
-        spawn, cmd_translate, listening
-       
+        spawn, cmd_translate, listening, err_listening
+        output_error, Event, err_listening
+
         text = '..done'
         widget_control, view_info, set_value=text, /append
         text = 'Location of NeXus: ' + parent_folder_name
@@ -2031,13 +2091,16 @@ cmd_folder_exist = "ls -d " + full_folder_name
 full_text = "   > " + cmd_folder_exist
 widget_control, full_view_info, set_value=full_text, /append
 
-spawn, cmd_folder_exist, listening
+spawn, cmd_folder_exist, listening, err_listening
+output_error, Event, err_listening
 
 if (listening NE '') then begin ;folder exists, we need to remove it first
     
     cmd_remove_folder = "rm -f -r " + full_folder_name
     cd, (*global).output_path
-    spawn, cmd_remove_folder
+    spawn, cmd_remove_folder,listening, err_listening
+    output_error, Event, err_listening
+
     full_text = "   > " + cmd_remove_folder
     widget_control, full_view_info, set_value=full_text, /append
     
@@ -2049,11 +2112,13 @@ cmd_create_NeXus_folder = "mkdir -p " + full_folder_name_NeXus
 
 full_text = "   > " + cmd_create_preNeXus_folder
 widget_control, full_view_info, set_value=full_text, /append
-spawn, cmd_create_preNeXus_folder
+spawn, cmd_create_preNeXus_folder, listening, err_listening
+output_error, Event, err_listening
 
 full_text = '   > ' + cmd_create_NeXus_folder 
 widget_control, full_view_info, set_value=full_text, /append
-spawn, cmd_create_NeXus_folder
+spawn, cmd_create_NeXus_folder, listening, err_listening
+output_error, Event, err_listening
 
 ;histogrammed and mapped event file and put histo_mapped file in preNeXus folder
 full_text = " -> Create histo_mapped file:"
@@ -2073,7 +2138,8 @@ for i=0,1 do begin
       full_folder_name_preNeXus
     text_cmd_copy = '> ' + cmd_copy
     widget_control,full_view_info,set_value=text_cmd_copy,/append
-    spawn, cmd_copy
+    spawn, cmd_copy, listening, err_listening
+    output_error, Event, err_listening
 endfor
 
 ;import geometry and mapping file into same directory
@@ -2082,7 +2148,8 @@ cmd_copy += " " + (*global).geometry_file
 cmd_copy += " " + full_folder_name_preNeXus
 text_cmd_copy = '> ' + cmd_copy
 widget_control, full_view_info, set_value=text_cmd_copy, /append
-spawn, cmd_copy
+spawn, cmd_copy,listening, err_listening
+output_error, Event, err_listening
 text_done = '...copy done'
 widget_control, full_view_info, set_value=text_done, /append
 
@@ -2094,7 +2161,8 @@ cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
 cmd_merge += " " + full_folder_name_preNeXus
 text_cmd_merge = '> ' + cmd_merge
 widget_control, full_view_info, set_value=text_cmd_merge,/append
-spawn, cmd_merge
+spawn, cmd_merge,listening, err_listening
+output_error, Event, err_listening
 text_done = '...merge done'
 widget_control, full_view_info, set_value=text_done, /append
 
@@ -2110,7 +2178,8 @@ full_nxt_file_name = full_nx_file_name + ".nxt"
 cmd_translate = "nxtranslate " + full_nxt_file_name
 text_cmd_translate = '> ' + cmd_translate
 widget_control, full_view_info, set_value=text_cmd_translate,/append
-spawn, cmd_translate
+spawn, cmd_translate,listening, err_listening
+output_error, Event, err_listening
 text_done = '... translation done'
 widget_control, full_view_info, set_value=text_done, /append
 
@@ -2123,7 +2192,8 @@ cmd_move_NeXus = "mv " + full_name_of_nexus_file
 cmd_move_NeXus += " " + full_folder_name_NeXus
 text_cmd_move_NeXus = '> ' + cmd_move_NeXus
 WIDGET_CONTROL, full_view_info, SET_VALUE=text_cmd_move_NeXus, /APPEND
-spawn, cmd_move_NeXus
+spawn, cmd_move_NeXus,listening, err_listening
+output_error, Event, err_listening
 text_done = '... move done'
 widget_control, full_view_info, set_value=text_done, /append
 
@@ -2162,3 +2232,25 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 end
+
+
+
+
+
+pro output_error, event, err_listening
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+full_view_info = widget_info(event.top,find_by_uname='log_book_text')
+
+if (err_listening NE '' OR err_listening NE ['']) then begin
+    full_text = 'ERROR: ' + err_listening
+    widget_control, full_view_info, set_value=full_text,/append
+endif
+
+end
+
+
