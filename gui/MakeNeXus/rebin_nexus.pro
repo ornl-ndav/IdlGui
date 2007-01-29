@@ -67,10 +67,10 @@ case Event.id of
               CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
         end
         
-    Widget_Info(wWidget, FIND_BY_UNAME='archive_type_group'): begin
-        archive_type_group_eventcb, Event
-    end
-
+;        Widget_Info(wWidget, FIND_BY_UNAME='archive_type_group'): begin
+;            archive_type_group_eventcb, Event
+;        end
+        
 ;portal_go
         Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
             USER_TEXT_CB, Event
@@ -190,6 +190,10 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
+                   default_log_rebin_coeff : 0.5,$
+                   default_rebin_coeff     : 200,$
+                   DAS_has_experiment_number : 0,$    ;put 1 when DAS will had experiment number
+                   translate_use_experiment_number : 0,$
                    tmp_nxdir_folder : '.makeNeXus_tmp',$
                    full_tmp_nxdir_folder_path : '',$
                    already_archived	: 0,$
@@ -202,12 +206,15 @@ global = ptr_new({$
                    output_path		: '/SNSlocal/users/',$
                    full_path_to_prenexus: '',$
                    full_path_to_nexus : '',$
+                   full_local_folder_name : '',$
                    output_path_for_this_file: '',$
                    instrument		: instrument_list[instrument],$
                    is_file_histo        : 0,$
                    user			: user,$
                    filter_histo_event	: '*neutron*.dat',$
                    find_prenexus_on_das : 0,$
+                   full_local_folder_name_preNeXus : '',$
+                   full_local_folder_name_NeXus : '',$
                    histo_event_filename  	: '',$
                    histo_event_filename_only	: '',$
                    histo_file_name_only: '',$
@@ -293,541 +300,519 @@ hide_log_book_tab_blocker = widget_base(MAIN_BASE,$
                                         frame=0,$
                                         map=map_hide_log_book_tab)
 
-  wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
- 
-  ; Create the first tab base, containing a label and two
-  ; button groups.
-  wT1 = WIDGET_BASE(wTab, TITLE='Input file',$
-	UNAME="wT1",$
-	SCR_XSIZE=550, SCR_YSIZE=250)
+wTab = WIDGET_TAB(MAIN_BASE, LOCATION=location)
 
-  HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
-                                             UNAME='HISTO_EVENT_FILE_RUN_NUMBER',$
-                                             XOFFSET=5,$
-                                             YOFFSET=5,$
-                                             SCR_XSIZE=35,$
-                                             SCR_YSIZE=30,$
-                                             VALUE='Run #',$
-                                             /align_left)
+; Create the first tab base, containing a label and two button groups.
+wT1 = WIDGET_BASE(wTab, TITLE='Input file',$
+                  UNAME="wT1",$
+                  SCR_XSIZE=550, SCR_YSIZE=250)
 
-  HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
-                                          UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
-                                          XOFFSET=40,$
-                                          YOFFSET=5,$
-                                          SCR_XSIZE=50,$
-                                          SCR_YSIZE=30,$
-                                          VALUE='',$   
-                                          /align_left,$
-                                          /editable)
+HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
+                                           UNAME='HISTO_EVENT_FILE_RUN_NUMBER',$
+                                           XOFFSET=5,$
+                                           YOFFSET=5,$
+                                           SCR_XSIZE=35,$
+                                           SCR_YSIZE=30,$
+                                           VALUE='Run #',$
+                                           /align_left)
 
-  OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
-                                                    UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
-                                                    XOFFSET= 90,$
-                                                    YOFFSET = 5,$
-                                                    SCR_XSIZE=60,$ 
-                                                    SCR_YSIZE=30, $
-                                                    VALUE= "O P E N",$
-                                                    tooltip="NeXus file to load")
-        
-  HISTO_EVENT_FILE_TYPE = widget_label(wt1,$
-	UNAME='HISTO_EVENT_FILE_TYPE',$
-	XOFFSET=220,$
-	YOFFSET=5,$
-	SCR_XSIZE=80,$
-	SCR_YSIZE=30,$
-	VALUE='File type: ')
+HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
+                                        UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
+                                        XOFFSET=40,$
+                                        YOFFSET=5,$
+                                        SCR_XSIZE=50,$
+                                        SCR_YSIZE=30,$
+                                        VALUE='',$   
+                                        /align_left,$
+                                        /editable)
 
-  ;where to put the file type (histogram or event)
-  HISTO_EVENT_FILE_TYPE_RESULT = widget_label(wt1,$
-	UNAME='HISTO_EVENT_FILE_TYPE_RESULT',$
-	XOFFSET=300,$
-	YOFFSET=5,$
-	SCR_XSIZE=100,$
-	SCR_YSIZE=25,$
-	VALUE='',$
-	FRAME=1)
+OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
+                                                  UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
+                                                  XOFFSET= 90,$
+                                                  YOFFSET = 5,$
+                                                  SCR_XSIZE=60,$ 
+                                                  SCR_YSIZE=30, $
+                                                  VALUE= "O P E N",$
+                                                  tooltip="NeXus file to load")
+
+HISTO_EVENT_FILE_TYPE = widget_label(wt1,$
+                                     UNAME='HISTO_EVENT_FILE_TYPE',$
+                                     XOFFSET=220,$
+                                     YOFFSET=5,$
+                                     SCR_XSIZE=80,$
+                                     SCR_YSIZE=30,$
+                                     VALUE='File type: ')
+
+                                ;where to put the file type (histogram or event)
+HISTO_EVENT_FILE_TYPE_RESULT = widget_label(wt1,$
+                                            UNAME='HISTO_EVENT_FILE_TYPE_RESULT',$
+                                            XOFFSET=300,$
+                                            YOFFSET=5,$
+                                            SCR_XSIZE=100,$
+                                            SCR_YSIZE=25,$
+                                            VALUE='',$
+                                            FRAME=1)
 
 
-  DISPLAY_BUTTON = WIDGET_BUTTON(wt1,$
-	UNAME="DISPLAY_BUTTON",$
-	XOFFSET=418,$
-	YOFFSET=5,$
-	SCR_XSIZE=120,$
-	SCR_YSIZE=30,$
-	VALUE="Activate preview",$
+DISPLAY_BUTTON = WIDGET_BUTTON(wt1,$
+                               UNAME="DISPLAY_BUTTON",$
+                               XOFFSET=418,$
+                               YOFFSET=5,$
+                               SCR_XSIZE=120,$
+                               SCR_YSIZE=30,$
+                               VALUE="Activate preview",$
 ;	/tracking_events,$
 ;	/pushbutton_events,$
-	sensitive=0,$
-	tooltip="Preview of the data")
+                               sensitive=0,$
+                               tooltip="Preview of the data")
+                               
+DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$ ;draw windows for BSS
+                                    UNAME="DISPLAY_WINDOW_1_BASE",$
+                                    XOFFSET=850,$
+                                    YOFFSET=10,$
+                                    SCR_XSIZE=290,$
+                                    SCR_YSIZE=290)
 
-  DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$	;draw windows for BSS
-	UNAME="DISPLAY_WINDOW_1_BASE",$
-	XOFFSET=850,$
-	YOFFSET=10,$
-	SCR_XSIZE=290,$
-	SCR_YSIZE=290)
+DISPLAY_WINDOW_0 = widget_draw(DISPLAY_WINDOW_1_BASE,$
+                               UNAME = "DISPLAY_WINDOW_0",$
+                               XOFFSET=0,$
+                               YOFFSET=0,$
+                               SCR_XSIZE=290,$	
+                               SCR_YSIZE=140)
 
-  DISPLAY_WINDOW_0 = widget_draw(DISPLAY_WINDOW_1_BASE,$
-	UNAME = "DISPLAY_WINDOW_0",$
-	XOFFSET=0,$
-	YOFFSET=0,$
-	SCR_XSIZE=290,$	
-	SCR_YSIZE=140)
-  
-  DISPLAY_WINDOW_1 = widget_draw(DISPLAY_WINDOW_1_BASE,$
-	UNAME = "DISPLAY_WINDOW_1",$
-	XOFFSET=0,$
-	YOFFSET=145,$
-	SCR_XSIZE=290,$	
-	SCR_YSIZE=140)
+DISPLAY_WINDOW_1 = widget_draw(DISPLAY_WINDOW_1_BASE,$
+                               UNAME = "DISPLAY_WINDOW_1",$
+                               XOFFSET=0,$
+                               YOFFSET=145,$
+                               SCR_XSIZE=290,$	
+                               SCR_YSIZE=140)
 
-  DISPLAY_WINDOW_BASE = widget_base(MAIN_BASE,$		;draw windows for REF
-	UNAME="DISPLAY_WINDOW_BASE",$
-	XOFFSET=850,$
-	YOFFSET=20,$
-	SCR_XSIZE=356,$
-	SCR_YSIZE=280,$
-	map=0)
+DISPLAY_WINDOW_BASE = widget_base(MAIN_BASE,$ ;draw windows for REF
+                                  UNAME="DISPLAY_WINDOW_BASE",$
+                                  XOFFSET=850,$
+                                  YOFFSET=20,$
+                                  SCR_XSIZE=356,$
+                                  SCR_YSIZE=280,$
+                                  map=0)
 
-  DISPLAY_WINDOW = widget_draw(DISPLAY_WINDOW_BASE,$
-	UNAME = "DISPLAY_WINDOW",$
-	XOFFSET=0,$
-	YOFFSET=0,$
-	SCR_XSIZE=356,$		
-	SCR_YSIZE=280)		
+DISPLAY_WINDOW = widget_draw(DISPLAY_WINDOW_BASE,$
+                             UNAME = "DISPLAY_WINDOW",$
+                             XOFFSET=0,$
+                             YOFFSET=0,$
+                             SCR_XSIZE=356,$		
+                             SCR_YSIZE=280)		
 
+;****************LEFT FRAME (info about histo file)
 
+HISTO_INFO_BASE = WIDGET_BASE(wT1,$
+                              UNAME='HISTO_INFO_BASE',$
+                              XOFFSET=5, YOFFSET=37,$
+                              SCR_XSIZE=205, SCR_YSIZE=208,$
+                              map=0)
 
+xoffset = 35
+yoffset = 35
+HISTO_INFO_NUMBER_PIXELIDS = widget_label(HISTO_INFO_BASE,$
+                                          XOFFSET = xoffset,$
+                                          YOFFSET = yoffset,$
+                                          SCR_XSIZE = 60,$	
+                                          SCR_YSIZE = 30,$
+                                          VALUE = "Pixel IDs: ",$
+                                          /align_left)
 
+HISTO_INFO_NUMBER_PIXELIDS_TEXT = widget_label(HISTO_INFO_BASE,$
+                                               UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT",$
+                                               XOFFSET = xoffset + 70,$
+                                               YOFFSET = yoffset,$
+                                               SCR_XSIZE = 60,$
+                                               SCR_YSIZE = 30,$
+                                               value="",$
+                                               frame=1,$
+                                               /align_left)
 
-  ;****************LEFT FRAME (info about histo file)
-
-  HISTO_INFO_BASE = WIDGET_BASE(wT1,$
-	UNAME='HISTO_INFO_BASE',$
-	XOFFSET=5, YOFFSET=37,$
-	SCR_XSIZE=205, SCR_YSIZE=208,$
-	map=0)
-  	
-  xoffset = 35
-  yoffset = 35
-  HISTO_INFO_NUMBER_PIXELIDS = widget_label(HISTO_INFO_BASE,$
-	XOFFSET = xoffset,$
-	YOFFSET = yoffset,$
-	SCR_XSIZE = 60,$	
-	SCR_YSIZE = 30,$
-	VALUE = "Pixel IDs: ",$
-	/align_left)
-
-  HISTO_INFO_NUMBER_PIXELIDS_TEXT = widget_label(HISTO_INFO_BASE,$
-	UNAME = "HISTO_INFO_NUMBER_PIXELIDS_TEXT",$
-	XOFFSET = xoffset + 70,$
-	YOFFSET = yoffset,$
-	SCR_XSIZE = 60,$
-	SCR_YSIZE = 30,$
-	value="",$
-	frame=1,$
-	/align_left)
-
-  yoffset += 40
-  HISTO_INFO_NUMBER_BINS = widget_label(HISTO_INFO_BASE,$
-	XOFFSET = xoffset,$
-	YOFFSET = yoffset,$
-	SCR_XSIZE = 60,$	
-	SCR_YSIZE = 30,$
-	VALUE = "Bins nbr: ",$
-	/align_left)
-
-  HISTO_INFO_NUMBER_BINS_TEXT = widget_label(HISTO_INFO_BASE,$
-	UNAME = "HISTO_INFO_NUMBER_BINS_TEXT",$
-	XOFFSET = xoffset + 70,$
-	YOFFSET = yoffset,$
-	SCR_XSIZE = 60,$
-	SCR_YSIZE = 30,$
-	frame=1,$
-	/align_left)
-
-  HISTO_INFO_LABLE = WIDGET_LABEL(HISTO_INFO_BASE,$
-	XOFFSET= 13,$
-	YOFFSET= 0,$
-	SCR_XSIZE=130,$
-	SCR_YSIZE=30,$
-	VALUE = " Histogram file infos")
-
-  HISTO_INFO_FRAME = WIDGET_LABEL(HISTO_INFO_BASE,$
-	XOFFSET=10, YOFFSET=15,$
-	SCR_XSIZE=180, SCR_YSIZE=170,$
-	FRAME=2, value ='')
-
-
-
-
-
-
-  ;****************LEFT FRAME (to histo a event file)
-
-  HIDE_HISTO_BASE = WIDGET_BASE(wT1,$
-                                UNAME='HIDE_HISTO_BASE',$
-                                XOFFSET=5,$
-                                YOFFSET=37,$
-                                SCR_XSIZE=205,$
-                                SCR_YSIZE=208)
-  
-  y_offset=57
-  HIDE_HISTO_FRAME = WIDGET_LABEL(HIDE_HISTO_BASE,$
-                                  UNAME='HIDE_HISTO_FRAME',$
-                                  XOFFSET=5,$
-                                  YOFFSET=y_offset,$
-                                  SCR_XSIZE=205,$
-                                  SCR_YSIZE=175,$
-                                  VALUE="")
-  
-  NUMBER_PIXELIDS_LABEL_tab1 = WIDGET_LABEL(wT1,$
-                                            UNAME="NUMBER_PIXELIDS_LABEL_tab1",$
-                                            XOFFSET=8,$
-                                            YOFFSET=y_offset+3,$
-                                            SCR_XSIZE=130,$
-                                            SCR_YSIZE=30,$
-                                            VALUE='Number of pixel IDs')
-  
-  NUMBER_PIXELIDS_TEXT_tab1 = WIDGET_TEXT(wT1,$
-                                          UNAME="NUMBER_PIXELIDS_TEXT_tab1",$
-                                          XOFFSET=140,$
-                                          YOFFSET=y_offset+3,$
-                                          SCR_XSIZE=65,$
-                                          SCR_YSIZE=30,$
-                                          VALUE='',$
-                                          /editable,$
-                                          /ALL_EVENTS,$
-                                         /align_left)
-  
-  REBINNING_TYPE_GROUP_wT1 = CW_BGROUP(wT1, ['linear', 'logarithmic'], $
-                                       /ROW, /EXCLUSIVE, /RETURN_NAME,$
-                                       XOFFSET=20,$
-                                       YOFFSET=33+y_offset,$
-                                       SET_VALUE=0.0,$
-                                       UNAME='REBINNING_TYPE_GROUP')
-  
-  left_offset=8
-  top_offset=70+y_offset-7
-  REBINNING_LABEL_wT1 = WIDGET_LABEL(wT1, $
-                                     UNAME="REBINNING_LABEL_wT1",$
-                                     XOFFSET=left_offset,$
-                                     YOFFSET=top_offset,$
-                                     SCR_XSIZE=130, SCR_YSIZE=30,$
-                                     VALUE='Rebin value (microS)')
-  
-  REBINNING_TEXT_wT1 = WIDGET_TEXT(wT1,$
-                                   UNAME="REBINNING_TEXT_wT1",$
-                                   XOFFSET=left_offset+132,$
-                                   YOFFSET=top_offset+2,$
-                                   SCR_XSIZE=65,$
-                                   SCR_YSIZE=30,$
-                                   VALUE='200',$
-                                   /editable,$ ;change that to the default instrument one when openning a file
-                                   /ALL_EVENTS,$
-                                   /align_left)
-  
-  MIN_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
-                                        UNAME="MIN_TIME_BIN_LABEL_wT1",$
-                                        XOFFSET=left_offset+2,$
-                                        YOFFSET=top_offset+37,$
-                                        SCR_XSIZE=120,$
-                                        SCR_YSIZE=30,$
-                                        VALUE='Min Tstamp (microS)')
-  
-  MIN_TIME_BIN_TEXT_wT1 = WIDGET_TEXT(wT1,$
-                                      UNAME='MIN_TIME_BIN_TEXT_wT1',$
-                                      XOFFSET=left_offset+132,$
-                                      YOFFSET=top_offset+35,$
-                                      SCR_XSIZE=65,$
-                                      SCR_YSIZE=30,$
-                                      VALUE='',$
-                                      /editable,$
-                                      /ALL_EVENTS,$
+yoffset += 40
+HISTO_INFO_NUMBER_BINS = widget_label(HISTO_INFO_BASE,$
+                                      XOFFSET = xoffset,$
+                                      YOFFSET = yoffset,$
+                                      SCR_XSIZE = 60,$	
+                                      SCR_YSIZE = 30,$
+                                      VALUE = "Bins nbr: ",$
                                       /align_left)
-  
-  MAX_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
-                                        UNAME="MAX_TIME_BIN_LABEL_wT1",$
-                                        XOFFSET=left_offset+2,$
-                                        YOFFSET=top_offset+70,$
-                                        SCR_XSIZE=120,$
-                                        SCR_YSIZE=30,$
-                                        VALUE='Max Tstamp (microS)')
-  
-  MAX_TIME_BIN_TEXT_wT1 = WIDGET_TEXT(wT1,$
-                                      UNAME='MAX_TIME_BIN_TEXT_wT1',$
-                                      XOFFSET=left_offset+132,$
-                                      YOFFSET=top_offset+70,$
-                                      SCR_XSIZE=65,$
-                                      SCR_YSIZE=30,$
-                                      VALUE='',$
-                                      /editable,$
-                                      /ALL_EVENTS,$
-                                      /align_left)
-  
-  LEFT_FRAME_wT1 = WIDGET_LABEL(wT1,$
+
+HISTO_INFO_NUMBER_BINS_TEXT = widget_label(HISTO_INFO_BASE,$
+                                           UNAME = "HISTO_INFO_NUMBER_BINS_TEXT",$
+                                           XOFFSET = xoffset + 70,$
+                                           YOFFSET = yoffset,$
+                                           SCR_XSIZE = 60,$
+                                           SCR_YSIZE = 30,$
+                                           frame=1,$
+                                           /align_left)
+
+HISTO_INFO_LABLE = WIDGET_LABEL(HISTO_INFO_BASE,$
+                                XOFFSET= 13,$
+                                YOFFSET= 0,$
+                                SCR_XSIZE=130,$
+                                SCR_YSIZE=30,$
+                                VALUE = " Histogram file infos")
+
+HISTO_INFO_FRAME = WIDGET_LABEL(HISTO_INFO_BASE,$
+                                XOFFSET=10, YOFFSET=15,$
+                                SCR_XSIZE=180, SCR_YSIZE=170,$
+                                FRAME=2, value ='')
+
+
+;****************LEFT FRAME (to histo a event file)
+HIDE_HISTO_BASE = WIDGET_BASE(wT1,$
+                              UNAME='HIDE_HISTO_BASE',$
+                              XOFFSET=5,$
+                              YOFFSET=37,$
+                              SCR_XSIZE=205,$
+                              SCR_YSIZE=208)
+
+y_offset=57
+HIDE_HISTO_FRAME = WIDGET_LABEL(HIDE_HISTO_BASE,$
+                                UNAME='HIDE_HISTO_FRAME',$
                                 XOFFSET=5,$
                                 YOFFSET=y_offset,$
-                                SCR_XSIZE=200,$
-                                SCR_YSIZE=170,$
-                                FRAME=2,$
-                                value ='')
-  
-                                ;general info that is outside the tabs
-  HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(Main_base,$
-                                     XOFFSET=565,$
-                                     YOFFSET=25,$
-                                     SCR_XSIZE=275,$
-                                     SCR_YSIZE=280,$
-                                     /scroll,$
-                                     /wrap,$
-                                     UNAME='HISTOGRAM_STATUS')
-  
-  HISTOGRAM_STATUS_wT1_label= widget_label(Main_base,$
-                                           XOFFSET=565,$
-                                           YOFFSET=02,$
-                                           SCR_XSIZE=90,$
-                                           SCR_YSIZE=30,$
-                                           VALUE="General infos:")
-  
-  ;file info that is part of the first tab
- FILE_INFO_BASE = widget_base(wT1,$
-	XOFFSET=215, YOFFSET=35,$
-	SCR_XSIZE=325, SCR_YSIZE=215)
+                                SCR_XSIZE=205,$
+                                SCR_YSIZE=175,$
+                                VALUE="")
 
- FILE_INFO_wT1_label = widget_label(file_info_base,$
-	XOFFSET=2, YOFFSET=0,$
-	SCR_XSIZE=72, SCR_YSIZE=26,$
-	VALUE="File infos")
+NUMBER_PIXELIDS_LABEL_tab1 = WIDGET_LABEL(wT1,$
+                                          UNAME="NUMBER_PIXELIDS_LABEL_tab1",$
+                                          XOFFSET=8,$
+                                          YOFFSET=y_offset+3,$
+                                          SCR_XSIZE=130,$
+                                          SCR_YSIZE=30,$
+                                          VALUE='Number of pixel IDs')
 
- x_offset = 4
- y_offset = 26
- delta_y = 35
- XML_FILE_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset, YOFFSET=y_offset,$
-	SCR_XSIZE=70, SCR_YSIZE=25,$
-	VALUE = "XML FILE: ",/align_left)
- XML_FILE_TEXT = widget_label(file_info_base,$
-	UNAME="XML_FILE_TEXT",$
-	XOFFSET=x_offset + 70, YOFFSET=y_offset,$
-	SCR_XSIZE=240, SCR_YSIZE=25,$
-	frame=1,$
-	/align_left,$
-	VALUE = "")
+NUMBER_PIXELIDS_TEXT_tab1 = WIDGET_TEXT(wT1,$
+                                        UNAME="NUMBER_PIXELIDS_TEXT_tab1",$
+                                        XOFFSET=140,$
+                                        YOFFSET=y_offset+3,$
+                                        SCR_XSIZE=65,$
+                                        SCR_YSIZE=30,$
+                                        VALUE='',$
+                                        /editable,$
+                                        /ALL_EVENTS,$
+                                        /align_left)
 
- y_offset += delta_y
- TITLE_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=50,$
-	SCR_YSIZE=25,$
-	VALUE = "Title: ",$
-	/align_left)
- TITLE_TEXT = widget_label(file_info_base,$
-	UNAME="TITLE_TEXT",$
-	XOFFSET=x_offset + 50,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=260,$
-	SCR_YSIZE=25,$
-	VALUE = "",$
-	frame=1,$
-	/align_left)
+REBINNING_TYPE_GROUP_wT1 = CW_BGROUP(wT1, ['linear', 'logarithmic'], $
+                                     /ROW, /EXCLUSIVE, /RETURN_NAME,$
+                                     XOFFSET=20,$
+                                     YOFFSET=33+y_offset,$
+                                     SET_VALUE=0.0,$
+                                     UNAME='REBINNING_TYPE_GROUP')
 
- y_offset += delta_y
- NOTES_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset, YOFFSET=y_offset,$
-	SCR_XSIZE=50, SCR_YSIZE=25,$
-	VALUE = "Notes: ",/align_left)
- NOTES_TEXT = widget_label(file_info_base,$
-	UNAME="NOTES_TEXT",$
-	XOFFSET=x_offset + 50,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=260, SCR_YSIZE=25,$
-	frame=1,$
-	/align_left,$
-	VALUE = "")
+left_offset=8
+top_offset=70+y_offset-7
+REBINNING_LABEL_wT1 = WIDGET_LABEL(wT1, $
+                                   UNAME="REBINNING_LABEL_wT1",$
+                                   XOFFSET=left_offset+3,$
+                                   YOFFSET=top_offset+2,$
+                                   SCR_XSIZE=130, SCR_YSIZE=30,$
+                                   VALUE='Rebin value (microS)',$
+                                   /align_left)
 
- y_offset += delta_y
- SPECIAL_DESIGNATION_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=85,$
-	SCR_YSIZE=25,$
-	VALUE = "Special notes: ",/align_left)
- NOTES_TEXT = widget_label(file_info_base,$
-	UNAME="SPECIAL_DESIGNATION",$
-	XOFFSET=x_offset + 90,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=220,$
-	SCR_YSIZE=25,$
-	frame=1,$
-	/align_left,$
-	VALUE = "")
+default_rebin_coeff = strcompress((*global).default_rebin_coeff,/remove_all)
+REBINNING_TEXT_wT1 = WIDGET_TEXT(wT1,$
+                                 UNAME="REBINNING_TEXT_wT1",$
+                                 XOFFSET=left_offset+132,$
+                                 YOFFSET=top_offset+3,$
+                                 SCR_XSIZE=65,$
+                                 SCR_YSIZE=30,$
+                                 VALUE=default_rebin_coeff,$
+                                 /editable,$ ;change that to the default instrument one when openning a file
+                                 /ALL_EVENTS,$
+                                 /align_left)
 
- y_offset += delta_y
- SCRIPT_ID_LABEL = widget_label(file_info_base,$
-	XOFFSET=x_offset, YOFFSET=y_offset,$
-	SCR_XSIZE=70, SCR_YSIZE=25,$
-	VALUE = "Script ID: ",/align_left)
- SCRIPT_ID_TEXT = widget_label(file_info_base,$
-	UNAME="SCRIPT_ID_TEXT",$
-	XOFFSET=x_offset + 70,$
-	YOFFSET=y_offset,$
-	SCR_XSIZE=140,$ 
-	SCR_YSIZE=25,$
-	frame=1,$
-	/align_left,$
-	VALUE = "")
+MIN_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
+                                      UNAME="MIN_TIME_BIN_LABEL_wT1",$
+                                      XOFFSET=left_offset+2,$
+                                      YOFFSET=top_offset+37,$
+                                      SCR_XSIZE=120,$
+                                      SCR_YSIZE=30,$
+                                      VALUE='Min Tstamp (microS)')
 
- complete_infofile_offset_x = 220
- complete_infofile_offset_y = y_offset-2
- COMPLETE_RUNINFO_FILE = widget_button(file_info_base,$
-	UNAME="COMPLETE_RUNINFO_FILE",$
-	XOFFSET=complete_infofile_offset_x,$
-	YOFFSET=complete_infofile_offset_y,$
-	SCR_XSIZE=100,$
-	SCR_YSIZE=20,$
-	VALUE="runinfo.xml",$
-	/tracking_events,$
-	/pushbutton_events,$
-	tooltip="Display full runinfo.xml file")
- 
- complete_infofile_offset_y += 22
- COMPLETE_CVINFO_FILE = widget_button(file_info_base,$
-	UNAME="COMPLETE_CVINFO_FILE",$
-	XOFFSET=complete_infofile_offset_x,$
-	YOFFSET=complete_infofile_offset_y,$
-	SCR_XSIZE=100,$
-	SCR_YSIZE=20,$
-	VALUE="cvinfo.xml",$
-	/tracking_events,$
-	tooltip="Display full cvinfo.xml file")
+MIN_TIME_BIN_TEXT_wT1 = WIDGET_TEXT(wT1,$
+                                    UNAME='MIN_TIME_BIN_TEXT_wT1',$
+                                    XOFFSET=left_offset+132,$
+                                    YOFFSET=top_offset+35,$
+                                    SCR_XSIZE=65,$
+                                    SCR_YSIZE=30,$
+                                    VALUE='',$
+                                    /editable,$
+                                    /ALL_EVENTS,$
+                                    /align_left)
 
-  FILE_INFO_wT1 = WIDGET_label(file_info_base,$
-	XOFFSET=0, YOFFSET=15,$	
-	SCR_XSIZE=325, SCR_YSIZE=190,$
-	VALUE="", $
-	UNAME="FILE_INFO_wT1",$
-	frame=2)
+MAX_TIME_BIN_LABEL_wT1 = WIDGET_LABEL(wT1, $
+                                      UNAME="MAX_TIME_BIN_LABEL_wT1",$
+                                      XOFFSET=left_offset+2,$
+                                      YOFFSET=top_offset+70,$
+                                      SCR_XSIZE=120,$
+                                      SCR_YSIZE=30,$
+                                      VALUE='Max Tstamp (microS)')
 
-  COMPLETE_XML_DISPLAY_TEXT = widget_text(MAIN_BASE,$
-	UNAME="COMPLETE_XML_DISPLAY_TEXT",$
-	XOFFSET=5,$
-	YOFFSET=320,$
-	SCR_XSIZE=835,$
-	SCR_YSIZE=340,$
-	/wrap,$
-	/scroll)
+MAX_TIME_BIN_TEXT_wT1 = WIDGET_TEXT(wT1,$
+                                    UNAME='MAX_TIME_BIN_TEXT_wT1',$
+                                    XOFFSET=left_offset+132,$
+                                    YOFFSET=top_offset+70,$
+                                    SCR_XSIZE=65,$
+                                    SCR_YSIZE=30,$
+                                    VALUE='',$
+                                    /editable,$
+                                    /ALL_EVENTS,$
+                                    /align_left)
 
-  CLOSE_COMPLETE_XML_DISPLAY_TEXT = widget_button(MAIN_BASE,$
-	UNAME="CLOSE_COMPLETE_XML_DISPLAY_TEXT",$
-	XOFFSET=300,$
-	YOFFSET=660,$
-	SCR_XSIZE=150,$
-	SCR_YSIZE=30,$
-	VALUE = "CLOSE XML WINDOW",$
-	/tracking_events,$
-	tooltip="Remove xml extension window")
+LEFT_FRAME_wT1 = WIDGET_LABEL(wT1,$
+                              XOFFSET=5,$
+                              YOFFSET=y_offset,$
+                              SCR_XSIZE=200,$
+                              SCR_YSIZE=170,$
+                              FRAME=2,$
+                              value ='')
 
-  wT2 = WIDGET_BASE(wTab, TITLE='Settings')
-  
-  OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_label(wT2, $
-	XOFFSET= 5, YOFFSET = 5, $
-	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Mapping file",$
-	UNAME='OPEN_MAPPING_FILE_BUTTON')
+;general info that is outside the tabs
+HISTOGRAM_STATUS_wT1 = WIDGET_TEXT(Main_base,$
+                                   XOFFSET=565,$
+                                   YOFFSET=25,$
+                                   SCR_XSIZE=275,$
+                                   SCR_YSIZE=280,$
+                                   /scroll,$
+                                   /wrap,$
+                                   UNAME='HISTOGRAM_STATUS')
 
-  MAPPING_FILE_LABEL_tab2 = WIDGET_label(wT2,$
-	UNAME='MAPPING_FILE_LABEL',$
-	XOFFSET=135, YOFFSET=5,$
-	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = mapping_file,$
-	frame=1,$
-	/align_left)
+HISTOGRAM_STATUS_wT1_label= widget_label(Main_base,$
+                                         XOFFSET=565,$
+                                         YOFFSET=02,$
+                                         SCR_XSIZE=90,$
+                                         SCR_YSIZE=30,$
+                                         VALUE="General infos:")
 
-  DEFAULT_TRANSLATION_BUTTON_tab2 = WIDGET_label(wT2, $
-	XOFFSET= 5, YOFFSET = 45, $
-	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Translation file",$
-	UNAME='DEFAULT_TRANSLATION_BUTTON')
+;file info that is part of the first tab
+FILE_INFO_BASE = widget_base(wT1,$
+                             XOFFSET=215, YOFFSET=35,$
+                             SCR_XSIZE=325, SCR_YSIZE=215)
 
-  DEFAULT_TRANSLATION_FILE_tab2 = WIDGET_label(wT2,$
-	UNAME='DEFAULT_TRANSLATION_FILE',$
-	XOFFSET=135, YOFFSET=45,$
-	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = translation_file,$
-	frame=1,$
-	/align_left)
+FILE_INFO_wT1_label = widget_label(file_info_base,$
+                                   XOFFSET=2, YOFFSET=0,$
+                                   SCR_XSIZE=72, SCR_YSIZE=26,$
+                                   VALUE="File infos")
 
-  DEFAULT_GEOMETRY_BUTTON_tab2 = WIDGET_label(wT2, $
-	XOFFSET= 5, YOFFSET = 85, $
-	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Geometry file",$
-	UNAME='DEFAULT_GEOMETRY_BUTTON')
+x_offset = 4
+y_offset = 26
+delta_y = 35
+XML_FILE_LABEL = widget_label(file_info_base,$
+                              XOFFSET=x_offset, YOFFSET=y_offset,$
+                              SCR_XSIZE=70, SCR_YSIZE=25,$
+                              VALUE = "XML FILE: ",/align_left)
+XML_FILE_TEXT = widget_label(file_info_base,$
+                             UNAME="XML_FILE_TEXT",$
+                             XOFFSET=x_offset + 70, YOFFSET=y_offset,$
+                             SCR_XSIZE=240, SCR_YSIZE=25,$
+                             frame=1,$
+                             /align_left,$
+                             VALUE = "")
 
-  DEFAULT_GEOMETRY_FILE_tab2 = WIDGET_label(wT2,$
-	UNAME='DEFAULT_GEOMETRY_FILE',$
-	XOFFSET=135, YOFFSET=85,$
-	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = geometry_file,$
-	frame=1,$
-	/align_left)
+y_offset += delta_y
+TITLE_LABEL = widget_label(file_info_base,$
+                           XOFFSET=x_offset,$
+                           YOFFSET=y_offset,$
+                           SCR_XSIZE=50,$
+                           SCR_YSIZE=25,$
+                           VALUE = "Title: ",$
+                           /align_left)
+TITLE_TEXT = widget_label(file_info_base,$
+                          UNAME="TITLE_TEXT",$
+                          XOFFSET=x_offset + 50,$
+                          YOFFSET=y_offset,$
+                          SCR_XSIZE=260,$
+                          SCR_YSIZE=25,$
+                          VALUE = "",$
+                          frame=1,$
+                          /align_left)
 
-  DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
-	XOFFSET= 5, YOFFSET = 125, $
-	SCR_XSIZE=130, SCR_YSIZE=30, $
-	VALUE= "Working path",$
-	UNAME='DEFAULT_PATH_BUTTON')
+y_offset += delta_y
+NOTES_LABEL = widget_label(file_info_base,$
+                           XOFFSET=x_offset, YOFFSET=y_offset,$
+                           SCR_XSIZE=50, SCR_YSIZE=25,$
+                           VALUE = "Notes: ",/align_left)
+NOTES_TEXT = widget_label(file_info_base,$
+                          UNAME="NOTES_TEXT",$
+                          XOFFSET=x_offset + 50,$
+                          YOFFSET=y_offset,$
+                          SCR_XSIZE=260, SCR_YSIZE=25,$
+                          frame=1,$
+                          /align_left,$
+                          VALUE = "")
 
-  DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
-	UNAME='DEFAULT_FINAL_PATH_tab2',$
-	XOFFSET=135, YOFFSET=125,$
-	SCR_XSIZE=408, SCR_YSIZE=32, $
-	value = output_path,$
-	/editable)
+y_offset += delta_y
+SPECIAL_DESIGNATION_LABEL = widget_label(file_info_base,$
+                                         XOFFSET=x_offset,$
+                                         YOFFSET=y_offset,$
+                                         SCR_XSIZE=85,$
+                                         SCR_YSIZE=25,$
+                                         VALUE = "Special notes: ",/align_left)
+NOTES_TEXT = widget_label(file_info_base,$
+                          UNAME="SPECIAL_DESIGNATION",$
+                          XOFFSET=x_offset + 90,$
+                          YOFFSET=y_offset,$
+                          SCR_XSIZE=220,$
+                          SCR_YSIZE=25,$
+                          frame=1,$
+                          /align_left,$
+                          VALUE = "")
+
+y_offset += delta_y
+SCRIPT_ID_LABEL = widget_label(file_info_base,$
+                               XOFFSET=x_offset, YOFFSET=y_offset,$
+                               SCR_XSIZE=70, SCR_YSIZE=25,$
+                               VALUE = "Script ID: ",/align_left)
+SCRIPT_ID_TEXT = widget_label(file_info_base,$
+                              UNAME="SCRIPT_ID_TEXT",$
+                              XOFFSET=x_offset + 70,$
+                              YOFFSET=y_offset,$
+                              SCR_XSIZE=140,$ 
+                              SCR_YSIZE=25,$
+                              frame=1,$
+                              /align_left,$
+                              VALUE = "")
+
+complete_infofile_offset_x = 220
+complete_infofile_offset_y = y_offset-2
+COMPLETE_RUNINFO_FILE = widget_button(file_info_base,$
+                                      UNAME="COMPLETE_RUNINFO_FILE",$
+                                      XOFFSET=complete_infofile_offset_x,$
+                                      YOFFSET=complete_infofile_offset_y,$
+                                      SCR_XSIZE=100,$
+                                      SCR_YSIZE=20,$
+                                      VALUE="runinfo.xml",$
+                                      /tracking_events,$
+                                      /pushbutton_events,$
+                                      tooltip="Display full runinfo.xml file")
+
+complete_infofile_offset_y += 22
+COMPLETE_CVINFO_FILE = widget_button(file_info_base,$
+                                     UNAME="COMPLETE_CVINFO_FILE",$
+                                     XOFFSET=complete_infofile_offset_x,$
+                                     YOFFSET=complete_infofile_offset_y,$
+                                     SCR_XSIZE=100,$
+                                     SCR_YSIZE=20,$
+                                     VALUE="cvinfo.xml",$
+                                     /tracking_events,$
+                                     tooltip="Display full cvinfo.xml file")
+
+FILE_INFO_wT1 = WIDGET_label(file_info_base,$
+                             XOFFSET=0, YOFFSET=15,$	
+                             SCR_XSIZE=325, SCR_YSIZE=190,$
+                             VALUE="", $
+                             UNAME="FILE_INFO_wT1",$
+                             frame=2)
+
+COMPLETE_XML_DISPLAY_TEXT = widget_text(MAIN_BASE,$
+                                        UNAME="COMPLETE_XML_DISPLAY_TEXT",$
+                                        XOFFSET=5,$
+                                        YOFFSET=320,$
+                                        SCR_XSIZE=835,$
+                                        SCR_YSIZE=340,$
+                                        /wrap,$
+                                        /scroll)
+
+CLOSE_COMPLETE_XML_DISPLAY_TEXT = widget_button(MAIN_BASE,$
+                                                UNAME="CLOSE_COMPLETE_XML_DISPLAY_TEXT",$
+                                                XOFFSET=300,$
+                                                YOFFSET=660,$
+                                                SCR_XSIZE=150,$
+                                                SCR_YSIZE=30,$
+                                                VALUE = "CLOSE XML WINDOW",$
+                                                /tracking_events,$
+                                                tooltip="Remove xml extension window")
+
+wT2 = WIDGET_BASE(wTab, TITLE='Settings')
+
+OPEN_MAPPING_FILE_BUTTON_tab2 = WIDGET_label(wT2, $
+                                             XOFFSET= 5, YOFFSET = 5, $
+                                             SCR_XSIZE=130, SCR_YSIZE=30, $
+                                             VALUE= "Mapping file",$
+                                             UNAME='OPEN_MAPPING_FILE_BUTTON')
+
+MAPPING_FILE_LABEL_tab2 = WIDGET_label(wT2,$
+                                       UNAME='MAPPING_FILE_LABEL',$
+                                       XOFFSET=135, YOFFSET=5,$
+                                       SCR_XSIZE=408, SCR_YSIZE=32, $
+                                       value = mapping_file,$
+                                       frame=1,$
+                                       /align_left)
+
+DEFAULT_TRANSLATION_BUTTON_tab2 = WIDGET_label(wT2, $
+                                               XOFFSET= 5, YOFFSET = 45, $
+                                               SCR_XSIZE=130, SCR_YSIZE=30, $
+                                               VALUE= "Translation file",$
+                                               UNAME='DEFAULT_TRANSLATION_BUTTON')
+
+DEFAULT_TRANSLATION_FILE_tab2 = WIDGET_label(wT2,$
+                                             UNAME='DEFAULT_TRANSLATION_FILE',$
+                                             XOFFSET=135, YOFFSET=45,$
+                                             SCR_XSIZE=408, SCR_YSIZE=32, $
+                                             value = translation_file,$
+                                             frame=1,$
+                                             /align_left)
+
+DEFAULT_GEOMETRY_BUTTON_tab2 = WIDGET_label(wT2, $
+                                            XOFFSET= 5, YOFFSET = 85, $
+                                            SCR_XSIZE=130, SCR_YSIZE=30, $
+                                            VALUE= "Geometry file",$
+                                            UNAME='DEFAULT_GEOMETRY_BUTTON')
+
+DEFAULT_GEOMETRY_FILE_tab2 = WIDGET_label(wT2,$
+                                          UNAME='DEFAULT_GEOMETRY_FILE',$
+                                          XOFFSET=135, YOFFSET=85,$
+                                          SCR_XSIZE=408, SCR_YSIZE=32, $
+                                          value = geometry_file,$
+                                          frame=1,$
+                                          /align_left)
+
+DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+                                         XOFFSET= 5, YOFFSET = 125, $
+                                         SCR_XSIZE=130, SCR_YSIZE=30, $
+                                         VALUE= "Working path",$
+                                         UNAME='DEFAULT_PATH_BUTTON')
+
+DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
+                                      UNAME='DEFAULT_FINAL_PATH_tab2',$
+                                      XOFFSET=135, YOFFSET=125,$
+                                      SCR_XSIZE=408, SCR_YSIZE=32, $
+                                      value = output_path,$
+                                      /editable)
 
 ;   Create a base widget to hold the 'Create NeXus' button, and
 ;   the button itself.
-  wControl = WIDGET_BASE(MAIN_BASE)
-  CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus file',$
-                               UNAME = "CREATE_NEXUS",$
-                               XOFFSET=5,$
-                               YOFFSET=277,$
-                               SCR_XSIZE=200,$
-                               SCR_YSIZE=30,$
-                               tooltip="Create NeXus")
-  
-  exist_frame = WIDGET_BASE(MAIN_BASE, $
-                            UNAME="exist_FRAME",$
-                            XOFFSET=215,$
-                            YOFFSET=277,$
-                            SCR_XSIZE=290,$
-                            SCR_YSIZE=35,$
-                           map=0)
-  
-  exist_label = WIDGET_LABEL(exist_frame,$
-                             UNAME="exist_LABEL",$
-                             XOFFSET=30,$
-                             YOFFSET=3,$
-                             SCR_XSIZE=380,$
-                             SCR_YSIZE=65,$
-                             frame=0,value="")
-  
-;  exist_or_not_base;  = WIDGET_BASE(MAIN_BASE,$
-;                                   XOFFSET=240,$
-;                                   YOFFSET=277,$
-;                                   SCR_XSIZE=240,$
-;                                   SCR_YSIZE=30,$
-;                                   UNAME="exist_or_not_base",$
-;                                  map=0)
-  
-;   exist_or_not_label = WIDGET_LABEL(exist_or_not_base,$
-;                                     XOFFSET=60, YOFFSET=0,$
-;                                     SCR_XSIZE=160, SCR_YSIZE=30,$
-;                                     VALUE="NEXUS FILE DOES NOT EXIST",$
-;                                     FRAME=2)
+wControl = WIDGET_BASE(MAIN_BASE)
+CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus file',$
+                             UNAME = "CREATE_NEXUS",$
+                             XOFFSET=5,$
+                             YOFFSET=277,$
+                             SCR_XSIZE=200,$
+                             SCR_YSIZE=30,$
+                             tooltip="Create NeXus")
 
-  ;archive or not
+; exist_frame = WIDGET_BASE(MAIN_BASE, $
+;                           UNAME="exist_FRAME",$
+;                           XOFFSET=215,$
+;                           YOFFSET=277,$
+;                           SCR_XSIZE=290,$
+;                           SCR_YSIZE=35,$
+;                           map=0)
+
+; exist_label = WIDGET_LABEL(exist_frame,$
+;                            UNAME="exist_LABEL",$
+;                            XOFFSET=30,$
+;                            YOFFSET=3,$
+;                            SCR_XSIZE=380,$
+;                            SCR_YSIZE=65,$
+;                            frame=0,value="")
+
+;archive or not
 already_archived_base = widget_base(MAIN_BASE,$
                                     uname='already_archived_base',$
                                     xoffset=240,$
@@ -838,69 +823,72 @@ already_archived_base = widget_base(MAIN_BASE,$
                                     map=0)
 
 already_archived_label = widget_label(already_archived_base,$
-                                      xoffset=35,$
-                                      yoffset=5,$
-                                      value='Run number already archived',$
-                                      /align_center)
+                                      uname='already_archived_label',$
+                                      xoffset=5,$
+                                      yoffset=0,$
+                                      value='',$
+                                      /align_center,$
+                                     scr_xsize=300,$
+                                     scr_ysize=30)
 
-archive_nexus_base = widget_base(MAIN_BASE,$
-                                 uname='archive_nexus_base',$
-                                 xoffset=240,$
-                                   yoffset=275,$
-                                 scr_xsize=270,$
-                                 scr_ysize=30,frame=2,$
-                                  map=0)
+; archive_nexus_base = widget_base(MAIN_BASE,$
+;                                  uname='archive_nexus_base',$
+;                                  xoffset=240,$
+;                                    yoffset=275,$
+;                                  scr_xsize=270,$
+;                                  scr_ysize=30,frame=2,$
+;                                   map=0)
 
-archive_list = ['Yes',$
-                   'No']
-archive_type_group = CW_BGROUP(archive_nexus_base,$ 
-                               archive_list,$
-                                 /exclusive,$
-                                 /RETURN_NAME,$
-                                 XOFFSET=160,$
-                                 YOFFSET=0,$
-                                 SET_VALUE=1.0,$
-                                 row=1,$
-                                 UNAME='archive_type_group')
-  archive_label = widget_label(archive_nexus_base,$
-                               xoffset=5,$
-                               yoffset=5,$
-                               value='Archive this run number: ',$
-                               /align_left)
-  
+; archive_list = ['Yes',$
+;                    'No']
+; archive_type_group = CW_BGROUP(archive_nexus_base,$ 
+;                                archive_list,$
+;                                /exclusive,$
+;                                /RETURN_NAME,$
+;                                XOFFSET=160,$
+;                                YOFFSET=0,$
+;                                SET_VALUE=1.0,$
+;                                row=1,$
+;                                UNAME='archive_type_group')
+; archive_label = widget_label(archive_nexus_base,$
+;                              xoffset=5,$
+;                              yoffset=5,$
+;                              value='Archive this run number: ',$
+;                              /align_left)
 
-  log_book_base = WIDGET_BASE(wTab, TITLE='Log book',$
-                              UNAME="log_book_base",$
-                              SCR_XSIZE=550, SCR_YSIZE=250)
-                             
 
-  log_book_text = widget_text(log_book_base,$
-                              uname='log_book_text',$
-                              scr_xsize=550,$
-                              scr_ysize=250,$
-                              xoffset=0,$
-                              yoffset=0,$
-                             /scroll,$
-                             /wrap)
+log_book_base = WIDGET_BASE(wTab, TITLE='Log book',$
+                            UNAME="log_book_base",$
+                            SCR_XSIZE=550, SCR_YSIZE=250)
 
-  
+
+log_book_text = widget_text(log_book_base,$
+                            uname='log_book_text',$
+                            scr_xsize=550,$
+                            scr_ysize=250,$
+                            xoffset=0,$
+                            yoffset=0,$
+                            /scroll,$
+                            /wrap)
+
+
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
-  WIDGET_CONTROL, MAIN_BASE, /REALIZE
-  WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
-  Widget_Control, CREATE_NEXUS, sensitive=0
-  Widget_control, DISPLAY_WINDOW_1_BASE, map=0
-  XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-    
-  if ((*global).runinfo_xml_filename EQ '') then begin
-     widget_control, COMPLETE_RUNINFO_FILE, sensitive=0
-  endif
+WIDGET_CONTROL, MAIN_BASE, /REALIZE
+WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
+Widget_Control, CREATE_NEXUS, sensitive=0
+Widget_control, DISPLAY_WINDOW_1_BASE, map=0
+XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-  if ((*global).cvinfo_xml_filename EQ '') then begin
-     widget_control, COMPLETE_CVINFO_FILE, sensitive=0
-  endif
-  
+if ((*global).runinfo_xml_filename EQ '') then begin
+    widget_control, COMPLETE_RUNINFO_FILE, sensitive=0
+endif
+
+if ((*global).cvinfo_xml_filename EQ '') then begin
+    widget_control, COMPLETE_CVINFO_FILE, sensitive=0
+endif
+
 
 
 end
@@ -909,5 +897,7 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro rebin_nexus, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+
+PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+
 end
