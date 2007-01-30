@@ -193,6 +193,7 @@ global = ptr_new({$
                    default_log_rebin_coeff : 0.5,$
                    default_rebin_coeff     : 200,$
                    DAS_has_experiment_number : 0,$    ;put 1 when DAS will had experiment number
+                   DAS_mouting_point : '-DAS-FS/',$
                    translate_use_experiment_number : 0,$
                    tmp_nxdir_folder : '.makeNeXus_tmp',$
                    full_tmp_nxdir_folder_path : '',$

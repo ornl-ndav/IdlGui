@@ -1308,6 +1308,10 @@ endif else begin
     full_path_to_nexus = get_full_path_to_preNeXus_path(listening_nexus,$
                                                         instrument,$
                                                         run_number)
+    full_path_to_prenexus = get_full_path_to_preNeXus_path(listening_prenexus,$
+                                                           instrument,$
+                                                           run_number)
+
     (*global).full_path_to_nexus = full_path_to_nexus
     
     result_archived = strmatch(full_path_to_nexus,"ERROR*")
@@ -1970,6 +1974,7 @@ endif else begin                ; file is on DAS
         
         id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
         WIDGET_CONTROL, id_0, GET_VALUE = lin_log
+        (*global).lin_log = lin_log
         
         id_1 = Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXELIDS_TEXT_tab1')
         WIDGET_CONTROL, id_1, GET_VALUE =number_pixels
@@ -1983,16 +1988,16 @@ endif else begin                ; file is on DAS
         id_4 = Widget_Info(wWidget, FIND_BY_UNAME='MIN_TIME_BIN_TEXT_wT1')
         WIDGET_CONTROL, id_4, GET_VALUE =min_time_bin
         
-        (*global).lin_log = lin_log
         (*global).number_pixels = number_pixels
         (*global).rebinning = rebinning
         (*global).max_time_bin = max_time_bin
         (*global).min_time_bin = min_time_bin
         event_filename = (*global).histo_event_filename
         
-        das_run_dir = get_das_run_dir(event_filename)
-        
         if (lin_log EQ 0) then begin ;linear rebinning
+            
+            das_run_dir = get_das_run_dir(event_filename)
+            
             (*global).default_rebin_coeff = rebinning
             cmd_translate = 'TS_translate.sh '
             cmd_translate += das_run_dir
@@ -2000,29 +2005,34 @@ endif else begin                ; file is on DAS
             cmd_translate += ' --max_time_bin ' + max_time_bin
             cmd_translate += ' --time_offset ' + min_time_bin
             
-        endif else begin        ;log rebinning
-            (*global).default_log_rebin_coeff = rebinning
-        endelse
-        
 ;tmp directory
-        cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
+            cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
+            
+            parent_folder_name = (*global).output_path
+            cmd_translate += ' --archiveRoot ' + parent_folder_name
+            cmd_translate += ' --no_archive'
+            
+            full_text = ' > ' + cmd_translate
+            widget_control, full_view_info, set_value=full_text, /append
+            spawn, cmd_translate, listening, err_listening
+            output_error, Event, err_listening
+            
+            text = '..done'
+            widget_control, view_info, set_value=text, /append
+            text = 'Location of NeXus: ' + parent_folder_name
+            widget_control, view_info, set_value=text, /append
+            full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+            full_text += '/' + (*global).instrument
+            widget_control, full_view_info, set_value=full_text, /append
+            
+        endif else begin        ;log rebinning 
+                                ;this if for not archive and event files
 
-        parent_folder_name = (*global).output_path
-        cmd_translate += ' --archiveRoot ' + parent_folder_name
-        cmd_translate += ' --no_archive'
+            (*global).default_log_rebin_coeff = rebinning
+                                ;use the old way
+            create_nexus_the_old_way, event
 
-        full_text = ' > ' + cmd_translate
-        widget_control, full_view_info, set_value=full_text, /append
-        spawn, cmd_translate, listening, err_listening
-        output_error, Event, err_listening
-
-        text = '..done'
-        widget_control, view_info, set_value=text, /append
-        text = 'Location of NeXus: ' + parent_folder_name
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
-        full_text += '/' + (*global).instrument
-        widget_control, full_view_info, set_value=full_text, /append
+        endelse
         
     endelse
     
@@ -2060,18 +2070,20 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 file=(*global).histo_event_filename ;full name of event or histo file
 run_number = (*global).run_number ;run number 
 is_file_histo = (*global).is_file_histo
+already_archived = (*global).already_archived
+instrument = (*global).instrument
 
 ;isolate proposal number from full file name
 result = get_proposal_experiment_number(event, $
                                         file,$
-                                        (*global).already_archived) 
+                                        already_archived) 
 proposal_number = result[0]
 experiment_number = result[1]
 
 (*global).proposal_number = proposal_number
 (*global).experiment_number = experiment_number
 
-parent_folder_name = (*global).output_path + (*global).instrument
+parent_folder_name = (*global).output_path + instrument
 full_folder_name = parent_folder_name + "/" + proposal_number 
 
 if ((*global).translate_use_experiment_number EQ 1) then begin
@@ -2132,15 +2144,37 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
 full_path_to_preNeXus = (*global).full_path_to_preNeXus
 
 ;copy data
-files_to_copy = ["*.xml","*.nxt"]
-for i=0,1 do begin
-    cmd_copy = "cp " + full_path_to_preNeXus + files_to_copy[i] + " " + $
-      full_folder_name_preNeXus
+if (already_archived EQ 1) then begin  ;files already archived
+    files_to_copy = ["*.xml","*.nxt"]
+    for i=0,1 do begin
+        cmd_copy = "cp " + full_path_to_preNeXus + files_to_copy[i] + " " + $
+          full_folder_name_preNeXus
+        text_cmd_copy = '> ' + cmd_copy
+        widget_control,full_view_info,set_value=text_cmd_copy,/append
+        spawn, cmd_copy, listening, err_listening
+        output_error, Event, err_listening
+    endfor
+endif else begin ;files not archived yet
+
+;copy beamtimeinfo and cvlist
+    path_up_to_proposal = '/' + instrument + (*global).DAS_mouting_point + '/'
+    path_up_to_proposal += proposal_number + '/'
+    beamtime_info_file_name = path_up_to_proposal + instrument + '_beamtimeinfo.xml'
+    cvlist_file_name = path_up_to_proposal + instrument + '_cvlist.xml'
+
+    path_up_to_run_number = path_up_to_proposal + instrument + '_' + run_number + '/'
+    other_xml_files = path_up_to_run_number + '*.xml'
+
+    cmd_copy = 'cp ' + beamtime_info_file_name + ' ' + cvlist_file_name
+    cmd_copy += ' ' + other_xml_files
+    cmd_copy += ' ' + full_folder_name_preNeXus
+    
     text_cmd_copy = '> ' + cmd_copy
     widget_control,full_view_info,set_value=text_cmd_copy,/append
     spawn, cmd_copy, listening, err_listening
     output_error, Event, err_listening
-endfor
+
+endelse
 
 ;import geometry and mapping file into same directory
 cmd_copy = "cp " + (*global).mapping_file 
