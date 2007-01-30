@@ -1,7 +1,22 @@
 function get_list_of_runs, instrument, runs_to_process
 
 if (instrument EQ 'REF_L') then begin
-    array_of_runs = strsplit(runs_to_process,',',count=length,/extract)
+    array_of_runs = ''
+    array_of_runs_1 = strsplit(runs_to_process,',',count=length,/extract)
+    array_of_runs_2 = strarr(length)
+    for j=0,(length-1) do begin
+        array_of_runs_2 = strsplit(array_of_runs_1[j],':',count=length_1,/extract)
+        if (length_1 GT 1) then begin
+            min = fix(array_of_runs_2[0])
+            max = fix(array_of_runs_2[1])
+            array_of_runs_add = strcompress(indgen(max-min+1)+min,/remove_all)
+            array_of_runs = [array_of_runs, array_of_runs_add]
+        endif else begin
+            array_of_runs = [array_of_runs,array_of_runs_2]
+        endelse
+    endfor
+    size_array_of_runs = size(array_of_runs)
+    array_of_runs = array_of_runs[1:size_array_of_runs[1]-1]
 endif else begin
     size_array = size(runs_to_process)
     size_is = size_array[1]
@@ -576,7 +591,7 @@ if (push_button EQ 0) then begin
 
 ;put help contains
     (*global).push_button = 1
-    text = '1924,1925,1930,1946,1947,1950'
+    text = '1920:1924,1928,1930,1950:1955'
 
 endif else begin
 
@@ -1088,8 +1103,6 @@ endif else begin
         ;put nexus run number into list of nexus runs if REF_L
         runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
         if (instrument EQ 'REF_L') then begin
-;            widget_control, runs_to_process_text_id, get_value=previous_text
-;            new_text = strcompress(run_number,/remove_all) + ',' + previous_text
             new_text = strcompress(run_number,/remove_all)
             widget_control, runs_to_process_text_id, set_value=new_text
         endif else begin ;only copy run number into run to process if REF_M
