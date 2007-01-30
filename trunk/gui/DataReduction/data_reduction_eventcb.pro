@@ -2246,6 +2246,8 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         widget_control, full_view_info, set_value=full_text, /append
         widget_control, view_info, set_value=text, /append
         (*global).entering_selection_of_plots_by_yes_button = 0
+        screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+        widget_control, screen_base_id, map=1
         
     endelse
 
@@ -2844,18 +2846,21 @@ widget_control, intermediate_plot_base, map=0
 
 ;if none of the plots have been selected change status of intermediate
 ;plots to NO
+screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
 if (number_of_plots_selected EQ 0) then begin
 
     inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
     widget_control, inter_id, set_value=1
     full_text = ' NONE'
     widget_control, full_view_info, set_value=full_text, /append
+    widget_control, screen_base_id, map=1
 
 endif else begin
     
     inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
     widget_control, inter_id, set_value=0
-    
+    widget_control, screen_base_id, map=0
+
 endelse
 
 text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
@@ -3154,6 +3159,9 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
 
         (*global).entering_selection_of_plots_by_yes_button = 0        
 
+        screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+        widget_control, screen_base_id, map=1
+
     endelse
 
     (*global).entering_intermediate_file_output_for_first_time = 0
@@ -3189,7 +3197,6 @@ indx0 = value[0]                ;.sdc
 indx1 = value[1]                ;.bkg
 indx2 = value[2]                ;.nom
 indx3 = value[3]                ;.bnm
-
 
 number_of_plots_selected = 0
 
@@ -3230,10 +3237,9 @@ if (indx1 EQ 1) then begin
     widget_control, full_view_info, set_value=full_text, /append
     
 endif else begin
-    
                                 ;remove this plot from the list of selected plots
     indx1 = 0
-    new_value = [indx0, indx1, indx2, indx3, indx4]
+    new_value = [indx0, indx1, indx2, indx3]
     
     widget_control,list_of_plots_id,set_value=new_value
     widget_control, tab_2_id, base_set_title=''
@@ -3283,17 +3289,20 @@ widget_control, intermediate_plot_base, map=0
 
 ;if none of the plots have been selected change status of intermediate
 ;plots to NO
+screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
 if (number_of_plots_selected EQ 0) then begin
 
     inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
     widget_control, inter_id, set_value=1
     full_text = ' NONE'
     widget_control, full_view_info, set_value=full_text, /append
+    widget_control, screen_base_id, map=1
 
 endif else begin
     
     inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
     widget_control, inter_id, set_value=0
+    widget_control, screen_base_id, map=0
     
 endelse
 
@@ -3350,6 +3359,30 @@ if (norm_list_group EQ 0) then begin
     normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
     widget_control, normalization_text_id, get_value=normalization_text
 endif
+
+;check the number of intermediate plots desired
+plots_selected = (*global).plots_selected
+screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+if (instrument EQ 'REF_L') then begin
+    if (plots_selected[0] EQ 0 AND $
+        plots_selected[1] EQ 0 AND $
+        plots_selected[2] EQ 0 AND $
+        plots_selected[3] EQ 0 AND $
+        plots_selected[4] EQ 0) then begin
+        widget_control, screen_base_id, map=1
+    endif else begin
+        widget_control, screen_base_id, map=0
+    endelse
+endif else begin
+    if (plots_selected[0] EQ 0 AND $
+        plots_selected[1] EQ 0 AND $
+        plots_selected[2] EQ 0 AND $
+        plots_selected[3] EQ 0) then begin
+        widget_control, screen_base_id, map=1
+    endif else begin
+        widget_control, screen_base_id, map=0
+    endelse
+endelse
 
 ;check if runs number not empty
 if (instrument EQ 'REF_L') then begin

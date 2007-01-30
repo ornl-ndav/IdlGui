@@ -970,6 +970,14 @@ other_plots_base = widget_base(data_reduction_tab,$
                                XOFFSET=0,$
                                YOFFSET=0)
 
+screen_base = widget_base(other_plots_base,$
+                          uname='screen_base',$
+                          xoffset=0,$
+                          yoffset=0,$
+                          scr_xsize=730,$
+                          scr_ysize=400,$
+                          map=1)
+
 other_plots_tab = widget_tab(other_plots_base,$
                              uname='other_plots_tab',$                             
                              location=0,$
