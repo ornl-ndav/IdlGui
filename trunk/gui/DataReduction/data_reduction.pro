@@ -1138,6 +1138,7 @@ global = ptr_new({$
                    intermediate_file_ext: ['.sdc',$
                                            '.bkg',$
                                            '.nom',$
+;                                           '.rmd',$
                                            '.bnm'],$
                    intermediate_plots_title: ['Summed signal region',$
                                               'Summed background region',$

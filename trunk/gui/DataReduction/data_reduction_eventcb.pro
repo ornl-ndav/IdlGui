@@ -3076,17 +3076,13 @@ if (value_selection[0] EQ 0 AND $
     value_selection[1] EQ 0 AND $
     value_selection[2] EQ 0 AND $
     value_selection[3] EQ 0 ) then begin
-
     widget_control, inter_id, set_value=1
-
 endif
 
 if ((*global).entering_selection_of_plots_by_yes_button EQ 1) then begin
- 
     widget_control, inter_id, set_value=1
-
 endif   
-  
+
 (*global).entering_selection_of_plots_by_yes_button = 0
 
 end
@@ -3181,6 +3177,7 @@ indx1 = value[1]                ;.bkg
 indx2 = value[2]                ;.nom
 indx3 = value[3]                ;.bnm
 
+
 number_of_plots_selected = 0
 
 runs_to_process = (*global).runs_to_process
@@ -3230,10 +3227,10 @@ endif else begin
     
 endelse
 
-norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
-widget_control, norm_id, get_value=norm_flag ;0:with norm    1:no normalization
-
+norm_back_id = widget_info(Event.top, find_by_uname='normalization_list_group_REF_M')
+widget_control, norm_back_id, get_value=norm_flag ;0:with norm    1:no normalization
 tab_3_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+
 if (indx2 EQ 1 AND norm_flag EQ 0) then begin
     
     widget_control, tab_3_id, base_set_title='Normalization'
@@ -3249,6 +3246,8 @@ endif else begin
     
 endelse
 
+norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+widget_control, norm_id, get_value=norm_flag ;0:with norm    1:no normalization
 tab_4_id = widget_info(Event.top, $
                        find_by_uname='background_region_from_normalization_region_summed_tof_base')
 if (indx3 EQ 1 AND norm_flag EQ 0) then begin
