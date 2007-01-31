@@ -1,8 +1,25 @@
-function is_local_nexus_function, value
+function remove_star_from_string, value
 
+new_value = strsplit(value,'\*',/extract,/regex)
 
-return, is_local_nexus
+return, new_value
 end
+
+
+
+
+
+
+
+function is_local_nexus_function, processing_run_number_array
+
+array_result = strmatch(processing_run_number_array,'*\**')
+
+return, array_result
+end
+
+
+
 
 function get_list_of_runs, instrument, runs_to_process
 
@@ -10,12 +27,25 @@ if (instrument EQ 'REF_L') then begin
     array_of_runs = ''
     array_of_runs_1 = strsplit(runs_to_process,',',count=length,/extract)
     array_of_runs_2 = strarr(length)
+
     for j=0,(length-1) do begin
-        array_of_runs_2 = strsplit(array_of_runs_1[j],'-',count=length_1,/extract)
+        array_of_runs_2 = strsplit(array_of_runs_1[j],'-',$
+                                   count=length_1,/extract)
         if (length_1 GT 1) then begin
-            min = fix(array_of_runs_2[0])
-            max = fix(array_of_runs_2[1])
-            array_of_runs_add = strcompress(indgen(max-min+1)+min,/remove_all)
+                                ;check if there is a * before/after
+                                ;array_of_runs_2[0] and [1]
+            local_nexus = is_local_nexus_function(array_of_runs_2)
+            if (local_nexus[0] EQ 0 AND $
+                local_nexus[1] EQ 0) then begin
+                min = fix(array_of_runs_2[0])
+                max = fix(array_of_runs_2[1])
+                array_of_runs_add = strcompress(indgen(max-min+1)+min,/remove_all)
+            endif else begin
+                min = fix(remove_star_from_string(array_of_runs_2[0]))
+                max = fix(remove_star_from_string(array_of_runs_2[1]))
+                array_of_runs_add = strcompress(indgen(max[0]-min[0]+1)+min[0],/remove_all)
+                array_of_runs_add += '*'
+            endelse
             array_of_runs = [array_of_runs, array_of_runs_add]
         endif else begin
             array_of_runs = [array_of_runs,array_of_runs_2]
@@ -57,13 +87,22 @@ runs_full_path = strarr(array_size)
 runs_to_use_array = lonarr(array_size)
 nbr_runs_to_use = 0
 
+;check if there is a star after or before the run number
+is_local_nexus_array= is_local_nexus_function(runs_array) ;remove_comments
+
 for i=0,(array_size-1) do begin
     
-    ;check if there is a star after or before the run number
-;    is_local_nexus = is_local_nexus_function(runs_array[i])    
-    
-    cmd_findnexus = "findnexus -i" + instrument
+    if (is_local_nexus_array[i] EQ 0) then begin  ;nexus is in SNSlocal or SNS
+        cmd_findnexus = 'findnexus'
+    endif else begin ;nexus is local
+        ;first remove the star
+        runs_array[i] = remove_star_from_string(runs_array[i])
+        cmd_findnexus = 'findnexus ~/local/' + instrument
+    endelse
+    cmd_findnexus +=  ' -i' + instrument
     cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
+    text = ' >' + cmd_findnexus
+    widget_control, full_view_info, set_value=text, /append
     spawn, cmd_findnexus, full_path_to_nexus
 
     array_of_nexus_files[i]=full_path_to_nexus
@@ -79,7 +118,7 @@ for i=0,(array_size-1) do begin
         
     endif else begin
         
-        full_text = 'runs # ' + runs_array[i] + ' OK (' +$
+        full_text = ' Runs # ' + runs_array[i] + ' OK (' +$
           array_of_nexus_files[i] + ')'
         runs_to_use_array[i]=1
         nbr_runs_to_use += 1
