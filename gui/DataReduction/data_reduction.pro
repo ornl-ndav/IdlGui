@@ -230,6 +230,11 @@ case Event.id of
         start_data_reduction_button_eventcb, Event
     end
 
+;cancel data reduction for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='cancel_data_reduction_button'): begin
+        cancel_data_reduction_button_eventcb, Event
+    end
+
 ;normalization run number text box
     widget_info(wWidget, FIND_BY_UNAME='normalization_text'): begin
         normalization_text_eventcb, Event
@@ -1131,6 +1136,7 @@ global = ptr_new({$
                    entering_intermediate_file_output_for_first_time : 0,$
                    signal_pid_file_name : '',$
                    background_pid_file_name : '',$
+                   cancel_data_reduction : 0,$
                    ct                   : 5,$
                    pass                 : 0,$
                    data_assoc		: ptr_new(0L),$
@@ -1768,6 +1774,15 @@ start_data_reduction_button = widget_button(start_data_reduction_base,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button',$
                                             sensitive=0)
+
+; cancel_data_reduction_button = widget_button(start_data_reduction_base,$
+;                                              xoffset=230,$
+;                                              yoffset=5,$
+;                                              scr_xsize=65,$
+;                                              scr_ysize=35,$
+;                                              value='CANCEL',$
+;                                              uname='cancel_data_reduction_button',$
+;                                              sensitive=0)
 
 ; start_data_reduction_tab = widget_tab(start_data_reduction_base,$
 ;                                       uname='start_data_reduction_tab',$
