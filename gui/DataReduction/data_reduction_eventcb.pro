@@ -253,7 +253,7 @@ end
 
 
 
-pro several_nexus_combobox_eventcb, Event
+pro several_nexus_combobox_eventcb, Event  ;REF_M
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -266,7 +266,7 @@ combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
 widget_control, combobox_id, get_value=value
 current_text = widget_info(combobox_id, /combobox_gettext)
 
-array_of_elements_to_add = parse_current_text(current_text,":")
+array_of_elements_to_add = parse_current_text(current_text,"-")
 size_of_array = size(array_of_elements_to_add)
 size_of_array = size_of_array[1]
 
@@ -2462,7 +2462,8 @@ widget_control, norm_bkg_id, get_value=norm_bkg_value
 if (instrument EQ 'REF_L') then begin
     interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
 endif else begin
-    interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group_REF_M')
+    interm_id = widget_info(Event.top, $
+                            find_by_uname='intermediate_file_output_list_group_REF_M')
 endelse
 
 widget_control, interm_id, get_value=interm_status
