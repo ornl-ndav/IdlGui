@@ -2611,6 +2611,26 @@ widget_control,id,get_uvalue=global
 full_view_info = widget_info(event.top,find_by_uname='log_book')
 widget_control, full_view_info, set_value=full_text,/append
 
+print, 'ucams = ', (*global).ucams
+
+; openw, 1, file_name
+
+; i=0
+; for x=0, Nx-1 do begin
+;     for y=0, Ny-1 do begin
+;         if (background_1_array[x,y] NE 0) then begin
+;             text = 'bank1_' + strcompress(x,/remove_all)
+;             text += '_' + strcompress(y,/remove_all)
+;             printf, 1,text
+;             ++i
+;         endif
+;     endfor
+; endfor
+
+; close, 1
+; free_lun, 1
+
+
 end
 
 
