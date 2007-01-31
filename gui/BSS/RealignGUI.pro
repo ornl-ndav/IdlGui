@@ -273,6 +273,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;or other means
 
 global = ptr_new({$
+                   debug_output_file_name : '~/RealignGUI_debug.txt',$
                    tmp_nxdir_folder : '/realignGUI_tmp/',$
                    file_type : '',$
                    file_to_plot_top : '',$
