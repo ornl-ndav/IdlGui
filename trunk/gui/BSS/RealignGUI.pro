@@ -484,44 +484,62 @@ widget_control,MAIN_BASE,set_uvalue=global
                                         FRAME=1,$
                                         VALUE="")
 
+;######################################################################
+;Top right part that will contain 2 tabs (interaction and log_book)
+ tabs_base = widget_base(main_base,$
+                         xoffset=560,$
+                         yoffset=10,$
+                         scr_xsize=545,$
+                         scr_ysize=440,$
+                         frame=1)
+
+ first_tab = widget_tab(tabs_base,$
+                        uname='data_reduction_tab',$
+                        location=0,$
+                        xoffset=0,$
+                        yoffset=0,$
+                        scr_xsize=545,$
+                        scr_ysize=440)
+
+interactive_tab_base = widget_base(first_tab,$
+                                   uname='interactive_tab',$
+                                   title='Main Tab',$
+                                   xoffset=0,$
+                                   yoffset=0)
+
+
 ;Pixels counts vertical window info
-pixels_counts_base = widget_base(main_base,$
-                                 XOFFSET=920,$
-                                 YOFFSET=10,$
-                                 SCR_XSIZE=200,$
-                                 SCR_YSIZE=445)
+pixels_counts_base = widget_base(interactive_tab_base,$
+                                 XOFFSET=355,$
+                                 YOFFSET=5,$
+                                 SCR_XSIZE=180,$
+                                 SCR_YSIZE=400,$
+                                 frame=1)
 
 pixels_counts_title = widget_label(pixels_counts_base,$
-                                   xoffset=8,$
+                                   xoffset=40,$
                                    yoffset=0,$
                                    scr_xsize=90,$
                                    scr_ysize=20,$
                                    value="Pixels values")
 
 pixels_counts_values = widget_text(pixels_counts_base,$
-                                   XOFFSET=6,$
+                                   XOFFSET=3,$
                                    YOFFSET=20,$
                                    SCR_XSIZE=173,$
-                                   SCR_YSIZE=420,$
+                                   SCR_YSIZE=375,$
                                    /wrap,$
                                    /scroll,$
                                    value = '',$
                                    UNAME='pixels_counts_values')
 
-pixels_counts_frame = widget_label(pixels_counts_base,$
-                                   XOFFSET=0,$
-                                   YOFFSET=10,$
-                                   SCR_XSIZE=185,$
-                                   SCR_YSIZE=430,$
-                                   FRAME=1)
-                              
-
 ;General infos window
-infos_base = widget_base(main_base,$
-                          XOFFSET=560,$
-                          YOFFSET=10,$
-                          SCR_XSIZE=355,$
-                          SCR_YSIZE=150)
+infos_base = widget_base(interactive_tab_base,$
+                          XOFFSET=0,$
+                          YOFFSET=5,$
+                          SCR_XSIZE=350,$
+                          SCR_YSIZE=120,$
+                         frame=1)
 
 infos_title = widget_label(infos_base,$
                            xoffset=6,$
@@ -532,27 +550,20 @@ infos_title = widget_label(infos_base,$
 
 general_infos = widget_text(infos_base,$
                              uname = "general_infos",$
-                             xoffset=6,$
-                             yoffset=20,$
-                             scr_xsize=339,$
-                             scr_ysize=115,$
+                             xoffset=5,$
+                             yoffset=18,$
+                             scr_xsize=340,$
+                             scr_ysize=100,$
                              /wrap,$
                             /scroll,$
                              value="")
 
-infos_frame = widget_label(infos_base,$
-                           xoffset=0,$
-                           yoffset=10,$
-                           scr_xsize=350,$
-                           scr_ysize=130,$
-                           frame=1)
-
 ;pixelID slider
-pixelID_base = widget_base(main_base,$
-                            XOFFSET=560,$
-                            YOFFSET=160,$
-                            SCR_XSIZE=245,$
-                            SCR_YSIZE=120)
+pixelID_base = widget_base(interactive_tab_base,$
+                           XOFFSET=0,$
+                           YOFFSET=130,$
+                           SCR_XSIZE=245,$
+                           SCR_YSIZE=120)
 
 pixelID_text = widget_label(pixelID_base,$
                             XOFFSET=5,$
@@ -604,24 +615,6 @@ remove_pixel_id = widget_button(pixelID_base,$
                                 value='R E M O V E',$
                                 sensitive=0)
 
-;pixelid_new_counts_label = widget_label(pixel_base,$
-;                                        xoffset=10,$
-;                                        yoffset=45,$
-;                                        scr_xsize=115,$
-;                                        scr_ysize=20,$
-;                                        value='New PixelID counts:',$
-;                                        /align_left)
-
-;pixelid_new_counts_value = widget_text(pixel_base,$
-;                                       uname='pixelid_new_counts_value',$
-;                                       xoffset=130,$
-;                                       yoffset=40,$
-;                                      scr_xsize=40,$
-;                                       scr_ysize=30,$
-;                                       value='1',$
-;                                       /align_left,$
-;                                       /editable)
-
 pixelid_new_counts_reset = $
   widget_button(pixelID_base,$
                 uname='pixelid_new_counts_reset',$
@@ -630,7 +623,7 @@ pixelid_new_counts_reset = $
                 scr_xsize=115,$
                 scr_ysize=30,$
                 value='A D D',$
-               sensitive=0)
+                sensitive=0)
 
 
 pixel_and_tube_frame = widget_label(pixelID_base,$
@@ -642,9 +635,9 @@ pixel_and_tube_frame = widget_label(pixelID_base,$
                                     value='')
 
 ;pixelID, tube and bank info
- ptb_info_base = widget_base(main_base,$
-                             XOFFSET=810,$
-                             YOFFSET=150,$
+ ptb_info_base = widget_base(interactive_tab_base,$
+                             XOFFSET=246,$
+                             YOFFSET=127,$
                              SCR_XSIZE=140,$
                              SCR_YSIZE=80)
 
@@ -708,13 +701,13 @@ tube_value = widget_label(ptb_info_base,$
                                value='')
 
 
-
 ;tube removed window
-removed_tube_base = widget_base(main_base,$
-                                XOFFSET=810,$
-                                YOFFSET=240,$
-                                SCR_XSIZE=110,$
-                                SCR_YSIZE=220)
+removed_tube_base = widget_base(interactive_tab_base,$
+                                XOFFSET=247,$
+                                YOFFSET=210,$
+                                SCR_XSIZE=103,$
+                                SCR_YSIZE=195,$
+                                frame=1)
 
 removed_tube_title = widget_label(removed_tube_base,$
                                   xoffset=5,$
@@ -723,26 +716,18 @@ removed_tube_title = widget_label(removed_tube_base,$
 
 removed_tube_text = widget_text(removed_tube_base,$
                                 uname="removed_tube_text",$
-                                xoffset=5,$
+                                xoffset=3,$
                                 yoffset=15,$
                                 scr_xsize=95,$
-                                scr_ysize=195,$
+                                scr_ysize=175,$
                                 /wrap,$
                                 /scroll,$
                                 sensitive=0)
 
-
-removed_tube_frame = widget_label(removed_tube_base,$
-                                  xoffset=0,$
-                                  yoffset=9,$
-                                  scr_xsize=100,$
-                                  scr_ysize=200,$
-                                  frame=1)
-
 ;tube interaction window
-tube_base = widget_base(main_base,$
-                        XOFFSET=560,$
-                        YOFFSET=280,$   ;310
+tube_base = widget_base(interactive_tab_base,$
+                        XOFFSET=0,$
+                        YOFFSET=245,$  
                         SCR_XSIZE=245,$
                         SCR_YSIZE=60)
 
@@ -771,50 +756,31 @@ cancel_remove_tube_button = widget_button(tube_base,$
                                           value='A D D',$
                                           sensitive=0)
 
-
-;remove_tube_label = widget_label(tube_base,$
-;                                 xoffset=10,$
-;                                 yoffset=25,$
-;                                 scr_xsize=120,$
-;                                 scr_ysize=20,$
-;                                 value='Remove this tube:',$
-;                                 /align_left)
-
-; remove_tube_group = cw_bgroup(tube_base, $
-;                               ['Yes', 'No'], $
-;                               /exclusive,$
-;                               /row,$
-;                               /RETURN_NAME,$
-;                               XOFFSET=130, $
-;                               YOFFSET=20,$
-;                               SET_VALUE=1.0,$
-;                               UNAME='remove_tube_group')
-
- Tube_frame = widget_label(tube_base,$
-                           xoffset=0,$
-                           yoffset=10,$
-                           scr_xsize=245,$
-                           scr_ysize=45,$
-                           frame=1,$
-                           value='')
+Tube_frame = widget_label(tube_base,$
+                          xoffset=0,$
+                          yoffset=10,$
+                          scr_xsize=245,$
+                          scr_ysize=45,$
+                          frame=1,$
+                          value='')
 
 ;reset and save buttons
-RESET_ALL_button = widget_button(main_base,$
+RESET_ALL_button = widget_button(interactive_tab_base,$
                                  UNAME="reset_all_button",$
-                                 xoffset=565,$
-                                 yoffset=348,$
+                                 xoffset=5,$
+                                 yoffset=310,$
                                  scr_xsize=235,$
                                  scr_ysize=30,$
                                  value="REINITIALIZE ALL VARIABLES",$
                                  sensitive=0)
 
-RESET_ALL_BUTTON_VALIDATE_BASE = WIDGET_BASE(main_base,$
+RESET_ALL_BUTTON_VALIDATE_BASE = WIDGET_BASE(interactive_tab_base,$
                                              uname='RESET_ALL_BUTTON_VALIDATE_BASE',$
-                                             xoffset=565,$
-                                             yoffset=378,$
+                                             xoffset=5,$
+                                             yoffset=340,$ ;378
                                              scr_xsize=235,$
                                              scr_ysize=40,$
-                                             map=0)
+                                             map=0) 
 
 RESET_ALL_BUTTON_VALIDATE_TEXT = widget_label(RESET_ALL_BUTTON_VALIDATE_BASE,$
                                               uname='reset_all_button_validate_text',$
@@ -840,29 +806,52 @@ RESET_ALL_BUTTON_VALIDATE_CANCEL = WIDGET_BUTTON(RESET_ALL_BUTTON_VALIDATE_BASE,
                                               scr_xsize=85,$
                                               scr_ysize=25,$
                                               value='CANCEL')
+;Get Mapped Plot
+plot_mapped_data = widget_button(interactive_tab_base,$
+                                 XOFFSET=2,$
+                                 YOFFSET=380,$
+                                 SCR_XSIZE=110,$
+                                 SCR_YSIZE=30,$
+                                 VALUE="PLOT MAPPED DATA",$
+                                 UNAME='plot_mapped_data')
+                                 
 
-; SAVE_CHANGES_button = widget_button(main_base,$
-;                                     UNAME="save_changes_button",$
-;                                     xoffset=644,$
-;                                     yoffset=380,$
-;                                     scr_xsize=80,$
-;                                     scr_ysize=30,$
-;                                     value="CHANGE TUBE")
+;Procude output file
+output_new_histo_mapped_file = widget_button(interactive_tab_base,$
+                                             XOFFSET=111,$
+                                             YOFFSET=380,$
+                                             SCR_XSIZE=135,$
+                                             SCR_YSIZE=30,$
+                                             VALUE="CREATE histo/NeXus",$
+                                             UNAME='output_new_histo_mapped_file')
 
-; SAVE_PIXELID_changes_button = widget_button(main_base,$
-;                                             UNAME="save_pixelid_changes_button",$
-;                                             xoffset=726,$
-;                                             yoffset=380,$
-;                                             scr_xsize=80,$
-;                                             scr_ysize=30,$
-;                                             value="CHANGE PIXEL")
+
+log_book_tab_base = widget_base(first_tab,$
+                                uname='log_book_tab_base',$
+                                title='Log book',$
+                                xoffset=0,$
+                                yoffset=0)
+
+log_book = widget_text(log_book_tab_base,$
+                       uname='log_book',$
+                       xoffset=5,$
+                       yoffset=5,$
+                       scr_xsize=530,$
+                       scr_ysize=405,$
+                       /scroll,$
+                       /wrap)
+                       
+
+
+
+
+
 
 
 y_offset = 375
 x_size_tubes = 215
 x_size_center =100
 y_dim = 90
-
 ;tube0_frame
 tube0_base = widget_base(main_base,$
                          UNAME="tube0_base",$
@@ -1167,25 +1156,6 @@ DAS_plot_frame = widget_label(DAS_plot_base,$
                               YOFFSET=20,$
                               FRAME=1)
 
-
-;Get Mapped Plot
-plot_mapped_data = widget_button(MAIN_BASE,$
-                                 XOFFSET=560,$
-                                 YOFFSET=420,$
-                                 SCR_XSIZE=110,$
-                                 SCR_YSIZE=30,$
-                                 VALUE="PLOT MAPPED DATA",$
-                                 UNAME='plot_mapped_data')
-                                 
-
-;Procude output file
-output_new_histo_mapped_file = widget_button(MAIN_BASE,$
-                                             XOFFSET=670,$
-                                             YOFFSET=420,$
-                                             SCR_XSIZE=135,$
-                                             SCR_YSIZE=30,$
-                                             VALUE="CREATE histo/NeXus",$
-                                             UNAME='output_new_histo_mapped_file')
 
 
 ;Mapped plot
