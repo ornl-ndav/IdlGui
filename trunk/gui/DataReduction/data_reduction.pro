@@ -1673,8 +1673,7 @@ help_base = widget_base(data_reduction_base,$
 help_label = widget_label(help_base,$
                           xoffset=5,$
                           yoffset=5,$
-                          value='1600   or   1600:1620')
-
+                          value='1600   or   1600-1620')
 
 ;one or several runs to process in the same time
 runs_to_process_label = widget_label(data_reduction_base,$
