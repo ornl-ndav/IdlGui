@@ -53,6 +53,20 @@ pro MAIN_BASE_event, Event
         plot_tubes_pixels, Event
     end
 
+    ;top left tab
+    Widget_Info(wWidget, FIND_BY_UNAME='draw_tube_pixels_base'): begin
+        draw_tube_pixels_base_eventcb, Event
+    end
+
+    ;slider tube in histo tab
+    Widget_Info(wWidget, FIND_BY_UNAME='histo_draw_tube_pixels_slider'): begin
+        histo_plot_tubes_pixels, Event
+    end
+
+    ;slider Nt in histo tab
+    Widget_Info(wWidget, FIND_BY_UNAME='nt_histo_draw_tube_pixels_slider'): begin
+        histo_plot_tubes_pixels, Event
+    end
 
     ;Widget to change the color of graph
     Widget_Info(wWidget, FIND_BY_UNAME='ABOUT_MENU'): begin
@@ -179,9 +193,6 @@ pro MAIN_BASE_event, Event
         pixelid_new_counts_reset, Event
     end
 
-
-
-
 ;Widget to change the color of graph of DAS
     Widget_Info(wWidget, FIND_BY_UNAME='CTOOL_MENU_DAS'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -273,6 +284,9 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;or other means
 
 global = ptr_new({$
+                   debugger : 'ele',$
+                   nexus_open : 0,$
+                   debug : 0,$                     ;1 for debugging  ;0 for not debgging
                    debug_output_file_name : '~/RealignGUI_debug.txt',$
                    tmp_nxdir_folder : '/realignGUI_tmp/',$
                    file_type : '',$
@@ -309,14 +323,18 @@ global = ptr_new({$
                    Nt			      :1L,$
                    y_coeff		      :10L,$
                    x_coeff		      :8.4,$
+                   image1                     : ptr_new(0L),$
                    image_2d_1		      : ptr_new(0L),$
                    image_2d_1_untouched	      : ptr_new(0L),$   
                    remap                      : ptr_new(0L),$
+                   remap_histo                : ptr_new(0L),$
                    reorder_array              : ptr_new(0L),$
                    tube_removed               : ptr_new(0L),$
                    pixel_removed              : ptr_new(0L),$
                    IDL_pixelid_removed        : ptr_new(0L),$
                    look_up                    : ptr_new(0L),$
+                   look_up_histo              : ptr_new(0L),$
+                   image_nt_nx_ny             : ptr_new(0L),$
                    i1                         : ptr_new(0L),$
                    i2                         : ptr_new(0L),$
                    i3                         : ptr_new(0L),$
@@ -443,31 +461,41 @@ widget_control,MAIN_BASE,set_uvalue=global
                                                 uname='CANCEL_OPEN_RUN_NUMBER_BUTTON')
 
 ;top-left frame (display of counts vs pixelID for each tube
-;one at a time
+;one at a time and tube per tube for each of the Nt time bins
+
   draw_tube_pixels_base = widget_base(MAIN_BASE,$
                                       SCR_XSIZE=550,$
                                       SCR_YSIZE=370,$
                                       XOFFSET=5,$
                                       YOFFSET=10)
   
-  draw_tube_pixels_frame_title = widget_label(draw_tube_pixels_base,$
-                                              SCR_XSIZE=120,$
-                                              SCR_YSIZE=20,$
-                                              XOFFSET=5,$
-                                              YOFFSET=0,$
-                                              VALUE="Tube per tube plot")
+;    drawing_tab = widget_tab(draw_tube_pixels_base,$
+;                             uname='draw_tube_pixels_base',$
+;                             location=0,$
+;                             xoffset=0,$
+;                             yoffset=0,$
+;                             scr_xsize=550,$
+;                             scr_ysize=370)
+; ;                          /tracking_events)
   
-  draw_tube_pixels_draw = widget_draw(draw_tube_pixels_base,$
+ ; tube_per_tube_plot_base = widget_base(drawing_tab,$
+   tube_per_tube_plot_base= widget_base(draw_tube_pixels_base,$
+                                        uname='tube_per_tube_plot_base',$
+                                        title='Tube per tube plot',$
+                                        xoffset=0,$
+                                        yoffset=0)
+
+  draw_tube_pixels_draw = widget_draw(tube_per_tube_plot_base,$
                                       UNAME='draw_tube_pixels_draw',$
                                       SCR_XSIZE=536,$
                                       SCR_YSIZE=300,$
-                                      XOFFSET=6,$
-                                      YOFFSET=20)
+                                      XOFFSET=4,$
+                                      YOFFSET=5)
   
-  draw_tube_pixels_slider = WIDGET_SLIDER(draw_tube_pixels_base,$
+  draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
                                           UNAME="draw_tube_pixels_slider",$
-                                          XOFFSET= 6,$
-                                          YOFFSET= 320,$
+                                          XOFFSET= 5,$
+                                          YOFFSET= 304,$
                                           SCR_XSIZE=536,$
                                           SCR_YSIZE=35,$
                                           MINIMUM=0,$
@@ -476,14 +504,52 @@ widget_control,MAIN_BASE,set_uvalue=global
                                           VALUE=0,$
                                           EVENT_PRO="plot_tubes_pixels")
   
-  draw_tube_pixels_frame = widget_label(draw_tube_pixels_base,$
-                                        UNAME="draw_tube_pixels_frame",$
-                                        SCR_XSIZE=550,$
-                                        SCR_YSIZE=350,$
-                                        XOFFSET=0,$
-                                        YOFFSET=10,$
-                                        FRAME=1,$
-                                        VALUE="")
+;   histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
+;                                               uname='histo_tube_per_tube_plot_base',$
+;                                               title='Tube per tube for each Nt',$
+;                                               xoffset=0,$
+;                                               yoffset=0)
+
+;   histo_draw_tube_pixels_draw = widget_draw(histo_tube_per_tube_plot_base,$
+;                                             UNAME='histo_draw_tube_pixels_draw',$
+;                                             SCR_XSIZE=536,$
+;                                             SCR_YSIZE=270,$
+;                                             XOFFSET=4,$
+;                                             YOFFSET=3)
+
+;   nt_histo_label = widget_label(histo_tube_per_tube_plot_base,$
+;                                 xoffset=0,$
+;                                 yoffset=287,$
+;                                 value='Nt:')
+
+;   nt_histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
+;                                           UNAME="nt_histo_draw_tube_pixels_slider",$
+;                                           XOFFSET= 40,$
+;                                           YOFFSET= 272,$
+;                                           SCR_XSIZE=500,$
+;                                           SCR_YSIZE=35,$
+;                                           MINIMUM=0,$
+;                                           MAXIMUM=(*global).Nt,$
+;                                           /DRAG,$
+;                                           VALUE=0,$
+;                                           EVENT_PRO="histo_plot_tubes_pixels")
+  
+;   tube_histo_label = widget_label(histo_tube_per_tube_plot_base,$
+;                                 xoffset=0,$
+;                                 yoffset=306+15,$
+;                                 value='Tube:')
+
+;   histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
+;                                           UNAME="histo_draw_tube_pixels_slider",$
+;                                           XOFFSET= 5+35,$
+;                                           YOFFSET= 306,$
+;                                           SCR_XSIZE=536-35,$
+;                                           SCR_YSIZE=35,$
+;                                           MINIMUM=0,$
+;                                           MAXIMUM=63,$
+;                                           /DRAG,$
+;                                           VALUE=0,$
+;                                           EVENT_PRO="histo_plot_tubes_pixels")
 
 ;######################################################################
 ;Top right part that will contain 2 tabs (interaction and log_book)
@@ -843,13 +909,73 @@ log_book = widget_text(log_book_tab_base,$
                        /wrap)
                        
 
+;Rick's way plot
+DAS_plot_base = widget_base(MAIN_BASE,$
+                            SCR_XSIZE=550,$
+                            SCR_YSIZE=245,$
+                            XOFFSET=5,$
+                            YOFFSET=455)
+
+
+DAS_plot_title = widget_label(DAS_plot_base,$
+                              SCR_XSIZE=70,$
+                              SCR_YSIZE=20,$
+                              XOFFSET=5,$
+                              YOFFSET=0s,$
+                              VALUE="DAS's plot")
+
+
+ DAS_plot_draw = widget_draw(DAS_plot_base,$
+                             UNAME='DAS_plot_draw',$
+                             SCR_XSIZE=536,$
+                             SCR_YSIZE=213,$
+                             XOFFSET=6,$
+                             YOFFSET=20)
+
+DAS_plot_frame = widget_label(DAS_plot_base,$
+                              UNAME='DAS_plot_frame',$
+                              SCR_XSIZE=547,$
+                              SCR_YSIZE=225,$
+                              XOFFSET=0,$
+                              YOFFSET=10,$
+                              FRAME=1)
+
+
+
+
+;Mapped plot
+map_plot_base = widget_base(MAIN_BASE,$
+                            XOFFSET=560,$
+                            YOFFSET=445,$
+                            SCR_XSIZE=550,$
+                            SCR_YSIZE=250)
+
+map_plot_title = widget_label(map_plot_base,$
+                              SCR_XSIZE=70,$
+                              SCR_YSIZE=15,$
+                              XOFFSET=5,$
+                              YOFFSET=12,$
+                              VALUE="Mapped plot")
+
+map_plot_draw = widget_draw(map_plot_base,$
+                            UNAME='map_plot_draw',$
+                            SCR_XSIZE=536,$
+                            SCR_YSIZE=213,$
+                            XOFFSET=6,$
+                            YOFFSET=30)
+
+map_plot_frame = widget_label(map_plot_base,$
+                              SCR_XSIZE=547,$
+                              SCR_YSIZE=225,$
+                              XOFFSET=0,$
+                              YOFFSET=20,$
+                              FRAME=1)
 
 
 
 
 
-
-y_offset = 375
+y_offset = 380
 x_size_tubes = 215
 x_size_center =100
 y_dim = 90
@@ -1127,65 +1253,6 @@ tube1_label =  widget_label(tube1_base,$
                             SCR_YSIZE=y_dim-30,$
                             FRAME=1,$
                             VALUE="")
-;Rick's way plot
-DAS_plot_base = widget_base(MAIN_BASE,$
-                            SCR_XSIZE=550,$
-                            SCR_YSIZE=250,$
-                            XOFFSET=5,$
-                            YOFFSET=440)
-
-DAS_plot_title = widget_label(DAS_plot_base,$
-                              SCR_XSIZE=70,$
-                              SCR_YSIZE=15,$
-                              XOFFSET=5,$
-                              YOFFSET=12,$
-                              VALUE="DAS's plot")
-
-
- DAS_plot_draw = widget_draw(DAS_plot_base,$
-                             UNAME='DAS_plot_draw',$
-                             SCR_XSIZE=536,$
-                             SCR_YSIZE=213,$
-                             XOFFSET=6,$
-                             YOFFSET=30)
-
-DAS_plot_frame = widget_label(DAS_plot_base,$
-                              UNAME='DAS_plot_frame',$
-                              SCR_XSIZE=547,$
-                              SCR_YSIZE=225,$
-                              XOFFSET=0,$
-                              YOFFSET=20,$
-                              FRAME=1)
-
-
-
-;Mapped plot
-map_plot_base = widget_base(MAIN_BASE,$
-                            XOFFSET=560,$
-                            YOFFSET=440,$
-                            SCR_XSIZE=550,$
-                            SCR_YSIZE=250)
-
-map_plot_title = widget_label(map_plot_base,$
-                              SCR_XSIZE=70,$
-                              SCR_YSIZE=15,$
-                              XOFFSET=5,$
-                              YOFFSET=12,$
-                              VALUE="Mapped plot")
-
-map_plot_draw = widget_draw(map_plot_base,$
-                            UNAME='map_plot_draw',$
-                            SCR_XSIZE=536,$
-                            SCR_YSIZE=213,$
-                            XOFFSET=6,$
-                            YOFFSET=30)
-
-map_plot_frame = widget_label(map_plot_base,$
-                              SCR_XSIZE=547,$
-                              SCR_YSIZE=225,$
-                              XOFFSET=0,$
-                              YOFFSET=20,$
-                              FRAME=1)
 
 
 ;draw boxes for plot windows

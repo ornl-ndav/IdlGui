@@ -239,28 +239,40 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;create look-up table
-look_up=lonarr((*global).Nx,(*global).Ny_scat)
+Nx = (*global).Nx
+Ny = (*global).Ny_scat
+Nt = (*global).Nt
+
+look_up=lonarr(Nx,Ny)
+look_up_histo = lonarr(Nt, Nx, Ny)
 for tube=0,31 do begin
     for pixel=0,63 do begin
         look_up[pixel,tube]=(63-pixel)+tube*128
+        looK_up_histo[*,pixel,tube] = (63-pixel)+tube*128
     endfor
     for pixel=64,127 do begin
         look_up[pixel,tube]=pixel+tube*128
+        look_up_histo[*,pixel,tube] = pixel+tube*128
     endfor
 endfor
 
 for tube=32,63 do begin
     for pixel=0,63 do begin
         look_up[pixel,tube]=(pixel+tube*128)
+        look_up_histo[*,pixel,tube] = pixel+tube*128
     endfor
     for pixel=64,127 do begin
         look_up[pixel,tube]=(191-pixel)+tube*128
+        look_up_histo[*,pixel,tube]=(191-pixel)+tube*128
     endfor
 endfor
 
 (*(*global).look_up) = look_up
+(*(*global).look_up_histo) = look_up_histo
 
 end
+
+
 
 
 
@@ -534,6 +546,8 @@ diff = ulonarr(Nt,Nx,Ny_diff)
 readu,u,diff
 close,/all
 
+(*(*global).image1) = image1
+
 if ((*global).swap_endian EQ 1) then begin
     
     image1=swap_endian(image1)
@@ -553,6 +567,7 @@ text = "  - Number of Tbins : " + strcompress(Nt,/remove_all)
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 PLOT_HISTO_FILE, Event, image1
+
 
 end
 
@@ -828,11 +843,17 @@ pro plot_mapped_data, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 text = ''
 output_into_log_book, event,text
 
-text="Plotting mapped data..."
+debug = (*global).debug
+
+text="Realign and plot data..."
 output_into_general_infos, event, text
+text="Realign data..."
 output_into_log_book, event,text
 
 i1=(*(*global).i1)
@@ -847,11 +868,20 @@ len2 = (*(*global).len2)
 Npix = (*global).Nx
 Ntubes = (*global).Ny_scat
 mid = Npix/2              
+Nt = (*global).Nt
+
+text = '* Npix: ' + strcompress(Npix)
+output_into_log_book, event,text
+text = '* Ntubes: '+ strcompress(Ntubes)
+output_into_log_book, event,text
+text = '* Nt: ' + strcompress(Nt)
+output_into_log_book, event,text
 
 Npad = 10
 pad = lonarr(Npad)
 
 image_2d_1 = (*(*global).image_2d_1)
+image_nt_nx_ny = (*(*global).image_nt_nx_ny)
 
 ;Define Ranges of tube responses
     
@@ -865,13 +895,20 @@ t2 = 66
 t3 = 125
 length_tube1 = t3 - t2
 
-;new remap array(Npix, Ntubes)
+;new remap array(Npix, Ntubes) and remap_histo(Nt, Npix, Ntubes)
 remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
+if ((*global).debug EQ 1) then begin
+    remap_histo = dblarr(Nt, Npix, Ntubes) 
+    temp_remap_histo = dblarr(Npix,Ntubes)
+endif
+
+;rindx = lonarr(5) ;will contain rindx0, rindx1...
+del = lonarr(5) ;will contain del0, del1...
 
 tube_removed = (*(*global).tube_removed)
 
-error_status = 0 ;remove_me
-CATCH, error_status
+error_status = 0 
+;CATCH, error_status
 
 if (error_status NE 0) then begin
     
@@ -882,112 +919,163 @@ if (error_status NE 0) then begin
     text="Warning ! Objects plotted are messier than they appear!"
     output_into_general_infos, event, text
     output_into_log_book, event,text
-
+    
 endif else begin
-
-for i=0,Ntubes-1 do begin
-
-    if (tube_removed[i] EQ 0) then begin
-
-        tube_pair = image_2d_1[*,i]
-        tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
+    
+    for i=0,Ntubes-1 do begin
         
-        indx_cntr = 64+Npad     ;74            
-        
+;        print, 'i: ' , strcompress(i,/remove_all), '/', strcompress(Ntubes-1) ;remove_me
+
+        if (tube_removed[i] EQ 0) then begin
+
+            tube_pair = image_2d_1[*,i]
+            tube_pair_pad = [pad,tube_pair,pad] ;lonarr of 147 elements
+            
+            indx_cntr = 64+Npad ;74            
+            
 ;cntr offset relative to cntr
-        cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
-
+            cntr_offset = indx_cntr - (Npad+i5[i]) ;74 - (10 + cntr) 
+            
 ;dial out center offset
-        tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
-        
+            tube_pair_pad_shft = shift(tube_pair_pad,cntr_offset)
+            
 ;REMAP TUBE0
-        
 ;remap tube end data
-        len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
-
+            len_meas_tube0 = i2[i] - i1[i] ;DAS length of first tube
+            
 ;remap (rebin) tube0 data 
 ;size of DAS_length of first tube
-        d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
-        
+            d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
+            
 ;remap (rebin) first part of tube (less than i2) (junk)
-        d0_0 = findgen(i1[i])/(i1[i])*t0
-
+            d0_0 = findgen(i1[i])/(i1[i])*t0
+            
 ;remap (rebin) tube end data (junk)
-        d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
+            d0_1 = float(mid-t1)*findgen((i5[i]-i2[i]))/((i5[i]-i2[i])) + t1
 ;new tube remapped
-        tube0_new = [d0_0,d0,d0_1]
-        mn0 = min(d0)                     ;always 2
-        mx0 = min([max(d0),Npix-1])       ;max(d0) or 127 
-        del0 = 59
-;        rindx1 = indgen(del0-1)+mn0
-        rindx1 = indgen(del0)+mn0
+            tube0_new = [d0_0,d0,d0_1]
+            mn0 = min(d0)       ;always 2
+            mx0 = min([max(d0),Npix-1]) ;max(d0) or 127 
+
+            del0 = 59
+            del[0] = del0
+            rindx1 = indgen(del0)+mn0
+            rindx_0 = rindx1
+
 ;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp) ;steve
 ;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)   ;jean
-        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
-        remap[rindx1,i] = dat   ;new array of the middle section
+            dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
+            remap[rindx1,i] = dat ;new array of the middle section
+
 ;remap endpoints and middle section
 ;one end
-        mn0 = min(d0_0)                   ; always 0
-        mx0 = min([max(d0_0),Npix-1])     ; always max(d0_0)
-        del0 = fix(mx0 - mn0) + 1
+            mn0 = min(d0_0)     ; always 0
+            mx0 = min([max(d0_0),Npix-1]) ; always max(d0_0)
 
-;        rindx0 = indgen(del0)+mn0
-        rindx0 = indgen(2)
+            del0 = fix(mx0 - mn0) + 1
+            del[1] = del0
+            rindx0 = indgen(2)
+            rindx_1 = rindx0 
 
-        dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
-        
-        scl = float(2)/i1[i]
-        remap[rindx0,i] = dat * scl
-        
+            dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+            scl = float(2)/i1[i]
+            remap[rindx0,i] = dat * scl
+            
 ;finally the middle
-        mn0 = t1+1
-        mx0 = t2-1
-        del0 = (mx0 - mn0) + 1
-        rindx0 = indgen(del0)+mn0
-        dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
-        scl = float(del0)/(i3[i] - i2[i])
-        remap[rindx0,i] = dat * scl
-        
+            mn0 = t1+1
+            mx0 = t2-1
+
+            del0 = (mx0 - mn0) + 1
+            del[2] = del0
+            rindx0 = indgen(del0)+mn0
+            rindx_2 = rindx0
+
+            dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
+            scl = float(del0)/(i3[i] - i2[i])
+            remap[rindx0,i] = dat * scl
+
 ;REMAP TUBE1
-        
+            
 ;remap tube1 data
-        len_meas_tube1 = i4[i] - i3[i]
-        d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
-        
+            len_meas_tube1 = i4[i] - i3[i]
+            d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
+            
 ;remap tube start data (junk)
-        d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
-        
+            d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
+            
 ;remap tube end data
-        d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
-        
+            d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
+            
 ;now the other tube end
-        mn0 = min(d1_1)
-        mx0 = min([max(d1_1),Npix-1])
-        del0 = (mx0 - mn0) + 1
-        rindx0 = indgen(del0)+mn0
-        dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
-        scl = float(del0)/(Npix-i4[i])
-        remap[rindx0,i] = dat * scl
+            mn0 = min(d1_1)
+            mx0 = min([max(d1_1),Npix-1])
+
+            del0 = (mx0 - mn0) + 1
+            del[3] = del0
+            rindx0 = indgen(del0)+mn0
+            rindx_3 = rindx0
+            
+            dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
+            scl = float(del0)/(Npix-i4[i])
+            remap[rindx0,i] = dat * scl
+
+            mn1 = min(d1)
+            mx1 = min([max(d1),Npix-1])
+
+            del1 = mx1 - mn1 + 1
+            del[4] = del1
+            rindx1 = indgen(del1)+mn1
+            rindx_4 = rindx1
+
+            dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
+            remap[rindx1,i] = dat
+
+            time_str = systime(1)
+
+            if (debug EQ 1) then begin
+                temp_histo_dat = dblarr(Npix,Ntubes)
+                for j=0,(Nt-1) do begin
+                    temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
+;                   histo_dat = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
+;                   remap_histo[j,rindx_0,i] = histo_dat    
+                    remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
+                    remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1])
+                    remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2])
+                    remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3])
+                    remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
+                endfor
+            endif
+            
+            time_end = systime(1)
         
-        mn1 = min(d1)
-        mx1 = min([max(d1),Npix-1])
-        del1 = mx1 - mn1 + 1
-        rindx1 = indgen(del1)+mn1
-        dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
-        remap[rindx1,i] = dat
-
+;            print, '...done in ' + strcompress(time_end-time_str,/remove_all)
+            
+        endif
+        
+    endfor
+    
+    text = '...done'
+    output_into_log_book, event,text
+    
+    (*(*global).remap) = remap
+    
+    if (debug EQ 1) then begin
+        (*(*global).remap_histo) = remap_histo
     endif
-
-endfor
-
-(*(*global).remap) = remap
-plot_realign_data, Event
-
+    
+    text = 'Plot data...'
+    output_into_log_book, event,text
+    plot_realign_data, Event
+    text = '...done'
+    output_into_log_book, event,text
+    
 endelse
 
 text="...done"
 output_into_general_infos, event, text
-output_into_log_book, event,text
+
+;turn off hourglass
+widget_control,hourglass=0
 
 end
 
@@ -1315,7 +1403,6 @@ update_list_of_pixelid_to_removed, Event,real_pixelid, 1
 update_list_of_IDL_pixelid_to_removed, Event, pixel_number, tube_number, 1
 
 ;add this pixel to the list of pixel to removed
-
 if (new_pixel_counts NE image_2d_1[pixel_number,tube_number]) then begin
     image_2d_1[pixel_number,tube_number]=new_pixel_counts
     (*(*global).image_2d_1)=image_2d_1
@@ -1958,8 +2045,9 @@ end
 ;--------------------------------------------------------------------------
 function get_path_to_prenexus, run_number
 
-path_to_findnexus = "~/SVN/ASGIntegration/trunk/utilities/"
-cmd = path_to_findnexus + "findnexus -iBSS " + $
+;path_to_findnexus = "~/SVN/ASGIntegration/trunk/utilities/"
+;cmd = path_to_findnexus + "findnexus -iBSS " + $
+cmd = "findnexus -iBSS " + $
   strcompress(run_number,/remove_all) + " --prenexus"
 spawn, cmd, path
 
@@ -2008,31 +2096,54 @@ endif else begin
     run_number = (*global).run_number
 endelse
 
+text = ''
+output_into_log_book, event, text
+
 ; get path to NeXus file
 path_to_preNeXus = get_path_to_prenexus(run_number)
-text = ' -> path to NeXus file: ' + path_to_preNeXus
+text = ' -> Path to NeXus file: ' + path_to_preNeXus
 output_into_log_book, event, text
 
 ;remove last part of path_name (to get only the path)
-string_to_remove = "BSS_"+strcompress(run_number,/remove_all)+"_cvinfo.xml"
+string_to_remove = "BSS_" + strcompress(run_number,/remove_all) + "_cvinfo.xml"
+text = '   string_to_remove: ' + string_to_remove
+output_into_log_book, event, text
+
 path=strsplit(path_to_preNeXus,string_to_remove,/regex,/extract)
+text = '   path: ' + path
+output_into_log_book, event, text
 path_to_preNeXus=path[0]
+text = '   path_to_preNeXus: ' + path_to_preNeXus
+output_into_log_book, event, text
+
 (*global).path_to_preNeXus = path_to_preNeXus
 
 ;get proposal number
+text = ' -> Get proposal Number:'
+output_into_log_book, event, text
 proposal_number_array=strsplit(path_to_preNeXus,'/',/regex,/extract)
+text = '   proposal_number_array: ' + proposal_number_array
+output_into_log_book, event, text
 proposal_number = proposal_number_array[2]
+text = '   proposal_number: ' + proposal_number
+output_into_log_book, event, text
 (*global).proposal_number = proposal_number
 
 ; create inst_run# folder into own space
+text = ' -> Create inst_run # folde into own space'
+output_into_log_book, event, text
+
 working_path = (*global).working_path
+
 folder_to_create = "BSS/" + proposal_number + "/" + $
   strcompress(run_number,/remove_all) 
+text = '    folder to create (up to run #): ' + folder_to_create
+output_into_log_book, event, text
 
 (*global).path_up_to_proposal_number = working_path + folder_to_create
 
 folder_to_create += "/preNeXus"
-text = ' -> folder to create: ' + folder_to_create
+text = '    folder to create (up to preNeXus): ' + folder_to_create
 output_into_log_book, event, text
 
 full_folder_name_to_create = working_path + folder_to_create
@@ -2107,22 +2218,38 @@ full_output_file_name = full_output_folder_name + "/" + output_file_name
 (*global).full_output_file_name = full_output_file_name
 (*global).full_output_folder_name = full_output_folder_name
 
-data = (*(*global).remap)
+if ((*global).debug EQ 0) then begin
+    data = (*(*global).remap)
+endif else begin
+    data = (*(*global).remap_histo)
+endelse
+
 ;add 8*128 '0' of the diffraction tube to have same format of histo
 ;files
 
-output_data = lonarr(128L,72L)
-output_data(*,0:63L) = data(*,*)
+if ((*global).debug EQ 0) then begin
+    output_data = lonarr(128L,72L)
+    output_data(*,0:63L) = data(*,*)
+    
+    look_up = (*(*global).look_up)
+    
+    reorder_data, Event, output_data
+    new_output_data = (*(*global).reorder_array)
+    
+    reshape_data = lonarr(64L,144L)
+    reshape_data(*,*)=new_output_data
+endif else begin
+    output_data = lonarr((*global).Nt,128L,72L)
+    output_data(*,*,0:63L) = data_histo(*,*,*)
+    look_up_histo = (*(*global).look_up_histo)
+    reorder_data, Event, output_data
 
-look_up = (*(*global).look_up)
+endelse
 
-reorder_data, Event, output_data
-new_output_data = (*(*global).reorder_array)
-
-reshape_data = lonarr(64L,144L)
-reshape_data(*,*)=new_output_data
 
 ;write out data
+text = 'Create histo_mammed file name: ' + full_output_file_name
+output_into_log_book, event,text
 openw,u1,full_output_file_name,/get
 writeu,u1,new_output_data
 
@@ -2166,7 +2293,12 @@ endfor
 run_number = (*global).run_number
 ;create timemap file "Create_Tbin_file -l 150000 -M 150000 -o
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
-cmd = "Create_Tbin_File -l 150000 -M 150000 -o "
+if ((*global).debug EQ 0) then begin
+    cmd = "Create_Tbin_File -l 150000 -M 150000 -o "
+endif else begin
+    cmd = "Create_Tbin_File -l 10 -M 200000 -o "
+endelse
+
 cmd += full_output_folder_name + "/BSS_" + $
   strcompress(run_number,/remove_all)
 cmd += "_neutron_timemap.dat"
@@ -2256,22 +2388,40 @@ pro reorder_data, Event, data
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+Nt=(*global).Nt
 Nx=(*global).Nx
 Ny=(*global).Ny_scat
 Ny_diff=(*global).Ny_diff
 
-look_up=(*(*global).look_up)
+if ((*global).debug EQ 0) then begin
 
-size_reorder_array = (Nx * (Ny + (*global).Ny_diff))
-reorder_pixelids = lonarr(size_reorder_array)
-
-for i=0,Nx-1 do begin
-    for j=0,Ny-1 do begin
-        reorder_pixelids(look_up(i, j))=data(i,j)
+    look_up=(*(*global).look_up)
+    
+    size_reorder_array = (Nx*(Ny+Ny_diff))
+    reorder_pixelids = lonarr(size_reorder_array)
+    
+    for i=0,Nx-1 do begin
+        for j=0,Ny-1 do begin
+            reorder_pixelids(look_up(i, j))=data(i,j)
+        endfor
     endfor
-endfor
+    
+    (*(*global).reorder_array) = reorder_pixelids
 
-(*(*global).reorder_array) = reorder_pixelids
+endif else begin
+
+    look_up_histo = (*(*global).look_up_histo)
+    
+    size_reorder_array = Nt*(Nx*(Ny+Ny_diff))
+    reorder_pixelids = lonarr(size_reorder_array)
+
+    for i=0,Nx-1 do begin
+        for j=0,Ny-1 do begin
+            reorder_pixelids(look_up(*,i,j)) = data_histo(*,i,j)
+        endfor
+    endfor
+
+endelse
 
 end
 
@@ -2336,9 +2486,11 @@ if (run_number EQ '') then begin
     
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
     output_into_general_infos, event, text, 0
-    
+    (*global).nexus_open = 0
+        
 endif else begin
     
+    (*global).nexus_open = 1
     (*global).run_number = run_number
     
     text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
@@ -2462,7 +2614,16 @@ image1 = ulonarr(Nt,Nx,Ny_scat)
 image1(*,*,0:Ny_scat_bank-1) = image_top
 image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
 
+;(*(*global).image_nt_nx_ny) = image1
+
 PLOT_HISTO_FILE, Event, image1
+
+;update Nt of nt_histo_draw_tube_pixels_slider
+; nt_histo_draw_tube_pixels_slider_id = $
+;   widget_info(Event.top, $
+;               find_by_uname='nt_histo_draw_tube_pixels_slider')
+; widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(Nt-1)
+
 
 end
 
@@ -2611,15 +2772,14 @@ widget_control,id,get_uvalue=global
 full_view_info = widget_info(event.top,find_by_uname='log_book')
 widget_control, full_view_info, set_value=full_text,/append
 
-if ((*global).ucams EQ 'ele') then begin
-;if ((*global).ucams EQ 'j35') then begin
+if ((*global).ucams EQ (*global).debugger) then begin
 
-file_name = (*global).debug_output_file_name
-openu, 1, file_name, /append
-text = full_text
-printf, 1,text
-close, 1
-free_lun, 1
+    file_name = (*global).debug_output_file_name
+    openu, 1, file_name, /append
+    text = full_text
+    printf, 1,text
+    close, 1
+    free_lun, 1
 
 endif
 
@@ -2644,3 +2804,70 @@ endif
 
 end
 
+
+
+
+pro histo_plot_tubes_pixels, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nt_id = widget_info(Event.top, find_by_uname='nt_histo_draw_tube_pixels_slider')
+widget_control, nt_id, get_value=Nt
+
+tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_slider')
+widget_control, tube_number_id, get_value=tube_number
+
+;color
+;DEVICE, DECOMPOSED = 0
+;loadct,5
+
+image_nt_nx_ny = (*(*global).image_nt_nx_ny)
+
+i1=(*(*global).i1)
+i2=(*(*global).i2)
+i3=(*(*global).i3)
+i4=(*(*global).i4)
+i5=(*(*global).i5)
+
+indx1 = i1[tube_number]
+indx2 = i2[tube_number]
+indx3 = i3[tube_number]
+indx4 = i4[tube_number]
+cntr = i5[tube_number]
+
+draw_info= widget_info(Event.top, find_by_uname='histo_draw_tube_pixels_draw')
+widget_control, draw_info, get_value=draw_id
+wset, draw_id
+
+;loadct,0
+plot, image_nt_nx_ny[Nt,*,tube_number]
+oplot, image_nt_nx_ny[Nt,*,tube_number],psym=4,color=255
+
+plots,[indx1,0],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx2,0],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[cntr,0],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx3,0],psym=4,color=255+(256*0)+(150*256),thick=3
+plots,[indx4,0],psym=4,color=255+(256*0)+(150*256),thick=3
+
+end
+
+
+
+
+pro  draw_tube_pixels_base_eventcb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).nexus_open EQ 1) then begin
+
+    image1 = (*(*global).image_nt_nx_ny)
+    histo_plot_tubes_pixels, Event
+    PLOT_HISTO_FILE, Event, image1
+
+endif
+
+end
