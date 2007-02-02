@@ -28,10 +28,28 @@ pro MAIN_BASE_event, Event
         OPEN_NEXUS_INTERFACE, Event
     end
 
+    ;Open widget in the top toolbar - OPEN LOCAL RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='open_local_nexus_menu'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_LOCAL_NEXUS_INTERFACE, Event
+    end
+
     ;Open widget in the top toolbar - OPEN RUN #
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_RUN_NUMBER_BUTTON'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         OPEN_NEXUS, Event
+    end
+
+    ;Open widget in the top toolbar - OPEN LOCAL RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_LOCAL_RUN_NUMBER_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_NEXUS, Event, 1
+    end
+
+    ;Open rebinNeXus GUI
+    Widget_Info(wWidget, FIND_BY_UNAME='rebinGUI_button'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        rebinGUI_button_eventcb, Event
     end
 
     ;Cancel open_run_number - OPEN RUN #
@@ -39,7 +57,12 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         CANCEL_OPEN_NEXUS, Event
     end
-        
+
+    ;Cancel open_local_run_number - OPEN RUN #
+    Widget_Info(wWidget, FIND_BY_UNAME='CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        CANCEL_LOCAL_OPEN_NEXUS, Event
+    end
 
     ;Exit widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU'): begin
@@ -413,51 +436,121 @@ widget_control,MAIN_BASE,set_uvalue=global
   
 
 ;open nexus_file window
-  OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
-                               XOFFSET=90,$
-                               YOFFSET=60,$
-                               UNAME='OPEN_NEXUS_BASE',$
-                               SCR_XSIZE=300,$
-                               SCR_YSIZE=50,$
-                               FRAME=10,$
-                               SPACE=4,$
-                               XPAD=3,$
-                               YPAD=3,$
-                               MAP=0)
-  
-  OPEN_RUN_NUMBER_LABEL = widget_label(OPEN_NEXUS_BASE,$
-                                       xoffset=5,$
-                                       yoffset=8,$
-                                       uname='OPEN_RUN_NUMBER_LABEL',$
-                                       scr_xsize=65,$
-                                       scr_ysize=30,$
-                                       value='Run number ')
-  
-  OPEN_RUN_NUMBER_TEXT = widget_text(OPEN_NEXUS_BASE,$
-                                     xoffset=70,$
-                                     yoffset=8,$
-                                     scr_xsize=80,$
+OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
+                             XOFFSET=90,$
+                             YOFFSET=60,$
+                             UNAME='OPEN_NEXUS_BASE',$
+                             SCR_XSIZE=300,$
+                             SCR_YSIZE=60,$
+                             FRAME=10,$
+                             SPACE=4,$
+                             XPAD=3,$
+                             YPAD=3,$
+                             MAP=0)
+
+OPEN_LOCAL_LABEL = widget_label(OPEN_NEXUS_BASE,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                value='Open archived nexus file',$
+                                scr_xsize=295,$
+                                frame=1)
+                          
+yoffset=18
+OPEN_RUN_NUMBER_LABEL = widget_label(OPEN_NEXUS_BASE,$
+                                     xoffset=5,$
+                                     yoffset=8+yoffset,$
+                                     uname='OPEN_RUN_NUMBER_LABEL',$
+                                     scr_xsize=65,$
                                      scr_ysize=30,$
-                                     value='',$
-                                     uname='OPEN_RUN_NUMBER_TEXT',$
-                                     /editable,$
-                                     /align_left)
-  
-  OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
-                                         xoffset=160,$
-                                         yoffset=8,$
-                                         scr_xsize=60,$
+                                     value='Run number ')
+
+OPEN_RUN_NUMBER_TEXT = widget_text(OPEN_NEXUS_BASE,$
+                                   xoffset=70,$
+                                   yoffset=8+yoffset,$
+                                   scr_xsize=80,$
+                                   scr_ysize=30,$
+                                   value='',$
+                                   uname='OPEN_RUN_NUMBER_TEXT',$
+                                   /editable,$
+                                   /align_left)
+
+OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
+                                       xoffset=160,$
+                                       yoffset=8+yoffset,$
+                                       scr_xsize=60,$
+                                       scr_ysize=30,$
+                                       value='OPEN',$
+                                       uname='OPEN_RUN_NUMBER_BUTTON')
+
+CANCEL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
+                                              xoffset=230,$
+                                              yoffset=8+yoffset,$
+                                              scr_xsize=60,$
+                                              scr_ysize=30,$
+                                              value='CANCEL',$
+                                              uname='CANCEL_OPEN_RUN_NUMBER_BUTTON')
+
+;open local nexus_file window
+OPEN_LOCAL_NEXUS_BASE = widget_base(MAIN_BASE,$
+                                    xoffset=90,$
+                                    yoffset=60,$
+                                    uname='open_local_nexus_base',$
+                                    scr_xsize=300,$
+                                    scr_ysize=60,$
+                                    frame=10,$
+                                    xpad=4,$
+                                    ypad=3,$
+                                    map=0)
+          
+OPEN_LOCAL_LABEL = widget_label(OPEN_LOCAL_NEXUS_BASE,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                value='Open local nexus file (~/local/)',$
+                                scr_xsize=295,$
+                                frame=1)
+                          
+yoffset=18
+OPEN_LOCAL_RUN_NUMBER_LABEL = widget_label(OPEN_LOCAL_NEXUS_BASE,$
+                                           xoffset=5,$
+                                           yoffset=8+yoffset,$
+                                           uname='OPEN_LOCAL_RUN_NUMBER_LABEL',$
+                                           scr_xsize=65,$
+                                           scr_ysize=30,$
+                                           value='Run number ')
+
+OPEN_LOCAL_RUN_NUMBER_TEXT = widget_text(OPEN_LOCAL_NEXUS_BASE,$
+                                         xoffset=70,$
+                                         yoffset=8+yoffset,$
+                                         scr_xsize=80,$
                                          scr_ysize=30,$
-                                         value='OPEN',$
-                                         uname='OPEN_RUN_NUMBER_BUTTON')
-  
-  CANCEL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_NEXUS_BASE,$
-                                                xoffset=230,$
-                                                yoffset=8,$
-                                                scr_xsize=60,$
-                                                scr_ysize=30,$
-                                                value='CANCEL',$
-                                                uname='CANCEL_OPEN_RUN_NUMBER_BUTTON')
+                                         value='',$
+                                         uname='OPEN_LOCAL_RUN_NUMBER_TEXT',$
+                                         /editable,$
+                                         /align_left)
+
+OPEN_LOCAL_RUN_NUMBER_BUTTON = widget_button(OPEN_LOCAL_NEXUS_BASE,$
+                                             xoffset=160,$
+                                             yoffset=8+yoffset,$
+                                             scr_xsize=60,$
+                                             scr_ysize=30,$
+                                             value='OPEN',$
+                                             uname='OPEN_LOCAL_RUN_NUMBER_BUTTON')
+
+CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_LOCAL_NEXUS_BASE,$
+                                                    xoffset=230,$
+                                                    yoffset=8+yoffset,$
+                                                    scr_xsize=60,$
+                                                    scr_ysize=30,$
+                                                    value='CANCEL',$
+                                                    uname='CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON')
+
+
+
+
+
+
+
+
 
 ;top-left frame (display of counts vs pixelID for each tube
 ;one at a time and tube per tube for each of the Nt time bins
@@ -556,8 +649,8 @@ widget_control,MAIN_BASE,set_uvalue=global
                          xoffset=560,$
                          yoffset=10,$
                          scr_xsize=545,$
-                         scr_ysize=440,$
-                         frame=1)
+                         scr_ysize=440)
+
 
  first_tab = widget_tab(tabs_base,$
                         uname='data_reduction_tab',$
@@ -1262,12 +1355,18 @@ tube1_label =  widget_label(tube1_base,$
                                   value="Open Run #...",$
                                   uname="OPEN_NEXUS_menu")
   
+
+  open_local_nexus_menu = widget_button(FILE_MENU,$
+                                        value='Open local Run #...',$
+                                        uname='open_local_nexus_menu')
+
   OPEN_MAPPED_HISTOGRAM = Widget_Button(FILE_MENU, $
                                         UNAME='OPEN_MAPPED_HISTOGRAM',$
                                         VALUE='Open Mapped Histogram')
                                      
-;  OPEN_HISTOGRAM = Widget_Button(FILE_MENU, UNAME='OPEN_HISTOGRAM'  $
-;      ,VALUE='Open Histogram')
+  rebinGUI_button = widget_button(FILE_MENU,$
+                                  uname='rebinGUI_button',$
+                                  value='RebinNeXus')
 
   EXIT_MENU = Widget_Button(FILE_MENU,$
                             UNAME='EXIT_MENU',$
