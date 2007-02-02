@@ -95,6 +95,22 @@ end
 
 
 
+pro OPEN_LOCAL_NEXUS_INTERFACE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display open_local_nexus interface
+open_local_nexus_id = widget_info(Event.top, find_by_uname='open_local_nexus_base')
+widget_control, open_local_nexus_id, map=1
+
+end
+
+
+
+
+
 
 FUNCTION find_full_nexus_name, Event, run_number, instrument    
 
@@ -120,6 +136,34 @@ return, full_nexus_name
 
 end
 
+
+
+
+FUNCTION find_full_local_nexus_name, Event, run_number, instrument    
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd = "findnexus -i" + instrument 
+cmd += " --prefix " + (*global).working_path
+cmd += " " + strcompress(run_number,/remove_all)
+spawn, cmd, full_nexus_name
+
+;check if nexus exists
+result = strmatch(full_nexus_name,"ERROR*")
+
+if (result GE 1) then begin
+    find_nexus = 0
+endif else begin
+    find_nexus = 1
+endelse
+
+(*global).find_nexus = find_nexus
+
+return, full_nexus_name
+
+end
 
 
  
@@ -169,6 +213,15 @@ widget_control, open_nexus_id, map=0
 end
 
 
+
+
+pro CANCEL_LOCAL_OPEN_NEXUS, Event
+
+;hide open_nexus interface
+open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='open_local_nexus_base')
+widget_control, open_nexus_id, map=0
+
+end
 
 
 
@@ -1943,6 +1996,7 @@ endelse
 ;write out data
 text = 'Create histo_mammed file name: ' + full_output_file_name
 output_into_log_book, event,text
+
 openw,u1,full_output_file_name,/get
 writeu,u1,new_output_data
 
@@ -2153,7 +2207,7 @@ end
 
 ;========================OPEN NEXUS============================
 
-pro OPEN_NEXUS, Event
+pro OPEN_NEXUS, Event, local
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -2168,12 +2222,17 @@ widget_control,/hourglass
 initialization_of_arrays, Event
 
 ;hide open_nexus interface
-open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
-widget_control, open_nexus_id, map=0
-
-;retrieve run_number
-run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
-widget_control, run_number_id, get_value=run_number
+if (n_elements(local) EQ 0) then begin
+    open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
+    widget_control, open_nexus_id, map=0
+    run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
+    widget_control, run_number_id, get_value=run_number
+endif else begin
+    open_local_nexus_id = widget_info(Event.top, FIND_BY_UNAME='open_local_nexus_base')
+    widget_control, open_local_nexus_id, map=0
+    run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_LOCAL_RUN_NUMBER_TEXT')
+    widget_control, run_number_id, get_value=run_number
+endelse
 
 if (run_number EQ '') then begin
     
@@ -2188,17 +2247,31 @@ endif else begin
     (*global).nexus_open = 1
     (*global).run_number = run_number
     
-    text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
-    output_into_general_infos, event, text, 0
-    output_into_log_book, event, text, 0
+    if (n_elements(local) EQ 0) then begin
+
+        text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
+        output_into_general_infos, event, text, 0
+        output_into_log_book, event, text, 0
     
 ;get path to nexus run #
-    instrument="BSS"
-    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+        instrument="BSS"
+        full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
     
+    endif else begin
+
+        text = "Opening local NeXus file # " + strcompress(run_number,/remove_all) + "....."
+        output_into_general_infos, event, text, 0
+        output_into_log_book, event, text, 0
+    
+;get path to local nexus run #
+        instrument="BSS"
+        full_nexus_name = find_full_local_nexus_name(Event, run_number, instrument)
+
+    endelse
+
 ;check result of search
     find_nexus = (*global).find_nexus
-
+    
     if (find_nexus EQ 0) then begin
         
         text_nexus = "Warning! NeXus file does not exist"
@@ -2869,5 +2942,12 @@ output_into_log_book, event, '> ' + text
 spawn, cmd_dump_bottom, listening
 output_into_log_book, event, listening
 output_error, event, err_listening
+
+end
+
+
+pro rebinGUI_button_eventcb, Event
+
+spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinNeXus &'
 
 end
