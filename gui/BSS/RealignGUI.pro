@@ -39,8 +39,7 @@ pro MAIN_BASE_event, Event
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
         CANCEL_OPEN_NEXUS, Event
     end
-    
-    
+        
 
     ;Exit widget in the top toolbar
     Widget_Info(wWidget, FIND_BY_UNAME='EXIT_MENU'): begin
@@ -284,7 +283,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 ;or other means
 
 global = ptr_new({$
-                   debugger : 'ele',$
+                   debugger : '',$    ;'j35' or 'ele'
                    nexus_open : 0,$
                    debug : 0,$                     ;1 for debugging  ;0 for not debgging
                    debug_output_file_name : '~/RealignGUI_debug.txt',$
@@ -347,70 +346,70 @@ global = ptr_new({$
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
-  IDENTIFICATION_BASE= widget_base(MAIN_BASE,$
-                                   XOFFSET=150,$
-                                   YOFFSET=120,$
-                                   UNAME='IDENTIFICATION_BASE',$
-                                   SCR_XSIZE=240,$
-                                   SCR_YSIZE=120,$
-                                   FRAME=10,$
-                                   SPACE=4,$
-                                   XPAD=3,$
-                                   YPAD=3)
+;   IDENTIFICATION_BASE= widget_base(MAIN_BASE,$
+;                                    XOFFSET=150,$
+;                                    YOFFSET=120,$
+;                                    UNAME='IDENTIFICATION_BASE',$
+;                                    SCR_XSIZE=240,$
+;                                    SCR_YSIZE=120,$
+;                                    FRAME=10,$
+;                                    SPACE=4,$
+;                                    XPAD=3,$
+;                                    YPAD=3)
   
-  IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
-                                      XOFFSET=40,$
-                                      YOFFSET=3,$
-                                      VALUE="ENTER YOUR 3 CHARACTERS ID")
+;   IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
+;                                       XOFFSET=40,$
+;                                       YOFFSET=3,$
+;                                       VALUE="ENTER YOUR 3 CHARACTERS ID")
   
-  IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
-                                    XOFFSET=100,$
-                                    YOFFSET=20,$
-                                    VALUE='',$ ;
-                                    SCR_XSIZE=37,$
-                                    /editable,$
-                                    UNAME='IDENTIFICATION_TEXT',$
-                                    /ALL_EVENTS)
+;   IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
+;                                     XOFFSET=100,$
+;                                     YOFFSET=20,$
+;                                     VALUE='',$ ;
+;                                     SCR_XSIZE=37,$
+;                                     /editable,$
+;                                     UNAME='IDENTIFICATION_TEXT',$
+;                                     /ALL_EVENTS)
   
-  ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
-                                           XOFFSET=5,$
-                                           YOFFSET=25,$
-                                           VALUE='',$
-                                           SCR_XSIZE=90,$
-                                           SCR_YSIZE=20, $
-                                           UNAME='ERROR_IDENTIFICATION_LEFT')
+;   ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
+;                                            XOFFSET=5,$
+;                                            YOFFSET=25,$
+;                                            VALUE='',$
+;                                            SCR_XSIZE=90,$
+;                                            SCR_YSIZE=20, $
+;                                            UNAME='ERROR_IDENTIFICATION_LEFT')
   
-  ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
-                                            XOFFSET=140,$
-                                            YOFFSET=25,$
-                                            VALUE='',$
-                                            SCR_XSIZE=90,$
-                                            SCR_YSIZE=20, $
-                                            UNAME='ERROR_IDENTIFICATION_RIGHT')
+;   ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
+;                                             XOFFSET=140,$
+;                                             YOFFSET=25,$
+;                                             VALUE='',$
+;                                             SCR_XSIZE=90,$
+;                                             SCR_YSIZE=20, $
+;                                             UNAME='ERROR_IDENTIFICATION_RIGHT')
   
-  DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
-                                      XOFFSET=0,$
-                                      YOFFSET=55,$
-                                      VALUE='Working path',$
-                                      SCR_XSIZE=80,$
-                                      SCR_YSIZE=30,$
-                                      UNAME='DEFAULT_PATH_BUTTON')
+;   DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
+;                                       XOFFSET=0,$
+;                                       YOFFSET=55,$
+;                                       VALUE='Working path',$
+;                                       SCR_XSIZE=80,$
+;                                       SCR_YSIZE=30,$
+;                                       UNAME='DEFAULT_PATH_BUTTON')
   
-  DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
-                                  XOFFSET=83,$
-                                  YOFFSET=55,$
-                                  VALUE=(*global).default_path,$
-                                  UNAME='DEFAULT_PATH_TEXT',$
-                                  /editable,$
-                                  SCR_XSIZE=150)
+;   DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
+;                                   XOFFSET=83,$
+;                                   YOFFSET=55,$
+;                                   VALUE=(*global).default_path,$
+;                                   UNAME='DEFAULT_PATH_TEXT',$
+;                                   /editable,$
+;                                   SCR_XSIZE=150)
   
-  IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
-                                    XOFFSET=67,$
-                                    YOFFSET=90,$
-                                    SCR_XSIZE=130,$
-                                    SCR_YSIZE=30,$
-                                    VALUE="E N T E R",$
-                                    UNAME='IDENTIFICATION_GO')		
+;   IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
+;                                     XOFFSET=67,$
+;                                     YOFFSET=90,$
+;                                     SCR_XSIZE=130,$
+;                                     SCR_YSIZE=30,$
+;                                     VALUE="E N T E R",$
+;                                     UNAME='IDENTIFICATION_GO')		
   
 
 ;open nexus_file window
@@ -1261,14 +1260,12 @@ tube1_label =  widget_label(tube1_base,$
 
   OPEN_NEXUS_menu = widget_button(FILE_MENU,$
                                   value="Open Run #...",$
-                                  uname="OPEN_NEXUS_menu",$
-                                  sensitive=0)
+                                  uname="OPEN_NEXUS_menu")
   
   OPEN_MAPPED_HISTOGRAM = Widget_Button(FILE_MENU, $
                                         UNAME='OPEN_MAPPED_HISTOGRAM',$
-                                        VALUE='Open Mapped Histogram',$
-                                        sensitive=0)
-
+                                        VALUE='Open Mapped Histogram')
+                                     
 ;  OPEN_HISTOGRAM = Widget_Button(FILE_MENU, UNAME='OPEN_HISTOGRAM'  $
 ;      ,VALUE='Open Histogram')
 
