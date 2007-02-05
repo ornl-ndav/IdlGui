@@ -667,10 +667,6 @@ endfor
 
 plot_tube_box, Event, 0
 
-draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
-widget_control, draw_info, get_value=draw_id
-wset, draw_id
-erase
 
 ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
@@ -1903,7 +1899,7 @@ output_error, event, err_listening
 cd, working_path
 
 if (listening NE '') then begin ;if folder already exists, remove it
-    cmd_remove = 'rm -r '+ full_folder_name_to_create
+    cmd_remove = 'rm -rf '+ full_folder_name_to_create
     text = ' >' + cmd_remove
     output_into_log_book, event, text
     spawn, cmd_remove, listening, err_listening
@@ -1985,10 +1981,10 @@ if ((*global).debug EQ 0) then begin
     reshape_data = lonarr(64L,144L)
     reshape_data(*,*)=new_output_data
 endif else begin
-    output_data = lonarr((*global).Nt,128L,72L)
-    output_data(*,*,0:63L) = data_histo(*,*,*)
+    new_output_data = lonarr((*global).Nt,128L,72L)
+    new_output_data(*,*,0:63L) = data(*,*,*)
     look_up_histo = (*(*global).look_up_histo)
-    reorder_data, Event, output_data
+    reorder_data, Event, new_output_data
 
 endelse
 
@@ -2164,7 +2160,7 @@ endif else begin
 
     for i=0,Nx-1 do begin
         for j=0,Ny-1 do begin
-            reorder_pixelids(look_up(*,i,j)) = data_histo(*,i,j)
+            reorder_pixelids(look_up_histo(*,i,j)) = data(*,i,j)
         endfor
     endfor
 
@@ -2244,6 +2240,24 @@ if (run_number EQ '') then begin
     
 endif else begin
     
+    ;erase main plots
+    draw_tube_pixels_draw_id = widget_info(Event.top,find_by_uname='draw_tube_pixels_draw')
+    widget_control, draw_tube_pixels_draw_id, get_value=draw_id
+    wset, draw_id
+    erase
+
+    ;erase remap plots
+    draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
+    widget_control, draw_info, get_value=draw_id
+    wset, draw_id
+    erase
+
+    ;DAS plots
+    DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
+    widget_control, DAS_plot_draw_id, get_value=draw_id
+    wset, draw_id
+    erase
+
     (*global).nexus_open = 1
     (*global).run_number = run_number
     
@@ -2387,7 +2401,7 @@ image1 = ulonarr(Nt,Nx,Ny_scat)
 image1(*,*,0:Ny_scat_bank-1) = image_top
 image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
 
-;(*(*global).image_nt_nx_ny) = image1
+(*(*global).image_nt_nx_ny) = image1
 
 PLOT_HISTO_FILE, Event, image1
 
@@ -2665,10 +2679,21 @@ widget_control,id,get_uvalue=global
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
+debug = (*global).debug
+
+;remove sensibility on button
+plot_mapped_data_id = widget_info(Event.top, find_by_uname='plot_mapped_data')
+widget_control, plot_mapped_data_id, sensitive=0
+
+if (debug EQ 1) then begin
+;show processing base
+    processing_base_id = widget_info(Event.top,$
+                                     find_by_uname='processing_base')
+    widget_control, processing_base_id, map=1
+endif 
+
 text = ''
 output_into_log_book, event,text
-
-debug = (*global).debug
 
 text="Realign and plot data..."
 output_into_general_infos, event, text
@@ -2721,8 +2746,7 @@ if ((*global).debug EQ 1) then begin
     temp_remap_histo = dblarr(Npix,Ntubes)
 endif
 
-;rindx = lonarr(5) ;will contain rindx0, rindx1...
-del = lonarr(5) ;will contain del0, del1...
+del = lonarr(5)
 
 tube_removed = (*(*global).tube_removed)
 
@@ -2743,8 +2767,6 @@ endif else begin
     
     for i=0,Ntubes-1 do begin
         
-;        print, 'i: ' , strcompress(i,/remove_all), '/', strcompress(Ntubes-1) ;remove_me
-
         if (tube_removed[i] EQ 0) then begin
 
             tube_pair = image_2d_1[*,i]
@@ -2767,6 +2789,7 @@ endif else begin
             d0 = float(length_tube0) * findgen(len_meas_tube0)/(len_meas_tube0) + t0 
             
 ;remap (rebin) first part of tube (less than i2) (junk)
+            if (i1[i] EQ 0) then i1[i]=1
             d0_0 = findgen(i1[i])/(i1[i])*t0
             
 ;remap (rebin) tube end data (junk)
@@ -2794,7 +2817,7 @@ endif else begin
             del0 = fix(mx0 - mn0) + 1
             del[1] = del0
             rindx0 = indgen(2)
-            rindx_1 = rindx0 
+            rindx_1 = rindx0
 
             dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
             scl = float(2)/i1[i]
@@ -2812,7 +2835,6 @@ endif else begin
             dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
             scl = float(del0)/(i3[i] - i2[i])
             remap[rindx0,i] = dat * scl
-
 ;REMAP TUBE1
             
 ;remap tube1 data
@@ -2848,11 +2870,13 @@ endif else begin
 
             dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
             remap[rindx1,i] = dat
-
-            time_str = systime(1)
-
+            
             if (debug EQ 1) then begin
+                
+                processing_draw_id = widget_info(Event.top,find_by_uname='processing_draw_id')
+                
                 temp_histo_dat = dblarr(Npix,Ntubes)
+                
                 for j=0,(Nt-1) do begin
                     temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
 ;                   histo_dat = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
@@ -2863,15 +2887,28 @@ endif else begin
                     remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3])
                     remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
                 endfor
+                
+                                ;evaluate size of processing bar
+                size_coeff = float(i)/(Ntubes-1)
+                size_bar = 220*size_coeff
+                processing_draw_id = widget_info(Event.top,$
+                                                 find_by_uname='processing_draw')
+                widget_control, processing_draw_id, scr_xsize=size_bar
+                processing_label_id = widget_info(Event.top, $
+                                                  find_by_uname='processing_label')
+                text = 'Processing...... ' 
+                pro_percentage = fix(size_coeff*100)
+                text += strcompress(pro_percentage,/remove_all)
+                text += '%'
+                widget_control, processing_label_id, $
+                  set_value=text
+
             endif
-            
-            time_end = systime(1)
-        
-;            print, '...done in ' + strcompress(time_end-time_str,/remove_all)
             
         endif
         
     endfor
+    
     
     text = '...done'
     output_into_log_book, event,text
@@ -2892,6 +2929,12 @@ endelse
 
 text="...done"
 output_into_general_infos, event, text
+
+if (debug EQ 1) then begin
+    widget_control, processing_base_id, map=0
+endif
+
+widget_control, plot_mapped_data_id, sensitive=1
 
 ;turn off hourglass
 widget_control,hourglass=0

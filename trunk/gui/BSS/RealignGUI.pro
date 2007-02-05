@@ -308,7 +308,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
 global = ptr_new({$
                    debugger : '',$    ;'j35' or 'ele'
                    nexus_open : 0,$
-                   debug : 0,$                     ;1 for debugging  ;0 for not debgging
+                   debug : 1,$                     ;1 for debugging  ;0 for not debgging
                    debug_output_file_name : '~/RealignGUI_debug.txt',$
                    tmp_nxdir_folder : '/realignGUI_tmp/',$
                    file_type : '',$
@@ -965,13 +965,52 @@ RESET_ALL_BUTTON_VALIDATE_CANCEL = WIDGET_BUTTON(RESET_ALL_BUTTON_VALIDATE_BASE,
                                               scr_xsize=85,$
                                               scr_ysize=25,$
                                               value='CANCEL')
+
+
+;processing info
+processing_base = WIDGET_BASE(interactive_tab_base,$
+                              uname='processing_base',$
+                              xoffset=10,$
+                              yoffset=340,$
+                              scr_xsize=224,$
+                              scr_ysize=35,$
+                              map=0,$
+                              frame=1)
+
+processing_draw = widget_draw(processing_base,$
+                              uname='processing_draw',$
+                              xoffset=1,$
+                              yoffset=18,$
+                              scr_xsize=1,$ ;220 is max
+                              scr_ysize=16)
+
+processing_draw_frame = widget_label(processing_base,$
+                                     xoffset=0,$
+                                     yoffset=17,$
+                                     scr_xsize=220,$
+                                     scr_ysize=15,$
+                                     frame=1,$
+                                     value='')
+
+processing_label = widget_label(processing_base,$
+                                uname='processing_label',$
+                                xoffset=10,$
+                                yoffset=0,$
+                                scr_xsize=200,$
+                                scr_ysize=20,$
+                                value='Processing...... 1%')
+
+
+
+
+
 ;Get Mapped Plot
 plot_mapped_data = widget_button(interactive_tab_base,$
                                  XOFFSET=2,$
                                  YOFFSET=380,$
                                  SCR_XSIZE=110,$
                                  SCR_YSIZE=30,$
-                                 VALUE="PLOT MAPPED DATA",$
+                                 VALUE="Realign / Plot",$
                                  UNAME='plot_mapped_data')
                                  
 
