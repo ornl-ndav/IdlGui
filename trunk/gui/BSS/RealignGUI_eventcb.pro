@@ -2016,7 +2016,9 @@ run_number = (*global).run_number
 
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
 linear_coeff = ceil(float(200000) / float((*global).Nt))
-cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 200000 -o "
+;cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all)
+;+ " -M 200000 -o " 
+cmd = "Create_Tbin_File -l 20 -M 200000 --time_offset 100000 -o " 
 
 cmd += full_output_folder_name + "/BSS_" + $
   strcompress(run_number,/remove_all)
@@ -2881,7 +2883,16 @@ endif else begin
         
     endfor
     
-    
+    size_bar = 220
+    processing_draw_id = widget_info(Event.top,$
+                                     find_by_uname='processing_draw')
+    widget_control, processing_draw_id, scr_xsize=size_bar
+    processing_label_id = widget_info(Event.top, $
+                                      find_by_uname='processing_label')
+    text = 'Processing...... 200%' 
+    widget_control, processing_label_id, $
+      set_value=text
+
     text = '...done'
     output_into_log_book, event,text
     
@@ -2977,5 +2988,51 @@ end
 pro rebinGUI_button_eventcb, Event
 
 spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinBSSNeXus &'
+
+end
+
+
+
+
+
+
+pro display_interactive_window, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+interactive_cmd_line_base_id = widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
+widget_control, interactive_cmd_line_base_id, map=1
+
+
+end
+
+
+
+
+
+
+
+
+
+pro interactive_ok_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+end
+
+
+pro interactive_cancel_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+interactive_cmd_line_base_id = widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
+widget_control, interactive_cmd_line_base_id, map=0
+
 
 end

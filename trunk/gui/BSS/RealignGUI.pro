@@ -230,7 +230,8 @@ pro MAIN_BASE_event, Event
 ;Widget to output histo_mapped_realigned data
     Widget_Info(wWidget, FIND_BY_UNAME='output_new_histo_mapped_file'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        output_new_histo_mapped_file, Event
+;        output_new_histo_mapped_file, Event
+         create_nexus_file, Event
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
@@ -272,6 +273,18 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='MAX_TBIN_TEXT'): begin
   	max_tbin_text, Event
     end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='interactive_ok_button'): begin
+  	interactive_ok_button_eventcb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='interactive_cancel_button'): begin
+  	interactive_cancel_button_eventcb, Event
+    end
+
+
+
+
 
   
 
@@ -348,7 +361,6 @@ global = ptr_new({$
                    image1                     : ptr_new(0L),$
                    image_2d_1		      : ptr_new(0L),$
                    image_2d_1_untouched	      : ptr_new(0L),$   
-                   remap                      : ptr_new(0L),$
                    remap_histo                : ptr_new(0L),$
                    reorder_array              : ptr_new(0L),$
                    tube_removed               : ptr_new(0L),$
@@ -448,6 +460,153 @@ OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
                              YPAD=3,$
                              MAP=0)
 
+
+
+;interactive command line window
+
+interactive_cmd_line_base = widget_base(main_base,$
+                                        xoffset=560,$
+                                        yoffset=455,$
+                                        uname='interactive_cmd_line_base',$
+                                        scr_xsize=545,$
+                                        scr_ysize=235,$
+                                        frame=1,$
+                                        map=1)
+
+interactive_create_tbin_file_label = widget_label(interactive_cmd_line_base,$
+                                                  xoffset=5,$
+                                                  yoffset=15,$
+                                                  value='Create_Tbin_File: ',$
+                                                  /align_left)
+
+interactive_create_tbin_file_text = widget_text(interactive_cmd_line_base,$
+                                                xoffset=120,$
+                                                yoffset=10,$
+                                                scr_xsize=420,$
+                                                scr_ysize=60,$
+                                                value='',$
+                                               /align_left,$
+                                               /editable,$
+                                               /wrap,$
+                                               /scroll)
+
+;Nt
+interactive_nt_label = widget_label(interactive_cmd_line_base,$
+                                    xoffset=5,$
+                                    yoffset=85,$
+                                    value='Nt:',$
+                                    /align_left)
+
+interactive_nt_text = widget_text(interactive_cmd_line_base,$
+                                  uname='interactive_nt_text',$
+                                  xoffset=30,$
+                                  yoffset=80,$
+                                  value='',$
+                                  scr_xsize=60,$
+                                  scr_ysize=30,$
+                                  /align_left,$
+                                  /editable)
+
+
+;Nx
+x_off = 100
+interactive_nx_label = widget_label(interactive_cmd_line_base,$
+                                    xoffset=5+x_off,$
+                                    yoffset=85,$
+                                    value='Nx:',$
+                                    /align_left)
+
+interactive_nx_text = widget_text(interactive_cmd_line_base,$
+                                  uname='interactive_nx_text',$
+                                  xoffset=30+x_off,$
+                                  yoffset=80,$
+                                  value='',$
+                                  scr_xsize=60,$
+                                  scr_ysize=30,$
+                                  /align_left,$
+                                  /editable)
+
+;Ny
+x_off = 200
+interactive_ny_label = widget_label(interactive_cmd_line_base,$
+                                    xoffset=5+x_off,$
+                                    yoffset=85,$
+                                    value='Ny:',$
+                                    /align_left)
+
+interactive_ny_text = widget_text(interactive_cmd_line_base,$
+                                  uname='interactive_ny_text',$
+                                  xoffset=30+x_off,$
+                                  yoffset=80,$
+                                  value='',$
+                                  scr_xsize=60,$
+                                  scr_ysize=30,$
+                                  /align_left,$
+                                  /editable)
+
+
+;N
+x_off = 300
+interactive_n_label = widget_label(interactive_cmd_line_base,$
+                                    xoffset=5+x_off,$
+                                    yoffset=85,$
+                                    value='Nbr elements:',$
+                                    /align_left)
+
+interactive_n_text = widget_text(interactive_cmd_line_base,$
+                                  uname='interactive_n_text',$
+                                  xoffset=90+x_off,$
+                                  yoffset=80,$
+                                  value='',$
+                                  scr_xsize=100,$
+                                  scr_ysize=30,$
+                                  /align_left,$
+                                  /editable)
+
+
+interactive_nexus_label = widget_label(interactive_cmd_line_base,$
+                                       xoffset=5,$
+                                       yoffset=130,$
+                                       value='NeXus file:',$
+                                       /align_left)
+
+interactive_nexus_text = widget_text(interactive_cmd_line_base,$
+                                     xoffset=80,$
+                                     yoffset=125,$
+                                     value='',$
+                                     scr_xsize=460,$
+                                     scr_ysize=50,$
+                                     uname='interactive_nexus_text',$
+                                     /align_left,$
+                                     /editable,$
+                                     /scroll,$
+                                    /wrap)
+
+;OK button
+interactive_ok_button = widget_button(interactive_cmd_line_base,$
+                                      xoffset=50,$
+                                      yoffset=190,$
+                                      value='VALIDATE',$
+                                      uname='interactive_ok_button',$
+                                      scr_xsize=200,$
+                                      scr_ysize=30,$
+                                     frame=1)
+
+
+;CANCEL button
+interactive_cancel_button = widget_button(interactive_cmd_line_base,$
+                                          xoffset=270,$
+                                          yoffset=190,$
+                                          value='CANCEL',$
+                                          uname='interactive_cancel_button',$
+                                          scr_xsize=200,$
+                                          scr_ysize=30,$
+                                          frame=1)
+
+
+
+
+;open local nexus interface
 OPEN_LOCAL_LABEL = widget_label(OPEN_NEXUS_BASE,$
                                 xoffset=0,$
                                 yoffset=0,$
@@ -975,7 +1134,7 @@ processing_base = WIDGET_BASE(interactive_tab_base,$
                               scr_xsize=224,$
                               scr_ysize=35,$
                               map=0,$
-                              frame=1)
+                              frame=0)
 
 processing_draw = widget_draw(processing_base,$
                               uname='processing_draw',$
@@ -998,7 +1157,7 @@ processing_label = widget_label(processing_base,$
                                 yoffset=0,$
                                 scr_xsize=200,$
                                 scr_ysize=20,$
-                                value='Processing...... 1%')
+                                value='Processing...... 0%')
 
 
 
@@ -1384,6 +1543,14 @@ tube1_label =  widget_label(tube1_base,$
                             SCR_YSIZE=y_dim-30,$
                             FRAME=1,$
                             VALUE="")
+
+
+
+
+
+
+
+
 
 
 ;draw boxes for plot windows
