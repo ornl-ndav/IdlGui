@@ -581,21 +581,6 @@ close,/all
 
 (*(*global).image1) = image1
 
-if ((*global).swap_endian EQ 1) then begin
-    
-    image1=swap_endian(image1)
-    diff=swap_endian(diff)
-    text = "true"
-    
-endif else begin
-    
-    text = "false"
-    
-endelse
-
-text1 = "  - Swap endian : " + text
-WIDGET_CONTROL, view_info, SET_VALUE=text1, /APPEND
-
 text = "  - Number of Tbins : " + strcompress(Nt,/remove_all)
 WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
@@ -869,7 +854,7 @@ end
 
 
 ;----------------------------------------------------------------
-pro plot_realign_data, Event
+pro plot_realign_data, Event, remap_histo_local
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -879,7 +864,8 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='general_infos')
 
 Ntubes = (*global).Ny_scat
 Npix = (*global).Nx
-remap = (*(*global).remap)
+
+remap = temporary(total(remap_histo_local,1))
 
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
@@ -1922,7 +1908,7 @@ end
 
 
 ;--------------------------------------------------------------------------
-pro output_new_histo_mapped_file, Event
+pro output_new_histo_mapped_file, Event, data
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1960,34 +1946,27 @@ full_output_file_name = full_output_folder_name + "/" + output_file_name
 (*global).full_output_file_name = full_output_file_name
 (*global).full_output_folder_name = full_output_folder_name
 
-if ((*global).debug EQ 0) then begin
-    data = (*(*global).remap)
-endif else begin
-    data = (*(*global).remap_histo)
-endelse
+;data = (*(*global).remap_histo) 
 
 ;add 8*128 '0' of the diffraction tube to have same format of histo
 ;files
 
-if ((*global).debug EQ 0) then begin
-    output_data = lonarr(128L,72L)
-    output_data(*,0:63L) = data(*,*)
+;;for old case with only 1 time bin
+;    output_data = lonarr(128L,72L)
+;     output_data(*,0:63L) = data(*,*)
     
-    look_up = (*(*global).look_up)
+;     look_up = (*(*global).look_up)
     
-    reorder_data, Event, output_data
-    new_output_data = (*(*global).reorder_array)
+;     reorder_data, Event, output_data
+;     new_output_data = (*(*global).reorder_array)
     
-    reshape_data = lonarr(64L,144L)
-    reshape_data(*,*)=new_output_data
-endif else begin
-    new_output_data = lonarr((*global).Nt,128L,72L)
-    new_output_data(*,*,0:63L) = data(*,*,*)
-    look_up_histo = (*(*global).look_up_histo)
-    reorder_data, Event, new_output_data
+;     reshape_data = lonarr(64L,144L)
+;     reshape_data(*,*)=new_output_data
 
-endelse
-
+new_output_data = ulonarr((*global).Nt,128L,72L,/NOZERO)
+new_output_data(*,*,0:63L) = temporary(data(*,*,*))
+look_up_histo = (*(*global).look_up_histo)
+reorder_data, Event, new_output_data
 
 ;write out data
 text = 'Create histo_mammed file name: ' + full_output_file_name
@@ -2000,7 +1979,7 @@ writeu,u1,new_output_data
 close,u1
 free_lun,u1
 
-create_nexus_file, Event
+;create_nexus_file, Event
 
 end
 
@@ -2034,13 +2013,10 @@ for i=0,1 do begin
 endfor
 
 run_number = (*global).run_number
-;create timemap file "Create_Tbin_file -l 150000 -M 150000 -o
+
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
-if ((*global).debug EQ 0) then begin
-    cmd = "Create_Tbin_File -l 150000 -M 150000 -o "
-endif else begin
-    cmd = "Create_Tbin_File -l 10 -M 200000 -o "
-endelse
+linear_coeff = ceil(float(200000) / float((*global).Nt))
+cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 200000 -o "
 
 cmd += full_output_folder_name + "/BSS_" + $
   strcompress(run_number,/remove_all)
@@ -2136,35 +2112,35 @@ Nx=(*global).Nx
 Ny=(*global).Ny_scat
 Ny_diff=(*global).Ny_diff
 
-if ((*global).debug EQ 0) then begin
+;if ((*global).debug EQ 0) then begin
 
-    look_up=(*(*global).look_up)
+;     look_up=(*(*global).look_up)
     
-    size_reorder_array = (Nx*(Ny+Ny_diff))
-    reorder_pixelids = lonarr(size_reorder_array)
+;     size_reorder_array = (Nx*(Ny+Ny_diff))
+;     reorder_pixelids = lonarr(size_reorder_array)
     
-    for i=0,Nx-1 do begin
-        for j=0,Ny-1 do begin
-            reorder_pixelids(look_up(i, j))=data(i,j)
-        endfor
+;     for i=0,Nx-1 do begin
+;         for j=0,Ny-1 do begin
+;             reorder_pixelids(look_up(i, j))=data(i,j)
+;         endfor
+;     endfor
+    
+;     (*(*global).reorder_array) = reorder_pixelids
+
+; endif else begin
+
+look_up_histo = (*(*global).look_up_histo)
+
+size_reorder_array = Nt*(Nx*(Ny+Ny_diff))
+reorder_pixelids = lonarr(size_reorder_array)
+
+for i=0,Nx-1 do begin
+    for j=0,Ny-1 do begin
+        reorder_pixelids(look_up_histo(*,i,j)) = data(*,i,j)
     endfor
-    
-    (*(*global).reorder_array) = reorder_pixelids
+endfor
 
-endif else begin
-
-    look_up_histo = (*(*global).look_up_histo)
-    
-    size_reorder_array = Nt*(Nx*(Ny+Ny_diff))
-    reorder_pixelids = lonarr(size_reorder_array)
-
-    for i=0,Nx-1 do begin
-        for j=0,Ny-1 do begin
-            reorder_pixelids(look_up_histo(*,i,j)) = data(*,i,j)
-        endfor
-    endfor
-
-endelse
+;endelse
 
 end
 
@@ -2340,7 +2316,7 @@ for i=0, (size[1]-1) do begin
     removed_tube[tube_to_remove[i]]=1
 endfor
 
-(*(*global).tube_removed) = removed_tube
+(*(*global).tube_removed) = temporary(removed_tube)
 run_number = (*global).run_number
 
 ;reinitialize DATA_REMOVED box
@@ -2374,7 +2350,7 @@ N = long(file_size) / Nbytes    ;number of elements
 
 Nt = long(N)/(long(Nx*(Ny_scat_bank)))
 (*global).Nt = Nt
-image_top = ulonarr(Nt, Nx, Ny_scat_bank)
+image_top = temporary(ulonarr(Nt, Nx, Ny_scat_bank))
 
 readu,u,image_top
 close,u
@@ -2398,8 +2374,8 @@ close,u
 text = ' Combining top and bottom banks into one array'
 output_into_log_book, event, text
 image1 = ulonarr(Nt,Nx,Ny_scat)
-image1(*,*,0:Ny_scat_bank-1) = image_top
-image1(*,*,Ny_scat_bank:Ny_scat-1) = image_bottom
+image1(*,*,0:Ny_scat_bank-1) = temporary(image_top)
+image1(*,*,Ny_scat_bank:Ny_scat-1) = temporary(image_bottom)
 
 (*(*global).image_nt_nx_ny) = image1
 
@@ -2679,18 +2655,14 @@ widget_control,id,get_uvalue=global
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
-debug = (*global).debug
-
 ;remove sensibility on button
 plot_mapped_data_id = widget_info(Event.top, find_by_uname='plot_mapped_data')
 widget_control, plot_mapped_data_id, sensitive=0
 
-if (debug EQ 1) then begin
 ;show processing base
-    processing_base_id = widget_info(Event.top,$
-                                     find_by_uname='processing_base')
-    widget_control, processing_base_id, map=1
-endif 
+processing_base_id = widget_info(Event.top,$
+                                 find_by_uname='processing_base')
+widget_control, processing_base_id, map=1
 
 text = ''
 output_into_log_book, event,text
@@ -2740,11 +2712,9 @@ t3 = 125
 length_tube1 = t3 - t2
 
 ;new remap array(Npix, Ntubes) and remap_histo(Nt, Npix, Ntubes)
-remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
-if ((*global).debug EQ 1) then begin
-    remap_histo = dblarr(Nt, Npix, Ntubes) 
-    temp_remap_histo = dblarr(Npix,Ntubes)
-endif
+;remap = dblarr(Npix,Ntubes)     ;Nx=128, Ny=64
+remap_histo = intarr(Nt, Npix, Ntubes) 
+temp_remap_histo = intarr(Npix,Ntubes)
 
 del = lonarr(5)
 
@@ -2804,10 +2774,8 @@ endif else begin
             rindx1 = indgen(del0)+mn0
             rindx_0 = rindx1
 
-;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0-1,/interp) ;steve
-;        dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)   ;jean
-            dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
-            remap[rindx1,i] = dat ;new array of the middle section
+;;            dat = congrid(image_2d_1[i1[i]:i2[i],i],del0,/interp)
+;;            remap[rindx1,i] = dat ;new array of the middle section
 
 ;remap endpoints and middle section
 ;one end
@@ -2819,9 +2787,9 @@ endif else begin
             rindx0 = indgen(2)
             rindx_1 = rindx0
 
-            dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
-            scl = float(2)/i1[i]
-            remap[rindx0,i] = dat * scl
+;            dat = congrid(image_2d_1[0:i1[i],i],del0,/interp)
+;            scl = float(2)/i1[i]
+;            remap[rindx0,i] = dat * scl
             
 ;finally the middle
             mn0 = t1+1
@@ -2832,9 +2800,9 @@ endif else begin
             rindx0 = indgen(del0)+mn0
             rindx_2 = rindx0
 
-            dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
-            scl = float(del0)/(i3[i] - i2[i])
-            remap[rindx0,i] = dat * scl
+ ;           dat = congrid(image_2d_1[i2[i]:i3[i],i],del0,/interp)
+ ;           scl = float(del0)/(i3[i] - i2[i])
+ ;           remap[rindx0,i] = dat * scl
 ;REMAP TUBE1
             
 ;remap tube1 data
@@ -2856,9 +2824,9 @@ endif else begin
             rindx0 = indgen(del0)+mn0
             rindx_3 = rindx0
             
-            dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
-            scl = float(del0)/(Npix-i4[i])
-            remap[rindx0,i] = dat * scl
+;            dat = congrid(image_2d_1[i4[i]:*,i],del0,/interp)
+;            scl = float(del0)/(Npix-i4[i])
+;            remap[rindx0,i] = dat * scl
 
             mn1 = min(d1)
             mx1 = min([max(d1),Npix-1])
@@ -2868,42 +2836,46 @@ endif else begin
             rindx1 = indgen(del1)+mn1
             rindx_4 = rindx1
 
-            dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
-            remap[rindx1,i] = dat
+;            dat = congrid(image_2d_1[i3[i]:i4[i],i],del1,/interp)
+;            remap[rindx1,i] = dat
             
-            if (debug EQ 1) then begin
+
+            processing_draw_id = widget_info(Event.top,find_by_uname='processing_draw_id')
                 
-                processing_draw_id = widget_info(Event.top,find_by_uname='processing_draw_id')
-                
-                temp_histo_dat = dblarr(Npix,Ntubes)
-                
-                for j=0,(Nt-1) do begin
-                    temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
+            temp_histo_dat = intarr(Npix,Ntubes)
+            
+            for j=0,(Nt-1) do begin
+                temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
 ;                   histo_dat = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
 ;                   remap_histo[j,rindx_0,i] = histo_dat    
-                    remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
-                    remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1])
-                    remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2])
-                    remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3])
-                    remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
-                endfor
+                remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
                 
+                remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1]) * $
+                  float(2)/i1[i]
+                
+                remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2]) * $
+                  (float(del[2])/(i3[i]-i2[i]))
+                
+                remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3]) * $
+                  (float(del[3])/(Npix-i4[i]))
+                
+                remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
+            endfor
+            
                                 ;evaluate size of processing bar
-                size_coeff = float(i)/(Ntubes-1)
-                size_bar = 220*size_coeff
-                processing_draw_id = widget_info(Event.top,$
-                                                 find_by_uname='processing_draw')
-                widget_control, processing_draw_id, scr_xsize=size_bar
-                processing_label_id = widget_info(Event.top, $
-                                                  find_by_uname='processing_label')
-                text = 'Processing...... ' 
-                pro_percentage = fix(size_coeff*100)
-                text += strcompress(pro_percentage,/remove_all)
-                text += '%'
-                widget_control, processing_label_id, $
-                  set_value=text
-
-            endif
+            size_coeff = float(i)/(Ntubes-1)
+            size_bar = 220*size_coeff
+            processing_draw_id = widget_info(Event.top,$
+                                             find_by_uname='processing_draw')
+            widget_control, processing_draw_id, scr_xsize=size_bar
+            processing_label_id = widget_info(Event.top, $
+                                              find_by_uname='processing_label')
+            text = 'Processing...... ' 
+            pro_percentage = fix(size_coeff*100)
+            text += strcompress(pro_percentage,/remove_all)
+            text += '%'
+            widget_control, processing_label_id, $
+              set_value=text
             
         endif
         
@@ -2913,28 +2885,41 @@ endif else begin
     text = '...done'
     output_into_log_book, event,text
     
-    (*(*global).remap) = remap
-    
-    if (debug EQ 1) then begin
-        (*(*global).remap_histo) = remap_histo
-    endif
+;    (*(*global).remap_histo) = remap_histo
     
     text = 'Plot data...'
     output_into_log_book, event,text
-    plot_realign_data, Event
+    
+    print, "before plot_realign_data"
+    help, /memory
+    plot_realign_data, Event, remap_histo
+    print, "After plot_realign_data"
+    help, /memory
+
     text = '...done'
     output_into_log_book, event,text
     
 endelse
 
+
+
 text="...done"
 output_into_general_infos, event, text
 
-if (debug EQ 1) then begin
-    widget_control, processing_base_id, map=0
-endif
+widget_control, processing_base_id, map=0
+;processing_draw_id = widget_info(Event.top,$
+;                                 find_by_uname='processing_draw')
+widget_control, processing_draw_id, scr_xsize=1
+;processing_label_id = widget_info(Event.top, $
+;                                  find_by_uname='processing_label')
+text = 'Processing......0%' 
+widget_control, processing_label_id, $
+  set_value=text
+            
 
 widget_control, plot_mapped_data_id, sensitive=1
+
+output_new_histo_mapped_file, Event, remap_histo
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -2991,6 +2976,6 @@ end
 
 pro rebinGUI_button_eventcb, Event
 
-spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinNeXus &'
+spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinBSSNeXus &'
 
 end
