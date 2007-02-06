@@ -1308,6 +1308,7 @@ endif else begin
     full_path_to_nexus = get_full_path_to_preNeXus_path(listening_nexus,$
                                                         instrument,$
                                                         run_number)
+
     full_path_to_prenexus = get_full_path_to_preNeXus_path(listening_prenexus,$
                                                            instrument,$
                                                            run_number)
@@ -1347,8 +1348,6 @@ endif else begin
     full_path_to_prenexus = get_full_path_to_preNeXus_path(listening_prenexus,$
                                                            instrument,$
                                                            run_number)
-    (*global).full_path_to_prenexus = full_path_to_prenexus
-
     full_text = '--> ' + full_path_to_prenexus
     widget_control, full_view_info, set_value=full_text, /append
 
@@ -1362,6 +1361,7 @@ endif else begin
 
     endif else begin ;preNeXus exist
 
+        (*global).full_path_to_prenexus = full_path_to_prenexus
         find_prenexus = 1
 ;check if full_path_to_preNeXus is not on DAS
         match = "*" + instrument + "-DAS-FS/*"
@@ -1740,6 +1740,7 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
     cmd_line_histo = "Event_to_Histo "
     cmd_line_histo += "-l " + strcompress(rebinning,/remove_all)
     cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
+    cmd_line_histo += " --time_offset " + strcompress(min_time_bin,/remove_all)
     cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
     cmd_line_histo += " -a " + strcompress(full_folder_name_preNeXus,$
                                            /remove_all)
@@ -1887,7 +1888,7 @@ full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 
 text = "Create NeXus..."
 full_text = "Create NeXus:"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+WIDGET_CONTROL, view_info, SET_VALUE=text
 widget_control, full_view_info, set_value=full_text, /append
 
 file = (*global).histo_event_filename
