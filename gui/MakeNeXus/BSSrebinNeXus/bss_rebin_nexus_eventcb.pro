@@ -1603,6 +1603,7 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
 
     cmd_line_histo = "Event_to_Histo "
     cmd_line_histo += "-l " + strcompress(rebinning,/remove_all)
+    cmd_line_histo += " --time_offset " + strcompress(min_time_bin,/remove_all)
     cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
     cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
     cmd_line_histo += " -a " + strcompress(full_folder_name_preNeXus,$
