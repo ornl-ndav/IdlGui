@@ -331,7 +331,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;or other means
 
 global = ptr_new({$
-                   linear_interpolation : 1,$ ;1:linear interploation   0:nearest_neighbor
+                   linear_interpolation : 0,$ ;1:linear interploation   0:nearest_neighbor
                    debugger : '',$    ;'j35' or 'ele'
                    nt_tab : 'j35',$ ;gives access to window that plot data for each nt
                    nexus_open : 0,$
