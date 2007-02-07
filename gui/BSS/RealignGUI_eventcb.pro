@@ -2000,99 +2000,45 @@ full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
 working_path = (*global).working_path
 
-;copy data
-files_to_copy = ["*.xml","*.nxt"]
-for i=0,1 do begin
-    cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
-      full_output_folder_name
-    text = ' >' + cmd_copy
-    output_into_log_book, event, text
-    spawn, cmd_copy, listening, err_listening
-    output_into_log_book, event, listening
-    output_error, event, err_listening
-endfor
-
 run_number = (*global).run_number
 
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
 linear_coeff = ceil(float(200000) / float((*global).Nt))
-;cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all)
-;+ " -M 200000 -o " 
-cmd = "Create_Tbin_File -l 20 -M 200000 --time_offset 100000 -o " 
-
+cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 200000 "
+cmd += "--time_offset 0 -o " 
 cmd += full_output_folder_name + "/BSS_" + $
   strcompress(run_number,/remove_all)
 cmd += "_neutron_timemap.dat"
 
-text = ' >' + cmd
-output_into_log_book, event, text
-spawn, cmd, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+interactive_create_tbin_file_text_id = $
+  widget_info(Event.top,$
+              find_by_uname='interactive_create_tbin_file_text')
+widget_control, interactive_create_tbin_file_text_id, set_value=cmd
 
-;import geometry and mapping file into same directory
-cmd_copy = "cp " + (*global).mapping_file 
-cmd_copy += " " + (*global).geometry_file
-cmd_copy += " " + full_output_folder_name
+;nt, nx, ny and n
+Nt=(*global).Nt
+interactive_nt_text_id = widget_info(Event.top,find_by_uname='interactive_nt_text')
+widget_control, interactive_nt_text_id, set_value=strcompress(Nt)
 
-text = ' >' + cmd_copy
-output_into_log_book, event, text
-spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+Nx=(*global).Nx
+interactive_nx_text_id = widget_info(Event.top,find_by_uname='interactive_nx_text')
+widget_control, interactive_nx_text_id, set_value=strcompress(Nx)
 
-;merge files
-cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
-cmd_merge += " " + full_output_folder_name
+Ny=(*global).Ny_scat
+interactive_ny_text_id = widget_info(Event.top,find_by_uname='interactive_ny_text')
+widget_control, interactive_ny_text_id, set_value=strcompress(Ny)
 
-text = ' >' + cmd_merge
-output_into_log_book, event, text
-spawn, cmd_merge, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+N=(*global).N
+interactive_n_text_id = widget_info(Event.top,find_by_uname='interactive_n_text')
+widget_control, interactive_n_text_id, set_value=strcompress(N)
 
-;create nexus file
-cd, (*global).full_output_folder_name
+full_nexus_name=(*global).full_nexus_name
+interactive_nexus_text_id = widget_info(Event.top,find_by_uname='interactive_nexus_text')
+widget_control, interactive_nexus_text_id, set_value=full_nexus_name
 
-cmd_translate = "nxtranslate " + full_output_folder_name
-cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
-cmd_translate += ".nxt"
 
-text = ' >' + cmd_translate
-output_into_log_book, event, text
-spawn, cmd_translate, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
-
-;create nexus folder and copy nexus file into new folder
-path_up_to_proposal_number = (*global).path_up_to_proposal_number
-
-path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
-cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
-
-text = ' >' + cmd_nexus_folder
-output_into_log_book, event, text
-spawn, cmd_nexus_folder, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
-
-name_of_nexus_file = full_output_folder_name + "/BSS_" 
-name_of_nexus_file += strcompress(run_number,/remove_all)
-name_of_nexus_file += ".nxs"
-
-cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
-
-full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
-full_nexus_filename += strcompress(run_number,/remove_all)
-text=" Name of NeXus file: " + full_nexus_filename
-output_into_log_book, event, text
-
-spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
-
-text="...done"
-output_into_general_infos, event, text
+;display interactive window
+display_interactive_window, Event
 
 end
 
@@ -2349,6 +2295,8 @@ file_size=fs.size
 
 Nbytes = (*global).nbytes
 N = long(file_size) / Nbytes    ;number of elements
+
+(*global).N = 2*N
 
 Nt = long(N)/(long(Nx*(Ny_scat_bank)))
 (*global).Nt = Nt
@@ -2889,7 +2837,7 @@ endif else begin
     widget_control, processing_draw_id, scr_xsize=size_bar
     processing_label_id = widget_info(Event.top, $
                                       find_by_uname='processing_label')
-    text = 'Processing...... 200%' 
+    text = 'Processing...... 100%' 
     widget_control, processing_label_id, $
       set_value=text
 
@@ -3002,7 +2950,8 @@ pro display_interactive_window, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-interactive_cmd_line_base_id = widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
+interactive_cmd_line_base_id = $
+  widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
 widget_control, interactive_cmd_line_base_id, map=1
 
 
@@ -3021,6 +2970,107 @@ pro interactive_ok_button_eventcb, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;remove interactive window
+interactive_cmd_line_base_id = $
+  widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
+widget_control, interactive_cmd_line_base_id, map=0
+
+path_to_preNeXus = (*global).path_to_preNeXus
+full_output_file_name = (*global).full_output_file_name
+full_output_folder_name = (*global).full_output_folder_name
+working_path = (*global).working_path
+
+;copy data
+files_to_copy = ["*.xml","*.nxt"]
+for i=0,1 do begin
+    cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
+      full_output_folder_name
+    text = ' >' + cmd_copy
+    output_into_log_book, event, text
+    spawn, cmd_copy, listening, err_listening
+    output_into_log_book, event, listening
+    output_error, event, err_listening
+endfor
+
+run_number = (*global).run_number
+
+; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
+
+;retrieve Create_tbin_file command
+interactive_create_tbin_file_text_id = $
+  widget_info(Event.top,$
+              find_by_uname='interactive_create_tbin_file_text')
+widget_control, interactive_create_tbin_file_text_id, get_value=cmd
+text = ' >' + cmd
+output_into_log_book, event, text
+spawn, cmd, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;import geometry and mapping file into same directory
+cmd_copy = "cp " + (*global).mapping_file 
+cmd_copy += " " + (*global).geometry_file
+cmd_copy += " " + full_output_folder_name
+
+text = ' >' + cmd_copy
+output_into_log_book, event, text
+spawn, cmd_copy, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;merge files
+cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
+cmd_merge += " " + full_output_folder_name
+
+text = ' >' + cmd_merge
+output_into_log_book, event, text
+spawn, cmd_merge, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;create nexus file
+cd, (*global).full_output_folder_name
+
+cmd_translate = "nxtranslate " + full_output_folder_name
+cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
+cmd_translate += ".nxt"
+
+text = ' >' + cmd_translate
+output_into_log_book, event, text
+spawn, cmd_translate, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;create nexus folder and copy nexus file into new folder
+path_up_to_proposal_number = (*global).path_up_to_proposal_number
+
+path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
+cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
+
+text = ' >' + cmd_nexus_folder
+output_into_log_book, event, text
+spawn, cmd_nexus_folder, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+name_of_nexus_file = full_output_folder_name + "/BSS_" 
+name_of_nexus_file += strcompress(run_number,/remove_all)
+name_of_nexus_file += ".nxs"
+
+cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
+
+full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
+full_nexus_filename += strcompress(run_number,/remove_all)
+text=" Name of NeXus file: " + full_nexus_filename
+output_into_log_book, event, text
+
+spawn, cmd_copy, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+text="...done"
+output_into_general_infos, event, text
 
 end
 
