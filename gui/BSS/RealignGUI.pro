@@ -282,7 +282,13 @@ pro MAIN_BASE_event, Event
   	interactive_cancel_button_eventcb, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='nt_display_configure_button'): begin
+  	nt_display_configure_button_eventcb, Event
+    end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='nt_display_configure_validate'): begin
+  	nt_display_configure_validate_eventcb, Event
+    end
 
 
 
@@ -308,17 +314,28 @@ plot_length = 304			;plot box length
 Resolve_Routine, 'RealignGUI_eventcb',/COMPILE_FULL_FILE 
 ;Load event callback routines
 
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,XOFFSET=100 ,YOFFSET=22 ,SCR_XSIZE=scr_x ,SCR_YSIZE=scr_y  $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Realign BSS tubes'  $
-      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
+                         UNAME='MAIN_BASE',$
+                         XOFFSET=100,$
+                         YOFFSET=50,$
+                         SCR_XSIZE=scr_x,$
+                         SCR_YSIZE=scr_y,$
+                         NOTIFY_REALIZE='MAIN_REALIZE',$
+                         TITLE='Realign BSS tubes',$
+                         SPACE=3,$
+                         XPAD=3,$
+                         YPAD=3,$
+                         MBAR=WID_BASE_0_MBAR)
 
 ;define initial global values - these could be input via external file
 ;or other means
 
 global = ptr_new({$
+                   linear_interpolation : 1,$ ;1:linear interploation   0:nearest_neighbor
                    debugger : '',$    ;'j35' or 'ele'
+                   nt_tab : 'j35',$ ;gives access to window that plot data for each nt
                    nexus_open : 0,$
+                   realign_plot : 0,$ ;0 if histo has not be realigned yet
                    debug : 1,$                     ;1 for debugging  ;0 for not debgging
                    debug_output_file_name : '~/RealignGUI_debug.txt',$
                    tmp_nxdir_folder : '/realignGUI_tmp/',$
@@ -361,6 +378,7 @@ global = ptr_new({$
                    image_2d_1		      : ptr_new(0L),$
                    image_2d_1_untouched	      : ptr_new(0L),$   
                    remap_histo                : ptr_new(0L),$
+                   remap_histo_integrated     : ptr_new(0L),$
                    reorder_array              : ptr_new(0L),$
                    tube_removed               : ptr_new(0L),$
                    pixel_removed              : ptr_new(0L),$
@@ -376,6 +394,7 @@ global = ptr_new({$
                    len1                       : ptr_new(0L),$
                    len2                       : ptr_new(0L)$
 })
+
 
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
@@ -445,6 +464,8 @@ widget_control,MAIN_BASE,set_uvalue=global
 ;                                     VALUE="E N T E R",$
 ;                                     UNAME='IDENTIFICATION_GO')		
   
+
+ucams =  get_ucams()
 
 ;open nexus_file window
 OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
@@ -702,102 +723,199 @@ CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_LOCAL_NEXUS_BASE,$
 
 
 
-
-
-
-
-
-
 ;top-left frame (display of counts vs pixelID for each tube
 ;one at a time and tube per tube for each of the Nt time bins
 
-  draw_tube_pixels_base = widget_base(MAIN_BASE,$
-                                      SCR_XSIZE=550,$
-                                      SCR_YSIZE=370,$
-                                      XOFFSET=5,$
-                                      YOFFSET=10)
-  
-;    drawing_tab = widget_tab(draw_tube_pixels_base,$
-;                             uname='draw_tube_pixels_base',$
-;                             location=0,$
-;                             xoffset=0,$
-;                             yoffset=0,$
-;                             scr_xsize=550,$
-;                             scr_ysize=370)
-; ;                          /tracking_events)
-  
- ; tube_per_tube_plot_base = widget_base(drawing_tab,$
-   tube_per_tube_plot_base= widget_base(draw_tube_pixels_base,$
-                                        uname='tube_per_tube_plot_base',$
-                                        title='Tube per tube plot',$
-                                        xoffset=0,$
-                                        yoffset=0)
+draw_tube_pixels_base = widget_base(MAIN_BASE,$
+                                    SCR_XSIZE=550,$
+                                    SCR_YSIZE=370,$
+                                    XOFFSET=5,$
+                                    YOFFSET=10)
 
-  draw_tube_pixels_draw = widget_draw(tube_per_tube_plot_base,$
-                                      UNAME='draw_tube_pixels_draw',$
-                                      SCR_XSIZE=536,$
-                                      SCR_YSIZE=300,$
-                                      XOFFSET=4,$
-                                      YOFFSET=5)
-  
-  draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
-                                          UNAME="draw_tube_pixels_slider",$
-                                          XOFFSET= 5,$
-                                          YOFFSET= 304,$
-                                          SCR_XSIZE=536,$
-                                          SCR_YSIZE=35,$
-                                          MINIMUM=0,$
-                                          MAXIMUM=63,$
-                                          /DRAG,$
-                                          VALUE=0,$
-                                          EVENT_PRO="plot_tubes_pixels")
-  
-;   histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
-;                                               uname='histo_tube_per_tube_plot_base',$
-;                                               title='Tube per tube for each Nt',$
-;                                               xoffset=0,$
-;                                               yoffset=0)
+if (ucams EQ 'j35') then begin
+    
+    drawing_tab = widget_tab(draw_tube_pixels_base,$
+                             uname='draw_tube_pixels_base',$
+                             location=0,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=550,$
+                             scr_ysize=370)
+;                             /tracking_events)
+    
+    tube_per_tube_plot_base = widget_base(drawing_tab,$
+                                          uname='tube_per_tube_plot_base',$
+                                          title='Tube per tube plot',$
+                                          xoffset=0,$
+                                          yoffset=0)
+    
+endif else begin
+    
+    tube_per_tube_plot_base= widget_base(draw_tube_pixels_base,$
+                                         uname='tube_per_tube_plot_base',$
+                                         title='Tube per tube plot',$
+                                         xoffset=0,$
+                                         yoffset=0)
+      
+endelse
 
-;   histo_draw_tube_pixels_draw = widget_draw(histo_tube_per_tube_plot_base,$
-;                                             UNAME='histo_draw_tube_pixels_draw',$
-;                                             SCR_XSIZE=536,$
-;                                             SCR_YSIZE=270,$
-;                                             XOFFSET=4,$
-;                                             YOFFSET=3)
+draw_tube_pixels_draw = widget_draw(tube_per_tube_plot_base,$
+                                    UNAME='draw_tube_pixels_draw',$
+                                    SCR_XSIZE=536,$
+                                    SCR_YSIZE=300,$
+                                    XOFFSET=4,$
+                                    YOFFSET=5)
 
-;   nt_histo_label = widget_label(histo_tube_per_tube_plot_base,$
-;                                 xoffset=0,$
-;                                 yoffset=287,$
-;                                 value='Nt:')
+draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
+                                        UNAME="draw_tube_pixels_slider",$
+                                        XOFFSET= 5,$
+                                        YOFFSET= 304,$
+                                        SCR_XSIZE=536,$
+                                        SCR_YSIZE=35,$
+                                        MINIMUM=0,$
+                                        MAXIMUM=63,$
+                                        /DRAG,$
+                                        VALUE=0,$
+                                        EVENT_PRO="plot_tubes_pixels")
 
-;   nt_histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
-;                                           UNAME="nt_histo_draw_tube_pixels_slider",$
-;                                           XOFFSET= 40,$
-;                                           YOFFSET= 272,$
-;                                           SCR_XSIZE=500,$
-;                                           SCR_YSIZE=35,$
-;                                           MINIMUM=0,$
-;                                           MAXIMUM=(*global).Nt,$
-;                                           /DRAG,$
-;                                           VALUE=0,$
-;                                           EVENT_PRO="histo_plot_tubes_pixels")
-  
-;   tube_histo_label = widget_label(histo_tube_per_tube_plot_base,$
-;                                 xoffset=0,$
-;                                 yoffset=306+15,$
-;                                 value='Tube:')
+if (ucams EQ 'j35') then begin
+    
+    histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
+                                                uname='histo_tube_per_tube_plot_base',$
+                                                title='Tube per tube for each Nt',$
+                                                xoffset=0,$
+                                                yoffset=0)
+    
+;configure nt displays base
+    nt_display_configure_base = widget_base(histo_tube_per_tube_plot_base,$
+                                            uname='nt_display_configure_base',$
+                                            xoffset=0,$
+                                            yoffset=275,$
+                                            scr_xsize=445,$
+                                            scr_ysize=40,$
+                                            frame=1,$
+                                            map=0)
 
-;   histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
-;                                           UNAME="histo_draw_tube_pixels_slider",$
-;                                           XOFFSET= 5+35,$
-;                                           YOFFSET= 306,$
-;                                           SCR_XSIZE=536-35,$
-;                                           SCR_YSIZE=35,$
-;                                           MINIMUM=0,$
-;                                           MAXIMUM=63,$
-;                                           /DRAG,$
-;                                           VALUE=0,$
-;                                           EVENT_PRO="histo_plot_tubes_pixels")
+    nt_display_time_offset_label = widget_label(nt_display_configure_base,$
+                                               xoffset=5,$
+                                               yoffset=10,$
+                                               value='Time offset:')
+    
+    nt_display_time_offset_text = widget_text(nt_display_configure_base,$
+                                              xoffset=81,$
+                                              yoffset=5,$
+                                              value='0',$
+                                              scr_xsize=55,$
+                                              scr_ysize=30,$
+                                              uname='nt_display_time_offset_text',$
+                                             /editable)
+
+
+    x_off_1 = 140
+    nt_display_time_bin_label = widget_label(nt_display_configure_base,$
+                                               xoffset=5+x_off_1,$
+                                               yoffset=10,$
+                                               value='Time bin:')
+    
+    nt_display_time_bin_text = widget_text(nt_display_configure_base,$
+                                              xoffset=66+x_off_1,$
+                                              yoffset=5,$
+                                              value='10',$
+                                              scr_xsize=55,$
+                                              scr_ysize=30,$
+                                              uname='nt_display_time_bin_text',$
+                                             /editable)
+
+
+    x_off_1 = 280
+    nt_display_max_time_label = widget_label(nt_display_configure_base,$
+                                               xoffset=5+x_off_1,$
+                                               yoffset=10,$
+                                               value='Max time:')
+    
+    nt_display_max_time_text = widget_text(nt_display_configure_base,$
+                                           xoffset=66+x_off_1,$
+                                           yoffset=5,$
+                                           value='200000',$
+                                           scr_xsize=55,$
+                                           scr_ysize=30,$
+                                           uname='nt_display_max_time_text',$
+                                           /editable)
+
+    nt_display_configure_validate = widget_button(nt_display_configure_base,$
+                                                  xoffset=410,$
+                                                  yoffset=5,$
+                                                  value='OK',$
+                                                  scr_xsize=30,$
+                                                  scr_ysize=30,$
+                                                  uname='nt_display_configure_validate')
+
+;end of configure nt window
+
+
+
+    histo_draw_tube_pixels_draw = widget_draw(histo_tube_per_tube_plot_base,$
+                                              UNAME='histo_draw_tube_pixels_draw',$
+                                              SCR_XSIZE=536,$
+                                              SCR_YSIZE=270,$
+                                              XOFFSET=4,$
+                                              YOFFSET=3)
+    
+    nt_histo_label = widget_label(histo_tube_per_tube_plot_base,$
+                                  xoffset=0,$
+                                  yoffset=287,$
+                                  value='Nt:')
+    
+    nt_histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
+                                                     UNAME="nt_histo_draw_tube_pixels_slider",$
+                                                     XOFFSET= 40,$
+                                                     YOFFSET= 272,$
+                                                     SCR_XSIZE=260,$
+                                                     SCR_YSIZE=35,$
+                                                     MINIMUM=0,$
+                                                     MAXIMUM=(*global).Nt,$
+                                                     /DRAG,$
+                                                     VALUE=0,$
+                                                     EVENT_PRO="histo_plot_tubes_pixels")
+    
+;where the time intervals will be displayed
+    nt_display_configure_label = widget_label(histo_tube_per_tube_plot_base,$
+                                              uname='nt_display_configure_label',$
+                                              xoffset=305,$
+                                              yoffset=287,$
+                                              value='',$
+                                              scr_xsize=140,$
+                                              scr_ysize=18,$
+                                              frame=1)
+    
+    nt_display_configure_button = widget_button(histo_tube_per_tube_plot_base,$
+                                                uname='nt_display_configure_button',$
+                                                xoffset=450,$
+                                                yoffset=285,$
+                                                scr_xsize=90,$
+                                                value='CONFIGURE')
+
+
+
+
+    tube_histo_label = widget_label(histo_tube_per_tube_plot_base,$
+                                    xoffset=0,$
+                                    yoffset=306+15,$
+                                    value='Tube:')
+    
+    histo_draw_tube_pixels_slider = WIDGET_SLIDER(histo_tube_per_tube_plot_base,$
+                                                  UNAME="histo_draw_tube_pixels_slider",$
+                                                  XOFFSET= 5+35,$
+                                                  YOFFSET= 308,$
+                                                  SCR_XSIZE=536-35,$
+                                                  SCR_YSIZE=35,$
+                                                  MINIMUM=0,$
+                                                  MAXIMUM=63,$
+                                                  /DRAG,$
+                                                  VALUE=0,$
+                                                  EVENT_PRO="histo_plot_tubes_pixels")
+    
+endif
 
 ;######################################################################
 ;Top right part that will contain 2 tabs (interaction and log_book)
