@@ -286,8 +286,6 @@ pro MAIN_BASE_event, Event
 
 
 
-  
-
     else:
   endcase
 
@@ -356,6 +354,7 @@ global = ptr_new({$
                    Ny_scat		      :64L,$
                    Ny_diff                    :8L,$
                    Nt			      :1L,$
+                   N                          :0L,$
                    y_coeff		      :10L,$
                    x_coeff		      :8.4,$
                    image1                     : ptr_new(0L),$
@@ -471,7 +470,7 @@ interactive_cmd_line_base = widget_base(main_base,$
                                         scr_xsize=545,$
                                         scr_ysize=235,$
                                         frame=1,$
-                                        map=1)
+                                        map=0)
 
 interactive_create_tbin_file_label = widget_label(interactive_cmd_line_base,$
                                                   xoffset=5,$
@@ -480,107 +479,105 @@ interactive_create_tbin_file_label = widget_label(interactive_cmd_line_base,$
                                                   /align_left)
 
 interactive_create_tbin_file_text = widget_text(interactive_cmd_line_base,$
+                                                uname='interactive_create_tbin_file_text',$
                                                 xoffset=120,$
                                                 yoffset=10,$
                                                 scr_xsize=420,$
-                                                scr_ysize=60,$
+                                                scr_ysize=70,$
                                                 value='',$
                                                /align_left,$
                                                /editable,$
                                                /wrap,$
                                                /scroll)
 
+y_off = 10
 ;Nt
 interactive_nt_label = widget_label(interactive_cmd_line_base,$
                                     xoffset=5,$
-                                    yoffset=85,$
+                                    yoffset=85+y_off,$
                                     value='Nt:',$
                                     /align_left)
 
-interactive_nt_text = widget_text(interactive_cmd_line_base,$
+interactive_nt_text = widget_label(interactive_cmd_line_base,$
                                   uname='interactive_nt_text',$
                                   xoffset=30,$
-                                  yoffset=80,$
+                                  yoffset=80+y_off,$
                                   value='',$
                                   scr_xsize=60,$
                                   scr_ysize=30,$
-                                  /align_left,$
-                                  /editable)
-
+                                  /align_left)
+                                  
 
 ;Nx
 x_off = 100
 interactive_nx_label = widget_label(interactive_cmd_line_base,$
                                     xoffset=5+x_off,$
-                                    yoffset=85,$
+                                    yoffset=85+y_off,$
                                     value='Nx:',$
                                     /align_left)
 
-interactive_nx_text = widget_text(interactive_cmd_line_base,$
-                                  uname='interactive_nx_text',$
-                                  xoffset=30+x_off,$
-                                  yoffset=80,$
-                                  value='',$
-                                  scr_xsize=60,$
-                                  scr_ysize=30,$
-                                  /align_left,$
-                                  /editable)
+interactive_nx_text = widget_label(interactive_cmd_line_base,$
+                                   uname='interactive_nx_text',$
+                                   xoffset=30+x_off,$
+                                   yoffset=80+y_off,$
+                                   value='',$
+                                   scr_xsize=60,$
+                                   scr_ysize=30,$
+                                   /align_left)
 
 ;Ny
 x_off = 200
 interactive_ny_label = widget_label(interactive_cmd_line_base,$
                                     xoffset=5+x_off,$
-                                    yoffset=85,$
+                                    yoffset=85+y_off,$
                                     value='Ny:',$
                                     /align_left)
 
-interactive_ny_text = widget_text(interactive_cmd_line_base,$
-                                  uname='interactive_ny_text',$
-                                  xoffset=30+x_off,$
-                                  yoffset=80,$
-                                  value='',$
-                                  scr_xsize=60,$
-                                  scr_ysize=30,$
-                                  /align_left,$
-                                  /editable)
+interactive_ny_text = widget_label(interactive_cmd_line_base,$
+                                   uname='interactive_ny_text',$
+                                   xoffset=30+x_off,$
+                                   yoffset=80+y_off,$
+                                   value='',$
+                                   scr_xsize=60,$
+                                   scr_ysize=30,$
+                                   /align_left)
+
 
 
 ;N
 x_off = 300
 interactive_n_label = widget_label(interactive_cmd_line_base,$
                                     xoffset=5+x_off,$
-                                    yoffset=85,$
+                                    yoffset=85+y_off,$
                                     value='Nbr elements:',$
                                     /align_left)
 
-interactive_n_text = widget_text(interactive_cmd_line_base,$
+interactive_n_text = widget_label(interactive_cmd_line_base,$
                                   uname='interactive_n_text',$
                                   xoffset=90+x_off,$
-                                  yoffset=80,$
+                                  yoffset=80+y_off,$
                                   value='',$
                                   scr_xsize=100,$
                                   scr_ysize=30,$
-                                  /align_left,$
-                                  /editable)
+                                  /align_left)
+                                  
 
-
+;name of nexus file
 interactive_nexus_label = widget_label(interactive_cmd_line_base,$
                                        xoffset=5,$
                                        yoffset=130,$
                                        value='NeXus file:',$
                                        /align_left)
 
-interactive_nexus_text = widget_text(interactive_cmd_line_base,$
+interactive_nexus_text = widget_label(interactive_cmd_line_base,$
                                      xoffset=80,$
                                      yoffset=125,$
                                      value='',$
                                      scr_xsize=460,$
-                                     scr_ysize=50,$
+                                     scr_ysize=30,$
                                      uname='interactive_nexus_text',$
-                                     /align_left,$
-                                     /editable,$
-                                     /scroll,$
-                                    /wrap)
+                                     /align_left)
+                   
 
 ;OK button
 interactive_ok_button = widget_button(interactive_cmd_line_base,$
@@ -590,7 +587,7 @@ interactive_ok_button = widget_button(interactive_cmd_line_base,$
                                       uname='interactive_ok_button',$
                                       scr_xsize=200,$
                                       scr_ysize=30,$
-                                     frame=1)
+                                      frame=1)
 
 
 ;CANCEL button
