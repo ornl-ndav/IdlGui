@@ -1,3 +1,41 @@
+function reverse_array, data
+
+tmp = data[0:63,0:31]
+tmp = reverse(tmp,1) 
+
+data[0:63,0:31] = tmp
+
+tmp = data[64:*,32:*]
+tmp = reverse(tmp,1)
+data[64:*,32:*] = tmp
+
+reverse_data = temporary(data)
+return, reverse_data
+end
+
+
+
+
+function reverse_3d_array, data
+
+tmp = data[*,0:63,0:31]
+tmp = reverse(tmp,2) 
+
+data[*,0:63,0:31] = tmp
+
+tmp = data[*,64:*,32:*]
+tmp = reverse(tmp,2)
+data[*,64:*,32:*] = tmp
+
+reverse_data = temporary(data)
+return, reverse_data
+end
+
+
+
+
+
+
 function get_ucams
 
 cd , "~/"
@@ -606,7 +644,13 @@ output_into_log_book, event, text
 image_2d_1 = total(image1,1)
 
 tmp = image_2d_1[0:63,0:31]
-tmp = reverse(tmp,1)
+
+;window,1
+;plot,total(tmp,2),title='in plot_histo_file before reversing, top bank'
+tmp = reverse(tmp,1) 
+
+;window,2
+;plot, total(tmp,2), title='in plot_histo after reversing, top bank'
 image_2d_1[0:63,0:31] = tmp
 
 tmp = image_2d_1[64:*,32:*]
@@ -651,7 +695,6 @@ for i=0, 63 do begin
 endfor
 
 plot_tube_box, Event, 0
-
 
 ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
@@ -1963,7 +2006,10 @@ full_output_file_name = full_output_folder_name + "/" + output_file_name
 ;     reshape_data = lonarr(64L,144L)
 ;     reshape_data(*,*)=new_output_data
 
-new_output_data = ulonarr((*global).Nt,128L,72L,/NOZERO)
+;new_output_data = ulonarr((*global).Nt,128L,72L,/NOZERO)
+
+data = reverse_3d_array(data)
+new_output_data = ulonarr((*global).Nt,128L,72L)
 new_output_data(*,*,0:63L) = temporary(data(*,*,*))
 look_up_histo = (*(*global).look_up_histo)
 reorder_data, Event, new_output_data
@@ -2134,6 +2180,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 (*global).file_type='nexus'
+(*global).realign_plot = 0 ;histo has not been realigned yet
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -2332,11 +2379,12 @@ image1(*,*,Ny_scat_bank:Ny_scat-1) = temporary(image_bottom)
 PLOT_HISTO_FILE, Event, image1
 
 ;update Nt of nt_histo_draw_tube_pixels_slider
-; nt_histo_draw_tube_pixels_slider_id = $
-;   widget_info(Event.top, $
-;               find_by_uname='nt_histo_draw_tube_pixels_slider')
-; widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(Nt-1)
-
+if ((*global).ucams EQ (*global).nt_tab) then begin
+    nt_histo_draw_tube_pixels_slider_id = $
+      widget_info(Event.top, $
+                  find_by_uname='nt_histo_draw_tube_pixels_slider')
+    widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(Nt-1)
+endif
 
 end
 
@@ -2536,9 +2584,22 @@ widget_control, nt_id, get_value=Nt
 tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_slider')
 widget_control, tube_number_id, get_value=tube_number
 
-;color
-;DEVICE, DECOMPOSED = 0
-;loadct,5
+;retrieve value of time_offset, time_bin and time_max
+nt_display_time_offset_text_id = widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
+widget_control, nt_display_time_offset_text_id, get_value=time_offset
+
+nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
+widget_control, nt_display_time_bin_text_id, get_value=time_bin
+
+nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+widget_control, nt_display_max_time_text_id, get_value=time_max
+
+bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
+bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
+text = strcompress(bin_min) + '-' + strcompress(bin_max) + ' microS'
+
+nt_display_configure_label_id = widget_info(Event.top,find_by_uname='nt_display_configure_label')
+widget_control, nt_display_configure_label_id, set_value=text[0]
 
 image_nt_nx_ny = (*(*global).image_nt_nx_ny)
 
@@ -2560,13 +2621,33 @@ wset, draw_id
 
 ;loadct,0
 plot, image_nt_nx_ny[Nt,*,tube_number]
-oplot, image_nt_nx_ny[Nt,*,tube_number],psym=4,color=255
+oplot, image_nt_nx_ny[Nt,*,tube_number],psym=4,color=220
 
 plots,[indx1,0],psym=4,color=255+(256*0)+(150*256),thick=3
 plots,[indx2,0],psym=4,color=255+(256*0)+(150*256),thick=3
 plots,[cntr,0],psym=4,color=255+(256*0)+(150*256),thick=3
 plots,[indx3,0],psym=4,color=255+(256*0)+(150*256),thick=3
 plots,[indx4,0],psym=4,color=255+(256*0)+(150*256),thick=3
+
+if ((*global).realign_plot EQ 1) then begin
+
+    image_remap_nt_nx_ny = (*(*global).remap_histo)
+    oplot, image_remap_nt_nx_ny[Nt,*,tube_number]
+    oplot, image_remap_nt_nx_ny[Nt,*,tube_number],psym=1,color=255+(256*50)+(150*256)
+    
+endif
+    
+
+
+
+
+
+
+
+
+
+
+
 
 end
 
@@ -2584,6 +2665,10 @@ if ((*global).nexus_open EQ 1) then begin
     image1 = (*(*global).image_nt_nx_ny)
     histo_plot_tubes_pixels, Event
     PLOT_HISTO_FILE, Event, image1
+
+    nt_histo_draw_tube_pixels_slider_id = $
+      widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
+    widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
 
 endif
 
@@ -2795,21 +2880,47 @@ endif else begin
             temp_histo_dat = intarr(Npix,Ntubes)
             
             for j=0,(Nt-1) do begin
+
                 temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
-;                   histo_dat = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
-;                   remap_histo[j,rindx_0,i] = histo_dat    
-                remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
-                
-                remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1]) * $
-                  float(2)/i1[i]
-                
-                remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2]) * $
-                  (float(del[2])/(i3[i]-i2[i]))
-                
-                remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3]) * $
-                  (float(del[3])/(Npix-i4[i]))
-                
-                remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
+                temp_histo_dat = reverse_array(temp_histo_dat)
+
+                if ((*global).linear_interpolation EQ 1) then begin ;linear interpolation
+
+                    remap_histo[j,rindx_0,i] = $
+                      congrid(temp_histo_dat[i1[i]:i2[i],i],del[0],/interp)
+                    
+                    remap_histo[j,rindx_1,i] = $
+                      congrid(temp_histo_dat[0:i1[i],i],del[1],/interp) * $
+                      float(2)/i1[i]
+                    
+                    remap_histo[j,rindx_2,i] = $
+                      congrid(temp_histo_dat[i2[i]:i3[i],i],del[2],/interp) * $
+                      (float(del[2])/(i3[i]-i2[i]))
+                    
+                    remap_histo[j,rindx_3,i] = $
+                      congrid(temp_histo_dat[i4[i]:*,i],del[3],/interp) * $
+                      (float(del[3])/(Npix-i4[i]))
+                    
+                    remap_histo[j,rindx_4,i] = $
+                      congrid(temp_histo_dat[i3[i]:i4[i],i],del[4],/interp)
+
+                endif else begin  ;nearest-neighbor sampling
+
+                    remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
+                    
+                    remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1]) * $
+                      float(2)/i1[i]
+                    
+                    remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2]) * $
+                      (float(del[2])/(i3[i]-i2[i]))
+                    
+                    remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3]) * $
+                      (float(del[3])/(Npix-i4[i]))
+                    
+                    remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
+
+                endelse
+
             endfor
             
                                 ;evaluate size of processing bar
@@ -2844,23 +2955,22 @@ endif else begin
     text = '...done'
     output_into_log_book, event,text
     
-;    (*(*global).remap_histo) = remap_histo
-    
+    (*(*global).remap_histo) = remap_histo
+    (*global).realign_plot = 1
+
     text = 'Plot data...'
     output_into_log_book, event,text
     
-    print, "before plot_realign_data"
-    help, /memory
+;    print, "before plot_realign_data"
+;    help, /memory
     plot_realign_data, Event, remap_histo
-    print, "After plot_realign_data"
-    help, /memory
+;    print, "After plot_realign_data"
+;    help, /memory
 
     text = '...done'
     output_into_log_book, event,text
     
 endelse
-
-
 
 text="...done"
 output_into_general_infos, event, text
@@ -2874,7 +2984,6 @@ widget_control, processing_draw_id, scr_xsize=1
 text = 'Processing......0%' 
 widget_control, processing_label_id, $
   set_value=text
-            
 
 widget_control, plot_mapped_data_id, sensitive=1
 
@@ -3075,6 +3184,8 @@ output_into_general_infos, event, text
 end
 
 
+
+
 pro interactive_cancel_button_eventcb, Event
 
 ;get global structure
@@ -3086,3 +3197,57 @@ widget_control, interactive_cmd_line_base_id, map=0
 
 
 end
+
+
+
+
+
+pro nt_display_configure_button_eventcb, Event
+
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nt_display_configure_base_id = widget_info(Event.top,find_by_uname='nt_display_configure_base')
+widget_control, nt_display_configure_base_id, map=1
+
+end
+
+
+
+
+pro nt_display_configure_validate_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nt_display_configure_base_id = widget_info(Event.top,find_by_uname='nt_display_configure_base')
+widget_control, nt_display_configure_base_id, map=0	
+
+nt_id = widget_info(Event.top, find_by_uname='nt_histo_draw_tube_pixels_slider')
+widget_control, nt_id, get_value=Nt
+
+;retrieve value of time_offset, time_bin and time_max
+nt_display_time_offset_text_id = widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
+widget_control, nt_display_time_offset_text_id, get_value=time_offset
+
+nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
+widget_control, nt_display_time_bin_text_id, get_value=time_bin
+
+nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+widget_control, nt_display_max_time_text_id, get_value=time_max
+
+bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
+bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
+text = strcompress(bin_min) + '-' + strcompress(bin_max) + ' microS'
+
+nt_display_configure_label_id = widget_info(Event.top,find_by_uname='nt_display_configure_label')
+widget_control, nt_display_configure_label_id, set_value=text[0]
+
+end
+
+
+
+
