@@ -2591,8 +2591,8 @@ widget_control, nt_display_time_offset_text_id, get_value=time_offset
 nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
 widget_control, nt_display_time_bin_text_id, get_value=time_bin
 
-nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
-widget_control, nt_display_max_time_text_id, get_value=time_max
+;nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+;widget_control, nt_display_max_time_text_id, get_value=time_max
 
 bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
 bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
