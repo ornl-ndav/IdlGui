@@ -2602,6 +2602,7 @@ nt_display_configure_label_id = widget_info(Event.top,find_by_uname='nt_display_
 widget_control, nt_display_configure_label_id, set_value=text[0]
 
 image_nt_nx_ny = (*(*global).image_nt_nx_ny)
+image_nt_nx_ny = reverse_3d_array(image_nt_nx_ny)
 
 i1=(*(*global).i1)
 i2=(*(*global).i2)
@@ -3063,7 +3064,6 @@ interactive_cmd_line_base_id = $
   widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
 widget_control, interactive_cmd_line_base_id, map=1
 
-
 end
 
 
@@ -3181,6 +3181,9 @@ output_error, event, err_listening
 text="...done"
 output_into_general_infos, event, text
 
+create_offset_xml_file, Event
+
+
 end
 
 
@@ -3236,8 +3239,8 @@ widget_control, nt_display_time_offset_text_id, get_value=time_offset
 nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
 widget_control, nt_display_time_bin_text_id, get_value=time_bin
 
-nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
-widget_control, nt_display_max_time_text_id, get_value=time_max
+;nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+;widget_control, nt_display_max_time_text_id, get_value=time_max
 
 bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
 bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
@@ -3251,3 +3254,104 @@ end
 
 
 
+pro create_offset_xml_file, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+i1=(*(*global).i1)
+i2=(*(*global).i2)
+i3=(*(*global).i3)
+i4=(*(*global).i4)
+i5=(*(*global).i5)
+
+len1 = (*(*global).len1)
+len2 = (*(*global).len2)
+
+tube_removed = (*(*global).tube_removed)
+Npix = (*global).Nx
+Ntubes = (*global).Ny_scat
+
+path_up_to_prenexus = (*global).path_up_to_proposal_number + '/preNeXus/'
+run_number = (*global).run_number
+xml_offset_extension = (*global).xml_offset_extension
+xml_offset_filename = 'BSS_' + strcompress(run_number) + xml_offset_extension
+full_xml_offset_filename = path_up_to_prenexus + xml_offset_filename
+
+;display infos
+text="Create offset file..."
+output_into_general_infos, event, text
+text="Create offset XML file:"
+output_into_log_book, event, text
+text = 'xml offset file: ' + full_xml_offset_filename
+output_into_log_book, event, text
+
+lines = strarr(3 + 4 + Ntubes * 3)
+;xml framework
+
+lines[0] = '<?xml version="1.0"?>'
+lines[1] = '<Instrument name="BSS" valid="true" version="3.0">'
+j=2
+for i=0,(Ntubes-1) do begin
+
+    case i of
+        0: begin
+            lines[j] = ' <bank 1>'
+            ++j
+        end
+        32: begin
+            lines[j] = ' <bank 2>'
+            ++j
+        end
+        else:
+    endcase
+
+    lines[j] = '  <tube ' + strcompress(i,/remove_all) + ' units="metre" type="Float64">'
+    ++j
+
+
+
+
+
+
+
+
+
+    case i of
+        31: begin
+            lines[j] = ' </bank 1>'
+            ++j
+        end
+        63: begin
+            lines[j] = ' </bank 2>'
+            ++j
+        end
+        else:
+    endcase
+    
+    lines[j] = '</Instrument>'
+
+endfor
+
+text="...done"
+output_into_general_infos, event, text
+
+write_xml_file, Event, full_xml_offset_filename, lines
+
+end
+
+
+
+
+
+pro write_xml_file, Event, full_xml_offset_filename, lines
+
+openw,u2,full_xml_offset_filename,/get
+writeu,u2,lines
+
+;close it up...
+close,u2
+free_lun,u2
+
+end
