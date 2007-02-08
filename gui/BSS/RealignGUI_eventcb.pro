@@ -1,3 +1,78 @@
+function produce_pixels_offset, i1, i2, i3, i4, i5, tube_removed, bank
+
+offset_text_array = strarr(2)
+start_position = -.075
+tube_length_m = 0.15
+
+offset_text_array[0]= ''
+offset_text_array[1]= ''
+
+if (tube_removed EQ 1) then begin
+
+    increment_offset = 0.234375    
+
+    for i=0,63 do begin
+        coeff = float(start_position + i*increment_offset)
+        offset_text_array[0] += strcompress(coeff,/remove_all) + ' '
+    endfor
+    offset_text_array[1] = offset_text_array[0]
+    
+endif else begin
+
+    case bank of
+        1: begin ;bank #1
+            
+            i1=63-i1
+            i2=63-i2
+            tube_length_pixel = i1-i2
+            increment_offset = tube_length_m / tube_length_pixel
+            start_position_local = start_position - i2 * increment_offset
+
+            for k=0,63 do begin
+                coeff = float(start_position_local + k*increment_offset)
+                offset_text_array[0] += strcompress(coeff,/remove_all) + ' '
+            endfor
+
+            i3=i3-63
+            i4=i4-63
+            tube_length_pixel = i4-i3
+            increment_offset = tube_length_m / tube_length_pixel
+            start_position_local = start_position - i3 * increment_offset
+
+            for k=0,63 do begin
+                coeff = float(start_position_local + k*increment_offset)
+                offset_text_array[1] += strcompress(coeff,/remove_all) + ' '
+            endfor
+
+        end
+        2: begin ;bank #2
+
+            tube_length_pixel = i2-i1
+            increment_offset = tube_length_m / tube_length_pixel
+
+
+
+
+            i3=63-i3
+            i4=63-i4
+            tube_length_pixel = i3-i4
+            increment_offset = tube_length_m / tube_length_pixel
+            
+
+
+        end
+        else:
+    endcase
+
+endelse
+
+return, offset_text_array
+end
+
+
+
+
+
 function reverse_array, data
 
 tmp = data[0:63,0:31]
@@ -3311,7 +3386,7 @@ output_into_log_book, event, text
 text = 'xml offset file: ' + full_xml_offset_filename
 output_into_log_book, event, text
 
-nbr_xml_lines = 3+4+(3*Ntubes)
+nbr_xml_lines = 3+4+(4*Ntubes)
 lines = strarr(nbr_xml_lines)
 ;xml framework
 
@@ -3324,25 +3399,33 @@ for i=0,(Ntubes-1) do begin
         0: begin
             lines[j] = ' <bank 1>'
             ++j
+            bank=1
         end
         32: begin
             lines[j] = ' <bank 2>'
             ++j
+            bank=2
         end
         else:
     endcase
 
-    lines[j] = '  <tube ' + strcompress(i,/remove_all) + $
+    offset_text_array = produce_pixels_offset(i1,i2,i3,i4,i5,tube_removed[i],bank)
+    lines[j] = offset_text
+    ++j
+
+    lines[j] = '  <tube ' + strcompress(2*i,/remove_all) + $
       ' units="metre" type="Float64">'
     ++j
 
+    lines[j] = offset_text_array[0]
+    ++j
 
+    lines[j] = '  <tube ' + strcompress(2*i+1,/remove_all) + $
+      ' units="metre" type="Float64">'
+    ++j
 
-
-
-
-
-
+    lines[j] = offset_text_array[1]
+    ++j
 
     case i of
         31: begin
@@ -3356,9 +3439,10 @@ for i=0,(Ntubes-1) do begin
         else:
     endcase
     
-    lines[j] = '</Instrument>'
-
 endfor
+
+lines[j] = '</Instrument>'
+nbr_xml_lines = j
 
 text="...done"
 output_into_general_infos, event, text
@@ -3366,6 +3450,7 @@ output_into_general_infos, event, text
 write_xml_file, Event, full_xml_offset_filename, lines, nbr_xml_lines
 
 end
+
 
 
 
@@ -3383,3 +3468,8 @@ close,1
 free_lun,1
 
 end
+
+
+
+
+
