@@ -331,6 +331,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;or other means
 
 global = ptr_new({$
+                   xml_offset_extension : '_offset.xml',$
                    linear_interpolation : 0,$ ;1:linear interploation   0:nearest_neighbor
                    debugger : '',$    ;'j35' or 'ele'
                    nt_tab : 'j35',$ ;gives access to window that plot data for each nt
@@ -827,26 +828,26 @@ if (ucams EQ 'j35') then begin
                                              /editable)
 
 
-    x_off_1 = 280
-    nt_display_max_time_label = widget_label(nt_display_configure_base,$
-                                               xoffset=5+x_off_1,$
-                                               yoffset=10,$
-                                               value='Max time:')
+;     x_off_1 = 280
+;     nt_display_max_time_label = widget_label(nt_display_configure_base,$
+;                                                xoffset=5+x_off_1,$
+;                                                yoffset=10,$
+;                                                value='Max time:')
     
-    nt_display_max_time_text = widget_text(nt_display_configure_base,$
-                                           xoffset=66+x_off_1,$
-                                           yoffset=5,$
-                                           value='200000',$
-                                           scr_xsize=55,$
-                                           scr_ysize=30,$
-                                           uname='nt_display_max_time_text',$
-                                           /editable)
+;     nt_display_max_time_text = widget_text(nt_display_configure_base,$
+;                                            xoffset=66+x_off_1,$
+;                                            yoffset=5,$
+;                                            value='200000',$
+;                                            scr_xsize=55,$
+;                                            scr_ysize=30,$
+;                                            uname='nt_display_max_time_text',$
+;                                            /editable)
 
     nt_display_configure_validate = widget_button(nt_display_configure_base,$
-                                                  xoffset=410,$
+                                                  xoffset=275,$
                                                   yoffset=5,$
-                                                  value='OK',$
-                                                  scr_xsize=30,$
+                                                  value='VALIDATE CHANGES',$
+                                                  scr_xsize=150,$
                                                   scr_ysize=30,$
                                                   uname='nt_display_configure_validate')
 
