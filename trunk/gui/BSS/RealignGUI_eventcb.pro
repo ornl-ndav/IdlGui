@@ -2079,7 +2079,8 @@ interactive_n_text_id = widget_info(Event.top,find_by_uname='interactive_n_text'
 widget_control, interactive_n_text_id, set_value=strcompress(N)
 
 full_nexus_name=(*global).full_nexus_name
-interactive_nexus_text_id = widget_info(Event.top,find_by_uname='interactive_nexus_text')
+interactive_nexus_text_id = $
+  widget_info(Event.top,find_by_uname='interactive_nexus_text')
 widget_control, interactive_nexus_text_id, set_value=full_nexus_name
 
 
@@ -2212,7 +2213,8 @@ if (run_number EQ '') then begin
 endif else begin
     
     ;erase main plots
-    draw_tube_pixels_draw_id = widget_info(Event.top,find_by_uname='draw_tube_pixels_draw')
+    draw_tube_pixels_draw_id = $
+      widget_info(Event.top,find_by_uname='draw_tube_pixels_draw')
     widget_control, draw_tube_pixels_draw_id, get_value=draw_id
     wset, draw_id
     erase
@@ -2234,7 +2236,8 @@ endif else begin
     
     if (n_elements(local) EQ 0) then begin
 
-        text = "Opening NeXus file # " + strcompress(run_number,/remove_all) + "....."
+        text = "Opening NeXus file # " + $
+          strcompress(run_number,/remove_all) + "....."
         output_into_general_infos, event, text, 0
         output_into_log_book, event, text, 0
     
@@ -2244,7 +2247,8 @@ endif else begin
     
     endif else begin
 
-        text = "Opening local NeXus file # " + strcompress(run_number,/remove_all) + "....."
+        text = "Opening local NeXus file # " + $
+          strcompress(run_number,/remove_all) + "....."
         output_into_general_infos, event, text, 0
         output_into_log_book, event, text, 0
     
@@ -2585,13 +2589,16 @@ tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_sli
 widget_control, tube_number_id, get_value=tube_number
 
 ;retrieve value of time_offset, time_bin and time_max
-nt_display_time_offset_text_id = widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
+nt_display_time_offset_text_id = $
+  widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
 widget_control, nt_display_time_offset_text_id, get_value=time_offset
 
-nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
+nt_display_time_bin_text_id = $
+  widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
 widget_control, nt_display_time_bin_text_id, get_value=time_bin
 
-;nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+;nt_display_max_time_text_id = $
+;    widget_info(Event.top,find_by_uname='nt_display_max_time_text')
 ;widget_control, nt_display_max_time_text_id, get_value=time_max
 
 bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
@@ -2843,10 +2850,12 @@ endif else begin
             
 ;remap tube1 data
             len_meas_tube1 = i4[i] - i3[i]
-            d1 = float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
+            d1 = $
+              float(length_tube1) * findgen(len_meas_tube1)/(len_meas_tube1-1) + t2
             
 ;remap tube start data (junk)
-            d1_0 = abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
+            d1_0 = $
+              abs(float(t2 - i5[i]))*findgen(abs(i3[i]-i5[i]))/(i3[i]-i5[i]+1) + mid
             
 ;remap tube end data
             d1_1 = float(Npix-t3)*findgen(Npix-i4[i])/(Npix-i4[i]+1) + (t3+1)
@@ -2876,7 +2885,8 @@ endif else begin
 ;            remap[rindx1,i] = dat
             
 
-            processing_draw_id = widget_info(Event.top,find_by_uname='processing_draw_id')
+            processing_draw_id = $
+              widget_info(Event.top,find_by_uname='processing_draw_id')
                 
             temp_histo_dat = intarr(Npix,Ntubes)
             
@@ -2885,7 +2895,8 @@ endif else begin
                 temp_histo_dat(*,*) = image_nt_nx_ny[j,*,*]
                 temp_histo_dat = reverse_array(temp_histo_dat)
 
-                if ((*global).linear_interpolation EQ 1) then begin ;linear interpolation
+;linear interpolation
+                if ((*global).linear_interpolation EQ 1) then begin 
 
                     remap_histo[j,rindx_0,i] = $
                       congrid(temp_histo_dat[i1[i]:i2[i],i],del[0],/interp)
@@ -2907,18 +2918,23 @@ endif else begin
 
                 endif else begin  ;nearest-neighbor sampling
 
-                    remap_histo[j,rindx_0,i] = congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
+                    remap_histo[j,rindx_0,i] = $
+                      congrid(temp_histo_dat[i1[i]:i2[i],i],del[0])
                     
-                    remap_histo[j,rindx_1,i] = congrid(temp_histo_dat[0:i1[i],i],del[1]) * $
+                    remap_histo[j,rindx_1,i] = $
+                      congrid(temp_histo_dat[0:i1[i],i],del[1]) * $
                       float(2)/i1[i]
                     
-                    remap_histo[j,rindx_2,i] = congrid(temp_histo_dat[i2[i]:i3[i],i],del[2]) * $
+                    remap_histo[j,rindx_2,i] = $
+                      congrid(temp_histo_dat[i2[i]:i3[i],i],del[2]) * $
                       (float(del[2])/(i3[i]-i2[i]))
                     
-                    remap_histo[j,rindx_3,i] = congrid(temp_histo_dat[i4[i]:*,i],del[3]) * $
+                    remap_histo[j,rindx_3,i] = $
+                      congrid(temp_histo_dat[i4[i]:*,i],del[3]) * $
                       (float(del[3])/(Npix-i4[i]))
                     
-                    remap_histo[j,rindx_4,i] = congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
+                    remap_histo[j,rindx_4,i] = $
+                      congrid(temp_histo_dat[i3[i]:i4[i],i],del[4])
 
                 endelse
 
@@ -3195,7 +3211,8 @@ pro interactive_cancel_button_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-interactive_cmd_line_base_id = widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
+interactive_cmd_line_base_id = $
+  widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
 widget_control, interactive_cmd_line_base_id, map=0
 
 
@@ -3212,7 +3229,8 @@ pro nt_display_configure_button_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-nt_display_configure_base_id = widget_info(Event.top,find_by_uname='nt_display_configure_base')
+nt_display_configure_base_id = $
+  widget_info(Event.top,find_by_uname='nt_display_configure_base')
 widget_control, nt_display_configure_base_id, map=1
 
 end
@@ -3226,27 +3244,32 @@ pro nt_display_configure_validate_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-nt_display_configure_base_id = widget_info(Event.top,find_by_uname='nt_display_configure_base')
+nt_display_configure_base_id = $
+  widget_info(Event.top,find_by_uname='nt_display_configure_base')
 widget_control, nt_display_configure_base_id, map=0	
 
 nt_id = widget_info(Event.top, find_by_uname='nt_histo_draw_tube_pixels_slider')
 widget_control, nt_id, get_value=Nt
 
 ;retrieve value of time_offset, time_bin and time_max
-nt_display_time_offset_text_id = widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
+nt_display_time_offset_text_id = $
+  widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
 widget_control, nt_display_time_offset_text_id, get_value=time_offset
 
-nt_display_time_bin_text_id = widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
+nt_display_time_bin_text_id = $
+  widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
 widget_control, nt_display_time_bin_text_id, get_value=time_bin
 
-;nt_display_max_time_text_id = widget_info(Event.top,find_by_uname='nt_display_max_time_text')
+;nt_display_max_time_text_id = $
+;      widget_info(Event.top,find_by_uname='nt_display_max_time_text')
 ;widget_control, nt_display_max_time_text_id, get_value=time_max
 
 bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
 bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
 text = strcompress(bin_min) + '-' + strcompress(bin_max) + ' microS'
 
-nt_display_configure_label_id = widget_info(Event.top,find_by_uname='nt_display_configure_label')
+nt_display_configure_label_id = $
+  widget_info(Event.top,find_by_uname='nt_display_configure_label')
 widget_control, nt_display_configure_label_id, set_value=text[0]
 
 end
@@ -3276,7 +3299,8 @@ Ntubes = (*global).Ny_scat
 path_up_to_prenexus = (*global).path_up_to_proposal_number + '/preNeXus/'
 run_number = (*global).run_number
 xml_offset_extension = (*global).xml_offset_extension
-xml_offset_filename = 'BSS_' + strcompress(run_number) + xml_offset_extension
+xml_offset_filename = 'BSS_' + strcompress(run_number,/remove_all) $
+  + xml_offset_extension
 full_xml_offset_filename = path_up_to_prenexus + xml_offset_filename
 
 ;display infos
@@ -3287,7 +3311,8 @@ output_into_log_book, event, text
 text = 'xml offset file: ' + full_xml_offset_filename
 output_into_log_book, event, text
 
-lines = strarr(3 + 4 + Ntubes * 3)
+nbr_xml_lines = 3+4+(3*Ntubes)
+lines = strarr(nbr_xml_lines)
 ;xml framework
 
 lines[0] = '<?xml version="1.0"?>'
@@ -3307,7 +3332,8 @@ for i=0,(Ntubes-1) do begin
         else:
     endcase
 
-    lines[j] = '  <tube ' + strcompress(i,/remove_all) + ' units="metre" type="Float64">'
+    lines[j] = '  <tube ' + strcompress(i,/remove_all) + $
+      ' units="metre" type="Float64">'
     ++j
 
 
@@ -3337,7 +3363,7 @@ endfor
 text="...done"
 output_into_general_infos, event, text
 
-write_xml_file, Event, full_xml_offset_filename, lines
+write_xml_file, Event, full_xml_offset_filename, lines, nbr_xml_lines
 
 end
 
@@ -3345,13 +3371,15 @@ end
 
 
 
-pro write_xml_file, Event, full_xml_offset_filename, lines
+pro write_xml_file, Event, full_xml_offset_filename, lines, nbr_lines
 
-openw,u2,full_xml_offset_filename,/get
-writeu,u2,lines
+openu, 1,full_xml_offset_filename,/append
+for i=0,(nbr_lines-1) do begin
+    printf,1, lines[i]
+endfor
 
 ;close it up...
-close,u2
-free_lun,u2
+close,1
+free_lun,1
 
 end
