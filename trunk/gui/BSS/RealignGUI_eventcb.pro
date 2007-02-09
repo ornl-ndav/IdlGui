@@ -1,3 +1,37 @@
+pro get_bin_min_max, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;Retrieve timemap from NeXus file
+cmd_timemap = "nxdir " + (*global).full_nexus_name
+cmd_timemap += " -p /entry/bank1/time_of_flight/ -o "
+spawn, cmd_timemap, listening
+
+list = listening[0]
+
+;get the number of elements
+nbr_elements = strsplit(list,'/entry/bank1/time_of_flight\[',$
+                        /regex,/extract)
+nbr_elements = strsplit(nbr_elements[0],'\]=\[',/regex,/extract)
+nbr_elements = nbr_elements[0]
+
+list_array_size = long(nbr_elements)
+
+
+
+
+
+
+
+end
+
+
+
+
+
+
 function produce_pixels_offset, i1, i2, i3, i4, i5, tube_removed, bank
 
 offset_text_array = strarr(2)
@@ -2746,18 +2780,22 @@ widget_control, nt_id, get_value=Nt
 tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_slider')
 widget_control, tube_number_id, get_value=tube_number
 
-;retrieve value of time_offset, time_bin and time_max
-nt_display_time_offset_text_id = $
-  widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
-widget_control, nt_display_time_offset_text_id, get_value=time_offset
+;; retrieve value of time_offset, time_bin and time_max
+; nt_display_time_offset_text_id = $
+;   widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
+; widget_control, nt_display_time_offset_text_id, get_value=time_offset
 
-nt_display_time_bin_text_id = $
-  widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
-widget_control, nt_display_time_bin_text_id, get_value=time_bin
+; nt_display_time_bin_text_id = $
+;   widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
+; widget_control, nt_display_time_bin_text_id, get_value=time_bin
 
 ;nt_display_max_time_text_id = $
 ;    widget_info(Event.top,find_by_uname='nt_display_max_time_text')
 ;widget_control, nt_display_max_time_text_id, get_value=time_max
+
+get_bin_min_max, Event
+bin_min = bin_values[0]
+bin_max = bin_values[1]
 
 bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
 bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))

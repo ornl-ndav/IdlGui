@@ -2,8 +2,6 @@ pro MAIN_BASE_event, Event
 
   wWidget =  Event.top  ;widget id
 
-;stop
-
   case Event.id of
 
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
@@ -512,8 +510,6 @@ CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON = widget_button(OPEN_LOCAL_NEXUS_BASE,$
                                                     value='CANCEL',$
                                                     uname='CANCEL_LOCAL_OPEN_RUN_NUMBER_BUTTON')
 
-
-
 ;top-left frame (display of counts vs pixelID for each tube
 ;one at a time and tube per tube for each of the Nt time bins
 
@@ -627,8 +623,6 @@ if (ucams EQ 'j35') then begin
                                                   uname='nt_display_configure_validate')
 
 ;end of configure nt window
-
-
 
     histo_draw_tube_pixels_draw = widget_draw(histo_tube_per_tube_plot_base,$
                                               UNAME='histo_draw_tube_pixels_draw',$
@@ -1479,7 +1473,7 @@ tube1_label =  widget_label(tube1_base,$
 
   Widget_Control, /REALIZE, MAIN_BASE
   
-                                ;disabled background buttons/draw/text/labels
+;disabled background buttons/draw/text/labels
   Widget_Control, draw_tube_pixels_slider, sensitive=0
   Widget_Control, nt_histo_draw_tube_pixels_slider, sensitive=0
   Widget_Control, histo_draw_tube_pixels_slider, sensitive=0
