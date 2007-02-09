@@ -230,7 +230,6 @@ pro MAIN_BASE_event, Event
 ;Widget to output histo_mapped_realigned data
     Widget_Info(wWidget, FIND_BY_UNAME='output_new_histo_mapped_file'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-;        output_new_histo_mapped_file, Event
          create_nexus_file, Event
     end
 
@@ -274,13 +273,13 @@ pro MAIN_BASE_event, Event
   	max_tbin_text, Event
     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='interactive_ok_button'): begin
-  	interactive_ok_button_eventcb, Event
-    end
+;     Widget_Info(wWidget, FIND_BY_UNAME='interactive_ok_button'): begin
+;   	interactive_ok_button_eventcb, Event
+;     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='interactive_cancel_button'): begin
-  	interactive_cancel_button_eventcb, Event
-    end
+;     Widget_Info(wWidget, FIND_BY_UNAME='interactive_cancel_button'): begin
+;   	interactive_cancel_button_eventcb, Event
+;     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='nt_display_configure_button'): begin
   	nt_display_configure_button_eventcb, Event
@@ -400,72 +399,6 @@ global = ptr_new({$
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
-;   IDENTIFICATION_BASE= widget_base(MAIN_BASE,$
-;                                    XOFFSET=150,$
-;                                    YOFFSET=120,$
-;                                    UNAME='IDENTIFICATION_BASE',$
-;                                    SCR_XSIZE=240,$
-;                                    SCR_YSIZE=120,$
-;                                    FRAME=10,$
-;                                    SPACE=4,$
-;                                    XPAD=3,$
-;                                    YPAD=3)
-  
-;   IDENTIFICATION_LABEL = widget_label(IDENTIFICATION_BASE,$
-;                                       XOFFSET=40,$
-;                                       YOFFSET=3,$
-;                                       VALUE="ENTER YOUR 3 CHARACTERS ID")
-  
-;   IDENTIFICATION_TEXT = widget_text(IDENTIFICATION_BASE,$
-;                                     XOFFSET=100,$
-;                                     YOFFSET=20,$
-;                                     VALUE='',$ ;
-;                                     SCR_XSIZE=37,$
-;                                     /editable,$
-;                                     UNAME='IDENTIFICATION_TEXT',$
-;                                     /ALL_EVENTS)
-  
-;   ERROR_IDENTIFICATION_left = widget_label(IDENTIFICATION_BASE,$
-;                                            XOFFSET=5,$
-;                                            YOFFSET=25,$
-;                                            VALUE='',$
-;                                            SCR_XSIZE=90,$
-;                                            SCR_YSIZE=20, $
-;                                            UNAME='ERROR_IDENTIFICATION_LEFT')
-  
-;   ERROR_IDENTIFICATION_right = widget_label(IDENTIFICATION_BASE,$
-;                                             XOFFSET=140,$
-;                                             YOFFSET=25,$
-;                                             VALUE='',$
-;                                             SCR_XSIZE=90,$
-;                                             SCR_YSIZE=20, $
-;                                             UNAME='ERROR_IDENTIFICATION_RIGHT')
-  
-;   DEFAULT_PATH_BUTTON = widget_button(IDENTIFICATION_BASE,$
-;                                       XOFFSET=0,$
-;                                       YOFFSET=55,$
-;                                       VALUE='Working path',$
-;                                       SCR_XSIZE=80,$
-;                                       SCR_YSIZE=30,$
-;                                       UNAME='DEFAULT_PATH_BUTTON')
-  
-;   DEFAULT_PATH_TEXT = widget_text(IDENTIFICATION_BASE,$
-;                                   XOFFSET=83,$
-;                                   YOFFSET=55,$
-;                                   VALUE=(*global).default_path,$
-;                                   UNAME='DEFAULT_PATH_TEXT',$
-;                                   /editable,$
-;                                   SCR_XSIZE=150)
-  
-;   IDENTIFICATION_GO = widget_button(IDENTIFICATION_BASE,$
-;                                     XOFFSET=67,$
-;                                     YOFFSET=90,$
-;                                     SCR_XSIZE=130,$
-;                                     SCR_YSIZE=30,$
-;                                     VALUE="E N T E R",$
-;                                     UNAME='IDENTIFICATION_GO')		
-  
-
 ucams =  get_ucams()
 
 ;open nexus_file window
@@ -480,149 +413,6 @@ OPEN_NEXUS_BASE= widget_base(MAIN_BASE,$
                              XPAD=3,$
                              YPAD=3,$
                              MAP=0)
-
-
-
-;interactive command line window
-
-interactive_cmd_line_base = widget_base(main_base,$
-                                        xoffset=560,$
-                                        yoffset=455,$
-                                        uname='interactive_cmd_line_base',$
-                                        scr_xsize=545,$
-                                        scr_ysize=235,$
-                                        frame=1,$
-                                        map=0)
-
-interactive_create_tbin_file_label = widget_label(interactive_cmd_line_base,$
-                                                  xoffset=5,$
-                                                  yoffset=15,$
-                                                  value='Create_Tbin_File: ',$
-                                                  /align_left)
-
-interactive_create_tbin_file_text = widget_text(interactive_cmd_line_base,$
-                                                uname='interactive_create_tbin_file_text',$
-                                                xoffset=120,$
-                                                yoffset=10,$
-                                                scr_xsize=420,$
-                                                scr_ysize=70,$
-                                                value='',$
-                                               /align_left,$
-                                               /editable,$
-                                               /wrap,$
-                                               /scroll)
-
-y_off = 10
-;Nt
-interactive_nt_label = widget_label(interactive_cmd_line_base,$
-                                    xoffset=5,$
-                                    yoffset=85+y_off,$
-                                    value='Nt:',$
-                                    /align_left)
-
-interactive_nt_text = widget_label(interactive_cmd_line_base,$
-                                  uname='interactive_nt_text',$
-                                  xoffset=30,$
-                                  yoffset=80+y_off,$
-                                  value='',$
-                                  scr_xsize=60,$
-                                  scr_ysize=30,$
-                                  /align_left)
-                                  
-
-;Nx
-x_off = 100
-interactive_nx_label = widget_label(interactive_cmd_line_base,$
-                                    xoffset=5+x_off,$
-                                    yoffset=85+y_off,$
-                                    value='Nx:',$
-                                    /align_left)
-
-interactive_nx_text = widget_label(interactive_cmd_line_base,$
-                                   uname='interactive_nx_text',$
-                                   xoffset=30+x_off,$
-                                   yoffset=80+y_off,$
-                                   value='',$
-                                   scr_xsize=60,$
-                                   scr_ysize=30,$
-                                   /align_left)
-
-;Ny
-x_off = 200
-interactive_ny_label = widget_label(interactive_cmd_line_base,$
-                                    xoffset=5+x_off,$
-                                    yoffset=85+y_off,$
-                                    value='Ny:',$
-                                    /align_left)
-
-interactive_ny_text = widget_label(interactive_cmd_line_base,$
-                                   uname='interactive_ny_text',$
-                                   xoffset=30+x_off,$
-                                   yoffset=80+y_off,$
-                                   value='',$
-                                   scr_xsize=60,$
-                                   scr_ysize=30,$
-                                   /align_left)
-
-
-
-;N
-x_off = 300
-interactive_n_label = widget_label(interactive_cmd_line_base,$
-                                    xoffset=5+x_off,$
-                                    yoffset=85+y_off,$
-                                    value='Nbr elements:',$
-                                    /align_left)
-
-interactive_n_text = widget_label(interactive_cmd_line_base,$
-                                  uname='interactive_n_text',$
-                                  xoffset=90+x_off,$
-                                  yoffset=80+y_off,$
-                                  value='',$
-                                  scr_xsize=100,$
-                                  scr_ysize=30,$
-                                  /align_left)
-                                  
-
-;name of nexus file
-interactive_nexus_label = widget_label(interactive_cmd_line_base,$
-                                       xoffset=5,$
-                                       yoffset=130,$
-                                       value='NeXus file:',$
-                                       /align_left)
-
-interactive_nexus_text = widget_label(interactive_cmd_line_base,$
-                                     xoffset=80,$
-                                     yoffset=125,$
-                                     value='',$
-                                     scr_xsize=460,$
-                                     scr_ysize=30,$
-                                     uname='interactive_nexus_text',$
-                                     /align_left)
-                   
-
-;OK button
-interactive_ok_button = widget_button(interactive_cmd_line_base,$
-                                      xoffset=50,$
-                                      yoffset=190,$
-                                      value='VALIDATE',$
-                                      uname='interactive_ok_button',$
-                                      scr_xsize=200,$
-                                      scr_ysize=30,$
-                                      frame=1)
-
-
-;CANCEL button
-interactive_cancel_button = widget_button(interactive_cmd_line_base,$
-                                          xoffset=270,$
-                                          yoffset=190,$
-                                          value='CANCEL',$
-                                          uname='interactive_cancel_button',$
-                                          scr_xsize=200,$
-                                          scr_ysize=30,$
-                                          frame=1)
-
-
 
 
 ;open local nexus interface
@@ -827,21 +617,6 @@ if (ucams EQ 'j35') then begin
                                               uname='nt_display_time_bin_text',$
                                              /editable)
 
-
-;     x_off_1 = 280
-;     nt_display_max_time_label = widget_label(nt_display_configure_base,$
-;                                                xoffset=5+x_off_1,$
-;                                                yoffset=10,$
-;                                                value='Max time:')
-    
-;     nt_display_max_time_text = widget_text(nt_display_configure_base,$
-;                                            xoffset=66+x_off_1,$
-;                                            yoffset=5,$
-;                                            value='200000',$
-;                                            scr_xsize=55,$
-;                                            scr_ysize=30,$
-;                                            uname='nt_display_max_time_text',$
-;                                            /editable)
 
     nt_display_configure_validate = widget_button(nt_display_configure_base,$
                                                   xoffset=275,$
@@ -1289,7 +1064,7 @@ plot_mapped_data = widget_button(interactive_tab_base,$
                                  UNAME='plot_mapped_data')
                                  
 
-;Procude output file
+;Produce output file
 output_new_histo_mapped_file = widget_button(interactive_tab_base,$
                                              XOFFSET=111,$
                                              YOFFSET=380,$

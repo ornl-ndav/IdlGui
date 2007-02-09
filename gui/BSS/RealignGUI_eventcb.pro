@@ -2126,51 +2126,116 @@ pro create_nexus_file, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;refresh map_data
+plot_realign_data, Event, (*(*global).remap_histo)
+
 path_to_preNeXus = (*global).path_to_preNeXus
 full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
 working_path = (*global).working_path
 
-run_number = (*global).run_number
-
-; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
-linear_coeff = ceil(float(200000) / float((*global).Nt))
-cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 150000 "
-cmd += "--time_offset 100000 -o " 
-cmd += full_output_folder_name + "/BSS_" + $
-  strcompress(run_number,/remove_all)
-cmd += "_neutron_timemap.dat"
-
-interactive_create_tbin_file_text_id = $
-  widget_info(Event.top,$
-              find_by_uname='interactive_create_tbin_file_text')
-widget_control, interactive_create_tbin_file_text_id, set_value=cmd
-
 ;nt, nx, ny and n
 Nt=(*global).Nt
-interactive_nt_text_id = widget_info(Event.top,find_by_uname='interactive_nt_text')
-widget_control, interactive_nt_text_id, set_value=strcompress(Nt)
-
 Nx=(*global).Nx
-interactive_nx_text_id = widget_info(Event.top,find_by_uname='interactive_nx_text')
-widget_control, interactive_nx_text_id, set_value=strcompress(Nx)
-
 Ny=(*global).Ny_scat
-interactive_ny_text_id = widget_info(Event.top,find_by_uname='interactive_ny_text')
-widget_control, interactive_ny_text_id, set_value=strcompress(Ny)
-
 N=(*global).N
-interactive_n_text_id = widget_info(Event.top,find_by_uname='interactive_n_text')
-widget_control, interactive_n_text_id, set_value=strcompress(N)
-
 full_nexus_name=(*global).full_nexus_name
-interactive_nexus_text_id = $
-  widget_info(Event.top,find_by_uname='interactive_nexus_text')
-widget_control, interactive_nexus_text_id, set_value=full_nexus_name
+run_number = (*global).run_number
 
+;name of neutron timemap file
+full_timemap_filename = full_output_folder_name + "/BSS_" + $
+  strcompress(run_number,/remove_all)
+full_timemap_filename += "_neutron_timemap.dat"
 
-;display interactive window
-display_interactive_window, Event
+;copy data
+files_to_copy = ["*.xml","*.nxt"]
+for i=0,1 do begin
+    cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
+      full_output_folder_name
+    text = ' >' + cmd_copy
+    output_into_log_book, event, text
+    spawn, cmd_copy, listening, err_listening
+    output_into_log_book, event, listening
+    output_error, event, err_listening
+endfor
+
+run_number = (*global).run_number
+
+;Retrieve timemap from NeXus file
+cmd_timemap = "nxdir " + full_nexus_name
+cmd_timemap += " -p /entry/bank1/time_of_flight/ --dump "
+cmd_timemap += full_timemap_filename
+text = ' >' + cmd_timemap
+output_into_log_book, event, text
+spawn, cmd_timemap, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;import geometry and mapping file into same directory
+cmd_copy = "cp " + (*global).mapping_file 
+cmd_copy += " " + (*global).geometry_file
+cmd_copy += " " + full_output_folder_name
+
+text = ' >' + cmd_copy
+output_into_log_book, event, text
+spawn, cmd_copy, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;merge files
+cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
+cmd_merge += " " + full_output_folder_name
+
+text = ' >' + cmd_merge
+output_into_log_book, event, text
+spawn, cmd_merge, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;create nexus file
+cd, (*global).full_output_folder_name
+
+cmd_translate = "nxtranslate " + full_output_folder_name
+cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
+cmd_translate += ".nxt"
+
+text = ' >' + cmd_translate
+output_into_log_book, event, text
+spawn, cmd_translate, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;create nexus folder and copy nexus file into new folder
+path_up_to_proposal_number = (*global).path_up_to_proposal_number
+
+path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
+cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
+
+text = ' >' + cmd_nexus_folder
+output_into_log_book, event, text
+spawn, cmd_nexus_folder, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+name_of_nexus_file = full_output_folder_name + "/BSS_" 
+name_of_nexus_file += strcompress(run_number,/remove_all)
+name_of_nexus_file += ".nxs"
+
+cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
+
+full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
+full_nexus_filename += strcompress(run_number,/remove_all)
+text=" Name of NeXus file: " + full_nexus_filename
+output_into_log_book, event, text
+
+spawn, cmd_copy, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
+
+;create_offset_xml_file, Event
+
+text="...done"
+output_into_general_infos, event, text
 
 end
 
@@ -2593,6 +2658,9 @@ end
 
 
 
+
+
+
 pro output_into_general_infos, event, text, do_not_append_it
 
 ;get the global data structure
@@ -2657,6 +2725,9 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
 endif
 
 end
+
+
+
 
 
 
@@ -2730,19 +2801,11 @@ if ((*global).realign_plot EQ 1) then begin
     
 endif
     
-
-
-
-
-
-
-
-
-
-
-
-
 end
+
+
+
+
 
 
 
@@ -3186,6 +3249,9 @@ interactive_cmd_line_base_id = $
   widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
 widget_control, interactive_cmd_line_base_id, map=0
 
+;refresh map_data
+plot_realign_data, Event, (*(*global).remap_histo)
+
 path_to_preNeXus = (*global).path_to_preNeXus
 full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
@@ -3206,6 +3272,13 @@ endfor
 run_number = (*global).run_number
 
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
+
+; full_nexus_name = (*global).full_nexus_name
+; cmd_nxdir = "nxdir " + full_nexus_name
+; cmd_nxdir += " -p /entry/bank1/time_of_flight -o"
+; print, "cmd_nxdir: " + cmd_nxdir
+
+; spawn, cmd_nxdir, listening, error_listening
 
 ;retrieve Create_tbin_file command
 interactive_create_tbin_file_text_id = $
@@ -3299,6 +3372,8 @@ interactive_cmd_line_base_id = $
   widget_info(Event.top, find_by_uname='interactive_cmd_line_base')
 widget_control, interactive_cmd_line_base_id, map=0
 
+;refresh map_data
+plot_realign_data, Event, (*(*global).remap_histo)
 
 end
 
