@@ -3468,8 +3468,8 @@ output_into_general_infos, event, text
 
 write_xml_file, Event, full_xml_offset_filename, lines, nbr_xml_lines
 
-;just for debugging - remove_me after debugging phase
-write_i_file, Event, '/SNS/users/j35/BSS_60_indeces.txt', i1,i2,i3,i4,i5, Ntubes
+;;just for debugging - remove_me after debugging phase
+;write_i_file, Event, '/SNS/users/j35/BSS_60_indeces.txt', i1,i2,i3,i4,i5, Ntubes
 end
 
 
