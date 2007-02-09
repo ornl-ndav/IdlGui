@@ -1436,14 +1436,6 @@ tube1_label =  widget_label(tube1_base,$
                             VALUE="")
 
 
-
-
-
-
-
-
-
-
 ;draw boxes for plot windows
   FILE_MENU = Widget_Button(WID_BASE_0_MBAR, UNAME='FILE_MENU' ,/MENU  $
       ,VALUE='File')
@@ -1489,6 +1481,8 @@ tube1_label =  widget_label(tube1_base,$
   
                                 ;disabled background buttons/draw/text/labels
   Widget_Control, draw_tube_pixels_slider, sensitive=0
+  Widget_Control, nt_histo_draw_tube_pixels_slider, sensitive=0
+  Widget_Control, histo_draw_tube_pixels_slider, sensitive=0
   Widget_Control, pixels_slider, sensitive=0
   Widget_Control, tube0_left_minus, sensitive=0
   Widget_Control, tube0_left_text, sensitive=0  

@@ -604,6 +604,8 @@ id_list=['reset_all_button',$
          'remove_pixelid',$
          'draw_tube_pixels_slider',$
          'pixels_slider',$
+         'nt_histo_draw_tube_pixels_slider',$
+         'histo_draw_tube_pixels_slider',$
          'remove_tube_button',$
          'removed_tube_text',$
          'tube0_left_minus',$
@@ -3563,6 +3565,7 @@ close,1
 free_lun,1
 
 end
+
 
 
 
