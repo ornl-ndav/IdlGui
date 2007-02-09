@@ -3279,11 +3279,10 @@ spawn, cmd_copy, listening, err_listening
 output_into_log_book, event, listening
 output_error, event, err_listening
 
+;create_offset_xml_file, Event
+
 text="...done"
 output_into_general_infos, event, text
-
-create_offset_xml_file, Event
-
 
 end
 
