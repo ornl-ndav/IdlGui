@@ -9,7 +9,8 @@ offset_text_array[1]= ''
 
 if (tube_removed EQ 1) then begin
 
-    increment_offset = 0.234375    
+;    increment_offset = 0.00234375    
+    increment_offset = 0.002380952   
 
     for i=0,63 do begin
         coeff = float(start_position + i*increment_offset)
@@ -49,19 +50,27 @@ endif else begin
 
             tube_length_pixel = i2-i1
             increment_offset = tube_length_m / tube_length_pixel
+            start_position_local = start_position - i1 * increment_offset
+            
+            for k=0,63 do begin
+                coeff = float(start_position_local + k*increment_offset)
+                offset_text_array[0] += strcompress(coeff,/remove_all) + ' '
+            endfor
 
-
-
-
-            i3=63-i3
-            i4=63-i4
+            i3=63-(i3-63)
+            i4=63-(i4-63)
             tube_length_pixel = i3-i4
             increment_offset = tube_length_m / tube_length_pixel
-            
+            start_position_local = start_position - i4 * increment_offset
 
+            for k=0,63 do begin
+                coeff = float(start_position_local + k*increment_offset)
+                offset_text_array[1] += strcompress(coeff,/remove_all) + ' '
+            endfor
 
         end
         else:
+
     endcase
 
 endelse
@@ -985,6 +994,7 @@ Npix = (*global).Nx
 
 remap = temporary(total(remap_histo_local,1))
 
+;get id of drawing region for remap data
 draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
 widget_control, draw_info, get_value=draw_id
 wset, draw_id
@@ -2125,8 +2135,8 @@ run_number = (*global).run_number
 
 ; full_output_folder_name + "BSS_" + run_number + "_neutron_timemap.dat"
 linear_coeff = ceil(float(200000) / float((*global).Nt))
-cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 200000 "
-cmd += "--time_offset 0 -o " 
+cmd = "Create_Tbin_File -l " + strcompress(linear_coeff,/remove_all) + " -M 150000 "
+cmd += "--time_offset 100000 -o " 
 cmd += full_output_folder_name + "/BSS_" + $
   strcompress(run_number,/remove_all)
 cmd += "_neutron_timemap.dat"
@@ -3386,7 +3396,7 @@ output_into_log_book, event, text
 text = 'xml offset file: ' + full_xml_offset_filename
 output_into_log_book, event, text
 
-nbr_xml_lines = 3+4+(4*Ntubes)
+nbr_xml_lines = 3+4+(6*Ntubes)
 lines = strarr(nbr_xml_lines)
 ;xml framework
 
@@ -3397,43 +3407,50 @@ for i=0,(Ntubes-1) do begin
 
     case i of
         0: begin
-            lines[j] = ' <bank 1>'
+            lines[j] = ' <bank number="1">'
             ++j
             bank=1
         end
         32: begin
-            lines[j] = ' <bank 2>'
+            lines[j] = ' <bank number="2">'
             ++j
             bank=2
         end
         else:
     endcase
 
-    offset_text_array = produce_pixels_offset(i1,i2,i3,i4,i5,tube_removed[i],bank)
-    lines[j] = offset_text
-    ++j
+    offset_text_array = produce_pixels_offset(i1[i],i2[i],i3[i],i4[i],i5[i],tube_removed[i],bank)
 
-    lines[j] = '  <tube ' + strcompress(2*i,/remove_all) + $
-      ' units="metre" type="Float64">'
+;    lines[j] = offset_text
+;    ++j
+
+    lines[j] = '  <tube number="' + strcompress(2*i,/remove_all) + $
+      '" units="metre" type="Float64">'
     ++j
 
     lines[j] = offset_text_array[0]
     ++j
 
-    lines[j] = '  <tube ' + strcompress(2*i+1,/remove_all) + $
-      ' units="metre" type="Float64">'
+    lines[j] = '  </tube>'
+    ++j
+
+    lines[j] = '  <tube number="' + strcompress(2*i+1,/remove_all) + $
+      '" units="metre" type="Float64">'
     ++j
 
     lines[j] = offset_text_array[1]
     ++j
 
+    lines[j] = '  </tube>'
+    ++j
+
     case i of
         31: begin
-            lines[j] = ' </bank 1>'
+            lines[j] = ' </bank>'
             ++j
         end
         63: begin
-            lines[j] = ' </bank 2>'
+            lines[j] = ' </bank>'
             ++j
         end
         else:
@@ -3442,6 +3459,8 @@ for i=0,(Ntubes-1) do begin
 endfor
 
 lines[j] = '</Instrument>'
+++j
+
 nbr_xml_lines = j
 
 text="...done"
@@ -3449,6 +3468,8 @@ output_into_general_infos, event, text
 
 write_xml_file, Event, full_xml_offset_filename, lines, nbr_xml_lines
 
+;just for debugging - remove_me after debugging phase
+write_i_file, Event, '/SNS/users/j35/BSS_60_indeces.txt', i1,i2,i3,i4,i5, Ntubes
 end
 
 
@@ -3472,4 +3493,20 @@ end
 
 
 
+pro write_i_file, Event, file_name, i1,i2,i3,i4,i5, Ntubes
 
+openu, 1,file_name,/append
+for i=0,(Ntubes-1) do begin
+    text = 'tube # ' + strcompress(i) + '   i1: ' + strcompress(i1[i])
+    text += ' i2: ' + strcompress(i2[i])
+    text += ' i3: ' + strcompress(i3[i])
+    text += ' i4: ' + strcompress(i4[i])
+    text += ' i5: ' + strcompress(i5[i])
+    printf,1, text
+endfor
+
+;close it up...
+close,1
+free_lun,1
+
+end
