@@ -1,31 +1,212 @@
-pro get_bin_min_max, Event
+function produce_pixel_array, list_of_pixels
+
+list_of_pixels_size_str = size(list_of_pixels)
+length = list_of_pixels_size_str[1]
+pixel_array = intarr(length,2)
+for i=0,(length-1) do begin
+    comma_parsed = strsplit(list_of_pixels[i],',',/regex,/extract)
+    pixel_array[i,0] = comma_parsed[0]
+    pixel_array[i,1] = comma_parsed[1]
+endfor
+return, pixel_array
+end
+
+
+
+
+
+
+
+
+function parse_list_of_tubes, untouched_list_to_plot
+
+separate_commas = strsplit(untouched_list_to_plot,',',/regex,/extract,count=length)
+list_to_plot_array = ''
+
+for i=0,(length-1) do begin
+    separate_list = strsplit(separate_commas[i],'-',/regex,/extract,count=length_1)
+    if (length_1 GT 1) then begin
+        first_parameter = fix(separate_list[0])
+        second_parameter = fix(separate_list[1])
+        parameter_list = [first_parameter, second_parameter]
+        min_parameter = MIN(parameter_list,max=max_parameter)
+        nbr_parameter = max_parameter - min_parameter
+        for i=0,(nbr_parameter) do begin
+            list_to_plot_array += strcompress(min_parameter + i,/remove_all) + '/'
+        endfor
+    endif else begin
+        list_to_plot_array += strcompress(separate_list[0],/remove_all) + '/'
+    endelse
+endfor
+
+list_to_plot = strsplit(list_to_plot_array,'/',/regex,/extract)
+return, list_to_plot 
+end
+
+
+
+
+
+
+function produce_list_of_pixels, element_1, element_2, nbr_elements
+
+left_side_parsed = strsplit(element_1,',',/extract,/regex)
+right_side_parsed = strsplit(element_2,',',/extract,/regex)
+
+left_tube = fix(left_side_parsed[0])
+right_tube = fix(right_side_parsed[0])
+
+left_pixel = fix(left_side_parsed[1])
+right_pixel = fix(right_side_parsed[1])
+
+;get min tube and min pixel
+tubes = [left_tube, right_tube]
+min_tube = MIN(tubes,max=max_tube)
+
+pixels = [left_pixel, right_pixel]
+min_pixel = MIN(pixels,max=max_pixel)
+
+continuous_list = ''
+nbr_elements=0
+
+nbr_tubes = (max_tube-min_tube)
+nbr_pixels = (max_pixel-min_pixel)
+
+for i=min_tube,max_tube do begin
+    case i of
+        min_tube: begin
+            lower_pixel_limit = min_pixel
+            if (max_tube EQ min_tube) then begin
+                upper_pixel_limit = max_pixel
+            endif else begin
+                upper_pixel_limit = 127     ;because working with DAS's tubes
+            endelse
+        end
+        max_tube: begin
+            upper_pixel_limit = max_pixel
+            lower_pixel_limit = 0
+        end
+        else:
+    endcase
+    for j=lower_pixel_limit,upper_pixel_limit do begin
+        tube = strcompress(i,/remove_all)
+        pixel = strcompress(j,/remove_all)
+        continuous_list += tube + ',' + pixel + '/'
+        nbr_elements++
+    endfor
+endfor
+
+return, continuous_list
+end
+
+
+
+
+
+
+
+function parse_list_of_pixels, untouched_list_of_pixels
+
+list = strsplit(untouched_list_of_pixels,'\)\(',/extract,count=length)
+list_to_plot_array = ''
+
+j=0
+if (length GT 0) then begin
+
+    while(j LT length) do begin
+        
+        if (j EQ (length-1)) then begin
+            
+            list_to_plot_array += list[j] + '/'
+            ++j
+            
+        endif else begin
+            
+            if (list[j+1] eq '-') then begin
+                
+                continuous_list = produce_list_of_pixels(list[j],list[j+2], nbr_elements)
+                list_to_plot_array += continuous_list
+                j=j+3
+                
+            endif else begin
+                
+                list_to_plot_array += list[j] + '/'
+                j++
+                
+            endelse
+
+        endelse
+            
+    endwhile
+endif
+
+list_to_plot = strsplit(list_to_plot_array,'/',/regex,/extract)
+return, list_to_plot
+end
+
+
+
+
+
+
+
+
+
+
+
+
+pro create_tbin_array, Event, full_nexus_name
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;Retrieve timemap from NeXus file
-cmd_timemap = "nxdir " + (*global).full_nexus_name
-cmd_timemap += " -p /entry/bank1/time_of_flight/ -o "
-spawn, cmd_timemap, listening
+text = 'Create time_of_flight array:'
+output_into_log_book, event, text
 
-list = listening[0]
+tmp_output_file = (*global).full_tmp_nxdir_folder_path 
+tmp_output_file += 'BSS_' + strcompress((*global).run_number,/remove_all) 
+tmp_output_file += '_tmp_tof.dat'
 
-;get the number of elements
-nbr_elements = strsplit(list,'/entry/bank1/time_of_flight\[',$
-                        /regex,/extract)
-nbr_elements = strsplit(nbr_elements[0],'\]=\[',/regex,/extract)
-nbr_elements = nbr_elements[0]
+cmd_nxdir = 'nxdir ' + full_nexus_name
+cmd_nxdir += ' -p /entry/bank1/time_of_flight/ --dump '
+cmd_nxdir += tmp_output_file
 
-list_array_size = long(nbr_elements)
+text = '>' + cmd_nxdir
+output_into_log_book, event, text
 
+spawn, cmd_nxdir, listening, err_listening
+output_into_log_book, event, listening
+output_error, event, err_listening
 
+openr, u, tmp_output_file, /get
+;to get the number of elements
+fs=fstat(u)
+file_size = fs.size
 
+text = 'Infos about tof file: ' + tmp_output_file
+output_into_log_book, event, text
+text = '  file_size: ' + strcompress(file_size,/remove_all)
+output_into_log_book, event, text
 
+Nbytes = (*global).nbytes
+N = long(file_size)/Nbytes
+text = '  N: ' + strcompress(N,/remove_all)
+output_into_log_book, event, text
 
+tof = fltarr(N)
+readu,u,tof
+close, /all
 
+(*(*global).tof) = tof
 
 end
+
+
+
+
+
+
 
 
 
@@ -116,6 +297,8 @@ end
 
 
 
+
+
 function reverse_array, data
 
 tmp = data[0:63,0:31]
@@ -134,6 +317,10 @@ end
 
 
 
+
+
+
+
 function reverse_3d_array, data
 
 tmp = data[*,0:63,0:31]
@@ -148,6 +335,9 @@ data[*,64:*,32:*] = tmp
 reverse_data = temporary(data)
 return, reverse_data
 end
+
+
+
 
 
 
@@ -233,6 +423,8 @@ end
 
 
 
+
+
 pro OPEN_NEXUS_INTERFACE, Event
 
 ;get global structure
@@ -244,6 +436,8 @@ open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
 widget_control, open_nexus_id, map=1
 
 end
+
+
 
 
 
@@ -291,6 +485,11 @@ endelse
 return, full_nexus_name
 
 end
+
+
+
+
+
 
 
 
@@ -762,7 +961,6 @@ text = 'Plot histo file:'
 output_into_log_book, event, text
 
 image_2d_1 = total(image1,1)
-
 tmp = image_2d_1[0:63,0:31]
 
 ;window,1
@@ -2072,7 +2270,7 @@ end
 
 
 ;--------------------------------------------------------------------------
-pro output_new_histo_mapped_file, Event, data
+pro output_new_histo_mapped_file, Eventb
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -2080,7 +2278,7 @@ widget_control,id,get_uvalue=global
 
 ;determine name of output file according to input file
 file = (*global).file
-
+data = (*(*global).remap_histo)
 text = ''
 output_into_log_book, event,text
 
@@ -2146,7 +2344,7 @@ writeu,u1,new_output_data
 close,u1
 free_lun,u1
 
-;create_nexus_file, Event
+create_nexus_file, Event
 
 end
 
@@ -2463,6 +2661,9 @@ endif else begin
 ;dump binary data of NeXus file into tmp_working_path
         create_local_copy_of_histo_mapped, Event
         
+;create array of tbin
+        create_tbin_array, Event, full_nexus_name
+
 ;read and plot nexus file
         READ_NEXUS_FILE, Event
 
@@ -2780,28 +2981,15 @@ widget_control, nt_id, get_value=Nt
 tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_slider')
 widget_control, tube_number_id, get_value=tube_number
 
-;; retrieve value of time_offset, time_bin and time_max
-; nt_display_time_offset_text_id = $
-;   widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
-; widget_control, nt_display_time_offset_text_id, get_value=time_offset
+tof = (*(*global).tof)
 
-; nt_display_time_bin_text_id = $
-;   widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
-; widget_control, nt_display_time_bin_text_id, get_value=time_bin
+bin_min = tof[float(Nt)]
+bin_max = tof[float(Nt)+1]
 
-;nt_display_max_time_text_id = $
-;    widget_info(Event.top,find_by_uname='nt_display_max_time_text')
-;widget_control, nt_display_max_time_text_id, get_value=time_max
-
-get_bin_min_max, Event
-bin_min = bin_values[0]
-bin_max = bin_values[1]
-
-bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
-bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
 text = strcompress(bin_min) + '-' + strcompress(bin_max) + ' microS'
 
-nt_display_configure_label_id = widget_info(Event.top,find_by_uname='nt_display_configure_label')
+nt_display_configure_label_id = widget_info(Event.top,$
+                                            find_by_uname='nt_display_configure_label')
 widget_control, nt_display_configure_label_id, set_value=text[0]
 
 image_nt_nx_ny = (*(*global).image_nt_nx_ny)
@@ -3192,7 +3380,7 @@ widget_control, processing_label_id, $
 
 widget_control, plot_mapped_data_id, sensitive=1
 
-output_new_histo_mapped_file, Event, remap_histo
+;output_new_histo_mapped_file, Event, remap_histo
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -3245,6 +3433,9 @@ output_into_log_book, event, listening
 output_error, event, err_listening
 
 end
+
+
+
 
 
 pro rebinGUI_button_eventcb, Event
@@ -3623,5 +3814,189 @@ endfor
 ;close it up...
 close,1
 free_lun,1
+
+end
+
+
+
+
+;VALIDATE button in 3rd tab (counts vs tof)
+pro counts_vs_tof_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+counts_vs_tof_text_tubes_id = widget_info(Event.top,find_by_uname='counts_vs_tof_text_tubes')
+widget_control, counts_vs_tof_text_tubes_id, get_value=untouched_list_of_tubes
+list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
+
+counts_vs_tof_text_pixels_id = widget_info(Event.top,find_by_uname='counts_vs_tof_text_pixels')
+widget_control, counts_vs_tof_text_pixels_id, get_value=untouched_list_of_pixels
+list_of_pixels = parse_list_of_pixels(untouched_list_of_pixels)
+
+;get array of tubes
+list_of_tubes_boolean = 0
+if (untouched_list_of_tubes Ne '') then begin
+    tube_array_size_str = size(list_of_tubes)
+    tube_array_size = tube_array_size_str[1]
+    tube_array=list_of_tubes
+    list_of_tubes_boolean = 1
+endif
+
+;get array of pixels
+list_of_pixels_boolean = 0
+if (untouched_list_of_pixels NE '') then begin
+    pixel_array = produce_pixel_array(list_of_pixels)
+    pixel_array_size_str = size(pixel_array)
+    pixel_array_size = pixel_array_size_str[1]
+    list_of_pixels_boolean = 1
+endif
+
+;reverse_array
+image = (*(*global).image_nt_nx_ny)
+image_reversed = reverse_3d_array(image) ;to be in DAS's world
+
+Nt = (*global).Nt
+final_data = lonarr(Nt)
+
+;add data for each tube selected
+if (list_of_tubes_boolean NE 0) then begin
+    tmp_data=lonarr(Nt, (*global).Nx)
+    for i=0,(tube_array_size-1) do begin
+        tmp_data(*,*)=image_reversed(*,*,fix(tube_array[i]))
+    endfor
+    final_data = total(tmp_data,2)
+endif
+
+;add data for each pixel selected
+if (list_of_pixels_boolean NE 0) then begin
+    for j=0,(pixel_array_size-1) do begin
+        final_data(*)=image_reversed(*,pixel_array[j,0],pixel_array[j,1])
+    endfor
+endif
+
+counts_vs_tof_draw_id = widget_info(Event.top,find_by_uname='counts_vs_tof_draw')
+widget_control, counts_vs_tof_draw_id, get_value=draw_id
+wset, draw_id
+
+plot, final_data, xtitle='TOF', ytitle='Counts'
+
+end
+
+
+
+
+
+
+
+
+
+pro counts_vs_tof_help_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+push_button = (*global).push_button
+id_text_tubes = widget_info(Event.top, find_by_uname='counts_vs_tof_text_tubes')
+id_text_pixels = widget_info(Event.top, find_by_uname='counts_vs_tof_text_pixels')
+id_text_pixelids = widget_info(Event.top, find_by_uname='counts_vs_tof_text_pixelids')
+
+if (push_button EQ 0) then begin
+
+;save previous contains of text box
+    widget_control, id_text_tubes, get_value=previous_text_tubes
+    (*global).previous_text_tubes = previous_text_tubes
+    widget_control, id_text_pixels, get_value=previous_text_pixels
+    (*global).previous_text_pixels = previous_text_pixels
+    widget_control, id_text_pixelids, get_value=previous_text_pixelids
+    (*global).previous_text_pixelids = previous_text_pixelids
+
+;put help contains
+    (*global).push_button = 1
+    text_tubes = '1,2,3,50-70,80,83,89,10'
+    text_pixels = '(1,2)(1,63)(2,3)-(3,8)'
+    text_pixelids = '453,4663,4668-4670'
+
+endif else begin
+
+;put back previous contain of text box
+    (*global).push_button = 0
+    text_tubes = (*global).previous_text_tubes
+    text_pixels = (*global).previous_text_pixels
+    text_pixelids = (*global).previous_text_pixelids
+
+endelse
+
+widget_control, id_text_tubes, set_value=text_tubes
+widget_control, id_text_pixels, set_value=text_pixels
+widget_control, id_text_pixelids, set_value=text_pixelids
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+pro add_pixel_to_tof_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tube_pixels_slider_id = widget_info(Event.top,$
+                                         find_by_uname='draw_tube_pixels_slider')
+widget_control, tube_pixels_slider_id, get_value=tube
+
+pixels_slider_id = widget_info(Event.top,$
+                               find_by_uname='pixels_slider')
+widget_control, pixels_slider_id, get_value=pixel
+
+counts_vs_tof_text_pixels_id = widget_info(Event.top,$
+                                           find_by_uname='counts_vs_tof_text_pixels')
+widget_control, counts_vs_tof_text_pixels_id, get_value=previous_pixels_text
+
+pixels_text = previous_pixels_text + '(' + strcompress(tube,/remove_all)
+pixels_text += ',' + strcompress(pixel,/remove_all) + ')'
+
+widget_control, counts_vs_tof_text_pixels_id, set_value=pixels_text
+
+
+
+end
+
+
+
+
+
+
+
+
+
+
+pro add_tube_to_tof_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tube_pixels_slider_id = widget_info(Event.top,$
+                                         find_by_uname='draw_tube_pixels_slider')
+widget_control, tube_pixels_slider_id, get_value=tube
+
+;add tube# into tab#3 list of tubes
+counts_vs_tof_text_tubes_id = widget_info(Event.top,$
+                                          find_by_uname='counts_vs_tof_text_tubes')
+widget_control, counts_vs_tof_text_tubes_id, get_value=previous_tubes_text
+tubes_text = previous_tubes_text + ',' + strcompress(tube,/remove_all)
+widget_control, counts_vs_tof_text_tubes_id, set_value=tubes_text
 
 end

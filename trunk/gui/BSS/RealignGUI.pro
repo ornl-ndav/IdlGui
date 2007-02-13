@@ -228,7 +228,8 @@ pro MAIN_BASE_event, Event
 ;Widget to output histo_mapped_realigned data
     Widget_Info(wWidget, FIND_BY_UNAME='output_new_histo_mapped_file'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-         create_nexus_file, Event
+;         create_nexus_file, Event
+      output_new_histo_mapped_file, Event
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_TEXT'): begin
@@ -287,10 +288,25 @@ pro MAIN_BASE_event, Event
   	nt_display_configure_validate_eventcb, Event
     end
 
+;tab#3
+    Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_button'): begin
+        counts_vs_tof_button_eventcb, Event
+    end
 
-
+    Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_help'): begin
+        counts_vs_tof_help_eventcb, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='add_pixel_to_tof_button'): begin
+        add_pixel_to_tof_button_eventcb, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='add_tube_to_tof_button'): begin
+        add_tube_to_tof_button_eventcb, Event
+    end
+    
     else:
-  endcase
+endcase
 
 end
 
@@ -313,7 +329,7 @@ Resolve_Routine, 'RealignGUI_eventcb',/COMPILE_FULL_FILE
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         XOFFSET=100,$
+                         XOFFSET=500,$           ;100 remove_me
                          YOFFSET=50,$
                          SCR_XSIZE=scr_x,$
                          SCR_YSIZE=scr_y,$
@@ -336,7 +352,7 @@ global = ptr_new({$
                    realign_plot : 0,$ ;0 if histo has not be realigned yet
                    debug : 1,$                     ;1 for debugging  ;0 for not debgging
                    debug_output_file_name : '~/RealignGUI_debug.txt',$
-                   tmp_nxdir_folder : '/realignGUI_tmp/',$
+                   tmp_nxdir_folder : '/.realignGUI_tmp/',$
                    file_type : '',$
                    file_to_plot_top : '',$
                    file_to_plot_bottom : '',$
@@ -358,6 +374,10 @@ global = ptr_new({$
                    full_output_folder_name    :'',$
                    path_up_to_proposal_number :'',$
                    proposal_number            :'',$
+                   previous_text_tubes        :'',$
+                   previous_text_pixels       :'',$
+                   previous_text_pixelids     :'',$
+                   push_button                :0,$
                    run_number                 :0,$ 
                    ucams	              :'',$
                    name			      :'',$
@@ -390,7 +410,8 @@ global = ptr_new({$
                    i4                         : ptr_new(0L),$
                    i5                         : ptr_new(0L),$
                    len1                       : ptr_new(0L),$
-                   len2                       : ptr_new(0L)$
+                   len2                       : ptr_new(0L),$
+                   tof                        : ptr_new(0L)$
 })
 
 
@@ -519,32 +540,100 @@ draw_tube_pixels_base = widget_base(MAIN_BASE,$
                                     XOFFSET=5,$
                                     YOFFSET=10)
 
-if (ucams EQ 'j35') then begin
-    
-    drawing_tab = widget_tab(draw_tube_pixels_base,$
-                             uname='draw_tube_pixels_base',$
-                             location=0,$
-                             xoffset=0,$
-                             yoffset=0,$
-                             scr_xsize=550,$
-                             scr_ysize=370)
+drawing_tab = widget_tab(draw_tube_pixels_base,$
+                         uname='draw_tube_pixels_base',$
+                         location=0,$
+                         xoffset=0,$
+                         yoffset=0,$
+                         scr_xsize=550,$
+                         scr_ysize=370)
 ;                             /tracking_events)
-    
-    tube_per_tube_plot_base = widget_base(drawing_tab,$
-                                          uname='tube_per_tube_plot_base',$
-                                          title='Tube per tube plot',$
-                                          xoffset=0,$
-                                          yoffset=0)
-    
-endif else begin
-    
-    tube_per_tube_plot_base= widget_base(draw_tube_pixels_base,$
-                                         uname='tube_per_tube_plot_base',$
-                                         title='Tube per tube plot',$
-                                         xoffset=0,$
-                                         yoffset=0)
-      
-endelse
+
+
+
+
+;##############################################################
+;3rd tab - couts vs tof for a range of pixelIDs
+counts_vs_tof_base = widget_base(drawing_tab,$
+                                 uname='counts_vs_tof_base',$
+                                 title='Counts vs TOF')
+                                 
+counts_vs_tof_draw = widget_draw(counts_vs_tof_base,$
+                                 UNAME='counts_vs_tof_draw',$
+                                 SCR_XSIZE=536,$
+                                 SCR_YSIZE=270,$
+                                 XOFFSET=4,$
+                                 YOFFSET=5)
+
+counts_vs_tof_label_tubes = widget_label(counts_vs_tof_base,$
+                                         xoffset=5,$
+                                         yoffset=287,$
+                                         value='TUBE(S)')
+
+counts_vs_tof_text_tubes = widget_text(counts_vs_tof_base,$
+                                 UNAME='counts_vs_tof_text_tubes',$
+                                 XOFFSET= 60,$
+                                 YOFFSET= 278,$
+                                 SCR_XSIZE=300,$
+                                 value='1,2,3,4,5,10-15',$    ;remove_me
+                                 /editable)
+
+counts_vs_tof_help = widget_button(counts_vs_tof_base,$
+                                   uname='counts_vs_tof_help',$
+                                   xoffset=500,$
+                                   yoffset=278,$
+                                   value = '?',$
+                                   scr_xsize=30,$
+                                   scr_ysize=30,$
+                                   /pushbutton_events,$
+                                   tooltip='Click to see the format of input to use')
+                                   
+counts_vs_tof_button = widget_button(counts_vs_tof_base,$
+                                     uname='counts_vs_tof_button',$
+                                     xoffset=380,$
+                                     yoffset=278,$
+                                     scr_xsize=110,$
+                                     scr_ysize=30,$
+                                     value='VALIDATE')
+
+
+counts_vs_tof_label_pixels = widget_label(counts_vs_tof_base,$
+                                          xoffset=5,$
+                                          yoffset=317,$
+                                          value='PIXEL(S)')
+
+counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
+                                        uname='counts_vs_tof_text_pixels',$
+                                        xoffset=60,$
+                                        yoffset=310,$
+                                        scr_xsize=200,$
+                                        value='(1,2)(1,5)(3,10)-(3,15)',$
+                                        /editable)
+                                          
+counts_vs_tof_label_pixelids = widget_label(counts_vs_tof_base,$
+                                            xoffset=274,$
+                                            yoffset=317,$
+                                            value='PIXELID(S)',$
+                                           sensitive=0)
+
+counts_vs_tof_text_pixelids = widget_text(counts_vs_tof_base,$
+                                          uname='counts_vs_tof_text_pixelids',$
+                                          xoffset=340,$
+                                          yoffset=310,$
+                                          scr_xsize=200,$
+                                          value='',$
+                                          /editable,$
+                                         sensitive=0)
+
+
+
+
+
+tube_per_tube_plot_base = widget_base(drawing_tab,$
+                                      uname='tube_per_tube_plot_base',$
+                                      title='Tube per tube plot',$
+                                      xoffset=0,$
+                                      yoffset=0)
 
 draw_tube_pixels_draw = widget_draw(tube_per_tube_plot_base,$
                                     UNAME='draw_tube_pixels_draw',$
@@ -557,7 +646,7 @@ draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
                                         UNAME="draw_tube_pixels_slider",$
                                         XOFFSET= 5,$
                                         YOFFSET= 304,$
-                                        SCR_XSIZE=536,$
+                                        SCR_XSIZE=470,$
                                         SCR_YSIZE=35,$
                                         MINIMUM=0,$
                                         MAXIMUM=63,$
@@ -565,62 +654,19 @@ draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
                                         VALUE=0,$
                                         EVENT_PRO="plot_tubes_pixels")
 
-if (ucams EQ 'j35') then begin
-    
-    histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
-                                                uname='histo_tube_per_tube_plot_base',$
-                                                title='Tube per tube for each Nt',$
-                                                xoffset=0,$
-                                                yoffset=0)
-    
-;configure nt displays base
-    nt_display_configure_base = widget_base(histo_tube_per_tube_plot_base,$
-                                            uname='nt_display_configure_base',$
+add_tube_to_tof_button = widget_button(tube_per_tube_plot_base,$
+                                       uname='add_tube_to_tof_button',$
+                                       xoffset=480,$
+                                       yoffset=315,$
+                                       value='TOF++',$
+                                       scr_xsize=60)
+
+
+histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
+                                            uname='histo_tube_per_tube_plot_base',$
+                                            title='Tube per tube for each Nt',$
                                             xoffset=0,$
-                                            yoffset=275,$
-                                            scr_xsize=445,$
-                                            scr_ysize=40,$
-                                            frame=1,$
-                                            map=0)
-
-    nt_display_time_offset_label = widget_label(nt_display_configure_base,$
-                                               xoffset=5,$
-                                               yoffset=10,$
-                                               value='Time offset:')
-    
-    nt_display_time_offset_text = widget_text(nt_display_configure_base,$
-                                              xoffset=81,$
-                                              yoffset=5,$
-                                              value='0',$
-                                              scr_xsize=55,$
-                                              scr_ysize=30,$
-                                              uname='nt_display_time_offset_text',$
-                                             /editable)
-
-
-    x_off_1 = 140
-    nt_display_time_bin_label = widget_label(nt_display_configure_base,$
-                                               xoffset=5+x_off_1,$
-                                               yoffset=10,$
-                                               value='Time bin:')
-    
-    nt_display_time_bin_text = widget_text(nt_display_configure_base,$
-                                              xoffset=66+x_off_1,$
-                                              yoffset=5,$
-                                              value='10',$
-                                              scr_xsize=55,$
-                                              scr_ysize=30,$
-                                              uname='nt_display_time_bin_text',$
-                                             /editable)
-
-
-    nt_display_configure_validate = widget_button(nt_display_configure_base,$
-                                                  xoffset=275,$
-                                                  yoffset=5,$
-                                                  value='VALIDATE CHANGES',$
-                                                  scr_xsize=150,$
-                                                  scr_ysize=30,$
-                                                  uname='nt_display_configure_validate')
+                                            yoffset=0)
 
 ;end of configure nt window
 
@@ -654,19 +700,10 @@ if (ucams EQ 'j35') then begin
                                               xoffset=305,$
                                               yoffset=287,$
                                               value='',$
-                                              scr_xsize=140,$
+                                              scr_xsize=230,$
                                               scr_ysize=18,$
                                               frame=1)
     
-    nt_display_configure_button = widget_button(histo_tube_per_tube_plot_base,$
-                                                uname='nt_display_configure_button',$
-                                                xoffset=450,$
-                                                yoffset=285,$
-                                                scr_xsize=90,$
-                                                value='CONFIGURE')
-
-
-
 
     tube_histo_label = widget_label(histo_tube_per_tube_plot_base,$
                                     xoffset=0,$
@@ -685,17 +722,21 @@ if (ucams EQ 'j35') then begin
                                                   VALUE=0,$
                                                   EVENT_PRO="histo_plot_tubes_pixels")
     
-endif
+
+
+
+
+
 
 ;######################################################################
 ;Top right part that will contain 2 tabs (interaction and log_book)
- tabs_base = widget_base(main_base,$
+tabs_base = widget_base(main_base,$
                          xoffset=560,$
                          yoffset=10,$
                          scr_xsize=545,$
                          scr_ysize=440)
-
-
+ 
+ 
  first_tab = widget_tab(tabs_base,$
                         uname='data_reduction_tab',$
                         location=0,$
@@ -803,10 +844,18 @@ pixelid_counts_value = widget_label(pixelID_base,$
                                     uname='pixelid_counts_value',$
                                     xoffset=65,$
                                     yoffset=y_off_counts,$
-                                    scr_xsize=150,$
+                                    scr_xsize=130,$
                                     scr_ysize=20,$
                                     value='',$
                                     /align_left)
+
+add_pixel_to_tof_button = widget_button(pixelID_base,$
+                                       uname='add_pixel_to_tof_button',$
+                                       xoffset=195,$
+                                       yoffset=y_off_counts-2,$
+                                       value='TOF++',$
+                                       scr_xsize=40)
+
 
 
 remove_pixel_id = widget_button(pixelID_base,$
