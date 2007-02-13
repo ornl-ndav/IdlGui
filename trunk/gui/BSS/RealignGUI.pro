@@ -304,6 +304,15 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='add_tube_to_tof_button'): begin
         add_tube_to_tof_button_eventcb, Event
     end
+
+;activate or not pixelID counts
+    Widget_Info(wWidget, FIND_BY_UNAME='pixels_values_activate'): begin
+        pixels_values_activate_eventcb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='pixels_values_desactivate'): begin
+        pixels_values_desactivate_eventcb, Event
+    end
     
     else:
 endcase
@@ -344,6 +353,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;or other means
 
 global = ptr_new({$
+                   activate_counts : 1,$
                    xml_offset_extension : '_offset.xml',$
                    linear_interpolation : 0,$ ;1:linear interploation   0:nearest_neighbor
                    debugger : '',$    ;'j35' or 'ele'
@@ -379,6 +389,8 @@ global = ptr_new({$
                    previous_text_pixelids     :'',$
                    push_button                :0,$
                    run_number                 :0,$ 
+                   tube_number_tab_1          :0,$
+                   tube_number_tab_2          :0,$
                    ucams	              :'',$
                    name			      :'',$
                    character_id		      :'',$
@@ -549,86 +561,7 @@ drawing_tab = widget_tab(draw_tube_pixels_base,$
                          scr_ysize=370)
 ;                             /tracking_events)
 
-
-
-
-;##############################################################
-;3rd tab - couts vs tof for a range of pixelIDs
-counts_vs_tof_base = widget_base(drawing_tab,$
-                                 uname='counts_vs_tof_base',$
-                                 title='Counts vs TOF')
-                                 
-counts_vs_tof_draw = widget_draw(counts_vs_tof_base,$
-                                 UNAME='counts_vs_tof_draw',$
-                                 SCR_XSIZE=536,$
-                                 SCR_YSIZE=270,$
-                                 XOFFSET=4,$
-                                 YOFFSET=5)
-
-counts_vs_tof_label_tubes = widget_label(counts_vs_tof_base,$
-                                         xoffset=5,$
-                                         yoffset=287,$
-                                         value='TUBE(S)')
-
-counts_vs_tof_text_tubes = widget_text(counts_vs_tof_base,$
-                                 UNAME='counts_vs_tof_text_tubes',$
-                                 XOFFSET= 60,$
-                                 YOFFSET= 278,$
-                                 SCR_XSIZE=300,$
-                                 value='1,2,3,4,5,10-15',$    ;remove_me
-                                 /editable)
-
-counts_vs_tof_help = widget_button(counts_vs_tof_base,$
-                                   uname='counts_vs_tof_help',$
-                                   xoffset=500,$
-                                   yoffset=278,$
-                                   value = '?',$
-                                   scr_xsize=30,$
-                                   scr_ysize=30,$
-                                   /pushbutton_events,$
-                                   tooltip='Click to see the format of input to use')
-                                   
-counts_vs_tof_button = widget_button(counts_vs_tof_base,$
-                                     uname='counts_vs_tof_button',$
-                                     xoffset=380,$
-                                     yoffset=278,$
-                                     scr_xsize=110,$
-                                     scr_ysize=30,$
-                                     value='VALIDATE')
-
-
-counts_vs_tof_label_pixels = widget_label(counts_vs_tof_base,$
-                                          xoffset=5,$
-                                          yoffset=317,$
-                                          value='PIXEL(S)')
-
-counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
-                                        uname='counts_vs_tof_text_pixels',$
-                                        xoffset=60,$
-                                        yoffset=310,$
-                                        scr_xsize=200,$
-                                        value='(1,2)(1,5)(3,10)-(3,15)',$
-                                        /editable)
-                                          
-counts_vs_tof_label_pixelids = widget_label(counts_vs_tof_base,$
-                                            xoffset=274,$
-                                            yoffset=317,$
-                                            value='PIXELID(S)',$
-                                           sensitive=0)
-
-counts_vs_tof_text_pixelids = widget_text(counts_vs_tof_base,$
-                                          uname='counts_vs_tof_text_pixelids',$
-                                          xoffset=340,$
-                                          yoffset=310,$
-                                          scr_xsize=200,$
-                                          value='',$
-                                          /editable,$
-                                         sensitive=0)
-
-
-
-
-
+;TAB #1
 tube_per_tube_plot_base = widget_base(drawing_tab,$
                                       uname='tube_per_tube_plot_base',$
                                       title='Tube per tube plot',$
@@ -652,16 +585,18 @@ draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
                                         MAXIMUM=63,$
                                         /DRAG,$
                                         VALUE=0,$
-                                        EVENT_PRO="plot_tubes_pixels")
+                                        EVENT_PRO='plot_tubes_pixels')
 
 add_tube_to_tof_button = widget_button(tube_per_tube_plot_base,$
                                        uname='add_tube_to_tof_button',$
                                        xoffset=480,$
                                        yoffset=315,$
                                        value='TOF++',$
-                                       scr_xsize=60)
+                                       scr_xsize=60,$
+                                       sensitive=0)
 
 
+;TAB #2
 histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
                                             uname='histo_tube_per_tube_plot_base',$
                                             title='Tube per tube for each Nt',$
@@ -720,8 +655,84 @@ histo_tube_per_tube_plot_base = widget_base(drawing_tab,$
                                                   MAXIMUM=63,$
                                                   /DRAG,$
                                                   VALUE=0,$
-                                                  EVENT_PRO="histo_plot_tubes_pixels")
+                                                  EVENT_PRO='histo_plot_tubes_pixels')
     
+
+;##############################################################
+;3rd tab - couts vs tof for a range of pixelIDs
+counts_vs_tof_base = widget_base(drawing_tab,$
+                                 uname='counts_vs_tof_base',$
+                                 title='Counts vs TOF')
+                                 
+counts_vs_tof_draw = widget_draw(counts_vs_tof_base,$
+                                 UNAME='counts_vs_tof_draw',$
+                                 SCR_XSIZE=536,$
+                                 SCR_YSIZE=270,$
+                                 XOFFSET=4,$
+                                 YOFFSET=5)
+
+counts_vs_tof_label_tubes = widget_label(counts_vs_tof_base,$
+                                         xoffset=5,$
+                                         yoffset=287,$
+                                         value='TUBE(S)')
+
+counts_vs_tof_text_tubes = widget_text(counts_vs_tof_base,$
+                                       UNAME='counts_vs_tof_text_tubes',$
+                                       XOFFSET= 60,$
+                                       YOFFSET= 278,$
+                                       SCR_XSIZE=300,$
+                                       value='1,2,3,4,5,10-15',$ ;remove_me
+                                       /editable,$
+                                       sensitive=0)
+
+counts_vs_tof_help = widget_button(counts_vs_tof_base,$
+                                   uname='counts_vs_tof_help',$
+                                   xoffset=500,$
+                                   yoffset=278,$
+                                   value = '?',$
+                                   scr_xsize=30,$
+                                   scr_ysize=30,$
+                                   /pushbutton_events,$
+                                   tooltip='Click to see the format of input to use')
+                                   
+counts_vs_tof_button = widget_button(counts_vs_tof_base,$
+                                     uname='counts_vs_tof_button',$
+                                     xoffset=380,$
+                                     yoffset=278,$
+                                     scr_xsize=110,$
+                                     scr_ysize=30,$
+                                     value='VALIDATE',$
+                                    sensitive=0)
+
+counts_vs_tof_label_pixels = widget_label(counts_vs_tof_base,$
+                                          xoffset=5,$
+                                          yoffset=317,$
+                                          value='PIXEL(S)')
+
+counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
+                                        uname='counts_vs_tof_text_pixels',$
+                                        xoffset=60,$
+                                        yoffset=310,$
+                                        scr_xsize=200,$
+                                        value='(1,2)(1,5)(3,10)-(3,15)',$
+                                        /editable,$
+                                       sensitive=0)
+                                          
+counts_vs_tof_label_pixelids = widget_label(counts_vs_tof_base,$
+                                            xoffset=274,$
+                                            yoffset=317,$
+                                            value='PIXELID(S)',$
+                                           sensitive=0)
+
+counts_vs_tof_text_pixelids = widget_text(counts_vs_tof_base,$
+                                          uname='counts_vs_tof_text_pixelids',$
+                                          xoffset=340,$
+                                          yoffset=310,$
+                                          scr_xsize=200,$
+                                          value='',$
+                                          /editable,$
+                                         sensitive=0)
+
 
 
 
@@ -761,6 +772,7 @@ pixels_counts_base = widget_base(interactive_tab_base,$
                                  frame=1)
 
 pixels_counts_title = widget_label(pixels_counts_base,$
+                                   uname='pixels_counts_title',$
                                    xoffset=40,$
                                    yoffset=0,$
                                    scr_xsize=90,$
@@ -771,11 +783,30 @@ pixels_counts_values = widget_text(pixels_counts_base,$
                                    XOFFSET=3,$
                                    YOFFSET=20,$
                                    SCR_XSIZE=173,$
-                                   SCR_YSIZE=375,$
+                                   SCR_YSIZE=345,$
                                    /wrap,$
                                    /scroll,$
                                    value = '',$
                                    UNAME='pixels_counts_values')
+
+pixels_values_activate = widget_button(pixels_counts_base,$
+                                       xoffset=3,$
+                                       yoffset=365,$
+                                       value='Activate',$
+                                       scr_xsize=85,$
+                                       scr_ysize=30,$
+                                       uname='pixels_values_activate',$
+                                      sensitive=0)
+
+pixels_values_desactivate = widget_button(pixels_counts_base,$
+                                          xoffset=93,$
+                                          yoffset=365,$
+                                          scr_xsize=85,$
+                                          scr_ysize=30,$
+                                          value='Desactivate',$
+                                          uname='pixels_values_desactivate',$
+                                          sensitive=0)
+
 
 ;General infos window
 infos_base = widget_base(interactive_tab_base,$
@@ -854,7 +885,8 @@ add_pixel_to_tof_button = widget_button(pixelID_base,$
                                        xoffset=195,$
                                        yoffset=y_off_counts-2,$
                                        value='TOF++',$
-                                       scr_xsize=40)
+                                       scr_xsize=40,$
+                                       sensitive=0)
 
 
 

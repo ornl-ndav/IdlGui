@@ -834,6 +834,12 @@ widget_control,id,get_uvalue=global
 
 ;enabled background buttons/draw/text/labels
 id_list=['reset_all_button',$
+         'counts_vs_tof_text_tubes',$
+         'counts_vs_tof_button',$
+         'counts_vs_tof_text_pixels',$
+         'pixels_values_desactivate',$
+         'add_tube_to_tof_button',$
+         'add_pixel_to_tof_button',$
          'remove_pixelid',$
          'draw_tube_pixels_slider',$
          'pixels_slider',$
@@ -869,6 +875,8 @@ id = widget_info(Event.top,FIND_BY_UNAME='output_new_histo_mapped_file')
 Widget_Control, id, sensitive=0
 
 end
+
+
 
 
 
@@ -949,6 +957,8 @@ end
 
 
 
+
+
 pro PLOT_HISTO_FILE, Event, image1
 
 ;get global structure
@@ -988,31 +998,24 @@ calculate_ix, Event
 ;display i1,i2,i3,i4 and i5 for tube 0
 display_ix, Event, 0
 
+if ((*global).activate_counts EQ 1) then begin
 ;fill pixelids counts in right table
-pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
-text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
-widget_control, pixelIDs_info_id, set_value=text
-for i=1,127 do begin
-    text = strcompress(i) + ': ' + strcompress(image_2d_1[i,0],/remove_all)
-    widget_control, pixelIDs_info_id, set_value=text, /append
-endfor
+    pixelIDs_info_id = widget_info(Event.top, FIND_BY_UNAME='pixels_counts_values')
+    text = ' 0: ' + strcompress(image_2d_1[0,0],/remove_all)
+    widget_control, pixelIDs_info_id, set_value=text
+    for i=1,127 do begin
+        text = strcompress(i) + ': ' + strcompress(image_2d_1[i,0],/remove_all)
+        widget_control, pixelIDs_info_id, set_value=text, /append
+    endfor
+endif    
 
 text = ' Plot data using DAS representation'
 output_into_log_book, event, text
-plot_das, Event
 
 ;plot on DAS'plot an indication of the position of the tube
-das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
-widget_control, das_plot_id, get_value=das_id
-wset, das_id
-x_coeff = (*global).x_coeff
-y_coeff = (*global).y_coeff
-for i=0, 63 do begin
-    plots, i*x_coeff, 0, /device, color=200
-    plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
-endfor
-
-plot_tube_box, Event, 0
+plot_rule_tube, event
+;das_tube_boxes, event, i
+;plot_tube_box, Event, 0, 200
 
 ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
@@ -1028,11 +1031,33 @@ end
 
 
 
+pro plot_rule_tube, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;plot on DAS'plot an indication of the position of the tube
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+x_coeff = (*global).x_coeff
+y_coeff = (*global).y_coeff
+for i=0, 63 do begin
+    plots, i*x_coeff, 0, /device, color=200
+    plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
+endfor
+
+end
+
+
+
+
 
 
 
 ;--------------------------------------------------------------------------
-pro plot_das, EVEnt
+pro plot_das, event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1046,6 +1071,7 @@ DEVICE, DECOMPOSED = 0
 das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
 widget_control, das_plot_id, get_value=das_id
 wset, das_id
+erase
 
 image_2d_1 = (*(*global).image_2d_1)
 
@@ -1069,10 +1095,32 @@ end
 
 
 
-
-
 ;--------------------------------------------------------------------------
-pro plot_tube_box, Event, tube_number
+pro plot_tube_box, Event, tube_number, tube_color
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;plot on DAS'plot
+das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
+widget_control, das_plot_id, get_value=das_id
+wset, das_id
+x_coeff = (*global).x_coeff
+y_coeff = (*global).y_coeff
+plots, tube_number*x_coeff, 0, /device, color=tube_color
+plots, tube_number*x_coeff, 64*y_coeff, /device, /continue, color=tube_color
+
+end
+
+
+
+
+
+
+
+
+pro plot_das, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1100,20 +1148,7 @@ tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
 
 DEVICE, DECOMPOSED = 1
 
-;plot on DAS'plot
-das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
-widget_control, das_plot_id, get_value=das_id
-wset, das_id
-x_coeff = (*global).x_coeff
-y_coeff = (*global).y_coeff
-plots, tube_number*x_coeff, 0, /device, color=200
-plots, tube_number*x_coeff, 64*y_coeff, /device, /continue, color=200
-
-
 end
-
-
-
 
 
 
@@ -1311,8 +1346,8 @@ plots,[indx4,image_2d_1[indx4,i]],psym=4,color=255+(256*0)+(150*256),thick=3
 
 tube_number = i
 
-if ((*global).new_tube EQ 1) then begin
-
+if ((*global).activate_counts EQ 1 AND (*global).new_tube EQ 1) then begin
+    
     (*global).new_tube = 0
     pixelIDs_info_id = widget_info(Event.top, $
                                    FIND_BY_UNAME='pixels_counts_values')
@@ -1350,7 +1385,7 @@ end
 
 
 ;----------------------------------------------------------------------------
-pro plot_tubes_pixels, Event
+pro plot_tubes_pixels, Event   ;tab#1
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1358,6 +1393,8 @@ widget_control,id,get_uvalue=global
 
 slider_id = widget_info(Event.top, find_by_uname='draw_tube_pixels_slider')
 widget_control, slider_id, get_value=tube_number
+
+(*global).tube_number_tab_1 = tube_number
 
 ;check if tube_number is in the list of tube removed
 ;if yes, validate ADD button and unvalidate REMOVE button
@@ -1406,10 +1443,12 @@ pixel_slider_id = widget_info(Event.top, find_by_uname='pixels_slider')
 initialization_pixel = 0
 widget_control, pixel_slider_id, set_value=initialization_pixel
 
-my_tube_number = tube_number
 (*global).new_tube = 1
-plot_tube_box, Event, my_tube_number
 display_ix, Event, tube_number
+
+plot_das, Event
+plot_tube_box, Event, (*global).tube_number_tab_1, 200
+plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
 
 end
 
@@ -2667,6 +2706,11 @@ endif else begin
 ;read and plot nexus file
         READ_NEXUS_FILE, Event
 
+;plot DAS
+        plot_das, Event
+        plot_tube_box, Event, (*global).tube_number_tab_1, 200
+        plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
+
 ;procedure to enable most of the buttons/text boxes..
         ENABLED_PROCEDURE, Event
         
@@ -2981,6 +3025,8 @@ widget_control, nt_id, get_value=Nt
 tube_number_id = widget_info(Event.top,find_by_uname='histo_draw_tube_pixels_slider')
 widget_control, tube_number_id, get_value=tube_number
 
+(*global).tube_number_tab_2 = tube_number
+
 tof = (*(*global).tof)
 
 bin_min = tof[float(Nt)]
@@ -3029,6 +3075,10 @@ if ((*global).realign_plot EQ 1) then begin
     
 endif
     
+plot_das, Event
+plot_tube_box, Event, (*global).tube_number_tab_1, 200
+plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
+
 end
 
 
@@ -3046,14 +3096,32 @@ widget_control,id,get_uvalue=global
 
 if ((*global).nexus_open EQ 1) then begin
 
-    image1 = (*(*global).image_nt_nx_ny)
-    histo_plot_tubes_pixels, Event
-    PLOT_HISTO_FILE, Event, image1
+    draw_tube_pixels_base_id = widget_info(Event.top,find_by_uname='draw_tube_pixels_base')
+    index = widget_info(draw_tube_pixels_base_id, /tab_current)
+    
+    case index of
 
-    nt_histo_draw_tube_pixels_slider_id = $
-      widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
-    widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
+        0: begin
+            image1 = (*(*global).image_nt_nx_ny)
+            PLOT_HISTO_FILE, Event, image1
+        end
+        1: begin
+            histo_plot_tubes_pixels, Event
+            nt_histo_draw_tube_pixels_slider_id = $
+              widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
+            widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
+        end
+        2: begin
+            
+            
+        end
+        else:
+    endcase
 
+    plot_das, Event
+    plot_tube_box, Event, (*global).tube_number_tab_1, 200
+    plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
+    
 endif
 
 end
@@ -3820,6 +3888,11 @@ end
 
 
 
+
+
+
+
+
 ;VALIDATE button in 3rd tab (counts vs tof)
 pro counts_vs_tof_button_eventcb, Event
 
@@ -3827,61 +3900,95 @@ pro counts_vs_tof_button_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-counts_vs_tof_text_tubes_id = widget_info(Event.top,find_by_uname='counts_vs_tof_text_tubes')
-widget_control, counts_vs_tof_text_tubes_id, get_value=untouched_list_of_tubes
-list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
+CATCH, parsing_error
 
-counts_vs_tof_text_pixels_id = widget_info(Event.top,find_by_uname='counts_vs_tof_text_pixels')
-widget_control, counts_vs_tof_text_pixels_id, get_value=untouched_list_of_pixels
-list_of_pixels = parse_list_of_pixels(untouched_list_of_pixels)
+if (parsing_error NE 0) then begin
 
+    ;output error
+    text = 'Counts vs tof: '
+    output_into_general_infos, event, text
+    output_into_log_book, event, text
+    text = 'ERROR: invalid format tubes and/or pixels to plot.'
+    output_into_general_infos, event, text
+    output_into_log_book, event, text
+
+endif else begin
+
+    counts_vs_tof_text_tubes_id = $
+      widget_info(Event.top,find_by_uname='counts_vs_tof_text_tubes')
+    widget_control, $
+      counts_vs_tof_text_tubes_id, get_value=untouched_list_of_tubes
+    list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
+    
+    counts_vs_tof_text_pixels_id = $
+      widget_info(Event.top,find_by_uname='counts_vs_tof_text_pixels')
+    widget_control, counts_vs_tof_text_pixels_id, $
+      get_value=untouched_list_of_pixels
+    list_of_pixels = parse_list_of_pixels(untouched_list_of_pixels)
+    
 ;get array of tubes
-list_of_tubes_boolean = 0
-if (untouched_list_of_tubes Ne '') then begin
-    tube_array_size_str = size(list_of_tubes)
-    tube_array_size = tube_array_size_str[1]
-    tube_array=list_of_tubes
-    list_of_tubes_boolean = 1
-endif
-
+    list_of_tubes_boolean = 0
+    if (untouched_list_of_tubes Ne '') then begin
+        tube_array_size_str = size(list_of_tubes)
+        tube_array_size = tube_array_size_str[1]
+        tube_array=list_of_tubes
+        list_of_tubes_boolean = 1
+    endif
+    
 ;get array of pixels
-list_of_pixels_boolean = 0
-if (untouched_list_of_pixels NE '') then begin
-    pixel_array = produce_pixel_array(list_of_pixels)
-    pixel_array_size_str = size(pixel_array)
-    pixel_array_size = pixel_array_size_str[1]
-    list_of_pixels_boolean = 1
-endif
-
+    list_of_pixels_boolean = 0
+    if (untouched_list_of_pixels NE '') then begin
+        pixel_array = produce_pixel_array(list_of_pixels)
+        pixel_array_size_str = size(pixel_array)
+        pixel_array_size = pixel_array_size_str[1]
+        list_of_pixels_boolean = 1
+    endif
+    
 ;reverse_array
-image = (*(*global).image_nt_nx_ny)
-image_reversed = reverse_3d_array(image) ;to be in DAS's world
-
-Nt = (*global).Nt
-final_data = lonarr(Nt)
-
+    image = (*(*global).image_nt_nx_ny)
+    image_reversed = reverse_3d_array(image) ;to be in DAS's world
+    
+    Nt = (*global).Nt
+    final_data_tube = lonarr(Nt)
+    final_data_pixel = lonarr(Nt)
+    
 ;add data for each tube selected
-if (list_of_tubes_boolean NE 0) then begin
-    tmp_data=lonarr(Nt, (*global).Nx)
-    for i=0,(tube_array_size-1) do begin
-        tmp_data(*,*)=image_reversed(*,*,fix(tube_array[i]))
-    endfor
-    final_data = total(tmp_data,2)
-endif
-
+    if (list_of_tubes_boolean NE 0) then begin
+        tmp_data=lonarr(Nt, (*global).Nx)
+        for i=0,(tube_array_size-1) do begin
+            tmp_data(*,*)=image_reversed(*,*,fix(tube_array[i]))
+        endfor
+        final_data_tube = total(tmp_data,2)
+    endif
+    
 ;add data for each pixel selected
-if (list_of_pixels_boolean NE 0) then begin
-    for j=0,(pixel_array_size-1) do begin
-        final_data(*)=image_reversed(*,pixel_array[j,0],pixel_array[j,1])
-    endfor
-endif
-
-counts_vs_tof_draw_id = widget_info(Event.top,find_by_uname='counts_vs_tof_draw')
-widget_control, counts_vs_tof_draw_id, get_value=draw_id
-wset, draw_id
-
-plot, final_data, xtitle='TOF', ytitle='Counts'
-
+    if (list_of_pixels_boolean NE 0) then begin
+        for j=0,(pixel_array_size-1) do begin
+            final_data_pixel(*)=image_reversed(*,pixel_array[j,0],pixel_array[j,1])
+        endfor
+    endif
+    
+    final_data = final_data_tube + final_data_pixel
+    
+    counts_vs_tof_draw_id = widget_info(Event.top,find_by_uname='counts_vs_tof_draw')
+    widget_control, counts_vs_tof_draw_id, get_value=draw_id
+    wset, draw_id
+    
+;to display right x-axis
+    tof=(*(*global).tof)
+    tof_size_str = size(tof)
+    tof_size = tof_size_str[1]
+    x_min = tof[0]
+    x_max = tof[tof_size-1]
+    diff = tof_size
+    
+    xtitle='TOF'
+    xaxis = (findgen(diff)/diff)*(x_max-x_min)+x_min
+    plot, xaxis, final_data, xrange=[x_min, x_max],$
+  xtitle=xtitle, ytitle='Counts'
+   
+endelse
+ 
 end
 
 
@@ -3998,5 +4105,53 @@ counts_vs_tof_text_tubes_id = widget_info(Event.top,$
 widget_control, counts_vs_tof_text_tubes_id, get_value=previous_tubes_text
 tubes_text = previous_tubes_text + ',' + strcompress(tube,/remove_all)
 widget_control, counts_vs_tof_text_tubes_id, set_value=tubes_text
+
+end
+
+
+
+
+
+
+pro pixels_values_activate_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).activate_counts = 1
+
+pixels_values_activate_id = widget_info(Event.top,find_by_uname='pixels_values_activate')
+widget_control, pixels_values_activate_id, sensitive=0
+pixels_values_desactivate_id = widget_info(Event.top,find_by_uname='pixels_values_desactivate')
+widget_control, pixels_values_desactivate_id, sensitive=1
+pixels_counts_title_id = widget_info(Event.top,find_by_uname='pixels_counts_title')
+widget_control, pixels_counts_title_id, sensitive=1
+pixels_counts_values_id = widget_info(Event.top,find_by_uname='pixels_counts_values')
+widget_control, pixels_counts_values_id, sensitive=1
+
+end
+
+
+
+
+
+
+pro pixels_values_desactivate_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).activate_counts = 0
+
+pixels_values_activate_id = widget_info(Event.top,find_by_uname='pixels_values_activate')
+widget_control, pixels_values_activate_id, sensitive=1
+pixels_values_desactivate_id = widget_info(Event.top,find_by_uname='pixels_values_desactivate')
+widget_control, pixels_values_desactivate_id, sensitive=0
+pixels_counts_title_id = widget_info(Event.top,find_by_uname='pixels_counts_title')
+widget_control, pixels_counts_title_id, sensitive=0
+pixels_counts_values_id = widget_info(Event.top,find_by_uname='pixels_counts_values')
+widget_control, pixels_counts_values_id, sensitive=0
 
 end
