@@ -715,15 +715,15 @@ counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
                                         xoffset=60,$
                                         yoffset=310,$
                                         scr_xsize=200,$
-                                        value='(10,63)(20,127)',$
+                                        value='(10,0)(20,127)',$
                                         /editable,$
-                                       sensitive=0)
+                                        sensitive=0)
                                           
 counts_vs_tof_label_pixelids = widget_label(counts_vs_tof_base,$
                                             xoffset=274,$
                                             yoffset=317,$
                                             value='PIXELID(S)',$
-                                           sensitive=0)
+                                            sensitive=0)
 
 counts_vs_tof_text_pixelids = widget_text(counts_vs_tof_base,$
                                           uname='counts_vs_tof_text_pixelids',$
@@ -732,12 +732,7 @@ counts_vs_tof_text_pixelids = widget_text(counts_vs_tof_base,$
                                           scr_xsize=200,$
                                           value='',$
                                           /editable,$
-                                         sensitive=0)
-
-
-
-
-
+                                          sensitive=0)
 
 
 ;######################################################################
@@ -862,7 +857,6 @@ pixels_slider = WIDGET_SLIDER(pixelID_base,$
                               VALUE=0,$
                               EVENT_PRO="get_pixels_infos")
 
-
 ;pixelID interaction window
 y_off_counts = 55
 y_off_buttons = 80
@@ -890,7 +884,6 @@ add_pixel_to_tof_button = widget_button(pixelID_base,$
                                        value='TOF++',$
                                        scr_xsize=40,$
                                        sensitive=0)
-
 
 
 remove_pixel_id = widget_button(pixelID_base,$
