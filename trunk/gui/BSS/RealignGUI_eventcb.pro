@@ -2668,6 +2668,8 @@ endif else begin
         READ_NEXUS_FILE, Event
 
 ;plot DAS
+        DEVICE, DECOMPOSED = 0
+        loadct,5
         plot_das, Event
         plot_tube_box, Event, (*global).tube_number_tab_1, 200
         plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
@@ -3803,6 +3805,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 CATCH, parsing_error
+erase_das_plot, event
+plot_rule_tube, event
 plot_das, Event
 
 if (parsing_error NE 0) then begin
@@ -4029,6 +4033,8 @@ end
 
 
 
+
+
 pro pixels_values_activate_eventcb, Event
 
 ;get global structure
@@ -4047,6 +4053,8 @@ pixels_counts_values_id = widget_info(Event.top,find_by_uname='pixels_counts_val
 widget_control, pixels_counts_values_id, sensitive=1
 
 end
+
+
 
 
 
@@ -4104,6 +4112,8 @@ end
 
 
 
+
+
 pro plot_list_of_pixels_3rd, event, pixel_array, size_array
 
 ;get global structure
@@ -4115,11 +4125,11 @@ widget_control, DAS_plot_draw_id, get_value=draw_id
 wset, draw_id
 
 x_coeff = (*global).x_coeff
-y_coeff = 1.65
+y_coeff = 1.55
 
 for i=0, (size_array-1) do begin
     plots,[pixel_array[i,0]*x_coeff,$
-           pixel_array[i,1]*y_coeff],psym=4,color=255+(256*0)+(150*256),thick=7,/device
+           pixel_array[i,1]*y_coeff+5],psym=4,color=255+(256*0)+(150*256),thick=7,/device
 endfor
 
 end
@@ -4128,3 +4138,15 @@ end
 
 
 
+pro erase_das_plot, event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
+widget_control, DAS_plot_draw_id, get_value=draw_id
+wset, draw_id
+erase
+
+end
