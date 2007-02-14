@@ -24,15 +24,17 @@ separate_commas = strsplit(untouched_list_to_plot,',',/regex,/extract,count=leng
 list_to_plot_array = ''
 
 for i=0,(length-1) do begin
+
     separate_list = strsplit(separate_commas[i],'-',/regex,/extract,count=length_1)
+
     if (length_1 GT 1) then begin
         first_parameter = fix(separate_list[0])
         second_parameter = fix(separate_list[1])
         parameter_list = [first_parameter, second_parameter]
         min_parameter = MIN(parameter_list,max=max_parameter)
         nbr_parameter = max_parameter - min_parameter
-        for i=0,(nbr_parameter) do begin
-            list_to_plot_array += strcompress(min_parameter + i,/remove_all) + '/'
+        for j=0,(nbr_parameter) do begin
+            list_to_plot_array += strcompress(min_parameter + j,/remove_all) + '/'
         endfor
     endif else begin
         list_to_plot_array += strcompress(separate_list[0],/remove_all) + '/'
@@ -342,62 +344,6 @@ end
 
 
 
-
-
-function get_ucams
-
-cd , "~/"
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-;print, "listening is: ", listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-return, ucams
-end
-
-
-
-
-
-
-;---------------------------------------------------------------------
-function get_file_name_only, file
-
-;to remove the part_to_remove part of the name
-part_to_remove="/"
-file_name = strsplit(file,part_to_remove,/extract,/regex,count=length) 
-file_name_only = file_name[length-1]
-
-return, file_name_only
-
-end
-
-
-
-
-
-
-
-;---------------------------------------------------------------------
-function modified_file_name, Event, file_name_only
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-remapped_file_name = (*global).remapped_file_name
-
-part_to_remove = '_mapped.dat'
-first_part_of_file_name = strsplit(file_name_only,$
-                                   part_to_remove,$
-                                   /extract,$
-                                   /regex,$
-                                   count=length)
-output_file_name = first_part_of_file_name[0] + '.dat'
-
-return, output_file_name
-
-end
 
 
 
@@ -2289,7 +2235,6 @@ output_into_log_book, event,text
 
 file_name_only = get_file_name_only(file)
 working_path = (*global).working_path
-;output_file_name = modified_file_name(Event, file_name_only)
 output_file_name = file_name_only
 text = '  * file_name_only: ' + file_name_only
 output_into_log_book, event,text
@@ -3069,6 +3014,8 @@ if ((*global).nexus_open EQ 1) then begin
         0: begin
             image1 = (*(*global).image_nt_nx_ny)
             PLOT_HISTO_FILE, Event, image1
+            erase_das_plot, event
+            plot_rule_tube, event
             plot_das, Event
             plot_tube_box, Event, (*global).tube_number_tab_1, 200
             plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
@@ -3078,6 +3025,8 @@ if ((*global).nexus_open EQ 1) then begin
             nt_histo_draw_tube_pixels_slider_id = $
               widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
             widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
+            erase_das_plot, event
+            plot_rule_tube, event
             plot_das, Event
             plot_tube_box, Event, (*global).tube_number_tab_1, 200
             plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
@@ -3863,9 +3812,6 @@ endif else begin
     image = (*(*global).image_nt_nx_ny)
     image_reversed = reverse_3d_array(image) ;to be in DAS's world
     
-
-    help, image_reversed
-
     Nt = (*global).Nt
     final_data_tube = lonarr(Nt)
     final_data_pixel = lonarr(Nt)
