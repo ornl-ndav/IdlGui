@@ -353,7 +353,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;or other means
 
 global = ptr_new({$
-                   activate_counts : 1,$
+                   tof_plot : 0,$            ;counts vs tof plot status (0: no plot, 1: yes)
+                   activate_counts : 0,$     ;activate or not list of counts (right window)
                    xml_offset_extension : '_offset.xml',$
                    linear_interpolation : 0,$ ;1:linear interploation   0:nearest_neighbor
                    debugger : '',$    ;'j35' or 'ele'
@@ -702,7 +703,7 @@ counts_vs_tof_button = widget_button(counts_vs_tof_base,$
                                      scr_xsize=110,$
                                      scr_ysize=30,$
                                      value='VALIDATE',$
-                                    sensitive=0)
+                                     sensitive=0)
 
 counts_vs_tof_label_pixels = widget_label(counts_vs_tof_base,$
                                           xoffset=5,$
@@ -714,7 +715,7 @@ counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
                                         xoffset=60,$
                                         yoffset=310,$
                                         scr_xsize=200,$
-                                        value='(1,2)(1,5)(3,10)-(3,15)',$
+                                        value='(10,63)(20,127)',$
                                         /editable,$
                                        sensitive=0)
                                           
@@ -777,7 +778,8 @@ pixels_counts_title = widget_label(pixels_counts_base,$
                                    yoffset=0,$
                                    scr_xsize=90,$
                                    scr_ysize=20,$
-                                   value="Pixels values")
+                                   value="Pixels values",$
+                                   sensitive=0)
 
 pixels_counts_values = widget_text(pixels_counts_base,$
                                    XOFFSET=3,$
@@ -787,7 +789,8 @@ pixels_counts_values = widget_text(pixels_counts_base,$
                                    /wrap,$
                                    /scroll,$
                                    value = '',$
-                                   UNAME='pixels_counts_values')
+                                   UNAME='pixels_counts_values',$
+                                   sensitive=0)
 
 pixels_values_activate = widget_button(pixels_counts_base,$
                                        xoffset=3,$
@@ -796,7 +799,7 @@ pixels_values_activate = widget_button(pixels_counts_base,$
                                        scr_xsize=85,$
                                        scr_ysize=30,$
                                        uname='pixels_values_activate',$
-                                      sensitive=0)
+                                      sensitive=1)
 
 pixels_values_desactivate = widget_button(pixels_counts_base,$
                                           xoffset=93,$
