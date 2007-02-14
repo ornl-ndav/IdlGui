@@ -682,7 +682,7 @@ counts_vs_tof_text_tubes = widget_text(counts_vs_tof_base,$
                                        XOFFSET= 60,$
                                        YOFFSET= 278,$
                                        SCR_XSIZE=300,$
-                                       value='1,2,3,4,5,10-15',$ ;remove_me
+                                       value='',$
                                        /editable,$
                                        sensitive=0)
 
@@ -715,7 +715,7 @@ counts_vs_tof_text_pixels = widget_text(counts_vs_tof_base,$
                                         xoffset=60,$
                                         yoffset=310,$
                                         scr_xsize=200,$
-                                        value='(10,0)(20,127)',$
+                                        value='',$
                                         /editable,$
                                         sensitive=0)
                                           

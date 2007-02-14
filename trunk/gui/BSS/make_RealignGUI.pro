@@ -5,7 +5,7 @@
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 resolve_routine, "system_utilities", /either
-
+resolve_routine, "nexus_utilities", /either
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/BSS/"
 resolve_routine, "xmanager", /either
 resolve_routine, "reverse", /either
