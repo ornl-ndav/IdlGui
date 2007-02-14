@@ -408,71 +408,8 @@ end
 
 
 
-FUNCTION find_full_nexus_name, Event, run_number, instrument    
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
-spawn, cmd, full_nexus_name
-
-;check if nexus exists
-result = strmatch(full_nexus_name,"ERROR*")
-
-if (result GE 1) then begin
-    find_nexus = 0
-endif else begin
-    find_nexus = 1
-endelse
-
-(*global).find_nexus = find_nexus
-
-return, full_nexus_name
-
-end
-
-
-
-
-
-
-
-
-
-FUNCTION find_full_local_nexus_name, Event, run_number, instrument    
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-cmd = "findnexus -i" + instrument 
-cmd += " --prefix " + (*global).working_path
-cmd += " " + strcompress(run_number,/remove_all)
-spawn, cmd, full_nexus_name
-
-;check if nexus exists
-result = strmatch(full_nexus_name,"ERROR*")
-
-if (result GE 1) then begin
-    find_nexus = 0
-endif else begin
-    find_nexus = 1
-endelse
-
-(*global).find_nexus = find_nexus
-
-return, full_nexus_name
-
-end
-
 
  
-
-
-
-
-
 
 
 
@@ -523,6 +460,10 @@ open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='open_local_nexus_base')
 widget_control, open_nexus_id, map=0
 
 end
+
+
+
+
 
 
 
@@ -2077,37 +2018,6 @@ end
 
 
 
-;--------------------------------------------------------------------------
-function get_path_to_prenexus, run_number
-
-;path_to_findnexus = "~/SVN/ASGIntegration/trunk/utilities/"
-;cmd = path_to_findnexus + "findnexus -iBSS " + $
-cmd = "findnexus -iBSS " + $
-  strcompress(run_number,/remove_all) + " --prenexus"
-spawn, cmd, path
-
-return, path
-
-end
-
-
-
-
-;-------------------------------------------------------------------------
-function isolate_run_number, file
-
-part_1 = '/'
-first_part = strsplit(file,part_1,/extract,/regex,count=length)
-
-part_2 = '_neutron_histo_mapped.dat'
-second_part = strsplit(first_part[length-1],part_2,/extract,/regex,count=length)
-
-part_3 = 'BSS_'
-run_number = strsplit(second_part[length-1],part_3,/extract,/regex)
-
-return, run_number[0]
-
-end
 
 
 
@@ -2135,7 +2045,7 @@ text = ''
 output_into_log_book, event, text
 
 ; get path to NeXus file
-path_to_preNeXus = get_path_to_prenexus(run_number)
+path_to_preNeXus = find_full_nexus_name(Event, 0, run_number, 'BSS')    
 text = ' -> Path to NeXus file: ' + path_to_preNeXus
 output_into_log_book, event, text
 
@@ -2165,7 +2075,7 @@ output_into_log_book, event, text
 (*global).proposal_number = proposal_number
 
 ; create inst_run# folder into own space
-text = ' -> Create inst_run # folde into own space'
+text = ' -> Create inst_run # folder into own space'
 output_into_log_book, event, text
 
 working_path = (*global).working_path
@@ -2216,7 +2126,7 @@ end
 
 
 ;--------------------------------------------------------------------------
-pro output_new_histo_mapped_file, Eventb
+pro output_new_histo_mapped_file, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -2572,7 +2482,7 @@ endif else begin
     
 ;get path to nexus run #
         instrument="BSS"
-        full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+        full_nexus_name = find_full_nexus_name(Event, 0, run_number, instrument)
     
     endif else begin
 
@@ -2583,7 +2493,7 @@ endif else begin
     
 ;get path to local nexus run #
         instrument="BSS"
-        full_nexus_name = find_full_local_nexus_name(Event, run_number, instrument)
+        full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
 
     endelse
 
