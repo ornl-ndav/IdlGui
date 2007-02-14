@@ -785,7 +785,6 @@ pro CTOOL_DAS, Event
 	widget_control,id,get_uvalue=global
 
 	xloadct,/MODAL,GROUP=id
-
 	plot_das,event
 
 end
@@ -809,7 +808,7 @@ pro CTOOL_realign, Event
 
 	xloadct,/MODAL,GROUP=id
 
-        plot_realign_data, Event
+        plot_realign_data, Event, (*(*global).remap_histo)
 
 end
 
@@ -837,7 +836,6 @@ id_list=['reset_all_button',$
          'counts_vs_tof_text_tubes',$
          'counts_vs_tof_button',$
          'counts_vs_tof_text_pixels',$
-         'pixels_values_desactivate',$
          'add_tube_to_tof_button',$
          'add_pixel_to_tof_button',$
          'remove_pixelid',$
@@ -965,10 +963,10 @@ pro PLOT_HISTO_FILE, Event, image1
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-text = ''
-output_into_log_book, event, text
-text = 'Plot histo file:'
-output_into_log_book, event, text
+;text = ''
+;output_into_log_book, event, text
+;text = 'Plot histo file:'
+;output_into_log_book, event, text
 
 image_2d_1 = total(image1,1)
 tmp = image_2d_1[0:63,0:31]
@@ -1009,8 +1007,8 @@ if ((*global).activate_counts EQ 1) then begin
     endfor
 endif    
 
-text = ' Plot data using DAS representation'
-output_into_log_book, event, text
+;text = ' Plot data using DAS representation'
+;output_into_log_book, event, text
 
 ;plot on DAS'plot an indication of the position of the tube
 plot_rule_tube, event
@@ -1020,8 +1018,8 @@ plot_rule_tube, event
 ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
 
-text = '...done'
-output_into_log_book, event, text
+;text = '...done'
+;output_into_log_book, event, text
 
 end
 
@@ -1051,43 +1049,6 @@ endfor
 end
 
 
-
-
-
-
-
-;--------------------------------------------------------------------------
-pro plot_das, event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;color
-DEVICE, DECOMPOSED = 0
-;loadct,5
-
-;plot DAS'plot
-das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
-widget_control, das_plot_id, get_value=das_id
-wset, das_id
-erase
-
-image_2d_1 = (*(*global).image_2d_1)
-
-xoff=5
-yoff=5
-x_size=400
-y_size=100
-New_Nx = 530
-New_Ny = 200
-image_2d_1 = transpose(image_2d_1)
-tvimg = congrid(image_2d_1,New_Nx,New_Ny,/interp)
-tvscl, tvimg, xoff, yoff, /device, xsize=x_size, ysize=y_size
-
-DEVICE, DECOMPOSED = 1
-
-end
 
 
 
@@ -1128,7 +1089,7 @@ widget_control,id,get_uvalue=global
 
 ;color
 DEVICE, DECOMPOSED = 0
-loadct,5
+;loadct,5
 
 ;plot DAS'plot
 das_plot_id = widget_info(Event.top, find_by_uname='DAS_plot_draw')
@@ -2752,6 +2713,9 @@ run_number = (*global).run_number
 ;reinitialize DATA_REMOVED box
 refresh_data_removed_text, Event
 
+text = ''
+output_into_log_book, event, text
+
 text = "Opening and reading NeXus file (run # " + $
   strcompress(run_number,/remove_all) + ')'
 output_into_log_book, event, text
@@ -3098,30 +3062,32 @@ if ((*global).nexus_open EQ 1) then begin
 
     draw_tube_pixels_base_id = widget_info(Event.top,find_by_uname='draw_tube_pixels_base')
     index = widget_info(draw_tube_pixels_base_id, /tab_current)
-    
-    case index of
 
+    case index of
         0: begin
             image1 = (*(*global).image_nt_nx_ny)
             PLOT_HISTO_FILE, Event, image1
+            plot_das, Event
+            plot_tube_box, Event, (*global).tube_number_tab_1, 200
+            plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
         end
         1: begin
             histo_plot_tubes_pixels, Event
             nt_histo_draw_tube_pixels_slider_id = $
               widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
             widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
+            plot_das, Event
+            plot_tube_box, Event, (*global).tube_number_tab_1, 200
+            plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
         end
         2: begin
-            
-            
+            plot_das, Event
+            if ((*global).tof_plot EQ 1) then begin
+                counts_vs_tof_button_eventcb, Event
+            endif
         end
         else:
     endcase
-
-    plot_das, Event
-    plot_tube_box, Event, (*global).tube_number_tab_1, 200
-    plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
-    
 endif
 
 end
@@ -3384,7 +3350,7 @@ endif else begin
 
             endfor
             
-                                ;evaluate size of processing bar
+;evaluate size of processing bar
             size_coeff = float(i)/(Ntubes-1)
             size_bar = 220*size_coeff
             processing_draw_id = widget_info(Event.top,$
@@ -3422,11 +3388,7 @@ endif else begin
     text = 'Plot data...'
     output_into_log_book, event,text
     
-;    print, "before plot_realign_data"
-;    help, /memory
     plot_realign_data, Event, remap_histo
-;    print, "After plot_realign_data"
-;    help, /memory
 
     text = '...done'
     output_into_log_book, event,text
@@ -3437,11 +3399,8 @@ text="...done"
 output_into_general_infos, event, text
 
 widget_control, processing_base_id, map=0
-;processing_draw_id = widget_info(Event.top,$
-;                                 find_by_uname='processing_draw')
 widget_control, processing_draw_id, scr_xsize=1
-;processing_label_id = widget_info(Event.top, $
-;                                  find_by_uname='processing_label')
+
 text = 'Processing......0%' 
 widget_control, processing_label_id, $
   set_value=text
@@ -3454,6 +3413,9 @@ widget_control, plot_mapped_data_id, sensitive=1
 widget_control,hourglass=0
 
 end
+
+
+
 
 
 
@@ -3507,9 +3469,7 @@ end
 
 
 pro rebinGUI_button_eventcb, Event
-
 spawn, '/SNS/users/j35/IDL/RebinNeXus/rebinBSSNeXus &'
-
 end
 
 
@@ -3680,61 +3640,6 @@ end
 
 
 
-pro nt_display_configure_button_eventcb, Event
-
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-nt_display_configure_base_id = $
-  widget_info(Event.top,find_by_uname='nt_display_configure_base')
-widget_control, nt_display_configure_base_id, map=1
-
-end
-
-
-
-
-pro nt_display_configure_validate_eventcb, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-nt_display_configure_base_id = $
-  widget_info(Event.top,find_by_uname='nt_display_configure_base')
-widget_control, nt_display_configure_base_id, map=0	
-
-nt_id = widget_info(Event.top, find_by_uname='nt_histo_draw_tube_pixels_slider')
-widget_control, nt_id, get_value=Nt
-
-;retrieve value of time_offset, time_bin and time_max
-nt_display_time_offset_text_id = $
-  widget_info(Event.top,find_by_uname='nt_display_time_offset_text')
-widget_control, nt_display_time_offset_text_id, get_value=time_offset
-
-nt_display_time_bin_text_id = $
-  widget_info(Event.top,find_by_uname='nt_display_time_bin_text')
-widget_control, nt_display_time_bin_text_id, get_value=time_bin
-
-;nt_display_max_time_text_id = $
-;      widget_info(Event.top,find_by_uname='nt_display_max_time_text')
-;widget_control, nt_display_max_time_text_id, get_value=time_max
-
-bin_min = long(float(Nt)*float(time_bin) + float(time_offset))
-bin_max = long(float(Nt+1)*float(time_bin) + float(time_offset))
-text = strcompress(bin_min) + '-' + strcompress(bin_max) + ' microS'
-
-nt_display_configure_label_id = $
-  widget_info(Event.top,find_by_uname='nt_display_configure_label')
-widget_control, nt_display_configure_label_id, set_value=text[0]
-
-end
-
-
-
-
 pro create_offset_xml_file, Event
 
 ;get global structure
@@ -3793,9 +3698,6 @@ for i=0,(Ntubes-1) do begin
     endcase
 
     offset_text_array = produce_pixels_offset(i1[i],i2[i],i3[i],i4[i],i5[i],tube_removed[i],bank)
-
-;    lines[j] = offset_text
-;    ++j
 
     lines[j] = '  <tube number="' + strcompress(2*i,/remove_all) + $
       '" units="metre" type="Float64">'
@@ -3901,6 +3803,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 CATCH, parsing_error
+plot_das, Event
 
 if (parsing_error NE 0) then begin
 
@@ -3912,6 +3815,8 @@ if (parsing_error NE 0) then begin
     output_into_general_infos, event, text
     output_into_log_book, event, text
 
+    (*global).tof_plot = 0
+
 endif else begin
 
     counts_vs_tof_text_tubes_id = $
@@ -3919,13 +3824,16 @@ endif else begin
     widget_control, $
       counts_vs_tof_text_tubes_id, get_value=untouched_list_of_tubes
     list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
+
+;display list_of_tubes into 3rd tab
+    plot_list_of_tubes_3rd, event, list_of_tubes
     
     counts_vs_tof_text_pixels_id = $
       widget_info(Event.top,find_by_uname='counts_vs_tof_text_pixels')
     widget_control, counts_vs_tof_text_pixels_id, $
       get_value=untouched_list_of_pixels
     list_of_pixels = parse_list_of_pixels(untouched_list_of_pixels)
-    
+
 ;get array of tubes
     list_of_tubes_boolean = 0
     if (untouched_list_of_tubes Ne '') then begin
@@ -3943,11 +3851,17 @@ endif else begin
         pixel_array_size = pixel_array_size_str[1]
         list_of_pixels_boolean = 1
     endif
+
+;display list_of_pixels into 3rd tab
+    plot_list_of_pixels_3rd, event, pixel_array, pixel_array_size
     
 ;reverse_array
     image = (*(*global).image_nt_nx_ny)
     image_reversed = reverse_3d_array(image) ;to be in DAS's world
     
+
+    help, image_reversed
+
     Nt = (*global).Nt
     final_data_tube = lonarr(Nt)
     final_data_pixel = lonarr(Nt)
@@ -3964,7 +3878,7 @@ endif else begin
 ;add data for each pixel selected
     if (list_of_pixels_boolean NE 0) then begin
         for j=0,(pixel_array_size-1) do begin
-            final_data_pixel(*)=image_reversed(*,pixel_array[j,0],pixel_array[j,1])
+            final_data_pixel(*)=image_reversed(*,pixel_array[j,1],pixel_array[j,0])
         endfor
     endif
     
@@ -3985,8 +3899,10 @@ endif else begin
     xtitle='TOF'
     xaxis = (findgen(diff)/diff)*(x_max-x_min)+x_min
     plot, xaxis, final_data, xrange=[x_min, x_max],$
-  xtitle=xtitle, ytitle='Counts'
-   
+      xtitle=xtitle, ytitle='Counts'
+    
+    (*global).tof_plot = 1
+
 endelse
  
 end
@@ -4155,3 +4071,60 @@ pixels_counts_values_id = widget_info(Event.top,find_by_uname='pixels_counts_val
 widget_control, pixels_counts_values_id, sensitive=0
 
 end
+
+
+
+
+
+
+pro plot_list_of_tubes_3rd, event, list_of_tubes
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
+widget_control, DAS_plot_draw_id, get_value=draw_id
+wset, draw_id
+
+nbr_tubes_str = size(list_of_tubes)
+nbr_tubes = nbr_tubes_str[1]
+
+x_coeff = (*global).x_coeff
+y_coeff = (*global).y_coeff
+
+for i=0, (nbr_tubes-1) do begin
+    plots, list_of_tubes[i]*x_coeff, 0, /device, color=255+(256*0)+(150*256)
+    plots, list_of_tubes[i]*x_coeff, 64*y_coeff, /device, /continue, color=255+(256*0)+(150*256)
+endfor
+
+end
+
+
+
+
+
+pro plot_list_of_pixels_3rd, event, pixel_array, size_array
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
+widget_control, DAS_plot_draw_id, get_value=draw_id
+wset, draw_id
+
+x_coeff = (*global).x_coeff
+y_coeff = 1.65
+
+for i=0, (size_array-1) do begin
+    plots,[pixel_array[i,0]*x_coeff,$
+           pixel_array[i,1]*y_coeff],psym=4,color=255+(256*0)+(150*256),thick=7,/device
+endfor
+
+end
+
+
+
+
+
