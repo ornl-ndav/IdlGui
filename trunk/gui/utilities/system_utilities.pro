@@ -98,6 +98,7 @@ end
 ; string defined, the string given in second argument
 ; by the string given as the third argument
 ;
+; \param event (INPUT) event structure
 ; \param input_string (INPUT) the string where the
 ; changes will occur
 ; \param old_string(INPUT) the string to be removed
@@ -125,6 +126,80 @@ end
 ;;     //end of modified_string
 
 
+
+
+
+
+;;
+; \defgroup output_into_text_box
+; \{
+;;
+
+;;
+; \brief This function output into the 
+; text box window the information given as an
+; argument
+;
+; \param event (INPUT) event structure
+; \param uname_destination (INPUT) uname of text box
+; \param text (INPUT) text to display
+; \param do_not_append_it (INPUT/OPTIONAL) if present
+; text box is reset before adding the new text
+pro output_into_text_box, event, $
+                          uname_destination, $
+                          text, $
+                          do_not_append_it
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+full_view_info = widget_info(event.top,find_by_uname=uname_destination)
+if (n_elements(do_not_append_it) EQ 0) then begin
+    widget_control, full_view_info, set_value=text,/append
+endif else begin
+    widget_control, full_view_info, set_value=text
+endelse
+
+end
+; \}
+;;     //end of output_into_text_box
+
+
+
+
+
+
+;;
+; \defgroup output_error_into_text_box
+; \{
+;;
+
+;;
+; \brief This function output into the 
+; text box window the information given as an
+; argument
+;
+; \param event (INPUT) event structure
+; \param uname_destination (INPUT) uname of text box
+; \param err_listening (INPUT) text to display
+pro output_error, event, uname_destination, err_listening
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+full_view_info = widget_info(event.top,find_by_uname=uname_destination)
+
+if (err_listening NE '' OR err_listening NE ['']) then begin
+    full_text = 'ERROR: ' + err_listening
+    widget_control, full_view_info, set_value=full_text,/append
+endif
+
+end
+; \}
+;;     //end of output_error
 
 
 
