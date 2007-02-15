@@ -1932,6 +1932,9 @@ endif else begin                ; file is on DAS
     
     if ((*global).is_file_histo EQ 1) then begin ;file is histogram
         
+        ;create folder into home space
+        create_folder, event
+
 ;isolate proposal number from full file name
         result = get_proposal_experiment_number(event, $
                                                 file,$
@@ -2045,7 +2048,88 @@ end
 
 
 
+pro create_folder, event
 
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+
+;create folder into working_path directory
+full_text = " -> Create folder in working path:"
+WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
+
+file=(*global).histo_event_filename ;full name of event or histo file
+run_number = (*global).run_number ;run number 
+is_file_histo = (*global).is_file_histo
+already_archived = (*global).already_archived
+instrument = (*global).instrument
+
+;isolate proposal number from full file name
+result = get_proposal_experiment_number(event, $
+                                        file,$
+                                        already_archived) 
+proposal_number = result[0]
+experiment_number = result[1]
+
+(*global).proposal_number = proposal_number
+(*global).experiment_number = experiment_number
+
+parent_folder_name = (*global).output_path + instrument
+full_folder_name = parent_folder_name + "/" + proposal_number 
+
+
+
+if ((*global).translate_use_experiment_number EQ 1) then begin
+    full_folder_name += "/" + experiment_number
+endif
+
+full_folder_name += "/" + run_number
+full_folder_name_preNeXus = full_folder_name + "/preNeXus/"
+full_folder_name_NeXus = full_folder_name + "/NeXus/"
+
+(*global).full_local_folder_name = full_folder_name + '/'
+(*global).full_local_folder_name_preNeXus = full_folder_name_preNeXus
+(*global).full_local_folder_name_NeXus = full_folder_name_NeXus
+
+;;check if folder exists already, if yes, remove it
+cmd_folder_exist = "ls -d " + full_folder_name
+full_text = "   > " + cmd_folder_exist
+widget_control, full_view_info, set_value=full_text, /append
+
+spawn, cmd_folder_exist, listening, err_listening
+output_error, Event, err_listening
+
+if (listening NE '') then begin ;folder exists, we need to remove it first
+    
+    cmd_remove_folder = "rm -f -r " + full_folder_name
+    cd, (*global).output_path
+    spawn, cmd_remove_folder,listening, err_listening
+    output_error, Event, err_listening
+
+    full_text = "   > " + cmd_remove_folder
+    widget_control, full_view_info, set_value=full_text, /append
+    
+endif 
+
+;create folders
+cmd_create_preNeXus_folder = "mkdir -p " + full_folder_name_preNeXus
+cmd_create_NeXus_folder = "mkdir -p " + full_folder_name_NeXus
+
+full_text = "   > " + cmd_create_preNeXus_folder
+widget_control, full_view_info, set_value=full_text, /append
+spawn, cmd_create_preNeXus_folder, listening, err_listening
+output_error, Event, err_listening
+
+full_text = '   > ' + cmd_create_NeXus_folder 
+widget_control, full_view_info, set_value=full_text, /append
+spawn, cmd_create_NeXus_folder, listening, err_listening
+output_error, Event, err_listening
+
+end
 
 
 
