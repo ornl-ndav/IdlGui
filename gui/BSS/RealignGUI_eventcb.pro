@@ -488,6 +488,34 @@ tube_removed = lonarr(Ny_scat)
 (*(*global).pixel_removed) = lonarr(Ny_scat * Nx)
 (*(*global).IDL_pixelid_removed) = lonarr(Ny_scat, Nx)
 
+
+end
+
+
+
+
+
+
+pro initialization_of_sliders, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id_list=['nt_histo_draw_tube_pixels_slider',$
+         'draw_tube_pixels_slider',$
+         'histo_draw_tube_pixels_slider',$
+         'pixels_slider']
+
+id_list_size = size(id_list)
+for i=0,(id_list_size[1]-1) do begin
+    id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+    Widget_Control, id, set_value= 0
+endfor
+
+(*global).tube_number_tab_1 = 0
+(*global).tube_number_tab_2 = 0
+
 end
 
 
@@ -497,8 +525,27 @@ end
 
 
 
+pro erase_plots, event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
+id_list=['draw_tube_pixels_draw',$
+         'histo_draw_tube_pixels_draw',$
+         'counts_vs_tof_draw',$
+         'map_plot_draw',$
+         'DAS_plot_draw']
+
+id_list_size = size(id_list)
+for i=0,(id_list_size[1]-1) do begin
+    id = widget_info(Event.top,FIND_BY_UNAME=id_list[i])
+    Widget_Control, id, get_value=draw_id
+    wset, draw_id
+    erase
+endfor
+
+end
 
 
 
@@ -2434,6 +2481,12 @@ widget_control,/hourglass
 ;initialized arrays
 initialization_of_arrays, Event
 
+;reinitialized sliders
+initialization_of_sliders, Event
+
+;reset all plots
+erase_plots, event
+
 ;hide open_nexus interface
 if (n_elements(local) EQ 0) then begin
     open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
@@ -2457,25 +2510,6 @@ if (run_number EQ '') then begin
     
 endif else begin
     
-    ;erase main plots
-    draw_tube_pixels_draw_id = $
-      widget_info(Event.top,find_by_uname='draw_tube_pixels_draw')
-    widget_control, draw_tube_pixels_draw_id, get_value=draw_id
-    wset, draw_id
-    erase
-
-    ;erase remap plots
-    draw_info= widget_info(Event.top, find_by_uname='map_plot_draw')
-    widget_control, draw_info, get_value=draw_id
-    wset, draw_id
-    erase
-
-    ;DAS plots
-    DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
-    widget_control, DAS_plot_draw_id, get_value=draw_id
-    wset, draw_id
-    erase
-
     (*global).nexus_open = 1
     (*global).run_number = run_number
     
