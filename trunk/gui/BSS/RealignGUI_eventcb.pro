@@ -164,7 +164,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 text = 'Create time_of_flight array:'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 tmp_output_file = (*global).full_tmp_nxdir_folder_path 
 tmp_output_file += 'BSS_' + strcompress((*global).run_number,/remove_all) 
@@ -175,11 +175,11 @@ cmd_nxdir += ' -p /entry/bank1/time_of_flight/ --dump '
 cmd_nxdir += tmp_output_file
 
 text = '>' + cmd_nxdir
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 spawn, cmd_nxdir, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 openr, u, tmp_output_file, /get
 ;to get the number of elements
@@ -187,14 +187,14 @@ fs=fstat(u)
 file_size = fs.size
 
 text = 'Infos about tof file: ' + tmp_output_file
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 text = '  file_size: ' + strcompress(file_size,/remove_all)
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 Nbytes = (*global).nbytes
 N = long(file_size)/Nbytes
 text = '  N: ' + strcompress(N,/remove_all)
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 tof = fltarr(N)
 readu,u,tof
@@ -442,6 +442,8 @@ end
 
 
 
+
+
 pro CANCEL_OPEN_NEXUS, Event
 
 ;hide open_nexus interface
@@ -449,6 +451,11 @@ open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
 widget_control, open_nexus_id, map=0
 
 end
+
+
+
+
+
 
 
 
@@ -542,6 +549,9 @@ end
 
 
 
+
+
+
 ;value = 1 means removed
 ;value = 0 means do not removed
 pro update_list_of_IDL_pixelid_to_removed, Event, pixelid, tube, value
@@ -555,6 +565,7 @@ IDL_pixelid_removed(tube, pixelid) = value
 (*(*global).IDL_pixelid_removed) = IDL_pixelid_removed
 
 end
+
 
 
 
@@ -660,11 +671,16 @@ end
 
 
 
-;--------------------------------------------------------------------------
-; \brief 
-;
-; \argument Event (INPUT)
-;--------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
 pro CTOOL_DAS, Event
 
 	;get global structure
@@ -682,11 +698,10 @@ end
 
 
 
-;--------------------------------------------------------------------------
-; \brief 
-;
-; \argument Event (INPUT)
-;--------------------------------------------------------------------------
+
+
+
+
 pro CTOOL_realign, Event
 
 	;get global structure
@@ -836,8 +851,9 @@ WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 PLOT_HISTO_FILE, Event, image1
 
-
 end
+
+
 
 
 
@@ -849,11 +865,6 @@ pro PLOT_HISTO_FILE, Event, image1
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-;text = ''
-;output_into_log_book, event, text
-;text = 'Plot histo file:'
-;output_into_log_book, event, text
 
 image_2d_1 = total(image1,1)
 tmp = image_2d_1[0:63,0:31]
@@ -894,9 +905,6 @@ if ((*global).activate_counts EQ 1) then begin
     endfor
 endif    
 
-;text = ' Plot data using DAS representation'
-;output_into_log_book, event, text
-
 ;plot on DAS'plot an indication of the position of the tube
 plot_rule_tube, event
 ;das_tube_boxes, event, i
@@ -904,9 +912,6 @@ plot_rule_tube, event
 
 ctool_id = widget_info(Event.top, find_by_uname='CTOOL_MENU_realign')
 widget_control, ctool_id, sensitive=0
-
-;text = '...done'
-;output_into_log_book, event, text
 
 end
 
@@ -1121,10 +1126,6 @@ Ninterp = 1
 tmp0 = remap
 tmp1 = rebin(tmp0,Ninterp*Npix,Ninterp*Ntubes,/samp)
 tmp1 = transpose(tmp1)
-
-;if dolog EQ 1 then begin
-;    tvscl,(alog10(tmp1>1))
-;endif else begin
 
 DEVICE, DECOMPOSED = 0
 ;loadct,5
@@ -1970,10 +1971,11 @@ endif else begin
            
     create_tmp_folder, wWidget
        
-    
 endelse
 
 end
+
+
 
 
 
@@ -2042,81 +2044,81 @@ endif else begin
 endelse
 
 text = ''
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 ; get path to NeXus file
 path_to_preNeXus = find_full_nexus_name(Event, 0, run_number, 'BSS')    
 text = ' -> Path to NeXus file: ' + path_to_preNeXus
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 ;remove last part of path_name (to get only the path)
 string_to_remove = "BSS_" + strcompress(run_number,/remove_all) + "_cvinfo.xml"
 text = '   string_to_remove: ' + string_to_remove
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 path=strsplit(path_to_preNeXus,string_to_remove,/regex,/extract)
 text = '   path: ' + path
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 path_to_preNeXus=path[0]
 text = '   path_to_preNeXus: ' + path_to_preNeXus
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 (*global).path_to_preNeXus = path_to_preNeXus
 
 ;get proposal number
 text = ' -> Get proposal Number:'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 proposal_number_array=strsplit(path_to_preNeXus,'/',/regex,/extract)
 text = '   proposal_number_array: ' + proposal_number_array
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 proposal_number = proposal_number_array[2]
 text = '   proposal_number: ' + proposal_number
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 (*global).proposal_number = proposal_number
 
 ; create inst_run# folder into own space
 text = ' -> Create inst_run # folder into own space'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 working_path = (*global).working_path
 
 folder_to_create = "BSS/" + proposal_number + "/" + $
   strcompress(run_number,/remove_all) 
 text = '    folder to create (up to run #): ' + folder_to_create
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 (*global).path_up_to_proposal_number = working_path + folder_to_create
 
 folder_to_create += "/preNeXus"
 text = '    folder to create (up to preNeXus): ' + folder_to_create
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 full_folder_name_to_create = working_path + folder_to_create
 (*global).full_output_folder_name  = full_folder_name_to_create
 cmd_check = "ls -d " + full_folder_name_to_create
 text = ' >' + cmd_check
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_check, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 cd, working_path
 
 if (listening NE '') then begin ;if folder already exists, remove it
     cmd_remove = 'rm -rf '+ full_folder_name_to_create
     text = ' >' + cmd_remove
-    output_into_log_book, event, text
+    output_into_text_box, event, 'log_book', text
     spawn, cmd_remove, listening, err_listening
-    output_into_log_book, event, listening
-    output_error, event, err_listening
+    output_into_text_box, event, 'log_book', listening
+    output_error, event, 'log_book', err_listening
 endif
 
 cmd = "mkdir -p " + full_folder_name_to_create
 text = ' >' + cmd
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 end
 
@@ -2136,24 +2138,24 @@ widget_control,id,get_uvalue=global
 file = (*global).file
 data = (*(*global).remap_histo)
 text = ''
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 text = 'Create new NeXus file...'
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 text = 'Create new NeXus file:'
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 file_name_only = get_file_name_only(file)
 working_path = (*global).working_path
 output_file_name = file_name_only
 text = '  * file_name_only: ' + file_name_only
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 text = '  * working path: ' + working_path
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 ;create folder that will contain output_remapped file
 text = ' -> Create output folder'
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 create_output_folder, Event
 
 run_number = (*global).run_number
@@ -2190,7 +2192,7 @@ reorder_data, Event, new_output_data
 
 ;write out data
 text = 'Create histo_mammed file name: ' + full_output_file_name
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 openw,u1,full_output_file_name,/get
 writeu,u1,new_output_data
@@ -2242,10 +2244,10 @@ for i=0,1 do begin
     cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
       full_output_folder_name
     text = ' >' + cmd_copy
-    output_into_log_book, event, text
+    output_into_text_box, event, 'log_book', text
     spawn, cmd_copy, listening, err_listening
-    output_into_log_book, event, listening
-    output_error, event, err_listening
+    output_into_text_box, event, 'log_book', listening
+    output_error, event, 'log_book', err_listening
 endfor
 
 run_number = (*global).run_number
@@ -2255,10 +2257,10 @@ cmd_timemap = "nxdir " + full_nexus_name
 cmd_timemap += " -p /entry/bank1/time_of_flight/ --dump "
 cmd_timemap += full_timemap_filename
 text = ' >' + cmd_timemap
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_timemap, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;import geometry and mapping file into same directory
 cmd_copy = "cp " + (*global).mapping_file 
@@ -2266,20 +2268,20 @@ cmd_copy += " " + (*global).geometry_file
 cmd_copy += " " + full_output_folder_name
 
 text = ' >' + cmd_copy
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;merge files
 cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
 cmd_merge += " " + full_output_folder_name
 
 text = ' >' + cmd_merge
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_merge, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create nexus file
 cd, (*global).full_output_folder_name
@@ -2289,10 +2291,10 @@ cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
 cmd_translate += ".nxt"
 
 text = ' >' + cmd_translate
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_translate, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create nexus folder and copy nexus file into new folder
 path_up_to_proposal_number = (*global).path_up_to_proposal_number
@@ -2301,10 +2303,10 @@ path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
 cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
 
 text = ' >' + cmd_nexus_folder
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_nexus_folder, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 name_of_nexus_file = full_output_folder_name + "/BSS_" 
 name_of_nexus_file += strcompress(run_number,/remove_all)
@@ -2315,16 +2317,16 @@ cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
 full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
 full_nexus_filename += strcompress(run_number,/remove_all)
 text=" Name of NeXus file: " + full_nexus_filename
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create_offset_xml_file, Event
 
 text="...done"
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 
 end
 
@@ -2399,6 +2401,8 @@ end
 
 
 
+
+
 pro validate_reset_all_changes, Event
 
 ;get global structure
@@ -2411,7 +2415,9 @@ widget_control, id, map=1
 end
 
 
-;========================OPEN NEXUS============================
+
+
+
 
 pro OPEN_NEXUS, Event, local
 
@@ -2444,8 +2450,8 @@ endelse
 if (run_number EQ '') then begin
     
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
-    output_into_general_infos, event, text, 0
-    output_into_log_book, event, text, 0
+    output_into_text_box, event, 'general_infos', text, 0
+    output_into_text_box, event, 'log_book', text, 0
     
     (*global).nexus_open = 0
     
@@ -2477,8 +2483,8 @@ endif else begin
 
         text = "Opening NeXus file # " + $
           strcompress(run_number,/remove_all) + "....."
-        output_into_general_infos, event, text, 0
-        output_into_log_book, event, text, 0
+        output_into_text_box, event, 'general_infos', text, 0
+        output_into_text_box, event, 'log_book', text, 0
     
 ;get path to nexus run #
         instrument="BSS"
@@ -2488,8 +2494,8 @@ endif else begin
 
         text = "Opening local NeXus file # " + $
           strcompress(run_number,/remove_all) + "....."
-        output_into_general_infos, event, text, 0
-        output_into_log_book, event, text, 0
+        output_into_text_box, event, 'general_infos', text, 0
+        output_into_text_box, event, 'log_book', text, 0
     
 ;get path to local nexus run #
         instrument="BSS"
@@ -2503,15 +2509,15 @@ endif else begin
     if (find_nexus EQ 0) then begin
         
         text_nexus = "Warning! NeXus file does not exist"
-        output_into_general_infos, event, text_nexus
-        output_into_log_book, event, text_nexus
+        output_into_text_box, event, 'general_infos', text_nexus, 0
+        output_into_text_box, event, 'log_book', text_nexus
         
     endif else begin
         
         (*global).full_nexus_name = full_nexus_name
         text_nexus = "(" + full_nexus_name + ")"
-        output_into_log_book, event, text_nexus 
-        output_into_general_infos, event, text_nexus
+        output_into_text_box, event, 'log_book', text_nexus 
+        output_into_text_box, event, 'general_infos', text_nexus
         
 ;dump binary data of NeXus file into tmp_working_path
         create_local_copy_of_histo_mapped, Event
@@ -2535,7 +2541,7 @@ endif else begin
         generate_look_up_table_of_real_pixelid_value, Event
 
         text = '...done'
-        output_into_general_infos, event, text
+        output_into_text_box, event, 'general_infos', text
 
     endelse
 
@@ -2545,6 +2551,9 @@ endelse
 widget_control,hourglass=0
 
 end
+
+
+
 
 
 
@@ -2571,11 +2580,11 @@ run_number = (*global).run_number
 refresh_data_removed_text, Event
 
 text = ''
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 text = "Opening and reading NeXus file (run # " + $
   strcompress(run_number,/remove_all) + ')'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 file = "/BSS_" + strcompress(run_number, /remove_all)
 file += "_neutron_histo_mapped.dat"
@@ -2588,9 +2597,9 @@ Ny_scat_bank = Ny_scat / 2
 
 ;opening top part
 text = ' Opening top bank binary file: '
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 file_top = (*global).file_to_plot_top
-output_into_log_book, event, ' ->' + file_top
+output_into_text_box, event, 'log_book', ' ->' + file_top
 openr,u,file_top,/get
 
 fs=fstat(u)
@@ -2610,9 +2619,9 @@ close,u
 
 ;opening bottom part
 text = ' Opening bottom bank binary file: '
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 file_bottom = (*global).file_to_plot_bottom
-output_into_log_book, event, ' ->' + file_bottom
+output_into_text_box, event, 'log_book', ' ->' + file_bottom
 openr,u,file_bottom,/get
 
 fs=fstat(u)
@@ -2625,7 +2634,7 @@ close,u
 
 ;combining image_top and image_bottom into image1
 text = ' Combining top and bottom banks into one array'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 image1 = ulonarr(Nt,Nx,Ny_scat)
 image1(*,*,0:Ny_scat_bank-1) = temporary(image_top)
 image1(*,*,Ny_scat_bank:Ny_scat-1) = temporary(image_bottom)
@@ -2645,7 +2654,7 @@ endif
 end
 
 
-;=================OPEN HISTO========================
+
 
 
 
@@ -2763,72 +2772,6 @@ end
 
 
 
-pro output_into_general_infos, event, text, do_not_append_it
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;display what is going on
-full_view_info = widget_info(event.top,find_by_uname='general_infos')
-if (n_elements(do_not_append_it) EQ 0) then begin
-    widget_control, full_view_info, set_value=text,/append
-endif else begin
-    widget_control, full_view_info, set_value=text
-endelse
-
-end
-
-
-
-
-pro output_into_log_book, event, full_text, do_not_append_it
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;display what is going on
-full_view_info = widget_info(event.top,find_by_uname='log_book')
-if (n_elements(do_not_append_it) EQ 0) then begin
-    widget_control, full_view_info, set_value=full_text,/append
-endif else begin
-    widget_control, full_view_info, set_value=full_text
-endelse
-
-if ((*global).ucams EQ (*global).debugger) then begin
-
-    file_name = (*global).debug_output_file_name
-    openu, 1, file_name, /append
-    text = full_text
-    printf, 1,text
-    close, 1
-    free_lun, 1
-
-endif
-
-end
-
-
-
-
-pro output_error, event, err_listening
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;display what is going on
-full_view_info = widget_info(event.top,find_by_uname='log_book')
-
-if (err_listening NE '' OR err_listening NE ['']) then begin
-    full_text = 'ERROR: ' + err_listening
-    widget_control, full_view_info, set_value=full_text,/append
-endif
-
-end
-
-
 
 
 
@@ -2934,7 +2877,8 @@ if ((*global).nexus_open EQ 1) then begin
             histo_plot_tubes_pixels, Event
             nt_histo_draw_tube_pixels_slider_id = $
               widget_info(Event.top,find_by_uname='nt_histo_draw_tube_pixels_slider')
-            widget_control, nt_histo_draw_tube_pixels_slider_id, set_slider_max=(*global).Nt-1
+            widget_control, nt_histo_draw_tube_pixels_slider_id, $
+              set_slider_max=(*global).Nt-1
             erase_das_plot, event
             plot_rule_tube, event
             plot_das, Event
@@ -2979,12 +2923,12 @@ processing_base_id = widget_info(Event.top,$
 widget_control, processing_base_id, map=1
 
 text = ''
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 text="Realign and plot data..."
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 text="Realign data..."
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 i1=(*(*global).i1)
 i2=(*(*global).i2)
@@ -3001,11 +2945,11 @@ mid = Npix/2
 Nt = (*global).Nt
 
 text = '* Npix: ' + strcompress(Npix)
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 text = '* Ntubes: '+ strcompress(Ntubes)
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 text = '* Nt: ' + strcompress(Nt)
-output_into_log_book, event,text
+output_into_text_box, event, 'log_book', text
 
 Npad = 10
 pad = lonarr(Npad)
@@ -3040,12 +2984,12 @@ error_status = 0
 if (error_status NE 0) then begin
     
     text="ERROR !"
-    output_into_general_infos, event, text
-    output_into_log_book, event,text
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
     
     text="Warning ! Objects plotted are messier than they appear!"
-    output_into_general_infos, event, text
-    output_into_log_book, event,text
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
     
 endif else begin
     
@@ -3241,23 +3185,23 @@ endif else begin
       set_value=text
 
     text = '...done'
-    output_into_log_book, event,text
+    output_into_text_box, event, 'log_book', text
     
     (*(*global).remap_histo) = remap_histo
     (*global).realign_plot = 1
 
     text = 'Plot data...'
-    output_into_log_book, event,text
+    output_into_text_box, event, 'log_book', text
     
     plot_realign_data, Event, remap_histo
 
     text = '...done'
-    output_into_log_book, event,text
+    output_into_text_box, event, 'log_book', text
     
 endelse
 
 text="...done"
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 
 widget_control, processing_base_id, map=0
 widget_control, processing_draw_id, scr_xsize=1
@@ -3308,20 +3252,20 @@ cmd_dump_bottom += tmp_output_file_bottom
 
 ;display command
 text = 'Create binary file of data from top bank:'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 text= cmd_dump_top
-output_into_log_book, event, '> ' + text
+output_into_text_box, event, 'log_book', '> ' + text
 spawn, cmd_dump_top, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 text = 'Create binary file of data from bottom bank:'
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 text= cmd_dump_bottom
-output_into_log_book, event, '> ' + text
+output_into_text_box, event, 'log_book', '> ' + text
 spawn, cmd_dump_bottom, listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 end
 
@@ -3383,10 +3327,10 @@ for i=0,1 do begin
     cmd_copy = "cp " + path_to_preNeXus + files_to_copy[i] + " " + $
       full_output_folder_name
     text = ' >' + cmd_copy
-    output_into_log_book, event, text
+    output_into_text_box, event, 'log_book', text
     spawn, cmd_copy, listening, err_listening
-    output_into_log_book, event, listening
-    output_error, event, err_listening
+    output_into_text_box, event, 'log_book', listening
+    output_error, event, 'log_book', err_listening
 endfor
 
 run_number = (*global).run_number
@@ -3406,10 +3350,10 @@ interactive_create_tbin_file_text_id = $
               find_by_uname='interactive_create_tbin_file_text')
 widget_control, interactive_create_tbin_file_text_id, get_value=cmd
 text = ' >' + cmd
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;import geometry and mapping file into same directory
 cmd_copy = "cp " + (*global).mapping_file 
@@ -3417,20 +3361,20 @@ cmd_copy += " " + (*global).geometry_file
 cmd_copy += " " + full_output_folder_name
 
 text = ' >' + cmd_copy
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;merge files
 cmd_merge = "TS_merge_preNeXus.sh " + (*global).translation_file
 cmd_merge += " " + full_output_folder_name
 
 text = ' >' + cmd_merge
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_merge, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create nexus file
 cd, (*global).full_output_folder_name
@@ -3440,10 +3384,10 @@ cmd_translate += "/BSS_" + strcompress(run_number,/remove_all)
 cmd_translate += ".nxt"
 
 text = ' >' + cmd_translate
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_translate, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create nexus folder and copy nexus file into new folder
 path_up_to_proposal_number = (*global).path_up_to_proposal_number
@@ -3452,10 +3396,10 @@ path_up_to_nexus_folder = path_up_to_proposal_number + "/NeXus"
 cmd_nexus_folder = "mkdir -p " + path_up_to_nexus_folder
 
 text = ' >' + cmd_nexus_folder
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 spawn, cmd_nexus_folder, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 name_of_nexus_file = full_output_folder_name + "/BSS_" 
 name_of_nexus_file += strcompress(run_number,/remove_all)
@@ -3466,16 +3410,16 @@ cmd_copy = "mv " + name_of_nexus_file + " " + path_up_to_nexus_folder
 full_nexus_filename = path_up_to_nexus_folder + "/BSS_" 
 full_nexus_filename += strcompress(run_number,/remove_all)
 text=" Name of NeXus file: " + full_nexus_filename
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 spawn, cmd_copy, listening, err_listening
-output_into_log_book, event, listening
-output_error, event, err_listening
+output_into_text_box, event, 'log_book', listening
+output_error, event, 'log_book', err_listening
 
 ;create_offset_xml_file, Event
 
 text="...done"
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 
 end
 
@@ -3529,11 +3473,11 @@ full_xml_offset_filename = path_up_to_prenexus + xml_offset_filename
 
 ;display infos
 text="Create offset file..."
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 text="Create offset XML file:"
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 text = 'xml offset file: ' + full_xml_offset_filename
-output_into_log_book, event, text
+output_into_text_box, event, 'log_book', text
 
 nbr_xml_lines = 3+4+(6*Ntubes)
 lines = strarr(nbr_xml_lines)
@@ -3600,7 +3544,7 @@ lines[j] = '</Instrument>'
 nbr_xml_lines = j
 
 text="...done"
-output_into_general_infos, event, text
+output_into_text_box, event, 'general_infos', text
 
 write_xml_file, Event, full_xml_offset_filename, lines, nbr_xml_lines
 
@@ -3663,20 +3607,21 @@ pro counts_vs_tof_button_eventcb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-CATCH, parsing_error
+;CATCH, parsing_error
 erase_das_plot, event
 plot_rule_tube, event
 plot_das, Event
+parsing_error = 0 ;remove_me
 
 if (parsing_error NE 0) then begin
 
     ;output error
     text = 'Counts vs tof: '
-    output_into_general_infos, event, text
-    output_into_log_book, event, text
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
     text = 'ERROR: invalid format tubes and/or pixels to plot.'
-    output_into_general_infos, event, text
-    output_into_log_book, event, text
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
 
     (*global).tof_plot = 0
 
@@ -3686,11 +3631,12 @@ endif else begin
       widget_info(Event.top,find_by_uname='counts_vs_tof_text_tubes')
     widget_control, $
       counts_vs_tof_text_tubes_id, get_value=untouched_list_of_tubes
-    list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
-
+    if (untouched_list_of_tubes NE '') then begin
+        list_of_tubes = parse_list_of_tubes(untouched_list_of_tubes)
 ;display list_of_tubes into 3rd tab
-    plot_list_of_tubes_3rd, event, list_of_tubes
-    
+        plot_list_of_tubes_3rd, event, list_of_tubes
+    endif
+
     counts_vs_tof_text_pixels_id = $
       widget_info(Event.top,find_by_uname='counts_vs_tof_text_pixels')
     widget_control, counts_vs_tof_text_pixels_id, $
@@ -3713,11 +3659,10 @@ endif else begin
         pixel_array_size_str = size(pixel_array)
         pixel_array_size = pixel_array_size_str[1]
         list_of_pixels_boolean = 1
-    endif
-
 ;display list_of_pixels into 3rd tab
     plot_list_of_pixels_3rd, event, pixel_array, pixel_array_size
-    
+    endif
+
 ;reverse_array
     image = (*(*global).image_nt_nx_ny)
     image_reversed = reverse_3d_array(image) ;to be in DAS's world
@@ -3901,7 +3846,8 @@ widget_control,id,get_uvalue=global
 
 pixels_values_activate_id = widget_info(Event.top,find_by_uname='pixels_values_activate')
 widget_control, pixels_values_activate_id, sensitive=0
-pixels_values_desactivate_id = widget_info(Event.top,find_by_uname='pixels_values_desactivate')
+pixels_values_desactivate_id = widget_info(Event.top,$
+                                           find_by_uname='pixels_values_desactivate')
 widget_control, pixels_values_desactivate_id, sensitive=1
 pixels_counts_title_id = widget_info(Event.top,find_by_uname='pixels_counts_title')
 widget_control, pixels_counts_title_id, sensitive=1
@@ -3927,7 +3873,8 @@ widget_control,id,get_uvalue=global
 
 pixels_values_activate_id = widget_info(Event.top,find_by_uname='pixels_values_activate')
 widget_control, pixels_values_activate_id, sensitive=1
-pixels_values_desactivate_id = widget_info(Event.top,find_by_uname='pixels_values_desactivate')
+pixels_values_desactivate_id = widget_info(Event.top,$
+                                           find_by_uname='pixels_values_desactivate')
 widget_control, pixels_values_desactivate_id, sensitive=0
 pixels_counts_title_id = widget_info(Event.top,find_by_uname='pixels_counts_title')
 widget_control, pixels_counts_title_id, sensitive=0
@@ -3983,10 +3930,14 @@ wset, draw_id
 x_coeff = (*global).x_coeff
 y_coeff = 1.55
 
-for i=0, (size_array-1) do begin
-    plots,[pixel_array[i,0]*x_coeff,$
-           pixel_array[i,1]*y_coeff+5],psym=4,color=255+(256*0)+(150*256),thick=7,/device
-endfor
+if (size_array GT 0) then begin
+    
+    for i=0, (size_array-1) do begin
+        plots,[pixel_array[i,0]*x_coeff,$
+               pixel_array[i,1]*y_coeff+5],psym=4,color=255+(256*0)+(150*256),thick=7,/device
+    endfor
+
+endif
 
 end
 
