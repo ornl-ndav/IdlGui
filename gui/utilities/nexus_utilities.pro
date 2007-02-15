@@ -27,10 +27,7 @@
 ;
 ; \file /gui/utilities/nexus_utilities.pro
 
-
-
-
-;;
+; \
 ; \defgroup find_full_nexus_name
 ; \{
 ;;
@@ -45,13 +42,18 @@
 ;
 ; \return full_nexus_name
 ; full nexus file name (with full path)
-FUNCTION find_full_nexus_name, Event, run_number, instrument    
+FUNCTION find_full_nexus_name, Event, local, run_number, instrument    
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
+cmd = "findnexus -i" + instrument 
+if (local EQ 1) then begin
+    cmd += " --prefix " + (*global).working_path
+endif
+cmd += " " + strcompress(run_number,/remove_all)
+
 spawn, cmd, full_nexus_name
 
 ;check if nexus exists
@@ -70,4 +72,34 @@ return, full_nexus_name
 end
 ; \}
 ;;     //end of find_full_nexus_name
+
+
+
+
+
+; \defgroup get_path_to_prenexus
+; \{
+;;
+
+;;
+; \brief output cvinfo.xml full path
+;
+; \param run_number (INPUT) run number
+;
+; \return path
+; full path to cvinfo prenexus file
+function get_path_to_prenexus, run_number
+
+cmd = "findnexus -iBSS " + $
+  strcompress(run_number,/remove_all) + " --prenexus"                        
+spawn, cmd, path
+
+return, path
+
+end
+; \}
+;;     //end of get_path_to_prenexus
+
+
+
 
