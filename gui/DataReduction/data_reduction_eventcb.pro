@@ -1274,6 +1274,7 @@ PRO dump_binary_data, Event, full_nexus_name
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
 ;create tmp_working_path
@@ -1287,7 +1288,11 @@ cmd_create = "mkdir " + tmp_folder
 
 text= " [ " + cmd_create + "..."
 widget_control, full_view_info, set_value=text, /append
-spawn, cmd_create
+spawn, cmd_create, listening, err_listening
+
+output_into_text_box, event, 'log_book_text', listening
+output_error, event, 'log_book_text', err_listening
+
 text= "   ...done ]"
 widget_control, full_view_info, set_value=text, /append
 
@@ -1670,6 +1675,7 @@ pro selection_press, event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
 instrument = (*global).instrument
 
 ;retrieve global parameters
@@ -1958,9 +1964,10 @@ if (selection_mode EQ 1 AND $
     endif
                      
 ;validate save_selection button if signal and background region are there
-    if (((*global).selection_signal EQ 1 AND $
-         (((*global).selection_background EQ 1) OR $
-          (*global).selection_background_2 EQ 1))) then begin
+;     if (((*global).selection_signal EQ 1 AND $
+;          (((*global).selection_background EQ 1) OR $
+;           (*global).selection_background_2 EQ 1))) then begin
+     if ((*global).selection_signal EQ 1) then begin
         id_save_selection = widget_info(Event.top, $
                                         find_by_uname='save_selection_button')
         widget_control, id_save_selection, sensitive=1
@@ -2037,6 +2044,14 @@ if ((*global).selection_signal EQ 0 AND $
     endif
 endif
 
+if ((*global).selection_background EQ 0 AND $
+    (*global).selection_background_2 EQ 0) then begin
+
+    background_list_group_id = widget_info(Event.top,find_by_uname='background_list_group')
+    widget_control, background_list_group_id, set_value=1
+
+endif
+    
 widget_control, view_info, set_value=text, /append
 widget_control, full_view_info, set_value=full_text, /append
 widget_control, selection_info, set_value=''
@@ -2084,15 +2099,26 @@ full_text = " - signal Pid file name is: " + signal_pid_file_name
 widget_control, full_view_info, set_value=full_text, /append
 
 (*global).signal_pid_file_name = signal_pid_file_name
-
-full_text = " - background Pid file name is: " + background_pid_file_name
-widget_control, background_id, set_value=pid_file_names[1]
-(*global).background_pid_file_name = background_pid_file_name
-
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=full_text, /append
-
 widget_control, signal_id, set_value=pid_file_names[0]
+
+if (background_selection EQ 1 OR background_2_selection EQ 1) then begin
+
+    full_text = " - background Pid file name is: " + background_pid_file_name
+    widget_control, background_id, set_value=pid_file_names[1]
+    (*global).background_pid_file_name = background_pid_file_name
+    
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
+
+    background_list_group_id = widget_info(Event.top,find_by_uname='background_list_group')
+    widget_control, background_list_group_id, set_value=0
+
+endif else begin
+
+    background_list_group_id = widget_info(Event.top,find_by_uname='background_list_group')
+    widget_control, background_list_group_id, set_value=1
+
+endelse
 
 ;check general status to activate or not go_button
 check_status_to_validate_go, Event
@@ -2548,11 +2574,13 @@ if (instrument EQ 'REF_M') then begin
 ;signal Pid file flag
         signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
         REF_M_cmd_line += signal_pid_cmd
-        
+
 ;background Pid file flag
-        bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-        REF_M_cmd_line += bkg_pid_cmd
-        
+        if (bkg_flag EQ 0) then begin
+            bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+            REF_M_cmd_line += bkg_pid_cmd
+        endif        
+
 ;background flag
         if (bkg_flag EQ 1) then begin
             REF_M_cmd_line += " --no-bkg"
@@ -3471,6 +3499,17 @@ if (instrument EQ 'REF_L') then begin
 endif else begin
     norm_list_group_id = widget_info(Event.top, $
                                      find_by_uname='normalization_list_group_REF_M')
+
+;check status of with or without background, if no background text, check
+;that no background has been checked. 
+
+    background_list_group_id = widget_info(Event.top,find_by_uname='background_list_group')
+    widget_control, background_list_group_id, get_value=back_index
+
+    if (bkg_pid_text EQ '' AND back_index EQ 1) then begin
+        bkg_pid_text = 'ok'
+        endif
+
 endelse
 
 widget_control, norm_list_group_id, get_value=norm_list_group
