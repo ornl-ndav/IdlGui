@@ -279,7 +279,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;get value of signal and back selection 
-keep_selection_list_group_id = widget_info(Event.top,find_by_uname='keep_selection_list_group')
+keep_selection_list_group_id = $
+  widget_info(Event.top,find_by_uname='keep_selection_list_group')
 widget_control, keep_selection_list_group_id, get_value=keep_selection_value
 
 (*global).keep_signal_selection = keep_selection_value[0]
@@ -474,7 +475,8 @@ det_angle_err_id = widget_info(Event.top, find_by_uname='detector_angle_err')
 widget_control, det_angle_id, get_value=detector_angle
 widget_control, det_angle_err_id, get_value=detector_angle_err
 
-det_angle_units_id = widget_info(Event.top, find_by_uname='detector_angle_units',/droplist_select)
+det_angle_units_id = $
+  widget_info(Event.top, find_by_uname='detector_angle_units',/droplist_select)
 widget_control, det_angle_units_id, get_value=all_det_angle_units
 index = widget_info(det_angle_units_id, /droplist_select)
 det_angle_units = all_det_angle_units[index]
@@ -903,78 +905,6 @@ return, [j, NeXus_path_array]
 end
 
 
-
-
-
-function check_access, Event, instrument, ucams
-
-list_of_instrument = ['REF_L', 'REF_M']
-
-;0:j35:jean / 1:pf9:pete / 2:2zr:michael / 3:mid:steve / 4:1qg:rick / 5:ha9:haile / 6:vyi:frank / 7:vuk:john 
-;8:x4t:xiadong / 9:ele:eugene
-list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele']
-
-;check if ucams is in the list
-ucams_index=-1
-for i =0, 9 do begin
-   if (ucams EQ list_of_ucams[i]) then begin
-     ucams_index = i
-     break 
-   endif
-endfor
-
-;check if user is autorized for this instrument
-CASE instrument OF		
-   ;REF_L
-   0: CASE  ucams_index OF
-        -1:
-	0: 		;authorized
-	1: 		;authorized
-	2: 		;authorized
-	3: 		;authorized
-	4: ucams_index=-1	;unauthorized
-	5: ucams_index=-1	;unauthorized
-	6: ucams_index=-1	;unauthorized
-	7: 		;authorized
-	8: 		;authorized
-	9: ucams_index=-1	;unauthorized
-      ENDCASE
-   ;REF_M
-   1: CASE ucams_index OF
-	-1:
-	0: 
-	1: 
-	2: 
-	3: 
-	4: 
-	5: 
-	6: 
-	7: ucams_index=-1
-	8: ucams_index=-1
-	9: ucams_index=-1
-      ENDCASE
-ENDCASE	 
-	
-RETURN, ucams_index
- 
-end
-
-
-
-;; ---------------------------------------------------------------------------------
-; pro USER_TEXT_cb, Event   for REF_M
-
-; view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_TOP_ACCESS_DENIED')
-; WIDGET_CONTROL, view_id, set_value= ''	
-; view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_TOP_ACCESS_DENIED')
-; WIDGET_CONTROL, view_id, set_value= ''	
-; view_id = widget_info(Event.top,FIND_BY_UNAME='LEFT_BOTTOM_ACCESS_DENIED')
-; WIDGET_CONTROL, view_id, set_value= ''	
-; view_id = widget_info(Event.top,FIND_BY_UNAME='RIGHT_BOTTOM_ACCESS_DENIED')
-; WIDGET_CONTROL, view_id, set_value= ''	
-
-; end
-;;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
 
 
 
@@ -2579,12 +2509,9 @@ if (instrument EQ 'REF_M') then begin
         if (bkg_flag EQ 0) then begin
             bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
             REF_M_cmd_line += bkg_pid_cmd
-        endif        
-
-;background flag
-        if (bkg_flag EQ 1) then begin
+        endif  else begin      
             REF_M_cmd_line += " --no-bkg"
-        endif
+        endelse
         
 ;--no-norm-bkg
         if (norm_bkg_value EQ 1) then begin
@@ -2647,8 +2574,9 @@ if (instrument EQ 'REF_M') then begin
         widget_control,/hourglass
         
 ;desactive run_reduction_button
-        start_data_reduction_button_id = widget_info(Event.top,$
-                                                     find_by_uname='start_data_reduction_button')
+        start_data_reduction_button_id = $
+          widget_info(Event.top,$
+                      find_by_uname='start_data_reduction_button')
         widget_control, start_data_reduction_button_id, sensitive=0
         
 ;main data reduction command line
@@ -2781,10 +2709,11 @@ endif else begin                ;REF_L
     widget_control,/hourglass
     
 ;desactive run_reduction_button
-    start_data_reduction_button_id = widget_info(Event.top,find_by_uname='start_data_reduction_button')
+    start_data_reduction_button_id = $
+      widget_info(Event.top,find_by_uname='start_data_reduction_button')
     widget_control, start_data_reduction_button_id, sensitive=0
     
-                                ;main data reduction command line
+;main data reduction command line
     spawn, cmd_line, listening  
     
     (*global).data_reduction_done = 1             
@@ -2972,8 +2901,9 @@ endif else begin
     
 endelse
 
-tab_5_id = widget_info(Event.top, $
-                       find_by_uname='background_region_from_normalization_region_summed_tof_base')
+tab_5_id = $
+  widget_info(Event.top, $
+              find_by_uname='background_region_from_normalization_region_summed_tof_base')
 if (indx4 EQ 1 AND norm_flag EQ 0) then begin
     
     widget_control, tab_5_id, base_set_title='Background from normalization'
@@ -3129,13 +3059,7 @@ while (NOT eof(u)) do begin
             
             catch, Error_Status
             if Error_status NE 0 then begin
-;			Print, 'Handling case where we only have the wavelength bin and no data...'
-;			print, 'This case occurs in the last line of the data file.'
-;     		PRINT, 'Error index: ', Error_status
-;      		PRINT, 'Error message: ', !ERROR_STATE.MSG
-;			Print, 'Handling Error Now'
-                                ;do something to handle error condition...
-                                ;append the last number to flt0
+
                 flt0 = [flt0,float(tmp0)]
                                 ;strip -1 from beginning of each array
                 flt0 = flt0[1:*]
@@ -3278,7 +3202,8 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         widget_control, intermediate_plot_base, map=1
 
         ;save status of buttons
-        plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+        plots_selection_id = $
+          widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
         widget_control, plots_selection_id, get_value=value_selection
 
         (*global).plots_selected = value_selection
@@ -3286,15 +3211,21 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         
     endif else begin            ;remove other plots 
         
-        intermediate_plot_base = widget_info(Event.top, find_by_uname='list_of_plots_base')
+        intermediate_plot_base = widget_info(Event.top, $
+                                             find_by_uname='list_of_plots_base')
         widget_control, intermediate_plot_base, map=0
         
                                 ;remove labels on tabs
-        tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
-        tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-        tab_3_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-        tab_4_id = widget_info(Event.top, $
-                               find_by_uname='background_region_from_normalization_region_summed_tof_base')
+        tab_1_id = widget_info(Event.top, $
+                               find_by_uname='signal_region_tab_base')
+        tab_2_id = widget_info(Event.top, $
+                               find_by_uname='background_summed_tof_base')
+        tab_3_id = widget_info(Event.top, $
+                               find_by_uname='normalization_region_summed_tof_base')
+        tab_4_id = $
+          widget_info(Event.top, $
+                      find_by_uname=$
+                      'background_region_from_normalization_region_summed_tof_base')
         widget_control, tab_1_id, base_set_title=''
         widget_control, tab_2_id, base_set_title=''
         widget_control, tab_3_id, base_set_title=''
@@ -3415,8 +3346,9 @@ endelse
 
 norm_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
 widget_control, norm_id, get_value=norm_flag ;0:with norm    1:no normalization
-tab_4_id = widget_info(Event.top, $
-                       find_by_uname='background_region_from_normalization_region_summed_tof_base')
+tab_4_id = $
+  widget_info(Event.top, $
+              find_by_uname='background_region_from_normalization_region_summed_tof_base')
 if (indx3 EQ 1 AND norm_flag EQ 0) then begin
     
     widget_control, tab_4_id, base_set_title='Background from normalization'
@@ -3440,7 +3372,8 @@ widget_control, intermediate_plot_base, map=0
 screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
 if (number_of_plots_selected EQ 0) then begin
 
-    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+    inter_id = $
+      widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
     widget_control, inter_id, set_value=1
     full_text = ' NONE'
     widget_control, full_view_info, set_value=full_text, /append
@@ -3448,7 +3381,8 @@ if (number_of_plots_selected EQ 0) then begin
 
 endif else begin
     
-    inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
+    inter_id = $
+      widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
     widget_control, inter_id, set_value=0
     widget_control, screen_base_id, map=0
     
@@ -3698,5 +3632,10 @@ check_status_to_validate_go, Event
 end
 
 pro runs_to_process_text_eventcb, Event
+check_status_to_validate_go, Event
+end
+
+
+pro background_list_group_eventcb, Event
 check_status_to_validate_go, Event
 end

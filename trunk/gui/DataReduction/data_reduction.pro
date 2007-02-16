@@ -144,7 +144,7 @@ case Event.id of
           if (Event.type EQ 2) then $   ;release
             selection_release, Event
     end
-;clear selection button for REF_L
+;clear selection button for REF_L and REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           clear_selection_cb, Event
@@ -261,6 +261,11 @@ case Event.id of
 ;background pid text box
     widget_info(wWidget, FIND_BY_UNAME='background_pid_text'): begin
         background_pid_text_eventcb, Event
+    end
+
+;background list group
+    widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
+        background_list_group_eventcb, Event
     end
 
 ;open nexus file
@@ -1301,6 +1306,7 @@ clear_selection_button = widget_button(select_signal_base,$
                                        scr_xsize=120,$
                                        value='CLEAR SELECTION',$
                                        sensitive=0)
+
 save_selection_button = widget_button(select_signal_base,$
                                       uname='save_selection_button',$
                                       xoffset=155,$
