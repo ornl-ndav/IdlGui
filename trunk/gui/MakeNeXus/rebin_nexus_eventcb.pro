@@ -132,45 +132,6 @@ end
 
 
 
-; pro archive_type_group_eventcb, Event
-
-; ;get global structure
-; id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-; widget_control,id,get_uvalue=global
-
-; archive_id = widget_info(Event.top,find_by_uname='archive_type_group')
-; widget_control, archive_id, get_value = archive_status
-; CREATE_NEXUS_id = widget_info(Event.top, find_by_uname='CREATE_NEXUS')
-
-; if (archive_status EQ 0) then begin
-;     (*global).do_u_want_to_archive_it  = 1
-;     widget_control, CREATE_NEXUS_id, set_value='Create NeXus and archive'
-; endif else begin
-;     (*global).do_u_want_to_archive_it  = 0
-;     widget_control, CREATE_NEXUS_id, set_value='Create NeXus and do not archive'
-; endelse
-
-; end
-
-
-
-
-
-function get_ucams
-
-cd , "~/"
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-;print, "listening is: ", listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-return, ucams
-end
-
-
-
-
-
 
 function get_up_to_date_map_geo_tran_files, instrument
 
@@ -190,19 +151,19 @@ translation_file = instrument + "_*.nxt"
 
 ;get up-to-date mapping_file
 ls_cmd = path_to_files_of_interest + mapping_file
-spawn, "ls " + ls_cmd, mapping_list
+spawn, "ls " + ls_cmd, mapping_list, err_listening
 
 mapping_file = reverse(mapping_list[sort(mapping_list)])
 
 ;get up-to-date geometry_file
 ls_cmd = path_to_files_of_interest + geometry_file
-spawn, "ls " + ls_cmd, geometry_list
+spawn, "ls " + ls_cmd, geometry_list, err_listening
 
 geometry_file = reverse(geometry_list[sort(geometry_list)])
 
 ;get up-to-date translation_file
 ls_cmd = path_to_files_of_interest + translation_file
-spawn, "ls " + ls_cmd, translation_list
+spawn, "ls " + ls_cmd, translation_list, err_listening
 
 translation_file = reverse(translation_list[sort(translation_list)])
 
