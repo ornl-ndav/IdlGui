@@ -33,7 +33,8 @@ case Event.id of
             endelse
             
         endif else begin
-            image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
+            image_logo=$
+              "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
             id = widget_info(wWidget,find_by_uname="logo_message_draw")
             WIDGET_CONTROL, id, GET_VALUE=id_value
             wset, id_value
@@ -160,19 +161,6 @@ case Event.id of
     widget_info(wWidget, FIND_BY_UNAME='keep_selection_list_group'):begin
         keep_selection_list_group_eventcb,Event
     end
-
-
-    
-;INSIDE DATA_REDUCTION_WINDOW
-;with or without background for REF_L
-;    widget_info(wWidget, FIND_BY_UNAME='background_list_group'): begin
-;        background_list_group_eventcb, Event
-;    end
-
-;with or without background for REF_M
-;    widget_info(wWidget, FIND_BY_UNAME='background_list_group_REF_M'): begin
-;        background_list_group_eventcb_REF_M, Event
-;    end
 
 ;with or without normalization for REF_L
     widget_info(wWidget, FIND_BY_UNAME='normalization_list_group_REF_L'): begin
@@ -420,7 +408,7 @@ global = ptr_new({$
                                            'background_summed_tof_draw',$
                                            'signal_region_summed_tof_draw',$
                                            'normalization_region_summed_tof_draw',$
-                                     'background_region_from_normalization_region_summed_tof_draw'],$
+                   'background_region_from_normalization_region_summed_tof_draw'],$
                    intermediate_file_ext: ['.sdc',$
                                            '.bkg',$
                                            '.sub',$
@@ -428,7 +416,7 @@ global = ptr_new({$
                                            '.bnm'],$
                    intermediate_plots_title: ['Summed signal region',$
                                               'Summed background region',$
-                                              'Summed signal region with background subtraction',$
+                   'Summed signal region with background subtraction',$
                                               'Summed normalization signal region',$
                                               'Summed normalization background'],$
                    entering_selection_of_plots_by_yes_button : 0,$
@@ -482,16 +470,8 @@ global = ptr_new({$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-;case instrument OF
-;    0: begin ;REF_L
 (*global).Nx = 304L
 (*global).Ny = 256L
-;    end
-;    1: begin ;REF_M
-;        (*global).Nx = 256L
-;        (*global).Ny = 304L
-;    end
-;endcase
 
 (*global).output_path = (*global).output_path + user + "/"
 
@@ -703,30 +683,6 @@ signal_pid_file_text = widget_text(data_reduction_base,$
                                    /editable,$
                                    /all_events)
 
-;background_title = widget_label(data_reduction_base,$
-;                                xoffset=8,$
-;                                yoffset=47,$
-;                                value='Background:')
-; background_list = ['Yes',$
-;                   'No']
-; background_list_group = CW_BGROUP(data_reduction_base,$ 
-;                                   background_list,$
-;                                   /exclusive,$
-;                                   /RETURN_NAME,$
-;                                   XOFFSET=100,$
-;                                   YOFFSET=40,$
-;                                   SET_VALUE=0.0,$
-;                                   row=1,$
-;                                   uname='background_list_group')
-
-; background_file_base = widget_base(data_reduction_base,$
-;                                    uname='background_file_base',$
-;                                    xoffset=0,$
-;                                    yoffset=70,$
-;                                    scr_xsize=xsize_of_tabs,$
-;                                    scr_ysize=40,$
-;                                    frame=0)
-
 background_pid_file_button = widget_button(data_reduction_base,$
                                            uname='background_pid_file_button',$
                                            xoffset=5,$
@@ -876,7 +832,7 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 uname='intermediate_file_output_list_group')
 
 acces_to_list_of_intermediate_plots = widget_button(data_reduction_base,$
-                                                    uname='access_to_list_of_intermediate_plots',$
+                                         uname='access_to_list_of_intermediate_plots',$
                                                     xoffset=260,$
                                                     yoffset=207,$
                                                     value='Plots')
@@ -1042,7 +998,7 @@ normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               YOFFSET=0)
 
 normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
-                                                   uname='normalization_region_summed_tof_draw',$
+                                       uname='normalization_region_summed_tof_draw',$
                                                    xoffset=2,$
                                                    yoffset=2,$
                                                    scr_xsize=710,$
@@ -1050,27 +1006,27 @@ normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_t
 
 
 ;background region from normalization summed tof
-background_region_from_normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
-                              uname='background_region_from_normalization_region_summed_tof_base',$
-                              TITLE='',$
-                              XOFFSET=0,$
-                              YOFFSET=0)
+background_region_from_normalization_region_summed_tof_tab_base = $
+  widget_base(other_plots_tab,$
+              uname='background_region_from_normalization_region_summed_tof_base',$
+              TITLE='',$
+              XOFFSET=0,$
+              YOFFSET=0)
 
-background_region_from_normalization_region_summed_tof_draw = widget_draw($
-                              background_region_from_normalization_region_summed_tof_tab_base,$
-                              uname='background_region_from_normalization_region_summed_tof_draw',$
-                              xoffset=2,$
-                              yoffset=2,$
-                              scr_xsize=710,$
-                              scr_ysize=383)
-
+background_region_from_normalization_region_summed_tof_draw = $
+  widget_draw(background_region_from_normalization_region_summed_tof_tab_base,$
+              uname='background_region_from_normalization_region_summed_tof_draw',$
+              xoffset=2,$
+              yoffset=2,$
+              scr_xsize=710,$
+              scr_ysize=383)
 
 ;log book tab
 log_book_base = widget_base(data_reduction_tab,$
-                         uname='log_book_base',$
-                         TITLE='Log book',$
-                         XOFFSET=0,$
-                         YOFFSET=0)
+                            uname='log_book_base',$
+                            TITLE='Log book',$
+                            XOFFSET=0,$
+                            YOFFSET=0)
 
 log_book_text = widget_text(log_book_base,$
                             uname='log_book_text',$
@@ -1148,11 +1104,10 @@ global = ptr_new({$
                    tab_drawing_ids      : ['signal_region_draw',$
                                            'background_summed_tof_draw',$
                                            'normalization_region_summed_tof_draw',$
-                                     'background_region_from_normalization_region_summed_tof_draw'],$
+                   'background_region_from_normalization_region_summed_tof_draw'],$
                    intermediate_file_ext: ['.sdc',$
                                            '.bkg',$
                                            '.nom',$
-;                                           '.rmd',$
                                            '.bnm'],$
                    intermediate_plots_title: ['Summed signal region',$
                                               'Summed background region',$
@@ -1262,7 +1217,7 @@ intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$
                                           set_value=[1,1,1,1])
 
 intermediate_plots_list_validate = widget_button(list_of_plots_base,$
-                                                 uname='intermediate_plots_list_validate_REF_M',$
+                                   uname='intermediate_plots_list_validate_REF_M',$
                                                  value='Validate',$
                                                  scr_xsize=150,$
                                                  xoffset=30,$
@@ -1275,7 +1230,6 @@ intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
                                                xoffset=200,$
                                                yoffset=180)
                                                
-
 ;TOP LEFT BOX - OPEN NEXUS
 nexus_run_number_base = widget_base(MAIN_BASE,$
                                     xoffset=5,$
@@ -1703,15 +1657,6 @@ several_nexus_combobox_help = widget_button(data_reduction_base,$
                                             /pushbutton_events,$
                                             tooltip='Click to see the format of input to use')
 
-; runs_to_process_text= widget_text(data_reduction_base,$
-;                                   xoffset=75,$
-;                                   yoffset=225,$
-;                                   scr_xsize=100,$
-;                                   value='',$
-;                                   uname='runs_to_process_text',$
-;                                   /editable,$
-;                                   /align_left,$
-;                                   /all_events)
 
 ;norm-bkg
 norm_background_title = widget_label(data_reduction_base,$
@@ -1748,7 +1693,7 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 YOFFSET=255,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
-                                                uname='intermediate_file_output_list_group_REF_M')
+                                          uname='intermediate_file_output_list_group_REF_M')
 
 intermediate_file_frame = widget_base(data_reduction_base,$
                                       xoffset=177,$
@@ -1773,61 +1718,6 @@ start_data_reduction_button = widget_button(start_data_reduction_base,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button',$
                                             sensitive=0)
-
-; cancel_data_reduction_button = widget_button(start_data_reduction_base,$
-;                                              xoffset=230,$
-;                                              yoffset=5,$
-;                                              scr_xsize=65,$
-;                                              scr_ysize=35,$
-;                                              value='CANCEL',$
-;                                              uname='cancel_data_reduction_button',$
-;                                              sensitive=0)
-
-; start_data_reduction_tab = widget_tab(start_data_reduction_base,$
-;                                       uname='start_data_reduction_tab',$
-;                                       location=2,$
-;                                       xoffset=0,$
-;                                       yoffset=0,$
-;                                       scr_xsize=295,$
-;                                       scr_ysize=40,$
-;                                       /tracking_events)
-
-;;work on 1 NeXus file at a time
-;one_nexus_file_base = widget_base(start_data_reduction_tab,$
-;                                  uname='one_nexus_file_base',$
-;                                  xoffset=0,$
-;                                  yoffset=0,$
-;                                  title='1')
-
-
-;; work on several NeXus file at a time
-; several_nexus_file_base = widget_base(start_data_reduction_tab,$
-;                                       uname='several_nexus_file_base',$
-;                                       xoffset=0,$
-;                                       yoffset=0,$
-;                                       title='..')
-
-; list_value = (*global).initial_list_of_runs
-; several_nexus_combobox = widget_combobox(several_nexus_file_base,$
-;                                          uname='several_nexus_combobox',$
-;                                          xoffset=5,$
-;                                          yoffset=3,$
-;                                          scr_ysize=30,$
-;                                          scr_xsize=110,$
-;                                          /editable,$
-;                                          value=list_value)
-
-; start_data_reduction_several_nexus_button = widget_button(several_nexus_file_base,$
-;                                                           xoffset=115,$
-;                                                           yoffset=0,$
-;                                                           scr_xsize=155,$
-;                                                           scr_ysize=35,$
-;                                                           value='START DATA REDUCTION',$
-;                                                  uname='start_data_reduction_several_nexus_button',$
-;                                                           sensitive=0)
-
-
-
 
 ;info text box 
 info_text_REF_M = widget_text(data_reduction_base,$
@@ -1962,20 +1852,6 @@ background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
                                          scr_xsize=710,$
                                          scr_ysize=383)
 
-; ;signal region summed tof plot
-; signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
-;                               uname='signal_region_summed_tof_base',$
-;                               TITLE='',$
-;                               XOFFSET=0,$
-;                               YOFFSET=0)
-
-; signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
-;                                             uname='signal_region_summed_tof_draw',$
-;                                             xoffset=2,$
-;                                             yoffset=2,$
-;                                             scr_xsize=710,$
-;                                             scr_ysize=383)
-
 ;normalization region summed tof plot
 normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               uname='normalization_region_summed_tof_base',$
@@ -1984,50 +1860,52 @@ normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
                               YOFFSET=0)
 
 normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
-                                                   uname='normalization_region_summed_tof_draw',$
+                                         uname='normalization_region_summed_tof_draw',$
                                                    xoffset=2,$
                                                    yoffset=2,$
                                                    scr_xsize=710,$
                                                    scr_ysize=383)
 
 ;background region from normalization summed tof
-background_region_from_normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
-                              uname='background_region_from_normalization_region_summed_tof_base',$
-                              TITLE='',$
-                              XOFFSET=0,$
-                              YOFFSET=0)
+background_region_from_normalization_region_summed_tof_tab_base = $
+  widget_base(other_plots_tab,$
+              uname='background_region_from_normalization_region_summed_tof_base',$
+              TITLE='',$
+              XOFFSET=0,$
+              YOFFSET=0)
 
-background_region_from_normalization_region_summed_tof_draw = widget_draw($
-                              background_region_from_normalization_region_summed_tof_tab_base,$
-                              uname='background_region_from_normalization_region_summed_tof_draw',$
-                              xoffset=2,$
-                              yoffset=2,$
-                              scr_xsize=710,$
-                              scr_ysize=383)
+background_region_from_normalization_region_summed_tof_draw = $
+  widget_draw($
+               background_region_from_normalization_region_summed_tof_tab_base,$
+               uname='background_region_from_normalization_region_summed_tof_draw',$
+               xoffset=2,$
+               yoffset=2,$
+               scr_xsize=710,$
+               scr_ysize=383)
 
 ;log book tab
 log_book_base = widget_base(data_reduction_tab,$
-                         uname='log_book_base',$
-                         TITLE='Log book',$
-                         XOFFSET=0,$
-                         YOFFSET=0)
+                            uname='log_book_base',$
+                            TITLE='Log book',$
+                            XOFFSET=0,$
+                            YOFFSET=0)
 
 log_book_text_REF_M = widget_text(log_book_base,$
-                            uname='log_book_text',$
-                            scr_xsize=720,$
-                            scr_ysize=395,$
-                            xoffset=5,$
-                            yoffset=5,$
-                            /scroll,$
-                            /wrap)
+                                  uname='log_book_text',$
+                                  scr_xsize=720,$
+                                  scr_ysize=395,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  /scroll,$
+                                  /wrap)
 
 FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
-                                  UNAME='FILE_MENU_REF_M',$
-                                  /MENU,$
-                                  VALUE='MENU')
+                                UNAME='FILE_MENU_REF_M',$
+                                /MENU,$
+                                VALUE='MENU')
 
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
-                                 ,VALUE='Color Tool...')
+                           ,VALUE='Color Tool...')
 
 
 EXIT_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='EXIT_MENU_REF_M'  $
@@ -2052,7 +1930,6 @@ end
 ;
 pro data_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
    PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra    ;REMOVE_COMMENTS
-;wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 0, "j35"     ;REMOVE_ME
 end
 
 
