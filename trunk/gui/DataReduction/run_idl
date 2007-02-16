@@ -1,5 +1,6 @@
 cd, "~/SVN/HistoTool/trunk/gui/utilities"
 .run system_utilities.pro
+.run nexus_utilities.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/DataReduction/"
 .run data_reduction_eventcb.pro

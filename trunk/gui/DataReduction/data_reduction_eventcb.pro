@@ -1,22 +1,12 @@
-function remove_star_from_string, value
-
-new_value = strsplit(value,'\*',/extract,/regex)
-
-return, new_value
-end
-
-
-
-
-
-
-
 function is_local_nexus_function, processing_run_number_array
 
 array_result = strmatch(processing_run_number_array,'*\**')
 
 return, array_result
 end
+
+
+
 
 
 
@@ -363,19 +353,6 @@ end
 
 
 
-function produce_output_file_name, Event, run_number, extension
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-tmp_folder = (*global).tmp_folder
-
-output_file_name = tmp_folder + (*global).instrument 
-output_file_name += "_" + run_number + extension
-
-return, output_file_name 
-end
 
 
 
@@ -693,7 +670,11 @@ end
 
 
 ;Create the output array for background selection
-pro create_background_pid_array_file, Event, XYsignal, XYbackground, XYbackground_2, file_name
+pro create_background_pid_array_file, Event, $
+                                      XYsignal, $
+                                      XYbackground, $
+                                      XYbackground_2, $
+                                      file_name
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -815,19 +796,6 @@ end
 
 
 
-function get_ucams
-
-cd , "~/"
-cmd_pwd = "pwd"
-spawn, cmd_pwd, listening
-;print, "listening is: ", listening
-array_listening=strsplit(listening,'/',count=length,/extract)
-ucams = array_listening[2]
-return, ucams
-end
-
-
-
 
 
 FUNCTION get_name_of_tmp_output_file, Event, tmp_working_path, instr
@@ -855,66 +823,7 @@ end
 
 
 
-FUNCTION find_full_nexus_name, Event, run_number, instrument    
 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-cmd = "findnexus -i" + instrument + " " + strcompress(run_number,/remove_all)
-spawn, cmd, full_nexus_name
-
-;check if nexus exists
-result = strmatch(full_nexus_name,"*ERROR*")
-
-if (result GE 1) then begin
-    find_nexus = 0
-endif else begin
-    find_nexus = 1
-endelse
-
-(*global).find_nexus = find_nexus
-
-return, full_nexus_name
-
-end
-
-
-
-
-Function find_nexus_path, NeXus_runs_array, length, instrument
-
-NeXus_path_array = strarr(length)
-j=0
-
-for i=0,length-1 do begin
-    cmd = "findnexus -i" + instrument + " " + strcompress(NeXus_runs_array[i],/remove_all)
-    spawn, cmd, full_nexus_name
-
-;check if nexus exist
-result = strmatch(full_nexus_name,"*ERROR*")
-
-if (result EQ 0) then begin
-    NeXus_path_array[j] = full_nexus_name
-    ++j
-endif
-
-endfor
-
-return, [j, NeXus_path_array] 
-end
-
-
-
-
-
-
-
-;------------------------------------------------------------------------------------------
-; \brief function to obtain the top level base widget given an arbitrary widget ID.
-;
-; \argument wWidget (INPUT)
-;------------------------------------------------------------------------------------------
 function get_tlb,wWidget
 
 id = wWidget
@@ -990,12 +899,16 @@ end
 
 
 
+
+
 pro wTLB_REALIZE, wWidget
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 end
+
+
 
 
 
@@ -1045,7 +958,7 @@ endif else begin
 
 ;get path to nexus run #
     instrument=(*global).instrument
-    full_nexus_name = find_full_nexus_name(Event, run_number, instrument)
+    full_nexus_name = find_full_nexus_name(Event, 0, run_number, instrument)
     
 ;check result of search
     find_nexus = (*global).find_nexus
@@ -1073,9 +986,11 @@ endif else begin
         (*global).file_opened = 1
 
 ;validate signal and background pid file
-        signal_pid_file_button_id = widget_info(Event.top, find_by_uname='signal_pid_file_button')
-        background_pid_file_button_id = widget_info(Event.top, $
-                                                    find_by_uname='background_pid_file_button')
+        signal_pid_file_button_id = widget_info(Event.top, $
+                                                find_by_uname='signal_pid_file_button')
+        background_pid_file_button_id = $
+          widget_info(Event.top, $
+                      find_by_uname='background_pid_file_button')
         widget_control, signal_pid_file_button_id, sensitive=1
         widget_control, background_pid_file_button_id, sensitive=1
         
@@ -1094,7 +1009,8 @@ endif else begin
             widget_control, combobox_id, set_value=array_text
             ;update label to '1 run #:'
             text = ' 1 run #'
-            runs_to_process_label_id = widget_info(Event.top, find_by_uname='runs_to_process_label')
+            runs_to_process_label_id = widget_info(Event.top, $
+                                                   find_by_uname='runs_to_process_label')
             widget_control, runs_to_process_label_id, set_value=text
         endelse
         
@@ -1178,8 +1094,9 @@ endelse
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
 tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-tab_5_id = widget_info(Event.top, $
-                       find_by_uname='background_region_from_normalization_region_summed_tof_base')
+tab_5_id = $
+  widget_info(Event.top, $
+              find_by_uname='background_region_from_normalization_region_summed_tof_base')
 widget_control, tab_1_id, base_set_title=''
 widget_control, tab_2_id, base_set_title=''
 widget_control, tab_4_id, base_set_title=''
@@ -2219,7 +2136,8 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         widget_control, intermediate_plot_base, map=1
 
         ;save status of buttons
-        plots_selection_id = widget_info(Event.top, find_by_uname='intermediate_plots_list_group')
+        plots_selection_id = widget_info(Event.top, $
+                                         find_by_uname='intermediate_plots_list_group')
         widget_control, plots_selection_id, get_value=value_selection
 
         (*global).plots_selected = value_selection
@@ -2233,9 +2151,12 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
                                 ;remove labels on tabs
         tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
         tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-        tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-        tab_5_id = widget_info(Event.top, $
-                               find_by_uname='background_region_from_normalization_region_summed_tof_base')
+        tab_4_id = widget_info(Event.top, $
+                               find_by_uname='normalization_region_summed_tof_base')
+        tab_5_id = $
+          widget_info(Event.top, $
+                      find_by_uname=$
+                      'background_region_from_normalization_region_summed_tof_base')
         widget_control, tab_1_id, base_set_title=''
         widget_control, tab_2_id, base_set_title=''
         widget_control, tab_4_id, base_set_title=''
@@ -2401,7 +2322,8 @@ if (norm_flag EQ 0) then begin
                     
                     find_nexus = 1 ;run# exist in archive
                     text = 'Normalization file: OK'
-                    full_text = 'Normalization file used: ' + full_path_to_nexus_normalization  
+                    full_text = $
+                      'Normalization file used: ' + full_path_to_nexus_normalization  
                     
                 endelse
                 
@@ -3002,15 +2924,6 @@ pro plot_reduction, Event, plot_file_name, draw_uname, title
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;CATCH, wrong_text_file
-
-;if (wrong_text_file ne 0) then begin
-
-;	WIDGET_CONTROL, view_info, SET_VALUE="ERROR: Invalid .txt file", /APPEND
-;	WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-
-;endif else begin
-
 openr,u,plot_file_name,/get
 fs = fstat(u)
 
@@ -3066,7 +2979,6 @@ while (NOT eof(u)) do begin
                 flt1 = flt1[1:*]
                 flt2 = flt2[1:*]
                                 ;you're done now...
-; 			Print,'Error Handling Complete'
                 CATCH, /CANCEL
             endif else begin
                 readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
@@ -3081,18 +2993,6 @@ while (NOT eof(u)) do begin
     
 endwhile
 
-;view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-;text = 'Number of non-data lines: ' + strcompress(Nndlines,/remove_all)
-;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-;text = 'Number of data lines: ' + strcompress(Ndlines,/remove_all)
-;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-;window,0
-;!p.multi=[0,2,2]
-;plot,flt0,title='Wavelength'
-;plot,flt1,title='Intensity'
-;plot,flt2,title='Sigma'
-
 draw_id = widget_info(Event.top, find_by_uname=draw_uname)
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
@@ -3101,6 +3001,7 @@ catch, error_plot_status
 if (error_plot_status NE 0) then begin
     text = 'Not enough data to plot'
     CATCH,/cancel
+
 ;log book ids (full and simple)
     view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
     full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -3116,13 +3017,7 @@ endelse
 close,u
 free_lun,u
 
-;endelse
-
-;CATCH, /CANCEL
-
 end
-;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
-
 
 
 
@@ -3267,11 +3162,6 @@ widget_control, list_of_plots_id, get_value=value
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 
-;index 1 of array: .sdc (signal region summed TOF)
-;index 2 of array: .bkg (background summed TOL)
-;index 3 of array: .nom (normalization region summed TOF)
-;index 4 of array: .bnk (background region normalization summed TOF)
-
 indx0 = value[0]                ;.sdc
 indx1 = value[1]                ;.bkg
 indx2 = value[2]                ;.nom
@@ -3302,9 +3192,6 @@ endif else begin
     widget_control, tab_1_id, base_set_title=''
     
 endelse
-
-;back_id = widget_info(Event.top, find_by_uname='background_list_group')
-;widget_control, back_id, get_value=bkg_flag  ;0:with bkg    1:no bkg
 
 tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
 if (indx1 EQ 1) then begin
@@ -3442,7 +3329,7 @@ endif else begin
 
     if (bkg_pid_text EQ '' AND back_index EQ 1) then begin
         bkg_pid_text = 'ok'
-        endif
+    endif
 
 endelse
 
@@ -3590,6 +3477,7 @@ endif else begin
 endelse
 
 end
+
 
 
 
