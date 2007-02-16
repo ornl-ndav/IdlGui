@@ -149,6 +149,7 @@ pro output_into_text_box, event, $
                           uname_destination, $
                           text, $
                           do_not_append_it
+
 ;get the global data structure
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global

@@ -1143,6 +1143,7 @@ global = ptr_new({$
                    selection_mode       : 1,$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
+                   working_path         : '~/local/REF_M/',$
                    ucams                : user,$
                    x1_back              : 0L,$
                    x2_back              : 0L,$

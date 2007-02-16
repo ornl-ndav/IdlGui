@@ -42,20 +42,22 @@
 ;
 ; \return full_nexus_name
 ; full nexus file name (with full path)
-FUNCTION find_full_nexus_name, Event, local, run_number, instrument    
+FUNCTION find_full_nexus_name, Event, local, run_number, instrument
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 cmd = "findnexus -i" + instrument 
-if (local EQ 1) then begin
+print, (*global).working_path
+;if (local EQ 1) then begin
+if (local) then begin
     cmd += " --prefix " + (*global).working_path
 endif
 cmd += " " + strcompress(run_number,/remove_all)
 
-spawn, cmd, full_nexus_name
-
+spawn, cmd, full_nexus_name, err_listening
+print, full_nexus_name
 ;check if nexus exists
 result = strmatch(full_nexus_name,"ERROR*")
 
