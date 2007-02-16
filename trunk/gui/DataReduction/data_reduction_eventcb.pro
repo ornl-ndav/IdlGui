@@ -78,17 +78,18 @@ runs_to_use_array = lonarr(array_size)
 nbr_runs_to_use = 0
 
 ;check if there is a star after or before the run number
-is_local_nexus_array= is_local_nexus_function(runs_array) ;remove_comments
+is_local_nexus_array = is_local_nexus_function(runs_array)
 
 for i=0,(array_size-1) do begin
-    
+
     if (is_local_nexus_array[i] EQ 0) then begin  ;nexus is in SNSlocal or SNS
         cmd_findnexus = 'findnexus'
     endif else begin ;nexus is local
         ;first remove the star
         runs_array[i] = remove_star_from_string(runs_array[i])
-        cmd_findnexus = 'findnexus ~/local/' + instrument
+        cmd_findnexus = 'findnexus --prefix ~/local/' + instrument
     endelse
+
     cmd_findnexus +=  ' -i' + instrument
     cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
     text = ' >' + cmd_findnexus
@@ -947,26 +948,36 @@ endif else begin
     
     ;no data reduction done on this run number yet
     (*global).data_reduction_done = 0
-
-    (*global).run_number = run_number
     
-    text = "Searching for NeXus file of run number " + strcompress(run_number,/remove_all)
+    text = "Searching for NeXus file of run number " + $
+      strcompress(run_number,/remove_all)
     text += "..."
     WIDGET_CONTROL, full_view_info, SET_VALUE=text
-    text = "Openning/plotting Run # " + strcompress(run_number,/remove_all) + "..."
+    text = "Openning/plotting Run # " + $
+      strcompress(run_number,/remove_all) + "..."
     WIDGET_CONTROL, view_info, SET_VALUE=text
 
 ;get path to nexus run #
     instrument=(*global).instrument
-    full_nexus_name = find_full_nexus_name(Event, 0, run_number, instrument)
-    
+    initial_run_number = run_number
+    run_number = remove_star_from_string(run_number)
+    (*global).run_number = run_number
+    full_nexus_name = $
+      find_full_nexus_name(Event,$
+                           strmatch(initial_run_number,'*\**'),$
+                           run_number,$
+                           instrument)
+
 ;check result of search
     find_nexus = (*global).find_nexus
     if (find_nexus EQ 0) then begin
+
         text_nexus = "Warning! NeXus file does not exist"
         WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
         WIDGET_CONTROL, full_view_info, SET_VALUE=text_nexus,/append
+
     endif else begin
+
         text_nexus = "NeXus file has been localized: "
         (*global).full_nexus_name = full_nexus_name
         text_nexus += full_nexus_name
@@ -1280,6 +1291,7 @@ Nimg = Nx*Ny
 Ntof = fs.size/(Nimg*4L)
 (*global).Ntof = Ntof           ;set back in global structure
 
+WIDGET_CONTROL, full_view_info, SET_VALUE='.... done reading data]', /APPEND
 data_assoc = assoc(u,lonarr(Ntof))
 
 ;make the image array
@@ -2509,8 +2521,8 @@ if (instrument EQ 'REF_M') then begin
         ending_time = systime(1)
         
         total_processing_time = ending_time - starting_time
-        full_text = ' -> work # ' + strcompress(i,/remove_all) + $
-          '/' + strcompress(nbr_runs_to_use-1) + ' done in ' + $
+        full_text = ' -> work # ' + strcompress(i+1,/remove_all) + $
+          '/' + strcompress(nbr_runs_to_use) + ' done in ' + $
           strcompress(total_processing_time,/remove_all) + ' s'
     
         widget_control, full_view_info, set_value=full_text,/append
@@ -2534,7 +2546,7 @@ if (instrument EQ 'REF_M') then begin
           title
         
         text = '...plot is done'
-        full_text = '...plot is is done'
+        full_text = '...plot is done'
         widget_control, full_view_info, set_value=full_text,/append
         widget_control, view_info, set_value=text,/append
         
