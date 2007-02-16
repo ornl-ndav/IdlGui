@@ -103,3 +103,48 @@ end
 
 
 
+
+
+
+
+; \defgroup find_nexus_path
+; \{
+;;
+
+;;
+; \brief output array that tells if
+; nexus has been found and if yes,
+; gives its full path
+;
+; \param Nexus_runs_array (INPUT) array of NeXus runs
+; \param length (INPUT) number of NeXus runs
+; \param instrument (INPUT) name of the instrument
+;
+; \return [j,NeXus_path_array]
+; j is the number of NeXus run found
+; [NeXus_path_array] is the array of the full NeXus name
+Function find_nexus_path, NeXus_runs_array, length, instrument
+
+NeXus_path_array = strarr(length)
+j=0
+
+for i=0,length-1 do begin
+     cmd = "findnexus -i" + instrument + " " + $
+       strcompress(NeXus_runs_array[i],/remove_all)
+     spawn, cmd, full_nexus_name
+     
+;check if nexus exist
+     result = strmatch(full_nexus_name,"*ERROR*")
+     
+     if (result EQ 0) then begin
+         NeXus_path_array[j] = full_nexus_name
+         ++j
+     endif
+     
+ endfor
+ 
+ return, [j, NeXus_path_array] 
+end
+; \}
+;;  //end of find_nexus_path
+

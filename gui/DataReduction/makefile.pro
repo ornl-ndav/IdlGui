@@ -3,8 +3,9 @@
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
-cd, "/SNS/users/j35/SVN/utilities/"
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 resolve_routine, "system_utilities", /either
+resolve_routine, "nexus_utilities", /either
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/"
 resolve_routine, "data_reduction_eventcb", /either

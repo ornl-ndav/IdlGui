@@ -205,3 +205,142 @@ end
 
 
 
+
+;;
+; \defgroup check_access
+; \{
+;;
+
+;;
+; \brief This function check if the ucams
+; given in the command line has access to 
+; the instrument tool is requesting
+;
+; \param event (INPUT) event structure
+; \param instrument (INPUT) name of the instrument
+; \param ucams (INPUT) ucams of the user
+function check_access, Event, instrument, ucams
+
+list_of_instrument = ['REF_L', 'REF_M']
+
+;0:j35:jean$
+;1:pf9:pete
+;2:2zr:michael
+;3:mid:steve
+;4:1qg:rick
+;5:ha9:haile
+;6:vyi:frank
+;7:vuk:john 
+;8:x4t:xiadong
+;9:ele:eugene
+
+list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele']
+
+;check if ucams is in the list
+ucams_index=-1
+for i =0, 9 do begin
+   if (ucams EQ list_of_ucams[i]) then begin
+     ucams_index = i
+     break 
+   endif
+endfor
+
+;check if user is autorized for this instrument
+CASE instrument OF		
+   ;REF_L
+   0: CASE  ucams_index OF
+        -1:
+	0: 		;authorized
+	1: 		;authorized
+	2: 		;authorized
+	3: 		;authorized
+	4: ucams_index=-1	;unauthorized
+	5: ucams_index=-1	;unauthorized
+	6: ucams_index=-1	;unauthorized
+	7: 		;authorized
+	8: 		;authorized
+	9: ucams_index=-1	;unauthorized
+      ENDCASE
+   ;REF_M
+   1: CASE ucams_index OF
+	-1:
+	0: 
+	1: 
+	2: 
+	3: 
+	4: 
+	5: 
+	6: 
+	7: ucams_index=-1
+	8: ucams_index=-1
+	9: ucams_index=-1
+      ENDCASE
+ENDCASE	 
+	
+RETURN, ucams_index
+ 
+end
+; \}
+;;     //end of check_access
+
+
+
+
+
+;;
+; \defgroup remove_star
+; \{
+;;
+
+;;
+; \brief This function remove the star
+; from the string
+;
+; \param value (INPUT) text to parse
+;
+; \return new_value
+; string without the star
+function remove_star_from_string, value
+
+new_value = strsplit(value,'\*',/extract,/regex)
+
+return, new_value
+end
+; \}
+;;     //end of remove_star_from_string
+
+
+
+
+
+
+;;
+; \defgroup produce_output_file_name
+; \{
+;;
+
+;;
+; \brief This function produces the output
+; file name
+;
+; \param Event (INPUT) event structure
+; \param run_number (INPUT) run number
+; \param extension (INPUT) the text to append
+;
+; \return output_file_name
+; resulting output file name
+function produce_output_file_name, Event, run_number, extension
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_folder = (*global).tmp_folder
+
+output_file_name = tmp_folder + (*global).instrument 
+output_file_name += "_" + run_number + extension
+
+return, output_file_name 
+end
+; \}
+;;     //end of produce_output_file_name
