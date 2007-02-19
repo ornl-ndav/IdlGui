@@ -1723,7 +1723,7 @@ if (linear_rebinning EQ 0) then begin ;linear rebinning
 
 endif else begin ;log rebinning
 
-    cmd_line_histo = "~/SVN/HistoTool/trunk/cli/Event_to_Histo "
+    cmd_line_histo = "Event_to_Histo "
     cmd_line_histo += "-L " + strcompress(rebinning,/remove_all)
     cmd_line_histo += " -M " + strcompress(max_time_bin,/remove_all)
     cmd_line_histo += " -p " + strcompress(number_pixels,/remove_all)
