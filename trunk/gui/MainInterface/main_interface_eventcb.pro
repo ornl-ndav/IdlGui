@@ -10,7 +10,6 @@ function get_ucams
 
 cmd_pwd = "pwd"
 spawn, cmd_pwd, listening
-print, "listening is: ", listening
 array_listening=strsplit(listening,'/',count=length,/extract)
 ucams = array_listening[2]
 return, ucams
@@ -48,7 +47,8 @@ case list_index of
     1: begin
 ;miniReflPak
         text='Visualization and data reduction tool for both Reflectometers'
-        picture = "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/miniReflPak_REF_L.bmp"
+        picture = $
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/miniReflPak_REF_L.bmp"
         x=0
         y=0
         if (host EQ 'heater' OR $
@@ -90,17 +90,31 @@ case list_index of
     end
     5: begin
 ;DataReduction
-
-        if (ucams EQ 'j35' OR ucams EQ '2zr') then launch_activation = 1
         text = 'Program that performs basics data_reduction for'
         text += ' the two reflectometers.'
         text += '                   '
-        text += ' COMING SOON IN YOUR AREA '
         picture = '/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/DataReduction.bmp'
         x=0
         y=0
+        launch_activation = 1
         (*global).active_idl_tool = 'DataReduction'
     end
+    6: begin
+;more_NeXus
+        text = 'Program that gives information about a particular'
+        text += ' run_number and can output the various data it'
+        text += ' contains.'
+        text += '                                                  '
+        text += '                               '
+        text += '                   UNDER CONSTRUCTION '
+        picture = $
+          '/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/under_construction.bmp'
+        x=0
+        y=0
+        launch_activation = 0
+        (*global).active_idl_tool = 'more_NeXus'
+    end
+
 endcase
 
 if (list_index NE 0) then begin
