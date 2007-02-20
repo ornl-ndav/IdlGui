@@ -25,6 +25,12 @@ widget_control,hourglass=0
 end
 
 
+
+
+
+
+
+
 pro Main_realize_2, wWidget
 
 tlb = get_tlb(wWidget)
@@ -33,8 +39,6 @@ tlb = get_tlb(wWidget)
 id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-
-print, '(*global).instrument ' + (*global).instrument
 end
 
 
