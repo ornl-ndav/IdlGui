@@ -287,7 +287,7 @@ output_path = (*global).output_path
 	SCR_YSIZE=(*global).ysize, $
 	title=title)
 
-if (user EQ 'j35' OR user EQ 'ha9') then begin
+if (user EQ 'j35') then begin
     map_hide_log_book_tab = 0
 endif else begin
     map_hide_log_book_tab = 1
