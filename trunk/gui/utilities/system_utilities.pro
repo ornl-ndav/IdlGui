@@ -345,3 +345,54 @@ return, output_file_name
 end
 ; \}
 ;;     //end of produce_output_file_name
+
+
+
+
+
+
+
+; \defgroup output_into_log_book_file
+; \{
+;;
+
+;;
+; \brief This function output the string
+; into a predefined fine (just for debugging)
+;
+; \param Event (INPUT) event structure
+pro output_into_log_book_file, Event, string
+
+full_logbook_filename = "~/local/MakeNeXus_logbook.txt"
+
+openu, 1,full_logbook_filename,/append
+printf, 1, string
+
+; for i=0,(nbr_lines-1) do begin
+;     printf,1, lines[i]
+; endfor
+
+;close it up...
+close,1
+free_lun,1
+
+end
+; \}
+;;     //end of output_into_log_book_file
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
