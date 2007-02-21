@@ -150,3 +150,29 @@ end
 ; \}
 ;;  //end of find_nexus_path
 
+
+
+
+
+
+; \defgroup is_nexus_local
+; \{
+;;
+
+;;
+; \brief check for the presence of a *
+; in the string to know if we are looking
+; for a local file or not
+;
+; \param run_number (INPUT) run number
+;
+; \return result
+; 1 for a local, 0 for an archive nexus file
+function is_nexus_local, run_number_string
+
+result = strmatch(run_number_string,'*\**')
+return, result
+
+end
+; \
+;;  //end of is_nexus_local
