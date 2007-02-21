@@ -283,6 +283,10 @@ case Event.id of
         several_nexus_combobox_eventcb, Event
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='sns_idl_button'): begin
+        sns_idl_button_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -1066,6 +1070,15 @@ SELECTION_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
 INFO_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
                                 uname='info_mode_REF_L',$
                                 value=' Info')
+
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
+
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
@@ -1919,6 +1932,15 @@ CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
 EXIT_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='EXIT_MENU_REF_M'  $
                                 ,VALUE='Exit')
 
+
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
+
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

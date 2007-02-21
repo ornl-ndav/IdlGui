@@ -3316,6 +3316,15 @@ end
 
 
 
+pro sns_idl_button_eventcb, Event
+spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
+
+
+
+
+
+
 pro display_interactive_window, Event
 
 ;get global structure

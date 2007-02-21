@@ -2335,3 +2335,8 @@ endif
 end
 
 
+
+
+pro sns_idl_button_eventcb, Event
+spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
