@@ -930,6 +930,7 @@ CASE instrument OF
 	1: 
 	2: 
 	3: 
+        9:
 	else: user_index=-1
       ENDCASE
 ENDCASE	 
