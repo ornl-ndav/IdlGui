@@ -10,126 +10,49 @@ case Event.id of
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
-
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
+        
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
+        WIDGET_control, id, GET_VALUE=instrument
+        ucams = get_ucams()
+        
+        if (check_access(Event, instrument, ucams) NE -1) then begin
+            id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            WIDGET_CONTROL, id, /destroy
+            wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
+        endif else begin
+            image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/access_denied.bmp"
+            id = widget_info(wWidget,find_by_uname="logo_message_draw")
+            WIDGET_CONTROL, id, GET_VALUE=id_value
+            wset, id_value
+            image = read_bmp(image_logo)
+            tv, image,0,0,/true
+        endelse
+        
+    end
+    
     Widget_Info(wWidget, FIND_BY_UNAME='activate_preview_button'): begin
         activate_preview_button_cb, Event
     end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
+    Widget_Info(wWidget, FIND_BY_UNAME='output_data_group'): begin
+        output_data_group_cb, Event
+    end
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='output_data_button'): begin
+        output_data_button_cb, Event
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_EVENT_FILE_BUTTON_tab1'): begin
-        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-          OPEN_HISTO_EVENT_FILE_CB, Event
+        open_nexus_cb, Event
     end
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='NUMBER_PIXEL_IDS_TEXT_tab1'): begin
-        NUMBER_PIXEL_IDS_CB, Event
-    end
-    
-    widget_info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP'): begin
-        REBINNING_TYPE_GROUP_CP, Event
-    end
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TEXT'): begin
-        REBINNING_TEXT_CB, Event
-    end
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='MAX_TIME_BIN_TEXT'): begin
-        MAX_TIME_BIN_TEXT_CB, Event
-    end
-    
-;    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
-;      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-;        OPEN_MAPPING_FILE_BUTTON_CB, Event
-;	end
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_BUTTON'): begin
-        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-          DEFAULT_PATH_BUTTON_CB, Event
-	end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='CREATE_NEXUS'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              CREATE_NEXUS_CB, Event
-        end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='DISPLAY_BUTTON'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              DISPLAY_BUTTON, Event
-        end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='COMPLETE_RUNINFO_FILE'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              COMPLETE_RUNINFO_FILE_event, Event
-        end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='COMPLETE_CVINFO_FILE'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              COMPLETE_CVINFO_FILE_event, Event
-        end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='CLOSE_COMPLETE_XML_DISPLAY_TEXT'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              CLOSE_COMPLETE_XML_DISPLAY_TEXT_event, Event
-        end
-        
-;portal_go
-        Widget_Info(wWidget, FIND_BY_UNAME='USER_TEXT'): begin
-            USER_TEXT_CB, Event
-        end
-        
-        Widget_Info(wWidget, FIND_BY_UNAME='PORTAL_GO'): begin
 
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
-            WIDGET_control, id, GET_VALUE=instrument
-            ucams = get_ucams()
-
-            if (check_access(Event, instrument, ucams) NE -1) then begin
-                id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-                WIDGET_CONTROL, id, /destroy
-                wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
-            endif else begin
-                image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/access_denied.bmp"
-                id = widget_info(wWidget,find_by_uname="logo_message_draw")
-                WIDGET_CONTROL, id, GET_VALUE=id_value
-                wset, id_value
-                image = read_bmp(image_logo)
-                tv, image,0,0,/true
-            endelse
-            
-        end
-
-        else:
-        
-    endcase
+else:
     
+endcase
+
 end
 
 
@@ -252,79 +175,40 @@ Resolve_Routine, 'more_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
+instrument = instrument_list[instrument]
+working_path = '~/local/' + instrument
 
 global = ptr_new({$
-                   activate_preview : 0,$
+                   activate_preview     : 0,$  ;1 = preview when oppening NeXus run number
+                   find_nexus           : 0,$  ;0 = nexus file not found, 1 = found
+                   full_nexus_name      : '',$ ;full path of nexus file
+                   instrument		: instrument,$
+                   user			: user,$ ;j35, ele....
+                   run_number		: '',$ ;run_number (without * if present)
+                   tmp_folder           : '~/local/.more_nexus_tmp',$ ;used to dump histogram
+                   local_nexus          : 0,$ ;1=local nexus, 0=archive version
+                   working_path         : working_path,$  ;local folder of nexus files
 
-                   default_log_rebin_coeff : 0.5,$
-                   default_rebin_coeff     : 200,$
-                   DAS_has_experiment_number : 0,$    ;put 1 when DAS will had experiment number
-                   DAS_mouting_point : '-DAS-FS/',$
-                   translate_use_experiment_number : 0,$
-                   tmp_nxdir_folder : '.makeNeXus_tmp',$
-                   full_tmp_nxdir_folder_path : '',$
-                   already_archived	: 0,$
-                   file_to_plot : '',$
-                   full_path_instr_run_number : '',$
-                   file_type_is_event	: 1,$
-                   do_u_want_to_archive_it : 0,$
-                   path			: '~/CD4/REF_M/REF_M_7/',$ 
-                   path_to_DAS_proposal_number : '',$
+
                    output_path		: '/SNSlocal/users/',$
                    full_path_to_prenexus: '',$
                    full_path_to_nexus : '',$
                    full_local_folder_name : '',$
                    output_path_for_this_file: '',$
-                   instrument		: instrument_list[instrument],$
-                   is_file_histo        : 0,$
-                   user			: user,$
-                   filter_histo_event	: '*neutron*.dat',$
-                   find_prenexus_on_das : 0,$
-                   full_local_folder_name_preNeXus : '',$
-                   full_local_folder_name_NeXus : '',$
-                   histo_event_filename  	: '',$
-                   histo_event_filename_only	: '',$
-                   histo_file_name_only: '',$
-                   full_histo_mapped_file_name : '',$
-                   histo_filename		: '',$
-                   histo_mapped_filename	: '',$
-                   histo_mapped_file_name_only : '',$
-                   file_to_plot_top     : '',$
-                   file_to_plot_bottom  : '',$
-                   nexus_filename		: '',$
-                   cvinfo_xml_filename	: '',$
-                   runinfo_xml_filename	: '',$
-                   new_translation_filename: '',$
-                   das_mount_point		: '',$
-                   experiment_number : '',$
-                   proposal_number		: '',$
-                   proposal_number_BSS	: '2006_1_2_SCI/',$
-                   proposal_number_REF_L	: '2006_1_4B_SCI/',$
-                   proposal_number_REF_M	: '2006_1_4A_SCI/',$
                    instrument_run_number	: '',$
-                   run_number		: '',$
-                   lin_log			: 0L,$
-                   number_pixels		: 0L,$
-                   rebinning		: 0L,$
-                   min_time_bin		: 0L,$
-                   max_time_bin		: 0L,$
-                   number_tbin		: 0L,$
-                   filter_mapping		: 'REF_M_TS_*.dat',$
-                   path_mapping		: '/SNS/REF_M/2006_1_4A_CAL/calibrations/', $
                    NX_REF_L		: 304L,$
                    NY_REF_L		: 256L,$
-                   Nimg_REF_L		: 77824L,$
+                   Npixels_REF_L		: 77824L,$
                    NX_REF_M		: 256L,$
                    NY_REF_M		: 304L,$
-                   Nimg_REF_M		: 77824L,$
-                   Nimg_BSS		: 9216L,$
-                   pixel_number		: '',$
+                   Npixels_REF_M        : 77824L,$
                    NX_BSS			: 190L,$
                    NY_BSS			: 130L,$
+                   Npixels_BSS		: 9216L,$
+                   pixel_number		: '',$
                    Ntof			: 0L,$
                    img_ptr 		: ptr_new(0L),$
-                   data_assoc		: ptr_new(0L),$
-                   display_button_activate : 0$
+                   data_assoc		: ptr_new(0L)$
 	})
 
 (*global).output_path = (*global).output_path + user + "/"
@@ -337,7 +221,7 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         UNAME='MAIN_BASE', $
                         XOFFSET=150,$
                         YOFFSET=350, $
-                        SCR_XSIZE=900, $
+                        SCR_XSIZE=950, $
                         SCR_YSIZE=600, $
                         title=title)
 
@@ -349,7 +233,8 @@ wTab = WIDGET_TAB(MAIN_BASE,$
 wT1 = WIDGET_BASE(wTab,$
                   TITLE='NeXus',$
                   UNAME='wT1',$
-                  SCR_XSIZE=850,$
+                  SCR_XSIZE=940,$
+                  xoffset=5,$
                   SCR_YSIZE=570)
 
 HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
@@ -429,7 +314,7 @@ endcase
 infos_setting_base = widget_base(wT1,$
                                  xoffset=320,$
                                  yoffset=7,$
-                                 scr_xsize=500,$
+                                 scr_xsize=800,$
                                  scr_ysize=340)
 
 wTab_2 = WIDGET_TAB(infos_setting_base,$
@@ -438,80 +323,234 @@ wTab_2 = WIDGET_TAB(infos_setting_base,$
 wT1_1 = widget_base(wTab_2,$
                     title='INFOS',$
                     uname='wT1_1',$
-                    scr_xsize=500,$
+                    scr_xsize=600,$
                     scr_ysize=350,$
                     frame=1)
 
 infos_text = widget_text(wT1_1,$
-                         yoffset=5,$
-                         xoffset=2,$
+                         yoffset=0,$
+                         xoffset=0,$
                          value='',$
                          uname='infos_text',$
-                         scr_xsize=490,$
-                         scr_ysize=310,$
+                         scr_xsize=600,$
+                         scr_ysize=315,$
                          /wrap,$
                          /scroll)
 
 ;bottom part of first tab
-output_data_label = widget_label(wT1,$
-                                 value='OUTPUT INTERFACE',$
-                                 xoffset=15,$
-                                 yoffset=351)
-
 output_data_base = widget_base(wT1,$
                                uname='output_data_base',$
                                xoffset=10,$
                                yoffset=360,$
-                               scr_xsize=800,$
+                               scr_xsize=913,$
                                scr_ysize=190,$
-                               frame=1)
-                                 
-output_data_list = ['event',$
-                   'histogram',$
-                   'time bins',$
-                   'Pulse ID',$
-                   'Infos file']
+                               frame=1,$
+                               map=0)
 
+;output data selection part                                 
+output_data_list = ['event file',$
+                    'histogram file',$
+                    'time bins file',$
+                    'Pulse ID file',$
+                    'Infos text']
 output_data_group = cw_bgroup(output_data_base,$ 
+                              uname='output_data_group',$
                               output_data_list,$
                               /RETURN_NAME,$
                               XOFFSET=5,$
                               YOFFSET=5,$
-                              UNAME='output_data_group',$
-                              /nonexclusive)
+                              /nonexclusive,$
+                              font='lucidasans-14',$
+                              set_value=[0,0,0,0,0])  
+
+;output data text base
+event_text_base = widget_base(output_data_base,$
+                              uname='event_text_base',$
+                              xoffset=140,$
+                              yoffset=5,$
+                              scr_xsize=680,$
+                              scr_ysize=30,$
+                              frame=0,$
+                              map=0)
+
+event_text = widget_text(event_text_base,$
+                         uname='event_text',$
+                         xoffset=0,$
+                         yoffset=0,$
+                         scr_xsize=400,$
+                         scr_ysize=30,$
+                         value='',$
+                         /editable,$
+                         font='lucidasans-10')
+
+output_format_list = ['binary(U/Mi)',$
+                      'binary(Mac)',$
+                      'ASCII']
+event_format_group = cw_bgroup(event_text_base,$ 
+                               uname='event_format_group',$
+                               output_format_list,$
+                               /RETURN_NAME,$
+                               XOFFSET=405,$
+                               YOFFSET=0,$
+                               /exclusive,$
+                               /row,$
+                               font='lucidasans-12',$
+                               set_value=0)
+                         
+histogram_text_base = widget_base(output_data_base,$
+                                  uname='histogram_text_base',$
+                                  xoffset=140,$
+                                  yoffset=36,$
+                                  scr_xsize=680,$
+                                  scr_ysize=30,$
+                                  frame=0,$
+                                  map=0)
+
+histogram_text = widget_text(histogram_text_base,$
+                             uname='histogram_text',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=400,$
+                             scr_ysize=30,$
+                             value='',$
+                             /editable,$
+                             font='lucidasans-10')
+
+histogram_format_group = cw_bgroup(histogram_text_base,$ 
+                                   uname='histogram_format_group',$
+                                   output_format_list,$
+                                   /RETURN_NAME,$
+                                   XOFFSET=405,$
+                                   YOFFSET=0,$
+                                   /exclusive,$
+                                   /row,$
+                                   font='lucidasans-12',$
+                                   set_value=0)
+
+timebins_text_base = widget_base(output_data_base,$
+                                 uname='timebins_text_base',$
+                                 xoffset=140,$
+                                 yoffset=67,$
+                                 scr_xsize=680,$
+                                 scr_ysize=30,$
+                                 frame=0,$
+                                 map=0)
+
+timebins_text = widget_text(timebins_text_base,$
+                             uname='timebins_text',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=400,$
+                             scr_ysize=30,$
+                             value='',$
+                             /editable,$
+                             font='lucidasans-10')
+
+timebins_format_group = cw_bgroup(timebins_text_base,$ 
+                                  uname='timebins_format_group',$
+                                  output_format_list,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=405,$
+                                  YOFFSET=0,$
+                                  /exclusive,$
+                                  /row,$
+                                  font='lucidasans-12',$
+                                  set_value=0.0)
+
+pulseid_text_base = widget_base(output_data_base,$
+                                uname='pulseid_text_base',$
+                                xoffset=140,$
+                                yoffset=98,$
+                                scr_xsize=680,$
+                                scr_ysize=30,$
+                                frame=0,$
+                                map=0)
+
+pulseid_text = widget_text(pulseid_text_base,$
+                             uname='pulseid_text',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=400,$
+                             scr_ysize=30,$
+                             value='',$
+                             /editable,$
+                             font='lucidasans-10')
+
+pulseid_format_group = cw_bgroup(pulseid_text_base,$ 
+                                 uname='pulseid_format_group',$
+                                 output_format_list,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=405,$
+                                 YOFFSET=0,$
+                                 /exclusive,$
+                                 /row,$
+                                 font='lucidasans-12',$
+                                 set_value=0.0)
+
+infos_text_base = widget_base(output_data_base,$
+                              uname='infos_text_base',$
+                              xoffset=140,$
+                              yoffset=129,$
+                              scr_xsize=680,$
+                              scr_ysize=30,$
+                              frame=0,$
+                              map=0)
+
+infos_file_text = widget_text(infos_text_base,$
+                         uname='infos_file_text',$
+                         xoffset=0,$
+                         yoffset=0,$
+                         scr_xsize=400,$
+                         scr_ysize=30,$
+                         value='',$
+                         /editable,$
+                         font='lucidasans-10')
+
+output_infos_format_list = ['ASCII',$
+                            'XML']
+
+infos_format_group = cw_bgroup(infos_text_base,$ 
+                               uname='infos_format_group',$
+                               output_infos_format_list,$
+                               /RETURN_NAME,$
+                               XOFFSET=405,$
+                               YOFFSET=0,$
+                               /exclusive,$
+                               /row,$
+                               font='lucidasans-12',$
+                               set_value=0.0)
+
+output_data_button_base = widget_base(output_data_base,$
+                                      uname='output_data_button_base',$
+                                      xoffset=820,$
+                                      yoffset=5,$
+                                      scr_xsize=90,$
+                                      scr_ysize=150,$
+                                      map=0)
+bmp_file = "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/output_data_go.bmp"
+output_data_button = widget_button(output_data_button_base,$
+                                   uname='output_data_button',$
+                                   xoffset=0,$
+                                   yoffset=0,$
+                                   scr_xsize=90,$
+                                   scr_ysize=150,$
+                                   /bitmap,$
+                                   value=bmp_file)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+text_infos = 'binary (U/Mi) : binary (Unix - Microsoft)  -  binary (Mac) : binary (Macintosh)'
+output_format_infos = widget_label(output_data_base,$  
+                                   xoffset=5,$
+                                   yoffset=165,$
+                                   value=text_infos,$
+                                   frame=1)
+                                   
 wT1_2 = widget_base(wTab_2,$
                     title='SETTINGS',$
                     uname='wT1_2',$
                     scr_xsize=400,$
                     scr_ysize=350,$
                     frame=1)
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;--------------------------------------------------------------------------------
 wT2 = Widget_base(wTab,$
@@ -524,10 +563,18 @@ wT2 = Widget_base(wTab,$
 wT3 = widget_base(wTab,$
                   title='Log Book',$
                   uname='wT3',$
-                  scr_xsize=850,$
-                  scr_ysize=440)
+                  scr_xsize=940,$
+                  scr_ysize=570)
 
-
+log_book_text = widget_text(wT3,$
+                            uname='log_book_text',$
+                            xoffset=5,$
+                            yoffset=5,$
+                            scr_xsize=935,$
+                            scr_ysize=560,$
+                            value='',$
+                            /wrap,$
+                            /scroll)
 
 
 
