@@ -2902,18 +2902,17 @@ view_id = widget_info(Event.top,FIND_BY_UNAME='VIEW_DRAW_REF_L')
 WIDGET_CONTROL, view_id, GET_VALUE = view_win_num
 
 ;Decomposed=0 causes the least-significant 8 bits of the color index value
-	;to be interpreted as a PseudoColor index.
-	DEVICE, DECOMPOSED = 0
+                                ;to be interpreted as a PseudoColor index.
+DEVICE, DECOMPOSED = 0
 
-	if (*global).pass EQ 0 then begin
-		;load the default color table on first pass thru SHOW_DATA
-		loadct,(*global).ct
-		(*global).pass = 1 ;clear the flag...
-	endif
+if (*global).pass EQ 0 then begin
+                                ;load the default color table on first pass thru SHOW_DATA
+    loadct,(*global).ct
+    (*global).pass = 1          ;clear the flag...
+endif
 
-	wset,view_win_num
-	tvscl,(*(*global).img_ptr)
-
+wset,view_win_num
+tvscl,(*(*global).img_ptr)
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
@@ -3947,3 +3946,11 @@ isurface, (*(*global).img_ptr),$
   color=[200,50,50]
 
 end
+
+
+
+pro sns_idl_button_eventcb, Event
+spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
+
+

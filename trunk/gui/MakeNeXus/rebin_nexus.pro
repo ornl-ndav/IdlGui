@@ -97,7 +97,11 @@ case Event.id of
             endelse
             
         end
-
+        
+        Widget_Info(wWidget, FIND_BY_UNAME='sns_idl_button'): begin
+            sns_idl_button_eventcb, Event
+        end
+        
         else:
         
     endcase
@@ -281,13 +285,14 @@ output_path = (*global).output_path
   ; Create the top-level base and the tab.
   title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ")"
   MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
-	UNAME='MAIN_BASE', $
-	XOFFSET=150, YOFFSET=350, $
-	SCR_XSIZE=(*global).xsize, $
-	SCR_YSIZE=(*global).ysize, $
-	title=title)
-
-if (user EQ 'j35') then begin
+                          UNAME='MAIN_BASE', $
+                          XOFFSET=150, YOFFSET=350, $
+                          SCR_XSIZE=(*global).xsize, $
+                          SCR_YSIZE=(*global).ysize, $
+                          title=title,$
+                          MBAR=WID_BASE_0_MBAR)
+  
+if (user EQ 'j35' OR user EQ 'ele') then begin
     map_hide_log_book_tab = 0
 endif else begin
     map_hide_log_book_tab = 1
@@ -872,7 +877,14 @@ log_book_text = widget_text(log_book_base,$
                             /scroll,$
                             /wrap)
 
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
 
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.

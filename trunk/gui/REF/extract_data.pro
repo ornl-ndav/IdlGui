@@ -249,9 +249,6 @@ widget_control,id,get_uvalue=global
           ABOUT_cb , Event
     end
 
-
-
-
 ;tab#2
     Widget_Info(wWidget, FIND_BY_UNAME='select_from_to_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -266,6 +263,10 @@ widget_control,id,get_uvalue=global
     Widget_Info(wWidget, FIND_BY_UNAME='list_of_runs_remove_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           remove_button_tab, Event, 'list_of_run_numbers_droplist'
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='sns_idl_button'): begin
+        sns_idl_button_eventcb, Event
     end
 
     else:
@@ -1188,6 +1189,15 @@ list_of_runs = ['']
   ABOUT_MENU = Widget_Button(MINI_REFLPACK_MENU, UNAME='ABOUT'  $
       ,VALUE='About')
 
+  idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                                 UNAME='idl_tools_menu',$
+                                 /MENU,$
+                                 VALUE='sns_idl_tools')
+
+  sns_idl_button = widget_button(idl_tools_menu,$
+                                 value="launch sns_idl_tools...",$
+                                 uname="sns_idl_button")
+
   Widget_Control, /REALIZE, MAIN_BASE
 
   Widget_Control, SAVE_BUTTON, sensitive=0
@@ -1699,6 +1709,15 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
    
    ABOUT_MENU_REF_L = Widget_Button(MINI_REFLPACK_MENU_REF_L, UNAME='ABOUT_MENU_REF_L'  $
                                     ,VALUE='About')
+   
+   idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                                  UNAME='idl_tools_menu',$
+                                  /MENU,$
+                                  VALUE='sns_idl_tools')
+   
+   sns_idl_button = widget_button(idl_tools_menu,$
+                                  value="launch sns_idl_tools...",$
+                                  uname="sns_idl_button")
    
    Widget_Control, /REALIZE, MAIN_BASE
    

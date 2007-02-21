@@ -313,6 +313,14 @@ pro MAIN_BASE_event, Event
     Widget_Info(wWidget, FIND_BY_UNAME='pixels_values_desactivate'): begin
         pixels_values_desactivate_eventcb, Event
     end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='sns_idl_button'): begin
+        sns_idl_button_eventcb, Event
+    end
+
+
+
+
     
     else:
 endcase
@@ -1552,6 +1560,15 @@ tube1_label =  widget_label(tube1_base,$
   CTOOL_MENU_realign = Widget_Button(UTILS_MENU,$
                                      UNAME='CTOOL_MENU_realign',$
                                      VALUE='Color Tool for realign data')
+  
+  idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                                 UNAME='idl_tools_menu',$
+                                 /MENU,$
+                                 VALUE='sns_idl_tools')
+
+  sns_idl_button = widget_button(idl_tools_menu,$
+                                 value="launch sns_idl_tools...",$
+                                 uname="sns_idl_button")
 
   Widget_Control, /REALIZE, MAIN_BASE
   

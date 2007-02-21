@@ -3539,3 +3539,9 @@ end
 pro background_list_group_eventcb, Event
 check_status_to_validate_go, Event
 end
+
+
+
+pro sns_idl_button_eventcb, Event
+spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
