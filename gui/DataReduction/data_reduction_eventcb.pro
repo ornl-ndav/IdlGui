@@ -2219,12 +2219,13 @@ pro EXIT_PROGRAM_REF_L, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;;remove temporary file
-;tmp_folder = (*global).tmp_folder
-;if (tmp_folder NE '') then begin
-;    cmd_remove = "rm -r " + tmp_folder
-;    spawn, cmd_remove
-;endif
+;remove temporary file
+tmp_folder = (*global).tmp_folder
+print, 'tmp_folder: ' + tmp_folder
+if (tmp_folder NE '') then begin
+    cmd_remove = "rm -r " + tmp_folder
+    spawn, cmd_remove
+endif
 
 widget_control,Event.top,/destroy
 
@@ -2238,11 +2239,12 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;remove temporary file
-;tmp_folder = (*global).tmp_folder
-;if (tmp_folder NE '') then begin
-;    cmd_remove = "rm -r " + tmp_folder
-;    spawn, cmd_remove
-;endif
+tmp_folder = (*global).tmp_folder
+print, 'tmp_folder: ' + tmp_folder
+if (tmp_folder NE '') then begin
+    cmd_remove = "rm -r " + tmp_folder
+    spawn, cmd_remove
+endif
 
 widget_control,Event.top,/destroy
 
