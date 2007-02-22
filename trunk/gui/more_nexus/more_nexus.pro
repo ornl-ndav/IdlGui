@@ -209,7 +209,7 @@ Resolve_Routine, 'more_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 instrument = instrument_list[instrument]
-working_path = '~/local/' + instrument + '/'
+working_path = '~/local/more_nexus/'
 
 global = ptr_new({$
                    activate_preview     : 0,$  ;1 = preview when oppening NeXus run number
@@ -226,8 +226,7 @@ global = ptr_new({$
                    timebins_ext         : '_timebin',$
                    pulseID_ext          : '_pulseid',$
                    infos_ext            : '_infos',$
-                   binaryUW             : '.dat',$
-                   binaryM              : '_M.dat',$
+                   binary               : '.dat',$
                    ascii                : '.txt',$
                    xml                  : '.xml',$
                    file_to_plot         : '',$
@@ -430,8 +429,7 @@ event_text = widget_text(event_text_base,$
                          /editable,$
                          font='lucidasans-10')
 
-output_format_list = ['binary(U/Mi)',$
-                      'binary(Mac)',$
+output_format_list = ['binary (Unix / Microsoft)',$
                       'ASCII']
 event_format_group = cw_bgroup(event_text_base,$ 
                                uname='event_format_group',$

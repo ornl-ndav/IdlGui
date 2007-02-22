@@ -2,6 +2,10 @@ pro more_nexus_eventcb
 end
 
 
+
+
+
+
 pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
@@ -36,9 +40,12 @@ pro open_nexus_cb, Event
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+DEVICE, DECOMPOSED = 0
+loadct,5
 widget_control,/hourglass
 
-HISTO_EVENT_FILE_TEXT_BOX_id = widget_info(Event.top,find_by_uname='HISTO_EVENT_FILE_TEXT_BOX')
+HISTO_EVENT_FILE_TEXT_BOX_id = widget_info(Event.top,$
+                                           find_by_uname='HISTO_EVENT_FILE_TEXT_BOX')
 widget_control, HISTO_EVENT_FILE_TEXT_BOX_id, get_value=run_number_text
 
 ;check if file is local or not
@@ -58,6 +65,12 @@ full_nexus_name = find_full_nexus_name(Event,$
                                        instrument)
 
 (*global).full_nexus_name = full_nexus_name
+
+;first thing to do, reinitialize log_book and info box
+nexus_name = instrument + '_' + run_number
+text = 'Looking for ' + nexus_name + ' ...'
+output_into_text_box, event, 'infos_text', text , 1
+output_into_text_box, event, 'log_book_text', text , 1
 
 find_nexus = (*global).find_nexus
 reinitialize_interface, event, find_nexus, instrument
@@ -112,13 +125,10 @@ end
 
 
 pro display_data, event, instrument, full_nexus_name, tmp_folder
-
 ;first create local copy of histo_mapped
 create_local_copy_of_histo_mapped, event, full_nexus_name, tmp_folder
-
 ;plot data
 plot_data, event
-
 end
 
 
@@ -277,8 +287,6 @@ pro plot_data_REF_L, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-loadct,5
 
 ;retrieve data parameters
 Nx = (*global).Nx_REF_L
@@ -538,7 +546,6 @@ end
 
 
 
-;____________________________________________________________________________________
 
 function display_xml_info, filename, item_name
 
@@ -565,6 +572,7 @@ end
 
 
 
+
 PRO xml_object_recurse, oNode, match, return_value
 
 ;check to see if this node matches the one we're looking for
@@ -584,6 +592,7 @@ end
       oSibling = oSibling->GetNextSibling()
    ENDWHILE
 END
+
 
 
 
@@ -630,11 +639,9 @@ end
 
 
 
-;------------------------------------------------------------------------------------------
-; \brief function to obtain the top level base widget given an arbitrary widget ID.
-;
-; \argument wWidget (INPUT)
-;------------------------------------------------------------------------------------------
+
+
+
 function get_tlb,wWidget
 
 id = wWidget
@@ -694,101 +701,6 @@ endif else begin
 endelse
 return, result
 end
-
-
-
-
-
-
-
-
-pro create_folder, event
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;display what is going on
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
-
-;create folder into working_path directory
-full_text = " -> Create folder in working path:"
-WIDGET_CONTROL, full_view_info, SET_VALUE=full_text, /APPEND
-
-file=(*global).histo_event_filename ;full name of event or histo file
-run_number = (*global).run_number ;run number 
-is_file_histo = (*global).is_file_histo
-already_archived = (*global).already_archived
-instrument = (*global).instrument
-
-;isolate proposal number from full file name
-result = get_proposal_experiment_number(event, $
-                                        file,$
-                                        already_archived) 
-proposal_number = result[0]
-experiment_number = result[1]
-
-(*global).proposal_number = proposal_number
-(*global).experiment_number = experiment_number
-
-parent_folder_name = (*global).output_path + instrument
-full_folder_name = parent_folder_name + "/" + proposal_number 
-
-
-
-if ((*global).translate_use_experiment_number EQ 1) then begin
-    full_folder_name += "/" + experiment_number
-endif
-
-full_folder_name += "/" + run_number
-full_folder_name_preNeXus = full_folder_name + "/preNeXus/"
-full_folder_name_NeXus = full_folder_name + "/NeXus/"
-
-(*global).full_local_folder_name = full_folder_name + '/'
-(*global).full_local_folder_name_preNeXus = full_folder_name_preNeXus
-(*global).full_local_folder_name_NeXus = full_folder_name_NeXus
-
-;;check if folder exists already, if yes, remove it
-cmd_folder_exist = "ls -d " + full_folder_name
-full_text = "   > " + cmd_folder_exist
-widget_control, full_view_info, set_value=full_text, /append
-
-spawn, cmd_folder_exist, listening, err_listening
-output_error, Event, err_listening
-
-if (listening NE '') then begin ;folder exists, we need to remove it first
-    
-    cmd_remove_folder = "rm -f -r " + full_folder_name
-    cd, (*global).output_path
-    spawn, cmd_remove_folder,listening, err_listening
-    output_error, Event, err_listening
-
-    full_text = "   > " + cmd_remove_folder
-    widget_control, full_view_info, set_value=full_text, /append
-    
-endif 
-
-;create folders
-cmd_create_preNeXus_folder = "mkdir -p " + full_folder_name_preNeXus
-cmd_create_NeXus_folder = "mkdir -p " + full_folder_name_NeXus
-
-full_text = "   > " + cmd_create_preNeXus_folder
-widget_control, full_view_info, set_value=full_text, /append
-spawn, cmd_create_preNeXus_folder, listening, err_listening
-output_error, Event, err_listening
-
-full_text = '   > ' + cmd_create_NeXus_folder 
-widget_control, full_view_info, set_value=full_text, /append
-spawn, cmd_create_NeXus_folder, listening, err_listening
-output_error, Event, err_listening
-
-end
-
-
-
-
-
 
 
 
@@ -876,7 +788,8 @@ case instrument of
         wset, id_value
         
         if (display_status EQ 0) then begin
-            no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
+            no_preview=$
+              "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
             image = read_bmp(no_preview)
             tv, image,0,0,/true
         endif else begin
@@ -945,19 +858,23 @@ id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 widget_control,/hourglass
-
-activate_preview_button_id = widget_info(Event.top,find_by_uname='activate_preview_button')
+activate_preview_button_id = $
+  widget_info(Event.top,find_by_uname='activate_preview_button')
 
 if ((*global).activate_preview EQ 0) then begin
+    
 ;desactivate button during plot
-    activate_preview_button_id = widget_info(event.top,find_by_uname='activate_preview_button')
+    activate_preview_button_id = $
+      widget_info(event.top,find_by_uname='activate_preview_button')
     widget_control, activate_preview_button_id, sensitive=0
     text = 'DESACTIVATE PREVIEW'
     widget_control, activate_preview_button_id, set_value = text
     (*global).activate_preview = 1
     display_preview_message, event, (*global).instrument, 1
-    display_data, event, (*global).instrument, $
-      (*global).full_nexus_name, (*global).tmp_folder
+    if ((*global).find_nexus EQ 1) then begin
+        display_data, event, (*global).instrument, $
+          (*global).full_nexus_name, (*global).tmp_folder
+    endif
 ;reactivate button after plot
     widget_control, activate_preview_button_id, sensitive=1
 endif else begin
@@ -1038,7 +955,8 @@ endif else begin
 endelse
 widget_control, infos_id, map=map_value
 
-output_data_button_base_id = widget_info(event.top,find_by_uname='output_data_button_base')
+output_data_button_base_id = $
+  widget_info(event.top,find_by_uname='output_data_button_base')
 if (number_of_selection GE 1) then begin ;display go button
     widget_control, output_data_button_base_id, map=1
 endif else begin
@@ -1055,21 +973,6 @@ end
 
 
 
-
-pro output_data_button_cb, Event
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;reinitialize file name
-output_data_group_id = widget_info(event.top,find_by_uname='output_data_group')
-widget_control, output_data_group_id, set_value=[0,0,0,0,0]
-
-;hide all text boxes
-output_data_group_cb, Event
-
-end
 
 
 
@@ -1135,11 +1038,8 @@ if (file_name EQ '') then begin
     file_name = ''
 endif else begin
     case output_format of
-        'binaryUW': begin
-            ext = (*global).binaryUW
-        end
-        'binaryM': begin
-            ext = (*global).binaryM
+        'binary': begin
+            ext = (*global).binary
         end
         'ascii': begin
             ext = (*global).ascii
@@ -1181,9 +1081,8 @@ endif else begin
     event_format_group_id = widget_info(event.top,find_by_uname='event_format_group')
     widget_control, event_format_group_id, get_value=format_index
     case format_index of
-        0: output_format = 'binaryUW'
-        1: output_format = 'binaryM'
-        2: output_format = 'ascii'
+        0: output_format = 'binary'
+        1: output_format = 'ascii'
     endcase
     create_full_output_name, event, file_name, output_format, 'event_text'
 endelse
@@ -1196,9 +1095,8 @@ endif else begin
     event_format_group_id = widget_info(event.top,find_by_uname='histogram_format_group')
     widget_control, event_format_group_id, get_value=format_index
     case format_index of
-        0: output_format = 'binaryUW'
-        1: output_format = 'binaryM'
-        2: output_format = 'ascii'
+        0: output_format = 'binary'
+        1: output_format = 'ascii'
     endcase
     create_full_output_name, event, file_name, output_format, 'histogram_text'
 endelse
@@ -1211,9 +1109,8 @@ endif else begin
     event_format_group_id = widget_info(event.top,find_by_uname='timebins_format_group')
     widget_control, event_format_group_id, get_value=format_index
     case format_index of
-        0: output_format = 'binaryUW'
-        1: output_format = 'binaryM'
-        2: output_format = 'ascii'
+        0: output_format = 'binary'
+        1: output_format = 'ascii'
     endcase
     create_full_output_name, event, file_name, output_format, 'timebins_text'
 endelse
@@ -1226,9 +1123,8 @@ endif else begin
     event_format_group_id = widget_info(event.top,find_by_uname='pulseid_format_group')
     widget_control, event_format_group_id, get_value=format_index
     case format_index of
-        0: output_format = 'binaryUW'
-        1: output_format = 'binaryM'
-        2: output_format = 'ascii'
+        0: output_format = 'binary'
+        1: output_format = 'ascii'
     endcase
     create_full_output_name, event, file_name, output_format, 'pulseid_text'
 endelse
@@ -1270,3 +1166,123 @@ end
 
 
 
+
+
+pro output_data_button_cb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;collect info from data group
+output_data_group_id = widget_info(event.top,find_by_uname='output_data_group')
+widget_control, output_data_group_id, get_value=selection
+
+;event
+if (selection[0] EQ 1) then begin
+    output_file, event, 'event', 'event_text', 'event_format_group', 'data'
+endif
+
+;histogram
+if (selection[1] EQ 1) then begin
+    output_file, event, 'histogram', 'histogram_text', 'histogram_format_group', 'data'
+endif
+
+;timebins
+if (selection[2] EQ 1) then begin
+    output_file, event, 'timebins', 'timebins_text', 'timebins_format_group', 'data'
+endif
+
+;pulseid
+if (selection[3] EQ 1) then begin
+    output_file, event, 'pulseid', 'pulseid_text', 'pulseid_format_group', 'data'
+endif
+
+;infos
+if (selection[4] EQ 1) then begin
+    output_file, event, 'infos', 'infos_file_text', 'infos_format_group', 'text'
+endif
+
+;reinitialize file name
+widget_control, output_data_group_id, set_value=[0,0,0,0,0]
+
+;hide all text boxes
+output_data_group_cb, Event
+
+end
+
+
+
+
+; data_type = event, histogram....etc
+; type = 'data' or 'text'
+pro output_file, event, data_type, output_text_uname, output_format_uname, type
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve value of text box = output file name
+output_text_uname_id = widget_info(event.top,find_by_uname=output_text_uname)
+widget_control, output_text_uname_id, get_value=output_file_name
+
+;retrieve format 
+output_format_id = widget_info(event.top,find_by_uname=output_format_uname)
+widget_control, output_format_id, get_value=output_format
+
+if (type eq 'data') then begin ;binary/ASCII or ASCII/XML
+    case output_format of
+        0: begin ;binary
+            output_binary_data, data_type, output_text_uname, 'unix'
+        end
+        1: begin ;ASCII
+            output_ascii_data, data_type, output_text_uname
+        end
+    endcase
+endif else begin ;ASCII or XML
+    case output_format of
+        0: begin ;ASCII
+            output_ascii_data, data_type, output_text_uname
+        end
+        1: begin ;XML
+            output_xml_data, data_type, output_text_uname
+        end
+    endcase
+endelse
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+;computer = 'unix'
+pro output_binary_data, data_type, output_text_uname, computer
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+case data_type of 
+    'event': begin
+        ;copy event_file if event file
+    end
+    'histogram': begin
+        
+    end
+    'timebins': begin
+
+    end
+    'pulseid': begin
+
+    end
+endcase
+end
