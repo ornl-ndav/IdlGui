@@ -194,6 +194,7 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
+                   find_nexus : 0,$
                    default_log_rebin_coeff : 0.5,$
                    default_rebin_coeff     : 200,$
                    DAS_has_experiment_number : 0,$    ;put 1 when DAS will had experiment number
@@ -209,6 +210,7 @@ global = ptr_new({$
                    path			: '~/CD4/REF_M/REF_M_7/',$ 
                    path_to_DAS_proposal_number : '',$
                    output_path		: '/SNSlocal/users/',$
+                   working_path         : '~/local/',$
                    full_path_to_prenexus: '',$
                    full_path_to_nexus : '',$
                    full_local_folder_name : '',$
