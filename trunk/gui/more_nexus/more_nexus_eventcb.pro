@@ -2,244 +2,28 @@ pro more_nexus_eventcb
 end
 
 
-
-
-
-
-
 pro MAIN_REALIZE, wWidget
-
 tlb = get_tlb(wWidget)
-
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
-
 image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/more_nexus_title.bmp"
 id = widget_info(wWidget,find_by_uname="logo_message_draw")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
 image = read_bmp(image_logo)
 tv, image,0,0,/true
-
 ;turn off hourglass
 widget_control,hourglass=0
-
 end
-
-
-
-
-
-
 
 
 pro Main_realize_2, wWidget
-
 tlb = get_tlb(wWidget)
-
 ;get the global data structure
 id=widget_info(wWidget, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 end
 
-
-
-
-
-
-
-
-
-pro display_preview_message, event, instrument, display_status
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-case instrument of
-
-    'REF_L': begin
-
-        id = widget_info(event.top,find_by_uname='drawing')
-        WIDGET_CONTROL, id, GET_VALUE=id_value
-        wset, id_value
-        
-        if (display_status EQ 0) then begin
-            no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
-            image = read_bmp(no_preview)
-            tv, image,0,0,/true
-        endif else begin
-            erase
-        endelse
-
-    end
-
-    'REF_M': begin
-
-         id = widget_info(event.top,find_by_uname='drawing')
-         WIDGET_CONTROL, id, GET_VALUE=id_value
-         wset, id_value
-
-         if (display_status EQ 0) then begin
-             no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_M.bmp"
-             image = read_bmp(no_preview)
-             tv, image,0,0,/true
-         endif else begin
-             erase
-         endelse
-
-     end
-
-     'BSS': begin
-         id_top = widget_info(event.top,find_by_uname='drawing_top')
-         WIDGET_CONTROL, id_top, GET_VALUE=id_top_value
-
-         id_bottom = widget_info(event.top,find_by_uname='drawing_bottom')
-         WIDGET_CONTROL, id_bottom, GET_VALUE=id_bottom_value
-         
-         if (display_status EQ 0) then begin
-             no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_top.bmp"
-             image = read_bmp(no_preview)
-             wset, id_top_value
-             tv, image,0,0,/true
-
-             no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_bottom.bmp"
-             image = read_bmp(no_preview)
-             wset, id_bottom_value
-             tv, image,0,0,/true
-         endif else begin
-             wset, id_top_value
-             erase
-             wset, id_bottom_value
-             erase
-         endelse
-
-     end
-endcase
-
-end
-
-
-
-
-
-pro activate_preview_button_cb, Event
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-activate_preview_button_id = widget_info(Event.top,find_by_uname='activate_preview_button')
-
-if ((*global).activate_preview EQ 0) then begin
-     text = 'DESACTIVATE PREVIEW'
-     value = 1
-endif else begin
-    text = 'ACTIVATE PREVIEW'
-    value = 0
-endelse
-
-widget_control, activate_preview_button_id, set_value = text
-(*global).activate_preview = value
-
-display_preview_message, event, (*global).instrument, value
-
-end
-
-
-
-
-
-
-pro output_data_group_cb, Event
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-output_list_id = widget_info(Event.top,find_by_uname='output_data_group')
-widget_control, output_list_id, get_value=selection
-
-number_of_selection = 0 ;number of selection
-
-;event output data
-event_id = widget_info(event.top,find_by_uname='event_text_base')
-if (selection[0] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, event_id, map=map_value
-
-;histogram output data
-histogram_id = widget_info(event.top,find_by_uname='histogram_text_base')
-if (selection[1] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, histogram_id, map=map_value
-
-;timebins output data
-timebins_id = widget_info(event.top,find_by_uname='timebins_text_base')
-if (selection[2] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, timebins_id, map=map_value
-
-;pulseid output data
-pulseid_id = widget_info(event.top,find_by_uname='pulseid_text_base')
-if (selection[3] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1	
-endif else begin
-    map_value = 0
-endelse
-widget_control, pulseid_id, map=map_value
-
-;infos output data
-infos_id = widget_info(event.top,find_by_uname='infos_text_base')
-if (selection[4] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, infos_id, map=map_value
-
-output_data_button_base_id = widget_info(event.top,find_by_uname='output_data_button_base')
-if (number_of_selection GE 1) then begin ;display go button
-    widget_control, output_data_button_base_id, map=1
-endif else begin
-    widget_control, output_data_button_base_id, map=0
-endelse
-
-end
-
-
-
-
-
-
-
-pro output_data_button_cb, Event
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-print, 'in output_data_button_cb'
-
-end
 
 
 
@@ -251,6 +35,8 @@ pro open_nexus_cb, Event
 ;get the global data structure
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+widget_control,/hourglass
 
 HISTO_EVENT_FILE_TEXT_BOX_id = widget_info(Event.top,find_by_uname='HISTO_EVENT_FILE_TEXT_BOX')
 widget_control, HISTO_EVENT_FILE_TEXT_BOX_id, get_value=run_number_text
@@ -289,34 +75,35 @@ if (find_nexus EQ 0 or full_nexus_name EQ '') then begin
     endelse
     nexus_name += instrument + '_' + strcompress(run_number,/remove_all)
     nexus_name += ' ..... does not exist'
-    output_into_text_box, event, 'infos_text', nexus_name, 0
-
+    output_into_text_box, event, 'infos_text', nexus_name, 1
+    output_into_text_box, event, 'log_book_text', nexus_name, 1
 endif else begin
-
+    
+;create tmp folder
+    return_text = create_tmp_folder(event, (*global).tmp_folder)
+    
     if ((*global).activate_preview EQ 1) then begin
-;         display_data,$
-;           event,$
-;           instrument,$          ; instrument
-;           full_nexus_name,$     ; full nexus name
-;           (*global).tmp_folder ; where to create the histo_mapped file
+        display_data,$
+          event,$
+          instrument,$          ; instrument
+          full_nexus_name,$     ; full nexus name
+          (*global).tmp_folder ; where to create the histo_mapped file
     endif
 
     nexus_name = instrument + '_' + strcompress(run_number,/remove_all)
     nexus_name += ' has been found:'
     output_into_text_box, event, 'infos_text', nexus_name, 1
-    output_into_text_box, event, 'infos_text', full_nexus_name
-
+    output_into_text_box, event, 'log_book_text', nexus_name, 1
+    output_into_text_box, event, 'infos_text', full_nexus_name, 1
+    output_into_text_box, event, 'log_book_text', full_nexus_name, 1
+    
+    ;activate bottom base (output_data)
     widget_control, output_data_base_id, map=1
 
 endelse
 
-
-
-
-
-
-
-
+;turn off hourglass
+widget_control,hourglass=0
 
 end
 
@@ -324,235 +111,94 @@ end
 
 
 
+pro display_data, event, instrument, full_nexus_name, tmp_folder
+
+;first create local copy of histo_mapped
+create_local_copy_of_histo_mapped, event, full_nexus_name, tmp_folder
+
+;plot data
+plot_data, event
+
+end
 
 
 
-pro reinitialize_interface, event, find_nexus, instrument
 
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+
+pro create_local_copy_of_histo_mapped, Event, full_nexus_name, tmp_folder
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-if ((*global).activate_preview EQ 1) then begin
+if ((*global).instrument EQ "BSS") then begin
     
-;erase display
-    case instrument of 
-        'REF_L': begin
-            drawing_id = widget_info(Event.top,find_by_uname='drawing')
-            widget_control, drawing_id, get_value=id
-            wset, id
-            erase
-        end
-        'REF_M': begin
-            drawing_id = widget_info(Event.top,find_by_uname='drawing')
-            widget_control, drawing_id, get_value=id
-            wset, id
-            erase
-        end
-        'BSS':begin
-            drawing_top_id = widget_info(Event.top,find_by_uname='drawing_top')
-            widget_control, drawing_top_id, get_value=id_top
-            wset, id_top
-            erase
-            drawing_bottom_id = widget_info(Event.top,find_by_uname='drawing_bottom')
-            widget_control, drawing_bottom_id, get_value=id_bottom
-            wset, id_bottom
-            erase
-        end
-    endcase
+    cmd_dump = "nxdir " + full_nexus_name
+    cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
+    cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
+;get name of output_file
+    tmp_output_file = tmp_folder
+    tmp_output_file += "/" + (*global).instrument
+    tmp_output_file += "_" + (*global).run_number
     
-endif
-
-;reinitialize log_book
-log_book_id = widget_info(Event.top,find_by_uname='log_book_text')
-widget_control, log_book_id, set_value=''
-
-end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function get_archive_run_dir, file
-
-archive_run_list = strsplit(file,'/',/regex,/extract,count=length)
-archive_run_dir = '/'
-for i=0,length-2 do begin
-    archive_run_dir += archive_run_list[i] + '/'
-endfor
-return, archive_run_dir
-end
-
-
-
-
-
-
-
-
-function get_proposal_experiment_number, event, file, archived
-
-;get the global data structure
-id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-DAS_has_experiment_number=(*global).DAS_has_experiment_number
-
-file_parsed = strsplit(file,"/",/regex,/extract,count=length)
-
-if (archived EQ 0) then begin  ;file is on DAS
-    if (DAS_has_experiment_number EQ 1) then begin ;no experiment number
-        proposal_number = file_parsed[length-4]
-        experiment_number = file_parsed[length-3]
-    endif else begin            ;DAS has experiment number
-        proposal_number = file_parsed[length-3]
-        experiment_number = "/"
-    endelse 
-
-endif else begin ;file has been archived
-
-    if (length EQ 7) then begin
-        proposal_number = file_parsed[length-5]
-        experiment_number = file_parsed[length-4]
-    endif else begin
-        proposal_number = file_parsed[length-4]
-        experiment_number = "/"
-    endelse
+    tmp_output_file_top = tmp_output_file + "_top.dat"
+    tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
+    (*global).file_to_plot_top = tmp_output_file_top
+    (*global).file_to_plot_bottom = tmp_output_file_bottom
+        
+    cmd_dump_top += tmp_output_file_top 
+    cmd_dump_bottom += tmp_output_file_bottom
+    
+;display command
+    full_text = 'Create local copy of the histo mapped data: '
+    output_into_text_box, event, 'log_book_text', full_text
+    full_text = '(top part) > ' + cmd_dump_top
+    output_into_text_box, event, 'log_book_text', full_text
+    spawn, cmd_dump_top, listening, err_listening
+    output_into_text_box, event, 'log_book_text', listening
+    output_error, event, 'log_book_text', err_listening
+    text= "..done"
+    output_into_text_box, event, 'log_book_text', text
+    
+    full_text = 'Create local copy of the histo mapped data: '
+    output_into_text_box, event, 'log_book_text', full_text
+    full_text = '(bottom part) > ' + cmd_dump_bottom
+    output_into_text_box, event, 'log_book_text', full_text
+    spawn, cmd_dump_bottom, listening, err_listening
+    output_into_text_box, event, 'log_book_text', listening
+    output_error, event, 'log_book_text', err_listening
+    text= "..done"
+    output_into_text_box, event, 'log_book_text', text
+    
+endif else begin
+    
+    cmd_dump = "nxdir " + full_nexus_name
+    cmd_dump += " -p /entry/bank1/data/ --dump "
+    
+;get name of output_file
+    tmp_output_file = tmp_folder
+    tmp_output_file += "/" + (*global).instrument
+    tmp_output_file += "_" + (*global).run_number
+    
+    tmp_output_file += ".dat"
+    (*global).file_to_plot = tmp_output_file
+    cmd_dump += tmp_output_file
+    
+;display command
+    text= cmd_dump
+    full_text = 'Create local copy of the histo mapped data: '
+    output_into_text_box, event, 'log_book_text', full_text
+    full_text = '> ' + cmd_dump
+    output_into_text_box, event, 'log_book_text', full_text
+    spawn, cmd_dump, listening, err_listening
+    output_into_text_box, event, 'log_book_text', listening
+    output_error, event, 'log_book_text', err_listening
+    text= "..done"
+    output_into_text_box, event, 'log_book_text', text
 
 endelse
-
-result = [proposal_number, experiment_number]
-return, result
-
+    
 end
-
-
-
-
-
-
-
-function get_das_run_dir, parent_folder_name
-
-das_run_list = strsplit(parent_folder_name,'/',/regex,/extract,count=length)
-das_run_dir = '/'
-for i=0,length-2 do begin
-    das_run_dir += das_run_list[i] + '/'
-endfor
-
-return, das_run_dir
-end
-
-
-
-
-
-
-
-
-function get_event_file_name_only, event_filename
-event_filename_list = strsplit(event_filename,'/',/regex,/extract,count=length)
-event_filename_only = event_filename_list[length-1]
-return, event_filename_only
-end
-
-
-
-
-
-
-
-function get_histo_event_file_name_only,Event, neutron_event_file_name_only
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-file_list=strsplit(neutron_event_file_name_only,'event.dat$',/regex,/extract,count=length)
-histo_file_name_only = file_list[0] + 'histo.dat'
-histo_mapped_file_name_only = file_list[0] + 'histo_mapped.dat'
-(*global).histo_mapped_file_name_only = histo_mapped_file_name_only
-(*global).full_histo_mapped_file_name = (*global).full_path_to_preNeXus + $
-  histo_mapped_file_name_only
-
-return, histo_file_name_only
-end
-
-
-
-
-
-
-
-function get_full_timemap_file_name, full_histo_file_name
-
-full_histo_file_name_array = strsplit(full_histo_file_name,'histo.dat',/regex,/extract)
-full_timemap_file_name = full_histo_file_name_array[0] + 'timemap.dat'
-
-return, full_timemap_file_name
-end
-
-
-
-
-
-
-
-
-
-
-pro get_histo_mapped_file_name, Event, neutron_event_file_name_only
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-file_list = strsplit(neutron_event_file_name_only,'.dat$',/regex,/extract,count=length)
-histo_mapped_file_name_only = file_list[0] + '_mapped.dat'
-(*global).histo_mapped_file_name_only = histo_mapped_file_name_only
-
-end
-
-
-
-
 
 
 
@@ -598,15 +244,14 @@ if file NE '' then begin
    img=transpose(img)
 
    ;load data up in global ptr array
-   (*(*global).img_ptr) = img
-   (*(*global).data_assoc) = data_assoc
+;   (*(*global).img_ptr) = img
+;   (*(*global).data_assoc) = data_assoc
 	
    ;now turn hourglass back off
    widget_control,hourglass=0
 
    ;put image data in the display window
-   id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
-   WIDGET_CONTROL, id, map=1
+   id = widget_info(Event.top, FIND_BY_UNAME='drawing')
    WIDGET_CONTROL, id, GET_VALUE = view_plot   
    wset,view_plot
    tvscl,img
@@ -615,6 +260,9 @@ if file NE '' then begin
    free_lun, u
 	
 endif;valid file
+
+;now turn hourglass back off
+widget_control,hourglass=0
 
 end
 
@@ -629,6 +277,8 @@ pro plot_data_REF_L, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+loadct,5
 
 ;retrieve data parameters
 Nx = (*global).Nx_REF_L
@@ -664,15 +314,11 @@ if file NE '' then begin
    img=transpose(img)
 
    ;load data up in global ptr array
-   (*(*global).img_ptr) = img
-   (*(*global).data_assoc) = data_assoc
+;   (*(*global).img_ptr) = img
+;   (*(*global).data_assoc) = data_assoc
 	
-   ;now turn hourglass back off
-   widget_control,hourglass=0
-
    ;put image data in the display window
-   id = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_WINDOW")
-   WIDGET_CONTROL, id, map=1
+   id = widget_info(Event.top, FIND_BY_UNAME='drawing')
    WIDGET_CONTROL, id, GET_VALUE = view_plot   
    wset,view_plot
    tvscl,img
@@ -681,6 +327,9 @@ if file NE '' then begin
    free_lun, u
 	
 endif;valid file
+
+;now turn hourglass back off
+widget_control,hourglass=0
 
 end
 
@@ -694,83 +343,43 @@ pro plot_data_BSS, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;retrieve data parameters
-;Nx = (*global).Nx_BSS
-;Ny = (*global).Ny_BSS
+widget_control,/hourglass
+
 Nx = 64L
 Ny = 64L
 
-file = (*global).file_to_plot
+;file = (*global).file_to_plot
 file_top = (*global).file_to_plot_top
 file_bottom = (*global).file_to_plot_bottom
 
-;only read data if valid file given
-if ((*global).find_prenexus_on_das EQ 1 AND file NE '') then begin
-    
-;top bank
-    openr,1,file
-    fs=fstat(1)
-    
-;to get the size of the file
-    file_size=fs.size
-    
-    N = long(file_size) / 4L    ;number of elements
-    data = lonarr(N)
-    readu,1,data
-    
-    close,1
-    free_lun, 1
-    
-    pixel_number = 64*64*2
-    Nt = N/(pixel_number)
-    
-;find the non-null elements
-    indx1 = where(data GT 0, Ngt0)
-    
-    img = intarr(Nt,Nx,Ny)
-    img(indx1)=data(indx1)
-    
-    simg = total(img,1) 	;sum over time bins
-    
-    top_bank = simg(0:63,0:63)
-    bottom_bank = simg(0:63,64:127)
-    
-endif else begin                ;using NeXus file
-    
-    if (file_top NE '' AND file_bottom NE '') then begin
-        
 ;top_bank
-        file_name = [file_top, file_bottom]
-        
-        for i=0,1 do begin
-            
-            openr,1,file_name[i]
-            fs=fstat(1)
-            file_size=fs.size
-            N=long(file_size)/4L
-            data=lonarr(N)
-            readu,1,data
-            close,1
-            free_lun,1
-            pixel_number = 64*64
-            Nt=N/(pixel_number)
-            
-            indx1 = where(data GT 0,Ngt0)
-            img=intarr(Nt,Nx,Ny)
-            img(indx1) = data(indx1)
-            
-            simg = total(img,1)
-            case i of 
-                0: top_bank = img
-                1: bottom_bank = img
-                else:
-            endcase
-            
-        endfor
-        
-    endif
+file_name = [file_top, file_bottom]
+
+for i=0,1 do begin
     
-endelse
+    openr,1,file_name[i]
+    fs=fstat(1)
+    file_size=fs.size
+    N=long(file_size)/4L
+    data=lonarr(N)
+    readu,1,data
+    close,1
+    free_lun,1
+    pixel_number = 64*64
+    Nt=N/(pixel_number)
+    
+    indx1 = where(data GT 0,Ngt0)
+    img=intarr(Nt,Nx,Ny)
+    img(indx1) = data(indx1)
+    
+    simg = total(img,1)
+    case i of 
+        0: top_bank = img
+        1: bottom_bank = img
+        else:
+    endcase
+    
+endfor
 
 ;work on top and bottom banks
 top_bank = transpose(top_bank)
@@ -786,7 +395,7 @@ xoff = 10
 yoff = 10
 
 ;top bank
-view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_0')
+view_info = widget_info(Event.top,FIND_BY_UNAME='drawing_top')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
@@ -795,7 +404,7 @@ tvimg = rebin(top_bank, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device
 
 ;bottom bank
-view_info = widget_info(Event.top,FIND_BY_UNAME='DISPLAY_WINDOW_1')
+view_info = widget_info(Event.top,FIND_BY_UNAME='drawing_bottom')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
@@ -803,177 +412,8 @@ wset, id
 tvimg = rebin(bottom_bank, New_Nx, New_Ny,/sample) 
 tvscl, tvimg, /device
 
-end
-
-
-
-
-
-
-
-pro create_local_copy_of_histo_mapped, Event, on_das, is_file_histo
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
-
-if (on_das EQ 0) then begin
-    
-    full_nexus_name = (*global).full_path_to_nexus
-    
-    if ((*global).instrument EQ "BSS") then begin
-        
-        cmd_dump = "nxdir " + full_nexus_name
-        cmd_dump_top = cmd_dump + " -p /entry/bank1/data/ --dump "
-        cmd_dump_bottom = cmd_dump + " -p /entry/bank2/data/ --dump "
-;get name of output_file
-        tmp_output_file = (*global).full_tmp_nxdir_folder_path 
-        tmp_output_file += "/" + (*global).instrument
-        tmp_output_file += "_" + (*global).run_number
-        
-        tmp_output_file_top = tmp_output_file + "_top.dat"
-        tmp_output_file_bottom = tmp_output_file + "_bottom.dat"
-        (*global).file_to_plot_top = tmp_output_file_top
-        (*global).file_to_plot_bottom = tmp_output_file_bottom
-        
-        cmd_dump_top += tmp_output_file_top 
-        cmd_dump_bottom += tmp_output_file_bottom
-        
-;display command
-        text= cmd_dump_top
-        widget_control, view_info, set_value=text, /append
-        text= "Processing....."
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Create local copy of the histo mapped data: '
-        widget_control, full_view_info, set_value=full_text, /append
-        full_text = '(top part) > ' + cmd_dump_top
-        widget_control, full_view_info, set_value=full_text, /append
-        
-        spawn, cmd_dump_top, listening, err_listening
-        output_error, Event, err_listening
-
-        text= "..done"
-        widget_control, view_info, set_value=text, /append
-                
-        text= cmd_dump_bottom
-        widget_control, view_info, set_value=text, /append
-        text= "Processing....."
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Create local copy of the histo mapped data: '
-        widget_control, full_view_info, set_value=full_text, /append
-        full_text = '(bottom part) > ' + cmd_dump_bottom
-        widget_control, full_view_info, set_value=full_text, /append
-        
-        spawn, cmd_dump_bottom, listening, err_listening
-        output_error, Event, err_listening
-
-        text= "..done"
-        widget_control, view_info, set_value=text, /append
-        
-    endif else begin
-        
-        cmd_dump = "nxdir " + full_nexus_name
-        cmd_dump += " -p /entry/bank1/data/ --dump "
-        
-;get name of output_file
-        tmp_output_file = (*global).full_tmp_nxdir_folder_path 
-        tmp_output_file += "/" + (*global).instrument
-        tmp_output_file += "_" + (*global).run_number
-        
-        tmp_output_file += ".dat"
-        (*global).file_to_plot = tmp_output_file
-        cmd_dump += tmp_output_file
-        
-;display command
-        text= cmd_dump
-        widget_control, view_info, set_value=text, /append
-        text= "Processing....."
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Create local copy of the histo mapped data: '
-        widget_control, full_view_info, set_value=full_text, /append
-        full_text = '> ' + cmd_dump
-        widget_control, full_view_info, set_value=full_text, /append
-        
-        spawn, cmd_dump, listening, err_listening
-        output_error, Event, err_listening
-
-        text= "..done"
-        widget_control, view_info, set_value=text, /append
-        
-    endelse
-    
-endif else begin                ;file is on das
-    
-    histo_event_filename = (*global).histo_event_filename
-    max_time_bin = strcompress((*global).max_time_bin,/remove_all)
-    pixel_number = strcompress((*global).pixel_number,/remove_all)
-    full_tmp_nxdir_folder_path = (*global).full_tmp_nxdir_folder_path
-    
-;nothing to do if binary file is histogrma file
-    if ((*global).is_file_histo EQ 0) then begin ;event binary file
-        
-;create local copy  of histo (1 time bin)
-        cmd_Event_to_Histo = 'Event_to_Histo '
-        cmd_Event_to_Histo += histo_event_filename
-        cmd_Event_to_Histo += ' -l ' + max_time_bin
-        cmd_Event_to_Histo += ' -p ' + pixel_number
-        cmd_Event_to_Histo += ' -M ' + max_time_bin
-        cmd_Event_to_Histo += ' -a ' + (*global).full_tmp_nxdir_folder_path
-        full_text = "Create local histogram binary file"
-        widget_control, full_view_info, set_value=full_text, /append
-        full_text = '> ' + cmd_Event_to_Histo
-        widget_control, full_view_info, set_value=full_text, /append
-        
-        spawn, cmd_Event_to_Histo, listening, err_listening
-        output_error, Event, err_listening
-
-        neutron_event_file_name_only = get_event_file_name_only(histo_event_filename)
-        histo_file_name = get_histo_event_file_name_only(Event, neutron_event_file_name_only)
-        full_histo_file_name = full_tmp_nxdir_folder_path + '/' + histo_file_name
-
-        output_folder = full_tmp_nxdir_folder_path
-
-    endif else begin
-        
-        neutron_event_file_name_only = get_event_file_name_only(histo_event_filename)
-        get_histo_mapped_file_name, Event, neutron_event_file_name_only
-        full_histo_file_name = histo_event_filename
-        full_histo_mapped_file_name_only = full_tmp_nxdir_folder_path + '/' + $
-          (*global).histo_mapped_file_name_only 
-
-        output_folder = full_tmp_nxdir_folder_path
-
-    endelse
-    
-    id = widget_info(Event.top, FIND_BY_UNAME="MAPPING_FILE_LABEL")
-    widget_control, id, get_value=mapping_filename
-
-    cmd_Map_Data = 'Map_Data '
-    cmd_Map_Data += ' -t 1 -p ' + pixel_number
-    cmd_Map_Data += ' -m ' + mapping_filename
-    cmd_Map_Data += ' -n ' + full_histo_file_name
-    cmd_Map_Data += ' -o ' + output_folder
-
-    full_text = "Create local mapped histogram binary file"
-    widget_control, full_view_info, set_value=full_text, /append
-    full_text = '> ' + cmd_Map_Data
-    widget_control, full_view_info, set_value=full_text, /append
-    
-    spawn, cmd_Map_Data, listening, err_listening
-    output_error, Event, err_listening
-
-    tmp_output_file = (*global).histo_mapped_file_name_only
-    tmp_output_file = full_tmp_nxdir_folder_path + '/' + tmp_output_file
-    (*global).file_to_plot = tmp_output_file
-    full_text = 'local file created: '
-    widget_control, full_view_info, set_value=full_text, /append
-    full_text = '> ' + tmp_output_file
-    widget_control, full_view_info, set_value=full_text, /append
-    
-endelse
+;turn off hourglass
+widget_control,hourglass=0
 
 end
 
@@ -981,101 +421,64 @@ end
 
 
 
-pro DISPLAY_BUTTON, Event
+
+
+
+
+
+
+
+pro plot_data, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-id_display = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
-widget_control, id_display, sensitive=0
-
-if ((*global).display_button_activate EQ 0) then begin ;button not activated
-
-    (*global).display_button_activate = 1
-    instrument =  (*global).instrument    
-    
-;change label of button
-    id_button = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
-    widget_control, id_button, set_value='Desactivate preview'
-
-;file to open
-    create_local_copy_of_histo_mapped, $
-      Event, $
-      (*global).find_prenexus_on_das, $
-      (*global).is_file_histo
-    
-    id=widget_info(Event.top,FIND_BY_UNAME="HISTOGRAM_STATUS")
-    text = "Plotting......"
-    widget_control, id, set_value = text, /append 
+text = "Plotting......"
+output_into_text_box, event, 'log_book_text', text
 
 ;plot data according to instrument type
+case (*global).instrument of        
     
-    case instrument of        
-        
-        "REF_L": begin
-            (*global).xsize_display = (*global).xsize_dislay_REF_L
-            id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-            widget_control, id, scr_xsize=(*global).xsize_display
-            
-            id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
-            widget_control, id1, scr_xsize=(*global).NY_REF_L
-            widget_control, id1, scr_ysize=(*global).NX_REF_L
-            
-            plot_data_REF_L, event
-            
-        end
-        "REF_M": begin
-            (*global).xsize_display = (*global).xsize_display_REF_M
-            id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-            widget_control, id, scr_xsize=(*global).xsize_display
-            
-            id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW")
-            widget_control, id1, scr_xsize=(*global).NY_REF_M
-            widget_control, id1, scr_ysize=(*global).NX_REF_M
-            
-            plot_data_REF_M, event      
-            
-        end
-        "BSS"  : begin
-            id = widget_info(Event.top, find_by_uname = "DISPLAY_WINDOW_BASE")
-            widget_control, id, map=0
-            
-            (*global).xsize_display = (*global).xsize_display_BSS
-            id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-            widget_control, id, scr_xsize=(*global).xsize_display
-            
-            id1 = widget_info(Event.top, find_by_uname="DISPLAY_WINDOW_1")
-            widget_control, id1, map=1		
-            
-            plot_data_BSS, event
-            
-        end
-    endcase
-    
-    id=widget_info(Event.top,FIND_BY_UNAME="HISTOGRAM_STATUS")
-    text = "done"
-    widget_control, id, set_value = text, /append 
-    
-endif else begin                ;if button released
-    
-    id = widget_info(Event.top, find_by_uname="MAIN_BASE")
-    widget_control, id, scr_xsize=(*global).xsize
-    
-    id_button = widget_info(Event.top, find_by_uname='DISPLAY_BUTTON')
-    widget_control, id_button, set_value='Activate preview'
+    "REF_L": begin
+        plot_data_REF_L, event
+    end
+    "REF_M": begin
+        plot_data_REF_M, event      
+    end
+    "BSS"  : begin
+        plot_data_BSS, event
+    end
+endcase
 
-    (*global).display_button_activate = 0
-
-endelse
-
-widget_control, id_display, sensitive=1
+text = "..done"
+output_into_text_box, event, 'log_book_text', text
 
 end
 
   
   
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -1258,14 +661,13 @@ end
 
 
 function get_full_path_to_preNeXus_path, listening, instrument, run_number
-
 string_to_remove = instrument + "_" + strcompress(run_number,/remove_all)
 string_to_remove += "_cvinfo.xml"
 full_path=strsplit(listening,string_to_remove,/extract,/regex)
-
 return, full_path
-
 end
+
+
 
 
 
@@ -1280,28 +682,17 @@ check_cmd = "ls " + name_if_event
 spawn, check_cmd, listening
 
 if (listening EQ '') then begin
-    
     check_histo_cmd = "ls " + name_if_histogram
     spawn, check_histo_cmd, listening_histo
-
     if (listening_histo EQ '') then begin
-
         result = -1
-
     endif else begin
-
         result = 0
-
     endelse
-
 endif else begin
-
     result = 1
-
 endelse
-
 return, result
-
 end
 
 
@@ -1405,20 +796,477 @@ end
 
 
 
-pro output_error, event, err_listening
+
+
+pro sns_idl_button_eventcb, Event
+spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
+
+
+
+
+
+
+
+pro wTab_eventcb, Event
 
 ;get the global data structure
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;display what is going on
-full_view_info = widget_info(event.top,find_by_uname='log_book_text')
+wTab_id = widget_info(event.top,find_by_uname='wTab')
+index = widget_info(wTab_id, /tab_current)
 
-if (err_listening NE '' OR err_listening NE ['']) then begin
-    full_text = 'ERROR: ' + err_listening
-    widget_control, full_view_info, set_value=full_text,/append
-endif
+activate_preview = (*global).activate_preview
+instrument = (*global).instrument
+
+case index of
+    0:begin
+        display_preview_message, event, instrument, activate_preview
+    end
+    1:begin
+
+    end
+    2:begin
+
+    end
+endcase
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pro display_preview_message, event, instrument, display_status
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+find_nexus = (*global).find_nexus
+
+case instrument of
+
+    'REF_L': begin
+
+        id = widget_info(event.top,find_by_uname='drawing')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        
+        if (display_status EQ 0) then begin
+            no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
+            image = read_bmp(no_preview)
+            tv, image,0,0,/true
+        endif else begin
+            if (find_nexus EQ 0) then erase
+        endelse
+    end
+    
+    'REF_M': begin
+
+         id = widget_info(event.top,find_by_uname='drawing')
+         WIDGET_CONTROL, id, GET_VALUE=id_value
+         wset, id_value
+
+         if (display_status EQ 0) then begin
+             no_preview=$
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_M.bmp"
+             image = read_bmp(no_preview)
+             tv, image,0,0,/true
+         endif else begin
+            if (find_nexus EQ 0) then erase
+         endelse
+
+     end
+
+     'BSS': begin
+         id_top = widget_info(event.top,find_by_uname='drawing_top')
+         WIDGET_CONTROL, id_top, GET_VALUE=id_top_value
+
+         id_bottom = widget_info(event.top,find_by_uname='drawing_bottom')
+         WIDGET_CONTROL, id_bottom, GET_VALUE=id_bottom_value
+         
+         if (display_status EQ 0) then begin
+             no_preview=$
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_top.bmp"
+             image = read_bmp(no_preview)
+             wset, id_top_value
+             tv, image,0,0,/true
+
+             no_preview=$
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_bottom.bmp"
+             image = read_bmp(no_preview)
+             wset, id_bottom_value
+             tv, image,0,0,/true
+         endif else begin
+            if (find_nexus EQ 0) then begin
+                wset, id_top_value
+                erase
+                wset, id_bottom_value
+                erase
+            endif
+         endelse
+
+     end
+endcase
 
 end
+
+
+
+
+
+pro activate_preview_button_cb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+widget_control,/hourglass
+
+activate_preview_button_id = widget_info(Event.top,find_by_uname='activate_preview_button')
+
+if ((*global).activate_preview EQ 0) then begin
+;desactivate button during plot
+    activate_preview_button_id = widget_info(event.top,find_by_uname='activate_preview_button')
+    widget_control, activate_preview_button_id, sensitive=0
+    text = 'DESACTIVATE PREVIEW'
+    widget_control, activate_preview_button_id, set_value = text
+    (*global).activate_preview = 1
+    display_preview_message, event, (*global).instrument, 1
+    display_data, event, (*global).instrument, $
+      (*global).full_nexus_name, (*global).tmp_folder
+;reactivate button after plot
+    widget_control, activate_preview_button_id, sensitive=1
+endif else begin
+    text = 'ACTIVATE PREVIEW'
+    widget_control, activate_preview_button_id, set_value = text
+    (*global).activate_preview = 0
+    display_preview_message, event, (*global).instrument, 0
+endelse
+
+;turn off hourglass
+widget_control,hourglass=0
+
+end
+
+
+
+
+
+
+pro output_data_group_cb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+output_list_id = widget_info(Event.top,find_by_uname='output_data_group')
+widget_control, output_list_id, get_value=selection
+
+number_of_selection = 0 ;number of selection
+
+;event output data
+event_id = widget_info(event.top,find_by_uname='event_text_base')
+if (selection[0] EQ 1) then begin
+    map_value = 1
+    number_of_selection += 1
+endif else begin
+    map_value = 0
+endelse
+widget_control, event_id, map=map_value
+
+;histogram output data
+histogram_id = widget_info(event.top,find_by_uname='histogram_text_base')
+if (selection[1] EQ 1) then begin
+    map_value = 1
+    number_of_selection += 1
+endif else begin
+    map_value = 0
+endelse
+widget_control, histogram_id, map=map_value
+
+;timebins output data
+timebins_id = widget_info(event.top,find_by_uname='timebins_text_base')
+if (selection[2] EQ 1) then begin
+    map_value = 1
+    number_of_selection += 1
+endif else begin
+    map_value = 0
+endelse
+widget_control, timebins_id, map=map_value
+
+;pulseid output data
+pulseid_id = widget_info(event.top,find_by_uname='pulseid_text_base')
+if (selection[3] EQ 1) then begin
+    map_value = 1
+    number_of_selection += 1	
+endif else begin
+    map_value = 0
+endelse
+widget_control, pulseid_id, map=map_value
+
+;infos output data
+infos_id = widget_info(event.top,find_by_uname='infos_text_base')
+if (selection[4] EQ 1) then begin
+    map_value = 1
+    number_of_selection += 1
+endif else begin
+    map_value = 0
+endelse
+widget_control, infos_id, map=map_value
+
+output_data_button_base_id = widget_info(event.top,find_by_uname='output_data_button_base')
+if (number_of_selection GE 1) then begin ;display go button
+    widget_control, output_data_button_base_id, map=1
+endif else begin
+    widget_control, output_data_button_base_id, map=0
+endelse
+
+;populate text boxes selected
+populate_text_boxes, event, selection
+
+end
+
+
+
+
+
+
+
+pro output_data_button_cb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;reinitialize file name
+output_data_group_id = widget_info(event.top,find_by_uname='output_data_group')
+widget_control, output_data_group_id, set_value=[0,0,0,0,0]
+
+;hide all text boxes
+output_data_group_cb, Event
+
+end
+
+
+
+
+
+
+pro reinitialize_interface, event, find_nexus, instrument
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).activate_preview EQ 1) then begin
+    
+;erase display
+    case instrument of 
+        'REF_L': begin
+            drawing_id = widget_info(Event.top,find_by_uname='drawing')
+            widget_control, drawing_id, get_value=id
+            wset, id
+            erase
+        end
+        'REF_M': begin
+            drawing_id = widget_info(Event.top,find_by_uname='drawing')
+            widget_control, drawing_id, get_value=id
+            wset, id
+            erase
+        end
+        'BSS':begin
+            drawing_top_id = widget_info(Event.top,find_by_uname='drawing_top')
+            widget_control, drawing_top_id, get_value=id_top
+            wset, id_top
+            erase
+            drawing_bottom_id = widget_info(Event.top,find_by_uname='drawing_bottom')
+            widget_control, drawing_bottom_id, get_value=id_bottom
+            wset, id_bottom
+            erase
+        end
+    endcase
+    
+endif
+
+;reinitialize log_book
+log_book_id = widget_info(Event.top,find_by_uname='log_book_text')
+widget_control, log_book_id, set_value=''
+
+end
+
+
+
+
+
+
+pro create_full_output_name, event, file_name, output_format, text_box_uname
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+text_box_uname_id = widget_info(event.top,find_by_uname=text_box_uname)
+
+if (file_name EQ '') then begin
+    file_name = ''
+endif else begin
+    case output_format of
+        'binaryUW': begin
+            ext = (*global).binaryUW
+        end
+        'binaryM': begin
+            ext = (*global).binaryM
+        end
+        'ascii': begin
+            ext = (*global).ascii
+        end
+        'xml': begin
+            ext = (*global).xml
+        end
+        else:
+    endcase
+    file_name += ext
+endelse
+
+widget_control, text_box_uname_id, set_value = file_name
+
+end
+
+
+
+
+
+
+
+pro populate_text_boxes, event, selection
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_path = (*global).working_path
+run_number = (*global).run_number
+instrument = (*global).instrument
+first_part_of_name = working_path + instrument + '_' + strcompress(run_number)
+
+;event filename
+if (selection[0] EQ 0) then begin
+    create_full_output_name, event, '', '', 'event_text'
+endif else begin
+    file_name=first_part_of_name+(*global).event_ext
+    event_format_group_id = widget_info(event.top,find_by_uname='event_format_group')
+    widget_control, event_format_group_id, get_value=format_index
+    case format_index of
+        0: output_format = 'binaryUW'
+        1: output_format = 'binaryM'
+        2: output_format = 'ascii'
+    endcase
+    create_full_output_name, event, file_name, output_format, 'event_text'
+endelse
+
+;histogram filename
+if (selection[1] EQ 0) then begin
+    create_full_output_name, event, '', '', 'histogram_text'
+endif else begin
+    file_name=first_part_of_name+(*global).histo_ext
+    event_format_group_id = widget_info(event.top,find_by_uname='histogram_format_group')
+    widget_control, event_format_group_id, get_value=format_index
+    case format_index of
+        0: output_format = 'binaryUW'
+        1: output_format = 'binaryM'
+        2: output_format = 'ascii'
+    endcase
+    create_full_output_name, event, file_name, output_format, 'histogram_text'
+endelse
+
+;timebins filename
+if (selection[2] EQ 0) then begin
+    create_full_output_name, event, '', '', 'timebins_text'
+endif else begin
+    file_name=first_part_of_name+(*global).timebins_ext
+    event_format_group_id = widget_info(event.top,find_by_uname='timebins_format_group')
+    widget_control, event_format_group_id, get_value=format_index
+    case format_index of
+        0: output_format = 'binaryUW'
+        1: output_format = 'binaryM'
+        2: output_format = 'ascii'
+    endcase
+    create_full_output_name, event, file_name, output_format, 'timebins_text'
+endelse
+
+;pulseid filename
+if (selection[3] EQ 0) then begin
+    create_full_output_name, event, '', '', 'pulseid_text'
+endif else begin
+    file_name=first_part_of_name+(*global).pulseID_ext
+    event_format_group_id = widget_info(event.top,find_by_uname='pulseid_format_group')
+    widget_control, event_format_group_id, get_value=format_index
+    case format_index of
+        0: output_format = 'binaryUW'
+        1: output_format = 'binaryM'
+        2: output_format = 'ascii'
+    endcase
+    create_full_output_name, event, file_name, output_format, 'pulseid_text'
+endelse
+
+;infos filename
+if (selection[4] EQ 0) then begin
+    create_full_output_name, event, '', '', 'infos_file_text'
+endif else begin
+    file_name=first_part_of_name+(*global).infos_ext
+    event_format_group_id = widget_info(event.top,find_by_uname='infos_format_group')
+    widget_control, event_format_group_id, get_value=format_index
+    case format_index of
+        0: output_format = 'ascii'
+        1: output_format = 'xml'
+    endcase
+    create_full_output_name, event, file_name, output_format, 'infos_file_text'
+endelse
+
+end
+
+
+
+
+
+
+pro output_format_group_cb, Event, uname
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+output_list_id = widget_info(Event.top,find_by_uname='output_data_group')
+widget_control, output_list_id, get_value=selection
+
+populate_text_boxes, event, selection
+
+end
+
+
 
 

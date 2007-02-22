@@ -154,13 +154,15 @@ pro output_into_text_box, event, $
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+if (text NE '') then begin
 ;display what is going on
-full_view_info = widget_info(event.top,find_by_uname=uname_destination)
-if (n_elements(do_not_append_it) EQ 0) then begin
-    widget_control, full_view_info, set_value=text,/append
-endif else begin
-    widget_control, full_view_info, set_value=text
-endelse
+    full_view_info = widget_info(event.top,find_by_uname=uname_destination)
+    if (n_elements(do_not_append_it) EQ 0) then begin
+        widget_control, full_view_info, set_value=text,/append
+    endif else begin
+        widget_control, full_view_info, set_value=text
+    endelse
+endif
 
 end
 ; \}
@@ -222,7 +224,7 @@ end
 ; \param ucams (INPUT) ucams of the user
 function check_access, Event, instrument, ucams
 
-list_of_instrument = ['REF_L', 'REF_M']
+list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 
 ;0:j35:jean$
 ;1:pf9:pete
@@ -271,12 +273,20 @@ CASE instrument OF
 	3: 
 	4: 
 	5: 
-	6: 
+        6: 
 	7: ucams_index=-1
-	8: ucams_index=-1
-	9: ucams_index=-1
-      ENDCASE
-ENDCASE	 
+        8: ucams_index=-1
+        9: ucams_index=-1
+    ENDCASE
+    2: case ucams_index of
+        -1:
+        0:
+        1:
+        2:
+        3:
+        9:
+    endcase
+        ENDCASE	 
 	
 RETURN, ucams_index
  
@@ -352,15 +362,18 @@ end
 
 
 
+
+
 ; \defgroup output_into_log_book_file
 ; \{
 ;;
 
 ;;
 ; \brief This function output the string
-; into a predefined fine (just for debugging)
+; into a predefined file (just for debugging)
 ;
 ; \param Event (INPUT) event structure
+; \param string (INPUT) string to output
 pro output_into_log_book_file, Event, string
 
 full_logbook_filename = "~/local/MakeNeXus_logbook.txt"
@@ -385,6 +398,27 @@ end
 
 
 
+
+
+; \defgroup create_tmp_folder
+; \{
+;;
+
+;;
+; \brief This function creates the temporary
+; folder
+;
+; \param Event (INPUT) event structure
+; \param tmp_folder (INPUT) temporary folder name
+function create_tmp_folder, event, tmp_folder
+
+cmd_mkdir = 'mkdir ' + tmp_folder
+spawn, cmd_mkdir, listening, err_listening
+
+return, [listening, err_listening]
+end
+; \}
+;;     //end of create_tmp_folder
 
 
 
