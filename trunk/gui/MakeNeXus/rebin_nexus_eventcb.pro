@@ -12,6 +12,7 @@ end
 
 
 
+
 function get_proposal_experiment_number, event, file, archived
 
 ;get the global data structure
@@ -99,6 +100,9 @@ histo_mapped_file_name_only = file_list[0] + 'histo_mapped.dat'
 
 return, histo_file_name_only
 end
+
+
+
 
 
 
@@ -450,6 +454,9 @@ end
 
 
 
+
+
+
 pro create_local_copy_of_histo_mapped, Event, on_das, is_file_histo
 
 ;get global structure
@@ -615,6 +622,7 @@ endif else begin                ;file is on das
 endelse
 
 end
+
 
 
 
@@ -881,6 +889,8 @@ end
 
 
 
+
+
 function check_access, Event, instrument, user
 
 list_of_instrument = ['REF_L', 'REF_M', 'BSS']
@@ -1054,10 +1064,11 @@ end
 ;return 1 if file is an event file
 ;return 0 if file is a histogram file
 ;return -1 if there is no event of histogram file
-function check_if_file_is_event, name_if_event, name_if_histogram
+function check_if_file_is_event, event, name_if_event, name_if_histogram
 
 check_cmd = "ls " + name_if_event
-spawn, check_cmd, listening
+spawn, check_cmd, listening, err_listening
+output_error, event, err_listening
 
 if (listening EQ '') then begin
     
@@ -1353,7 +1364,7 @@ endif else begin
         (*global).full_path_instr_run_number = full_path_instr_run_number
         name_if_event = full_path_instr_run_number + "_neutron_event.dat"
         name_if_histogram = full_path_instr_run_number + "_neutron_histo.dat"
-        main_file_is_event = check_if_file_is_event(name_if_event,name_if_histogram)
+        main_file_is_event = check_if_file_is_event(event, name_if_event,name_if_histogram)
         full_text = 'Check if binary file is event or histo:'
         widget_control, full_view_info, set_value=full_text, /append
         
@@ -1855,6 +1866,7 @@ widget_control, full_view_info, set_value=full_text, /append
 
 file = (*global).histo_event_filename
 run_number = (*global).run_number
+instrument = (*global).instrument
 
 if ((*global).already_archived EQ 1) then begin ;file has already been archived
 
@@ -1876,14 +1888,27 @@ if ((*global).already_archived EQ 1) then begin ;file has already been archived
         spawn, cmd_translate, listening, err_listening
         output_error, Event, err_listening
 
-        text = '..done'
+;check if NeXus is where it should be
+        full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
+
+        if ((*global).find_nexus EQ 1) then begin
+            text = '..done'
+            widget_control, view_info, set_value=text, /append
+            text = 'NeXus file: ' + full_nexus_name
+            full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+            full_text += '/' + (*global).instrument
+            widget_control, full_view_info, set_value=full_text, /append        
+            full_text = text
+            widget_control, full_view_info, set_value=full_text, /append        
+            full_text = 'Nexus file has been created with success'
+        endif else begin
+            text = ' .. ERROR (check log book)'
+            full_text = ' Process failed'
+        endelse
+
         widget_control, view_info, set_value=text, /append
-        text = 'Location of NeXus: ' + parent_folder_name
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
-        full_text += '/' + (*global).instrument
-        widget_control, full_view_info, set_value=full_text, /append
-        
+        widget_control, full_view_info, set_value=full_text, /append        
+
     endif else begin
         
         create_nexus_the_old_way, event
@@ -1927,15 +1952,31 @@ endif else begin                ; file is on DAS
         widget_control, full_view_info, set_value=full_text, /append
         spawn, cmd_translate, listening, err_listening
         output_error, Event, err_listening
+        
+;check if NeXus is where it should be
+        full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
 
-        text = '..done'
-        widget_control, view_info, set_value=text, /append
-        text = 'Location of NeXus: ' + parent_folder_name
-        widget_control, view_info, set_value=text, /append
-        full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
-        full_text += '/' + (*global).instrument
-        widget_control, full_view_info, set_value=full_text, /append
-
+        if ((*global).find_nexus EQ 1) then begin
+            text = '..done'
+            widget_control, view_info, set_value=text, /append
+            text = 'Location of NeXus: ' + parent_folder_name
+            full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+            full_text += '/' + (*global).instrument
+            widget_control, view_info, set_value=text, /append
+            widget_control, full_view_info, set_value=full_text, /append
+            full_text = 'Nexus: ' + full_nexus_name
+            widget_control, full_view_info, set_value=full_text, /append
+            text = full_text
+            widget_control, view_info, set_value=full_text, /append
+            full_text = 'Nexus file has been created with success'
+            widget_control, full_view_info, set_value=full_text, /append
+        endif else begin
+            text = ' .. ERROR (check log book)'
+            full_text = ' Process failed.'
+            widget_control, view_info, set_value=text, /append
+            widget_control, full_view_info, set_value=full_text, /append
+        endelse
+        
     endif else begin
         
         id_0 = Widget_Info(wWidget, FIND_BY_UNAME='REBINNING_TYPE_GROUP')
@@ -1962,6 +2003,9 @@ endif else begin                ; file is on DAS
         
         if (lin_log EQ 0) then begin ;linear rebinning
             
+            ;remove old directory first
+            create_folder, event
+
             das_run_dir = get_das_run_dir(event_filename)
             
             (*global).default_rebin_coeff = rebinning
@@ -1983,13 +2027,25 @@ endif else begin                ; file is on DAS
             spawn, cmd_translate, listening, err_listening
             output_error, Event, err_listening
             
-            text = '..done'
-            widget_control, view_info, set_value=text, /append
-            text = 'Location of NeXus: ' + parent_folder_name
-            widget_control, view_info, set_value=text, /append
-            full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
-            full_text += '/' + (*global).instrument
-            widget_control, full_view_info, set_value=full_text, /append
+;check if NeXus is where it should be
+            full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
+
+            if ((*global).find_nexus EQ 1) then begin
+                text = '..done'
+                widget_control, view_info, set_value=text, /append
+                text = 'Location of NeXus: ' + parent_folder_name
+                full_text = 'Location of NeXus and preNeXus files: ' + parent_folder_name
+                full_text += '/' + (*global).instrument
+                widget_control, view_info, set_value=text, /append
+                widget_control, full_view_info, set_value=full_text, /append
+                full_text = 'NeXus: ' + full_nexus_name
+                widget_control, full_view_info, set_value=full_text, /append
+            endif else begin
+                text = '..ERROR'
+                full_text = '.. process failed'
+                widget_control, view_info, set_value=text, /append
+                widget_control, full_view_info, set_value=full_text, /append
+            endelse
             
         endif else begin        ;log rebinning 
                                 ;this if for not archive and event files
@@ -2042,8 +2098,6 @@ experiment_number = result[1]
 
 parent_folder_name = (*global).output_path + instrument
 full_folder_name = parent_folder_name + "/" + proposal_number 
-
-
 
 if ((*global).translate_use_experiment_number EQ 1) then begin
     full_folder_name += "/" + experiment_number
@@ -2284,16 +2338,41 @@ full_text = full_folder_name_NeXus + (*global).instrument
 full_text += "_" + (*global).run_number + ".nxs"
 widget_control, full_view_info, set_value=full_text,/append
 
+;check if NeXus is where it should be
+full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
+
 ;activate "Create local NeXus" button
 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
 widget_control, id_create_nexus, sensitive=1
 
-text = "... done"
-full_text = "... create NeXus is done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /append
-widget_control, full_view_info, set_value=full_text, /append
+if ((*global).find_nexus EQ 1) then begin
+    text = "... done"
+    full_text = "... create NeXus is done"
+    WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
+    full_text = 'NeXus: ' + full_nexus_name
+    text = full_text
+    widget_control, full_view_info, set_value=full_text, /append
+    WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+    full_text = 'Nexus file has been created with success'
+    widget_control, full_view_info, set_value=full_text, /append
+endif else begin
+    text = "... ERROR (consult log book)"
+    full_text = "... create NeXsu failed"
+    WIDGET_CONTROL, view_info, SET_VALUE=text, /append
+    widget_control, full_view_info, set_value=full_text, /append
+endelse
 
 end
+
+
+
+
+
+
+
+
+
 
 
 
