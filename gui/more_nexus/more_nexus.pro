@@ -41,6 +41,31 @@ case Event.id of
         output_data_group_cb, Event
     end
     
+;output format of event
+    Widget_Info(wWidget, FIND_BY_UNAME='event_format_group'): begin
+        output_format_group_cb, Event, 'event_format_group'
+    end
+
+;output format of histogram
+    Widget_Info(wWidget, FIND_BY_UNAME='histogram_format_group'): begin
+        output_format_group_cb, Event, 'histogram_format_group'
+    end
+
+;output format of timebins
+    Widget_Info(wWidget, FIND_BY_UNAME='timebins_format_group'): begin
+        output_format_group_cb, Event, 'timebins_format_group'
+    end
+
+;output format of pulseid
+    Widget_Info(wWidget, FIND_BY_UNAME='pulseid_format_group'): begin
+        output_format_group_cb, Event, 'pulseid_format_group'
+    end
+
+;output format of infos
+    Widget_Info(wWidget, FIND_BY_UNAME='infos_format_group'): begin
+        output_format_group_cb, Event, 'infos_format_group'
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='output_data_button'): begin
         output_data_button_cb, Event
     end
@@ -48,6 +73,15 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_EVENT_FILE_BUTTON_tab1'): begin
         open_nexus_cb, Event
     end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='sns_idl_button'): begin
+        sns_idl_button_eventcb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='wTab'): begin
+        wTab_eventcb, Event
+    end
+
 
 else:
     
@@ -85,9 +119,8 @@ MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
                         TITLE='More NeXus',$
                         SPACE=3,$
                         XPAD=3,$
-                        YPAD=3,$
-                        MBAR=WID_BASE_0_MBAR)
-
+                        YPAD=3)
+                        
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
@@ -176,7 +209,7 @@ Resolve_Routine, 'more_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback 
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 instrument = instrument_list[instrument]
-working_path = '~/local/' + instrument
+working_path = '~/local/' + instrument + '/'
 
 global = ptr_new({$
                    activate_preview     : 0,$  ;1 = preview when oppening NeXus run number
@@ -187,8 +220,19 @@ global = ptr_new({$
                    run_number		: '',$ ;run_number (without * if present)
                    tmp_folder           : '~/local/.more_nexus_tmp',$ ;used to dump histogram
                    local_nexus          : 0,$ ;1=local nexus, 0=archive version
-                   working_path         : working_path,$  ;local folder of nexus files
-
+                   working_path         : working_path,$ ;local folder of nexus files
+                   event_ext            : '_neutron_event',$
+                   histo_ext            : '_neutron_histo_mapped',$
+                   timebins_ext         : '_timebin',$
+                   pulseID_ext          : '_pulseid',$
+                   infos_ext            : '_infos',$
+                   binaryUW             : '.dat',$
+                   binaryM              : '_M.dat',$
+                   ascii                : '.txt',$
+                   xml                  : '.xml',$
+                   file_to_plot         : '',$
+                   file_to_plot_top     : '',$
+                   file_to_plot_bottom  : '',$
 
                    output_path		: '/SNSlocal/users/',$
                    full_path_to_prenexus: '',$
@@ -223,10 +267,13 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         YOFFSET=350, $
                         SCR_XSIZE=950, $
                         SCR_YSIZE=600, $
-                        title=title)
+                        title=title,$
+                        MBAR=WID_BASE_0_MBAR)
 
 wTab = WIDGET_TAB(MAIN_BASE,$
-                  LOCATION=location)
+                  uname='wTab',$
+                  LOCATION=location,$
+                  /tracking_events)
 
 ;--------------------------------------------------------------------------------
 ; First tab (NEXUS interface)
@@ -538,9 +585,12 @@ output_data_button = widget_button(output_data_button_base,$
                                    value=bmp_file)
 
 
-text_infos = 'binary (U/Mi) : binary (Unix - Microsoft)  -  binary (Mac) : binary (Macintosh)'
+text_infos = '        binary (Unix-Microsoft) : .dat'
+text_infos += '        binary (Macintosh) : M.dat'
+text_infos += '        ASCII : .txt'
+text_infos += '        XML : .xml       '
 output_format_infos = widget_label(output_data_base,$  
-                                   xoffset=5,$
+                                   xoffset=100,$
                                    yoffset=165,$
                                    value=text_infos,$
                                    frame=1)
@@ -858,6 +908,15 @@ log_book_text = widget_text(wT3,$
 ;                              value='Archive this run number: ',$
 ;                              /align_left)
 
+
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
+
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
