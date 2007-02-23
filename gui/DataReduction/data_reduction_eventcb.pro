@@ -2067,11 +2067,22 @@ pro produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 ;signal selection
 x1_signal = (*global).x1_signal
 x2_signal = (*global).x2_signal
 y1_signal = (*global).y1_signal
 y2_signal = (*global).y2_signal
+
+if (instrument eq 'REF_M') then begin
+
+    x1_signal = round(x1_signal/2)
+    x2_signal = round(x2_signal/2)
+    y1_signal = round(y1_signal/2)
+    y2_signal = round(y2_signal/2)
+
+endif
 
 XYsignal = reorder(x1_signal, x2_signal, y1_signal, y2_signal)
 
@@ -2084,6 +2095,15 @@ x2_back = (*global).x2_back
 y1_back = (*global).y1_back
 y2_back = (*global).y2_back
 
+if (instrument eq 'REF_M') then begin
+
+    x1_back = round(x1_back/2)
+    x2_back = round(x2_back/2)
+    y1_back = round(y1_back/2)
+    y2_back = round(y2_back/2)
+
+endif
+
 XYbackground = reorder(x1_back, x2_back, y1_back, y2_back)
 
 ;background selection #2
@@ -2091,6 +2111,15 @@ x1_back_2 = (*global).x1_back_2
 x2_back_2 = (*global).x2_back_2
 y1_back_2 = (*global).y1_back_2
 y2_back_2 = (*global).y2_back_2
+
+if (instrument eq 'REF_M') then begin
+
+    x1_back_2 = round(x1_back_2/2)
+    x2_back_2 = round(x2_back_2/2)
+    y1_back_2 = round(y1_back_2/2)
+    y2_back_2 = round(y2_back_2/2)
+
+endif
 
 XYbackground_2 = reorder(x1_back_2, x2_back_2, y1_back_2, y2_back_2)
 
@@ -3612,4 +3641,19 @@ end
 
 pro sns_idl_button_eventcb, Event
 spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
+end
+
+
+pro working_path_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_working_path = (*global).tmp_working_path
+tmp_working_path = dialog_pickfile(path=tmp_working_path,/directory)
+(*global).tmp_working_path = tmp_working_path
+
+print, 'tmp_working_path: ' + tmp_working_path
+
 end

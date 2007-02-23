@@ -287,6 +287,11 @@ case Event.id of
         sns_idl_button_eventcb, Event
     end
 
+;working_path of REF_M
+    Widget_Info(wWidget, FIND_BY_UNAME='working_path'): begin
+        working_path_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -350,7 +355,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          
+                                  SET_VALUE=1.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -1933,6 +1938,10 @@ FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                 UNAME='FILE_MENU_REF_M',$
                                 /MENU,$
                                 VALUE='MENU')
+
+;working_path = widget_button(FILE_MENU_REF_M,$
+;                             uname='working_path',$
+;                             value='working path...')
 
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
                            ,VALUE='Color Tool...')
