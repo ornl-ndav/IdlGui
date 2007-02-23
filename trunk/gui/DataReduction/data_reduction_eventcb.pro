@@ -691,10 +691,20 @@ xmax_back = XYbackground[1]
 ymin_back = XYbackground[2]
 ymax_back = XYbackground[3]
 
+if ((*global).instrument EQ 'REF_M') then begin
 
-;define arrays
-;Nx = (*global).Nx
-;Ny = (*global).Ny
+xmin_signal = round(xmin_signal/2)
+xmax_signal = round(xmax_signal/2)
+ymin_signal = round(ymin_signal/2)
+ymax_signal = round(ymax_signal/2)
+
+xmin_back = round(xmin_back/2)
+xmax_back = round(xmax_back/2)
+ymin_back = round(ymin_back/2)
+ymax_back = round(ymax_back/2)
+
+endif
+
 Nx = (*global).Ny
 Ny = (*global).Nx
 signal_array=intarr(Nx, Ny)
@@ -881,7 +891,6 @@ widget_control,/hourglass
 
 ;turn off hourglass
 widget_control,hourglass=0
-
 
 
 end
@@ -1269,6 +1278,7 @@ widget_control,id,get_uvalue=global
 ;retrieve data parameters
 Nx = (*global).Nx
 Ny = (*global).Ny
+instrument = (*global).instrument
 
 file = (*global).full_histo_mapped_name
 nexus_file_name_only = (*global).nexus_file_name_only
@@ -1315,11 +1325,24 @@ if (*global).pass EQ 0 then begin
     (*global).pass = 1          ;clear the flag...
 endif
 
-;put image data in main draw window
 id_draw = widget_info(Event.top, find_by_uname='display_data_base')
 widget_control, id_draw, get_value=id_value
 wset,id_value
-tvscl,img
+
+if (instrument EQ 'REF_L') then begin
+
+    tvscl,img
+
+endif else begin
+
+    New_Ny = 2*Nx
+    New_Nx = 2*Ny
+    
+    tvimg = rebin(img, New_Nx, New_Ny,/sample)
+    tvscl, tvimg, /device
+    
+endelse
+
 
 ;plot selection we want to keep
 plot_selection,Event
@@ -1378,7 +1401,21 @@ WIDGET_CONTROL, id_draw, GET_VALUE = id
 DEVICE, DECOMPOSED = 0
 
 wset, id
-tvscl,(*(*global).img_ptr)
+img = (*(*global).img_ptr)
+
+if ((*global).instrument EQ 'REF_L') then begin
+
+    tvscl,img
+
+endif else begin
+
+    New_Ny = 2*(*global).Nx
+    New_Nx = 2*(*global).Ny
+    
+    tvimg = rebin(img, New_Nx, New_Ny,/sample)
+    tvscl, tvimg, /device
+
+endelse
 
 selection_value = (*global).selection_value
 selection_signal = (*global).selection_signal
@@ -1561,6 +1598,11 @@ if (selection_mode EQ 0 AND file_opened EQ 1) then begin
     x = Event.x
     y = Event.y
 
+    if (instrument EQ 'REF_M') then begin
+        x = round(x/2)
+        y = round(y/2)
+    endif
+
 ;set data
     text = " x= " + strcompress(x,/remove_all)
     text += " y= " + strcompress(y,/remove_all)
@@ -1580,6 +1622,11 @@ if (selection_mode EQ 1 AND file_opened EQ 1) then begin
     x=event.x
     y=event.y
     
+;    if (instrument EQ 'REF_M') then begin
+;        x = round (x/2)
+;        y = round (y/2)
+;    endif
+
     if (left_click_number EQ 0) then begin
     
         if (signal_or_background EQ 0) then begin
@@ -1670,6 +1717,11 @@ endif
 full_text_selection_1 = ''
 full_text_selection_2 = 'The two corners are defined by:'
          
+if ((*global).instrument EQ 'REF_M') then begin
+    y = round(y/2)
+    x = round(x/2)
+endif
+
 y_min = min(y)
 y_max = max(y)
 x_min = min(x)
@@ -1774,6 +1826,8 @@ pro selection_release, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 ;retrieve global parameters
 file_opened = (*global).file_opened
 ;1: for selection mode      0: for info mode
@@ -1793,8 +1847,9 @@ if (selection_mode EQ 1 AND $
 
     X2=event.x
     Y2=event.y
+    
     SHOW_DATA,event
-                     
+
     if (signal_or_background EQ 0) then begin
         color_line = (*global).color_line_signal
         (*global).selection_signal = 1
@@ -2221,10 +2276,9 @@ widget_control,id,get_uvalue=global
 
 ;remove temporary file
 tmp_folder = (*global).tmp_folder
-print, 'tmp_folder: ' + tmp_folder
 if (tmp_folder NE '') then begin
     cmd_remove = "rm -r " + tmp_folder
-    spawn, cmd_remove
+    spawn, cmd_remove, listening, err_listening
 endif
 
 widget_control,Event.top,/destroy

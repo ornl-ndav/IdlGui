@@ -350,7 +350,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          
+                                  SET_VALUE=1.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -396,7 +396,7 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1000,$
+                         SCR_XSIZE=1000,$ 
                          SCR_YSIZE=440,$
                          XOFFSET=250,$
                          YOFFSET=22,$
@@ -1097,8 +1097,8 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1050,$
-                         SCR_YSIZE=442,$
+                         SCR_XSIZE=1350,$   ;1050
+                         SCR_YSIZE=570,$   ;442
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -1278,12 +1278,21 @@ nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
                                     value='O P E N',$
                                     uname='nexus_run_number_go_REF_M')
 
+;SNS logo
+sns_logo_drawing = widget_draw(MAIN_BASE,$
+                               uname='sns_logo_drawing',$
+                               xoffset=310,$
+                               yoffset=3,$
+                               scr_xsize=1030,$
+                               scr_ysize=45)
+
+
 ;BOTTOM LEFT BOX - DISPLAY DATA
 display_data_base = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
                                 yoffset=50,$  
-                                scr_xsize=304,$
-                                scr_ysize=256,$
+                                scr_xsize=2*304,$
+                                scr_ysize=2*256,$
                                 uname='display_data_base',$
                                 retain=2,$
                                 /BUTTON_EVENTS,$
@@ -1292,10 +1301,10 @@ display_data_base = widget_draw(MAIN_BASE,$
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
-                                 xoffset=5,$
-                                 yoffset=308,$
+                                 xoffset=640,$
+                                 yoffset=500,$
                                  scr_xsize=301,$
-                                 scr_ysize=60,$
+                                 scr_ysize=58,$
                                  frame=1)
 selection_title = widget_label(select_signal_base,$
                                xoffset=5,$
@@ -1333,8 +1342,8 @@ save_selection_button = widget_button(select_signal_base,$
 ;keep current pid when opening other run number
 keep_current_selection_base = widget_base(MAIN_BASE,$
                                           uname='keep_current_selection_base',$
-                                          xoffset=5,$
-                                          yoffset=372,$
+                                          xoffset=970,$
+                                          yoffset=500,$
                                           scr_xsize=220,$
                                           scr_ysize=58,$
                                           frame=1,$
@@ -1360,8 +1369,8 @@ keep_selection_label = widget_label(keep_current_selection_base,$
 
 ;Selection or Info mode
 selection_mode_base = widget_base(MAIN_BASE,$
-                                  xoffset=229,$
-                                  yoffset=372,$
+                                  xoffset=1220,$
+                                  yoffset=500,$
                                   scr_xsize=77,$
                                   scr_ysize=58,$
                                   frame=1)
@@ -1384,8 +1393,8 @@ selection_mode_base = widget_base(MAIN_BASE,$
 xsize_of_tabs = 730
 ysize_of_tabs = 430
 data_reduction_plots_base = widget_base(MAIN_BASE,$
-                                        xoffset=315,$
-                                        yoffset=5,$
+                                        xoffset=615,$ ;615
+                                        yoffset=50,$   ;5
                                         scr_xsize=xsize_of_tabs,$
                                         scr_ysize=ysize_of_tabs)
 
@@ -1944,6 +1953,14 @@ sns_idl_button = widget_button(idl_tools_menu,$
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+sns_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/sns_logo.bmp"
+id = widget_info(main_base,find_by_uname="sns_logo_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(sns_logo)
+tv, image,0,0,/true
 
 end
 
