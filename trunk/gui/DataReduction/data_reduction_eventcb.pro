@@ -681,6 +681,8 @@ pro create_background_pid_array_file, Event, $
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
 xmin_signal = XYsignal[0]
 xmax_signal = XYsignal[1]
 ymin_signal = XYsignal[2]
@@ -691,17 +693,17 @@ xmax_back = XYbackground[1]
 ymin_back = XYbackground[2]
 ymax_back = XYbackground[3]
 
-if ((*global).instrument EQ 'REF_M') then begin
+if (instrument EQ 'REF_M') then begin
 
-xmin_signal = round(xmin_signal/2)
-xmax_signal = round(xmax_signal/2)
-ymin_signal = round(ymin_signal/2)
-ymax_signal = round(ymax_signal/2)
-
-xmin_back = round(xmin_back/2)
-xmax_back = round(xmax_back/2)
-ymin_back = round(ymin_back/2)
-ymax_back = round(ymax_back/2)
+    xmin_signal = round(xmin_signal/2)
+    xmax_signal = round(xmax_signal/2)
+    ymin_signal = round(ymin_signal/2)
+    ymax_signal = round(ymax_signal/2)
+    
+    xmin_back = round(xmin_back/2)
+    xmax_back = round(xmax_back/2)
+    ymin_back = round(ymin_back/2)
+    ymax_back = round(ymax_back/2)
 
 endif
 
@@ -727,11 +729,21 @@ endfor
 
 ;if there is a second background selection
 if ((*global).selection_background_2 EQ 1) then begin  
+
     xmin_back_2 = XYbackground_2[0]
     xmax_back_2 = XYbackground_2[1]
     ymin_back_2 = XYbackground_2[2]
     ymax_back_2 = XYbackground_2[3]
 
+    if (instrument EQ 'REF_M') then begin
+        
+        xmin_back_2 = round(xmin_back_2/2)
+        xmax_back_2 = round(xmax_back_2/2)
+        ymin_back_2 = round(ymin_back_2/2)
+        ymax_back_2 = round(ymax_back_2/2)
+
+    endif
+    
     background_2_array = intarr(Nx, Ny)
     
     for x=xmin_back_2,xmax_back_2 do begin
@@ -739,11 +751,11 @@ if ((*global).selection_background_2 EQ 1) then begin
             background_2_array[x,y]=1
         endfor
     endfor
-
+    
 ;create new background array
- 
+    
     background_1_array += background_2_array
-   
+    
 endif
 
 ;remove from background array, pixel already in signal array
