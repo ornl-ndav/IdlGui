@@ -1103,7 +1103,7 @@ instrument_list = ['REF_L', 'REF_M']
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1350,$   ;1050
-                         SCR_YSIZE=570,$   ;442
+                         SCR_YSIZE=630,$   ;442
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -1303,6 +1303,79 @@ display_data_base = widget_draw(MAIN_BASE,$
                                 /BUTTON_EVENTS,$
                                 /MOTION_EVENTS)
 
+
+;INFORMATION ABOUT DISTANCES
+info_distance_base = widget_base(MAIN_BASE,$
+                                 xoffset=2,$
+                                 yoffset=570,$
+                                 scr_xsize=800,$
+                                 scr_ysize=55,$
+                                 frame=1)
+
+distance_sample_detector_das_label = widget_label(info_distance_base,$
+                                                  xoffset=5,$
+                                                  yoffset=0,$
+                                                  scr_ysize=30,$
+                                                  value='Distance sample - detector (DAS):')
+
+distanace_sample_detector_das = widget_label(info_distance_base,$
+                                             uname='distance_sample_detector_das',$
+                                             xoffset=220,$
+                                             yoffset=0,$
+                                             scr_xsize=150,$
+                                             scr_ysize=30,$
+                                             value='',$
+                                            /align_left)
+
+distance_sample_detector_nexus_label = widget_label(info_distance_base,$
+                                                    xoffset=5,$
+                                                    yoffset=25,$
+                                                    scr_ysize=30,$
+                                                    value='Distance sample - detector (NeXus):')
+
+distance_sample_detector_nexus = widget_label(info_distance_base,$
+                                              uname='distance_sample_detector_nexus',$
+                                              xoffset=230,$
+                                              yoffset=25,$
+                                              scr_xsize=150,$
+                                              scr_ysize=30,$
+                                              value='',$
+                                             /align_left)
+                                           
+
+
+;distance moderator detector
+xoff = 400
+distance_moderator_detector_das_label = widget_label(info_distance_base,$
+                                                  xoffset=5+xoff,$
+                                                  yoffset=0,$
+                                                  scr_ysize=30,$
+                                                  value='Distance moderator - detector (DAS):')
+
+distanace_moderator_detector_das = widget_label(info_distance_base,$
+                                             uname='distance_moderator_detector_das',$
+                                             xoffset=230+xoff,$
+                                             yoffset=0,$
+                                             scr_xsize=190,$
+                                             scr_ysize=30,$
+                                             value='',$
+                                               /align_left)
+
+distance_moderator_detector_nexus_label = widget_label(info_distance_base,$
+                                                    xoffset=5+xoff,$
+                                                    yoffset=25,$
+                                                    scr_ysize=30,$
+                                                    value='Distance moderator - detector (NeXus):')
+
+distance_moderator_detector_nexus = widget_label(info_distance_base,$
+                                                 uname='distance_moderator_detector_nexus',$
+                                                 xoffset=240+xoff,$
+                                                 yoffset=25,$
+                                                 scr_xsize=150,$
+                                                 scr_ysize=30,$
+                                                 value='',$
+                                                 /align_left)
+                                           
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$

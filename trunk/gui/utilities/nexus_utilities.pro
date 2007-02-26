@@ -76,6 +76,47 @@ end
 
 
 
+; \
+; \defgroup find_full_prenexus_name
+; \{
+;;
+
+;;
+; \brief This function looks for a prenexus file
+; using 'findnexus'
+;
+; \param event (INPUT) event structure
+; \param run_number (INPUT) run number
+; \param instrument (INPUT) instrument name
+;
+; \return full_nexus_name
+; full nexus file name (with full path)
+FUNCTION find_full_prenexus_name, Event, local, run_number, instrument
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd = "findnexus --prenexus -i " + instrument 
+;if (local EQ 1) then begin
+if (local) then begin
+    cmd += " --prefix " + (*global).working_path
+endif
+cmd += " " + strcompress(run_number,/remove_all)
+spawn, cmd, full_prenexus_name, err_listening
+
+;check if nexus exists
+result = strmatch(full_prenexus_name,"ERROR*")
+
+return, full_prenexus_name
+
+end
+; \}
+;;     //end of find_full_prenexus_name
+
+
+
+
 
 ; \defgroup get_path_to_prenexus
 ; \{

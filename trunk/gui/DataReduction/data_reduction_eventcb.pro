@@ -1004,6 +1004,12 @@ endif else begin
         text_nexus += full_nexus_name
         WIDGET_CONTROL, full_view_info, SET_VALUE=text_nexus,/append
         
+        if (instrument EQ 'REF_M') then begin
+
+            populate_distance_labels, event, full_nexus_name
+
+        endif
+
 ;dump binary data of NeXus file into tmp_working_path
         text = " - dump binary data......."
         WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
@@ -3629,7 +3635,7 @@ check_status_to_validate_go, Event
 end
 
 pro runs_to_process_text_eventcb, Event
-check_status_to_validate_go, Event
+heck_status_to_validate_go, Event
 end
 
 
@@ -3657,3 +3663,143 @@ tmp_working_path = dialog_pickfile(path=tmp_working_path,/directory)
 print, 'tmp_working_path: ' + tmp_working_path
 
 end
+
+
+
+
+
+
+function get_distance, text, pattern, index
+
+result = strsplit(text, pattern, /extract)
+
+return, result[index]
+end
+
+
+
+
+
+
+
+
+function display_xml_info_MDD, filename, item_name
+
+oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+
+oDocList = oDoc->GetElementsByTagName('motors_91031')
+obj1 = oDocList->item(0)
+
+obj2=obj1->GetElementsByTagName('ModeratorDetDis')
+obj3=obj2->item(0)
+
+obj3b=obj3->getattributes()
+obj3c=obj3b->getnameditem(item_name)
+
+return, obj3c->getvalue()
+
+end
+
+
+
+
+
+function display_xml_info_SDD, filename, item_name
+
+oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+
+oDocList = oDoc->GetElementsByTagName('motors_91031')
+obj1 = oDocList->item(0)
+
+obj2=obj1->GetElementsByTagName('SampleDetDis')
+obj3=obj2->item(0)
+
+obj3b=obj3->getattributes()
+obj3c=obj3b->getnameditem(item_name)
+
+return, obj3c->getvalue()
+
+end
+
+
+
+
+
+
+pro populate_distance_labels, event, full_nexus_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cmd_nxdir = "nxdir -p NXdetector/NXgeometry/NXtranslation/distance -l "
+cmd_nxdir += full_nexus_name
+
+distance_err = 0
+CATCH, distance_err
+
+distance_sample_detector_das_id = $
+  widget_info(Event.top,find_by_uname='distance_sample_detector_nexus')
+    
+if (distance_err NE 0) then begin
+    
+    widget_control, distance_sample_detector_das_id, set_value='N/A'
+
+endif else begin
+    
+    spawn, cmd_nxdir, listening
+    
+    distance_tmp = get_distance(listening[0],',',2)
+    distance = get_distance(distance_tmp, ']',0)
+    
+;distance sample - moderator nexus
+    widget_control, distance_sample_detector_das_id, set_value=distance + ' m'
+
+endelse
+
+catch,/cancel
+
+;distance sample - moderator nexus DAS
+cmd_nxdir = "nxdir -p NXmoderator/distance/ "
+cmd_nxdir += full_nexus_name + ' -o'
+spawn, cmd_nxdir, listening
+distance_DS_tmp  = get_distance(listening[0],'=',1)
+
+distance_DS = abs(float(distance_DS_tmp))
+distance_moderator_detector_nexus_id = $
+  widget_info(Event.top,find_by_uname='distance_moderator_detector_nexus')
+widget_control, distance_moderator_detector_nexus_id, $
+  set_value=strcompress(distance_DS,/remove_all) + ' m'
+
+full_prenexus_name = $
+  find_full_prenexus_name(Event, $
+                          0, $
+                          (*global).run_number, $
+                          (*global).instrument)
+
+;distance moderator_detector DAS
+value = display_xml_info_MDD(full_prenexus_name[0], "value")
+
+distance_moderator_detector_das_id = $
+  widget_info(event.top, find_by_uname='distance_moderator_detector_das')
+widget_control, distance_moderator_detector_das_id, set_value=value + ' mm'
+
+
+;distance sample detector NeXus
+value = display_xml_info_SDD(full_prenexus_name[0], "value")
+
+distance_sample_detector_das_id = $
+  widget_info(event.top, find_by_uname='distance_sample_detector_das')
+widget_control, distance_sample_detector_das_id, set_value=value + ' mm'
+
+
+    
+    
+
+
+
+
+
+
+end
+
