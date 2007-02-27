@@ -3646,7 +3646,7 @@ oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
 oDocList = oDoc->GetElementsByTagName('motors_91031')
 obj1 = oDocList->item(0)
 
-obj2=obj1->GetElementsByTagName('ModeratorDetDis')
+obj2=obj1->GetElementsByTagName('ModeratorSamDis')
 obj3=obj2->item(0)
 
 obj3b=obj3->getattributes()
@@ -3743,18 +3743,30 @@ full_prenexus_name = $
                           (*global).instrument)
 
 ;distance moderator_detector DAS
-value = display_xml_info_MDD(full_prenexus_name[0], "value")
+distance_err = 0
+CATCH, distance_err
 
-if (value EQ '') then begin
+if (distance_err NE 0) then begin
+
     value = 'N/A'
+
 endif else begin
-    value += ' mm'
+
+    value = display_xml_info_MDD(full_prenexus_name[0], "value")
+    
+    if (value EQ '') then begin
+        value = 'N/A'
+    endif else begin
+        value += ' mm'
+    endelse
+
 endelse
 
 distance_moderator_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_moderator_detector_das')
 widget_control, distance_moderator_detector_das_id, set_value=value
 
+catch,/cancel
 
 ;distance sample detector DAS
 value = display_xml_info_SDD(full_prenexus_name[0], "value")
