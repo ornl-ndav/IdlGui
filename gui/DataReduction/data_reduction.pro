@@ -371,7 +371,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=0.0,$          
+                                  SET_VALUE=1.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -1446,13 +1446,13 @@ distance_sample_detector_nexus = widget_label(info_distance_base,$
                                            
 
 
-;distance moderator detector
+;distance moderator detector (it's in fact mode to sample)
 xoff = 400
 distance_moderator_detector_das_label = widget_label(info_distance_base,$
                                                   xoffset=5+xoff,$
                                                   yoffset=0,$
                                                   scr_ysize=30,$
-                                                  value='Distance moderator - detector (DAS):')
+                                                  value='Distance moderator - sample (DAS):')
 
 distanace_moderator_detector_das = widget_label(info_distance_base,$
                                              uname='distance_moderator_detector_das',$
@@ -1467,7 +1467,7 @@ distance_moderator_detector_nexus_label = widget_label(info_distance_base,$
                                                     xoffset=5+xoff,$
                                                     yoffset=25,$
                                                     scr_ysize=30,$
-                                                    value='Distance moderator - detector (NeXus):')
+                                                    value='Distance moderator - sample (NeXus):')
 
 distance_moderator_detector_nexus = widget_label(info_distance_base,$
                                                  uname='distance_moderator_detector_nexus',$
@@ -1478,6 +1478,7 @@ distance_moderator_detector_nexus = widget_label(info_distance_base,$
                                                  value='',$
                                                  /align_left)
                                            
+
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
@@ -1566,6 +1567,28 @@ selection_mode_base = widget_base(MAIN_BASE,$
                                   SET_VALUE=0.0,$
                                   uname='selection_mode_group')
                                     
+
+;REF_M logo
+REF_M_logo = widget_draw(MAIN_BASE,$
+                         uname='REF_M_logo',$
+                         xoffset=815,$
+                         yoffset=568,$
+                         scr_xsize=530,$
+                         scr_ysize=60)
+                         
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ;data_reduction and other_plots tab
@@ -2144,6 +2167,15 @@ id = widget_info(main_base,find_by_uname="sns_logo_drawing")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
 image = read_bmp(sns_logo)
+tv, image,0,0,/true
+
+
+REF_M_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/REF_M_logo.bmp"
+id = widget_info(main_base,find_by_uname="REF_M_logo")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(REF_M_logo)
 tv, image,0,0,/true
 
 end
