@@ -757,19 +757,15 @@ xmax_back = XYbackground[1]
 ymin_back = XYbackground[2]
 ymax_back = XYbackground[3]
 
-if (instrument EQ 'REF_M') then begin
+xmin_signal = round(xmin_signal/2)
+xmax_signal = round(xmax_signal/2)
+ymin_signal = round(ymin_signal/2)
+ymax_signal = round(ymax_signal/2)
 
-    xmin_signal = round(xmin_signal/2)
-    xmax_signal = round(xmax_signal/2)
-    ymin_signal = round(ymin_signal/2)
-    ymax_signal = round(ymax_signal/2)
-    
-    xmin_back = round(xmin_back/2)
-    xmax_back = round(xmax_back/2)
-    ymin_back = round(ymin_back/2)
-    ymax_back = round(ymax_back/2)
-
-endif
+xmin_back = round(xmin_back/2)
+xmax_back = round(xmax_back/2)
+ymin_back = round(ymin_back/2)
+ymax_back = round(ymax_back/2)
 
 Nx = (*global).Ny
 Ny = (*global).Nx
@@ -799,14 +795,10 @@ if ((*global).selection_background_2 EQ 1) then begin
     ymin_back_2 = XYbackground_2[2]
     ymax_back_2 = XYbackground_2[3]
 
-    if (instrument EQ 'REF_M') then begin
-        
-        xmin_back_2 = round(xmin_back_2/2)
-        xmax_back_2 = round(xmax_back_2/2)
-        ymin_back_2 = round(ymin_back_2/2)
-        ymax_back_2 = round(ymax_back_2/2)
-
-    endif
+    xmin_back_2 = round(xmin_back_2/2)
+    xmax_back_2 = round(xmax_back_2/2)
+    ymin_back_2 = round(ymin_back_2/2)
+    ymax_back_2 = round(ymax_back_2/2)
     
     background_2_array = intarr(Nx, Ny)
     
@@ -1415,21 +1407,12 @@ id_draw = widget_info(Event.top, find_by_uname='display_data_base')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 
-if (instrument EQ 'REF_L') then begin
+New_Ny = 2*Nx
+New_Nx = 2*Ny
 
-    tvscl,img
-
-endif else begin
-
-    New_Ny = 2*Nx
-    New_Nx = 2*Ny
+tvimg = rebin(img, New_Nx, New_Ny,/sample)
+tvscl, tvimg, /device
     
-    tvimg = rebin(img, New_Nx, New_Ny,/sample)
-    tvscl, tvimg, /device
-    
-endelse
-
-
 ;plot selection we want to keep
 plot_selection,Event
 
@@ -1489,19 +1472,11 @@ DEVICE, DECOMPOSED = 0
 wset, id
 img = (*(*global).img_ptr)
 
-if ((*global).instrument EQ 'REF_L') then begin
+New_Ny = 2*(*global).Nx
+New_Nx = 2*(*global).Ny
 
-    tvscl,img
-
-endif else begin
-
-    New_Ny = 2*(*global).Nx
-    New_Nx = 2*(*global).Ny
-    
-    tvimg = rebin(img, New_Nx, New_Ny,/sample)
-    tvscl, tvimg, /device
-
-endelse
+tvimg = rebin(img, New_Nx, New_Ny,/sample)
+tvscl, tvimg, /device
 
 selection_value = (*global).selection_value
 selection_signal = (*global).selection_signal
@@ -1684,10 +1659,8 @@ if (selection_mode EQ 0 AND file_opened EQ 1) then begin
     x = Event.x
     y = Event.y
 
-    if (instrument EQ 'REF_M') then begin
-        x = round(x/2)
-        y = round(y/2)
-    endif
+    x = round(x/2)
+    y = round(y/2)
 
 ;set data
     text = " x= " + strcompress(x,/remove_all)
@@ -1708,11 +1681,6 @@ if (selection_mode EQ 1 AND file_opened EQ 1) then begin
     x=event.x
     y=event.y
     
-;    if (instrument EQ 'REF_M') then begin
-;        x = round (x/2)
-;        y = round (y/2)
-;    endif
-
     if (left_click_number EQ 0) then begin
     
         if (signal_or_background EQ 0) then begin
@@ -1803,10 +1771,8 @@ endif
 full_text_selection_1 = ''
 full_text_selection_2 = 'The two corners are defined by:'
          
-if ((*global).instrument EQ 'REF_M') then begin
-    y = round(y/2)
-    x = round(x/2)
-endif
+y = round(y/2)
+x = round(x/2)
 
 y_min = min(y)
 y_max = max(y)
@@ -2149,14 +2115,10 @@ x2_signal = (*global).x2_signal
 y1_signal = (*global).y1_signal
 y2_signal = (*global).y2_signal
 
-if (instrument eq 'REF_M') then begin
-
-    x1_signal = round(x1_signal/2)
-    x2_signal = round(x2_signal/2)
-    y1_signal = round(y1_signal/2)
-    y2_signal = round(y2_signal/2)
-
-endif
+x1_signal = round(x1_signal/2)
+x2_signal = round(x2_signal/2)
+y1_signal = round(y1_signal/2)
+y2_signal = round(y2_signal/2)
 
 XYsignal = reorder(x1_signal, x2_signal, y1_signal, y2_signal)
 
@@ -2169,14 +2131,10 @@ x2_back = (*global).x2_back
 y1_back = (*global).y1_back
 y2_back = (*global).y2_back
 
-if (instrument eq 'REF_M') then begin
-
-    x1_back = round(x1_back/2)
-    x2_back = round(x2_back/2)
-    y1_back = round(y1_back/2)
-    y2_back = round(y2_back/2)
-
-endif
+x1_back = round(x1_back/2)
+x2_back = round(x2_back/2)
+y1_back = round(y1_back/2)
+y2_back = round(y2_back/2)
 
 XYbackground = reorder(x1_back, x2_back, y1_back, y2_back)
 
@@ -2186,14 +2144,10 @@ x2_back_2 = (*global).x2_back_2
 y1_back_2 = (*global).y1_back_2
 y2_back_2 = (*global).y2_back_2
 
-if (instrument eq 'REF_M') then begin
-
-    x1_back_2 = round(x1_back_2/2)
-    x2_back_2 = round(x2_back_2/2)
-    y1_back_2 = round(y1_back_2/2)
-    y2_back_2 = round(y2_back_2/2)
-
-endif
+x1_back_2 = round(x1_back_2/2)
+x2_back_2 = round(x2_back_2/2)
+y1_back_2 = round(y1_back_2/2)
+y2_back_2 = round(y2_back_2/2)
 
 XYbackground_2 = reorder(x1_back_2, x2_back_2, y1_back_2, y2_back_2)
 
@@ -3728,7 +3682,7 @@ end
 
 
 
-pro populate_distance_labels, event, full_nexus_name
+pro populate_distance_labels, event, full_nexus_name  ;REF_M
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -3744,34 +3698,43 @@ distance_sample_detector_das_id = $
   widget_info(Event.top,find_by_uname='distance_sample_detector_nexus')
     
 if (distance_err NE 0) then begin
-    
     widget_control, distance_sample_detector_das_id, set_value='N/A'
-
 endif else begin
-    
     spawn, cmd_nxdir, listening
     
     distance_tmp = get_distance(listening[0],',',2)
     distance = get_distance(distance_tmp, ']',0)
     
-;distance sample - moderator nexus
-    widget_control, distance_sample_detector_das_id, set_value=distance + ' m'
+    if (distance EQ '') then begin
+        distance = 'N/A'
+    endif else begin
+        distance += ' m'
+    endelse
 
+;distance sample - moderator nexus
+    widget_control, distance_sample_detector_das_id, set_value=distance
 endelse
 
 catch,/cancel
 
-;distance sample - moderator nexus DAS
+;distance sample - moderator nexus nexus
 cmd_nxdir = "nxdir -p NXmoderator/distance/ "
 cmd_nxdir += full_nexus_name + ' -o'
 spawn, cmd_nxdir, listening
 distance_DS_tmp  = get_distance(listening[0],'=',1)
 
-distance_DS = abs(float(distance_DS_tmp))
+if (distance_DS_tmp EQ '') then begin
+    distance_DS = 'N/A'
+endif else begin
+    distance_DS = abs(float(distance_DS_tmp))
+    distance_DS = strcompress(distance_DS) + ' m'
+endelse
+
 distance_moderator_detector_nexus_id = $
   widget_info(Event.top,find_by_uname='distance_moderator_detector_nexus')
+
 widget_control, distance_moderator_detector_nexus_id, $
-  set_value=strcompress(distance_DS,/remove_all) + ' m'
+  set_value=strcompress(distance_DS,/remove_all)
 
 full_prenexus_name = $
   find_full_prenexus_name(Event, $
@@ -3782,17 +3745,29 @@ full_prenexus_name = $
 ;distance moderator_detector DAS
 value = display_xml_info_MDD(full_prenexus_name[0], "value")
 
+if (value EQ '') then begin
+    value = 'N/A'
+endif else begin
+    value += ' mm'
+endelse
+
 distance_moderator_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_moderator_detector_das')
-widget_control, distance_moderator_detector_das_id, set_value=value + ' mm'
+widget_control, distance_moderator_detector_das_id, set_value=value
 
 
-;distance sample detector NeXus
+;distance sample detector DAS
 value = display_xml_info_SDD(full_prenexus_name[0], "value")
+
+if (value EQ '') then begin
+    value = 'N/A'
+endif else begin
+    value += ' mm'
+endelse
 
 distance_sample_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_sample_detector_das')
-widget_control, distance_sample_detector_das_id, set_value=value + ' mm'
+widget_control, distance_sample_detector_das_id, set_value=value
 
 end
 
