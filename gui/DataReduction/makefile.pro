@@ -6,6 +6,7 @@
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 resolve_routine, "system_utilities", /either
 resolve_routine, "nexus_utilities", /either
+resolve_routine, "prenexus_utilities", /either
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/"
 resolve_routine, "data_reduction_eventcb", /either
