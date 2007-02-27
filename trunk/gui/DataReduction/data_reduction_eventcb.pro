@@ -1,3 +1,19 @@
+function produce_output_file_name, Event, run_number, extension
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tmp_folder = (*global).local_folder
+
+output_file_name = tmp_folder + (*global).instrument 
+output_file_name += "_" + run_number + extension
+
+return, output_file_name 
+end
+
+
+
 function is_local_nexus_function, processing_run_number_array
 
 array_result = strmatch(processing_run_number_array,'*\**')
@@ -639,6 +655,54 @@ end
 
 
 
+
+
+pro sequentially_help_runs_to_process, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+push_button = (*global).push_button
+id_text_box = widget_info(Event.top, find_by_uname='sequentially_runs_to_process_text')
+
+if (push_button EQ 0) then begin
+
+;save previous contains of text box
+    widget_control, id_text_box, get_value=previous_text
+    (*global).previous_text = previous_text
+
+;put help contains
+    (*global).push_button = 1
+    text = '1920-1924,1928,1930,1950-1955'
+
+endif else begin
+
+;put back previous contain of text box
+    (*global).push_button = 0
+    text = (*global).previous_text
+
+endelse
+
+widget_control, id_text_box, set_value=text
+
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;Create the output array for signal selection
 pro create_signal_pid_array_file, XY, file_name
 
@@ -766,7 +830,6 @@ for x=xmin_signal,xmax_signal do begin
     endfor
 endfor
 
-
 openw, 1, file_name
 
 i=0
@@ -800,7 +863,8 @@ function get_signal_background_pid_file_name, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-tmp_folder = (*global).tmp_folder
+;tmp_folder = (*global).tmp_folder
+tmp_folder = (*global).local_folder
 pid_file_extension = (*global).pid_file_extension
 first_part = tmp_folder + (*global).instrument
 first_part += "_" + (*global).run_number
@@ -1037,6 +1101,10 @@ endif else begin
         if (instrument EQ 'REF_L') then begin
             new_text = strcompress(run_number,/remove_all)
             widget_control, runs_to_process_text_id, set_value=new_text
+            sequentially_runs_to_process_text_id = $
+              widget_info(event.top,$
+                          find_by_uname='sequentially_runs_to_process_text')
+            widget_control, sequentially_runs_to_process_text_id, set_value=new_text
         endif else begin ;only copy run number into run to process if REF_M
             combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
             new_text = strcompress(run_number,/remove_all)            
@@ -1154,7 +1222,7 @@ end
 
 
 
-PRO dump_binary_data, Event, full_nexus_name
+pro dump_binary_data, Event, full_nexus_name
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1167,8 +1235,7 @@ full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 tmp_working_path = (*global).tmp_working_path
 tmp_working_path += "_" + (*global).instrument + "/"
 
-tmp_folder = (*global).output_path + tmp_working_path
-(*global).tmp_folder = tmp_folder
+tmp_folder = (*global).tmp_folder
 cmd_create = "mkdir " + tmp_folder
 
 text= " [ " + cmd_create + "..."
@@ -1306,7 +1373,8 @@ text = " - plot NeXus file: " + nexus_file_name_only + "..."
 WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 
 ;determine path	
-path = (*global).tmp_folder
+;path = (*global).tmp_folder
+path = (*global).local_folder
 cd, path
         
 WIDGET_CONTROL, full_view_info, SET_VALUE=' [ - reading in data...', /APPEND
@@ -2341,7 +2409,6 @@ widget_control,id,get_uvalue=global
 
 ;remove temporary file
 tmp_folder = (*global).tmp_folder
-print, 'tmp_folder: ' + tmp_folder
 if (tmp_folder NE '') then begin
     cmd_remove = "rm -r " + tmp_folder
     spawn, cmd_remove
@@ -2356,7 +2423,7 @@ end
 
 
 
-pro start_data_reduction_button_eventcb, Event
+pro start_data_reduction_button_eventcb, Event   ;for REF_M
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -2378,13 +2445,8 @@ full_background_pid_file_name = (*global).background_pid_file_name
 ;*****************************
 ;get normalization run number
 ;check if we want normalization or not
-if (instrument EQ 'REF_L') then begin
-    normalization_status_id = widget_info(Event.top, $
-                                          find_by_uname='normalization_list_group_REF_L')
-endif else begin
-    normalization_status_id = widget_info(Event.top, $
+normalization_status_id = widget_info(Event.top, $
                                           find_by_uname='normalization_list_group_REF_M')
-endelse
 widget_control, normalization_status_id, get_value=norm_flag
 
 ;norm_flag=0 means with normalization
@@ -2395,7 +2457,7 @@ if (norm_flag EQ 0) then begin
     
     if (run_number_normalization NE '') then begin
         
-                                ;verify format 
+;verify format 
         wrong_format = 0
         CATCH, wrong_run_number_format
         
@@ -2470,19 +2532,11 @@ widget_control, bkg_flag_id, get_value=bkg_flag
 
 ;*****************************
 ;get runs_to_process list of files
-if (instrument eq 'REF_L') then begin ;REF_L
-    runs_to_process_text_id = widget_info(Event.top, $
-                                          find_by_uname='runs_to_process_text')
-    widget_control, runs_to_process_text_id, get_value=runs_to_process
-    runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
-endif else begin                ;REF_M
-    several_nexus_combobox_id = $
-      widget_info(Event.top,$
-                  find_by_uname='several_nexus_combobox')
-    widget_control, several_nexus_combobox_id, get_value=runs_to_process
-    runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
-
-endelse
+several_nexus_combobox_id = $
+  widget_info(Event.top,$
+              find_by_uname='several_nexus_combobox')
+widget_control, several_nexus_combobox_id, get_value=runs_to_process
+runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
 
 ;*****************************
 ;check status of normalize bkg
@@ -2491,215 +2545,62 @@ widget_control, norm_bkg_id, get_value=norm_bkg_value
 
 ;*****************************
 ;check status of intermediate outputs
-if (instrument EQ 'REF_L') then begin
-    interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
-endif else begin
-    interm_id = widget_info(Event.top, $
-                            find_by_uname='intermediate_file_output_list_group_REF_M')
-endelse
-
+interm_id = widget_info(Event.top, $
+                        find_by_uname='intermediate_file_output_list_group_REF_M')
 widget_control, interm_id, get_value=interm_status
 
-if (instrument EQ 'REF_M') then begin
+array_of_parameters = retrieve_REF_M_parameters(Event)
+wave_min = array_of_parameters[0]
+wave_max = array_of_parameters[1]
+wave_width = array_of_parameters[2]
+detector_angle_rad = array_of_parameters[3]
+detector_angle_err = array_of_parameters[4]
+
+nbr_runs_to_use_size = size(runs_and_full_path)
+nbr_runs_to_use = nbr_runs_to_use_size[1]
+
+if (nbr_runs_to_use GT 1) then begin
+    screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+    widget_control, screen_base_id, map=1
+endif
+
+for i=0,(nbr_runs_to_use-1) do begin
     
-    array_of_parameters = retrieve_REF_M_parameters(Event)
-    wave_min = array_of_parameters[0]
-    wave_max = array_of_parameters[1]
-    wave_width = array_of_parameters[2]
-    detector_angle_rad = array_of_parameters[3]
-    detector_angle_err = array_of_parameters[4]
+    (*global).processing_run_number = runs_and_full_path[i,0]
     
-    nbr_runs_to_use_size = size(runs_and_full_path)
-    nbr_runs_to_use = nbr_runs_to_use_size[1]
-
-    if (nbr_runs_to_use GT 1) then begin
-        screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
-        widget_control, screen_base_id, map=1
-    endif
-
-    for i=0,(nbr_runs_to_use-1) do begin
-        
-        (*global).processing_run_number = runs_and_full_path[i,0]
-
 ;start command line for REF_M
-        REF_M_cmd_line = "reflect_reduction "
-        
-;add list of NeXus run numbers
-        runs_text = ""
-;    REF_M_cmd_line += full_path_to_nexus_normalization
-        REF_M_cmd_line += runs_and_full_path[i,1]
-        
-;normalization
-        if (norm_flag EQ 0) then begin
-            
-;    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
-            norm_cmd = "  --norm=" + strcompress(full_path_to_nexus_normalization,/remove_all)
-            REF_M_cmd_line += norm_cmd
-            
-        endif
-        
-;signal Pid file flag
-        signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
-        REF_M_cmd_line += signal_pid_cmd
-
-;background Pid file flag
-        if (bkg_flag EQ 0) then begin
-            bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-            REF_M_cmd_line += bkg_pid_cmd
-        endif  else begin      
-            REF_M_cmd_line += " --no-bkg"
-        endelse
-        
-;--no-norm-bkg
-        if (norm_bkg_value EQ 1) then begin
-            norm_bkg_cmd = " --no-norm-bkg"
-            REF_M_cmd_line += norm_bkg_cmd
-        endif
-        
-;--dump_all or various plots
-        if (interm_status EQ 0) then begin
-            list_of_plots = (*global).plots_selected
-            
-            interm_plot_cmd = ""
-;.sdc 
-            if (list_of_plots[0] EQ 1) then begin
-                interm_plot_cmd += " --dump-specular"
-            endif
-            
-;.norm
-            if (list_of_plots[2] EQ 1) then begin
-                interm_plot_cmd += " --dump-norm"
-            endif
-            
-;.bnk
-            if (list_of_plots[3] EQ 1) then begin
-                interm_plot_cmd += " --dump-norm-bkg"
-            endif
-            
-            REF_M_cmd_line += interm_plot_cmd
-
-        endif
-        
-;min, max and width angles
-        l_bins_cmd = " --l-bins=" + strcompress(wave_min,/remove_all)
-        l_bins_cmd += "," + strcompress(wave_max,/remove_all)
-        l_bins_cmd += "," + strcompress(wave_width,/remove_all)
-        
-        REF_M_cmd_line += l_bins_cmd    
-        
-;detector_angle
-        det_angle_cmd = " --det-angle="      
-        det_angle_cmd += strcompress(detector_angle_rad,/remove_all)
-        det_angle_cmd += "," + strcompress(detector_angle_err,/remove_all)
-        
-        REF_M_cmd_line += det_angle_cmd
-        
-        text = "Processing data reduction of run # " + $
-          strcompress(runs_and_full_path[i,0],/remove_all)
-        text += " ..."
-        
-        widget_control, view_info, set_value=text,/append
-        full_text = " running using the following command line:"
-        widget_control, full_view_info, set_value=full_text,/append
-        
-        full_text = "> " + REF_M_cmd_line
-        cmd_line = REF_M_cmd_line
-        
-        widget_control, full_view_info, set_value=full_text,/append
-        starting_time = systime(1)
-    
-        widget_control,/hourglass
-        
-;desactive run_reduction_button
-        start_data_reduction_button_id = $
-          widget_info(Event.top,$
-                      find_by_uname='start_data_reduction_button')
-        widget_control, start_data_reduction_button_id, sensitive=0
-        
-;main data reduction command line
-        spawn, cmd_line, listening  
-        
-        (*global).data_reduction_done = 1             
-        
-        ending_time = systime(1)
-        
-        total_processing_time = ending_time - starting_time
-        full_text = ' -> work # ' + strcompress(i+1,/remove_all) + $
-          '/' + strcompress(nbr_runs_to_use) + ' done in ' + $
-          strcompress(total_processing_time,/remove_all) + ' s'
-    
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
-    
-        text = ' -> plotting main output file...'
-        main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
-        (*global).main_output_file_name = main_output_file_name
-        full_text = 'Plotting main output file: ' + main_output_file_name
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
-        
-;plot main .txt file
-        draw_id = 'data_reduction_plot'
-        title = "Intensity vs. TOF (run # " + $
-          strcompress(runs_and_full_path[i,0],/remove_all) + ")"
-        plot_reduction, $
-          Event, $
-          main_output_file_name, $
-          draw_id, $
-          title
-        
-        text = '...plot is done'
-        full_text = '...plot is done'
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
-        
-    endfor
-    
-    text = '...Full process is done'
-    full_text = '...Full process is done'
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
-    
-endif else begin                ;REF_L
-    
-    nbr_runs_to_use_size = size(runs_and_full_path)
-    nbr_runs_to_use = nbr_runs_to_use_size[1]
-    
-;start command line for REF_L
-    REF_L_cmd_line = "reflect_tofred_batch " 
+    REF_M_cmd_line = "reflect_reduction "
     
 ;add list of NeXus run numbers
     runs_text = ""
-    for j=0,(nbr_runs_to_use-1) do begin
-        runs_text += strcompress(runs_and_full_path[j,0],/remove_all) + " "
-    endfor
-    REF_L_cmd_line += runs_text
+;    REF_M_cmd_line += full_path_to_nexus_normalization
+    REF_M_cmd_line += runs_and_full_path[i,1]
     
 ;normalization
     if (norm_flag EQ 0) then begin
-        norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
-        REF_L_cmd_line += norm_cmd
+        
+;    norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+        norm_cmd = "  --norm=" + strcompress(full_path_to_nexus_normalization,/remove_all)
+        REF_M_cmd_line += norm_cmd
+        
     endif
-    
-    REF_L_cmd_line += " -- "
     
 ;signal Pid file flag
     signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
-    REF_L_cmd_line += signal_pid_cmd
+    REF_M_cmd_line += signal_pid_cmd
     
 ;background Pid file flag
-    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
-    REF_L_cmd_line += bkg_pid_cmd
-    
-;background flag
-    if (bkg_flag EQ 1) then begin
-        REF_L_cmd_line += " --no-bkg"
-    endif
+    if (bkg_flag EQ 0) then begin
+        bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+        REF_M_cmd_line += bkg_pid_cmd
+    endif  else begin      
+        REF_M_cmd_line += " --no-bkg"
+    endelse
     
 ;--no-norm-bkg
     if (norm_bkg_value EQ 1) then begin
         norm_bkg_cmd = " --no-norm-bkg"
-        REF_L_cmd_line += norm_bkg_cmd
+        REF_M_cmd_line += norm_bkg_cmd
     endif
     
 ;--dump_all or various plots
@@ -2712,34 +2613,45 @@ endif else begin                ;REF_L
             interm_plot_cmd += " --dump-specular"
         endif
         
-;.sub
-        if (list_of_plots[2] EQ 1) then begin
-            interm_plot_cmd += " --dump-sub"
-        endif
-        
 ;.norm
-        if (list_of_plots[3] EQ 1) then begin
+        if (list_of_plots[2] EQ 1) then begin
             interm_plot_cmd += " --dump-norm"
         endif
         
 ;.bnk
-        if (list_of_plots[4] EQ 1) then begin
+        if (list_of_plots[3] EQ 1) then begin
             interm_plot_cmd += " --dump-norm-bkg"
         endif
         
-        REF_L_cmd_line += interm_plot_cmd
+        REF_M_cmd_line += interm_plot_cmd
         
     endif
     
-    text = "Processing data reduction...."
+;min, max and width angles
+    l_bins_cmd = " --l-bins=" + strcompress(wave_min,/remove_all)
+    l_bins_cmd += "," + strcompress(wave_max,/remove_all)
+    l_bins_cmd += "," + strcompress(wave_width,/remove_all)
+    
+    REF_M_cmd_line += l_bins_cmd    
+    
+;detector_angle
+    det_angle_cmd = " --det-angle="      
+    det_angle_cmd += strcompress(detector_angle_rad,/remove_all)
+    det_angle_cmd += "," + strcompress(detector_angle_err,/remove_all)
+    
+    REF_M_cmd_line += det_angle_cmd
+    
+    text = "Processing data reduction of run # " + $
+      strcompress(runs_and_full_path[i,0],/remove_all)
+    text += " ..."
     
     widget_control, view_info, set_value=text,/append
     full_text = " running using the following command line:"
     widget_control, full_view_info, set_value=full_text,/append
     
-    full_text = "> " + REF_L_cmd_line
-    cmd_line = REF_L_cmd_line
-        
+    full_text = "> " + REF_M_cmd_line
+    cmd_line = REF_M_cmd_line
+    
     widget_control, full_view_info, set_value=full_text,/append
     starting_time = systime(1)
     
@@ -2747,24 +2659,27 @@ endif else begin                ;REF_L
     
 ;desactive run_reduction_button
     start_data_reduction_button_id = $
-      widget_info(Event.top,find_by_uname='start_data_reduction_button')
+      widget_info(Event.top,$
+                  find_by_uname='start_data_reduction_button')
     widget_control, start_data_reduction_button_id, sensitive=0
     
 ;main data reduction command line
+    cd, (*global).local_folder
     spawn, cmd_line, listening  
     
     (*global).data_reduction_done = 1             
     
-    text = "...DONE"
     ending_time = systime(1)
     
     total_processing_time = ending_time - starting_time
-    full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
+    full_text = ' -> work # ' + strcompress(i+1,/remove_all) + $
+      '/' + strcompress(nbr_runs_to_use) + ' done in ' + $
+      strcompress(total_processing_time,/remove_all) + ' s'
     
     widget_control, full_view_info, set_value=full_text,/append
     widget_control, view_info, set_value=text,/append
     
-    text = 'Plotting output main output file....'
+    text = ' -> plotting main output file...'
     main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
     (*global).main_output_file_name = main_output_file_name
     full_text = 'Plotting main output file: ' + main_output_file_name
@@ -2773,23 +2688,30 @@ endif else begin                ;REF_L
     
 ;plot main .txt file
     draw_id = 'data_reduction_plot'
-    title = "Intensity vs. Wavelength "
+    title = "Intensity vs. TOF (run # " + $
+      strcompress(runs_and_full_path[i,0],/remove_all) + ")"
     plot_reduction, $
       Event, $
       main_output_file_name, $
       draw_id, $
       title
     
-    text = '...done'
-    full_text = '...done'
+    text = '...plot is done'
+    full_text = '...plot is done'
     widget_control, full_view_info, set_value=full_text,/append
     widget_control, view_info, set_value=text,/append
     
-    widget_control,hourglass=0
-    
-endelse
+endfor
+
+text = '...Full process is done'
+full_text = '...Full process is done'
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, view_info, set_value=text,/append
 
 end
+
+
+
 
 
 
@@ -2802,6 +2724,8 @@ widget_control,id,get_uvalue=global
 (*global).cancel_data_reduction = 1
 
 end
+
+
 
 
 
@@ -3418,8 +3342,7 @@ widget_control,id,get_uvalue=global
 
 status=0
 instrument = (*global).instrument
-start_data_reduction_button_id = widget_info(Event.top,$
-                                             find_by_uname='start_data_reduction_button')
+
 ;check if there is a signal pid file 
 signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
 widget_control, signal_pid_text_id, get_value=signal_pid_text
@@ -3585,10 +3508,30 @@ if (strcompress(signal_pid_text,/remove_all) NE '' AND $
     
 endif
 
-if (status EQ 1) then begin 
-    widget_control,start_data_reduction_button_id, sensitive=1
+if (instrument EQ 'REF_M') then begin
+    
+start_data_reduction_button_id = $
+  widget_info(Event.top,$
+              find_by_uname='start_data_reduction_button')
+
+    if (status EQ 1) then begin 
+        widget_control,start_data_reduction_button_id, sensitive=1
+    endif else begin
+        widget_control,start_data_reduction_button_id, sensitive=0
+    endelse
+
 endif else begin
-    widget_control,start_data_reduction_button_id, sensitive=0
+
+start_data_reduction_button_REF_L_id = $
+  widget_info(Event.top,$
+              find_by_uname='start_data_reduction_button_REF_L')
+
+    if (status EQ 1) then begin 
+        widget_control,start_data_reduction_button_REF_L_id, sensitive=1
+    endif else begin
+        widget_control,start_data_reduction_button_REF_L_id, sensitive=0
+    endelse
+
 endelse
 
 end
@@ -3635,7 +3578,7 @@ check_status_to_validate_go, Event
 end
 
 pro runs_to_process_text_eventcb, Event
-heck_status_to_validate_go, Event
+check_status_to_validate_go, Event
 end
 
 
@@ -3650,6 +3593,8 @@ spawn, '/SNS/users/j35/IDL/MainInterface/sns_idl_tools &'
 end
 
 
+
+
 pro working_path_eventcb, Event
 
 ;get global structure
@@ -3657,13 +3602,70 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 tmp_working_path = (*global).tmp_working_path
-tmp_working_path = dialog_pickfile(path=tmp_working_path,/directory)
-(*global).tmp_working_path = tmp_working_path
 
-print, 'tmp_working_path: ' + tmp_working_path
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+no_folder = 0
+catch, no_folder
+
+if (no_folder NE 0) then begin
+
+    text = 'Working folder is still: ' + (*global).local_folder
+
+endif else begin
+
+    tmp_working_path = dialog_pickfile(path=tmp_working_path,/directory)
+    (*global).local_folder = tmp_working_path
+    text = 'Working folder is now: ' + tmp_working_path
+
+endelse
+
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=text, /append
+
+catch,/cancel
 
 end
 
+
+
+
+
+
+pro working_path_ref_l_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+local_folder = (*global).local_folder
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+no_folder = 0
+catch, no_folder
+
+if (no_folder NE 0) then begin
+
+    text = 'Working folder is still: ' + (*global).local_folder
+
+endif else begin
+
+    tmp_working_path = dialog_pickfile(path=local_folder,/directory)
+    (*global).local_folder = tmp_working_path
+    
+endelse
+
+widget_control, view_info, set_value=text, /append
+widget_control, full_view_info, set_value=text, /append
+
+catch,/cancel
+
+end
 
 
 
@@ -3792,14 +3794,422 @@ distance_sample_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_sample_detector_das')
 widget_control, distance_sample_detector_das_id, set_value=value + ' mm'
 
+end
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+pro start_data_reduction_button_eventcb_REF_L, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+stop_reduction = 0
+
+;info_box id
+view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+;retrieve values of all input
+
+;retrieve value of signal and background pid file
+full_signal_pid_file_name = (*global).signal_pid_file_name
+full_background_pid_file_name = (*global).background_pid_file_name
+
+;*****************************
+;get normalization run number
+;check if we want normalization or not
+normalization_status_id = widget_info(Event.top, $
+                                      find_by_uname='normalization_list_group_REF_L')
+widget_control, normalization_status_id, get_value=norm_flag
+
+;norm_flag=0 means with normalization
+if (norm_flag EQ 0) then begin 
+
+    normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
+    widget_control, normalization_text_id, get_value=run_number_normalization
     
+    if (run_number_normalization NE '') then begin
+        
+;verify format 
+        wrong_format = 0
+        CATCH, wrong_run_number_format
+        
+        if (wrong_run_number_format ne 0) then begin
+            
+            WIDGET_CONTROL, view_info, $
+              SET_VALUE="ERROR: normalization run number invalid", /APPEND
+            WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+            text = 'ERROR: normalization run number invalid - ' + run_number_normalization
+            WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+            WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
+            wrong_format = 1
+            stop_reduction = 1
+            
+        endif else begin
+            
+;routine use to test format of normalization run number
+            a=lonarr(float(run_number_normalization))
+            
+            if (wrong_format EQ 0) then begin
+                
+;get full NeXus path
+                cmd_findnexus = "findnexus -i" + (*global).instrument
+                cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
+                spawn, cmd_findnexus, full_path_to_nexus_normalization
+                
+;check if nexus exists
+                result = strmatch(full_path_to_nexus_normalization,"ERROR*")
+                
+                if (result[0] GE 1) then begin
+                    
+                    find_nexus = 0 ;run# does not exist in archive
+                    text = 'Normalization file does not exist'
+                    full_text = 'Normalization run number file does not exist (' + $
+                      full_path_to_nexus_normalization + ')'
+                    stop_reduction = 1
+                    
+                endif else begin
+                    
+                    find_nexus = 1 ;run# exist in archive
+                    text = 'Normalization file: OK'
+                    full_text = $
+                      'Normalization file used: ' + full_path_to_nexus_normalization  
+                    
+                endelse
+                
+                widget_control, view_info, set_value=text, /append
+                widget_control, full_view_info, set_value=full_text, /append
+                
+            endif
+            
+        endelse
+        
+        catch, /cancel
+        
+    endif else begin
+        
+        text = 'Please specify a normalization run number'
+        full_text = 'Normalization run number: MISSING'
+        widget_control, view_info, set_value=text, /append
+        widget_control, full_view_info, set_value=full_text, /append
+        stop_reduction = 1
+        
+    endelse
     
+endif
 
+;****************************
+;check status of bkg flag
+bkg_flag_id = widget_info(Event.top, find_by_uname='background_list_group')
+widget_control, bkg_flag_id, get_value=bkg_flag
 
+;*****************************
+;get runs_to_process list of files
 
+run_data_reduction_tab_id = widget_info(event.top,$
+                                        find_by_uname='run_data_reduction_tab')
+tab_value = widget_info(run_data_reduction_tab_id, /tab_current)
+                                        
+if (tab_value EQ 0) then begin
+    runs_to_process_text_id = widget_info(Event.top, $
+                                          find_by_uname='runs_to_process_text')
+endif else begin
+    runs_to_process_text_id = widget_info(event.top,$
+                                          find_by_uname='sequentially_runs_to_process_text')
+endelse
 
+widget_control, runs_to_process_text_id, get_value=runs_to_process
+runs_and_full_path = get_final_list_of_runs(Event, runs_to_process)
 
+;*****************************
+;check status of normalize bkg
+norm_bkg_id = widget_info(Event.top, find_by_uname='norm_background_list_group')
+widget_control, norm_bkg_id, get_value=norm_bkg_value
+
+;*****************************
+;check status of intermediate outputs
+interm_id = widget_info(Event.top, find_by_uname='intermediate_file_output_list_group')
+
+widget_control, interm_id, get_value=interm_status
+
+nbr_runs_to_use_size = size(runs_and_full_path)
+nbr_runs_to_use = nbr_runs_to_use_size[1]
+
+if (tab_value EQ 0) then begin
+
+;start command line for REF_L
+    REF_L_cmd_line = "reflect_tofred_batch " 
+    
+;add list of NeXus run numbers
+    runs_text = ""
+    for j=0,(nbr_runs_to_use-1) do begin
+        runs_text += strcompress(runs_and_full_path[j,0],/remove_all) + " "
+    endfor
+    REF_L_cmd_line += runs_text
+    
+;normalization
+    if (norm_flag EQ 0) then begin
+        norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+        REF_L_cmd_line += norm_cmd
+    endif
+    
+    REF_L_cmd_line += " -- "
+    
+;signal Pid file flag
+    signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+    REF_L_cmd_line += signal_pid_cmd
+    
+;background Pid file flag
+    bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+    REF_L_cmd_line += bkg_pid_cmd
+    
+;background flag
+    if (bkg_flag EQ 1) then begin
+        REF_L_cmd_line += " --no-bkg"
+    endif
+    
+;--no-norm-bkg
+    if (norm_bkg_value EQ 1) then begin
+        norm_bkg_cmd = " --no-norm-bkg"
+        REF_L_cmd_line += norm_bkg_cmd
+    endif
+    
+;--dump_all or various plots
+    if (interm_status EQ 0) then begin
+        list_of_plots = (*global).plots_selected
+        
+        interm_plot_cmd = ""
+;.sdc 
+        if (list_of_plots[0] EQ 1) then begin
+            interm_plot_cmd += " --dump-specular"
+        endif
+        
+;.sub
+        if (list_of_plots[2] EQ 1) then begin
+            interm_plot_cmd += " --dump-sub"
+        endif
+        
+;.norm
+        if (list_of_plots[3] EQ 1) then begin
+            interm_plot_cmd += " --dump-norm"
+        endif
+        
+;.bnk
+        if (list_of_plots[4] EQ 1) then begin
+            interm_plot_cmd += " --dump-norm-bkg"
+        endif
+        
+        REF_L_cmd_line += interm_plot_cmd
+        
+    endif
+    
+    text = "Processing data reduction...."
+    
+    widget_control, view_info, set_value=text,/append
+    full_text = " running using the following command line:"
+    widget_control, full_view_info, set_value=full_text,/append
+    
+    full_text = "> " + REF_L_cmd_line
+    cmd_line = REF_L_cmd_line
+    
+    widget_control, full_view_info, set_value=full_text,/append
+    starting_time = systime(1)
+    
+    widget_control,/hourglass
+    
+;desactive run_reduction_button
+    start_data_reduction_button_id = $
+      widget_info(Event.top,find_by_uname='start_data_reduction_button_REF_L')
+    widget_control, start_data_reduction_button_id, sensitive=0
+    
+;main data reduction command line
+    spawn, cmd_line, listening  
+    (*global).data_reduction_done = 1             
+    
+    text = "...DONE"
+    ending_time = systime(1)
+    
+    total_processing_time = ending_time - starting_time
+    full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
+    
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
+    text = 'Plotting output main output file....'
+    main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+    (*global).main_output_file_name = main_output_file_name
+    full_text = 'Plotting main output file: ' + main_output_file_name
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
+;plot main .txt file
+    draw_id = 'data_reduction_plot'
+    title = "Intensity vs. Wavelength "
+    plot_reduction, $
+      Event, $
+      main_output_file_name, $
+      draw_id, $
+      title
+    
+    text = '...plot is done'
+    full_text = '...plot is done'
+    widget_control, full_view_info, set_value=full_text,/append
+    widget_control, view_info, set_value=text,/append
+    
+endif else begin
+
+    for i=0,(nbr_runs_to_use-1) do begin
+        
+        full_text = '-> Working on run # ' + strcompress(runs_and_full_path[i,0]) + ':'
+        widget_control, full_view_info, set_value=full_text,/append
+        widget_control, view_info, set_value=full_text,/append
+
+;start command line for REF_L
+        REF_L_cmd_line = "reflect_tofred_batch " 
+        
+;add list of NeXus run numbers
+        runs_text = ""
+        runs_text += strcompress(runs_and_full_path[i,0],/remove_all) + " "
+        REF_L_cmd_line += runs_text
+        
+;normalization
+        if (norm_flag EQ 0) then begin
+            norm_cmd = " --norm=" + strcompress(run_number_normalization,/remove_all)
+            REF_L_cmd_line += norm_cmd
+        endif
+        
+        REF_L_cmd_line += " -- "
+        
+;signal Pid file flag
+        signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
+        REF_L_cmd_line += signal_pid_cmd
+        
+;background Pid file flag
+        bkg_pid_cmd = " --bkg-roi-file=" + full_background_pid_file_name 
+        REF_L_cmd_line += bkg_pid_cmd
+        
+;background flag
+        if (bkg_flag EQ 1) then begin
+            REF_L_cmd_line += " --no-bkg"
+        endif
+        
+;--no-norm-bkg
+        if (norm_bkg_value EQ 1) then begin
+            norm_bkg_cmd = " --no-norm-bkg"
+            REF_L_cmd_line += norm_bkg_cmd
+        endif
+        
+;--dump_all or various plots
+        if (interm_status EQ 0) then begin
+            list_of_plots = (*global).plots_selected
+            
+            interm_plot_cmd = ""
+;.sdc 
+            if (list_of_plots[0] EQ 1) then begin
+                interm_plot_cmd += " --dump-specular"
+            endif
+            
+;.sub
+            if (list_of_plots[2] EQ 1) then begin
+                interm_plot_cmd += " --dump-sub"
+            endif
+            
+;.norm
+            if (list_of_plots[3] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm"
+            endif
+            
+;.bnk
+            if (list_of_plots[4] EQ 1) then begin
+                interm_plot_cmd += " --dump-norm-bkg"
+            endif
+            
+            REF_L_cmd_line += interm_plot_cmd
+            
+        endif
+        
+        text = "Processing data reduction...."
+        
+        widget_control, view_info, set_value=text,/append
+        full_text = " running using the following command line:"
+        widget_control, full_view_info, set_value=full_text,/append
+        
+        full_text = "> " + REF_L_cmd_line
+        cmd_line = REF_L_cmd_line
+        
+        widget_control, full_view_info, set_value=full_text,/append
+        starting_time = systime(1)
+        
+        widget_control,/hourglass
+        
+;desactive run_reduction_button
+        start_data_reduction_button_id = $
+          widget_info(Event.top,find_by_uname='start_data_reduction_button_REF_L')
+        widget_control, start_data_reduction_button_id, sensitive=0
+        
+;main data reduction command line
+        spawn, cmd_line, listening  
+        
+        (*global).data_reduction_done = 1             
+        
+        text = "...DONE"
+        ending_time = systime(1)
+        
+        total_processing_time = ending_time - starting_time
+        full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
+        
+        widget_control, full_view_info, set_value=full_text,/append
+        widget_control, view_info, set_value=text,/append
+        
+        text = 'Plotting output main output file....'
+        main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+        (*global).main_output_file_name = main_output_file_name
+        full_text = 'Plotting main output file: ' + main_output_file_name
+        widget_control, full_view_info, set_value=full_text,/append
+        widget_control, view_info, set_value=text,/append
+        
+;plot main .txt file
+        draw_id = 'data_reduction_plot'
+        title = "Intensity vs. Wavelength "
+        plot_reduction, $
+          Event, $
+          main_output_file_name, $
+          draw_id, $
+          title
+        
+        text = '...plot is done'
+        full_text = '...plot is done'
+        widget_control, full_view_info, set_value=full_text,/append
+        widget_control, view_info, set_value=text,/append
+        
+    endfor
+
+endelse
+
+text = '...done'
+full_text = '...done'
+widget_control, full_view_info, set_value=full_text,/append
+widget_control, view_info, set_value=text,/append
+
+widget_control,hourglass=0
 
 end
+
+
+
+
 

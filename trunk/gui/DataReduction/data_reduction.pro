@@ -73,10 +73,16 @@ case Event.id of
           open_pid_file, Event, "background"
     end
 
-;help on input format of runs to process for REF_L
+;help on input format of runs to process for REF_L (add nexus)
     Widget_Info(wWidget, FIND_BY_UNAME='runs_to_process_help'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
           help_runs_to_process, Event
+    end
+
+;help on input format of runs to process for REF_L (sequentially)
+    Widget_Info(wWidget, FIND_BY_UNAME='sequentially_runs_to_process_help'): begin
+        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+          sequentially_help_runs_to_process, Event
     end
 
 ;help on input format of runs to process for REF_M
@@ -213,9 +219,14 @@ case Event.id of
         intermediate_plots_list_cancel_eventcb_REF_M,Event
     end
 
-;start data reduction for REF_L and REF_M
+;start data reduction for REF_M
     widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
         start_data_reduction_button_eventcb, Event
+    end
+
+;start data reduction for REF_L
+    widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button_REF_L'): begin
+        start_data_reduction_button_eventcb_REF_L, Event
     end
 
 ;cancel data reduction for REF_M
@@ -292,6 +303,11 @@ case Event.id of
         working_path_eventcb, Event
     end
 
+;working_path of REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='working_path_ref_l'): begin
+        working_path_ref_l_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -355,7 +371,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=1.0,$          
+                                  SET_VALUE=0.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -459,7 +475,8 @@ global = ptr_new({$
                    selection_background : 0,$
                    selection_background_2 : 0,$
                    selection_mode       : 1,$
-                   tmp_folder           : '',$
+                   tmp_folder           : '~/.tmp_data_reduction_REF_L/',$
+                   local_folder         : '~/local/REF_L/',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '',$
                    ucams                : user,$
@@ -549,7 +566,6 @@ intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
                                                xoffset=200,$
                                                yoffset=180)
                                                
-
 
 ;TOP LEFT BOX - OPEN NEXUS
 nexus_run_number_base = widget_base(MAIN_BASE,$
@@ -701,21 +717,21 @@ signal_pid_file_text = widget_text(data_reduction_base,$
 background_pid_file_button = widget_button(data_reduction_base,$
                                            uname='background_pid_file_button',$
                                            xoffset=5,$
-                                           yoffset=47,$
+                                           yoffset=40,$
                                            value='Back. Pid file',$
                                            sensitive=0)
 
 background_file_text = widget_text(data_reduction_base,$
                                    uname='background_pid_text',$
                                    xoffset=110,$
-                                   yoffset=47,$
+                                   yoffset=40,$
                                    scr_xsize=190,$
                                    value='',$
                                    /align_left,$
                                    /editable,$
                                    /all_events)
 
-norm_y_offset = 20
+norm_y_offset = 40
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
                                    yoffset=117-norm_y_offset,$
@@ -755,7 +771,7 @@ normalization_text = widget_text(norm_run_number_base,$
                                  /align_left,$
                                  /all_events)
 
-norm_bkg_offset = 10
+norm_bkg_offset = 30
 norm_background_title = widget_label(data_reduction_base,$
                                      xoffset=5,$
                                      yoffset=145-norm_bkg_offset,$
@@ -781,7 +797,7 @@ norm_frame = widget_base(data_reduction_base,$
                           scr_ysize=31,$
                           frame=1)
 
-bkg_offset = 10
+bkg_offset = 30
 background_title = widget_label(data_reduction_base,$
                                      xoffset=175,$
                                      yoffset=145-bkg_offset,$
@@ -806,28 +822,76 @@ back_frame = widget_base(data_reduction_base,$
                          scr_ysize=31,$
                          frame=1)
 
-runs_to_process_label = widget_label(data_reduction_base,$
-                                     xoffset=6,$
-                                     yoffset=183-norm_bkg_offset,$
+;add tab that offer the option to add NeXus or run sequentially runs
+run_data_reduction_tab = widget_tab(data_reduction_base,$
+                                    uname='run_data_reduction_tab',$
+                                    location=0,$
+                                    xoffset=0,$
+                                    yoffset=173-norm_bkg_offset,$
+                                    scr_xsize=310,$
+                                    scr_ysize=60)
+;                                    /tracking_events)
+
+;add NeXus file DATA REDUCTION
+add_nexus_tab_base = widget_base(run_data_reduction_tab,$
+                                 uname='add_nexus_tab_base',$
+                                 TITLE='ADD NeXus AND RUN',$
+                                 XOFFSET=0,$
+                                 YOFFSET=0)
+
+runs_to_process_label = widget_label(add_nexus_tab_base,$
+                                     xoffset=0,$
+                                     yoffset=12,$
                                      value='Runs #')
-runs_to_process_text = widget_text(data_reduction_base,$
-                                   xoffset=50,$
-                                   yoffset=173-norm_bkg_offset,$
+runs_to_process_text = widget_text(add_nexus_tab_base,$
+                                   xoffset=45,$
+                                   yoffset=2,$
                                    scr_xsize=230,$
                                    value='',$
                                    uname='runs_to_process_text',$
                                    /editable,$
                                    /align_left,$
                                    /all_events)
-runs_to_process_help = widget_button(data_reduction_base,$
+runs_to_process_help = widget_button(add_nexus_tab_base,$
                                      uname='runs_to_process_help',$
                                      xoffset=280,$
-                                     yoffset=173-norm_bkg_offset,$
+                                     yoffset=2,$
                                      scr_xsize=20,$
                                      scr_ysize=30,$
                                      value='?',$
                                     /pushbutton_events,$
                                      tooltip='Click to see the format of input to use')
+
+
+;sequentially run
+sequentially_nexus_tab_base = widget_base(run_data_reduction_tab,$
+                                          uname='sequentially_nexus_tab_base',$
+                                          TITLE='RUN SEQUENTIALLY',$
+                                          XOFFSET=0,$
+                                          YOFFSET=0)
+
+sequentially_runs_to_process_label = widget_label(sequentially_nexus_tab_base,$
+                                                  xoffset=0,$
+                                                  yoffset=12,$
+                                                  value='Runs #')
+sequentially_runs_to_process_text = widget_text(sequentially_nexus_tab_base,$
+                                                xoffset=45,$
+                                                yoffset=2,$
+                                                scr_xsize=230,$
+                                                value='',$
+                                                uname='sequentially_runs_to_process_text',$
+                                                /editable,$
+                                                /align_left,$
+                                                /all_events)
+sequentially_runs_to_process_help = widget_button(sequentially_nexus_tab_base,$
+                                                  uname='sequentially_runs_to_process_help',$
+                                                  xoffset=280,$
+                                                  yoffset=2,$
+                                                  scr_xsize=20,$
+                                                  scr_ysize=30,$
+                                                  value='?',$
+                                                  /pushbutton_events,$
+                                                  tooltip='Click to see the format of input to use')
 
 intermediate_file_label = widget_label(data_reduction_base,$
                                        xoffset=5,$
@@ -857,7 +921,7 @@ start_data_reduction_button = widget_button(data_reduction_base,$
                                             yoffset=235,$
                                             scr_xsize=295,$
                                             value='START DATA REDUCTION',$
-                                            uname='start_data_reduction_button',$
+                                            uname='start_data_reduction_button_REF_L',$
                                             sensitive=0)
 
 ;info text box 
@@ -1052,10 +1116,14 @@ log_book_text = widget_text(log_book_base,$
                             /scroll,$
                             /wrap)
 
-FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR, $
+FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
                                   VALUE='MENU')
+
+WORKING_PATH_REF_L = widget_button(FILE_MENU_REF_L,$
+                                   uname='working_path_ref_l',$
+                                   value='Working Path...')
 
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU'  $
                            ,VALUE='Color Tool...')
@@ -1160,6 +1228,7 @@ global = ptr_new({$
                    selection_background : 0,$
                    selection_background_2 : 0,$
                    selection_mode       : 1,$
+                   local_folder         : '~/local/REF_M/',$
                    tmp_folder           : '',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '~/local/REF_M/',$
@@ -2012,9 +2081,9 @@ FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                 /MENU,$
                                 VALUE='MENU')
 
-;working_path = widget_button(FILE_MENU_REF_M,$
-;                             uname='working_path',$
-;                             value='working path...')
+working_path = widget_button(FILE_MENU_REF_M,$
+                             uname='working_path',$
+                             value='working path...')
 
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
                            ,VALUE='Color Tool...')
