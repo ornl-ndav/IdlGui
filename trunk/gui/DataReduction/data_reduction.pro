@@ -417,8 +417,8 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1000,$ 
-                         SCR_YSIZE=440,$
+                         SCR_XSIZE=1280,$ 
+                         SCR_YSIZE=670,$
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -619,17 +619,34 @@ current_mode_status_label = widget_label(current_mode_base,$
 display_data_base = widget_draw(MAIN_BASE,$
                                 xoffset=5,$
                                 yoffset=50,$
-                                scr_xsize=256,$
-                                scr_ysize=304,$
+                                scr_xsize=2*256,$
+                                scr_ysize=2*304,$
                                 uname='display_data_base',$
                                 retain=2,$
                                 /BUTTON_EVENTS,$
                                 /MOTION_EVENTS)
 
+;sns logo
+sns_logo_drawing = widget_draw(MAIN_BASE,$
+                            uname='sns_logo_drawing',$
+                            xoffset=530,$
+                            yoffset=535,$
+                            scr_xsize=743,$
+                            scr_ysize=116)
+
+;REF_L logo
+REF_L_logo_drawing = widget_draw(MAIN_BASE,$
+                                 uname='REF_L_logo_drawing',$
+                                 xoffset=800,$
+                                 yoffset=445,$
+                                 scr_xsize=463,$
+                                 scr_ysize=73)
+
+
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
-                                 xoffset=5,$
-                                 yoffset=360,$
+                                 xoffset=530,$
+                                 yoffset=445,$
                                  scr_xsize=253,$
                                  scr_ysize=70,$
                                  frame=1)
@@ -670,7 +687,7 @@ save_selection_button = widget_button(select_signal_base,$
 xsize_of_tabs = 730
 ysize_of_tabs = 430
 data_reduction_plots_base = widget_base(MAIN_BASE,$
-                                        xoffset=265,$
+                                        xoffset=2*265,$
                                         yoffset=5,$
                                         scr_xsize=xsize_of_tabs,$
                                         scr_ysize=ysize_of_tabs)
@@ -1156,6 +1173,22 @@ sns_idl_button = widget_button(idl_tools_menu,$
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+sns_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/sns_logo_REF_L.bmp"
+id = widget_info(main_base,find_by_uname="sns_logo_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(sns_logo)
+tv, image,-15,0,/true
+
+REF_L_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/REF_L_label.bmp"
+id = widget_info(main_base,find_by_uname="REF_L_logo_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(REF_L_logo)
+tv, image,0,0,/true
+
 end
 
 
@@ -1394,7 +1427,7 @@ distanace_sample_detector_das = widget_label(info_distance_base,$
                                              scr_xsize=150,$
                                              scr_ysize=30,$
                                              value='',$
-                                            /align_left)
+                                             /align_left)
 
 distance_sample_detector_nexus_label = widget_label(info_distance_base,$
                                                     xoffset=5,$
