@@ -29,6 +29,7 @@
  */
 
 #include "Event_to_Histo.hpp"
+#include "ctime"  //REMOVE_ME
 
 using namespace std;
 using namespace TCLAP;
@@ -194,7 +195,94 @@ void generate_histo(const size_t array_size,
   }
   if (verbose && !debug)
     {
-      cout << "\r    generate_histo.done\n";
+      cout << "\r.done\n";
+    }
+  
+  return;
+}
+
+void generate_histo_old_way(const size_t array_size,
+                            const int32_t new_Nt,
+                            const int32_t pixel_number,
+                            const int32_t * binary_array,
+                            uint32_t * histo_array,
+                            const size_t histo_array_size,
+                            const int32_t max_time_bin_100ns,
+                            const int32_t time_offset_100ns,
+                            const int32_t time_rebin_width_100ns,
+                            const bool debug,
+                            const bool verbose)
+{
+  int32_t pixelid;
+  int32_t time_bin;
+  int32_t time_stamp;
+  int32_t processing_percent = 0;
+  
+  //initialize histo array
+  initialize_array(histo_array,
+                   histo_array_size);
+
+  if (debug)
+    {
+      cout << "\n\n**In generate_histo (the old way)**\n\n";
+      cout << "\tarray_size= " << array_size << endl;
+      cout << "\tnew_Nt= " << new_Nt << endl;
+      cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
+      cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
+      cout << "\nLegend:";
+      cout << "\t\t#     : index number" << endl;
+      cout << "------\t\t";
+      cout << "Pid   : PixelID" << endl;
+      cout << "\t\t    t_ms  : time in micro seconds" << endl;
+      cout << "\t\t    tbin: time_bin" << endl << endl;
+    }
+
+  for (size_t i=0 ; i<array_size/2; i++) 
+  {
+    if (verbose && !debug)
+      {
+        processing_percent = (2*i*100/array_size);
+        cout << "\r" << processing_percent << "%";
+      }
+
+    pixelid = binary_array[2 * i + 1];
+    time_stamp = binary_array[2*i];
+    time_bin = int(floor(time_stamp/time_rebin_width_100ns));
+
+    if (debug)
+      {
+        cout << "#" << i << "\t";
+        cout << "Pid= " << pixelid << "\t";
+        cout << "t_ms= " << time_stamp <<"\t";
+        cout << "tstamp_value= " << time_stamp << "\t";
+        cout << "\ttbin_position= " << time_bin;
+      }
+
+      //remove data that are oustide the scope of range
+      if (pixelid < 0 ||                             
+          pixelid >= pixel_number ||
+          time_stamp < time_offset_100ns ||
+          time_stamp > max_time_bin_100ns)
+        {
+          if (debug)
+            {
+              cout << "......OUT OF RANGE" << endl;
+            }
+          continue;
+        }
+      else
+        {
+          if (debug)
+            {
+              cout << "......OK" << endl;
+            }
+          //record data that is inside the scope of range
+          histo_array[time_bin + pixelid * new_Nt] += 1;
+        }
+  }
+  if (verbose && !debug)
+    {
+      cout << "\r.done\n";
     }
   
   return;
@@ -202,6 +290,9 @@ void generate_histo(const size_t array_size,
 
 int32_t main(int32_t argc, char *argv[])
 {
+  time_t time_start; //REMOVE_ME
+  time_start = time(NULL); //REMOVE_ME
+
   try
     {
       // Setup the command-line parser object
@@ -246,6 +337,10 @@ int32_t main(int32_t argc, char *argv[])
       ValueArg<float> time_rebin_width_cmd("l","linear",
                                              "width of rebin linear time bin",
                                              true, -1, "new linear time bin");
+
+      SwitchArg old_linear_rebin_method_cmd("", "old_linear",
+                                            "Use old linear histogramming algorithm",
+                                            false, cmd);
 
       ValueArg<float> time_offset_cmd("", "time_offset",
                                         "initial offset time (microS)",
@@ -311,7 +406,7 @@ int32_t main(int32_t argc, char *argv[])
                                                    debug,
                                                    verbose);
 
-          if (verbose || !debug) 
+          if (verbose || debug) 
             { 
               cout << "done\n"; 
             }
@@ -367,17 +462,18 @@ int32_t main(int32_t argc, char *argv[])
                 {
                   cout << "--> generate_linear_time_bin_vector.";  //1st
                 }
+              
               time_bin_vector=generate_linear_time_bin_vector(
-                                                        max_time_bin_100ns,
-                                                        time_rebin_width_100ns,
-                                                        time_offset_100ns,
-                                                        debug,
-                                                        verbose);
+                                                              max_time_bin_100ns,
+                                                              time_rebin_width_100ns,
+                                                              time_offset_100ns,
+                                                              debug,
+                                                              verbose);
               if (verbose && !debug)
                 {
                   cout << "done\n";
                 }
-
+              
             }
           else if (log_rebin_coeff_cmd.isSet()) //log rebinning
             {
@@ -451,23 +547,46 @@ int32_t main(int32_t argc, char *argv[])
           size_t histo_array_size = new_Nt * pixel_number;
           uint32_t * histo_array = new uint32_t [histo_array_size];
           
-          if (verbose || debug)
-            {
-              cout << "--> generate_histo...(processing)...\n"; 
-            }
-
           //generate histo binary data array
-          generate_histo(array_size,
-                         new_Nt,
-                         pixel_number,
-                         binary_array,
-                         histo_array,
-                         histo_array_size,
-                         time_bin_vector,
-                         max_time_bin_100ns,
-                         time_offset_100ns,
-                         debug,
-                         verbose);
+          
+          if (time_rebin_width_cmd.isSet() &&       //linear rebinning and
+              old_linear_rebin_method_cmd.isSet())  //old way
+            {
+              if (verbose || debug)
+                {
+                  cout << "--> generate_histo - old_way (processing).\n"; //1st
+                }
+              generate_histo_old_way(array_size,
+                                     new_Nt,
+                                     pixel_number,
+                                     binary_array,
+                                     histo_array,
+                                     histo_array_size,
+                                     max_time_bin_100ns,
+                                     time_offset_100ns,
+                                     time_rebin_width_100ns,
+                                     debug,
+                                     verbose);
+            }
+          else
+            {
+              if (verbose || debug)
+                {
+                  cout << "--> generate_histo - binary (processing).\n"; //1st
+                }
+
+              generate_histo(array_size,
+                             new_Nt,
+                             pixel_number,
+                             binary_array,
+                             histo_array,
+                             histo_array_size,
+                             time_bin_vector,
+                             max_time_bin_100ns,
+                             time_offset_100ns,
+                             debug,
+                             verbose);
+            }
 
           // free memory allocated to binary_array
           delete binary_array;
@@ -517,10 +636,31 @@ int32_t main(int32_t argc, char *argv[])
               cout << "done\n"; 
             }
 
+          if (verbose || debug)
+            {
+              cout << "--> close histo_file.";  //1st 
+            }
           histo_file.close();
+          if (verbose || debug)
+            {
+              cout << "done\n"; 
+            }
           
+
+
+
+          if (verbose || debug)
+            {
+              cout << "--> free memory of histo_array.";  //1st
+            }
+
           // free memory allocated to histo_array
           delete histo_array;
+
+          if (verbose || debug)
+            {
+              cout << "done\n"; 
+            }
 
           if (verbose || debug)
             {
@@ -533,7 +673,12 @@ int32_t main(int32_t argc, char *argv[])
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
-  
+
+  time_t time_end; //REMOVE_ME
+  time_end = time(NULL); //REMOVE_ME
+
+  printf("%ld seconds to process",(time_end-time_start)); //REMOVE_ME
+
   return 0;
 }
 
