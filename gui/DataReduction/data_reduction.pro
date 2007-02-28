@@ -308,6 +308,16 @@ case Event.id of
         working_path_ref_l_eventcb, Event
     end
 
+;open_nexus button in menu (for accelerator)
+    Widget_Info(wWidget, FIND_BY_UNAME='open_nexus_button'): begin
+        open_nexus_button_eventcb, Event
+    end
+
+
+
+
+
+
     else:
     
 endcase
@@ -586,12 +596,14 @@ nexus_run_number_box = widget_text(nexus_run_number_base,$
                                    scr_xsize=80,$
                                    scr_ysize=30,$
                                    uname='nexus_run_number_box',$
-                                  /all_events)
+                                   /all_events)
+
 nexus_run_number_go = widget_button(nexus_run_number_base,$
                                     xoffset=120,$
                                     yoffset=7,$
                                     value='O P E N',$
                                     uname='nexus_run_number_go')
+
 
 ;current mode
 current_mode_base = widget_base(MAIN_BASE,$
@@ -1137,6 +1149,11 @@ FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
                                   VALUE='MENU')
+
+OPEN_NEXUS_button = widget_button(FILE_MENU_REF_L,$
+                           uname='open_nexus_button',$
+                           value='Open Nexus',$
+                           accelerator="Return")
 
 WORKING_PATH_REF_L = widget_button(FILE_MENU_REF_L,$
                                    uname='working_path_ref_l',$
@@ -2136,6 +2153,11 @@ FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                 UNAME='FILE_MENU_REF_M',$
                                 /MENU,$
                                 VALUE='MENU')
+
+OPEN_NEXUS_button = widget_button(FILE_MENU_REF_M,$
+                           uname='open_nexus_button',$
+                           value='Open Nexus',$
+                           accelerator="Return")
 
 working_path = widget_button(FILE_MENU_REF_M,$
                              uname='working_path',$

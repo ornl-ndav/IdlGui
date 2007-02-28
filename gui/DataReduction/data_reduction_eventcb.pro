@@ -4218,3 +4218,6 @@ end
 
 
 
+pro open_nexus_button_eventcb, Event
+open_nexus_file, event
+end
