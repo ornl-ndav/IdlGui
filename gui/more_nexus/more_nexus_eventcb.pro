@@ -905,66 +905,154 @@ widget_control, output_list_id, get_value=selection
 
 number_of_selection = 0 ;number of selection
 
-;event output data
-event_id = widget_info(event.top,find_by_uname='event_text_base')
-if (selection[0] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, event_id, map=map_value
+;BSS case
+if ((*global).instrument EQ 'BSS') then begin
 
-;histogram output data
-histogram_id = widget_info(event.top,find_by_uname='histogram_text_base')
-if (selection[1] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, histogram_id, map=map_value
+;event output data
+    event_id = widget_info(event.top,find_by_uname='event_text_base')
+    if (selection[0] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, event_id, map=map_value
+    
+;histogram bank 1 output data
+    histogram_id = widget_info(event.top,find_by_uname='histogram_bank1_text_base')
+    if (selection[1] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, histogram_id, map=map_value
+    
+;histogram bank 2 output data
+    histogram_id = widget_info(event.top,find_by_uname='histogram_bank2_text_base')
+    if (selection[2] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, histogram_id, map=map_value
+
+;histogram bank 3 output data
+    histogram_id = widget_info(event.top,find_by_uname='histogram_bank3_text_base')
+    if (selection[3] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, histogram_id, map=map_value
 
 ;timebins output data
-timebins_id = widget_info(event.top,find_by_uname='timebins_text_base')
-if (selection[2] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, timebins_id, map=map_value
-
+    timebins_id = widget_info(event.top,find_by_uname='timebins_text_base')
+    if (selection[4] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, timebins_id, map=map_value
+    
 ;pulseid output data
-pulseid_id = widget_info(event.top,find_by_uname='pulseid_text_base')
-if (selection[3] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1	
-endif else begin
-    map_value = 0
-endelse
-widget_control, pulseid_id, map=map_value
-
+    pulseid_id = widget_info(event.top,find_by_uname='pulseid_text_base')
+    if (selection[5] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1	
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, pulseid_id, map=map_value
+    
 ;infos output data
-infos_id = widget_info(event.top,find_by_uname='infos_text_base')
-if (selection[4] EQ 1) then begin
-    map_value = 1
-    number_of_selection += 1
-endif else begin
-    map_value = 0
-endelse
-widget_control, infos_id, map=map_value
-
-output_data_button_base_id = $
-  widget_info(event.top,find_by_uname='output_data_button_base')
-if (number_of_selection GE 1) then begin ;display go button
-    widget_control, output_data_button_base_id, map=1
-endif else begin
-    widget_control, output_data_button_base_id, map=0
-endelse
-
+    infos_id = widget_info(event.top,find_by_uname='infos_text_base')
+    if (selection[6] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, infos_id, map=map_value
+    
+    output_data_button_base_id = $
+      widget_info(event.top,find_by_uname='output_data_button_base')
+    if (number_of_selection GE 1) then begin ;display go button
+        widget_control, output_data_button_base_id, map=1
+    endif else begin
+        widget_control, output_data_button_base_id, map=0
+    endelse
+    
 ;populate text boxes selected
-populate_text_boxes, event, selection
+    populate_text_boxes, event, selection
+
+endif else begin
+
+;event output data
+    event_id = widget_info(event.top,find_by_uname='event_text_base')
+    if (selection[0] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, event_id, map=map_value
+    
+;histogram output data
+    histogram_id = widget_info(event.top,find_by_uname='histogram_text_base')
+    if (selection[1] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, histogram_id, map=map_value
+    
+;timebins output data
+    timebins_id = widget_info(event.top,find_by_uname='timebins_text_base')
+    if (selection[2] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, timebins_id, map=map_value
+    
+;pulseid output data
+    pulseid_id = widget_info(event.top,find_by_uname='pulseid_text_base')
+    if (selection[3] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1	
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, pulseid_id, map=map_value
+    
+;infos output data
+    infos_id = widget_info(event.top,find_by_uname='infos_text_base')
+    if (selection[4] EQ 1) then begin
+        map_value = 1
+        number_of_selection += 1
+    endif else begin
+        map_value = 0
+    endelse
+    widget_control, infos_id, map=map_value
+    
+    output_data_button_base_id = $
+      widget_info(event.top,find_by_uname='output_data_button_base')
+    if (number_of_selection GE 1) then begin ;display go button
+        widget_control, output_data_button_base_id, map=1
+    endif else begin
+        widget_control, output_data_button_base_id, map=0
+    endelse
+    
+;populate text boxes selected
+    populate_text_boxes, event, selection
+    
+endelse
 
 end
 
@@ -1073,74 +1161,179 @@ run_number = (*global).run_number
 instrument = (*global).instrument
 first_part_of_name = working_path + instrument + '_' + strcompress(run_number)
 
-;event filename
-if (selection[0] EQ 0) then begin
-    create_full_output_name, event, '', '', 'event_text'
-endif else begin
-    file_name=first_part_of_name+(*global).event_ext
-    event_format_group_id = widget_info(event.top,find_by_uname='event_format_group')
-    widget_control, event_format_group_id, get_value=format_index
-    case format_index of
-        0: output_format = 'binary'
-        1: output_format = 'ascii'
-    endcase
-    create_full_output_name, event, file_name, output_format, 'event_text'
-endelse
+;BSS case
+if (instrument EQ 'BSS') then begin
 
-;histogram filename
-if (selection[1] EQ 0) then begin
-    create_full_output_name, event, '', '', 'histogram_text'
-endif else begin
-    file_name=first_part_of_name+(*global).histo_ext
-    event_format_group_id = widget_info(event.top,find_by_uname='histogram_format_group')
-    widget_control, event_format_group_id, get_value=format_index
-    case format_index of
-        0: output_format = 'binary'
-        1: output_format = 'ascii'
-    endcase
-    create_full_output_name, event, file_name, output_format, 'histogram_text'
-endelse
+;event filename
+    if (selection[0] EQ 0) then begin
+        create_full_output_name, event, '', '', 'event_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).event_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='event_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'event_text'
+    endelse
+    
+;histogram bank 1 filename
+    if (selection[1] EQ 0) then begin
+        create_full_output_name, event, '', '', 'histogram_bank1_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).histo_bank1_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='histogram_bank1_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'histogram_bank1_text'
+    endelse
+    
+;histogram bank 2 filename
+    if (selection[2] EQ 0) then begin
+        create_full_output_name, event, '', '', 'histogram_bank2_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).histo_bank2_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='histogram_bank2_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'histogram_bank2_text'
+    endelse
+
+;histogram bank 3 filename
+    if (selection[3] EQ 0) then begin
+        create_full_output_name, event, '', '', 'histogram_bank3_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).histo_bank3_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='histogram_bank3_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'histogram_bank3_text'
+    endelse
 
 ;timebins filename
-if (selection[2] EQ 0) then begin
-    create_full_output_name, event, '', '', 'timebins_text'
-endif else begin
-    file_name=first_part_of_name+(*global).timebins_ext
-    event_format_group_id = widget_info(event.top,find_by_uname='timebins_format_group')
-    widget_control, event_format_group_id, get_value=format_index
-    case format_index of
-        0: output_format = 'binary'
-        1: output_format = 'ascii'
-    endcase
-    create_full_output_name, event, file_name, output_format, 'timebins_text'
-endelse
-
+    if (selection[4] EQ 0) then begin
+        create_full_output_name, event, '', '', 'timebins_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).timebins_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='timebins_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'timebins_text'
+    endelse
+    
 ;pulseid filename
-if (selection[3] EQ 0) then begin
-    create_full_output_name, event, '', '', 'pulseid_text'
-endif else begin
-    file_name=first_part_of_name+(*global).pulseID_ext
-    event_format_group_id = widget_info(event.top,find_by_uname='pulseid_format_group')
-    widget_control, event_format_group_id, get_value=format_index
-    case format_index of
-        0: output_format = 'binary'
-        1: output_format = 'ascii'
-    endcase
-    create_full_output_name, event, file_name, output_format, 'pulseid_text'
-endelse
-
+    if (selection[5] EQ 0) then begin
+        create_full_output_name, event, '', '', 'pulseid_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).pulseID_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='pulseid_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'pulseid_text'
+    endelse
+    
 ;infos filename
-if (selection[4] EQ 0) then begin
-    create_full_output_name, event, '', '', 'infos_file_text'
+    if (selection[6] EQ 0) then begin
+        create_full_output_name, event, '', '', 'infos_file_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).infos_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='infos_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'ascii'
+            1: output_format = 'xml'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'infos_file_text'
+    endelse
+
 endif else begin
-    file_name=first_part_of_name+(*global).infos_ext
-    event_format_group_id = widget_info(event.top,find_by_uname='infos_format_group')
-    widget_control, event_format_group_id, get_value=format_index
-    case format_index of
-        0: output_format = 'ascii'
-        1: output_format = 'xml'
-    endcase
-    create_full_output_name, event, file_name, output_format, 'infos_file_text'
+
+;event filename
+    if (selection[0] EQ 0) then begin
+        create_full_output_name, event, '', '', 'event_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).event_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='event_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'event_text'
+    endelse
+    
+;histogram filename
+    if (selection[1] EQ 0) then begin
+        create_full_output_name, event, '', '', 'histogram_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).histo_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='histogram_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'histogram_text'
+    endelse
+    
+;timebins filename
+    if (selection[2] EQ 0) then begin
+        create_full_output_name, event, '', '', 'timebins_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).timebins_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='timebins_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'timebins_text'
+    endelse
+    
+;pulseid filename
+    if (selection[3] EQ 0) then begin
+        create_full_output_name, event, '', '', 'pulseid_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).pulseID_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='pulseid_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'binary'
+            1: output_format = 'ascii'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'pulseid_text'
+    endelse
+    
+;infos filename
+    if (selection[4] EQ 0) then begin
+        create_full_output_name, event, '', '', 'infos_file_text'
+    endif else begin
+        file_name=first_part_of_name+(*global).infos_ext
+        event_format_group_id = widget_info(event.top,find_by_uname='infos_format_group')
+        widget_control, event_format_group_id, get_value=format_index
+        case format_index of
+            0: output_format = 'ascii'
+            1: output_format = 'xml'
+        endcase
+        create_full_output_name, event, file_name, output_format, 'infos_file_text'
+    endelse
+    
 endelse
 
 end
@@ -1233,7 +1426,7 @@ widget_control, output_format_id, get_value=output_format
 if (type eq 'data') then begin ;binary/ASCII or ASCII/XML
     case output_format of
         0: begin ;binary
-            output_binary_data, data_type, output_text_uname, 'unix'
+            output_binary_data, event, data_type, output_text_uname, 'unix'
         end
         1: begin ;ASCII
             output_ascii_data, data_type, output_text_uname
@@ -1255,17 +1448,8 @@ end
 
 
 
-
-
-
-
-
-
-
-
-
 ;computer = 'unix'
-pro output_binary_data, data_type, output_text_uname, computer
+pro output_binary_data, event, data_type, output_text_uname, computer
 
 ;get the global data structure
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1274,6 +1458,7 @@ widget_control,id,get_uvalue=global
 case data_type of 
     'event': begin
         ;copy event_file if event file
+        
     end
     'histogram': begin
         
@@ -1285,4 +1470,28 @@ case data_type of
 
     end
 endcase
+end
+
+
+
+
+pro working_path_eventcb, Event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_path = (*global).working_path
+working_path = dialog_pickfile(path=working_path,/directory)
+
+text = 'Output path is: ' + working_path
+working_path_text_id = widget_info(event.top,find_by_uname='working_path_text')
+widget_control, working_path_text_id, set_value=text
+
+end
+
+
+
+pro exit_button_eventcb, Event
+widget_control,Event.top,/destroy
 end
