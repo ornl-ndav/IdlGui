@@ -1367,6 +1367,12 @@ WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 ;determine path	
 ;path = (*global).tmp_folder
 path = (*global).local_folder
+
+cmd_create = "mkdir " + path
+cmd_text = '> ' + cmd_create
+widget_control, full_view_info, set_value=cmd_text, /append
+spawn, cmd_create, listening, error_listening
+output_error, event, 'log_book_text', error_listening
 cd, path
         
 WIDGET_CONTROL, full_view_info, SET_VALUE=' [ - reading in data...', /APPEND
@@ -3567,6 +3573,8 @@ catch, no_folder
 if (no_folder NE 0) then begin
 
     text = 'Working folder is still: ' + (*global).local_folder
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=text, /append
 
 endif else begin
 
@@ -3574,10 +3582,14 @@ endif else begin
     (*global).local_folder = tmp_working_path
     text = 'Working folder is now: ' + tmp_working_path
 
-endelse
+;create folder 
+    cmd_create = "mkdir " + tmp_working_path
+    cmd_text = '> ' + cmd_create
+    widget_control, full_view_info, set_value=cmd_text, /append
+    spawn, cmd_create, listening, error_listening
+    output_error, event, 'log_book_text', error_listening
 
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=text, /append
+endelse
 
 catch,/cancel
 
@@ -3606,16 +3618,22 @@ catch, no_folder
 if (no_folder NE 0) then begin
 
     text = 'Working folder is still: ' + (*global).local_folder
+    widget_control, view_info, set_value=text, /append
+    widget_control, full_view_info, set_value=text, /append
 
 endif else begin
 
     tmp_working_path = dialog_pickfile(path=local_folder,/directory)
     (*global).local_folder = tmp_working_path
     
-endelse
+;create folder 
+    cmd_create = "mkdir " + tmp_working_path
+    cmd_text = '> ' + cmd_create
+    widget_control, full_view_info, set_value=cmd_text, /append
+    spawn, cmd_create, listening, error_listening
+    output_error, event, 'log_book_text', err_listening
 
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=text, /append
+endelse
 
 catch,/cancel
 
