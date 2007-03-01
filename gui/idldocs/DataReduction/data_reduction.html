@@ -1,0 +1,175 @@
+<html>
+<center>
+<img src='data_reduction_gui_logo.bmp'>
+</center>
+<br>
+Once the DataReduction tool selected, you have to click one more time the IDL Virtual machine flash window. From there, you have to select your instrument, 
+<b><a href='data_reduction.html#REF_L'>REF_L</a></b> or 
+<b><a href='data_reduction.html#REF_M'>REF_M</a></b>.<br>
+<br><center><img src='data_reduction_portal.png'></img></center>
+<br>
+<h1><u><a name='REF_L'>Liquids Reflectometer</a></u></h1>
+The liquids reflectometer IDL tools welcomes you with the following window.<br><br>
+<center><img src='REF_L_images/REF_L_blank.png'></img></center>
+<br><p>Let's start by having a quick overview of the GUI.<br>
+<br>
+The GUI can be divided in 3 regions, <i>input</i>, <i>display</i> and <i>data reduction</i> 
+regions.<br>
+<ul>
+ <li><h3><b>INPUT</b></h3></li>
+<center><img src='REF_L_images/input.png'></img></center>
+<br>The <font color=red>MENU</font> button gives access to the following options:
+<br>
+<br>
+<ul>
+ <li> <font color=blue><b>Open Nexus</b></font>: to load the NeXus file determined by the run number entered in the main GUI.</li>
+ <li> <font color=blue><b>Working Path...</b></font>: to change the working directory. Where all the output files produced by the data reduction will be created.</li>
+ <li> <font color=blue><b>Color Tool...</b></font>: to change the color of te main display.</li>
+ <li> <font color=blue><b>Exit</b></font>: to exit the program. This allows the program to remove the temporary files used to plot the data. This is why Exit must be choosen to exit the program.</li>
+</ul>
+<br><center>
+<img src='REF_L_images/menu.png'></img></center>
+<br><br>
+The <font color=red>MODE</font> button gives access to the selection mode that can be changed from <i>selection</i> to <i>infos</i>.
+<br><center><img src='REF_L_images/selection.png'></img></center>
+<br><br>
+<ul>
+ <li> <font color=blue><b>selection</b></font>: default mode that allows to select regions for signal, background_1 and background_2.<br></li>
+<center><img src='REF_L_images/selection_mode.png'></img></center>
+<br>
+ <li> <font color=blue><b>infos</b></font>: allows the user to get information about the pixel selected.<br></li>
+<center><img src='REF_L_images/infos_mode.png'></img></center>
+</ul>
+<br>The <font color=red>sns_idl_tools</font> this button start another session of sns_idl_tools.
+<br><br>
+<li><h3><b>DISPLAY</b></h3></li>
+The large display on the left is where the NeXus run will be displayed. The selection interactive tool box placed below the data_reduction window is also part of the display region. This is where the user will save the region selected. Doing so will create two txt files that will be used by the data reduction tool.
+<br><center><img src='REF_L_images/selection_part.png'></img></center>
+<li><h3><b>DATA REDUCTION</b></h3></li>
+This window comport 4 tabs: <i><font color=green>Data Reduction</font></i>, 
+<i><font color=green>Selection tools</font></i>,
+<i><font color=green>Extra plots</font></i> and 
+<i><font color=green>Log Book</font></i>.
+<br>
+<ul>
+<li><font color=green>Data Reduction</font></li><br>
+<center><img src='REF_L_images/data_reducton_tab_1.png'></img></center><br>
+<ul><li><u>Pid files:</u> To be able to activate the <b>START DATA REDUCTION</b> button, a signal Pid (Pixel ID) and a Background Pid files must be loaded. To do so, either select the region(s) of interest by using the selection mode in the main display window or load a Pid file by using the <b>Signal Pid file</b> and/or </b>Back. Pid file</b> buttons. Both a signal and backgound Pid files must be selected to be able to run the data reduction.<br></li>
+<br><li><u>Normalization</u>: if the check box corresponding to the normalization file is on <b>Yes</b>, a run number is required in the text box on the right.</li>
+<br><li><u>Norm. bkg.:</u> normalization background.</li>
+<br><li><u>bkg.:</u> background. Must be checked out if there is no Background Pid file.</li>
+<br><li><u>ADD NeXus AND RUN</u> or <u>RUN SEQUENTIALLY</u>:<br><br>
+  <ul><li>ADD NeXus AND RUN: the data reduction program will add all the NeXus files given in the
+command line.</li>
+      <li>RUN SEQUENTIALLY: the data reduction will work on the first valid NeXus run number found in the command line, will display the resulting plot(s) and then will move to the next run number. </li>
+  </ul>
+<br><u>Input accepted:</u><font color=red><i>1210,1212,1230-1235,1238</i></font><br>
+will run the data reduction using run 1210,1212,1230,1231,1232....1235 and 1238. In case one of the run number does not have a NeXus file archived, this run number will not be part of the data reduction. To get more information about the run number rejected, check the log_book (last tab).<br>
+<br><li><u>List of intermediate plots:</u> give access to a window that let the user select which, if any, plots he wants to display.<br>
+<center><img src='REF_L_images/intermediate_plots.png'></img></center></br>
+<br>If at least 1 plot has been selected, the plot(s) is visible, once the full data reduction process done, in the third tab as shown here.<br><br>
+<center><img src='REF_L_images/extra_plots.png'></img></center>
+<br>
+<br><li><u>information window: gives some brief information:</u><br>
+  <ul>
+  <li> Open and plot NeXus file</li>
+  <li> Selection saved</li>
+  <li> x, y and number of counts of pixel selected in infos mode</li>
+  <li> data reduction process, start and end</li>
+  <li> ...</li>
+  </ul>
+<br>
+<li><u>Data reduction result:</u><br> The window on the right will plot the result of the data reduction.<br>
+<center><img src='REF_L_images/data_reduction_plot.png'></img></center>
+</ul>
+<li><font color=green>Selection tools<br></font>
+<br> This text box gives information about the region selected. There is one tab for each of the region selected, signal, background region 1 (background_1) and background region 2 (background_2). The infos given are:
+<ul><li>x, y, intensity and pixelID of the two corners of the box</li>
+<li>Number of pixels inside the selection box</li>
+<li>Selection width (in pixels)</li>
+<li>Selection height (in pixels)</li>
+<li>Total number of counts inside selection</li>
+<li>Total number of counts outside selection</li>
+<li>Average number of counts inside selection</li>
+<li>Average number of counts outside selection</li>
+</ul></li>
+<br><center><img src='REF_L_images/data_reduction_tab-2.png'></center>
+<br>
+
+<li><font color=green>Extra plots</font><br>
+ <br>Where the intermediate or extra plots are displayed if at least one has been selected 
+ before running the data reduction.
+</li>
+
+<li><font color=green>Log Book</font><br>
+ <br>
+
+<br><center><img src='REF_L_images/data_reduction_tab_4.png'></center>
+<br>
+</li>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h1><u><a name='REF_M'>Magnetism Reflectometer</a></u></h1>
+</html>
+
+
+
+
+
+
