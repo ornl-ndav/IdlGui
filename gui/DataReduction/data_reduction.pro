@@ -1150,10 +1150,10 @@ FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                   /MENU,$
                                   VALUE='MENU')
 
-OPEN_NEXUS_button = widget_button(FILE_MENU_REF_L,$
-                           uname='open_nexus_button',$
-                           value='Open Nexus',$
-                           accelerator="Return")
+; OPEN_NEXUS_button = widget_button(FILE_MENU_REF_L,$
+;                            uname='open_nexus_button',$
+;                            value='Open Nexus',$
+;                            accelerator="Return")
 
 WORKING_PATH_REF_L = widget_button(FILE_MENU_REF_L,$
                                    uname='working_path_ref_l',$
@@ -2139,10 +2139,10 @@ FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                 /MENU,$
                                 VALUE='MENU')
 
-OPEN_NEXUS_button = widget_button(FILE_MENU_REF_M,$
-                           uname='open_nexus_button',$
-                           value='Open Nexus',$
-                           accelerator="Return")
+; OPEN_NEXUS_button = widget_button(FILE_MENU_REF_M,$
+;                            uname='open_nexus_button',$
+;                            value='Open Nexus',$
+;                            accelerator="Return")
 
 working_path = widget_button(FILE_MENU_REF_M,$
                              uname='working_path',$

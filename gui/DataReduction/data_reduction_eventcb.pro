@@ -3733,7 +3733,7 @@ endif else begin
     widget_control, distance_sample_detector_das_id, set_value=distance
 endelse
 
-catch,/cancel
+catch, /cancel
 
 ;distance sample - moderator nexus nexus
 cmd_nxdir = "nxdir -p NXmoderator/distance/ "
@@ -3741,12 +3741,17 @@ cmd_nxdir += full_nexus_name + ' -o'
 spawn, cmd_nxdir, listening
 distance_DS_tmp  = get_distance(listening[0],'=',1)
 
+distance_err = 0
+CATCH, distance_err
+
 if (distance_DS_tmp EQ '') then begin
     distance_DS = 'N/A'
 endif else begin
     distance_DS = abs(float(distance_DS_tmp))
     distance_DS = strcompress(distance_DS) + ' m'
 endelse
+
+catch, /cancel
 
 distance_moderator_detector_nexus_id = $
   widget_info(Event.top,find_by_uname='distance_moderator_detector_nexus')
@@ -3784,20 +3789,30 @@ distance_moderator_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_moderator_detector_das')
 widget_control, distance_moderator_detector_das_id, set_value=value
 
-catch,/cancel
+catch, /cancel
+
+distance_err = 0
+CATCH, distance_err
+
+
+if (distance_err NE 0) then begin
+
+    value = 'N/A'
+
+endif else begin
 
 ;distance sample detector DAS
-value = display_xml_info_SDD(full_prenexus_name[0], "value")
-
-if (value EQ '') then begin
-    value = 'N/A'
-endif else begin
+    value = display_xml_info_SDD(full_prenexus_name[0], "value")
     value += ' mm'
+
 endelse
 
 distance_sample_detector_das_id = $
   widget_info(event.top, find_by_uname='distance_sample_detector_das')
 widget_control, distance_sample_detector_das_id, set_value=value
+
+catch, /cancel
+
 
 end
 
