@@ -935,7 +935,7 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 
-image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/data_reduction_gui_logo.bmp"
+image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/data_reduction_gui_logo.bmp"
 id = widget_info(wWidget,find_by_uname="logo_message_draw")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
@@ -3842,80 +3842,83 @@ normalization_status_id = widget_info(Event.top, $
 widget_control, normalization_status_id, get_value=norm_flag
 
 ;norm_flag=0 means with normalization
-if (norm_flag EQ 0) then begin 
+ if (norm_flag EQ 0) then begin 
 
-    normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
-    widget_control, normalization_text_id, get_value=run_number_normalization
+     normalization_text_id = widget_info(Event.top, find_by_uname='normalization_text')
+     widget_control, normalization_text_id, get_value=run_number_normalization
+
+     text= 'Normalization run used: ' + run_number_normalization
+     WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+   
+;     if (run_number_normalization NE '') then begin
+        
+; ;verify format 
+;         wrong_format = 0
+;         CATCH, wrong_run_number_format
+        
+;         if (wrong_run_number_format ne 0) then begin
+            
+;             WIDGET_CONTROL, view_info, $
+;               SET_VALUE="ERROR: normalization run number invalid", /APPEND
+;             WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
+;             text = 'ERROR: normalization run number invalid - ' + run_number_normalization
+;             WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+;             WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
+;             wrong_format = 1
+;             stop_reduction = 1
+            
+;         endif else begin
+            
+; ;routine use to test format of normalization run number
+;             a=lonarr(float(run_number_normalization))
+            
+;             if (wrong_format EQ 0) then begin
+                
+; ;get full NeXus path
+;                 cmd_findnexus = "findnexus -i" + (*global).instrument
+;                 cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
+;                 spawn, cmd_findnexus, full_path_to_nexus_normalization
+                
+; ;check if nexus exists
+;                 result = strmatch(full_path_to_nexus_normalization,"ERROR*")
+                
+;                 if (result[0] GE 1) then begin
+                    
+;                     find_nexus = 0 ;run# does not exist in archive
+;                     text = 'Normalization file does not exist'
+;                     full_text = 'Normalization run number file does not exist (' + $
+;                       full_path_to_nexus_normalization + ')'
+;                     stop_reduction = 1
+                    
+;                 endif else begin
+                    
+;                     find_nexus = 1 ;run# exist in archive
+;                     text = 'Normalization file: OK'
+;                     full_text = $
+;                       'Normalization file used: ' + full_path_to_nexus_normalization  
+                    
+;                 endelse
+                
+;                 widget_control, view_info, set_value=text, /append
+;                 widget_control, full_view_info, set_value=full_text, /append
+                
+;             endif
+            
+;         endelse
+        
+;         catch, /cancel
+        
+;     endif else begin
+        
+;         text = 'Please specify a normalization run number'
+;         full_text = 'Normalization run number: MISSING'
+;         widget_control, view_info, set_value=text, /append
+;         widget_control, full_view_info, set_value=full_text, /append
+;         stop_reduction = 1
+        
+;     endelse
     
-    if (run_number_normalization NE '') then begin
-        
-;verify format 
-        wrong_format = 0
-        CATCH, wrong_run_number_format
-        
-        if (wrong_run_number_format ne 0) then begin
-            
-            WIDGET_CONTROL, view_info, $
-              SET_VALUE="ERROR: normalization run number invalid", /APPEND
-            WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-            text = 'ERROR: normalization run number invalid - ' + run_number_normalization
-            WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
-            WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
-            wrong_format = 1
-            stop_reduction = 1
-            
-        endif else begin
-            
-;routine use to test format of normalization run number
-            a=lonarr(float(run_number_normalization))
-            
-            if (wrong_format EQ 0) then begin
-                
-;get full NeXus path
-                cmd_findnexus = "findnexus -i" + (*global).instrument
-                cmd_findnexus += " " + strcompress(run_number_normalization, /remove_all)
-                spawn, cmd_findnexus, full_path_to_nexus_normalization
-                
-;check if nexus exists
-                result = strmatch(full_path_to_nexus_normalization,"ERROR*")
-                
-                if (result[0] GE 1) then begin
-                    
-                    find_nexus = 0 ;run# does not exist in archive
-                    text = 'Normalization file does not exist'
-                    full_text = 'Normalization run number file does not exist (' + $
-                      full_path_to_nexus_normalization + ')'
-                    stop_reduction = 1
-                    
-                endif else begin
-                    
-                    find_nexus = 1 ;run# exist in archive
-                    text = 'Normalization file: OK'
-                    full_text = $
-                      'Normalization file used: ' + full_path_to_nexus_normalization  
-                    
-                endelse
-                
-                widget_control, view_info, set_value=text, /append
-                widget_control, full_view_info, set_value=full_text, /append
-                
-            endif
-            
-        endelse
-        
-        catch, /cancel
-        
-    endif else begin
-        
-        text = 'Please specify a normalization run number'
-        full_text = 'Normalization run number: MISSING'
-        widget_control, view_info, set_value=text, /append
-        widget_control, full_view_info, set_value=full_text, /append
-        stop_reduction = 1
-        
-    endelse
-    
-endif
+ endif
 
 ;****************************
 ;check status of bkg flag
