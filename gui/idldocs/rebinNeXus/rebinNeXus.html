@@ -1,7 +1,68 @@
 <html>
 <body>
 <center>
-<h1>rebinNeXus</h1>
-<img src='../images/under_construction.gif'></img>
+<img src='images/rebin_nexus_gui_logo.bmp'></img>
 </center>
+<br><br>From the <i>sns_idl_tools</i> portal, to reach the <b>rebinNeXus</b> idl tools, select rebinNeXus, click 'launch application' and click the IDL virtual machine flash window.
+<br><br><center><img src='images/rebinNeXus_portal.png'></img></center>
+<br><br> Select your instrument and press <b>ENTER</b>.
+</body>
+<p><h2>INTRODUCTION</h2>
+rebinNeXus is a tool that allows the user to create a local (~/ucams/local/) NeXus file. rebinNeXus takes a run number as argument and will look for the archive NeXus file first, then for the preNeXus files on the DAS server. It is then possible to create a local NeXus file from an already archived NeXus file or from the preNeXus files. One must keep in mind that the new NeXus file created using this tool will not be archived.
+<br><br>
+<hr size=4 width=50%>
+<h2>GUI</h2>
+<p>All three instruments will then present the same GUI at that point. Only the PREVIEW window will change from one instrument to the other.<br>
+<center><img src='images/rebinNeXus_blank.png'></img></center>
+<br>The main gui is composed of 3 tabs, <i><font color='red'><b>Input file</b></font></i>, 
+<i><font color='red'><b>Settings</b></font></i> and <i><font color='red'><b>Log book</b></font></i>.<br>
+<ul>
+<li><b><font color=red>Input file</font></b>
+<br>The left side of the <i>Input file</i> tab populates once a run number has been loaded. It differs if the input file is in <u>event</u> or <u>histogram mode</u>. 
+<br>
+ <ul>
+ <li>Event file:<br>
+  <ul>
+  <li>The <u>number of pixelIDs</u> is predefined accordingly to the instrument (77824 for REF_L and rEF_M, 9216 for BSS). This field is editable but must be use with cautious.</li>
+  <li>Two histogramming mode are possible: <u>linear</u> and <u>logarithmic</u>. The next text box label reflects the histogramming mode selected. If this on is linear, the label is <u>rebin value</u> that is the time bins width (in microS). If the mode selected is logarithmic, the label is <u>rebin coefficient</u>, which corresponds to the following equation:
+<center><img src='images/rebin_coeff.png'></center></li>
+  <li><u>Min Tstamp</u> and <u>Max Tstamp</u> are the minimum and maximum time stamps of the histogramming file. </li>
+  </ul>
+<br><br><center><img src='images/event_mode.png'></img></center>
+<br>
+ <li>Histogramming file:<br><br>
+  <ul>
+  <li><u>Pixelids</u> is, line in the case of the event file, the number of pixel IDs for the instrument selected (77824 for REF_L and REF_M and 9216 for BSS).</li>
+  <li><u>Bins nbr</u> the number of bins found in the histogram file.</li>
+  </ul><br>
+Due to the fact that the input file is a histogram mode, it is not possible to rehistogram that file but only use the data as they are.
+<br><br><center><img src='images/histo_mode.png'></img></center>
+<br>
+<br> The top part of this tab gives the type of the file loaded (event or histogram) and offer the possibility to get or not a preview of the data (integrated over time). This preview will differ from one instrument to the other (256x304 for REF_L, 304x256 for REF_M and 2x64x64 for BSS) as shown here:<br>
+<ul>
+<li><h4>REF_L</h2><br><center><img src='images/REF_L_preview.png'></img></center></li>
+<li><h4>REF_M</h2><br><center><img src='images/REF_M_preview.png'></img></center></li>
+<li><h4>BSS</h2><br><center><img src='images/BSS_preview.png'></img></center></li>
+</ul>
+<br> The rigth side of the <i>Input file</i> tab gives some very generic information about the run:<br>
+ <ul><li>XML FILE: the matrix of the preNeXus and NeXus files for this run.</li>
+     <li>Title: the tile of the run as given by the title field of the runinfo file.</li>
+     <li>Notes: the notes found in the same preNeXus file</li>
+     <li>Special notes: field of the same name found in same the preNeXus file</li>
+     <li>Script ID: script ID field from runinfo preNeXus file</li>
+ </ul>
+<br>The <b>runinfo.xml</b> and <b>cvinfo.xml</b> buttons allows to display the contents of these two files.<br>
+<center><img src='images/runinfo_xml_preview.png'></img></center></ul>
+<li><b><font color=red>Settings</font></b>
+ <br>In this tab, you can visualize which <u>mapping file</u>, <u>translation file</u> and <u>geometry file</u> the program is going to use to create the NeXus file. The program automatically determines the last up to date mapping, translation and geometry files.<br>
+<br><center><img src='images/settings.png'></img></center>
+
+
+
+
+
+
+
+
+
 </html>
