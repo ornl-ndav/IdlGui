@@ -7,61 +7,164 @@
 <br><br><center><img src='images/rebinNeXus_portal.png'></img></center>
 <br><br> Select your instrument and press <b>ENTER</b>.
 </body>
-<p><h2>INTRODUCTION</h2>
+<hr size=4 width=50%>
+<H2><center>TABLE OF CONTENTS</center></h2>
+<ul>
+ <li><a href='#link1'>INTRODUCTION</a></li>
+ <li><a href='#link2'>PRESENTATION OF THE GUI</a></li>
+   <ul>
+   <li><a href='#link3'>Input file tab</a></li>
+     <ul>
+     <li><a href='#link4'>event mode</a></li>
+       <ul>
+       <li><a href='#link5'>number of pixelIDs</a></li>
+       <li><a href='#link6'>histogramming modes</a></li>
+       <li><a href='#link7'>min and Max time stamps</a></li>
+       </ul>
+     <li><a href='#link8'>histogram mode</a></li>
+       <ul>
+       <li><a href='#link9'>pixelids</a></li>
+       <li><a href='#link10'>bins number</a></li>       
+       </ul>
+     <li><a href='#link11'>preview of the data</a></li>
+       <ul>
+       <li><a href='#link12'>REF_L</a></li>
+       <li><a href='#link13'>REF_M</a></li>
+       <li><a href='#link14'>BSS</a></li>
+       </ul>
+     <li><a href='#link15'>information about run</a></li>
+     </ul>
+   <li><a href='#link16'>Settings</a></li>
+   <li><a href='#link17'>Log book</a></li>
+   </ul>
+  <li><a href='#link18'>TUTORIAL</a></li>
+   <ul>
+   <li><a href='#link19'>Scenarri possible</a></li>
+    <ul>
+    <li><a href='#link20'>event file archived</a></li>
+    <li><a href='#link22'>histogram file archived</a></li>
+    <li><a href='#link22'>event file not archived</a></li>
+    <li><a href='#link23'>histogram file not archived</a></li>
+    <li><a href='#link24'>not found</a></li>
+    </ul>
+   <li><a href='#link25'>Histogram mode</a></li>
+   <li><a href='#link26'>Event mode</a></li>
+   </ul>
+</ul>
+<hr size=4 width=50%>
+
+<p><h2><a id='link1'>INTRODUCTION</a></h2>
 rebinNeXus is a tool that allows the user to create a local (~/ucams/local/) NeXus file. rebinNeXus takes a run number as argument and will look for the archive NeXus file first, then for the preNeXus files on the DAS server. It is then possible to create a local NeXus file from an already archived NeXus file or from the preNeXus files. One must keep in mind that the new NeXus file created using this tool will not be archived.
 <br><br>
-<hr size=4 width=50%>
-<h2>GUI</h2>
+
+<h2><a id='link2'>PRESENTATION OF THE GUI</a></h2>
 <p>All three instruments will then present the same GUI at that point. Only the PREVIEW window will change from one instrument to the other.<br>
 <center><img src='images/rebinNeXus_blank.png'></img></center>
 <br>The main gui is composed of 3 tabs, <i><font color='red'><b>Input file</b></font></i>, 
 <i><font color='red'><b>Settings</b></font></i> and <i><font color='red'><b>Log book</b></font></i>.<br>
 <ul>
-<li><b><font color=red>Input file</font></b>
+<li><b><font color=red><a id='link3'>Input file</a></font></b>
 <br>The left side of the <i>Input file</i> tab populates once a run number has been loaded. It differs if the input file is in <u>event</u> or <u>histogram mode</u>. 
-<br>
+<br><br>
+
  <ul>
- <li>Event file:<br>
+ <li><a id='link4'>Event mode</a>:<br><br>
   <ul>
-  <li>The <u>number of pixelIDs</u> is predefined accordingly to the instrument (77824 for REF_L and rEF_M, 9216 for BSS). This field is editable but must be use with cautious.</li>
-  <li>Two histogramming mode are possible: <u>linear</u> and <u>logarithmic</u>. The next text box label reflects the histogramming mode selected. If this on is linear, the label is <u>rebin value</u> that is the time bins width (in microS). If the mode selected is logarithmic, the label is <u>rebin coefficient</u>, which corresponds to the following equation:
-<center><img src='images/rebin_coeff.png'></center></li>
-  <li><u>Min Tstamp</u> and <u>Max Tstamp</u> are the minimum and maximum time stamps of the histogramming file. </li>
+  <li>The <u><a id='link5'>number of pixelIDs</a></u> is predefined accordingly to the instrument 
+      (77824 for REF_L and rEF_M, 9216 for BSS). This field is editable but must be use with cautious.</li>
+  <li><a id='link6'>Two histogramming mode are possible</a>: <u>linear</u> and <u>logarithmic</u>. 
+      The next text box label reflects the histogramming mode selected. If this on is linear, the label 
+      is <u>rebin value</u> that is the time bins width (in microS). If the mode selected is logarithmic, 
+      the label is <u>rebin coefficient</u>, which corresponds to the following equation:
+      <center><img src='images/rebin_coeff.png'></center></li>
+  <li><a id='link7'><u>Min Tstamp</u> and <u>Max Tstamp</u></a> are the minimum and maximum time stamps
+      of the histogramming file. </li>
   </ul>
+
 <br><br><center><img src='images/event_mode.png'></img></center>
 <br>
- <li>Histogramming file:<br><br>
+
+ <li><a id='link8'>Histograme mode</a>:<br><br>
   <ul>
-  <li><u>Pixelids</u> is, line in the case of the event file, the number of pixel IDs for the instrument selected (77824 for REF_L and REF_M and 9216 for BSS).</li>
-  <li><u>Bins nbr</u> the number of bins found in the histogram file.</li>
+  <li><u><a id='link9'>Pixelids</a></u> is, line in the case of the event file, the number of pixel 
+     IDs for the instrument selected (77824 for REF_L and REF_M and 9216 for BSS).</li>
+  <li><u><a id='link10'>Bins nbr</a></u> the number of bins found in the histogram file.</li>
   </ul><br>
-Due to the fact that the input file is a histogram mode, it is not possible to rehistogram that file but only use the data as they are.
+
+Due to the fact that the input file is a histogram mode, it is not possible to rehistogram that file 
+but only use the data as they are.
+
 <br><br><center><img src='images/histo_mode.png'></img></center>
+
 <br>
 <br> The top part of this tab gives the type of the file loaded (event or histogram) and offer the possibility to get or not a preview of the data (integrated over time). This preview will differ from one instrument to the other (256x304 for REF_L, 304x256 for REF_M and 2x64x64 for BSS) as shown here:<br>
+<br><br>
+
+<li><a id='link11'>Preview of the data</a></li>
 <ul>
-<li><h4>REF_L</h2><br><center><img src='images/REF_L_preview.png'></img></center></li>
-<li><h4>REF_M</h2><br><center><img src='images/REF_M_preview.png'></img></center></li>
-<li><h4>BSS</h2><br><center><img src='images/BSS_preview.png'></img></center></li>
+<li><h4><a id='link12'>REF_L</a></h2><br><center><img src='images/REF_L_preview.png'></img></center></li>
+<li><h4><a id='link13'>REF_M</a></h2><br><center><img src='images/REF_M_preview.png'></img></center></li>
+<li><h4><a id='link14'>BSS</a></h2><br><center><img src='images/BSS_preview.png'></img></center></li>
 </ul>
-<br> The rigth side of the <i>Input file</i> tab gives some very generic information about the run:<br>
+<br>
+
+<li><a id='link15'>Information about run</a></li><br>
+
+ The rigth side of the <i>Input file</i> tab gives some very generic information about the run:<br>
  <ul><li>XML FILE: the matrix of the preNeXus and NeXus files for this run.</li>
      <li>Title: the tile of the run as given by the title field of the runinfo file.</li>
      <li>Notes: the notes found in the same preNeXus file</li>
      <li>Special notes: field of the same name found in same the preNeXus file</li>
      <li>Script ID: script ID field from runinfo preNeXus file</li>
  </ul>
-<br>The <b>runinfo.xml</b> and <b>cvinfo.xml</b> buttons allows to display the contents of these two files.<br>
+<br>The <b>runinfo.xml</b> and <b>cvinfo.xml</b> buttons allows to display the contents of these
+    two files.<br>
 <center><img src='images/runinfo_xml_preview.png'></img></center></ul>
-<li><b><font color=red>Settings</font></b>
- <br>In this tab, you can visualize which <u>mapping file</u>, <u>translation file</u> and <u>geometry file</u> the program is going to use to create the NeXus file. The program automatically determines the last up to date mapping, translation and geometry files.<br>
-<br><center><img src='images/settings.png'></img></center>
+<br>
+
+<li><b><font color=red><a id='link16'>Settings</a></font></b>
+  <br>In this tab, you can visualize which <u>mapping</u>, <u>translation</u> and <u>geometry </u> 
+  files the program is going to use to create the NeXus file. The program automatically determines the 
+  last up to date mapping, translation and geometry files.<br>
+<br><center><img src='images/settings.png'></img></center></li>
+<br><li><b><font color=red><a id='link17'>Log book</a></font></b>
+
+  <br>Gives details information about the various processes involved (loading, plotting, creation of the NeXus file...).<br><br>
+<center><img src='images/log_book.png'></img></center>
 
 
+<p><h2><a id='link18'>TUTORIAL</a></h2>
+Here is a detail proces that you can follow to create a local NeXus file.
+
+<h3><a id='link19'>Scenarii possible</a></h3>
+First enter the run number of interest in the top left box. The program runs in the back the <i>findnexus</i> command and looks for the archived NeXus file and if not found, the DAS preNeXus files of the corresponding run number. From there 5 scenarii are possible according to the run number given:<br><br>
+ <ul>
+ <li><a id='link20'>file is event mode and has been archived</a></li>
+ <center><img src='images/event_archived.png'></center><br>
+ <li><a id='link21'>file is histogram mode and has been archived</a></li>
+ <center><img src='images/histo_archived.png'></center><br>
+ <li><a id='link22'>file is event mode and has not been archived yet</a></li>
+ <center><img src='images/event_not_archived.png'></center><br>
+ <li><a id='link23'>file is histogram mode and has not been archived yet</a></li>
+ <center><img src='images/histo_not_archived.png'></center><br>
+ <li><a id='link24'>file can not be found</a></li>
+ <center><img src='images/run_does_not_exist.png'></center><br>
+ </ul>
+<h3><a id='link25'>Histogram mode</a></h3>
+In this case, you can display the data by activating the preview and check the runinfo.xml and 
+cvinfo.xml files. Click the <b>Create local NeXus file</b> button to create the NeXus file. This file will be located in your own local directory <font color=red size=+2>~/local/<i>instrument_name</i></font> where instrument_name is REF_L, REF_M or BSS.<br><br>
+For example, if instrument is REF_L and run number is 10, the NeXus file will be located here 
+(if you are j35):<br>
+<center><img src='images/REF_L_10_location.png'></center>
+<h3><a id='link26'>Event mode</a></h3>
+When working in event mode, or in other terms with a run number that contains an event file, it is possible
+to histogram the data using two modes, linear or logarithmic. By default, the linear histogramming is selected. <br>
+<center><img src='images/linear_log_box.png'></center>Enter the rebin value if using the linear histogramming, or coefficient if using the logarithmic coefficient. 
+<center><img src='images/min_tstamp.png'><img src='images/max_tstamp.png'></center>
+Enter the minimum and maximum time stamps then click <b>Create local NeXus file</b>.
 
 
-
-
+</p>
 
 
 
