@@ -240,7 +240,7 @@ will run the data reduction using run 1210,1212,1230,1231,1232....1235 and 1238.
        The program will run the command <i>findnexus -iREF_M 1234</i></li>
    <li>local NeXus:  ex: <font color=red>1234*</font> or <font color=red>*1234</font>
        The program will run the command <i>findnexus -iREF_M 1234 --prefix=~/local/</i></li>
-   </ul>
+   </ul><br>
    
 <a id="link33"><li>Main display</li></a>
    <center><img src='REF_M_images/display.png'></center>
@@ -308,15 +308,35 @@ will run the data reduction using run 1210,1212,1230,1231,1232....1235 and 1238.
    
 <a id="link37"><li>Extra plots</li></a>
    <center><img src='REF_M_images/extra_plots_tab.png'></center>
+   This is where the plots selected are displayed.<br>
+
+<a id="link38"><li>Log Book</li></a>
+   <center><img src='REF_M_images/log_book_tab.png'></center>
+   Gives a detail of most of the function used by the program. The data reduction command line for example
+   is displayed. This log book is mainly used when something is wrong or strange in the result.<br><br>
    
+<a id="link39"><li>Selection box</li></a>
+   <center><img src='REF_M_images/selection_box_left.png'></center>
+   The default mode is <b>selection</b> and the default selection is <b>signal</b>. To select the background
+   region #1, check the <font color=red>Back_1</font> switch and select the region on the main display. A second
+   background region can be selected by checking <font color=red>Back_2</font>. To clear a selection, check first
+   the selection you want to remove <font color=red>signal</font>, <font color=red>Back_1</font> or 
+   <font color=red>Back_2</font> and press <b>CLEAR SELECTION</b>.<br><br>
 
+<a id="link40"><li>Selection to keep</li></a>
+   <center><img src='REF_M_images/selection_box_center.png'></center>
+   One of the great feature of this program is to be able to keep a selection and apply this selection on 
+   another NeXus file. To do so, select a region of interest (signal and/or background) and press the selection
+   you want to keep (signal and/or background). Open another NeXus file and the previous saved selection will be 
+   displayed on the new plot.<br><br>
+   The following case show how the three region are redisplayed on the new run number. It is not necessary
+   to save the selection and create the Pid files. <br>
+   <center><img src='REF_M_images/before_saving.png'><img src='REF_M_images/after_saving.png'></center><br><br>
 
-
-<a id="link38"><center><img src='REF_M_images/log_book_tab.png'></center></a>
-<a id="link39"><center><img src='REF_M_images/selection_box_left.png'></center></a>
-<a id="link40"><center><img src='REF_M_images/selection_box_center.png'></center></a>
-<a id="link41"><center><img src='REF_M_images/selection_box_right.png'></center></a>
-
+<a id="link41"><li>Selection mode</li></a>
+   <center><img src='REF_M_images/selection_box_right.png'></center>
+   To work in <b>selection mode</b> check the Select switch, and to work in <b>info mode</b>, check the Info 
+   switch. The <b>info mode</b> gives the x, y and number of counts of the pixel selected in the main display.
 </center>
 
 </html>
