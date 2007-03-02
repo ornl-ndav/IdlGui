@@ -10,7 +10,7 @@ pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
-image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/more_nexus_title.bmp"
+image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/more_nexus_title.bmp"
 id = widget_info(wWidget,find_by_uname="logo_message_draw")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
@@ -789,7 +789,7 @@ case instrument of
         
         if (display_status EQ 0) then begin
             no_preview=$
-              "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
+              "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_REF_L.bmp"
             image = read_bmp(no_preview)
             tv, image,0,0,/true
         endif else begin
@@ -805,7 +805,7 @@ case instrument of
 
          if (display_status EQ 0) then begin
              no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_M.bmp"
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_REF_M.bmp"
              image = read_bmp(no_preview)
              tv, image,0,0,/true
          endif else begin
@@ -823,13 +823,13 @@ case instrument of
          
          if (display_status EQ 0) then begin
              no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_top.bmp"
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_BSS_top.bmp"
              image = read_bmp(no_preview)
              wset, id_top_value
              tv, image,0,0,/true
 
              no_preview=$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_bottom.bmp"
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_BSS_bottom.bmp"
              image = read_bmp(no_preview)
              wset, id_bottom_value
              tv, image,0,0,/true
@@ -1367,41 +1367,94 @@ pro output_data_button_cb, Event
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+widget_control,/hourglass
+
+;first create working directory
+create_working_directory, event
+
 ;collect info from data group
 output_data_group_id = widget_info(event.top,find_by_uname='output_data_group')
 widget_control, output_data_group_id, get_value=selection
 
-;event
-if (selection[0] EQ 1) then begin
-    output_file, event, 'event', 'event_text', 'event_format_group', 'data'
-endif
+instrument = (*global).instrument
 
-;histogram
-if (selection[1] EQ 1) then begin
-    output_file, event, 'histogram', 'histogram_text', 'histogram_format_group', 'data'
-endif
+if (instrument EQ 'BSS') then begin
+
+;event
+    if (selection[0] EQ 1) then begin
+        output_file, event, 'event', 'event_text', 'event_format_group', 'data'
+    endif
+    
+;histogram bank1
+    if (selection[1] EQ 1) then begin
+        output_file, event, 'histogram_bank1', 'histogram_bank1_text', 'histogram_bank1_format_group', 'data'
+    endif
+    
+;histogram bank2
+    if (selection[2] EQ 1) then begin
+        output_file, event, 'histogram_bank2', 'histogram_bank1_text', 'histogram_bank2_format_group', 'data'
+    endif
+
+;histogram bank3
+    if (selection[3] EQ 1) then begin
+        output_file, event, 'histogram_bank3', 'histogram_bank3_text', 'histogram_bank3_format_group', 'data'
+    endif
 
 ;timebins
-if (selection[2] EQ 1) then begin
-    output_file, event, 'timebins', 'timebins_text', 'timebins_format_group', 'data'
-endif
-
+    if (selection[2] EQ 1) then begin
+        output_file, event, 'timebins', 'timebins_text', 'timebins_format_group', 'data'
+    endif
+    
 ;pulseid
-if (selection[3] EQ 1) then begin
-    output_file, event, 'pulseid', 'pulseid_text', 'pulseid_format_group', 'data'
-endif
-
+    if (selection[3] EQ 1) then begin
+        output_file, event, 'pulseid', 'pulseid_text', 'pulseid_format_group', 'data'
+    endif
+    
 ;infos
-if (selection[4] EQ 1) then begin
-    output_file, event, 'infos', 'infos_file_text', 'infos_format_group', 'text'
-endif
-
+    if (selection[4] EQ 1) then begin
+        output_file, event, 'infos', 'infos_file_text', 'infos_format_group', 'text'
+    endif
+    
 ;reinitialize file name
-widget_control, output_data_group_id, set_value=[0,0,0,0,0]
+    widget_control, output_data_group_id, set_value=[0,0,0,0,0,0,0]
+
+endif else begin
+
+;event
+    if (selection[0] EQ 1) then begin
+        output_file, event, 'event', 'event_text', 'event_format_group', 'data'
+    endif
+    
+;histogram
+    if (selection[1] EQ 1) then begin
+        output_file, event, 'histogram', 'histogram_text', 'histogram_format_group', 'data'
+    endif
+    
+;timebins
+    if (selection[2] EQ 1) then begin
+        output_file, event, 'timebins', 'timebins_text', 'timebins_format_group', 'data'
+    endif
+    
+;pulseid
+    if (selection[3] EQ 1) then begin
+        output_file, event, 'pulseid', 'pulseid_text', 'pulseid_format_group', 'data'
+    endif
+    
+;infos
+    if (selection[4] EQ 1) then begin
+        output_file, event, 'infos', 'infos_file_text', 'infos_format_group', 'text'
+    endif
+    
+;reinitialize file name
+    widget_control, output_data_group_id, set_value=[0,0,0,0,0]
+    
+endelse
 
 ;hide all text boxes
-output_data_group_cb, Event
+    output_data_group_cb, Event
 
+widget_control,hourglass=0
+    
 end
 
 
@@ -1455,21 +1508,57 @@ pro output_binary_data, event, data_type, output_text_uname, computer
 id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;determine output file name
+output_text_uname_id = widget_info(event.top,find_by_uname=output_text_uname)
+widget_control, output_text_uname_id, get_value=output_file_name
+
 case data_type of 
     'event': begin
         ;copy event_file if event file
-        
     end
     'histogram': begin
-        
+        cmd_tmp = ' -p /entry/bank1/data/ --dump '
+        cmd_tmp += output_file_name
+        text = 'dumping histogram bank1'
+    end
+    'histogram_bank1': begin
+        cmd_tmp = ' -p /entry/bank1/data/ --dump '
+        cmd_tmp += output_file_name
+        text = 'dumping histogram bank1'
+    end
+    'histogram_bank2': begin
+        cmd_tmp = ' -p /entry/bank2/data/ --dump '
+        cmd_tmp += output_file_name
+        text = 'dumping histogram bank2'
+    end
+    'histogram_bank3': begin
+        cmd_tmp = ' -p /entry/bank3/data/ --dump '
+        cmd_tmp += output_file_name
+        text = 'dumping histogram bank3'
     end
     'timebins': begin
-
+        cmd_tmp = ' -p /entry/bank1/time_of_flight/ --dump '
+        cmd_tmp += output_file_name
+        text = 'dumping time bins'
     end
     'pulseid': begin
 
     end
 endcase
+
+output_into_text_box, event, 'log_book_text', '-> ' + text + ':'
+output_into_text_box, event, 'infos_text', '-> ' + text + ' in ' + output_file_name
+
+cmd = 'nxdir ' + (*global).full_nexus_name
+cmd += cmd_tmp
+cmd_text = ' > ' + cmd
+output_into_text_box, event, 'log_book_text', cmd_text
+
+spawn, cmd, listening, error_listening
+output_into_text_box, event, 'log_book_text', 'Done ' + text
+output_error, event, 'log_book_text', error_listening
+output_into_text_box, event, 'infos_text', 'Done' + text
+
 end
 
 
@@ -1484,9 +1573,11 @@ widget_control,id,get_uvalue=global
 working_path = (*global).working_path
 working_path = dialog_pickfile(path=working_path,/directory)
 
-text = 'Output path is: ' + working_path
+text = 'Working directory is: ' + working_path
 working_path_text_id = widget_info(event.top,find_by_uname='working_path_text')
 widget_control, working_path_text_id, set_value=text
+
+working_path = (*global).working_path
 
 end
 
@@ -1494,4 +1585,25 @@ end
 
 pro exit_button_eventcb, Event
 widget_control,Event.top,/destroy
+end
+
+
+
+
+pro create_working_directory, event
+
+;get the global data structure
+id=widget_info(event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+working_directory = (*global).working_path
+
+cmd_create = "mkdir " + working_directory
+
+text= '-> Create working directory (if not there yet): ' + working_directory
+output_into_text_box, event, 'log_book_text', text
+spawn, cmd_create, listening, err_listening
+output_into_text_box, event, 'log_book_text', listening
+output_error, event, 'log_book_text', err_listening
+
 end

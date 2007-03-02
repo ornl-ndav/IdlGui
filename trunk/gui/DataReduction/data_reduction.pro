@@ -34,7 +34,7 @@ case Event.id of
             
         endif else begin
             image_logo=$
-              "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/access_denied.bmp"
+              "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/access_denied.bmp"
             id = widget_info(wWidget,find_by_uname="logo_message_draw")
             WIDGET_CONTROL, id, GET_VALUE=id_value
             wset, id_value
@@ -381,7 +381,7 @@ INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$
                                   /RETURN_NAME,$
                                   XOFFSET=30,$
                                   YOFFSET=25,$
-                                  SET_VALUE=1.0,$          
+                                  SET_VALUE=0.0,$          
                                   UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
@@ -764,7 +764,7 @@ norm_y_offset = 40
 normalization_label = widget_label(data_reduction_base,$
                                    xoffset=5,$
                                    yoffset=117-norm_y_offset,$
-                                   value='Normalization:')
+                                   value='Norm.:')
 
 normalization_list = ['Yes',$
                       'No']
@@ -772,7 +772,7 @@ normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$
                                            normalization_list,$
                                            /exclusive,$
                                            /RETURN_NAME,$
-                                           XOFFSET=90,$
+                                           XOFFSET=45,$
                                            YOFFSET=110-norm_y_offset,$
                                            SET_VALUE=0.0,$
                                            row=1,$
@@ -780,20 +780,20 @@ normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$
 
 norm_run_number_base = widget_base(data_reduction_base,$
                                    uname='norm_run_number_base',$
-                                   xoffset=175,$
+                                   xoffset=140,$
                                    yoffset=110-norm_y_offset,$
-                                   scr_xsize=150,$
+                                   scr_xsize=170,$
                                    scr_ysize=34)
 
 normalization_label = widget_label(norm_run_number_base,$
                                    xoffset=0,$
                                    yoffset=7,$
-                                   value='-> Run #')
+                                   value='Runs#')
 
 normalization_text = widget_text(norm_run_number_base,$
-                                 xoffset=55,$
+                                 xoffset=35,$
                                  yoffset=2,$
-                                 scr_xsize=70,$
+                                 scr_xsize=125,$
                                  value='',$
                                  uname='normalization_text',$
                                  /editable,$
@@ -1191,7 +1191,7 @@ Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 sns_logo=$
-  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/sns_logo_REF_L.bmp"
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo_REF_L.bmp"
 id = widget_info(main_base,find_by_uname="sns_logo_drawing")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
@@ -1199,7 +1199,7 @@ image = read_bmp(sns_logo)
 tv, image,-15,0,/true
 
 REF_L_logo=$
-  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/REF_L_label.bmp"
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_L_label.bmp"
 id = widget_info(main_base,find_by_uname="REF_L_logo_drawing")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
@@ -1593,21 +1593,6 @@ REF_M_logo = widget_draw(MAIN_BASE,$
                          scr_xsize=530,$
                          scr_ysize=60)
                          
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
 xsize_of_tabs = 730
@@ -2184,7 +2169,7 @@ Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 sns_logo=$
-  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/sns_logo.bmp"
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo.bmp"
 id = widget_info(main_base,find_by_uname="sns_logo_drawing")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
@@ -2193,7 +2178,7 @@ tv, image,0,0,/true
 
 
 REF_M_logo=$
-  "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/REF_M_logo.bmp"
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_M_logo.bmp"
 id = widget_info(main_base,find_by_uname="REF_M_logo")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value

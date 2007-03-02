@@ -995,7 +995,7 @@ tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
-image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/rebin_nexus_gui_logo.bmp"
+image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/rebin_nexus_gui_logo.bmp"
 id = widget_info(wWidget,find_by_uname="logo_message_draw")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value

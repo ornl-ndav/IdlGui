@@ -23,7 +23,7 @@ case Event.id of
             WIDGET_CONTROL, id, /destroy
             wTLB, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, ucams
         endif else begin
-            image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/access_denied.bmp"
+            image_logo="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/access_denied.bmp"
             id = widget_info(wWidget,find_by_uname="logo_message_draw")
             WIDGET_CONTROL, id, GET_VALUE=id_value
             wset, id_value
@@ -103,6 +103,10 @@ case Event.id of
 
     Widget_Info(wWidget, FIND_BY_UNAME='exit_button'): begin
         exit_button_eventcb, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='open_nexus_button'): begin
+        open_nexus_cb, Event
     end
 
 else:
@@ -452,6 +456,7 @@ if (instrument EQ 'BSS') then begin
     
 ;output data text base
 xoff = 25
+xoff_group = 20
 ;event
     event_text_base = widget_base(output_data_base,$
                                   uname='event_text_base',$
@@ -466,19 +471,19 @@ xoff = 25
                              uname='event_text',$
                              xoffset=0,$
                              yoffset=0,$
-                             scr_xsize=400,$
+                             scr_xsize=400+xoff_group,$
                              scr_ysize=30,$
                              value='',$
                              /editable,$
                              font='lucidasans-10')
     
-    output_format_list = ['binary (Unix / Microsoft)',$
+    output_format_list = ['binary(Unix/Microsoft)',$
                           'ASCII']
     event_format_group = cw_bgroup(event_text_base,$ 
                                    uname='event_format_group',$
                                    output_format_list,$
                                    /RETURN_NAME,$
-                                   XOFFSET=405,$
+                                   XOFFSET=405+xoff_group,$
                                    YOFFSET=0,$
                                    /exclusive,$
                                    /row,$
@@ -499,7 +504,7 @@ xoff = 25
                                        uname='histogram_bank1_text',$
                                        xoffset=0,$
                                        yoffset=0,$
-                                       scr_xsize=400,$
+                                       scr_xsize=400+xoff_group,$
                                        scr_ysize=30,$
                                        value='',$
                                        /editable,$
@@ -509,7 +514,7 @@ xoff = 25
                                              uname='histogram_bank1_format_group',$
                                              output_format_list,$
                                              /RETURN_NAME,$
-                                             XOFFSET=405,$
+                                             XOFFSET=405+xoff_group,$
                                              YOFFSET=0,$
                                              /exclusive,$
                                              /row,$
@@ -530,7 +535,7 @@ xoff = 25
                                        uname='histogram_bank2_text',$
                                        xoffset=0,$
                                        yoffset=0,$
-                                       scr_xsize=400,$
+                                       scr_xsize=400+xoff_group,$
                                        scr_ysize=30,$
                                        value='',$
                                        /editable,$
@@ -540,7 +545,7 @@ xoff = 25
                                              uname='histogram_bank2_format_group',$
                                              output_format_list,$
                                              /RETURN_NAME,$
-                                             XOFFSET=405,$
+                                             XOFFSET=405+xoff_group,$
                                              YOFFSET=0,$
                                              /exclusive,$
                                              /row,$
@@ -561,7 +566,7 @@ xoff = 25
                                        uname='histogram_bank3_text',$
                                        xoffset=0,$
                                        yoffset=0,$
-                                       scr_xsize=400,$
+                                       scr_xsize=400+xoff_group,$
                                        scr_ysize=30,$
                                        value='',$
                                        /editable,$
@@ -571,7 +576,7 @@ xoff = 25
                                              uname='histogram_bank3_format_group',$
                                              output_format_list,$
                                              /RETURN_NAME,$
-                                             XOFFSET=405,$
+                                             XOFFSET=405+xoff_group,$
                                              YOFFSET=0,$
                                              /exclusive,$
                                              /row,$
@@ -592,7 +597,7 @@ xoff = 25
                                 uname='timebins_text',$
                                 xoffset=0,$
                                 yoffset=0,$
-                                scr_xsize=400,$
+                                scr_xsize=400+xoff_group,$
                                 scr_ysize=30,$
                                 value='',$
                                 /editable,$
@@ -602,7 +607,7 @@ xoff = 25
                                       uname='timebins_format_group',$
                                       output_format_list,$
                                       /RETURN_NAME,$
-                                      XOFFSET=405,$
+                                      XOFFSET=405+xoff_group,$
                                       YOFFSET=0,$
                                       /exclusive,$
                                       /row,$
@@ -623,7 +628,7 @@ xoff = 25
                                uname='pulseid_text',$
                                xoffset=0,$
                                yoffset=0,$
-                               scr_xsize=400,$
+                               scr_xsize=400+xoff_group,$
                                scr_ysize=30,$
                                value='',$
                                /editable,$
@@ -633,7 +638,7 @@ xoff = 25
                                      uname='pulseid_format_group',$
                                      output_format_list,$
                                      /RETURN_NAME,$
-                                     XOFFSET=405,$
+                                     XOFFSET=405+xoff_group,$
                                      YOFFSET=0,$
                                      /exclusive,$
                                      /row,$
@@ -654,7 +659,7 @@ xoff = 25
                                   uname='infos_file_text',$
                                   xoffset=0,$
                                   yoffset=0,$
-                                  scr_xsize=400,$
+                                  scr_xsize=400+xoff_group,$
                                   scr_ysize=30,$
                                   value='',$
                                   /editable,$
@@ -667,7 +672,7 @@ xoff = 25
                                    uname='infos_format_group',$
                                    output_infos_format_list,$
                                    /RETURN_NAME,$
-                                   XOFFSET=405,$
+                                   XOFFSET=405+xoff_group,$
                                    YOFFSET=0,$
                                    /exclusive,$
                                    /row,$
@@ -681,7 +686,7 @@ xoff = 25
                                           scr_xsize=90,$
                                           scr_ysize=150,$
                                           map=0)
-    bmp_file = "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/output_data_go.bmp"
+    bmp_file = "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/output_data_go.bmp"
     output_data_button = widget_button(output_data_button_base,$
                                        uname='output_data_button',$
                                        xoffset=0,$
@@ -691,7 +696,7 @@ xoff = 25
                                        /bitmap,$
                                        value=bmp_file)
     
-    working_path_text = 'Output path is: ' + working_path
+    working_path_text = 'Working directory is: ' + working_path
     working_path_label = widget_label(output_data_base,$
                                       uname='working_path_text',$
                                       xoffset=5,$
@@ -923,7 +928,9 @@ endif else begin                ;REF_L or REF_M
                                           scr_xsize=90,$
                                           scr_ysize=150,$
                                           map=0)
-    bmp_file = "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/output_data_go.bmp"
+
+    ;GO button
+    bmp_file = "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/output_data_go.bmp"
     output_data_button = widget_button(output_data_button_base,$
                                        uname='output_data_button',$
                                        xoffset=0,$
@@ -933,7 +940,7 @@ endif else begin                ;REF_L or REF_M
                                        /bitmap,$
                                        value=bmp_file)
     
-    working_path_text = 'Output path is: ' + working_path
+    working_path_text = 'Working directory is: ' + working_path
     working_path_label = widget_label(output_data_base,$
                                       uname='working_path_text',$
                                       xoffset=5,$
@@ -990,6 +997,11 @@ file_path = widget_button(WID_BASE_0_MBAR,$
                           /menu,$
                           value='File')
 
+OPEN_NEXUS_button = widget_button(file_path,$
+                           uname='open_nexus_button',$
+                           value='Open Nexus',$
+                           accelerator="Return")
+
 working_path = widget_button(file_path,$
                              uname='working_path',$
                              value='Working path...')
@@ -1016,7 +1028,7 @@ XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 case instrument of
 
     'REF_L': begin
-        no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_L.bmp"
+        no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_REF_L.bmp"
         id = widget_info(Main_base,find_by_uname='drawing')
         WIDGET_CONTROL, id, GET_VALUE=id_value
         wset, id_value
@@ -1024,7 +1036,7 @@ case instrument of
         tv, image,0,0,/true
     end
     'REF_M': begin
-        no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_REF_M.bmp"
+        no_preview="/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_REF_M.bmp"
         id = widget_info(main_base,find_by_uname='drawing')
         WIDGET_CONTROL, id, GET_VALUE=id_value
         wset, id_value
@@ -1033,7 +1045,7 @@ case instrument of
     end
     'BSS' : begin
         no_preview=$
-          "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_top.bmp"
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_BSS_top.bmp"
         id_top = widget_info(main_base,find_by_uname='drawing_top')
         WIDGET_CONTROL, id_top, GET_VALUE=id_top_value
         wset, id_top_value
@@ -1041,7 +1053,7 @@ case instrument of
         tv, image,0,0,/true
         
         no_preview=$
-           "/SNS/users/j35/SVN/HistoTool/trunk/gui/more_nexus/no_preview_BSS_bottom.bmp"
+           "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/no_preview_BSS_bottom.bmp"
         id_bottom = widget_info(main_base,find_by_uname='drawing_bottom')
         WIDGET_CONTROL, id_bottom, GET_VALUE=id_bottom_value
         wset, id_bottom_value

@@ -568,14 +568,14 @@ VIEW_DRAW = Widget_Draw(MAIN_BASE,$
                             scr_xsize=50,$
                             scr_ysize=48,$
                             uname='go_button',$
-                            value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/go1.bmp',$
+                            value='/SNS/users/j35/SVN/HistoTool/trunk/gui/images/go1.bmp',$
                             /bitmap,$
                             frame=2)
          
 
   image_background = widget_button(OPEN_NEXUS_BASE,$
                                    uname='image_background_minireflpak',$
-                         value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
+                     value='/SNS/users/j35/SVN/HistoTool/trunk/gui/images/miniReflPak_logo.bmp',$
                                    xoffset=15,$
                                    yoffset=54,$
                                    scr_xsize=270,$
@@ -1655,7 +1655,7 @@ VIEW_DRAW_REF_L = Widget_Draw(MAIN_BASE, $
                               yoffset=480,$
                               scr_xsize=280,$
                               scr_ysize=100,$
-                              value='/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak_logo.bmp',$
+                              value='/SNS/users/j35/SVN/HistoTool/trunk/gui/images/miniReflPak_logo.bmp',$
                               /bitmap)
 
 
