@@ -145,11 +145,55 @@ case Event.id of
 ;draw_interaction for REF_L
     Widget_Info(wWidget, FIND_BY_UNAME='display_data_base'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_DRAW' )then $
-          if( Event.type EQ 0 )then $   ;press
+          if( Event.type EQ 0 )then $ ;press
           selection_press, Event
-          if (Event.type EQ 2) then $   ;release
-            selection_release, Event
+        if (Event.type EQ 2) then $ ;release
+          selection_release, Event
+
     end
+
+;replot banners for REF_L
+    widget_info(wWidget, FIND_BY_UNAME='sns_logo_drawing_REF_L'):begin
+        sns_logo=$
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo_REF_L.bmp"
+        id = widget_info(wWidget,find_by_uname="sns_logo_drawing_REF_L")
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        image = read_bmp(sns_logo)
+        tv, image,-15,0,/true
+    end
+
+    widget_info(wWidget, FIND_BY_UNAME='REF_L_logo_drawing'):begin
+        REF_L_logo=$
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_L_label.bmp"
+        id = widget_info(wWidget,find_by_uname="REF_L_logo_drawing")
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        image = read_bmp(REF_L_logo)
+        tv, image,0,0,/true
+    end
+
+;replot banners for REF_M
+    widget_info(wWidget, FIND_BY_UNAME='sns_logo_drawing'):begin
+        sns_logo=$
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo.bmp"
+        id = widget_info(wWidget,find_by_uname="sns_logo_drawing")
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        image = read_bmp(sns_logo)
+        tv, image,0,0,/true
+    end
+    
+    widget_info(wWidget, FIND_BY_UNAME='REF_M_logo'):begin
+        REF_M_logo=$
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_M_logo.bmp"
+        id = widget_info(wWidget,find_by_uname="REF_M_logo")
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        image = read_bmp(REF_M_logo)
+        tv, image,0,0,/true
+    end
+
 ;clear selection button for REF_L and REF_M
     Widget_Info(wWidget, FIND_BY_UNAME='clear_selection_button'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -640,11 +684,12 @@ display_data_base = widget_draw(MAIN_BASE,$
 
 ;sns logo
 sns_logo_drawing = widget_draw(MAIN_BASE,$
-                            uname='sns_logo_drawing',$
-                            xoffset=530,$
-                            yoffset=535,$
-                            scr_xsize=743,$
-                            scr_ysize=116)
+                               uname='sns_logo_drawing_REF_L',$
+                               xoffset=530,$
+                               yoffset=535,$
+                               scr_xsize=743,$
+                               scr_ysize=116,$
+                               /MOTION_EVENTS)
 
 ;REF_L logo
 REF_L_logo_drawing = widget_draw(MAIN_BASE,$
@@ -652,7 +697,8 @@ REF_L_logo_drawing = widget_draw(MAIN_BASE,$
                                  xoffset=800,$
                                  yoffset=445,$
                                  scr_xsize=463,$
-                                 scr_ysize=73)
+                                 scr_ysize=73,$
+                                 /MOTION_EVENTS)
 
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
@@ -1192,7 +1238,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 sns_logo=$
   "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo_REF_L.bmp"
-id = widget_info(main_base,find_by_uname="sns_logo_drawing")
+id = widget_info(main_base,find_by_uname="sns_logo_drawing_REF_L")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
 image = read_bmp(sns_logo)
@@ -1408,7 +1454,8 @@ sns_logo_drawing = widget_draw(MAIN_BASE,$
                                xoffset=310,$
                                yoffset=3,$
                                scr_xsize=1030,$
-                               scr_ysize=45)
+                               scr_ysize=45,$
+                               /MOTION_EVENTS)
 
 
 ;BOTTOM LEFT BOX - DISPLAY DATA
@@ -1591,7 +1638,8 @@ REF_M_logo = widget_draw(MAIN_BASE,$
                          xoffset=815,$
                          yoffset=568,$
                          scr_xsize=530,$
-                         scr_ysize=60)
+                         scr_ysize=60,$
+                         /MOTION_EVENTS)
                          
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
