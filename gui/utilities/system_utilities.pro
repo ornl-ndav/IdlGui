@@ -236,12 +236,13 @@ list_of_instrument = ['REF_L', 'REF_M', 'BSS']
 ;7:vuk:john 
 ;8:x4t:xiadong
 ;9:ele:eugene
+;10:ceh:candice
 
-list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele']
+list_of_ucams = ['j35','pf9','2zr','mid','1qg','ha9','vyi','vuk','x4t','ele','ceh']
 
 ;check if ucams is in the list
 ucams_index=-1
-for i =0, 9 do begin
+for i =0, 10 do begin
    if (ucams EQ list_of_ucams[i]) then begin
      ucams_index = i
      break 
@@ -263,6 +264,7 @@ CASE instrument OF
 	7: 		;authorized
 	8: 		;authorized
 	9: ucams_index=-1	;unauthorized
+        10:
       ENDCASE
    ;REF_M
    1: CASE ucams_index OF
@@ -277,6 +279,7 @@ CASE instrument OF
 	7: ucams_index=-1
         8: ucams_index=-1
         9: ucams_index=-1
+        10: ucams_index=-1
     ENDCASE
     2: case ucams_index of
         -1:

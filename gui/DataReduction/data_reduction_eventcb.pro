@@ -14,61 +14,6 @@ end
 
 
 
-function is_local_nexus_function, processing_run_number_array
-
-array_result = strmatch(processing_run_number_array,'*\**')
-
-return, array_result
-end
-
-
-
-
-
-
-
-function get_list_of_runs, instrument, runs_to_process
-
-if (instrument EQ 'REF_L') then begin
-    array_of_runs = ''
-    array_of_runs_1 = strsplit(runs_to_process,',',count=length,/extract)
-    array_of_runs_2 = strarr(length)
-
-    for j=0,(length-1) do begin
-        array_of_runs_2 = strsplit(array_of_runs_1[j],'-',$
-                                   count=length_1,/extract)
-        if (length_1 GT 1) then begin
-                                ;check if there is a * before/after
-                                ;array_of_runs_2[0] and [1]
-            local_nexus = is_local_nexus_function(array_of_runs_2)
-            if (local_nexus[0] EQ 0 AND $
-                local_nexus[1] EQ 0) then begin
-                min = fix(array_of_runs_2[0])
-                max = fix(array_of_runs_2[1])
-                array_of_runs_add = strcompress(indgen(max-min+1)+min,/remove_all)
-            endif else begin
-                min = fix(remove_star_from_string(array_of_runs_2[0]))
-                max = fix(remove_star_from_string(array_of_runs_2[1]))
-                array_of_runs_add = strcompress(indgen(max[0]-min[0]+1)+min[0],/remove_all)
-                array_of_runs_add += '*'
-            endelse
-            array_of_runs = [array_of_runs, array_of_runs_add]
-        endif else begin
-            array_of_runs = [array_of_runs,array_of_runs_2]
-        endelse
-    endfor
-    size_array_of_runs = size(array_of_runs)
-    array_of_runs = array_of_runs[1:size_array_of_runs[1]-1]
-endif else begin
-    size_array = size(runs_to_process)
-    size_is = size_array[1]
-    array_of_runs = runs_to_process[1:size_is-1]
-endelse
-
-return, array_of_runs
-end
-
-
 
 
 
@@ -94,7 +39,7 @@ runs_to_use_array = lonarr(array_size)
 nbr_runs_to_use = 0
 
 ;check if there is a star after or before the run number
-is_local_nexus_array = is_local_nexus_function(runs_array)
+is_local_nexus_array = is_nexus_local(runs_array)
 
 for i=0,(array_size-1) do begin
 
@@ -277,6 +222,8 @@ endelse
 (*global).selection_mode = selection_status
 
 end
+
+
 
 
 pro keep_selection_list_group_eventcb, Event
@@ -1088,16 +1035,20 @@ endif else begin
         widget_control, signal_pid_file_button_id, sensitive=1
         widget_control, background_pid_file_button_id, sensitive=1
         
-        ;put nexus run number into list of nexus runs if REF_L
-        runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
         if (instrument EQ 'REF_L') then begin
-            new_text = strcompress(run_number,/remove_all)
-            widget_control, runs_to_process_text_id, set_value=new_text
-            sequentially_runs_to_process_text_id = $
-              widget_info(event.top,$
-                          find_by_uname='sequentially_runs_to_process_text')
-            widget_control, sequentially_runs_to_process_text_id, set_value=new_text
+
+            add_run_number_to_list_if_not_present, $
+              event, $
+              'sequentially_runs_to_process_text',$
+              run_number
+              
+            add_run_number_to_list_if_not_present, $
+              event, $
+              'runs_to_process_text',$
+              run_number
+
         endif else begin ;only copy run number into run to process if REF_M
+
             combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
             new_text = strcompress(run_number,/remove_all)            
             list_of_runs = strarr(1)
@@ -1110,11 +1061,10 @@ endif else begin
             runs_to_process_label_id = widget_info(Event.top, $
                                                    find_by_uname='runs_to_process_label')
             widget_control, runs_to_process_label_id, set_value=text
+
         endelse
         
-;        if (instrument EQ 'REF_L') then begin
         check_status_to_validate_go, Event
-;        endif
 
     endelse
     
@@ -1133,79 +1083,128 @@ widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
 
-;erase selection corners from global if desired
-if ((*global).keep_signal_selection EQ 0) then begin
-    (*global).selection_signal = 0
-endif 
-
-if ((*global).keep_back_selection EQ 0) then begin
-    (*global).selection_background = 0
-    (*global).selection_background_2 = 0
-endif
+if (instrument EQ 'REF_M') then begin ;REF_M
 
 ;no data reduction plot available
-(*global).data_reduction_done = 0
-
+    (*global).data_reduction_done = 0
+    
 ;put intermediate output back to NO
-if (instrument EQ 'REF_M') then begin
     list_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
-endif else begin
-    list_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
-endelse
-widget_control, list_id, set_value=1
-
+    widget_control, list_id, set_value=1
+    
 ;erase main plot (left box)
-id_draw = widget_info(Event.top, find_by_uname='display_data_base')
-widget_control, id_draw, get_value=id_value
-wset,id_value
-erase
-
+    id_draw = widget_info(Event.top, find_by_uname='display_data_base')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    erase
+    
 ;erase data reduction plot
-main_draw_id = widget_info(Event.top, find_by_uname='data_reduction_plot')
-widget_control, main_draw_id, get_value=id_value
-wset,id_value
-erase
-
+    main_draw_id = widget_info(Event.top, find_by_uname='data_reduction_plot')
+    widget_control, main_draw_id, get_value=id_value
+    wset,id_value
+    erase
+    
 ;reset all boxes (pid ...)
-if ((*global).keep_signal_selection EQ 0) then begin
-    signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
-    widget_control, signal_pid_text_id, set_value=''
-endif
-
-if ((*global).keep_back_selection EQ 0) then begin
-    background_pid_text_id = widget_info(Event.top,find_by_uname='background_pid_text')
-    widget_control, background_pid_text_id, set_value=''
-endif
-
-normalization_text_id = widget_info(Event.top,find_by_uname='normalization_text')
-widget_control, normalization_text_id, set_value=''
-
-if (instrument EQ 'REF_L') then begin
-    runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
-    widget_control, runs_to_process_text_id, set_value=''
-endif else begin
+    if ((*global).keep_signal_selection EQ 0) then begin
+        signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
+        widget_control, signal_pid_text_id, set_value=''
+    endif
+    
+    if ((*global).keep_back_selection EQ 0) then begin
+        background_pid_text_id = widget_info(Event.top,find_by_uname='background_pid_text')
+        widget_control, background_pid_text_id, set_value=''
+    endif
+    
+    normalization_text_id = widget_info(Event.top,find_by_uname='normalization_text')
+    widget_control, normalization_text_id, set_value=''
+    
     combobox_id = widget_info(Event.top,find_by_uname='several_nexus_combobox')
     widget_control, combobox_id, set_value=(*global).initial_list_of_runs
-endelse
-
+    
 ;reset label of all intermediate plots
-tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
-tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
-tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
-tab_5_id = $
-  widget_info(Event.top, $
-              find_by_uname='background_region_from_normalization_region_summed_tof_base')
-widget_control, tab_1_id, base_set_title=''
-widget_control, tab_2_id, base_set_title=''
-widget_control, tab_4_id, base_set_title=''
-widget_control, tab_5_id, base_set_title=''
+    tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+    tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+    tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+    tab_5_id = $
+      widget_info(Event.top, $
+                  find_by_uname='background_region_from_normalization_region_summed_tof_base')
+    widget_control, tab_1_id, base_set_title=''
+    widget_control, tab_2_id, base_set_title=''
+    widget_control, tab_4_id, base_set_title=''
+    widget_control, tab_5_id, base_set_title=''
+    
+    (*global).plots_selected = [0,0,0,0]
 
-if (instrument EQ 'REF_L') then begin
-    tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
-    widget_control, tab_3_id, base_set_title=''
-    (*global).plots_selected = [0,0,0,0,0]
-endif else begin
-        (*global).plots_selected = [0,0,0,0]
+endif else begin                ;REF_L
+
+    if ((*global).save_session EQ 0) then begin ;yes, save session
+
+    endif else begin ;no, clear everything
+        
+;erase selection corners from global if desired
+        if ((*global).keep_signal_selection EQ 0) then begin
+            (*global).selection_signal = 0
+        endif 
+        
+        if ((*global).keep_back_selection EQ 0) then begin
+            (*global).selection_background = 0
+            (*global).selection_background_2 = 0
+        endif
+        
+;no data reduction plot available
+        (*global).data_reduction_done = 0
+        
+;put intermediate output back to NO
+        list_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
+        widget_control, list_id, set_value=1
+        
+;erase main plot (left box)
+        id_draw = widget_info(Event.top, find_by_uname='display_data_base')
+        widget_control, id_draw, get_value=id_value
+        wset,id_value
+        erase
+        
+;erase data reduction plot
+        main_draw_id = widget_info(Event.top, find_by_uname='data_reduction_plot')
+        widget_control, main_draw_id, get_value=id_value
+        wset,id_value
+        erase
+        
+;reset all boxes (pid ...)
+        if ((*global).keep_signal_selection EQ 0) then begin
+            signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
+            widget_control, signal_pid_text_id, set_value=''
+        endif
+        
+        if ((*global).keep_back_selection EQ 0) then begin
+            background_pid_text_id = widget_info(Event.top,find_by_uname='background_pid_text')
+            widget_control, background_pid_text_id, set_value=''
+        endif
+        
+        normalization_text_id = widget_info(Event.top,find_by_uname='normalization_text')
+        widget_control, normalization_text_id, set_value=''
+        
+        runs_to_process_text_id = widget_info(Event.top, find_by_uname='runs_to_process_text')
+        widget_control, runs_to_process_text_id, set_value=''
+        
+;reset label of all intermediate plots
+        tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
+        tab_2_id = widget_info(Event.top, find_by_uname='background_summed_tof_base')
+        tab_4_id = widget_info(Event.top, find_by_uname='normalization_region_summed_tof_base')
+        tab_5_id = $
+          widget_info(Event.top, $
+                      find_by_uname='background_region_from_normalization_region_summed_tof_base')
+        widget_control, tab_1_id, base_set_title=''
+        widget_control, tab_2_id, base_set_title=''
+        widget_control, tab_4_id, base_set_title=''
+        widget_control, tab_5_id, base_set_title=''
+        
+        tab_3_id = widget_info(Event.top, find_by_uname='signal_region_summed_tof_base')
+        widget_control, tab_3_id, base_set_title=''
+        (*global).plots_selected = [0,0,0,0,0]
+
+    endelse
+    
 endelse
 
 end
@@ -1230,7 +1229,7 @@ tmp_working_path += "_" + (*global).instrument + "/"
 tmp_folder = (*global).tmp_folder
 cmd_create = "mkdir " + tmp_folder
 
-text= " [ " + cmd_create + "..."
+text= " [ " + cmd_create + " ..."
 widget_control, full_view_info, set_value=text, /append
 spawn, cmd_create, listening, err_listening
 
@@ -4238,4 +4237,64 @@ end
 
 pro open_nexus_button_eventcb, Event
 open_nexus_file, event
+end
+
+
+
+
+pro save_session_group_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id=widget_info(Event.top,find_by_uname='save_session_group')
+widget_control, id, get_value=value
+
+(*global).save_session = value
+
+if (value EQ 0) then begin
+
+    keep_signal = 1
+    keep_back = 1
+
+endif else begin
+
+    keep_signal = 0
+    keep_back = 0
+
+endelse
+
+(*global).keep_signal_selection = keep_signal
+(*global).keep_back_selection = keep_back
+
+end
+
+
+
+
+pro add_run_number_to_list_if_not_present, event, uname, run_number
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get list of run number to process
+text_id = widget_info(Event.top,find_by_uname=uname)
+widget_control, text_id, get_value=list_of_runs
+
+;get list of runs if list not empty
+if (list_of_runs NE '') then begin
+    array_of_runs = get_list_of_runs ((*global).instrument, list_of_runs)
+
+;check that run_number is not in list already
+    already_present_run_number = check_if_run_number_already_in_list(array_of_runs,run_number)
+    
+    if (already_present_run_number EQ 0) then begin
+        final_list_of_runs = list_of_runs + ',' + run_number
+        widget_control, text_id, set_value=final_list_of_runs
+    endif
+
+endif
+
 end

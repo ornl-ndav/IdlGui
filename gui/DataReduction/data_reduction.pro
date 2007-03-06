@@ -22,8 +22,9 @@ case Event.id of
           id=widget_info(Event.top,FIND_BY_UNAME='INSTRUMENT_TYPE_GROUP')
         WIDGET_control, id, GET_VALUE=instrument
         ucams = get_ucams()
-        
+
         if (check_access(Event, instrument, ucams) NE -1) then begin
+
             id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
             WIDGET_CONTROL, id, /destroy
             if (instrument EQ 0) then begin
@@ -33,6 +34,7 @@ case Event.id of
             endelse
             
         endif else begin
+
             image_logo=$
               "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/access_denied.bmp"
             id = widget_info(wWidget,find_by_uname="logo_message_draw")
@@ -357,10 +359,10 @@ case Event.id of
         open_nexus_button_eventcb, Event
     end
 
-
-
-
-
+;save session for REF_L
+    Widget_Info(wWidget, FIND_BY_UNAME='save_session_group'): begin
+        save_session_group_cb, Event
+    end
 
     else:
     
@@ -461,6 +463,10 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
 
+
+
+
+
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;for REF_L
 
 Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
@@ -510,8 +516,8 @@ global = ptr_new({$
                    full_nexus_name      : '',$
                    img_ptr 		: ptr_new(0L),$
                    instrument		: instrument_list[instrument],$
-                   keep_signal_selection: 0,$
-                   keep_back_selection : 0,$
+                   keep_signal_selection: 1,$
+                   keep_back_selection  : 1,$
                    left_click_number    :0,$
                    main_output_file_name : '',$
                    nexus_file_name_only : '',$
@@ -524,12 +530,13 @@ global = ptr_new({$
                    processing_run_number : 0,$
                    push_button          : 0,$
                    run_number		: '',$
+                   save_session         : 0,$
                    selection_value      : 0,$
                    selection_signal     : 0,$
                    selection_background : 0,$
                    selection_background_2 : 0,$
                    selection_mode       : 1,$
-                   tmp_folder           : '~/.tmp_data_reduction_REF_L/',$
+                   tmp_folder           : '.tmp_data_reduction_REF_L/',$
                    local_folder         : '~/local/REF_L/',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '',$
@@ -547,7 +554,7 @@ global = ptr_new({$
                    y1_signal            : 0L,$
                    y2_signal            : 0L,$
                    color_line_signal    : 250L,$
-                   color_line_background: 300L,$
+                   color_line_background: 100L,$
                    color_line_background_2: 100L,$
                    data_reduction_done : 0,$
                    plots_selected : [0,0,0,0,0] $
@@ -564,7 +571,11 @@ widget_control, MAIN_BASE, set_uvalue=global
 tmp_working_path = (*global).tmp_working_path
 tmp_working_path += "_" + (*global).instrument + "/"
 tmp_folder = (*global).output_path + tmp_working_path
+
+tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 (*global).tmp_folder = tmp_folder
+
+
 
 ;#########################
 ;intermediate plots window
@@ -669,6 +680,34 @@ current_mode_status_label = widget_label(current_mode_base,$
                                          yoffset=20,$
                                          value='SELECTION',$
                                          /align_center)
+
+
+
+;keep session
+keep_session_base = widget_base(MAIN_BASE,$
+                                xoffset=265,$
+                                yoffset=5,$
+                                scr_xsize=249,$
+                                scr_ysize=40,$
+                                frame=1)
+
+keep_session_label = widget_label(keep_session_base,$
+                                  xoffset=5,$
+                                  yoffset=10,$
+                                  value='Save full session:',$
+                                 font='lucidasans-bold-14')
+
+save_session_list = ['Yes',$
+                     'No']
+save_session_group = CW_BGROUP(keep_session_base,$ 
+                               save_session_list,$
+                               /exclusive,$
+                               /RETURN_NAME,$
+                               XOFFSET=150,$
+                               YOFFSET=5,$
+                               SET_VALUE=0.0,$
+                               row=1,$
+                               UNAME='save_session_group')
 
 
 ;BOTTOM LEFT BOX - DISPLAY DATA
@@ -1194,7 +1233,7 @@ log_book_text = widget_text(log_book_base,$
 FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
-                                  VALUE='MENU')
+                                  VALUE='File')
 
 ; OPEN_NEXUS_button = widget_button(FILE_MENU_REF_L,$
 ;                            uname='open_nexus_button',$
@@ -1214,7 +1253,7 @@ EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
 MODE_MENU_REF_L = widget_button(WID_BASE_0_MBAR, $
                                 uname='mode_menu_REF_L',$
                                 /menu,$
-                                value='MODE')
+                                value='Mode')
 
 SELECTION_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
                                      uname='selection_mode_REF_L',$
@@ -2185,16 +2224,11 @@ log_book_text_REF_M = widget_text(log_book_base,$
 FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
                                 UNAME='FILE_MENU_REF_M',$
                                 /MENU,$
-                                VALUE='MENU')
-
-; OPEN_NEXUS_button = widget_button(FILE_MENU_REF_M,$
-;                            uname='open_nexus_button',$
-;                            value='Open Nexus',$
-;                            accelerator="Return")
+                                VALUE='File')
 
 working_path = widget_button(FILE_MENU_REF_M,$
                              uname='working_path',$
-                             value='working path...')
+                             value='working Path...')
 
 CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
                            ,VALUE='Color Tool...')
