@@ -16,7 +16,7 @@
   <name>SNS iTools Core</name>
   <description>[TODO short description of project]</description>
   <properties>
-    <snsProjectPath>trunk/java/sns-itools-core</snsProjectPath>
+    <projectPath>trunk/java/sns-itools-core</projectPath>
   </properties>
   <scm>
     <connection>${scmConnectionBaseUrl}/${repositoryName}/${projectPath}</connection>
