@@ -32,6 +32,11 @@ case Event.id of
         MAX_TIME_BIN_TEXT_CB, Event
     end
     
+    Widget_Info(wWidget, FIND_BY_UNAME='exit'): begin
+        exit_cb, Event
+    end
+
+
 ;    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
 ;      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
 ;        OPEN_MAPPING_FILE_BUTTON_CB, Event
@@ -145,11 +150,13 @@ instrument_list = ['Liquids Reflectometer',$
                    'Magnetism Reflectometer',$
                    'Backscattering Spectrometer']
 INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
-	instrument_list,$
-    	/exclusive,/RETURN_NAME,$
-	XOFFSET=30, YOFFSET=25,$
-	SET_VALUE=0.0,$
-	UNAME='INSTRUMENT_TYPE_GROUP')
+                                  instrument_list,$
+                                  /exclusive,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=30,$
+                                  YOFFSET=25,$
+                                  SET_VALUE=2.0,$
+                                  UNAME='INSTRUMENT_TYPE_GROUP')
 
 LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
                         UNAME="logo_message_base",$
@@ -194,6 +201,9 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
+                   output_folder : '',$
+                   file_extension : 'tmp_event_neutron.dat',$
+                   nbr_nexus_file : 1,$
                    find_nexus : 0,$
                    default_log_rebin_coeff : 0.5,$
                    default_rebin_coeff     : 200,$
@@ -272,6 +282,7 @@ global = ptr_new({$
                    NX_BSS			: 190L,$
                    NY_BSS			: 130L,$
                    Ntof			: 0L,$
+                   list_of_runs         : ptr_new(0L),$
                    img_ptr 		: ptr_new(0L),$
                    data_assoc		: ptr_new(0L),$
                    display_button_activate : 0$
@@ -300,6 +311,16 @@ endif else begin
     map_hide_log_book_tab = 1
 endelse
 
+general_message = widget_label(MAIN_BASE,$
+                               uname='general_message',$
+                               xoffset=260,$
+                               yoffset=0,$
+                               scr_xsize=200,$
+                               scr_ysize=20,$
+                               font='lucidasans-bold-10',$
+                               value='')
+
+
 hide_log_book_tab_blocker = widget_base(MAIN_BASE,$
                                         xoffset=130,$
                                         yoffset=0,$
@@ -321,14 +342,14 @@ HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
                                            YOFFSET=5,$
                                            SCR_XSIZE=35,$
                                            SCR_YSIZE=30,$
-                                           VALUE='Run #',$
+                                           VALUE='Run#',$
                                            /align_left)
 
 HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
                                         UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
                                         XOFFSET=40,$
                                         YOFFSET=5,$
-                                        SCR_XSIZE=50,$
+                                        SCR_XSIZE=120,$
                                         SCR_YSIZE=30,$
                                         VALUE='',$   
                                         /align_left,$
@@ -336,12 +357,14 @@ HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
 
 OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
                                                   UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
-                                                  XOFFSET= 90,$
+                                                  XOFFSET= 160,$
                                                   YOFFSET = 5,$
-                                                  SCR_XSIZE=60,$ 
+                                                  SCR_XSIZE=40,$ 
                                                   SCR_YSIZE=30, $
-                                                  VALUE= "O P E N",$
+                                                  VALUE= "OPEN",$
                                                   tooltip="NeXus file to load")
+
+
 
 HISTO_EVENT_FILE_TYPE = widget_label(wt1,$
                                      UNAME='HISTO_EVENT_FILE_TYPE',$
@@ -780,18 +803,18 @@ DEFAULT_GEOMETRY_FILE_tab2 = WIDGET_label(wT2,$
                                           frame=1,$
                                           /align_left)
 
-DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
-                                         XOFFSET= 5, YOFFSET = 125, $
-                                         SCR_XSIZE=130, SCR_YSIZE=30, $
-                                         VALUE= "Working path",$
-                                         UNAME='DEFAULT_PATH_BUTTON')
+; DEFAULT_PATH_BUTTON_tab2 = WIDGET_BUTTON(wT2, $
+;                                          XOFFSET= 5, YOFFSET = 125, $
+;                                          SCR_XSIZE=130, SCR_YSIZE=30, $
+;                                          VALUE= "Working path",$
+;                                          UNAME='DEFAULT_PATH_BUTTON')
 
-DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
-                                      UNAME='DEFAULT_FINAL_PATH_tab2',$
-                                      XOFFSET=135, YOFFSET=125,$
-                                      SCR_XSIZE=408, SCR_YSIZE=32, $
-                                      value = output_path,$
-                                      /editable)
+; DEFAULT_FINAL_PATH_tab2 = WIDGET_TEXT(wT2,$
+;                                       UNAME='DEFAULT_FINAL_PATH_tab2',$
+;                                       XOFFSET=135, YOFFSET=125,$
+;                                       SCR_XSIZE=408, SCR_YSIZE=32, $
+;                                       value = output_path,$
+;                                       /editable)
 
 ;   Create a base widget to hold the 'Create NeXus' button, and
 ;   the button itself.
@@ -879,6 +902,8 @@ log_book_text = widget_text(log_book_base,$
                             /scroll,$
                             /wrap)
 
+
+
 idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
                                UNAME='idl_tools_menu',$
                                /MENU,$
@@ -887,6 +912,10 @@ idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
 sns_idl_button = widget_button(idl_tools_menu,$
                                value="launch sns_idl_tools...",$
                                uname="sns_idl_button")
+
+exit_button = widget_button(idl_tools_menu,$
+                            value='Exit',$
+                            uname='exit')
 
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
