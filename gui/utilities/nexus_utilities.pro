@@ -1,3 +1,4 @@
+
 ;
 ;                     SNS IDL GUI tools
 ;           A part of the SNS Analysis Software Suite.
@@ -220,6 +221,46 @@ end
 
 
 
+; \defgroup produce_array_of_tmp_event_file_name
+; \{
+;;
 
+;;
+; \brief produce array of neutron_event.dat file into
+; new provided directory
+;
+; \param event (INPUT) event structure
+; \param instrument (INPUT) name of instrument
+; \param list_of_runs_check (INPUT) array of run number
+; \param nbr_runs (INPUT) the number of runs to check
+; \param full_tmp_nxdir_folder_path (INPUT) output folder
+;
+; \return array_of_full_tmp_event_file_name
+; array of full prenexus neutron.event file name
+function produce_array_of_tmp_event_file_name, event, $
+                                               instrument, $
+                                               list_of_runs_check, $
+                                               nbr_runs, $
+                                               full_tmp_nxdir_folder_path
+          
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+  
+for i=0,(nbr_runs-1) do begin
 
+    full_tmp_event_file_name = full_tmp_nxdir_folder_path + '/' +instrument
+    full_tmp_event_file_name += '_' + list_of_runs_check[i]
+    full_tmp_event_file_name += '_neutron_event.dat'
+    
+    if (i EQ 0) then begin
+        array_of_full_tmp_event_file_name = full_tmp_event_file_name
+    endif else begin
+        array_of_full_tmp_event_file_name = [array_of_full_tmp_event_file_name,full_tmp_event_file_name]
+    endelse
+endfor                                                              
 
+return, array_of_full_tmp_event_file_name
+end
+; \
+;;  //end of produce_array_of_tmp_event_file_name

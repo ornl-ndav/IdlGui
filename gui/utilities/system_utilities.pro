@@ -428,8 +428,29 @@ end
 
 
 
+; \defgroup replace_string
+; \{
+;;
 
+;;
+; \brief This function replace in the string provided
+; the first string by the second
+; folder
+;
+; \param Event (INPUT) event structure
+; \param full_prenexus_name (INPUT) initial string
+; \param string_1 (INPUT) string to replace
+; \param string_2 (INPUT) string to replace with
+;
+; \return full_neutron_event_file_name
+; new string
+function replace_string, full_prenexus_name, string_1, string_2
 
+full_neutron_event_file_name = strsplit(full_prenexus_name,string_1,/extract,/regex)
+full_neutron_event_file_name += string_2
 
-
+return, full_neutron_event_file_name 
+end
+; \}
+;;     //end of replace_string
 
