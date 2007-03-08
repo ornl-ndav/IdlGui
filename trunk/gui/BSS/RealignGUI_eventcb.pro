@@ -1946,7 +1946,7 @@ WIDGET_CONTROL, text_id, GET_VALUE=ucams
 
 (*global).ucams = ucams
 
-working_path = default_path + strcompress(ucams,/remove_all)+ '/'
+working_path = default_path + strcompress(ucams,/remove_all)+ '/' + (*global).realign_bss_folder
 (*global).working_path = working_path
 
 text_id=widget_info(Event.top, FIND_BY_UNAME='DEFAULT_PATH_TEXT')
@@ -2094,7 +2094,8 @@ text = ''
 output_into_text_box, event, 'log_book', text
 
 ; get path to NeXus file
-path_to_preNeXus = find_full_nexus_name(Event, 0, run_number, 'BSS')    
+path_to_preNeXus = find_full_prenexus_name(Event, (*global).local_nexus, run_number, 'BSS')
+;path_to_preNeXus = find_full_nexus_name(Event, 0, run_number, 'BSS')    
 text = ' -> Path to NeXus file: ' + path_to_preNeXus
 output_into_text_box, event, 'log_book', text
 
@@ -2116,9 +2117,7 @@ output_into_text_box, event, 'log_book', text
 text = ' -> Get proposal Number:'
 output_into_text_box, event, 'log_book', text
 proposal_number_array=strsplit(path_to_preNeXus,'/',/regex,/extract)
-text = '   proposal_number_array: ' + proposal_number_array
-output_into_text_box, event, 'log_book', text
-proposal_number = proposal_number_array[2]
+proposal_number = proposal_number_array[4]
 text = '   proposal_number: ' + proposal_number
 output_into_text_box, event, 'log_book', text
 (*global).proposal_number = proposal_number
@@ -2134,13 +2133,13 @@ folder_to_create = "BSS/" + proposal_number + "/" + $
 text = '    folder to create (up to run #): ' + folder_to_create
 output_into_text_box, event, 'log_book', text
 
-(*global).path_up_to_proposal_number = working_path + folder_to_create
+(*global).path_up_to_proposal_number = working_path + (*global).realign_bss_folder + folder_to_create
 
 folder_to_create += "/preNeXus"
 text = '    folder to create (up to preNeXus): ' + folder_to_create
 output_into_text_box, event, 'log_book', text
 
-full_folder_name_to_create = working_path + folder_to_create
+full_folder_name_to_create = working_path + (*global).working_path_folder + folder_to_create
 (*global).full_output_folder_name  = full_folder_name_to_create
 cmd_check = "ls -d " + full_folder_name_to_create
 text = ' >' + cmd_check
@@ -2212,25 +2211,6 @@ full_output_file_name = full_output_folder_name + "/" + output_file_name
 (*global).full_output_file_name = full_output_file_name
 (*global).full_output_folder_name = full_output_folder_name
 
-;data = (*(*global).remap_histo) 
-
-;add 8*128 '0' of the diffraction tube to have same format of histo
-;files
-
-;;for old case with only 1 time bin
-;    output_data = lonarr(128L,72L)
-;     output_data(*,0:63L) = data(*,*)
-    
-;     look_up = (*(*global).look_up)
-    
-;     reorder_data, Event, output_data
-;     new_output_data = (*(*global).reorder_array)
-    
-;     reshape_data = lonarr(64L,144L)
-;     reshape_data(*,*)=new_output_data
-
-;new_output_data = ulonarr((*global).Nt,128L,72L,/NOZERO)
-
 data = reverse_3d_array(data)
 new_output_data = ulonarr((*global).Nt,128L,72L)
 new_output_data(*,*,0:63L) = temporary(data(*,*,*))
@@ -2271,6 +2251,8 @@ path_to_preNeXus = (*global).path_to_preNeXus
 full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
 working_path = (*global).working_path
+
+print, 'working_path= ' + working_path
 
 ;nt, nx, ny and n
 Nt=(*global).Nt
@@ -2489,11 +2471,13 @@ erase_plots, event
 
 ;hide open_nexus interface
 if (n_elements(local) EQ 0) then begin
+    (*global).local_nexus = 0
     open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
     widget_control, open_nexus_id, map=0
     run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_RUN_NUMBER_TEXT')
     widget_control, run_number_id, get_value=run_number
 endif else begin
+    (*global).local_nexus = 1
     open_local_nexus_id = widget_info(Event.top, FIND_BY_UNAME='open_local_nexus_base')
     widget_control, open_local_nexus_id, map=0
     run_number_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_LOCAL_RUN_NUMBER_TEXT')
@@ -2724,7 +2708,7 @@ widget_control,id,get_uvalue=global
 
 (*global).file_type='histo'
 
-spawn, "pwd",listening
+spawn, "pwd", listening
 
 if ((*global).path EQ '') then begin
    path = listening
