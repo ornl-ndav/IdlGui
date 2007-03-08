@@ -366,6 +366,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;or other means
 
 global = ptr_new({$
+                   realign_bss_folder : 'RealignGUI/',$
+                   local_nexus :0,$
                    tof_plot : 0,$            ;counts vs tof plot status (0: no plot, 1: yes)
                    activate_counts : 0,$     ;activate or not list of counts (right window)
                    xml_offset_extension : '_offset.xml',$
@@ -388,10 +390,11 @@ global = ptr_new({$
                    file_already_opened	      :0,$
                    new_tube                   :1,$
                    path			      :'/SNSlocal/tmp/',$
-                   working_path		      :'',$
+                   working_path               :'',$
+                   working_path_folder        :'RealignGUI/',$
                    default_path		      :'/SNSlocal/users/',$
                    remapped_file_name         :'mapped.dat',$
-                   mapping_file  :'/SNS/users/j35/BSS/BSS_TS_2006_11_16.dat',$
+                   mapping_file  :'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_TS_2006_06_09.dat',$
                    geometry_file  :'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_geom_2006_09_26.nxs',$
                    translation_file :'/SNS/BSS/2006_1_2_CAL/calibrations/BSS_2006_08_25.nxt',$
                    path_to_preNeXus           :'',$
@@ -844,25 +847,38 @@ general_infos = widget_text(infos_base,$
                             /scroll,$
                              value="")
 
-;pixelID slider
-pixelID_base = widget_base(interactive_tab_base,$
-                           XOFFSET=0,$
-                           YOFFSET=130,$
-                           SCR_XSIZE=245,$
-                           SCR_YSIZE=120)
 
-pixelID_text = widget_label(pixelID_base,$
-                            XOFFSET=5,$
-                            YOFFSET=0,$
-                            SCR_XSIZE=60,$
-                            SCR_YSIZE=20,$
-                            VALUE="Pixel ID")
+;pixel/tube and row tabs
+pixel_tube_row_base = widget_base(interactive_tab_base,$
+                                  xoffset=0,$
+                                  yoffset=134,$
+                                  scr_xsize=240,$ ;240
+                                  scr_ysize=170,$ ;170
+                                  uname='pixel_tube_row_base')
+
+;pixelID slider box
+pixel_tube_tab = widget_tab(pixel_tube_row_base,$
+                            uname='pixel_tube_tab_base',$
+                            location=0,$
+                            xoffset=0,$
+                            yoffset=0,$
+                            scr_xsize=240,$ 
+                            scr_ysize=200) 
+
+;FIRST TAB
+pixelID_base = widget_base(pixel_tube_tab,$
+                           title='PixelID',$
+                           XOFFSET=0,$
+                           YOFFSET=0,$
+                           SCR_XSIZE=245,$
+                           SCR_YSIZE=140)
+
 
 pixels_slider = WIDGET_SLIDER(pixelID_base,$
                               UNAME="pixels_slider",$
                               XOFFSET= 7,$
-                              YOFFSET= 18,$
-                              SCR_XSIZE=230,$
+                              YOFFSET= 5,$
+                              SCR_XSIZE=225,$
                               SCR_YSIZE=35,$
                               MINIMUM=0,$
                               MAXIMUM=127,$
@@ -872,7 +888,7 @@ pixels_slider = WIDGET_SLIDER(pixelID_base,$
 
 ;pixelID interaction window
 y_off_counts = 55
-y_off_buttons = 80
+y_off_buttons = 100
 pixelid_counts_label = widget_label(pixelID_base,$
                                     xoffset=10,$
                                     yoffset=y_off_counts,$
@@ -885,25 +901,25 @@ pixelid_counts_value = widget_label(pixelID_base,$
                                     uname='pixelid_counts_value',$
                                     xoffset=65,$
                                     yoffset=y_off_counts,$
-                                    scr_xsize=130,$
+                                    scr_xsize=120,$
                                     scr_ysize=20,$
                                     value='',$
                                     /align_left)
 
 add_pixel_to_tof_button = widget_button(pixelID_base,$
                                        uname='add_pixel_to_tof_button',$
-                                       xoffset=195,$
+                                       xoffset=188,$
                                        yoffset=y_off_counts-2,$
                                        value='TOF++',$
-                                       scr_xsize=40,$
+                                       scr_xsize=45,$
                                        sensitive=0)
 
 
 remove_pixel_id = widget_button(pixelID_base,$
                                 uname='remove_pixelid',$
-                                xoffset=5,$
+                                xoffset=2,$
                                 yoffset=y_off_buttons,$
-                                scr_xsize=120,$
+                                scr_xsize=115,$
                                 scr_ysize=30,$
                                 value='R E M O V E',$
                                 sensitive=0)
@@ -911,21 +927,13 @@ remove_pixel_id = widget_button(pixelID_base,$
 pixelid_new_counts_reset = $
   widget_button(pixelID_base,$
                 uname='pixelid_new_counts_reset',$
-                xoffset=125,$
+                xoffset=118,$
                 yoffset=y_off_buttons,$
                 scr_xsize=115,$
                 scr_ysize=30,$
                 value='A D D',$
                 sensitive=0)
 
-
-pixel_and_tube_frame = widget_label(pixelID_base,$
-                                    xoffset=0,$
-                                    yoffset=8,$
-                                    scr_xsize=355,$
-                                    scr_ysize=105,$
-                                    frame=1,$
-                                    value='')
 
 ;pixelID, tube and bank info
  ptb_info_base = widget_base(interactive_tab_base,$
@@ -1017,45 +1025,45 @@ removed_tube_text = widget_text(removed_tube_base,$
                                 /scroll,$
                                 sensitive=0)
 
+;SECOND TAB
 ;tube interaction window
-tube_base = widget_base(interactive_tab_base,$
-                        XOFFSET=0,$
-                        YOFFSET=245,$  
+tube_base = widget_base(pixel_tube_tab,$
+                        title='Tube',$
+                        XOFFSET=5,$
+                        YOFFSET=0,$  
                         SCR_XSIZE=245,$
-                        SCR_YSIZE=60)
-
-tube_title = widget_label(tube_base,$
-                          xoffset=5,$
-                          yoffset=0,$
-                          scr_xsize=30,$
-                          scr_ysize=20,$
-                          value='Tube')
+                        SCR_YSIZE=160)
 
 remove_tube_button = widget_button(tube_base,$
                                    uname='remove_tube_button',$
-                                   xoffset=5,$
-                                   yoffset=20,$
-                                   scr_xsize=120,$
-                                   scr_ysize=30,$
+                                   xoffset=40,$
+                                   yoffset=30,$
+                                   scr_xsize=150,$
+                                   scr_ysize=40,$
                                    value='R E M O V E',$
                                    sensitive=0)
 
 cancel_remove_tube_button = widget_button(tube_base,$
                                           uname='cancel_remove_tube_button',$
-                                          xoffset=125,$
-                                          yoffset=20,$
-                                          scr_xsize=115,$
-                                          scr_ysize=30,$
+                                          xoffset=40,$
+                                          yoffset=70,$
+                                          scr_xsize=150,$
+                                          scr_ysize=40,$
                                           value='A D D',$
                                           sensitive=0)
 
-Tube_frame = widget_label(tube_base,$
-                          xoffset=0,$
-                          yoffset=10,$
-                          scr_xsize=245,$
-                          scr_ysize=45,$
-                          frame=1,$
-                          value='')
+;THIRD TAB
+row_base = widget_base(pixel_tube_tab,$
+                       title='Row of pixels',$
+                       xoffset=0,$
+                       yoffset=0,$
+                       scr_xsize=245,$
+                       scr_ysize=140)
+
+
+
+
+
 
 ;reset and save buttons
 RESET_ALL_button = widget_button(interactive_tab_base,$
@@ -1537,10 +1545,6 @@ tube1_label =  widget_label(tube1_base,$
                                         UNAME='OPEN_MAPPED_HISTOGRAM',$
                                         VALUE='Open Mapped Histogram')
                                      
-  rebinGUI_button = widget_button(FILE_MENU,$
-                                  uname='rebinGUI_button',$
-                                  value='RebinNeXus')
-
   EXIT_MENU = Widget_Button(FILE_MENU,$
                             UNAME='EXIT_MENU',$
                             VALUE='Exit')
