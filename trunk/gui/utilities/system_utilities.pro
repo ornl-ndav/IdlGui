@@ -164,6 +164,14 @@ if (text NE '') then begin
     endelse
 endif
 
+;if ((*global).ucams EQ 'j35' && uname_destination EQ 'log_book_text') then begin
+;    full_logbook_filename = "~/local/DataReduction_logbook.txt"
+;    openu, 6,full_logbook_filename, /append
+;    printf, 6, text
+;    close,6
+;    free_lun,6
+;endif
+
 end
 ; \}
 ;;     //end of output_into_text_box
@@ -198,6 +206,22 @@ full_view_info = widget_info(event.top,find_by_uname=uname_destination)
 if (err_listening NE '' OR err_listening NE ['']) then begin
     full_text = 'ERROR: ' + err_listening
     widget_control, full_view_info, set_value=full_text,/append
+
+;     if ((*global).ucams EQ 'j35') then begin
+;         full_logbook_filename = "~/local/DataReduction_logbook.txt"
+;         openu, 3,full_logbook_filename,/append
+;         nbr_lines_array = size(err_listening)
+;         nbr_lines = nbr_lines_array[1]
+
+;         for i=0,(nbr_lines-1) do begin
+;             printf,3, err_listening[i]
+;         endfor
+        
+; ;close it up...
+;         close,3
+;         free_lun,3
+;     endif
+    
 endif
 
 end
