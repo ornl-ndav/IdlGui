@@ -488,6 +488,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   data_reduction_plot_left : 0,$
+                   data_reduction_plot_right : 200000,$
                    entering_intermediate_file_output_for_first_time : 0,$
                    signal_pid_file_name : '',$
                    background_pid_file_name : '',$
@@ -1052,8 +1054,46 @@ data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
                                   yoffset=5,$
                                   scr_xsize=405,$
-                                  scr_ysize=393,$
+                                  scr_ysize=350,$  ;393
                                   uname='data_reduction_plot')
+
+left_right_range_base = widget_base(first_tab_base,$
+                                    xoffset=315,$
+                                    yoffset=360,$
+                                    scr_xsize=403,$
+                                    scr_ysize=30,$
+                                    frame=1)
+                                    
+left_side_label = widget_label(left_right_range_base,$
+                               xoffset=20,$
+                               yoffset=5,$
+                               value='Left value:')
+left_side_text = widget_text(left_right_range_base,$
+                             uname='left_side_text',$
+                             xoffset=100,$
+                             yoffset=0,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+
+right_side_label = widget_label(left_right_range_base,$
+                               xoffset=220,$
+                               yoffset=5,$
+                               value='Right value:')
+right_side_text = widget_text(left_right_range_base,$
+                              uname='right_side_text',$
+                              xoffset=300,$
+                              yoffset=0,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$

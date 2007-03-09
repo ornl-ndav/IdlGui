@@ -2956,6 +2956,16 @@ pro plot_reduction, Event, plot_file_name, draw_uname, title
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;retrieve value of xmin and xmax
+xmin_id = widget_info(event.top,find_by_uname='left_side_text')
+widget_control, xmin_id, get_value=xmin
+
+xmax_id = widget_info(event.top,find_by_uname='right_side_text')
+widget_control, xmax_id, get_value=xmax
+
+xmin=float(xmin)
+xmax=float(xmax)
+
 openr,u,plot_file_name,/get
 fs = fstat(u)
 
@@ -3042,7 +3052,7 @@ if (error_plot_status NE 0) then begin
 ;    widget_control, view_info, set_value=text,/append
 ;    widget_control, full_view_info, set_value=text,/append
 endif else begin
-    plot,flt0,flt1,title=title
+    plot,flt0,flt1,xrange=[xmin,xmax],title=title
     errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
 endelse
 
