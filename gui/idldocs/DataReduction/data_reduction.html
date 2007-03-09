@@ -13,7 +13,7 @@ window. From there, you have to select your instrument,
 <hr size=4 width=50%>
 <center><h2>TABLE OF CONTENTS</h2></center>
 <ul>
-<li><a href="#link1">Liquids Reflectometer</a></li>
+<li><a href="#link1"><h3>Liquids Reflectometer</h3></a></li>
   <ul>
   <li><a href="#link2">Input</a></li>
     <ul>
@@ -30,6 +30,9 @@ window. From there, you have to select your instrument,
       </ul>
     <li><a href="#link10_a">sns_idl_tools</a></li>
     </ul>
+  <li><a href="#link10_b">Run number</a></li>
+  <li><a href="#link10_c">Mode</a></li>
+  <li><a href="#link10_d">Save session</a></li>
   <li><a href="#link11">Display</a></li>
   <li><a href="#link12">Data reduction</a></li>
     <ul>
@@ -49,7 +52,7 @@ window. From there, you have to select your instrument,
     <li><a href="#link24">Log book</a></li>
     </ul>
   </ul>
-<li><a href="#link25">Magnetism Reflectometer</a></li>
+<li><a href="#link25"><h3>Magnetism Reflectometer</h3></a></li>
   <ul>
   <li><a href="#link30_a">Menu</a></li>
     <ul>
@@ -123,6 +126,7 @@ Click the area in the picture to get more information.<br><br>
 <area shape="rect" coords="52,16,114,33" alt="sns_idl_tools" href="#link10_a">
 <area shape="rect" coords="3,39,116,65" alt="Run number" href="#link10_b">
 <area shape="rect" coords="119,40,162,65" alt="Mode selection" href="#link10_c">
+<area shape="rect" coords="165,39,321,66" alt="Save session" href="#link10_d">
 <area shape="rect" coords="0,66,321,443" alt="Main display" href="#link11">
 <area shape="rect" coords="332,39,388,52" alt="Tabs" href="#link12">
 <area shape="rect" coords="332,52,785,305" alt="Data Reduction tab" href="#link13">
@@ -158,7 +162,7 @@ regions.<br>
 The <font color=red><a id="link8">Mode</a></font> button gives access to the selection mode that
  can be changed from <i>selection</i> to <i>infos</i>.
 
-<br><center><img src='REF_L_images/selection.png'></img></center><br><br>
+<br><center><img src='REF_L_images/selection_menu.png'></img></center><br><br>
 
  <ul>
  <li> <font color=blue><b><a id="link9">selection</a></b></font>: default mode that allows to
@@ -186,8 +190,20 @@ The <font color=red><a id="link8">Mode</a></font> button gives access to the sel
    <br>
 
 <li><a id="link10_c"><b>Mode</b></a>:</li> gives the current mode selected (<b>selection</b> or 
-<b>infos</b>).
+<b>infos</b>).<br>
+<center><img src='REF_L_images/selection.png'></center><br>
 
+<li><a id="link10_d"><b>Save session</b></a>:</li>
+<center><img src='REF_L_images/save_session.png'></center>
+Save session when reloading a new run number. When <i>ON</i>, following item are kept:
+  <ul>
+  <li> signal and background selection, if present.</li>
+  <li> Runs # text box of <b>ADD NeXus AND RUN</b> and <b>RUN SEQUENTIALLY</b>. The new run number
+  loaded is added to the list if not already part of the list.</li>
+  <li> Normalization runs number.</li>
+  <li> all status of switches (Norm. bgk., Bkg., Norm. Intermediate files output).</li>
+  </ul>
+  
 <li><h3><b><a id="link11">Display</a></b></h3></li>
 
 The large display on the left is where the NeXus run will be displayed. 
