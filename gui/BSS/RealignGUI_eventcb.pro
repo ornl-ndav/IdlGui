@@ -2507,7 +2507,7 @@ endif else begin
 ;get path to nexus run #
         instrument="BSS"
         full_nexus_name = find_full_nexus_name(Event, 0, run_number, instrument)
-    
+
     endif else begin
 
         text = "Opening local NeXus file # " + $
@@ -3982,5 +3982,67 @@ DAS_plot_draw_id = widget_info(Event.top,find_by_uname='DAS_plot_draw')
 widget_control, DAS_plot_draw_id, get_value=draw_id
 wset, draw_id
 erase
+
+end
+
+
+
+
+
+
+
+pro add_row_eventcb, Event
+
+end
+
+
+
+
+pro remove_row_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get value of from_row, to_row and pixel_row
+starting_tube_droplist_id = widget_info(Event.top,find_by_uname='starting_tube_dropllist')
+ending_tube_droplist_id = widget_info(Event.top,find_by_uname='ending_tube_dropllist')
+pixel_droplist_id = widget_info(Event.top,find_by_uname='pixel_dropllist')
+;widget_control, starting_tube_droplist_id, get_value=list_of_tubes
+
+from_tube = widget_info(starting_tube_droplist_id, /combobox_gettext)
+to_tube = widget_info(ending_tube_droplist_id, /combobox_gettext)
+pixel_nbr = widget_info(pixel_droplist_id, /combobox_gettext)
+
+;change variable from string to int
+i_from_tube = fix(from_tube)
+i_to_tube = fix(to_tube)
+pixel_number = fix(pixel_nbr)
+
+;update number of counts for that pixel
+image_2d_1 = (*(*global).image_2d_1)
+
+;generate the list of pixelid to removed
+list_of_real_pixelid_to_remove = lonarr(i_to_tube-i_from_tube+1)
+i=0
+for tube_number=i_from_tube,i_to_tube do begin
+
+    list_of_real_pixelid_to_remove[i++] =  give_real_pixelid_value(Event, pixel_number, tube_number)
+
+    if (image_2d_1[pixel_number,tube_number]) then begin
+
+        image_2d_1[pixel_number,tube_number]=0
+        removed_tube_text_id = widget_info(Event.top, $
+                                           FIND_BY_UNAME="removed_tube_text")
+        text = "Pix:" + strcompress(list_of_real_pixelid_to_remove[i-1],/remove_all)
+        widget_control, removed_tube_text_id, set_value=text,/append
+
+        update_list_of_pixelid_to_removed, Event, list_of_real_pixelid_to_remove[i-1], 0
+        update_list_of_IDL_pixelid_to_removed, Event, pixel_number, tube_number, 1
+
+    endif
+
+endfor
+(*(*global).image_2d_1)=image_2d_1
 
 end

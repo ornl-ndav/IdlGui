@@ -318,9 +318,15 @@ pro MAIN_BASE_event, Event
         sns_idl_button_eventcb, Event
     end
 
+;third tab (add row of pixels)
+    Widget_Info(wWidget, FIND_BY_UNAME='add_row'): begin
+        add_row_eventcb, Event
+    end
 
-
-
+;third tab (remove row of pixels)
+    Widget_Info(wWidget, FIND_BY_UNAME='remove_row'): begin
+        remove_row_eventcb, Event
+    end
     
     else:
 endcase
@@ -924,15 +930,14 @@ remove_pixel_id = widget_button(pixelID_base,$
                                 value='R E M O V E',$
                                 sensitive=0)
 
-pixelid_new_counts_reset = $
-  widget_button(pixelID_base,$
-                uname='pixelid_new_counts_reset',$
-                xoffset=118,$
-                yoffset=y_off_buttons,$
-                scr_xsize=115,$
-                scr_ysize=30,$
-                value='A D D',$
-                sensitive=0)
+pixelid_new_counts_reset = widget_button(pixelID_base,$
+                                         uname='pixelid_new_counts_reset',$
+                                         xoffset=118,$
+                                         yoffset=y_off_buttons,$
+                                         scr_xsize=115,$
+                                         scr_ysize=30,$
+                                         value='A D D',$
+                                         sensitive=0)
 
 
 ;pixelID, tube and bank info
@@ -1059,6 +1064,72 @@ row_base = widget_base(pixel_tube_tab,$
                        yoffset=0,$
                        scr_xsize=245,$
                        scr_ysize=140)
+
+; STARTING TUBE
+starting_tube_label = widget_label(row_base,$
+                                   xoffset=5,$
+                                   yoffset=17,$
+                                   value='From tube # ',$
+                                   font='lucidasans-bold-10')
+
+tube_number = indgen(64)
+tube_number_array = string(tube_number)
+starting_tube_droplist = widget_combobox(row_base,$
+                                         xoffset=100,$
+                                         yoffset=10,$
+                                         uname='starting_tube_dropllist',$
+                                         value=tube_number_array)
+                                         
+
+; ENDING TUBE
+ending_tube_label = widget_label(row_base,$
+                                 xoffset=5,$
+                                 yoffset=45,$
+                                 value='To tube # ',$
+                                 font='lucidasans-bold-10')
+
+ending_tube_droplist = widget_combobox(row_base,$
+                                       xoffset=100,$
+                                       yoffset=40,$
+                                       uname='ending_tube_dropllist',$
+                                       value=tube_number_array)
+
+; PIXEL NUMBER
+pixel_label = widget_label(row_base,$
+                           xoffset=5,$
+                           yoffset=75,$
+                           value='Pixel # ',$
+                           font='lucidasans-bold-10')
+
+pixel_number = indgen(124)
+pixel_number_array = string(pixel_number)
+ending_tube_droplist = widget_combobox(row_base,$
+                                       xoffset=100,$
+                                       yoffset=70,$
+                                       uname='pixel_dropllist',$
+                                       value=pixel_number_array)
+                                        
+remove_row_id = widget_button(row_base,$
+                              uname='remove_row',$
+                              xoffset=2,$
+                              yoffset=y_off_buttons+5,$
+                              scr_xsize=115,$
+                              scr_ysize=30,$
+                              value='R E M O V E',$
+                              sensitive=1)     ;remove_me and put back 0
+
+add_row_id = widget_button(row_base,$
+                           uname='add_row',$
+                           xoffset=118,$
+                           yoffset=y_off_buttons+5,$
+                           scr_xsize=115,$
+                           scr_ysize=30,$
+                           value='A D D',$
+                           sensitive=1)          ;remove_me and put back 0
+
+
+
+
 
 
 
