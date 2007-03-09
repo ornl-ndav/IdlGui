@@ -54,7 +54,7 @@ for i=0,(array_size-1) do begin
     cmd_findnexus +=  ' -i' + instrument
     cmd_findnexus += " " + strcompress(runs_array[i], /remove_all)
     text = ' >' + cmd_findnexus
-    widget_control, full_view_info, set_value=text, /append
+    output_into_text_box, event, 'log_book_text', text
     spawn, cmd_findnexus, full_path_to_nexus
 
     array_of_nexus_files[i]=full_path_to_nexus
@@ -77,7 +77,7 @@ for i=0,(array_size-1) do begin
         
     endelse
     
-    widget_control, full_view_info, set_value=full_text,/append
+    output_into_text_box, event, 'log_book_text', full_text
     
 endfor
 
@@ -116,9 +116,9 @@ endif else begin
     
 endelse
 
-widget_control, view_info, set_value=text,/append
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, full_view_info, set_value=full_text_2,/append
+;widget_control, view_info, set_value=text,/append
+output_into_text_box, event, 'log_book_text', full_text
+output_into_text_box, event, 'info_text', text
 
 return, runs_and_full_path
 end
@@ -523,8 +523,8 @@ if (full_pid_file NE '') then begin
 ;put info into log_book
     full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
     text = type + ' Pid file has been loaded: '
-    widget_control, full_view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=full_pid_file, /append
+    output_into_text_box, event, 'log_book_text', text
+    output_into_text_box, event, 'log_book_text', full_pid_file
 
     check_status_to_validate_go, Event
 
@@ -963,7 +963,7 @@ if (run_number EQ '') then begin
 
     text = "!!! Please specify a run number !!! " + strcompress(run_number,/remove_all)
     WIDGET_CONTROL, view_info, SET_VALUE=text
-    widget_control, full_view_info, set_value=text
+    output_into_text_box, event, 'info_text', text, 1
     
 endif else begin
     
@@ -976,10 +976,10 @@ endif else begin
     text = "Searching for NeXus file of run number " + $
       strcompress(run_number,/remove_all)
     text += "..."
-    WIDGET_CONTROL, full_view_info, SET_VALUE=text
+    output_into_text_box, event, 'info_text', text,1
     text = "Openning/plotting Run # " + $
       strcompress(run_number,/remove_all) + "..."
-    WIDGET_CONTROL, view_info, SET_VALUE=text
+    output_into_text_box, event, 'info_text', text
 
 ;get path to nexus run #
     instrument=(*global).instrument
@@ -997,15 +997,15 @@ endif else begin
     if (find_nexus EQ 0) then begin
 
         text_nexus = "Warning! NeXus file does not exist"
-        WIDGET_CONTROL, view_info, SET_VALUE=text_nexus,/append
-        WIDGET_CONTROL, full_view_info, SET_VALUE=text_nexus,/append
+        output_into_text_box, event, 'info_text', text_nexus
+        output_into_text_box, event, 'log_book_text', text_nexus
 
     endif else begin
 
         text_nexus = "NeXus file has been localized: "
         (*global).full_nexus_name = full_nexus_name
         text_nexus += full_nexus_name
-        WIDGET_CONTROL, full_view_info, SET_VALUE=text_nexus,/append
+        output_into_text_box, event, 'log_book_text', text_nexus
         
         if (instrument EQ 'REF_M') then begin
 
@@ -1015,10 +1015,10 @@ endif else begin
 
 ;dump binary data of NeXus file into tmp_working_path
         text = " - dump binary data......."
-        WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
+        output_into_text_box, event, 'log_book_text', text
         dump_binary_data, Event, full_nexus_name       
         text = " - dump binary data.......done" 
-        WIDGET_CONTROL, full_view_info, SET_VALUE=text,/append
+        output_into_text_box, event, 'log_book_text', text
 
 ;read and plot nexus file
         read_and_plot_nexus_file, Event      
@@ -1230,14 +1230,16 @@ tmp_folder = (*global).tmp_folder
 cmd_create = "mkdir " + tmp_folder
 
 text= " [ " + cmd_create + " ..."
-widget_control, full_view_info, set_value=text, /append
+output_into_text_box, event, 'log_book_text', text
+;widget_control, full_view_info, set_value=text, /append
 spawn, cmd_create, listening, err_listening
 
 output_into_text_box, event, 'log_book_text', listening
 output_error, event, 'log_book_text', err_listening
 
 text= "   ...done ]"
-widget_control, full_view_info, set_value=text, /append
+output_into_text_box, event, 'log_book_text', text
+;widget_control, full_view_info, set_value=text, /append
 
 cmd_dump = "nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
@@ -1257,7 +1259,8 @@ spawn, cmd_dump, listening
 ;display result of command
 ;text= listening
 text= "   ...done ]"
-widget_control, full_view_info, set_value=text, /append
+output_into_text_box, event, 'log_book_text', text
+;widget_control, full_view_info, set_value=text, /append
 
 end
 
@@ -1361,7 +1364,8 @@ nexus_file_name_only = (*global).nexus_file_name_only
 
 full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
 text = " - plot NeXus file: " + nexus_file_name_only + "..."
-WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+output_into_text_box, event, 'log_book_text', text
+;WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 
 ;determine path	
 ;path = (*global).tmp_folder
@@ -1369,12 +1373,14 @@ path = (*global).local_folder
 
 cmd_create = "mkdir " + path
 cmd_text = '> ' + cmd_create
-widget_control, full_view_info, set_value=cmd_text, /append
+output_into_text_box, event, 'log_book_text', cmd_text
+;widget_control, full_view_info, set_value=cmd_text, /append
 spawn, cmd_create, listening, error_listening
 output_error, event, 'log_book_text', error_listening
 cd, path
         
-WIDGET_CONTROL, full_view_info, SET_VALUE=' [ - reading in data...', /APPEND
+output_into_text_box, event, 'log_book_text', '[ - reading in data...'
+;WIDGET_CONTROL, full_view_info, SET_VALUE=' [ - reading in data...', /APPEND
 strtime = systime(1)
 
 openr,u,file,/get
@@ -1384,7 +1390,8 @@ Nimg = Nx*Ny
 Ntof = fs.size/(Nimg*4L)
 (*global).Ntof = Ntof           ;set back in global structure
 
-WIDGET_CONTROL, full_view_info, SET_VALUE='.... done reading data]', /APPEND
+output_into_text_box, event, 'log_book_text', '... done reading data]'
+;WIDGET_CONTROL, full_view_info, SET_VALUE='.... done reading data]', /APPEND
 data_assoc = assoc(u,lonarr(Ntof))
 
 ;make the image array
@@ -1424,11 +1431,13 @@ plot_selection,Event
 endtime = systime(1)
 tt_time = string(endtime - strtime)
 text = 'Done in ' + strcompress(tt_time,/remove_all) + ' s'
-WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+output_into_text_box, event, 'log_book_text', text
+;WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
 	
 view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
 text = "...Done"
-WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+output_into_text_box, event, 'log_book_text', text
+;WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
 
 ;now turn hourglass back off
 widget_control,hourglass=0
@@ -1674,8 +1683,10 @@ if (selection_mode EQ 0 AND file_opened EQ 1) then begin
 ;put number of counts in number_of_counts label position
     text += " counts= " + strcompress(img(x,y))
     full_text = "PixelID infos : " + text
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, view_info, set_value=text, /append
+;    widget_control, full_view_info, set_value=full_text, /append
 
 endif
 
@@ -2023,8 +2034,10 @@ if ((*global).selection_background EQ 0 AND $
 
 endif
     
-widget_control, view_info, set_value=text, /append
-widget_control, full_view_info, set_value=full_text, /append
+output_into_text_box, event, 'log_book_text', full_text
+output_into_text_box, event, 'info_text', text
+;widget_control, view_info, set_value=text, /append
+;widget_control, full_view_info, set_value=full_text, /append
 widget_control, selection_info, set_value=''
 widget_control, view_info_tab, base_set_title=''
 SHOW_DATA,event
@@ -2067,7 +2080,8 @@ produce_pid_files, Event, signal_pid_file_name, background_pid_file_name
 
 ;output full name of pid files in log-book
 full_text = " - signal Pid file name is: " + signal_pid_file_name
-widget_control, full_view_info, set_value=full_text, /append
+output_into_text_box, event, 'log_book_text', full_text
+;widget_control, full_view_info, set_value=full_text, /append
 
 (*global).signal_pid_file_name = signal_pid_file_name
 widget_control, signal_id, set_value=pid_file_names[0]
@@ -2078,8 +2092,10 @@ if (background_selection EQ 1 OR background_2_selection EQ 1) then begin
     widget_control, background_id, set_value=pid_file_names[1]
     (*global).background_pid_file_name = background_pid_file_name
     
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;   widget_control, view_info, set_value=text, /append
+;    widget_control, full_view_info, set_value=full_text, /append
 
     background_list_group_id = widget_info(Event.top,find_by_uname='background_list_group')
     widget_control, background_list_group_id, set_value=0
@@ -2310,8 +2326,10 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
 
         full_text = 'No intermediate files will be produced'
         text = 'No intermediate plot'
-        widget_control, full_view_info, set_value=full_text, /append
-        widget_control, view_info, set_value=text, /append
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text, /append
+;        widget_control, view_info, set_value=text, /append
         (*global).entering_selection_of_plots_by_yes_button = 0
         screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
         widget_control, screen_base_id, map=1
@@ -2422,14 +2440,14 @@ if (norm_flag EQ 0) then begin
         
         if (wrong_run_number_format ne 0) then begin
             
-            WIDGET_CONTROL, view_info, $
-              SET_VALUE="ERROR: normalization run number invalid", /APPEND
-            WIDGET_CONTROL, view_info, SET_VALUE="Program Terminated", /APPEND
-            text = 'ERROR: normalization run number invalid - ' + run_number_normalization
-            WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
-            WIDGET_CONTROL, full_view_info, SET_VALUE="Program Terminated", /APPEND
-            wrong_format = 1
-            stop_reduction = 1
+        output_into_text_box, event, 'info_text', "ERROR: normalization run number invalid"
+        output_into_text_box, event, 'info_text', "Program Terminated"
+        text = 'ERROR: normalization run number invalid - ' + run_number_normalization
+        output_into_text_box, event, 'log_book_text', text        
+;    WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+        output_into_text_box, event, 'log_book_text', "Program Terminated", /APPEND
+        wrong_format = 1
+        stop_reduction = 1
             
         endif else begin
             
@@ -2463,8 +2481,10 @@ if (norm_flag EQ 0) then begin
                     
                 endelse
                 
-                widget_control, view_info, set_value=text, /append
-                widget_control, full_view_info, set_value=full_text, /append
+        output_into_text_box, event, 'info_text', text        
+        output_into_text_box, event, 'log_book_text', full_text
+;        widget_control, view_info, set_value=text, /append
+;        widget_control, full_view_info, set_value=full_text, /append
                 
             endif
             
@@ -2476,8 +2496,10 @@ if (norm_flag EQ 0) then begin
         
         text = 'Please specify a normalization run number'
         full_text = 'Normalization run number: MISSING'
-        widget_control, view_info, set_value=text, /append
-        widget_control, full_view_info, set_value=full_text, /append
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, view_info, set_value=text, /append
+;        widget_control, full_view_info, set_value=full_text, /append
         stop_reduction = 1
         
     endelse
@@ -2635,15 +2657,20 @@ for i=0,(nbr_runs_to_use-1) do begin
       '/' + strcompress(nbr_runs_to_use) + ' done in ' + $
       strcompress(total_processing_time,/remove_all) + ' s'
     
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
     text = ' -> plotting main output file...'
     main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
     (*global).main_output_file_name = main_output_file_name
     full_text = 'Plotting main output file: ' + main_output_file_name
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
 ;plot main .txt file
     draw_id = 'data_reduction_plot'
@@ -2657,15 +2684,19 @@ for i=0,(nbr_runs_to_use-1) do begin
     
     text = '...plot is done'
     full_text = '...plot is done'
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
 endfor
 
 text = '...Full process is done'
 full_text = '...Full process is done'
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, view_info, set_value=text,/append
+output_into_text_box, event, 'log_book_text', full_text
+output_into_text_box, event, 'info_text', text
+;widget_control, full_view_info, set_value=full_text,/append
+;widget_control, view_info, set_value=text,/append
 
 end
 
@@ -2747,7 +2778,8 @@ indx4 = value[4]
 number_of_plots_selected = 0
 
 full_text = 'Name of intermediate plots that will be plotted:'
-widget_control, full_view_info, set_value=full_text, /append
+output_into_text_box, event, 'log_book_text', full_text
+;widget_control, full_view_info, set_value=full_text, /append
 
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
 if (indx0 EQ 1) then begin ;signal region summed TOF
@@ -2756,7 +2788,8 @@ if (indx0 EQ 1) then begin ;signal region summed TOF
     number_of_plots_selected += 1
     
     full_text = ' - Signal region summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
+    ;widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
 
 endif else begin
 
@@ -2774,8 +2807,8 @@ if (indx1 EQ 1) then begin
     number_of_plots_selected += 1
 
     full_text = ' - Background summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-
+;    widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
 endif else begin
 
     ;remove this plot from the list of selected plots
@@ -2794,8 +2827,8 @@ if (indx2 EQ 1) then begin      ;signal region summed TOF
     number_of_plots_selected += 1
     
     full_text = ' - Signal region summed TOF after subtracting the background'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+     output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
     
     widget_control, tab_3_id, base_set_title=''
@@ -2812,8 +2845,8 @@ if (indx3 EQ 1 AND norm_flag EQ 0) then begin
     number_of_plots_selected += 1
     
     full_text = ' - Normalization region summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+     output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
     
     indx3 = 0
@@ -2830,8 +2863,8 @@ if (indx4 EQ 1 AND norm_flag EQ 0) then begin
     number_of_plots_selected += 1
     
     full_text = ' - Background region from normalization summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+     output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
     
     indx4 = 0
@@ -2850,7 +2883,8 @@ if (number_of_plots_selected EQ 0) then begin
     inter_id = widget_info(Event.top,find_by_uname='intermediate_file_output_list_group')
     widget_control, inter_id, set_value=1
     full_text = ' NONE'
-    widget_control, full_view_info, set_value=full_text, /append
+;    widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
     widget_control, screen_base_id, map=1
 
 endif else begin
@@ -2863,9 +2897,9 @@ endelse
 
 text = 'Number of plots selected: '+ strcompress(number_of_plots_selected,/remove_all)
 widget_control, view_info, set_value=text, /append
+output_into_text_box, event, 'info_text', text
 
 (*global).plots_selected = [indx0,indx1,indx2,indx3,indx4]
-
 
 end
 
@@ -3003,14 +3037,14 @@ if (error_plot_status NE 0) then begin
 ;log book ids (full and simple)
     view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
     full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
-    widget_control, view_info, set_value=text,/append
-    widget_control, full_view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, view_info, set_value=text,/append
+;    widget_control, full_view_info, set_value=text,/append
 endif else begin
     plot,flt0,flt1,title=title
     errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
 endelse
-
-
 
 close,u
 free_lun,u
@@ -3126,8 +3160,11 @@ if ((*global).entering_intermediate_file_output_for_first_time EQ 1) then begin
         
         full_text = 'No intermediate files will be produced'
         text = 'No intermediate plot'
-        widget_control, full_view_info, set_value=full_text, /append
-        widget_control, view_info, set_value=text, /append
+
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text, /append
+;        widget_control, view_info, set_value=text, /append
 
         (*global).entering_selection_of_plots_by_yes_button = 0        
 
@@ -3174,7 +3211,8 @@ endif else begin
     full_text = 'Name of intermediate files that will be produced for each of the ' + $
       strcompress(runs_to_process,/remove_all) + ' runs number:'
 endelse
-widget_control, full_view_info, set_value=full_text, /append
+output_into_text_box, event, 'log_book_text', full_text
+;widget_control, full_view_info, set_value=full_text, /append
 
 tab_1_id = widget_info(Event.top, find_by_uname='signal_region_tab_base')
 if (indx0 EQ 1) then begin ;signal region summed TOF
@@ -3183,8 +3221,8 @@ if (indx0 EQ 1) then begin ;signal region summed TOF
     number_of_plots_selected += 1
     
     full_text = ' - Signal region summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+    output_into_text_box, event, 'log_book_text', full_text
 endif else begin
     
     widget_control, tab_1_id, base_set_title=''
@@ -3198,8 +3236,8 @@ if (indx1 EQ 1) then begin
     number_of_plots_selected += 1
     
     full_text = ' - Background summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+ output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
                                 ;remove this plot from the list of selected plots
     indx1 = 0
@@ -3220,8 +3258,8 @@ if (indx2 EQ 1 AND norm_flag EQ 0) then begin
     number_of_plots_selected += 1
     
     full_text = ' - Normalization region summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+ output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
     
     indx2 = 0
@@ -3240,8 +3278,8 @@ if (indx3 EQ 1 AND norm_flag EQ 0) then begin
     number_of_plots_selected += 1
     
     full_text = ' - Background region from normalization summed TOF'
-    widget_control, full_view_info, set_value=full_text, /append
-    
+;    widget_control, full_view_info, set_value=full_text, /append
+ output_into_text_box, event, 'log_book_text', full_text   
 endif else begin
     
     indx3 = 0
@@ -3261,8 +3299,9 @@ if (number_of_plots_selected EQ 0) then begin
       widget_info(Event.top,find_by_uname='intermediate_file_output_list_group_REF_M')
     widget_control, inter_id, set_value=1
     full_text = ' NONE'
-    widget_control, full_view_info, set_value=full_text, /append
-    widget_control, screen_base_id, map=1
+;    widget_control, full_view_info, set_value=full_text, /append
+output_into_text_box, event, 'log_book_text', full_text 
+   widget_control, screen_base_id, map=1
 
 endif else begin
     
@@ -3279,7 +3318,8 @@ endif else begin
     text = 'Number of files selected: '+ strcompress(number_of_plots_selected,/remove_all)
 endelse
 
-widget_control, view_info, set_value=text, /append
+output_into_text_box, event, 'info_text', text
+;widget_control, view_info, set_value=text, /append
 
 (*global).plots_selected = [indx0,indx1,indx2,indx3]
 
@@ -3572,19 +3612,23 @@ catch, no_folder
 if (no_folder NE 0) then begin
 
     text = 'Working folder is still: ' + (*global).local_folder
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=text, /append
+    output_into_text_box, event, 'log_book_text', text
+    output_into_text_box, event, 'info_text', text
+
+;    widget_control, view_info, set_value=text, /append
+;    widget_control, full_view_info, set_value=text, /append
 
 endif else begin
 
     tmp_working_path = dialog_pickfile(path=tmp_working_path,/directory)
     (*global).local_folder = tmp_working_path
     text = 'Working folder is now: ' + tmp_working_path
-
+    output_into_text_box, event, 'log_book_text', text
 ;create folder 
     cmd_create = "mkdir " + tmp_working_path
     cmd_text = '> ' + cmd_create
-    widget_control, full_view_info, set_value=cmd_text, /append
+    output_into_text_box, event, 'log_book_text', cmd_text
+;    widget_control, full_view_info, set_value=cmd_text, /append
     spawn, cmd_create, listening, error_listening
     output_error, event, 'log_book_text', error_listening
 
@@ -3617,8 +3661,11 @@ catch, no_folder
 if (no_folder NE 0) then begin
 
     text = 'Working folder is still: ' + (*global).local_folder
-    widget_control, view_info, set_value=text, /append
-    widget_control, full_view_info, set_value=text, /append
+    output_into_text_box, event, 'log_book_text', text
+    output_into_text_box, event, 'info_text', text
+
+;    widget_control, view_info, set_value=text, /append
+;    widget_control, full_view_info, set_value=text, /append
 
 endif else begin
 
@@ -3628,7 +3675,8 @@ endif else begin
 ;create folder 
     cmd_create = "mkdir " + tmp_working_path
     cmd_text = '> ' + cmd_create
-    widget_control, full_view_info, set_value=cmd_text, /append
+    output_into_text_box, event, 'log_book_text', cmd_text
+;    widget_control, full_view_info, set_value=cmd_text, /append
     spawn, cmd_create, listening, error_listening
     output_error, event, 'log_book_text', err_listening
 
@@ -3862,7 +3910,8 @@ widget_control, normalization_status_id, get_value=norm_flag
      widget_control, normalization_text_id, get_value=run_number_normalization
 
      text= 'Normalization run used: ' + run_number_normalization
-     WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
+     output_into_text_box, event, 'log_book_text', text
+;     WIDGET_CONTROL, full_view_info, SET_VALUE=text, /APPEND
    
 ;     if (run_number_normalization NE '') then begin
         
@@ -4041,14 +4090,17 @@ if (tab_value EQ 0) then begin
     
     text = "Processing data reduction...."
     
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'info_text', text
+;    widget_control, view_info, set_value=text,/append
     full_text = " running using the following command line:"
-    widget_control, full_view_info, set_value=full_text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+;    widget_control, full_view_info, set_value=full_text,/append
     
     full_text = "> " + REF_L_cmd_line
     cmd_line = REF_L_cmd_line
     
-    widget_control, full_view_info, set_value=full_text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+;    widget_control, full_view_info, set_value=full_text,/append
     starting_time = systime(1)
     
     widget_control,/hourglass
@@ -4068,15 +4120,21 @@ if (tab_value EQ 0) then begin
     total_processing_time = ending_time - starting_time
     full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
     
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+ 
+;   widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
     text = 'Plotting output main output file....'
     main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
     (*global).main_output_file_name = main_output_file_name
     full_text = 'Plotting main output file: ' + main_output_file_name
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+ 
+;   widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
 ;plot main .txt file
     draw_id = 'data_reduction_plot'
@@ -4089,16 +4147,20 @@ if (tab_value EQ 0) then begin
     
     text = '...plot is done'
     full_text = '...plot is done'
-    widget_control, full_view_info, set_value=full_text,/append
-    widget_control, view_info, set_value=text,/append
+    output_into_text_box, event, 'log_book_text', full_text
+    output_into_text_box, event, 'info_text', text
+;    widget_control, full_view_info, set_value=full_text,/append
+;    widget_control, view_info, set_value=text,/append
     
 endif else begin
 
     for i=0,(nbr_runs_to_use-1) do begin
         
         full_text = '-> Working on run # ' + strcompress(runs_and_full_path[i,0]) + ':'
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=full_text,/append
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text,/append
+;        widget_control, view_info, set_value=full_text,/append
 
 ;start command line for REF_L
         REF_L_cmd_line = "reflect_tofred_batch " 
@@ -4166,14 +4228,16 @@ endif else begin
         
         text = "Processing data reduction...."
         
-        widget_control, view_info, set_value=text,/append
+;        widget_control, view_info, set_value=text,/append
         full_text = " running using the following command line:"
-        widget_control, full_view_info, set_value=full_text,/append
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text,/append
         
         full_text = "> " + REF_L_cmd_line
         cmd_line = REF_L_cmd_line
-        
-        widget_control, full_view_info, set_value=full_text,/append
+                output_into_text_box, event, 'log_book_text', full_text
+;        widget_control, full_view_info, set_value=full_text,/append
         starting_time = systime(1)
         
         widget_control,/hourglass
@@ -4194,15 +4258,19 @@ endif else begin
         total_processing_time = ending_time - starting_time
         full_text = '...DONE in ' + strcompress(total_processing_time,/remove_all) + ' s'
         
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
+       output_into_text_box, event, 'log_book_text', full_text
+       output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text,/append
+;        widget_control, view_info, set_value=text,/append
         
         text = 'Plotting output main output file....'
         main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
         (*global).main_output_file_name = main_output_file_name
         full_text = 'Plotting main output file: ' + main_output_file_name
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
+       output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text,/append
+;        widget_control, view_info, set_value=text,/append
         
 ;plot main .txt file
         draw_id = 'data_reduction_plot'
@@ -4215,8 +4283,10 @@ endif else begin
         
         text = '...plot is done'
         full_text = '...plot is done'
-        widget_control, full_view_info, set_value=full_text,/append
-        widget_control, view_info, set_value=text,/append
+       output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+;        widget_control, full_view_info, set_value=full_text,/append
+;        widget_control, view_info, set_value=text,/append
         
     endfor
 
@@ -4224,8 +4294,10 @@ endelse
 
 text = '...done'
 full_text = '...done'
-widget_control, full_view_info, set_value=full_text,/append
-widget_control, view_info, set_value=text,/append
+output_into_text_box, event, 'log_book_text', full_text
+output_into_text_box, event, 'info_text', text
+;widget_control, full_view_info, set_value=full_text,/append
+;widget_control, view_info, set_value=text,/append
 
 widget_control,hourglass=0
 
@@ -4295,6 +4367,9 @@ if (list_of_runs NE '') then begin
         widget_control, text_id, set_value=final_list_of_runs
     endif
 
-endif
+endif else begin
+    widget_control, text_id, set_value=run_number
+endelse
+
 
 end
