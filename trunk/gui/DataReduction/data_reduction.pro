@@ -364,6 +364,11 @@ case Event.id of
         save_session_group_cb, Event
     end
 
+;restore preview as before
+    Widget_Info(wWidget, FIND_BY_UNAME='restore_button'): begin
+        restore_button_cb, Event
+    end
+
     else:
     
 endcase
@@ -488,6 +493,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   first_time_plotting : 1,$
                    data_reduction_plot_left : 0,$
                    data_reduction_plot_right : 200000,$
                    entering_intermediate_file_output_for_first_time : 0,$
@@ -733,13 +739,124 @@ sns_logo_drawing = widget_draw(MAIN_BASE,$
                                /MOTION_EVENTS)
 
 ;REF_L logo
-REF_L_logo_drawing = widget_draw(MAIN_BASE,$
+REF_L_logo_base = widget_base(main_base,$
+                              uname='REF_L_logo_base',$
+                              xoffset=800,$
+                              yoffset=445,$
+                              scr_xsize=463,$
+                              scr_ysize=73,$
+                              map=0)
+REF_L_logo_drawing = widget_draw(REF_L_logo_base,$
                                  uname='REF_L_logo_drawing',$
-                                 xoffset=800,$
-                                 yoffset=445,$
+                                 xoffset=0,$
+                                 yoffset=0,$
                                  scr_xsize=463,$
                                  scr_ysize=73,$
                                  /MOTION_EVENTS)
+                                 
+;x and y axis interaction box of data reduction plot
+x_y_axis_interaction_base = widget_base(main_base,$
+                                        uname='x_y_axis_interaction_base',$
+                                        xoffset=800,$
+                                        yoffset=445,$
+                                        scr_xsize=463,$
+                                        scr_ysize=73,$
+                                        map=1,$
+                                        frame=1)
+
+x_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=2,$
+                            value='X-axis:',$
+                            font='lucidasans-bold-14')
+
+left_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=70,$
+                               yoffset=5,$
+                               value='Left value:')
+
+left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                             uname='left_side_text_x',$
+                             xoffset=140,$
+                             yoffset=0,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+
+right_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=230,$
+                               yoffset=5,$
+                               value='Right value:')
+right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                              uname='right_side_text_x',$
+                              xoffset=310,$
+                              yoffset=0,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+yoff = 40
+y_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=2+yoff,$
+                            value='Y-axis:',$
+                            font='lucidasans-bold-14')
+
+left_side_label_y = widget_label(x_y_axis_interaction_base,$
+                                 xoffset=70,$
+                                 yoffset=5+yoff,$
+                                 value='Left value:')
+
+left_side_text_y = widget_text(x_y_axis_interaction_base,$
+                             uname='left_side_text_y',$
+                             xoffset=140,$
+                             yoffset=0+yoff,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+right_side_label_y = widget_label(x_y_axis_interaction_base,$
+                               xoffset=230,$
+                               yoffset=5+yoff,$
+                               value='Right value:')
+right_side_text_y = widget_text(x_y_axis_interaction_base,$
+                              uname='right_side_text_y',$
+                              xoffset=310,$
+                              yoffset=0+yoff,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+
+restore_button = widget_button(x_y_axis_interaction_base,$
+                               uname='restore_button',$
+                               xoffset=400,$
+                               yoffset=1,$
+                               scr_xsize=60,$
+                               scr_ysize=70,$
+                               value='RESTORE')
+
+
+
+
+
+
+
+     
+
 
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
@@ -1054,46 +1171,9 @@ data_reduction_plot = widget_draw(first_tab_base,$
                                   xoffset=315,$
                                   yoffset=5,$
                                   scr_xsize=405,$
-                                  scr_ysize=350,$  ;393
+                                  scr_ysize=393,$ 
                                   uname='data_reduction_plot')
 
-left_right_range_base = widget_base(first_tab_base,$
-                                    xoffset=315,$
-                                    yoffset=360,$
-                                    scr_xsize=403,$
-                                    scr_ysize=30,$
-                                    frame=1)
-                                    
-left_side_label = widget_label(left_right_range_base,$
-                               xoffset=20,$
-                               yoffset=5,$
-                               value='Left value:')
-left_side_text = widget_text(left_right_range_base,$
-                             uname='left_side_text',$
-                             xoffset=100,$
-                             yoffset=0,$
-                             scr_xsize=80,$
-                             scr_ysize=30,$
-                             value='0',$
-                             /editable,$
-                             /align_left,$
-                             font='lucidasans-bold-10')
-
-
-right_side_label = widget_label(left_right_range_base,$
-                               xoffset=220,$
-                               yoffset=5,$
-                               value='Right value:')
-right_side_text = widget_text(left_right_range_base,$
-                              uname='right_side_text',$
-                              xoffset=300,$
-                              yoffset=0,$
-                              scr_xsize=80,$
-                              scr_ysize=30,$
-                              value='200000',$
-                              /editable,$
-                              /align_left,$
-                              font='lucidasans-bold-10')
 
 ;selection boxes info tab
 fourth_tab_base = widget_base(data_reduction_tab,$
