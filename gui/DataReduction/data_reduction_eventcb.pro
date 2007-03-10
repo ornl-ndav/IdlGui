@@ -1136,6 +1136,13 @@ if (instrument EQ 'REF_M') then begin ;REF_M
     (*global).plots_selected = [0,0,0,0]
 
 endif else begin                ;REF_L
+    
+    ;remove x-y axis interaction box and bring back to life REF_L logo
+    (*global).first_time_plotting = 1
+    REF_L_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+    widget_control, REF_L_logo_base_id, map=1
+    x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
+    widget_control, x_y_axis_interaction_base_id, map=0
 
     if ((*global).save_session EQ 0) then begin ;yes, save session
 
@@ -2956,16 +2963,6 @@ pro plot_reduction, Event, plot_file_name, draw_uname, title
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;retrieve value of xmin and xmax
-xmin_id = widget_info(event.top,find_by_uname='left_side_text')
-widget_control, xmin_id, get_value=xmin
-
-xmax_id = widget_info(event.top,find_by_uname='right_side_text')
-widget_control, xmax_id, get_value=xmax
-
-xmin=float(xmin)
-xmax=float(xmax)
-
 openr,u,plot_file_name,/get
 fs = fstat(u)
 
@@ -3035,6 +3032,45 @@ while (NOT eof(u)) do begin
     
 endwhile
 
+;retrieve value of xmin, xmax, ymin and ymax
+xmin_id = widget_info(event.top,find_by_uname='left_side_text_x')
+xmax_id = widget_info(event.top,find_by_uname='right_side_text_x')
+ymin_id = widget_info(event.top,find_by_uname='left_side_text_y')
+ymax_id = widget_info(event.top,find_by_uname='right_side_text_y')
+
+if ((*global).first_time_plotting EQ 1) then begin
+
+    xmax = max(flt0,/nan)
+    xmin = min(flt0,/nan)
+    ymax = max(flt1,/nan)
+    ymin = min(flt1,/nan)
+
+;populate text_box
+    widget_control, xmin_id, set_value=strcompress(xmin)
+    widget_control, xmax_id, set_value=strcompress(xmax)
+    widget_control, ymin_id, set_value=strcompress(ymin)
+    widget_control, ymax_id, set_value=strcompress(ymax)
+
+    (*global).first_time_plotting = 0
+    
+    REF_L_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+    widget_control, REF_L_logo_base_id, map=0
+    x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
+    widget_control, x_y_axis_interaction_base_id, map=1
+
+endif else begin
+
+    widget_control, xmin_id, get_value=xmin
+    widget_control, xmax_id, get_value=xmax
+    widget_control, ymin_id, get_value=ymin
+    widget_control, ymax_id, get_value=ymax
+    xmin=float(xmin)
+    xmax=float(xmax)
+    ymin=float(ymin)
+    ymax=float(ymax)
+
+endelse
+    
 draw_id = widget_info(Event.top, find_by_uname=draw_uname)
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
@@ -3052,7 +3088,8 @@ if (error_plot_status NE 0) then begin
 ;    widget_control, view_info, set_value=text,/append
 ;    widget_control, full_view_info, set_value=text,/append
 endif else begin
-    plot,flt0,flt1,xrange=[xmin,xmax],title=title
+    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title
+;    plot,flt0,flt1,title=title
     errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
 endelse
 
@@ -4381,5 +4418,18 @@ endif else begin
     widget_control, text_id, set_value=run_number
 endelse
 
+
+end
+
+
+
+pro restore_button_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).first_time_plotting = 1
+data_reduction_tab_cb, Event
 
 end
