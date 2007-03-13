@@ -1,3 +1,4 @@
+
 pro MAIN_BASE_event, Event
  
 ;get global structure
@@ -484,7 +485,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1280,$ 
                          SCR_YSIZE=670,$
-                         XOFFSET=250,$
+                         XOFFSET=0,$    ;250
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
                          TITLE='Data Reduction GUI for REF_L',$
@@ -493,6 +494,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   x_axis : 0,$
+                   y_axis : 0,$
                    first_time_plotting : 1,$
                    data_reduction_plot_left : 0,$
                    data_reduction_plot_right : 200000,$
@@ -745,7 +748,7 @@ REF_L_logo_base = widget_base(main_base,$
                               yoffset=445,$
                               scr_xsize=463,$
                               scr_ysize=73,$
-                              map=0)
+                              map=1)
 REF_L_logo_drawing = widget_draw(REF_L_logo_base,$
                                  uname='REF_L_logo_drawing',$
                                  xoffset=0,$
@@ -761,23 +764,40 @@ x_y_axis_interaction_base = widget_base(main_base,$
                                         yoffset=445,$
                                         scr_xsize=463,$
                                         scr_ysize=73,$
-                                        map=1,$
+                                        map=0,$
                                         frame=1)
 
 x_axis_label = widget_label(x_y_axis_interaction_base,$
                             xoffset=5,$
-                            yoffset=2,$
+                            yoffset=7,$
                             value='X-axis:',$
-                            font='lucidasans-bold-14')
+                            font='lucidasans-bold-10')
 
+axis_lin_log = ['lin',$
+                'log']
+x_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='x_axis_lin_log_REF_L')
+
+
+x_off_min = 150
+x_off_max = 275
+x_off_min_box = 185
+x_off_max_box = 310
 left_side_label_x = widget_label(x_y_axis_interaction_base,$
-                               xoffset=70,$
-                               yoffset=5,$
-                               value='Left value:')
+                               xoffset=x_off_min,$
+                               yoffset=7,$
+                               value='Min:')
 
 left_side_text_x = widget_text(x_y_axis_interaction_base,$
                              uname='left_side_text_x',$
-                             xoffset=140,$
+                             xoffset=x_off_min_box,$
                              yoffset=0,$
                              scr_xsize=80,$
                              scr_ysize=30,$
@@ -788,12 +808,12 @@ left_side_text_x = widget_text(x_y_axis_interaction_base,$
 
 
 right_side_label_x = widget_label(x_y_axis_interaction_base,$
-                               xoffset=230,$
-                               yoffset=5,$
-                               value='Right value:')
+                               xoffset=x_off_max,$
+                               yoffset=7,$
+                               value='Max:')
 right_side_text_x = widget_text(x_y_axis_interaction_base,$
                               uname='right_side_text_x',$
-                              xoffset=310,$
+                              xoffset=x_off_max_box,$
                               yoffset=0,$
                               scr_xsize=80,$
                               scr_ysize=30,$
@@ -805,18 +825,28 @@ right_side_text_x = widget_text(x_y_axis_interaction_base,$
 yoff = 40
 y_axis_label = widget_label(x_y_axis_interaction_base,$
                             xoffset=5,$
-                            yoffset=2+yoff,$
+                            yoffset=4+yoff,$
                             value='Y-axis:',$
-                            font='lucidasans-bold-14')
+                            font='lucidasans-bold-10')
+
+y_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=37,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='y_axis_lin_log_REF_L')
 
 left_side_label_y = widget_label(x_y_axis_interaction_base,$
-                                 xoffset=70,$
+                                 xoffset=x_off_min,$
                                  yoffset=5+yoff,$
-                                 value='Left value:')
+                                 value='Min:')
 
 left_side_text_y = widget_text(x_y_axis_interaction_base,$
                              uname='left_side_text_y',$
-                             xoffset=140,$
+                             xoffset=x_off_min_box,$
                              yoffset=0+yoff,$
                              scr_xsize=80,$
                              scr_ysize=30,$
@@ -826,12 +856,12 @@ left_side_text_y = widget_text(x_y_axis_interaction_base,$
                              font='lucidasans-bold-10')
 
 right_side_label_y = widget_label(x_y_axis_interaction_base,$
-                               xoffset=230,$
+                               xoffset=x_off_max,$
                                yoffset=5+yoff,$
-                               value='Right value:')
+                               value='Max:')
 right_side_text_y = widget_text(x_y_axis_interaction_base,$
                               uname='right_side_text_y',$
-                              xoffset=310,$
+                              xoffset=x_off_max_box,$
                               yoffset=0+yoff,$
                               scr_xsize=80,$
                               scr_ysize=30,$

@@ -992,6 +992,8 @@ endif else begin
                            run_number,$
                            instrument)
 
+    print, 'full_nexus is: ' + full_nexus_name
+
 ;check result of search
     find_nexus = (*global).find_nexus
     if (find_nexus EQ 0) then begin
@@ -1247,6 +1249,8 @@ output_error, event, 'log_book_text', err_listening
 text= "   ...done ]"
 output_into_text_box, event, 'log_book_text', text
 ;widget_control, full_view_info, set_value=text, /append
+
+print, 'full_nexus_name: ' + full_nexus_name
 
 cmd_dump = "nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
@@ -3091,11 +3095,58 @@ if (error_plot_status NE 0) then begin
 endif else begin
 
     if (instrument EQ 'REF_L') then begin
-        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title
+;check status of x_axis (lin or log)
+        x_axis_lin_log_REF_L_id = widget_info(event.top,find_by_uname='x_axis_lin_log_REF_L')
+        widget_control, x_axis_lin_log_REF_L_id, get_value = x_axis_type
+        
+;check status of y_axis (lin or log)
+        y_axis_lin_log_REF_L_id = widget_info(event.top,find_by_uname='y_axis_lin_log_REF_L')
+        widget_control, y_axis_lin_log_REF_L_id, get_value= y_axis_type
+
+        case x_axis_type of
+
+            0:begin
+
+                case y_axis_type of
+                
+                    0: begin
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title
+                    end
+
+                    1: begin
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/ylog
+                    end
+
+                endcase
+
+            end
+               
+            1: begin
+                
+                case y_axis_type of
+
+                    0: begin
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog
+                    end
+
+                    1: begin
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog,/ylog
+                    end
+                    
+                endcase
+                
+            end
+
+        endcase
+
     endif else begin
+
         plot,flt0,flt1,title=title
+
     endelse
+
     errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
+
 endelse
 
 close,u
