@@ -328,6 +328,16 @@ pro MAIN_BASE_event, Event
         remove_row_eventcb, Event
     end
     
+;refresh map_plot, das_plot and main_plot
+    Widget_Info(wWidget, FIND_BY_UNAME='map_plot_draw'): begin
+        map_plot_draw_cb, Event
+    end
+
+;refresh all plots
+    Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot'): begin
+        refresh_plot_cb, Event
+    end
+
     else:
 endcase
 
@@ -596,7 +606,8 @@ draw_tube_pixels_draw = widget_draw(tube_per_tube_plot_base,$
                                     SCR_XSIZE=536,$
                                     SCR_YSIZE=300,$
                                     XOFFSET=4,$
-                                    YOFFSET=5)
+                                    YOFFSET=5,$
+                                    /MOTION_EVENTS)
 
 draw_tube_pixels_slider = WIDGET_SLIDER(tube_per_tube_plot_base,$
                                         UNAME="draw_tube_pixels_slider",$
@@ -1274,7 +1285,8 @@ DAS_plot_title = widget_label(DAS_plot_base,$
                              SCR_XSIZE=536,$
                              SCR_YSIZE=213,$
                              XOFFSET=6,$
-                             YOFFSET=20)
+                             YOFFSET=20,$
+                             /MOTION_EVENTS)
 
 DAS_plot_frame = widget_label(DAS_plot_base,$
                               UNAME='DAS_plot_frame',$
@@ -1306,7 +1318,8 @@ map_plot_draw = widget_draw(map_plot_base,$
                             SCR_XSIZE=536,$
                             SCR_YSIZE=213,$
                             XOFFSET=6,$
-                            YOFFSET=30)
+                            YOFFSET=30,$
+                            /MOTION_EVENTS)
 
 map_plot_frame = widget_label(map_plot_base,$
                               SCR_XSIZE=547,$
@@ -1624,10 +1637,6 @@ tube1_label =  widget_label(tube1_base,$
                              UNAME='UTILS_MENU',$
                              /MENU ,VALUE='RealignGUI')
 
-  ABOUT_MENU = Widget_Button(UTILS_MENU,$
-                             UNAME='ABOUT_MENU',$
-                             VALUE='about RealignGUI')
-
   CTOOL_MENU_DAS = Widget_Button(UTILS_MENU,$
                                  UNAME='CTOOL_MENU_DAS',$
                                  VALUE='Color Tool for DAS')
@@ -1635,7 +1644,16 @@ tube1_label =  widget_label(tube1_base,$
   CTOOL_MENU_realign = Widget_Button(UTILS_MENU,$
                                      UNAME='CTOOL_MENU_realign',$
                                      VALUE='Color Tool for realign data')
+
+  REFRESH_Plot = widget_button(UTILS_MENU,$
+                               uname='refresh_plot',$
+                               value='Refresh plots')
   
+
+  ABOUT_MENU = Widget_Button(UTILS_MENU,$
+                             UNAME='ABOUT_MENU',$
+                             VALUE='about RealignGUI')
+ 
   idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
                                  UNAME='idl_tools_menu',$
                                  /MENU,$

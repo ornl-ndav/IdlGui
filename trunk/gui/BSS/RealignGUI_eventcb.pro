@@ -1142,6 +1142,20 @@ end
 
 
 
+pro map_plot_draw_cb, event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).realign_plot EQ 1) then begin
+    plot_realign_data, Event, (*(*global).remap_histo)
+endif
+
+end
+
+
+
 
 
 
@@ -2252,8 +2266,6 @@ full_output_file_name = (*global).full_output_file_name
 full_output_folder_name = (*global).full_output_folder_name
 working_path = (*global).working_path
 
-print, 'working_path= ' + working_path
-
 ;nt, nx, ny and n
 Nt=(*global).Nt
 Nx=(*global).Nx
@@ -3002,12 +3014,12 @@ exit_status=0
 
 if (error_status NE 0) then begin
     
-    goto,exit
+    goto, exit
     
 endif else begin
     
     for i=0,Ntubes-1 do begin
-        
+
         if (tube_removed[i] EQ 0) then begin
 
             tube_pair = image_2d_1[*,i]
@@ -3214,7 +3226,7 @@ endif else begin
 endelse
 
 exit: exit_status = 1
-if (exit_status EQ 1) then begin
+if (exit_status EQ 1 AND i NE 64) then begin
     text="ERROR !"
     output_into_text_box, event, 'general_infos', text
     output_into_text_box, event, 'log_book', text
@@ -4051,3 +4063,28 @@ endfor
 (*(*global).image_2d_1)=image_2d_1
 
 end
+
+
+
+
+
+pro refresh_plot_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).nexus_open EQ 1) then begin
+    image1 = (*(*global).image_nt_nx_ny)
+    PLOT_HISTO_FILE, Event, image1
+    erase_das_plot, event
+    plot_rule_tube, event
+    plot_das, Event
+    plot_tube_box, Event, (*global).tube_number_tab_1, 200
+    plot_tube_box, Event, (*global).tube_number_tab_2, 255+(256*50)+(150*256)    
+endif
+
+end
+
+
+
