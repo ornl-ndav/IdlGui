@@ -2997,17 +2997,12 @@ del = lonarr(5)
 tube_removed = (*(*global).tube_removed)
 
 error_status = 0 
-;CATCH, error_status
+CATCH, error_status
+exit_status=0
 
 if (error_status NE 0) then begin
     
-    text="ERROR !"
-    output_into_text_box, event, 'general_infos', text
-    output_into_text_box, event, 'log_book', text
-    
-    text="Warning ! Objects plotted are messier than they appear!"
-    output_into_text_box, event, 'general_infos', text
-    output_into_text_box, event, 'log_book', text
+    goto,exit
     
 endif else begin
     
@@ -3217,6 +3212,16 @@ endif else begin
     output_into_text_box, event, 'log_book', text
     
 endelse
+
+exit: exit_status = 1
+if (exit_status EQ 1) then begin
+    text="ERROR !"
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
+    text="Warning ! Objects plotted are messier than they appear!"
+    output_into_text_box, event, 'general_infos', text
+    output_into_text_box, event, 'log_book', text
+endif
 
 text="...done"
 output_into_text_box, event, 'general_infos', text
