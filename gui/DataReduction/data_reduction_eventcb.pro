@@ -992,8 +992,6 @@ endif else begin
                            run_number,$
                            instrument)
 
-    print, 'full_nexus is: ' + full_nexus_name
-
 ;check result of search
     find_nexus = (*global).find_nexus
     if (find_nexus EQ 0) then begin
@@ -1013,7 +1011,11 @@ endif else begin
 
             populate_distance_labels, event, full_nexus_name
 
-        endif
+        endif else begin ;REF_L
+
+            populate_proton_charge, event, full_nexus_name
+
+        endelse
 
 ;dump binary data of NeXus file into tmp_working_path
         text = " - dump binary data......."
@@ -1249,8 +1251,6 @@ output_error, event, 'log_book_text', err_listening
 text= "   ...done ]"
 output_into_text_box, event, 'log_book_text', text
 ;widget_control, full_view_info, set_value=text, /append
-
-print, 'full_nexus_name: ' + full_nexus_name
 
 cmd_dump = "nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
@@ -4487,5 +4487,29 @@ widget_control,id,get_uvalue=global
 
 (*global).first_time_plotting = 1
 data_reduction_tab_cb, Event
+
+end
+
+
+
+
+pro populate_proton_charge, event, full_nexus_name
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nxdir_cmd = 'nxdir ' + full_nexus_name
+nxdir_cmd += ' -p /entry/proton_charge/ -o'
+spawn, nxdir_cmd, listening
+
+proton_charge_array = strsplit(listening,'=',/extract,/regex)
+proton_charge_str = proton_charge_array[1]
+proton_charge_pC = double(proton_charge_str) * (0.36)
+
+text = 'Proton charge = '
+text += strcompress(proton_charge_pC)
+text += ' 10^10 pC'
+output_into_text_box, event, 'info_text', text
 
 end
