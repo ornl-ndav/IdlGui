@@ -164,13 +164,13 @@ if (text NE '') then begin
     endelse
 endif
 
-;if ((*global).ucams EQ 'j35' && uname_destination EQ 'log_book_text') then begin
-;    full_logbook_filename = "~/local/DataReduction_logbook.txt"
-;    openu, 6,full_logbook_filename, /append
-;    printf, 6, text
-;    close,6
-;    free_lun,6
-;endif
+if ((*global).ucams EQ 'ceh' && uname_destination EQ 'log_book_text') then begin
+    full_logbook_filename = "~/local/DataReduction_logbook.txt"
+    openu, 6,full_logbook_filename, /append
+    printf, 6, text
+    close,6
+    free_lun,6
+endif
 
 end
 ; \}
@@ -207,20 +207,19 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
     full_text = 'ERROR: ' + err_listening
     widget_control, full_view_info, set_value=full_text,/append
 
-;     if ((*global).ucams EQ 'j35') then begin
-;         full_logbook_filename = "~/local/DataReduction_logbook.txt"
-;         openu, 3,full_logbook_filename,/append
-;         nbr_lines_array = size(err_listening)
-;         nbr_lines = nbr_lines_array[1]
-
-;         for i=0,(nbr_lines-1) do begin
-;             printf,3, err_listening[i]
-;         endfor
+     if ((*global).ucams EQ 'ceh') then begin
+         full_logbook_filename = "~/local/DataReduction_logbook.txt"
+         openu, 3,full_logbook_filename,/append
+         nbr_lines_array = size(err_listening)
+         nbr_lines = nbr_lines_array[1]
+         for i=0,(nbr_lines-1) do begin
+             printf,3, err_listening[i]
+         endfor
         
-; ;close it up...
-;         close,3
-;         free_lun,3
-;     endif
+ ;close it up...
+         close,3
+         free_lun,3
+     endif
     
 endif
 
@@ -485,3 +484,25 @@ end
 ; \}
 ;;     //end of replace_string
 
+
+
+
+
+; \defgroup get_min_run_number
+; \{
+;;
+
+;;
+; \brief This function output the minimum
+; run number from the list
+;
+; \param runs_and_full_path (INPUT) list of run numbers and their full path
+;
+; \return run_number_min
+; the minimum run_number
+function  get_min_run_number, runs_and_full_path
+
+run_number_min = MIN(runs_and_full_path[*,0])
+
+return, strcompress(run_number_min,/remove_all)
+end

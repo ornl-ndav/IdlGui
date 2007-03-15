@@ -4216,6 +4216,7 @@ if (tab_value EQ 0) then begin
     widget_control, start_data_reduction_button_id, sensitive=0
     
 ;main data reduction command line
+
     spawn, cmd_line, listening  
     (*global).data_reduction_done = 1             
     
@@ -4231,8 +4232,10 @@ if (tab_value EQ 0) then begin
 ;   widget_control, full_view_info, set_value=full_text,/append
 ;    widget_control, view_info, set_value=text,/append
     
+    run_number_min = get_min_run_number(runs_and_full_path)
+
     text = 'Plotting output main output file....'
-    main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+    main_output_file_name = produce_output_file_name(Event, run_number_min, '.txt')
     (*global).main_output_file_name = main_output_file_name
     full_text = 'Plotting main output file: ' + main_output_file_name
     output_into_text_box, event, 'log_book_text', full_text
@@ -4369,7 +4372,9 @@ endif else begin
 ;        widget_control, view_info, set_value=text,/append
         
         text = 'Plotting output main output file....'
-        main_output_file_name = produce_output_file_name(Event, (*global).run_number, '.txt')
+        run_number_min = get_min_run_number(runs_and_full_path)
+        
+        main_output_file_name = produce_output_file_name(Event, run_number_min, '.txt')
         (*global).main_output_file_name = main_output_file_name
         full_text = 'Plotting main output file: ' + main_output_file_name
        output_into_text_box, event, 'log_book_text', full_text
