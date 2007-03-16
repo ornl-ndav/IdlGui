@@ -1091,6 +1091,13 @@ instrument = (*global).instrument
 
 if (instrument EQ 'REF_M') then begin ;REF_M
 
+    ;remove x-y axis interaction box and bring back to life REF_M logo
+    (*global).first_time_plotting = 1
+    REF_M_logo_base_id = widget_info(event.top,find_by_uname='REF_M_logo_base')
+    widget_control, REF_M_logo_base_id, map=1
+    x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
+    widget_control, x_y_axis_interaction_base_id, map=0
+    
 ;no data reduction plot available
     (*global).data_reduction_done = 0
     
@@ -3039,47 +3046,50 @@ while (NOT eof(u)) do begin
 endwhile
 
 instrument = (*global).instrument
-if (instrument EQ 'REF_L') then begin
 
 ;retrieve value of xmin, xmax, ymin and ymax
-    xmin_id = widget_info(event.top,find_by_uname='left_side_text_x')
-    xmax_id = widget_info(event.top,find_by_uname='right_side_text_x')
-    ymin_id = widget_info(event.top,find_by_uname='left_side_text_y')
-    ymax_id = widget_info(event.top,find_by_uname='right_side_text_y')
-    
-    if ((*global).first_time_plotting EQ 1) then begin
+xmin_id = widget_info(event.top,find_by_uname='left_side_text_x')
+xmax_id = widget_info(event.top,find_by_uname='right_side_text_x')
+ymin_id = widget_info(event.top,find_by_uname='left_side_text_y')
+ymax_id = widget_info(event.top,find_by_uname='right_side_text_y')
 
-        xmax = max(flt0,/nan)
-        xmin = min(flt0,/nan)
-        ymax = max(flt1,/nan)
-        ymin = min(flt1,/nan)
-        
+if ((*global).first_time_plotting EQ 1) then begin
+    
+    xmax = max(flt0,/nan)
+    xmin = min(flt0,/nan)
+    ymax = max(flt1,/nan)
+    ymin = min(flt1,/nan)
+    
 ;populate text_box
-        widget_control, xmin_id, set_value=strcompress(xmin)
-        widget_control, xmax_id, set_value=strcompress(xmax)
-        widget_control, ymin_id, set_value=strcompress(ymin)
-        widget_control, ymax_id, set_value=strcompress(ymax)
-        
-        (*global).first_time_plotting = 0
-        
-        REF_L_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
-        widget_control, REF_L_logo_base_id, map=0
-        x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
-        widget_control, x_y_axis_interaction_base_id, map=1
-        
-    endif else begin
-        
-        widget_control, xmin_id, get_value=xmin
-        widget_control, xmax_id, get_value=xmax
-        widget_control, ymin_id, get_value=ymin
-        widget_control, ymax_id, get_value=ymax
-        xmin=float(xmin)
-        xmax=float(xmax)
-        ymin=float(ymin)
-        ymax=float(ymax)
-        
-    endelse
-endif
+    widget_control, xmin_id, set_value=strcompress(xmin)
+    widget_control, xmax_id, set_value=strcompress(xmax)
+    widget_control, ymin_id, set_value=strcompress(ymin)
+    widget_control, ymax_id, set_value=strcompress(ymax)
+    
+    (*global).first_time_plotting = 0
+    
+if (instrument EQ 'REF_L') then begin
+    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+endif else begin
+    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_M_logo_base')
+endelse
+    widget_control, REF_logo_base_id, map=0
+    x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
+    widget_control, x_y_axis_interaction_base_id, map=1
+    
+endif else begin
+    
+    widget_control, xmin_id, get_value=xmin
+    widget_control, xmax_id, get_value=xmax
+    widget_control, ymin_id, get_value=ymin
+    widget_control, ymax_id, get_value=ymax
+    xmin=float(xmin)
+    xmax=float(xmax)
+    ymin=float(ymin)
+    ymax=float(ymax)
+    
+endelse
+
 draw_id = widget_info(Event.top, find_by_uname=draw_uname)
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
@@ -3096,59 +3106,52 @@ if (error_plot_status NE 0) then begin
     output_into_text_box, event, 'info_text', text
 endif else begin
 
-    if (instrument EQ 'REF_L') then begin
 ;check status of x_axis (lin or log)
-        x_axis_lin_log_REF_L_id = widget_info(event.top,find_by_uname='x_axis_lin_log_REF_L')
-        widget_control, x_axis_lin_log_REF_L_id, get_value = x_axis_type
-        
+    x_axis_lin_log_REF_id = widget_info(event.top,find_by_uname='x_axis_lin_log_REF')
+    widget_control, x_axis_lin_log_REF_id, get_value = x_axis_type
+    
 ;check status of y_axis (lin or log)
-        y_axis_lin_log_REF_L_id = widget_info(event.top,find_by_uname='y_axis_lin_log_REF_L')
-        widget_control, y_axis_lin_log_REF_L_id, get_value= y_axis_type
-
-        case x_axis_type of
-
-            0:begin
-
-                case y_axis_type of
+    y_axis_lin_log_REF_id = widget_info(event.top,find_by_uname='y_axis_lin_log_REF')
+    widget_control, y_axis_lin_log_REF_id, get_value= y_axis_type
+    
+    case x_axis_type of
+        
+        0:begin
+            
+            case y_axis_type of
                 
-                    0: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title
-                    end
-
-                    1: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/ylog
-                    end
-
-                endcase
-
-            end
-               
-            1: begin
+                0: begin
+                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title
+                end
                 
-                case y_axis_type of
-
-                    0: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog
-                    end
-
-                    1: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog,/ylog
-                    end
-                    
-                endcase
+                1: begin
+                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/ylog
+                end
                 
-            end
-
-        endcase
-
-    endif else begin
-
-        plot,flt0,flt1,title=title
-
-    endelse
-
+            endcase
+            
+        end
+        
+        1: begin
+            
+            case y_axis_type of
+                
+                0: begin
+                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog
+                end
+                
+                1: begin
+                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],title=title,/xlog,/ylog
+                end
+                
+            endcase
+            
+        end
+        
+    endcase
+    
     errplot,flt0,flt1 - flt2, flt1 + flt2,color = 100 ;'0xff00ffxl'
-
+    
 endelse
 
 close,u
