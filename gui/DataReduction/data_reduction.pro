@@ -775,7 +775,7 @@ x_axis_label = widget_label(x_y_axis_interaction_base,$
 
 axis_lin_log = ['lin',$
                 'log']
-x_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$ 
+x_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
                                  axis_lin_log,$
                                  /exclusive,$
                                  /RETURN_NAME,$
@@ -783,7 +783,7 @@ x_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$
                                  YOFFSET=0,$
                                  SET_VALUE=0.0,$
                                  row=1,$
-                                 uname='x_axis_lin_log_REF_L')
+                                 uname='x_axis_lin_log_REF')
 
 
 x_off_min = 150
@@ -829,7 +829,7 @@ y_axis_label = widget_label(x_y_axis_interaction_base,$
                             value='Y-axis:',$
                             font='lucidasans-bold-10')
 
-y_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$ 
+y_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
                                  axis_lin_log,$
                                  /exclusive,$
                                  /RETURN_NAME,$
@@ -837,7 +837,7 @@ y_axis_lin_log_REF_L = CW_BGROUP(x_y_axis_interaction_base,$
                                  YOFFSET=37,$
                                  SET_VALUE=0.0,$
                                  row=1,$
-                                 uname='y_axis_lin_log_REF_L')
+                                 uname='y_axis_lin_log_REF')
 
 left_side_label_y = widget_label(x_y_axis_interaction_base,$
                                  xoffset=x_off_min,$
@@ -1456,7 +1456,7 @@ instrument_list = ['REF_L', 'REF_M']
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1350,$   ;1050
-                         SCR_YSIZE=630,$   ;442
+                         SCR_YSIZE=633,$   ;442
                          XOFFSET=250,$
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
@@ -1466,6 +1466,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   first_time_plotting : 0,$
                    entering_intermediate_file_output_for_first_time : 0,$
                    signal_pid_file_name : '',$
                    background_pid_file_name : '',$
@@ -1662,9 +1663,9 @@ display_data_base = widget_draw(MAIN_BASE,$
 ;INFORMATION ABOUT DISTANCES
 info_distance_base = widget_base(MAIN_BASE,$
                                  xoffset=2,$
-                                 yoffset=570,$
+                                 yoffset=568,$
                                  scr_xsize=800,$
-                                 scr_ysize=55,$
+                                 scr_ysize=60,$
                                  frame=1)
 
 distance_sample_detector_das_label = widget_label(info_distance_base,$
@@ -1736,7 +1737,7 @@ distance_moderator_detector_nexus = widget_label(info_distance_base,$
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
                                  xoffset=640,$
-                                 yoffset=500,$
+                                 yoffset=495,$
                                  scr_xsize=301,$
                                  scr_ysize=58,$
                                  frame=1)
@@ -1777,7 +1778,7 @@ save_selection_button = widget_button(select_signal_base,$
 keep_current_selection_base = widget_base(MAIN_BASE,$
                                           uname='keep_current_selection_base',$
                                           xoffset=970,$
-                                          yoffset=500,$
+                                          yoffset=495,$
                                           scr_xsize=220,$
                                           scr_ysize=58,$
                                           frame=1,$
@@ -1804,32 +1805,162 @@ keep_selection_label = widget_label(keep_current_selection_base,$
 ;Selection or Info mode
 selection_mode_base = widget_base(MAIN_BASE,$
                                   xoffset=1220,$
-                                  yoffset=500,$
+                                  yoffset=495,$
                                   scr_xsize=77,$
                                   scr_ysize=58,$
                                   frame=1)
 
- selection_mode_list = ['Select.',$
-                        'Info']
- selection_mode_group = CW_BGROUP(selection_mode_base,$ 
-                                  selection_mode_list,$
-                                  /exclusive,$
-                                  /RETURN_NAME,$
-                                  XOFFSET=0,$
-                                  YOFFSET=0,$
-                                  SET_VALUE=0.0,$
+selection_mode_list = ['Select.',$
+                       'Info']
+selection_mode_group = CW_BGROUP(selection_mode_base,$ 
+                                 selection_mode_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=0,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
                                   uname='selection_mode_group')
-                                    
+
 
 ;REF_M logo
-REF_M_logo = widget_draw(MAIN_BASE,$
+REF_M_logo_base = widget_base(MAIN_BASE,$
+                              uname='REF_M_logo_base',$
+                              xoffset=815,$
+                              yoffset=568,$
+                              scr_xsize=530,$
+                              scr_ysize=60,$
+                              map=1)
+
+
+REF_M_logo = widget_draw(REF_M_logo_base,$
                          uname='REF_M_logo',$
-                         xoffset=815,$
-                         yoffset=568,$
+                         xoffset=0,$
+                         yoffset=0,$
                          scr_xsize=530,$
                          scr_ysize=60,$
                          /MOTION_EVENTS)
                          
+
+;x and y axis interaction box of data reduction plot
+x_y_axis_interaction_base = widget_base(main_base,$
+                                        uname='x_y_axis_interaction_base',$
+                                        xoffset=815,$
+                                        yoffset=568,$
+                                        scr_xsize=530,$
+                                        scr_ysize=60,$
+                                        map=0,$
+                                        frame=1)
+
+x_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=7,$
+                            value='X-axis:',$
+                            font='lucidasans-bold-10')
+
+axis_lin_log = ['lin',$
+                'log']
+x_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='x_axis_lin_log_REF')
+x_off_min = 150
+x_off_max = 275
+x_off_min_box = 185
+x_off_max_box = 310
+left_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_min,$
+                               yoffset=7,$
+                               value='Min:')
+
+left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                             uname='left_side_text_x',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+
+right_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=7,$
+                               value='Max:')
+right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                              uname='right_side_text_x',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+yoff = 32
+y_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=4+yoff,$
+                            value='Y-axis:',$
+                            font='lucidasans-bold-10')
+
+y_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=yoff-3,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='y_axis_lin_log_REF')
+
+left_side_label_y = widget_label(x_y_axis_interaction_base,$
+                                 xoffset=x_off_min,$
+                                 yoffset=5+yoff,$
+                                 value='Min:')
+
+left_side_text_y = widget_text(x_y_axis_interaction_base,$
+                             uname='left_side_text_y',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0+yoff,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+right_side_label_y = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=5+yoff,$
+                               value='Max:')
+right_side_text_y = widget_text(x_y_axis_interaction_base,$
+                              uname='right_side_text_y',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0+yoff,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+
+restore_button = widget_button(x_y_axis_interaction_base,$
+                               uname='restore_button',$
+                               xoffset=395,$
+                               yoffset=1,$
+                               scr_xsize=130,$
+                               scr_ysize=60,$
+                               value='RESTORE')
+
 ;data_reduction and other_plots tab
 ;DATA REDUCTION and PLOTS BASE
 xsize_of_tabs = 730
@@ -2060,7 +2191,7 @@ normalization_list_group_REF_M = CW_BGROUP(data_reduction_base,$
                                            /RETURN_NAME,$
                                            XOFFSET=90,$
                                            YOFFSET=190,$
-                                           SET_VALUE=0.0,$
+                                           SET_VALUE=1.0,$
                                            row=1,$
                                            uname='normalization_list_group_REF_M')
 
@@ -2069,7 +2200,8 @@ norm_run_number_base = widget_base(data_reduction_base,$
                                    xoffset=175,$
                                    yoffset=190,$
                                    scr_xsize=200,$
-                                   scr_ysize=30)
+                                   scr_ysize=30,$
+                                   map=0)
 
 normalization_label = widget_label(norm_run_number_base,$
                                    xoffset=0,$
@@ -2144,7 +2276,7 @@ norm_background_list_group = CW_BGROUP(data_reduction_base,$
                                        /RETURN_NAME,$
                                        XOFFSET=80,$
                                        YOFFSET=263,$
-                                       SET_VALUE=0.0,$
+                                       SET_VALUE=1.0,$
                                        row=1,$
                                        uname='norm_background_list_group')
 
