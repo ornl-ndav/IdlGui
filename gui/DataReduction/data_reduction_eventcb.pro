@@ -1893,12 +1893,18 @@ endif else begin
         view_info = widget_info(Event.top,FIND_BY_UNAME='background_info')
         WIDGET_CONTROL, view_info, SET_VALUE=value_group
         view_info_tab = widget_info(Event.top, find_by_uname='background_1_tab_base')
-        widget_control, view_info_tab, base_set_title="Background #1 (blue)"
+        if ((*global).instrument EQ 'REF_L') then begin ;REF_L
+            text_color_back_1 = " (red)"
+        endif else begin ;REF_M
+            text_color_back_1 = " (yellow)"
+        endelse
+        widget_control, view_info_tab, base_set_title="Background #1" + text_color_back_1
     endif else begin
+        text_color_back_2 = " (red)"
         view_info = widget_info(Event.top,FIND_BY_UNAME='background_2_info')
         WIDGET_CONTROL, view_info, SET_VALUE=value_group
         view_info_tab = widget_info(Event.top, find_by_uname='background_2_tab_base')
-        widget_control, view_info_tab, base_set_title="Background #2 (red)"
+        widget_control, view_info_tab, base_set_title="Background #2" + text_color_back_2
     endelse
     
 endelse        
