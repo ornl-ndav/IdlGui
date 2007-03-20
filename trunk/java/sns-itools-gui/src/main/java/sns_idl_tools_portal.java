@@ -29,8 +29,8 @@ public class sns_idl_tools_portal {
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 		
 		//Add the select and display panels to the main panel
-		mainPanel.add(selectPanel());
-		mainPanel.add(displayPanel());
+		mainPanel.add(selectPanel);
+		mainPanel.add(displayPanel);
 	}
 	
 	/*
@@ -39,11 +39,11 @@ public class sns_idl_tools_portal {
 	private void addWidgets() {
 		
 		//Get the images and put them into an array of ImageIcons.
-		images[0] = "../../ressources/images/plotBSS.bmp";
-		images[1] = "../../ressources/images/RealignBSS.bmp";
-		images[2] = "../../ressources/images/rebinNeXus.bmp";
-		images[3] = "../../ressources/images/DataReduction.bmp";
-		images[4] = "../../ressources/images/under_construction.bmp";
+		images[0] = createImageIcon("../../ressources/images/plotBSS.bmp");
+		images[1] = createImageIcon("../../ressources/images/RealignBSS.bmp");
+		images[2] = createImageIcon("../../ressources/images/rebinNeXus.bmp");
+		images[3] = createImageIcon("../../ressources/images/DataReduction.bmp");
+		images[4] = createImageIcon("../../ressources/images/under_construction.bmp");
 		
 		/* 
 		 * Create a label for displaying the tools preview and put
@@ -65,8 +65,8 @@ public class sns_idl_tools_portal {
 		// Create a combobox with IDL tools choices
 		String[] tools = {"plotBSS","RealignBSS","rebinNeXus","DataReduction",
 				"more_NeXus"};
-		toolsChoices = new JComboBox(tools);
-		toolsChoices.setSelectedIndex(START_INDEX);
+		toolChoices = new JComboBox(tools);
+		toolChoices.setSelectedIndex(START_INDEX);
 		
 		// Display the first image
 		toolIconLabel.setIcon(images[START_INDEX]);
@@ -91,7 +91,7 @@ public class sns_idl_tools_portal {
 	}
 	
 	public void actionPerformed(ActionEvent event) {
-		if ("comboBoxChanged".equals(event.getACtionCommand())) {
+		if ("comboBoxChanged".equals(event.getActionCommand())) {
 			// Update the icon to display the new IDL tool
 			toolIconLabel.setIcon(images[toolChoices.getSelectedIndex()]);
 		}
@@ -122,28 +122,13 @@ public class sns_idl_tools_portal {
 		
 		//Create and set up the window.
 		JFrame portalFrame = new JFrame("SNS IDL tools");
-		portalFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE`);
+		portalFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		portalFrame.setContentPane(portal.mainPanel);
 		
 		//Display the window
 		portalFrame.pack();
 		portalFrame.setVisible(true);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/**
 	 * @param args
