@@ -10,16 +10,22 @@ public class idlToolsPortal implements ActionListener{
 	final static int START_INDEX = 0;
 	
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
-	JPanel mainPanel, selectPanel, displayPanel;
+	String[] info = new String[NUM_IMAGES];
+	
+	JPanel mainPanel, selectPanel, displayPanel, infoPanel, goPanel;
+	JButton goButton;
 	
 	JComboBox toolChoices = null;
 	JLabel toolIconLabel = null;
+	JLabel infoLabel = null;
 	
 	public idlToolsPortal() {
 		
 		//Create the tool selection and the display panels.
-		selectPanel = new JPanel();
 		displayPanel = new JPanel();
+		selectPanel = new JPanel();
+		infoPanel = new JPanel();
+		goPanel = new JPanel();
 		
 		//Add various widgets tot he sub panels;
 		addWidgets();
@@ -32,6 +38,8 @@ public class idlToolsPortal implements ActionListener{
 		//Add the select and display panels to the main panel
 		mainPanel.add(selectPanel);
 		mainPanel.add(displayPanel);
+		mainPanel.add(infoPanel);
+		mainPanel.add(goPanel);
 	}
 	
 	/*
@@ -46,6 +54,22 @@ public class idlToolsPortal implements ActionListener{
 		images[3] = createImageIcon("/gov/ornl/sns/itools/images/DataReduction_M.gif");
 		images[4] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
 		
+		//Define the help text that goes with each tool
+		//plotBSS
+		info[0] = "<html>This program plots data for the Backscattering instrument. It is also<br>" +
+				"possible to display the range of time bins desired</html>";
+		//RealignBSS
+		info[1] = "<html>Program used to realign the pixelID of the Backscattering instrument.<br>" +
+				"A NeXus file is then produced based on the new position of these pixels</html>";
+		//rebinNeXus
+		info[2] = "<html>Program used to visualize the data of any NeXus file. It can also be used<br>" +
+				"to rebin the data (when running in event mode) and create a local NeXus file</html>";
+		//DataReduction
+		info[3] = "<html>Program that performs some basic data_reduction for the two reflectometers</html>";
+		//moreNeXus
+		info[4] = "<html>Program that gives information about a particular run_number and can output the<br>" +
+				"various data it contains</html>";
+			
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -60,7 +84,7 @@ public class idlToolsPortal implements ActionListener{
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		
 		toolIconLabel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createEmptyBorder(0, 0, 10, 0),
+				BorderFactory.createEmptyBorder(0, 0, 5, 0),
 				toolIconLabel.getBorder()));
 		
 		// Create a combobox with IDL tools choices
@@ -75,7 +99,7 @@ public class idlToolsPortal implements ActionListener{
 		
 		// Add a border around the selected panel
 		selectPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Select IDL tool"),
+				BorderFactory.createTitledBorder("IDL tool"),
 				BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		
 		// Add a border around the display panel
@@ -83,18 +107,37 @@ public class idlToolsPortal implements ActionListener{
 				BorderFactory.createTitledBorder("Preview of tool selected"),
 				BorderFactory.createEmptyBorder(5,5,5,5)));
 		
+		// Add a border around the info display Panel
+		infoPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Infos about tool selected"),
+				BorderFactory.createEmptyBorder(5,5,5,5)));
+		
+		//Button to validate tool selected
+		goButton = new JButton("LAUNCH TOOL SELECTED");
+	
+		// add a border around the go Panel
+		goPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("GO"),
+				BorderFactory.createEmptyBorder(5,5,5,5)));
+		
+		infoLabel = new JLabel(info[0],JLabel.CENTER);
+		
 		// Add idl tools combo box to select panel and image label
 		displayPanel.add(toolIconLabel);
-		selectPanel.add(toolIconLabel);
+		selectPanel.add(toolChoices);
+		goPanel.add(goButton);
+		infoPanel.add(infoLabel);
 		
 		// Listen to events from the combo box
 		toolChoices.addActionListener(this);
+		goButton.addActionListener(this);
 	}
 	
 	public void actionPerformed(ActionEvent event) {
 		if ("comboBoxChanged".equals(event.getActionCommand())) {
 			// Update the icon to display the new IDL tool
 			toolIconLabel.setIcon(images[toolChoices.getSelectedIndex()]);
+			infoLabel.setText(info[toolChoices.getSelectedIndex()]);
 		}
 	}
 	
@@ -125,6 +168,9 @@ public class idlToolsPortal implements ActionListener{
 		JFrame portalFrame = new JFrame("SNS IDL tools");
 		portalFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		portalFrame.setContentPane(portal.mainPanel);
+		
+		//Set the default button
+		//portalFrame.getRootPane().setDefaultButton(goButton);
 		
 		//Display the window
 		portalFrame.pack();
