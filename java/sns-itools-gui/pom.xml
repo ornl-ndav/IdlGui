@@ -34,4 +34,22 @@
       <artifactId>log4j</artifactId>
     </dependency>
   </dependencies>
+  <build>
+<!-- Create JAR -->
+    <plugin>
+      <groupID>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <configuration>
+        <archive>
+          <manifest>
+            <addClasspath>true</addClasspath>
+          </manifest>
+          <manifestEntries>
+            <Main-Class>gov.ornl.sns.translation.ConsoleInterface</Main-Class>
+            <Package>gov.ornl.sns.sns.itools.gui</Package>
+          </manifestEntries>
+        </archive>
+      </configuration>
+    </plugin>
+  </build>
 </project>
