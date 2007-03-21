@@ -30,12 +30,16 @@
       <version>0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupID>gov.ornl.sns</groupID>
+      <artifactId>sns-util</artifactId>
+      <version>0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
     </dependency>
   </dependencies>
   <build>
-<!-- Create JAR -->
     <plugin>
       <groupID>org.apache.maven.plugins</groupId>
       <artifactId>maven-jar-plugin</artifactId>
