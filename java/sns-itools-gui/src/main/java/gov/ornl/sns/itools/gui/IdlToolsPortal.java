@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.net.URL;
+import java.lang.System;  //to get the user name
+import java.net.InetAddress;  //to get the hostname
 
 public class IdlToolsPortal implements ActionListener{
 
@@ -162,7 +164,7 @@ public class IdlToolsPortal implements ActionListener{
 	 * Create the GUI and show it. 
 	 */
 	private static void createAndShowGUI() {
-		//make sure we have a nice window decorations.
+		//make sure w33e have a nice window decorations.
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
 		//Create a new instance of idlToolsPortal
@@ -192,5 +194,16 @@ public class IdlToolsPortal implements ActionListener{
 				createAndShowGUI();
 				}
 		});
+		
+		//REMOVE_ME
+    System.out.println("user name is: " + System.getProperty("user.name"));
+    try {
+      java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
+      System.out.println("hostname is: " + localMachine.getHostName());
+    }
+    catch (java.net.UnknownHostException uhe)
+    {
+      //handle exception
+    }
 	}
 }

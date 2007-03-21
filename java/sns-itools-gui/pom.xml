@@ -30,7 +30,7 @@
       <version>0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupID>gov.ornl.sns</groupID>
+      <groupId>gov.ornl.sns</groupId>
       <artifactId>sns-util</artifactId>
       <version>0.1-SNAPSHOT</version>
     </dependency>
@@ -40,20 +40,23 @@
     </dependency>
   </dependencies>
   <build>
-    <plugin>
-      <groupId>org.apache.maven.plugins</groupId>
-      <artifactId>maven-jar-plugin</artifactId>
-      <configuration>
-        <archive>
-          <manifest>
-            <addClasspath>true</addClasspath>
-          </manifest>
-          <manifestEntries>
-            <Main-Class>gov.ornl.sns.translation.ConsoleInterface</Main-Class>
-            <Package>gov.ornl.sns.sns.itools.gui</Package>
-          </manifestEntries>
-        </archive>
-      </configuration>
-    </plugin>
+    <plugins>
+<!-- CREATE JAR -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <configuration>
+          <archive>
+            <manifest>
+              <addClasspath>true</addClasspath>
+            </manifest>
+            <manifestEntries>
+              <Main-Class>gov.ornl.sns.itools.gui.IdlToolsPortal</Main-Class>
+              <Package>gov.ornl.sns.sns.itools.gui</Package>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 </project>
