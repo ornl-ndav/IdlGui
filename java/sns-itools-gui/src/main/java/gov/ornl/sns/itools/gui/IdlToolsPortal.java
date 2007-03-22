@@ -11,9 +11,22 @@ public class IdlToolsPortal implements ActionListener{
 	final static int NUM_IMAGES = 5;
 	final static int START_INDEX = 0;
 	
+  Boolean enableButton = false;  //default behavior of the GO button
+  enum enumHostname { dev, heater, mrac, lrac, bac, unknown}
+  static String DEV = "dev.ornl.gov";
+  static String HEATER = "heater.ornl.gov";
+  static String LRAC = "lrac.sns.gov";
+  static String MRAC = "mrac.sns.gov";
+  static String BAC = "bac.sns.gov";
+  static String UNKNOWN = "unknown";
+  
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
-	
+	String hostname;
+
+  //get hostname  
+  enumHostname localHostname; 
+    
 	JPanel mainPanel, selectPanel, displayPanel, infoPanel, goPanel;
 	JButton goButton;
 	
@@ -28,8 +41,18 @@ public class IdlToolsPortal implements ActionListener{
 		selectPanel = new JPanel();
 		infoPanel = new JPanel();
 		goPanel = new JPanel();
-		
-		//Add various widgets tot he sub panels;
+    
+    try {
+      java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
+      hostname = localMachine.getHostName();
+    } 
+    catch (java.net.UnknownHostException uhe)
+    {
+     //handle exception
+      hostname = "unknown";
+    }
+        
+    //Add various widgets tot he sub panels;
 		addWidgets();
 		
 		//Create the main panel to contain the two sub panels
@@ -117,7 +140,8 @@ public class IdlToolsPortal implements ActionListener{
 		//Button to validate tool selected
 		goButton = new JButton("LAUNCH TOOL SELECTED");
 		goButton.setActionCommand("go");
-		
+    goButton.setEnabled(false);
+    
 		// add a border around the go Panel
 		goPanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder("GO"),
@@ -141,12 +165,68 @@ public class IdlToolsPortal implements ActionListener{
 			// Update the icon to display the new IDL tool
 			toolIconLabel.setIcon(images[toolChoices.getSelectedIndex()]);
 			infoLabel.setText(info[toolChoices.getSelectedIndex()]);
+      
+      System.out.println("host is:" + hostname);
+      
+      if (hostname.compareTo(DEV) == 0) {
+        localHostname = enumHostname.dev;
+      } else if (hostname.compareTo(HEATER) == 0) {
+        localHostname = enumHostname.heater;
+      } else if (hostname.compareTo(MRAC) == 0) {
+        localHostname = enumHostname.mrac;
+      } else if (hostname.compareTo(LRAC) == 0) {
+        localHostname = enumHostname.lrac;
+      } else if (hostname.compareTo(BAC) == 0) {
+        localHostname = enumHostname.bac;
+      } else {
+        localHostname = enumHostname.unknown;
+      }
+          
+      switch (toolChoices.getSelectedIndex()) {
+        case 0:
+          switch (localHostname) {
+          case bac: enableButton = true; break;
+          default: enableButton = false; break;
+          };
+          break;
+        case 1:
+          switch (localHostname) {
+          case bac: enableButton = true; break;
+          default: enableButton = false; break;
+          };
+          break;
+        case 2:
+          switch (localHostname) {
+          case lrac:
+          case mrac:
+          case heater:
+          case bac: enableButton = true; break;
+          default: enableButton = false; break;
+          };
+          break;
+        case 3: 
+          switch (localHostname) {
+          case lrac:
+          case mrac:
+          case heater: enableButton = true; break;
+          default: enableButton = false; break;
+          };
+          break;
+        case 4:
+          switch (localHostname) {
+          case dev: enableButton = true; break;   //REMOVE_ME
+          default: enableButton = false; break;
+          }
+      }
+      goButton.setEnabled(enableButton);
+      System.out.println("enableButton is: " + enableButton);
 		}
 		if ("go".equals(event.getActionCommand())){
 			System.out.printf("I'm here with i=%d",toolChoices.getSelectedIndex());
 		}
-	}
-	
+  }
+
+  
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	protected static ImageIcon createImageIcon(String path) {
 		java.net.URL imageURL = IdlToolsPortal.class.getResource(path);
@@ -194,16 +274,9 @@ public class IdlToolsPortal implements ActionListener{
 				createAndShowGUI();
 				}
 		});
-		
-		//REMOVE_ME
-    System.out.println("user name is: " + System.getProperty("user.name"));
-    try {
-      java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
-      System.out.println("hostname is: " + localMachine.getHostName());
-    }
-    catch (java.net.UnknownHostException uhe)
-    {
-      //handle exception
-    }
-	}
+    
+	// give user name	
+  // System.out.println("user name is: " + System.getProperty("user.name"));
+	
+  }
 }
