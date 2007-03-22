@@ -1,10 +1,11 @@
 package gov.ornl.sns.itools.gui;
-import java.awt.*;
+//import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.net.URL;
+//import java.net.URL;
 import java.lang.System;  //to get the user name
-import java.net.InetAddress;  //to get the hostname
+//import java.net.InetAddress;  //to get the hostname
+import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
@@ -14,12 +15,17 @@ public class IdlToolsPortal implements ActionListener{
   Boolean enableButton = false;  //default behavior of the GO button
   enum enumHostname { dev, heater, mrac, lrac, bac, unknown}
   static String DEV = "dev.ornl.gov";
-  static String HEATER = "heater.ornl.gov";
+  static String HEATER = "heater";
   static String LRAC = "lrac.sns.gov";
   static String MRAC = "mrac.sns.gov";
   static String BAC = "bac.sns.gov";
   static String UNKNOWN = "unknown";
   
+  static String PLOTBSS = "/SNS/users/j35/IDL/BSS/plotBSS";
+  static String REALIGN_BSS = "/SNS/users/j35/IDL/RealignGUI/RealignBSS";
+  static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
+  static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
+    
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
 	String hostname;
@@ -65,7 +71,8 @@ public class IdlToolsPortal implements ActionListener{
 		mainPanel.add(displayPanel);
 		mainPanel.add(infoPanel);
 		mainPanel.add(goPanel);
-	}
+    
+  }
 	
 	/*
 	 * Get the images and set up the widgets
@@ -158,6 +165,7 @@ public class IdlToolsPortal implements ActionListener{
 		// Listen to events from the combo box
 		toolChoices.addActionListener(this);
 		goButton.addActionListener(this);
+    setGoButton();
 	}
 	
 	public void actionPerformed(ActionEvent event) {
@@ -165,67 +173,102 @@ public class IdlToolsPortal implements ActionListener{
 			// Update the icon to display the new IDL tool
 			toolIconLabel.setIcon(images[toolChoices.getSelectedIndex()]);
 			infoLabel.setText(info[toolChoices.getSelectedIndex()]);
-      
-      System.out.println("host is:" + hostname);
-      
-      if (hostname.compareTo(DEV) == 0) {
-        localHostname = enumHostname.dev;
-      } else if (hostname.compareTo(HEATER) == 0) {
-        localHostname = enumHostname.heater;
-      } else if (hostname.compareTo(MRAC) == 0) {
-        localHostname = enumHostname.mrac;
-      } else if (hostname.compareTo(LRAC) == 0) {
-        localHostname = enumHostname.lrac;
-      } else if (hostname.compareTo(BAC) == 0) {
-        localHostname = enumHostname.bac;
-      } else {
-        localHostname = enumHostname.unknown;
-      }
-          
-      switch (toolChoices.getSelectedIndex()) {
-        case 0:
-          switch (localHostname) {
-          case bac: enableButton = true; break;
-          default: enableButton = false; break;
-          };
-          break;
-        case 1:
-          switch (localHostname) {
-          case bac: enableButton = true; break;
-          default: enableButton = false; break;
-          };
-          break;
-        case 2:
-          switch (localHostname) {
-          case lrac:
-          case mrac:
-          case heater:
-          case bac: enableButton = true; break;
-          default: enableButton = false; break;
-          };
-          break;
-        case 3: 
-          switch (localHostname) {
-          case lrac:
-          case mrac:
-          case heater: enableButton = true; break;
-          default: enableButton = false; break;
-          };
-          break;
-        case 4:
-          switch (localHostname) {
-          case dev: enableButton = true; break;   //REMOVE_ME
-          default: enableButton = false; break;
-          }
-      }
-      goButton.setEnabled(enableButton);
-      System.out.println("enableButton is: " + enableButton);
-		}
+      setGoButton();
+    }
 		if ("go".equals(event.getActionCommand())){
-			System.out.printf("I'm here with i=%d",toolChoices.getSelectedIndex());
-		}
-  }
 
+		  Process p;
+      try {
+      
+        switch (toolChoices.getSelectedIndex()) {
+         case 0: // plotBSS
+           p = (Runtime.getRuntime()).exec(PLOTBSS);
+           System.exit(0);  
+           break;
+         case 1: //RealignBSS
+           p = (Runtime.getRuntime()).exec(REALIGN_BSS);
+           System.exit(0);
+           break;
+         case 2: //rebinNeXus
+           p = (Runtime.getRuntime()).exec(REBIN_NEXUS);
+           System.exit(0);
+           break;
+         case 3: //DataReduction
+           p = (Runtime.getRuntime()).exec(DATA_REDUCTION);
+           System.exit(0);
+           break;
+         case 4: //under_construction
+         default: break;
+           }
+	      }
+      catch (IOException e)
+      {
+        System.out.println(e.getMessage());
+      }
+    
+		} 
+  }   
+  
+    
+  
+  /** Check if tools is available on computer and enable or not
+   * go button accordingly to result
+   */
+  public void setGoButton() {
+    
+    if (hostname.compareTo(DEV) == 0) {
+      localHostname = enumHostname.dev;
+    } else if (hostname.compareTo(HEATER) == 0) {
+      localHostname = enumHostname.heater;
+    } else if (hostname.compareTo(MRAC) == 0) {
+      localHostname = enumHostname.mrac;
+    } else if (hostname.compareTo(LRAC) == 0) {
+      localHostname = enumHostname.lrac;
+    } else if (hostname.compareTo(BAC) == 0) {
+      localHostname = enumHostname.bac;
+    } else {
+      localHostname = enumHostname.unknown;
+    }
+        
+    switch (toolChoices.getSelectedIndex()) {
+      case 0: //plotBSS
+        switch (localHostname) {
+        case bac: enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;
+      case 1: //RealignBSS
+        switch (localHostname) {
+        case bac: enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;
+      case 2: //rebinNeXus
+        switch (localHostname) {
+        case lrac:
+        case mrac:
+        case heater:
+        case bac: enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;
+      case 3: //DataReduction
+        switch (localHostname) {
+        case lrac:
+        case mrac:
+        case heater: enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;
+      case 4: //under_construction
+        switch (localHostname) {
+        case dev: enableButton = true; break;
+        default: enableButton = false; break;
+        }
+    }
+    goButton.setEnabled(enableButton);
+  }
+  
   
 	/** Returns an ImageIcon, or null if the path was invalid. */
 	protected static ImageIcon createImageIcon(String path) {
