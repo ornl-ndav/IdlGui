@@ -16,13 +16,13 @@ public class IdlToolsPortal implements ActionListener{
   enum enumHostname { dev, heater, mrac, lrac, bac, unknown}
   static String DEV = "dev.ornl.gov";
   static String HEATER = "heater";
-  static String LRAC = "lrac.sns.gov";
-  static String MRAC = "mrac.sns.gov";
+  static String LRAC = "lrac";
+  static String MRAC = "mrac";
   static String BAC = "bac.sns.gov";
   static String UNKNOWN = "unknown";
   
   static String PLOTBSS = "/SNS/users/j35/IDL/BSS/plotBSS";
-  static String REALIGN_BSS = "/SNS/users/j35/IDL/RealignGUI/RealignBSS";
+  static String REALIGN_BSS = "/SNS/users/j35/IDL/BSS/RealignGUI/RealignBSS";
   static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
   static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
     
@@ -34,7 +34,7 @@ public class IdlToolsPortal implements ActionListener{
   enumHostname localHostname; 
     
 	JPanel mainPanel, selectPanel, displayPanel, infoPanel, goPanel;
-	JButton goButton;
+	static JButton goButton;
 	
 	JComboBox toolChoices = null;
 	JLabel toolIconLabel = null;
@@ -299,7 +299,7 @@ public class IdlToolsPortal implements ActionListener{
 		portalFrame.setContentPane(portal.mainPanel);
 		
 		//Set the default button
-		//portalFrame.getRootPane().setDefaultButton(goButton);
+		portalFrame.getRootPane().setDefaultButton(goButton);
 		
 		//Display the window
 		portalFrame.pack();
