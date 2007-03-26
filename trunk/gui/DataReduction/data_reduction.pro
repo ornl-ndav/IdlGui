@@ -494,9 +494,14 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   previous_n : 0,$
                    x_axis : 0,$
                    y_axis : 0,$
-                   first_time_plotting : 1,$
+                   xmin_global : ptr_new(0L),$
+                   xmax_global : ptr_new(0L),$
+                   ymin_global : ptr_new(0L),$
+                   ymax_global : ptr_new(0L),$
+                   first_time_plotting_n : ptr_new(0L),$
                    data_reduction_plot_left : 0,$
                    data_reduction_plot_right : 200000,$
                    entering_intermediate_file_output_for_first_time : 0,$
@@ -796,7 +801,7 @@ left_side_label_x = widget_label(x_y_axis_interaction_base,$
                                value='Min:')
 
 left_side_text_x = widget_text(x_y_axis_interaction_base,$
-                             uname='left_side_text_x',$
+                             uname='xmin',$
                              xoffset=x_off_min_box,$
                              yoffset=0,$
                              scr_xsize=80,$
@@ -812,7 +817,7 @@ right_side_label_x = widget_label(x_y_axis_interaction_base,$
                                yoffset=7,$
                                value='Max:')
 right_side_text_x = widget_text(x_y_axis_interaction_base,$
-                              uname='right_side_text_x',$
+                              uname='xmax',$
                               xoffset=x_off_max_box,$
                               yoffset=0,$
                               scr_xsize=80,$
@@ -845,7 +850,7 @@ left_side_label_y = widget_label(x_y_axis_interaction_base,$
                                  value='Min:')
 
 left_side_text_y = widget_text(x_y_axis_interaction_base,$
-                             uname='left_side_text_y',$
+                             uname='ymin',$
                              xoffset=x_off_min_box,$
                              yoffset=0+yoff,$
                              scr_xsize=80,$
@@ -860,7 +865,7 @@ right_side_label_y = widget_label(x_y_axis_interaction_base,$
                                yoffset=5+yoff,$
                                value='Max:')
 right_side_text_y = widget_text(x_y_axis_interaction_base,$
-                              uname='right_side_text_y',$
+                              uname='ymax',$
                               xoffset=x_off_max_box,$
                               yoffset=0+yoff,$
                               scr_xsize=80,$
@@ -1466,7 +1471,12 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
-                   first_time_plotting : 0,$
+                   previous_n : 0,$
+                   first_time_plotting_n : ptr_new(0L),$
+                   xmin_global : ptr_new(0L),$
+                   xmax_global : ptr_new(0L),$
+                   ymin_global : ptr_new(0L),$
+                   ymax_global : ptr_new(0L),$
                    entering_intermediate_file_output_for_first_time : 0,$
                    signal_pid_file_name : '',$
                    background_pid_file_name : '',$
@@ -1878,7 +1888,7 @@ left_side_label_x = widget_label(x_y_axis_interaction_base,$
                                value='Min:')
 
 left_side_text_x = widget_text(x_y_axis_interaction_base,$
-                             uname='left_side_text_x',$
+                             uname='xmin',$
                              xoffset=x_off_min_box,$
                              yoffset=0,$
                              scr_xsize=80,$
@@ -1894,7 +1904,7 @@ right_side_label_x = widget_label(x_y_axis_interaction_base,$
                                yoffset=7,$
                                value='Max:')
 right_side_text_x = widget_text(x_y_axis_interaction_base,$
-                              uname='right_side_text_x',$
+                              uname='xmax',$
                               xoffset=x_off_max_box,$
                               yoffset=0,$
                               scr_xsize=80,$
@@ -1927,7 +1937,7 @@ left_side_label_y = widget_label(x_y_axis_interaction_base,$
                                  value='Min:')
 
 left_side_text_y = widget_text(x_y_axis_interaction_base,$
-                             uname='left_side_text_y',$
+                             uname='ymin',$
                              xoffset=x_off_min_box,$
                              yoffset=0+yoff,$
                              scr_xsize=80,$
@@ -1942,7 +1952,7 @@ right_side_label_y = widget_label(x_y_axis_interaction_base,$
                                yoffset=5+yoff,$
                                value='Max:')
 right_side_text_y = widget_text(x_y_axis_interaction_base,$
-                              uname='right_side_text_y',$
+                              uname='ymax',$
                               xoffset=x_off_max_box,$
                               yoffset=0+yoff,$
                               scr_xsize=80,$
