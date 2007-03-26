@@ -1,5 +1,0 @@
-cd, "~/SVN/HistoTool/trunk/gui/MakeNeXus/BSSrebinNeXus/"
-.run BSS_rebin_nexus_eventcb.pro
-.run BSS_rebin_nexus.pro
-BSS_rebin_nexus
-
