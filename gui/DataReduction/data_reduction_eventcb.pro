@@ -13,8 +13,48 @@ return, output_file_name
 end
 
 
+function get_list_of_runs, instrument, runs_to_process
 
+if (instrument EQ 'REF_L') then begin
 
+    array_of_runs = ''
+    array_of_runs_1 = strsplit(runs_to_process,',',count=length,/extract)
+    array_of_runs_2 = strarr(length)
+
+    for j=0,(length-1) do begin
+
+        array_of_runs_2 = strsplit(array_of_runs_1[j],'-',$
+                                   count=length_1,/extract)
+        if (length_1 GT 1) then begin
+            ;check if there is a * before/after
+            ;array_of_runs_2[0] and [1]
+            local_nexus = is_local_nexus_function(array_of_runs_2)
+            if (local_nexus[0] EQ 0 AND $
+                local_nexus[1] EQ 0) then begin
+                min = fix(array_of_runs_2[0])
+                max = fix(array_of_runs_2[1])
+                array_of_runs_add = strcompress(indgen(max-min+1)+min,/removee_all)
+            endif else begin
+                min = fix(remove_star_from_string(array_of_runs_2[0]))
+                max = fix(remove_star_from_string(array_of_runs_2[1]))
+                array_of_runs_add = strcompress(indgen(max[0]-min[0]+1)+min[0],/remove_all)
+                array_of_runs_add += '*'
+            endelse
+            array_of_runs = [array_of_runs, array_of_runs_add]
+        endif else begin
+            array_of_runs = [array_of_runs, array_of_runs_2]
+        endelse
+    endfor
+    size_array_of_runs = size(array_of_runs)
+    array_of_runs = array_of_runs[1:size_array_of_runs[1]-1]
+endif else begin
+    size_array = size(runs_to_process)
+    size_is = size_array[1]
+    array_of_runs = runs_to_process[1:size_is-1]
+endelse
+
+return, array_of_runs
+end
 
 
 function get_final_list_of_runs, Event, runs_to_process   ;REF_M
@@ -941,8 +981,6 @@ end
 ;OPEN NEXUS FILE
 pro open_nexus_file, Event
 
-
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -1089,10 +1127,21 @@ widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
 
+;reinitialize xmin,xmax,ymin and ymax for rescalling plots
+xmin = fltarr(6)
+ymin = fltarr(6)
+xmax = fltarr(6)
+ymax = fltarr(6)
+(*(*global).xmin_global) = xmin
+(*(*global).ymin_global) = ymin
+(*(*global).xmax_global) = xmax
+(*(*global).ymax_global) = ymax
+
+(*(*global).first_time_plotting_n) = intarr(6)+1
+
 if (instrument EQ 'REF_M') then begin ;REF_M
 
     ;remove x-y axis interaction box and bring back to life REF_M logo
-    (*global).first_time_plotting = 1
     REF_M_logo_base_id = widget_info(event.top,find_by_uname='REF_M_logo_base')
     widget_control, REF_M_logo_base_id, map=1
     x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
@@ -1151,7 +1200,6 @@ if (instrument EQ 'REF_M') then begin ;REF_M
 endif else begin                ;REF_L
     
     ;remove x-y axis interaction box and bring back to life REF_L logo
-    (*global).first_time_plotting = 1
     REF_L_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
     widget_control, REF_L_logo_base_id, map=1
     x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
@@ -2756,9 +2804,9 @@ widget_control,id,get_uvalue=global
 main_output_file_name = (*global).main_output_file_name
 
 draw_id = 'data_reduction_plot'
+title = "Intensity vs. Wavelength (run # " + $
+  strcompress((*global).processing_run_number,/remove_all) + ")"
 
-    title = "Intensity vs. Wavelength (run # " + $
-      strcompress((*global).processing_run_number,/remove_all) + ")"
 plot_reduction, $
   Event, $
   main_output_file_name, $
@@ -3053,14 +3101,49 @@ endwhile
 
 instrument = (*global).instrument
 
-;retrieve value of xmin, xmax, ymin and ymax
-xmin_id = widget_info(event.top,find_by_uname='left_side_text_x')
-xmax_id = widget_info(event.top,find_by_uname='right_side_text_x')
-ymin_id = widget_info(event.top,find_by_uname='left_side_text_y')
-ymax_id = widget_info(event.top,find_by_uname='right_side_text_y')
+;check if plot is main plot or intermediate plot
+other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
+value = widget_info(other_plots_tab_id, /tab_current)
 
-if ((*global).first_time_plotting EQ 1) then begin
+xmin_global = (*(*global).xmin_global)
+xmax_global = (*(*global).xmax_global)
+ymin_global = (*(*global).ymin_global)
+ymax_global = (*(*global).ymax_global)
+
+case value of
     
+    0: n=0
+    2: begin                    ;intermediate plots
+        
+;get active tab
+        other_plots_tab_id = widget_info(Event.top,find_by_uname='other_plots_tab')
+        value_intermediate = widget_info(other_plots_tab_id, /tab_current)
+        
+        case value_intermediate of
+            
+            0: n=1
+            1: n=2
+            2: n=3
+            3: n=4
+            4: n=5
+             
+        endcase
+        
+    end
+    else:
+endcase
+
+first_time_plotting_n = (*(*global).first_time_plotting_n)
+first_time_plotting = first_time_plotting_n[n]
+
+;populate text box
+xmin_id = widget_info(Event.top,find_by_uname='xmin')
+xmax_id = widget_info(Event.top,find_by_uname='xmax')
+ymin_id = widget_info(Event.top,find_by_uname='ymin')
+ymax_id = widget_info(Event.top,find_by_uname='ymax')
+
+if (first_time_plotting EQ 1) then begin
+
     xmax = max(flt0,/nan)
     xmin = min(flt0,/nan)
     ymax = max(flt1,/nan)
@@ -3072,29 +3155,65 @@ if ((*global).first_time_plotting EQ 1) then begin
     widget_control, ymin_id, set_value=strcompress(ymin)
     widget_control, ymax_id, set_value=strcompress(ymax)
     
-    (*global).first_time_plotting = 0
+    xmin_global[n] = xmin
+    ymin_global[n] = ymin
+    xmax_global[n] = xmax
+    ymax_global[n] = ymax
+
+    first_time_plotting_n[n]=0
     
-if (instrument EQ 'REF_L') then begin
-    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
-endif else begin
-    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_M_logo_base')
-endelse
+    if (instrument EQ 'REF_L') then begin
+        REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+    endif else begin
+        REF_logo_base_id = widget_info(event.top,find_by_uname='REF_M_logo_base')
+    endelse
+    
     widget_control, REF_logo_base_id, map=0
     x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
     widget_control, x_y_axis_interaction_base_id, map=1
     
 endif else begin
     
-    widget_control, xmin_id, get_value=xmin
-    widget_control, xmax_id, get_value=xmax
-    widget_control, ymin_id, get_value=ymin
-    widget_control, ymax_id, get_value=ymax
-    xmin=float(xmin)
-    xmax=float(xmax)
-    ymin=float(ymin)
-    ymax=float(ymax)
-    
+    if ((*global).previous_n EQ n) then begin
+        
+        widget_control, xmin_id, get_value=xmin
+        widget_control, xmax_id, get_value=xmax
+        widget_control, ymin_id, get_value=ymin
+        widget_control, ymax_id, get_value=ymax
+        
+        xmin=float(xmin)
+        xmax=float(xmax)
+        ymin=float(ymin)
+        ymax=float(ymax)
+
+        xmin_global[n] = xmin
+        xmax_global[n] = xmax
+        ymin_global[n] = ymin
+        ymax_global[n] = ymax
+        
+    endif else begin
+
+;populate xmin,xmax.... with appropriate values
+        xmin = xmin_global[n]
+        ymin = ymin_global[n]
+        xmax = xmax_global[n]
+        ymax = ymax_global[n]
+
+        widget_control, xmin_id, set_value=strcompress(xmin,/remove_all)
+        widget_control, xmax_id, set_value=strcompress(xmax,/remove_all)
+        widget_control, ymin_id, set_value=strcompress(ymin,/remove_all)
+        widget_control, ymax_id, set_value=strcompress(ymax,/remove_all)
+
+    endelse
+
 endelse
+
+(*(*global).xmin_global) = xmin_global
+(*(*global).xmax_global) = xmax_global
+(*(*global).ymin_global) = ymin_global
+(*(*global).ymax_global) = ymax_global
+(*(*global).first_time_plotting_n) = first_time_plotting_n
+(*global).previous_n = n
 
 draw_id = widget_info(Event.top, find_by_uname=draw_uname)
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
@@ -4501,7 +4620,37 @@ pro restore_button_cb, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-(*global).first_time_plotting = 1
+;check if plot is main plot or intermediate plot
+other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
+value = widget_info(other_plots_tab_id, /tab_current)
+
+case value of
+    
+    0: n=0
+    2: begin                    ;intermediate plots
+        
+;get active tab
+        other_plots_tab_id = widget_info(Event.top,find_by_uname='other_plots_tab')
+        value_intermediate = widget_info(other_plots_tab_id, /tab_current)
+        
+        case value_intermediate of
+            
+            0: n=1
+            1: n=2
+            2: n=3
+            3: n=4
+            4: n=5
+             
+        endcase
+        
+    end
+    else:
+endcase
+
+first_time_plotting_n = (*(*global).first_time_plotting_n)
+first_time_plotting_n[n]=1
+(*(*global).first_time_plotting_n) = first_time_plotting_n
+
 data_reduction_tab_cb, Event
 
 end
