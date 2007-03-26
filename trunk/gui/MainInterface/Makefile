@@ -19,6 +19,5 @@ all:
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/sns_idl_tools /SNS/users/j35/IDL/MainInterface/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/data_reduction.sav /SNS/users/j35/IDL/DataReduction/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/data_reduction /SNS/users/j35/IDL/DataReduction/
-	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/BSSrebinNeXus/bss_rebin_nexus.sav /SNS/users/j35/IDL/RebinNeXus/
-	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/BSSrebinNeXus/rebinBSSNeXus /SNS/users/j35/IDL/RebinNeXus/
+
 
