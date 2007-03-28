@@ -1,3 +1,35 @@
+function check_if_run_number_already_in_list, array_of_runs, run_number
+
+array_of_runs_tmp = size(array_of_runs)
+array_of_runs_type = array_of_runs_tmp[0]
+array_of_runs_size = array_of_runs_tmp[1]
+result=0
+
+if (array_of_runs_type EQ 1) then begin
+
+    run_number_local = strcompress(run_number,/remove_all)
+    
+    for i=0,(array_of_runs_size-1) do begin
+        if (run_number_local EQ strcompress(array_of_runs[i],/remove_all)) then begin
+            result=1
+        endif
+    endfor
+
+endif
+
+return, result
+end
+
+
+
+
+
+
+
+
+
+
+
 function produce_output_file_name, Event, run_number, extension
 
 ;get global structure
@@ -55,6 +87,11 @@ endelse
 
 return, array_of_runs
 end
+
+
+
+
+
 
 
 function get_final_list_of_runs, Event, runs_to_process   ;REF_M
@@ -911,6 +948,8 @@ end
 
 
 
+
+
 ;main_realize of the front door interface (instrument selection)
 pro MAIN_REALIZE, wWidget
 
@@ -931,6 +970,8 @@ tv, image,0,0,/true
 
 end
 ;$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+
 
 
 
