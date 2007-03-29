@@ -207,19 +207,19 @@ if (err_listening NE '' OR err_listening NE ['']) then begin
     full_text = 'ERROR: ' + err_listening
     widget_control, full_view_info, set_value=full_text,/append
 
-     if ((*global).ucams EQ 'ceh') then begin
-         full_logbook_filename = "~/local/DataReduction_logbook.txt"
-         openu, 3,full_logbook_filename,/append
-         nbr_lines_array = size(err_listening)
-         nbr_lines = nbr_lines_array[1]
-         for i=0,(nbr_lines-1) do begin
-             printf,3, err_listening[i]
-         endfor
+;      if ((*global).ucams EQ 'ceh') then begin
+;          full_logbook_filename = "~/local/DataReduction_logbook.txt"
+;          openu, 3,full_logbook_filename,/append
+;          nbr_lines_array = size(err_listening)
+;          nbr_lines = nbr_lines_array[1]
+;          for i=0,(nbr_lines-1) do begin
+;              printf,3, err_listening[i]
+;          endfor
         
- ;close it up...
-         close,3
-         free_lun,3
-     endif
+;  ;close it up...
+;          close,3
+;          free_lun,3
+;      endif
     
 endif
 
