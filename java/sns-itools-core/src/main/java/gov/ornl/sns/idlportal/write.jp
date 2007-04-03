@@ -1,7 +1,0 @@
-keystore "jeanstore";
-grant SignedBy "jean" {
-  permission java.util.PropertyPermission
-      	"user.home", "read";
-  permission java.io.FilePermission
-	"${user.home}/newfile","write";
-};
