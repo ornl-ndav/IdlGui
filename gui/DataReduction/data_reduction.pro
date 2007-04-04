@@ -1746,7 +1746,7 @@ distance_moderator_detector_nexus = widget_label(info_distance_base,$
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
-                                 xoffset=640,$
+                                 xoffset=615,$
                                  yoffset=495,$
                                  scr_xsize=301,$
                                  scr_ysize=58,$
@@ -1787,7 +1787,7 @@ save_selection_button = widget_button(select_signal_base,$
 ;keep current pid when opening other run number
 keep_current_selection_base = widget_base(MAIN_BASE,$
                                           uname='keep_current_selection_base',$
-                                          xoffset=970,$
+                                          xoffset=925,$
                                           yoffset=495,$
                                           scr_xsize=220,$
                                           scr_ysize=58,$
@@ -1814,7 +1814,7 @@ keep_selection_label = widget_label(keep_current_selection_base,$
 
 ;Selection or Info mode
 selection_mode_base = widget_base(MAIN_BASE,$
-                                  xoffset=1220,$
+                                  xoffset=1155,$
                                   yoffset=495,$
                                   scr_xsize=77,$
                                   scr_ysize=58,$
@@ -1831,6 +1831,22 @@ selection_mode_group = CW_BGROUP(selection_mode_base,$
                                  SET_VALUE=0.0,$
                                   uname='selection_mode_group')
 
+;info drawing
+info_schema_base = widget_base(MAIN_BASE,$
+                               uname='info_schema_base',$
+                               xoffset=1240,$
+                               yoffset=495,$
+                               scr_xsize=100,$
+                               scr_ysize=58,$
+                               frame=0,$
+                              map=0)
+
+schema_drawing = widget_draw(info_schema_base,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=100,$
+                             scr_ysize=58,$
+                             uname='schema_drawing')
 
 ;REF_M logo
 REF_M_logo_base = widget_base(MAIN_BASE,$
@@ -2558,6 +2574,21 @@ WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
 image = read_bmp(REF_M_logo)
 tv, image,0,0,/true
+
+detector_layout=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/detector_layout.bmp"
+id = widget_info(main_base,find_by_uname="schema_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(detector_layout)
+tv, image,0,0,/true
+
+
+
+
+
+
+
 
 end
 

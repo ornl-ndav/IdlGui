@@ -1,3 +1,68 @@
+function distance_from_xborder, x
+
+a = x * (0.2/303)
+a *= 1000 ;to get it in mm
+
+return, a
+end
+
+
+
+
+
+function distance_from_xcenter, x
+
+center_offset = 0.003
+
+if (x LE 151) then begin        ;first half
+    x_diff = 151-x
+endif else begin                ;second half
+    x_diff = x-152
+endelse
+b = center_offset + x_diff * (0.2/304)
+b *= 1000 ;to get it in mm
+
+return, b
+end
+
+
+
+
+function distance_from_yborder, y
+
+c = y * (0.17/255)
+c *= 1000 ; to get it in mm
+
+return, c
+end
+
+
+
+
+
+
+function distance_from_ycenter, y
+
+center_offset = 0.003
+
+if (y LE 127) then begin        ;first half
+ y_diff = 127-y
+endif else begin                ;second half
+ y_diff = y-128
+endelse
+d = center_offset + y_diff*(0.17/256)
+d *= 1000 ; to get it in mm
+
+return, d
+end
+
+
+
+
+
+
+
+
 function check_if_run_number_already_in_list, array_of_runs, run_number
 
 array_of_runs_tmp = size(array_of_runs)
@@ -290,10 +355,23 @@ widget_control,id,get_uvalue=global
 selection_mode_group_id = widget_info(Event.top, find_by_uname='selection_mode_group')
 widget_control, selection_mode_group_id, get_value=selection_status
 
+instrument = (*global).instrument
+
+info_schema_base_id = widget_info(event.top,find_by_uname='info_schema_base')
+
 if (selection_status EQ 0) then begin
     selection_status = 1
+    widget_control, info_schema_base_id, map=0
 endif else begin
     selection_status = 0
+    widget_control, info_schema_base_id, map=1
+    detector_layout=$
+      "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/detector_layout.bmp"
+    id = widget_info(event.top,find_by_uname="schema_drawing")
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    wset, id_value
+    image = read_bmp(detector_layout)
+    tv, image,0,0,/true
 endelse
 
 (*global).selection_mode = selection_status
@@ -1792,22 +1870,40 @@ if (selection_mode EQ 0 AND file_opened EQ 1) then begin
 ;put number of counts in number_of_counts label position
     text += " counts= " + strcompress(img(x,y))
     full_text = "PixelID infos : " + text
+
     output_into_text_box, event, 'log_book_text', full_text
     output_into_text_box, event, 'info_text', text
-;    widget_control, view_info, set_value=text, /append
-;    widget_control, full_view_info, set_value=full_text, /append
+
+    if (instrument EQ 'REF_M') then begin
+        
+        a = distance_from_xborder(x)
+        b = distance_from_xcenter(x)
+        c = distance_from_yborder(y)
+        d = distance_from_ycenter(y)
+        
+        text = " a= " + strcompress(a) + " mm"
+        text += "   b= " + strcompress(b) + " mm"
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+        
+        text = " c= " + strcompress(c) + " mm"
+        text += "   d= " + strcompress(d) + " mm"
+        output_into_text_box, event, 'log_book_text', full_text
+        output_into_text_box, event, 'info_text', text
+        
+    endif
 
 endif
 
 if (selection_mode EQ 1 AND file_opened EQ 1) then begin
-
+    
     left_click_number = (*global).left_click_number
-
+    
     x=event.x
     y=event.y
     
     if (left_click_number EQ 0) then begin
-    
+        
         if (signal_or_background EQ 0) then begin
             (*global).x1_signal = x
             (*global).y1_signal = y
