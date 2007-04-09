@@ -1,7 +1,6 @@
 function distance_from_xborder, x
 
-a = x * (0.2/303)
-a *= 1000 ;to get it in mm
+a = x * 0.7 ;in mm
 
 return, a
 end
@@ -12,15 +11,14 @@ end
 
 function distance_from_xcenter, x
 
-center_offset = 0.003
+center_offset = 0.35
 
 if (x LE 151) then begin        ;first half
     x_diff = 151-x
 endif else begin                ;second half
     x_diff = x-152
 endelse
-b = center_offset + x_diff * (0.2/304)
-b *= 1000 ;to get it in mm
+b = center_offset + x_diff * 0.7 ;in mn
 
 return, b
 end
@@ -30,8 +28,7 @@ end
 
 function distance_from_yborder, y
 
-c = y * (0.17/255)
-c *= 1000 ; to get it in mm
+c = y * 0.7 ;in mm
 
 return, c
 end
@@ -43,15 +40,14 @@ end
 
 function distance_from_ycenter, y
 
-center_offset = 0.003
+center_offset = 0.35
 
 if (y LE 127) then begin        ;first half
  y_diff = 127-y
 endif else begin                ;second half
  y_diff = y-128
 endelse
-d = center_offset + y_diff*(0.17/256)
-d *= 1000 ; to get it in mm
+d = center_offset + y_diff * 0.7 ; in mm
 
 return, d
 end
