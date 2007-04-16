@@ -26,6 +26,7 @@ end
 
 
 
+
 function distance_from_yborder, y
 
 c = y * 0.7 ;in mm
@@ -1868,7 +1869,7 @@ if (selection_mode EQ 0 AND file_opened EQ 1) then begin
     full_text = "PixelID infos : " + text
 
     output_into_text_box, event, 'log_book_text', full_text
-    output_into_text_box, event, 'info_text', text
+;    output_into_text_box, event, 'info_text', text
 
     if (instrument EQ 'REF_M') then begin
         
@@ -2737,6 +2738,11 @@ interm_id = widget_info(Event.top, $
                         find_by_uname='intermediate_file_output_list_group_REF_M')
 widget_control, interm_id, get_value=interm_status
 
+;*****************************
+;check status of instrument geometry file
+instrument_geometry_button_id = widget_info(event.top, find_by_uname='instrument_geometry_list_group')
+widget_control, instrument_geometry_button_id, get_value=instrument_geometry
+
 array_of_parameters = retrieve_REF_M_parameters(Event)
 wave_min = array_of_parameters[0]
 wave_max = array_of_parameters[1]
@@ -2764,6 +2770,12 @@ for i=0,(nbr_runs_to_use-1) do begin
 ;    REF_M_cmd_line += full_path_to_nexus_normalization
     REF_M_cmd_line += runs_and_full_path[i,1]
     
+;instrument geometry
+    if (instrument_geometry EQ 0) then begin
+        instr_geom_cmd = " --inst_geom=" + (*global).instrument_geometry_file_name
+        REF_M_cmd_line += instr_geom_cmd
+    endif
+
 ;normalization
     if (norm_flag EQ 0) then begin
         
@@ -3163,6 +3175,34 @@ pro plot_reduction, Event, plot_file_name, draw_uname, title
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+instrument = (*global).instrument
+
+if (instrument EQ 'REF_L') then begin
+    
+    combine_data_spectrum_id = widget_info(event.top,find_by_uname='combine_data_spectrum_list_group')
+    widget_control, combine_data_spectrum_id, get_value=combine_data_spectrum
+    if (combine_data_spectrum EQ 0) then begin
+        plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
+    endif else begin
+        plot_reduction_combine, Event, plot_file_name, draw_uname, title
+    endelse
+endif else begin
+    plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
+endelse
+
+end
+
+
+
+
+pro plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument = (*global).instrument
+
 openr,u,plot_file_name,/get
 fs = fstat(u)
 
@@ -3231,8 +3271,6 @@ while (NOT eof(u)) do begin
     endcase
     
 endwhile
-
-instrument = (*global).instrument
 
 ;check if plot is main plot or intermediate plot
 other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
@@ -3416,6 +3454,210 @@ close,u
 free_lun,u
 
 end
+
+
+
+
+
+
+
+pro plot_reduction_combine, Event, plot_file_name, draw_uname, title
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument = (*global).instrument
+
+openr,u,plot_file_name,/get
+fs = fstat(u)
+
+Ntof = (*global).Ntof
+
+;define an empty string variable to hold results from reading the file
+tmp  = ''
+tmp0 = ''
+tmp1 = ''
+tmp2 = ''
+
+flt0 = -1.0
+flt1 = -1.0
+flt2 = -1.0
+
+Nelines = 0L  ;number of lines that does not start with a number
+Nndlines = 0L
+Ndlines = 0L
+onebyte = 0b
+
+while (NOT eof(u)) do begin
+    
+    readu,u,onebyte             ;,format='(a1)'
+    fs = fstat(u)
+                                ;print,'onebyte: ',onebyte
+                                ;rewinded file pointer one character
+
+    if fs.cur_ptr EQ 0 then begin 
+        point_lun,u,0
+    endif else begin
+        point_lun,u,fs.cur_ptr - 1
+    endelse
+    
+    true = 1
+    case true of
+        
+        ((onebyte LT 48) OR (onebyte GT 57)): begin
+                                ;case where we have non-numbers
+            Nelines = Nelines + 1
+            readf,u,tmp
+        end
+        
+        else: begin
+                                ;case where we (should) have data
+            Ndlines = Ndlines + 1
+                                ;print,'Data Line: ',Ndlines
+            
+            catch, Error_Status
+            if Error_status NE 0 then begin
+
+                                ;you're done now...
+                CATCH, /CANCEL
+
+            endif else begin
+
+                readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
+                flt0 = [flt0,float(tmp0)] ;x axis
+                flt1 = [flt1,float(tmp1)]  ;y axis
+                flt2 = [flt2,float(tmp2)]  ;y_error axis
+
+            endelse
+            
+        end
+    endcase
+    
+endwhile
+
+;strip -1 from beginning of each array
+flt0 = flt0[1:*]
+flt1 = flt1[1:*]
+flt2 = flt2[1:*]
+
+;check if plot is main plot or intermediate plot
+other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
+value = widget_info(other_plots_tab_id, /tab_current)
+
+case value of
+    
+    0: n=0
+    2: begin                    ;intermediate plots
+        
+;get active tab
+        other_plots_tab_id = widget_info(Event.top,find_by_uname='other_plots_tab')
+        value_intermediate = widget_info(other_plots_tab_id, /tab_current)
+        
+        case value_intermediate of
+            
+            0: n=1
+            1: n=2
+            2: n=3
+            3: n=4
+            4: n=5
+             
+        endcase
+        
+    end
+    else:
+endcase
+
+first_time_plotting_n = (*(*global).first_time_plotting_n)
+first_time_plotting = first_time_plotting_n[n]
+
+if (first_time_plotting EQ 1) then begin
+
+    first_time_plotting_n[n]=0
+    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+    
+endif else begin
+    
+endelse
+
+draw_id = widget_info(Event.top, find_by_uname=draw_uname)
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+catch, error_plot_status
+if (error_plot_status NE 0) then begin
+    text = 'Not enough data to plot'
+    CATCH,/cancel
+
+;log book ids (full and simple)
+    view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
+    full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+    output_into_text_box, event, 'log_book_text', text
+    output_into_text_box, event, 'info_text', text
+
+endif else begin
+
+    CATCH,/CANCEL
+    
+;x_axis
+    Ntof = 750  ;remove_me
+    x_axis=flt0[sort(flt0[0:(Ntof-1)])]
+    tvscl_x_axis = indgen(float(x_axis[Ntof-1]))
+    
+;y_axis
+    flt0_size = size(flt0)
+    number_of_row = fix(flt0_size[1]/Ntof)
+    
+;    print, flt1
+    
+;define the final big array
+    final_array = fltarr(Ntof,number_of_row)
+    for i=0,(number_of_row-1) do begin
+        final_array[0,i] = flt1[i*Ntof:i*Ntof+(Ntof-1)]
+    endfor
+    
+;remove -inf and inf
+    indx1 = where(final_array EQ !VALUES.F_INFINITY, ngt1)
+    if (ngt1 NE 0) then begin
+        final_array(indx1) = (*global).plus_inf
+    endif
+    
+    indx2 = where(final_array EQ -!VALUES.F_INFINITY, ngt2)
+    if (ngt2 NE 0) then begin
+        final_array(indx2) = (*global).minus_inf
+    endif
+    
+;indx3 = where(final_array EQ strcompress(!values.F_NAN), ngt)
+nan = !VALUES.F_NAN
+nan_user = (*global).nan_user
+for i=0,(number_of_row*Ntof-1) do begin
+    if (strcompress(final_array[i]) EQ strcompress(nan)) then begin
+        final_array[i] = nan_user 
+    endif
+endfor
+    
+;tvscl, final_array, /NAN
+    DEVICE, DECOMPOSED = 0
+    loadct,5
+    
+    tvscl_x_off = 8
+    tvscl_y_off = 22
+    
+    New_Ny = number_of_row * floor((393-tvscl_y_off)/number_of_row)
+
+    tvimg = rebin(final_array, Ntof, New_Ny,/sample)
+    tvscl,tvimg,4,tvscl_y_off
+    plot, tvscl_x_axis, ystyle=4, xstyle=8, /nodata, /device, /noerase, xmargin=[0.5,0],ymargin=[2,0]
+      
+    
+endelse
+
+close,u
+free_lun,u
+
+end
+
+
 
 
 
@@ -4386,11 +4628,23 @@ widget_control, interm_id, get_value=interm_status
 nbr_runs_to_use_size = size(runs_and_full_path)
 nbr_runs_to_use = nbr_runs_to_use_size[1]
 
-if (tab_value EQ 0) then begin
+;*****************************
+;check status of instrument geometry file
+instrument_geometry_button_id = widget_info(event.top, find_by_uname='instrument_geometry_list_group')
+widget_control, instrument_geometry_button_id, get_value=instrument_geometry
 
-;start command line for REF_L
-    REF_L_cmd_line = "reflect_tofred_batch " 
+;*****************************
+;check status of combine data spectrum
+combine_data_spectrum_id = widget_info(event.top,find_by_uname='combine_data_spectrum_list_group')
+widget_control, combine_data_spectrum_id, get_value=combine_data_spectrum
+
+if (tab_value EQ 0) then begin
     
+;start command line for REF_L
+;    REF_L_cmd_line = "reflect_tofred_batch " 
+
+    REF_L_cmd_line = "reflect_tofred "   
+
 ;add list of NeXus run numbers
     runs_text = ""
     for j=0,(nbr_runs_to_use-1) do begin
@@ -4404,8 +4658,20 @@ if (tab_value EQ 0) then begin
         REF_L_cmd_line += norm_cmd
     endif
     
-    REF_L_cmd_line += " -- "
+;    REF_L_cmd_line += " -- "
     
+;instrument geometry
+    if (instrument_geometry EQ 0) then begin
+        instr_geom_cmd = " --inst_geom=" + (*global).instrument_geometry_file_name
+        REF_L_cmd_line += instr_geom_cmd
+    endif
+
+;combine data spectrum
+    if (combine_data_spectrum EQ 0) then begin
+        comb_data_spect = " --combine"
+        REF_L_cmd_line += comb_data_spect
+    endif
+
 ;signal Pid file flag
     signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
     REF_L_cmd_line += signal_pid_cmd
@@ -4532,7 +4798,7 @@ endif else begin
 ;        widget_control, view_info, set_value=full_text,/append
 
 ;start command line for REF_L
-        REF_L_cmd_line = "reflect_tofred_batch " 
+        REF_L_cmd_line = "reflect_tofred " 
         
 ;add list of NeXus run numbers
         runs_text = ""
@@ -4545,8 +4811,14 @@ endif else begin
             REF_L_cmd_line += norm_cmd
         endif
         
-        REF_L_cmd_line += " -- "
+;        REF_L_cmd_line += " -- "
         
+;combine data spectrum
+    if (combine_data_spectrum EQ 0) then begin
+        comb_data_spect = " --combine"
+        REF_L_cmd_line += comb_data_spect
+    endif
+
 ;signal Pid file flag
         signal_pid_cmd = " --signal-roi-file=" + full_signal_pid_file_name
         REF_L_cmd_line += signal_pid_cmd
@@ -4811,3 +5083,163 @@ text += ' 10^10 pC'
 output_into_text_box, event, 'info_text', text
 
 end
+
+
+
+
+
+
+
+pro instrument_geometry_button_cb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
+
+instrument_geometry = (*global).instrument_geometry  ;the actual status of the instrument geometry switch
+first_time_entering_procedure = (*global).first_time_entering_procedure
+
+if (first_time_entering_procedure EQ 0) then begin
+    
+    if (instrument_geometry EQ 'no') then begin  ;we want to overwrite the geometry file
+        
+        instr_geometry_path = (*global).instr_geometry_path
+        
+        pid_path = instr_geometry_path
+        title = 'Select your instrument geometry file'
+        filter = (*global).instrument + '_geom_*.nxs'
+        
+;open file
+        full_geometry_file = dialog_pickfile(path=pid_path,$
+                                             get_path=path,$
+                                             title=title,$
+                                             filter=filter)
+        
+        instrument_geometry_text_id = widget_info(Event.top,find_by_uname='instrument_geometry_text')
+        
+        if (full_geometry_file NE '') then begin
+            
+;    last_part_of_name = get_last_part_of_pid_file_name(full_geometry_file)
+;    widget_control, instrument_geometry_text_id, set_value=last_part_of_name
+            
+;put info into log_book
+            text = ' Data Reduction will use the geometry file:'
+            output_into_text_box, event, 'log_book_text', text
+            output_into_text_box, event, 'log_book_text', ' ' + full_geometry_file
+            (*global).instrument_geometry_file_name = full_geometry_file
+            
+            check_status_to_validate_go, Event
+            
+        endif else begin
+        
+;change switch button to NO (no geometry file has been defined)
+            instrument_geometry_button_id = widget_info(event.top, find_by_uname='instrument_geometry_list_group')
+            widget_control, instrument_geometry_button_id, set_value=1
+
+            text = ' Data Reduction will use the default geometry file.'
+            output_into_text_box, event, 'log_book_text', text
+                
+        endelse
+        
+        (*global).instrument_geometry = 'yes'
+        
+    endif else begin
+        
+        text = ' Data Reduction will use the default geometry file.'
+        output_into_text_box, event, 'log_book_text', text
+        
+        (*global).instrument_geometry = 'no'
+        
+    endelse
+    
+    first_time_entering_procedure = 1
+
+endif else begin
+
+    first_time_entering_procedure = 0
+
+endelse
+
+(*global).first_time_entering_procedure = first_time_entering_procedure 
+
+if ((*global).instrument EQ 'REF_M') then begin
+
+    instrument_geometry_base_id = widget_info(event.top,find_by_uname='instrument_geometry_base')
+    widget_control, instrument_geometry_base_id, map=0
+
+endif
+
+end
+
+
+
+
+pro  instrument_geometry_button_event, Event
+
+instrument_geometry_base_id = widget_info(event.top,find_by_uname='instrument_geometry_base')
+widget_control, instrument_geometry_base_id, map=1
+
+end
+
+
+
+pro tmp_plot_button_event, Event
+
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+plot_file_name = '~/local/REF_L/REF_L_1845.txt'
+draw_uname = 'data_reduction_plot'
+title= 'try'
+plot_reduction_combine, Event, plot_file_name, draw_uname, title
+
+end
+
+
+
+
+
+pro  combine_settings_button_event, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+combine_settings_base_id = widget_info(event.top,find_by_uname='combine_settings_base')
+widget_control, combine_settings_base_id, map=1
+
+end
+
+
+
+
+pro combine_settings_validate_event, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+minus_inf_id = widget_info(event.top,find_by_uname='combine_settings_minus_infinity_value')
+plus_inf_id = widget_info(event.top,find_by_uname='combine_infinity_plus_infinity_value')
+nan_id = widget_info(event.top,find_by_uname='combine_infinity_nan_value')
+
+widget_control, minus_inf_id, get_value=minus_inf
+widget_control, plus_inf_id, get_value=plus_inf
+widget_control, nan_id, get_value=nan_user
+
+(*global).minus_inf = minus_inf
+(*global).plus_inf = plus_inf
+(*global).nan_user = nan_user
+
+combine_settings_base_id = widget_info(event.top,find_by_uname='combine_settings_base')
+widget_control, combine_settings_base_id, map=0
+
+end
+
+
+
+

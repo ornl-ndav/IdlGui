@@ -370,6 +370,34 @@ case Event.id of
         restore_button_cb, Event
     end
 
+;instrument geometry button (REF_L)
+    Widget_Info(wWidget, FIND_BY_UNAME='instrument_geometry_list_group'): begin
+        instrument_geometry_button_cb, Event
+    end
+
+;instrument_geometry_button (REF_M)
+   Widget_Info(wWidget, FIND_BY_UNAME='instrument_geometry_button'): begin
+        instrument_geometry_button_event, Event
+    end
+
+;settings of combine data spectrum (REF_L)
+   Widget_Info(wWidget, FIND_BY_UNAME='combine_settings_button'): begin
+        combine_settings_button_event, Event
+    end
+
+;validate settings for not combine plots (REF_L)
+   Widget_Info(wWidget, FIND_BY_UNAME='combine_settings_validate'): begin
+        combine_settings_validate_event, Event
+    end
+
+;remove me
+   Widget_Info(wWidget, FIND_BY_UNAME='tmp_plot_button'): begin
+        tmp_plot_button_event, Event
+    end
+
+
+
+
     else:
     
 endcase
@@ -494,6 +522,13 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   minus_inf : -10000L,$
+                   plus_inf  : +10000L,$ 
+                   nan_user : +10000L,$
+                   instrument_geometry_file_name : '',$
+                   first_time_entering_procedure : 1,$
+                   instrument_geometry : 'no',$
+                   instr_geometry_path : '/SNS/REF_L/2006_1_4B_CAL/calibrations',$
                    previous_n : 0,$
                    x_axis : 0,$
                    y_axis : 0,$
@@ -552,7 +587,8 @@ global = ptr_new({$
                    selection_background : 0,$
                    selection_background_2 : 0,$
                    selection_mode       : 1,$
-                   tmp_folder           : '.tmp_data_reduction_REF_L/',$
+;                   tmp_folder           : '.tmp_data_reduction_REF_L/',$
+                   tmp_folder           : 'REF_L/',$
                    local_folder         : '~/local/REF_L/',$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '',$
@@ -591,14 +627,25 @@ tmp_folder = (*global).output_path + tmp_working_path
 tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 (*global).tmp_folder = tmp_folder
 
+;; remove_me
+; tmp_plot_button = widget_button(main_base,$
+;                                 xoffset=100,$
+;                                 yoffset=100,$
+;                                 value='PLOT',$
+;                                 uname='tmp_plot_button')
+
+
+
+
+
 
 
 ;#########################
 ;intermediate plots window
 list_of_plots_base = widget_base(MAIN_BASE,$
                                  uname='list_of_plots_base',$
-                                 xoffset=400,$
-                                 yoffset=150,$
+                                 xoffset=515,$
+                                 yoffset=140,$
                                  scr_xsize=330,$
                                  scr_ysize=220,$
                                  xpad=5,$
@@ -943,6 +990,7 @@ data_reduction_plots_base = widget_base(MAIN_BASE,$
                                         scr_xsize=xsize_of_tabs,$
                                         scr_ysize=ysize_of_tabs)
 
+
 data_reduction_tab = widget_tab(data_reduction_plots_base,$
                                 uname='data_reduction_tab',$
                                 location=0,$
@@ -951,19 +999,99 @@ data_reduction_tab = widget_tab(data_reduction_plots_base,$
                                 scr_xsize=xsize_of_tabs,$
                                 scr_ysize=ysize_of_tabs,$
                                 /tracking_events)
-  
+
 ;data reduction tab
 first_tab_base = widget_base(data_reduction_tab,$
                                   uname='data_reduction_base',$
                                   TITLE='Data Reduction',$
                                   XOFFSET=0,$
                                   YOFFSET=0)
+
 data_reduction_base = widget_base(first_tab_base,$
                                   xoffset=5,$
                                   yoffset=5,$
                                   scr_xsize=305,$
                                   scr_ysize=390,$
                                   frame=1)
+
+;combine settings base                           
+combine_settings_base = widget_base(data_reduction_base,$
+                                    uname='combine_settings_base',$
+                                    xoffset=0,$
+                                    yoffset=150,$
+                                    scr_xsize=295,$
+                                    scr_ysize=180,$
+                                    frame=5,$
+                                    map=0)
+
+combine_settings_title = widget_label(combine_settings_base,$
+                                      xoffset=50,$
+                                      yoffset=5,$
+                                      value='SETTINGS FOR THE COMBINE FLAG',$
+                                      frame=1)
+
+x_offset_left = 5
+x_offset_right = 100
+combine_settings_minus_infinity_label = widget_label(combine_settings_base,$
+                                                    value='-Infinity = ',$
+                                                    xoffset=x_offset_left,$
+                                                    yoffset=45)
+
+combine_settings_minus_infinity_value = widget_text(combine_settings_base,$
+                                                    uname='combine_settings_minus_infinity_value',$
+                                                    value='-10000',$
+                                                    xoffset=x_offset_right,$
+                                                    yoffset=40,$
+                                                    scr_xsize=150,$
+                                                    scr_ysize=30,$
+                                                    /editable)
+                                                    
+yoff = 35
+combine_settings_plus_infinity_label = widget_label(combine_settings_base,$
+                                                    value='+Infinity = ',$
+                                                    xoffset=x_offset_left,$
+                                                    yoffset=45+yoff)
+
+combine_settings_plus_infinity_value = widget_text(combine_settings_base,$
+                                                   uname='combine_infinity_plus_infinity_value',$
+                                                   value='+10000',$
+                                                   xoffset=x_offset_right,$
+                                                   yoffset=40+yoff,$
+                                                   scr_xsize=150,$
+                                                   scr_ysize=30,$
+                                                   /editable)
+
+yoff1 = 70
+combine_settings_nan_label = widget_label(combine_settings_base,$
+                                          value='Nan = ',$
+                                          xoffset=x_offset_left,$
+                                          yoffset=45+yoff1)
+
+combine_settings_nan_value = widget_text(combine_settings_base,$
+                                         uname='combine_infinity_nan_value',$
+                                         value='+10000',$
+                                         xoffset=x_offset_right,$
+                                         yoffset=40+yoff1,$
+                                         scr_xsize=150,$
+                                         scr_ysize=30,$
+                                         /editable)
+
+combine_settings_validate = widget_button(combine_settings_base,$
+                                          value='VALIDATE',$
+                                          xoffset=25,$
+                                          yoffset=150,$
+                                          scr_xsize=250,$
+                                          uname='combine_settings_validate')
+
+
+
+
+
+
+
+
+
+
 
 signal_pid_file_button = widget_button(data_reduction_base,$
                                       uname='signal_pid_file_button',$
@@ -1161,9 +1289,10 @@ sequentially_runs_to_process_help = widget_button(sequentially_nexus_tab_base,$
                                                   /pushbutton_events,$
                                                   tooltip='Click to see the format of input to use')
 
+
 intermediate_file_label = widget_label(data_reduction_base,$
                                        xoffset=5,$
-                                       yoffset=210,$
+                                       yoffset=215,$
                                        value='Intermediate files output:')
 
 intermediate_file_output_list = ['Yes',$
@@ -1173,31 +1302,104 @@ intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$
                                                 /exclusive,$
                                                 /RETURN_NAME,$
                                                 XOFFSET=170,$
-                                                YOFFSET=204,$
+                                                YOFFSET=209,$
                                                 SET_VALUE=1.0,$
                                                 row=1,$
                                                 uname='intermediate_file_output_list_group')
 
 acces_to_list_of_intermediate_plots = widget_button(data_reduction_base,$
-                                         uname='access_to_list_of_intermediate_plots',$
+                                                    uname='access_to_list_of_intermediate_plots',$
                                                     xoffset=260,$
-                                                    yoffset=207,$
+                                                    yoffset=212,$
                                                     value='Plots')
+
+combine_data_spectrum_label = widget_label(data_reduction_base,$
+                                           xoffset=5,$
+                                           yoffset=245,$
+                                           value='Combine data spectrum:')
                                                   
+combine_data_spectrum_list_group = CW_BGROUP(data_reduction_base,$ 
+                                             intermediate_file_output_list,$
+                                             /exclusive,$
+                                             /RETURN_NAME,$
+                                             XOFFSET=150,$
+                                             YOFFSET=239,$
+                                             SET_VALUE=1.0,$
+                                             row=1,$
+                                             uname='combine_data_spectrum_list_group')
+
+combine_settings_button = widget_button(data_reduction_base,$
+                                        uname='combine_settings_button',$
+                                        xoffset=242,$
+                                        yoffset=243,$
+                                        value='Settings')
+                                 
+
+
+
+
+
+
+
+
+;instrument geometry
+instrument_geometry_label = widget_label(data_reduction_base,$
+                                         uname='instrument_geometry_label',$
+                                         xoffset=5,$
+                                         yoffset=275,$
+                                         value='Overwrite instrument geometry: ')
+
+instrument_geometry_list_group = CW_BGROUP(data_reduction_base,$ 
+                                           intermediate_file_output_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=195,$
+                                           YOFFSET=268,$
+                                           SET_VALUE=1.0,$
+                                           row=1,$
+                                           uname='instrument_geometry_list_group')
+
+
+
+
+
+
+
+
+
+
+
+
+; instrument_geometry_button = widget_button(data_reduction_base,$
+;                                            uname='instrument_geometry_button',$
+;                                            xoffset=5,$
+;                                            yoffset=273,$
+;                                            value='Instr. geom.:')
+
+
+; instrument_geometry_text = widget_text(data_reduction_base,$
+;                                        uname='instrument_geometry_text',$
+;                                        xoffset=100,$
+;                                        yoffset=270,$
+;                                        scr_xsize=200,$
+;                                        scr_ysize=30,$
+;                                        /editable,$
+;                                        value='')
+                                       
+
 start_data_reduction_button = widget_button(data_reduction_base,$
                                             xoffset=5,$
-                                            yoffset=235,$
+                                            yoffset=305,$
                                             scr_xsize=295,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button_REF_L',$
                                             sensitive=0)
-
 ;info text box 
 info_text = widget_text(data_reduction_base,$
                         xoffset=5,$
-                        yoffset=265,$
+                        yoffset=335,$
                         scr_xsize=295,$
-                        scr_ysize=120,$
+                        scr_ysize=50,$
                         /scroll,$
                         /wrap,$
                         uname='info_text')
@@ -1471,6 +1673,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   instrument_geometry_file_name : '',$
+                   first_time_entering_procedure : 1,$
+                   instrument_geometry : 'no',$
+                   instr_geometry_path : '/SNS/REF_M/2006_1_4A_CAL/calibrations',$
                    previous_n : 0,$
                    first_time_plotting_n : ptr_new(0L),$
                    xmin_global : ptr_new(0L),$
@@ -1570,7 +1776,7 @@ tmp_folder = (*global).output_path + tmp_working_path
 ;intermediate plots window
 list_of_plots_base = widget_base(MAIN_BASE,$
                                  uname='list_of_plots_base',$
-                                 xoffset=450,$
+                                 xoffset=605,$
                                  yoffset=200,$
                                  scr_xsize=330,$
                                  scr_ysize=220,$
@@ -2332,6 +2538,30 @@ intermediate_file_frame = widget_base(data_reduction_base,$
                                       scr_ysize=65,$
                                       frame=1)
 
+;instrument_geometry base
+instrument_geometry_base = widget_base(data_reduction_base,$
+                                      xoffset=5,$
+                                      yoffset=290,$
+                                      scr_xsize=295,$
+                                      scr_ysize=40,$
+                                      uname='instrument_geometry_base',$
+                                      map=0)
+
+instrument_geometry_label = widget_label(instrument_geometry_base,$
+                                         uname='instrument_geometry_label',$
+                                         xoffset=5,$
+                                         yoffset=13,$
+                                         value='Overwrite instrument geometry: ')
+
+instrument_geometry_list_group = CW_BGROUP(instrument_geometry_base,$ 
+                                           intermediate_file_output_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=195,$
+                                           YOFFSET=7,$
+                                           SET_VALUE=1.0,$
+                                           row=1,$
+                                           uname='instrument_geometry_list_group')
 
 ;start data reduction base
 start_data_reduction_base = widget_base(data_reduction_base,$
@@ -2343,11 +2573,23 @@ start_data_reduction_base = widget_base(data_reduction_base,$
 start_data_reduction_button = widget_button(start_data_reduction_base,$
                                             xoffset=0,$
                                             yoffset=5,$
-                                            scr_xsize=295,$
+                                            scr_xsize=190,$
                                             scr_ysize=35,$
                                             value='START DATA REDUCTION',$
                                             uname='start_data_reduction_button',$
                                             sensitive=0)
+
+;overwrite instrument geometry 
+instrument_geometry_button = widget_button(start_data_reduction_base,$
+                                           xoffset=195,$
+                                           yoffset=5,$
+                                           scr_xsize=100,$
+                                           scr_ysize=35,$
+                                           value='Instr. Geom.',$
+                                           uname='instrument_geometry_button',$
+                                           sensitive=1)
+
+
 
 ;info text box 
 info_text_REF_M = widget_text(data_reduction_base,$
