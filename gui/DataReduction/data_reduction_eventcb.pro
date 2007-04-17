@@ -1997,8 +1997,8 @@ y_max = max(y)
 x_min = min(x)
 x_max = max(x)
 
-y12 = y_max-y_min
-x12 = x_max-x_min
+y12 = y_max-y_min+1  ;+1 to take into account side of selection
+x12 = x_max-x_min+1  ;+1 to take into account side of selection
 total_pixel_inside = x12*y12
 total_pixel_outside = Nx*Ny - total_pixel_inside
 
