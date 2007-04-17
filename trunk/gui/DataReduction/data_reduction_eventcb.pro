@@ -3177,6 +3177,8 @@ widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
 
+;erase_reduction_plot, event, draw_uname
+
 if (instrument EQ 'REF_L') then begin
 
     zoom_button_id = widget_info(event.top,find_by_uname='zoom_button')
@@ -3604,7 +3606,7 @@ if (error_plot_status NE 0) then begin
 
 endif else begin
 
-    CATCH,/CANCEL
+
     
 ;x_axis
     Ntof = 750  ;remove_me
@@ -3622,28 +3624,38 @@ endif else begin
     for i=0,(number_of_row-1) do begin
         final_array[0,i] = flt1[i*Ntof:i*Ntof+(Ntof-1)]
     endfor
-    
-;remove -inf and inf
-    indx1 = where(final_array EQ !VALUES.F_INFINITY, ngt1)
-    if (ngt1 NE 0) then begin
-        final_array(indx1) = (*global).plus_inf
+
+
+;    
+;;remove -inf and inf
+;    indx1 = where(final_array EQ !VALUES.F_INFINITY, ngt1)
+;    if (ngt1 NE 0) then begin
+;        final_array(indx1) = (*global).plus_inf
+;    endif
+;    
+;    indx2 = where(final_array EQ -!VALUES.F_INFINITY, ngt2)
+;    if (ngt2 NE 0) then begin
+;        final_array(indx2) = (*global).minus_inf
+;    endif
+
+;remove negative numbers
+    indx4 = where(final_array LT 0, ngt0)
+    if (ngt0 NE 0) then begin
+        final_array(indx4) = !values.F_NAN
     endif
     
-    indx2 = where(final_array EQ -!VALUES.F_INFINITY, ngt2)
-    if (ngt2 NE 0) then begin
-        final_array(indx2) = (*global).minus_inf
-    endif
-    
-;indx3 = where(final_array EQ strcompress(!values.F_NAN), ngt)
-nan = !VALUES.F_NAN
-nan_user = (*global).nan_user
-for i=0,(number_of_row*Ntof-1) do begin
-    if (strcompress(final_array[i]) EQ strcompress(nan)) then begin
-        final_array[i] = nan_user 
-    endif
-endfor
+;;indx3 = where(final_array EQ strcompress(!values.F_NAN), ngt)
+;nan = !VALUES.F_NAN
+;nan_user = (*global).nan_user
+;for i=0,(number_of_row*Ntof-1) do begin
+;    if (strcompress(final_array[i]) EQ strcompress(nan)) then begin
+;        final_array[i] = nan_user 
+;    endif
+;endfor
     
 ;tvscl, final_array, /NAN
+
+    CATCH,/CANCEL
 
     DEVICE, DECOMPOSED = 0
     loadct,5
@@ -3654,7 +3666,7 @@ endfor
     New_Ny = number_of_row * floor((393-tvscl_y_off)/number_of_row)
 
     tvimg = rebin(final_array, Ntof, New_Ny,/sample)
-    tvscl,tvimg,4,tvscl_y_off
+    tvscl,tvimg,4,tvscl_y_off, /nan
     plot, tvscl_x_axis, ystyle=4, xstyle=8, /nodata, /device, /noerase, xmargin=[0.5,0],ymargin=[2,0]
       
 endelse
@@ -3956,6 +3968,9 @@ widget_control,id,get_uvalue=global
 
 status=0
 instrument = (*global).instrument
+
+;erase data_reduction plot
+erase_reduction_plot, event, 'data_reduction_plot'
 
 ;check if there is a signal pid file 
 signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
@@ -5260,5 +5275,17 @@ wset,view_plot_id
 text = 'Right click to exit ZOOM'
 output_into_text_box, event, 'info_text', text
 zoom, /new_window, fact=2, xsize=405, ysize=393, /continuous
+
+end
+
+
+
+pro erase_reduction_plot, event, draw_uname
+
+draw_id = widget_info(Event.top, find_by_uname=draw_uname)
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+erase
+
 
 end

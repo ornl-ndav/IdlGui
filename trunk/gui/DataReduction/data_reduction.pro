@@ -657,7 +657,7 @@ list_of_plots_base = widget_base(MAIN_BASE,$
                                  xpad=5,$
                                  ypad=5,$
                                  frame=2,$
-                                map=0)
+                                 map=0)
 
 list_of_intermediate_plots_base = widget_base(list_of_plots_base,$
                                               uname='list_of_intermediate_plots_base',$
@@ -1020,74 +1020,75 @@ data_reduction_base = widget_base(first_tab_base,$
                                   scr_ysize=390,$
                                   frame=1)
 
-;combine settings base                           
-combine_settings_base = widget_base(data_reduction_base,$
-                                    uname='combine_settings_base',$
-                                    xoffset=0,$
-                                    yoffset=150,$
-                                    scr_xsize=295,$
-                                    scr_ysize=180,$
-                                    frame=5,$
-                                    map=0)
 
-combine_settings_title = widget_label(combine_settings_base,$
-                                      xoffset=50,$
-                                      yoffset=5,$
-                                      value='SETTINGS FOR THE COMBINE FLAG',$
-                                      frame=1)
+; ;combine settings base                           
+; combine_settings_base = widget_base(data_reduction_base,$
+;                                     uname='combine_settings_base',$
+;                                     xoffset=0,$
+;                                     yoffset=150,$
+;                                     scr_xsize=295,$
+;                                     scr_ysize=180,$
+;                                     frame=5,$
+;                                     map=0)
 
-x_offset_left = 5
-x_offset_right = 100
-combine_settings_minus_infinity_label = widget_label(combine_settings_base,$
-                                                    value='-Infinity = ',$
-                                                    xoffset=x_offset_left,$
-                                                    yoffset=45)
+; combine_settings_title = widget_label(combine_settings_base,$
+;                                       xoffset=50,$
+;                                       yoffset=5,$
+;                                       value='SETTINGS FOR THE COMBINE FLAG',$
+;                                       frame=1)
 
-combine_settings_minus_infinity_value = widget_text(combine_settings_base,$
-                                                    uname='combine_settings_minus_infinity_value',$
-                                                    value='-10000',$
-                                                    xoffset=x_offset_right,$
-                                                    yoffset=40,$
-                                                    scr_xsize=150,$
-                                                    scr_ysize=30,$
-                                                    /editable)
+; x_offset_left = 5
+; x_offset_right = 100
+; combine_settings_minus_infinity_label = widget_label(combine_settings_base,$
+;                                                     value='-Infinity = ',$
+;                                                     xoffset=x_offset_left,$
+;                                                     yoffset=45)
+
+; combine_settings_minus_infinity_value = widget_text(combine_settings_base,$
+;                                                     uname='combine_settings_minus_infinity_value',$
+;                                                     value='-10000',$
+;                                                     xoffset=x_offset_right,$
+;                                                     yoffset=40,$
+;                                                     scr_xsize=150,$
+;                                                     scr_ysize=30,$
+;                                                     /editable)
                                                     
-yoff = 35
-combine_settings_plus_infinity_label = widget_label(combine_settings_base,$
-                                                    value='+Infinity = ',$
-                                                    xoffset=x_offset_left,$
-                                                    yoffset=45+yoff)
+; yoff = 35
+; combine_settings_plus_infinity_label = widget_label(combine_settings_base,$
+;                                                     value='+Infinity = ',$
+;                                                     xoffset=x_offset_left,$
+;                                                     yoffset=45+yoff)
 
-combine_settings_plus_infinity_value = widget_text(combine_settings_base,$
-                                                   uname='combine_infinity_plus_infinity_value',$
-                                                   value='+10000',$
-                                                   xoffset=x_offset_right,$
-                                                   yoffset=40+yoff,$
-                                                   scr_xsize=150,$
-                                                   scr_ysize=30,$
-                                                   /editable)
+; combine_settings_plus_infinity_value = widget_text(combine_settings_base,$
+;                                                    uname='combine_infinity_plus_infinity_value',$
+;                                                    value='+10000',$
+;                                                    xoffset=x_offset_right,$
+;                                                    yoffset=40+yoff,$
+;                                                    scr_xsize=150,$
+;                                                    scr_ysize=30,$
+;                                                    /editable)
 
-yoff1 = 70
-combine_settings_nan_label = widget_label(combine_settings_base,$
-                                          value='Nan = ',$
-                                          xoffset=x_offset_left,$
-                                          yoffset=45+yoff1)
+; yoff1 = 70
+; combine_settings_nan_label = widget_label(combine_settings_base,$
+;                                           value='Nan = ',$
+;                                           xoffset=x_offset_left,$
+;                                           yoffset=45+yoff1)
 
-combine_settings_nan_value = widget_text(combine_settings_base,$
-                                         uname='combine_infinity_nan_value',$
-                                         value='+10000',$
-                                         xoffset=x_offset_right,$
-                                         yoffset=40+yoff1,$
-                                         scr_xsize=150,$
-                                         scr_ysize=30,$
-                                         /editable)
+; combine_settings_nan_value = widget_text(combine_settings_base,$
+;                                          uname='combine_infinity_nan_value',$
+;                                          value='+10000',$
+;                                          xoffset=x_offset_right,$
+;                                          yoffset=40+yoff1,$
+;                                          scr_xsize=150,$
+;                                          scr_ysize=30,$
+;                                          /editable)
 
-combine_settings_validate = widget_button(combine_settings_base,$
-                                          value='VALIDATE',$
-                                          xoffset=25,$
-                                          yoffset=150,$
-                                          scr_xsize=250,$
-                                          uname='combine_settings_validate')
+; combine_settings_validate = widget_button(combine_settings_base,$
+;                                           value='VALIDATE',$
+;                                           xoffset=25,$
+;                                           yoffset=150,$
+;                                           scr_xsize=250,$
+;                                           uname='combine_settings_validate')
 
 
 
@@ -1334,11 +1335,11 @@ combine_data_spectrum_list_group = CW_BGROUP(data_reduction_base,$
                                              row=1,$
                                              uname='combine_data_spectrum_list_group')
 
-combine_settings_button = widget_button(data_reduction_base,$
-                                        uname='combine_settings_button',$
-                                        xoffset=242,$
-                                        yoffset=243,$
-                                        value='Settings')
+; combine_settings_button = widget_button(data_reduction_base,$
+;                                         uname='combine_settings_button',$
+;                                         xoffset=242,$
+;                                         yoffset=243,$
+;                                         value='Settings')
                                  
 
 
