@@ -395,8 +395,10 @@ case Event.id of
         tmp_plot_button_event, Event
     end
 
-
-
+;zoom button
+   Widget_Info(wWidget, FIND_BY_UNAME='zoom_button'): begin
+        zoom_button_event, Event
+    end
 
     else:
     
@@ -634,11 +636,15 @@ tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 ;                                 value='PLOT',$
 ;                                 uname='tmp_plot_button')
 
-
-
-
-
-
+;zoom button
+zoom_button = widget_button(main_base,$
+                            xoffset=970,$
+                            yoffset=0,$
+                            value='ZOOM',$
+                            scr_xsize=150,$
+                            scr_ysize=25,$
+                            uname='zoom_button',$
+                            sensitive=0)
 
 ;#########################
 ;intermediate plots window
