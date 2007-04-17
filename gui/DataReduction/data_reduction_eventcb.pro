@@ -3178,16 +3178,23 @@ widget_control,id,get_uvalue=global
 instrument = (*global).instrument
 
 if (instrument EQ 'REF_L') then begin
-    
+
+    zoom_button_id = widget_info(event.top,find_by_uname='zoom_button')
     combine_data_spectrum_id = widget_info(event.top,find_by_uname='combine_data_spectrum_list_group')
     widget_control, combine_data_spectrum_id, get_value=combine_data_spectrum
+    
     if (combine_data_spectrum EQ 0) then begin
         plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
+        widget_control, zoom_button_id, sensitive=0
     endif else begin
         plot_reduction_combine, Event, plot_file_name, draw_uname, title
+        widget_control, zoom_button_id, sensitive=1
     endelse
+
 endif else begin
+
     plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
+
 endelse
 
 end
@@ -3637,6 +3644,7 @@ for i=0,(number_of_row*Ntof-1) do begin
 endfor
     
 ;tvscl, final_array, /NAN
+
     DEVICE, DECOMPOSED = 0
     loadct,5
     
@@ -3649,7 +3657,6 @@ endfor
     tvscl,tvimg,4,tvscl_y_off
     plot, tvscl_x_axis, ystyle=4, xstyle=8, /nodata, /device, /noerase, xmargin=[0.5,0],ymargin=[2,0]
       
-    
 endelse
 
 close,u
@@ -5243,3 +5250,15 @@ end
 
 
 
+
+pro zoom_button_event, Event
+
+draw_id = widget_info(Event.top, find_by_uname='data_reduction_plot')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+text = 'Right click to exit ZOOM'
+output_into_text_box, event, 'info_text', text
+zoom, /new_window, fact=2, xsize=405, ysize=393, /continuous
+
+end
