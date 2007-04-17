@@ -523,6 +523,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          XPAD=3,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
+
 global = ptr_new({$
                    minus_inf : -10000L,$
                    plus_inf  : +10000L,$ 
@@ -2853,7 +2854,22 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro data_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-   PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra    ;REMOVE_COMMENTS
+
+;check hostname here
+spawn, 'hostname',listening
+
+;get user
+user = get_ucams()
+
+if (listening EQ 'lrac') then begin
+    wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 0, user ;for REF_L
+endif else begin
+    if(listening EQ 'mrac') then begin
+        wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, 1, user ;GUI for REF_M
+    endif else begin
+        PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra ;REMOVE_COMMENTS
+    endelse
+endelse
 end
 
 
