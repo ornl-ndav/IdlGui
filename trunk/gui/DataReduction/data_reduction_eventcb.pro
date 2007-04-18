@@ -3644,6 +3644,11 @@ endif else begin
         final_array(indx4) = !values.F_NAN
     endif
     
+    indx5 = where(final_array GT 0, ngt1) 
+    if (ngt1 NE 0) then begin
+        final_array(indx5) = alog10(final_array(indx5))
+    endif
+
 ;;indx3 = where(final_array EQ strcompress(!values.F_NAN), ngt)
 ;nan = !VALUES.F_NAN
 ;nan_user = (*global).nan_user
