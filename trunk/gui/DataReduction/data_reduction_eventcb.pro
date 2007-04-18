@@ -530,6 +530,7 @@ if (plots_selected[value] EQ 1 AND $
      output_file_name = produce_output_file_name(Event,$
                                                  (*global).run_number,$
                                                  file_extension)
+     (*global).output_plot_file_name = output_plot_file_name
 
      plot_reduction, $
        Event, $
@@ -1642,7 +1643,6 @@ pro CTOOL, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;xloadct,/MODAL,GROUP=id
 xloadct,/modal,group=id
 
 SHOW_DATA,event
@@ -3182,15 +3182,18 @@ instrument = (*global).instrument
 if (instrument EQ 'REF_L') then begin
 
     zoom_button_id = widget_info(event.top,find_by_uname='zoom_button')
+    loadct_button_id = widget_info(event.top,find_by_uname='loadct_button')
     combine_data_spectrum_id = widget_info(event.top,find_by_uname='combine_data_spectrum_list_group')
     widget_control, combine_data_spectrum_id, get_value=combine_data_spectrum
     
     if (combine_data_spectrum EQ 0) then begin
         plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
         widget_control, zoom_button_id, sensitive=0
+        widget_control, loadct_button_id, sensitive=0
     endif else begin
         plot_reduction_combine, Event, plot_file_name, draw_uname, title
         widget_control, zoom_button_id, sensitive=1
+        widget_control, loadct_button_id, sensitive=1
     endelse
 
 endif else begin
@@ -3663,7 +3666,7 @@ endif else begin
     CATCH,/CANCEL
 
     DEVICE, DECOMPOSED = 0
-    loadct,5
+;    loadct,5
     
     tvscl_x_off = 8
     tvscl_y_off = 22
@@ -5292,5 +5295,26 @@ WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 erase
 
+end
+
+
+
+
+
+pro loadct_button_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;xloadct,/MODAL,GROUP=id
+xloadct,/modal,group=id
+
+plot_file_name = (*global).main_output_file_name
+print, 'plot_file_name: ' + plot_file_name
+draw_uname = 'data_reduction_plot'
+title =' '
+plot_reduction_combine, Event, plot_file_name, draw_uname, title
 
 end
+
