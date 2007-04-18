@@ -400,6 +400,11 @@ case Event.id of
         zoom_button_event, Event
     end
 
+;loadct button
+   Widget_Info(wWidget, FIND_BY_UNAME='loadct_button'): begin
+        loadct_button_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -525,6 +530,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          MBAR=WID_BASE_0_MBAR)
 
 global = ptr_new({$
+                   output_plot_file_name: '',$
                    minus_inf : -10000L,$
                    plus_inf  : +10000L,$ 
                    nan_user : +10000L,$
@@ -639,13 +645,25 @@ tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 
 ;zoom button
 zoom_button = widget_button(main_base,$
-                            xoffset=970,$
+                            xoffset=940,$
                             yoffset=0,$
                             value='ZOOM',$
-                            scr_xsize=150,$
+                            scr_xsize=120,$
                             scr_ysize=25,$
                             uname='zoom_button',$
                             sensitive=0)
+
+;loadct button for uncombine data
+loadct_button = widget_button(main_base,$
+                              xoffset=1060,$
+                              yoffset=0,$
+                              value='Change color scale',$
+                              scr_xsize=120,$
+                              scr_ysize=25,$
+                              uname='loadct_button',$
+                              sensitive=0)
+
+
 
 ;#########################
 ;intermediate plots window
@@ -1681,6 +1699,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   output_plot_file_name: '',$
                    instrument_geometry_file_name : '',$
                    first_time_entering_procedure : 1,$
                    instrument_geometry : 'no',$
