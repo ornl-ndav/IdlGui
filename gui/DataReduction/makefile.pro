@@ -22,6 +22,8 @@ resolve_routine, "xloadct",/either
 resolve_routine, "xregistered",/either
 resolve_routine, "errplot",/either
 resolve_routine, "uniq",/either
+resolve_routine, "ZOOM",/either
+
 save,/routines,filename="data_reduction.sav"
 exit
 
