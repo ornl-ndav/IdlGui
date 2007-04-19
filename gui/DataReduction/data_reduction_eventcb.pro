@@ -527,14 +527,15 @@ if (plots_selected[value] EQ 1 AND $
      ;drawing id
      drawing_id = tab_drawing_ids[value]
      file_extension = intermediate_file_extension[value]
-     output_file_name = produce_output_file_name(Event,$
-                                                 (*global).run_number,$
-                                                 file_extension)
+     output_plot_file_name = produce_output_file_name(Event,$
+                                                      (*global).run_number,$
+                                                      file_extension)
+     
      (*global).output_plot_file_name = output_plot_file_name
 
      plot_reduction, $
        Event, $
-       output_file_name, $
+       output_plot_file_name, $
        drawing_id, $
        title[value]
 
@@ -1243,6 +1244,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
+(*global).first_time_plotting_data_reduction = 1
 
 ;reinitialize xmin,xmax,ymin and ymax for rescalling plots
 xmin = fltarr(6)
@@ -1315,8 +1317,32 @@ if (instrument EQ 'REF_M') then begin ;REF_M
     (*global).plots_selected = [0,0,0,0]
 
 endif else begin                ;REF_L
+
+    ;remove action on zoom, loadct and reset uncombe data reduction plot
+    zoom_button_id = widget_info(event.top,find_by_uname='zoom_button')
+    loadct_button_id = widget_info(event.top,find_by_uname='loadct_button')
+    reset_data_reduction_id = widget_info(event.top,find_by_uname='reset_data_reduction')
+    widget_control, zoom_button_id, sensitive=0
+    widget_control, loadct_button_id, sensitive=0
+    widget_control, reset_data_reduction_id, sensitive=0
+
+    ;remove max, min and loadct widget_draw
+    data_reduction_scale_base_id = widget_info(event.top,find_by_uname='data_reduction_scale_base')
+    widget_control, data_reduction_scale_base_id, sensitive=0
     
-    ;remove x-y axis interaction box and bring back to life REF_L logo
+    ;remove data in max and min scale boxes
+      data_reduction_scale_max_id = widget_info(event.top,find_by_uname='data_reduction_scale_max')
+      data_reduction_scale_min_id = widget_info(event.top,find_by_uname='data_reduction_scale_min')
+      widget_control, data_reduction_scale_max_id, set_value=''
+      widget_control, data_reduction_scale_min_id, set_value=''
+
+    ;remove scale plot
+      data_reduction_scale_id = widget_info(Event.top,FIND_BY_UNAME='data_reduction_scale')
+      WIDGET_CONTROL, data_reduction_scale_id, GET_VALUE=id
+      wset, id
+      erase
+                                
+;remove x-y axis interaction box and bring back to life REF_L logo
     REF_L_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
     widget_control, REF_L_logo_base_id, map=1
     x_y_axis_interaction_base_id = widget_info(event.top, find_by_uname='x_y_axis_interaction_base')
@@ -3191,15 +3217,22 @@ if (instrument EQ 'REF_L') then begin
     loadct_button_id = widget_info(event.top,find_by_uname='loadct_button')
     combine_data_spectrum_id = widget_info(event.top,find_by_uname='combine_data_spectrum_list_group')
     widget_control, combine_data_spectrum_id, get_value=combine_data_spectrum
-    
+    reset_data_reduction_id = widget_info(event.top,find_by_uname='reset_data_reduction')
+    data_reduction_scale_base_id = widget_info(event.top,find_by_uname='data_reduction_scale_base')
+
+
     if (combine_data_spectrum EQ 0) then begin
         plot_reduction_normal_mode, Event, plot_file_name, draw_uname, title
         widget_control, zoom_button_id, sensitive=0
         widget_control, loadct_button_id, sensitive=0
+        widget_control, reset_data_reduction_id, sensitive=0
+        widget_control, data_reduction_scale_base_id, sensitive=0
     endif else begin
         plot_reduction_combine, Event, plot_file_name, draw_uname, title
         widget_control, zoom_button_id, sensitive=1
         widget_control, loadct_button_id, sensitive=1
+        widget_control, reset_data_reduction_id, sensitive=1
+        widget_control, data_reduction_scale_base_id, sensitive=1
     endelse
 
 endif else begin
@@ -3486,127 +3519,16 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 instrument = (*global).instrument
+first_time_plotting_data_reduction = (*global).first_time_plotting_data_reduction
 
-openr,u,plot_file_name,/get
-fs = fstat(u)
-
-Ntof = (*global).Ntof
-
-;define an empty string variable to hold results from reading the file
-tmp  = ''
-tmp0 = ''
-tmp1 = ''
-tmp2 = ''
-
-flt0 = -1.0
-flt1 = -1.0
-flt2 = -1.0
-
-Nelines = 0L  ;number of lines that does not start with a number
-Nndlines = 0L
-Ndlines = 0L
-onebyte = 0b
-
-while (NOT eof(u)) do begin
-    
-    readu,u,onebyte             ;,format='(a1)'
-    fs = fstat(u)
-                                ;print,'onebyte: ',onebyte
-                                ;rewinded file pointer one character
-
-    if fs.cur_ptr EQ 0 then begin 
-        point_lun,u,0
-    endif else begin
-        point_lun,u,fs.cur_ptr - 1
-    endelse
-    
-    true = 1
-    case true of
-        
-        ((onebyte LT 48) OR (onebyte GT 57)): begin
-                                ;case where we have non-numbers
-            Nelines = Nelines + 1
-            readf,u,tmp
-        end
-        
-        else: begin
-                                ;case where we (should) have data
-            Ndlines = Ndlines + 1
-                                ;print,'Data Line: ',Ndlines
-            
-            catch, Error_Status
-            if Error_status NE 0 then begin
-
-                                ;you're done now...
-                CATCH, /CANCEL
-
-            endif else begin
-
-                readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
-                flt0 = [flt0,float(tmp0)]  ;x axis
-                flt1 = [flt1,float(tmp1)]  ;y axis
-                flt2 = [flt2,float(tmp2)]  ;y_error axis
-
-            endelse
-            
-        end
-    endcase
-    
-endwhile
-
-;strip -1 from beginning of each array
-flt0 = flt0[1:*]
-flt1 = flt1[1:*]
-flt2 = flt2[1:*]
-
-;check if plot is main plot or intermediate plot
-other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
-value = widget_info(other_plots_tab_id, /tab_current)
-
-case value of
-    
-    0: n=0
-    2: begin                    ;intermediate plots
-        
-;get active tab
-        other_plots_tab_id = widget_info(Event.top,find_by_uname='other_plots_tab')
-        value_intermediate = widget_info(other_plots_tab_id, /tab_current)
-        
-        case value_intermediate of
-            
-            0: n=1
-            1: n=2
-            2: n=3
-            3: n=4
-            4: n=5
-             
-        endcase
-        
-    end
-    else:
-endcase
-
-first_time_plotting_n = (*(*global).first_time_plotting_n)
-first_time_plotting = first_time_plotting_n[n]
-
-if (first_time_plotting EQ 1) then begin
-
-    first_time_plotting_n[n]=0
-    REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
-    
-endif else begin
-    
-endelse
-
-draw_id = widget_info(Event.top, find_by_uname=draw_uname)
-WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
-wset,view_plot_id
+tvscl_x_off = 42
+tvscl_y_off = 21
 
 catch, error_plot_status
 if (error_plot_status NE 0) then begin
     text = 'Not enough data to plot'
     CATCH,/cancel
-
+    
 ;log book ids (full and simple)
     view_info = widget_info(Event.top, FIND_BY_UNAME='info_text')
     full_view_info = widget_info(Event.top, find_by_uname='log_book_text')
@@ -3614,24 +3536,208 @@ if (error_plot_status NE 0) then begin
     output_into_text_box, event, 'info_text', text
 
 endif else begin
-
-;x_axis
-    Ntof = 750L  ;remove_me
-    x_axis=flt0[sort(flt0[0:(Ntof-1)])]
-    tvscl_x_axis = lindgen(float(x_axis[Ntof-1]))
-
-;y_axis
-    flt0_size = size(flt0)
-    number_of_row = fix(flt0_size[1]/Ntof)
     
+    Ntof = (*global).Ntof
+
+    if (first_time_plotting_data_reduction EQ 1) then begin
+            
+        openr,u,plot_file_name,/get
+        fs = fstat(u)
+        
+;define an empty string variable to hold results from reading the file
+        tmp  = ''
+        tmp0 = ''
+        tmp1 = ''
+        tmp2 = ''
+        
+        flt0 = -1.0
+        flt1 = -1.0
+        flt2 = -1.0
+        
+        Nelines = 0L ;number of lines that does not start with a number
+        Nndlines = 0L
+        Ndlines = 0L
+        onebyte = 0b
+        
+        while (NOT eof(u)) do begin
+            
+            readu,u,onebyte     ;,format='(a1)'
+            fs = fstat(u)
+                                ;print,'onebyte: ',onebyte
+                                ;rewinded file pointer one character
+            
+            if fs.cur_ptr EQ 0 then begin 
+                point_lun,u,0
+            endif else begin
+                point_lun,u,fs.cur_ptr - 1
+            endelse
+            
+            true = 1
+            case true of
+                
+                ((onebyte LT 48) OR (onebyte GT 57)): begin
+                                ;case where we have non-numbers
+                    Nelines = Nelines + 1
+                    readf,u,tmp
+                end
+                
+                else: begin
+                                ;case where we (should) have data
+                    Ndlines = Ndlines + 1
+                                ;print,'Data Line: ',Ndlines
+                    
+                    catch, Error_Status
+                    if Error_status NE 0 then begin
+                        
+                                ;you're done now...
+                        CATCH, /CANCEL
+                        
+                    endif else begin
+                        
+                        readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
+                        flt0 = [flt0,float(tmp0)] ;x axis
+                        flt1 = [flt1,float(tmp1)] ;y axis
+                        flt2 = [flt2,float(tmp2)] ;y_error axis
+                        
+                    endelse
+                    
+                end
+            endcase
+            
+        endwhile
+        
+;strip -1 from beginning of each array
+        flt0 = flt0[1:*]
+        flt1 = flt1[1:*]
+        flt2 = flt2[1:*]
+        
+;check if plot is main plot or intermediate plot
+        other_plots_tab_id = widget_info(Event.top,find_by_uname='data_reduction_tab')
+        value = widget_info(other_plots_tab_id, /tab_current)
+        
+        case value of
+            
+            0: n=0
+            2: begin            ;intermediate plots
+                
+;get active tab
+                other_plots_tab_id = widget_info(Event.top,find_by_uname='other_plots_tab')
+                value_intermediate = widget_info(other_plots_tab_id, /tab_current)
+                
+                case value_intermediate of
+                    
+                    0: n=1
+                    1: n=2
+                    2: n=3
+                    3: n=4
+                    4: n=5
+                    
+                endcase
+                
+            end
+            else:
+        endcase
+        
+        first_time_plotting_n = (*(*global).first_time_plotting_n)
+        first_time_plotting = first_time_plotting_n[n]
+        
+        if (first_time_plotting EQ 1) then begin
+            
+            first_time_plotting_n[n]=0
+            REF_logo_base_id = widget_info(event.top,find_by_uname='REF_L_logo_base')
+            
+        endif
+                    
+        draw_id = widget_info(Event.top, find_by_uname=draw_uname)
+        WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+        wset,view_plot_id
+        
+;x_axis
+;        Ntof = 750L             ;remove_me
+        x_axis=flt0[sort(flt0[0:(Ntof-1)])]
+        tvscl_x_axis = lindgen(float(x_axis[Ntof-1]))
+        (*(*global).tvscl_x_axis) = tvscl_x_axis
+;y_axis
+        flt0_size = size(flt0)
+        number_of_row = fix(flt0_size[1]/Ntof)
+        (*global).number_of_row_in_data_reduction_file = number_of_row
 ;define the final big array
-    final_array = fltarr(Ntof,number_of_row)
-    for i=0,(number_of_row-1) do begin
-        final_array[0,i] = flt1[i*Ntof:i*Ntof+(Ntof-1)]
-    endfor
+        final_array = fltarr(Ntof,number_of_row)
+        for i=0,(number_of_row-1) do begin
+            final_array[0,i] = flt1[i*Ntof:i*Ntof+(Ntof-1)]
+        endfor
+        
+        (*(*global).final_array) = final_array
+        (*global).first_time_plotting_data_reduction = 0
+        
+        close,u
+        free_lun,u
 
+;plot of scale
+        print, 'here'
+        data_reduction_scale_id = widget_info(Event.top,FIND_BY_UNAME='data_reduction_scale')
+        WIDGET_CONTROL, data_reduction_scale_id, GET_VALUE=id
+        wset, id
+        New_Ny = number_of_row * floor((393-tvscl_y_off)/number_of_row)
+        cscl = lindgen(20,New_Ny)
+        tvscl,cscl,25,10,/device
+        
+    endif else begin
 
-;    
+        final_array = (*(*global).final_array)
+        number_of_row = (*global).number_of_row_in_data_reduction_file 
+        tvscl_x_axis = (*(*global).tvscl_x_axis)
+
+    endelse
+
+    if (instrument EQ 'REF_L') then begin
+
+        data_reduction_scale_max_id = widget_info(event.top,find_by_uname='data_reduction_scale_max')
+        data_reduction_scale_min_id = widget_info(event.top,find_by_uname='data_reduction_scale_min')
+        
+        if (first_time_plotting_data_reduction EQ 1) then begin
+            
+            max_top = max(final_array,/nan)
+            min_top = min(final_array,/nan)
+            widget_control, data_reduction_scale_max_id, set_value=strcompress(max_top)
+            widget_control, data_reduction_scale_min_id, set_value=strcompress(min_top)
+            
+        endif
+        
+        if ((*global).reset_data_reduction EQ 0) then begin
+            
+;remove data outside the range selected in the text boxes
+            widget_control, data_reduction_scale_max_id, get_value=max_value
+            widget_control, data_reduction_scale_min_id, get_value=min_value
+            
+            if (max_value NE '') then begin
+                max_value = float(max_value[0])
+                indx_max = where(float(final_array) GT max_value, Nmax)
+                if (Nmax NE 0) then begin
+                    final_array(indx_max) = !Values.F_NAN
+                endif
+            endif
+            
+            if (min_value NE '') then begin
+                min_value = float(min_value[0])
+                indx_min = where(final_array LT min_value, Nmin)
+                if (Nmin NE 0) then begin
+                    final_array(indx_min) = !Values.F_NAN
+                endif
+            endif
+            
+        endif else begin
+
+            max_top = max(final_array,/nan)
+            min_top = min(final_array,/nan)
+            widget_control, data_reduction_scale_max_id, set_value=strcompress(max_top)
+            widget_control, data_reduction_scale_min_id, set_value=strcompress(min_top)
+            (*global).reset_data_reduction = 0            
+
+        endelse
+        
+    endif
+
 ;;remove -inf and inf
 ;    indx1 = where(final_array EQ !VALUES.F_INFINITY, ngt1)
 ;    if (ngt1 NE 0) then begin
@@ -3642,18 +3748,27 @@ endif else begin
 ;    if (ngt2 NE 0) then begin
 ;        final_array(indx2) = (*global).minus_inf
 ;    endif
-
-;remove negative numbers
-    indx4 = where(final_array LT 0, ngt0)
-    if (ngt0 NE 0) then begin
-        final_array(indx4) = !values.F_NAN
+    
+    uncombine_data_formula_id = widget_info(event.top,find_by_uname='uncombine_data_formula')
+    widget_control, uncombine_data_formula_id, get_value=formula_list
+    index = widget_info(uncombine_data_formula_id, /droplist_select)
+    formula_selected = formula_list[index]
+    
+    if ( formula_selected EQ 'log10') then begin ;log10
+        
+;remove negative numbers and zeros too
+        indx4 = where(final_array LE 0, ngt0)
+        if (ngt0 NE 0) then begin
+            final_array(indx4) = !values.F_NAN
+        endif
+        
+        indx5 = where(final_array GT 0, ngt1) 
+        if (ngt1 NE 0) then begin
+            final_array(indx5) = alog10(final_array(indx5))
+        endif
+        
     endif
     
-    indx5 = where(final_array GT 0, ngt1) 
-    if (ngt1 NE 0) then begin
-        final_array(indx5) = alog10(final_array(indx5))
-    endif
-
 ;;indx3 = where(final_array EQ strcompress(!values.F_NAN), ngt)
 ;nan = !VALUES.F_NAN
 ;nan_user = (*global).nan_user
@@ -3664,24 +3779,21 @@ endif else begin
 ;endfor
     
 ;tvscl, final_array, /NAN
-
+    
     CATCH,/CANCEL
-
+    
     DEVICE, DECOMPOSED = 0
 ;    loadct,5
-    
-    tvscl_x_off = 42
-    tvscl_y_off = 21
     
     New_Ny = number_of_row * floor((393-tvscl_y_off)/number_of_row)
 
 ;comment out this part when using tmp button
-    y12=18
-    ymin=50
+;    y12=18
+;    ymin=50
 
 ;comment this part when using tmp button
-;    y12=(*global).y12
-;    ymin=(*global).ymin
+    y12=(*global).y12
+    ymin=(*global).ymin
 
     tvscl_y_axis = (indgen(y12)+ymin)*0.7
 
@@ -3689,6 +3801,10 @@ endif else begin
 ;    tvscl_y_axis = indgen(y12)
 
     tvscl_y_axis_string = string(tvscl_y_axis)
+
+    data_reduction_id = widget_info(Event.top,FIND_BY_UNAME=draw_uname)
+    WIDGET_CONTROL, data_reduction_id, GET_VALUE=id
+    wset, id
 
     tvimg = rebin(final_array, Ntof, New_Ny, /sample)
     tvscl, tvimg, tvscl_x_off, tvscl_y_off, /nan
@@ -3705,12 +3821,9 @@ endif else begin
 ;      ymargin=[2,0]
       ymargin=[2,(393-New_Ny)/10],$
         title='x-axis: tof(s) / y-axis: distance (mm)'
-
-endelse
-
-close,u
-free_lun,u
-
+            
+  endelse
+  
 end
 
 
@@ -4008,6 +4121,7 @@ instrument = (*global).instrument
 
 ;erase data_reduction plot
 erase_reduction_plot, event, 'data_reduction_plot'
+;reset_and_erase_displays, Event
 
 ;check if there is a signal pid file 
 signal_pid_text_id = widget_info(Event.top,find_by_uname='signal_pid_text')
@@ -4251,7 +4365,6 @@ end
 pro background_list_group_eventcb, Event
 check_status_to_validate_go, Event
 end
-
 
 
 pro sns_idl_button_eventcb, Event
@@ -5340,10 +5453,24 @@ widget_control,id,get_uvalue=global
 xloadct,/modal,group=id
 
 plot_file_name = (*global).main_output_file_name
-print, 'plot_file_name: ' + plot_file_name
 draw_uname = 'data_reduction_plot'
 title =' '
 plot_reduction_combine, Event, plot_file_name, draw_uname, title
 
 end
 
+
+
+pro reset_data_reduction_eventcb, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).reset_data_reduction = 1
+plot_file_name = (*global).main_output_file_name
+draw_uname = 'data_reduction_plot'
+title =' '
+plot_reduction_combine, Event, plot_file_name, draw_uname, title
+
+end
