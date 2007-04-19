@@ -1999,6 +1999,12 @@ x_max = max(x)
 
 y12 = y_max-y_min+1  ;+1 to take into account side of selection
 x12 = x_max-x_min+1  ;+1 to take into account side of selection
+
+if (signal_or_background EQ 0) then begin
+    (*global).ymin = y_min
+    (*global).y12=y12
+endif 
+
 total_pixel_inside = x12*y12
 total_pixel_outside = Nx*Ny - total_pixel_inside
 
@@ -3537,7 +3543,7 @@ while (NOT eof(u)) do begin
             endif else begin
 
                 readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
-                flt0 = [flt0,float(tmp0)] ;x axis
+                flt0 = [flt0,float(tmp0)]  ;x axis
                 flt1 = [flt1,float(tmp1)]  ;y axis
                 flt2 = [flt2,float(tmp2)]  ;y_error axis
 
@@ -3609,18 +3615,14 @@ if (error_plot_status NE 0) then begin
 
 endif else begin
 
-
-    
 ;x_axis
-    Ntof = 750  ;remove_me
+    Ntof = 750L  ;remove_me
     x_axis=flt0[sort(flt0[0:(Ntof-1)])]
-    tvscl_x_axis = indgen(float(x_axis[Ntof-1]))
-    
+    tvscl_x_axis = lindgen(float(x_axis[Ntof-1]))
+
 ;y_axis
     flt0_size = size(flt0)
     number_of_row = fix(flt0_size[1]/Ntof)
-    
-;    print, flt1
     
 ;define the final big array
     final_array = fltarr(Ntof,number_of_row)
@@ -3668,15 +3670,42 @@ endif else begin
     DEVICE, DECOMPOSED = 0
 ;    loadct,5
     
-    tvscl_x_off = 8
-    tvscl_y_off = 22
+    tvscl_x_off = 42
+    tvscl_y_off = 21
     
     New_Ny = number_of_row * floor((393-tvscl_y_off)/number_of_row)
 
-    tvimg = rebin(final_array, Ntof, New_Ny,/sample)
-    tvscl,tvimg,4,tvscl_y_off, /nan
-    plot, tvscl_x_axis, ystyle=4, xstyle=8, /nodata, /device, /noerase, xmargin=[0.5,0],ymargin=[2,0]
-      
+;comment out this part when using tmp button
+    y12=18
+    ymin=50
+
+;comment this part when using tmp button
+;    y12=(*global).y12
+;    ymin=(*global).ymin
+
+    tvscl_y_axis = (indgen(y12)+ymin)*0.7
+
+;    tvscl_y_axis = (indgen(y12)+ymin)
+;    tvscl_y_axis = indgen(y12)
+
+    tvscl_y_axis_string = string(tvscl_y_axis)
+
+    tvimg = rebin(final_array, Ntof, New_Ny, /sample)
+    tvscl, tvimg, tvscl_x_off, tvscl_y_off, /nan
+    plot, tvscl_x_axis, tvscl_y_axis, $
+      yrange=[tvscl_y_axis[0],$
+              tvscl_y_axis[y12-1]],yticklayout=0, $
+      ytickname=tvscl_y_axis_string, $
+;      ystyle=8, $
+      ystyle=1,$
+      xstyle=8, $
+      /nodata, /device, $
+      /noerase, $
+      xmargin=[7,0], $
+;      ymargin=[2,0]
+      ymargin=[2,(393-New_Ny)/10],$
+        title='x-axis: tof(s) / y-axis: distance (mm)'
+
 endelse
 
 close,u
@@ -5222,7 +5251,7 @@ pro tmp_plot_button_event, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-plot_file_name = '~/local/REF_L/REF_L_1845.txt'
+plot_file_name = '~/local/REF_L/REF_L_2854.txt'
 draw_uname = 'data_reduction_plot'
 title= 'try'
 plot_reduction_combine, Event, plot_file_name, draw_uname, title

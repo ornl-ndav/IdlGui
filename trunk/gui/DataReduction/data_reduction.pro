@@ -602,6 +602,8 @@ global = ptr_new({$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '',$
                    ucams                : user,$
+                   y12                  : 0L,$
+                   ymin                 : 0L,$
                    x1_back              : 0L,$
                    x2_back              : 0L,$
                    y1_back              : 0L,$
@@ -636,12 +638,12 @@ tmp_folder = (*global).output_path + tmp_working_path
 tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 (*global).tmp_folder = tmp_folder
 
-;; remove_me
-; tmp_plot_button = widget_button(main_base,$
-;                                 xoffset=100,$
-;                                 yoffset=100,$
-;                                 value='PLOT',$
-;                                 uname='tmp_plot_button')
+; remove_me
+ tmp_plot_button = widget_button(main_base,$
+                                 xoffset=100,$
+                                 yoffset=100,$
+                                 value='PLOT',$
+                                 uname='tmp_plot_button')
 
 ;zoom button
 zoom_button = widget_button(main_base,$
@@ -1762,6 +1764,8 @@ global = ptr_new({$
                    tmp_working_path     : '.tmp_data_reduction',$
                    working_path         : '~/local/REF_M/',$
                    ucams                : user,$
+                   ymin                 : 0L,$
+                   y12                  : 0L,$
                    x1_back              : 0L,$
                    x2_back              : 0L,$
                    y1_back              : 0L,$
