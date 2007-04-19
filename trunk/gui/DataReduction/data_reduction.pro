@@ -405,6 +405,11 @@ case Event.id of
         loadct_button_eventcb, Event
     end
 
+; reset_data_reduction button
+   Widget_Info(wWidget, FIND_BY_UNAME='reset_data_reduction'): begin
+        reset_data_reduction_eventcb, Event
+    end
+
     else:
     
 endcase
@@ -518,9 +523,9 @@ instrument_list = ['REF_L', 'REF_M']
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
-                         SCR_XSIZE=1280,$ 
+                         SCR_XSIZE=1330,$  ;1280 
                          SCR_YSIZE=670,$
-                         XOFFSET=0,$    ;250
+                         XOFFSET=50,$     250
                          YOFFSET=22,$
                          NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
                          TITLE='Data Reduction GUI for REF_L',$
@@ -530,6 +535,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          MBAR=WID_BASE_0_MBAR)
 
 global = ptr_new({$
+                   reset_data_reduction : 0,$
+                   tvscl_x_axis : ptr_new(0L),$
+                   number_of_row_in_data_reduction_file : 0,$
+                   first_time_plotting_data_reduction : 1,$
                    output_plot_file_name: '',$
                    minus_inf : -10000L,$
                    plus_inf  : +10000L,$ 
@@ -620,6 +629,7 @@ global = ptr_new({$
                    color_line_background: 100L,$
                    color_line_background_2: 100L,$
                    data_reduction_done : 0,$
+                   final_array : ptr_new(0L),$
                    plots_selected : [0,0,0,0,0] $
                  })
 
@@ -639,15 +649,15 @@ tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
 (*global).tmp_folder = tmp_folder
 
 ; remove_me
- tmp_plot_button = widget_button(main_base,$
-                                 xoffset=100,$
-                                 yoffset=100,$
-                                 value='PLOT',$
-                                 uname='tmp_plot_button')
+;  tmp_plot_button = widget_button(main_base,$
+;                                  xoffset=100,$
+;                                  yoffset=100,$
+;                                  value='PLOT',$
+;                                  uname='tmp_plot_button')
 
 ;zoom button
 zoom_button = widget_button(main_base,$
-                            xoffset=940,$
+                            xoffset=880,$
                             yoffset=0,$
                             value='ZOOM',$
                             scr_xsize=120,$
@@ -657,7 +667,7 @@ zoom_button = widget_button(main_base,$
 
 ;loadct button for uncombine data
 loadct_button = widget_button(main_base,$
-                              xoffset=1060,$
+                              xoffset=1000,$
                               yoffset=0,$
                               value='Change color scale',$
                               scr_xsize=120,$
@@ -665,7 +675,15 @@ loadct_button = widget_button(main_base,$
                               uname='loadct_button',$
                               sensitive=0)
 
-
+;reset data_reduction_plot
+reset_data_reduction = widget_button(main_base,$
+                                     xoffset=1120,$
+                                     yoffset=0,$
+                                     value='Reset plot',$
+                                     scr_xsize=120,$
+                                     scr_ysize=25,$
+                                     uname='reset_data_reduction',$
+                                     sensitive=0)
 
 ;#########################
 ;intermediate plots window
@@ -771,8 +789,6 @@ current_mode_status_label = widget_label(current_mode_base,$
                                          value='SELECTION',$
                                          /align_center)
 
-
-
 ;keep session
 keep_session_base = widget_base(MAIN_BASE,$
                                 xoffset=265,$
@@ -814,9 +830,9 @@ display_data_base = widget_draw(MAIN_BASE,$
 ;sns logo
 sns_logo_drawing = widget_draw(MAIN_BASE,$
                                uname='sns_logo_drawing_REF_L',$
-                               xoffset=530,$
+                               xoffset=540,$
                                yoffset=535,$
-                               scr_xsize=743,$
+                               scr_xsize=763,$
                                scr_ysize=116,$
                                /MOTION_EVENTS)
 
@@ -949,7 +965,6 @@ right_side_text_y = widget_text(x_y_axis_interaction_base,$
                               /align_left,$
                               font='lucidasans-bold-10')
 
-
 restore_button = widget_button(x_y_axis_interaction_base,$
                                uname='restore_button',$
                                xoffset=400,$
@@ -957,16 +972,6 @@ restore_button = widget_button(x_y_axis_interaction_base,$
                                scr_xsize=60,$
                                scr_ysize=70,$
                                value='RESTORE')
-
-
-
-
-
-
-
-     
-
-
 
 ;SELECT SIGNAL and BACKGROUND INTERFACE
 select_signal_base = widget_base(MAIN_BASE,$
@@ -1110,16 +1115,6 @@ data_reduction_base = widget_base(first_tab_base,$
 ;                                           yoffset=150,$
 ;                                           scr_xsize=250,$
 ;                                           uname='combine_settings_validate')
-
-
-
-
-
-
-
-
-
-
 
 signal_pid_file_button = widget_button(data_reduction_base,$
                                       uname='signal_pid_file_button',$
@@ -1339,6 +1334,7 @@ acces_to_list_of_intermediate_plots = widget_button(data_reduction_base,$
                                                     uname='access_to_list_of_intermediate_plots',$
                                                     xoffset=260,$
                                                     yoffset=212,$
+                                                    scr_xsize=48,$
                                                     value='Plots')
 
 combine_data_spectrum_label = widget_label(data_reduction_base,$
@@ -1350,11 +1346,21 @@ combine_data_spectrum_list_group = CW_BGROUP(data_reduction_base,$
                                              intermediate_file_output_list,$
                                              /exclusive,$
                                              /RETURN_NAME,$
-                                             XOFFSET=150,$
+                                             XOFFSET=148,$
                                              YOFFSET=239,$
                                              SET_VALUE=1.0,$
                                              row=1,$
                                              uname='combine_data_spectrum_list_group')
+
+zaxis_formula = ["log10","linear"]
+uncombine_data_formula = widget_droplist(data_reduction_base,$
+                                         UNAME='uncombine_data_formula',$
+                                         XOFFSET=225,$
+                                         YOFFSET=237,$
+                                         VALUE=zaxis_formula, $
+                                         title='')
+                                         
+
 
 ; combine_settings_button = widget_button(data_reduction_base,$
 ;                                         uname='combine_settings_button',$
@@ -1362,19 +1368,11 @@ combine_data_spectrum_list_group = CW_BGROUP(data_reduction_base,$
 ;                                         yoffset=243,$
 ;                                         value='Settings')
                                  
-
-
-
-
-
-
-
-
 ;instrument geometry
 instrument_geometry_label = widget_label(data_reduction_base,$
                                          uname='instrument_geometry_label',$
                                          xoffset=5,$
-                                         yoffset=275,$
+                                         yoffset=277,$
                                          value='Overwrite instrument geometry: ')
 
 instrument_geometry_list_group = CW_BGROUP(data_reduction_base,$ 
@@ -1382,21 +1380,10 @@ instrument_geometry_list_group = CW_BGROUP(data_reduction_base,$
                                            /exclusive,$
                                            /RETURN_NAME,$
                                            XOFFSET=195,$
-                                           YOFFSET=268,$
+                                           YOFFSET=270,$
                                            SET_VALUE=1.0,$
                                            row=1,$
                                            uname='instrument_geometry_list_group')
-
-
-
-
-
-
-
-
-
-
-
 
 ; instrument_geometry_button = widget_button(data_reduction_base,$
 ;                                            uname='instrument_geometry_button',$
@@ -1615,6 +1602,42 @@ log_book_text = widget_text(log_book_base,$
                             /scroll,$
                             /wrap)
 
+data_reduction_scale_base = widget_base(main_base,$
+                                        uname='data_reduction_scale_base',$
+                                        xoffset=1265,$
+                                        yoffset=15,$
+                                        scr_xsize=60,$
+                                        scr_ysize=430,$
+                                        sensitive=0)
+
+
+data_reduction_scale_max = widget_text(data_reduction_scale_base,$
+                                       uname='data_reduction_scale_max',$
+                                       xoffset=0,$
+                                       yoffset=0,$
+                                       scr_xsize=60,$
+                                       scr_ysize=30,$
+                                       value='',$
+                                       /editable,$
+                                       /align_left)
+
+data_reduction_scale = widget_draw(data_reduction_scale_base,$
+                                   uname='data_reduction_scale',$
+                                   xoffset=5,$
+                                   yoffset=30,$
+                                   scr_xsize=50,$
+                                   scr_ysize=365)
+
+data_reduction_scale_min = widget_text(data_reduction_scale_base,$
+                                       uname='data_reduction_scale_min',$
+                                       xoffset=0,$
+                                       yoffset=395,$
+                                       scr_xsize=60,$
+                                        scr_ysize=30,$
+                                       value='',$
+                                       /editable,$
+                                       /align_left)
+
 FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
                                   UNAME='FILE_MENU_REF_L',$
                                   /MENU,$
@@ -1666,7 +1689,7 @@ id = widget_info(main_base,find_by_uname="sns_logo_drawing_REF_L")
 WIDGET_CONTROL, id, GET_VALUE=id_value
 wset, id_value
 image = read_bmp(sns_logo)
-tv, image,-15,0,/true
+tv, image,0,0,/true
 
 REF_L_logo=$
   "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_L_label.bmp"
@@ -1701,6 +1724,9 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          YPAD=3,$
                          MBAR=WID_BASE_0_MBAR)
 global = ptr_new({$
+                   tvscl_x_axis : ptr_new(0L),$
+                   number_of_row_in_data_reduction_file : 0,$
+                   first_time_plotting_data_reduction : 1,$
                    output_plot_file_name: '',$
                    instrument_geometry_file_name : '',$
                    first_time_entering_procedure : 1,$
@@ -1784,6 +1810,7 @@ global = ptr_new({$
                    data_reduction_done : 0,$
                    plots_selected : [0,0,0,0],$
                    list_of_runs : ptr_new(0L),$
+                   final_array : ptr_new(0L),$
                    initial_list_of_runs : [' '] $
                  })
 
