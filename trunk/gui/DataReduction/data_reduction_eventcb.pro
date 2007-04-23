@@ -3795,33 +3795,55 @@ endif else begin
     y12=(*global).y12
     ymin=(*global).ymin
 
-    tvscl_y_axis = (indgen(y12)+ymin)*0.7
 
-;    tvscl_y_axis = (indgen(y12)+ymin)
 ;    tvscl_y_axis = indgen(y12)
-
-    tvscl_y_axis_string = string(tvscl_y_axis)
 
     data_reduction_id = widget_info(Event.top,FIND_BY_UNAME=draw_uname)
     WIDGET_CONTROL, data_reduction_id, GET_VALUE=id
     wset, id
+    
+    if (y12 GE 30) then begin
+        
+        tvscl_y_axis = (indgen(y12)+ymin)
 
-    tvimg = rebin(final_array, Ntof, New_Ny, /sample)
-    tvscl, tvimg, tvscl_x_off, tvscl_y_off, /nan
-    plot, tvscl_x_axis, tvscl_y_axis, $
-      yrange=[tvscl_y_axis[0],$
-              tvscl_y_axis[y12-1]],yticklayout=0, $
-      ytickname=tvscl_y_axis_string, $
+        tvimg = rebin(final_array, Ntof, New_Ny, /sample)
+        tvscl, tvimg, tvscl_x_off, tvscl_y_off, /nan
+        plot, tvscl_x_axis, tvscl_y_axis, $
+          yrange=[tvscl_y_axis[0],$
+                  tvscl_y_axis[y12-1]],yticklayout=0, $
 ;      ystyle=8, $
-      ystyle=1,$
-      xstyle=8, $
-      /nodata, /device, $
-      /noerase, $
-      xmargin=[7,0], $
+        ystyle=1,$
+          xstyle=8, $
+          /nodata, /device, $
+          /noerase, $
+          xmargin=[7,0], $
 ;      ymargin=[2,0]
-      ymargin=[2,(393-New_Ny)/10],$
-        title='x-axis: tof(s) / y-axis: distance (mm)'
+        ymargin=[2,(393-New_Ny)/10],$
+          title='x-axis: tof(s) / y-axis: pixels'
+
+    endif else begin
+
+        tvscl_y_axis = (indgen(y12)+ymin)*0.7
+        tvscl_y_axis_string = string(tvscl_y_axis)
+        
+        tvimg = rebin(final_array, Ntof, New_Ny, /sample)
+        tvscl, tvimg, tvscl_x_off, tvscl_y_off, /nan
+        plot, tvscl_x_axis, tvscl_y_axis, $
+          yrange=[tvscl_y_axis[0],$
+                  tvscl_y_axis[y12-1]],yticklayout=0, $
+          ytickname=tvscl_y_axis_string, $
+;      ystyle=8, $
+        ystyle=1,$
+          xstyle=8, $
+          /nodata, /device, $
+          /noerase, $
+          xmargin=[7,0], $
+;      ymargin=[2,0]
+        ymargin=[2,(393-New_Ny)/10],$
+          title='x-axis: tof(s) / y-axis: distance (mm)'
             
+    endelse
+
   endelse
   
 end
