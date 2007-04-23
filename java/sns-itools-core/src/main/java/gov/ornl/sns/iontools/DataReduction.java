@@ -10,12 +10,14 @@ package gov.ornl.sns.iontools;
  lines and modify to suit your needs.)
 ********************************************************************/
 
+import gov.ornl.sns.iontools.IParameters;
+import gov.ornl.sns.iontools.InstrumentConfiguration;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
-import java.awt.image.BufferedImage;
+//import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -167,10 +169,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     IONVariable     IONfoundNexus;
     String          foundNexus = "0";
     
-    int             Nx = 256;
-    int             Ny = 304;
-    int             Ny_min = 0;
-    int             Ny_max = (303-255);
+    int             Nx;
+    int             Ny;
+    int             NyMin;
+    int             NyMax;
+//    int             Ny_max = (303-255);
     
     int	            c_xval1=0;	  // initial x for rubber band box
     int		    c_yval1=0;	  // initial y for rubber band box
@@ -373,9 +376,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       if (IONfoundNexus.toString().compareTo("0") != 0) {
 
 	  if (X < 0) {X = 0;};
-	  if (Y < Ny_min*2) {Y = Ny_min*2;};
+	  if (Y < NyMin*2) {Y = NyMin*2;};
 	  if (X > Nx*2) {X = 2*Nx-1;};
-	  if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	  if (Y > 2*Ny) {Y = 2*Ny-1;};
 	  
 	  
 	  if (modeSelected.compareTo("signalSelection") == 0) {
@@ -405,9 +408,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     {
 	if (IONfoundNexus.toString().compareTo("0") != 0) {
 	    if (X < 0) {X = 0;};
-	    if (Y < 2*Ny_min) {Y = 2*Ny_min;};
+	    if (Y < 2*NyMin) {Y = 2*NyMin;};
 	    if (X > 2*Nx) {X = 2*Nx-1;};
-	    if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	    if (Y > 2*NyMax) {Y = 2*IParameters.NyReflMax-1;};
 	    
 	    c_xval2 = (int) X/2;
 	    c_yval2 = (int) (607-Y)/2;
@@ -463,9 +466,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	if (IONfoundNexus.toString().compareTo("0") != 0) {
 
 	    if (X < 0) {X = 0;};
-	    if (Y < 2*Ny_min) {Y = 2*Ny_min;};
+	    if (Y < 2*NyMin) {Y = 2*NyMin;};
 	    if (X > 2*Nx) {X = 2*Nx-1;};
-	    if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	    if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	    
 	    if (modeSelected.compareTo("signalSelection") == 0) {
 		signalSelectionTextArea.setText(text1);
@@ -642,10 +645,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		    */
 		    
 		    //	    if (instrument.compareTo("REF_L") == 0) {
-		    Nx = 256;
-		    Ny_min = 0;
-		    Ny_max = 304; 
-		    //	    } else {
+		    NyMin = IParameters.NyReflMin;
+		    NyMax = IParameters.NyReflMax;
+		    
+					    //	    } else {
 		    //		Nx = 304;
 		    //		Ny_min = 303-255;
 		    //		Ny_max = 255;
@@ -750,6 +753,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    topPanel.add(runNumber);
 	    //	    topPanel.add(instrList);
 
+	    //retrieve Nx and Ny according to instrument type
+	    InstrumentConfiguration getN = new InstrumentConfiguration("REF_L");
+	    Nx = getN.retrieveNx();
+	    Ny = getN.retrieveNy();
+	    
 	    // Second line (plot)
 	    c_plot = new IONJGrDrawable(Nx*2, Ny*2);
 	    plotPanel.add(c_plot,BorderLayout.SOUTH);
