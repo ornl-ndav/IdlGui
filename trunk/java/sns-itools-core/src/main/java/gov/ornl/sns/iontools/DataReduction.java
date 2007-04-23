@@ -1,5 +1,5 @@
 //
-// DataReduction.java
+package src.main.java.gov.ornl.sns.iontools;
 //
 
 /*******************************************************************
@@ -208,7 +208,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     //JMenuItem of DataReductionMenu
     JMenuItem       preferencesMenuItem;
-    InternalFrame   preferencesFrame;
+//    InternalFrame   preferencesFrame;
 
     //JMenuItem of mode
     ButtonGroup     modeButtonGroup;
@@ -610,7 +610,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 
 	    if ("preferencesMenuItem".equals(evt.getActionCommand())) {
-		    preferencesFrame.setVisible(true);
+		//    preferencesFrame.setVisible(true);
 	    }
 
 	    if ("signalSelection".equals(evt.getActionCommand())) {
@@ -795,7 +795,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 
-
+/*
     protected void createFrame() {
 	preferencesFrame = new InternalFrame();
 	
@@ -819,7 +819,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	return panel;
     }
 
-
+*/
 
 /*
  ************************************************
