@@ -1,5 +1,5 @@
 //
-package src.main.java.gov.ornl.sns.iontools;
+package gov.ornl.sns.iontools;
 //
 
 /*******************************************************************

@@ -1,3 +1,4 @@
+package gov.ornl.sns.idlportal;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
