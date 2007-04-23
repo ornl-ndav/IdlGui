@@ -11,7 +11,7 @@ package gov.ornl.sns.iontools;
 ********************************************************************/
 
 import gov.ornl.sns.iontools.IParameters;
-import gov.ornl.sns.iontools.InstrumentConfiguration;
+import gov.ornl.sns.iontools.DisplayConfiguration;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
@@ -39,7 +39,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 {
     // Instance Vars
     String          ucams = "j35";
-
+    DisplayConfiguration   getN;
+    
     IONGrConnection c_ionCon;
 
     IONJGrDrawable   c_plot;
@@ -242,7 +243,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   
   public void init(){
 
-      /*
+	  initializeParameters();
+	  
+	  /*
       Container contentPane = getContentPane();
       contentPane.setLayout(new FlowLayout(FlowLayout.LEADING));
       
@@ -272,7 +275,36 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	      //handle exception
 	  }    
   }
- /*
+ 
+  /**
+   * This method initialize all the parameters used to display the GUI.
+   *
+   */
+  private void initializeParameters() {
+	   
+	    //retrieve Nx, Ny, NyMin and NyMax according to instrument type
+	    getN = new DisplayConfiguration("REF_L");
+	    Nx = getN.retrieveNx();
+	    Ny = getN.retrieveNy();
+		NyMin = getN.retrieveNyMin();
+	    NyMax = getN.retrieveNyMax();
+	  System.out.println("NyMin: " + NyMin);
+	  System.out.println("NyMax: " + NyMax);
+	    
+  }
+ 
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  /*
  *************************************************
  * Inorder to display status messages at startup and also 
  * to be able to disconnect when the page is not being viewed
@@ -378,7 +410,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  if (X < 0) {X = 0;};
 	  if (Y < NyMin*2) {Y = NyMin*2;};
 	  if (X > Nx*2) {X = 2*Nx-1;};
-	  if (Y > 2*Ny) {Y = 2*Ny-1;};
+	  if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	  
 	  
 	  if (modeSelected.compareTo("signalSelection") == 0) {
@@ -410,7 +442,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    if (X < 0) {X = 0;};
 	    if (Y < 2*NyMin) {Y = 2*NyMin;};
 	    if (X > 2*Nx) {X = 2*Nx-1;};
-	    if (Y > 2*NyMax) {Y = 2*IParameters.NyReflMax-1;};
+	    if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	    
 	    c_xval2 = (int) X/2;
 	    c_yval2 = (int) (607-Y)/2;
@@ -643,19 +675,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		    //retrieve name of instrument
 		    instrument = (String)instrList.getSelectedItem();
 		    */
-		    
-		    //	    if (instrument.compareTo("REF_L") == 0) {
-		    NyMin = IParameters.NyReflMin;
-		    NyMax = IParameters.NyReflMax;
-		    
-					    //	    } else {
-		    //		Nx = 304;
-		    //		Ny_min = 303-255;
-		    //		Ny_max = 255;
-		    //	    }
-		    
-		    // createVar();
 
+		    // createVar();
 		   
 		    instr = new com.rsi.ion.IONVariable(instrument);
 		    user = new com.rsi.ion.IONVariable(ucams); 
@@ -687,15 +708,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       //retrieve value of combobox
       instrument = (String)instrList.getSelectedItem();
       
-      if (compareTo(instrument, "REF_L" = 0)) {
-      Nx = 256;
-      Ny = 304;
-      } else {
-      Nx = 304;
-      Ny = 256;
-      }
-      }
-      );
     */	
 
 /*
@@ -753,10 +765,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    topPanel.add(runNumber);
 	    //	    topPanel.add(instrList);
 
-	    //retrieve Nx and Ny according to instrument type
-	    InstrumentConfiguration getN = new InstrumentConfiguration("REF_L");
-	    Nx = getN.retrieveNx();
-	    Ny = getN.retrieveNy();
 	    
 	    // Second line (plot)
 	    c_plot = new IONJGrDrawable(Nx*2, Ny*2);
