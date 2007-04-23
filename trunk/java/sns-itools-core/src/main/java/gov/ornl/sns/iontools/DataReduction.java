@@ -10,11 +10,19 @@
  lines and modify to suit your needs.)
 ********************************************************************/
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.image.BufferedImage;
+import java.awt.Dimension;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.*;
-import java.applet.*;
+//import java.applet.*;
 import java.io.*;
 import java.net.*;
 import java.util.Arrays;
@@ -23,21 +31,23 @@ import javax.swing.*;
 
 
 public class DataReduction extends JApplet implements IONDisconnectListener, 
-						IONOutputListener, 
-						ActionListener,
-						IONMouseListener
+						      IONOutputListener, 
+						      ActionListener,
+						      IONMouseListener
 {
     // Instance Vars
     String          ucams = "j35";
 
     IONGrConnection c_ionCon;
-    IONGrDrawable   c_plot;
+
+    IONJGrDrawable   c_plot;
     Dimension       c_dimApp;
     int             c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     String          runNumberValue;
-    String          instrument;
-    String[]        instrumentStrings = {"REF_L", "REF_M"};
-    String          text;
+    String          instrument = "REF_L";
+    //    String[]        instrumentStrings = {"REF_L", "REF_M"};
+    String          text1;
+    String          text2;
     String          cmd; 
     JLabel	    runNumberLabel;	
     JTextField      runNumber;
@@ -61,7 +71,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JLabel          blank3Label;
     
     //def of components of input tab
-
     JPanel          buttonSignalBackgroundPanel;
     JPanel          textFieldSignalBackgroundPanel;
     JPanel          signalBackgroundPanel;
@@ -122,7 +131,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JRadioButton    yesIntermediateRadioButton;
     JRadioButton    noIntermediateRadioButton;
     JButton         intermediateButton;
-
+    
     //combine spectrum
     JPanel          combineSpectrumPanel;
     JLabel          combineSpectrumLabel;
@@ -153,8 +162,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     int             y_max;
 
     IONVariable     a_idl;
-    IONCallableClient runFound;   //1 if a run has been found, 0 otherwise
-
+    IONVariable     iVar;
+    IONVariable     ionVar;
+    IONVariable     IONfoundNexus;
+    String          foundNexus = "0";
+    
+    int             Nx = 256;
+    int             Ny = 304;
+    int             Ny_min = 0;
+    int             Ny_max = (303-255);
+    
     int	            c_xval1=0;	  // initial x for rubber band box
     int		    c_yval1=0;	  // initial y for rubber band box
     int		    c_xval2=0;	  // final x for rubber band box
@@ -164,21 +181,58 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     int		    c_x2=0;		  // final x java
     int		    c_y2=0;		  // final y java
     int             a=0;
-    
-    int             Nx = 256;
-    int             Ny = 304;
-    int             Ny_min = 0;
-    int             Ny_max = (303-255);
-    
+
+    int             signal_x1=0;
+    int             signal_y1=0;
+    int             back1_x1=0;
+    int             back1_y1=0;
+    int             back2_x1=0;
+    int             back2_y1=0;
+    int             signal_x2=0;
+    int             signal_y2=0;
+    int             back1_x2=0;
+    int             back1_y2=0;
+    int             back2_x2=0;
+    int             back2_y2=0;
+    int             info_x=0;
+    int             info_y=0;
+
     String          hostname;
 
     //menu
     JMenuBar        menuBar;
+    JMenu           dataReductionPackMenu;
     JMenu           modeMenu;
+    JMenu           parametersMenu;
+    JMenu           saveSessionMenu;
+
+    //JMenuItem of DataReductionMenu
+    JMenuItem       preferencesMenuItem;
+    InternalFrame   preferencesFrame;
+
+    //JMenuItem of mode
     ButtonGroup     modeButtonGroup;
-    JRadioButtonMenuItem selectModeMenuItem;
+    JRadioButtonMenuItem signalSelectionModeMenuItem;
+    JRadioButtonMenuItem background1SelectionModeMenuItem;
+    JRadioButtonMenuItem background2SelectionModeMenuItem;
     JRadioButtonMenuItem infoModeMenuItem;
-	
+    JCheckBoxMenuItem    cbMenuItem;
+    String  modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
+
+    JMenu           intermediateMenu;
+
+    //JMenuItem of instruments
+    JMenu           instrumentMenu;
+    JRadioButtonMenuItem reflRadioButton;
+    JRadioButtonMenuItem refmRadioButton;
+    JRadioButtonMenuItem bssRadioButton;
+    ButtonGroup     instrumentButtonGroup;
+
+    //JMenuItem of save session in parameters
+    ButtonGroup          saveFullSessionButtonGroup;
+    JRadioButtonMenuItem yesSaveFullSessionMenuItem;
+    JRadioButtonMenuItem noSaveFullSessionMenu;
+
 // ******************************
 // Init Method
 // ******************************
@@ -194,11 +248,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
       // Create connection and drawable objects
       c_ionCon   = new IONGrConnection();
+      //      c_ionClient = new IONCallableClient();  //try
       c_dimApp = getSize();
       buildGUI();	
       runNumber.requestFocusInWindow();
 
       connectToServer();
+      IONfoundNexus = new IONVariable((int)0);
 
       //retrieve hostname
       //      System.out.println("user name is: " + System.getProperty("user.name"));
@@ -211,11 +267,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       catch (java.net.UnknownHostException uhe)
 	  {
 	      //handle exception
-	  }
-      
-
-
-
+	  }    
   }
  /*
  *************************************************
@@ -274,6 +326,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   // Connect to the server
      try { 
 	 c_ionCon.connect(this.getCodeBase().getHost()); 
+	 //	 c_ionClient.connect(this.getCodeBase().getHost());   //try
      } catch(UnknownHostException eUn) {
          System.err.println("Error: Unknown Host.") ;
          writeMessage("Error:Unknown Host.");
@@ -293,7 +346,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     c_bConnected = 1;
     writeMessage("Connected.");
 
- // Add the disconnect listener
+    // Add the disconnect listener
     c_ionCon.addIONDisconnectListener(this);
     c_ionCon.addIONOutputListener(this);
 
@@ -317,96 +370,150 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void mousePressed(com.rsi.ion.IONDrawable drawable, int X, int Y, 
                     long when, int mask)
   {
-      if (X < 0) {X = 0;};
-      if (Y < Ny_min*2) {Y = Ny_min*2;};
-      if (X > Nx*2) {X = 2*Nx-1;};
-      if (Y > 2*Ny_max) {Y = 2*Ny-1;};
-      
-      c_x1= X;
-      c_y1= Y;
-      
-      c_xval1 = (int) X / 2;
-      c_yval1 = (int) (607-Y)/2;
+      if (IONfoundNexus.toString().compareTo("0") != 0) {
 
-      c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
-      
+	  if (X < 0) {X = 0;};
+	  if (Y < Ny_min*2) {Y = Ny_min*2;};
+	  if (X > Nx*2) {X = 2*Nx-1;};
+	  if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	  
+	  
+	  if (modeSelected.compareTo("signalSelection") == 0) {
+	      signal_x1 = X;
+	      signal_y1 = Y;
+	  } else if (modeSelected.compareTo("back1Selection") == 0) {
+	      back1_x1 = X;
+	      back1_y1 = Y;
+	  } else if (modeSelected.compareTo("back2Selection") == 0) {
+	      back2_x1 = X;
+	      back2_y1 = Y;
+	  } else {
+	      info_x = X;
+	      info_y = Y;
+	  }
+
+	  c_xval1 = (int) X / 2;
+	  c_yval1 = (int) (607-Y)/2;
+	  
+	  c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
+      }
       return;
   }
     
     public void mouseMoved(com.rsi.ion.IONDrawable drawable, int X, int Y, 
 			   long when, int mask)
     {
-	if (X < 0) {X = 0;};
-	if (Y < 2*Ny_min) {Y = 2*Ny_min;};
-	if (X > 2*Nx) {X = 2*Nx-1;};
-	if (Y > 2*Ny_max) {Y = 2*Ny-1;};
-	
-	c_x2= X;
-	c_y2= Y;
-	
-	c_xval2 = (int) X/2;
-	c_yval2 = (int) (607-Y)/2;
-	doBox();
+	if (IONfoundNexus.toString().compareTo("0") != 0) {
+	    if (X < 0) {X = 0;};
+	    if (Y < 2*Ny_min) {Y = 2*Ny_min;};
+	    if (X > 2*Nx) {X = 2*Nx-1;};
+	    if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	    
+	    c_xval2 = (int) X/2;
+	    c_yval2 = (int) (607-Y)/2;
 
-	c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
-	
+	    if (modeSelected.compareTo("signalSelection") == 0) {
+		signal_x2 = X;
+		signal_y2 = Y;
+		doBox();
+	    } else if (modeSelected.compareTo("back1Selection") == 0) {
+		back1_x2 = X;
+		back1_y2 = Y;
+		doBox();
+	    } else if (modeSelected.compareTo("back2Selection") == 0) {
+		back2_x2 = X;
+		back2_y2 = Y;
+		doBox();
+	    } else {
+		info_x = X;
+		info_y = Y;
+	    }
+	    
+	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
+	}
 	return;
     }
     
     public void mouseReleased(com.rsi.ion.IONDrawable drawable, int X, int Y, 
 			      long when, int mask)
     { 
-	int [] someArray = new int [2];
-	
-	//sort array
-	//x
-	someArray[0] = c_xval1;
-	someArray[1] = c_xval2;
-	Arrays.sort(someArray);
-	x_min = someArray[0];
-	x_max = someArray[1];
-	
-	//y
-	someArray[0] = c_yval1;
-	someArray[1] = c_yval2;
-	Arrays.sort(someArray);
-	y_min = someArray[0];
-	y_max = someArray[1];
-	
-	// output values into textbox
-	text = "x_min: " + x_min + "\ty_min: " + y_min + "\n";
-	generalInfoTextArea.setText(text);
-	text = "x_max: " + x_max + "\ty_max: " + y_max + "\n";
-	generalInfoTextArea.append(text);
-	
-	doBox();
-	c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
-	return;
+      if (IONfoundNexus.toString().compareTo("0") != 0) {
+	  int [] someArray = new int [2];
+	  
+	  //sort array
+	  //x
+	  someArray[0] = c_xval1;
+	  someArray[1] = c_xval2;
+	  Arrays.sort(someArray);
+	  x_min = someArray[0];
+	  x_max = someArray[1];
+	  
+	  //y
+	  someArray[0] = c_yval1;
+	  someArray[1] = c_yval2;
+	  Arrays.sort(someArray);
+	  y_min = someArray[0];
+	  y_max = someArray[1];
+	  
+	  // output values into textbox
+	  text1= "x_min: " + x_min + "\ty_min: " + y_min + "\n";
+	  //	  generalInfoTextArea.setText(text);
+	  text2 = "x_max: " + x_max + "\ty_max: " + y_max + "\n";
+
+	if (IONfoundNexus.toString().compareTo("0") != 0) {
+
+	    if (X < 0) {X = 0;};
+	    if (Y < 2*Ny_min) {Y = 2*Ny_min;};
+	    if (X > 2*Nx) {X = 2*Nx-1;};
+	    if (Y > 2*Ny_max) {Y = 2*Ny-1;};
+	    
+	    if (modeSelected.compareTo("signalSelection") == 0) {
+		signalSelectionTextArea.setText(text1);
+		signalSelectionTextArea.append(text2);
+		doBox();
+	    } else if (modeSelected.compareTo("back1Selection") == 0) {
+		back1SelectionTextArea.setText(text1);		
+		back1SelectionTextArea.append(text2);		
+		doBox();
+	    } else if (modeSelected.compareTo("back2Selection") == 0) {
+		back2SelectionTextArea.setText(text1);
+		back2SelectionTextArea.append(text2);
+		doBox();
+	    } else {
+		generalInfoTextArea.setText(text1);
+		generalInfoTextArea.append(text2);
+	    }
+	    	
+	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
+	    
+	}
+      }
+      return;
     }
     
-/*
+    /*
 ***************************************
- *  actionPerformed()
- *
- * Purpose:
- *  Handles GUI events for displaying.
- */      
-	public void actionPerformed(ActionEvent evt){
-
-	    if ("signalPidFileButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed signalPidFileButton");
-	    }
-
-	    if ("signalPidFileTextField".equals(evt.getActionCommand())) {
-
-	    }
-
-	    if ("backgroundPidFileButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed backgroundpidFileButton");
-	    }
-
-	    if ("backgroundPidFileTextField".equals(evt.getActionCommand())) {
-	    }
+*  actionPerformed()
+*
+* Purpose:
+*  Handles GUI events for displaying.
+*/      
+    public void actionPerformed(ActionEvent evt){
+	
+	if ("signalPidFileButton".equals(evt.getActionCommand())) {
+	    System.out.println("I just pressed signalPidFileButton");
+	}
+	
+	if ("signalPidFileTextField".equals(evt.getActionCommand())) {
+	    
+	}
+	
+	if ("backgroundPidFileButton".equals(evt.getActionCommand())) {
+	    System.out.println("I just pressed backgroundpidFileButton");
+	}
+	
+	  if ("backgroundPidFileTextField".equals(evt.getActionCommand())) {
+	  }
 
 	    if ("yesNormalization".equals(evt.getActionCommand())) {
 		normalizationTextField.setEnabled(true);
@@ -484,40 +591,87 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    if ("startDataReductionButton".equals(evt.getActionCommand())) {
 		System.out.println("I just pressed go Data Reduction");
 	    }
+	    
+	    //if one of the intermediate check box is check
+	    if ("plot1".equals(evt.getActionCommand())) {
+		System.out.println("in check box");
+	    }
 
+	    if ("instrumentREFL".equals(evt.getActionCommand())) {
+		instrument = "REF_L";
+	    }
+
+	    if ("instrumentREFM".equals(evt.getActionCommand())) {
+		instrument = "REF_M";
+	    }
+
+	    if ("instrumentBSS".equals(evt.getActionCommand())) {
+		instrument = "BSS";
+	    }
+
+	    if ("preferencesMenuItem".equals(evt.getActionCommand())) {
+		    preferencesFrame.setVisible(true);
+	    }
+
+	    if ("signalSelection".equals(evt.getActionCommand())) {
+		modeSelected = "signalSelection";
+	    }
+	    
+	    if ("back1Selection".equals(evt.getActionCommand())) {
+		modeSelected = "back1Selection";
+	    }
+	    
+	    if ("back2Selection".equals(evt.getActionCommand())) {
+		modeSelected = "back2Selection";
+	    }
+	    
+	    if ("info".equals(evt.getActionCommand())) {
+		modeSelected = "info";
+	    }
+	    
 	    if ("runNumber".equals(evt.getActionCommand())) {
 		
 		//retrive value of run number
 		runNumberValue = runNumber.getText();
 		
-		/*
-		//retrieve name of instrument
-		instrument = (String)instrList.getSelectedItem();
-		*/
-		
-		//	    if (instrument.compareTo("REF_L") == 0) {
-		Nx = 256;
-		Ny_min = 0;
-		Ny_max = 304; 
-		//	    } else {
-		//		Nx = 304;
-		//		Ny_min = 303-255;
-		//		Ny_max = 255;
-		//	    }
-		
-		instrument = "REF_L";
-		instr = new com.rsi.ion.IONVariable(instrument);
-		user = new com.rsi.ion.IONVariable(ucams);
-		
-		c_ionCon.setDrawable(c_plot);
-		String cmd = "plot_data, " + runNumberValue + ", " + instr + ", " + user;
-		
-		showStatus("Processing...");
-		executeCmd(cmd);
-		showStatus("Done!");
-		
-		checkGUI();
-		
+		if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
+
+		    /*
+		    //retrieve name of instrument
+		    instrument = (String)instrList.getSelectedItem();
+		    */
+		    
+		    //	    if (instrument.compareTo("REF_L") == 0) {
+		    Nx = 256;
+		    Ny_min = 0;
+		    Ny_max = 304; 
+		    //	    } else {
+		    //		Nx = 304;
+		    //		Ny_min = 303-255;
+		    //		Ny_max = 255;
+		    //	    }
+		    
+		    // createVar();
+
+		   
+		    instr = new com.rsi.ion.IONVariable(instrument);
+		    user = new com.rsi.ion.IONVariable(ucams); 
+
+
+		    //	    sendIDLVariable("X",iVar);
+	
+		    c_ionCon.setDrawable(c_plot);
+		    
+		    String cmd = "foundNexus = plot_data( " + runNumberValue + ", " + 
+			instr + ", " + user+")";
+
+		    showStatus("Processing...");
+		    executeCmd(cmd);
+		    IONfoundNexus = queryVariable("foundNexus");
+
+		    showStatus("Done!");
+		    checkGUI();
+		}
 	    }
 	    
 	    enabledGoDatReduction();
@@ -551,13 +705,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	private void buildGUI(){
 
 	    topPanel = new JPanel();
-	    plotPanel = new JPanel();
+	    plotPanel = new JPanel(new BorderLayout());
 	    leftPanel = new JPanel(new BorderLayout());
 
 	    //	    dataReductionPanel = new JPanel();
 	    tabbedPane = new JTabbedPane();
 	    dataReductionTabbedPane = new JTabbedPane();
-	    plotDataReductionPanel = new JPanel(new BorderLayout());
+	    plotDataReductionPanel = new JPanel();
 	    //	    dataReductionPanel = new JPanel();
 	    GridBagLayout gridbag = new GridBagLayout();
 	    GridBagConstraints c = new GridBagConstraints();
@@ -594,15 +748,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	    topPanel.add(runNumberLabel);
 	    topPanel.add(runNumber);
-	    //topPanel.add(instrList);
+	    //	    topPanel.add(instrList);
 
 	    // Second line (plot)
-	    c_plot = new IONGrDrawable(256*2, 304*2);
-	    plotPanel.add(c_plot);
-	    
+	    c_plot = new IONJGrDrawable(Nx*2, Ny*2);
+	    plotPanel.add(c_plot,BorderLayout.SOUTH);
 	    leftPanel.add(topPanel,BorderLayout.NORTH);
-	    leftPanel.add(plotPanel);
-	    
+	    leftPanel.add(plotPanel,BorderLayout.SOUTH);
+
 	    //main DataReduction-Selection-logBook tabs - first tab
 	    panela = new JPanel();
 	    dataReductionTabbedPane.addTab("Input", panela);
@@ -629,12 +782,33 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    plotDataReductionPanel.add(tabbedPane);
 
 	    //add everything in final window
-	    JPanel contentPane  = new JPanel(new BorderLayout());
-	    contentPane.add(plotDataReductionPanel);
-	    add(contentPane);
+	    //	    JPanel contentPane  = new JPanel(new BorderLayout());
+
+	    //create internal frame for preferences
+	    //createFrame();
+	    
+	    add(plotDataReductionPanel);
+	    //contentPane.add(plotDataReductionPanel);
+	    //add(contentPane);
 	    setJMenuBar(menuBar);
 
 	}
+
+
+
+    protected void createFrame() {
+	preferencesFrame = new InternalFrame();
+	
+	//preferencesFrame.setVisible(false);
+	preferencesFrame.setVisible(false);
+	add(preferencesFrame);
+	
+	try {
+	    preferencesFrame.setSelected(true);
+	} catch (java.beans.PropertyVetoException e) {}
+    }
+    
+    
 
     protected JComponent makeTextPanel(String text) {
 	JPanel panel = new JPanel(false);
@@ -644,11 +818,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	panel.add(filler);
 	return panel;
     }
-
-
-
-
-
 
 
 
@@ -722,13 +891,35 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	
 	Graphics g = c_plot.getGraphics();
 	c_plot.update(g);
-	g.setColor(Color.red);
-	g.drawLine(c_x1,c_y1,c_x1,c_y2);
-	g.drawLine(c_x1,c_y2,c_x2,c_y2);
-	g.drawLine(c_x2,c_y2,c_x2,c_y1);
-	g.drawLine(c_x2,c_y1,c_x1,c_y1);
+	
+	for (int i=0; i<3; i++) {
+	    
+	    if (i == 0) {
+		c_x1 = signal_x1;
+		c_y1 = signal_y1;
+		c_x2 = signal_x2;
+		c_y2 = signal_y2;
+		g.setColor(Color.red);
+	    } else if (i == 1) {
+		c_x1 = back1_x1;
+		c_y1 = back1_y1;
+		c_x2 = back1_x2;
+		c_y2 = back1_y2;
+		g.setColor(Color.yellow);
+	    } else if (i == 2) {
+		c_x1 = back2_x1;
+		c_y1 = back2_y1;
+		c_x2 = back2_x2;
+		c_y2 = back2_y2;
+		g.setColor(Color.green);
+	    }
+		
+	    g.drawLine(c_x1,c_y1,c_x1,c_y2);
+	    g.drawLine(c_x1,c_y2,c_x2,c_y2);
+	    g.drawLine(c_x2,c_y2,c_x2,c_y1);
+	    g.drawLine(c_x2,c_y1,c_x1,c_y1);
+	}
     }
-
 
 
     private void createSelectionGui() {
@@ -1045,7 +1236,21 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	menuBar = new JMenuBar();
 
 	//Create the first menu
-	modeMenu = new JMenu("Operation mode");
+	dataReductionPackMenu = new JMenu("DataReductionPack");
+	dataReductionPackMenu.setActionCommand("dataReductionPackMenu");
+	dataReductionPackMenu.setMnemonic(KeyEvent.VK_D);
+	dataReductionPackMenu.setEnabled(true);
+	menuBar.add(dataReductionPackMenu);
+		
+	preferencesMenuItem = new JMenuItem("Preferences...");
+	preferencesMenuItem.setMnemonic(KeyEvent.VK_C);
+	preferencesMenuItem.setActionCommand("preferencesMenuItem");
+	preferencesMenuItem.addActionListener(this);
+	dataReductionPackMenu.add(preferencesMenuItem);
+
+	//Create the second menu
+	modeMenu = new JMenu("Mode");
+	modeMenu.setActionCommand("modeMenu");
 	modeMenu.setMnemonic(KeyEvent.VK_M);
 	modeMenu.getAccessibleContext().setAccessibleDescription("Select the active operation mode");
 	menuBar.add(modeMenu);
@@ -1053,24 +1258,192 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	//a group of radio button menu items
 	modeButtonGroup = new ButtonGroup();
 
-	selectModeMenuItem = new JRadioButtonMenuItem("Selection");
-	selectModeMenuItem.setSelected(true);
-	selectModeMenuItem.setMnemonic(KeyEvent.VK_S);
-	modeButtonGroup.add(selectModeMenuItem);
-	modeMenu.add(selectModeMenuItem);
+	signalSelectionModeMenuItem = new JRadioButtonMenuItem("Signal selection");
+	signalSelectionModeMenuItem.setActionCommand("signalSelection");
+	signalSelectionModeMenuItem.addActionListener(this);
+	signalSelectionModeMenuItem.setSelected(true);
+	signalSelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
+	modeButtonGroup.add(signalSelectionModeMenuItem);
+	modeMenu.add(signalSelectionModeMenuItem);
 	
+	background1SelectionModeMenuItem = new JRadioButtonMenuItem("Background #1 selection");
+	background1SelectionModeMenuItem.setActionCommand("back1Selection");
+	background1SelectionModeMenuItem.addActionListener(this);
+	background1SelectionModeMenuItem.setSelected(true);
+	background1SelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
+	modeButtonGroup.add(background1SelectionModeMenuItem);
+	modeMenu.add(background1SelectionModeMenuItem);
+
+	background2SelectionModeMenuItem = new JRadioButtonMenuItem("Background #2 selection");
+	background2SelectionModeMenuItem.setActionCommand("back2Selection");
+	background2SelectionModeMenuItem.addActionListener(this);
+	background2SelectionModeMenuItem.setSelected(true);
+	background2SelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
+	modeButtonGroup.add(background2SelectionModeMenuItem);
+	modeMenu.add(background2SelectionModeMenuItem);
+
 	infoModeMenuItem = new JRadioButtonMenuItem("Info");
+	infoModeMenuItem.setActionCommand("info");
+	infoModeMenuItem.addActionListener(this);
 	infoModeMenuItem.setMnemonic(KeyEvent.VK_I);
 	modeButtonGroup.add(infoModeMenuItem);
 	modeMenu.add(infoModeMenuItem);
-	modeMenu.setEnabled(false);
+	modeMenu.setEnabled(true);
+
+	//create the second menu
+	parametersMenu = new JMenu("Parameters");
+	parametersMenu.setActionCommand("parametersMenu");
+	parametersMenu.setMnemonic(KeyEvent.VK_P);
+	parametersMenu.getAccessibleContext().setAccessibleDescription("Select the various parameters");
+	parametersMenu.setEnabled(false);
+
+	parametersMenu.setRequestFocusEnabled(true);
+	parametersMenu.requestFocus(true);
+	menuBar.add(parametersMenu);
+
+	/*
+	//a subemenu of list of intermediate plots
+	intermediateMenu = new JMenuItem("Intermediate plots");
+	intermediateMenu.setMnemonic(KeyEvent.VK_I);
+	modeMenu.add(intermediateMenu);
+	*/
+
+	//instrument
+	instrumentMenu = new JMenu("Instrument");
+	instrumentMenu.setMnemonic(KeyEvent.VK_I);
+	parametersMenu.add(instrumentMenu);
+
+	//a group of radio button menu items
+	instrumentButtonGroup = new ButtonGroup();
+
+	reflRadioButton = new JRadioButtonMenuItem("REF_L");
+	reflRadioButton.setActionCommand("instrumentREFL");
+	reflRadioButton.addActionListener(this);
+	reflRadioButton.setSelected(true);
+	reflRadioButton.setMnemonic(KeyEvent.VK_L);
+	instrumentButtonGroup.add(reflRadioButton);
+	instrumentMenu.add(reflRadioButton);
 	
+	refmRadioButton = new JRadioButtonMenuItem("REF_M");
+	refmRadioButton.setActionCommand("instrumentREFM");
+	refmRadioButton.addActionListener(this);
+	refmRadioButton.setSelected(true);
+	refmRadioButton.setMnemonic(KeyEvent.VK_M);
+	instrumentButtonGroup.add(refmRadioButton);
+	instrumentMenu.add(refmRadioButton);
+
+	bssRadioButton = new JRadioButtonMenuItem("BSS");
+	bssRadioButton.setActionCommand("instrumentBSS");
+	bssRadioButton.addActionListener(this);
+	bssRadioButton.setSelected(true);
+	bssRadioButton.setMnemonic(KeyEvent.VK_B);
+	instrumentButtonGroup.add(bssRadioButton);
+	instrumentMenu.add(bssRadioButton);
+
+
+
+
+
+
+
+
+
+	//intermediate plot
+	intermediateMenu = new JMenu("Intermediate plots");
+	intermediateMenu.setMnemonic(KeyEvent.VK_P);
+	parametersMenu.add(intermediateMenu);
+	
+	//a list of check box intermediate plots
+	cbMenuItem = new JCheckBoxMenuItem("Signal Region Summed vs TOF");
+	cbMenuItem.setActionCommand("plot1");
+	cbMenuItem.addActionListener(this);
+        intermediateMenu.add(cbMenuItem);
+	
+	cbMenuItem = new JCheckBoxMenuItem("Background Summed vs TOF");
+	cbMenuItem.addActionListener(this);
+	intermediateMenu.add(cbMenuItem);
+
+	cbMenuItem = new JCheckBoxMenuItem("Signal Region Summed vs TOF");
+	cbMenuItem.addActionListener(this);
+	intermediateMenu.add(cbMenuItem);
+
+	cbMenuItem = new JCheckBoxMenuItem("Normalization Region Summed vs TOF");
+	cbMenuItem.addActionListener(this);
+	intermediateMenu.add(cbMenuItem);
+
+	cbMenuItem = new JCheckBoxMenuItem("Background Region from Normalization Summed vs TOF");
+	cbMenuItem.addActionListener(this);
+	intermediateMenu.add(cbMenuItem);
+
+	//save full session
+	saveSessionMenu = new JMenu("Parameters saved between sessions");
+	saveSessionMenu.setMnemonic(KeyEvent.VK_S);
+	parametersMenu.add(saveSessionMenu);
+	
+	//list of parameters to save
+	cbMenuItem = new JCheckBoxMenuItem("Save everything");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+
+	saveSessionMenu.addSeparator();
+
+	cbMenuItem = new JCheckBoxMenuItem("Save background 1 selection");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+
+	cbMenuItem = new JCheckBoxMenuItem("Save background 2 selection");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+
+	saveSessionMenu.addSeparator();
+
+	cbMenuItem = new JCheckBoxMenuItem("Save signal Pid file");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+
+	cbMenuItem = new JCheckBoxMenuItem("Save background Pid file");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+	
+	saveSessionMenu.addSeparator();
+
+	cbMenuItem = new JCheckBoxMenuItem("Save normalization run number");
+	cbMenuItem.addActionListener(this);
+	saveSessionMenu.add(cbMenuItem);
+
+	    
     }
 
     private void checkGUI() {
 	
 	//if the run number has been found, activate selection mode
-	modeMenu.setEnabled(false);
+	if (IONfoundNexus.toString().compareTo("0") == 0) {
+	    modeMenu.setEnabled(false);
+	    parametersMenu.setEnabled(false);
+	} else {
+	    	    modeMenu.setEnabled(true);
+	    parametersMenu.setEnabled(true);
+	}
     }
 
+    private void createVar() {
+
+	iVar = new IONVariable((int)0);
+	sendIDLVariable("X",iVar);
+    }
+    
+    private void sendIDLVariable(String sVariable, IONVariable ionVar) {
+	try {
+	    c_ionCon.setIDLVariable(sVariable,ionVar);
+	} catch (Exception e) {}
+    }
+    
+    private IONVariable queryVariable(String sVariable) {
+	try {
+	    ionVar = c_ionCon.getIDLVariable(sVariable);
+	} catch (Exception e) {}
+	return ionVar;
+    }
+
+    
 }
