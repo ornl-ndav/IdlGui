@@ -1,52 +1,10 @@
-;Create the output array for signal selection
-pro create_signal_pid_array_file, XY, file_name
-
-print, 'in create_signal_pid_array'
-xmin = XY[0]
-xmax = XY[1]
-ymin = XY[2]
-ymax = XY[3]
-
-print, 'xmin: ' + strcompress(xmin)
-print, 'xmax: ' + strcompress(xmax)
-print, 'ymin: ' + strcompress(ymin)
-print, 'ymax: ' + strcompress(ymax)
-
-openw, 1, file_name
-
-i=0
-for x=xmin, xmax do begin
-    for y=ymin, ymax do begin
-        text = 'bank1_' + strcompress(x,/remove_all)
-        text += '_' + strcompress(y,/remove_all)
-        printf, 1,text
-        ++i
-    endfor
-endfor
-
-close, 1
-free_lun, 1
-
-end
-
-
-
-
-
-
-
 ;Create the output array for background selection
-pro create_background_pid_array_file, Event, $
-                                      XYsignal, $
-                                      XYbackground, $
-                                      XYbackground_2, $
-                                      file_name
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-instrument = (*global).instrument
+pro CREATE_BACKGROUND_PID_FILE, Nx, Ny, $
+                                XYsignal, $
+                                XYbackground, $
+                                XYbackground_2, $
+                                back2_selected,$
+                                file_name
 
 xmin_signal = XYsignal[0]
 xmax_signal = XYsignal[1]
@@ -68,8 +26,6 @@ xmax_back = round(xmax_back/2)
 ymin_back = round(ymin_back/2)
 ymax_back = round(ymax_back/2)
 
-Nx = (*global).Ny
-Ny = (*global).Nx
 signal_array=intarr(Nx, Ny)
 background_1_array = intarr(Nx, Ny)
 
@@ -89,7 +45,7 @@ for x=xmin_back, xmax_back do begin
 endfor
 
 ;if there is a second background selection
-if ((*global).selection_background_2 EQ 1) then begin  
+if (back2_selected EQ 1) then begin  
 
     xmin_back_2 = XYbackground_2[0]
     xmax_back_2 = XYbackground_2[1]
