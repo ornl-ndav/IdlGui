@@ -50,9 +50,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 						      IONOutputListener, 
 						      ActionListener,
 						      IONMouseListener
-{
-
-	
+{	
 	// Instance Vars
     String          ucams = "j35";
     DisplayConfiguration   getN;
@@ -91,7 +89,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JPanel          panela; //input tab
     JPanel          panel1; //selection
     JPanel          panel2; //log book
-    JPanel          panelb; //Extra plots
+    JPanel          panelb; //DataReductionPlot
+    IONJGrDrawable   c_dataReductionPlot;	    
+    
+    JPanel          panelc; //Extra plots
     JTabbedPane     tabbedPane;
     JTabbedPane     dataReductionTabbedPane;
 
@@ -196,6 +197,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     IONVariable     iVar;
     IONVariable     ionVar;
     IONVariable     IONfoundNexus;
+    IONVariable    	ionCmd;
+    IONVariable     ionOutputPath;
+    
     boolean         bFoundNexus = false;
     
 //parameters used to define the graphical window and the selection tool
@@ -441,9 +445,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     // add mouse listener
     c_plot.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
+    c_dataReductionPlot.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
 
     // Add the drawables to the connection
     c_ionCon.addDrawable(c_plot);
+    c_ionCon.addDrawable(c_dataReductionPlot);
+    
   }
 
 /*
@@ -617,6 +624,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 */      
     public void actionPerformed(ActionEvent evt){
 	
+    //fill all widgets parameters each time an action is done
+   	populateCheckDataReductionButtonValidationParameters();
+    	    	
 	if ("signalPidFileButton".equals(evt.getActionCommand())) {
 		pidSignalFileName = IontoolsFile.createPidFileName(ucams, instrument, runNumberValue, IParameters.SIGNAL_STRING);
 		signalPidFileTextField.setBackground(Color.RED);
@@ -635,6 +645,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		executeCmd(cmd);		
 		clearSignalPidFileButton.setEnabled(true);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = true;
+		CheckDataReductionButtonValidation.sSignalPidFile = pidSignalFileName;
+//		System.out.println("pidSignalFileName: " + pidSignalFileName);
 	}
 	
 	if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
@@ -646,11 +658,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		clearSignalPidFileButton.setEnabled(false);
 		signalPidFileButton.setEnabled(false);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = false;
+		CheckDataReductionButtonValidation.sSignalPidFile = "";
 	}
-	
-	//if ("signalPidFileTextField".equals(evt.getActionCommand())) {
-	//    
-	//}
 	
 	if ("backgroundPidFileButton".equals(evt.getActionCommand())) {
 		pidBackFileName = IontoolsFile.createPidFileName(ucams, instrument, runNumberValue, IParameters.BACK_STRING);
@@ -683,6 +692,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		executeCmd(cmd);		
 		clearBackPidFileButton.setEnabled(true);
 		CheckDataReductionButtonValidation.bBackPidFileSaved = true;
+		CheckDataReductionButtonValidation.sBackPidFile = pidBackFileName;
 	}
 	
 	if ("clearBackPidFileButton".equals(evt.getActionCommand())) {
@@ -696,12 +706,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		clearBackPidFileButton.setEnabled(false);
 		backgroundPidFileButton.setEnabled(false);
 		CheckDataReductionButtonValidation.bBackPidFileSaved = false;
+		CheckDataReductionButtonValidation.sBackPidFile = "";
 	}
 	
-	
-	
-	
-	  //if ("backgroundPidFileTextField".equals(evt.getActionCommand())) {
+	//if ("backgroundPidFileTextField".equals(evt.getActionCommand())) {
 	  //}
 
 	    if ("yesNormalization".equals(evt.getActionCommand())) {
@@ -717,7 +725,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 	    
 	    if ("normalizationTextField".equals(evt.getActionCommand())) {
-	    	CheckDataReductionButtonValidation.sNormalizationRunNumber = normalizationTextField.getText(); 
 	    }
 
 	    if ("yesBackground".equals(evt.getActionCommand())) {
@@ -734,14 +741,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		System.out.println("I just pressed no in noNormBackground");
 	    }
 
-	    if ("runsAddTextField".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed enter in runsAddTextField");
-	    }
-
-	    if ("runsSequenceTextField".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed enter in runsSequenceTextField");
-	    }
-
 	    if ("yesIntermediate".equals(evt.getActionCommand())) {
 		intermediateButton.setEnabled(true);
 	    }
@@ -755,15 +754,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 	    
 	    if ("yesCombineBackground".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed yes in combine background");
+	    	CheckDataReductionButtonValidation.bCombineDataSpectrum = true;
 	    }
 
 	    if ("noCombineBackground".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed no in combine background");
+	    	CheckDataReductionButtonValidation.bCombineDataSpectrum = false;
 	    }
 	    
 	    if ("yesInstrumentGeometry".equals(evt.getActionCommand())) {
-		instrumentGeometryButton.setEnabled(true);
+	    instrumentGeometryButton.setEnabled(true);
 		instrumentGeometryTextField.setEnabled(true);
 		CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry = true;
 	    }
@@ -779,11 +778,30 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 
 	    if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
-	    	CheckDataReductionButtonValidation.sInstrumentGeometry = instrumentGeometryTextField.getText();
+	    	
 	    }
 
 	    if ("startDataReductionButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed go Data Reduction");
+	    	String cmd_local = RunRefDataReduction.createDataReductionCmd();
+	    	
+	    	c_ionCon.setDrawable(c_dataReductionPlot);
+	    	//ionCmd = new com.rsi.ion.IONVariable(cmd_local);
+	    		    	
+	    	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
+	    	
+	    	String[] cmdArray = cmd_local.split(" ");
+	    	int cmdArraySize = cmdArray.length;
+	    	
+	 	   	int[] nx = {cmdArraySize};
+	    	ionCmd = new IONVariable(cmdArray,nx); 
+	    	
+	    	sendIDLVariable("IDLcmd", ionCmd);
+	    		    	
+	    	String cmd = "run_data_reduction_cmd, IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr;  
+
+	    	showStatus("Processing...");
+	    	executeCmd(cmd);
+	    	showStatus("Done!");
 	    }
 	    
 	    //if one of the intermediate check box is check
@@ -821,14 +839,20 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		modeSelected = "info";
 	    }
 	    
+	    if ("runsAddTextField".equals(evt.getActionCommand())) {
+	    }
+	    
+	    if ("runsSequenceTextField".equals(evt.getActionCommand())) {
+	    }
+
 	    if ("runNumberTextField".equals(evt.getActionCommand())) {
-		
-		//retrive value of run number
+	    	    	
+	    	//retrive value of run number
 	    	runNumberValue = runNumberTextField.getText();
 		
-		if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
-
-			reinitializeVariables();
+	    	if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
+	   
+	    		reinitializeVariables();
 			
 			/*
 		    //retrieve name of instrument
@@ -837,24 +861,35 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 		    // createVar();
 		   
- 		    instr = new com.rsi.ion.IONVariable(instrument);
-		    user = new com.rsi.ion.IONVariable(ucams); 
+	    		instr = new com.rsi.ion.IONVariable(instrument);
+	    		user = new com.rsi.ion.IONVariable(ucams); 
 
-
-		    c_ionCon.setDrawable(c_plot);
+	    		c_ionCon.setDrawable(c_plot);
 		    
-		    String cmd = "foundNexus = plot_data( " + runNumberValue + ", " + 
-			instr + ", " + user+")";
+	    		String cmd = "foundNexus = plot_data( " + runNumberValue + ", " + 
+	    		instr + ", " + user+")";
 
-		    showStatus("Processing...");
-		    executeCmd(cmd);
-		    IONfoundNexus = queryVariable("foundNexus");
-		    NexusFound foundNexus = new NexusFound(IONfoundNexus);
-		    bFoundNexus = foundNexus.isNexusFound();
-		    System.out.println("bFoundNexus is: " + bFoundNexus);
-		    showStatus("Done!");
-		    checkGUI();
-		}
+	    		showStatus("Processing...");
+	    		executeCmd(cmd);
+	    		IONfoundNexus = queryVariable("foundNexus");
+	    		NexusFound foundNexus = new NexusFound(IONfoundNexus);
+	    		bFoundNexus = foundNexus.isNexusFound();
+	    		System.out.println("bFoundNexus is: " + bFoundNexus);
+	    		showStatus("Done!");
+	    		checkGUI();
+	    	
+	    		//check if run number is not already part of the data reduction runs
+	    		UpdateDataReductionRunNumberTextField.updateDataReductionRunNumbers(runNumberValue);
+	    
+	    		//update text field
+	    		if (bFoundNexus) {
+	    			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
+	    				runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
+	    			} else {
+	    				runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
+	    			}
+	    		}
+	    	}
 	    }		
 	    
 	    if (CheckDataReductionButtonValidation.checkDataReductionButtonStatus()) {
@@ -911,8 +946,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    dataReductionTabbedPane.addTab("Input", panela);
 	    createInputGUI();
 
-	    panelb = new JPanel();
-	    dataReductionTabbedPane.addTab("Extra Plots", panelb);
+	    c_dataReductionPlot = new IONJGrDrawable(IParameters.DATA_REDUCTION_PLOT_X, IParameters.DATA_REDUCTION_PLOT_Y);
+	    
+	    panelb = new JPanel(new BorderLayout());
+	    panelb.add(c_dataReductionPlot);
+	    dataReductionTabbedPane.addTab("Data Reduction Plot", panelb);
+	    
+	    panelc = new JPanel();
+	    dataReductionTabbedPane.addTab("Extra Plots", panelc);
 	    
 	    tabbedPane.addTab("Data Reduction",dataReductionTabbedPane);
 
@@ -1293,10 +1334,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	
 	yesCombineSpectrumRadioButton = new JRadioButton("Yes");
 	yesCombineSpectrumRadioButton.setActionCommand("yesCombineBackground");
-	yesCombineSpectrumRadioButton.setSelected(true);
+	yesCombineSpectrumRadioButton.setSelected(false);
 	yesCombineSpectrumRadioButton.addActionListener(this);
 
 	noCombineSpectrumRadioButton = new JRadioButton("No");
+	noCombineSpectrumRadioButton.setSelected(true);
 	noCombineSpectrumRadioButton.setActionCommand("noCombineBackground");
 	noCombineSpectrumRadioButton.addActionListener(this);
 
@@ -1349,6 +1391,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	runsAddLabel = new JLabel(" Run(s) number: ");
 	runsAddTextField = new JTextField(30);
+	runsAddTextField.setToolTipText("1230,1231,1234-1238,1240");
 	runsAddTextField.setEditable(true);
 	runsAddTextField.setActionCommand("runsAddTextField");
 	runsAddTextField.addActionListener(this);
@@ -1358,6 +1401,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	runsSequenceLabel = new JLabel(" Run(s) number: ");
 	runsSequenceTextField = new JTextField(30);
+	runsSequenceTextField.setToolTipText("1230,1231,1234-1238,1240");
 	runsSequenceTextField.setEditable(true);
 	runsSequenceTextField.setActionCommand("runsSequenceTextField");
 	runsSequenceTextField.addActionListener(this);
@@ -1374,7 +1418,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	startDataReductionButton.setToolTipText("Press to launch the data reduction");
 	startDataReductionButton.setEnabled(true);
 	startDataReductionPanel.add(startDataReductionButton);
-	startDataReductionButton.setEnabled(false);
+	//startDataReductionButton.setEnabled(false);
 
 	blank1Label = new JLabel("    ");
 	blank2Label = new JLabel("    ");
@@ -1671,6 +1715,21 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	
     }
     
-    
+    private void populateCheckDataReductionButtonValidationParameters() {
+    	CheckDataReductionButtonValidation.sRunNumber = runNumberTextField.getText();
+    	CheckDataReductionButtonValidation.sNormalizationRunNumber = normalizationTextField.getText(); 	    	
+    	CheckDataReductionButtonValidation.sAddNexusAndGoString = runsAddTextField.getText();     
+    	CheckDataReductionButtonValidation.sGoSequentiallyString = runsSequenceTextField.getText();    	
+    	CheckDataReductionButtonValidation.sInstrumentGeometry = instrumentGeometryTextField.getText();
+    	
+    	if (runsTabbedPane.getSelectedIndex() == 0) {
+    		CheckDataReductionButtonValidation.bAddNexusAndGo = true;
+    	} else {
+    		CheckDataReductionButtonValidation.bAddNexusAndGo = false;
+    	}
+    	CheckDataReductionButtonValidation.sInstrument = instrument;
+    	
+    	
+    }
     
 }
