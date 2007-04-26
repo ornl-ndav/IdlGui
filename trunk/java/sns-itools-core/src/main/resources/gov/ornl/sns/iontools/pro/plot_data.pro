@@ -1,12 +1,3 @@
-function getMinimum, xmin, xmax
-
-print, 'xmin: ' + strcompress(xmin)
-print, 'xmax: ' + strcompress(xmax)
-
-return, 1200
-end
-
-
 ; \
 ; \defgroup find_full_nexus_name
 ; \{
@@ -149,7 +140,9 @@ if (full_nexus_path NE '') then begin
 
  endelse
 
-return, foundNeXus
+result = [strcompress(foundNexus),strcompress(Ntof)]
+
+return, result
 END
 
 
