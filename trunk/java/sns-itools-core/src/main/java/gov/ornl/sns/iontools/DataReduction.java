@@ -70,10 +70,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     //pid files names creation
     static String 			pidSignalFileName;
-    String          pidBackFileName;
+    static String          pidBackFileName;
     String   		sNexusFound;
     String          sNtof;
-    int             iBack2SelectionExist = 0;
+    static int             iBack2SelectionExist = 0;
     
     
     String          text1;
@@ -133,14 +133,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JPanel          signalBackgroundPanel;
 
     //signal and back pid
-    JPanel          signalPidPanel;
-    static JTextField      signalPidFileTextField;
-    JButton         signalPidFileButton;
-    static JButton         clearSignalPidFileButton;
-    JPanel          backgroundPidPanel;
-    static JTextField      backgroundPidFileTextField;    
-    JButton         backgroundPidFileButton;
-    JButton         clearBackPidFileButton;
+    JPanel          	signalPidPanel;
+    static JTextField   signalPidFileTextField;
+    static JButton      signalPidFileButton;
+    static JButton  	clearSignalPidFileButton;
+    JPanel          	backgroundPidPanel;
+    static JTextField   backgroundPidFileTextField;    
+    static JButton      backgroundPidFileButton;
+    static JButton  	clearBackPidFileButton;
     //normalization
     JPanel          normalizationPanel;
     JLabel          normalizationLabel;
@@ -162,14 +162,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     ButtonGroup     normBackgroundButtonGroup;
     JRadioButton    yesNormBackgroundRadioButton;
     JRadioButton    noNormBackgroundRadioButton;
+
     //tab of runs
     JTabbedPane     runsTabbedPane;
     JPanel          runsAddPanel;
     JLabel          runsAddLabel;
-    JTextField      runsAddTextField;
+    static JTextField      runsAddTextField;
     JPanel          runsSequencePanel;
     JLabel          runsSequenceLabel;
-    JTextField      runsSequenceTextField;
+    static JTextField      runsSequenceTextField;
 
     //tab of selection
     JTabbedPane     selectionTab;
@@ -249,38 +250,38 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     int		    	c_y2=0;		  // final y java
     int             a=0;
 
-    int             signal_x1=0;
-    int             signal_y1=0;
-    int             back1_x1=0;
-    int             back1_y1=0;
-    int             back2_x1=0;
-    int             back2_y1=0;
-    int             signal_x2=0;
-    int             signal_y2=0;
-    int             back1_x2=0;
-    int             back1_y2=0;
-    int             back2_x2=0;
-    int             back2_y2=0;
-    int             info_x=0;
-    int             info_y=0;
+    static int             signal_x1=0;
+    static int             signal_y1=0;
+    static int             back1_x1=0;
+    static int             back1_y1=0;
+    static int             back2_x1=0;
+    static int             back2_y1=0;
+    static int             signal_x2=0;
+    static int             signal_y2=0;
+    static int             back1_x2=0;
+    static int             back1_y2=0;
+    static int             back2_x2=0;
+    static int             back2_y2=0;
+    static int             info_x=0;
+    static int             info_y=0;
 
     //xmin, max and ymin and max pixelid values
-    static int				signal_xmin;
+    static int			signal_xmin;
 	static int 			signal_ymin;
 	static int 			signal_xmax;
 	static int 			signal_ymax;
-	int				back1_xmin;
-	int				back1_ymin;
-	int 			back1_xmax;
-	int 			back1_ymax;
-	int				back2_xmin;
-	int 			back2_ymin;
-	int				back2_xmax;
-	int 			back2_ymax;
-	int				info_xmin;
-	int 			info_ymin;
-	int 			info_xmax;
-	int 			info_ymax;
+	static int			back1_xmin;
+	static int			back1_ymin;
+	static int 			back1_xmax;
+	static int 			back1_ymax;
+	static int			back2_xmin;
+	static int 			back2_ymin;
+	static int			back2_xmax;
+	static int 			back2_ymax;
+	static int			info_xmin;
+	static int 			info_ymin;
+	static int 			info_xmax;
+	static int 			info_ymax;
     
     String          hostname;
 
@@ -368,7 +369,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //used to display data
 	    getN = new DisplayConfiguration(instrument);
 	    Nx = getN.retrieveNx();
+	    ParametersConfiguration.Nx = Nx;
 	    Ny = getN.retrieveNy();
+	    ParametersConfiguration.Ny = Ny;
 		NyMin = getN.retrieveNyMin();
 	    NyMax = getN.retrieveNyMax();
 	  
@@ -653,63 +656,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 	
 	if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
-		signalPidFileTextField.setBackground(Color.WHITE);
-		signalPidFileTextField.setText("");	
-		saveXY(IParameters.SIGNAL_STRING,0,0,0,0);
-		signal_x1 =signal_y1 = signal_x2 = signal_y2 = 0;
+		SaveSignalPidFileAction.clearSignalPidFileAction();
 		doBox();
-		clearSignalPidFileButton.setEnabled(false);
-		signalPidFileButton.setEnabled(false);
-		CheckDataReductionButtonValidation.bSignalPidFileSaved = false;
-		CheckDataReductionButtonValidation.sSignalPidFile = "";
 	}
 	
 	if ("backgroundPidFileButton".equals(evt.getActionCommand())) {
-		pidBackFileName = IontoolsFile.createPidFileName(ucams, instrument, runNumberValue, IParameters.BACK_STRING);
-		backgroundPidFileTextField.setBackground(Color.RED);
-		backgroundPidFileTextField.setText(pidBackFileName);
-	
-		IONVariable fullFileName = new IONVariable(pidBackFileName);
-		
-		int[] xarrSignal = {signal_xmin, signal_xmax, signal_ymin, signal_ymax};
-		int[] xarrBack1 = {back1_xmin, back1_xmax, back1_ymin, back1_ymax};
-		int[] xarrBack2 = {back2_xmin, back2_xmax, back2_ymin, back2_ymax};
-		int[] nx = {4};
-		IONVariable IONxvalsSignal = new IONVariable(xarrSignal,nx);
-		IONVariable IONxvalsBack1 = new IONVariable(xarrBack1, nx);
-		IONVariable IONxvalsBack2 = new IONVariable(xarrBack2, nx);
-		IONVariable ionBack2Selected = new IONVariable(iBack2SelectionExist);
-		IONVariable ionNx = new IONVariable(Nx);
-		IONVariable ionNy = new IONVariable(Ny);
-		
-		try {
-			c_ionCon.setIDLVariable("back2Selected", ionBack2Selected);
-			c_ionCon.setIDLVariable("Nx", ionNx);
-			c_ionCon.setIDLVariable("Ny", ionNy);
-			c_ionCon.setIDLVariable("XY_signal", IONxvalsSignal);
-			c_ionCon.setIDLVariable("XY_back1", IONxvalsBack1);
-			c_ionCon.setIDLVariable("XY_back2", IONxvalsBack2);
-			cmd = "CREATE_BACKGROUND_PID_FILE, Nx, Ny, XY_signal, XY_back1, XY_back2, back2Selected, " + fullFileName;
-		} catch (Exception e) {
-		}
-		executeCmd(cmd);		
-		clearBackPidFileButton.setEnabled(true);
-		CheckDataReductionButtonValidation.bBackPidFileSaved = true;
-		CheckDataReductionButtonValidation.sBackPidFile = pidBackFileName;
+		SaveBackgroundPidFileAction.backgroundPidFileButton();
 	}
 	
 	if ("clearBackPidFileButton".equals(evt.getActionCommand())) {
-		backgroundPidFileTextField.setBackground(Color.WHITE);
-		backgroundPidFileTextField.setText("");	
-		saveXY(IParameters.BACK1_STRING,0,0,0,0);
-		saveXY(IParameters.BACK2_STRING,0,0,0,0);
-		back1_x1 = back1_y1 = back1_x2 = back1_y2 = 0;
-		back2_x1 = back2_y1 = back2_x2 = back2_y2 = 0;
+		SaveBackgroundPidFileAction.clearBackgroundPidFileAction();
 		doBox();
-		clearBackPidFileButton.setEnabled(false);
-		backgroundPidFileButton.setEnabled(false);
-		CheckDataReductionButtonValidation.bBackPidFileSaved = false;
-		CheckDataReductionButtonValidation.sBackPidFile = "";
 	}
 	
 	//if ("backgroundPidFileTextField".equals(evt.getActionCommand())) {

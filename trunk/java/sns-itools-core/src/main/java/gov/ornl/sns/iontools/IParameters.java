@@ -75,7 +75,7 @@ public interface IParameters {
 		static final int NyRefl                 = 304;
 	    static final int NyReflMin 				= 0;
 	    static final int NyReflMax			    = 304;
-	
+	    
 	    //REF_M
 	    static final int NxRefm                 = 304;
 	    static final int NxRefmMin              = 0;

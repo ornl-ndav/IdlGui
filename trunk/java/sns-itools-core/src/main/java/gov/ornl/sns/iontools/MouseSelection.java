@@ -1,56 +1,30 @@
 package gov.ornl.sns.iontools;
 
-
-
 public class MouseSelection {
 
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
-		
-	public void testFunction() {
-			System.out.println("I'm in testFunction");
-	}
+	static void saveXY(String mode,int x_min, int y_min, int x_max, int y_max) {
+    	
+		if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {
+    		DataReduction.signal_xmin = x_min;
+    		DataReduction.signal_ymin = y_min;
+    		DataReduction.signal_xmax = x_max;
+    		DataReduction.signal_ymax = y_max;
+    	} else if (mode.compareTo(IParameters.BACK1_STRING) == 0) {
+    		DataReduction.back1_xmin = x_min;
+    		DataReduction.back1_ymin = y_min;
+    		DataReduction.back1_xmax = x_max;
+    		DataReduction.back1_ymax = y_max;
+    	} else if (mode.compareTo(IParameters.BACK2_STRING) == 0) {
+    		DataReduction.back2_xmin = x_min;
+    		DataReduction.back2_ymin = y_min;
+    		DataReduction.back2_xmax = x_max;
+    		DataReduction.back2_ymax = y_max;
+    	} else if (mode.compareTo(IParameters.INFO_STRING) == 0) {
+    		DataReduction.info_xmin = x_min;
+    		DataReduction.info_ymin = y_min;
+    		DataReduction.info_xmax = x_max;
+    		DataReduction.info_ymax = y_max;
+    	}
+    }	
 	
-	/*
-	 *******************************************
-	 * Mouse Listener Implementation
-	 */
-
-	/*
-	public void mousePressed(com.rsi.ion.IONDrawable drawable, int X, int Y, 
-	                    long when, int mask)
-	  {
-	      if (IONfoundNexus.toString().compareTo("0") != 0) {
-
-		  if (X < 0) {X = 0;};
-		  if (Y < NyMin*2) {Y = NyMin*2;};
-		  if (X > Nx*2) {X = 2*Nx-1;};
-		  if (Y > 2*NyMax) {Y = 2*Ny-1;};
-		  
-		  
-		  if (modeSelected.compareTo("signalSelection") == 0) {
-		      signal_x1 = X;
-		      signal_y1 = Y;
-		  } else if (modeSelected.compareTo("back1Selection") == 0) {
-		      back1_x1 = X;
-		      back1_y1 = Y;
-		  } else if (modeSelected.compareTo("back2Selection") == 0) {
-		      back2_x1 = X;
-		      back2_y1 = Y;
-		  } else {
-		      info_x = X;
-		      info_y = Y;
-		  }
-
-		  c_xval1 = (int) X / 2;
-		  c_yval1 = (int) (607-Y)/2;
-		  
-		  c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
-	      }
-	      return;
-	  }
-
-	*/
 }
