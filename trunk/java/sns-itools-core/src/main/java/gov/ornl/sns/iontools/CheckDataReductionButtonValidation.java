@@ -65,9 +65,7 @@ public class CheckDataReductionButtonValidation {
 		if (bNormalizationSwitch) {
 			if (sNormalizationRunNumber.compareTo("") == 0) {return false;}
 		}
-		if (bOverwriteInstrumentGeometry) {
-			if (sInstrumentGeometry.compareTo("") == 0) {return false;}
-		}
+		if (bOverwriteInstrumentGeometry) {return false;}
 		if (bAddNexusAndGo) {
 			if (sAddNexusAndGoString.compareTo("") == 0) {return false;}
 		} else {
