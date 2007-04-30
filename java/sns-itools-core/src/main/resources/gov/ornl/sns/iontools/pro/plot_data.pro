@@ -45,7 +45,7 @@ end
 
 
 
-Pro dumpBinaryData, full_nexus_name, instrument, ucams
+function dumpBinaryData, full_nexus_name, instrument, ucams
 
 ;create tmp_working_path
 ;get global structure
@@ -60,6 +60,7 @@ cmd_dump += tmp_output_file_name
 ;print, 'cmd_dump: ' + cmd_dump
 spawn, cmd_dump, listenining
 
+return, tmp_output_file_name
 end
 
 
@@ -77,7 +78,7 @@ foundNeXus = 0
 if (full_nexus_path NE '') then begin
 
  ;dump histo data into temporary file
-     dumpBinaryData, full_nexus_path, instrument, ucams
+     tmp_output_file_name = dumpBinaryData(full_nexus_path, instrument, ucams)
     
      if (instrument EQ 'REF_L') then begin
          Nx = 304L
@@ -89,7 +90,7 @@ if (full_nexus_path NE '') then begin
 
      file = '/SNS/users/' + ucams + '/' + instrument + '_tmp_histo_data.dat'
     
-                                 ;only read data if valid file given
+     ;only read data if valid file given
      openr,u,file,/get
                                  ;find out file info
      fs = fstat(u)
@@ -99,7 +100,7 @@ if (full_nexus_path NE '') then begin
 
      data_assoc = assoc(u,lonarr(Ntof))
     
-                                 ;make the image array
+     ;make the image array
      img = lonarr(Nx,Ny)
      
      for i=0L,Nimg-1 do begin
@@ -107,7 +108,7 @@ if (full_nexus_path NE '') then begin
          y = i/Nx
          img[x,y] = total(data_assoc[i])
      endfor
-    
+
      close, u
      free_lun, u
 
@@ -140,7 +141,7 @@ if (full_nexus_path NE '') then begin
 
  endelse
 
-result = [strcompress(foundNexus),strcompress(Ntof)]
+result = [strcompress(foundNexus),strcompress(Ntof), tmp_output_file_name]
 
 return, result
 END

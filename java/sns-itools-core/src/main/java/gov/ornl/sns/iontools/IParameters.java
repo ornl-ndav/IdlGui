@@ -30,6 +30,17 @@ public interface IParameters {
 		static final String REF_L              = "REF_L";
 		static final String REF_M              = "REF_M";
 		
+		static final double PIXEL_SIZE_MM           = 0.7; 
+		static final double HALF_PIXEL_SIZE_MM    = PIXEL_SIZE_MM / 2;
+		static final int CENTER_PIXEL_X_LEFT_REF_M  = 151;
+		static final int CENTER_PIXEL_X_RIGHT_REF_M = 152;
+		static final int CENTER_PIXEL_Y_LEFT_REF_M  = 127;
+		static final int CENTER_PIXEL_Y_RIGHT_REF_M = 128;
+		static final int CENTER_PIXEL_X_LEFT_REF_L  = 127;
+		static final int CENTER_PIXEL_X_RIGHT_REF_L = 128;
+		static final int CENTER_PIXEL_Y_LEFT_REF_L  = 151;
+		static final int CENTER_PIXEL_Y_RIGHT_REF_L = 152;
+		
 		//REF_L Data Reduction command line - flags 
 		static final String REF_L_DATA_REDUCTION_CMD 		= "reflect_tofred";
 		static final String REF_L_NORMALIZATION_FLAG 		= "--norm=";
@@ -48,6 +59,14 @@ public interface IParameters {
 		static final int DATA_REDUCTION_PLOT_X	            = 700;
 		static final int DATA_REDUCTION_PLOT_Y              = 500;
 		
+		//data reduction plot interaction
+		static final int yAxisMin               = 0;
+		static final int yAxisMax               = 200;
+		static final int yAxisInit              = 1;
+		static final int xAxisMin               = 0;
+		static final int xAxisMax               = 200;
+		static final int xAxisInit              = 1;
+				
 		//constants used to define the main graphical display size
 	 	//REF_L
 		static final int NxRefl        			= 256;

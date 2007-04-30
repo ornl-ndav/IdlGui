@@ -29,7 +29,7 @@ import gov.ornl.sns.iontools.DisplayConfiguration;
 import gov.ornl.sns.iontools.IParameters;
 import gov.ornl.sns.iontools.IontoolsFile;
 import java.awt.BorderLayout;
-import java.awt.Component;
+//import java.awt.Component;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -49,28 +49,33 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 						      IONOutputListener, 
 						      ActionListener,
 						      IONMouseListener
+						      
 {	
 	// Instance Vars
-    String          ucams = "j35";
+    static String          ucams = "j35";
+    static String          instrument = IParameters.DEFAULT_INSTRUMENT;
+    static String          runNumberValue;
+    
+    
     DisplayConfiguration   getN;
     int             iNtof;    
     int             iY12;  			//ymax-ymin+1 (signal)
     float           fNtof;
-    IONGrConnection c_ionCon;
-    
+    String          sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
+    static IONGrConnection c_ionCon;
     
     IONJGrDrawable   c_plot;
     Dimension       c_dimApp;
     int             c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     
     //pid files names creation
-    String 			pidSignalFileName;
+    static String 			pidSignalFileName;
     String          pidBackFileName;
     String   		sNexusFound;
     String          sNtof;
     int             iBack2SelectionExist = 0;
     
-    String          instrument = IParameters.DEFAULT_INSTRUMENT;
+    
     String          text1;
     String          text2;
     String          cmd; 
@@ -78,11 +83,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JLabel          instrumentLogoLabel;
     JLabel	        runNumberLabel;	
     JTextField      runNumberTextField;
-    JTextArea       generalInfoTextArea;
+    static JTextArea       generalInfoTextArea;
 
     //def of components of data reduction tab
     JPanel          topPanel;
-    String          runNumberValue;
+    
     final static int NUM_LOGO_IMAGES = 2;
     final static int START_INDEX = 0;
     ImageIcon[]     instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
@@ -108,6 +113,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JRadioButton    logYaxisRadioButton;
     ButtonGroup     xAxisButtonGroup;
     ButtonGroup     yAxisButtonGroup;
+    JSlider         yAxisSliderMax;
+    JSlider         yAxisSliderMin;
+    JSlider         xAxisSliderMax;
+    JSlider         xAxisSliderMin;         
+    JButton         dataReductionPlotValidateButton;
     
     JPanel          panelc; //Extra plots
     JTabbedPane     tabbedPane;
@@ -124,11 +134,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     //signal and back pid
     JPanel          signalPidPanel;
-    JTextField      signalPidFileTextField;
+    static JTextField      signalPidFileTextField;
     JButton         signalPidFileButton;
-    JButton         clearSignalPidFileButton;
+    static JButton         clearSignalPidFileButton;
     JPanel          backgroundPidPanel;
-    JTextField      backgroundPidFileTextField;    
+    static JTextField      backgroundPidFileTextField;    
     JButton         backgroundPidFileButton;
     JButton         clearBackPidFileButton;
     //normalization
@@ -194,15 +204,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JRadioButton    yesInstrumentGeometryRadioButton;
     JRadioButton    noInstrumentGeometryRadioButton;
     ButtonGroup     instrumentGeometryButtonGroup;
-    JButton         instrumentGeometryButton;
-    JTextField      instrumentGeometryTextField;
+    static JButton         instrumentGeometryButton;
+    static JTextField      instrumentGeometryTextField;
 
     //start data reduction
     JPanel          startDataReductionPanel;
     JButton         startDataReductionButton;
 
     JComboBox       instrList;
-    IONVariable     instr;
+    static IONVariable     instr;
     IONVariable     user;
     
     int             x_min;
@@ -255,10 +265,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     int             info_y=0;
 
     //xmin, max and ymin and max pixelid values
-    int				signal_xmin;
-	int 			signal_ymin;
-	int 			signal_xmax;
-	int 			signal_ymax;
+    static int				signal_xmin;
+	static int 			signal_ymin;
+	static int 			signal_xmax;
+	static int 			signal_ymax;
 	int				back1_xmin;
 	int				back1_ymin;
 	int 			back1_xmax;
@@ -470,7 +480,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void mousePressed(com.rsi.ion.IONDrawable drawable, int X, int Y, 
                     long when, int mask)
   {
-      if (bFoundNexus) {
+	  if (bFoundNexus) {
 
 	  if (X < 0) {X = 0;};
 	  if (Y < NyMin*2) {Y = NyMin*2;};
@@ -589,19 +599,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		iBack2SelectionExist = 1;
 		doBox();
 	    } else {
-		generalInfoTextArea.setText(text1);
-		generalInfoTextArea.append(text2);
-		saveXY(IParameters.INFO_STRING,x_min, y_min, x_max, y_max);
+	    text2 = "x: " + info_x + " y: " + info_y + "\n";	
+		generalInfoTextArea.setText(text2);
+		//saveXY(IParameters.INFO_STRING,x_min, y_min, x_max, y_max);
+		PixelInfoMessage.outputMessage(text2);
 	    }
 	    	
-	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
 	    
+	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
 	}
       }
       return;
     }
-    
-    
+        
     public void saveXY(String mode,int x_min, int y_min, int x_max, int y_max) {
     	if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {
     		signal_xmin = x_min;
@@ -639,25 +649,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
    	populateCheckDataReductionButtonValidationParameters();
     	    	
 	if ("signalPidFileButton".equals(evt.getActionCommand())) {
-		pidSignalFileName = IontoolsFile.createPidFileName(ucams, instrument, runNumberValue, IParameters.SIGNAL_STRING);
-		signalPidFileTextField.setBackground(Color.RED);
-		signalPidFileTextField.setText(pidSignalFileName);	
-		
-		int[] xarr = {signal_xmin, signal_xmax, signal_ymin, signal_ymax};
-		int[] nx = {4};
-		IONVariable IONxvals = new IONVariable(xarr,nx);
-		IONVariable fullFileName = new IONVariable(pidSignalFileName);
-		
-		try {
-			c_ionCon.setIDLVariable("XY", IONxvals);
-			cmd = "CREATE_SIGNAL_PID_FILE, XY, " + fullFileName;
-		} catch (Exception e) {
-		}
-		executeCmd(cmd);		
-		clearSignalPidFileButton.setEnabled(true);
-		CheckDataReductionButtonValidation.bSignalPidFileSaved = true;
-		CheckDataReductionButtonValidation.sSignalPidFile = pidSignalFileName;
-//		System.out.println("pidSignalFileName: " + pidSignalFileName);
+		SaveSignalPidFileAction.signalPidFileButton();
 	}
 	
 	if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
@@ -773,23 +765,20 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 	    
 	    if ("yesInstrumentGeometry".equals(evt.getActionCommand())) {
-	    instrumentGeometryButton.setEnabled(true);
-		instrumentGeometryTextField.setEnabled(true);
-		CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry = true;
+	    	InstrumentGeometryAction.yesInstrumentGeometry();
 	    }
 
 	    if ("noInstrumentGeometry".equals(evt.getActionCommand())) {
-		instrumentGeometryButton.setEnabled(false);
-		instrumentGeometryTextField.setEnabled(false);
-		CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry = false;
+	    	InstrumentGeometryAction.noInstrumentGeometry();
 	    }
 
 	    if ("instrumentGeometryButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed button in instrument geometry");
+		
+	    	System.out.println("I just pressed button in instrument geometry");
 	    }
 
 	    if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
-	    	
+	    	InstrumentGeometryAction.yesInstrumentGeometry();	    		
 	    }
 
 	    if ("startDataReductionButton".equals(evt.getActionCommand())) {
@@ -818,6 +807,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	showStatus("Processing...");
 	    	executeCmd(cmd);
 	    	showStatus("Done!");
+	    	
+	    	//show data reductin plot tab
+	    	dataReductionTabbedPane.setSelectedIndex(1);
 	    }
 	    
 	    //if one of the intermediate check box is check
@@ -903,6 +895,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    		Float fNtof = new Float(sNtof);
 	    		iNtof = fNtof.intValue();
 	    		
+	    		//name of tmp output file name
+	    		sTmpOutputFileName = myResultArray[2];
+		    		
 	    		showStatus("Done!");
 	    		checkGUI();
 	    	
@@ -954,6 +949,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	    //build menu
 	    createMenu();
+	    
 
 	    //get the instrument logo picture and put them into an array of instrumentLogo
 	    for (int i=0 ; i<NUM_LOGO_IMAGES ; i++) {
@@ -1162,33 +1158,21 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		
 //    	main panel of data reduction plot
     	panelb.setLayout(new BoxLayout(panelb,BoxLayout.Y_AXIS));
-    	
+    	    	
     	JPanel dataReductionPlotPanel = new JPanel();
+    	dataReductionPlotPanel.setLayout(new BoxLayout(dataReductionPlotPanel,BoxLayout.X_AXIS));
+    	
     	//zoom x-axis
     	c_dataReductionPlot = new IONJGrDrawable(IParameters.DATA_REDUCTION_PLOT_X, IParameters.DATA_REDUCTION_PLOT_Y);
-    	c_dataReductionPlot.setAlignmentX(CENTER_ALIGNMENT);
-    	dataReductionPlotPanel.add(c_dataReductionPlot);
-    	dataReductionPlotPanel.setAlignmentX(CENTER_ALIGNMENT);
-    	panelb.add(c_dataReductionPlot);
-    	
-    	panelZoom = new JPanel();
-    	
-	    //panel x-axis
-    	//panelZoomXaxis = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    	panelZoomXaxis = new JPanel();
-	    labelXaxis = new JLabel("X-axis");
-	    linXaxisRadioButton = new JRadioButton("Linear");
-	    linXaxisRadioButton.setSelected(true);
-	    logXaxisRadioButton = new JRadioButton("Log10");
-	    xAxisButtonGroup = new ButtonGroup();
-	    xAxisButtonGroup.add(linXaxisRadioButton);
-	    xAxisButtonGroup.add(logXaxisRadioButton);
-	    panelZoomXaxis.add(linXaxisRadioButton);
-	    panelZoomXaxis.add(logXaxisRadioButton);
-	    	    
-	    //panel y-axis
+    	    	
+    	//panel y-axis
 	    //panelZoomYaxis = new JPanel(new FlowLayout(FlowLayout.CENTER));
 	    panelZoomYaxis = new JPanel();
+	    panelZoomYaxis.setLayout(new BoxLayout(panelZoomYaxis,BoxLayout.Y_AXIS));
+	    panelZoomYaxis.setBorder(BorderFactory.createCompoundBorder(
+    			BorderFactory.createTitledBorder("Y-axis"),
+    			BorderFactory.createEmptyBorder(1,1,1,1)));
+    	
 	    labelYaxis = new JLabel("Y-axis");	
 	    linYaxisRadioButton = new JRadioButton("Linear");
 	    linYaxisRadioButton.setSelected(true);
@@ -1196,14 +1180,101 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    yAxisButtonGroup = new ButtonGroup();
 	    yAxisButtonGroup.add(linYaxisRadioButton);
 	    yAxisButtonGroup.add(logYaxisRadioButton);
+	    
+	    JLabel axisSliderMinLabel = new JLabel("Min");
+	    JLabel axisSliderMaxLabel = new JLabel("Max");
+	    
+	    JPanel yAxisSliderPanel = new JPanel();
+	    yAxisSliderPanel.setLayout(new BoxLayout(yAxisSliderPanel,BoxLayout.X_AXIS));
+
+	    JPanel yAxisSliderMinPanel = new JPanel();
+	    yAxisSliderMinPanel.setLayout(new BoxLayout(yAxisSliderMinPanel,BoxLayout.Y_AXIS));
+	    yAxisSliderMin = new JSlider(JSlider.VERTICAL,IParameters.yAxisMin, IParameters.yAxisMax, IParameters.yAxisInit);
+	    yAxisSliderMin.setMajorTickSpacing(50);
+	    yAxisSliderMin.setMinorTickSpacing(10);
+	    yAxisSliderMin.setPaintLabels(true);
+	    yAxisSliderMin.setPaintTicks(true);
+	    yAxisSliderMinPanel.add(axisSliderMinLabel);
+	    yAxisSliderMinPanel.add(yAxisSliderMin);
+	    
+	    JPanel yAxisSliderMaxPanel = new JPanel();
+	    yAxisSliderMaxPanel.setLayout(new BoxLayout(yAxisSliderMaxPanel,BoxLayout.Y_AXIS));
+	    yAxisSliderMax = new JSlider(JSlider.VERTICAL,IParameters.yAxisMin, IParameters.yAxisMax, IParameters.yAxisInit);
+	    yAxisSliderMax.setMajorTickSpacing(50);
+	    yAxisSliderMax.setMinorTickSpacing(10);
+	    yAxisSliderMax.setPaintLabels(false);
+	    yAxisSliderMax.setPaintTicks(false);
+	    yAxisSliderMaxPanel.add(axisSliderMaxLabel);
+	    yAxisSliderMaxPanel.add(yAxisSliderMax);
+	    
+	    yAxisSliderPanel.add(yAxisSliderMinPanel);
+	    yAxisSliderPanel.add(yAxisSliderMaxPanel);
+	    
 	    panelZoomYaxis.add(linYaxisRadioButton);
 	    panelZoomYaxis.add(logYaxisRadioButton);
+	    panelZoomYaxis.add(yAxisSliderPanel);
 	    
-	    panelZoom.add(panelZoomXaxis,BorderLayout.CENTER);
-	    panelZoom.add(panelZoomYaxis,BorderLayout.PAGE_END);
-	    panelb.add(panelZoom, BorderLayout.PAGE_END);
+	    dataReductionPlotPanel.add(c_dataReductionPlot);
+	    dataReductionPlotPanel.add(panelZoomYaxis);
 	    
+	    //----------------------------
+	        	
+    	//panel x-axis
+    	panelZoomXaxis = new JPanel();
+    	panelZoomXaxis.setLayout(new BoxLayout(panelZoomXaxis,BoxLayout.X_AXIS));
+    	//panelZoomXaxis.setBorder(BorderFactory.createCompoundBorder(
+    	//		BorderFactory.createTitledBorder("X-axis"),
+    	//		BorderFactory.createEmptyBorder(5,5,5,5)));
+    	
+    	labelXaxis = new JLabel("X-axis");
+	    linXaxisRadioButton = new JRadioButton("Linear");
+	    linXaxisRadioButton.setSelected(true);
+	    logXaxisRadioButton = new JRadioButton("Log10");
+	    xAxisButtonGroup = new ButtonGroup();
+	    xAxisButtonGroup.add(linXaxisRadioButton);
+	    xAxisButtonGroup.add(logXaxisRadioButton);
+
+	    JPanel xAxisSliderPanel = new JPanel();
+	    xAxisSliderPanel.setLayout(new BoxLayout(xAxisSliderPanel,BoxLayout.Y_AXIS));
 	    
+	    JPanel xAxisSliderMinPanel = new JPanel();
+	    xAxisSliderMinPanel.setLayout(new BoxLayout(xAxisSliderMinPanel,BoxLayout.X_AXIS));
+	    xAxisSliderMin = new JSlider(JSlider.HORIZONTAL,IParameters.xAxisMin, IParameters.xAxisMax, IParameters.xAxisInit);
+	    xAxisSliderMin.setMajorTickSpacing(5);
+	    xAxisSliderMin.setMinorTickSpacing(50);
+	    xAxisSliderMin.setPaintLabels(false);
+	    xAxisSliderMin.setPaintTicks(false);
+	    xAxisSliderMinPanel.add(axisSliderMinLabel);
+	    xAxisSliderMinPanel.add(xAxisSliderMin);
+	    
+	    JPanel xAxisSliderMaxPanel = new JPanel();
+	    xAxisSliderMaxPanel.setLayout(new BoxLayout(xAxisSliderMaxPanel,BoxLayout.X_AXIS));
+	    xAxisSliderMax = new JSlider(JSlider.HORIZONTAL,IParameters.xAxisMin, IParameters.xAxisMax, IParameters.xAxisInit);
+	    xAxisSliderMax.setMajorTickSpacing(50);
+	    xAxisSliderMax.setMinorTickSpacing(25);
+	    xAxisSliderMax.setPaintLabels(true);
+	    xAxisSliderMax.setPaintTicks(true);
+	    xAxisSliderMaxPanel.add(axisSliderMaxLabel);
+	    xAxisSliderMaxPanel.add(xAxisSliderMax);
+	    
+	    xAxisSliderPanel.add(xAxisSliderMaxPanel);
+	    xAxisSliderPanel.add(xAxisSliderMinPanel);
+	    
+	    JPanel validatePanel = new JPanel();
+	    dataReductionPlotValidateButton = new JButton("REFRESH");
+	    dataReductionPlotValidateButton.setActionCommand("dataReductionPlotValidateButton");
+	    dataReductionPlotValidateButton.addActionListener(this);
+		dataReductionPlotValidateButton.setEnabled(false);
+	    dataReductionPlotValidateButton.setToolTipText("Replot data reduction window");	    
+	    validatePanel.add(dataReductionPlotValidateButton);
+	    
+	    panelZoomXaxis.add(linXaxisRadioButton);
+	    panelZoomXaxis.add(logXaxisRadioButton);
+	    panelZoomXaxis.add(xAxisSliderPanel);
+	    panelZoomXaxis.add(validatePanel);
+	    
+	    panelb.add(dataReductionPlotPanel);
+	    //panelb.add(panelZoomXaxis);
 	    
     }
 	
@@ -1284,6 +1355,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	signalPidFileTextField.setEditable(false);
 	signalPidFileTextField.setActionCommand("signalPidFileTextField");
 	signalPidFileTextField.addActionListener(this);
+	signalPidFileTextField.setBackground(Color.RED);
 	
 	clearSignalPidFileButton = new JButton ("Clear signal");
 	clearSignalPidFileButton.setActionCommand("clearSignalPidFileButton");
@@ -1302,7 +1374,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	backgroundPidFileTextField.setEditable(false);
 	backgroundPidFileTextField.setActionCommand("backgroundPidFileTextField");
 	backgroundPidFileTextField.addActionListener(this);
-
+	backgroundPidFileTextField.setBackground(Color.RED);
+	
 	clearBackPidFileButton = new JButton("Clear background");
 	clearBackPidFileButton.setActionCommand("clearBackPidFileButton");
 	clearBackPidFileButton.addActionListener(this);
@@ -1342,6 +1415,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	normalizationTextBoxPanel = new JPanel();
 	normalizationTextBoxLabel = new JLabel("Run number: ");
 	normalizationTextField = new JTextField(15);
+	normalizationTextField.setBackground(Color.RED);
 	normalizationTextField.setActionCommand("normalizationTextField");
 	normalizationTextField.setEditable(true);
 	normalizationTextField.addActionListener(this);
@@ -1350,7 +1424,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	normalizationPanel.add(normalizationTextBoxPanel);
 	
 	//background radio button
-	backgroundLabel = new JLabel(" Background: ");
+	backgroundLabel = new JLabel(" Background:    ");
 
 	yesBackgroundRadioButton = new JRadioButton("Yes");
 	yesBackgroundRadioButton.setActionCommand("yesBackground");
@@ -1391,7 +1465,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	//intermediate plots
 	intermediatePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-	intermediateLabel = new JLabel(" Intermediate file output:");
+	intermediateLabel = new JLabel(" Intermediate file output:     ");
 
 	yesIntermediateRadioButton = new JRadioButton("Yes");
 	yesIntermediateRadioButton.setActionCommand("yesIntermediate");
@@ -1419,7 +1493,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     //combine spectrum
 	combineSpectrumPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-	combineSpectrumLabel = new JLabel(" Combine data spectrum: ");
+	combineSpectrumLabel = new JLabel(" Combine data spectrum:     ");
 	
 	yesCombineSpectrumRadioButton = new JRadioButton("Yes");
 	yesCombineSpectrumRadioButton.setActionCommand("yesCombineBackground");
@@ -1482,6 +1556,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	runsAddTextField = new JTextField(30);
 	runsAddTextField.setToolTipText("1230,1231,1234-1238,1240");
 	runsAddTextField.setEditable(true);
+	runsAddTextField.setBackground(Color.RED);
 	runsAddTextField.setActionCommand("runsAddTextField");
 	runsAddTextField.addActionListener(this);
 	runsAddPanel.add(runsAddLabel);
@@ -1492,6 +1567,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	runsSequenceTextField = new JTextField(30);
 	runsSequenceTextField.setToolTipText("1230,1231,1234-1238,1240");
 	runsSequenceTextField.setEditable(true);
+	runsSequenceTextField.setBackground(Color.RED);
 	runsSequenceTextField.setActionCommand("runsSequenceTextField");
 	runsSequenceTextField.addActionListener(this);
 	runsSequencePanel.add(runsSequenceLabel);
@@ -1814,9 +1890,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	} else {
     		CheckDataReductionButtonValidation.bAddNexusAndGo = false;
     	}
-    	CheckDataReductionButtonValidation.sInstrument = instrument;
-    	
-    	
+    	CheckDataReductionButtonValidation.sInstrument = instrument;   	
     }
-    
+        
 }
