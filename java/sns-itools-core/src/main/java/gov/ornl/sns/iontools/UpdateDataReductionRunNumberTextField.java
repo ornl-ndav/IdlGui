@@ -24,6 +24,8 @@
  */
 package gov.ornl.sns.iontools;
 
+import java.awt.Color;
+
 public class UpdateDataReductionRunNumberTextField {
 
 	static String runNumberTextField = "";
@@ -34,8 +36,10 @@ public class UpdateDataReductionRunNumberTextField {
 		//retrieve active tab (Add NeXus and Go or GO sequentially and value of text field
 		if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
 			runNumberTextField = CheckDataReductionButtonValidation.sAddNexusAndGoString;
+			DataReduction.runsAddTextField.setBackground(Color.WHITE);
 		} else {
 		    runNumberTextField = CheckDataReductionButtonValidation.sGoSequentiallyString;
+		    DataReduction.runsSequenceTextField.setBackground(Color.WHITE);
 		}
 
 //		System.out.println("Text field is: " + runNumberTextField);

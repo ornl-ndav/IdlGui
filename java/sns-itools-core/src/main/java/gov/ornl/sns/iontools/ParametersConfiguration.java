@@ -28,5 +28,7 @@ public class ParametersConfiguration {
 
     //parameters used to trigger or not some of the methods
     public boolean bFoundNexus                = false;
-
+    static int Nx;
+    static int Ny;
+    
 }
