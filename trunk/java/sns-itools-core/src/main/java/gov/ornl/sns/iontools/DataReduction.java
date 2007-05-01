@@ -44,6 +44,8 @@ import java.net.*;
 import java.util.Arrays;
 import com.rsi.ion.*;
 import javax.swing.*;
+import java.net.URL;
+import javax.swing.text.*;
 
 public class DataReduction extends JApplet implements IONDisconnectListener, 
 						      IONOutputListener, 
@@ -55,42 +57,42 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          ucams = "j35";
     static String          instrument = IParameters.DEFAULT_INSTRUMENT;
     static String          runNumberValue;
-    
+    static String          sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
     
     DisplayConfiguration   getN;
     int             iNtof;    
     int             iY12;  			//ymax-ymin+1 (signal)
     float           fNtof;
-    String          sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
+    
     static IONGrConnection c_ionCon;
     
     IONJGrDrawable   c_plot;
-    Dimension       c_dimApp;
-    int             c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
+    Dimension        c_dimApp;
+    int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     
     //pid files names creation
     static String 			pidSignalFileName;
-    static String          pidBackFileName;
-    String   		sNexusFound;
-    String          sNtof;
-    static int             iBack2SelectionExist = 0;
+    static String           pidBackFileName;
+    String  		 		sNexusFound;
+    String          		sNtof;
+    static int              iBack2SelectionExist = 0;
     
     
-    String          text1;
-    String          text2;
-    String          cmd; 
-    JPanel          instrumentLogoPanel;
-    JLabel          instrumentLogoLabel;
-    JLabel	        runNumberLabel;	
-    JTextField      runNumberTextField;
-    static JTextArea       generalInfoTextArea;
+    String          	text1;
+    String          	text2;
+    String          	cmd; 
+    JPanel          	instrumentLogoPanel;
+    JLabel          	instrumentLogoLabel;
+    JLabel	        	runNumberLabel;	
+    JTextField      	runNumberTextField;
+    static JTextArea    generalInfoTextArea;
 
     //def of components of data reduction tab
-    JPanel          topPanel;
+    JPanel 		        topPanel;
     
-    final static int NUM_LOGO_IMAGES = 2;
-    final static int START_INDEX = 0;
-    ImageIcon[]     instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
+    final static int 	NUM_LOGO_IMAGES = 2;
+    final static int 	START_INDEX = 0;
+    ImageIcon[]     	instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
     
     JPanel          plotPanel;
     JPanel          leftPanel;
@@ -102,35 +104,35 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     //Data Reduction Plot
     IONJGrDrawable   c_dataReductionPlot;	    
-    JPanel 			panelZoom;
-    JPanel          panelZoomXaxis;
-    JPanel          panelZoomYaxis;
-    JLabel          labelXaxis;
-    JLabel          labelYaxis;
-    JRadioButton    linXaxisRadioButton;
-    JRadioButton    logXaxisRadioButton;
-    JRadioButton    linYaxisRadioButton;
-    JRadioButton    logYaxisRadioButton;
-    ButtonGroup     xAxisButtonGroup;
-    ButtonGroup     yAxisButtonGroup;
-    JSlider         yAxisSliderMax;
-    JSlider         yAxisSliderMin;
-    JSlider         xAxisSliderMax;
-    JSlider         xAxisSliderMin;         
-    JButton         dataReductionPlotValidateButton;
+    JPanel 			 panelZoom;
+    JPanel           panelZoomXaxis;
+    JPanel           panelZoomYaxis;
+    JLabel           labelXaxis;
+    JLabel           labelYaxis;
+    JRadioButton     linXaxisRadioButton;
+    JRadioButton     logXaxisRadioButton;
+    JRadioButton     linYaxisRadioButton;
+    JRadioButton     logYaxisRadioButton;
+    ButtonGroup      xAxisButtonGroup;
+    ButtonGroup      yAxisButtonGroup;
+    JSlider          yAxisSliderMax;
+    JSlider          yAxisSliderMin;
+    JSlider          xAxisSliderMax;
+    JSlider          xAxisSliderMin;         
+    JButton          dataReductionPlotValidateButton;
     
-    JPanel          panelc; //Extra plots
-    JTabbedPane     tabbedPane;
-    JTabbedPane     dataReductionTabbedPane;
+    JPanel           panelc; //Extra plots
+    JTabbedPane      tabbedPane;
+    JTabbedPane      dataReductionTabbedPane;
 
-    JLabel          blank1Label;
-    JLabel          blank2Label;
-    JLabel          blank3Label;
+    JLabel           blank1Label;
+    JLabel           blank2Label;
+    JLabel           blank3Label;
     
     //def of components of input tab
-    JPanel          buttonSignalBackgroundPanel;
-    JPanel          textFieldSignalBackgroundPanel;
-    JPanel          signalBackgroundPanel;
+    JPanel           buttonSignalBackgroundPanel;
+    JPanel           textFieldSignalBackgroundPanel;
+    JPanel           signalBackgroundPanel;
 
     //signal and back pid
     JPanel          	signalPidPanel;
@@ -141,98 +143,99 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField   backgroundPidFileTextField;    
     static JButton      backgroundPidFileButton;
     static JButton  	clearBackPidFileButton;
+
     //normalization
-    JPanel          normalizationPanel;
-    JLabel          normalizationLabel;
-    ButtonGroup     normalizationButtonGroup;
-    JRadioButton    yesNormalizationRadioButton;
-    JRadioButton    noNormalizationRadioButton;
-    JPanel          normalizationTextBoxPanel;
-    JLabel          normalizationTextBoxLabel;
-    JTextField      normalizationTextField;
+    JPanel          	normalizationPanel;
+    JLabel         		normalizationLabel;
+    ButtonGroup    	 	normalizationButtonGroup;
+    JRadioButton    	yesNormalizationRadioButton;
+    JRadioButton    	noNormalizationRadioButton;
+    JPanel          	normalizationTextBoxPanel;
+    static JLabel       normalizationTextBoxLabel;
+    static JTextField   normalizationTextField;
     //background
-    JPanel          backgroundPanel;
-    JLabel          backgroundLabel;
-    ButtonGroup     backgroundButtonGroup;
-    JRadioButton    yesBackgroundRadioButton;
-    JRadioButton    noBackgroundRadioButton;
+    JPanel        	    backgroundPanel;
+    JLabel         	    backgroundLabel;
+    ButtonGroup         backgroundButtonGroup;
+    JRadioButton        yesBackgroundRadioButton;
+    JRadioButton        noBackgroundRadioButton;
     //norm. background
-    JPanel          normBackgroundPanel;
-    JLabel          normBackgroundLabel;
-    ButtonGroup     normBackgroundButtonGroup;
-    JRadioButton    yesNormBackgroundRadioButton;
-    JRadioButton    noNormBackgroundRadioButton;
+    JPanel              normBackgroundPanel;
+    JLabel              normBackgroundLabel;
+    ButtonGroup         normBackgroundButtonGroup;
+    JRadioButton        yesNormBackgroundRadioButton;
+    JRadioButton        noNormBackgroundRadioButton;
 
     //tab of runs
-    JTabbedPane     runsTabbedPane;
-    JPanel          runsAddPanel;
-    JLabel          runsAddLabel;
-    static JTextField      runsAddTextField;
-    JPanel          runsSequencePanel;
-    JLabel          runsSequenceLabel;
-    static JTextField      runsSequenceTextField;
+    JTabbedPane    		runsTabbedPane;
+    JPanel          	runsAddPanel;
+    JLabel          	runsAddLabel;
+    static JTextField   runsAddTextField;
+    JPanel          	runsSequencePanel;
+    JLabel          	runsSequenceLabel;
+    static JTextField   runsSequenceTextField;
 
     //tab of selection
-    JTabbedPane     selectionTab;
-    JPanel          signalSelectionPanel;
-    JPanel          back1SelectionPanel;
-    JPanel          back2SelectionPanel;
-    JTextArea       signalSelectionTextArea;
-    JTextArea       back1SelectionTextArea;
-    JTextArea       back2SelectionTextArea;
+    JTabbedPane     	selectionTab;
+    JPanel          	signalSelectionPanel;
+    JPanel          	back1SelectionPanel;
+    JPanel          	back2SelectionPanel;
+    static JTextArea    signalSelectionTextArea;
+    static JTextArea    back1SelectionTextArea;
+    static JTextArea    back2SelectionTextArea;
 
     //tab of Log Book
-    JTextArea       textAreaLogBook;
+    JTextArea      	    textAreaLogBook;
     
     //intermediate file output
-    JPanel          intermediatePanel;
-    JLabel          intermediateLabel;
-    ButtonGroup     intermediateButtonGroup;
-    JRadioButton    yesIntermediateRadioButton;
-    JRadioButton    noIntermediateRadioButton;
-    JButton         intermediateButton;
+    JPanel          	intermediatePanel;
+    JLabel          	intermediateLabel;
+    ButtonGroup         intermediateButtonGroup;
+    JRadioButton        yesIntermediateRadioButton;
+    JRadioButton        noIntermediateRadioButton;
+    JButton             intermediateButton;
     
     //combine spectrum
-    JPanel          combineSpectrumPanel;
-    JLabel          combineSpectrumLabel;
-    ButtonGroup     combineSpectrumButtonGroup;
-    JRadioButton    yesCombineSpectrumRadioButton;
-    JRadioButton    noCombineSpectrumRadioButton;
+    JPanel          	combineSpectrumPanel;
+    JLabel          	combineSpectrumLabel;
+    ButtonGroup     	combineSpectrumButtonGroup;
+    JRadioButton    	yesCombineSpectrumRadioButton;
+    JRadioButton    	noCombineSpectrumRadioButton;
 
     //instrument geometry file
-    JPanel          instrumentGeometryPanel;
-    JLabel          instrumentGeometryLabel;
-    JRadioButton    yesInstrumentGeometryRadioButton;
-    JRadioButton    noInstrumentGeometryRadioButton;
-    ButtonGroup     instrumentGeometryButtonGroup;
-    static JButton         instrumentGeometryButton;
-    static JTextField      instrumentGeometryTextField;
+    JPanel          	instrumentGeometryPanel;
+    JLabel          	instrumentGeometryLabel;
+    JRadioButton    	yesInstrumentGeometryRadioButton;
+    JRadioButton    	noInstrumentGeometryRadioButton;
+    ButtonGroup     	instrumentGeometryButtonGroup;
+    static JButton      instrumentGeometryButton;
+    static JTextField   instrumentGeometryTextField;
 
     //start data reduction
-    JPanel          startDataReductionPanel;
-    JButton         startDataReductionButton;
+    JPanel          	startDataReductionPanel;
+    JButton         	startDataReductionButton;
 
-    JComboBox       instrList;
-    static IONVariable     instr;
-    IONVariable     user;
+    JComboBox       	instrList;
+    static IONVariable  instr;
+    IONVariable     	user;
     
-    int             x_min;
-    int             x_max;
-    int             y_min;
-    int             y_max;
+    int             	x_min;
+    int             	x_max;
+    int             	y_min;
+    int             	y_max;
 
-    IONVariable     a_idl;
-    IONVariable     iVar;
-    IONVariable     ionVar;
-    IONVariable     IONfoundNexusAndNtof;
-    IONVariable     IONfoundNexus;
-    IONVariable    	ionCmd;
-    IONVariable     ionOutputPath;
-    IONVariable     ionNtof;
-    IONVariable     ionY12;
-    IONVariable     ionYmin;
+    IONVariable     	a_idl;
+    IONVariable     	iVar;
+    IONVariable     	ionVar;
+    IONVariable     	IONfoundNexusAndNtof;
+    IONVariable     	IONfoundNexus;
+    IONVariable    		ionCmd;
+    IONVariable     	ionOutputPath;
+    IONVariable     	ionNtof;
+    IONVariable     	ionY12;
+    IONVariable     	ionYmin;
     
-    boolean         bFoundNexus = false;
+    boolean      	    bFoundNexus = false;
     
 //parameters used to define the graphical window and the selection tool
     int             Nx;
@@ -297,27 +300,27 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 //    InternalFrame   preferencesFrame;
 
     //JMenuItem of mode
-    ButtonGroup     modeButtonGroup;
-    JRadioButtonMenuItem signalSelectionModeMenuItem;
-    JRadioButtonMenuItem background1SelectionModeMenuItem;
-    JRadioButtonMenuItem background2SelectionModeMenuItem;
-    JRadioButtonMenuItem infoModeMenuItem;
-    JCheckBoxMenuItem    cbMenuItem;
-    String  modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
+    ButtonGroup     		modeButtonGroup;
+    JRadioButtonMenuItem    signalSelectionModeMenuItem;
+    JRadioButtonMenuItem    background1SelectionModeMenuItem;
+    JRadioButtonMenuItem    background2SelectionModeMenuItem;
+    JRadioButtonMenuItem    infoModeMenuItem;
+    JCheckBoxMenuItem       cbMenuItem;
+    String  			    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
 
-    JMenu           intermediateMenu;
+    JMenu           		intermediateMenu;
 
     //JMenuItem of instruments
-    JMenu           instrumentMenu;
-    JRadioButtonMenuItem reflRadioButton;
-    JRadioButtonMenuItem refmRadioButton;
-    JRadioButtonMenuItem bssRadioButton;
-    ButtonGroup     instrumentButtonGroup;
+    JMenu           		instrumentMenu;
+    JRadioButtonMenuItem 	reflRadioButton;
+    JRadioButtonMenuItem 	refmRadioButton;
+    JRadioButtonMenuItem 	bssRadioButton;
+    ButtonGroup     		instrumentButtonGroup;
 
     //JMenuItem of save session in parameters
-    ButtonGroup          saveFullSessionButtonGroup;
-    JRadioButtonMenuItem yesSaveFullSessionMenuItem;
-    JRadioButtonMenuItem noSaveFullSessionMenu;
+    ButtonGroup          	saveFullSessionButtonGroup;
+    JRadioButtonMenuItem 	yesSaveFullSessionMenuItem;
+    JRadioButtonMenuItem 	noSaveFullSessionMenu;
 
 // ******************************
 // Init Method
@@ -584,21 +587,21 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	    if (modeSelected.compareTo("signalSelection") == 0) {
 		signalSelectionTextArea.setText(text1);
-		signalSelectionTextArea.append(text2);
+		//signalSelectionTextArea.append(text2);
 		signalPidFileButton.setEnabled(true);
-		saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
+		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
 		doBox();
 		iY12 = y_max - y_min + 1;
 	    } else if (modeSelected.compareTo("back1Selection") == 0) {
 		back1SelectionTextArea.setText(text1);		
 		back1SelectionTextArea.append(text2);		
 		backgroundPidFileButton.setEnabled(true);
-		saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);
+		MouseSelection.saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);
 		doBox();
 	    } else if (modeSelected.compareTo("back2Selection") == 0) {
 		back2SelectionTextArea.setText(text1);
 		back2SelectionTextArea.append(text2);
-		saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
+		MouseSelection.saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
 		iBack2SelectionExist = 1;
 		doBox();
 	    } else {
@@ -608,37 +611,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		PixelInfoMessage.outputMessage(text2);
 	    }
 	    	
-	    
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
 	}
       }
       return;
     }
         
-    public void saveXY(String mode,int x_min, int y_min, int x_max, int y_max) {
-    	if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {
-    		signal_xmin = x_min;
-    		signal_ymin = y_min;
-    		signal_xmax = x_max;
-    		signal_ymax = y_max;
-    	} else if (mode.compareTo(IParameters.BACK1_STRING) == 0) {
-    		back1_xmin = x_min;
-    		back1_ymin = y_min;
-    		back1_xmax = x_max;
-    		back1_ymax = y_max;
-    	} else if (mode.compareTo(IParameters.BACK2_STRING) == 0) {
-    		back2_xmin = x_min;
-    		back2_ymin = y_min;
-    		back2_xmax = x_max;
-    		back2_ymax = y_max;
-    	} else if (mode.compareTo(IParameters.INFO_STRING) == 0) {
-    		info_xmin = x_min;
-    		info_ymin = y_min;
-    		info_xmax = x_max;
-    		info_ymax = y_max;
-    	}
-    }	
-    		    		
+
 /*	
 ***************************************
 *  actionPerformed()
@@ -673,18 +652,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  //}
 
 	    if ("yesNormalization".equals(evt.getActionCommand())) {
-		normalizationTextField.setEnabled(true);
-		normalizationTextBoxLabel.setEnabled(true);
-		CheckDataReductionButtonValidation.bNormalizationSwitch = true;
+	    	NormalizationAction.yesNormalization();
 	    }
 
 	    if ("noNormalization".equals(evt.getActionCommand())) {
-		normalizationTextField.setEnabled(false);
-		normalizationTextBoxLabel.setEnabled(false);
-		CheckDataReductionButtonValidation.bNormalizationSwitch = false;
+	    	NormalizationAction.noNormalization();
 	    }
 	    
 	    if ("normalizationTextField".equals(evt.getActionCommand())) {
+	    	NormalizationAction.yesNormalization();
 	    }
 
 	    if ("yesBackground".equals(evt.getActionCommand())) {
@@ -694,7 +670,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }
 
 	    if ("yesNormBackground".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed yes in yesNormBackground");
+	    	System.out.println("I just pressed yes in yesNormBackground");
 	    }
 
 	    if ("noNormBackground".equals(evt.getActionCommand())) {
@@ -744,7 +720,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	
 	    	c_ionCon.setDrawable(c_dataReductionPlot);
 	    	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
-	    	
+	    		    	
 	    	String[] cmdArray = cmd_local.split(" ");
 	    	int cmdArraySize = cmdArray.length;
 	    	int[] nx = {cmdArraySize};
@@ -830,7 +806,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    		user = new com.rsi.ion.IONVariable(ucams); 
 
 	    		c_ionCon.setDrawable(c_plot);
-		    
+	    		    		
 	    		String cmd = "result = plot_data( " + runNumberValue + ", " + 
 	    		instr + ", " + user+")";
 	    		
@@ -854,7 +830,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    		
 	    		//name of tmp output file name
 	    		sTmpOutputFileName = myResultArray[2];
-		    		
 	    		showStatus("Done!");
 	    		checkGUI();
 	    	
@@ -1248,7 +1223,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	signalSelectionPanel = new JPanel();
 	signalSelectionTextArea = new JTextArea(30,50);
-	signalSelectionPanel.add(signalSelectionTextArea);
+	signalSelectionTextArea.setEditable(false);
+    signalSelectionPanel.add(signalSelectionTextArea);
 	selectionTab.addTab("Signal", signalSelectionPanel);
 
 	back1SelectionPanel = new JPanel();
