@@ -31,4 +31,13 @@ public class ParametersConfiguration {
     static int Nx;
     static int Ny;
     
+    static boolean bLinearXAxis = true;
+    static boolean bLinearYAxis = true;
+    static String sXMax;
+    static String sXMin;
+    static String sYMax;
+    static String sYMin;
+    
+    
+    
 }
