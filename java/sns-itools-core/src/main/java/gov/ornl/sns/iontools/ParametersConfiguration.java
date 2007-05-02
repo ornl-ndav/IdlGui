@@ -30,13 +30,28 @@ public class ParametersConfiguration {
     public boolean bFoundNexus                = false;
     static int Nx;
     static int Ny;
+    static int iNtof;
+    static int iY12;
     
-    static boolean bLinearXAxis = true;
-    static boolean bLinearYAxis = true;
+    //initial state of variables after loading data for the firs time
+    static boolean bLinearXAxisInitial;
+    static boolean bLinearYAxisInitial;
+    static String sXMaxInitial;
+    static String sXMinInitial;
+    static String sYMaxInitial;
+    static String sYMinInitial;
+    
+    //reset for each event 
+    static boolean bLinearXAxis;
+    static boolean bLinearYAxis;
     static String sXMax;
     static String sXMin;
     static String sYMax;
     static String sYMin;
+    
+    
+    
+    
     
     
     

@@ -1,7 +1,6 @@
 package gov.ornl.sns.iontools;
 
 import com.rsi.ion.*;
-import javax.swing.*;
 
 public class MouseSelection {
 
@@ -40,20 +39,20 @@ public class MouseSelection {
 		ymax = y_max;
 		
 		if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {  //signal selection
-    		DataReduction.signal_xmin = x_min;
-    		DataReduction.signal_ymin = y_min;
-    		DataReduction.signal_xmax = x_max;
-    		DataReduction.signal_ymax = y_max;
+			MouseSelectionParameters.signal_xmin = x_min;
+			MouseSelectionParameters.signal_ymin = y_min;
+			MouseSelectionParameters.signal_xmax = x_max;
+			MouseSelectionParameters.signal_ymax = y_max;
     	} else if (mode.compareTo(IParameters.BACK1_STRING) == 0) { //background1 selection
-    		DataReduction.back1_xmin = x_min;
-    		DataReduction.back1_ymin = y_min;
-    		DataReduction.back1_xmax = x_max;
-    		DataReduction.back1_ymax = y_max;
+    		MouseSelectionParameters.back1_xmin = x_min;
+    		MouseSelectionParameters.back1_ymin = y_min;
+    		MouseSelectionParameters.back1_xmax = x_max;
+    		MouseSelectionParameters.back1_ymax = y_max;
     	} else if (mode.compareTo(IParameters.BACK2_STRING) == 0) { //background2 selection
-    		DataReduction.back2_xmin = x_min;
-    		DataReduction.back2_ymin = y_min;
-    		DataReduction.back2_xmax = x_max;
-    		DataReduction.back2_ymax = y_max;
+    		MouseSelectionParameters.back2_xmin = x_min;
+    		MouseSelectionParameters.back2_ymin = y_min;
+    		MouseSelectionParameters.back2_xmax = x_max;
+    		MouseSelectionParameters.back2_ymax = y_max;
     	}
 		
 		getFullSelectionInfo(mode, x_min, y_min, x_max, y_max);
