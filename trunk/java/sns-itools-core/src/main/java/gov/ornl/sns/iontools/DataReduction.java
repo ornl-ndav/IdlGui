@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2007, J.-C. Bilheux <bilheuxjm@ornl.gov>
- * Spallation Neutron Source at Oak Ridge National Laboratory
+ * showpallation Neutron Source at Oak Ridge National Laboratory
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -64,8 +64,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
     
     DisplayConfiguration   getN;
-    int             iNtof;    
-    int             iY12;  			//ymax-ymin+1 (signal)
     float           fNtof;
     
     static IONGrConnection c_ionCon;
@@ -256,38 +254,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     int		    	c_y2=0;		  // final y java
     int             a=0;
 
-    static int             signal_x1=0;
-    static int             signal_y1=0;
-    static int             back1_x1=0;
-    static int             back1_y1=0;
-    static int             back2_x1=0;
-    static int             back2_y1=0;
-    static int             signal_x2=0;
-    static int             signal_y2=0;
-    static int             back1_x2=0;
-    static int             back1_y2=0;
-    static int             back2_x2=0;
-    static int             back2_y2=0;
-    static int             info_x=0;
-    static int             info_y=0;
-
-    //xmin, max and ymin and max pixelid values
-    static int			signal_xmin;
-	static int 			signal_ymin;
-	static int 			signal_xmax;
-	static int 			signal_ymax;
-	static int			back1_xmin;
-	static int			back1_ymin;
-	static int 			back1_xmax;
-	static int 			back1_ymax;
-	static int			back2_xmin;
-	static int 			back2_ymin;
-	static int			back2_xmax;
-	static int 			back2_ymax;
-	static int			info_xmin;
-	static int 			info_ymin;
-	static int 			info_xmax;
-	static int 			info_ymax;
     
     String          hostname;
 
@@ -498,17 +464,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  
 	  
 	  if (modeSelected.compareTo("signalSelection") == 0) {
-	      signal_x1 = X;
-	      signal_y1 = Y;
+	      MouseSelectionParameters.signal_x1 = X;
+	      MouseSelectionParameters.signal_y1 = Y;
 	  } else if (modeSelected.compareTo("back1Selection") == 0) {
-	      back1_x1 = X;
-	      back1_y1 = Y;
+	      MouseSelectionParameters.back1_x1 = X;
+	      MouseSelectionParameters.back1_y1 = Y;
 	  } else if (modeSelected.compareTo("back2Selection") == 0) {
-	      back2_x1 = X;
-	      back2_y1 = Y;
+	      MouseSelectionParameters.back2_x1 = X;
+	      MouseSelectionParameters.back2_y1 = Y;
 	  } else {
-	      info_x = X;
-	      info_y = Y;
+	      MouseSelectionParameters.info_x = X;
+	      MouseSelectionParameters.info_y = Y;
 	  }
 
 	  c_xval1 = (int) X / 2;
@@ -534,20 +500,20 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    c_yval2 = (int) (607-Y)/2;
 
 	    if (modeSelected.compareTo("signalSelection") == 0) {
-		signal_x2 = X;
-		signal_y2 = Y;
+		MouseSelectionParameters.signal_x2 = X;
+		MouseSelectionParameters.signal_y2 = Y;
 		doBox();
 	    } else if (modeSelected.compareTo("back1Selection") == 0) {
-		back1_x2 = X;
-		back1_y2 = Y;
+		MouseSelectionParameters.back1_x2 = X;
+		MouseSelectionParameters.back1_y2 = Y;
 		doBox();
 	    } else if (modeSelected.compareTo("back2Selection") == 0) {
-		back2_x2 = X;
-		back2_y2 = Y;
+		MouseSelectionParameters.back2_x2 = X;
+		MouseSelectionParameters.back2_y2 = Y;
 		doBox();
 	    } else {
-		info_x = X;
-		info_y = Y;
+		MouseSelectionParameters.info_x = X;
+		MouseSelectionParameters.info_y = Y;
 	    }
 	    
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
@@ -594,7 +560,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		signalPidFileButton.setEnabled(true);
 		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
 		doBox();
-		iY12 = y_max - y_min + 1;
+		ParametersConfiguration.iY12 = y_max - y_min + 1;
 	    } else if (modeSelected.compareTo("back1Selection") == 0) {
 		back1SelectionTextArea.setText(text1);		
 		back1SelectionTextArea.append(text2);		
@@ -608,7 +574,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		iBack2SelectionExist = 1;
 		doBox();
 	    } else {
-	    text2 = "x: " + info_x + " y: " + info_y + "\n";	
+	    text2 = "x: " + MouseSelectionParameters.info_x + " y: " + MouseSelectionParameters.info_y + "\n";	
 		generalInfoTextArea.setText(text2);
 		//saveXY(IParameters.INFO_STRING,x_min, y_min, x_max, y_max);
 		PixelInfoMessage.outputMessage(text2);
@@ -633,8 +599,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     //fill all widgets parameters each time an action is done
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
    	CheckGUI.populateCheckDataReductionPlotParameters();
-   		
-	if ("signalPidFileButton".equals(evt.getActionCommand())) {
+
+   	if ("signalPidFileButton".equals(evt.getActionCommand())) {
 		SaveSignalPidFileAction.signalPidFileButton();
 	}
 	
@@ -652,188 +618,202 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		doBox();
 	}
 	
-	if ("xValidateButton".equals(evt.getActionCommand())) {
-		IONVariable ionXmin = new IONVariable(0);
-		IONVariable ionXmax = new IONVariable(150000);
-		IONVariable ionYmin = new IONVariable(0);
-		IONVariable ionYmax = new IONVariable(5);
-		IONVariable ionXscale = new IONVariable("linear");
-		IONVariable ionYscale = new IONVariable("log10");
-		cmd = "run_data_reduction_combine (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr + ",";
-		cmd += ionXscale + "," + ionXmin + "," + ionXmax + ",";
-		cmd += ionYscale + "," + ionYmin + "," + ionYmax + ")";
+	if ("xValidateButton".equals(evt.getActionCommand()) ||
+		"yValidateButton".equals(evt.getActionCommand()) ||
+		"xMaxTextField".equals(evt.getActionCommand()) ||
+		"xMinTextField".equals(evt.getActionCommand()) ||
+		"yMaxTextField".equals(evt.getActionCommand()) ||
+		"yMinTextField".equals(evt.getActionCommand())) {
+		if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine plot
+			UpdateDataReductionPlotCombineInterface.validateDataReductionPlotCombineXYAxis();
+		} else { //uncombine plot
+			UpdateDataReductionPlotUncombineInterface.validateDataReductionPlotUncombineXYAxis();
+		}
 	}
-	
-	if ("yValidateButton".equals(evt.getActionCommand())) {
-	
-	}
-	
+		
 	if ("xResetButton".equals(evt.getActionCommand())) {
+		UpdateDataReductionPlotCombineInterface.resetDataReductionPlotCombineXAxis();
 	}
 	
 	if ("yResetButton".equals(evt.getActionCommand())) {
+		if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine plot
+			UpdateDataReductionPlotCombineInterface.resetDataReductionPlotCombineYAxis();
+		} else {
+			UpdateDataReductionPlotUncombineInterface.resetDataReductionPlotUncombineYAxis();
+		}
 	}
 	
-	    if ("yesNormalization".equals(evt.getActionCommand())) {
-	    	NormalizationAction.yesNormalization();
-	    }
+	if ("yesNormalization".equals(evt.getActionCommand())) {
+	  	NormalizationAction.yesNormalization();
+	}
 
-	    if ("noNormalization".equals(evt.getActionCommand())) {
-	    	NormalizationAction.noNormalization();
-	    }
+	if ("noNormalization".equals(evt.getActionCommand())) {
+	   	NormalizationAction.noNormalization();
+	}
 	    
-	    if ("normalizationTextField".equals(evt.getActionCommand())) {
-	    	NormalizationAction.yesNormalization();
-	    }
+	if ("normalizationTextField".equals(evt.getActionCommand())) {
+	   	NormalizationAction.yesNormalization();
+	}
 
-	    if ("yesBackground".equals(evt.getActionCommand())) {
-	    }
+	if ("yesBackground".equals(evt.getActionCommand())) {
+	}
 
-	    if ("noBackground".equals(evt.getActionCommand())) {
-	    }
+	if ("noBackground".equals(evt.getActionCommand())) {
+	}
 
-	    if ("yesNormBackground".equals(evt.getActionCommand())) {
-	    	System.out.println("I just pressed yes in yesNormBackground");
-	    }
+	if ("yesNormBackground".equals(evt.getActionCommand())) {
+	  	System.out.println("I just pressed yes in yesNormBackground");
+	}
 
-	    if ("noNormBackground".equals(evt.getActionCommand())) {
+	if ("noNormBackground".equals(evt.getActionCommand())) {
 		System.out.println("I just pressed no in noNormBackground");
-	    }
+	}
 
-	    if ("yesIntermediate".equals(evt.getActionCommand())) {
+	if ("yesIntermediate".equals(evt.getActionCommand())) {
 		intermediateButton.setEnabled(true);
-	    }
+	}
 
-	    if ("noIntermediate".equals(evt.getActionCommand())) {
+	if ("noIntermediate".equals(evt.getActionCommand())) {
 		intermediateButton.setEnabled(false);
-	    }
+	}
 
-	    if ("intermediateButton".equals(evt.getActionCommand())) {
+	if ("intermediateButton".equals(evt.getActionCommand())) {
 		System.out.println("I just pressed intermediateButton");
-	    }
+	}
 	    
-	    if ("yesCombineBackground".equals(evt.getActionCommand())) {
-	    	CheckDataReductionButtonValidation.bCombineDataSpectrum = true;
-	    }
+	if ("yesCombineSpectrum".equals(evt.getActionCommand())) {
+	   	CheckDataReductionButtonValidation.bCombineDataSpectrum = true;
+	   	CheckGUI.enableDataReductionPlotXAxis();
+	}
 
-	    if ("noCombineBackground".equals(evt.getActionCommand())) {
-	    	CheckDataReductionButtonValidation.bCombineDataSpectrum = false;
-	    }
+	if ("noCombineSpectrum".equals(evt.getActionCommand())) {
+	   	CheckDataReductionButtonValidation.bCombineDataSpectrum = false;
+	   	CheckGUI.disableDataReductionPlotXAxis();
+	}
 	    
-	    if ("yesInstrumentGeometry".equals(evt.getActionCommand())) {
-	    	InstrumentGeometryAction.yesInstrumentGeometry();
-	    }
+	if ("yesInstrumentGeometry".equals(evt.getActionCommand())) {
+	   	InstrumentGeometryAction.yesInstrumentGeometry();
+	}
 
-	    if ("noInstrumentGeometry".equals(evt.getActionCommand())) {
-	    	InstrumentGeometryAction.noInstrumentGeometry();
-	    }
+	if ("noInstrumentGeometry".equals(evt.getActionCommand())) {
+	   	InstrumentGeometryAction.noInstrumentGeometry();
+	}
 
-	    if ("instrumentGeometryButton".equals(evt.getActionCommand())) {
-		
-	    	System.out.println("I just pressed button in instrument geometry");
-	    }
+	if ("instrumentGeometryButton".equals(evt.getActionCommand())) {
+		System.out.println("I just pressed button in instrument geometry");
+	}
 
-	    if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
-	    	InstrumentGeometryAction.yesInstrumentGeometry();	    		
-	    }
+	if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
+	   	InstrumentGeometryAction.yesInstrumentGeometry();	    		
+	}
 
-	    if ("startDataReductionButton".equals(evt.getActionCommand())) {
+	if ("startDataReductionButton".equals(evt.getActionCommand())) {
 	    	
-	    	String cmd_local = RunRefDataReduction.createDataReductionCmd();
+	  	String cmd_local = RunRefDataReduction.createDataReductionCmd();
 	    	
-	    	c_ionCon.setDrawable(c_dataReductionPlot);
-	    	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
+	   	c_ionCon.setDrawable(c_dataReductionPlot);
+	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
 	    		    	
-	    	String[] cmdArray = cmd_local.split(" ");
-	    	int cmdArraySize = cmdArray.length;
-	    	int[] nx = {cmdArraySize};
-	    	ionCmd = new IONVariable(cmdArray,nx); 
-	    	ionNtof = new IONVariable(iNtof);
-	    	ionY12 = new IONVariable(iY12);
-	    	ionYmin = new IONVariable(y_min);
-	    	sendIDLVariable("IDLcmd", ionCmd);
+	   	String[] cmdArray = cmd_local.split(" ");
+	   	int cmdArraySize = cmdArray.length;
+	   	int[] nx = {cmdArraySize};
+	   	ionCmd = new IONVariable(cmdArray,nx); 
+	   	sendIDLVariable("IDLcmd", ionCmd);
 	    		    	
-	    	String cmd;
-	    	if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
+	   	String cmd;
+	   	if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
 	    		
-	    		cmd = "array_result = run_data_reduction_combine (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr + ")";
-		    	showStatus("Processing...");
-		    	executeCmd(cmd);
-		    	showStatus("Done!");
+	   		cmd = "array_result = run_data_reduction_combine (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr + ")";
+	    	showStatus("Processing...");
+	    	executeCmd(cmd);
+	    	showStatus("Done!");
 
-	    		IONVariable myIONresult;
-	    		myIONresult = queryVariable("array_result");
-	    		String[] myResultArray;
-	    		myResultArray = myIONresult.getStringArray();
-	    		
-	    		ParametersConfiguration.sXMin = myResultArray[0];
-	    		ParametersConfiguration.sXMax = myResultArray[1];
-	    		ParametersConfiguration.sYMin = myResultArray[2];
-	    		ParametersConfiguration.sYMax = myResultArray[3];
-	    		UpdateDataReductionPlotInterface.updateDataReductionPlotGUI();
-	    		
-	    	} else {
-	    		
-	    		cmd = "run_data_reduction, IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr + "," + ionNtof + "," + ionY12 + "," + ionYmin; 
-		    	showStatus("Processing...");
-		    	executeCmd(cmd);
-		    	showStatus("Done!");
-	    	}
-	    		
+    		IONVariable myIONresult;
+    		myIONresult = queryVariable("array_result");
+	    	String[] myResultArray;
+	    	myResultArray = myIONresult.getStringArray();
+	    			    		
+	    	CheckGUI.populateCheckDataReductionPlotCombineParameters(myResultArray);
+	    	UpdateDataReductionPlotCombineInterface.updateDataReductionPlotGUI();
 	    	
-	    	//show data reductin plot tab
-	    	dataReductionTabbedPane.setSelectedIndex(1);
-	    }
+	    } else {
 	    
-	    //if one of the intermediate check box is check
-	    if ("plot1".equals(evt.getActionCommand())) {
-		System.out.println("in check box");
-	    }
-
-	    if ("instrumentREFL".equals(evt.getActionCommand())) {
-	    	displayInstrumentLogo(0);
-	    	instrument = "REF_L";
-	    }
-
-	    if ("instrumentREFM".equals(evt.getActionCommand())) {
-	    	displayInstrumentLogo(1);
-	    	instrument = "REF_M";
-	    }
-
-	    if ("preferencesMenuItem".equals(evt.getActionCommand())) {
-		//    preferencesFrame.setVisible(true);
-	    }
-
-	    if ("signalSelection".equals(evt.getActionCommand())) {
-		modeSelected = "signalSelection";
-	    }
+	    	ionNtof = new IONVariable(ParametersConfiguration.iNtof);
+		   	ionY12 = new IONVariable(ParametersConfiguration.iY12);
+		   	ionYmin = new IONVariable(MouseSelectionParameters.signal_ymin);
+		   	
+		   	cmd = "array_result = run_data_reduction (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," ;
+	    	cmd += instr + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
+		   	showStatus("Processing...");
+		   	executeCmd(cmd);
+		   	showStatus("Done!");
 	    
-	    if ("back1Selection".equals(evt.getActionCommand())) {
-		modeSelected = "back1Selection";
+    		IONVariable myIONresult;
+    		myIONresult = queryVariable("array_result");
+	    	String[] myResultArray;
+	    	myResultArray = myIONresult.getStringArray();
+		   	
+	    	System.out.println("myResultArray[0]: " + myResultArray[0]);
+	    	System.out.println("myResultArray[1]: " + myResultArray[1]);
+	    	
+	    	CheckGUI.populateCheckDataReductionPlotParameters(myResultArray);
+	    	UpdateDataReductionPlotUncombineInterface.updateDataReductionPlotGUI();
 	    }
-	    
-	    if ("back2Selection".equals(evt.getActionCommand())) {
-		modeSelected = "back2Selection";
-	    }
-	    
-	    if ("info".equals(evt.getActionCommand())) {
-		modeSelected = "info";
-	    }
-	    
-	    if ("runsAddTextField".equals(evt.getActionCommand())) {
-	    }
-	    
-	    if ("runsSequenceTextField".equals(evt.getActionCommand())) {
-	    }
-
-	    if ("runNumberTextField".equals(evt.getActionCommand())) {
 	    	    	
-	    	//retrive value of run number
-	    	runNumberValue = runNumberTextField.getText();
+	   	//show data reductin plot tab
+	    dataReductionTabbedPane.setSelectedIndex(1);
+	    
+	}
+	    
+	//if one of the intermediate check box is check
+	if ("plot1".equals(evt.getActionCommand())) {
+		System.out.println("in check box");
+	}
+
+	if ("instrumentREFL".equals(evt.getActionCommand())) {
+	   	displayInstrumentLogo(0);
+	  	instrument = "REF_L";
+	}
+
+	if ("instrumentREFM".equals(evt.getActionCommand())) {
+	   	displayInstrumentLogo(1);
+	   	instrument = "REF_M";
+	}
+
+	if ("preferencesMenuItem".equals(evt.getActionCommand())) {
+	//    preferencesFrame.setVisible(true);
+	}
+
+	if ("signalSelection".equals(evt.getActionCommand())) {
+		modeSelected = "signalSelection";
+	}
+	    
+	if ("back1Selection".equals(evt.getActionCommand())) {
+		modeSelected = "back1Selection";
+	}
+	    
+	if ("back2Selection".equals(evt.getActionCommand())) {
+		modeSelected = "back2Selection";
+	}
+	    
+	if ("info".equals(evt.getActionCommand())) {
+		modeSelected = "info";
+	}
+	    
+	if ("runsAddTextField".equals(evt.getActionCommand())) {
+	}
+	    
+	if ("runsSequenceTextField".equals(evt.getActionCommand())) {
+	}
+
+	if ("runNumberTextField".equals(evt.getActionCommand())) {
+	    	    	
+		//retrive value of run number
+		runNumberValue = runNumberTextField.getText();
 		
-	    	if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
+		if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
 	   
-	    		reinitializeVariables();
+			reinitializeVariables();
 			
 			/*
 		    //retrieve name of instrument
@@ -842,58 +822,58 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 		    // createVar();
 		   
-	    		instr = new com.rsi.ion.IONVariable(instrument);
-	    		user = new com.rsi.ion.IONVariable(ucams); 
+			instr = new com.rsi.ion.IONVariable(instrument);
+			user = new com.rsi.ion.IONVariable(ucams); 
 
-	    		c_ionCon.setDrawable(c_plot);
+			c_ionCon.setDrawable(c_plot);
 	    		    		
-	    		String cmd = "result = plot_data( " + runNumberValue + ", " + 
-	    		instr + ", " + user+")";
+			String cmd = "result = plot_data( " + runNumberValue + ", " + 
+			instr + ", " + user+")";
 	    		
-	    		showStatus("Processing...");
-	    		executeCmd(cmd);
+			showStatus("Processing...");
+			executeCmd(cmd);
 	    		
-	    		IONVariable myIONresult;
-	    		myIONresult = queryVariable("result");
-	    		String[] myResultArray;
-	    		myResultArray = myIONresult.getStringArray();
+			IONVariable myIONresult;
+			myIONresult = queryVariable("result");
+			String[] myResultArray;
+			myResultArray = myIONresult.getStringArray();
 	    		
-	    		//Nexus file found or not 
-	    		sNexusFound = myResultArray[0];
-	    		NexusFound foundNexus = new NexusFound(sNexusFound);
-	    		bFoundNexus = foundNexus.isNexusFound();
+			//Nexus file found or not 
+			sNexusFound = myResultArray[0];
+			NexusFound foundNexus = new NexusFound(sNexusFound);
+			bFoundNexus = foundNexus.isNexusFound();
 	    		
-	    		//Number of tof 
-	    		sNtof = myResultArray[1];
-	    		Float fNtof = new Float(sNtof);
-	    		iNtof = fNtof.intValue();
-	    		
-	    		//name of tmp output file name
-	    		sTmpOutputFileName = myResultArray[2];
-	    		showStatus("Done!");
-	    		checkGUI();
+			//Number of tof 
+			sNtof = myResultArray[1];
+			Float fNtof = new Float(sNtof);
+			ParametersConfiguration.iNtof = fNtof.intValue();
+				    		
+			//name of tmp output file name
+			sTmpOutputFileName = myResultArray[2];
+			showStatus("Done!");
+			checkGUI();
 	    	
-	    		//check if run number is not already part of the data reduction runs
-	    		UpdateDataReductionRunNumberTextField.updateDataReductionRunNumbers(runNumberValue);
+			//check if run number is not already part of the data reduction runs
+			UpdateDataReductionRunNumberTextField.updateDataReductionRunNumbers(runNumberValue);
 	    
-	    		//update text field
-	    		if (bFoundNexus) {
-	    			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
-	    				runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
-	    			} else {
-	    				runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
-	    			}
-	    		}
-	    	}
-	    }		
+			//update text field
+			if (bFoundNexus) {
+				if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
+					runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
+	    		} else {
+	    			runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
+	    		}	
+	    	}	
+	    }	
+	}		
 	    
-	    if (CheckDataReductionButtonValidation.checkDataReductionButtonStatus()) {
-	    	startDataReductionButton.setEnabled(true);
-	    } else {
-	    	startDataReductionButton.setEnabled(false);
-	    }
+	if (CheckDataReductionButtonValidation.checkDataReductionButtonStatus()) {
+		startDataReductionButton.setEnabled(true);
+	} else {
+		startDataReductionButton.setEnabled(false);
+	}
 	    	    
-	}   
+  }   
     
     /*
       instrList.addActionListener( new ActionListener() {
@@ -1108,22 +1088,22 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	for (int i=0; i<3; i++) {
 	    
 		if (i == 0) {
-			c_x1 = signal_x1;
-			c_y1 = signal_y1;
-			c_x2 = signal_x2;
-			c_y2 = signal_y2;
+			c_x1 = MouseSelectionParameters.signal_x1;
+			c_y1 = MouseSelectionParameters.signal_y1;
+			c_x2 = MouseSelectionParameters.signal_x2;
+			c_y2 = MouseSelectionParameters.signal_y2;
 			g.setColor(Color.red);
 	    } else if (i == 1) {
-	    	c_x1 = back1_x1;
-	    	c_y1 = back1_y1;
-	    	c_x2 = back1_x2;
-	    	c_y2 = back1_y2;
+	    	c_x1 = MouseSelectionParameters.back1_x1;
+	    	c_y1 = MouseSelectionParameters.back1_y1;
+	    	c_x2 = MouseSelectionParameters.back1_x2;
+	    	c_y2 = MouseSelectionParameters.back1_y2;
 	    	g.setColor(Color.yellow);
 	    } else if (i == 2) {
-	    	c_x1 = back2_x1;
-	    	c_y1= back2_y1;
-	    	c_x2 = back2_x2;
-	    	c_y2 = back2_y2;
+	    	c_x1 = MouseSelectionParameters.back2_x1;
+	    	c_y1 = MouseSelectionParameters.back2_y1;
+	    	c_x2 = MouseSelectionParameters.back2_x2;
+	    	c_y2 = MouseSelectionParameters.back2_y2;
 	    	g.setColor(Color.green);
 	    }
 		
@@ -1347,13 +1327,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	combineSpectrumLabel = new JLabel(" Combine data spectrum:     ");
 	
 	yesCombineSpectrumRadioButton = new JRadioButton("Yes");
-	yesCombineSpectrumRadioButton.setActionCommand("yesCombineBackground");
+	yesCombineSpectrumRadioButton.setActionCommand("yesCombineSpectrum");
 	yesCombineSpectrumRadioButton.setSelected(false);
 	yesCombineSpectrumRadioButton.addActionListener(this);
 
 	noCombineSpectrumRadioButton = new JRadioButton("No");
 	noCombineSpectrumRadioButton.setSelected(true);
-	noCombineSpectrumRadioButton.setActionCommand("noCombineBackground");
+	noCombineSpectrumRadioButton.setActionCommand("noCombineSpectrum");
 	noCombineSpectrumRadioButton.addActionListener(this);
 
 	combineSpectrumButtonGroup = new ButtonGroup();
