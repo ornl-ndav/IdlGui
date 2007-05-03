@@ -4,33 +4,45 @@ import com.rsi.ion.*;
 
 public class MouseSelection {
 
-	static int xmin;
-	static int ymin;
-	static int xmax;
-	static int ymax;
+	private static int xmin;
+	private static int ymin;
+	private static int xmax;
+	private static int ymax;
+	private static int infoX;
+	private static int infoY;
 	
-	static String[] sSelectionInfo;
-	static IONVariable ionTmpHistoFile;
-	static IONVariable ionXmin;
-	static IONVariable ionXmax;
-	static IONVariable ionYmin;
-	static IONVariable ionYmax;
-	static IONVariable ionNx;
-	static IONVariable ionNy;
+	private static IONVariable ionTmpHistoFile;
+	private static IONVariable ionXmin;
+	private static IONVariable ionXmax;
+	private static IONVariable ionYmin;
+	private static IONVariable ionYmax;
+	private static IONVariable ionNx;
+	private static IONVariable ionNy;
+	private static IONVariable ionX;
+	private static IONVariable ionY;
 	
-	static String sSelectionHeight;
-	static String sSelectionWidth;
-	static String sNbrPixelInsideSelection;
-	static String sNbrPixelOutsideSelection;
-	static String sStartingPixelId;
-	static String sEndingPixelId;
-	static String sCountsStartingPixelId;
-	static String sCountsEndingPixelId;
-	static String sCountsInsideSelection;
-	static String sCountsOutsideSelection;
-	static String sAverageCountsInsideSelection;
-	static String sAverageCountsOutsideSelection;
-		
+	//for selection
+	private static String sSelectionHeight;
+	private static String sSelectionWidth;
+	private static String sNbrPixelInsideSelection;
+	private static String sNbrPixelOutsideSelection;
+	private static String sStartingPixelId;
+	private static String sEndingPixelId;
+	private static String sCountsStartingPixelId;
+	private static String sCountsEndingPixelId;
+	private static String sCountsInsideSelection;
+	private static String sCountsOutsideSelection;
+	private static String sAverageCountsInsideSelection;
+	private static String sAverageCountsOutsideSelection;
+
+	//for pixelInfo
+	private static String sDistXBorder;
+	private static String sDistXCenter;
+	private static String sDistYBorder;
+	private static String sDistYCenter;
+	private static String sNbrCounts;
+	private static String sPixelID;
+	
 	static void saveXY(String mode,int x_min, int y_min, int x_max, int y_max) {
     	
 		xmin = x_min;
@@ -58,10 +70,19 @@ public class MouseSelection {
 		getFullSelectionInfo(mode, x_min, y_min, x_max, y_max);
     }	
 	
+	static void saveXYinfo(int x, int y) {
+		
+		infoX = x;
+		infoY = y;
+		
+		getFullPixelInfo(infoX, infoY);
+		
+	}
+		
 	/*
 	 * Function that produces the output
 	 */
-	static void getFullSelectionInfo(String mode, int x_min, int y_min, int x_max, int y_max) {
+	private static void getFullSelectionInfo(String mode, int x_min, int y_min, int x_max, int y_max) {
 		
 		ionTmpHistoFile = new com.rsi.ion.IONVariable(DataReduction.sTmpOutputFileName);
 		ionXmin = new com.rsi.ion.IONVariable(x_min); 
@@ -85,54 +106,110 @@ public class MouseSelection {
 		sSelectionInfo = ionSelectionInfo.getStringArray();
 	
 		InitializeStrings(sSelectionInfo);
-		ProduceSelectionInfoMessage(mode);
+		ProduceSelectionMessage(mode);
 				
 	}
 	
-		static void InitializeStrings(String[] sSelectionInfo) {
-			
-			int i=0;
-			sSelectionHeight = sSelectionInfo[i++];
-			sSelectionWidth = sSelectionInfo[i++];
-			sNbrPixelInsideSelection = sSelectionInfo[i++];
-			sNbrPixelOutsideSelection = sSelectionInfo[i++];
-			sStartingPixelId = sSelectionInfo[i++];
-			sEndingPixelId = sSelectionInfo[i++];
-			sCountsStartingPixelId = sSelectionInfo[i++];
-			sCountsEndingPixelId = sSelectionInfo[i++];
-			sCountsInsideSelection = sSelectionInfo[i++];
-			sCountsOutsideSelection = sSelectionInfo[i++];
-			sAverageCountsInsideSelection = sSelectionInfo[i++];
-			sAverageCountsOutsideSelection = sSelectionInfo[i++];
-						
-		}
+	static void getFullPixelInfo(int x, int y) {
+		
+		ionTmpHistoFile = new com.rsi.ion.IONVariable(DataReduction.sTmpOutputFileName);
+		ionX = new com.rsi.ion.IONVariable(x); 
+		ionY = new com.rsi.ion.IONVariable(y);
+		ionNx = new com.rsi.ion.IONVariable(ParametersConfiguration.Nx);
+		ionNy = new com.rsi.ion.IONVariable(ParametersConfiguration.Ny);
+				
+	String cmd = "pixelInfo = pixel_info( ";
+	cmd += ionNx + "," + ionNy;
+	cmd += "," + ionTmpHistoFile;
+	cmd += "," + ionX + "," + ionY;
+	cmd += ")";
+		
+	IonUtils.executeCmd(cmd);
 	
-		static void ProduceSelectionInfoMessage(String mode){
+	IONVariable ionPixelInfo = IonUtils.queryVariable("pixelInfo");
+	String[] sPixelInfo;
+	sPixelInfo = ionPixelInfo.getStringArray();
+
+	InitializePixelInfoStrings(sPixelInfo);
+	ProducePixelInfoMessage();
+	
+	}
+
+	private static void InitializeStrings(String[] sSelectionInfo) {
+			
+		int i=0;
+		sSelectionHeight = sSelectionInfo[i++];
+		sSelectionWidth = sSelectionInfo[i++];
+		sNbrPixelInsideSelection = sSelectionInfo[i++];
+		sNbrPixelOutsideSelection = sSelectionInfo[i++];
+		sStartingPixelId = sSelectionInfo[i++];
+		sEndingPixelId = sSelectionInfo[i++];
+		sCountsStartingPixelId = sSelectionInfo[i++];
+		sCountsEndingPixelId = sSelectionInfo[i++];
+		sCountsInsideSelection = sSelectionInfo[i++];
+		sCountsOutsideSelection = sSelectionInfo[i++];
+		sAverageCountsInsideSelection = sSelectionInfo[i++];
+		sAverageCountsOutsideSelection = sSelectionInfo[i++];
 		
-			String sMessage = "* The two corners are defined by:\n";
-			sMessage += "   - Bottom left corner:\n";
-			sMessage += "     PixelID #: " + sStartingPixelId;
-			sMessage += " (x= " + xmin + "; y= " + ymin + "; intensity= " + sCountsStartingPixelId + ")\n";
-			sMessage += "   - Top right corner:\n";
-			sMessage += "     PixelID #: " + sEndingPixelId;
-			sMessage += " (x= " + xmax + "; y= " + ymax + "; intensity= " + sCountsEndingPixelId + ")\n\n";
-			sMessage += "* General information about selection:\n";
-			sMessage += "   - Number of pixelIDs inside the selection: " + sNbrPixelInsideSelection + "\n";
-			sMessage += "   - Selection width: " + sSelectionWidth + "\n";
-			sMessage += "   - Selection height: " + sSelectionHeight + "\n";
-			sMessage += "   - Total counts inside selection: " + sCountsInsideSelection + "\n";
-			sMessage += "   - Total counts outside selection: " + sCountsOutsideSelection + "\n";
-			sMessage += "   - Average counts inside selection: " + sAverageCountsInsideSelection + "\n";
-			sMessage += "   - Average counts outside selection: " + sAverageCountsOutsideSelection + "\n";
+	}
+	
+	private static void InitializePixelInfoStrings(String[] sPixelInfo) {
 			
-			if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {  //signal selection
-				DataReduction.signalSelectionTextArea.setText(sMessage);
-			} else if (mode.compareTo(IParameters.BACK1_STRING) == 0) { //background1 selection
-				DataReduction.back1SelectionTextArea.setText(sMessage);
-			} else if (mode.compareTo(IParameters.BACK2_STRING) == 0) { //background2 selection
-				DataReduction.back2SelectionTextArea.setText(sMessage);
-			}
+		int i=0;
+		sDistXBorder = sPixelInfo[i++];
+		sDistXCenter = sPixelInfo[i++];
+		sDistYBorder = sPixelInfo[i++];
+		sDistYCenter = sPixelInfo[i++];
+		sNbrCounts = sPixelInfo[i++];
+		sPixelID = sPixelInfo[i++];
 			
+	}
+			
+	private static void ProduceSelectionMessage(String mode){
+		
+		String sMessage = "* The two corners are defined by:\n";
+		sMessage += "   - Bottom left corner:\n";
+		sMessage += "     PixelID #: " + sStartingPixelId;
+		sMessage += " (x= " + xmin + "; y= " + ymin + "; intensity= " + sCountsStartingPixelId + ")\n";
+		sMessage += "   - Top right corner:\n";
+		sMessage += "     PixelID #: " + sEndingPixelId;
+		sMessage += " (x= " + xmax + "; y= " + ymax + "; intensity= " + sCountsEndingPixelId + ")\n\n";
+		sMessage += "* General information about selection:\n";
+		sMessage += "   - Number of pixelIDs inside the selection: " + sNbrPixelInsideSelection + "\n";
+		sMessage += "   - Number of pixelIDs outiside the selection: " + sNbrPixelOutsideSelection + "\n";
+		sMessage += "   - Selection width: " + sSelectionWidth + "\n";
+		sMessage += "   - Selection height: " + sSelectionHeight + "\n";
+		sMessage += "   - Total counts inside selection: " + sCountsInsideSelection + "\n";
+		sMessage += "   - Total counts outside selection: " + sCountsOutsideSelection + "\n";
+		sMessage += "   - Average counts inside selection: " + sAverageCountsInsideSelection + "\n";
+		sMessage += "   - Average counts outside selection: " + sAverageCountsOutsideSelection + "\n";
+		
+		if (mode.compareTo(IParameters.SIGNAL_STRING) == 0) {  //signal selection
+			DataReduction.signalSelectionTextArea.setText(sMessage);
+		} else if (mode.compareTo(IParameters.BACK1_STRING) == 0) { //background1 selection
+			DataReduction.back1SelectionTextArea.setText(sMessage);
+		} else if (mode.compareTo(IParameters.BACK2_STRING) == 0) { //background2 selection
+			DataReduction.back2SelectionTextArea.setText(sMessage);
 		}
+			
+	}
+
+	private static void ProducePixelInfoMessage() {
 		
+		String sMessage = " The pixel selected is defined by:\n\n";
+		sMessage += "   - X: " + infoX + "\n";
+		sMessage += "   - Y: " + infoY + "\n";
+		sMessage += "\n";
+		sMessage += "   - a: " + sDistXBorder + " mm\n";
+		sMessage += "   - b: " + sDistXCenter + " mm\n";
+		sMessage += "   - c: " + sDistYBorder + " mm\n";
+		sMessage += "   - d: " + sDistYCenter + " mm\n";
+		sMessage += "\n";
+		sMessage += "   - Nbr counts: " + sNbrCounts + "\n";
+		sMessage += "   - Pixel ID: " + sPixelID + "\n";
+		
+		DataReduction.pixelInfoTextArea.setText(sMessage);
+		
+	}
+	
 }
