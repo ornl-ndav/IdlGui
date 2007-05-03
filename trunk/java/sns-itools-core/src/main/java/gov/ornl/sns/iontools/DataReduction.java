@@ -79,6 +79,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     String          		sNtof;
     static int              iBack2SelectionExist = 0;
     
+    //extra plot panel
+    static JPanel		extraPlotPanel;
     
     String          	text1;
     String          	text2;
@@ -99,7 +101,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JPanel          plotPanel;
     JPanel          leftPanel;
     JPanel          plotDataReductionPanel;
-    JPanel          panela; //input tab
+    JPanel          panela; //input tab			   
     JPanel          panel1; //selection
     JPanel          panel2; //log book
     static JPanel          panelb; //DataReductionPlot
@@ -181,10 +183,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     JPanel          	signalSelectionPanel;
     JPanel          	back1SelectionPanel;
     JPanel          	back2SelectionPanel;
+    JPanel              pixelInfoPanel;
+    JLabel              pixelInfoLabel;
     static JTextArea    signalSelectionTextArea;
     static JTextArea    back1SelectionTextArea;
     static JTextArea    back2SelectionTextArea;
-
+    static JTextArea    pixelInfoTextArea;
+    ImageIcon    		detectorLayout = new ImageIcon();
+    
     //tab of Log Book
     JTextArea      	    textAreaLogBook;
     
@@ -455,6 +461,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void mousePressed(com.rsi.ion.IONDrawable drawable, int X, int Y, 
                     long when, int mask)
   {
+	  	  
 	  if (bFoundNexus) {
 
 	  if (X < 0) {X = 0;};
@@ -462,18 +469,21 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  if (X > Nx*2) {X = 2*Nx-1;};
 	  if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	  
+	  if (mask == 1) {  //left click
+		  if (modeSelected.compareTo("signalSelection") == 0) {
+			  MouseSelectionParameters.signal_x1 = X;
+			  MouseSelectionParameters.signal_y1 = Y;
+		  } else if (modeSelected.compareTo("back1Selection") == 0) {
+			  MouseSelectionParameters.back1_x1 = X;
+			  MouseSelectionParameters.back1_y1 = Y;
+		  } else if (modeSelected.compareTo("back2Selection") == 0) {
+			  MouseSelectionParameters.back2_x1 = X;
+			  MouseSelectionParameters.back2_y1 = Y;
+		  }
+	  } 
 	  
-	  if (modeSelected.compareTo("signalSelection") == 0) {
-	      MouseSelectionParameters.signal_x1 = X;
-	      MouseSelectionParameters.signal_y1 = Y;
-	  } else if (modeSelected.compareTo("back1Selection") == 0) {
-	      MouseSelectionParameters.back1_x1 = X;
-	      MouseSelectionParameters.back1_y1 = Y;
-	  } else if (modeSelected.compareTo("back2Selection") == 0) {
-	      MouseSelectionParameters.back2_x1 = X;
-	      MouseSelectionParameters.back2_y1 = Y;
-	  } else {
-	      MouseSelectionParameters.info_x = X;
+	  if (mask == 4) {  //rigth click
+		  MouseSelectionParameters.info_x = X;
 	      MouseSelectionParameters.info_y = Y;
 	  }
 
@@ -491,7 +501,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	
     	
 	if (bFoundNexus) {
-	    if (X < 0) {X = 0;};
+	  
+		if (X < 0) {X = 0;};
 	    if (Y < 2*NyMin) {Y = 2*NyMin;};
 	    if (X > 2*Nx) {X = 2*Nx-1;};
 	    if (Y > 2*NyMax) {Y = 2*Ny-1;};
@@ -499,21 +510,23 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    c_xval2 = (int) X/2;
 	    c_yval2 = (int) (607-Y)/2;
 
-	    if (modeSelected.compareTo("signalSelection") == 0) {
-		MouseSelectionParameters.signal_x2 = X;
-		MouseSelectionParameters.signal_y2 = Y;
-		doBox();
-	    } else if (modeSelected.compareTo("back1Selection") == 0) {
-		MouseSelectionParameters.back1_x2 = X;
-		MouseSelectionParameters.back1_y2 = Y;
-		doBox();
-	    } else if (modeSelected.compareTo("back2Selection") == 0) {
-		MouseSelectionParameters.back2_x2 = X;
-		MouseSelectionParameters.back2_y2 = Y;
-		doBox();
-	    } else {
-		MouseSelectionParameters.info_x = X;
-		MouseSelectionParameters.info_y = Y;
+	    if (mask == 1) { //left click
+	    	if (modeSelected.compareTo("signalSelection") == 0) {
+	    		MouseSelectionParameters.signal_x2 = X;
+	    		MouseSelectionParameters.signal_y2 = Y;
+	    	} else if (modeSelected.compareTo("back1Selection") == 0) {
+	    		MouseSelectionParameters.back1_x2 = X;
+	    		MouseSelectionParameters.back1_y2 = Y;
+	    	} else if (modeSelected.compareTo("back2Selection") == 0) {
+	    		MouseSelectionParameters.back2_x2 = X;
+	    		MouseSelectionParameters.back2_y2 = Y;
+	    	}
+	    	doBox();
+	    }
+	    	
+	    if (mask == 4) {  //right click
+	    	MouseSelectionParameters.info_x = X;
+	    	MouseSelectionParameters.info_y = Y;
 	    }
 	    
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
@@ -542,11 +555,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  y_min = someArray[0];
 	  y_max = someArray[1];
 	  
-	  // output values into textbox
-	  text1= "x_min: " + x_min + "\ty_min: " + y_min + "\n";
-	  //	  generalInfoTextArea.setText(text);
-	  text2 = "x_max: " + x_max + "\ty_max: " + y_max + "\n";
-
 	if (IONfoundNexus.toString().compareTo("0") != 0) {
 
 	    if (X < 0) {X = 0;};
@@ -554,30 +562,26 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    if (X > 2*Nx) {X = 2*Nx-1;};
 	    if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	    
-	    if (modeSelected.compareTo("signalSelection") == 0) {
-		signalSelectionTextArea.setText(text1);
-		//signalSelectionTextArea.append(text2);
-		signalPidFileButton.setEnabled(true);
-		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
-		doBox();
-		ParametersConfiguration.iY12 = y_max - y_min + 1;
-	    } else if (modeSelected.compareTo("back1Selection") == 0) {
-		back1SelectionTextArea.setText(text1);		
-		back1SelectionTextArea.append(text2);		
-		backgroundPidFileButton.setEnabled(true);
-		MouseSelection.saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);
-		doBox();
-	    } else if (modeSelected.compareTo("back2Selection") == 0) {
-		back2SelectionTextArea.setText(text1);
-		back2SelectionTextArea.append(text2);
-		MouseSelection.saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
-		iBack2SelectionExist = 1;
-		doBox();
-	    } else {
-	    text2 = "x: " + MouseSelectionParameters.info_x + " y: " + MouseSelectionParameters.info_y + "\n";	
-		generalInfoTextArea.setText(text2);
-		//saveXY(IParameters.INFO_STRING,x_min, y_min, x_max, y_max);
-		PixelInfoMessage.outputMessage(text2);
+	    if (mask == 1) {  //left click
+	    	if (modeSelected.compareTo("signalSelection") == 0) {
+	    		signalPidFileButton.setEnabled(true);
+	    		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
+	    		ParametersConfiguration.iY12 = y_max - y_min + 1;
+	    	} else if (modeSelected.compareTo("back1Selection") == 0) {
+	    		backgroundPidFileButton.setEnabled(true);
+	    		MouseSelection.saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);
+	    	} else if (modeSelected.compareTo("back2Selection") == 0) {
+	    		MouseSelection.saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
+	    		iBack2SelectionExist = 1;
+	    	} 
+	    	doBox();
+	    }
+	    
+	    if (mask == 4) {  //right click
+	    	MouseSelection.saveXYinfo(x_max, y_max);
+	    	dataReductionTabbedPane.setSelectedIndex(0);
+	    	tabbedPane.setSelectedIndex(1);
+	    	selectionTab.setSelectedIndex(3);
 	    }
 	    	
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
@@ -753,15 +757,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	String[] myResultArray;
 	    	myResultArray = myIONresult.getStringArray();
 		   	
-	    	System.out.println("myResultArray[0]: " + myResultArray[0]);
-	    	System.out.println("myResultArray[1]: " + myResultArray[1]);
-	    	
 	    	CheckGUI.populateCheckDataReductionPlotParameters(myResultArray);
 	    	UpdateDataReductionPlotUncombineInterface.updateDataReductionPlotGUI();
 	    }
 	    	    	
 	   	//show data reductin plot tab
-	    dataReductionTabbedPane.setSelectedIndex(1);
+	   	dataReductionTabbedPane.setSelectedIndex(1);
 	    
 	}
 	    
@@ -902,7 +903,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //build menu
 	    createMenu();
 	    
-
+	    //create extra plot panel 
+	    ExtraPlotPanel.buildGUI();
+	  	    
 	    //get the instrument logo picture and put them into an array of instrumentLogo
 	    for (int i=0 ; i<NUM_LOGO_IMAGES ; i++) {
 	    	instrumentLogo[i] = createImageIcon("/gov/ornl/sns/iontools/images/image" + i + ".jpg");	
@@ -916,12 +919,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    plotPanel.add(c_plot,BorderLayout.SOUTH);
 	    leftPanel.add(topPanel,BorderLayout.NORTH);
 	    leftPanel.add(plotPanel,BorderLayout.SOUTH);
-
+	    	    
 	    //main DataReduction-Selection-logBook tabs - first tab
-	    panela = new JPanel();
-	    dataReductionTabbedPane.addTab("Input", panela);
+	    panela = new JPanel();                           
 	    createInputGUI();
-
+	    
+	    //dataReductionTabbedPane.addTab("Input", panela);  //remove_comments
+	    dataReductionTabbedPane.addTab("Input", panela);
+	    
 	    //data reduction plot/tab
 	    panelb = new JPanel();
 	    CreateDataReductionPlotTab.initializeDisplay();
@@ -956,16 +961,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
-
+	    
+	    
 	    //add everything in final window
 	    //	    JPanel contentPane  = new JPanel(new BorderLayout());
 	    //create internal frame for preferences
 	    //createFrame();
 	    
 	    add(plotDataReductionPanel);
+	    
 	    //contentPane.add(plotDataReductionPanel);
 	    //add(contentPane);
 	    setJMenuBar(menuBar);
+	    
 	}
 
 	
@@ -1135,6 +1143,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	back2SelectionPanel.add(back2SelectionTextArea);
 	selectionTab.addTab("Background 2", back2SelectionPanel);
 
+	pixelInfoPanel = new JPanel();
+	pixelInfoLabel = new JLabel();
+	detectorLayout = createImageIcon("/gov/ornl/sns/iontools/images/detector_layout.jpg");	
+	pixelInfoLabel.setIcon(detectorLayout);		
+	pixelInfoTextArea = new JTextArea(30,30);
+	pixelInfoPanel.add(pixelInfoLabel);
+	pixelInfoPanel.add(Box.createRigidArea(new Dimension(20,0)));
+	pixelInfoPanel.add(pixelInfoTextArea);
+	selectionTab.addTab("Pixel info", pixelInfoPanel);
+	
 	panel1.add(selectionTab);
 
     }
@@ -1155,7 +1173,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     }
 
     private void displayInstrumentLogo(int instrumentIndex) {
-	    instrumentLogoLabel.setIcon(instrumentLogo[instrumentIndex]);		
+    	instrumentLogoLabel.setIcon(instrumentLogo[instrumentIndex]);		
     }
     
 
@@ -1225,12 +1243,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	
 	//normalization radio button
 	normalizationLabel = new JLabel(" Normalization: ");
-
+		
 	yesNormalizationRadioButton = new JRadioButton("Yes");
 	yesNormalizationRadioButton.setActionCommand("yesNormalization");
 	yesNormalizationRadioButton.setSelected(true);
 	yesNormalizationRadioButton.addActionListener(this);
-
+		
 	noNormalizationRadioButton = new JRadioButton("No");
 	noNormalizationRadioButton.setActionCommand("noNormalization");
 	noNormalizationRadioButton.addActionListener(this);
@@ -1424,17 +1442,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	JScrollPane scrollPane = new JScrollPane(generalInfoTextArea,
 						 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 						 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-	
+
 	//add all components
 	panela.setLayout(new BoxLayout(panela,BoxLayout.PAGE_AXIS));
-	//	panela.add(signalPidPanel);
-	//	panela.add(backgroundPidPanel);
 	panela.add(signalBackgroundPanel);
-	//	normalizationPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 	panela.add(normalizationPanel);
-	//	backgroundPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 	panela.add(backgroundPanel);
-	//	normBackgroundPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 	panela.add(normBackgroundPanel);
 	panela.add(intermediatePanel);
 	panela.add(combineSpectrumPanel);
@@ -1457,7 +1470,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	//Create the menu bar
 	menuBar = new JMenuBar();
-
+		
 	//Create the first menu
 	dataReductionPackMenu = new JMenu("DataReductionPack");
 	dataReductionPackMenu.setActionCommand("dataReductionPackMenu");
