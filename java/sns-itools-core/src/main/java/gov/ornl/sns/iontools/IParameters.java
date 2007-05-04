@@ -56,7 +56,7 @@ public interface IParameters {
 		static final String REF_L_DUMP_NORM_BKG            	= "--dump-norm-bkg";
 		
 		//size of data reduction graphical window
-		static final int DATA_REDUCTION_PLOT_X	            = 600;
+		static final int DATA_REDUCTION_PLOT_X	            = 650;
 		static final int DATA_REDUCTION_PLOT_Y              = 500;
 		
 		//data reduction plot interaction

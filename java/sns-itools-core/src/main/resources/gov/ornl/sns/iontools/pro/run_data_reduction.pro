@@ -127,8 +127,7 @@ tvscl_y_off = 0
     if (Nmax NE 0) then begin
         final_array(indx_max) = !Values.F_NAN
     endif
-    
-            
+                
     min_value = float(ymin)
     indx_min = where(final_array LT min_value, Nmin)
     if (Nmin NE 0) then begin
@@ -210,7 +209,6 @@ DEVICE, DECOMPOSED = 0
 ;    endif else begin
 
 set_plot, 'z'                   ;put image data in the display window
-;erase
 
 New_Nx = 2*Ntof
 New_Ny = number_of_row * floor((500-tvscl_y_off)/number_of_row)
@@ -438,8 +436,9 @@ DEVICE, DECOMPOSED = 0
 ;    endif else begin
 
 set_plot, 'z'                   ;put image data in the display window
+erase 
 
-New_Nx = Ntof
+New_Nx = 2*Ntof
 New_Ny = number_of_row * floor((500-tvscl_y_off)/number_of_row)
 
 DEVICE,SET_RESOLUTION=[tvscl_x_off+New_Nx,tvscl_y_off+New_Ny]
