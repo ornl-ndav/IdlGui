@@ -107,7 +107,7 @@ if (error_plot_status NE 0) then begin
     CATCH,/cancel
 endif else begin
     set_plot, 'z'               ;put image data in the display window
-    New_Nx = long(600)
+    New_Nx = long(650)
     New_Ny = long(500)
     DEVICE,SET_RESOLUTION=[New_Nx,New_Ny]
     erase

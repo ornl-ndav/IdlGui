@@ -9,13 +9,14 @@ public class CheckGUI {
 	    	CheckDataReductionButtonValidation.sAddNexusAndGoString = DataReduction.runsAddTextField.getText();     
 	    	CheckDataReductionButtonValidation.sGoSequentiallyString = DataReduction.runsSequenceTextField.getText();    	
 	    	CheckDataReductionButtonValidation.sInstrumentGeometry = DataReduction.instrumentGeometryTextField.getText();
+	    	CheckDataReductionButtonValidation.sInstrument = DataReduction.instrument;   	
 	    	
 	    	if (DataReduction.runsTabbedPane.getSelectedIndex() == 0) {
 	    		CheckDataReductionButtonValidation.bAddNexusAndGo = true;
 	    	} else {
 	    		CheckDataReductionButtonValidation.bAddNexusAndGo = false;
 	    	}
-	    	CheckDataReductionButtonValidation.sInstrument = DataReduction.instrument;   	
+	    	
 	    }
 	  
 	  /*

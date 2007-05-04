@@ -43,24 +43,35 @@ public class RunRefDataReduction {
    static String cmd = "";
    static String sDataReductionCmd = "";
    
-   
+   static void reinitializeLocalVariables() {
+	   
+	   sSignalPidFileName = CheckDataReductionButtonValidation.sSignalPidFile;
+	   sBackPidFileName = CheckDataReductionButtonValidation.sBackPidFile;
+	   bNormalization = CheckDataReductionButtonValidation.bNormalizationSwitch;
+	   sNormalization = CheckDataReductionButtonValidation.sNormalizationRunNumber;
+	   bCombineDataSpectrum = CheckDataReductionButtonValidation.bCombineDataSpectrum;
+	   bOverwriteInstrumentGeometry = CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry;
+	   sInstrumentGeometry = CheckDataReductionButtonValidation.sInstrumentGeometry;
+	   sInstrument=CheckDataReductionButtonValidation.sInstrument;
+	   String cmd = "";
+	   String sDataReductionCmd = "";
+	   
+   }
    
 	static String createDataReductionCmd () {
 		
-//		System.out.println("in createDataReductionCmd");
-//		System.out.println("sSignalPidFileName: " + sSignalPidFileName);
+		reinitializeLocalVariables();
 		
 		if (sInstrument.compareTo(IParameters.REF_L) == 0) { //REF_L
 			sDataReductionCmd = createReflDataReductionCmd();
-		} else {
+		} else { //REF_M
 			sDataReductionCmd = createRefmDataReductionCmd();
 		}
 		return cmd;
 	}
 	
-	
-	
 	static String createReflDataReductionCmd() {
+
 		//Add nexus and go
 		if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
 			sRunsNumber = CheckDataReductionButtonValidation.sAddNexusAndGoString;
@@ -88,6 +99,8 @@ public class RunRefDataReduction {
 		if (bCombineDataSpectrum) {
 			cmd += IParameters.REF_L_COMBINE_FLAG + " ";
 		}
+		
+		System.out.println("bCombineDataSpectrum: " + bCombineDataSpectrum);
 		
 		cmd += IParameters.REF_L_SIGNAL_ROI_FILE_FLAG + sSignalPidFileName + " ";
 		cmd += IParameters.REF_L_BKG_ROI_FILE_FLAG + sBackPidFileName + " ";

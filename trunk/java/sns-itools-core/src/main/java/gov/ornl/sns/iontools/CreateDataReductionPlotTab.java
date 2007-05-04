@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 2007, J.-C. Bilheux <bilheuxjm@ornl.gov>
+ * showpallation Neutron Source at Oak Ridge National Laboratory
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use, copy,
+ * modify, merge, publish, distribute, sublicense, and/or sell copies
+ * of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS
+ * BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN
+ * ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package gov.ornl.sns.iontools;
 
 import com.rsi.ion.*;
@@ -21,8 +45,7 @@ public class CreateDataReductionPlotTab {
 		initializeXAxisDisplay();
 	
 	}
-	
-	
+		
 	/*
 	 * Create GUI of y-axis
 	 */
@@ -68,10 +91,10 @@ public class CreateDataReductionPlotTab {
     
     xoff = 40;
     yoff += 0;
-    DataReduction.yMaxTextField = new JTextField(13);
+    DataReduction.yMaxTextField = new JTextField(9);
     DataReduction.yMaxTextField.setEditable(true);
     DataReduction.yMaxTextField.setActionCommand("yMaxTextField");
-    DataReduction.yMaxTextField.setPreferredSize(new Dimension(30,30));
+    DataReduction.yMaxTextField.setPreferredSize(new Dimension(5,30));
     Dimension yMaxTextFieldSize = DataReduction.yMaxTextField.getPreferredSize();
     DataReduction.yMaxTextField.setBounds(IParameters.DATA_REDUCTION_PLOT_X + xoff,
     		yoff,
@@ -93,10 +116,10 @@ public class CreateDataReductionPlotTab {
     
     xoff = 40;
     yoff += 0;
-    DataReduction.yMinTextField = new JTextField(13);
+    DataReduction.yMinTextField = new JTextField(9);
     DataReduction.yMinTextField.setEditable(true);
     DataReduction.yMinTextField.setActionCommand("yMinTextField");
-    DataReduction.yMinTextField.setPreferredSize(new Dimension(30,30));
+    DataReduction.yMinTextField.setPreferredSize(new Dimension(20,30));
     Dimension yMinTextFieldSize = DataReduction.yMinTextField.getPreferredSize();
     DataReduction.yMinTextField.setBounds(IParameters.DATA_REDUCTION_PLOT_X + xoff,
     		yoff,
@@ -107,10 +130,10 @@ public class CreateDataReductionPlotTab {
     //validate button
     xoff = 5;
     yoff += 45;
-    DataReduction.yValidateButton = new JButton("Validate changes");
+    DataReduction.yValidateButton = new JButton("Refresh");
     DataReduction.yValidateButton.setActionCommand("yValidateButton");
     DataReduction.yValidateButton.setToolTipText("Validate y axis changes");
-    DataReduction.yValidateButton.setPreferredSize(new Dimension(180,30));
+    DataReduction.yValidateButton.setPreferredSize(new Dimension(135,30));
     Dimension yValidateButtonSize = DataReduction.yValidateButton.getPreferredSize();
     DataReduction.yValidateButton.setBounds(IParameters.DATA_REDUCTION_PLOT_X + xoff,
     		yoff,
@@ -124,7 +147,7 @@ public class CreateDataReductionPlotTab {
     DataReduction.yResetButton = new JButton("Reset y-axis");
     DataReduction.yResetButton.setActionCommand("yResetButton");
     DataReduction.yResetButton.setToolTipText("Reset y axis");
-    DataReduction.yResetButton.setPreferredSize(new Dimension(180,30));
+    DataReduction.yResetButton.setPreferredSize(new Dimension(135,30));
     Dimension yResetButtonSize = DataReduction.yResetButton.getPreferredSize();
     DataReduction.yResetButton.setBounds(IParameters.DATA_REDUCTION_PLOT_X + xoff,
     		yoff,
@@ -224,7 +247,7 @@ public class CreateDataReductionPlotTab {
 	    //validate changes
 	    xoff = 350;
 	    yoff = 15;
-	    DataReduction.xValidateButton = new JButton("Validate changes");
+	    DataReduction.xValidateButton = new JButton("Refresh");
 	    DataReduction.xValidateButton.setActionCommand("xValidateButton");
 	    DataReduction.xValidateButton.setToolTipText("Validate x axis changes");
 	    DataReduction.xValidateButton.setPreferredSize(new Dimension(180,30));
