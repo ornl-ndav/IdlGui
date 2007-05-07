@@ -61,12 +61,6 @@ public class CheckGUI {
   		 
 	  }
 	
-	  
-	  
-	  
-	  
-	  
-	  
 	  /*
 	   * initialize all the parameters for each event 
 	   */
@@ -123,6 +117,23 @@ public class CheckGUI {
 		  
 	  }
 
+	  /*
+	   * function that update the GUI according to NeXus found or not
+	   */
+	  static void checkGUI(boolean bFoundNexus) {
 
+		//if the run number has been found, activate selection mode
+		  if (!bFoundNexus) {
+			  DataReduction.modeMenu.setEnabled(false); 					//mode menu
+			  DataReduction.parametersMenu.setEnabled(false);  				//parameters menu
+			  DataReduction.loadctComboBox.setEnabled(false);
+		} else {											//run number has not been found
+			DataReduction.modeMenu.setEnabled(true);
+			DataReduction.parametersMenu.setEnabled(true);
+			DataReduction.loadctComboBox.setEnabled(true);
+		}
+		    
+	  }
+	  
 
 }

@@ -26,7 +26,7 @@ package gov.ornl.sns.iontools;
 
 public class NexusFound {
 
-	private boolean foundNexus;
+	static private boolean foundNexus;
 	
 	public NexusFound(String sNexusFound) {
 		

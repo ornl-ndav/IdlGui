@@ -160,6 +160,7 @@ free_lun,u
 tvimg=TVRD()
 set_plot,'ION'
 loadct, 39, /silent
+
 ;tv,tvimg,0,-1
 tv,tvimg,0
 

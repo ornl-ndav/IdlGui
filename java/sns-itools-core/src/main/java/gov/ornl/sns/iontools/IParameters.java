@@ -93,4 +93,48 @@ public interface IParameters {
 	    static final String PATH_TO_HOME           = "/SNS/users/";
 	    static final String SEQUENCE_SEPARATOR     = "-";
 	    static final String WORKING_PATH           = "~/local";
+
+	    static final int LOADCT_DEFAULT_INDEX      = 39;
+	    static final String[] LOADCT_NAME          = {"Black/White", 
+	    											  "Blue/White", 
+	    											  "Green/Red/Blue/White",
+	    											  "Red Temperature",
+	    											  "Blue/Green/Red/Yellow",
+	    											  "Std Gamma-II",
+	    											  "Prism",
+	    											  "Red/Purple",
+	    											  "Green/White Linear",
+	    											  "Green/White Exponential",
+	    											  "Green/Pink",
+	    											  "Blue/Red",
+	    											  "16 Level",
+	    											  "Rainbow",
+	    											  "Steps",
+	    											  "Stern Special",
+	    											  "Haze",
+	    											  "Blue/Pastel/Red",
+	    											  "Pastels",
+	    											  "Hue Sat Lightness",
+	    											  "Hue Sat Lightness",
+	    											  "Hue Sat Value 1",
+	    											  "Hue Sat Value 2",
+	    											  "Purple/Red + Stri",
+	    											  "Beach",
+	    											  "Mac Style",
+	    											  "Eos A",
+	    											  "Eos B",
+	    											  "Hardcandy",
+	    											  "Nature",
+	    											  "Ocean",
+	    											  "Peppermint",
+	    											  "Plasma",
+	    											  "Blue/Red",
+	    											  "Rainbow",
+	    											  "Blue Waves",
+	    											  "Volcano",
+	    											  "Waves",
+	    											  "Rainbow18",
+	    											  "Rainbow + White",
+	    											  "Rainbow + Black"};
+	    											  
 }

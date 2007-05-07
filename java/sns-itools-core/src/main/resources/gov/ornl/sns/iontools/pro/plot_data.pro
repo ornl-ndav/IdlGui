@@ -68,7 +68,7 @@ end
 
 
 
-function PLOT_DATA, run_number, instrument, ucams
+function PLOT_DATA, run_number, instrument, ucams, loadct_variable
 
 ;determine full path to nexus file
 full_nexus_path = find_full_nexus_name(run_number, instrument)
@@ -124,7 +124,9 @@ if (full_nexus_path NE '') then begin
 
      tvimg=TVRD()
      set_plot,'ION'
-     loadct, 39, /silent
+
+     loadct,loadct_variable,/silent
+
      tv,tvimg,0,-1
      
      foundNeXus = 1
@@ -139,9 +141,12 @@ if (full_nexus_path NE '') then begin
      loadct, 39, /silent
      tv,tvimg,0,-1
 
+     Ntof = 0 
+     tmp_output_file_name = 'no Nexus found'
+
  endelse
 
-result = [strcompress(foundNexus),strcompress(Ntof), tmp_output_file_name]
+result = [strcompress(foundNexus,/remove_all),strcompress(Ntof), tmp_output_file_name]
 
 return, result
 END
