@@ -42,42 +42,26 @@ public class UpdateDataReductionRunNumberTextField {
 		    DataReduction.runsSequenceTextField.setBackground(Color.WHITE);
 		}
 
-//		System.out.println("Text field is: " + runNumberTextField);
-//		System.out.println("run number is: " + runNumberValue);
-		
 		if (!runNumberTextField.contains(runNumberValue)) { //run number not found in text field so far
 			//check if run number is not inside a sequence of runs (1999-2002)
 
-//			System.out.println("run number not found yet");
-			
 			if (runNumberTextField.contains(IParameters.SEQUENCE_SEPARATOR)) { //there is at least one sequence of runs
 			
-//				System.out.println("there is at least one sequence of runs");
-				
 				String[]  tmp = runNumberTextField.split(",");
 
 				//get size of tmp string array
 				int tmpSize = tmp.length;
-//				System.out.println("tmpSize: " + tmpSize);
 								
 				for (int i=0 ; i<tmpSize ; i++) { 
 				
-//					System.out.println("tmp[" + i + "]= " + tmp[i]);
 					String[] tmp1 = tmp[i].split(IParameters.SEQUENCE_SEPARATOR);
 					int tmp1Size = tmp1.length;
-//					System.out.println("tmp1Size: " + tmp1Size);
 					
 					if (tmp1Size > 1) { //if there is a seqence
 					
-//						System.out.println("tmp1[0]: " + tmp1[0]);
-//						System.out.println("tmp1[1]: " + tmp1[1]);
-						
 						int runNumber1 = Integer.parseInt(tmp1[0].trim());
-//						System.out.println("runNumber1: " + runNumber1);
 						int runNumber2 = Integer.parseInt(tmp1[1].trim());
-//						System.out.println("runNumber2: " + runNumber2);
 						int iRunNumberValue = Integer.parseInt(runNumberValue.trim());
-//						System.out.println("iRunNumberValue: " + iRunNumberValue);
 						
 						if (runNumber1 <= runNumber2) {
 
@@ -102,20 +86,19 @@ public class UpdateDataReductionRunNumberTextField {
 				
 			//run number is not part of the text field - we can add it
 			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
-//				System.out.println("in add nexus and go");
+
 				if (CheckDataReductionButtonValidation.sAddNexusAndGoString.compareTo("") == 0) {
 					CheckDataReductionButtonValidation.sAddNexusAndGoString = runNumberValue;
 				} else {
 					CheckDataReductionButtonValidation.sAddNexusAndGoString += "," + runNumberValue;
 				}
 			} else {
-//				System.out.println("in go sequentially");
+
 				if (CheckDataReductionButtonValidation.sGoSequentiallyString.compareTo("") == 0) {
 					CheckDataReductionButtonValidation.sGoSequentiallyString = runNumberValue;
 				} else {
 					CheckDataReductionButtonValidation.sGoSequentiallyString += "," + runNumberValue;
 				}
-//				System.out.println("CheckDataReductionButtonValidation.sGoSequentiallyString: " + CheckDataReductionButtonValidation.sGoSequentiallyString);
 			}		
 			
 		} else { //run number found in the text right away

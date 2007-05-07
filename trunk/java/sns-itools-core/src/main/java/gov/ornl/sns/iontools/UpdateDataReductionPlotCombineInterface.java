@@ -40,7 +40,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		sYMax = ParametersConfiguration.sYMax;
 		sYMin = ParametersConfiguration.sYMin;
 		
-		outputData();
+		//outputData();
 		
 		String cmd = createDataReductionPlotCombineCmd();
 		executeCmd(cmd);
@@ -56,7 +56,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		sYMax = ParametersConfiguration.sYMax;
 		sYMin = ParametersConfiguration.sYMin;
 		
-		outputData();
+		//outputData();
 		
 		String cmd = createDataReductionPlotCombineCmd();
 		executeCmd(cmd);

@@ -26,7 +26,8 @@ public class UpdateDataReductionPlotUncombineInterface {
 		bLinearYAxis = ParametersConfiguration.bLinearYAxis;
 		sYMax = ParametersConfiguration.sYMax;
 		sYMin = ParametersConfiguration.sYMin;
-		outputData();
+
+		//outputData();
 		
 		String cmd = createDataReductionPlotUncombineCmd();
 		executeCmd(cmd);
@@ -38,7 +39,8 @@ public class UpdateDataReductionPlotUncombineInterface {
 		bLinearYAxis = ParametersConfiguration.bLinearYAxis;
 		sYMax = ParametersConfiguration.sYMax;
 		sYMin = ParametersConfiguration.sYMin;
-		outputData();
+		
+		//outputData();
 		
 		String cmd = createDataReductionPlotUncombineCmd();
 		executeCmd(cmd);
