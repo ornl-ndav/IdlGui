@@ -27,32 +27,37 @@ package gov.ornl.sns.iontools;
 public class RunRefDataReduction {
 
 	//retrieve all parameters
-   static String sSignalPidFileName = CheckDataReductionButtonValidation.sSignalPidFile;
-   static String sBackPidFileName = CheckDataReductionButtonValidation.sBackPidFile;
-   static boolean bNormalization = CheckDataReductionButtonValidation.bNormalizationSwitch;
-   static String sNormalization = CheckDataReductionButtonValidation.sNormalizationRunNumber;
+   static String sSignalPidFileName;
+   static String sBackPidFileName;
+   static boolean bNormalization;
+   static String sNormalization;
    static boolean bBackground;
    static boolean bNormalizationBackground;
    static boolean bIntermediateFileOutput;
-   static boolean bCombineDataSpectrum = CheckDataReductionButtonValidation.bCombineDataSpectrum;
-   static boolean bOverwriteInstrumentGeometry = CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry;
-   static String sInstrumentGeometry = CheckDataReductionButtonValidation.sInstrumentGeometry;
+   static boolean bCombineDataSpectrum;
+   static boolean bOverwriteInstrumentGeometry;
+   static String sInstrumentGeometry;
    static boolean bAddNexusAndGo;
    static String sRunsNumber;
-   static String sInstrument=CheckDataReductionButtonValidation.sInstrument;
+   static String sInstrument;
    static String cmd = "";
    static String sDataReductionCmd = "";
    
    static void reinitializeLocalVariables() {
 	   
-	   sSignalPidFileName = CheckDataReductionButtonValidation.sSignalPidFile;
-	   sBackPidFileName = CheckDataReductionButtonValidation.sBackPidFile;
-	   bNormalization = CheckDataReductionButtonValidation.bNormalizationSwitch;
-	   sNormalization = CheckDataReductionButtonValidation.sNormalizationRunNumber;
-	   bCombineDataSpectrum = CheckDataReductionButtonValidation.bCombineDataSpectrum;
-	   bOverwriteInstrumentGeometry = CheckDataReductionButtonValidation.bOverwriteInstrumentGeometry;
-	   sInstrumentGeometry = CheckDataReductionButtonValidation.sInstrumentGeometry;
-	   sInstrument=CheckDataReductionButtonValidation.sInstrument;
+	   sSignalPidFileName = DataReduction.liveParameters.getSignalPidFile();
+	   sBackPidFileName = DataReduction.liveParameters.getBackPidFile();
+	   bNormalization = DataReduction.liveParameters.isNormalizationSwitch();
+	   sNormalization = DataReduction.liveParameters.getNormalizationRunNumber();
+	   bBackground = DataReduction.liveParameters.isBackgroundSwitch();
+	   bNormalizationBackground = DataReduction.liveParameters.isNormalizationBackgroundSwitch();
+	   bIntermediateFileOutput = DataReduction.liveParameters.isIntermediatePlotsSwitch();
+	   bCombineDataSpectrum = DataReduction.liveParameters.isCombineDataSpectrum();
+	   bOverwriteInstrumentGeometry = DataReduction.liveParameters.isOverwriteInstrumentGeometry();
+	   sInstrumentGeometry = DataReduction.liveParameters.getInstrumentGeometry();
+	   bAddNexusAndGo = DataReduction.liveParameters.isAddNexusAndGo();
+	
+	   sInstrument = DataReduction.liveParameters.getInstrument();
 	   String cmd = "";
 	   String sDataReductionCmd = "";
 	   
@@ -73,11 +78,11 @@ public class RunRefDataReduction {
 	static String createReflDataReductionCmd() {
 
 		//Add nexus and go
-		if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
-			sRunsNumber = CheckDataReductionButtonValidation.sAddNexusAndGoString;
+		if (bAddNexusAndGo) {
+			sRunsNumber = DataReduction.liveParameters.getAddNexusAndGoString();		
 			cmd = createReflAddNexusDataReductionCmd();
 		} else { //Run Sequentially
-			sRunsNumber = CheckDataReductionButtonValidation.sGoSequentiallyString;
+			sRunsNumber = DataReduction.liveParameters.getGoSequentiallyString();
 			cmd = createReflGoSequentiallyDataReductionCmd();
 		}
 		return cmd;
@@ -89,28 +94,28 @@ public class RunRefDataReduction {
 		cmd += sRunsNumber + " ";
 		
 		if (bNormalization) {
-			cmd += IParameters.REF_L_NORMALIZATION_FLAG + sNormalization + " ";
+			cmd += IParameters.NORMALIZATION_FLAG + sNormalization + " ";
 		}
 		
 		if (bOverwriteInstrumentGeometry) {
-			cmd += IParameters.REF_L_INSTRUMENT_GEOMETRY_FLAG + sInstrumentGeometry + " "; 
+			cmd += IParameters.INSTRUMENT_GEOMETRY_FLAG + sInstrumentGeometry + " "; 
 		}
 		
 		if (bCombineDataSpectrum) {
-			cmd += IParameters.REF_L_COMBINE_FLAG + " ";
+			cmd += IParameters.COMBINE_FLAG + " ";
 		}
 		
 		System.out.println("bCombineDataSpectrum: " + bCombineDataSpectrum);
 		
-		cmd += IParameters.REF_L_SIGNAL_ROI_FILE_FLAG + sSignalPidFileName + " ";
-		cmd += IParameters.REF_L_BKG_ROI_FILE_FLAG + sBackPidFileName + " ";
+		cmd += IParameters.SIGNAL_ROI_FILE_FLAG + sSignalPidFileName + " ";
+		cmd += IParameters.BKG_ROI_FILE_FLAG + sBackPidFileName + " ";
 		
 		if (!bBackground) {
-			cmd += IParameters.REF_L_NO_BKG_FLAG + " ";
+			cmd += IParameters.NO_BKG_FLAG + " ";
 		}
 		
 		if (!bNormalizationBackground) {
-			cmd += IParameters.REF_L_NO_NORM_BKG + " ";
+			cmd += IParameters.NO_NORM_BKG + " ";
 		}
 		
 		//list of intermediate plots

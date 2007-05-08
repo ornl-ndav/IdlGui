@@ -89,7 +89,7 @@ public class SaveBackgroundPidFileAction {
 		
 	static void executeCmd(String cmd) {
 	    try{
-	  	  DataReduction.c_ionCon.setIDLVariable("instrument",DataReduction.instr);
+	  	  DataReduction.c_ionCon.setIDLVariable("instrument",DataReduction.ionInstrument);
 	  	  DataReduction.c_ionCon.executeIDLCommand(cmd);
 	        } catch(Exception e) { 
 	  	  String smsg;

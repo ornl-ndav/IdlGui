@@ -253,7 +253,7 @@ if (error_plot_status NE 0) then begin
     CATCH,/cancel
 endif else begin
     set_plot, 'z'               ;put image data in the display window
-    New_Nx = long(600)
+    New_Nx = long(650)
     New_Ny = long(500)
     DEVICE,SET_RESOLUTION=[New_Nx,New_Ny]
     erase
@@ -287,7 +287,14 @@ end
 function RUN_DATA_REDUCTION_COMBINE, cmd, $
                                      outputPath, $
                                      run_number, $
-                                     instrument
+                                     instrument, $
+
+
+help, outputPath
+help, run_number
+help, instrument
+help, cmd
+print, cmd
 
 cmd_size_array = size(cmd)
 cmd_size = cmd_size_array[1]

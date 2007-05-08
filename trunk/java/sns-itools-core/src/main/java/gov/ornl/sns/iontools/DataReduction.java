@@ -58,7 +58,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          	text2;
     static String          	cmd; 
     static String           hostname;
-    static String  			    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
+    static String  		    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
     
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
@@ -84,18 +84,26 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     static boolean      	bFoundNexus = false;
     
+    static GuiLiveParameters  liveParameters;
+    
     DisplayConfiguration    getN;
     static float            fNtof;
 
     ImageIcon[]     	    instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
-    static ImageIcon    		detectorLayout = new ImageIcon();
+    static ImageIcon   		detectorLayout = new ImageIcon();
     
     //ION
     static IONGrConnection  c_ionCon;
     static IONJGrDrawable   c_plot;
-    static IONVariable      instr;
-    static IONVariable     	user;
     static IONJGrDrawable   c_dataReductionPlot;	     //data reduction plot    
+    static IONJGrDrawable   c_SRextraPlots;              //Signal Region summed vs TOF drawing window
+    static IONJGrDrawable   c_BextraPlots;               //Background summed vs TOF
+    static IONJGrDrawable   c_SRBextraPlots;             //Signal Region with background summed vs TOF
+    static IONJGrDrawable   c_NRextraPlots;              //Normalization region summed vs TOF
+    static IONJGrDrawable   c_BRNextraPlots;             //Background region from normalization summed TOF
+    
+    static IONVariable      ionInstrument;
+    static IONVariable     	user;
     static IONVariable     	a_idl;
     static IONVariable     	iVar;
     static IONVariable     	ionVar;
@@ -107,9 +115,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static IONVariable     	ionY12;
     static IONVariable     	ionYmin;
     static IONVariable      ionLoadct;
+    static IONVariable      ionExtraPlotCmd;
+    static IONVariable      ionRunNumberValue;
+    
     static Dimension        c_dimApp;
     
-    static JPanel		    extraPlotPanel;  //extra plot panel
     static JPanel          	instrumentLogoPanel;
     static JPanel           topPanel;
     static JPanel 			clearSelectionPanel ;
@@ -120,7 +130,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           panel1; //selection
     static JPanel           panel2; //log book
     static JPanel           panelb; //DataReductionPlot
-    static JPanel           panelc; //Extra plots
+    static JPanel           extraPlotsPanel; //Extra plots
     static JPanel           settingsPanel; //settings panel
     static JPanel           buttonSignalBackgroundPanel;
     static JPanel           textFieldSignalBackgroundPanel;
@@ -143,12 +153,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel          	runsSequencePanel;
     static JPanel           displayModePanel;                //loadct list
     static JPanel           loadctPanel;
-    
+    static JPanel           extraPlotSettingsPanel;
+        
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
     static JTabbedPane      dataReductionTabbedPane;
     static JTabbedPane     	selectionTab;
     static JTabbedPane      runsTabbedPane;
+    static JTabbedPane      extraPlotsTabbedPane;
     
     static JMenuBar         menuBar;
     
@@ -168,10 +180,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JRadioButtonMenuItem    background1SelectionModeMenuItem;
     static JRadioButtonMenuItem    background2SelectionModeMenuItem;
     static JRadioButtonMenuItem    infoModeMenuItem;
-    static JRadioButtonMenuItem 	yesSaveFullSessionMenuItem;
-    static JRadioButtonMenuItem 	noSaveFullSessionMenu;
+    static JRadioButtonMenuItem    yesSaveFullSessionMenuItem;
+    static JRadioButtonMenuItem    noSaveFullSessionMenu;
 
-    static JMenuItem       preferencesMenuItem;
+    static JMenuItem        preferencesMenuItem;
     
     static JRadioButton    	yesNormalizationRadioButton;
     static JRadioButton    	noNormalizationRadioButton;
@@ -181,20 +193,26 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JRadioButton     noIntermediateRadioButton;
     static JRadioButton    	yesCombineSpectrumRadioButton;
     static JRadioButton    	noCombineSpectrumRadioButton;
-    static JRadioButton        yesNormBackgroundRadioButton;
-    static JRadioButton        noNormBackgroundRadioButton;
+    static JRadioButton     yesNormBackgroundRadioButton;
+    static JRadioButton     noNormBackgroundRadioButton;
     static JRadioButton    	yesInstrumentGeometryRadioButton;
     static JRadioButton    	noInstrumentGeometryRadioButton;
     
-    static ButtonGroup    	 	normalizationButtonGroup;
-    static ButtonGroup         backgroundButtonGroup;
-    static ButtonGroup         normBackgroundButtonGroup;
-    static ButtonGroup         intermediateButtonGroup;
+    static ButtonGroup    	normalizationButtonGroup;
+    static ButtonGroup      backgroundButtonGroup;
+    static ButtonGroup      normBackgroundButtonGroup;
+    static ButtonGroup      intermediateButtonGroup;
     static ButtonGroup     	combineSpectrumButtonGroup;
     static ButtonGroup     	instrumentGeometryButtonGroup;
-    static ButtonGroup     		modeButtonGroup;
-    static ButtonGroup          	saveFullSessionButtonGroup;
-    static ButtonGroup     		instrumentButtonGroup;
+    static ButtonGroup     	modeButtonGroup;
+    static ButtonGroup      saveFullSessionButtonGroup;
+    static ButtonGroup     	instrumentButtonGroup;
+    
+    static JCheckBox	    extraPlotsSRCheckBox;
+    static JCheckBox 		extraPlotsBSCheckBox;
+    static JCheckBox        extraPlotsSRBCheckBox;
+    static JCheckBox        extraPlotsNRCheckBox;
+    static JCheckBox        extraPlotsBRNCheckBox;
     
     static JLabel          	instrumentLogoLabel;
     static JLabel	        runNumberLabel;	
@@ -206,11 +224,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           blank1Label;
     static JLabel           blank2Label;
     static JLabel           blank3Label;
-    static JLabel       normalizationTextBoxLabel;
-    static JLabel              normBackgroundLabel;
-    static JLabel         	    backgroundLabel;
+    static JLabel           normalizationTextBoxLabel;
+    static JLabel           normBackgroundLabel;
+    static JLabel         	backgroundLabel;
     static JLabel          	runsAddLabel;
-    static JLabel              pixelInfoLabel;
+    static JLabel           pixelInfoLabel;
     static JLabel          	runsSequenceLabel;
     static JLabel          	instrumentGeometryLabel;
     static JLabel          	intermediateLabel;
@@ -224,16 +242,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       signalPidFileTextField;
     static JTextField       backgroundPidFileTextField;    
     static JTextField       normalizationTextField;
-    static JTextField   runsAddTextField;
-    static JTextField   runsSequenceTextField;
-    static JTextField   instrumentGeometryTextField;
+    static JTextField       runsAddTextField;
+    static JTextField       runsSequenceTextField;
+    static JTextField       instrumentGeometryTextField;
     
     static JTextArea        generalInfoTextArea;
-    static JTextArea    signalSelectionTextArea;
-    static JTextArea    back1SelectionTextArea;
-    static JTextArea    back2SelectionTextArea;
-    static JTextArea    pixelInfoTextArea;
-    static JTextArea      	    textAreaLogBook;
+    static JTextArea        signalSelectionTextArea;
+    static JTextArea        back1SelectionTextArea;
+    static JTextArea        back2SelectionTextArea;
+    static JTextArea        pixelInfoTextArea;
+    static JTextArea      	textAreaLogBook;
     
     static JButton          yValidateButton;
     static JButton          xValidateButton;
@@ -241,14 +259,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          xResetButton;
     static JButton          dataReductionPlotValidateButton;
     static JButton          backgroundPidFileButton;
-    static JButton      	clearBackPidFileButton;
+    static JButton          clearBackPidFileButton;
     static JButton          signalPidFileButton;
-    static JButton      	clearSignalPidFileButton;
-    static JButton             intermediateButton;
-    static JButton         	startDataReductionButton;
-    static JButton      instrumentGeometryButton;
-        
-    static JScrollPane 		   scrollPane;
+    static JButton          clearSignalPidFileButton;
+    static JButton          intermediateButton;
+    static JButton      	startDataReductionButton;
+    static JButton      	instrumentGeometryButton;
+    static JButton      	settingsValidateButton; 
+              
+    static JScrollPane 		scrollPane;
     
     static JComboBox        linLogComboBoxX;
     static JComboBox        linLogComboBoxY;
@@ -560,14 +579,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 */      
     public void actionPerformed(ActionEvent evt){
 	
-    //fill all widgets parameters each time an action is done
+    //fill up all widgets parameters each time an action is done
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
    	CheckGUI.populateCheckDataReductionPlotParameters();
-
+   	liveParameters = new GuiLiveParameters();
+   	
+   	if (IParameters.DEBUG) {DebuggingTools.displayData();}
+   	   	
    	if ("loadctComboBox".equals(evt.getActionCommand())) {
    		ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
    		String cmd_loadct = "replot_data, " + runNumberValue + ","; 
-		cmd_loadct += instr + "," + user + ",";
+		cmd_loadct += ionInstrument + "," + user + ",";
 		cmd_loadct += ionLoadct; 
 		showStatus("Processing...");
 	   	executeCmd(cmd_loadct);
@@ -630,17 +652,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("yesBackground".equals(evt.getActionCommand())) {
+		extraPlotsBSCheckBox.setEnabled(true);
 	}
 
 	if ("noBackground".equals(evt.getActionCommand())) {
+		extraPlotsBSCheckBox.setEnabled(false);
 	}
 
 	if ("yesNormBackground".equals(evt.getActionCommand())) {
-	  	System.out.println("I just pressed yes in yesNormBackground");
+		extraPlotsBRNCheckBox.setEnabled(true);
 	}
 
 	if ("noNormBackground".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed no in noNormBackground");
+		extraPlotsBRNCheckBox.setEnabled(false);
 	}
 
 	if ("yesIntermediate".equals(evt.getActionCommand())) {
@@ -652,9 +676,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("intermediateButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed intermediateButton");
+		tabbedPane.setSelectedIndex(3);
 	}
 	    
+	if ("settingsValidateButton".equals(evt.getActionCommand())) {
+		
+		tabbedPane.setSelectedIndex(0);
+	}
+	
 	if ("yesCombineSpectrum".equals(evt.getActionCommand())) {
 	   	CheckDataReductionButtonValidation.bCombineDataSpectrum = true;
 	   	CheckGUI.enableDataReductionPlotXAxis();
@@ -683,25 +712,39 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	if ("startDataReductionButton".equals(evt.getActionCommand())) {
 	    	
+		RunRefDataReduction.reinitializeLocalVariables();
 	  	String cmd_local = RunRefDataReduction.createDataReductionCmd();
+	  	//cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    	
-	   	c_ionCon.setDrawable(c_dataReductionPlot);
+	  	System.out.println("cmd_local: " + cmd_local);
+	  	
+	  	c_ionCon.setDrawable(c_dataReductionPlot);
 	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
-	    		    	
+	   	ionRunNumberValue = new IONVariable(runNumberValue);
+	   		   	
 	   	String[] cmdArray = cmd_local.split(" ");
 	   	int cmdArraySize = cmdArray.length;
+	   	
+	   	
+	   	System.out.println("cmdArraySize; " + cmdArraySize);
 	   	int[] nx = {cmdArraySize};
 	   	ionCmd = new IONVariable(cmdArray,nx); 
 	   	sendIDLVariable("IDLcmd", ionCmd);
-	    		    	
+	    	   	
 	   	String cmd;
+	   	
 	   	if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
 	    		
-	   		cmd = "array_result = run_data_reduction_combine (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," + instr + ")";
-	    	showStatus("Processing...");
+	   		cmd = "array_result = run_data_reduction_combine (IDLcmd, ";
+	 //cmd = "array_result = run_data_reduction_combine (" + ionCmd + ",";
+	   		cmd += ionOutputPath + "," + ionRunNumberValue + "," + ionInstrument + ")";
+	   		
+	   		System.out.println("cmd is : " + cmd);
+	    	
+	   		showStatus("Processing...");
 	    	executeCmd(cmd);
 	    	showStatus("Done!");
-
+/*
     		IONVariable myIONresult;
     		myIONresult = queryVariable("array_result");
 	    	String[] myResultArray;
@@ -709,7 +752,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    			    		
 	    	CheckGUI.populateCheckDataReductionPlotCombineParameters(myResultArray);
 	    	UpdateDataReductionPlotCombineInterface.updateDataReductionPlotGUI();
-	    	
+	*/    	
 	    } else {
 	    
 	    	ionNtof = new IONVariable(ParametersConfiguration.iNtof);
@@ -717,7 +760,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		   	ionYmin = new IONVariable(MouseSelectionParameters.signal_ymin);
 		   	
 		   	cmd = "array_result = run_data_reduction (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," ;
-	    	cmd += instr + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
+	    	cmd += ionInstrument + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
 	    	
 	    	showStatus("Processing...");
 		   	executeCmd(cmd);
@@ -734,7 +777,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	    	
 	   	//show data reductin plot tab
 	   	dataReductionTabbedPane.setSelectedIndex(1);
-	    
+
 	}
 	    
 	//if one of the intermediate check box is check
@@ -794,14 +837,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 		    // createVar();
 		   
-			instr = new com.rsi.ion.IONVariable(instrument);
+			ionInstrument = new com.rsi.ion.IONVariable(instrument);
 			user = new com.rsi.ion.IONVariable(ucams); 
 			ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
 			
 			c_ionCon.setDrawable(c_plot);
 	    		    		
 			String cmd = "result = plot_data( " + runNumberValue + ", " + 
-			instr + ", " + user + "," + ionLoadct + ")";
+			ionInstrument + ", " + user + "," + ionLoadct + ")";
 	    		
 			showStatus("Processing...");
 			executeCmd(cmd);
@@ -875,8 +918,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //build menu
 	    createMenu();
 	    
-	    //create extra plot panel 
-	    ExtraPlotPanel.buildGUI();
+	    
 	  	    
 	    //get the instrument logo picture and put them into an array of instrumentLogo
 	    for (int i=0 ; i<NUM_LOGO_IMAGES ; i++) {
@@ -895,12 +937,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //create loadct panel below main plot
 	    LoadctPanel.buildGUI();
 	    plotPanel.add(loadctComboBox,BorderLayout.SOUTH);
-	    
-
-	    
+	
 	    //main DataReduction-Selection-logBook tabs - first tab
 	    CreateDataReductionInputGUI.createInputGui();
-	    addActionListener();
+
 	    
 	    //dataReductionTabbedPane.addTab("Input", panela);  //remove_comments
 	    dataReductionTabbedPane.addTab("Input", panela);
@@ -908,20 +948,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //data reduction plot/tab
 	    panelb = new JPanel();
 	    CreateDataReductionPlotTab.initializeDisplay();
-	    yMaxTextField.addActionListener(this);
-	    yMinTextField.addActionListener(this);
-	    yResetButton.addActionListener(this);
-	    yValidateButton.addActionListener(this);
-	    xMaxTextField.addActionListener(this);
-	    xMinTextField.addActionListener(this);
-	    xResetButton.addActionListener(this);
-	    xValidateButton.addActionListener(this);
-	  	    
-		dataReductionTabbedPane.addTab("Data Reduction Plot", panelb);
+	    dataReductionTabbedPane.addTab("Data Reduction Plot", panelb);
 	    
 	    //Extra plots tab (inside data reduction tab)
-	    panelc = new JPanel();
-	    dataReductionTabbedPane.addTab("Extra Plots", panelc);
+	    CreateExtraPlotPanel.buildGUI();
+	    dataReductionTabbedPane.addTab("Extra Plots", extraPlotsPanel);
+	    
 	    
 	    tabbedPane.addTab("Data Reduction",dataReductionTabbedPane);
 
@@ -937,8 +969,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	    //configuration tab 
 	    settingsPanel = new JPanel();
+	    //add extra plot setttings 
+	    SettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);
-	    
+		    
 	    setLayout(new BorderLayout());
 
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
@@ -952,10 +986,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	    add(plotDataReductionPanel);
 	    
+	    
+	    
 	    //contentPane.add(plotDataReductionPanel);
 	    //add(contentPane);
 	    setJMenuBar(menuBar);
-	    
+	    addActionListener();	    
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
@@ -979,7 +1015,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  */
   private void executeCmd(String cmd) {
       try{
-	  c_ionCon.setIDLVariable("instrument",instr);
+	  c_ionCon.setIDLVariable("instrument",ionInstrument);
 	  c_ionCon.executeIDLCommand(cmd);
       } catch(Exception e) { 
 	  String smsg;
@@ -1369,7 +1405,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     }
     
     private void addActionListener() {
-    	
     	DataReduction.signalPidFileButton.addActionListener(this);
     	DataReduction.signalPidFileTextField.addActionListener(this);
     	DataReduction.clearSignalPidFileButton.addActionListener(this);
@@ -1396,7 +1431,22 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.runsSequenceTextField.addActionListener(this);
     	DataReduction.startDataReductionButton.addActionListener(this);
     	DataReduction.loadctComboBox.addActionListener(this);
-
+    	DataReduction.extraPlotsBRNCheckBox.addActionListener(this);
+    	DataReduction.extraPlotsBSCheckBox.addActionListener(this);
+    	DataReduction.extraPlotsNRCheckBox.addActionListener(this);
+    	DataReduction.extraPlotsSRBCheckBox.addActionListener(this);
+    	DataReduction.extraPlotsSRCheckBox.addActionListener(this);
+    	DataReduction.settingsValidateButton.addActionListener(this);
+    	
+    	yMaxTextField.addActionListener(this);
+	    yMinTextField.addActionListener(this);
+	    yResetButton.addActionListener(this);
+	    yValidateButton.addActionListener(this);
+	    xMaxTextField.addActionListener(this);
+	    xMinTextField.addActionListener(this);
+	    xResetButton.addActionListener(this);
+	    xValidateButton.addActionListener(this);
+	  	
     }
     
     
