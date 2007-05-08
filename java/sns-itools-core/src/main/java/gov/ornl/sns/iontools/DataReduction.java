@@ -89,7 +89,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     DisplayConfiguration    getN;
     static float            fNtof;
 
-    ImageIcon[]     	    instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
+    static ImageIcon[]     	instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
     static ImageIcon   		detectorLayout = new ImageIcon();
     
     //ION
@@ -97,7 +97,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static IONJGrDrawable   c_plot;
     static IONJGrDrawable   c_dataReductionPlot;	     //data reduction plot    
     static IONJGrDrawable   c_SRextraPlots;              //Signal Region summed vs TOF drawing window
-    static IONJGrDrawable   c_BextraPlots;               //Background summed vs TOF
+    static IONJGrDrawable   c_BSextraPlots;               //Background summed vs TOF
     static IONJGrDrawable   c_SRBextraPlots;             //Signal Region with background summed vs TOF
     static IONJGrDrawable   c_NRextraPlots;              //Normalization region summed vs TOF
     static IONJGrDrawable   c_BRNextraPlots;             //Background region from normalization summed TOF
@@ -217,9 +217,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel          	instrumentLogoLabel;
     static JLabel	        runNumberLabel;	
     static JLabel           labelXaxis;
+    static JLabel           labelXaxisEP;
     static JLabel           labelYaxis;
+    static JLabel           labelYaxisEP;
     static JLabel           maxLabel;
+    static JLabel           maxLabelEP;
     static JLabel           minLabel;
+    static JLabel           minLabelEP;
     static JLabel         	normalizationLabel;
     static JLabel           blank1Label;
     static JLabel           blank2Label;
@@ -239,6 +243,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       yMinTextField;
     static JTextField       xMaxTextField;
     static JTextField       xMinTextField;
+    static JTextField       yMaxTextFieldEP;
+    static JTextField       yMinTextFieldEP;
+    static JTextField       xMaxTextFieldEP;
+    static JTextField       xMinTextFieldEP;
     static JTextField       signalPidFileTextField;
     static JTextField       backgroundPidFileTextField;    
     static JTextField       normalizationTextField;
@@ -254,9 +262,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextArea      	textAreaLogBook;
     
     static JButton          yValidateButton;
+    static JButton          yValidateButtonEP;
     static JButton          xValidateButton;
+    static JButton          xValidateButtonEP;
     static JButton          yResetButton;
+    static JButton          yResetButtonEP;
     static JButton          xResetButton;
+    static JButton          xResetButtonEP;
     static JButton          dataReductionPlotValidateButton;
     static JButton          backgroundPidFileButton;
     static JButton          clearBackPidFileButton;
@@ -270,7 +282,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JScrollPane 		scrollPane;
     
     static JComboBox        linLogComboBoxX;
+    static JComboBox        linLogComboBoxXEP;
     static JComboBox        linLogComboBoxY;
+    static JComboBox        linLogComboBoxYEP;
     static JComboBox       	instrList;
     static JComboBox        loadctComboBox;
     
@@ -428,6 +442,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     // Add the drawables to the connection
     c_ionCon.addDrawable(c_plot);
     c_ionCon.addDrawable(c_dataReductionPlot);
+    c_ionCon.addDrawable(c_SRextraPlots);
+    c_ionCon.addDrawable(c_BSextraPlots);
+    c_ionCon.addDrawable(c_SRBextraPlots);
+    c_ionCon.addDrawable(c_NRextraPlots);
+    c_ionCon.addDrawable(c_BRNextraPlots);
     
   }
 
@@ -715,8 +734,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		String cmd_local = RunRefDataReduction.createDataReductionCmd();
 	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    
-	  	System.out.println("cmd_local: " + cmd_local);  //REMOVE_ME	
-	  	
 	  	c_ionCon.setDrawable(c_dataReductionPlot);
 	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
 	   	ionRunNumberValue = new IONVariable(runNumberValue);
@@ -725,7 +742,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	   	int cmdArraySize = cmdArray.length;
 	   		   	
 	   	int[] nx = {cmdArraySize};
-	   	System.out.println("nx is: " + nx);  //REMOVE_ME
 	   	ionCmd = new IONVariable(cmdArray,nx); 
 	   	sendIDLVariable("IDLcmd", ionCmd);
 	    	
@@ -737,7 +753,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	   		cmd += ionOutputPath + "," + ionRunNumberValue + "," + ionInstrument + ")";
 	   		
 	   		showStatus("Processing...");
-	   		System.out.println("just before running the cmd");  //REMOVE_ME
 	   		executeCmd(cmd);
 	   		showStatus("Done!");
 
@@ -773,6 +788,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	    	
 	   	//show data reductin plot tab
 	   	dataReductionTabbedPane.setSelectedIndex(1);
+	   	if (liveParameters.isIntermediatePlotsSwitch()) {  //we asked for intermediate plots
+	   		ExtraPlots.plotExtraPlots();
+	   	}
 
 	}
 	    
@@ -970,7 +988,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
-	    
+
 	    
 	    //add everything in final window
 	    //	    JPanel contentPane  = new JPanel(new BorderLayout());
@@ -1269,14 +1287,25 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.background1SelectionModeMenuItem.addActionListener(this);
     	DataReduction.background2SelectionModeMenuItem.addActionListener(this);
     	
-    	yMaxTextField.addActionListener(this);
-	    yMinTextField.addActionListener(this);
-	    yResetButton.addActionListener(this);
-	    yValidateButton.addActionListener(this);
-	    xMaxTextField.addActionListener(this);
-	    xMinTextField.addActionListener(this);
-	    xResetButton.addActionListener(this);
-	    xValidateButton.addActionListener(this);
+    	//from Data Reduction plot tab
+    	DataReduction.yMaxTextField.addActionListener(this);
+	    DataReduction.yMinTextField.addActionListener(this);
+	    DataReduction.yResetButton.addActionListener(this);
+	    DataReduction.yValidateButton.addActionListener(this);
+	    DataReduction.xMaxTextField.addActionListener(this);
+	    DataReduction.xMinTextField.addActionListener(this);
+	    DataReduction.xResetButton.addActionListener(this);
+	    DataReduction.xValidateButton.addActionListener(this);
+	  	
+	    //from extra plots tab
+	    DataReduction.yMaxTextFieldEP.addActionListener(this);
+	    DataReduction.yMinTextFieldEP.addActionListener(this);
+	    DataReduction.yResetButtonEP.addActionListener(this);
+	    DataReduction.yValidateButtonEP.addActionListener(this);
+	    DataReduction.xMaxTextFieldEP.addActionListener(this);
+	    DataReduction.xMinTextFieldEP.addActionListener(this);
+	    DataReduction.xResetButtonEP.addActionListener(this);
+	    DataReduction.xValidateButtonEP.addActionListener(this);
 	  	
     }
     

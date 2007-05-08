@@ -125,11 +125,9 @@ public class CheckGUI {
 		//if the run number has been found, activate selection mode
 		  if (!bFoundNexus) {
 			  DataReduction.modeMenu.setEnabled(false); 					//mode menu
-			  DataReduction.parametersMenu.setEnabled(false);  				//parameters menu
 			  DataReduction.loadctComboBox.setEnabled(false);
 		} else {											//run number has not been found
 			DataReduction.modeMenu.setEnabled(true);
-			DataReduction.parametersMenu.setEnabled(true);
 			DataReduction.loadctComboBox.setEnabled(true);
 		}
 		    

@@ -281,26 +281,15 @@ end
 
 
 
-
-
-
 function RUN_DATA_REDUCTION_COMBINE, cmd, $
                                      outputPath, $
                                      run_number, $
-                                     instrument, $
-
-
-help, outputPath
-help, run_number
-help, instrument
-help, cmd
-print, cmd
+                                     instrument
 
 cmd_size_array = size(cmd)
 cmd_size = cmd_size_array[1]
 
 cmdLocal = ""
-
 for i=0,(cmd_size-1) do begin
     cmdLocal += cmd[i] + " "
 endfor
