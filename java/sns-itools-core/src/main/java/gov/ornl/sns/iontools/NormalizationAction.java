@@ -14,7 +14,7 @@ public class NormalizationAction {
 		} else {
 			DataReduction.normalizationTextField.setBackground(Color.WHITE);
 		}
-		
+		DataReduction.extraPlotsNRCheckBox.setEnabled(true);
 	}
 
 	static void noNormalization() {
@@ -23,7 +23,7 @@ public class NormalizationAction {
 		DataReduction.normalizationTextBoxLabel.setEnabled(false);
 		DataReduction.normalizationTextField.setBackground(Color.WHITE);
 		CheckDataReductionButtonValidation.bNormalizationSwitch = false;
-		
+	   	DataReduction.extraPlotsNRCheckBox.setEnabled(false);
 	}
 		
 }

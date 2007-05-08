@@ -26,6 +26,8 @@ package gov.ornl.sns.iontools;
 
 public interface IParameters {
 	
+		static final boolean DEBUG = false;
+	
 		static final String DEFAULT_INSTRUMENT = "REF_L";
 		static final String REF_L              = "REF_L";
 		static final String REF_M              = "REF_M";
@@ -42,22 +44,28 @@ public interface IParameters {
 		static final int CENTER_PIXEL_Y_RIGHT_REF_L = 152;
 		
 		//REF_L Data Reduction command line - flags 
-		static final String REF_L_DATA_REDUCTION_CMD 		= "reflect_tofred";
-		static final String REF_L_NORMALIZATION_FLAG 		= "--norm=";
-		static final String REF_L_INSTRUMENT_GEOMETRY_FLAG 	= "--inst_geom=";
-		static final String REF_L_COMBINE_FLAG 				= "--combine";
-		static final String REF_L_SIGNAL_ROI_FILE_FLAG 		= "--signal-roi-file=";
-		static final String REF_L_BKG_ROI_FILE_FLAG 		= "--bkg-roi-file=";
-		static final String REF_L_NO_BKG_FLAG  				= "--no-bkg";
-		static final String REF_L_NO_NORM_BKG             	= "--no-norm-bkg";
-		static final String REF_L_DUMP_SPECULAR             = "--dump-specular";
-		static final String REF_L_DUMP_SUB                  = "--dump-sub";
-		static final String REF_L_DUMP_NORM                 = "--dump-norm";
-		static final String REF_L_DUMP_NORM_BKG            	= "--dump-norm-bkg";
+		static final String REF_L_DATA_REDUCTION_CMD 	= "reflect_tofred";
+		
+		//Data reducton command line -flags
+		static final String NORMALIZATION_FLAG 		    = "--norm=";
+		static final String INSTRUMENT_GEOMETRY_FLAG 	= "--inst_geom=";
+		static final String COMBINE_FLAG 				= "--combine";
+		static final String SIGNAL_ROI_FILE_FLAG 		= "--signal-roi-file=";
+		static final String BKG_ROI_FILE_FLAG 	      	= "--bkg-roi-file=";
+		static final String NO_BKG_FLAG  				= "--no-bkg";
+		static final String NO_NORM_BKG             	= "--no-norm-bkg";
+		static final String DUMP_SPECULAR               = "--dump-specular";
+		static final String DUMP_SUB                    = "--dump-sub";
+		static final String DUMP_NORM                   = "--dump-norm";
+		static final String DUMP_NORM_BKG            	= "--dump-norm-bkg";
 		
 		//size of data reduction graphical window
 		static final int DATA_REDUCTION_PLOT_X	            = 650;
 		static final int DATA_REDUCTION_PLOT_Y              = 500;
+		
+		//size of extra plots graphical window
+		static final int EXTRA_PLOTS_X     					= 650;
+		static final int EXTRA_PLOTS_Y                      = 500;
 		
 		//data reduction plot interaction
 		static final int yAxisMin               = 0;
