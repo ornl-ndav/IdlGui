@@ -58,12 +58,33 @@ public interface IParameters {
 		static final String DUMP_SUB                    = "--dump-sub";
 		static final String DUMP_NORM                   = "--dump-norm";
 		static final String DUMP_NORM_BKG            	= "--dump-norm-bkg";
+
+		//Extra plots extension
+		static final String SR_EXTENSION                = ".sdc";
+		static final String BS_EXTENSION                = ".bkg";
+		static final String SRB_EXTENSION               = ".sub";
+		static final String NR_EXTENSION                = ".nom";
+		static final String BRN_EXTENSION               = ".bnm";
 		
-		//size of data reduction graphical window
+		//Extra plots file names
+		static final String SR_TITLE       = "Signal Region";
+		static final String BS_TITLE       = "Background";
+		static final String SRB_TITLE      = "Signal Region with Background";
+		static final String NR_TITLE       = "Normalization region";
+		static final String BRN_TITLE      = "Background region from Normalization";
+				
+		//Extra plots type
+		static final String SR				= "SR";
+		static final String BS				= "BS";
+		static final String SRB             = "SRB";
+		static final String NR              = "NR";
+		static final String BRN             = "BRN";
+		
+		//Size of data reduction graphical window
 		static final int DATA_REDUCTION_PLOT_X	            = 650;
 		static final int DATA_REDUCTION_PLOT_Y              = 500;
 		
-		//size of extra plots graphical window
+		//Size of extra plots graphical window
 		static final int EXTRA_PLOTS_X     					= 650;
 		static final int EXTRA_PLOTS_Y                      = 500;
 		
