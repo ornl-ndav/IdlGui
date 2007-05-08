@@ -712,11 +712,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	if ("startDataReductionButton".equals(evt.getActionCommand())) {
 	    	
-		RunRefDataReduction.reinitializeLocalVariables();
-	  	String cmd_local = RunRefDataReduction.createDataReductionCmd();
-	  	//cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
-	    	
-	  	System.out.println("cmd_local: " + cmd_local);
+		String cmd_local = RunRefDataReduction.createDataReductionCmd();
+	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
+	    
+	  	System.out.println("cmd_local: " + cmd_local);  //REMOVE_ME	
 	  	
 	  	c_ionCon.setDrawable(c_dataReductionPlot);
 	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
@@ -724,27 +723,24 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	   		   	
 	   	String[] cmdArray = cmd_local.split(" ");
 	   	int cmdArraySize = cmdArray.length;
-	   	
-	   	
-	   	System.out.println("cmdArraySize; " + cmdArraySize);
+	   		   	
 	   	int[] nx = {cmdArraySize};
+	   	System.out.println("nx is: " + nx);  //REMOVE_ME
 	   	ionCmd = new IONVariable(cmdArray,nx); 
 	   	sendIDLVariable("IDLcmd", ionCmd);
-	    	   	
+	    	
 	   	String cmd;
 	   	
 	   	if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
-	    		
-	   		cmd = "array_result = run_data_reduction_combine (IDLcmd, ";
-	 //cmd = "array_result = run_data_reduction_combine (" + ionCmd + ",";
+	    
+	   		cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
 	   		cmd += ionOutputPath + "," + ionRunNumberValue + "," + ionInstrument + ")";
 	   		
-	   		System.out.println("cmd is : " + cmd);
-	    	
 	   		showStatus("Processing...");
-	    	executeCmd(cmd);
-	    	showStatus("Done!");
-/*
+	   		System.out.println("just before running the cmd");  //REMOVE_ME
+	   		executeCmd(cmd);
+	   		showStatus("Done!");
+
     		IONVariable myIONresult;
     		myIONresult = queryVariable("array_result");
 	    	String[] myResultArray;
@@ -752,7 +748,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    			    		
 	    	CheckGUI.populateCheckDataReductionPlotCombineParameters(myResultArray);
 	    	UpdateDataReductionPlotCombineInterface.updateDataReductionPlotGUI();
-	*/    	
+
 	    } else {
 	    
 	    	ionNtof = new IONVariable(ParametersConfiguration.iNtof);
@@ -916,10 +912,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    plotDataReductionPanel = new JPanel();
 
 	    //build menu
-	    createMenu();
-	    
-	    
-	  	    
+	    CreateMenu.buildGUI();
+	    	  	    
 	    //get the instrument logo picture and put them into an array of instrumentLogo
 	    for (int i=0 ; i<NUM_LOGO_IMAGES ; i++) {
 	    	instrumentLogo[i] = createImageIcon("/gov/ornl/sns/iontools/images/image" + i + ".jpg");	
@@ -940,7 +934,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	
 	    //main DataReduction-Selection-logBook tabs - first tab
 	    CreateDataReductionInputGUI.createInputGui();
-
 	    
 	    //dataReductionTabbedPane.addTab("Input", panela);  //remove_comments
 	    dataReductionTabbedPane.addTab("Input", panela);
@@ -985,11 +978,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //createFrame();
 	    
 	    add(plotDataReductionPanel);
-	    
-	    
-	    
-	    //contentPane.add(plotDataReductionPanel);
-	    //add(contentPane);
 	    setJMenuBar(menuBar);
 	    addActionListener();	    
 	}
@@ -1166,170 +1154,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 //    private void enabledGoDatReduction() {
 //	System.out.println("Checking if all the parameters are there");
  //   }
-
-
-    private void createMenu() {
-
-	//Create the menu bar
-	menuBar = new JMenuBar();
-		
-	//Create the first menu
-	dataReductionPackMenu = new JMenu("DataReductionPack");
-	dataReductionPackMenu.setActionCommand("dataReductionPackMenu");
-	dataReductionPackMenu.setMnemonic(KeyEvent.VK_D);
-	dataReductionPackMenu.setEnabled(true);
-	menuBar.add(dataReductionPackMenu);
-
-	//name of instrument 
-	instrumentMenu = new JMenu("Instrument");
-	instrumentMenu.setMnemonic(KeyEvent.VK_I);
-	dataReductionPackMenu.add(instrumentMenu);
-
-	//a group of radio button menu items
-	instrumentButtonGroup = new ButtonGroup();
-
-	reflRadioButton = new JRadioButtonMenuItem("REF_L");
-	reflRadioButton.setActionCommand("instrumentREFL");
-	reflRadioButton.addActionListener(this);
-	reflRadioButton.setSelected(true);
-	reflRadioButton.setMnemonic(KeyEvent.VK_L);
-	instrumentButtonGroup.add(reflRadioButton);
-	instrumentMenu.add(reflRadioButton);
-	
-	refmRadioButton = new JRadioButtonMenuItem("REF_M");
-	refmRadioButton.setActionCommand("instrumentREFM");
-	refmRadioButton.addActionListener(this);
-	refmRadioButton.setSelected(true);
-	refmRadioButton.setMnemonic(KeyEvent.VK_M);
-	instrumentButtonGroup.add(refmRadioButton);
-	instrumentMenu.add(refmRadioButton);
-
-	//preferences
-	preferencesMenuItem = new JMenuItem("Preferences...");
-	preferencesMenuItem.setMnemonic(KeyEvent.VK_C);
-	preferencesMenuItem.setActionCommand("preferencesMenuItem");
-	preferencesMenuItem.addActionListener(this);
-	dataReductionPackMenu.add(preferencesMenuItem);
-
-	//Create the second menu
-	modeMenu = new JMenu("Mode");
-	modeMenu.setActionCommand("modeMenu");
-	modeMenu.setMnemonic(KeyEvent.VK_M);
-	modeMenu.setEnabled(false);
-	modeMenu.getAccessibleContext().setAccessibleDescription("Select the active operation mode");
-	menuBar.add(modeMenu);
-
-	//a group of radio button menu items
-	modeButtonGroup = new ButtonGroup();
-
-	signalSelectionModeMenuItem = new JRadioButtonMenuItem("Signal selection");
-	signalSelectionModeMenuItem.setActionCommand("signalSelection");
-	signalSelectionModeMenuItem.addActionListener(this);
-	signalSelectionModeMenuItem.setSelected(true);
-	signalSelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
-	modeButtonGroup.add(signalSelectionModeMenuItem);
-	modeMenu.add(signalSelectionModeMenuItem);
-	
-	background1SelectionModeMenuItem = new JRadioButtonMenuItem("Background #1 selection");
-	background1SelectionModeMenuItem.setActionCommand("back1Selection");
-	background1SelectionModeMenuItem.addActionListener(this);
-	background1SelectionModeMenuItem.setSelected(true);
-	background1SelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
-	modeButtonGroup.add(background1SelectionModeMenuItem);
-	modeMenu.add(background1SelectionModeMenuItem);
-
-	background2SelectionModeMenuItem = new JRadioButtonMenuItem("Background #2 selection");
-	background2SelectionModeMenuItem.setActionCommand("back2Selection");
-	background2SelectionModeMenuItem.addActionListener(this);
-	background2SelectionModeMenuItem.setSelected(true);
-	background2SelectionModeMenuItem.setMnemonic(KeyEvent.VK_S);
-	modeButtonGroup.add(background2SelectionModeMenuItem);
-	modeMenu.add(background2SelectionModeMenuItem);
-
-	//create the second menu
-	parametersMenu = new JMenu("Parameters");
-	parametersMenu.setActionCommand("parametersMenu");
-	parametersMenu.setMnemonic(KeyEvent.VK_P);
-	parametersMenu.getAccessibleContext().setAccessibleDescription("Select the various parameters");
-	parametersMenu.setEnabled(false);
-
-	parametersMenu.setRequestFocusEnabled(true);
-	parametersMenu.requestFocus(true);
-	menuBar.add(parametersMenu);
-
-	/*
-	//a subemenu of list of intermediate plots
-	intermediateMenu = new JMenuItem("Intermediate plots");
-	intermediateMenu.setMnemonic(KeyEvent.VK_I);
-	modeMenu.add(intermediateMenu);
-	*/
-
-	//intermediate plot
-	intermediateMenu = new JMenu("Intermediate plots");
-	intermediateMenu.setMnemonic(KeyEvent.VK_P);
-	parametersMenu.add(intermediateMenu);
-	
-	//a list of check box intermediate plots
-	cbMenuItem = new JCheckBoxMenuItem("Signal Region Summed vs TOF");
-	cbMenuItem.setActionCommand("plot1");
-	cbMenuItem.addActionListener(this);
-        intermediateMenu.add(cbMenuItem);
-	
-	cbMenuItem = new JCheckBoxMenuItem("Background Summed vs TOF");
-	cbMenuItem.addActionListener(this);
-	intermediateMenu.add(cbMenuItem);
-
-	cbMenuItem = new JCheckBoxMenuItem("Signal Region Summed vs TOF");
-	cbMenuItem.addActionListener(this);
-	intermediateMenu.add(cbMenuItem);
-
-	cbMenuItem = new JCheckBoxMenuItem("Normalization Region Summed vs TOF");
-	cbMenuItem.addActionListener(this);
-	intermediateMenu.add(cbMenuItem);
-
-	cbMenuItem = new JCheckBoxMenuItem("Background Region from Normalization Summed vs TOF");
-	cbMenuItem.addActionListener(this);
-	intermediateMenu.add(cbMenuItem);
-
-	//save full session
-	saveSessionMenu = new JMenu("Parameters saved between sessions");
-	saveSessionMenu.setMnemonic(KeyEvent.VK_S);
-	parametersMenu.add(saveSessionMenu);
-	
-	//list of parameters to save
-	cbMenuItem = new JCheckBoxMenuItem("Save everything");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-
-	saveSessionMenu.addSeparator();
-
-	cbMenuItem = new JCheckBoxMenuItem("Save background 1 selection");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-
-	cbMenuItem = new JCheckBoxMenuItem("Save background 2 selection");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-
-	saveSessionMenu.addSeparator();
-
-	cbMenuItem = new JCheckBoxMenuItem("Save signal Pid file");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-
-	cbMenuItem = new JCheckBoxMenuItem("Save background Pid file");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-	
-	saveSessionMenu.addSeparator();
-
-	cbMenuItem = new JCheckBoxMenuItem("Save normalization run number");
-	cbMenuItem.addActionListener(this);
-	saveSessionMenu.add(cbMenuItem);
-
-	    
-    }
-
+    
     private void createRunNumberPanel() {
     	
 	    GridBagLayout gridbag = new GridBagLayout();
@@ -1437,6 +1262,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.extraPlotsSRBCheckBox.addActionListener(this);
     	DataReduction.extraPlotsSRCheckBox.addActionListener(this);
     	DataReduction.settingsValidateButton.addActionListener(this);
+    	DataReduction.reflRadioButton.addActionListener(this);
+    	DataReduction.refmRadioButton.addActionListener(this);
+    	DataReduction.preferencesMenuItem.addActionListener(this);
+    	DataReduction.signalSelectionModeMenuItem.addActionListener(this);
+    	DataReduction.background1SelectionModeMenuItem.addActionListener(this);
+    	DataReduction.background2SelectionModeMenuItem.addActionListener(this);
     	
     	yMaxTextField.addActionListener(this);
 	    yMinTextField.addActionListener(this);

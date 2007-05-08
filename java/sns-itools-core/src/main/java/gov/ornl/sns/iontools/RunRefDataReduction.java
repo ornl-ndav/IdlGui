@@ -90,32 +90,30 @@ public class RunRefDataReduction {
 	
 	
 	static String createReflAddNexusDataReductionCmd() {
-		cmd = IParameters.REF_L_DATA_REDUCTION_CMD + " ";
-		cmd += sRunsNumber + " ";
+		cmd = IParameters.REF_L_DATA_REDUCTION_CMD ;
+		cmd += " " + sRunsNumber;
 		
 		if (bNormalization) {
-			cmd += IParameters.NORMALIZATION_FLAG + sNormalization + " ";
+			cmd += " " + IParameters.NORMALIZATION_FLAG + sNormalization;
 		}
 		
 		if (bOverwriteInstrumentGeometry) {
-			cmd += IParameters.INSTRUMENT_GEOMETRY_FLAG + sInstrumentGeometry + " "; 
+			cmd += " " + IParameters.INSTRUMENT_GEOMETRY_FLAG + sInstrumentGeometry; 
 		}
 		
 		if (bCombineDataSpectrum) {
-			cmd += IParameters.COMBINE_FLAG + " ";
+			cmd += " " + IParameters.COMBINE_FLAG;
 		}
 		
-		System.out.println("bCombineDataSpectrum: " + bCombineDataSpectrum);
-		
-		cmd += IParameters.SIGNAL_ROI_FILE_FLAG + sSignalPidFileName + " ";
-		cmd += IParameters.BKG_ROI_FILE_FLAG + sBackPidFileName + " ";
+		cmd += " " + IParameters.SIGNAL_ROI_FILE_FLAG + sSignalPidFileName;
+		cmd += " " + IParameters.BKG_ROI_FILE_FLAG + sBackPidFileName;
 		
 		if (!bBackground) {
-			cmd += IParameters.NO_BKG_FLAG + " ";
+			cmd += " " + IParameters.NO_BKG_FLAG;
 		}
 		
 		if (!bNormalizationBackground) {
-			cmd += IParameters.NO_NORM_BKG + " ";
+			cmd += " " + IParameters.NO_NORM_BKG;
 		}
 		
 		//list of intermediate plots
