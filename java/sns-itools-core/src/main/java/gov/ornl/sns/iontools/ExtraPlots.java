@@ -47,18 +47,16 @@ public class ExtraPlots {
 	}
 
 	/*
-	 * Function that output the extra plots required
+	 * Function that output the extra plots required after running the data reduction
 	 */
 	static void plotExtraPlots() {
 
-		boolean bPlotFile;
-		
 		//Signal Region summed vs TOF
 		if (DataReduction.liveParameters.isExtraPlotsSRBselected()) {
 			cmd = createCmd(IParameters.SR_EXTENSION,
 							IParameters.SR_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_SRextraPlots);	
-			bPlotFile = runCmd(cmd, IParameters.SR);
+			ExtraPlotInterface.bSRplot = runCmd(cmd, IParameters.SR);
 		}
 		
 		//Background summed vs TOF
@@ -66,7 +64,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.BS_EXTENSION,
 							IParameters.BS_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_BSextraPlots);
-			bPlotFile = runCmd(cmd, IParameters.BS);
+			ExtraPlotInterface.bBSplot = runCmd(cmd, IParameters.BS);
 		}
 		
 		//Signal region with background summed vs TOF
@@ -74,7 +72,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.SRB_EXTENSION,
 							IParameters.SRB_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_SRBextraPlots);
-			bPlotFile = runCmd(cmd, IParameters.SRB);
+			ExtraPlotInterface.bSRBplot = runCmd(cmd, IParameters.SRB);
 		}
 		
 		//Normalization region summed vs TOF
@@ -82,7 +80,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.NR_EXTENSION,
 							IParameters.NR_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_NRextraPlots);
-			bPlotFile = runCmd(cmd, IParameters.NR);
+			ExtraPlotInterface.bNRplot = runCmd(cmd, IParameters.NR);
 		}
 		
 		//Background region from normalization summed TOF
@@ -90,7 +88,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.BRN_EXTENSION,
 							IParameters.BRN_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_BRNextraPlots);
-			bPlotFile = runCmd(cmd, IParameters.BRN);
+			ExtraPlotInterface.bBRNplot = runCmd(cmd, IParameters.BRN);
 		}
 	
 		//populate first SR axis text boxes
@@ -140,9 +138,12 @@ public class ExtraPlots {
 		                     myResultArray[3],
 		                     myResultArray[4]};
 		
+		String[] xyScale = {"linear","log10"};
+		
 		DataReduction.myEPinterface = new ExtraPlotInterface(
 				type,
 				xyMinMax,
+				xyScale,
 				true);
 			
 		return bPlotFound;

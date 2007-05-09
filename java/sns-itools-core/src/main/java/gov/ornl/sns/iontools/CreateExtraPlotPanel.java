@@ -33,17 +33,20 @@ public class CreateExtraPlotPanel {
 						   IParameters.NA,
 						   IParameters.NA,
 						   IParameters.NA};
+		String[] sScale = {"linear", "log10"};
 		boolean bFirstTime = true;
 		DataReduction.myEPinterface = new ExtraPlotInterface(
 				IParameters.SR,
 				sEmpty,
+				sScale,
 				bFirstTime);
 		
+		DataReduction.bEPFirstTime = true;
 		//change event handler to be able to refresh xmin, xmax, ymin and ymax text boxes.
 		DataReduction.extraPlotsTabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
-				boolean bFirstTime = true;
-				ExtraPlotsPopulateAxis.populateAxis(bFirstTime);
+				ExtraPlotsPopulateAxis.enabledOrNotAxis();
+				ExtraPlotsPopulateAxis.populateAxis(DataReduction.bEPFirstTime);
 			}});
 	}
 	

@@ -83,9 +83,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     final static int 	    START_INDEX = 0;
     
     static boolean      	bFoundNexus = false;
+    static boolean 			bEPFirstTime;
     
     static GuiLiveParameters  liveParameters;
-    static ExtraPlotInterface        myEPinterface;
+    static ExtraPlotInterface myEPinterface;
     
     DisplayConfiguration    getN;
     static float            fNtof;
@@ -296,6 +297,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void init(){
 
 	  initializeParameters();
+	  
+	  
 	  
 	  
 	  /*
@@ -901,20 +904,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    }	
 	}		
 
-	if ("xValidateButtonEP".equals(evt.getActionCommand())) {
-		System.out.println("validate x EP");
+	if ("xValidateButtonEP".equals(evt.getActionCommand()) || 
+		"yValidateButtonEP".equals(evt.getActionCommand()) ||
+		"xMinTextFieldEP".equals(evt.getActionCommand()) ||
+		"xMaxTextFieldEP".equals(evt.getActionCommand()) ||
+		"yMinTextFieldEP".equals(evt.getActionCommand()) ||
+		"yMaxTextFieldEP".equals(evt.getActionCommand())) {
+		bEPFirstTime = false;
+		UpdateExtraPlotsInterface.updateExtraPlotsGUI();
 	}
 	
-	if ("xResetButtonEP".equals(evt.getActionCommand())) {
-		System.out.println("reset x EP");
-	}
-	
-	if ("yValidateButtonEP".equals(evt.getActionCommand())) {
-		System.out.println("validate y EP");
-	}
-	
-	if ("yResetButtonEP".equals(evt.getActionCommand())) {
-		System.out.println("reset y EP");
+	if ("xResetButtonEP".equals(evt.getActionCommand()) ||
+	    "yResetButtonEP".equals(evt.getActionCommand())) {	
+		UpdateExtraPlotsInterface.refreshExtraPlotsGUI();
 	}
 		
 	if (CheckDataReductionButtonValidation.checkDataReductionButtonStatus()) {
@@ -925,15 +927,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	    
     }   
     
-    /*
-      instrList.addActionListener( new ActionListener() {
-      
-      //retrieve value of combobox
-      instrument = (String)instrList.getSelectedItem();
-      
-    */	
-
-/*
+ /*
  ******************************************
  * buildGUI()
  *
