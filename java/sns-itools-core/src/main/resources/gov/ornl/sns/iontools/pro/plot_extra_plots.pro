@@ -2,24 +2,20 @@ function find_output_file_name, instrument, $
                                 run_number, $
                                 output_path, $
                                 extension
-
 file_name = output_path + "/" + instrument + "_" 
 file_name += strcompress(run_number,/remove_all) + extension
-
 return, file_name
 end
 
 
 
 
-FUNCTION PLOT_EXTRA_PLOTS, instrument, run_number, output_path, extension, title
 
+FUNCTION PLOT_EXTRA_PLOTS, instrument, run_number, output_path, extension, title
 output_file_name = find_output_file_name(instrument, $
                                          run_number, $
                                          output_path, $
                                          extension)
-
-
 
 no_file = 0
 catch, no_file
@@ -27,10 +23,10 @@ catch, no_file
 if (no_file NE 0) then begin
 
     plot_file_found = 0    
-    xmax = 0
-    xmin = 0
-    ymax = 0
-    ymin = 0
+    xmax = "N/A"
+    xmin = "N/A"
+    ymax = "N/A"
+    ymin = "N/A"
 
 endif else begin
 

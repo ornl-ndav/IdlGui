@@ -85,6 +85,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static boolean      	bFoundNexus = false;
     
     static GuiLiveParameters  liveParameters;
+    static ExtraPlotInterface        myEPinterface;
     
     DisplayConfiguration    getN;
     static float            fNtof;
@@ -598,6 +599,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 */      
     public void actionPerformed(ActionEvent evt){
 	
+    //this will be used to show where some of the tabs changed
+    //DataReduction.extraPlotsTabbedPane.setBackgroundAt(2,Color.RED);
+    	
     //fill up all widgets parameters each time an action is done
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
    	CheckGUI.populateCheckDataReductionPlotParameters();
@@ -896,7 +900,23 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	}	
 	    }	
 	}		
-	    
+
+	if ("xValidateButtonEP".equals(evt.getActionCommand())) {
+		System.out.println("validate x EP");
+	}
+	
+	if ("xResetButtonEP".equals(evt.getActionCommand())) {
+		System.out.println("reset x EP");
+	}
+	
+	if ("yValidateButtonEP".equals(evt.getActionCommand())) {
+		System.out.println("validate y EP");
+	}
+	
+	if ("yResetButtonEP".equals(evt.getActionCommand())) {
+		System.out.println("reset y EP");
+	}
+		
 	if (CheckDataReductionButtonValidation.checkDataReductionButtonStatus()) {
 		startDataReductionButton.setEnabled(true);
 	} else {
@@ -997,6 +1017,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	    add(plotDataReductionPanel);
 	    setJMenuBar(menuBar);
+	   
 	    addActionListener();	    
 	}
 

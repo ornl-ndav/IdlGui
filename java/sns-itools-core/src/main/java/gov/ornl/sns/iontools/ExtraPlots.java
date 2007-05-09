@@ -58,7 +58,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.SR_EXTENSION,
 							IParameters.SR_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_SRextraPlots);	
-			bPlotFile = runCmd(cmd);
+			bPlotFile = runCmd(cmd, IParameters.SR);
 		}
 		
 		//Background summed vs TOF
@@ -66,7 +66,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.BS_EXTENSION,
 							IParameters.BS_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_BSextraPlots);
-			bPlotFile = runCmd(cmd);
+			bPlotFile = runCmd(cmd, IParameters.BS);
 		}
 		
 		//Signal region with background summed vs TOF
@@ -74,7 +74,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.SRB_EXTENSION,
 							IParameters.SRB_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_SRBextraPlots);
-			bPlotFile = runCmd(cmd);
+			bPlotFile = runCmd(cmd, IParameters.SRB);
 		}
 		
 		//Normalization region summed vs TOF
@@ -82,7 +82,7 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.NR_EXTENSION,
 							IParameters.NR_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_NRextraPlots);
-			bPlotFile = runCmd(cmd);
+			bPlotFile = runCmd(cmd, IParameters.NR);
 		}
 		
 		//Background region from normalization summed TOF
@@ -90,8 +90,13 @@ public class ExtraPlots {
 			cmd = createCmd(IParameters.BRN_EXTENSION,
 							IParameters.BRN_TITLE);
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_BRNextraPlots);
-			bPlotFile = runCmd(cmd);
+			bPlotFile = runCmd(cmd, IParameters.BRN);
 		}
+	
+		//populate first SR axis text boxes
+		boolean bFirstTime = true;
+		ExtraPlotsPopulateAxis.populateAxis(bFirstTime);
+		
 	}
 	
 	/*
@@ -115,7 +120,7 @@ public class ExtraPlots {
 	/*
 	 * This function executes the command line
 	 */
-	static private boolean runCmd(String cmd) {
+	static private boolean runCmd(String cmd, String type) {
 		
 		IonUtils.executeCmd(cmd);
 	    		
@@ -124,14 +129,24 @@ public class ExtraPlots {
 		String[] myResultArray;
 		myResultArray = myIONresult.getStringArray();
 
-		System.out.println("myResultArray[0]= " + myResultArray[0]);
-		
+		//0 if extra plot file not found, 1 otherwise
 		if (myResultArray[0].compareTo("0") == 0) {
 			bPlotFound = false;
 		} else {
 			bPlotFound = true;
 		}
+		String[] xyMinMax = {myResultArray[1],
+		                     myResultArray[2],
+		                     myResultArray[3],
+		                     myResultArray[4]};
+		
+		DataReduction.myEPinterface = new ExtraPlotInterface(
+				type,
+				xyMinMax,
+				true);
+			
 		return bPlotFound;
+	
 	}
 	
 }

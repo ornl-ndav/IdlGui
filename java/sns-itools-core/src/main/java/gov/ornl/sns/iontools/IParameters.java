@@ -27,13 +27,15 @@ package gov.ornl.sns.iontools;
 public interface IParameters {
 	
 		static final boolean DEBUG = false;
+		
+		static final String NA = "N/A";
 	
 		static final String DEFAULT_INSTRUMENT = "REF_L";
 		static final String REF_L              = "REF_L";
 		static final String REF_M              = "REF_M";
 		
 		static final double PIXEL_SIZE_MM           = 0.7; 
-		static final double HALF_PIXEL_SIZE_MM    = PIXEL_SIZE_MM / 2;
+		static final double HALF_PIXEL_SIZE_MM      = PIXEL_SIZE_MM / 2;
 		static final int CENTER_PIXEL_X_LEFT_REF_M  = 151;
 		static final int CENTER_PIXEL_X_RIGHT_REF_M = 152;
 		static final int CENTER_PIXEL_Y_LEFT_REF_M  = 127;
