@@ -6,6 +6,9 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Color;
 import java.awt.Component;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
+
 
 public class CreateExtraPlotPanel {
 
@@ -23,9 +26,25 @@ public class CreateExtraPlotPanel {
 		buildTabbedPane();
 		buildXAxisScale();
 		buildYAxisScale();
+
+		//this is just used if user change EPtabs before running a 
+		//data reduction
+		String[] sEmpty = {IParameters.NA,
+						   IParameters.NA,
+						   IParameters.NA,
+						   IParameters.NA};
+		boolean bFirstTime = true;
+		DataReduction.myEPinterface = new ExtraPlotInterface(
+				IParameters.SR,
+				sEmpty,
+				bFirstTime);
 		
-			
-		
+		//change event handler to be able to refresh xmin, xmax, ymin and ymax text boxes.
+		DataReduction.extraPlotsTabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				boolean bFirstTime = true;
+				ExtraPlotsPopulateAxis.populateAxis(bFirstTime);
+			}});
 	}
 	
 	/*
@@ -275,7 +294,7 @@ public class CreateExtraPlotPanel {
 				0,
 				extraPlotsTabbedPaneSize.width,
 				extraPlotsTabbedPaneSize.height);
-						
+		
 		//Signal region summed vs TOF
 		DataReduction.c_SRextraPlots  = new IONJGrDrawable(
 				IParameters.EXTRA_PLOTS_X,
@@ -307,6 +326,7 @@ public class CreateExtraPlotPanel {
 		DataReduction.extraPlotsTabbedPane.addTab("Background from Normalization", DataReduction.c_BRNextraPlots);
 
 		DataReduction.extraPlotsPanel.add(DataReduction.extraPlotsTabbedPane);
+		
 		
 	}
 	
