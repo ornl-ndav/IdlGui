@@ -82,6 +82,12 @@ public interface IParameters {
 		static final String NR              = "NR";
 		static final String BRN             = "BRN";
 		
+		//Extra plots and Data Reduction scaling factor
+		static final String LINEAR          = "linear";
+		static final String LOG10           = "log10";
+		static final String XSCALE          = "linear";
+		static final String YSCALE          = "log10";
+		
 		//Size of data reduction graphical window
 		static final int DATA_REDUCTION_PLOT_X	            = 650;
 		static final int DATA_REDUCTION_PLOT_Y              = 500;
