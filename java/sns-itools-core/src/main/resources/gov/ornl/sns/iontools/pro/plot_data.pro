@@ -51,7 +51,7 @@ function dumpBinaryData, full_nexus_name, instrument, ucams
 ;get global structure
 tmp_working_path = "/SNS/users/" + ucams + '/local/'
 
-cmd_dump = "nxdir " + full_nexus_name
+cmd_dump = "srun nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
 
 ;get tmp_output_file_name

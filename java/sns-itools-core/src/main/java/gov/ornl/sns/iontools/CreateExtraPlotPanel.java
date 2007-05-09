@@ -48,6 +48,9 @@ public class CreateExtraPlotPanel {
 				ExtraPlotsPopulateAxis.enabledOrNotAxis();
 				ExtraPlotsPopulateAxis.populateAxis(DataReduction.bEPFirstTime);
 			}});
+		
+		//disable axis before first data reduction
+		refreshAxisGUI(false);
 	}
 	
 	/*
@@ -330,8 +333,19 @@ public class CreateExtraPlotPanel {
 
 		DataReduction.extraPlotsPanel.add(DataReduction.extraPlotsTabbedPane);
 		
-		
 	}
 	
+	public static void refreshAxisGUI(boolean bEnabledAxis) {
+		DataReduction.xMaxTextFieldEP.setEnabled(bEnabledAxis);
+		DataReduction.xMinTextFieldEP.setEnabled(bEnabledAxis);
+		DataReduction.yMaxTextFieldEP.setEnabled(bEnabledAxis);
+		DataReduction.yMinTextFieldEP.setEnabled(bEnabledAxis);
+		DataReduction.linLogComboBoxXEP.setEnabled(bEnabledAxis);
+		DataReduction.linLogComboBoxYEP.setEnabled(bEnabledAxis);
+		DataReduction.xValidateButtonEP.setEnabled(bEnabledAxis);
+		DataReduction.xResetButtonEP.setEnabled(bEnabledAxis);
+		DataReduction.yValidateButtonEP.setEnabled(bEnabledAxis);
+		DataReduction.yResetButtonEP.setEnabled(bEnabledAxis);
+	}
 	
 }

@@ -296,6 +296,7 @@ endfor
 
 ;run data reduction command line
 cd, outputPath
+cmdLocal = "srun " + cmdLocal
 spawn, cmdLocal, listening
 
 output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath)
