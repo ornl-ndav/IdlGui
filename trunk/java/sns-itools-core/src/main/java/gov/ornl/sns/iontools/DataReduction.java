@@ -706,8 +706,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 	    
 	if ("settingsValidateButton".equals(evt.getActionCommand())) {
-		
 		tabbedPane.setSelectedIndex(0);
+		dataReductionTabbedPane.setSelectedIndex(0);	
 	}
 	
 	if ("yesCombineSpectrum".equals(evt.getActionCommand())) {

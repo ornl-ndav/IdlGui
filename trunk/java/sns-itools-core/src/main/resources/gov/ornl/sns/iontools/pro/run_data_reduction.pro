@@ -490,6 +490,7 @@ for i=0,(cmd_size-1) do begin
 endfor
 
 cd, outputPath
+cmdLocal = "srun " + cmdLocal
 spawn, cmdLocal, listening
 
 output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath)

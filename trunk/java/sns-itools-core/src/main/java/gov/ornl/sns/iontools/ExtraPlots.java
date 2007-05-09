@@ -90,7 +90,9 @@ public class ExtraPlots {
 			DataReduction.c_ionCon.setDrawable(DataReduction.c_BRNextraPlots);
 			ExtraPlotInterface.bBRNplot = runCmd(cmd, IParameters.BRN);
 		}
-	
+
+		CreateExtraPlotPanel.refreshAxisGUI(ExtraPlotInterface.bBRNplot);
+		
 		//populate first SR axis text boxes
 		boolean bFirstTime = true;
 		ExtraPlotsPopulateAxis.populateAxis(bFirstTime);
