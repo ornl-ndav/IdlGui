@@ -54,7 +54,9 @@ public class SaveSignalPidFileAction {
 		DataReduction.signalPidFileButton.setEnabled(false);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = false;
 		CheckDataReductionButtonValidation.sSignalPidFile = "";
-
+		MouseSelection.RemoveSignalPidInfoMessage();
+		
+		TabUtils.removeForegroundColor(DataReduction.selectionTab,0);
 	}
 	
 	

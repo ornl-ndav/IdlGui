@@ -38,6 +38,8 @@ import java.net.*;
 import java.util.Arrays;
 import com.rsi.ion.*;
 import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ChangeEvent;
 
 public class DataReduction extends JApplet implements IONDisconnectListener, 
 						      IONOutputListener, 
@@ -461,7 +463,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void mousePressed(com.rsi.ion.IONDrawable drawable, int X, int Y, 
                     long when, int mask)
   {
-	  	  
 	  if (bFoundNexus) {
 
 	  if (X < 0) {X = 0;};
@@ -537,8 +538,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     public void mouseReleased(com.rsi.ion.IONDrawable drawable, int X, int Y, 
 			      long when, int mask)
     { 
-    	System.out.println("bfoundNexus: " + bFoundNexus);
-    	
+    		
       if (bFoundNexus) {
 	  int [] someArray = new int [2];
 	  
@@ -569,12 +569,18 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    		signalPidFileButton.setEnabled(true);
 	    		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
 	    		ParametersConfiguration.iY12 = y_max - y_min + 1;
+	    		TabUtils.addForegroundColor(tabbedPane,1);
+	    		TabUtils.addForegroundColor(selectionTab, 0);
 	    	} else if (modeSelected.compareTo("back1Selection") == 0) {
 	    		backgroundPidFileButton.setEnabled(true);
 	    		MouseSelection.saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);
+	    		TabUtils.addForegroundColor(tabbedPane,1);
+	    		TabUtils.addForegroundColor(selectionTab, 1);
 	    	} else if (modeSelected.compareTo("back2Selection") == 0) {
 	    		MouseSelection.saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
 	    		iBack2SelectionExist = 1;
+	    		TabUtils.addForegroundColor(tabbedPane,1);
+	    		TabUtils.addForegroundColor(selectionTab, 2);
 	    	} 
 	    	doBox();
 	    }
@@ -584,6 +590,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	dataReductionTabbedPane.setSelectedIndex(0);
 	    	tabbedPane.setSelectedIndex(1);
 	    	selectionTab.setSelectedIndex(3);
+    		TabUtils.addForegroundColor(tabbedPane,1);
+    		TabUtils.addForegroundColor(selectionTab, 3);
 	    }
 	    	
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
@@ -602,8 +610,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 */      
     public void actionPerformed(ActionEvent evt){
 	
-    //this will be used to show where some of the tabs changed
-    //DataReduction.extraPlotsTabbedPane.setBackgroundAt(2,Color.RED);
     	
     //fill up all widgets parameters each time an action is done
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
@@ -1012,6 +1018,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    add(plotDataReductionPanel);
 	    setJMenuBar(menuBar);
 	   
+	    //	  change event handler to be able to remove blue foreground of main tab
+		tabbedPane.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent ev) {
+				TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
+		}});
+	    
 	    addActionListener();	    
 	}
 
@@ -1131,7 +1143,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	//definition of variables
 	selectionTab = new JTabbedPane();
-
+	
 	signalSelectionPanel = new JPanel();
 	signalSelectionTextArea = new JTextArea(30,50);
 	signalSelectionTextArea.setEditable(false);
@@ -1157,6 +1169,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	pixelInfoPanel.add(Box.createRigidArea(new Dimension(20,0)));
 	pixelInfoPanel.add(pixelInfoTextArea);
 	selectionTab.addTab("Pixel info", pixelInfoPanel);
+
+	//change event handler to be able to remove blue foreground
+	selectionTab.addChangeListener(new ChangeListener() {
+		public void stateChanged(ChangeEvent ev) {
+			TabUtils.removeColorWhenClicked(selectionTab);
+			TabUtils.removeColorOfParentTab(tabbedPane,selectionTab);
+	}});
 	
 	panel1.add(selectionTab);
 
