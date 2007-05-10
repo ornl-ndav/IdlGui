@@ -158,6 +158,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           displayModePanel;                //loadct list
     static JPanel           loadctPanel;
     static JPanel           extraPlotSettingsPanel;
+    static JPanel           savingParametersSettingsPanel;
         
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -217,6 +218,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JCheckBox        extraPlotsSRBCheckBox;
     static JCheckBox        extraPlotsNRCheckBox;
     static JCheckBox        extraPlotsBRNCheckBox;
+    static JCheckBox     	saveSignalPidFileCheckBox;
+    static JCheckBox 		saveBackPidFileCheckBox;
+    static JCheckBox		saveNormalizationCheckBox;
+    static JCheckBox 		saveBackgroundCheckBox;
+    static JCheckBox     	saveNormalizationBackgroundCheckBox;
+    static JCheckBox		saveIntermediateFileOutputCheckBox;
+    static JCheckBox		saveCombineDataSpectrumCheckBox;
+    static JCheckBox		saveOverwriteInstrumentGeometryCheckBox;
+    static JCheckBox		saveAddAndGoRunNumberCheckBox;
+    static JCheckBox		saveGoSequentiallyCheckBox;
     
     static JLabel          	instrumentLogoLabel;
     static JLabel	        runNumberLabel;	
@@ -849,7 +860,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("runNumberTextField".equals(evt.getActionCommand())) {
-	    	    	
+	    
+		//reset color of all tabs
+		TabUtils.removedAllTabColor();
+		
 		//retrive value of run number
 		runNumberValue = runNumberTextField.getText();
 		
@@ -869,13 +883,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
 			
 			c_ionCon.setDrawable(c_plot);
-	    		    		
-			String cmd = "result = plot_data( " + runNumberValue + ", " + 
+	    		    	
+						String cmd = "result = plot_data( " + runNumberValue + ", " + 
 			ionInstrument + ", " + user + "," + ionLoadct + ")";
-	    		
 			showStatus("Processing...");
 			executeCmd(cmd);
-	    		
+						
 			IONVariable myIONresult;
 			myIONresult = queryVariable("result");
 			String[] myResultArray;
@@ -931,6 +944,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		startDataReductionButton.setEnabled(false);
 	}
 	    	    
+	
+	
     }   
     
  /*
@@ -1341,6 +1356,18 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    DataReduction.xResetButtonEP.addActionListener(this);
 	    DataReduction.xValidateButtonEP.addActionListener(this);
 	  	
+	    //from settings
+	    DataReduction.saveSignalPidFileCheckBox.addActionListener(this);
+	    DataReduction.saveBackPidFileCheckBox.addActionListener(this);
+	    DataReduction.saveNormalizationCheckBox.addActionListener(this);
+	    DataReduction.saveBackgroundCheckBox.addActionListener(this);
+	    DataReduction.saveNormalizationBackgroundCheckBox.addActionListener(this);
+	    DataReduction.saveIntermediateFileOutputCheckBox.addActionListener(this);
+	    DataReduction.saveCombineDataSpectrumCheckBox.addActionListener(this);
+	    DataReduction.saveOverwriteInstrumentGeometryCheckBox.addActionListener(this);
+	    DataReduction.saveAddAndGoRunNumberCheckBox.addActionListener(this);
+	    DataReduction.saveGoSequentiallyCheckBox.addActionListener(this);
+	    
     }
     
     
