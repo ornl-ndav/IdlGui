@@ -24,6 +24,8 @@
  */
 package gov.ornl.sns.iontools;
 
+import java.awt.Color;
+
 public interface IParameters {
 	
 		static final boolean DEBUG = false;
@@ -173,5 +175,9 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-	    											  
+	    
+	    static final Color TAB_BACKGROUND_NEW         = Color.RED;
+	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
+	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;
+	    static final Color TAB_FOREGROUND_OLD         = Color.BLACK;
 }

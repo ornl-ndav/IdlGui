@@ -95,14 +95,31 @@ public class MouseSelection {
     }	
 	
 	static void saveXYinfo(int x, int y) {
-		
 		infoX = x;
 		infoY = y;
-		
 		getFullPixelInfo(infoX, infoY);
-		
 	}
-		
+	
+	public static void RemovePixelInfoMessage() {
+		String sMessage = "";
+		DataReduction.pixelInfoTextArea.setText(sMessage);	
+	}
+	
+	public static void RemoveSignalPidInfoMessage() {
+		String sMessage = "";
+		DataReduction.signalSelectionTextArea.setText(sMessage);
+	}
+	
+	public static void RemoveBack1PidInfoMessage() {
+		String sMessage = "";
+		DataReduction.back1SelectionTextArea.setText(sMessage);
+	}
+	
+	public static void RemoveBack2PidInfoMessage() {
+		String sMessage = "";
+		DataReduction.back1SelectionTextArea.setText(sMessage);
+	}
+	
 	/*
 	 * Function that produces the output
 	 */
@@ -219,7 +236,6 @@ public class MouseSelection {
 	}
 
 	private static void ProducePixelInfoMessage() {
-		
 		String sMessage = " The pixel selected is defined by:\n\n";
 		sMessage += "   - X: " + infoX + "\n";
 		sMessage += "   - Y: " + infoY + "\n";
@@ -233,7 +249,7 @@ public class MouseSelection {
 		sMessage += "   - Pixel ID: " + sPixelID + "\n";
 		
 		DataReduction.pixelInfoTextArea.setText(sMessage);
-		
 	}
+	
 	
 }

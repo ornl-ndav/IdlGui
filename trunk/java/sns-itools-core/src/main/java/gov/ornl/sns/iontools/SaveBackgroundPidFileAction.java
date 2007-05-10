@@ -84,6 +84,11 @@ public class SaveBackgroundPidFileAction {
 		CheckDataReductionButtonValidation.bBackPidFileSaved = false;
 		CheckDataReductionButtonValidation.sBackPidFile = "";
 		
+		MouseSelection.RemoveBack1PidInfoMessage();
+		MouseSelection.RemoveBack2PidInfoMessage();
+	
+		TabUtils.removeForegroundColor(DataReduction.selectionTab,1);
+		TabUtils.removeForegroundColor(DataReduction.selectionTab,2);
 	}
 	
 		
