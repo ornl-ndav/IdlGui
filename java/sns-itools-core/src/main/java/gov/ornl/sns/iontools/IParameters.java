@@ -25,6 +25,7 @@
 package gov.ornl.sns.iontools;
 
 import java.awt.Color;
+import javax.swing.*;
 
 public interface IParameters {
 	
@@ -180,4 +181,11 @@ public interface IParameters {
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
 	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;
 	    static final Color TAB_FOREGROUND_OLD         = Color.BLACK;
+	    
+	    static final JTabbedPane[] listOfTabbedPane   = {DataReduction.tabbedPane,
+	    												 DataReduction.dataReductionTabbedPane,
+	     												 DataReduction.selectionTab,
+	     												 DataReduction.runsTabbedPane,
+	     												 DataReduction.extraPlotsTabbedPane};
+	    
 }
