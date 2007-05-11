@@ -141,8 +141,6 @@ void create_mapped_data(const string neutronfile,
                         const map<int32_t, int32_t> & pixel_map,
                         bool debug)
 {
-  cout << "num_tof_bins = " << num_tof_bins << endl;
-
   // Open binary data file
   ifstream neutron_data(neutronfile.c_str(), ios::binary);
   if(!neutron_data.is_open())
@@ -209,8 +207,6 @@ void create_mapped_data_incore(uint32_t * histo_array,
                         const map<int32_t, int32_t> & pixel_map,
                         bool debug)
 {
-  cout << "num_tof_bins = " << num_tof_bins << endl;
-
   // Open mapped binary data file
   ofstream mapped_data(mappedfile.c_str(), ios::binary);
   if(!mapped_data.is_open())
