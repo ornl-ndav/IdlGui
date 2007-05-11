@@ -141,6 +141,8 @@ void create_mapped_data(const string neutronfile,
                         const map<int32_t, int32_t> & pixel_map,
                         bool debug)
 {
+  cout << "num_tof_bins = " << num_tof_bins << endl;
+
   // Open binary data file
   ifstream neutron_data(neutronfile.c_str(), ios::binary);
   if(!neutron_data.is_open())
@@ -198,5 +200,51 @@ void create_mapped_data(const string neutronfile,
       mapped_data.write(reinterpret_cast<char *>(data_buffer), 
                         num_tof_bins*EventHisto::SIZEOF_UINT32_T);
     }
+}
+
+void create_mapped_data_incore(uint32_t * histo_array,
+                        const size_t histo_array_size,
+                        const string mappedfile,
+                        const int32_t num_tof_bins,
+                        const map<int32_t, int32_t> & pixel_map,
+                        bool debug)
+{
+  cout << "num_tof_bins = " << num_tof_bins << endl;
+
+  // Open mapped binary data file
+  ofstream mapped_data(mappedfile.c_str(), ios::binary);
+  if(!mapped_data.is_open())
+  {
+    throw runtime_error("Failed opening mapped binary file");
+  }
+
+  // Iterate over the pixel map
+  int index;
+  map<int32_t, int32_t>::const_iterator iter;
+  for(iter = pixel_map.begin(); iter != pixel_map.end(); ++iter)
+  {
+    if(debug)
+    {
+      cout << "Position: " << iter->second << endl;
+      cout << "Offset  : " << iter->second * num_tof_bins << endl;
+    }
+
+    index = iter->second * num_tof_bins;
+
+    // check that the read won't go past the end of file
+    if(index+num_tof_bins>histo_array_size)
+    {
+      throw runtime_error("Tried to read past end of histo array");
+    }
+
+    if(debug)
+    {
+      print_data_block(num_tof_bins, histo_array + index);
+    }
+
+    // Write data to mapped file
+    mapped_data.write(reinterpret_cast<char *>(histo_array + index), 
+                        num_tof_bins*EventHisto::SIZEOF_UINT32_T);
+  }
 }
 
