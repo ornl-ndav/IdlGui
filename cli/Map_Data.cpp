@@ -30,6 +30,7 @@
 
 #include "Map_Data.hpp"
 #include "utils.hpp"
+#include "ctime"  //REMOVE_ME
 
 using namespace std;
 using namespace TCLAP;
@@ -58,6 +59,9 @@ using namespace TCLAP;
  */
 int main(int argc, char **argv)
 {
+  time_t time_start; //REMOVE_ME
+  time_start = time(NULL); //REMOVE_ME
+
   try
     {
       // Setup the command-line parser object
@@ -107,6 +111,11 @@ int main(int argc, char **argv)
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
   
+  time_t time_end; //REMOVE_ME
+  time_end = time(NULL); //REMOVE_ME
+
+  printf("%ld seconds to process\n",(time_end-time_start)); //REMOVE_ME
+
   return 0;
 }
 
