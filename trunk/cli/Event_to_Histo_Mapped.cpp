@@ -480,6 +480,12 @@ int32_t main(int32_t argc, char *argv[])
                 new_Nt, pixel_map, 
                 debug);
   
+        time_t time_map_end; //REMOVE_ME
+        time_map_end = time(NULL); //REMOVE_ME
+
+        printf("%ld seconds to map histogram data & write file\n",
+          (time_map_end-time_histo_end)); //REMOVE_ME
+
         // if (verbose || debug)
         // {
         //   cout << "--> free memory of histo_array.";  //1st
