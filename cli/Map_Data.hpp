@@ -139,6 +139,12 @@ void create_mapped_data(const std::string neutronfile,
                         const int32_t num_tof_bins,
                         const std::map<int32_t, int32_t> & pixel_map,
                         bool debug);
+void create_mapped_data_incore(uint32_t * histo_array,
+                        const size_t histo_array_size,
+                        const std::string mappedfile,
+                        const int32_t num_tof_bins,
+                        const std::map<int32_t, int32_t> & pixel_map,
+                        bool debug);
 /**
  * \} // end of create_mapped_data group
  */
