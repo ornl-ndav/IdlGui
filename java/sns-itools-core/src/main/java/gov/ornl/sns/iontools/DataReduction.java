@@ -89,6 +89,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     static GuiLiveParameters  liveParameters;
     static ExtraPlotInterface myEPinterface;
+    static ParametersToKeep   myParametersToKeep;
     
     DisplayConfiguration    getN;
     static float            fNtof;
@@ -311,9 +312,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	  initializeParameters();
 	  
-	  
-	  
-	  
 	  /*
       Container contentPane = getContentPane();
       contentPane.setLayout(new FlowLayout(FlowLayout.LEADING));
@@ -323,16 +321,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
       // Create connection and drawable objects
       c_ionCon   = new IONGrConnection();
-      //      c_ionClient = new IONCallableClient();  //try
       c_dimApp = getSize();
       buildGUI();	
       runNumberTextField.requestFocusInWindow();
-
       connectToServer();
       
-
       //retrieve hostname
-      //      System.out.println("user name is: " + System.getProperty("user.name"));
+      //System.out.println("user name is: " + System.getProperty("user.name"));
       
       try {
 	  java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
@@ -620,12 +615,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 *  Handles GUI events for displaying.
 */      
     public void actionPerformed(ActionEvent evt){
-	
-    	
+	    	
     //fill up all widgets parameters each time an action is done
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
    	CheckGUI.populateCheckDataReductionPlotParameters();
    	liveParameters = new GuiLiveParameters();
+   	
    	
    	if (IParameters.DEBUG) {DebuggingTools.displayData();}
    	   	
@@ -868,16 +863,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		runNumberValue = runNumberTextField.getText();
 		
 		if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
-	   
-			reinitializeVariables();
-			
-			/*
+	
+			//remove or not parameters we don't want anymore
+			ParametersToKeep.refreshGuiWithParametersToKeep();
+						/*
 		    //retrieve name of instrument
 		    instrument = (String)instrList.getSelectedItem();
 		    */
 
-		    // createVar();
-		   
 			ionInstrument = new com.rsi.ion.IONVariable(instrument);
 			user = new com.rsi.ion.IONVariable(ucams); 
 			ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
@@ -914,9 +907,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 			//update text field
 			if (bFoundNexus) {
+//				tell the program that it's not the first run ever
+				ParametersToKeep.bFirstRunEver=false;
 				if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
 					runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
-	    		} else {
+				} else {
 	    			runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
 	    		}	
 	    	}	
@@ -1288,14 +1283,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	return ionVar;
     }
 
-    private void reinitializeVariables() {
-
-    	iBack2SelectionExist = 0;  					//reinitialize back2 selection 
-    	backgroundPidFileButton.setEnabled(false);  //disable background pid button
-    	signalPidFileButton.setEnabled(true);       //disable signal pid button
-    	
-    }
-    
     private void addActionListener() {
     	DataReduction.signalPidFileButton.addActionListener(this);
     	DataReduction.signalPidFileTextField.addActionListener(this);
