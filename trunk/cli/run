@@ -1,11 +1,25 @@
 #!/bin/bash
 
-Event_to_Histo -l 200 -M 150000 -p 77824 REF_L_2454_neutron_event.dat
+echo ""
+echo "Generating Histogram:"
+
+Event_to_Histo -l 20 -M 150000 -p 77824 REF_L_2454_neutron_event.dat
 
 echo ""
 echo "plus:"
 echo ""
 
+echo "Mapping Histogram:"
+
 Map_Data -p 77824 -m REF_L_TS_2006_12_01.dat \
 	-n REF_L_2454_neutron_histo.dat -t 750
+
+echo ""
+echo "Copying results to REF_L_2454_neutron_histo_mapped.dat.ORIG..."
+cp REF_L_2454_neutron_histo_mapped.dat \
+	REF_L_2454_neutron_histo_mapped.dat.ORIG
+echo ""
+
+echo "Done."
+echo ""
 

@@ -1,6 +1,19 @@
 #!/bin/bash
 
-Event_to_Histo_Mapped -l 200 -M 150000 -p 77824 \
+echo ""
+echo "Generating and Mapping Histogram:"
+
+Event_to_Histo_Mapped -l 20 -M 150000 -p 77824 \
 	-m REF_L_TS_2006_12_01.dat \
 	REF_L_2454_neutron_event.dat
+
+echo ""
+echo "Comparing results against ORIG results..."
+echo ""
+
+cmp REF_L_2454_neutron_histo_mapped.dat \
+	REF_L_2454_neutron_histo_mapped.dat.ORIG
+
+echo "Done."
+echo ""
 
