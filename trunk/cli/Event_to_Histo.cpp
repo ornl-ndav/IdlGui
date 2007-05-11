@@ -385,6 +385,9 @@ int32_t main(int32_t argc, char *argv[])
       size_t input_file_vector_size=input_file_vector.size();
       for (size_t i=0 ; i<input_file_vector_size ; ++i)
         {
+          time_t time_read_start; //REMOVE_ME
+          time_read_start = time(NULL); //REMOVE_ME
+
           string input_filename;
           string output_filename("");
           string tof_info_filename("");
@@ -433,6 +436,12 @@ int32_t main(int32_t argc, char *argv[])
             {
               cout << "done\n";
             }
+
+          time_t time_read_end; //REMOVE_ME
+          time_read_end = time(NULL); //REMOVE_ME
+
+          printf("%ld seconds to read file\n",
+            (time_read_end-time_read_start)); //REMOVE_ME
 
           // now file_size is the number of element in the file
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
@@ -539,6 +548,12 @@ int32_t main(int32_t argc, char *argv[])
               cout << "done\n";
             }
 
+          time_t time_bin_end; //REMOVE_ME
+          time_bin_end = time(NULL); //REMOVE_ME
+
+          printf("%ld seconds to generate time bins\n",
+            (time_bin_end-time_read_end)); //REMOVE_ME
+
           int32_t pixel_number = pixel_number_cmd.getValue();
 
           //this is the new number of time bins in the histo file
@@ -605,6 +620,12 @@ int32_t main(int32_t argc, char *argv[])
                 }
             }
           
+          time_t time_histo_end; //REMOVE_ME
+          time_histo_end = time(NULL); //REMOVE_ME
+
+          printf("%ld seconds to generate histogram\n",
+            (time_histo_end-time_bin_end)); //REMOVE_ME
+
           if (debug || verbose)
             {
               cout << "--> write_data_block.";  //1st
@@ -646,7 +667,11 @@ int32_t main(int32_t argc, char *argv[])
               cout << "done\n"; 
             }
           
+          time_t time_write_end; //REMOVE_ME
+          time_write_end = time(NULL); //REMOVE_ME
 
+          printf("%ld seconds to write histogram file\n",
+            (time_write_end-time_histo_end)); //REMOVE_ME
 
 
           if (verbose || debug)
@@ -677,7 +702,7 @@ int32_t main(int32_t argc, char *argv[])
   time_t time_end; //REMOVE_ME
   time_end = time(NULL); //REMOVE_ME
 
-  printf("%ld seconds to process",(time_end-time_start)); //REMOVE_ME
+  printf("%ld seconds to process\n",(time_end-time_start)); //REMOVE_ME
 
   return 0;
 }
