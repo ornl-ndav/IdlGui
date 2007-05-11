@@ -75,8 +75,6 @@ full_nexus_path = find_full_nexus_name(run_number, instrument)
 
 foundNeXus = 0
 
-print, 'in plot data, position 1'  //REMOVE_ME
-
 if (full_nexus_path NE '') then begin
 
  ;dump histo data into temporary file
