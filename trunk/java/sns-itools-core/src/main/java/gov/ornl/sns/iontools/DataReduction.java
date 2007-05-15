@@ -61,7 +61,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          	cmd; 
     static String           hostname;
     static String  		    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
-    
+      
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     static int              Nx;
@@ -294,7 +294,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton      	startDataReductionButton;
     static JButton      	instrumentGeometryButton;
     static JButton      	settingsValidateButton; 
-              
+    static JButton          replotSelectionButton;      
+    
     static JScrollPane 		scrollPane;
     
     static JComboBox        linLogComboBoxX;
@@ -327,17 +328,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       connectToServer();
       
       //retrieve hostname
-      //System.out.println("user name is: " + System.getProperty("user.name"));
+      //java.util.Properties props = System.getProperties();
+      //props.list(System.out);
       
       try {
 	  java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
 	  hostname = localMachine.getHostName();
-	  //System.out.println("hostname is: " + localMachine.getHostName());
+	  
       }
       catch (java.net.UnknownHostException uhe)
 	  {
 	      //handle exception
-	  }    
+	  } 
+            
   }
  
   /**
@@ -416,8 +419,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
   // Connect to the server
      try { 
-	 c_ionCon.connect(this.getCodeBase().getHost()); 
-	 //	 c_ionClient.connect(this.getCodeBase().getHost());   //try
+    	// temporary = "user: " + this.getCodeBase().getAuthority();
+    	 c_ionCon.connect(this.getCodeBase().getHost()); 
      } catch(UnknownHostException eUn) {
          System.err.println("Error: Unknown Host.") ;
          writeMessage("Error:Unknown Host.");
@@ -544,7 +547,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     public void mouseReleased(com.rsi.ion.IONDrawable drawable, int X, int Y, 
 			      long when, int mask)
     { 
-    		
+    	
       if (bFoundNexus) {
 	  int [] someArray = new int [2];
 	  
@@ -741,7 +744,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("instrumentGeometryButton".equals(evt.getActionCommand())) {
-		System.out.println("I just pressed button in instrument geometry");
+		Graphics g = c_plot.getGraphics();
+		c_plot.update(g);
+		c_x1 = MouseSelectionParameters.signal_x1;
+		c_y1 = MouseSelectionParameters.signal_y1;
+		c_x2 = MouseSelectionParameters.signal_x2;
+		c_y2 = MouseSelectionParameters.signal_y2;
+		g.setColor(Color.red);
+		g.drawLine(c_x1,c_y1,c_x1,c_y2);
+		g.drawLine(c_x1,c_y2,c_x2,c_y2);
+		g.drawLine(c_x2,c_y2,c_x2,c_y1);
+		g.drawLine(c_x2,c_y1,c_x1,c_y1);
 	}
 
 	if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
@@ -820,12 +833,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	if ("instrumentREFL".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(0);
-	  	instrument = "REF_L";
+	  	instrument = IParameters.REF_L;
 	}
 
 	if ("instrumentREFM".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(1);
-	   	instrument = "REF_M";
+	   	instrument = IParameters.REF_M;
 	}
 
 	if ("preferencesMenuItem".equals(evt.getActionCommand())) {
@@ -907,7 +920,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 			//update text field
 			if (bFoundNexus) {
-//				tell the program that it's not the first run ever
+				//tell the program that it's not the first run ever
 				ParametersToKeep.bFirstRunEver=false;
 				if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
 					runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
@@ -915,7 +928,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    			runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
 	    		}	
 	    	}	
-	    }	
+			
+		}	
 	}		
 
 	if ("xValidateButtonEP".equals(evt.getActionCommand()) || 
@@ -938,11 +952,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	} else {
 		startDataReductionButton.setEnabled(false);
 	}
-	    	    
-	
+
+	if ("replotSelectionButton".equals(evt.getActionCommand())) {
+		//doBox();
+		buildGUI();
+			}
 	
     }   
-    
+  
  /*
  ******************************************
  * buildGUI()
@@ -970,8 +987,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //create top left panel (logo + run number)
 	    createRunNumberPanel();
 
-	    //main plot
 	    c_plot = new IONJGrDrawable(Nx*2, Ny*2);
+	    
 	    plotPanel.add(c_plot,BorderLayout.NORTH);
 	    leftPanel.add(topPanel,BorderLayout.NORTH);
 	    leftPanel.add(plotPanel,BorderLayout.SOUTH);
@@ -1034,7 +1051,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 				TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});
 	    
-	    addActionListener();	    
+	    addActionListener();
+	    
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */
@@ -1115,8 +1133,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  * 
  * Purpose: Draws rubber band box with Java.
  */
-    private final void doBox(){
-	
+    static final void doBox(){
+		
 	Graphics g = c_plot.getGraphics();
 	c_plot.update(g);
 	
@@ -1146,8 +1164,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    g.drawLine(c_x1,c_y2,c_x2,c_y2);
 	    g.drawLine(c_x2,c_y2,c_x2,c_y1);
 	    g.drawLine(c_x2,c_y1,c_x1,c_y1);
+	    
 	}
-    }
+ }
 
     private void createSelectionGui() {
 
@@ -1235,7 +1254,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    instrumentLogoLabel.setHorizontalAlignment(JLabel.CENTER);
 	    instrumentLogoLabel.setVerticalAlignment(JLabel.CENTER);
 	    	    
-	    runNumberLabel = new JLabel("Run number: ",JLabel.LEFT);
+	    runNumberLabel = new JLabel("Run #",JLabel.LEFT);
 	    c.gridx=1;
 	    c.gridy=0;
 	    c.gridwidth=1;
@@ -1253,18 +1272,23 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    c.gridheight=1;
 	    gridbag.setConstraints(runNumberTextField,c);
 
-	    /*
-	    //combobox
-	    instrList = new JComboBox(instrumentStrings);
-	    instrList.setSelectedIndex(0);
-	    instrList.addActionListener(this);
-	    */
+	    replotSelectionButton = new JButton("<html><b>Replot<br>Selection</b></html>");
+	    replotSelectionButton.setPreferredSize(new Dimension(90,30));
+	    replotSelectionButton.setActionCommand("replotSelectionButton");
+	    replotSelectionButton.addActionListener(this);
+	    
+	    c.gridx=3;
+	    c.gridy=0;
+	    c.gridwidth=1;
+	    c.gridheight=1;
+	    gridbag.setConstraints(replotSelectionButton,c);
 	    
 	    instrumentLogoPanel.add(instrumentLogoLabel);
 	    topPanel.add(instrumentLogoPanel);
 	    topPanel.add(runNumberLabel);
 	    topPanel.add(runNumberTextField);
-
+	    topPanel.add(replotSelectionButton);
+	    
 	    //Display the first image
 	    instrumentLogoLabel.setIcon(instrumentLogo[START_INDEX]);
 	    

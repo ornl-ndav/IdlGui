@@ -71,11 +71,9 @@ public class CreateDataReductionInputGUI {
 		
 	DataReduction.yesNormalizationRadioButton = new JRadioButton("Yes");
 	DataReduction.yesNormalizationRadioButton.setActionCommand("yesNormalization");
-	DataReduction.yesNormalizationRadioButton.setSelected(true);
-			
 	DataReduction.noNormalizationRadioButton = new JRadioButton("No");
 	DataReduction.noNormalizationRadioButton.setActionCommand("noNormalization");
-		
+
 	DataReduction.normalizationButtonGroup = new ButtonGroup();
 	DataReduction.normalizationButtonGroup.add(DataReduction.yesNormalizationRadioButton);
 	DataReduction.normalizationButtonGroup.add(DataReduction.noNormalizationRadioButton);
@@ -93,17 +91,29 @@ public class CreateDataReductionInputGUI {
 	DataReduction.normalizationTextBoxPanel.add(DataReduction.normalizationTextBoxLabel);
 	DataReduction.normalizationTextBoxPanel.add(DataReduction.normalizationTextField);
 	DataReduction.normalizationPanel.add(DataReduction.normalizationTextBoxPanel);
+
+	if (IParameters.YES_NORMALIZATION_CHECK_BOX) {
+		DataReduction.yesNormalizationRadioButton.setSelected(true);
+	} else {
+		DataReduction.noNormalizationRadioButton.setSelected(true);
+		DataReduction.normalizationTextField.setEnabled(false);
+		DataReduction.normalizationTextBoxLabel.setEnabled(false);
+	}
 	
 	//background radio button
 	DataReduction.backgroundLabel = new JLabel(" Background:    ");
 
 	DataReduction.yesBackgroundRadioButton = new JRadioButton("Yes");
 	DataReduction.yesBackgroundRadioButton.setActionCommand("yesBackground");
-	DataReduction.yesBackgroundRadioButton.setSelected(true);
-
 	DataReduction.noBackgroundRadioButton = new JRadioButton("No");
 	DataReduction.noBackgroundRadioButton.setActionCommand("noBackground");
 
+	if (IParameters.YES_BACKGROUND_CHECK_BOX) {
+		DataReduction.yesBackgroundRadioButton.setSelected(true);	
+	} else {
+		DataReduction.noBackgroundRadioButton.setSelected(true);
+	}
+		
 	DataReduction.backgroundButtonGroup = new ButtonGroup();
 	DataReduction.backgroundButtonGroup.add(DataReduction.yesBackgroundRadioButton);
 	DataReduction.backgroundButtonGroup.add(DataReduction.noBackgroundRadioButton);
@@ -117,11 +127,15 @@ public class CreateDataReductionInputGUI {
 	
 	DataReduction.yesNormBackgroundRadioButton = new JRadioButton("Yes");
 	DataReduction.yesNormBackgroundRadioButton.setActionCommand("yesNormBackground");
-	DataReduction.yesNormBackgroundRadioButton.setSelected(true);
-
 	DataReduction.noNormBackgroundRadioButton = new JRadioButton("No");
 	DataReduction.noNormBackgroundRadioButton.setActionCommand("noNormBackground");
 
+	if (IParameters.YES_NORMALIZATION_BACKGROUND_CHECK_BOX) {
+		DataReduction.yesNormBackgroundRadioButton.setSelected(true);
+	} else {
+		DataReduction.noNormBackgroundRadioButton.setSelected(true);
+	}
+	
 	DataReduction.normBackgroundButtonGroup = new ButtonGroup();
 	DataReduction.normBackgroundButtonGroup.add(DataReduction.yesNormBackgroundRadioButton);
 	DataReduction.normBackgroundButtonGroup.add(DataReduction.noNormBackgroundRadioButton);
@@ -136,10 +150,8 @@ public class CreateDataReductionInputGUI {
 
 	DataReduction.yesIntermediateRadioButton = new JRadioButton("Yes");
 	DataReduction.yesIntermediateRadioButton.setActionCommand("yesIntermediate");
-
 	DataReduction.noIntermediateRadioButton = new JRadioButton("No");
 	DataReduction.noIntermediateRadioButton.setActionCommand("noIntermediate");
-	DataReduction.noIntermediateRadioButton.setSelected(true);
 
 	DataReduction.intermediateButtonGroup = new ButtonGroup();
 	DataReduction.intermediateButtonGroup.add(DataReduction.yesIntermediateRadioButton);
@@ -148,7 +160,13 @@ public class CreateDataReductionInputGUI {
 	DataReduction.intermediateButton = new JButton("Intermediate Plots");
 	DataReduction.intermediateButton.setActionCommand("intermediateButton");
 	DataReduction.intermediateButton.setToolTipText("List of intermediate plots available");
-	DataReduction.intermediateButton.setEnabled(false);
+
+	if (IParameters.YES_INTERMEDIATE_FILE_CHECK_BOX) {
+		DataReduction.yesIntermediateRadioButton.setSelected(true);
+	} else {
+		DataReduction.noIntermediateRadioButton.setSelected(true);
+		DataReduction.intermediateButton.setEnabled(false);
+	}
 	
 	DataReduction.intermediatePanel.add(DataReduction.intermediateLabel);
 	DataReduction.intermediatePanel.add(DataReduction.yesIntermediateRadioButton);
@@ -162,11 +180,15 @@ public class CreateDataReductionInputGUI {
 	DataReduction.yesCombineSpectrumRadioButton = new JRadioButton("Yes");
 	DataReduction.yesCombineSpectrumRadioButton.setActionCommand("yesCombineSpectrum");
 	DataReduction.yesCombineSpectrumRadioButton.setSelected(false);
-
 	DataReduction.noCombineSpectrumRadioButton = new JRadioButton("No");
-	DataReduction.noCombineSpectrumRadioButton.setSelected(true);
 	DataReduction.noCombineSpectrumRadioButton.setActionCommand("noCombineSpectrum");
 
+	if (IParameters.YES_COMBINE_DATA_SPECTRUM) {
+		DataReduction.yesCombineSpectrumRadioButton.setSelected(true);
+	} else {
+		DataReduction.noCombineSpectrumRadioButton.setSelected(true);
+	}
+	
 	DataReduction.combineSpectrumButtonGroup = new ButtonGroup();
 	DataReduction.combineSpectrumButtonGroup.add(DataReduction.yesCombineSpectrumRadioButton);
 	DataReduction.combineSpectrumButtonGroup.add(DataReduction.noCombineSpectrumRadioButton);
@@ -181,11 +203,9 @@ public class CreateDataReductionInputGUI {
 	
 	DataReduction.yesInstrumentGeometryRadioButton = new JRadioButton("Yes");
 	DataReduction.yesInstrumentGeometryRadioButton.setActionCommand("yesInstrumentGeometry");
-	
 	DataReduction.noInstrumentGeometryRadioButton = new JRadioButton("No");
 	DataReduction.noInstrumentGeometryRadioButton.setActionCommand("noInstrumentGeometry");
-	DataReduction.noInstrumentGeometryRadioButton.setSelected(true);
-
+	
 	DataReduction.instrumentGeometryButtonGroup = new ButtonGroup();
 	DataReduction.instrumentGeometryButtonGroup.add(DataReduction.yesInstrumentGeometryRadioButton);
 	DataReduction.instrumentGeometryButtonGroup.add(DataReduction.noInstrumentGeometryRadioButton);
@@ -199,6 +219,14 @@ public class CreateDataReductionInputGUI {
 	DataReduction.instrumentGeometryTextField.setActionCommand("instrumentGeometryTextField");
 	DataReduction.instrumentGeometryTextField.setEditable(true);
 
+	if (IParameters.YES_OVERWRITE_INSTRUMENT_GEOMETRY) {
+		DataReduction.yesInstrumentGeometryRadioButton.setSelected(true);	
+	} else {
+		DataReduction.noInstrumentGeometryRadioButton.setSelected(true);
+		DataReduction.instrumentGeometryButton.setEnabled(false);
+		DataReduction.instrumentGeometryTextField.setEnabled(false);
+	}
+						
 	DataReduction.instrumentGeometryPanel.add(DataReduction.instrumentGeometryLabel);
 	DataReduction.instrumentGeometryPanel.add(DataReduction.yesInstrumentGeometryRadioButton);
 	DataReduction.instrumentGeometryPanel.add(DataReduction.noInstrumentGeometryRadioButton);

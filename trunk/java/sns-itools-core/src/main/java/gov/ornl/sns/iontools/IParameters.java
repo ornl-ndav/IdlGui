@@ -48,6 +48,31 @@ public interface IParameters {
 		static final int CENTER_PIXEL_Y_LEFT_REF_L  = 151;
 		static final int CENTER_PIXEL_Y_RIGHT_REF_L = 152;
 		
+		//Default status of GUI
+		static final boolean YES_NORMALIZATION_CHECK_BOX            = true;
+		static final boolean YES_BACKGROUND_CHECK_BOX               = true;
+		static final boolean YES_NORMALIZATION_BACKGROUND_CHECK_BOX = true;
+		static final boolean YES_COMBINE_DATA_SPECTRUM              = false;
+		static final boolean YES_OVERWRITE_INSTRUMENT_GEOMETRY      = false;
+		static final boolean YES_INTERMEDIATE_FILE_CHECK_BOX        = false;
+		static final boolean YES_INTERMEDIATE_SR					= true;
+		static final boolean YES_INTERMEDIATE_BS					= true;
+		static final boolean YES_INTERMEDIATE_SRB      			 	= true;
+		static final boolean YES_INTERMEDIATE_NR					= true;
+		static final boolean YES_INTERMEDIATE_BRN					= true;
+		
+		//Default list of parameters to keep
+		static final boolean KEEP_SIGNAL_PID_FILE_NAME				= true;
+		static final boolean KEEP_BACKGROUND_PID_FILE_NAME			= true;
+		static final boolean KEEP_NORMALIZATION						= true;
+		static final boolean KEEP_BACKGROUND						= true;
+		static final boolean KEEP_NORMALIZATION_BACKGROUND			= true;
+		static final boolean KEEP_INTERMEDIATE_FILE_OUTPUT			= true;
+		static final boolean KEEP_COMBINE_DATA_SPECTRUM				= true;
+		static final boolean KEEP_OVERWRITE_INSTRUMENT_GEOMETRY		= true;
+		static final boolean KEEP_ADD_NEXUS_AND_GO					= true;
+		static final boolean KEEP_GO_SEQUENTIALLY					= true;
+				
 		//REF_L Data Reduction command line - flags 
 		static final String REF_L_DATA_REDUCTION_CMD 	= "reflect_tofred";
 		
@@ -181,6 +206,8 @@ public interface IParameters {
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
 	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;
 	    static final Color TAB_FOREGROUND_OLD         = Color.BLACK;
+	    static final Color TEXT_BOX_REQUIRED_EMPTY    = Color.RED;
+	    static final Color TEXT_BOX_REQUIRED_FULL     = Color.WHITE;
 	    
 	    static final JTabbedPane[] listOfTabbedPane   = {DataReduction.tabbedPane,
 	    												 DataReduction.dataReductionTabbedPane,

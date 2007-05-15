@@ -2,20 +2,20 @@ package gov.ornl.sns.iontools;
 
 public class MouseSelectionParameters {
 
-	 	static int            	signal_x1=0;
-	    static int             	signal_y1=0;
-	    static int             	back1_x1=0;
-	    static int             	back1_y1=0;
-	    static int             	back2_x1=0;
-	    static int             	back2_y1=0;
-	    static int             	signal_x2=0;
-	    static int             	signal_y2=0;
-	    static int             	back1_x2=0;
-	    static int             	back1_y2=0;
-	    static int             	back2_x2=0;
-	    static int             	back2_y2=0;
-	    static int             	info_x=0;
-	    static int             	info_y=0;
+	 	static int            	signal_x1 = 0;
+	    static int             	signal_y1 = 0;
+	    static int             	back1_x1  = 0;
+	    static int             	back1_y1  = 0;
+	    static int             	back2_x1  = 0;
+	    static int             	back2_y1  = 0;
+	    static int             	signal_x2 = 0;
+	    static int             	signal_y2 = 0;
+	    static int             	back1_x2  = 0;
+	    static int             	back1_y2  = 0;
+	    static int             	back2_x2  = 0;
+	    static int             	back2_y2  = 0;
+	    static int             	info_x    = 0;
+	    static int             	info_y    = 0;
 
 	    //xmin, max and ymin and max pixelid values
 	    static int				signal_xmin;
