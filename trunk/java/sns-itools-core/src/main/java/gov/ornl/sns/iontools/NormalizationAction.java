@@ -1,7 +1,5 @@
 package gov.ornl.sns.iontools;
 
-import java.awt.Color;
-
 public class NormalizationAction {
 
 	static void yesNormalization() {
@@ -10,9 +8,9 @@ public class NormalizationAction {
 		DataReduction.normalizationTextBoxLabel.setEnabled(true);
 		CheckDataReductionButtonValidation.bNormalizationSwitch = true;
 		if (CheckDataReductionButtonValidation.sNormalizationRunNumber.compareTo("")==0) {
-			DataReduction.normalizationTextField.setBackground(Color.RED);
+			DataReduction.normalizationTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
 		} else {
-			DataReduction.normalizationTextField.setBackground(Color.WHITE);
+			DataReduction.normalizationTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_FULL);
 		}
 		DataReduction.extraPlotsNRCheckBox.setEnabled(true);
 	}
@@ -21,7 +19,7 @@ public class NormalizationAction {
 		
 		DataReduction.normalizationTextField.setEnabled(false);
 		DataReduction.normalizationTextBoxLabel.setEnabled(false);
-		DataReduction.normalizationTextField.setBackground(Color.WHITE);
+		DataReduction.normalizationTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_FULL);
 		CheckDataReductionButtonValidation.bNormalizationSwitch = false;
 	   	DataReduction.extraPlotsNRCheckBox.setEnabled(false);
 	}

@@ -377,6 +377,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  
 	    //NeXus not found yet
 	    IONfoundNexus = new IONVariable((int)0);  
+	    
+	    
   }
   
   /*
@@ -697,6 +699,26 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		}
 	}
 	
+	if ("wavelengthMinTextField".equals(evt.getActionCommand())) {
+		WavelengthAction.validatingWavelengthMinText();
+	}
+	
+	if ("wavelengthMaxTextField".equals(evt.getActionCommand())) {
+		WavelengthAction.validatingWavelengthMaxText();
+	}
+	
+	if ("wavelengthWidthTextField".equals(evt.getActionCommand())) {
+		WavelengthAction.validatingWavelengthWidthText();
+	}
+	
+	if ("detectorAngleTextField".equals(evt.getActionCommand())) {
+		DetectorAngleAction.validatingDetectorAngleText();
+	}
+	
+	if ("detectorAnglePMTextField".equals(evt.getActionCommand())) {
+		DetectorAngleAction.validatingDetectorAnglePMText();
+	}
+	
 	if ("yesNormalization".equals(evt.getActionCommand())) {
 	  	NormalizationAction.yesNormalization();
 	}
@@ -844,6 +866,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  	c_plot_REFM.setVisible(false);
 	  	c_plot = c_plot_REFL;
 	  	initializeParameters();
+	  	UpdateMainGUI.prepareGUI();
 	}
 
 	if ("instrumentREFM".equals(evt.getActionCommand())) {
@@ -853,6 +876,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  	c_plot_REFM.setVisible(true);
 	  	c_plot = c_plot_REFM;
 	  	initializeParameters();
+	  	UpdateMainGUI.prepareGUI();
 	}
 
 	if ("preferencesMenuItem".equals(evt.getActionCommand())) {
@@ -1364,6 +1388,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.signalSelectionModeMenuItem.addActionListener(this);
     	DataReduction.background1SelectionModeMenuItem.addActionListener(this);
     	DataReduction.background2SelectionModeMenuItem.addActionListener(this);
+    	DataReduction.wavelengthMinTextField.addActionListener(this);
+    	DataReduction.wavelengthMaxTextField.addActionListener(this);
+    	DataReduction.wavelengthWidthTextField.addActionListener(this);
+    	DataReduction.detectorAngleTextField.addActionListener(this);
+    	DataReduction.detectorAnglePMTextField.addActionListener(this);
     	
     	//from Data Reduction plot tab
     	DataReduction.yMaxTextField.addActionListener(this);

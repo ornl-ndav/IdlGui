@@ -2,9 +2,11 @@ package gov.ornl.sns.iontools;
 
 import javax.swing.*;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
+
 
 public class CreateDataReductionInputGUI {
 
@@ -101,7 +103,27 @@ public class CreateDataReductionInputGUI {
 	DataReduction.wavelengthPanel.add(DataReduction.wavelengthAngstromsLabel);
 		
 	//Detector Angle (for REF_M only)
+	DataReduction.detectorAngleLabel = new JLabel("Detector Angle:      ");
+	DataReduction.detectorAngleTextField = new JTextField(7);
+	DataReduction.detectorAngleTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+	DataReduction.detectorAngleTextField.setEditable(true);
+	DataReduction.detectorAngleTextField.setActionCommand("detectorAngleTextField");
 	
+	DataReduction.detectorAnglePMLabel = new JLabel("+/- ");
+	DataReduction.detectorAnglePMTextField = new JTextField(7);
+	DataReduction.detectorAnglePMTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+	DataReduction.detectorAnglePMTextField.setEditable(true);
+	DataReduction.detectorAnglePMTextField.setActionCommand("detectorAnglePMTextField");
+	
+	String[] angleUnitsStrings = {"radians","degres"};
+    DataReduction.detectorAngleUnuitsComboBox = new JComboBox(angleUnitsStrings);
+		
+	DataReduction.detectorAnglePanel.add(DataReduction.detectorAngleLabel);
+	DataReduction.detectorAnglePanel.add(DataReduction.detectorAngleTextField);
+	DataReduction.detectorAnglePanel.add(DataReduction.detectorAnglePMLabel);
+	DataReduction.detectorAnglePanel.add(DataReduction.detectorAnglePMTextField);
+	DataReduction.detectorAnglePanel.add(Box.createRigidArea(new Dimension(39,0)));
+	DataReduction.detectorAnglePanel.add(DataReduction.detectorAngleUnuitsComboBox);
 	
 	//normalization radio button
 	DataReduction.normalizationLabel = new JLabel(" Normalization: ");
@@ -319,6 +341,7 @@ public class CreateDataReductionInputGUI {
 	DataReduction.panela.setLayout(new BoxLayout(DataReduction.panela,BoxLayout.PAGE_AXIS));
 	DataReduction.panela.add(DataReduction.signalBackgroundPanel);
 	DataReduction.panela.add(DataReduction.wavelengthPanel);
+	DataReduction.panela.add(DataReduction.detectorAnglePanel);
 	DataReduction.panela.add(DataReduction.normalizationPanel);
 	DataReduction.panela.add(DataReduction.backgroundPanel);
 	DataReduction.panela.add(DataReduction.normBackgroundPanel);
@@ -328,6 +351,9 @@ public class CreateDataReductionInputGUI {
 	DataReduction.panela.add(DataReduction.runsTabbedPane);
 	DataReduction.panela.add(DataReduction.startDataReductionPanel);
 	DataReduction.panela.add(DataReduction.scrollPane);
+	
+	DataReduction.wavelengthPanel.setVisible(false);
+	DataReduction.detectorAnglePanel.setVisible(false);
 
 	}
 }
