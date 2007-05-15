@@ -158,11 +158,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel          	backgroundPidPanel;
     static JPanel          	normalizationTextBoxPanel;
     static JPanel          	runsSequencePanel;
-    static JPanel           displayModePanel;                //loadct list
+    static JPanel           displayModePanel;           
     static JPanel           loadctPanel;
     static JPanel           extraPlotSettingsPanel;
     static JPanel           savingParametersSettingsPanel;
-        
+    static JPanel           wavelengthPanel;
+    static JPanel           detectorAnglePanel;
+    
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
     static JTabbedPane      dataReductionTabbedPane;
@@ -255,6 +257,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel          	instrumentGeometryLabel;
     static JLabel          	intermediateLabel;
     static JLabel          	combineSpectrumLabel;
+    static JLabel           wavelengthLabel;
+    static JLabel           wavelengthMinLabel;
+    static JLabel           wavelengthMaxLabel;
+    static JLabel           wavelengthWidthLabel;
+    static JLabel           wavelengthAngstromsLabel;
+    static JLabel           detectorAngleLabel;
+    static JLabel           detectorAnglePMLabel;
     
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;
@@ -271,6 +280,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       runsAddTextField;
     static JTextField       runsSequenceTextField;
     static JTextField       instrumentGeometryTextField;
+    static JTextField       wavelengthMinTextField;
+    static JTextField       wavelengthMaxTextField;
+    static JTextField       wavelengthWidthTextField;
+    static JTextField       detectorAngleTextField;
+    static JTextField       detectorAnglePMTextField;
     
     static JTextArea        generalInfoTextArea;
     static JTextArea        signalSelectionTextArea;
@@ -306,6 +320,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JComboBox        linLogComboBoxYEP;
     static JComboBox       	instrList;
     static JComboBox        loadctComboBox;
+    static JComboBox        detectorAngleUnuitsComboBox;
     
 // ******************************
 // Init Method

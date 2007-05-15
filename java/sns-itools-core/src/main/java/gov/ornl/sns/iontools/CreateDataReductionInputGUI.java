@@ -18,6 +18,8 @@ public class CreateDataReductionInputGUI {
 
 	DataReduction.signalPidPanel = new JPanel();
 	DataReduction.backgroundPidPanel = new JPanel();
+	DataReduction.wavelengthPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
+	DataReduction.detectorAnglePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 	DataReduction.normalizationPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 	DataReduction.backgroundPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 	DataReduction.normBackgroundPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -66,6 +68,41 @@ public class CreateDataReductionInputGUI {
 	DataReduction.signalBackgroundPanel.add(DataReduction.textFieldSignalBackgroundPanel,BorderLayout.CENTER);
 	DataReduction.signalBackgroundPanel.add(DataReduction.clearSelectionPanel,BorderLayout.LINE_END);
 	
+	//Wavelength (for REF_M only)
+	DataReduction.wavelengthLabel = new JLabel("Wavelength:   ");
+	
+	DataReduction.wavelengthMinLabel = new JLabel("Min ");
+	DataReduction.wavelengthMinTextField = new JTextField(7);
+	DataReduction.wavelengthMinTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+	DataReduction.wavelengthMinTextField.setEditable(true);
+	DataReduction.wavelengthMinTextField.setActionCommand("wavelengthMinTextField");
+	
+	DataReduction.wavelengthMaxLabel = new JLabel("Max ");
+	DataReduction.wavelengthMaxTextField = new JTextField(7);
+	DataReduction.wavelengthMaxTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+	DataReduction.wavelengthMaxTextField.setEditable(true);
+	DataReduction.wavelengthMaxTextField.setActionCommand("wavelengthMaxTextField");
+	
+	DataReduction.wavelengthWidthLabel = new JLabel("Width ");
+	DataReduction.wavelengthWidthTextField = new JTextField(7);
+	DataReduction.wavelengthWidthTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+	DataReduction.wavelengthWidthTextField.setEditable(true);
+	DataReduction.wavelengthWidthTextField.setActionCommand("wavelengthWidthTextField");
+	
+	DataReduction.wavelengthAngstromsLabel = new JLabel("Angstroms");
+	
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthLabel);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthMinLabel);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthMinTextField);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthMaxLabel);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthMaxTextField);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthWidthLabel);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthWidthTextField);
+	DataReduction.wavelengthPanel.add(DataReduction.wavelengthAngstromsLabel);
+		
+	//Detector Angle (for REF_M only)
+	
+	
 	//normalization radio button
 	DataReduction.normalizationLabel = new JLabel(" Normalization: ");
 		
@@ -85,7 +122,7 @@ public class CreateDataReductionInputGUI {
 	DataReduction.normalizationTextBoxPanel = new JPanel();
 	DataReduction.normalizationTextBoxLabel = new JLabel("Run number: ");
 	DataReduction.normalizationTextField = new JTextField(15);
-	DataReduction.normalizationTextField.setBackground(Color.RED);
+	DataReduction.normalizationTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
 	DataReduction.normalizationTextField.setActionCommand("normalizationTextField");
 	DataReduction.normalizationTextField.setEditable(true);
 	DataReduction.normalizationTextBoxPanel.add(DataReduction.normalizationTextBoxLabel);
@@ -281,6 +318,7 @@ public class CreateDataReductionInputGUI {
 	DataReduction.panela = new JPanel();                           
 	DataReduction.panela.setLayout(new BoxLayout(DataReduction.panela,BoxLayout.PAGE_AXIS));
 	DataReduction.panela.add(DataReduction.signalBackgroundPanel);
+	DataReduction.panela.add(DataReduction.wavelengthPanel);
 	DataReduction.panela.add(DataReduction.normalizationPanel);
 	DataReduction.panela.add(DataReduction.backgroundPanel);
 	DataReduction.panela.add(DataReduction.normBackgroundPanel);
