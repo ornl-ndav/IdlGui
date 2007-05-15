@@ -144,10 +144,10 @@ public interface IParameters {
 	    //REF_M
 	    static final int NxRefm                 = 304;
 	    static final int NxRefmMin              = 0;
-	    static final int NxRefmMax              = (303-255);
+	    static final int NxRefmMax              = 304;
 	    static final int NyRefm                 = 256;
 	    static final int NyRefmMin              = 0;
-	    static final int NyRefmMax              = (303-255);
+	    static final int NyRefmMax              = 256;
 
 	    static final String SIGNAL_STRING          = "signal";
 	    static final String BACK1_STRING           = "back1";
