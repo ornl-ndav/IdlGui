@@ -99,6 +99,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     //ION
     static IONGrConnection  c_ionCon;
+    static IONJGrDrawable   c_plot_REFL;
+    static IONJGrDrawable   c_plot_REFM;
     static IONJGrDrawable   c_plot;
     static IONJGrDrawable   c_dataReductionPlot;	     //data reduction plot    
     static IONJGrDrawable   c_SRextraPlots;              //Signal Region summed vs TOF drawing window
@@ -334,7 +336,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       try {
 	  java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
 	  hostname = localMachine.getHostName();
-	  
       }
       catch (java.net.UnknownHostException uhe)
 	  {
@@ -451,11 +452,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     c_ionCon.debugMode(false);
 
     // add mouse listener
-    c_plot.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
+    c_plot_REFL.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
+    c_plot_REFM.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
     c_dataReductionPlot.addIONMouseListener(this, IONMouseListener.ION_MOUSE_DOWN);
 
     // Add the drawables to the connection
-    c_ionCon.addDrawable(c_plot);
+    c_ionCon.addDrawable(c_plot_REFL);
+    c_ionCon.addDrawable(c_plot_REFM);
     c_ionCon.addDrawable(c_dataReductionPlot);
     c_ionCon.addDrawable(c_SRextraPlots);
     c_ionCon.addDrawable(c_BSextraPlots);
@@ -498,7 +501,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  }
 
 	  c_xval1 = (int) X / 2;
-	  c_yval1 = (int) (607-Y)/2;
+	  c_yval1 = (int) ((NyMax*2-1)-Y)/2;
 	  
 	  c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_ANY);
       }
@@ -518,7 +521,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    if (Y > 2*NyMax) {Y = 2*Ny-1;};
 	    
 	    c_xval2 = (int) X/2;
-	    c_yval2 = (int) (607-Y)/2;
+	    c_yval2 = (int) ((NyMax*2-1)-Y)/2;
 
 	    if (mask == 1) { //left click
 	    	if (modeSelected.compareTo("signalSelection") == 0) {
@@ -623,8 +626,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
    	CheckGUI.populateCheckDataReductionButtonValidationParameters();
    	CheckGUI.populateCheckDataReductionPlotParameters();
    	liveParameters = new GuiLiveParameters();
-   	
-   	
+   	   	
    	if (IParameters.DEBUG) {DebuggingTools.displayData();}
    	   	
    	if ("loadctComboBox".equals(evt.getActionCommand())) {
@@ -744,17 +746,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("instrumentGeometryButton".equals(evt.getActionCommand())) {
-		Graphics g = c_plot.getGraphics();
-		c_plot.update(g);
-		c_x1 = MouseSelectionParameters.signal_x1;
-		c_y1 = MouseSelectionParameters.signal_y1;
-		c_x2 = MouseSelectionParameters.signal_x2;
-		c_y2 = MouseSelectionParameters.signal_y2;
-		g.setColor(Color.red);
-		g.drawLine(c_x1,c_y1,c_x1,c_y2);
-		g.drawLine(c_x1,c_y2,c_x2,c_y2);
-		g.drawLine(c_x2,c_y2,c_x2,c_y1);
-		g.drawLine(c_x2,c_y1,c_x1,c_y1);
 	}
 
 	if ("instrumentGeometryTextField".equals(evt.getActionCommand())) {
@@ -834,11 +825,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	if ("instrumentREFL".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(0);
 	  	instrument = IParameters.REF_L;
+	  	c_plot_REFL.setVisible(true);
+	  	c_plot_REFM.setVisible(false);
+	  	c_plot = c_plot_REFL;
+	  	initializeParameters();
 	}
 
 	if ("instrumentREFM".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(1);
 	   	instrument = IParameters.REF_M;
+	   	c_plot_REFL.setVisible(false);
+	  	c_plot_REFM.setVisible(true);
+	  	c_plot = c_plot_REFM;
+	  	initializeParameters();
 	}
 
 	if ("preferencesMenuItem".equals(evt.getActionCommand())) {
@@ -890,7 +889,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			
 			c_ionCon.setDrawable(c_plot);
 	    		    	
-						String cmd = "result = plot_data( " + runNumberValue + ", " + 
+			String cmd = "result = plot_data( " + runNumberValue + ", " + 
 			ionInstrument + ", " + user + "," + ionLoadct + ")";
 			showStatus("Processing...");
 			executeCmd(cmd);
@@ -954,9 +953,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("replotSelectionButton".equals(evt.getActionCommand())) {
-		//doBox();
-		buildGUI();
-			}
+		doBox();
+	}
 	
     }   
   
@@ -987,9 +985,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //create top left panel (logo + run number)
 	    createRunNumberPanel();
 
-	    c_plot = new IONJGrDrawable(Nx*2, Ny*2);
+	    c_plot_REFL = new IONJGrDrawable(Nx*2, Ny*2);
+	    c_plot_REFL.setVisible(true);
+	    c_plot_REFM = new IONJGrDrawable(Ny*2,Nx*2);
+	    c_plot_REFM.setVisible(false);
 	    
-	    plotPanel.add(c_plot,BorderLayout.NORTH);
+	    c_plot = c_plot_REFL;
+	    
+	    plotPanel.add(c_plot_REFL,BorderLayout.NORTH);
+	    plotPanel.add(c_plot_REFM);
 	    leftPanel.add(topPanel,BorderLayout.NORTH);
 	    leftPanel.add(plotPanel,BorderLayout.SOUTH);
 	    
@@ -1011,8 +1015,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //Extra plots tab (inside data reduction tab)
 	    CreateExtraPlotPanel.buildGUI();
 	    dataReductionTabbedPane.addTab("Extra Plots", extraPlotsPanel);
-	    
-	    
+	    	    
 	    tabbedPane.addTab("Data Reduction",dataReductionTabbedPane);
 
 	    //second main tab (selection)
