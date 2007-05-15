@@ -12,12 +12,14 @@ public class UpdateMainGUI {
 			//disable wavelength and detector angle panels
 			DataReduction.wavelengthPanel.setVisible(false);
 			DataReduction.detectorAnglePanel.setVisible(false);
-			
+			DataReduction.extraPlotsSRBCheckBox.setEnabled(true);
+						
 		} else { //REF_M
 			
 			//enable wavelength and detector angle panels
 			DataReduction.wavelengthPanel.setVisible(true);
 			DataReduction.detectorAnglePanel.setVisible(true);
+			DataReduction.extraPlotsSRBCheckBox.setEnabled(false);
 			
 		}
 	}
