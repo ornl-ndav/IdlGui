@@ -30,8 +30,7 @@ public class SettingsPanel {
 	
 	
 	public static void buildSettingsExtraPlotPanel() {
-		
-						
+							
 		DataReduction.extraPlotSettingsPanel = new JPanel();   	// extra plots panel
 		DataReduction.extraPlotSettingsPanel.setLayout(new GridLayout(0,1));
 		DataReduction.extraPlotSettingsPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -50,31 +49,31 @@ public class SettingsPanel {
 		// ** list of plots available **
 		// signal region summed vs TOF
 		DataReduction.extraPlotsSRCheckBox = new JCheckBox("Signal Region summed vs TOF");
-		DataReduction.extraPlotsSRCheckBox.setSelected(true);
+		DataReduction.extraPlotsSRCheckBox.setSelected(IParameters.YES_INTERMEDIATE_SR);
 		DataReduction.extraPlotsSRCheckBox.setActionCommand("extraPlotsSRCheckBox");
 		DataReduction.extraPlotSettingsPanel.add(DataReduction.extraPlotsSRCheckBox);
 		
 		// background summed vs tof
 		DataReduction.extraPlotsBSCheckBox = new JCheckBox("Background summed vs TOF");
-		DataReduction.extraPlotsBSCheckBox.setSelected(true);
+		DataReduction.extraPlotsBSCheckBox.setSelected(IParameters.YES_INTERMEDIATE_BS);
 		DataReduction.extraPlotsBSCheckBox.setActionCommand("extraPlotsBSCheckBox");
 		DataReduction.extraPlotSettingsPanel.add(DataReduction.extraPlotsBSCheckBox);
 
 		// signal region with background vs TOF
 		DataReduction.extraPlotsSRBCheckBox = new JCheckBox("Signal region with background summed vs TOF");
-		DataReduction.extraPlotsSRBCheckBox.setSelected(true);
+		DataReduction.extraPlotsSRBCheckBox.setSelected(IParameters.YES_INTERMEDIATE_SRB);
 		DataReduction.extraPlotsSRBCheckBox.setActionCommand("extraPlotsSRBCheckBox");
 		DataReduction.extraPlotSettingsPanel.add(DataReduction.extraPlotsSRBCheckBox);
 
 		// normalization region summed vs TOF
 		DataReduction.extraPlotsNRCheckBox = new JCheckBox("Normalization region summed vs TOF");
-		DataReduction.extraPlotsNRCheckBox.setSelected(true);
+		DataReduction.extraPlotsNRCheckBox.setSelected(IParameters.YES_INTERMEDIATE_NR);
 		DataReduction.extraPlotsNRCheckBox.setActionCommand("extraPlotsNRCheckBox");
 		DataReduction.extraPlotSettingsPanel.add(DataReduction.extraPlotsNRCheckBox);
 
 		// Background region from normalization summed TOF
 		DataReduction.extraPlotsBRNCheckBox = new JCheckBox("Background region from normalization summed vs TOF");
-		DataReduction.extraPlotsBRNCheckBox.setSelected(true);
+		DataReduction.extraPlotsBRNCheckBox.setSelected(IParameters.YES_INTERMEDIATE_BRN);
 		DataReduction.extraPlotsBRNCheckBox.setActionCommand("extraPlotsBRNCheckBox");
 		DataReduction.extraPlotSettingsPanel.add(DataReduction.extraPlotsBRNCheckBox);
 		
