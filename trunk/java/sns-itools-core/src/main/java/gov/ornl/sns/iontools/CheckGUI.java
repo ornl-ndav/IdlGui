@@ -4,17 +4,42 @@ public class CheckGUI {
 
 	  static void populateCheckDataReductionButtonValidationParameters() {
 	    	
-		  	CheckDataReductionButtonValidation.sRunNumber = DataReduction.runNumberTextField.getText();
-	    	CheckDataReductionButtonValidation.sNormalizationRunNumber = DataReduction.normalizationTextField.getText(); 	    	
-	    	CheckDataReductionButtonValidation.sAddNexusAndGoString = DataReduction.runsAddTextField.getText();     
-	    	CheckDataReductionButtonValidation.sGoSequentiallyString = DataReduction.runsSequenceTextField.getText();    	
-	    	CheckDataReductionButtonValidation.sInstrumentGeometry = DataReduction.instrumentGeometryTextField.getText();
-	    	CheckDataReductionButtonValidation.sInstrument = DataReduction.instrument;   	
-	    	
+		  	CheckDataReductionButtonValidation.sRunNumber = 
+		  		DataReduction.runNumberTextField.getText();
+	    	CheckDataReductionButtonValidation.sNormalizationRunNumber = 
+	    		DataReduction.normalizationTextField.getText(); 	    	
+	    	CheckDataReductionButtonValidation.sAddNexusAndGoString = 
+	    		DataReduction.runsAddTextField.getText();     
+	    	CheckDataReductionButtonValidation.sGoSequentiallyString = 
+	    		DataReduction.runsSequenceTextField.getText();    	
+	    	CheckDataReductionButtonValidation.sInstrumentGeometry = 
+	    		DataReduction.instrumentGeometryTextField.getText();
+	    	CheckDataReductionButtonValidation.sInstrument = 
+	    		DataReduction.instrument;   	
+	    	CheckDataReductionButtonValidation.sWavelengthMin = 
+	    		DataReduction.wavelengthMaxTextField.getText();
+	    	CheckDataReductionButtonValidation.sWavelengthMax = 
+	    		DataReduction.wavelengthMaxTextField.getText();
+	    	CheckDataReductionButtonValidation.sWavelengthWidth = 
+	    		DataReduction.wavelengthWidthTextField.getText();
+	    	CheckDataReductionButtonValidation.sDetectorAngle =
+	    		DataReduction.detectorAngleTextField.getText();
+	    	CheckDataReductionButtonValidation.sDetectorAnglePM =
+	    		DataReduction.detectorAnglePMTextField.getText();
+	    		    	
 	    	if (DataReduction.runsTabbedPane.getSelectedIndex() == 0) {
 	    		CheckDataReductionButtonValidation.bAddNexusAndGo = true;
 	    	} else {
 	    		CheckDataReductionButtonValidation.bAddNexusAndGo = false;
+	    	}
+	    	
+	    	//for REF_M only
+	    	if (DataReduction.instrument.compareTo(IParameters.REF_M)==0) {
+	    		DetectorAngleAction.validatingDetectorAngleText();
+	    		DetectorAngleAction.validatingDetectorAnglePMText();
+	    		WavelengthAction.validatingWavelengthMinText();
+	    		WavelengthAction.validatingWavelengthMaxText();
+	    		WavelengthAction.validatingWavelengthWidthText();
 	    	}
 	    	
 	    }
