@@ -26,15 +26,20 @@ package gov.ornl.sns.iontools;
 
 public class CheckDataReductionButtonValidation {
 
-	private static boolean bValidateGoDataReductionButton = true;	
+	private final static boolean bValidateGoDataReductionButton = true;	
 	
     //status of DataReduction tab widgets
-    static String sInstrument = "";
-	static String sSignalPidFile = "";
-    static String sBackPidFile = "";
-	static String sRunNumber = "";
+    static String  sInstrument = "";
+	static String  sSignalPidFile = "";
+    static String  sBackPidFile = "";
+	static String  sRunNumber = "";
 	static boolean bSignalPidFileSaved = false;
     static boolean bBackPidFileSaved = false; 	
+    static String  sWavelengthMin = "";
+    static String  sWavelengthMax = "";
+    static String  sWavelengthWidth = "";
+    static String  sDetectorAngle = "";
+    static String  sDetectorAnglePM = "";
     static boolean bNormalizationSwitch = true;   
     static String  sNormalizationRunNumber = "";
     static boolean bBackgroundSwitch = true;
@@ -48,17 +53,6 @@ public class CheckDataReductionButtonValidation {
     
 	static boolean checkDataReductionButtonStatus() {
 
-//		System.out.println("in checkDataReductionButtonStatus()");
-//		System.out.println("sSignaPidFile: " + sSignalPidFile);
-//		System.out.println("bSignalPidFileSaved: " + bSignalPidFileSaved);
-//		System.out.println("bBackPidFileSaved: " + bBackPidFileSaved);
-//		System.out.println("bNormalizationSwitch: " + bNormalizationSwitch);
-//		System.out.println("sNormalizationRunNumber: " + sNormalizationRunNumber);
-//		System.out.println("bOverwriteInstrumentGeometry: " + bOverwriteInstrumentGeometry);
-//		System.out.println("sInstrumentGeometry: " + sInstrumentGeometry);
-//		System.out.println("bAddNexusAndGo: " + bAddNexusAndGo);
-//		System.out.println("sAddNexusAndGoString: " + sAddNexusAndGoString);
-
 		if (sRunNumber.compareTo("") == 0) {return false;}
 		if (!bSignalPidFileSaved) {return false;}  //no signal pid file has been saved, we can leave now
 		if (!bBackPidFileSaved) {return false;}    //no back pid file has been saved, we can leave now
@@ -70,9 +64,31 @@ public class CheckDataReductionButtonValidation {
 			if (sAddNexusAndGoString.compareTo("") == 0) {return false;}
 		} else {
 			if (sGoSequentiallyString.compareTo("") == 0) {return false;}
+			//only for REF_M
 		}
-		
+		if (sInstrument.compareTo(IParameters.REF_M)==0) {
+			if (sWavelengthMin.compareTo("") == 0 ||
+			    sWavelengthMax.compareTo("") == 0 ||
+			    sWavelengthWidth.compareTo("") == 0) {return false;}
+			if (sDetectorAngle.compareTo("") == 0 ||
+				sDetectorAnglePM.compareTo("") == 0) { return false;}
+		}	 
 		return bValidateGoDataReductionButton ;
 	}
 
+	static void outputData() {
+
+		System.out.println("in checkDataReductionButtonStatus()");
+		System.out.println("sSignaPidFile: " + sSignalPidFile);
+		System.out.println("bSignalPidFileSaved: " + bSignalPidFileSaved);
+		System.out.println("bBackPidFileSaved: " + bBackPidFileSaved);
+		System.out.println("bNormalizationSwitch: " + bNormalizationSwitch);
+		System.out.println("sNormalizationRunNumber: " + sNormalizationRunNumber);
+		System.out.println("bOverwriteInstrumentGeometry: " + bOverwriteInstrumentGeometry);
+		System.out.println("sInstrumentGeometry: " + sInstrumentGeometry);
+		System.out.println("bAddNexusAndGo: " + bAddNexusAndGo);
+		System.out.println("sAddNexusAndGoString: " + sAddNexusAndGoString);
+
+	}
+	
 }

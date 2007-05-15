@@ -640,7 +640,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     public void actionPerformed(ActionEvent evt){
 	    	
     //fill up all widgets parameters each time an action is done
-   	CheckGUI.populateCheckDataReductionButtonValidationParameters();
+    CheckGUI.populateCheckDataReductionButtonValidationParameters();	
    	CheckGUI.populateCheckDataReductionPlotParameters();
    	liveParameters = new GuiLiveParameters();
    	   	
@@ -862,6 +862,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	if ("instrumentREFL".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(0);
 	  	instrument = IParameters.REF_L;
+	  	CheckGUI.populateCheckDataReductionButtonValidationParameters();
 	  	c_plot_REFL.setVisible(true);
 	  	c_plot_REFM.setVisible(false);
 	  	c_plot = c_plot_REFL;
@@ -872,6 +873,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	if ("instrumentREFM".equals(evt.getActionCommand())) {
 	   	displayInstrumentLogo(1);
 	   	instrument = IParameters.REF_M;
+	   	CheckGUI.populateCheckDataReductionButtonValidationParameters();
 	   	c_plot_REFL.setVisible(false);
 	  	c_plot_REFM.setVisible(true);
 	  	c_plot = c_plot_REFM;
@@ -994,6 +996,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	if ("replotSelectionButton".equals(evt.getActionCommand())) {
 		doBox();
 	}
+
+	
 	
     }   
   
