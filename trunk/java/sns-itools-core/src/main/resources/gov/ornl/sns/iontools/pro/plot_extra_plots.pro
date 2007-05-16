@@ -12,6 +12,10 @@ end
 
 
 FUNCTION PLOT_EXTRA_PLOTS, instrument, run_number, output_path, extension, title
+
+print, 'title: ' + title
+print, 'extension: ' + extension
+
 output_file_name = find_output_file_name(instrument, $
                                          run_number, $
                                          output_path, $

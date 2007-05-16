@@ -249,8 +249,6 @@ end
 
 function PLOT_FIRST_TIME_DATA_REDUCTION, output_file_name, Ntof, Y12, ymin
 
-;tvscl_x_off = 57
-;tvscl_y_off = 25
 tvscl_x_off = 0
 tvscl_y_off = 0
 
@@ -330,6 +328,9 @@ tvscl_y_off = 0
     flt1 = flt1[1:*]
     flt2 = flt2[1:*]
         
+
+help, flt0
+
 ;x_axis
     x_axis=flt0[sort(flt0[0:(Ntof-1)])]
     tvscl_x_axis = lindgen(float(x_axis[Ntof-1]))
@@ -490,7 +491,7 @@ for i=0,(cmd_size-1) do begin
 endfor
 
 cd, outputPath
-cmdLocal = "srun " + cmdLocal
+;cmdLocal = "srun " + cmdLocal
 spawn, cmdLocal, listening
 
 output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath)
