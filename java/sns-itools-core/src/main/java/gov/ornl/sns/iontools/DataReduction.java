@@ -619,8 +619,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	dataReductionTabbedPane.setSelectedIndex(0);
 	    	tabbedPane.setSelectedIndex(1);
 	    	selectionTab.setSelectedIndex(3);
-    		TabUtils.addForegroundColor(tabbedPane,1);
-    		TabUtils.addForegroundColor(selectionTab, 3);
+    		//TabUtils.addForegroundColor(tabbedPane,1);
+    		//TabUtils.addForegroundColor(selectionTab, 3);
 	    }
 	    	
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
@@ -770,8 +770,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 
 	if ("noCombineSpectrum".equals(evt.getActionCommand())) {
-	   	CheckDataReductionButtonValidation.bCombineDataSpectrum = false;
-	   	CheckGUI.disableDataReductionPlotXAxis();
+	   	if (DataReduction.instrument.compareTo(IParameters.REF_M)==0) { //REF_M
+	   		DataReduction.yesCombineSpectrumRadioButton.setSelected(true);
+	   	} else {
+	   		CheckDataReductionButtonValidation.bCombineDataSpectrum = false;
+	   	}
+		CheckGUI.disableDataReductionPlotXAxis();
 	}
 	    
 	if ("yesInstrumentGeometry".equals(evt.getActionCommand())) {
@@ -791,7 +795,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	if ("startDataReductionButton".equals(evt.getActionCommand())) {
 	    	
-		String cmd_local = RunRefDataReduction.createDataReductionCmd();
+		String cmd_local = CreateCmdAndRunDataReduction.createDataReductionCmd();
 	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    
 	  	c_ionCon.setDrawable(c_dataReductionPlot);
@@ -1318,7 +1322,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    c.gridheight=1;
 	    gridbag.setConstraints(runNumberTextField,c);
 
-	    replotSelectionButton = new JButton("<html><b>Replot<br>Selection</b></html>");
+	    replotSelectionButton = new JButton("<html><font size=2>Replot Selection</html>");
 	    replotSelectionButton.setPreferredSize(new Dimension(90,30));
 	    replotSelectionButton.setActionCommand("replotSelectionButton");
 	    replotSelectionButton.addActionListener(this);

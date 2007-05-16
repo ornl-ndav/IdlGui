@@ -24,29 +24,40 @@
  */
 package gov.ornl.sns.iontools;
 
-public class RunRefDataReduction {
+public class CreateCmdAndRunDataReduction {
 
 	//retrieve all parameters
-   static String sSignalPidFileName;
-   static String sBackPidFileName;
+   static String  sSignalPidFileName;
+   static String  sBackPidFileName;
+   static String  sWavelengthMin;
+   static String  sWavelengthMax;
+   static String  sWavelengthWidth;
+   static String  sDetectorAngle;
+   static String  sDetectorAnglePM;
+   static boolean bDetectorAngleRadians;
    static boolean bNormalization;
-   static String sNormalization;
+   static String  sNormalization;
    static boolean bBackground;
    static boolean bNormalizationBackground;
    static boolean bIntermediateFileOutput;
    static boolean bCombineDataSpectrum;
    static boolean bOverwriteInstrumentGeometry;
-   static String sInstrumentGeometry;
+   static String  sInstrumentGeometry;
    static boolean bAddNexusAndGo;
-   static String sRunsNumber;
-   static String sInstrument;
-   static String cmd = "";
-   static String sDataReductionCmd = "";
+   static String  sRunsNumber;
+   static String  sInstrument;
+   static String  cmd = "";
+   static String  sDataReductionCmd = "";
    
    static void reinitializeLocalVariables() {
 	   
 	   sSignalPidFileName = DataReduction.liveParameters.getSignalPidFile();
 	   sBackPidFileName = DataReduction.liveParameters.getBackPidFile();
+	   sWavelengthMin = DataReduction.liveParameters.getWavelengthMin();
+	   sWavelengthMax = DataReduction.liveParameters.getWavelengthMax(); 
+	   sWavelengthWidth = DataReduction.liveParameters.getWavelengthWidth();
+	   sDetectorAngle = DataReduction.liveParameters.getDetectorAngle();
+	   sDetectorAnglePM = DataReduction.liveParameters.getDetectorAnglePM();
 	   bNormalization = DataReduction.liveParameters.isNormalizationSwitch();
 	   sNormalization = DataReduction.liveParameters.getNormalizationRunNumber();
 	   bBackground = DataReduction.liveParameters.isBackgroundSwitch();
@@ -56,11 +67,7 @@ public class RunRefDataReduction {
 	   bOverwriteInstrumentGeometry = DataReduction.liveParameters.isOverwriteInstrumentGeometry();
 	   sInstrumentGeometry = DataReduction.liveParameters.getInstrumentGeometry();
 	   bAddNexusAndGo = DataReduction.liveParameters.isAddNexusAndGo();
-	
 	   sInstrument = DataReduction.liveParameters.getInstrument();
-	   String cmd = "";
-	   String sDataReductionCmd = "";
-	   
    }
    
 	static String createDataReductionCmd () {
@@ -116,44 +123,76 @@ public class RunRefDataReduction {
 			cmd += " " + IParameters.NO_NORM_BKG;
 		}
 		
-		//list of intermediate plots
-	
 		return cmd;
 	}
 	
 
 	static String createReflGoSequentiallyDataReductionCmd() {
+	
+		return cmd;
+		}
+
+	
+	static String createRefmDataReductionCmd() {
+
+     	//Add nexus and go
+		if (bAddNexusAndGo) {
+			sRunsNumber = DataReduction.liveParameters.getAddNexusAndGoString();		
+			cmd = createRefmAddNexusDataReductionCmd();
+		} else { //Run Sequentially
+			sRunsNumber = DataReduction.liveParameters.getGoSequentiallyString();
+			cmd = createRefmGoSequentiallyDataReductionCmd();
+		}
+	
+		return cmd;
+	
+		}
+
+	
+	static String createRefmAddNexusDataReductionCmd() {
+		
+		cmd = IParameters.REF_M_DATA_REDUCTION_CMD ;
+		cmd += " " + sRunsNumber;
+		
+		if (bNormalization) {
+			cmd += " " + IParameters.NORMALIZATION_FLAG + sNormalization;
+		}
+		
+		if (bOverwriteInstrumentGeometry) {
+			cmd += " " + IParameters.INSTRUMENT_GEOMETRY_FLAG + sInstrumentGeometry; 
+		}
+		
+		/* not yet available
+		if (bCombineDataSpectrum) {
+			cmd += " " + IParameters.COMBINE_FLAG;
+		}
+		*/
+		
+		cmd += " " + IParameters.SIGNAL_ROI_FILE_FLAG + sSignalPidFileName;
+		cmd += " " + IParameters.BKG_ROI_FILE_FLAG + sBackPidFileName;
+		
+		if (!bBackground) {
+			cmd += " " + IParameters.NO_BKG_FLAG;
+		}
+		
+		if (!bNormalizationBackground) {
+			cmd += " " + IParameters.NO_NORM_BKG;
+		}
+		
+		cmd += " " + IParameters.WAVELENGTH_BINS_FLAG;
+		cmd += sWavelengthMin + "," + sWavelengthMax + "," + sWavelengthWidth;
+		
+		cmd += " " + IParameters.DET_ANGLE_FLAG;
+		cmd += sDetectorAngle + "," + sDetectorAnglePM;
+		
+		System.out.println("cmd: " + cmd);  //REMOVE_ME
 		
 		return cmd;
+	
 	}
-
-
-
-
-
-
-
-	static String createRefmDataReductionCmd() {
+	
+	static String createRefmGoSequentiallyDataReductionCmd() {
 		return cmd;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }

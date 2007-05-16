@@ -2,12 +2,18 @@ package gov.ornl.sns.iontools;
 
 public class GuiLiveParameters {
 
-	private String sInstrument;
-	private String sSignalPidFile;
-    private String sBackPidFile;
-	private String sRunNumber;
+	private String  sInstrument;
+	private String  sSignalPidFile;
+    private String  sBackPidFile;
+	private String  sRunNumber;
 	private boolean bSignalPidFileSaved;
-    private boolean bBackPidFileSaved; 	
+    private boolean bBackPidFileSaved;
+    private String  sWavelengthMin;
+    private String  sWavelengthMax;
+    private String  sWavelengthWidth;
+    private String  sDetectorAngle;
+    private String  sDetectorAnglePM;
+    private boolean bDetectorAngleRadians;
     private boolean bNormalizationSwitch;   
     private String  sNormalizationRunNumber;
     private boolean bBackgroundSwitch;
@@ -45,6 +51,23 @@ public class GuiLiveParameters {
 			bBackPidFileSaved = true;
 		} else {
 			bBackPidFileSaved = false;
+		}
+		
+		sWavelengthMin = DataReduction.wavelengthMinTextField.getText();
+		sWavelengthMax = DataReduction.wavelengthMaxTextField.getText();
+		sWavelengthWidth = DataReduction.wavelengthWidthTextField.getText();
+		
+		if (DataReduction.detectorAngleUnuitsComboBox.getSelectedIndex() == 0) {
+			bDetectorAngleRadians = true;
+		} else {
+			bDetectorAngleRadians = false;
+		}
+		
+		sDetectorAngle = DataReduction.detectorAngleTextField.getText();
+		sDetectorAnglePM = DataReduction.detectorAnglePMTextField.getText();
+		if (!bDetectorAngleRadians) { //degres
+			sDetectorAngle = UtilsFunction.convertDegresToRadians(sDetectorAngle);
+			sDetectorAnglePM = UtilsFunction.convertDegresToRadians(sDetectorAnglePM);
 		}
 		
 		if (DataReduction.yesNormalizationRadioButton.isSelected()) {
@@ -131,7 +154,8 @@ public class GuiLiveParameters {
     	sAddNexusAndGoString = DataReduction.runsAddTextField.getText();     
     	
     	sGoSequentiallyString = DataReduction.runsSequenceTextField.getText();    	
-    	
+    
+    	//outputData();
 	}
 	
 	public String getInstrument() {
@@ -156,6 +180,30 @@ public class GuiLiveParameters {
 	
 	public boolean isBackPidFileSaved() {
 		return bBackPidFileSaved;
+	}
+	
+	public String getWavelengthMin() {
+		return sWavelengthMin;
+	}
+	
+	public String getWavelengthMax() {
+		return sWavelengthMax;
+	}
+	
+	public String getWavelengthWidth() {
+		return sWavelengthWidth;
+	}
+	
+	public String getDetectorAngle() {
+		return sDetectorAngle;
+	}
+	
+	public String getDetectorAnglePM() {
+		return sDetectorAnglePM;
+	}
+	
+	public boolean isDetectorAngleRadians() {
+		return bDetectorAngleRadians;
 	}
 	
 	public boolean isNormalizationSwitch() {
@@ -222,4 +270,38 @@ public class GuiLiveParameters {
 		return sGoSequentiallyString;
 	}
 		
+	private void outputData() {
+	
+		System.out.println("****** GuiLiveParameters *******");
+		System.out.println("sInstrument: " + sInstrument);
+		System.out.println("sSignalPidFile: " + sSignalPidFile);
+		System.out.println("sBackPidFile: " + sBackPidFile);
+		System.out.println("sRunNumber: " + sRunNumber);
+		System.out.println("bSignalPidFileSaved: " + bSignalPidFileSaved);
+		System.out.println("bBackPidFileSaved: " + bBackPidFileSaved);
+		System.out.println("sWavelengthMin: " + sWavelengthMin);
+		System.out.println("sWavelengthMax: " + sWavelengthMax);
+		System.out.println("sWavelengthWidth: " + sWavelengthWidth);
+		System.out.println("sDetectorAngle: " + sDetectorAngle);
+		System.out.println("sDetectorAnglePM: " + sDetectorAnglePM);
+		System.out.println("bDetectorAngleRadians: " + bDetectorAngleRadians);
+		System.out.println("bNormalizationSwitch: " + bNormalizationSwitch);
+		System.out.println("sNormalizationRunNumber: " + sNormalizationRunNumber);
+		System.out.println("bBackgroundSwitch: " + bBackgroundSwitch);
+		System.out.println("bNormalizationBackgroundSwitch: " + bNormalizationBackgroundSwitch);
+		System.out.println("bIntermediatePlotsSwitch: " + bIntermediatePlotsSwitch);
+		System.out.println("bExtraPlotsSR: " + bExtraPlotsSR);
+		System.out.println("bExtraPlotsBS: " + bExtraPlotsBS);
+		System.out.println("bExtraPlotsSRB: " + bExtraPlotsSRB);
+		System.out.println("bExtraPlotsNR: " + bExtraPlotsNR);
+		System.out.println("bExtraPlotsBRN: " + bExtraPlotsBRN);
+		System.out.println("bCombineDataSpectrum: " + bCombineDataSpectrum);
+		System.out.println("bOverwriteInstrumentGeometry: " + bOverwriteInstrumentGeometry);
+		System.out.println("sInstrumentGeometry: " + sInstrumentGeometry);
+		System.out.println("bAddNexusAndGo: " + bAddNexusAndGo);
+		System.out.println("sAddNexusAndGoString: " + sAddNexusAndGoString);
+		System.out.println("sGoSequentiallyString: " + sGoSequentiallyString);
+		
+	}
+	
 }
