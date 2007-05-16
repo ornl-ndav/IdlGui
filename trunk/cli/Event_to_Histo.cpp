@@ -201,8 +201,8 @@ int32_t main(int32_t argc, char *argv[])
           time_t time_read_end; //REMOVE_ME
           time_read_end = time(NULL); //REMOVE_ME
 
-          printf("%ld seconds to read file\n",
-            (time_read_end-time_read_start)); //REMOVE_ME
+          printf("%ld seconds to read file, size=%d\n",
+            (time_read_end-time_read_start), file_size); //REMOVE_ME
 
           // now file_size is the number of element in the file
           size_t array_size = file_size / EventHisto::SIZEOF_UINT32_T;
@@ -386,6 +386,10 @@ int32_t main(int32_t argc, char *argv[])
 
           printf("%ld seconds to generate histogram\n",
             (time_histo_end-time_bin_end)); //REMOVE_ME
+
+          printf("(effective rate = %lf events per second)\n",
+            (double)file_size / (double)(time_histo_end-time_bin_end));
+            //REMOVE_ME
 
           if (debug || verbose)
             {
