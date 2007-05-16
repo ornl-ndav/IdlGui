@@ -673,14 +673,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		SaveBackgroundPidFileAction.clearBackgroundPidFileAction();
 		doBox();
 	}
-	
+		
 	if ("xValidateButton".equals(evt.getActionCommand()) ||
 		"yValidateButton".equals(evt.getActionCommand()) ||
 		"xMaxTextField".equals(evt.getActionCommand()) ||
 		"xMinTextField".equals(evt.getActionCommand()) ||
 		"yMaxTextField".equals(evt.getActionCommand()) ||
 		"yMinTextField".equals(evt.getActionCommand())) {
-		if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine plot
+		if (liveParameters.isCombineDataSpectrum()) { //combine plots
 			UpdateDataReductionPlotCombineInterface.validateDataReductionPlotCombineXYAxis();
 		} else { //uncombine plot
 			UpdateDataReductionPlotUncombineInterface.validateDataReductionPlotUncombineXYAxis();
@@ -692,7 +692,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	}
 	
 	if ("yResetButton".equals(evt.getActionCommand())) {
-		if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine plot
+		if (liveParameters.isCombineDataSpectrum()) { //combine plots
 			UpdateDataReductionPlotCombineInterface.resetDataReductionPlotCombineYAxis();
 		} else {
 			UpdateDataReductionPlotUncombineInterface.resetDataReductionPlotUncombineYAxis();
@@ -811,8 +811,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	
 	   	String cmd;
 	   	
-	   	if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
-	    
+	   	//if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
+	    if (liveParameters.isCombineDataSpectrum()) {
+	    	
 	   		cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
 	   		cmd += ionOutputPath + "," + ionRunNumberValue + "," + ionInstrument + ")";
 	   		
@@ -835,7 +836,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		   	ionYmin = new IONVariable(MouseSelectionParameters.signal_ymin);
 		   	
 		   	cmd = "array_result = run_data_reduction (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," ;
-	    	cmd += ionInstrument + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
+		   	cmd += ionInstrument + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
 	    	
 	    	showStatus("Processing...");
 		   	executeCmd(cmd);
@@ -849,13 +850,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	CheckGUI.populateCheckDataReductionPlotParameters(myResultArray);
 	    	UpdateDataReductionPlotUncombineInterface.updateDataReductionPlotGUI();
 	    }
-	    	    	
+	    
+	   	
 	   	//show data reductin plot tab
 	   	dataReductionTabbedPane.setSelectedIndex(1);
 	   	if (liveParameters.isIntermediatePlotsSwitch()) {  //we asked for intermediate plots
 	   		ExtraPlots.plotExtraPlots();
 	   	}
-
+	   		
 	}
 	    
 	//if one of the intermediate check box is check
@@ -870,8 +872,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  	c_plot_REFL.setVisible(true);
 	  	c_plot_REFM.setVisible(false);
 	  	c_plot = c_plot_REFL;
-	  	initializeParameters();
 	  	UpdateMainGUI.prepareGUI();
+	  	initializeParameters();
 	}
 
 	if ("instrumentREFM".equals(evt.getActionCommand())) {
@@ -881,8 +883,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	   	c_plot_REFL.setVisible(false);
 	  	c_plot_REFM.setVisible(true);
 	  	c_plot = c_plot_REFM;
-	  	initializeParameters();
 	  	UpdateMainGUI.prepareGUI();
+	  	initializeParameters();
 	}
 
 	if ("preferencesMenuItem".equals(evt.getActionCommand())) {
@@ -1001,7 +1003,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		doBox();
 	}
 
-	
+	liveParameters = new GuiLiveParameters();
 	
     }   
   

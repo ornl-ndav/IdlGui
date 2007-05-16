@@ -111,10 +111,11 @@ public class UpdateDataReductionPlotCombineInterface {
 		//instrument
 		ionInstrument = new IONVariable(DataReduction.instrument);
 		
-    	cmd = "plot_data_reduction_combine, " + ionInstrument + "," + ionRunNumber + "," + ionOutputPath + ",";
+		cmd = "plot_data_reduction_combine, " + ionInstrument + "," + ionRunNumber + "," + ionOutputPath + ",";
+    	    	
     	cmd += ionXScale + "," + ionXMin + "," + ionXMax + ",";
     	cmd += ionYScale + "," + ionYMin + "," + ionYMax;
-		
+		System.out.println("in UpdateDataReductionPlotCombineInterface: " + cmd);
     	return cmd;
 	}
 	
