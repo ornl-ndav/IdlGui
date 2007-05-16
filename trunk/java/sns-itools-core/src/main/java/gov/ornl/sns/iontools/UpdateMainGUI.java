@@ -20,6 +20,8 @@ public class UpdateMainGUI {
 			DataReduction.wavelengthPanel.setVisible(true);
 			DataReduction.detectorAnglePanel.setVisible(true);
 			DataReduction.extraPlotsSRBCheckBox.setEnabled(false);
+			DataReduction.noCombineSpectrumRadioButton.setEnabled(false);
+			DataReduction.yesCombineSpectrumRadioButton.setSelected(true);
 			
 		}
 	}

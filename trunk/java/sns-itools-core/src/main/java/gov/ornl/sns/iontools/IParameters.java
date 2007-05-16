@@ -32,6 +32,7 @@ public interface IParameters {
 		static final boolean DEBUG = false;
 		
 		static final String NA = "N/A";
+		static final double DEGRES_TO_RADIANS_FACTOR = (2*Math.PI)/180; 
 	
 		static final String DEFAULT_INSTRUMENT = "REF_L";
 		static final String REF_L              = "REF_L";
@@ -73,8 +74,9 @@ public interface IParameters {
 		static final boolean KEEP_ADD_NEXUS_AND_GO					= true;
 		static final boolean KEEP_GO_SEQUENTIALLY					= true;
 				
-		//REF_L Data Reduction command line - flags 
+		//Data Reduction command line - flags 
 		static final String REF_L_DATA_REDUCTION_CMD 	= "reflect_tofred";
+		static final String REF_M_DATA_REDUCTION_CMD    = "reflect_reduction";
 		
 		//Data reducton command line -flags
 		static final String NORMALIZATION_FLAG 		    = "--norm=";
@@ -88,7 +90,9 @@ public interface IParameters {
 		static final String DUMP_SUB                    = "--dump-sub";
 		static final String DUMP_NORM                   = "--dump-norm";
 		static final String DUMP_NORM_BKG            	= "--dump-norm-bkg";
-
+		static final String WAVELENGTH_BINS_FLAG        = "--l-bins=";
+		static final String DET_ANGLE_FLAG              = "--det-angle=";
+		
 		//Extra plots extension
 		static final String SR_EXTENSION                = ".sdc";
 		static final String BS_EXTENSION                = ".bkg";
