@@ -31,6 +31,11 @@ public interface IParameters {
 	
 		static final boolean DEBUG = false;
 		
+	    static final String PATH_TO_HOME           = "/SNS/users/";
+	    static final String SEQUENCE_SEPARATOR     = "-";
+	    static final String WORKING_PATH           = "/SNS/users/ionuser/";
+
+	    
 		static final String NA = "N/A";
 		static final double DEGRES_TO_RADIANS_FACTOR = (2*Math.PI)/180; 
 	
@@ -159,10 +164,6 @@ public interface IParameters {
 	    static final String BACK_STRING            = "back";
 	    static final String INFO_STRING            = "info";
 	    
-	    static final String PATH_TO_HOME           = "/SNS/users/";
-	    static final String SEQUENCE_SEPARATOR     = "-";
-	    static final String WORKING_PATH           = "/SNS/users/ionuser/";
-
 	    static final int LOADCT_DEFAULT_INDEX      = 39;
 	    static final String[] LOADCT_NAME          = {"Black/White", 
 	    											  "Blue/White", 

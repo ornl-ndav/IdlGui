@@ -15,6 +15,7 @@ public class ParametersToKeep {
 	static boolean bSaveAddAndGoRunNumberCheckBox 			= IParameters.KEEP_ADD_NEXUS_AND_GO;
 	static boolean bSaveGoSequentiallyCheckBox 				= IParameters.KEEP_GO_SEQUENTIALLY;
 	static boolean bFirstRunEver 							= true;
+    static String sSessionWorkingDirectory 				    = "";
 	
 	/*
 	 * Reinitialize all the parameters
