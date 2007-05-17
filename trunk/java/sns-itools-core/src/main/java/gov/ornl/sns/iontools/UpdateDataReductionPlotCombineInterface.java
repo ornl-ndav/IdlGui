@@ -106,7 +106,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		ionYMax = new IONVariable(sYMax);
 		    		    	
 		//output path
-		ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + DataReduction.instrument);
+		ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH);
 		
 		//run number
 		ionRunNumber = new IONVariable(DataReduction.runNumberValue);

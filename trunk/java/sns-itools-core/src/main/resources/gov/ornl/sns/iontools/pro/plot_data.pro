@@ -49,7 +49,7 @@ function dumpBinaryData, full_nexus_name, instrument, ucams
 
 ;create tmp_working_path
 ;get global structure
-tmp_working_path = "/SNS/users/" + ucams + '/local/'
+tmp_working_path = "/SNS/users/" + ucams + '/'
 
 ;cmd_dump = "srun nxdir " + full_nexus_name
 cmd_dump = "nxdir " + full_nexus_name
@@ -89,7 +89,7 @@ if (full_nexus_path NE '') then begin
          Ny = 304L
      endelse
 
-     file = '/SNS/users/' + ucams + '/local/' + instrument + '_tmp_histo_data.dat'
+     file = '/SNS/users/' + ucams + '/' + instrument + '_tmp_histo_data.dat'
     
      ;only read data if valid file given
      openr,u,file,/get

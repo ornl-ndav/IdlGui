@@ -98,28 +98,3 @@ free_lun, 1
 
 end
 
-
-
-
-
-function get_signal_background_pid_file_name, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;tmp_folder = (*global).tmp_folder
-tmp_folder = (*global).local_folder
-pid_file_extension = (*global).pid_file_extension
-first_part = tmp_folder + (*global).instrument
-first_part += "_" + (*global).run_number
-
-signal_pid_file_name = first_part + "_signal_" + pid_file_extension
-background_pid_file_name = first_part + "_background_" + pid_file_extension
-
-signal_background_pid_file_names = [signal_pid_file_name,$
-                                    background_pid_file_name]
-
-return, signal_background_pid_file_names
-end
-
