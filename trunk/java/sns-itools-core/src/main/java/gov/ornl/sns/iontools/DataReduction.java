@@ -227,6 +227,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JCheckBox        extraPlotsBRNCheckBox;
     static JCheckBox     	saveSignalPidFileCheckBox;
     static JCheckBox 		saveBackPidFileCheckBox;
+    static JCheckBox        saveMinWavelengthCheckBox;
+    static JCheckBox 		saveMaxWavelengthCheckBox;
+    static JCheckBox  		saveWidthWavelengthCheckBox;
+    static JCheckBox		saveDetectorAngleCheckBox;
+    static JCheckBox		saveDetectorAnglePMCheckBox;
+    static JCheckBox        saveDetectorAngleUnitsCheckBox;
     static JCheckBox		saveNormalizationCheckBox;
     static JCheckBox 		saveBackgroundCheckBox;
     static JCheckBox     	saveNormalizationBackgroundCheckBox;
@@ -657,7 +663,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
    		ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
    		String cmd_loadct = "replot_data, " + runNumberValue + ","; 
 		cmd_loadct += ionInstrument + "," + user + ",";
-		cmd_loadct += ionLoadct; 
+		cmd_loadct += ionLoadct;
+		cmd_loadct += "," + ionWorkingPathSession;
 		showStatus("Processing...");
 	   	executeCmd(cmd_loadct);
 	   	showStatus("Done!");
@@ -869,7 +876,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	//if one of the intermediate check box is check
 	if ("plot1".equals(evt.getActionCommand())) {
-		System.out.println("in check box");
 	}
 
 	if ("instrumentREFL".equals(evt.getActionCommand())) {

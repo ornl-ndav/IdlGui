@@ -70,6 +70,12 @@ public interface IParameters {
 		//Default list of parameters to keep
 		static final boolean KEEP_SIGNAL_PID_FILE_NAME				= true;
 		static final boolean KEEP_BACKGROUND_PID_FILE_NAME			= true;
+		static final boolean KEEP_MIN_WAVELENGTH				  	= true;
+		static final boolean KEEP_MAX_WAVELENGTH					= true;
+		static final boolean KEEP_WIDTH_WAVELENGTH					= true;
+		static final boolean KEEP_DETECTOR_ANGLE					= true;
+		static final boolean KEEP_DETECTOR_ANGLE_PM					= true;
+		static final boolean KEEP_DETECTOR_ANGLE_UNITS              = true;
 		static final boolean KEEP_NORMALIZATION						= true;
 		static final boolean KEEP_BACKGROUND						= true;
 		static final boolean KEEP_NORMALIZATION_BACKGROUND			= true;

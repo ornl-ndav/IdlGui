@@ -17,8 +17,8 @@ public class SettingsPanel {
 	private static int settingsValidateButtonYoff = 590;
 	
 	//saving parameters panel
-	private static int savingParametersSettingsPanelWidth = 400;
-	private static int savingParametersSettingsPanelHeight = 370;
+	private static int savingParametersSettingsPanelWidth = 380;
+	private static int savingParametersSettingsPanelHeight = 500;
 	
 	public static void buildGUI() {
 		
@@ -109,8 +109,8 @@ public class SettingsPanel {
 				savingParametersSettingsPanelHeight));
 		Dimension savingParametersSettingsPanelSize = DataReduction.savingParametersSettingsPanel.getPreferredSize();
 		DataReduction.savingParametersSettingsPanel.setBounds(
-				xoff,
-				yoff + extraPlotSettingsPanelHeight,
+				xoff + extraPlotSettingsPanelWidth, 
+				yoff,
 				savingParametersSettingsPanelSize.width,
 				savingParametersSettingsPanelSize.height);
 
@@ -123,6 +123,36 @@ public class SettingsPanel {
 		DataReduction.saveBackPidFileCheckBox.setSelected(true);
 		DataReduction.saveBackPidFileCheckBox.setActionCommand("saveBackPidFileCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveBackPidFileCheckBox);
+		
+		DataReduction.saveMinWavelengthCheckBox = new JCheckBox("Min wavelength");
+		DataReduction.saveMinWavelengthCheckBox.setSelected(true);
+		DataReduction.saveMinWavelengthCheckBox.setActionCommand("saveMinWavelengthCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveMinWavelengthCheckBox);
+		
+		DataReduction.saveMaxWavelengthCheckBox = new JCheckBox("Max wavelength");
+		DataReduction.saveMaxWavelengthCheckBox.setSelected(true);
+		DataReduction.saveMaxWavelengthCheckBox.setActionCommand("saveMaxWavelengthCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveMaxWavelengthCheckBox);
+		
+		DataReduction.saveWidthWavelengthCheckBox = new JCheckBox("Width wavelength");
+		DataReduction.saveWidthWavelengthCheckBox.setSelected(true);
+		DataReduction.saveWidthWavelengthCheckBox.setActionCommand("saveWidthWavelengthCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveWidthWavelengthCheckBox);
+		
+		DataReduction.saveDetectorAngleCheckBox = new JCheckBox("Detector angle");
+		DataReduction.saveDetectorAngleCheckBox.setSelected(true);
+		DataReduction.saveDetectorAngleCheckBox.setActionCommand("saveDetectorAngleCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAngleCheckBox);
+		
+		DataReduction.saveDetectorAnglePMCheckBox = new JCheckBox("Detector angle incertitude");
+		DataReduction.saveDetectorAnglePMCheckBox.setSelected(true);
+		DataReduction.saveDetectorAnglePMCheckBox.setActionCommand("saveDetectorAnglePMCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAnglePMCheckBox);
+		
+		DataReduction.saveDetectorAngleUnitsCheckBox = new JCheckBox("Detector angle units");
+		DataReduction.saveDetectorAngleUnitsCheckBox.setSelected(true);
+		DataReduction.saveDetectorAngleUnitsCheckBox.setActionCommand("saveDetectorAngleUnitsCheckBox");
+		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAngleUnitsCheckBox);
 		
 		DataReduction.saveNormalizationCheckBox = new JCheckBox("Normalization");
 		DataReduction.saveNormalizationCheckBox.setSelected(true);
