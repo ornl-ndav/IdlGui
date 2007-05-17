@@ -1,4 +1,4 @@
-FUNCTION FIND_OUPUT_FILE_NAME_REP, instrument, $
+FUNCTION FIND_OUPUT_FILE_NAME_EP, instrument, $
                                    run_number, $
                                    output_path, $
                                    extension
@@ -25,7 +25,7 @@ xmin = float(xmin)
 ymax = float(ymax)
 ymin = float(ymin)
 
-output_file_name = FIND_OUTPUT_FILE_NAME_REP(instrument, run_number, outputPath, extension)
+output_file_name = FIND_OUTPUT_FILE_NAME_EP(instrument, run_number, outputPath, extension)
 
 openr,u,output_file_name,/get
 fs = fstat(u)

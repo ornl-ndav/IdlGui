@@ -112,7 +112,7 @@ public class UpdateExtraPlotsInterface {
 		ionYmin = new IONVariable(ymin);
 		ionXmax = new IONVariable(xmax);
 		ionYmax = new IONVariable(ymax);
-		ionOutputPath = new IONVariable(IParameters.WORKING_PATH + "/" + DataReduction.instrument);
+		ionOutputPath = new IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 		ionRunNumber = new IONVariable(DataReduction.runNumberValue);
 		ionInstrument = new IONVariable(DataReduction.instrument);
 		ionExtension = new IONVariable(sExtension);
