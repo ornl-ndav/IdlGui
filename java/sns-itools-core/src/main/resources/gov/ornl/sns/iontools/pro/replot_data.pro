@@ -1,4 +1,4 @@
-PRO REPLOT_DATA, run_number, instrument, ucams, loadct_variable
+PRO REPLOT_DATA, run_number, instrument, ucams, loadct_variable, working_path_session
 
 if (instrument EQ 'REF_L') then begin
     Nx = 304L
@@ -8,7 +8,7 @@ endif else begin
     Ny = 304L
 endelse
 
-file = '/SNS/users/' + ucams + '/local/' + instrument + '_tmp_histo_data.dat'
+file = working_path_session + instrument + '_tmp_histo_data.dat'
     
                                 ;only read data if valid file given
 

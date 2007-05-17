@@ -6,6 +6,12 @@ public class ParametersToKeep {
 
 	static boolean bSaveSignalPidFileCheckBox 				= IParameters.KEEP_SIGNAL_PID_FILE_NAME;
 	static boolean bSaveBackPidFileCheckBox 				= IParameters.KEEP_BACKGROUND_PID_FILE_NAME;
+	static boolean bSaveMinWavelengthCheckBox				= IParameters.KEEP_MIN_WAVELENGTH;
+	static boolean bSaveMaxWavelengthCheckBox				= IParameters.KEEP_MAX_WAVELENGTH;
+	static boolean bSaveWidthWavelengthCheckBox				= IParameters.KEEP_WIDTH_WAVELENGTH;
+	static boolean bSaveDetectorAngleCheckBox				= IParameters.KEEP_DETECTOR_ANGLE;
+	static boolean bSaveDetectorAnglePMCheckBox				= IParameters.KEEP_DETECTOR_ANGLE_PM;
+	static boolean bSaveDetectorAngleUnitsCheckBox          	= IParameters.KEEP_DETECTOR_ANGLE_UNITS;
 	static boolean bSaveNormalizationCheckBox 				= IParameters.KEEP_NORMALIZATION;
 	static boolean bSaveBackgroundCheckBox 					= IParameters.KEEP_BACKGROUND;
 	static boolean bSaveNormalizationBackgroundCheckBox 	= IParameters.KEEP_NORMALIZATION_BACKGROUND;
@@ -34,6 +40,48 @@ public class ParametersToKeep {
 			bSaveBackPidFileCheckBox = true;
 		} else {
 			bSaveBackPidFileCheckBox = false;
+		}
+	
+		//keep or not min wavelength 
+		if (DataReduction.saveMinWavelengthCheckBox.isSelected()) {
+			bSaveMinWavelengthCheckBox = true;
+		} else {
+			bSaveMinWavelengthCheckBox = false;
+		}
+		
+		//keep or not max wavelength
+		if (DataReduction.saveMaxWavelengthCheckBox.isSelected()) {
+			bSaveMaxWavelengthCheckBox = true;
+		} else {
+			bSaveMaxWavelengthCheckBox = false;
+		}
+		
+		//keep or not width wavelength
+		if (DataReduction.saveWidthWavelengthCheckBox.isSelected()) {
+			bSaveWidthWavelengthCheckBox = true;
+		} else {
+			bSaveWidthWavelengthCheckBox = false;
+		}
+		
+		//keep or not detector angle
+		if (DataReduction.saveDetectorAngleCheckBox.isSelected()) {
+			bSaveDetectorAngleCheckBox = true;
+		} else {
+			bSaveDetectorAngleCheckBox = false;
+		}
+		
+		//keep or not detector angle incertitude
+		if (DataReduction.saveDetectorAnglePMCheckBox.isSelected()) {
+			bSaveDetectorAnglePMCheckBox = true;
+		} else {
+			bSaveDetectorAnglePMCheckBox = false;
+		}
+		
+		//keep or not detector angle units
+		if (DataReduction.saveDetectorAngleUnitsCheckBox.isSelected()) {
+			bSaveDetectorAngleUnitsCheckBox = true;
+		} else {
+			bSaveDetectorAngleUnitsCheckBox = false;
 		}
 		
 		//keep or not status of Normalization flag
@@ -126,6 +174,29 @@ public class ParametersToKeep {
 				MouseSelectionParameters.back1_y2 = 0;
 				MouseSelectionParameters.back2_y1 = 0;
 				MouseSelectionParameters.back2_y2 = 0;
+			}
+			if (!bSaveMinWavelengthCheckBox) { //min wavelength
+				DataReduction.wavelengthMinTextField.setText("");
+				DataReduction.wavelengthMinTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+			}
+			if (!bSaveMaxWavelengthCheckBox) { //max wavelength
+				DataReduction.wavelengthMaxTextField.setText("");
+				DataReduction.wavelengthMaxTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+			}
+			if (!bSaveWidthWavelengthCheckBox) { //width wavelength
+				DataReduction.wavelengthWidthTextField.setText("");
+				DataReduction.wavelengthWidthTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+			}
+			if (!bSaveDetectorAngleCheckBox) { //detector angle
+				DataReduction.detectorAngleTextField.setText("");
+				DataReduction.detectorAngleTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+			}
+			if (!bSaveDetectorAnglePMCheckBox) { //detector angle incertitude
+				DataReduction.detectorAnglePMTextField.setText("");
+				DataReduction.detectorAnglePMTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+			}
+			if (!bSaveDetectorAngleUnitsCheckBox) { //detector angle units
+				DataReduction.detectorAngleUnuitsComboBox.setSelectedIndex(0);
 			}
 			if (!bSaveNormalizationCheckBox) { //normalizaiton check box
 				DataReduction.yesNormalizationRadioButton.setSelected(IParameters.YES_NORMALIZATION_CHECK_BOX);
