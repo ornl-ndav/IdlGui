@@ -30,6 +30,7 @@ public class UpdateDataReductionPlotUncombineInterface {
 		//outputData();
 		
 		String cmd = createDataReductionPlotUncombineCmd();
+		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		executeCmd(cmd);
 		
     }
@@ -43,6 +44,7 @@ public class UpdateDataReductionPlotUncombineInterface {
 		//outputData();
 		
 		String cmd = createDataReductionPlotUncombineCmd();
+		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		executeCmd(cmd);
     }
 	

@@ -43,6 +43,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		//outputData();
 		
 		String cmd = createDataReductionPlotCombineCmd();
+		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		executeCmd(cmd);
 	}
 		
@@ -59,6 +60,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		//outputData();
 		
 		String cmd = createDataReductionPlotCombineCmd();
+		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		executeCmd(cmd);
 				
 		resetDataReductionCombineXAxisGUI();
@@ -75,6 +77,7 @@ public class UpdateDataReductionPlotCombineInterface {
 		sYMin = ParametersConfiguration.sYMinInitial;
 	
 		String cmd = createDataReductionPlotCombineCmd();
+		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		executeCmd(cmd);
 				
 		resetDataReductionCombineYAxisGUI();
@@ -115,7 +118,7 @@ public class UpdateDataReductionPlotCombineInterface {
     	    	
     	cmd += ionXScale + "," + ionXMin + "," + ionXMax + ",";
     	cmd += ionYScale + "," + ionYMin + "," + ionYMax;
-		System.out.println("in UpdateDataReductionPlotCombineInterface: " + cmd);
+		
     	return cmd;
 	}
 	

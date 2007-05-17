@@ -1,4 +1,4 @@
-function find_output_file_name, instrument, run_number, output_path
+function find_output_file_name_combine, instrument, run_number, output_path
 
 file_name = output_path + "/" + instrument + "_" 
 file_name += strcompress(run_number,/remove_all) + ".txt"
@@ -19,13 +19,19 @@ pro PLOT_DATA_REDUCTION_COMBINE, instrument,$
                                  ymin, $
                                  ymax
 
+print, 'xScale: ' + xScale
+print, 'xmin: ' + xmin
+print, 'xmax: ' + xmax
+print, 'yScale: ' + yScale
+print, 'ymin: ' + ymin
+print, 'ymax: ' + ymax
 
 xmax = float(xmax)
 xmin = float(xmin)
 ymax = float(ymax)
 ymin = float(ymin)
 
-output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath)
+output_file_name = FIND_OUTPUT_FILE_NAME_COMBINE(instrument, run_number, outputPath)
 
 openr,u,output_file_name,/get
 fs = fstat(u)
@@ -299,7 +305,7 @@ cd, outputPath
 ;cmdLocal = "srun " + cmdLocal
 spawn, cmdLocal, listening
 
-output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath)
+output_file_name = FIND_OUTPUT_FILE_NAME_COMBINE(instrument, run_number, outputPath)
 
 array_result = PLOT_FIRST_TIME_DATA_REDUCTION_COMBINE(output_file_name, run_number)
 

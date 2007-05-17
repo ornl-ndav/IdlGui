@@ -347,6 +347,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       //retrieve hostname
       //java.util.Properties props = System.getProperties();
       //props.list(System.out);
+      //String username = System.getProperty("user.name");
+      //generalInfoTextArea.setText(username);
       
       try {
 	  java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
