@@ -48,7 +48,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 						      
 {	
 	// Instance Vars
-    static String           ucams = "j35";				//ucams
+    static String           ucams = "ionuser";				//ucams
     static String           instrument = IParameters.DEFAULT_INSTRUMENT;
     static String           runNumberValue;
     static String           sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
@@ -801,7 +801,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    
 	  	c_ionCon.setDrawable(c_dataReductionPlot);
-	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH + "/" + instrument);
+	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH);
 	   	ionRunNumberValue = new IONVariable(runNumberValue);
 	   		   	
 	   	String[] cmdArray = cmd_local.split(" ");

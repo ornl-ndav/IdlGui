@@ -19,12 +19,6 @@ pro PLOT_DATA_REDUCTION_COMBINE, instrument,$
                                  ymin, $
                                  ymax
 
-print, 'xScale: ' + xScale
-print, 'xmin: ' + xmin
-print, 'xmax: ' + xmax
-print, 'yScale: ' + yScale
-print, 'ymin: ' + ymin
-print, 'ymax: ' + ymax
 
 xmax = float(xmax)
 xmin = float(xmin)

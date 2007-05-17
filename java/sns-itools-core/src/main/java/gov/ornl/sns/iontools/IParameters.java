@@ -161,7 +161,7 @@ public interface IParameters {
 	    
 	    static final String PATH_TO_HOME           = "/SNS/users/";
 	    static final String SEQUENCE_SEPARATOR     = "-";
-	    static final String WORKING_PATH           = "~/local";
+	    static final String WORKING_PATH           = "/SNS/users/ionuser/";
 
 	    static final int LOADCT_DEFAULT_INDEX      = 39;
 	    static final String[] LOADCT_NAME          = {"Black/White", 

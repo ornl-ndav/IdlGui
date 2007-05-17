@@ -34,7 +34,7 @@ public class IontoolsFile {
 
 	static String createPidFileName(String ucams, String instrument, String runNumber, String selectionType) {
 		
-		outputFolder = IParameters.PATH_TO_HOME + ucams + "/local/" + instrument + "/";
+		outputFolder = IParameters.PATH_TO_HOME + ucams + "/";
 		
 		outputPidFileName = instrument + "_" + runNumber + "_";
 		//get the extenstion according to the selection type (signal or back)
