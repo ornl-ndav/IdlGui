@@ -185,8 +185,6 @@ public class CreateCmdAndRunDataReduction {
 		cmd += " " + IParameters.DET_ANGLE_FLAG;
 		cmd += sDetectorAngle + "," + sDetectorAnglePM;
 		
-		System.out.println("cmd: " + cmd);  //REMOVE_ME
-		
 		return cmd;
 	
 	}
