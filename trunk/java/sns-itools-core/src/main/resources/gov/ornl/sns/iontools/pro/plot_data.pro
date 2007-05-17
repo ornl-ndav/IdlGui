@@ -45,20 +45,15 @@ end
 
 
 
-function dumpBinaryData, full_nexus_name, instrument, ucams
-
-;create tmp_working_path
-;get global structure
-tmp_working_path = "/SNS/users/" + ucams + '/'
+function dumpBinaryData, full_nexus_name, instrument, ucams, path
 
 ;cmd_dump = "srun nxdir " + full_nexus_name
 cmd_dump = "nxdir " + full_nexus_name
 cmd_dump += " -p /entry/bank1/data/ --dump "
 
 ;get tmp_output_file_name
-tmp_output_file_name = tmp_working_path + instrument + '_tmp_histo_data.dat'
+tmp_output_file_name = path + instrument + '_tmp_histo_data.dat'
 cmd_dump += tmp_output_file_name
-;print, 'cmd_dump: ' + cmd_dump
 spawn, cmd_dump, listenining
 
 return, tmp_output_file_name
@@ -69,7 +64,7 @@ end
 
 
 
-function PLOT_DATA, run_number, instrument, ucams, loadct_variable
+function PLOT_DATA, run_number, instrument, ucams, loadct_variable, path
 
 ;determine full path to nexus file
 full_nexus_path = find_full_nexus_name(run_number, instrument)
@@ -79,7 +74,7 @@ foundNeXus = 0
 if (full_nexus_path NE '') then begin
 
  ;dump histo data into temporary file
-     tmp_output_file_name = dumpBinaryData(full_nexus_path, instrument, ucams)
+     tmp_output_file_name = dumpBinaryData(full_nexus_path, instrument, ucams, path)
 
      if (instrument EQ 'REF_L') then begin
          Nx = 304L
@@ -89,7 +84,7 @@ if (full_nexus_path NE '') then begin
          Ny = 304L
      endelse
 
-     file = '/SNS/users/' + ucams + '/' + instrument + '_tmp_histo_data.dat'
+     file = path + instrument + '_tmp_histo_data.dat'
     
      ;only read data if valid file given
      openr,u,file,/get

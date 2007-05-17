@@ -61,6 +61,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          	cmd; 
     static String           hostname;
     static String  		    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
+    static String           sTmpFolder;
       
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
@@ -124,6 +125,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static IONVariable      ionLoadct;
     static IONVariable      ionExtraPlotCmd;
     static IONVariable      ionRunNumberValue;
+    static IONVariable      ionWorkingPathSession;
     
     static Dimension        c_dimApp;
     
@@ -343,7 +345,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       buildGUI();	
       runNumberTextField.requestFocusInWindow();
       connectToServer();
-      
+
+	    //create tmp folder inside ionuser
+	    UtilsFunction.createTmpFolder();
+
       //retrieve hostname
       //java.util.Properties props = System.getProperties();
       //props.list(System.out);
@@ -363,6 +368,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  
   /**
    * This method initialize all the parameters used to display the GUI.
+   * as well as the temporary folder created for that particular session.
    *
    */
   private void initializeParameters() {
@@ -379,8 +385,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  
 	    //NeXus not found yet
 	    IONfoundNexus = new IONVariable((int)0);  
-	    
-	    
+  
   }
   
   /*
@@ -801,7 +806,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    
 	  	c_ionCon.setDrawable(c_dataReductionPlot);
-	   	ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH);
+	   	ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 	   	ionRunNumberValue = new IONVariable(runNumberValue);
 	   		   	
 	   	String[] cmdArray = cmd_local.split(" ");
@@ -935,11 +940,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			ionInstrument = new com.rsi.ion.IONVariable(instrument);
 			user = new com.rsi.ion.IONVariable(ucams); 
 			ionLoadct = new IONVariable(loadctComboBox.getSelectedIndex());
+			ionWorkingPathSession = new IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 			
 			c_ionCon.setDrawable(c_plot);
 	    		    	
 			String cmd = "result = plot_data( " + runNumberValue + ", " + 
-			ionInstrument + ", " + user + "," + ionLoadct + ")";
+			ionInstrument + ", " + user + "," + ionLoadct;
+			cmd += "," + ionWorkingPathSession + ")";
 			showStatus("Processing...");
 			executeCmd(cmd);
 						

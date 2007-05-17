@@ -71,7 +71,7 @@ public class UpdateDataReductionPlotUncombineInterface {
 		ionY12 = new IONVariable(ParametersConfiguration.iY12);
 		
 		//output path
-		ionOutputPath = new com.rsi.ion.IONVariable(IParameters.WORKING_PATH);
+		ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 		
 		//run number
 		ionRunNumber = new IONVariable(DataReduction.runNumberValue);

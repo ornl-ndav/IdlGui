@@ -1,7 +1,7 @@
-FUNCTION FIND_OUPUT_FILE_NAME, instrument, $
-                               run_number, $
-                               output_path, $
-                               extension
+FUNCTION FIND_OUPUT_FILE_NAME_REP, instrument, $
+                                   run_number, $
+                                   output_path, $
+                                   extension
 file_name = output_path + "/" + instrument + "_" 
 file_name += strcompress(run_number,/remove_all) + extension
 return, file_name
@@ -25,7 +25,7 @@ xmin = float(xmin)
 ymax = float(ymax)
 ymin = float(ymin)
 
-output_file_name = FIND_OUTPUT_FILE_NAME(instrument, run_number, outputPath, extension)
+output_file_name = FIND_OUTPUT_FILE_NAME_REP(instrument, run_number, outputPath, extension)
 
 openr,u,output_file_name,/get
 fs = fstat(u)
