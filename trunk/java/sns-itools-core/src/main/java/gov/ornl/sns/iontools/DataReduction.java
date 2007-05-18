@@ -61,8 +61,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          	cmd; 
     static String           hostname;
     static String  		    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
-    static String           sTmpFolder;
-      
+    static String           sTmpFolder;      
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     static int              Nx;
@@ -953,42 +952,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			String cmd = "result = plot_data( " + runNumberValue + ", " + 
 			ionInstrument + ", " + user + "," + ionLoadct;
 			cmd += "," + ionWorkingPathSession + ")";
-			showStatus("Processing...");
-			executeCmd(cmd);
-						
-			IONVariable myIONresult;
-			myIONresult = queryVariable("result");
-			String[] myResultArray;
-			myResultArray = myIONresult.getStringArray();
-	    		
-			//Nexus file found or not 
-			sNexusFound = myResultArray[0];
-			NexusFound foundNexus = new NexusFound(sNexusFound);
-			bFoundNexus = foundNexus.isNexusFound();
-	    				
-			//Number of tof 
-			sNtof = myResultArray[1];
-			Float fNtof = new Float(sNtof);
-			ParametersConfiguration.iNtof = fNtof.intValue();
-				    		
-			//name of tmp output file name
-			sTmpOutputFileName = myResultArray[2];
-			showStatus("Done!");
-			CheckGUI.checkGUI(bFoundNexus);
-	    	
-			//check if run number is not already part of the data reduction runs
-			UpdateDataReductionRunNumberTextField.updateDataReductionRunNumbers(runNumberValue);
-	    
-			//update text field
-			if (bFoundNexus) {
-				//tell the program that it's not the first run ever
-				ParametersToKeep.bFirstRunEver=false;
-				if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
-					runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
-				} else {
-	    			runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
-	    		}	
-	    	}	
+
+			
+			
+			//main plot run in another thread
+			SubmitPlot run = new SubmitPlot(cmd);
+			Thread runThread = new Thread(run,"plot in progress");
+			runThread.start();
 			
 		}	
 	}		
@@ -1190,9 +1160,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  *   Utility method that is used to write a string to the
  *   screen using Java.
  */
-  private void writeMessage(String sMsg){
+  public void writeMessage(String sMsg){
         showStatus(sMsg);
-	System.out.println(sMsg);
   }
     
 /***********************
