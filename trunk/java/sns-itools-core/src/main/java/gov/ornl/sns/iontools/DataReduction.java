@@ -317,7 +317,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton      	startDataReductionButton;
     static JButton      	instrumentGeometryButton;
     static JButton      	settingsValidateButton; 
-    static JButton          replotSelectionButton;      
+    static JButton          replotSelectionButton;  
+    static JButton          settingsSelectAllButton;
+    static JButton          settingsUnselectAllButton;
     
     static JScrollPane 		scrollPane;
     
@@ -772,9 +774,18 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		tabbedPane.setSelectedIndex(3);
 	}
 	    
+	/* Settings tab */
 	if ("settingsValidateButton".equals(evt.getActionCommand())) {
 		tabbedPane.setSelectedIndex(0);
 		dataReductionTabbedPane.setSelectedIndex(0);	
+	}
+	
+	if ("settingsSelectAllButton".equals(evt.getActionCommand())) {
+		SettingsPanelAction.selectAllSettingsTab();
+	}
+	
+	if ("settingsUnselectAllButton".equals(evt.getActionCommand())) {
+		SettingsPanelAction.unselectAllSettingsTab();
 	}
 	
 	if ("yesCombineSpectrum".equals(evt.getActionCommand())) {
@@ -1065,7 +1076,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //configuration tab 
 	    settingsPanel = new JPanel();
 	    //add extra plot setttings 
-	    SettingsPanel.buildGUI();
+	    CreateSettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);
 		    
 	    setLayout(new BorderLayout());
@@ -1419,7 +1430,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    DataReduction.saveOverwriteInstrumentGeometryCheckBox.addActionListener(this);
 	    DataReduction.saveAddAndGoRunNumberCheckBox.addActionListener(this);
 	    DataReduction.saveGoSequentiallyCheckBox.addActionListener(this);
-	    
+	    DataReduction.settingsSelectAllButton.addActionListener(this);
+	    DataReduction.settingsUnselectAllButton.addActionListener(this);
     }
     
     
