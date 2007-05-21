@@ -13,12 +13,13 @@ public class SuperEventHandler extends DataReduction {
 		if (IParameters.DEBUG) {DebuggingTools.displayData();}
    	   	
 	   	if ("loadctComboBox".equals(evt.getActionCommand())) {
-	   		ionLoadct = new com.rsi.ion.IONVariable(loadctComboBox.getSelectedIndex());
-	   		String cmd_loadct = "replot_data, " + runNumberValue + ","; 
-			cmd_loadct += ionInstrument + "," + user + ",";
-			cmd_loadct += ionLoadct;
-			cmd_loadct += "," + ionWorkingPathSession;
-			IonUtils.executeCmd(cmd_loadct);
+	   		String cmdLoadct = SubmitLoadct.createLoadctCmd();
+
+	   		//main plot run in another thread
+			SubmitLoadct run = new SubmitLoadct(cmdLoadct);
+			Thread runThread = new Thread(run,"Loadct plot in progress");
+			runThread.start();
+	   		
 	   	}
 	   		   	
 		if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
