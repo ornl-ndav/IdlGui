@@ -13,7 +13,8 @@ public class SubmitPlot implements Runnable {
 	}
 	
 	public void run() {
-		
+
+		ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
 		IonUtils.executeCmd(this.cmd);
 
 		com.rsi.ion.IONVariable myIONresult;
@@ -48,6 +49,8 @@ public class SubmitPlot implements Runnable {
     			DataReduction.runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
     		}	
     	}	
+		
+		ProcessingInterfaceWithGui.removeProcessingMessage();
 			
 	}
 	
