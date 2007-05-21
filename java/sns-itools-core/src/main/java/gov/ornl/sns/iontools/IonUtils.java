@@ -14,6 +14,14 @@ public class IonUtils {
 		return ionVar;
 	    }
 
+
+	static void sendIDLVariable(String sVariable, IONVariable ionVar) {
+    	try {
+    		DataReduction.c_ionCon.setIDLVariable(sVariable,ionVar);
+    	} catch (Exception e) {}
+    }
+	
+	
 	/*
 	 ************************************************
 	 * executeCmd()

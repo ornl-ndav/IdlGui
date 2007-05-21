@@ -40,6 +40,7 @@ import com.rsi.ion.*;
 import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
+import java.awt.Font;
 
 public class DataReduction extends JApplet implements IONDisconnectListener, 
 						      IONOutputListener, 
@@ -96,6 +97,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     static ImageIcon[]     	instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
     static ImageIcon   		detectorLayout = new ImageIcon();
+    static ImageIcon        processingGif = new ImageIcon();
     
     //ION
     static IONGrConnection  c_ionCon;
@@ -165,6 +167,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           savingParametersSettingsPanel;
     static JPanel           wavelengthPanel;
     static JPanel           detectorAnglePanel;
+    static JPanel           processingPanel;
     
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -271,6 +274,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           wavelengthAngstromsLabel;
     static JLabel           detectorAngleLabel;
     static JLabel           detectorAnglePMLabel;
+    static JLabel           processingLabel;
+    static JLabel           processingInfoLabel;
     
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;
@@ -822,66 +827,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		String cmd_local = CreateCmdAndRunDataReduction.createDataReductionCmd();
 	  	cmd_local += ExtraPlots.createIDLcmd();  //add extra plot
 	    
-	  	c_ionCon.setDrawable(c_dataReductionPlot);
-	   	ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
-	   	ionRunNumberValue = new IONVariable(runNumberValue);
-	   		   	
-	   	String[] cmdArray = cmd_local.split(" ");
-	   	int cmdArraySize = cmdArray.length;
-	   		   	
-	   	int[] nx = {cmdArraySize};
-	   	ionCmd = new IONVariable(cmdArray,nx); 
-	   	sendIDLVariable("IDLcmd", ionCmd);
-	    	
-	   	String cmd;
-	   	
-	   	//if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
-	    if (liveParameters.isCombineDataSpectrum()) {
-	    	
-	   		cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
-	   		cmd += ionOutputPath + "," + ionRunNumberValue + "," + ionInstrument + ")";
-	   		
-	   		showStatus("Processing...");
-	   		executeCmd(cmd);
-	   		showStatus("Done!");
+		//main plot run in another thread
+		SubmitDataReduction run = new SubmitDataReduction(cmd_local);
+		Thread runThread = new Thread(run,"Data Reduction in progess");
+		runThread.start();
 
-    		IONVariable myIONresult;
-    		myIONresult = queryVariable("array_result");
-	    	String[] myResultArray;
-	    	myResultArray = myIONresult.getStringArray();
-	    			    		
-	    	CheckGUI.populateCheckDataReductionPlotCombineParameters(myResultArray);
-	    	UpdateDataReductionPlotCombineInterface.updateDataReductionPlotGUI();
-
-	    } else {
-	    
-	    	ionNtof = new IONVariable(ParametersConfiguration.iNtof);
-		   	ionY12 = new IONVariable(ParametersConfiguration.iY12);
-		   	ionYmin = new IONVariable(MouseSelectionParameters.signal_ymin);
-		   	
-		   	cmd = "array_result = run_data_reduction (IDLcmd, " + ionOutputPath + "," + runNumberValue + "," ;
-		   	cmd += ionInstrument + "," + ionNtof + "," + ionY12 + "," + ionYmin + ")"; 
-	    	
-	    	showStatus("Processing...");
-		   	executeCmd(cmd);
-		   	showStatus("Done!");
-	    
-    		IONVariable myIONresult;
-    		myIONresult = queryVariable("array_result");
-	    	String[] myResultArray;
-	    	myResultArray = myIONresult.getStringArray();
-		   	
-	    	CheckGUI.populateCheckDataReductionPlotParameters(myResultArray);
-	    	UpdateDataReductionPlotUncombineInterface.updateDataReductionPlotGUI();
-	    }
-	    
-	   	
-	   	//show data reductin plot tab
-	   	dataReductionTabbedPane.setSelectedIndex(1);
-	   	if (liveParameters.isIntermediatePlotsSwitch()) {  //we asked for intermediate plots
-	   		ExtraPlots.plotExtraPlots();
-	   	}
-	   		
 	}
 	    
 	//if one of the intermediate check box is check
@@ -964,8 +914,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			ionInstrument + ", " + user + "," + ionLoadct;
 			cmd += "," + ionWorkingPathSession + ")";
 
-			
-			
 			//main plot run in another thread
 			SubmitPlot run = new SubmitPlot(cmd);
 			Thread runThread = new Thread(run,"plot in progress");
@@ -1018,7 +966,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    tabbedPane = new JTabbedPane();
 	    dataReductionTabbedPane = new JTabbedPane();
 	    plotDataReductionPanel = new JPanel();
-
+	    processingPanel = new JPanel();
+	    
 	    //build menu
 	    CreateMenu.buildGUI();
 	    	  	    
@@ -1027,6 +976,20 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	instrumentLogo[i] = createImageIcon("/gov/ornl/sns/iontools/images/image" + i + ".jpg");	
 	    }
 
+	    //processing logo and info message
+	    processingInfoLabel = new JLabel("");
+	    processingInfoLabel.setVisible(true);
+	    processingInfoLabel.setForeground(Color.BLUE);
+	    processingInfoLabel.setFont(new Font("Serif", Font.PLAIN, 20));
+	    //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/lineProcessing.gif");
+	    processingGif = createImageIcon("/gov/ornl/sns/iontools/images/cool.gif");
+	    processingLabel = new JLabel();
+	    processingLabel.setVisible(true);
+	    processingLabel.setIcon(processingGif);
+	    processingPanel.add(processingInfoLabel);
+	    processingPanel.add(processingLabel);
+	    processingPanel.setVisible(false);
+	    
 	    //create top left panel (logo + run number)
 	    createRunNumberPanel();
 
@@ -1083,7 +1046,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
-
+	    plotDataReductionPanel.add(processingPanel);	    
 	    
 	    //add everything in final window
 	    //	    JPanel contentPane  = new JPanel(new BorderLayout());
