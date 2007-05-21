@@ -1,17 +1,11 @@
 package gov.ornl.sns.iontools;
 
+/*
+ * this class plot the main plot from the NeXus file in another
+ * thread. 
+ */
 public class SubmitPlot implements Runnable {
 
-//	private Configuration configuration = null;
-//	private Component parent = null;
-//	public String function = null;
-//	public TisTreeNode tisTree = null;
-//	private String cmd = null;
-	
-//	public SubmitRun(String cmd) {
-//		this.cmd = cmd;
-//	}
-	
 	private String cmd = null;
 	
 	public SubmitPlot(String cmd) {

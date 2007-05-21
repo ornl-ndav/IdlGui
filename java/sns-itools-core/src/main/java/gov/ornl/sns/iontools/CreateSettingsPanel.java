@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
-public class SettingsPanel {
+public class CreateSettingsPanel {
 
 	//extra plot panel
 	private static int xoff = 10;
@@ -15,6 +15,11 @@ public class SettingsPanel {
 	private static int validateButtonHeight = 30;
 	private static int settingsValidateButtonXoff = 300;
 	private static int settingsValidateButtonYoff = 590;
+	private static int settingsSelectAllButtonXoff = 412;
+	private static int settingsSelectAllButtonYoff = 510;
+	private static int settingsSelectAllButtonDeltaX = 196;
+	private static int settingsSelectButtonWidth = 180;
+	private static int settingsSelectButtonHeight = 30;
 	
 	//saving parameters panel
 	private static int savingParametersSettingsPanelWidth = 380;
@@ -195,8 +200,34 @@ public class SettingsPanel {
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveGoSequentiallyCheckBox);
 		
 		DataReduction.settingsPanel.add(DataReduction.savingParametersSettingsPanel);
-			
-	}
 	
+		DataReduction.settingsSelectAllButton = new JButton("Select all");
+		DataReduction.settingsSelectAllButton.setActionCommand("settingsSelectAllButton");
+		DataReduction.settingsSelectAllButton.setToolTipText("Select everything");
+		DataReduction.settingsSelectAllButton.setPreferredSize(new Dimension(
+				settingsSelectButtonWidth,
+				settingsSelectButtonHeight));
+		Dimension settingsSelectButtonDimension = DataReduction.settingsSelectAllButton.getPreferredSize();
+		DataReduction.settingsSelectAllButton.setBounds(
+				settingsSelectAllButtonXoff,
+				settingsSelectAllButtonYoff,
+				settingsSelectButtonDimension.width,
+				settingsSelectButtonDimension.height);
+		DataReduction.settingsPanel.add(DataReduction.settingsSelectAllButton);
+				
+		DataReduction.settingsUnselectAllButton = new JButton("Unselect all");
+		DataReduction.settingsUnselectAllButton.setActionCommand("settingsUnselectAllButton");
+		DataReduction.settingsUnselectAllButton.setToolTipText("Unselect everything");
+		DataReduction.settingsUnselectAllButton.setPreferredSize(new Dimension(
+				settingsSelectButtonWidth,
+				settingsSelectButtonHeight));
+		Dimension settingsUnselectButtonDimension = DataReduction.settingsUnselectAllButton.getPreferredSize();
+		DataReduction.settingsUnselectAllButton.setBounds(
+				settingsSelectAllButtonXoff + settingsSelectAllButtonDeltaX,
+				settingsSelectAllButtonYoff,
+				settingsUnselectButtonDimension.width,
+				settingsUnselectButtonDimension.height);
+		DataReduction.settingsPanel.add(DataReduction.settingsUnselectAllButton);
 	
+	}	
 }
