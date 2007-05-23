@@ -234,17 +234,13 @@ public class SuperEventHandler extends DataReduction {
 			TabUtils.removedAllTabColor();
 			
 			//retrive value of run number
-			runNumberValue = runNumberTextField.getText();
-			
+			DataReduction.runNumberValue = DataReduction.runNumberTextField.getText();
+						
 			if (runNumberValue.compareTo("") != 0) {   //plot only if there is a run number
 		
-				//remove or not parameters we don't want anymore
+					//remove or not parameters we don't want anymore
 				ParametersToKeep.refreshGuiWithParametersToKeep();
-							/*
-			    //retrieve name of instrument
-			    instrument = (String)instrList.getSelectedItem();
-			    */
-
+				
 				ionInstrument = new com.rsi.ion.IONVariable(instrument);
 				user = new com.rsi.ion.IONVariable(ucams); 
 				ionLoadct = new com.rsi.ion.IONVariable(loadctComboBox.getSelectedIndex());

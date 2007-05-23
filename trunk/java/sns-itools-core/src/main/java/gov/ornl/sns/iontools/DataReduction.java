@@ -168,6 +168,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           wavelengthPanel;
     static JPanel           detectorAnglePanel;
     static JPanel           processingPanel;
+    static JPanel           filesToTransferPanel;
     
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -358,8 +359,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       runNumberTextField.requestFocusInWindow();
       connectToServer();
 
-	    //create tmp folder inside ionuser
-	    UtilsFunction.createTmpFolder();
+	  //create tmp folder inside ionuser
+	  UtilsFunction.createTmpFolder();
 
       //retrieve hostname
       //java.util.Properties props = System.getProperties();
@@ -375,7 +376,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	  {
 	      //handle exception
 	  } 
-            
+
+      //DataReduction.generalInfoTextArea.setText("user is: " + getParameter("userName"));
+      
   }
  
   /**
@@ -663,9 +666,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
    	CheckGUI.populateCheckDataReductionPlotParameters();
    	liveParameters = new GuiLiveParameters();
    	SuperEventHandler.lookForEvent(evt);
-   	
-   	
-	liveParameters = new GuiLiveParameters();
+   	liveParameters = new GuiLiveParameters();
 	
     }   
   
@@ -700,6 +701,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    processingInfoLabel.setForeground(Color.BLUE);
 	    processingInfoLabel.setFont(new Font("Serif", Font.PLAIN, 20));
 	    //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/lineProcessing.gif");
+	    //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/SNSlogo.gif");
 	    processingGif = createImageIcon("/gov/ornl/sns/iontools/images/cool.gif");
 	    processingLabel = new JLabel();
 	    processingLabel.setVisible(true);
@@ -760,6 +762,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    CreateSettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);
 		    
+	    //files to transfer tab
+	    filesToTransferPanel = new JPanel();
+	    
+	    tabbedPane.addTab("Transfer Files", filesToTransferPanel);
+	    
 	    setLayout(new BorderLayout());
 
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
@@ -1114,8 +1121,5 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    DataReduction.settingsSelectAllButton.addActionListener(this);
 	    DataReduction.settingsUnselectAllButton.addActionListener(this);
     }
-    
-    
-    
-    
+  
 }

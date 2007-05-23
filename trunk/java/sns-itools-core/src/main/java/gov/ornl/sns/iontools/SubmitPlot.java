@@ -14,6 +14,12 @@ public class SubmitPlot implements Runnable {
 	
 	public void run() {
 
+		
+		String sMessage = "Run number to plot: " + DataReduction.runNumberValue + "\n";
+		UtilsFunction.printInLogBook(sMessage, false);
+		sMessage = "   - Searching for run number " + DataReduction.runNumberValue + "...";
+		UtilsFunction.printInLogBook(sMessage);
+		
 		ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
 		IonUtils.executeCmd(this.cmd);
 
@@ -41,6 +47,10 @@ public class SubmitPlot implements Runnable {
     
 		//update text field
 		if (DataReduction.bFoundNexus) {
+			
+			sMessage = "found and plotted\n";
+			UtilsFunction.printInLogBook(sMessage);
+			
 			//tell the program that it's not the first run ever
 			ParametersToKeep.bFirstRunEver=false;
 			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
@@ -48,7 +58,12 @@ public class SubmitPlot implements Runnable {
 			} else {
     			DataReduction.runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
     		}	
-    	}	
+    	} else {
+    		
+    		sMessage = "not found\n";
+    		UtilsFunction.printInLogBook(sMessage);
+    		    		
+    	}
 		
 		ProcessingInterfaceWithGui.removeProcessingMessage();
 			
