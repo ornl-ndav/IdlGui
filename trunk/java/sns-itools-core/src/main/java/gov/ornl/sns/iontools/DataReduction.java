@@ -173,7 +173,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           filesToTransferStep1Panel;
     static JPanel           filesToTransferStep2Panel;
     static JPanel           filesToTransferStep3Panel;
-    static JPanel 			filesToTransferProcessingPanel;
+    static JPanel 			    filesToTransferProcessingPanel;
     
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -184,7 +184,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     static JMenuBar         menuBar;
     
-    static JCheckBoxMenuItem       cbMenuItem;
+    static JCheckBoxMenuItem  cbMenuItem;
+    
+    static JSplitPane         filesToTransferSplitPane;
+    static JScrollPane        filesScrollPane;
+    static JScrollPane        detailScrollPane;
     
     static JMenu            dataReductionPackMenu;
     static JMenu            modeMenu;
@@ -192,6 +196,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JMenu            saveSessionMenu;
     static JMenu           	intermediateMenu;
     static JMenu            instrumentMenu;
+    
+    static JProgressBar     saveFilesToTransferProgressBar;
     
     static JRadioButtonMenuItem    reflRadioButton;
     static JRadioButtonMenuItem    refmRadioButton;
@@ -772,12 +778,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //add extra plot setttings 
 	    CreateSettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);
-		    
+		        
 	    //files to transfer tab
 	    filesToTransferPanel = new JPanel(new GridLayout(0,1));
 	    tabbedPane.addTab("Transfer Files", filesToTransferPanel);
 	    CreateFilesToTransferPanel.buildGUI();
-	    
+	          
 	    setLayout(new BorderLayout());
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);

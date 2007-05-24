@@ -1,14 +1,17 @@
 package gov.ornl.sns.iontools;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 
 import javax.swing.*;
 
 public class CreateFilesToTransferPanel {
 
-	private static int iIconLabelWidth = 30;
+  private static int iPanelXoff = 5;
+  private static int iPanelYoff = 5;
+  private static int iPanelWidth = 800;
+  private static int iPanelHeight = 50; 
+	private static int iPanel2Height = 300;
+  private static int iIconLabelWidth = 30;
 	private static int iIconLabelHeight = 30;
 	private static int iLabelXoff = 10;
 	private static int iLabelYoff = 15;
@@ -16,12 +19,16 @@ public class CreateFilesToTransferPanel {
 	private static int iButtonHeight = 30;
 	private static int iButtonXoff = 100;
 	private static int iButtonYoff = 15;
-	
-	
-    //DataReduction.filesToTransferPanel.setLayout(new Layout(BorderLayout));
-	static void buildGUI() {
-		
-		buildPanel1();  	//panel of step 1
+  private static int iProgressBarWidth = 600;
+  private static int iProgressBarHeight = 30;
+	private static int iSplitPaneWidth = 500;
+  private static int iSplitPaneHeigth = 300;
+  
+  static void buildGUI() {
+
+    DataReduction.filesToTransferPanel.setLayout(null);
+    
+		buildPanel1();  	  //panel of step 1
 		buildPanel2();      //panel of step 2
 		buildPanel3();      //panel of step 3
 		buildPanel4();      //panel that contains the processing bar
@@ -64,8 +71,22 @@ public class CreateFilesToTransferPanel {
 		
 		DataReduction.filesToTransferStep1Panel.add(DataReduction.filesToKeepIcon1Label);
 		DataReduction.filesToTransferStep1Panel.add(DataReduction.filesToKeep1Button);
-		DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep1Panel);		
+		
+    DataReduction.filesToTransferStep1Panel.setPreferredSize(new Dimension(
+        iPanelWidth,
+        iPanelHeight));
+    Dimension filesToTransferStep1PanelSize = DataReduction.filesToTransferStep1Panel.getPreferredSize();
+    DataReduction.filesToTransferStep1Panel.setBounds(
+        iPanelXoff,
+        iPanelYoff,
+        filesToTransferStep1PanelSize.width,
+        filesToTransferStep1PanelSize.height);
+            
+    DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep1Panel);		
 				
+    
+    
+    
 	}
 	
 	/* 
@@ -89,7 +110,43 @@ public class CreateFilesToTransferPanel {
 				filesToKeepIconLabelSize.height);
 		
 		DataReduction.filesToTransferStep2Panel.add(DataReduction.filesToKeepIcon2Label);
-		DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep2Panel);
+		
+		DataReduction.filesToTransferSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,
+        DataReduction.filesScrollPane, 
+        DataReduction.detailScrollPane);
+    DataReduction.filesToTransferSplitPane.setOneTouchExpandable(true);
+    DataReduction.filesToTransferSplitPane.setDividerLocation(300);
+    
+    Dimension minimumSize = new Dimension(300,50);
+    DataReduction.filesScrollPane = new JScrollPane();
+    DataReduction.detailScrollPane = new JScrollPane();
+    
+    DataReduction.filesScrollPane.setMinimumSize(minimumSize);
+    DataReduction.detailScrollPane.setMinimumSize(minimumSize);
+    
+    DataReduction.filesToTransferSplitPane.setPreferredSize(new Dimension(
+        iSplitPaneWidth,
+        iSplitPaneHeigth));
+    Dimension filesToTransferSplitPaneSize = DataReduction.filesToTransferSplitPane.getPreferredSize();
+    DataReduction.filesToTransferSplitPane.setBounds(
+        iButtonXoff,
+        iButtonYoff,
+        filesToTransferSplitPaneSize.width,
+        filesToTransferSplitPaneSize.height);
+        
+    DataReduction.filesToTransferStep2Panel.add(DataReduction.filesToTransferSplitPane);
+    
+    DataReduction.filesToTransferStep2Panel.setPreferredSize(new Dimension(
+        iPanelWidth,
+        iPanelHeight));
+    Dimension filesToTransferStep2PanelSize = DataReduction.filesToTransferStep2Panel.getPreferredSize();
+    DataReduction.filesToTransferStep2Panel.setBounds(
+        iPanelXoff,
+        iPanelYoff + iPanelHeight,
+        filesToTransferStep2PanelSize.width,
+        filesToTransferStep2PanelSize.height);
+    
+    DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep2Panel);
 		
 	}
 	
@@ -127,7 +184,18 @@ public class CreateFilesToTransferPanel {
 		
 		DataReduction.filesToTransferStep3Panel.add(DataReduction.filesToKeepIcon3Label);
 		DataReduction.filesToTransferStep3Panel.add(DataReduction.filesToKeep3Button);
-		DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep3Panel);
+		
+    DataReduction.filesToTransferStep3Panel.setPreferredSize(new Dimension(
+        iPanelWidth,
+        iPanelHeight));
+    Dimension filesToTransferStep3PanelSize = DataReduction.filesToTransferStep3Panel.getPreferredSize();
+    DataReduction.filesToTransferStep3Panel.setBounds(
+        iPanelXoff,
+        2*iPanelYoff + iPanelHeight + iPanel2Height,
+        filesToTransferStep3PanelSize.width,
+        filesToTransferStep3PanelSize.height);
+    
+    DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferStep3Panel);
 	
 	}
 	
@@ -138,8 +206,34 @@ public class CreateFilesToTransferPanel {
 		
 		DataReduction.filesToTransferProcessingPanel = new JPanel();
 		DataReduction.filesToTransferProcessingPanel.setLayout(null);
+    
+    DataReduction.saveFilesToTransferProgressBar = new JProgressBar(0,400);
+    DataReduction.saveFilesToTransferProgressBar.setValue(50);
+    DataReduction.saveFilesToTransferProgressBar.setStringPainted(true);
+    
+    DataReduction.saveFilesToTransferProgressBar.setPreferredSize(new Dimension(
+        iProgressBarWidth,
+        iProgressBarHeight));
+    Dimension saveFilesToTransferProgressBarSize = DataReduction.saveFilesToTransferProgressBar.getPreferredSize();
+    DataReduction.saveFilesToTransferProgressBar.setBounds(
+        iLabelXoff,
+        iLabelYoff,
+        saveFilesToTransferProgressBarSize.width,
+        saveFilesToTransferProgressBarSize.height);
+    
+    DataReduction.filesToTransferProcessingPanel.add(DataReduction.saveFilesToTransferProgressBar);
 		
-		
+    DataReduction.filesToTransferProcessingPanel.setPreferredSize(new Dimension(
+        iPanelWidth,
+        iPanelHeight));
+    Dimension filesToTransferProcessingPanelSize = DataReduction.filesToTransferProcessingPanel.getPreferredSize();
+    DataReduction.filesToTransferProcessingPanel.setBounds(
+        iButtonXoff,
+        3*iPanelYoff + 2*iPanelHeight + iPanel2Height,
+        filesToTransferProcessingPanelSize.width,
+        filesToTransferProcessingPanelSize.height);
+    
+    DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferProcessingPanel);
 	}
 	
 	
