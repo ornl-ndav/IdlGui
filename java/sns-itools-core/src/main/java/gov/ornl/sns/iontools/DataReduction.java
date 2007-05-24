@@ -32,6 +32,7 @@ import java.awt.GridBagConstraints;
 import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.event.*;
 import java.io.*;
 import java.net.*;
@@ -169,6 +170,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           detectorAnglePanel;
     static JPanel           processingPanel;
     static JPanel           filesToTransferPanel;
+    static JPanel           filesToTransferStep1Panel;
+    static JPanel           filesToTransferStep2Panel;
+    static JPanel           filesToTransferStep3Panel;
+    static JPanel 			filesToTransferProcessingPanel;
     
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -277,7 +282,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           detectorAnglePMLabel;
     static JLabel           processingLabel;
     static JLabel           processingInfoLabel;
-    
+    static JLabel           filesToKeepIcon1Label;
+    static JLabel           filesToKeepIcon2Label;
+    static JLabel           filesToKeepIcon3Label;
+    static JLabel           filesToKeep2Label;
+        
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;
     static JTextField       yMinTextField;
@@ -326,6 +335,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          replotSelectionButton;  
     static JButton          settingsSelectAllButton;
     static JButton          settingsUnselectAllButton;
+    static JButton          filesToKeep1Button;
+    static JButton          filesToKeep3Button;
     
     static JScrollPane 		scrollPane;
     
@@ -763,12 +774,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    tabbedPane.addTab("Settings", settingsPanel);
 		    
 	    //files to transfer tab
-	    filesToTransferPanel = new JPanel();
-	    
+	    filesToTransferPanel = new JPanel(new GridLayout(0,1));
 	    tabbedPane.addTab("Transfer Files", filesToTransferPanel);
+	    CreateFilesToTransferPanel.buildGUI();
 	    
 	    setLayout(new BorderLayout());
-
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
 	    plotDataReductionPanel.add(processingPanel);	    
