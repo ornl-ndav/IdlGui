@@ -142,18 +142,60 @@ public class ParametersToKeep {
 	}
 	
   /*
-   * This function is used when switching from one instrument to another
-   * all the parameters have to be removed.
+   * This function tells the system that nothing has to be conserved
    */
+  static void initializeNoParametersToKeep() {
+    
+    bSaveSignalPidFileCheckBox               = false;
+    bSaveBackPidFileCheckBox                 = false;
+    bSaveMinWavelengthCheckBox               = false;
+    bSaveMaxWavelengthCheckBox               = false;
+    bSaveWidthWavelengthCheckBox             = false;
+    bSaveDetectorAngleCheckBox               = false;
+    bSaveDetectorAnglePMCheckBox             = false;
+    bSaveDetectorAngleUnitsCheckBox          = false;
+    bSaveNormalizationCheckBox               = false;
+    bSaveBackgroundCheckBox                  = false;
+    bSaveNormalizationBackgroundCheckBox     = false;
+    bSaveIntermediateFileOutputCheckBox      = false;
+    bSaveCombineDataSpectrumCheckBox         = false;
+    bSaveOverwriteInstrumentGeometryCheckBox = false;
+    bSaveAddAndGoRunNumberCheckBox           = false;
+    bSaveGoSequentiallyCheckBox              = false;
+      
+  }
+  
+  /*
+   * This function is used when switching from one instrument to another
+   * all the parameters have to be removed
+   */
+  static void refreshGuiWithNoParametersToKeep() {
+    
+    //tell the sytem that we don't want to keep anything
+    initializeNoParametersToKeep();
+    refreshGui();
+    bFirstRunEver = true;
+    
+  }
   
   
-  
+  /*
+   * This function checks which parameters we want to keep
+   */
 	static void refreshGuiWithParametersToKeep() {
 	
 		//initialize parameters to keep or not
 		initializeParametersToKeep();
 		//outputData();
-		
+		refreshGui();
+    
+  }
+  
+  /*
+   * This function reset or not all the fields of the applet
+   */
+  static void refreshGui() {
+    
 		if (!bFirstRunEver) { //refresh GUI only if it's not the first run ever
 			if (!bSaveSignalPidFileCheckBox) { //remove pid signal
 				DataReduction.signalPidFileButton.setEnabled(false);

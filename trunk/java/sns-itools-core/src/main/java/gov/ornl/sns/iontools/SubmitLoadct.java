@@ -15,9 +15,12 @@ public class SubmitLoadct implements Runnable {
 	
 	public void run() {
 		
-    //if (DataReduction.instrument.compareTo(IParameters.REF_L)==0) {
-        DataReduction.c_ionCon.setDrawable(DataReduction.c_plot);
-        
+    if (DataReduction.instrument.compareTo(IParameters.REF_L)==0) {
+      DataReduction.c_ionCon.setDrawable(DataReduction.c_plot_REFL);
+    } else {
+      DataReduction.c_ionCon.setDrawable(DataReduction.c_plot_REFM);
+    }
+    
 		ProcessingInterfaceWithGui.displayProcessingMessage("Replot in progress");
 		IonUtils.executeCmd(this.cmd);
 		ProcessingInterfaceWithGui.removeProcessingMessage();
