@@ -8,7 +8,7 @@ public class ExtraPlots {
 	static private String cmd;
 	static private boolean bPlotFound;
 	private static boolean bExtraPlotsSR;
-	//private static boolean bExtraPlotsBS;
+	private static boolean bExtraPlotsBS;
 	private static boolean bExtraPlotsSRB;
 	private static boolean bExtraPlotsNR;
 	private static boolean bExtraPlotsBRN;
@@ -18,7 +18,7 @@ public class ExtraPlots {
 		if (DataReduction.yesIntermediateRadioButton.isSelected()) { //we want some extra plots
 
 			bExtraPlotsSR = DataReduction.liveParameters.isExtraPlotsSRselected();
-		//	bExtraPlotsBS = DataReduction.liveParameters.isExtraPlotsBSselected();
+		  bExtraPlotsBS = DataReduction.liveParameters.isExtraPlotsBSselected();
 			bExtraPlotsSRB = DataReduction.liveParameters.isExtraPlotsSRBselected();
 			bExtraPlotsNR = DataReduction.liveParameters.isExtraPlotsNRselected();
 			bExtraPlotsBRN = DataReduction.liveParameters.isExtraPlotsBRNselected();
@@ -39,7 +39,8 @@ public class ExtraPlots {
 
 		String result = "";
 		if (bExtraPlotsSR) { result += " " + IParameters.DUMP_SPECULAR;}
-		if (bExtraPlotsSRB) { result += " " + IParameters.DUMP_SUB;}
+		if (bExtraPlotsBS) { result += " " + IParameters.DUMP_BKG;}
+    if (bExtraPlotsSRB) { result += " " + IParameters.DUMP_SUB;}
 		if (bExtraPlotsNR) { result += " " + IParameters.DUMP_NORM;}
 		if (bExtraPlotsBRN) { result += " " + IParameters.DUMP_NORM_BKG;}
 				

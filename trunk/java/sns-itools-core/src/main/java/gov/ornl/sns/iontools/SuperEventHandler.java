@@ -15,7 +15,7 @@ public class SuperEventHandler extends DataReduction {
 	   	if ("loadctComboBox".equals(evt.getActionCommand())) {
 	   		String cmdLoadct = SubmitLoadct.createLoadctCmd();
 
-	   		//main plot run in another thread
+	   	//main plot run in another thread
 			SubmitLoadct run = new SubmitLoadct(cmdLoadct);
 			Thread runThread = new Thread(run,"Loadct plot in progress");
 			runThread.start();
