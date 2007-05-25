@@ -20,27 +20,27 @@ public class SubmitDataReduction implements Runnable {
 		String sMessage = "Running data reduction:\n";	 
 		UtilsFunction.printInLogBook(sMessage);	
 		
-		DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
-	   	DataReduction.ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
-	   	DataReduction.ionRunNumberValue = new com.rsi.ion.IONVariable(DataReduction.runNumberValue);
+    DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
+		DataReduction.ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
+		DataReduction.ionRunNumberValue = new com.rsi.ion.IONVariable(DataReduction.runNumberValue);
 	   		   	
-	   	String[] cmdArray = this.cmd.split(" ");
-	   	int cmdArraySize = cmdArray.length;
+		String[] cmdArray = this.cmd.split(" ");
+		int cmdArraySize = cmdArray.length;
 	   		   	
-	   	int[] nx = {cmdArraySize};
-	   	DataReduction.ionCmd = new com.rsi.ion.IONVariable(cmdArray,nx); 
-	   	IonUtils.sendIDLVariable("IDLcmd", DataReduction.ionCmd);
+		int[] nx = {cmdArraySize};
+		DataReduction.ionCmd = new com.rsi.ion.IONVariable(cmdArray,nx); 
+		IonUtils.sendIDLVariable("IDLcmd", DataReduction.ionCmd);
     	
-	   	String local_cmd;
+		String local_cmd;
 	   		   	
-	   	//if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
-	    if (DataReduction.liveParameters.isCombineDataSpectrum()) {
+		//if (CheckDataReductionButtonValidation.bCombineDataSpectrum) { //combine data
+		if (DataReduction.liveParameters.isCombineDataSpectrum()) {
 	    	
-	    	sMessage = "   Mode : Combine\n";
-		   	UtilsFunction.printInLogBook(sMessage);
+		  sMessage = "   Mode : Combine\n";
+		  UtilsFunction.printInLogBook(sMessage);
 		   	
-	    	local_cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
-	   		local_cmd += DataReduction.ionOutputPath + "," + DataReduction.ionRunNumberValue + "," + DataReduction.ionInstrument + ")";
+	    local_cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
+	    local_cmd += DataReduction.ionOutputPath + "," + DataReduction.ionRunNumberValue + "," + DataReduction.ionInstrument + ")";
 	   		
 	   		sMessage = "   cmd  : " + this.cmd + "\n";
 	   		UtilsFunction.printInLogBook(sMessage);
