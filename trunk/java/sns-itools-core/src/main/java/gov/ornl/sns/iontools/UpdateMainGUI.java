@@ -28,6 +28,8 @@ public class UpdateMainGUI {
   DataReduction.runsAddTextField.setText("");
   DataReduction.runsSequenceTextField.setText("");
   updateSettingsPanel(DataReduction.instrument);
+  TabUtils.removedAllTabColor(); //remove color of all tabs
+  ParametersToKeep.refreshGuiWithParametersToKeep(); //remove all previous contents
   
 	}
 	

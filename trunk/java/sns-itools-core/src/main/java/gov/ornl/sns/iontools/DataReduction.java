@@ -54,15 +54,15 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String           instrument = IParameters.DEFAULT_INSTRUMENT;
     static String           runNumberValue;
     static String           sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
-    static String 			pidSignalFileName;        	//name of signal pid file
+    static String 			    pidSignalFileName;        	//name of signal pid file
     static String           pidBackFileName;			//name of back pid file
-    static String	 		sNexusFound;			//NeXus file found or not
-    static String     		sNtof;					//Number of time of flight
+    static String	      		sNexusFound;			//NeXus file found or not
+    static String     	 	  sNtof;					//Number of time of flight
     static String          	text1;
     static String          	text2;
     static String          	cmd; 
     static String           hostname;
-    static String  		    modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
+    static String  		      modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
     static String           sTmpFolder;      
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
@@ -70,14 +70,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static int 	            Ny;
     static int              NyMin;
     static int              NyMax;
-    static int		        c_xval1=0;	  // initial x for rubber band box
-    static int			    c_yval1=0;	  // initial y for rubber band box
-    static int		    	c_xval2=0;	  // final x for rubber band box
-    static int			    c_yval2=0;	  // final y for rubber band box
-    static int			    c_x1=0;		  // initial x java
-    static int			    c_y1=0;		  // initial y java
-    static int		    	c_x2=0;		  // final x java
-    static int		    	c_y2=0;		  // final y java
+    static int		          c_xval1=0;	  // initial x for rubber band box
+    static int			        c_yval1=0;	  // initial y for rubber band box
+    static int		    	    c_xval2=0;	  // final x for rubber band box
+    static int			        c_yval2=0;	  // final y for rubber band box
+    static int			        c_x1=0;		  // initial x java
+    static int			        c_y1=0;		  // initial y java
+    static int		    	    c_x2=0;		  // final x java
+    static int		    	    c_y2=0;		  // final y java
     static int              a=0;
     static int             	x_min;
     static int             	x_max;
@@ -718,7 +718,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    processingInfoLabel.setVisible(true);
 	    processingInfoLabel.setForeground(Color.BLUE);
 	    processingInfoLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-	    processingGif = createImageIcon("/gov/ornl/sns/iontools/images/cool.gif");
+      processingGif = createImageIcon("/gov/ornl/sns/iontools/images/newSNSlogoSize2.gif");
 
       processingLabel = new JLabel();
 	    processingLabel.setVisible(true);

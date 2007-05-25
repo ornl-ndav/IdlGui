@@ -141,6 +141,13 @@ public class ParametersToKeep {
 		}
 	}
 	
+  /*
+   * This function is used when switching from one instrument to another
+   * all the parameters have to be removed.
+   */
+  
+  
+  
 	static void refreshGuiWithParametersToKeep() {
 	
 		//initialize parameters to keep or not
