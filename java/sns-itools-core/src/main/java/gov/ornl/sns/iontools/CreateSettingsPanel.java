@@ -133,32 +133,38 @@ public class CreateSettingsPanel {
 		DataReduction.saveMinWavelengthCheckBox.setSelected(true);
 		DataReduction.saveMinWavelengthCheckBox.setActionCommand("saveMinWavelengthCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveMinWavelengthCheckBox);
+    DataReduction.saveMinWavelengthCheckBox.setEnabled(false);
 		
 		DataReduction.saveMaxWavelengthCheckBox = new JCheckBox("Max wavelength");
 		DataReduction.saveMaxWavelengthCheckBox.setSelected(true);
 		DataReduction.saveMaxWavelengthCheckBox.setActionCommand("saveMaxWavelengthCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveMaxWavelengthCheckBox);
-		
+		DataReduction.saveMaxWavelengthCheckBox.setEnabled(false);
+    
 		DataReduction.saveWidthWavelengthCheckBox = new JCheckBox("Width wavelength");
 		DataReduction.saveWidthWavelengthCheckBox.setSelected(true);
 		DataReduction.saveWidthWavelengthCheckBox.setActionCommand("saveWidthWavelengthCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveWidthWavelengthCheckBox);
-		
+		DataReduction.saveWidthWavelengthCheckBox.setEnabled(false);
+    
 		DataReduction.saveDetectorAngleCheckBox = new JCheckBox("Detector angle");
 		DataReduction.saveDetectorAngleCheckBox.setSelected(true);
 		DataReduction.saveDetectorAngleCheckBox.setActionCommand("saveDetectorAngleCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAngleCheckBox);
-		
+		DataReduction.saveDetectorAngleCheckBox.setEnabled(false);
+    
 		DataReduction.saveDetectorAnglePMCheckBox = new JCheckBox("Detector angle incertitude");
 		DataReduction.saveDetectorAnglePMCheckBox.setSelected(true);
 		DataReduction.saveDetectorAnglePMCheckBox.setActionCommand("saveDetectorAnglePMCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAnglePMCheckBox);
-		
+		DataReduction.saveDetectorAnglePMCheckBox.setEnabled(false);
+    
 		DataReduction.saveDetectorAngleUnitsCheckBox = new JCheckBox("Detector angle units");
 		DataReduction.saveDetectorAngleUnitsCheckBox.setSelected(true);
 		DataReduction.saveDetectorAngleUnitsCheckBox.setActionCommand("saveDetectorAngleUnitsCheckBox");
 		DataReduction.savingParametersSettingsPanel.add(DataReduction.saveDetectorAngleUnitsCheckBox);
-		
+		DataReduction.saveDetectorAngleUnitsCheckBox.setEnabled(false);
+    
 		DataReduction.saveNormalizationCheckBox = new JCheckBox("Normalization");
 		DataReduction.saveNormalizationCheckBox.setSelected(true);
 		DataReduction.saveNormalizationCheckBox.setActionCommand("saveNormalizationCheckBox");

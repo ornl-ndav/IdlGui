@@ -92,17 +92,18 @@ public interface IParameters {
 		//Data reducton command line -flags
 		static final String NORMALIZATION_FLAG 		    = "--norm=";
 		static final String INSTRUMENT_GEOMETRY_FLAG 	= "--inst_geom=";
-		static final String COMBINE_FLAG 				= "--combine";
-		static final String SIGNAL_ROI_FILE_FLAG 		= "--signal-roi-file=";
-		static final String BKG_ROI_FILE_FLAG 	      	= "--bkg-roi-file=";
-		static final String NO_BKG_FLAG  				= "--no-bkg";
+		static final String COMBINE_FLAG 			       	= "--combine";
+		static final String SIGNAL_ROI_FILE_FLAG 		  = "--signal-roi-file=";
+		static final String BKG_ROI_FILE_FLAG 	      = "--bkg-roi-file=";
+		static final String NO_BKG_FLAG  				      = "--no-bkg";
 		static final String NO_NORM_BKG             	= "--no-norm-bkg";
-		static final String DUMP_SPECULAR               = "--dump-specular";
-		static final String DUMP_SUB                    = "--dump-sub";
-		static final String DUMP_NORM                   = "--dump-norm";
+		static final String DUMP_SPECULAR             = "--dump-specular";
+		static final String DUMP_BKG                  = "--dump-bkg";
+    static final String DUMP_SUB                  = "--dump-sub";
+		static final String DUMP_NORM                 = "--dump-norm";
 		static final String DUMP_NORM_BKG            	= "--dump-norm-bkg";
-		static final String WAVELENGTH_BINS_FLAG        = "--l-bins=";
-		static final String DET_ANGLE_FLAG              = "--det-angle=";
+		static final String WAVELENGTH_BINS_FLAG      = "--l-bins=";
+		static final String DET_ANGLE_FLAG            = "--det-angle=";
 		
 		//Extra plots extension
 		static final String SR_EXTENSION                = ".sdc";

@@ -97,8 +97,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static float            fNtof;
 
     static ImageIcon[]     	instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
-    static ImageIcon   		detectorLayout = new ImageIcon();
+    static ImageIcon     		detectorLayout = new ImageIcon();
     static ImageIcon        processingGif = new ImageIcon();
+    static ImageIcon        arrowGif = new ImageIcon();
     
     //ION
     static IONGrConnection  c_ionCon;
@@ -288,9 +289,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           detectorAnglePMLabel;
     static JLabel           processingLabel;
     static JLabel           processingInfoLabel;
-    static JLabel           filesToKeepIcon1Label;
-    static JLabel           filesToKeepIcon2Label;
-    static JLabel           filesToKeepIcon3Label;
+    static JLabel           filesToKeepArrowIcon;
+    static JLabel           filesToKeepArrowIcon2;
     static JLabel           filesToKeep2Label;
         
     static JTextField      	runNumberTextField;
@@ -335,16 +335,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          signalPidFileButton;
     static JButton          clearSignalPidFileButton;
     static JButton          intermediateButton;
-    static JButton      	startDataReductionButton;
-    static JButton      	instrumentGeometryButton;
-    static JButton      	settingsValidateButton; 
+    static JButton      	  startDataReductionButton;
+    static JButton      	  instrumentGeometryButton;
+    static JButton      	  settingsValidateButton; 
     static JButton          replotSelectionButton;  
     static JButton          settingsSelectAllButton;
     static JButton          settingsUnselectAllButton;
     static JButton          filesToKeep1Button;
+    static JButton          filesToKeep2Button;
     static JButton          filesToKeep3Button;
-    
-    static JScrollPane 		scrollPane;
+        
+    static JScrollPane 		  scrollPane;
     
     static JComboBox        linLogComboBoxX;
     static JComboBox        linLogComboBoxXEP;
@@ -717,10 +718,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    processingInfoLabel.setVisible(true);
 	    processingInfoLabel.setForeground(Color.BLUE);
 	    processingInfoLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-	    //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/lineProcessing.gif");
-	    //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/SNSlogo.gif");
 	    processingGif = createImageIcon("/gov/ornl/sns/iontools/images/cool.gif");
-	    processingLabel = new JLabel();
+
+      processingLabel = new JLabel();
 	    processingLabel.setVisible(true);
 	    processingLabel.setIcon(processingGif);
 	    processingPanel.add(processingInfoLabel);
