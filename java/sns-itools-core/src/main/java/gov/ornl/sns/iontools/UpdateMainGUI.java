@@ -29,7 +29,7 @@ public class UpdateMainGUI {
   DataReduction.runsSequenceTextField.setText("");
   updateSettingsPanel(DataReduction.instrument);
   TabUtils.removedAllTabColor(); //remove color of all tabs
-  ParametersToKeep.refreshGuiWithParametersToKeep(); //remove all previous contents
+  ParametersToKeep.refreshGuiWithNoParametersToKeep(); //remove all previous contents
   
 	}
 	
@@ -54,8 +54,7 @@ public class UpdateMainGUI {
     DataReduction.saveDetectorAngleCheckBox.setEnabled(status);
     DataReduction.saveDetectorAnglePMCheckBox.setEnabled(status);
     DataReduction.saveDetectorAngleUnitsCheckBox.setEnabled(status);
-    
-    
+     
   }
   
 }
