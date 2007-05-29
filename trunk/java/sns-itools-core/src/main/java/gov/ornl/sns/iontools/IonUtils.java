@@ -31,20 +31,19 @@ public class IonUtils {
 	 */
 	  static void executeCmd(String cmd) {
 	      try{
-		  //DataReduction.c_ionCon.setIDLVariable("instrument",DataReduction.ionInstrument);
-		  DataReduction.c_ionCon.executeIDLCommand(cmd);
-	      } catch(Exception e) { 
-		  String smsg;
-		  if(e instanceof IOException)
-		      smsg = "Communication error:"+e.getMessage(); 
-		  else if(e instanceof IONSecurityException )
-		      smsg = "ION Java security error"; 
-		  else if(e instanceof IONIllegalCommandException )
-		      smsg = "Illegal IDL Command detected on server."; 
-		  else 
-		      smsg = "Unknown error: "+e.getMessage();
-		  System.err.println("Error: "+smsg);
-	      }
+	        DataReduction.c_ionCon.executeIDLCommand(cmd);
+	        } catch (Exception e) { 
+	        String smsg;
+	        if(e instanceof IOException)
+	          smsg = "Communication error:"+e.getMessage(); 
+	        else if(e instanceof IONSecurityException )
+	          smsg = "ION Java security error"; 
+	        else if(e instanceof IONIllegalCommandException )
+	          smsg = "Illegal IDL Command detected on server."; 
+	        else 
+	          smsg = "Unknown error: "+e.getMessage();
+	        System.err.println("Error: "+smsg);
+	        }
 	  }
 
 }

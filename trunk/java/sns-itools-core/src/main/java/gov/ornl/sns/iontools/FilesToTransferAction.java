@@ -52,7 +52,9 @@ public class FilesToTransferAction {
     //list of files selected and transfer them one at a time
     for (int i=0; i<iSelection.length; i++) {
       String cmd = createCmd(sListOfFiles[i]);
-      System.out.println("cmd: " + cmd);
+      System.out.println(cmd);
+      IonUtils.executeCmd(cmd);
+      
       //System.out.println(FilesToTransferAction.sListOfFiles[i]);
     }
     
@@ -64,7 +66,7 @@ public class FilesToTransferAction {
   static String createCmd(String fileName) {
     
     String cmd = "";
-    cmd = "move_file ";
+    cmd = "MOVE_FILE, ";
     cmd += DataReduction.remoteUser + ",";
     cmd += DataReduction.sTmpFolder + ",";
     cmd += fileName;
