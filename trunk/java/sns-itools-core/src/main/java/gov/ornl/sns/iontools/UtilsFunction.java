@@ -1,5 +1,7 @@
 package gov.ornl.sns.iontools;
 
+import java.io.File;
+
 public class UtilsFunction {
 
 	static String convertDegresToRadians(String sAngleDegree) {
@@ -29,7 +31,8 @@ public class UtilsFunction {
 		String cmd = "create_tmp_folder, " + ionFullTmpFolderName;
 		IonUtils.executeCmd(cmd);
 		
-		ParametersToKeep.sSessionWorkingDirectory += "/";
+    ParametersToKeep.sSessionWorkingDirectory += "/";
+    DataReduction.sTmpFolder = ParametersToKeep.sSessionWorkingDirectory;
 		
 	}
 		
@@ -55,7 +58,27 @@ public class UtilsFunction {
 		
 	}
 	
+  /*
+   * Get list of files in temporary directory
+   */
+	static String[] getListOfFiles() {
+  
+    String[] files;
+	  File dir = new File(ParametersToKeep.sSessionWorkingDirectory);
+	  if (dir.exists()) {
+	    files = dir.list();
+	    //to display list of files
+      //for (String file:files) {
+      //System.out.println(file);
+	    //}
+	  } else {
+	    files = null; 
+    }
+	  return files;
+  
+  }
 	
+  
 }
 
 

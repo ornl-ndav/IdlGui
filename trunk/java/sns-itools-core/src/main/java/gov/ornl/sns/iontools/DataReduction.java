@@ -42,6 +42,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ChangeEvent;
 import java.awt.Font;
+import java.util.Vector;
 
 public class DataReduction extends JApplet implements IONDisconnectListener, 
 						      IONOutputListener, 
@@ -51,13 +52,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 {	
 	// Instance Vars
     static String           ucams = "ionuser";				//ucams
+    static String           remoteUser;           
     static String           instrument = IParameters.DEFAULT_INSTRUMENT;
     static String           runNumberValue;
-    static String           sTmpOutputFileName;   //the full name of the file that contaits the dump histo data
+    static String           sTmpOutputFileName;         //the full name of the file that contaits the dump histo data
     static String 			    pidSignalFileName;        	//name of signal pid file
-    static String           pidBackFileName;			//name of back pid file
-    static String	      		sNexusFound;			//NeXus file found or not
-    static String     	 	  sNtof;					//Number of time of flight
+    static String           pidBackFileName;		      	//name of back pid file
+    static String	      		sNexusFound;			          //NeXus file found or not
+    static String     	 	  sNtof;					            //Number of time of flight
     static String          	text1;
     static String          	text2;
     static String          	cmd; 
@@ -83,18 +85,18 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static int             	x_max;
     static int             	y_min;
     static int             	y_max;
-    final static int 	    NUM_LOGO_IMAGES = 2;
-    final static int 	    START_INDEX = 0;
+    final static int 	      NUM_LOGO_IMAGES = 2;
+    final static int 	      START_INDEX = 0;
     
     static boolean      	bFoundNexus = false;
-    static boolean 			bEPFirstTime;
+    static boolean 			  bEPFirstTime;
     
     static GuiLiveParameters  liveParameters;
     static ExtraPlotInterface myEPinterface;
     static ParametersToKeep   myParametersToKeep;
     
     static DisplayConfiguration    getN;
-    static float            fNtof;
+    static float                   fNtof;
 
     static ImageIcon[]     	instrumentLogo = new ImageIcon[NUM_LOGO_IMAGES];
     static ImageIcon     		detectorLayout = new ImageIcon();
@@ -134,7 +136,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     static JPanel          	instrumentLogoPanel;
     static JPanel           topPanel;
-    static JPanel 			clearSelectionPanel ;
+    static JPanel 			    clearSelectionPanel ;
     static JPanel           plotPanel;
     static JPanel           leftPanel;
     static JPanel           plotDataReductionPanel;
@@ -173,6 +175,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           filesToTransferPanel;
     static JPanel           filesToTransferManualPanel;
     static JPanel           filesToTransferMenuPanel;
+    static JPanel           filesToTransferCheckBoxPanel;
         
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
@@ -185,9 +188,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     
     static JCheckBoxMenuItem  cbMenuItem;
     
-    static JSplitPane         filesToTransferSplitPane;
-    static JScrollPane        filesScrollPane;
-    static JScrollPane        detailScrollPane;
+    static JSplitPane       filesToTransferSplitPane;
+    static JScrollPane      filesScrollPane;
+    static JScrollPane      detailScrollPane;
     
     static JMenu            dataReductionPackMenu;
     static JMenu            modeMenu;
@@ -195,6 +198,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JMenu            saveSessionMenu;
     static JMenu           	intermediateMenu;
     static JMenu            instrumentMenu;
+    
+    static JList            filesToTransferList;
+    static JList            filesTransferedList;
     
     static JProgressBar     saveFilesToTransferProgressBar;
     
@@ -236,30 +242,33 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static ButtonGroup     	instrumentButtonGroup;
     static ButtonGroup      filesTransferButtonGroup;
     
-    static JCheckBox	    extraPlotsSRCheckBox;
-    static JCheckBox 		extraPlotsBSCheckBox;
+    static JCheckBox	      extraPlotsSRCheckBox;
+    static JCheckBox 		    extraPlotsBSCheckBox;
     static JCheckBox        extraPlotsSRBCheckBox;
     static JCheckBox        extraPlotsNRCheckBox;
     static JCheckBox        extraPlotsBRNCheckBox;
-    static JCheckBox     	saveSignalPidFileCheckBox;
-    static JCheckBox 		saveBackPidFileCheckBox;
+    static JCheckBox     	  saveSignalPidFileCheckBox;
+    static JCheckBox 		    saveBackPidFileCheckBox;
     static JCheckBox        saveMinWavelengthCheckBox;
-    static JCheckBox 		saveMaxWavelengthCheckBox;
-    static JCheckBox  		saveWidthWavelengthCheckBox;
-    static JCheckBox		saveDetectorAngleCheckBox;
-    static JCheckBox		saveDetectorAnglePMCheckBox;
+    static JCheckBox 		    saveMaxWavelengthCheckBox;
+    static JCheckBox  		  saveWidthWavelengthCheckBox;
+    static JCheckBox		    saveDetectorAngleCheckBox;
+    static JCheckBox		    saveDetectorAnglePMCheckBox;
     static JCheckBox        saveDetectorAngleUnitsCheckBox;
-    static JCheckBox		saveNormalizationCheckBox;
-    static JCheckBox 		saveBackgroundCheckBox;
-    static JCheckBox     	saveNormalizationBackgroundCheckBox;
-    static JCheckBox		saveIntermediateFileOutputCheckBox;
-    static JCheckBox		saveCombineDataSpectrumCheckBox;
-    static JCheckBox		saveOverwriteInstrumentGeometryCheckBox;
-    static JCheckBox		saveAddAndGoRunNumberCheckBox;
-    static JCheckBox		saveGoSequentiallyCheckBox;
+    static JCheckBox		    saveNormalizationCheckBox;
+    static JCheckBox 		    saveBackgroundCheckBox;
+    static JCheckBox     	  saveNormalizationBackgroundCheckBox;
+    static JCheckBox		    saveIntermediateFileOutputCheckBox;
+    static JCheckBox		    saveCombineDataSpectrumCheckBox;
+    static JCheckBox		    saveOverwriteInstrumentGeometryCheckBox;
+    static JCheckBox		    saveAddAndGoRunNumberCheckBox;
+    static JCheckBox		    saveGoSequentiallyCheckBox;
+    static JCheckBox        transferPidFilesCheckBox;
+    static JCheckBox        transferDataReductionFileCheckBox;
+    static JCheckBox        transferExtraPlotsCheckBox;
     
     static JLabel          	instrumentLogoLabel;
-    static JLabel	        runNumberLabel;	
+    static JLabel	          runNumberLabel;	
     static JLabel           labelXaxis;
     static JLabel           labelXaxisEP;
     static JLabel           labelYaxis;
@@ -342,11 +351,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          replotSelectionButton;  
     static JButton          settingsSelectAllButton;
     static JButton          settingsUnselectAllButton;
-    static JButton          filesToKeep1Button;
-    static JButton          filesToKeep2Button;
-    static JButton          filesToKeep3Button;
-        
+    static JButton          transferFilesButton;
+    
     static JScrollPane 		  scrollPane;
+    
+    static Vector   vFilesToTransfer;
+    static Vector   fFilesTransfered; 
     
     static JComboBox        linLogComboBoxX;
     static JComboBox        linLogComboBoxXEP;
@@ -378,8 +388,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       runNumberTextField.requestFocusInWindow();
       connectToServer();
 
-	  //create tmp folder inside ionuser
-	  UtilsFunction.createTmpFolder();
+      //create tmp folder inside ionuser
+      UtilsFunction.createTmpFolder();
 
       //retrieve hostname
       //java.util.Properties props = System.getProperties();
@@ -388,16 +398,24 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       //generalInfoTextArea.setText(username);
       
       try {
-	  java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
-	  hostname = localMachine.getHostName();
-      }
-      catch (java.net.UnknownHostException uhe)
-	  {
+        java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
+        hostname = localMachine.getHostName();
+        }
+        catch (java.net.UnknownHostException uhe)
+        {
 	      //handle exception
 	  } 
 
-      //DataReduction.generalInfoTextArea.setText("user is: " + getParameter("userName"));
-      
+      //get remote user ucams
+      //if not found, ucams is set to developer ucams
+      remoteUser = getParameter("userName");
+      try {
+         byte[] sTmp = remoteUser.getBytes();
+      } catch (Exception e)
+      {
+        remoteUser = IParameters.DEVELOPER_UCAMS;
+      }
+      DataReduction.generalInfoTextArea.setText("user is: " + remoteUser); 
   }
  
   /**
@@ -798,10 +816,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    add(plotDataReductionPanel);
 	    setJMenuBar(menuBar);
 	   
-	    //	  change event handler to be able to remove blue foreground of main tab
+	    //change event handler to be able to remove blue foreground of main tab
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
-				TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
+			  if (tabbedPane.getSelectedIndex()==4) { //if Transfer tab is selected
+			    FilesToTransferAction.updateListOfFilesToTransfer();
+        }
+        TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});
 	    
 	    addActionListener();
@@ -1141,7 +1162,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //from Files Transfer
       DataReduction.automaticFilesTransferRadioButton.addActionListener(this);
       DataReduction.manualFilesTransferRadioButton.addActionListener(this);
-    
+      DataReduction.transferFilesButton.addActionListener(this);
     }
   
 }

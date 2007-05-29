@@ -1,6 +1,7 @@
 package gov.ornl.sns.iontools;
 
 import java.awt.event.*;
+import java.io.File;
 
 public class SuperEventHandler extends DataReduction {
 
@@ -294,5 +295,13 @@ public class SuperEventHandler extends DataReduction {
       DataReduction.filesToTransferManualPanel.setVisible(true);
     }
     
+    //transfer button
+    if ("transferFilesButton".equals(evt.getActionCommand())) {
+      //System.out.println(DataReduction.filesToTransferList.getSelectedValue());
+      //System.out.println(DataReduction.filesToTransferList.getSelectedIndex());
+      //System.out.println("selection is: " + iSelection[0]);
+      FilesToTransferAction.transferFile();
+    }
+        
 	}
 }
