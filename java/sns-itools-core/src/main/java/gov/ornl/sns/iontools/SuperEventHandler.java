@@ -19,7 +19,6 @@ public class SuperEventHandler extends DataReduction {
 			SubmitLoadct run = new SubmitLoadct(cmdLoadct);
 			Thread runThread = new Thread(run,"Loadct plot in progress");
 			runThread.start();
-	   		
 	   	}
 	   		   	
 		if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
@@ -285,7 +284,15 @@ public class SuperEventHandler extends DataReduction {
 			doBox();
 		}
 
-		
+    //automatic files transfer
+    if ("automaticFilesTransfer".equals(evt.getActionCommand())) {
+      DataReduction.filesToTransferManualPanel.setVisible(false);
+    }
+
+    //manual files transfer 
+    if ("manualFilesTransfer".equals(evt.getActionCommand())) {
+      DataReduction.filesToTransferManualPanel.setVisible(true);
+    }
+    
 	}
-	
 }

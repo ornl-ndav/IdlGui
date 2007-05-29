@@ -171,11 +171,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           detectorAnglePanel;
     static JPanel           processingPanel;
     static JPanel           filesToTransferPanel;
-    static JPanel           filesToTransferStep1Panel;
-    static JPanel           filesToTransferStep2Panel;
-    static JPanel           filesToTransferStep3Panel;
-    static JPanel 			    filesToTransferProcessingPanel;
-    
+    static JPanel           filesToTransferManualPanel;
+    static JPanel           filesToTransferMenuPanel;
+        
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
     static JTabbedPane      dataReductionTabbedPane;
@@ -224,6 +222,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JRadioButton     noNormBackgroundRadioButton;
     static JRadioButton    	yesInstrumentGeometryRadioButton;
     static JRadioButton    	noInstrumentGeometryRadioButton;
+    static JRadioButton     automaticFilesTransferRadioButton;
+    static JRadioButton     manualFilesTransferRadioButton;
     
     static ButtonGroup    	normalizationButtonGroup;
     static ButtonGroup      backgroundButtonGroup;
@@ -234,6 +234,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static ButtonGroup     	modeButtonGroup;
     static ButtonGroup      saveFullSessionButtonGroup;
     static ButtonGroup     	instrumentButtonGroup;
+    static ButtonGroup      filesTransferButtonGroup;
     
     static JCheckBox	    extraPlotsSRCheckBox;
     static JCheckBox 		extraPlotsBSCheckBox;
@@ -1136,6 +1137,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    DataReduction.saveGoSequentiallyCheckBox.addActionListener(this);
 	    DataReduction.settingsSelectAllButton.addActionListener(this);
 	    DataReduction.settingsUnselectAllButton.addActionListener(this);
+    
+	    //from Files Transfer
+      DataReduction.automaticFilesTransferRadioButton.addActionListener(this);
+      DataReduction.manualFilesTransferRadioButton.addActionListener(this);
+    
     }
   
 }
