@@ -31,9 +31,10 @@ public interface IParameters {
 	
 		static final boolean DEBUG = false;
 		
-	    static final String PATH_TO_HOME           = "/SNS/users/";
-	    static final String SEQUENCE_SEPARATOR     = "-";
-	    static final String WORKING_PATH           = "/SNS/users/ionuser/";
+	  static final String DEVELOPER_UCAMS        = "j35";  
+    static final String PATH_TO_HOME           = "/SNS/users/";
+	  static final String SEQUENCE_SEPARATOR     = "-";
+	  static final String WORKING_PATH           = "/SNS/users/ionuser/";
 
 	    
 		static final String NA = "N/A";
@@ -226,5 +227,9 @@ public interface IParameters {
 	     												 DataReduction.selectionTab,
 	     												 DataReduction.runsTabbedPane,
 	     												 DataReduction.extraPlotsTabbedPane};
-	    
+	    //transfer files
+      static final boolean bTransferPidFile           = true;
+      static final boolean bTransferDataReductionFile = true;
+      static final boolean bTransferExtraPlotFile     = true;
+      
 }

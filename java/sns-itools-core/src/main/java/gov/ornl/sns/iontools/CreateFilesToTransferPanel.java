@@ -1,15 +1,21 @@
 package gov.ornl.sns.iontools;
 
 import java.awt.Dimension;
-
+import java.awt.GridLayout;
 import javax.swing.*;
+import java.util.*;
 
 public class CreateFilesToTransferPanel {
 
   private static int iPanelMenuXoff = 5;
   private static int iPanelMenuYoff = 5;
   private static int iPanelManualXoff = 5;
-  private static int iPanelManualYoff = 100;
+  private static int iPanelManualYoff = 85;
+  
+  private static int iFilesToTransferCheckBoxPanelXoff = 15;
+  private static int iFilesToTransferCheckBoxPanelYoff = 25;
+  private static int iFilesToTransferCheckBoxPanelWidth = 320;
+  private static int iFilesToTransferCheckBoxPanelHeigth = 100;
   
   private static int iFilesTransferRadioButtonWidth = 400;
   private static int iFilesTransferRadioButtonHeight = 30;
@@ -17,29 +23,30 @@ public class CreateFilesToTransferPanel {
   private static int iAutomaticFilesTransferRadioButtonYoff = 5;
   private static int iManualFilesTransferRadioButtonYoff = 35;
   
-  private static int iPanelWidth = 900;
-  private static int iPanelHeight = 80; 
-	private static int iPanel2Height = 300;
-	private static int iButtonWidth = 340;
-	private static int iButtonHeight = 30;
+  private static int iFilesToTransferListXoff = 15;
+  private static int iFilestoTransferListYoff = 135;
+  private static int iFilesToTransferListHeigth = 300;
+  private static int iFilesTransferedListXoff = 450;
+  private static int iFilesTransferedListYoff = 135;
+  
+  private static int iTransferFilesButtonXoff = 337;
+  private static int iTransferFilesButtonYoff = 250;
+  private static int iTransferFilesButtonWidth = 110;
+  private static int iTransferFilesButtonHeight = 30;
+    
+  private static int iPanelWidth  = 790;
+  private static int iPanel1Height = 70;
+  private static int iPanel2Height = 600;
 	
-  private static int iButton1Xoff = 15;
-	private static int iButton1Yoff = 5;
-  private static int iIconWidth = 50;
-  private static int iIconHeight = 30;
-  private static int iIcon1Xoff = iButtonWidth + 2*iButton1Xoff;
-  private static int iIcon2Xoff = iIcon1Xoff + iIconWidth + iButtonWidth + 2*iButton1Xoff; 
-  private static int iButton2Xoff = iIcon1Xoff+iIconWidth+iButton1Xoff;
-    
+  
   static void buildGUI() {
-
+    DataReduction.vFilesToTransfer = new Vector();
+            
     DataReduction.filesToTransferPanel.setLayout(null);
-    
-		buildPanel1();  	  //panel of step 1
-		buildPanel2();      //panel of step 2
-//		buildPanel3();      //panel of step 3
-//		buildPanel4();      //panel that contains the processing bar
-	}
+    buildPanel1();  	  //panel of automatic/manual selection
+    buildPanel2();      //panel of manual mode
+  
+  }
 
   static void buildPanel1() {
    
@@ -61,6 +68,7 @@ public class CreateFilesToTransferPanel {
     
     DataReduction.manualFilesTransferRadioButton = new JRadioButton("Manual Files Transfer");
     DataReduction.manualFilesTransferRadioButton.setActionCommand("manualFilesTransfer");
+    DataReduction.manualFilesTransferRadioButton.setSelected(true);
     DataReduction.manualFilesTransferRadioButton.setPreferredSize(new Dimension(
         iFilesTransferRadioButtonWidth,
         iFilesTransferRadioButtonHeight));
@@ -79,7 +87,7 @@ public class CreateFilesToTransferPanel {
     
     DataReduction.filesToTransferMenuPanel.setPreferredSize(new Dimension(
         iPanelWidth,
-        iPanelHeight));
+        iPanel1Height));
     Dimension filesToTransferMenuPanelSize = DataReduction.filesToTransferMenuPanel.getPreferredSize();
     DataReduction.filesToTransferMenuPanel.setBounds(
         iPanelMenuXoff,
@@ -92,75 +100,113 @@ public class CreateFilesToTransferPanel {
     
   }
   
+  /*
+   * build the panel that list the categories of files to transfer
+   */
+  static void buildCategoriesPanel() {
+    
+    DataReduction.filesToTransferCheckBoxPanel = new JPanel();
+    DataReduction.filesToTransferCheckBoxPanel.setLayout(new GridLayout(0,1));
+    DataReduction.filesToTransferCheckBoxPanel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createTitledBorder("Categories of files to select from"),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
+    
+    DataReduction.transferPidFilesCheckBox = new JCheckBox("Pixel IDs selection files");
+    DataReduction.transferPidFilesCheckBox.setSelected(IParameters.bTransferPidFile);
+    DataReduction.transferPidFilesCheckBox.setActionCommand("transferPidFilesCheckBox");
+    
+    DataReduction.transferDataReductionFileCheckBox = new JCheckBox("Main Data Reduction files");
+    DataReduction.transferDataReductionFileCheckBox.setSelected(IParameters.bTransferDataReductionFile);
+    DataReduction.transferDataReductionFileCheckBox.setActionCommand("transferDataReductionFileCheckBox");
+    
+    DataReduction.transferExtraPlotsCheckBox = new JCheckBox("Extra Plots files");
+    DataReduction.transferExtraPlotsCheckBox.setSelected(IParameters.bTransferExtraPlotFile);
+    DataReduction.transferExtraPlotsCheckBox.setActionCommand("transferExtraPlotsCheckBox");
+    
+    DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferPidFilesCheckBox);
+    DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferDataReductionFileCheckBox);
+    DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferExtraPlotsCheckBox);
+    
+    DataReduction.filesToTransferCheckBoxPanel.setPreferredSize(new Dimension(
+        iFilesToTransferCheckBoxPanelWidth,
+        iFilesToTransferCheckBoxPanelHeigth));
+    Dimension filesToTransferCheckBoxPanelSize = DataReduction.filesToTransferCheckBoxPanel.getPreferredSize();
+    DataReduction.filesToTransferCheckBoxPanel.setBounds(
+        iFilesToTransferCheckBoxPanelXoff,
+        iFilesToTransferCheckBoxPanelYoff,
+        filesToTransferCheckBoxPanelSize.width,
+        filesToTransferCheckBoxPanelSize.height);
+    
+    DataReduction.filesToTransferManualPanel.add(DataReduction.filesToTransferCheckBoxPanel);
+  }
   
 	/*
 	 * This function will create the second part of the tab
-   * which is when we select manaul transfer
+   * which is when we select manual transfer
    * 
 	 */
 	static void buildPanel2() {
 		
-		DataReduction.filesToTransferManualPanel = new JPanel();
+	  DataReduction.filesToTransferManualPanel = new JPanel();
 		DataReduction.filesToTransferManualPanel.setLayout(null);
 
-    //Button #1 : Select files to keep
-		DataReduction.filesToKeep1Button = new JButton("Select files to save");
-		DataReduction.filesToKeep1Button.setActionCommand("filesToKeepButton");
-		DataReduction.filesToKeep1Button.setPreferredSize(new Dimension(
-				iButtonWidth,
-				iButtonHeight));
-		Dimension filesToKeepButtonSize = DataReduction.filesToKeep1Button.getPreferredSize();
-		DataReduction.filesToKeep1Button.setBounds(
-				iButton1Xoff,
-				iButton1Yoff,
-				filesToKeepButtonSize.width,
-				filesToKeepButtonSize.height);
-		
-		DataReduction.filesToTransferManualPanel.add(DataReduction.filesToKeep1Button);
+    buildCategoriesPanel();
+    
+    DataReduction.filesToTransferList = new JList(DataReduction.vFilesToTransfer);
+    DataReduction.filesToTransferList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    DataReduction.filesToTransferList.setSelectedIndex(0);
+    JScrollPane listScrollPane = new JScrollPane(DataReduction.filesToTransferList);
+    listScrollPane.setPreferredSize(new Dimension(
+        iFilesToTransferCheckBoxPanelWidth,
+        iFilesToTransferListHeigth));
+    Dimension filesToTransferSize = listScrollPane.getPreferredSize();
+    listScrollPane.setBounds(
+        iFilesToTransferListXoff,
+        iFilestoTransferListYoff,
+        filesToTransferSize.width,
+        filesToTransferSize.height);
+    DataReduction.filesToTransferManualPanel.add(listScrollPane);
+    
+    DataReduction.transferFilesButton = new JButton("Transfer ->");
+    DataReduction.transferFilesButton.setActionCommand("transferFilesButton");
+    DataReduction.transferFilesButton.setPreferredSize(new Dimension(
+        iTransferFilesButtonWidth,
+        iTransferFilesButtonHeight));
+    Dimension transferFilesButtonsize = DataReduction.transferFilesButton.getPreferredSize();
+    DataReduction.transferFilesButton.setBounds(
+        iTransferFilesButtonXoff,
+        iTransferFilesButtonYoff,
+        transferFilesButtonsize.width,
+        transferFilesButtonsize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.transferFilesButton);
+    
+    DataReduction.filesTransferedList = new JList();
+    JScrollPane listScroll2Pane = new JScrollPane(DataReduction.filesTransferedList);
+    listScrollPane.setPreferredSize(new Dimension(
+        iFilesToTransferCheckBoxPanelWidth,
+        iFilesToTransferListHeigth));
+    listScroll2Pane.setBounds(
+        iFilesTransferedListXoff,
+        iFilesTransferedListYoff,
+        filesToTransferSize.width,
+        filesToTransferSize.height);
+    DataReduction.filesToTransferManualPanel.add(listScroll2Pane);
 
-    //Arrow #1
-    DataReduction.arrowGif = DataReduction.createImageIcon("/gov/ornl/sns/iontools/images/right_arrow.gif");
-    DataReduction.filesToKeepArrowIcon = new JLabel();
-    DataReduction.filesToKeepArrowIcon.setIcon(DataReduction.arrowGif);
-    DataReduction.filesToKeepArrowIcon.setPreferredSize(new Dimension(
-        iIconWidth,
-        iIconHeight));
-    Dimension filesToKeepArrowIconSize = DataReduction.filesToKeepArrowIcon.getPreferredSize();
-    DataReduction.filesToKeepArrowIcon.setBounds(
-        iIcon1Xoff,
-        iButton1Yoff,
-        filesToKeepArrowIconSize.width,
-        filesToKeepArrowIconSize.height);
-    
-    DataReduction.filesToTransferManualPanel.add(DataReduction.filesToKeepArrowIcon);
-    
-    //Button #3
-    DataReduction.filesToKeep3Button = new JButton("Transfer files");
-    DataReduction.filesToKeep3Button.setActionCommand("filesToKeep3Button");
-    DataReduction.filesToKeep3Button.setPreferredSize(new Dimension(
-        iButtonWidth,
-        iButtonHeight));
-    Dimension filesToKeep3ButtonSize = DataReduction.filesToKeep3Button.getPreferredSize();
-    DataReduction.filesToKeep3Button.setBounds(
-        iButton2Xoff,
-        iButton1Yoff,
-        filesToKeep3ButtonSize.width,
-        filesToKeep3ButtonSize.height);
-    
-    DataReduction.filesToTransferManualPanel.add(DataReduction.filesToKeep3Button);
-    
     DataReduction.filesToTransferManualPanel.setPreferredSize(new Dimension(
         iPanelWidth,
-        iPanelHeight));
+        iPanel2Height));
     Dimension filesToTransferManualPanelSize = DataReduction.filesToTransferManualPanel.getPreferredSize();
     DataReduction.filesToTransferManualPanel.setBounds(
         iPanelManualXoff,
         iPanelManualYoff,
         filesToTransferManualPanelSize.width,
         filesToTransferManualPanelSize.height);
-            
+    DataReduction.filesToTransferManualPanel.setBorder(BorderFactory.createCompoundBorder(
+        BorderFactory.createTitledBorder("Manual Selection"),
+        BorderFactory.createEmptyBorder(5,5,5,5)));
+    
     DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferManualPanel);		
-	    
+        
 	}
 	
 	
