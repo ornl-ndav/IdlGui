@@ -395,8 +395,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       //retrieve hostname
       //java.util.Properties props = System.getProperties();
       //props.list(System.out);
-      //String username = System.getProperty("user.name");
-      //generalInfoTextArea.setText(username);
+      //String username = System.getProperty("os.arch");
+      //System.out.println("os.name: " + username);
       
       try {
         java.net.InetAddress localMachine = java.net.InetAddress.getLocalHost();
@@ -477,7 +477,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  */
   public void stop(){
     writeMessage("Page exited.");
-	c_ionCon.removeIONDisconnectListener(this);
+    FilesToTransferAction.transferAllFilesFromCurrentSession();
+    
+    c_ionCon.removeIONDisconnectListener(this);
     if(c_bConnected == 1){
       c_ionCon.disconnect();
       c_bConnected=0;

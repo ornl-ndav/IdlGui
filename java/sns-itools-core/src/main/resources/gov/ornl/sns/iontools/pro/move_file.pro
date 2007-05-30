@@ -1,10 +1,8 @@
 pro MOVE_FILE, ucams, tmp_folder, file_name
 
-output_folder = "/SNS/users/" + ucams + "/"
-
-cmd = "cp " 
+cmd = "/usr/local/bin/ioncp " 
 cmd += tmp_folder+file_name
-cmd += " " + output_folder
+cmd += " " + ucams
 spawn, cmd
 
 end

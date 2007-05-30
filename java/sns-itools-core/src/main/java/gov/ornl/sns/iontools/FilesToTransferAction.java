@@ -20,28 +20,27 @@ public class FilesToTransferAction {
    */
   static void updateListOfFilesToTransfer() {
   
-    sListOfFiles = getListOfFiles();
+    if (!ParametersToKeep.bFirstRunEver) {
+      sListOfFiles = getListOfFiles();
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);
 //    }
-    if (!DataReduction.transferPidFilesCheckBox.isSelected()) {
-      System.out.println("in remove pid");  //REMOVE_ME
-      removePidFilesFromList(sListOfFiles);
-    }     
-    if (!DataReduction.transferDataReductionFileCheckBox.isSelected()) {
-      removeDataReductionFilesFromList(sListOfFiles);
-    } 
-    if (!DataReduction.transferExtraPlotsCheckBox.isSelected()) {
-      removeExtraPlotsFilesFromList(sListOfFiles);
-    } 
-    if (!DataReduction.transferTmpHistoCheckBox.isSelected()) {
-      removeTmpHistoFileFromList(sListOfFiles);
-    }
-    
-    vListOfFiles = new Vector();
-    vListOfFiles = getVectorListOfFiles(sListOfFiles);
-    DataReduction.filesToTransferList.setListData(vListOfFiles);
-    
+      if (!DataReduction.transferPidFilesCheckBox.isSelected()) {
+        removePidFilesFromList(sListOfFiles);
+      }     
+      if (!DataReduction.transferDataReductionFileCheckBox.isSelected()) {
+        removeDataReductionFilesFromList(sListOfFiles);
+      } 
+      if (!DataReduction.transferExtraPlotsCheckBox.isSelected()) {
+        removeExtraPlotsFilesFromList(sListOfFiles);
+      } 
+      if (!DataReduction.transferTmpHistoCheckBox.isSelected()) {
+        removeTmpHistoFileFromList(sListOfFiles);
+      }
+      vListOfFiles = new Vector();
+      vListOfFiles = getVectorListOfFiles(sListOfFiles);
+      DataReduction.filesToTransferList.setListData(vListOfFiles);
+      }
   }
   
   /*
@@ -185,5 +184,27 @@ public class FilesToTransferAction {
       tmpArray[i]=tmpListOfFiles.get(i).toString();
     }
     sListOfFiles = tmpArray;
+  }
+  
+  /*
+   * this function tells if the mode is automatic or not
+   */
+  static boolean isTransferModeAutomatic() {
+    return DataReduction.automaticFilesTransferRadioButton.isSelected();
+  }
+  
+  /*
+   * This function copy all the files created during the current session 
+   * to the home directory when the automatic mode is selected
+   */
+  static void transferAllFilesFromCurrentSession() {
+    if (isTransferModeAutomatic()) { //mode is automatic
+      sListOfFiles = getListOfFiles();
+      for (int i=0; i<sListOfFiles.length; i++) {
+        String cmd = createCmd(sListOfFiles[i]);
+        System.out.println("cmd is: " + cmd);
+        IonUtils.executeCmd(cmd);
+      }
+    }
   }
 }

@@ -1,7 +1,5 @@
 package gov.ornl.sns.iontools;
 
-import java.io.File;
-
 public class UtilsFunction {
 
 	static String convertDegresToRadians(String sAngleDegree) {
@@ -64,7 +62,9 @@ public class UtilsFunction {
 	static String[] getListOfFiles() {
   
     String[] files;
-	  File dir = new File(ParametersToKeep.sSessionWorkingDirectory);
+	  
+    /* only works on heater
+    File dir = new File(ParametersToKeep.sSessionWorkingDirectory);
 	  if (dir.exists()) {
 	    files = dir.list();
 	    //to display list of files
@@ -74,11 +74,20 @@ public class UtilsFunction {
 	  } else {
 	    files = null; 
     }
-	  return files;
-  
-  }
+	  */
+        
+    com.rsi.ion.IONVariable ionTmpFolder = new com.rsi.ion.IONVariable(DataReduction.sTmpFolder);
+    String cmd = "sList = LIST_OF_FILES(" + ionTmpFolder + ")";
+    IonUtils.executeCmd(cmd);
+    
+    com.rsi.ion.IONVariable myIONresult;
+    myIONresult = IonUtils.queryVariable("sList");
+    //String[] myResultArray;
+    files = myIONresult.getStringArray();
+    
+    return files;
+	}
 	
-  
 }
 
 
