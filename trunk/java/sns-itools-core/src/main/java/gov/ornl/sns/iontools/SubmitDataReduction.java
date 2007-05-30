@@ -65,7 +65,7 @@ public class SubmitDataReduction implements Runnable {
 	    	sMessage = "   Mode : Uncombine\n";
 		   	UtilsFunction.printInLogBook(sMessage);
 		   	
-		   	DataReduction.ionNtof = new com.rsi.ion.IONVariable(ParametersConfiguration.iNtof);
+        DataReduction.ionNtof = new com.rsi.ion.IONVariable(ParametersConfiguration.iNtof);
 		   	DataReduction.ionY12 = new com.rsi.ion.IONVariable(ParametersConfiguration.iY12);
 		   	DataReduction.ionYmin = new com.rsi.ion.IONVariable(MouseSelectionParameters.signal_ymin);
 		   	

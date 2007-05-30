@@ -1,12 +1,16 @@
 package gov.ornl.sns.iontools;
 
 import java.util.Vector;
+import com.rsi.ion.*;
 
 public class FilesToTransferAction {
 
   static Vector vListOfFiles;
   static String[] sListOfFiles;
-    
+  static IONVariable ionUcams;
+  static IONVariable ionTmpFolder;
+  static IONVariable ionFileName;
+  
   /*
    * This function upate the list of files to transfered
    */
@@ -36,9 +40,8 @@ public class FilesToTransferAction {
   static void getVectorListOfFiles(String[] listFiles) {
   
     for (int i=0; i<(listFiles.length); i++) {
-      //System.out.println(listFiles[i]);
-        vListOfFiles.add(listFiles[i]);
-     }
+      vListOfFiles.add(listFiles[i]);
+      }
   }
   
   /*
@@ -52,9 +55,8 @@ public class FilesToTransferAction {
     //list of files selected and transfer them one at a time
     for (int i=0; i<iSelection.length; i++) {
       String cmd = createCmd(sListOfFiles[i]);
-      System.out.println(cmd);
+      System.out.println("cmd is: " + cmd);
       IonUtils.executeCmd(cmd);
-      
       //System.out.println(FilesToTransferAction.sListOfFiles[i]);
     }
     
@@ -65,11 +67,16 @@ public class FilesToTransferAction {
    */
   static String createCmd(String fileName) {
     
+    ionUcams = new IONVariable(DataReduction.remoteUser);
+    ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
+    ionFileName = new IONVariable(fileName);
+    
     String cmd = "";
-    cmd = "MOVE_FILE, ";
-    cmd += DataReduction.remoteUser + ",";
-    cmd += DataReduction.sTmpFolder + ",";
-    cmd += fileName;
+    
+    cmd = "move_file, ";
+    cmd += ionUcams + ",";
+    cmd += ionTmpFolder + ",";
+    cmd += ionFileName;
     return cmd;
     
   }
