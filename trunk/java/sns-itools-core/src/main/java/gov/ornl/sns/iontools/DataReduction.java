@@ -478,7 +478,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
   public void stop(){
     writeMessage("Page exited.");
     FilesToTransferAction.transferAllFilesFromCurrentSession();
-    
+    UtilsFunction.removeTmpFolder();
     c_ionCon.removeIONDisconnectListener(this);
     if(c_bConnected == 1){
       c_ionCon.disconnect();
