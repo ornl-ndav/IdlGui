@@ -203,7 +203,8 @@ public class SuperEventHandler extends DataReduction {
 		}
 
 		if ("preferencesMenuItem".equals(evt.getActionCommand())) {
-		//    preferencesFrame.setVisible(true);
+      tabbedPane.setSelectedIndex(3);
+      dataReductionTabbedPane.setSelectedIndex(0);  
 		}
 
 		if ("signalSelection".equals(evt.getActionCommand())) {
