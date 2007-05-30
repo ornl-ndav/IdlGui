@@ -88,6 +88,20 @@ public class UtilsFunction {
     return files;
 	}
 	
+  /*
+   * Remove tmp folder before leaving program
+   */
+  static void removeTmpFolder() {
+    
+    com.rsi.ion.IONVariable ionTmpFolder = new com.rsi.ion.IONVariable(DataReduction.sTmpFolder);
+    String cmd = "remove_tmp_folder, ";
+    cmd += ionTmpFolder;
+    IonUtils.executeCmd(cmd);
+    
+  }
+  
+  
+  
 }
 
 
