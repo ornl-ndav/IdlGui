@@ -127,7 +127,12 @@ public interface IParameters {
 		static final String NR        = "NR";
 		static final String BRN       = "BRN";
 		
-		//Extra plots and Data Reduction scaling factor
+    //Extension of files to removed
+    static final String PID_FILE_EXTENSION            = "_Pid.txt";
+    static final String TXT_FILE_EXTENSION            = ".txt";
+    static final String TMP_HISTO_FILE_EXTENSION      = "_tmp_histo_data.dat";
+          
+    //Extra plots and Data Reduction scaling factor
 		static final String LINEAR    = "linear";
 		static final String LOG10     = "log10";
 		static final String XSCALE    = "linear";
@@ -151,10 +156,10 @@ public interface IParameters {
 				
 		//constants used to define the main graphical display size
 	 	//REF_L
-		static final int NxRefl        			= 256;
+		  static final int NxRefl        			= 256;
 	    static final int NxReflMin        = 0;
 	    static final int NxReflMax        = 256;
-		static final int NyRefl             = 304;
+		  static final int NyRefl             = 304;
 	    static final int NyReflMin 				= 0;
 	    static final int NyReflMax			  = 304;
 	    
@@ -172,7 +177,7 @@ public interface IParameters {
 	    static final String BACK_STRING    = "back";
 	    static final String INFO_STRING    = "info";
 	    
-	    static final int LOADCT_DEFAULT_INDEX      = 39;
+      static final int LOADCT_DEFAULT_INDEX      = 39;
 	    static final String[] LOADCT_NAME          = {"Black/White", 
 	    											  "Blue/White", 
 	    											  "Green/Red/Blue/White",
@@ -228,8 +233,9 @@ public interface IParameters {
 	     												 DataReduction.runsTabbedPane,
 	     												 DataReduction.extraPlotsTabbedPane};
 	    //transfer files
-      static final boolean bTransferPidFile           = true;
-      static final boolean bTransferDataReductionFile = true;
-      static final boolean bTransferExtraPlotFile     = true;
+      static final boolean B_TRANSFER_PID_FILE             = true;
+      static final boolean B_TRANSFER_DATA_REDUCTION_FILE  = true;
+      static final boolean B_TRANSFER_EXTRA_PLOT_FILE      = true;
+      static final boolean B_TRANSFER_TMP_HISTO_FILE       = false;
       
 }

@@ -266,6 +266,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JCheckBox        transferPidFilesCheckBox;
     static JCheckBox        transferDataReductionFileCheckBox;
     static JCheckBox        transferExtraPlotsCheckBox;
+    static JCheckBox        transferTmpHistoCheckBox;
     
     static JLabel          	instrumentLogoLabel;
     static JLabel	          runNumberLabel;	
@@ -415,7 +416,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       {
         remoteUser = IParameters.DEVELOPER_UCAMS;
       }
-      DataReduction.generalInfoTextArea.setText("user is: " + remoteUser); 
+      DataReduction.generalInfoTextArea.setText("WELCOME " + remoteUser); 
   }
  
   /**
@@ -942,7 +943,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  }
 
     private void createSelectionGui() {
-
 	//definition of variables
 	selectionTab = new JTabbedPane();
 	
@@ -1163,6 +1163,11 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.automaticFilesTransferRadioButton.addActionListener(this);
       DataReduction.manualFilesTransferRadioButton.addActionListener(this);
       DataReduction.transferFilesButton.addActionListener(this);
+      DataReduction.transferPidFilesCheckBox.addActionListener(this);
+      DataReduction.transferDataReductionFileCheckBox.addActionListener(this);
+      DataReduction.transferExtraPlotsCheckBox.addActionListener(this);
+      DataReduction.transferTmpHistoCheckBox.addActionListener(this);
     }
+    
   
 }

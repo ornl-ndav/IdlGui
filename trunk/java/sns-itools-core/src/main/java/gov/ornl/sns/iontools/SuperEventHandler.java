@@ -304,5 +304,13 @@ public class SuperEventHandler extends DataReduction {
       FilesToTransferAction.transferFile();
     }
         
+    //when checking one of the list of files to see or not
+    if ("transferPidFilesCheckBox".equals(evt.getActionCommand()) ||
+        "transferDataReductionFileCheckBox".equals(evt.getActionCommand()) ||
+        "transferExtraPlotsCheckBox".equals(evt.getActionCommand()) ||
+        "transferTmpHistoCheckBox".equals(evt.getActionCommand())) {
+         FilesToTransferAction.updateListOfFilesToTransfer(); 
+    }
+        
 	}
 }
