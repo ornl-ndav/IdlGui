@@ -33,7 +33,7 @@ public class SaveSignalPidFileAction {
 			cmd = "CREATE_SIGNAL_PID_FILE, XY, " + fullFileName;
 		} catch (Exception e) {
 		}
-		
+		System.out.println("save signal cmd: " + cmd);  //REMOVE_ME
 		executeCmd(cmd);		
 		DataReduction.clearSignalPidFileButton.setEnabled(true);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = true;

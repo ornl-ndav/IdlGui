@@ -112,20 +112,25 @@ public class CreateFilesToTransferPanel {
         BorderFactory.createEmptyBorder(5,5,5,5)));
     
     DataReduction.transferPidFilesCheckBox = new JCheckBox("Pixel IDs selection files");
-    DataReduction.transferPidFilesCheckBox.setSelected(IParameters.bTransferPidFile);
+    DataReduction.transferPidFilesCheckBox.setSelected(IParameters.B_TRANSFER_PID_FILE);
     DataReduction.transferPidFilesCheckBox.setActionCommand("transferPidFilesCheckBox");
     
     DataReduction.transferDataReductionFileCheckBox = new JCheckBox("Main Data Reduction files");
-    DataReduction.transferDataReductionFileCheckBox.setSelected(IParameters.bTransferDataReductionFile);
+    DataReduction.transferDataReductionFileCheckBox.setSelected(IParameters.B_TRANSFER_DATA_REDUCTION_FILE);
     DataReduction.transferDataReductionFileCheckBox.setActionCommand("transferDataReductionFileCheckBox");
     
     DataReduction.transferExtraPlotsCheckBox = new JCheckBox("Extra Plots files");
-    DataReduction.transferExtraPlotsCheckBox.setSelected(IParameters.bTransferExtraPlotFile);
+    DataReduction.transferExtraPlotsCheckBox.setSelected(IParameters.B_TRANSFER_EXTRA_PLOT_FILE);
     DataReduction.transferExtraPlotsCheckBox.setActionCommand("transferExtraPlotsCheckBox");
+    
+    DataReduction.transferTmpHistoCheckBox = new JCheckBox("Temporary Histogram files");
+    DataReduction.transferTmpHistoCheckBox.setSelected(IParameters.B_TRANSFER_TMP_HISTO_FILE);
+    DataReduction.transferTmpHistoCheckBox.setActionCommand("transferTmpHistoCheckBox");
     
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferPidFilesCheckBox);
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferDataReductionFileCheckBox);
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferExtraPlotsCheckBox);
+    DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferTmpHistoCheckBox);
     
     DataReduction.filesToTransferCheckBoxPanel.setPreferredSize(new Dimension(
         iFilesToTransferCheckBoxPanelWidth,
