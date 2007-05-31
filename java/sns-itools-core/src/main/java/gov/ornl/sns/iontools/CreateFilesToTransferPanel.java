@@ -15,7 +15,12 @@ public class CreateFilesToTransferPanel {
   private static int iFilesToTransferCheckBoxPanelXoff = 15;
   private static int iFilesToTransferCheckBoxPanelYoff = 25;
   private static int iFilesToTransferCheckBoxPanelWidth = 320;
-  private static int iFilesToTransferCheckBoxPanelHeigth = 100;
+  private static int iFilesToTransferCheckBoxPanelHeight = 100;
+  
+  private static int iFilesToTransferRefreshButtonXoff = 450;
+  private static int iFilesToTransferRefreshButtonYoff = 60;
+  private static int iFilesToTransferRefreshButtonWidth = 320;
+  private static int iFilesToTransferRefreshButtonHeight = 30;
   
   private static int iFilesTransferRadioButtonWidth = 400;
   private static int iFilesTransferRadioButtonHeight = 30;
@@ -54,7 +59,7 @@ public class CreateFilesToTransferPanel {
     DataReduction.filesToTransferMenuPanel.setLayout(null);
     
     //first line - automatic transfer
-    DataReduction.automaticFilesTransferRadioButton = new JRadioButton("Automatic Files Transfer");
+    DataReduction.automaticFilesTransferRadioButton = new JRadioButton("Save Files Automatically");
     DataReduction.automaticFilesTransferRadioButton.setActionCommand("automaticFilesTransfer");
     DataReduction.automaticFilesTransferRadioButton.setPreferredSize(new Dimension(
         iFilesTransferRadioButtonWidth,
@@ -66,7 +71,7 @@ public class CreateFilesToTransferPanel {
         filesTransferRadioButtonSize.width,
         filesTransferRadioButtonSize.height);
     
-    DataReduction.manualFilesTransferRadioButton = new JRadioButton("Manual Files Transfer");
+    DataReduction.manualFilesTransferRadioButton = new JRadioButton("Save Files Manually");
     DataReduction.manualFilesTransferRadioButton.setActionCommand("manualFilesTransfer");
     DataReduction.manualFilesTransferRadioButton.setSelected(true);
     DataReduction.manualFilesTransferRadioButton.setPreferredSize(new Dimension(
@@ -134,7 +139,7 @@ public class CreateFilesToTransferPanel {
     
     DataReduction.filesToTransferCheckBoxPanel.setPreferredSize(new Dimension(
         iFilesToTransferCheckBoxPanelWidth,
-        iFilesToTransferCheckBoxPanelHeigth));
+        iFilesToTransferCheckBoxPanelHeight));
     Dimension filesToTransferCheckBoxPanelSize = DataReduction.filesToTransferCheckBoxPanel.getPreferredSize();
     DataReduction.filesToTransferCheckBoxPanel.setBounds(
         iFilesToTransferCheckBoxPanelXoff,
@@ -157,6 +162,20 @@ public class CreateFilesToTransferPanel {
 
     buildCategoriesPanel();
     
+    //refresh button
+    DataReduction.transferRefreshButton = new JButton("REFRESH LIST OF FILES");
+    DataReduction.transferRefreshButton.setActionCommand("transferRefreshButton");
+    DataReduction.transferRefreshButton.setPreferredSize(new Dimension(
+        iFilesToTransferRefreshButtonWidth,
+        iFilesToTransferRefreshButtonHeight));
+    Dimension transferRefreshButtonSize = DataReduction.transferRefreshButton.getPreferredSize();
+    DataReduction.transferRefreshButton.setBounds(
+        iFilesToTransferRefreshButtonXoff,
+        iFilesToTransferRefreshButtonYoff,
+        transferRefreshButtonSize.width,
+        transferRefreshButtonSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.transferRefreshButton);
+    
     DataReduction.filesToTransferList = new JList(DataReduction.vFilesToTransfer);
     DataReduction.filesToTransferList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     DataReduction.filesToTransferList.setSelectedIndex(0);
@@ -172,7 +191,7 @@ public class CreateFilesToTransferPanel {
         filesToTransferSize.height);
     DataReduction.filesToTransferManualPanel.add(listScrollPane);
     
-    DataReduction.transferFilesButton = new JButton("Transfer ->");
+    DataReduction.transferFilesButton = new JButton("SAVE ->");
     DataReduction.transferFilesButton.setActionCommand("transferFilesButton");
     DataReduction.transferFilesButton.setPreferredSize(new Dimension(
         iTransferFilesButtonWidth,

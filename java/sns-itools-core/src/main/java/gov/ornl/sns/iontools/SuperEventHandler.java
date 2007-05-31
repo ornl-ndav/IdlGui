@@ -311,6 +311,11 @@ public class SuperEventHandler extends DataReduction {
         "transferTmpHistoCheckBox".equals(evt.getActionCommand())) {
          FilesToTransferAction.updateListOfFilesToTransfer(); 
     }
-        
+
+    //refresh button in transfer tab
+    if ("transferRefreshButton".equals(evt.getActionCommand())) {
+      FilesToTransferAction.updateListOfFilesToTransfer();
+    }
+    
 	}
 }
