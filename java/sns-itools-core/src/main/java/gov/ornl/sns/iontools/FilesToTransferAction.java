@@ -20,7 +20,8 @@ public class FilesToTransferAction {
    */
   static void updateListOfFilesToTransfer() {
   
-    if (!ParametersToKeep.bFirstRunEver) {
+    if (!ParametersToKeep.bThreadInProcess &&
+        !ParametersToKeep.bFirstRunEver) {
       sListOfFiles = getListOfFiles();
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);

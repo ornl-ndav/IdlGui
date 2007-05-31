@@ -15,6 +15,7 @@ public class SubmitDataReduction implements Runnable {
 	
 	public void run() {
 		
+    ParametersToKeep.bThreadInProcess = true;
 		ProcessingInterfaceWithGui.displayProcessingMessage("Running data reduction");
 
 		String sMessage = "Running data reduction:\n";	 
@@ -98,7 +99,8 @@ public class SubmitDataReduction implements Runnable {
 	   	}
 	   	
 		ProcessingInterfaceWithGui.removeProcessingMessage();
-
-	}
+    ParametersToKeep.bThreadInProcess = false;
+	
+  }
 	
 }

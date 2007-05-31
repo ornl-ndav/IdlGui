@@ -4,24 +4,25 @@ import java.awt.Color;
 
 public class ParametersToKeep {
 
-	static boolean bSaveSignalPidFileCheckBox 				= IParameters.KEEP_SIGNAL_PID_FILE_NAME;
-	static boolean bSaveBackPidFileCheckBox 				= IParameters.KEEP_BACKGROUND_PID_FILE_NAME;
-	static boolean bSaveMinWavelengthCheckBox				= IParameters.KEEP_MIN_WAVELENGTH;
-	static boolean bSaveMaxWavelengthCheckBox				= IParameters.KEEP_MAX_WAVELENGTH;
-	static boolean bSaveWidthWavelengthCheckBox				= IParameters.KEEP_WIDTH_WAVELENGTH;
-	static boolean bSaveDetectorAngleCheckBox				= IParameters.KEEP_DETECTOR_ANGLE;
-	static boolean bSaveDetectorAnglePMCheckBox				= IParameters.KEEP_DETECTOR_ANGLE_PM;
-	static boolean bSaveDetectorAngleUnitsCheckBox          	= IParameters.KEEP_DETECTOR_ANGLE_UNITS;
-	static boolean bSaveNormalizationCheckBox 				= IParameters.KEEP_NORMALIZATION;
-	static boolean bSaveBackgroundCheckBox 					= IParameters.KEEP_BACKGROUND;
-	static boolean bSaveNormalizationBackgroundCheckBox 	= IParameters.KEEP_NORMALIZATION_BACKGROUND;
-	static boolean bSaveIntermediateFileOutputCheckBox 		= IParameters.KEEP_INTERMEDIATE_FILE_OUTPUT;
-	static boolean bSaveCombineDataSpectrumCheckBox 		= IParameters.KEEP_COMBINE_DATA_SPECTRUM;
+	static boolean bSaveSignalPidFileCheckBox 				      = IParameters.KEEP_SIGNAL_PID_FILE_NAME;
+	static boolean bSaveBackPidFileCheckBox 				        = IParameters.KEEP_BACKGROUND_PID_FILE_NAME;
+	static boolean bSaveMinWavelengthCheckBox				        = IParameters.KEEP_MIN_WAVELENGTH;
+	static boolean bSaveMaxWavelengthCheckBox				        = IParameters.KEEP_MAX_WAVELENGTH;
+	static boolean bSaveWidthWavelengthCheckBox				      = IParameters.KEEP_WIDTH_WAVELENGTH;
+	static boolean bSaveDetectorAngleCheckBox		       		  = IParameters.KEEP_DETECTOR_ANGLE;
+	static boolean bSaveDetectorAnglePMCheckBox				      = IParameters.KEEP_DETECTOR_ANGLE_PM;
+	static boolean bSaveDetectorAngleUnitsCheckBox          = IParameters.KEEP_DETECTOR_ANGLE_UNITS;
+	static boolean bSaveNormalizationCheckBox 			       	= IParameters.KEEP_NORMALIZATION;
+	static boolean bSaveBackgroundCheckBox 					        = IParameters.KEEP_BACKGROUND;
+	static boolean bSaveNormalizationBackgroundCheckBox 	  = IParameters.KEEP_NORMALIZATION_BACKGROUND;
+	static boolean bSaveIntermediateFileOutputCheckBox 		  = IParameters.KEEP_INTERMEDIATE_FILE_OUTPUT;
+	static boolean bSaveCombineDataSpectrumCheckBox 		    = IParameters.KEEP_COMBINE_DATA_SPECTRUM;
 	static boolean bSaveOverwriteInstrumentGeometryCheckBox = IParameters.KEEP_OVERWRITE_INSTRUMENT_GEOMETRY;
-	static boolean bSaveAddAndGoRunNumberCheckBox 			= IParameters.KEEP_ADD_NEXUS_AND_GO;
-	static boolean bSaveGoSequentiallyCheckBox 				= IParameters.KEEP_GO_SEQUENTIALLY;
-	static boolean bFirstRunEver 							= true;
-    static String sSessionWorkingDirectory 				    = "";
+	static boolean bSaveAddAndGoRunNumberCheckBox 		    	= IParameters.KEEP_ADD_NEXUS_AND_GO;
+	static boolean bSaveGoSequentiallyCheckBox 				      = IParameters.KEEP_GO_SEQUENTIALLY;
+	static boolean bFirstRunEver 							              = true;
+  static String sSessionWorkingDirectory 				          = "";
+  static boolean bThreadInProcess                         = false;
 	
 	/*
 	 * Reinitialize all the parameters
