@@ -14,7 +14,7 @@ public class SubmitPlot implements Runnable {
 	
 	public void run() {
 
-		
+    ParametersToKeep.bThreadInProcess = true;
 		String sMessage = "Run number to plot: " + DataReduction.runNumberValue + "\n";
 		UtilsFunction.printInLogBook(sMessage, false);
 		sMessage = "   - Searching for run number " + DataReduction.runNumberValue + "...";
@@ -66,7 +66,7 @@ public class SubmitPlot implements Runnable {
     	}
 		
 		ProcessingInterfaceWithGui.removeProcessingMessage();
-			
+    ParametersToKeep.bThreadInProcess = false;
 	}
 	
 }

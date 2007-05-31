@@ -15,6 +15,7 @@ public class SubmitLoadct implements Runnable {
 	
 	public void run() {
 		
+    ParametersToKeep.bThreadInProcess = true;
     if (DataReduction.instrument.compareTo(IParameters.REF_L)==0) {
       DataReduction.c_ionCon.setDrawable(DataReduction.c_plot_REFL);
     } else {
@@ -24,7 +25,7 @@ public class SubmitLoadct implements Runnable {
 		ProcessingInterfaceWithGui.displayProcessingMessage("Replot in progress");
 		IonUtils.executeCmd(this.cmd);
 		ProcessingInterfaceWithGui.removeProcessingMessage();
-		
+    ParametersToKeep.bThreadInProcess = false;
 	}
 	
 	static String createLoadctCmd() {
