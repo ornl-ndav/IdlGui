@@ -38,9 +38,7 @@ public class UtilsFunction {
 	 * Append text into log book text box
 	 */
 	static void printInLogBook(String sMessage) {
-	
-		DataReduction.textAreaLogBook.append(sMessage);
-		
+			DataReduction.textAreaLogBook.append(sMessage);
 	}
 	
 	/*

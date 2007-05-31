@@ -353,6 +353,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          settingsSelectAllButton;
     static JButton          settingsUnselectAllButton;
     static JButton          transferFilesButton;
+    static JButton          transferRefreshButton;
     
     static JScrollPane 		  scrollPane;
     
@@ -433,7 +434,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    ParametersConfiguration.Nx = Nx;
 	    Ny = getN.retrieveNy();
 	    ParametersConfiguration.Ny = Ny;
-		NyMin = getN.retrieveNyMin();
+		  NyMin = getN.retrieveNyMin();
 	    NyMax = getN.retrieveNyMax();
 	  
 	    //NeXus not found yet
@@ -803,7 +804,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		        
 	    //files to transfer tab
 	    filesToTransferPanel = new JPanel(new GridLayout(0,1));
-	    tabbedPane.addTab("Transfer Files", filesToTransferPanel);
+	    tabbedPane.addTab("Save Files", filesToTransferPanel);
 	    CreateFilesToTransferPanel.buildGUI();
 	          
 	    setLayout(new BorderLayout());
@@ -823,7 +824,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
 			  if (tabbedPane.getSelectedIndex()==4) { //if Transfer tab is selected
-			    FilesToTransferAction.updateListOfFilesToTransfer();
+          FilesToTransferAction.updateListOfFilesToTransfer();
         }
         TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});
@@ -1169,6 +1170,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.transferDataReductionFileCheckBox.addActionListener(this);
       DataReduction.transferExtraPlotsCheckBox.addActionListener(this);
       DataReduction.transferTmpHistoCheckBox.addActionListener(this);
+      DataReduction.transferRefreshButton.addActionListener(this);
     }
     
   
