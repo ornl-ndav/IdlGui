@@ -951,17 +951,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	
 	signalSelectionPanel = new JPanel();
 	signalSelectionTextArea = new JTextArea(30,50);
-	signalSelectionTextArea.setEditable(false);
+  signalSelectionTextArea.setEditable(false);
     signalSelectionPanel.add(signalSelectionTextArea);
 	selectionTab.addTab("Signal", signalSelectionPanel);
 
 	back1SelectionPanel = new JPanel();
 	back1SelectionTextArea = new JTextArea(30,50);
+  back1SelectionTextArea.setEditable(false);
 	back1SelectionPanel.add(back1SelectionTextArea);
 	selectionTab.addTab("Background 1", back1SelectionPanel);
 
 	back2SelectionPanel = new JPanel();
 	back2SelectionTextArea = new JTextArea(30,50);
+  back2SelectionTextArea.setEditable(false);
 	back2SelectionPanel.add(back2SelectionTextArea);
 	selectionTab.addTab("Background 2", back2SelectionPanel);
 
@@ -970,6 +972,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	detectorLayout = createImageIcon("/gov/ornl/sns/iontools/images/detector_layout.jpg");	
 	pixelInfoLabel.setIcon(detectorLayout);		
 	pixelInfoTextArea = new JTextArea(30,30);
+  pixelInfoTextArea.setEditable(false);
 	pixelInfoPanel.add(pixelInfoLabel);
 	pixelInfoPanel.add(Box.createRigidArea(new Dimension(20,0)));
 	pixelInfoPanel.add(pixelInfoTextArea);

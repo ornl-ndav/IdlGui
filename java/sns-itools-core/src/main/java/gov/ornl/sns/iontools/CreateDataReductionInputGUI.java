@@ -331,7 +331,7 @@ public class CreateDataReductionInputGUI {
 	
 	//general info text area 
 	DataReduction.generalInfoTextArea = new JTextArea(5,40);
-	DataReduction.generalInfoTextArea.setEditable(true);
+	DataReduction.generalInfoTextArea.setEditable(false);
 	DataReduction.scrollPane = new JScrollPane(DataReduction.generalInfoTextArea,
 						 JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 						 JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
