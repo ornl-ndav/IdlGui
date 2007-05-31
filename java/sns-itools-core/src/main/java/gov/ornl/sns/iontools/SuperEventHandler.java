@@ -317,5 +317,11 @@ public class SuperEventHandler extends DataReduction {
       FilesToTransferAction.updateListOfFilesToTransfer();
     }
     
+    //display info about selected file
+    if ("getSaveFileInfoButton".equals(evt.getActionCommand())) {
+      FilesToTransferAction.getSelectedFileInfo();
+    }
+    
+    
 	}
 }

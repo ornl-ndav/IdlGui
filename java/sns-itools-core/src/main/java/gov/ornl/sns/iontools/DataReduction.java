@@ -331,6 +331,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextArea        back2SelectionTextArea;
     static JTextArea        pixelInfoTextArea;
     static JTextArea      	textAreaLogBook;
+    static JTextArea        saveFileInfoTextArea;
     
     static JButton          yValidateButton;
     static JButton          yValidateButtonEP;
@@ -354,8 +355,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JButton          settingsUnselectAllButton;
     static JButton          transferFilesButton;
     static JButton          transferRefreshButton;
+    static JButton          getSaveFileInfoButton;
     
     static JScrollPane 		  scrollPane;
+    static JScrollPane      saveFileInfoScrollPane;    
     
     static Vector   vFilesToTransfer;
     static Vector   fFilesTransfered; 
@@ -1174,6 +1177,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.transferExtraPlotsCheckBox.addActionListener(this);
       DataReduction.transferTmpHistoCheckBox.addActionListener(this);
       DataReduction.transferRefreshButton.addActionListener(this);
+      DataReduction.getSaveFileInfoButton.addActionListener(this);
     }
     
   
