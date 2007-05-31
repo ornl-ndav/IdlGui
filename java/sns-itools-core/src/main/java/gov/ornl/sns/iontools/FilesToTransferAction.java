@@ -212,17 +212,16 @@ public class FilesToTransferAction {
    * of the selected file to save
    */
   static void getSelectedFileInfo() {
-    int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
-    String cmd = createSaveFileInfoCmd(sListOfFiles[iSelection[0]]);
-
-    IonUtils.executeCmd(cmd);
-    
-    com.rsi.ion.IONVariable myIONresult;
-    myIONresult = IonUtils.queryVariable("result");
-    String[] myResultArray;
-    myResultArray = myIONresult.getStringArray();
-        
-    displayMessageInInfoBox(myResultArray);    
+    if (!DataReduction.filesToTransferList.isSelectionEmpty()) {
+      int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
+      String cmd = createSaveFileInfoCmd(sListOfFiles[iSelection[0]]);
+      IonUtils.executeCmd(cmd);
+      com.rsi.ion.IONVariable myIONresult;
+      myIONresult = IonUtils.queryVariable("result");
+      String[] myResultArray;
+      myResultArray = myIONresult.getStringArray();
+      displayMessageInInfoBox(myResultArray);    
+    }
   }
 
   /*
@@ -248,13 +247,12 @@ public class FilesToTransferAction {
  
      int myResultArrayLength = myResultArray.length;
      myResultArray[0] += "\n";
-     DataReduction.saveFileInfoTextArea.setText(myResultArray[0]);
-     for (int i=1; i<myResultArrayLength; i++) {
-       if (i != myResultArrayLength-1) {
-           myResultArray[i]+="\n";
-       }  
-       DataReduction.saveFileInfoTextArea.append(myResultArray[i]);
-     }
-     
+       DataReduction.saveFileInfoTextArea.setText(myResultArray[0]);
+       for (int i=1; i<myResultArrayLength; i++) {
+         if (i != myResultArrayLength-1) {
+             myResultArray[i]+="\n";
+         }  
+         DataReduction.saveFileInfoTextArea.append(myResultArray[i]);
+       }
    }
 }
