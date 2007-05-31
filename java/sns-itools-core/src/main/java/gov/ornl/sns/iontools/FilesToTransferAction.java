@@ -13,7 +13,7 @@ public class FilesToTransferAction {
   static IONVariable ionUcams;
   static IONVariable ionTmpFolder;
   static IONVariable ionFileName;
-  
+  static IONVariable ionNbrLineDisplayed;
   
   /*
    * This function upate the list of files to transfered
@@ -214,17 +214,58 @@ public class FilesToTransferAction {
   static void getSelectedFileInfo() {
     if (!DataReduction.filesToTransferList.isSelectionEmpty()) {
       int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
-      String cmd = createSaveFileInfoCmd(sListOfFiles[iSelection[0]]);
-      IonUtils.executeCmd(cmd);
-      com.rsi.ion.IONVariable myIONresult;
-      myIONresult = IonUtils.queryVariable("result");
-      String[] myResultArray;
-      myResultArray = myIONresult.getStringArray();
-      displayMessageInInfoBox(myResultArray);    
+      String sFileName = sListOfFiles[iSelection[0]];
+      if (isFileRmdFile(sFileName)) { //xml file (.rmd file)
+        
+        String message = "The first ";
+        message += IParameters.i_RMD_NBR_LINE_DISPLAYED;
+        message += "  lines of the selected file are displayed";
+        displayedInfoMessage(message);
+        
+        String cmd = createSaveXmlFileInfoCmd(sFileName);
+        IonUtils.executeCmd(cmd);
+        com.rsi.ion.IONVariable myIONresult;
+        myIONresult = IonUtils.queryVariable("result");
+        String[] myResultArray;
+        myResultArray = myIONresult.getStringArray();
+        displayMessageInInfoBox(myResultArray);
+      } else {
+        
+        String message = "The first ";
+        message += IParameters.i_NO_RMD_NBR_LINE_DISPLAYED;
+        message += "  lines of the selected file are displayed";
+        displayedInfoMessage(message);
+        
+        String cmd = createSaveFileInfoCmd(sFileName);
+        IonUtils.executeCmd(cmd);
+        com.rsi.ion.IONVariable myIONresult;
+        myIONresult = IonUtils.queryVariable("result");
+        String[] myResultArray;
+        myResultArray = myIONresult.getStringArray();
+        displayMessageInInfoBox(myResultArray);
+        }
     }
   }
 
   /*
+   * This function create the cmd for the xml (.rmd) file through IDL.
+   * The full contains of the file will be displayed
+   */
+  static String createSaveXmlFileInfoCmd(String sFileName) {
+  
+    ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
+    ionFileName  = new IONVariable(sFileName);
+    ionNbrLineDisplayed = new IONVariable(IParameters.i_RMD_NBR_LINE_DISPLAYED);
+    
+    String cmd = "result = DISPLAY_XML_FILE_INFO( ";
+    cmd += ionFileName + ",";
+    cmd += ionTmpFolder + ",";
+    cmd += ionNbrLineDisplayed + ")";
+    
+    return cmd;
+  }
+    
+   /*
    * This function creates the cmd that will be run through IDL to get
    * the first line of the given file
    */
@@ -232,10 +273,12 @@ public class FilesToTransferAction {
    
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
     ionFileName  = new IONVariable(sFileName);
+    ionNbrLineDisplayed = new IONVariable(IParameters.i_NO_RMD_NBR_LINE_DISPLAYED);
     
     String cmd = "result = DISPLAY_FILE_INFO( ";
     cmd += ionFileName + ",";
-    cmd += ionTmpFolder + ")";
+    cmd += ionTmpFolder + ",";
+    cmd += ionNbrLineDisplayed + ")";
     
     return cmd;
   }
@@ -255,4 +298,29 @@ public class FilesToTransferAction {
          DataReduction.saveFileInfoTextArea.append(myResultArray[i]);
        }
    }
+   
+   /*
+    * Checks if the file selected is an xml (.rmd file)
+    */
+   static boolean isFileRmdFile(String sFileName) {
+     if (sFileName.endsWith(IParameters.RMD_EXTENSION)) {
+       return true;
+     } else {
+       return false;
+     }
+   }
+   
+   /*
+    * Displayed the message in the save file info message box
+    */
+    static void displayedInfoMessage(String sInfoMessage) {
+      DataReduction.saveFileInfoMessageTextfield.setText(sInfoMessage);      
+    }
+    
+    /*
+     * This function clears the save file info message box
+     */
+    static void clearInfoMessage() {
+      DataReduction.saveFileInfoMessageTextfield.setText("");
+    }
 }

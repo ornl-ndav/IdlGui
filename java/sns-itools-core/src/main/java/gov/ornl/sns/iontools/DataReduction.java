@@ -324,7 +324,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       wavelengthWidthTextField;
     static JTextField       detectorAngleTextField;
     static JTextField       detectorAnglePMTextField;
-    
+    static JTextField       saveFileInfoMessageTextfield;      
+
     static JTextArea        generalInfoTextArea;
     static JTextArea        signalSelectionTextArea;
     static JTextArea        back1SelectionTextArea;
@@ -332,7 +333,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextArea        pixelInfoTextArea;
     static JTextArea      	textAreaLogBook;
     static JTextArea        saveFileInfoTextArea;
-    
+        
     static JButton          yValidateButton;
     static JButton          yValidateButtonEP;
     static JButton          xValidateButton;

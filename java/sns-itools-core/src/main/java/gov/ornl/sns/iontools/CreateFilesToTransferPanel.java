@@ -53,6 +53,12 @@ public class CreateFilesToTransferPanel {
   private static int iGetSaveFileInfoButtonWidth = 300;
   private static int iGetSaveFileInfoButtonHeight = 30;
   
+  private static int iSaveFileInfoMessageXoff = 348;
+  private static int iSaveFileInfoMessageYoff = 373;
+  private static int iSaveFileInfoMessageWidth = 220;
+  private static int iSaveFileInfomessageHeight = 30; 
+  
+  
   static void buildGUI() {
     DataReduction.vFilesToTransfer = new Vector();
             
@@ -238,7 +244,7 @@ public class CreateFilesToTransferPanel {
         BorderFactory.createTitledBorder("Manual Selection"),
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
-    DataReduction.getSaveFileInfoButton = new JButton("Display first 6 lines of selected file");
+    DataReduction.getSaveFileInfoButton = new JButton("Display info about selected file");
     DataReduction.getSaveFileInfoButton.setActionCommand("getSaveFileInfoButton");
     DataReduction.getSaveFileInfoButton.setPreferredSize(new Dimension(
         iGetSaveFileInfoButtonWidth,
@@ -250,6 +256,19 @@ public class CreateFilesToTransferPanel {
         iFilesToTransferCheckBoxPanelWidth,
         getSaveFileInfoButtonSize.height);
     DataReduction.filesToTransferManualPanel.add(DataReduction.getSaveFileInfoButton);
+    
+    DataReduction.saveFileInfoMessageTextfield = new JTextField(38);
+    DataReduction.saveFileInfoMessageTextfield.setEditable(false);
+    DataReduction.saveFileInfoMessageTextfield.setPreferredSize(new Dimension(
+        iSaveFileInfoMessageWidth,
+        iSaveFileInfomessageHeight));
+    Dimension saveFileInfoMessageTextFieldSize = DataReduction.saveFileInfoMessageTextfield.getPreferredSize();
+    DataReduction.saveFileInfoMessageTextfield.setBounds(
+        iSaveFileInfoMessageXoff,
+        iSaveFileInfoMessageYoff,
+        saveFileInfoMessageTextFieldSize.width,
+        saveFileInfoMessageTextFieldSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.saveFileInfoMessageTextfield);
     
     DataReduction.saveFileInfoTextArea = new JTextArea(5,40);
     DataReduction.saveFileInfoTextArea.setEditable(false);
