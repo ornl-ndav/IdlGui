@@ -202,9 +202,59 @@ public class FilesToTransferAction {
       sListOfFiles = getListOfFiles();
       for (int i=0; i<sListOfFiles.length; i++) {
         String cmd = createCmd(sListOfFiles[i]);
-        System.out.println("cmd is: " + cmd);
         IonUtils.executeCmd(cmd);
       }
     }
   }
+
+  /*
+   * This function output in the info text box the first lines
+   * of the selected file to save
+   */
+  static void getSelectedFileInfo() {
+    int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
+    String cmd = createSaveFileInfoCmd(sListOfFiles[iSelection[0]]);
+
+    IonUtils.executeCmd(cmd);
+    
+    com.rsi.ion.IONVariable myIONresult;
+    myIONresult = IonUtils.queryVariable("result");
+    String[] myResultArray;
+    myResultArray = myIONresult.getStringArray();
+        
+    displayMessageInInfoBox(myResultArray);    
+  }
+
+  /*
+   * This function creates the cmd that will be run through IDL to get
+   * the first line of the given file
+   */
+  static String createSaveFileInfoCmd(String sFileName) {
+   
+    ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
+    ionFileName  = new IONVariable(sFileName);
+    
+    String cmd = "result = DISPLAY_FILE_INFO( ";
+    cmd += ionFileName + ",";
+    cmd += ionTmpFolder + ")";
+    
+    return cmd;
+  }
+  
+  /*
+   * this function displays the message in the text area box
+   */
+   static void displayMessageInInfoBox(String[] myResultArray) {
+ 
+     int myResultArrayLength = myResultArray.length;
+     myResultArray[0] += "\n";
+     DataReduction.saveFileInfoTextArea.setText(myResultArray[0]);
+     for (int i=1; i<myResultArrayLength; i++) {
+       if (i != myResultArrayLength-1) {
+           myResultArray[i]+="\n";
+       }  
+       DataReduction.saveFileInfoTextArea.append(myResultArray[i]);
+     }
+     
+   }
 }

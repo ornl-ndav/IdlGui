@@ -10,10 +10,10 @@ public class CreateFilesToTransferPanel {
   private static int iPanelMenuXoff = 5;
   private static int iPanelMenuYoff = 5;
   private static int iPanelManualXoff = 5;
-  private static int iPanelManualYoff = 85;
+  private static int iPanelManualYoff = 72;
   
   private static int iFilesToTransferCheckBoxPanelXoff = 15;
-  private static int iFilesToTransferCheckBoxPanelYoff = 25;
+  private static int iFilesToTransferCheckBoxPanelYoff = 20;
   private static int iFilesToTransferCheckBoxPanelWidth = 320;
   private static int iFilesToTransferCheckBoxPanelHeight = 100;
   
@@ -26,13 +26,13 @@ public class CreateFilesToTransferPanel {
   private static int iFilesTransferRadioButtonHeight = 30;
   private static int iFilesTransferRadioButtonXoff = 5;
   private static int iAutomaticFilesTransferRadioButtonYoff = 5;
-  private static int iManualFilesTransferRadioButtonYoff = 35;
+  private static int iManualFilesTransferRadioButtonYoff = 27;
   
   private static int iFilesToTransferListXoff = 15;
-  private static int iFilestoTransferListYoff = 135;
-  private static int iFilesToTransferListHeigth = 300;
+  private static int iFilesToTransferListYoff = 130;
+  private static int iFilesToTransferListHeigth = 235;
   private static int iFilesTransferedListXoff = 450;
-  private static int iFilesTransferedListYoff = 135;
+  private static int iFilesTransferedListYoff = iFilesToTransferListYoff;
   
   private static int iTransferFilesButtonXoff = 337;
   private static int iTransferFilesButtonYoff = 250;
@@ -41,8 +41,17 @@ public class CreateFilesToTransferPanel {
     
   private static int iPanelWidth  = 790;
   private static int iPanel1Height = 70;
-  private static int iPanel2Height = 600;
+  private static int iPanel2Height = 550;
 	
+  private static int iSaveFileInfoTextAreaXoff = 15;
+  private static int iSaveFileInfoTextAreaYoff = 410;
+  private static int iSaveFileInfoTextAreaWidth = 755;
+  private static int iSaveFileInfoTextAreaHeight = 125;
+  
+  private static int iGetSaveFileInfoButtonXoff = 15;
+  private static int iGetSaveFileInfoButtonYoff = 373;
+  private static int iGetSaveFileInfoButtonWidth = 300;
+  private static int iGetSaveFileInfoButtonHeight = 30;
   
   static void buildGUI() {
     DataReduction.vFilesToTransfer = new Vector();
@@ -186,7 +195,7 @@ public class CreateFilesToTransferPanel {
     Dimension filesToTransferSize = listScrollPane.getPreferredSize();
     listScrollPane.setBounds(
         iFilesToTransferListXoff,
-        iFilestoTransferListYoff,
+        iFilesToTransferListYoff,
         filesToTransferSize.width,
         filesToTransferSize.height);
     DataReduction.filesToTransferManualPanel.add(listScrollPane);
@@ -228,7 +237,36 @@ public class CreateFilesToTransferPanel {
     DataReduction.filesToTransferManualPanel.setBorder(BorderFactory.createCompoundBorder(
         BorderFactory.createTitledBorder("Manual Selection"),
         BorderFactory.createEmptyBorder(5,5,5,5)));
+
+    DataReduction.getSaveFileInfoButton = new JButton("Display first 6 lines of selected file");
+    DataReduction.getSaveFileInfoButton.setActionCommand("getSaveFileInfoButton");
+    DataReduction.getSaveFileInfoButton.setPreferredSize(new Dimension(
+        iGetSaveFileInfoButtonWidth,
+        iGetSaveFileInfoButtonHeight));
+    Dimension getSaveFileInfoButtonSize = DataReduction.getSaveFileInfoButton.getPreferredSize();
+    DataReduction.getSaveFileInfoButton.setBounds(
+        iGetSaveFileInfoButtonXoff,
+        iGetSaveFileInfoButtonYoff,
+        iFilesToTransferCheckBoxPanelWidth,
+        getSaveFileInfoButtonSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.getSaveFileInfoButton);
     
+    DataReduction.saveFileInfoTextArea = new JTextArea(5,40);
+    DataReduction.saveFileInfoTextArea.setEditable(false);
+    DataReduction.saveFileInfoScrollPane = new JScrollPane(DataReduction.saveFileInfoTextArea,
+               JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+               JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+    DataReduction.saveFileInfoScrollPane.setPreferredSize(new Dimension(
+        iSaveFileInfoTextAreaWidth,
+        iSaveFileInfoTextAreaHeight));
+    Dimension saveFileInfoTextAreaSize = DataReduction.saveFileInfoScrollPane.getPreferredSize();
+    DataReduction.saveFileInfoScrollPane.setBounds(
+        iSaveFileInfoTextAreaXoff,
+        iSaveFileInfoTextAreaYoff,
+        saveFileInfoTextAreaSize.width,
+        saveFileInfoTextAreaSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.saveFileInfoScrollPane);
+        
     DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferManualPanel);		
         
 	}
