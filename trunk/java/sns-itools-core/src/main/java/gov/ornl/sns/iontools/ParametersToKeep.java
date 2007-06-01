@@ -23,8 +23,10 @@ public class ParametersToKeep {
 	static boolean bFirstRunEver 							              = true;
   static String sSessionWorkingDirectory 				          = "";
   static boolean bThreadInProcess                         = false;
-	
-	/*
+	static int     iNbrInfoLinesNotXmlToDisplayed           = IParameters.i_NO_RMD_NBR_LINE_DISPLAYED;
+	static int     iNbrInfoLinesXmlToDisplayed              = IParameters.i_RMD_NBR_LINE_DISPLAYED;
+  
+  /*
 	 * Reinitialize all the parameters
 	 */
 	static void initializeParametersToKeep() {

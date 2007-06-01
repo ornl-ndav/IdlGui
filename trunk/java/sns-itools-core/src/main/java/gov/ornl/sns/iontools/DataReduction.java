@@ -176,7 +176,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           filesToTransferManualPanel;
     static JPanel           filesToTransferMenuPanel;
     static JPanel           filesToTransferCheckBoxPanel;
-        
+    static JPanel           settingsParametersPanel;
+    
     static JTabbedPane      settingsTabbedPane; 	
     static JTabbedPane      tabbedPane;
     static JTabbedPane      dataReductionTabbedPane;
@@ -267,7 +268,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JCheckBox        transferDataReductionFileCheckBox;
     static JCheckBox        transferExtraPlotsCheckBox;
     static JCheckBox        transferTmpHistoCheckBox;
-    
+        
     static JLabel          	instrumentLogoLabel;
     static JLabel	          runNumberLabel;	
     static JLabel           labelXaxis;
@@ -303,7 +304,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           filesToKeepArrowIcon;
     static JLabel           filesToKeepArrowIcon2;
     static JLabel           filesToKeep2Label;
-        
+    static JLabel           nbrInfoLinesDisplayedNotXmlFilesLabel;
+    static JLabel           nbrInfoLinesDisplayedXmlFilesLabel;
+    
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;
     static JTextField       yMinTextField;
@@ -325,7 +328,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       detectorAngleTextField;
     static JTextField       detectorAnglePMTextField;
     static JTextField       saveFileInfoMessageTextfield;      
-
+    static JTextField       nbrInfoLinesDisplayedNotXmlFilesTextField;
+    static JTextField       nbrInfoLinesDisplayedXmlFilesTextField;
+    
     static JTextArea        generalInfoTextArea;
     static JTextArea        signalSelectionTextArea;
     static JTextArea        back1SelectionTextArea;
@@ -1171,7 +1176,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    DataReduction.saveGoSequentiallyCheckBox.addActionListener(this);
 	    DataReduction.settingsSelectAllButton.addActionListener(this);
 	    DataReduction.settingsUnselectAllButton.addActionListener(this);
-    
+      DataReduction.nbrInfoLinesDisplayedNotXmlFilesTextField.addActionListener(this);
+      DataReduction.nbrInfoLinesDisplayedXmlFilesTextField.addActionListener(this);
+                    
 	    //from Files Transfer
       DataReduction.automaticFilesTransferRadioButton.addActionListener(this);
       DataReduction.manualFilesTransferRadioButton.addActionListener(this);

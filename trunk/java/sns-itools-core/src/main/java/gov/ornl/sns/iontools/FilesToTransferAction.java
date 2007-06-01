@@ -22,6 +22,7 @@ public class FilesToTransferAction {
   
     if (!ParametersToKeep.bThreadInProcess &&
         !ParametersToKeep.bFirstRunEver) {
+      
       sListOfFiles = getListOfFiles();
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);
@@ -92,7 +93,7 @@ public class FilesToTransferAction {
   }
   
   /*
-   * Create the cmd that will be run through ION_JAVA
+   * Create the cmd that will be run through ION_JAVA to copy/transfer the files
    */
   static String createCmd(String fileName) {
     
@@ -254,10 +255,13 @@ public class FilesToTransferAction {
    */
   static String createSaveXmlFileInfoCmd(String sFileName) {
   
+    //update nbr of lines to displayed
+    SettingsTabAction.validateXmlTextField();
+    
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
     ionFileName  = new IONVariable(sFileName);
-    ionNbrLineDisplayed = new IONVariable(IParameters.i_RMD_NBR_LINE_DISPLAYED);
-    
+    ionNbrLineDisplayed = new IONVariable(ParametersToKeep.iNbrInfoLinesXmlToDisplayed);
+        
     String cmd = "result = DISPLAY_XML_FILE_INFO( ";
     cmd += ionFileName + ",";
     cmd += ionTmpFolder + ",";
@@ -272,10 +276,13 @@ public class FilesToTransferAction {
    */
   static String createSaveFileInfoCmd(String sFileName) {
    
+    //update nbr of lines to displayed
+    SettingsTabAction.validateNotXmlTextField();
+
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
     ionFileName  = new IONVariable(sFileName);
-    ionNbrLineDisplayed = new IONVariable(IParameters.i_NO_RMD_NBR_LINE_DISPLAYED);
-    
+    ionNbrLineDisplayed = new IONVariable(ParametersToKeep.iNbrInfoLinesNotXmlToDisplayed);
+        
     String cmd = "result = DISPLAY_FILE_INFO( ";
     cmd += ionFileName + ",";
     cmd += ionTmpFolder + ",";
