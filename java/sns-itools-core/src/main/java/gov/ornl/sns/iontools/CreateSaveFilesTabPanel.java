@@ -5,7 +5,7 @@ import java.awt.GridLayout;
 import javax.swing.*;
 import java.util.*;
 
-public class CreateFilesToTransferPanel {
+public class CreateSaveFilesTabPanel {
 
   private static int iPanelMenuXoff = 5;
   private static int iPanelMenuYoff = 5;
