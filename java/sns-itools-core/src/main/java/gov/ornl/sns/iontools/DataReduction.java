@@ -787,30 +787,30 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //Extra plots tab (inside data reduction tab)
 	    CreateExtraPlotPanel.buildGUI();
 	    dataReductionTabbedPane.addTab("Extra Plots", extraPlotsPanel);
-	    	    
-	    tabbedPane.addTab("Data Reduction",dataReductionTabbedPane);
+	    
+      //-> 1st main tab
+	    tabbedPane.addTab("Data Reduction",dataReductionTabbedPane);     
 
-	    //second main tab (selection)
+	    //-> second main tab (selection)
 	    panel1 = new JPanel();
-	    tabbedPane.addTab("Selection", panel1);
+	    tabbedPane.addTab("Selection", panel1);                            
 	    createSelectionGui();
 
-	    //third main tab (log book)
+      //-> 3rd main tab - files to transfer tab
+      filesToTransferPanel = new JPanel(new GridLayout(0,1));
+      tabbedPane.addTab("Save Files", filesToTransferPanel);           
+      CreateFilesToTransferPanel.buildGUI();
+
+      //-> 4th main tab (log book)
 	    panel2 = new JPanel();
 	    createLogBoogGui();
 	    tabbedPane.addTab("LogBook", panel2);
 	    
-	    //configuration tab 
+	    //-> 5th main tab (settings) 
 	    settingsPanel = new JPanel();
-	    //add extra plot setttings 
 	    CreateSettingsPanel.buildGUI();
-	    tabbedPane.addTab("Settings", settingsPanel);
+	    tabbedPane.addTab("Settings", settingsPanel);       
 		        
-	    //files to transfer tab
-	    filesToTransferPanel = new JPanel(new GridLayout(0,1));
-	    tabbedPane.addTab("Save Files", filesToTransferPanel);
-	    CreateFilesToTransferPanel.buildGUI();
-	          
 	    setLayout(new BorderLayout());
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
