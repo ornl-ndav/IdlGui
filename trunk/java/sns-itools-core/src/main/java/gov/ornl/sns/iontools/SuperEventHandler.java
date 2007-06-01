@@ -303,7 +303,7 @@ public class SuperEventHandler extends DataReduction {
       //System.out.println(DataReduction.filesToTransferList.getSelectedValue());
       //System.out.println(DataReduction.filesToTransferList.getSelectedIndex());
       //System.out.println("selection is: " + iSelection[0]);
-      FilesToTransferAction.transferFile();
+      SaveFilesTabAction.transferFile();
     }
         
     //when checking one of the list of files to see or not
@@ -311,17 +311,17 @@ public class SuperEventHandler extends DataReduction {
         "transferDataReductionFileCheckBox".equals(evt.getActionCommand()) ||
         "transferExtraPlotsCheckBox".equals(evt.getActionCommand()) ||
         "transferTmpHistoCheckBox".equals(evt.getActionCommand())) {
-         FilesToTransferAction.updateListOfFilesToTransfer(); 
+         SaveFilesTabAction.updateListOfFilesToTransfer(); 
     }
 
     //refresh button in transfer tab
     if ("transferRefreshButton".equals(evt.getActionCommand())) {
-      FilesToTransferAction.updateListOfFilesToTransfer();
+      SaveFilesTabAction.updateListOfFilesToTransfer();
     }
     
     //display info about selected file
     if ("getSaveFileInfoButton".equals(evt.getActionCommand())) {
-      FilesToTransferAction.getSelectedFileInfo();
+      SaveFilesTabAction.getSelectedFileInfo();
     }
     
     //settings configuration not xml file text field

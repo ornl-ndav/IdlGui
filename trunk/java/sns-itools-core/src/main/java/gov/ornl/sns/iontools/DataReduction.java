@@ -488,7 +488,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  */
   public void stop(){
     writeMessage("Page exited.");
-    FilesToTransferAction.transferAllFilesFromCurrentSession();
+    SaveFilesTabAction.transferAllFilesFromCurrentSession();
     UtilsFunction.removeTmpFolder();
     c_ionCon.removeIONDisconnectListener(this);
     if(c_bConnected == 1){
@@ -805,7 +805,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       //-> 3rd main tab - files to transfer tab
       filesToTransferPanel = new JPanel(new GridLayout(0,1));
       tabbedPane.addTab("Save Files", filesToTransferPanel);           
-      CreateFilesToTransferPanel.buildGUI();
+      CreateSaveFilesTabPanel.buildGUI();
 
       //-> 4th main tab (log book) only for j35
 	    if (remoteUser.compareTo(IParameters.DEVELOPER_UCAMS)==0) {
@@ -836,7 +836,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
 			  if (tabbedPane.getSelectedIndex()==4) { //if Transfer tab is selected
-          FilesToTransferAction.updateListOfFilesToTransfer();
+          SaveFilesTabAction.updateListOfFilesToTransfer();
         }
         TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});

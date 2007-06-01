@@ -4,7 +4,7 @@ import java.util.Vector;
 import com.rsi.ion.*;
 import java.util.List;
 
-public class FilesToTransferAction {
+public class SaveFilesTabAction {
 
   static Vector      vListOfFiles;
   static Vector      vListOfFilesAdded;
