@@ -118,7 +118,7 @@ public class SuperEventHandler extends DataReduction {
 		}
 
 		if ("intermediateButton".equals(evt.getActionCommand())) {
-			tabbedPane.setSelectedIndex(3);
+			tabbedPane.setSelectedIndex(4);
 		}
 		    
 		/* Settings tab */
