@@ -123,7 +123,9 @@ public class SuperEventHandler extends DataReduction {
 		    
 		/* Settings tab */
 		if ("settingsValidateButton".equals(evt.getActionCommand())) {
-			tabbedPane.setSelectedIndex(0);
+			SettingsTabAction.validateNotXmlTextField();
+      SettingsTabAction.validateXmlTextField();
+      tabbedPane.setSelectedIndex(0);
 			dataReductionTabbedPane.setSelectedIndex(0);	
 		}
 		
@@ -322,6 +324,15 @@ public class SuperEventHandler extends DataReduction {
       FilesToTransferAction.getSelectedFileInfo();
     }
     
+    //settings configuration not xml file text field
+    if ("nbrInfoLinesDisplayedNotXmlFilesTextField".equals(evt.getActionCommand())) {
+      SettingsTabAction.validateNotXmlTextField();
+    }
+    
+    //settings configuration xml file text field
+    if ("nbrInfoLinesDisplayedXmlFilesTextField".equals(evt.getActionCommand())) {
+      SettingsTabAction.validateXmlTextField();
+    }
     
 	}
 }

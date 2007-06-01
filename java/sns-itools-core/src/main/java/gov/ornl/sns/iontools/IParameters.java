@@ -227,7 +227,9 @@ public interface IParameters {
 	    static final Color TAB_FOREGROUND_OLD         = Color.BLACK;
 	    static final Color TEXT_BOX_REQUIRED_EMPTY    = Color.RED;
 	    static final Color TEXT_BOX_REQUIRED_FULL     = Color.WHITE;
-	    
+	    static final Color TEXT_BOX_WRONG_FORMAT      = Color.ORANGE;
+      static final Color TEXT_BOX_RIGHT_FORMAT      = Color.WHITE;
+      
 	    static final JTabbedPane[] listOfTabbedPane   = {DataReduction.tabbedPane,
 	    												 DataReduction.dataReductionTabbedPane,
 	     												 DataReduction.selectionTab,
