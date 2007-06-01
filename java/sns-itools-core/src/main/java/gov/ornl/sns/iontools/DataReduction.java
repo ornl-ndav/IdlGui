@@ -380,7 +380,17 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
 	  initializeParameters();
 	  
-	  /*
+    //get remote user ucams
+    //if not found, ucams is set to developer ucams
+    remoteUser = getParameter("userName");
+    try {
+       byte[] sTmp = remoteUser.getBytes();
+    } catch (Exception e)
+    {
+      remoteUser = IParameters.DEVELOPER_UCAMS;
+    }
+
+    /*
       Container contentPane = getContentPane();
       contentPane.setLayout(new FlowLayout(FlowLayout.LEADING));
       
@@ -412,15 +422,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	      //handle exception
 	  } 
 
-      //get remote user ucams
-      //if not found, ucams is set to developer ucams
-      remoteUser = getParameter("userName");
-      try {
-         byte[] sTmp = remoteUser.getBytes();
-      } catch (Exception e)
-      {
-        remoteUser = IParameters.DEVELOPER_UCAMS;
-      }
       DataReduction.generalInfoTextArea.setText("WELCOME " + remoteUser); 
   }
  
@@ -801,10 +802,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       tabbedPane.addTab("Save Files", filesToTransferPanel);           
       CreateFilesToTransferPanel.buildGUI();
 
-      //-> 4th main tab (log book)
-	    panel2 = new JPanel();
-	    createLogBoogGui();
-	    tabbedPane.addTab("LogBook", panel2);
+      //-> 4th main tab (log book) only for j35
+	    if (remoteUser.compareTo(IParameters.DEVELOPER_UCAMS)==0) {
+	      panel2 = new JPanel();
+	      createLogBoogGui();
+	      tabbedPane.addTab("LogBook", panel2);
+      }
 	    
 	    //-> 5th main tab (settings) 
 	    settingsPanel = new JPanel();
@@ -954,19 +957,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	selectionTab = new JTabbedPane();
 	
 	signalSelectionPanel = new JPanel();
-	signalSelectionTextArea = new JTextArea(30,50);
+	signalSelectionTextArea = new JTextArea(40,50);
   signalSelectionTextArea.setEditable(false);
     signalSelectionPanel.add(signalSelectionTextArea);
 	selectionTab.addTab("Signal", signalSelectionPanel);
 
 	back1SelectionPanel = new JPanel();
-	back1SelectionTextArea = new JTextArea(30,50);
+	back1SelectionTextArea = new JTextArea(40,50);
   back1SelectionTextArea.setEditable(false);
 	back1SelectionPanel.add(back1SelectionTextArea);
 	selectionTab.addTab("Background 1", back1SelectionPanel);
 
 	back2SelectionPanel = new JPanel();
-	back2SelectionTextArea = new JTextArea(30,50);
+	back2SelectionTextArea = new JTextArea(40,50);
   back2SelectionTextArea.setEditable(false);
 	back2SelectionPanel.add(back2SelectionTextArea);
 	selectionTab.addTab("Background 2", back2SelectionPanel);

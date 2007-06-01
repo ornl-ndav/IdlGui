@@ -19,8 +19,8 @@ public class SubmitDataReduction implements Runnable {
 		ProcessingInterfaceWithGui.displayProcessingMessage("Running data reduction");
 
 		String sMessage = "Running data reduction:\n";	 
-		UtilsFunction.printInLogBook(sMessage);	
-		
+    LogBookAction.displayMessageInLogBook(sMessage, true);
+    		
     DataReduction.c_ionCon.setDrawable(DataReduction.c_dataReductionPlot);
 		DataReduction.ionOutputPath = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 		DataReduction.ionRunNumberValue = new com.rsi.ion.IONVariable(DataReduction.runNumberValue);
@@ -38,21 +38,21 @@ public class SubmitDataReduction implements Runnable {
 		if (DataReduction.liveParameters.isCombineDataSpectrum()) {
 	    	
 		  sMessage = "   Mode : Combine\n";
-		  UtilsFunction.printInLogBook(sMessage);
-		   	
+      LogBookAction.displayMessageInLogBook(sMessage, true);
+      		   	
 	    local_cmd = "array_result = run_data_reduction_combine(IDLcmd, ";
 	    local_cmd += DataReduction.ionOutputPath + "," + DataReduction.ionRunNumberValue + "," + DataReduction.ionInstrument + ")";
 	   		
 	   		sMessage = "   cmd  : " + this.cmd + "\n";
-	   		UtilsFunction.printInLogBook(sMessage);
-	   		sMessage = "   Processing.... ";
-	   		UtilsFunction.printInLogBook(sMessage);
-	   		
+        LogBookAction.displayMessageInLogBook(sMessage, true);
+        sMessage = "   Processing.... ";
+        LogBookAction.displayMessageInLogBook(sMessage, true);
+        	   		
 	   		IonUtils.executeCmd(local_cmd);
 	   		
 	   		sMessage = " done " + "\n";
-	   		UtilsFunction.printInLogBook(sMessage);
-	   			   		
+        LogBookAction.displayMessageInLogBook(sMessage, true);
+        	   			   		
     		com.rsi.ion.IONVariable myIONresult;
     		myIONresult = IonUtils.queryVariable("array_result");
 	    	String[] myResultArray;
@@ -64,7 +64,7 @@ public class SubmitDataReduction implements Runnable {
 	    } else {
 	    
 	    	sMessage = "   Mode : Uncombine\n";
-		   	UtilsFunction.printInLogBook(sMessage);
+        LogBookAction.displayMessageInLogBook(sMessage, true);
 		   	
         DataReduction.ionNtof = new com.rsi.ion.IONVariable(ParametersConfiguration.iNtof);
 		   	DataReduction.ionY12 = new com.rsi.ion.IONVariable(ParametersConfiguration.iY12);
@@ -74,14 +74,14 @@ public class SubmitDataReduction implements Runnable {
 		   	local_cmd += DataReduction.ionInstrument + "," + DataReduction.ionNtof + "," + DataReduction.ionY12 + "," + DataReduction.ionYmin + ")"; 
 	    	
 		   	sMessage = "   cmd  : " + this.cmd + "\n";
-	   		UtilsFunction.printInLogBook(sMessage);
+        LogBookAction.displayMessageInLogBook(sMessage, true);
 	   		sMessage = "   Processing.... ";
-	   		UtilsFunction.printInLogBook(sMessage);
+        LogBookAction.displayMessageInLogBook(sMessage, true);
 	   		
 	   		IonUtils.executeCmd(local_cmd);
 		   	
 	   		sMessage = " done " + "\n";
-	   		UtilsFunction.printInLogBook(sMessage);
+        LogBookAction.displayMessageInLogBook(sMessage, true);
 	   		
     		com.rsi.ion.IONVariable myIONresult;
     		myIONresult = IonUtils.queryVariable("array_result");
