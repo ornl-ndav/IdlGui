@@ -15,11 +15,11 @@ public class SubmitPlot implements Runnable {
 	public void run() {
 
     ParametersToKeep.bThreadInProcess = true;
-		String sMessage = "Run number to plot: " + DataReduction.runNumberValue + "\n";
-		UtilsFunction.printInLogBook(sMessage, false);
-		sMessage = "   - Searching for run number " + DataReduction.runNumberValue + "...";
-		UtilsFunction.printInLogBook(sMessage);
-		
+    String sMessage = "Run number to plot: " + DataReduction.runNumberValue + "\n";
+    LogBookAction.displayMessageInLogBook(sMessage, false);
+ 		sMessage = "   - Searching for run number " + DataReduction.runNumberValue + "...";
+    LogBookAction.displayMessageInLogBook(sMessage, true);
+    		
 		ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
 		IonUtils.executeCmd(this.cmd);
 
@@ -49,8 +49,8 @@ public class SubmitPlot implements Runnable {
 		if (DataReduction.bFoundNexus) {
 			
 			sMessage = "found and plotted\n";
-			UtilsFunction.printInLogBook(sMessage);
-			
+      LogBookAction.displayMessageInLogBook(sMessage, true);
+      			
 			//tell the program that it's not the first run ever
 			ParametersToKeep.bFirstRunEver=false;
 			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
@@ -61,8 +61,8 @@ public class SubmitPlot implements Runnable {
     	} else {
     		
     		sMessage = "not found\n";
-    		UtilsFunction.printInLogBook(sMessage);
-    		    		
+        LogBookAction.displayMessageInLogBook(sMessage, true);
+        
     	}
 		
 		ProcessingInterfaceWithGui.removeProcessingMessage();

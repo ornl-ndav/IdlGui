@@ -34,25 +34,6 @@ public class UtilsFunction {
 		
 	}
 		
-	/*
-	 * Append text into log book text box
-	 */
-	static void printInLogBook(String sMessage) {
-			DataReduction.textAreaLogBook.append(sMessage);
-	}
-	
-	/*
-	 * append or replace log book text with/by sMessage
-	 */
-	static void printInLogBook(String sMessage, boolean bAppend) {
-		
-		if (bAppend) {
-			DataReduction.textAreaLogBook.append(sMessage);
-		} else {
-			DataReduction.textAreaLogBook.setText(sMessage);
-		}
-		
-	}
 	
   /*
    * Get list of files in temporary directory
