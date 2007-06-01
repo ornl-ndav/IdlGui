@@ -220,7 +220,7 @@ public class SaveFilesTabAction {
       if (isFileRmdFile(sFileName)) { //xml file (.rmd file)
         
         String message = "The first ";
-        message += IParameters.i_RMD_NBR_LINE_DISPLAYED;
+        message += ParametersToKeep.iNbrInfoLinesXmlToDisplayed;
         message += "  lines of the selected file are displayed";
         displayedInfoMessage(message);
         
@@ -234,7 +234,7 @@ public class SaveFilesTabAction {
       } else {
         
         String message = "The first ";
-        message += IParameters.i_NO_RMD_NBR_LINE_DISPLAYED;
+        message += ParametersToKeep.iNbrInfoLinesNotXmlToDisplayed;
         message += "  lines of the selected file are displayed";
         displayedInfoMessage(message);
         
