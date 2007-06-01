@@ -50,7 +50,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 						      IONMouseListener
 						      
 {	
-	// Instance Vars
+  // Instance Vars
     static String           ucams = "ionuser";				//ucams
     static String           remoteUser;           
     static String           instrument = IParameters.DEFAULT_INSTRUMENT;
@@ -1190,6 +1190,5 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.transferRefreshButton.addActionListener(this);
       DataReduction.getSaveFileInfoButton.addActionListener(this);
     }
-    
-  
+      
 }

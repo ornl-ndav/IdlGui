@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.*;
 import java.util.*;
+import javax.swing.event.*;
 
 public class CreateSaveFilesTabPanel {
 
@@ -289,6 +290,5 @@ public class CreateSaveFilesTabPanel {
     DataReduction.filesToTransferPanel.add(DataReduction.filesToTransferManualPanel);		
         
 	}
-	
 	
 }
