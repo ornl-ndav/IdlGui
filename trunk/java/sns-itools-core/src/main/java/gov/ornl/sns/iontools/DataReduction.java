@@ -805,20 +805,20 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       filesToTransferPanel = new JPanel(new GridLayout(0,1));
       tabbedPane.addTab("Save Files", filesToTransferPanel);           
       CreateSaveFilesTabPanel.buildGUI();
-
-      //-> 4th main tab (log book) only for j35
-	    if (remoteUser.compareTo(IParameters.DEVELOPER_UCAMS)==0) {
-	      panel2 = new JPanel();
-	      createLogBoogGui();
-	      tabbedPane.addTab("LogBook", panel2);
-      }
 	    
-	    //-> 5th main tab (settings) 
+	    //-> 4th main tab (settings) 
 	    settingsPanel = new JPanel();
 	    CreateSettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);       
 		        
-	    setLayout(new BorderLayout());
+      //-> last main tab (log book) only for j35
+      if (remoteUser.compareTo(IParameters.DEVELOPER_UCAMS)==0) {
+        panel2 = new JPanel();
+        createLogBoogGui();
+        tabbedPane.addTab("LogBook", panel2);
+      }
+
+      setLayout(new BorderLayout());
 	    plotDataReductionPanel.add(leftPanel,BorderLayout.WEST);
 	    plotDataReductionPanel.add(tabbedPane);
 	    plotDataReductionPanel.add(processingPanel);	    
