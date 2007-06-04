@@ -318,11 +318,6 @@ public class SuperEventHandler extends DataReduction {
       SaveFilesTabAction.updateListOfFilesToTransfer();
     }
     
-    //display info about selected file
-    if ("getSaveFileInfoButton".equals(evt.getActionCommand())) {
-      SaveFilesTabAction.getSelectedFileInfo();
-    }
-    
     //settings configuration not xml file text field
     if ("nbrInfoLinesDisplayedNotXmlFilesTextField".equals(evt.getActionCommand())) {
       SettingsTabAction.validateNotXmlTextField();

@@ -2,10 +2,13 @@ package gov.ornl.sns.iontools;
 
 import java.util.Vector;
 import com.rsi.ion.*;
+import com.sun.org.apache.bcel.internal.generic.StoreInstruction;
+
 import java.util.List;
 
 public class SaveFilesTabAction {
 
+  static int         iNbrOfFiles = 0;
   static Vector      vListOfFiles;
   static Vector      vListOfFilesAdded;
   static String[]    sListOfFiles;
@@ -14,6 +17,7 @@ public class SaveFilesTabAction {
   static IONVariable ionTmpFolder;
   static IONVariable ionFileName;
   static IONVariable ionNbrLineDisplayed;
+  static StoreFilesToSavePreview[] sFilePreview;
   
   /*
    * This function upate the list of files to transfered
@@ -24,6 +28,7 @@ public class SaveFilesTabAction {
         !ParametersToKeep.bFirstRunEver) {
       
       sListOfFiles = getListOfFiles();
+      iNbrOfFiles = sListOfFiles.length; //nbr of files to list
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);
 //    }
@@ -42,6 +47,14 @@ public class SaveFilesTabAction {
       vListOfFiles = new Vector();
       vListOfFiles = getVectorListOfFiles(sListOfFiles);
       DataReduction.filesToTransferList.setListData(vListOfFiles);
+      
+      //this part will store the preview of all the files everytime we want a refresh
+      if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
+        sFilePreview = new StoreFilesToSavePreview[SaveFilesTabAction.iNbrOfFiles];
+        runSelectedFileInfoLoop(SaveFilesTabAction.iNbrOfFiles);
+        
+      }
+      
       }
   }
   
@@ -210,52 +223,26 @@ public class SaveFilesTabAction {
   }
 
   /*
+   * This function will collect all the preview of the files
+   */
+  static void runSelectedFileInfoLoop(int iNbrFile) {
+    for (int i=0; i<iNbrFile; ++i) {
+      getSelectedFileInfo(i);
+    }
+  }
+  
+  /*
    * This function output in the info text box the first lines
    * of the selected file to save
    */
-  static void getSelectedFileInfo() {
+  static void getSelectedFileInfo(int iIndex) {
     
     //info of selected file run in another thread
-    SubmitGetSelectionFileInfo run = new SubmitGetSelectionFileInfo();
+    SubmitGetSelectionFileInfo run = new SubmitGetSelectionFileInfo(iIndex);
     Thread runThread = new Thread(run,"Preview of selected file in progress");
     runThread.start();
-        
-    /*
-    if (!DataReduction.filesToTransferList.isSelectionEmpty()) {
-      int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
-      String sFileName = sListOfFiles[iSelection[0]];
-      if (isFileRmdFile(sFileName)) { //xml file (.rmd file)
-        
-        String message = "The first ";
-        message += ParametersToKeep.iNbrInfoLinesXmlToDisplayed;
-        message += "  lines of the selected file are displayed";
-        displayedInfoMessage(message);
-        
-        String cmd = createSaveXmlFileInfoCmd(sFileName);
-        IonUtils.executeCmd(cmd);
-        com.rsi.ion.IONVariable myIONresult;
-        myIONresult = IonUtils.queryVariable("result");
-        String[] myResultArray;
-        myResultArray = myIONresult.getStringArray();
-        displayMessageInInfoBox(myResultArray);
-      
-      } else {
-        
-        String message = "The first ";
-        message += ParametersToKeep.iNbrInfoLinesNotXmlToDisplayed;
-        message += "  lines of the selected file are displayed";
-        displayedInfoMessage(message);
-        
-        String cmd = createSaveFileInfoCmd(sFileName);
-        IonUtils.executeCmd(cmd);
-        com.rsi.ion.IONVariable myIONresult;
-        myIONresult = IonUtils.queryVariable("result");
-        String[] myResultArray;
-        myResultArray = myIONresult.getStringArray();
-        displayMessageInInfoBox(myResultArray);
-        }
-        */
-    }
+   
+  }
 
 
   /*
