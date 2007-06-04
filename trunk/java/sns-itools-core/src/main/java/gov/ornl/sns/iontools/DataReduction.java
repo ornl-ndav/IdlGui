@@ -834,7 +834,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    //change event handler to be able to remove blue foreground of main tab
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
-			  if (tabbedPane.getSelectedIndex()==4) { //if Transfer tab is selected
+			  if (tabbedPane.getSelectedIndex()==2) { //if Transfer tab is selected
           SaveFilesTabAction.updateListOfFilesToTransfer();
         }
         TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);

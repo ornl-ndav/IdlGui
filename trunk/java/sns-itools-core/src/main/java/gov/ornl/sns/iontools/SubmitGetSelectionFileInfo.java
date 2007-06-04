@@ -5,7 +5,11 @@ package gov.ornl.sns.iontools;
  */
 public class SubmitGetSelectionFileInfo implements Runnable {
 
-  public SubmitGetSelectionFileInfo() {
+  private int iIndex;
+  static String[] myResultArray;
+  
+  public SubmitGetSelectionFileInfo(int iIndex) {
+    this.iIndex = iIndex;
   }
   
   public void run() {
@@ -14,8 +18,8 @@ public class SubmitGetSelectionFileInfo implements Runnable {
 
       int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
       String sFileName = SaveFilesTabAction.sListOfFiles[iSelection[0]];
-      
-      if (SaveFilesTabAction.isFileRmdFile(sFileName)) { //xml file (.rmd file)
+            
+       if (SaveFilesTabAction.isFileRmdFile(sFileName)) { //xml file (.rmd file)
         
         String message = "The first ";
         message += ParametersToKeep.iNbrInfoLinesXmlToDisplayed;
@@ -46,6 +50,8 @@ public class SubmitGetSelectionFileInfo implements Runnable {
         SaveFilesTabAction.displayMessageInInfoBox(myResultArray);
       }
       IonUtils.executeCmd(".reset");
+      SaveFilesTabAction.sFilePreview[this.iIndex] = new StoreFilesToSavePreview(myResultArray);
+      
     }
 
   }
