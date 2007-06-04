@@ -4,7 +4,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import javax.swing.*;
 import java.util.*;
-import javax.swing.event.*;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.ListSelectionEvent;
 
 public class CreateSaveFilesTabPanel {
 
@@ -49,14 +50,9 @@ public class CreateSaveFilesTabPanel {
   private static int iSaveFileInfoTextAreaWidth = 755;
   private static int iSaveFileInfoTextAreaHeight = 125;
   
-  private static int iGetSaveFileInfoButtonXoff = 15;
-  private static int iGetSaveFileInfoButtonYoff = 373;
-  private static int iGetSaveFileInfoButtonWidth = 300;
-  private static int iGetSaveFileInfoButtonHeight = 30;
-  
-  private static int iSaveFileInfoMessageXoff = 348;
+  private static int iSaveFileInfoMessageXoff = 15;
   private static int iSaveFileInfoMessageYoff = 373;
-  private static int iSaveFileInfoMessageWidth = 220;
+  private static int iSaveFileInfoMessageWidth = 200;
   private static int iSaveFileInfomessageHeight = 30; 
   
   
@@ -193,6 +189,19 @@ public class CreateSaveFilesTabPanel {
     DataReduction.filesToTransferManualPanel.add(DataReduction.transferRefreshButton);
     
     DataReduction.filesToTransferList = new JList(DataReduction.vFilesToTransfer);
+    
+    ListSelectionModel listSelectionModel = DataReduction.filesToTransferList.getSelectionModel();
+    listSelectionModel.addListSelectionListener(new ListSelectionListener() {
+      public void valueChanged(ListSelectionEvent e) {
+        if (e.getValueIsAdjusting()) return;
+        ListSelectionModel lsm = (ListSelectionModel)e.getSource();
+        if (!lsm.isSelectionEmpty()) {
+        SaveFilesTabAction.getSelectedFileInfo();
+        }
+      }
+    }
+    );
+    
     DataReduction.filesToTransferList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
     DataReduction.filesToTransferList.setSelectedIndex(0);
     JScrollPane listScrollPane = new JScrollPane(DataReduction.filesToTransferList);
@@ -245,20 +254,7 @@ public class CreateSaveFilesTabPanel {
         BorderFactory.createTitledBorder("Manual Selection"),
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
-    DataReduction.getSaveFileInfoButton = new JButton("Display info about selected file");
-    DataReduction.getSaveFileInfoButton.setActionCommand("getSaveFileInfoButton");
-    DataReduction.getSaveFileInfoButton.setPreferredSize(new Dimension(
-        iGetSaveFileInfoButtonWidth,
-        iGetSaveFileInfoButtonHeight));
-    Dimension getSaveFileInfoButtonSize = DataReduction.getSaveFileInfoButton.getPreferredSize();
-    DataReduction.getSaveFileInfoButton.setBounds(
-        iGetSaveFileInfoButtonXoff,
-        iGetSaveFileInfoButtonYoff,
-        iFilesToTransferCheckBoxPanelWidth,
-        getSaveFileInfoButtonSize.height);
-    DataReduction.filesToTransferManualPanel.add(DataReduction.getSaveFileInfoButton);
-    
-    DataReduction.saveFileInfoMessageTextfield = new JTextField(38);
+    DataReduction.saveFileInfoMessageTextfield = new JTextField(29);
     DataReduction.saveFileInfoMessageTextfield.setEditable(false);
     DataReduction.saveFileInfoMessageTextfield.setPreferredSize(new Dimension(
         iSaveFileInfoMessageWidth,

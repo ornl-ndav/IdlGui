@@ -13,7 +13,6 @@ endif else begin
 
     openr,u,output_file_name,/get
     fs = fstat(u)
-    
 ;define an empty string variable to hold results from reading the file
     tmp  = ''
     tmp0 = ''
@@ -30,7 +29,6 @@ endif else begin
     onebyte = 0b
     
     while (NOT eof(u)) do begin
-        
         readu,u,onebyte         ;,format='(a1)'
         fs = fstat(u)
                                 ;print,'onebyte: ',onebyte

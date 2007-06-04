@@ -280,7 +280,7 @@ public class CreateSettingsPanel {
     DataReduction.settingsPanel.add(DataReduction.settingsParametersPanel);
   
     //Nbr of info lines displayed for not XML files in save files
-    String message = "Nbr of info lines displayed by not XML file";
+    String message = "Nbr of info lines displayed - no XML file";
     DataReduction.nbrInfoLinesDisplayedNotXmlFilesLabel = new JLabel(message);
     DataReduction.nbrInfoLinesDisplayedNotXmlFilesLabel.setPreferredSize(new Dimension(
         nbrLinesNotXmlLabelWidth,
@@ -311,7 +311,7 @@ public class CreateSettingsPanel {
     DataReduction.settingsParametersPanel.add(DataReduction.nbrInfoLinesDisplayedNotXmlFilesTextField);
     
     //  Nbr of info lines displayed for XML files in save files
-    message = "Nbr of info lines displayed by XML file";
+    message = "Nbr of info lines displayed - XML file";
     DataReduction.nbrInfoLinesDisplayedXmlFilesLabel = new JLabel(message);
     DataReduction.nbrInfoLinesDisplayedXmlFilesLabel.setPreferredSize(new Dimension(
         nbrLinesXmlLabelWidth,

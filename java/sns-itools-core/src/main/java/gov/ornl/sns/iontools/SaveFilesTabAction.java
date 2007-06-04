@@ -214,6 +214,13 @@ public class SaveFilesTabAction {
    * of the selected file to save
    */
   static void getSelectedFileInfo() {
+    
+    //info of selected file run in another thread
+    SubmitGetSelectionFileInfo run = new SubmitGetSelectionFileInfo();
+    Thread runThread = new Thread(run,"Preview of selected file in progress");
+    runThread.start();
+        
+    /*
     if (!DataReduction.filesToTransferList.isSelectionEmpty()) {
       int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
       String sFileName = sListOfFiles[iSelection[0]];
@@ -231,6 +238,7 @@ public class SaveFilesTabAction {
         String[] myResultArray;
         myResultArray = myIONresult.getStringArray();
         displayMessageInInfoBox(myResultArray);
+      
       } else {
         
         String message = "The first ";
@@ -246,8 +254,9 @@ public class SaveFilesTabAction {
         myResultArray = myIONresult.getStringArray();
         displayMessageInInfoBox(myResultArray);
         }
+        */
     }
-  }
+
 
   /*
    * This function create the cmd for the xml (.rmd) file through IDL.
