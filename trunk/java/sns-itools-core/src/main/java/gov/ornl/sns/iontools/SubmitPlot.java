@@ -67,6 +67,7 @@ public class SubmitPlot implements Runnable {
 		
 		ProcessingInterfaceWithGui.removeProcessingMessage();
     ParametersToKeep.bThreadInProcess = false;
+    ThingsToDoWhenThreadIsDone.doWhenMainPlotIsDone();
 	}
 	
 }

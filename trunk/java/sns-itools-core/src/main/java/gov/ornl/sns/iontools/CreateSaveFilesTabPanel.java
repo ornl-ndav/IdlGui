@@ -177,6 +177,7 @@ public class CreateSaveFilesTabPanel {
     //refresh button
     DataReduction.transferRefreshButton = new JButton("REFRESH LIST OF FILES");
     DataReduction.transferRefreshButton.setActionCommand("transferRefreshButton");
+    DataReduction.transferRefreshButton.setEnabled(ParametersToKeep.bNeedToValidateSaveRefreshButton);
     DataReduction.transferRefreshButton.setPreferredSize(new Dimension(
         iFilesToTransferRefreshButtonWidth,
         iFilesToTransferRefreshButtonHeight));

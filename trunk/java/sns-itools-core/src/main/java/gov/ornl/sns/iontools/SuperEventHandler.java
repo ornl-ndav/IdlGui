@@ -317,6 +317,7 @@ public class SuperEventHandler extends DataReduction {
     if ("transferRefreshButton".equals(evt.getActionCommand())) {
       SaveFilesTabAction.updateListOfFilesToTransfer(true);  //get new hashtable
       DataReduction.transferRefreshButton.setEnabled(false); //no need to refresh now
+      ParametersToKeep.bNeedToRefreshListOfFiles = false;
     }
     
     //settings configuration not xml file text field

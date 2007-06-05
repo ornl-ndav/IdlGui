@@ -1,7 +1,5 @@
 package gov.ornl.sns.iontools;
 
-import java.awt.Color;
-
 public class ParametersToKeep {
 
 	static boolean bSaveSignalPidFileCheckBox 				      = IParameters.KEEP_SIGNAL_PID_FILE_NAME;
@@ -25,7 +23,8 @@ public class ParametersToKeep {
   static boolean bThreadInProcess                         = false;
 	static int     iNbrInfoLinesNotXmlToDisplayed           = IParameters.i_NO_RMD_NBR_LINE_DISPLAYED;
 	static int     iNbrInfoLinesXmlToDisplayed              = IParameters.i_RMD_NBR_LINE_DISPLAYED;
-  
+  static boolean bNeedToValidateSaveRefreshButton         = false;
+  static boolean bNeedToRefreshListOfFiles                = false;
   /*
 	 * Reinitialize all the parameters
 	 */

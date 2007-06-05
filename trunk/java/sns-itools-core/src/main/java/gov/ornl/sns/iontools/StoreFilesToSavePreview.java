@@ -2,7 +2,6 @@ package gov.ornl.sns.iontools;
 
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Arrays;
 
 public class StoreFilesToSavePreview {
 

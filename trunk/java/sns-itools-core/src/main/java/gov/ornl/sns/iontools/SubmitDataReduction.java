@@ -100,7 +100,8 @@ public class SubmitDataReduction implements Runnable {
 	   	
 		ProcessingInterfaceWithGui.removeProcessingMessage();
     ParametersToKeep.bThreadInProcess = false;
-	
+    ThingsToDoWhenThreadIsDone.doWhenDataReductionIsDone();
+    
   }
 	
 }
