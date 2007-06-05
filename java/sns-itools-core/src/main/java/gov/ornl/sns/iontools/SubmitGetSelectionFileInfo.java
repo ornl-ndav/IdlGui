@@ -32,8 +32,7 @@ public class SubmitGetSelectionFileInfo implements Runnable {
         myIONresult = IonUtils.queryVariable("result");
         String[] myResultArray;
         myResultArray = myIONresult.getStringArray();
-        SaveFilesTabAction.displayMessageInInfoBox(myResultArray);
-      
+              
       } else {
         
         String message = "The first ";
@@ -47,11 +46,10 @@ public class SubmitGetSelectionFileInfo implements Runnable {
         myIONresult = IonUtils.queryVariable("result");
         String[] myResultArray;
         myResultArray = myIONresult.getStringArray();
-        SaveFilesTabAction.displayMessageInInfoBox(myResultArray);
+  
       }
       IonUtils.executeCmd(".reset");
-      SaveFilesTabAction.sFilePreview[this.iIndex] = new StoreFilesToSavePreview(myResultArray);
-      
+            
     }
 
   }

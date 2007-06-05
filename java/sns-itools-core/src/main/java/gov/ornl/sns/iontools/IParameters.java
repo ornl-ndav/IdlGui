@@ -113,6 +113,7 @@ public interface IParameters {
 		static final String NR_EXTENSION              = ".nom";
 		static final String BRN_EXTENSION             = ".bnm";
 		static final String RMD_EXTENSION             = ".rmd";
+    static final String DAT_EXTENSION             = ".dat";
     
 		//Extra plots file names
 		static final String SR_TITLE       = "Signal Region";
