@@ -750,9 +750,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    processingInfoLabel.setVisible(true);
 	    processingInfoLabel.setForeground(Color.BLUE);
 	    processingInfoLabel.setFont(new Font("Serif", Font.PLAIN, 20));
-      //processingGif = createImageIcon("/gov/ornl/sns/iontools/images/SNSlogo.gif");
-      processingGif = createImageIcon("/gov/ornl/sns/iontools/images/newSNSlogoSize2.gif");
-
+      processingGif = createImageIcon("/gov/ornl/sns/iontools/images/sns_logo_animated_2.gif");
+      
       processingLabel = new JLabel();
 	    processingLabel.setVisible(true);
 	    processingLabel.setIcon(processingGif);
