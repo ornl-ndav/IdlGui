@@ -6,7 +6,6 @@ pro plot_load_new, fname
     openr, unit,fname, /get
     readu, unit, data
 
-
     plot, data
 
     free_lun, unit

@@ -21,44 +21,50 @@ public class SaveFilesTabAction {
   static StoreFilesToSavePreview[] sFilePreview;
   //static Hashtable<String, String[]>   sHashtableOfFiles;
   static Hashtable<String, List<String>>   sHashtableOfFiles;
-  
+    
   /*
    * This function upate the list of files to transfered
    */
-  static void updateListOfFilesToTransfer() {
+  static void updateListOfFilesToTransfer(boolean bFilesChanged) {
   
-    if (!ParametersToKeep.bThreadInProcess &&
+    try {
+    
+      if (!ParametersToKeep.bThreadInProcess &&
         !ParametersToKeep.bFirstRunEver) {
       
-      sListOfFiles = getListOfFiles();
-      sCompleteListOfFiles = sListOfFiles;
+        sListOfFiles = getListOfFiles();
+        sCompleteListOfFiles = sListOfFiles;
       
-      iNbrOfFiles = sListOfFiles.length; //nbr of files to list
+        iNbrOfFiles = sListOfFiles.length; //nbr of files to list
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);
 //    }
-      if (!DataReduction.transferPidFilesCheckBox.isSelected()) {
-        removePidFilesFromList(sListOfFiles);
-      }     
-      if (!DataReduction.transferDataReductionFileCheckBox.isSelected()) {
-        removeDataReductionFilesFromList(sListOfFiles);
-      } 
-      if (!DataReduction.transferExtraPlotsCheckBox.isSelected()) {
-        removeExtraPlotsFilesFromList(sListOfFiles);
-      } 
-      if (!DataReduction.transferTmpHistoCheckBox.isSelected()) {
-        removeTmpHistoFileFromList(sListOfFiles);
-      }
-      vListOfFiles = new Vector();
-      vListOfFiles = getVectorListOfFiles(sListOfFiles);
-      DataReduction.filesToTransferList.setListData(vListOfFiles);
+        if (!DataReduction.transferPidFilesCheckBox.isSelected()) {
+          removePidFilesFromList(sListOfFiles);
+        }     
+        if (!DataReduction.transferDataReductionFileCheckBox.isSelected()) {
+          removeDataReductionFilesFromList(sListOfFiles);
+        } 
+        if (!DataReduction.transferExtraPlotsCheckBox.isSelected()) {
+          removeExtraPlotsFilesFromList(sListOfFiles);
+        } 
+        if (!DataReduction.transferTmpHistoCheckBox.isSelected()) {
+          removeTmpHistoFileFromList(sListOfFiles);
+        }
+        vListOfFiles = new Vector();
+        vListOfFiles = getVectorListOfFiles(sListOfFiles);
+        DataReduction.filesToTransferList.setListData(vListOfFiles);
       
-      //this part will store the preview of all the files everytime we want a refresh
-      if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
-        StoreFilesToSavePreview.createHashtableOfFilesToSave();
+        if (bFilesChanged) {
+          //this part will store the preview of all the files everytime we want a refresh
+          if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
+            StoreFilesToSavePreview.createHashtableOfFilesToSave();
+          }
+        }
       }
-    }
+    } catch (Exception e) {};
   }
+ 
   
   /*
    * Get list of files in String array
@@ -225,41 +231,20 @@ public class SaveFilesTabAction {
   }
 
   /*
-   * This function will collect all the preview of the files
-   */
-  static void runSelectedFileInfoLoop(int iNbrFile) {
-    for (int i=0; i<iNbrFile; ++i) {
-      getSelectedFileInfo(i);
-    }
-  }
-  
-  /*
-   * This function output in the info text box the first lines
-   * of the selected file to save
-   */
-  static void getSelectedFileInfo(int iIndex) {
-    
-    //info of selected file run in another thread
-    SubmitGetSelectionFileInfo run = new SubmitGetSelectionFileInfo(iIndex);
-    Thread runThread = new Thread(run,"Preview of selected file in progress");
-    runThread.start();
-   
-  }
-
-  /*
    * this function displays the preview of the selected file in the 
    * message box 
    */
   static void displaySelectedFileInfo(int iIndex) {
 
-    List<String> value = SaveFilesTabAction.sHashtableOfFiles.get(sCompleteListOfFiles[iIndex]);
-    String[] myStringArray = value.toArray(new String[0]);
+    try {
+      List<String> value = SaveFilesTabAction.sHashtableOfFiles.get(sCompleteListOfFiles[iIndex]);
+      String[] myStringArray = value.toArray(new String[0]);
         
 //    List<String> myResultArray = sHashtableOfFiles.get(sFilePreview[iIndex]);
-    
 //    String[] myStringArray = myResultArray.toArray(new String[0]);
 //    System.out.println("string is: " + myStringArray.toString());
     SaveFilesTabAction.displayMessageInInfoBox(myStringArray); 
+    } catch (Exception e) {};
   }
   
   /*
