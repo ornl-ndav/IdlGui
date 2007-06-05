@@ -58,7 +58,7 @@ public class SaveBackgroundPidFileAction {
 		DataReduction.clearBackPidFileButton.setEnabled(true);
 		CheckDataReductionButtonValidation.bBackPidFileSaved = true;
 		CheckDataReductionButtonValidation.sBackPidFile = DataReduction.pidBackFileName;
-		
+    ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
 	}
 
 	
@@ -89,6 +89,7 @@ public class SaveBackgroundPidFileAction {
 	
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,1);
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,2);
+    ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
 	}
 	
 		

@@ -37,7 +37,7 @@ public class SaveSignalPidFileAction {
 		DataReduction.clearSignalPidFileButton.setEnabled(true);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = true;
 		CheckDataReductionButtonValidation.sSignalPidFile = DataReduction.pidSignalFileName;
-		
+    ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
 	}
 	
 	static void clearSignalPidFileAction() {
@@ -56,6 +56,7 @@ public class SaveSignalPidFileAction {
 		MouseSelection.RemoveSignalPidInfoMessage();
 		
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,0);
+    ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
 	}
 	
 	

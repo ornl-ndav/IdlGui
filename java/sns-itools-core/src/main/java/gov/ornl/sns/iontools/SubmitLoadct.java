@@ -26,6 +26,7 @@ public class SubmitLoadct implements Runnable {
 		IonUtils.executeCmd(this.cmd);
 		ProcessingInterfaceWithGui.removeProcessingMessage();
     ParametersToKeep.bThreadInProcess = false;
+    ThingsToDoWhenThreadIsDone.doWhenLoadctIsDone();
 	}
 	
 	static String createLoadctCmd() {

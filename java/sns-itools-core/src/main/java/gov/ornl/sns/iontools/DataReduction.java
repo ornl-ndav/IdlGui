@@ -836,8 +836,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 			public void stateChanged(ChangeEvent ev) {
         
         if (tabbedPane.getSelectedIndex()==2) { //if Transfer tab is selected
-          SaveFilesTabAction.updateListOfFilesToTransfer(true); //refresh hashtable
-          DataReduction.transferRefreshButton.setEnabled(true); //offer possibility to refresh
+          if (ParametersToKeep.bNeedToRefreshListOfFiles) {
+            SaveFilesTabAction.updateListOfFilesToTransfer(true); //refresh hashtable
+            ParametersToKeep.bNeedToRefreshListOfFiles = false;
+          }
         }
         TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});
