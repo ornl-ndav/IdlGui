@@ -196,7 +196,8 @@ public class CreateSaveFilesTabPanel {
         if (e.getValueIsAdjusting()) return;
         ListSelectionModel lsm = (ListSelectionModel)e.getSource();
         if (!lsm.isSelectionEmpty()) {
-        //SaveFilesTabAction.getSelectedFileInfo();   //this is where I should add the code to get the string[] form SstoreFilesToSavePreview class
+          int[] indexSelected = DataReduction.filesToTransferList.getSelectedIndices();
+          SaveFilesTabAction.displaySelectedFileInfo(indexSelected[0]);
         }
       }
     }

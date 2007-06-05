@@ -1,8 +1,8 @@
 package gov.ornl.sns.iontools;
 
+import java.util.Hashtable;
 import java.util.Vector;
 import com.rsi.ion.*;
-import com.sun.org.apache.bcel.internal.generic.StoreInstruction;
 
 import java.util.List;
 
@@ -12,12 +12,15 @@ public class SaveFilesTabAction {
   static Vector      vListOfFiles;
   static Vector      vListOfFilesAdded;
   static String[]    sListOfFiles;
+  static String[]    sCompleteListOfFiles;
   static List        lListOfFilesAdded;
   static IONVariable ionUcams;
   static IONVariable ionTmpFolder;
   static IONVariable ionFileName;
   static IONVariable ionNbrLineDisplayed;
   static StoreFilesToSavePreview[] sFilePreview;
+  //static Hashtable<String, String[]>   sHashtableOfFiles;
+  static Hashtable<String, List<String>>   sHashtableOfFiles;
   
   /*
    * This function upate the list of files to transfered
@@ -28,6 +31,8 @@ public class SaveFilesTabAction {
         !ParametersToKeep.bFirstRunEver) {
       
       sListOfFiles = getListOfFiles();
+      sCompleteListOfFiles = sListOfFiles;
+      
       iNbrOfFiles = sListOfFiles.length; //nbr of files to list
 //    for (String file:sListOfFiles) {
 //      System.out.println(file);
@@ -50,12 +55,9 @@ public class SaveFilesTabAction {
       
       //this part will store the preview of all the files everytime we want a refresh
       if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
-        sFilePreview = new StoreFilesToSavePreview[SaveFilesTabAction.iNbrOfFiles];
-        runSelectedFileInfoLoop(SaveFilesTabAction.iNbrOfFiles);
-        
+        StoreFilesToSavePreview.createHashtableOfFilesToSave();
       }
-      
-      }
+    }
   }
   
   /*
@@ -244,7 +246,22 @@ public class SaveFilesTabAction {
    
   }
 
+  /*
+   * this function displays the preview of the selected file in the 
+   * message box 
+   */
+  static void displaySelectedFileInfo(int iIndex) {
 
+    List<String> value = SaveFilesTabAction.sHashtableOfFiles.get(sCompleteListOfFiles[iIndex]);
+    String[] myStringArray = value.toArray(new String[0]);
+        
+//    List<String> myResultArray = sHashtableOfFiles.get(sFilePreview[iIndex]);
+    
+//    String[] myStringArray = myResultArray.toArray(new String[0]);
+//    System.out.println("string is: " + myStringArray.toString());
+    SaveFilesTabAction.displayMessageInInfoBox(myStringArray); 
+  }
+  
   /*
    * This function create the cmd for the xml (.rmd) file through IDL.
    * The full contains of the file will be displayed
@@ -301,6 +318,17 @@ public class SaveFilesTabAction {
          }  
          DataReduction.saveFileInfoTextArea.append(myResultArray[i]);
        }
+   }
+   
+   /*
+    * Checks if the file is a binary file or not
+    */
+   static boolean isFileDatFile(String sFileName) {
+     if (sFileName.endsWith(IParameters.DAT_EXTENSION)) {
+       return true;
+     } else {
+       return false;
+     }
    }
    
    /*
