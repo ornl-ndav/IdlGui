@@ -306,6 +306,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           filesToKeep2Label;
     static JLabel           nbrInfoLinesDisplayedNotXmlFilesLabel;
     static JLabel           nbrInfoLinesDisplayedXmlFilesLabel;
+    static JLabel           renameFileLabel;
     
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;

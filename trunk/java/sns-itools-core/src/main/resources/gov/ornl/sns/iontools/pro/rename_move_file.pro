@@ -1,7 +1,7 @@
 pro RENAME_MOVE_FILE, ucams, tmp_folder, old_file_name, new_file_name
 
 if (ucams EQ 'j35') Then begin
-	cmd = "mv " 
+	cmd = "cp " 
 	cmd += tmp_folder + old_file_name
 	cmd += " /SNS/users/j35/" + new_file_name
 endif else begin
@@ -12,5 +12,5 @@ endif else begin
 endelse
 
 spawn, cmd
-
+print, cmd
 end

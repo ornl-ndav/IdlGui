@@ -124,6 +124,7 @@ public class SaveFilesTabAction {
     ionUcams     = new IONVariable(DataReduction.remoteUser);
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
     ionOldFileName  = new IONVariable(oldFileName);
+    ionNewFileName = new IONVariable(newFileName);
     
     String cmd = "RENAME_MOVE_FILE, ";
     cmd += ionUcams + ",";
