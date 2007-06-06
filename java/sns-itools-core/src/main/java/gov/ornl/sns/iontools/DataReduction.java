@@ -1189,8 +1189,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.transferPidFilesCheckBox.addActionListener(this);
       DataReduction.transferDataReductionFileCheckBox.addActionListener(this);
       DataReduction.transferExtraPlotsCheckBox.addActionListener(this);
-      DataReduction.transferTmpHistoCheckBox.addActionListener(this);
       DataReduction.transferRefreshButton.addActionListener(this);
+      DataReduction.saveFileInfoMessageTextfield.addActionListener(this);
     }
       
 }
