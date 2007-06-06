@@ -16,11 +16,13 @@ public class SaveFilesTabAction {
   static List        lListOfFilesAdded;
   static IONVariable ionUcams;
   static IONVariable ionTmpFolder;
-  static IONVariable ionFileName;
+  static IONVariable ionOldFileName;
+  static IONVariable ionNewFileName;
   static IONVariable ionNbrLineDisplayed;
   static StoreFilesToSavePreview[] sFilePreview;
   static Hashtable<String, List<String>>   sHashtableOfFiles;
-    
+  static Hashtable<String, String> sHashtableOldNewFileNames;
+  
   /*
    * This function upate the list of files to transfered
    */
@@ -58,6 +60,7 @@ public class SaveFilesTabAction {
           //this part will store the preview of all the files everytime we want a refresh
           if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
             StoreFilesToSavePreview.createHashtableOfFilesToSave();
+            StoreFilesToRename.createHashtableOfFilesToRename();
           }
         }
       }
@@ -102,10 +105,11 @@ public class SaveFilesTabAction {
     //get selected indices
     int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
     lListOfFilesAdded = new java.util.ArrayList();
-    
     //list of files selected and transfer them one at a time
     for (int i=0; i<iSelection.length; i++) {
-      String cmd = createCmd(sListOfFiles[iSelection[i]]);
+      String sOldName = sListOfFiles[iSelection[i]];
+      String sNewName = sHashtableOldNewFileNames.get(sOldName);
+      String cmd = createRenameMoveFileCmd(sOldName, sNewName);
       IonUtils.executeCmd(cmd);
       addFileInRightBox(sListOfFiles[iSelection[i]]); //add files into right box
     }
@@ -115,20 +119,37 @@ public class SaveFilesTabAction {
   /*
    * Create the cmd that will be run through ION_JAVA to copy/transfer the files
    */
-  static String createCmd(String fileName) {
+  static String createRenameMoveFileCmd(String oldFileName, String newFileName) {
     
     ionUcams     = new IONVariable(DataReduction.remoteUser);
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
-    ionFileName  = new IONVariable(fileName);
+    ionOldFileName  = new IONVariable(oldFileName);
     
-    String cmd = "MOVE_FILE, ";
+    String cmd = "RENAME_MOVE_FILE, ";
     cmd += ionUcams + ",";
     cmd += ionTmpFolder + ",";
-    cmd += ionFileName;
+    cmd += ionOldFileName + ",";
+    cmd += ionNewFileName;
     return cmd;
     
   }
   
+  /*
+   * Create the cmd that will be run through ION_JAVA to copy/transfer the files
+   */
+  static String createMoveFileCmd(String oldFileName) {
+    
+    ionUcams     = new IONVariable(DataReduction.remoteUser);
+    ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
+        
+    String cmd = "MOVE_FILE, ";
+    cmd += ionUcams + ",";
+    cmd += ionTmpFolder + ",";
+    cmd += ionOldFileName;
+    return cmd;
+    
+  }
+
   /*
    * This function add the file name in the right box 
    */
@@ -223,7 +244,7 @@ public class SaveFilesTabAction {
     if (isTransferModeAutomatic()) { //mode is automatic
       sListOfFiles = getListOfFiles();
       for (int i=0; i<sListOfFiles.length; i++) {
-        String cmd = createCmd(sListOfFiles[i]);
+        String cmd = createMoveFileCmd(sListOfFiles[i]);
         IonUtils.executeCmd(cmd);
       }
     }
@@ -254,11 +275,11 @@ public class SaveFilesTabAction {
     SettingsTabAction.validateXmlTextField();
     
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
-    ionFileName  = new IONVariable(sFileName);
+    ionOldFileName  = new IONVariable(sFileName);
     ionNbrLineDisplayed = new IONVariable(ParametersToKeep.iNbrInfoLinesXmlToDisplayed);
         
     String cmd = "result = DISPLAY_XML_FILE_INFO( ";
-    cmd += ionFileName + ",";
+    cmd += ionOldFileName + ",";
     cmd += ionTmpFolder + ",";
     cmd += ionNbrLineDisplayed + ")";
     
@@ -275,11 +296,11 @@ public class SaveFilesTabAction {
     SettingsTabAction.validateNotXmlTextField();
 
     ionTmpFolder = new IONVariable(DataReduction.sTmpFolder);
-    ionFileName  = new IONVariable(sFileName);
+    ionOldFileName  = new IONVariable(sFileName);
     ionNbrLineDisplayed = new IONVariable(ParametersToKeep.iNbrInfoLinesNotXmlToDisplayed);
         
     String cmd = "result = DISPLAY_FILE_INFO( ";
-    cmd += ionFileName + ",";
+    cmd += ionOldFileName + ",";
     cmd += ionTmpFolder + ",";
     cmd += ionNbrLineDisplayed + ")";
     
@@ -346,9 +367,8 @@ public class SaveFilesTabAction {
     static void renameFileToSave() {
       String sNewFileName = DataReduction.saveFileInfoMessageTextfield.getText();
       String sOldFileName = getFirstFileSelected();
-      
-      System.out.println("new name is: " + sNewFileName);
-      System.out.println("old name is: " + sOldFileName);
+      //replace old name by new name
+      sHashtableOldNewFileNames.put(sOldFileName, sNewFileName);
     }
 
     /*
