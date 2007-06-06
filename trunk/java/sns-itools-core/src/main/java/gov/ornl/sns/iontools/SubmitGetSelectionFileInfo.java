@@ -47,11 +47,6 @@ public class SubmitGetSelectionFileInfo implements Runnable {
    */
   static String[] getPreviewOfXmlFile(String sFileName) {
    
-    String message = "The first ";
-    message += ParametersToKeep.iNbrInfoLinesXmlToDisplayed;
-    message += "  lines of the selected file are displayed";
-    SaveFilesTabAction.displayedInfoMessage(message);
-    
     String cmd = SaveFilesTabAction.createSaveXmlFileInfoCmd(sFileName);
     IonUtils.executeCmd(cmd);
     com.rsi.ion.IONVariable myIONresult;
@@ -68,11 +63,6 @@ public class SubmitGetSelectionFileInfo implements Runnable {
    */
   static String[] getPreviewOfNotXmlFile(String sFileName) {
    
-    String message = "The first ";
-    message += ParametersToKeep.iNbrInfoLinesNotXmlToDisplayed;
-    message += "  lines of the selected file are displayed";
-    SaveFilesTabAction.displayedInfoMessage(message);
-    
     String cmd = SaveFilesTabAction.createSaveFileInfoCmd(sFileName);
     IonUtils.executeCmd(cmd);
     com.rsi.ion.IONVariable myIONresult;
