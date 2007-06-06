@@ -309,7 +309,8 @@ public class SuperEventHandler extends DataReduction {
     if ("transferPidFilesCheckBox".equals(evt.getActionCommand()) ||
         "transferDataReductionFileCheckBox".equals(evt.getActionCommand()) ||
         "transferExtraPlotsCheckBox".equals(evt.getActionCommand())) {
-      SaveFilesTabAction.updateListOfFilesToTransfer(false);  //no need to refresh hashtable 
+      SaveFilesTabAction.updateListOfFilesToTransfer(false);  //no need to refresh hashtable
+      SaveFilesTabAction.resetTextAreaField();
     }
 
     //refresh button in transfer tab
