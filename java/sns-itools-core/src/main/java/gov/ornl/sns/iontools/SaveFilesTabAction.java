@@ -19,7 +19,6 @@ public class SaveFilesTabAction {
   static IONVariable ionFileName;
   static IONVariable ionNbrLineDisplayed;
   static StoreFilesToSavePreview[] sFilePreview;
-  //static Hashtable<String, String[]>   sHashtableOfFiles;
   static Hashtable<String, List<String>>   sHashtableOfFiles;
     
   /*
@@ -239,11 +238,9 @@ public class SaveFilesTabAction {
     try {
       List<String> value = SaveFilesTabAction.sHashtableOfFiles.get(sCompleteListOfFiles[iIndex]);
       String[] myStringArray = value.toArray(new String[0]);
-        
-//    List<String> myResultArray = sHashtableOfFiles.get(sFilePreview[iIndex]);
-//    String[] myStringArray = myResultArray.toArray(new String[0]);
-//    System.out.println("string is: " + myStringArray.toString());
-    SaveFilesTabAction.displayMessageInInfoBox(myStringArray); 
+      String sFileName = sCompleteListOfFiles[iIndex];
+      SaveFilesTabAction.displayedLabelMessage(sFileName);
+      SaveFilesTabAction.displayMessageInInfoBox(myStringArray); 
     } catch (Exception e) {};
   }
   
@@ -328,10 +325,11 @@ public class SaveFilesTabAction {
    }
    
    /*
-    * Displayed the message in the save file info message box
-    */
-    static void displayedInfoMessage(String sInfoMessage) {
-      DataReduction.saveFileInfoMessageTextfield.setText(sInfoMessage);      
+     * This function displays the given string in the label box just above
+     * the preview text box
+     */
+    static void displayedLabelMessage(String sLabelMessage) {
+      DataReduction.saveFileInfoMessageTextfield.setText(sLabelMessage);
     }
     
     /*
