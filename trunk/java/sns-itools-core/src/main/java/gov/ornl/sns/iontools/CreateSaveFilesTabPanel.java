@@ -140,15 +140,10 @@ public class CreateSaveFilesTabPanel {
     DataReduction.transferExtraPlotsCheckBox.setSelected(IParameters.B_TRANSFER_EXTRA_PLOT_FILE);
     DataReduction.transferExtraPlotsCheckBox.setActionCommand("transferExtraPlotsCheckBox");
     
-    DataReduction.transferTmpHistoCheckBox = new JCheckBox("Temporary Histogram files");
-    DataReduction.transferTmpHistoCheckBox.setSelected(IParameters.B_TRANSFER_TMP_HISTO_FILE);
-    DataReduction.transferTmpHistoCheckBox.setActionCommand("transferTmpHistoCheckBox");
-    
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferPidFilesCheckBox);
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferDataReductionFileCheckBox);
     DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferExtraPlotsCheckBox);
-    DataReduction.filesToTransferCheckBoxPanel.add(DataReduction.transferTmpHistoCheckBox);
-    
+        
     DataReduction.filesToTransferCheckBoxPanel.setPreferredSize(new Dimension(
         iFilesToTransferCheckBoxPanelWidth,
         iFilesToTransferCheckBoxPanelHeight));
@@ -257,7 +252,8 @@ public class CreateSaveFilesTabPanel {
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
     DataReduction.saveFileInfoMessageTextfield = new JTextField(29);
-    DataReduction.saveFileInfoMessageTextfield.setEditable(false);
+    DataReduction.saveFileInfoMessageTextfield.setEditable(true);
+    DataReduction.saveFileInfoMessageTextfield.setActionCommand("saveFileInfoMessageTextField");
     DataReduction.saveFileInfoMessageTextfield.setPreferredSize(new Dimension(
         iSaveFileInfoMessageWidth,
         iSaveFileInfomessageHeight));

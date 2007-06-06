@@ -47,9 +47,9 @@ public class SaveFilesTabAction {
         if (!DataReduction.transferExtraPlotsCheckBox.isSelected()) {
           removeExtraPlotsFilesFromList(sListOfFiles);
         } 
-        if (!DataReduction.transferTmpHistoCheckBox.isSelected()) {
-          removeTmpHistoFileFromList(sListOfFiles);
-        }
+        
+        removeTmpHistoFileFromList(sListOfFiles);
+        
         vListOfFiles = new Vector();
         vListOfFiles = getVectorListOfFiles(sListOfFiles);
         DataReduction.filesToTransferList.setListData(vListOfFiles);
@@ -99,7 +99,7 @@ public class SaveFilesTabAction {
    */
   static void transferFile() {
     
-    //get selected indeces
+    //get selected indices
     int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
     lListOfFilesAdded = new java.util.ArrayList();
     
@@ -338,4 +338,28 @@ public class SaveFilesTabAction {
     static void clearInfoMessage() {
       DataReduction.saveFileInfoMessageTextfield.setText("");
     }
+    
+    /*
+     * This function will rename the file currently previewed
+     * by the name entered in the message text field
+     */
+    static void renameFileToSave() {
+      String sNewFileName = DataReduction.saveFileInfoMessageTextfield.getText();
+      String sOldFileName = getFirstFileSelected();
+      
+      System.out.println("new name is: " + sNewFileName);
+      System.out.println("old name is: " + sOldFileName);
+    }
+
+    /*
+     * This function will give the name of the first file selected
+     */
+    static String getFirstFileSelected() {
+      //get selected indices
+      int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
+      return sListOfFiles[iSelection[0]];
+    }
+    
+    
+    
 }
