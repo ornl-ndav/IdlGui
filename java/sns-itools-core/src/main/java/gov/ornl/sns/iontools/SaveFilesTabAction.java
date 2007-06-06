@@ -360,6 +360,12 @@ public class SaveFilesTabAction {
       return sListOfFiles[iSelection[0]];
     }
     
-    
-    
+    /*
+     * This function will clear off the contain of the text field
+     * and text area boxes
+     */
+    static void resetTextAreaField() {
+      DataReduction.saveFileInfoMessageTextfield.setText("");
+      DataReduction.saveFileInfoTextArea.setText("");
+    }
 }
