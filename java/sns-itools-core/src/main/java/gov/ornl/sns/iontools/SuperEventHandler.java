@@ -299,9 +299,6 @@ public class SuperEventHandler extends DataReduction {
     
     //transfer button
     if ("transferFilesButton".equals(evt.getActionCommand())) {
-      //System.out.println(DataReduction.filesToTransferList.getSelectedValue());
-      //System.out.println(DataReduction.filesToTransferList.getSelectedIndex());
-      //System.out.println("selection is: " + iSelection[0]);
       SaveFilesTabAction.transferFile();
     }
         

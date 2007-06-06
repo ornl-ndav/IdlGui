@@ -15,7 +15,6 @@ public class StoreFilesToRename {
   String[] sCompleteListOfFiles = SaveFilesTabAction.sCompleteListOfFiles;
   int iNbrOfFiles = SaveFilesTabAction.iNbrOfFiles;  
   populateHashtable(sCompleteListOfFiles, iNbrOfFiles);
-    
   }
   
   /*
@@ -26,7 +25,6 @@ public class StoreFilesToRename {
     int iCompleteListOfFilesSize = sCompleteListOfFiles.length;
     for (int i=0; i<iCompleteListOfFilesSize; ++i) {
       SaveFilesTabAction.sHashtableOldNewFileNames.put(sCompleteListOfFiles[i], sCompleteListOfFiles[i]);
-   
     }
   } 
   

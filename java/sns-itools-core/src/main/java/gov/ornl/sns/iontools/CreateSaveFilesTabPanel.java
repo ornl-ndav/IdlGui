@@ -50,8 +50,13 @@ public class CreateSaveFilesTabPanel {
   private static int iSaveFileInfoTextAreaWidth = 755;
   private static int iSaveFileInfoTextAreaHeight = 125;
   
-  private static int iSaveFileInfoMessageXoff = 15;
-  private static int iSaveFileInfoMessageYoff = 373;
+  private static int iRenameFileLabelXoff = 15;
+  private static int iRenameFileLabelYoff = 373;
+  private static int iRenameFileLabelWidth = 80;
+  private static int iRenameFileLabelHeigth = 30;
+  
+  private static int iSaveFileInfoMessageXoff = 90;
+  private static int iSaveFileInfoMessageYoff = iRenameFileLabelYoff;
   private static int iSaveFileInfoMessageWidth = 200;
   private static int iSaveFileInfomessageHeight = 30; 
   
@@ -251,6 +256,18 @@ public class CreateSaveFilesTabPanel {
         BorderFactory.createTitledBorder("Manual Selection"),
         BorderFactory.createEmptyBorder(5,5,5,5)));
 
+    DataReduction.renameFileLabel = new JLabel("File name:");
+    DataReduction.renameFileLabel.setPreferredSize(new Dimension(
+        iRenameFileLabelWidth,
+        iRenameFileLabelHeigth));
+    Dimension renameFileLabelSize = DataReduction.renameFileLabel.getPreferredSize();
+    DataReduction.renameFileLabel.setBounds(
+        iRenameFileLabelXoff,
+        iRenameFileLabelYoff,
+        renameFileLabelSize.width,
+        renameFileLabelSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.renameFileLabel);
+    
     DataReduction.saveFileInfoMessageTextfield = new JTextField(29);
     DataReduction.saveFileInfoMessageTextfield.setEditable(true);
     DataReduction.saveFileInfoMessageTextfield.setActionCommand("saveFileInfoMessageTextField");
