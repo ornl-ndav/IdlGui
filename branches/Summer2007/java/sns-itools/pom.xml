@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+                             http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>gov.ornl.sns</groupId>
+    <artifactId>sns-asg-pom</artifactId>
+    <version>1.0.1-SNAPSHOT</version>
+  </parent>
+  <groupId>gov.ornl.sns.itools</groupId>
+  <artifactId>sns-itools</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <packaging>pom</packaging>
+  <name>SNS iTools</name>
+  <description>Parent project for all iTools modules.</description>
+  <modules>
+    <module>../sns-itools-core</module>
+    <module>../sns-itools-gui</module>
+  </modules>
+  <developers>
+    <developer>
+      <id>j35</id>
+      <name>Jean-Christophe Bilheux</name>
+      <email>bilheuxjm@ornl.gov</email>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <properties>
+    <repositoryName>HistoTool</repositoryName>
+    <projectPath>trunk/java/sns-itools</projectPath>
+  </properties>
+  <scm>
+    <connection>${scmConnectionBaseUrl}/${repositoryName}/${projectPath}</connection>
+    <developerConnection>${scmDeveloperConnectionBaseUrl}/${repositoryName}/${projectPath}</developerConnection>
+    <url>${scmTracBaseUrl}/${repositoryName}/browser/${projectPath}</url>
+  </scm>  
+  <ciManagement>
+    <system>continuum</system>
+    <url>${continuumUrl}</url>
+    <notifiers>
+      <notifier>
+        <type>mail</type>
+        <sendOnSuccess>true</sendOnSuccess>
+        <sendOnFailure>true</sendOnFailure>
+        <sendOnError>true</sendOnError>
+        <sendOnWarning>true</sendOnWarning>
+        <configuration>
+          <address>bilheuxjm@ornl.gov</address>
+        </configuration>
+      </notifier>
+    </notifiers>
+  </ciManagement>
+</project>
