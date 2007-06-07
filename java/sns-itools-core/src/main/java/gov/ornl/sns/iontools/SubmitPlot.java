@@ -44,7 +44,7 @@ public class SubmitPlot implements Runnable {
     	
 		//check if run number is not already part of the data reduction runs
 		UpdateDataReductionRunNumberTextField.updateDataReductionRunNumbers(DataReduction.runNumberValue);
-    
+  
 		//update text field
 		if (DataReduction.bFoundNexus) {
 			

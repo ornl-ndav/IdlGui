@@ -1,3 +1,4 @@
+
 /*
  * Copyright (c) 2007, J.-C. Bilheux <bilheuxjm@ornl.gov>
  * showpallation Neutron Source at Oak Ridge National Laboratory
@@ -65,7 +66,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String          	cmd; 
     static String           hostname;
     static String  		      modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
-    static String           sTmpFolder;      
+    static String           sTmpFolder;                  // ex:/SNS/users/ionuser/94545484585458454/
+    static String           sTmpFolderRelativePath;      // ex: 945454845585458454
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     static int              Nx;
@@ -487,7 +489,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  *   disconnect from the server when this is the case.
  */
   public void stop(){
-    writeMessage("Page exited.");
     SaveFilesTabAction.transferAllFilesFromCurrentSession();
     UtilsFunction.removeTmpFolder();
     c_ionCon.removeIONDisconnectListener(this);

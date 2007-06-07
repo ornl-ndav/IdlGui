@@ -30,8 +30,9 @@ public class UtilsFunction {
 		IonUtils.executeCmd(cmd);
 		
     ParametersToKeep.sSessionWorkingDirectory += "/";
+    DataReduction.sTmpFolderRelativePath = sTmpFolder;
     DataReduction.sTmpFolder = ParametersToKeep.sSessionWorkingDirectory;
-		
+        
 	}
 		
 	
@@ -72,9 +73,9 @@ public class UtilsFunction {
    */
   static void removeTmpFolder() {
     
-    com.rsi.ion.IONVariable ionTmpFolder = new com.rsi.ion.IONVariable(DataReduction.sTmpFolder);
+    com.rsi.ion.IONVariable ionTmpFolderRelativePath = new com.rsi.ion.IONVariable(DataReduction.sTmpFolderRelativePath);
     String cmd = "remove_tmp_folder, ";
-    cmd += ionTmpFolder;
+    cmd += ionTmpFolderRelativePath;
     IonUtils.executeCmd(cmd);
     
   }
