@@ -17,8 +17,10 @@ public class SaveBackgroundPidFileAction {
 				IParameters.BACK_STRING);
 		
 		DataReduction.backgroundPidFileTextField.setBackground(Color.WHITE);
-		DataReduction.backgroundPidFileTextField.setText(DataReduction.pidBackFileName);
-	
+		
+    String pidBackFileNameShortVersion = UtilsFunction.getOnlyLastPartOfFileName(DataReduction.pidBackFileName);
+    DataReduction.backgroundPidFileTextField.setText(pidBackFileNameShortVersion);  
+    	
 		IONVariable fullFileName = new IONVariable(DataReduction.pidBackFileName);
 		
 		int[] xarrSignal = {MouseSelectionParameters.signal_xmin, 

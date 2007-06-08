@@ -1,5 +1,7 @@
 package gov.ornl.sns.iontools;
 
+import java.io.*;
+
 public class UtilsFunction {
 
 	static String convertDegresToRadians(String sAngleDegree) {
@@ -79,8 +81,15 @@ public class UtilsFunction {
     IonUtils.executeCmd(cmd);
     
   }
+
+  /*
+   * This function returns only the last part of the full path given
+   */
+  static String getOnlyLastPartOfFileName(String sFullFileName) {
   
-  
+    File fFileName = new File(sFullFileName);
+    return fFileName.getName();
+  }
   
 }
 
