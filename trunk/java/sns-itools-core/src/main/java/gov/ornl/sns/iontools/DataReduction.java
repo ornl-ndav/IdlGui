@@ -68,6 +68,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String  		      modeSelected="signalSelection";//signalSelection, back1Selection, back2Selection, info
     static String           sTmpFolder;                  // ex:/SNS/users/ionuser/94545484585458454/
     static String           sTmpFolderRelativePath;      // ex: 945454845585458454
+    
+    
     static int              iBack2SelectionExist = 0;
     static int              c_bConnected=0; // 0 => !conn, 1 => conn, -1 => conn failed
     static int              Nx;
@@ -310,7 +312,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JLabel           nbrInfoLinesDisplayedXmlFilesLabel;
     static JLabel           renameFileLabel;
     static JLabel           oldFileNameLabel;
-    
+    static JLabel           nxsummaryConfigFileLabel;
+        
     static JTextField      	runNumberTextField;
     static JTextField       yMaxTextField;
     static JTextField       yMinTextField;
@@ -334,6 +337,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JTextField       saveFileInfoMessageTextfield;      
     static JTextField       nbrInfoLinesDisplayedNotXmlFilesTextField;
     static JTextField       nbrInfoLinesDisplayedXmlFilesTextField;
+    static JTextField       nxsummaryConfigFileTextField;
     
     static JTextArea        generalInfoTextArea;
     static JTextArea        signalSelectionTextArea;
@@ -430,7 +434,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	      //handle exception
 	  } 
 
-      DataReduction.generalInfoTextArea.setText("WELCOME " + remoteUser); 
+        DataReduction.generalInfoTextArea.setText("WELCOME " + remoteUser); 
   }
  
   /**

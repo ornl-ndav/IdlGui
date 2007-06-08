@@ -35,7 +35,7 @@ public interface IParameters {
     static final String PATH_TO_HOME           = "/SNS/users/";
 	  static final String SEQUENCE_SEPARATOR     = "-";
 	  static final String WORKING_PATH           = "/SNS/users/ionuser/";
-
+    static final String NXSUMMARY_CONFIG_FILE  = "/SNS/users/j35/.nxsummary.conf";
 	    
 		static final String NA = "N/A";
 		static final double DEGRES_TO_RADIANS_FACTOR = (2*Math.PI)/180; 
