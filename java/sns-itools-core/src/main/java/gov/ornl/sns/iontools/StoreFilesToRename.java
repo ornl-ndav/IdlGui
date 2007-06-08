@@ -18,14 +18,14 @@ public class StoreFilesToRename {
   }
   
   /*
-   * This function populate the hashtable of Of files to rename
+   * This function populate the hashtable of files to rename
    */
-  static void populateHashtable(String[] sCompleteListOfFiles, int iNbrOfFiles) {
-    
-    int iCompleteListOfFilesSize = sCompleteListOfFiles.length;
-    for (int i=0; i<iCompleteListOfFilesSize; ++i) {
+    static void populateHashtable(String[] sCompleteListOfFiles, int iNbrOfFiles) {
+      
+      int iCompleteListOfFilesSize = sCompleteListOfFiles.length;
+      for (int i=0; i<iCompleteListOfFilesSize; ++i) {
       SaveFilesTabAction.sHashtableOldNewFileNames.put(sCompleteListOfFiles[i], sCompleteListOfFiles[i]);
-    }
+      }
   } 
   
 }
