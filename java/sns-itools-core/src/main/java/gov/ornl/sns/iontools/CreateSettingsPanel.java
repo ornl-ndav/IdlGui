@@ -48,6 +48,15 @@ public class CreateSettingsPanel {
   private static int nbrLinesXmlTextFieldWidth = nbrLinesNotXmlTextFieldWidth;
   private static int nbrLinesXmlTextFieldHeight = nbrLinesNotXmlLabelHeight;
   
+  private static int nxsummaryFileLabelXoff = nbrLinesNotXmlLabelXoff;
+  private static int nxsummaryFileLabelYoff = nbrLinesXmlLabelYoff + 30;
+  private static int nxsummaryFileLabelWidth = 400;
+  private static int nxsummaryFileLabelHeight = 30;
+  
+  private static int nxsummaryFileTextFieldXoff = nxsummaryFileLabelXoff + 150;
+  private static int nxsummaryFileTextFieldYoff = nxsummaryFileLabelYoff;
+  private static int nxsummaryFileTextFieldWidth = 209;
+  private static int nxsummaryFileTextFieldHeigth = 30;  
   
 	public static void buildGUI() {
 		
@@ -340,6 +349,23 @@ public class CreateSettingsPanel {
         nbrInfoLinesDisplayedXmlFilesTextFieldSize.height);
     DataReduction.settingsParametersPanel.add(DataReduction.nbrInfoLinesDisplayedXmlFilesTextField);
     
+    DataReduction.nxsummaryConfigFileLabel = new JLabel("nxsummary config file");
+    DataReduction.nxsummaryConfigFileLabel.setBounds(
+        nxsummaryFileLabelXoff,
+        nxsummaryFileLabelYoff,
+        nxsummaryFileLabelWidth,
+        nxsummaryFileLabelHeight);
+    DataReduction.settingsParametersPanel.add(DataReduction.nxsummaryConfigFileLabel);
+    
+    DataReduction.nxsummaryConfigFileTextField = new JTextField(40);
+    DataReduction.nxsummaryConfigFileTextField.setEditable(true);
+    DataReduction.nxsummaryConfigFileTextField.setText(IParameters.NXSUMMARY_CONFIG_FILE);
+    DataReduction.nxsummaryConfigFileTextField.setBounds(
+        nxsummaryFileTextFieldXoff,
+        nxsummaryFileTextFieldYoff,
+        nxsummaryFileTextFieldWidth,
+        nxsummaryFileTextFieldHeigth);
+    DataReduction.settingsParametersPanel.add(DataReduction.nxsummaryConfigFileTextField);
     
   }
 }

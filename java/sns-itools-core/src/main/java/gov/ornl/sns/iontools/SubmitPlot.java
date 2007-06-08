@@ -55,10 +55,16 @@ public class SubmitPlot implements Runnable {
 			ParametersToKeep.bFirstRunEver=false;
 			if (CheckDataReductionButtonValidation.bAddNexusAndGo) {
 				DataReduction.runsAddTextField.setText(CheckDataReductionButtonValidation.sAddNexusAndGoString);
-			} else {
+			  } else {
     			DataReduction.runsSequenceTextField.setText(CheckDataReductionButtonValidation.sGoSequentiallyString);
-    		}	
-    	} else {
+    		}
+      
+      //run nxsummary
+      String[] sNxsummaryArray;
+      sNxsummaryArray = runNxsummary(DataReduction.runNumberValue, DataReduction.instrument);
+      putMessageInMainInfoBox(sNxsummaryArray);
+      
+      } else { //Nexus not found
     		
     		sMessage = "not found\n";
         LogBookAction.displayMessageInLogBook(sMessage, true);
@@ -70,4 +76,47 @@ public class SubmitPlot implements Runnable {
     ThingsToDoWhenThreadIsDone.doWhenMainPlotIsDone();
 	}
 	
+  /*
+   * This function calls the IDL module that is going to returns the nxsummary
+   * of the given run number for the given instrument.
+   */
+  static String[] runNxsummary(String sRunNumber, String sInstrument) {
+  
+    com.rsi.ion.IONVariable ionRunNumber = new com.rsi.ion.IONVariable(sRunNumber);
+    com.rsi.ion.IONVariable ionInstrument = new com.rsi.ion.IONVariable(sInstrument);
+    String sConfigFile = DataReduction.nxsummaryConfigFileTextField.getText();
+    com.rsi.ion.IONVariable ionConfigFile = new com.rsi.ion.IONVariable(sConfigFile);
+    
+    String cmd = "result = NXSUMMARY(";
+    cmd += ionRunNumber;
+    cmd += "," + ionInstrument;
+    cmd += "," + ionConfigFile + ")";
+    
+    IonUtils.executeCmd(cmd);
+    
+    com.rsi.ion.IONVariable myIONresult;
+    myIONresult = IonUtils.queryVariable("result");
+    String[] myResultArray;
+    myResultArray = myIONresult.getStringArray();
+    
+    return myResultArray;
+  }
+  
+  /*
+   * This function copy the result of nxsummary into the main info text box
+   */
+  static void putMessageInMainInfoBox(String[] myResultArray) {
+    
+    int iResultSize = myResultArray.length;
+    DataReduction.generalInfoTextArea.setText(myResultArray[0]+"\n");
+    for (int i=1; i<iResultSize; ++i) {
+      DataReduction.generalInfoTextArea.append(myResultArray[i]+"\n");
+    }
+    
+  }
+  
+  
+  
+  
+  
 }
