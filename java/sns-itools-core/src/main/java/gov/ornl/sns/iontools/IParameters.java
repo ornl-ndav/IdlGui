@@ -242,4 +242,5 @@ public interface IParameters {
       static final boolean B_TRANSFER_EXTRA_PLOT_FILE      = true;
       static final int     i_RMD_NBR_LINE_DISPLAYED        = 15;
       static final int     i_NO_RMD_NBR_LINE_DISPLAYED     = 7;
+      static final String  OLD_NAME_MESSAGE                = "(Old name was : ";
 }

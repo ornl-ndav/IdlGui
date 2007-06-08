@@ -8,21 +8,21 @@ import java.util.List;
 
 public class SaveFilesTabAction {
 
-  static int         iNbrOfFiles = 0;
-  static Vector      vListOfFiles;
-  static Vector      vListOfFilesAdded;
-  static String[]    sListOfFiles;
-  static String[]    sListOfFilesRenamed;
-  static String[]    sCompleteListOfFiles;
-  static List        lListOfFilesAdded;
-  static IONVariable ionUcams;
-  static IONVariable ionTmpFolder;
-  static IONVariable ionOldFileName;
-  static IONVariable ionNewFileName;
-  static IONVariable ionNbrLineDisplayed;
-  static StoreFilesToSavePreview[] sFilePreview;
+  static int          iNbrOfFiles = 0;
+  static Vector       vListOfFiles;
+  static Vector       vListOfFilesAdded;
+  static String[]     sListOfFiles;
+  static String[]     sListOfFilesRenamed;
+  static String[]     sCompleteListOfFiles;
+  static List         lListOfFilesAdded;
+  static IONVariable  ionUcams;
+  static IONVariable  ionTmpFolder;
+  static IONVariable  ionOldFileName;
+  static IONVariable  ionNewFileName;
+  static IONVariable  ionNbrLineDisplayed;
+  static StoreFilesToSavePreview[]         sFilePreview;
   static Hashtable<String, List<String>>   sHashtableOfFiles;
-  static Hashtable<String, String> sHashtableOldNewFileNames;
+  static Hashtable<String, String>         sHashtableOldNewFileNames;
   
   /*
    * This function upate the list of files to transfered
@@ -30,7 +30,6 @@ public class SaveFilesTabAction {
   static void updateListOfFilesToTransfer(boolean bFilesChanged) {
   
     try {
-    
       if (!ParametersToKeep.bThreadInProcess &&
         !ParametersToKeep.bFirstRunEver) {
       
@@ -139,12 +138,9 @@ public class SaveFilesTabAction {
     for (int i=0; i<iSelection.length; i++) {
       String sOldName = sListOfFiles[iSelection[i]];
       String sNewName = sHashtableOldNewFileNames.get(sOldName);
-      System.out.println("sOldName: " + sOldName);
-      System.out.println("sNewName: " + sNewName);
       String cmd = createRenameMoveFileCmd(sOldName, sNewName);
-      System.out.println("cmd: " + cmd);
       IonUtils.executeCmd(cmd);
-      addFileInRightBox(sListOfFiles[iSelection[i]]); //add files into right box
+      addFileInRightBox(sNewName);
     }
     
   }
@@ -407,6 +403,8 @@ public class SaveFilesTabAction {
         //replace old name by new name
         sHashtableOldNewFileNames.put(sOldFileName, sNewFileName);
         refreshListOfNames();
+        writeOldNameInLabelMessageBox(sOldFileName, sNewFileName);
+        DataReduction.filesToTransferList.setSelectedIndex(iSelection[0]);
         } catch (Exception e) {};
     }
 
@@ -415,7 +413,6 @@ public class SaveFilesTabAction {
      */
     static String getFirstFileSelected(int iIndex) {
       //get selected indices
-      
       return sListOfFiles[iIndex];
     }
     
@@ -426,5 +423,18 @@ public class SaveFilesTabAction {
     static void resetTextAreaField() {
       DataReduction.saveFileInfoMessageTextfield.setText("");
       DataReduction.saveFileInfoTextArea.setText("");
+      DataReduction.oldFileNameLabel.setText("");
+    }
+    
+    /*
+     * This function displays the old name of the file selected when
+     * a new name has been entered
+     */
+    static void writeOldNameInLabelMessageBox(String sOldFileName, String sNewFileName) {
+      //do soemthing only if the new name is different from the old name
+      if (sOldFileName.compareTo(sNewFileName)!=0) {
+        String sMessage = IParameters.OLD_NAME_MESSAGE + sOldFileName + " )";
+        DataReduction.oldFileNameLabel.setText(sMessage);
+      }
     }
 }
