@@ -60,6 +60,10 @@ public class CreateSaveFilesTabPanel {
   private static int iSaveFileInfoMessageWidth = 200;
   private static int iSaveFileInfomessageHeight = 30; 
   
+  private static int iOldFileNameLabelXoff = 400;
+  private static int iOldFileNameLabelYoff = iRenameFileLabelYoff;
+  private static int iOldFileNameLabelWidth = 200;
+  private static int iOldFileNameLabelHeigth = 30;
   
   static void buildGUI() {
     DataReduction.vFilesToTransfer = new Vector();
@@ -268,7 +272,7 @@ public class CreateSaveFilesTabPanel {
         renameFileLabelSize.height);
     DataReduction.filesToTransferManualPanel.add(DataReduction.renameFileLabel);
     
-    DataReduction.saveFileInfoMessageTextfield = new JTextField(29);
+    DataReduction.saveFileInfoMessageTextfield = new JTextField(25);
     DataReduction.saveFileInfoMessageTextfield.setEditable(true);
     DataReduction.saveFileInfoMessageTextfield.setActionCommand("saveFileInfoMessageTextField");
     DataReduction.saveFileInfoMessageTextfield.setPreferredSize(new Dimension(
@@ -281,6 +285,18 @@ public class CreateSaveFilesTabPanel {
         saveFileInfoMessageTextFieldSize.width,
         saveFileInfoMessageTextFieldSize.height);
     DataReduction.filesToTransferManualPanel.add(DataReduction.saveFileInfoMessageTextfield);
+    
+    DataReduction.oldFileNameLabel = new JLabel("");
+    DataReduction.oldFileNameLabel.setPreferredSize(new Dimension(
+        iOldFileNameLabelWidth,
+        iOldFileNameLabelHeigth));
+    Dimension oldFileNameLabelSize = DataReduction.oldFileNameLabel.getPreferredSize();
+    DataReduction.oldFileNameLabel.setBounds(
+        iOldFileNameLabelXoff,
+        iOldFileNameLabelYoff,
+        oldFileNameLabelSize.width,
+        oldFileNameLabelSize.height);
+    DataReduction.filesToTransferManualPanel.add(DataReduction.oldFileNameLabel);
     
     DataReduction.saveFileInfoTextArea = new JTextArea(5,40);
     DataReduction.saveFileInfoTextArea.setEditable(false);

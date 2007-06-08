@@ -12,6 +12,7 @@ public class SaveFilesTabAction {
   static Vector      vListOfFiles;
   static Vector      vListOfFilesAdded;
   static String[]    sListOfFiles;
+  static String[]    sListOfFilesRenamed;
   static String[]    sCompleteListOfFiles;
   static List        lListOfFilesAdded;
   static IONVariable ionUcams;
@@ -50,12 +51,6 @@ public class SaveFilesTabAction {
           removeExtraPlotsFilesFromList(sListOfFiles);
         } 
         
-        removeTmpHistoFileFromList(sListOfFiles);
-        
-        vListOfFiles = new Vector();
-        vListOfFiles = getVectorListOfFiles(sListOfFiles);
-        DataReduction.filesToTransferList.setListData(vListOfFiles);
-      
         if (bFilesChanged) {
           //this part will store the preview of all the files everytime we want a refresh
           if (SaveFilesTabAction.iNbrOfFiles != 0) { //don't do anything when nothing to see
@@ -63,10 +58,44 @@ public class SaveFilesTabAction {
             StoreFilesToRename.createHashtableOfFilesToRename();
           }
         }
+        
+        removeTmpHistoFileFromList(sListOfFiles);
+        refreshListOfNames();
+        
       }
     } catch (Exception e) {};
   }
  
+  
+  /*
+   * This function just reset the list when a new name has been entered
+   */
+  static void refreshListOfNames() {
+
+     sListOfFilesRenamed = getRenamedListOfFiles(sListOfFiles);
+    //vListOfFiles = getVectorListOfFiles(sListOfFiles);
+    vListOfFiles = getVectorListOfFiles(sListOfFilesRenamed);
+    DataReduction.filesToTransferList.setListData(vListOfFiles);
+    }
+  
+  /*
+   * This function will gives the list of files to print
+   * in the left box (renamed files)
+   */
+  static String[] getRenamedListOfFiles(String[] sListOfFilesLocal) {
+   
+    int iNbrOfFiles = sListOfFilesLocal.length;
+    sListOfFilesRenamed = new String[iNbrOfFiles];
+    for (int i=0; i<iNbrOfFiles; ++i) {
+      sListOfFilesRenamed[i] = sListOfFilesLocal[i];
+    }
+    for (int i=0; i<iNbrOfFiles; ++i) {
+      if (sListOfFilesLocal[i].compareTo(sHashtableOldNewFileNames.get(sListOfFilesLocal[i]))!=0) {
+        sListOfFilesRenamed[i] = sHashtableOldNewFileNames.get(sListOfFilesLocal[i]);
+      } 
+    }
+    return sListOfFilesRenamed;
+  }
   
   /*
    * Get list of files in String array
@@ -79,7 +108,8 @@ public class SaveFilesTabAction {
    * transfer string array into vector 
    */
   static Vector getVectorListOfFiles(String[] listFiles) {
-  
+
+    vListOfFiles = new Vector();
     for (int i=0; i<(listFiles.length); i++) {
       vListOfFiles.add(listFiles[i]);
       }
@@ -109,7 +139,10 @@ public class SaveFilesTabAction {
     for (int i=0; i<iSelection.length; i++) {
       String sOldName = sListOfFiles[iSelection[i]];
       String sNewName = sHashtableOldNewFileNames.get(sOldName);
+      System.out.println("sOldName: " + sOldName);
+      System.out.println("sNewName: " + sNewName);
       String cmd = createRenameMoveFileCmd(sOldName, sNewName);
+      System.out.println("cmd: " + cmd);
       IonUtils.executeCmd(cmd);
       addFileInRightBox(sListOfFiles[iSelection[i]]); //add files into right box
     }
@@ -351,7 +384,8 @@ public class SaveFilesTabAction {
      * the preview text box
      */
     static void displayedLabelMessage(String sLabelMessage) {
-      DataReduction.saveFileInfoMessageTextfield.setText(sLabelMessage);
+      String sNewFileName = sHashtableOldNewFileNames.get(sLabelMessage); 
+      DataReduction.saveFileInfoMessageTextfield.setText(sNewFileName);
     }
     
     /*
@@ -367,18 +401,22 @@ public class SaveFilesTabAction {
      */
     static void renameFileToSave() {
       String sNewFileName = DataReduction.saveFileInfoMessageTextfield.getText();
-      String sOldFileName = getFirstFileSelected();
-      //replace old name by new name
-      sHashtableOldNewFileNames.put(sOldFileName, sNewFileName);
+      try {
+        int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
+        String sOldFileName = getFirstFileSelected(iSelection[0]);
+        //replace old name by new name
+        sHashtableOldNewFileNames.put(sOldFileName, sNewFileName);
+        refreshListOfNames();
+        } catch (Exception e) {};
     }
 
     /*
      * This function will give the name of the first file selected
      */
-    static String getFirstFileSelected() {
+    static String getFirstFileSelected(int iIndex) {
       //get selected indices
-      int[] iSelection = DataReduction.filesToTransferList.getSelectedIndices();
-      return sListOfFiles[iSelection[0]];
+      
+      return sListOfFiles[iIndex];
     }
     
     /*
