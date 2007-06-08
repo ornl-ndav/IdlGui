@@ -60,9 +60,9 @@ public class CreateSaveFilesTabPanel {
   private static int iSaveFileInfoMessageWidth = 200;
   private static int iSaveFileInfomessageHeight = 30; 
   
-  private static int iOldFileNameLabelXoff = 400;
+  private static int iOldFileNameLabelXoff = 370;
   private static int iOldFileNameLabelYoff = iRenameFileLabelYoff;
-  private static int iOldFileNameLabelWidth = 200;
+  private static int iOldFileNameLabelWidth = 350;
   private static int iOldFileNameLabelHeigth = 30;
   
   static void buildGUI() {
