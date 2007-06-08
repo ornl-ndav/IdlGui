@@ -2,11 +2,11 @@ package gov.ornl.sns.iontools;
 
 public class GuiLiveParameters {
 
-	private String  sInstrument;
-	private String  sSignalPidFile;
+	  private String  sInstrument;
+	  private String  sSignalPidFile;
     private String  sBackPidFile;
-	private String  sRunNumber;
-	private boolean bSignalPidFileSaved;
+    private String  sRunNumber;
+    private boolean bSignalPidFileSaved;
     private boolean bBackPidFileSaved;
     private String  sWavelengthMin;
     private String  sWavelengthMax;
@@ -20,11 +20,11 @@ public class GuiLiveParameters {
     private boolean bNormalizationBackgroundSwitch;
     private boolean bIntermediatePlotsSwitch;
     private boolean bExtraPlotsSR;
-	private boolean bExtraPlotsBS;
-	private boolean bExtraPlotsSRB;
-	private boolean bExtraPlotsNR;
-	private boolean bExtraPlotsBRN;
-	private boolean bCombineDataSpectrum;
+    private boolean bExtraPlotsBS;
+    private boolean bExtraPlotsSRB;
+    private boolean bExtraPlotsNR;
+    private boolean bExtraPlotsBRN;
+    private boolean bCombineDataSpectrum;
     private boolean bOverwriteInstrumentGeometry;
     private String  sInstrumentGeometry;
     private boolean bAddNexusAndGo;           
@@ -34,11 +34,8 @@ public class GuiLiveParameters {
 	GuiLiveParameters() {
 		
 		sInstrument = DataReduction.instrument;   	
-		
-		sSignalPidFile = DataReduction.signalPidFileTextField.getText();
-		
-		sBackPidFile = DataReduction.backgroundPidFileTextField.getText();
-		
+		sSignalPidFile = DataReduction.pidSignalFileName;
+		sBackPidFile = DataReduction.pidBackFileName;
 		sRunNumber = DataReduction.runNumberTextField.getText();
     	
 		if (sSignalPidFile.compareTo("") == 0) {
@@ -152,9 +149,7 @@ public class GuiLiveParameters {
     	}
     	
     	sAddNexusAndGoString = DataReduction.runsAddTextField.getText();     
-    	
     	sGoSequentiallyString = DataReduction.runsSequenceTextField.getText();    	
-    
     	//outputData();
 	}
 	

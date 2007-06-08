@@ -16,7 +16,9 @@ public class SaveSignalPidFileAction {
 				IParameters.SIGNAL_STRING);
 		
 		DataReduction.signalPidFileTextField.setBackground(Color.WHITE);
-		DataReduction.signalPidFileTextField.setText(DataReduction.pidSignalFileName);	
+    
+    String pidSignalFileNameShortVersion = UtilsFunction.getOnlyLastPartOfFileName(DataReduction.pidSignalFileName);
+    DataReduction.signalPidFileTextField.setText(pidSignalFileNameShortVersion);	
 		
 		int[] xarr = {MouseSelectionParameters.signal_xmin, 
 				MouseSelectionParameters.signal_xmax, 
@@ -77,6 +79,7 @@ public class SaveSignalPidFileAction {
 	  	  System.err.println("Error: "+smsg);
 	        }
 	}
-	
+
+  
 }
   
