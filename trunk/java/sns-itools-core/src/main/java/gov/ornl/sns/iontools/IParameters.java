@@ -35,7 +35,7 @@ public interface IParameters {
     static final String PATH_TO_HOME           = "/SNS/users/";
 	  static final String SEQUENCE_SEPARATOR     = "-";
 	  static final String WORKING_PATH           = "/SNS/users/ionuser/";
-    static final String NXSUMMARY_CONFIG_FILE  = "/SNS/users/j35/.nxsummary.conf";
+    static final String NXSUMMARY_CONFIG_FILE  = "/SNS/users/j35/.nxsummary_datareduction.conf";
 	    
 		static final String NA = "N/A";
 		static final double DEGRES_TO_RADIANS_FACTOR = (2*Math.PI)/180; 
@@ -148,6 +148,10 @@ public interface IParameters {
 		static final int EXTRA_PLOTS_X     			= 650;
 		static final int EXTRA_PLOTS_Y          = 500;
 		
+    //size of other plot graphical window
+    static final int OTHER_PLOTS_X          = 550;
+    static final int OTHER_PLOTS_Y          = 550;
+   
 		//data reduction plot interaction
 		static final int yAxisMin               = 0;
 		static final int yAxisMax               = 200;
@@ -180,7 +184,7 @@ public interface IParameters {
 	    static final String INFO_STRING    = "info";
 	    
       static final int LOADCT_DEFAULT_INDEX      = 39;
-	    static final String[] LOADCT_NAME          = {"Black/White", 
+      static final String[] LOADCT_NAME          = {"Black/White", 
 	    											  "Blue/White", 
 	    											  "Green/Red/Blue/White",
 	    											  "Red Temperature",
@@ -221,7 +225,14 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-	    
+      static final String[] LIST_OF_OTHER_PLOTS     = {"Total counts vs tof for full detector range",
+                                                       "Total counts vs tof for the right-click X",
+                                                       "Total counts vs tof for the right-click Y",
+                                                       "Total counts vs tof for the selected signal selection",
+                                                       "Total counts vs tof for the selected background1 selection",
+                                                       "Total counts vs tof for the selected background2 selection",
+                                                       "Full 2d plot for a particular range of time bins"};
+      	    
 	    static final Color TAB_BACKGROUND_NEW         = Color.RED;
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
 	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;

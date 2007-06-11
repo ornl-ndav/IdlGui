@@ -204,7 +204,7 @@ public class SuperEventHandler extends DataReduction {
 		}
 
 		if ("preferencesMenuItem".equals(evt.getActionCommand())) {
-      tabbedPane.setSelectedIndex(3);
+      tabbedPane.setSelectedIndex(4);
       dataReductionTabbedPane.setSelectedIndex(0);  
 		}
 
@@ -332,6 +332,13 @@ public class SuperEventHandler extends DataReduction {
     if ("saveFileInfoMessageTextField".equals(evt.getActionCommand())) {
       SaveFilesTabAction.renameFileToSave();
     }
+  
+    //when selecting another plots to view
+    if ("listOfOtherPlotsComboBox".equals(evt.getActionCommand())) {
+      System.out.println("in list of other plots to see");
+    }
     
 	}
+  
+  
 }

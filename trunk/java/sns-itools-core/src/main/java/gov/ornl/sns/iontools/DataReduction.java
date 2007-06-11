@@ -92,8 +92,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     final static int 	      NUM_LOGO_IMAGES = 2;
     final static int 	      START_INDEX = 0;
     
-    static boolean      	bFoundNexus = false;
-    static boolean 			  bEPFirstTime;
+    static boolean      	  bFoundNexus = false;
+    static boolean 			    bEPFirstTime;
     
     static GuiLiveParameters  liveParameters;
     static ExtraPlotInterface myEPinterface;
@@ -113,11 +113,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static IONJGrDrawable   c_plot_REFM;
     static IONJGrDrawable   c_plot;
     static IONJGrDrawable   c_dataReductionPlot;	     //data reduction plot    
-    static IONJGrDrawable   c_SRextraPlots;              //Signal Region summed vs TOF drawing window
-    static IONJGrDrawable   c_BSextraPlots;               //Background summed vs TOF
-    static IONJGrDrawable   c_SRBextraPlots;             //Signal Region with background summed vs TOF
-    static IONJGrDrawable   c_NRextraPlots;              //Normalization region summed vs TOF
-    static IONJGrDrawable   c_BRNextraPlots;             //Background region from normalization summed TOF
+    static IONJGrDrawable   c_SRextraPlots;            //Signal Region summed vs TOF drawing window
+    static IONJGrDrawable   c_BSextraPlots;            //Background summed vs TOF
+    static IONJGrDrawable   c_SRBextraPlots;           //Signal Region with background summed vs TOF
+    static IONJGrDrawable   c_NRextraPlots;            //Normalization region summed vs TOF
+    static IONJGrDrawable   c_BRNextraPlots;           //Background region from normalization summed TOF
+    static IONJGrDrawable   c_otherPlots;
     
     static IONVariable      ionInstrument;
     static IONVariable     	user;
@@ -150,6 +151,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JPanel           panelb; //DataReductionPlot
     static JPanel           extraPlotsPanel; //Extra plots
     static JPanel           settingsPanel; //settings panel
+    static JPanel           otherPlotsPanel;
     static JPanel           buttonSignalBackgroundPanel;
     static JPanel           textFieldSignalBackgroundPanel;
     static JPanel           signalBackgroundPanel;
@@ -373,8 +375,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JScrollPane 		  scrollPane;
     static JScrollPane      saveFileInfoScrollPane;    
     
-    static Vector   vFilesToTransfer;
-    static Vector   fFilesTransfered; 
+    static Vector           vFilesToTransfer;
+    static Vector           fFilesTransfered; 
     
     static JComboBox        linLogComboBoxX;
     static JComboBox        linLogComboBoxXEP;
@@ -383,6 +385,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JComboBox       	instrList;
     static JComboBox        loadctComboBox;
     static JComboBox        detectorAngleUnuitsComboBox;
+    static JComboBox        listOfOtherPlotsComboBox;
     
 // ******************************
 // Init Method
@@ -808,12 +811,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    tabbedPane.addTab("Selection", panel1);                            
 	    createSelectionGui();
 
-      //-> 3rd main tab - files to transfer tab
+      //-> 3rd main tab - Other plots
+	    CreateOtherPlotsPanel.createGUI();
+      tabbedPane.addTab("Various plots",otherPlotsPanel);
+            
+      //-> 4rd main tab - files to transfer tab
       filesToTransferPanel = new JPanel(new GridLayout(0,1));
       tabbedPane.addTab("Save Files", filesToTransferPanel);           
       CreateSaveFilesTabPanel.buildGUI();
 	    
-	    //-> 4th main tab (settings) 
+	    //-> 5th main tab (settings) 
 	    settingsPanel = new JPanel();
 	    CreateSettingsPanel.buildGUI();
 	    tabbedPane.addTab("Settings", settingsPanel);       
@@ -842,7 +849,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		tabbedPane.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent ev) {
         
-        if (tabbedPane.getSelectedIndex()==2) { //if Transfer tab is selected
+        if (tabbedPane.getSelectedIndex()==3) { //if Transfer tab is selected
           if (ParametersToKeep.bNeedToRefreshListOfFiles) {
             SaveFilesTabAction.updateListOfFilesToTransfer(true); //refresh hashtable
             ParametersToKeep.bNeedToRefreshListOfFiles = false;
@@ -1198,6 +1205,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.transferExtraPlotsCheckBox.addActionListener(this);
       DataReduction.transferRefreshButton.addActionListener(this);
       DataReduction.saveFileInfoMessageTextfield.addActionListener(this);
+      
+      //from other plots
+      DataReduction.listOfOtherPlotsComboBox.addActionListener(this);
+      
     }
       
 }
