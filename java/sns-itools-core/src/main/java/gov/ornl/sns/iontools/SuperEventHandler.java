@@ -335,7 +335,7 @@ public class SuperEventHandler extends DataReduction {
   
     //when selecting another plots to view
     if ("listOfOtherPlotsComboBox".equals(evt.getActionCommand())) {
-      System.out.println("in list of other plots to see");
+      OtherPlotsAction.selectDesiredPlot();
     }
     
 	}
