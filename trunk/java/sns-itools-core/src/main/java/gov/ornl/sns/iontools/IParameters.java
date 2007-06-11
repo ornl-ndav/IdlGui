@@ -225,7 +225,8 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-      static final String[] LIST_OF_OTHER_PLOTS     = {"Total counts vs tof for full detector range",
+      static final String[] LIST_OF_OTHER_PLOTS     = {"Clear",
+                                                       "Total counts vs tof for full detector range",
                                                        "Total counts vs tof for the right-click X",
                                                        "Total counts vs tof for the right-click Y",
                                                        "Total counts vs tof for the selected signal selection",
