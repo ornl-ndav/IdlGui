@@ -118,7 +118,11 @@ void layout_nexus_file(NXhandle &file_id,
     }
   if (NXmakegroup(file_id, "bank1", "NXevent_data") != NX_OK)
     {
-      throw runtime_error("Failed to make NXevent_data group");
+      throw runtime_error("Failed to make bank1 group");
+    }
+  if (NXopengroup(file_id, "bank1", "NXevent_data") != NX_OK)
+    {
+      throw runtime_error("Failed to open entry group");
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
@@ -153,7 +157,7 @@ void write_data(const NXhandle &file_id,
   int size = data.size();
 
   // Open the group 
-  if (NXopengrouppath(file_id, group_path.c_str()) != NX_OK)
+  if (NXopenpath(file_id, group_path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open group: "+group_path);
     }
@@ -200,7 +204,7 @@ void write_attr(const NXhandle &file_id,
                 const string &data_path)
 {
   // Open the data
-  if (NXopengrouppath(file_id, data_path.c_str()) != NX_OK)
+  if (NXopenpath(file_id, data_path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open group: "+data_path);
     }
