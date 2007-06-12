@@ -36,7 +36,7 @@ utils.o: utils.cpp utils.hpp
 bin_vector_utils.o: bin_vector_utils.cpp bin_vector_utils.hpp utils.hpp
 
 rand2nxl.o: rand2nxl.cpp
-	$(CXX) `pkg-config nexus --cflags` -c rand2nxl.cpp
+	$(CXX) `pkg-config nexus --cflags` -c -I ../inc rand2nxl.cpp
 
 Event_to_Histo_Mapped.o: Event_to_Histo_Mapped.cpp Event_to_Histo.hpp Map_Data.hpp utils.hpp
 	$(CXX) -c -I ../inc Event_to_Histo_Mapped.cpp
