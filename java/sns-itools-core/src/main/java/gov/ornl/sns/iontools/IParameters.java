@@ -226,14 +226,23 @@ public interface IParameters {
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
       static final String[] LIST_OF_OTHER_PLOTS     = {"Clear",
-                                                       "Total counts vs tof for full detector range",
-                                                       "Total counts vs tof for the right-click X",
-                                                       "Total counts vs tof for the right-click Y",
-                                                       "Total counts vs tof for the selected signal selection",
-                                                       "Total counts vs tof for the selected background1 selection",
-                                                       "Total counts vs tof for the selected background2 selection",
-                                                       "Full 2d plot for a particular range of time bins"};
-      	    
+                                                       "Counts = f( TOF , Sum(X) , Sum(Y) )",
+                                                       "Counts = f( TOF , Xo , Sum(Y) )",
+                                                       "Counts = f( TOF , Sum(X) , Yo )",
+                                                       "Counts = f( TOF , signal_selection(X,Y) )",
+                                                       "Counts = f( TOF , back1_selection(X,Y) )",
+                                                       "Counts = f( TOF , back2_selection(X,Y) )",
+                                                       "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
+      
+      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear display",
+                                                           "Total counts vs TOF for \nfull detector range",
+                                                           "Total counts vs tof for \nthe right-click X",
+                                                           "Total counts vs tof for \nthe right-click Y",
+                                                           "Total counts vs tof for \nthe selected signal selection",
+                                                           "Total counts vs tof for \nthe selected background1 selection",
+                                                           "Total counts vs tof for \nthe selected background2 selection",
+                                                           "Full 2d plot for a particular \nrange of time bins"};
+      
 	    static final Color TAB_BACKGROUND_NEW         = Color.RED;
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
 	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;
