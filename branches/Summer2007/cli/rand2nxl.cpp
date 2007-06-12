@@ -1,11 +1,14 @@
 #include "napi.h"
 #include <iostream>
-#include <stdlib.h>
+#include <string>
+#include <cstdlib>
 #include <libgen.h>
 #include <tclap/CmdLine.h>
-#define VERSION "1.0"
 
-using namespace std;
+using std::string;
+using std::cerr;
+using std::endl;
+using std::vector;
 using namespace TCLAP;
 
 // STRUCT: Config
@@ -101,6 +104,7 @@ void end_nexus_file(NXhandle & file_id) {
 int main(int32_t argc, char *argv[]) {
   NXhandle file_id;
   struct Config config;
+  const string VERSION("1.0");
 
   try 
     {
