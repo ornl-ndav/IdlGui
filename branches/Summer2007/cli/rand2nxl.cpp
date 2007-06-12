@@ -28,8 +28,8 @@ struct Config
 // DESCRIPT: takes an array of num_events size and populates
 // it with time of flight values
 ////
-void populate_tof_arr(int * const tof_arr,
-                      Config & config) 
+void populate_tof_arr(int *const tof_arr,
+                      Config &config) 
 {
   int i;
 
@@ -45,8 +45,8 @@ void populate_tof_arr(int * const tof_arr,
 // DESCRIPTION: takes an array of num_events size and populates
 // it with 0 <= pixel id <= max_pixel_id
 ////
-void populate_pixel_id_arr(int * const pixel_id_arr,
-                           Config & config) 
+void populate_pixel_id_arr(int *const pixel_id_arr,
+                           Config &config) 
 {
   int i;
 
@@ -58,29 +58,41 @@ void populate_pixel_id_arr(int * const pixel_id_arr,
     }
 }
 
-// FUNCTION: start_nexus_file
-// DESCRIPTION: Creates the nexus file and makes the initial group
+// FUNCTION: layout_nexus_file
+// DESCRIPTION: Creates the nexus file and makes the groups
 ////
-void start_nexus_file(NXhandle & file_id,
-                      Config & config) 
+void layout_nexus_file(NXhandle &file_id,
+                      Config &config) 
 {
-  (void)NXopen(config.out_path.c_str(), NXACC_CREATE, &file_id);
+  NXaccess file_access;
+
+  if (config.format == "hdf4") {
+    file_access = NXACC_CREATE4;
+  }
+  else if (config.format == "xml") {
+    file_access = NXACC_CREATEXML;
+  }
+  else {
+    file_access = NXACC_CREATE5;
+  }
+ 
+  (void)NXopen(config.out_path.c_str(), file_access, &file_id);
   (void)NXmakegroup(file_id, "entry", "NXentry");
+  (void)NXopengroup(file_id, "entry", "NXentry");
+  (void)NXmakegroup(file_id, "bank1", "NXevent_data");
+  (void)NXopengroup(file_id, "bank1", "NXevent_data");
 }
 
 // FUNCTION: populate_nexus_file
 // DESCRIPTION: Populates the file with the information
 ////
-void populate_nexus_file(NXhandle & file_id,
-                         int * const rand_tof_arr,
-                         int * const rand_pix_arr,
-                         Config & config)
+void populate_nexus_file(NXhandle &file_id,
+                         int *const rand_tof_arr,
+                         int *const rand_pix_arr,
+                         Config &config)
 {
   char var[12] = "10^-7second";
 
-  (void)NXopengroup(file_id, "entry", "NXentry");
-  (void)NXmakegroup(file_id, "bank1", "NXevent_data");
-  (void)NXopengroup(file_id, "bank1", "NXevent_data");
   (void)NXmakedata(file_id, "time_of_flight", NX_INT32, 1, &config.num_events);
   (void)NXopendata(file_id, "time_of_flight");
   (void)NXputdata(file_id, rand_tof_arr);
@@ -89,16 +101,6 @@ void populate_nexus_file(NXhandle & file_id,
   (void)NXopendata(file_id, "pixel_number");
   (void)NXputdata(file_id, rand_pix_arr);
   (void)NXputattr(file_id, "units", var, 11, NX_CHAR);
-}
-
-// FUNCTION: end_nexus_file
-// DESCRIPTION: Ends any groups or data and then closes the file
-////
-void end_nexus_file(NXhandle & file_id) {
-  (void)NXclosedata(file_id);
-  (void)NXclosegroup(file_id);
-  (void)NXclosegroup(file_id);
-  (void)NXclose(&file_id);
 }
 
 int main(int32_t argc, char *argv[]) {
@@ -166,14 +168,14 @@ int main(int32_t argc, char *argv[]) {
   // Populate the random pixel id array
   populate_pixel_id_arr(rand_pixel_id_arr, config);
 
-  // Open nexus file and create initial items
-  start_nexus_file(file_id, config);
+  // Open nexus file and layout groups
+  layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
   populate_nexus_file(file_id, rand_tof_arr, rand_pixel_id_arr, config);
 
   // Close off the nexus file and any groups or data
-  end_nexus_file(file_id);
+  NXclose(&file_id);
 
   return 0;
 }
