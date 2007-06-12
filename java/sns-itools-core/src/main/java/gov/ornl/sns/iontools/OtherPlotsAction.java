@@ -6,8 +6,6 @@ public class OtherPlotsAction {
 
   static void selectDesiredPlot() {
   
-    Graphics g = DataReduction.c_otherPlots.getGraphics();
-    
     int iPlotSelected = DataReduction.listOfOtherPlotsComboBox.getSelectedIndex();
     switch (iPlotSelected) {
     case 0:
@@ -37,7 +35,64 @@ public class OtherPlotsAction {
     default:
     }
   }
+  
+  /*
+   * This functions takes care of the multiThreading launching
+   */
+  static void startThread(String cmd) {
+  
+  //plot will run in another thread
+  SubmitOtherPlots run = new SubmitOtherPlots(cmd);
+  Thread runThread = new Thread(run,"plot in progress");
+  runThread.start();
+      
+  }
 
+  /*
+   * This functions creates the cmd to run
+   */
+  static String createCmd(int index) {
+    
+    String cmd = "";
+    Graphics g = DataReduction.c_otherPlots.getGraphics();
+    DataReduction.c_ionCon.setDrawable(DataReduction.c_otherPlots);
+    
+    com.rsi.ion.IONVariable ionTmpFolder = new com.rsi.ion.IONVariable(DataReduction.sTmpOutputFileName);
+    com.rsi.ion.IONVariable ionNx = new com.rsi.ion.IONVariable(DataReduction.Nx);
+    com.rsi.ion.IONVariable ionNy = new com.rsi.ion.IONVariable(DataReduction.Ny);
+        
+    switch (index) {
+    case 0:  //clear
+         g.clearRect(0, 0, IParameters.OTHER_PLOTS_X, IParameters.OTHER_PLOTS_Y);
+         break;
+    case 1: //Counts = f( TOF , Sum(X) , Sum(Y) )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 2: //Counts = f( TOF , Xo , Sum(Y) )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 3: //Counts = f( TOF , Sum(X) , Yo )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 4: //Counts = f( TOF , signal_selection )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 5: //Counts = f( TOF , back1_selection )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 6: //Counts = f( TOF , back2_selection )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+         cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+         break;
+    default:
+    }
+    cmd += "," + ionNx + "," + ionNy;
+    return cmd;
+    
+  }
+    
   /*
    * This function clears the plot
    */
@@ -50,6 +105,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsFullDetectorRange(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
   
   /*
@@ -58,6 +115,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsRightClickX(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
   
   /*
@@ -66,6 +125,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsRightClickY(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
   
   /*
@@ -73,6 +134,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedSignal(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
   
   /*
@@ -80,6 +143,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedBack1(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
 
   /*
@@ -87,6 +152,8 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedBack2(int index) {
     displayInfoMessage(index);
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
 
   /*
@@ -94,7 +161,8 @@ public class OtherPlotsAction {
    */
   static void plotfull2dForGivenTbinRange(int index) {
     displayInfoMessage(index);
-    System.out.println("in static void plotfull2dForGivenTbinRange()");
+    String cmd = createCmd(index);
+    startThread(cmd);
   }
 
   /*

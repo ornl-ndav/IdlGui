@@ -243,12 +243,12 @@ public class SuperEventHandler extends DataReduction {
 					//remove or not parameters we don't want anymore
         ParametersToKeep.refreshGuiWithParametersToKeep();
 				
-				ionInstrument = new com.rsi.ion.IONVariable(instrument);
+        ionInstrument = new com.rsi.ion.IONVariable(instrument);
 				user = new com.rsi.ion.IONVariable(ucams); 
 				ionLoadct = new com.rsi.ion.IONVariable(loadctComboBox.getSelectedIndex());
 				ionWorkingPathSession = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 				
-				c_ionCon.setDrawable(c_plot);
+        c_ionCon.setDrawable(c_plot);
 		    		    	
 				String cmd = "result = plot_data( " + runNumberValue + ", " + 
 				ionInstrument + ", " + user + "," + ionLoadct;

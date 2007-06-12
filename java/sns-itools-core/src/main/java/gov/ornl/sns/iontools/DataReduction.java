@@ -52,13 +52,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 						      
 {	
   // Instance Vars
-    static String           ucams = "ionuser";				//ucams
+    static String           ucams = "ionuser";				  //ucams
     static String           remoteUser;           
     static String           instrument = IParameters.DEFAULT_INSTRUMENT;
     static String           runNumberValue;
-    static String           sTmpOutputFileName;         //the full name of the file that contaits the dump histo data
-    static String 			    pidSignalFileName = "";        	//name of signal pid file
-    static String           pidBackFileName = "";		      	//name of back pid file
+    static String           sTmpOutputFileName = "";         //the full name of the file that contains the dump histo data
+    static String 			    pidSignalFileName = "";     //name of signal pid file
+    static String           pidBackFileName = "";		    //name of back pid file
     static String	      		sNexusFound;			          //NeXus file found or not
     static String     	 	  sNtof;					            //Number of time of flight
     static String          	text1;
@@ -564,6 +564,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     c_ionCon.addDrawable(c_SRBextraPlots);
     c_ionCon.addDrawable(c_NRextraPlots);
     c_ionCon.addDrawable(c_BRNextraPlots);
+    c_ionCon.addDrawable(c_otherPlots);
     
   }
 
