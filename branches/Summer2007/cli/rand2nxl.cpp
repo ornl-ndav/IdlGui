@@ -31,16 +31,16 @@ struct Config
   int32_t rand_seed;
 };
 
-/** \fn void populate_tof_arr(int *const tof_arr,
+/** \fn void populate_tof_vec(vector<uint32_t> &tof_vec,
  *                            Config &config);
- *  \brief Creates a random array of time of flight
+ *  \brief Creates a random vector of time of flight
  *         values.
- *  \param tof_arr The array to fill.
- *  \param config Holds the restraints of the array, like
+ *  \param tof_vec The vector to fill.
+ *  \param config Holds the restraints of the vector, like
  *                the maximum size, and the seed for the
  *                random number generator.
  */
-void populate_tof_arr(int *const tof_arr,
+void populate_tof_vec(vector<uint32_t> &tof_vec,
                       Config &config) 
 {
   int i;
@@ -49,20 +49,20 @@ void populate_tof_arr(int *const tof_arr,
   srand(config.rand_seed);
   for ( i=0; i<config.num_events; i++ ) 
     {
-      tof_arr[i] = rand();
+      tof_vec.push_back(rand());
     }
 }
 
-/** \fn void populate_pixel_id_arr(int *const pixel_id_arr,
+/** \fn void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
  *                                 Config &config);
- *  \brief Creates a random array of time of pixel id
+ *  \brief Creates a random vector of time of pixel id
  *         values.
- *  \param pixel_id_arr The array to fill.
- *  \param config Holds the restraints of the array, like
+ *  \param pixel_id_vec The vector to fill.
+ *  \param config Holds the restraints of the vector, like
  *                the maximum size, maximum pixel value, and 
  *                the seed for the random number generator.
  */
-void populate_pixel_id_arr(int *const pixel_id_arr,
+void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
                            Config &config) 
 {
   int i;
@@ -71,7 +71,7 @@ void populate_pixel_id_arr(int *const pixel_id_arr,
   srand(config.rand_seed);
   for ( i=0; i<config.num_events; i++ ) 
     {
-      pixel_id_arr[i] = rand()%(config.max_pixel_id+1);
+      pixel_id_vec.push_back(rand()%(config.max_pixel_id+1));
     }
 }
 
@@ -103,39 +103,39 @@ void layout_nexus_file(NXhandle &file_id,
       file_access = NXACC_CREATE5;
     }
  
-  (void)NXopen(config.out_path.c_str(), file_access, &file_id);
-  (void)NXmakegroup(file_id, "entry", "NXentry");
-  (void)NXopengroup(file_id, "entry", "NXentry");
-  (void)NXmakegroup(file_id, "bank1", "NXevent_data");
-  (void)NXopengroup(file_id, "bank1", "NXevent_data");
+  NXopen(config.out_path.c_str(), file_access, &file_id);
+  NXmakegroup(file_id, "entry", "NXentry");
+  NXopengroup(file_id, "entry", "NXentry");
+  NXmakegroup(file_id, "bank1", "NXevent_data");
+  NXopengroup(file_id, "bank1", "NXevent_data");
 }
 
 /** \fn populate_nexus_file(NXhandle &file_id,
-  *                         int *const rand_tof_arr,
-  *                         int *const rand_pix_arr,
+  *                         vector<uint32_t> &rand_tof_vec,
+  *                         vector<uint32_t> &rand_pix_vec,
   *                         Config &config)
   * \brief Populates the nexus file with the random information 
   *        that was already obtained.
   * \param file_id The handle to the nexus file.
-  * \param rand_tof_arr The random time of flight array.
-  * \param rand_pixel_id_arr The random pixel id array.
-  * \param config Hold the size of the random arrays.
+  * \param rand_tof_vec The random time of flight vector.
+  * \param rand_pixel_id_vec The random pixel id vector.
+  * \param config Hold the size of the random vectors.
   */
 void populate_nexus_file(NXhandle &file_id,
-                         int *const rand_tof_arr,
-                         int *const rand_pixel_id_arr,
+                         vector<uint32_t> &rand_tof_vec,
+                         vector<uint32_t> &rand_pixel_id_vec,
                          Config &config)
 {
   char var[12] = "10^-7second";
 
-  (void)NXmakedata(file_id, "time_of_flight", NX_INT32, 1, &config.num_events);
-  (void)NXopendata(file_id, "time_of_flight");
-  (void)NXputdata(file_id, rand_tof_arr);
-  (void)NXclosedata(file_id);
-  (void)NXmakedata(file_id, "pixel_number", NX_INT32, 1, &config.num_events);
-  (void)NXopendata(file_id, "pixel_number");
-  (void)NXputdata(file_id, rand_pixel_id_arr);
-  (void)NXputattr(file_id, "units", var, 11, NX_CHAR);
+  NXmakedata(file_id, "time_of_flight", NX_INT32, 1, &config.num_events);
+  NXopendata(file_id, "time_of_flight");
+  NXputdata(file_id, &rand_tof_vec.at(0));
+  NXclosedata(file_id);
+  NXmakedata(file_id, "pixel_number", NX_INT32, 1, &config.num_events);
+  NXopendata(file_id, "pixel_number");
+  NXputdata(file_id, &rand_pixel_id_vec.at(0));
+  NXputattr(file_id, "units", var, 11, NX_CHAR);
 }
 
 /** \fn int main(int32_t argc,
@@ -148,6 +148,8 @@ int main(int32_t argc,
   NXhandle file_id;
   struct Config config;
   const string VERSION("1.0");
+  vector<uint32_t> rand_tof_vec;
+  vector<uint32_t> rand_pixel_id_vec;
 
   try 
     {
@@ -160,20 +162,20 @@ int main(int32_t argc,
 
       // Add command-line options
       ValueArg<string> out_path("o","output",
-                                "name of output file (default is <toolname>.nxl)",
-                                 false, default_file_name, "output file name", cmd);
+                       "name of output file (default is <toolname>.nxl)",
+                       false, default_file_name, "output file name", cmd);
       
-      ValueArg<int32_t> num_events("", "length", 
-                                   "number of events to generate (default is 1000)",
-                                   false, 1000, "number of events", cmd);
+      ValueArg<uint32_t> num_events("", "length", 
+                        "number of events to generate (default is 1000)",
+                        false, 1000, "number of events", cmd);
 
-      ValueArg<int32_t> max_pixel_id("", "max_id",
-                                     "maximum pixel id (default is 10)",
-                                     false, 10, "max pixel id", cmd);
+      ValueArg<uint32_t> max_pixel_id("", "max_id",
+                        "maximum pixel id (default is 10)",
+                        false, 10, "max pixel id", cmd);
 
-      ValueArg<int32_t> rand_seed("", "rand_seed",
-                                  "seed for random number generator (default is none)",
-                                  false, 1, "random seed", cmd);
+      ValueArg<uint32_t> rand_seed("", "rand_seed",
+                        "seed for random number generator (default is none)",
+                        false, 1, "random seed", cmd);
 
       // Types for the nexus file format
       vector<string> allowed_types;
@@ -181,8 +183,8 @@ int main(int32_t argc,
       allowed_types.push_back("hdf5");
       allowed_types.push_back("xml");
       ValueArg<string> format("f", "format",
-                              "format for the nexus file (default is hdf5)",
-                              false, "hdf5", allowed_types, cmd);
+                       "format for the nexus file (default is hdf5)",
+                       false, "hdf5", allowed_types, cmd);
       
       // Parse the command-line
       cmd.parse(argc, argv);    
@@ -199,23 +201,20 @@ int main(int32_t argc,
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
 
-  // Declare the arrays for the random numbers
-  int rand_tof_arr[config.num_events];
-  int rand_pixel_id_arr[config.num_events];
   
-  // Populate the random time of flight array
-  populate_tof_arr(rand_tof_arr, config);
+  // Populate the random time of flight vector
+  populate_tof_vec(rand_tof_vec, config);
 
-  // Populate the random pixel id array
-  populate_pixel_id_arr(rand_pixel_id_arr, config);
+  // Populate the random pixel id vector
+  populate_pixel_id_vec(rand_pixel_id_vec, config);
 
   // Open nexus file and layout groups
   layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
-  populate_nexus_file(file_id, rand_tof_arr, rand_pixel_id_arr, config);
+  populate_nexus_file(file_id, rand_tof_vec, rand_pixel_id_vec, config);
 
-  // Close off the nexus file and any groups or data
+  // Close off the nexus file
   NXclose(&file_id);
 
   return 0;
