@@ -1,3 +1,7 @@
+/** \file rand2nxl.cpp
+ *  \brief Creates a nexus light file with random values.
+ */
+
 #include "napi.h"
 #include <iostream>
 #include <string>
@@ -11,10 +15,13 @@ using std::endl;
 using std::vector;
 using namespace TCLAP;
 
-// STRUCT: Config
-// DESCRIPTION: Holds all the information from
-// the command line
-////
+/** \struct Config
+ *  \brief Holds all the configuration variables
+ *
+ *  The config struct holds all the information obtained
+ *  by the command line parser the all the variables can
+ *  easily be passed to functions.
+ */
 struct Config 
 {
   string out_path;
@@ -24,10 +31,15 @@ struct Config
   int32_t rand_seed;
 };
 
-// FUNCTION: populate_tof_arr
-// DESCRIPT: takes an array of num_events size and populates
-// it with time of flight values
-////
+/** \fn void populate_tof_arr(int *const tof_arr,
+ *                            Config &config);
+ *  \brief Creates a random array of time of flight
+ *         values.
+ *  \param tof_arr The array to fill.
+ *  \param config Holds the restraints of the array, like
+ *                the maximum size, and the seed for the
+ *                random number generator.
+ */
 void populate_tof_arr(int *const tof_arr,
                       Config &config) 
 {
@@ -41,10 +53,15 @@ void populate_tof_arr(int *const tof_arr,
     }
 }
 
-// FUNCTION: populate_pix_id_arr
-// DESCRIPTION: takes an array of num_events size and populates
-// it with 0 <= pixel id <= max_pixel_id
-////
+/** \fn void populate_pixel_id_arr(int *const pixel_id_arr,
+ *                                 Config &config);
+ *  \brief Creates a random array of time of pixel id
+ *         values.
+ *  \param pixel_id_arr The array to fill.
+ *  \param config Holds the restraints of the array, like
+ *                the maximum size, maximum pixel value, and 
+ *                the seed for the random number generator.
+ */
 void populate_pixel_id_arr(int *const pixel_id_arr,
                            Config &config) 
 {
@@ -58,23 +75,33 @@ void populate_pixel_id_arr(int *const pixel_id_arr,
     }
 }
 
-// FUNCTION: layout_nexus_file
-// DESCRIPTION: Creates the nexus file and makes the groups
-////
+/** \fn void layout_nexus_file(NXhandle &file_id,
+  *                            Config &config)
+  * \brief Creates the nexus file and makes and opens 
+  *        the groups.
+  * \param file_id The variable to store the nexus file
+  *        handle in.
+  * \param config Contains the format of the file and the
+  *        name of the file.
+  */
 void layout_nexus_file(NXhandle &file_id,
                       Config &config) 
 {
   NXaccess file_access;
 
-  if (config.format == "hdf4") {
-    file_access = NXACC_CREATE4;
-  }
-  else if (config.format == "xml") {
-    file_access = NXACC_CREATEXML;
-  }
-  else {
-    file_access = NXACC_CREATE5;
-  }
+  // Get the format of the nexus file
+  if (config.format == "hdf4")
+    {
+      file_access = NXACC_CREATE4;
+    }
+  else if (config.format == "xml")
+    {
+      file_access = NXACC_CREATEXML;
+    }
+  else
+    {
+      file_access = NXACC_CREATE5;
+    }
  
   (void)NXopen(config.out_path.c_str(), file_access, &file_id);
   (void)NXmakegroup(file_id, "entry", "NXentry");
@@ -83,12 +110,20 @@ void layout_nexus_file(NXhandle &file_id,
   (void)NXopengroup(file_id, "bank1", "NXevent_data");
 }
 
-// FUNCTION: populate_nexus_file
-// DESCRIPTION: Populates the file with the information
-////
+/** \fn populate_nexus_file(NXhandle &file_id,
+  *                         int *const rand_tof_arr,
+  *                         int *const rand_pix_arr,
+  *                         Config &config)
+  * \brief Populates the nexus file with the random information 
+  *        that was already obtained.
+  * \param file_id The handle to the nexus file.
+  * \param rand_tof_arr The random time of flight array.
+  * \param rand_pixel_id_arr The random pixel id array.
+  * \param config Hold the size of the random arrays.
+  */
 void populate_nexus_file(NXhandle &file_id,
                          int *const rand_tof_arr,
-                         int *const rand_pix_arr,
+                         int *const rand_pixel_id_arr,
                          Config &config)
 {
   char var[12] = "10^-7second";
@@ -99,11 +134,17 @@ void populate_nexus_file(NXhandle &file_id,
   (void)NXclosedata(file_id);
   (void)NXmakedata(file_id, "pixel_number", NX_INT32, 1, &config.num_events);
   (void)NXopendata(file_id, "pixel_number");
-  (void)NXputdata(file_id, rand_pix_arr);
+  (void)NXputdata(file_id, rand_pixel_id_arr);
   (void)NXputattr(file_id, "units", var, 11, NX_CHAR);
 }
 
-int main(int32_t argc, char *argv[]) {
+/** \fn int main(int32_t argc,
+ *               char *argv[])
+ *  \brief Parses the command line and calls the necessary
+ *         functions to make and populate the nexus file.
+ */
+int main(int32_t argc, 
+         char *argv[]) {
   NXhandle file_id;
   struct Config config;
   const string VERSION("1.0");
