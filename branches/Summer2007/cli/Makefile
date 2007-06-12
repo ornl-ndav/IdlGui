@@ -17,7 +17,7 @@ RAND_OBJS 	= 	rand2nxl.o
 all : $(ALL)
 
 rand2nxl: $(RAND_OBJS)
-	$(CXX) `pkg-config nexus --libs` -o rand2nxl $(RAND_OBJS) -L/usr/local/hdf4/lib/ -L/usr/local/hdf5/lib/
+	$(CXX) $(RAND_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o rand2nxl	
 
 Event_to_Histo_Mapped: $(HMAP_OBJS)
 	$(CXX) -o Event_to_Histo_Mapped $(HMAP_OBJS)
