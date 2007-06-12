@@ -31,17 +31,16 @@ struct Config
   int32_t rand_seed;
 };
 
-/** \fn void populate_tof_vec(vector<uint32_t> &tof_vec,
- *                            Config &config);
- *  \brief Creates a random vector of time of flight
- *         values.
- *  \param tof_vec The vector to fill.
+/** \fn void populate_tof(vector<uint32_t> &tof,
+ *                        const Config &config);
+ *  \brief Creates random time of flight values.
+ *  \param tof The vector to fill.
  *  \param config Holds the restraints of the vector, like
  *                the maximum size, and the seed for the
  *                random number generator.
  */
-void populate_tof_vec(vector<uint32_t> &tof_vec,
-                      Config &config) 
+void populate_tof(vector<uint32_t> &tof,
+                      const Config &config) 
 {
   int i;
 
@@ -49,21 +48,20 @@ void populate_tof_vec(vector<uint32_t> &tof_vec,
   srand(config.rand_seed);
   for ( i=0; i<config.num_events; i++ ) 
     {
-      tof_vec.push_back(rand());
+      tof.push_back(rand());
     }
 }
 
-/** \fn void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
- *                                 Config &config);
- *  \brief Creates a random vector of time of pixel id
- *         values.
- *  \param pixel_id_vec The vector to fill.
+/** \fn void populate_pixel_id(vector<uint32_t> &pixel_id,
+ *                             const Config &config);
+ *  \brief Creates a random vector of pixel id values.
+ *  \param pixel_id The vector to fill.
  *  \param config Holds the restraints of the vector, like
  *                the maximum size, maximum pixel value, and 
  *                the seed for the random number generator.
  */
-void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
-                           Config &config) 
+void populate_pixel_id(vector<uint32_t> &pixel_id,
+                           const Config &config) 
 {
   int i;
 
@@ -71,12 +69,12 @@ void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
   srand(config.rand_seed);
   for ( i=0; i<config.num_events; i++ ) 
     {
-      pixel_id_vec.push_back(rand()%(config.max_pixel_id+1));
+      pixel_id.push_back(rand()%(config.max_pixel_id+1));
     }
 }
 
 /** \fn void layout_nexus_file(NXhandle &file_id,
-  *                            Config &config)
+  *                            const Config &config)
   * \brief Creates the nexus file and makes and opens 
   *        the groups.
   * \param file_id The variable to store the nexus file
@@ -85,7 +83,7 @@ void populate_pixel_id_vec(vector<uint32_t> &pixel_id_vec,
   *        name of the file.
   */
 void layout_nexus_file(NXhandle &file_id,
-                      Config &config) 
+                       const Config &config) 
 {
   NXaccess file_access;
 
@@ -103,39 +101,74 @@ void layout_nexus_file(NXhandle &file_id,
       file_access = NXACC_CREATE5;
     }
  
+  // Open the file, make all the groups and close them off
   NXopen(config.out_path.c_str(), file_access, &file_id);
   NXmakegroup(file_id, "entry", "NXentry");
   NXopengroup(file_id, "entry", "NXentry");
   NXmakegroup(file_id, "bank1", "NXevent_data");
-  NXopengroup(file_id, "bank1", "NXevent_data");
+  NXclosegroup(file_id);
+  NXclosegroup(file_id);
 }
 
-/** \fn populate_nexus_file(NXhandle &file_id,
-  *                         vector<uint32_t> &rand_tof_vec,
-  *                         vector<uint32_t> &rand_pix_vec,
-  *                         Config &config)
-  * \brief Populates the nexus file with the random information 
-  *        that was already obtained.
-  * \param file_id The handle to the nexus file.
-  * \param rand_tof_vec The random time of flight vector.
-  * \param rand_pixel_id_vec The random pixel id vector.
-  * \param config Hold the size of the random vectors.
+/** \fn void write_data(const NXhandle &file_id,
+  *                     const vector<NumT> &data,
+  *                     const string &group_path,
+  *                     const string &data_name)
+  * \brief Templated function that opens a group
+  *        in a nexus file and writes data.
+  * \param file_id The handle for the nexus file.
+  * \param data Templated vector of data to be 
+  *             written.
+  * \param group_path The group to write the data
+  *                   to in the nexus file.
+  * \param data_name The name of the data.
   */
-void populate_nexus_file(NXhandle &file_id,
-                         vector<uint32_t> &rand_tof_vec,
-                         vector<uint32_t> &rand_pixel_id_vec,
-                         Config &config)
+template <typename NumT>
+void write_data(const NXhandle &file_id,
+                const vector<NumT> &data, 
+                const string &group_path,
+                const string &data_name)
 {
-  char var[12] = "10^-7second";
+  // Get the size of the data for referencing it
+  int size = data.size();
 
-  NXmakedata(file_id, "time_of_flight", NX_INT32, 1, &config.num_events);
-  NXopendata(file_id, "time_of_flight");
-  NXputdata(file_id, &rand_tof_vec.at(0));
+  // Open the group 
+  NXopengrouppath(file_id, group_path.c_str());
+  // Make the data, open it, and write it
+  NXmakedata(file_id, data_name.c_str(), 
+             NX_INT32, 1, &size);
+  NXopendata(file_id, data_name.c_str());
+  NXputdata(file_id, (void *)&data.at(0));
+  // Close the data and the group
   NXclosedata(file_id);
-  NXmakedata(file_id, "pixel_number", NX_INT32, 1, &config.num_events);
-  NXopendata(file_id, "pixel_number");
-  NXputdata(file_id, &rand_pixel_id_vec.at(0));
-  NXputattr(file_id, "units", var, 11, NX_CHAR);
+  NXclosegroup(file_id);
+}
+
+/** \fn void write_attr(const NXhandle &file_id,
+  *                     const string &attr_name,
+  *                     const string &attr_value,
+  *                     const string &data_path)
+  * \brief Opens a data field in a nexus file and
+  *        writes an attribute for it.
+  * \param file_id The handle for the nexus file.
+  * \param attr_name The name of the attribute.
+  * \param group_value The value associated with
+  *                    the attribute
+  * \param data_path The path to the data
+  */
+void write_attr(const NXhandle &file_id,
+                const string &attr_name,
+                const string &attr_value,
+                const string &data_path)
+{
+  // Open the data
+  NXopengrouppath(file_id, data_path.c_str());
+  // Write the attribute for the data
+  NXputattr(file_id, (char *)attr_name.c_str(), (char *)attr_value.c_str(), 
+            attr_value.length(), NX_CHAR);
+  // Close the data and the group
+  NXclosedata(file_id);
+  NXclosegroup(file_id);
 }
 
 /** \fn int main(int32_t argc,
@@ -148,8 +181,8 @@ int main(int32_t argc,
   NXhandle file_id;
   struct Config config;
   const string VERSION("1.0");
-  vector<uint32_t> rand_tof_vec;
-  vector<uint32_t> rand_pixel_id_vec;
+  vector<uint32_t> rand_tof;
+  vector<uint32_t> rand_pixel_id;
 
   try 
     {
@@ -200,19 +233,20 @@ int main(int32_t argc,
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
-
   
   // Populate the random time of flight vector
-  populate_tof_vec(rand_tof_vec, config);
+  populate_tof(rand_tof, config);
 
   // Populate the random pixel id vector
-  populate_pixel_id_vec(rand_pixel_id_vec, config);
+  populate_pixel_id(rand_pixel_id, config);
 
   // Open nexus file and layout groups
   layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
-  populate_nexus_file(file_id, rand_tof_vec, rand_pixel_id_vec, config);
+  write_data(file_id, rand_tof, "/entry/bank1", "time_of_flight");
+  write_data(file_id, rand_pixel_id, "/entry/bank1", "pixel_number");
+  write_attr(file_id, "units", "10^-7second", "/entry/bank1/pixel_number");
 
   // Close off the nexus file
   NXclose(&file_id);
