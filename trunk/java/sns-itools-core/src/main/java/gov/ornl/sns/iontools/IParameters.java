@@ -234,6 +234,15 @@ public interface IParameters {
                                                        "Counts = f( TOF , back2_selection )",
                                                        "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
       
+      static final String[] LIST_OF_PRO_FILES       = {"clear",
+                                                       "plot_tof_sumx_sumy",
+                                                       "plot_tof_xo_sumy",
+                                                       "plot_tof_sumx_yo",
+                                                       "plot_tof_signal_selection",
+                                                       "plot_tof_back1_selection",
+                                                       "plot_tof_back2_selection",
+                                                       "plot_tofo_sumx_sumy"};
+            
       static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear display",
                                                            "Total counts vs TOF for \nfull detector range",
                                                            "Total counts vs tof for \nthe right-click X",
