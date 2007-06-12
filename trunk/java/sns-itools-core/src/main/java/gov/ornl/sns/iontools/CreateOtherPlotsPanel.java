@@ -118,6 +118,7 @@ public class CreateOtherPlotsPanel {
     infoScrollPane = new JScrollPane(infoTextArea,
         JScrollPane.VERTICAL_SCROLLBAR_NEVER,
         JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+    //infoScrollPane.setWheelScrollingEnabled(true);
     infoScrollPane.setPreferredSize(new Dimension(
         infoScrollPaneWidth,
         infoScrollPaneHeight));

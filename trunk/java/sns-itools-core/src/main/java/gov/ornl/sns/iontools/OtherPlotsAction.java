@@ -11,28 +11,28 @@ public class OtherPlotsAction {
     int iPlotSelected = DataReduction.listOfOtherPlotsComboBox.getSelectedIndex();
     switch (iPlotSelected) {
     case 0:
-         clearPlot();
+         clearPlot(iPlotSelected);
          break;
     case 1:
-         plotTotalCountsFullDetectorRange();
+         plotTotalCountsFullDetectorRange(iPlotSelected);
          break;
     case 2:
-         plotTotalCountsRightClickX();
+         plotTotalCountsRightClickX(iPlotSelected);
          break;
     case 3:
-         plotTotalCountsRightClickY();
+         plotTotalCountsRightClickY(iPlotSelected);
          break;
     case 4:
-         plotTotalCountsSelectedSignal();
+         plotTotalCountsSelectedSignal(iPlotSelected);
          break;
     case 5:
-         plotTotalCountsSelectedBack1();
+         plotTotalCountsSelectedBack1(iPlotSelected);
          break;
     case 6:
-         plotTotalCountsSelectedBack2();
+         plotTotalCountsSelectedBack2(iPlotSelected);
          break;
     case 7: 
-      plotfull2dForGivenTbinRange();
+      plotfull2dForGivenTbinRange(iPlotSelected);
          break;
     default:
     }
@@ -41,59 +41,67 @@ public class OtherPlotsAction {
   /*
    * This function clears the plot
    */
-  static void clearPlot() {
-    
+  static void clearPlot(int index) {
+    displayInfoMessage(index);
   }
   
   /*
    * This function plots the total number of counts of the full detector area
    */
-  static void plotTotalCountsFullDetectorRange() {
-    System.out.println("  static void plotTotalCountsFullDetectorRange() ");
+  static void plotTotalCountsFullDetectorRange(int index) {
+    displayInfoMessage(index);
   }
   
   /*
    * This function plots the total number of counts of the right click X over
    * the full range of Y
    */
-  static void plotTotalCountsRightClickX() {
-    System.out.println("static void plotTotalCountsRightClickX()");
+  static void plotTotalCountsRightClickX(int index) {
+    displayInfoMessage(index);
   }
   
   /*
    * This function plots the total number of counts of the right click Y over
    * the full range of X
    */
-  static void plotTotalCountsRightClickY() {
-    System.out.println("static void plotTotalCountsRightClickY() ");
+  static void plotTotalCountsRightClickY(int index) {
+    displayInfoMessage(index);
   }
   
   /*
    * This function plots the total number of counts of the signal selection
    */
-  static void plotTotalCountsSelectedSignal() {
-    System.out.println("static void plotTotalCountsSelectedSignal() ");
+  static void plotTotalCountsSelectedSignal(int index) {
+    displayInfoMessage(index);
   }
   
   /*
    * This function plots the total number of counts of the background 1 selection
    */
-  static void plotTotalCountsSelectedBack1() {
-    System.out.println("static void plotTotalCountsSelectedBack1() ");
+  static void plotTotalCountsSelectedBack1(int index) {
+    displayInfoMessage(index);
   }
 
   /*
    * This function plots the total number of counts of the background 2 selection
    */
-  static void plotTotalCountsSelectedBack2() {
-    System.out.println("  static void plotTotalCountsSelectedBack2() ");
+  static void plotTotalCountsSelectedBack2(int index) {
+    displayInfoMessage(index);
   }
 
   /*
    * This function plots the total number of counts for a given range of Tbins
    */
-  static void plotfull2dForGivenTbinRange() {
+  static void plotfull2dForGivenTbinRange(int index) {
+    displayInfoMessage(index);
     System.out.println("in static void plotfull2dForGivenTbinRange()");
+  }
+
+  /*
+   * This function displays the description of the function selected
+   */
+  static void displayInfoMessage(int index) {
+    CreateOtherPlotsPanel.infoTextArea.setText(IParameters.MESSAGE_LIST_OF_OTHER_PLOTS[index]);
   }
 
 }
