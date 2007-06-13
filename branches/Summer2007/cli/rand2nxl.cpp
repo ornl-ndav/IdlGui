@@ -243,7 +243,7 @@ void write_data(const NXhandle &file_id,
     {
       throw runtime_error("Failed to open data: "+data_name);
     }
-  if (NXputdata(file_id, (void *)&data.at(0)) != NX_OK)
+  if (NXputdata(file_id, (void *)&data[0]) != NX_OK)
     {
       throw runtime_error("Failed to create data");
     }
