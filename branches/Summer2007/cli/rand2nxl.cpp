@@ -275,14 +275,17 @@ void write_attr(const NXhandle &file_id,
                 const string &attr_value,
                 const string &data_path)
 {
+  // Make a non const variable for NXputattr
+  string nx_attr_value(attr_value);
+
   // Open the data
   if (NXopenpath(file_id, data_path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open group: "+data_path);
     }
   // Write the attribute for the data
-  if (NXputattr(file_id, (char *)attr_name.c_str(), 
-                (char *)attr_value.c_str(), attr_value.length(),
+  if (NXputattr(file_id, attr_name.c_str(), 
+                &nx_attr_value[0], attr_value.length(),
                 NX_CHAR) != NX_OK)
     {
       throw runtime_error("Failed to create attribute: "+attr_name);
