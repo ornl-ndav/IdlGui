@@ -96,13 +96,17 @@ void layout_nexus_file(NXhandle &file_id,
     {
       file_access = NXACC_CREATE4;
     }
+  else if (config.format =="hdf5")
+    {
+      file_access = NXACC_CREATE5;
+    }
   else if (config.format == "xml")
     {
       file_access = NXACC_CREATEXML;
     }
   else
     {
-      file_access = NXACC_CREATE5;
+      throw runtime_error("Invalid nexus format type: "+config.format);
     }
  
   // Open the file, make all the groups and close them off
