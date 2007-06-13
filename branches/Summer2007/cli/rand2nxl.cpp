@@ -73,7 +73,7 @@ void populate_pixel_id(vector<uint32_t> &pixel_id,
   srand(config.rand_seed);
   for ( i=0; i<config.num_events; i++ ) 
     {
-      pixel_id.push_back(rand()%(config.max_pixel_id+1));
+      pixel_id.push_back(rand()%config.max_pixel_id);
     }
 }
 
