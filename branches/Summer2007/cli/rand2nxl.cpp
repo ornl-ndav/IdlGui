@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <stdexcept>
 #include <libgen.h>
+#include <typeinfo>
 #include <tclap/CmdLine.h>
 
 using std::string;
@@ -15,6 +16,7 @@ using std::cerr;
 using std::endl;
 using std::vector;
 using std::runtime_error;
+using std::type_info;
 using namespace TCLAP;
 
 /** \struct Config
@@ -42,7 +44,7 @@ struct Config
  *                random number generator.
  */
 void populate_tof(vector<uint32_t> &tof,
-                      const Config &config) 
+                  const Config &config) 
 {
   int i;
 
@@ -63,7 +65,7 @@ void populate_tof(vector<uint32_t> &tof,
  *                the seed for the random number generator.
  */
 void populate_pixel_id(vector<uint32_t> &pixel_id,
-                           const Config &config) 
+                       const Config &config) 
 {
   int i;
 
@@ -134,7 +136,63 @@ void layout_nexus_file(NXhandle &file_id,
     }
 }
 
-/** \fn void write_data(const NXhandle &file_id,
+/** \fn template <typename Numt>
+ *      int typename_to_nexus_type(type_info &type)
+ *  \brief Converts a data type into a nexus data type
+ *  \param type The type of data to convert
+ *  \return -1 if the type is not a valid nexus type
+ *
+ *  Since nexus api calls might need a nexus type (like
+ *  NX_INT32) for writing data, this function will convert
+ *  the type of a templated function into a nexus type.
+ */
+template <typename NumT>
+int typename_to_nexus_type(NumT &type)
+{
+  if (typeid(type) == typeid(char))
+    {
+      return NX_CHAR;
+    }
+  else if (typeid(type) == typeid(float))
+    {
+      return NX_FLOAT32;
+    }
+  else if (typeid(type) == typeid(double))
+    {
+      return NX_FLOAT64;
+    }
+  else if (typeid(type) == typeid(int8_t))
+    {
+      return NX_INT8;
+    }
+  else if (typeid(type) == typeid(uint8_t))
+    {
+      return NX_UINT8;
+    }
+  else if (typeid(type) == typeid(int16_t))
+    {
+      return NX_INT16;
+    }
+  else if (typeid(type) == typeid(uint16_t))
+    {
+      return NX_UINT16;
+    }
+  else if (typeid(type) == typeid(int32_t))
+    {
+      return NX_INT32;
+    }
+  else if (typeid(type) == typeid(uint32_t))
+    {
+      return NX_UINT32;
+    }
+  else
+    {
+      return -1;
+    }
+}
+
+/** \fn template <typename NumT>
+  *     void write_data(const NXhandle &file_id,
   *                     const vector<NumT> &data,
   *                     const string &group_path,
   *                     const string &data_name)
@@ -155,7 +213,17 @@ void write_data(const NXhandle &file_id,
 {
   // Get the size of the data for referencing it
   int size = data.size();
+  // Get the nexus data type of the template
+  NumT type;
+  int nexus_data_type = typename_to_nexus_type(type);
 
+  // Check if the type of the template is a valid nexus type
+  if (nexus_data_type == -1)
+    {
+      throw runtime_error("Invalid data type for nexus: "
+                          +string(typeid(NumT).name()));
+    }
+  
   // Open the group 
   if (NXopenpath(file_id, group_path.c_str()) != NX_OK)
     {
@@ -163,7 +231,7 @@ void write_data(const NXhandle &file_id,
     }
   // Make the data, open it, and write it
   if (NXmakedata(file_id, data_name.c_str(), 
-             NX_INT32, 1, &size) != NX_OK)
+                 nexus_data_type, 1, &size) != NX_OK)
     {
       throw runtime_error("Failed make data: "+data_name);
     }
