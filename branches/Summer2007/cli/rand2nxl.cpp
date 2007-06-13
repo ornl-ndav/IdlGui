@@ -112,31 +112,31 @@ void layout_nexus_file(NXhandle &file_id,
   // Open the file, make all the groups and close them off
   if (NXopen(config.out_path.c_str(), file_access, &file_id) != NX_OK)
     {
-      throw runtime_error("Failed to open nexus file");
+      throw runtime_error("Failed to open nexus file: "+config.out_path);
     }
   if (NXmakegroup(file_id, "entry", "NXentry") != NX_OK)
     {
-      throw runtime_error("Failed to create entry group");
+      throw runtime_error("Failed to make group: entry");
     }
   if (NXopengroup(file_id, "entry", "NXentry") != NX_OK)
     {
-      throw runtime_error("Failed to open entry group");
+      throw runtime_error("Failed to open group: entry");
     }
   if (NXmakegroup(file_id, "bank1", "NXevent_data") != NX_OK)
     {
-      throw runtime_error("Failed to make bank1 group");
+      throw runtime_error("Failed to make group: bank1");
     }
   if (NXopengroup(file_id, "bank1", "NXevent_data") != NX_OK)
     {
-      throw runtime_error("Failed to open entry group");
+      throw runtime_error("Failed to open group: bank1");
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group");
+      throw runtime_error("Failed to close group: bank1");
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group");
+      throw runtime_error("Failed to close group: entry");
     }
 }
 
@@ -212,16 +212,16 @@ void write_data(const NXhandle &file_id,
     }
   if (NXputdata(file_id, &nx_data[0]) != NX_OK)
     {
-      throw runtime_error("Failed to create data");
+      throw runtime_error("Failed to create data under "+data_name);
     }
   // Close the data and the group
   if (NXclosedata(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close data");
+      throw runtime_error("Failed to close data: "+data_name);
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group");
+      throw runtime_error("Failed to close group: "+group_path);
     }
 }
 
@@ -248,7 +248,7 @@ void write_attr(const NXhandle &file_id,
   // Open the data
   if (NXopenpath(file_id, data_path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open group: "+data_path);
+      throw runtime_error("Failed to open data: "+data_path);
     }
   // Write the attribute for the data
   if (NXputattr(file_id, attr_name.c_str(), 
@@ -260,11 +260,11 @@ void write_attr(const NXhandle &file_id,
   // Close the data and the group
   if (NXclosedata(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close data");
+      throw runtime_error("Failed to close data: "+data_path);
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group");
+      throw runtime_error("Failed to close group: "+data_path);
     }
 }
 
@@ -341,14 +341,14 @@ int main(int32_t argc,
   layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
-  write_data(file_id, rand_tof, "/entry/bank1/", "time_of_flight");
+  write_data(file_id, rand_tof, "/entry/bank1", "time_of_flight");
   write_data(file_id, rand_pixel_id, "/entry/bank1", "pixel_number");
   write_attr(file_id, "units", "10^-7second", "/entry/bank1/pixel_number");
 
   // Close the nexus file
   if (NXclose(&file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close nexus file");
+      throw runtime_error("Failed to close nexus file: "+config.out_path);
     }
 
   return 0;
