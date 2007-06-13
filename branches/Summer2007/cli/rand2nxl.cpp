@@ -1,4 +1,6 @@
-/** \file rand2nxl.cpp
+/** Author: Wes Kendall
+ *  Date: 06-13-07
+ *  \file rand2nxl.cpp
  *  \brief Creates a nexus light file with random values.
  */
 
