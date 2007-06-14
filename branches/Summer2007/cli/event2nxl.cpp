@@ -238,6 +238,7 @@ void read_data(vector<NumT> &tof,
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
+  size_t data_size = sizeof(NumT);
 
   // Open the event file
   ifstream file(config.event_file.c_str(), std::ios::binary);
@@ -246,30 +247,40 @@ void read_data(vector<NumT> &tof,
       throw runtime_error("Failed opening file: "+config.event_file);
     } 
   
-  // Determine the file and data size
-  file.seekg(0,std::ios::end);
-  size_t file_size = file.tellg()/sizeof(NumT);
+  // Determine the file and buffer size
+  file.seekg(0, std::ios::end);
+  size_t file_size = file.tellg()/data_size;
   size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
 
   // Go to the start of file and begin reading
   file.seekg(0,std::ios::beg);
-  while(offset < file_size){
-    file.seekg(offset*sizeof(NumT), std::ios::beg);
-    file.read(reinterpret_cast<char *>(buffer), buffer_size*sizeof(NumT));
+  while(offset < file_size)
+    {
+      file.seekg(offset*data_size, std::ios::beg);
+      file.read(reinterpret_cast<char *>(buffer), buffer_size*data_size);
 
-    for( i = 0; i < buffer_size; i++ )
-      {
-        cout << buffer[i] << endl;
-      }
+      // Populate the time of flight and pixel id
+      // vectors with the data from the event file
+      for( i = 0; i < buffer_size; i++ )
+        {
+          if (i%2 == 0)
+            {
+              tof.push_back(buffer[i]);
+            }
+          else 
+            {
+              pixel_id.push_back(buffer[i]);
+            }
+        }
     
-    offset += buffer_size;
+      offset += buffer_size;
 
-    // Make sure to not read past EOF
-    if(offset+BLOCK_SIZE > file_size)
-      {
-        buffer_size = file_size-offset;
-      }
-  }
+      // Make sure to not read past EOF
+      if(offset+BLOCK_SIZE > file_size)
+        {
+          buffer_size = file_size-offset;
+        }
+    }
 
   // Close event file
   file.close();
@@ -334,11 +345,9 @@ int main(int32_t argc,
   layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
-#ifdef WES
   write_data(file_id, tof, "/entry/bank1", "time_of_flight");
   write_data(file_id, pixel_id, "/entry/bank1", "pixel_number");
   write_attr(file_id, "units", "10^-7second", "/entry/bank1/pixel_number");
-#endif
 
   // Close the nexus file
   if (NXclose(&file_id) != NX_OK)
