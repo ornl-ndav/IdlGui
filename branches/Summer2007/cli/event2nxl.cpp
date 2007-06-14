@@ -265,11 +265,12 @@ void read_data(vector<NumT> &tof,
         {
           if (i%2 == 0)
             {
-              tof.push_back(buffer[i]);
+              // Use pointer arithmetic for speed
+              tof.push_back(*(buffer+i));
             }
           else 
             {
-              pixel_id.push_back(buffer[i]);
+              pixel_id.push_back(*(buffer+i));
             }
         }
     
