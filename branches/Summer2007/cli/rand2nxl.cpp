@@ -150,7 +150,7 @@ void layout_nexus_file(NXhandle &file_id,
  *  for the nexus api, and this function is called with a int32_t
  *  type template.
  */
-inline int typename_to_nexus_type(const int32_t &val)
+inline int typename_to_nexus_type(const int32_t val)
 {
   return NX_INT32;
 }
@@ -163,7 +163,7 @@ inline int typename_to_nexus_type(const int32_t &val)
  *  for the nexus api, and this function is called with a uint32_t
  *  type template.
  */
-inline int typename_to_nexus_type(const uint32_t &val)
+inline int typename_to_nexus_type(const uint32_t val)
 {
   return NX_UINT32;
 } 
