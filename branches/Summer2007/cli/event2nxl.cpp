@@ -229,6 +229,16 @@ void write_attr(const NXhandle &file_id,
     }
 }
 
+/** \fn template <typename NumT>
+ *      void read_data(vector<NumT> &tof,
+ *      vector<NumT> &pixel_id,
+ *      const Config &config)
+ *  \brief Reads information from the even file and populates
+ *         the data vectors.
+ *  \param tof The vector to hold time of flight values.
+ *  \param pixel_id The vector to hold pixel id values.
+ *  \param config The configuration options.
+ */
 template <typename NumT>
 void read_data(vector<NumT> &tof,
                vector<NumT> &pixel_id,
@@ -315,8 +325,8 @@ int main(int32_t argc,
                        false, default_file_name, "output file name", cmd);
       
       ValueArg<string> event_file("i", "input", 
-                        "event file to read from",
-                        false, "BSS_108_neutron_event.dat", "event file", cmd);
+                       "event file to read from",
+                       true, NULL, "event file", cmd);
 
       // Types for the nexus file format
       vector<string> allowed_types;
@@ -328,7 +338,7 @@ int main(int32_t argc,
                        false, "hdf5", allowed_types, cmd);
       
       // Parse the command-line
-      cmd.parse(argc, argv);    
+      cmd.parse(argc, argv); 
 
       // Fill out the config object
       config.out_path = out_path.getValue();
