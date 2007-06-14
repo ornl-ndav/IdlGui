@@ -150,7 +150,7 @@ public interface IParameters {
 		
     //size of other plot graphical window
     static final int OTHER_PLOTS_X          = 550;
-    static final int OTHER_PLOTS_Y          = 550;
+    static final int OTHER_PLOTS_Y          = 600;
    
 		//data reduction plot interaction
 		static final int yAxisMin               = 0;
@@ -232,7 +232,7 @@ public interface IParameters {
                                                        "Counts = f( TOF , signal_selection )",
                                                        "Counts = f( TOF , back1_selection )",
                                                        "Counts = f( TOF , back2_selection )",
-                                                       "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
+      "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
       
       static final String[] LIST_OF_PRO_FILES       = {"clear",
                                                        "plot_tof_sumx_sumy",
