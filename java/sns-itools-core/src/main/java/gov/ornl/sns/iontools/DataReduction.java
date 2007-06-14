@@ -80,10 +80,10 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static int			        c_yval1=0;	  // initial y for rubber band box
     static int		    	    c_xval2=0;	  // final x for rubber band box
     static int			        c_yval2=0;	  // final y for rubber band box
-    static int			        c_x1=0;		  // initial x java
-    static int			        c_y1=0;		  // initial y java
-    static int		    	    c_x2=0;		  // final x java
-    static int		    	    c_y2=0;		  // final y java
+    static int			        c_x1=0;  		  // initial x java
+    static int			        c_y1=0;		    // initial y java
+    static int		    	    c_x2=0;		    // final x java
+    static int		    	    c_y2=0;		    // final y java
     static int              a=0;
     static int             	x_min;
     static int             	x_max;
@@ -1209,7 +1209,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       
       //from other plots
       DataReduction.listOfOtherPlotsComboBox.addActionListener(this);
-      
+      CreateOtherPlotsPanel.xoTextField.addActionListener(this);
     }
       
 }

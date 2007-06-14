@@ -34,6 +34,8 @@ public class OtherPlotsAction {
          break;
     default:
     }
+    //make various fields visible or invisible.
+    OtherPlotsUpdateGui.updateGUI(iPlotSelected); 
   }
   
   /*
@@ -178,3 +180,5 @@ public class OtherPlotsAction {
   }
 
 }
+
+

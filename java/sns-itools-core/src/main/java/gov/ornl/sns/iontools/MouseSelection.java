@@ -32,8 +32,8 @@ public class MouseSelection {
 	private static int ymin;
 	private static int xmax;
 	private static int ymax;
-	private static int infoX;
-	private static int infoY;
+	static int infoX = 0;
+	static int infoY = 0;
 	
 	private static IONVariable ionTmpHistoFile;
 	private static IONVariable ionXmin;
