@@ -136,6 +136,25 @@ public class OtherPlotsAction {
       break;
     case 6: //Counts = f( TOF , back2_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
+      
+      int xminB2 = MouseSelectionParameters.back2_xmin;
+      int xmaxB2 = MouseSelectionParameters.back2_xmax;
+      int yminB2 = MouseSelectionParameters.back2_ymin;
+      int ymaxB2 = MouseSelectionParameters.back2_ymax;
+      
+      com.rsi.ion.IONVariable ionXminB2 = new com.rsi.ion.IONVariable(xminB2);
+      com.rsi.ion.IONVariable ionXmaxB2 = new com.rsi.ion.IONVariable(xmaxB2);
+      com.rsi.ion.IONVariable ionYminB2 = new com.rsi.ion.IONVariable(yminB2);
+      com.rsi.ion.IONVariable ionYmaxB2 = new com.rsi.ion.IONVariable(ymaxB2);
+      
+      if (isSelectionValid(xminB2, xmaxB2, yminB2, ymaxB2)) {
+        cmd += "," + ionXminB2;
+        cmd += "," + ionXmaxB2;
+        cmd += "," + ionYminB2;
+        cmd += "," + ionYmaxB2;
+      } else {
+        bThreadSafe = false;
+      }
       break;
     case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
@@ -227,6 +246,7 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedBack2(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
     if (bThreadSafe) {
       startThread(cmd);
@@ -274,6 +294,12 @@ public class OtherPlotsAction {
         sMessage += "  Xmax = " + MouseSelectionParameters.back1_xmax;
         sMessage += "\n  Ymin = " + MouseSelectionParameters.back1_ymin;
         sMessage += "  Ymax = " + MouseSelectionParameters.back1_ymax;
+        break;
+      case 6: //Counts = f( TOF , back2_selection )
+        sMessage = "\n\nSelection (background 2):\n  Xmin = " + MouseSelectionParameters.back2_xmin;
+        sMessage += "  Xmax = " + MouseSelectionParameters.back2_xmax;
+        sMessage += "\n  Ymin = " + MouseSelectionParameters.back2_ymin;
+        sMessage += "  Ymax = " + MouseSelectionParameters.back2_ymax;
         break;
     }
     CreateOtherPlotsPanel.infoTextArea.append(sMessage);
