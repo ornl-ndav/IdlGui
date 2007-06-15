@@ -93,27 +93,46 @@ public class OtherPlotsAction {
     case 4: //Counts = f( TOF , signal_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       
-      int xmin = MouseSelectionParameters.signal_xmin;
-      int xmax = MouseSelectionParameters.signal_xmax;
-      int ymin = MouseSelectionParameters.signal_ymin;
-      int ymax = MouseSelectionParameters.signal_ymax;
+      int xminS = MouseSelectionParameters.signal_xmin;
+      int xmaxS = MouseSelectionParameters.signal_xmax;
+      int yminS = MouseSelectionParameters.signal_ymin;
+      int ymaxS = MouseSelectionParameters.signal_ymax;
       
-      com.rsi.ion.IONVariable ionXmin = new com.rsi.ion.IONVariable(xmin);
-      com.rsi.ion.IONVariable ionXmax = new com.rsi.ion.IONVariable(xmax);
-      com.rsi.ion.IONVariable ionYmin = new com.rsi.ion.IONVariable(ymin);
-      com.rsi.ion.IONVariable ionYmax = new com.rsi.ion.IONVariable(ymax);
+      com.rsi.ion.IONVariable ionXminS = new com.rsi.ion.IONVariable(xminS);
+      com.rsi.ion.IONVariable ionXmaxS = new com.rsi.ion.IONVariable(xmaxS);
+      com.rsi.ion.IONVariable ionYminS = new com.rsi.ion.IONVariable(yminS);
+      com.rsi.ion.IONVariable ionYmaxS = new com.rsi.ion.IONVariable(ymaxS);
       
-      if (isSelectionValid(xmin, xmax, ymin, ymax)) {
-        cmd += "," + ionXmin;
-        cmd += "," + ionXmax;
-        cmd += "," + ionYmin;
-        cmd += "," + ionYmax;
+      if (isSelectionValid(xminS, xmaxS, yminS, ymaxS)) {
+        cmd += "," + ionXminS;
+        cmd += "," + ionXmaxS;
+        cmd += "," + ionYminS;
+        cmd += "," + ionYmaxS;
       } else {
         bThreadSafe = false;
       }
       break;
     case 5: //Counts = f( TOF , back1_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
+      
+      int xminB1 = MouseSelectionParameters.back1_xmin;
+      int xmaxB1 = MouseSelectionParameters.back1_xmax;
+      int yminB1 = MouseSelectionParameters.back1_ymin;
+      int ymaxB1 = MouseSelectionParameters.back1_ymax;
+      
+      com.rsi.ion.IONVariable ionXminB1 = new com.rsi.ion.IONVariable(xminB1);
+      com.rsi.ion.IONVariable ionXmaxB1 = new com.rsi.ion.IONVariable(xmaxB1);
+      com.rsi.ion.IONVariable ionYminB1 = new com.rsi.ion.IONVariable(yminB1);
+      com.rsi.ion.IONVariable ionYmaxB1 = new com.rsi.ion.IONVariable(ymaxB1);
+      
+      if (isSelectionValid(xminB1, xmaxB1, yminB1, ymaxB1)) {
+        cmd += "," + ionXminB1;
+        cmd += "," + ionXmaxB1;
+        cmd += "," + ionYminB1;
+        cmd += "," + ionYmaxB1;
+      } else {
+        bThreadSafe = false;
+      }
       break;
     case 6: //Counts = f( TOF , back2_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
@@ -123,11 +142,8 @@ public class OtherPlotsAction {
       break;
     default:
     } 
-    
     cmd += "," + ionTmpHistoFile + "," + ionNx + "," + ionNy;
-
     return cmd;
-    
   }
     
   /*
@@ -197,6 +213,7 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedBack1(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
     if (bThreadSafe) {
       startThread(cmd);
@@ -247,10 +264,16 @@ public class OtherPlotsAction {
         sMessage = "\n\n  Yo = " + MouseSelection.infoY;
         break;
       case 4: //Counts = f( TOF , signal_selection )
-        sMessage = "\n\nSelection:\n  Xmin = " + MouseSelectionParameters.signal_xmin;
+        sMessage = "\n\nSelection (signal):\n  Xmin = " + MouseSelectionParameters.signal_xmin;
         sMessage += "  Xmax = " + MouseSelectionParameters.signal_xmax;
         sMessage += "\n  Ymin = " + MouseSelectionParameters.signal_ymin;
         sMessage += "  Ymax = " + MouseSelectionParameters.signal_ymax;
+        break;
+      case 5: //Counts = f( TOF , back1_selection )
+        sMessage = "\n\nSelection (background 1):\n  Xmin = " + MouseSelectionParameters.back1_xmin;
+        sMessage += "  Xmax = " + MouseSelectionParameters.back1_xmax;
+        sMessage += "\n  Ymin = " + MouseSelectionParameters.back1_ymin;
+        sMessage += "  Ymax = " + MouseSelectionParameters.back1_ymax;
         break;
     }
     CreateOtherPlotsPanel.infoTextArea.append(sMessage);
