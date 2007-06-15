@@ -611,9 +611,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     public void mouseMoved(com.rsi.ion.IONDrawable drawable, int X, int Y, 
 			   long when, int mask)
     {
-    	
-    	
-	if (bFoundNexus) {
+      if (bFoundNexus) {
 	  
 		if (X < 0) {X = 0;};
 	    if (Y < 2*NyMin) {Y = 2*NyMin;};
@@ -691,7 +689,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	} else if (modeSelected.compareTo("back2Selection") == 0) {
 	    		MouseSelection.saveXY(IParameters.BACK2_STRING,x_min, y_min, x_max, y_max);
 	    		iBack2SelectionExist = 1;
-	    		TabUtils.addForegroundColor(tabbedPane,1);
+          TabUtils.addForegroundColor(tabbedPane,1);
 	    		TabUtils.addForegroundColor(selectionTab, 2);
 	    	} 
 	    	doBox();
@@ -699,11 +697,16 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    
 	    if (mask == 4) {  //right click
 	    	MouseSelection.saveXYinfo(x_max, y_max);
-	    	dataReductionTabbedPane.setSelectedIndex(0);
-	    	tabbedPane.setSelectedIndex(1);
-	    	selectionTab.setSelectedIndex(3);
-    		//TabUtils.addForegroundColor(tabbedPane,1);
-    		//TabUtils.addForegroundColor(selectionTab, 3);
+	    	//if right tab is on 'other plots' and plot selected is xo or yo, update plot
+        if (tabbedPane.getSelectedIndex() == 2 &&
+            (DataReduction.listOfOtherPlotsComboBox.getSelectedIndex() == 2 ||
+             DataReduction.listOfOtherPlotsComboBox.getSelectedIndex() == 3)) {
+              OtherPlotsAction.selectDesiredPlot();
+        } else {
+              dataReductionTabbedPane.setSelectedIndex(0);
+              tabbedPane.setSelectedIndex(1);
+              selectionTab.setSelectedIndex(3);
+        }
 	    }
 	    	
 	    c_plot.addIONMouseListener(this, com.rsi.ion.IONMouseListener.ION_MOUSE_DOWN);
