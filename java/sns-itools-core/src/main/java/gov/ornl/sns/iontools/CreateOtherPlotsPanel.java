@@ -7,6 +7,7 @@ import com.rsi.ion.*;
 
 public class CreateOtherPlotsPanel {
 
+  static JButton refreshButton;
   static JPanel topPartPanel;
   static JTextArea infoTextArea;
   static JScrollPane infoScrollPane;
@@ -28,23 +29,30 @@ public class CreateOtherPlotsPanel {
   static int listOfOtherPlotsWidth = 550;
   static int listOfOtherPlotsHeight = 30;
 
+  static int refreshButtonXoff = 562;
+  static int refreshButtonYoff = 5;
+  static int refreshButtonWidth = 230;
+  static int refreshButtonHeight = 30;
+  
   static int otherPlotsGraphicalWindowXoff = 5;
   static int otherPlotsGraphicalWindowYoff = 40;
   static int otherPlotsGraphicalWindowWidth = IParameters.OTHER_PLOTS_X;
   static int otherPlotsGraphicalWindowHeight = IParameters.OTHER_PLOTS_Y;
   
-  static int infoLabelXoff = 570;
-  static int infoLabelYoff = 15;
+  static int yoff = 30;
+  
+  static int infoLabelXoff = 575;
+  static int infoLabelYoff = 18+yoff;
   static int infoLabelWidth = 200;
   static int infoLabelHeight = 30;
   
   static int infoScrollPaneXoff = 560;
-  static int infoScrollPaneYoff = 55;
+  static int infoScrollPaneYoff = 55+yoff;
   static int infoScrollPaneWidth = 240;
   static int infoScrollPaneHeight = 150;
   
   static int xoLabelXoff = 570;
-  static int xoLabelYoff = 210;
+  static int xoLabelYoff = 210+yoff;
   static int xoLabelWidth = 100;
   static int xoLabelHeight = 30;
   
@@ -100,6 +108,18 @@ public class CreateOtherPlotsPanel {
         listOfOtherPlotsComboBoxSize.height);
     topPartPanel.add(DataReduction.listOfOtherPlotsComboBox);
     
+    refreshButton = new JButton("REFRESH PLOT");
+    refreshButton.setActionCommand("refreshButton");
+    refreshButton.setPreferredSize(new Dimension(
+        refreshButtonWidth,
+        refreshButtonHeight));
+    refreshButton.setBounds(
+        refreshButtonXoff,
+        refreshButtonYoff,
+        refreshButtonWidth,
+        refreshButtonHeight);
+    topPartPanel.add(refreshButton);
+    
     topPartPanel.setPreferredSize(new Dimension(
         topPartPanelWidth,
         topPartPanelHeight));
@@ -111,6 +131,8 @@ public class CreateOtherPlotsPanel {
         topPartPanelSize.height);
     DataReduction.otherPlotsPanel.add(topPartPanel);
   
+    
+    
   }
   
   static void createPlotArea() {
@@ -142,7 +164,7 @@ public class CreateOtherPlotsPanel {
         infoLabelYoff,
         infoLabelSize.width,
         infoLabelSize.height);
-    topPartPanel.add(infoLabel);    
+    DataReduction.otherPlotsPanel.add(infoLabel);    
     
     infoTextArea = new JTextArea(20,40);
     infoTextArea.setEditable(false);

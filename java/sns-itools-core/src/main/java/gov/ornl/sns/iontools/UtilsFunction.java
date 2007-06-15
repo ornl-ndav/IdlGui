@@ -104,6 +104,17 @@ public class UtilsFunction {
       }
   }
   
+  /*
+   * Checks if the input is a integer
+   */
+  static boolean isInputInteger(String sInput) {
+    try {
+      Integer.parseInt(sInput);
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
 }
 
 
