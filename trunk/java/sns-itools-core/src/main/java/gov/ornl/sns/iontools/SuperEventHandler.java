@@ -341,7 +341,7 @@ public class SuperEventHandler extends DataReduction {
     //when using ENTER in other plots xo text field
     if ("xoTextField".equals(evt.getActionCommand())) {
       String sXo = CreateOtherPlotsPanel.xoTextField.getText();
-      if (OtherPlotsAction.isInputInteger(sXo)) {
+      if (UtilsFunction.isInputInteger(sXo)) {
         MouseSelection.infoX = Integer.parseInt(sXo);
         OtherPlotsAction.selectDesiredPlot();
       } else {
@@ -352,13 +352,19 @@ public class SuperEventHandler extends DataReduction {
     //when using ENTER in other plots yo text field
     if ("yoTextField".equals(evt.getActionCommand())) {
       String sYo = CreateOtherPlotsPanel.yoTextField.getText();
-      if (OtherPlotsAction.isInputInteger(sYo)) {
+      if (UtilsFunction.isInputInteger(sYo)) {
         MouseSelection.infoY = Integer.parseInt(sYo);
         OtherPlotsAction.selectDesiredPlot();}
       else {
         OtherPlotsAction.displayErrorMessage();
       }
     }
+    
+    //refresh button in other plots panel
+    if ("refreshButton".equals(evt.getActionCommand())) {
+      OtherPlotsAction.selectDesiredPlot();
+    }
+    
   }
   
 }

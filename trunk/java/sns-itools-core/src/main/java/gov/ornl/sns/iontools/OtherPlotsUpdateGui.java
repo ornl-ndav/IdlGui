@@ -76,9 +76,9 @@ public class OtherPlotsUpdateGui {
     String sResult;
     sResult = "(0 - ";
     if (bIsXo) {
-      sResult += Integer.toString(DataReduction.Nx);
+      sResult += Integer.toString(DataReduction.Nx - 1);
     } else {
-      sResult += Integer.toString(DataReduction.Ny);
+      sResult += Integer.toString(DataReduction.Ny - 1);
     }
     sResult += ")";
     return sResult;

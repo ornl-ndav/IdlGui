@@ -92,6 +92,25 @@ public class OtherPlotsAction {
       break;
     case 4: //Counts = f( TOF , signal_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
+      
+      int xmin = MouseSelectionParameters.signal_xmin;
+      int xmax = MouseSelectionParameters.signal_xmax;
+      int ymin = MouseSelectionParameters.signal_ymin;
+      int ymax = MouseSelectionParameters.signal_ymax;
+      
+      com.rsi.ion.IONVariable ionXmin = new com.rsi.ion.IONVariable(xmin);
+      com.rsi.ion.IONVariable ionXmax = new com.rsi.ion.IONVariable(xmax);
+      com.rsi.ion.IONVariable ionYmin = new com.rsi.ion.IONVariable(ymin);
+      com.rsi.ion.IONVariable ionYmax = new com.rsi.ion.IONVariable(ymax);
+      
+      if (isSelectionValid(xmin, xmax, ymin, ymax)) {
+        cmd += "," + ionXmin;
+        cmd += "," + ionXmax;
+        cmd += "," + ionYmin;
+        cmd += "," + ionYmax;
+      } else {
+        bThreadSafe = false;
+      }
       break;
     case 5: //Counts = f( TOF , back1_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
@@ -135,13 +154,13 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsRightClickX(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
     if (bThreadSafe) {
       startThread(cmd);
       } else {
         displayErrorMessage();
       }
-    
   }
   
   /*
@@ -150,6 +169,7 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsRightClickY(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
     if (bThreadSafe) {
       startThread(cmd);
@@ -163,8 +183,13 @@ public class OtherPlotsAction {
    */
   static void plotTotalCountsSelectedSignal(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+    } else {
+      displayErrorMessage();
+    }
   }
   
   /*
@@ -173,7 +198,11 @@ public class OtherPlotsAction {
   static void plotTotalCountsSelectedBack1(int index) {
     displayInfoMessage(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+    } else {
+      displayErrorMessage();
+    }
   }
 
   /*
@@ -182,7 +211,11 @@ public class OtherPlotsAction {
   static void plotTotalCountsSelectedBack2(int index) {
     displayInfoMessage(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+    } else {
+      displayErrorMessage();
+    }
   }
 
   /*
@@ -202,22 +235,43 @@ public class OtherPlotsAction {
   }
 
   /*
+   * This function displays more info according to plot selected
+   */
+  static void displayMoreInfo(int index) {
+    String sMessage = "";
+    switch(index) {
+      case 2: //Counts = f( TOF , Xo , Sum(Y) )
+        sMessage = "\n\n  Xo = " + MouseSelection.infoX;
+        break;
+      case 3: //Counts = f( TOF , Sum(X) , Yo )
+        sMessage = "\n\n  Yo = " + MouseSelection.infoY;
+        break;
+      case 4: //Counts = f( TOF , signal_selection )
+        sMessage = "\n\nSelection:\n  Xmin = " + MouseSelectionParameters.signal_xmin;
+        sMessage += "  Xmax = " + MouseSelectionParameters.signal_xmax;
+        sMessage += "\n  Ymin = " + MouseSelectionParameters.signal_ymin;
+        sMessage += "  Ymax = " + MouseSelectionParameters.signal_ymax;
+        break;
+    }
+    CreateOtherPlotsPanel.infoTextArea.append(sMessage);
+  }
+  
+  /*
    * This function lets the user know that the input is invalid
    */
   static void displayErrorMessage() {
-    String message = "\n ***** INVALID INPUT *****";
+    String message = "\n\n ***** INVALID INPUT *****";
     CreateOtherPlotsPanel.infoTextArea.append(message);
   }
   
   /*
-   * Checks if the input is a integer
+   * This functions checks that the selection is valid 
    */
-  static boolean isInputInteger(String sInput) {
-    try {
-      Integer.parseInt(sInput);
-    } catch (NumberFormatException nfe) {
+  static boolean isSelectionValid(int xmin, int xmax, int ymin, int ymax) {
+    if (xmin == 0 && xmax == 0 && ymin == 0 && ymax ==0) {
       return false;
+    } else {
+      return true;
     }
-    return true;
   }
 }

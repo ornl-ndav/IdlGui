@@ -1211,6 +1211,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.listOfOtherPlotsComboBox.addActionListener(this);
       CreateOtherPlotsPanel.xoTextField.addActionListener(this);
       CreateOtherPlotsPanel.yoTextField.addActionListener(this);
+      CreateOtherPlotsPanel.refreshButton.addActionListener(this);
+      
     }
       
 }
