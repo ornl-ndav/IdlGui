@@ -326,7 +326,7 @@ int main(int32_t argc,
       
       ValueArg<string> event_file("i", "input", 
                        "event file to read from",
-                       true, NULL, "event file", cmd);
+                       true, "", "event file", cmd);
 
       // Types for the nexus file format
       vector<string> allowed_types;
