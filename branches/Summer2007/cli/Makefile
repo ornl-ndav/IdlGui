@@ -1,6 +1,6 @@
 #$Id$
 CXX = g++ -g
-ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl
+ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl event2nxl
 
 HMAP_OBJS	=	Event_to_Histo_Mapped.o \
 				histo_utils.o bin_vector_utils.o map_utils.o utils.o
@@ -14,7 +14,12 @@ MAP_OBJS	=	Map_Data.o map_utils.o utils.o
 
 RAND_OBJS 	= 	rand2nxl.o
 
+EVENT_OBJS      =	event2nxl.o   
+
 all : $(ALL)
+
+event2nxl: $(EVENT_OBJS)
+	$(CXX) $(EVENT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o event2nxl	
 
 rand2nxl: $(RAND_OBJS)
 	$(CXX) $(RAND_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o rand2nxl	
@@ -34,6 +39,9 @@ Map_Data: $(MAP_OBJS)
 utils.o: utils.cpp utils.hpp
 
 bin_vector_utils.o: bin_vector_utils.cpp bin_vector_utils.hpp utils.hpp
+
+event2nxl.o: event2nxl.cpp
+	$(CXX) `pkg-config nexus --cflags` -c -I ../inc event2nxl.cpp
 
 rand2nxl.o: rand2nxl.cpp
 	$(CXX) `pkg-config nexus --cflags` -c -I ../inc rand2nxl.cpp
