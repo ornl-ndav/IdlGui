@@ -271,17 +271,11 @@ void read_data(vector<NumT> &tof,
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
-      for( i = 0; i < buffer_size; i++ )
+      for( i = 0; i < buffer_size; i+=2 )
         {
-          if (i%2 == 0)
-            {
-              // Use pointer arithmetic for speed
-              tof.push_back(*(buffer+i));
-            }
-          else 
-            {
-              pixel_id.push_back(*(buffer+i));
-            }
+          // Use pointer arithmetic for speed
+          tof.push_back(*(buffer+i));
+          pixel_id.push_back(*(buffer+i+1));
         }
     
       offset += buffer_size;
