@@ -43,11 +43,13 @@ public class OtherPlotsUpdateGui {
   static void makeXoVisible(boolean bVisible) {
       CreateOtherPlotsPanel.xoLabel.setVisible(bVisible);
       CreateOtherPlotsPanel.xoTextField.setVisible(bVisible);
-      CreateOtherPlotsPanel.xoyoRangeLabel.setVisible(bVisible);
+      CreateOtherPlotsPanel.xoRangeLabel.setVisible(bVisible);
       if (bVisible) {
         boolean bIsXo = true;
         String sRangeLabel = getXoYoRangeLabel(bIsXo);
-        CreateOtherPlotsPanel.xoyoRangeLabel.setText(sRangeLabel);
+        CreateOtherPlotsPanel.xoRangeLabel.setText(sRangeLabel);
+        String sXoTextField = getXoYoTextField(bIsXo);
+        CreateOtherPlotsPanel.xoTextField.setText(sXoTextField);
       }
   }
 
@@ -57,19 +59,20 @@ public class OtherPlotsUpdateGui {
   static void makeYoVisible(boolean bVisible) {
     CreateOtherPlotsPanel.yoLabel.setVisible(bVisible);
     CreateOtherPlotsPanel.yoTextField.setVisible(bVisible);
-    CreateOtherPlotsPanel.xoyoRangeLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.yoRangeLabel.setVisible(bVisible);
     if (bVisible) {
       boolean bIsXo = false;
       String sRangeLabel = getXoYoRangeLabel(bIsXo);
-      CreateOtherPlotsPanel.xoyoRangeLabel.setText(sRangeLabel);
+      CreateOtherPlotsPanel.yoRangeLabel.setText(sRangeLabel);
+      String sYoTextField = getXoYoTextField(bIsXo);
+      CreateOtherPlotsPanel.yoTextField.setText(sYoTextField);
     }
   }
 
   /*
-   * Create the string to display in the string 
+   * Create the string to display in the range label labe widget 
    */
   static String getXoYoRangeLabel(boolean bIsXo) {
-    
     String sResult;
     sResult = "(0 - ";
     if (bIsXo) {
@@ -78,6 +81,19 @@ public class OtherPlotsUpdateGui {
       sResult += Integer.toString(DataReduction.Ny);
     }
     sResult += ")";
+    return sResult;
+  }
+  
+  /*
+   * Create the string to display in the text field
+   */
+  static String getXoYoTextField(boolean bIsXo) {
+    String sResult;
+    if (bIsXo) {
+      sResult = Integer.toString(MouseSelection.infoX);
+    } else {
+      sResult = Integer.toString(MouseSelection.infoY);
+    }
     return sResult;
   }
 }

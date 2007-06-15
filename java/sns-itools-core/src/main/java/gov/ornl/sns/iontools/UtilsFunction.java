@@ -91,6 +91,19 @@ public class UtilsFunction {
     return fFileName.getName();
   }
   
+  /*
+   * Checks if the input is valid or not
+   */
+  static boolean isInputValid(int valueToTest,int valueToCompareWithMin, int valueToCompareWithMax) {
+    
+    if (valueToCompareWithMin <= valueToTest &&
+          valueToCompareWithMax > valueToTest) {
+        return true;
+      } else {
+        return false;
+      }
+  }
+  
 }
 
 

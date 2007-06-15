@@ -10,8 +10,7 @@ public class SubmitOtherPlots implements Runnable{
   
     public void run() {
 
-    //ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
-      System.out.println("cmd is: " + this.cmd);
+      //ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
       IonUtils.executeCmd(this.cmd);
 
     }
