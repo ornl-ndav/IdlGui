@@ -1,11 +1,13 @@
 package gov.ornl.sns.iontools;
 
-import java.awt.Graphics;
-
 public class OtherPlotsAction {
+
+  static boolean bThreadSafe;
 
   static void selectDesiredPlot() {
   
+    bThreadSafe = true;
+    
     int iPlotSelected = DataReduction.listOfOtherPlotsComboBox.getSelectedIndex();
     switch (iPlotSelected) {
     case 0:
@@ -30,7 +32,7 @@ public class OtherPlotsAction {
          plotTotalCountsSelectedBack2(iPlotSelected);
          break;
     case 7: 
-      plotfull2dForGivenTbinRange(iPlotSelected);
+        plotfull2dForGivenTbinRange(iPlotSelected);
          break;
     default:
     }
@@ -56,43 +58,54 @@ public class OtherPlotsAction {
   static String createCmd(int index) {
     
     String cmd = "";
-//    Graphics g = DataReduction.c_otherPlots.getGraphics();
     DataReduction.c_ionCon.setDrawable(DataReduction.c_otherPlots);
     
-    com.rsi.ion.IONVariable ionTmpFolder = new com.rsi.ion.IONVariable(DataReduction.sTmpOutputFileName);
+    com.rsi.ion.IONVariable ionTmpHistoFile = new com.rsi.ion.IONVariable(DataReduction.sTmpOutputFileName);
     com.rsi.ion.IONVariable ionNx = new com.rsi.ion.IONVariable(DataReduction.Nx);
     com.rsi.ion.IONVariable ionNy = new com.rsi.ion.IONVariable(DataReduction.Ny);
     
     switch (index) {
     
     case 0: //clear
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index]; 
       break;
     case 1: //Counts = f( TOF , Sum(X) , Sum(Y) )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
     case 2: //Counts = f( TOF , Xo , Sum(Y) )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      if (UtilsFunction.isInputValid(MouseSelection.infoX,0,DataReduction.Nx)) {
+        cmd = IParameters.LIST_OF_PRO_FILES[index];
+        com.rsi.ion.IONVariable ionXo = new com.rsi.ion.IONVariable(MouseSelection.infoX);
+        cmd += "," + ionXo;
+      } else {
+        bThreadSafe = false;
+      }
       break;
     case 3: //Counts = f( TOF , Sum(X) , Yo )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      if (UtilsFunction.isInputValid(MouseSelection.infoY,0,DataReduction.Ny)) {
+             cmd = IParameters.LIST_OF_PRO_FILES[index];
+             com.rsi.ion.IONVariable ionYo = new com.rsi.ion.IONVariable(MouseSelection.infoY);
+             cmd += "," + ionYo;
+        } else {
+          bThreadSafe = false;
+        }
       break;
     case 4: //Counts = f( TOF , signal_selection )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
     case 5: //Counts = f( TOF , back1_selection )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
     case 6: //Counts = f( TOF , back2_selection )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
     case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
-      cmd = IParameters.LIST_OF_PRO_FILES[index] + "," + ionTmpFolder;
+      cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
     default:
     } 
     
-    cmd += "," + ionNx + "," + ionNy;
+    cmd += "," + ionTmpHistoFile + "," + ionNx + "," + ionNy;
 
     return cmd;
     
@@ -123,7 +136,12 @@ public class OtherPlotsAction {
   static void plotTotalCountsRightClickX(int index) {
     displayInfoMessage(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+      } else {
+        displayErrorMessage();
+      }
+    
   }
   
   /*
@@ -133,7 +151,11 @@ public class OtherPlotsAction {
   static void plotTotalCountsRightClickY(int index) {
     displayInfoMessage(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+    } else {
+      displayErrorMessage();
+    }
   }
   
   /*
@@ -179,6 +201,23 @@ public class OtherPlotsAction {
     CreateOtherPlotsPanel.infoTextArea.setText(IParameters.MESSAGE_LIST_OF_OTHER_PLOTS[index]);
   }
 
+  /*
+   * This function lets the user know that the input is invalid
+   */
+  static void displayErrorMessage() {
+    String message = "\n ***** INVALID INPUT *****";
+    CreateOtherPlotsPanel.infoTextArea.append(message);
+  }
+  
+  /*
+   * Checks if the input is a integer
+   */
+  static boolean isInputInteger(String sInput) {
+    try {
+      Integer.parseInt(sInput);
+    } catch (NumberFormatException nfe) {
+      return false;
+    }
+    return true;
+  }
 }
-
-

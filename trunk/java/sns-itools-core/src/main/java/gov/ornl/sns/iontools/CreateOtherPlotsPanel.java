@@ -15,7 +15,8 @@ public class CreateOtherPlotsPanel {
   static JLabel yoLabel;
   static JTextField xoTextField;
   static JTextField yoTextField;
-  static JLabel xoyoRangeLabel;
+  static JLabel xoRangeLabel;
+  static JLabel yoRangeLabel;
   
   static int topPartPanelXoff = 5;
   static int topPartPanelYoff = 5;
@@ -181,14 +182,14 @@ public class CreateOtherPlotsPanel {
       xoTextFieldHeight);
   DataReduction.otherPlotsPanel.add(xoTextField);
   
-  xoyoRangeLabel = new JLabel("(0 - 255)");
-  xoyoRangeLabel.setVisible(false);
-  xoyoRangeLabel.setBounds(
+  xoRangeLabel = new JLabel("");
+  xoRangeLabel.setVisible(false);
+  xoRangeLabel.setBounds(
       xoyoRangeLabelXoff,
       xoyoRangeLabelYoff,
       xoyoRangeLabelWidth,
       xoyoRangeLabelHeight);
-  DataReduction.otherPlotsPanel.add(xoyoRangeLabel);
+  DataReduction.otherPlotsPanel.add(xoRangeLabel);
   
   yoLabel = new JLabel("yo = ");
   yoLabel.setVisible(false);
@@ -210,6 +211,14 @@ public class CreateOtherPlotsPanel {
       yoTextFieldHeight);
   DataReduction.otherPlotsPanel.add(yoTextField);
   
+  yoRangeLabel = new JLabel("");
+  yoRangeLabel.setVisible(false);
+  yoRangeLabel.setBounds(
+      xoyoRangeLabelXoff,
+      xoyoRangeLabelYoff,
+      xoyoRangeLabelWidth,
+      xoyoRangeLabelHeight);
+  DataReduction.otherPlotsPanel.add(yoRangeLabel);
   
   
   }

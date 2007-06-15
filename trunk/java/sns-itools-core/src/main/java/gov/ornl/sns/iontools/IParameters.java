@@ -243,10 +243,18 @@ public interface IParameters {
                                                        "plot_tof_back2_selection",
                                                        "plot_tofo_sumx_sumy"};
             
-      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear display",
-                                                           "Total counts vs TOF for \nfull detector range",
-                                                           "Total counts vs tof for \nthe right-click X",
-                                                           "Total counts vs tof for \nthe right-click Y",
+      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear display.",
+                                                           "Total counts vs TOF for \nfull detector range.",
+                                                           "Total counts vs TOF for xo integrated\n" +
+                                                           "over the full range of Ny.\n" +
+                                                           "xo can be defined using a right mouse\n" +
+                                                           "click on the main plot or by editing\n" +
+                                                           "the text box below.",
+                                                           "Total counts vs TOF for yo integrated\n" +
+                                                           "over the full range of Nx.\n" +
+                                                           "yo can be defined using a right mouse\n" + 
+                                                           "click on the main plot or by editing\n" +
+                                                           "text box below.",
                                                            "Total counts vs tof for \nthe selected signal selection",
                                                            "Total counts vs tof for \nthe selected background1 selection",
                                                            "Total counts vs tof for \nthe selected background2 selection",
