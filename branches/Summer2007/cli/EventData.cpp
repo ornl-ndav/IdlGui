@@ -1,3 +1,10 @@
+/** Author: Wes Kendall
+ *  Date: 06-18-07
+ *  \file EventData.cpp
+ *  \brief The implementation for the EventData
+ *         class.
+ */
+
 #ifndef _IMPLEMENTATION
 #define _IMPLEMENTATION
 
@@ -9,7 +16,6 @@ using std::runtime_error;
 template <typename NumT>
 void EventData<NumT>::read_data(const Config &config) 
 {
-  const size_t BLOCK_SIZE = 1024;
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
@@ -28,7 +34,7 @@ void EventData<NumT>::read_data(const Config &config)
   size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
 
   // Go to the start of file and begin reading
-  file.seekg(0,std::ios::beg);
+  file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
       file.seekg(offset*data_size, std::ios::beg);
@@ -59,13 +65,13 @@ void EventData<NumT>::read_data(const Config &config)
 template <typename NumT>
 const vector<NumT> EventData<NumT>::get_tof(void)
 {
-  return static_cast<const vector<NumT> > (EventData::tof);
+  return static_cast< const vector<NumT> > (EventData::tof);
 }
 
 template <typename NumT>
 const vector<NumT> EventData<NumT>::get_pixel_id(void)
 {
-  return static_cast<const vector<NumT> > (EventData::pixel_id);
+  return static_cast< const vector<NumT> > (EventData::pixel_id);
 }
 
 #endif

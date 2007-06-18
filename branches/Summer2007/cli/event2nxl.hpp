@@ -1,7 +1,15 @@
+/** Author: Wes Kendall
+ *  Date: 06-18-07
+ *  \file event2nxl.hpp
+ *  \brief The function declarations, includes, and class/struct 
+ *         definitions for event2nxl.cpp.
+ */
+
 #ifndef _EVENT2NXL_HPP
 #define _EVENT2NXL_HPP
 
 #include "napi.h"
+#include "NexusUtil.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,6 +22,9 @@
 
 using std::vector;
 using std::string;
+
+const string VERSION("1.0");
+const size_t BLOCK_SIZE = 1024;
 
 /** \struct Config
  *  \brief Holds all the configuration variables
@@ -29,7 +40,7 @@ struct Config
   string event_file;
 };
 
-/** \class EventData
+/** \class Event_Data
  *  \brief Holds all the data from the event file and
  *         includes the functions for working on the
  *         data
@@ -41,12 +52,12 @@ class EventData
     vector<NumT> tof;
     vector<NumT> pixel_id;
   public:
-    /** \fn void read_data(const Config &)
+    /** \fn void read_data(const Config &config)
      *  \brief Reads information from the event file and populates
      *         the data vectors.
      *  \param config The configuration options.
      */
-    void read_data(const Config &);
+    void read_data(const Config &config);
 
     /** \fn const vector<NumT> get_tof(void)
      *  \brief Returns a constant vector to the private tof vector.
