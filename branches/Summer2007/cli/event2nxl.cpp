@@ -1,7 +1,7 @@
 /** Author: Wes Kendall
- *  Date: 06-13-07
- *  \file rand2nxl.cpp
- *  \brief Creates a nexus light file with random values.
+ *  Date: 06-18-07
+ *  \file event2nxl.cpp
+ *  \brief Creates a nexus light file with a given event file.
  */
 
 #include "event2nxl.hpp"
@@ -15,8 +15,6 @@ using std::runtime_error;
 using std::type_info;
 using namespace TCLAP;
 
-const string VERSION("1.0");
-
 /** \fn void layout_nexus_file(NXhandle &file_id,
   *                            const Config &config)
   * \brief Creates the nexus file and makes and opens 
@@ -26,58 +24,13 @@ const string VERSION("1.0");
   * \param config Contains the format of the file and the
   *        name of the file.
   */
-void layout_nexus_file(NXhandle &file_id,
+void layout_nexus_file(NexusUtil &nexus_util,
                        const Config &config) 
 {
-  NXaccess file_access;
-
-  // Get the format of the nexus file
-  if (config.format == "hdf4")
-    {
-      file_access = NXACC_CREATE4;
-    }
-  else if (config.format =="hdf5")
-    {
-      file_access = NXACC_CREATE5;
-    }
-  else if (config.format == "xml")
-    {
-      file_access = NXACC_CREATEXML;
-    }
-  else
-    {
-      throw runtime_error("Invalid nexus format type: "+config.format);
-    }
- 
-  // Open the file, make all the groups and close them off
-  if (NXopen(config.out_path.c_str(), file_access, &file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to open nexus file: "+config.out_path);
-    }
-  if (NXmakegroup(file_id, "entry", "NXentry") != NX_OK)
-    {
-      throw runtime_error("Failed to make group: entry");
-    }
-  if (NXopengroup(file_id, "entry", "NXentry") != NX_OK)
-    {
-      throw runtime_error("Failed to open group: entry");
-    }
-  if (NXmakegroup(file_id, "bank1", "NXevent_data") != NX_OK)
-    {
-      throw runtime_error("Failed to make group: bank1");
-    }
-  if (NXopengroup(file_id, "bank1", "NXevent_data") != NX_OK)
-    {
-      throw runtime_error("Failed to open group: bank1");
-    }
-  if (NXclosegroup(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close group: bank1");
-    }
-  if (NXclosegroup(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close group: entry");
-    }
+  nexus_util.make_group("entry", "NXentry");
+  nexus_util.open_group("entry", "NXentry");
+  nexus_util.make_group("bank1", "NXevent_data");
+  nexus_util.open_group("bank1", "NXevent_data");
 }
 
 /** \fn inline int typename_to_nexus_type(const int32_t &val)
@@ -121,7 +74,7 @@ inline int typename_to_nexus_type(const uint32_t &val)
   * \param data_name The name of the data.
   */
 template <typename NumT>
-void write_data(const NXhandle &file_id,
+void write_data(NexusUtil &nexus_util,
                 const vector<NumT> &data, 
                 const string &group_path,
                 const string &data_name)
@@ -130,39 +83,15 @@ void write_data(const NXhandle &file_id,
   // to make sure the original is never changed
   vector<NumT> nx_data(data);
   // Get the size of the data for referencing it
-  int size = data.size();
+  int dimensions = data.size();
   // Get the nexus data type of the template
   NumT type;
   int nexus_data_type = typename_to_nexus_type(type);
 
-  // Open the group 
-  if (NXopenpath(file_id, group_path.c_str()) != NX_OK)
-    {
-      throw runtime_error("Failed to open group: "+group_path);
-    }
-  // Make the data, open it, and write it
-  if (NXmakedata(file_id, data_name.c_str(), 
-                 nexus_data_type, 1, &size) != NX_OK)
-    {
-      throw runtime_error("Failed make data: "+data_name);
-    }
-  if (NXopendata(file_id, data_name.c_str()) != NX_OK)
-    {
-      throw runtime_error("Failed to open data: "+data_name);
-    }
-  if (NXputdata(file_id, &nx_data[0]) != NX_OK)
-    {
-      throw runtime_error("Failed to create data under "+data_name);
-    }
-  // Close the data and the group
-  if (NXclosedata(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close data: "+data_name);
-    }
-  if (NXclosegroup(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close group: "+group_path);
-    }
+  nexus_util.open_path(group_path);
+  nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
+  nexus_util.open_data(data_name);
+  nexus_util.put_data(&nx_data[0]);
 }
 
 /** \fn void write_attr(const NXhandle &file_id,
@@ -177,7 +106,7 @@ void write_data(const NXhandle &file_id,
   *                    the attribute
   * \param data_path The path to the data
   */
-void write_attr(const NXhandle &file_id,
+void write_attr(NexusUtil &nexus_util,
                 const string &attr_name,
                 const string &attr_value,
                 const string &data_path)
@@ -185,27 +114,9 @@ void write_attr(const NXhandle &file_id,
   // Make a non const variable for NXputattr
   string nx_attr_value(attr_value);
 
-  // Open the data
-  if (NXopenpath(file_id, data_path.c_str()) != NX_OK)
-    {
-      throw runtime_error("Failed to open data: "+data_path);
-    }
-  // Write the attribute for the data
-  if (NXputattr(file_id, attr_name.c_str(), 
-                &nx_attr_value[0], attr_value.length(),
-                NX_CHAR) != NX_OK)
-    {
-      throw runtime_error("Failed to create attribute: "+attr_name);
-    }
-  // Close the data and the group
-  if (NXclosedata(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close data: "+data_path);
-    }
-  if (NXclosegroup(file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close group: "+data_path);
-    }
+  nexus_util.open_path(data_path);
+  nexus_util.put_attr(attr_name, &nx_attr_value[0], 
+                      attr_value.length(), NX_CHAR);
 }
 
 /** \fn int main(int32_t argc,
@@ -215,7 +126,6 @@ void write_attr(const NXhandle &file_id,
  */
 int main(int32_t argc, 
          char *argv[]) {
-  NXhandle file_id;
   struct Config config;
   EventData <uint32_t>event_data;
 
@@ -261,19 +171,16 @@ int main(int32_t argc,
   
   // Gather the information from the event file
   event_data.read_data(config);
+ 
+  // Create a new nexus utility
+  NexusUtil nexus_util(config.out_path, config.format);
   // Open nexus file and layout groups
-  layout_nexus_file(file_id, config);
+  layout_nexus_file(nexus_util, config);
 
   // Populate the nexus file with information
-  write_data(file_id, event_data.get_tof(), "/entry/bank1", "time_of_flight");
-  write_data(file_id, event_data.get_pixel_id(), "/entry/bank1", "pixel_number");
-  write_attr(file_id, "units", "10^-7second", "/entry/bank1/pixel_number");
-
-  // Close the nexus file
-  if (NXclose(&file_id) != NX_OK)
-    {
-      throw runtime_error("Failed to close nexus file: "+config.out_path);
-    }
+  write_data(nexus_util, event_data.get_tof(), "/entry/bank1", "time_of_flight");
+  write_data(nexus_util, event_data.get_pixel_id(), "/entry/bank1", "pixel_number");
+  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/pixel_number");
 
   return 0;
 }
