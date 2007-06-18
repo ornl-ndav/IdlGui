@@ -15,6 +15,8 @@ using std::runtime_error;
 using std::type_info;
 using namespace TCLAP;
 
+const string VERSION("1.0");
+
 /** \fn void layout_nexus_file(NXhandle &file_id,
   *                            const Config &config)
   * \brief Creates the nexus file and makes and opens 
@@ -215,7 +217,6 @@ int main(int32_t argc,
          char *argv[]) {
   NXhandle file_id;
   struct Config config;
-  const string VERSION("1.0");
   EventData <uint32_t>event_data;
 
   try 
