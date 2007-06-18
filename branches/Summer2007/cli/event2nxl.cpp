@@ -4,15 +4,7 @@
  *  \brief Creates a nexus light file with random values.
  */
 
-#include "napi.h"
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <fstream>
-#include <stdexcept>
-#include <libgen.h>
-#include <typeinfo>
-#include <tclap/CmdLine.h>
+#include "event2nxl.hpp"
 
 using std::string;
 using std::cerr;
@@ -21,22 +13,7 @@ using std::endl;
 using std::vector;
 using std::runtime_error;
 using std::type_info;
-using std::ifstream;
 using namespace TCLAP;
-
-/** \struct Config
- *  \brief Holds all the configuration variables
- *
- *  The config struct holds all the information obtained
- *  by the command line parser the all the variables can
- *  easily be passed to functions.
- */
-struct Config 
-{
-  string out_path;
-  string format;
-  string event_file;
-};
 
 /** \fn void layout_nexus_file(NXhandle &file_id,
   *                            const Config &config)
@@ -229,68 +206,6 @@ void write_attr(const NXhandle &file_id,
     }
 }
 
-/** \fn template <typename NumT>
- *      void read_data(vector<NumT> &tof,
- *      vector<NumT> &pixel_id,
- *      const Config &config)
- *  \brief Reads information from the even file and populates
- *         the data vectors.
- *  \param tof The vector to hold time of flight values.
- *  \param pixel_id The vector to hold pixel id values.
- *  \param config The configuration options.
- */
-template <typename NumT>
-void read_data(vector<NumT> &tof,
-               vector<NumT> &pixel_id,
-               const Config &config)
-{
-  const size_t BLOCK_SIZE = 1024;
-  NumT buffer[BLOCK_SIZE];
-  size_t offset = 0;
-  size_t i;
-  size_t data_size = sizeof(NumT);
-
-  // Open the event file
-  ifstream file(config.event_file.c_str(), std::ios::binary);
-  if(!(file.is_open()))
-    {
-      throw runtime_error("Failed opening file: "+config.event_file);
-    } 
-  
-  // Determine the file and buffer size
-  file.seekg(0, std::ios::end);
-  size_t file_size = file.tellg()/data_size;
-  size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
-
-  // Go to the start of file and begin reading
-  file.seekg(0,std::ios::beg);
-  while(offset < file_size)
-    {
-      file.seekg(offset*data_size, std::ios::beg);
-      file.read(reinterpret_cast<char *>(buffer), buffer_size*data_size);
-
-      // Populate the time of flight and pixel id
-      // vectors with the data from the event file
-      for( i = 0; i < buffer_size; i+=2 )
-        {
-          // Use pointer arithmetic for speed
-          tof.push_back(*(buffer+i));
-          pixel_id.push_back(*(buffer+i+1));
-        }
-    
-      offset += buffer_size;
-
-      // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
-        {
-          buffer_size = file_size-offset;
-        }
-    }
-
-  // Close event file
-  file.close();
-}
-
 /** \fn int main(int32_t argc,
  *               char *argv[])
  *  \brief Parses the command line and calls the necessary
@@ -301,8 +216,7 @@ int main(int32_t argc,
   NXhandle file_id;
   struct Config config;
   const string VERSION("1.0");
-  vector<uint32_t> tof;
-  vector<uint32_t> pixel_id;
+  EventData <uint32_t>event_data;
 
   try 
     {
@@ -345,13 +259,13 @@ int main(int32_t argc,
     }
   
   // Gather the information from the event file
-  read_data(tof, pixel_id, config);
+  event_data.read_data(config);
   // Open nexus file and layout groups
   layout_nexus_file(file_id, config);
 
   // Populate the nexus file with information
-  write_data(file_id, tof, "/entry/bank1", "time_of_flight");
-  write_data(file_id, pixel_id, "/entry/bank1", "pixel_number");
+  write_data(file_id, event_data.get_tof(), "/entry/bank1", "time_of_flight");
+  write_data(file_id, event_data.get_pixel_id(), "/entry/bank1", "pixel_number");
   write_attr(file_id, "units", "10^-7second", "/entry/bank1/pixel_number");
 
   // Close the nexus file
