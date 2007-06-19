@@ -87,11 +87,22 @@ void write_data(NexusUtil &nexus_util,
   // Get the nexus data type of the template
   NumT type;
   int nexus_data_type = typename_to_nexus_type(type);
+  int i;
+  int size;
 
   nexus_util.open_path(group_path);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
-  nexus_util.put_data(&nx_data[0]);
+  
+  size = BLOCK_SIZE;
+  for (i = 0; i < dimensions; i+=size) {
+    if (dimensions - i < size)
+      {
+        size = dimensions - i;
+      }
+    nexus_util.put_slab(&nx_data[0], &i, &size);
+  }
+//  nexus_util.put_data(&nx_data[0]);
 }
 
 /** \fn void write_attr(const NXhandle &file_id,
