@@ -1,5 +1,8 @@
 /** Author: Wes Kendall
  *  Date: 06-18-07
+ *  \file nxl2event.cpp
+ *  \brief Takes a nexus file and converts it
+ *         back to an event file.
  */
 
 #include "napi.h"
@@ -16,11 +19,33 @@ using std::endl;
 using std::string;
 using namespace TCLAP;
 
-int main (int argc, char *argv[])
+void close_bank(NexusUtil &nexus_util)
+{
+  nexus_util.close_group();
+  nexus_util.close_group();
+}
+
+void get_data(const string &data_name, void *data, NexusUtil &nexus_util)
 {
   int rank;
   int dimensions;
-  int nexus_data_type;  
+  int nexus_data_type;
+
+  nexus_util.open_data(data_name.c_str());
+  nexus_util.get_info(&rank, &dimensions, &nexus_data_type);
+  nexus_util.malloc((void **)&data, rank, &dimensions, nexus_data_type);
+  nexus_util.get_data(data);
+  nexus_util.close_data();
+}
+
+void open_bank(const string &bank_name, NexusUtil &nexus_util)
+{
+  nexus_util.open_group("entry", "NXentry");
+  nexus_util.open_group(bank_name.c_str(), "NXevent_data");
+}
+
+int main(int argc, char *argv[])
+{
   uint32_t *tof;
   uint32_t *pixel_id;
   string input_file;
@@ -71,21 +96,11 @@ int main (int argc, char *argv[])
   // Create a new nexus utility
   NexusUtil nexus_util(input_file, NXACC_READ);
   
-  nexus_util.open_group("entry", "NXentry");
-  nexus_util.open_group("bank1", "NXevent_data");
+  open_bank("bank1", nexus_util);
 
-  nexus_util.open_data("time_of_flight");
-  nexus_util.get_info(&rank, &dimensions, &nexus_data_type);
-  nexus_util.malloc((void **)&tof, rank, &dimensions, nexus_data_type);
-  nexus_util.get_data(tof);
-  nexus_util.close_data();
+  get_data("time_of_flight", &tof, nexus_util);
 
-  nexus_util.open_data("pixel_number");
-  nexus_util.get_info(&rank, &dimensions, &nexus_data_type);
-  nexus_util.malloc((void **)&pixel_id, rank, &dimensions, nexus_data_type);
-  nexus_util.get_data(pixel_id);
-  nexus_util.close_data();
+  get_data("pixel_number", &pixel_id, nexus_util);
 
-  nexus_util.close_group();
-  nexus_util.close_group();
+  close_bank(nexus_util);
 }
