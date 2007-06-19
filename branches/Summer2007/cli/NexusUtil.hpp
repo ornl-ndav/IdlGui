@@ -1,3 +1,10 @@
+/** Author: Wes Kendall
+ *  Date: 06-18-07
+ *  \file NexusUtil.hpp
+ *  \brief The class declaration and prototypes for
+ *         NexusUtil.cpp.
+ */
+
 #ifndef _NEXUS_UTIL_HPP
 #define _NEXUS_UTIL_HPP
 
@@ -87,13 +94,23 @@ class NexusUtil
      *               void *value,
      *               int length,
      *               int nx_type)
-     *  \brief Writes an attribute to a piece of data, while checking for
-     *         errors.
+     *  \brief Writes an attribute to a piece of data, 
+     *         while checking for errors.
      */
     void put_attr(const string &name, 
                   void *value, 
                   int length, 
                   int nx_type);
+    
+    /** \fn put_slab(void *nx_data,
+     *               int start,
+     *               int size)
+     *  \brief Writes a chunk of data to a nexus file, 
+     *         while checking for errors.
+     */
+    void put_slab(void *nx_data, 
+                  int *start,
+                  int *size);
 };
 
 #endif

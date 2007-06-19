@@ -115,7 +115,7 @@ void NexusUtil::close_data(void)
     }
 }
 
-void NexusUtil:: put_attr(const string &name, void *value, 
+void NexusUtil::put_attr(const string &name, void *value, 
                           int length, int nx_type)
 {
   if (NXputattr(file_id, name.c_str(),
@@ -123,5 +123,13 @@ void NexusUtil:: put_attr(const string &name, void *value,
                 nx_type) != NX_OK)
     {
       throw runtime_error("Failed to create attribute: "+name);
+    }
+}
+
+void NexusUtil::put_slab(void *nx_data, int *start, int *size)
+{
+  if (NXputslab(file_id, nx_data, start, size) != NX_OK)
+    {
+      throw runtime_error("Failed to create data chunk");
     }
 }
