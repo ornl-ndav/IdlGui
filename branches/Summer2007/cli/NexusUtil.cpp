@@ -11,28 +11,9 @@
 using std::runtime_error;
 using std::string;
 
-NexusUtil::NexusUtil(const string &out_path, const string &format)
+NexusUtil::NexusUtil(const string &out_path, 
+                     const NXaccess &file_access)
 {
-  NXaccess file_access;
-
-  // Get the format of the nexus file
-  if (format == "hdf4")
-    {
-      file_access = NXACC_CREATE4;
-    }
-  else if (format =="hdf5")
-    {
-      file_access = NXACC_CREATE5;
-    }
-  else if (format == "xml")
-    {
-      file_access = NXACC_CREATEXML;
-    }
-  else
-    {
-      throw runtime_error("Invalid nexus format type: "+format);
-    }
-
   if (NXopen(out_path.c_str(), file_access, &file_id) != NX_OK)
     {
       throw runtime_error("Failed to open nexus file: "+out_path);
@@ -131,5 +112,48 @@ void NexusUtil::put_slab(void *nx_data, int *start, int *size)
   if (NXputslab(file_id, nx_data, start, size) != NX_OK)
     {
       throw runtime_error("Failed to create data chunk");
+    }
+}
+
+void NexusUtil::get_data(void *nx_data)
+{
+  if (NXgetdata(file_id, nx_data) != NX_OK)
+    {
+      throw runtime_error("Failed to get data");
+    }
+}
+
+void NexusUtil::get_slab(void *nx_data, int *start, int *size)
+{
+  if (NXgetslab(file_id, nx_data, start, size) != NX_OK)
+    {
+      throw runtime_error("Failed to get slab");
+    }
+}
+
+void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
+                       int nexus_data_type)
+{
+  if (NXmalloc(nx_data, rank, dimensions, nexus_data_type) != NX_OK)
+    {
+      throw runtime_error("Malloc failure");
+    }
+}
+
+void NexusUtil::free(void **nx_data)
+{
+  if (NXfree(nx_data) != NX_OK)
+    {
+      throw runtime_error("Free failure");
+    }
+}
+
+void NexusUtil::get_info(int *rank, int *dimensions, 
+                         int *nexus_data_type)
+{
+  if (NXgetinfo(file_id, rank, dimensions, 
+                nexus_data_type) != NX_OK)
+    {
+      throw runtime_error("Failed to get data information");
     }
 }

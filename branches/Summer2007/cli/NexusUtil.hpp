@@ -20,12 +20,12 @@ class NexusUtil
     NXhandle file_id;
   public:
     /** \fn NexusUtil(const string &out_path, 
-     *                const string &format)
+     *                const NXaccess &file_access)
      *  \brief Constructor that opens the nexus file with the 
      *         specified format.
      */
     NexusUtil(const string &out_path, 
-              const string &format);
+              const NXaccess &file_access);
 
     /** \fn ~NexusUtil(void)
      *  \brief Destructor that closes the nexus file.
@@ -111,6 +111,48 @@ class NexusUtil
     void put_slab(void *nx_data, 
                   int *start,
                   int *size);
+
+    /** \fn get_data(void *nx_data)
+     *  \brief Gets data from the nexus file, 
+     *         while checking for errors.
+     */
+    void get_data(void *nx_data);
+    
+    /** \fn get_slab(void *nx_data,
+     *               int *start,
+     *               int *size)
+     *  \brief Gets a chunk of data from the nexus file, 
+     *         while checking for errors.
+     */
+    void get_slab(void *nx_data, 
+                  int *start, 
+                  int *size);
+
+    /** \fn malloc(void **nx_data,
+     *             int rank,
+     *             int *dimensions,
+     *             int nexus_data_type)
+     *  \brief Uses NXmalloc, while checking for errors.
+     */
+    void malloc(void **nx_data,
+                int rank,
+                int *dimensions,
+               int nexus_data_type);
+
+    /* \fn free(void **nx_data)
+     * \brief Calls NXfree, while checking for errors.
+     */
+    void free(void **nx_data);
+
+    /* \fn get_info(int *rank,
+     *              int *dimensions,
+     *              int *nexus_data_type)
+     * \brief Gets nexus data information, 
+     *        while checking for errors.
+     */
+    void get_info(int *rank,
+                  int *dimensions,
+                  int *nexus_data_type);
 };
 
 #endif
