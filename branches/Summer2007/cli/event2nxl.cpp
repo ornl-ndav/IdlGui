@@ -138,6 +138,7 @@ int main(int32_t argc,
          char *argv[]) {
   struct Config config;
   EventData <uint32_t>event_data;
+  NXaccess file_access;
 
   try 
     {
@@ -179,6 +180,24 @@ int main(int32_t argc,
       config.out_path = out_path.getValue();
       config.event_file = event_file.getValue();
       config.format = format.getValue();
+  
+      // Get the format of the nexus file
+      if (format.getValue() == "hdf4")
+        {
+          file_access = NXACC_CREATE4;
+        }
+      else if (format.getValue() =="hdf5")
+        {
+          file_access = NXACC_CREATE5;
+        }
+      else if (format.getValue() == "xml")
+        {
+          file_access = NXACC_CREATEXML;
+        }
+      else
+        {
+          throw runtime_error("Invalid nexus format type: "+format.getValue());
+        }
     }
   catch (ArgException &e)
     {
@@ -188,9 +207,9 @@ int main(int32_t argc,
   
   // Gather the information from the event file
   event_data.read_data(config);
- 
+
   // Create a new nexus utility
-  NexusUtil nexus_util(config.out_path, config.format);
+  NexusUtil nexus_util(config.out_path, file_access);
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config);
 
