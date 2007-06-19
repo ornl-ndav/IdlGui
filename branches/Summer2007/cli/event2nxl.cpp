@@ -102,7 +102,6 @@ void write_data(NexusUtil &nexus_util,
       }
     nexus_util.put_slab(&nx_data[0], &i, &size);
   }
-//  nexus_util.put_data(&nx_data[0]);
 }
 
 /** \fn void write_attr(const NXhandle &file_id,
@@ -156,7 +155,7 @@ int main(int32_t argc,
       
       ValueArg<string> event_file("i", "input", 
                        "event file to read from",
-                       true, "", "event file", cmd);
+                       false, "", "event file", cmd);
 
       // Types for the nexus file format
       vector<string> allowed_types;
@@ -166,10 +165,16 @@ int main(int32_t argc,
       ValueArg<string> format("f", "format",
                        "format for the nexus file (default is hdf5)",
                        false, "hdf5", allowed_types, cmd);
-      
+     
       // Parse the command-line
       cmd.parse(argc, argv); 
-
+      
+      if (!event_file.isSet()) 
+        {
+          cerr << "Error: Must specify an input file" << endl;
+          exit(1);
+        }
+    
       // Fill out the config object
       config.out_path = out_path.getValue();
       config.event_file = event_file.getValue();
@@ -178,6 +183,7 @@ int main(int32_t argc,
   catch (ArgException &e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
+      exit(1);
     }
   
   // Gather the information from the event file
