@@ -10,10 +10,9 @@ public class OtherPlotsAction {
   
     bThreadSafe = true;
         
-    int iPlotSelected = DataReduction.listOfOtherPlotsComboBox.getSelectedIndex();
+    int iPlotSelected = CreateOtherPlotsPanel.listOfOtherPlotsComboBox.getSelectedIndex();
     switch (iPlotSelected) {
     case 0:
-         clearPlot(iPlotSelected);
          break;
     case 1:
          plotTotalCountsFullDetectorRange(iPlotSelected);

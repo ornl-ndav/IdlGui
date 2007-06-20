@@ -225,7 +225,7 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-      static final String[] LIST_OF_OTHER_PLOTS     = {"Clear",
+      static final String[] LIST_OF_OTHER_PLOTS     = {" ------- SELECT ME ------- ",
                                                        "Counts = f( TOF , Sum(X) , Sum(Y) )",
                                                        "Counts = f( TOF , Xo , Sum(Y) )",
                                                        "Counts = f( TOF , Sum(X) , Yo )",
@@ -243,7 +243,7 @@ public interface IParameters {
                                                        "plot_tof_back2_selection",
                                                        "plot_tofo_sumx_sumy"};
             
-      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear display.",
+      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear Plot area",
                                                            "Total counts vs TOF for \nfull detector range.",
                                                            "Total counts vs TOF for xo integrated\n" +
                                                            "over the full range of Ny.\n" +

@@ -385,7 +385,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JComboBox       	instrList;
     static JComboBox        loadctComboBox;
     static JComboBox        detectorAngleUnuitsComboBox;
-    static JComboBox        listOfOtherPlotsComboBox;
+    
     
 // ******************************
 // Init Method
@@ -699,8 +699,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	MouseSelection.saveXYinfo(x_max, y_max);
 	    	//if right tab is on 'other plots' and plot selected is xo or yo, update plot
         if (tabbedPane.getSelectedIndex() == 2 &&
-            (DataReduction.listOfOtherPlotsComboBox.getSelectedIndex() == 2 ||
-             DataReduction.listOfOtherPlotsComboBox.getSelectedIndex() == 3)) {
+            (CreateOtherPlotsPanel.listOfOtherPlotsComboBox.getSelectedIndex() == 2 ||
+             CreateOtherPlotsPanel.listOfOtherPlotsComboBox.getSelectedIndex() == 3)) {
               OtherPlotsAction.selectDesiredPlot();
         } else {
               dataReductionTabbedPane.setSelectedIndex(0);
@@ -1211,12 +1211,13 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.saveFileInfoMessageTextfield.addActionListener(this);
       
       //from other plots
-      DataReduction.listOfOtherPlotsComboBox.addActionListener(this);
+      CreateOtherPlotsPanel.listOfOtherPlotsComboBox.addActionListener(this);
       CreateOtherPlotsPanel.xoTextField.addActionListener(this);
       CreateOtherPlotsPanel.yoTextField.addActionListener(this);
       CreateOtherPlotsPanel.refreshButton.addActionListener(this);
       CreateOtherPlotsPanel.tBinMinTextField.addActionListener(this);
       CreateOtherPlotsPanel.tBinMaxTextField.addActionListener(this);
+      CreateOtherPlotsPanel.clearButton.addActionListener(this);
     }
       
 }
