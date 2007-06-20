@@ -49,10 +49,7 @@ public class ParametersConfiguration {
     static String sYMax;
     static String sYMin;
     
-    
-    
-    
-    
-    
-    
+    //tbin min and max
+    static int TBinMin = 0;
+    static int TBinMax = 0;
 }

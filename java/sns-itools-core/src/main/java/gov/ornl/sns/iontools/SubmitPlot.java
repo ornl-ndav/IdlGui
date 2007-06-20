@@ -112,7 +112,6 @@ public class SubmitPlot implements Runnable {
     for (int i=1; i<iResultSize; ++i) {
       DataReduction.generalInfoTextArea.append(myResultArray[i]+"\n");
     }
-    
   }
   
   
