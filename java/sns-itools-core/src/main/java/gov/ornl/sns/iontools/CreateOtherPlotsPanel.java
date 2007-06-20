@@ -20,24 +20,42 @@ public class CreateOtherPlotsPanel {
   static JLabel           tBinMaxLabel;
   static JLabel           tBinMinRangeLabel;
   static JLabel           tBinMaxRangeLabel;
+  static JLabel           list1OfOtherPlotsLabel;
+  static JLabel           list2OfOtherPlotsLabel;
   static JTextArea        infoTextArea;
   static JTextField       tBinMinTextField;
   static JTextField       tBinMaxTextField;
   static JTextField       xoTextField;
   static JTextField       yoTextField;
-  static JComboBox        listOfOtherPlotsComboBox;
+  static JComboBox        list1OfOtherPlotsComboBox;
+  static JComboBox        list2OfOtherPlotsComboBox;
   
   static int topPartPanelXoff = 5;
   static int topPartPanelYoff = 5;
   static int topPartPanelWidth = 800;
   static int topPartPanelHeight = 40;
   
-  static int listOfOtherPlotsXoff = 5;
-  static int listOfOtherPlotsYoff = 5;
-  static int listOfOtherPlotsWidth = 300;
-  static int listOfOtherPlotsHeight = 30;
+  static int list1OfOtherPlotsLabelXoff = 5;
+  static int list1OfOtherPlotsLabelYoff = 5;
+  static int list1OfOtherPlotsLabelWidth = 50;
+  static int list1OfOtherPlotsLabelHeight = 30;
+  
+  static int list1OfOtherPlotsXoff = 45;
+  static int list1OfOtherPlotsYoff = 5;
+  static int list1OfOtherPlotsWidth = 150;
+  static int list1OfOtherPlotsHeight = 30;
 
-  static int refreshButtonXoff = 530;
+  static int list2OfOtherPlotsLabelXoff = 250;
+  static int list2OfOtherPlotsLabelYoff = 5;
+  static int list2OfOtherPlotsLabelWidth = 50;
+  static int list2OfOtherPlotsLabelHeight = 30;
+  
+  static int list2OfOtherPlotsXoff = 285;
+  static int list2OfOtherPlotsYoff = list1OfOtherPlotsYoff;
+  static int list2OfOtherPlotsWidth = 180;
+  static int list2OfOtherPlotsHeight = list1OfOtherPlotsHeight;
+  
+  static int refreshButtonXoff = 525;
   static int refreshButtonYoff = 5;
   static int refreshButtonWidth = 130;
   static int refreshButtonHeight = 30;
@@ -137,23 +155,47 @@ public class CreateOtherPlotsPanel {
     
     topPartPanel = new JPanel();
     topPartPanel.setLayout(null);
-        
-    listOfOtherPlotsComboBox = new JComboBox(IParameters.LIST_OF_OTHER_PLOTS);
-    listOfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-    listOfOtherPlotsComboBox.setSelectedIndex(0);
-    listOfOtherPlotsComboBox.setActionCommand("listOfOtherPlotsComboBox");
-    listOfOtherPlotsComboBox.setEnabled(true);
-    listOfOtherPlotsComboBox.setPreferredSize(new Dimension(
-        listOfOtherPlotsWidth,
-        listOfOtherPlotsHeight));
-    Dimension listOfOtherPlotsComboBoxSize = listOfOtherPlotsComboBox.getPreferredSize();
-    listOfOtherPlotsComboBox.setBounds(
-        listOfOtherPlotsXoff,
-        listOfOtherPlotsYoff,
-        listOfOtherPlotsComboBoxSize.width,
-        listOfOtherPlotsComboBoxSize.height);
-    topPartPanel.add(listOfOtherPlotsComboBox);
     
+    list1OfOtherPlotsLabel = new JLabel("TOF :");
+    list1OfOtherPlotsLabel.setBounds(
+        list1OfOtherPlotsLabelXoff,
+        list1OfOtherPlotsLabelYoff,
+        list1OfOtherPlotsLabelWidth,
+        list1OfOtherPlotsLabelHeight);
+    topPartPanel.add(list1OfOtherPlotsLabel);
+    
+    list1OfOtherPlotsComboBox = new JComboBox(IParameters.LIST_OF_OTHER_PLOTS_PART1);
+    list1OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+    list1OfOtherPlotsComboBox.setSelectedIndex(0);
+    list1OfOtherPlotsComboBox.setActionCommand("list1OfOtherPlotsComboBox");
+    list1OfOtherPlotsComboBox.setEnabled(true);
+    list1OfOtherPlotsComboBox.setBounds(
+        list1OfOtherPlotsXoff,
+        list1OfOtherPlotsYoff,
+        list1OfOtherPlotsWidth,
+        list1OfOtherPlotsHeight);
+    topPartPanel.add(list1OfOtherPlotsComboBox);
+    
+    list2OfOtherPlotsLabel = new JLabel("X,Y :");
+    list2OfOtherPlotsLabel.setBounds(
+        list2OfOtherPlotsLabelXoff,
+        list2OfOtherPlotsLabelYoff,
+        list2OfOtherPlotsLabelWidth,
+        list2OfOtherPlotsLabelHeight);
+    topPartPanel.add(list2OfOtherPlotsLabel);
+
+    list2OfOtherPlotsComboBox = new JComboBox(IParameters.LIST_OF_OTHER_PLOTS_PART2);
+    list2OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+    list2OfOtherPlotsComboBox.setSelectedIndex(0);
+    list2OfOtherPlotsComboBox.setActionCommand("list2OfOtherPlotsComboBox");
+    list2OfOtherPlotsComboBox.setEnabled(true);
+    list2OfOtherPlotsComboBox.setBounds(
+        list2OfOtherPlotsXoff,
+        list2OfOtherPlotsYoff,
+        list2OfOtherPlotsWidth,
+        list2OfOtherPlotsHeight);
+    topPartPanel.add(list2OfOtherPlotsComboBox);
+        
     refreshButton = new JButton("REFRESH PLOT");
     refreshButton.setActionCommand("refreshButton");
     refreshButton.setPreferredSize(new Dimension(

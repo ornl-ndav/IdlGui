@@ -699,8 +699,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	MouseSelection.saveXYinfo(x_max, y_max);
 	    	//if right tab is on 'other plots' and plot selected is xo or yo, update plot
         if (tabbedPane.getSelectedIndex() == 2 &&
-            (CreateOtherPlotsPanel.listOfOtherPlotsComboBox.getSelectedIndex() == 2 ||
-             CreateOtherPlotsPanel.listOfOtherPlotsComboBox.getSelectedIndex() == 3)) {
+            (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 2 ||
+             CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 3)) {
               OtherPlotsAction.selectDesiredPlot();
         } else {
               dataReductionTabbedPane.setSelectedIndex(0);
@@ -817,7 +817,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
       //-> 3rd main tab - Other plots
 	    CreateOtherPlotsPanel.createGUI();
-      tabbedPane.addTab("Various plots",otherPlotsPanel);
+      tabbedPane.addTab("Counts = f( TOF, X, Y )",otherPlotsPanel);
             
       //-> 4rd main tab - files to transfer tab
       filesToTransferPanel = new JPanel(new GridLayout(0,1));
@@ -1211,7 +1211,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       DataReduction.saveFileInfoMessageTextfield.addActionListener(this);
       
       //from other plots
-      CreateOtherPlotsPanel.listOfOtherPlotsComboBox.addActionListener(this);
+      CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.addActionListener(this);
+      CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.addActionListener(this);
       CreateOtherPlotsPanel.xoTextField.addActionListener(this);
       CreateOtherPlotsPanel.yoTextField.addActionListener(this);
       CreateOtherPlotsPanel.refreshButton.addActionListener(this);

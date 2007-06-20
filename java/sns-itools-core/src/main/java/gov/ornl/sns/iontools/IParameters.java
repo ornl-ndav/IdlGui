@@ -225,14 +225,26 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-      static final String[] LIST_OF_OTHER_PLOTS     = {" ------- SELECT ME ------- ",
+      static final String[] LIST_OF_OTHER_PLOTS     = {" ----- SELECT ME ----- ",
                                                        "Counts = f( TOF , Sum(X) , Sum(Y) )",
                                                        "Counts = f( TOF , Xo , Sum(Y) )",
                                                        "Counts = f( TOF , Sum(X) , Yo )",
                                                        "Counts = f( TOF , signal_selection )",
                                                        "Counts = f( TOF , back1_selection )",
                                                        "Counts = f( TOF , back2_selection )",
-      "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
+                                                       "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
+      
+      static final String[] LIST_OF_OTHER_PLOTS_PART1 = {" -- SELECT ME -- ",
+                                                         " Integrated over TOF",
+                                                         " TOF min - TOF max"};
+      
+      static final String[] LIST_OF_OTHER_PLOTS_PART2 = {" ---- SELECT ME ---- ",
+                                                         " Integrated over X and Y",
+                                                         " Xo, Integrated over Y",
+                                                         " Integrated over X, Yo",
+                                                         " Signal Selection",
+                                                         " Background_1 Selection",
+                                                         " Background_2 Selection"};
       
       static final String[] LIST_OF_PRO_FILES       = {"clear",
                                                        "plot_tof_sumx_sumy",
