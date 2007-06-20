@@ -361,9 +361,9 @@ public class OtherPlotsAction {
     
     int NTof = Integer.parseInt(DataReduction.sNtof);
     if (0 <= TBinMin &&
-        TBinMin <= NTof &&
+        TBinMin < NTof &&
         TBinMin <= TBinMax &&
-        TBinMax <= NTof) {
+        TBinMax < NTof) {
       return true;
     } else {
       return false;
