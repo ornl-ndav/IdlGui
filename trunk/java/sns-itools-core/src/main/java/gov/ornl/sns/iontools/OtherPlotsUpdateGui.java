@@ -133,4 +133,5 @@ public class OtherPlotsUpdateGui {
     sResult = "( 0 - " + DataReduction.sNtof + " )";
     return sResult;
   }
+
 }

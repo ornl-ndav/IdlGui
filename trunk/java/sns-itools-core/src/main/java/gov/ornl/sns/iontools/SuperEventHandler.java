@@ -258,7 +258,7 @@ public class SuperEventHandler extends DataReduction {
 				SubmitPlot run = new SubmitPlot(cmd);
 				Thread runThread = new Thread(run,"plot in progress");
 				runThread.start();
-				
+      
 			}	
 		}		
 

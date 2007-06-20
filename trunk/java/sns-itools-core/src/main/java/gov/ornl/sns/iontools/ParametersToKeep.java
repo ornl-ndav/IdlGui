@@ -19,13 +19,14 @@ public class ParametersToKeep {
 	static boolean bSaveAddAndGoRunNumberCheckBox 		    	= IParameters.KEEP_ADD_NEXUS_AND_GO;
 	static boolean bSaveGoSequentiallyCheckBox 				      = IParameters.KEEP_GO_SEQUENTIALLY;
 	static boolean bFirstRunEver 							              = true;
-  static String sSessionWorkingDirectory 				          = "";
+  static String  sSessionWorkingDirectory 				        = "";
   static boolean bThreadInProcess                         = false;
 	static int     iNbrInfoLinesNotXmlToDisplayed           = IParameters.i_NO_RMD_NBR_LINE_DISPLAYED;
 	static int     iNbrInfoLinesXmlToDisplayed              = IParameters.i_RMD_NBR_LINE_DISPLAYED;
   static boolean bNeedToValidateSaveRefreshButton         = false;
   static boolean bNeedToRefreshListOfFiles                = false;
-  /*
+  
+  /* 
 	 * Reinitialize all the parameters
 	 */
 	static void initializeParametersToKeep() {

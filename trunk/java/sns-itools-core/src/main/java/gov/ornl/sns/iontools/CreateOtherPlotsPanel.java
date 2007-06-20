@@ -292,7 +292,7 @@ public class CreateOtherPlotsPanel {
       tBinMinLabelHeight);
   DataReduction.otherPlotsPanel.add(tBinMinLabel);
   
-  tBinMinTextField = new JTextField("300");
+  tBinMinTextField = new JTextField("0");
   tBinMinTextField.setVisible(false);
   tBinMinTextField.setActionCommand("tBinMinTextField");
   tBinMinTextField.setEditable(true);
@@ -303,7 +303,7 @@ public class CreateOtherPlotsPanel {
       tBinMinTextFieldHeight);
   DataReduction.otherPlotsPanel.add(tBinMinTextField);
   
-  tBinMinRangeLabel = new JLabel("(0 - 749)");
+  tBinMinRangeLabel = new JLabel("");
   tBinMinRangeLabel.setVisible(false);
   tBinMinRangeLabel.setBounds(
       tBinMinRangeLabelXoff,
@@ -322,7 +322,7 @@ public class CreateOtherPlotsPanel {
       tBinMaxLabelHeight);
   DataReduction.otherPlotsPanel.add(tBinMaxLabel);
   
-  tBinMaxTextField = new JTextField("500");
+  tBinMaxTextField = new JTextField("0");
   tBinMaxTextField.setVisible(false);
   tBinMaxTextField.setActionCommand("tBinMaxTextField");
   tBinMaxTextField.setEditable(true);
@@ -333,7 +333,7 @@ public class CreateOtherPlotsPanel {
       tBinMaxTextFieldHeight);
   DataReduction.otherPlotsPanel.add(tBinMaxTextField);
   
-  tBinMaxRangeLabel = new JLabel("(0 - 749)");
+  tBinMaxRangeLabel = new JLabel("");
   tBinMaxRangeLabel.setVisible(false);
   tBinMaxRangeLabel.setBounds(
       tBinMaxRangeLabelXoff,

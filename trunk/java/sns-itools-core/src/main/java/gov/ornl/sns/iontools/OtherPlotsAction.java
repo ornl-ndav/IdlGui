@@ -164,13 +164,19 @@ public class OtherPlotsAction {
       String sTbinMax = CreateOtherPlotsPanel.tBinMaxTextField.getText();
       if (UtilsFunction.isInputInteger(sTbinMin) &&
           UtilsFunction.isInputInteger(sTbinMax)) {
-        tBinMin = Integer.parseInt(sTbinMin);
-        tBinMax = Integer.parseInt(sTbinMax);
-        com.rsi.ion.IONVariable ionTBinMin = new com.rsi.ion.IONVariable(tBinMin);
-        com.rsi.ion.IONVariable ionTBinMax = new com.rsi.ion.IONVariable(tBinMax);
-        cmd += "," + ionTBinMin;
-        cmd += "," + ionTBinMax;
-      } else {
+          tBinMin = Integer.parseInt(sTbinMin);
+          tBinMax = Integer.parseInt(sTbinMax);
+          if (isTBinMinMaxCorrect(tBinMin, tBinMax)) {
+            ParametersConfiguration.TBinMax = tBinMax;
+            ParametersConfiguration.TBinMin = tBinMin;
+            com.rsi.ion.IONVariable ionTBinMin = new com.rsi.ion.IONVariable(tBinMin);
+            com.rsi.ion.IONVariable ionTBinMax = new com.rsi.ion.IONVariable(tBinMax);
+            cmd += "," + ionTBinMin;
+            cmd += "," + ionTBinMax;
+          } else {
+            bThreadSafe = false;
+          }
+        } else {
         bThreadSafe = false;
       }
       break;
@@ -275,8 +281,8 @@ public class OtherPlotsAction {
    */
   static void plotfull2dForGivenTbinRange(int index) {
     displayInfoMessage(index);
-    displayMoreInfo(index);
     String cmd = createCmd(index);
+    displayMoreInfo(index);
     if (bThreadSafe) {
       startThread(cmd);
     } else {
@@ -323,7 +329,7 @@ public class OtherPlotsAction {
         break;
       case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
         sMessage = "\n\n  Min Tbin is : " + tBinMin;
-        sMessage = "\n  Max Tbin is : " + tBinMax;
+        sMessage += "\n  Max Tbin is : " + tBinMax;
         break;
     }
     CreateOtherPlotsPanel.infoTextArea.append(sMessage);
@@ -346,5 +352,22 @@ public class OtherPlotsAction {
     } else {
       return true;
     }
+  }
+  
+  /*
+   * Checks that 0 <= TBinMin <= Ntof and TBinMin <= TBinMax <= Ntof
+   */
+  static boolean isTBinMinMaxCorrect(int TBinMin, int TBinMax) {
+    
+    int NTof = Integer.parseInt(DataReduction.sNtof);
+    if (0 <= TBinMin &&
+        TBinMin <= NTof &&
+        TBinMin <= TBinMax &&
+        TBinMax <= NTof) {
+      return true;
+    } else {
+      return false;
+    }
+          
   }
 }

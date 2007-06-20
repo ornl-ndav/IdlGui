@@ -142,7 +142,7 @@ if (full_nexus_path NE '') then begin
 
  endelse
 
-result = [strcompress(foundNexus,/remove_all),strcompress(Ntof), tmp_output_file_name]
+result = [strcompress(foundNexus,/remove_all),strcompress(Ntof,/remove_all), tmp_output_file_name]
 
 return, result
 END
