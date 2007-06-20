@@ -364,6 +364,12 @@ public class SuperEventHandler extends DataReduction {
     if ("refreshButton".equals(evt.getActionCommand())) {
       OtherPlotsAction.selectDesiredPlot();
     }
+
+    //tbin min and max in other plots panel
+    if ("tBinMinTextField".equals(evt.getActionCommand()) ||
+        "tBinMaxTextField".equals(evt.getActionCommand())) {
+      OtherPlotsAction.selectDesiredPlot();
+    }
     
   }
   

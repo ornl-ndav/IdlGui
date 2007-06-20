@@ -3,11 +3,13 @@ package gov.ornl.sns.iontools;
 public class OtherPlotsAction {
 
   static boolean bThreadSafe;
-
+  static int tBinMin = 0;
+  static int tBinMax = 0;
+  
   static void selectDesiredPlot() {
   
     bThreadSafe = true;
-    
+        
     int iPlotSelected = DataReduction.listOfOtherPlotsComboBox.getSelectedIndex();
     switch (iPlotSelected) {
     case 0:
@@ -32,7 +34,7 @@ public class OtherPlotsAction {
          plotTotalCountsSelectedBack2(iPlotSelected);
          break;
     case 7: 
-        plotfull2dForGivenTbinRange(iPlotSelected);
+         plotfull2dForGivenTbinRange(iPlotSelected);
          break;
     default:
     }
@@ -158,6 +160,19 @@ public class OtherPlotsAction {
       break;
     case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
+      String sTbinMin = CreateOtherPlotsPanel.tBinMinTextField.getText();
+      String sTbinMax = CreateOtherPlotsPanel.tBinMaxTextField.getText();
+      if (UtilsFunction.isInputInteger(sTbinMin) &&
+          UtilsFunction.isInputInteger(sTbinMax)) {
+        tBinMin = Integer.parseInt(sTbinMin);
+        tBinMax = Integer.parseInt(sTbinMax);
+        com.rsi.ion.IONVariable ionTBinMin = new com.rsi.ion.IONVariable(tBinMin);
+        com.rsi.ion.IONVariable ionTBinMax = new com.rsi.ion.IONVariable(tBinMax);
+        cmd += "," + ionTBinMin;
+        cmd += "," + ionTBinMax;
+      } else {
+        bThreadSafe = false;
+      }
       break;
     default:
     } 
@@ -260,8 +275,13 @@ public class OtherPlotsAction {
    */
   static void plotfull2dForGivenTbinRange(int index) {
     displayInfoMessage(index);
+    displayMoreInfo(index);
     String cmd = createCmd(index);
-    startThread(cmd);
+    if (bThreadSafe) {
+      startThread(cmd);
+    } else {
+      displayErrorMessage();
+    }
   }
 
   /*
@@ -300,6 +320,10 @@ public class OtherPlotsAction {
         sMessage += "  Xmax = " + MouseSelectionParameters.back2_xmax;
         sMessage += "\n  Ymin = " + MouseSelectionParameters.back2_ymin;
         sMessage += "  Ymax = " + MouseSelectionParameters.back2_ymax;
+        break;
+      case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+        sMessage = "\n\n  Min Tbin is : " + tBinMin;
+        sMessage = "\n  Max Tbin is : " + tBinMax;
         break;
     }
     CreateOtherPlotsPanel.infoTextArea.append(sMessage);
