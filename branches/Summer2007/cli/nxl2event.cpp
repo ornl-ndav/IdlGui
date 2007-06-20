@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
   // Create a new nexus utility
   NexusUtil nexus_util(input_file, NXACC_READ);
   
-  // Open the bank and gather all the data
+  // Open the bank and gather the data
   open_bank("bank1", nexus_util);
 
   tof = reinterpret_cast<uint32_t *>
