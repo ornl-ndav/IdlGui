@@ -365,12 +365,18 @@ public class SuperEventHandler extends DataReduction {
       OtherPlotsAction.selectDesiredPlot();
     }
 
+    //clear button in other plots tabs
+    if ("clearButton".equals(evt.getActionCommand())) {
+      OtherPlotsAction.clearPlot(0);
+      OtherPlotsUpdateGui.updateGUI(0); 
+    }
+    
     //tbin min and max in other plots panel
     if ("tBinMinTextField".equals(evt.getActionCommand()) ||
         "tBinMaxTextField".equals(evt.getActionCommand())) {
       OtherPlotsAction.selectDesiredPlot();
     }
-    
+        
   }
   
 }

@@ -7,23 +7,25 @@ import com.rsi.ion.*;
 
 public class CreateOtherPlotsPanel {
 
-  static JButton refreshButton;
-  static JPanel topPartPanel;
-  static JTextArea infoTextArea;
-  static JTextField xoTextField;
-  static JTextField yoTextField;
-  static JScrollPane infoScrollPane;
-  static JLabel infoLabel;
-  static JLabel xoLabel;
-  static JLabel yoLabel;
-  static JLabel xoRangeLabel;
-  static JLabel yoRangeLabel;
-  static JLabel tBinMinLabel;
-  static JLabel tBinMaxLabel;
-  static JLabel tBinMinRangeLabel;
-  static JLabel tBinMaxRangeLabel;
-  static JTextField tBinMinTextField;
-  static JTextField tBinMaxTextField;
+  static JButton          refreshButton;
+  static JButton          clearButton;
+  static JPanel           topPartPanel;
+  static JScrollPane      infoScrollPane;
+  static JLabel           infoLabel;
+  static JLabel           xoLabel;
+  static JLabel           yoLabel;
+  static JLabel           xoRangeLabel;
+  static JLabel           yoRangeLabel;
+  static JLabel           tBinMinLabel;
+  static JLabel           tBinMaxLabel;
+  static JLabel           tBinMinRangeLabel;
+  static JLabel           tBinMaxRangeLabel;
+  static JTextArea        infoTextArea;
+  static JTextField       tBinMinTextField;
+  static JTextField       tBinMaxTextField;
+  static JTextField       xoTextField;
+  static JTextField       yoTextField;
+  static JComboBox        listOfOtherPlotsComboBox;
   
   static int topPartPanelXoff = 5;
   static int topPartPanelYoff = 5;
@@ -32,13 +34,18 @@ public class CreateOtherPlotsPanel {
   
   static int listOfOtherPlotsXoff = 5;
   static int listOfOtherPlotsYoff = 5;
-  static int listOfOtherPlotsWidth = 550;
+  static int listOfOtherPlotsWidth = 300;
   static int listOfOtherPlotsHeight = 30;
 
-  static int refreshButtonXoff = 562;
+  static int refreshButtonXoff = 530;
   static int refreshButtonYoff = 5;
-  static int refreshButtonWidth = 230;
+  static int refreshButtonWidth = 130;
   static int refreshButtonHeight = 30;
+  
+  static int clearButtonXoff = 660;
+  static int clearButtonYoff = refreshButtonYoff;
+  static int clearButtonWidth = refreshButtonWidth;
+  static int clearButtonHeight = refreshButtonHeight;
   
   static int otherPlotsGraphicalWindowXoff = 5;
   static int otherPlotsGraphicalWindowYoff = 40;
@@ -131,21 +138,21 @@ public class CreateOtherPlotsPanel {
     topPartPanel = new JPanel();
     topPartPanel.setLayout(null);
         
-    DataReduction.listOfOtherPlotsComboBox = new JComboBox(IParameters.LIST_OF_OTHER_PLOTS);
-    DataReduction.listOfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
-    DataReduction.listOfOtherPlotsComboBox.setSelectedIndex(0);
-    DataReduction.listOfOtherPlotsComboBox.setActionCommand("listOfOtherPlotsComboBox");
-    DataReduction.listOfOtherPlotsComboBox.setEnabled(true);
-    DataReduction.listOfOtherPlotsComboBox.setPreferredSize(new Dimension(
+    listOfOtherPlotsComboBox = new JComboBox(IParameters.LIST_OF_OTHER_PLOTS);
+    listOfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+    listOfOtherPlotsComboBox.setSelectedIndex(0);
+    listOfOtherPlotsComboBox.setActionCommand("listOfOtherPlotsComboBox");
+    listOfOtherPlotsComboBox.setEnabled(true);
+    listOfOtherPlotsComboBox.setPreferredSize(new Dimension(
         listOfOtherPlotsWidth,
         listOfOtherPlotsHeight));
-    Dimension listOfOtherPlotsComboBoxSize = DataReduction.listOfOtherPlotsComboBox.getPreferredSize();
-    DataReduction.listOfOtherPlotsComboBox.setBounds(
+    Dimension listOfOtherPlotsComboBoxSize = listOfOtherPlotsComboBox.getPreferredSize();
+    listOfOtherPlotsComboBox.setBounds(
         listOfOtherPlotsXoff,
         listOfOtherPlotsYoff,
         listOfOtherPlotsComboBoxSize.width,
         listOfOtherPlotsComboBoxSize.height);
-    topPartPanel.add(DataReduction.listOfOtherPlotsComboBox);
+    topPartPanel.add(listOfOtherPlotsComboBox);
     
     refreshButton = new JButton("REFRESH PLOT");
     refreshButton.setActionCommand("refreshButton");
@@ -158,6 +165,15 @@ public class CreateOtherPlotsPanel {
         refreshButtonWidth,
         refreshButtonHeight);
     topPartPanel.add(refreshButton);
+
+    clearButton = new JButton("CLEAR PLOT");
+    clearButton.setActionCommand("clearButton");
+    clearButton.setBounds(
+        clearButtonXoff,
+        clearButtonYoff,
+        clearButtonWidth,
+        clearButtonHeight);
+    topPartPanel.add(clearButton);
     
     topPartPanel.setPreferredSize(new Dimension(
         topPartPanelWidth,
