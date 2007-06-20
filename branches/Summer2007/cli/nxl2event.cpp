@@ -22,6 +22,13 @@ using std::endl;
 using std::string;
 using namespace TCLAP;
 
+/** \fn write_data(const string &output_file, 
+ *                 uint32_t *tof,
+ *                 uint32_t *pixel_id, 
+ *                 int size)
+ *  \brief Writes binary data to an ouput file
+ *         in the same format as an event file.
+ */
 void write_data(const string &output_file, uint32_t *tof, 
                 uint32_t *pixel_id, int size)
 {
@@ -35,18 +42,31 @@ void write_data(const string &output_file, uint32_t *tof,
   // Write the arrays back in the same way they were read
   for (int i = 0; i < size; i++)
     {
-      file.write(reinterpret_cast<char *>(tof+i), sizeof(uint32_t));
-      file.write(reinterpret_cast<char *>(pixel_id+i), sizeof(uint32_t));
+      file.write(reinterpret_cast<char *>(tof+i), 
+                 sizeof(uint32_t));
+      file.write(reinterpret_cast<char *>(pixel_id+i), 
+                 sizeof(uint32_t));
     }
   file.close();
 }
 
+/** \fn close_bank(NexusUtil &nexus_util)
+ *  \brief Closes a bank in a nexus file.
+ */
 void close_bank(NexusUtil &nexus_util)
 {
   nexus_util.close_group();
   nexus_util.close_group();
 }
 
+/** \fn get_data(const string &data_name,
+ *               void *data,
+ *               NexusUtil &nexus_util,
+ *               int &dimensions)
+ *  \brief Gets data from a nexus file and stores
+ *         it into an array.
+ *  \return A pointer to the newly allocated array.
+ */
 void * get_data(const string &data_name, void *data, 
                 NexusUtil &nexus_util, int &dimensions)
 {
@@ -55,7 +75,8 @@ void * get_data(const string &data_name, void *data,
 
   nexus_util.open_data(data_name.c_str());
   nexus_util.get_info(&rank, &dimensions, &nexus_data_type);
-  nexus_util.malloc((void **)&data, rank, &dimensions, nexus_data_type);
+  nexus_util.malloc(reinterpret_cast<void **>(&data), rank, 
+                    &dimensions, nexus_data_type);
   nexus_util.get_data(data);
   nexus_util.close_data();
 
@@ -63,12 +84,21 @@ void * get_data(const string &data_name, void *data,
   return data;
 }
 
+/** \fn open_bank(const string &bank_name, 
+ *                NexusUtil &nexus_util
+ *  \brief Opens a bank in a nexus file.
+ */
 void open_bank(const string &bank_name, NexusUtil &nexus_util)
 {
   nexus_util.open_group("entry", "NXentry");
   nexus_util.open_group(bank_name.c_str(), "NXevent_data");
 }
 
+/* \fn main(int argc,
+ *          char *argv[])
+ * \brief Parses the command line and calls the 
+ *        appropriate functions.
+ */
 int main(int argc, char *argv[])
 {
   uint32_t *tof;
