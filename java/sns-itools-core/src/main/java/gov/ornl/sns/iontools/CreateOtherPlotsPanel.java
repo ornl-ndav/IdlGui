@@ -10,14 +10,20 @@ public class CreateOtherPlotsPanel {
   static JButton refreshButton;
   static JPanel topPartPanel;
   static JTextArea infoTextArea;
+  static JTextField xoTextField;
+  static JTextField yoTextField;
   static JScrollPane infoScrollPane;
   static JLabel infoLabel;
   static JLabel xoLabel;
   static JLabel yoLabel;
-  static JTextField xoTextField;
-  static JTextField yoTextField;
   static JLabel xoRangeLabel;
   static JLabel yoRangeLabel;
+  static JLabel tBinMinLabel;
+  static JLabel tBinMaxLabel;
+  static JLabel tBinMinRangeLabel;
+  static JLabel tBinMaxRangeLabel;
+  static JTextField tBinMinTextField;
+  static JTextField tBinMaxTextField;
   
   static int topPartPanelXoff = 5;
   static int topPartPanelYoff = 5;
@@ -75,6 +81,39 @@ public class CreateOtherPlotsPanel {
   static int xoyoRangeLabelYoff = xoLabelYoff;
   static int xoyoRangeLabelWidth = 100;
   static int xoyoRangeLabelHeight = xoLabelHeight;
+  
+  //Tbin min
+  static int tBinMinLabelXoff = 560;
+  static int tBinMinLabelYoff = xoLabelYoff;
+  static int tBinMinLabelWidth = 100;
+  static int tBinMinLabelHeight = 30;
+  
+  static int tBinMinTextFieldXoff = 630;
+  static int tBinMinTextFieldYoff = xoLabelYoff;
+  static int tBinMinTextFieldWidth = xoTextFieldWidth;
+  static int tBinMinTextFieldHeight = xoTextFieldHeight;
+  
+  static int tBinMinRangeLabelXoff = 715;
+  static int tBinMinRangeLabelYoff = xoyoRangeLabelYoff;
+  static int tBinMinRangeLabelWidth = xoyoRangeLabelWidth;
+  static int tBinMinRangeLabelHeight = xoyoRangeLabelHeight;
+ 
+  //Tbin max
+  static int yoff1 = 35;
+  static int tBinMaxLabelXoff = tBinMinLabelXoff;
+  static int tBinMaxLabelYoff = xoLabelYoff + yoff1;
+  static int tBinMaxLabelWidth = 100;
+  static int tBinMaxLabelHeight = 30;
+  
+  static int tBinMaxTextFieldXoff = tBinMinTextFieldXoff;
+  static int tBinMaxTextFieldYoff = xoLabelYoff + yoff1;
+  static int tBinMaxTextFieldWidth = xoTextFieldWidth;
+  static int tBinMaxTextFieldHeight = xoTextFieldHeight;
+  
+  static int tBinMaxRangeLabelXoff = tBinMinRangeLabelXoff;
+  static int tBinMaxRangeLabelYoff = xoyoRangeLabelYoff + yoff1;
+  static int tBinMaxRangeLabelWidth = xoyoRangeLabelWidth;
+  static int tBinMaxRangeLabelHeight = xoyoRangeLabelHeight;
   
   static void createGUI() {
   
@@ -213,6 +252,7 @@ public class CreateOtherPlotsPanel {
       xoyoRangeLabelHeight);
   DataReduction.otherPlotsPanel.add(xoRangeLabel);
   
+  //yo label - text field - message widgets  
   yoLabel = new JLabel("yo = ");
   yoLabel.setVisible(false);
   yoLabel.setBounds(
@@ -242,7 +282,65 @@ public class CreateOtherPlotsPanel {
       xoyoRangeLabelHeight);
   DataReduction.otherPlotsPanel.add(yoRangeLabel);
   
+  //tbin min 
+  tBinMinLabel = new JLabel("Tbin min : ");
+  tBinMinLabel.setVisible(false);
+  tBinMinLabel.setBounds(
+      tBinMinLabelXoff,
+      tBinMinLabelYoff,
+      tBinMinLabelWidth,
+      tBinMinLabelHeight);
+  DataReduction.otherPlotsPanel.add(tBinMinLabel);
   
+  tBinMinTextField = new JTextField("300");
+  tBinMinTextField.setVisible(false);
+  tBinMinTextField.setActionCommand("tBinMinTextField");
+  tBinMinTextField.setEditable(true);
+  tBinMinTextField.setBounds(
+      tBinMinTextFieldXoff,
+      tBinMinTextFieldYoff,
+      tBinMinTextFieldWidth,
+      tBinMinTextFieldHeight);
+  DataReduction.otherPlotsPanel.add(tBinMinTextField);
+  
+  tBinMinRangeLabel = new JLabel("(0 - 749)");
+  tBinMinRangeLabel.setVisible(false);
+  tBinMinRangeLabel.setBounds(
+      tBinMinRangeLabelXoff,
+      tBinMinRangeLabelYoff,
+      tBinMinRangeLabelWidth,
+      tBinMinRangeLabelHeight);
+  DataReduction.otherPlotsPanel.add(tBinMinRangeLabel);
+  
+  //tbin max 
+  tBinMaxLabel = new JLabel("Tbin max : ");
+  tBinMaxLabel.setVisible(false);
+  tBinMaxLabel.setBounds(
+      tBinMaxLabelXoff,
+      tBinMaxLabelYoff,
+      tBinMaxLabelWidth,
+      tBinMaxLabelHeight);
+  DataReduction.otherPlotsPanel.add(tBinMaxLabel);
+  
+  tBinMaxTextField = new JTextField("500");
+  tBinMaxTextField.setVisible(false);
+  tBinMaxTextField.setActionCommand("tBinMaxTextField");
+  tBinMaxTextField.setEditable(true);
+  tBinMaxTextField.setBounds(
+      tBinMaxTextFieldXoff,
+      tBinMaxTextFieldYoff,
+      tBinMaxTextFieldWidth,
+      tBinMaxTextFieldHeight);
+  DataReduction.otherPlotsPanel.add(tBinMaxTextField);
+  
+  tBinMaxRangeLabel = new JLabel("(0 - 749)");
+  tBinMaxRangeLabel.setVisible(false);
+  tBinMaxRangeLabel.setBounds(
+      tBinMaxRangeLabelXoff,
+      tBinMaxRangeLabelYoff,
+      tBinMaxRangeLabelWidth,
+      tBinMaxRangeLabelHeight);
+  DataReduction.otherPlotsPanel.add(tBinMaxRangeLabel);
   }
 
 

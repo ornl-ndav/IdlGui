@@ -1,5 +1,8 @@
-PRO PLOT_TOFO_SUMX_SUMY, tmp_folder
+PRO PLOT_TOFO_SUMX_SUMY, TbinMin, TbinMax, tmp_histo_file, Nx, Ny
 
-print, 'in plot_tofo_sumX_sumY with tmp_folder: ' + tmp_folder
+TbinMin = Long(TbinMin)
+TbinMax = Long(TbinMax)
+Nx = Long(Nx)
+Ny = Long(Ny)
 
 END

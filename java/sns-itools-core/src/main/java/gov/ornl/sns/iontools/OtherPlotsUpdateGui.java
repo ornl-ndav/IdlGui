@@ -9,6 +9,7 @@ public class OtherPlotsUpdateGui {
     
     boolean bMakeXoVisible = false;
     boolean bMakeYoVisible = false;
+    boolean bMakeTbinVisible = false;
     
     switch (index) {
     case 0: //clear
@@ -28,13 +29,13 @@ public class OtherPlotsUpdateGui {
     case 6: //Counts = f( TOF , back2_selection )
       break;
     case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+      bMakeTbinVisible = true;
       break;
     default:
     } 
-    
     makeXoVisible(bMakeXoVisible);
     makeYoVisible(bMakeYoVisible);
-  
+    makeTbinVisible(bMakeTbinVisible);
   }    
 
   /*
@@ -70,6 +71,24 @@ public class OtherPlotsUpdateGui {
   }
 
   /*
+   * This function will display all the Tbin (min and max)
+   * related widgets
+   */
+  static void makeTbinVisible(boolean bVisible) {
+    CreateOtherPlotsPanel.tBinMinLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.tBinMaxLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.tBinMinTextField.setVisible(bVisible);
+    CreateOtherPlotsPanel.tBinMaxTextField.setVisible(bVisible);
+    CreateOtherPlotsPanel.tBinMinRangeLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.tBinMaxRangeLabel.setVisible(bVisible);
+    if (bVisible) {
+      String sRangeMinLabel = getTbinMinRangeLabel();
+      CreateOtherPlotsPanel.tBinMinRangeLabel.setText(sRangeMinLabel);
+      String sRangeMaxLabel = getTbinMaxRangeLabel();
+      CreateOtherPlotsPanel.tBinMaxRangeLabel.setText(sRangeMaxLabel);
+    }
+  }
+  /*
    * Create the string to display in the range label labe widget 
    */
   static String getXoYoRangeLabel(boolean bIsXo) {
@@ -94,6 +113,24 @@ public class OtherPlotsUpdateGui {
     } else {
       sResult = Integer.toString(MouseSelection.infoY);
     }
+    return sResult;
+  }
+  
+  /*
+   * Create the string to display in the Min Tbin label range
+   */
+  static String getTbinMinRangeLabel() {
+    String sResult;
+    sResult = "( 0 - " + DataReduction.sNtof + " )";
+    return sResult;
+  }
+  
+  /*
+   * Create the string to display in the Max Tbin label range
+   */
+  static String getTbinMaxRangeLabel() {
+    String sResult;
+    sResult = "( 0 - " + DataReduction.sNtof + " )";
     return sResult;
   }
 }
