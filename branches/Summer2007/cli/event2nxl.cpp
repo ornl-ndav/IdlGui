@@ -214,7 +214,7 @@ int main(int32_t argc,
   // Populate the nexus file with information
   write_data(nexus_util, event_data.get_tof(), "/entry/bank1", "time_of_flight");
   write_data(nexus_util, event_data.get_pixel_id(), "/entry/bank1", "pixel_number");
-  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/pixel_number");
+  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/time_of_flight");
 
   return 0;
 }
