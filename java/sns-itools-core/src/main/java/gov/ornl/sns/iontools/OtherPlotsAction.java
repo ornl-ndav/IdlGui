@@ -19,43 +19,43 @@ public class OtherPlotsAction {
       case 7:  //f( TOf, ---, ---)
       case 14 ://f( TOFo, ---, ---)
         bThreadSafe = false;
-        OtherPlotsCreateMessage.displayInfoMessage(iIndex);
+        executePlot(iIndex);
         break;
       case 1:  //f( ---, SumX, SumY)
         bThreadSafe = false;
       case 8:  //f( TOF, SumX, SumY)
       case 15: //f( TOFo, SumX, SumY)
-        plotTotalCountsFullDetectorRange(iIndex);
+        executePlot(iIndex);
         break;
       case 2:  //f( ---, Xo, SumY)
         bThreadSafe = false;
       case 9:  //f( TOF, Xo, SumY)
       case 16: //f( TOFo, Xo, SumY)
-        plotTotalCountsRightClickX(iIndex);
+        executePlot(iIndex);
         break;
       case 3:  //f( ---, SumX, Yo)
         bThreadSafe = false;
       case 10: //f( TOF, SumX, Yo)
       case 17: //f( TOFo, SumX, Yo)
-        plotTotalCountsRightClickY(iIndex);
+        executePlot(iIndex);
         break;
       case 4:  //f( ---, SignalSelection)
         bThreadSafe = false;
       case 11: //f( TOF, SignalSelection)
       case 18: //f( TOFo, SignalSelection)
-        plotTotalCountsSelectedSignal(iIndex);
+        executePlot(iIndex);
         break;
       case 5:  //f( ---, BackSelection)
         bThreadSafe = false;
       case 12: //f( TOF, BackSelection)
       case 19: //f( TOFo, BackSelection)
-        plotTotalCountsSelectedBack1(iIndex);
+        executePlot(iIndex);
         break;
       case 6:  //f( ---, Back2Selection)
         bThreadSafe = false;
       case 13: //f( TOF, Back2Selection)
       case 20: //f( TOFo, Back2Selection)
-        plotTotalCountsSelectedBack2(iIndex);
+        executePlot(iIndex);
         break;
       default:
       }
@@ -75,7 +75,6 @@ public class OtherPlotsAction {
   runThread.start();
       
   }
-
     
   /*
    * This function clears the plot
@@ -87,94 +86,9 @@ public class OtherPlotsAction {
   }
   
   /*
-   * This function plots the total number of counts of the full detector area
+   * This function redirects the index to the rigth cmd and messages
    */
-  static void plotTotalCountsFullDetectorRange(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-  
-  /*
-   * This function plots the total number of counts of the right click X over
-   * the full range of Y
-   */
-  static void plotTotalCountsRightClickX(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    OtherPlotsCreateMessage.displayMoreInfo(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-  
-  /*
-   * This function plots the total number of counts of the right click Y over
-   * the full range of X
-   */
-  static void plotTotalCountsRightClickY(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    OtherPlotsCreateMessage.displayMoreInfo(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-  
-  /*
-   * This function plots the total number of counts of the signal selection
-   */
-  static void plotTotalCountsSelectedSignal(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    OtherPlotsCreateMessage.displayMoreInfo(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-  
-  /*
-   * This function plots the total number of counts of the background 1 selection
-   */
-  static void plotTotalCountsSelectedBack1(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    OtherPlotsCreateMessage.displayMoreInfo(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-
-  /*
-   * This function plots the total number of counts of the background 2 selection
-   */
-  static void plotTotalCountsSelectedBack2(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    OtherPlotsCreateMessage.displayMoreInfo(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
-    if (bThreadSafe) {
-      startThread(cmd);
-    } else {
-      OtherPlotsCreateMessage.displayErrorMessage(index);
-    }
-  }
-
-  /*
-   * This function plots the total number of counts for a given range of Tbins
-   */
-  static void plotfull2dForGivenTbinRange(int index) {
+  static void executePlot(int index) {
     OtherPlotsCreateMessage.displayInfoMessage(index);
     String cmd = OtherPlotsCreateCmd.createCmd(index);
     OtherPlotsCreateMessage.displayMoreInfo(index);
@@ -184,4 +98,6 @@ public class OtherPlotsAction {
       OtherPlotsCreateMessage.displayErrorMessage(index);
     }
   }
+   
+   
 }

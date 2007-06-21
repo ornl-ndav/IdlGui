@@ -45,7 +45,7 @@ public class CreateOtherPlotsPanel {
   
   static int list1OfOtherPlotsXoff = 45;
   static int list1OfOtherPlotsYoff = 5;
-  static int list1OfOtherPlotsWidth = 150;
+  static int list1OfOtherPlotsWidth = 180;
   static int list1OfOtherPlotsHeight = 30;
 
   static int list2OfOtherPlotsLabelXoff = 250;
