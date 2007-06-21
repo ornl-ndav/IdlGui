@@ -24,14 +24,43 @@ public class OtherPlotsCreateCmd {
     case 5: //I=f(?,back selection)
     case 6: //I=f(?,back2 selection)
     case 7: //I=f(tof,?,?)
-    case 8: //I=f(tof,sumx,sumy)
+    case 8:  //I=f(TOF,sum(X),sum(Y))
+    case 15: //I=f(TOFo,sum(X),sum(Y))
+      cmd = IParameters.LIST_OF_PRO_FILES[8];
+      String sTbinMin = CreateOtherPlotsPanel.tBinMinTextField.getText();
+      String sTbinMax = CreateOtherPlotsPanel.tBinMaxTextField.getText();
+      if (UtilsFunction.isInputInteger(sTbinMin) &&
+          UtilsFunction.isInputInteger(sTbinMax)) {
+          OtherPlotsAction.tBinMin = Integer.parseInt(sTbinMin);
+          OtherPlotsAction.tBinMax = Integer.parseInt(sTbinMax);
+          if (OtherPlotsUtils.isTBinMinMaxCorrect(OtherPlotsAction.tBinMin, OtherPlotsAction.tBinMax)) {
+            ParametersConfiguration.TBinMax = OtherPlotsAction.tBinMax;
+            ParametersConfiguration.TBinMin = OtherPlotsAction.tBinMin;
+            com.rsi.ion.IONVariable ionTBinMin = new com.rsi.ion.IONVariable(OtherPlotsAction.tBinMin);
+            com.rsi.ion.IONVariable ionTBinMax = new com.rsi.ion.IONVariable(OtherPlotsAction.tBinMax);
+            com.rsi.ion.IONVariable ionTOFo;
+            if (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 1) {
+              ionTOFo = new com.rsi.ion.IONVariable(0);
+            } else {
+              ionTOFo = new com.rsi.ion.IONVariable(1);
+            }             
+            cmd += "," + ionTBinMin;
+            cmd += "," + ionTBinMax;
+            cmd += "," + ionTOFo;
+          } else {
+            OtherPlotsAction.bThreadSafe = false;
+          }
+        } else {
+        OtherPlotsAction.bThreadSafe = false;
+      }
+      break;
     case 14: //I=f(tofo,?,?)
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
-    case 9: // I=f(TOF,Xo,Sum(Y))
+    case 9:  //I=f(TOF,Xo,Sum(Y))
     case 16: //I=f(TOFo, Xo, Sum(Y))
       if (UtilsFunction.isInputValid(MouseSelection.infoX,0,DataReduction.Nx)) {
-        cmd = IParameters.LIST_OF_PRO_FILES[index];
+        cmd = IParameters.LIST_OF_PRO_FILES[9];
         com.rsi.ion.IONVariable ionTOFmin = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMinTextField.getText());
         com.rsi.ion.IONVariable ionTOFmax = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMaxTextField.getText());
         com.rsi.ion.IONVariable ionTOFo;
@@ -49,9 +78,21 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 10: //Counts = f( TOF , Sum(X) , Yo )
+    case 10: //I=f(TOF,Sum(X),Yo)
+    case 17: //I=f(TOFo,Sum(X),Yo)
       if (UtilsFunction.isInputValid(MouseSelection.infoY,0,DataReduction.Ny)) {
-             cmd = IParameters.LIST_OF_PRO_FILES[index];
+             cmd = IParameters.LIST_OF_PRO_FILES[10];
+             com.rsi.ion.IONVariable ionTOFmin = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMinTextField.getText());
+             com.rsi.ion.IONVariable ionTOFmax = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMaxTextField.getText());
+             com.rsi.ion.IONVariable ionTOFo;
+             if (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 1) {
+               ionTOFo = new com.rsi.ion.IONVariable(0);
+             } else {
+               ionTOFo = new com.rsi.ion.IONVariable(1);
+             }
+             cmd += "," + ionTOFmin;
+             cmd += "," + ionTOFmax;
+             cmd += "," + ionTOFo;
              com.rsi.ion.IONVariable ionYo = new com.rsi.ion.IONVariable(MouseSelection.infoY);
              cmd += "," + ionYo;
         } else {
@@ -124,30 +165,6 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 15: //Counts = f( TOFo , Sum(X) , Sum(Y) )
-      cmd = IParameters.LIST_OF_PRO_FILES[index];
-      String sTbinMin = CreateOtherPlotsPanel.tBinMinTextField.getText();
-      String sTbinMax = CreateOtherPlotsPanel.tBinMaxTextField.getText();
-      if (UtilsFunction.isInputInteger(sTbinMin) &&
-          UtilsFunction.isInputInteger(sTbinMax)) {
-          OtherPlotsAction.tBinMin = Integer.parseInt(sTbinMin);
-          OtherPlotsAction.tBinMax = Integer.parseInt(sTbinMax);
-          if (OtherPlotsUtils.isTBinMinMaxCorrect(OtherPlotsAction.tBinMin, OtherPlotsAction.tBinMax)) {
-            ParametersConfiguration.TBinMax = OtherPlotsAction.tBinMax;
-            ParametersConfiguration.TBinMin = OtherPlotsAction.tBinMin;
-            com.rsi.ion.IONVariable ionTBinMin = new com.rsi.ion.IONVariable(OtherPlotsAction.tBinMin);
-            com.rsi.ion.IONVariable ionTBinMax = new com.rsi.ion.IONVariable(OtherPlotsAction.tBinMax);
-            cmd += "," + ionTBinMin;
-            cmd += "," + ionTBinMax;
-          } else {
-            OtherPlotsAction.bThreadSafe = false;
-          }
-        } else {
-        OtherPlotsAction.bThreadSafe = false;
-      }
-      break;
-    case 17: //Counts = f(TOFo, Sum(X), Yo)
-    break;
     case 18: //Counts = f(TOFo, Signal selection)
       break;
     case 19: //Counts = f(TOFo, back selection)
