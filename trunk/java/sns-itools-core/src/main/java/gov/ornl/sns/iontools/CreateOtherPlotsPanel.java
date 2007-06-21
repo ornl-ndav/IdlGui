@@ -82,10 +82,10 @@ public class CreateOtherPlotsPanel {
   static int infoScrollPaneXoff = 560;
   static int infoScrollPaneYoff = 55+yoff;
   static int infoScrollPaneWidth = 240;
-  static int infoScrollPaneHeight = 150;
+  static int infoScrollPaneHeight = 200;
   
   static int xoLabelXoff = 560;
-  static int xoLabelYoff = 210 + yoff;
+  static int xoLabelYoff = 260 + yoff;
   static int xoLabelWidth = 100;
   static int xoLabelHeight = 30;
   
