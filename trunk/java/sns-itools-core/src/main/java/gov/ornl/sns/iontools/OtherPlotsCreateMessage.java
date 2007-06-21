@@ -89,16 +89,16 @@ public class OtherPlotsCreateMessage {
           sMessage += "\n  Ymin = " + save_ymin;
           sMessage += "    Ymax = " + save_ymax;
           if (OtherPlotsUtils.isSelectionValid(save_xmin, save_xmax, save_ymin, save_ymax)) {
-            sMessage += "\n\n Signal selection used : " + SaveSignalPidFileAction.pidSignalFileNameShortVersion;
+            sMessage += "\n\n Signal selection file used :\n  " + SaveSignalPidFileAction.pidSignalFileNameShortVersion;
           } else {
             sMessage += "\n\n Please select and save a signal region\n first.";
             OtherPlotsAction.bThreadSafe = false;
           }
         } else {
-          int interactive_xmin = MouseSelectionParameters.interactive_signal_xmin;
-          int interactive_xmax = MouseSelectionParameters.interactive_signal_xmax;
-          int interactive_ymin = MouseSelectionParameters.interactive_signal_ymin;
-          int interactive_ymax = MouseSelectionParameters.interactive_signal_ymax;
+          int interactive_xmin = MouseSelectionParameters.signal_xmin;
+          int interactive_xmax = MouseSelectionParameters.signal_xmax;
+          int interactive_ymin = MouseSelectionParameters.signal_ymin;
+          int interactive_ymax = MouseSelectionParameters.signal_ymax;
             sMessage += "\n\nSelection saved (signal):\n  Xmin = " + interactive_xmin;
             sMessage += "    Xmax = " + interactive_xmax;
             sMessage += "\n  Ymin = " + interactive_ymin;

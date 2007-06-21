@@ -22,6 +22,11 @@ public class SaveSignalPidFileAction {
     pidSignalFileNameShortVersion = UtilsFunction.getOnlyLastPartOfFileName(DataReduction.pidSignalFileName);
     DataReduction.signalPidFileTextField.setText(pidSignalFileNameShortVersion);	
 		
+    MouseSelectionParameters.save_signal_xmin = MouseSelectionParameters.signal_xmin;
+    MouseSelectionParameters.save_signal_xmax = MouseSelectionParameters.signal_xmax;
+    MouseSelectionParameters.save_signal_ymin = MouseSelectionParameters.signal_ymin;
+    MouseSelectionParameters.save_signal_ymax = MouseSelectionParameters.signal_ymax;
+    
 		int[] xarr = {MouseSelectionParameters.signal_xmin, 
 				MouseSelectionParameters.signal_xmax, 
 				MouseSelectionParameters.signal_ymin, 
@@ -53,7 +58,11 @@ public class SaveSignalPidFileAction {
 		MouseSelectionParameters.signal_y1 = 0;
 		MouseSelectionParameters.signal_x2 = 0;
 		MouseSelectionParameters.signal_y2 = 0;
-		DataReduction.clearSignalPidFileButton.setEnabled(false);
+		MouseSelectionParameters.save_signal_xmin = 0;
+    MouseSelectionParameters.save_signal_xmax = 0;
+    MouseSelectionParameters.save_signal_ymin = 0;
+    MouseSelectionParameters.save_signal_ymax = 0;
+    DataReduction.clearSignalPidFileButton.setEnabled(false);
 		DataReduction.signalPidFileButton.setEnabled(false);
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = false;
 		CheckDataReductionButtonValidation.sSignalPidFile = "";

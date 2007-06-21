@@ -60,7 +60,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static String 			    pidSignalFileName = "";     //name of signal pid file
     static String           pidBackFileName = "";		    //name of back pid file
     static String	      		sNexusFound;			          //NeXus file found or not
-    static String     	 	  sNtof;					            //Number of time of flight
+    static String     	 	  sNtof = "";					            //Number of time of flight
     static String          	text1;
     static String          	text2;
     static String          	cmd; 
@@ -681,6 +681,14 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    		ParametersConfiguration.iY12 = y_max - y_min + 1;
 	    		TabUtils.addForegroundColor(tabbedPane,1);
 	    		TabUtils.addForegroundColor(selectionTab, 0);
+          
+          //if right tab is on Other Plots and signal selection has been selected, then update
+          if (tabbedPane.getSelectedIndex()==2 &&
+              CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex()==4 &&
+              CreateOtherPlotsPanel.interactiveSelectionRadioButton.isSelected()) {
+              OtherPlotsAction.selectDesiredPlot();
+            } 
+            
 	    	} else if (modeSelected.compareTo("back1Selection") == 0) {
 	    		backgroundPidFileButton.setEnabled(true);
 	    		MouseSelection.saveXY(IParameters.BACK1_STRING,x_min, y_min, x_max, y_max);

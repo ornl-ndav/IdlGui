@@ -14,6 +14,8 @@ public class SubmitPlot implements Runnable {
 	
 	public void run() {
 
+    DataReduction.c_ionCon.setDrawable(DataReduction.c_plot);
+    
     ParametersToKeep.bThreadInProcess = true;
     String sMessage = "Run number to plot: " + DataReduction.runNumberValue + "\n";
     LogBookAction.displayMessageInLogBook(sMessage, false);
