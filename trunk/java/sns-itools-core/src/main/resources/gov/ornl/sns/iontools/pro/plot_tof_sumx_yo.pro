@@ -24,7 +24,7 @@ counts_vs_tof_intermediate=total(data,2)
 
 if (tofo EQ 0) then begin
 
-   counts_vs_tof= counts_vs_tof_intermediate[*,yo]
+   counts_vs_tof = counts_vs_tof_intermediate[*,yo]
 
 endif else begin
 

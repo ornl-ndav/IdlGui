@@ -1,4 +1,7 @@
-PRO PLOT_TOF_SIGNAL_SELECTION, xmin, $
+PRO PLOT_TOF_SIGNAL_SELECTION, tof_min, $
+                               tof_max, $
+                               tofo, $
+                               xmin, $
                                xmax, $
                                ymin, $
                                ymax, $
@@ -28,12 +31,21 @@ readu,u,data
 close, u
 free_lun, u
 
-counts_vs_tof_inter1 = data(*,xmin:xmax, ymin:ymax)
+if (tofo EQ 0) then begin
+
+    counts_vs_tof_inter1 = data(*,xmin:xmax, ymin:ymax)
+
+endif else begin
+
+    tof_min = Long(tof_min)
+    tof_max = Long(tof_max)
+    counts_vs_tof_inter1 = data(tof_min:tof_max,xmin:xmax, ymin:ymax)
+
+endelse
+
 counts_vs_tof_inter2 = total(counts_vs_tof_inter1,2)
-counts_vs_tof = lonarr(Ntof)
 counts_vs_tof = total(counts_vs_tof_inter2,2)
 
-help, counts_vs_tof
 
 xtitle= '#time bins'
 ytitle= 'Counts'
