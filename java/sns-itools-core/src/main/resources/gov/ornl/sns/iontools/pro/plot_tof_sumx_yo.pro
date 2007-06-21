@@ -1,4 +1,4 @@
-PRO PLOT_TOF_SUMX_YO, yo, tmp_histo_file, Nx, Ny
+PRO PLOT_TOF_SUMX_YO, tof_min, tof_max, tofo, yo, tmp_histo_file, Nx, Ny
 
 Nx = Long(Nx)
 Ny = Long(Ny)
@@ -21,7 +21,18 @@ free_lun, u
 
 counts_vs_tof_intermediate=lonarr(Ntof)
 counts_vs_tof_intermediate=total(data,2)
-counts_vs_tof=counts_vs_tof_intermediate[*,yo]
+
+if (tofo EQ 0) then begin
+
+   counts_vs_tof= counts_vs_tof_intermediate[*,yo]
+
+endif else begin
+
+    tof_min = Long(tof_min)
+    tof_max = Long(tof_max)
+    counts_vs_tof= counts_vs_tof_intermediate[tof_min:tof_max,yo]
+    
+endelse
 
 xtitle= '#time bins'
 ytitle= 'Counts'

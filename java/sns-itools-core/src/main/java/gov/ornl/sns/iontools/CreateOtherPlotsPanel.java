@@ -396,7 +396,7 @@ public class CreateOtherPlotsPanel {
       tBinMaxLabelHeight);
   DataReduction.otherPlotsPanel.add(tBinMaxLabel);
   
-  tBinMaxTextField = new JTextField("0");
+  tBinMaxTextField = new JTextField("1");
   tBinMaxTextField.setVisible(false);
   tBinMaxTextField.setActionCommand("tBinMaxTextField");
   tBinMaxTextField.setEditable(true);
