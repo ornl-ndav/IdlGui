@@ -13,6 +13,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 #include <cstdlib>
 #include <fstream>
 #include <stdexcept>
@@ -22,6 +23,7 @@
 
 using std::vector;
 using std::string;
+using std::map;
 
 const string VERSION("1.0");
 const size_t BLOCK_SIZE = 1024;
@@ -38,6 +40,7 @@ struct Config
   string out_path;
   string format;
   string event_file;
+  string mapping_file;
 };
 
 /** \class Event_Data
@@ -58,6 +61,14 @@ class EventData
      *  \param config The configuration options.
      */
     void read_data(const Config &config);
+
+    /** \fn void map_pixel_ids(const string &mapping_file,
+     *                         map<uint32_t, uint32_t> &mapped_pixel_ids)
+     *  \brief Takes a mapping file and maps the pixels to
+     *         the appropriate numbers.
+     */
+    void map_pixel_ids(const string &mapping_file,
+                       map<uint32_t, uint32_t> &mapped_pixel_ids);
 
     /** \fn const vector<NumT> get_tof(void)
      *  \brief Returns a constant vector to the private tof vector.

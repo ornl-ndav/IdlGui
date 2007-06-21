@@ -151,6 +151,10 @@ int main(int32_t argc,
                        "event file to read from",
                        false, "", "event file", cmd);
 
+      ValueArg<string> mapping_file("m", "mapping",
+                       "mapping file for pixel ids",
+                       false, "", "mapping file", cmd);
+      
       // Types for the nexus file format
       vector<string> allowed_types;
       allowed_types.push_back("hdf4");
@@ -173,7 +177,8 @@ int main(int32_t argc,
       config.out_path = out_path.getValue();
       config.event_file = event_file.getValue();
       config.format = format.getValue();
-  
+      config.mapping_file = mapping_file.getValue();
+      
       // Get the format of the nexus file
       if (format.getValue() == "hdf4")
         {
