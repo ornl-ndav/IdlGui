@@ -1,13 +1,13 @@
-PRO PLOT_TOF_SIGNAL_SELECTION, tof_min, $
-                               tof_max, $
-                               tofo, $
-                               xmin, $
-                               xmax, $
-                               ymin, $
-                               ymax, $
-                               tmp_histo_file, $
-                               Nx, $
-                               Ny
+PRO PLOT_TOF_SELECTION, tof_min, $
+                        tof_max, $
+                        tofo, $
+                        xmin, $
+                        xmax, $
+                        ymin, $
+                        ymax, $
+                        tmp_histo_file, $
+                        Nx, $
+                        Ny
 
 xmin = Long(xmin)
 xmax = Long(xmax)

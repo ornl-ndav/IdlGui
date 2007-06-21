@@ -181,7 +181,19 @@ public class OtherPlotsCreateCmd {
       }
       break;
     case 13: //Counts = f( TOF , back2_selection )
-      cmd = IParameters.LIST_OF_PRO_FILES[index];
+    case 20: //Counts = f(TOFo, back2 selection)
+      cmd = IParameters.LIST_OF_PRO_FILES[13];
+      
+      ionTOFmin = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMinTextField.getText());
+      ionTOFmax = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMaxTextField.getText());
+      if (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 1) {
+        ionTOFo = new com.rsi.ion.IONVariable(0);
+      } else {
+        ionTOFo = new com.rsi.ion.IONVariable(1);
+      }
+      cmd += "," + ionTOFmin;
+      cmd += "," + ionTOFmax;
+      cmd += "," + ionTOFo;
       
       int xminB2 = MouseSelectionParameters.back2_xmin;
       int xmaxB2 = MouseSelectionParameters.back2_xmax;
@@ -201,8 +213,6 @@ public class OtherPlotsCreateCmd {
       } else {
         OtherPlotsAction.bThreadSafe = false;
       }
-      break;
-    case 20: //Counts = f(TOFo, back2 selection)
       break;
     case 21: //clear
     cmd = "clear";

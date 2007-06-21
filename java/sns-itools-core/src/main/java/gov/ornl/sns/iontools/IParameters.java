@@ -249,9 +249,9 @@ public interface IParameters {
                                                  "plot_tof_sumx_sumy",
                                                  "plot_tof_xo_sumy",
                                                  "plot_tof_sumx_yo",
-                                                 "plot_tof_signal_selection",
-                                                 "plot_tof_back1_selection",
-                                                 "plot_tof_back2_selection"};
+                                                 "plot_tof_selection",
+                                                 "plot_tof_selection",
+                                                 "plot_tof_selection"};
                                                  
         
       static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {" I = f ( -?- , -?- , -?- )",
