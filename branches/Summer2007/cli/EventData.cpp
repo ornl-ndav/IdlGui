@@ -67,16 +67,20 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file,
 template <typename NumT>
 void EventData<NumT>::read_data(const Config &config) 
 {
-  map<uint32_t, uint32_t> mapped_pixel_ids;
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
   size_t data_size = sizeof(NumT);
+  map<uint32_t, uint32_t> pixel_id_map;
+  map<uint32_t, uint32_t>::iterator map_iterator;
+  map<uint32_t, uint32_t>::iterator map_end;
+  bool is_mapped = (config.mapping_file != "") ? true : false;
 
   // First create a map if mapping is set
-  if (config.mapping_file != "")
+  if (is_mapped)
     {
-      map_pixel_ids(config.mapping_file, mapped_pixel_ids);
+      map_pixel_ids(config.mapping_file, pixel_id_map);
+      map_end = pixel_id_map.end();
     }
 
   // Open the event file
@@ -104,7 +108,17 @@ void EventData<NumT>::read_data(const Config &config)
         {
           // Use pointer arithmetic for speed
           EventData::tof.push_back(*(buffer + i));
-          EventData::pixel_id.push_back(*(buffer + i + 1));
+
+          // Map the pixels if necessary
+          if (is_mapped && 
+             (map_iterator = pixel_id_map.find(*(buffer + i + 1))) != map_end)
+            {
+              EventData::pixel_id.push_back(map_iterator->second);
+            }
+          else
+            {
+              EventData::pixel_id.push_back(*(buffer + i + 1));
+            }
         }
 
       offset += buffer_size;

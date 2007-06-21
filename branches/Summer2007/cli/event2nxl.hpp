@@ -68,7 +68,7 @@ class EventData
      *         the appropriate numbers.
      */
     void map_pixel_ids(const string &mapping_file,
-                       map<uint32_t, uint32_t> &mapped_pixel_ids);
+                       map<uint32_t, uint32_t> &pixel_id_map);
 
     /** \fn const vector<NumT> get_tof(void)
      *  \brief Returns a constant vector to the private tof vector.
