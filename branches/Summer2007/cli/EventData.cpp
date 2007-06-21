@@ -16,7 +16,7 @@ using std::map;
 
 template <typename NumT>
 void EventData<NumT>::map_pixel_ids(const string &mapping_file, 
-                                    map<uint32_t, uint32_t> &mapped_pixel_ids)
+                                    map<uint32_t, uint32_t> &pixel_id_map)
 {
   size_t data_size = sizeof(uint32_t);
   uint32_t mapping_index = 0;
@@ -47,7 +47,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file,
       // in the mapping file to that index
       for( i = 0; i < buffer_size; i++ )
         {
-          mapped_pixel_ids[mapping_index] = *(buffer + i);
+          pixel_id_map[mapping_index] = *(buffer + i);
           mapping_index++;
         }
 
