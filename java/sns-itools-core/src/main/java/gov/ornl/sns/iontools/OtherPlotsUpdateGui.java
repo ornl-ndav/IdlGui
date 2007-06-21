@@ -28,10 +28,8 @@ public class OtherPlotsUpdateGui {
       bMakeSelectionVisible = true;
       break;
     case 5: //I=f(?,back selection)
-      bMakeSelectionVisible = true;
       break;
     case 6: //I=f(?,back2 selection)
-      bMakeSelectionVisible = true;
       break;
     case 7: //I=f(tof,?,?)
       break;
@@ -50,10 +48,8 @@ public class OtherPlotsUpdateGui {
       bMakeSelectionVisible = true;
       break;
     case 12: //Counts = f( TOF , back1_selection )
-      bMakeSelectionVisible = true;
       break;
     case 13: //Counts = f( TOF , back2_selection )
-      bMakeSelectionVisible = true;
       break;
     case 15: //Counts = f( TOFo , Sum(X) , Sum(Y) )
       bMakeTbinVisible = true;
@@ -71,11 +67,9 @@ public class OtherPlotsUpdateGui {
       bMakeTbinVisible = true;
       break;
     case 19: //Counts = f(TOFo, back selection)
-      bMakeSelectionVisible = true;
       bMakeTbinVisible = true;
       break;
     case 20: //Counts = f(TOFo, back2 selection)
-      bMakeSelectionVisible = true;
       bMakeTbinVisible = true;
       break;
     default:

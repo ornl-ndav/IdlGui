@@ -27,38 +27,63 @@ public class OtherPlotsCreateMessage {
       break;
     case 2:  //f( ---, Xo, SumY)
     case 9:  //f( TOF, Xo, SumY)
+    case 16: //f( TOFo, Xo, SumY)
       sMessage = "\n\n  Xo = " + MouseSelection.infoX;
       break;
-    case 16: //f( TOFo, Xo, SumY)
     case 3:  //f( ---, SumX, Yo)
     case 10: //f( TOF, SumX, Yo)
+    case 17: //f( TOFo, SumX, Yo)
       sMessage = "\n\n  Yo = " + MouseSelection.infoY;
       break;
-    case 17: //f( TOFo, SumX, Yo)
     case 4:  //f( ---, SignalSelection)
     case 11: //f( TOF, SignalSelection)
-      sMessage = "\n\nSelection (signal):\n  Xmin = " + MouseSelectionParameters.signal_xmin;
-      sMessage += "  Xmax = " + MouseSelectionParameters.signal_xmax;
-      sMessage += "\n  Ymin = " + MouseSelectionParameters.signal_ymin;
-      sMessage += "  Ymax = " + MouseSelectionParameters.signal_ymax;
-      break;
     case 18: //f( TOFo, SignalSelection)
+      if (CreateOtherPlotsPanel.saveSelectionRadioButton.isSelected()) {  
+        int save_xmin = MouseSelectionParameters.save_signal_xmin;
+        int save_xmax = MouseSelectionParameters.save_signal_xmax;
+        int save_ymin = MouseSelectionParameters.save_signal_ymin;
+        int save_ymax = MouseSelectionParameters.save_signal_ymax;
+          sMessage = "\n\nSelection saved (signal):\n  Xmin = " + save_xmin;
+          sMessage += "  Xmax = " + save_xmax;
+          sMessage += "\n  Ymin = " + save_ymin;
+          sMessage += "  Ymax = " + save_ymax;
+          if (OtherPlotsUtils.isSelectionValid(save_xmin, save_xmax, save_ymin, save_ymax)) {
+            sMessage += "\n\n Signal selection used : " + SaveSignalPidFileAction.pidSignalFileNameShortVersion;
+          } else {
+            sMessage += "\n\n Please select and save a signal region\n first.";
+            OtherPlotsAction.bThreadSafe = false;
+          }
+        } else {
+          int interactive_xmin = MouseSelectionParameters.interactive_signal_xmin;
+          int interactive_xmax = MouseSelectionParameters.interactive_signal_xmax;
+          int interactive_ymin = MouseSelectionParameters.interactive_signal_ymin;
+          int interactive_ymax = MouseSelectionParameters.interactive_signal_ymax;
+            sMessage = "\n\nSelection saved (signal):\n  Xmin = " + interactive_xmin;
+            sMessage += "  Xmax = " + interactive_xmax;
+            sMessage += "\n  Ymin = " + interactive_ymin;
+            sMessage += "  Ymax = " + interactive_ymax;
+            if (!OtherPlotsUtils.isSelectionValid(interactive_xmin, interactive_xmax, interactive_ymin, interactive_ymax)) {
+              sMessage += "\n\n Please select a signal region first.";
+              OtherPlotsAction.bThreadSafe = false;
+            }
+        }
+        break;
     case 5:  //f( ---, BackSelection)
     case 12: //f( TOF, BackSelection)
+    case 19: //f( TOFo, BackSelection)
       sMessage = "\n\nSelection (background 1):\n  Xmin = " + MouseSelectionParameters.back1_xmin;
       sMessage += "  Xmax = " + MouseSelectionParameters.back1_xmax;
       sMessage += "\n  Ymin = " + MouseSelectionParameters.back1_ymin;
       sMessage += "  Ymax = " + MouseSelectionParameters.back1_ymax;
       break;
-    case 19: //f( TOFo, BackSelection)
     case 6:  //f( ---, Back2Selection)
     case 13: //f( TOF, Back2Selection)
+    case 20: //f( TOFo, Back2Selection)
       sMessage = "\n\nSelection (background 2):\n  Xmin = " + MouseSelectionParameters.back2_xmin;
       sMessage += "  Xmax = " + MouseSelectionParameters.back2_xmax;
       sMessage += "\n  Ymin = " + MouseSelectionParameters.back2_ymin;
       sMessage += "  Ymax = " + MouseSelectionParameters.back2_ymax;
       break;
-    case 20: //f( TOFo, Back2Selection)
     default:
     }
     

@@ -6,6 +6,8 @@ import java.io.*;
 
 public class SaveSignalPidFileAction {
 
+  static String pidSignalFileNameShortVersion;
+  
 	static void signalPidFileButton() {
 	
 		String cmd="";
@@ -17,7 +19,7 @@ public class SaveSignalPidFileAction {
 		
 		DataReduction.signalPidFileTextField.setBackground(Color.WHITE);
     
-    String pidSignalFileNameShortVersion = UtilsFunction.getOnlyLastPartOfFileName(DataReduction.pidSignalFileName);
+    pidSignalFileNameShortVersion = UtilsFunction.getOnlyLastPartOfFileName(DataReduction.pidSignalFileName);
     DataReduction.signalPidFileTextField.setText(pidSignalFileNameShortVersion);	
 		
 		int[] xarr = {MouseSelectionParameters.signal_xmin, 
