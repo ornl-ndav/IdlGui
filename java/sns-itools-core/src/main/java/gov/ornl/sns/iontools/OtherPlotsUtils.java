@@ -18,16 +18,20 @@ public class OtherPlotsUtils {
    */
   static boolean isTBinMinMaxCorrect(int TBinMin, int TBinMax) {
     
-    int NTof = Integer.parseInt(DataReduction.sNtof);
-    if (0 <= TBinMin &&
-        TBinMin < NTof &&
-        TBinMin <= TBinMax &&
-        TBinMax < NTof) {
-      return true;
+    String sNtof = DataReduction.sNtof;
+    if (sNtof.compareTo("")!=0) {
+      int NTof = Integer.parseInt(DataReduction.sNtof);
+      if (0 <= TBinMin &&
+          TBinMin < NTof &&
+          TBinMin <= TBinMax &&
+          TBinMax < NTof) {
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }
-          
   }
   
 }

@@ -13,7 +13,6 @@ public class OtherPlotsAction {
     int iTOFSelected = CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex();
     int iXYSelected = CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex();
     int iIndex = iTOFSelected * 7 + iXYSelected;
-    
     switch (iIndex) {
       case 0:  //f( ---, ---, ---)
       case 7:  //f( TOf, ---, ---)

@@ -248,8 +248,6 @@ public class SuperEventHandler extends DataReduction {
 				ionLoadct = new com.rsi.ion.IONVariable(loadctComboBox.getSelectedIndex());
 				ionWorkingPathSession = new com.rsi.ion.IONVariable(ParametersToKeep.sSessionWorkingDirectory);
 				
-        c_ionCon.setDrawable(c_plot);
-		    		    	
 				String cmd = "result = plot_data( " + runNumberValue + ", " + 
 				ionInstrument + ", " + user + "," + ionLoadct;
 				cmd += "," + ionWorkingPathSession + ")";
@@ -258,7 +256,6 @@ public class SuperEventHandler extends DataReduction {
 				SubmitPlot run = new SubmitPlot(cmd);
 				Thread runThread = new Thread(run,"plot in progress");
 				runThread.start();
-      
 			}	
 		}		
 

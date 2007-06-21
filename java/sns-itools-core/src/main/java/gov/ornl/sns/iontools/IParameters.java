@@ -225,15 +225,7 @@ public interface IParameters {
 	    											  "Rainbow18",
 	    											  "Rainbow + White",
 	    											  "Rainbow + Black"};
-      static final String[] LIST_OF_OTHER_PLOTS     = {" ----- SELECT ME ----- ",
-                                                       "Counts = f( TOF , Sum(X) , Sum(Y) )",
-                                                       "Counts = f( TOF , Xo , Sum(Y) )",
-                                                       "Counts = f( TOF , Sum(X) , Yo )",
-                                                       "Counts = f( TOF , signal_selection )",
-                                                       "Counts = f( TOF , back1_selection )",
-                                                       "Counts = f( TOF , back2_selection )",
-                                                       "Counts = f( TOFo , Sum(X) , Sum(Y) )"};
-      
+            
       static final String[] LIST_OF_OTHER_PLOTS_PART1 = {" -- SELECT ME -- ",
                                                          " Integrated over TOF",
                                                          " TOF min - TOF max"};
@@ -289,25 +281,7 @@ public interface IParameters {
                                                            " I = f ( [TOFmin,TOFmax] , Signal Select.)",
                                                            " I = f ( [TOFmin,TOFmax] , Back1 Select.)",
                                                            " I = f ( [TOFmin,TOFmax] , Back2 Select.)"};
-      
-      /*static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear Plot area",
-                                                           "Total counts vs TOF for \nfull detector range.",
-                                                           "Total counts vs TOF for xo integrated\n" +
-                                                           "over the full range of Ny.\n" +
-                                                           "xo can be defined using a right mouse\n" +
-                                                           "click on the main plot or by editing\n" +
-                                                           "the text box below.",
-                                                           "Total counts vs TOF for yo integrated\n" +
-                                                           "over the full range of Nx.\n" +
-                                                           "yo can be defined using a right mouse\n" + 
-                                                           "click on the main plot or by editing\n" +
-                                                           "text box below.",
-                                                           "Total counts vs tof for \nthe selected signal selection",
-                                                           "Total counts vs tof for \nthe selected background1 selection",
-                                                           "Total counts vs tof for \nthe selected background2 selection",
-                                                           "Full 2d plot for a particular \nrange of time bins"};
-                                                           */
-      
+            
 	    static final Color TAB_BACKGROUND_NEW         = Color.RED;
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;
 	    static final Color TAB_FOREGROUND_NEW         = Color.BLUE;
