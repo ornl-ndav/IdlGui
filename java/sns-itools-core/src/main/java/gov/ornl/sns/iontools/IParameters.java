@@ -246,16 +246,51 @@ public interface IParameters {
                                                          " Background_1 Selection",
                                                          " Background_2 Selection"};
       
-      static final String[] LIST_OF_PRO_FILES       = {"clear",
-                                                       "plot_tof_sumx_sumy",
-                                                       "plot_tof_xo_sumy",
-                                                       "plot_tof_sumx_yo",
-                                                       "plot_tof_signal_selection",
-                                                       "plot_tof_back1_selection",
-                                                       "plot_tof_back2_selection",
-                                                       "plot_tofo_sumx_sumy"};
-            
-      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear Plot area",
+      static final String[] LIST_OF_PRO_FILES = {"",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "",
+                                                 "plot_tof_sumx_sumy",
+                                                 "plot_tof_xo_sumy",
+                                                 "plot_tof_sumx_yo",
+                                                 "plot_tof_signal_selection",
+                                                 "plot_tof_back1_selection",
+                                                 "plot_tof_back2_selection",
+                                                 "",
+                                                 "plot_tofo_sumx_sumy",
+                                                 "plot_tofo_xo_sumy",
+                                                 "plot_tofo_sumx_yo",
+                                                 "plot_tofo_signal_selection",
+                                                 "plot_tofo_back1_selection",
+                                                 "plot_tofo_back2_selection"};
+        
+      static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {" I = f ( -?- , -?- , -?- )",
+                                                           " I = f ( -?- , Sum(X) , Sum(Y) ) ",
+                                                           " I = f ( -?- , Xo, Sum(Y) ) ",
+                                                           " I = f ( -?- , Sum(X) , Yo )",
+                                                           " I = f ( -?- , Signal Selection )",
+                                                           " I = f ( -?- , Back1 Selection )",
+                                                           " I = f ( -?- , Back2 Selection )",
+                                                           " I = f ( TOF , -?- , -?- )",
+                                                           " I = f ( TOF , Sum(X) , Sum(Y) ) ",
+                                                           " I = f ( TOF , Xo, Sum(Y) ) ",
+                                                           " I = f ( TOF , Sum(X) , Yo )",
+                                                           " I = f ( TOF , Signal Selection )",
+                                                           " I = f ( TOF , Back1 Selection )",
+                                                           " I = f ( TOF , Back2 Selection )",
+                                                           " I = f ( [TOFmin,TOFmax] , -?- , -?- )",
+                                                           " I = f ( [TOFmin,TOFmax] , Sum(X) , Sum(Y) ) ",
+                                                           " I = f ( [TOFmin,TOFmax] , Xo, Sum(Y) ) ",
+                                                           " I = f ( [TOFmin,TOFmax] , Sum(X) , Yo )",
+                                                           " I = f ( [TOFmin,TOFmax] , Signal Select.)",
+                                                           " I = f ( [TOFmin,TOFmax] , Back1 Select.)",
+                                                           " I = f ( [TOFmin,TOFmax] , Back2 Select.)"};
+      
+      /*static final String[] MESSAGE_LIST_OF_OTHER_PLOTS = {"Clear Plot area",
                                                            "Total counts vs TOF for \nfull detector range.",
                                                            "Total counts vs TOF for xo integrated\n" +
                                                            "over the full range of Ny.\n" +
@@ -271,6 +306,7 @@ public interface IParameters {
                                                            "Total counts vs tof for \nthe selected background1 selection",
                                                            "Total counts vs tof for \nthe selected background2 selection",
                                                            "Full 2d plot for a particular \nrange of time bins"};
+                                                           */
       
 	    static final Color TAB_BACKGROUND_NEW         = Color.RED;
 	    static final Color TAB_BACKGROUND_OLD         = Color.WHITE;

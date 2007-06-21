@@ -29,6 +29,9 @@ public class CreateOtherPlotsPanel {
   static JTextField       yoTextField;
   static JComboBox        list1OfOtherPlotsComboBox;
   static JComboBox        list2OfOtherPlotsComboBox;
+  static JRadioButton     interactiveSelectionRadioButton;
+  static JRadioButton     saveSelectionRadioButton;
+  static ButtonGroup      selectionButtonGroup;
   
   static int topPartPanelXoff = 5;
   static int topPartPanelYoff = 5;
@@ -70,8 +73,7 @@ public class CreateOtherPlotsPanel {
   static int otherPlotsGraphicalWindowWidth = IParameters.OTHER_PLOTS_X;
   static int otherPlotsGraphicalWindowHeight = IParameters.OTHER_PLOTS_Y;
   
-  static int yoff = 30;
-  
+  static int yoff = 35;
   static int infoLabelXoff = 575;
   static int infoLabelYoff = 18+yoff;
   static int infoLabelWidth = 200;
@@ -82,8 +84,8 @@ public class CreateOtherPlotsPanel {
   static int infoScrollPaneWidth = 240;
   static int infoScrollPaneHeight = 150;
   
-  static int xoLabelXoff = 570;
-  static int xoLabelYoff = 210+yoff;
+  static int xoLabelXoff = 560;
+  static int xoLabelYoff = 210 + yoff;
   static int xoLabelWidth = 100;
   static int xoLabelHeight = 30;
   
@@ -92,7 +94,7 @@ public class CreateOtherPlotsPanel {
   static int yoLabelWidth = xoLabelWidth;
   static int yoLabelHeight = xoLabelHeight;
   
-  static int xoTextFieldXoff = 610;
+  static int xoTextFieldXoff = 630;
   static int xoTextFieldYoff = xoLabelYoff;
   static int xoTextFieldWidth = 80;
   static int xoTextFieldHeight = xoLabelHeight;
@@ -102,43 +104,57 @@ public class CreateOtherPlotsPanel {
   static int yoTextFieldWidth = xoTextFieldWidth;
   static int yoTextFieldHeight = xoLabelHeight;
 
-  static int xoyoRangeLabelXoff = 700;
+  static int xoyoRangeLabelXoff = 715;
   static int xoyoRangeLabelYoff = xoLabelYoff;
   static int xoyoRangeLabelWidth = 100;
   static int xoyoRangeLabelHeight = xoLabelHeight;
   
+  //interactive and save selection radio buttons
+  static int saveSelectionXoff = xoLabelXoff;
+  static int saveSelectionYoff = xoLabelYoff;
+  static int saveSelectionWidth = 250;
+  static int saveSelectionHeight = 30;
+
+  static int yoffRadio = 25;
+  static int interactiveSelectionXoff = xoLabelXoff;
+  static int interactiveSelectionYoff = saveSelectionYoff + yoffRadio;
+  static int interactiveSelectionWidth = saveSelectionWidth;
+  static int interactiveSelectionHeight = saveSelectionHeight;
+
   //Tbin min
-  static int tBinMinLabelXoff = 560;
-  static int tBinMinLabelYoff = xoLabelYoff;
+  static int tBinOff = yoff;
+  static int tBinMinLabelXoff = xoLabelXoff;
+  static int tBinMinLabelYoff = interactiveSelectionYoff + tBinOff;
   static int tBinMinLabelWidth = 100;
   static int tBinMinLabelHeight = 30;
   
-  static int tBinMinTextFieldXoff = 630;
-  static int tBinMinTextFieldYoff = xoLabelYoff;
+  static int tBinMinTextFieldXoff = xoTextFieldXoff;
+  static int tBinMinTextFieldYoff = tBinMinLabelYoff;
   static int tBinMinTextFieldWidth = xoTextFieldWidth;
   static int tBinMinTextFieldHeight = xoTextFieldHeight;
   
-  static int tBinMinRangeLabelXoff = 715;
-  static int tBinMinRangeLabelYoff = xoyoRangeLabelYoff;
+  static int tBinMinRangeLabelXoff = xoyoRangeLabelXoff;
+  static int tBinMinRangeLabelYoff = tBinMinLabelYoff;
   static int tBinMinRangeLabelWidth = xoyoRangeLabelWidth;
   static int tBinMinRangeLabelHeight = xoyoRangeLabelHeight;
  
   //Tbin max
   static int yoff1 = 35;
   static int tBinMaxLabelXoff = tBinMinLabelXoff;
-  static int tBinMaxLabelYoff = xoLabelYoff + yoff1;
+  static int tBinMaxLabelYoff = tBinMinLabelYoff + yoff1;
   static int tBinMaxLabelWidth = 100;
   static int tBinMaxLabelHeight = 30;
   
   static int tBinMaxTextFieldXoff = tBinMinTextFieldXoff;
-  static int tBinMaxTextFieldYoff = xoLabelYoff + yoff1;
+  static int tBinMaxTextFieldYoff = tBinMinLabelYoff + yoff1;
   static int tBinMaxTextFieldWidth = xoTextFieldWidth;
   static int tBinMaxTextFieldHeight = xoTextFieldHeight;
   
   static int tBinMaxRangeLabelXoff = tBinMinRangeLabelXoff;
-  static int tBinMaxRangeLabelYoff = xoyoRangeLabelYoff + yoff1;
+  static int tBinMaxRangeLabelYoff = tBinMinLabelYoff + yoff1;
   static int tBinMaxRangeLabelWidth = xoyoRangeLabelWidth;
   static int tBinMaxRangeLabelHeight = xoyoRangeLabelHeight;
+  
   
   static void createGUI() {
   
@@ -281,7 +297,7 @@ public class CreateOtherPlotsPanel {
   DataReduction.otherPlotsPanel.add(infoScrollPane);
   
   //xo label - text field - message widgets
-  xoLabel = new JLabel("xo = ");
+  xoLabel = new JLabel("Xo : ");
   xoLabel.setVisible(false);
   xoLabel.setBounds(
       xoLabelXoff,
@@ -311,7 +327,7 @@ public class CreateOtherPlotsPanel {
   DataReduction.otherPlotsPanel.add(xoRangeLabel);
   
   //yo label - text field - message widgets  
-  yoLabel = new JLabel("yo = ");
+  yoLabel = new JLabel("Yo : ");
   yoLabel.setVisible(false);
   yoLabel.setBounds(
       yoLabelXoff,
@@ -399,13 +415,32 @@ public class CreateOtherPlotsPanel {
       tBinMaxRangeLabelWidth,
       tBinMaxRangeLabelHeight);
   DataReduction.otherPlotsPanel.add(tBinMaxRangeLabel);
+
+  saveSelectionRadioButton = new JRadioButton("Save Selection Mode");
+  saveSelectionRadioButton.setActionCommand("saveSelectionRadioButton");
+  saveSelectionRadioButton.setSelected(true);
+  saveSelectionRadioButton.setVisible(false);
+  saveSelectionRadioButton.setBounds(
+      saveSelectionXoff,
+      saveSelectionYoff,
+      saveSelectionWidth,
+      saveSelectionHeight);
+  
+  interactiveSelectionRadioButton = new JRadioButton("Interactive Selection Mode");
+  interactiveSelectionRadioButton.setActionCommand("interactiveSelectionRadioButton");
+  interactiveSelectionRadioButton.setVisible(false);
+  interactiveSelectionRadioButton.setBounds(
+      interactiveSelectionXoff,
+      interactiveSelectionYoff,
+      interactiveSelectionWidth,
+      interactiveSelectionHeight);
+
+  selectionButtonGroup = new ButtonGroup();
+  selectionButtonGroup.add(saveSelectionRadioButton);
+  selectionButtonGroup.add(interactiveSelectionRadioButton);
+  DataReduction.otherPlotsPanel.add(interactiveSelectionRadioButton);
+  DataReduction.otherPlotsPanel.add(saveSelectionRadioButton);
+    
+
   }
-
-
-
-
-
-
-
-
 }

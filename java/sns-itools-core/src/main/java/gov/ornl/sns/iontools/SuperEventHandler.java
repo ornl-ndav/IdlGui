@@ -346,7 +346,7 @@ public class SuperEventHandler extends DataReduction {
         MouseSelection.infoX = Integer.parseInt(sXo);
         OtherPlotsAction.selectDesiredPlot();
       } else {
-        OtherPlotsAction.displayErrorMessage();
+        OtherPlotsCreateMessage.displayErrorInputMessage();
       }
     }
     
@@ -357,7 +357,7 @@ public class SuperEventHandler extends DataReduction {
         MouseSelection.infoY = Integer.parseInt(sYo);
         OtherPlotsAction.selectDesiredPlot();}
       else {
-        OtherPlotsAction.displayErrorMessage();
+        OtherPlotsCreateMessage.displayErrorInputMessage();
       }
     }
     
@@ -377,7 +377,5 @@ public class SuperEventHandler extends DataReduction {
         "tBinMaxTextField".equals(evt.getActionCommand())) {
       OtherPlotsAction.selectDesiredPlot();
     }
-        
   }
-  
 }
