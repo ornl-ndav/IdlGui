@@ -27,6 +27,12 @@ using namespace TCLAP;
 
 const size_t BLOCK_SIZE = 1024;
 
+/** \fn map_pixel_ids(const string &mapping_file,
+ *                  map<uint32_t, uint32_t> &pixel_id_map)
+ *  \brief Takes a mapping file and fills a pixel map. This 
+ *         map will be used to convert pixel ids back to
+ *         their original value.
+ */
 void map_pixel_ids(const string &mapping_file,
                    map<uint32_t, uint32_t> &pixel_id_map)
 {
