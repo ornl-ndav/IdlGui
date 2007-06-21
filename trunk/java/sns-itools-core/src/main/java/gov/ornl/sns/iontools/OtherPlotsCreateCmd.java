@@ -16,13 +16,19 @@ public class OtherPlotsCreateCmd {
     
     switch (index) {
     
-    case 0: //clear
-      cmd = IParameters.LIST_OF_PRO_FILES[index]; 
-      break;
-    case 1: //Counts = f( TOF , Sum(X) , Sum(Y) )
+    case 0: //I=f(?,?,?)
+    case 1: //I=f(?,sumx,sumy)
+    case 2: //I=f(?,xo,sumy)
+    case 3: //I=f(?,sumx,yo)
+    case 4: //I=f(?,signal selection)
+    case 5: //I=f(?,back selection)
+    case 6: //I=f(?,back2 selection)
+    case 7: //I=f(tof,?,?)
+    case 8: //I=f(tof,sumx,sumy)
+    case 14: //I=f(tofo,?,?)
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
-    case 2: //Counts = f( TOF , Xo , Sum(Y) )
+    case 9: //I=f(tof,xo,sumy)
       if (UtilsFunction.isInputValid(MouseSelection.infoX,0,DataReduction.Nx)) {
         cmd = IParameters.LIST_OF_PRO_FILES[index];
         com.rsi.ion.IONVariable ionXo = new com.rsi.ion.IONVariable(MouseSelection.infoX);
@@ -31,7 +37,7 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 3: //Counts = f( TOF , Sum(X) , Yo )
+    case 10: //Counts = f( TOF , Sum(X) , Yo )
       if (UtilsFunction.isInputValid(MouseSelection.infoY,0,DataReduction.Ny)) {
              cmd = IParameters.LIST_OF_PRO_FILES[index];
              com.rsi.ion.IONVariable ionYo = new com.rsi.ion.IONVariable(MouseSelection.infoY);
@@ -40,7 +46,7 @@ public class OtherPlotsCreateCmd {
           OtherPlotsAction.bThreadSafe = false;
         }
       break;
-    case 4: //Counts = f( TOF , signal_selection )
+    case 11: //Counts = f( TOF , signal_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       
       int xminS = MouseSelectionParameters.signal_xmin;
@@ -62,7 +68,7 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 5: //Counts = f( TOF , back1_selection )
+    case 12: //Counts = f( TOF , back1_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       
       int xminB1 = MouseSelectionParameters.back1_xmin;
@@ -84,7 +90,7 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 6: //Counts = f( TOF , back2_selection )
+    case 13: //Counts = f( TOF , back2_selection )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       
       int xminB2 = MouseSelectionParameters.back2_xmin;
@@ -106,7 +112,7 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 7: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+    case 15: //Counts = f( TOFo , Sum(X) , Sum(Y) )
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       String sTbinMin = CreateOtherPlotsPanel.tBinMinTextField.getText();
       String sTbinMax = CreateOtherPlotsPanel.tBinMaxTextField.getText();
@@ -127,6 +133,16 @@ public class OtherPlotsCreateCmd {
         } else {
         OtherPlotsAction.bThreadSafe = false;
       }
+      break;
+    case 16: //Counts = f(TOFo, Xo, Sum(Y))
+      break;
+    case 17: //Counts = f(TOFo, Sum(X), Yo)
+    break;
+    case 18: //Counts = f(TOFo, Signal selection)
+      break;
+    case 19: //Counts = f(TOFo, back selection)
+      break;
+    case 20: //Counts = f(TOFo, back2 selection)
       break;
     default:
     } 

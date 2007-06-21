@@ -223,7 +223,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     static JMenuItem        preferencesMenuItem;
     
-    static JRadioButton    	yesNormalizationRadioButton;
+    static JRadioButton     yesNormalizationRadioButton;
     static JRadioButton    	noNormalizationRadioButton;
     static JRadioButton     yesBackgroundRadioButton;
     static JRadioButton     noBackgroundRadioButton;
@@ -238,7 +238,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     static JRadioButton     automaticFilesTransferRadioButton;
     static JRadioButton     manualFilesTransferRadioButton;
     
-    static ButtonGroup    	normalizationButtonGroup;
+    static ButtonGroup      normalizationButtonGroup;
     static ButtonGroup      backgroundButtonGroup;
     static ButtonGroup      normBackgroundButtonGroup;
     static ButtonGroup      intermediateButtonGroup;
@@ -1219,6 +1219,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       CreateOtherPlotsPanel.tBinMinTextField.addActionListener(this);
       CreateOtherPlotsPanel.tBinMaxTextField.addActionListener(this);
       CreateOtherPlotsPanel.clearButton.addActionListener(this);
+      CreateOtherPlotsPanel.saveSelectionRadioButton.addActionListener(this);
+      CreateOtherPlotsPanel.interactiveSelectionRadioButton.addActionListener(this);
     }
       
 }
