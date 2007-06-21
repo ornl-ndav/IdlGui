@@ -28,9 +28,21 @@ public class OtherPlotsCreateCmd {
     case 14: //I=f(tofo,?,?)
       cmd = IParameters.LIST_OF_PRO_FILES[index];
       break;
-    case 9: //I=f(tof,xo,sumy)
+    case 9: // I=f(TOF,Xo,Sum(Y))
+    case 16: //I=f(TOFo, Xo, Sum(Y))
       if (UtilsFunction.isInputValid(MouseSelection.infoX,0,DataReduction.Nx)) {
         cmd = IParameters.LIST_OF_PRO_FILES[index];
+        com.rsi.ion.IONVariable ionTOFmin = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMinTextField.getText());
+        com.rsi.ion.IONVariable ionTOFmax = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMaxTextField.getText());
+        com.rsi.ion.IONVariable ionTOFo;
+        if (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 1) {
+          ionTOFo = new com.rsi.ion.IONVariable(0);
+        } else {
+          ionTOFo = new com.rsi.ion.IONVariable(1);
+        }
+        cmd += "," + ionTOFmin;
+        cmd += "," + ionTOFmax;
+        cmd += "," + ionTOFo;
         com.rsi.ion.IONVariable ionXo = new com.rsi.ion.IONVariable(MouseSelection.infoX);
         cmd += "," + ionXo;
       } else {
@@ -134,8 +146,6 @@ public class OtherPlotsCreateCmd {
         OtherPlotsAction.bThreadSafe = false;
       }
       break;
-    case 16: //Counts = f(TOFo, Xo, Sum(Y))
-      break;
     case 17: //Counts = f(TOFo, Sum(X), Yo)
     break;
     case 18: //Counts = f(TOFo, Signal selection)
@@ -144,6 +154,8 @@ public class OtherPlotsCreateCmd {
       break;
     case 20: //Counts = f(TOFo, back2 selection)
       break;
+    case 21: //clear
+    cmd = "clear";
     default:
     } 
     cmd += "," + ionTmpHistoFile + "," + ionNx + "," + ionNy;

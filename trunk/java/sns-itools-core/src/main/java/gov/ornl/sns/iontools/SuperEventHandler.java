@@ -367,7 +367,7 @@ public class SuperEventHandler extends DataReduction {
 
     //clear button in other plots tabs
     if ("clearButton".equals(evt.getActionCommand())) {
-      OtherPlotsAction.clearPlot(0);
+      OtherPlotsAction.clearPlot();
       OtherPlotsUpdateGui.updateGUI(0); 
     }
     

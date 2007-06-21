@@ -78,9 +78,8 @@ public class OtherPlotsAction {
   /*
    * This function clears the plot
    */
-  static void clearPlot(int index) {
-    OtherPlotsCreateMessage.displayInfoMessage(index);
-    String cmd = OtherPlotsCreateCmd.createCmd(index);
+  static void clearPlot() {
+    String cmd = OtherPlotsCreateCmd.createCmd(21);
     startThread(cmd);
   }
   
@@ -95,6 +94,7 @@ public class OtherPlotsAction {
       startThread(cmd);
     } else {
       OtherPlotsCreateMessage.displayErrorMessage(index);
+      clearPlot();
     }
   }
    
