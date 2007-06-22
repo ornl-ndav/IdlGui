@@ -43,6 +43,7 @@ public interface IParameters {
 		static final String DEFAULT_INSTRUMENT      = "REF_L";
 		static final String REF_L                   = "REF_L";
 		static final String REF_M                   = "REF_M";
+    static final int    PIXELID_TOTAL           = 77824;
 		
 		static final double PIXEL_SIZE_MM           = 0.7; 
 		static final double HALF_PIXEL_SIZE_MM      = PIXEL_SIZE_MM / 2;

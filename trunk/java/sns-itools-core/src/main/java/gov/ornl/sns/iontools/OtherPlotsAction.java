@@ -13,6 +13,7 @@ public class OtherPlotsAction {
     int iTOFSelected = CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex();
     int iXYSelected = CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex();
     int iIndex = iTOFSelected * 8 + iXYSelected;
+
     switch (iIndex) {
       case 0:  //f( ---, ---, ---)
       case 8:  //f( TOf, ---, ---)
@@ -85,7 +86,7 @@ public class OtherPlotsAction {
    * This function clears the plot
    */
   static void clearPlot() {
-    String cmd = OtherPlotsCreateCmd.createCmd(21);
+    String cmd = OtherPlotsCreateCmd.createCmd(24);
     startThread(cmd);
   }
   
@@ -96,7 +97,6 @@ public class OtherPlotsAction {
     OtherPlotsCreateMessage.displayInfoMessage(index);
     String cmd = OtherPlotsCreateCmd.createCmd(index);
     OtherPlotsCreateMessage.displayMoreInfo(index);
-    bThreadSafe = false;  //REMOVE_ME
     if (bThreadSafe) {
       startThread(cmd);
     } else {

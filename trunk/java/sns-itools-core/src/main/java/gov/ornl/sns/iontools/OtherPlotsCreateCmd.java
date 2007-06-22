@@ -240,7 +240,8 @@ public class OtherPlotsCreateCmd {
       }
       break;
     case 24: //clear
-    cmd = IParameters.LIST_OF_PRO_FILES[0];
+      cmd = IParameters.LIST_OF_PRO_FILES[0];
+      break;
     default:
     } 
     cmd += "," + ionTmpHistoFile + "," + ionNx + "," + ionNy;
