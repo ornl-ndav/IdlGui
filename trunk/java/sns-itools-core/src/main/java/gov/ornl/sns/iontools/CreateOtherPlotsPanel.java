@@ -90,7 +90,7 @@ public class CreateOtherPlotsPanel {
   static int xoLabelHeight = 30;
   
   static int yoLabelXoff = xoLabelXoff;
-  static int yoLabelYoff = xoLabelYoff;
+  static int yoLabelYoff = xoLabelYoff + yoff;
   static int yoLabelWidth = xoLabelWidth;
   static int yoLabelHeight = xoLabelHeight;
   
@@ -104,10 +104,15 @@ public class CreateOtherPlotsPanel {
   static int yoTextFieldWidth = xoTextFieldWidth;
   static int yoTextFieldHeight = xoLabelHeight;
 
-  static int xoyoRangeLabelXoff = 715;
-  static int xoyoRangeLabelYoff = xoLabelYoff;
-  static int xoyoRangeLabelWidth = 100;
-  static int xoyoRangeLabelHeight = xoLabelHeight;
+  static int xoRangeLabelXoff = 715;
+  static int xoRangeLabelYoff = xoLabelYoff;
+  static int xoRangeLabelWidth = 100;
+  static int xoRangeLabelHeight = xoLabelHeight;
+  
+  static int yoRangeLabelXoff = 715;
+  static int yoRangeLabelYoff = yoLabelYoff;
+  static int yoRangeLabelWidth = 100;
+  static int yoRangeLabelHeight = xoLabelHeight;
   
   //interactive and save selection radio buttons
   static int saveSelectionXoff = xoLabelXoff;
@@ -115,7 +120,7 @@ public class CreateOtherPlotsPanel {
   static int saveSelectionWidth = 250;
   static int saveSelectionHeight = 30;
 
-  static int yoffRadio = 25;
+  static int yoffRadio = 35;
   static int interactiveSelectionXoff = xoLabelXoff;
   static int interactiveSelectionYoff = saveSelectionYoff + yoffRadio;
   static int interactiveSelectionWidth = saveSelectionWidth;
@@ -133,10 +138,10 @@ public class CreateOtherPlotsPanel {
   static int tBinMinTextFieldWidth = xoTextFieldWidth;
   static int tBinMinTextFieldHeight = xoTextFieldHeight;
   
-  static int tBinMinRangeLabelXoff = xoyoRangeLabelXoff;
+  static int tBinMinRangeLabelXoff = xoRangeLabelXoff;
   static int tBinMinRangeLabelYoff = tBinMinLabelYoff;
-  static int tBinMinRangeLabelWidth = xoyoRangeLabelWidth;
-  static int tBinMinRangeLabelHeight = xoyoRangeLabelHeight;
+  static int tBinMinRangeLabelWidth = xoRangeLabelWidth;
+  static int tBinMinRangeLabelHeight = xoRangeLabelHeight;
  
   //Tbin max
   static int yoff1 = 35;
@@ -152,8 +157,8 @@ public class CreateOtherPlotsPanel {
   
   static int tBinMaxRangeLabelXoff = tBinMinRangeLabelXoff;
   static int tBinMaxRangeLabelYoff = tBinMinLabelYoff + yoff1;
-  static int tBinMaxRangeLabelWidth = xoyoRangeLabelWidth;
-  static int tBinMaxRangeLabelHeight = xoyoRangeLabelHeight;
+  static int tBinMaxRangeLabelWidth = xoRangeLabelWidth;
+  static int tBinMaxRangeLabelHeight = xoRangeLabelHeight;
   
   
   static void createGUI() {
@@ -320,10 +325,10 @@ public class CreateOtherPlotsPanel {
   xoRangeLabel = new JLabel("");
   xoRangeLabel.setVisible(false);
   xoRangeLabel.setBounds(
-      xoyoRangeLabelXoff,
-      xoyoRangeLabelYoff,
-      xoyoRangeLabelWidth,
-      xoyoRangeLabelHeight);
+      xoRangeLabelXoff,
+      xoRangeLabelYoff,
+      xoRangeLabelWidth,
+      xoRangeLabelHeight);
   DataReduction.otherPlotsPanel.add(xoRangeLabel);
   
   //yo label - text field - message widgets  
@@ -350,10 +355,10 @@ public class CreateOtherPlotsPanel {
   yoRangeLabel = new JLabel("");
   yoRangeLabel.setVisible(false);
   yoRangeLabel.setBounds(
-      xoyoRangeLabelXoff,
-      xoyoRangeLabelYoff,
-      xoyoRangeLabelWidth,
-      xoyoRangeLabelHeight);
+      yoRangeLabelXoff,
+      yoRangeLabelYoff,
+      yoRangeLabelWidth,
+      yoRangeLabelHeight);
   DataReduction.otherPlotsPanel.add(yoRangeLabel);
   
   //tbin min 
