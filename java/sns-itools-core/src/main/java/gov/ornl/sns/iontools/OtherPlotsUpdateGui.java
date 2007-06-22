@@ -24,52 +24,65 @@ public class OtherPlotsUpdateGui {
     case 3: //I=f(?,sumx,yo)
       bMakeYoVisible = true;
       break;
-    case 4: //I=f(?,signal selection)
-      bMakeSelectionVisible = true;
-      break;
-    case 5: //I=f(?,back selection)
-      break;
-    case 6: //I=f(?,back2 selection)
-      break;
-    case 7: //I=f(tof,?,?)
-      break;
-    case 8: //I=f(tof,sumx,sumy)
-      break;
-    case 14: //I=f(tofo,?,?)
-      bMakeTbinVisible = true;
-      break;
-    case 9: //I=f(tof,xo,sumy)
+    case 4: //I=f(?,xo,yo)
       bMakeXoVisible = true;
-      break;
-    case 10: //Counts = f( TOF , Sum(X) , Yo )
       bMakeYoVisible = true;
       break;
-    case 11: //Counts = f( TOF , signal_selection )
+    case 5: //I=f(?,signal selection)
       bMakeSelectionVisible = true;
       break;
-    case 12: //Counts = f( TOF , back1_selection )
+    case 6: //I=f(?,back selection)
       break;
-    case 13: //Counts = f( TOF , back2_selection )
+    case 7: //I=f(?,back2 selection)
       break;
-    case 15: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+    case 8: //I=f(tof,?,?)
+      break;
+    case 9: //I=f(tof,sumx,sumy)
+      break;
+    case 10: //I=f(tof,xo,sumy)
+      bMakeXoVisible = true;
+      break;
+    case 11: //I=f(TOF,Sum(X),Yo)
+      bMakeYoVisible = true;
+      break;
+    case 12: //I=f(TOF,Xo,Yo)
+      bMakeXoVisible = true;
+      bMakeYoVisible = true;
+      break;
+    case 13: //Counts = f( TOF , signal_selection )
+      bMakeSelectionVisible = true;
+      break;
+    case 14: //Counts = f( TOF , back1_selection )
+      break;
+    case 15: //Counts = f( TOF , back2_selection )
+      break;
+    case 16: //I=f(tofo,?,?)
       bMakeTbinVisible = true;
       break;
-    case 16: //Counts = f(TOFo, Xo, Sum(Y))
+    case 17: //Counts = f( TOFo , Sum(X) , Sum(Y) )
+      bMakeTbinVisible = true;
+      break;
+    case 18: //Counts = f(TOFo, Xo, Sum(Y))
       bMakeXoVisible = true;
       bMakeTbinVisible = true;
       break;
-    case 17: //Counts = f(TOFo, Sum(X), Yo)
+    case 19: //Counts = f(TOFo, Sum(X), Yo)
       bMakeYoVisible = true;
       bMakeTbinVisible = true;
       break;
-    case 18: //Counts = f(TOFo, Signal selection)
+    case 20: //I=f(TOFo,Xo,Yo)
+      bMakeXoVisible = true;
+      bMakeYoVisible = true;
+      bMakeTbinVisible = true;
+      break;
+    case 21: //Counts = f(TOFo, Signal selection)
       bMakeSelectionVisible = true;
       bMakeTbinVisible = true;
       break;
-    case 19: //Counts = f(TOFo, back selection)
+    case 22: //Counts = f(TOFo, back selection)
       bMakeTbinVisible = true;
       break;
-    case 20: //Counts = f(TOFo, back2 selection)
+    case 23: //Counts = f(TOFo, back2 selection)
       bMakeTbinVisible = true;
       break;
     default:

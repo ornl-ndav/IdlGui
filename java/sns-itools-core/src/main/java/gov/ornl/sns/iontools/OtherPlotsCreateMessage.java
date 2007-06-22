@@ -18,10 +18,10 @@ public class OtherPlotsCreateMessage {
     switch(index) {
     case 0:  //f( ---, ---, ---)
       break;
-    case 7:  //f( TOf, ---, ---)
+    case 8:  //f( TOF, ---, ---)
       sMessage = "\n\n TOF : Integrated over full range";
       break;
-    case 14 ://f( TOFo, ---, ---)
+    case 16 ://f( TOFo, ---, ---)
       sMessage = "\n\n  Min TOF is : " + OtherPlotsAction.tBinMin;
       sMessage += "\n  Max TOF is : " + OtherPlotsAction.tBinMax;
       break;
@@ -29,12 +29,12 @@ public class OtherPlotsCreateMessage {
       sMessage = "\n\n  X = Integrated over full range";
       sMessage += "\n  Y = Integrated over full range"; 
       break;
-    case 8:  //f( TOF, SumX, SumY)
+    case 9:  //f( TOF, SumX, SumY)
       sMessage = "\n\n  TOF : Integrated over full range";
       sMessage += "\n  X = Integrated over full range";
       sMessage += "\n  Y = Integrated over full range"; 
       break;
-    case 15: //f( TOFo, SumX, SumY)
+    case 17: //f( TOFo, SumX, SumY)
       sMessage = "\n\n  Min TOF is : " + OtherPlotsAction.tBinMin;
       sMessage += "\n  Max TOF is : " + OtherPlotsAction.tBinMax;
       sMessage += "\n  X = Integrated over full range";
@@ -44,12 +44,12 @@ public class OtherPlotsCreateMessage {
       sMessage = "\n\n  Xo = " + MouseSelection.infoX;
       sMessage += "\n  Y = Integrated over full range"; 
       break;
-    case 9:  //f( TOF, Xo, SumY)
+    case 10:  //f( TOF, Xo, SumY)
       sMessage = "\n\n  TOF : Integrated over full range";
       sMessage += "\n  Xo = " + MouseSelection.infoX;
       sMessage += "\n  Y : Integrated over full range";
       break;
-    case 16: //f( TOFo, Xo, SumY)
+    case 18: //f( TOFo, Xo, SumY)
       sMessage = "\n\n  Min TOF is : " + OtherPlotsAction.tBinMin;
       sMessage += "\n  Max TOF is : " + OtherPlotsAction.tBinMax;
       sMessage += "\n  Xo = " + MouseSelection.infoX;
@@ -59,20 +59,35 @@ public class OtherPlotsCreateMessage {
       sMessage = "\n\n  X : Integrated over full range";
       sMessage += "\n  Yo = " + MouseSelection.infoY;
       break;
-    case 10: //f( TOF, SumX, Yo)
+    case 11: //f( TOF, SumX, Yo)
       sMessage = "\n\n  TOF : Integrated over full range";
       sMessage += "\n  X : Integrated over full range";
       sMessage += "\n  Yo = " + MouseSelection.infoY;
       break;
-    case 17: //f( TOFo, SumX, Yo)
+    case 19: //f( TOFo, SumX, Yo)
       sMessage = "\n\n  Min TOF is : " + OtherPlotsAction.tBinMin;
       sMessage += "\n  Max TOF is : " + OtherPlotsAction.tBinMax;
       sMessage += "\n  X : Integrated over full range";
       sMessage += "\n  Yo = " + MouseSelection.infoY;
       break;
-    case 4:  //f( ---, SignalSelection)
-    case 11: //f( TOF, SignalSelection)
-    case 18: //f( TOFo, SignalSelection)
+    case 4:  //f(---,Xo,Yo)
+      sMessage = "\n\n  Xo = " + MouseSelection.infoX;
+      sMessage += "\n  Yo = " + MouseSelection.infoY;
+      break;
+    case 12: //f(TOF,Xo,Yo)
+      sMessage = "\n\n  TOF : Integrated over full range";
+      sMessage += "\n  Xo = " + MouseSelection.infoX;
+      sMessage += "\n  Yo = " + MouseSelection.infoY;
+      break;
+    case 20: //f(TOFo,Xo,Yo)
+      sMessage = "\n\n  Min TOF is : " + OtherPlotsAction.tBinMin;
+      sMessage += "\n  Max TOF is : " + OtherPlotsAction.tBinMax;
+      sMessage += "\n  Xo = " + MouseSelection.infoX;
+      sMessage += "\n  Yo = " + MouseSelection.infoY;
+      break;
+    case 5:  //f( ---, SignalSelection)
+    case 13: //f( TOF, SignalSelection)
+    case 21: //f( TOFo, SignalSelection)
       if (index == 11) {
         sMessage = "\n\n  TOF : Integrated over full range";
       } else if (index == 18) {
@@ -109,9 +124,9 @@ public class OtherPlotsCreateMessage {
             }
         }
         break;
-    case 5:  //f( ---, BackSelection)
-    case 12: //f( TOF, BackSelection)
-    case 19: //f( TOFo, BackSelection)
+    case 6:  //f( ---, BackSelection)
+    case 14: //f( TOF, BackSelection)
+    case 22: //f( TOFo, BackSelection)
       if (index == 12) {
         sMessage = "\n\n TOF : Integrated over full range";
       } else if (index == 19) {
@@ -123,9 +138,9 @@ public class OtherPlotsCreateMessage {
       sMessage += "\n  Ymin = " + MouseSelectionParameters.back1_ymin;
       sMessage += "    Ymax = " + MouseSelectionParameters.back1_ymax;
       break;
-    case 6:  //f( ---, Back2Selection)
-    case 13: //f( TOF, Back2Selection)
-    case 20: //f( TOFo, Back2Selection)
+    case 7:  //f( ---, Back2Selection)
+    case 15: //f( TOF, Back2Selection)
+    case 23: //f( TOFo, Back2Selection)
       if (index == 13) {
         sMessage = "\n\n TOF : Integrated over full range";
       } else if (index == 20) {
