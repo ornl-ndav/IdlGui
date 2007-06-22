@@ -14,19 +14,18 @@ public class CreateOtherPlotsPanel {
   static JLabel           infoLabel;
   static JLabel           xoLabel;
   static JLabel           yoLabel;
-  static JLabel           xoRangeLabel;
-  static JLabel           yoRangeLabel;
   static JLabel           tBinMinLabel;
   static JLabel           tBinMaxLabel;
-  static JLabel           tBinMinRangeLabel;
-  static JLabel           tBinMaxRangeLabel;
   static JLabel           list1OfOtherPlotsLabel;
   static JLabel           list2OfOtherPlotsLabel;
+  static JLabel           orLabel;
+  static JLabel           pixelIDLabel;
   static JTextArea        infoTextArea;
   static JTextField       tBinMinTextField;
   static JTextField       tBinMaxTextField;
   static JTextField       xoTextField;
   static JTextField       yoTextField;
+  static JTextField       pixelIDTextField;
   static JComboBox        list1OfOtherPlotsComboBox;
   static JComboBox        list2OfOtherPlotsComboBox;
   static JRadioButton     interactiveSelectionRadioButton;
@@ -94,9 +93,9 @@ public class CreateOtherPlotsPanel {
   static int yoLabelWidth = xoLabelWidth;
   static int yoLabelHeight = xoLabelHeight;
   
-  static int xoTextFieldXoff = 630;
+  static int xoTextFieldXoff = 595;
   static int xoTextFieldYoff = xoLabelYoff;
-  static int xoTextFieldWidth = 80;
+  static int xoTextFieldWidth = 50;
   static int xoTextFieldHeight = xoLabelHeight;
   
   static int yoTextFieldXoff = xoTextFieldXoff;
@@ -104,15 +103,21 @@ public class CreateOtherPlotsPanel {
   static int yoTextFieldWidth = xoTextFieldWidth;
   static int yoTextFieldHeight = xoLabelHeight;
 
-  static int xoRangeLabelXoff = 715;
-  static int xoRangeLabelYoff = xoLabelYoff;
-  static int xoRangeLabelWidth = 100;
-  static int xoRangeLabelHeight = xoLabelHeight;
+  //OR and pixelID labels and pixeldID textbox
+  static int orLabelXoff = 660;
+  static int orLabelYoff = xoLabelYoff + yoff/2;
+  static int orLabelWidth = 20;
+  static int orLabelHeight = 30;
   
-  static int yoRangeLabelXoff = 715;
-  static int yoRangeLabelYoff = yoLabelYoff;
-  static int yoRangeLabelWidth = 100;
-  static int yoRangeLabelHeight = xoLabelHeight;
+  static int pixelIDLabelXoff = 700;
+  static int pixelIDLabelYoff = xoLabelYoff;
+  static int pixelIDLabelWidth = 100;
+  static int pixelIDLabelHeight = 30;
+  
+  static int pixelIDTextFieldXoff = 700;
+  static int pixelIDTextFieldYoff = xoLabelYoff + yoff;
+  static int pixelIDTextFieldWidth = 60;
+  static int pixelIDTextFieldHeight = 30;
   
   //interactive and save selection radio buttons
   static int saveSelectionXoff = xoLabelXoff;
@@ -133,16 +138,11 @@ public class CreateOtherPlotsPanel {
   static int tBinMinLabelWidth = 100;
   static int tBinMinLabelHeight = 30;
   
-  static int tBinMinTextFieldXoff = xoTextFieldXoff;
+  static int tBinMinTextFieldXoff = 630;
   static int tBinMinTextFieldYoff = tBinMinLabelYoff;
-  static int tBinMinTextFieldWidth = xoTextFieldWidth;
+  static int tBinMinTextFieldWidth = 65;
   static int tBinMinTextFieldHeight = xoTextFieldHeight;
   
-  static int tBinMinRangeLabelXoff = xoRangeLabelXoff;
-  static int tBinMinRangeLabelYoff = tBinMinLabelYoff;
-  static int tBinMinRangeLabelWidth = xoRangeLabelWidth;
-  static int tBinMinRangeLabelHeight = xoRangeLabelHeight;
- 
   //Tbin max
   static int yoff1 = 35;
   static int tBinMaxLabelXoff = tBinMinLabelXoff;
@@ -152,14 +152,8 @@ public class CreateOtherPlotsPanel {
   
   static int tBinMaxTextFieldXoff = tBinMinTextFieldXoff;
   static int tBinMaxTextFieldYoff = tBinMinLabelYoff + yoff1;
-  static int tBinMaxTextFieldWidth = xoTextFieldWidth;
+  static int tBinMaxTextFieldWidth = tBinMinTextFieldWidth;
   static int tBinMaxTextFieldHeight = xoTextFieldHeight;
-  
-  static int tBinMaxRangeLabelXoff = tBinMinRangeLabelXoff;
-  static int tBinMaxRangeLabelYoff = tBinMinLabelYoff + yoff1;
-  static int tBinMaxRangeLabelWidth = xoRangeLabelWidth;
-  static int tBinMaxRangeLabelHeight = xoRangeLabelHeight;
-  
   
   static void createGUI() {
   
@@ -322,15 +316,6 @@ public class CreateOtherPlotsPanel {
       xoTextFieldHeight);
   DataReduction.otherPlotsPanel.add(xoTextField);
   
-  xoRangeLabel = new JLabel("");
-  xoRangeLabel.setVisible(false);
-  xoRangeLabel.setBounds(
-      xoRangeLabelXoff,
-      xoRangeLabelYoff,
-      xoRangeLabelWidth,
-      xoRangeLabelHeight);
-  DataReduction.otherPlotsPanel.add(xoRangeLabel);
-  
   //yo label - text field - message widgets  
   yoLabel = new JLabel("Yo : ");
   yoLabel.setVisible(false);
@@ -352,14 +337,36 @@ public class CreateOtherPlotsPanel {
       yoTextFieldHeight);
   DataReduction.otherPlotsPanel.add(yoTextField);
   
-  yoRangeLabel = new JLabel("");
-  yoRangeLabel.setVisible(false);
-  yoRangeLabel.setBounds(
-      yoRangeLabelXoff,
-      yoRangeLabelYoff,
-      yoRangeLabelWidth,
-      yoRangeLabelHeight);
-  DataReduction.otherPlotsPanel.add(yoRangeLabel);
+  //or and pixelid labels
+  orLabel = new JLabel("OR");
+  orLabel.setVisible(false);
+  orLabel.setBounds(
+      orLabelXoff,
+      orLabelYoff,
+      orLabelWidth,
+      orLabelHeight);
+  DataReduction.otherPlotsPanel.add(orLabel);
+  
+  pixelIDLabel = new JLabel("Pixel ID:");
+  pixelIDLabel.setVisible(false);
+  pixelIDLabel.setBounds(
+      pixelIDLabelXoff,
+      pixelIDLabelYoff,
+      pixelIDLabelWidth,
+      pixelIDLabelHeight);
+  DataReduction.otherPlotsPanel.add(pixelIDLabel);
+  
+  //pixelID TextField
+  pixelIDTextField = new JTextField("");
+  pixelIDTextField.setVisible(false);
+  pixelIDTextField.setActionCommand("pixelIDTextField");
+  pixelIDTextField.setEditable(true);
+  pixelIDTextField.setBounds(
+      pixelIDTextFieldXoff,
+      pixelIDTextFieldYoff,
+      pixelIDTextFieldWidth,
+      pixelIDTextFieldHeight);
+  DataReduction.otherPlotsPanel.add(pixelIDTextField);
   
   //tbin min 
   tBinMinLabel = new JLabel("Tbin min : ");
@@ -382,15 +389,6 @@ public class CreateOtherPlotsPanel {
       tBinMinTextFieldHeight);
   DataReduction.otherPlotsPanel.add(tBinMinTextField);
   
-  tBinMinRangeLabel = new JLabel("");
-  tBinMinRangeLabel.setVisible(false);
-  tBinMinRangeLabel.setBounds(
-      tBinMinRangeLabelXoff,
-      tBinMinRangeLabelYoff,
-      tBinMinRangeLabelWidth,
-      tBinMinRangeLabelHeight);
-  DataReduction.otherPlotsPanel.add(tBinMinRangeLabel);
-  
   //tbin max 
   tBinMaxLabel = new JLabel("Tbin max : ");
   tBinMaxLabel.setVisible(false);
@@ -412,15 +410,6 @@ public class CreateOtherPlotsPanel {
       tBinMaxTextFieldHeight);
   DataReduction.otherPlotsPanel.add(tBinMaxTextField);
   
-  tBinMaxRangeLabel = new JLabel("");
-  tBinMaxRangeLabel.setVisible(false);
-  tBinMaxRangeLabel.setBounds(
-      tBinMaxRangeLabelXoff,
-      tBinMaxRangeLabelYoff,
-      tBinMaxRangeLabelWidth,
-      tBinMaxRangeLabelHeight);
-  DataReduction.otherPlotsPanel.add(tBinMaxRangeLabel);
-
   saveSelectionRadioButton = new JRadioButton("Save Selection Mode");
   saveSelectionRadioButton.setActionCommand("saveSelectionRadioButton");
   saveSelectionRadioButton.setSelected(true);

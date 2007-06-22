@@ -20,17 +20,16 @@ readu,u,data
 close, u
 free_lun, u
 
-counts_vs_tof_intermediate=lonarr(Ntof)
-
 if (tofo EQ 0) then begin
 
-   counts_vs_tof= counts_vs_tof_intermediate[*,xo,yo]
+   counts_vs_tof = data[*,xo,yo]
+   help, counts_vs_tof
 
 endif else begin
 
     tof_min = Long(tof_min)
     tof_max = Long(tof_max)
-    counts_vs_tof= counts_vs_tof_intermediate[tof_min:tof_max,xo,yo]
+    counts_vs_tof= data[tof_min:tof_max,xo,yo]
     
 endelse
    

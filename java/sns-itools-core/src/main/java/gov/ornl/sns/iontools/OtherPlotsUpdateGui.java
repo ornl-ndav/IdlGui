@@ -7,9 +7,10 @@ public class OtherPlotsUpdateGui {
    */
   static void updateGUI(int index) {
     
-    boolean bMakeXoVisible = false;
-    boolean bMakeYoVisible = false;
-    boolean bMakeTbinVisible = false;
+    boolean bMakeXoVisible        = false;
+    boolean bMakeYoVisible        = false;
+    boolean bMakeXoYoVisible      = false;
+    boolean bMakeTbinVisible      = false;
     boolean bMakeSelectionVisible = false;
     
     switch (index) {
@@ -27,6 +28,7 @@ public class OtherPlotsUpdateGui {
     case 4: //I=f(?,xo,yo)
       bMakeXoVisible = true;
       bMakeYoVisible = true;
+      bMakeXoYoVisible = true;
       break;
     case 5: //I=f(?,signal selection)
       bMakeSelectionVisible = true;
@@ -48,6 +50,7 @@ public class OtherPlotsUpdateGui {
     case 12: //I=f(TOF,Xo,Yo)
       bMakeXoVisible = true;
       bMakeYoVisible = true;
+      bMakeXoYoVisible = true;
       break;
     case 13: //Counts = f( TOF , signal_selection )
       bMakeSelectionVisible = true;
@@ -73,6 +76,7 @@ public class OtherPlotsUpdateGui {
     case 20: //I=f(TOFo,Xo,Yo)
       bMakeXoVisible = true;
       bMakeYoVisible = true;
+      bMakeXoYoVisible = true;
       bMakeTbinVisible = true;
       break;
     case 21: //Counts = f(TOFo, Signal selection)
@@ -91,6 +95,7 @@ public class OtherPlotsUpdateGui {
     makeYoVisible(bMakeYoVisible);
     makeTbinVisible(bMakeTbinVisible);
     makeSelectionModeVisible(bMakeSelectionVisible);
+    makeXoYoVisible(bMakeXoYoVisible);
   }    
 
   /*
@@ -99,11 +104,10 @@ public class OtherPlotsUpdateGui {
   static void makeXoVisible(boolean bVisible) {
       CreateOtherPlotsPanel.xoLabel.setVisible(bVisible);
       CreateOtherPlotsPanel.xoTextField.setVisible(bVisible);
-      CreateOtherPlotsPanel.xoRangeLabel.setVisible(bVisible);
       if (bVisible) {
         boolean bIsXo = true;
         String sRangeLabel = getXoYoRangeLabel(bIsXo);
-        CreateOtherPlotsPanel.xoRangeLabel.setText(sRangeLabel);
+        CreateOtherPlotsPanel.xoTextField.setToolTipText(sRangeLabel);
         String sXoTextField = getXoYoTextField(bIsXo);
         CreateOtherPlotsPanel.xoTextField.setText(sXoTextField);
       }
@@ -115,16 +119,27 @@ public class OtherPlotsUpdateGui {
   static void makeYoVisible(boolean bVisible) {
     CreateOtherPlotsPanel.yoLabel.setVisible(bVisible);
     CreateOtherPlotsPanel.yoTextField.setVisible(bVisible);
-    CreateOtherPlotsPanel.yoRangeLabel.setVisible(bVisible);
     if (bVisible) {
       boolean bIsXo = false;
       String sRangeLabel = getXoYoRangeLabel(bIsXo);
-      CreateOtherPlotsPanel.yoRangeLabel.setText(sRangeLabel);
+      CreateOtherPlotsPanel.yoTextField.setToolTipText(sRangeLabel);
       String sYoTextField = getXoYoTextField(bIsXo);
       CreateOtherPlotsPanel.yoTextField.setText(sYoTextField);
     }
   }
 
+  /*
+   * Make visible the pixelid box when Xo and Yo have been selected
+   */
+  static void makeXoYoVisible(boolean bVisible) {
+    CreateOtherPlotsPanel.orLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.pixelIDLabel.setVisible(bVisible);
+    CreateOtherPlotsPanel.pixelIDTextField.setVisible(bVisible);
+    if (bVisible) {
+      String sRangePixelId = getPixelIDRangeLabel(); 
+      CreateOtherPlotsPanel.pixelIDTextField.setToolTipText(sRangePixelId);
+    }
+  }
   /*
    * This function will display all the Tbin (min and max)
    * related widgets
@@ -134,13 +149,11 @@ public class OtherPlotsUpdateGui {
     CreateOtherPlotsPanel.tBinMaxLabel.setVisible(bVisible);
     CreateOtherPlotsPanel.tBinMinTextField.setVisible(bVisible);
     CreateOtherPlotsPanel.tBinMaxTextField.setVisible(bVisible);
-    CreateOtherPlotsPanel.tBinMinRangeLabel.setVisible(bVisible);
-    CreateOtherPlotsPanel.tBinMaxRangeLabel.setVisible(bVisible);
     if (bVisible) {
       String sRangeMinLabel = getTbinMinRangeLabel();
-      CreateOtherPlotsPanel.tBinMinRangeLabel.setText(sRangeMinLabel);
+      CreateOtherPlotsPanel.tBinMinTextField.setToolTipText(sRangeMinLabel);
       String sRangeMaxLabel = getTbinMaxRangeLabel();
-      CreateOtherPlotsPanel.tBinMaxRangeLabel.setText(sRangeMaxLabel);
+      CreateOtherPlotsPanel.tBinMaxTextField.setToolTipText(sRangeMaxLabel);
     }
   }
   
@@ -154,11 +167,11 @@ public class OtherPlotsUpdateGui {
   }
   
   /*
-   * Create the string to display in the range label labe widget 
+   * Create the string to display in the range label Xo and Yo text field 
    */
   static String getXoYoRangeLabel(boolean bIsXo) {
     String sResult;
-    sResult = "(0 - ";
+    sResult = "(0-";
     if (bIsXo) {
       sResult += Integer.toString(DataReduction.Nx - 1);
     } else {
@@ -169,7 +182,7 @@ public class OtherPlotsUpdateGui {
   }
   
   /*
-   * Create the string to display in the text field
+   * Create the string to display in the text field tooltip
    */
   static String getXoYoTextField(boolean bIsXo) {
     String sResult;
@@ -182,21 +195,31 @@ public class OtherPlotsUpdateGui {
   }
   
   /*
-   * Create the string to display in the Min Tbin label range
+   * Create the string to display in the Min Tbin textField tooltip
    */
   static String getTbinMinRangeLabel() {
     String sResult;
-    sResult = "( 0 - " + DataReduction.sNtof + " )";
+    sResult = "(0-" + DataReduction.sNtof + ")";
     return sResult;
   }
   
   /*
-   * Create the string to display in the Max Tbin label range
+   * Create the string to display in the Max Tbin textfield tooltip
    */
   static String getTbinMaxRangeLabel() {
     String sResult;
-    sResult = "( 0 - " + DataReduction.sNtof + " )";
+    sResult = "(0-" + DataReduction.sNtof + ")";
     return sResult;
   }
 
+  /*
+   * Create the string to display in tooltip for number of pixelID
+   */
+  static String getPixelIDRangeLabel() { 
+    String sResult;
+    sResult = "(0-" + Integer.toString(IParameters.PIXELID_TOTAL-1) + ")";
+    return sResult;
+  }
+
+  
 }
