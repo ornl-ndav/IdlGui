@@ -357,7 +357,7 @@ public class CreateOtherPlotsPanel {
   DataReduction.otherPlotsPanel.add(pixelIDLabel);
   
   //pixelID TextField
-  pixelIDTextField = new JTextField("");
+  pixelIDTextField = new JTextField("0");
   pixelIDTextField.setVisible(false);
   pixelIDTextField.setActionCommand("pixelIDTextField");
   pixelIDTextField.setEditable(true);

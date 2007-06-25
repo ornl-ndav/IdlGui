@@ -163,10 +163,10 @@ public interface IParameters {
 				
 		//constants used to define the main graphical display size
 	 	//REF_L
-		  static final int NxRefl        			= 256;
+		  static final int NxRefl        	  = 256;
 	    static final int NxReflMin        = 0;
 	    static final int NxReflMax        = 256;
-		  static final int NyRefl             = 304;
+		  static final int NyRefl           = 304;
 	    static final int NyReflMin 				= 0;
 	    static final int NyReflMax			  = 304;
 	    

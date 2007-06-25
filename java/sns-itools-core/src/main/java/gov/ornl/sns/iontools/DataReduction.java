@@ -707,8 +707,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    	MouseSelection.saveXYinfo(x_max, y_max);
 	    	//if right tab is on 'other plots' and plot selected is xo or yo, update plot
         if (tabbedPane.getSelectedIndex() == 2 &&
-            (CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 2 ||
-             CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex() == 3)) {
+            (CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex() == 2) ||
+             CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex() == 3 ||
+             CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex() == 4) {
               OtherPlotsAction.selectDesiredPlot();
         } else {
               dataReductionTabbedPane.setSelectedIndex(0);

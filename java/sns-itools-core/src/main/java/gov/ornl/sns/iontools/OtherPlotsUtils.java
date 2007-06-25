@@ -34,4 +34,17 @@ public class OtherPlotsUtils {
     }
   }
   
+  /*
+   * Checks that the PixelID input is valid
+   * valid = is an integer and between 0 and 77823
+   */
+  static boolean isPixelIdValid(String sPixelID) {
+    if (UtilsFunction.isInputInteger(sPixelID)) {
+      int iPixelID = Integer.parseInt(sPixelID);
+      if (0 <= iPixelID && iPixelID < IParameters.PIXELID_TOTAL) {
+        return true; 
+      }
+    } 
+    return false;
+  }
 }
