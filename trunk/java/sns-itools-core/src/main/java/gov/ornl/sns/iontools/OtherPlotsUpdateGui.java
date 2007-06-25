@@ -138,6 +138,8 @@ public class OtherPlotsUpdateGui {
     if (bVisible) {
       String sRangePixelId = getPixelIDRangeLabel(); 
       CreateOtherPlotsPanel.pixelIDTextField.setToolTipText(sRangePixelId);
+      String sPixelIDTextField = getPixelIDTextField();
+      CreateOtherPlotsPanel.pixelIDTextField.setText(sPixelIDTextField);
     }
   }
   /*
@@ -195,6 +197,22 @@ public class OtherPlotsUpdateGui {
   }
   
   /*
+   * Create the pixel ID value according to values of Xo and Yo
+   */
+  static String getPixelIDTextField() {
+    int iXo = MouseSelection.infoX;
+    int iYo = MouseSelection.infoY;
+    int iPixelID;
+    if (DataReduction.instrument.compareTo(IParameters.REF_L)==0) { //REF_L
+        iPixelID = iYo * IParameters.NxRefl + iXo;
+    } else { //REF_M
+        iPixelID = iYo * IParameters.NxRefm + iXo;
+    }
+    return Integer.toString(iPixelID);
+  }
+  
+  
+  /*
    * Create the string to display in the Min Tbin textField tooltip
    */
   static String getTbinMinRangeLabel() {
@@ -221,5 +239,23 @@ public class OtherPlotsUpdateGui {
     return sResult;
   }
 
+  /*
+   * This function determines the Xo and Yo according to pixelID given
+   */
+  static void convertPixelIdToXoYo(String sPixelID) {
+      int iPixelID = Integer.parseInt(sPixelID);
+      int Nx;
+      if (DataReduction.instrument.compareTo(IParameters.REF_L)==0) { //REF_L
+        Nx = IParameters.NxRefl;
+      } else {
+        Nx = IParameters.NxRefm;
+      }
+      int iXo = iPixelID % Nx;
+      MouseSelection.infoX = iXo;
+      int iYo = Math.round(iPixelID / Nx);
+      MouseSelection.infoY = iYo;
+      
+  }
+  
   
 }

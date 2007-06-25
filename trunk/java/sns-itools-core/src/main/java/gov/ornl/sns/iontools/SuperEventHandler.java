@@ -339,27 +339,20 @@ public class SuperEventHandler extends DataReduction {
     }
     
     //when using ENTER in other plots xo text field
-    if ("xoTextField".equals(evt.getActionCommand())) {
+    if ("xoTextField".equals(evt.getActionCommand()) ||
+        "yoTextField".equals(evt.getActionCommand())) {
       String sXo = CreateOtherPlotsPanel.xoTextField.getText();
-      if (UtilsFunction.isInputInteger(sXo)) {
+      String sYo = CreateOtherPlotsPanel.yoTextField.getText();
+      if (UtilsFunction.isInputInteger(sXo) &&
+          UtilsFunction.isInputInteger(sYo)) {
         MouseSelection.infoX = Integer.parseInt(sXo);
+        MouseSelection.infoY = Integer.parseInt(sYo);
         OtherPlotsAction.selectDesiredPlot();
       } else {
         OtherPlotsCreateMessage.displayErrorInputMessage();
       }
     }
-    
-    //when using ENTER in other plots yo text field
-    if ("yoTextField".equals(evt.getActionCommand())) {
-      String sYo = CreateOtherPlotsPanel.yoTextField.getText();
-      if (UtilsFunction.isInputInteger(sYo)) {
-        MouseSelection.infoY = Integer.parseInt(sYo);
-        OtherPlotsAction.selectDesiredPlot();}
-      else {
-        OtherPlotsCreateMessage.displayErrorInputMessage();
-      }
-    }
-    
+        
     //refresh button in other plots panel
     if ("refreshButton".equals(evt.getActionCommand())) {
       OtherPlotsAction.selectDesiredPlot();
@@ -376,5 +369,20 @@ public class SuperEventHandler extends DataReduction {
         "tBinMaxTextField".equals(evt.getActionCommand())) {
       OtherPlotsAction.selectDesiredPlot();
     }
+  
+    //pixelID text field
+    if ("pixelIDTextField".equals(evt.getActionCommand())) {
+      String sPixelID = CreateOtherPlotsPanel.pixelIDTextField.getText();
+      if (OtherPlotsUtils.isPixelIdValid(sPixelID)) {
+        OtherPlotsUpdateGui.convertPixelIdToXoYo(sPixelID);
+        OtherPlotsAction.selectDesiredPlot();
+      }
+    }
+  
+  
+  
+  
+  
+  
   }
 }
