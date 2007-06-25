@@ -7,7 +7,6 @@ public class ThingsToDoWhenThreadIsDone {
     DataReduction.transferRefreshButton.setEnabled(true);
     ParametersToKeep.bNeedToRefreshListOfFiles = true;
     activateOtherPlotsWidgets(DataReduction.bFoundNexus);
-    
   }
   
   static void doWhenLoadctIsDone() {
@@ -38,6 +37,5 @@ public class ThingsToDoWhenThreadIsDone {
     CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.setEnabled(bActivate);
     CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.setEnabled(bActivate);
 }
-
 
 }

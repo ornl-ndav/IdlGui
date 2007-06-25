@@ -1,24 +1,60 @@
 package gov.ornl.sns.iontools;
 
 import javax.swing.*;
+
+import org.apache.log4j.Layout;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Color;
 
-
 public class CreateDataReductionInputGUI {
 
+  static JTabbedPane      saveLoadSelectionTabbedPane;
+  static JPanel           loadPidPanel;
+  static JComboBox        listOfPidFileToLoadComboBox;
+  static JComboBox        typeOfSelectionComboBox;
+  static JButton          loadPidButton;
+  static JButton          clearPidButton;
+  static JLabel           loadSignalLabel;
+  static JLabel           loadBackLabel;
+  static JTextField       loadSignalTextField;
+  static JTextField       loadBackTextField;
+  
+  static int      fileToSelectComboBoxXoff = 5;
+  static int      fileToSelectComboBoxYoff = 5;
+  static int      fileToSelectComboBoxWidth = 300;
+  static int      fileToSelectComboBoxHeight = 30;
+  
+  static int      loadButtonXoff = 315;
+  static int      loadButtonYoff = fileToSelectComboBoxYoff;
+  static int      loadButtonWidth = 125;
+  static int      loadButtonHeight = fileToSelectComboBoxHeight;
+  
+  static int      loadLabelXoff = 445;
+  static int      loadLabelYoff = fileToSelectComboBoxYoff;
+  static int      loadLabelWidth = 50;
+  static int      loadLabelHeight = fileToSelectComboBoxHeight;
+  
+  static int      fileTextFieldXoff = 490;
+  static int      fileTextFieldYoff = fileToSelectComboBoxYoff;
+  static int      fileTextFieldWidth = 300;
+  static int      fileTextFieldHeight = fileToSelectComboBoxHeight;
+  static int      textFieldSize = 100;
+  static int      yoff= 35;
+  
 	public static void createInputGui() {
-		
-//	definition of variables
-	DataReduction.buttonSignalBackgroundPanel = new JPanel(new GridLayout(0,1));   
+	    
+  //definition of variables
+  DataReduction.buttonSignalBackgroundPanel = new JPanel(new GridLayout(0,1));   
 	DataReduction.textFieldSignalBackgroundPanel = new JPanel(new GridLayout(0,1));
 	DataReduction.clearSelectionPanel = new JPanel(new GridLayout(0,1));
 	DataReduction.signalBackgroundPanel = new JPanel() ; 
 
 	DataReduction.signalPidPanel = new JPanel();
+  
 	DataReduction.backgroundPidPanel = new JPanel();
 	DataReduction.wavelengthPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 	DataReduction.detectorAnglePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
@@ -28,6 +64,10 @@ public class CreateDataReductionInputGUI {
 
 	DataReduction.startDataReductionPanel = new JPanel(new FlowLayout());
 
+  //save and load selection tabs
+  saveLoadSelectionTabbedPane = new JTabbedPane();
+  
+  //first tab SAVE SELECTION
 	//signal pid infos
 	DataReduction.signalPidFileButton = new JButton("Save Signal PID file");
 	DataReduction.signalPidFileButton.setActionCommand("signalPidFileButton");
@@ -36,7 +76,6 @@ public class CreateDataReductionInputGUI {
 	
 	DataReduction.signalPidFileTextField = new JTextField(40);
 	DataReduction.signalPidFileTextField.setEditable(false);
-	DataReduction.signalPidFileTextField.setActionCommand("signalPidFileTextField");
 	DataReduction.signalPidFileTextField.setBackground(Color.RED);
 	
 	DataReduction.clearSignalPidFileButton = new JButton ("Clear signal");
@@ -52,7 +91,6 @@ public class CreateDataReductionInputGUI {
 	
 	DataReduction.backgroundPidFileTextField = new JTextField(40);
 	DataReduction.backgroundPidFileTextField.setEditable(false);
-	DataReduction.backgroundPidFileTextField.setActionCommand("backgroundPidFileTextField");
 	DataReduction.backgroundPidFileTextField.setBackground(Color.RED);
 	
 	DataReduction.clearBackPidFileButton = new JButton("Clear background");
@@ -69,8 +107,92 @@ public class CreateDataReductionInputGUI {
 	DataReduction.signalBackgroundPanel.add(DataReduction.buttonSignalBackgroundPanel,BorderLayout.LINE_START);
 	DataReduction.signalBackgroundPanel.add(DataReduction.textFieldSignalBackgroundPanel,BorderLayout.CENTER);
 	DataReduction.signalBackgroundPanel.add(DataReduction.clearSelectionPanel,BorderLayout.LINE_END);
-	
-	//Wavelength (for REF_M only)
+	saveLoadSelectionTabbedPane.addTab("SAVE SELECTION", DataReduction.signalBackgroundPanel); //first tab
+
+  //second tab LOAD SELECTION
+  loadPidPanel = new JPanel();
+  loadPidPanel.setLayout(null);
+    
+  //top part of LOAD selection tab
+  String[] listOfSelectionFiles = {"REF_L_2454_signal_Pid.txt","REF_L_2455_signal_Pid.txt"};
+  listOfPidFileToLoadComboBox = new JComboBox(listOfSelectionFiles);
+  listOfPidFileToLoadComboBox.setBounds(
+      fileToSelectComboBoxXoff,
+      fileToSelectComboBoxYoff,
+      fileToSelectComboBoxWidth,
+      fileToSelectComboBoxHeight);
+  loadPidPanel.add(listOfPidFileToLoadComboBox);
+  
+  loadPidButton = new JButton("LOAD");
+  loadPidButton.setActionCommand("loadPidButton");
+  loadPidButton.setToolTipText("Load and use the selected file as the signal or background PID file");
+  loadPidButton.setBounds(
+      loadButtonXoff,
+      loadButtonYoff,
+      loadButtonWidth,
+      loadButtonHeight);
+  loadPidPanel.add(loadPidButton);
+  
+  loadSignalLabel = new JLabel("Signal:");
+  loadSignalLabel.setBounds(
+      loadLabelXoff,
+      loadLabelYoff,
+      loadLabelWidth,
+      loadLabelHeight);
+  loadPidPanel.add(loadSignalLabel);
+  
+  loadSignalTextField = new JTextField(textFieldSize);
+  loadSignalTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+  loadSignalTextField.setEditable(false);
+  loadSignalTextField.setBounds(
+      fileTextFieldXoff,
+      fileTextFieldYoff,
+      fileTextFieldWidth,
+      fileTextFieldHeight);
+  loadPidPanel.add(loadSignalTextField);
+  
+  //bottom part of LOAD selection tab
+  
+  String[] listOfSelection = IParameters.LIST_OF_SELECTION;
+  typeOfSelectionComboBox = new JComboBox(listOfSelection);
+  typeOfSelectionComboBox.setBounds(
+      fileToSelectComboBoxXoff,
+      fileToSelectComboBoxYoff + yoff,
+      fileToSelectComboBoxWidth,
+      fileToSelectComboBoxHeight);
+  loadPidPanel.add(typeOfSelectionComboBox);
+  
+  clearPidButton = new JButton("CLEAR");
+  clearPidButton.setActionCommand("clearPidButton");
+  clearPidButton.setToolTipText("clear the selected file");
+  clearPidButton.setBounds(
+      loadButtonXoff,
+      loadButtonYoff + yoff,
+      loadButtonWidth,
+      loadButtonHeight);
+  loadPidPanel.add(clearPidButton);
+  
+  loadBackLabel = new JLabel("  Back.:");
+  loadBackLabel.setBounds(
+      loadLabelXoff,
+      loadLabelYoff + yoff,
+      loadLabelWidth,
+      loadLabelHeight);
+  loadPidPanel.add(loadBackLabel);
+  
+  loadBackTextField = new JTextField(textFieldSize);
+  loadBackTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+  loadBackTextField.setEditable(false);
+  loadBackTextField.setBounds(
+      fileTextFieldXoff,
+      fileTextFieldYoff + yoff,
+      fileTextFieldWidth,
+      fileTextFieldHeight);
+  loadPidPanel.add(loadBackTextField);
+  
+  saveLoadSelectionTabbedPane.addTab("LOAD SELECTION", loadPidPanel);
+  
+  //Wavelength (for REF_M only)
 	DataReduction.wavelengthLabel = new JLabel("Wavelength:   ");
 	
 	DataReduction.wavelengthMinLabel = new JLabel("Min ");
@@ -339,7 +461,7 @@ public class CreateDataReductionInputGUI {
 	//add all components
 	DataReduction.panela = new JPanel();                           
 	DataReduction.panela.setLayout(new BoxLayout(DataReduction.panela,BoxLayout.PAGE_AXIS));
-	DataReduction.panela.add(DataReduction.signalBackgroundPanel);
+	DataReduction.panela.add(saveLoadSelectionTabbedPane);
 	DataReduction.panela.add(DataReduction.wavelengthPanel);
 	DataReduction.panela.add(DataReduction.detectorAnglePanel);
 	DataReduction.panela.add(DataReduction.normalizationPanel);

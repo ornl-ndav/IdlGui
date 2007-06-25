@@ -184,6 +184,9 @@ public interface IParameters {
 	    static final String BACK_STRING    = "back";
 	    static final String INFO_STRING    = "info";
 	    
+      static final String[] LIST_OF_SELECTION = {"Signal",
+                                                 "Background"};
+      
       static final int LOADCT_DEFAULT_INDEX      = 39;
       static final String[] LOADCT_NAME          = {"Black/White", 
 	    											  "Blue/White", 
