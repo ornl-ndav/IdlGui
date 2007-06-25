@@ -4,8 +4,11 @@ Nx = Long(Nx)
 Ny = Long(Ny)
 yo = Long(yo)
 
+Narray = [Nx,Ny]
+Nmin = min(Narray,max=Nmax)
+
 set_plot, 'z'
-DEVICE,SET_RESOLUTION=[2*Nx, 2*Ny]
+DEVICE,SET_RESOLUTION=[2*Nmin, 2*Nmax]
 
 openr,u,tmp_histo_file,/get
 fs = fstat(u)
