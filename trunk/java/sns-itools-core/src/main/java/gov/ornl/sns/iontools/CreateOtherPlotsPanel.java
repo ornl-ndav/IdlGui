@@ -183,7 +183,7 @@ public class CreateOtherPlotsPanel {
     list1OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
     list1OfOtherPlotsComboBox.setSelectedIndex(0);
     list1OfOtherPlotsComboBox.setActionCommand("list1OfOtherPlotsComboBox");
-    list1OfOtherPlotsComboBox.setEnabled(true);
+    list1OfOtherPlotsComboBox.setEnabled(false);
     list1OfOtherPlotsComboBox.setBounds(
         list1OfOtherPlotsXoff,
         list1OfOtherPlotsYoff,
@@ -203,7 +203,7 @@ public class CreateOtherPlotsPanel {
     list2OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
     list2OfOtherPlotsComboBox.setSelectedIndex(0);
     list2OfOtherPlotsComboBox.setActionCommand("list2OfOtherPlotsComboBox");
-    list2OfOtherPlotsComboBox.setEnabled(true);
+    list2OfOtherPlotsComboBox.setEnabled(false);
     list2OfOtherPlotsComboBox.setBounds(
         list2OfOtherPlotsXoff,
         list2OfOtherPlotsYoff,
@@ -213,6 +213,7 @@ public class CreateOtherPlotsPanel {
         
     refreshButton = new JButton("REFRESH PLOT");
     refreshButton.setActionCommand("refreshButton");
+    refreshButton.setEnabled(false);
     refreshButton.setPreferredSize(new Dimension(
         refreshButtonWidth,
         refreshButtonHeight));
@@ -225,6 +226,7 @@ public class CreateOtherPlotsPanel {
 
     clearButton = new JButton("CLEAR PLOT");
     clearButton.setActionCommand("clearButton");
+    clearButton.setEnabled(false);
     clearButton.setBounds(
         clearButtonXoff,
         clearButtonYoff,
