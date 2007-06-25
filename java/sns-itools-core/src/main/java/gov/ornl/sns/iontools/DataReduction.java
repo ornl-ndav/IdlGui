@@ -805,7 +805,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    CreateDataReductionInputGUI.createInputGui();
 	    
 	    //dataReductionTabbedPane.addTab("Input", panela);  //remove_comments
-	    dataReductionTabbedPane.addTab("Input", panela);
+      dataReductionTabbedPane.addTab("Input", panela);
 	    
 	    //data reduction plot/tab
 	    panelb = new JPanel();
@@ -1130,10 +1130,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 
     private void addActionListener() {
     	DataReduction.signalPidFileButton.addActionListener(this);
-    	DataReduction.signalPidFileTextField.addActionListener(this);
     	DataReduction.clearSignalPidFileButton.addActionListener(this);
     	DataReduction.backgroundPidFileButton.addActionListener(this);
-    	DataReduction.backgroundPidFileTextField.addActionListener(this);
     	DataReduction.clearBackPidFileButton.addActionListener(this);
     	DataReduction.yesNormalizationRadioButton.addActionListener(this);
     	DataReduction.noNormalizationRadioButton.addActionListener(this);
@@ -1172,7 +1170,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.wavelengthWidthTextField.addActionListener(this);
     	DataReduction.detectorAngleTextField.addActionListener(this);
     	DataReduction.detectorAnglePMTextField.addActionListener(this);
-    	
+    	CreateDataReductionInputGUI.loadPidButton.addActionListener(this);
+      CreateDataReductionInputGUI.clearPidButton.addActionListener(this);
+      
     	//from Data Reduction plot tab
     	DataReduction.yMaxTextField.addActionListener(this);
 	    DataReduction.yMinTextField.addActionListener(this);
