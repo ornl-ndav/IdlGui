@@ -3,8 +3,13 @@ PRO PLOT_TOF_SUMX_SUMY, tof_min, tof_max, tofo, tmp_histo_file, Nx, Ny
 Nx = Long(Nx)
 Ny = Long(Ny)
 
+;Nmin = Nx
+;Nmax = Ny
+Narray = [Nx,Ny]
+Nmin = min(Narray,max=Nmax)
+
 set_plot, 'z'
-DEVICE,SET_RESOLUTION=[2*Nx, 2*Ny]
+DEVICE,SET_RESOLUTION=[2*Nmin, 2*Nmax]
 
 openr,u,tmp_histo_file,/get
 fs = fstat(u)
