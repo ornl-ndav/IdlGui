@@ -965,9 +965,9 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
  * 
  * Purpose: Draws rubber band box with Java.
  */
-    static final void doBox(){
+  static final void doBox(){
 		
-      Graphics g = c_plot.getGraphics();
+  Graphics g = c_plot.getGraphics();
 	c_plot.update(g);
 	
 	for (int i=0; i<3; i++) {
