@@ -14,7 +14,7 @@ MAP_OBJS	=	Map_Data.o map_utils.o utils.o
 
 RAND_OBJS 	= 	rand2nxl.o
 
-EVENT_OBJS      =	event2nxl.o nexus_util.o 
+EVENT2NXL_OBJS      =	event2nxl.o nexus_util.o event_data.o 
 
 NXL2EVENT_OBJS 	= 	nxl2event.o nexus_util.o
 
@@ -23,8 +23,8 @@ all: $(ALL)
 nxl2event: $(NXL2EVENT_OBJS)
 	$(CXX) $(NXL2EVENT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o nxl2event
 
-event2nxl: $(EVENT_OBJS)
-	$(CXX) $(EVENT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o event2nxl
+event2nxl: $(EVENT2NXL_OBJS)
+	$(CXX) $(EVENT2NXL_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o event2nxl
 
 rand2nxl: $(RAND_OBJS)
 	$(CXX) $(RAND_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o rand2nxl	
@@ -74,6 +74,9 @@ map_utils.o: map_utils.cpp Map_Data.hpp utils.hpp
 
 nexus_util.o: nexus_util.cpp nexus_util.hpp
 	$(CXX) -c -I ../inc nexus_util.cpp
+
+event_data.o: event_data.cpp 
+	$(CXX) -c -I ../inc event_data.cpp
 
 clean:
 	rm -f $(ALL) *.o

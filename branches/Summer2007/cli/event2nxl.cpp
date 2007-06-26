@@ -5,6 +5,13 @@
  */
 
 #include "event2nxl.hpp"
+#include "event_data.hpp"
+#include <cstdlib>
+#include <fstream>
+#include <stdexcept>
+#include <libgen.h>
+#include <typeinfo>
+#include <tclap/CmdLine.h>
 
 using std::string;
 using std::cerr;
@@ -15,15 +22,6 @@ using std::runtime_error;
 using std::type_info;
 using namespace TCLAP;
 
-/** \fn void layout_nexus_file(NXhandle &file_id,
-  *                            const Config &config)
-  * \brief Creates the nexus file and makes and opens 
-  *        the groups.
-  * \param file_id The variable to store the nexus file
-  *        handle in.
-  * \param config Contains the format of the file and the
-  *        name of the file.
-  */
 void layout_nexus_file(NexusUtil &nexus_util,
                        const Config &config) 
 {
@@ -33,46 +31,16 @@ void layout_nexus_file(NexusUtil &nexus_util,
   nexus_util.open_group("bank1", "NXevent_data");
 }
 
-/** \fn inline int typename_to_nexus_type(const int32_t &val)
- *  \brief Returns an int32 nexus type.
- *  \param val The type of the templated calling function
- *
- *  A templated function needs to know what type to use
- *  for the nexus api, and this function is called with a int32_t
- *  type template.
- */
 inline int typename_to_nexus_type(const int32_t &val)
 {
   return NX_INT32;
 }
 
-/** \fn inline int typename_to_nexus_type(const uint32_t &val)
- *  \brief Returns an uint32 nexus type.
- *  \param val The type of the templated calling function
- *
- *  A templated function needs to know what type to use
- *  for the nexus api, and this function is called with a uint32_t
- *  type template.
- */
 inline int typename_to_nexus_type(const uint32_t &val)
 {
   return NX_UINT32;
 } 
 
-/** \fn template <typename NumT>
-  *     void write_data(const NXhandle &file_id,
-  *                     const vector<NumT> &data,
-  *                     const string &group_path,
-  *                     const string &data_name)
-  * \brief Templated function that opens a group
-  *        in a nexus file and writes data.
-  * \param file_id The handle for the nexus file.
-  * \param data Templated vector of data to be 
-  *             written.
-  * \param group_path The group to write the data
-  *                   to in the nexus file.
-  * \param data_name The name of the data.
-  */
 template <typename NumT>
 void write_data(NexusUtil &nexus_util,
                 const vector<NumT> &data, 
@@ -97,18 +65,6 @@ void write_data(NexusUtil &nexus_util,
   nexus_util.put_slab(&nx_data[0], &i, &dimensions);
 }
 
-/** \fn void write_attr(const NXhandle &file_id,
-  *                     const string &attr_name,
-  *                     const string &attr_value,
-  *                     const string &data_path)
-  * \brief Opens a data field in a nexus file and
-  *        writes an attribute for it.
-  * \param file_id The handle for the nexus file.
-  * \param attr_name The name of the attribute.
-  * \param group_value The value associated with
-  *                    the attribute
-  * \param data_path The path to the data
-  */
 void write_attr(NexusUtil &nexus_util,
                 const string &attr_name,
                 const string &attr_value,
@@ -205,7 +161,7 @@ int main(int32_t argc,
     }
   
   // Gather the information from the event file
-  event_data.read_data(config);
+  event_data.read_data(config.event_file, config.mapping_file);
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);

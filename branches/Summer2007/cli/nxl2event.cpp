@@ -6,7 +6,8 @@
  */
 
 #include "napi.h"
-#include "NexusUtil.hpp"
+#include "nexus_util.hpp"
+#include <stdexcept>
 #include <tclap/CmdLine.h>
 #include <iostream>
 #include <fstream>

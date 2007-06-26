@@ -7,7 +7,9 @@
  */
 
 #include "nexus_util.hpp"
-#include <iostream>
+#include <string>
+#include <stdexcept>
+
 using std::runtime_error;
 using std::string;
 
