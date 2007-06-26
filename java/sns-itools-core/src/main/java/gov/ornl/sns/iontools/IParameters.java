@@ -36,7 +36,7 @@ public interface IParameters {
 	  static final String SEQUENCE_SEPARATOR     = "-";
 	  static final String WORKING_PATH           = "/SNS/users/ionuser/";
     static final String NXSUMMARY_CONFIG_FILE  = "/SNS/users/j35/.nxsummary_datareduction.conf";
-	    
+    
 		static final String NA = "N/A";
 		static final double DEGRES_TO_RADIANS_FACTOR = (2*Math.PI)/180; 
 	
@@ -133,8 +133,8 @@ public interface IParameters {
     //Extension of files to removed
     static final String PID_FILE_EXTENSION            = "_Pid.txt";
     static final String TXT_FILE_EXTENSION            = ".txt";
-    static final String TMP_HISTO_FILE_EXTENSION      = "_tmp_histo_data.dat";
-          
+    static final String TMP_HISTO_FILE_EXTENSION      = "_tmp_histo_data.dat";    
+        
     //Extra plots and Data Reduction scaling factor
 		static final String LINEAR    = "linear";
 		static final String LOG10     = "log10";

@@ -192,6 +192,18 @@ public class CreateDataReductionInputGUI {
   
   saveLoadSelectionTabbedPane.addTab("LOAD SELECTION", loadPidPanel);
   
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   //Wavelength (for REF_M only)
 	DataReduction.wavelengthLabel = new JLabel("Wavelength:   ");
 	

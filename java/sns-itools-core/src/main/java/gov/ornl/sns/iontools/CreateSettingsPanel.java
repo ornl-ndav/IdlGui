@@ -6,6 +6,11 @@ import java.awt.GridLayout;
 
 public class CreateSettingsPanel {
 
+  private static JLabel     pidFileExtensionLabel;
+  private static JLabel     pidFileHomeDirectoryLabel;
+  private static JTextField pidFileExtensionTextField;
+  private static JTextField pidFileHomeDirectoryTextField;
+  
 	//extra plot panel
 	private static int xoff = 10;
 	private static int yoff = 5;
@@ -48,8 +53,9 @@ public class CreateSettingsPanel {
   private static int nbrLinesXmlTextFieldWidth = nbrLinesNotXmlTextFieldWidth;
   private static int nbrLinesXmlTextFieldHeight = nbrLinesNotXmlLabelHeight;
   
+  private static int yoff1 = 30;
   private static int nxsummaryFileLabelXoff = nbrLinesNotXmlLabelXoff;
-  private static int nxsummaryFileLabelYoff = nbrLinesXmlLabelYoff + 30;
+  private static int nxsummaryFileLabelYoff = nbrLinesXmlLabelYoff + yoff1;
   private static int nxsummaryFileLabelWidth = 400;
   private static int nxsummaryFileLabelHeight = 30;
   
@@ -58,6 +64,27 @@ public class CreateSettingsPanel {
   private static int nxsummaryFileTextFieldWidth = 209;
   private static int nxsummaryFileTextFieldHeigth = 30;  
   
+  //Pid file infos
+  private static int pidFileExtensionXoff = nbrLinesNotXmlLabelXoff;
+  private static int pidFileExtensionYoff = nxsummaryFileTextFieldYoff + yoff1;
+  private static int pidFileExtensionWidth = 150;
+  private static int pidFileExtensionHeight = 30;
+  
+  private static int pidFileExtensionTextFieldXoff = nxsummaryFileTextFieldXoff;
+  private static int pidFileExtensionTextFieldYoff = pidFileExtensionYoff;
+  private static int pidFileExtensionTextFieldWidth = 209;
+  private static int pidFileExtensionTextFieldHeight = 30;
+  
+  private static int pidFileHomeDirectoryXoff = nbrLinesNotXmlLabelXoff;
+  private static int pidFileHomeDirectoryYoff = pidFileExtensionTextFieldYoff + yoff1;
+  private static int pidFileHomeDirectoryWidth = 150;
+  private static int pidFileHomeDirectoryHeight = 30;
+  
+  private static int pidFileHomeDirectoryTextFieldXoff = nxsummaryFileTextFieldXoff;
+  private static int pidFileHomeDirectoryTextFieldYoff = pidFileHomeDirectoryYoff;
+  private static int pidFileHomeDirectoryTextFieldWidth = 209;
+  private static int pidFileHomeDirectoryTextFieldHeight = 30;
+    
 	public static void buildGUI() {
 		
 		DataReduction.settingsPanel.setLayout(null);  			// main panel of tab
@@ -366,6 +393,43 @@ public class CreateSettingsPanel {
         nxsummaryFileTextFieldWidth,
         nxsummaryFileTextFieldHeigth);
     DataReduction.settingsParametersPanel.add(DataReduction.nxsummaryConfigFileTextField);
+
+    pidFileExtensionLabel = new JLabel("PID file extension");
+    pidFileExtensionLabel.setBounds(
+        pidFileExtensionXoff,
+        pidFileExtensionYoff,
+        pidFileExtensionWidth,
+        pidFileExtensionHeight);
+    DataReduction.settingsParametersPanel.add(pidFileExtensionLabel);
+    
+    pidFileExtensionTextField = new JTextField(40);
+    pidFileExtensionTextField.setEditable(true);
+    pidFileExtensionTextField.setText(IParameters.PID_FILE_EXTENSION);
+    pidFileExtensionTextField.setBounds(
+        pidFileExtensionTextFieldXoff,
+        pidFileExtensionTextFieldYoff,
+        pidFileExtensionTextFieldWidth,
+        pidFileExtensionTextFieldHeight);
+    DataReduction.settingsParametersPanel.add(pidFileExtensionTextField);
+    
+    pidFileHomeDirectoryLabel = new JLabel("PID file directory");
+    pidFileHomeDirectoryLabel.setBounds(
+        pidFileHomeDirectoryXoff,
+        pidFileHomeDirectoryYoff,
+        pidFileHomeDirectoryWidth,
+        pidFileHomeDirectoryHeight);
+    DataReduction.settingsParametersPanel.add(pidFileHomeDirectoryLabel);
+    
+    pidFileHomeDirectoryTextField = new JTextField(40);
+    pidFileHomeDirectoryTextField.setEditable(true);
+    String sText = "~" + DataReduction.remoteUser + "/";
+    pidFileHomeDirectoryTextField.setText(sText);
+    pidFileHomeDirectoryTextField.setBounds(
+        pidFileHomeDirectoryTextFieldXoff,
+        pidFileHomeDirectoryTextFieldYoff,
+        pidFileHomeDirectoryTextFieldWidth,
+        pidFileHomeDirectoryTextFieldHeight);
+    DataReduction.settingsParametersPanel.add(pidFileHomeDirectoryTextField);
     
   }
 }
