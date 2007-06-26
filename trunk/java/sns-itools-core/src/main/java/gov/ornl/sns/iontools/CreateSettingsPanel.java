@@ -6,10 +6,10 @@ import java.awt.GridLayout;
 
 public class CreateSettingsPanel {
 
-  private static JLabel     pidFileExtensionLabel;
-  private static JLabel     pidFileHomeDirectoryLabel;
-  private static JTextField pidFileExtensionTextField;
-  private static JTextField pidFileHomeDirectoryTextField;
+  static JLabel     pidFileExtensionLabel;
+  static JLabel     pidFileHomeDirectoryLabel;
+  static JTextField pidFileExtensionTextField;
+  static JTextField pidFileHomeDirectoryTextField;
   
 	//extra plot panel
 	private static int xoff = 10;
@@ -422,7 +422,7 @@ public class CreateSettingsPanel {
     
     pidFileHomeDirectoryTextField = new JTextField(40);
     pidFileHomeDirectoryTextField.setEditable(true);
-    String sText = "~" + DataReduction.remoteUser + "/";
+    String sText = UtilsFunction.getHomePath();
     pidFileHomeDirectoryTextField.setText(sText);
     pidFileHomeDirectoryTextField.setBounds(
         pidFileHomeDirectoryTextFieldXoff,

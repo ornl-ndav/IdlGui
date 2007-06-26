@@ -115,6 +115,27 @@ public class UtilsFunction {
     }
     return true;
   }
+
+  /*
+   * Create home path
+   */
+  static String getHomePath() {
+    String sPath = "~" + DataReduction.remoteUser + "/";
+    return sPath;
+  }
+  
+  /*
+   * Get only last part of String array
+   * get contain after last '/'
+   */
+  static String[] getLastPartOfStringArray(String[] myResultArray) {
+    String[] resultingArray = myResultArray;
+    int iNbrOfElements = myResultArray.length;
+    for (int i=0; i<iNbrOfElements; ++i) {
+      resultingArray[i] = getOnlyLastPartOfFileName(myResultArray[i]);
+    }
+    return resultingArray;
+  }
 }
 
 
