@@ -87,7 +87,7 @@ int main(int32_t argc,
          char *argv[]) {
   struct Config config;
   EventData <uint32_t>event_data;
-  NXaccess file_access;
+  e_nx_access file_access;
 
   try 
     {
@@ -139,15 +139,15 @@ int main(int32_t argc,
       // Get the format of the nexus file
       if (format.getValue() == "hdf4")
         {
-          file_access = NXACC_CREATE4;
+          file_access = HDF_FOUR;
         }
       else if (format.getValue() =="hdf5")
         {
-          file_access = NXACC_CREATE5;
+          file_access = HDF_FIVE;
         }
       else if (format.getValue() == "xml")
         {
-          file_access = NXACC_CREATEXML;
+          file_access = XML;
         }
       else
         {

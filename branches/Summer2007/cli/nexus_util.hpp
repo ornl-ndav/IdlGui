@@ -11,6 +11,16 @@
 #include "napi.h"
 #include <string>
 
+typedef enum e_nx_access 
+{ 
+  READ = NXACC_READ, 
+  RDWR = NXACC_RDWR, 
+  CREATE = NXACC_CREATE, 
+  HDF_FOUR = NXACC_CREATE4, 
+  HDF_FIVE = NXACC_CREATE5, 
+  XML = NXACC_CREATEXML 
+};
+
 class NexusUtil
 {
   private:
@@ -22,7 +32,7 @@ class NexusUtil
      *         specified format.
      */
     NexusUtil(const std::string &out_path, 
-              const NXaccess &file_access);
+              const e_nx_access file_access);
 
     /** \fn ~NexusUtil(void)
      *  \brief Destructor that closes the nexus file.

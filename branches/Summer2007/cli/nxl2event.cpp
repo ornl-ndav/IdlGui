@@ -245,7 +245,8 @@ int main(int argc, char *argv[])
     }
 
   // Create a new nexus utility
-  NexusUtil nexus_util(input_file, NXACC_READ);
+  e_nx_access nx_access = READ;
+  NexusUtil nexus_util(input_file, nx_access);
   
   // Open the bank and gather the data
   open_bank("bank1", nexus_util);

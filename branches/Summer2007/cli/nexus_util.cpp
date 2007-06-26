@@ -13,15 +13,14 @@
 using std::runtime_error;
 using std::string;
 
-NexusUtil::NexusUtil(const string &out_path, 
-                     const NXaccess &file_access)
+NexusUtil::NexusUtil(const string &out_path,
+                     e_nx_access file_access)
 {
-  if (NXopen(out_path.c_str(), file_access, &file_id) != NX_OK)
+  if (NXopen(out_path.c_str(), (NXaccess)file_access, &file_id) != NX_OK)
     {
       throw runtime_error("Failed to open nexus file: "+out_path);
     }
 }
-
 
 NexusUtil::~NexusUtil(void)
 {
