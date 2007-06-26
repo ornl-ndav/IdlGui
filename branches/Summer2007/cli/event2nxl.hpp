@@ -9,7 +9,7 @@
 #define _EVENT2NXL_HPP
 
 #include "napi.h"
-#include "NexusUtil.hpp"
+#include "nexus_util.hpp"
 #include <iostream>
 #include <string>
 #include <vector>
@@ -40,6 +40,7 @@ struct Config
   string out_path;
   string format;
   string event_file;
+  string pulse_id_file;
   string mapping_file;
 };
 
@@ -80,7 +81,5 @@ class EventData
      */
     const vector<NumT> get_pixel_id(void);
 };
-
-#include "EventData.cpp"
 
 #endif

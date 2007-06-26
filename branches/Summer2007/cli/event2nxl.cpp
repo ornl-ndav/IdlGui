@@ -147,9 +147,9 @@ int main(int32_t argc,
                        "name of output file (default is <toolname>.nxl)",
                        false, default_file_name, "output file name", cmd);
       
-      ValueArg<string> event_file("i", "input", 
-                       "event file to read from",
-                       false, "", "event file", cmd);
+      ValueArg<string> data_file("i", "input", 
+                       "basename of data file to read from. example - BSS_60",
+                       false, "", "data file basename", cmd);
 
       ValueArg<string> mapping_file("m", "mapping",
                        "mapping file for pixel ids",
@@ -167,7 +167,7 @@ int main(int32_t argc,
       // Parse the command-line
       cmd.parse(argc, argv); 
       
-      if (!event_file.isSet()) 
+      if (!data_file.isSet()) 
         {
           cerr << "Error: Must specify an input file" << endl;
           exit(1);
@@ -175,7 +175,8 @@ int main(int32_t argc,
     
       // Fill out the config object
       config.out_path = out_path.getValue();
-      config.event_file = event_file.getValue();
+      config.event_file = data_file.getValue()+"_neutron_event.dat";
+      config.pulse_id_file = data_file.getValue()+"_pulseid.dat";
       config.format = format.getValue();
       config.mapping_file = mapping_file.getValue();
       

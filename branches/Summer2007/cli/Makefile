@@ -14,9 +14,9 @@ MAP_OBJS	=	Map_Data.o map_utils.o utils.o
 
 RAND_OBJS 	= 	rand2nxl.o
 
-EVENT_OBJS      =	event2nxl.o NexusUtil.o 
+EVENT_OBJS      =	event2nxl.o nexus_util.o 
 
-NXL2EVENT_OBJS 	= 	nxl2event.o NexusUtil.o
+NXL2EVENT_OBJS 	= 	nxl2event.o nexus_util.o
 
 all: $(ALL)
 
@@ -45,10 +45,10 @@ utils.o: utils.cpp utils.hpp
 
 bin_vector_utils.o: bin_vector_utils.cpp bin_vector_utils.hpp utils.hpp
 
-nxl2event.o: nxl2event.cpp NexusUtil.hpp
+nxl2event.o: nxl2event.cpp nexus_util.hpp
 	$(CXX) `pkg-config nexus --cflags` -c -I ../inc nxl2event.cpp
 
-event2nxl.o: event2nxl.cpp event2nxl.hpp NexusUtil.hpp
+event2nxl.o: event2nxl.cpp event2nxl.hpp nexus_util.hpp
 	$(CXX) `pkg-config nexus --cflags` -c -I ../inc event2nxl.cpp
 
 rand2nxl.o: rand2nxl.cpp
@@ -72,8 +72,8 @@ Map_Data.o: Map_Data.cpp Map_Data.hpp utils.hpp
 map_utils.o: map_utils.cpp Map_Data.hpp utils.hpp
 	$(CXX) -c -I ../inc map_utils.cpp
 
-NexusUtil.o: NexusUtil.cpp NexusUtil.hpp
-	$(CXX) -c -I ../inc NexusUtil.cpp
+nexus_util.o: nexus_util.cpp nexus_util.hpp
+	$(CXX) -c -I ../inc nexus_util.cpp
 
 clean:
 	rm -f $(ALL) *.o

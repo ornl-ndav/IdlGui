@@ -1,6 +1,6 @@
 /** Author: Wes Kendall
  *  Date: 06-18-07
- *  \file NexusUtil.hpp
+ *  \file nexus_util.hpp
  *  \brief The class declaration and prototypes for
  *         NexusUtil.cpp.
  */

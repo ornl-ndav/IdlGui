@@ -1,12 +1,12 @@
 /** Author: Wes Kendall
  *  Date: 06-18-07
- *  \file NexusUtil.cpp
+ *  \file nexus_util.cpp
  *  \brief A bunch of wrapper functions for the nexus api. These
  *         functions are enclosed in a class and do all the 
  *         necessary error checking.
  */
 
-#include "NexusUtil.hpp"
+#include "nexus_util.hpp"
 #include <iostream>
 using std::runtime_error;
 using std::string;

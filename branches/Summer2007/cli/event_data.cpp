@@ -1,6 +1,6 @@
 /** Author: Wes Kendall
  *  Date: 06-18-07
- *  \file EventData.cpp
+ *  \file event_data.cpp
  *  \brief The implementation for the EventData
  *         class.
  */
