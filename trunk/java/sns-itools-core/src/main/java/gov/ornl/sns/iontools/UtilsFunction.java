@@ -128,11 +128,11 @@ public class UtilsFunction {
    * Get only last part of String array
    * get contain after last '/'
    */
-  static String[] getLastPartOfStringArray(String[] myResultArray) {
-    String[] resultingArray = myResultArray;
-    int iNbrOfElements = myResultArray.length;
+  static String[] getLastPartOfStringArray(String[] array) {
+    String[] resultingArray = array;
+    int iNbrOfElements = array.length;
     for (int i=0; i<iNbrOfElements; ++i) {
-      resultingArray[i] = getOnlyLastPartOfFileName(myResultArray[i]);
+      resultingArray[i] = getOnlyLastPartOfFileName(array[i]);
     }
     return resultingArray;
   }

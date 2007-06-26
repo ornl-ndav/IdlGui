@@ -4,7 +4,9 @@ public class LoadSelectionPidFileAction {
 
   static com.rsi.ion.IONVariable ionPath;
   static com.rsi.ion.IONVariable ionExtension;
+  static com.rsi.ion.IONVariable ionFullFileName;
   static String[] listOfPidFiles;
+  static String[] myResultArray;
   
   static void getListOfPidFilesInHomeDirectory() {
    
@@ -22,11 +24,9 @@ public class LoadSelectionPidFileAction {
       myIONresult = IonUtils.queryVariable("list_of_files");
       
       try {
-        
-        String[] myResultArray;
         myResultArray = myIONresult.getStringArray();
-        listOfPidFiles = myResultArray;
-        
+        listOfPidFiles = new String[myResultArray.length];
+        System.arraycopy(myResultArray, 0, listOfPidFiles, 0, myResultArray.length);        
         String[] lastPartResultArray = UtilsFunction.getLastPartOfStringArray(myResultArray);
         
         //Number of files to list
@@ -61,5 +61,69 @@ public class LoadSelectionPidFileAction {
     }
   }
 
+  /*
+   * This function loads the desired pid file
+   */
+  static void loadPidFile() {
+    
+    try {
+      boolean bSignalPid = isSignalSelected();
+      String  sPidFileFullName = getPidFileFullName();
+      if (bSignalPid) {
+        getSignalXYMinMax(sPidFileFullName);
+      } else {
+        getBackXYMinMax(sPidFileFullName);
+      }
+    } catch (Exception e) {}
+  }
   
+  /*
+   * This functions returns true if the signal PID file is selected
+   * false if background is selected
+   */
+   static boolean isSignalSelected() {
+     int iSelectedIndex = CreateDataReductionInputGUI.typeOfSelectionComboBox.getSelectedIndex();
+     if (iSelectedIndex == 0) {
+       return true;
+     } else {
+       return false;
+     }
+   }
+     
+   /*
+    * Get the full path to the pid file name
+    */
+   static String getPidFileFullName() {
+     int indexSelected = CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.getSelectedIndex();
+     return listOfPidFiles[indexSelected];
+   }
+   
+   /*
+    * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
+    * signal pid file
+    */
+   static void getSignalXYMinMax(String sFullFileName) {
+   ionFullFileName = new com.rsi.ion.IONVariable(sFullFileName);
+   String cmd = "xyMinMax = get_signal_xy_min_max( " + ionFullFileName + ")";
+   IonUtils.executeCmd(cmd);
+   try {
+     com.rsi.ion.IONVariable myIONresult;
+     myIONresult = IonUtils.queryVariable("xyMinMax");
+     String[] XYMinMax = myIONresult.getStringArray();
+     
+     System.out.println("Xmin: " + XYMinMax[0]);
+     System.out.println("Xmax: " + XYMinMax[1]);
+     System.out.println("Ymin: " + XYMinMax[2]);
+     System.out.println("Ymax: " + XYMinMax[3]);
+   
+    } catch (Exception e) {};
+   }
+ 
+   /*
+    * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
+    * back pid file
+    */
+   static void getBackXYMinMax(String sFullFileName) {
+   }
+ 
 }

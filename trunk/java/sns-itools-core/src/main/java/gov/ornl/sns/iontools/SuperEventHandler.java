@@ -379,13 +379,20 @@ public class SuperEventHandler extends DataReduction {
       }
     }
   
-    //
+    //load Pid file : home or current tmp folder
     if ("homeOrCurrentSessionComboBox".equals(evt.getActionCommand())) {
       LoadSelectionPidFileAction.getListOfPidFilesInHomeDirectory();
     }
   
+    //load button in load Pid files tab
+    if ("loadPidButton".equals(evt.getActionCommand())) {
+      LoadSelectionPidFileAction.loadPidFile();
+    }
     
-  
+    //clear button in load pid files tab
+    if ("clearPidButton".equals(evt.getActionCommand())) {
+      
+    }
   
   
   }
