@@ -871,7 +871,19 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
         TabUtils.removeColorOfParentTab(tabbedPane, selectionTab);
 		}});
 	    
-	    addActionListener();
+	  //event handler for save and load selection
+    CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.addChangeListener(new ChangeListener() {
+      public void stateChanged(ChangeEvent ev) {
+        
+        //if load tab is selected
+        if (CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.getSelectedIndex()==1) {
+          
+        }
+        
+      }});
+    
+    
+    addActionListener();
       DisplayConfiguration.colorTabsBackground();
 
 	}
