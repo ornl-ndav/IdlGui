@@ -285,6 +285,13 @@ public interface IParameters {
 	    static final Color TEXT_BOX_WRONG_FORMAT      = Color.ORANGE;
       static final Color TEXT_BOX_RIGHT_FORMAT      = Color.WHITE;
       
+      static final Color MAIN_TABS                  = Color.MAGENTA;
+      static final Color DATA_REDUCTION_TABS        = Color.CYAN;
+      static final Color PID_TABS                   = Color.ORANGE;
+      static final Color SELECTION_INFO_TABS        = Color.GREEN;
+      static final Color SEQUENTIALLY_RUN_TABS      = Color.ORANGE;
+      static final Color EXTRA_PLOTS_TABS           = Color.PINK;
+      
 	    static final JTabbedPane[] listOfTabbedPane   = {DataReduction.tabbedPane,
 	    												 DataReduction.dataReductionTabbedPane,
 	     												 DataReduction.selectionTab,

@@ -805,8 +805,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    CreateDataReductionInputGUI.createInputGui();
 	    
 	    //dataReductionTabbedPane.addTab("Input", panela);  //remove_comments
-      dataReductionTabbedPane.addTab("Input", panela);
-	    
+	    dataReductionTabbedPane.addTab("Input", panela);
+      	    
 	    //data reduction plot/tab
 	    panelb = new JPanel();
 	    CreateDataReductionPlotTab.initializeDisplay();
@@ -872,7 +872,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 		}});
 	    
 	    addActionListener();
-	    
+      DisplayConfiguration.colorTabsBackground();
+
 	}
 
 	/** Returns an ImageIcon, or null if the path was invalid. */

@@ -105,4 +105,49 @@ public class DisplayConfiguration {
 		return NyMax;
 	}
 	
+  /*
+   * This function set the background of the tabs
+   */
+    static void colorTabsBackground() {
+      // Input
+      DataReduction.dataReductionTabbedPane.setBackgroundAt(0, IParameters.DATA_REDUCTION_TABS);
+      // Data Reduction Plot
+      DataReduction.dataReductionTabbedPane.setBackgroundAt(1, IParameters.DATA_REDUCTION_TABS);
+      // Extra Plots
+      DataReduction.dataReductionTabbedPane.setBackgroundAt(2, IParameters.DATA_REDUCTION_TABS);
+      
+      // Data Reduction
+      DataReduction.tabbedPane.setBackgroundAt(0, IParameters.MAIN_TABS);
+      // Selection
+      DataReduction.tabbedPane.setBackgroundAt(1, IParameters.MAIN_TABS);
+      // Counts = f(TOF,X,Y)
+      DataReduction.tabbedPane.setBackgroundAt(2, IParameters.MAIN_TABS);
+      // Save Files
+      DataReduction.tabbedPane.setBackgroundAt(3, IParameters.MAIN_TABS);
+      // Settings
+      DataReduction.tabbedPane.setBackgroundAt(4, IParameters.MAIN_TABS);
+      // LogBook
+      DataReduction.tabbedPane.setBackgroundAt(5, IParameters.MAIN_TABS);
+                  
+      // Save and Load Pid files
+      CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.setBackgroundAt(0, IParameters.PID_TABS);
+      CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.setBackgroundAt(1, IParameters.PID_TABS);
+      
+      //Extra Plots
+      DataReduction.extraPlotsTabbedPane.setBackgroundAt(0, IParameters.EXTRA_PLOTS_TABS);
+      DataReduction.extraPlotsTabbedPane.setBackgroundAt(1, IParameters.EXTRA_PLOTS_TABS);
+      DataReduction.extraPlotsTabbedPane.setBackgroundAt(2, IParameters.EXTRA_PLOTS_TABS);
+      DataReduction.extraPlotsTabbedPane.setBackgroundAt(3, IParameters.EXTRA_PLOTS_TABS);
+      DataReduction.extraPlotsTabbedPane.setBackgroundAt(4, IParameters.EXTRA_PLOTS_TABS);
+      
+      //Selection
+      DataReduction.selectionTab.setBackgroundAt(0, IParameters.SELECTION_INFO_TABS);
+      DataReduction.selectionTab.setBackgroundAt(1, IParameters.SELECTION_INFO_TABS);
+      DataReduction.selectionTab.setBackgroundAt(2, IParameters.SELECTION_INFO_TABS);
+      
+      //runs tab
+      DataReduction.runsTabbedPane.setBackgroundAt(0, IParameters.SEQUENTIALLY_RUN_TABS);
+      DataReduction.runsTabbedPane.setBackgroundAt(1, IParameters.SEQUENTIALLY_RUN_TABS);
+      
+    }
 }
