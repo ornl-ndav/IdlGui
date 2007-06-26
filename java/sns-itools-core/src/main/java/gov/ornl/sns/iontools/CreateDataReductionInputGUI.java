@@ -1,9 +1,6 @@
 package gov.ornl.sns.iontools;
 
 import javax.swing.*;
-
-import org.apache.log4j.Layout;
-
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,6 +13,7 @@ public class CreateDataReductionInputGUI {
   static JPanel           loadPidPanel;
   static JComboBox        listOfPidFileToLoadComboBox;
   static JComboBox        typeOfSelectionComboBox;
+  static JComboBox        homeOrCurrentSessionComboBox;
   static JButton          loadPidButton;
   static JButton          clearPidButton;
   static JLabel           loadSignalLabel;
@@ -23,11 +21,14 @@ public class CreateDataReductionInputGUI {
   static JTextField       loadSignalTextField;
   static JTextField       loadBackTextField;
   
+  static String[] listOfSelectionFiles = {""};
+  
   static int      fileToSelectComboBoxXoff = 5;
   static int      fileToSelectComboBoxYoff = 5;
   static int      fileToSelectComboBoxWidth = 300;
+  static int      typeOfSelectionComboBoxWidth = 145;
   static int      fileToSelectComboBoxHeight = 30;
-  
+    
   static int      loadButtonXoff = 315;
   static int      loadButtonYoff = fileToSelectComboBoxYoff;
   static int      loadButtonWidth = 125;
@@ -45,7 +46,12 @@ public class CreateDataReductionInputGUI {
   static int      textFieldSize = 100;
   static int      yoff= 35;
   
-	public static void createInputGui() {
+  static int      homeOrCurrentSessionComboBoxXoff = 155;
+  static int      homeOrCurrentSessionComboBoxYoff = loadButtonYoff + yoff;
+  static int      homeOrCurrentSessionComboBoxWidth = 150;
+  static int      homeOrCurrentSessionComboBoxHeight = 30;
+  
+  	public static void createInputGui() {
 	    
   //definition of variables
   DataReduction.buttonSignalBackgroundPanel = new JPanel(new GridLayout(0,1));   
@@ -112,9 +118,8 @@ public class CreateDataReductionInputGUI {
   //second tab LOAD SELECTION
   loadPidPanel = new JPanel();
   loadPidPanel.setLayout(null);
-    
+  
   //top part of LOAD selection tab
-  String[] listOfSelectionFiles = {"REF_L_2454_signal_Pid.txt","REF_L_2455_signal_Pid.txt"};
   listOfPidFileToLoadComboBox = new JComboBox(listOfSelectionFiles);
   listOfPidFileToLoadComboBox.setBounds(
       fileToSelectComboBoxXoff,
@@ -151,17 +156,30 @@ public class CreateDataReductionInputGUI {
       fileTextFieldHeight);
   loadPidPanel.add(loadSignalTextField);
   
-  //bottom part of LOAD selection tab
-  
+  //bottom part of load selection PID files
   String[] listOfSelection = IParameters.LIST_OF_SELECTION;
   typeOfSelectionComboBox = new JComboBox(listOfSelection);
+  typeOfSelectionComboBox.setActionCommand("typeOfSelectionComboBox");
   typeOfSelectionComboBox.setBounds(
       fileToSelectComboBoxXoff,
       fileToSelectComboBoxYoff + yoff,
-      fileToSelectComboBoxWidth,
+      typeOfSelectionComboBoxWidth,
       fileToSelectComboBoxHeight);
   loadPidPanel.add(typeOfSelectionComboBox);
   
+  String[] listOfDirectory = { "Home directory","Current session" };
+  homeOrCurrentSessionComboBox = new JComboBox(listOfDirectory);
+  homeOrCurrentSessionComboBox.setActionCommand("homeOrCurrentSessionComboBox");
+  homeOrCurrentSessionComboBox.setBounds(
+      homeOrCurrentSessionComboBoxXoff,
+      homeOrCurrentSessionComboBoxYoff,
+      homeOrCurrentSessionComboBoxWidth,
+      homeOrCurrentSessionComboBoxHeight);
+  String sInfo = "HOME DIRECTORY: defined in the settings tab - ";
+  sInfo += "CURRENT SESSION: used only through the life of the current session";
+  homeOrCurrentSessionComboBox.setToolTipText(sInfo);
+  loadPidPanel.add(homeOrCurrentSessionComboBox);
+    
   clearPidButton = new JButton("CLEAR");
   clearPidButton.setActionCommand("clearPidButton");
   clearPidButton.setToolTipText("clear the selected file");
@@ -191,19 +209,7 @@ public class CreateDataReductionInputGUI {
   loadPidPanel.add(loadBackTextField);
   
   saveLoadSelectionTabbedPane.addTab("LOAD SELECTION", loadPidPanel);
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+    
   //Wavelength (for REF_M only)
 	DataReduction.wavelengthLabel = new JLabel("Wavelength:   ");
 	

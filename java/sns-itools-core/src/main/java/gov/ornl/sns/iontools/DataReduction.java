@@ -877,7 +877,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
         
         //if load tab is selected
         if (CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.getSelectedIndex()==1) {
-          
+          LoadSelectionPidFileAction.getListOfPidFilesInHomeDirectory();
         }
         
       }});
@@ -1185,6 +1185,8 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.detectorAnglePMTextField.addActionListener(this);
     	CreateDataReductionInputGUI.loadPidButton.addActionListener(this);
       CreateDataReductionInputGUI.clearPidButton.addActionListener(this);
+      CreateDataReductionInputGUI.typeOfSelectionComboBox.addActionListener(this);
+      CreateDataReductionInputGUI.homeOrCurrentSessionComboBox.addActionListener(this);
       
     	//from Data Reduction plot tab
     	DataReduction.yMaxTextField.addActionListener(this);

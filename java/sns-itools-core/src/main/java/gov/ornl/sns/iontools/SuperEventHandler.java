@@ -379,8 +379,12 @@ public class SuperEventHandler extends DataReduction {
       }
     }
   
+    //
+    if ("homeOrCurrentSessionComboBox".equals(evt.getActionCommand())) {
+      LoadSelectionPidFileAction.getListOfPidFilesInHomeDirectory();
+    }
   
-  
+    
   
   
   
