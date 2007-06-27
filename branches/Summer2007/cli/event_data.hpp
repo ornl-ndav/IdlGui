@@ -31,16 +31,14 @@ class EventData
      *         the data vectors.
      *  \param config The configuration options.
      */
-    void read_data(const std::string &event_file, 
-                   const std::string &mapping_file);
+    void read_data(const std::string &event_file);
 
     /** \fn void map_pixel_ids(const std::string &mapping_file,
      *                         map<uint32_t, uint32_t> &mapped_pixel_ids)
      *  \brief Takes a mapping file and maps the pixels to
      *         the appropriate numbers.
      */
-    void map_pixel_ids(const std::string &mapping_file,
-                       std::map<uint32_t, uint32_t> &pixel_id_map);
+    void map_pixel_ids(const std::string &mapping_file);
 
     /** \fn const std::vector<NumT> get_tof(void)
      *  \brief Returns a constant vector to the private tof vector.

@@ -11,31 +11,40 @@
 #include <stdexcept>
 #include <map>
 #include <vector>
+#include <iostream>
 
 using std::vector;
 using std::string;
+using std::map;
+using std::runtime_error;
 
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
 template const vector<uint32_t> EventData<uint32_t>::get_tof(void);
 template const vector<uint32_t> EventData<uint32_t>::get_pixel_id(void);
-template void EventData<uint32_t>::read_data(const string &, const string &);
+template void EventData<uint32_t>::read_data(const string &);
+template void EventData<uint32_t>::map_pixel_ids(const string &);
 
 template <typename NumT>
-void EventData<NumT>::map_pixel_ids(const string &mapping_file, 
-                                    std::map<uint32_t, uint32_t> &pixel_id_map)
+void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 {
+  map<uint32_t, uint32_t> pixel_id_map;
   size_t data_size = sizeof(uint32_t);
   uint32_t mapping_index = 0;
   int32_t buffer[BLOCK_SIZE];
   size_t offset = 0;
-  size_t i;
+
+  // If the data hasn't been read yet, throw an exception
+  if (pixel_id.size() == 0)
+    {
+      throw runtime_error("Must read data before mapping");
+    }
 
   // Open the mapping file
   std::ifstream file(mapping_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw std::runtime_error("Failed opening file: "+mapping_file);
+      throw runtime_error("Failed opening file: "+mapping_file);
     }
 
   // Determine the file and buffer size
@@ -52,7 +61,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file,
 
       // For each mapping index, map the pixel id
       // in the mapping file to that index
-      for( i = 0; i < buffer_size; i++ )
+      for( size_t i = 0; i < buffer_size; i++ )
         {
           pixel_id_map[mapping_index] = *(buffer + i);
           mapping_index++;
@@ -69,27 +78,22 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file,
 
   // Close mapping file
   file.close();
+
+  // After creating the map, map the pixel ids to the proper value
+  int size = pixel_id.size();
+  for ( size_t i = 0; i < size; i++ )
+    {
+      pixel_id[i] = pixel_id_map[pixel_id[i]];
+    }
 }
 
 template <typename NumT>
-void EventData<NumT>::read_data(const string &event_file, 
-                                const string &mapping_file) 
+void EventData<NumT>::read_data(const string &event_file) 
 {
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
   size_t data_size = sizeof(NumT);
-  std::map<uint32_t, uint32_t> pixel_id_map;
-  std::map<uint32_t, uint32_t>::iterator map_iterator;
-  std::map<uint32_t, uint32_t>::iterator map_end;
-  bool is_mapped = (mapping_file != "") ? true : false;
-
-  // First create a map if mapping is set
-  if (is_mapped)
-    {
-      map_pixel_ids(mapping_file, pixel_id_map);
-      map_end = pixel_id_map.end();
-    }
 
   // Open the event file
   std::ifstream file(event_file.c_str(), std::ios::binary);
@@ -116,17 +120,7 @@ void EventData<NumT>::read_data(const string &event_file,
         {
           // Use pointer arithmetic for speed
           EventData::tof.push_back(*(buffer + i));
-
-          // Map the pixels if necessary
-          if (is_mapped && 
-             (map_iterator = pixel_id_map.find(*(buffer + i + 1))) != map_end)
-            {
-              EventData::pixel_id.push_back(map_iterator->second);
-            }
-          else
-            {
-              EventData::pixel_id.push_back(*(buffer + i + 1));
-            }
+          EventData::pixel_id.push_back(*(buffer + i + 1));
         }
 
       offset += buffer_size;
