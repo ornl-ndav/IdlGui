@@ -3,9 +3,10 @@ package gov.ornl.sns.iontools;
 public class OtherPlotsAction {
 
   static boolean bThreadSafe;
+  static boolean bActivatePlot;
   static int tBinMin = 0;
   static int tBinMax = 0;
-  
+ 
   static void selectDesiredPlot() {
   
     bThreadSafe = true;
@@ -13,7 +14,8 @@ public class OtherPlotsAction {
     int iTOFSelected = CreateOtherPlotsPanel.list1OfOtherPlotsComboBox.getSelectedIndex();
     int iXYSelected = CreateOtherPlotsPanel.list2OfOtherPlotsComboBox.getSelectedIndex();
     int iIndex = iTOFSelected * 8 + iXYSelected;
-
+    int iXAxis = CreateOtherPlotsPanel.xAxisComboBox.getSelectedIndex();
+    
     switch (iIndex) {
       case 0:  //f( ---, ---, ---)
       case 8:  //f( TOf, ---, ---)
@@ -25,24 +27,48 @@ public class OtherPlotsAction {
         bThreadSafe = false;
       case 9:  //f( TOF, SumX, SumY)
       case 17: //f( TOFo, SumX, SumY)
+        switch (iXAxis) {
+        case 2: //X
+        case 0: //Y
+          bThreadSafe = false;
+        case 1: //TOF
+        }
         executePlot(iIndex);
         break;
       case 2:  //f( ---, Xo, SumY)
         bThreadSafe = false;
       case 10:  //f( TOF, Xo, SumY)
       case 18: //f( TOFo, Xo, SumY)
+        switch (iXAxis) {
+        case 2: //X
+        case 0: //Y
+          bThreadSafe = false;
+        case 1: //TOF
+        }
         executePlot(iIndex);
         break;
       case 3:  //f( ---, SumX, Yo)
         bThreadSafe = false;
       case 11: //f( TOF, SumX, Yo)
       case 19: //f( TOFo, SumX, Yo)
+        switch (iXAxis) {
+        case 2: //X
+        case 0: //Y
+          bThreadSafe = false;
+        case 1: //TOF
+        }
         executePlot(iIndex);
         break;
       case 4:  //f(---,Xo,Yo)
         bThreadSafe = false;
       case 12: //f(TOF,Xo,Yo)
       case 20: //f(TOFo,Xo,Yo)
+        switch (iXAxis) {
+        case 2: //X
+        case 0: //Y
+          bThreadSafe = false;
+        case 1: //TOF
+        }
         executePlot(iIndex);
         break;
       case 5:  //f( ---, SignalSelection)
@@ -65,7 +91,6 @@ public class OtherPlotsAction {
         break;
       default:
       }
-      
     //make various fields visible or invisible.
     OtherPlotsUpdateGui.updateGUI(iIndex); 
   }
@@ -98,7 +123,9 @@ public class OtherPlotsAction {
     String cmd = OtherPlotsCreateCmd.createCmd(index);
     OtherPlotsCreateMessage.displayMoreInfo(index);
     if (bThreadSafe) {
-      startThread(cmd);
+      if (bActivatePlot) {
+        startThread(cmd);
+      }
     } else {
       OtherPlotsCreateMessage.displayErrorMessage(index);
       clearPlot();

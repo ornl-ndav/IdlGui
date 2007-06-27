@@ -331,8 +331,11 @@ public class SuperEventHandler extends DataReduction {
     //when selecting another plots to view
     if ("list1OfOtherPlotsComboBox".equals(evt.getActionCommand()) ||
         "list2OfOtherPlotsComboBox".equals(evt.getActionCommand()) ||
+        "xAxisComboBox".equals(evt.getActionCommand()) ||
+        "yAxisComboBox".equals(evt.getActionCommand()) ||
         "saveSelectionRadioButton".equals(evt.getActionCommand()) ||
         "interactiveSelectionRadioButton".equals(evt.getActionCommand())) {
+      OtherPlotsAction.bActivatePlot = false;
       OtherPlotsAction.selectDesiredPlot();
     }
     
@@ -351,8 +354,9 @@ public class SuperEventHandler extends DataReduction {
       }
     }
         
-    //refresh button in other plots panel
+    //Plot button in other plots panel (old refresh button)
     if ("refreshButton".equals(evt.getActionCommand())) {
+      OtherPlotsAction.bActivatePlot = true;
       OtherPlotsAction.selectDesiredPlot();
     }
 
