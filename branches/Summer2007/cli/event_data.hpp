@@ -10,11 +10,14 @@
 
 #include <vector>
 #include <string>
-#include <map>
-#include <fstream>
-#include <stdexcept>
 #include "nexus_util.hpp"
 
+/** \enum e_data_name
+ *  \brief Enumeration of the data in the nexus file.
+ *  
+ *  e_data_name is used primarily for the compiler
+ *  to catch any erronous values given to functions.
+ */
 typedef enum e_data_name
 {
   TOF = 0,
@@ -34,17 +37,17 @@ class EventData
     std::vector<NumT> pixel_id;
     std::string data_path;
   public:
-    /** \fn void read_data(const Config &config)
+    /** \fn void read_data(const string &event_file)
      *  \brief Reads information from the event file and populates
      *         the data vectors.
-     *  \param config The configuration options.
+     *  \param event_file The event file to read from.
      */
     void read_data(const std::string &event_file);
 
-    /** \fn void map_pixel_ids(const std::string &mapping_file,
-     *                         map<uint32_t, uint32_t> &mapped_pixel_ids)
+    /** \fn void map_pixel_ids(const std::string &mapping_file)
      *  \brief Takes a mapping file and maps the pixels to
      *         the appropriate numbers.
+     *  \param mapping_file The mapping file to use.
      */
     void map_pixel_ids(const std::string &mapping_file);
 
@@ -105,7 +108,7 @@ class EventData
     
     /** \fn void get_nx_data_values(const e_data_name nx_data_type,
      *                              string &data_name, 
-     *                              vector<uint32_t> &data)
+     *                              vector<NumT> &data)
      *  \brief Fills in the nexus values associated with the
      *         e_data_name enumeration.
      *  \param nx_data_type The enumeration specifying which piece

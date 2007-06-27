@@ -2,7 +2,8 @@
  *  Date: 06-18-07
  *  \file event_data.cpp
  *  \brief The implementation for the EventData
- *         class.
+ *         class. For any documentation of the
+ *         functions, look at event_data.hpp.
  */
 
 #include "event_data.hpp"
@@ -11,12 +12,12 @@
 #include <stdexcept>
 #include <map>
 #include <vector>
-#include <iostream>
 
 using std::vector;
 using std::string;
 using std::map;
 using std::runtime_error;
+using std::ifstream;
 
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
@@ -84,10 +85,11 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
                                  const string &attr_value,
                                  const e_data_name nx_data_name)
 {
-
   string nx_attr_value(attr_value);
   string data_name;
-
+  
+  // Fill in the values that are associated with the
+  // given e_data_name
   get_nx_data_values(nx_data_name, data_name);  
 
   nexus_util.open_path(data_path + "/" + data_name);
@@ -100,29 +102,26 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
                                  const e_data_name nx_data_name)
 {
   string data_name;
-  // Make a non constant variable to pass to nx function
-  // to make sure the original is never changed
   vector<NumT> nx_data;
-  // Get the size of the data for referencing it
-  int dimensions;
+  
+  // Fill in the values that are associated with the 
+  // given e_data_name
+  get_nx_data_values(nx_data_name, data_name, nx_data);
+  int dimensions = nx_data.size();
+  
   // Get the nexus data type of the template
   NumT type;
   int nexus_data_type = typename_to_nexus_type(type);
-  int i = 0;
 
   nexus_util.open_path(data_path);
-
-  get_nx_data_values(nx_data_name, data_name, nx_data);
-  
-  dimensions = nx_data.size();
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
 
+  int i = 0;
   // Write all the data to the nexus file
   nexus_util.put_slab(&nx_data[0], &i, &dimensions);
 }
  
-
 template <typename NumT>
 void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 {
@@ -139,7 +138,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
     }
 
   // Open the mapping file
-  std::ifstream file(mapping_file.c_str(), std::ios::binary);
+  ifstream file(mapping_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
       throw runtime_error("Failed opening file: "+mapping_file);
@@ -193,10 +192,10 @@ void EventData<NumT>::read_data(const string &event_file)
   size_t data_size = sizeof(NumT);
 
   // Open the event file
-  std::ifstream file(event_file.c_str(), std::ios::binary);
+  ifstream file(event_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw std::runtime_error("Failed opening file: "+event_file);
+      throw runtime_error("Failed opening file: "+event_file);
     }
 
   // Determine the file and buffer size

@@ -125,6 +125,7 @@ int main(int32_t argc,
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
+  
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config);
 
