@@ -48,28 +48,51 @@ class EventData
      */
     void map_pixel_ids(const std::string &mapping_file);
 
-    /** \fn const std::vector<NumT> get_tof(void)
-     *  \brief Returns a constant vector to the private tof vector.
-     */
-    const std::vector<NumT> get_tof(void);
-
-    /** \fn const std::vector<NumT> get_pixel_id(void)
-     *  \brief Returns a constant vector to the private pixel_id vector.
-     */
-    const std::vector<NumT> get_pixel_id(void);
-
+     /** \fn void write_data(NexusUtil &nexus_util,
+      *                     const e_data_name nx_data_name)
+      * \brief Templated function that writes data to a nexus
+      *        file.
+      * \param nexus_util The nexus utility.
+      * \param nx_data_name The enumeration specifying which 
+      *                     piece of data to write.
+      */
     void write_data(NexusUtil &nexus_util,
                     const e_data_name nx_data_name);
 
+    /** \fn void write_attr(NexusUtil &nexus_util,
+      *                     const string &attr_name,
+      *                     const string &attr_value,
+      *                     const e_data_name nx_data_name)
+      * \brief Opens a data field in a nexus file and
+      *        writes an attribute for it.
+      * \param nexus_util The nexus utility.
+      * \param attr_name The name of the attribute.
+      * \param group_value The value associated with
+      *                    the attribute.
+      * \param nx_data_name The enumeration specifying which
+      *                     piece of data to write.
+      */
     void write_attr(NexusUtil &nexus_util,
                     const std::string &attr_name,
                     const std::string &attr_value,
                     const e_data_name nx_data_name);
-   
+  
+    /** \fn inline int typename_to_nexus_type(const int32_t &val)
+     *  \brief Returns an int32 nexus type.
+     *  \param val The type of the templated calling function
+     */
     inline int typename_to_nexus_type(const int32_t &val);
 
+    /** \fn inline int typename_to_nexus_type(const uint32_t &val)
+     *  \brief Returns an uint32 nexus type.
+     *  \param val The type of the templated calling function
+     */
     inline int typename_to_nexus_type(const uint32_t &val);
 
+    /* \fn EventData(const string &path)
+     * \brief Constructor the EventData class.
+     * \param path The path to the data in the nexus file.
+     */
     EventData(const std::string &path);
 };
 

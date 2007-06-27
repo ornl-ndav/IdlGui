@@ -31,53 +31,6 @@ void layout_nexus_file(NexusUtil &nexus_util,
   nexus_util.open_group("bank1", "NXevent_data");
 }
 
-inline int typename_to_nexus_type(const int32_t &val)
-{
-  return NX_INT32;
-}
-
-inline int typename_to_nexus_type(const uint32_t &val)
-{
-  return NX_UINT32;
-} 
-
-template <typename NumT>
-void write_data(NexusUtil &nexus_util,
-                const vector<NumT> &data, 
-                const string &group_path,
-                const string &data_name)
-{
-  // Make a non constant variable to pass to nx function
-  // to make sure the original is never changed
-  vector<NumT> nx_data(data);
-  // Get the size of the data for referencing it
-  int dimensions = data.size();
-  // Get the nexus data type of the template
-  NumT type;
-  int nexus_data_type = typename_to_nexus_type(type);
-  int i = 0;
-
-  nexus_util.open_path(group_path);
-  nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
-  nexus_util.open_data(data_name);
-
-  // Write all the data to the nexus file
-  nexus_util.put_slab(&nx_data[0], &i, &dimensions);
-}
-
-void write_attr(NexusUtil &nexus_util,
-                const string &attr_name,
-                const string &attr_value,
-                const string &data_path)
-{
-  // Make a non const variable for NXputattr
-  string nx_attr_value(attr_value);
-
-  nexus_util.open_path(data_path);
-  nexus_util.put_attr(attr_name, &nx_attr_value[0], 
-                      attr_value.length(), NX_CHAR);
-}
-
 /** \fn int main(int32_t argc,
  *               char *argv[])
  *  \brief Parses the command line and calls the necessary
@@ -87,7 +40,6 @@ int main(int32_t argc,
          char *argv[]) {
   struct Config config;
   e_nx_access file_access;
-  e_data_name nx_data_name;
 
   try 
     {
@@ -125,8 +77,7 @@ int main(int32_t argc,
       
       if (!data_file.isSet()) 
         {
-          cerr << "Error: Must specify an input file" << endl;
-          exit(1);
+          throw runtime_error("Error: Must specify an input file");
         }
     
       // Fill out the config object
@@ -159,7 +110,8 @@ int main(int32_t argc,
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
       exit(1);
     }
-  
+
+  // Create a bank of information for the nexus file  
   EventData <uint32_t>bank_one_data("/entry/bank1");
   
   // Gather the information from the event file
@@ -177,15 +129,10 @@ int main(int32_t argc,
   layout_nexus_file(nexus_util, config);
 
   // Populate the nexus file with information
-  nx_data_name = TOF;
-  bank_one_data.write_data(nexus_util, nx_data_name);
-  bank_one_data.write_attr(nexus_util, "units", "10^-7second", nx_data_name);
-  //write_data(nexus_util, bank_one_data.get_tof(), "/entry/bank1", "time_of_flight");
+  bank_one_data.write_data(nexus_util, TOF);
+  bank_one_data.write_attr(nexus_util, "units", "10^-7second", TOF);
 
-  nx_data_name = PIXEL_ID;
-  bank_one_data.write_data(nexus_util, nx_data_name);
-
-//  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/time_of_flight");
+  bank_one_data.write_data(nexus_util, PIXEL_ID);
 
   return 0;
 }

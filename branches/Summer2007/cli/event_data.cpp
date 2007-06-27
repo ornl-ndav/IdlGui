@@ -20,8 +20,6 @@ using std::runtime_error;
 
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
-template const vector<uint32_t> EventData<uint32_t>::get_tof(void);
-template const vector<uint32_t> EventData<uint32_t>::get_pixel_id(void);
 template void EventData<uint32_t>::read_data(const string &);
 template void EventData<uint32_t>::write_data(NexusUtil &, 
                                               const e_data_name);
@@ -219,16 +217,4 @@ void EventData<NumT>::read_data(const string &event_file)
 
   // Close event file
   file.close();
-}
-
-template <typename NumT>
-const vector<NumT> EventData<NumT>::get_tof(void)
-{
-  return static_cast< const vector<NumT> > (EventData::tof);
-}
-
-template <typename NumT>
-const vector<NumT> EventData<NumT>::get_pixel_id(void)
-{
-  return static_cast< const vector<NumT> > (EventData::pixel_id);
 }
