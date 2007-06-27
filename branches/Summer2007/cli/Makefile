@@ -32,7 +32,7 @@ rand2nxl: $(RAND_OBJS)
 	$(CXX) $(RAND_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o rand2nxl	
 
 histo_light: $(HISTO_LIGHT_OBJS) 
-	$(CXX) $(HISTO_LIGHT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o
+	$(CXX) $(HISTO_LIGHT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o histo_light
 
 Event_to_Histo_Mapped: $(HMAP_OBJS)
 	$(CXX) -o Event_to_Histo_Mapped $(HMAP_OBJS)
