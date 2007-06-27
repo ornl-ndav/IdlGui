@@ -12,6 +12,7 @@ public class OtherPlotsCreateCmd {
     String sTbinMax;
     int iTbinMin;
     int iTbinMax;
+    com.rsi.ion.IONVariable ionXAxis;
     com.rsi.ion.IONVariable ionTOFmin;
     com.rsi.ion.IONVariable ionTOFmax;
     com.rsi.ion.IONVariable ionTOFo;
@@ -146,9 +147,11 @@ public class OtherPlotsCreateCmd {
           }
         }
       }
+      ionXAxis = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.xAxisComboBox.getSelectedIndex());
+      cmd += "," + ionXAxis;
+      
       ionTOFmin = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMinTextField.getText());
       ionTOFmax = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.tBinMaxTextField.getText());
-      
       cmd += "," + ionTOFmin;
       cmd += "," + ionTOFmax;
       cmd += "," + ionTOFo;
@@ -182,6 +185,9 @@ public class OtherPlotsCreateCmd {
       } else {
         ionTOFo = new com.rsi.ion.IONVariable(1);
       }
+      ionXAxis = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.xAxisComboBox.getSelectedIndex());
+      cmd += "," + ionXAxis;
+           
       cmd += "," + ionTOFmin;
       cmd += "," + ionTOFmax;
       cmd += "," + ionTOFo;
@@ -216,6 +222,9 @@ public class OtherPlotsCreateCmd {
       } else {
         ionTOFo = new com.rsi.ion.IONVariable(1);
       }
+      ionXAxis = new com.rsi.ion.IONVariable(CreateOtherPlotsPanel.xAxisComboBox.getSelectedIndex());
+      cmd += "," + ionXAxis;
+
       cmd += "," + ionTOFmin;
       cmd += "," + ionTOFmax;
       cmd += "," + ionTOFo;
