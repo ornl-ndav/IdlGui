@@ -242,6 +242,12 @@ public interface IParameters {
                                                          " Signal Selection",
                                                          " Background_1 Selection",
                                                          " Background_2 Selection"};
+                                                         
+      static final String[] LIST_OF_X_AXIS = {"TOF",
+                                              "X",
+                                              "Y"};
+      
+      static final String[] LIST_OF_Y_AXIS = {"Counts"};
       
       static final String[] LIST_OF_PRO_FILES = {"clear",
                                                  "plot_tof_sumx_sumy",
