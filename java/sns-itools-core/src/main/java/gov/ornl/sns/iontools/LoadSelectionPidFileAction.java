@@ -10,6 +10,7 @@ public class LoadSelectionPidFileAction {
   static com.rsi.ion.IONVariable ionFullFileName;
   static String[] listOfPidFiles;
   static String[] myResultArray;
+  static String   shortFileName;
   
   static void getListOfPidFilesInHomeDirectory() {
    
@@ -104,6 +105,15 @@ public class LoadSelectionPidFileAction {
    }
    
    /*
+    * Get only the pid file name (without path)
+    */
+   static String getPidFileShortName() {
+     int indexSelected = CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.getSelectedIndex();
+     String sShortFileName = UtilsFunction.getOnlyLastPartOfFileName(listOfPidFiles[indexSelected]);
+     return sShortFileName;
+   }
+   
+   /*
     * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
     * signal pid file
     */
@@ -116,6 +126,9 @@ public class LoadSelectionPidFileAction {
      myIONresult = IonUtils.queryVariable("xyMinMax");
      String[] XYMinMax = myIONresult.getStringArray();
      saveSignalXYMinMax(XYMinMax);
+     DataReduction.pidSignalFileName = sFullFileName; //pid file name
+     String sShortPidFileName = getPidFileShortName();
+     updateSignalGUI(sShortPidFileName);
    } catch (Exception e) {};
    }
  
@@ -134,9 +147,44 @@ public class LoadSelectionPidFileAction {
      getSignalInfo(xmin, ymin, xmax, ymax);
    }
    
+   /*
+    * This function displays the info about the selection loaded in the 
+    * selection tab.
+    */
    static void getSignalInfo(int xmin, int ymin, int xmax, int ymax) {
      MouseSelection.saveXY(IParameters.SIGNAL_STRING,xmin, ymin, xmax, ymax);
    }
+   
+   /*
+    * This function update the GUI once a signal pid file has been selected
+    * that means, it adds its name in the load and the save signal text fields.
+    * Enabled CLEAR button in save pid files.
+    */
+   static void updateSignalGUI(String sShortPidFileName){
+     DataReduction.signalPidFileTextField.setText(sShortPidFileName);
+     DataReduction.signalPidFileTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_FULL);
+     DataReduction.clearSignalPidFileButton.setEnabled(true);
+     CreateDataReductionInputGUI.loadSignalTextField.setText(sShortPidFileName);
+     CreateDataReductionInputGUI.loadSignalTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_FULL);
+        }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    /*
     * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
@@ -182,4 +230,17 @@ public class LoadSelectionPidFileAction {
         g.drawLine(xmax,ymin,xmin,ymin);
       }
     }
+
+   static void clearPidFile() {
+     boolean bSignalPid = isSignalSelected();
+     if (bSignalPid) {
+       CreateDataReductionInputGUI.loadSignalTextField.setText("");
+       CreateDataReductionInputGUI.loadSignalTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
+       SaveSignalPidFileAction.clearSignalPidFileAction();
+     }
+   }
+   
+   
+   
+
 }

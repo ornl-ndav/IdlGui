@@ -23,7 +23,6 @@ public class SuperEventHandler extends DataReduction {
 	   		   	
 		if ("clearSignalPidFileButton".equals(evt.getActionCommand())) {
 			SaveSignalPidFileAction.clearSignalPidFileAction();
-			doBox();
 		}
 		
 		if ("backgroundPidFileButton".equals(evt.getActionCommand())) {
@@ -32,7 +31,6 @@ public class SuperEventHandler extends DataReduction {
 		
 		if ("clearBackPidFileButton".equals(evt.getActionCommand())) {
 			SaveBackgroundPidFileAction.clearBackgroundPidFileAction();
-			doBox();
 		}
 			
 		if ("xValidateButton".equals(evt.getActionCommand()) ||
@@ -391,8 +389,8 @@ public class SuperEventHandler extends DataReduction {
     
     //clear button in load pid files tab
     if ("clearPidButton".equals(evt.getActionCommand())) {
-      
-    }
+      LoadSelectionPidFileAction.clearPidFile();
+      }
   
   
   }
