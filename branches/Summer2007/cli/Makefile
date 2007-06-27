@@ -1,6 +1,6 @@
 #$Id$
 CXX = g++ -g
-ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl event2nxl nxl2event
+ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl event2nxl nxl2event histo_light
 
 HMAP_OBJS	=	Event_to_Histo_Mapped.o \
 				histo_utils.o bin_vector_utils.o map_utils.o utils.o
@@ -18,6 +18,8 @@ EVENT2NXL_OBJS      =	event2nxl.o nexus_util.o event_data.o
 
 NXL2EVENT_OBJS 	= 	nxl2event.o nexus_util.o
 
+HISTO_LIGHT_OBJS = 	histo_light.o 
+
 all: $(ALL)
 
 nxl2event: $(NXL2EVENT_OBJS)
@@ -28,6 +30,9 @@ event2nxl: $(EVENT2NXL_OBJS)
 
 rand2nxl: $(RAND_OBJS)
 	$(CXX) $(RAND_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o rand2nxl	
+
+histo_light: $(HISTO_LIGHT_OBJS) 
+	$(CXX) $(HISTO_LIGHT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o
 
 Event_to_Histo_Mapped: $(HMAP_OBJS)
 	$(CXX) -o Event_to_Histo_Mapped $(HMAP_OBJS)
@@ -78,6 +83,8 @@ nexus_util.o: nexus_util.cpp nexus_util.hpp
 event_data.o: event_data.cpp 
 	$(CXX) -c -I ../inc event_data.cpp
 
+histo_light.o: histo_light.cpp
+	$(CXX) -c -I ../inc histo_light.cpp
 clean:
 	rm -f $(ALL) *.o
 
