@@ -59,7 +59,6 @@ void map_pixel_ids(const string &mapping_file,
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
-      file.seekg(offset * data_size, std::ios::beg);
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // For each mapping index, map the pixel id

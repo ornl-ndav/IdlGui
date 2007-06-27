@@ -154,7 +154,6 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
-      file.seekg(offset * data_size, std::ios::beg);
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // For each mapping index, map the pixel id
@@ -209,7 +208,6 @@ void EventData<NumT>::read_data(const string &event_file)
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
-      file.seekg(offset * data_size, std::ios::beg);
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // Populate the time of flight and pixel id
