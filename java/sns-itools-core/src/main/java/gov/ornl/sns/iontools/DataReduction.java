@@ -914,12 +914,12 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       public void stateChanged(ChangeEvent ev) {
         
         //if load tab is selected
-        if (CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.getSelectedIndex()==1) {
+        if (CreateDataReductionInputGUI.saveLoadSelectionTabbedPane.getSelectedIndex()==1 && 
+            ParametersToKeep.bThreadInProcess != true) {
           LoadSelectionPidFileAction.getListOfPidFilesInHomeDirectory();
         }
         
       }});
-    
     
     addActionListener();
       DisplayConfiguration.colorTabsBackground();
