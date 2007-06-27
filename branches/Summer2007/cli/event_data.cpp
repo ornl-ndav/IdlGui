@@ -25,6 +25,10 @@ template const vector<uint32_t> EventData<uint32_t>::get_pixel_id(void);
 template void EventData<uint32_t>::read_data(const string &);
 template void EventData<uint32_t>::write_data(NexusUtil &, 
                                               const e_data_name);
+template void EventData<uint32_t>::write_attr(NexusUtil &,
+                                              const string &,
+                                              const string &,
+                                              const e_data_name);
 template void EventData<uint32_t>::map_pixel_ids(const string &);
 template EventData<uint32_t>::EventData(const string &);
 
@@ -44,6 +48,30 @@ template <typename NumT>
 inline int EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
 {
   return NX_UINT32;
+}
+
+
+template <typename NumT>
+void EventData<NumT>::write_attr(NexusUtil &nexus_util, 
+                                 const string &attr_name,
+                                 const string &attr_value,
+                                 const e_data_name nx_data_name)
+{
+
+  string nx_attr_value(attr_value);
+  string data_name;
+
+  if (nx_data_name == TOF)
+    {
+      data_name = "time_of_flight";
+    }
+  else if (nx_data_name == PIXEL_ID)
+    {
+      data_name = "pixel_number";
+    }
+  nexus_util.open_path(data_path + "/" + data_name);
+  nexus_util.put_attr(attr_name, &nx_attr_value[0],
+                      attr_value.length(), NX_CHAR);
 }
 
 template <typename NumT>

@@ -179,12 +179,13 @@ int main(int32_t argc,
   // Populate the nexus file with information
   nx_data_name = TOF;
   bank_one_data.write_data(nexus_util, nx_data_name);
+  bank_one_data.write_attr(nexus_util, "units", "10^-7second", nx_data_name);
   //write_data(nexus_util, bank_one_data.get_tof(), "/entry/bank1", "time_of_flight");
 
   nx_data_name = PIXEL_ID;
   bank_one_data.write_data(nexus_util, nx_data_name);
 
-  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/time_of_flight");
+//  write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/time_of_flight");
 
   return 0;
 }

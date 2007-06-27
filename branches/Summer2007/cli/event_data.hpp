@@ -60,6 +60,11 @@ class EventData
 
     void write_data(NexusUtil &nexus_util,
                     const e_data_name nx_data_name);
+
+    void write_attr(NexusUtil &nexus_util,
+                    const std::string &attr_name,
+                    const std::string &attr_value,
+                    const e_data_name nx_data_name);
    
     inline int typename_to_nexus_type(const int32_t &val);
 
