@@ -1,5 +1,8 @@
 package gov.ornl.sns.iontools;
 
+import java.awt.Graphics;
+import java.awt.Color;
+
 public class LoadSelectionPidFileAction {
 
   static com.rsi.ion.IONVariable ionPath;
@@ -74,7 +77,9 @@ public class LoadSelectionPidFileAction {
       } else {
         getBackXYMinMax(sPidFileFullName);
       }
+      doBox();
     } catch (Exception e) {}
+    
   }
   
   /*
@@ -110,15 +115,29 @@ public class LoadSelectionPidFileAction {
      com.rsi.ion.IONVariable myIONresult;
      myIONresult = IonUtils.queryVariable("xyMinMax");
      String[] XYMinMax = myIONresult.getStringArray();
-     
-     System.out.println("Xmin: " + XYMinMax[0]);
-     System.out.println("Xmax: " + XYMinMax[1]);
-     System.out.println("Ymin: " + XYMinMax[2]);
-     System.out.println("Ymax: " + XYMinMax[3]);
-   
-    } catch (Exception e) {};
+     saveSignalXYMinMax(XYMinMax);
+   } catch (Exception e) {};
    }
  
+   /*
+    * This function save xmin, xmax, ymin and ymax for the signal
+    */
+   static void saveSignalXYMinMax(String[] XYMinMax) {
+     int xmin = Integer.parseInt(XYMinMax[0]);
+     int ymin = Integer.parseInt(XYMinMax[1]);
+     int xmax = Integer.parseInt(XYMinMax[2]);
+     int ymax = Integer.parseInt(XYMinMax[3]);
+     MouseSelectionParameters.signal_x1=2*(xmin);
+     MouseSelectionParameters.signal_y1=2*(IParameters.NyRefl-ymin)-1;
+     MouseSelectionParameters.signal_x2=2*(xmax);
+     MouseSelectionParameters.signal_y2=2*(IParameters.NyRefl-ymax)-1;
+     getSignalInfo(xmin, ymin, xmax, ymax);
+   }
+   
+   static void getSignalInfo(int xmin, int ymin, int xmax, int ymax) {
+     MouseSelection.saveXY(IParameters.SIGNAL_STRING,xmin, ymin, xmax, ymax);
+   }
+   
    /*
     * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
     * back pid file
@@ -126,4 +145,41 @@ public class LoadSelectionPidFileAction {
    static void getBackXYMinMax(String sFullFileName) {
    }
  
+   static final void doBox(){
+    
+    int xmin = 0;
+    int ymin = 0;
+    int xmax = 0;
+    int ymax = 0;
+          
+    Graphics g = DataReduction.c_plot.getGraphics();
+    DataReduction.c_plot.update(g);
+    
+    for (int i=0; i<3; i++) {
+        
+      if (i == 0) {
+        xmin = MouseSelectionParameters.signal_x1;
+        ymin = MouseSelectionParameters.signal_y1;
+        xmax = MouseSelectionParameters.signal_x2;
+        ymax = MouseSelectionParameters.signal_y2;
+        g.setColor(Color.red);
+        } else if (i == 1) {
+          xmin = MouseSelectionParameters.back1_x1;
+          ymin = MouseSelectionParameters.back1_y1;
+          xmax = MouseSelectionParameters.back1_x2;
+          ymax = MouseSelectionParameters.back1_y2;
+          g.setColor(Color.yellow);
+        } else if (i == 2) {
+          xmin = MouseSelectionParameters.back2_x1;
+          ymin = MouseSelectionParameters.back2_y1;
+          xmax = MouseSelectionParameters.back2_x2;
+          ymax = MouseSelectionParameters.back2_y2;
+          g.setColor(Color.green);
+        }
+        g.drawLine(xmin,ymin,xmin,ymax);
+        g.drawLine(xmin,ymax,xmax,ymax);
+        g.drawLine(xmax,ymax,xmax,ymin);
+        g.drawLine(xmax,ymin,xmin,ymin);
+      }
+    }
 }

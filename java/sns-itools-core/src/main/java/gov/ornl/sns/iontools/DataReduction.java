@@ -677,7 +677,7 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
 	    if (mask == 1) {  //left click
 	    	if (modeSelected.compareTo("signalSelection") == 0) {
 	    		signalPidFileButton.setEnabled(true);
-	    		MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
+          MouseSelection.saveXY(IParameters.SIGNAL_STRING,x_min, y_min, x_max, y_max);
 	    		ParametersConfiguration.iY12 = y_max - y_min + 1;
 	    		TabUtils.addForegroundColor(tabbedPane,1);
 	    		TabUtils.addForegroundColor(selectionTab, 0);
@@ -723,7 +723,45 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
       }
       return;
     }
+
+    /***********************
+     * doBox 
+     * 
+     * Purpose: Draws rubber band box with Java.
+     */
+      static final void doBox(){
         
+      Graphics g = c_plot.getGraphics();
+      c_plot.update(g);
+      
+      for (int i=0; i<3; i++) {
+          
+        if (i == 0) {
+          c_x1 = MouseSelectionParameters.signal_x1;
+          c_y1 = MouseSelectionParameters.signal_y1;
+          c_x2 = MouseSelectionParameters.signal_x2;
+          c_y2 = MouseSelectionParameters.signal_y2;
+          g.setColor(Color.red);
+          } else if (i == 1) {
+            c_x1 = MouseSelectionParameters.back1_x1;
+            c_y1 = MouseSelectionParameters.back1_y1;
+            c_x2 = MouseSelectionParameters.back1_x2;
+            c_y2 = MouseSelectionParameters.back1_y2;
+            g.setColor(Color.yellow);
+          } else if (i == 2) {
+            c_x1 = MouseSelectionParameters.back2_x1;
+            c_y1 = MouseSelectionParameters.back2_y1;
+            c_x2 = MouseSelectionParameters.back2_x2;
+            c_y2 = MouseSelectionParameters.back2_y2;
+            g.setColor(Color.green);
+          }
+        g.drawLine(c_x1,c_y1,c_x1,c_y2);
+        g.drawLine(c_x1,c_y2,c_x2,c_y2);
+        g.drawLine(c_x2,c_y2,c_x2,c_y1);
+        g.drawLine(c_x2,c_y1,c_x1,c_y1);
+       }
+     }
+
 
 /*	
 ***************************************
@@ -960,45 +998,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
         showStatus(sMsg);
   }
     
-/***********************
- * doBox 
- * 
- * Purpose: Draws rubber band box with Java.
- */
-  static final void doBox(){
-		
-  Graphics g = c_plot.getGraphics();
-	c_plot.update(g);
-	
-	for (int i=0; i<3; i++) {
-	    
-		if (i == 0) {
-			c_x1 = MouseSelectionParameters.signal_x1;
-			c_y1 = MouseSelectionParameters.signal_y1;
-			c_x2 = MouseSelectionParameters.signal_x2;
-			c_y2 = MouseSelectionParameters.signal_y2;
-			g.setColor(Color.red);
-	    } else if (i == 1) {
-	    	c_x1 = MouseSelectionParameters.back1_x1;
-	    	c_y1 = MouseSelectionParameters.back1_y1;
-	    	c_x2 = MouseSelectionParameters.back1_x2;
-	    	c_y2 = MouseSelectionParameters.back1_y2;
-	    	g.setColor(Color.yellow);
-	    } else if (i == 2) {
-	    	c_x1 = MouseSelectionParameters.back2_x1;
-	    	c_y1 = MouseSelectionParameters.back2_y1;
-	    	c_x2 = MouseSelectionParameters.back2_x2;
-	    	c_y2 = MouseSelectionParameters.back2_y2;
-	    	g.setColor(Color.green);
-	    }
-		
-	    g.drawLine(c_x1,c_y1,c_x1,c_y2);
-	    g.drawLine(c_x1,c_y2,c_x2,c_y2);
-	    g.drawLine(c_x2,c_y2,c_x2,c_y1);
-	    g.drawLine(c_x2,c_y1,c_x1,c_y1);
-	    
-	}
- }
 
     private void createSelectionGui() {
 	//definition of variables

@@ -57,10 +57,8 @@ public class SaveFilesTabAction {
             StoreFilesToRename.createHashtableOfFilesToRename();
           }
         }
-        
         removeTmpHistoFileFromList(sListOfFiles);
         refreshListOfNames();
-        
       }
     } catch (Exception e) {};
   }
