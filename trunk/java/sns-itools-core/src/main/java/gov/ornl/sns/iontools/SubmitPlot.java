@@ -23,7 +23,7 @@ public class SubmitPlot implements Runnable {
     LogBookAction.displayMessageInLogBook(sMessage, true);
     		
 		ProcessingInterfaceWithGui.displayProcessingMessage("Plot in progress");
-		IonUtils.executeCmd(this.cmd);
+    IonUtils.executeCmd(this.cmd);
 
 		com.rsi.ion.IONVariable myIONresult;
 		myIONresult = IonUtils.queryVariable("result");

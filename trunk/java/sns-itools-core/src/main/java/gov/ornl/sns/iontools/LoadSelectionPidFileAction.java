@@ -15,7 +15,6 @@ public class LoadSelectionPidFileAction {
   static void getListOfPidFilesInHomeDirectory() {
    
     String sPidDirectory = getPidDirectory();
-    System.out.println("sPidDirectory: " + sPidDirectory); //REMOVe_me
     String sPidExtension = CreateSettingsPanel.pidFileExtensionTextField.getText();
     
     
@@ -24,29 +23,11 @@ public class LoadSelectionPidFileAction {
       ionExtension = new com.rsi.ion.IONVariable(sPidExtension);
       String cmd = "list_of_files = get_list_of_pid_files (" + ionPath;
       cmd += "," + ionExtension + ")";
-      System.out.println("cmd: " + cmd);
-      IonUtils.executeCmd(cmd);
       
-      com.rsi.ion.IONVariable myIONresult;
-      myIONresult = IonUtils.queryVariable("list_of_files");
-      
-      try {
-        myResultArray = myIONresult.getStringArray();
-        listOfPidFiles = new String[myResultArray.length];
-        System.arraycopy(myResultArray, 0, listOfPidFiles, 0, myResultArray.length);        
-        String[] lastPartResultArray = UtilsFunction.getLastPartOfStringArray(myResultArray);
-        
-        //Number of files to list
-        int iNbrOfPidFiles = myResultArray.length;
-        if (iNbrOfPidFiles > 0) {
-          CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.removeAllItems();
-            for (int i=0; i<iNbrOfPidFiles; ++i) {
-              CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.addItem(lastPartResultArray[i]);
-            }
-        }
-      } catch (Exception e) {
-        CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.removeAllItems(); 
-      }
+      //submit job in another thread
+      SubmitLoadListOfPidFiles run = new SubmitLoadListOfPidFiles(cmd);
+      Thread runThread = new Thread(run,"Work in progress");
+      runThread.start();
     }
   }
 
