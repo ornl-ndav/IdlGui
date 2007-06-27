@@ -86,8 +86,8 @@ void write_attr(NexusUtil &nexus_util,
 int main(int32_t argc, 
          char *argv[]) {
   struct Config config;
-  EventData <uint32_t>event_data;
   e_nx_access file_access;
+  e_data_name nx_data_name;
 
   try 
     {
@@ -160,13 +160,15 @@ int main(int32_t argc,
       exit(1);
     }
   
+  EventData <uint32_t>bank_one_data("/entry/bank1");
+  
   // Gather the information from the event file
-  event_data.read_data(config.event_file);
+  bank_one_data.read_data(config.event_file);
 
   // Map the pixel ids if necessary
   if (config.mapping_file != "")
     {
-      event_data.map_pixel_ids(config.mapping_file);
+      bank_one_data.map_pixel_ids(config.mapping_file);
     }
 
   // Create a new nexus utility
@@ -175,8 +177,13 @@ int main(int32_t argc,
   layout_nexus_file(nexus_util, config);
 
   // Populate the nexus file with information
-  write_data(nexus_util, event_data.get_tof(), "/entry/bank1", "time_of_flight");
-  write_data(nexus_util, event_data.get_pixel_id(), "/entry/bank1", "pixel_number");
+  nx_data_name = TOF;
+  bank_one_data.write_data(nexus_util, nx_data_name);
+  //write_data(nexus_util, bank_one_data.get_tof(), "/entry/bank1", "time_of_flight");
+
+  nx_data_name = PIXEL_ID;
+  bank_one_data.write_data(nexus_util, nx_data_name);
+
   write_attr(nexus_util, "units", "10^-7second", "/entry/bank1/time_of_flight");
 
   return 0;

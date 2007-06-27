@@ -13,6 +13,13 @@
 #include <map>
 #include <fstream>
 #include <stdexcept>
+#include "nexus_util.hpp"
+
+typedef enum e_data_name
+{
+  TOF = 0,
+  PIXEL_ID = 1
+};
 
 /** \class EventData
  *  \brief Holds all the data from the event file and
@@ -25,6 +32,7 @@ class EventData
   private:
     std::vector<NumT> tof;
     std::vector<NumT> pixel_id;
+    std::string data_path;
   public:
     /** \fn void read_data(const Config &config)
      *  \brief Reads information from the event file and populates
@@ -49,6 +57,15 @@ class EventData
      *  \brief Returns a constant vector to the private pixel_id vector.
      */
     const std::vector<NumT> get_pixel_id(void);
+
+    void write_data(NexusUtil &nexus_util,
+                    const e_data_name nx_data_name);
+   
+    inline int typename_to_nexus_type(const int32_t &val);
+
+    inline int typename_to_nexus_type(const uint32_t &val);
+
+    EventData(const std::string &path);
 };
 
 #endif

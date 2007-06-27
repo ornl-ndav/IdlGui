@@ -23,7 +23,64 @@ using std::runtime_error;
 template const vector<uint32_t> EventData<uint32_t>::get_tof(void);
 template const vector<uint32_t> EventData<uint32_t>::get_pixel_id(void);
 template void EventData<uint32_t>::read_data(const string &);
+template void EventData<uint32_t>::write_data(NexusUtil &, 
+                                              const e_data_name);
 template void EventData<uint32_t>::map_pixel_ids(const string &);
+template EventData<uint32_t>::EventData(const string &);
+
+template<typename NumT>
+EventData<NumT>::EventData(const string &path)
+{
+  data_path = path;
+}
+
+template <typename NumT>
+inline int EventData<NumT>::typename_to_nexus_type(const int32_t &val)
+{
+  return NX_INT32;
+}
+
+template <typename NumT>
+inline int EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
+{
+  return NX_UINT32;
+}
+
+template <typename NumT>
+void EventData<NumT>::write_data(NexusUtil &nexus_util, 
+                                 const e_data_name nx_data_name)
+{
+  string data_name;
+  // Make a non constant variable to pass to nx function
+  // to make sure the original is never changed
+  vector<NumT> nx_data;
+  // Get the size of the data for referencing it
+  int dimensions;
+  // Get the nexus data type of the template
+  NumT type;
+  int nexus_data_type = typename_to_nexus_type(type);
+  int i = 0;
+
+  nexus_util.open_path(data_path);
+  if (nx_data_name == TOF)
+    {
+      data_name = "time_of_flight";
+      nx_data = tof;
+    }
+  else if (nx_data_name == PIXEL_ID)
+    {
+      data_name = "pixel_number";
+      nx_data = pixel_id;
+    }
+
+  dimensions = nx_data.size();
+  nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
+  nexus_util.open_data(data_name);
+
+  // Write all the data to the nexus file
+  nexus_util.put_slab(&nx_data[0], &i, &dimensions);
+}
+ 
 
 template <typename NumT>
 void EventData<NumT>::map_pixel_ids(const string &mapping_file)
