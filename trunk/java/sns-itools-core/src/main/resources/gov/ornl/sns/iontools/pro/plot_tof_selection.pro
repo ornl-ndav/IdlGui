@@ -1,4 +1,5 @@
-PRO PLOT_TOF_SELECTION, tof_min, $
+PRO PLOT_TOF_SELECTION, xaxis, $
+                        tof_min, $
                         tof_max, $
                         tofo, $
                         xmin, $
@@ -9,6 +10,7 @@ PRO PLOT_TOF_SELECTION, tof_min, $
                         Nx, $
                         Ny
 
+xaxis = Long(xaxis)
 xmin = Long(xmin)
 xmax = Long(xmax)
 ymin = Long(ymin)
@@ -46,11 +48,30 @@ endif else begin
 
 endelse
 
-counts_vs_tof_inter2 = total(counts_vs_tof_inter1,2)
-counts_vs_tof = total(counts_vs_tof_inter2,2)
+if (xaxis EQ 0) then begin ;TOF
 
+    counts_vs_tof_inter2 = total(counts_vs_tof_inter1,2)
+    counts_vs_tof = total(counts_vs_tof_inter2,2)
+    xtitle= '#time bins'
 
-xtitle= '#time bins'
+endif else begin
+
+    if (xaxis EQ 1) then begin ;X
+
+            counts_vs_tof_inter2 = total(counts_vs_tof_inter1,1)
+            counts_vs_tof = total(counts_vs_tof_inter2,2)
+            xtitle = 'X pixels'
+
+    endif else begin ;Y
+
+            counts_vs_tof_inter2 = total(counts_vs_tof_inter1,1)
+            counts_vs_tof = total(counts_vs_tof_inter2,1)
+            xtitle = 'Y pixels'
+
+    endelse
+
+endelse
+
 ytitle= 'Counts'
 
 plot, counts_vs_tof, xtitle=xtitle, ytitle=ytitle
