@@ -7,8 +7,38 @@ public class OtherPlotsCreateMessage {
    */
   static void displayInfoMessage(int index) {
     CreateOtherPlotsPanel.infoTextArea.setText(IParameters.MESSAGE_LIST_OF_OTHER_PLOTS[index]);
+    int iXAxis = CreateOtherPlotsPanel.xAxisComboBox.getSelectedIndex();
+    int iYAxis = CreateOtherPlotsPanel.yAxisComboBox.getSelectedIndex();
+    displayAxisSelected(iXAxis, iYAxis);
   }
 
+  /*
+   * This function displays the x-axis and y-axis selected
+   */
+  static void displayAxisSelected(int iXAxis, int iYAxis){
+    String axisMessage;
+    axisMessage = "\n X-axis: ";
+    //x-axis
+    switch (iXAxis) {
+    case 0: //TOF
+      axisMessage += " TOF";
+      break;
+    case 1: //X
+      axisMessage += " X";
+      break;
+    case 2: //Y
+      axisMessage += " Y";
+      break;
+    }
+    //y-axis
+    axisMessage += "     Y-axis: ";
+    switch (iYAxis) {
+    case 0: //Counts
+      axisMessage += "Counts";
+    }
+    CreateOtherPlotsPanel.infoTextArea.append(axisMessage);
+  }
+  
   /*
    * This function displays more info according to plot selected
    */

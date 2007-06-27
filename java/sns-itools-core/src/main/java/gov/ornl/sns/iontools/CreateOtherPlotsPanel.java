@@ -62,17 +62,17 @@ public class CreateOtherPlotsPanel {
   
   static int list2OfOtherPlotsXoff = 250;
   static int list2OfOtherPlotsYoff = list1OfOtherPlotsYoff;
-  static int list2OfOtherPlotsWidth = 250;
+  static int list2OfOtherPlotsWidth = 200;
   static int list2OfOtherPlotsHeight = list1OfOtherPlotsHeight;
   
-  static int xAxisLabelXoff = 520;
-  static int yAxisLabelXoff = 665;
+  static int xAxisLabelXoff = 490;
+  static int yAxisLabelXoff = 650;
   static int xAxisLabelYoff = list1OfOtherPlotsYoff;
   static int xAxisLabelWidth = 50;
   static int xAxisLabelHeight = 30;
   
-  static int xAxisComboBoxXoff = 570;
-  static int yAxisComboBoxXoff = 715;
+  static int xAxisComboBoxXoff = 540;
+  static int yAxisComboBoxXoff = 700;
   static int xAxisComboBoxYoff = xAxisLabelYoff;
   static int xAxisComboBoxWidth = 80;
   static int xAxisComboBoxHeight = 30;
@@ -267,11 +267,6 @@ public class CreateOtherPlotsPanel {
         xAxisComboBoxWidth,
         xAxisComboBoxHeight);
     topPartPanel.add(yAxisComboBox);
-    
-    
-    
-    
-    
     
     topPartPanel.setPreferredSize(new Dimension(
         topPartPanelWidth,
