@@ -28,27 +28,29 @@ public class CreateDataReductionInputGUI {
   static int      fileToSelectComboBoxWidth = 300;
   static int      typeOfSelectionComboBoxWidth = 145;
   static int      fileToSelectComboBoxHeight = 30;
-    
-  static int      loadButtonXoff = 315;
-  static int      loadButtonYoff = fileToSelectComboBoxYoff;
-  static int      loadButtonWidth = 125;
-  static int      loadButtonHeight = fileToSelectComboBoxHeight;
+  static int      yoff= 35;
   
-  static int      loadLabelXoff = 445;
+  static int      loadButtonXoff = 315;
+  static int      loadButtonYoff = fileToSelectComboBoxYoff + yoff;
+  static int      loadButtonWidth = 235;
+  static int      loadButtonHeight = fileToSelectComboBoxHeight;
+  static int      clearButtonXoff = loadButtonXoff + 240;
+  static int      clearButtonYoff =  loadButtonYoff;
+  
+  static int      loadLabelXoff = loadButtonXoff;
   static int      loadLabelYoff = fileToSelectComboBoxYoff;
   static int      loadLabelWidth = 50;
   static int      loadLabelHeight = fileToSelectComboBoxHeight;
   
-  static int      fileTextFieldXoff = 490;
+  static int      fileTextFieldXoff = loadButtonXoff + 50;
   static int      fileTextFieldYoff = fileToSelectComboBoxYoff;
-  static int      fileTextFieldWidth = 300;
+  static int      fileTextFieldWidth = 425;
   static int      fileTextFieldHeight = fileToSelectComboBoxHeight;
   static int      textFieldSize = 100;
-  static int      yoff= 35;
-  
-  static int      homeOrCurrentSessionComboBoxXoff = 155;
-  static int      homeOrCurrentSessionComboBoxYoff = loadButtonYoff + yoff;
-  static int      homeOrCurrentSessionComboBoxWidth = 150;
+ 
+  static int      homeOrCurrentSessionComboBoxXoff = 5;
+  static int      homeOrCurrentSessionComboBoxYoff = loadButtonYoff;
+  static int      homeOrCurrentSessionComboBoxWidth = 300;
   static int      homeOrCurrentSessionComboBoxHeight = 30;
   
   	public static void createInputGui() {
@@ -157,17 +159,7 @@ public class CreateDataReductionInputGUI {
   loadPidPanel.add(loadSignalTextField);
   
   //bottom part of load selection PID files
-  String[] listOfSelection = IParameters.LIST_OF_SELECTION;
-  typeOfSelectionComboBox = new JComboBox(listOfSelection);
-  typeOfSelectionComboBox.setActionCommand("typeOfSelectionComboBox");
-  typeOfSelectionComboBox.setBounds(
-      fileToSelectComboBoxXoff,
-      fileToSelectComboBoxYoff + yoff,
-      typeOfSelectionComboBoxWidth,
-      fileToSelectComboBoxHeight);
-  loadPidPanel.add(typeOfSelectionComboBox);
-  
-  String[] listOfDirectory = { "Home directory","Current session" };
+  String[] listOfDirectory = { "Home directory","Directory of current session" };
   homeOrCurrentSessionComboBox = new JComboBox(listOfDirectory);
   homeOrCurrentSessionComboBox.setActionCommand("homeOrCurrentSessionComboBox");
   homeOrCurrentSessionComboBox.setBounds(
@@ -184,31 +176,13 @@ public class CreateDataReductionInputGUI {
   clearPidButton.setActionCommand("clearPidButton");
   clearPidButton.setToolTipText("clear the selected file");
   clearPidButton.setBounds(
-      loadButtonXoff,
-      loadButtonYoff + yoff,
+      clearButtonXoff,
+      clearButtonYoff,
       loadButtonWidth,
       loadButtonHeight);
   loadPidPanel.add(clearPidButton);
   
-  loadBackLabel = new JLabel("  Back.:");
-  loadBackLabel.setBounds(
-      loadLabelXoff,
-      loadLabelYoff + yoff,
-      loadLabelWidth,
-      loadLabelHeight);
-  loadPidPanel.add(loadBackLabel);
-  
-  loadBackTextField = new JTextField(textFieldSize);
-  loadBackTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
-  loadBackTextField.setEditable(false);
-  loadBackTextField.setBounds(
-      fileTextFieldXoff,
-      fileTextFieldYoff + yoff,
-      fileTextFieldWidth,
-      fileTextFieldHeight);
-  loadPidPanel.add(loadBackTextField);
-  
-  saveLoadSelectionTabbedPane.addTab("LOAD SELECTION", loadPidPanel);
+  saveLoadSelectionTabbedPane.addTab("LOAD SIGNAL SELECTION", loadPidPanel);
     
   //Wavelength (for REF_M only)
 	DataReduction.wavelengthLabel = new JLabel("Wavelength:   ");

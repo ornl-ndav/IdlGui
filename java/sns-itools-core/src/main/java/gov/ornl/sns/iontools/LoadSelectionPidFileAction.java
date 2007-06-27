@@ -15,13 +15,16 @@ public class LoadSelectionPidFileAction {
   static void getListOfPidFilesInHomeDirectory() {
    
     String sPidDirectory = getPidDirectory();
+    System.out.println("sPidDirectory: " + sPidDirectory); //REMOVe_me
     String sPidExtension = CreateSettingsPanel.pidFileExtensionTextField.getText();
+    
     
     if (sPidExtension.compareTo("")!=0 && sPidDirectory.compareTo("")!=0) {
       ionPath = new com.rsi.ion.IONVariable(sPidDirectory);
       ionExtension = new com.rsi.ion.IONVariable(sPidExtension);
       String cmd = "list_of_files = get_list_of_pid_files (" + ionPath;
       cmd += "," + ionExtension + ")";
+      System.out.println("cmd: " + cmd);
       IonUtils.executeCmd(cmd);
       
       com.rsi.ion.IONVariable myIONresult;
@@ -44,9 +47,7 @@ public class LoadSelectionPidFileAction {
       } catch (Exception e) {
         CreateDataReductionInputGUI.listOfPidFileToLoadComboBox.removeAllItems(); 
       }
-      
     }
-    
   }
 
   /*
@@ -71,31 +72,13 @@ public class LoadSelectionPidFileAction {
   static void loadPidFile() {
     
     try {
-      boolean bSignalPid = isSignalSelected();
       String  sPidFileFullName = getPidFileFullName();
-      if (bSignalPid) {
-        getSignalXYMinMax(sPidFileFullName);
-      } else {
-        getBackXYMinMax(sPidFileFullName);
-      }
+      getSignalXYMinMax(sPidFileFullName);
       doBox();
     } catch (Exception e) {}
     
   }
   
-  /*
-   * This functions returns true if the signal PID file is selected
-   * false if background is selected
-   */
-   static boolean isSignalSelected() {
-     int iSelectedIndex = CreateDataReductionInputGUI.typeOfSelectionComboBox.getSelectedIndex();
-     if (iSelectedIndex == 0) {
-       return true;
-     } else {
-       return false;
-     }
-   }
-     
    /*
     * Get the full path to the pid file name
     */
@@ -118,18 +101,18 @@ public class LoadSelectionPidFileAction {
     * signal pid file
     */
    static void getSignalXYMinMax(String sFullFileName) {
-   ionFullFileName = new com.rsi.ion.IONVariable(sFullFileName);
-   String cmd = "xyMinMax = get_signal_xy_min_max( " + ionFullFileName + ")";
-   IonUtils.executeCmd(cmd);
-   try {
-     com.rsi.ion.IONVariable myIONresult;
-     myIONresult = IonUtils.queryVariable("xyMinMax");
-     String[] XYMinMax = myIONresult.getStringArray();
-     saveSignalXYMinMax(XYMinMax);
-     DataReduction.pidSignalFileName = sFullFileName; //pid file name
-     String sShortPidFileName = getPidFileShortName();
-     updateSignalGUI(sShortPidFileName);
-   } catch (Exception e) {};
+     ionFullFileName = new com.rsi.ion.IONVariable(sFullFileName);
+     String cmd = "xyMinMax = get_signal_xy_min_max( " + ionFullFileName + ")";
+     try {
+       IonUtils.executeCmd(cmd);
+       com.rsi.ion.IONVariable myIONresult;
+       myIONresult = IonUtils.queryVariable("xyMinMax");
+       String[] XYMinMax = myIONresult.getStringArray();
+       saveSignalXYMinMax(XYMinMax);
+       DataReduction.pidSignalFileName = sFullFileName; //pid file name
+       String sShortPidFileName = getPidFileShortName();
+       updateSignalGUI(sShortPidFileName);
+     } catch (Exception e) {};
    }
  
    /*
@@ -166,33 +149,8 @@ public class LoadSelectionPidFileAction {
      DataReduction.clearSignalPidFileButton.setEnabled(true);
      CreateDataReductionInputGUI.loadSignalTextField.setText(sShortPidFileName);
      CreateDataReductionInputGUI.loadSignalTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_FULL);
-        }
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   /*
-    * This function will retrive the Xmin, Xmax, Ymin and Ymax from the
-    * back pid file
-    */
-   static void getBackXYMinMax(String sFullFileName) {
    }
- 
+   
    static final void doBox(){
     
     int xmin = 0;
@@ -232,12 +190,9 @@ public class LoadSelectionPidFileAction {
     }
 
    static void clearPidFile() {
-     boolean bSignalPid = isSignalSelected();
-     if (bSignalPid) {
        CreateDataReductionInputGUI.loadSignalTextField.setText("");
        CreateDataReductionInputGUI.loadSignalTextField.setBackground(IParameters.TEXT_BOX_REQUIRED_EMPTY);
        SaveSignalPidFileAction.clearSignalPidFileAction();
-     }
    }
    
    

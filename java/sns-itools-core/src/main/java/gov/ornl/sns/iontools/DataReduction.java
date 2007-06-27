@@ -1184,7 +1184,6 @@ public class DataReduction extends JApplet implements IONDisconnectListener,
     	DataReduction.detectorAnglePMTextField.addActionListener(this);
     	CreateDataReductionInputGUI.loadPidButton.addActionListener(this);
       CreateDataReductionInputGUI.clearPidButton.addActionListener(this);
-      CreateDataReductionInputGUI.typeOfSelectionComboBox.addActionListener(this);
       CreateDataReductionInputGUI.homeOrCurrentSessionComboBox.addActionListener(this);
       
     	//from Data Reduction plot tab
