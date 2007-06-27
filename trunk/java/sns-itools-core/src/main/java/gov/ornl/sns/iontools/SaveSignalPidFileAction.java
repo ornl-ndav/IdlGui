@@ -67,9 +67,9 @@ public class SaveSignalPidFileAction {
 		CheckDataReductionButtonValidation.bSignalPidFileSaved = false;
 		CheckDataReductionButtonValidation.sSignalPidFile = "";
 		MouseSelection.RemoveSignalPidInfoMessage();
-		
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,0);
     ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
+    DataReduction.doBox();
 	}
 	
 	

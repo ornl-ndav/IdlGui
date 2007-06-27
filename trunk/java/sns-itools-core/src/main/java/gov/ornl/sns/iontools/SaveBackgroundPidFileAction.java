@@ -92,6 +92,8 @@ public class SaveBackgroundPidFileAction {
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,1);
 		TabUtils.removeForegroundColor(DataReduction.selectionTab,2);
     ThingsToDoWhenThreadIsDone.doWhenCreatePidFileIsDone();
+    
+    DataReduction.doBox();
 	}
 	
 		
