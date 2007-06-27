@@ -89,6 +89,38 @@ class EventData
      */
     inline int typename_to_nexus_type(const uint32_t &val);
 
+    /** \fn void get_nx_data_values(const e_data_name nx_data_type,
+     *                              string &data_name)
+     *  \brief Fills in the nexus values associated with the
+     *         e_data_name enumeration.
+     *  \param nx_data_type The enumeration specifying which piece
+     *                      of data. Ex - TOF for time of flight.
+     *  \param data_name The string to fill in the actual name
+     *                   associated with the enumeration. Ex -
+     *                   data_name will be set to "time_of_flight"
+     *                   if the nx_data_type is TOF.
+     */
+    void get_nx_data_values(const e_data_name nx_data_type,
+                            std::string &data_name);
+    
+    /** \fn void get_nx_data_values(const e_data_name nx_data_type,
+     *                              string &data_name, 
+     *                              vector<uint32_t> &data)
+     *  \brief Fills in the nexus values associated with the
+     *         e_data_name enumeration.
+     *  \param nx_data_type The enumeration specifying which piece
+     *                      of data. Ex - TOF for time of flight.
+     *  \param data_name The string to fill in the actual name
+     *                   associated with the enumeration. Ex -
+     *                   data_name will be set to "time_of_flight"
+     *                   if the nx_data_type is TOF.
+     *  \param data The chunk of data that will be set properly
+     *              according to the enumeration.
+     */
+    void get_nx_data_values(const e_data_name nx_data_type,
+                            std::string &data_name,
+                            std::vector<NumT> &data);
+
     /* \fn EventData(const string &path)
      * \brief Constructor the EventData class.
      * \param path The path to the data in the nexus file.

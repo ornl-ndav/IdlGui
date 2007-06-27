@@ -48,6 +48,35 @@ inline int EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
   return NX_UINT32;
 }
 
+template <typename NumT>
+void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type, 
+                                         string &data_name)
+{
+  if (nx_data_type == TOF)
+    {
+      data_name = "time_of_flight";
+    }
+  else if (nx_data_type == PIXEL_ID)
+    {
+      data_name = "pixel_number";
+    }
+}
+
+template <typename NumT>
+void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
+                                         string &data_name,
+                                         vector<NumT> &data)
+{
+  get_nx_data_values(nx_data_type, data_name);
+  if (nx_data_type == TOF)
+    {
+      data = tof;
+    }
+  else if (nx_data_type == PIXEL_ID)
+    {
+      data = pixel_id;
+    }
+}
 
 template <typename NumT>
 void EventData<NumT>::write_attr(NexusUtil &nexus_util, 
@@ -59,14 +88,8 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
   string nx_attr_value(attr_value);
   string data_name;
 
-  if (nx_data_name == TOF)
-    {
-      data_name = "time_of_flight";
-    }
-  else if (nx_data_name == PIXEL_ID)
-    {
-      data_name = "pixel_number";
-    }
+  get_nx_data_values(nx_data_name, data_name);  
+
   nexus_util.open_path(data_path + "/" + data_name);
   nexus_util.put_attr(attr_name, &nx_attr_value[0],
                       attr_value.length(), NX_CHAR);
@@ -88,17 +111,9 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   int i = 0;
 
   nexus_util.open_path(data_path);
-  if (nx_data_name == TOF)
-    {
-      data_name = "time_of_flight";
-      nx_data = tof;
-    }
-  else if (nx_data_name == PIXEL_ID)
-    {
-      data_name = "pixel_number";
-      nx_data = pixel_id;
-    }
 
+  get_nx_data_values(nx_data_name, data_name, nx_data);
+  
   dimensions = nx_data.size();
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
