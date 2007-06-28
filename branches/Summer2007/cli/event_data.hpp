@@ -12,6 +12,8 @@
 #include <string>
 #include "nexus_util.hpp"
 
+const uint32_t ERROR=0x80000000;
+
 /** \enum e_data_name
  *  \brief Enumeration of the data in the nexus file.
  *  

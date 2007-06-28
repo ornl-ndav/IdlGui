@@ -213,9 +213,13 @@ void EventData<NumT>::read_data(const string &event_file)
       // vectors with the data from the event file
       for( i = 0; i < buffer_size; i+=2 )
         {
-          // Use pointer arithmetic for speed
-          EventData::tof.push_back(*(buffer + i));
-          EventData::pixel_id.push_back(*(buffer + i + 1));
+          // Filter out error codes
+          if ((*(buffer + i + 1) & ERROR) != ERROR)
+            {
+              // Use pointer arithmetic for speed
+              EventData::tof.push_back(*(buffer + i));
+              EventData::pixel_id.push_back(*(buffer + i + 1));
+            }
         }
 
       offset += buffer_size;
