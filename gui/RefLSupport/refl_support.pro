@@ -37,8 +37,7 @@ global = ptr_new({  $
 ;                   img_ptr 		: ptr_new(0L),$
                  })
 
-; Create the top-level base and the tab.
-title = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
+
 
 ;def of parameters used for positioning and sizing widgets
 ;[xoff,yoff,width,height]
@@ -53,6 +52,7 @@ ListOfFilesSize = [220, 5  , 250 , 30 ]
 FileInfoSize    = [5  , 40 , 510 , 260]
 ListOfColorSize = [5  , 300, 100 , 30 ]
 
+MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINED CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
@@ -70,7 +70,7 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         YOFFSET=MainBaseSize[1],$
                         SCR_XSIZE=MainBaseSize[2], $
                         SCR_YSIZE=MainBaseSize[3], $
-                        TITLE=title,$
+                        TITLE=MainTitle,$
                         MBAR=WID_BASE_0_MBAR)
 
 PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
