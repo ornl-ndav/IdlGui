@@ -132,6 +132,7 @@ public class CreateDataReductionInputGUI {
   
   loadPidButton = new JButton("LOAD");
   loadPidButton.setActionCommand("loadPidButton");
+  loadPidButton.setEnabled(false);
   loadPidButton.setToolTipText("Load and use the selected file as the signal or background PID file");
   loadPidButton.setBounds(
       loadButtonXoff,
@@ -173,6 +174,7 @@ public class CreateDataReductionInputGUI {
   loadPidPanel.add(homeOrCurrentSessionComboBox);
     
   clearPidButton = new JButton("CLEAR");
+  clearPidButton.setEnabled(false);
   clearPidButton.setActionCommand("clearPidButton");
   clearPidButton.setToolTipText("clear the selected file");
   clearPidButton.setBounds(

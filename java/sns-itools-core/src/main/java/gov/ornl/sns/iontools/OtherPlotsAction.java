@@ -28,10 +28,10 @@ public class OtherPlotsAction {
       case 9:  //f( TOF, SumX, SumY)
       case 17: //f( TOFo, SumX, SumY)
         switch (iXAxis) {
-        case 2: //X
-        case 0: //Y
+        case 1: //X
+        case 2: //Y
           bThreadSafe = false;
-        case 1: //TOF
+        case 0: //TOF
         }
         executePlot(iIndex);
         break;
@@ -40,10 +40,10 @@ public class OtherPlotsAction {
       case 10:  //f( TOF, Xo, SumY)
       case 18: //f( TOFo, Xo, SumY)
         switch (iXAxis) {
-        case 2: //X
-        case 0: //Y
+        case 1: //X
+        case 2: //Y
           bThreadSafe = false;
-        case 1: //TOF
+        case 0: //TOF
         }
         executePlot(iIndex);
         break;
@@ -52,10 +52,10 @@ public class OtherPlotsAction {
       case 11: //f( TOF, SumX, Yo)
       case 19: //f( TOFo, SumX, Yo)
         switch (iXAxis) {
-        case 2: //X
-        case 0: //Y
+        case 1: //X
+        case 2: //Y
           bThreadSafe = false;
-        case 1: //TOF
+        case 0: //TOF
         }
         executePlot(iIndex);
         break;
@@ -64,10 +64,10 @@ public class OtherPlotsAction {
       case 12: //f(TOF,Xo,Yo)
       case 20: //f(TOFo,Xo,Yo)
         switch (iXAxis) {
-        case 2: //X
-        case 0: //Y
+        case 1: //X
+        case 2: //Y
           bThreadSafe = false;
-        case 1: //TOF
+        case 0: //TOF
         }
         executePlot(iIndex);
         break;
@@ -130,7 +130,15 @@ public class OtherPlotsAction {
       OtherPlotsCreateMessage.displayErrorMessage(index);
       clearPlot();
     }
+    activatePlotClearButtons(bThreadSafe);
   }
    
-   
+ /*
+  * This function enables or not the PLOT and CLEAR buttons
+  */
+  static void activatePlotClearButtons(boolean bActivate) {
+    CreateOtherPlotsPanel.refreshButton.setEnabled(bActivate);
+    CreateOtherPlotsPanel.clearButton.setEnabled(bActivate);
+  }
+  
 }

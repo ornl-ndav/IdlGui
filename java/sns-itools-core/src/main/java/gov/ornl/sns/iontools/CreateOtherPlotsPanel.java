@@ -50,9 +50,9 @@ public class CreateOtherPlotsPanel {
   static int list1OfOtherPlotsLabelWidth = 50;
   static int list1OfOtherPlotsLabelHeight = 30;
   
-  static int list1OfOtherPlotsXoff = 45;
+  static int list1OfOtherPlotsXoff = 40;
   static int list1OfOtherPlotsYoff = 5;
-  static int list1OfOtherPlotsWidth = 150;
+  static int list1OfOtherPlotsWidth = 155;
   static int list1OfOtherPlotsHeight = 30;
 
   static int list2OfOtherPlotsLabelXoff = 220;
@@ -202,7 +202,7 @@ public class CreateOtherPlotsPanel {
     list1OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
     list1OfOtherPlotsComboBox.setSelectedIndex(0);
     list1OfOtherPlotsComboBox.setActionCommand("list1OfOtherPlotsComboBox");
-    list1OfOtherPlotsComboBox.setEnabled(true);
+    list1OfOtherPlotsComboBox.setEnabled(false);
     list1OfOtherPlotsComboBox.setBounds(
         list1OfOtherPlotsXoff,
         list1OfOtherPlotsYoff,
@@ -222,7 +222,7 @@ public class CreateOtherPlotsPanel {
     list2OfOtherPlotsComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
     list2OfOtherPlotsComboBox.setSelectedIndex(0);
     list2OfOtherPlotsComboBox.setActionCommand("list2OfOtherPlotsComboBox");
-    list2OfOtherPlotsComboBox.setEnabled(true);
+    list2OfOtherPlotsComboBox.setEnabled(false);
     list2OfOtherPlotsComboBox.setBounds(
         list2OfOtherPlotsXoff,
         list2OfOtherPlotsYoff,
@@ -241,7 +241,7 @@ public class CreateOtherPlotsPanel {
     xAxisComboBox = new JComboBox(IParameters.LIST_OF_X_AXIS);
     xAxisComboBox.setSelectedIndex(0);
     xAxisComboBox.setActionCommand("xAxisComboBox");
-    xAxisComboBox.setEnabled(true);
+    xAxisComboBox.setEnabled(false);
     xAxisComboBox.setBounds(
         xAxisComboBoxXoff,
         xAxisComboBoxYoff,
@@ -260,7 +260,7 @@ public class CreateOtherPlotsPanel {
     yAxisComboBox = new JComboBox(IParameters.LIST_OF_Y_AXIS);
     yAxisComboBox.setSelectedIndex(0);
     yAxisComboBox.setActionCommand("yAxisComboBox");
-    yAxisComboBox.setEnabled(true);
+    yAxisComboBox.setEnabled(false);
     yAxisComboBox.setBounds(
         yAxisComboBoxXoff,
         xAxisComboBoxYoff,
