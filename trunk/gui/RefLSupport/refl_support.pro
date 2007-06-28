@@ -26,7 +26,7 @@ end
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
 
-Resolve_Routine, 'more_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -37,17 +37,21 @@ global = ptr_new({  $
 ;                   img_ptr 		: ptr_new(0L),$
                  })
 
-(*global).output_path = (*global).output_path + user + "/"
-output_path = (*global).output_path 
-
 ; Create the top-level base and the tab.
-title = " Output histo/event data - Check NeXus (" + (*global).instrument + ")"
+title = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
+
+;def of parameters used for positioning and sizing widgets
+;[xoff,yoff,width,height]
+
+MainBaseSize = [150, 150, 1200, 600]
+
+
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
-                        UNAME='MAIN_BASE', $
-                        XOFFSET=150,$
-                        YOFFSET=350, $
-                        SCR_XSIZE=950, $
-                        SCR_YSIZE=ysize, $
+                        UNAME='MAIN_BASE',$
+                        XOFFSET=MainBaseSize[0],$
+                        YOFFSET=MainBaseSize[1],$
+                        SCR_XSIZE=MainBaseSize[2], $
+                        SCR_YSIZE=MainBaseSize[3], $
                         title=title,$
                         MBAR=WID_BASE_0_MBAR)
 
