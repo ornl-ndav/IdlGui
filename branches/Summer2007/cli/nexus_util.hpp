@@ -11,6 +11,11 @@
 #include "napi.h"
 #include <string>
 
+/** \enum e_nx_access
+ *  \brief Enumeration for the types of nexus file
+ *         access. This allows the compiler to 
+ *         check for errors.
+ */
 typedef enum e_nx_access 
 { 
   READ = NXACC_READ, 
@@ -21,12 +26,18 @@ typedef enum e_nx_access
   XML = NXACC_CREATEXML 
 };
 
+/** \class NexusUtil
+ *  \brief A nexus utility that opens a file in the
+ *         constructor and stores the file handle
+ *         as a private variable. The functions also
+ *         do appropriate error checking.
+ */
 class NexusUtil
 {
   private:
     NXhandle file_id;
   public:
-    /** \fn NexusUtil(const std::string &out_path, 
+    /** \fn NexusUtil(const string &out_path, 
      *                const NXaccess &file_access)
      *  \brief Constructor that opens the nexus file with the 
      *         specified format.
@@ -39,16 +50,16 @@ class NexusUtil
      */
     ~NexusUtil(void);
 
-    /** \fn make_group(const std::string &name, 
-     *                 const std::string &path)
+    /** \fn make_group(const string &name, 
+     *                 const string &path)
      *  \brief Makes a group in a nexus file, while checking for
      *         errors.
      */
     void make_group(const std::string &name, 
                     const std::string &path);
     
-    /** \fn open_group(const std::string &name, 
-     *                 const std::string &path)
+    /** \fn open_group(const string &name, 
+     *                 const string &path)
      *  \brief Opens a group in a nexus file, while checking for
      *         errors.
      */
@@ -61,13 +72,13 @@ class NexusUtil
      */
     void close_group(void);
     
-    /** \fn open_path(const std::string &path)
+    /** \fn open_path(const string &path)
      *  \brief Opens a path in a nexus file, while checking for
      *         errors.
      */
     void open_path(const std::string &path);
     
-    /** \fn make_data(const std::string &name, 
+    /** \fn make_data(const string &name, 
      *                int nexus_data_type,
      *                int rank,
      *                int *dimensions)
@@ -79,7 +90,7 @@ class NexusUtil
                    int rank, 
                    int *dimensions);
     
-    /** \fn open_group(const std::string &name)
+    /** \fn open_group(const string &name)
      *  \brief Opens data in a nexus file, while checking for
      *         errors.
      */
@@ -97,7 +108,7 @@ class NexusUtil
      */
     void close_data(void);
     
-    /** \fn put_attr(const std::string &name,
+    /** \fn put_attr(const string &name,
      *               void *value,
      *               int length,
      *               int nx_type)
@@ -108,6 +119,14 @@ class NexusUtil
                   void *value, 
                   int length, 
                   int nx_type);
+
+    /** \fn put_attr(const string &name,
+     *               const string &value);
+     *  \brief Overloaded function that is specifically
+     *         meant for strings.
+     */
+    void put_attr(const std::string &name,
+                  const std::string &value);
     
     /** \fn put_slab(void *nx_data,
      *               int start,
@@ -144,7 +163,7 @@ class NexusUtil
     void malloc(void **nx_data,
                 int rank,
                 int *dimensions,
-               int nexus_data_type);
+                int nexus_data_type);
 
     /* \fn free(void **nx_data)
      * \brief Calls NXfree, while checking for errors.
