@@ -42,15 +42,41 @@ global = ptr_new({  $
 ;def of parameters used for positioning and sizing widgets
 ;[xoff,yoff,width,height]
 
-MainBaseSize    = [150, 150, 1200, 600]
-PlotWindowSize  = [5  , 5  , 650 , 590]
-StepsTabSize    = [660, 5  , 530 , 400]
-Step1Size       = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
-LoadButton      = [5  , 5  , 100 , 30 ]
-ClearButton     = [110, 5  , 100 , 30 ]
-ListOfFilesSize = [220, 5  , 250 , 30 ]
-FileInfoSize    = [5  , 40 , 510 , 260]
-ListOfColorSize = [5  , 300, 100 , 30 ]
+MainBaseSize         = [150, 150, 1200, 600]
+PlotWindowSize       = [5  , 5  , 650 , 590]
+StepsTabSize         = [660, 5  , 530 , 400]
+Step1Size            = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
+LoadButton           = [5  , 5  , 100 , 30 ]
+ClearButton          = [110, 5  , 100 , 30 ]
+ListOfFilesSize      = [220, 5  , 250 , 30 ]
+FileInfoSize         = [5  , 40 , 510 , 260]
+ListOfColorSize      = [5  , 300, 100 , 30 ]
+BaseFileSize         = [5  , 5  , 250 , 30 ]
+Step2GoButtonSize    = [340, 7  , 180 , 30 ]
+distance_L_TB        = 30
+Step2Q1LabelSize     = [5  , 45 , 30  , 30 ]
+Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
+                        Step2Q1LabelSize[1],$
+                        120,$
+                        Step2Q1LabelSize[3]]
+distance_L_L         = 155
+Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
+                        Step2Q1LabelSize[1],$
+                        Step2Q1LabelSize[2],$
+                        Step2Q1LabelSize[3]]
+Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
+                        Step2Q1LabelSize[1],$
+                        Step2Q1TextFieldSize[2],$
+                        Step2Q1LabelSize[3]]
+Step2SFLabelSize     = [Step2Q1LabelSize[0]+2*distance_L_L, $
+                        Step2Q1LabelSize[1],$
+                        Step2Q1LabelSize[2],$
+                        Step2Q1LabelSize[3]]
+Step2SFTextFieldSize = [Step2SFLabelSize[0]+distance_L_TB,$
+                        Step2Q1LabelSize[1],$
+                        Step2Q1TextFieldSize[2],$
+                        Step2Q1LabelSize[3]]
+
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 Step1Title = 'LOAD FILES'
@@ -60,6 +86,11 @@ LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
 ListOfColorTitle = 'Color of plot:'
+BaseFileTitle = 'Critical edge file:'
+Step2GoButtonTitle = 'Rescale Critical Edge'
+Step2Q1LabelTitle = 'Q1:'
+Step2Q2LabelTitle = 'Q2:'
+Step2SFLabelTitle = 'SF:'
 
 ListOfFiles = ['                            ']
 ListOfcolor = ['red','white','green','purple']
@@ -146,15 +177,7 @@ LIST_OF_COLOR_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
                                          VALUE=ListOfColor,$
                                          TITLE=ListOfColorTitle)
 
-
-
-
-
-
-
-
-
-;--STEP 2--
+;--STEP 2-----------------------------------------------------------------------
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          UNAME='step2',$
                          TITLE=Step2Title,$
@@ -162,6 +185,91 @@ STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          YOFFSET=Step1Size[1],$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
+
+BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEP2_BASE,$
+                                     UNAME='base_file_droplist',$
+                                     XOFFSET=BaseFileSize[0],$
+                                     YOFFSET=BaseFileSize[1],$
+                                     SCR_XSIZE=BaseFileSize[2],$
+                                     SCR_YSIZE=BaseFileSize[3],$
+                                     VALUE=ListOfFiles,$
+                                     TITLE=BaseFileTitle)
+
+STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
+                             UNAME='Step2_button',$
+                             XOFFSET=Step2GoButtonSize[0],$
+                             YOFFSET=Step2GoButtonSize[1],$
+                             SCR_XSIZE=Step2GoButtonSize[2],$
+                             SCR_YSIZE=Step2GoButtonSize[3],$
+                             SENSITIVE=1,$
+                             VALUE=Step2GoButtonTitle)
+
+STEP2_Q1_LABEL = WIDGET_LABEL(STEP2_BASE,$
+                              XOFFSET=Step2Q1LabelSize[0],$
+                              YOFFSET=Step2Q1LabelSize[1],$
+                              SCR_XSIZE=Step2Q1LabelSize[2],$
+                              SCR_YSIZE=Step2Q1LabelSize[3],$
+                              VALUE=Step2Q1LabelTitle)
+
+STEP2_Q1_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+                                  UNAME='step2_q1_text_field',$
+                                  XOFFSET=Step2Q1TextFieldSize[0],$
+                                  YOFFSET=Step2Q1TextFieldSize[1],$
+                                  SCR_XSIZE=Step2Q1TextFieldSize[2],$
+                                  SCR_YSIZE=Step2Q1TextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+STEP2_Q2_LABEL = WIDGET_LABEL(STEP2_BASE,$
+                              XOFFSET=Step2Q2LabelSize[0],$
+                              YOFFSET=Step2Q2LabelSize[1],$
+                              SCR_XSIZE=Step2Q2LabelSize[2],$
+                              SCR_YSIZE=Step2Q2LabelSize[3],$
+                              VALUE=Step2Q2LabelTitle)
+
+STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+                                  UNAME='step2_q2_text_field',$
+                                  XOFFSET=Step2Q2TextFieldSize[0],$
+                                  YOFFSET=Step2Q2TextFieldSize[1],$
+                                  SCR_XSIZE=Step2Q2TextFieldSize[2],$
+                                  SCR_YSIZE=Step2Q2TextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+STEP2_SF_LABEL = WIDGET_LABEL(STEP2_BASE,$
+                              XOFFSET=Step2SFLabelSize[0],$
+                              YOFFSET=Step2SFLabelSize[1],$
+                              SCR_XSIZE=Step2SFLabelSize[2],$
+                              SCR_YSIZE=Step2SFLabelSize[3],$
+                              VALUE=Step2SFLabelTitle)
+
+STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+                                  UNAME='step2_sf_text_field',$
+                                  XOFFSET=Step2SFTextFieldSize[0],$
+                                  YOFFSET=Step2SFTextFieldSize[1],$
+                                  SCR_XSIZE=Step2SFTextFieldSize[2],$
+                                  SCR_YSIZE=Step2SFTextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;--STEP 3--
 STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
