@@ -1,0 +1,5 @@
+cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
+.run refl_support_eventcb.pro
+.run refl_support.pro
+refl_support
+
