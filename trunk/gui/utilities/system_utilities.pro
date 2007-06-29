@@ -58,8 +58,7 @@ end
 
 
 ;;
-; \defgroup get_file_name_only
-; \{
+; \defgroup get_file_name_only; \{
 ;;
 
 ;;
@@ -84,6 +83,19 @@ end
 
 
 
+
+;this function will remove the last part and will
+;give back the path
+function get_path_to_file_name, file
+
+spliter='/'
+path_tmp = strsplit(file,spliter,/extract,/regex,count=length)
+path ='/'
+for i=0,(length-2) do begin
+  path += path_tmp[i] + '/'
+endfor
+return, path
+end
 
 
 

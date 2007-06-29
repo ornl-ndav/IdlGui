@@ -10,10 +10,41 @@ case Event.id of
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
-    
-;    Widget_Info(wWidget, FIND_BY_UNAME='open_nexus_button'): begin
-;        open_nexus_cb, Event
-;    end
+
+    ;--step1--
+    Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
+        load_file, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
+        display_info_about_file, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
+        clear_file, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='list_of_color_droplist'): begin
+        change_color_of_plot, Event
+    end
+
+    ;--step2--
+    Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
+        run_step2, Event
+    end
+
+    ;--step3--
+    Widget_Info(wWidget, FIND_BY_UNAME='step3_base_file_droplist'): begin
+        step3_base_file_droplist, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
+        step3_work_on_file_droplist, Event
+    end
+
+    Widget_Info(wWidget, FIND_BY_UNAME='Step3_button'): begin
+        run_step3, Event
+    end
     
 else:
     
@@ -30,19 +61,26 @@ Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callbac
 
 ;define initial global values - these could be input via external file or other means
 
-;working_path = '/SNS/users/' + user + '/local/more_nexus/'
+;get ucams of user
+ucams = get_ucams()
+
 
 global = ptr_new({  $
-                   Ntof			: 0L$
-;                   img_ptr 		: ptr_new(0L),$
+                   ucams          : '',$             ;remote user ucams
+                   file_extension : '.txt',$         ;file extension of file to load
+                   input_path     : '',$             ;default path to file to load
+                   list_of_files  :ptr_new(0L)$
                  })
 
-
+list_of_files = strarr(1)
+(*(*global).list_of_files) = list_of_files
+(*global).ucams      = ucams
+(*global).input_path = '~' + ucams
 
 ;def of parameters used for positioning and sizing widgets
 ;[xoff,yoff,width,height]
 
-MainBaseSize         = [150, 150, 1200, 600]
+MainBaseSize         = [50 , 500, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
 ;--Step1--
@@ -126,7 +164,7 @@ Step2SFLabelTitle = 'SF:'
 Step3BaseFileTitle   = 'Base File:'
 Step3WorkOnFileTitle = '  Work On:'
 
-ListOfFiles = ['                            ']
+ListOfFiles  = ['                            ']  
 ListOfcolor = ['red','white','green','purple']
 
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -192,6 +230,9 @@ LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
                                          SCR_YSIZE=ListOfFilesSize[3],$
                                          VALUE=ListOfFiles,$
                                          TITLE=ListOfFilesTitle)
+
+
+
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
@@ -378,19 +419,9 @@ STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
                                   SCR_XSIZE=Step3SFTextFieldSize[2],$
                                   SCR_YSIZE=Step3SFTextFieldSize[3],$
                                   VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
+                                  /EDITABLE,$ 
+                                  /ALIGN_LEFT,$ 
                                   /ALL_EVENTS)
-
-
-
-
-
-
-
-
-
-
 
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
