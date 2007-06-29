@@ -8,9 +8,9 @@
 #ifndef _EVENT_DATA_HPP
 #define _EVENT_DATA_HPP 1
 
+#include "nexus_util.hpp"
 #include <vector>
 #include <string>
-#include "nexus_util.hpp"
 
 const uint32_t ERROR=0x80000000;
 
@@ -39,12 +39,20 @@ class EventData
     std::vector<NumT> pixel_id;
     std::string data_path;
   public:
-    /** \fn void read_data(const string &event_file)
+    /** \fn void read_event_file(const string &event_file)
      *  \brief Reads information from the event file and populates
-     *         the data vectors.
+     *         the tof and pixel id vectors.
      *  \param event_file The event file to read from.
      */
-    void read_data(const std::string &event_file);
+    void read_event_file(const std::string &event_file);
+
+    /** \fn void read_pulse_id_file(const string &pulse_id_file)
+     *  \brief Reads information from the pulse id file.
+     *  \param pulse_id_file The pulse id file to read from.
+     */
+    void read_pulse_id_file(const std::string &pulse_id_file);
+
+    void seconds_to_iso8601(NumT seconds, std::string &time);
 
     /** \fn void map_pixel_ids(const std::string &mapping_file)
      *  \brief Takes a mapping file and maps the pixels to

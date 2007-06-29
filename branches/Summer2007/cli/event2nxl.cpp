@@ -115,7 +115,10 @@ int main(int32_t argc,
   EventData <uint32_t>bank_one_data("/entry/bank1");
   
   // Gather the information from the event file
-  bank_one_data.read_data(config.event_file);
+  bank_one_data.read_event_file(config.event_file);
+
+  // Gather the data from the pulse id file
+  bank_one_data.read_pulse_id_file(config.pulse_id_file);
 
   // Map the pixel ids if necessary
   if (config.mapping_file != "")

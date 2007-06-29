@@ -12,7 +12,12 @@
 #include <stdexcept>
 #include <map>
 #include <vector>
+#include <iostream>
+#include <sstream>
 
+using std::stringstream;
+using std::cout;
+using std::endl;
 using std::vector;
 using std::string;
 using std::map;
@@ -21,7 +26,8 @@ using std::ifstream;
 
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
-template void EventData<uint32_t>::read_data(const string &);
+template void EventData<uint32_t>::read_event_file(const string &);
+template void EventData<uint32_t>::read_pulse_id_file(const string &);
 template void EventData<uint32_t>::write_data(NexusUtil &, 
                                               const e_data_name);
 template void EventData<uint32_t>::write_attr(NexusUtil &,
@@ -184,7 +190,182 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 }
 
 template <typename NumT>
-void EventData<NumT>::read_data(const string &event_file) 
+void EventData<NumT>::seconds_to_iso8601(NumT seconds, string &time)
+{
+  uint32_t year_len = 31536000;
+  uint32_t months_len[12] = 
+           {
+             2678400,
+             2419200,
+             2678400,
+             2592000,
+             2678400,
+             2592000,
+             2678400,
+             2678400,
+             2592000,
+             2678400,
+             2592000,
+             2678400
+           };
+  uint32_t day_len = 86400;
+  uint32_t hour_len = 3600;
+  uint32_t minute_len = 60;
+
+  uint32_t year;
+  uint32_t leap_years;
+  uint32_t month;
+  uint32_t day;
+  uint32_t hour;
+  uint32_t minute;
+
+  // Use a stringstream for easy int to string conversion
+  stringstream time_stream;
+
+  // Subtract 4 hours because of the EST time zone
+  seconds -= (4 * hour_len);
+
+  // Find out how many years have passed since 1990,
+  // including leap years
+  for (year = 1990; ; year++)
+    {
+      if (year % 4 == 0 && 
+          !(year % 100 == 0 && year % 400 != 0))
+        {
+          if (seconds < year_len + day_len)
+            {
+              break;
+            }
+          else 
+            {
+              seconds -= (year_len + day_len);
+            }
+        }
+      else
+        {
+          if (seconds < year_len)
+            {
+              break;
+            }
+          else
+            {
+              seconds -= year_len;
+            }
+        }
+    }
+
+  // If a leap year will happen in the current year
+  if (year % 4 == 0 &&
+     !(year % 100 == 0 && year % 400 != 0))
+    {
+      months_len[1] += day_len;
+    }
+
+  // Find out how many months have passed
+  for (month = 1; month <= 12; month++)
+    {
+      if (seconds >= months_len[month - 1])
+        {
+          seconds -= months_len[month - 1];
+        }
+      else
+        {
+          break;
+        } 
+    }
+  
+  // Find out what day it is
+  day = (seconds / day_len) + 1;
+  seconds %= day_len;
+
+  // Find out what hour it is
+  hour = seconds / hour_len;
+  seconds %= hour_len;
+
+  // Find out what minute it is
+  minute = seconds / minute_len;
+  seconds %= minute_len;
+
+  // After gathering all the values, convert
+  // it a proper iso8601 string
+  time_stream << year << "-";
+  if (month < 10)
+    {
+      time_stream << "0";
+    }
+  time_stream << month << "-";
+  if (day < 10)
+    {
+      time_stream << "0";
+    }
+  time_stream << day << "T";
+  if (hour < 10)
+    {
+      time_stream << "0";
+    }
+  time_stream << hour << ":";
+  if (minute < 10)
+    {
+      time_stream << "0";
+    }
+  time_stream << minute << ":";
+  if (seconds < 10)
+    {
+      time_stream << "0";
+    }
+  time_stream << seconds << "-04:00";
+  time_stream >> time;
+}
+
+template <typename NumT>
+void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
+{
+  NumT buffer[BLOCK_SIZE];
+  size_t offset = 0;
+  size_t i;
+  size_t data_size = sizeof(NumT);
+  string time;
+
+  // Open the pulse id file
+  ifstream file(pulse_id_file.c_str(), std::ios::binary);
+  if(!(file.is_open()))
+    {
+      throw runtime_error("Failed opening file: "+pulse_id_file);
+    }
+
+  // Determine the file and buffer size
+  file.seekg(0, std::ios::end);
+  size_t file_size = file.tellg() / data_size;
+  size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
+
+  // Go to the start of file and begin reading
+  file.seekg(0, std::ios::beg);
+  while(offset < file_size)
+    {
+      file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
+
+      // Read in the time and convert it to ISO8601. Also read in the
+      // file offsets
+      for( i = 0; i < buffer_size; i+=4 )
+        {
+          seconds_to_iso8601(static_cast<NumT>(*(buffer + i + 1)), time);
+        }
+
+      offset += buffer_size;
+
+      // Make sure to not read past EOF
+      if(offset+BLOCK_SIZE > file_size)
+        {
+          buffer_size = file_size-offset;
+        }
+    }
+
+  // Close event file
+  file.close();
+}
+
+template <typename NumT>
+void EventData<NumT>::read_event_file(const string &event_file) 
 {
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
