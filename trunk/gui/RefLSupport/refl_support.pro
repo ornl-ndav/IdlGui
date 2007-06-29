@@ -69,11 +69,14 @@ global = ptr_new({  $
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
-                   list_of_files  :ptr_new(0L)$
+                   list_of_files  : ptr_new(0L),$    ;list of files loaded
+                   ListOfLongFileName : ptr_new(0L)$     ;list of path of file loaded
                  })
 
 list_of_files = strarr(1)
+ListOfLongFileName = strarr(1)
 (*(*global).list_of_files) = list_of_files
+(*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
 (*global).input_path = '~' + ucams
 
@@ -92,7 +95,7 @@ FileInfoSize         = [5  , 40 , 510 , 260]
 ListOfColorSize      = [5  , 300, 100 , 30 ]
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
-Step2GoButtonSize    = [340, 7  , 180 , 30 ]
+Step2GoButtonSize    = [350, 7  , 170 , 30 ]
 distance_L_TB        = 30
 Step2Q1LabelSize     = [5  , 45 , 30  , 30 ]
 Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
@@ -122,7 +125,7 @@ Step3WorkOnFileSize  = [Step3BaseFileSize[0],$
                         45 ,$
                         Step3BaseFileSize[2],$
                         Step3BaseFileSize[3]]
-Step3GoButtonSize    = [290, 7  , 225 , 70 ]
+Step3GoButtonSize    = [310, 7  , 205 , 70 ]
 Step3Q1LabelSize     = [5  , 90 , 30  , 30 ]
 Step3Q1TextFieldSize = [Step3Q1LabelSize[0]+distance_L_TB, $
                         Step3Q1LabelSize[1],$

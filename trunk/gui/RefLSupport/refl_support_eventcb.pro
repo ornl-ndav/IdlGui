@@ -3,10 +3,10 @@ PRO LOAD_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-file=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Window
-ShortFileName = get_file_name_only(file)
-add_new_file_to_droplist, Event, ShortFileName
-
+LongfileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Window
+ShortFileName = get_file_name_only(LongFileName) ;get only the file name (without path) of file
+add_new_file_to_droplist, Event, ShortFileName, LongFileName ;add file to list of droplist (step1,step2 and 3)
+display_info_about_selected_file, Event, LongFileName
 end
 
 
@@ -23,7 +23,15 @@ end
 
 ;droplist in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
-print, "in display_info_about_file"
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+TextBoxId= widget_info(Event.top, find_by_uname='list_of_files_droplist')
+TextBoxIndex= widget_info(TextBoxId,/droplist_select)
+ListOfLongFileName = (*(*global).ListOfLongFileName)
+LongFileName = ListOfLongFileName[TextBoxIndex]
+display_info_about_selected_file, Event, LongFileName
+
 end
 
 ;run calculation of CE in step 2
