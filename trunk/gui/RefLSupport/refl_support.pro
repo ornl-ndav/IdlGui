@@ -45,12 +45,14 @@ global = ptr_new({  $
 MainBaseSize         = [150, 150, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
+;--Step1--
 Step1Size            = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
 LoadButton           = [5  , 5  , 100 , 30 ]
 ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 FileInfoSize         = [5  , 40 , 510 , 260]
 ListOfColorSize      = [5  , 300, 100 , 30 ]
+;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [340, 7  , 180 , 30 ]
 distance_L_TB        = 30
@@ -76,9 +78,37 @@ Step2SFTextFieldSize = [Step2SFLabelSize[0]+distance_L_TB,$
                         Step2Q1LabelSize[1],$
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
-
+;--Step3
+Step3BaseFileSize    = [5  , 5  , 300 , 30 ]
+Step3WorkOnFileSize  = [Step3BaseFileSize[0],$
+                        45 ,$
+                        Step3BaseFileSize[2],$
+                        Step3BaseFileSize[3]]
+Step3GoButtonSize    = [290, 7  , 225 , 70 ]
+Step3Q1LabelSize     = [5  , 90 , 30  , 30 ]
+Step3Q1TextFieldSize = [Step3Q1LabelSize[0]+distance_L_TB, $
+                        Step3Q1LabelSize[1],$
+                        120,$
+                        Step3Q1LabelSize[3]]
+Step3Q2LabelSize     = [Step3Q1LabelSize[0]+distance_L_L, $
+                        Step3Q1LabelSize[1],$
+                        Step3Q1LabelSize[2],$
+                        Step3Q1LabelSize[3]]
+Step3Q2TextFieldSize = [Step3Q2LabelSize[0]+distance_L_TB, $
+                        Step3Q1LabelSize[1],$
+                        Step3Q1TextFieldSize[2],$
+                        Step3Q1LabelSize[3]]
+Step3SFLabelSize     = [Step3Q1LabelSize[0]+2*distance_L_L, $
+                        Step3Q1LabelSize[1],$
+                        Step3Q1LabelSize[2],$
+                        Step3Q1LabelSize[3]]
+Step3SFTextFieldSize = [Step3SFLabelSize[0]+distance_L_TB,$
+                        Step3Q1LabelSize[1],$
+                        Step3Q1TextFieldSize[2],$
+                        Step3Q1LabelSize[3]]
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
+;--Step1--
 Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINED CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
@@ -86,11 +116,15 @@ LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
 ListOfColorTitle = 'Color of plot:'
+;--Step2--
 BaseFileTitle = 'Critical edge file:'
 Step2GoButtonTitle = 'Rescale Critical Edge'
 Step2Q1LabelTitle = 'Q1:'
 Step2Q2LabelTitle = 'Q2:'
 Step2SFLabelTitle = 'SF:'
+;--Step3--
+Step3BaseFileTitle   = 'Base File:'
+Step3WorkOnFileTitle = '  Work On:'
 
 ListOfFiles = ['                            ']
 ListOfcolor = ['red','white','green','purple']
@@ -258,19 +292,6 @@ STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;--STEP 3--
 STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
                          UNAME='step3',$
@@ -280,11 +301,101 @@ STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
 
+STEP3_BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
+                                           UNAME='step3_base_file_droplist',$
+                                           XOFFSET=Step3BaseFileSize[0],$
+                                           YOFFSET=Step3BaseFileSize[1],$
+                                           SCR_XSIZE=Step3BaseFileSize[2],$
+                                           SCR_YSIZE=Step3BaseFileSize[3],$
+                                           VALUE=ListOfFiles,$
+                                           TITLE=Step3BaseFileTitle)
+
+STEP3_WORK_ON_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
+                                           UNAME='step3_work_on_file_droplist',$
+                                           XOFFSET=Step3WorkOnFileSize[0],$
+                                           YOFFSET=Step3WorkOnFileSize[1],$
+                                           SCR_XSIZE=Step3WorkOnFileSize[2],$
+                                           SCR_YSIZE=Step3WorkOnFileSize[3],$
+                                           VALUE=ListOfFiles,$
+                                           TITLE=Step3WorkOnFileTitle)
+
+STEP3_BUTTON = WIDGET_BUTTON(STEP3_BASE,$
+                             UNAME='Step3_button',$
+                             XOFFSET=Step3GoButtonSize[0],$
+                             YOFFSET=Step3GoButtonSize[1],$
+                             SCR_XSIZE=Step3GoButtonSize[2],$
+                             SCR_YSIZE=Step3GoButtonSize[3],$
+                             SENSITIVE=1,$
+                             VALUE=Step2GoButtonTitle)
+
+STEP3_Q1_LABEL = WIDGET_LABEL(STEP3_BASE,$
+                              XOFFSET=Step3Q1LabelSize[0],$
+                              YOFFSET=Step3Q1LabelSize[1],$
+                              SCR_XSIZE=Step3Q1LabelSize[2],$
+                              SCR_YSIZE=Step3Q1LabelSize[3],$
+                              VALUE=Step2Q1LabelTitle)
+
+STEP3_Q1_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
+                                  UNAME='step3_q1_text_field',$
+                                  XOFFSET=Step3Q1TextFieldSize[0],$
+                                  YOFFSET=Step3Q1TextFieldSize[1],$
+                                  SCR_XSIZE=Step3Q1TextFieldSize[2],$
+                                  SCR_YSIZE=Step3Q1TextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+STEP3_Q2_LABEL = WIDGET_LABEL(STEP3_BASE,$
+                              XOFFSET=Step3Q2LabelSize[0],$
+                              YOFFSET=Step3Q2LabelSize[1],$
+                              SCR_XSIZE=Step3Q2LabelSize[2],$
+                              SCR_YSIZE=Step3Q2LabelSize[3],$
+                              VALUE=Step2Q2LabelTitle)
+
+STEP3_Q2_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
+                                  UNAME='step3_q2_text_field',$
+                                  XOFFSET=Step3Q2TextFieldSize[0],$
+                                  YOFFSET=Step3Q2TextFieldSize[1],$
+                                  SCR_XSIZE=Step3Q2TextFieldSize[2],$
+                                  SCR_YSIZE=Step3Q2TextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+STEP3_SF_LABEL = WIDGET_LABEL(STEP3_BASE,$
+                              XOFFSET=Step3SFLabelSize[0],$
+                              YOFFSET=Step3SFLabelSize[1],$
+                              SCR_XSIZE=Step3SFLabelSize[2],$
+                              SCR_YSIZE=Step3SFLabelSize[3],$
+                              VALUE=Step2SFLabelTitle)
+
+STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
+                                  UNAME='step3_sf_text_field',$
+                                  XOFFSET=Step3SFTextFieldSize[0],$
+                                  YOFFSET=Step3SFTextFieldSize[1],$
+                                  SCR_XSIZE=Step3SFTextFieldSize[2],$
+                                  SCR_YSIZE=Step3SFTextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+
+
+
+
+
+
+
+
+
 
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
-WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
+WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
