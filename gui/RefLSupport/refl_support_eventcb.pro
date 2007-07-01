@@ -3,10 +3,14 @@ PRO LOAD_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-LongfileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Window
-ShortFileName = get_file_name_only(LongFileName) ;get only the file name (without path) of file
-add_new_file_to_droplist, Event, ShortFileName, LongFileName ;add file to list of droplist (step1,step2 and 3)
-display_info_about_selected_file, Event, LongFileName
+LongFileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Window
+
+;continue only if a file has been selected
+if (LongfileName NE '') then begin
+   ShortFileName = get_file_name_only(LongFileName)          ;get only the file name (without path) of file
+   add_new_file_to_droplist, Event, ShortFileName, LongFileName ;add file to list of droplist (step1,step2 and 3)
+   display_info_about_selected_file, Event, LongFileName
+endif
 end
 
 

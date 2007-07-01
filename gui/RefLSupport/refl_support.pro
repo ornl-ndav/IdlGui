@@ -61,21 +61,34 @@ Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callbac
 
 ;define initial global values - these could be input via external file or other means
 
-;get ucams of user
-ucams = get_ucams()
-
+;get ucams of user if running on linux 
+;and set ucams to 'j35' if runningon darwin
+if (!VERSION.os EQ 'darwin') then begin
+   ucams = 'j35'
+endif else begin
+   ucams = get_ucams()
+endelse
 
 global = ptr_new({  $
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
+                   Q1_array       : ptr_new(0L),$    ;Q1 array
+                   Q2_array       : ptr_new(0L),$    ;Q2 array
+                   SF_array       : ptr_new(0L),$    ;Scalling factor array
                    ListOfLongFileName : ptr_new(0L)$     ;list of path of file loaded
                  })
 
 list_of_files = strarr(1)
+Q1_array      = lonarr(1)
+Q2_array      = lonarr(1)
+SF_array      = lonarr(1)
 ListOfLongFileName = strarr(1)
 (*(*global).list_of_files) = list_of_files
+(*(*global).Q1_array) = Q1_array
+(*(*global).Q2_array) = Q2_array
+(*(*global).SF_array) = SF_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
 (*global).input_path = '~' + ucams
