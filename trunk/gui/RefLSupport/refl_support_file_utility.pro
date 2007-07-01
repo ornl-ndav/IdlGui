@@ -67,13 +67,17 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ListOfFiles = (*(*global).list_of_files)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
+;is is the first file loaded
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
+;if not
 endif else begin
-    if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
+   ;is this file not already listed 
+   if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
         ListOfFiles = [ListOfFiles,ShortFileName]
         ListOfLongFileName = [ListOfLongFileName,LongFileName]
+        CreateArrays,Event   ;if a file is added, the Q1,Q2,SF arrays are updated
     endif
 endelse
 (*(*global).list_of_files) = ListOfFiles
@@ -132,4 +136,77 @@ endfor
 end
 
 
+;this function creates and update the Q1, Q2, SF arrays when a file is added
+PRO CreateArrays, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
+Q1_array = (*(*global).Q1_array)
+Q2_array = (*(*global).Q2_array)
+SF_array = (*(*global).SF_array)
+
+Q1_array = [Q1_array,0]
+Q2_array = [Q2_array,0]
+SF_array = [SF_array,0]
+
+(*(*global).Q1_array) = Q1_array
+(*(*global).Q2_array) = Q2_array
+(*(*global).SF_array) = SF_array
+END
+
+
+;this function removes from the Q1,Q2,SF and List_of_files, the info at 
+;given index iIndex
+PRO RemoveIndexFromArray, Event, iIndex
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;check size of array
+ListOfFiles = (*(*global).list_of_files)
+
+;if array contains only 1 element, reset all arrays
+if (ListOfFilesSize EQ 1) then begin
+   ResetArrays,Event
+endif else begin
+   RemoveIndexFromList, Event, iIndex
+endelse
+
+
+END
+
+;This function reset all the arrays (Q1,Q2,SF,list_of_files and ListOfLongFileName)
+PRO ResetArray, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+list_of_files      = strarr(1)
+Q1_array           = lonarr(1)
+Q2_array           = lonarr(1)
+SF_array           = lonarr(1)
+ListOfLongFileName = strarr(1)
+
+(*(*global).list_of_files)      = list_of_files
+(*(*global).Q1_array)           = Q1_array
+(*(*global).Q2-array)           = Q2_array
+(*(*global).SF_array)           = SF_array
+(*(*global).ListOfLongFileName) = ListOfLongFileName
+END
+
+
+;This function remove the value at the index iIndex
+PRO RemoveIndexFromList, Event, iIndex
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Lenght=1)
+Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Lenght=1)
+Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Lenght=1)
+SF_array           = ArrayDelete(SF_array,AT=iIndex,Lenght=1)
+ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Lenght=1)
+
+(*(*global).list_of_files)     = ListOfFiles
+(*(*global).Q1_array)          = Q1_array
+(*(*global).Q2_array)          = Q2_array
+(*(*global).SF_array)          = SF_array
+(*(*global).ListOfLongFileName) = ListOfLongFileName
+END

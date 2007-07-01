@@ -2,6 +2,7 @@ cd, "~/SVN/HistoTool/trunk/gui/utilities/"
 .run system_utilities.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
+.run ArrayDelete.pro
 .run refl_support_file_utility.pro
 .run refl_support_eventcb.pro
 .run refl_support.pro
