@@ -1,3 +1,24 @@
+;This function gives the size of the array given
+;as a parameter
+FUNCTION getSizeOfArray, ListOfFiles
+
+sizeArray = size(ListOfFiles)
+return, sizeArray[1]
+END
+
+
+;This function returns the selected index of the 'uname'
+;droplist given
+FUNCTION getSelectedIndex, Event, uname
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+TextBoxId= widget_info(Event.top, find_by_uname=uname)
+TextBoxIndex= widget_info(TextBoxId,/droplist_select)
+return, TextBoxIndex
+END
+
+
 ;This function checks if the newly loaded file has alredy
 ;been loaded. Return 1 if yes and 0 if not
 FUNCTION isFileAlreadyInList, ListOfFiles, file
@@ -82,6 +103,16 @@ endif else begin
 endelse
 (*(*global).list_of_files) = ListOfFiles
 (*(*global).ListOfLongFileName) = ListOfLongFileName
+;update droplists
+updateDropList, Event, ListOfFiles
+end
+
+
+;This function refresh the list displays in all the droplist (step1-2 and 3)
+PRO updateDropList, Event, ListOfFiles
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;update list of file in droplist of step1
 list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
 widget_control, list_of_files_droplist_id, set_value=ListOfFiles
@@ -93,7 +124,8 @@ step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_fi
 widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
 step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
 widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
-end
+END
+
 
 
 ;This functions displays the first few lines of the newly loaded file
@@ -127,6 +159,8 @@ endif else begin
     close,u
     free_lun,u
 endelse
+
+
 ;populate text box with array
 TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
 widget_control, TextBoxId, set_value=info_array[0]
@@ -163,6 +197,7 @@ widget_control,id,get_uvalue=global
 
 ;check size of array
 ListOfFiles = (*(*global).list_of_files)
+ListOfFilesSize = getSizeOfArray(ListOfFiles)
 
 ;if array contains only 1 element, reset all arrays
 if (ListOfFilesSize EQ 1) then begin
@@ -171,11 +206,10 @@ endif else begin
    RemoveIndexFromList, Event, iIndex
 endelse
 
-
 END
 
 ;This function reset all the arrays (Q1,Q2,SF,list_of_files and ListOfLongFileName)
-PRO ResetArray, Event
+PRO ResetArrays, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -187,7 +221,7 @@ ListOfLongFileName = strarr(1)
 
 (*(*global).list_of_files)      = list_of_files
 (*(*global).Q1_array)           = Q1_array
-(*(*global).Q2-array)           = Q2_array
+(*(*global).Q2_array)           = Q2_array
 (*(*global).SF_array)           = SF_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 END
@@ -198,11 +232,17 @@ PRO RemoveIndexFromList, Event, iIndex
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Lenght=1)
-Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Lenght=1)
-Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Lenght=1)
-SF_array           = ArrayDelete(SF_array,AT=iIndex,Lenght=1)
-ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Lenght=1)
+ListOfFiles = (*(*global).list_of_files)
+Q1_array = (*(*global).Q1_array)
+Q2_array = (*(*global).Q2_array)
+SF_array = (*(*global).SF_array)
+ListOfLongFileName = (*(*global).ListOfLongFileName)
+
+ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Length=1)
+Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Length=1)
+Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Length=1)
+SF_array           = ArrayDelete(SF_array,AT=iIndex,Length=1)
+ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 
 (*(*global).list_of_files)     = ListOfFiles
 (*(*global).Q1_array)          = Q1_array
@@ -210,3 +250,5 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Lenght=1)
 (*(*global).SF_array)          = SF_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 END
+
+

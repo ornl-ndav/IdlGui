@@ -7,8 +7,10 @@ LongFileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Wi
 
 ;continue only if a file has been selected
 if (LongfileName NE '') then begin
-   ShortFileName = get_file_name_only(LongFileName)          ;get only the file name (without path) of file
-   add_new_file_to_droplist, Event, ShortFileName, LongFileName ;add file to list of droplist (step1,step2 and 3)
+   ;get only the file name (without path) of file
+   ShortFileName = get_file_name_only(LongFileName)    
+   ;add file to list of droplist (step1,step2 and 3)
+   add_new_file_to_droplist, Event, ShortFileName, LongFileName 
    display_info_about_selected_file, Event, LongFileName
 endif
 end
@@ -17,7 +19,16 @@ end
 
 ;clear file button in step 1
 PRO CLEAR_FILE, Event
-print, "in clear file"
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get the selected index of the load list droplist
+TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
+RemoveIndexFromArray, Event, TextBoxIndex
+
+;update list displays in all droplists
+ListOfFiles = (*(*global).list_of_files)
+updateDropList, Event, ListOfFiles
 end
 
 ;select color of plot in step 1
@@ -30,8 +41,9 @@ PRO DISPLAY_INFO_ABOUT_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-TextBoxId= widget_info(Event.top, find_by_uname='list_of_files_droplist')
-TextBoxIndex= widget_info(TextBoxId,/droplist_select)
+;get the selected index of the load list droplist
+TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
+
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 LongFileName = ListOfLongFileName[TextBoxIndex]
 display_info_about_selected_file, Event, LongFileName
