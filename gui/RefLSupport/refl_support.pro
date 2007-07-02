@@ -91,7 +91,13 @@ ListOfLongFileName = strarr(1)
 (*(*global).SF_array) = SF_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
-(*global).input_path = '~' + ucams
+
+if (!VERSION.os EQ 'darwin') then begin
+   (*global).input_path = '~/tmp/'
+endif else begin
+   (*global).input_path = '~' + ucams
+endelse
+
 
 ;def of parameters used for positioning and sizing widgets
 ;[xoff,yoff,width,height]
