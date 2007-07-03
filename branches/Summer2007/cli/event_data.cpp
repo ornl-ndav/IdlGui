@@ -194,6 +194,9 @@ template <typename NumT>
 void EventData<NumT>::seconds_to_iso8601(NumT seconds, string &time)
 {
   char date[100];
+  // Since the times start at a different epoch (jan 1, 1990) than
+  // the unix epoch (jan 1, 1970), add the number of seconds
+  // between the epochs to use the ctime library
   const uint32_t epoch_diff = 631152000;
   time_t pulse_seconds = epoch_diff + seconds;
   struct tm *pulse_time = localtime(&pulse_seconds);
