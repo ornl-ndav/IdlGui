@@ -1,6 +1,6 @@
 #$Id$
 CXX = g++ -g
-ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl event2nxl nxl2event histo_light
+ALL = Event_to_Histo Map_Data Create_Tbin_File Event_to_Histo_Mapped rand2nxl event2nxl nxl2event histo_light nxl_diff
 
 HMAP_OBJS	=	Event_to_Histo_Mapped.o \
 				histo_utils.o bin_vector_utils.o map_utils.o utils.o
@@ -14,13 +14,18 @@ MAP_OBJS	=	Map_Data.o map_utils.o utils.o
 
 RAND_OBJS 	= 	rand2nxl.o
 
-EVENT2NXL_OBJS      =	event2nxl.o nexus_util.o event_data.o 
+EVENT2NXL_OBJS  =	event2nxl.o nexus_util.o event_data.o 
 
 NXL2EVENT_OBJS 	= 	nxl2event.o nexus_util.o
 
 HISTO_LIGHT_OBJS = 	histo_light.o 
 
+NXL_DIFF_OBJS   =   	nxl_diff.o
+
 all: $(ALL)
+
+nxl_diff: $(NXL_DIFF_OBJS)
+	$(CXX) $(NXL_DIFF_OBJS) -o nxl_diff
 
 nxl2event: $(NXL2EVENT_OBJS)
 	$(CXX) $(NXL2EVENT_OBJS) -static-libgcc -L/usr/local/hdf5/lib -L/usr/local/hdf4/lib -Wl,-Bstatic `pkg-config nexus --libs-only-l` -ljpeg -o nxl2event
@@ -49,6 +54,9 @@ Map_Data: $(MAP_OBJS)
 utils.o: utils.cpp utils.hpp
 
 bin_vector_utils.o: bin_vector_utils.cpp bin_vector_utils.hpp utils.hpp
+
+nxl_diff.o: nxl_diff.cpp
+	$(CXX) -c -I ../inc nxl_diff.cpp
 
 nxl2event.o: nxl2event.cpp nexus_util.hpp
 	$(CXX) `pkg-config nexus --cflags` -c -I ../inc nxl2event.cpp

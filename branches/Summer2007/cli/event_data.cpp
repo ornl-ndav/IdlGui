@@ -14,6 +14,7 @@
 #include <vector>
 #include <iostream>
 #include <sstream>
+#include <ctime>
 
 using std::stringstream;
 using std::cout;
@@ -192,129 +193,12 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 template <typename NumT>
 void EventData<NumT>::seconds_to_iso8601(NumT seconds, string &time)
 {
-  uint32_t year_len = 31536000;
-  uint32_t months_len[12] = 
-           {
-             2678400,
-             2419200,
-             2678400,
-             2592000,
-             2678400,
-             2592000,
-             2678400,
-             2678400,
-             2592000,
-             2678400,
-             2592000,
-             2678400
-           };
-  uint32_t day_len = 86400;
-  uint32_t hour_len = 3600;
-  uint32_t minute_len = 60;
-
-  uint32_t year;
-  uint32_t leap_years;
-  uint32_t month;
-  uint32_t day;
-  uint32_t hour;
-  uint32_t minute;
-
-  // Use a stringstream for easy int to string conversion
-  stringstream time_stream;
-
-  // Subtract 4 hours because of the EST time zone
-  seconds -= (4 * hour_len);
-
-  // Find out how many years have passed since 1990,
-  // including leap years
-  for (year = 1990; ; year++)
-    {
-      if (year % 4 == 0 && 
-          !(year % 100 == 0 && year % 400 != 0))
-        {
-          if (seconds < year_len + day_len)
-            {
-              break;
-            }
-          else 
-            {
-              seconds -= (year_len + day_len);
-            }
-        }
-      else
-        {
-          if (seconds < year_len)
-            {
-              break;
-            }
-          else
-            {
-              seconds -= year_len;
-            }
-        }
-    }
-
-  // If a leap year will happen in the current year
-  if (year % 4 == 0 &&
-     !(year % 100 == 0 && year % 400 != 0))
-    {
-      months_len[1] += day_len;
-    }
-
-  // Find out how many months have passed
-  for (month = 1; month <= 12; month++)
-    {
-      if (seconds >= months_len[month - 1])
-        {
-          seconds -= months_len[month - 1];
-        }
-      else
-        {
-          break;
-        } 
-    }
-  
-  // Find out what day it is
-  day = (seconds / day_len) + 1;
-  seconds %= day_len;
-
-  // Find out what hour it is
-  hour = seconds / hour_len;
-  seconds %= hour_len;
-
-  // Find out what minute it is
-  minute = seconds / minute_len;
-  seconds %= minute_len;
-
-  // After gathering all the values, convert
-  // it a proper iso8601 string
-  time_stream << year << "-";
-  if (month < 10)
-    {
-      time_stream << "0";
-    }
-  time_stream << month << "-";
-  if (day < 10)
-    {
-      time_stream << "0";
-    }
-  time_stream << day << "T";
-  if (hour < 10)
-    {
-      time_stream << "0";
-    }
-  time_stream << hour << ":";
-  if (minute < 10)
-    {
-      time_stream << "0";
-    }
-  time_stream << minute << ":";
-  if (seconds < 10)
-    {
-      time_stream << "0";
-    }
-  time_stream << seconds << "-04:00";
-  time_stream >> time;
+  char date[100];
+  const uint32_t epoch_diff = 631152000;
+  time_t pulse_seconds = epoch_diff + seconds;
+  struct tm *pulse_time = localtime(&pulse_seconds);
+  strftime(date, sizeof(date), "%Y-%m-%dT%X-04:00", pulse_time);
+  time = date;
 }
 
 template <typename NumT>
@@ -349,6 +233,7 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
       for( i = 0; i < buffer_size; i+=4 )
         {
           seconds_to_iso8601(static_cast<NumT>(*(buffer + i + 1)), time);
+          cout << time << endl;
         }
 
       offset += buffer_size;
