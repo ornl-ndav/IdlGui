@@ -3,6 +3,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include <tclap/CmdLine.h>
 
 using std::vector;
 using std::string;
@@ -11,6 +12,7 @@ using std::cout;
 using std::endl;
 using std::ifstream;
 using std::runtime_error;
+using namespace TCLAP;
 
 const string VERSION = "1.0";
 const size_t BLOCK_SIZE = 1024;
@@ -94,14 +96,35 @@ int main(int32_t argc,
 {
   vector<uint32_t> file_one_data;
   vector<uint32_t> file_two_data;
+  vector<string> file_names;
 
-  if (argc != 3)
+  try
     {
-      cerr << "usage: nxl_diff file1 file2" << endl;
-      exit(1);
+      CmdLine cmd("", ' ', VERSION);
+
+      UnlabeledMultiArg<string> filenamesArg("filenames",
+                                            "Names of files to be compared",
+                                            "filename1 filename2", cmd);
+      // Parse the command line
+      cmd.parse(argc,argv);
+      
+      // Get the file names
+      file_names = filenamesArg.getValue();
+      if(file_names.size() != 2)
+        {
+          cerr << "ERROR: Must specify two files to be compared" << endl;
+          cmd.getOutput()->usage(cmd);
+          return -1;
+        }
     }
-  string file_one(argv[1]);
-  string file_two(argv[2]);
+  catch(ArgException &e)
+    {
+      cerr << "PARSE ERROR:" << e.error() << " for arg " << e.argId() 
+           << endl;
+    }
+
+  string file_one(file_names[0]);
+  string file_two(file_names[1]);
 
   read_data(file_one, file_one_data);
   read_data(file_two, file_two_data);
