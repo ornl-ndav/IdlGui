@@ -14,6 +14,10 @@ if (LongfileName NE '') then begin
    display_info_about_selected_file, Event, LongFileName
    plot_loaded_file, Event, LongFileName
 endif
+
+;plot all loaded files
+ListLongFileName = (*(*global).ListOfLongFileName)
+plot_loaded_file, Event, ListLongFileName
 end
 
 
@@ -33,8 +37,12 @@ end
 
 ;select color of plot in step 1
 PRO REFRESH_PLOT_BUTTON, Event
-LongFileName = getLongFileNameSelected(Event)
-plot_loaded_file, Event, LongFileName
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+AssignColorToSelectedPlot,Event
+ListLongFileName = (*(*global).ListOfLongFileName)
+plot_loaded_file, Event, ListLongFileName
 end
 
 ;droplist of files in step 1

@@ -10,13 +10,19 @@ END
 ;This function returns the selected index of the 'uname'
 ;droplist given
 FUNCTION getSelectedIndex, Event, uname
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
 TextBoxId= widget_info(Event.top, find_by_uname=uname)
 TextBoxIndex= widget_info(TextBoxId,/droplist_select)
 return, TextBoxIndex
 END
+
+
+;This function sets the selected inded of the 'uname'
+;droplist
+PRO SetSelectedIndex, Event, uname, index
+droplistId= widget_info(Event.top, find_by_uname=uname)
+widget_control, droplistId, set_droplist_select = index
+END
+
 
 
 ;this function gives the long name of the file selected
@@ -29,6 +35,17 @@ TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 LongFileName = ListOfLongFileName[TextBoxIndex]
 return, LongFileName
+END
+
+
+;This functions gives the index of the color selected
+FUNCTION getColorIndex, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
+widget_control, list_of_color_slider_id, get_value = colorIndex
+return, colorIndex
 END
 
 
@@ -111,7 +128,7 @@ endif else begin
    if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
         ListOfFiles = [ListOfFiles,ShortFileName]
         ListOfLongFileName = [ListOfLongFileName,LongFileName]
-        CreateArrays,Event   ;if a file is added, the Q1,Q2,SF arrays are updated
+        CreateArrays,Event   ;if a file is added, the Q1,Q2,SF... arrays are updated
     endif
 endelse
 (*(*global).list_of_files) = ListOfFiles
@@ -119,6 +136,7 @@ endelse
 ;update droplists
 updateDropList, Event, ListOfFiles
 EnableStep1ClearFile, Event, 1
+SelectLastLoadedFile, Event
 end
 
 
@@ -184,7 +202,7 @@ endfor
 end
 
 
-;this function creates and update the Q1, Q2, SF arrays when a file is added
+;this function creates and update the Q1, Q2, SF... arrays when a file is added
 PRO CreateArrays, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -192,16 +210,20 @@ widget_control,id,get_uvalue=global
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
+color_array = (*(*global).color_array)
 FileHistory = (*(*global).FileHistory)
 
 Q1_array = [Q1_array,0]
 Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
+colorIndex = getColorIndex(Event)
+color_array = [color_array, colorIndex]
 FileHistory = [FileHistory,'']
 
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
+(*(*global).color_array) = color_array
 (*(*global).FileHistory) = FileHistory
 END
 
@@ -222,8 +244,8 @@ if (ListOfFilesSize EQ 1) then begin
 endif else begin
    RemoveIndexFromList, Event, iIndex
 endelse
-
 END
+
 
 ;This function reset all the arrays (Q1,Q2,SF,list_of_files and ListOfLongFileName)
 PRO ResetArrays, Event
@@ -234,6 +256,7 @@ list_of_files      = strarr(1)
 Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
+color_array        = lonarr(1)
 ListOfLongFileName = strarr(1)
 FileHistory        = strarr(1)
 
@@ -241,6 +264,7 @@ FileHistory        = strarr(1)
 (*(*global).Q1_array)           = Q1_array
 (*(*global).Q2_array)           = Q2_array
 (*(*global).SF_array)           = SF_array
+(*(*global).color_array)        = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*(*global).FileHistory)        = FileHistory
 END
@@ -256,6 +280,7 @@ ListOfFiles = (*(*global).list_of_files)
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
+color_array = (*(*global).color_array)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 
 FileHistory        = ArrayDelete(FileHistory,At=iIndex,Length=1)
@@ -263,6 +288,7 @@ ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Length=1)
 Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Length=1)
 Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Length=1)
 SF_array           = ArrayDelete(SF_array,AT=iIndex,Length=1)
+color_array        = ArrayDelete(color_array,AT=iIndex,Length=1)
 ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 
 (*(*global).FileHistory)       = FileHistory
@@ -270,6 +296,7 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 (*(*global).Q1_array)          = Q1_array
 (*(*global).Q2_array)          = Q2_array
 (*(*global).SF_array)          = SF_array
+(*(*global).color_array)       = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 END
 
@@ -297,55 +324,29 @@ FileHistory[0] = list[value]
 END
 
 
-;This function clears the contain of all the droplists
-PRO ClearAllDropLists, Event
+;This function assign to the current selected file the current
+;selected color
+PRO AssignColorToSelectedPlot, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;clear off list of file in droplist of step1
-list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
-widget_control, list_of_files_droplist_id, set_value=['']
-;clear off list of file in droplist of step2
-base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
-widget_control, base_file_droplist_id, set_value=['']
-;clear off list of file in droplists of step3
-step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
-widget_control, step3_base_file_droplist_id, set_value=['']
-step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
-widget_control, step3_work_on_file_droplist_id, set_value=['']
+colorIndex = getColorIndex(Event)
+fileIndex = getSelectedIndex(Event, 'list_of_files_droplist')
+
+color_array = (*(*global).color_array)
+color_array[fileIndex] = colorIndex
+(*(*global).color_array) = color_array
 END
 
 
-;This function clears the contain of all the text boxes
-PRO ClearAllTextBoxes, Event
+;This function automatically selects the last loaded file
+PRO SelectLastLoadedFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;clear step2 
-step2_q1_text_field_id = Widget_info(Event.top,find_by_uname='step2_q1_text_field')
-Widget_control, step2_q1_text_field_id, set_value=''
-step2_q2_text_field_id = Widget_info(Event.top,find_by_uname='step2_q2_text_field')
-Widget_control, step2_q2_text_field_id, set_value=''
-step2_SF_text_field_id = Widget_info(Event.top,find_by_uname='step2_sf_text_field')
-Widget_control, step2_SF_text_field_id, set_value=''
-;clear step3
-step3_q1_text_field_id = Widget_info(Event.top,find_by_uname='step3_q1_text_field')
-Widget_control, step3_q1_text_field_id, set_value=''
-step3_q2_text_field_id = Widget_info(Event.top,find_by_uname='step3_q2_text_field')
-Widget_control, step3_q2_text_field_id, set_value=''
-step3_SF_text_field_id = Widget_info(Event.top,find_by_uname='step3_sf_text_field')
-Widget_control, step3_SF_text_field_id, set_value=''
+ListOfFiles = (*(*global).list_of_files)
+
+NbrOfFiles = getSizeOfArray(ListOfFiles)
+SetSelectedIndex, Event, 'list_of_files_droplist', (NbrOfFiles-1)
 
 END
-
-
-;This function removes the contain of the info file found in Step1
-PRO ClearFileInfoStep1, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
-widget_control, TextBoxId, set_Value=''
-END
-
-
