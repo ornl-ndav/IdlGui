@@ -191,8 +191,10 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 }
 
 template <typename NumT>
-void EventData<NumT>::seconds_to_iso8601(NumT seconds, string &time)
+void EventData<NumT>::seconds_to_iso8601(NumT seconds, NumT nanoseconds,
+                                         string &time)
 {
+  stringstream time_stream;
   char date[100];
   // Since the times start at a different epoch (jan 1, 1990) than
   // the unix epoch (jan 1, 1970), add the number of seconds
@@ -200,8 +202,16 @@ void EventData<NumT>::seconds_to_iso8601(NumT seconds, string &time)
   const uint32_t epoch_diff = 631152000;
   time_t pulse_seconds = epoch_diff + seconds;
   struct tm *pulse_time = localtime(&pulse_seconds);
-  strftime(date, sizeof(date), "%Y-%m-%dT%X-04:00", pulse_time);
-  time = date;
+  strftime(date, sizeof(date), "%Y-%m-%dT%X.", pulse_time);
+  time_stream << date;
+  uint32_t val = 100000000;
+  while (nanoseconds < val)
+    {
+      time_stream << 0;
+      val /= 10;
+    }
+  time_stream << nanoseconds << "-04:00";
+  time_stream >> time;  
 }
 
 template <typename NumT>
@@ -212,6 +222,8 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
   size_t i;
   size_t data_size = sizeof(NumT);
   string time;
+  NumT prev_second = 0;
+  NumT prev_nanosecond = 0;
 
   // Open the pulse id file
   ifstream file(pulse_id_file.c_str(), std::ios::binary);
@@ -225,18 +237,26 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
   size_t file_size = file.tellg() / data_size;
   size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
 
+  // Read in the initial time and convert it to ISO8601
+  file.seekg(0, std::ios::beg);
+  file.read(reinterpret_cast<char *>(buffer), data_size * 2);
+  seconds_to_iso8601(static_cast<NumT>(*(buffer + 1)),
+                     static_cast<NumT>(*(buffer)),
+                     time);
+  prev_nanosecond = static_cast<NumT>(*(buffer)); 
+  prev_second = static_cast<NumT>(*(buffer + 1));
+
+  cout << time << endl;
+ 
   // Go to the start of file and begin reading
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
-      // Read in the time and convert it to ISO8601. Also read in the
-      // file offsets
+      // Keep track of the time offsets and read in the pulse times
       for( i = 0; i < buffer_size; i+=4 )
         {
-          seconds_to_iso8601(static_cast<NumT>(*(buffer + i + 1)), time);
-          cout << time << endl;
         }
 
       offset += buffer_size;
@@ -247,7 +267,6 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
           buffer_size = file_size-offset;
         }
     }
-
   // Close event file
   file.close();
 }

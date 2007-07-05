@@ -119,23 +119,18 @@ int main(int32_t argc,
 
   // Gather the data from the pulse id file
   bank_one_data.read_pulse_id_file(config.pulse_id_file);
-
   // Map the pixel ids if necessary
   if (config.mapping_file != "")
     {
       bank_one_data.map_pixel_ids(config.mapping_file);
     }
-
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
-  
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config);
-
   // Populate the nexus file with information
   bank_one_data.write_data(nexus_util, TOF);
   bank_one_data.write_attr(nexus_util, "units", "10^-7second", TOF);
-
   bank_one_data.write_data(nexus_util, PIXEL_ID);
 
   return 0;

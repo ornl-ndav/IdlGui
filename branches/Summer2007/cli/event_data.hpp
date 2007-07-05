@@ -37,6 +37,7 @@ class EventData
   private:
     std::vector<NumT> tof;
     std::vector<NumT> pixel_id;
+    std::vector<NumT> pulse_time;
     std::string data_path;
 
     /** \fn void seconds_to_iso8601(NumT seconds, 
@@ -44,9 +45,11 @@ class EventData
      *  \brief Takes a number of seconds since jan 1, 1990
      *         and converts it to an iso8601 date string.
      *  \param seconds The number of seconds since jan 1, 1990.
+     *  \param nanoseconds The nanoseconds of the current second.
      *  \param time The variable to store the ISO8601 date string in.
      */
     void seconds_to_iso8601(NumT seconds, 
+                            NumT nanoseconds,
                             std::string &time);
     
     /** \fn inline int typename_to_nexus_type(const int32_t &val)
