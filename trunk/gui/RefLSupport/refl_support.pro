@@ -24,10 +24,10 @@ case Event.id of
         clear_file, Event
     end
 
-    Widget_Info(wWidget, FIND_BY_UNAME='list_of_color_droplist'): begin
-        change_color_of_plot, Event
+    Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
+        refresh_plot_button, Event
     end
-
+    
     ;--step2--
     Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
         run_step2, Event
@@ -118,7 +118,9 @@ LoadButton           = [5  , 5  , 100 , 30 ]
 ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 FileInfoSize         = [5  , 40 , 510 , 260]
-ListOfColorSize      = [5  , 300, 100 , 30 ]
+ListOfColorLabelSize = [5  , 310, 100 , 30 ]
+ListOfColorSize      = [110, 300, 310 , 35 ]
+RefreshPlotSize      = [430, 305, 90  , 30 ]
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
@@ -189,7 +191,8 @@ Step3Title = 'RESCALE FILES'
 LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
-ListOfColorTitle = 'Color of plot:'
+ListOfColorTitle = 'Color index:'
+RefreshPlotButtonTitle = 'Refresh Plot'
 ;--Step2--
 BaseFileTitle = 'Critical edge file:'
 Step2GoButtonTitle = 'Rescale Critical Edge'
@@ -268,8 +271,6 @@ LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
                                          TITLE=ListOfFilesTitle)
 
 
-
-
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
                         XOFFSET=FileInfoSize[0],$
@@ -279,14 +280,32 @@ FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         /SCROLL,$
                         /WRAP)
                         
-LIST_OF_COLOR_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
-                                         UNAME='list_of_color_droplist',$
-                                         XOFFSET=ListOfColorSize[0],$
-                                         YOFFSET=ListOfColorSize[1],$
-                                         SCR_XSIZE=ListOfColorSize[2],$
-                                         SCR_YSIZE=ListOfColorSize[3],$
-                                         VALUE=ListOfColor,$
-                                         TITLE=ListOfColorTitle)
+LIST_OF_COLOR_LABEL = WIDGET_LABEL(STEP1_BASE,$
+                                   VALUE=ListOfColorTitle,$
+                                   XOFFSET=ListOfColorLabelSize[0],$
+                                   YOFFSET=ListOfColorLabelSize[1],$
+                                   SCR_XSIZE=ListOfColorLabelSize[2],$
+                                   SCR_YSIZE=ListOfColorLabelSize[3])
+
+LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
+                                     UNAME='list_of_color_slider',$
+                                     MINIMUM=0,$
+                                     MAXIMUM=255,$
+                                     XOFFSET=ListOfColorSize[0],$
+                                     YOFFSET=ListOfColorSize[1],$
+                                     SCR_XSIZE=ListOfColorSize[2],$
+                                     SCR_YSIZE=ListOfColorSize[3],$
+                                     TITLE=ListOfColorTitle,$
+                                     VALUE=100)
+
+REFRESH_PLOT_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
+                                    UNAME='refresh_plot_button',$
+                                    XOFFSET=RefreshPlotSize[0],$
+                                    YOFFSET=RefreshPlotSize[1],$
+                                    SCR_XSIZE=RefreshPlotSize[2],$
+                                    SCR_YSIZE=RefreshPlotSize[3],$
+                                    VALUE=RefreshPlotButtonTitle)
+
 
 ;--STEP 2-----------------------------------------------------------------------
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$

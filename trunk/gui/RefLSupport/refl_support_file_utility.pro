@@ -19,6 +19,19 @@ return, TextBoxIndex
 END
 
 
+;this function gives the long name of the file selected
+FUNCTION getLongFileNameSelected, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get the selected index of the load list droplist
+TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
+ListOfLongFileName = (*(*global).ListOfLongFileName)
+LongFileName = ListOfLongFileName[TextBoxIndex]
+return, LongFileName
+END
+
+
 ;This function checks if the newly loaded file has alredy
 ;been loaded. Return 1 if yes and 0 if not
 FUNCTION isFileAlreadyInList, ListOfFiles, file
@@ -109,6 +122,7 @@ EnableStep1ClearFile, Event, 1
 end
 
 
+
 ;This function refresh the list displays in all the droplist (step1-2 and 3)
 PRO updateDropList, Event, ListOfFiles
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -160,7 +174,6 @@ endif else begin
     close,u
     free_lun,u
 endelse
-
 
 ;populate text box with array
 TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
@@ -336,8 +349,3 @@ widget_control, TextBoxId, set_Value=''
 END
 
 
-;This function plots the selected file
-PRO plot_loaded_file, Event, LongFileName
-
-
-END
