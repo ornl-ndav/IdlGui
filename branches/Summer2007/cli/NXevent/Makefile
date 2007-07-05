@@ -42,6 +42,9 @@ nexus_util.o: nexus_util.cpp nexus_util.hpp
 event_data.o: event_data.cpp 
 	$(CXX) -c -I ../../inc event_data.cpp
 
+docs:
+	cd doc && make docs
+
 clean:
 	rm -f $(ALL) *.o
 
