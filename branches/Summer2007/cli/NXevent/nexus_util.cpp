@@ -57,7 +57,7 @@ void NexusUtil::make_group(const string &name, const string &path)
       throw runtime_error("No path name specified");
     }
 
-  if (NXmakegroup(file_id, name.c_str(), path.c_str()) != NX_OK)
+  if (NXmakegroup(this->file_id, name.c_str(), path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to make group: "+name);
     }
@@ -75,7 +75,7 @@ void NexusUtil::open_group(const string &name, const string &path)
       throw runtime_error("No path name specified");
     }
 
-  if (NXopengroup(file_id, name.c_str(), path.c_str()) != NX_OK)
+  if (NXopengroup(this->file_id, name.c_str(), path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open group: entry");
     }
@@ -83,7 +83,7 @@ void NexusUtil::open_group(const string &name, const string &path)
 
 void NexusUtil::close_group(void)
 {
-  if (NXclosegroup(file_id) != NX_OK)
+  if (NXclosegroup(this->file_id) != NX_OK)
     {
       throw runtime_error("Failed to close group");
     }
@@ -96,7 +96,7 @@ void NexusUtil::open_path(const string &path)
       throw runtime_error("No path name specified");
     }
   
-  if (NXopenpath(file_id, path.c_str()) != NX_OK)
+  if (NXopenpath(this->file_id, path.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open group: "+path);
     }
@@ -111,7 +111,7 @@ void NexusUtil::make_data(const string &name,
       throw runtime_error("No data name specified");
     }
  
-  if (NXmakedata(file_id, name.c_str(),
+  if (NXmakedata(this->file_id, name.c_str(),
                  nexus_data_type, rank, dimensions) != NX_OK)
     {
       throw runtime_error("Failed make data: "+name);
@@ -125,7 +125,7 @@ void NexusUtil::open_data(const string &name)
       throw runtime_error("No data name specified");
     }
 
-  if (NXopendata(file_id, name.c_str()) != NX_OK)
+  if (NXopendata(this->file_id, name.c_str()) != NX_OK)
     {
       throw runtime_error("Failed to open data: "+name);
     }
@@ -138,7 +138,7 @@ void NexusUtil::put_data(void *nx_data)
       throw runtime_error("No data specified");
     }
 
-  if (NXputdata(file_id, nx_data) != NX_OK)
+  if (NXputdata(this->file_id, nx_data) != NX_OK)
     {
       throw runtime_error("Failed to create data");
     }
@@ -146,7 +146,7 @@ void NexusUtil::put_data(void *nx_data)
 
 void NexusUtil::close_data(void)
 {
-  if (NXclosedata(file_id) != NX_OK)
+  if (NXclosedata(this->file_id) != NX_OK)
     {
       throw runtime_error("Failed to close data");
     }
@@ -165,7 +165,7 @@ void NexusUtil::put_attr(const string &name, void *value,
       throw runtime_error("No attribute specified");
     }
 
-  if (NXputattr(file_id, name.c_str(),
+  if (NXputattr(this->file_id, name.c_str(),
                 value, length,
                 nx_type) != NX_OK)
     {
@@ -186,7 +186,7 @@ void NexusUtil::put_attr(const string &name, const string &value)
     }
 
   string nx_value(value);
-  if (NXputattr(file_id, name.c_str(),
+  if (NXputattr(this->file_id, name.c_str(),
                 &(nx_value[0]), nx_value.length(),
                 NX_CHAR) != NX_OK)
     {
@@ -201,7 +201,7 @@ void NexusUtil::put_slab(void *nx_data, int *start, int *size)
       throw runtime_error("No data specified");
     }
 
-  if (NXputslab(file_id, nx_data, start, size) != NX_OK)
+  if (NXputslab(this->file_id, nx_data, start, size) != NX_OK)
     {
       throw runtime_error("Failed to create data chunk");
     }
@@ -214,7 +214,7 @@ void NexusUtil::get_data(void *nx_data)
       throw runtime_error("Invalid data block");
     }
 
-  if (NXgetdata(file_id, nx_data) != NX_OK)
+  if (NXgetdata(this->file_id, nx_data) != NX_OK)
     {
       throw runtime_error("Failed to get data");
     }
@@ -227,7 +227,7 @@ void NexusUtil::get_slab(void *nx_data, int *start, int *size)
       throw runtime_error("Invalid data block");
     }
 
-  if (NXgetslab(file_id, nx_data, start, size) != NX_OK)
+  if (NXgetslab(this->file_id, nx_data, start, size) != NX_OK)
     {
       throw runtime_error("Failed to get slab");
     }
@@ -253,7 +253,7 @@ void NexusUtil::free(void **nx_data)
 void NexusUtil::get_info(int *rank, int *dimensions, 
                          int *nexus_data_type)
 {
-  if (NXgetinfo(file_id, rank, dimensions, 
+  if (NXgetinfo(this->file_id, rank, dimensions, 
                 nexus_data_type) != NX_OK)
     {
       throw runtime_error("Failed to get data information");

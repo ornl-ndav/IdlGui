@@ -41,7 +41,7 @@ template EventData<uint32_t>::EventData(const string &);
 template<typename NumT>
 EventData<NumT>::EventData(const string &path)
 {
-  data_path = path;
+  this->data_path = path;
 }
 
 template <typename NumT>
@@ -75,14 +75,14 @@ void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
                                          string &data_name,
                                          vector<NumT> &data)
 {
-  get_nx_data_values(nx_data_type, data_name);
+  this->get_nx_data_values(nx_data_type, data_name);
   if (nx_data_type == TOF)
     {
-      data = tof;
+      data = this->tof;
     }
   else if (nx_data_type == PIXEL_ID)
     {
-      data = pixel_id;
+      data = this->pixel_id;
     }
 }
 
@@ -97,9 +97,9 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
   
   // Fill in the values that are associated with the
   // given e_data_name
-  get_nx_data_values(nx_data_name, data_name);  
+  this->get_nx_data_values(nx_data_name, data_name);  
 
-  nexus_util.open_path(data_path + "/" + data_name);
+  nexus_util.open_path(this->data_path + "/" + data_name);
   nexus_util.put_attr(attr_name, &nx_attr_value[0],
                       attr_value.length(), NX_CHAR);
 }
@@ -113,14 +113,14 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   
   // Fill in the values that are associated with the 
   // given e_data_name
-  get_nx_data_values(nx_data_name, data_name, nx_data);
+  this->get_nx_data_values(nx_data_name, data_name, nx_data);
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
   NumT type;
-  int nexus_data_type = typename_to_nexus_type(type);
+  int nexus_data_type = this->typename_to_nexus_type(type);
 
-  nexus_util.open_path(data_path);
+  nexus_util.open_path(this->data_path);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
 
@@ -139,7 +139,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
   size_t offset = 0;
 
   // If the data hasn't been read yet, throw an exception
-  if (pixel_id.size() == 0)
+  if (this->pixel_id.size() == 0)
     {
       throw runtime_error("Must read data before mapping");
     }
@@ -183,10 +183,10 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
   file.close();
 
   // After creating the map, map the pixel ids to the proper value
-  int size = pixel_id.size();
+  int size = this->pixel_id.size();
   for ( size_t i = 0; i < size; i++ )
     {
-      pixel_id[i] = pixel_id_map[pixel_id[i]];
+      this->pixel_id[i] = pixel_id_map[this->pixel_id[i]];
     }
 }
 
@@ -240,9 +240,9 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
   // Read in the initial time and convert it to ISO8601
   file.seekg(0, std::ios::beg);
   file.read(reinterpret_cast<char *>(buffer), data_size * 2);
-  seconds_to_iso8601(static_cast<NumT>(*(buffer + 1)),
-                     static_cast<NumT>(*(buffer)),
-                     time);
+  this->seconds_to_iso8601(static_cast<NumT>(*(buffer + 1)),
+                           static_cast<NumT>(*(buffer)),
+                           time);
   prev_nanosecond = static_cast<NumT>(*(buffer)); 
   prev_second = static_cast<NumT>(*(buffer + 1));
 
@@ -305,8 +305,8 @@ void EventData<NumT>::read_event_file(const string &event_file)
           if ((*(buffer + i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              EventData::tof.push_back(*(buffer + i));
-              EventData::pixel_id.push_back(*(buffer + i + 1));
+              this->tof.push_back(*(buffer + i));
+              this->pixel_id.push_back(*(buffer + i + 1));
             }
         }
 
