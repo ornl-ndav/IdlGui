@@ -8,12 +8,10 @@
 
 #include "nexus_util.hpp"
 #include <string>
-#include <fstream>
 #include <stdexcept>
 
 using std::runtime_error;
 using std::string;
-using std::ifstream;
 
 NexusUtil::NexusUtil(const string &out_path,
                      e_nx_access file_access)
@@ -22,13 +20,6 @@ NexusUtil::NexusUtil(const string &out_path,
     {
       throw runtime_error("Must specify a file to open");
     }
-
-  ifstream file(out_path.c_str(), std::ios::in);
-  if(!(file.is_open()))
-    {
-      throw runtime_error("File doesn't exist: "+out_path);
-    }
-  file.close();
 
   if (NXopen(out_path.c_str(), 
       (NXaccess)file_access, &file_id) != NX_OK)
