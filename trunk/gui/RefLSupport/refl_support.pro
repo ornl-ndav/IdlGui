@@ -82,6 +82,7 @@ global = ptr_new({  $
                    Q1_array       : ptr_new(0L),$    ;Q1 array
                    Q2_array       : ptr_new(0L),$    ;Q2 array
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
+                   color_array    : ptr_new(0L),$    ;index of color for each file 
                    ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
                  })
 
@@ -90,12 +91,14 @@ list_of_files = strarr(1)
 Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
+color_array   = lonarr(1)
 ListOfLongFileName = strarr(1)
 (*(*global).FileHistory) = FileHistory
 (*(*global).list_of_files) = list_of_files
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
+(*(*global).color_array) = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
 
@@ -485,6 +488,7 @@ RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                  SCR_XSIZE=ResetAllButtonSize[2],$
                                  SCR_YSIZE=ResetAllButtonSize[3],$
                                  VALUE='RESET FULL SESSION')
+
                                  
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
