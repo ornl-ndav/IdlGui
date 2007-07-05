@@ -16,7 +16,6 @@ endif
 end
 
 
-
 ;clear file button in step 1
 PRO CLEAR_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -47,12 +46,11 @@ TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 LongFileName = ListOfLongFileName[TextBoxIndex]
 display_info_about_selected_file, Event, LongFileName
-
 end
 
 ;run calculation of CE in step 2
 PRO RUN_STEP2, Event
-print, "in run step2"
+SaveQofCE,Event
 end
 
 ;base file droplist in step 3
@@ -70,6 +68,15 @@ PRO RUN_STEP3, Event
 print, "in run_step3"
 end
 
+;reset full session
+PRO RESET_ALL_BUTTON, Event
+;reset all arrays
+ResetArrays, Event       ;reset all arrays
+ClearAllDropLists, Event ;clear all droplists
+ClearAllTextBoxes, Event ;clear all textBoxes
+ClearFileInfoStep1, Event ;clear contain of info file (Step1)
+
+END
 
 
 

@@ -45,7 +45,12 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='Step3_button'): begin
         run_step3, Event
     end
-    
+
+    ;--reset all button
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
+        reset_all_button, Event
+    end
+
 else:
     
 endcase
@@ -55,7 +60,6 @@ end
 
 
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
-
 
 Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
@@ -73,18 +77,21 @@ global = ptr_new({  $
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
+                   FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
                    Q1_array       : ptr_new(0L),$    ;Q1 array
                    Q2_array       : ptr_new(0L),$    ;Q2 array
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
-                   ListOfLongFileName : ptr_new(0L)$     ;list of path of file loaded
+                   ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
                  })
 
+FileHistory   = strarr(1)
 list_of_files = strarr(1)
 Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
 ListOfLongFileName = strarr(1)
+(*(*global).FileHistory) = FileHistory
 (*(*global).list_of_files) = list_of_files
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
@@ -167,10 +174,17 @@ Step3SFTextFieldSize = [Step3SFLabelSize[0]+distance_L_TB,$
                         Step3Q1TextFieldSize[2],$
                         Step3Q1LabelSize[3]]
 
+;--RESET ALL
+yoff = 5
+ResetAllButtonSize   = [StepsTabSize[0],$
+                        StepsTabSize[3]+yoff,$
+                        200,$
+                        30]
+
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 ;--Step1--
 Step1Title = 'LOAD FILES'
-Step2Title = 'DEFINED CRITICAL EDGE FILE'
+Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
 LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
@@ -185,7 +199,7 @@ Step2SFLabelTitle = 'SF:'
 ;--Step3--
 Step3BaseFileTitle   = 'Base File:'
 Step3WorkOnFileTitle = '  Work On:'
-
+Step3GoButtonTitle = 'Rescale Work-on file'
 ListOfFiles  = ['                            ']  
 ListOfcolor = ['red','white','green','purple']
 
@@ -241,7 +255,7 @@ CLEAR_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
                             YOFFSET=ClearButton[1],$
                             SCR_XSIZE=ClearButton[2],$
                             SCR_YSIZE=ClearButton[3],$
-                            SENSITIVE=1,$
+                            SENSITIVE=0,$
                             VALUE=ClearButtonTitle)
 
 LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
@@ -389,7 +403,7 @@ STEP3_BUTTON = WIDGET_BUTTON(STEP3_BASE,$
                              SCR_XSIZE=Step3GoButtonSize[2],$
                              SCR_YSIZE=Step3GoButtonSize[3],$
                              SENSITIVE=1,$
-                             VALUE=Step2GoButtonTitle)
+                             VALUE=Step3GoButtonTitle)
 
 STEP3_Q1_LABEL = WIDGET_LABEL(STEP3_BASE,$
                               XOFFSET=Step3Q1LabelSize[0],$
@@ -444,7 +458,15 @@ STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
                                   /EDITABLE,$ 
                                   /ALIGN_LEFT,$ 
                                   /ALL_EVENTS)
-
+;--RESET ALL BUTTONS--
+RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+                                 UNAME='reset_all_button',$
+                                 XOFFSET=ResetAllButtonSize[0],$
+                                 YOFFSET=ResetAllButtonSize[1],$
+                                 SCR_XSIZE=ResetAllButtonSize[2],$
+                                 SCR_YSIZE=ResetAllButtonSize[3],$
+                                 VALUE='RESET FULL SESSION')
+                                 
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE

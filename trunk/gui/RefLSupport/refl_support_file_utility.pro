@@ -105,6 +105,7 @@ endelse
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 ;update droplists
 updateDropList, Event, ListOfFiles
+EnableStep1ClearFile, Event, 1
 end
 
 
@@ -178,14 +179,17 @@ widget_control,id,get_uvalue=global
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
+FileHistory = (*(*global).FileHistory)
 
 Q1_array = [Q1_array,0]
 Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
+FileHistory = [FileHistory,'']
 
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
+(*(*global).FileHistory) = FileHistory
 END
 
 
@@ -218,12 +222,14 @@ Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
 ListOfLongFileName = strarr(1)
+FileHistory        = strarr(1)
 
 (*(*global).list_of_files)      = list_of_files
 (*(*global).Q1_array)           = Q1_array
 (*(*global).Q2_array)           = Q2_array
 (*(*global).SF_array)           = SF_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
+(*(*global).FileHistory)        = FileHistory
 END
 
 
@@ -232,18 +238,21 @@ PRO RemoveIndexFromList, Event, iIndex
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+FileHistory = (*(*global).FileHistory)
 ListOfFiles = (*(*global).list_of_files)
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 
+FileHistory        = ArrayDelete(FileHistory,At=iIndex,Length=1)
 ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Length=1)
 Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Length=1)
 Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Length=1)
 SF_array           = ArrayDelete(SF_array,AT=iIndex,Length=1)
 ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 
+(*(*global).FileHistory)       = FileHistory
 (*(*global).list_of_files)     = ListOfFiles
 (*(*global).Q1_array)          = Q1_array
 (*(*global).Q2_array)          = Q2_array
@@ -252,3 +261,83 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 END
 
 
+;This function save Q1, Q2 and SF of the Critical Edge file selected
+PRO SaveQofCE, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Q1_array = (*(*global).Q1_array)
+Q2_array = (*(*global).Q2_array)
+SF_array = (*(*global).SF_array)
+FileHistory = (*(*global).FileHistory)
+
+;get name of selected CE file
+base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
+widget_control,base_file_droplist_id, get_value=list
+value = widget_info(base_file_droplist_id,/droplist_select)
+FileHistory[0] = list[value]
+
+(*(*global).Q1_array)    = Q1_array
+(*(*global).Q2_array)    = Q2_array
+(*(*global).SF_array)    = SF_array
+(*(*global).FileHistory) = FileHistory
+END
+
+
+;This function clears the contain of all the droplists
+PRO ClearAllDropLists, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;clear off list of file in droplist of step1
+list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
+widget_control, list_of_files_droplist_id, set_value=['']
+;clear off list of file in droplist of step2
+base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
+widget_control, base_file_droplist_id, set_value=['']
+;clear off list of file in droplists of step3
+step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
+widget_control, step3_base_file_droplist_id, set_value=['']
+step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
+widget_control, step3_work_on_file_droplist_id, set_value=['']
+END
+
+
+;This function clears the contain of all the text boxes
+PRO ClearAllTextBoxes, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;clear step2 
+step2_q1_text_field_id = Widget_info(Event.top,find_by_uname='step2_q1_text_field')
+Widget_control, step2_q1_text_field_id, set_value=''
+step2_q2_text_field_id = Widget_info(Event.top,find_by_uname='step2_q2_text_field')
+Widget_control, step2_q2_text_field_id, set_value=''
+step2_SF_text_field_id = Widget_info(Event.top,find_by_uname='step2_sf_text_field')
+Widget_control, step2_SF_text_field_id, set_value=''
+;clear step3
+step3_q1_text_field_id = Widget_info(Event.top,find_by_uname='step3_q1_text_field')
+Widget_control, step3_q1_text_field_id, set_value=''
+step3_q2_text_field_id = Widget_info(Event.top,find_by_uname='step3_q2_text_field')
+Widget_control, step3_q2_text_field_id, set_value=''
+step3_SF_text_field_id = Widget_info(Event.top,find_by_uname='step3_sf_text_field')
+Widget_control, step3_SF_text_field_id, set_value=''
+
+END
+
+
+;This function removes the contain of the info file found in Step1
+PRO ClearFileInfoStep1, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
+widget_control, TextBoxId, set_Value=''
+END
+
+
+;This function plots the selected file
+PRO plot_loaded_file, Event, LongFileName
+
+
+END
