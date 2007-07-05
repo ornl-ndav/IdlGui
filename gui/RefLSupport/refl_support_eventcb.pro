@@ -12,6 +12,7 @@ if (LongfileName NE '') then begin
    ;add file to list of droplist (step1,step2 and 3)
    add_new_file_to_droplist, Event, ShortFileName, LongFileName 
    display_info_about_selected_file, Event, LongFileName
+   plot_loaded_file, Event, LongFileName
 endif
 end
 
@@ -31,20 +32,15 @@ updateDropList, Event, ListOfFiles
 end
 
 ;select color of plot in step 1
-PRO CHANGE_COLOR_OF_PLOT, Event
-print, "in change color of plot"
+PRO REFRESH_PLOT_BUTTON, Event
+LongFileName = getLongFileNameSelected(Event)
+plot_loaded_file, Event, LongFileName
 end
 
-;droplist in step 1
+;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;get the selected index of the load list droplist
-TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
-
-ListOfLongFileName = (*(*global).ListOfLongFileName)
-LongFileName = ListOfLongFileName[TextBoxIndex]
+;get the long name of the selected file
+LongFileName = getLongFileNameSelected(Event)
 display_info_about_selected_file, Event, LongFileName
 end
 
@@ -75,7 +71,7 @@ ResetArrays, Event       ;reset all arrays
 ClearAllDropLists, Event ;clear all droplists
 ClearAllTextBoxes, Event ;clear all textBoxes
 ClearFileInfoStep1, Event ;clear contain of info file (Step1)
-
+ClearMainPlot, Event     ;clear main plot window
 END
 
 
@@ -91,5 +87,7 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 end
+
+
 
 
