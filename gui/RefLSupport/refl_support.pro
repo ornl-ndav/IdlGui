@@ -11,6 +11,10 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): begin
+        steps_tab, Event, 0
+    end
+
     ;--step1--
     Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
         load_file, Event
@@ -22,10 +26,6 @@ case Event.id of
 
     Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
         clear_file, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
-        refresh_plot_button, Event
     end
     
     ;--step2--
@@ -50,6 +50,12 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
         reset_all_button, Event
     end
+    
+    ;--refresh plots
+    Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
+        steps_tab, Event, 1
+    end
+
 
 else:
     
@@ -77,6 +83,7 @@ global = ptr_new({  $
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
+                   PrevTabSelect  : 0,$              ;value of previous tab selected
                    FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
                    Q1_array       : ptr_new(0L),$    ;Q1 array
@@ -92,6 +99,8 @@ Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
 color_array   = lonarr(1)
+ColorSliderDefaultValue = 100
+color_array[0] = ColorSliderDefaultValue
 ListOfLongFileName = strarr(1)
 (*(*global).FileHistory) = FileHistory
 (*(*global).list_of_files) = list_of_files
@@ -123,7 +132,6 @@ ListOfFilesSize      = [220, 5  , 250 , 30 ]
 FileInfoSize         = [5  , 40 , 510 , 260]
 ListOfColorLabelSize = [5  , 310, 100 , 30 ]
 ListOfColorSize      = [110, 300, 310 , 35 ]
-RefreshPlotSize      = [430, 305, 90  , 30 ]
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
@@ -185,6 +193,11 @@ ResetAllButtonSize   = [StepsTabSize[0],$
                         StepsTabSize[3]+yoff,$
                         200,$
                         30]
+RefreshPlotSize      = [StepsTabSize[0]+ResetAllButtonSize[2],$
+                        StepsTabSize[3]+yoff,$
+                        ResetAllButtonSize[2],$
+                        ResetAllButtonSize[3]]
+
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 ;--Step1--
@@ -195,7 +208,7 @@ LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
 ListOfColorTitle = 'Color index:'
-RefreshPlotButtonTitle = 'Refresh Plot'
+
 ;--Step2--
 BaseFileTitle = 'Critical edge file:'
 Step2GoButtonTitle = 'Rescale Critical Edge'
@@ -207,7 +220,8 @@ Step3BaseFileTitle   = 'Base File:'
 Step3WorkOnFileTitle = '  Work On:'
 Step3GoButtonTitle = 'Rescale Work-on file'
 ListOfFiles  = ['                            ']  
-ListOfcolor = ['red','white','green','purple']
+;Main Base
+RefreshPlotButtonTitle = 'Refresh Plot'
 
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         UNAME='MAIN_BASE',$
@@ -299,15 +313,7 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      SCR_XSIZE=ListOfColorSize[2],$
                                      SCR_YSIZE=ListOfColorSize[3],$
                                      TITLE=ListOfColorTitle,$
-                                     VALUE=100)
-
-REFRESH_PLOT_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
-                                    UNAME='refresh_plot_button',$
-                                    XOFFSET=RefreshPlotSize[0],$
-                                    YOFFSET=RefreshPlotSize[1],$
-                                    SCR_XSIZE=RefreshPlotSize[2],$
-                                    SCR_YSIZE=RefreshPlotSize[3],$
-                                    VALUE=RefreshPlotButtonTitle)
+                                     VALUE=ColorSliderDefaultValue)
 
 
 ;--STEP 2-----------------------------------------------------------------------
@@ -488,6 +494,15 @@ RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                  SCR_XSIZE=ResetAllButtonSize[2],$
                                  SCR_YSIZE=ResetAllButtonSize[3],$
                                  VALUE='RESET FULL SESSION')
+
+REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+                                    UNAME='refresh_plot_button',$
+                                    XOFFSET=RefreshPlotSize[0],$
+                                    YOFFSET=RefreshPlotSize[1],$
+                                    SCR_XSIZE=RefreshPlotSize[2],$
+                                    SCR_YSIZE=RefreshPlotSize[3],$
+                                    VALUE=RefreshPlotButtonTitle)
+
 
                                  
 ;Realize the widgets, set the user value of the top-level

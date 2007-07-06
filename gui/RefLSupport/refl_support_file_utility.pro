@@ -25,13 +25,13 @@ END
 
 
 
-;this function gives the long name of the file selected
-FUNCTION getLongFileNameSelected, Event
+;this function gives the long name of the file selected in the uname droplist
+FUNCTION getLongFileNameSelected, Event, uname
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;get the selected index of the load list droplist
-TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
+TextBoxIndex = getSelectedIndex(Event, uname)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 LongFileName = ListOfLongFileName[TextBoxIndex]
 return, LongFileName
