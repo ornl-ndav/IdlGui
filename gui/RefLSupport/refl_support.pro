@@ -493,7 +493,8 @@ RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                  YOFFSET=ResetAllButtonSize[1],$
                                  SCR_XSIZE=ResetAllButtonSize[2],$
                                  SCR_YSIZE=ResetAllButtonSize[3],$
-                                 VALUE='RESET FULL SESSION')
+                                 VALUE='RESET FULL SESSION',$
+                                 sensitive=0)
 
 REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                     UNAME='refresh_plot_button',$
@@ -501,7 +502,8 @@ REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                     YOFFSET=RefreshPlotSize[1],$
                                     SCR_XSIZE=RefreshPlotSize[2],$
                                     SCR_YSIZE=RefreshPlotSize[3],$
-                                    VALUE=RefreshPlotButtonTitle)
+                                    VALUE=RefreshPlotButtonTitle,$
+                                    sensitive=0)
 
 
                                  
