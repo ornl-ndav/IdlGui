@@ -128,6 +128,7 @@ endelse
 MainBaseSize         = [50 , 500, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
+
 ;--Step1--
 Step1Size            = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
 LoadButton           = [5  , 5  , 100 , 30 ]
@@ -136,6 +137,19 @@ ListOfFilesSize      = [220, 5  , 250 , 30 ]
 FileInfoSize         = [5  , 40 , 510 , 260]
 ListOfColorLabelSize = [5  , 310, 100 , 30 ]
 ListOfColorSize      = [110, 300, 310 , 35 ]
+BlackLabelsize       = [100, 330, 50  , 30 ]
+ColorYoff = 55
+BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
+                        330, 50  , 30 ]
+RedLabelSize         = [BlackLabelSize[0]+2*ColorYoff,$
+                        330, 50  , 30 ]
+OrangeLabelSize      = [BlackLabelSize[0]+3*ColorYoff,$
+                        330, 50  , 30 ]
+YellowLabelSize      = [BlackLabelSize[0]+4*ColorYoff,$
+                        330, 50  , 30 ]
+WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
+                        330, 50  , 30 ]
+
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
@@ -212,6 +226,12 @@ LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
 ListOfColorTitle = 'Color index:'
+BlackLabelTitle = 'Black'
+BlueLabelTitle = 'Blue'
+RedLabelTitle = 'Red'
+OrangeLabelTitle = 'Orange'
+YellowLabelTitle = 'Yellow'
+WhiteLabelTitle = 'White'
 
 ;--Step2--
 BaseFileTitle = 'Critical edge file:'
@@ -319,7 +339,47 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      TITLE=ListOfColorTitle,$
                                      VALUE=ColorSliderDefaultValue)
 
+BlackLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=BlackLabelSize[0],$
+                          YOFFSET=BlackLabelSize[1],$
+                          SCR_XSIZE=BlackLabelSize[2],$
+                          SCR_YSIZE=BlackLabelSize[3],$
+                          VALUE=BlackLabelTitle)
 
+BlueLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=BlueLabelSize[0],$
+                          YOFFSET=BlueLabelSize[1],$
+                          SCR_XSIZE=BlueLabelSize[2],$
+                          SCR_YSIZE=BlueLabelSize[3],$
+                          VALUE=BlueLabelTitle)
+
+RedLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=RedLabelSize[0],$
+                          YOFFSET=RedLabelSize[1],$
+                          SCR_XSIZE=RedLabelSize[2],$
+                          SCR_YSIZE=RedLabelSize[3],$
+                          VALUE=RedLabelTitle)
+
+OrangeLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=OrangeLabelSize[0],$
+                          YOFFSET=OrangeLabelSize[1],$
+                          SCR_XSIZE=OrangeLabelSize[2],$
+                          SCR_YSIZE=OrangeLabelSize[3],$
+                          VALUE=OrangeLabelTitle)
+
+YellowLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=YellowLabelSize[0],$
+                          YOFFSET=YellowLabelSize[1],$
+                          SCR_XSIZE=YellowLabelSize[2],$
+                          SCR_YSIZE=YellowLabelSize[3],$
+                          VALUE=YellowLabelTitle)
+
+WhiteLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=WhiteLabelSize[0],$
+                          YOFFSET=WhiteLabelSize[1],$
+                          SCR_XSIZE=WhiteLabelSize[2],$
+                          SCR_YSIZE=WhiteLabelSize[3],$
+                          VALUE=WhiteLabelTitle)
 ;--STEP 2-----------------------------------------------------------------------
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          UNAME='step2',$
