@@ -97,7 +97,7 @@ end
 
 ;run calculation of base->work on in step 3
 PRO RUN_STEP3, Event
-print, "in run_step3"
+  print, "in run_step3"
 end
 
 ;reset full session
