@@ -1,8 +1,8 @@
 ;This function gives the size of the array given
 ;as a parameter
 FUNCTION getSizeOfArray, ListOfFiles
-
 sizeArray = size(ListOfFiles)
+help, ListOfFiles
 return, sizeArray[1]
 END
 

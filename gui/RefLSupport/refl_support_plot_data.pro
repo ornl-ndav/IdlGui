@@ -108,7 +108,7 @@ endif else begin
             CATCH,/CANCEL
             DEVICE, DECOMPOSED = 0
             loadct,5
- 
+            
             colorIndex = color_array[i]
             if (FirstPass EQ 1) then begin
 
