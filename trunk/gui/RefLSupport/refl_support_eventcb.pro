@@ -1,3 +1,36 @@
+;procedure triggered each time a new tab is reached or refresh plot button
+PRO steps_tab, Event, isRefresh
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
+
+steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
+CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+
+if (PrevTabSelect NE CurrTabSelect OR $
+    isRefresh EQ 1) then begin
+    (*global).PrevTabSelect = CurrTabSelect
+    CASE (CurrTabSelect) OF
+        0: begin                    ;if first tab plot everything
+            AssignColorToSelectedPlot,Event
+            ListLongFileName = (*(*global).ListOfLongFileName)
+            plot_loaded_file, Event, ListLongFileName
+        end
+        1: begin                ;if second tab plot only CE plot
+            LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 
+            plot_loaded_file, Event,LongFileName
+        end
+        2: begin            ;if third tab plot only two files selected
+            LongFileName1 = getLongFileNameSelected(Event,'step3_base_file_droplist')
+            LongFileName2 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
+            ListLongFileName = [LongFileName1,LongFileName2]
+            plot_loaded_file, Event, ListLongFileName
+        end
+    ENDCASE
+endif
+END
+
 ;load file button in step 1
 PRO LOAD_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -12,7 +45,7 @@ if (LongfileName NE '') then begin
    ;add file to list of droplist (step1,step2 and 3)
    add_new_file_to_droplist, Event, ShortFileName, LongFileName 
    display_info_about_selected_file, Event, LongFileName
-   plot_loaded_file, Event, LongFileName
+;   plot_loaded_file, Event, LongFileName
 endif
 
 ;plot all loaded files
@@ -35,20 +68,10 @@ ListOfFiles = (*(*global).list_of_files)
 updateDropList, Event, ListOfFiles
 end
 
-;select color of plot in step 1
-PRO REFRESH_PLOT_BUTTON, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-AssignColorToSelectedPlot,Event
-ListLongFileName = (*(*global).ListOfLongFileName)
-plot_loaded_file, Event, ListLongFileName
-end
-
 ;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
 ;get the long name of the selected file
-LongFileName = getLongFileNameSelected(Event)
+LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
 display_info_about_selected_file, Event, LongFileName
 end
 
@@ -59,12 +82,12 @@ end
 
 ;base file droplist in step 3
 PRO STEP3_BASE_FILE_DROPLIST, Event
-print, "in step3_base_file_droplist"
+steps_tab, Event, 1
 end
 
 ;work on file droplist in step 3
 PRO STEP3_WORK_ON_FILE_DROPLIST, Event
-print, "in step3_work_on_file_droplist"
+steps_tab, Event, 1
 end
 
 ;run calculation of base->work on in step 3
