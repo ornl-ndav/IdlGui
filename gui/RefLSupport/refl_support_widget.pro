@@ -93,3 +93,13 @@ WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 erase
 END
+
+;reset the position of the color slider
+PRO ResetPositionOfSlider, Event 
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+defaultColorSliderPosition = (*global).ColorSliderDefaultValue
+list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
+widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
+END

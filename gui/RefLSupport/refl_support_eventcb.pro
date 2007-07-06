@@ -50,39 +50,48 @@ endif
 ;plot all loaded files
 ListLongFileName = (*(*global).ListOfLongFileName)
 plot_loaded_file, Event, ListLongFileName
-end
+END
 
 
 ;clear file button in step 1
 PRO CLEAR_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get the selected index of the load list droplist
 TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
 RemoveIndexFromArray, Event, TextBoxIndex
-
-;update list displays in all droplists
+;update GUI
 ListOfFiles = (*(*global).list_of_files)
-updateDropList, Event, ListOfFiles
-end
+updateGUI, Event, ListOfFiles
+;plot all loaded files
+ListLongFileName = (*(*global).ListOfLongFileName)
+plot_loaded_file, Event, ListLongFileName
+display_info_about_file, Event
+END
+
 
 ;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
 ;get the long name of the selected file
 LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
-display_info_about_selected_file, Event, LongFileName
-end
+if (LongFileName EQ '') then begin
+   clear_info_about_selected_file, Event
+endif else begin
+   display_info_about_selected_file, Event, LongFileName
+endelse
+END
+
 
 ;run calculation of CE in step 2
 PRO RUN_STEP2, Event
 SaveQofCE,Event
-end
+END
+
 
 ;Ce file droplist in step 2
 PRO step2_base_file_droplist, Event
 steps_tab, Event, 1
-end
+END
 
 
 ;base file droplist in step 3
@@ -108,6 +117,7 @@ ClearAllDropLists, Event ;clear all droplists
 ClearAllTextBoxes, Event ;clear all textBoxes
 ClearFileInfoStep1, Event ;clear contain of info file (Step1)
 ClearMainPlot, Event     ;clear main plot window
+ResetPositionOfSlider, Event ;reset color slider
 END
 
 

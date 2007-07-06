@@ -7,7 +7,17 @@ widget_control,id,get_uvalue=global
 
 size = getSizeOfArray(ListLongFileName)
 
-if (size NE 0) then begin
+draw_id = widget_info(Event.top, find_by_uname='plot_window')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+if (size EQ 1 AND $
+   ListLongFileName[0] EQ '') then begin
+   
+   ;no more files loaded so erase plot
+   erase
+
+endif else begin
 
     color_array = (*(*global).color_array)
     FirstPass = 1
@@ -90,9 +100,7 @@ if (size NE 0) then begin
             flt1 = flt1[1:*]
             flt2 = flt2[1:*]
             
-            draw_id = widget_info(Event.top, find_by_uname='plot_window')
-            WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
-            wset,view_plot_id
+    
             
             close,u
             free_lun,u
@@ -120,6 +128,6 @@ if (size NE 0) then begin
 
     endfor
 
-endif
+endelse
 
 END
