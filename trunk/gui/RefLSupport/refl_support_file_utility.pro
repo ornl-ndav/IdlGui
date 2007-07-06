@@ -133,32 +133,20 @@ endif else begin
 endelse
 (*(*global).list_of_files) = ListOfFiles
 (*(*global).ListOfLongFileName) = ListOfLongFileName
-;update droplists
-updateDropList, Event, ListOfFiles
-EnableStep1ClearFile, Event, 1
-SelectLastLoadedFile, Event
+
+;update GUI
+updateGUI,Event
 end
 
 
-
-;This function refresh the list displays in all the droplist (step1-2 and 3)
-PRO updateDropList, Event, ListOfFiles
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;update list of file in droplist of step1
-list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
-widget_control, list_of_files_droplist_id, set_value=ListOfFiles
-;update list of file in droplist of step2
-base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
-widget_control, base_file_droplist_id, set_value=ListOfFiles
-;update list of file in droplists of step3
-step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
-widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
-step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
-widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
+;This function updates the GUI
+;droplist, buttons...
+PRO updateGUI, Event
+updateDropList, Event, ListOfFiles
+EnableStep1ClearFile, Event, 1
+SelectLastLoadedFile, Event
+EnableMainBaseButtons, Event, 1
 END
-
 
 
 ;This functions displays the first few lines of the newly loaded file
@@ -267,6 +255,8 @@ FileHistory        = strarr(1)
 (*(*global).color_array)        = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*(*global).FileHistory)        = FileHistory
+
+EnableMainBaseButtons, Event, 0
 END
 
 

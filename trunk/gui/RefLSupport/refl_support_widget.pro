@@ -1,9 +1,35 @@
 PRO EnableStep1ClearFile, Event, validate
+ClearFileId = widget_info(Event.top, find_by_uname='clear_button')
+widget_control, ClearFileId, sensitive=validate
+END
+
+
+;this function enables the main base buttons
+;refresh and reset all
+PRO EnableMainBaseButtons, Event, validate
+reset_all_button_id = widget_info(Event.top,find_by_uname='reset_all_button')
+widget_control, reset_all_button_id, sensitive=validate
+refresh_plot_button_id = widget_info(Event.top,find_by_uname='refresh_plot_button')
+widget_control, refresh_plot_button_id, sensitive=validate
+END
+
+
+;This function refresh the list displays in all the droplist (step1-2 and 3)
+PRO updateDropList, Event, ListOfFiles
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-ClearFileId = widget_info(Event.top, find_by_uname='clear_button')
-widget_control, ClearFileId, sensitive=validate
+;update list of file in droplist of step1
+list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
+widget_control, list_of_files_droplist_id, set_value=ListOfFiles
+;update list of file in droplist of step2
+base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
+widget_control, base_file_droplist_id, set_value=ListOfFiles
+;update list of file in droplists of step3
+step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
+widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
+step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
+widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
 END
 
 
