@@ -94,6 +94,7 @@ global = ptr_new({  $
                    Q2_array       : ptr_new(0L),$    ;Q2 array
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
                    color_array    : ptr_new(0L),$    ;index of color for each file 
+                   ColorSliderDefaultValue : 100,$   ;default index value of color slider
                    ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
                  })
 
@@ -103,7 +104,7 @@ Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
 color_array   = lonarr(1)
-ColorSliderDefaultValue = 100
+ColorSliderDefaultValue = (*global).ColorSliderDefaultValue
 color_array[0] = ColorSliderDefaultValue
 ListOfLongFileName = strarr(1)
 (*(*global).FileHistory) = FileHistory

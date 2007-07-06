@@ -16,7 +16,7 @@ return, TextBoxIndex
 END
 
 
-;This function sets the selected inded of the 'uname'
+;This function sets the selected index of the 'uname'
 ;droplist
 PRO SetSelectedIndex, Event, uname, index
 droplistId= widget_info(Event.top, find_by_uname=uname)
@@ -143,9 +143,15 @@ end
 ;droplist, buttons...
 PRO updateGUI, Event, ListOfFiles
 updateDropList, Event, ListOfFiles
-EnableStep1ClearFile, Event, 1
+ArraySize = getSizeOfArray(ListOfFiles)
+if (ArraySize EQ 0) then begin
+   validate = 0
+endif else begin
+   validate = 1
+endelse
+EnableStep1ClearFile, Event, validate
 SelectLastLoadedFile, Event
-EnableMainBaseButtons, Event, 1
+EnableMainBaseButtons, Event, validate
 END
 
 
@@ -189,6 +195,12 @@ for i=1,(nbr_line-1) do begin
 endfor
 end
 
+
+;this function clear the info text box
+PRO clear_info_about_selected_file, Event
+TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
+widget_control, TextBoxId, set_value=''
+END
 
 ;this function creates and update the Q1, Q2, SF... arrays when a file is added
 PRO CreateArrays, Event
@@ -245,6 +257,7 @@ Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
 color_array        = lonarr(1)
+color_array[0]     = getColorIndex(Event)
 ListOfLongFileName = strarr(1)
 FileHistory        = strarr(1)
 
