@@ -71,7 +71,6 @@ step3_q2_text_field_id = Widget_info(Event.top,find_by_uname='step3_q2_text_fiel
 Widget_control, step3_q2_text_field_id, set_value=''
 step3_SF_text_field_id = Widget_info(Event.top,find_by_uname='step3_sf_text_field')
 Widget_control, step3_SF_text_field_id, set_value=''
-
 END
 
 
@@ -85,7 +84,6 @@ widget_control, TextBoxId, set_Value=''
 END
 
 
-
 ;clear main plot window
 PRO ClearMainPlot, Event   
 draw_id = widget_info(Event.top, find_by_uname='plot_window')
@@ -93,6 +91,7 @@ WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 erase
 END
+
 
 ;reset the position of the color slider
 PRO ResetPositionOfSlider, Event 
