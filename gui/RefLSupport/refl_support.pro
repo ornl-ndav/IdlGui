@@ -29,6 +29,11 @@ case Event.id of
     end
     
     ;--step2--
+    Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
+         step2_base_file_droplist, Event
+         print, 'here'
+    end
+
     Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
         run_step2, Event
     end
@@ -55,7 +60,6 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
         steps_tab, Event, 1
     end
-
 
 else:
     

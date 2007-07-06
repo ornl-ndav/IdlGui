@@ -42,10 +42,9 @@ LongFileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Wi
 if (LongfileName NE '') then begin
    ;get only the file name (without path) of file
    ShortFileName = get_file_name_only(LongFileName)    
-   ;add file to list of droplist (step1,step2 and 3)
+   ;add file to list of droplist (step1, step2 and 3)
    add_new_file_to_droplist, Event, ShortFileName, LongFileName 
    display_info_about_selected_file, Event, LongFileName
-;   plot_loaded_file, Event, LongFileName
 endif
 
 ;plot all loaded files
@@ -79,6 +78,12 @@ end
 PRO RUN_STEP2, Event
 SaveQofCE,Event
 end
+
+;Ce file droplist in step 2
+PRO step2_base_file_droplist, Event
+steps_tab, Event, 1
+end
+
 
 ;base file droplist in step 3
 PRO STEP3_BASE_FILE_DROPLIST, Event
