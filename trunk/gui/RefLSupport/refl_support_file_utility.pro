@@ -135,13 +135,13 @@ endelse
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 
 ;update GUI
-updateGUI,Event
+updateGUI,Event, ListOfFiles
 end
 
 
 ;This function updates the GUI
 ;droplist, buttons...
-PRO updateGUI, Event
+PRO updateGUI, Event, ListOfFiles
 updateDropList, Event, ListOfFiles
 EnableStep1ClearFile, Event, 1
 SelectLastLoadedFile, Event
