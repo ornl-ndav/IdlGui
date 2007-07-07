@@ -84,6 +84,7 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   FirstTimePlotting : 1,$         ;1 if first plot, 0 if not
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
@@ -222,16 +223,18 @@ RescaleBaseSize      = [StepsTabSize[0],$
                         StepsTabSize[3]+yoff,$
                         StepsTabSize[2]-xoff,$
                         80]
-d12 = 60  ;distance between 'x-axis:' and 'min:'
-d23 = 55  ;distance between 'min' and text field
-d34 = 60  ;distance between text field and 'max'
-d45 = 55  ;distance between 'max' and text field
-d56 = 70  ;distance between text field and lin/log
-d67 = 110 ;distance between lin/log and reset_button
+d12 = 50  ;distance between 'x-axis:' and 'min:'
+d23 = 35  ;distance between 'min' and text field
+d34 = 80  ;distance between text field and 'max'
+d45 = d23  ;distance between 'max' and text field
+d56 = 80  ;distance between text field and lin/log
+d67 = 95 ;distance between lin/log and validate button
+d78 = 70  ;distance between validate button and reset button
 axis_lin_log = ['lin','log']
-LabelSize    = [50,30]  ;scr_xsize and scr_ysize
-TextBoxSize  = [50,30]  ;scr_xsize and scr_ysize
-ResetButton  = [100,30]  ;scr_xsize and scr_ysize
+LabelSize    = [35,30]   ;scr_xsize and scr_ysize
+TextBoxSize  = [70,30]   ;scr_xsize and scr_ysize
+ResetButton  = [70,30]  ;scr_xsize and scr_ysize
+ValidateButton = [70,65] ;scr_xsize and scr_ysize
 ;xaxis
 XaxisLabelSize       = [5,$
                         5,$
@@ -255,11 +258,15 @@ XaxisMaxTextFieldSize= [XaxisMaxLabelSize[0]+d45,$
                         TextBoxSize[1]]
 XaxisLinLogSize      = [XaxisMaxTextFieldSize[0]+d56,$
                         XaxisMaxTextFieldSize[1]]
-XResetButtonSize     = [XAxisLinLogsize[0]+d67,$
-                        XAxisLinLogSize[1],$
+ValidateButtonSize = [XAxisLinLogsize[0]+d67,$
+                      XAxisLinLogSize[1],$
+                      ValidateButton[0],$
+                      ValidateButton[1]]
+XResetButtonSize     = [ValidateButtonSize[0]+d78,$
+                        ValidateButtonSize[1],$
                         ResetButton[0],$
                         ResetButton[1]]
-                        
+                                
 ;yaxis
 yoff= 35
 YaxisLabelSize       = [5,$
@@ -284,7 +291,7 @@ YaxisMaxTextFieldSize= [YaxisMaxLabelSize[0]+d45,$
                         TextBoxSize[1]]
 YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
-YResetButtonSize     = [YAxisLinLogsize[0]+d67,$
+YResetButtonSize     = [ValidateButtonSize[0]+d78,$
                         YAxisLinLogSize[1],$
                         ResetButton[0],$
                         ResetButton[1]]
@@ -706,13 +713,21 @@ XaxisLinLog = CW_BGROUP(RescaleBase,$
                          row=1,$
                          uname='XaxisLinLog')                 
 
+ValidateButton = WIDGET_BUTTON(RescaleBase,$
+                               XOFFSET=ValidateButtonSize[0],$
+                               YOFFSET=ValidateButtonSize[1],$
+                               SCR_XSIZE=ValidateButtonSize[2],$
+                               SCR_YSIZE=ValidateButtonSize[3],$
+                               UNAME='ValidateButton',$
+                               VALUE='VALIDATE')
+
 XResetButton = WIDGET_BUTTON(RescaleBase,$
                              XOFFSET=XResetButtonSize[0],$
                              YOFFSET=XResetButtonSize[1],$
                              SCR_XSIZE=XResetButtonSize[2],$
                              SCR_YSIZE=XResetButtonSize[3],$
                              UNAME='XResetButton',$
-                             VALUE='Reset X-axis')
+                             VALUE='Reset X')
 
 ;yaxis
 YaxisLabel = WIDGET_LABEL(RescaleBase,$
@@ -774,7 +789,7 @@ YResetButton = WIDGET_BUTTON(RescaleBase,$
                              SCR_XSIZE=YResetButtonSize[2],$
                              SCR_YSIZE=YResetButtonSize[3],$
                              UNAME='YResetButton',$
-                             VALUE='Reset Y-axis')
+                             VALUE='Reset Y')
 
 
 ;Realize the widgets, set the user value of the top-level

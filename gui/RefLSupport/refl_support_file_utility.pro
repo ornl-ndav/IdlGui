@@ -360,5 +360,14 @@ ListOfFiles = (*(*global).list_of_files)
 
 NbrOfFiles = getSizeOfArray(ListOfFiles)
 SetSelectedIndex, Event, 'list_of_files_droplist', (NbrOfFiles-1)
+END
+
+
+;This function reset various parameters when a new session is launched (full reset)
+PRO ResetAllOtherParameters, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+(*global).FirstTimePlotting = 1 ;next load will be the first one
 
 END

@@ -125,6 +125,7 @@ ClearAllTextBoxes, Event ;clear all textBoxes
 ClearFileInfoStep1, Event ;clear contain of info file (Step1)
 ClearMainPlot, Event     ;clear main plot window
 ResetPositionOfSlider, Event ;reset color slider
+ResetAllOtherParameters, Event
 END
 
 
