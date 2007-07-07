@@ -1,3 +1,30 @@
+;This function populates the x/y axis text boxes
+PRO PopulateXYScaleAxis, Event, $
+                         min_xaxis, $
+                         max_xaxis, $
+                         min_yaxis, $
+                         max_yaxis
+
+
+;min-xaxis
+XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+widget_control, XminId, set_value=strcompress(min_xaxis,/remove_all)
+
+;max-xaxis
+XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+widget_control, XmaxId, set_value=strcompress(max_xaxis,/remove_all)
+
+;min-yaxis
+YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+widget_control, YminId, set_value=strcompress(min_yaxis,/remove_all)
+
+;max-yaxis
+YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+widget_control, YmaxId, set_value=strcompress(max_yaxis,/remove_all)
+
+END
+
+
 ;This function plots the selected file
 PRO plot_loaded_file, Event, ListLongFileName
 
@@ -100,8 +127,6 @@ endif else begin
             flt1 = flt1[1:*]
             flt2 = flt2[1:*]
             
-    
-            
             close,u
             free_lun,u
             
@@ -117,10 +142,19 @@ endif else begin
                 errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
                 FirstPass = 0
             
+                ;populate min/max x/y axis
+                min_xaxis = min(flt0,max=max_xaxis,/nan)
+                min_yaxis = min(flt1,max=max_yaxis,/nan)
+                PopulateXYScaleAxis, Event, $
+                                    min_xaxis, $
+                                    max_xaxis, $
+                                    min_yaxis, $
+                                    max_yaxis
+
             endif else begin
 
-                plot, flt0, flt1_first,/noerase
-                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+               plot, flt0, flt1_first,/noerase
+               errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
             endelse
 
@@ -129,5 +163,9 @@ endif else begin
     endfor
 
 endelse
+
+min = min(flt1,max=max,/nan)
+print, 'min is ' + strcompress(min)
+print, 'max is ' + strcompress(max)
 
 END
