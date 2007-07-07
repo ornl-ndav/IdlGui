@@ -119,6 +119,7 @@ end
 PRO RESET_ALL_BUTTON, Event
 ;reset all arrays
 ResetArrays, Event       ;reset all arrays
+ReinitializeColorArray, Event
 ClearAllDropLists, Event ;clear all droplists
 ClearAllTextBoxes, Event ;clear all textBoxes
 ClearFileInfoStep1, Event ;clear contain of info file (Step1)
