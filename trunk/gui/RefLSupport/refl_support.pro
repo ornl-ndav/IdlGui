@@ -205,7 +205,6 @@ Step3SFTextFieldSize = [Step3SFLabelSize[0]+distance_L_TB,$
                         Step3Q1LabelSize[1],$
                         Step3Q1TextFieldSize[2],$
                         Step3Q1LabelSize[3]]
-
 ;--RESET ALL
 yoff = 5
 ResetAllButtonSize   = [StepsTabSize[0],$
@@ -216,6 +215,79 @@ RefreshPlotSize      = [StepsTabSize[0]+ResetAllButtonSize[2],$
                         StepsTabSize[3]+yoff,$
                         ResetAllButtonSize[2],$
                         ResetAllButtonSize[3]]
+;--RESCALE 
+yoff = 40
+xoff = 5
+RescaleBaseSize      = [StepsTabSize[0],$
+                        StepsTabSize[3]+yoff,$
+                        StepsTabSize[2]-xoff,$
+                        80]
+d12 = 60  ;distance between 'x-axis:' and 'min:'
+d23 = 55  ;distance between 'min' and text field
+d34 = 60  ;distance between text field and 'max'
+d45 = 55  ;distance between 'max' and text field
+d56 = 70  ;distance between text field and lin/log
+d67 = 110 ;distance between lin/log and reset_button
+axis_lin_log = ['lin','log']
+LabelSize    = [50,30]  ;scr_xsize and scr_ysize
+TextBoxSize  = [50,30]  ;scr_xsize and scr_ysize
+ResetButton  = [100,30]  ;scr_xsize and scr_ysize
+;xaxis
+XaxisLabelSize       = [5,$
+                        5,$
+                        LabelSize[0],$
+                        LabelSize[1]]
+XaxisMinLabelSize    = [XaxisLabelSize[0]+d12,$
+                        XaxisLabelSize[1],$
+                        LabelSize[0],$
+                        LabelSize[1]]
+XaxisMinTextFieldSize= [XaxisMinLabelSize[0]+d23,$
+                        XaxisMinLabelSize[1],$
+                        TextBoxSize[0],$
+                        TextBoxSize[1]]
+XaxisMaxLabelSize    = [XaxisMinTextFieldSize[0]+d34,$
+                        XaxisMinTextFieldSize[1],$
+                        LabelSize[0],$
+                        LabelSize[1]]
+XaxisMaxTextFieldSize= [XaxisMaxLabelSize[0]+d45,$
+                        XaxisMaxLabelSize[1],$
+                        TextBoxSize[0],$
+                        TextBoxSize[1]]
+XaxisLinLogSize      = [XaxisMaxTextFieldSize[0]+d56,$
+                        XaxisMaxTextFieldSize[1]]
+XResetButtonSize     = [XAxisLinLogsize[0]+d67,$
+                        XAxisLinLogSize[1],$
+                        ResetButton[0],$
+                        ResetButton[1]]
+                        
+;yaxis
+yoff= 35
+YaxisLabelSize       = [5,$
+                        5+yoff,$
+                        LabelSize[0],$
+                        LabelSize[1]]
+YaxisMinLabelSize    = [YaxisLabelSize[0]+d12,$
+                        YaxisLabelSize[1],$
+                        LabelSize[0],$
+                        LabelSize[1]]
+YaxisMinTextFieldSize= [YaxisMinLabelSize[0]+d23,$
+                        YaxisMinLabelSize[1],$
+                        TextBoxSize[0],$
+                        TextBoxSize[1]]
+YaxisMaxLabelSize    = [YaxisMinTextFieldSize[0]+d34,$
+                        YaxisMinTextFieldSize[1],$
+                        LabelSize[0],$
+                        LabelSize[1]]
+YaxisMaxTextFieldSize= [YaxisMaxLabelSize[0]+d45,$
+                        YaxisMaxLabelSize[1],$
+                        TextBoxSize[0],$
+                        TextBoxSize[1]]
+YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
+                        YaxisMaxTextFieldSize[1]]
+YResetButtonSize     = [YAxisLinLogsize[0]+d67,$
+                        YAxisLinLogSize[1],$
+                        ResetButton[0],$
+                        ResetButton[1]]
 
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
@@ -570,8 +642,141 @@ REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                     VALUE=RefreshPlotButtonTitle,$
                                     sensitive=0)
 
+;--rescale base
+RescaleBase = WIDGET_BASE(MAIN_BASE,$
+                          UNAME='RescaleBase',$
+                          XOFFSET=RescaleBaseSize[0],$
+                          YOFFSET=RescaleBaseSize[1],$
+                          SCR_XSIZE=RescaleBaseSize[2],$
+                          SCR_YSIZE=RescaleBaseSize[3],$
+                          FRAME=1,$
+                          SENSITIVE=1)
 
-                                 
+;xaxis
+XaxisLabel = WIDGET_LABEL(RescaleBase,$
+                          XOFFSET=XaxisLabelSize[0],$
+                          YOFFSET=XaxisLabelSize[1],$
+                          SCR_XSIZE=XaxisLabelSize[2],$
+                          SCR_YSIZE=XaxisLabelSize[3],$
+                          VALUE='X-axis')
+
+XaxisMinLabel = WIDGET_LABEL(RescaleBase,$
+                             XOFFSET=XaxisMinLabelSize[0],$
+                             YOFFSET=XaxisMinLabelSize[1],$
+                             SCR_XSIZE=XaxisMinLabelSize[2],$
+                             SCR_YSIZE=XaxisMinLabelSize[3],$
+                             VALUE='min:')
+
+XaxisMinTextField = WIDGET_TEXT(RescaleBase,$
+                                UNAME='XaxisMinTextField',$
+                                XOFFSET=XaxisMinTextFieldSize[0],$
+                                YOFFSET=XaxisMinTextFieldSize[1],$
+                                SCR_XSIZE=XaxisMinTextFieldSize[2],$
+                                SCR_YSIZE=XaxisMinTextFieldSize[3],$
+                                VALUE='',$
+                                /EDITABLE,$ 
+                                /ALIGN_LEFT,$ 
+                                /ALL_EVENTS)
+            
+XaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
+                             XOFFSET=XaxisMaxLabelSize[0],$
+                             YOFFSET=XaxisMaxLabelSize[1],$
+                             SCR_XSIZE=XaxisMaxLabelSize[2],$
+                             SCR_YSIZE=XaxisMaxLabelSize[3],$
+                             VALUE='max:')
+
+XaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
+                                UNAME='XaxisMaxTextField',$
+                                XOFFSET=XaxisMaxTextFieldSize[0],$
+                                YOFFSET=XaxisMaxTextFieldSize[1],$
+                                SCR_XSIZE=XaxisMaxTextFieldSize[2],$
+                                SCR_YSIZE=XaxisMaxTextFieldSize[3],$
+                                VALUE='',$
+                                /EDITABLE,$ 
+                                /ALIGN_LEFT,$ 
+                                /ALL_EVENTS)    
+
+XaxisLinLog = CW_BGROUP(RescaleBase,$ 
+                         axis_lin_log,$
+                         /exclusive,$
+                         /RETURN_NAME,$
+                         XOFFSET=XaxisLinLogSize[0],$
+                         YOFFSET=XaxisLinLogSize[1],$
+                         SET_VALUE=0.0,$
+                         row=1,$
+                         uname='XaxisLinLog')                 
+
+XResetButton = WIDGET_BUTTON(RescaleBase,$
+                             XOFFSET=XResetButtonSize[0],$
+                             YOFFSET=XResetButtonSize[1],$
+                             SCR_XSIZE=XResetButtonSize[2],$
+                             SCR_YSIZE=XResetButtonSize[3],$
+                             UNAME='XResetButton',$
+                             VALUE='Reset X-axis')
+
+;yaxis
+YaxisLabel = WIDGET_LABEL(RescaleBase,$
+                          XOFFSET=YaxisLabelSize[0],$
+                          YOFFSET=YaxisLabelSize[1],$
+                          SCR_XSIZE=YaxisLabelSize[2],$
+                          SCR_YSIZE=YaxisLabelSize[3],$
+                          VALUE='Y-axis')
+
+YaxisMinLabel = WIDGET_LABEL(RescaleBase,$
+                             XOFFSET=YaxisMinLabelSize[0],$
+                             YOFFSET=YaxisMinLabelSize[1],$
+                             SCR_XSIZE=YaxisMinLabelSize[2],$
+                             SCR_YSIZE=YaxisMinLabelSize[3],$
+                             VALUE='min:')
+
+YaxisMinTextField = WIDGET_TEXT(RescaleBase,$
+                                UNAME='YaxisMinTextField',$
+                                XOFFSET=YaxisMinTextFieldSize[0],$
+                                YOFFSET=YaxisMinTextFieldSize[1],$
+                                SCR_XSIZE=YaxisMinTextFieldSize[2],$
+                                SCR_YSIZE=YaxisMinTextFieldSize[3],$
+                                VALUE='',$
+                                /EDITABLE,$ 
+                                /ALIGN_LEFT,$ 
+                                /ALL_EVENTS)
+            
+YaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
+                             XOFFSET=YaxisMaxLabelSize[0],$
+                             YOFFSET=YaxisMaxLabelSize[1],$
+                             SCR_XSIZE=YaxisMaxLabelSize[2],$
+                             SCR_YSIZE=YaxisMaxLabelSize[3],$
+                             VALUE='max:')
+
+YaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
+                                UNAME='YaxisMaxTextField',$
+                                XOFFSET=YaxisMaxTextFieldSize[0],$
+                                YOFFSET=YaxisMaxTextFieldSize[1],$
+                                SCR_XSIZE=YaxisMaxTextFieldSize[2],$
+                                SCR_YSIZE=YaxisMaxTextFieldSize[3],$
+                                VALUE='',$
+                                /EDITABLE,$ 
+                                /ALIGN_LEFT,$ 
+                                /ALL_EVENTS)                     
+
+YaxisLinLog = CW_BGROUP(RescaleBase,$ 
+                         axis_lin_log,$
+                         /exclusive,$
+                         /RETURN_NAME,$
+                         XOFFSET=YaxisLinLogSize[0],$
+                         YOFFSET=YaxisLinLogSize[1],$
+                         SET_VALUE=0.0,$
+                         row=1,$
+                         uname='YaxisLinLog')      
+
+YResetButton = WIDGET_BUTTON(RescaleBase,$
+                             XOFFSET=YResetButtonSize[0],$
+                             YOFFSET=YResetButtonSize[1],$
+                             SCR_XSIZE=YResetButtonSize[2],$
+                             SCR_YSIZE=YResetButtonSize[3],$
+                             UNAME='YResetButton',$
+                             VALUE='Reset Y-axis')
+
+
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
