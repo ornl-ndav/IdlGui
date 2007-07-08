@@ -343,10 +343,8 @@ END
 PRO AssignColorToSelectedPlot, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 colorIndex = getColorIndex(Event)
 fileIndex = getSelectedIndex(Event, 'list_of_files_droplist')
-
 color_array = (*(*global).color_array)
 color_array[fileIndex] = colorIndex
 (*(*global).color_array) = color_array
@@ -357,9 +355,7 @@ END
 PRO SelectLastLoadedFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ListOfFiles = (*(*global).list_of_files)
-
 NbrOfFiles = getSizeOfArray(ListOfFiles)
 SetSelectedIndex, Event, 'list_of_files_droplist', (NbrOfFiles-1)
 END
@@ -369,7 +365,55 @@ END
 PRO ResetAllOtherParameters, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 (*global).FirstTimePlotting = 1 ;next load will be the first one
+END
 
+
+;This function reinitialize the Rescale base
+PRO ResetRescaleBase,Event
+;reset X and Y, Min and Max text fields
+XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+XYMinMax = [XminId, XmaxId, YminId, YmaxId]
+for i=0,3 do begin
+   widget_control, XYMinMax[i], set_value=''
+endfor
+;reset X and Y lin/log
+XaxisLinLogId = widget_info(Event.top,find_by_uname='XaxisLinLog')
+YaxisLinLogId = widget_info(Event.top,find_by_uname='YaxisLinLog')
+widget_control, XaxisLinLogId, set_value=0
+widget_control, YaxisLinLogId, set_value=0
+END
+
+;This function takes care of launching the plot function in the right mode
+PRO DoPlot, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;get index of current tab selected
+steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
+CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+CASE (CurrTabSelect) OF
+   0: begin                     ;if the first tab is selected
+      ListLongFileName = (*(*global).ListOfLongFileName)
+      plot_loaded_file, Event, ListLongFileName
+   end
+   1: begin                     ;if the second tab is selected
+      LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 
+      LongFileNameArray = strarr(1)
+      LongFileNameArray[0]=LongFileName
+      plot_loaded_file, Event,LongFileNameArray   
+   end
+   2: begin                     ;if the third tab is selected
+      LongFileName1 = getLongFileNameSelected(Event,'step3_base_file_droplist')
+      LongFileName2 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
+      if (LongFileName1 NE LongFileName2) then begin
+         ListLongFileName = [LongFileName1,LongFileName2]
+      endif else begin
+         ListLongFileName = [LongFileName1]
+      endelse
+   plot_loaded_file, Event, ListLongFileName
+   end
+ENDCASE
 END

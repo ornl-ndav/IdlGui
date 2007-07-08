@@ -126,6 +126,7 @@ ClearFileInfoStep1, Event ;clear contain of info file (Step1)
 ClearMainPlot, Event     ;clear main plot window
 ResetPositionOfSlider, Event ;reset color slider
 ResetAllOtherParameters, Event
+ResetRescaleBase,Event
 END
 
 ;validate the rescalling parameters
@@ -134,9 +135,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;tells the program that it's not the first time plotting
 (*global).FirstTimePlotting = 0
-;plot all loaded files
-ListLongFileName = (*(*global).ListOfLongFileName)
-plot_loaded_file, Event, ListLongFileName
+DoPlot,Event
 END
 
 ;reset X and Y axis rescalling
@@ -145,9 +144,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;tells the program that it's like first time plotting
 (*global).FirstTimePlotting = 1
-;plot all loaded files
-ListLongFileName = (*(*global).ListOfLongFileName)
-plot_loaded_file, Event, ListLongFileName
+DoPlot, Event
 END
 
 
