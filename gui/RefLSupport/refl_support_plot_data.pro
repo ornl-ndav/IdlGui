@@ -1,3 +1,17 @@
+;This function returns 1 if the specified axis scale is linear
+;and 0 if it's logarithmic
+FUNCTION getScale, Event, axis
+if (axis EQ 'X') then begin
+   uname = 'XaxisLinLog' 
+endif else begin
+   uname = 'YaxisLinLog'
+endelse
+axis_id = widget_info(Event.top,find_by_uname=uname)
+widget_control, axis_id, get_value=value
+return, value
+END
+
+
 ;This function will retrieve the values of Xmin/max and Ymin/max
 FUNCTION retrieveXYMinMax, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -87,6 +101,9 @@ size = getSizeOfArray(ListLongFileName)
 draw_id = widget_info(Event.top, find_by_uname='plot_window')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
+
+IsXlin = getScale(Event,'X')
+IsYlin = getScale(Event,'Y')
 
 if (size EQ 1 AND $
    ListLongFileName[0] EQ '') then begin
@@ -190,10 +207,31 @@ endif else begin
                 flt1_first = flt1
 
                 if (FirstTimePlotting EQ 1) then begin
-                   plot,flt0, flt1
-                   errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                  
-                  
+              
+                     case IsXlin of
+                        0:begin
+                        case IsYlin of
+                           0: begin
+                              plot,flt0,flt1
+                           end
+                           1: begin
+                              plot,flt0,flt1,/ylog
+                           end
+                        endcase
+                     end
+                        1: begin
+                           case IsYlin of
+                              0: begin
+                                 plot,flt0,flt1,/xlog
+                              end
+                              1: begin
+                                 plot,flt0,flt1,/xlog,/ylog
+                              end
+                           endcase
+                        end
+                     endcase
+                     errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                                    
 ;populate min/max x/y axis
                    min_xaxis = min(flt0,max=max_xaxis,/nan)
                    min_yaxis = min(flt1,max=max_yaxis,/nan)
@@ -216,7 +254,28 @@ endif else begin
                   ymin = float(XYMinMax[2])
                   ymax = float(XYMinMax[3])
                   
-                  plot,flt0, flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                  case IsXlin of
+                        0:begin
+                        case IsYlin of
+                           0: begin
+                              plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                           end
+                           1: begin
+                              plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                           end
+                        endcase
+                     end
+                        1: begin
+                           case IsYlin of
+                              0: begin
+                                 plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                              end
+                              1: begin
+                                 plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                              end
+                           endcase
+                        end
+                     endcase               
                   errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
                   
                endelse
@@ -231,7 +290,28 @@ endif else begin
                ymin = float(XYMinMax[2])
                ymax = float(XYMinMax[3])
                   
-               plot,flt0, flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+               case IsXlin of
+                  0:begin
+                     case IsYlin of
+                        0: begin
+                           plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                        1: begin
+                           plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                     endcase
+                  end
+                  1: begin
+                     case IsYlin of
+                        0: begin
+                           plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                        1: begin
+                           plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                     endcase
+                  end
+               endcase            
                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
             endelse

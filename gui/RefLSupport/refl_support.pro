@@ -65,6 +65,11 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='ValidateButton'): begin
        ValidateButton, Event
     end
+    
+    ;--reset X and Y rescale button
+    Widget_Info(wWidget, FIND_BY_UNAME='ResetButton'): begin
+       ResetRescaleButton, Event
+    end
 
 
 
@@ -241,7 +246,7 @@ d78 = 70  ;distance between validate button and reset button
 axis_lin_log = ['lin','log']
 LabelSize    = [35,30]   ;scr_xsize and scr_ysize
 TextBoxSize  = [70,30]   ;scr_xsize and scr_ysize
-ResetButton  = [70,30]  ;scr_xsize and scr_ysize
+ResetButton  = [70,65]  ;scr_xsize and scr_ysize
 ValidateButton = [70,65] ;scr_xsize and scr_ysize
 ;xaxis
 XaxisLabelSize       = [5,$
@@ -270,10 +275,10 @@ ValidateButtonSize = [XAxisLinLogsize[0]+d67,$
                       XAxisLinLogSize[1],$
                       ValidateButton[0],$
                       ValidateButton[1]]
-XResetButtonSize     = [ValidateButtonSize[0]+d78,$
-                        ValidateButtonSize[1],$
-                        ResetButton[0],$
-                        ResetButton[1]]
+ResetButtonSize     = [ValidateButtonSize[0]+d78,$
+                       ValidateButtonSize[1],$
+                       ResetButton[0],$
+                       ResetButton[1]]
                                 
 ;yaxis
 yoff= 35
@@ -299,11 +304,6 @@ YaxisMaxTextFieldSize= [YaxisMaxLabelSize[0]+d45,$
                         TextBoxSize[1]]
 YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
-YResetButtonSize     = [ValidateButtonSize[0]+d78,$
-                        YAxisLinLogSize[1],$
-                        ResetButton[0],$
-                        ResetButton[1]]
-
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 ;--Step1--
@@ -729,13 +729,13 @@ ValidateButton = WIDGET_BUTTON(RescaleBase,$
                                UNAME='ValidateButton',$
                                VALUE='VALIDATE')
 
-XResetButton = WIDGET_BUTTON(RescaleBase,$
-                             XOFFSET=XResetButtonSize[0],$
-                             YOFFSET=XResetButtonSize[1],$
-                             SCR_XSIZE=XResetButtonSize[2],$
-                             SCR_YSIZE=XResetButtonSize[3],$
-                             UNAME='XResetButton',$
-                             VALUE='Reset X')
+ResetButton = WIDGET_BUTTON(RescaleBase,$
+                            XOFFSET=ResetButtonSize[0],$
+                            YOFFSET=ResetButtonSize[1],$
+                            SCR_XSIZE=ResetButtonSize[2],$
+                            SCR_YSIZE=ResetButtonSize[3],$
+                            UNAME='ResetButton',$
+                            VALUE='Reset X/Y')
 
 ;yaxis
 YaxisLabel = WIDGET_LABEL(RescaleBase,$
@@ -790,15 +790,6 @@ YaxisLinLog = CW_BGROUP(RescaleBase,$
                          SET_VALUE=0.0,$
                          row=1,$
                          uname='YaxisLinLog')      
-
-YResetButton = WIDGET_BUTTON(RescaleBase,$
-                             XOFFSET=YResetButtonSize[0],$
-                             YOFFSET=YResetButtonSize[1],$
-                             SCR_XSIZE=YResetButtonSize[2],$
-                             SCR_YSIZE=YResetButtonSize[3],$
-                             UNAME='YResetButton',$
-                             VALUE='Reset Y')
-
 
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
