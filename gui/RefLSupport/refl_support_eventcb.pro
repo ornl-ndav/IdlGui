@@ -128,8 +128,15 @@ ResetPositionOfSlider, Event ;reset color slider
 ResetAllOtherParameters, Event
 END
 
-
-
+;validate the rescalling parameters
+PRO ValidateButton, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).FirstTimePlotting = 0
+;plot all loaded files
+ListLongFileName = (*(*global).ListOfLongFileName)
+plot_loaded_file, Event, ListLongFileName
+END
 
 pro REFL_SUPPORT_EVENTCB
 end
@@ -141,6 +148,7 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 end
+
 
 
 

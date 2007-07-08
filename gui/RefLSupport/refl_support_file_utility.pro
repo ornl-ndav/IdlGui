@@ -121,13 +121,15 @@ ListOfLongFileName = (*(*global).ListOfLongFileName)
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
+
 ;if not
 endif else begin
    ;is this file not already listed 
    if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
-        ListOfFiles = [ListOfFiles,ShortFileName]
-        ListOfLongFileName = [ListOfLongFileName,LongFileName]
-        CreateArrays,Event   ;if a file is added, the Q1,Q2,SF... arrays are updated
+          (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
+          ListOfFiles = [ListOfFiles,ShortFileName]
+          ListOfLongFileName = [ListOfLongFileName,LongFileName]
+          CreateArrays,Event    ;if a file is added, the Q1,Q2,SF... arrays are updated
     endif
 endelse
 (*(*global).list_of_files) = ListOfFiles

@@ -60,6 +60,13 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
         steps_tab, Event, 1
     end
+    
+    ;--validate rescale
+    Widget_Info(wWidget, FIND_BY_UNAME='ValidateButton'): begin
+       ValidateButton, Event
+    end
+
+
 
 else:
     
@@ -84,7 +91,8 @@ endif else begin
 endelse
 
 global = ptr_new({  $
-                   FirstTimePlotting : 1,$         ;1 if first plot, 0 if not
+                   FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
+                   XYMinMax       : ptr_new(0L),$
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
