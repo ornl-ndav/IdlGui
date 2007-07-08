@@ -1,10 +1,57 @@
+;This function will retrieve the values of Xmin/max and Ymin/max
+FUNCTION retrieveXYMinMax, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;min-xaxis
+XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+widget_control, XminId, get_value=Xmin
+
+;max-xaxis
+XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+widget_control, XmaxId, get_value=Xmax
+
+;min-yaxis
+YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+widget_control, YminId, get_value=Ymin
+
+;max-yaxis
+YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+widget_control, YmaxId, get_value=Ymax
+
+return_array = [Xmin,Xmax,Ymin,Ymax]
+return, return_array
+END
+
+;This function creates the default xmin/max and ymin/max values
+;that will be used if one of the input is invalid
+PRO CreateDefaultXYMinMax, Event,$
+                           min_xaxis,$
+                           max_xaxis,$
+                           min_yaxis,$
+                           max_yaxis
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+XYMinMax = (*(*global).XYMinMax)
+XYMinMax = strarr(4)
+
+XYMinMax[0] = min_xaxis
+XYMinMax[1] = max_xaxis
+XYMinMax[2] = min_yaxis
+XYMinMax[3] = max_yaxis
+
+(*(*global).XYMinMax) = XYMinMax
+END
+
+
 ;This function populates the x/y axis text boxes
 PRO PopulateXYScaleAxis, Event, $
                          min_xaxis, $
                          max_xaxis, $
                          min_yaxis, $
                          max_yaxis
-
 
 ;min-xaxis
 XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
@@ -31,6 +78,9 @@ PRO plot_loaded_file, Event, ListLongFileName
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;1 if first load, 0 otherwise
+FirstTimePlotting = (*global).FirstTimePlotting
 
 size = getSizeOfArray(ListLongFileName)
 
@@ -138,22 +188,50 @@ endif else begin
             if (FirstPass EQ 1) then begin
 
                 flt1_first = flt1
-                plot,flt0, flt1
-                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                FirstPass = 0
-            
-                ;populate min/max x/y axis
-                min_xaxis = min(flt0,max=max_xaxis,/nan)
-                min_yaxis = min(flt1,max=max_yaxis,/nan)
-                PopulateXYScaleAxis, Event, $
-                                    min_xaxis, $
-                                    max_xaxis, $
-                                    min_yaxis, $
-                                    max_yaxis
+
+                if (FirstTimePlotting EQ 1) then begin
+                   plot,flt0, flt1
+                   errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                  
+                  
+;populate min/max x/y axis
+                   min_xaxis = min(flt0,max=max_xaxis,/nan)
+                   min_yaxis = min(flt1,max=max_yaxis,/nan)
+                   PopulateXYScaleAxis, Event, $
+                                        min_xaxis, $
+                                        max_xaxis, $
+                                        min_yaxis, $
+                                        max_yaxis
+                   CreateDefaultXYMinMax,Event,$
+                                         min_xaxis,$
+                                         max_xaxis,$
+                                         min_yaxis,$
+                                         max_yaxis
+  
+               endif else begin
+                 
+                  XYMinMax = retrieveXYMinMax(Event)
+                  xmin = float(XYMinMax[0])
+                  xmax = float(XYMinMax[1])
+                  ymin = float(XYMinMax[2])
+                  ymax = float(XYMinMax[3])
+                  
+                  plot,flt0, flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                  errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                  
+               endelse
+
+               FirstPass = 0
 
             endif else begin
 
-               plot, flt0, flt1_first,/noerase
+               XYMinMax = retrieveXYMinMax(Event)
+               xmin = float(XYMinMax[0])
+               xmax = float(XYMinMax[1])
+               ymin = float(XYMinMax[2])
+               ymax = float(XYMinMax[3])
+                  
+               plot,flt0, flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
             endelse
@@ -163,9 +241,5 @@ endif else begin
     endfor
 
 endelse
-
-min = min(flt1,max=max,/nan)
-print, 'min is ' + strcompress(min)
-print, 'max is ' + strcompress(max)
 
 END
