@@ -417,3 +417,15 @@ CASE (CurrTabSelect) OF
    end
 ENDCASE
 END
+
+
+PRO populateColorLabel, Event, LongFileName
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+SelectedIndex = getSelectedIndex(Event,'list_of_files_droplist')
+ListShortFileName = (*(*global).list_of_files)
+fileName = ListShortFileName[SelectedIndex]
+fileName = '(-> ' + fileName + ')'
+ColorLabelIndex = widget_info(Event.top,find_by_uname='ColorFileLabel')
+widget_control, ColorLabelIndex, set_value=fileName
+END
