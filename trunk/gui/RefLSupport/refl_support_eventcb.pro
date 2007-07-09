@@ -37,6 +37,7 @@ if (PrevTabSelect NE CurrTabSelect OR $
 endif
 END
 
+
 ;load file button in step 1
 PRO LOAD_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -51,6 +52,7 @@ if (LongfileName NE '') then begin
    ;add file to list of droplist (step1, step2 and 3)
    add_new_file_to_droplist, Event, ShortFileName, LongFileName 
    display_info_about_selected_file, Event, LongFileName
+   populateColorLabel, Event, LongFileName
 endif
 
 ;plot all loaded files
@@ -84,6 +86,7 @@ if (LongFileName EQ '') then begin
    clear_info_about_selected_file, Event
 endif else begin
    display_info_about_selected_file, Event, LongFileName
+   populateColorLabel, Event, LongFileName
 endelse
 END
 

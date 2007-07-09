@@ -150,9 +150,13 @@ LoadButton           = [5  , 5  , 100 , 30 ]
 ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 FileInfoSize         = [5  , 40 , 510 , 260]
-ListOfColorLabelSize = [5  , 310, 100 , 30 ]
-ListOfColorSize      = [110, 300, 310 , 35 ]
-BlackLabelsize       = [100, 330, 50  , 30 ]
+ListOfColorLabelSize = [5  , 310, 50 , 30 ]
+ListOfColorSize      = [60 , 300, 310 , 35 ]
+ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
+                        ListOfColorLabelSize[1],$
+                        150,$
+                        35]
+BlackLabelsize       = [50, 330, 50  , 30 ]
 ColorYoff = 55
 BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
                         330, 50  , 30 ]
@@ -313,7 +317,7 @@ Step3Title = 'RESCALE FILES'
 LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
-ListOfColorTitle = 'Color index:'
+ListOfColorTitle = 'Color:'
 BlackLabelTitle = 'Black'
 BlueLabelTitle = 'Blue'
 RedLabelTitle = 'Red'
@@ -426,6 +430,14 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      SCR_YSIZE=ListOfColorSize[3],$
                                      TITLE=ListOfColorTitle,$
                                      VALUE=ColorSliderDefaultValue)
+
+ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
+                              UNAME='ColorFileLabel',$
+                              XOFFSET=ColorFileLabelSize[0],$
+                              YOFFSET=ColorFileLabelSize[1],$
+                              SCR_XSIZE=ColorFileLabelSize[2],$
+                              SCR_YSIZE=ColorFileLabelSize[3],$
+                              VALUE='')
 
 BlackLabel = WIDGET_LABEL(STEP1_BASE,$
                           XOFFSET=BlackLabelSize[0],$
