@@ -121,15 +121,17 @@ end
 ;reset full session
 PRO RESET_ALL_BUTTON, Event
 ;reset all arrays
-ResetArrays, Event       ;reset all arrays
+ResetArrays, Event            ;reset all arrays
 ReinitializeColorArray, Event
-ClearAllDropLists, Event ;clear all droplists
-ClearAllTextBoxes, Event ;clear all textBoxes
-ClearFileInfoStep1, Event ;clear contain of info file (Step1)
-ClearMainPlot, Event     ;clear main plot window
-ResetPositionOfSlider, Event ;reset color slider
+ClearAllDropLists, Event      ;clear all droplists
+ClearAllTextBoxes, Event      ;clear all textBoxes
+ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
+ClearMainPlot, Event          ;clear main plot window
+ResetPositionOfSlider, Event  ;reset color slider
 ResetAllOtherParameters, Event
 ResetRescaleBase,Event
+ActivateRescaleBase, Event, 0
+ActivateClearFileButton, Event, 0
 END
 
 ;validate the rescalling parameters

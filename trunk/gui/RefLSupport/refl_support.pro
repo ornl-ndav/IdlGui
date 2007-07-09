@@ -677,7 +677,7 @@ RescaleBase = WIDGET_BASE(MAIN_BASE,$
                           SCR_XSIZE=RescaleBaseSize[2],$
                           SCR_YSIZE=RescaleBaseSize[3],$
                           FRAME=1,$
-                          SENSITIVE=1)
+                          MAP=0)
 
 ;xaxis
 XaxisLabel = WIDGET_LABEL(RescaleBase,$

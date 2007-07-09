@@ -121,7 +121,7 @@ ListOfLongFileName = (*(*global).ListOfLongFileName)
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
-
+    ActivateRescaleBase,Event,1
 ;if not
 endif else begin
    ;is this file not already listed 
@@ -153,6 +153,7 @@ endelse
 EnableStep1ClearFile, Event, validate
 SelectLastLoadedFile, Event
 EnableMainBaseButtons, Event, validate
+ActivateClearFileButton, Event, validate
 END
 
 
@@ -242,6 +243,7 @@ ListOfFilesSize = getSizeOfArray(ListOfFiles)
 ;if array contains only 1 element, reset all arrays
 if (ListOfFilesSize EQ 1) then begin
    ResetArrays,Event
+   ActivateRescaleBase, Event, 0
 endif else begin
    RemoveIndexFromList, Event, iIndex
 endelse
@@ -428,4 +430,19 @@ fileName = ListShortFileName[SelectedIndex]
 fileName = '(-> ' + fileName + ')'
 ColorLabelIndex = widget_info(Event.top,find_by_uname='ColorFileLabel')
 widget_control, ColorLabelIndex, set_value=fileName
+END
+
+
+;this function activate (if validateMap=1) or desactive-hide(if validateMap=0)
+;the RescaleBase
+PRO ActivateRescaleBase, Event, validateMap
+RescaleBaseId = widget_info(Event.top,find_by_uname='RescaleBase')
+widget_control, RescaleBaseId, map=validateMap
+END
+
+
+;This function activates or not the CLEAR file button
+PRO ActivateClearFileButton, Event, ValidateButton
+ClearButtonId = widget_info(Event.top,find_by_uname='clear_button')
+widget_control, ClearButtonId, sensitive=ValidateButton
 END
