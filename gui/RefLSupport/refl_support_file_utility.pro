@@ -154,6 +154,7 @@ EnableStep1ClearFile, Event, validate
 SelectLastLoadedFile, Event
 EnableMainBaseButtons, Event, validate
 ActivateClearFileButton, Event, validate
+ActivateColorSlider, Event, Validate
 END
 
 
@@ -445,4 +446,11 @@ END
 PRO ActivateClearFileButton, Event, ValidateButton
 ClearButtonId = widget_info(Event.top,find_by_uname='clear_button')
 widget_control, ClearButtonId, sensitive=ValidateButton
+END
+
+
+;This function clear the contain of the color label 
+PRO ClearColorLabel, Event
+ColorFileLabelId = widget_info(Event.top,find_by_uname='ColorFileLabel')
+widget_control, ColorFileLabelId, set_value=''
 END
