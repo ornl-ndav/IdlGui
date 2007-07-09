@@ -28,7 +28,8 @@ widget_control, base_file_droplist_id, set_value=ListOfFiles
 ;update list of file in droplists of step3
 step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
 widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
-step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
+step3_work_on_file_droplist_id = widget_info(Event.top,$
+                                             find_by_uname='step3_work_on_file_droplist')
 widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
 END
 
@@ -47,7 +48,8 @@ widget_control, base_file_droplist_id, set_value=['']
 ;clear off list of file in droplists of step3
 step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
 widget_control, step3_base_file_droplist_id, set_value=['']
-step3_work_on_file_droplist_id = widget_info(Event.top,find_by_uname='step3_work_on_file_droplist')
+step3_work_on_file_droplist_id = widget_info(Event.top,$
+                                             find_by_uname='step3_work_on_file_droplist')
 widget_control, step3_work_on_file_droplist_id, set_value=['']
 END
 
@@ -101,4 +103,44 @@ widget_control,id,get_uvalue=global
 defaultColorSliderPosition = (*global).ColorSliderDefaultValue
 list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
 widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
+END
+
+
+PRO populateColorLabel, Event, LongFileName
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+SelectedIndex = getSelectedIndex(Event,'list_of_files_droplist')
+ListShortFileName = (*(*global).list_of_files)
+fileName = ListShortFileName[SelectedIndex]
+fileName = '(-> ' + fileName + ')'
+ColorLabelIndex = widget_info(Event.top,find_by_uname='ColorFileLabel')
+widget_control, ColorLabelIndex, set_value=fileName
+END
+
+
+;this function activate (if validateMap=1) or desactive-hide(if validateMap=0)
+;the RescaleBase
+PRO ActivateRescaleBase, Event, validateMap
+RescaleBaseId = widget_info(Event.top,find_by_uname='RescaleBase')
+widget_control, RescaleBaseId, map=validateMap
+END
+
+
+;This function activates or not the CLEAR file button
+PRO ActivateClearFileButton, Event, ValidateButton
+ClearButtonId = widget_info(Event.top,find_by_uname='clear_button')
+widget_control, ClearButtonId, sensitive=ValidateButton
+END
+
+
+;This function clear the contain of the color label 
+PRO ClearColorLabel, Event
+ColorFileLabelId = widget_info(Event.top,find_by_uname='ColorFileLabel')
+widget_control, ColorFileLabelId, set_value=''
+END
+
+;This function enable the color slider
+PRO ActivateColorSlider, Event, ValidateSlider
+ColorSliderId = widget_info(Event.top, find_by_uname='list_of_color_slider')
+widget_control, ColorSliderId, sensitive=ValidateSlider
 END

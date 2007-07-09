@@ -429,7 +429,8 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      SCR_XSIZE=ListOfColorSize[2],$
                                      SCR_YSIZE=ListOfColorSize[3],$
                                      TITLE=ListOfColorTitle,$
-                                     VALUE=ColorSliderDefaultValue)
+                                     VALUE=ColorSliderDefaultValue,$
+                                     sensitive=0)
 
 ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
                               UNAME='ColorFileLabel',$

@@ -84,9 +84,13 @@ PRO DISPLAY_INFO_ABOUT_FILE, Event
 LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
 if (LongFileName EQ '') then begin
    clear_info_about_selected_file, Event
+   ActivateClearFileButton, Event, 0
+   ClearColorLabel, Event
+   ActivateColorSlider,Event,0
 endif else begin
    display_info_about_selected_file, Event, LongFileName
    populateColorLabel, Event, LongFileName
+   ActivateColorSlider,Event,1
 endelse
 END
 
@@ -132,7 +136,9 @@ ResetAllOtherParameters, Event
 ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
+ClearColorLabel, Event
 END
+
 
 ;validate the rescalling parameters
 PRO ValidateButton, Event
@@ -142,6 +148,7 @@ widget_control,id,get_uvalue=global
 (*global).FirstTimePlotting = 0
 DoPlot,Event
 END
+
 
 ;reset X and Y axis rescalling
 PRO ResetRescaleButton, Event
