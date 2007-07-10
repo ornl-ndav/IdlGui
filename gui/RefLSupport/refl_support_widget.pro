@@ -1,3 +1,79 @@
+;This function returns 1 if the first button is validated
+;and 0 if it's the second
+FUNCTION getButtonValidated, Event, uname
+TOFid = widget_info(Event.top,find_by_uname=uname)
+widget_control, TOFid, get_value=value
+return, value
+END
+
+
+;This function returns 1 if the input can be turned into
+;a float, and 0 if it can't
+FUNCTION isValueFloat, textString
+result = isNumeric(textString)
+if (result EQ 0) then begin
+    return, 0
+endif else begin
+    return, 1
+endelse
+END
+
+
+;This function returns the contain of the Text Field
+FUNCTION getTextFieldValue, Event, uname
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = string
+RETURN, string
+END
+
+
+;This function checks the Input File Format GUI
+;and returns:
+; - 0 if it's ok
+; - 1 if data reduction is blank with TOF
+; - 2 if angle is blank with TOF
+; - 3 if data reduction value is wrong with TOF
+; - 4 if angle value is wrong with TOF
+FUNCTION InputParameterStatus, Event
+
+isTOFselected = getButtonValidated(Event,'InputFileFormat')
+if (isTOFselected EQ 0) then begin ;TOF is selected
+  
+    distanceTextFieldValue = $
+      getTextFieldValue(Event,$
+                        'ModeratorDetectorDistanceTextField')
+    distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
+;distance text field is blank
+    if (distanceTextFieldValue EQ '') then begin
+        return, 1
+    endif else begin
+;distance text field can't be turned into a float
+        if (isValueFloat(distanceTextFieldValue) NE 1) then begin
+            return, 3
+        endif
+    endelse
+    
+    angleTextFieldValue = $
+      getTextFieldValue(Event,$
+                        'AngleTextField')
+    angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
+;angle text field is blank
+    if (angleTextFieldValue EQ '') then begin
+        return, 2
+    endif else begin
+;angle text field can't be turned into a float
+        if (isValueFloat(angleTextFieldValue) NE 1) then begin
+            return, 4
+        endif
+    endelse
+    return,0
+endif else begin ;Q selected, so no need to check the GUI
+    return,0
+endelse
+END
+
+
+
 PRO ActivateButton, Event, uname, validate
 unameId = widget_info(Event.top,find_by_uname=uname)
 widget_control, unameId, sensitive=validate
@@ -157,5 +233,23 @@ END
 
 ;This function will check if the LOAD button can be validated or no
 PRO checkLoadButtonStatus, Event
-print, 'in checkLoadButtonStatus'
+
+InputParameter = InputParameterStatus(Event)
+CASE (InputParameter) of
+    0: BEGIN ;yes two thumbs up
+        ;validate Load button
+    END
+    1: BEGIN ;distance field is missing
+        print, 'case is 1'
+    END
+    2: BEGIN ;angle field is missing
+        print, 'case is 2'
+    END
+    3: BEGIN ;distance field is invalid (is not a number)
+        print, 'case is 3'
+    END
+    4: BEGIN ;angle field is invalid
+        print, 'case is 4'
+    END
+ENDCASE
 END
