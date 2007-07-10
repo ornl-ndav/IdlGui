@@ -186,19 +186,22 @@ END
 
 ;TOF or Q buttons
 PRO InputFileFormat, Event
-ValidateButton = getButtonValidated(Event, 'InputFileFormat')
-if (ValidateButton EQ 0) then begin
+ValidateButton = getButtonValidated(Event,'InputFileFormat')
+if (ValidateButton EQ 0) then begin ;TOF
     Validate = 1
-endif else begin
+endif else begin ;Q
     Validate = 0
 endelse
-ModeratorDetectorDistanceBaseId = widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
+ModeratorDetectorDistanceBaseId = $
+  widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
 widget_control, ModeratorDetectorDistanceBaseId, map=Validate
+checkLoadButtonStatus, Event
 END
 
 
 pro REFL_SUPPORT_EVENTCB
 end
+
 
 pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)

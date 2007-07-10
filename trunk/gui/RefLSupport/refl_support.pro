@@ -32,6 +32,16 @@ case Event.id of
         InputFileFormat, Event
     end
 
+    ;when distance text field is edited
+    Widget_Info(wWidget, FIND_BY_UNAME='ModeratorDetectorDistanceTextField'): begin
+        checkLoadButtonStatus, Event
+    end
+
+    ;when angle text field is edited
+    Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): begin
+        checkLoadButtonStatus, Event
+    end
+
     ;--step2--
     Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
          step2_base_file_droplist, Event
@@ -472,7 +482,8 @@ ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                                                  UNAME='ModeratorDetectorDistanceTextField',$
                                                  VALUE=distanceMD,$
                                                  /editable,$
-                                                /align_left)
+                                                 /align_left,$
+                                                 /all_events)
 
 AngleUnitList = ['rad','degree']
 AngleUnits = CW_BGROUP(ModeratorDetectorDistanceBase,$
@@ -500,7 +511,8 @@ AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                              SCR_YSIZE=AngleTextFieldSize[3],$
                              VALUE='',$
                              /EDITABLE,$
-                            /align_left)
+                             /align_left,$
+                             /all_events)
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
