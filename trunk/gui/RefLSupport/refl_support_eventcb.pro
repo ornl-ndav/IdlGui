@@ -112,15 +112,18 @@ PRO STEP3_BASE_FILE_DROPLIST, Event
 steps_tab, Event, 1
 end
 
+
 ;work on file droplist in step 3
 PRO STEP3_WORK_ON_FILE_DROPLIST, Event
 steps_tab, Event, 1
 end
 
+
 ;run calculation of base->work on in step 3
 PRO RUN_STEP3, Event
   print, "in run_step3"
 end
+
 
 ;reset full session
 PRO RESET_ALL_BUTTON, Event
@@ -157,6 +160,19 @@ widget_control,id,get_uvalue=global
 ;tells the program that it's like first time plotting
 (*global).FirstTimePlotting = 1
 DoPlot, Event
+END
+
+
+;TOF or Q buttons
+PRO InputFileFormat, Event
+ValidateButton = getButtonValidated(Event, 'InputFileFormat')
+if (ValidateButton EQ 0) then begin
+    Validate = 1
+endif else begin
+    Validate = 0
+endelse
+ModeratorDetectorDistanceBaseId = widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
+widget_control, ModeratorDetectorDistanceBaseId, map=Validate
 END
 
 
