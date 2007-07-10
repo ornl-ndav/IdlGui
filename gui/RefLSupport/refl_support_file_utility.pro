@@ -7,6 +7,78 @@ return, value
 END
 
 
+;This function returns 1 if the input can be turned into
+;a float, and 0 if it can't
+FUNCTION isValueFloat, textString
+error_plot_status = 0
+catch, error_plot_status
+;first remove spaces
+textString = strcompress(textString,/remove_all)
+if (error_plot_status NE 0) then begin
+    return, 0
+endif else begin
+    b=float(textString)
+endelse
+RETURN, 1
+END
+
+
+;This function returns the contain of the Text Field
+FUNCTION getTextFieldValue, Event, uname
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = string
+RETURN, string
+END
+
+
+;This function checks the Input File Format GUI
+;and returns:
+; - 0 if it's ok
+; - 1 if data reduction is blank with TOF
+; - 2 if angle is blank with TOF
+; - 3 if data reduction value is wrong with TOF
+; - 4 if angle value is wrong with TOF
+FUNCTION InputParameterStatus, Event
+
+isTOFselected = getButtonValidated(Event,'InputFileFormat')
+if (isTOFselected EQ 0) then begin ;TOF is selected
+  
+    distanceTextFieldValue = $
+      getTextFieldValue(Event,$
+                        'ModeratorDetectorDistanceTextField')
+    distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
+;distance text field is blank
+    if (distanceTextFieldValue EQ '') then begin
+        return, 1
+    endif else begin
+;distance text field can't be turned into a float
+        if (isValueFloat(distanceTextFieldValue) NE 1) then begin
+            return, 3
+        endif
+    endelse
+    
+    angleTextFieldValue = $
+      getTextFieldValue(Event,$
+                        'AngleTextField')
+    angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
+;angle text field is blank
+    if (angleTextFieldValue EQ '') then begin
+        return, 2
+    endif else begin
+;angle text field can't be turned into a float
+        if (isValueFloat(angleTextFieldValue) NE 1) then begin
+            return, 4
+        endif
+    endelse
+    return,0
+endif else begin ;Q selected, so no need to check the GUI
+    return,0
+endelse
+END
+
+
+
+
 ;This function returns the value found in the text field given
 FUNCTION getValue, Event, uname
 unameId = widget_info(Event.top,find_by_uname=uname)
@@ -194,7 +266,7 @@ PRO display_info_about_selected_file, Event, LongFileName
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 no_file = 0
-nbr_line = fix(20) ;nbr of lines to display
+nbr_line = (*global).NbrInfoLineToDisplay
 catch, no_file
 if (no_file NE 0) then begin
     plot_file_found = 0    

@@ -74,12 +74,8 @@ case Event.id of
        ResetRescaleButton, Event
     end
 
-
-
 else:
-    
 endcase
-
 end
 
 
@@ -100,6 +96,7 @@ endelse
 
 global = ptr_new({  $
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
+                   NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box
                    distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
                    XYMinMax       : ptr_new(0L),$
                    ucams          : '',$             ;remote user ucams
@@ -154,11 +151,12 @@ LoadButton           = [5  , 5  , 100 , 30 ]
 ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
-InputFileFormatSize  = [130 , InputFileFormatLabelSize[1]]
+InputFileFormatSize  = [130 , $
+                        InputFileFormatLabelSize[1]]
 ModeratorDetectorDistanceBase = [210,$
                                  InputFileFormatLabelSize[1]-5,$
                                  400,$
-                                 40]
+                                 80]
 ModeratorDetectorDistanceLabelSize = [25,$
                                       5,$
                                       120,$
@@ -167,25 +165,37 @@ ModeratorDetectorDistanceTextFieldSize = [145,$
                                           ModeratorDetectorDistanceLabelSize[1],$
                                           100,$
                                           30]
-FileInfoSize         = [5  , 90 , 510 , 200]
-ListOfColorLabelSize = [5  , 310, 50 , 30 ]
-ListOfColorSize      = [60 , 300, 310 , 35 ]
+yoff = 35
+AngleLabelSize = [25,$
+                  ModeratorDetectorDistanceLabelSize[1]+yoff,$
+                  50,$
+                  ModeratorDetectorDistanceLabelSize[3]]
+
+AngleTextFieldSize = [75,$
+                      AngleLabelSize[1],$
+                      80,$
+                      ModeratorDetectorDistanceTextFieldSize[3]]
+AngleUnitsSize = [ 160, AngleLabelSize[1]]
+
+FileInfoSize         = [5 , 120, 510 , 200]
+ListOfColorLabelSize = [5 , 330, 50  , 30 ]
+ListOfColorSize      = [60, 320, 310 , 35 ]
 ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
                         ListOfColorLabelSize[1],$
                         150,$
                         35]
-BlackLabelsize       = [50, 330, 50  , 30 ]
+BlackLabelsize       = [50, 350, 50  , 30 ]
 ColorYoff = 55
 BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
-                        330, 50  , 30 ]
+                        BlackLabelSize[1], 50 , 30 ]
 RedLabelSize         = [BlackLabelSize[0]+2*ColorYoff,$
-                        330, 50  , 30 ]
+                       BlackLabelSize[1], 50 , 30 ]
 OrangeLabelSize      = [BlackLabelSize[0]+3*ColorYoff,$
-                        330, 50  , 30 ]
+                        BlackLabelSize[1], 50  , 30 ]
 YellowLabelSize      = [BlackLabelSize[0]+4*ColorYoff,$
-                        330, 50  , 30 ]
+                        BlackLabelSize[1], 50  , 30 ]
 WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
-                        330, 50  , 30 ]
+                        BlackLabelSize[1], 50  , 30 ]
 
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
@@ -461,7 +471,36 @@ ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                                                  SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
                                                  UNAME='ModeratorDetectorDistanceTextField',$
                                                  VALUE=distanceMD,$
-                                                 /editable)
+                                                 /editable,$
+                                                /align_left)
+
+AngleUnitList = ['rad','degree']
+AngleUnits = CW_BGROUP(ModeratorDetectorDistanceBase,$
+                       AngleUnitList,$
+                       /exclusive,$
+                       /return_name,$
+                       XOFFSET=AngleUnitsSize[0],$
+                       YOFFSET=AngleUnitsSize[1],$
+                       SET_VALUE=0.0,$
+                       row=1,$
+                       uname='AngleUnits')                 
+
+AngleLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
+                          XOFFSET=AngleLabelSize[0],$
+                          YOFFSET=AngleLabelSize[1],$
+                          SCR_XSIZE=AngleLabelSize[2],$
+                          SCR_YSIZE=AngleLabelSize[3],$
+                          VALUE='Angle:')
+
+AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
+                             UNAME='AngleTextField',$
+                             XOFFSET=AngleTextFieldSize[0],$
+                             YOFFSET=AngleTextFieldSize[1],$
+                             SCR_XSIZE=AngleTextFieldSize[2],$
+                             SCR_YSIZE=AngleTextFieldSize[3],$
+                             VALUE='',$
+                             /EDITABLE,$
+                            /align_left)
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
@@ -868,8 +907,8 @@ YaxisLinLog = CW_BGROUP(RescaleBase,$
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
 end
+
 
 ;
 ; Empty stub procedure used for autoloading.

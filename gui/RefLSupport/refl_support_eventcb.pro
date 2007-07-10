@@ -43,21 +43,42 @@ PRO LOAD_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-LongFileName=OPEN_FILE(Event) ;launch the program that open the OPEN IDL FILE Window
+;first check that if Input File format is TOF, distance and angle are
+;there
+InputParameter = InputParameterStatus(Event)
+CASE (InputParameter) of
+    0: BEGIN ;yes two thumbs up
+        print, 'case is 0'
 
-;continue only if a file has been selected
-if (LongfileName NE '') then begin
-   ;get only the file name (without path) of file
-   ShortFileName = get_file_name_only(LongFileName)    
-   ;add file to list of droplist (step1, step2 and 3)
-   add_new_file_to_droplist, Event, ShortFileName, LongFileName 
-   display_info_about_selected_file, Event, LongFileName
-   populateColorLabel, Event, LongFileName
-endif
+;;launch the program that open the OPEN IDL FILE window
+;        LongFileName=OPEN_FILE(Event) 
+;;continue only if a file has been selected
+;        if (LongfileName NE '') then begin
+;;get only the file name (without path) of file
+;            ShortFileName = get_file_name_only(LongFileName)    
+;;add file to list of droplist (step1, step2 and 3)
+;            add_new_file_to_droplist, Event, ShortFileName, LongFileName 
+;            display_info_about_selected_file, Event, LongFileName
+;            populateColorLabel, Event, LongFileName
+;        endif
+;;plot all loaded files
+;        ListLongFileName = (*(*global).ListOfLongFileName)
+;        plot_loaded_file, Event, ListLongFileName
+    END
+    1: BEGIN ;distance field is missing
+        print, 'case is 1'
+    END
+    2: BEGIN ;angle field is missing
+        print, 'case is 2'
+    END
+    3: BEGIN ;distance field is invalid (is not a number)
+        print, 'case is 3'
+    END
+    4: BEGIN ;angle field is invalid
+        print, 'case is 4'
+    END
+ENDCASE
 
-;plot all loaded files
-ListLongFileName = (*(*global).ListOfLongFileName)
-plot_loaded_file, Event, ListLongFileName
 END
 
 
