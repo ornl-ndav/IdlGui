@@ -150,12 +150,16 @@ ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
 InputFileFormatSize  = [130 , InputFileFormatLabelSize[1]]
-ModeratorDetectorDistanceLabelSize = [150,$
-                                      InputFileFormatLabelSize[1],$
-                                      80,$
+ModeratorDetectorDistanceBase = [200,$
+                                 InputFileFormatLabelSize[1]-5,$
+                                 400,$
+                                 40]
+ModeratorDetectorDistanceLabelSize = [5,$
+                                      5,$
+                                      120,$
                                       30]
-ModeratorDetectorDistanceTextFieldSize = [200,$
-                                          InputFileFormatLabelSize[1],$
+ModeratorDetectorDistanceTextFieldSize = [155,$
+                                          ModeratorDetectorDistanceLabelSize[1],$
                                           100,$
                                           30]
 FileInfoSize         = [5  , 90 , 510 , 200]
@@ -430,7 +434,28 @@ InputFileFormat = CW_BGROUP(STEP1_BASE,$
                             row=1,$
                             uname='InputFileFormat')                 
 
+ModeratorDetectorDistanceBase = WIDGET_BASE(STEP1_BASE,$
+                                            UNAME='ModeratorDetectorDistanceBase',$
+                                            XOFFSET=ModeratorDetectorDistanceBase[0],$
+                                            YOFFSET=ModeratorDetectorDistanceBase[1],$
+                                            SCR_XSIZE=ModeratorDetectorDistanceBase[2],$
+                                            SCR_YSIZE=ModeratorDetectorDistanceBase[3])
 
+ModeratorDetectorDistanceLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
+                                              XOFFSET=ModeratorDetectorDistanceLabelSize[0],$
+                                              YOFFSET=ModeratorDetectorDistanceLabelSize[1],$
+                                              SCR_XSIZE=ModeratorDetectorDistanceLabelSize[2],$
+                                              SCR_YSIZE=ModeratorDetectorDistanceLabelSize[3],$
+                                              VALUE='Distance M-D (m): ')
+
+
+ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
+                                                 XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
+                                                 YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
+                                                 SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
+                                                 SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
+                                                 UNAME='ModeratorDetectorDistanceTextField',$
+                                                 /editable)
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
