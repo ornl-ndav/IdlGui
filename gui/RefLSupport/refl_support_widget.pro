@@ -1,3 +1,9 @@
+PRO ActivateButton, Event, uname, validate
+unameId = widget_info(Event.top,find_by_uname=uname)
+widget_control, unameId, sensitive=validate
+END
+
+
 PRO EnableStep1ClearFile, Event, validate
 ClearFileId = widget_info(Event.top, find_by_uname='clear_button')
 widget_control, ClearFileId, sensitive=validate
@@ -26,7 +32,8 @@ widget_control, list_of_files_droplist_id, set_value=ListOfFiles
 base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
 widget_control, base_file_droplist_id, set_value=ListOfFiles
 ;update list of file in droplists of step3
-step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
+step3_base_file_droplist_id = $
+  widget_info(Event.top,find_by_uname='step3_base_file_droplist')
 widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
 step3_work_on_file_droplist_id = widget_info(Event.top,$
                                              find_by_uname='step3_work_on_file_droplist')
@@ -46,7 +53,8 @@ widget_control, list_of_files_droplist_id, set_value=['']
 base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
 widget_control, base_file_droplist_id, set_value=['']
 ;clear off list of file in droplists of step3
-step3_base_file_droplist_id = widget_info(Event.top,find_by_uname='step3_base_file_droplist')
+step3_base_file_droplist_id = $
+  widget_info(Event.top,find_by_uname='step3_base_file_droplist')
 widget_control, step3_base_file_droplist_id, set_value=['']
 step3_work_on_file_droplist_id = widget_info(Event.top,$
                                              find_by_uname='step3_work_on_file_droplist')
@@ -139,8 +147,15 @@ ColorFileLabelId = widget_info(Event.top,find_by_uname='ColorFileLabel')
 widget_control, ColorFileLabelId, set_value=''
 END
 
+
 ;This function enable the color slider
 PRO ActivateColorSlider, Event, ValidateSlider
 ColorSliderId = widget_info(Event.top, find_by_uname='list_of_color_slider')
 widget_control, ColorSliderId, sensitive=ValidateSlider
+END
+
+
+;This function will check if the LOAD button can be validated or no
+PRO checkLoadButtonStatus, Event
+print, 'in checkLoadButtonStatus'
 END

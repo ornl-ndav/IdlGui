@@ -10,16 +10,12 @@ END
 ;This function returns 1 if the input can be turned into
 ;a float, and 0 if it can't
 FUNCTION isValueFloat, textString
-error_plot_status = 0
-catch, error_plot_status
-;first remove spaces
-textString = strcompress(textString,/remove_all)
-if (error_plot_status NE 0) then begin
+result = isNumeric(textString)
+if (result EQ 0) then begin
     return, 0
 endif else begin
-    b=float(textString)
+    return, 1
 endelse
-RETURN, 1
 END
 
 
@@ -75,8 +71,6 @@ endif else begin ;Q selected, so no need to check the GUI
     return,0
 endelse
 END
-
-
 
 
 ;This function returns the value found in the text field given
