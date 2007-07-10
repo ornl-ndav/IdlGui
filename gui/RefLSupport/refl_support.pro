@@ -27,7 +27,11 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
         clear_file, Event
     end
-    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='InputFileFormat'): begin
+        InputFileFormat, Event
+    end
+
     ;--step2--
     Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
          step2_base_file_droplist, Event
@@ -96,6 +100,7 @@ endelse
 
 global = ptr_new({  $
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
+                   distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
                    XYMinMax       : ptr_new(0L),$
                    ucams          : '',$             ;remote user ucams
                    file_extension : '.txt',$         ;file extension of file to load
@@ -150,15 +155,15 @@ ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
 InputFileFormatSize  = [130 , InputFileFormatLabelSize[1]]
-ModeratorDetectorDistanceBase = [200,$
+ModeratorDetectorDistanceBase = [210,$
                                  InputFileFormatLabelSize[1]-5,$
                                  400,$
                                  40]
-ModeratorDetectorDistanceLabelSize = [5,$
+ModeratorDetectorDistanceLabelSize = [25,$
                                       5,$
                                       120,$
                                       30]
-ModeratorDetectorDistanceTextFieldSize = [155,$
+ModeratorDetectorDistanceTextFieldSize = [145,$
                                           ModeratorDetectorDistanceLabelSize[1],$
                                           100,$
                                           30]
@@ -448,13 +453,14 @@ ModeratorDetectorDistanceLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
                                               SCR_YSIZE=ModeratorDetectorDistanceLabelSize[3],$
                                               VALUE='Distance M-D (m): ')
 
-
+distanceMD = strcompress((*global).distanceMD)
 ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                                                  XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
                                                  YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
                                                  SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
                                                  SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
                                                  UNAME='ModeratorDetectorDistanceTextField',$
+                                                 VALUE=distanceMD,$
                                                  /editable)
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$

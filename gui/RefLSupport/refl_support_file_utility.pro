@@ -1,3 +1,12 @@
+;This function returns 1 if the first button is validated
+;and 0 if it's the second
+FUNCTION getButtonValidated, Event, uname
+TOFid = widget_info(Event.top,find_by_uname=uname)
+widget_control, TOFid, get_value=value
+return, value
+END
+
+
 ;This function returns the value found in the text field given
 FUNCTION getValue, Event, uname
 unameId = widget_info(Event.top,find_by_uname=uname)
