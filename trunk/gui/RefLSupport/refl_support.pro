@@ -31,7 +31,6 @@ case Event.id of
     ;--step2--
     Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
          step2_base_file_droplist, Event
-         print, 'here'
     end
 
     Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
@@ -149,7 +148,17 @@ Step1Size            = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
 LoadButton           = [5  , 5  , 100 , 30 ]
 ClearButton          = [110, 5  , 100 , 30 ]
 ListOfFilesSize      = [220, 5  , 250 , 30 ]
-FileInfoSize         = [5  , 40 , 510 , 260]
+InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
+InputFileFormatSize  = [130 , InputFileFormatLabelSize[1]]
+ModeratorDetectorDistanceLabelSize = [150,$
+                                      InputFileFormatLabelSize[1],$
+                                      80,$
+                                      30]
+ModeratorDetectorDistanceTextFieldSize = [200,$
+                                          InputFileFormatLabelSize[1],$
+                                          100,$
+                                          30]
+FileInfoSize         = [5  , 90 , 510 , 200]
 ListOfColorLabelSize = [5  , 310, 50 , 30 ]
 ListOfColorSize      = [60 , 300, 310 , 35 ]
 ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
@@ -282,8 +291,7 @@ ValidateButtonSize = [XAxisLinLogsize[0]+d67,$
 ResetButtonSize     = [ValidateButtonSize[0]+d78,$
                        ValidateButtonSize[1],$
                        ResetButton[0],$
-                       ResetButton[1]]
-                                
+                       ResetButton[1]]                                
 ;yaxis
 yoff= 35
 YaxisLabelSize       = [5,$
@@ -324,7 +332,8 @@ RedLabelTitle = 'Red'
 OrangeLabelTitle = 'Orange'
 YellowLabelTitle = 'Yellow'
 WhiteLabelTitle = 'White'
-
+input_file_label = 'Input file format:'
+input_file_format = ['TOF','Q']
 ;--Step2--
 BaseFileTitle = 'Critical edge file:'
 Step2GoButtonTitle = 'Rescale Critical Edge'
@@ -402,6 +411,25 @@ LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
                                          SCR_YSIZE=ListOfFilesSize[3],$
                                          VALUE=ListOfFiles,$
                                          TITLE=ListOfFilesTitle)
+
+InputFileFormatLabel = WIDGET_LABEL(STEP1_BASE,$
+                                    XOFFSET=InputFileFormatLabelSize[0],$
+                                    YOFFSET=InputFileFormatLabelSize[1],$
+                                    SCR_XSIZE=InputFileFormatLabelSize[2],$
+                                    SCR_YSIZE=InputFileFormatLabelSize[3],$
+                                    VALUE='Input file format:')
+
+
+InputFileFormat = CW_BGROUP(STEP1_BASE,$ 
+                            input_file_format,$
+                            /exclusive,$
+                            /RETURN_NAME,$
+                            XOFFSET=InputFileFormatSize[0],$
+                            YOFFSET=InputFileFormatSize[1],$
+                            SET_VALUE=0.0,$
+                            row=1,$
+                            uname='InputFileFormat')                 
+
 
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$

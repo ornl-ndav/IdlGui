@@ -1,3 +1,28 @@
+;This function returns the value found in the text field given
+FUNCTION getValue, Event, uname
+unameId = widget_info(Event.top,find_by_uname=uname)
+widget_control,unameId,get_value=value
+return, value
+END
+
+
+;This function returns Q1, Q2 and SF of the current selected tab
+FUNCTION getQ1Q2SF, Event, TAB
+
+IF (TAB EQ 'STEP2') then begin
+    Q1 = getValue(Event, 'step2_q1_text_field')    
+    Q2 = getValue(Event, 'step2_q2_text_field')
+    SF = getValue(Event, 'step2_sf_text_field')
+ENDIF ELSE BEGIN
+    Q1 = getValue(Event, 'step3_q1_text_field')    
+    Q2 = getValue(Event, 'step3_q2_text_field')
+    SF = getValue(Event, 'step3_sf_text_field')
+ENDELSE
+Q1Q2SF = [float(Q1),float(Q2),float(SF)]
+RETURN, Q1Q2SF
+END
+
+
 ;This function gives the size of the array given
 ;as a parameter
 FUNCTION getSizeOfArray, ListOfFiles
@@ -28,7 +53,6 @@ END
 FUNCTION getLongFileNameSelected, Event, uname
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get the selected index of the load list droplist
 TextBoxIndex = getSelectedIndex(Event, uname)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
@@ -41,7 +65,6 @@ END
 FUNCTION getColorIndex, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
 widget_control, list_of_color_slider_id, get_value = colorIndex
 return, colorIndex
@@ -134,7 +157,6 @@ endif else begin
 endelse
 (*(*global).list_of_files) = ListOfFiles
 (*(*global).ListOfLongFileName) = ListOfLongFileName
-
 ;update GUI
 updateGUI,Event, ListOfFiles
 end
@@ -189,7 +211,6 @@ endif else begin
     close,u
     free_lun,u
 endelse
-
 ;populate text box with array
 TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
 widget_control, TextBoxId, set_value=info_array[0]
@@ -204,6 +225,7 @@ PRO clear_info_about_selected_file, Event
 TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
 widget_control, TextBoxId, set_value=''
 END
+
 
 ;this function creates and update the Q1, Q2, SF... arrays when a file is added
 PRO CreateArrays, Event
@@ -276,6 +298,7 @@ FileHistory        = strarr(1)
 EnableMainBaseButtons, Event, 0
 END
 
+
 ;this function does a full true reset of color index
 ;ie: is reset to 100/red
 PRO ReinitializeColorArray, Event
@@ -286,6 +309,7 @@ color_array               = lonarr(1)
 color_array[0]            = (*global).ColorSliderDefaultValue
 (*(*global).color_array)  = color_array
 END
+
 
 ;This function remove the value at the index iIndex
 PRO RemoveIndexFromList, Event, iIndex
@@ -334,10 +358,24 @@ widget_control,base_file_droplist_id, get_value=list
 value = widget_info(base_file_droplist_id,/droplist_select)
 FileHistory[0] = list[value]
 
+;get Q1, Q2 and SF (float)
+Q1Q2SF = getQ1Q2SF(Event,'STEP2')
+Q1 = Q1Q2SF[0]
+Q2 = Q1Q2SF[1]
+SF = Q1Q2SF[2]
+
+Q1_array[0] = Q1
+Q2_array[0] = Q2
+SF_array[0] = SF
+
 (*(*global).Q1_array)    = Q1_array
 (*(*global).Q2_array)    = Q2_array
 (*(*global).SF_array)    = SF_array
 (*(*global).FileHistory) = FileHistory
+
+;fit current data file selected
+LongFileName = getLongFileNameSelected(Event,'base_file_droplist')
+FitFunction, Event, LongFileName, Q1, Q2
 END
 
 
@@ -454,3 +492,4 @@ PRO ClearColorLabel, Event
 ColorFileLabelId = widget_info(Event.top,find_by_uname='ColorFileLabel')
 widget_control, ColorFileLabelId, set_value=''
 END
+

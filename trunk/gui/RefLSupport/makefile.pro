@@ -9,6 +9,7 @@
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/"
 resolve_routine, "ArrayDelete",/either
+resolve_routine, "refl_support_fit",/either
 resolve_routine, "refl_support_plot_data",/either
 resolve_routine, "refl_support_widget",/either
 resolve_routine, "refl_support_eventcb", /either
