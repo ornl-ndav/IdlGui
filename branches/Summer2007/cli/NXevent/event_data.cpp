@@ -92,7 +92,6 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
                                  const string &attr_value,
                                  const e_data_name nx_data_name)
 {
-  string nx_attr_value(attr_value);
   string data_name;
   
   // Fill in the values that are associated with the
@@ -101,8 +100,7 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
 
   nexus_util.open_path(this->data_path);
   nexus_util.open_data(data_name);
-  nexus_util.put_attr(attr_name, &nx_attr_value[0],
-                      attr_value.length(), NX_CHAR);
+  nexus_util.put_attr(attr_name, attr_value);
 }
 
 template <typename NumT>
