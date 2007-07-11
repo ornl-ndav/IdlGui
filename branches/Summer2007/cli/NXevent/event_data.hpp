@@ -151,6 +151,11 @@ class EventData
      *  \param path The path to the data in the nexus file.
      */
     EventData(const std::string &path);
+
+    /**
+     *  \brief The destructor for the EventData class.
+     */
+    ~EventData();
 };
 
 #endif

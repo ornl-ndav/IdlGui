@@ -44,6 +44,14 @@ EventData<NumT>::EventData(const string &path)
   this->data_path = path;
 }
 
+template<typename NumT>
+EventData<NumT>::~EventData()
+{
+  this->tof = NULL;
+  this->pixel_id = NULL;
+  this->pulse_time = NULL;
+}
+
 template <typename NumT>
 inline int EventData<NumT>::typename_to_nexus_type(const int32_t &val)
 {
