@@ -201,125 +201,137 @@ endif else begin
             DEVICE, DECOMPOSED = 0
             loadct,5
             
+;check if input is TOF or Q
+            isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
+            if(isTOFvalidated eq '0') then begin ;input file is in TOF
+
+;Converts the data from TOF to Q
+                convert_TOF_to_Q, Event
+                flt0 = (*(*global).flt0_xaxis)
+                flt1 = (*(*global).flt1_yaxis)
+                flt2 = (*(*global).flt2_yaxis_err)
+
+            endif
+
             colorIndex = color_array[i]
             if (FirstPass EQ 1) then begin
-
+                
                 flt1_first = flt1
-
+                
                 if (FirstTimePlotting EQ 1) then begin
-              
-                     case IsXlin of
+                    
+                    case IsXlin of
                         0:begin
-                        case IsYlin of
-                           0: begin
-                              plot,flt0,flt1
-                           end
-                           1: begin
-                              plot,flt0,flt1,/ylog
-                           end
-                        endcase
-                     end
-                        1: begin
-                           case IsYlin of
-                              0: begin
-                                 plot,flt0,flt1,/xlog
-                              end
-                              1: begin
-                                 plot,flt0,flt1,/xlog,/ylog
-                              end
-                           endcase
+                            case IsYlin of
+                                0: begin
+                                    plot,flt0,flt1
+                                end
+                                1: begin
+                                    plot,flt0,flt1,/ylog
+                                end
+                            endcase
                         end
-                     endcase
-                     errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                                    
+                        1: begin
+                            case IsYlin of
+                                0: begin
+                                    plot,flt0,flt1,/xlog
+                                end
+                                1: begin
+                                    plot,flt0,flt1,/xlog,/ylog
+                                end
+                            endcase
+                        end
+                    endcase
+                    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                    
 ;populate min/max x/y axis
-                   min_xaxis = min(flt0,max=max_xaxis,/nan)
-                   min_yaxis = min(flt1,max=max_yaxis,/nan)
-                   PopulateXYScaleAxis, Event, $
-                                        min_xaxis, $
-                                        max_xaxis, $
-                                        min_yaxis, $
-                                        max_yaxis
-                   CreateDefaultXYMinMax,Event,$
-                                         min_xaxis,$
-                                         max_xaxis,$
-                                         min_yaxis,$
-                                         max_yaxis
-  
-               endif else begin
-                 
-                  XYMinMax = retrieveXYMinMax(Event)
-                  xmin = float(XYMinMax[0])
-                  xmax = float(XYMinMax[1])
-                  ymin = float(XYMinMax[2])
-                  ymax = float(XYMinMax[3])
-                  
-                  case IsXlin of
+                    min_xaxis = min(flt0,max=max_xaxis,/nan)
+                    min_yaxis = min(flt1,max=max_yaxis,/nan)
+                    PopulateXYScaleAxis, Event, $
+                      min_xaxis, $
+                      max_xaxis, $
+                      min_yaxis, $
+                      max_yaxis
+                    CreateDefaultXYMinMax,Event,$
+                      min_xaxis,$
+                      max_xaxis,$
+                      min_yaxis,$
+                      max_yaxis
+                    
+                endif else begin
+                    
+                    XYMinMax = retrieveXYMinMax(Event)
+                    xmin = float(XYMinMax[0])
+                    xmax = float(XYMinMax[1])
+                    ymin = float(XYMinMax[2])
+                    ymax = float(XYMinMax[3])
+                    
+                    case IsXlin of
                         0:begin
-                        case IsYlin of
-                           0: begin
-                              plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                           end
-                           1: begin
-                              plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                           end
-                        endcase
-                     end
-                        1: begin
-                           case IsYlin of
-                              0: begin
-                                 plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                              end
-                              1: begin
-                                 plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                              end
-                           endcase
+                            case IsYlin of
+                                0: begin
+                                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                                end
+                                1: begin
+                                    plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                                end
+                            endcase
                         end
-                     endcase               
-                  errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                  
-               endelse
-
-               FirstPass = 0
-
+                        1: begin
+                            case IsYlin of
+                                0: begin
+                                    plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                                end
+                                1: begin
+                                    plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                                end
+                            endcase
+                        end
+                    endcase               
+                    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                    
+                endelse
+                
+                FirstPass = 0
+                
             endif else begin
-
-               XYMinMax = retrieveXYMinMax(Event)
-               xmin = float(XYMinMax[0])
-               xmax = float(XYMinMax[1])
-               ymin = float(XYMinMax[2])
-               ymax = float(XYMinMax[3])
-                  
-               case IsXlin of
-                  0:begin
-                     case IsYlin of
-                        0: begin
-                           plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                        end
-                        1: begin
-                           plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                        end
-                     endcase
-                  end
-                  1: begin
-                     case IsYlin of
-                        0: begin
-                           plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                        end
-                        1: begin
-                           plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                        end
-                     endcase
-                  end
-               endcase            
-               errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-
+                
+                XYMinMax = retrieveXYMinMax(Event)
+                xmin = float(XYMinMax[0])
+                xmax = float(XYMinMax[1])
+                ymin = float(XYMinMax[2])
+                ymax = float(XYMinMax[3])
+                
+                case IsXlin of
+                    0:begin
+                        case IsYlin of
+                            0: begin
+                                plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                            end
+                            1: begin
+                                plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                            end
+                        endcase
+                    end
+                    1: begin
+                        case IsYlin of
+                            0: begin
+                                plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                            end
+                            1: begin
+                                plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                            end
+                        endcase
+                    end
+                endcase            
+                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                
             endelse
-
+            
         endelse
-
+        
     endfor
-
+    
 endelse
 
 END
