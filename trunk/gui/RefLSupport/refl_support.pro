@@ -105,6 +105,8 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   h_over_mn      :
+                   
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
                    NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box
                    distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
@@ -113,6 +115,9 @@ global = ptr_new({  $
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
                    PrevTabSelect  : 0,$              ;value of previous tab selected
+                   flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
+                   flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
+                   flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
                    FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
                    Q1_array       : ptr_new(0L),$    ;Q1 array
@@ -426,7 +431,7 @@ LOAD_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
                             YOFFSET=LoadButton[1],$
                             SCR_XSIZE=LoadButton[2],$
                             SCR_YSIZE=LoadButton[3],$
-                            SENSITIVE=0,$
+                            SENSITIVE=1,$
                             VALUE=LoadButtonTitle)
 
 CLEAR_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
@@ -536,7 +541,6 @@ ErrorMessageLabel = widget_label(ErrorMessageBase,$
                                  scr_xsize=ErrorMessageLabelSize[2],$
                                  scr_ysize=ErrorMessageLabelSize[3],$
                                  value='')
-
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
