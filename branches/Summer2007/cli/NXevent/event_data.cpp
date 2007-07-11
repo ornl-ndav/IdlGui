@@ -68,6 +68,10 @@ void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
     {
       data_name = "pixel_number";
     }
+  else 
+    {
+      throw runtime_error("Invalid enumerated data type");
+    }
 }
 
 template <typename NumT>
@@ -83,6 +87,10 @@ void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
   else if (nx_data_type == PIXEL_ID)
     {
       data = this->pixel_id;
+    }
+  else
+    {
+      throw runtime_error("Invalid enumerated data type");
     }
 }
 
