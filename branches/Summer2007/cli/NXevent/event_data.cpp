@@ -130,10 +130,7 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   nexus_util.open_path(this->data_path);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
-
-  int i = 0;
-  // Write all the data to the nexus file
-  nexus_util.put_slab(&nx_data[0], &i, &dimensions);
+  nexus_util.put_data_with_slabs(nx_data, 16777215);
 }
  
 template <typename NumT>

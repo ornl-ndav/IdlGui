@@ -9,9 +9,15 @@
 #include "nexus_util.hpp"
 #include <string>
 #include <stdexcept>
+#include <vector>
 
 using std::runtime_error;
 using std::string;
+using std::vector;
+
+template 
+void NexusUtil::put_data_with_slabs<uint32_t>(vector<uint32_t> & nx_data,
+                                              int block_size);
 
 NexusUtil::NexusUtil(const string &out_path,
                      e_nx_access file_access)
@@ -135,6 +141,20 @@ void NexusUtil::put_data(void *nx_data)
     }
 }
 
+template <typename NumT>
+void NexusUtil::put_data(const vector<NumT> & nx_data)
+{
+  if (nx_data.empty())
+    {
+      throw runtime_error("No data specified");
+    }
+
+  if (NXputdata(this->file_id, &(nx_data[0])) != NX_OK)
+    {
+      throw runtime_error("Failed to create data");
+    }
+}
+
 void NexusUtil::close_data(void)
 {
   if (NXclosedata(this->file_id) != NX_OK)
@@ -182,6 +202,52 @@ void NexusUtil::put_attr(const string &name, const string &value)
                 NX_CHAR) != NX_OK)
     {
       throw runtime_error("Failed to create attribute: "+name);
+    }
+}
+
+template <typename NumT>
+void NexusUtil::put_slab(vector<NumT> & nx_data, int start, 
+                         int block_size)
+{
+  if (nx_data.empty())
+    {
+      throw runtime_error("No data specified");
+    }
+  if (block_size <= 0)
+    {
+      throw runtime_error("Block size must be > 0");
+    }
+  if (NXputslab(this->file_id, &(nx_data[start]), &start, 
+                &block_size) != NX_OK)
+    {
+      throw runtime_error("Failed to create data chunk");
+    }
+}
+
+template <typename NumT>
+void NexusUtil::put_data_with_slabs(vector<NumT> & nx_data, 
+                                    int block_size)
+{
+  if (nx_data.empty())
+    {
+      throw runtime_error("No data specified");
+    }
+  if (block_size <= 0)
+    {
+      throw runtime_error("Block size must be > 0");
+    }
+  int data_size = nx_data.size();
+  for (int i = 0; i < data_size; i+=block_size)
+    {
+      if (i + block_size >= data_size)
+        {
+          block_size = data_size - i;
+        }
+      if (NXputslab(this->file_id, &(nx_data[i]), &i,
+                    &block_size) != NX_OK)
+        {
+          throw runtime_error("Failed to create data chunk");
+        }
     }
 }
 

@@ -10,6 +10,7 @@
 
 #include "napi.h"
 #include <string>
+#include <vector>
 
 /** \enum e_nx_access
  *  \brief Enumeration for the types of nexus file
@@ -101,6 +102,15 @@ class NexusUtil
      *         errors.
      */
     void put_data(void *nx_data);
+
+    /** 
+     *  \brief Writes data to a nexus file, while checking for
+     *         errors.
+     *  \param nx_data The vector of data to be written to the
+     *                 nexus file.
+     */
+    template <typename NumT>
+    void put_data(const std::vector<NumT> & nx_data);
     
     /** \fn close_data(void)
      *  \brief Closes data in a nexus file, while checking for
@@ -137,6 +147,30 @@ class NexusUtil
     void put_slab(void *nx_data, 
                   int *start,
                   int *size);
+
+    /**
+     *  \brief Writes a chunk of a vector to a nexus file, 
+     *         while checking for errors.
+     *  \param nx_data The vector of data.
+     *  \param start The starting index in the vector.
+     *  \param block_size The size of the chunk of data to 
+     *                    be written.
+     */
+    template <typename NumT>
+    void NexusUtil::put_slab(std::vector<NumT> & nx_data, 
+                             int start,
+                             int block_size);
+
+    /**
+     *  \brief Writes all the data using put_slab and a loop
+     *         with a given block size. Also error checks.
+     *  \param nx_data The data to be written.
+     *  \param block_size The size of the blocks to write to the
+     *                    file.
+     */
+    template <typename NumT>
+    void NexusUtil::put_data_with_slabs(std::vector<NumT> & nx_data,
+                                        int block_size);
 
     /** \fn get_data(void *nx_data)
      *  \brief Gets data from the nexus file, 
