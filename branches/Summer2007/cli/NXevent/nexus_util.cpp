@@ -36,9 +36,12 @@ NexusUtil::NexusUtil(const string &out_path,
 
 NexusUtil::~NexusUtil(void)
 {
-  if (NXclose(&(this->file_id)) != NX_OK)
+  if (this->file_id != NULL)
     {
-      throw runtime_error("Failed to close nexus file");
+      if (NXclose(&(this->file_id)) != NX_OK)
+        {
+          throw runtime_error("Failed to close nexus file");
+        }
     }
 }
 
