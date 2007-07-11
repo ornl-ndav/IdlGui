@@ -163,7 +163,7 @@ ListOfFilesSize      = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
 InputFileFormatSize  = [130 , $
                         InputFileFormatLabelSize[1]]
-ModeratorDetectorDistanceBase = [210,$
+ModeratorDetectorDistanceBase = [220,$
                                  InputFileFormatLabelSize[1]-5,$
                                  400,$
                                  80]
@@ -186,6 +186,12 @@ AngleTextFieldSize = [75,$
                       80,$
                       ModeratorDetectorDistanceTextFieldSize[3]]
 AngleUnitsSize = [ 160, AngleLabelSize[1]]
+
+ErrorMessageBaseSize = [InputFileFormatLabelSize[0],$
+                         InputFileFormatLabelSize[1]+35,$
+                         210,$
+                         35]
+ErrorMessageLabelSize = [0, 0, 210, 30]
 
 FileInfoSize         = [5 , 120, 510 , 200]
 ListOfColorLabelSize = [5 , 330, 50  , 30 ]
@@ -420,7 +426,7 @@ LOAD_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
                             YOFFSET=LoadButton[1],$
                             SCR_XSIZE=LoadButton[2],$
                             SCR_YSIZE=LoadButton[3],$
-                            SENSITIVE=1,$
+                            SENSITIVE=0,$
                             VALUE=LoadButtonTitle)
 
 CLEAR_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
@@ -509,10 +515,28 @@ AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                              YOFFSET=AngleTextFieldSize[1],$
                              SCR_XSIZE=AngleTextFieldSize[2],$
                              SCR_YSIZE=AngleTextFieldSize[3],$
-                             VALUE='',$
+                             VALUE='0',$
                              /EDITABLE,$
                              /align_left,$
                              /all_events)
+
+ErrorMessageBase = widget_base(STEP1_BASE,$
+                               xoffset=ErrorMessageBaseSize[0],$
+                               yoffset=ErrorMessageBaseSize[1],$
+                               scr_xsize=ErrorMessageBaseSize[2],$
+                               scr_ysize=ErrorMessageBaseSize[3],$
+                               uname='ErrorMessageBase',$
+                               frame=1,$
+                               map=0)
+
+ErrorMessageLabel = widget_label(ErrorMessageBase,$
+                                 uname='ErrorMessageLabel',$
+                                 xoffset=ErrorMessageLabelSize[0],$
+                                 yoffset=ErrorMessageLabelSize[1],$
+                                 scr_xsize=ErrorMessageLabelSize[2],$
+                                 scr_ysize=ErrorMessageLabelSize[3],$
+                                 value='')
+
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
