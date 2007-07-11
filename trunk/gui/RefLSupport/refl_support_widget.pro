@@ -10,12 +10,21 @@ END
 ;This function returns 1 if the input can be turned into
 ;a float, and 0 if it can't
 FUNCTION isValueFloat, textString
-result = isNumeric(textString)
-if (result EQ 0) then begin
+result = getNumeric(textString)
+if (result EQ '') then begin
     return, 0
 endif else begin
     return, 1
 endelse
+END
+
+
+;this function updates the text field by removing the un-wanted 
+;characters and just keeping the digits
+PRO updateTextField, Event, textString, uname
+TFid = widget_info(Event.top,find_by_uname=uname)
+TFupdated = getNumeric(textString)
+widget_control, TFid, set_value=strcompress(TFupdated)
 END
 
 
@@ -37,47 +46,45 @@ END
 FUNCTION InputParameterStatus, Event
 
 isTOFselected = getButtonValidated(Event,'InputFileFormat')
-if (isTOFselected EQ 0) then begin ;TOF is selected
+Status = 0
+if (isTOFselected EQ 0) then begin ;TOF is selected (else Q)
   
     distanceTextFieldValue = $
       getTextFieldValue(Event,$
                         'ModeratorDetectorDistanceTextField')
     distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
+
 ;distance text field is blank
     if (distanceTextFieldValue EQ '') then begin
-        return, 1
+        Status = 1
     endif else begin
+
 ;distance text field can't be turned into a float
         if (isValueFloat(distanceTextFieldValue) NE 1) then begin
-            return, 3
-        endif
+            Status = 2
+        endif 
     endelse
     
     angleTextFieldValue = $
       getTextFieldValue(Event,$
                         'AngleTextField')
     angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
+    
 ;angle text field is blank
     if (angleTextFieldValue EQ '') then begin
-        return, 2
+        Status += 10
     endif else begin
+
 ;angle text field can't be turned into a float
         if (isValueFloat(angleTextFieldValue) NE 1) then begin
-            return, 4
+            Status += 20
         endif
     endelse
-    return,0
-endif else begin ;Q selected, so no need to check the GUI
-    return,0
-endelse
+endif  
+return,Status
 END
 
 
-
-PRO ActivateButton, Event, uname, validate
-unameId = widget_info(Event.top,find_by_uname=uname)
-widget_control, unameId, sensitive=validate
-END
 
 
 PRO EnableStep1ClearFile, Event, validate
@@ -231,25 +238,63 @@ widget_control, ColorSliderId, sensitive=ValidateSlider
 END
 
 
+;This function displays the error message in the error message label
+PRO displayErrorMessage, Event, text
+ErrorMessageLabelid = widget_info(Event.top,find_by_uname='ErrorMessageLabel')
+widget_control, ErrorMessageLabelid, set_value=text
+END
+
+
+;this function map or not the ErrorBase
+PRO activateErrorMessageBaseFunction, Event, activateErrorBase
+ErrorMessageBaseId = widget_info(Event.top,find_by_uname='ErrorMessageBase')
+widget_control, ErrorMessageBaseid, map = activateErrorBase
+END
+
+
+;This function activate or not the button given by uname
+PRO ActivateButton, Event, uname, validate
+unameId = widget_info(Event.top,find_by_uname=uname)
+widget_control, unameId, sensitive=validate
+END
+
+
 ;This function will check if the LOAD button can be validated or no
 PRO checkLoadButtonStatus, Event
-
 InputParameter = InputParameterStatus(Event)
-CASE (InputParameter) of
-    0: BEGIN ;yes two thumbs up
-        ;validate Load button
+activateErrorBase = 1
+validateLoadButton = 0
+CASE (InputParameter) OF
+    0: BEGIN                    ; ok
+        validateLoadButton = 1
+        activateErrorBase = 0
     END
-    1: BEGIN ;distance field is missing
-        print, 'case is 1'
+    1: BEGIN                    ;distance empty and angle ok
+        text = 'Dist. is empty'
     END
-    2: BEGIN ;angle field is missing
-        print, 'case is 2'
+    2: BEGIN                    ;distance wrong and angle ok
+        text = 'Angle has wrong format'
     END
-    3: BEGIN ;distance field is invalid (is not a number)
-        print, 'case is 3'
+    10: BEGIN                   ;distance ok but angle empty
+        text = 'Angle is empty'
     END
-    4: BEGIN ;angle field is invalid
-        print, 'case is 4'
+    11: BEGIN                   ;distance and angle are empty
+        text = 'Dist. and angle are empty'
+    END
+    12: BEGIN                   ;distance wrong and angle empty
+        text = 'Dist. is wrong and angle empty'
+    END
+    20: BEGIN                   ;distance ok and angle wrong
+        text = 'Angle has wrong format'
+    END
+    21: BEGIN                   ;distance is empty and angle is wrong
+        text = 'Dist. empty and wrong angle format'
+    END
+    22: BEGIN                   ;distance and angle are wrong
+        text = 'Dist. and angle have wrong format'
     END
 ENDCASE
+activateErrorMessageBaseFunction, Event, activateErrorBase
+DisplayErrorMessage, Event, text
+ActivateButton, Event, 'load_button', validateLoadButton
 END
