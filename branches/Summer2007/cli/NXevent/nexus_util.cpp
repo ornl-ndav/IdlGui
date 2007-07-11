@@ -293,6 +293,10 @@ void NexusUtil::get_slab(void *nx_data, int *start, int *size)
 void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
                        int nexus_data_type)
 {
+  if (nx_data == NULL)
+    {
+      throw runtime_error("Can't malloc NULL pointer");
+    }
   if (NXmalloc(nx_data, rank, dimensions, nexus_data_type) != NX_OK)
     {
       throw runtime_error("Malloc failure");
@@ -301,9 +305,12 @@ void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
 
 void NexusUtil::free(void **nx_data)
 {
-  if (NXfree(nx_data) != NX_OK)
+  if (nx_data != NULL)
     {
-      throw runtime_error("Free failure");
+      if (NXfree(nx_data) != NX_OK)
+        {
+          throw runtime_error("Free failure");
+        }
     }
 }
 
