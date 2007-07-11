@@ -99,7 +99,8 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
   // given e_data_name
   this->get_nx_data_values(nx_data_name, data_name);  
 
-  nexus_util.open_path(this->data_path + "/" + data_name);
+  nexus_util.open_path(this->data_path);
+  nexus_util.open_data(data_name);
   nexus_util.put_attr(attr_name, &nx_attr_value[0],
                       attr_value.length(), NX_CHAR);
 }
