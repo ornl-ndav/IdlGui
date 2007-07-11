@@ -77,7 +77,7 @@ void NexusUtil::open_group(const string &name, const string &path)
 
   if (NXopengroup(this->file_id, name.c_str(), path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open group: entry");
+      throw runtime_error("Failed to open group: "+name);
     }
 }
 
