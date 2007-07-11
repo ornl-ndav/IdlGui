@@ -137,6 +137,12 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
   int32_t buffer[BLOCK_SIZE];
   size_t offset = 0;
 
+  // Make sure the file name isn't empty
+  if (mapping_file.empty())
+    {
+      throw runtime_error("Empty mapping file name");
+    }
+
   // If the data hasn't been read yet, throw an exception
   if (this->pixel_id.size() == 0)
     {
