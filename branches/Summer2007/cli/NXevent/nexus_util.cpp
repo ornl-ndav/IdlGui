@@ -22,7 +22,7 @@ void NexusUtil::put_data_with_slabs<uint32_t>(vector<uint32_t> & nx_data,
 NexusUtil::NexusUtil(const string &out_path,
                      e_nx_access file_access)
 {
-  if (out_path == "")
+  if (out_path.empty())
     {
       throw runtime_error("Must specify a file to open");
     }
@@ -47,12 +47,12 @@ NexusUtil::~NexusUtil(void)
 
 void NexusUtil::make_group(const string &name, const string &path)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No group name specified");
     }
 
-  if (path == "")
+  if (path.empty())
     {
       throw runtime_error("No path name specified");
     }
@@ -65,12 +65,12 @@ void NexusUtil::make_group(const string &name, const string &path)
 
 void NexusUtil::open_group(const string &name, const string &path)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No group name specified");
     }
 
-  if (path == "")
+  if (path.empty())
     {
       throw runtime_error("No path name specified");
     }
@@ -91,7 +91,7 @@ void NexusUtil::close_group(void)
 
 void NexusUtil::open_path(const string &path)
 {
-  if (path == "")
+  if (path.empty())
     {
       throw runtime_error("No path name specified");
     }
@@ -106,7 +106,7 @@ void NexusUtil::make_data(const string &name,
                           int nexus_data_type, int rank, 
                           int *dimensions)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No data name specified");
     }
@@ -125,7 +125,7 @@ void NexusUtil::make_data(const string &name,
 
 void NexusUtil::open_data(const string &name)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No data name specified");
     }
@@ -174,7 +174,7 @@ void NexusUtil::close_data(void)
 void NexusUtil::put_attr(const string &name, void *value, 
                           int length, int nx_type)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No attribute name specified");
     }
@@ -194,12 +194,12 @@ void NexusUtil::put_attr(const string &name, void *value,
 
 void NexusUtil::put_attr(const string &name, const string &value)
 {
-  if (name == "")
+  if (name.empty())
     {
       throw runtime_error("No attribute name specified");
     }
 
-  if (value == "")
+  if (value.empty())
     {
       throw runtime_error("No attribute value specified");
     }
