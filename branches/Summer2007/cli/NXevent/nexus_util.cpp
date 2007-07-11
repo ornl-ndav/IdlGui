@@ -28,7 +28,7 @@ NexusUtil::NexusUtil(const string &out_path,
     }
 
   if (NXopen(out_path.c_str(), 
-      (NXaccess)file_access, &file_id) != NX_OK)
+      (NXaccess)file_access, &(this->file_id)) != NX_OK)
     {
       throw runtime_error("Failed to open nexus file: "+out_path);
     }
@@ -36,7 +36,7 @@ NexusUtil::NexusUtil(const string &out_path,
 
 NexusUtil::~NexusUtil(void)
 {
-  if (NXclose(&file_id) != NX_OK)
+  if (NXclose(&(this->file_id)) != NX_OK)
     {
       throw runtime_error("Failed to close nexus file");
     }
