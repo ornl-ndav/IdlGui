@@ -31,15 +31,6 @@ return, sizeArray[1]
 END
 
 
-;This function returns the selected index of the 'uname'
-;droplist given
-FUNCTION getSelectedIndex, Event, uname
-TextBoxId= widget_info(Event.top, find_by_uname=uname)
-TextBoxIndex= widget_info(TextBoxId,/droplist_select)
-return, TextBoxIndex
-END
-
-
 ;This function sets the selected index of the 'uname'
 ;droplist
 PRO SetSelectedIndex, Event, uname, index
@@ -244,7 +235,7 @@ Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
 
 ;get current angle value entered
-angleValue = (*global).angleValue
+angleValue = getCurrentAngleValue(Event)
 angle_array = [angle_array,angleValue]
 
 colorIndex = getColorIndex(Event)

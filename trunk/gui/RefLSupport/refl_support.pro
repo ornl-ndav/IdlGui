@@ -105,8 +105,7 @@ endif else begin
 endelse
 
 global = ptr_new({  $
-                   h_over_mn      :
-                   
+                   h_over_mn      : 3955.4,$         ;h/mass of neutron in USI                   
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
                    NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box
                    distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
@@ -115,7 +114,7 @@ global = ptr_new({  $
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
                    PrevTabSelect  : 0,$              ;value of previous tab selected
-                   angleValue     : 0,$              ;current value of the angle (float)
+                   angleValue     : float(0),$              ;current value of the angle (float)
                    flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
                    flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
@@ -524,7 +523,7 @@ AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                              YOFFSET=AngleTextFieldSize[1],$
                              SCR_XSIZE=AngleTextFieldSize[2],$
                              SCR_YSIZE=AngleTextFieldSize[3],$
-                             VALUE='0',$
+                             VALUE=strcompress((*global).angleValue,/remove_all),$
                              /EDITABLE,$
                              /align_left,$
                              /all_events)
