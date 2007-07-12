@@ -25,6 +25,13 @@ typedef enum e_data_name
   TOF = 0,
   PIXEL_ID = 1
 };
+    
+/** \fn inline int typename_to_nexus_type(const int32_t &val)
+ *  \brief Returns an int32 nexus type.
+ *  \param val The type of the templated calling function.
+ */
+template <typename NumT>
+inline e_nx_data_type typename_to_nexus_type(void);
 
 /** \class EventData
  *  \brief Holds all the data from the event file and
@@ -51,18 +58,6 @@ class EventData
     void seconds_to_iso8601(NumT seconds, 
                             NumT nanoseconds,
                             std::string &time);
-    
-    /** \fn inline int typename_to_nexus_type(const int32_t &val)
-     *  \brief Returns an int32 nexus type.
-     *  \param val The type of the templated calling function.
-     */
-    inline e_nx_data_type typename_to_nexus_type(const int32_t &val);
-
-    /** \fn inline int typename_to_nexus_type(const uint32_t &val)
-     *  \brief Returns an uint32 nexus type.
-     *  \param val The type of the templated calling function.
-     */
-    inline e_nx_data_type typename_to_nexus_type(const uint32_t &val);
     
     /** \fn void get_nx_data_values(const e_data_name nx_data_type,
      *                              string &data_name)

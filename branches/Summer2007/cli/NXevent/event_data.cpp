@@ -50,16 +50,22 @@ EventData<NumT>::~EventData()
 {
 }
 
-template <typename NumT>
-inline e_nx_data_type EventData<NumT>::typename_to_nexus_type(const int32_t &val)
+template<>
+inline e_nx_data_type typename_to_nexus_type<uint32_t>()
+{
+  return UINT32;
+}
+
+template<>
+inline e_nx_data_type typename_to_nexus_type<int32_t>()
 {
   return INT32;
 }
 
-template <typename NumT>
-inline e_nx_data_type EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
+template<typename NumT>
+inline e_nx_data_type typename_to_nexus_type()
 {
-  return UINT32;
+  throw runtime_error("Invalid nexus data type");
 }
 
 template <typename NumT>
@@ -130,8 +136,7 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
-  NumT type;
-  e_nx_data_type nexus_data_type = this->typename_to_nexus_type(type);
+  e_nx_data_type nexus_data_type = typename_to_nexus_type<NumT>();
 
   nexus_util.open_path(this->data_path);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
