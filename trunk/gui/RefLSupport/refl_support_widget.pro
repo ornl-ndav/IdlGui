@@ -1,30 +1,46 @@
-;This function returns 1 if the first button is validated
+;This function outputs the value of the angle entered in the text box angle
+FUNCTION getAngleValue, Event
+  angleValueId = widget_info(Event.top,find_by_uname='AngleTextField')
+  widget_control, angleValueId, get_value=angleValue
+  angleValue = float(angleValue)
+  return, angleValue
+end
+
+                                ;This function returns 1 if the first button is validated
 ;and 0 if it's the second
 FUNCTION getButtonValidated, Event, uname
-TOFid = widget_info(Event.top,find_by_uname=uname)
-widget_control, TOFid, get_value=value
-return, value
+  TOFid = widget_info(Event.top,find_by_uname=uname)
+  widget_control, TOFid, get_value=value
+  return, value
 END
 
 
 ;This function returns 1 if the input can be turned into
 ;a float, and 0 if it can't
 FUNCTION isValueFloat, textString
-result = getNumeric(textString)
-if (result EQ '') then begin
-    return, 0
-endif else begin
-    return, 1
-endelse
+  result = getNumeric(textString)
+  if (result EQ '') then begin
+     return, 0
+  endif else begin
+     return, 1
+  endelse
+END
+
+
+;This function displays the angle value of the selected file
+PRO displayAngleValue, Event
+
+
+
 END
 
 
 ;this function updates the text field by removing the un-wanted 
 ;characters and just keeping the digits
 PRO updateTextField, Event, textString, uname
-TFid = widget_info(Event.top,find_by_uname=uname)
-TFupdated = getNumeric(textString)
-widget_control, TFid, set_value=strcompress(TFupdated)
+  TFid = widget_info(Event.top,find_by_uname=uname)
+  TFupdated = getNumeric(textString)
+  widget_control, TFid, set_value=strcompress(TFupdated)
 END
 
 
@@ -261,19 +277,26 @@ END
 
 ;This function will check if the LOAD button can be validated or no
 PRO checkLoadButtonStatus, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 InputParameter = InputParameterStatus(Event)
 activateErrorBase = 1
 validateLoadButton = 0
+angleValue = 0
 CASE (InputParameter) OF
     0: BEGIN                    ; ok
         validateLoadButton = 1
         activateErrorBase = 0
+        angleValue = getAngleValue(Event)
     END
     1: BEGIN                    ;distance empty and angle ok
         text = 'Dist. is empty'
+        angleValue = getAngleValue(Event)
     END
     2: BEGIN                    ;distance wrong and angle ok
         text = 'Angle has wrong format'
+        angleValue = getAngleValue(Event)
     END
     10: BEGIN                   ;distance ok but angle empty
         text = 'Angle is empty'
@@ -294,6 +317,7 @@ CASE (InputParameter) OF
         text = 'Dist. and angle have wrong format'
     END
 ENDCASE
+(*global).angleValue = angleValue
 activateErrorMessageBaseFunction, Event, activateErrorBase
 DisplayErrorMessage, Event, text
 ActivateButton, Event, 'load_button', validateLoadButton
