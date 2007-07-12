@@ -70,8 +70,7 @@ class EventData
      *                   data_name will be set to "time_of_flight"
      *                   if the nx_data_type is TOF.
      */
-    void get_nx_data_values(const e_data_name nx_data_type,
-                            std::string &data_name);
+    std::string get_nx_data_name(const e_data_name nx_data_type);
     
     /** \fn void get_nx_data_values(const e_data_name nx_data_type,
      *                              string &data_name, 
@@ -87,9 +86,7 @@ class EventData
      *  \param data The chunk of data that will be set properly
      *              according to the enumeration.
      */
-    void get_nx_data_values(const e_data_name nx_data_type,
-                            std::string &data_name,
-                            std::vector<NumT> &data);
+    std::vector<NumT> & get_nx_data_values(const e_data_name nx_data_type);
 
   public:
     /** \fn void read_event_file(const string &event_file)

@@ -69,16 +69,15 @@ inline e_nx_data_type typename_to_nexus_type()
 }
 
 template <typename NumT>
-void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type, 
-                                         string &data_name)
+string EventData<NumT>::get_nx_data_name(const e_data_name nx_data_type)
 {
   if (nx_data_type == TOF)
     {
-      data_name = "time_of_flight";
+      return "time_of_flight";
     }
   else if (nx_data_type == PIXEL_ID)
     {
-      data_name = "pixel_number";
+      return "pixel_number";
     }
   else 
     {
@@ -87,18 +86,16 @@ void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
 }
 
 template <typename NumT>
-void EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type,
-                                         string &data_name,
-                                         vector<NumT> &data)
+vector<NumT> & 
+EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type)
 {
-  this->get_nx_data_values(nx_data_type, data_name);
   if (nx_data_type == TOF)
     {
-      data = this->tof;
+      return this->tof;
     }
   else if (nx_data_type == PIXEL_ID)
     {
-      data = this->pixel_id;
+      return this->pixel_id;
     }
   else
     {
@@ -116,7 +113,7 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
   
   // Fill in the values that are associated with the
   // given e_data_name
-  this->get_nx_data_values(nx_data_name, data_name);  
+  data_name = this->get_nx_data_name(nx_data_name);  
 
   nexus_util.open_path(this->data_path);
   nexus_util.open_data(data_name);
@@ -132,7 +129,8 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   
   // Fill in the values that are associated with the 
   // given e_data_name
-  this->get_nx_data_values(nx_data_name, data_name, nx_data);
+  data_name = this->get_nx_data_name(nx_data_name);
+  nx_data = this->get_nx_data_values(nx_data_name);
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
