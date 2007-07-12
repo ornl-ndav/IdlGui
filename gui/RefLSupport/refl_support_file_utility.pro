@@ -48,7 +48,6 @@ widget_control, droplistId, set_droplist_select = index
 END
 
 
-
 ;this function gives the long name of the file selected in the uname droplist
 FUNCTION getLongFileNameSelected, Event, uname
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -144,6 +143,7 @@ ListOfLongFileName = (*(*global).ListOfLongFileName)
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
+    angleValue = getAngleValue(Event)
     ActivateRescaleBase,Event,1
 ;if not
 endif else begin
@@ -235,12 +235,18 @@ widget_control,id,get_uvalue=global
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
+angle_array = (*(*global).angle_array)
 color_array = (*(*global).color_array)
 FileHistory = (*(*global).FileHistory)
 
 Q1_array = [Q1_array,0]
 Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
+
+;get current angle value entered
+angleValue = (*global).angleValue
+angle_array = [angle_array,angleValue]
+
 colorIndex = getColorIndex(Event)
 color_array = [color_array, colorIndex]
 FileHistory = [FileHistory,'']
@@ -248,6 +254,7 @@ FileHistory = [FileHistory,'']
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
+(*(*global).angle_array) = angle_array
 (*(*global).color_array) = color_array
 (*(*global).FileHistory) = FileHistory
 END
@@ -282,6 +289,7 @@ list_of_files      = strarr(1)
 Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
+angle_array        = lonarr(1)
 color_array        = lonarr(1)
 color_array[0]     = getColorIndex(Event)
 ListOfLongFileName = strarr(1)
@@ -291,6 +299,7 @@ FileHistory        = strarr(1)
 (*(*global).Q1_array)           = Q1_array
 (*(*global).Q2_array)           = Q2_array
 (*(*global).SF_array)           = SF_array
+(*(*global).angle_array)        = angle_array
 (*(*global).color_array)        = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*(*global).FileHistory)        = FileHistory
@@ -321,6 +330,7 @@ ListOfFiles = (*(*global).list_of_files)
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
+angle_array = (*(*global).angle_array)
 color_array = (*(*global).color_array)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 
@@ -329,6 +339,7 @@ ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Length=1)
 Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Length=1)
 Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Length=1)
 SF_array           = ArrayDelete(SF_array,AT=iIndex,Length=1)
+angle_array        = ArrayDelete(angle_array,AT=iIndex,Length=1)
 color_array        = ArrayDelete(color_array,AT=iIndex,Length=1)
 ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 
@@ -337,6 +348,7 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 (*(*global).Q1_array)          = Q1_array
 (*(*global).Q2_array)          = Q2_array
 (*(*global).SF_array)          = SF_array
+(*(*global).angle_array)       = angle_array
 (*(*global).color_array)       = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 END

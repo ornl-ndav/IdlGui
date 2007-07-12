@@ -16,6 +16,7 @@ if (PrevTabSelect NE CurrTabSelect OR $
             AssignColorToSelectedPlot,Event
             ListLongFileName = (*(*global).ListOfLongFileName)
             plot_loaded_file, Event, ListLongFileName
+            displayAngleValue, Event
         end
         1: begin                ;if second tab plot only CE plot
             LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 

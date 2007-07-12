@@ -115,6 +115,7 @@ global = ptr_new({  $
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
                    PrevTabSelect  : 0,$              ;value of previous tab selected
+                   angleValue     : 0,$              ;current value of the angle (float)
                    flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
                    flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
@@ -123,6 +124,7 @@ global = ptr_new({  $
                    Q1_array       : ptr_new(0L),$    ;Q1 array
                    Q2_array       : ptr_new(0L),$    ;Q2 array
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
+                   angle_array    : ptr_new(0L),$    ;Angle value
                    color_array    : ptr_new(0L),$    ;index of color for each file 
                    ColorSliderDefaultValue : 100,$   ;default index value of color slider
                    ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
@@ -133,6 +135,7 @@ list_of_files = strarr(1)
 Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
+angle_array   = lonarr(1)
 color_array   = lonarr(1)
 ColorSliderDefaultValue = (*global).ColorSliderDefaultValue
 color_array[0] = ColorSliderDefaultValue
@@ -142,6 +145,7 @@ ListOfLongFileName = strarr(1)
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
+(*(*global).angle_array) = angle_array
 (*(*global).color_array) = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
