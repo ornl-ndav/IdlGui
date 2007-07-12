@@ -27,6 +27,24 @@ typedef enum e_nx_access
   XML = NXACC_CREATEXML 
 };
 
+/** \enum e_nx_data_type
+ *  \brief Enumeration for all the types of nexus
+ *         data. This allows the compiler to check for
+ *         possible errors.
+ */
+typedef enum e_nx_data_type
+{
+  CHAR = NX_CHAR,
+  FLOAT32 = NX_FLOAT32, 
+  FLOAT64 = NX_FLOAT64, 
+  INT8 = NX_INT8, 
+  UINT8 = NX_UINT8, 
+  INT16 = NX_INT16, 
+  UINT16 =  NX_UINT16, 
+  INT32 = NX_INT32, 
+  UINT32 = NX_UINT32
+};
+
 /** \class NexusUtil
  *  \brief A nexus utility that opens a file in the
  *         constructor and stores the file handle
@@ -37,6 +55,13 @@ class NexusUtil
 {
   private:
     NXhandle file_id;
+    
+    /**
+     * \brief Converts an integer to a valid nexus data
+     *        type enumeration.
+     */
+    e_nx_data_type get_nx_data_type(int data_type);
+
   public:
     /** \fn NexusUtil(const string &out_path, 
      *                const NXaccess &file_access)
@@ -87,7 +112,7 @@ class NexusUtil
      *         errors.
      */
     void make_data(const std::string &name, 
-                   int nexus_data_type, 
+                   const e_nx_data_type nx_data_type, 
                    int rank, 
                    int *dimensions);
     
@@ -121,14 +146,14 @@ class NexusUtil
     /** \fn put_attr(const string &name,
      *               void *value,
      *               int length,
-     *               int nx_type)
+     *               int nexus_data_type)
      *  \brief Writes an attribute to a piece of data, 
      *         while checking for errors.
      */
     void put_attr(const std::string &name, 
                   void *value, 
                   int length, 
-                  int nx_type);
+                  const e_nx_data_type nx_data_type);
 
     /** \fn put_attr(const string &name,
      *               const string &value);
@@ -197,7 +222,7 @@ class NexusUtil
     void malloc(void **nx_data,
                 int rank,
                 int *dimensions,
-                int nexus_data_type);
+                const e_nx_data_type nx_data_type);
 
     /* \fn free(void **nx_data)
      * \brief Calls NXfree, while checking for errors.
@@ -212,7 +237,7 @@ class NexusUtil
      */
     void get_info(int *rank,
                   int *dimensions,
-                  int *nexus_data_type);
+                  e_nx_data_type &nx_data_type);
 };
 
 #endif

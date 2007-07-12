@@ -103,7 +103,8 @@ void NexusUtil::open_path(const string &path)
 }
 
 void NexusUtil::make_data(const string &name, 
-                          int nexus_data_type, int rank, 
+                          const e_nx_data_type nx_data_type, 
+                          int rank, 
                           int *dimensions)
 {
   if (name.empty())
@@ -117,7 +118,7 @@ void NexusUtil::make_data(const string &name,
     }
 
   if (NXmakedata(this->file_id, name.c_str(),
-                 nexus_data_type, rank, dimensions) != NX_OK)
+                 (int)nx_data_type, rank, dimensions) != NX_OK)
     {
       throw runtime_error("Failed make data: "+name);
     }
@@ -172,7 +173,8 @@ void NexusUtil::close_data(void)
 }
 
 void NexusUtil::put_attr(const string &name, void *value, 
-                          int length, int nx_type)
+                         int length, 
+                         const e_nx_data_type nx_data_type)
 {
   if (name.empty())
     {
@@ -186,7 +188,7 @@ void NexusUtil::put_attr(const string &name, void *value,
 
   if (NXputattr(this->file_id, name.c_str(),
                 value, length,
-                nx_type) != NX_OK)
+                (int)nx_data_type) != NX_OK)
     {
       throw runtime_error("Failed to create attribute: "+name);
     }
@@ -323,7 +325,7 @@ void NexusUtil::get_slab(void *nx_data, int *start, int *size)
 }
 
 void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
-                       int nexus_data_type)
+                       const e_nx_data_type nx_data_type)
 {
   if (nx_data == NULL)
     {
@@ -335,7 +337,7 @@ void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
       throw runtime_error("Invalid dimensions");
     }
   
-  if (NXmalloc(nx_data, rank, dimensions, nexus_data_type) != NX_OK)
+  if (NXmalloc(nx_data, rank, dimensions, (int)nx_data_type) != NX_OK)
     {
       throw runtime_error("Malloc failure");
     }
@@ -352,9 +354,54 @@ void NexusUtil::free(void **nx_data)
     }
 }
 
-void NexusUtil::get_info(int *rank, int *dimensions, 
-                         int *nexus_data_type)
+e_nx_data_type NexusUtil::get_nx_data_type(int data_type)
 {
+  if (data_type == NX_CHAR)
+    {
+      return CHAR;
+    }
+  else if (data_type == NX_FLOAT32)
+    {
+      return FLOAT32;
+    }
+  else if (data_type == NX_FLOAT64)
+    {
+      return FLOAT64;
+    }
+  else if (data_type == NX_INT8)
+    {
+      return INT8;
+    }
+  else if (data_type == NX_UINT8)
+    {
+      return UINT8;
+    }
+  else if (data_type == NX_INT16)
+    {
+      return INT16;
+    }
+  else if (data_type == NX_UINT16)
+    {
+      return UINT16;
+    }
+  else if (data_type == NX_INT32)
+    {
+      return INT32;
+    }
+  else if (data_type == NX_UINT32)
+    {
+      return UINT32;
+    }
+  else
+    {
+      throw runtime_error("Invalid nexus data type enumeration");
+    }
+}
+
+void NexusUtil::get_info(int *rank, int *dimensions, 
+                         e_nx_data_type &nx_data_type)
+{
+  int data_type;
   if (rank == NULL)
     {
       throw runtime_error("Invalid rank");
@@ -365,14 +412,10 @@ void NexusUtil::get_info(int *rank, int *dimensions,
       throw runtime_error("Invalid dimensions");
     }
 
-  if (nexus_data_type == NULL)
-    {
-      throw runtime_error("Invalid nexus data type");
-    }
-
   if (NXgetinfo(this->file_id, rank, dimensions, 
-                nexus_data_type) != NX_OK)
+                &data_type) != NX_OK)
     {
       throw runtime_error("Failed to get data information");
     }
+  nx_data_type = this->get_nx_data_type(data_type);
 }

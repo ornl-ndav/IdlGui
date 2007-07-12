@@ -56,13 +56,13 @@ class EventData
      *  \brief Returns an int32 nexus type.
      *  \param val The type of the templated calling function.
      */
-    inline int typename_to_nexus_type(const int32_t &val);
+    inline e_nx_data_type typename_to_nexus_type(const int32_t &val);
 
     /** \fn inline int typename_to_nexus_type(const uint32_t &val)
      *  \brief Returns an uint32 nexus type.
      *  \param val The type of the templated calling function.
      */
-    inline int typename_to_nexus_type(const uint32_t &val);
+    inline e_nx_data_type typename_to_nexus_type(const uint32_t &val);
     
     /** \fn void get_nx_data_values(const e_data_name nx_data_type,
      *                              string &data_name)

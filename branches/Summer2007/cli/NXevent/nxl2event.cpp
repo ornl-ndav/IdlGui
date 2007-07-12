@@ -157,10 +157,10 @@ void * get_data(const string &data_name, void *data,
                 NexusUtil &nexus_util, int &dimensions)
 {
   int rank;
-  int nexus_data_type;
+  e_nx_data_type nexus_data_type;
 
   nexus_util.open_data(data_name.c_str());
-  nexus_util.get_info(&rank, &dimensions, &nexus_data_type);
+  nexus_util.get_info(&rank, &dimensions, nexus_data_type);
   nexus_util.malloc(reinterpret_cast<void **>(&data), rank, 
                     &dimensions, nexus_data_type);
   nexus_util.get_data(data);

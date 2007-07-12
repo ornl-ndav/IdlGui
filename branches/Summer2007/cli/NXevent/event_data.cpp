@@ -37,6 +37,7 @@ template void EventData<uint32_t>::write_attr(NexusUtil &,
                                               const e_data_name);
 template void EventData<uint32_t>::map_pixel_ids(const string &);
 template EventData<uint32_t>::EventData(const string &);
+template EventData<uint32_t>::~EventData();
 
 template<typename NumT>
 EventData<NumT>::EventData(const string &path)
@@ -47,21 +48,18 @@ EventData<NumT>::EventData(const string &path)
 template<typename NumT>
 EventData<NumT>::~EventData()
 {
-  this->tof = NULL;
-  this->pixel_id = NULL;
-  this->pulse_time = NULL;
 }
 
 template <typename NumT>
-inline int EventData<NumT>::typename_to_nexus_type(const int32_t &val)
+inline e_nx_data_type EventData<NumT>::typename_to_nexus_type(const int32_t &val)
 {
-  return NX_INT32;
+  return INT32;
 }
 
 template <typename NumT>
-inline int EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
+inline e_nx_data_type EventData<NumT>::typename_to_nexus_type(const uint32_t &val)
 {
-  return NX_UINT32;
+  return UINT32;
 }
 
 template <typename NumT>
@@ -133,7 +131,7 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
   
   // Get the nexus data type of the template
   NumT type;
-  int nexus_data_type = this->typename_to_nexus_type(type);
+  e_nx_data_type nexus_data_type = this->typename_to_nexus_type(type);
 
   nexus_util.open_path(this->data_path);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
