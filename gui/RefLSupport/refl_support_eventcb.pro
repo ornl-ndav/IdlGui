@@ -75,6 +75,8 @@ updateGUI, Event, ListOfFiles
 ListLongFileName = (*(*global).ListOfLongFileName)
 plot_loaded_file, Event, ListLongFileName
 display_info_about_file, Event
+angleValue = getAngleValue(Event)
+displayAngleValue, Event, angleValue
 END
 
 
@@ -91,6 +93,8 @@ endif else begin
    display_info_about_selected_file, Event, LongFileName
    populateColorLabel, Event, LongFileName
    ActivateColorSlider,Event,1
+   angleValue = getAngleValue(Event)
+   displayAngleValue, Event, angleValue
 endelse
 END
 
