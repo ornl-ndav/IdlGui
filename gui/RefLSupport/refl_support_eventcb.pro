@@ -41,23 +41,29 @@ END
 
 ;load file button in step 1
 PRO LOAD_FILE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ 
 ;launch the program that open the OPEN IDL FILE window
-        LongFileName=OPEN_FILE(Event) 
+ LongFileName=OPEN_FILE(Event) 
 ;continue only if a file has been selected
-        if (LongfileName NE '') then begin
+ if (LongfileName NE '') then begin
 ;get only the file name (without path) of file
-            ShortFileName = get_file_name_only(LongFileName)    
+     ShortFileName = get_file_name_only(LongFileName)    
+
+;get the value of the angle (in rad)
+     angleValue = getCurrentAngleValue(Event)
+     (*global).angleValue = angleValue
+     get_angle_value_and_do_conversion, Event, angleValue
+
 ;add file to list of droplist (step1, step2 and 3)
-            add_new_file_to_droplist, Event, ShortFileName, LongFileName 
-            display_info_about_selected_file, Event, LongFileName
-            populateColorLabel, Event, LongFileName
-        endif
+     add_new_file_to_droplist, Event, ShortFileName, LongFileName 
+     display_info_about_selected_file, Event, LongFileName
+     populateColorLabel, Event, LongFileName
+ endif
 ;plot all loaded files
-        ListLongFileName = (*(*global).ListOfLongFileName)
-        plot_loaded_file, Event, ListLongFileName
+ ListLongFileName = (*(*global).ListOfLongFileName)
+ plot_loaded_file, Event, ListLongFileName
 END
 
 
@@ -82,6 +88,9 @@ END
 
 ;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;get the long name of the selected file
 LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
 if (LongFileName EQ '') then begin
