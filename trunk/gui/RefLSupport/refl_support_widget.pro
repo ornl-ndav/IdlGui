@@ -72,44 +72,48 @@ END
 ; - 3 if data reduction value is wrong with TOF
 ; - 4 if angle value is wrong with TOF
 FUNCTION InputParameterStatus, Event
-
-isTOFselected = getButtonValidated(Event,'InputFileFormat')
-Status = 0
-if (isTOFselected EQ 0) then begin ;TOF is selected (else Q)
-  
-    distanceTextFieldValue = $
-      getTextFieldValue(Event,$
-                        'ModeratorDetectorDistanceTextField')
-    distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
-
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ 
+ isTOFselected = getButtonValidated(Event,'InputFileFormat')
+ Status = 0
+ if (isTOFselected EQ 0) then begin ;TOF is selected (else Q)
+     
+     distanceTextFieldValue = $
+       getTextFieldValue(Event,$
+                         'ModeratorDetectorDistanceTextField')
+     distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
+     
 ;distance text field is blank
-    if (distanceTextFieldValue EQ '') then begin
-        Status = 1
-    endif else begin
-
+     if (distanceTextFieldValue EQ '') then begin
+         Status = 1
+     endif else begin
+         
 ;distance text field can't be turned into a float
-        if (isValueFloat(distanceTextFieldValue) NE 1) then begin
-            Status = 2
-        endif 
-    endelse
-    
-    angleTextFieldValue = $
-      getTextFieldValue(Event,$
-                        'AngleTextField')
-    angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
-    
+         if (isValueFloat(distanceTextFieldValue) NE 1) then begin
+             Status = 2
+         endif 
+     endelse
+     
+     angleTextFieldValue = $
+       getTextFieldValue(Event,$
+                         'AngleTextField')
+     angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
+     
 ;angle text field is blank
-    if (angleTextFieldValue EQ '') then begin
-        Status += 10
-    endif else begin
-
+     if (angleTextFieldValue EQ '') then begin
+         Status += 10
+     endif else begin
+         
 ;angle text field can't be turned into a float
-        if (isValueFloat(angleTextFieldValue) NE 1) then begin
-            Status += 20
-        endif
-    endelse
-endif  
-return,Status
+         if (isValueFloat(angleTextFieldValue) NE 1) then begin
+             Status += 20
+         endif else begin       ;else save angleValue
+             (*global).angleValue = float(angleTextFieldValue)
+         endelse
+     endelse
+ endif  
+ return,Status
 END
 
 

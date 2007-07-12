@@ -8,6 +8,7 @@
 ;.run "system_utilities"
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/"
+resolve_routine, "refl_support_math",/either
 resolve_routine, "isNumeric",/either
 resolve_routine, "ArrayDelete",/either
 resolve_routine, "refl_support_fit",/either

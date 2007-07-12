@@ -134,8 +134,11 @@ ListOfLongFileName = (*(*global).ListOfLongFileName)
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
-    angleValue = getAngleValue(Event)
     ActivateRescaleBase,Event,1
+    ;save angle value
+    angle_array = (*(*global).angle_array)
+    angle_array[0] = (*global).angleValue
+    (*(*global).angle_array) = angle_array
 ;if not
 endif else begin
    ;is this file not already listed 
@@ -146,6 +149,7 @@ endif else begin
           CreateArrays,Event    ;if a file is added, the Q1,Q2,SF... arrays are updated
     endif
 endelse
+
 (*(*global).list_of_files) = ListOfFiles
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 ;update GUI
@@ -235,7 +239,7 @@ Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
 
 ;get current angle value entered
-angleValue = getCurrentAngleValue(Event)
+angleValue = (*global).angleValue
 angle_array = [angle_array,angleValue]
 
 colorIndex = getColorIndex(Event)
@@ -280,7 +284,7 @@ list_of_files      = strarr(1)
 Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
-angle_array        = lonarr(1)
+angle_array        = fltarr(1)
 color_array        = lonarr(1)
 color_array[0]     = getColorIndex(Event)
 ListOfLongFileName = strarr(1)
