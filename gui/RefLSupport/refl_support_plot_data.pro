@@ -206,8 +206,9 @@ endif else begin
             if(isTOFvalidated eq '0') then begin ;input file is in TOF
 
 ;Converts the data from TOF to Q
-;                convert_TOF_to_Q, Event
-;                flt0 = (*(*global).flt0_xaxis)
+                (*(*global).flt0_xaxis) = flt0
+                convert_TOF_to_Q, Event
+                flt0 = (*(*global).flt0_xaxis)
 ;                flt1 = (*(*global).flt1_yaxis)
 ;                flt2 = (*(*global).flt2_yaxis_err)
 
