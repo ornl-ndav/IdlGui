@@ -14,7 +14,7 @@ dMD = getTextFieldValue(Event,'AngleTextField')
 dMD = float(dMD)
 
 h_over_mn = (*global).h_over_mn
-CST = 4*!PI*sin(angleValue)
+CST = 4*!PI*sin(angleValue/2)
 CST /= h_over_mn
 CST *= dMD
 
@@ -31,7 +31,7 @@ if (algorithmSelected EQ 1) then begin  ;Jacobian method
     flt1 = (*(*global).flt1_yaxis)
     flt2 = (*(*global).flt2_yaxis_err)
     
-
+    
     
     
 endif
