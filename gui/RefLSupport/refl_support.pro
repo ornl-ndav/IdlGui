@@ -125,7 +125,8 @@ global = ptr_new({  $
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
                    angle_array    : ptr_new(0L),$    ;Angle value
                    color_array    : ptr_new(0L),$    ;index of color for each file 
-                   ColorSliderDefaultValue : 100,$   ;default index value of color slider
+                   ColorSliderDefaultValue : 25,$    ;default index value of color slider
+                   PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
                  })
 
@@ -580,7 +581,7 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      SCR_YSIZE=ListOfColorSize[3],$
                                      TITLE=ListOfColorTitle,$
                                      VALUE=ColorSliderDefaultValue,$
-                                     sensitive=0)
+                                     sensitive=1)
 
 ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
                               UNAME='ColorFileLabel',$

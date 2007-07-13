@@ -31,9 +31,6 @@ if (algorithmSelected EQ 1) then begin  ;Jacobian method
     flt1 = (*(*global).flt1_yaxis)
     flt2 = (*(*global).flt2_yaxis_err)
     
-    
-    
-    
 endif
 
 (*(*global).flt0_xaxis) = flt0
