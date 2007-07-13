@@ -4,8 +4,6 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 flt0 = (*(*global).flt0_xaxis)
-;flt1 = (*(*global).flt1_yaxis)
-;flt2 = (*(*global).flt2_yaxis_err)
 
 ;get current angle value (in rad)
 angleValue = getAngleValue(Event)
@@ -25,6 +23,18 @@ flt0_size = flt0_size_array[1]
 for i=0,(flt0_size-1) do begin
     flt0[i]=CST/(flt0[i]*1E-6)
 end
+
+;get value of algorithm selected
+algorithmSelected = getTOFtoQalgorithmSelected(Event)
+if (algorithmSelected EQ 1) then begin  ;Jacobian method
+
+    flt1 = (*(*global).flt1_yaxis)
+    flt2 = (*(*global).flt2_yaxis_err)
+    
+
+    
+    
+endif
 
 (*(*global).flt0_xaxis) = flt0
 

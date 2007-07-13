@@ -189,20 +189,11 @@ endif else begin
     fs = fstat(u)
 ;define an empty string variable to hold results from reading the file
     tmp = ''
-    while (NOT eof(u)) do begin
-        readu,u,onebyte         ;,format='(a1)'
-        fs = fstat(u)
-        if fs.cur_ptr EQ 0 then begin
-            point_lun,u,0
-        endif else begin
-            point_lun,u,fs.cur_ptr - 4
-        endelse
-        info_array = strarr(nbr_line)
-        for i=0,(nbr_line) do begin
-            readf,u,tmp
-            info_array[i] = tmp
-        endfor
-    endwhile
+    info_array = strarr(nbr_line)
+    for i=0,(nbr_line-1) do begin
+        readf,u,tmp
+        info_array[i] = tmp
+    endfor
     close,u
     free_lun,u
 endelse

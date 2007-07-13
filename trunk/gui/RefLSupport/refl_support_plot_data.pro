@@ -120,8 +120,11 @@ endif else begin
         error_plot_status = 0
         catch, error_plot_status
         if (error_plot_status NE 0) then begin
-            text = 'Not enough data to plot'
+
             CATCH,/cancel
+            text = 'ERROR plotting data'
+            displayErrorMessage, Event, text
+
         endif else begin
     
             openr,u,ListLongFileName[i],/get

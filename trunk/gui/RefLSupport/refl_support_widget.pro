@@ -1,3 +1,12 @@
+;This function gives the algorithm selected to do the TOF to Q 
+;0 for simple method, 1 for Jacobian (the one uses by Michael)
+FUNCTION getTOFtoQalgorithmSelected, Event
+tof_to_Q_algorithm_id = widget_info(event.top, find_by_uname='tof_to_Q_algorithm')
+widget_control, tof_to_Q_algorithm_id, get_value=algorithm_index
+return, algorithm_index
+END
+
+
 ;This function returns the selected index of the 'uname'
 ;droplist given
 FUNCTION getSelectedIndex, Event, uname
