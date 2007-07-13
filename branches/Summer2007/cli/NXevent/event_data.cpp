@@ -1,9 +1,8 @@
-/** Author: Wes Kendall
- *  Date: 06-18-07
- *  \file event_data.cpp
- *  \brief The implementation for the EventData
- *         class. For any documentation of the
- *         functions, look at event_data.hpp.
+/**
+ * \file event_data.cpp
+ * \brief The implementation for the EventData
+ *        class. For any documentation of the
+ *        functions, look at event_data.hpp.
  */
 
 #include "event_data.hpp"

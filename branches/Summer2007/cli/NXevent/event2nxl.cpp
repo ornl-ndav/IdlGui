@@ -1,7 +1,6 @@
-/** Author: Wes Kendall
- *  Date: 06-18-07
- *  \file event2nxl.cpp
- *  \brief Creates a nexus light file with a given event file.
+/**
+ * \file event2nxl.cpp
+ * \brief Creates a nexus light file with a given event file.
  */
 
 #include "event2nxl.hpp"
@@ -31,10 +30,11 @@ void layout_nexus_file(NexusUtil & nexus_util,
   nexus_util.open_group("bank1", "NXevent_data");
 }
 
-/** \fn int main(int32_t argc,
- *               char *argv[])
- *  \brief Parses the command line and calls the necessary
- *         functions to make and populate the nexus file.
+/** 
+ * \brief Parses the command line and calls the necessary
+ *        functions to make and populate the nexus file.
+ * \exception ArgException Thrown when TCLAP parser can't correctly
+ *                         parse the command line.
  */
 int main(int32_t argc, 
          char * argv[]) {

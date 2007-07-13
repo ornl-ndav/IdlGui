@@ -1,8 +1,7 @@
-/** Author: Wes Kendall
- *  Date: 06-26-07
- *  \file event_data.hpp
- *  \brief The function declarations, includes, and class
- *         definition for event_data.cpp.
+/**
+ * \file event_data.hpp
+ * \brief The function declarations, includes, and class
+ *        definition for event_data.cpp.
  */
 
 #ifndef _EVENT_DATA_HPP
@@ -14,11 +13,12 @@
 
 const uint32_t ERROR=0x80000000;
 
-/** \enum e_data_name
- *  \brief Enumeration of the data in the nexus file.
- *  
- *  e_data_name is used primarily for the compiler
- *  to catch any erronous values given to functions.
+/** 
+ * \enum e_data_name
+ * \brief Enumeration of the data in the nexus file.
+ * 
+ * e_data_name is used primarily for the compiler
+ * to catch any erronous values given to functions.
  */
 typedef enum e_data_name
 {
@@ -26,17 +26,21 @@ typedef enum e_data_name
   PIXEL_ID = 1
 };
     
-/** \fn inline int typename_to_nexus_type(const int32_t &val)
- *  \brief Returns an int32 nexus type.
- *  \param val The type of the templated calling function.
+/**
+ * \brief Turns a type (like uint32_t) into a valid nexus
+ *        type. 
+ * \return The enumerator for the nexus data type.
+ * \exception runtime_error Thrown if the function isn't
+ *                          instantiated for the type given.
  */
 template <typename NumT>
 inline e_nx_data_type typename_to_nexus_type(void);
 
-/** \class EventData
- *  \brief Holds all the data from the event file and
- *         includes the functions for working on the
- *         data
+/** 
+ * \class EventData
+ * \brief Holds all the data from the event file and
+ *        includes the functions for working on the
+ *        data
  */
 template <typename NumT>
 class EventData
@@ -47,105 +51,100 @@ class EventData
     std::vector<NumT> pulse_time;
     std::string data_path;
 
-    /** \fn void seconds_to_iso8601(NumT seconds, 
-     *                              string &time)
-     *  \brief Takes a number of seconds since jan 1, 1990
-     *         and converts it to an iso8601 date string.
-     *  \param seconds The number of seconds since jan 1, 1990.
-     *  \param nanoseconds The nanoseconds of the current second.
-     *  \param time The variable to store the ISO8601 date string in.
+    /** 
+     * \brief Takes a number of seconds since jan 1, 1990
+     *        and converts it to an iso8601 date string.
+     * \param seconds The number of seconds since jan 1, 1990.
+     * \param nanoseconds The nanoseconds of the current second.
+     * \param time The variable to store the ISO8601 date string in.
      */
     void seconds_to_iso8601(NumT seconds, 
                             NumT nanoseconds,
                             std::string & time);
     
-    /** \fn void get_nx_data_values(const e_data_name nx_data_type,
-     *                              string &data_name)
-     *  \brief Fills in the nexus values associated with the
-     *         e_data_name enumeration.
-     *  \param nx_data_type The enumeration specifying which piece
-     *                      of data. Ex - TOF for time of flight.
-     *  \param data_name The string to fill in the actual name
-     *                   associated with the enumeration. Ex -
-     *                   data_name will be set to "time_of_flight"
-     *                   if the nx_data_type is TOF.
+    /**
+     * \brief Fills in the nexus values associated with the
+     *        e_data_name enumeration.
+     * \param nx_data_type The enumeration specifying which piece
+     *                     of data. Ex - TOF for time of flight.
+     * \exception runtime_error Thrown if the enumeration value is 
+     *                          invalid.
+     * \return The string representation of the data. Ex - 
+     *         "time_of_flight" for TOF.
      */
     std::string get_nx_data_name(const e_data_name nx_data_type);
     
-    /** \fn void get_nx_data_values(const e_data_name nx_data_type,
-     *                              string &data_name, 
-     *                              vector<NumT> &data)
-     *  \brief Fills in the nexus values associated with the
-     *         e_data_name enumeration.
-     *  \param nx_data_type The enumeration specifying which piece
-     *                      of data. Ex - TOF for time of flight.
-     *  \param data_name The string to fill in the actual name
-     *                   associated with the enumeration. Ex -
-     *                   data_name will be set to "time_of_flight"
-     *                   if the nx_data_type is TOF.
-     *  \param data The chunk of data that will be set properly
-     *              according to the enumeration.
+    /**
+     * \brief Fills in the nexus values associated with the
+     *        e_data_name enumeration.
+     * \param nx_data_type The enumeration specifying which piece
+     *                     of data. Ex - TOF for time of flight.
+     * \exception runtime_error Thrown if the enumeration value is
+     *                          invalid.
+     * \return The vector of data associated with the enumeration.
      */
     std::vector<NumT> & get_nx_data_values(const e_data_name nx_data_type);
 
   public:
-    /** \fn void read_event_file(const string &event_file)
-     *  \brief Reads information from the event file and populates
-     *         the tof and pixel id vectors.
-     *  \param event_file The event file to read from.
+    /**
+     * \brief Reads information from the event file and populates
+     *        the tof and pixel id vectors.
+     * \param event_file The event file to read from.
+     * \exception runtime_error Thrown if the event file can't be opened.
      */
     void read_event_file(const std::string & event_file);
 
-    /** \fn void read_pulse_id_file(const string &pulse_id_file)
-     *  \brief Reads information from the pulse id file.
-     *  \param pulse_id_file The pulse id file to read from.
+    /**
+     * \brief Reads information from the pulse id file.
+     * \param pulse_id_file The pulse id file to read from.
+     * \exception runtime_error Thrown if the pulse id file
+     *                          can't be opened.
      */
     void read_pulse_id_file(const std::string & pulse_id_file);
 
-    /** \fn void map_pixel_ids(const std::string &mapping_file)
-     *  \brief Takes a mapping file and maps the pixels to
-     *         the appropriate numbers.
-     *  \param mapping_file The mapping file to use.
+    /**
+     * \brief Takes a mapping file and maps the pixels to
+     *        the appropriate numbers.
+     * \param mapping_file The mapping file to use.
+     * \exception runtime_error Thrown if the mappging file doesn't
+     *                          exist or if the data hasn't been read
+     *                          in yet.
      */
     void map_pixel_ids(const std::string & mapping_file);
 
-    /** \fn void write_data(NexusUtil &nexus_util,
-     *                      const e_data_name nx_data_name)
-     *  \brief Templated function that writes data to a nexus
-     *         file.
-     *  \param nexus_util The nexus utility.
-     *  \param nx_data_name The enumeration specifying which 
-     *                      piece of data to write.
+    /**
+     * \brief Templated function that writes data to a nexus
+     *        file.
+     * \param nexus_util The nexus utility.
+     * \param nx_data_name The enumeration specifying which 
+     *                     piece of data to write.
      */
     void write_data(NexusUtil & nexus_util,
                     const e_data_name nx_data_name);
 
-    /** \fn void write_attr(NexusUtil &nexus_util,
-     *                      const string &attr_name,
-     *                      const string &attr_value,
-     *                      const e_data_name nx_data_name)
-     *  \brief Opens a data field in a nexus file and
-     *         writes an attribute for it.
-     *  \param nexus_util The nexus utility.
-     *  \param attr_name The name of the attribute.
-     *  \param group_value The value associated with
-     *                     the attribute.
-     *  \param nx_data_name The enumeration specifying which
-     *                      piece of data to write.
+    /**
+     * \brief Opens a data field in a nexus file and
+     *        writes an attribute for it.
+     * \param nexus_util The nexus utility.
+     * \param attr_name The name of the attribute.
+     * \param group_value The value associated with
+     *                    the attribute.
+     * \param nx_data_name The enumeration specifying which
+     *                     piece of data to write.
      */
     void write_attr(NexusUtil & nexus_util,
                     const std::string & attr_name,
                     const std::string & attr_value,
                     const e_data_name nx_data_name);
   
-    /** \fn EventData(const string &path)
-     *  \brief Constructor the EventData class.
-     *  \param path The path to the data in the nexus file.
+    /**
+     * \brief Constructor the EventData class.
+     * \param path The path to the data in the nexus file.
      */
     EventData(const std::string & data_path);
 
     /**
-     *  \brief The destructor for the EventData class.
+     * \brief The destructor for the EventData class.
      */
     ~EventData();
 };
