@@ -51,13 +51,19 @@ return, LongFileName
 END
 
 
-;This functions gives the index of the color selected
-FUNCTION getColorIndex, Event
+;This function defines the new color and moves the slider if necessary
+PRO defineColorIndex, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
-widget_control, list_of_color_slider_id, get_value = colorIndex
-return, colorIndex
+widget_control, list_of_color_slider_id, get_value = ColorIndex
+
+PreviousColorIndex = (*global).PreviousColorIndex
+if (ColorIndex EQ (PreviouscolorIndex)) Then begin
+    ColorIndex += 25
+    MoveColorIndex,Event,ColorIndex
+    (*global).PreviousColorIndex = ColorIndex
+endif 
 END
 
 

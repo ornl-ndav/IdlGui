@@ -1,9 +1,35 @@
+;This functions gives the index of the color selected
+FUNCTION getColorIndex, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
+widget_control, list_of_color_slider_id, get_value = ColorIndex
+return, colorIndex
+END
+
+
+;This function moves the color index to the right position
+PRO MoveColorIndex,Event
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ ColorIndex = getColorIndex(Event)
+
+ PreviousColorIndex = (*global).PreviousColorIndex
+ if (ColorIndex EQ PreviouscolorIndex) Then begin
+     ColorIndex += 25
+     (*global).PreviousColorIndex = ColorIndex
+     list_of_color_slider_id = widget_info(Event.top,find_by_uname='list_of_color_slider')
+     widget_control, list_of_color_slider_id, set_value=ColorIndex
+ endif 
+END
+
+
 ;This function gives the algorithm selected to do the TOF to Q 
 ;0 for simple method, 1 for Jacobian (the one uses by Michael)
 FUNCTION getTOFtoQalgorithmSelected, Event
-tof_to_Q_algorithm_id = widget_info(event.top, find_by_uname='tof_to_Q_algorithm')
-widget_control, tof_to_Q_algorithm_id, get_value=algorithm_index
-return, algorithm_index
+ tof_to_Q_algorithm_id = widget_info(event.top, find_by_uname='tof_to_Q_algorithm')
+ widget_control, tof_to_Q_algorithm_id, get_value=algorithm_index
+ return, algorithm_index
 END
 
 
@@ -233,6 +259,8 @@ PRO ResetPositionOfSlider, Event
  defaultColorSliderPosition = (*global).ColorSliderDefaultValue
  list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
  widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
+
+ (*global).PreviousColorIndex = defaultColorSliderPosition
 END
 
 

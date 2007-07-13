@@ -53,6 +53,9 @@ PRO LOAD_FILE, Event
 ;get only the file name (without path) of file
      ShortFileName = get_file_name_only(LongFileName)    
 
+;MoveColorIndex to new position 
+     MoveColorIndex,Event
+
 ;get the value of the angle (in rad)
      angleValue = getCurrentAngleValue(Event)
      (*global).angleValue = angleValue
@@ -149,7 +152,7 @@ ClearAllDropLists, Event      ;clear all droplists
 ClearAllTextBoxes, Event      ;clear all textBoxes
 ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
 ClearMainPlot, Event          ;clear main plot window
-ResetPositionOfSlider, Event  ;reset color slider
+ResetPositionOfSlider, Event  ;reset color slider and previousColorIndex
 ResetAllOtherParameters, Event
 ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
