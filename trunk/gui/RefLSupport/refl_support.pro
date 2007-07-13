@@ -275,6 +275,12 @@ Step3SFTextFieldSize = [Step3SFLabelSize[0]+distance_L_TB,$
                         Step3Q1LabelSize[1],$
                         Step3Q1TextFieldSize[2],$
                         Step3Q1LabelSize[3]]
+;--settings tab
+SettingsTabSize      = [5  , 5  , 500 , 200 ]
+tof_to_Q_label_size  = [5  , 5  , 150 , 30 ]
+tof_to_Q_size        = [160, 5]
+
+
 ;--RESET ALL
 yoff = 5
 ResetAllButtonSize   = [StepsTabSize[0],$
@@ -388,6 +394,9 @@ Step3BaseFileTitle   = 'Base File:'
 Step3WorkOnFileTitle = '  Work On:'
 Step3GoButtonTitle = 'Rescale Work-on file'
 ListOfFiles  = ['                            ']  
+;--Settings tab--
+SettingsTabTitle     = 'Settings'
+tof_to_Q_label_title = 'TOF_to_Q algorithm:' 
 ;Main Base
 RefreshPlotButtonTitle = 'Refresh Plot'
 
@@ -792,6 +801,35 @@ STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
                                   /EDITABLE,$ 
                                   /ALIGN_LEFT,$ 
                                   /ALL_EVENTS)
+
+;--SETTINGS TAB ----------------------------------------------------------------
+SETTINGS_BASE = WIDGET_BASE(STEPS_TAB,$
+                            UNAME='settings_base',$
+                            TITLE=SettingsTabTitle,$
+                            XOFFSET=SettingsTabSize[0],$
+                            YOFFSET=SettingsTabSize[1],$
+                            SCR_XSIZE=SettingsTabSize[2],$
+                            SCR_YSIZE=SettingsTabSize[3])
+
+TOF_to_Q_label = widget_label(settings_base,$
+                              value=TOF_to_Q_label_title,$
+                              xoffset=TOF_to_Q_label_size[0],$
+                              yoffset=TOF_to_Q_label_size[1],$
+                              scr_xsize=TOF_to_Q_label_size[2],$
+                              scr_ysize=TOF_to_Q_label_size[3],$
+                              /align_left)
+
+TOF_to_Q_algorithm = ['(4*PI*sin(theta)*m*L)/hTOF   ','Jacobian']
+TOF_to_Q_algorithm = CW_BGROUP(settings_base,$
+                               TOF_to_Q_algorithm,$
+                               /exclusive,$
+                               /return_name,$
+                               XOFFSET=tof_to_Q_size[0],$
+                               YOFFSET=tof_to_Q_size[1],$
+                               SET_VALUE=0.0,$
+                               row=1,$
+                               uname='tof_to_Q_algorithm')                 
+
 ;--RESET ALL BUTTONS--
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                  UNAME='reset_all_button',$

@@ -35,6 +35,7 @@ if (PrevTabSelect NE CurrTabSelect OR $
             endelse
             plot_loaded_file, Event, ListLongFileName
         end
+        else:                ;if fourth tab (settings tab) is selected
     ENDCASE
 endif
 END
