@@ -22,8 +22,8 @@ using std::runtime_error;
 using std::type_info;
 using namespace TCLAP;
 
-void layout_nexus_file(NexusUtil &nexus_util,
-                       const Config &config) 
+void layout_nexus_file(NexusUtil & nexus_util,
+                       const Config & config) 
 {
   nexus_util.make_group("entry", "NXentry");
   nexus_util.open_group("entry", "NXentry");
@@ -37,7 +37,7 @@ void layout_nexus_file(NexusUtil &nexus_util,
  *         functions to make and populate the nexus file.
  */
 int main(int32_t argc, 
-         char *argv[]) {
+         char * argv[]) {
   struct Config config;
   e_nx_access file_access;
 
@@ -82,8 +82,8 @@ int main(int32_t argc,
     
       // Fill out the config object
       config.out_path = out_path.getValue();
-      config.event_file = data_file.getValue()+"_neutron_event.dat";
-      config.pulse_id_file = data_file.getValue()+"_pulseid.dat";
+      config.event_file = data_file.getValue() + "_neutron_event.dat";
+      config.pulse_id_file = data_file.getValue() + "_pulseid.dat";
       config.format = format.getValue();
       config.mapping_file = mapping_file.getValue();
       
@@ -102,10 +102,10 @@ int main(int32_t argc,
         }
       else
         {
-          throw runtime_error("Invalid nexus format type: "+format.getValue());
+          throw runtime_error("Invalid nexus format type: " + format.getValue());
         }
     }
-  catch (ArgException &e)
+  catch (ArgException & e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
       exit(1);

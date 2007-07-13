@@ -45,14 +45,14 @@ struct Config
  *                the maximum size, and the seed for the
  *                random number generator.
  */
-void populate_tof(vector<uint32_t> &tof,
-                  const Config &config) 
+void populate_tof(vector<uint32_t> & tof,
+                  const Config & config) 
 {
   int i;
 
   // Set the random number seed
   srand(config.rand_seed);
-  for ( i=0; i<config.num_events; i++ ) 
+  for (i = 0; i < config.num_events; i++) 
     {
       tof.push_back(rand());
     }
@@ -66,16 +66,16 @@ void populate_tof(vector<uint32_t> &tof,
  *                the maximum size, maximum pixel value, and 
  *                the seed for the random number generator.
  */
-void populate_pixel_id(vector<uint32_t> &pixel_id,
-                       const Config &config) 
+void populate_pixel_id(vector<uint32_t> & pixel_id,
+                       const Config & config) 
 {
   int i;
 
   // Set the random number seed
   srand(config.rand_seed);
-  for ( i=0; i<config.num_events; i++ ) 
+  for (i = 0; i < config.num_events; i++) 
     {
-      pixel_id.push_back(rand()%config.max_pixel_id);
+      pixel_id.push_back(rand() % config.max_pixel_id);
     }
 }
 
@@ -88,8 +88,8 @@ void populate_pixel_id(vector<uint32_t> &pixel_id,
   * \param config Contains the format of the file and the
   *        name of the file.
   */
-void layout_nexus_file(NXhandle &file_id,
-                       const Config &config) 
+void layout_nexus_file(NXhandle & file_id,
+                       const Config & config) 
 {
   NXaccess file_access;
 
@@ -108,13 +108,13 @@ void layout_nexus_file(NXhandle &file_id,
     }
   else
     {
-      throw runtime_error("Invalid nexus format type: "+config.format);
+      throw runtime_error("Invalid nexus format type: " + config.format);
     }
  
   // Open the file, make all the groups and close them off
   if (NXopen(config.out_path.c_str(), file_access, &file_id) != NX_OK)
     {
-      throw runtime_error("Failed to open nexus file: "+config.out_path);
+      throw runtime_error("Failed to open nexus file: " + config.out_path);
     }
   if (NXmakegroup(file_id, "entry", "NXentry") != NX_OK)
     {
@@ -183,10 +183,10 @@ inline int typename_to_nexus_type(const uint32_t val)
   * \param data_name The name of the data.
   */
 template <typename NumT>
-void write_data(const NXhandle &file_id,
-                const vector<NumT> &data, 
-                const string &group_path,
-                const string &data_name)
+void write_data(const NXhandle & file_id,
+                const vector<NumT> & data, 
+                const string & group_path,
+                const string & data_name)
 {
   // Make a non constant variable to pass to nx function
   // to make sure the original is never changed
@@ -200,30 +200,30 @@ void write_data(const NXhandle &file_id,
   // Open the group 
   if (NXopenpath(file_id, group_path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open group: "+group_path);
+      throw runtime_error("Failed to open group: " + group_path);
     }
   // Make the data, open it, and write it
   if (NXmakedata(file_id, data_name.c_str(), 
                  nexus_data_type, 1, &size) != NX_OK)
     {
-      throw runtime_error("Failed make data: "+data_name);
+      throw runtime_error("Failed make data: " + data_name);
     }
   if (NXopendata(file_id, data_name.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open data: "+data_name);
+      throw runtime_error("Failed to open data: " + data_name);
     }
   if (NXputdata(file_id, &nx_data[0]) != NX_OK)
     {
-      throw runtime_error("Failed to create data under "+data_name);
+      throw runtime_error("Failed to create data under " + data_name);
     }
   // Close the data and the group
   if (NXclosedata(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close data: "+data_name);
+      throw runtime_error("Failed to close data: " + data_name);
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group: "+group_path);
+      throw runtime_error("Failed to close group: " + group_path);
     }
 }
 
@@ -239,10 +239,10 @@ void write_data(const NXhandle &file_id,
   *                    the attribute
   * \param data_path The path to the data
   */
-void write_attr(const NXhandle &file_id,
-                const string &attr_name,
-                const string &attr_value,
-                const string &data_path)
+void write_attr(const NXhandle & file_id,
+                const string & attr_name,
+                const string & attr_value,
+                const string & data_path)
 {
   // Make a non const variable for NXputattr
   string nx_attr_value(attr_value);
@@ -250,23 +250,23 @@ void write_attr(const NXhandle &file_id,
   // Open the data
   if (NXopenpath(file_id, data_path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open data: "+data_path);
+      throw runtime_error("Failed to open data: " + data_path);
     }
   // Write the attribute for the data
   if (NXputattr(file_id, attr_name.c_str(), 
                 &nx_attr_value[0], attr_value.length(),
                 NX_CHAR) != NX_OK)
     {
-      throw runtime_error("Failed to create attribute: "+attr_name);
+      throw runtime_error("Failed to create attribute: " + attr_name);
     }
   // Close the data and the group
   if (NXclosedata(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close data: "+data_path);
+      throw runtime_error("Failed to close data: " + data_path);
     }
   if (NXclosegroup(file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close group: "+data_path);
+      throw runtime_error("Failed to close group: " + data_path);
     }
 }
 
@@ -276,7 +276,7 @@ void write_attr(const NXhandle &file_id,
  *         functions to make and populate the nexus file.
  */
 int main(int32_t argc, 
-         char *argv[]) {
+         char * argv[]) {
   NXhandle file_id;
   struct Config config;
   const string VERSION("1.0");
@@ -328,7 +328,7 @@ int main(int32_t argc,
       config.rand_seed = rand_seed.getValue();
       config.format = format.getValue();
     }
-  catch (ArgException &e)
+  catch (ArgException & e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
     }
@@ -350,7 +350,7 @@ int main(int32_t argc,
   // Close the nexus file
   if (NXclose(&file_id) != NX_OK)
     {
-      throw runtime_error("Failed to close nexus file: "+config.out_path);
+      throw runtime_error("Failed to close nexus file: " + config.out_path);
     }
 
   return 0;

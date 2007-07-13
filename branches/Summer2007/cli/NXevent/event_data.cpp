@@ -27,22 +27,35 @@ using std::ifstream;
 
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
-template void EventData<uint32_t>::read_event_file(const string &);
-template void EventData<uint32_t>::read_pulse_id_file(const string &);
-template void EventData<uint32_t>::write_data(NexusUtil &, 
-                                              const e_data_name);
-template void EventData<uint32_t>::write_attr(NexusUtil &,
-                                              const string &,
-                                              const string &,
-                                              const e_data_name);
-template void EventData<uint32_t>::map_pixel_ids(const string &);
-template EventData<uint32_t>::EventData(const string &);
-template EventData<uint32_t>::~EventData();
+template 
+void EventData<uint32_t>::read_event_file(const string & event_file);
+
+template 
+void EventData<uint32_t>::read_pulse_id_file(const string & pulse_id_file);
+
+template 
+void EventData<uint32_t>::write_data(NexusUtil & nexus_util, 
+                                     const e_data_name nx_data_name);
+
+template 
+void EventData<uint32_t>::write_attr(NexusUtil & nexus_util,
+                                     const string & attr_name,
+                                     const string & attr_value,
+                                     const e_data_name nx_data_name);
+
+template 
+void EventData<uint32_t>::map_pixel_ids(const string & mapping_file);
+
+template 
+EventData<uint32_t>::EventData(const string & data_path);
+
+template 
+EventData<uint32_t>::~EventData();
 
 template<typename NumT>
-EventData<NumT>::EventData(const string &path)
+EventData<NumT>::EventData(const string & data_path)
 {
-  this->data_path = path;
+  this->data_path = data_path;
 }
 
 template<typename NumT>
@@ -104,9 +117,9 @@ EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type)
 }
 
 template <typename NumT>
-void EventData<NumT>::write_attr(NexusUtil &nexus_util, 
-                                 const string &attr_name,
-                                 const string &attr_value,
+void EventData<NumT>::write_attr(NexusUtil & nexus_util, 
+                                 const string & attr_name,
+                                 const string & attr_value,
                                  const e_data_name nx_data_name)
 {
   string data_name;
@@ -121,7 +134,7 @@ void EventData<NumT>::write_attr(NexusUtil &nexus_util,
 }
 
 template <typename NumT>
-void EventData<NumT>::write_data(NexusUtil &nexus_util, 
+void EventData<NumT>::write_data(NexusUtil & nexus_util, 
                                  const e_data_name nx_data_name)
 {
   string data_name;
@@ -143,7 +156,7 @@ void EventData<NumT>::write_data(NexusUtil &nexus_util,
 }
  
 template <typename NumT>
-void EventData<NumT>::map_pixel_ids(const string &mapping_file)
+void EventData<NumT>::map_pixel_ids(const string & mapping_file)
 {
   map<uint32_t, uint32_t> pixel_id_map;
   size_t data_size = sizeof(uint32_t);
@@ -167,7 +180,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
   ifstream file(mapping_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+mapping_file);
+      throw runtime_error("Failed opening file: " + mapping_file);
     }
 
   // Determine the file and buffer size
@@ -183,7 +196,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 
       // For each mapping index, map the pixel id
       // in the mapping file to that index
-      for( size_t i = 0; i < buffer_size; i++ )
+      for(size_t i = 0; i < buffer_size; i++)
         {
           pixel_id_map[mapping_index] = *(buffer + i);
           mapping_index++;
@@ -192,9 +205,9 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
       offset += buffer_size;
 
       // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
+      if(offset + BLOCK_SIZE > file_size)
         {
-          buffer_size = file_size-offset;
+          buffer_size = file_size - offset;
         }
     }
 
@@ -203,7 +216,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 
   // After creating the map, map the pixel ids to the proper value
   int size = this->pixel_id.size();
-  for ( size_t i = 0; i < size; i++ )
+  for(size_t i = 0; i < size; i++)
     {
       this->pixel_id[i] = pixel_id_map[this->pixel_id[i]];
     }
@@ -211,7 +224,7 @@ void EventData<NumT>::map_pixel_ids(const string &mapping_file)
 
 template <typename NumT>
 void EventData<NumT>::seconds_to_iso8601(NumT seconds, NumT nanoseconds,
-                                         string &time)
+                                         string & time)
 {
   stringstream time_stream;
   char date[100];
@@ -234,7 +247,7 @@ void EventData<NumT>::seconds_to_iso8601(NumT seconds, NumT nanoseconds,
 }
 
 template <typename NumT>
-void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
+void EventData<NumT>::read_pulse_id_file(const string & pulse_id_file)
 {
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
@@ -248,7 +261,7 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
   ifstream file(pulse_id_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+pulse_id_file);
+      throw runtime_error("Failed opening file: " + pulse_id_file);
     }
 
   // Determine the file and buffer size
@@ -274,16 +287,16 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // Keep track of the time offsets and read in the pulse times
-      for( i = 0; i < buffer_size; i+=4 )
+      for(i = 0; i < buffer_size; i+=4)
         {
         }
 
       offset += buffer_size;
 
       // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
+      if(offset + BLOCK_SIZE > file_size)
         {
-          buffer_size = file_size-offset;
+          buffer_size = file_size - offset;
         }
     }
   // Close event file
@@ -291,7 +304,7 @@ void EventData<NumT>::read_pulse_id_file(const string &pulse_id_file)
 }
 
 template <typename NumT>
-void EventData<NumT>::read_event_file(const string &event_file) 
+void EventData<NumT>::read_event_file(const string & event_file)
 {
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
@@ -302,7 +315,7 @@ void EventData<NumT>::read_event_file(const string &event_file)
   ifstream file(event_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+event_file);
+      throw runtime_error("Failed opening file: " + event_file);
     }
 
   // Determine the file and buffer size
@@ -318,7 +331,7 @@ void EventData<NumT>::read_event_file(const string &event_file)
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
-      for( i = 0; i < buffer_size; i+=2 )
+      for(i = 0; i < buffer_size; i+=2)
         {
           // Filter out error codes
           if ((*(buffer + i + 1) & ERROR) != ERROR)
@@ -332,9 +345,9 @@ void EventData<NumT>::read_event_file(const string &event_file)
       offset += buffer_size;
 
       // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
+      if(offset + BLOCK_SIZE > file_size)
         {
-          buffer_size = file_size-offset;
+          buffer_size = file_size - offset;
         }
     }
 

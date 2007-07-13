@@ -68,7 +68,7 @@ class NexusUtil
      *  \brief Constructor that opens the nexus file with the 
      *         specified format.
      */
-    NexusUtil(const std::string &out_path, 
+    NexusUtil(const std::string & out_path, 
               const e_nx_access file_access);
 
     /** \fn ~NexusUtil(void)
@@ -81,16 +81,16 @@ class NexusUtil
      *  \brief Makes a group in a nexus file, while checking for
      *         errors.
      */
-    void make_group(const std::string &name, 
-                    const std::string &path);
+    void make_group(const std::string & name, 
+                    const std::string & path);
     
     /** \fn open_group(const string &name, 
      *                 const string &path)
      *  \brief Opens a group in a nexus file, while checking for
      *         errors.
      */
-    void open_group(const std::string &name,  
-                    const std::string &path);
+    void open_group(const std::string & name,  
+                    const std::string & path);
     
     /** \fn close_group(void)
      *  \brief Closes a group in a nexus file, while checking for
@@ -102,7 +102,7 @@ class NexusUtil
      *  \brief Opens a path in a nexus file, while checking for
      *         errors.
      */
-    void open_path(const std::string &path);
+    void open_path(const std::string & path);
     
     /** \fn make_data(const string &name, 
      *                int nexus_data_type,
@@ -111,22 +111,22 @@ class NexusUtil
      *  \brief Makes data in a nexus file, while checking for
      *         errors.
      */
-    void make_data(const std::string &name, 
+    void make_data(const std::string & name, 
                    const e_nx_data_type nx_data_type, 
                    int rank, 
-                   int *dimensions);
+                   int * dimensions);
     
     /** \fn open_group(const string &name)
      *  \brief Opens data in a nexus file, while checking for
      *         errors.
      */
-    void open_data(const std::string &name);
+    void open_data(const std::string & name);
     
     /** \fn put_data(void *nx_data)
      *  \brief Writes data to a nexus file, while checking for
      *         errors.
      */
-    void put_data(void *nx_data);
+    void put_data(void * nx_data);
 
     /** 
      *  \brief Writes data to a nexus file, while checking for
@@ -150,8 +150,8 @@ class NexusUtil
      *  \brief Writes an attribute to a piece of data, 
      *         while checking for errors.
      */
-    void put_attr(const std::string &name, 
-                  void *value, 
+    void put_attr(const std::string & name, 
+                  void * value, 
                   int length, 
                   const e_nx_data_type nx_data_type);
 
@@ -160,8 +160,8 @@ class NexusUtil
      *  \brief Overloaded function that is specifically
      *         meant for strings.
      */
-    void put_attr(const std::string &name,
-                  const std::string &value);
+    void put_attr(const std::string & name,
+                  const std::string & value);
     
     /** \fn put_slab(void *nx_data,
      *               int start,
@@ -169,9 +169,9 @@ class NexusUtil
      *  \brief Writes a chunk of data to a nexus file, 
      *         while checking for errors.
      */
-    void put_slab(void *nx_data, 
-                  int *start,
-                  int *size);
+    void put_slab(void * nx_data, 
+                  int * start,
+                  int * size);
 
     /**
      *  \brief Writes a chunk of a vector to a nexus file, 
@@ -201,7 +201,7 @@ class NexusUtil
      *  \brief Gets data from the nexus file, 
      *         while checking for errors.
      */
-    void get_data(void *nx_data);
+    void get_data(void * nx_data);
     
     /** \fn get_slab(void *nx_data,
      *               int *start,
@@ -209,9 +209,9 @@ class NexusUtil
      *  \brief Gets a chunk of data from the nexus file, 
      *         while checking for errors.
      */
-    void get_slab(void *nx_data, 
-                  int *start, 
-                  int *size);
+    void get_slab(void * nx_data, 
+                  int * start, 
+                  int * size);
 
     /** \fn malloc(void **nx_data,
      *             int rank,
@@ -219,15 +219,15 @@ class NexusUtil
      *             int nexus_data_type)
      *  \brief Uses NXmalloc, while checking for errors.
      */
-    void malloc(void **nx_data,
+    void malloc(void ** nx_data,
                 int rank,
-                int *dimensions,
+                int * dimensions,
                 const e_nx_data_type nx_data_type);
 
     /* \fn free(void **nx_data)
      * \brief Calls NXfree, while checking for errors.
      */
-    void free(void **nx_data);
+    void free(void ** nx_data);
 
     /* \fn get_info(int *rank,
      *              int *dimensions,
@@ -235,9 +235,9 @@ class NexusUtil
      * \brief Gets nexus data information, 
      *        while checking for errors.
      */
-    void get_info(int *rank,
-                  int *dimensions,
-                  e_nx_data_type &nx_data_type);
+    void get_info(int * rank,
+                  int * dimensions,
+                  e_nx_data_type & nx_data_type);
 };
 
 #endif

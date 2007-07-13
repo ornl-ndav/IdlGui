@@ -18,8 +18,8 @@ const string VERSION = "1.0";
 const size_t BLOCK_SIZE = 1024;
 const uint32_t ERROR = 0x80000000;
 
-void compare_data(const vector<uint32_t> &file_one_data,
-                  const vector<uint32_t> &file_two_data)
+void compare_data(const vector<uint32_t> & file_one_data,
+                  const vector<uint32_t> & file_two_data)
 {
   if (file_one_data.size() != file_two_data.size())
     {
@@ -28,7 +28,7 @@ void compare_data(const vector<uint32_t> &file_one_data,
   else
     {
       int size = file_one_data.size();
-      for (int i = 0; i < size; i++)
+      for(int i = 0; i < size; i++)
         {
           if (*(&file_one_data[0] + i) != *(&file_two_data[0] + i))
             {
@@ -39,8 +39,8 @@ void compare_data(const vector<uint32_t> &file_one_data,
     }
 }
 
-void read_data(const string &file_name, 
-          vector<uint32_t> &data)
+void read_data(const string & file_name, 
+          vector<uint32_t> & data)
 {
   uint32_t buffer[BLOCK_SIZE];
   size_t offset = 0;
@@ -51,7 +51,7 @@ void read_data(const string &file_name,
   ifstream file(file_name.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+file_name);
+      throw runtime_error("Failed opening file: " + file_name);
     }
 
   // Determine the file and buffer size
@@ -67,7 +67,7 @@ void read_data(const string &file_name,
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
-      for( i = 0; i < buffer_size; i+=2 )
+      for(i = 0; i < buffer_size; i+=2)
         {
           // Filter out error codes
           if ((*(buffer + i + 1) & ERROR) != ERROR)
@@ -81,9 +81,9 @@ void read_data(const string &file_name,
       offset += buffer_size;
 
       // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
+      if(offset + BLOCK_SIZE > file_size)
         {
-          buffer_size = file_size-offset;
+          buffer_size = file_size - offset;
         }
     }
 
@@ -92,7 +92,7 @@ void read_data(const string &file_name,
 }
 
 int main(int32_t argc, 
-         char *argv[]) 
+         char * argv[]) 
 {
   vector<uint32_t> file_one_data;
   vector<uint32_t> file_two_data;
@@ -117,7 +117,7 @@ int main(int32_t argc,
           return -1;
         }
     }
-  catch(ArgException &e)
+  catch(ArgException & e)
     {
       cerr << "PARSE ERROR:" << e.error() << " for arg " << e.argId() 
            << endl;

@@ -19,7 +19,7 @@ template
 void NexusUtil::put_data_with_slabs<uint32_t>(vector<uint32_t> & nx_data,
                                               int block_size);
 
-NexusUtil::NexusUtil(const string &out_path,
+NexusUtil::NexusUtil(const string & out_path,
                      e_nx_access file_access)
 {
   if (out_path.empty())
@@ -30,7 +30,7 @@ NexusUtil::NexusUtil(const string &out_path,
   if (NXopen(out_path.c_str(), 
       (NXaccess)file_access, &(this->file_id)) != NX_OK)
     {
-      throw runtime_error("Failed to open nexus file: "+out_path);
+      throw runtime_error("Failed to open nexus file: " + out_path);
     }
 }
 
@@ -45,7 +45,7 @@ NexusUtil::~NexusUtil(void)
     }
 }
 
-void NexusUtil::make_group(const string &name, const string &path)
+void NexusUtil::make_group(const string & name, const string & path)
 {
   if (name.empty())
     {
@@ -59,11 +59,11 @@ void NexusUtil::make_group(const string &name, const string &path)
 
   if (NXmakegroup(this->file_id, name.c_str(), path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to make group: "+name);
+      throw runtime_error("Failed to make group: " + name);
     }
 }
 
-void NexusUtil::open_group(const string &name, const string &path)
+void NexusUtil::open_group(const string & name, const string & path)
 {
   if (name.empty())
     {
@@ -77,7 +77,7 @@ void NexusUtil::open_group(const string &name, const string &path)
 
   if (NXopengroup(this->file_id, name.c_str(), path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open group: "+name);
+      throw runtime_error("Failed to open group: " + name);
     }
 }
 
@@ -89,7 +89,7 @@ void NexusUtil::close_group(void)
     }
 }
 
-void NexusUtil::open_path(const string &path)
+void NexusUtil::open_path(const string & path)
 {
   if (path.empty())
     {
@@ -98,14 +98,14 @@ void NexusUtil::open_path(const string &path)
   
   if (NXopenpath(this->file_id, path.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open group: "+path);
+      throw runtime_error("Failed to open group: " + path);
     }
 }
 
-void NexusUtil::make_data(const string &name, 
+void NexusUtil::make_data(const string & name, 
                           const e_nx_data_type nx_data_type, 
                           int rank, 
-                          int *dimensions)
+                          int * dimensions)
 {
   if (name.empty())
     {
@@ -120,11 +120,11 @@ void NexusUtil::make_data(const string &name,
   if (NXmakedata(this->file_id, name.c_str(),
                  (int)nx_data_type, rank, dimensions) != NX_OK)
     {
-      throw runtime_error("Failed make data: "+name);
+      throw runtime_error("Failed make data: " + name);
     }
 }
 
-void NexusUtil::open_data(const string &name)
+void NexusUtil::open_data(const string & name)
 {
   if (name.empty())
     {
@@ -133,11 +133,11 @@ void NexusUtil::open_data(const string &name)
 
   if (NXopendata(this->file_id, name.c_str()) != NX_OK)
     {
-      throw runtime_error("Failed to open data: "+name);
+      throw runtime_error("Failed to open data: " + name);
     }
 }
 
-void NexusUtil::put_data(void *nx_data)
+void NexusUtil::put_data(void * nx_data)
 {
   if (nx_data == NULL)
     {
@@ -172,7 +172,7 @@ void NexusUtil::close_data(void)
     }
 }
 
-void NexusUtil::put_attr(const string &name, void *value, 
+void NexusUtil::put_attr(const string & name, void * value, 
                          int length, 
                          const e_nx_data_type nx_data_type)
 {
@@ -190,11 +190,11 @@ void NexusUtil::put_attr(const string &name, void *value,
                 value, length,
                 (int)nx_data_type) != NX_OK)
     {
-      throw runtime_error("Failed to create attribute: "+name);
+      throw runtime_error("Failed to create attribute: " + name);
     }
 }
 
-void NexusUtil::put_attr(const string &name, const string &value)
+void NexusUtil::put_attr(const string & name, const string & value)
 {
   if (name.empty())
     {
@@ -211,7 +211,7 @@ void NexusUtil::put_attr(const string &name, const string &value)
                 &(nx_value[0]), nx_value.length(),
                 NX_CHAR) != NX_OK)
     {
-      throw runtime_error("Failed to create attribute: "+name);
+      throw runtime_error("Failed to create attribute: " + name);
     }
 }
 
@@ -251,7 +251,7 @@ void NexusUtil::put_data_with_slabs(vector<NumT> & nx_data,
     }
   
   int data_size = nx_data.size();
-  for (int i = 0; i < data_size; i+=block_size)
+  for(int i = 0; i < data_size; i+=block_size)
     {
       if (i + block_size >= data_size)
         {
@@ -265,7 +265,7 @@ void NexusUtil::put_data_with_slabs(vector<NumT> & nx_data,
     }
 }
 
-void NexusUtil::put_slab(void *nx_data, int *start, int *size)
+void NexusUtil::put_slab(void * nx_data, int * start, int * size)
 {
   if (nx_data == NULL)
     {
@@ -288,7 +288,7 @@ void NexusUtil::put_slab(void *nx_data, int *start, int *size)
     }
 }
 
-void NexusUtil::get_data(void *nx_data)
+void NexusUtil::get_data(void * nx_data)
 {
   if (nx_data == NULL)
     {
@@ -301,7 +301,7 @@ void NexusUtil::get_data(void *nx_data)
     }
 }
 
-void NexusUtil::get_slab(void *nx_data, int *start, int *size)
+void NexusUtil::get_slab(void * nx_data, int * start, int * size)
 {
   if (nx_data == NULL)
     {
@@ -324,7 +324,7 @@ void NexusUtil::get_slab(void *nx_data, int *start, int *size)
     }
 }
 
-void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
+void NexusUtil::malloc(void ** nx_data, int rank, int * dimensions,
                        const e_nx_data_type nx_data_type)
 {
   if (nx_data == NULL)
@@ -343,7 +343,7 @@ void NexusUtil::malloc(void **nx_data, int rank, int *dimensions,
     }
 }
 
-void NexusUtil::free(void **nx_data)
+void NexusUtil::free(void ** nx_data)
 {
   if (nx_data != NULL)
     {
@@ -398,8 +398,8 @@ e_nx_data_type NexusUtil::get_nx_data_type(int data_type)
     }
 }
 
-void NexusUtil::get_info(int *rank, int *dimensions, 
-                         e_nx_data_type &nx_data_type)
+void NexusUtil::get_info(int * rank, int * dimensions, 
+                         e_nx_data_type & nx_data_type)
 {
   int data_type;
   if (rank == NULL)

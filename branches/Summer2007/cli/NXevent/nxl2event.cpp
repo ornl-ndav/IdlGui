@@ -34,8 +34,8 @@ const size_t BLOCK_SIZE = 1024;
  *         map will be used to convert pixel ids back to
  *         their original value.
  */
-void map_pixel_ids(const string &mapping_file,
-                   map<uint32_t, uint32_t> &pixel_id_map)
+void map_pixel_ids(const string & mapping_file,
+                   map<uint32_t, uint32_t> & pixel_id_map)
 {
   size_t data_size = sizeof(uint32_t);
   uint32_t mapping_index = 0;
@@ -47,7 +47,7 @@ void map_pixel_ids(const string &mapping_file,
   ifstream file(mapping_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+mapping_file);
+      throw runtime_error("Failed opening file: " + mapping_file);
     }
 
   // Determine the file and buffer size
@@ -63,7 +63,7 @@ void map_pixel_ids(const string &mapping_file,
 
       // For each mapping index, map the pixel id
       // in the mapping file to that index
-      for( i = 0; i < buffer_size; i++ )
+      for(i = 0; i < buffer_size; i++)
         {
           pixel_id_map[*(buffer + i)] = mapping_index;
           mapping_index++;
@@ -72,9 +72,9 @@ void map_pixel_ids(const string &mapping_file,
       offset += buffer_size;
 
       // Make sure to not read past EOF
-      if(offset+BLOCK_SIZE > file_size)
+      if(offset + BLOCK_SIZE > file_size)
         {
-          buffer_size = file_size-offset;
+          buffer_size = file_size - offset;
         }
     }
 
@@ -90,9 +90,9 @@ void map_pixel_ids(const string &mapping_file,
  *         in the same format as an event file. Maps
  *         the pixels if a mapping file is present.
  */
-void write_data(const string &output_file, uint32_t *tof, 
-                uint32_t *pixel_id, int size, 
-                const string &mapping_file)
+void write_data(const string & output_file, uint32_t * tof, 
+                uint32_t * pixel_id, int size, 
+                const string & mapping_file)
 {
   bool is_mapped = (mapping_file != "") ? true : false;
   map<uint32_t, uint32_t> pixel_id_map;
@@ -103,7 +103,7 @@ void write_data(const string &output_file, uint32_t *tof,
   ofstream file(output_file.c_str(), std::ios::binary);
   if(!(file.is_open()))
     {
-      throw runtime_error("Failed opening file: "+output_file);
+      throw runtime_error("Failed opening file: " + output_file);
     }
  
   // Map the pixels if necessary
@@ -116,7 +116,7 @@ void write_data(const string &output_file, uint32_t *tof,
   // Write the arrays back in the same way they were read
   for (int i = 0; i < size; i++)
     {
-      file.write(reinterpret_cast<char *>(tof+i), 
+      file.write(reinterpret_cast<char *>(tof + i), 
                  sizeof(uint32_t));
       // Map the pixel back to original value if necessary
       if (is_mapped &&
@@ -127,7 +127,7 @@ void write_data(const string &output_file, uint32_t *tof,
         }
       else 
         {
-          file.write(reinterpret_cast<char *>(pixel_id+i), 
+          file.write(reinterpret_cast<char *>(pixel_id + i), 
                      sizeof(uint32_t));
         }
     }
@@ -139,7 +139,7 @@ void write_data(const string &output_file, uint32_t *tof,
 /** \fn close_bank(NexusUtil &nexus_util)
  *  \brief Closes a bank in a nexus file.
  */
-void close_bank(NexusUtil &nexus_util)
+void close_bank(NexusUtil & nexus_util)
 {
   nexus_util.close_group();
   nexus_util.close_group();
@@ -153,8 +153,8 @@ void close_bank(NexusUtil &nexus_util)
  *         it into an array.
  *  \return A pointer to the newly allocated array.
  */
-void * get_data(const string &data_name, void *data, 
-                NexusUtil &nexus_util, int &dimensions)
+void * get_data(const string & data_name, void * data, 
+                NexusUtil & nexus_util, int & dimensions)
 {
   int rank;
   e_nx_data_type nexus_data_type;
@@ -174,7 +174,7 @@ void * get_data(const string &data_name, void *data,
  *                NexusUtil &nexus_util
  *  \brief Opens a bank in a nexus file.
  */
-void open_bank(const string &bank_name, NexusUtil &nexus_util)
+void open_bank(const string & bank_name, NexusUtil & nexus_util)
 {
   nexus_util.open_group("entry", "NXentry");
   nexus_util.open_group(bank_name.c_str(), "NXevent_data");
@@ -185,10 +185,10 @@ void open_bank(const string &bank_name, NexusUtil &nexus_util)
  * \brief Parses the command line and calls the 
  *        appropriate functions.
  */
-int main(int argc, char *argv[])
+int main(int argc, char * argv[])
 {
-  uint32_t *tof;
-  uint32_t *pixel_id;
+  uint32_t * tof;
+  uint32_t * pixel_id;
   string input_file;
   string mapping_file;
   string output_file;
@@ -237,7 +237,7 @@ int main(int argc, char *argv[])
       output_file = out_path.getValue();
       mapping_file = map_file.getValue();
     }
-  catch (ArgException &e)
+  catch (ArgException & e)
     {
       cerr << "Error: " << e.error() << " for arg " << e.argId() << endl;
       exit(1);

@@ -38,7 +38,7 @@ struct Config
   * \param config Contains the format of the file and the
   *        name of the file.
   */
-void layout_nexus_file(NexusUtil &nexus_util,
-                       const Config &config);
+void layout_nexus_file(NexusUtil & nexus_util,
+                       const Config & config);
 
 #endif
