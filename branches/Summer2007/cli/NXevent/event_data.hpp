@@ -23,7 +23,9 @@ const uint32_t ERROR=0x80000000;
 typedef enum e_data_name
 {
   TOF = 0,
-  PIXEL_ID = 1
+  PIXEL_ID = 1,
+  PULSE_TIME = 2,
+  EVENTS_PER_PULSE = 3
 };
     
 /**
@@ -48,8 +50,10 @@ class EventData
   private:
     std::vector<NumT> tof;
     std::vector<NumT> pixel_id;
-    std::vector<NumT> pulse_time;
+    std::vector<uint64_t> pulse_time;
+    std::vector<uint64_t> events_per_pulse;
     std::string data_path;
+    std::string pulse_time_offset;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
@@ -58,9 +62,7 @@ class EventData
      * \param nanoseconds The nanoseconds of the current second.
      * \param time The variable to store the ISO8601 date string in.
      */
-    void seconds_to_iso8601(NumT seconds, 
-                            NumT nanoseconds,
-                            std::string & time);
+    std::string seconds_to_iso8601(NumT seconds);
     
     /**
      * \brief Fills in the nexus values associated with the
@@ -74,16 +76,10 @@ class EventData
      */
     std::string get_nx_data_name(const e_data_name nx_data_type);
     
-    /**
-     * \brief Fills in the nexus values associated with the
-     *        e_data_name enumeration.
-     * \param nx_data_type The enumeration specifying which piece
-     *                     of data. Ex - TOF for time of flight.
-     * \exception runtime_error Thrown if the enumeration value is
-     *                          invalid.
-     * \return The vector of data associated with the enumeration.
-     */
-    std::vector<NumT> & get_nx_data_values(const e_data_name nx_data_type);
+    template <typename DataNumT>
+    void write_private_data(NexusUtil & nexus_util, 
+                            std::vector<DataNumT> & nx_data,
+                            std::string & data_name);
 
   public:
     /**
@@ -92,15 +88,17 @@ class EventData
      * \param event_file The event file to read from.
      * \exception runtime_error Thrown if the event file can't be opened.
      */
-    void read_event_file(const std::string & event_file);
+    void read_data(const std::string & event_file);
 
     /**
-     * \brief Reads information from the pulse id file.
+     * \brief Reads information from the pulse id file and event file.
+     * \param event_file The event file to read from.
      * \param pulse_id_file The pulse id file to read from.
-     * \exception runtime_error Thrown if the pulse id file
+     * \exception runtime_error Thrown if any of the files
      *                          can't be opened.
      */
-    void read_pulse_id_file(const std::string & pulse_id_file);
+    void read_data(const std::string & event_file,
+                   const std::string & pulse_id_file);
 
     /**
      * \brief Takes a mapping file and maps the pixels to

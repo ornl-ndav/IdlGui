@@ -19,6 +19,10 @@ template
 void NexusUtil::put_data_with_slabs<uint32_t>(vector<uint32_t> & nx_data,
                                               int block_size);
 
+template 
+void NexusUtil::put_data_with_slabs<uint64_t>(vector<uint64_t> & nx_data,
+                                              int block_size);
+
 NexusUtil::NexusUtil(const string & out_path,
                      e_nx_access file_access)
 {

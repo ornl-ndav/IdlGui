@@ -27,10 +27,8 @@ using std::ifstream;
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
 template 
-void EventData<uint32_t>::read_event_file(const string & event_file);
-
-template 
-void EventData<uint32_t>::read_pulse_id_file(const string & pulse_id_file);
+void EventData<uint32_t>::read_data(const string & event_file,
+                                    const string & pulse_id_file);
 
 template 
 void EventData<uint32_t>::write_data(NexusUtil & nexus_util, 
@@ -91,25 +89,15 @@ string EventData<NumT>::get_nx_data_name(const e_data_name nx_data_type)
     {
       return "pixel_number";
     }
+  else if (nx_data_type == PULSE_TIME)
+    {
+      return "pulse_time";
+    }
+  else if (nx_data_type == EVENTS_PER_PULSE)
+    {
+      return "events_per_pulse";
+    }
   else 
-    {
-      throw runtime_error("Invalid enumerated data type");
-    }
-}
-
-template <typename NumT>
-vector<NumT> & 
-EventData<NumT>::get_nx_data_values(const e_data_name nx_data_type)
-{
-  if (nx_data_type == TOF)
-    {
-      return this->tof;
-    }
-  else if (nx_data_type == PIXEL_ID)
-    {
-      return this->pixel_id;
-    }
-  else
     {
       throw runtime_error("Invalid enumerated data type");
     }
@@ -133,16 +121,11 @@ void EventData<NumT>::write_attr(NexusUtil & nexus_util,
 }
 
 template <typename NumT>
-void EventData<NumT>::write_data(NexusUtil & nexus_util, 
-                                 const e_data_name nx_data_name)
+template <typename DataNumT>
+void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
+                                         vector<DataNumT> & nx_data, 
+                                         string & data_name)
 {
-  string data_name;
-  vector<NumT> nx_data;
-  
-  // Fill in the values that are associated with the 
-  // given e_data_name
-  data_name = this->get_nx_data_name(nx_data_name);
-  nx_data = this->get_nx_data_values(nx_data_name);
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
@@ -152,6 +135,41 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
   nexus_util.put_data_with_slabs(nx_data, 16777215);
+}
+
+template <typename NumT>
+void EventData<NumT>::write_data(NexusUtil & nexus_util, 
+                                 const e_data_name nx_data_name)
+{
+  string data_name;
+  
+  // Fill in the values that are associated with the 
+  // given e_data_name
+  data_name = this->get_nx_data_name(nx_data_name);
+  if (nx_data_name == TOF)
+    {
+      this->write_private_data(nexus_util, 
+                               this->tof, data_name);
+    }
+  else if (nx_data_name == PIXEL_ID)
+    {
+      this->write_private_data(nexus_util, 
+                               this->pixel_id, data_name);
+    }
+  else if (nx_data_name == PULSE_TIME)
+    {
+      this->write_private_data(nexus_util, 
+                               this->pulse_time, data_name);
+    }
+  else if (nx_data_name == EVENTS_PER_PULSE)
+    {
+      this->write_private_data(nexus_util, 
+                               this->events_per_pulse, data_name);
+    }
+  else
+    {
+      throw runtime_error("Invalid enumerated data type");
+    }
 }
  
 template <typename NumT>
@@ -222,10 +240,8 @@ void EventData<NumT>::map_pixel_ids(const string & mapping_file)
 }
 
 template <typename NumT>
-void EventData<NumT>::seconds_to_iso8601(NumT seconds, NumT nanoseconds,
-                                         string & time)
+string EventData<NumT>::seconds_to_iso8601(NumT seconds)
 {
-  stringstream time_stream;
   char date[100];
   // Since the times start at a different epoch (jan 1, 1990) than
   // the unix epoch (jan 1, 1970), add the number of seconds
@@ -233,28 +249,22 @@ void EventData<NumT>::seconds_to_iso8601(NumT seconds, NumT nanoseconds,
   const uint32_t epoch_diff = 631152000;
   time_t pulse_seconds = epoch_diff + seconds;
   struct tm *pulse_time = localtime(&pulse_seconds);
-  strftime(date, sizeof(date), "%Y-%m-%dT%X.", pulse_time);
-  time_stream << date;
-  uint32_t val = 100000000;
-  while (nanoseconds < val)
-    {
-      time_stream << 0;
-      val /= 10;
-    }
-  time_stream << nanoseconds << "-04:00";
-  time_stream >> time;  
+  strftime(date, sizeof(date), "%Y-%m-%dT%X-04:00", pulse_time);
+  string time(date);
+  return time;  
 }
 
 template <typename NumT>
-void EventData<NumT>::read_pulse_id_file(const string & pulse_id_file)
+void EventData<NumT>::read_data(const string & event_file,
+                                const string & pulse_id_file)
 {
-  NumT buffer[BLOCK_SIZE];
+  uint32_t init_buffer[2];
+  uint64_t buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
-  size_t data_size = sizeof(NumT);
-  string time;
-  NumT prev_second = 0;
-  NumT prev_nanosecond = 0;
+  size_t data_size = sizeof(uint64_t);
+  uint64_t init_time = 0;
+  uint64_t prev_index = 0;
 
   // Open the pulse id file
   ifstream file(pulse_id_file.c_str(), std::ios::binary);
@@ -268,26 +278,34 @@ void EventData<NumT>::read_pulse_id_file(const string & pulse_id_file)
   size_t file_size = file.tellg() / data_size;
   size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
 
-  // Read in the initial time and convert it to ISO8601
+  // Read in the initial time and convert it to ISO8601. Skip the initial 
+  // index since it will always be zero.
   file.seekg(0, std::ios::beg);
-  file.read(reinterpret_cast<char *>(buffer), data_size * 2);
-  this->seconds_to_iso8601(static_cast<NumT>(*(buffer + 1)),
-                           static_cast<NumT>(*(buffer)),
-                           time);
-  prev_nanosecond = static_cast<NumT>(*(buffer)); 
-  prev_second = static_cast<NumT>(*(buffer + 1));
+  file.read(reinterpret_cast<char *>(init_buffer), sizeof(uint32_t) * 4);
+  this->pulse_time_offset = 
+    this->seconds_to_iso8601(static_cast<uint32_t>(*(init_buffer + 1)));
+  init_time = static_cast<uint32_t>(*(init_buffer + 1)) * 4294967296;
 
-  cout << time << endl;
+  // Push back the initial time offset
+  pulse_time.push_back(static_cast<uint64_t>(*(init_buffer)));
  
-  // Go to the start of file and begin reading
-  file.seekg(0, std::ios::beg);
+  offset += 2;
+  // Make sure to not read past EOF
+  if(offset + BLOCK_SIZE > file_size)
+    {
+      buffer_size = file_size - offset;
+    }
+
   while(offset < file_size)
     {
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // Keep track of the time offsets and read in the pulse times
-      for(i = 0; i < buffer_size; i+=4)
+      for(i = 0; i < buffer_size; i+=2)
         {
+          pulse_time.push_back(static_cast<uint64_t>(*(buffer + i)) - init_time);
+          events_per_pulse.push_back(static_cast<uint64_t>(*(buffer + i + 1)) - prev_index);
+          prev_index = static_cast<uint64_t>(*(buffer + i + 1));
         }
 
       offset += buffer_size;
@@ -298,17 +316,25 @@ void EventData<NumT>::read_pulse_id_file(const string & pulse_id_file)
           buffer_size = file_size - offset;
         }
     }
-  // Close event file
+
+  // Close the pulse id file
   file.close();
+  
+  read_data(event_file);
 }
 
 template <typename NumT>
-void EventData<NumT>::read_event_file(const string & event_file)
+void EventData<NumT>::read_data(const string & event_file)
 {
   NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
   size_t data_size = sizeof(NumT);
+  int event_number = 0;
+  bool pulse_id_exists = (events_per_pulse.empty()) ? false : true;
+  int pulse_index = 0;
+  int pulse_offset = 0;
+  int events_per_pulse_size;
 
   // Open the event file
   ifstream file(event_file.c_str(), std::ios::binary);
@@ -322,6 +348,12 @@ void EventData<NumT>::read_event_file(const string & event_file)
   size_t file_size = file.tellg() / data_size;
   size_t buffer_size = (file_size < BLOCK_SIZE) ? file_size : BLOCK_SIZE;
 
+  if (pulse_id_exists)
+    {
+      pulse_offset = this->events_per_pulse[pulse_index];
+      events_per_pulse_size = this->events_per_pulse.size();
+    }
+
   // Go to the start of file and begin reading
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
@@ -332,6 +364,15 @@ void EventData<NumT>::read_event_file(const string & event_file)
       // vectors with the data from the event file
       for(i = 0; i < buffer_size; i+=2)
         {
+          if (pulse_id_exists && (event_number == pulse_offset))
+            {
+              pulse_index++;
+              if (pulse_index < events_per_pulse_size)
+                {
+                  pulse_offset += this->events_per_pulse[pulse_index];
+                }
+            }
+
           // Filter out error codes
           if ((*(buffer + i + 1) & ERROR) != ERROR)
             {
@@ -339,6 +380,14 @@ void EventData<NumT>::read_event_file(const string & event_file)
               this->tof.push_back(*(buffer + i));
               this->pixel_id.push_back(*(buffer + i + 1));
             }
+          else if (pulse_id_exists)
+            {
+              if (pulse_index < events_per_pulse_size)
+                {
+                  events_per_pulse[pulse_index]--;
+                }
+            }
+          event_number++;
         }
 
       offset += buffer_size;
@@ -349,7 +398,7 @@ void EventData<NumT>::read_event_file(const string & event_file)
           buffer_size = file_size - offset;
         }
     }
-
+  
   // Close event file
   file.close();
 }
