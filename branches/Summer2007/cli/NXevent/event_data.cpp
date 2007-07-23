@@ -258,13 +258,12 @@ template <typename NumT>
 void EventData<NumT>::read_data(const string & event_file,
                                 const string & pulse_id_file)
 {
-  uint32_t init_buffer[2];
-  uint64_t buffer[BLOCK_SIZE];
+  NumT buffer[BLOCK_SIZE];
   size_t offset = 0;
   size_t i;
-  size_t data_size = sizeof(uint64_t);
-  uint64_t init_time = 0;
-  uint64_t prev_index = 0;
+  size_t data_size = sizeof(NumT);
+  NumT init_seconds = 0;
+  NumT prev_index = 0;
 
   // Open the pulse id file
   ifstream file(pulse_id_file.c_str(), std::ios::binary);
@@ -281,15 +280,15 @@ void EventData<NumT>::read_data(const string & event_file,
   // Read in the initial time and convert it to ISO8601. Skip the initial 
   // index since it will always be zero.
   file.seekg(0, std::ios::beg);
-  file.read(reinterpret_cast<char *>(init_buffer), sizeof(uint32_t) * 4);
+  file.read(reinterpret_cast<char *>(buffer), sizeof(NumT) * 4);
   this->pulse_time_offset = 
-    this->seconds_to_iso8601(static_cast<uint32_t>(*(init_buffer + 1)));
-  init_time = static_cast<uint32_t>(*(init_buffer + 1)) * 4294967296;
+    this->seconds_to_iso8601(static_cast<NumT>(*(buffer + 1)));
+  init_seconds = static_cast<NumT>(*(buffer + 1));
 
   // Push back the initial time offset
-  pulse_time.push_back(static_cast<uint64_t>(*(init_buffer)));
- 
-  offset += 2;
+  pulse_time.push_back(static_cast<NumT>(*(buffer)));
+
+  offset += 4;
   // Make sure to not read past EOF
   if(offset + BLOCK_SIZE > file_size)
     {
@@ -301,11 +300,17 @@ void EventData<NumT>::read_data(const string & event_file,
       file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
 
       // Keep track of the time offsets and read in the pulse times
-      for(i = 0; i < buffer_size; i+=2)
+      for(i = 0; i < buffer_size; i+=4)
         {
-          pulse_time.push_back(static_cast<uint64_t>(*(buffer + i)) - init_time);
-          events_per_pulse.push_back(static_cast<uint64_t>(*(buffer + i + 1)) - prev_index);
-          prev_index = static_cast<uint64_t>(*(buffer + i + 1));
+          pulse_time.push_back(
+            ((static_cast<NumT>(*(buffer + i + 1)) * 1000000000) 
+             + static_cast<NumT>(*(buffer + i)))
+            -((init_seconds * 1000000000))
+          );
+          events_per_pulse.push_back(static_cast<NumT>(*(buffer + i + 2)) 
+                                     - prev_index);
+          prev_index = static_cast<NumT>(*(buffer + i + 2));
+          cout << prev_index << endl;
         }
 
       offset += buffer_size;
@@ -317,8 +322,17 @@ void EventData<NumT>::read_data(const string & event_file,
         }
     }
 
-  // Close the pulse id file
-  file.close();
+  // Find out the number of events for the last pulse
+  ifstream file2(event_file.c_str(), std::ios::binary);
+  if(!(file2.is_open()))
+    {
+      throw runtime_error("Failed opening file: " + event_file);
+    }
+
+  // Determine the file and buffer size
+  file2.seekg(0, std::ios::end);
+  events_per_pulse.push_back(file2.tellg() / (data_size * 2) - prev_index);
+  file2.close();
   
   read_data(event_file);
 }

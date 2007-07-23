@@ -116,7 +116,7 @@ int main(int32_t argc,
   
   // Gather the information from the event file
   bank_one_data.read_data(config.event_file, config.pulse_id_file);
-
+  
   // Map the pixel ids if necessary
   if (config.mapping_file != "")
     {
