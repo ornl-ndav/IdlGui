@@ -3,10 +3,14 @@ PRO steps_tab, Event, isRefresh
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;do the rest of the stuff only if there is at least one file loaded
+
 PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
 
 steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
 CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+
+
 
 if (PrevTabSelect NE CurrTabSelect OR $
     isRefresh EQ 1) then begin
