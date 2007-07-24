@@ -4,32 +4,37 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;do the rest of the stuff only if there is at least one file loaded
-
-PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
-
-steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
-CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
-
-
-
-if (PrevTabSelect NE CurrTabSelect OR $
-    isRefresh EQ 1) then begin
-    (*global).PrevTabSelect = CurrTabSelect
-    CASE (CurrTabSelect) OF
-        0: begin                    ;if first tab plot everything
+list_of_files = (*(*global).list_of_files)
+list_of_files_size_array = size(list_of_files)
+list_of_files_size = list_of_files_size_array[1]
+if (list_of_files_size EQ 1 && $
+    list_of_files[0] EQ '') then begin
+;nothing to do, no file loaded
+endif else begin 
+   
+   PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
+   
+   steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
+   CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+   
+   if (PrevTabSelect NE CurrTabSelect OR $
+       isRefresh EQ 1) then begin
+      (*global).PrevTabSelect = CurrTabSelect
+      CASE (CurrTabSelect) OF
+         0: begin               ;if first tab plot everything
             AssignColorToSelectedPlot,Event
             ListLongFileName = (*(*global).ListOfLongFileName)
             plot_loaded_file, Event, ListLongFileName
             angleValue = getAngleValue(Event)
             displayAngleValue, Event, angleValue
-        end
-        1: begin                ;if second tab plot only CE plot
+         end
+         1: begin               ;if second tab plot only CE plot
             LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 
             LongFileNameArray = strarr(1)
             LongFileNameArray[0]=LongFileName
             plot_loaded_file, Event,LongFileNameArray
-        end
-        2: begin            ;if third tab plot only two files selected
+         end
+         2: begin               ;if third tab plot only two files selected
             LongFileName1 = getLongFileNameSelected(Event,'step3_base_file_droplist')
             LongFileName2 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
             if (LongFileName1 NE LongFileName2) then begin
@@ -38,10 +43,11 @@ if (PrevTabSelect NE CurrTabSelect OR $
                ListLongFileName = [LongFileName1]
             endelse
             plot_loaded_file, Event, ListLongFileName
-        end
-        else:                ;if fourth tab (settings tab) is selected
-    ENDCASE
-endif
+         end
+         else:                  ;if fourth tab (settings tab) is selected
+      ENDCASE
+   endif
+endelse
 END
 
 
