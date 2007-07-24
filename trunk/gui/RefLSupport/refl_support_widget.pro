@@ -1,3 +1,11 @@
+;this function gives the current selected tab
+FUNCTION getTabSelected, Event
+TabId = widget_info(Event.top,find_by_uname='StepsTabSize')
+tabSelected = widget_info(TabId,/TAB_CURRENT)
+return, tabSelected
+end
+
+
 ;This functions gives the index of the color selected
 FUNCTION getColorIndex, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

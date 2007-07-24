@@ -134,25 +134,26 @@ end
 PRO add_new_file_to_droplist, Event, ShortFileName, LongFileName
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
 ListOfFiles = (*(*global).list_of_files)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
-;is is the first file loaded
+;is's the first file loaded
 if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
-    ListOfFiles = [ShortFileName]
-    ListOfLongFileName = [LongFileName]
-    ActivateRescaleBase,Event,1
-    ;save angle value
-    angle_array = (*(*global).angle_array)
-    angle_array[0] = (*global).angleValue
-    (*(*global).angle_array) = angle_array
+   ListOfFiles = [ShortFileName]
+   ListOfLongFileName = [LongFileName]
+   ActivateRescaleBase,Event,1
+   ;save angle value
+   angle_array = (*(*global).angle_array)
+   angle_array[0] = (*global).angleValue
+   (*(*global).angle_array) = angle_array
 ;if not
 endif else begin
    ;is this file not already listed 
    if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
-          (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
-          ListOfFiles = [ListOfFiles,ShortFileName]
-          ListOfLongFileName = [ListOfLongFileName,LongFileName]
-          CreateArrays,Event    ;if a file is added, the Q1,Q2,SF... arrays are updated
+      (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
+      ListOfFiles = [ListOfFiles,ShortFileName]
+      ListOfLongFileName = [ListOfLongFileName,LongFileName]
+      CreateArrays,Event        ;if a file is added, the Q1,Q2,SF... arrays are updated
     endif
 endelse
 
@@ -261,6 +262,7 @@ widget_control,id,get_uvalue=global
 ;check size of array
 ListOfFiles = (*(*global).list_of_files)
 ListOfFilesSize = getSizeOfArray(ListOfFiles)
+(*global).nbr_file_loaded -= 1
 
 ;if array contains only 1 element, reset all arrays
 if (ListOfFilesSize EQ 1) then begin
