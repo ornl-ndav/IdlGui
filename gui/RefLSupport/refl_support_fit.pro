@@ -1,14 +1,9 @@
 PRO FitFunction, Event, Q1, Q2, flt0, flt1, flt2
 
-; Define an 11-element vector of independent variable data:
-X = [0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0]
+print, flt0
+print, '-------------------------------'
+print, flt1
 
-; Define an 11-element vector of dependent variable data:
-Y = [0.25, 0.16, 0.09, 0.04, 0.01, 0.00, 0.01, 0.04, 0.09, $
-   0.16, 0.25]
-
-; Define a vector of measurement errors:
-measure_errors = REPLICATE(0.01, 11)
 
 ; Compute the second degree polynomial fit to the data:
 cooef = POLY_FIT(flt0, flt1, 2, MEASURE_ERRORS=flt2, $
@@ -26,7 +21,6 @@ plot,x,y
 ;now calculate data on new coordinates
 N_new = 100
 x_new = findgen(N_new)/N_new
-
 y_new = cooef(2)*x_new^2 + cooef(1)*x_new + cooef(0)
 
 ;overplot new data in red
@@ -36,7 +30,9 @@ END
 
 
 
-FUNCTION LoadDataFile, Event, LongFileName
+PRO LoadDataFile, Event, LongFileName, Q1, Q2
+
+print, 'LongFileName: ' + LongFileName
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -65,7 +61,7 @@ endif else begin
     tmp2 = ''
     
     flt0 = -1.0
-    flt1 = -1.
+    flt1 = -1.0
     flt2 = -1.0
     
     Nelines = 0L    ;number of lines that does not start with a number
@@ -118,7 +114,6 @@ endif else begin
             end
         endcase
         
-xtm
     endwhile
     
 ;strip -1 from beginning of each array
@@ -142,13 +137,19 @@ xtm
     Q1 = float(Q1Q2SF[0])
     Q2 = float(Q1Q2SF[1])
 
+;remove NAN from flt1 and flt2 and update array flt0
+    max_flt1 = max(flt1,/nan)
+    min_flt1 = min(flt1,/nan)
+    indx_flt1 = where(flt1 GT min_flt1 AND flt1 LT max_flt1)
+    flt1_new = flt1(indx_flt1)
+    flt0_new = flt0(indx_flt1)
+    flt2_new = flt2(indx_flt1)
+
 ;Start function that will calculate the Fit function
-    
-    FitFunction, Event, Q1, Q2, flt0, flt1, flt2
+    FitFunction, Event, Q1, Q2, flt0_new[0:20], flt1_new[0:20], flt2_new[0:20]
 
 endelse    
 
-return, 1
 END
 
 
