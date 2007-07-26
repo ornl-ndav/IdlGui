@@ -225,13 +225,16 @@ WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
-distance_L_TB        = 30
-Step2Q1LabelSize     = [5  , 45 , 30  , 30 ]
+Step2TabSize         = [5  , 45 , 320 , 70 ]
+Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
+Step2Tab2Base        = Step2Tab1Base
+distance_L_TB        = 35
+Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
 Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
                         Step2Q1LabelSize[1],$
-                        120,$
+                        80,$
                         Step2Q1LabelSize[3]]
-distance_L_L         = 155
+distance_L_L         = 130
 Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
                         Step2Q1LabelSize[1],$
                         Step2Q1LabelSize[2],$
@@ -240,14 +243,46 @@ Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
                         Step2Q1LabelSize[1],$
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
-Step2SFLabelSize     = [Step2Q1LabelSize[0]+2*distance_L_L, $
-                        Step2Q1LabelSize[1],$
+Step2SFLabelSize     = [330, $
+                        45,$
                         Step2Q1LabelSize[2],$
                         Step2Q1LabelSize[3]]
 Step2SFTextFieldSize = [Step2SFLabelSize[0]+distance_L_TB,$
                         Step2Q1LabelSize[1],$
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
+distanceVertical_L_L = 35
+Step2RLabelSize      = [Step2SFLabelSize[0], $
+                        Step2SFLabelSize[1]+distanceVertical_L_L, $
+                        Step2SFLabelSize[2],$
+                        Step2SFLabelSize[3]]
+Step2RTextFieldSize  = [Step2SFLabelSize[0]+distance_L_TB, $
+                        Step2RLabelSize[1], $
+                        Step2SFLabelSize[2],$
+                        Step2SFLabelSize[3]]
+Step2DeltaRLabelSize      = [Step2SFLabelSize[0], $
+                             Step2SFLabelSize[1]+distanceVertical_L_L, $
+                             Step2SFLabelSize[2],$
+                             Step2SFLabelSize[3]]
+Step2DeltaRTextFieldSize  = [Step2SFLabelSize[0]+distance_L_TB, $
+                             Step2RLabelSize[1], $
+                             Step2SFLabelSize[2],$
+                             Step2SFLabelSize[3]]
+
+Step2XLabelSize     = [5  , 5 , 30  , 30 ]
+Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
+                        Step2XLabelSize[1],$
+                        80,$
+                        Step2XLabelSize[3]]
+Step2YLabelSize     = [Step2XLabelSize[0]+distance_L_L, $
+                        Step2XLabelSize[1],$
+                        Step2XLabelSize[2],$
+                        Step2XLabelSize[3]]
+Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
+                        Step2XLabelSize[1],$
+                        Step2XTextFieldSize[2],$
+                        Step2XLabelSize[3]]
+
 ;--Step3
 Step3BaseFileSize    = [5  , 5  , 300 , 30 ]
 Step3WorkOnFileSize  = [Step3BaseFileSize[0],$
@@ -385,11 +420,18 @@ WhiteLabelTitle = 'White'
 input_file_label = 'Input file format:'
 input_file_format = ['TOF','Q']
 ;--Step2--
-BaseFileTitle = 'Critical edge file:'
+BaseFileTitle      = 'Critical edge file:'
+Step2Tab1Title     = 'Determine SF using Q range'
+Step2Tab2Title     = 'Deternine SF using mouse'
 Step2GoButtonTitle = 'Rescale Critical Edge'
-Step2Q1LabelTitle = 'Q1:'
-Step2Q2LabelTitle = 'Q2:'
-Step2SFLabelTitle = 'SF:'
+Step2Q1LabelTitle  = 'Q1:'
+Step2Q2LabelTitle  = 'Q2:'
+Step2SFLabelTitle  = 'SF:'
+Step2XLabelTitle = 'X:'
+Step2YLabelTitle = 'Y:'
+Step2RLabelTitle = 'R :'
+Step2DeltaRLabelTitle = 'deltaR :'
+
 ;--Step3--
 Step3BaseFileTitle   = 'Base File:'
 Step3WorkOnFileTitle = '  Work On:'
@@ -659,14 +701,33 @@ STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
                              SENSITIVE=1,$
                              VALUE=Step2GoButtonTitle)
 
-STEP2_Q1_LABEL = WIDGET_LABEL(STEP2_BASE,$
+;--tabs of step2
+STEP2TAB = WIDGET_TAB(step2_base,$
+                      UNAME='step2tab',$
+                      LOCATION=0,$
+                      XOFFSET=Step2TabSize[0],$
+                      YOFFSET=Step2TabSize[1],$
+                      SCR_XSIZE=Step2TabSize[2],$
+                      SCR_YSIZE=Step2TabSize[3],$
+                      /TRACKING_EVENTS)
+
+;--tab 1 of step 2
+step2tab1base = widget_base(step2tab,$
+                            uname='step2tab1base',$
+                            xoffset=Step2Tab1Base[0],$
+                            yoffset=Step2Tab1Base[1],$
+                            scr_xsize=Step2Tab1Base[2],$
+                            scr_ysize=Step2Tab1Base[3],$
+                            title=step2Tab1Title)
+
+STEP2_Q1_LABEL = WIDGET_LABEL(step2tab1base,$
                               XOFFSET=Step2Q1LabelSize[0],$
                               YOFFSET=Step2Q1LabelSize[1],$
                               SCR_XSIZE=Step2Q1LabelSize[2],$
                               SCR_YSIZE=Step2Q1LabelSize[3],$
                               VALUE=Step2Q1LabelTitle)
 
-STEP2_Q1_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+STEP2_Q1_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
                                   UNAME='step2_q1_text_field',$
                                   XOFFSET=Step2Q1TextFieldSize[0],$
                                   YOFFSET=Step2Q1TextFieldSize[1],$
@@ -677,14 +738,14 @@ STEP2_Q1_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
 
-STEP2_Q2_LABEL = WIDGET_LABEL(STEP2_BASE,$
+STEP2_Q2_LABEL = WIDGET_LABEL(step2tab1base,$
                               XOFFSET=Step2Q2LabelSize[0],$
                               YOFFSET=Step2Q2LabelSize[1],$
                               SCR_XSIZE=Step2Q2LabelSize[2],$
                               SCR_YSIZE=Step2Q2LabelSize[3],$
                               VALUE=Step2Q2LabelTitle)
 
-STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
                                   UNAME='step2_q2_text_field',$
                                   XOFFSET=Step2Q2TextFieldSize[0],$
                                   YOFFSET=Step2Q2TextFieldSize[1],$
@@ -695,6 +756,54 @@ STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
 
+
+
+;--tab #2 of step 2
+step2tab2base = widget_base(step2tab,$
+                            uname='step2tab2base',$
+                            xoffset=Step2Tab2Base[0],$
+                            yoffset=Step2Tab2Base[1],$
+                            scr_xsize=Step2Tab2Base[2],$
+                            scr_ysize=Step2Tab2Base[3],$
+                            title=step2Tab2Title)
+
+STEP2_X_LABEL = WIDGET_LABEL(step2tab2base,$
+                              XOFFSET=Step2XLabelSize[0],$
+                              YOFFSET=Step2XLabelSize[1],$
+                              SCR_XSIZE=Step2XLabelSize[2],$
+                              SCR_YSIZE=Step2XLabelSize[3],$
+                              VALUE=Step2XLabelTitle)
+
+STEP2_X_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
+                                  UNAME='step2_x_text_field',$
+                                  XOFFSET=Step2XTextFieldSize[0],$
+                                  YOFFSET=Step2XTextFieldSize[1],$
+                                  SCR_XSIZE=Step2XTextFieldSize[2],$
+                                  SCR_YSIZE=Step2XTextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+STEP2_Y_LABEL = WIDGET_LABEL(step2tab2base,$
+                              XOFFSET=Step2YLabelSize[0],$
+                              YOFFSET=Step2YLabelSize[1],$
+                              SCR_XSIZE=Step2YLabelSize[2],$
+                              SCR_YSIZE=Step2YLabelSize[3],$
+                              VALUE=Step2YLabelTitle)
+
+STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
+                                  UNAME='step2_Y_text_field',$
+                                  XOFFSET=Step2YTextFieldSize[0],$
+                                  YOFFSET=Step2YTextFieldSize[1],$
+                                  SCR_XSIZE=Step2YTextFieldSize[2],$
+                                  SCR_YSIZE=Step2YTextFieldSize[3],$
+                                  VALUE='',$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT,$
+                                  /ALL_EVENTS)
+
+;--outside tab of step2
 STEP2_SF_LABEL = WIDGET_LABEL(STEP2_BASE,$
                               XOFFSET=Step2SFLabelSize[0],$
                               YOFFSET=Step2SFLabelSize[1],$
@@ -712,6 +821,39 @@ STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   /EDITABLE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
+
+STEP2_R_LABEL = WIDGET_LABEL(STEP2_BASE,$
+                             XOFFSET=Step2RLabelSize[0],$
+                             YOFFSET=Step2RLabelSize[1],$
+                             SCR_XSIZE=Step2RLabelSize[2],$
+                             SCR_YSIZE=Step2RLabelSize[3],$
+                             VALUE=Step2RLabelTitle)
+
+STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+                                 UNAME='step2_R_text_field',$
+                                 XOFFSET=Step2RTextFieldSize[0],$
+                                 YOFFSET=Step2RTextFieldSize[1],$
+                                 SCR_XSIZE=Step2RTextFieldSize[2],$
+                                 SCR_YSIZE=Step2RTextFieldSize[3],$
+                                 VALUE='',$
+                                 /EDITABLE,$
+                                 /ALIGN_LEFT,$
+                                 /ALL_EVENTS)
+
+STEP2_deltaR_LABEL = WIDGET_LABEL(STEP2_BASE,$
+                                  XOFFSET=Step2DeltaRLabelSize[0],$
+                                  YOFFSET=Step2DeltaRLabelSize[1],$
+                                  SCR_XSIZE=Step2DeltaRLabelSize[2],$
+                                  SCR_YSIZE=Step2DeltaRLabelSize[3],$
+                                  VALUE=Step2DeltaRLabelTitle)
+
+
+
+
+
+
+
+
 
 ;--STEP 3--
 STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -820,7 +962,7 @@ TOF_to_Q_label = widget_label(settings_base,$
                               scr_ysize=TOF_to_Q_label_size[3],$
                               /align_left)
 
-TOF_to_Q_algorithm = ['(4*PI*sin(theta)*m*L)/hTOF   ','Jacobian']
+TOF_to_Q_algorithm = ['(4*PI*sin(theta/2)*m*L)/hTOF   ','Jacobian']
 TOF_to_Q_algorithm = CW_BGROUP(settings_base,$
                                TOF_to_Q_algorithm,$
                                /exclusive,$
