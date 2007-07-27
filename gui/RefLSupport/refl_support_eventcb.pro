@@ -3,6 +3,10 @@ PRO steps_tab, Event, isRefresh
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
+steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
+CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+
 ;do the rest of the stuff only if there is at least one file loaded
 list_of_files = (*(*global).list_of_files)
 list_of_files_size_array = size(list_of_files)
@@ -11,11 +15,6 @@ if (list_of_files_size EQ 1 && $
     list_of_files[0] EQ '') then begin
 ;nothing to do, no file loaded
 endif else begin 
-   
-   PrevTabSelect = (*global).PrevTabSelect ;previous tab selected
-   
-   steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
-   CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
    
    if (PrevTabSelect NE CurrTabSelect OR $
        isRefresh EQ 1) then begin
@@ -48,6 +47,22 @@ endif else begin
       ENDCASE
    endif
 endelse
+
+if (PrevTabSelect NE CurrTabSelect OR $
+    isRefresh EQ 1) then begin
+    (*global).PrevTabSelect = CurrTabSelect
+    CASE (CurrTabSelect) OF
+        0: begin                ;if first tab plot everything
+        end
+        1: begin                ;if second tab plot only CE plot
+            refresh_draw_labels_tab2, Event
+        end
+        2: begin            ;if third tab plot only two files selected
+        end
+        else:
+    ENDCASE
+endif
+
 END
 
 
