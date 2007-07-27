@@ -84,6 +84,17 @@ case Event.id of
        ResetRescaleButton, Event
     end
 
+    ;replot ri and delta_ri
+    widget_info(wWidget, FIND_BY_UNAME='step2_ri_draw'):begin
+        ri_logo=$
+          "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp"
+        id = widget_info(wWidget,find_by_uname='step2_ri_draw')
+        WIDGET_CONTROL, id, GET_VALUE=id_value
+        wset, id_value
+        image = read_bmp(ri_logo)
+        tv, image,-8,0,/true
+    end
+
 else:
 endcase
 end
@@ -127,7 +138,11 @@ global = ptr_new({  $
                    color_array    : ptr_new(0L),$    ;index of color for each file 
                    ColorSliderDefaultValue : 25,$    ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
-                   ListOfLongFileName : ptr_new(0L)$ ;list of path of file loaded
+                   ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
+                   images_tab2    : ptr_new(0L),$    ;list of images of tab1 (SF, ri...)
+                   unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab1
+                   images_tab2_xoff : ptr_new(0L),$  ;images x_offset of tab2
+                   images_tab2_yoff : ptr_new(0L)$   ;images y_offset of tab2  
                  })
 
 FileHistory   = strarr(1)
@@ -150,10 +165,24 @@ ListOfLongFileName = strarr(1)
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
 
+images_tab2 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
+               "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+unames_tab2 = ["step2_sf_draw",$
+               "step2_ri_draw",$
+               "step2_delta_ri_draw"]
+images_tab2_xoff = [-5,-8,-3]
+images_tab2_yoff = [-4,0,-3]
+
+(*(*global).images_tab2) = images_tab2
+(*(*global).unames_tab2) = unames_tab2
+(*(*global).images_tab2_xoff) = images_tab2_xoff
+(*(*global).images_tab2_yoff) = images_tab2_yoff
+
 if (!VERSION.os EQ 'darwin') then begin
-   (*global).input_path = '~/tmp/'
+    (*global).input_path = '~/tmp/'
 endif else begin
-   (*global).input_path = '~' + ucams
+    (*global).input_path = '~' + ucams
 endelse
 
 
@@ -225,7 +254,7 @@ WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
-Step2TabSize         = [5  , 45 , 320 , 70 ]
+Step2TabSize         = [5  , 60 , 320 , 70 ]
 Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
 Step2Tab2Base        = Step2Tab1Base
 distance_L_TB        = 35
@@ -243,32 +272,37 @@ Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
                         Step2Q1LabelSize[1],$
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
-Step2SFLabelSize     = [330, $
+
+Step2SFDrawSize     = [330, $
                         45,$
                         Step2Q1LabelSize[2],$
                         Step2Q1LabelSize[3]]
-Step2SFTextFieldSize = [Step2SFLabelSize[0]+distance_L_TB,$
-                        Step2Q1LabelSize[1],$
+Step2SFTextFieldSize = [Step2SFDrawSize[0]+distance_L_TB,$
+                        Step2SFDrawSize[1],$
                         Step2Q1TextFieldSize[2],$
-                        Step2Q1LabelSize[3]]
-distanceVertical_L_L = 35
-Step2RLabelSize      = [Step2SFLabelSize[0], $
-                        Step2SFLabelSize[1]+distanceVertical_L_L, $
-                        Step2SFLabelSize[2],$
-                        Step2SFLabelSize[3]]
-Step2RTextFieldSize  = [Step2SFLabelSize[0]+distance_L_TB, $
-                        Step2RLabelSize[1], $
-                        Step2SFLabelSize[2],$
-                        Step2SFLabelSize[3]]
-Step2DeltaRLabelSize      = [Step2SFLabelSize[0], $
-                             Step2SFLabelSize[1]+distanceVertical_L_L, $
-                             Step2SFLabelSize[2],$
-                             Step2SFLabelSize[3]]
-Step2DeltaRTextFieldSize  = [Step2SFLabelSize[0]+distance_L_TB, $
-                             Step2RLabelSize[1], $
-                             Step2SFLabelSize[2],$
-                             Step2SFLabelSize[3]]
+                        Step2Q1TextFieldSize[3]]
 
+distanceVertical_L_L = 35
+Step2RDrawSize      = [Step2SFDrawSize[0], $
+                       Step2SFDrawSize[1]+distanceVertical_L_L, $
+                       Step2SFDrawSize[2],$
+                       Step2SFDrawSize[3]]
+
+Step2RTextFieldSize  = [Step2SFDrawSize[0]+distance_L_TB, $
+                        Step2RDrawSize[1], $
+                        Step2Q1TextFieldSize[2],$
+                        Step2Q1TextFieldSize[3]]
+
+Step2DeltaRDrawSize      = [Step2SFDrawSize[0], $
+                            Step2RDrawSize[1]+distanceVertical_L_L, $
+                            Step2SFDrawSize[2],$
+                            Step2SFDrawSize[3]]
+Step2DeltaRLabelSize  = [Step2RTextFieldSize[0],$
+                         Step2DeltaRDrawSize[1], $
+                         Step2Q1TextFieldSize[2],$
+                         Step2Q1TextFieldSize[3]]
+
+;-------------
 Step2XLabelSize     = [5  , 5 , 30  , 30 ]
 Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
                         Step2XLabelSize[1],$
@@ -284,12 +318,9 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
                         Step2XLabelSize[3]]
 
 ;--Step3
-Step3BaseFileSize    = [5  , 5  , 300 , 30 ]
-Step3WorkOnFileSize  = [Step3BaseFileSize[0],$
-                        45 ,$
-                        Step3BaseFileSize[2],$
-                        Step3BaseFileSize[3]]
-Step3GoButtonSize    = [310, 7  , 205 , 70 ]
+Step3WorkOnFileSize  = [5  , 5  , 300 , 30]
+Step3GoButtonSize    = [310, 7  , 205 , 30 ]
+
 Step3Q1LabelSize     = [5  , 90 , 30  , 30 ]
 Step3Q1TextFieldSize = [Step3Q1LabelSize[0]+distance_L_TB, $
                         Step3Q1LabelSize[1],$
@@ -424,17 +455,15 @@ BaseFileTitle      = 'Critical edge file:'
 Step2Tab1Title     = 'Determine SF using Q range'
 Step2Tab2Title     = 'Deternine SF using mouse'
 Step2GoButtonTitle = 'Rescale Critical Edge'
-Step2Q1LabelTitle  = 'Q1:'
-Step2Q2LabelTitle  = 'Q2:'
+Step2Q1LabelTitle  = 'Qmin:'
+Step2Q2LabelTitle  = 'Qmax:'
 Step2SFLabelTitle  = 'SF:'
 Step2XLabelTitle = 'X:'
 Step2YLabelTitle = 'Y:'
-Step2RLabelTitle = 'R :'
-Step2DeltaRLabelTitle = 'deltaR :'
+Step2RLabelTitle = 'r :'
 
 ;--Step3--
-Step3BaseFileTitle   = 'Base File:'
-Step3WorkOnFileTitle = '  Work On:'
+Step3WorkOnFileTitle = 'Work On:'
 Step3GoButtonTitle = 'Rescale Work-on file'
 ListOfFiles  = ['                            ']  
 ;--Settings tab--
@@ -804,12 +833,13 @@ STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
                                   /ALL_EVENTS)
 
 ;--outside tab of step2
-STEP2_SF_LABEL = WIDGET_LABEL(STEP2_BASE,$
-                              XOFFSET=Step2SFLabelSize[0],$
-                              YOFFSET=Step2SFLabelSize[1],$
-                              SCR_XSIZE=Step2SFLabelSize[2],$
-                              SCR_YSIZE=Step2SFLabelSize[3],$
-                              VALUE=Step2SFLabelTitle)
+STEP2_SF_draw = WIDGET_draw(STEP2_BASE,$
+                            uname='step2_sf_draw',$
+                            XOFFSET=Step2SFdrawSize[0],$
+                            YOFFSET=Step2SFdrawSize[1],$
+                            SCR_XSIZE=Step2SFdrawSize[2],$
+                            SCR_YSIZE=Step2SFdrawSize[3])
+
 
 STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   UNAME='step2_sf_text_field',$
@@ -822,12 +852,12 @@ STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
 
-STEP2_R_LABEL = WIDGET_LABEL(STEP2_BASE,$
-                             XOFFSET=Step2RLabelSize[0],$
-                             YOFFSET=Step2RLabelSize[1],$
-                             SCR_XSIZE=Step2RLabelSize[2],$
-                             SCR_YSIZE=Step2RLabelSize[3],$
-                             VALUE=Step2RLabelTitle)
+step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
+                            uname='step2_ri_draw',$
+                            XOFFSET=Step2RDrawSize[0],$
+                            YOFFSET=Step2RDrawSize[1],$
+                            SCR_XSIZE=Step2RDrawSize[2],$
+                            SCR_YSIZE=Step2RDrawSize[3])
 
 STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                  UNAME='step2_R_text_field',$
@@ -840,20 +870,21 @@ STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
                                  /ALIGN_LEFT,$
                                  /ALL_EVENTS)
 
-STEP2_deltaR_LABEL = WIDGET_LABEL(STEP2_BASE,$
+STEP2_delta_ri_draw = WIDGET_DRAW(STEP2_BASE,$
+                                 uname='step2_delta_ri_draw',$
+                                 XOFFSET=Step2DeltaRDrawSize[0],$
+                                 YOFFSET=Step2DeltaRDrawSize[1],$
+                                 SCR_XSIZE=Step2DeltaRDrawSize[2],$
+                                 SCR_YSIZE=Step2DeltaRDrawSize[3])
+
+STEP2_deltaR_label = WIDGET_LABEL(STEP2_BASE,$
+                                  UNAME='step2_deltaR_label',$
                                   XOFFSET=Step2DeltaRLabelSize[0],$
                                   YOFFSET=Step2DeltaRLabelSize[1],$
                                   SCR_XSIZE=Step2DeltaRLabelSize[2],$
                                   SCR_YSIZE=Step2DeltaRLabelSize[3],$
-                                  VALUE=Step2DeltaRLabelTitle)
-
-
-
-
-
-
-
-
+                                  VALUE='',$
+                                  /ALIGN_LEFT)
 
 ;--STEP 3--
 STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -863,15 +894,6 @@ STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
                          YOFFSET=Step1Size[1],$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
-
-STEP3_BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
-                                           UNAME='step3_base_file_droplist',$
-                                           XOFFSET=Step3BaseFileSize[0],$
-                                           YOFFSET=Step3BaseFileSize[1],$
-                                           SCR_XSIZE=Step3BaseFileSize[2],$
-                                           SCR_YSIZE=Step3BaseFileSize[3],$
-                                           VALUE=ListOfFiles,$
-                                           TITLE=Step3BaseFileTitle)
 
 STEP3_WORK_ON_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
                                            UNAME='step3_work_on_file_droplist',$
@@ -1131,6 +1153,25 @@ YaxisLinLog = CW_BGROUP(RescaleBase,$
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+
+; ri_logo=$
+;   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp"
+; id = widget_info(main_base,find_by_uname="step2_ri_draw")
+; WIDGET_CONTROL, id, GET_VALUE=id_value
+; wset, id_value
+; image = read_bmp(ri_logo)
+; tv, image,/true
+
+
+; delta_ri_logo=$
+;   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"
+; id = widget_info(main_base,find_by_uname="step2_delta_ri_draw")
+; WIDGET_CONTROL, id, GET_VALUE=id_value
+; wset, id_value
+; image = read_bmp(delta_ri_logo)
+; tv, image,/true
+
 end
 
 

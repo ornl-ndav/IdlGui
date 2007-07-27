@@ -1,3 +1,26 @@
+;This function replot the SF, ri and delta_ri labels/draw
+PRO refresh_draw_labels_tab2, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+images = (*(*global).images_tab2)
+unames = (*(*global).unames_tab2)
+images_xoff = (*(*global).images_tab2_xoff)
+images_yoff = (*(*global).images_tab2_yoff)
+
+image_size_array = size(images)
+image_size = image_size_array[1]
+
+for i=0,(image_size-1) do begin
+    id = widget_info(Event.top,find_by_uname=unames[i])
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    wset, id_value
+    image = read_bmp(images[i])
+    tv, image,images_xoff[i],images_yoff[i],/true
+endfor
+    
+END
+
 ;This function moves the color index to the right position
 PRO MoveColorIndex,Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
