@@ -2883,13 +2883,6 @@ wset, id_value
 image = read_bmp(detector_layout)
 tv, image,0,0,/true
 
-
-
-
-
-
-
-
 end
 
 
