@@ -2845,6 +2845,11 @@ for i=0,(nbr_runs_to_use-1) do begin
             interm_plot_cmd += " --dump-specular"
         endif
         
+;.bkg 
+        if (list_of_plots[1] EQ 1) then begin
+            interm_plot_cmd += " --dump-bkg"
+        endif
+
 ;.norm
         if (list_of_plots[2] EQ 1) then begin
             interm_plot_cmd += " --dump-norm"
@@ -3635,7 +3640,7 @@ endif else begin
                 endcase
                 
             end
-            else:
+            else: n=0
         endcase
         
         first_time_plotting_n = (*(*global).first_time_plotting_n)
@@ -4892,9 +4897,12 @@ if (tab_value EQ 0) then begin
         interm_plot_cmd = ""
 ;.sdc 
         if (list_of_plots[0] EQ 1) then begin
+            interm_plot_cmd += " --dump-bkg"
+        endif
+;.bkg   
+        if (list_of_plots[1] EQ 1) then begin
             interm_plot_cmd += " --dump-specular"
         endif
-        
 ;.sub
         if (list_of_plots[2] EQ 1) then begin
             interm_plot_cmd += " --dump-sub"
