@@ -165,12 +165,19 @@ ListOfLongFileName = strarr(1)
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*global).ucams      = ucams
 
-images_tab2 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
-               "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+if (!VERSION.os EQ 'darwin') then begin
+   images_tab2 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+                  "~/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
+                  "~/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+endif else begin
+   images_tab2 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
+                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_ri_draw",$
                "step2_delta_ri_draw"]
+
 images_tab2_xoff = [-5,-8,-3]
 images_tab2_yoff = [-4,0,-3]
 
@@ -192,64 +199,6 @@ endelse
 MainBaseSize         = [50 , 500, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
-
-;--Step1--
-Step1Size            = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
-LoadButton           = [5  , 5  , 100 , 30 ]
-ClearButton          = [110, 5  , 100 , 30 ]
-ListOfFilesSize      = [220, 5  , 250 , 30 ]
-InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
-InputFileFormatSize  = [130 , $
-                        InputFileFormatLabelSize[1]]
-ModeratorDetectorDistanceBase = [220,$
-                                 InputFileFormatLabelSize[1]-5,$
-                                 400,$
-                                 80]
-ModeratorDetectorDistanceLabelSize = [25,$
-                                      5,$
-                                      120,$
-                                      30]
-ModeratorDetectorDistanceTextFieldSize = [145,$
-                                          ModeratorDetectorDistanceLabelSize[1],$
-                                          100,$
-                                          30]
-yoff = 35
-AngleLabelSize = [25,$
-                  ModeratorDetectorDistanceLabelSize[1]+yoff,$
-                  50,$
-                  ModeratorDetectorDistanceLabelSize[3]]
-
-AngleTextFieldSize = [75,$
-                      AngleLabelSize[1],$
-                      80,$
-                      ModeratorDetectorDistanceTextFieldSize[3]]
-AngleUnitsSize = [ 160, AngleLabelSize[1]]
-
-ErrorMessageBaseSize = [InputFileFormatLabelSize[0],$
-                         InputFileFormatLabelSize[1]+35,$
-                         210,$
-                         35]
-ErrorMessageLabelSize = [0, 0, 210, 30]
-
-FileInfoSize         = [5 , 120, 510 , 200]
-ListOfColorLabelSize = [5 , 330, 50  , 30 ]
-ListOfColorSize      = [60, 320, 310 , 35 ]
-ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
-                        ListOfColorLabelSize[1],$
-                        150,$
-                        35]
-BlackLabelsize       = [50, 350, 50  , 30 ]
-ColorYoff = 55
-BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
-                        BlackLabelSize[1], 50 , 30 ]
-RedLabelSize         = [BlackLabelSize[0]+2*ColorYoff,$
-                       BlackLabelSize[1], 50 , 30 ]
-OrangeLabelSize      = [BlackLabelSize[0]+3*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
-YellowLabelSize      = [BlackLabelSize[0]+4*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
-WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
 
 ;--Step2--
 BaseFileSize         = [5  , 5  , 250 , 30 ]
@@ -434,22 +383,11 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
-;--Step1--
+;Define titles
 Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
-LoadButtonTitle = 'Load File'
-ClearButtonTitle = 'Clear File'
-ListOfFilesTitle = 'List of files:'
-ListOfColorTitle = 'Color:'
-BlackLabelTitle = 'Black'
-BlueLabelTitle = 'Blue'
-RedLabelTitle = 'Red'
-OrangeLabelTitle = 'Orange'
-YellowLabelTitle = 'Yellow'
-WhiteLabelTitle = 'White'
-input_file_label = 'Input file format:'
-input_file_format = ['TOF','Q']
+
 ;--Step2--
 BaseFileTitle      = 'Critical edge file:'
 Step2Tab1Title     = 'Determine SF using Q range'
@@ -500,209 +438,17 @@ STEPS_TAB = WIDGET_TAB(MAIN_BASE,$
                        SCR_YSIZE=StepsTabSize[3],$
                        /TRACKING_EVENTS)
 
-;--STEP 1-----------------------------------------------------------------------
-STEP1_BASE = WIDGET_BASE(STEPS_TAB,$
-                         UNAME='step1',$
-                         TITLE=Step1Title,$
-                         XOFFSET=Step1Size[0],$
-                         YOFFSET=Step1Size[1],$
-                         SCR_XSIZE=Step1Size[2],$
-                         SCR_YSIZE=Step1Size[3])
+;Build STEP1
+Step1Size = MakeGuiStep1(StepsTabSize, $
+                         STEPS_TAB, $
+                         strcompress((*global).distanceMD),$
+                         strcompress((*global).angleValue),$
+                         ListOfFiles,$
+                         Step1Title)
+                      
 
-LOAD_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
-                            UNAME='load_button',$
-                            XOFFSET=LoadButton[0],$
-                            YOFFSET=LoadButton[1],$
-                            SCR_XSIZE=LoadButton[2],$
-                            SCR_YSIZE=LoadButton[3],$
-                            SENSITIVE=1,$
-                            VALUE=LoadButtonTitle)
+Step1Size                = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
 
-CLEAR_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
-                            UNAME='clear_button',$
-                            XOFFSET=ClearButton[0],$
-                            YOFFSET=ClearButton[1],$
-                            SCR_XSIZE=ClearButton[2],$
-                            SCR_YSIZE=ClearButton[3],$
-                            SENSITIVE=0,$
-                            VALUE=ClearButtonTitle)
-
-LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
-                                         UNAME='list_of_files_droplist',$
-                                         XOFFSET=ListOfFilesSize[0],$
-                                         YOFFSET=ListOfFilesSize[1],$
-                                         SCR_XSIZE=ListOfFilesSize[2],$
-                                         SCR_YSIZE=ListOfFilesSize[3],$
-                                         VALUE=ListOfFiles,$
-                                         TITLE=ListOfFilesTitle)
-
-InputFileFormatLabel = WIDGET_LABEL(STEP1_BASE,$
-                                    XOFFSET=InputFileFormatLabelSize[0],$
-                                    YOFFSET=InputFileFormatLabelSize[1],$
-                                    SCR_XSIZE=InputFileFormatLabelSize[2],$
-                                    SCR_YSIZE=InputFileFormatLabelSize[3],$
-                                    VALUE='Input file format:')
-
-
-InputFileFormat = CW_BGROUP(STEP1_BASE,$ 
-                            input_file_format,$
-                            /exclusive,$
-                            /RETURN_NAME,$
-                            XOFFSET=InputFileFormatSize[0],$
-                            YOFFSET=InputFileFormatSize[1],$
-                            SET_VALUE=0.0,$
-                            row=1,$
-                            uname='InputFileFormat')                 
-
-ModeratorDetectorDistanceBase = WIDGET_BASE(STEP1_BASE,$
-                                            UNAME='ModeratorDetectorDistanceBase',$
-                                            XOFFSET=ModeratorDetectorDistanceBase[0],$
-                                            YOFFSET=ModeratorDetectorDistanceBase[1],$
-                                            SCR_XSIZE=ModeratorDetectorDistanceBase[2],$
-                                            SCR_YSIZE=ModeratorDetectorDistanceBase[3])
-
-ModeratorDetectorDistanceLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
-                                              XOFFSET=ModeratorDetectorDistanceLabelSize[0],$
-                                              YOFFSET=ModeratorDetectorDistanceLabelSize[1],$
-                                              SCR_XSIZE=ModeratorDetectorDistanceLabelSize[2],$
-                                              SCR_YSIZE=ModeratorDetectorDistanceLabelSize[3],$
-                                              VALUE='Distance M-D (m): ')
-
-distanceMD = strcompress((*global).distanceMD)
-ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
-                                                 XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
-                                                 YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
-                                                 SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
-                                                 SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
-                                                 UNAME='ModeratorDetectorDistanceTextField',$
-                                                 VALUE=distanceMD,$
-                                                 /editable,$
-                                                 /align_left,$
-                                                 /all_events)
-
-AngleUnitList = ['rad','degree']
-AngleUnits = CW_BGROUP(ModeratorDetectorDistanceBase,$
-                       AngleUnitList,$
-                       /exclusive,$
-                       /return_name,$
-                       XOFFSET=AngleUnitsSize[0],$
-                       YOFFSET=AngleUnitsSize[1],$
-                       SET_VALUE=0.0,$
-                       row=1,$
-                       uname='AngleUnits')                 
-
-AngleLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
-                          XOFFSET=AngleLabelSize[0],$
-                          YOFFSET=AngleLabelSize[1],$
-                          SCR_XSIZE=AngleLabelSize[2],$
-                          SCR_YSIZE=AngleLabelSize[3],$
-                          VALUE='Angle:')
-
-AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
-                             UNAME='AngleTextField',$
-                             XOFFSET=AngleTextFieldSize[0],$
-                             YOFFSET=AngleTextFieldSize[1],$
-                             SCR_XSIZE=AngleTextFieldSize[2],$
-                             SCR_YSIZE=AngleTextFieldSize[3],$
-                             VALUE=strcompress((*global).angleValue,/remove_all),$
-                             /EDITABLE,$
-                             /align_left,$
-                             /all_events)
-
-ErrorMessageBase = widget_base(STEP1_BASE,$
-                               xoffset=ErrorMessageBaseSize[0],$
-                               yoffset=ErrorMessageBaseSize[1],$
-                               scr_xsize=ErrorMessageBaseSize[2],$
-                               scr_ysize=ErrorMessageBaseSize[3],$
-                               uname='ErrorMessageBase',$
-                               frame=1,$
-                               map=0)
-
-ErrorMessageLabel = widget_label(ErrorMessageBase,$
-                                 uname='ErrorMessageLabel',$
-                                 xoffset=ErrorMessageLabelSize[0],$
-                                 yoffset=ErrorMessageLabelSize[1],$
-                                 scr_xsize=ErrorMessageLabelSize[2],$
-                                 scr_ysize=ErrorMessageLabelSize[3],$
-                                 value='')
-
-FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
-                        UNAME='file_info',$
-                        XOFFSET=FileInfoSize[0],$
-                        YOFFSET=FileInfoSize[1],$
-                        SCR_XSIZE=FileInfoSize[2],$
-                        SCR_YSIZE=FileInfoSize[3],$
-                        /SCROLL,$
-                        /WRAP)
-                        
-LIST_OF_COLOR_LABEL = WIDGET_LABEL(STEP1_BASE,$
-                                   VALUE=ListOfColorTitle,$
-                                   XOFFSET=ListOfColorLabelSize[0],$
-                                   YOFFSET=ListOfColorLabelSize[1],$
-                                   SCR_XSIZE=ListOfColorLabelSize[2],$
-                                   SCR_YSIZE=ListOfColorLabelSize[3])
-
-LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
-                                     UNAME='list_of_color_slider',$
-                                     MINIMUM=0,$
-                                     MAXIMUM=255,$
-                                     XOFFSET=ListOfColorSize[0],$
-                                     YOFFSET=ListOfColorSize[1],$
-                                     SCR_XSIZE=ListOfColorSize[2],$
-                                     SCR_YSIZE=ListOfColorSize[3],$
-                                     TITLE=ListOfColorTitle,$
-                                     VALUE=ColorSliderDefaultValue,$
-                                     sensitive=1)
-
-ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
-                              UNAME='ColorFileLabel',$
-                              XOFFSET=ColorFileLabelSize[0],$
-                              YOFFSET=ColorFileLabelSize[1],$
-                              SCR_XSIZE=ColorFileLabelSize[2],$
-                              SCR_YSIZE=ColorFileLabelSize[3],$
-                              VALUE='')
-
-BlackLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlackLabelSize[0],$
-                          YOFFSET=BlackLabelSize[1],$
-                          SCR_XSIZE=BlackLabelSize[2],$
-                          SCR_YSIZE=BlackLabelSize[3],$
-                          VALUE=BlackLabelTitle)
-
-BlueLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlueLabelSize[0],$
-                          YOFFSET=BlueLabelSize[1],$
-                          SCR_XSIZE=BlueLabelSize[2],$
-                          SCR_YSIZE=BlueLabelSize[3],$
-                          VALUE=BlueLabelTitle)
-
-RedLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=RedLabelSize[0],$
-                          YOFFSET=RedLabelSize[1],$
-                          SCR_XSIZE=RedLabelSize[2],$
-                          SCR_YSIZE=RedLabelSize[3],$
-                          VALUE=RedLabelTitle)
-
-OrangeLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=OrangeLabelSize[0],$
-                          YOFFSET=OrangeLabelSize[1],$
-                          SCR_XSIZE=OrangeLabelSize[2],$
-                          SCR_YSIZE=OrangeLabelSize[3],$
-                          VALUE=OrangeLabelTitle)
-
-YellowLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=YellowLabelSize[0],$
-                          YOFFSET=YellowLabelSize[1],$
-                          SCR_XSIZE=YellowLabelSize[2],$
-                          SCR_YSIZE=YellowLabelSize[3],$
-                          VALUE=YellowLabelTitle)
-
-WhiteLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=WhiteLabelSize[0],$
-                          YOFFSET=WhiteLabelSize[1],$
-                          SCR_XSIZE=WhiteLabelSize[2],$
-                          SCR_YSIZE=WhiteLabelSize[3],$
-                          VALUE=WhiteLabelTitle)
 ;--STEP 2-----------------------------------------------------------------------
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          UNAME='step2',$
@@ -1153,24 +899,6 @@ YaxisLinLog = CW_BGROUP(RescaleBase,$
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
-
-; ri_logo=$
-;   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp"
-; id = widget_info(main_base,find_by_uname="step2_ri_draw")
-; WIDGET_CONTROL, id, GET_VALUE=id_value
-; wset, id_value
-; image = read_bmp(ri_logo)
-; tv, image,/true
-
-
-; delta_ri_logo=$
-;   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"
-; id = widget_info(main_base,find_by_uname="step2_delta_ri_draw")
-; WIDGET_CONTROL, id, GET_VALUE=id_value
-; wset, id_value
-; image = read_bmp(delta_ri_logo)
-; tv, image,/true
 
 end
 
