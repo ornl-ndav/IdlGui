@@ -205,31 +205,16 @@ distance_L_TB        = 35
 distance_L_L         = 130
 distanceVertical_L_L = 35
 
-;--Step3
-Step3WorkOnFileSize  = [5  , 5  , 300 , 30]
-Step3GoButtonSize    = [310, 7  , 205 , 30 ]
+;Define titles
+Step1Title = 'LOAD FILES'
+Step2Title = 'DEFINE CRITICAL EDGE FILE'
+Step3Title = 'RESCALE FILES'
+ListOfFiles  = ['                            ']  
 
-Step3Q1LabelSize     = [5  , 90 , 30  , 30 ]
-Step3Q1TextFieldSize = [Step3Q1LabelSize[0]+distance_L_TB, $
-                        Step3Q1LabelSize[1],$
-                        120,$
-                        Step3Q1LabelSize[3]]
-Step3Q2LabelSize     = [Step3Q1LabelSize[0]+distance_L_L, $
-                        Step3Q1LabelSize[1],$
-                        Step3Q1LabelSize[2],$
-                        Step3Q1LabelSize[3]]
-Step3Q2TextFieldSize = [Step3Q2LabelSize[0]+distance_L_TB, $
-                        Step3Q1LabelSize[1],$
-                        Step3Q1TextFieldSize[2],$
-                        Step3Q1LabelSize[3]]
-Step3SFLabelSize     = [Step3Q1LabelSize[0]+2*distance_L_L, $
-                        Step3Q1LabelSize[1],$
-                        Step3Q1LabelSize[2],$
-                        Step3Q1LabelSize[3]]
-Step3SFTextFieldSize = [Step3SFLabelSize[0]+distance_L_TB,$
-                        Step3Q1LabelSize[1],$
-                        Step3Q1TextFieldSize[2],$
-                        Step3Q1LabelSize[3]]
+
+
+
+
 ;--settings tab
 SettingsTabSize      = [5  , 5  , 500 , 200 ]
 tof_to_Q_label_size  = [5  , 5  , 150 , 30 ]
@@ -321,18 +306,11 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
-;Define titles
-Step1Title = 'LOAD FILES'
-Step2Title = 'DEFINE CRITICAL EDGE FILE'
-Step3Title = 'RESCALE FILES'
 
-;--Step3--
-Step3WorkOnFileTitle = 'Work On:'
-Step3GoButtonTitle = 'Rescale Work-on file'
-ListOfFiles  = ['                            ']  
 ;--Settings tab--
 SettingsTabTitle     = 'Settings'
 tof_to_Q_label_title = 'TOF_to_Q algorithm:' 
+
 ;Main Base
 RefreshPlotButtonTitle = 'Refresh Plot'
 
@@ -372,7 +350,7 @@ Step1Size = MakeGuiStep1(StepsTabSize, $
                          ListOfFiles,$
                          Step1Title)
                       
-;Build Step2
+;Build STEP2
 MakeGuiStep2, STEPS_TAB,$
               Step1Size,$
               Step2Title,$
@@ -381,86 +359,13 @@ MakeGuiStep2, STEPS_TAB,$
               distanceVertical_L_L,$
               ListOfFiles
 
-;--STEP 3--
-STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
-                         UNAME='step3',$
-                         TITLE=Step3Title,$
-                         XOFFSET=Step1Size[0],$
-                         YOFFSET=Step1Size[1],$
-                         SCR_XSIZE=Step1Size[2],$
-                         SCR_YSIZE=Step1Size[3])
-
-STEP3_WORK_ON_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
-                                           UNAME='step3_work_on_file_droplist',$
-                                           XOFFSET=Step3WorkOnFileSize[0],$
-                                           YOFFSET=Step3WorkOnFileSize[1],$
-                                           SCR_XSIZE=Step3WorkOnFileSize[2],$
-                                           SCR_YSIZE=Step3WorkOnFileSize[3],$
-                                           VALUE=ListOfFiles,$
-                                           TITLE=Step3WorkOnFileTitle)
-
-STEP3_BUTTON = WIDGET_BUTTON(STEP3_BASE,$
-                             UNAME='Step3_button',$
-                             XOFFSET=Step3GoButtonSize[0],$
-                             YOFFSET=Step3GoButtonSize[1],$
-                             SCR_XSIZE=Step3GoButtonSize[2],$
-                             SCR_YSIZE=Step3GoButtonSize[3],$
-                             SENSITIVE=1,$
-                             VALUE=Step3GoButtonTitle)
-
-STEP3_Q1_LABEL = WIDGET_LABEL(STEP3_BASE,$
-                              XOFFSET=Step3Q1LabelSize[0],$
-                              YOFFSET=Step3Q1LabelSize[1],$
-                              SCR_XSIZE=Step3Q1LabelSize[2],$
-                              SCR_YSIZE=Step3Q1LabelSize[3],$
-                              VALUE=Step2Q1LabelTitle)
-
-STEP3_Q1_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-                                  UNAME='step3_q1_text_field',$
-                                  XOFFSET=Step3Q1TextFieldSize[0],$
-                                  YOFFSET=Step3Q1TextFieldSize[1],$
-                                  SCR_XSIZE=Step3Q1TextFieldSize[2],$
-                                  SCR_YSIZE=Step3Q1TextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
-
-STEP3_Q2_LABEL = WIDGET_LABEL(STEP3_BASE,$
-                              XOFFSET=Step3Q2LabelSize[0],$
-                              YOFFSET=Step3Q2LabelSize[1],$
-                              SCR_XSIZE=Step3Q2LabelSize[2],$
-                              SCR_YSIZE=Step3Q2LabelSize[3],$
-                              VALUE=Step2Q2LabelTitle)
-
-STEP3_Q2_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-                                  UNAME='step3_q2_text_field',$
-                                  XOFFSET=Step3Q2TextFieldSize[0],$
-                                  YOFFSET=Step3Q2TextFieldSize[1],$
-                                  SCR_XSIZE=Step3Q2TextFieldSize[2],$
-                                  SCR_YSIZE=Step3Q2TextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
-
-STEP3_SF_LABEL = WIDGET_LABEL(STEP3_BASE,$
-                              XOFFSET=Step3SFLabelSize[0],$
-                              YOFFSET=Step3SFLabelSize[1],$
-                              SCR_XSIZE=Step3SFLabelSize[2],$
-                              SCR_YSIZE=Step3SFLabelSize[3],$
-                              VALUE=Step2SFLabelTitle)
-
-STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-                                  UNAME='step3_sf_text_field',$
-                                  XOFFSET=Step3SFTextFieldSize[0],$
-                                  YOFFSET=Step3SFTextFieldSize[1],$
-                                  SCR_XSIZE=Step3SFTextFieldSize[2],$
-                                  SCR_YSIZE=Step3SFTextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$ 
-                                  /ALIGN_LEFT,$ 
-                                  /ALL_EVENTS)
+;Build STEP3
+MakeGuiStep3, STEPS_TAB,$
+              Step1Size,$
+              Step3Title,$
+              distance_L_TB,$
+              distance_L_L,$
+              ListOfFiles
 
 ;--SETTINGS TAB ----------------------------------------------------------------
 SETTINGS_BASE = WIDGET_BASE(STEPS_TAB,$
