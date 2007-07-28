@@ -3,6 +3,7 @@ cd, "~/SVN/HistoTool/trunk/gui/utilities/"
 
 cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
 .run MakeGuiStep1.pro
+.run MakeGuiStep2.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run refl_support_get.pro
