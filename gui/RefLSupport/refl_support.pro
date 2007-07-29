@@ -36,10 +36,11 @@ global = ptr_new({  $
                    ColorSliderDefaultValue : 25,$    ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
-                   images_tab2    : ptr_new(0L),$    ;list of images of tab1 (SF, ri...)
-                   unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab1
-                   images_tab2_xoff : ptr_new(0L),$  ;images x_offset of tab2
-                   images_tab2_yoff : ptr_new(0L)$   ;images y_offset of tab2  
+                   images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)
+                   unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab2
+                   unames_tab3    : ptr_new(0L),$    ;list of widget_draw of tab3
+                   images_tabs_xoff : ptr_new(0L),$  ;images x_offset of tabs
+                   images_tabs_yoff : ptr_new(0L)$   ;images y_offset of tabs  
                  })
 
 FileHistory   = strarr(1)
@@ -63,25 +64,29 @@ ListOfLongFileName = strarr(1)
 (*global).ucams      = ucams
 
 if (!VERSION.os EQ 'darwin') then begin
-   images_tab2 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+   images_tabs = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
 endif else begin
-   images_tab2 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+   images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
 endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_ri_draw",$
                "step2_delta_ri_draw"]
+unames_tab3 = ["step3_sf_draw",$
+               "step3_ri_draw",$
+               "step3_delta_ri_draw"]
 
-images_tab2_xoff = [-5,-8,-3]
-images_tab2_yoff = [-4,0,-3]
+images_tabs_xoff = [-5,-8,-3]
+images_tabs_yoff = [-4,0,-3]
 
-(*(*global).images_tab2) = images_tab2
+(*(*global).images_tabs) = images_tabs
 (*(*global).unames_tab2) = unames_tab2
-(*(*global).images_tab2_xoff) = images_tab2_xoff
-(*(*global).images_tab2_yoff) = images_tab2_yoff
+(*(*global).unames_tab3) = unames_tab3
+(*(*global).images_tabs_xoff) = images_tabs_xoff
+(*(*global).images_tabs_yoff) = images_tabs_yoff
 
 if (!VERSION.os EQ 'darwin') then begin
     (*global).input_path = '~/tmp/'
@@ -157,8 +162,6 @@ MakeGuiStep2, STEPS_TAB,$
 MakeGuiStep3, STEPS_TAB,$
               Step1Size,$
               Step3Title,$
-              distance_L_TB,$
-              distance_L_L,$
               ListOfFiles
 
 ;Build SETTINGS tab
@@ -174,7 +177,6 @@ WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 end
-
 
 ;
 ; Empty stub procedure used for autoloading.

@@ -27,34 +27,6 @@ Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
 
-Step2SFDrawSize     = [330, $
-                       45,$
-                       Step2Q1LabelSize[2],$
-                       Step2Q1LabelSize[3]]
-Step2SFTextFieldSize = [Step2SFDrawSize[0]+distance_L_TB,$
-                        Step2SFDrawSize[1],$
-                        Step2Q1TextFieldSize[2],$
-                        Step2Q1TextFieldSize[3]]
-
-Step2RDrawSize      = [Step2SFDrawSize[0], $
-                       Step2SFDrawSize[1]+distanceVertical_L_L, $
-                       Step2SFDrawSize[2],$
-                       Step2SFDrawSize[3]]
-
-Step2RTextFieldSize  = [Step2SFDrawSize[0]+distance_L_TB, $
-                        Step2RDrawSize[1], $
-                        Step2Q1TextFieldSize[2],$
-                        Step2Q1TextFieldSize[3]]
-
-Step2DeltaRDrawSize      = [Step2SFDrawSize[0], $
-                            Step2RDrawSize[1]+distanceVertical_L_L, $
-                            Step2SFDrawSize[2],$
-                            Step2SFDrawSize[3]]
-Step2DeltaRLabelSize  = [Step2RTextFieldSize[0],$
-                         Step2DeltaRDrawSize[1], $
-                         Step2Q1TextFieldSize[2],$
-                         Step2Q1TextFieldSize[3]]
-
 Step2XLabelSize     = [5  , 5 , 30  , 30 ]
 Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
                        Step2XLabelSize[1],$
@@ -68,6 +40,33 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
                        Step2XLabelSize[1],$
                        Step2XTextFieldSize[2],$
                        Step2XLabelSize[3]]
+
+Step2RDrawSize      = [330,$
+                       45,$
+                       30,$
+                       30]
+Step2RTextFieldSize  = [Step2RDrawSize[0]+distance_L_TB, $
+                        Step2RDrawSize[1], $
+                        Step2Q1TextFieldSize[2],$
+                        Step2Q1TextFieldSize[3]]
+
+Step2DeltaRDrawSize      = [Step2RDrawSize[0], $
+                            Step2RDrawSize[1]+distanceVertical_L_L, $
+                            Step2RDrawSize[2],$
+                            Step2RDrawSize[3]]
+Step2DeltaRLabelSize  = [Step2RTextFieldSize[0],$
+                         Step2DeltaRDrawSize[1], $
+                         Step2Q1TextFieldSize[2],$
+                         Step2Q1TextFieldSize[3]]
+
+Step2SFDrawSize     = [Step2DeltaRDrawSize[0], $
+                       Step2DeltaRDrawsize[1]+distanceVertical_L_L,$
+                       Step2Q1LabelSize[2],$
+                       Step2Q1LabelSize[3]]
+Step2SFTextFieldSize = [Step2SFDrawSize[0]+distance_L_TB,$
+                        Step2SFDrawSize[1],$
+                        Step2Q1TextFieldSize[2],$
+                        Step2Q1TextFieldSize[3]]
 
 ;Define titles
 BaseFileTitle      = 'Critical edge file:'

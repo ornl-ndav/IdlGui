@@ -58,6 +58,7 @@ if (PrevTabSelect NE CurrTabSelect OR $
             refresh_draw_labels_tab2, Event
         end
         2: begin            ;if third tab plot only two files selected
+            refresh_draw_labels_tab3, Event
         end
         else:
     ENDCASE
