@@ -211,15 +211,6 @@ Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
 ListOfFiles  = ['                            ']  
 
-
-
-
-
-;--settings tab
-SettingsTabSize      = [5  , 5  , 500 , 200 ]
-tof_to_Q_label_size  = [5  , 5  , 150 , 30 ]
-tof_to_Q_size        = [160, 5]
-
 ;--RESET ALL
 yoff = 5
 ResetAllButtonSize   = [StepsTabSize[0],$
@@ -307,10 +298,6 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
 
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 
-;--Settings tab--
-SettingsTabTitle     = 'Settings'
-tof_to_Q_label_title = 'TOF_to_Q algorithm:' 
-
 ;Main Base
 RefreshPlotButtonTitle = 'Refresh Plot'
 
@@ -342,7 +329,7 @@ STEPS_TAB = WIDGET_TAB(MAIN_BASE,$
                        SCR_YSIZE=StepsTabSize[3],$
                        /TRACKING_EVENTS)
 
-;Build STEP1
+;Build STEP1 tab
 Step1Size = MakeGuiStep1(StepsTabSize, $
                          STEPS_TAB, $
                          strcompress((*global).distanceMD),$
@@ -350,7 +337,7 @@ Step1Size = MakeGuiStep1(StepsTabSize, $
                          ListOfFiles,$
                          Step1Title)
                       
-;Build STEP2
+;Build STEP2 tab
 MakeGuiStep2, STEPS_TAB,$
               Step1Size,$
               Step2Title,$
@@ -359,7 +346,7 @@ MakeGuiStep2, STEPS_TAB,$
               distanceVertical_L_L,$
               ListOfFiles
 
-;Build STEP3
+;Build STEP3 tab
 MakeGuiStep3, STEPS_TAB,$
               Step1Size,$
               Step3Title,$
@@ -367,33 +354,11 @@ MakeGuiStep3, STEPS_TAB,$
               distance_L_L,$
               ListOfFiles
 
-;--SETTINGS TAB ----------------------------------------------------------------
-SETTINGS_BASE = WIDGET_BASE(STEPS_TAB,$
-                            UNAME='settings_base',$
-                            TITLE=SettingsTabTitle,$
-                            XOFFSET=SettingsTabSize[0],$
-                            YOFFSET=SettingsTabSize[1],$
-                            SCR_XSIZE=SettingsTabSize[2],$
-                            SCR_YSIZE=SettingsTabSize[3])
+;Build SETTINGS tab
+MakeGuiSettings, STEPS_TAB
 
-TOF_to_Q_label = widget_label(settings_base,$
-                              value=TOF_to_Q_label_title,$
-                              xoffset=TOF_to_Q_label_size[0],$
-                              yoffset=TOF_to_Q_label_size[1],$
-                              scr_xsize=TOF_to_Q_label_size[2],$
-                              scr_ysize=TOF_to_Q_label_size[3],$
-                              /align_left)
-
-TOF_to_Q_algorithm = ['(4*PI*sin(theta/2)*m*L)/hTOF   ','Jacobian']
-TOF_to_Q_algorithm = CW_BGROUP(settings_base,$
-                               TOF_to_Q_algorithm,$
-                               /exclusive,$
-                               /return_name,$
-                               XOFFSET=tof_to_Q_size[0],$
-                               YOFFSET=tof_to_Q_size[1],$
-                               SET_VALUE=0.0,$
-                               row=1,$
-                               uname='tof_to_Q_algorithm')                 
+;Build Main Base Components
+MakeGuiMainBaseComponents
 
 ;--RESET ALL BUTTONS--
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
