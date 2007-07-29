@@ -9,6 +9,7 @@ cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
 .run MakeGuiMainBaseComponents.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
+.run Main_Base_event.pro
 .run refl_support_get.pro
 .run getNumeric.pro
 .run refl_support_widget.pro

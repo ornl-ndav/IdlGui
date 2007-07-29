@@ -1,107 +1,4 @@
-pro MAIN_BASE_event, Event
- 
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-wWidget =  Event.top            ;widget id
-
-case Event.id of
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): begin
-        steps_tab, Event, 0
-    end
-
-    ;--step1--
-    Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
-        load_file, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
-        display_info_about_file, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
-        clear_file, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='InputFileFormat'): begin
-        InputFileFormat, Event
-    end
-
-    ;when distance text field is edited
-    Widget_Info(wWidget, FIND_BY_UNAME='ModeratorDetectorDistanceTextField'): begin
-        checkLoadButtonStatus, Event
-    end
-
-    ;when angle text field is edited
-    Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): begin
-        checkLoadButtonStatus, Event
-    end
-
-    ;--step2--
-    Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
-         step2_base_file_droplist, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
-        run_step2, Event
-    end
-
-    ;--step3--
-    Widget_Info(wWidget, FIND_BY_UNAME='step3_base_file_droplist'): begin
-        step3_base_file_droplist, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
-        step3_work_on_file_droplist, Event
-    end
-
-    Widget_Info(wWidget, FIND_BY_UNAME='Step3_button'): begin
-        run_step3, Event
-    end
-
-    ;--reset all button
-    Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
-        reset_all_button, Event
-    end
-    
-    ;--refresh plots
-    Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
-        steps_tab, Event, 1
-    end
-    
-    ;--validate rescale
-    Widget_Info(wWidget, FIND_BY_UNAME='ValidateButton'): begin
-       ValidateButton, Event
-    end
-    
-    ;--reset X and Y rescale button
-    Widget_Info(wWidget, FIND_BY_UNAME='ResetButton'): begin
-       ResetRescaleButton, Event
-    end
-
-    ;replot ri and delta_ri
-    widget_info(wWidget, FIND_BY_UNAME='step2_ri_draw'):begin
-        ri_logo=$
-          "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp"
-        id = widget_info(wWidget,find_by_uname='step2_ri_draw')
-        WIDGET_CONTROL, id, GET_VALUE=id_value
-        wset, id_value
-        image = read_bmp(ri_logo)
-        tv, image,-8,0,/true
-    end
-
-else:
-endcase
-end
-
-
-
-pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
+pro Build_GUI, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
 Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
@@ -192,10 +89,6 @@ endif else begin
     (*global).input_path = '~' + ucams
 endelse
 
-
-;def of parameters used for positioning and sizing widgets
-;[xoff,yoff,width,height]
-
 MainBaseSize         = [50 , 500, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
@@ -212,8 +105,7 @@ Step3Title = 'RESCALE FILES'
 ListOfFiles  = ['                            ']  
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 
-
-;Main Base
+;Build Main Base
 RefreshPlotButtonTitle = 'Refresh Plot'
 
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -275,7 +167,6 @@ MakeGuiSettings, STEPS_TAB
 ;Build Main Base Components
 MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
 
-
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
@@ -289,5 +180,5 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro refl_support, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-wTLB, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+Build_GUI, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end
