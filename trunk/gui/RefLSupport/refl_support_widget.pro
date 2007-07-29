@@ -139,9 +139,6 @@ PRO updateDropList, Event, ListOfFiles
  base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
  widget_control, base_file_droplist_id, set_value=ListOfFiles
 ;update list of file in droplists of step3
- step3_base_file_droplist_id = $
-   widget_info(Event.top,find_by_uname='step3_base_file_droplist')
- widget_control, step3_base_file_droplist_id, set_value=ListOfFiles
  step3_work_on_file_droplist_id = widget_info(Event.top,$
                                               find_by_uname='step3_work_on_file_droplist')
  widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
