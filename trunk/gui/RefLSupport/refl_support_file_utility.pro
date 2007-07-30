@@ -85,40 +85,6 @@ return, FullFileName
 end
 
 
-;This functions populate the various droplist boxes
-;It also checks if the newly file loaded is not already 
-;present in the list, in this case, it's not added
-PRO add_new_file_to_droplist, Event, ShortFileName, LongFileName
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-ListOfFiles = (*(*global).list_of_files)
-ListOfLongFileName = (*(*global).ListOfLongFileName)
-;is's the first file loaded
-if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
-   ListOfFiles = [ShortFileName]
-   ListOfLongFileName = [LongFileName]
-   ActivateRescaleBase,Event,1
-   ;save angle value
-   angle_array = (*(*global).angle_array)
-   angle_array[0] = (*global).angleValue
-   (*(*global).angle_array) = angle_array
-;if not
-endif else begin
-   ;is this file not already listed 
-   if(isFileAlreadyInList(ListOfFiles,ShortFileName) EQ 0) then begin ;true newly file
-      (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
-      ListOfFiles = [ListOfFiles,ShortFileName]
-      ListOfLongFileName = [ListOfLongFileName,LongFileName]
-      CreateArrays,Event        ;if a file is added, the Q1,Q2,SF... arrays are updated
-    endif
-endelse
-
-(*(*global).list_of_files) = ListOfFiles
-(*(*global).ListOfLongFileName) = ListOfLongFileName
-;update GUI
-updateGUI,Event, ListOfFiles
-end
 
 
 ;This function updates the GUI
@@ -182,6 +148,7 @@ PRO CreateArrays, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+Qmin_array = (*(*global).Qmin_array)
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
@@ -189,6 +156,7 @@ angle_array = (*(*global).angle_array)
 color_array = (*(*global).color_array)
 FileHistory = (*(*global).FileHistory)
 
+Qmin_array = [Qmin_array,0]
 Q1_array = [Q1_array,0]
 Q2_array = [Q2_array,0]
 SF_array = [SF_array,0]
@@ -201,6 +169,7 @@ colorIndex = getColorIndex(Event)
 color_array = [color_array, colorIndex]
 FileHistory = [FileHistory,'']
 
+(*(*global).Qmin_array) = Qmin_array
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
@@ -236,6 +205,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 list_of_files      = strarr(1)
+Qmin_array         = lonarr(1)
 Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
@@ -246,6 +216,7 @@ ListOfLongFileName = strarr(1)
 FileHistory        = strarr(1)
 
 (*(*global).list_of_files)      = list_of_files
+(*(*global).Qmin_array)         = Qmin_array
 (*(*global).Q1_array)           = Q1_array
 (*(*global).Q2_array)           = Q2_array
 (*(*global).SF_array)           = SF_array
@@ -277,6 +248,7 @@ widget_control,id,get_uvalue=global
 
 FileHistory = (*(*global).FileHistory)
 ListOfFiles = (*(*global).list_of_files)
+Qmin_array = (*(*global).Qmin_array)
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 SF_array = (*(*global).SF_array)
@@ -286,6 +258,7 @@ ListOfLongFileName = (*(*global).ListOfLongFileName)
 
 FileHistory        = ArrayDelete(FileHistory,At=iIndex,Length=1)
 ListOfFiles        = ArrayDelete(ListOfFiles,AT=iIndex,Length=1)
+Qmin_array         = ArrayDelete(Qmin_array,AT=iIndex,Length=1)
 Q1_array           = ArrayDelete(Q1_array,AT=iIndex,Length=1)
 Q2_array           = ArrayDelete(Q2_array,AT=iIndex,Length=1)
 SF_array           = ArrayDelete(SF_array,AT=iIndex,Length=1)
@@ -295,6 +268,7 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 
 (*(*global).FileHistory)       = FileHistory
 (*(*global).list_of_files)     = ListOfFiles
+(*(*global).Qmin_array)        = Qmin_array
 (*(*global).Q1_array)          = Q1_array
 (*(*global).Q2_array)          = Q2_array
 (*(*global).SF_array)          = SF_array

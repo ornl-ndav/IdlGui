@@ -19,6 +19,8 @@ cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run refl_support_file_utility.pro
 .run refl_support_plot_data.pro
 .run refl_support_TOF_to_Q.pro
+
+.run refl_support_open_file.pro
 .run refl_support_eventcb.pro
 .run refl_support.pro
 refl_support

@@ -85,6 +85,9 @@ YaxisMaxTextFieldSize= [YaxisMaxLabelSize[0]+d45,$
 YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
 
+;Define title variables
+RefreshPlotButtonTitle = 'Refresh Plot'
+
 
 ;Build GUI
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
