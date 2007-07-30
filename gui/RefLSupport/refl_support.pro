@@ -33,6 +33,7 @@ global = ptr_new({  $
                    SF_array       : ptr_new(0L),$    ;Scalling factor array
                    angle_array    : ptr_new(0L),$    ;Angle value
                    color_array    : ptr_new(0L),$    ;index of color for each file 
+                   Qmin_array     : ptr_new(0L),$    ;list of Qmin
                    ColorSliderDefaultValue : 25,$    ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
@@ -45,6 +46,7 @@ global = ptr_new({  $
 
 FileHistory   = strarr(1)
 list_of_files = strarr(1)
+Qmin_array    = lonarr(1)
 Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
@@ -55,6 +57,7 @@ color_array[0] = ColorSliderDefaultValue
 ListOfLongFileName = strarr(1)
 (*(*global).FileHistory) = FileHistory
 (*(*global).list_of_files) = list_of_files
+(*(*global).Qmin_array) = Qmin_array
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 (*(*global).SF_array) = SF_array
@@ -111,8 +114,6 @@ ListOfFiles  = ['                            ']
 MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
 
 ;Build Main Base
-RefreshPlotButtonTitle = 'Refresh Plot'
-
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         UNAME='MAIN_BASE',$
                         XOFFSET=MainBaseSize[0],$
