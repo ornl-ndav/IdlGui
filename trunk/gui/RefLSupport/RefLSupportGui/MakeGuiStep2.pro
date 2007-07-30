@@ -8,6 +8,10 @@ PRO MakeGuiStep2, STEPS_TAB,$
 
 ;Define position and size of widgets
 BaseFileSize         = [5  , 5  , 250 , 30 ]
+
+BaseFileCELabel      = [5  , 5  , 150  , 30 ]
+BaseFileCEFileName   = [155, 5  , 150 , 30 ]
+
 Step2GoButtonSize    = [350, 7  , 170 , 30 ]
 Step2TabSize         = [5  , 60 , 320 , 70 ]
 Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
@@ -89,14 +93,31 @@ STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
 
-BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEP2_BASE,$
-                                     UNAME='base_file_droplist',$
-                                     XOFFSET=BaseFileSize[0],$
-                                     YOFFSET=BaseFileSize[1],$
-                                     SCR_XSIZE=BaseFileSize[2],$
-                                     SCR_YSIZE=BaseFileSize[3],$
-                                     VALUE=ListOfFiles,$
-                                     TITLE=BaseFileTitle)
+;removed droplist in first version of program
+;;BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEPS_TAB,$
+;;                                      UNAME='base_file_droplist',$
+;;                                      XOFFSET=BaseFileSize[0],$
+;;                                      YOFFSET=BaseFileSize[1],$
+;;                                      SCR_XSIZE=BaseFileSize[2],$
+;;                                      SCR_YSIZE=BaseFileSize[3],$
+;;                                      VALUE=ListOfFiles,$
+;;                                      TITLE=BaseFileTitle)
+
+BASE_FILE_Label = widget_label(STEP2_BASE,$
+                               xoffset=BaseFileCELabel[0],$
+                               yoffset=BaseFileCELabel[1],$
+                               scr_xsize=BaseFileCELabel[2],$
+                               scr_ysize=BaseFileCELabel[3],$
+                               value=BaseFileTitle)
+
+BASE_FILE_CE_file_name = widget_label(STEP2_BASE,$
+                                      UNAME='bas_file_ce_file_name',$
+                                      xoffset=BaseFileCEFileName[0],$
+                                      yoffset=BaseFileCEFileName[1],$
+                                      scr_xsize=BaseFileCEFileName[2],$
+                                      scr_ysize=BaseFileCEFileName[3],$
+                                      value='REF_L_1830.txt',$
+                                      /align_left)
 
 STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
                              UNAME='Step2_button',$
