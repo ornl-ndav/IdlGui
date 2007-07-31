@@ -1,6 +1,27 @@
+;This function moves the color index to the right position
+PRO ReflSupportOpenFile_MoveColorIndex,Event
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ ColorIndex = getColorIndex(Event)
+
+ print, 'ColorIndex: ' + strcompress(ColorIndex)
+ 
+ PreviousColorIndex = (*global).PreviousColorIndex
+ print, 'PreviousColorIndex: ' + strcompress(PreviousColorIndex)
+if (ColorIndex EQ PreviouscolorIndex) Then begin
+     ColorIndex += 25
+     (*global).PreviousColorIndex = ColorIndex
+     list_of_color_slider_id = widget_info(Event.top,find_by_uname='list_of_color_slider')
+     widget_control, list_of_color_slider_id, set_value=ColorIndex
+ endif 
+END
+
+
+
+
 ;This function plot all the files loaded
 ;This function is only reached by the LOAD button
-PRO PlotLoadedFiles, Event, ListLongFileName
+PRO ReflSupportOpenFile_PlotLoadedFiles, Event, ListLongFileName
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -262,10 +283,32 @@ END
 
 
 
+
+;This function updates the GUI
+;droplist, buttons...
+PRO ReflSupportOpenFile_updateGUI, Event, ListOfFiles
+ReflSupportWidget_updateDropList, Event, ListOfFiles
+ArraySize = getSizeOfArray(ListOfFiles)
+if (ArraySize EQ 0) then begin
+   validate = 0
+endif else begin
+   validate = 1
+endelse
+EnableStep1ClearFile, Event, validate
+SelectLastLoadedFile, Event
+EnableMainBaseButtons, Event, validate
+ActivateClearFileButton, Event, validate
+ActivateColorSlider, Event, Validate
+END
+
+
+
+
 ;This functions populate the various droplist boxes
 ;It also checks if the newly file loaded is not already 
 ;present in the list, in this case, it's not added
-PRO add_new_file_to_droplist, Event, ShortFileName, LongFileName
+PRO ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName
+
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
   widget_control,id,get_uvalue=global
   
@@ -303,16 +346,15 @@ PRO add_new_file_to_droplist, Event, ShortFileName, LongFileName
   (*(*global).ListOfLongFileName) = ListOfLongFileName
 
 ;update GUI
-  updateGUI,Event, ListOfFiles
+  ReflSupportOpenFile_updateGUI,Event, ListOfFiles
 end
-
 
 
 
 ;
 ;This function load the file in the first step
 ;
-PRO LOAD_FILE, Event
+PRO ReflSupportOpenFile_LoadFile, Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
  widget_control,id,get_uvalue=global
  
@@ -326,7 +368,7 @@ PRO LOAD_FILE, Event
      ShortFileName = get_file_name_only(LongFileName)    
 
 ;MoveColorIndex to new position 
-     MoveColorIndex,Event
+     ReflSupportOpenFile_MoveColorIndex,Event
 
 ;get the value of the angle (in rad)
      angleValue = getCurrentAngleValue(Event)
@@ -334,13 +376,13 @@ PRO LOAD_FILE, Event
      get_angle_value_and_do_conversion, Event, angleValue
 
 ;add file to list of droplist (step1 and 3)
-     add_new_file_to_droplist, Event, ShortFileName, LongFileName 
+     ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
      display_info_about_selected_file, Event, LongFileName
      populateColorLabel, Event, LongFileName
  endif
 
 ;plot all loaded files
  ListLongFileName = (*(*global).ListOfLongFileName)
- PlotLoadedFiles, Event, ListLongFileName
+ ReflSupportOpenFile_PlotLoadedFiles, Event, ListLongFileName
 END
 

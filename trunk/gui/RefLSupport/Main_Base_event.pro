@@ -15,11 +15,16 @@ PRO MAIN_BASE_event, Event
         steps_tab, Event, 0
      end
      
-                                ;--step1--
+;--step1--
+
+     ;when LOADING a new file
      Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
-        load_file, Event
+         ReflSupportOpenFile_LoadFile, Event       
      end
      
+
+
+
      Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
         display_info_about_file, Event
      end

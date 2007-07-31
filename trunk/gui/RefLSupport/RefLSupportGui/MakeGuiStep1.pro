@@ -1,5 +1,8 @@
 FUNCTION MakeGuiStep1, StepsTabSize, STEPS_TAB, distanceMD, angleValue, ListOfFiles, Step1Title
 
+;define default values
+ColorSliderDefaultValue = 25
+
 ;Define widgets position and size
 Step1Size                = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
 LoadButton               = [5  , 5  , 100 , 30 ]

@@ -1,7 +1,3 @@
-PRO LoadFileButton, Event
-
-END
-
 ;procedure triggered each time a new tab is reached or refresh plot button
 PRO steps_tab, Event, isRefresh
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -75,7 +71,8 @@ END
 PRO CLEAR_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-;get the selected index of the load list droplist
+;get the selected index of the load
+;list droplist
 TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
 RemoveIndexFromArray, Event, TextBoxIndex
 ;update GUI
