@@ -46,6 +46,7 @@ NexusUtil::~NexusUtil(void)
         {
           throw runtime_error("Failed to close nexus file");
         }
+      this->file_id = NULL;
     }
 }
 
