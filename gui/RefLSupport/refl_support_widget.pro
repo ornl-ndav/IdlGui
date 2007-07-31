@@ -151,7 +151,7 @@ END
 
 
 ;This function refresh the list displays in all the droplist (step1-2 and 3)
-PRO updateDropList, Event, ListOfFiles
+PRO ReflSupportWidget_updateDropList, Event, ListOfFiles
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
  widget_control,id,get_uvalue=global
 

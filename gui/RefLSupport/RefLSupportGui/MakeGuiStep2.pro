@@ -116,7 +116,7 @@ BASE_FILE_CE_file_name = widget_label(STEP2_BASE,$
                                       yoffset=BaseFileCEFileName[1],$
                                       scr_xsize=BaseFileCEFileName[2],$
                                       scr_ysize=BaseFileCEFileName[3],$
-                                      value='REF_L_1830.txt',$
+                                      value='',$
                                       /align_left)
 
 STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
