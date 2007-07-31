@@ -469,10 +469,8 @@ end
 
 
 
-
-
 ;--------------------------------------------------------------------------------------------
-pro IDENTIFICATION_GO_cb, Event
+pro IDENTIFICATION_BSS_GO_cb, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -488,6 +486,7 @@ ucams=(*global).ucams
 name = ''
 case ucams of
 	'ele': name = 'Eugene Mamontov'
+        'z3i': name = 'Michaela Zamponi'
 	'eg9': name = 'Stephanie Hammons'
 	'2zr': name = 'Michael Reuter'
 	'pf9': name = 'Peter Peterson'
@@ -512,55 +511,75 @@ if (name EQ '') then begin
    
 endif else begin
 
-   (*global).name = name
-   working_path = (*global).working_path
 
-   welcome = "Welcome " + strcompress(name,/remove_all)
-   welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
-   view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
-   WIDGET_CONTROL, view_id, base_set_title= welcome	
-
-   view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
-   WIDGET_CONTROL, view_id, destroy=1
-
-   view_id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH_NAME')
-   WIDGET_CONTROL, view_id, set_value=working_path
-
-   ;working path is set
-   cd, working_path
- 
-   view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
-   text = "LOGIN parameters:"
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-   text = "User id           : " + ucams
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-   text = "Name              : " + name
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-   text = "Working directory : " + working_path
-   WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
-
-  ;enabled background buttons/draw/text/labels
-   list_id = ['OUTPUT_PATH',$
-              'OPEN_NEXUS']
-   list_id_size = size(list_id)
-   for i=0, (list_id_size[1]-1) do begin
-          id = widget_info(Event.top, find_by_uname=list_id[i])
-          widget_control, id, sensitive=1
-   endfor
+   cd_works = 0
+   catch, cd_works
+   if (cd_works NE 0) then begin
    
-  if (ucams EQ 'j35') then begin
-      list_id=['OPEN_MAPPED_HISTOGRAM',$
-               'OPEN_HISTOGRAM',$
-               'TRANSLATION_FRAME']
-      size_list=size(list_id)
-      for i=0,(size_list[1]-1) do begin
-          id = widget_info(Event.top, find_by_uname=list_id[i])
-          widget_control, id, sensitive=1
-      endfor
-  endif
+       catch,/cancel
+       error_message = "INVALID UCAMS"
+       view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_LEFT')
+       WIDGET_CONTROL, view_id, set_value= error_message	
+       view_id = widget_info(Event.top,FIND_BY_UNAME='ERROR_IDENTIFICATION_RIGHT')
+       WIDGET_CONTROL, view_id, set_value= error_message	
+       
+       view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+       text = "Invalid 3 characters id... please try another user identification id"
+       WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+       
+   endif else begin
+       
+;working path is set
+       (*global).name = name
+       working_path = (*global).working_path
 
-create_tmp_folder, Event
+       cd, working_path
+              
+       welcome = "Welcome " + strcompress(name,/remove_all)
+       welcome += "  (working directory: " + strcompress(working_path,/remove_all) + ")"	
+       view_id = widget_info(Event.top,FIND_BY_UNAME='MAIN_BASE')
+       WIDGET_CONTROL, view_id, base_set_title= welcome	
+       
+       view_id = widget_info(Event.top,FIND_BY_UNAME='IDENTIFICATION_BASE')
+       WIDGET_CONTROL, view_id, destroy=1
+       
+       view_id = widget_info(Event.top,FIND_BY_UNAME='OUTPUT_PATH_NAME')
+       WIDGET_CONTROL, view_id, set_value=working_path
 
+       view_info = widget_info(Event.top,FIND_BY_UNAME='GENERAL_INFOS')
+       text = "LOGIN parameters:"
+       WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+       text = "User id           : " + ucams
+       WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+       text = "Name              : " + name
+       WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+       text = "Working directory : " + working_path
+       WIDGET_CONTROL, view_info, SET_VALUE=text, /APPEND
+       
+                                ;enabled background buttons/draw/text/labels
+       list_id = ['OUTPUT_PATH',$
+                  'OPEN_NEXUS']
+       list_id_size = size(list_id)
+       for i=0, (list_id_size[1]-1) do begin
+           id = widget_info(Event.top, find_by_uname=list_id[i])
+           widget_control, id, sensitive=1
+       endfor
+       
+       if (ucams EQ 'j35') then begin
+           list_id=['OPEN_MAPPED_HISTOGRAM',$
+                    'OPEN_HISTOGRAM',$
+                    'TRANSLATION_FRAME']
+           size_list=size(list_id)
+           for i=0,(size_list[1]-1) do begin
+               id = widget_info(Event.top, find_by_uname=list_id[i])
+               widget_control, id, sensitive=1
+           endfor
+       endif
+       
+       create_tmp_folder, Event
+       
+   endelse
+   
 endelse
 
 end

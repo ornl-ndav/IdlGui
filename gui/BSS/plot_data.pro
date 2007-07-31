@@ -75,20 +75,10 @@ pro MAIN_BASE_event, Event
           CANCEL_OPEN_RUN_NUMBER, Event
     end
     
-    
-    
-    
-
-
-
-
-
-
     Widget_Info(wWidget, FIND_BY_UNAME='IDENTIFICATION_GO'): begin
       if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-        IDENTIFICATION_GO_cb, Event
+        IDENTIFICATION_BSS_GO_cb, Event
     end
-
 
     ;Load Event file
     Widget_Info(wWidget, FIND_BY_UNAME='EVENT_FILE'): begin
@@ -619,3 +609,4 @@ end
 pro plot_data, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
   MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
+
