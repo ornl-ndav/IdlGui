@@ -128,14 +128,17 @@ int main(int32_t argc,
     {
       event_data.map_pixel_ids(config.mapping_file);
     }
+
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
 
-  bank_numbers.push_back(1);
-  bank_numbers.push_back(2);
-  bank_numbers.push_back(3);
+  bank_numbers.push_back(1);  // bank1
+  bank_numbers.push_back(2);  // bank2
+  bank_numbers.push_back(3);  // bank3
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config, bank_numbers);
+
+  event_data.write_nexus_file(nexus_util, "bank file name");
 
   return 0;
 }

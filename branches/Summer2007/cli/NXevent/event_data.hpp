@@ -9,6 +9,7 @@
 
 #include "nexus_util.hpp"
 #include <vector>
+#include <map>
 #include <string>
 
 const uint32_t ERROR=0x80000000;
@@ -81,7 +82,11 @@ class EventData
      *         "time_of_flight" for TOF.
      */
     std::string get_nx_data_name(const e_data_name nx_data_type);
-    
+   
+    void parse_bank_file(const std::string & bank_file,
+                         std::map<NumT, int> & bank_map,
+                         std::vector<int> & bank_numbers);
+ 
     template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
                             std::vector<DataNumT> & nx_data,
@@ -89,6 +94,15 @@ class EventData
                             const int bank_number);
 
   public:
+    /**
+     * \brief Splits the information into banks and writes it to
+     *        the nexus file.
+     * \param nexus_util The nexus_utility with the open file.
+     * \param bank_file The xml bank configuration file
+     */
+    void write_nexus_file(NexusUtil & nexus_util, 
+                          const std::string & bank_file);  
+
     /**
      * \brief Reads information from the event file and populates
      *        the tof and pixel id vectors.

@@ -46,6 +46,10 @@ template
 void EventData<uint32_t>::map_pixel_ids(const string & mapping_file);
 
 template 
+void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util,
+                                           const string & bank_file);
+
+template 
 EventData<uint32_t>::EventData();
 
 template 
@@ -127,6 +131,43 @@ void EventData<NumT>::write_attr(NexusUtil & nexus_util,
   this->open_bank(nexus_util, bank_number);
   nexus_util.open_data(data_name);
   nexus_util.put_attr(attr_name, attr_value);
+}
+
+template <typename NumT>
+void EventData<NumT>::parse_bank_file(const string & bank_file,
+                                      map<NumT, int> & bank_map,
+                                      vector<int> & bank_numbers)
+{
+  // This function will parse the bank file and fill a map of the
+  // number for each bank. It will also fill a vector of the bank 
+  // numbers for laying out the nexus file. For now, the numbers are
+  // just hardcoded. 
+  bank_numbers.push_back(1);
+  bank_numbers.push_back(2);
+  bank_numbers.push_back(3);
+
+  for (int i = 0; i < 4096; i++)
+    {
+      bank_map[i] = 1;
+    }
+  for (int i = 4096; i < 8192; i++)
+    {
+      bank_map[i] = 2;
+    }
+  for (int i = 8192; i < 9216; i++)
+    {
+      bank_map[i] = 3;
+    }
+}
+
+template <typename NumT>
+void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
+                                       const string & bank_file)
+{
+  map<NumT, int> bank_map;
+  vector<int> bank_numbers;
+  // Ignore the bank file for right now, and just hardcode the values.
+  this->parse_bank_file(bank_file, bank_map, bank_numbers);
 }
 
 template <typename NumT>
