@@ -26,12 +26,18 @@ endif else begin
             plot_loaded_file, Event, ListLongFileName
             angleValue = getAngleValue(Event)
             displayAngleValue, Event, angleValue
-         end
+        end
          1: begin               ;if second tab plot only CE plot
             LongFileName = (*global).full_CE_name
             LongFileNameArray = strarr(1)
             LongFileNameArray[0]=LongFileName
             plot_loaded_file, Event,LongFileNameArray
+            
+                                ;display the Qmin and Qmax for the CE file
+                                ;for now, the first file loaded is
+                                ;considered as being the CE file
+            ReflSupportWidget_display_Q_values, Event, 0  
+
          end
          2: begin               ;if third tab plot only the file selected
             LongFileName1 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
