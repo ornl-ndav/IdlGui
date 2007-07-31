@@ -22,12 +22,17 @@ using std::type_info;
 using namespace TCLAP;
 
 void layout_nexus_file(NexusUtil & nexus_util,
-                       const Config & config) 
+                       const Config & config,
+                       vector<int> & bank_numbers) 
 {
   nexus_util.make_group("entry", "NXentry");
   nexus_util.open_group("entry", "NXentry");
-  nexus_util.make_group("bank1", "NXevent_data");
-  nexus_util.open_group("bank1", "NXevent_data");
+  
+  int size = bank_numbers.size();
+  for (int i = 0; i < size; i++) 
+    {
+      nexus_util.make_group("bank" + bank_numbers[i], "NXevent_datsa");
+    }
 }
 
 /** 
@@ -113,6 +118,7 @@ int main(int32_t argc,
 
   // Create a bank of information for the nexus file  
   EventData <uint32_t>event_data;
+  vector<int> bank_numbers;
   
   // Gather the information from the event file
   event_data.read_data(config.event_file, config.pulse_id_file);
@@ -124,8 +130,12 @@ int main(int32_t argc,
     }
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
+
+  bank_numbers.push_back(1);
+  bank_numbers.push_back(2);
+  bank_numbers.push_back(3);
   // Open nexus file and layout groups
-  layout_nexus_file(nexus_util, config);
+  layout_nexus_file(nexus_util, config, bank_numbers);
 
   return 0;
 }
