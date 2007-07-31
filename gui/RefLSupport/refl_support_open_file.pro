@@ -48,6 +48,7 @@ widget_control,id,get_uvalue=global
 FirstTimePlotting = (*global).FirstTimePlotting
 
 Qmin_array = (*(*global).Qmin_array)
+Qmax_array = (*(*global).Qmax_array)
 
 size = getSizeOfArray(ListLongFileName)
 
@@ -287,15 +288,16 @@ endif else begin
             
         endelse
 
-        Qmin_array[i] = min(flt0,/nan)
-        print, Qmin_array
-        
+        Qmin_array[i] = min(flt0,max=max_value,/nan)
+        Qmax_array[i] = max_value
+
     endfor
     
 endelse
 
 ;store back the array of all the Qmin of the functions loaded
 (*(*global).Qmin_array) = Qmin_array
+(*(*global).Qmax_array) = Qmax_array
 
 END
 
