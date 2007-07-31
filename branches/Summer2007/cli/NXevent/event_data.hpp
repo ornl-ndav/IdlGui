@@ -52,7 +52,6 @@ class EventData
     std::vector<NumT> pixel_id;
     std::vector<NumT> pulse_time;
     std::vector<NumT> events_per_pulse;
-    std::string data_path;
     std::string pulse_time_offset;
 
     /** 
@@ -63,7 +62,14 @@ class EventData
      * \param time The variable to store the ISO8601 date string in.
      */
     std::string seconds_to_iso8601(NumT seconds);
-    
+   
+    /**
+     * \brief Opens a bank in a nexus file.
+     * \param nexus_util The nexus utility
+     * \param bank_number The number of the bank to open
+     */
+    void open_bank(NexusUtil & nexus_util, const int bank_number);
+ 
     /**
      * \brief Fills in the nexus values associated with the
      *        e_data_name enumeration.
@@ -79,7 +85,8 @@ class EventData
     template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
                             std::vector<DataNumT> & nx_data,
-                            std::string & data_name);
+                            std::string & data_name,
+                            const int bank_number);
 
   public:
     /**
@@ -116,9 +123,11 @@ class EventData
      * \param nexus_util The nexus utility.
      * \param nx_data_name The enumeration specifying which 
      *                     piece of data to write.
+     * \param bank_number The number of the bank to write data to.
      */
     void write_data(NexusUtil & nexus_util,
-                    const e_data_name nx_data_name);
+                    const e_data_name nx_data_name,
+                    const int bank_number);
 
     /**
      * \brief Opens a data field in a nexus file and
@@ -129,17 +138,18 @@ class EventData
      *                    the attribute.
      * \param nx_data_name The enumeration specifying which
      *                     piece of data to write.
+     * \param bank_number The bank number of the data.
      */
     void write_attr(NexusUtil & nexus_util,
                     const std::string & attr_name,
                     const std::string & attr_value,
-                    const e_data_name nx_data_name);
+                    const e_data_name nx_data_name,
+                    const int bank_number);
   
     /**
      * \brief Constructor the EventData class.
-     * \param path The path to the data in the nexus file.
      */
-    EventData(const std::string & data_path);
+    EventData();
 
     /**
      * \brief The destructor for the EventData class.

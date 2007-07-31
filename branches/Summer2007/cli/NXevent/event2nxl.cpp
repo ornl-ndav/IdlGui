@@ -112,27 +112,20 @@ int main(int32_t argc,
     }
 
   // Create a bank of information for the nexus file  
-  EventData <uint32_t>bank_one_data("/entry/bank1");
+  EventData <uint32_t>event_data;
   
   // Gather the information from the event file
-  bank_one_data.read_data(config.event_file, config.pulse_id_file);
+  event_data.read_data(config.event_file, config.pulse_id_file);
   
   // Map the pixel ids if necessary
   if (config.mapping_file != "")
     {
-      bank_one_data.map_pixel_ids(config.mapping_file);
+      event_data.map_pixel_ids(config.mapping_file);
     }
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config);
-  // Populate the nexus file with information
-  bank_one_data.write_data(nexus_util, TOF);
-  bank_one_data.write_attr(nexus_util, "units", "10^-7second", TOF);
-  bank_one_data.write_data(nexus_util, PIXEL_ID);
-  bank_one_data.write_data(nexus_util, PULSE_TIME);
-  bank_one_data.write_attr(nexus_util, "units", "10^-9second", PULSE_TIME);
-  bank_one_data.write_data(nexus_util, EVENTS_PER_PULSE);
 
   return 0;
 }

@@ -32,27 +32,28 @@ void EventData<uint32_t>::read_data(const string & event_file,
 
 template 
 void EventData<uint32_t>::write_data(NexusUtil & nexus_util, 
-                                     const e_data_name nx_data_name);
+                                     const e_data_name nx_data_name,
+                                     const int bank_number);
 
 template 
 void EventData<uint32_t>::write_attr(NexusUtil & nexus_util,
                                      const string & attr_name,
                                      const string & attr_value,
-                                     const e_data_name nx_data_name);
+                                     const e_data_name nx_data_name,
+                                     const int bank_number);
 
 template 
 void EventData<uint32_t>::map_pixel_ids(const string & mapping_file);
 
 template 
-EventData<uint32_t>::EventData(const string & data_path);
+EventData<uint32_t>::EventData();
 
 template 
 EventData<uint32_t>::~EventData();
 
 template<typename NumT>
-EventData<NumT>::EventData(const string & data_path)
+EventData<NumT>::EventData()
 {
-  this->data_path = data_path;
 }
 
 template<typename NumT>
@@ -104,10 +105,18 @@ string EventData<NumT>::get_nx_data_name(const e_data_name nx_data_type)
 }
 
 template <typename NumT>
+void EventData<NumT>::open_bank(NexusUtil & nexus_util,
+                                const int bank_number)
+{
+  nexus_util.open_path("entry/bank" + bank_number);
+}
+
+template <typename NumT>
 void EventData<NumT>::write_attr(NexusUtil & nexus_util, 
                                  const string & attr_name,
                                  const string & attr_value,
-                                 const e_data_name nx_data_name)
+                                 const e_data_name nx_data_name,
+                                 const int bank_number)
 {
   string data_name;
   
@@ -115,7 +124,7 @@ void EventData<NumT>::write_attr(NexusUtil & nexus_util,
   // given e_data_name
   data_name = this->get_nx_data_name(nx_data_name);  
 
-  nexus_util.open_path(this->data_path);
+  this->open_bank(nexus_util, bank_number);
   nexus_util.open_data(data_name);
   nexus_util.put_attr(attr_name, attr_value);
 }
@@ -124,14 +133,15 @@ template <typename NumT>
 template <typename DataNumT>
 void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
                                          vector<DataNumT> & nx_data, 
-                                         string & data_name)
+                                         string & data_name,
+                                         const int bank_number)
 {
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
   e_nx_data_type nexus_data_type = typename_to_nexus_type<NumT>();
 
-  nexus_util.open_path(this->data_path);
+  this->open_bank(nexus_util, bank_number);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
   nexus_util.put_data_with_slabs(nx_data, 16777215);
@@ -139,7 +149,8 @@ void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
 
 template <typename NumT>
 void EventData<NumT>::write_data(NexusUtil & nexus_util, 
-                                 const e_data_name nx_data_name)
+                                 const e_data_name nx_data_name,
+                                 const int bank_number)
 {
   string data_name;
   
@@ -149,22 +160,26 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
   if (nx_data_name == TOF)
     {
       this->write_private_data(nexus_util, 
-                               this->tof, data_name);
+                               this->tof, data_name,
+                               bank_number);
     }
   else if (nx_data_name == PIXEL_ID)
     {
       this->write_private_data(nexus_util, 
-                               this->pixel_id, data_name);
+                               this->pixel_id, data_name,
+                               bank_number);
     }
   else if (nx_data_name == PULSE_TIME)
     {
       this->write_private_data(nexus_util, 
-                               this->pulse_time, data_name);
+                               this->pulse_time, data_name,
+                               bank_number);
     }
   else if (nx_data_name == EVENTS_PER_PULSE)
     {
       this->write_private_data(nexus_util, 
-                               this->events_per_pulse, data_name);
+                               this->events_per_pulse, data_name,
+                               bank_number);
     }
   else
     {
@@ -310,7 +325,7 @@ void EventData<NumT>::read_data(const string & event_file,
           events_per_pulse.push_back(static_cast<NumT>(*(buffer + i + 2)) 
                                      - prev_index);
           prev_index = static_cast<NumT>(*(buffer + i + 2));
-          cout << prev_index << endl;
+          //cout << prev_index << endl;
         }
 
       offset += buffer_size;
@@ -390,6 +405,7 @@ void EventData<NumT>::read_data(const string & event_file)
           // Filter out error codes
           if ((*(buffer + i + 1) & ERROR) != ERROR)
             {
+              //cout << *(buffer + i + 1) << endl;
               // Use pointer arithmetic for speed
               this->tof.push_back(*(buffer + i));
               this->pixel_id.push_back(*(buffer + i + 1));
