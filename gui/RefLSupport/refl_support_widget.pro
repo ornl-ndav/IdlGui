@@ -1,3 +1,33 @@
+;This procedure just put the given value in the text field
+;specified by the uname after doing a strcompression of the 
+;value
+PRO ReflSupportWidget_setValue, Event, uname, value
+
+TFid = widget_info(Event.top,find_by_uname=uname)
+widget_control, TFid, set_value=strcompress(value,/remove_all)
+
+END
+
+
+
+;This function displays in the Qmin and Qmax text fields the 
+;Qmin and Qmax of the CE file
+PRO ReflSupportWidget_display_Q_values, Event, index
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Qmin_array = (*(*global).Qmin_array)
+Qmax_array = (*(*global).Qmax_array)
+
+ReflSupportWidget_setValue, Event, 'step2_q1_text_field', Qmin_array[index]
+ReflSupportWidget_setValue, Event, 'step2_q2_text_field', Qmax_array[index]
+
+END
+
+
+
+
 PRO ReflSupportWidget_PopulateCELabelStep2, Event, CE_short_name
 cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
 widget_control, cd_label_id, set_value=CE_short_name
