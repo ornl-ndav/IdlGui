@@ -174,8 +174,15 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
     {
       banks[bank_numbers[i]] = new Bank;
     }
-}
 
+  // Split the pixel ids and tofs into banks
+  size = this->pixel_id.size();
+  for (int i = 0; i < size; i++)
+    {
+      banks[bank_map[pixel_id[i]]]->tof.push_back(this->tof[i]);
+      banks[bank_map[pixel_id[i]]]->pixel_id.push_back(this->pixel_id[i]);
+    }
+}
 template <typename NumT>
 template <typename DataNumT>
 void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
