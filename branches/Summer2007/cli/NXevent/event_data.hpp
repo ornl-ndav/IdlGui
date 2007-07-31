@@ -49,6 +49,13 @@ template <typename NumT>
 class EventData
 {
   private:
+    struct Bank
+    {
+      std::vector<NumT> tof;
+      std::vector<NumT> pixel_id;
+      std::vector<NumT> pulse_time;
+      std::vector<NumT> events_per_pulse;
+    };
     std::vector<NumT> tof;
     std::vector<NumT> pixel_id;
     std::vector<NumT> pulse_time;

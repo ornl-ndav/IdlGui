@@ -166,8 +166,14 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
 {
   map<NumT, int> bank_map;
   vector<int> bank_numbers;
-  // Ignore the bank file for right now, and just hardcode the values.
+  map<int, Bank *> banks;
+
   this->parse_bank_file(bank_file, bank_map, bank_numbers);
+  int size = bank_numbers.size();
+  for (int i = 0; i < size; i++)
+    {
+      banks[bank_numbers[i]] = new Bank;
+    }
 }
 
 template <typename NumT>
