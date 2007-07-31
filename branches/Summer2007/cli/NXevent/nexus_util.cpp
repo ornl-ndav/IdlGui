@@ -220,8 +220,8 @@ void NexusUtil::put_attr(const string & name, const string & value)
 }
 
 template <typename NumT>
-void NexusUtil::put_slab(vector<NumT> & nx_data, int start, 
-                         int block_size)
+void NexusUtil::put_slab(const vector<NumT> & nx_data, int start, 
+                         const int block_size)
 {
   if (nx_data.empty())
     {
@@ -269,7 +269,8 @@ void NexusUtil::put_data_with_slabs(vector<NumT> & nx_data,
     }
 }
 
-void NexusUtil::put_slab(void * nx_data, int * start, int * size)
+void NexusUtil::put_slab(void * nx_data, int * start, 
+                         int * size)
 {
   if (nx_data == NULL)
     {

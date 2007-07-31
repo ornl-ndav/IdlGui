@@ -226,9 +226,9 @@ class NexusUtil
      *                          if the slab can't be written.
      */
     template <typename NumT>
-    void NexusUtil::put_slab(std::vector<NumT> & nx_data, 
-                             int start,
-                             int block_size);
+    void put_slab(const std::vector<NumT> & nx_data, 
+                  const int start,
+                  const int block_size);
 
     /**
      * \brief Writes all the data using put_slab and a loop
