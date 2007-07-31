@@ -118,7 +118,7 @@ void NexusUtil::make_data(const string & name,
  
   if (dimensions == NULL)
     {
-      throw runtime_error("Invalid dimensions");
+      throw runtime_error("Dimensions are null");
     }
 
   if (NXmakedata(this->file_id, name.c_str(),
@@ -145,7 +145,7 @@ void NexusUtil::put_data(void * nx_data)
 {
   if (nx_data == NULL)
     {
-      throw runtime_error("No data specified");
+      throw runtime_error("Data specified is null");
     }
 
   if (NXputdata(this->file_id, nx_data) != NX_OK)
@@ -187,7 +187,7 @@ void NexusUtil::put_attr(const string & name, void * value,
 
   if (value == NULL)
     {
-      throw runtime_error("No attribute specified");
+      throw runtime_error("Attribute value is null");
     }
 
   if (NXputattr(this->file_id, name.c_str(),
@@ -273,17 +273,17 @@ void NexusUtil::put_slab(void * nx_data, int * start, int * size)
 {
   if (nx_data == NULL)
     {
-      throw runtime_error("No data specified");
+      throw runtime_error("Data specified is null");
     }
 
   if (start == NULL)
     {
-      throw runtime_error("Invalid start index");
+      throw runtime_error("Start index is null");
     }
 
   if (size == NULL)
     {
-      throw runtime_error("Invalid size");
+      throw runtime_error("Data size is null");
     }
 
   if (NXputslab(this->file_id, nx_data, start, size) != NX_OK)
@@ -296,7 +296,7 @@ void NexusUtil::get_data(void * nx_data)
 {
   if (nx_data == NULL)
     {
-      throw runtime_error("Invalid data block");
+      throw runtime_error("Data block is null");
     }
 
   if (NXgetdata(this->file_id, nx_data) != NX_OK)
@@ -309,17 +309,17 @@ void NexusUtil::get_slab(void * nx_data, int * start, int * size)
 {
   if (nx_data == NULL)
     {
-      throw runtime_error("Invalid data block");
+      throw runtime_error("Data block is null");
     }
 
   if (start == NULL)
     {
-      throw runtime_error("Invalid start index");
+      throw runtime_error("Start index is null");
     }
   
   if (size == NULL)
     {
-      throw runtime_error("Invalid size");
+      throw runtime_error("Data size is null");
     }
 
   if (NXgetslab(this->file_id, nx_data, start, size) != NX_OK)
@@ -338,7 +338,7 @@ void NexusUtil::malloc(void ** nx_data, int rank, int * dimensions,
   
   if (dimensions == NULL)
     {
-      throw runtime_error("Invalid dimensions");
+      throw runtime_error("Dimensions are null");
     }
   
   if (NXmalloc(nx_data, rank, dimensions, (int)nx_data_type) != NX_OK)
@@ -408,12 +408,12 @@ void NexusUtil::get_info(int * rank, int * dimensions,
   int data_type;
   if (rank == NULL)
     {
-      throw runtime_error("Invalid rank");
+      throw runtime_error("Rank is null");
     }
 
   if (dimensions == NULL)
     {
-      throw runtime_error("Invalid dimensions");
+      throw runtime_error("Dimensions are null");
     }
 
   if (NXgetinfo(this->file_id, rank, dimensions, 
