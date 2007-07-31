@@ -366,14 +366,9 @@ CASE (CurrTabSelect) OF
       plot_loaded_file, Event,LongFileNameArray   
    end
    2: begin                     ;if the third tab is selected
-      LongFileName1 = getLongFileNameSelected(Event,'step3_base_file_droplist')
-      LongFileName2 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
-      if (LongFileName1 NE LongFileName2) then begin
-         ListLongFileName = [LongFileName1,LongFileName2]
-      endif else begin
-         ListLongFileName = [LongFileName1]
-      endelse
-   plot_loaded_file, Event, ListLongFileName
+      LongFileName1 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
+      ListLongFileName = [LongFileName1]
+      plot_loaded_file, Event, ListLongFileName
    end
 ENDCASE
 END
