@@ -1,3 +1,16 @@
+PRO ReflSupportWidget_PopulateCELabelStep2, Event, CE_short_name
+cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
+widget_control, cd_label_id, set_value=CE_short_name
+END
+
+
+PRO ReflSupportwidget_ClearCElabelStep2, Event
+cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
+widget_control, cd_label_id, set_value='No File loaded'
+END
+
+
+
 ;This function replot the SF, ri and delta_ri labels/draw of tab2
 PRO refresh_draw_labels_tab2, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -173,13 +186,7 @@ PRO ClearAllDropLists, Event
 ;clear off list of file in droplist of step1
  list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
  widget_control, list_of_files_droplist_id, set_value=['']
-;clear off list of file in droplist of step2
- base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
- widget_control, base_file_droplist_id, set_value=['']
 ;clear off list of file in droplists of step3
- step3_base_file_droplist_id = $
-   widget_info(Event.top,find_by_uname='step3_base_file_droplist')
- widget_control, step3_base_file_droplist_id, set_value=['']
  step3_work_on_file_droplist_id = widget_info(Event.top,$
                                               find_by_uname='step3_work_on_file_droplist')
  widget_control, step3_work_on_file_droplist_id, set_value=['']

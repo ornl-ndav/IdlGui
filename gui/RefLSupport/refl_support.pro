@@ -13,6 +13,8 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   full_CE_name   : '',$             ;full path to CE file
+                   short_CE_name  : '',$             ;short path to CE file
                    h_over_mn      : 3955.4,$         ;h/mass of neutron in USI                   
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
                    NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box

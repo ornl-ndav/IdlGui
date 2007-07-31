@@ -111,7 +111,7 @@ BASE_FILE_Label = widget_label(STEP2_BASE,$
                                value=BaseFileTitle)
 
 BASE_FILE_CE_file_name = widget_label(STEP2_BASE,$
-                                      UNAME='bas_file_ce_file_name',$
+                                      UNAME='short_ce_file_name',$
                                       xoffset=BaseFileCEFileName[0],$
                                       yoffset=BaseFileCEFileName[1],$
                                       scr_xsize=BaseFileCEFileName[2],$

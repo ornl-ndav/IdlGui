@@ -1,13 +1,31 @@
+;this function display the OPEN FILE from IDL
+;get global structure
+Function ReflSupportOpenFile_OPEN_FILE, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+title    = 'Select file:'
+filter   = '*' + (*global).file_extension
+pid_path = (*global).input_path
+;open file
+FullFileName = dialog_pickfile(path=pid_path,$
+                               get_path=path,$
+                               title=title,$
+                               filter=filter)
+;redefine the working path
+path = define_new_default_working_path(Event,FullFileName)
+return, FullFileName
+end
+
+
+
+
 ;This function moves the color index to the right position
 PRO ReflSupportOpenFile_MoveColorIndex,Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
  widget_control,id,get_uvalue=global
  ColorIndex = getColorIndex(Event)
-
- print, 'ColorIndex: ' + strcompress(ColorIndex)
  
  PreviousColorIndex = (*global).PreviousColorIndex
- print, 'PreviousColorIndex: ' + strcompress(PreviousColorIndex)
 if (ColorIndex EQ PreviouscolorIndex) Then begin
      ColorIndex += 25
      (*global).PreviousColorIndex = ColorIndex
@@ -15,7 +33,6 @@ if (ColorIndex EQ PreviouscolorIndex) Then begin
      widget_control, list_of_color_slider_id, set_value=ColorIndex
  endif 
 END
-
 
 
 
@@ -271,6 +288,7 @@ endif else begin
         endelse
 
         Qmin_array[i] = min(flt0,/nan)
+        print, Qmin_array
         
     endfor
     
@@ -287,13 +305,19 @@ END
 ;This function updates the GUI
 ;droplist, buttons...
 PRO ReflSupportOpenFile_updateGUI, Event, ListOfFiles
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ReflSupportWidget_updateDropList, Event, ListOfFiles
 ArraySize = getSizeOfArray(ListOfFiles)
 if (ArraySize EQ 0) then begin
-   validate = 0
+    validate = 0
+    CE_short_name = 'No file selected'
 endif else begin
-   validate = 1
+    validate = 1
+    CE_short_name = (*global).short_CE_name
 endelse
+ReflSupportWidget_PopulateCELabelStep2, Event, CE_short_name
 EnableStep1ClearFile, Event, validate
 SelectLastLoadedFile, Event
 EnableMainBaseButtons, Event, validate
@@ -317,16 +341,19 @@ PRO ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName
 
 ;it's the first file loaded
   if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
-     
-     ListOfFiles = [ShortFileName]
-     ListOfLongFileName = [LongFileName]
-     ActivateRescaleBase,Event,1
-
-     ;save angle value
-     angle_array = (*(*global).angle_array)
-     angle_array[0] = (*global).angleValue
-     (*(*global).angle_array) = angle_array
-
+      
+      (*global).full_CE_name = LongFileName
+      (*global).short_CE_name = ShortFileName
+      
+      ListOfFiles = [ShortFileName]
+      ListOfLongFileName = [LongFileName]
+      ActivateRescaleBase,Event,1
+      
+                                ;save angle value
+      angle_array = (*(*global).angle_array)
+      angle_array[0] = (*global).angleValue
+      (*(*global).angle_array) = angle_array
+      
 ;if's not the first file loaded
   endif else begin
 
@@ -359,7 +386,7 @@ PRO ReflSupportOpenFile_LoadFile, Event
  widget_control,id,get_uvalue=global
  
 ;launch the program that open the OPEN IDL FILE window
- LongFileName=OPEN_FILE(Event) 
+ LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
 
 ;continue only if a file has been selected
  if (LongfileName NE '') then begin

@@ -66,23 +66,6 @@ return, path
 end
 
 
-;this function display the OPEN FILE from IDL
-;get global structure
-Function OPEN_FILE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-title    = 'Select file:'
-filter   = '*' + (*global).file_extension
-pid_path = (*global).input_path
-;open file
-FullFileName = dialog_pickfile(path=pid_path,$
-                               get_path=path,$
-                               title=title,$
-                               filter=filter)
-;redefine the working path
-path = define_new_default_working_path(Event,FullFileName)
-return, FullFileName
-end
 
 
 
@@ -90,7 +73,7 @@ end
 ;This function updates the GUI
 ;droplist, buttons...
 PRO updateGUI, Event, ListOfFiles
-updateDropList, Event, ListOfFiles
+ReflSupportWidget_updateDropList, Event, ListOfFiles
 ArraySize = getSizeOfArray(ListOfFiles)
 if (ArraySize EQ 0) then begin
    validate = 0
