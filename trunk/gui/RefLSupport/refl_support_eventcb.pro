@@ -28,7 +28,7 @@ endif else begin
             displayAngleValue, Event, angleValue
          end
          1: begin               ;if second tab plot only CE plot
-            LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 
+            LongFileName = (*global).full_CE_name
             LongFileNameArray = strarr(1)
             LongFileNameArray[0]=LongFileName
             plot_loaded_file, Event,LongFileNameArray
@@ -154,6 +154,7 @@ ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
 ClearColorLabel, Event
+ReflSupportWidget_ClearCElabelStep2, Event
 END
 
 
