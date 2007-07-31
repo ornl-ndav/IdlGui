@@ -2365,6 +2365,15 @@ if (already_archived EQ 1) then begin  ;files already archived
         widget_control,full_view_info,set_value=text_cmd_copy,/append
         spawn, cmd_copy, listening, err_listening
         output_error, Event, 'log_book_text', err_listening
+
+        ;changed permission of all files copied
+        cmd_permission = "chmod u+w " +  full_folder_name_preNeXus + files_to_copy[0]
+        cmd_permission += " " + full_folder_name_preNeXus + files_to_copy[1]
+        text_cmd_permission = '> ' + cmd_permission
+        widget_control,full_view_info,set_value=text_cmd_permission,/append
+        spawn, cmd_permission, listening, err_listening
+        output_error, Event, 'log_book_text', err_listening
+
     endfor
 endif else begin ;files not archived yet
 
