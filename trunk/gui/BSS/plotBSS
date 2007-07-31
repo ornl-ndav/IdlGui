@@ -1,1 +1,1 @@
-idl -vm=/SNS/users/j35/IDL/BSS/plot_data.sav
+idl -vm="/SNS/users/j35/IDL/BSS/plot_data.sav"

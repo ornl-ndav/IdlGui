@@ -1987,6 +1987,7 @@ ucams = (*global).ucams
 name = ''
 case ucams of
 	'ele': name = 'Eugene Mamontov'
+        'z3i': name = 'Michaela Zamponi'
 	'eg9': name = 'Stephanie Hammons'
 	'2zr': name = 'Michael Reuter'
 	'pf9': name = 'Peter Peterson'
