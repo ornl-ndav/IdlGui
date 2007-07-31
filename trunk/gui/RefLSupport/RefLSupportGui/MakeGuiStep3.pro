@@ -54,7 +54,7 @@ Step3SFTextFieldSize = [Step3SFDrawSize[0]+distance_L_TB,$
 
 
 ;Define titles
-Step3WorkOnFileTitle = 'Work On:'
+Step3WorkOnFileTitle = 'File name:'
 Step3GoButtonTitle = 'Rescale Work-on file'
 ListOfFiles  = ['                            ']  
 Step2Q1LabelTitle = 'Qmin:'
