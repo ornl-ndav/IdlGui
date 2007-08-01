@@ -40,7 +40,8 @@ endif else begin
 
          end
          2: begin               ;if third tab plot only the file selected
-            LongFileName1 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
+            LongFileName1 = getLongFileNameSelected(Event,$
+                                                    'step3_work_on_file_droplist')
             ListLongFileName = [LongFileName1]
             plot_loaded_file, Event, ListLongFileName
 

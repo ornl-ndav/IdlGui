@@ -26,7 +26,7 @@ TOF_to_Q_label = widget_label(settings_base,$
                               scr_ysize=TOF_to_Q_label_size[3],$
                               /align_left)
 
-TOF_to_Q_algorithm = ['(4*PI*sin(theta/2)*m*L)/hTOF   ','Jacobian']
+TOF_to_Q_algorithm = ['(4*PI*sin(theta)*m*L)/(h.TOF)   ','Jacobian']
 TOF_to_Q_algorithm = CW_BGROUP(settings_base,$
                                TOF_to_Q_algorithm,$
                                /exclusive,$
