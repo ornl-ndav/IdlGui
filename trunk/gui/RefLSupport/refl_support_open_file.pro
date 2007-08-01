@@ -164,7 +164,11 @@ endif else begin
 
 ;Converts the data from TOF to Q
                 (*(*global).flt0_xaxis) = flt0
-                convert_TOF_to_Q, Event
+                
+                angle_value_deg_array = (*(*global).angle_array)
+                angle_value_deg = angle_value_deg_array[i]
+                convert_TOF_to_Q, Event, angle_value_deg
+
                 flt0 = (*(*global).flt0_xaxis)
 ;                flt1 = (*(*global).flt1_yaxis)
 ;                flt2 = (*(*global).flt2_yaxis_err)
