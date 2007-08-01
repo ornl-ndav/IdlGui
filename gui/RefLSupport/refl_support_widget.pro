@@ -41,7 +41,7 @@ END
 
 ;This function displays in the Qmin and Qmax text fields the 
 ;Qmin and Qmax of the CE file
-PRO ReflSupportWidget_display_Q_values, Event, index
+PRO ReflSupportWidget_display_Q_values, Event, index, tab
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -49,8 +49,14 @@ widget_control,id,get_uvalue=global
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
 
-ReflSupportWidget_setValue, Event, 'step2_q1_text_field', Qmin_array[index]
-ReflSupportWidget_setValue, Event, 'step2_q2_text_field', Qmax_array[index]
+if (tab EQ 2) then begin
+    ReflSupportWidget_setValue, Event, 'step2_q1_text_field', Qmin_array[index]
+    ReflSupportWidget_setValue, Event, 'step2_q2_text_field', Qmax_array[index]
+endif else begin
+    ReflSupportWidget_setValue, Event, 'step3_q1_text_field', Qmin_array[index]
+    ReflSupportWidget_setValue, Event, 'step3_q2_text_field', Qmax_array[index]
+
+endelse
 
 END
 
