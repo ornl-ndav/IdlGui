@@ -1,5 +1,5 @@
 ;This function converts the TOF to Q 
-PRO convert_TOF_to_Q, Event
+PRO convert_TOF_to_Q, Event, angleValue
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -9,7 +9,6 @@ flt0_size = flt0_array[1]
 Q = fltarr(flt0_size)
 
 ;get current angle value (in deg)
-angleValue = getAngleValue(Event)
 angleValue = float(angleValue)
 
 ;get current distance MD
@@ -30,14 +29,14 @@ for i=0,(flt0_size-1) do begin
     Q[i] = CST / lambda
 end
 
-;get value of algorithm selected
-algorithmSelected = getTOFtoQalgorithmSelected(Event)
-if (algorithmSelected EQ 1) then begin  ;Jacobian method
+;;get value of algorithm selected
+;algorithmSelected = getTOFtoQalgorithmSelected(Event)
+;if (algorithmSelected EQ 1) then begin  ;Jacobian method
 
-    flt1 = (*(*global).flt1_yaxis)
-    flt2 = (*(*global).flt2_yaxis_err)
+;    flt1 = (*(*global).flt1_yaxis)
+;    flt2 = (*(*global).flt2_yaxis_err)
     
-endif
+;endif
 
 (*(*global).flt0_xaxis) = Q
 
