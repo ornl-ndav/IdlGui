@@ -1461,7 +1461,7 @@ endif else begin
     endif else begin ;run number exists
         
 ;check if file is event or histo
-        full_path_instr_run_number = full_path_to_prenexus + instrument + "_"
+        full_path_instr_run_number = full_path_to_prenexus + '/' + instrument + "_"
         full_path_instr_run_number += strcompress(run_number,/remove_all)
         (*global).full_path_instr_run_number = full_path_instr_run_number
         name_if_event = full_path_instr_run_number + "_neutron_event.dat"
