@@ -36,7 +36,7 @@ endif else begin
                                 ;display the Qmin and Qmax for the CE file
                                 ;for now, the first file loaded is
                                 ;considered as being the CE file
-            ReflSupportWidget_display_Q_values, Event, 0  
+            ReflSupportWidget_display_Q_values, Event, 0, 2  
 
          end
          2: begin               ;if third tab plot only the file selected
@@ -47,6 +47,12 @@ endif else begin
                                 ;this function will disable the
                                 ;editable boxes if first file selected
             ReflSupportWidget_ManageStep3Tab, Event 
+                                
+                                ;display the Qmin and Qmax for the CE file
+                                ;for now, the first file loaded is
+                                ;considered as being the CE file
+            indexSelected = getSelectedIndex(Event,'step3_work_on_file_droplist')
+            ReflSupportWidget_display_Q_values, Event, indexSelected, 3  
          end
          else:                  ;if fourth tab (settings tab) is selected
       ENDCASE
