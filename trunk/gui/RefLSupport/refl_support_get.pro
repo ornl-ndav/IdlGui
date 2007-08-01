@@ -42,7 +42,8 @@ return, angleValue
 END
 
 
-;This function outputs the value of the angle of the current selected file
+;This function outputs the value of the angle of the current selected
+;file (degrees)
 FUNCTION getAngleValue, Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
  widget_control,id,get_uvalue=global

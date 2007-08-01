@@ -159,7 +159,7 @@ AngleUnits = CW_BGROUP(ModeratorDetectorDistanceBase,$
                        /return_name,$
                        XOFFSET=AngleUnitsSize[0],$
                        YOFFSET=AngleUnitsSize[1],$
-                       SET_VALUE=0.0,$
+                       SET_VALUE=1.0,$
                        row=1,$
                        uname='AngleUnits')                 
 
