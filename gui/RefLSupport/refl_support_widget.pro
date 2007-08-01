@@ -1,11 +1,41 @@
+;This function will enable or not the widgets of tab3
+PRO ReflSupportWidget_enableStep3Widgets,Event,sensitiveBoolean
+widget_uname = ['Step3_button',$
+                'step3_q1_text_field',$
+                'step3_q2_text_field',$
+                'step3_sf_text_field',$
+                'step3_R_text_field',$
+                'step3_deltaR_label']
+for i=0,5 do begin
+    widget_id = widget_info(Event.top,find_by_uname=widget_uname[i])
+    widget_control, widget_id, sensitive = sensitiveBoolean
+endfor
+
+END
+
+
+
+;This function will disable the widgets of step3 if
+;the first file (CE file) is selected 
+PRO ReflSupportWidget_ManageStep3Tab, Event 
+index = getSelectedIndex(Event,'step3_work_on_file_droplist')
+if (index EQ 0) then begin
+    ;disable all widgets of step3
+    ReflSupportWidget_enableStep3Widgets,Event,0
+endif else begin
+    ;enable all widgets of step3
+    ReflSupportWidget_enableStep3Widgets,Event,1
+endelse
+END
+
+
+
 ;This procedure just put the given value in the text field
 ;specified by the uname after doing a strcompression of the 
 ;value
 PRO ReflSupportWidget_setValue, Event, uname, value
-
 TFid = widget_info(Event.top,find_by_uname=uname)
 widget_control, TFid, set_value=strcompress(value,/remove_all)
-
 END
 
 
