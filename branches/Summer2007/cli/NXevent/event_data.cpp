@@ -167,22 +167,46 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
   map<NumT, int> bank_map;
   vector<int> bank_numbers;
   map<int, Bank *> banks;
+  Bank *bank;
+  int pulse_index = 0;
+  uint64_t pulse_total = 0;
 
   this->parse_bank_file(bank_file, bank_map, bank_numbers);
   int size = bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      banks[bank_numbers[i]] = new Bank;
+      banks[bank_numbers[i]] = new Bank();
     }
-
   // Split the pixel ids and tofs into banks
   size = this->pixel_id.size();
+  pulse_total = this->events_per_pulse[0];
   for (int i = 0; i < size; i++)
     {
-      banks[bank_map[pixel_id[i]]]->tof.push_back(this->tof[i]);
-      banks[bank_map[pixel_id[i]]]->pixel_id.push_back(this->pixel_id[i]);
+      bank = banks[bank_map[pixel_id[i]]];
+      bank->tof.push_back(this->tof[i]);
+      bank->pixel_id.push_back(this->pixel_id[i]);
+   
+      if (i >= pulse_total)
+        {
+          pulse_total += this->events_per_pulse[pulse_index + 1];
+          pulse_index++;
+        }
+      
+      if (bank->pulse_index == -1 ||
+          this->pulse_time[pulse_index] !=
+          bank->pulse_time[bank->pulse_index])
+        {
+          bank->pulse_index++;
+          bank->events_per_pulse.push_back(1);
+          bank->pulse_time.push_back(this->pulse_time[pulse_index]);
+        }
+      else
+        {
+          bank->events_per_pulse[bank->pulse_index]++;
+        }
     }
 }
+
 template <typename NumT>
 template <typename DataNumT>
 void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
