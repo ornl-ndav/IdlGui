@@ -368,7 +368,7 @@ CASE (CurrTabSelect) OF
       plot_loaded_file, Event, ListLongFileName
    end
    1: begin                     ;if the second tab is selected
-      LongFileName = getLongFileNameSelected(Event,'base_file_droplist') 
+      LongFileName = (*global).full_CE_name
       LongFileNameArray = strarr(1)
       LongFileNameArray[0]=LongFileName
       plot_loaded_file, Event,LongFileNameArray   
