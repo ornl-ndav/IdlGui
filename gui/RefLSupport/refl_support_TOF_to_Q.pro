@@ -5,7 +5,7 @@ widget_control,id,get_uvalue=global
 
 flt0 = (*(*global).flt0_xaxis)
 
-;get current angle value (in rad)
+;get current angle value (in deg)
 angleValue = getAngleValue(Event)
 angleValue = float(angleValue)
 
@@ -14,7 +14,7 @@ dMD = getTextFieldValue(Event,'AngleTextField')
 dMD = float(dMD)
 
 h_over_mn = (*global).h_over_mn
-CST = 4*!PI*sin(angleValue/2)
+CST = 4*!PI*sin((!PI * angleValue)/180)
 CST /= h_over_mn
 CST *= dMD
 

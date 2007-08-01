@@ -399,12 +399,14 @@ PRO ReflSupportOpenFile_LoadFile, Event
 ;MoveColorIndex to new position 
      ReflSupportOpenFile_MoveColorIndex,Event
 
-;get the value of the angle (in rad)
+;get the value of the angle (in degree)
      angleValue = getCurrentAngleValue(Event)
      (*global).angleValue = angleValue
      get_angle_value_and_do_conversion, Event, angleValue
 
 ;add file to list of droplist (step1 and 3)
+;add all files to step1 droplist
+;add all except first one to step3 droplist
      ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
      display_info_about_selected_file, Event, LongFileName
      populateColorLabel, Event, LongFileName
