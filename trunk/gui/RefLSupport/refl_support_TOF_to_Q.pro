@@ -4,24 +4,30 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 flt0 = (*(*global).flt0_xaxis)
+flt0_array = size(flt0)
+flt0_size = flt0_array[1]
+Q = fltarr(flt0_size)
 
 ;get current angle value (in deg)
 angleValue = getAngleValue(Event)
 angleValue = float(angleValue)
 
 ;get current distance MD
-dMD = getTextFieldValue(Event,'AngleTextField')
+dMD = getTextFieldValue(Event,'ModeratorDetectorDistanceTextField')
 dMD = float(dMD)
 
 h_over_mn = (*global).h_over_mn
-CST = 4*!PI*sin((!PI * angleValue)/180)
-CST /= h_over_mn
-CST *= dMD
 
-flt0_size_array = size(flt0)
-flt0_size = flt0_size_array[1]
+CST = 4*!PI*sin((!PI * angleValue)/180)
 for i=0,(flt0_size-1) do begin
-    flt0[i]=CST/(flt0[i]*1E-6)
+    if (i EQ (flt0_size-1)) then begin
+        lambda = h_over_mn * (flt0[i])
+    endif else begin
+        lambda = h_over_mn * ((flt0[i] + flt0[i+1])/2)
+    endelse
+    lambda /= dMD
+    
+    Q[i] = CST / lambda
 end
 
 ;get value of algorithm selected
@@ -33,6 +39,6 @@ if (algorithmSelected EQ 1) then begin  ;Jacobian method
     
 endif
 
-(*(*global).flt0_xaxis) = flt0
+(*(*global).flt0_xaxis) = Q
 
 END
