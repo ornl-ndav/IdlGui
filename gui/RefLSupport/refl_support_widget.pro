@@ -6,11 +6,10 @@ widget_uname = ['Step3_button',$
                 'step3_sf_text_field',$
                 'step3_R_text_field',$
                 'step3_deltaR_label']
-for i=0,5 do begin
+For i=0,5 do begin
     widget_id = widget_info(Event.top,find_by_uname=widget_uname[i])
-    widget_control, widget_id, sensitive = sensitiveBoolean
+    widget_control, widget_id, editable = sensitiveBoolean
 endfor
-
 END
 
 
