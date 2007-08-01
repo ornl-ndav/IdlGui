@@ -49,8 +49,8 @@ global = ptr_new({  $
 
 FileHistory   = strarr(1)
 list_of_files = strarr(1)
-Qmin_array    = lonarr(1)
-Qmax_array    = lonarr(1)
+Qmin_array    = fltarr(1)
+Qmax_array    = fltarr(1)
 Q1_array      = lonarr(1)
 Q2_array      = lonarr(1)
 SF_array      = lonarr(1)
