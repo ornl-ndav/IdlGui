@@ -57,10 +57,6 @@ PRO MAIN_BASE_event, Event
      end
      
                                 ;--step3--
-     Widget_Info(wWidget, FIND_BY_UNAME='step3_base_file_droplist'): begin
-        step3_base_file_droplist, Event
-     end
-     
      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
         step3_work_on_file_droplist, Event
      end

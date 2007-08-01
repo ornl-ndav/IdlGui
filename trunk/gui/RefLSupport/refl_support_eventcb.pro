@@ -43,6 +43,10 @@ endif else begin
             LongFileName1 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
             ListLongFileName = [LongFileName1]
             plot_loaded_file, Event, ListLongFileName
+
+                                ;this function will disable the
+                                ;editable boxes if first file selected
+            ReflSupportWidget_ManageStep3Tab, Event 
          end
          else:                  ;if fourth tab (settings tab) is selected
       ENDCASE
