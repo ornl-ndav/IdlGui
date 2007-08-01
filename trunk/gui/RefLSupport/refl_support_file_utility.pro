@@ -191,8 +191,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 list_of_files      = strarr(1)
-Qmin_array         = lonarr(1)
-Qmax_array         = lonarr(1)
+Qmin_array         = fltarr(1)
+Qmax_array         = fltarr(1)
 Q1_array           = lonarr(1)
 Q2_array           = lonarr(1)
 SF_array           = lonarr(1)
