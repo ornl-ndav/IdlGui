@@ -25,8 +25,9 @@ global = ptr_new({  $
                    input_path     : '',$             ;default path to file to load
                    PrevTabSelect  : 0,$              ;value of previous tab selected
                    angleValue     : float(0),$              ;current value of the angle (float)
-                   flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
-                   flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
+                   CEcooef          : ptr_new(0L),$    ;the fitting coeff of the CE file
+                   flt0_xaxis     : ptr_new(0L),$ ;x-axis of loaded file
+                   flt1_yaxis     : ptr_new(0L),$ ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
                    FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
@@ -47,6 +48,7 @@ global = ptr_new({  $
                    images_tabs_yoff : ptr_new(0L)$   ;images y_offset of tabs  
                  })
 
+CEcooef       = lonarr(3)
 FileHistory   = strarr(1)
 list_of_files = strarr(1)
 Qmin_array    = fltarr(1)
@@ -59,17 +61,18 @@ color_array   = lonarr(1)
 ColorSliderDefaultValue = (*global).ColorSliderDefaultValue
 color_array[0] = ColorSliderDefaultValue
 ListOfLongFileName = strarr(1)
-(*(*global).FileHistory) = FileHistory
+(*(*global).CEcooef)       = CEcooef
+(*(*global).FileHistory)   = FileHistory
 (*(*global).list_of_files) = list_of_files
-(*(*global).Qmin_array) = Qmin_array
-(*(*global).Qmax_array) = Qmax_array
-(*(*global).Q1_array) = Q1_array
-(*(*global).Q2_array) = Q2_array
-(*(*global).SF_array) = SF_array
-(*(*global).angle_array) = angle_array
-(*(*global).color_array) = color_array
+(*(*global).Qmin_array)    = Qmin_array
+(*(*global).Qmax_array)    = Qmax_array
+(*(*global).Q1_array)      = Q1_array
+(*(*global).Q2_array)      = Q2_array
+(*(*global).SF_array)      = SF_array
+(*(*global).angle_array)   = angle_array
+(*(*global).color_array)   = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
-(*global).ucams      = ucams
+(*global).ucams            = ucams
 
 if (!VERSION.os EQ 'darwin') then begin
    images_tabs = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$

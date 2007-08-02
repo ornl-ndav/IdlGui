@@ -93,6 +93,10 @@ PRO plot_loaded_file, Event, ListLongFileName
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;0 means that the fitting plot won't be seen
+;1 means that the fitting plot will be seen
+show_error_plot=0
+
 ;1 if first load, 0 otherwise
 FirstTimePlotting = (*global).FirstTimePlotting
 
@@ -219,6 +223,7 @@ endif else begin
 
             endif
 
+            
             colorIndex = color_array[i]
             if (FirstPass EQ 1) then begin
                 
@@ -330,10 +335,25 @@ endif else begin
                         endcase
                     end
                 endcase            
-                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
                 
             endelse
             
+                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+
+                cooef = (*(*global).CEcooef)
+                print, 'cooef[0]: ' + strcompress(cooef[0])
+                if (cooef[0] NE 0 AND $
+                    cooef[1] NE 0 AND $
+                    cooef[2] NE 0) then begin
+                    print, 'here'
+                    show_error_plot=1
+                    N_new = 100
+                    x_new = findgen(N_new)/N_new
+                    y_new = cooef(2)*x_new^2 + cooef(1)*x_new + cooef(0)
+                    oplot,x_new,y_new,color=200,thick=1.5
+                endif
+
+
         endelse
         
     endfor
