@@ -116,7 +116,7 @@ Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
 ListOfFiles  = ['                            ']  
-MainTitle = "REF_L SUPPORT - CRITICAL EDGES PROGRAM"
+MainTitle = "REF_L SUPPORT - RESCALLING PROGRAM"
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
