@@ -269,41 +269,6 @@ ListOfLongFileName = ArrayDelete(ListOfLongFileName,AT=iIndex,Length=1)
 END
 
 
-;This function save Q1, Q2 and SF of the Critical Edge file selected
-PRO SaveQofCE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-Q1_array = (*(*global).Q1_array)
-Q2_array = (*(*global).Q2_array)
-SF_array = (*(*global).SF_array)
-FileHistory = (*(*global).FileHistory)
-
-;get name of selected CE file
-base_file_droplist_id = widget_info(Event.top,find_by_uname='base_file_droplist')
-widget_control,base_file_droplist_id, get_value=list
-value = widget_info(base_file_droplist_id,/droplist_select)
-FileHistory[0] = list[value]
-
-;get Q1, Q2 and SF (float)
-Q1Q2SF = getQ1Q2SF(Event,'STEP2')
-Q1 = Q1Q2SF[0]
-Q2 = Q1Q2SF[1]
-SF = Q1Q2SF[2]
-
-Q1_array[0] = Q1
-Q2_array[0] = Q2
-SF_array[0] = SF
-
-(*(*global).Q1_array)    = Q1_array
-(*(*global).Q2_array)    = Q2_array
-(*(*global).SF_array)    = SF_array
-(*(*global).FileHistory) = FileHistory
-
-;fit current data file selected
-LongFileName = getLongFileNameSelected(Event,'base_file_droplist')
-LoadDataFile, Event, LongFileName, Q1, Q2
-END
 
 
 ;This function assign to the current selected file the current

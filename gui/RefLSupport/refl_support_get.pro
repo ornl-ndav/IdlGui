@@ -1,3 +1,63 @@
+;This function removes all the values outside the given
+;range of values [0,10] from the array passed as argument
+FUNCTION getArrayRangeOfNotNanValues, flt1_new
+index = where(flt1_new GE 0 AND flt1_new LE 10)
+return, index
+return, rangeIndexes
+END
+
+
+;This function takes array as an argument and will
+;return the first argument >= Q1 and the last one <=Q2
+;
+;To determine in which order the search should be done (increasing
+;or decreasing order) the first and last argument will be checked first
+FUNCTION getArrayRangeFromQ1Q2, flt0, Q1, Q2
+
+FirstValue = flt0[0]
+flt0_size = (size(flt0))[1]
+LastValue  = flt0[flt0_size-1]
+
+left_index = 0
+right_index = (flt0_size-1)
+
+found_left_index = 0
+if (FirstValue LT LastValue) then begin ;increasing order
+    for i=0,(flt0_size-1) do begin
+        if (found_left_index EQ 0) then begin
+            if (flt0[i] GE Q1) then begin
+                left_index = i
+                found_left_index = 1
+            endif
+        endif else begin
+            if (flt0[i] GT Q2) then begin
+                right_index = i-1
+                break
+            endif
+        endelse
+        endfor
+endif else begin                ;decreasing order
+    for i=0,(flt0_size-1) do begin
+        if (found_left_index EQ 0) then begin
+            if (flt0[i] LE Q2) then begin
+                left_index = i
+                found_left_index = 1
+            endif
+        endif else begin
+            if (flt0[i] LT Q1) then begin
+                right_index = i-1
+                break
+            endif
+        endelse
+    endfor
+endelse          
+
+returnArray = [left_index, right_index]
+return, returnArray
+END
+
+
+
 ;This function returns the true min and max value of the first array
 ;argument. True min and max means that the flt1 value of the
 ;corresponding min and max is defined, not NAN or not negative

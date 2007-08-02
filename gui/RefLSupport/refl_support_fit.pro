@@ -1,29 +1,29 @@
-PRO FitFunction, Event, Q1, Q2, flt0, flt1, flt2
+PRO FitFunction, Event, flt0, flt1, flt2
 
-print, flt0
-print, '-------------------------------'
-print, flt1
-
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 ; Compute the second degree polynomial fit to the data:
 cooef = POLY_FIT(flt0, flt1, 2, MEASURE_ERRORS=flt2, $
    SIGMA=sigma)
+(*(*global).CEcooef) = cooef
 
 ; Print the coefficients:
 PRINT, 'Coefficients: ', cooef
 PRINT, 'Standard errors: ', sigma
 
-;show original data
+;;show original data
 loadct,3
 window,0
-plot,x,y
+plot,flt0,flt1
 
-;now calculate data on new coordinates
+;;now calculate data on new coordinates
 N_new = 100
 x_new = findgen(N_new)/N_new
 y_new = cooef(2)*x_new^2 + cooef(1)*x_new + cooef(0)
 
-;overplot new data in red
+;;overplot new data in red
 oplot,x_new,y_new,color=200,thick=1.5
 
 END
@@ -31,8 +31,6 @@ END
 
 
 PRO LoadDataFile, Event, LongFileName, Q1, Q2
-
-print, 'LongFileName: ' + LongFileName
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -57,7 +55,7 @@ endif else begin
 ;define an empty string variable to hold results from reading the file
     tmp  = ''
     tmp0 = ''
-    tmp1 = ''
+    tmp1 = '' 
     tmp2 = ''
     
     flt0 = -1.0

@@ -123,7 +123,7 @@ END
 
 ;run calculation of CE in step 2
 PRO RUN_STEP2, Event
-SaveQofCE,Event
+ReflSupportStep2_SaveQofCE, Event
 END
 
 
