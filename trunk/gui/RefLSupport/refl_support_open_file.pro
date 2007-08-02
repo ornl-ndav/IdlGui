@@ -172,9 +172,9 @@ endif else begin
                 flt0 = (*(*global).flt0_xaxis)
 ;                flt1 = (*(*global).flt1_yaxis)
 ;                flt2 = (*(*global).flt2_yaxis_err)
-
+                
             endif
-
+            
             colorIndex = color_array[i]
             if (FirstPass EQ 1) then begin
                 
@@ -292,8 +292,12 @@ endif else begin
             
         endelse
 
-        Qmin_array[i] = min(flt0,max=max_value,/nan)
-        Qmax_array[i] = max_value
+;determine Qmin and Qmax
+        QminQmax = getQminQmaxValue(flt0, flt1)
+        Qmin = QminQmax[0]
+        Qmax = QminQmax[1]
+        Qmin_array[i] = Qmin
+        Qmax_array[i] = Qmax
  
     endfor
     
