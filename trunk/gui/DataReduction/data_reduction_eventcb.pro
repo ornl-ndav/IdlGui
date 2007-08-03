@@ -1144,6 +1144,7 @@ endif else begin
     initial_run_number = run_number
     run_number = remove_star_from_string(run_number)
     (*global).run_number = run_number
+
     full_nexus_name = $
       find_full_nexus_name(Event,$
                            strmatch(initial_run_number,'*\**'),$
@@ -2785,23 +2786,27 @@ detector_angle_err = array_of_parameters[4]
 nbr_runs_to_use_size = size(runs_and_full_path)
 nbr_runs_to_use = nbr_runs_to_use_size[1]
 
-if (nbr_runs_to_use GT 1) then begin
-    screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
-    widget_control, screen_base_id, map=1
-endif
+;if (nbr_runs_to_use GT 1) then begin
+;    screen_base_id = widget_info(Event.top,find_by_uname='screen_base')
+;    widget_control, screen_base_id, map=1
+;endif
 
-for i=0,(nbr_runs_to_use-1) do begin
+
     
-    (*global).processing_run_number = runs_and_full_path[i,0]
+ ;   (*global).processing_run_number = runs_and_full_path[i,0]
     
 ;start command line for REF_M
     REF_M_cmd_line = "reflect_reduction "
     
+    for i=0,(nbr_runs_to_use-1) do begin
+
 ;add list of NeXus run numbers
-    runs_text = ""
+        runs_text = " "
 ;    REF_M_cmd_line += full_path_to_nexus_normalization
-    REF_M_cmd_line += runs_and_full_path[i,1]
-    
+        REF_M_cmd_line += runs_and_full_path[i,1]
+        
+    endfor
+
 ;instrument geometry
     if (instrument_geometry EQ 0) then begin
         instr_geom_cmd = " --inst_geom=" + (*global).instrument_geometry_file_name
@@ -2878,11 +2883,11 @@ for i=0,(nbr_runs_to_use-1) do begin
     
     REF_M_cmd_line += det_angle_cmd
     
-    text = "Processing data reduction of run # " + $
-      strcompress(runs_and_full_path[i,0],/remove_all)
-    text += " ..."
-    
-    widget_control, view_info, set_value=text,/append
+;    text = "Processing data reduction of run # " + $
+;      strcompress(runs_and_full_path[i,0],/remove_all)
+;    text += " ..."   
+;    widget_control, view_info, set_value=text,/append
+
     full_text = " running using the following command line:"
     widget_control, full_view_info, set_value=full_text,/append
     
@@ -2909,12 +2914,11 @@ for i=0,(nbr_runs_to_use-1) do begin
     ending_time = systime(1)
     
     total_processing_time = ending_time - starting_time
-    full_text = ' -> work # ' + strcompress(i+1,/remove_all) + $
-      '/' + strcompress(nbr_runs_to_use) + ' done in ' + $
+    full_text = ' -> work done in ' + $
       strcompress(total_processing_time,/remove_all) + ' s'
     
     output_into_text_box, event, 'log_book_text', full_text
-    output_into_text_box, event, 'info_text', text
+;    output_into_text_box, event, 'info_text', text
 ;    widget_control, full_view_info, set_value=full_text,/append
 ;    widget_control, view_info, set_value=text,/append
     
@@ -2930,8 +2934,7 @@ for i=0,(nbr_runs_to_use-1) do begin
     
 ;plot main .txt file
     draw_id = 'data_reduction_plot'
-    title = "Intensity vs. TOF (run # " + $
-      strcompress(runs_and_full_path[i,0],/remove_all) + ")"
+    title = "Intensity vs. TOF " 
     plot_reduction, $
       Event, $
       main_output_file_name, $
@@ -2945,8 +2948,6 @@ for i=0,(nbr_runs_to_use-1) do begin
 ;    widget_control, full_view_info, set_value=full_text,/append
 ;    widget_control, view_info, set_value=text,/append
     
-endfor
-
 text = '...Full process is done'
 full_text = '...Full process is done'
 output_into_text_box, event, 'log_book_text', full_text
@@ -3357,7 +3358,7 @@ case value of
         endcase
         
     end
-    else:
+    else: n=0
 endcase
 
 first_time_plotting_n = (*(*global).first_time_plotting_n)
@@ -5276,12 +5277,18 @@ nxdir_cmd += ' -p /entry/proton_charge/ -o'
 spawn, nxdir_cmd, listening
 
 proton_charge_array = strsplit(listening,'=',/extract,/regex)
-proton_charge_str = proton_charge_array[1]
-proton_charge_pC = double(proton_charge_str) * (0.36)
-
+no_proton_charge = 0
+catch, no_proton_charge
 text = 'Proton charge = '
-text += strcompress(proton_charge_pC)
-text += ' 10^10 pC'
+if (no_proton_charge NE 0) then begin
+    catch, /cancel
+    text += ' N/A'
+endif else begin
+    proton_charge_str = proton_charge_array[1]
+    proton_charge_pC = double(proton_charge_str) * (0.36)
+    text += strcompress(proton_charge_pC)
+    text += ' 10^10 pC'
+endelse
 output_into_text_box, event, 'info_text', text
 
 end
