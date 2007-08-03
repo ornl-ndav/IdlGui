@@ -12,8 +12,7 @@ BaseFileSize         = [5  , 5  , 250 , 30 ]
 BaseFileCELabel      = [5  , 5  , 150  , 30 ]
 BaseFileCEFileName   = [155, 5  , 150 , 30 ]
 
-Step2GoButtonSize    = [350, 7  , 170 , 30 ]
-Step2TabSize         = [5  , 60 , 320 , 70 ]
+Step2TabSize         = [5  , 50 , 500 , 70 ]
 Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
 Step2Tab2Base        = Step2Tab1Base
 Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
@@ -45,44 +44,53 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
                        Step2XTextFieldSize[2],$
                        Step2XLabelSize[3]]
 
-Step2RDrawSize      = [330,$
-                       45,$
-                       30,$
-                       30]
-Step2RTextFieldSize  = [Step2RDrawSize[0]+distance_L_TB, $
-                        Step2RDrawSize[1], $
-                        Step2Q1TextFieldSize[2],$
-                        Step2Q1TextFieldSize[3]]
+;automatic go button
+Step2GoButtonSize    = [5, 130 , 500 , 30 ]
 
-Step2DeltaRDrawSize      = [Step2RDrawSize[0], $
-                            Step2RDrawSize[1]+distanceVertical_L_L, $
-                            Step2RDrawSize[2],$
-                            Step2RDrawSize[3]]
-Step2DeltaRLabelSize  = [Step2RTextFieldSize[0],$
-                         Step2DeltaRDrawSize[1], $
-                         Step2Q1TextFieldSize[2],$
-                         Step2Q1TextFieldSize[3]]
+;manual label
+Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 50]
+Step2ManualFittingFrameLabelSize = [20, Step2GoButtonSize[1]+33]
 
-Step2SFDrawSize     = [Step2DeltaRDrawSize[0], $
-                       Step2DeltaRDrawsize[1]+distanceVertical_L_L,$
-                       Step2Q1LabelSize[2],$
-                       Step2Q1LabelSize[3]]
-Step2SFTextFieldSize = [Step2SFDrawSize[0]+distance_L_TB,$
-                        Step2SFDrawSize[1],$
-                        Step2Q1TextFieldSize[2],$
-                        Step2Q1TextFieldSize[3]]
+;fitting equation label
+step2FittingEquationLabelSize = [10, Step2GoButtonSize[1]+58]
+distance_1 = 130
+step2FittingEquationATextFieldSize = [step2FittingEquationLabelSize[0]+distance_1,$
+                                      step2FittingEquationLabelSize[1]-5,$
+                                      100,$
+                                      30]
+distance_2 = 100
+step2FittingEquationXLabelSize = [step2FittingEquationATextFieldSize[0]+distance_2,$
+                                  step2FittingEquationLabelSize[1]]
+distance_3 = 17
+step2FittingEquationBTextFieldSize = [step2FittingEquationXLabelSize[0]+distance_3,$
+                                      step2FittingEquationLabelSize[1]-5,$
+                                      100,30]
+distance_4 = 100
+Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
+                           step2FittingEquationLabelSize[1]-5,$
+                           145,30]
+
+
+;SF
+Step2SFdrawSize = [350,300,40,40]
+Step2SFTextFieldSize = [400,300,40,40]
+
+
 
 ;Define titles
 BaseFileTitle      = 'Critical edge file:'
 Step2Tab1Title     = 'Determine SF using Q range'
 Step2Tab2Title     = 'Deternine SF using mouse'
-Step2GoButtonTitle = 'Rescale Critical Edge'
+Step2GoButtonTitle = 'Automatic Rescaling of Critical Edge file'
+Step2ManualGoButtonTitle = 'Manual Fiting of CE'
 Step2Q1LabelTitle  = 'Qmin:'
 Step2Q2LabelTitle  = 'Qmax:'
 Step2SFLabelTitle  = 'SF:'
 Step2XLabelTitle = 'X:'
 Step2YLabelTitle = 'Y:'
-Step2RLabelTitle = 'r :'
+
+Step2FittingEquationLabel = 'Fitting equation:  Y='
+Step2FittingEquationXLabel = 'X+'
 
 ;Build GUI
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -230,59 +238,115 @@ STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
 
-;--outside tab of step2
-STEP2_SF_draw = WIDGET_draw(STEP2_BASE,$
-                            uname='step2_sf_draw',$
-                            XOFFSET=Step2SFdrawSize[0],$
-                            YOFFSET=Step2SFdrawSize[1],$
-                            SCR_XSIZE=Step2SFdrawSize[2],$
-                            SCR_YSIZE=Step2SFdrawSize[3])
+;Manual fitting equation label outside tab of step2
+step2FittingEquationLabel = widget_label(STEP2_BASE,$
+                                         value=Step2FittingEquationLabel,$
+                                         xoffset=step2FittingEquationLabelSize[0],$
+                                         yoffset=step2FittingEquationLabelSize[1])
+
+step2FittingEquationATextField = widget_text(STEP2_BASE,$
+                                             uname='step2_fitting_equation_a_text_field',$
+                                             xoffset=step2FittingEquationATextFieldSize[0],$
+                                             yoffset=step2FittingEquationATextFieldSize[1],$
+                                             scr_xsize=step2FittingEquationATextFieldSize[2],$
+                                             scr_ysize=step2FittingEquationATextFieldSize[3],$
+                                             value='',$
+                                             /editable,$
+                                             /align_left)
+
+step2FittingEquationXLabel = widget_label(STEP2_BASE,$
+                                          value=Step2FittingEquationXLabel,$
+                                          xoffset=step2FittingEquationXLabelSize[0],$
+                                          yoffset=step2FittingEquationXLabelSize[1])
+
+step2FittingEquationBTextField = widget_text(STEP2_BASE,$
+                                             uname='step2_fitting_equation_b_text_field',$
+                                             xoffset=step2FittingEquationBTextFieldSize[0],$
+                                             yoffset=step2FittingEquationBTextFieldSize[1],$
+                                             scr_xsize=step2FittingEquationBTextFieldSize[2],$
+                                             scr_ysize=step2FittingEquationBTextFieldSize[3],$
+                                             value='',$
+                                             /editable,$
+                                             /align_left)
 
 
-STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
-                                  UNAME='step2_sf_text_field',$
-                                  XOFFSET=Step2SFTextFieldSize[0],$
-                                  YOFFSET=Step2SFTextFieldSize[1],$
-                                  SCR_XSIZE=Step2SFTextFieldSize[2],$
-                                  SCR_YSIZE=Step2SFTextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
+Step2ManualGoButton = widget_button(STEP2_BASE,$
+                                    uname='step2ManualGoButton',$
+                                    xoffset=Step2ManualGoButtonSize[0],$
+                                    yoffset=Step2ManualGoButtonSize[1],$
+                                    scr_xsize=Step2ManualGoButtonSize[2],$
+                                    scr_ysize=Step2ManualGoButtonSize[3],$
+                                    value=Step2ManualGoButtonTitle)
 
-step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
-                            uname='step2_ri_draw',$
-                            XOFFSET=Step2RDrawSize[0],$
-                            YOFFSET=Step2RDrawSize[1],$
-                            SCR_XSIZE=Step2RDrawSize[2],$
-                            SCR_YSIZE=Step2RDrawSize[3])
 
-STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
-                                 UNAME='step2_R_text_field',$
-                                 XOFFSET=Step2RTextFieldSize[0],$
-                                 YOFFSET=Step2RTextFieldSize[1],$
-                                 SCR_XSIZE=Step2RTextFieldSize[2],$
-                                 SCR_YSIZE=Step2RTextFieldSize[3],$
-                                 VALUE='',$
-                                 /EDITABLE,$
-                                 /ALIGN_LEFT,$
-                                 /ALL_EVENTS)
+Step2ManualFittingFrameLabel = widget_label(STEP2_BASE,$
+                                            xoffset=Step2ManualFittingFrameLabelSize[0],$
+                                            yoffset=Step2ManualFittingFrameLabelSize[1],$
+                                            value='Manual fitting')
+                                            
 
-STEP2_delta_ri_draw = WIDGET_DRAW(STEP2_BASE,$
-                                 uname='step2_delta_ri_draw',$
-                                 XOFFSET=Step2DeltaRDrawSize[0],$
-                                 YOFFSET=Step2DeltaRDrawSize[1],$
-                                 SCR_XSIZE=Step2DeltaRDrawSize[2],$
-                                 SCR_YSIZE=Step2DeltaRDrawSize[3])
+Step2ManualFittingFrame = widget_label(STEP2_BASE,$
+                                       xoffset=Step2ManualFittingFrameSize[0],$
+                                       yoffset=Step2ManualFittingFrameSize[1],$
+                                       scr_xsize=Step2ManualFittingFrameSize[2],$
+                                       scr_ysize=Step2ManualFittingFrameSize[3],$
+                                       frame=1,$
+                                       value='')
 
-STEP2_deltaR_label = WIDGET_LABEL(STEP2_BASE,$
-                                  UNAME='step2_deltaR_label',$
-                                  XOFFSET=Step2DeltaRLabelSize[0],$
-                                  YOFFSET=Step2DeltaRLabelSize[1],$
-                                  SCR_XSIZE=Step2DeltaRLabelSize[2],$
-                                  SCR_YSIZE=Step2DeltaRLabelSize[3],$
-                                  VALUE='',$
-                                  /ALIGN_LEFT)
+
+;; --outside tab of step2
+ STEP2_SF_draw = WIDGET_draw(STEP2_BASE,$
+                             uname='step2_sf_draw',$
+                             XOFFSET=Step2SFdrawSize[0],$
+                             YOFFSET=Step2SFdrawSize[1],$
+                             SCR_XSIZE=Step2SFdrawSize[2],$
+                             SCR_YSIZE=Step2SFdrawSize[3])
+
+
+ STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+                                   UNAME='step2_sf_text_field',$
+                                   XOFFSET=Step2SFTextFieldSize[0],$
+                                   YOFFSET=Step2SFTextFieldSize[1],$
+                                   SCR_XSIZE=Step2SFTextFieldSize[2],$
+                                   SCR_YSIZE=Step2SFTextFieldSize[3],$
+                                   VALUE='',$
+                                   /EDITABLE,$
+                                   /ALIGN_LEFT,$
+                                   /ALL_EVENTS)
+
+; step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
+;                             uname='step2_ri_draw',$
+;                             XOFFSET=Step2RDrawSize[0],$
+;                             YOFFSET=Step2RDrawSize[1],$
+;                             SCR_XSIZE=Step2RDrawSize[2],$
+;                             SCR_YSIZE=Step2RDrawSize[3])
+
+; STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
+;                                  UNAME='step2_R_text_field',$
+;                                  XOFFSET=Step2RTextFieldSize[0],$
+;                                  YOFFSET=Step2RTextFieldSize[1],$
+;                                  SCR_XSIZE=Step2RTextFieldSize[2],$
+;                                  SCR_YSIZE=Step2RTextFieldSize[3],$
+;                                  VALUE='',$
+;                                  /EDITABLE,$
+;                                  /ALIGN_LEFT,$
+;                                  /ALL_EVENTS)
+
+; STEP2_delta_ri_draw = WIDGET_DRAW(STEP2_BASE,$
+;                                  uname='step2_delta_ri_draw',$
+;                                  XOFFSET=Step2DeltaRDrawSize[0],$
+;                                  YOFFSET=Step2DeltaRDrawSize[1],$
+;                                  SCR_XSIZE=Step2DeltaRDrawSize[2],$
+;                                  SCR_YSIZE=Step2DeltaRDrawSize[3])
+
+; STEP2_deltaR_label = WIDGET_LABEL(STEP2_BASE,$
+;                                   UNAME='step2_deltaR_label',$
+;                                   XOFFSET=Step2DeltaRLabelSize[0],$
+;                                   YOFFSET=Step2DeltaRLabelSize[1],$
+;                                   SCR_XSIZE=Step2DeltaRLabelSize[2],$
+;                                   SCR_YSIZE=Step2DeltaRLabelSize[3],$
+;                                   VALUE='',$
+;                                   /ALIGN_LEFT)
 
 
 

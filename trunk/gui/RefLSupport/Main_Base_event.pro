@@ -55,7 +55,12 @@ PRO MAIN_BASE_event, Event
      Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
         run_step2, Event
      end
-     
+
+     ;manual fitting of CE file
+     Widget_Info(wWidget, FIND_BY_UNAME='step2ManualGoButton'): begin
+         manualCEfitting, Event
+     end
+       
                                 ;--step3--
      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
         step3_work_on_file_droplist, Event

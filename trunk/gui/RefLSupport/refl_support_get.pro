@@ -164,7 +164,7 @@ FUNCTION getQ1Q2SF, Event, TAB
 IF (TAB EQ 'STEP2') then begin
     Q1 = getValue(Event, 'step2_q1_text_field')    
     Q2 = getValue(Event, 'step2_q2_text_field')
-    SF = getValue(Event, 'step2_sf_text_field')
+    SF = getValue(Event, 'step2_sf_text_field')     
 ENDIF ELSE BEGIN
     Q1 = getValue(Event, 'step3_q1_text_field')    
     Q2 = getValue(Event, 'step3_q2_text_field')

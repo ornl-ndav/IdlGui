@@ -77,7 +77,7 @@ END
 
 
 ;This function replot the SF, ri and delta_ri labels/draw of tab2
-PRO refresh_draw_labels_tab2, Event
+PRO ReflSupportWidget_refresh_draw_labels_tab2, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
