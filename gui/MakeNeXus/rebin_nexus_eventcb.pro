@@ -1142,7 +1142,7 @@ function get_full_path_to_preNeXus_path, listening, instrument, run_number
 string_to_remove = instrument + "_" + strcompress(run_number,/remove_all)
 string_to_remove += "_cvinfo.xml"
 full_path=strsplit(listening,string_to_remove,/extract,/regex)
-
+full_path += '/'
 return, full_path
 
 end
@@ -2384,7 +2384,7 @@ endif else begin ;files not archived yet
     cvlist_file_name = path_up_to_proposal + instrument + '_cvlist.xml'
 
     path_up_to_run_number = path_up_to_proposal + instrument + '_' + run_number + '/'
-    other_xml_files = path_up_to_run_number + '*.xml'
+    other_xml_files = path_up_to_run_number + '/' + '*.xml'
 
     cmd_copy = 'cp ' + beamtime_info_file_name + ' ' + cvlist_file_name
     cmd_copy += ' ' + other_xml_files
