@@ -130,9 +130,6 @@ int main(int32_t argc,
       event_data.create_pixel_map(config.mapping_file);
     }
  
-  // Create the bank map
-  event_data.parse_bank_file(config.bank_file);
- 
   // Gather the information from the event file
   event_data.read_data(config.event_file, config.pulse_id_file, config.bank_file);
 

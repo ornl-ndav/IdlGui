@@ -139,27 +139,22 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
   this->bank_numbers.push_back(2);
   this->bank_numbers.push_back(3);
 
+  vector<Bank<NumT> *> banks;
+  banks.push_back(new Bank<NumT>());
+  banks.push_back(new Bank<NumT>());
+  banks.push_back(new Bank<NumT>());
+
   for (int i = 0; i < 4096; i++)
     {
-      this->bank_map.push_back(1);
+      this->bank_map.push_back(banks[0]);
     }
   for (int i = 4096; i < 8192; i++)
     {
-      this->bank_map.push_back(2);
+      this->bank_map.push_back(banks[1]);
     }
   for (int i = 8192; i < 9216; i++)
     {
-      this->bank_map.push_back(3);
-    }
-
-  int size = this->bank_numbers.size();
-  for (int i = 0; i < size; i++)
-    { 
-      if (this->bank_numbers[i] >= this->banks.size())
-        {
-          this->banks.resize(this->bank_numbers[i]);
-        }
-      this->banks[this->bank_numbers[i]] = new Bank<NumT>();
+      this->bank_map.push_back(banks[2]);
     }
 }
 
@@ -194,25 +189,25 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
   if (nx_data_name == TOF)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->tof, data_name,
+                               this->bank_map[bank_number]->tof, data_name,
                                bank_number);
     }
   else if (nx_data_name == PIXEL_ID)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->pixel_id, data_name,
+                               this->bank_map[bank_number]->pixel_id, data_name,
                                bank_number);
     }
   else if (nx_data_name == PULSE_TIME)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->pulse_time, data_name,
+                               this->bank_map[bank_number]->pulse_time, data_name,
                                bank_number);
     }
   else if (nx_data_name == EVENTS_PER_PULSE)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->events_per_pulse, data_name,
+                               this->bank_map[bank_number]->events_per_pulse, data_name,
                                bank_number);
     }
   else
@@ -225,7 +220,6 @@ template <typename NumT>
 void EventData<NumT>::create_pixel_map(const string & mapping_file)
 {
   size_t data_size = sizeof(uint32_t);
-  uint32_t mapping_index = 0;
   int32_t buffer[BLOCK_SIZE];
   size_t offset = 0;
 
@@ -311,7 +305,6 @@ void EventData<NumT>::read_data(const string & event_file,
   size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
 
   Bank<NumT> *bank;
-
   this->parse_bank_file(bank_file);
 
   // Go to the start of file and begin reading
@@ -328,7 +321,7 @@ void EventData<NumT>::read_data(const string & event_file,
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              bank = banks[this->bank_map[*(event_buffer + event_i + 1)]];
+              bank = this->banks[this->bank_map[*(event_buffer + event_i + 1)]];
               
               bank->tof.push_back(*(event_buffer + event_i));
               bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
@@ -373,7 +366,6 @@ void EventData<NumT>::read_data(const string & event_file,
   NumT pulse_buffer[BLOCK_SIZE];
   size_t pulse_fp_offset = 0;
   NumT init_seconds = 0;
-  NumT prev_index = 0;
   NumT prev_time;
   NumT pulse_index;
 
@@ -445,8 +437,7 @@ void EventData<NumT>::read_data(const string & event_file,
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              bank = this->banks[this->bank_map[*(event_buffer + event_i + 1)]];
-              
+              bank = this->bank_map[*(event_buffer + event_i + 1)];
               bank->tof.push_back(*(event_buffer + event_i));
               bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
               if (bank->pulse_index == -1 ||

@@ -10,7 +10,6 @@
 #include "nexus_util.hpp"
 #include "bank.hpp"
 #include <vector>
-#include <map>
 #include <string>
 
 const uint32_t ERROR=0x80000000;
@@ -52,10 +51,9 @@ class EventData
   private:
     std::vector<NumT> pixel_id_map;
     std::string pulse_time_offset;
-    std::vector<int> bank_map;
+    std::vector<Bank<NumT> *> bank_map;
     std::vector<int> bank_numbers;
     std::vector<NumT> events_per_pulse;
-    std::vector<Bank<NumT> *> banks;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
