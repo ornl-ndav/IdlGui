@@ -321,7 +321,7 @@ void EventData<NumT>::read_data(const string & event_file,
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              bank = this->banks[this->bank_map[*(event_buffer + event_i + 1)]];
+              bank = this->bank_map[*(event_buffer + event_i + 1)];
               
               bank->tof.push_back(*(event_buffer + event_i));
               bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
