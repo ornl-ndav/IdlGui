@@ -297,7 +297,6 @@ void EventData<NumT>::read_data(const string & event_file,
   size_t event_fp_offset = 0;
   size_t data_size = sizeof(NumT);
   uint32_t event_number = 0;
-  bool mapping_exists = (this->pixel_id_map.empty()) ? false : true;
 
   // Open the event file
   ifstream event_fp(event_file.c_str(), std::ios::binary);
@@ -332,14 +331,7 @@ void EventData<NumT>::read_data(const string & event_file,
               bank = banks[this->bank_map[*(event_buffer + event_i + 1)]];
               
               bank->tof.push_back(*(event_buffer + event_i));
-              if (mapping_exists)
-                {
-                  bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
-                }
-              else
-                {
-                  bank->pixel_id.push_back(*(event_buffer + event_i + 1));
-                }
+              bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
             }
         }
 
@@ -365,7 +357,6 @@ void EventData<NumT>::read_data(const string & event_file,
   size_t event_fp_offset = 0;
   size_t data_size = sizeof(NumT);
   uint32_t event_number = 0;
-  bool mapping_exists = (this->pixel_id_map.empty()) ? false : true;
 
   // Open the event file
   ifstream event_fp(event_file.c_str(), std::ios::binary);
@@ -457,14 +448,7 @@ void EventData<NumT>::read_data(const string & event_file,
               bank = this->banks[this->bank_map[*(event_buffer + event_i + 1)]];
               
               bank->tof.push_back(*(event_buffer + event_i));
-              if (mapping_exists)
-                {
-                  bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
-                }
-              else
-                {
-                  bank->pixel_id.push_back(*(event_buffer + event_i + 1));
-                }
+              bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
               if (bank->pulse_index == -1 ||
                   prev_time !=
                   bank->pulse_time[bank->pulse_index])
