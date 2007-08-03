@@ -50,14 +50,12 @@ template <typename NumT>
 class EventData
 {
   private:
-    std::vector<NumT> tof;
-    std::vector<NumT> pixel_id;
-    std::vector<NumT> pulse_time;
-    std::vector<NumT> events_per_pulse;
     std::vector<NumT> pixel_id_map;
     std::string pulse_time_offset;
     std::map<NumT, int> bank_map;
     std::vector<int> bank_numbers;
+    std::vector<NumT> events_per_pulse;
+    std::map<int, Bank<NumT> *> banks;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
@@ -96,15 +94,6 @@ class EventData
   public:
     void parse_bank_file(const std::string & bank_file);
  
-    /**
-     * \brief Splits the information into banks and writes it to
-     *        the nexus file.
-     * \param nexus_util The nexus_utility with the open file.
-     * \param bank_file The xml bank configuration file
-     */
-    void write_nexus_file(NexusUtil & nexus_util, 
-                          const std::string & bank_file);  
-
     /**
      * \brief Reads information from the event file and populates
      *        the tof and pixel id vectors.

@@ -46,10 +46,6 @@ template
 void EventData<uint32_t>::create_pixel_map(const string & mapping_file);
 
 template 
-void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util,
-                                           const string & bank_file);
-
-template 
 EventData<uint32_t>::EventData();
 
 template 
@@ -156,52 +152,11 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
     {
       this->bank_map[i] = 3;
     }
-}
 
-template <typename NumT>
-void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
-                                       const string & bank_file)
-{
-  map<NumT, int> bank_map;
-  vector<int> bank_numbers;
-  map<int, Bank<NumT> *> banks;
-  Bank<NumT> *bank;
-  int pulse_index = 0;
-  uint64_t pulse_total = 0;
-
-  this->parse_bank_file(bank_file);
-  int size = bank_numbers.size();
+  int size = this->bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      banks[bank_numbers[i]] = new Bank<NumT>();
-    }
-  // Split the pixel ids and tofs into banks
-  size = this->pixel_id.size();
-  pulse_total = this->events_per_pulse[0];
-  for (int i = 0; i < size; i++)
-    {
-      bank = banks[bank_map[this->pixel_id[i]]];
-      bank->tof.push_back(this->tof[i]);
-      bank->pixel_id.push_back(this->pixel_id[i]);
-   
-      if (i >= pulse_total)
-        {
-          pulse_total += this->events_per_pulse[pulse_index + 1];
-          pulse_index++;
-        }
-      
-      if (bank->pulse_index == -1 ||
-          this->pulse_time[pulse_index] !=
-          bank->pulse_time[bank->pulse_index])
-        {
-          bank->pulse_index++;
-          bank->events_per_pulse.push_back(1);
-          bank->pulse_time.push_back(this->pulse_time[pulse_index]);
-        }
-      else
-        {
-          bank->events_per_pulse[bank->pulse_index]++;
-        }
+      this->banks[this->bank_numbers[i]] = new Bank<NumT>();
     }
 }
 
@@ -236,25 +191,25 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
   if (nx_data_name == TOF)
     {
       this->write_private_data(nexus_util, 
-                               this->tof, data_name,
+                               this->banks[bank_number]->tof, data_name,
                                bank_number);
     }
   else if (nx_data_name == PIXEL_ID)
     {
       this->write_private_data(nexus_util, 
-                               this->pixel_id, data_name,
+                               this->banks[bank_number]->pixel_id, data_name,
                                bank_number);
     }
   else if (nx_data_name == PULSE_TIME)
     {
       this->write_private_data(nexus_util, 
-                               this->pulse_time, data_name,
+                               this->banks[bank_number]->pulse_time, data_name,
                                bank_number);
     }
   else if (nx_data_name == EVENTS_PER_PULSE)
     {
       this->write_private_data(nexus_util, 
-                               this->events_per_pulse, data_name,
+                               this->banks[bank_number]->events_per_pulse, data_name,
                                bank_number);
     }
   else
@@ -355,15 +310,9 @@ void EventData<NumT>::read_data(const string & event_file)
   size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
 
 /*** BANKING********************************/
-  map<int, Bank<NumT> *> banks;
   Bank<NumT> *bank;
 
   this->parse_bank_file(bank_file);
-  int size = this->bank_numbers.size();
-  for (int i = 0; i < size; i++)
-    {
-      banks[this->bank_numbers[i]] = new Bank<NumT>();
-    }
 /*************************************************/
 
   // Go to the start of file and begin reading
@@ -474,15 +423,9 @@ void EventData<NumT>::read_data(const string & event_file,
 /********************************************/
 
 /*** BANKING********************************/
-  map<int, Bank<NumT> *> banks;
   Bank<NumT> *bank;
 
   this->parse_bank_file(bank_file);
-  int size = this->bank_numbers.size();
-  for (int i = 0; i < size; i++)
-    {
-      banks[this->bank_numbers[i]] = new Bank<NumT>();
-    }
 /*************************************************/
 
   // Go to the start of file and begin reading
