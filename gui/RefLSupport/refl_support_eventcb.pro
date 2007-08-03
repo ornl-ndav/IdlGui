@@ -60,21 +60,21 @@ endif else begin
    endif
 endelse
 
-if (PrevTabSelect NE CurrTabSelect OR $
-    isRefresh EQ 1) then begin
-    (*global).PrevTabSelect = CurrTabSelect
-    CASE (CurrTabSelect) OF
-        0: begin                ;if first tab plot everything
-        end
-        1: begin                ;if second tab plot only CE plot
-            refresh_draw_labels_tab2, Event
-        end
-        2: begin            ;if third tab plot only two files selected
-            refresh_draw_labels_tab3, Event
-        end
-        else:
-    ENDCASE
-endif
+;if (PrevTabSelect NE CurrTabSelect OR $
+;    isRefresh EQ 1) then begin
+;    (*global).PrevTabSelect = CurrTabSelect
+;    CASE (CurrTabSelect) OF
+;        0: begin                ;if first tab plot everything
+;        end
+;        1: begin                ;if second tab plot only CE plot
+            ReflSupportWidget_refresh_draw_labels_tab2, Event
+;        end
+;        2: begin            ;if third tab plot only two files selected
+;            refresh_draw_labels_tab3, Event
+;        end
+;        else:
+;    ENDCASE
+;endif
 
 END
 

@@ -76,23 +76,23 @@ ListOfLongFileName = strarr(1)
 (*global).ucams            = ucams
 
 if (!VERSION.os EQ 'darwin') then begin
-   images_tabs = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-                  "~/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
-                  "~/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+   images_tabs = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
+;                  "~/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
+;                  "~/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
 endif else begin
-   images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
+   images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
+;                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/ri.bmp",$
+;                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/delta_ri.bmp"]
 endelse
-unames_tab2 = ["step2_sf_draw",$
-               "step2_ri_draw",$
-               "step2_delta_ri_draw"]
+unames_tab2 = ["step2_sf_draw"]
+;               "step2_ri_draw",$
+;               "step2_delta_ri_draw"]
 unames_tab3 = ["step3_sf_draw",$
                "step3_ri_draw",$
                "step3_delta_ri_draw"]
 
-images_tabs_xoff = [-5,-8,-3]
-images_tabs_yoff = [-4,0,-3]
+images_tabs_xoff = [0 ,-8,-3]
+images_tabs_yoff = [0,0,-3]
 
 (*(*global).images_tabs) = images_tabs
 (*(*global).unames_tab2) = unames_tab2

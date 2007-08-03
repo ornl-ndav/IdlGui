@@ -11,6 +11,7 @@ cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
 cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run Main_Base_event.pro
 .run refl_support_get.pro
+.run refl_support_put.pro
 .run getNumeric.pro
 .run refl_support_widget.pro
 .run refl_support_fit.pro

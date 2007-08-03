@@ -118,8 +118,6 @@ endif else begin
         convert_TOF_to_Q, Event, angle_value_deg
         
         flt0 = (*(*global).flt0_xaxis)
-;                flt1 = (*(*global).flt1_yaxis)
-;                flt2 = (*(*global).flt2_yaxis_err)
         
     endif
     
@@ -142,12 +140,34 @@ endif else begin
     (*(*global).flt0_CE_range) = flt0_new
 
 ;Start function that will calculate the Fit function
-    FitFunction, Event, flt0_new, flt1_new, flt2_new
+    FitCEFunction, Event, flt0_new, flt1_new, flt2_new
     LongFileNameArray = [CE_file_name]
     plot_loaded_file, Event,LongFileNameArray
 
-endelse    
+;display the value of the coeff in the A and B text boxes
+    cooef = (*(*global).CEcooef)
+    putValueInTextField, Event, 'step2_fitting_equation_a_text_field', strcompress(cooef[1])
+    putValueInTextField, Event, 'step2_fitting_equation_b_text_field', strcompress(cooef[0])
 
+endelse    
 END
 
 
+
+;Manual fitting of CE file using loaded parameters
+PRO manualCEfitting, Event
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+cooef1 = getValue(Event, 'step2_fitting_equation_a_text_field')
+cooef0 = getValue(Event, 'step2_fitting_equation_b_text_field')
+
+cooef1 = getNumeric(cooef1)
+cooef0 = getNumeric(cooef0)
+
+(*(*global).CEcooef) = [cooef0,cooef1]
+
+plot_loaded_file, Event, (*global).full_CE_name
+
+END

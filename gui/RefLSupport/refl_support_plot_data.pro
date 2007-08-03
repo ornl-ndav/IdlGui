@@ -342,13 +342,13 @@ endif else begin
 
                 cooef = (*(*global).CEcooef)
 ;polynome of degree 1 for CE 
+
                 if (cooef[0] NE 0 AND $
                     cooef[1] NE 0) then begin
                     show_error_plot=1
                     flt0_new = (*(*global).flt0_CE_range)
                     y_new = cooef(1)*flt0_new + cooef(0)
                     oplot,flt0_new,y_new,color=400,thick=1.5
-
                 endif
 
         endelse

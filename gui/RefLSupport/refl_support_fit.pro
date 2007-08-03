@@ -1,4 +1,4 @@
-PRO FitFunction, Event, flt0, flt1, flt2
+PRO FitCEFunction, Event, flt0, flt1, flt2
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
