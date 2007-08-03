@@ -164,8 +164,8 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
 {
   map<NumT, int> bank_map;
   vector<int> bank_numbers;
-  map<int, Bank *> banks;
-  Bank *bank;
+  map<int, Bank<NumT> *> banks;
+  Bank<NumT> *bank;
   int pulse_index = 0;
   uint64_t pulse_total = 0;
 
@@ -173,7 +173,7 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
   int size = bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      banks[bank_numbers[i]] = new Bank();
+      banks[bank_numbers[i]] = new Bank<NumT>();
     }
   // Split the pixel ids and tofs into banks
   size = this->pixel_id.size();
@@ -355,14 +355,14 @@ void EventData<NumT>::read_data(const string & event_file)
   size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
 
 /*** BANKING********************************/
-  map<int, Bank *> banks;
-  Bank *bank;
+  map<int, Bank<NumT> *> banks;
+  Bank<NumT> *bank;
 
   this->parse_bank_file(bank_file);
   int size = this->bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      banks[this->bank_numbers[i]] = new Bank();
+      banks[this->bank_numbers[i]] = new Bank<NumT>();
     }
 /*************************************************/
 
@@ -474,14 +474,14 @@ void EventData<NumT>::read_data(const string & event_file,
 /********************************************/
 
 /*** BANKING********************************/
-  map<int, Bank *> banks;
-  Bank *bank;
+  map<int, Bank<NumT> *> banks;
+  Bank<NumT> *bank;
 
   this->parse_bank_file(bank_file);
   int size = this->bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      banks[this->bank_numbers[i]] = new Bank();
+      banks[this->bank_numbers[i]] = new Bank<NumT>();
     }
 /*************************************************/
 

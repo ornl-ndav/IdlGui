@@ -8,6 +8,7 @@
 #define _EVENT_DATA_HPP 1
 
 #include "nexus_util.hpp"
+#include "bank.hpp"
 #include <vector>
 #include <map>
 #include <string>
@@ -93,23 +94,6 @@ class EventData
                             const int bank_number);
 
   public:
-    class Bank
-    {
-      public:
-      int pulse_index;
-      std::vector<NumT> tof;
-      std::vector<NumT> pixel_id;
-      std::vector<NumT> pulse_time;
-      std::vector<NumT> events_per_pulse;
-      Bank()
-        {
-          this->pulse_index = -1;
-        }
-      ~Bank()
-        {
-        }
-    };
-    
     void parse_bank_file(const std::string & bank_file);
  
     /**
