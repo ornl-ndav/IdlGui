@@ -53,7 +53,17 @@ PRO MAIN_BASE_event, Event
      end
      
      Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
-        run_step2, Event
+        run_full_step2, Event
+     end
+     
+     ;automatic fitting of CE
+     Widget_Info(wWidget, FIND_BY_UNAME='step2_automatic_fitting_button'): begin
+         run_automatic_fitting, Event
+     end
+     
+     ;automatic scaling of CE
+     Widget_Info(wWidget, FIND_BY_UNAME='step2_automatic_scaling_button'): begin
+         run_automatic_scaling, Event
      end
 
      ;manual fitting of CE file

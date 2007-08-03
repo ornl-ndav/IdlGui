@@ -27,6 +27,7 @@ global = ptr_new({  $
                    angleValue     : float(0),$       ;current value of the angle (float)
                    CEcooef        : ptr_new(0L),$    ;the fitting coeff of the CE file
                    flt0_CE_range  : ptr_new(0L),$    ;flt0 between Q1 and Q2 for CE file
+                   CE_scaling_factor : 0,$           ;The CE scaling factor to go from Y to 1
                    flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
                    flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
@@ -78,22 +79,24 @@ ListOfLongFileName = strarr(1)
 if (!VERSION.os EQ 'darwin') then begin
    images_tabs = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
-                  "~/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp"]
+                  "~/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
+                  "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
 endif else begin
    images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp"]
+                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
+                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
 endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_y_before_draw",$
-               "step2_y_after_draw"]
-;               "step2_delta_ri_draw"]
+               "step2_y_after_draw",$
+               "step2_before_to_after_draw"]
 unames_tab3 = ["step3_sf_draw",$
                "step3_ri_draw",$
                "step3_delta_ri_draw"]
 
-images_tabs_xoff = [0,0,0]
-images_tabs_yoff = [0,0,0]
+images_tabs_xoff = [0,0,0,0]
+images_tabs_yoff = [0,0,0,0]
 
 (*(*global).images_tabs) = images_tabs
 (*(*global).unames_tab2) = unames_tab2

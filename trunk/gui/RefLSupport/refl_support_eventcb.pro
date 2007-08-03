@@ -121,9 +121,22 @@ endelse
 END
 
 
-;run calculation of CE in step 2
-PRO RUN_STEP2, Event
-ReflSupportStep2_SaveQofCE, Event
+;when using automatic fitting of CE (step2)
+PRO RUN_automatic_fitting, Event
+ReflSupportStep2_fitCE, Event
+;activate scaling button once the fitting is done
+ActivateButton, Event, 'step2_automatic_scaling_button', 1
+END
+
+;when using automatic scaling of CE (step2)
+PRO run_automatic_scaling, Event
+ReflSupportStep2_scaleCE, Event
+END
+
+;when using automatic fitting and scaling of CE (step2)
+PRO run_full_step2, Event
+run_automatic_fitting, Event
+run_automatic_scaling, Event
 END
 
 

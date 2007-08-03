@@ -1,5 +1,5 @@
 ;This function save Q1, Q2 and SF of the Critical Edge file selected
-PRO ReflSupportStep2_SaveQofCE, Event
+PRO ReflSupportStep2_fitCE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -11,10 +11,39 @@ Q1Q2SF = getQ1Q2SF(Event, 'STEP2')
 Q1 = float(Q1Q2SF[0])
 Q2 = float(Q1Q2SF[1])
 
-;fit CE file and get scaling factor
+;store the values of Q1 and Q2 for CE
+Q1_array = (*(*global).Q1_array)
+Q2_array = (*(*global).Q2_array)
+Q1_array[0]=Q1
+Q2_array[1]=Q2
+(*(*global).Q1_array) = Q1_array
+(*(*global).Q2_array) = Q2_array
+
+;fit CE file and determine scaling factor
 LoadCEFile, Event, CE_LongFileName, Q1, Q2
 
+;calculate average Y before rescaling
+CalculateAverageFittedY, Event, Q1, Q2
 END
+
+
+
+;This function is the next step (after the fitting) to
+;bring to 1 the average Q1 to Q2 part of CE
+PRO ReflSupportStep2_scaleCE, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve value of the scaling factor
+CE_scaling_factor = (*global).CE_scaling_factor
+
+END
+
+
+
+
+
+
 
 
 
@@ -150,6 +179,38 @@ endif else begin
     putValueInTextField, Event, 'step2_fitting_equation_b_text_field', strcompress(cooef[0])
 
 endelse    
+END
+
+
+;this function will calculate the average Y value between Q1 and Q2 of
+;the fitted function for CE only
+PRO CalculateAverageFittedY, Event, Q1, Q2
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+CEcooef = (*(*global).CEcooef)
+;y=ax+b
+b=CEcooef[0]
+a=CEcooef[1]
+
+;create an array of Nbr_elements = 100 elements between Q1 and Q2
+Nbr_elements = 100
+diff = Q2-Q1
+delta = diff/Nbr_elements
+
+;x_axis is composed (Nbr_elements+1)
+x_axis=(findgen(Nbr_elements+1))*delta + Q1
+
+;y_axis
+y_axis=a*x_axis+b
+
+AverageValue = total(y_axis)/(Nbr_elements+1)
+(*global).CE_scaling_factor = AverageValue
+
+;display value in Ybefore text field
+putValueInTextField, Event, 'step2_y_before_text_field', strcompress(AverageValue)
+
 END
 
 

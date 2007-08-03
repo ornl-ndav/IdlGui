@@ -45,10 +45,19 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
                        Step2XLabelSize[3]]
 
 ;automatic go button
-Step2GoButtonSize    = [5, 130 , 500 , 30 ]
+Step2AutomaticFittingSize = [5, 130, 130, 30]
+d_b1_b2 = 135
+Step2AutomaticScalingsize = [Step2AutomaticFittingSize[0]+d_b1_b2,$
+                          Step2AutomaticFittingSize[1],$
+                          Step2AutomaticFittingSize[2],$
+                          Step2AutomaticFittingSize[3]]
+Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b1_b2,$
+                        Step2AutomaticScalingSize[1],$
+                        Step2AutomaticScalingSize[2]+105,$
+                        Step2AutomaticScalingSize[3]]
 
 ;manual label
-Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 50]
+Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 180]
 Step2ManualFittingFrameLabelSize = [20, Step2GoButtonSize[1]+33]
 
 ;fitting equation label
@@ -71,33 +80,54 @@ Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
                            145,30]
 
 ;Average Y before and after
-Step2YBeforeDrawSize = [ 70, 245, 60, 40]
-STep2YAfterDrawSize  = [ 70, 295, 60, 40]
+Step2YBeforeDrawSize = [ 25, 245, 60, 40]
+Step2YAfterDrawSize  = [ 25, Step2YBeforeDrawSize[1]+50, 60, 40]
 
-Step2YBeforeTextField = [150, 250, 80, 30]
-Step2YAfterTextField  = [150, 300, 80, 30]
+Step2YBeforeTextField = [Step2YBeforeDrawSize[0]+70,$
+                         Step2YBeforeDrawSize[1]+5,$
+                         80, 30]
+Step2YAfterTextField  = [Step2YAfterDrawSize[0]+70,$
+                         Step2YAfterDrawSize[1]+5,$
+                         80, 30]
+
+;From before to after
+Step2BeforeToAfterDrawSize = [185, Step2YBeforeDrawSize[1]-3,$
+                              40, 100]
 
 
 ;SF
-Step2SFdrawSize = [350,300,40,40]
-Step2SFTextFieldSize = [400,300,40,40]
+Step2SFdrawSize      = [225,Step2YBeforeDrawSize[1]+25,40,40]
+d1=50
+Step2SFTextFieldSize = [Step2SFdrawSize[0]+d1,$
+                        Step2SFdrawSize[1]+5,80,30]
 
-
+;Manual scalling of CE file
+Step2ManualScalingButtonSize = [Step2ManualGoButtonSize[0],$
+                                Step2SFTextFieldSize[1],$
+                                Step2ManualGoButtonSize[2],$
+                                STep2ManualGoButtonSize[3]]
 
 ;Define titles
 BaseFileTitle      = 'Critical edge file:'
 Step2Tab1Title     = 'Determine SF using Q range'
 Step2Tab2Title     = 'Deternine SF using mouse'
-Step2GoButtonTitle = 'Automatic Rescaling of Critical Edge file'
-Step2ManualGoButtonTitle = 'Manual Fiting of CE'
+Step2AutomaticFittingButtonTitle = 'Automatic Fitting'
+Step2AutomaticScalingButtonTitle = 'Automatic Scaling'
+Step2GoButtonTitle = 'Automatic Fitting/Rescaling of CE'
+Step2ManualGoButtonTitle = 'Manual Fitting of CE'
+Step2ManualScalingButtonTitle = 'Manual Scaling of CE'
 Step2Q1LabelTitle  = 'Qmin:'
 Step2Q2LabelTitle  = 'Qmax:'
 Step2SFLabelTitle  = 'SF:'
 Step2XLabelTitle = 'X:'
 Step2YLabelTitle = 'Y:'
 
+Step2YAfterValue = strcompress(1)
+
 Step2FittingEquationLabel = 'Fitting equation:  Y='
 Step2FittingEquationXLabel = 'X+'
+
+
 
 ;Build GUI
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -133,6 +163,24 @@ BASE_FILE_CE_file_name = widget_label(STEP2_BASE,$
                                       scr_ysize=BaseFileCEFileName[3],$
                                       value='',$
                                       /align_left)
+
+STEP2_automatic_fitting_button = WIDGET_BUTTON(STEP2_BASE,$
+                                           UNAME='step2_automatic_fitting_button',$
+                                           XOFFSET=Step2automaticFittingSize[0],$
+                                           YOFFSET=Step2automaticFittingSize[1],$
+                                           SCR_XSIZE=Step2automaticFittingSize[2],$
+                                           SCR_YSIZE=Step2automaticFittingSize[3],$
+                                           SENSITIVE=1,$
+                                           VALUE=Step2AutomaticFittingButtonTitle)
+
+STEP2_automatic_scaling_button = WIDGET_BUTTON(STEP2_BASE,$
+                                               UNAME='step2_automatic_scaling_button',$
+                                               XOFFSET=Step2automaticScalingSize[0],$
+                                               YOFFSET=Step2automaticScalingSize[1],$
+                                               SCR_XSIZE=Step2automaticScalingSize[2],$
+                                               SCR_YSIZE=Step2automaticScalingSize[3],$
+                                               SENSITIVE=0,$
+                                               VALUE=Step2AutomaticScalingButtonTitle)
 
 STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
                              UNAME='Step2_button',$
@@ -286,19 +334,6 @@ Step2ManualGoButton = widget_button(STEP2_BASE,$
                                     value=Step2ManualGoButtonTitle)
 
 
-Step2ManualFittingFrameLabel = widget_label(STEP2_BASE,$
-                                            xoffset=Step2ManualFittingFrameLabelSize[0],$
-                                            yoffset=Step2ManualFittingFrameLabelSize[1],$
-                                            value='Manual fitting')
-                                            
-
-Step2ManualFittingFrame = widget_label(STEP2_BASE,$
-                                       xoffset=Step2ManualFittingFrameSize[0],$
-                                       yoffset=Step2ManualFittingFrameSize[1],$
-                                       scr_xsize=Step2ManualFittingFrameSize[2],$
-                                       scr_ysize=Step2ManualFittingFrameSize[3],$
-                                       frame=1,$
-                                       value='')
 
 ;Average Y before and after
 Step2YBeforeDraw = widget_draw(STEP2_BASE,$
@@ -331,9 +366,16 @@ Step2YAfterTextField = widget_text(STEP2_BASE,$
                                     yoffset=Step2YAfterTextField[1],$
                                     scr_xsize=Step2YAfterTextField[2],$
                                     scr_ysize=Step2YAfterTextField[3],$
-                                    value='',$
+                                    value=Step2YAfterValue,$
                                     /editable,$
                                     /align_left)
+
+Step2BeforeToAfterDraw = widget_draw(STEP2_BASE,$
+                                     uname='step2_before_to_after_draw',$
+                                     xoffset=Step2BeforeToAfterDrawSize[0],$
+                                     yoffset=Step2BeforeToAfterDrawSize[1],$
+                                     scr_xsize=Step2BeforeToAfterDrawSize[2],$
+                                     scr_ysize=Step2BeforeToAfterDrawSize[3])
 
 
 
@@ -356,6 +398,29 @@ Step2YAfterTextField = widget_text(STEP2_BASE,$
                                    /EDITABLE,$
                                    /ALIGN_LEFT)
 
+Step2ManualScalingButton = widget_button(STEP2_BASE,$
+                                          uname='step2_manual_scaling_button',$
+                                          xoffset=Step2ManualScalingButtonSize[0],$
+                                          yoffset=Step2ManualScalingButtonSize[1],$
+                                          scr_xsize=Step2ManualScalingButtonSize[2],$
+                                          scr_ysize=Step2ManualScalingButtonSize[3],$
+                                          value=Step2ManualScalingButtonTitle)
+
+
+ Step2ManualFittingFrameLabel = widget_label(STEP2_BASE,$
+                                             xoffset=Step2ManualFittingFrameLabelSize[0],$
+                                             yoffset=Step2ManualFittingFrameLabelSize[1],$
+                                             value='Manual fitting')
+ 
+ 
+ Step2ManualFittingFrame = widget_label(STEP2_BASE,$
+                                        xoffset=Step2ManualFittingFrameSize[0],$
+                                        yoffset=Step2ManualFittingFrameSize[1],$
+                                        scr_xsize=Step2ManualFittingFrameSize[2],$
+                                        scr_ysize=Step2ManualFittingFrameSize[3],$
+                                        frame=1,$
+                                        value='')
+ 
 
 ; step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
 ;                             uname='step2_ri_draw',$
