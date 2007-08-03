@@ -54,6 +54,7 @@ class EventData
     std::vector<Bank<NumT> *> bank_map;
     std::vector<int> bank_numbers;
     std::vector<NumT> events_per_pulse;
+    std::vector<Bank<NumT> *> banks;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
@@ -122,6 +123,8 @@ class EventData
      *                          in yet.
      */
     void create_pixel_map(const std::string & mapping_file);
+
+    void write_nexus_file(NexusUtil & nexus_util);
 
     /**
      * \brief Templated function that writes data to a nexus

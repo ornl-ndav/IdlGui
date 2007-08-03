@@ -122,7 +122,6 @@ int main(int32_t argc,
 
   // Create a bank of information for the nexus file  
   EventData <uint32_t>event_data;
-  vector<int> bank_numbers;
   
   // Create the pixel map
   if (config.mapping_file != "")
@@ -136,13 +135,8 @@ int main(int32_t argc,
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
 
-  bank_numbers.push_back(1);  // bank1
-  bank_numbers.push_back(2);  // bank2
-  bank_numbers.push_back(3);  // bank3
-  // Open nexus file and layout groups
-  layout_nexus_file(nexus_util, config, bank_numbers);
-
-//  event_data.write_nexus_file(nexus_util, "bank file name");
+  // Write the nexus file
+  event_data.write_nexus_file(nexus_util);
 
   return 0;
 }
