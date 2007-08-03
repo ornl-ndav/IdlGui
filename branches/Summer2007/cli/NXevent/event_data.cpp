@@ -379,7 +379,7 @@ void EventData<NumT>::read_data(const string & event_file,
 
   NumT pulse_buffer[BLOCK_SIZE];
   size_t pulse_fp_offset = 0;
-  uint64_t init_seconds = 0;
+  NumT init_seconds = 0;
   NumT prev_index = 0;
   NumT prev_time;
   NumT pulse_index;
@@ -402,7 +402,7 @@ void EventData<NumT>::read_data(const string & event_file,
   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
   this->pulse_time_offset =
     this->seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
-  init_seconds = static_cast<uint64_t>(*(pulse_buffer + 1));
+  init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
 
   // Get the initial time offset
   prev_time = static_cast<NumT>(*(pulse_buffer));  
