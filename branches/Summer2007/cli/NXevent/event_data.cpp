@@ -333,91 +333,85 @@ string EventData<NumT>::seconds_to_iso8601(NumT seconds)
 template <typename NumT>
 void EventData<NumT>::read_data(const string & event_file)
 {
-  string pulse_id_file;
-  NumT pulse_buffer[BLOCK_SIZE];
-  size_t pulse_fp_offset = 0;
-  size_t i;
+  string bank_file;
+  size_t event_i;
+
+  NumT event_buffer[BLOCK_SIZE];
+  size_t event_fp_offset = 0;
   size_t data_size = sizeof(NumT);
-  NumT init_seconds = 0;
-  NumT prev_index = 0;
+  uint32_t event_number = 0;
+  bool mapping_exists = (this->pixel_id_map.empty()) ? false : true;
 
-  // Open the pulse id file
-  ifstream pulse_fp(pulse_id_file.c_str(), std::ios::binary);
-  if(!(pulse_fp.is_open()))
-    {
-      throw runtime_error("Failed opening file: " + pulse_id_file);
-    }
-
-  // Determine the file and buffer size
-  pulse_fp.seekg(0, std::ios::end);
-  size_t pulse_file_size = pulse_fp.tellg() / data_size;
-  size_t pulse_buffer_size = (pulse_file_size < BLOCK_SIZE) ? pulse_file_size : BLOCK_SIZE;
-
-  // Read in the initial time and convert it to ISO8601. Skip the initial 
-  // index since it will always be zero.
-  pulse_fp.seekg(0, std::ios::beg);
-  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), sizeof(NumT) * 4);
-  this->pulse_time_offset = 
-    this->seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
-  init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
-
-  // Push back the initial time offset
-  pulse_time.push_back(static_cast<NumT>(*(pulse_buffer)));
-
-  pulse_fp_offset += 4;
-  // Make sure to not read past EOF
-  if(pulse_fp_offset + BLOCK_SIZE > pulse_file_size)
-    {
-      pulse_buffer_size = pulse_file_size - pulse_fp_offset;
-    }
-
-  while(pulse_fp_offset < pulse_file_size)
-    {
-      pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
-
-      // Keep track of the time offsets and read in the pulse times
-      for(i = 0; i < pulse_buffer_size; i+=4)
-        {
-          this->pulse_time.push_back(
-            ((static_cast<NumT>(*(pulse_buffer + i + 1)) * 1000000000) 
-             + static_cast<NumT>(*(pulse_buffer + i)))
-            -((init_seconds * 1000000000))
-          );
-          this->events_per_pulse.push_back(static_cast<NumT>(*(pulse_buffer + i + 2)) 
-                                     - prev_index);
-          prev_index = static_cast<NumT>(*(pulse_buffer + i + 2));
-        }
-
-      pulse_fp_offset += pulse_buffer_size;
-
-      // Make sure to not read past EOF
-      if(pulse_fp_offset + BLOCK_SIZE > pulse_file_size)
-        {
-          pulse_buffer_size = pulse_file_size - pulse_fp_offset;
-        }
-    }
-
-  // Find out the number of events for the last pulse
+  // Open the event file
   ifstream event_fp(event_file.c_str(), std::ios::binary);
   if(!(event_fp.is_open()))
     {
       throw runtime_error("Failed opening file: " + event_file);
     }
 
-  // Determine the file and buffer size
+  // Determine the event file and buffer size
   event_fp.seekg(0, std::ios::end);
-  this->events_per_pulse.push_back(event_fp.tellg() / (data_size * 2) - prev_index);
+  size_t event_file_size = event_fp.tellg() / data_size;
+  size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
+
+/*** BANKING********************************/
+  map<int, Bank *> banks;
+  Bank *bank;
+
+  this->parse_bank_file(bank_file);
+  int size = this->bank_numbers.size();
+  for (int i = 0; i < size; i++)
+    {
+      banks[this->bank_numbers[i]] = new Bank();
+    }
+/*************************************************/
+
+  // Go to the start of file and begin reading
+  event_fp.seekg(0, std::ios::beg);
+  while(event_fp_offset < event_file_size)
+    {
+      event_fp.read(reinterpret_cast<char *>(event_buffer), event_buffer_size * data_size);
+
+      // Populate the time of flight and pixel id
+      // vectors with the data from the event file
+      for(event_i = 0; event_i < event_buffer_size; event_i+=2)
+        {
+          // Filter out error codes
+          if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
+            {
+              // Use pointer arithmetic for speed
+              bank = banks[this->bank_map[*(event_buffer + event_i + 1)]];
+              
+              bank->tof.push_back(*(event_buffer + event_i));
+              if (mapping_exists)
+                {
+                  bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
+                }
+              else
+                {
+                  bank->pixel_id.push_back(*(event_buffer + event_i + 1));
+                }
+            }
+        }
+
+      event_fp_offset += event_buffer_size;
+
+      // Make sure to not read past EOF
+      if(event_fp_offset + BLOCK_SIZE > event_file_size)
+        {
+          event_buffer_size = event_file_size - event_fp_offset;
+        }
+    }
+  // Close event file
   event_fp.close();
-  
-  read_data(event_file);
 }
 
 template <typename NumT>
 void EventData<NumT>::read_data(const string & event_file, 
                                 const string & pulse_id_file)
 {
-  string bank_file;
   size_t event_i, pulse_i;
+  string bank_file;
 
   NumT event_buffer[BLOCK_SIZE];
   size_t event_fp_offset = 0;
