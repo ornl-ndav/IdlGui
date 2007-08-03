@@ -9,7 +9,6 @@
 #include "event2nxl.hpp"
 #include <fstream>
 #include <stdexcept>
-#include <map>
 #include <vector>
 #include <iostream>
 #include <sstream>
@@ -20,7 +19,6 @@ using std::cout;
 using std::endl;
 using std::vector;
 using std::string;
-using std::map;
 using std::runtime_error;
 using std::ifstream;
 
@@ -143,20 +141,24 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
 
   for (int i = 0; i < 4096; i++)
     {
-      this->bank_map[i] = 1;
+      this->bank_map.push_back(1);
     }
   for (int i = 4096; i < 8192; i++)
     {
-      this->bank_map[i] = 2;
+      this->bank_map.push_back(2);
     }
   for (int i = 8192; i < 9216; i++)
     {
-      this->bank_map[i] = 3;
+      this->bank_map.push_back(3);
     }
 
   int size = this->bank_numbers.size();
   for (int i = 0; i < size; i++)
-    {
+    { 
+      if (this->bank_numbers[i] >= this->banks.size())
+        {
+          this->banks.resize(this->bank_numbers[i]);
+        }
       this->banks[this->bank_numbers[i]] = new Bank<NumT>();
     }
 }

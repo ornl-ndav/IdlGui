@@ -52,10 +52,10 @@ class EventData
   private:
     std::vector<NumT> pixel_id_map;
     std::string pulse_time_offset;
-    std::map<NumT, int> bank_map;
+    std::vector<int> bank_map;
     std::vector<int> bank_numbers;
     std::vector<NumT> events_per_pulse;
-    std::map<int, Bank<NumT> *> banks;
+    std::vector<Bank<NumT> *> banks;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
