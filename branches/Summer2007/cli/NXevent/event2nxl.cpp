@@ -67,6 +67,10 @@ int main(int32_t argc,
       ValueArg<string> mapping_file("m", "mapping",
                        "mapping file for pixel ids",
                        false, "", "mapping file", cmd);
+
+      ValueArg<string> bank_file("b", "bank",
+                       "bank configuration file",
+                       false, "", "bank file", cmd);
       
       // Types for the nexus file format
       vector<string> allowed_types;
@@ -120,14 +124,17 @@ int main(int32_t argc,
   EventData <uint32_t>event_data;
   vector<int> bank_numbers;
   
-  // Gather the information from the event file
-  event_data.read_data(config.event_file, config.pulse_id_file);
-  
-  // Map the pixel ids if necessary
+  // Create the pixel map
   if (config.mapping_file != "")
     {
-      event_data.map_pixel_ids(config.mapping_file);
+      event_data.create_pixel_map(config.mapping_file);
     }
+ 
+  // Create the bank map
+  event_data.parse_bank_file(config.bank_file);
+ 
+  // Gather the information from the event file
+  event_data.read_data(config.event_file, config.pulse_id_file);
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
@@ -138,7 +145,7 @@ int main(int32_t argc,
   // Open nexus file and layout groups
   layout_nexus_file(nexus_util, config, bank_numbers);
 
-  event_data.write_nexus_file(nexus_util, "bank file name");
+//  event_data.write_nexus_file(nexus_util, "bank file name");
 
   return 0;
 }

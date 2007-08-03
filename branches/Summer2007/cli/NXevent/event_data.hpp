@@ -53,7 +53,10 @@ class EventData
     std::vector<NumT> pixel_id;
     std::vector<NumT> pulse_time;
     std::vector<NumT> events_per_pulse;
+    std::vector<NumT> pixel_id_map;
     std::string pulse_time_offset;
+    std::map<NumT, int> bank_map;
+    std::vector<int> bank_numbers;
 
     /** 
      * \brief Takes a number of seconds since jan 1, 1990
@@ -83,10 +86,6 @@ class EventData
      */
     std::string get_nx_data_name(const e_data_name nx_data_type);
    
-    void parse_bank_file(const std::string & bank_file,
-                         std::map<NumT, int> & bank_map,
-                         std::vector<int> & bank_numbers);
- 
     template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
                             std::vector<DataNumT> & nx_data,
@@ -110,6 +109,9 @@ class EventData
         {
         }
     };
+    
+    void parse_bank_file(const std::string & bank_file);
+ 
     /**
      * \brief Splits the information into banks and writes it to
      *        the nexus file.
@@ -138,14 +140,13 @@ class EventData
                    const std::string & pulse_id_file);
 
     /**
-     * \brief Takes a mapping file and maps the pixels to
-     *        the appropriate numbers.
+     * \brief Takes a mapping file and creates a pixel id map.
      * \param mapping_file The mapping file to use.
      * \exception runtime_error Thrown if the mappging file doesn't
      *                          exist or if the data hasn't been read
      *                          in yet.
      */
-    void map_pixel_ids(const std::string & mapping_file);
+    void create_pixel_map(const std::string & mapping_file);
 
     /**
      * \brief Templated function that writes data to a nexus

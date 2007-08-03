@@ -28,6 +28,7 @@ struct Config
   std::string event_file;
   std::string pulse_id_file;
   std::string mapping_file;
+  std::string bank_file;
 };
 
 /**
