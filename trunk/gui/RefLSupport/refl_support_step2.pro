@@ -139,6 +139,8 @@ endif else begin
     flt1_new = flt1_new(RangeIndexes)
     flt2_new = flt2_new(RangeIndexes)
 
+    (*(*global).flt0_CE_range) = flt0_new
+
 ;Start function that will calculate the Fit function
     FitFunction, Event, flt0_new, flt1_new, flt2_new
     LongFileNameArray = [CE_file_name]

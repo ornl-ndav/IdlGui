@@ -341,18 +341,15 @@ endif else begin
                 errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
                 cooef = (*(*global).CEcooef)
-                print, 'cooef[0]: ' + strcompress(cooef[0])
+;polynome of degree 1 for CE 
                 if (cooef[0] NE 0 AND $
-                    cooef[1] NE 0 AND $
-                    cooef[2] NE 0) then begin
-                    print, 'here'
+                    cooef[1] NE 0) then begin
                     show_error_plot=1
-                    N_new = 100
-                    x_new = findgen(N_new)/N_new
-                    y_new = cooef(2)*x_new^2 + cooef(1)*x_new + cooef(0)
-                    oplot,x_new,y_new,color=200,thick=1.5
-                endif
+                    flt0_new = (*(*global).flt0_CE_range)
+                    y_new = cooef(1)*flt0_new + cooef(0)
+                    oplot,flt0_new,y_new,color=400,thick=1.5
 
+                endif
 
         endelse
         
