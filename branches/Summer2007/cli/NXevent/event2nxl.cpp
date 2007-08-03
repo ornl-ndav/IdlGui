@@ -134,7 +134,7 @@ int main(int32_t argc,
   event_data.parse_bank_file(config.bank_file);
  
   // Gather the information from the event file
-  event_data.read_data(config.event_file, config.pulse_id_file);
+  event_data.read_data(config.event_file, config.pulse_id_file, config.bank_file);
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);

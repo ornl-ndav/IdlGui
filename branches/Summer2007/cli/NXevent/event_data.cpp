@@ -28,7 +28,8 @@ using std::ifstream;
 // event_data.cpp in event_data.hpp
 template 
 void EventData<uint32_t>::read_data(const string & event_file,
-                                    const string & pulse_id_file);
+                                    const string & pulse_id_file,
+                                    const string & bank_file);
 
 template 
 void EventData<uint32_t>::write_data(NexusUtil & nexus_util, 
@@ -286,11 +287,10 @@ string EventData<NumT>::seconds_to_iso8601(NumT seconds)
 }
 
 template <typename NumT>
-void EventData<NumT>::read_data(const string & event_file)
+void EventData<NumT>::read_data(const string & event_file, 
+                                const string & bank_file)
 {
-  string bank_file;
   size_t event_i;
-
   NumT event_buffer[BLOCK_SIZE];
   size_t event_fp_offset = 0;
   size_t data_size = sizeof(NumT);
@@ -309,11 +309,9 @@ void EventData<NumT>::read_data(const string & event_file)
   size_t event_file_size = event_fp.tellg() / data_size;
   size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
 
-/*** BANKING********************************/
   Bank<NumT> *bank;
 
   this->parse_bank_file(bank_file);
-/*************************************************/
 
   // Go to the start of file and begin reading
   event_fp.seekg(0, std::ios::beg);
@@ -357,11 +355,10 @@ void EventData<NumT>::read_data(const string & event_file)
 
 template <typename NumT>
 void EventData<NumT>::read_data(const string & event_file, 
-                                const string & pulse_id_file)
+                                const string & pulse_id_file,
+                                const string & bank_file)
 {
   size_t event_i, pulse_i;
-  string bank_file;
-
   NumT event_buffer[BLOCK_SIZE];
   size_t event_fp_offset = 0;
   size_t data_size = sizeof(NumT);
@@ -380,10 +377,9 @@ void EventData<NumT>::read_data(const string & event_file,
   size_t event_file_size = event_fp.tellg() / data_size;
   size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
 
-/***********************/
   NumT pulse_buffer[BLOCK_SIZE];
   size_t pulse_fp_offset = 0;
-  NumT init_seconds = 0;
+  uint64_t init_seconds = 0;
   NumT prev_index = 0;
   NumT prev_time;
   NumT pulse_index;
@@ -406,13 +402,13 @@ void EventData<NumT>::read_data(const string & event_file,
   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
   this->pulse_time_offset =
     this->seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
-  init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
+  init_seconds = static_cast<uint64_t>(*(pulse_buffer + 1));
 
-  // Push back the initial time offset
-//  pulse_time.push_back(static_cast<NumT>(*(pulse_buffer)));
+  // Get the initial time offset
   prev_time = static_cast<NumT>(*(pulse_buffer));  
 
-  pulse_fp_offset = 0;
+  // Since the first pulse offset is zero and doesn't matter, skip to the next one and
+  // start with it.
   pulse_i = 4; 
   pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_i + 2));
   // Make sure to not read past EOF
@@ -420,13 +416,9 @@ void EventData<NumT>::read_data(const string & event_file,
     {
       pulse_buffer_size = pulse_file_size - pulse_fp_offset;
     }
-/********************************************/
 
-/*** BANKING********************************/
   Bank<NumT> *bank;
-
   this->parse_bank_file(bank_file);
-/*************************************************/
 
   // Go to the start of file and begin reading
   event_fp.seekg(0, std::ios::beg);
@@ -455,13 +447,12 @@ void EventData<NumT>::read_data(const string & event_file,
                   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
                 }
               pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_i + 2));
-              cout << pulse_index << endl;
             }
           // Filter out error codes
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              bank = banks[this->bank_map[*(event_buffer + event_i + 1)]];
+              bank = this->banks[this->bank_map[*(event_buffer + event_i + 1)]];
               
               bank->tof.push_back(*(event_buffer + event_i));
               if (mapping_exists)

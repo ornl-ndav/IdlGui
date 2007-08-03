@@ -98,19 +98,23 @@ class EventData
      * \brief Reads information from the event file and populates
      *        the tof and pixel id vectors.
      * \param event_file The event file to read from.
+     * \param bank_file The bank configuration file.
      * \exception runtime_error Thrown if the event file can't be opened.
      */
-    void read_data(const std::string & event_file);
+    void read_data(const std::string & event_file,
+                   const std::string & bank_file);
 
     /**
      * \brief Reads information from the pulse id file and event file.
      * \param event_file The event file to read from.
      * \param pulse_id_file The pulse id file to read from.
+     * \param bank_file The bank configuration file. 
      * \exception runtime_error Thrown if any of the files
      *                          can't be opened.
      */
     void read_data(const std::string & event_file,
-                   const std::string & pulse_id_file);
+                   const std::string & pulse_id_file,
+                   const std::string & bank_file);
 
     /**
      * \brief Takes a mapping file and creates a pixel id map.
