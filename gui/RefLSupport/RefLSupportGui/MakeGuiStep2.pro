@@ -70,6 +70,13 @@ Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
                            step2FittingEquationLabelSize[1]-5,$
                            145,30]
 
+;Average Y before and after
+Step2YBeforeDrawSize = [ 70, 245, 60, 40]
+STep2YAfterDrawSize  = [ 70, 295, 60, 40]
+
+Step2YBeforeTextField = [150, 250, 80, 30]
+Step2YAfterTextField  = [150, 300, 80, 30]
+
 
 ;SF
 Step2SFdrawSize = [350,300,40,40]
@@ -293,6 +300,42 @@ Step2ManualFittingFrame = widget_label(STEP2_BASE,$
                                        frame=1,$
                                        value='')
 
+;Average Y before and after
+Step2YBeforeDraw = widget_draw(STEP2_BASE,$
+                               uname='step2_y_before_draw',$
+                               xoffset=Step2YBeforeDrawSize[0],$
+                               yoffset=Step2YBeforeDrawSize[1],$
+                               scr_xsize=Step2YBeforeDrawSize[2],$
+                               scr_ysize=Step2YBeforeDrawSize[3])
+
+Step2YBeforeTextField = widget_text(STEP2_BASE,$
+                                    uname='step2_y_before_text_field',$
+                                    xoffset=Step2YBeforeTextField[0],$
+                                    yoffset=Step2YBeforeTextField[1],$
+                                    scr_xsize=Step2YBeforeTextField[2],$
+                                    scr_ysize=Step2YBeforeTextField[3],$
+                                    value='',$
+                                    /editable,$
+                                    /align_left)
+
+Step2YAfterDraw = widget_draw(STEP2_BASE,$
+                               uname='step2_y_after_draw',$
+                               xoffset=Step2YAfterDrawSize[0],$
+                               yoffset=Step2YAfterDrawSize[1],$
+                               scr_xsize=Step2YAfterDrawSize[2],$
+                               scr_ysize=Step2YAfterDrawSize[3])
+
+Step2YAfterTextField = widget_text(STEP2_BASE,$
+                                    uname='step2_y_after_text_field',$
+                                    xoffset=Step2YAfterTextField[0],$
+                                    yoffset=Step2YAfterTextField[1],$
+                                    scr_xsize=Step2YAfterTextField[2],$
+                                    scr_ysize=Step2YAfterTextField[3],$
+                                    value='',$
+                                    /editable,$
+                                    /align_left)
+
+
 
 ;; --outside tab of step2
  STEP2_SF_draw = WIDGET_draw(STEP2_BASE,$
@@ -311,8 +354,8 @@ Step2ManualFittingFrame = widget_label(STEP2_BASE,$
                                    SCR_YSIZE=Step2SFTextFieldSize[3],$
                                    VALUE='',$
                                    /EDITABLE,$
-                                   /ALIGN_LEFT,$
-                                   /ALL_EVENTS)
+                                   /ALIGN_LEFT)
+
 
 ; step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
 ;                             uname='step2_ri_draw',$
