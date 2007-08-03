@@ -15,7 +15,7 @@ endelse
 global = ptr_new({  $
                    full_CE_name   : '',$             ;full path to CE file
                    short_CE_name  : '',$             ;short path to CE file
-                   h_over_mn      : 0.0039554,$         ;h/mass of neutron in USI                   
+                   h_over_mn      : 0.0039554,$      ;h/mass of neutron in USI                   
                    FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
                    NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box
                    distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
@@ -24,10 +24,11 @@ global = ptr_new({  $
                    file_extension : '.txt',$         ;file extension of file to load
                    input_path     : '',$             ;default path to file to load
                    PrevTabSelect  : 0,$              ;value of previous tab selected
-                   angleValue     : float(0),$              ;current value of the angle (float)
-                   CEcooef          : ptr_new(0L),$    ;the fitting coeff of the CE file
-                   flt0_xaxis     : ptr_new(0L),$ ;x-axis of loaded file
-                   flt1_yaxis     : ptr_new(0L),$ ;y-axis of loaded file
+                   angleValue     : float(0),$       ;current value of the angle (float)
+                   CEcooef        : ptr_new(0L),$    ;the fitting coeff of the CE file
+                   flt0_CE_range  : ptr_new(0L),$    ;flt0 between Q1 and Q2 for CE file
+                   flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
+                   flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
                    FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
@@ -40,7 +41,7 @@ global = ptr_new({  $
                    Qmax_array     : ptr_new(0L),$    ;list of Qmax
                    ColorSliderDefaultValue : 25,$    ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
-                   ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
+                   ListOfLongFileName : ptr_new(0L),$;list of path of file loaded
                    images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)
                    unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab2
                    unames_tab3    : ptr_new(0L),$    ;list of widget_draw of tab3
