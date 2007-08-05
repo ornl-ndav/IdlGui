@@ -21,5 +21,5 @@ for i=0,(ArraySize-1) do begin
         j+=1
     endif 
 endfor
-return, string(finalArray)
+return, float(string(finalArray))
 END

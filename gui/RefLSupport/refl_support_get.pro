@@ -143,7 +143,7 @@ END
 
 
 ;This function returns the contain of the Text Field
-FUNCTION getTextFieldValue, Event, uname
+FUNCTION getTextFieldValue, Event, uname            
 TextFieldID = widget_info(Event.top,find_by_uname=uname)
 widget_control, TextFieldID, get_value = string
 RETURN, string
