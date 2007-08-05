@@ -15,7 +15,7 @@ Q2 = float(Q1Q2SF[1])
 Q1_array = (*(*global).Q1_array)
 Q2_array = (*(*global).Q2_array)
 Q1_array[0]=Q1
-Q2_array[1]=Q2
+Q2_array[0]=Q2
 (*(*global).Q1_array) = Q1_array
 (*(*global).Q2_array) = Q2_array
 
@@ -24,6 +24,34 @@ LoadCEFile, Event, CE_LongFileName, Q1, Q2
 
 ;calculate average Y before rescaling
 CalculateAverageFittedY, Event, Q1, Q2
+
+;show the scalling factor (but do not replot it)
+;get the average Y value before
+Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field')
+Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field')
+
+;check if Ybefore is numeric or not
+YbeforeIsNumeric = isNumeric(Ybefore)
+YafterIsNumeric  = isNumeric(Yafter)
+
+;Ybefore and Yafter are numeric
+if (YbeforeIsNumeric EQ 1 AND $
+    YafterIsNumeric EQ 1) then begin
+
+   Ybefore = getNumeric(Ybefore)
+   Yafter  = getNumeric(Yafter)
+
+  ;put scaling factor in its box
+   scaling_factor = Ybefore / Yafter
+
+endif else begin ;scaling factor can be calculated
+   
+   scaling_factor = 'NaN'
+
+endelse   
+
+putValueInTextField, Event,'step2_sf_text_field', scaling_factor
+
 END
 
 

@@ -138,16 +138,6 @@ PRO MoveColorIndex,Event
 END
 
 
-;This function returns 1 if the input can be turned into
-;a float, and 0 if it can't
-FUNCTION isValueFloat, textString
-  result = getNumeric(textString)
-  if (result EQ '') then begin
-     return, 0
-  endif else begin
-     return, 1
-  endelse
-END
 
 
 ;this function updates the text field by removing the un-wanted 
