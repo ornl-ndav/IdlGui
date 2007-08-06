@@ -44,9 +44,14 @@ if (YbeforeIsNumeric EQ 1 AND $
   ;put scaling factor in its box
    scaling_factor = Ybefore / Yafter
 
+  ;activate scaling button once the fitting is done
+   ActivateButton, Event, 'step2_automatic_scaling_button', 1
+
 endif else begin ;scaling factor can be calculated
    
    scaling_factor = 'NaN'
+  ;desactivate scaling button once the fitting is done
+   ActivateButton, Event, 'step2_automatic_scaling_button', 0
 
 endelse   
 

@@ -124,8 +124,6 @@ END
 ;when using automatic fitting of CE (step2)
 PRO RUN_automatic_fitting, Event
 ReflSupportStep2_fitCE, Event
-;activate scaling button once the fitting is done
-ActivateButton, Event, 'step2_automatic_scaling_button', 1
 END
 
 ;when using automatic scaling of CE (step2)
