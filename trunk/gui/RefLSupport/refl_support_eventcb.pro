@@ -186,8 +186,6 @@ END
 PRO ValidateButton, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-;tells the program that it's not the first time plotting
-(*global).FirstTimePlotting = 0
 DoPlot,Event
 END
 
@@ -196,8 +194,8 @@ END
 PRO ResetRescaleButton, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-;tells the program that it's like first time plotting
-(*global).FirstTimePlotting = 1
+;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
+putXYMinMax, Event, (*(*global).XYMinMax)
 DoPlot, Event
 END
 
