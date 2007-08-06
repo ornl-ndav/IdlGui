@@ -46,14 +46,20 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
 
 ;automatic go button
 Step2AutomaticFittingSize = [5, 130, 130, 30]
-d_b1_b2 = 135
+d11 = 129
+Step2ANDlabel = [Step2AutomaticFittingSize[0]+d11,$
+                 Step2AutomaticFittingSize[1]+5]
+d_b1_b2 = 137
 Step2AutomaticScalingsize = [Step2AutomaticFittingSize[0]+d_b1_b2,$
                           Step2AutomaticFittingSize[1],$
                           Step2AutomaticFittingSize[2],$
                           Step2AutomaticFittingSize[3]]
-Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b1_b2,$
+Step2ORlabel = [Step2AutomaticScalingSize[0]+d11,$
+                Step2AutomaticScalingSize[1]+5]
+d_b2_b3 = 143
+Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
                         Step2AutomaticScalingSize[1],$
-                        Step2AutomaticScalingSize[2]+105,$
+                        Step2AutomaticScalingSize[2]+95,$
                         Step2AutomaticScalingSize[3]]
 
 ;manual label
@@ -122,11 +128,10 @@ Step2SFLabelTitle  = 'SF:'
 Step2XLabelTitle = 'X:'
 Step2YLabelTitle = 'Y:'
 
-Step2YAfterValue = strcompress(1)
+Step2YAfterValue = strcompress(1,/remove_all)
 
 Step2FittingEquationLabel = 'Fitting equation:  Y='
 Step2FittingEquationXLabel = 'X+'
-
 
 
 ;Build GUI
@@ -173,6 +178,11 @@ STEP2_automatic_fitting_button = WIDGET_BUTTON(STEP2_BASE,$
                                            SENSITIVE=1,$
                                            VALUE=Step2AutomaticFittingButtonTitle)
 
+Step2_and_label = widget_label(STEP2_BASE,$
+                               xoffset=Step2ANDlabel[0],$
+                               yoffset=Step2ANDlabel[1],$
+                               value='&')
+
 STEP2_automatic_scaling_button = WIDGET_BUTTON(STEP2_BASE,$
                                                UNAME='step2_automatic_scaling_button',$
                                                XOFFSET=Step2automaticScalingSize[0],$
@@ -181,6 +191,11 @@ STEP2_automatic_scaling_button = WIDGET_BUTTON(STEP2_BASE,$
                                                SCR_YSIZE=Step2automaticScalingSize[3],$
                                                SENSITIVE=0,$
                                                VALUE=Step2AutomaticScalingButtonTitle)
+
+Step2_or_label = widget_label(STEP2_BASE,$
+                              xoffset=Step2ORlabel[0],$
+                              yoffset=Step2ORlabel[1],$
+                              value='or')
 
 STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
                              UNAME='Step2_button',$
@@ -245,7 +260,6 @@ STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
                                   /EDITABLE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
-
 
 
 ;--tab #2 of step 2
@@ -350,7 +364,6 @@ Step2YBeforeTextField = widget_text(STEP2_BASE,$
                                     scr_xsize=Step2YBeforeTextField[2],$
                                     scr_ysize=Step2YBeforeTextField[3],$
                                     value='',$
-                                    /editable,$
                                     /align_left)
 
 Step2YAfterDraw = widget_draw(STEP2_BASE,$
@@ -421,41 +434,5 @@ Step2ManualScalingButton = widget_button(STEP2_BASE,$
                                         frame=1,$
                                         value='')
  
-
-; step2_ri_draw = WIDGET_DRAW(STEP2_BASE,$
-;                             uname='step2_ri_draw',$
-;                             XOFFSET=Step2RDrawSize[0],$
-;                             YOFFSET=Step2RDrawSize[1],$
-;                             SCR_XSIZE=Step2RDrawSize[2],$
-;                             SCR_YSIZE=Step2RDrawSize[3])
-
-; STEP2_R_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
-;                                  UNAME='step2_R_text_field',$
-;                                  XOFFSET=Step2RTextFieldSize[0],$
-;                                  YOFFSET=Step2RTextFieldSize[1],$
-;                                  SCR_XSIZE=Step2RTextFieldSize[2],$
-;                                  SCR_YSIZE=Step2RTextFieldSize[3],$
-;                                  VALUE='',$
-;                                  /EDITABLE,$
-;                                  /ALIGN_LEFT,$
-;                                  /ALL_EVENTS)
-
-; STEP2_delta_ri_draw = WIDGET_DRAW(STEP2_BASE,$
-;                                  uname='step2_delta_ri_draw',$
-;                                  XOFFSET=Step2DeltaRDrawSize[0],$
-;                                  YOFFSET=Step2DeltaRDrawSize[1],$
-;                                  SCR_XSIZE=Step2DeltaRDrawSize[2],$
-;                                  SCR_YSIZE=Step2DeltaRDrawSize[3])
-
-; STEP2_deltaR_label = WIDGET_LABEL(STEP2_BASE,$
-;                                   UNAME='step2_deltaR_label',$
-;                                   XOFFSET=Step2DeltaRLabelSize[0],$
-;                                   YOFFSET=Step2DeltaRLabelSize[1],$
-;                                   SCR_XSIZE=Step2DeltaRLabelSize[2],$
-;                                   SCR_YSIZE=Step2DeltaRLabelSize[3],$
-;                                   VALUE='',$
-;                                   /ALIGN_LEFT)
-
-
 
 END
