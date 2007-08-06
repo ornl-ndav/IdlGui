@@ -46,8 +46,7 @@ global = ptr_new({  $
                    color_array    : ptr_new(0L),$    ;index of color for each file 
                    Qmin_array     : ptr_new(0L),$    ;list of Qmin
                    Qmax_array     : ptr_new(0L),$    ;list of Qmax
-                   XYMinMax       : ptr_new(0L),$    ;Xmin, Xmax, Ymin and Ymax
-                   ColorSliderDefaultValue : 25,$    ;default index value of color slider
+                   ColorSliderDefaultValue : 25,$ ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$;list of path of file loaded
                    images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)

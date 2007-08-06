@@ -25,7 +25,7 @@ widget_control, XminId, set_value=strcompress(Xmin)
 
 ;max-xaxis
 XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
-widget_control, XmaxId, set_value=strcompress(max)
+widget_control, XmaxId, set_value=strcompress(Xmax)
 
 ;min-yaxis
 YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')

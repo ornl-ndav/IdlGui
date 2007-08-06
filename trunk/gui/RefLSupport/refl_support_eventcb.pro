@@ -22,16 +22,12 @@ endif else begin
       CASE (CurrTabSelect) OF
          0: begin               ;if first tab plot everything
             AssignColorToSelectedPlot,Event
-            ListLongFileName = (*(*global).ListOfLongFileName)
-            plot_loaded_file, Event, ListLongFileName
+            plot_loaded_file, Event, 'all'
             angleValue = getAngleValue(Event)
             displayAngleValue, Event, angleValue
         end
          1: begin               ;if second tab plot only CE plot
-            LongFileName = (*global).full_CE_name
-            LongFileNameArray = strarr(1)
-            LongFileNameArray[0]=LongFileName
-            plot_loaded_file, Event,LongFileNameArray
+            plot_loaded_file, Event, 'CE'
             
                                 ;display the Qmin and Qmax for the CE file
                                 ;for now, the first file loaded is
@@ -40,10 +36,7 @@ endif else begin
 
          end
          2: begin               ;if third tab plot only the file selected
-            LongFileName1 = getLongFileNameSelected(Event,$
-                                                    'step3_work_on_file_droplist')
-            ListLongFileName = [LongFileName1]
-            plot_loaded_file, Event, ListLongFileName
+            plot_loaded_file, Event, '2plots'
 
                                 ;this function will disable the
                                 ;editable boxes if first file selected
