@@ -13,6 +13,9 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   flt0_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
+                   flt1_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
+                   flt2_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
                    rescaling_ymax : 1.2,$            ;ymax when rescalling data
                    rescaling_ymin : 0,$              ;ymin when rescalling data
                    full_CE_name   : '',$             ;full path to CE file
@@ -35,6 +38,7 @@ global = ptr_new({  $
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
                    FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
                    list_of_files  : ptr_new(0L),$    ;list of files loaded
+                   NbrFilesLoaded : 0,$              ;number of files loaded
                    Q1_array       : ptr_new(0L),$    ;Q1 array
                    Q2_array       : ptr_new(0L),$    ;Q2 array
                    SF_array       : ptr_new(0L),$    ;Scalling factor array

@@ -127,9 +127,12 @@ END
 
 
 ;this function creates and update the Q1, Q2, SF... arrays when a file is added
-PRO CreateArrays, Event
+PRO ReflSupportFileUtility_CreateArrays, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;number of files loaded
+(*global).NbrFilesLoaded += 1
 
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
@@ -179,8 +182,10 @@ ListOfFilesSize = getSizeOfArray(ListOfFiles)
 if (ListOfFilesSize EQ 1) then begin
    ResetArrays,Event
    ActivateRescaleBase, Event, 0
+   (*global).NbrFilesLoaded = 0
 endif else begin
    RemoveIndexFromList, Event, iIndex
+   (*global).NbrFilesLoaded -= 1
 endelse
 END
 
