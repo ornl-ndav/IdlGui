@@ -16,6 +16,9 @@ global = ptr_new({  $
                    flt0_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
                    flt1_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
                    flt2_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
+                   flt0_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
+                   flt1_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
+                   flt2_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
                    rescaling_ymax : 1.2,$            ;ymax when rescalling data
                    rescaling_ymin : 0,$              ;ymin when rescalling data
                    full_CE_name   : '',$             ;full path to CE file
@@ -32,7 +35,7 @@ global = ptr_new({  $
                    angleValue     : float(0),$       ;current value of the angle (float)
                    CEcooef        : ptr_new(0L),$    ;the fitting coeff of the CE file
                    flt0_CE_range  : ptr_new(0L),$    ;flt0 between Q1 and Q2 for CE file
-                   CE_scaling_factor : 0,$           ;The CE scaling factor to go from Y to 1
+                   CE_scaling_factor : float(0),$           ;The CE scaling factor to go from Y to 1
                    flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
                    flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file

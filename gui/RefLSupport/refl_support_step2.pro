@@ -42,7 +42,8 @@ if (YbeforeIsNumeric EQ 1 AND $
    Yafter  = getNumeric(Yafter)
 
   ;put scaling factor in its box
-   scaling_factor = Ybefore / Yafter
+   scaling_factor = float(Ybefore) / float(Yafter)
+   (*global).CE_scaling_factor = scaling_factor
 
   ;activate scaling button once the fitting is done
    ActivateButton, Event, 'step2_automatic_scaling_button', 1
@@ -67,15 +68,12 @@ PRO ReflSupportStep2_scaleCE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;retrieve value of the scaling factor
-CE_scaling_factor = (*global).CE_scaling_factor
-
 ;change the value of the ymax and ymin in the zoom box to 1.2 and 0
 putValueInTextField, Event, 'YaxisMaxTextField', (*global).rescaling_ymax
 putValueInTextField, Event, 'YaxisMinTextField', (*global).rescaling_ymin
 
 ;replot CE data with new scale
-plot_CE_file, Event
+plot_rescale_CE_file, Event
 
 END
 
@@ -187,20 +185,11 @@ END
 
 
 ;This function plots the selected file
-PRO plot_CE_file, Event
+PRO plot_rescale_CE_file, Event
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-full_CE_name = (*global).full_CE_name
-
-;0 means that the fitting plot won't be seen
-;1 means that the fitting plot will be seen
-show_error_plot=0
-
-;1 if first load, 0 otherwise
-FirstTimePlotting = (*global).FirstTimePlotting
 
 draw_id = widget_info(Event.top, find_by_uname='plot_window')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
@@ -210,169 +199,88 @@ IsXlin = getScale(Event,'X')
 IsYlin = getScale(Event,'Y')
 
 color_array = (*(*global).color_array)
-FirstPass = 1
 
-error_plot_status = 0
-catch, error_plot_status
-if (error_plot_status NE 0) then begin
+DEVICE, DECOMPOSED = 0
+loadct,5
     
-    CATCH,/cancel
-    text = 'ERROR plotting data'
-    displayErrorMessage, Event, text
-    
-endif else begin
-    
-    openr,u,full_CE_name,/get
-    fs = fstat(u)
-    
-;define an empty string variable to hold results from reading the file
-    tmp  = ''
-    tmp0 = ''
-    tmp1 = ''
-    tmp2 = ''
-    
-    flt0 = -1.0
-    flt1 = -1.
-    flt2 = -1.0
-    
-    Nelines = 0L    ;number of lines that does not start with a number
-    Nndlines = 0L
-    Ndlines = 0L
-    onebyte = 0b
-    
-    while (NOT eof(u)) do begin
-        
-        readu,u,onebyte         ;,format='(a1)'
-        fs = fstat(u)
-                                ;print,'onebyte: ',onebyte
-                                ;rewinded file pointer one character
-        
-        if fs.cur_ptr EQ 0 then begin 
-            point_lun,u,0
-        endif else begin
-            point_lun,u,fs.cur_ptr - 1
-        endelse
-        
-        true = 1
-        case true of
+flt0_ptr = (*global).flt0_ptr
+flt1_ptr = (*global).flt1_ptr
+flt2_ptr = (*global).flt2_ptr
             
-            ((onebyte LT 48) OR (onebyte GT 57)): begin
-                                ;case where we have non-numbers
-                Nelines = Nelines + 1
-                readf,u,tmp
+;retrieve particular flt0, flt1 and flt2
+flt0 = *flt0_ptr[0]
+flt1 = *flt1_ptr[0]
+flt2 = *flt2_ptr[0]
+
+;divide by scaling factor
+CE_scaling_factor = (*global).CE_scaling_factor
+flt1 = flt1/CE_scaling_factor
+flt2 = flt2/sqrt(CE_scaling_factor)
+
+cooef = (*(*global).CEcooef)
+if (cooef[0] NE 0 AND $
+    cooef[1] NE 0) then begin
+    cooef[0] /= CE_scaling_factor
+    Cooef[1] /= CE_scaling_Factor
+endif
+(*(*global).CEcooef) = cooef
+
+;save new values
+flt0_rescale_ptr = (*global).flt0_rescale_ptr
+*flt0_rescale_ptr[0] = flt0
+(*global).flt0_rescale_ptr = flt0_rescale_ptr
+
+flt1_rescale_ptr = (*global).flt1_rescale_ptr
+*flt1_rescale_ptr[0] = flt1
+(*global).flt1_rescale_ptr = flt1_rescale_ptr
+
+flt2_rescale_ptr = (*global).flt2_rescale_ptr
+*flt2_rescale_ptr[0] = flt2
+(*global).flt2_rescale_ptr = flt2_rescale_ptr
+
+;end of rescaling part
+
+colorIndex = color_array[0]
+
+XYMinMax = getXYMinMax(Event)
+xmin = float(XYMinMax[0])
+xmax = float(XYMinMax[1])
+ymin = float(XYMinMax[2])
+ymax = float(XYMinMax[3])
+
+case IsXlin of
+    0:begin
+        case IsYlin of
+            0: begin
+                plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
             end
-            
-            else: begin
-                                ;case where we (should) have data
-                Ndlines = Ndlines + 1
-                                ;print,'Data Line: ',Ndlines
-                
-                catch, Error_Status
-                if Error_status NE 0 then begin
-                    
-                                ;you're done now...
-                    CATCH, /CANCEL
-                    
-                endif else begin
-                    
-                    readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
-                    flt0 = [flt0,float(tmp0)] ;x axis
-                    flt1 = [flt1,float(tmp1)] ;y axis
-                    flt2 = [flt2,float(tmp2)] ;y_error axis
-                    
-                endelse
-                
+            1: begin
+                plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
             end
         endcase
-        
-    endwhile
-    
-;strip -1 from beginning of each array
-    flt0 = flt0[1:*]
-    flt1 = flt1[1:*]
-    flt2 = flt2[1:*]
-    
-    close,u
-    free_lun,u
-    
-    CATCH,/CANCEL
-    DEVICE, DECOMPOSED = 0
-    loadct,5
-    
-;check if input is TOF or Q
-    isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
-    if(isTOFvalidated eq '0') then begin ;input file is in TOF
-        
-;Converts the data from TOF to Q
-        (*(*global).flt0_xaxis) = flt0
-        angle_value_deg_array = (*(*global).angle_array)
-        angle_value_deg = angle_value_deg_array[0]
-        convert_TOF_to_Q, Event, angle_value_deg
-        flt0 = (*(*global).flt0_xaxis)
-;                flt1 = (*(*global).flt1_yaxis)
-;                flt2 = (*(*global).flt2_yaxis_err)
-        
-    endif
-    
-;divide by scaling factor
-    CE_scaling_factor = (*global).CE_scaling_factor
+    end
+    1: begin
+        case IsYlin of
+            0: begin
+                plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            end
+            1: begin
+                plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            end
+        endcase
+    end
+endcase            
 
-    flt1 = flt1/CE_scaling_factor
-    flt2 = flt2/sqrt(CE_scaling_factor)
+errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
-    cooef = (*(*global).CEcooef)
-    if (cooef[0] NE 0 AND $
-        cooef[1] NE 0) then begin
-        cooef[0] /= CE_scaling_factor
-        Cooef[1] /= CE_scaling_Factor
-    endif
-        
-;end of rescaling part only
-    
-    colorIndex = color_array[0]
-    
-    XYMinMax = getXYMinMax(Event)
-    xmin = float(XYMinMax[0])
-    xmax = float(XYMinMax[1])
-    ymin = float(XYMinMax[2])
-    ymax = float(XYMinMax[3])
-    
-    case IsXlin of
-        0:begin
-            case IsYlin of
-                0: begin
-                    plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                end
-                1: begin
-                    plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                end
-            endcase
-        end
-        1: begin
-            case IsYlin of
-                0: begin
-                    plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                end
-                1: begin
-                    plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                end
-            endcase
-        end
-    endcase            
-    
-    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-    
 ;polynome of degree 1 for CE 
-    
-    if (cooef[0] NE 0 AND $
-        cooef[1] NE 0) then begin
-        show_error_plot=1
-        flt0_new = (*(*global).flt0_CE_range)
-        y_new = cooef(1)*flt0_new + cooef(0)
-        oplot,flt0_new,y_new,color=400,thick=1.5
-    endif
-    
-endelse
+if (cooef[0] NE 0 AND $
+    cooef[1] NE 0) then begin
+    show_error_plot=1
+    flt0_new = (*(*global).flt0_CE_range)
+    y_new = cooef(1)*flt0_new + cooef(0)
+    oplot,flt0_new,y_new,color=400,thick=1.5
+endif
 
 END
 
