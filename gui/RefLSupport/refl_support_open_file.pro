@@ -130,6 +130,10 @@ endif else begin
 ;populate min/max x/y axis
                     min_xaxis = min(flt0,max=max_xaxis,/nan)
                     min_yaxis = min(flt1,max=max_yaxis,/nan)
+;keep in global value of x and y min and max
+                    (*(*global).XYMinMax) = [min_xaxis,max_xaxis,$
+                                             min_yaxis,max_yaxis]
+
                     PopulateXYScaleAxis, Event, $
                       min_xaxis, $
                       max_xaxis, $
