@@ -94,6 +94,7 @@ wset,view_plot_id
 
 IsXlin = getScale(Event,'X')
 IsYlin = getScale(Event,'Y')
+ClearPlot = 0      ;by default, the display does not have to be erased
 
 CASE (index) OF
     'CE': begin                 ;plot CE
@@ -110,106 +111,115 @@ CASE (index) OF
         endif
         index_to_plot = [index_to_plot-1,index_to_plot]
     end
+    'clear': begin              ;no files to plot, just erase display
+        ClearPlot = 1
+    end
 ENDCASE
 
 DEVICE, DECOMPOSED = 0
 loadct,5
 
+if (ClearPlot EQ 1) then begin ;no plot to plot, erase display
+    erase
+endif else begin ;at least one file has to be ploted
+
 ;retrieve flt0, flt1 and flt2
-flt0_ptr = (*global).flt0_rescale_ptr
-flt1_ptr = (*global).flt1_rescale_ptr
-flt2_ptr = (*global).flt2_rescale_ptr
-            
-index_size = (size(index_to_plot))(1)
-for i=0,(index_size-1) do begin
+    flt0_ptr = (*global).flt0_rescale_ptr
+    flt1_ptr = (*global).flt1_rescale_ptr
+    flt2_ptr = (*global).flt2_rescale_ptr
     
-    ;retrieve particular flt0, flt1 and flt2
-    flt0 = *flt0_ptr[index_to_plot[i]]
-    flt1 = *flt1_ptr[index_to_plot[i]]
-    flt2 = *flt2_ptr[index_to_plot[i]]
-
-    color_array = (*(*global).color_array)
-    colorIndex = color_array[index_to_plot[i]]
-    
-    XYMinMax = retrieveXYMinMax(Event)
-    xmin = float(XYMinMax[0])
-    xmax = float(XYMinMax[1])
-    ymin = float(XYMinMax[2])
-    ymax = float(XYMinMax[3])
-    
-    if (i EQ 0) Then begin
+    index_size = (size(index_to_plot))(1)
+    for i=0,(index_size-1) do begin
         
-        case IsXlin of
-            0:begin
-                case IsYlin of
-                    0: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                    end
-                    1: begin
-                        plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                    end
-                endcase
-            end
-            1: begin
-                case IsYlin of
-                    0: begin
-                        plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                    end
-                    1: begin
-                        plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
-                    end
-                endcase
-            end
-        endcase               
-        errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-    
-    endif else begin
-
+                                ;retrieve particular flt0, flt1 and flt2
+        flt0 = *flt0_ptr[index_to_plot[i]]
+        flt1 = *flt1_ptr[index_to_plot[i]]
+        flt2 = *flt2_ptr[index_to_plot[i]]
+        
+        color_array = (*(*global).color_array)
+        colorIndex = color_array[index_to_plot[i]]
+        
         XYMinMax = retrieveXYMinMax(Event)
         xmin = float(XYMinMax[0])
         xmax = float(XYMinMax[1])
         ymin = float(XYMinMax[2])
         ymax = float(XYMinMax[3])
         
-        case IsXlin of
-            0:begin
-                case IsYlin of
-                    0: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                    end
-                    1: begin
-                        plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                    end
-                endcase
-            end
-            1: begin
-                case IsYlin of
-                    0: begin
-                        plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                    end
-                    1: begin
-                        plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                    end
-                endcase
-            end
-        endcase            
+        if (i EQ 0) Then begin
+            
+            case IsXlin of
+                0:begin
+                    case IsYlin of
+                        0: begin
+                            plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                        end
+                        1: begin
+                            plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                        end
+                    endcase
+                end
+                1: begin
+                    case IsYlin of
+                        0: begin
+                            plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                        end
+                        1: begin
+                            plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                        end
+                    endcase
+                end
+            endcase               
+            errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+            
+        endif else begin
+            
+            XYMinMax = retrieveXYMinMax(Event)
+            xmin = float(XYMinMax[0])
+            xmax = float(XYMinMax[1])
+            ymin = float(XYMinMax[2])
+            ymax = float(XYMinMax[3])
+            
+            case IsXlin of
+                0:begin
+                    case IsYlin of
+                        0: begin
+                            plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                        1: begin
+                            plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                    endcase
+                end
+                1: begin
+                    case IsYlin of
+                        0: begin
+                            plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                        1: begin
+                            plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        end
+                    endcase
+                end
+            endcase            
+            
+        endelse
         
-    endelse
-    
-    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-    
-    cooef = (*(*global).CEcooef)
-    
+        errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+        
+        cooef = (*(*global).CEcooef)
+        
 ;polynome of degree 1 for CE 
+        
+        if (cooef[0] NE 0 AND $
+            cooef[1] NE 0) then begin
+            show_error_plot=1
+            flt0_new = (*(*global).flt0_CE_range)
+            y_new = cooef(1)*flt0_new + cooef(0)
+            oplot,flt0_new,y_new,color=400,thick=1.5
+        endif
+        
+    endfor
     
-    if (cooef[0] NE 0 AND $
-        cooef[1] NE 0) then begin
-        show_error_plot=1
-        flt0_new = (*(*global).flt0_CE_range)
-        y_new = cooef(1)*flt0_new + cooef(0)
-        oplot,flt0_new,y_new,color=400,thick=1.5
-    endif
-    
-endfor
+endelse
 
 END

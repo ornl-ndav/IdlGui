@@ -83,9 +83,16 @@ RemoveIndexFromArray, Event, TextBoxIndex
 ;update GUI
 ListOfFiles = (*(*global).list_of_files)
 updateGUI, Event, ListOfFiles
-;plot all loaded files
-ListLongFileName = (*(*global).ListOfLongFileName)
-plot_loaded_file, Event, ListLongFileName
+
+;plot all loaded files if listOfFiles is not empty
+ListOfFilesSize = getSizeOfArray(ListOfFiles)
+if (ListOfFilesSize EQ 1 AND $
+    ListOfFiles[0] EQ '') then begin
+    plot_loaded_file, Event, 'clear'
+endif else begin
+    plot_loaded_file, Event, 'all
+endelse
+
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
 displayAngleValue, Event, angleValue
