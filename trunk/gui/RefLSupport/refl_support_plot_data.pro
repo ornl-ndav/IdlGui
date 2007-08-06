@@ -1,15 +1,3 @@
-;This function returns 1 if the specified axis scale is linear
-;and 0 if it's logarithmic
-FUNCTION getScale, Event, axis
-if (axis EQ 'X') then begin
-   uname = 'XaxisLinLog' 
-endif else begin
-   uname = 'YaxisLinLog'
-endelse
-axis_id = widget_info(Event.top,find_by_uname=uname)
-widget_control, axis_id, get_value=value
-return, value
-END
 
 
 ;This function will retrieve the values of Xmin/max and Ymin/max
@@ -128,9 +116,9 @@ DEVICE, DECOMPOSED = 0
 loadct,5
 
 ;retrieve flt0, flt1 and flt2
-flt0_ptr = (*global).flt0_ptr
-flt1_ptr = (*global).flt1_ptr
-flt2_ptr = (*global).flt2_ptr
+flt0_ptr = (*global).flt0_rescale_ptr
+flt1_ptr = (*global).flt1_rescale_ptr
+flt2_ptr = (*global).flt2_rescale_ptr
             
 index_size = (size(index_to_plot))(1)
 for i=0,(index_size-1) do begin

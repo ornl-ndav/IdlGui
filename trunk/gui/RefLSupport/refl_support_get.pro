@@ -1,3 +1,19 @@
+;This function returns 1 if the specified axis scale is linear
+;and 0 if it's logarithmic
+FUNCTION getScale, Event, axis
+if (axis EQ 'X') then begin
+   uname = 'XaxisLinLog' 
+endif else begin
+   uname = 'YaxisLinLog'
+endelse
+axis_id = widget_info(Event.top,find_by_uname=uname)
+widget_control, axis_id, get_value=value
+return, value
+END
+
+
+
+
 ;This function will retrieve the values of Xmin/max and Ymin/max
 FUNCTION getXYMinMax, Event
 
