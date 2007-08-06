@@ -18,7 +18,6 @@ end
 
 
 
-
 ;This function moves the color index to the right position
 PRO ReflSupportOpenFile_MoveColorIndex,Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -38,11 +37,13 @@ END
 
 ;This function plot all the files loaded
 ;This function is only reached by the LOAD button
-PRO ReflSupportOpenFile_PlotLoadedFiles, Event, ListLongFileName
+PRO ReflSupportOpenFile_PlotLoadedFiles, Event
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+ListLongFileName = (*(*global).ListOfLongFileName)
 
 ;1 if first load, 0 otherwise
 FirstTimePlotting = (*global).FirstTimePlotting
@@ -69,10 +70,15 @@ endif else begin
 
     color_array = (*(*global).color_array)
     FirstPass = 1
+
+    flt0_ptr = (*global).flt0_ptr
+    flt1_ptr = (*global).flt1_ptr
+    flt2_ptr = (*global).flt2_ptr
+
     for i=0,(size-1) do begin
 
         error_plot_status = 0
-        catch, error_plot_status
+;        catch, error_plot_status
         if (error_plot_status NE 0) then begin
 
             CATCH,/cancel
@@ -81,99 +87,14 @@ endif else begin
 
         endif else begin
     
-            openr,u,ListLongFileName[i],/get
-            fs = fstat(u)
-        
-;define an empty string variable to hold results from reading the file
-            tmp  = ''
-            tmp0 = ''
-            tmp1 = ''
-            tmp2 = ''
-            
-            flt0 = -1.0
-            flt1 = -1.
-            flt2 = -1.0
-            
-            Nelines = 0L ;number of lines that does not start with a number
-            Nndlines = 0L
-            Ndlines = 0L
-            onebyte = 0b
-            
-            while (NOT eof(u)) do begin
-                
-                readu,u,onebyte ;,format='(a1)'
-                fs = fstat(u)
-                                ;print,'onebyte: ',onebyte
-                                ;rewinded file pointer one character
-        
-                if fs.cur_ptr EQ 0 then begin 
-                    point_lun,u,0
-                endif else begin
-                    point_lun,u,fs.cur_ptr - 1
-                endelse
-                
-                true = 1
-                case true of
-                    
-                    ((onebyte LT 48) OR (onebyte GT 57)): begin
-                                ;case where we have non-numbers
-                        Nelines = Nelines + 1
-                        readf,u,tmp
-                    end
-                    
-                    else: begin
-                                ;case where we (should) have data
-                        Ndlines = Ndlines + 1
-                                ;print,'Data Line: ',Ndlines
-                        
-                        catch, Error_Status
-                        if Error_status NE 0 then begin
-                            
-                                ;you're done now...
-                            CATCH, /CANCEL
-                            
-                        endif else begin
-                            
-                            readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
-                            flt0 = [flt0,float(tmp0)] ;x axis
-                            flt1 = [flt1,float(tmp1)] ;y axis
-                            flt2 = [flt2,float(tmp2)] ;y_error axis
-                            
-                        endelse
-                        
-                    end
-                endcase
-                
-            endwhile
-            
-;strip -1 from beginning of each array
-            flt0 = flt0[1:*]
-            flt1 = flt1[1:*]
-            flt2 = flt2[1:*]
-            
-            close,u
-            free_lun,u
+            flt0 = *flt0_ptr[i]
+            flt1 = *flt1_ptr[i]
+            flt2 = *flt2_ptr[i]
             
             CATCH,/CANCEL
+
             DEVICE, DECOMPOSED = 0
             loadct,5
-            
-;check if input is TOF or Q
-            isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
-            if(isTOFvalidated eq '0') then begin ;input file is in TOF
-
-;Converts the data from TOF to Q
-                (*(*global).flt0_xaxis) = flt0
-                
-                angle_value_deg_array = (*(*global).angle_array)
-                angle_value_deg = angle_value_deg_array[i]
-                convert_TOF_to_Q, Event, angle_value_deg
-
-                flt0 = (*(*global).flt0_xaxis)
-;                flt1 = (*(*global).flt1_yaxis)
-;                flt2 = (*(*global).flt2_yaxis_err)
-                
-            endif
             
             colorIndex = color_array[i]
             if (FirstPass EQ 1) then begin
@@ -349,12 +270,13 @@ PRO ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName
   ListOfFiles = (*(*global).list_of_files)
   ListOfLongFileName = (*(*global).ListOfLongFileName)
 
-;it's the first file loaded
+;it's the first file loaded (CE file)
   if (isListOfFilesSize0(ListOfFiles) EQ 1) then begin
       
       (*global).full_CE_name = LongFileName
       (*global).short_CE_name = ShortFileName
-      
+      (*global).NbrFilesLoaded = 1 ;we have now 1 file loaded
+
       ListOfFiles = [ShortFileName]
       ListOfLongFileName = [LongFileName]
       ActivateRescaleBase,Event,1
@@ -373,7 +295,7 @@ PRO ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName
         (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
         ListOfFiles = [ListOfFiles,ShortFileName]
         ListOfLongFileName = [ListOfLongFileName,LongFileName]
-        CreateArrays,Event      ;if a file is added, the Q1,Q2,SF... arrays are updated
+        ReflSupportFileUtility_CreateArrays,Event      ;if a file is added, the Q1,Q2,SF... arrays are updated
      
      endif
   
@@ -388,8 +310,138 @@ end
 
 
 
+;This function is going to open and store the new fresh open files
+PRO ReflSupportOpenFile_Storeflts, Event, LongFileName, index
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+error_plot_status = 0
+catch, error_plot_status
+if (error_plot_status NE 0) then begin
+    
+    CATCH,/cancel
+    text = 'ERROR plotting data'
+    displayErrorMessage, Event, text
+    
+endif else begin
+    
+    openr,u,LongFileName,/get
+    fs = fstat(u)
+    
+;define an empty string variable to hold results from reading the file
+    tmp  = ''
+    tmp0 = ''
+    tmp1 = ''
+    tmp2 = ''
+    
+    flt0 = -1.0
+    flt1 = -1.
+    flt2 = -1.0
+    
+    Nelines = 0L    ;number of lines that does not start with a number
+    Nndlines = 0L
+    Ndlines = 0L
+    onebyte = 0b
+    
+    while (NOT eof(u)) do begin
+        
+        readu,u,onebyte         ;,format='(a1)'
+        fs = fstat(u)
+                                ;print,'onebyte: ',onebyte
+                                ;rewinded file pointer one character
+        
+        if fs.cur_ptr EQ 0 then begin 
+            point_lun,u,0
+        endif else begin
+            point_lun,u,fs.cur_ptr - 1
+        endelse
+        
+        true = 1
+        case true of
+            
+            ((onebyte LT 48) OR (onebyte GT 57)): begin
+                                ;case where we have non-numbers
+                Nelines = Nelines + 1
+                readf,u,tmp
+            end
+            
+            else: begin
+                                ;case where we (should) have data
+                Ndlines = Ndlines + 1
+                                ;print,'Data Line: ',Ndlines
+                
+                catch, Error_Status
+                if Error_status NE 0 then begin
+                    
+                                ;you're done now...
+                    CATCH, /CANCEL
+                    
+                endif else begin
+                    
+                    readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
+                    flt0 = [flt0,float(tmp0)] ;x axis
+                    flt1 = [flt1,float(tmp1)] ;y axis
+                    flt2 = [flt2,float(tmp2)] ;y_error axis
+                    
+                endelse
+                
+            end
+        endcase
+        
+    endwhile
+    
+;strip -1 from beginning of each array
+    flt0 = flt0[1:*]
+    flt1 = flt1[1:*]
+    flt2 = flt2[1:*]
+    
+    close,u
+    free_lun,u
+    
+    CATCH,/CANCEL
+    DEVICE, DECOMPOSED = 0
+    loadct,5
+    
+;check if input is TOF or Q
+    isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
+    if(isTOFvalidated eq '0') then begin ;input file is in TOF
+        
+;Converts the data from TOF to Q
+        (*(*global).flt0_xaxis) = flt0
+        
+        angle_value_deg_array = (*(*global).angle_array)
+        angle_value_deg = angle_value_deg_array[index]
+        convert_TOF_to_Q, Event, angle_value_deg
+        
+        flt0 = (*(*global).flt0_xaxis)
+
+    endif
+
+;store flt0, ftl1 and flt2 in ptrarr
+flt0_ptr = (*global).flt0_ptr
+*flt0_ptr[index] = flt0
+(*global).flt0_ptr = flt0_ptr
+
+flt1_ptr = (*global).flt1_ptr
+*flt1_ptr[index] = flt1
+(*global).flt1_ptr = flt1_ptr
+
+flt2_ptr = (*global).flt2_ptr
+*flt2_ptr[index] = flt2
+(*global).flt2_ptr = flt2_ptr
+
+endelse
+        
+END
+
+
+
+
+
+
+
 ;
-;This function load the file in the first step
+;This function load the file in the first step (first tab)
 ;
 PRO ReflSupportOpenFile_LoadFile, Event
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -412,16 +464,20 @@ PRO ReflSupportOpenFile_LoadFile, Event
      (*global).angleValue = angleValue
      get_angle_value_and_do_conversion, Event, angleValue
 
-;add file to list of droplist (step1 and 3)
-;add all files to step1 droplist
-;add all except first one to step3 droplist
+;store flt0, flt1 and flt2 of new files
+     index = (*global).NbrFilesLoaded
+     ReflSupportOpenFile_Storeflts, Event, LongFileName, index
+
+;add all files to step1 and step3 droplist
      ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
      display_info_about_selected_file, Event, LongFileName
      populateColorLabel, Event, LongFileName
+
  endif
 
 ;plot all loaded files
- ListLongFileName = (*(*global).ListOfLongFileName)
- ReflSupportOpenFile_PlotLoadedFiles, Event, ListLongFileName
+
+ ReflSupportOpenFile_PlotLoadedFiles, Event
+
 END
 

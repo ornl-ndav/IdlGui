@@ -96,6 +96,7 @@ plot_loaded_file, Event, ListLongFileName
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
 displayAngleValue, Event, angleValue
+
 END
 
 

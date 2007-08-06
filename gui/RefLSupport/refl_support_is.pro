@@ -14,9 +14,7 @@ END
 ;into a value or not
 ;1 means yes, and 0 means no
 FUNCTION isNumeric, textString
-
 ;float
 result = isValueFloat(textString)
-
 RETURN, result
 END
