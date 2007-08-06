@@ -140,6 +140,15 @@ FUNCTION getSelectedIndex, Event, uname
 END
 
 
+;This function returns the number of element found in the droplist
+;given
+FUNCTION getNbrElementsInDroplist, Event, uname
+  DropListId = widget_info(Event.top,find_by_uname=uname)
+  nbr_elements = widget_info(DropListId, /droplist_number)
+return, nbr_elements
+END
+
+
 ;This function returns the current angle value from the text box
 FUNCTION getCurrentAngleValue, Event
 angleTextBoxId = widget_info(Event.top,find_by_uname='AngleTextField')

@@ -255,6 +255,7 @@ END
 
 
 
+
 ;Manual fitting of CE file using loaded parameters
 PRO manualCEfitting, Event
 ;retrieve global structure
@@ -272,6 +273,7 @@ cooef0 = getNumeric(cooef0)
 plot_loaded_file, Event, (*global).full_CE_name
 
 END
+
 
 
 
@@ -406,13 +408,8 @@ endif else begin
 ;divide by scaling factor
     CE_scaling_factor = (*global).CE_scaling_factor
 
-    print, 'before'
-    print, flt1
-
     flt1 = flt1/CE_scaling_factor
-
-    print, 'after'
-    print, flt1
+    flt2 = flt2/sqrt(CE_scaling_factor)
 
     cooef = (*(*global).CEcooef)
     if (cooef[0] NE 0 AND $

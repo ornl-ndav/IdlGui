@@ -334,19 +334,14 @@ steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
 CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
 CASE (CurrTabSelect) OF
    0: begin                     ;if the first tab is selected
-      ListLongFileName = (*(*global).ListOfLongFileName)
-      plot_loaded_file, Event, ListLongFileName
+       plot_loaded_file, Event, 'all'
    end
-   1: begin                     ;if the second tab is selected
-      LongFileName = (*global).full_CE_name
-      LongFileNameArray = strarr(1)
-      LongFileNameArray[0]=LongFileName
-      plot_loaded_file, Event,LongFileNameArray   
+   1: begin               ;if the second tab is selected, plot index 0 (CE file)
+       plot_loaded_file, Event, 'CE'
    end
-   2: begin                     ;if the third tab is selected
-      LongFileName1 = getLongFileNameSelected(Event,'step3_work_on_file_droplist')
-      ListLongFileName = [LongFileName1]
-      plot_loaded_file, Event, ListLongFileName
+   2: begin       ;if the third tab is selected plot index and index-1
+
+       plot_loaded_file, Event, '2plots'
    end
 ENDCASE
 END
