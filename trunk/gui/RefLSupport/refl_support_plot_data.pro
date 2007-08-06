@@ -223,8 +223,8 @@ endif else begin
 
             endif
 
-            
             colorIndex = color_array[i]
+
             if (FirstPass EQ 1) then begin
                 
                 flt1_first = flt1
@@ -341,6 +341,7 @@ endif else begin
                 errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
 
                 cooef = (*(*global).CEcooef)
+
 ;polynome of degree 1 for CE 
 
                 if (cooef[0] NE 0 AND $

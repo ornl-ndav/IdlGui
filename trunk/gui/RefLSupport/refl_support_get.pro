@@ -1,3 +1,30 @@
+;This function will retrieve the values of Xmin/max and Ymin/max
+FUNCTION getXYMinMax, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;min-xaxis
+XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+widget_control, XminId, get_value=Xmin
+
+;max-xaxis
+XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+widget_control, XmaxId, get_value=Xmax
+
+;min-yaxis
+YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+widget_control, YminId, get_value=Ymin
+
+;max-yaxis
+YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+widget_control, YmaxId, get_value=Ymax
+
+return_array = [Xmin,Xmax,Ymin,Ymax]
+return, return_array
+END
+
+
+
 ;This function removes all the values outside the given
 ;range of values [0,10] from the array passed as argument
 FUNCTION getArrayRangeOfNotNanValues, flt1_new

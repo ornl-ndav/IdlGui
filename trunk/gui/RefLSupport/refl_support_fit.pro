@@ -30,7 +30,7 @@ END
 
 
 
-PRO LoadDataFile, Event, LongFileName, Q1, Q2
+PRO LoadDataFile2, Event, LongFileName, Q1, Q2
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
