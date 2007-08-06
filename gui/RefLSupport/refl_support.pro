@@ -13,6 +13,8 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   rescaling_ymax : 1.2,$            ;ymax when rescalling data
+                   rescaling_ymin : 0,$              ;ymin when rescalling data
                    full_CE_name   : '',$             ;full path to CE file
                    short_CE_name  : '',$             ;short path to CE file
                    h_over_mn      : 0.0039554,$      ;h/mass of neutron in USI                   

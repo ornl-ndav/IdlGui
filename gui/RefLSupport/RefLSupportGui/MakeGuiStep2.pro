@@ -45,21 +45,21 @@ Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
                        Step2XLabelSize[3]]
 
 ;automatic go button
-Step2AutomaticFittingSize = [5, 130, 130, 30]
-d11 = 129
+Step2AutomaticFittingSize = [5, 130, 125, 30]
+d11 = 126
 Step2ANDlabel = [Step2AutomaticFittingSize[0]+d11,$
                  Step2AutomaticFittingSize[1]+5]
 d_b1_b2 = 137
 Step2AutomaticScalingsize = [Step2AutomaticFittingSize[0]+d_b1_b2,$
-                          Step2AutomaticFittingSize[1],$
-                          Step2AutomaticFittingSize[2],$
-                          Step2AutomaticFittingSize[3]]
+                             Step2AutomaticFittingSize[1],$
+                             Step2AutomaticFittingSize[2],$
+                             Step2AutomaticFittingSize[3]]
 Step2ORlabel = [Step2AutomaticScalingSize[0]+d11,$
                 Step2AutomaticScalingSize[1]+5]
 d_b2_b3 = 143
 Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
                         Step2AutomaticScalingSize[1],$
-                        Step2AutomaticScalingSize[2]+95,$
+                        Step2AutomaticScalingSize[2]+97,$
                         Step2AutomaticScalingSize[3]]
 
 ;manual label
@@ -142,16 +142,6 @@ STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          YOFFSET=Step1Size[1],$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
-
-;removed droplist in first version of program
-;;BASE_FILE_DROPLIST = WIDGET_DROPLIST(STEPS_TAB,$
-;;                                      UNAME='base_file_droplist',$
-;;                                      XOFFSET=BaseFileSize[0],$
-;;                                      YOFFSET=BaseFileSize[1],$
-;;                                      SCR_XSIZE=BaseFileSize[2],$
-;;                                      SCR_YSIZE=BaseFileSize[3],$
-;;                                      VALUE=ListOfFiles,$
-;;                                      TITLE=BaseFileTitle)
 
 BASE_FILE_Label = widget_label(STEP2_BASE,$
                                xoffset=BaseFileCELabel[0],$
