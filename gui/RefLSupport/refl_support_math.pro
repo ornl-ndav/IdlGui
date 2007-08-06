@@ -1,6 +1,6 @@
 ;This function converts the input angle into deg
 FUNCTION convert_to_deg, f_angle_rad
- f_angle_deg_local = (180 * f_angle_degree) / !PI
+ f_angle_deg_local = (180 * f_angle_rad) / !PI
  RETURN, f_angle_deg_local
 END
 
@@ -20,7 +20,7 @@ PRO get_angle_value_and_do_conversion, Event, angleValue
      (*global).angleValue = f_angle_deg
      ;copy new value into text field
      AngleTextFieldId = widget_info(Event.top,find_by_uname='AngleTextField')
-     widget_control, AngleTextFieldId, set_value=strcompress(f_angle_rad,/remove_all)
+     widget_control, AngleTextFieldId, set_value=strcompress(f_angle_deg,/remove_all)
      ;reverse status of rad/degree button
      widget_control, AngleUnitsId, set_value=1
  endif

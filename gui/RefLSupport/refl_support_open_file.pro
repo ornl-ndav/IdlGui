@@ -412,11 +412,8 @@ endif else begin
         
 ;Converts the data from TOF to Q
         (*(*global).flt0_xaxis) = flt0
-        
-        angle_value_deg_array = (*(*global).angle_array)
-        angle_value_deg = angle_value_deg_array[index]
-        convert_TOF_to_Q, Event, angle_value_deg
-        
+        angleValue = (*global).angleValue
+        convert_TOF_to_Q, Event, angleValue
         flt0 = (*(*global).flt0_xaxis)
 
     endif
@@ -469,7 +466,7 @@ PRO ReflSupportOpenFile_LoadFile, Event
      get_angle_value_and_do_conversion, Event, angleValue
 
 ;store flt0, flt1 and flt2 of new files
-     index = (*global).NbrFilesLoaded
+     index = (*global).NbrFilesLoaded 
      ReflSupportOpenFile_Storeflts, Event, LongFileName, index
 
 ;add all files to step1 and step3 droplist

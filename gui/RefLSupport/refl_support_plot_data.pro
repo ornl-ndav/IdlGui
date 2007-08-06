@@ -109,18 +109,18 @@ IsYlin = getScale(Event,'Y')
 
 CASE (index) OF
     'CE': begin                 ;plot CE
-        index_array = [index]
+        index_to_plot = [0]
     end
     'all': begin                ;plot all the plots
         nbr_elements = getNbrElementsInDropList(Event,'step3_work_on_file_droplist')
-        index = indgen(nbr_elements)
+        index_to_plot = indgen(nbr_elements)
     end
     '2plots': begin             ;plot index and (index-1) in tab 3
-        index = getSelectedIndex(Event, 'step3_work_on_file_droplist')
-        if (index EQ 0) then begin
-            index += 1
+        index_to_plot = getSelectedIndex(Event, 'step3_work_on_file_droplist')
+        if (index_to_plot EQ 0) then begin
+            index_to_plot += 1
         endif
-        index_array = [index-1,index]
+        index_to_plot = [index_to_plot-1,index_to_plot]
     end
 ENDCASE
 
@@ -132,16 +132,16 @@ flt0_ptr = (*global).flt0_ptr
 flt1_ptr = (*global).flt1_ptr
 flt2_ptr = (*global).flt2_ptr
             
-index_size = (size(index))(1)
+index_size = (size(index_to_plot))(1)
 for i=0,(index_size-1) do begin
     
     ;retrieve particular flt0, flt1 and flt2
-    flt0 = *flt0_ptr[i]
-    flt1 = *flt1_ptr[i]
-    flt2 = *flt2_ptr[i]
+    flt0 = *flt0_ptr[index_to_plot[i]]
+    flt1 = *flt1_ptr[index_to_plot[i]]
+    flt2 = *flt2_ptr[index_to_plot[i]]
 
     color_array = (*(*global).color_array)
-    colorIndex = color_array[i]
+    colorIndex = color_array[index_to_plot[i]]
     
     XYMinMax = retrieveXYMinMax(Event)
     xmin = float(XYMinMax[0])
