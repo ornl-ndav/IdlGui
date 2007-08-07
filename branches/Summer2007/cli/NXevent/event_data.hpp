@@ -83,7 +83,15 @@ class EventData
      *         "time_of_flight" for TOF.
      */
     std::string get_nx_data_name(const e_data_name nx_data_type);
-   
+ 
+    /**
+     * \brief Writes the private data from EventData to a nexus file.
+     * \param nexus_util The nexus utility with the open file handle.
+     * \param nx_data The data to be written to the nexus file.
+     * \param data_name The name of the data to be written 
+     *                  (ex. time_of_flight).
+     * \param bank_number The bank number of the data being written.
+     */
     template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
                             std::vector<DataNumT> & nx_data,
@@ -91,8 +99,21 @@ class EventData
                             const int bank_number);
 
   public:
+    /**
+     * \brief Gets the initial pulse time offset string from the
+     *        EventData class.
+     * \exception runtime_error Thrown if the initial pulse offset hasn't
+     *                          been read in.
+     */
     const std::string & get_pulse_time_offset(void);
 
+    /**
+     * \brief Parses the banking configuration file and sets up the
+     *        bank data structures and maps.
+     * \param bank_file The name of the xml bank configuration file.
+     * \exception runtime_error Thrown if any error happens in the xml 
+     *                          parsing.
+     */
     void parse_bank_file(const std::string & bank_file);
  
     /**
@@ -126,8 +147,20 @@ class EventData
      */
     void create_pixel_map(const std::string & mapping_file);
 
+    /**
+     * \brief Writes the data to a nexus file. This is the overloaded 
+     *        function for when a pulse id file is present.
+     * \param nexus_util The nexus utility with the open file handle.
+     * \param pulse_id_file The name of the pulse id file. This parameter
+     *                      isn't used. It is only for overloading the function.
+     */
     void write_nexus_file(NexusUtil & nexus_util, const std::string & pulse_id_file);
 
+    /**
+     * \brief Writes the data to a nexus file. This is the overloaded
+     *        function for when a pulse id file isn't present. 
+     * \param nexus_util The nexus utility with the open file handle.
+     */
     void write_nexus_file(NexusUtil & nexus_util);
 
     /**
