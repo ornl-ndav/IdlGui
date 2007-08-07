@@ -317,8 +317,7 @@ void EventData<NumT>::create_pixel_map(const string & mapping_file)
   file.close();
 }
 
-template <typename NumT>
-string EventData<NumT>::seconds_to_iso8601(NumT seconds)
+string seconds_to_iso8601(uint32_t seconds)
 {
   char date[100];
   // Since the times start at a different epoch (jan 1, 1990) than
@@ -436,7 +435,7 @@ void EventData<NumT>::read_data(const string & event_file,
   pulse_fp.seekg(0, std::ios::beg);
   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
   this->pulse_time_offset =
-    this->seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
+    seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
   init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
 
   // Get the initial time offset

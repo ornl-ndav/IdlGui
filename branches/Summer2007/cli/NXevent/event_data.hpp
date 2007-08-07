@@ -40,6 +40,15 @@ template <typename NumT>
 inline e_nx_data_type typename_to_nexus_type(void);
 
 /** 
+ * \brief Takes a number of seconds since jan 1, 1990
+ *        and converts it to an iso8601 date string.
+ * \param seconds The number of seconds since jan 1, 1990.
+ * \param nanoseconds The nanoseconds of the current second.
+ * \param time The variable to store the ISO8601 date string in.
+ */
+std::string seconds_to_iso8601(uint32_t seconds);
+
+/** 
  * \class EventData
  * \brief Holds all the data from the event file and
  *        includes the functions for working on the
@@ -55,15 +64,6 @@ class EventData
     std::vector<int> bank_numbers;
     std::vector<NumT> events_per_pulse;
     std::vector<Bank<NumT> *> banks;
-
-    /** 
-     * \brief Takes a number of seconds since jan 1, 1990
-     *        and converts it to an iso8601 date string.
-     * \param seconds The number of seconds since jan 1, 1990.
-     * \param nanoseconds The nanoseconds of the current second.
-     * \param time The variable to store the ISO8601 date string in.
-     */
-    std::string seconds_to_iso8601(NumT seconds);
    
     /**
      * \brief Opens a bank in a nexus file.
