@@ -36,6 +36,13 @@ endfor
 END
 
 
+;this function hide or not the base hidden base of the manual scaling
+;mode of step 3
+PRO ReflSupportWidget_HideBase, Event, uname, mapBoolean
+widget_id = widget_info(Event.top,find_by_uname=uname)
+widget_control, widget_id, map=mapBoolean
+END
+
 
 
 ;This function will disable the widgets of step3 if

@@ -18,17 +18,20 @@ Step3ManualModeFrameSize             = [8, 50, 504, 300]
 
 ;low and Hight Q file names
 Step3ManualModeLowQFileLabelSize     = [25, 65]
-Step3ManualModeLowQFileNameSize      = [95, 60, 100, 30]
+Step3ManualModeLowQFileNameSize      = [105, 60, 100, 30]
 Step3ManualModeHighQFileLabelSize    = [230, 65]
 Step3ManualModeHighQFileDroplistSize = [305, 55, 60, 30]
 
+;frame that will hide all the widgets of the manual scaling box
+Step3ManualModeHiddenFrameSize = [20,90,490,240]
+
 ;Qmin and Qmax
-Step3ManualQMinLabelSize              = [40, 120]
-d_L_T = 35
+Step3ManualQMinLabelSize              = [25, 120]
+d_L_T = 120
 Step3ManualQMinTextFieldSize         = [Step3ManualQMinLabelSize[0] + d_L_T ,$
                                         Step3ManualQMinLabelSize[1] - 5,$
                                         80,30]
-d_L_L = 150
+d_L_L = 250
 Step3ManualQMaxLabelSize             = [Step3ManualQMinLabelSize[0] + d_L_L,$
                                         Step3ManualQMinLabelSize[1]]
 Step3ManualQMaxTextFieldSize         = [Step3ManualQMaxLabelSize[0] + d_L_T,$
@@ -76,8 +79,8 @@ Step3AutomaticRescaleButtonTitle  = 'Automatic rescaling'
 Step3ManualModeLabelTitle         = 'Manual rescaling'
 Step3ManualModeLowQFileLabelTitle = 'Low Q file:'
 Step3ManualModeHighQFileLabelTitle = 'High Q file:'
-Step3ManualQMinLabelTitle            = 'Qmin'
-Step3ManualQMaxLabelTitle            = 'Qmax'
+Step3ManualQMinLabelTitle            = 'Qmin of high Q file'
+Step3ManualQMaxLabelTitle            = 'Qmax of low Q file'
 Step3ManualScalingButtonTitle        = 'Manual scaling'
 
 
@@ -140,6 +143,16 @@ Step3ManualModeHighQFileDroplist = WIDGET_DROPLIST(STEP3_BASE,$
                                                    SCR_XSIZE=Step3ManualModeHighQFileDroplistSize[2],$
                                                    SCR_YSIZE=Step3ManualModeHighQFileDroplistSize[3],$
                                                    VALUE=ListOfFiles)
+
+;Manual Mode Hidden Frame
+Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
+                                   uname='Step3ManualModeHiddenFrame',$
+                                   xoffset=Step3ManualModeHiddenFrameSize[0],$
+                                   yoffset=Step3ManualModeHiddenFrameSize[1],$
+                                   scr_xsize=Step3ManualModeHiddenFrameSize[2],$
+                                   scr_ysize=Step3ManualModeHiddenFrameSize[3],$
+                                   map=1)
+
 ;Qmin label
 Step3ManualQMinLabel = widget_label(STEP3_BASE,$
                                     xoffset=Step3ManualQMinLabelSize[0],$
@@ -253,6 +266,7 @@ STEP3_Manual_mode_frame = widget_label(STEP3_BASE,$
                                        scr_ysize=Step3ManualModeFrameSize[3],$
                                        value='',$
                                        frame=1)
+
 
 
 
