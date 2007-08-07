@@ -100,9 +100,10 @@ unames_tab2 = ["step2_sf_draw",$
                "step2_y_before_draw",$
                "step2_y_after_draw",$
                "step2_before_to_after_draw"]
-unames_tab3 = ["step3_sf_draw",$
-               "step3_ri_draw",$
-               "step3_delta_ri_draw"]
+unames_tab3 = ["Step3SFDraw",$
+               "Step3YLowQDraw",$
+               "Step3YHighQDraw",$
+               "Step3_before_to_after_draw"]
 
 images_tabs_xoff = [0,0,0,0]
 images_tabs_yoff = [0,0,0,0]

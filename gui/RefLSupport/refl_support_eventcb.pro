@@ -53,21 +53,21 @@ endif else begin
    endif
 endelse
 
-;if (PrevTabSelect NE CurrTabSelect OR $
-;    isRefresh EQ 1) then begin
-;    (*global).PrevTabSelect = CurrTabSelect
-;    CASE (CurrTabSelect) OF
-;        0: begin                ;if first tab plot everything
-;        end
-;        1: begin                ;if second tab plot only CE plot
+if (PrevTabSelect NE CurrTabSelect OR $
+    isRefresh EQ 1) then begin
+    (*global).PrevTabSelect = CurrTabSelect
+    CASE (CurrTabSelect) OF
+        0: begin                ;if first tab plot everything
+        end
+        1: begin                ;if second tab plot only CE plot
             ReflSupportWidget_refresh_draw_labels_tab2, Event
-;        end
-;        2: begin            ;if third tab plot only two files selected
-;            refresh_draw_labels_tab3, Event
-;        end
-;        else:
-;    ENDCASE
-;endif
+        end
+        2: begin            ;if third tab plot only two files selected
+            ReflSupportWidget_refresh_draw_labels_tab3, Event
+        end
+        else:
+    ENDCASE
+endif
 
 END
 
@@ -108,16 +108,16 @@ widget_control,id,get_uvalue=global
 ;get the long name of the selected file
 LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
 if (LongFileName EQ '') then begin
-   clear_info_about_selected_file, Event
-   ActivateClearFileButton, Event, 0
-   ClearColorLabel, Event
-   ActivateColorSlider,Event,0
+    clear_info_about_selected_file, Event
+    ActivateClearFileButton, Event, 0
+    ClearColorLabel, Event
+    ActivateColorSlider,Event,0
 endif else begin
-   display_info_about_selected_file, Event, LongFileName
-   populateColorLabel, Event, LongFileName
-   ActivateColorSlider,Event,1
-   angleValue = getAngleValue(Event)
-   displayAngleValue, Event, angleValue
+    display_info_about_selected_file, Event, LongFileName
+    populateColorLabel, Event, LongFileName
+    ActivateColorSlider,Event,1
+    angleValue = getAngleValue(Event)
+    displayAngleValue, Event, angleValue
 endelse
 END
 
