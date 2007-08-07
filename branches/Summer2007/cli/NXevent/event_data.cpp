@@ -35,6 +35,11 @@ void EventData<uint32_t>::write_data(NexusUtil & nexus_util,
                                      const int bank_number);
 
 template 
+void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util,
+                                           const string & pulse_id_file);
+
+
+template 
 void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util);
 
 template 
@@ -169,6 +174,35 @@ const string &  EventData<NumT>::get_pulse_time_offset(void)
 
 template <typename NumT>
 void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
+{
+  // First layout the nexus file
+  nexus_util.make_group("entry", "NXentry");
+  nexus_util.open_group("entry", "NXentry");
+  int size = bank_numbers.size();
+  for (int i = 0; i < size; i++)
+    { 
+      stringstream bank_num;
+      bank_num << "bank" << this->bank_numbers[i];
+      nexus_util.make_group(bank_num.str(), "NXevent_data");
+      nexus_util.open_group(bank_num.str(), "NXevent_data");
+      nexus_util.close_group();
+    }
+  nexus_util.close_group();
+  // Write out each bank's information
+  size = this->bank_numbers.size();
+  for (int i = 0; i < size; i++)
+    {
+      if (this->banks[bank_numbers[i]]->tof.size() > 0)
+        {
+          this->write_data(nexus_util, TOF, this->bank_numbers[i]);
+          this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-7second", TOF, this->bank_numbers[i]);
+        }
+    }
+}
+
+template <typename NumT>
+void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, const string & pulse_id_file)
 {
   // First layout the nexus file
   nexus_util.make_group("entry", "NXentry");

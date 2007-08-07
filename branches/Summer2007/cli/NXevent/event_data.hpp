@@ -126,6 +126,8 @@ class EventData
      */
     void create_pixel_map(const std::string & mapping_file);
 
+    void write_nexus_file(NexusUtil & nexus_util, const std::string & pulse_id_file);
+
     void write_nexus_file(NexusUtil & nexus_util);
 
     /**

@@ -21,20 +21,6 @@ using std::runtime_error;
 using std::type_info;
 using namespace TCLAP;
 
-void layout_nexus_file(NexusUtil & nexus_util,
-                       const Config & config,
-                       vector<int> & bank_numbers) 
-{
-  nexus_util.make_group("entry", "NXentry");
-  nexus_util.open_group("entry", "NXentry");
-  
-  int size = bank_numbers.size();
-  for (int i = 0; i < size; i++) 
-    {
-      nexus_util.make_group("bank" + bank_numbers[i], "NXevent_datsa");
-    }
-}
-
 /** 
  * \brief Parses the command line and calls the necessary
  *        functions to make and populate the nexus file.
@@ -130,13 +116,28 @@ int main(int32_t argc,
     }
  
   // Gather the information from the event file
-  event_data.read_data(config.event_file, config.pulse_id_file, config.bank_file);
+  if (config.pulse_id_file.empty())
+    {
+      event_data.read_data(config.event_file, config.bank_file);
+    }
+  else
+    {
+      event_data.read_data(config.event_file, config.pulse_id_file, config.bank_file);
+    }
+
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
 
   // Write the nexus file
-  event_data.write_nexus_file(nexus_util);
+  if (config.pulse_id_file.empty())
+    {
+      event_data.write_nexus_file(nexus_util);
+    }
+  else
+    {
+      event_data.write_nexus_file(nexus_util, config.pulse_id_file);
+    }
 
   return 0;
 }
