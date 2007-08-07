@@ -42,11 +42,22 @@ endif else begin
                                 ;editable boxes if first file selected
             ReflSupportWidget_ManageStep3Tab, Event 
                                 
+            indexSelected = getSelectedIndex(Event,'step3_work_on_file_droplist')
+                                ;no interaction is possible on the CE file
+            if (indexSelected EQ 0) then begin
+                ReflSupportStep3_DisableManualScalingBox, Event
+            endif else begin
+                ReflSupportStep3_EnableManualScalingBox, Event
+            endelse
+                                ;This function displays the base file
+                                ;name unless the first file is
+                                ;selected, in this case, it shows that
+                                ;the working file is the CE file
+            ReflSupportStep3_displayLowQFileName, Event, indexSelected
                                 ;display the Qmin and Qmax for the CE file
                                 ;for now, the first file loaded is
                                 ;considered as being the CE file
-            indexSelected = getSelectedIndex(Event,'step3_work_on_file_droplist')
-            ReflSupportWidget_display_Q_values, Event, indexSelected, 3  
+            ReflSupportStep3_display_Q_values, Event, indexSelected
          end
          else:                  ;if fourth tab (settings tab) is selected
       ENDCASE

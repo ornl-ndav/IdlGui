@@ -105,11 +105,17 @@ CASE (index) OF
         index_to_plot = indgen(nbr_elements)
     end
     '2plots': begin             ;plot index and (index-1) in tab 3
-        index_to_plot = getSelectedIndex(Event, 'step3_work_on_file_droplist')
-        if (index_to_plot EQ 0) then begin
-            index_to_plot += 1
-        endif
-        index_to_plot = [index_to_plot-1,index_to_plot]
+        nbr_elements = getNbrElementsInDropList(Event,'step3_work_on_file_droplist')
+        if (nbr_elements EQ 1) then begin ;if only 1 file, must be CE file
+            index_to_plot = [0]
+        endif else begin ;more than 1 file
+            index_to_plot = getSelectedIndex(Event, 'step3_work_on_file_droplist')
+            if (index_to_plot EQ 0) then begin
+                index_to_plot = [0]
+            endif else begin
+                index_to_plot = [index_to_plot-1,index_to_plot]
+            endelse
+        endelse
     end
     'clear': begin              ;no files to plot, just erase display
         ClearPlot = 1

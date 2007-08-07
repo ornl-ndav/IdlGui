@@ -1,16 +1,40 @@
-;This function will enable or not the widgets of tab3
+;This function will enable (editable) or not the text fields of tab3
 PRO ReflSupportWidget_enableStep3Widgets,Event,sensitiveBoolean
-widget_uname = ['Step3_button',$
-                'step3_q1_text_field',$
-                'step3_q2_text_field',$
-                'step3_sf_text_field',$
-                'step3_R_text_field',$
-                'step3_deltaR_label']
-For i=0,5 do begin
+widget_uname = ['Step3_automatic_rescale_button',$
+                'Step3ManualQMinTextField',$
+                'Step3ManualQMaxTextField',$
+                'Step3YLowQTextField',$
+                'Step3YHighQTextField',$
+                'Step3SFTextField']
+
+uname_size = (size(widget_uname))(1)
+For i=0,(uname_size-1) do begin
     widget_id = widget_info(Event.top,find_by_uname=widget_uname[i])
     widget_control, widget_id, editable = sensitiveBoolean
 endfor
 END
+
+
+;this function enables or not all the widgets of the manual scaling of
+;step3
+PRO ReflSupportWidget_enableStep3ManualScalingWidgets, Event, sensitiveBoolean
+widget_uname = ['Step3ManualQMinTextField',$
+                'Step3ManualQMaxTextField',$
+                'Step3YLowQTextField',$
+                'Step3YHighQTextField',$
+                'Step3SFTextField',$
+                'Step3ManualScalingButton',$
+                'Step3SFDraw',$
+                'Step3YHighQDraw',$
+                'Step3YLowQDraw']
+
+uname_size = (size(widget_uname))(1)
+For i=0,(uname_size-1) do begin
+    widget_id = widget_info(Event.top,find_by_uname=widget_uname[i])
+    widget_control, widget_id, sensitive = sensitiveBoolean
+endfor
+END
+
 
 
 

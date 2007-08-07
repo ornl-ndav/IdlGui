@@ -18,6 +18,7 @@ cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run refl_support_widget.pro
 .run refl_support_fit.pro
 .run refl_support_step2.pro
+.run refl_support_step3.pro
 .run ArrayDelete.pro
 .run refl_support_math.pro
 .run refl_support_file_utility.pro

@@ -110,7 +110,13 @@ PRO MAIN_BASE_event, Event
         image = read_bmp(ri_logo)
         tv, image,-8,0,/true
      end
-     
+
+;--step 3--
+     ;launch the automatic rescaling of all loaded files
+     Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): begin
+        ReflSupportStep3_AutomaticRescalin, Event
+     end
+
 else:
   endcase
   

@@ -17,8 +17,8 @@ Step3ManualModeLabelSize             = [15, 42]
 Step3ManualModeFrameSize             = [8, 50, 504, 300]
 
 ;low and Hight Q file names
-Step3ManualModeLowQFileLabelSize     = [15, 65]
-Step3ManualModeLowQFileNameSize      = [85, 60, 100, 30]
+Step3ManualModeLowQFileLabelSize     = [25, 65]
+Step3ManualModeLowQFileNameSize      = [95, 60, 100, 30]
 Step3ManualModeHighQFileLabelSize    = [230, 65]
 Step3ManualModeHighQFileDroplistSize = [305, 55, 60, 30]
 
@@ -111,23 +111,26 @@ STEP3_automatic_rescale_button = WIDGET_BUTTON(STEP3_BASE,$
 ;manual mode
 ;low Q label
 Step3ManualModeLowQFileLabel = widget_label(STEP3_BASE,$
+                                            uname='Step3ManualModeLowQFileLabel',$
                                             xoffset=Step3ManualModeLowQFileLabelSize[0],$
                                             yoffset=Step3ManualModeLowQFileLabelSize[1],$
                                             value=Step3ManualModeLowQFileLabelTitle)
 
 ;low Q field name
 Step3ManualModeLowQFileName = widget_label(STEP3_BASE,$
+                                           uname='Step3ManualModeLowQFileName',$
                                            xoffset=Step3ManualModeLowQFileNameSize[0],$
                                            yoffset=Step3ManualModeLowQFileNameSize[1],$
                                            scr_xsize=Step3ManualModeLowQFileNameSize[2],$
                                            scr_ysize=Step3ManualModeLowQFileNameSize[3],$
-                                           value='REF_L_2899.txt')
+                                           value='')
 
 ;high Q label
 Step3ManualModeHighQFileLabel = widget_label(STEP3_BASE,$
-                                            xoffset=Step3ManualModeHighQFileLabelSize[0],$
-                                            yoffset=Step3ManualModeHighQFileLabelSize[1],$
-                                            value=Step3ManualModeHighQFileLabelTitle)
+                                             uname='Step3ManualModeHighQFileLabel',$
+                                             xoffset=Step3ManualModeHighQFileLabelSize[0],$
+                                             yoffset=Step3ManualModeHighQFileLabelSize[1],$
+                                             value=Step3ManualModeHighQFileLabelTitle)
 
 ;high Q droplist
 Step3ManualModeHighQFileDroplist = WIDGET_DROPLIST(STEP3_BASE,$
