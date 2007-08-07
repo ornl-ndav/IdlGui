@@ -1,8 +1,94 @@
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
-PRO ReflSupportStep3_AutomaticRescalin, Event
+PRO ReflSupportStep3_AutomaticRescaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+flt0_ptr = (*global).flt0_ptr
+flt1_ptr = (*global).flt1_ptr
+flt2_ptr = (*global).flt2_ptr
+Qmin_array = (*(*global).Qmin_array)
+Qmax_array = (*(*global).Qmax_array)
+
+;get number of files loaded
+nbrFile = (*global).NbrFilesLoaded
+for i=1,(nbrFile-1) do begin
+
+;get Qmin and Qmax
+    Qmin = float(Qmin_array[i])
+    Qmax = float(Qmax_array[i-1])
+
+;change the Q range
+    Qrange = (Qmax - Qmin)
+;remove 10% of first part and 50% of last part
+    Qmin = Qmin + (Qrange/25)*100
+    Qmax = Qmax - (Qrange/50)*100
+
+;HIGH Q file
+;get flt0 of high Q file
+    flt0_highQ = *flt0_ptr[i]
+    flt1_highQ = *flt1_ptr[i]
+    flt2_highQ = *flt2_ptr[i]
+
+;determine the working indexes of flt0, flt1 and flt2 for high Q file
+    RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax)
+    left_index = RangeIndexes[0]
+    right_index = RangeIndexes[1]
+    
+;determine working range of low Q file
+    flt0_highQ_new = flt0_highQ[left_index:right_index]
+    flt1_highQ_new = flt1_highQ[left_index:right_index]
+    flt2_highQ_new = flt2_highQ[left_index:right_index]
+
+;remove the non defined and inf values from flt0_highQ, flt1_highQ and flt2_highQ
+    RangeIndexes = getArrayRangeOfNotNanValues(flt1_highQ_new)
+    flt0_highQ_new = flt0_highQ_new(RangeIndexes)
+    flt1_highQ_new = flt1_highQ_new(RangeIndexes)
+    flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+
+;remove points that are error GE than their values
+    RangeIndexes = getArrayRangeOfErrorGEValue(flt1_highQ_new, flt2_highQ_new)
+    flt0_highQ_new = flt0_highQ_new(RangeIndexes)
+    flt1_highQ_new = flt1_highQ_new(RangeIndexes)
+    flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+
+;start function that will calculate the fit parameters
+    FitOrder3Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i
+
+;LOW Q file
+;get flt0 of low Q file
+    flt0_lowQ = *flt0_ptr[i-1]
+    flt1_lowQ = *flt1_ptr[i-1]
+    flt2_lowQ = *flt2_ptr[i-1]
+
+;determine the working indexes of flt0, flt1 and flt2 for low Q file
+    RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax)
+    left_index = RangeIndexes[0]
+    right_index = RangeIndexes[1]
+    
+;determine working range of high Q file
+    flt0_lowQ_new = flt0_lowQ[left_index:right_index]
+    flt1_lowQ_new = flt1_lowQ[left_index:right_index]
+    flt2_lowQ_new = flt2_lowQ[left_index:right_index]
+
+;remove the non defined and inf values from flt0_lowQ, flt1_lowQ and flt2_lowQ
+    RangeIndexes = getArrayRangeOfNotNanValues(flt1_lowQ_new)
+    flt0_lowQ_new = flt0_lowQ_new(RangeIndexes)
+    flt1_lowQ_new = flt1_lowQ_new(RangeIndexes)
+    flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
+
+;remove points that are error GE than their values
+    RangeIndexes = getArrayRangeOfErrorGEValue(flt1_LowQ_new, flt2_LowQ_new)
+    flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
+    flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
+    flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
+
+;start function that will calculate the fit parameters
+    FitOrder3Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1
+
+endfor
+
+plot_loaded_file, Event, '2plots'
 
 END
 
