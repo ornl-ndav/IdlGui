@@ -30,14 +30,8 @@ void EventData<uint32_t>::read_data(const string & event_file,
                                     const string & bank_file);
 
 template 
-void EventData<uint32_t>::write_data(NexusUtil & nexus_util, 
-                                     const e_data_name nx_data_name,
-                                     const int bank_number);
-
-template 
 void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util,
                                            const string & pulse_id_file);
-
 
 template 
 void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util);
@@ -47,17 +41,7 @@ void EventData<uint32_t>::read_data(const string & event_file,
                                     const string & bank_file);
 
 template 
-void EventData<uint32_t>::write_attr(NexusUtil & nexus_util,
-                                     const string & attr_name,
-                                     const string & attr_value,
-                                     const e_data_name nx_data_name,
-                                     const int bank_number);
-
-template 
 void EventData<uint32_t>::create_pixel_map(const string & mapping_file);
-
-template 
-const string & EventData<uint32_t>::get_pulse_time_offset(void);
 
 template 
 EventData<uint32_t>::EventData();
@@ -196,7 +180,8 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
         {
           this->write_data(nexus_util, TOF, this->bank_numbers[i]);
           this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "units", "10^-7second", TOF, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-7second", 
+                           TOF, this->bank_numbers[i]);
         }
     }
 }
@@ -227,9 +212,12 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, const string & pu
           this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
           this->write_data(nexus_util, PULSE_TIME, this->bank_numbers[i]);
           this->write_data(nexus_util, EVENTS_PER_PULSE, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "units", "10^-7second", TOF, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "units", "10^-9second", PULSE_TIME, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "offset", this->get_pulse_time_offset(), PULSE_TIME, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-7second", 
+                           TOF, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-9second", 
+                           PULSE_TIME, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "offset", this->get_pulse_time_offset(), 
+                           PULSE_TIME, this->bank_numbers[i]);
         }
     }
 }
@@ -273,25 +261,29 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
   if (nx_data_name == TOF)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->tof, data_name,
+                               this->banks[bank_number]->tof, 
+                               data_name,
                                bank_number);
     }
   else if (nx_data_name == PIXEL_ID)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->pixel_id, data_name,
+                               this->banks[bank_number]->pixel_id, 
+                               data_name,
                                bank_number);
     }
   else if (nx_data_name == PULSE_TIME)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->pulse_time, data_name,
+                               this->banks[bank_number]->pulse_time, 
+                               data_name,
                                bank_number);
     }
   else if (nx_data_name == EVENTS_PER_PULSE)
     {
       this->write_private_data(nexus_util, 
-                               this->banks[bank_number]->events_per_pulse, data_name,
+                               this->banks[bank_number]->events_per_pulse, 
+                               data_name,
                                bank_number);
     }
   else
@@ -329,7 +321,8 @@ void EventData<NumT>::create_pixel_map(const string & mapping_file)
   file.seekg(0, std::ios::beg);
   while(offset < file_size)
     {
-      file.read(reinterpret_cast<char *>(buffer), buffer_size * data_size);
+      file.read(reinterpret_cast<char *>(buffer), 
+                buffer_size * data_size);
 
       // For each mapping index, map the pixel id
       // in the mapping file to that index
@@ -385,7 +378,8 @@ void EventData<NumT>::read_data(const string & event_file,
   // Determine the event file and buffer size
   event_fp.seekg(0, std::ios::end);
   size_t event_file_size = event_fp.tellg() / data_size;
-  size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
+  size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? 
+                               event_file_size : BLOCK_SIZE;
 
   Bank<NumT> *bank;
   this->parse_bank_file(bank_file);
@@ -394,7 +388,8 @@ void EventData<NumT>::read_data(const string & event_file,
   event_fp.seekg(0, std::ios::beg);
   while(event_fp_offset < event_file_size)
     {
-      event_fp.read(reinterpret_cast<char *>(event_buffer), event_buffer_size * data_size);
+      event_fp.read(reinterpret_cast<char *>(event_buffer), 
+                    event_buffer_size * data_size);
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
@@ -407,7 +402,8 @@ void EventData<NumT>::read_data(const string & event_file,
               bank = this->bank_map[*(event_buffer + event_i + 1)];
               
               bank->tof.push_back(*(event_buffer + event_i));
-              bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
+              bank->pixel_id.push_back(
+                this->pixel_id_map[*(event_buffer + event_i + 1)]);
             }
         }
 
@@ -444,7 +440,8 @@ void EventData<NumT>::read_data(const string & event_file,
   // Determine the event file and buffer size
   event_fp.seekg(0, std::ios::end);
   size_t event_file_size = event_fp.tellg() / data_size;
-  size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? event_file_size : BLOCK_SIZE;
+  size_t event_buffer_size = (event_file_size < BLOCK_SIZE) ? 
+                               event_file_size : BLOCK_SIZE;
 
   NumT pulse_buffer[BLOCK_SIZE];
   size_t pulse_fp_offset = 0;
@@ -462,12 +459,14 @@ void EventData<NumT>::read_data(const string & event_file,
   // Determine the file and buffer size
   pulse_fp.seekg(0, std::ios::end);
   size_t pulse_file_size = pulse_fp.tellg() / data_size;
-  size_t pulse_buffer_size = (pulse_file_size < BLOCK_SIZE) ? pulse_file_size : BLOCK_SIZE;
+  size_t pulse_buffer_size = (pulse_file_size < BLOCK_SIZE) ? 
+                               pulse_file_size : BLOCK_SIZE;
 
   // Read in the initial time and convert it to ISO8601. Skip the initial
   // index since it will always be zero.
   pulse_fp.seekg(0, std::ios::beg);
-  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
+  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), 
+                pulse_buffer_size * data_size);
   this->pulse_time_offset =
     seconds_to_iso8601(static_cast<NumT>(*(pulse_buffer + 1)));
   init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
@@ -475,8 +474,8 @@ void EventData<NumT>::read_data(const string & event_file,
   // Get the initial time offset
   prev_time = static_cast<NumT>(*(pulse_buffer));  
 
-  // Since the first pulse offset is zero and doesn't matter, skip to the next one and
-  // start with it.
+  // Since the first pulse offset is zero and doesn't matter, skip to the 
+  // next one and start with it.
   pulse_i = 4; 
   pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_i + 2));
   // Make sure to not read past EOF
@@ -492,7 +491,8 @@ void EventData<NumT>::read_data(const string & event_file,
   event_fp.seekg(0, std::ios::beg);
   while(event_fp_offset < event_file_size)
     {
-      event_fp.read(reinterpret_cast<char *>(event_buffer), event_buffer_size * data_size);
+      event_fp.read(reinterpret_cast<char *>(event_buffer), 
+                    event_buffer_size * data_size);
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
@@ -500,7 +500,8 @@ void EventData<NumT>::read_data(const string & event_file,
         {
           if (event_number == pulse_index)
             {
-              prev_time = ((static_cast<NumT>(*(pulse_buffer + pulse_i + 1)) * 1000000000)
+              prev_time = ((static_cast<NumT>(*(pulse_buffer + pulse_i + 1)) 
+                          * 1000000000)
                           + static_cast<NumT>(*(pulse_buffer + pulse_i)))
                           -((init_seconds * 1000000000));
               pulse_i += 4;
@@ -512,7 +513,8 @@ void EventData<NumT>::read_data(const string & event_file,
                     {
                       pulse_buffer_size = pulse_file_size - pulse_fp_offset;
                     }
-                  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), pulse_buffer_size * data_size);
+                  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), 
+                                pulse_buffer_size * data_size);
                 }
               pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_i + 2));
             }
@@ -523,7 +525,8 @@ void EventData<NumT>::read_data(const string & event_file,
               // Use pointer arithmetic for speed
               bank = this->bank_map[*(event_buffer + event_i + 1)];
               bank->tof.push_back(*(event_buffer + event_i));
-              bank->pixel_id.push_back(this->pixel_id_map[*(event_buffer + event_i + 1)]);
+              bank->pixel_id.push_back(
+                this->pixel_id_map[*(event_buffer + event_i + 1)]);
               if (bank->pulse_index == -1 ||
                   prev_time !=
                   bank->pulse_time[bank->pulse_index])
