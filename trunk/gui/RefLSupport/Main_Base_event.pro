@@ -114,7 +114,7 @@ PRO MAIN_BASE_event, Event
 ;--step 3--
      ;launch the automatic rescaling of all loaded files
      Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): begin
-        ReflSupportStep3_AutomaticRescalin, Event
+        ReflSupportStep3_AutomaticRescaling, Event
      end
 
 else:

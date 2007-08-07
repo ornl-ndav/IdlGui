@@ -1,3 +1,12 @@
+;This function gives a list of point to keep, for which the Y value is
+;greater than the error bar
+FUNCTION getArrayRangeOfErrorGEValue, flt1, flt2
+index = where(flt2 LT flt1)
+return, index
+END
+
+
+
 ;This function returns 1 if the specified axis scale is linear
 ;and 0 if it's logarithmic
 FUNCTION getScale, Event, axis
@@ -10,7 +19,6 @@ axis_id = widget_info(Event.top,find_by_uname=uname)
 widget_control, axis_id, get_value=value
 return, value
 END
-
 
 
 

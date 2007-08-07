@@ -49,6 +49,14 @@ endif else begin
             endif else begin
                 ReflSupportStep3_EnableManualScalingBox, Event
             endelse
+                                ;this function disable the automatic
+                                ;scaling button is the number of files
+                                ;to scale is 1 or less
+            if ((*global).NbrFilesLoaded LE 1) then begin
+                ActivateButton, Event, 'Step3_automatic_rescale_button', 0
+            endif else begin
+                ActivateButton, Event, 'Step3_automatic_rescale_button', 1
+            endelse
                                 ;This function displays the base file
                                 ;name unless the first file is
                                 ;selected, in this case, it shows that

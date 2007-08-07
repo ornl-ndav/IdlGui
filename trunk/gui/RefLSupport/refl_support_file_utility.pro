@@ -77,6 +77,7 @@ ReflSupportWidget_updateDropList, Event, ListOfFiles
 ArraySize = getSizeOfArray(ListOfFiles)
 if (ArraySize EQ 0) then begin
    validate = 0
+   
 endif else begin
    validate = 1
 endelse

@@ -212,10 +212,13 @@ endif else begin ;at least one file has to be ploted
         
         errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
         
+
+        
+;fitting plots
+case (index) of
+    'CE': begin                 ;CE file only (linear fitting)
+                                ;polynome of degree 1 for CE 
         cooef = (*(*global).CEcooef)
-        
-;polynome of degree 1 for CE 
-        
         if (cooef[0] NE 0 AND $
             cooef[1] NE 0) then begin
             show_error_plot=1
@@ -223,7 +226,22 @@ endif else begin ;at least one file has to be ploted
             y_new = cooef(1)*flt0_new + cooef(0)
             oplot,flt0_new,y_new,color=400,thick=1.5
         endif
-        
+    end
+else:
+    
+    '2plots': begin
+       cooef = (*global).fit_cooef_ptr
+       cooef_low_Q = *cooef[i]
+       if (cooef[0] NE 0 AND $
+           cooef[1] NE 0 AND $
+           cooef[2] NE 0 AND $
+           cooef[3] NE 0) then begin
+           y_new = cooef(3)*flt0^3 + cooef(2)*flt0^2 + cooef(1)*flt0_new + cooef(0)
+           oplot,flt0_new,y_new,color=400,thick=1.5
+       endif
+   end
+endcase
+
     endfor
     
 endelse

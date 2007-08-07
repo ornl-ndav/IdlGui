@@ -103,7 +103,6 @@ flt2_new = flt2[left_index:right_index]
 
 ;remove the non defined and inf values from flt0, flt1 and flt2
 RangeIndexes = getArrayRangeOfNotNanValues(flt1_new)
-
 flt0_new = flt0_new(RangeIndexes)
 flt1_new = flt1_new(RangeIndexes)
 flt2_new = flt2_new(RangeIndexes)

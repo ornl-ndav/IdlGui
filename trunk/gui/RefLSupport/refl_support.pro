@@ -19,6 +19,7 @@ global = ptr_new({  $
                    flt0_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
                    flt1_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
                    flt2_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
+                   fit_cooef_ptr   : ptrarr(20,/allocate_heap),$
                    rescaling_ymax : 1.2,$            ;ymax when rescalling data
                    rescaling_ymin : 0,$              ;ymin when rescalling data
                    full_CE_name   : '',$             ;full path to CE file
