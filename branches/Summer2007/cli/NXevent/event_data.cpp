@@ -153,7 +153,14 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
 template <typename NumT>
 const string &  EventData<NumT>::get_pulse_time_offset(void)
 {
-  return this->pulse_time_offset;
+  if (this->pulse_time_offset.empty())
+    {
+      throw runtime_error("Pulse time offset hasn't been created");
+    }
+  else
+    {
+      return this->pulse_time_offset;
+    }
 }
 
 template <typename NumT>
