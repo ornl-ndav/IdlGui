@@ -52,6 +52,9 @@ template
 void EventData<uint32_t>::create_pixel_map(const string & mapping_file);
 
 template 
+const string & EventData<uint32_t>::get_pulse_time_offset(void);
+
+template 
 EventData<uint32_t>::EventData();
 
 template 
@@ -159,6 +162,12 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
 }
 
 template <typename NumT>
+const string &  EventData<NumT>::get_pulse_time_offset(void)
+{
+  return this->pulse_time_offset;
+}
+
+template <typename NumT>
 void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
 {
   // First layout the nexus file
@@ -184,6 +193,9 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
           this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
           this->write_data(nexus_util, PULSE_TIME, this->bank_numbers[i]);
           this->write_data(nexus_util, EVENTS_PER_PULSE, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-7second", TOF, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "units", "10^-9second", PULSE_TIME, this->bank_numbers[i]);
+          this->write_attr(nexus_util, "offset", this->get_pulse_time_offset(), PULSE_TIME, this->bank_numbers[i]);
         }
     }
 }

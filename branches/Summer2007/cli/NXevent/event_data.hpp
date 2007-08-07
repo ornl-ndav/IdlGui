@@ -91,6 +91,8 @@ class EventData
                             const int bank_number);
 
   public:
+    const std::string & get_pulse_time_offset(void);
+
     void parse_bank_file(const std::string & bank_file);
  
     /**
