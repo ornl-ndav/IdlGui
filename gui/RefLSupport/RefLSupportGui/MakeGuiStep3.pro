@@ -227,12 +227,12 @@ Step3LowQLabel = widget_label(STEP3_BASE,$
                               value=Step3ManualModeLowQFileLabelTitle)
 
 Step3LowQFileNameLabel = widget_label(STEP3_BASE,$
-                                      uname='Step3ManualModeLowQFileName',$
+                                      uname='Step3LowQFileNameLabel',$
                                       xoffset=Step3LowQFileNameLabelSize[0],$
                                       yoffset=Step3LowQFileNameLabelSize[1],$
                                       scr_xsize=Step3LowQFileNameLabelSize[2],$
                                       scr_ysize=Step3LowQFileNameLabelSize[3],$
-                                      value='REF_L_28944.txt')
+                                      value='')
                               
 ;High Q file name
 Step3HighQLabel = widget_label(STEP3_BASE,$
@@ -244,12 +244,12 @@ Step3HighQLabel = widget_label(STEP3_BASE,$
                               value=Step3ManualModeHighQFileLabelTitle)
 
 Step3HighQFileNameLabel = widget_label(STEP3_BASE,$
-                                       uname='Step3ManualModeLowQFileName',$
-                                      xoffset=Step3HighQFileNameLabelSize[0],$
-                                      yoffset=Step3HighQFileNameLabelSize[1],$
-                                      scr_xsize=Step3HighQFileNameLabelSize[2],$
-                                      scr_ysize=Step3HighQFileNameLabelSize[3],$
-                                      value='')
+                                       uname='Step3HighQFileNameLabel',$
+                                       xoffset=Step3HighQFileNameLabelSize[0],$
+                                       yoffset=Step3HighQFileNameLabelSize[1],$
+                                       scr_xsize=Step3HighQFileNameLabelSize[2],$
+                                       scr_ysize=Step3HighQFileNameLabelSize[3],$
+                                       value='')
                               
 
 
@@ -270,7 +270,7 @@ Step3SFTextField = widget_text(STEP3_BASE,$
                                uname='Step3SFTextField',$
                                /editable,$
                                /align_left,$
-                               value=1)
+                               value='1')
 
 ;Before to after arrow
 Step3BeforeToAfterDraw = widget_draw(STEP3_BASE,$
@@ -332,22 +332,6 @@ Step3_1DecreaseButton = widget_button(STEP3_BASE,$
                                       value='-')
 
 
-
-
-
-
-
-;;Manual scaling button
-;Step3ManualScalingButton = widget_button(STEP3_BASE,$
-;                                         uname='Step3ManualScalingButton',$
-;                                         xoffset=Step3ManualScalingButtonSize[0],$
-;                                         yoffset=Step3ManualScalingButtonSize[1],$
-;                                         scr_xsize=Step3ManualScalingButtonSize[2],$
-;                                         scr_ysize=Step3ManualScalingButtonSize[3],$
-;                                         value=Step3ManualScalingButtonTitle)
-
-
-
 STEP3_Manual_mode_label = widget_label(STEP3_BASE,$
                                        xoffset=Step3ManualModeLabelSize[0],$
                                        yoffset=Step3ManualModeLabelSize[1],$
@@ -370,112 +354,6 @@ STEP3_Manual_mode_frame = widget_label(STEP3_BASE,$
 
 
 
-; STEP3_WORK_ON_FILE_DROPLIST = WIDGET_DROPLIST(STEP3_BASE,$
-;                                            UNAME='step3_work_on_file_droplist',$
-;                                            XOFFSET=Step3WorkOnFileSize[0],$
-;                                            YOFFSET=Step3WorkOnFileSize[1],$
-;                                            SCR_XSIZE=Step3WorkOnFileSize[2],$
-;                                            SCR_YSIZE=Step3WorkOnFileSize[3],$
-;                                            VALUE=ListOfFiles,$
-;                                            TITLE=Step3WorkOnFileTitle)
-
-; STEP3_BUTTON = WIDGET_BUTTON(STEP3_BASE,$
-;                              UNAME='Step3_button',$
-;                              XOFFSET=Step3GoButtonSize[0],$
-;                              YOFFSET=Step3GoButtonSize[1],$
-;                              SCR_XSIZE=Step3GoButtonSize[2],$
-;                              SCR_YSIZE=Step3GoButtonSize[3],$
-;                              SENSITIVE=1,$
-;                              VALUE=Step3GoButtonTitle)
-
-; STEP3_Q1_LABEL = WIDGET_LABEL(STEP3_BASE,$
-;                               XOFFSET=Step3Q1LabelSize[0],$
-;                               YOFFSET=Step3Q1LabelSize[1],$
-;                               SCR_XSIZE=Step3Q1LabelSize[2],$
-;                               SCR_YSIZE=Step3Q1LabelSize[3],$
-;                               VALUE=Step2Q1LabelTitle)
-
-; STEP3_Q1_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-;                                   UNAME='step3_q1_text_field',$
-;                                   XOFFSET=Step3Q1TextFieldSize[0],$
-;                                   YOFFSET=Step3Q1TextFieldSize[1],$
-;                                   SCR_XSIZE=Step3Q1TextFieldSize[2],$
-;                                   SCR_YSIZE=Step3Q1TextFieldSize[3],$
-;                                   VALUE='',$
-;                                   /EDITABLE,$
-;                                   /ALIGN_LEFT,$
-;                                   /ALL_EVENTS)
-
-; STEP3_Q2_LABEL = WIDGET_LABEL(STEP3_BASE,$
-;                               XOFFSET=Step3Q2LabelSize[0],$
-;                               YOFFSET=Step3Q2LabelSize[1],$
-;                               SCR_XSIZE=Step3Q2LabelSize[2],$
-;                               SCR_YSIZE=Step3Q2LabelSize[3],$
-;                               VALUE=Step2Q2LabelTitle)
-
-; STEP3_Q2_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-;                                   UNAME='step3_q2_text_field',$
-;                                   XOFFSET=Step3Q2TextFieldSize[0],$
-;                                   YOFFSET=Step3Q2TextFieldSize[1],$
-;                                   SCR_XSIZE=Step3Q2TextFieldSize[2],$
-;                                   SCR_YSIZE=Step3Q2TextFieldSize[3],$
-;                                   VALUE='',$
-;                                   /EDITABLE,$
-;                                   /ALIGN_LEFT,$
-;                                   /ALL_EVENTS)
-
-; STEP3_SF_draw = WIDGET_draw(STEP3_BASE,$
-;                             uname='step3_sf_draw',$
-;                             XOFFSET=Step3SFdrawSize[0],$
-;                             YOFFSET=Step3SFdrawSize[1],$
-;                             SCR_XSIZE=Step3SFdrawSize[2],$
-;                             SCR_YSIZE=Step3SFdrawSize[3])
-
-
-; STEP3_SF_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-;                                   UNAME='step3_sf_text_field',$
-;                                   XOFFSET=Step3SFTextFieldSize[0],$
-;                                   YOFFSET=Step3SFTextFieldSize[1],$
-;                                   SCR_XSIZE=Step3SFTextFieldSize[2],$
-;                                   SCR_YSIZE=Step3SFTextFieldSize[3],$
-;                                   VALUE='',$
-;                                   /EDITABLE,$
-;                                   /ALIGN_LEFT,$
-;                                   /ALL_EVENTS)
-
-; step3_ri_draw = WIDGET_DRAW(STEP3_BASE,$
-;                             uname='step3_ri_draw',$
-;                             XOFFSET=Step3RDrawSize[0],$
-;                             YOFFSET=Step3RDrawSize[1],$
-;                             SCR_XSIZE=Step3RDrawSize[2],$
-;                             SCR_YSIZE=Step3RDrawSize[3])
-
-; STEP3_R_TEXT_FIELD = WIDGET_TEXT(STEP3_BASE,$
-;                                  UNAME='step3_R_text_field',$
-;                                  XOFFSET=Step3RTextFieldSize[0],$
-;                                  YOFFSET=Step3RTextFieldSize[1],$
-;                                  SCR_XSIZE=Step3RTextFieldSize[2],$
-;                                  SCR_YSIZE=Step3RTextFieldSize[3],$
-;                                  VALUE='',$
-;                                  /EDITABLE,$
-;                                  /ALIGN_LEFT,$
-;                                  /ALL_EVENTS)
-
-; STEP3_delta_ri_draw = WIDGET_DRAW(STEP3_BASE,$
-;                                  uname='step3_delta_ri_draw',$
-;                                  XOFFSET=Step3DeltaRDrawSize[0],$
-;                                  YOFFSET=Step3DeltaRDrawSize[1],$
-;                                  SCR_XSIZE=Step3DeltaRDrawSize[2],$
-;                                  SCR_YSIZE=Step3DeltaRDrawSize[3])
-
-; STEP3_deltaR_label = WIDGET_LABEL(STEP3_BASE,$
-;                                   UNAME='step3_deltaR_label',$
-;                                   XOFFSET=Step3DeltaRLabelSize[0],$
-;                                   YOFFSET=Step3DeltaRLabelSize[1],$
-;                                   SCR_XSIZE=Step3DeltaRLabelSize[2],$
-;                                   SCR_YSIZE=Step3DeltaRLabelSize[3],$
-;                                   VALUE='',$
-;                                   /ALIGN_LEFT)
 
 
 
