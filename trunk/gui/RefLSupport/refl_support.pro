@@ -13,13 +13,14 @@ endif else begin
 endelse
 
 global = ptr_new({  $
-                   flt0_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
-                   flt1_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
-                   flt2_ptr       : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
+                   flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
+                   flt1_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
+                   flt2_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
                    flt0_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
                    flt1_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
                    flt2_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
-                   fit_cooef_ptr   : ptrarr(20,/allocate_heap),$
+                   fit_cooef_ptr    : ptrarr(20,/allocate_heap),$ 
+                   flt0_range       : ptrarr(2,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
                    rescaling_ymax : 1.2,$            ;ymax when rescalling data
                    rescaling_ymin : 0,$              ;ymin when rescalling data
                    full_CE_name   : '',$             ;full path to CE file
@@ -36,7 +37,7 @@ global = ptr_new({  $
                    angleValue     : float(0),$       ;current value of the angle (float)
                    CEcooef        : ptr_new(0L),$    ;the fitting coeff of the CE file
                    flt0_CE_range  : ptr_new(0L),$    ;flt0 between Q1 and Q2 for CE file
-                   CE_scaling_factor : float(0),$           ;The CE scaling factor to go from Y to 1
+                   CE_scaling_factor : float(0),$    ;The CE scaling factor to go from Y to 1
                    flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
                    flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
                    flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
@@ -50,14 +51,16 @@ global = ptr_new({  $
                    color_array    : ptr_new(0L),$    ;index of color for each file 
                    Qmin_array     : ptr_new(0L),$    ;list of Qmin
                    Qmax_array     : ptr_new(0L),$    ;list of Qmax
-                   ColorSliderDefaultValue : 25,$ ;default index value of color slider
+                   ColorSliderDefaultValue : 25,$    ;default index value of color slider
                    PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$;list of path of file loaded
                    images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)
                    unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab2
                    unames_tab3    : ptr_new(0L),$    ;list of widget_draw of tab3
                    images_tabs_xoff : ptr_new(0L),$  ;images x_offset of tabs
-                   images_tabs_yoff : ptr_new(0L)$   ;images y_offset of tabs  
+                   images_tabs_yoff : ptr_new(0L),$  ;images y_offset of tabs  
+                   show_CE_fit      : 0,$            ;0 means the step2 has not been performed
+                   show_other_fit   : 0$             ;0 means that the step3 has not been done yet
                  })
 
 CEcooef       = lonarr(3)

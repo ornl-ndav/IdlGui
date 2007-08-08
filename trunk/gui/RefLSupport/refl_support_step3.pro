@@ -52,6 +52,11 @@ for i=1,(nbrFile-1) do begin
     flt1_highQ_new = flt1_highQ_new(RangeIndexes)
     flt2_highQ_new = flt2_highQ_new(RangeIndexes)
 
+;store flt0_highQ_new into flt0_pointer[0]
+flt0_ptr = (*global).flt0_range
+*flt0_ptr[0] = flt0_highQ_new
+(*global).flt0_range = flt0_ptr
+
 ;start function that will calculate the fit parameters
     FitOrder3Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i
 
@@ -82,6 +87,10 @@ for i=1,(nbrFile-1) do begin
     flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
     flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
     flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
+
+;store flt0_LowQ_new into flt0_pointer[1]
+    *flt0_ptr[1] = flt0_LowQ_new
+    (*global).flt0_range = flt0_ptr
 
 ;start function that will calculate the fit parameters
     FitOrder3Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1

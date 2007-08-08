@@ -11,9 +11,7 @@ cooef = POLY_FIT(flt0, flt1, 2, MEASURE_ERRORS=flt2, $
 fit_cooef_ptr = (*global).fit_cooef_ptr
 *fit_cooef_ptr[index] = cooef
 (*global).fit_cooef_ptr = fit_cooef_ptr
-
-print, 'index is: ' + strcompress(index)
-print, cooef
+(*global).show_other_fit = 1
 
 END
 
@@ -29,6 +27,7 @@ widget_control,id,get_uvalue=global
 cooef = POLY_FIT(flt0, flt1, 1, MEASURE_ERRORS=flt2, $
    SIGMA=sigma)
 (*(*global).CEcooef) = cooef
+(*global).show_CE_fit = 1
 
 ;; Print the coefficients:
 ;PRINT, 'Coefficients: ', cooef
