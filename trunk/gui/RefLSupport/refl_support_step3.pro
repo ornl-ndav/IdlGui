@@ -1,3 +1,56 @@
+;This function rescale manually the working file using the new SF 
+PRO ReflSupportStep3_RescaleFile, Event, delta_SF
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+flt1_ptr = (*global).flt1_ptr
+flt2_ptr = (*global).flt2_ptr
+
+;get value of current SF
+sSF = getTextFieldValue(Event,'Step3SFTextField')
+SF = float(sSF)
+SF += float(delta_SF)
+
+if (SF LE 0) then begin
+    SF = float(0.0001)
+endif
+
+;put new SF value in text box
+putValueInTextField, Event,'Step3SFTextField',SF
+
+;get selected index of droplist
+index = getSelectedIndex(Event,'step3_work_on_file_droplist')
+
+flt1 = *flt1_ptr[index]
+flt2 = *flt2_ptr[index]
+
+print, 'before'
+print, flt2[50]
+
+SF = SF[0]
+
+;rescale data
+flt1 = flt1 / SF
+flt2 = flt2 / sqrt(SF)
+
+print, 'after'
+print, flt2[50]
+
+flt1_rescale_ptr = (*global).flt1_rescale_ptr
+flt2_rescale_ptr = (*global).flt2_rescale_ptr
+
+*flt1_rescale_ptr[index] = flt1
+*flt2_rescale_ptr[index] = flt2
+
+(*global).flt1_rescale_ptr = flt1_rescale_ptr
+(*global).flt2_rescale_ptr = flt2_rescale_ptr
+
+plot_loaded_file, Event, '2plots'
+
+END
+
+
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
 PRO ReflSupportStep3_AutomaticRescaling, Event
@@ -143,12 +196,16 @@ if (indexSelected EQ 0) then begin
     textHighQ = 'C.E. file ->'
     textLowQ  = ''
     text      = ''
+    text2     = ''
 endif else begin
     textLowQ  = 'Low Q file:'
     textHighQ = 'High Q file:'
     list_of_files = (*(*global).list_of_files)
     text = list_of_files[indexSelected-1]
+    text2 = list_of_files[indexSelected]
 endelse
+putValueInLabel, Event, 'Step3LowQFileNameLabel',text
+putValueInLabel, Event, 'Step3HighQFileNameLabel',text2
 putValueInLabel, Event, 'Step3ManualModeLowQFileLabel',textLowQ
 putValueInLabel, Event, 'Step3ManualModeHighQFileLabel',textHighQ
 putValueInLabel, Event, 'Step3ManualModeLowQFileName',text
