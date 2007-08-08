@@ -117,6 +117,41 @@ PRO MAIN_BASE_event, Event
         ReflSupportStep3_AutomaticRescaling, Event
      end
 
+     ;SF += 0.5
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_3increase_button'): begin
+         ReflSupportStep3_rescale_file, Event, 0.5
+     end
+
+     ;SF += 0.1
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_2increase_button'): begin
+         ReflSupportStep3_rescale_file, Event, 0.1
+     end
+
+     ;SF += 0.01
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_1increase_button'): begin
+         ReflSupportStep3_rescale_file, Event, 0.01
+     end
+
+     ;SF -= 0.5
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_3decrease_button'): begin
+         ReflSupportStep3_rescale_file, Event, -0.5
+     end
+     
+    ;SF -= 0.1
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_2decrease_button'): begin
+         ReflSupportStep3_rescale_file, Event, -0.1
+     end
+ 
+    ;SF -= 0.01
+     Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): begin
+         ReflSupportStep3_rescale_file, Event, -0.01
+     end
+ 
+
+
+
+
+
 else:
   endcase
   
