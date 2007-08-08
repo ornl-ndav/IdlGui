@@ -14,7 +14,7 @@ Step3AutomaticRescaleButtonSize      = [5, 5, 515, 30]
 ;**manual mode
 ;main frame
 Step3ManualModeLabelSize             = [15, 42]
-Step3ManualModeFrameSize             = [8, 50, 504, 300]
+Step3ManualModeFrameSize             = [8, 50, 504, 305]
 
 ;low and Hight Q file names
 Step3ManualModeLowQFileLabelSize     = [25, 65]
@@ -23,7 +23,7 @@ Step3ManualModeHighQFileLabelSize    = [230, 65]
 Step3ManualModeHighQFileDroplistSize = [305, 55, 60, 30]
 
 ;frame that will hide all the widgets of the manual scaling box
-Step3ManualModeHiddenFrameSize = [20,90,490,240]
+Step3ManualModeHiddenFrameSize = [10,90,500,255]
 
 ;Qmin and Qmax
 Step3ManualQMinLabelSize              = [25, 120]
@@ -165,7 +165,7 @@ Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
                                    yoffset=Step3ManualModeHiddenFrameSize[1],$
                                    scr_xsize=Step3ManualModeHiddenFrameSize[2],$
                                    scr_ysize=Step3ManualModeHiddenFrameSize[3],$
-                                   map=0)
+                                   map=1)
 
 ;SF
 Step3SFDraw = widget_draw(STEP3_BASE,$
@@ -248,7 +248,7 @@ Step3fltTextField = widget_text(STEP3_BASE,$
 flt0Label = widget_label(STEP3_BASE,$
                          xoffset=flt0LabelSize[0],$
                          yoffset=flt0LabelSize[1],$
-                         value=' flt0       flt1 Low Q        flt1 High Q')
+                         value=' flt0        flt1 Low Q       flt1 High Q')
                                 
 ;--part tmp removed
 Step3HiddenBaseTmp = widget_base(step3_base,$

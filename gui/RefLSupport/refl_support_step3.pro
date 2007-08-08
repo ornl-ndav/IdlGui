@@ -235,8 +235,8 @@ widget_control,id,get_uvalue=global
 ;get selected index of droplist
 index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 
-flt0_ptr = (*global).flt0_ptr
-flt1_ptr = (*global).flt1_ptr
+flt0_ptr = (*global).flt0_rescale_ptr
+flt1_ptr = (*global).flt1_rescale_ptr
 
 flt0_lowQ   = *flt0_ptr[index-1]
 flt0_highQ  = *flt0_ptr[index]
@@ -289,25 +289,24 @@ max_number = max_number[0]
 i_lowQ  = 0
 i_highQ = 0
 for i=0,(max_number-1) do begin
-    text = strcompress(flt0_uniq[i])
-    text += "      "
-    if (flt0_lowQ[i_lowQ] EQ flt0_uniq[i]) then begin
-        print, 'in 1'
-        text += strcompress(flt1_lowQ[i_lowQ])
-        i_lowQ += 1
-    endif
-    text += "      "
-    if (flt0_highQ[i_highQ] EQ flt0_uniq[i]) then begin
-        print, 'in 2'
-        text += strcompress(flt1_highQ[i_highQ])
-        i_highQ += 1
-    endif
-
-    if (i EQ 0) then begin
-        putValueInTextField,Event,'step3_flt_text_filed',text
-    endif else begin
-        appendValueInTextField,Event,'step3_flt_text_filed',text
-    endelse
+   text = strcompress(flt0_uniq[i])
+   text += "-----"
+   if (flt0_lowQ[i_lowQ] EQ flt0_uniq[i]) then begin
+      text = text + strcompress(flt1_lowQ[i_lowQ])
+      i_lowQ += 1
+   endif else begin
+      text += '---------'
+   endelse
+   text += "-----"
+   if (flt0_highQ[i_highQ] EQ flt0_uniq[i]) then begin
+      text =  text + strcompress(flt1_highQ[i_highQ])
+      i_highQ += 1
+   endif
+   if (i EQ 0) then begin
+      putValueInTextField,Event,'step3_flt_text_filed',text
+   endif else begin
+      appendValueInTextField,Event,'step3_flt_text_filed',text
+   endelse
 endfor
 
 END
