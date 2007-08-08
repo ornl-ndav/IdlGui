@@ -15,6 +15,20 @@ PRO MAIN_BASE_event, Event
         steps_tab, Event, 0
      end
      
+                                ;--reset all button
+     Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
+        reset_all_button, Event
+     end
+     
+                                ;--refresh plots
+     Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
+        steps_tab, Event, 1
+     end
+
+     Widget_Info(wWidget, FIND_BY_UNAME='print_button'):begin
+        ReflSupport_ProduceOutputFile, Event
+     end
+
 ;--step1--
 
      ;when LOADING a new file
@@ -78,15 +92,6 @@ PRO MAIN_BASE_event, Event
         run_step3, Event
      end
      
-                                ;--reset all button
-     Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
-        reset_all_button, Event
-     end
-     
-                                ;--refresh plots
-     Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
-        steps_tab, Event, 1
-     end
      
                                 ;--validate rescale
      Widget_Info(wWidget, FIND_BY_UNAME='ValidateButton'): begin
