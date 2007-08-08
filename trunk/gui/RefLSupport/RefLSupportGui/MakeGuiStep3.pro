@@ -64,8 +64,38 @@ Step3BeforeToAfterDrawSize = [Step3LowQLabelSize[0]+250,$
 Step3SFDrawSize      = [320,220,40,40]
 Step3SFTextFieldSize = [Step3SFDrawSize[0] + 50,$
                         Step3SFDrawSize[1] + 5,$
-                        100,$
+                        125,$
                         30]
+
+
+;increase SF 
+Step3_3IncreaseButtonSize = [Step3SFTextFieldSize[0],$
+                             Step3SFTextFieldSize[1]-40,$
+                             40,40]
+d_B_B = 40
+Step3_2IncreaseButtonSize = [Step3_3IncreaseButtonSize[0] + d_B_B,$
+                             Step3_3IncreaseButtonSize[1],$
+                             Step3_3IncreaseButtonSize[2],$
+                             Step3_3IncreaseButtonSize[3]]
+Step3_1IncreaseButtonSize = [Step3_2IncreaseButtonSize[0] + d_B_B,$
+                             Step3_2IncreaseButtonSize[1],$
+                             Step3_2IncreaseButtonSize[2],$
+                             Step3_2IncreaseButtonSize[3]]
+
+;decrease SF 
+Step3_3DecreaseButtonSize = [Step3SFTextFieldSize[0],$
+                             Step3SFTextFieldSize[1]+30,$
+                             40,40]
+d_B_B = 40
+Step3_2DecreaseButtonSize = [Step3_3DecreaseButtonSize[0] + d_B_B,$
+                             Step3_3DecreaseButtonSize[1],$
+                             Step3_3DecreaseButtonSize[2],$
+                             Step3_3DecreaseButtonSize[3]]
+Step3_1DecreaseButtonSize = [Step3_2DecreaseButtonSize[0] + d_B_B,$
+                             Step3_2DecreaseButtonSize[1],$
+                             Step3_2DecreaseButtonSize[2],$
+                             Step3_2DecreaseButtonSize[3]]
+
 
 ;;Manual scaling
 ;Step3ManualScalingButtonSize = [Step3SFTextFieldSize[0]+90,$
@@ -239,7 +269,8 @@ Step3SFTextField = widget_text(STEP3_BASE,$
                                scr_ysize=Step3SFTextFieldSize[3],$
                                uname='Step3SFTextField',$
                                /editable,$
-                               /align_left)
+                               /align_left,$
+                               value=1)
 
 ;Before to after arrow
 Step3BeforeToAfterDraw = widget_draw(STEP3_BASE,$
@@ -248,6 +279,63 @@ Step3BeforeToAfterDraw = widget_draw(STEP3_BASE,$
                                      yoffset=Step3BeforeToAfterDrawSize[1],$
                                      scr_xsize=Step3BeforeToAfterDrawSize[2],$
                                      scr_ysize=Step3BeforeToAfterDrawSize[3])
+
+;Increase buttons
+Step3_3IncreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_3increase_button',$
+                                      xoffset=Step3_3IncreaseButtonSize[0],$
+                                      yoffset=Step3_3IncreaseButtonSize[1],$
+                                      scr_xsize=Step3_3IncreaseButtonSize[2],$
+                                      scr_ysize=Step3_3IncreaseButtonSize[3],$
+                                      value='+++')
+
+Step3_2IncreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_2increase_button',$
+                                      xoffset=Step3_2IncreaseButtonSize[0],$
+                                      yoffset=Step3_2IncreaseButtonSize[1],$
+                                      scr_xsize=Step3_2IncreaseButtonSize[2],$
+                                      scr_ysize=Step3_2IncreaseButtonSize[3],$
+                                      value='++')
+
+Step3_1IncreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_1increase_button',$
+                                      xoffset=Step3_1IncreaseButtonSize[0],$
+                                      yoffset=Step3_1IncreaseButtonSize[1],$
+                                      scr_xsize=Step3_1IncreaseButtonSize[2],$
+                                      scr_ysize=Step3_1IncreaseButtonSize[3],$
+                                      value='+')
+
+
+;Decrease buttons
+Step3_3DecreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_3decrease_button',$
+                                      xoffset=Step3_3DecreaseButtonSize[0],$
+                                      yoffset=Step3_3DecreaseButtonSize[1],$
+                                      scr_xsize=Step3_3DecreaseButtonSize[2],$
+                                      scr_ysize=Step3_3DecreaseButtonSize[3],$
+                                      value='---')
+
+Step3_2DecreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_2decrease_button',$
+                                      xoffset=Step3_2DecreaseButtonSize[0],$
+                                      yoffset=Step3_2DecreaseButtonSize[1],$
+                                      scr_xsize=Step3_2DecreaseButtonSize[2],$
+                                      scr_ysize=Step3_2DecreaseButtonSize[3],$
+                                      value='--')
+
+Step3_1DecreaseButton = widget_button(STEP3_BASE,$
+                                      uname='step3_1decrease_button',$
+                                      xoffset=Step3_1DecreaseButtonSize[0],$
+                                      yoffset=Step3_1DecreaseButtonSize[1],$
+                                      scr_xsize=Step3_1DecreaseButtonSize[2],$
+                                      scr_ysize=Step3_1DecreaseButtonSize[3],$
+                                      value='-')
+
+
+
+
+
+
 
 ;;Manual scaling button
 ;Step3ManualScalingButton = widget_button(STEP3_BASE,$
