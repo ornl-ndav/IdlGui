@@ -1,10 +1,6 @@
 ;This function will enable (editable) or not the text fields of tab3
 PRO ReflSupportWidget_enableStep3Widgets,Event,sensitiveBoolean
 widget_uname = ['Step3_automatic_rescale_button',$
-                'Step3ManualQMinTextField',$
-                'Step3ManualQMaxTextField',$
-                'Step3YLowQTextField',$
-                'Step3YHighQTextField',$
                 'Step3SFTextField']
 
 uname_size = (size(widget_uname))(1)
@@ -20,13 +16,8 @@ END
 PRO ReflSupportWidget_enableStep3ManualScalingWidgets, Event, sensitiveBoolean
 widget_uname = ['Step3ManualQMinTextField',$
                 'Step3ManualQMaxTextField',$
-                'Step3YLowQTextField',$
-                'Step3YHighQTextField',$
                 'Step3SFTextField',$
-                'Step3ManualScalingButton',$
-                'Step3SFDraw',$
-                'Step3YHighQDraw',$
-                'Step3YLowQDraw']
+                'Step3SFDraw']
 
 uname_size = (size(widget_uname))(1)
 For i=0,(uname_size-1) do begin
@@ -135,7 +126,7 @@ PRO ReflSupportWidget_refresh_draw_labels_tab3, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-images = (*(*global).images_tabs)
+images = (*(*global).images_tab3)
 unames = (*(*global).unames_tab3)
 images_xoff = (*(*global).images_tabs_xoff)
 images_yoff = (*(*global).images_tabs_yoff)
