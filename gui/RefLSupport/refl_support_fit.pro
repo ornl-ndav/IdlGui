@@ -1,11 +1,11 @@
-PRO FitOrder3Function, Event, flt0, flt1, flt2, index
+PRO FitOrder_n_Function, Event, flt0, flt1, flt2, index, order_n
 
 ;retrieve global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ; Compute the second degree polynomial fit to the data:
-cooef = POLY_FIT(flt0, flt1, 2, MEASURE_ERRORS=flt2, $
+cooef = POLY_FIT(flt0, flt1, order_n, MEASURE_ERRORS=flt2, $
    SIGMA=sigma,/double)
 
 fit_cooef_ptr = (*global).fit_cooef_ptr
@@ -14,6 +14,7 @@ fit_cooef_ptr = (*global).fit_cooef_ptr
 (*global).show_other_fit = 1
 
 END
+
 
 
 

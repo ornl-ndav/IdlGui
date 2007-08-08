@@ -18,12 +18,14 @@ for i=1,(nbrFile-1) do begin
     Qmin = float(Qmin_array[i])
     Qmax = float(Qmax_array[i-1])
 
-;change the Q range
-    Qrange = (Qmax - Qmin)
-;remove 10% of first part and 50% of last part
-    Qmin = Qmin + (Qrange/25)*100
-    Qmax = Qmax - (Qrange/50)*100
+;;change the Q range
+;    Qrange = (Qmax - Qmin)
+;;remove 5% of first part and 50% of last part
+;    Qmin = Qmin + (Qrange*5)/100
+;    Qmax = Qmax - (Qrange*50)/100
 
+;remove first two Q
+    Qmax = 0.1
 ;HIGH Q file
 ;get flt0 of high Q file
     flt0_highQ = *flt0_ptr[i]
@@ -53,12 +55,12 @@ for i=1,(nbrFile-1) do begin
     flt2_highQ_new = flt2_highQ_new(RangeIndexes)
 
 ;store flt0_highQ_new into flt0_pointer[0]
-flt0_ptr = (*global).flt0_range
-*flt0_ptr[0] = flt0_highQ_new
-(*global).flt0_range = flt0_ptr
+    flt0_ptr = (*global).flt0_range
+    *flt0_ptr[0] = flt0_highQ_new
+    (*global).flt0_range = flt0_ptr
 
 ;start function that will calculate the fit parameters
-    FitOrder3Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i
+    FitOrder_n_Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i, 2
 
 ;LOW Q file
 ;get flt0 of low Q file
@@ -93,7 +95,7 @@ flt0_ptr = (*global).flt0_range
     (*global).flt0_range = flt0_ptr
 
 ;start function that will calculate the fit parameters
-    FitOrder3Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1
+    FitOrder_n_Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1, 2
 
 endfor
 
