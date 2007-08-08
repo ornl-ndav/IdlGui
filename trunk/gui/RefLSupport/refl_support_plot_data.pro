@@ -250,7 +250,8 @@ endif else begin                ;at least one file has to be ploted
                        oplot,flt0_new,y_new,color=400,thick=1.5
                    endif
                endif
-          end
+           end
+           else:
       endcase
      
  endfor
