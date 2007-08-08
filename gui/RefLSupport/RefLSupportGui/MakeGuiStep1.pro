@@ -176,7 +176,7 @@ AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
                              YOFFSET=AngleTextFieldSize[1],$
                              SCR_XSIZE=AngleTextFieldSize[2],$
                              SCR_YSIZE=AngleTextFieldSize[3],$
-                             VALUE=angleValue,$
+;                             VALUE=angleValue,$
                              /EDITABLE,$
                              /align_left,$
                              /all_events)

@@ -10,7 +10,6 @@ Q = fltarr(flt0_size)
 
 ;get current angle value (in deg)
 angleValue = float(angleValue)
-print, 'angle value: ' + strcompress(angleValue) ;remove_me
 ;get current distance MD
 dMD = getTextFieldValue(Event,'ModeratorDetectorDistanceTextField')
 dMD = float(dMD)

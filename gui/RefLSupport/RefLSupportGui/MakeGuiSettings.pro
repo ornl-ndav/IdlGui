@@ -17,12 +17,21 @@ d_L_T = 160
 polyFitOrderTextBoxSize = [polyFitOrderLabelSize[0] + d_L_T,$
                            polyFitOrderLabelSize[1]-5,$
                            50,30]
+
+;nbr of element to display
+nbrDataLabelSize     = [5,polyFitOrderLabelSize[1]+d_line_to_line]
+d_L_T_2 = 200
+nbrDataTextFieldSize = [nbrDataLabelSize[0] + d_L_T_2,$
+                        nbrDataLabelSize[1] -5,$
+                        50,30]
+
 ;Define titles
-SettingsTabTitle       = 'Settings'
-tof_to_Q_label_title   = 'TOF_to_Q algorithm:' 
-polyFitOrderLabelTitle = 'Fitting order n:' 
+SettingsTabTitle        = 'Settings'
+tof_to_Q_label_title    = 'TOF_to_Q algorithm:' 
+polyFitOrderLabelTitle  = 'Fitting order n:' 
 polyFitOrderTextBoxDefaultValue = '3'
 ShowErrorBarLabelTitle  = 'Show error bars'
+nbrDataLabelTitle       = 'Nbr of data to display in Step3'
 
 ;Build GUI
 SETTINGS_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -69,7 +78,6 @@ ShowErrorBarGroup = cw_bgroup(settings_base,$
                               row=1,$
                               uname='show_error_bar_group')
                               
-
 ;order of fitting function
 PolyFitOrderLabel = widget_label(settings_base,$
                                  xoffset=polyFitOrderLabelSize[0],$
@@ -86,5 +94,20 @@ PolyFitOrderTextBox = widget_text(settings_base,$
                                   /align_left,$
                                   value=polyFitOrdertextBoxDefaultValue)
 
+;nbr of elements to display
+nbrDataLabel = widget_label(settings_base,$
+                            xoffset=nbrDataLabelSize[0],$
+                            yoffset=nbrDataLabelSize[1],$
+                            value=nbrDataLabelTitle)
+
+nbrDataTextField = widget_text(settings_base,$
+                               xoffset=nbrDataTextFieldSize[0],$
+                               yoffset=nbrDataTextFieldSize[1],$
+                               scr_xsize=nbrDataTextFieldSize[2],$
+                               scr_ysize=nbrDataTextFieldSize[3],$
+                               value=strcompress(100),$
+                               uname='nbrDataTextField',$
+                               /editable,$
+                               /align_left)
 
 END

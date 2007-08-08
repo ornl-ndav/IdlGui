@@ -25,17 +25,11 @@ index = getSelectedIndex(Event,'step3_work_on_file_droplist')
 flt1 = *flt1_ptr[index]
 flt2 = *flt2_ptr[index]
 
-print, 'before'
-print, flt2[50]
-
 SF = SF[0]
 
 ;rescale data
 flt1 = flt1 / SF
 flt2 = flt2 / sqrt(SF)
-
-print, 'after'
-print, flt2[50]
 
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
 flt2_rescale_ptr = (*global).flt2_rescale_ptr
@@ -47,6 +41,10 @@ flt2_rescale_ptr = (*global).flt2_rescale_ptr
 (*global).flt2_rescale_ptr = flt2_rescale_ptr
 
 plot_loaded_file, Event, '2plots'
+
+;this function displays in step3 the list of flt0, flt1 for low Q file
+;and flt1 for high Q file
+ReflSupportStep3_OutputFlt0Flt1, Event
 
 END
 
@@ -181,7 +179,6 @@ endif else begin
 endelse
 ReflSupportWidget_setValue, Event, 'Step3ManualQMinTextField', Qmin_text
 ReflSupportWidget_setValue, Event, 'Step3ManualQMaxTextField', Qmax_text
-
 END
 
 
@@ -204,8 +201,6 @@ endif else begin
     text = list_of_files[indexSelected-1]
     text2 = list_of_files[indexSelected]
 endelse
-putValueInLabel, Event, 'Step3LowQFileNameLabel',text
-putValueInLabel, Event, 'Step3HighQFileNameLabel',text2
 putValueInLabel, Event, 'Step3ManualModeLowQFileLabel',textLowQ
 putValueInLabel, Event, 'Step3ManualModeHighQFileLabel',textHighQ
 putValueInLabel, Event, 'Step3ManualModeLowQFileName',text
@@ -221,9 +216,100 @@ ReflSupportWidget_HideBase, Event, 'Step3ManualModeHiddenFrame', 1
 END
 
 
+
 ;This function is reached only when the selected file in the step 3
 ;droplist is any of the file except the first one (CE file). In this
 ;case, all the widgets of the manual scalling box are shown.
 PRO ReflSupportStep3_EnableManualScalingBox, Event
 ReflSupportWidget_HideBase, Event, 'Step3ManualModeHiddenFrame', 0
 END
+
+
+
+;This function displays the flt0, flt1 array of the low Q file and the flt1
+;array of the high Q file
+PRO ReflSupportStep3_OutputFlt0Flt1, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get selected index of droplist
+index = getSelectedIndex(Event,'step3_work_on_file_droplist')
+
+flt0_ptr = (*global).flt0_ptr
+flt1_ptr = (*global).flt1_ptr
+
+flt0_lowQ   = *flt0_ptr[index-1]
+flt0_highQ  = *flt0_ptr[index]
+flt1_lowQ   = *flt1_ptr[index-1]
+flt1_highQ  = *flt1_ptr[index]
+Q1 = (*(*global).Qmin_array)
+Q2 = (*(*global).Qmax_array)
+
+;Qmin and Qmax
+QminHighQ = Q1[index]
+QmaxLowQ  = Q2[index-1]
+
+;remove -inf, inf and NAN values from flt1_lowQ and flt1_highQ
+flt1_lowQ_range = getArrayRangeOfNotNanValues(flt1_lowQ)
+flt1_lowQ = flt1_lowQ(flt1_lowQ_range)
+flt0_lowQ = flt0_lowQ(flt1_lowQ_range)
+
+flt1_highQ_range = getArrayRangeOfNotNanValues(flt1_highQ)
+flt1_highQ = flt1_highQ(flt1_highQ_range)
+flt0_highQ = flt0_highQ(flt1_highQ_range)
+
+;get index of values inside range of data
+;check where to start, Qmin of HighQ for each flt0
+flt0_lowQ_index_array = getArrayRangeFromQ1Q2(flt0_LowQ, QminHighQ, QmaxLowQ)
+flt0_lowQ = flt0_lowQ[flt0_lowQ_index_array[0]:flt0_lowQ_index_array[1]]
+flt1_lowQ = flt1_lowQ[flt0_lowQ_index_array[0]:flt0_lowQ_index_array[1]]
+
+flt0_highQ_index_array = getArrayRangeFromQ1Q2(flt0_HighQ, QminHighQ, QmaxLowQ)
+flt0_highQ = flt0_highQ[flt0_highQ_index_array[0]:flt0_highQ_index_array[1]]
+flt1_highQ = flt1_highQ[flt0_highQ_index_array[0]:flt0_highQ_index_array[1]]
+
+;create master_flt0 (addtion of flt0_low and flt0_high)
+;WORK on flt0
+flt0_lowQ  = flt0_lowQ[sort(flt0_lowQ)]
+flt0_highQ = flt0_highQ[sort(flt0_highQ)]
+flt0 = [flt0_lowQ, flt0_highQ]
+flt0_uniq = flt0[uniq(flt0,sort(flt0))]
+flt0_size = (size(flt0_uniq))(1)
+
+nbr_to_display = float(getTextFieldValue(Event,'nbrDataTextField'))
+
+if (nbr_to_display LE flt0_size) then begin
+    max_number = nbr_to_display
+endif else begin
+    max_number = flt0_size
+endelse
+
+max_number = max_number[0]
+
+i_lowQ  = 0
+i_highQ = 0
+for i=0,(max_number-1) do begin
+    text = strcompress(flt0_uniq[i])
+    text += "      "
+    if (flt0_lowQ[i_lowQ] EQ flt0_uniq[i]) then begin
+        print, 'in 1'
+        text += strcompress(flt1_lowQ[i_lowQ])
+        i_lowQ += 1
+    endif
+    text += "      "
+    if (flt0_highQ[i_highQ] EQ flt0_uniq[i]) then begin
+        print, 'in 2'
+        text += strcompress(flt1_highQ[i_highQ])
+        i_highQ += 1
+    endif
+
+    if (i EQ 0) then begin
+        putValueInTextField,Event,'step3_flt_text_filed',text
+    endif else begin
+        appendValueInTextField,Event,'step3_flt_text_filed',text
+    endelse
+endfor
+
+END
+
+

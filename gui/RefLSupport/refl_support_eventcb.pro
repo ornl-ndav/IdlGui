@@ -190,12 +190,6 @@ steps_tab, Event, 1
 end
 
 
-;run calculation of base->work on in step 3
-PRO RUN_STEP3, Event
-  print, "in run_step3"
-end
-
-
 ;reset full session
 PRO RESET_ALL_BUTTON, Event
 ;reset all arrays

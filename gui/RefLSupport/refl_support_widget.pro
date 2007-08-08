@@ -276,19 +276,15 @@ PRO ClearAllTextBoxes, Event
  widget_control,id,get_uvalue=global
  
 ;clear step2 
- step2_q1_text_field_id = Widget_info(Event.top,find_by_uname='step2_q1_text_field')
- Widget_control, step2_q1_text_field_id, set_value=''
- step2_q2_text_field_id = Widget_info(Event.top,find_by_uname='step2_q2_text_field')
- Widget_control, step2_q2_text_field_id, set_value=''
- step2_SF_text_field_id = Widget_info(Event.top,find_by_uname='step2_sf_text_field')
- Widget_control, step2_SF_text_field_id, set_value=''
+ putValueInTextField,Event,'step2_q1_text_field',''
+ putValueInTextField,Event,'step2_q2_text_field',''
+ putValueInTextField,Event,'step2_sf_text_field',''
 ;clear step3
- step3_q1_text_field_id = Widget_info(Event.top,find_by_uname='step3_q1_text_field')
- Widget_control, step3_q1_text_field_id, set_value=''
- step3_q2_text_field_id = Widget_info(Event.top,find_by_uname='step3_q2_text_field')
- Widget_control, step3_q2_text_field_id, set_value=''
- step3_SF_text_field_id = Widget_info(Event.top,find_by_uname='step3_sf_text_field')
- Widget_control, step3_SF_text_field_id, set_value=''
+ putValueInTextField,Event,'Step3SFTextField',''
+ putValueInTextField,Event,'Step3ManualQMinTextField',''
+ putValueInTextField,Event,'Step3ManualQMaxTextField',''
+ putValueInLabel, Event, 'Step3ManualModeLowQFileName',''
+
 END
 
 

@@ -38,35 +38,17 @@ Step3ManualQMaxTextFieldSize         = [Step3ManualQMaxLabelSize[0] + d_L_T,$
                                         Step3ManualQMinTextFieldSize[1],$
                                         80,30]
 
-;Low Q file name
-Step3LowQLabelSize = [10, 200, 100, 30]
-d_L_L = 80
-Step3LowQFileNameLabelSize = [Step3LowQLabelSize[0] + d_L_L,$
-                              Step3LowQLabelSize[1],$
-                              150,30]
-d_vertical_L_L = 50
-Step3HighQLabelSize = [Step3LowQLabelSize[0],$
-                       Step3LowQLabelSize[1]+d_vertical_L_L,$
-                       Step3LowQLabelSize[2],$
-                       Step3LowQLabelSize[3]]
-Step3HighQFileNameLabelSize = [Step3LowQFileNameLabelSize[0],$
-                               Step3LowQFileNameLabelSize[1] + d_vertical_L_L,$
-                               Step3LowQFileNameLabelSize[2],$
-                               Step3LowQFileNameLabelSize[3]]
-                             
-
-;Before and After
-Step3BeforeToAfterDrawSize = [Step3LowQLabelSize[0]+250,$
-                              Step3LowQLabelSize[1]+7,$
-                              40,90]
-
 ;SF
-Step3SFDrawSize      = [320,220,40,40]
-Step3SFTextFieldSize = [Step3SFDrawSize[0] + 50,$
+Step3SFDrawSize      = [18,130,40,40]
+Step3SFTextFieldSize = [Step3SFDrawSize[0] + 45,$
                         Step3SFDrawSize[1] + 5,$
-                        125,$
+                        120,$
                         30]
 
+
+;text field to display flt0, ftl1_lowQ and flt2_highQ
+Step3fltTextFieldSize = [200,120,310,225]
+flt0LabelSize     = [215,100]
 
 ;increase SF 
 Step3_3IncreaseButtonSize = [Step3SFTextFieldSize[0],$
@@ -183,76 +165,7 @@ Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
                                    yoffset=Step3ManualModeHiddenFrameSize[1],$
                                    scr_xsize=Step3ManualModeHiddenFrameSize[2],$
                                    scr_ysize=Step3ManualModeHiddenFrameSize[3],$
-                                   map=1)
-
-;Qmin label
-Step3ManualQMinLabel = widget_label(STEP3_BASE,$
-                                    xoffset=Step3ManualQMinLabelSize[0],$
-                                    yoffset=Step3ManualQMinLabelSize[1],$
-                                    value=Step3ManualQMinLabelTitle)
-
-;Qmin value
-Step3ManualQMinTextField = widget_text(STEP3_BASE,$
-                                       xoffset=Step3ManualQMinTextFieldSize[0],$
-                                       yoffset=Step3ManualQMinTextFieldSize[1],$
-                                       scr_xsize=Step3ManualQMinTextFieldSize[2],$
-                                       scr_ysize=Step3ManualQMinTextFieldSize[3],$
-                                       /editable,$
-                                       /align_left,$
-                                       uname='Step3ManualQMinTextField')
-
-;Qmax label
-Step3ManualQMaxLabel = widget_label(STEP3_BASE,$
-                                    xoffset=Step3ManualQMaxLabelSize[0],$
-                                    yoffset=Step3ManualQMaxLabelSize[1],$
-                                    value=Step3ManualQMaxLabelTitle)
-
-;Qmax text field
-Step3ManualQMaxTextField = widget_text(STEP3_BASE,$
-                                       xoffset=Step3ManualQMaxTextFieldSize[0],$
-                                       yoffset=Step3ManualQMaxTextFieldSize[1],$
-                                       scr_xsize=Step3ManualQMaxTextFieldSize[2],$
-                                       scr_ysize=Step3ManualQMaxTextFieldSize[3],$
-                                       /editable,$
-                                       /align_left,$
-                                       uname='Step3ManualQMaxTextField')
-
-;Low Q file name
-Step3LowQLabel = widget_label(STEP3_BASE,$
-                              xoffset=Step3LowQLabelSize[0],$
-                              yoffset=Step3LowQLabelSize[1],$
-                              scr_xsize=Step3LowQLabelSize[2],$
-                              scr_ysize=Step3LowQLabelSize[3],$
-                              uname='Step3ManualModeLowQFileLabel',$
-                              value=Step3ManualModeLowQFileLabelTitle)
-
-Step3LowQFileNameLabel = widget_label(STEP3_BASE,$
-                                      uname='Step3LowQFileNameLabel',$
-                                      xoffset=Step3LowQFileNameLabelSize[0],$
-                                      yoffset=Step3LowQFileNameLabelSize[1],$
-                                      scr_xsize=Step3LowQFileNameLabelSize[2],$
-                                      scr_ysize=Step3LowQFileNameLabelSize[3],$
-                                      value='')
-                              
-;High Q file name
-Step3HighQLabel = widget_label(STEP3_BASE,$
-                              xoffset=Step3HighQLabelSize[0],$
-                              yoffset=Step3HighQLabelSize[1],$
-                              scr_xsize=Step3HighQLabelSize[2],$
-                              scr_ysize=Step3HighQLabelSize[3],$
-                              uname='Step3ManualModeHighQFileLabel',$
-                              value=Step3ManualModeHighQFileLabelTitle)
-
-Step3HighQFileNameLabel = widget_label(STEP3_BASE,$
-                                       uname='Step3HighQFileNameLabel',$
-                                       xoffset=Step3HighQFileNameLabelSize[0],$
-                                       yoffset=Step3HighQFileNameLabelSize[1],$
-                                       scr_xsize=Step3HighQFileNameLabelSize[2],$
-                                       scr_ysize=Step3HighQFileNameLabelSize[3],$
-                                       value='')
-                              
-
-
+                                   map=0)
 
 ;SF
 Step3SFDraw = widget_draw(STEP3_BASE,$
@@ -271,14 +184,6 @@ Step3SFTextField = widget_text(STEP3_BASE,$
                                /editable,$
                                /align_left,$
                                value='1')
-
-;Before to after arrow
-Step3BeforeToAfterDraw = widget_draw(STEP3_BASE,$
-                                     uname='Step3_before_to_after_draw',$
-                                     xoffset=Step3BeforeToAfterDrawSize[0],$
-                                     yoffset=Step3BeforeToAfterDrawSize[1],$
-                                     scr_xsize=Step3BeforeToAfterDrawSize[2],$
-                                     scr_ysize=Step3BeforeToAfterDrawSize[3])
 
 ;Increase buttons
 Step3_3IncreaseButton = widget_button(STEP3_BASE,$
@@ -330,6 +235,66 @@ Step3_1DecreaseButton = widget_button(STEP3_BASE,$
                                       scr_xsize=Step3_1DecreaseButtonSize[2],$
                                       scr_ysize=Step3_1DecreaseButtonSize[3],$
                                       value='-')
+
+;text field to display flt0, flt1_lowQ and flt1_highQ
+Step3fltTextField = widget_text(STEP3_BASE,$
+                                uname='step3_flt_text_filed',$
+                                xoffset=Step3fltTextFieldSize[0],$
+                                yoffset=Step3fltTextFieldSize[1],$
+                                scr_xsize=Step3fltTextFieldSize[2],$
+                                scr_ysize=Step3fltTextFieldSize[3],$
+                                /scroll)
+                                
+flt0Label = widget_label(STEP3_BASE,$
+                         xoffset=flt0LabelSize[0],$
+                         yoffset=flt0LabelSize[1],$
+                         value=' flt0       flt1 Low Q        flt1 High Q')
+                                
+;--part tmp removed
+Step3HiddenBaseTmp = widget_base(step3_base,$
+                                 xoffset=Step3ManualQMinLabelSize[0]-5,$
+                                 yoffset=Step3ManualQMinLabelSize[1]-5,$
+                                 scr_xsize=460,$
+                                 scr_ysize=50,$
+                                 map=1)
+
+;Qmin label
+Step3ManualQMinLabel = widget_label(STEP3_BASE,$
+                                    xoffset=Step3ManualQMinLabelSize[0],$
+                                    yoffset=Step3ManualQMinLabelSize[1],$
+                                    value=Step3ManualQMinLabelTitle)
+
+;Qmin value
+Step3ManualQMinTextField = widget_text(STEP3_BASE,$
+                                       xoffset=Step3ManualQMinTextFieldSize[0],$
+                                       yoffset=Step3ManualQMinTextFieldSize[1],$
+                                       scr_xsize=Step3ManualQMinTextFieldSize[2],$
+                                       scr_ysize=Step3ManualQMinTextFieldSize[3],$
+                                       /editable,$
+                                       /align_left,$
+                                       uname='Step3ManualQMinTextField')
+
+;Qmax label
+Step3ManualQMaxLabel = widget_label(STEP3_BASE,$
+                                    xoffset=Step3ManualQMaxLabelSize[0],$
+                                    yoffset=Step3ManualQMaxLabelSize[1],$
+                                    value=Step3ManualQMaxLabelTitle)
+
+;Qmax text field
+Step3ManualQMaxTextField = widget_text(STEP3_BASE,$
+                                       xoffset=Step3ManualQMaxTextFieldSize[0],$
+                                       yoffset=Step3ManualQMaxTextFieldSize[1],$
+                                       scr_xsize=Step3ManualQMaxTextFieldSize[2],$
+                                       scr_ysize=Step3ManualQMaxTextFieldSize[3],$
+                                       /editable,$
+                                       /align_left,$
+                                       uname='Step3ManualQMaxTextField')
+;--part temporary removed
+
+
+
+
+
 
 
 STEP3_Manual_mode_label = widget_label(STEP3_BASE,$
