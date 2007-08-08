@@ -125,6 +125,9 @@ ENDCASE
 DEVICE, DECOMPOSED = 0
 loadct,5
 
+;check if plot will be with error bars or not
+ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group')
+
 if (ClearPlot EQ 1) then begin  ;no plot to plot, erase display
    erase
 endif else begin                ;at least one file has to be ploted
@@ -174,47 +177,50 @@ endif else begin                ;at least one file has to be ploted
                   end
                endcase
             end
-         endcase               
-         errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-         
-      endif else begin
-         
-         XYMinMax = retrieveXYMinMax(Event)
-         xmin = float(XYMinMax[0])
-         xmax = float(XYMinMax[1])
-         ymin = float(XYMinMax[2])
-         ymax = float(XYMinMax[3])
-         
-         case IsXlin of
+        endcase               
+        
+        if (ErrorBarStatus EQ 0) then begin
+            errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+        endif
+
+    endif else begin
+        
+        XYMinMax = retrieveXYMinMax(Event)
+        xmin = float(XYMinMax[0])
+        xmax = float(XYMinMax[1])
+        ymin = float(XYMinMax[2])
+        ymax = float(XYMinMax[3])
+        
+        case IsXlin of
             0:begin
-               case IsYlin of
-                  0: begin
-                     plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                  end
-                  1: begin
-                     plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                  end
-               endcase
+                case IsYlin of
+                    0: begin
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                    end
+                    1: begin
+                        plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                    end
+                endcase
             end
             1: begin
-               case IsYlin of
-                  0: begin
-                     plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                  end
-                  1: begin
-                     plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
-                  end
-               endcase
+                case IsYlin of
+                    0: begin
+                        plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                    end
+                    1: begin
+                        plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                    end
+                endcase
             end
-         endcase            
-         
-      endelse
-      
-      errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-      
-      
-      
-;fitting plots
+        endcase            
+        
+    endelse
+    
+    if (ErrorBarStatus EQ 0) then begin
+        errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+    endif
+    
+                                ;fitting plots
        case (index) of
           'CE': begin            ;CE file only (linear fitting)
                                  ;polynome of degree 1 for CE 

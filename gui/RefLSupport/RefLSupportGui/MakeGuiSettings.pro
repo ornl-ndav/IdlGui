@@ -5,9 +5,15 @@ SettingsTabSize      = [5  , 5  , 500 , 200 ]
 tof_to_Q_label_size  = [5  , 5  , 150 , 30 ]
 tof_to_Q_size        = [160, 5]
 
+d_line_to_line = 40
+;Show or not error bars
+ShowErrorBarLabelSize = [5, tof_to_Q_label_size[1]+ d_line_to_line, 100, 30]
+ShowErrorBarGroupSize = [ShowErrorBarLabelSize[0]+ 155,$
+                         ShowErrorBarLabelSize[1]]
+
 ;polynomial fitting order 
-polyFitOrderLabelSize   = [5, 45]
-d_L_T = 110
+polyFitOrderLabelSize   = [5, ShowErrorBarLabelSize[1]+ d_line_to_line]
+d_L_T = 160
 polyFitOrderTextBoxSize = [polyFitOrderLabelSize[0] + d_L_T,$
                            polyFitOrderLabelSize[1]-5,$
                            50,30]
@@ -16,6 +22,7 @@ SettingsTabTitle       = 'Settings'
 tof_to_Q_label_title   = 'TOF_to_Q algorithm:' 
 polyFitOrderLabelTitle = 'Fitting order n:' 
 polyFitOrderTextBoxDefaultValue = '3'
+ShowErrorBarLabelTitle  = 'Show error bars'
 
 ;Build GUI
 SETTINGS_BASE = WIDGET_BASE(STEPS_TAB,$
@@ -44,7 +51,26 @@ TOF_to_Q_algorithm = CW_BGROUP(settings_base,$
                                SET_VALUE=0.0,$
                                row=1,$
                                uname='tof_to_Q_algorithm')                 
+;show or not the error bars
+ShowErrorBarLabel = widget_label(settings_base,$
+                                 xoffset=ShowErrorBarLabelSize[0],$
+                                 yoffset=ShowErrorBarLabelSize[1],$
+                                 scr_xsize=ShowErrorBarLabelSize[2],$
+                                 scr_ysize=ShowErrorbarLabelSize[3],$
+                                 value=ShowErrorBarLabelTitle)
 
+ShowErrorBarChoice = ['yes','no']
+ShowErrorBarGroup = cw_bgroup(settings_base,$
+                              ShowErrorBarChoice,$
+                              /exclusive,$
+                              xoffset=ShowErrorBarGroupSize[0],$
+                              yoffset=ShowErrorBarGroupSize[1],$
+                              set_value=0.0,$
+                              row=1,$
+                              uname='show_error_bar_group')
+                              
+
+;order of fitting function
 PolyFitOrderLabel = widget_label(settings_base,$
                                  xoffset=polyFitOrderLabelSize[0],$
                                  yoffset=polyFitOrderLabelSize[1],$
