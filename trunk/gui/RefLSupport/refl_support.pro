@@ -95,22 +95,19 @@ if (!VERSION.os EQ 'darwin') then begin
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
-   images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-                 "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
+   images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
 endif else begin
    images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
-   images_tab3 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
+   images_tab3 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
 endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_y_before_draw",$
                "step2_y_after_draw",$
                "step2_before_to_after_draw"]
-unames_tab3 = ["Step3SFDraw",$
-               "Step3_before_to_after_draw"]
+unames_tab3 = ["Step3SFDraw"]
 
 images_tabs_xoff = [0,0,0,0]
 images_tabs_yoff = [0,0,0,0]
