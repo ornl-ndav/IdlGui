@@ -55,6 +55,7 @@ global = ptr_new({  $
                    PreviousColorIndex : 25,$         ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$;list of path of file loaded
                    images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)
+                   images_tab3    : ptr_new(0L),$    ;list of images for tab 3 only
                    unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab2
                    unames_tab3    : ptr_new(0L),$    ;list of widget_draw of tab3
                    images_tabs_xoff : ptr_new(0L),$  ;images x_offset of tabs
@@ -94,10 +95,14 @@ if (!VERSION.os EQ 'darwin') then begin
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
+   images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
+                 "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
 endif else begin
    images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
+                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
+   images_tab3 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
                   "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
 endelse
 unames_tab2 = ["step2_sf_draw",$
@@ -105,14 +110,13 @@ unames_tab2 = ["step2_sf_draw",$
                "step2_y_after_draw",$
                "step2_before_to_after_draw"]
 unames_tab3 = ["Step3SFDraw",$
-               "Step3YLowQDraw",$
-               "Step3YHighQDraw",$
                "Step3_before_to_after_draw"]
 
 images_tabs_xoff = [0,0,0,0]
 images_tabs_yoff = [0,0,0,0]
 
 (*(*global).images_tabs) = images_tabs
+(*(*global).images_tab3) = images_tab3
 (*(*global).unames_tab2) = unames_tab2
 (*(*global).unames_tab3) = unames_tab3
 (*(*global).images_tabs_xoff) = images_tabs_xoff

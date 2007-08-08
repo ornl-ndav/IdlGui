@@ -10,6 +10,10 @@ flt2_ptr = (*global).flt2_ptr
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
 
+;get fitting order from settings tab
+fitting_order_array = fix(getTextFieldValue(Event, 'poly_fit_order_text_box'))
+fitting_order = fitting_order_array[0]
+
 ;get number of files loaded
 nbrFile = (*global).NbrFilesLoaded
 for i=1,(nbrFile-1) do begin
@@ -60,7 +64,7 @@ for i=1,(nbrFile-1) do begin
     (*global).flt0_range = flt0_ptr
 
 ;start function that will calculate the fit parameters
-    FitOrder_n_Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i, 2
+    FitOrder_n_Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i, fitting_order
 
 ;LOW Q file
 ;get flt0 of low Q file
@@ -95,7 +99,7 @@ for i=1,(nbrFile-1) do begin
     (*global).flt0_range = flt0_ptr
 
 ;start function that will calculate the fit parameters
-    FitOrder_n_Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1, 2
+    FitOrder_n_Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1, fitting_order
 
 endfor
 
