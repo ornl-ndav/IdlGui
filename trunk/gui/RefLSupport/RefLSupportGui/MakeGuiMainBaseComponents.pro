@@ -2,14 +2,20 @@ PRO MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
 
 ;Define position and size of widgets
 yoff = 5
-ResetAllButtonSize   = [StepsTabSize[0],$
+ResetAllButtonSize   = [StepsTabSize[0]-2,$
                         StepsTabSize[3]+yoff,$
-                        200,$
+                        177,$
                         30]
 RefreshPlotSize      = [StepsTabSize[0]+ResetAllButtonSize[2],$
                         StepsTabSize[3]+yoff,$
                         ResetAllButtonSize[2],$
                         ResetAllButtonSize[3]]
+
+PrintButtonSize      = [RefreshPlotSize[0] + RefreshPlotSize[2],$
+                        ResetAllButtonSize[1],$
+                        ResetAllButtonSize[2],$
+                        ResetAllButtonsize[3]]
+
 ;--RESCALE 
 yoff = 40
 xoff = 5
@@ -87,7 +93,7 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
 
 ;Define title variables
 RefreshPlotButtonTitle = 'Refresh Plot'
-
+printButtonTitle = 'OUTPUT FILE'
 
 ;Build GUI
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
@@ -107,6 +113,15 @@ REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
                                     SCR_YSIZE=RefreshPlotSize[3],$
                                     VALUE=RefreshPlotButtonTitle,$
                                     sensitive=0)
+
+PRINT_BUTTON = widget_button(MAIN_BASE,$
+                             uname='print_button',$
+                             xoffset=PrintButtonSize[0],$
+                             yoffset=PrintButtonSize[1],$
+                             scr_xsize=PrintButtonSize[2],$
+                             scr_ysize=PrintButtonSize[3],$
+                             value=printButtonTitle,$
+                             sensitive=0)
 
 ;--rescale base
 RescaleBase = WIDGET_BASE(MAIN_BASE,$
