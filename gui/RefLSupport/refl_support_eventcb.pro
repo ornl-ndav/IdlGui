@@ -124,7 +124,7 @@ if (ListOfFilesSize EQ 1 AND $
     plot_loaded_file, Event, 'clear'
 endif else begin
     plot_loaded_file, Event, 'all
-endelse
+ endelse
 
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
@@ -206,6 +206,7 @@ ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
 ClearColorLabel, Event
 ReflSupportWidget_ClearCElabelStep2, Event
+ActivatePrintFileButton, Event, 0
 END
 
 

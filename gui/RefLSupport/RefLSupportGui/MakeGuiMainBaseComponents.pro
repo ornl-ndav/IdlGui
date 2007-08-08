@@ -92,7 +92,7 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
                         YaxisMaxTextFieldSize[1]]
 
 ;Define title variables
-RefreshPlotButtonTitle = 'Refresh Plot'
+RefreshPlotButtonTitle = 'REFRESH PLOT'
 printButtonTitle = 'OUTPUT FILE'
 
 ;Build GUI

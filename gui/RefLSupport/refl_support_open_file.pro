@@ -258,6 +258,7 @@ SelectLastLoadedFile, Event
 EnableMainBaseButtons, Event, validate
 ActivateClearFileButton, Event, validate
 ActivateColorSlider, Event, Validate
+ActivatePrintFileButton, Event, Validate
 END
 
 

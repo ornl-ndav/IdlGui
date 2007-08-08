@@ -230,6 +230,13 @@ widget_control, ClearFileId, sensitive=validate
 END
 
 
+PRO ActivatePrintFileButton, Event, validate
+PrintButtonId = widget_info(Event.top, find_by_uname='print_button')
+widget_control, PrintButtonId, sensitive=validate
+END
+
+
+
 ;this function enables the main base buttons
 ;refresh and reset all
 PRO EnableMainBaseButtons, Event, validate
