@@ -18,7 +18,6 @@ END
 
 
 
-
 ;Main function that will produce and display the output file.
 PRO ReflSupport_ProduceOutputFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -81,4 +80,30 @@ endfor
 ;output contain of output file in output_file_tab
 putValueInTextField, Event, 'output_file_text_field', MasterText
 
+;create output file name
+createOutputFile, Event, outputFileName, MasterText
+
 END
+
+
+
+;This function create the output file
+PRO createOutputFile, Event, output_file_name, MasterText
+
+help, output_file_name
+help, MasterText
+
+;size of MasterText
+MasterTextSize = (size(MasterText))(1)
+
+openw, 1, output_file_name
+
+for i=0,(MasterTextsize-1) do begin
+   printf, 1,MasterText[i]
+endfor
+
+close, 1
+free_lun, 1
+
+END
+
