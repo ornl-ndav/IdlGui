@@ -1,7 +1,7 @@
-cd, "~/SVN/HistoTool/trunk/gui/utilities/"
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 .run system_utilities.pro
 
-cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
 .run MakeGuiStep1.pro
 .run MakeGuiStep2.pro
 .run MakeGuiStep3.pro
@@ -9,7 +9,7 @@ cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/RefLSupportGui/"
 .run MakeGuiSettings.pro
 .run MakeGuiMainBaseComponents.pro
 
-cd, "~/SVN/HistoTool/trunk/gui/RefLSupport/"
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run getNumeric.pro
 .run refl_support_get.pro
 .run refl_support_put.pro
