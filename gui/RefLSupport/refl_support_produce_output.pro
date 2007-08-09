@@ -39,9 +39,45 @@ MasterText += metadata_CE_file
 
 ;remove first blank line
 MasterText = MasterText[1:*]
+
 ;get the number of files to print out
 nbrFiles = getNbrElementsInDroplist(Event, 'list_of_files_droplist')
 
+;get list of files
+list_of_files = (*(*global).list_of_files)
+
+;get global object of data of interest
+flt0_ptr = (*global).flt0_rescale_ptr
+flt1_ptr = (*global).flt1_rescale_ptr
+flt2_ptr = (*global).flt2_rescale_ptr
+
+;loop over all the files to get output
+for i=0,(nbrFiles-1) do begin
+
+   ;add a blank line before all data
+   MasterText = [MasterText,'']
+   
+   ;get name of file first
+   fileName = list_of_files[i]
+   TextFileName = '## ' + fileName + '##'
+   MasterText = [MasterText,TextFileName]
+
+   ;retrieve flt0, flt1 and flt2
+   flt0 = *flt0_ptr[i]
+   flt1 = *flt1_ptr[i]
+   flt2 = *flt2_ptr[i]
+     
+   flt0Size = (size(flt0))(1)
+   for j=0,(flt0Size-1) do begin
+      TextData = strcompress(flt0[j]) 
+      TextData += ' '
+      TextData += strcompress(flt1[j])
+      TextData += ' '
+      TextData += strcompress(flt2[j])
+      MasterText = [MasterText,TextData]
+   endfor
+
+endfor
 ;output contain of output file in output_file_tab
 putValueInTextField, Event, 'output_file_text_field', MasterText
 
