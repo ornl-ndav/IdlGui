@@ -50,6 +50,10 @@ Step3SFTextFieldSize = [Step3SFDrawSize[0] + 45,$
 Step3fltTextFieldSize = [200,120,310,225]
 flt0LabelSize     = [215,100]
 
+;yes/no box to show or not values
+displayValueLabelYesNoSize = [10, 300]
+displayValueYesNoSize      = [60,320]
+
 ;increase SF 
 Step3_3IncreaseButtonSize = [Step3SFTextFieldSize[0],$
                              Step3SFTextFieldSize[1]-40,$
@@ -165,7 +169,7 @@ Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
                                    yoffset=Step3ManualModeHiddenFrameSize[1],$
                                    scr_xsize=Step3ManualModeHiddenFrameSize[2],$
                                    scr_ysize=Step3ManualModeHiddenFrameSize[3],$
-                                   map=1)
+                                   map=0)
 
 ;SF
 Step3SFDraw = widget_draw(STEP3_BASE,$
@@ -249,7 +253,24 @@ flt0Label = widget_label(STEP3_BASE,$
                          xoffset=flt0LabelSize[0],$
                          yoffset=flt0LabelSize[1],$
                          value=' flt0        flt1 Low Q       flt1 High Q')
-                                
+       
+;display or not data                
+displayValueLabelYesNo = widget_label(STEP3_BASE,$
+                                      value='Display data:',$
+                                      xoffset=displayValueLabelYesNoSize[0],$
+                                      yoffset=displayValueLabelYesNoSize[1])
+         
+displayValueYesNoList = ['yes','no']
+displayValueYesNo = cw_bgroup(STEP3_BASE,$
+                              displayValueYesNoList,$
+                              uname='display_value_yes_no',$
+                              xoffset=displayValueYesNoSize[0],$
+                              yoffset=displayValueYesNoSize[1],$
+                              /exclusive,$
+                              set_value=1.0,$
+                              row=1)
+                              
+
 ;--part tmp removed
 Step3HiddenBaseTmp = widget_base(step3_base,$
                                  xoffset=Step3ManualQMinLabelSize[0]-5,$
