@@ -48,11 +48,10 @@ END
 
 
 ;This function removes all the values outside the given
-;range of values [0,100] from the array passed as argument
+;range of values [0,10000] from the array passed as argument
 FUNCTION getArrayRangeOfNotNanValues, flt1_new
-index = where(flt1_new GE 0 AND flt1_new LE 100)
+index = where(flt1_new GE 0 AND flt1_new LE 10000)
 return, index
-return, rangeIndexes
 END
 
 

@@ -18,6 +18,8 @@ END
 
 
 
+
+
 ;Main function that will produce and display the output file.
 PRO ReflSupport_ProduceOutputFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -61,10 +63,23 @@ for i=0,(nbrFiles-1) do begin
    TextFileName = '## ' + fileName + '##'
    MasterText = [MasterText,TextFileName]
 
+   ;add the value of the angle (in degree)
+   angle_array = (*(*global).angle_array)
+   angle_value = angle_array[i]
+   TextAngle = '#Angle value: ' + strcompress(angle_value)
+   TextAngle += ' degrees'
+   MasterText = [MasterText,TextAngle]
+
    ;retrieve flt0, flt1 and flt2
    flt0 = *flt0_ptr[i]
    flt1 = *flt1_ptr[i]
    flt2 = *flt2_ptr[i]
+   
+   ;remove INF, -INF and NAN values from arrays
+   index = getArrayRangeOfNotNanValues(flt1)
+   flt0 = flt0(index)
+   flt1 = flt1(index)
+   flt2 = flt2(index)
      
    flt0Size = (size(flt0))(1)
    for j=0,(flt0Size-1) do begin
