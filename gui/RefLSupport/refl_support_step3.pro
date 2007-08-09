@@ -43,8 +43,14 @@ flt2_rescale_ptr = (*global).flt2_rescale_ptr
 plot_loaded_file, Event, '2plots'
 
 ;this function displays in step3 the list of flt0, flt1 for low Q file
-;and flt1 for high Q file
-ReflSupportStep3_OutputFlt0Flt1, Event
+;and flt1 for high Q file only if user wants too.
+displayData = getButtonValidated(Event,'display_value_yes_no')
+if (displayData EQ 0) then begin
+   ReflSupportStep3_OutputFlt0Flt1, Event
+endif else begin ;clear text box
+   
+endelse
+
 
 END
 
