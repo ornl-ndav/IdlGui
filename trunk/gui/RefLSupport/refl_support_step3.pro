@@ -48,9 +48,8 @@ displayData = getButtonValidated(Event,'display_value_yes_no')
 if (displayData EQ 0) then begin
    ReflSupportStep3_OutputFlt0Flt1, Event
 endif else begin ;clear text box
-   
+   putValueInTextField, Event,'step3_flt_text_filed',''
 endelse
-
 
 END
 
