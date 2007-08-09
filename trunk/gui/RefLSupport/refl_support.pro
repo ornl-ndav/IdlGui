@@ -196,6 +196,10 @@ MakeGuiStep3, STEPS_TAB,$
               Step3Title,$
               ListOfFiles
 
+;Buid OUTPUT_PLOT tab
+MakeGuiOutputFile, STEPS_TAB,$
+                   Step1Size
+
 ;Build SETTINGS tab
 MakeGuiSettings, STEPS_TAB
 
