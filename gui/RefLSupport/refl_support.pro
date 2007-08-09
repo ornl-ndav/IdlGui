@@ -21,52 +21,54 @@ global = ptr_new({  $
                    flt2_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
                    fit_cooef_ptr    : ptrarr(20,/allocate_heap),$ 
                    flt0_range       : ptrarr(2,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
-                   rescaling_ymax : 1.2,$            ;ymax when rescalling data
-                   rescaling_ymin : 0,$              ;ymin when rescalling data
-                   full_CE_name   : '',$             ;full path to CE file
-                   short_CE_name  : '',$             ;short path to CE file
-                   h_over_mn      : 0.0039554,$      ;h/mass of neutron in USI                   
-                   FirstTimePlotting : 1,$           ;1 if first plot, 0 if not
-                   NbrInfoLineToDisplay : 12,$       ;the number of line to display in info box
-                   distanceMD     : 14.85,$          ;distance Moderator-Detector (m)
+                   rescaling_ymax : 1.2,$ ;ymax when rescalling data
+                   rescaling_ymin : 0,$ ;ymin when rescalling data
+                   full_CE_name   : '',$ ;full path to CE file
+                   short_CE_name  : '',$ ;short path to CE file
+                   h_over_mn      : 0.0039554,$ ;h/mass of neutron in USI                   
+                   FirstTimePlotting : 1,$ ;1 if first plot, 0 if not
+                   NbrInfoLineToDisplay : 12,$ ;the number of line to display in info box
+                   distanceMD     : 14.85,$ ;distance Moderator-Detector (m)
                    XYMinMax       : ptr_new(0L),$
-                   ucams          : '',$             ;remote user ucams
-                   file_extension : '.txt',$         ;file extension of file to load
-                   input_path     : '',$             ;default path to file to load
-                   PrevTabSelect  : 0,$              ;value of previous tab selected
-                   angleValue     : float(0),$       ;current value of the angle (float)
-                   CEcooef        : ptr_new(0L),$    ;the fitting coeff of the CE file
-                   flt0_CE_range  : ptr_new(0L),$    ;flt0 between Q1 and Q2 for CE file
-                   CE_scaling_factor : float(0),$    ;The CE scaling factor to go from Y to 1
-                   flt0_xaxis     : ptr_new(0L),$    ;x-axis of loaded file
-                   flt1_yaxis     : ptr_new(0L),$    ;y-axis of loaded file
-                   flt2_yaxis_err : ptr_new(0L),$    ;y-axis error of loaded file
-                   FileHistory    : ptr_new(0L),$    ;#0:CE file #1:next file...etc
-                   list_of_files  : ptr_new(0L),$    ;list of files loaded
-                   NbrFilesLoaded : 0,$              ;number of files loaded
-                   Q1_array       : ptr_new(0L),$    ;Q1 array
-                   Q2_array       : ptr_new(0L),$    ;Q2 array
-                   SF_array       : ptr_new(0L),$    ;Scalling factor array
-                   angle_array    : ptr_new(0L),$    ;Angle value
-                   color_array    : ptr_new(0L),$    ;index of color for each file 
-                   Qmin_array     : ptr_new(0L),$    ;list of Qmin
-                   Qmax_array     : ptr_new(0L),$    ;list of Qmax
-                   ColorSliderDefaultValue : 25,$    ;default index value of color slider
-                   PreviousColorIndex : 25,$         ;color index of previous run
-                   ListOfLongFileName : ptr_new(0L),$;list of path of file loaded
-                   images_tabs    : ptr_new(0L),$    ;list of images of tabs (SF, ri...)
-                   images_tab3    : ptr_new(0L),$    ;list of images for tab 3 only
-                   unames_tab2    : ptr_new(0L),$    ;list of widget_draw of tab2
-                   unames_tab3    : ptr_new(0L),$    ;list of widget_draw of tab3
-                   images_tabs_xoff : ptr_new(0L),$  ;images x_offset of tabs
-                   images_tabs_yoff : ptr_new(0L),$  ;images y_offset of tabs  
-                   show_CE_fit      : 0,$            ;0 means the step2 has not been performed
-                   show_other_fit   : 0$             ;0 means that the step3 has not been done yet
-                 })
+                   ucams          : '',$ ;remote user ucams
+                   file_extension : '.txt',$ ;file extension of file to load
+                   input_path     : '',$ ;default path to file to load
+                   PrevTabSelect  : 0,$ ;value of previous tab selected
+                   angleValue     : float(0),$ ;current value of the angle (float)
+                   CEcooef        : ptr_new(0L),$ ;the fitting coeff of the CE file
+                   flt0_CE_range  : ptr_new(0L),$ ;flt0 between Q1 and Q2 for CE file
+                   CE_scaling_factor : float(0),$ ;The CE scaling factor to go from Y to 1
+                   metadata_CE_file: ptr_new(0L),$ ;first part of the CE input file
+                   flt0_xaxis     : ptr_new(0L),$ ;x-axis of loaded file
+                   flt1_yaxis     : ptr_new(0L),$ ;y-axis of loaded file
+                   flt2_yaxis_err : ptr_new(0L),$ ;y-axis error of loaded file
+                   FileHistory    : ptr_new(0L),$ ;#0:CE file #1:next file...etc
+                   list_of_files  : ptr_new(0L),$ ;list of files loaded
+                   NbrFilesLoaded : 0,$ ;number of files loaded
+                   Q1_array       : ptr_new(0L),$ ;Q1 array
+                   Q2_array       : ptr_new(0L),$ ;Q2 array
+                   SF_array       : ptr_new(0L),$ ;Scalling factor array
+                   angle_array    : ptr_new(0L),$ ;Angle value
+                   color_array    : ptr_new(0L),$ ;index of color for each file 
+                   Qmin_array     : ptr_new(0L),$ ;list of Qmin
+                   Qmax_array     : ptr_new(0L),$ ;list of Qmax
+                   ColorSliderDefaultValue : 25,$ ;default index value of color slider
+                   PreviousColorIndex : 25,$ ;color index of previous run
+                   ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
+                   images_tabs    : ptr_new(0L),$ ;list of images of tabs (SF, ri...)
+                   images_tab3    : ptr_new(0L),$ ;list of images for tab 3 only
+                   unames_tab2    : ptr_new(0L),$ ;list of widget_draw of tab2
+                   unames_tab3    : ptr_new(0L),$ ;list of widget_draw of tab3
+                   images_tabs_xoff : ptr_new(0L),$ ;images x_offset of tabs
+                   images_tabs_yoff : ptr_new(0L),$ ;images y_offset of tabs  
+                   show_CE_fit      : 0,$ ;0 means the step2 has not been performed
+                   show_other_fit   : 0$ ;0 means that the step3 has not been done yet
+})
 
 CEcooef       = lonarr(3)
 FileHistory   = strarr(1)
 list_of_files = strarr(1)
+metadata_CE_file = strarr(1)
 Qmin_array    = fltarr(1)
 Qmax_array    = fltarr(1)
 Q1_array      = lonarr(1)
@@ -88,6 +90,7 @@ ListOfLongFileName = strarr(1)
 (*(*global).angle_array)   = angle_array
 (*(*global).color_array)   = color_array
 (*(*global).ListOfLongFileName) = ListOfLongFileName
+(*(*global).metadata_CE_file) = metadata_CE_file
 (*global).ucams            = ucams
 
 if (!VERSION.os EQ 'darwin') then begin

@@ -320,6 +320,10 @@ PRO ReflSupportOpenFile_Storeflts, Event, LongFileName, index
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+if (index EQ 0) then begin
+    metadata_CE_file = (*(*global).metadata_CE_file)
+endif
+
 error_plot_status = 0
 catch, error_plot_status
 if (error_plot_status NE 0) then begin
@@ -368,6 +372,9 @@ endif else begin
                                 ;case where we have non-numbers
                 Nelines = Nelines + 1
                 readf,u,tmp
+                if (index EQ 0) then begin
+                    metadata_CE_file = [metadata_CE_file,tmp]
+                endif
             end
             
             else: begin
@@ -418,6 +425,14 @@ endif else begin
         flt0 = (*(*global).flt0_xaxis)
 
     endif
+
+;remove last 4 lines of metadata_CE_only and
+;store metadata_CE_file for index 0 only
+if (index EQ 0) then begin
+    size = (size(metadata_CE_file))(1)
+    metadata_CE_file = metadata_CE_file[0:size-5]
+    (*(*global).metadata_CE_file) = metadata_CE_file
+endif
 
 ;store flt0, ftl1 and flt2 in ptrarr
 flt0_ptr = (*global).flt0_ptr
