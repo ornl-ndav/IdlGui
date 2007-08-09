@@ -33,8 +33,7 @@ d78 = 70  ;distance between validate button and reset button
 axis_lin_log = ['lin','log']
 LabelSize    = [35,30]   ;scr_xsize and scr_ysize
 TextBoxSize  = [70,30]   ;scr_xsize and scr_ysize
-ResetButton  = [70,65]  ;scr_xsize and scr_ysize
-ValidateButton = [70,65] ;scr_xsize and scr_ysize
+ResetButton  = [140,65]  ;scr_xsize and scr_ysize
 ;xaxis
 XaxisLabelSize       = [5,$
                         5,$
@@ -58,12 +57,8 @@ XaxisMaxTextFieldSize= [XaxisMaxLabelSize[0]+d45,$
                         TextBoxSize[1]]
 XaxisLinLogSize      = [XaxisMaxTextFieldSize[0]+d56,$
                         XaxisMaxTextFieldSize[1]]
-ValidateButtonSize = [XAxisLinLogsize[0]+d67,$
-                      XAxisLinLogSize[1],$
-                      ValidateButton[0],$
-                      ValidateButton[1]]
-ResetButtonSize     = [ValidateButtonSize[0]+d78,$
-                       ValidateButtonSize[1],$
+ResetButtonSize     = [XAxisLinLogsize[0]+d67,$
+                       XAxisLinLogSize[1],$
                        ResetButton[0],$
                        ResetButton[1]]                                
 ;yaxis
@@ -187,14 +182,6 @@ XaxisLinLog = CW_BGROUP(RescaleBase,$
                          row=1,$
                          uname='XaxisLinLog')                 
 
-ValidateButton = WIDGET_BUTTON(RescaleBase,$
-                               XOFFSET=ValidateButtonSize[0],$
-                               YOFFSET=ValidateButtonSize[1],$
-                               SCR_XSIZE=ValidateButtonSize[2],$
-                               SCR_YSIZE=ValidateButtonSize[3],$
-                               UNAME='ValidateButton',$
-                               VALUE='VALIDATE')
-
 ResetButton = WIDGET_BUTTON(RescaleBase,$
                             XOFFSET=ResetButtonSize[0],$
                             YOFFSET=ResetButtonSize[1],$
@@ -248,14 +235,14 @@ YaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
                                 /ALL_EVENTS)                     
 
 YaxisLinLog = CW_BGROUP(RescaleBase,$ 
-                         axis_lin_log,$
-                         /exclusive,$
-                         /RETURN_NAME,$
-                         XOFFSET=YaxisLinLogSize[0],$
-                         YOFFSET=YaxisLinLogSize[1],$
-                         SET_VALUE=0.0,$
-                         row=1,$
-                         uname='YaxisLinLog')      
+                        axis_lin_log,$
+                        /exclusive,$
+                        /RETURN_NAME,$
+                        XOFFSET=YaxisLinLogSize[0],$
+                        YOFFSET=YaxisLinLogSize[1],$
+                        SET_VALUE=0.0,$
+                        row=1,$
+                        uname='YaxisLinLog')      
 
 
 END
