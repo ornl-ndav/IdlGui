@@ -13,6 +13,7 @@ endif else begin
 endelse
 
 global = ptr_new({  $
+                   replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
                    flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
                    flt1_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
                    flt2_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
@@ -161,7 +162,6 @@ PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
                           SCR_XSIZE=PlotWindowSize[2],$
                           SCR_YSIZE=PlotWindowSize[3],$
                           RETAIN=2,$
-                          /BUTTON_EVENTS,$
                           /MOTION_EVENTS)
 
 STEPS_TAB = WIDGET_TAB(MAIN_BASE,$

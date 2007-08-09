@@ -29,6 +29,20 @@ PRO MAIN_BASE_event, Event
         ReflSupport_ProduceOutputFile, Event
      end
 
+     Widget_Info(wWidget, FIND_BY_UNAME='plot_window'):begin
+        replot_main_plot, Event
+     end
+     
+     ;XaxisLinLog
+     Widget_Info(wWidget, FIND_BY_UNAME='XaxisLinLog'):begin
+        rescale_data_changed, Event
+     end
+     
+     ;YaxisLinLog
+     Widget_Info(wWidget, FIND_BY_UNAME='YaxisLinLog'):begin
+        rescale_data_changed, Event
+     end
+
 ;--step1--
 
      ;when LOADING a new file
@@ -92,7 +106,26 @@ PRO MAIN_BASE_event, Event
         run_step3, Event
      end
      
+     ;changing min value of yaxis
+     Widget_Info(wWidget, FIND_BY_UNAME='YaxisMinTextField'): begin
+        rescale_data_changed, Event
+     end
      
+     ;changing max value of yaxis
+     Widget_Info(wWidget, FIND_BY_UNAME='YaxisMaxTextField'): begin
+        rescale_data_changed, Event
+     end
+
+     ;changing min value of xaxis
+     Widget_Info(wWidget, FIND_BY_UNAME='XaxisMinTextField'): begin
+        rescale_data_changed, Event
+     end
+
+     ;changing max value of xaxis
+     Widget_Info(wWidget, FIND_BY_UNAME='XaxisMaxTextField'): begin
+        rescale_data_changed, Event
+     end
+                                     
                                 ;--validate rescale
      Widget_Info(wWidget, FIND_BY_UNAME='ValidateButton'): begin
         ValidateButton, Event

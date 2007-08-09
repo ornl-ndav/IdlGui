@@ -214,7 +214,8 @@ END
 PRO ValidateButton, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-DoPlot,Event
+(*global).replot_me = 1
+;DoPlot,Event
 END
 
 
@@ -241,6 +242,26 @@ ModeratorDetectorDistanceBaseId = $
 widget_control, ModeratorDetectorDistanceBaseId, map=Validate
 checkLoadButtonStatus, Event
 END
+
+
+PRO replot_main_plot, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+if (((*global).replot_me) EQ 1) then begin
+    steps_tab, Event,1
+    (*global).replot_me = 0
+endif
+end
+
+
+PRO rescale_data_changed, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).replot_me = 1
+END
+
+
+
 
 
 pro REFL_SUPPORT_EVENTCB

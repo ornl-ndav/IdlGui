@@ -90,9 +90,6 @@ END
 ;This function create the output file
 PRO createOutputFile, Event, output_file_name, MasterText
 
-help, output_file_name
-help, MasterText
-
 ;size of MasterText
 MasterTextSize = (size(MasterText))(1)
 
