@@ -9,11 +9,11 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 5;
+	final static int NUM_IMAGES = 6;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
-  enum enumHostname { dev, heater, mrac, lrac, bac, unknown}
+  enum enumHostname {dev, heater, mrac, lrac, bac, unknown}
   static String DEV = "dev.ornl.gov";
   static String HEATER = "heater";
   static String LRAC = "lrac";
@@ -25,7 +25,8 @@ public class IdlToolsPortal implements ActionListener{
   static String REALIGN_BSS = "/SNS/users/j35/IDL/BSS/RealignGUI/RealignBSS";
   static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
   static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
-    
+  static String REFL_SCALE = "/SNS/users/j35/IDL/REF/REF_L/RefLScale";
+   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
 	String hostname;
@@ -85,6 +86,7 @@ public class IdlToolsPortal implements ActionListener{
 		images[2] = createImageIcon("/gov/ornl/sns/itools/images/rebinNeXus.gif");
 		images[3] = createImageIcon("/gov/ornl/sns/itools/images/DataReduction_M.gif");
 		images[4] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
+    images[5] = createImageIcon("/gov/ornl/sns/itools/images/RefLScale.gif");
 		
 		//Define the help text that goes with each tool
 		//plotBSS
@@ -101,6 +103,9 @@ public class IdlToolsPortal implements ActionListener{
 		//moreNeXus
 		info[4] = "<html>Program that gives information about a particular run_number and can output the<br>" +
 				"various data it contains</html>";
+    //RefLScale
+    info[5] = "<html>This program rescale a set of files produced by the <b>REF_L data reduction<br>" +
+        "program</b>.</html>";
 			
 		/* 
 		 * Create a label for displaying the tools preview and put
@@ -121,7 +126,7 @@ public class IdlToolsPortal implements ActionListener{
 		
 		// Create a combobox with IDL tools choices
 		String[] tools = {"plotBSS","RealignBSS","rebinNeXus","DataReduction",
-				"more_NeXus"};
+				"more_NeXus","ReflScale"};
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
 		
@@ -198,6 +203,10 @@ public class IdlToolsPortal implements ActionListener{
            System.exit(0);
            break;
          case 4: //under_construction
+           break;
+         case 5: //RefLSupport
+           p = (Runtime.getRuntime()).exec(REFL_SCALE);
+           System.exit(0);
          default: break;
            }
 	      }
@@ -264,7 +273,16 @@ public class IdlToolsPortal implements ActionListener{
         switch (localHostname) {
         case dev: enableButton = true; break;
         default: enableButton = false; break;
-        }
+        };
+        break;
+      case 5: //RefLScale
+        switch (localHostname) {
+        case lrac:
+        case heater: enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;
+          
     }
     goButton.setEnabled(enableButton);
   }
