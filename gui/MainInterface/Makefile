@@ -6,7 +6,12 @@
 # Copy the VM program in its final location
 
 all:
-	idl /SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/makefile.pro;
+	#idl /SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/makefile.pro;
+	/SNS/users/j35/SVN/HistoTool/trunk/gui/REF/Makefile
+	/SNS/users/j35/SVN/HistoTool/trunk/gui/BSS/Makefile
+	/SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/Makefile
+	/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/Makefile
+	/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Makefile
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/REF/miniReflPak /SNS/users/j35/IDL/REF/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/REF/extract_data.sav /SNS/users/j35/IDL/REF/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/BSS/plot_data.sav /SNS/users/j35/IDL/BSS/;
