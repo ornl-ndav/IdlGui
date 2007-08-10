@@ -19,5 +19,6 @@ all:
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/sns_idl_tools /SNS/users/j35/IDL/MainInterface/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/data_reduction.sav /SNS/users/j35/IDL/DataReduction/
 	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/data_reduction /SNS/users/j35/IDL/DataReduction/
-	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/refl_support /SNS/users/j35/IDL/REF/REF_L/
+	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/refl_support.sav /SNS/users/j35/IDL/REF/REF_L/
+	cp /SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/RefLScale /SNS/users/j35/IDL/REF/REF_L/
 

@@ -114,7 +114,20 @@ case list_index of
         launch_activation = 0
         (*global).active_idl_tool = 'more_NeXus'
     end
-
+    7: begin
+;RefLScale
+        text = 'Program that rescales a set of data'
+        text += ''
+        text += 'Files must be loaded by increasing value'
+        text += 'of their angle'
+        text += '                                        '
+        picture = $
+          '/SNS/users/j35/SVN/HistoTool/trunk/gui/MainInterface/under_construction.bmp'
+        x=0
+        y=0
+        launch_activation = 0
+        (*global).active_idl_tool = 'RefLScale'
+    end
 endcase
 
 if (list_index NE 0) then begin
@@ -163,6 +176,9 @@ case active_idl_tool of
     end
     'DataReduction': begin
         spawn, '/SNS/users/j35/IDL/DataReduction/data_reduction'
+    end
+    'RefLScale':begin
+        spawn, '/SNS/users/j35/IDL/REF/RefLScale'
     end
 endcase
 
