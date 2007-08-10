@@ -120,22 +120,181 @@ void EventData<NumT>::write_attr(NexusUtil & nexus_util,
   nexus_util.put_attr(attr_name, attr_value);
 }
 
+bool is_positive_int(string str)
+{
+  int size = str.length();
+  if (size == 0)
+    {
+      return false;
+    }
+  if (str[0] == '0' && size > 1)
+    {
+      return false;
+    }
+  for (int i = 1; i < size; i++)
+    {
+      if (str[i] < '0' || str[i] > '9')
+        {
+          return false;
+        }
+    }
+  return true;
+}
+
 template <typename NumT>
 void EventData<NumT>::parse_bank_file(const string & bank_file)
 {
-  // This function will parse the bank file and fill a map of the
-  // number for each bank. It will also fill a vector of the bank 
-  // numbers for laying out the nexus file. For now, the numbers are
-  // just hardcoded. 
+  xmlChar name[20] = "name";
+  xmlDocPtr doc = NULL;
+  xmlLineNumbersDefault(1);
+  doc = xmlReadFile(bank_file.c_str(), NULL, 0);
+  if (doc == NULL)
+    {
+      throw runtime_error("Could not read bank configuration file: " + bank_file);
+    }
+
+  xmlNodePtr cur_node = xmlDocGetRootElement(doc);
+  int max_bank_number = -1;
+  int bank_number = -1;
+
+  for (cur_node = cur_node->children; cur_node;
+       cur_node = cur_node->next) 
+    {
+      xmlNodePtr bank_node;
+      for (bank_node = cur_node->children; bank_node;
+           bank_node = bank_node->next)
+        {
+          if (xmlStrcmp(bank_node->name, 
+              (const xmlChar *)"number") == 0)
+            {
+              if (bank_node->children == NULL)
+                {
+                  throw runtime_error("No bank number found");
+                }
+              else
+                {
+                  string bank_number_str(
+                    reinterpret_cast<const char *>
+                    (bank_node->children->content));
+                  // Make sure the bank number is a valid integer 
+                  // before conversion
+                  if (!is_positive_int(bank_number_str))
+                    {
+                      throw runtime_error("Invalid bank_number: "
+                        + bank_number_str);
+                    }
+                  // When a valid bank number is found, push it on
+                  // the bank numbers vector
+                  bank_number = atoi(bank_number_str.c_str());
+                  if (bank_number > max_bank_number) 
+                    { 
+                      max_bank_number = bank_number;
+                      this->banks.resize(max_bank_number + 1);
+                    }
+                  this->bank_numbers.push_back(
+                    bank_number);
+                  this->banks[bank_number] = new Bank<NumT>();
+                }
+            }
+          else if (xmlStrcmp(bank_node->name, 
+                   (const xmlChar *)"continuous_list") == 0)
+            {
+              int start = -1;
+              int stop = -1;
+              if (bank_number == -1)
+                {
+                  throw runtime_error(
+                    "Bank number must be specified before continuous list");
+                }
+              xmlNodePtr cont_list_node;
+              for (cont_list_node = bank_node->children; cont_list_node;
+                   cont_list_node = cont_list_node->next)
+                {
+                  if (xmlStrcmp(cont_list_node->name,
+                   (const xmlChar *)"start") == 0)
+                    {
+                      // Check if the start number is valid
+                      if (cont_list_node->children->content == NULL)
+                        {
+                          throw runtime_error("No start number found");
+                        }
+                      string start_str(
+                        reinterpret_cast<const char *>
+                        (cont_list_node->children->content));
+                      if (!is_positive_int(start_str))
+                        {
+                          throw runtime_error("Invalid start number: "
+                                              + start_str);
+                        }
+                      start = atoi(start_str.c_str());
+                    }
+                  else if (xmlStrcmp(cont_list_node->name,
+                   (const xmlChar *)"stop") == 0)
+                    {
+                      // Check if the stop number is valid
+                      if (cont_list_node->children->content == NULL)
+                        {
+                          throw runtime_error("No stop number found");
+                        }
+                      string stop_str(
+                        reinterpret_cast<const char *>
+                        (cont_list_node->children->content));
+                      if (!is_positive_int(stop_str))
+                        {
+                          throw runtime_error("Invalid stop number: "
+                                              + stop_str);
+                        }
+                      stop = atoi(stop_str.c_str());
+                    }
+                }
+              // Make sure the starting and stopping numbers were
+              // found for the continuous list and that the start isn't
+              // >= to the stop
+              if (start == -1)
+                {
+                  throw runtime_error(
+                    "No start number found for continuous list");
+                }
+              if (stop == -1)
+                {
+                  throw runtime_error(
+                    "No stop number found for continuous list");
+                }
+              if (start >= stop)
+                {
+                  throw runtime_error(
+                    "Start number must be less than stop number");
+                }
+              if (stop > this->bank_map.size())
+                {
+                  this->bank_map.resize(stop + 1);
+                }
+              // Fill in a continuous list for the bank map once 
+              // valid numbers have been found
+              for (int i = start; i < stop; i++)
+                {
+                  this->bank_map[i] = this->banks[bank_number];
+                }
+              break;
+            }
+        }
+      bank_number = -1;
+    }
+
+  if (max_bank_number == -1)
+    {
+      throw runtime_error("No banks found in bank configuration");
+    }
+ /* 
   this->bank_numbers.push_back(1);
   this->bank_numbers.push_back(2);
   this->bank_numbers.push_back(3);
- 
+
   this->banks.resize(4);
   this->banks[1] = new Bank<NumT>();
   this->banks[2] = new Bank<NumT>();
   this->banks[3] = new Bank<NumT>();
-  
+
   for (int i = 0; i < 4096; i++)
     {
       this->bank_map.push_back(banks[1]);
@@ -147,7 +306,7 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
   for (int i = 8192; i < 9216; i++)
     {
       this->bank_map.push_back(banks[3]);
-    }
+    }*/
 }
 
 template <typename NumT>
@@ -194,7 +353,8 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
 }
 
 template <typename NumT>
-void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, const string & pulse_id_file)
+void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, 
+                                       const string & pulse_id_file)
 {
   // First layout the nexus file
   nexus_util.make_group("entry", "NXentry");
@@ -209,11 +369,12 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, const string & pu
       nexus_util.close_group();
     }
   nexus_util.close_group();
+  
   // Write out each bank's information
   size = this->bank_numbers.size();
   for (int i = 0; i < size; i++)
     {
-      if (this->banks[bank_numbers[i]]->tof.size() > 0)
+      if (this->banks[this->bank_numbers[i]]->tof.size() > 0)
         {
           this->write_data(nexus_util, TOF, this->bank_numbers[i]);
           this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
@@ -469,6 +630,12 @@ void EventData<NumT>::read_data(const string & event_file,
   size_t pulse_buffer_size = (pulse_file_size < BLOCK_SIZE) ? 
                                pulse_file_size : BLOCK_SIZE;
 
+  // If the pulse file is 0 size, throw an error
+  if (pulse_file_size == 0)
+    {
+      throw runtime_error("Pulse file size is zero");
+    }
+
   // Read in the initial time and convert it to ISO8601. Skip the initial
   // index since it will always be zero.
   pulse_fp.seekg(0, std::ios::beg);
@@ -498,7 +665,7 @@ void EventData<NumT>::read_data(const string & event_file,
   event_fp.seekg(0, std::ios::beg);
   while(event_fp_offset < event_file_size)
     {
-      event_fp.read(reinterpret_cast<char *>(event_buffer), 
+      event_fp.read(reinterpret_cast<char *>(event_buffer),
                     event_buffer_size * data_size);
 
       // Populate the time of flight and pixel id
@@ -507,7 +674,7 @@ void EventData<NumT>::read_data(const string & event_file,
         {
           if (event_number == pulse_index)
             {
-              prev_time = ((static_cast<NumT>(*(pulse_buffer + pulse_i + 1)) 
+              prev_time = ((static_cast<NumT>(*(pulse_buffer + pulse_i + 1))
                           * 1000000000)
                           + static_cast<NumT>(*(pulse_buffer + pulse_i)))
                           -((init_seconds * 1000000000));
@@ -520,12 +687,12 @@ void EventData<NumT>::read_data(const string & event_file,
                     {
                       pulse_buffer_size = pulse_file_size - pulse_fp_offset;
                     }
-                  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), 
+                  pulse_fp.read(reinterpret_cast<char *>(pulse_buffer),
                                 pulse_buffer_size * data_size);
                 }
               pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_i + 2));
             }
-          
+
           // Filter out error codes
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
@@ -549,10 +716,9 @@ void EventData<NumT>::read_data(const string & event_file,
             }
           event_number++;
         }
-      
+
       event_fp_offset += event_buffer_size;
 
-      // Make sure to not read past EOF
       if(event_fp_offset + BLOCK_SIZE > event_file_size)
         {
           event_buffer_size = event_file_size - event_fp_offset;

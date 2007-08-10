@@ -81,6 +81,7 @@ int main(int32_t argc,
       config.pulse_id_file = data_file.getValue() + "_pulseid.dat";
       config.format = format.getValue();
       config.mapping_file = mapping_file.getValue();
+      config.bank_file = bank_file.getValue();
       
       // Get the format of the nexus file
       if (format.getValue() == "hdf4")
@@ -128,7 +129,7 @@ int main(int32_t argc,
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
-
+  
   // Write the nexus file
   if (config.pulse_id_file.empty())
     {
@@ -138,6 +139,5 @@ int main(int32_t argc,
     {
       event_data.write_nexus_file(nexus_util, config.pulse_id_file);
     }
-
   return 0;
 }

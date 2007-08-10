@@ -11,6 +11,9 @@
 #include "bank.hpp"
 #include <vector>
 #include <string>
+#include <cstdlib>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 const uint32_t ERROR=0x80000000;
 
