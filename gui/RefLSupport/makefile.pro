@@ -39,6 +39,10 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/"
 
 resolve_routine, "strsplit",/either
 resolve_routine, "loadct",/either
+resolve_routine, "errplot",/either
+resolve_routine, "read_bmp",/either
+resolve_routine, "poly_fit",/either
+resolve_routine, "uniq",/either
 resolve_routine, "refl_support", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
