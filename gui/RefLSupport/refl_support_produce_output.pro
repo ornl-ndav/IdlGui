@@ -66,7 +66,7 @@ for i=0,(nbrFiles-1) do begin
    ;add the value of the angle (in degree)
    angle_array = (*(*global).angle_array)
    angle_value = angle_array[i]
-   TextAngle = '#Angle value: ' + strcompress(angle_value)
+   TextAngle = '#Incident angle: ' + strcompress(angle_value)
    TextAngle += ' degrees'
    MasterText = [MasterText,TextAngle]
 

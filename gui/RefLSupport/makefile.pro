@@ -35,35 +35,12 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/"
 .run "refl_support_produce_output.pro"
 .run "refl_support_eventcb.pro"
 .run "refl_support.pro"
-
 .run "refl_support_eventcb"
+
 resolve_routine, "strsplit",/either
-;resolve_routine, "loadct",/either
+resolve_routine, "loadct",/either
 resolve_routine, "refl_support", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 save,/routines,filename="refl_support.sav"
 exit
-
-
-
-
-
-
-
-
-
-;resolve_routine, "refl_support_file_utility",/either
-;resolve_routine, "refl_support_math",/either
-;resolve_routine, "isNumeric",/either
-;resolve_routine, "ArrayDelete",/either
-;resolve_routine, "refl_support_fit",/either
-;resolve_routine, "refl_support_plot_data",/either
-;resolve_routine, "refl_support_widget",/either
-;resolve_routine, "refl_support_eventcb", /either
-;.run "refl_support_eventcb"
-;resolve_routine, "refl_support", /either
-;resolve_routine, "CW_BGROUP", /either
-;resolve_routine, "XMANAGER", /either
-;save,/routines,filename="refl_support.sav"
-;exit
