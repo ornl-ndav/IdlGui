@@ -140,6 +140,13 @@ endif else begin                ;at least one file has to be ploted
    index_size = (size(index_to_plot))(1)
    for i=0,(index_size-1) do begin
       
+       ;color index of main plot
+       if (i EQ 0) then begin
+           MainPlotColor = 100
+       endif else begin
+           MainPlotColor = 255
+       endelse
+
                                 ;retrieve particular flt0, flt1 and flt2
       flt0 = *flt0_ptr[index_to_plot[i]]
       flt1 = *flt1_ptr[index_to_plot[i]]
@@ -160,20 +167,20 @@ endif else begin                ;at least one file has to be ploted
             0:begin
                case IsYlin of
                   0: begin
-                     plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                     plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],color=MainPlotColor
                   end
                   1: begin
-                     plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                     plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],color=MainPlotColor
                   end
                endcase
             end
             1: begin
                case IsYlin of
                   0: begin
-                     plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                     plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],color=MainPlotColor
                   end
                   1: begin
-                     plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+                     plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],color=MainPlotColor
                   end
                endcase
             end
@@ -195,20 +202,20 @@ endif else begin                ;at least one file has to be ploted
             0:begin
                 case IsYlin of
                     0: begin
-                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax],color=MainPlotColor,/noerase
                     end
                     1: begin
-                        plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase,color=MainPlotColor
                     end
                 endcase
             end
             1: begin
                 case IsYlin of
                     0: begin
-                        plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase,color=MainPlotColor
                     end
                     1: begin
-                        plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase
+                        plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax],/noerase,color=MainPlotColor
                     end
                 endcase
             end
