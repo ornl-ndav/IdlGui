@@ -3,6 +3,10 @@
 Function ReflSupportOpenFile_OPEN_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+widget_control, dMDAngleBaseId, map=0
+
 title    = 'Select file:'
 filter   = '*' + (*global).file_extension
 pid_path = (*global).input_path

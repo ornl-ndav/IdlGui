@@ -390,7 +390,7 @@ END
 
 
 ;This function will check if the LOAD button can be validated or no
-PRO checkLoadButtonStatus, Event
+PRO ReflSupportWidget_checkOpenButtonStatus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -412,24 +412,24 @@ CASE (InputParameter) OF
         text = 'Angle is empty'
     END
     11: BEGIN                   ;distance and angle are empty
-        text = 'Dist. and angle are empty'
+        text = 'Dist. & angle are empty'
     END
     12: BEGIN                   ;distance wrong and angle empty
-        text = 'Dist. is wrong and angle empty'
+        text = 'Dist. is wrong & angle empty'
     END
     20: BEGIN                   ;distance ok and angle wrong
         text = 'Angle has wrong format'
     END
     21: BEGIN                   ;distance is empty and angle is wrong
-        text = 'Dist. empty and wrong angle format'
+        text = 'Dist. empty & wrong angle format'
     END
     22: BEGIN                   ;distance and angle are wrong
-        text = 'Dist. and angle have wrong format'
+        text = 'Dist. & angle have wrong format'
     END
 ENDCASE
 activateErrorMessageBaseFunction, Event, activateErrorBase
 DisplayErrorMessage, Event, text
-ActivateButton, Event, 'load_button', validateLoadButton
+ActivateButton, Event, 'ok_load_button', validateLoadButton
 END
 
 
@@ -438,3 +438,5 @@ PRO displayAngleValue, Event, angleValue
  angleTextFieldId = widget_info(Event.top,find_by_uname='AngleTextField')
  widget_control, angleTextFieldId, set_value=strcompress(angleValue)
 END
+
+

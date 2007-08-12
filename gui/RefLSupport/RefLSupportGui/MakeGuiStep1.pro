@@ -10,34 +10,44 @@ ClearButton              = [110, 5  , 100 , 30 ]
 ListOfFilesSize          = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
 InputFileFormatSize      = [130 , InputFileFormatLabelSize[1]]
-ModeratorDetectorDistanceBase = [220,$
-                                 InputFileFormatLabelSize[1]-5,$
-                                 400,$
-                                 80]
-ModeratorDetectorDistanceLabelSize = [25,5,120,30]
-ModeratorDetectorDistanceTextFieldSize = [145,$
-                                          ModeratorDetectorDistanceLabelSize[1],$
+
+;base that covers the entire first part and will contain the angle/dMD widgets
+dMDAngleBaseSize      = [5,5,StepsTabSize[2]-20,105]
+dMDAngleMainLabelSize = [5,5]
+dMDAngleMainLabelTitle = 'To go from TOF to Q, the file you are about to'
+dMDAngleMainLabelTitle += ' load will use:'
+
+ModeratorDetectorDistanceLabelSize = [5,35]
+ModeratorDetectorDistanceLabelTitle = 'Distance Moderator-Detector (m):'
+ModeratorDetectorDistanceTextFieldSize = [210,$
+                                          ModeratorDetectorDistanceLabelSize[1]-6,$
                                           100,$
                                           30]
 yoff = 35
-AngleLabelSize = [25,$
-                  ModeratorDetectorDistanceLabelSize[1]+yoff,$
-                  50,$
-                  ModeratorDetectorDistanceLabelSize[3]]
-
-AngleTextFieldSize = [75,$
-                      AngleLabelSize[1],$
-                      80,$
+AngleLabelSize = [5,ModeratorDetectorDistanceLabelSize[1]+yoff]
+                  
+AngleTextFieldSize = [100,$
+                      AngleLabelSize[1]-6,$
+                      100,$
                       ModeratorDetectorDistanceTextFieldSize[3]]
-AngleUnitsSize = [ 160, AngleLabelSize[1]]
+AngleUnitsSize = [ 200, AngleLabelSize[1]-6]
 
-ErrorMessageBaseSize = [InputFileFormatLabelSize[0],$
-                        InputFileFormatLabelSize[1]+35,$
-                        210,$
-                        35]
+ErrorMessageBaseSize = [ModeratorDetectorDistanceLabelSize[0]+308,$
+                        ModeratorDetectorDistanceLabelSize[1]-8,$
+                        190,$
+                        30]
 ErrorMessageLabelSize = [0, 0, 210, 30]
 
-FileInfoSize         = [5 , 120, 510 , 200]
+OkLoadButtonSize     = [312,AngleTextFieldSize[1],$
+                        95,30]
+OkLoadButtonTitle = 'OK'
+CancelLoadButtonsize = [412,AngleTextFieldSize[1],$
+                        okLoadButtonsize[2],$
+                        okLoadButtonSize[3]]
+CancelLoadButtonTitle = 'CANCEL'
+
+;text box that gives info about selected file
+FileInfoSize         = [5 , 80, 510 , 240]
 ListOfColorLabelSize = [5 , 330, 50  , 30 ]
 ListOfColorSize      = [60, 320, 310 , 35 ]
 ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
@@ -81,6 +91,102 @@ STEP1_BASE = WIDGET_BASE(STEPS_TAB,$
                          YOFFSET=Step1Size[1],$
                          SCR_XSIZE=Step1Size[2],$
                          SCR_YSIZE=Step1Size[3])
+
+;---------------------------------------------------------
+dMDAngleBase = widget_base(STEP1_BASE,$
+                           uname='dMD_angle_base',$
+                           xoffset=dMDAngleBaseSize[0],$
+                           yoffset=dMDAngleBaseSize[1],$
+                           scr_xsize=dMDAngleBaseSize[2],$
+                           scr_ysize=dMDAngleBaseSize[3],$
+                           frame=1,$
+                           map=0)
+
+ErrorMessageBase = widget_base(dMDAngleBase,$
+                               xoffset=ErrorMessageBaseSize[0],$
+                               yoffset=ErrorMessageBaseSize[1],$
+                               scr_xsize=ErrorMessageBaseSize[2],$
+                               scr_ysize=ErrorMessageBaseSize[3],$
+                               uname='ErrorMessageBase',$
+                               frame=1,$
+                               map=0)
+
+ErrorMessageLabel = widget_label(ErrorMessageBase,$
+                                 uname='ErrorMessageLabel',$
+                                 xoffset=ErrorMessageLabelSize[0],$
+                                 yoffset=ErrorMessageLabelSize[1],$
+                                 scr_xsize=ErrorMessageLabelSize[2],$
+                                 scr_ysize=ErrorMessageLabelSize[3],$
+                                 value='')
+
+
+dMDAngleMainLabel = widget_label(dMDAngleBase,$
+                                 xoffset=dMDAngleMainLabelSize[0],$
+                                 yoffset=dMDAngleMainLabelSize[1],$
+                                 value=dMDAngleMainLabelTitle)
+
+ModeratorDetectorDistanceLabel = WIDGET_LABEL(dMDAngleBase,$
+                                              XOFFSET=ModeratorDetectorDistanceLabelSize[0],$
+                                              YOFFSET=ModeratorDetectorDistanceLabelSize[1],$
+                                              VALUE=ModeratorDetectorDistanceLabelTitle)
+
+ModeratorDetectorDistanceTextField = WIDGET_TEXT(dMDAngleBase,$
+                                                 XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
+                                                 YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
+                                                 SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
+                                                 SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
+                                                 UNAME='ModeratorDetectorDistanceTextField',$
+                                                 VALUE=distanceMD,$
+                                                 /editable,$
+                                                 /align_left,$
+                                                 /all_events)
+
+
+AngleUnitList = ['rad','degree']
+AngleUnits = CW_BGROUP(dMDAngleBase,$
+                       AngleUnitList,$
+                       /exclusive,$
+                       /return_name,$
+                       XOFFSET=AngleUnitsSize[0],$
+                       YOFFSET=AngleUnitsSize[1],$
+                       SET_VALUE=1.0,$
+                       row=1,$
+                       uname='AngleUnits')                 
+
+AngleLabel = WIDGET_LABEL(dMDAngleBase,$
+                          XOFFSET=AngleLabelSize[0],$
+                          YOFFSET=AngleLabelSize[1],$
+                          VALUE='Polar angle:')
+
+AngleTextField = WIDGET_TEXT(dMDAngleBase,$
+                             UNAME='AngleTextField',$
+                             XOFFSET=AngleTextFieldSize[0],$
+                             YOFFSET=AngleTextFieldSize[1],$
+                             SCR_XSIZE=AngleTextFieldSize[2],$
+                             SCR_YSIZE=AngleTextFieldSize[3],$
+                             /EDITABLE,$
+                             /align_left,$
+                             /all_events)
+
+OkLoadButton = widget_button(dMDAngleBase,$
+                             uname='ok_load_button',$
+                             xoffset=OkLoadButtonSize[0],$
+                             yoffset=OkLoadButtonSize[1],$
+                             scr_xsize=OkLoadButtonSize[2],$
+                             scr_ysize=OkLoadButtonSize[3],$
+                             sensitive=0,$
+                             value=okLoadButtonTitle)
+
+CancelLoadButton = widget_button(dMDAngleBase,$
+                                 uname='cancel_load_button',$
+                                 xoffset=CancelLoadButtonSize[0],$
+                                 yoffset=CancelLoadButtonSize[1],$
+                                 scr_xsize=CancelLoadButtonSize[2],$
+                                 scr_ysize=CancelLoadButtonSize[3],$
+                                 sensitive=1,$
+                                 value=CancelLoadButtonTitle)
+
+;------------------end of angle and distance base
 
 LOAD_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
                             UNAME='load_button',$
@@ -127,76 +233,6 @@ InputFileFormat = CW_BGROUP(STEP1_BASE,$
                             row=1,$
                             uname='InputFileFormat')                 
 
-ModeratorDetectorDistanceBase = WIDGET_BASE(STEP1_BASE,$
-                                            UNAME='ModeratorDetectorDistanceBase',$
-                                            XOFFSET=ModeratorDetectorDistanceBase[0],$
-                                            YOFFSET=ModeratorDetectorDistanceBase[1],$
-                                            SCR_XSIZE=ModeratorDetectorDistanceBase[2],$
-                                            SCR_YSIZE=ModeratorDetectorDistanceBase[3])
-
-ModeratorDetectorDistanceLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
-                                              XOFFSET=ModeratorDetectorDistanceLabelSize[0],$
-                                              YOFFSET=ModeratorDetectorDistanceLabelSize[1],$
-                                              SCR_XSIZE=ModeratorDetectorDistanceLabelSize[2],$
-                                              SCR_YSIZE=ModeratorDetectorDistanceLabelSize[3],$
-                                              VALUE='Distance M-D (m): ')
-
-ModeratorDetectorDistanceTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
-                                                 XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
-                                                 YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
-                                                 SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
-                                                 SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
-                                                 UNAME='ModeratorDetectorDistanceTextField',$
-                                                 VALUE=distanceMD,$
-                                                 /editable,$
-                                                 /align_left,$
-                                                 /all_events)
-
-AngleUnitList = ['rad','degree']
-AngleUnits = CW_BGROUP(ModeratorDetectorDistanceBase,$
-                       AngleUnitList,$
-                       /exclusive,$
-                       /return_name,$
-                       XOFFSET=AngleUnitsSize[0],$
-                       YOFFSET=AngleUnitsSize[1],$
-                       SET_VALUE=1.0,$
-                       row=1,$
-                       uname='AngleUnits')                 
-
-AngleLabel = WIDGET_LABEL(ModeratorDetectorDistanceBase,$
-                          XOFFSET=AngleLabelSize[0],$
-                          YOFFSET=AngleLabelSize[1],$
-                          SCR_XSIZE=AngleLabelSize[2],$
-                          SCR_YSIZE=AngleLabelSize[3],$
-                          VALUE='Angle:')
-
-AngleTextField = WIDGET_TEXT(ModeratorDetectorDistanceBase,$
-                             UNAME='AngleTextField',$
-                             XOFFSET=AngleTextFieldSize[0],$
-                             YOFFSET=AngleTextFieldSize[1],$
-                             SCR_XSIZE=AngleTextFieldSize[2],$
-                             SCR_YSIZE=AngleTextFieldSize[3],$
-;                             VALUE=angleValue,$
-                             /EDITABLE,$
-                             /align_left,$
-                             /all_events)
-
-ErrorMessageBase = widget_base(STEP1_BASE,$
-                               xoffset=ErrorMessageBaseSize[0],$
-                               yoffset=ErrorMessageBaseSize[1],$
-                               scr_xsize=ErrorMessageBaseSize[2],$
-                               scr_ysize=ErrorMessageBaseSize[3],$
-                               uname='ErrorMessageBase',$
-                               frame=1,$
-                               map=0)
-
-ErrorMessageLabel = widget_label(ErrorMessageBase,$
-                                 uname='ErrorMessageLabel',$
-                                 xoffset=ErrorMessageLabelSize[0],$
-                                 yoffset=ErrorMessageLabelSize[1],$
-                                 scr_xsize=ErrorMessageLabelSize[2],$
-                                 scr_ysize=ErrorMessageLabelSize[3],$
-                                 value='')
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
                         UNAME='file_info',$
