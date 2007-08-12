@@ -30,6 +30,12 @@ Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
                         Step2Q1TextFieldSize[2],$
                         Step2Q1LabelSize[3]]
 
+distance_L_L_2 = distance_L_L - 15
+Step2Q1Q2ErrorLabelSize = [Step2Q2LabelSize[0]+distance_L_L_2,$
+                           Step2Q2Labelsize[1],$
+                           250,$
+                           Step2Q1LabelSize[3]]
+
 Step2XLabelSize     = [5  , 5 , 30  , 30 ]
 Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
                        Step2XLabelSize[1],$
@@ -250,8 +256,13 @@ STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
                                   /EDITABLE,$
                                   /ALIGN_LEFT,$
                                   /ALL_EVENTS)
-
-
+Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
+                                   uname='step2_q1q1_error_label',$
+                                   xoffset=Step2Q1Q2ErrorLabelSize[0],$
+                                   yoffset=Step2Q1Q2ErrorLabelSize[1],$
+                                   scr_xsize=Step2Q1Q2ErrorLabelSize[2],$
+                                   scr_ysize=Step2Q1Q2ErrorLabelSize[3],$
+                                   value='')
 ;--tab #2 of step 2
 step2tab2base = widget_base(step2tab,$
                             uname='step2tab2base',$
