@@ -263,50 +263,50 @@ Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
                                    scr_xsize=Step2Q1Q2ErrorLabelSize[2],$
                                    scr_ysize=Step2Q1Q2ErrorLabelSize[3],$
                                    value='')
-;--tab #2 of step 2
-step2tab2base = widget_base(step2tab,$
-                            uname='step2tab2base',$
-                            xoffset=Step2Tab2Base[0],$
-                            yoffset=Step2Tab2Base[1],$
-                            scr_xsize=Step2Tab2Base[2],$
-                            scr_ysize=Step2Tab2Base[3],$
-                            title=step2Tab2Title)
+;;--tab #2 of step 2
+;; step2tab2base = widget_base(step2tab,$
+;;                             uname='step2tab2base',$
+;;                             xoffset=Step2Tab2Base[0],$
+;;                             yoffset=Step2Tab2Base[1],$
+;;                             scr_xsize=Step2Tab2Base[2],$
+;;                             scr_ysize=Step2Tab2Base[3],$
+;;                             title=step2Tab2Title)
 
-STEP2_X_LABEL = WIDGET_LABEL(step2tab2base,$
-                              XOFFSET=Step2XLabelSize[0],$
-                              YOFFSET=Step2XLabelSize[1],$
-                              SCR_XSIZE=Step2XLabelSize[2],$
-                              SCR_YSIZE=Step2XLabelSize[3],$
-                              VALUE=Step2XLabelTitle)
+;; STEP2_X_LABEL = WIDGET_LABEL(step2tab2base,$
+;;                               XOFFSET=Step2XLabelSize[0],$
+;;                               YOFFSET=Step2XLabelSize[1],$
+;;                               SCR_XSIZE=Step2XLabelSize[2],$
+;;                               SCR_YSIZE=Step2XLabelSize[3],$
+;;                               VALUE=Step2XLabelTitle)
 
-STEP2_X_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
-                                  UNAME='step2_x_text_field',$
-                                  XOFFSET=Step2XTextFieldSize[0],$
-                                  YOFFSET=Step2XTextFieldSize[1],$
-                                  SCR_XSIZE=Step2XTextFieldSize[2],$
-                                  SCR_YSIZE=Step2XTextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
+;; STEP2_X_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
+;;                                   UNAME='step2_x_text_field',$
+;;                                   XOFFSET=Step2XTextFieldSize[0],$
+;;                                   YOFFSET=Step2XTextFieldSize[1],$
+;;                                   SCR_XSIZE=Step2XTextFieldSize[2],$
+;;                                   SCR_YSIZE=Step2XTextFieldSize[3],$
+;;                                   VALUE='',$
+;;                                   /EDITABLE,$
+;;                                   /ALIGN_LEFT,$
+;;                                   /ALL_EVENTS)
 
-STEP2_Y_LABEL = WIDGET_LABEL(step2tab2base,$
-                              XOFFSET=Step2YLabelSize[0],$
-                              YOFFSET=Step2YLabelSize[1],$
-                              SCR_XSIZE=Step2YLabelSize[2],$
-                              SCR_YSIZE=Step2YLabelSize[3],$
-                              VALUE=Step2YLabelTitle)
+;; STEP2_Y_LABEL = WIDGET_LABEL(step2tab2base,$
+;;                               XOFFSET=Step2YLabelSize[0],$
+;;                               YOFFSET=Step2YLabelSize[1],$
+;;                               SCR_XSIZE=Step2YLabelSize[2],$
+;;                               SCR_YSIZE=Step2YLabelSize[3],$
+;;                               VALUE=Step2YLabelTitle)
 
-STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
-                                  UNAME='step2_Y_text_field',$
-                                  XOFFSET=Step2YTextFieldSize[0],$
-                                  YOFFSET=Step2YTextFieldSize[1],$
-                                  SCR_XSIZE=Step2YTextFieldSize[2],$
-                                  SCR_YSIZE=Step2YTextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
+;; STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
+;;                                   UNAME='step2_Y_text_field',$
+;;                                   XOFFSET=Step2YTextFieldSize[0],$
+;;                                   YOFFSET=Step2YTextFieldSize[1],$
+;;                                   SCR_XSIZE=Step2YTextFieldSize[2],$
+;;                                   SCR_YSIZE=Step2YTextFieldSize[3],$
+;;                                   VALUE='',$
+;;                                   /EDITABLE,$
+;;                                   /ALIGN_LEFT,$
+;;                                   /ALL_EVENTS)
 
 ;Manual fitting equation label outside tab of step2
 step2FittingEquationLabel = widget_label(STEP2_BASE,$
