@@ -168,7 +168,31 @@ END
 ;when using automatic fitting and scaling of CE (step2)
 PRO run_full_step2, Event
 run_automatic_fitting, Event
-run_automatic_scaling, Event
+
+;show the scalling factor (but do not replot it)
+;get the average Y value before
+Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field')
+Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field')
+
+;check if Ybefore is numeric or not
+YbeforeIsNumeric = isNumeric(Ybefore)
+YafterIsNumeric  = isNumeric(Yafter)
+
+;Ybefore and Yafter are numeric
+if (YbeforeIsNumeric EQ 1 AND $
+    YafterIsNumeric EQ 1) then begin
+
+   putValueInLabel, Event, 'step2_q1q1_error_label', ''
+   run_automatic_scaling, Event
+
+endif else begin ;scaling factor can be calculated so second step (scaling) 
+;automatic mode can be performed.
+
+;display message in Q1 and Q2 boxe saying that auto stopped
+
+putValueInLabel, Event, 'step2_q1q1_error_label', '**ERROR: Select another range of Qs**'
+
+endelse   
 END
 
 
