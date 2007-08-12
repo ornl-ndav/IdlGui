@@ -47,7 +47,16 @@ PRO MAIN_BASE_event, Event
 
      ;when LOADING a new file
      Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
-         ReflSupportOpenFile_LoadFile, Event       
+        ReflSupportEventcb_LoadFileButton, Event 
+     end
+
+;in dMDAngle base, cancel button
+     Widget_Info(wWidget, FIND_BY_UNAME='cancel_load_button'): begin
+        ReflSupportEventcb_CancelLoadButton, Event 
+     end
+
+     Widget_Info(wWidget, FIND_BY_UNAME='ok_load_button'): begin
+        ReflSupportEventcb_OkLoadButton, Event 
      end
 
      Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
@@ -64,12 +73,12 @@ PRO MAIN_BASE_event, Event
      
                                 ;when distance text field is edited
      Widget_Info(wWidget, FIND_BY_UNAME='ModeratorDetectorDistanceTextField'): begin
-        checkLoadButtonStatus, Event
+             ReflSupportWidget_checkOpenButtonStatus, Event 
      end
      
                                 ;when angle text field is edited
      Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): begin
-        checkLoadButtonStatus, Event
+             ReflSupportWidget_checkOpenButtonStatus, Event 
      end
      
                                 ;--step2--

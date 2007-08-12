@@ -105,6 +105,37 @@ endif
 END
 
 
+;Load a file button
+PRO ReflSupportEventcb_LoadFileButton, Event 
+                                ;check the status of the TOF or Q button
+                                ;if Q, go directly to ReflSuppportOpenFile_Loadfile
+                                ;if TOF, display TOF interactive box
+ FormatFileSelected = getButtonValidated(Event,'InputFileFormat')   
+  if (FormatFileSelected EQ 0) then begin ;TOF
+         ;display the dMD and angle value base
+     dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+     widget_control, dMDAngleBaseId, map=1
+                                ;check status of ok_load button
+     ReflSupportWidget_checkOpenButtonStatus, Event 
+  endif else begin              ;Q
+     ReflSupportOpenFile_LoadFile, Event
+  endelse
+END
+
+
+;Cancel Load button
+PRO ReflSupportEventcb_CancelLoadButton, Event 
+  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+  widget_control, dMDAngleBaseId, map=0
+END
+
+
+;When OK is pressed in dMDAngle base (to load a input file)
+PRO ReflSupportEventcb_OkLoadButton, Event 
+     ReflSupportOpenFile_LoadFile, Event       
+END
+
+
 ;clear file button in step 1
 PRO CLEAR_FILE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -255,16 +286,16 @@ END
 
 ;TOF or Q buttons
 PRO InputFileFormat, Event
-ValidateButton = getButtonValidated(Event,'InputFileFormat')
-if (ValidateButton EQ 0) then begin ;TOF
-    Validate = 1
-endif else begin ;Q
-    Validate = 0
-endelse
-ModeratorDetectorDistanceBaseId = $
-  widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
-widget_control, ModeratorDetectorDistanceBaseId, map=Validate
-checkLoadButtonStatus, Event
+;; ValidateButton = getButtonValidated(Event,'InputFileFormat')
+;; if (ValidateButton EQ 0) then begin ;TOF
+;;     Validate = 1
+;; endif else begin ;Q
+;;     Validate = 0
+;; endelse
+;; ModeratorDetectorDistanceBaseId = $
+;;   widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
+;; widget_control, ModeratorDetectorDistanceBaseId, map=Validate
+;; checkLoadButtonStatus, Event
 END
 
 
