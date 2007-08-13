@@ -154,8 +154,8 @@ if (ListOfFilesSize EQ 1 AND $
     ListOfFiles[0] EQ '') then begin
     plot_loaded_file, Event, 'clear'
 endif else begin
-    plot_loaded_file, Event, 'all
- endelse
+   plot_loaded_file, Event, 'all
+endelse
 
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
@@ -166,23 +166,23 @@ END
 
 ;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  
 ;get the long name of the selected file
-LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
-if (LongFileName EQ '') then begin
-    clear_info_about_selected_file, Event
-    ActivateClearFileButton, Event, 0
-    ClearColorLabel, Event
-    ActivateColorSlider,Event,0
-endif else begin
-    display_info_about_selected_file, Event, LongFileName
-    populateColorLabel, Event, LongFileName
-    ActivateColorSlider,Event,1
-    angleValue = getAngleValue(Event)
-    displayAngleValue, Event, angleValue
-endelse
+  LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
+  if (LongFileName EQ '') then begin
+     clear_info_about_selected_file, Event
+     ActivateClearFileButton, Event, 0
+     ClearColorLabel, Event
+     ActivateColorSlider,Event,0
+  endif else begin
+     display_info_about_selected_file, Event, LongFileName
+     populateColorLabel, Event, LongFileName
+     ActivateColorSlider,Event,1
+     angleValue = getAngleValue(Event)
+     displayAngleValue, Event, angleValue
+  endelse
 END
 
 

@@ -433,10 +433,28 @@ ActivateButton, Event, 'ok_load_button', validateLoadButton
 END
 
 
+;this function changes the format of the input variable 
+;into a 3 digit precision float
+Function ReflSupportMath_getndigits, Event, angleValue
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  angleDisplayPrecision = (*global).angleDisplayPrecision
+   
+  step1Variable = float(angleValue)*angleDisplayPrecision
+  step2Variable = floor(step1Variable)
+  step3Variable = float(step2Variable) / angleDisplayPrecision
+  return, step3Variable
+END
+
+
+
 PRO displayAngleValue, Event, angleValue
 ;get angle value for that index
- angleTextFieldId = widget_info(Event.top,find_by_uname='AngleTextField')
- widget_control, angleTextFieldId, set_value=strcompress(angleValue)
+ angleTextFieldId = widget_info(Event.top,find_by_uname='dMD_angle_info_label')
+ ;fnAngleValue = ReflSupportMath_getndigits(Event, angleValue)
+ text = '(Angle: ' + strcompress(angleValue) + ' degrees)'
+ widget_control, angleTextFieldId, set_value=text
 END
+
 
 

@@ -26,3 +26,17 @@ PRO get_angle_value_and_do_conversion, Event, angleValue
  endif
 END
      
+
+;this function changes the format of the input variable 
+;into a 3 digit precision float
+Function ReflSupportMath_getndigits, Event, angleValue
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  widget_control,id,get_uvalue=global
+  angleDisplayPrecision = (*global).angleDisplayPrecision
+   
+  step1Variable = float(angleValue)*angleDisplayPrecision
+  step2Variable = floor(step1Variable)
+  step3Variable = float(step2Variable) / angleDisplayPrecision
+  return, step3Variable
+END
+

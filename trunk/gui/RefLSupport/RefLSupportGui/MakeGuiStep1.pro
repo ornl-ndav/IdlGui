@@ -11,6 +11,11 @@ ListOfFilesSize          = [220, 5  , 250 , 30 ]
 InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
 InputFileFormatSize      = [130 , InputFileFormatLabelSize[1]]
 
+;value of selected angle and dMD
+dMDAngleInfoLabelSize = [InputFileFormatSize[0]+100,$
+                         InputFileFormatSize[1],$
+                         300,30]
+
 ;base that covers the entire first part and will contain the angle/dMD widgets
 dMDAngleBaseSize      = [5,5,StepsTabSize[2]-20,105]
 dMDAngleMainLabelSize = [5,5]
@@ -232,6 +237,17 @@ InputFileFormat = CW_BGROUP(STEP1_BASE,$
                             SET_VALUE=0.0,$
                             row=1,$
                             uname='InputFileFormat')                 
+
+;Info label that show the current angle value and dMD
+dMDAngleInfoLabel = widget_label(STEP1_BASE,$
+                                 uname='dMD_angle_info_label',$
+                                 xoffset=dMDAngleInfoLabelSize[0],$
+                                 yoffset=dMDAngleInfoLabelSize[1],$
+                                 scr_xsize=dMDAngleInfoLabelSize[2],$
+                                 scr_ysize=dMDAngleInfoLabelSize[3],$
+                                 value ='')
+                                 ;value='(Angle: 3.14 degrees & dMD: 14.50 m)')
+
 
 
 FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
