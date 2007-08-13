@@ -9,10 +9,10 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 .run "prenexus_utilities"
 .run "parsing_functions"
 
-cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/DataReduction/"
-resolve_routine, "data_reduction_eventcb", /either
-.run "data_reduction_eventcb"
-resolve_routine, "data_reduction", /either
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
+resolve_routine, "ref_reduction_eventcb", /either
+.run "ref_reduction_eventcb"
+resolve_routine, "ref_reduction", /either
 resolve_routine, "CW_BGROUP", /either
 resolve_routine, "XMANAGER", /either
 resolve_routine, "STRSPLIT", /either
@@ -24,6 +24,6 @@ resolve_routine, "errplot",/either
 resolve_routine, "uniq",/either
 resolve_routine, "ZOOM",/either
 
-save,/routines,filename="data_reduction.sav"
+save,/routines,filename="ref_reduction.sav"
 exit
 
