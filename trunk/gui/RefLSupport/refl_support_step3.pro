@@ -29,7 +29,7 @@ SF = SF[0]
 
 ;rescale data
 flt1 = flt1 / SF
-flt2 = flt2 / sqrt(SF)
+flt2 = flt2 / SF
 
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
 flt2_rescale_ptr = (*global).flt2_rescale_ptr
