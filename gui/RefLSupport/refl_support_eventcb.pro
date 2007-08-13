@@ -50,36 +50,23 @@ endif else begin
                 ReflSupportStep3_EnableManualScalingBox, Event
             endelse
 
-
-
-
-                                ;!!!!!!!!!!!!!!!! for now, automatic
-                                ;recsaling is invalid !!!!!!!!!!!!!!!!
-
-
                                 ;this function disable the automatic
                                 ;scaling button is the number of files
                                 ;to scale is 1 or less
             if ((*global).NbrFilesLoaded LE 1) then begin
                 ActivateButton, Event, 'Step3_automatic_rescale_button', 0
             endif else begin
-                ActivateButton, Event, 'Step3_automatic_rescale_button', 0
+                ActivateButton, Event, 'Step3_automatic_rescale_button', 1
             endelse
-
-
-
-
-
 
                                 ;This function displays the base file
                                 ;name unless the first file is
                                 ;selected, in this case, it shows that
                                 ;the working file is the CE file
             ReflSupportStep3_displayLowQFileName, Event, indexSelected
-                                ;display the Qmin and Qmax for the CE file
-                                ;for now, the first file loaded is
-                                ;considered as being the CE file
-            ReflSupportStep3_display_Q_values, Event, indexSelected
+            
+                                ;display the SF of the selected file
+            ReflSupportStep3_display_SF_values, Event, indexSelected
          end
          else:                  ;if fourth tab (settings tab) is selected
       ENDCASE
@@ -166,22 +153,22 @@ END
 
 ;droplist of files in step 1
 PRO DISPLAY_INFO_ABOUT_FILE, Event
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-  widget_control,id,get_uvalue=global
-  
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;get the long name of the selected file
-  LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
+LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist')
   if (LongFileName EQ '') then begin
-     clear_info_about_selected_file, Event
-     ActivateClearFileButton, Event, 0
-     ClearColorLabel, Event
-     ActivateColorSlider,Event,0
+      clear_info_about_selected_file, Event
+      ActivateClearFileButton, Event, 0
+      ClearColorLabel, Event
+      ActivateColorSlider,Event,0
   endif else begin
-     display_info_about_selected_file, Event, LongFileName
-     populateColorLabel, Event, LongFileName
-     ActivateColorSlider,Event,1
-     angleValue = getAngleValue(Event)
-     displayAngleValue, Event, angleValue
+      display_info_about_selected_file, Event, LongFileName
+      populateColorLabel, Event, LongFileName
+      ActivateColorSlider,Event,1
+      angleValue = getAngleValue(Event)
+      displayAngleValue, Event, angleValue
   endelse
 END
 

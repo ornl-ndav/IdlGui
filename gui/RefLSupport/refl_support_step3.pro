@@ -54,21 +54,18 @@ endelse
 END
 
 
+
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
 PRO ReflSupportStep3_AutomaticRescaling, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-flt0_ptr = (*global).flt0_ptr
-flt1_ptr = (*global).flt1_ptr
-flt2_ptr = (*global).flt2_ptr
+flt0_rescale_ptr = (*global).flt0_rescale_ptr
+flt1_rescale_ptr = (*global).flt1_rescale_ptr
+flt2_rescale_ptr = (*global).flt2_rescale_ptr
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
-
-;get fitting order from settings tab
-fitting_order_array = fix(getTextFieldValue(Event, 'poly_fit_order_text_box'))
-fitting_order = fitting_order_array[0]
 
 ;get number of files loaded
 nbrFile = (*global).NbrFilesLoaded
@@ -84,13 +81,11 @@ for i=1,(nbrFile-1) do begin
 ;    Qmin = Qmin + (Qrange*5)/100
 ;    Qmax = Qmax - (Qrange*50)/100
 
-;remove first two Q
-    Qmax = 0.1
 ;HIGH Q file
 ;get flt0 of high Q file
-    flt0_highQ = *flt0_ptr[i]
-    flt1_highQ = *flt1_ptr[i]
-    flt2_highQ = *flt2_ptr[i]
+    flt0_highQ = *flt0_rescale_ptr[i]
+    flt1_highQ = *flt1_rescale_ptr[i]
+    flt2_highQ = *flt2_rescale_ptr[i]
 
 ;determine the working indexes of flt0, flt1 and flt2 for high Q file
     RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax)
@@ -102,31 +97,26 @@ for i=1,(nbrFile-1) do begin
     flt1_highQ_new = flt1_highQ[left_index:right_index]
     flt2_highQ_new = flt2_highQ[left_index:right_index]
 
-;remove the non defined and inf values from flt0_highQ, flt1_highQ and flt2_highQ
-    RangeIndexes = getArrayRangeOfNotNanValues(flt1_highQ_new)
-    flt0_highQ_new = flt0_highQ_new(RangeIndexes)
-    flt1_highQ_new = flt1_highQ_new(RangeIndexes)
-    flt2_highQ_new = flt2_highQ_new(RangeIndexes)
+;;remove the non defined and inf values from flt0_highQ, flt1_highQ and flt2_highQ
+;    RangeIndexes = getArrayRangeOfNotNanValues(flt1_highQ_new)
+;    flt0_highQ_new = flt0_highQ_new(RangeIndexes)
+;    flt1_highQ_new = flt1_highQ_new(RangeIndexes)
+;    flt2_highQ_new = flt2_highQ_new(RangeIndexes)
 
-;remove points that are error GE than their values
+;set to 0 the indefined data 
+    flt1_highQ_new = getArrayOfInfValues(flt1_highQ_new)
+    
+;remove points that have error GE than their values
     RangeIndexes = getArrayRangeOfErrorGEValue(flt1_highQ_new, flt2_highQ_new)
     flt0_highQ_new = flt0_highQ_new(RangeIndexes)
     flt1_highQ_new = flt1_highQ_new(RangeIndexes)
     flt2_highQ_new = flt2_highQ_new(RangeIndexes)
 
-;store flt0_highQ_new into flt0_pointer[0]
-    flt0_ptr = (*global).flt0_range
-    *flt0_ptr[0] = flt0_highQ_new
-    (*global).flt0_range = flt0_ptr
-
-;start function that will calculate the fit parameters
-    FitOrder_n_Function, Event, flt0_highQ_new, flt1_highQ_new, flt2_highQ_new, i, fitting_order
-
 ;LOW Q file
 ;get flt0 of low Q file
-    flt0_lowQ = *flt0_ptr[i-1]
-    flt1_lowQ = *flt1_ptr[i-1]
-    flt2_lowQ = *flt2_ptr[i-1]
+    flt0_lowQ = *flt0_rescale_ptr[i-1]
+    flt1_lowQ = *flt1_rescale_ptr[i-1]
+    flt2_lowQ = *flt2_rescale_ptr[i-1]
 
 ;determine the working indexes of flt0, flt1 and flt2 for low Q file
     RangeIndexes = getArrayRangeFromQ1Q2(flt0_lowQ, Qmin, Qmax)
@@ -138,24 +128,52 @@ for i=1,(nbrFile-1) do begin
     flt1_lowQ_new = flt1_lowQ[left_index:right_index]
     flt2_lowQ_new = flt2_lowQ[left_index:right_index]
 
+;set to 0 the indefined data 
+    flt1_lowQ_new = getArrayOfInfValues(flt1_lowQ_new)
+
 ;remove the non defined and inf values from flt0_lowQ, flt1_lowQ and flt2_lowQ
     RangeIndexes = getArrayRangeOfNotNanValues(flt1_lowQ_new)
     flt0_lowQ_new = flt0_lowQ_new(RangeIndexes)
     flt1_lowQ_new = flt1_lowQ_new(RangeIndexes)
     flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
 
-;remove points that are error GE than their values
+;remove points that have error GE than their values
     RangeIndexes = getArrayRangeOfErrorGEValue(flt1_LowQ_new, flt2_LowQ_new)
     flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
     flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
     flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
 
-;store flt0_LowQ_new into flt0_pointer[1]
-    *flt0_ptr[1] = flt0_LowQ_new
-    (*global).flt0_range = flt0_ptr
+;Calculate the data totals
+    TLowQflt1  = total(flt1_LowQ_new)
+    THighQflt1 = total(flt1_highQ_new)
 
-;start function that will calculate the fit parameters
-    FitOrder_n_Function, Event, flt0_lowQ_new, flt1_lowQ_new, flt2_lowQ_new, i-1, fitting_order
+;Calculate the Q totals
+    TLowQflt0  = total(flt0_LowQ_new)
+    THighQflt0 = total(flt0_HighQ_new)
+
+;SF
+    SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
+
+;store the SF
+    SF_array = (*(*global).SF_array)
+    SF_array[i] = SF
+    (*(*global).SF_array) = SF_array
+
+;Rescale the initial data
+    flt1_rescale_ptr = (*global).flt1_rescale_ptr
+    flt2_rescale_ptr = (*global).flt2_rescale_ptr
+
+    flt1_highQ = *flt1_rescale_ptr[i]
+    flt2_highQ = *flt2_rescale_ptr[i]
+
+    flt1_highQ = flt1_highQ / SF
+    flt2_highQ = flt2_highQ / SF
+
+    *flt1_rescale_ptr[i] = flt1_highQ
+    *flt2_rescale_ptr[i] = flt2_HighQ
+
+    (*global).flt1_rescale_ptr = flt1_rescale_ptr
+    (*global).flt2_rescale_ptr = flt2_rescale_ptr
 
 endfor
 
@@ -166,24 +184,19 @@ END
 
 
 
-;This function displays in the Qmin and Qmax text fields the 
-;Qmin and Qmax of the CE file
-PRO ReflSupportStep3_display_Q_values, Event,index
+;This function displays the SF of the selected file
+PRO ReflSupportStep3_display_SF_values, Event,index
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-Qmin_array = (*(*global).Qmin_array)
-Qmax_array = (*(*global).Qmax_array)
+SF_array = (*(*global).SF_array)
 
-if (index EQ 0) then begin
-    Qmin_text = ''
-    Qmax_text = ''
+if (index NE 0) then begin
+    SF = SF_array[index]
 endif else begin
-    Qmin_text = Qmin_array[index]
-    Qmax_text = Qmax_array[index-1]
+    SF = ''
 endelse
-ReflSupportWidget_setValue, Event, 'Step3ManualQMinTextField', Qmin_text
-ReflSupportWidget_setValue, Event, 'Step3ManualQMaxTextField', Qmax_text
+ReflSupportWidget_setValue, Event, 'Step3SFTextField', SF
 END
 
 
