@@ -4,8 +4,8 @@ cd, "~/SVN/HistoTool/trunk/gui/utilities"
 .run prenexus_utilities.pro
 .run parsing_functions.pro
 
-cd, "~/SVN/HistoTool/trunk/gui/DataReduction/"
-.run data_reduction_eventcb.pro
-.run data_reduction.pro
-data_reduction
+cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
+.run ref_reduction_eventcb.pro
+.run ref_reduction_reduction.pro
+ref_reduction
 
