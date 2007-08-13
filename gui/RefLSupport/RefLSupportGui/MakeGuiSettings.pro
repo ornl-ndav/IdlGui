@@ -12,14 +12,17 @@ ShowErrorBarGroupSize = [ShowErrorBarLabelSize[0]+ 155,$
                          ShowErrorBarLabelSize[1]]
 
 ;polynomial fitting order 
-polyFitOrderLabelSize   = [5, ShowErrorBarLabelSize[1]+ d_line_to_line]
-d_L_T = 160
-polyFitOrderTextBoxSize = [polyFitOrderLabelSize[0] + d_L_T,$
-                           polyFitOrderLabelSize[1]-5,$
-                           50,30]
+MinCrapDataLabelSize1        = [5,ShowErrorBarLabelSize[1]+d_line_to_line]
+d_L_T = 80
+MinCrapDataTextFieldSize     = [MinCrapDataLabelSize1[0] + d_L_T,$
+                                MinCrapDataLabelSize1[1]-5,$
+                                50,30]
+;default number of data to remove
+MinCrapDefaultValue = 1
+MinCrapDataLabelSize2        = [140,MinCrapDataLabelSize1[1]]
 
 ;nbr of element to display
-nbrDataLabelSize     = [5,polyFitOrderLabelSize[1]+d_line_to_line]
+nbrDataLabelSize     = [5,minCrapDataLabelSize1[1]+d_line_to_line]
 d_L_T_2 = 200
 nbrDataTextFieldSize = [nbrDataLabelSize[0] + d_L_T_2,$
                         nbrDataLabelSize[1] -5,$
@@ -28,8 +31,8 @@ nbrDataTextFieldSize = [nbrDataLabelSize[0] + d_L_T_2,$
 ;Define titles
 SettingsTabTitle        = 'Settings'
 tof_to_Q_label_title    = 'TOF_to_Q algorithm:' 
-polyFitOrderLabelTitle  = 'Fitting order n:' 
-polyFitOrderTextBoxDefaultValue = '3'
+MinCrapDataTitle1       = 'Remove the'
+MinCrapDataTitle2       = 'first data for auto-scaling'
 ShowErrorBarLabelTitle  = 'Show error bars'
 nbrDataLabelTitle       = 'Nbr of data to display in Step3'
 
@@ -78,21 +81,26 @@ ShowErrorBarGroup = cw_bgroup(settings_base,$
                               row=1,$
                               uname='show_error_bar_group')
                               
-;order of fitting function
-PolyFitOrderLabel = widget_label(settings_base,$
-                                 xoffset=polyFitOrderLabelSize[0],$
-                                 yoffset=polyFitOrderLabelSize[1],$
-                                 value=PolyFitOrderLabelTitle)
+MinCrapLabel1 = widget_label(settings_base,$
+                             xoffset=MinCrapDataLabelSize1[0],$
+                             yoffset=MinCrapDataLabelSize1[1],$
+                             value=MinCrapDataTitle1)
 
-PolyFitOrderTextBox = widget_text(settings_base,$
-                                  xoffset=PolyFitOrderTextBoxSize[0],$
-                                  yoffset=PolyFitOrderTextBoxSize[1],$
-                                  scr_xsize=PolyFitOrderTextBoxSize[2],$
-                                  scr_ysize=PolyFitOrderTextBoxSize[3],$
-                                  uname='poly_fit_order_text_box',$
-                                  /editable,$
-                                  /align_left,$
-                                  value=polyFitOrdertextBoxDefaultValue)
+MinCrapTextField = widget_text(settings_base,$
+                               xoffset=MinCrapDataTextFieldSize[0],$
+                               yoffset=MinCrapDataTextFieldSize[1],$
+                               scr_xsize=MinCrapDataTextFieldSize[2],$
+                               scr_ysize=MinCrapDataTextFieldSize[3],$
+                               uname='min_crap_text_field',$
+                               /editable,$
+                               /align_left,$
+                               value=strcompress(MinCrapDefaultValue))
+
+MinCrapLabel2 = widget_label(settings_base,$
+                             xoffset=MinCrapDataLabelSize2[0],$
+                             yoffset=MinCrapDataLabelSize2[1],$
+                             value=MinCrapDataTitle2)
+
 
 ;nbr of elements to display
 nbrDataLabel = widget_label(settings_base,$

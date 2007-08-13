@@ -75,11 +75,9 @@ for i=1,(nbrFile-1) do begin
     Qmin = float(Qmin_array[i])
     Qmax = float(Qmax_array[i-1])
 
-;;change the Q range
-;    Qrange = (Qmax - Qmin)
-;;remove 5% of first part and 50% of last part
-;    Qmin = Qmin + (Qrange*5)/100
-;    Qmax = Qmax - (Qrange*50)/100
+;Number of data to exclude from auto-fitting
+    Ncrap = getTextFieldValue(Event,'min_crap_text_field')
+    Ncrap = fix(Ncrap)
 
 ;HIGH Q file
 ;get flt0 of high Q file
@@ -144,12 +142,12 @@ for i=1,(nbrFile-1) do begin
     flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
 
 ;Calculate the data totals
-    TLowQflt1  = total(flt1_LowQ_new)
-    THighQflt1 = total(flt1_highQ_new)
+    TLowQflt1  = total(flt1_LowQ_new[Ncrap:*])
+    THighQflt1 = total(flt1_highQ_new[Ncrap:*])
 
 ;Calculate the Q totals
-    TLowQflt0  = total(flt0_LowQ_new)
-    THighQflt0 = total(flt0_HighQ_new)
+    TLowQflt0  = total(flt0_LowQ_new[Ncrap:*])
+    THighQflt0 = total(flt0_HighQ_new[Ncrap:*])
 
 ;SF
     SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
