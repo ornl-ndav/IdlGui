@@ -431,7 +431,7 @@ draw_offset_y = 10			;draw y offset within widget
 plot_height = 150			;plot box height
 plot_length = 304			;plot box length
 
-Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
                         UNAME='MAIN_BASE',$
@@ -515,7 +515,7 @@ end
 
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;for REF_L
 
-Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -1707,7 +1707,7 @@ end
 
 pro wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;GUI for REF_M
 
-Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -2898,7 +2898,7 @@ end
 ;
 ; Empty stub procedure used for autoloading.
 ;
-pro data_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;check hostname here
 spawn, 'hostname',listening

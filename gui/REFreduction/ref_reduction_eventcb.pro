@@ -1076,7 +1076,7 @@ end
 
 ; \brief Empty stub procedure used for autoloading.
 ;
-pro data_reduction_eventcb
+pro ref_reduction_eventcb
 end
 
 
