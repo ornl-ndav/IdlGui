@@ -6,6 +6,6 @@ cd, "~/SVN/HistoTool/trunk/gui/utilities"
 
 cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_eventcb.pro
-.run ref_reduction_reduction.pro
+.run ref_reduction.pro
 ref_reduction
 
