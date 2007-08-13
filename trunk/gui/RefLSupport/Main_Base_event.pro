@@ -81,7 +81,7 @@ PRO MAIN_BASE_event, Event
              ReflSupportWidget_checkOpenButtonStatus, Event 
      end
      
-                                ;--step2--
+;--step2--
      Widget_Info(wWidget, FIND_BY_UNAME='base_file_droplist'): begin
         step2_base_file_droplist, Event
      end
@@ -109,10 +109,6 @@ PRO MAIN_BASE_event, Event
 ;--step 3--
      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
         step3_work_on_file_droplist, Event
-     end
-     
-     Widget_Info(wWidget, FIND_BY_UNAME='Step3_button'): begin
-        run_step3, Event
      end
      
      ;changing min value of yaxis

@@ -47,11 +47,20 @@ END
 
 
 
-;This function removes all the values outside the given
-;range of values [0,10000] from the array passed as argument
+;This function returns an index array of all the not inf data
 FUNCTION getArrayRangeOfNotNanValues, flt1_new
-index = where(flt1_new GE 0 AND flt1_new LE 10000)
+index = where(finite(flt1_new))
 return, index
+END
+
+
+;This function removes the infinite values of the array
+FUNCTION getArrayOfInfValues, flt1_new
+index = where(~finite(flt1_new),Nindx)
+if Nindx GT 0 then begin
+    flt1_new[index] = 0            ;need to get rid of infs
+endif
+return, flt1_new
 END
 
 

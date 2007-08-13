@@ -226,47 +226,7 @@ endif else begin                ;at least one file has to be ploted
     if (ErrorBarStatus EQ 0) then begin
         errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
     endif
-    
-                                ;fitting plots
-       case (index) of
-          'CE': begin            ;CE file only (linear fitting)
-                                 ;polynome of degree 1 for CE 
-             if ((*global).show_CE_fit EQ 1) then begin
-                cooef = (*(*global).CEcooef)
-                if (cooef[0] NE 0 AND $
-                    cooef[1] NE 0) then begin
-                   show_error_plot=1
-                   flt0_new = (*(*global).flt0_CE_range)
-                   y_new = cooef(1)*flt0_new + cooef(0)
-                   oplot,flt0_new,y_new,color=400,thick=1.5
-                endif
-             endif
-          end
-          '2plots': begin
-               if ((*global).show_other_fit EQ 1) then begin
-                   cooef = (*global).fit_cooef_ptr
-                   cooef_low_Q = *cooef[i]
-                 
-                                  ;retrieve flt0 between Q1 and Q2 for plotting only
-                   flt0_range_ptr = (*global).flt0_range
-                   flt0_new = *flt0_range_ptr[i]
-                   if (cooef_low_Q[0] NE 0) then begin
-                     
-                       flt0_new_ptr = (*global).flt0_range
-                       flt0_new = *flt0_new_ptr[i]
-                      
-                       y_new = 0
-                       cooef_size = (size(cooef_low_Q))(2)
-                       for k=0,(cooef_size-1) do begin
-                           y_new += cooef_low_Q(k)*flt0_new^k
-                       endfor
-                       oplot,flt0_new,y_new,color=400,thick=1.5
-                   endif
-               endif
-           end
-           else:
-      endcase
-     
+
  endfor
  
 endelse

@@ -124,7 +124,7 @@ STEP3_automatic_rescale_button = WIDGET_BUTTON(STEP3_BASE,$
                                                YOFFSET=Step3AutomaticRescaleButtonSize[1],$
                                                SCR_XSIZE=Step3AutomaticRescaleButtonSize[2],$
                                                SCR_YSIZE=Step3AutomaticRescaleButtonSize[3],$
-                                               SENSITIVE=0,$
+                                               SENSITIVE=1,$
                                                VALUE=Step3AutomaticRescaleButtonTitle)
 
 
