@@ -417,103 +417,10 @@ endcase
 end
 
 
-pro PORTAL_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
-;define parameters
-scr_x 	= 880				;main window width
-scr_y 	= 750				;main window height 
-ctrl_x	= 1				;width of left box - control
-ctrl_y	= scr_y				;height of lect box - control
-draw_x 	= 304				;main width of draw area
-draw_y 	= 256				;main heigth of draw area
-draw_offset_x = 10			;draw x offset within widget
-draw_offset_y = 10			;draw y offset within widget
-plot_height = 150			;plot box height
-plot_length = 304			;plot box length
-
-Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
-
-MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
-                        UNAME='MAIN_BASE',$
-                        SCR_XSIZE=265,$
-                        SCR_YSIZE=250,$
-                        XOFFSET=450,$
-                        YOFFSET=50,$
-                        NOTIFY_REALIZE='MAIN_REALIZE',$
-                        TITLE='Data Reduction',$
-                        SPACE=3,$
-                        XPAD=3,$
-                        YPAD=3,$
-                        MBAR=WID_BASE_0_MBAR)
-
-;attach global data structure with widget ID of widget main base widget ID
-widget_control,MAIN_BASE,set_uvalue=global
-
-PORTAL_BASE= widget_base(MAIN_BASE,$
-                         UNAME='PORTAL_BASE',$
-                         SCR_XSIZE=240,$
-                         SCR_YSIZE=80,$
-                         FRAME=10,$
-                         SPACE=4,$
-                         XPAD=3,$
-                         YPAD=3,$
-                         column=1)
-
-PORTAL_LABEL = widget_label(PORTAL_BASE,$
-                            XOFFSET=40,$
-                            YOFFSET=3,$
-                            VALUE="SELECT YOUR INSTRUMENT")
-
-instrument_list = ['Liquids Reflectometer',$
-                   'Magnetism Reflectometer']
-
-INSTRUMENT_TYPE_GROUP = CW_BGROUP(PORTAL_BASE,$ 
-                                  instrument_list,$
-                                  /exclusive,$
-                                  /RETURN_NAME,$
-                                  XOFFSET=30,$
-                                  YOFFSET=25,$
-                                  SET_VALUE=0.0,$          
-                                  UNAME='INSTRUMENT_TYPE_GROUP')
-
-LOGO_MESSAGE_BASE = widget_base(MAIN_BASE,$
-                        UNAME="USER_BASE",$
-                        SCR_XSIZE=265,$
-                        SCR_YSIZE=70,$
-                        XOFFSET=0,$
-                        YOFFSET=110,$
-                        FRAME=10,$
-                        SPACE=4,$
-                        XPAD=3,$
-                        YPAD=3)
-
-logo_message_draw = widget_draw(logo_message_base,$
-                                uname='logo_message_draw',$
-                                xoffset=5,$
-                                yoffset=5,$
-                                scr_xsize=235,$
-                                scr_ysize=60,$
-                                uvalue=0)
-
-PORTAL_GO = widget_button(MAIN_BASE,$
-                          XOFFSET=3,$
-                          YOFFSET=210,$
-                          SCR_XSIZE=260,$
-                          SCR_YSIZE=30,$
-                          UNAME="PORTAL_GO",$
-                          VALUE="E N T E R",$
-                          tooltip="Press to enter main program")
-
-Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
-end
-
-
-
 
 
 pro wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;for REF_L
+
 
 Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
@@ -1711,7 +1618,9 @@ Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callbac
 
 ;define initial global values - these could be input via external file or other means
 
+instrument = 1 ;temporary
 instrument_list = ['REF_L', 'REF_M']
+user = get_ucams()
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
@@ -2899,22 +2808,7 @@ end
 ; Empty stub procedure used for autoloading.
 ;
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
-;check hostname here
-spawn, 'hostname',listening
-
-;get user
-user = get_ucams()
-
-if (listening EQ 'lrac') then begin
-    wTLB, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 0, user ;for REF_L
-endif else begin
-    if(listening EQ 'mrac') then begin
-        wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, 1, user ;GUI for REF_M
-    endif else begin
-        PORTAL_BASE, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra ;REMOVE_COMMENTS
-    endelse
-endelse
+wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, 1, user ;GUI for REF_M
 end
 
 
