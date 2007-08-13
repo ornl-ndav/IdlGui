@@ -196,6 +196,111 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
                   this->banks[bank_number] = new Bank<NumT>();
                 }
             }
+          else if (xmlStrcmp(bank_node->name,
+                   (const xmlChar *)"step_list") == 0)
+            {
+              int start = -1;
+              int stop = -1;
+              int step = -1;
+              if (bank_number == -1)
+                {
+                  throw runtime_error(
+                    "Bank number must be specified before step list");
+                }
+              xmlNodePtr cont_list_node;
+              for (cont_list_node = bank_node->children; cont_list_node;
+                   cont_list_node = cont_list_node->next)
+                {
+                  if (xmlStrcmp(cont_list_node->name,
+                   (const xmlChar *)"start") == 0)
+                    {
+                      // Check if the start number is valid
+                      if (cont_list_node->children->content == NULL)
+                        {
+                          throw runtime_error("No start number found");
+                        }
+                      string start_str(
+                        reinterpret_cast<const char *>
+                        (cont_list_node->children->content));
+                      if (!is_positive_int(start_str))
+                        {
+                          throw runtime_error("Invalid start number: "
+                                              + start_str);
+                        }
+                      start = atoi(start_str.c_str());
+                    }
+                  else if (xmlStrcmp(cont_list_node->name,
+                   (const xmlChar *)"step") == 0)
+                    {
+                      // Check if the start number is valid
+                      if (cont_list_node->children->content == NULL)
+                        {
+                          throw runtime_error("No step number found");
+                        }
+                      string step_str(
+                        reinterpret_cast<const char *>
+                        (cont_list_node->children->content));
+                      if (!is_positive_int(step_str))
+                        {
+                          throw runtime_error("Invalid start number: "
+                                              + step_str);
+                        }
+                      step = atoi(step_str.c_str());
+                    }
+                  else if (xmlStrcmp(cont_list_node->name,
+                   (const xmlChar *)"stop") == 0)
+                    {
+                      // Check if the stop number is valid
+                      if (cont_list_node->children->content == NULL)
+                        {
+                          throw runtime_error("No stop number found");
+                        }
+                      string stop_str(
+                        reinterpret_cast<const char *>
+                        (cont_list_node->children->content));
+                      if (!is_positive_int(stop_str))
+                        {
+                          throw runtime_error("Invalid stop number: "
+                                              + stop_str);
+                        }
+                      stop = atoi(stop_str.c_str());
+                    }
+                }
+              // Make sure the starting, stopping, and step numbers were
+              // found for the step list and that the start isn't
+              // >= to the stop
+              if (start == -1)
+                {
+                  throw runtime_error(
+                    "No start number found for step list");
+                }
+              if (stop == -1)
+                {
+                  throw runtime_error(
+                    "No stop number found for step list");
+                }
+              if (step == -1)
+                {
+                  throw runtime_error(
+                    "No step number found for step list");
+                }
+              if (start >= stop)
+                {
+                  throw runtime_error(
+                    "Start number must be less than stop number");
+                }
+              if (stop > this->bank_map.size())
+                {
+                  this->bank_map.resize(stop + 1);
+                }
+              // Fill in a step list for the bank map once
+              // valid numbers have been found
+              for (int i = start; i < stop; i+=step)
+                {
+                  this->bank_map[i] = this->banks[bank_number];
+                }
+              break;
+            }
           else if (xmlStrcmp(bank_node->name, 
                    (const xmlChar *)"continuous_list") == 0)
             {
