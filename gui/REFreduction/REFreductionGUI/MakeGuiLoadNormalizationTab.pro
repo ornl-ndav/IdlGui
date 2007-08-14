@@ -2,11 +2,13 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  DataNormalizationTabSize,$
                                  NormalizationTitle,$
                                  D_DD_TabSize,$
+                                 D_DD_BaseSize,$
                                  D_DD_TabTitle,$
                                  GlobalRunNumber,$
-                                 RunNumberTitles
-
-  
+                                 RunNumberTitles,$
+                                 GlobalLoadDataGraphs,$
+                                 FileInfoSize
+ 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LoadNormalizationTabSize = [0,0,$
@@ -53,6 +55,19 @@ load_normalization_run_number_button = widget_button(LOAD_NORMALIZATION_BASE,$
 MakeGuiLoadNormalization1D2DTab,$
   LOAD_NORMALIZATION_BASE,$
   D_DD_TabSize,$
-  D_DD_TabTitle
+  D_DD_BaseSize,$
+  D_DD_TabTitle,$
+  GlobalLoadDataGraphs
+
+;File info huge label
+normalization_file_info_label = widget_label(LOAD_NORMALIZATION_BASE,$
+                                             xoffset=FileInfoSize[0],$
+                                             yoffset=FileInfoSize[1],$
+                                             scr_xsize=FileInfoSize[2],$
+                                             scr_ysize=FileInfoSize[3],$
+                                             frame=1,$
+                                             value='')
+
+
 
 END
