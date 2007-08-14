@@ -13,7 +13,8 @@ LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
                         SCR_XSIZE=LoadTabSize[2],$
                         SCR_YSIZE=LoadTabSize[3])
 
-
+;Build DATA and NORMALIZATION tabs
+MakeGuiLoadDataNormalizationTab, LOAD_BASE 
 
 
 
