@@ -7,6 +7,9 @@ cd, "~/SVN/HistoTool/trunk/gui/utilities/"
 cd, "~/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
+.run MakeGuiLoadDataNormalizationTab.pro
+.run MakeGuiLoadDataTab.pro
+.run MakeGuiLoadNormalizationTab.pro
 .run MakeGuiReduceTab.pro
 .run MakeGuiPlotsTab.pro
 .run MakeGuiLogBookTab.pro
