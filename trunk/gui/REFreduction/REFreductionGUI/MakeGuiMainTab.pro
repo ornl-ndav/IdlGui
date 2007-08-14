@@ -1,5 +1,7 @@
 PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize
 
+instrument = 'REF_L'
+
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
@@ -22,7 +24,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;build LOAD tab
-MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle
+MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle

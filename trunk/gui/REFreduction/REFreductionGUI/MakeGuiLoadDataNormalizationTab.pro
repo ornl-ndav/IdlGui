@@ -1,9 +1,12 @@
 PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE,$
                                      MainBaseSize,$
                                      D_DD_TabSize,$
+                                     D_DD_BaseSize,$
                                      D_DD_TabTitle,$
                                      GlobalRunNumber,$
-                                     RunNumberTitles
+                                     RunNumberTitles,$
+                                     GlobalLoadDataGraphs,$
+                                     FileInfoSize
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -28,9 +31,12 @@ MakeGuiLoadDataTab, DataNormalizationTab,$
   DataNormalizationTabSize,$
   DataTitle,$
   D_DD_TabSize,$
+  D_DD_BaseSize,$
   D_DD_TabTitle,$
   GlobalRunNumber,$
-  RunNumberTitles
+  RunNumberTitles,$
+  GlobalLoadDataGraphs,$
+  FileInfoSize
 
 
 ;build NORMALIZATION tab
@@ -38,8 +44,11 @@ MakeGuiLoadNormalizationTab, DataNormalizationTab,$
   DataNormalizationTabSize,$
   NormalizationTitle,$
   D_DD_TabSize,$
+  D_DD_BaseSize,$
   D_DD_TabTitle,$
   GlobalRunNumber,$
-  RunNumberTitles
+  RunNumberTitles,$
+  GlobalLoadDataGraphs,$
+  FileInfoSize
 
 END

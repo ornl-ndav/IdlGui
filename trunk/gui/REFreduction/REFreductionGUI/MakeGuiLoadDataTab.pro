@@ -2,9 +2,12 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
                         DataNormalizationTabSize,$
                         DataTitle,$
                         D_DD_TabSize,$
+                        D_DD_BaseSize,$
                         D_DD_TabTitle,$
                         GlobalRunNumber,$
-                        RunNumberTitles
+                        RunNumberTitles,$
+                        GlobalLoadDataGraphs,$
+                        FileInfoSize
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -47,9 +50,23 @@ load_data_run_number_button = widget_button(LOAD_DATA_BASE,$
                                             value=RunNumberTitles[1],$
                                             uname='load_data_run_number_button')
 
-
 ;Build 1D and 2D tabs
-MakeGuiLoadData1D2DTab, LOAD_DATA_BASE, D_DD_TabSize, D_DD_TabTitle
+MakeGuiLoadData1D2DTab,$
+  LOAD_DATA_BASE,$
+  D_DD_TabSize,$
+  D_DD_BaseSize,$
+  D_DD_TabTitle,$
+  GlobalLoadDataGraphs
+
+;File info huge label
+data_file_info_label = widget_label(LOAD_DATA_BASE,$
+                                    xoffset=FileInfoSize[0],$
+                                    yoffset=FileInfoSize[1],$
+                                    scr_xsize=FileInfoSize[2],$
+                                    scr_ysize=FileInfoSize[3],$
+                                    frame=1,$
+                                    value='')
+
 
 
 END
