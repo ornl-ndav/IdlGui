@@ -1,0 +1,22 @@
+cd, "~/SVN/HistoTool/trunk/gui/utilities/"
+.run system_utilities.pro
+.run nexus_utilities.pro
+.run prenexus_utilities.pro
+.run parsing_functions.pro
+
+cd, "~/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
+.run MakeGuiMainTab.pro
+.run MakeGuiLoadTab.pro
+.run MakeGuiReduceTab.pro
+.run MakeGuiPlotsTab.pro
+.run MakeGuiLogBookTab.pro
+.run MakeGuiSettingsTab.pro
+	
+cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
+.run ref_reduction_eventcb.pro
+.run ref_reduction.pro
+.run MainBaseEvent.pro
+ref_reduction
+
+
+
