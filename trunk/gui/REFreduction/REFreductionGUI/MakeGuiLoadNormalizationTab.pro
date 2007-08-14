@@ -2,7 +2,9 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  DataNormalizationTabSize,$
                                  NormalizationTitle,$
                                  D_DD_TabSize,$
-                                 D_DD_TabTitle
+                                 D_DD_TabTitle,$
+                                 GlobalRunNumber,$
+                                 RunNumberTitles
 
   
 ;define widget variables
@@ -20,8 +22,37 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE=LoadNormalizationTabSize[2],$
                                       SCR_YSIZE=LoadNormalizationTabSize[3])
 
-;Build 1D and 2D tabs
-MakeGuiLoadNormalization1D2DTab, LOAD_NORMALIZATION_BASE, D_DD_TabSize, D_DD_TabTitle
+;Run Number widgets (label - text_field - LOAD button)
+load_normalization_run_number_label = widget_label(LOAD_NORMALIZATION_BASE,$
+                                                   value=RunNumberTitles[0],$
+                                                   xoffset=GlobalRunNumber[0],$
+                                                   yoffset=GlobalRunNumber[1])
 
+load_normalization_run_number_text_field = widget_text(LOAD_NORMALIZATION_BASE,$
+                                                       xoffset=GlobalRunNumber[2],$
+                                                       yoffset=GlobalRunNumber[3],$
+                                                       scr_xsize=GlobalRunNumber[4],$
+                                                       scr_ysize=GlobalRunNumber[5],$
+                                                       /editable,$
+                                                       /align_left,$
+                                                       /all_events,$
+                                                       uname='load_normalization_run_number_text_field')
+
+load_normalization_run_number_button = widget_button(LOAD_NORMALIZATION_BASE,$
+                                                     xoffset=GlobalRunNumber[6],$
+                                                     yoffset=GlobalRunNumber[7],$
+                                                     scr_xsize=GlobalRunNumber[8],$
+                                                     scr_ysize=GlobalRunNumber[9],$
+                                                     sensitive=1,$
+                                                     value=RunNumberTitles[1],$
+                                                     uname='load_normalization_run_number_button')
+
+
+
+;Build 1D and 2D tabs
+MakeGuiLoadNormalization1D2DTab,$
+  LOAD_NORMALIZATION_BASE,$
+  D_DD_TabSize,$
+  D_DD_TabTitle
 
 END
