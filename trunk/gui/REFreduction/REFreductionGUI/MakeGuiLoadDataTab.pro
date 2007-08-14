@@ -1,6 +1,8 @@
 PRO MakeGuiLoadDataTab, DataNormalizationTab,$
                         DataNormalizationTabSize,$
-                        DataTitle
+                        DataTitle,$
+                        D_DD_TabSize,$
+                        D_DD_TabTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -16,5 +18,9 @@ LOAD_DATA_BASE = WIDGET_BASE(DataNormalizationTab,$
                              YOFFSET=LoadDataTabSize[1],$
                              SCR_XSIZE=LoadDataTabSize[2],$
                              SCR_YSIZE=LoadDataTabSize[3])
+
+;Build 1D and 2D tabs
+MakeGuiLoadData1D2DTab, LOAD_DATA_BASE, D_DD_TabSize, D_DD_TabTitle
+
 
 END
