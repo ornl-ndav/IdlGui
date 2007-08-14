@@ -7,14 +7,18 @@
 
 #include "napi.h"
 #include "nexus_util.hpp"
+#include "Bank.hpp"
 #include <stdexcept>
 #include <tclap/CmdLine.h>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <string>
 #include <map>
 #include <vector>
 #include <libgen.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
 
 using std::vector;
 using std::runtime_error;
@@ -24,6 +28,7 @@ using std::map;
 using std::endl;
 using std::string;
 using std::ifstream;
+using std::stringstream;
 using namespace TCLAP;
 
 const size_t BLOCK_SIZE = 1024;
@@ -90,26 +95,16 @@ void map_pixel_ids(const string & mapping_file,
  *         in the same format as an event file. Maps
  *         the pixels if a mapping file is present.
  */
-void write_data(const string & output_file, uint32_t * tof, 
+void write_data(ofstream & file, uint32_t * tof, 
                 uint32_t * pixel_id, int size, 
-                const string & mapping_file)
+                map<uint32_t, uint32_t> & pixel_id_map)
 {
-  bool is_mapped = (mapping_file != "") ? true : false;
-  map<uint32_t, uint32_t> pixel_id_map;
+  bool is_mapped = (pixel_id_map.empty()) ? false : true;
   map<uint32_t, uint32_t>::iterator map_end;
   map<uint32_t, uint32_t>::iterator map_iterator;
 
-  // Open the event file
-  ofstream file(output_file.c_str(), std::ios::binary);
-  if(!(file.is_open()))
-    {
-      throw runtime_error("Failed opening file: " + output_file);
-    }
- 
-  // Map the pixels if necessary
   if (is_mapped)
     {
-      map_pixel_ids(mapping_file, pixel_id_map);
       map_end = pixel_id_map.end();
     }
 
@@ -131,9 +126,6 @@ void write_data(const string & output_file, uint32_t * tof,
                      sizeof(uint32_t));
         }
     }
-
-  // Close the event file
-  file.close();
 }
 
 /** \fn close_bank(NexusUtil &nexus_util)
@@ -170,6 +162,93 @@ void * get_data(const string & data_name, void * data,
   return data;
 }
 
+bool is_positive_int(string str)
+{
+  int size = str.length();
+  if (size == 0)
+    {
+      return false;
+    }
+  if (str[0] == '0' && size > 1)
+    {
+      return false;
+    }
+  for (int i = 1; i < size; i++)
+    {
+      if (!isdigit(str[i]))
+        {
+          return false;
+        }
+    }
+  return true;
+}
+
+int get_xml_int(xmlNodePtr node)
+{
+  if (node->children == NULL ||
+      node->children->content == NULL)
+    {
+      throw runtime_error("In function get_xml_int: No number found");
+    }
+  else
+    {
+      string number_str(reinterpret_cast<const char *>
+                        (node->children->content));
+      // Make sure the bank number is a valid integer
+      // before conversion
+      if (!is_positive_int(number_str))
+        {
+          throw runtime_error("Invalid number: " + number_str);
+        }
+      return atoi(number_str.c_str());
+    }
+}
+
+void parse_bank_file(const string & bank_file,
+                     vector<uint32_t> & bank_numbers,
+                     vector<Bank<uint32_t> *> & banks)
+{
+  xmlDocPtr doc = NULL;
+  xmlLineNumbersDefault(1);
+  doc = xmlReadFile(bank_file.c_str(), NULL, 0);
+  if (doc == NULL)
+    {
+      throw runtime_error("Could not read bank configuration file: "
+                          + bank_file);
+    }
+
+  xmlNodePtr cur_node = xmlDocGetRootElement(doc);
+  int max_bank_number = -1;
+  int bank_number = -1;
+
+  for (cur_node = cur_node->children; cur_node;
+       cur_node = cur_node->next)
+    {
+      xmlNodePtr bank_node;
+      for (bank_node = cur_node->children; bank_node;
+           bank_node = bank_node->next)
+        {
+          if (xmlStrcmp(bank_node->name,
+              (const xmlChar *)"number") == 0)
+            {
+              // When a valid bank number is found, push it on
+              // the bank numbers vector
+              bank_number = get_xml_int(bank_node);
+              if (bank_number > max_bank_number)
+                {
+                  max_bank_number = bank_number;
+                  banks.resize(max_bank_number + 1);
+                }
+              bank_numbers.push_back(
+                bank_number);
+              banks[bank_number] = new Bank<uint32_t>();
+            }
+        }
+    }
+  xmlFreeDoc(doc);
+  xmlCleanupParser();
+}
+
 /** \fn open_bank(const string &bank_name, 
  *                NexusUtil &nexus_util
  *  \brief Opens a bank in a nexus file.
@@ -187,12 +266,10 @@ void open_bank(const string & bank_name, NexusUtil & nexus_util)
  */
 int main(int argc, char * argv[])
 {
-  uint32_t * tof;
-  uint32_t * pixel_id;
   string input_file;
   string mapping_file;
+  string banking_file;
   string output_file;
-  int dimensions;
 
   try
     {
@@ -215,6 +292,10 @@ int main(int argc, char * argv[])
                        "mapping file for pixel ids",
                        false, "", "mapping file", cmd);
 
+      ValueArg<string> bank_file("b", "banking",
+                       "banking configuration file",
+                       false, "", "banking file", cmd);
+
       // Types for the nexus file format
       vector<string> allowed_types;
       allowed_types.push_back("hdf4");
@@ -232,10 +313,17 @@ int main(int argc, char * argv[])
           cerr << "Error: Must specify an input file" << endl;
           exit(1);
         }
+
+      if (!bank_file.isSet())
+        {
+          cerr << "Error: Must specify a banking configuration file" << endl;
+          exit(1);
+        }
       
       input_file = nexus_file.getValue();
       output_file = out_path.getValue();
       mapping_file = map_file.getValue();
+      banking_file = bank_file.getValue();
     }
   catch (ArgException & e)
     {
@@ -247,21 +335,46 @@ int main(int argc, char * argv[])
   e_nx_access nx_access = READ;
   NexusUtil nexus_util(input_file, nx_access);
   
-  // Open the bank and gather the data
-  open_bank("bank1", nexus_util);
+  vector<uint32_t> bank_numbers;
+  vector<Bank<uint32_t> *> banks;
+  parse_bank_file(banking_file, bank_numbers, banks);
 
-  tof = reinterpret_cast<uint32_t *>
-        (get_data("time_of_flight", tof, nexus_util, dimensions));
-  pixel_id = reinterpret_cast<uint32_t *>
-             (get_data("pixel_number", pixel_id, nexus_util, dimensions));
-
-  close_bank(nexus_util);
-
-  // Write the data to an equivalent event file
-  write_data(output_file, tof, pixel_id, dimensions, mapping_file);
+  // Open the event file
+  ofstream file(output_file.c_str(), std::ios::binary);
+  if(!(file.is_open()))
+    {
+      throw runtime_error("Failed opening file: " + output_file);
+    }
   
-  // Free any allocated memory
-  nexus_util.free(reinterpret_cast<void **>(&tof));
-  nexus_util.free(reinterpret_cast<void **>(&pixel_id));
+  map<uint32_t, uint32_t> pixel_id_map;
+  // Map the pixels if necessary
+  if (mapping_file != "")
+    {
+      map_pixel_ids(mapping_file, pixel_id_map);
+    }
+
+  // Open the bank and gather the data
+  int size = bank_numbers.size();
+  uint32_t *tof;
+  uint32_t *pixel_id;
+  int dimensions;
+  for (int i = 0; i < size; i++)
+    {
+      stringstream bank_num;
+      bank_num << "bank" << bank_numbers[i];
+      open_bank(bank_num.str(), nexus_util);
+      tof = reinterpret_cast<uint32_t *>
+        (get_data("time_of_flight", tof, nexus_util, dimensions));
+      pixel_id = reinterpret_cast<uint32_t *>
+        (get_data("pixel_number", pixel_id, nexus_util, dimensions));
+      close_bank(nexus_util);
+      write_data(file, tof, pixel_id, dimensions, pixel_id_map);
+      // Free any allocated memory
+      nexus_util.free(reinterpret_cast<void **>(&tof));
+      nexus_util.free(reinterpret_cast<void **>(&pixel_id));
+    }
+
+  // Close the event file
+  file.close();
   return 0;
 }

@@ -8,10 +8,11 @@
 #define _EVENT_DATA_HPP 1
 
 #include "nexus_util.hpp"
-#include "bank.hpp"
+#include "Bank.hpp"
 #include <vector>
 #include <string>
 #include <cstdlib>
+#include <locale>
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
@@ -75,6 +76,12 @@ class EventData
      * \param bank_number The number of the bank to open
      */
     void open_bank(NexusUtil & nexus_util, const int bank_number);
+
+    void create_step_list(xmlNodePtr bank_node, int bank_number);
+
+    void create_cont_list(xmlNodePtr bank_node, int bank_number);
+   
+    void create_arbitrary(xmlNodePtr bank_node, int bank_number);
  
     /**
      * \brief Fills in the nexus values associated with the
@@ -96,9 +103,8 @@ class EventData
      *                  (ex. time_of_flight).
      * \param bank_number The bank number of the data being written.
      */
-    template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
-                            std::vector<DataNumT> & nx_data,
+                            std::vector<NumT> & nx_data,
                             std::string & data_name,
                             const int bank_number);
 
