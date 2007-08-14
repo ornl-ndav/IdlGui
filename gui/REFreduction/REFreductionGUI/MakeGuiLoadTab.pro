@@ -58,10 +58,17 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
 
 ;File info hudge label (empty for now)
-FileInfoSize = [D_DD_TabSize[2]+50,$
-                15,$
-                490,$
-                800]
+;top label
+FileInfoSize_1 = [D_DD_TabSize[2]+50,$
+                  15,$
+                  495,$
+                  600]
+;bottom text field
+FileInfoSize_2 = [FileInfoSize_1[0],$
+                  630,$
+                  495,$
+                  190]
+FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 
 ;----Build widgets-----
 LOAD_BASE = WIDGET_BASE(MAIN_TAB,$

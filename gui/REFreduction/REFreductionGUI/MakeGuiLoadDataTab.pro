@@ -67,6 +67,15 @@ data_file_info_label = widget_label(LOAD_DATA_BASE,$
                                     frame=1,$
                                     value='')
 
+;Text field box to get info about current process
+data_log_book_text_field = widget_text(LOAD_DATA_BASE,$
+                                       uname='data_log_book_text_field',$
+                                       xoffset=FileInfoSize[4],$
+                                       yoffset=FileInfoSize[5],$
+                                       scr_xsize=FileInfoSize[6],$
+                                       scr_ysize=FileInfoSize[7],$
+                                       /scroll,$
+                                       /wrap)
 
 
 END
