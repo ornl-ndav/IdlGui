@@ -1,0 +1,2410 @@
+PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+
+
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+
+;define initial global values - these could be input via external file or other means
+
+;get ucams of user if running on linux
+;and set ucams to 'j35' if running on darwin
+if (!VERSION.os EQ 'darwin') then begin
+   ucams = 'j35'
+endif else begin
+   ucams = get_ucams()
+endelse
+
+;define global variables
+global = ptr_new ()
+
+
+
+
+
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
+                         UNAME='MAIN_BASE',$
+                         SCR_XSIZE=1330,$  ;1280 
+                         SCR_YSIZE=670,$
+                         XOFFSET=50,$     250
+                         YOFFSET=22,$
+                         NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
+                         TITLE='Data Reduction GUI for REF_L',$
+                         SPACE=3,$
+                         XPAD=3,$
+                         YPAD=3,$
+                         MBAR=WID_BASE_0_MBAR)
+
+global = ptr_new({$
+                   reset_data_reduction : 0,$
+                   tvscl_x_axis : ptr_new(0L),$
+                   number_of_row_in_data_reduction_file : 0,$
+                   first_time_plotting_data_reduction : 1,$
+                   output_plot_file_name: '',$
+                   minus_inf : -10000L,$
+                   plus_inf  : +10000L,$ 
+                   nan_user : +10000L,$
+                   instrument_geometry_file_name : '',$
+                   first_time_entering_procedure : 1,$
+                   instrument_geometry : 'no',$
+                   instr_geometry_path : '/SNS/REF_L/2006_1_4B_CAL/calibrations',$
+                   previous_n : 0,$
+                   x_axis : 0,$
+                   y_axis : 0,$
+                   xmin_global : ptr_new(0L),$
+                   xmax_global : ptr_new(0L),$
+                   ymin_global : ptr_new(0L),$
+                   ymax_global : ptr_new(0L),$
+                   first_time_plotting_n : ptr_new(0L),$
+                   data_reduction_plot_left : 0,$
+                   data_reduction_plot_right : 200000,$
+                   entering_intermediate_file_output_for_first_time : 0,$
+                   signal_pid_file_name : '',$
+                   background_pid_file_name : '',$
+                   ct                   : 5,$
+                   pass                 : 0,$
+                   data_assoc		: ptr_new(0L),$
+                   tab_drawing_ids      : ['signal_region_draw',$
+                                           'background_summed_tof_draw',$
+                                           'signal_region_summed_tof_draw',$
+                                           'normalization_region_summed_tof_draw',$
+                   'background_region_from_normalization_region_summed_tof_draw'],$
+                   intermediate_file_ext: ['.sdc',$
+                                           '.bkg',$
+                                           '.sub',$
+                                           '.nom',$
+                                           '.bnm'],$
+                   intermediate_plots_title: ['Summed signal region',$
+                                              'Summed background region',$
+                   'Summed signal region with background subtraction',$
+                                              'Summed normalization signal region',$
+                                              'Summed normalization background'],$
+                   entering_selection_of_plots_by_yes_button : 0,$
+                   file_opened          : 0,$
+                   find_nexus           : 0L,$
+                   full_histo_mapped_name : '',$
+                   full_nexus_name      : '',$
+                   img_ptr 		: ptr_new(0L),$
+                   instrument		: instrument_list[instrument],$
+                   keep_signal_selection: 1,$
+                   keep_back_selection  : 1,$
+                   left_click_number    :0,$
+                   main_output_file_name : '',$
+                   nexus_file_name_only : '',$
+                   Nx                   : 0L,$
+                   Ny                   : 0L,$
+                   Ntof                 : 0L,$
+                   output_path		: '/SNSlocal/users/',$
+                   pid_file_extension   : 'Pid.txt',$
+                   previous_text        : '',$
+                   processing_run_number : 0,$
+                   push_button          : 0,$
+                   run_number		: '',$
+                   save_session         : 0,$
+                   selection_value      : 0,$
+                   selection_signal     : 0,$
+                   selection_background : 0,$
+                   selection_background_2 : 0,$
+                   selection_mode       : 1,$
+;                   tmp_folder           : '.tmp_data_reduction_REF_L/',$
+                   tmp_folder           : 'REF_L/',$
+                   local_folder         : '~/local/REF_L/',$
+                   tmp_working_path     : '.tmp_data_reduction',$
+                   working_path         : '',$
+                   ucams                : user,$
+                   y12                  : 0L,$
+                   ymin                 : 0L,$
+                   x1_back              : 0L,$
+                   x2_back              : 0L,$
+                   y1_back              : 0L,$
+                   y2_back              : 0L,$
+                   x1_back_2            : 0L,$
+                   x2_back_2            : 0L,$
+                   y1_back_2            : 0L,$
+                   y2_back_2            : 0L,$
+                   x1_signal            : 0L,$
+                   x2_signal            : 0L,$
+                   y1_signal            : 0L,$
+                   y2_signal            : 0L,$
+                   color_line_signal    : 250L,$
+                   color_line_background: 100L,$
+                   color_line_background_2: 100L,$
+                   data_reduction_done : 0,$
+                   final_array : ptr_new(0L),$
+                   plots_selected : [0,0,0,0,0] $
+                 })
+
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
+
+(*global).Nx = 304L
+(*global).Ny = 256L
+
+(*global).output_path = (*global).output_path + user + "/"
+
+tmp_working_path = (*global).tmp_working_path
+tmp_working_path += "_" + (*global).instrument + "/"
+tmp_folder = (*global).output_path + tmp_working_path
+
+tmp_folder = '/SNS/users/' + user + '/local/' + (*global).tmp_folder
+(*global).tmp_folder = tmp_folder
+
+; remove_me
+;  tmp_plot_button = widget_button(main_base,$
+;                                  xoffset=100,$
+;                                  yoffset=100,$
+;                                  value='PLOT',$
+;                                  uname='tmp_plot_button')
+
+;zoom button
+zoom_button = widget_button(main_base,$
+                            xoffset=880,$
+                            yoffset=0,$
+                            value='ZOOM',$
+                            scr_xsize=120,$
+                            scr_ysize=25,$
+                            uname='zoom_button',$
+                            sensitive=0)
+
+;loadct button for uncombine data
+loadct_button = widget_button(main_base,$
+                              xoffset=1000,$
+                              yoffset=0,$
+                              value='Change color scale',$
+                              scr_xsize=120,$
+                              scr_ysize=25,$
+                              uname='loadct_button',$
+                              sensitive=0)
+
+;reset data_reduction_plot
+reset_data_reduction = widget_button(main_base,$
+                                     xoffset=1120,$
+                                     yoffset=0,$
+                                     value='Reset plot',$
+                                     scr_xsize=120,$
+                                     scr_ysize=25,$
+                                     uname='reset_data_reduction',$
+                                     sensitive=0)
+
+;#########################
+;intermediate plots window
+list_of_plots_base = widget_base(MAIN_BASE,$
+                                 uname='list_of_plots_base',$
+                                 xoffset=515,$
+                                 yoffset=140,$
+                                 scr_xsize=330,$
+                                 scr_ysize=220,$
+                                 xpad=5,$
+                                 ypad=5,$
+                                 frame=2,$
+                                 map=0)
+
+list_of_intermediate_plots_base = widget_base(list_of_plots_base,$
+                                              uname='list_of_intermediate_plots_base',$
+                                              xoffset=0,$
+                                              yoffset=0,$
+                                              scr_xsize=330,$
+                                              scr_ysize=180,$
+                                              column=1)
+
+list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,$
+                                                value='List of intermediate plots',$
+                                                frame=2)
+
+intermediate_plots_list = ['Signal region summed TOF',$
+                           'Background summed TOF',$
+                           'Signal region summed TOF',$
+                           'Normalization region summed TOF',$
+                           'Background region from normalization summed TOF']
+
+intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$ 
+                                          intermediate_plots_list,$
+                                          /RETURN_NAME,$
+                                          /nonexclusive,$
+                                          XOFFSET=30,$
+                                          YOFFSET=25,$
+                                          UNAME='intermediate_plots_list_group',$
+                                          set_value=[1,1,1,1,1])
+
+intermediate_plots_list_validate = widget_button(list_of_plots_base,$
+                                                 uname='intermediate_plots_list_validate',$
+                                                 value='Validate',$
+                                                 scr_xsize=150,$
+                                                 xoffset=30,$
+                                                 yoffset=180)
+
+intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
+                                               uname='intermediate_plots_list_cancel',$
+                                               value='Cancel',$
+                                               scr_xsize=100,$
+                                               xoffset=200,$
+                                               yoffset=180)
+                                               
+
+;TOP LEFT BOX - OPEN NEXUS
+nexus_run_number_base = widget_base(MAIN_BASE,$
+                                    xoffset=5,$
+                                    yoffset=5,$
+                                    scr_xsize=180,$
+                                    scr_ysize=40,$
+                                    frame=1)
+nexus_run_number_title = widget_label(nexus_run_number_base,$
+                                      xoffset=5,$
+                                      yoffset=10,$
+                                      value='Run #')
+nexus_run_number_box = widget_text(nexus_run_number_base,$
+                                   xoffset=40,$
+                                   yoffset=5,$
+                                   /editable,$
+                                   /align_left,$
+                                   scr_xsize=80,$
+                                   scr_ysize=30,$
+                                   uname='nexus_run_number_box',$
+                                   /all_events)
+
+nexus_run_number_go = widget_button(nexus_run_number_base,$
+                                    xoffset=120,$
+                                    yoffset=7,$
+                                    value='O P E N',$
+                                    uname='nexus_run_number_go')
+
+
+;current mode
+current_mode_base = widget_base(MAIN_BASE,$
+                                xoffset=190,$
+                                yoffset=5,$
+                                scr_xsize=68,$
+                                scr_ysize=40,$
+                                frame=1)
+
+current_mode_label = widget_label(current_mode_base,$
+                                  xoffset=10,$
+                                  yoffset=0,$
+                                  value='M O D E',$
+                                  font='lucidasans-bold-10')
+
+current_mode_status_label = widget_label(current_mode_base,$
+                                         uname='current_mode_status_label',$
+                                         xoffset=5,$
+                                         yoffset=20,$
+                                         value='SELECTION',$
+                                         /align_center)
+
+;keep session
+keep_session_base = widget_base(MAIN_BASE,$
+                                xoffset=265,$
+                                yoffset=5,$
+                                scr_xsize=249,$
+                                scr_ysize=40,$
+                                frame=1)
+
+keep_session_label = widget_label(keep_session_base,$
+                                  xoffset=5,$
+                                  yoffset=10,$
+                                  value='Save full session:',$
+                                 font='lucidasans-bold-14')
+
+save_session_list = ['Yes',$
+                     'No']
+save_session_group = CW_BGROUP(keep_session_base,$ 
+                               save_session_list,$
+                               /exclusive,$
+                               /RETURN_NAME,$
+                               XOFFSET=150,$
+                               YOFFSET=5,$
+                               SET_VALUE=0.0,$
+                               row=1,$
+                               UNAME='save_session_group')
+
+
+;BOTTOM LEFT BOX - DISPLAY DATA
+display_data_base = widget_draw(MAIN_BASE,$
+                                xoffset=5,$
+                                yoffset=50,$
+                                scr_xsize=2*256,$
+                                scr_ysize=2*304,$
+                                uname='display_data_base',$
+                                retain=2,$
+                                /BUTTON_EVENTS,$
+                                /MOTION_EVENTS)
+
+;sns logo
+sns_logo_drawing = widget_draw(MAIN_BASE,$
+                               uname='sns_logo_drawing_REF_L',$
+                               xoffset=540,$
+                               yoffset=535,$
+                               scr_xsize=763,$
+                               scr_ysize=116,$
+                               /MOTION_EVENTS)
+
+;REF_L logo
+REF_L_logo_base = widget_base(main_base,$
+                              uname='REF_L_logo_base',$
+                              xoffset=800,$
+                              yoffset=445,$
+                              scr_xsize=463,$
+                              scr_ysize=73,$
+                              map=1)
+REF_L_logo_drawing = widget_draw(REF_L_logo_base,$
+                                 uname='REF_L_logo_drawing',$
+                                 xoffset=0,$
+                                 yoffset=0,$
+                                 scr_xsize=463,$
+                                 scr_ysize=73,$
+                                 /MOTION_EVENTS)
+                                 
+;x and y axis interaction box of data reduction plot
+x_y_axis_interaction_base = widget_base(main_base,$
+                                        uname='x_y_axis_interaction_base',$
+                                        xoffset=800,$
+                                        yoffset=445,$
+                                        scr_xsize=463,$
+                                        scr_ysize=73,$
+                                        map=0,$
+                                        frame=1)
+
+x_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=7,$
+                            value='X-axis:',$
+                            font='lucidasans-bold-10')
+
+axis_lin_log = ['lin',$
+                'log']
+x_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='x_axis_lin_log_REF')
+
+
+x_off_min = 150
+x_off_max = 275
+x_off_min_box = 185
+x_off_max_box = 310
+left_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_min,$
+                               yoffset=7,$
+                               value='Min:')
+
+left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                             uname='xmin',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+
+right_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=7,$
+                               value='Max:')
+right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                              uname='xmax',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+yoff = 40
+y_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=4+yoff,$
+                            value='Y-axis:',$
+                            font='lucidasans-bold-10')
+
+y_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=37,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='y_axis_lin_log_REF')
+
+left_side_label_y = widget_label(x_y_axis_interaction_base,$
+                                 xoffset=x_off_min,$
+                                 yoffset=5+yoff,$
+                                 value='Min:')
+
+left_side_text_y = widget_text(x_y_axis_interaction_base,$
+                             uname='ymin',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0+yoff,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+right_side_label_y = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=5+yoff,$
+                               value='Max:')
+right_side_text_y = widget_text(x_y_axis_interaction_base,$
+                              uname='ymax',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0+yoff,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+restore_button = widget_button(x_y_axis_interaction_base,$
+                               uname='restore_button',$
+                               xoffset=400,$
+                               yoffset=1,$
+                               scr_xsize=60,$
+                               scr_ysize=70,$
+                               value='RESTORE')
+
+;SELECT SIGNAL and BACKGROUND INTERFACE
+select_signal_base = widget_base(MAIN_BASE,$
+                                 xoffset=530,$
+                                 yoffset=445,$
+                                 scr_xsize=253,$
+                                 scr_ysize=70,$
+                                 frame=1)
+selection_title = widget_label(select_signal_base,$
+                               xoffset=0,$
+                               yoffset=9,$
+                               value='Selection')
+selection_list = ['Signal',$
+                  'Back_1',$
+                  'Back_2']
+selection_list_group = CW_BGROUP(select_signal_base,$ 
+                                 selection_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=60,$
+                                 YOFFSET=3,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 UNAME='selection_list_group')
+
+clear_selection_button = widget_button(select_signal_base,$
+                                       uname='clear_selection_button',$
+                                       xoffset=5,$
+                                       yoffset=35,$
+                                       scr_xsize=120,$
+                                       value='CLEAR SELECTION',$
+                                       sensitive=0)
+save_selection_button = widget_button(select_signal_base,$
+                                      uname='save_selection_button',$
+                                      xoffset=125,$
+                                      yoffset=35,$
+                                      scr_xsize=120,$
+                                      value='SAVE SELECTION',$
+                                      sensitive=0)
+
+;data_reduction and other_plots tab
+;DATA REDUCTION and PLOTS BASE
+xsize_of_tabs = 730
+ysize_of_tabs = 430
+data_reduction_plots_base = widget_base(MAIN_BASE,$
+                                        xoffset=2*265,$
+                                        yoffset=5,$
+                                        scr_xsize=xsize_of_tabs,$
+                                        scr_ysize=ysize_of_tabs)
+
+
+data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                uname='data_reduction_tab',$
+                                location=0,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                scr_xsize=xsize_of_tabs,$
+                                scr_ysize=ysize_of_tabs,$
+                                /tracking_events)
+
+;data reduction tab
+first_tab_base = widget_base(data_reduction_tab,$
+                                  uname='data_reduction_base',$
+                                  TITLE='Data Reduction',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+data_reduction_base = widget_base(first_tab_base,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  scr_xsize=305,$
+                                  scr_ysize=390,$
+                                  frame=1)
+
+
+; ;combine settings base                           
+; combine_settings_base = widget_base(data_reduction_base,$
+;                                     uname='combine_settings_base',$
+;                                     xoffset=0,$
+;                                     yoffset=150,$
+;                                     scr_xsize=295,$
+;                                     scr_ysize=180,$
+;                                     frame=5,$
+;                                     map=0)
+
+; combine_settings_title = widget_label(combine_settings_base,$
+;                                       xoffset=50,$
+;                                       yoffset=5,$
+;                                       value='SETTINGS FOR THE COMBINE FLAG',$
+;                                       frame=1)
+
+; x_offset_left = 5
+; x_offset_right = 100
+; combine_settings_minus_infinity_label = widget_label(combine_settings_base,$
+;                                                     value='-Infinity = ',$
+;                                                     xoffset=x_offset_left,$
+;                                                     yoffset=45)
+
+; combine_settings_minus_infinity_value = widget_text(combine_settings_base,$
+;                                                     uname='combine_settings_minus_infinity_value',$
+;                                                     value='-10000',$
+;                                                     xoffset=x_offset_right,$
+;                                                     yoffset=40,$
+;                                                     scr_xsize=150,$
+;                                                     scr_ysize=30,$
+;                                                     /editable)
+                                                    
+; yoff = 35
+; combine_settings_plus_infinity_label = widget_label(combine_settings_base,$
+;                                                     value='+Infinity = ',$
+;                                                     xoffset=x_offset_left,$
+;                                                     yoffset=45+yoff)
+
+; combine_settings_plus_infinity_value = widget_text(combine_settings_base,$
+;                                                    uname='combine_infinity_plus_infinity_value',$
+;                                                    value='+10000',$
+;                                                    xoffset=x_offset_right,$
+;                                                    yoffset=40+yoff,$
+;                                                    scr_xsize=150,$
+;                                                    scr_ysize=30,$
+;                                                    /editable)
+
+; yoff1 = 70
+; combine_settings_nan_label = widget_label(combine_settings_base,$
+;                                           value='Nan = ',$
+;                                           xoffset=x_offset_left,$
+;                                           yoffset=45+yoff1)
+
+; combine_settings_nan_value = widget_text(combine_settings_base,$
+;                                          uname='combine_infinity_nan_value',$
+;                                          value='+10000',$
+;                                          xoffset=x_offset_right,$
+;                                          yoffset=40+yoff1,$
+;                                          scr_xsize=150,$
+;                                          scr_ysize=30,$
+;                                          /editable)
+
+; combine_settings_validate = widget_button(combine_settings_base,$
+;                                           value='VALIDATE',$
+;                                           xoffset=25,$
+;                                           yoffset=150,$
+;                                           scr_xsize=250,$
+;                                           uname='combine_settings_validate')
+
+signal_pid_file_button = widget_button(data_reduction_base,$
+                                      uname='signal_pid_file_button',$
+                                      xoffset=5,$
+                                      yoffset=7,$
+                                      value='Signal Pid file',$
+                                      sensitive=0)
+
+signal_pid_file_text = widget_text(data_reduction_base,$
+                                   uname='signal_pid_text',$
+                                   xoffset=110,$
+                                   yoffset=5,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable,$
+                                   /all_events)
+
+background_pid_file_button = widget_button(data_reduction_base,$
+                                           uname='background_pid_file_button',$
+                                           xoffset=5,$
+                                           yoffset=40,$
+                                           value='Back. Pid file',$
+                                           sensitive=0)
+
+background_file_text = widget_text(data_reduction_base,$
+                                   uname='background_pid_text',$
+                                   xoffset=110,$
+                                   yoffset=40,$
+                                   scr_xsize=190,$
+                                   value='',$
+                                   /align_left,$
+                                   /editable,$
+                                   /all_events)
+
+norm_y_offset = 40
+normalization_label = widget_label(data_reduction_base,$
+                                   xoffset=5,$
+                                   yoffset=117-norm_y_offset,$
+                                   value='Norm.:')
+
+normalization_list = ['Yes',$
+                      'No']
+normalization_list_group_REF_L = CW_BGROUP(data_reduction_base,$ 
+                                           normalization_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=45,$
+                                           YOFFSET=110-norm_y_offset,$
+                                           SET_VALUE=0.0,$
+                                           row=1,$
+                                           uname='normalization_list_group_REF_L')
+
+norm_run_number_base = widget_base(data_reduction_base,$
+                                   uname='norm_run_number_base',$
+                                   xoffset=140,$
+                                   yoffset=110-norm_y_offset,$
+                                   scr_xsize=170,$
+                                   scr_ysize=34)
+
+normalization_label = widget_label(norm_run_number_base,$
+                                   xoffset=0,$
+                                   yoffset=7,$
+                                   value='Runs#')
+
+normalization_text = widget_text(norm_run_number_base,$
+                                 xoffset=35,$
+                                 yoffset=2,$
+                                 scr_xsize=125,$
+                                 value='',$
+                                 uname='normalization_text',$
+                                 /editable,$
+                                 /align_left,$
+                                 /all_events)
+
+norm_bkg_offset = 30
+norm_background_title = widget_label(data_reduction_base,$
+                                     xoffset=5,$
+                                     yoffset=145-norm_bkg_offset,$
+                                     value='Norm. bkg.:')
+
+
+norm_background_list = ['Yes',$
+                        'No']
+norm_background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                       norm_background_list,$
+                                       /exclusive,$
+                                       /RETURN_NAME,$
+                                       XOFFSET=75,$
+                                       YOFFSET=138-norm_bkg_offset,$
+                                       SET_VALUE=0.0,$
+                                       row=1,$
+                                       uname='norm_background_list_group')
+
+norm_frame = widget_base(data_reduction_base,$
+                          xoffset=0,$
+                          yoffset=136-norm_bkg_offset,$
+                          scr_xsize=162,$
+                          scr_ysize=31,$
+                          frame=1)
+
+bkg_offset = 30
+background_title = widget_label(data_reduction_base,$
+                                     xoffset=175,$
+                                     yoffset=145-bkg_offset,$
+                                     value='Bkg.:')
+
+background_list = ['Yes',$
+                   'No']
+background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                  background_list,$
+                                  /exclusive,$
+                                  /RETURN_NAME,$
+                                  XOFFSET=210,$
+                                  YOFFSET=138-bkg_offset,$
+                                  SET_VALUE=0.0,$
+                                  row=1,$
+                                  uname='background_list_group')
+
+back_frame = widget_base(data_reduction_base,$
+                         xoffset=170,$
+                         yoffset=136-norm_bkg_offset,$
+                         scr_xsize=130,$
+                         scr_ysize=31,$
+                         frame=1)
+
+;add tab that offer the option to add NeXus or run sequentially runs
+run_data_reduction_tab = widget_tab(data_reduction_base,$
+                                    uname='run_data_reduction_tab',$
+                                    location=0,$
+                                    xoffset=0,$
+                                    yoffset=173-norm_bkg_offset,$
+                                    scr_xsize=310,$
+                                    scr_ysize=60)
+;                                    /tracking_events)
+
+;add NeXus file DATA REDUCTION
+add_nexus_tab_base = widget_base(run_data_reduction_tab,$
+                                 uname='add_nexus_tab_base',$
+                                 TITLE='ADD NeXus AND RUN',$
+                                 XOFFSET=0,$
+                                 YOFFSET=0)
+
+runs_to_process_label = widget_label(add_nexus_tab_base,$
+                                     xoffset=0,$
+                                     yoffset=12,$
+                                     value='Runs #')
+runs_to_process_text = widget_text(add_nexus_tab_base,$
+                                   xoffset=45,$
+                                   yoffset=2,$
+                                   scr_xsize=230,$
+                                   value='',$
+                                   uname='runs_to_process_text',$
+                                   /editable,$
+                                   /align_left,$
+                                   /all_events)
+runs_to_process_help = widget_button(add_nexus_tab_base,$
+                                     uname='runs_to_process_help',$
+                                     xoffset=280,$
+                                     yoffset=2,$
+                                     scr_xsize=20,$
+                                     scr_ysize=30,$
+                                     value='?',$
+                                    /pushbutton_events,$
+                                     tooltip='Click to see the format of input to use')
+
+
+;sequentially run
+sequentially_nexus_tab_base = widget_base(run_data_reduction_tab,$
+                                          uname='sequentially_nexus_tab_base',$
+                                          TITLE='RUN SEQUENTIALLY',$
+                                          XOFFSET=0,$
+                                          YOFFSET=0)
+
+sequentially_runs_to_process_label = widget_label(sequentially_nexus_tab_base,$
+                                                  xoffset=0,$
+                                                  yoffset=12,$
+                                                  value='Runs #')
+sequentially_runs_to_process_text = widget_text(sequentially_nexus_tab_base,$
+                                                xoffset=45,$
+                                                yoffset=2,$
+                                                scr_xsize=230,$
+                                                value='',$
+                                                uname='sequentially_runs_to_process_text',$
+                                                /editable,$
+                                                /align_left,$
+                                                /all_events)
+sequentially_runs_to_process_help = widget_button(sequentially_nexus_tab_base,$
+                                                  uname='sequentially_runs_to_process_help',$
+                                                  xoffset=280,$
+                                                  yoffset=2,$
+                                                  scr_xsize=20,$
+                                                  scr_ysize=30,$
+                                                  value='?',$
+                                                  /pushbutton_events,$
+                                                  tooltip='Click to see the format of input to use')
+
+
+intermediate_file_label = widget_label(data_reduction_base,$
+                                       xoffset=5,$
+                                       yoffset=215,$
+                                       value='Intermediate files output:')
+
+intermediate_file_output_list = ['Yes',$
+                                 'No']
+intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$ 
+                                                intermediate_file_output_list,$
+                                                /exclusive,$
+                                                /RETURN_NAME,$
+                                                XOFFSET=170,$
+                                                YOFFSET=209,$
+                                                SET_VALUE=1.0,$
+                                                row=1,$
+                                                uname='intermediate_file_output_list_group')
+
+acces_to_list_of_intermediate_plots = widget_button(data_reduction_base,$
+                                                    uname='access_to_list_of_intermediate_plots',$
+                                                    xoffset=260,$
+                                                    yoffset=212,$
+                                                    scr_xsize=48,$
+                                                    value='Plots')
+
+combine_data_spectrum_label = widget_label(data_reduction_base,$
+                                           xoffset=5,$
+                                           yoffset=245,$
+                                           value='Combine data spectrum:')
+                                                  
+combine_data_spectrum_list_group = CW_BGROUP(data_reduction_base,$ 
+                                             intermediate_file_output_list,$
+                                             /exclusive,$
+                                             /RETURN_NAME,$
+                                             XOFFSET=148,$
+                                             YOFFSET=239,$
+                                             SET_VALUE=1.0,$
+                                             row=1,$
+                                             uname='combine_data_spectrum_list_group')
+
+zaxis_formula = ["log10","linear"]
+uncombine_data_formula = widget_droplist(data_reduction_base,$
+                                         UNAME='uncombine_data_formula',$
+                                         XOFFSET=225,$
+                                         YOFFSET=237,$
+                                         VALUE=zaxis_formula, $
+                                         title='')
+                                         
+
+
+; combine_settings_button = widget_button(data_reduction_base,$
+;                                         uname='combine_settings_button',$
+;                                         xoffset=242,$
+;                                         yoffset=243,$
+;                                         value='Settings')
+                                 
+;instrument geometry
+instrument_geometry_label = widget_label(data_reduction_base,$
+                                         uname='instrument_geometry_label',$
+                                         xoffset=5,$
+                                         yoffset=277,$
+                                         value='Overwrite instrument geometry: ')
+
+instrument_geometry_list_group = CW_BGROUP(data_reduction_base,$ 
+                                           intermediate_file_output_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=195,$
+                                           YOFFSET=270,$
+                                           SET_VALUE=1.0,$
+                                           row=1,$
+                                           uname='instrument_geometry_list_group')
+
+; instrument_geometry_button = widget_button(data_reduction_base,$
+;                                            uname='instrument_geometry_button',$
+;                                            xoffset=5,$
+;                                            yoffset=273,$
+;                                            value='Instr. geom.:')
+
+
+; instrument_geometry_text = widget_text(data_reduction_base,$
+;                                        uname='instrument_geometry_text',$
+;                                        xoffset=100,$
+;                                        yoffset=270,$
+;                                        scr_xsize=200,$
+;                                        scr_ysize=30,$
+;                                        /editable,$
+;                                        value='')
+                                       
+
+start_data_reduction_button = widget_button(data_reduction_base,$
+                                            xoffset=5,$
+                                            yoffset=305,$
+                                            scr_xsize=295,$
+                                            value='START DATA REDUCTION',$
+                                            uname='start_data_reduction_button_REF_L',$
+                                            sensitive=0)
+;info text box 
+info_text = widget_text(data_reduction_base,$
+                        xoffset=5,$
+                        yoffset=335,$
+                        scr_xsize=295,$
+                        scr_ysize=50,$
+                        /scroll,$
+                        /wrap,$
+                        uname='info_text')
+
+data_reduction_plot = widget_draw(first_tab_base,$
+                                  xoffset=315,$
+                                  yoffset=5,$
+                                  scr_xsize=405,$
+                                  scr_ysize=393,$ 
+                                  uname='data_reduction_plot')
+
+
+;selection boxes info tab
+fourth_tab_base = widget_base(data_reduction_tab,$
+                                  uname='fourth_tab_base',$
+                                  TITLE='Selection infos',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+selection_tab = widget_tab(fourth_tab_base,$
+                                  location=0,$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=xsize_of_tabs-10,$
+                                  scr_ysize=ysize_of_tabs-30)
+  
+;signal_selection_tab
+signal_tab_base = widget_base(selection_tab,$
+                              uname='signal_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_info = widget_text(signal_tab_base,$
+                          uname='signal_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;background_1_selection_tab
+background_1_tab_base = widget_base(selection_tab,$
+                                    uname='background_1_tab_base',$
+                                    TITLE='',$
+                                    XOFFSET=0,$
+                                    YOFFSET=0)
+
+background_1_info = widget_text(background_1_tab_base,$
+                          uname='background_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;background_2_selection_tab
+background_2_tab_base = widget_base(selection_tab,$
+                                  uname='background_2_tab_base',$
+                                  TITLE='',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+background_2_info = widget_text(background_2_tab_base,$
+                          uname='background_2_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;other plots tab
+other_plots_base = widget_base(data_reduction_tab,$
+                               uname='other_plots_base',$
+                               TITLE='Extra plots',$
+                               XOFFSET=0,$
+                               YOFFSET=0)
+
+screen_base = widget_base(other_plots_base,$
+                          uname='screen_base',$
+                          xoffset=0,$
+                          yoffset=0,$
+                          scr_xsize=730,$
+                          scr_ysize=400,$
+                          map=1)
+
+other_plots_tab = widget_tab(other_plots_base,$
+                             uname='other_plots_tab',$                             
+                             location=0,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=xsize_of_tabs-10,$
+                             scr_ysize=ysize_of_tabs-30,$
+                             /tracking_events)
+
+;signal region plot
+signal_region_tab_base = widget_base(other_plots_tab,$
+                              uname='signal_region_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_region_draw = widget_draw(signal_region_tab_base,$
+                                 uname='signal_region_draw',$
+                                 xoffset=2,$
+                                 yoffset=2,$
+                                 scr_xsize=710,$
+                                 scr_ysize=383)
+
+;background summed TOF plot
+background_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='background_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
+                                         uname='background_summed_tof_draw',$
+                                         xoffset=2,$
+                                         yoffset=2,$
+                                         scr_xsize=710,$
+                                         scr_ysize=383)
+
+;signal region summed tof plot
+signal_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='signal_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_region_summed_tof_draw = widget_draw(signal_region_summed_tof_tab_base,$
+                                            uname='signal_region_summed_tof_draw',$
+                                            xoffset=2,$
+                                            yoffset=2,$
+                                            scr_xsize=710,$
+                                            scr_ysize=383)
+
+;normalization region summed tof plot
+normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='normalization_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
+                                       uname='normalization_region_summed_tof_draw',$
+                                                   xoffset=2,$
+                                                   yoffset=2,$
+                                                   scr_xsize=710,$
+                                                   scr_ysize=383)
+
+
+;background region from normalization summed tof
+background_region_from_normalization_region_summed_tof_tab_base = $
+  widget_base(other_plots_tab,$
+              uname='background_region_from_normalization_region_summed_tof_base',$
+              TITLE='',$
+              XOFFSET=0,$
+              YOFFSET=0)
+
+background_region_from_normalization_region_summed_tof_draw = $
+  widget_draw(background_region_from_normalization_region_summed_tof_tab_base,$
+              uname='background_region_from_normalization_region_summed_tof_draw',$
+              xoffset=2,$
+              yoffset=2,$
+              scr_xsize=710,$
+              scr_ysize=383)
+
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                            uname='log_book_base',$
+                            TITLE='Log book',$
+                            XOFFSET=0,$
+                            YOFFSET=0)
+
+log_book_text = widget_text(log_book_base,$
+                            uname='log_book_text',$
+                            scr_xsize=720,$
+                            scr_ysize=395,$
+                            xoffset=5,$
+                            yoffset=5,$
+                            /scroll,$
+                            /wrap)
+
+data_reduction_scale_base = widget_base(main_base,$
+                                        uname='data_reduction_scale_base',$
+                                        xoffset=1265,$
+                                        yoffset=15,$
+                                        scr_xsize=60,$
+                                        scr_ysize=430,$
+                                        sensitive=0)
+
+
+data_reduction_scale_max = widget_text(data_reduction_scale_base,$
+                                       uname='data_reduction_scale_max',$
+                                       xoffset=0,$
+                                       yoffset=0,$
+                                       scr_xsize=60,$
+                                       scr_ysize=30,$
+                                       value='',$
+                                       /editable,$
+                                       /align_left)
+
+data_reduction_scale = widget_draw(data_reduction_scale_base,$
+                                   uname='data_reduction_scale',$
+                                   xoffset=5,$
+                                   yoffset=30,$
+                                   scr_xsize=50,$
+                                   scr_ysize=365)
+
+data_reduction_scale_min = widget_text(data_reduction_scale_base,$
+                                       uname='data_reduction_scale_min',$
+                                       xoffset=0,$
+                                       yoffset=395,$
+                                       scr_xsize=60,$
+                                        scr_ysize=30,$
+                                       value='',$
+                                       /editable,$
+                                       /align_left)
+
+FILE_MENU_REF_L = Widget_Button(WID_BASE_0_MBAR,$
+                                  UNAME='FILE_MENU_REF_L',$
+                                  /MENU,$
+                                  VALUE='File')
+
+; OPEN_NEXUS_button = widget_button(FILE_MENU_REF_L,$
+;                            uname='open_nexus_button',$
+;                            value='Open Nexus',$
+;                            accelerator="Return")
+
+WORKING_PATH_REF_L = widget_button(FILE_MENU_REF_L,$
+                                   uname='working_path_ref_l',$
+                                   value='Working Path...')
+
+CTOOL_MENU = Widget_Button(FILE_MENU_REF_L, UNAME='CTOOL_MENU'  $
+                           ,VALUE='Color Tool...')
+
+EXIT_MENU_REF_L = Widget_Button(FILE_MENU_REF_L, UNAME='EXIT_MENU_REF_L'  $
+                                ,VALUE='Exit')
+
+MODE_MENU_REF_L = widget_button(WID_BASE_0_MBAR, $
+                                uname='mode_menu_REF_L',$
+                                /menu,$
+                                value='Mode')
+
+SELECTION_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
+                                     uname='selection_mode_REF_L',$
+                                     value='*Selection')
+
+INFO_MODE_REF_L = widget_button(MODE_MENU_REF_L,$
+                                uname='info_mode_REF_L',$
+                                value=' Info')
+
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
+
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
+
+Widget_Control, /REALIZE, MAIN_BASE
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+sns_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo_REF_L.bmp"
+id = widget_info(main_base,find_by_uname="sns_logo_drawing_REF_L")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(sns_logo)
+tv, image,0,0,/true
+
+REF_L_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_L_label.bmp"
+id = widget_info(main_base,find_by_uname="REF_L_logo_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(REF_L_logo)
+tv, image,0,0,/true
+
+end
+
+
+
+
+
+pro wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, instrument, user   ;GUI for REF_M
+
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+
+;define initial global values - these could be input via external file or other means
+
+instrument = 1 ;temporary
+instrument_list = ['REF_L', 'REF_M']
+user = get_ucams()
+
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
+                         UNAME='MAIN_BASE',$
+                         SCR_XSIZE=1350,$   ;1050
+                         SCR_YSIZE=633,$   ;442
+                         XOFFSET=250,$
+                         YOFFSET=22,$
+                         NOTIFY_REALIZE='MAIN_REALIZE_data_reduction',$
+                         TITLE='Data Reduction GUI for REF_M',$
+                         SPACE=3,$
+                         XPAD=3,$
+                         YPAD=3,$
+                         MBAR=WID_BASE_0_MBAR)
+global = ptr_new({$
+                   tvscl_x_axis : ptr_new(0L),$
+                   number_of_row_in_data_reduction_file : 0,$
+                   first_time_plotting_data_reduction : 1,$
+                   output_plot_file_name: '',$
+                   instrument_geometry_file_name : '',$
+                   first_time_entering_procedure : 1,$
+                   instrument_geometry : 'no',$
+                   instr_geometry_path : '/SNS/REF_M/2006_1_4A_CAL/calibrations',$
+                   previous_n : 0,$
+                   first_time_plotting_n : ptr_new(0L),$
+                   xmin_global : ptr_new(0L),$
+                   xmax_global : ptr_new(0L),$
+                   ymin_global : ptr_new(0L),$
+                   ymax_global : ptr_new(0L),$
+                   entering_intermediate_file_output_for_first_time : 0,$
+                   signal_pid_file_name : '',$
+                   background_pid_file_name : '',$
+                   cancel_data_reduction : 0,$
+                   ct                   : 5,$
+                   pass                 : 0,$
+                   data_assoc		: ptr_new(0L),$
+                   entering_selection_of_plots_by_yes_button : 0,$
+                   file_opened          : 0,$
+                   find_nexus           : 0L,$
+                   full_histo_mapped_name : '',$
+                   full_nexus_name      : '',$
+                   tab_drawing_ids      : ['signal_region_draw',$
+                                           'background_summed_tof_draw',$
+                                           'normalization_region_summed_tof_draw',$
+                   'background_region_from_normalization_region_summed_tof_draw'],$
+                   intermediate_file_ext: ['.sdc',$
+                                           '.bkg',$
+                                           '.nom',$
+                                           '.bnm'],$
+                   intermediate_plots_title: ['Summed signal region',$
+                                              'Summed background region',$
+                                              'Summed normalization signal region',$
+                                              'Summed normalization background'],$
+                   img_ptr 		: ptr_new(0L),$
+                   instrument		: instrument_list[instrument],$
+                   keep_signal_selection: 0,$
+                   keep_back_selection : 0,$
+                   left_click_number    : 0,$
+                   main_output_file_name: '',$
+                   nexus_file_name_only : '',$
+                   Nx                   : 0L,$
+                   Ny                   : 0L,$
+                   Ntof                 : 0L,$
+                   output_path		: '/SNSlocal/users/',$
+                   output_plots         : 1,$
+                   previous_text        : '',$
+                   processing_run_number : 0,$
+                   push_button          : 0,$
+                   pid_file_extension   : 'Pid.txt',$
+                   run_number		: '',$
+                   runs_to_process      : 0,$
+                   selection_value      : 0,$
+                   selection_signal     : 0,$
+                   selection_background : 0,$
+                   selection_background_2 : 0,$
+                   selection_mode       : 1,$
+                   local_folder         : '~/local/REF_M/',$
+                   tmp_folder           : '',$
+                   tmp_working_path     : '.tmp_data_reduction',$
+                   working_path         : '~/local/REF_M/',$
+                   ucams                : user,$
+                   ymin                 : 0L,$
+                   y12                  : 0L,$
+                   x1_back              : 0L,$
+                   x2_back              : 0L,$
+                   y1_back              : 0L,$
+                   y2_back              : 0L,$
+                   x1_back_2            : 0L,$
+                   x2_back_2            : 0L,$
+                   y1_back_2            : 0L,$
+                   y2_back_2            : 0L,$
+                   x1_signal            : 0L,$
+                   x2_signal            : 0L,$
+                   y1_signal            : 0L,$
+                   y2_signal            : 0L,$
+                   color_line_signal    : 250L,$
+                   color_line_background: 3000L,$
+                   color_line_background_2: 100L,$
+                   data_reduction_done : 0,$
+                   plots_selected : [0,0,0,0],$
+                   list_of_runs : ptr_new(0L),$
+                   final_array : ptr_new(0L),$
+                   initial_list_of_runs : [' '] $
+                 })
+
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
+
+(*global).Nx = 256L
+(*global).Ny = 304L
+
+list_of_runs = strarr(1)
+list_of_runs[0] = ' '
+(*(*global).list_of_runs) = list_of_runs
+
+(*global).output_path = (*global).output_path + user + "/"
+tmp_working_path = (*global).tmp_working_path
+tmp_working_path += "_" + (*global).instrument + "/"
+tmp_folder = (*global).output_path + tmp_working_path
+(*global).tmp_folder = tmp_folder
+
+;#########################
+;intermediate plots window
+list_of_plots_base = widget_base(MAIN_BASE,$
+                                 uname='list_of_plots_base',$
+                                 xoffset=605,$
+                                 yoffset=200,$
+                                 scr_xsize=330,$
+                                 scr_ysize=220,$
+                                 xpad=5,$
+                                 ypad=5,$
+                                 frame=2,$
+                                 map=0)
+
+list_of_intermediate_plots_base = widget_base(list_of_plots_base,$
+                                              uname='list_of_intermediate_plots_base',$
+                                              xoffset=0,$
+                                              yoffset=0,$
+                                              scr_xsize=330,$
+                                              scr_ysize=180,$
+                                              column=1)
+
+list_of_intermediate_plots_title = widget_label(list_of_intermediate_plots_base,$
+                                                uname='list_of_intermediate_plots_title',$
+                                                value='List of intermediate plots',$
+                                                frame=2)
+
+intermediate_plots_list = ['Signal region summed TOF',$
+                           'Background summed TOF',$
+                           'Normalization region summed TOF',$
+                           'Background region from normalization summed TOF']
+
+intermediate_plots_list_GROUP = CW_BGROUP(list_of_intermediate_plots_base,$ 
+                                          intermediate_plots_list,$
+                                          /RETURN_NAME,$
+                                          /nonexclusive,$
+                                          XOFFSET=30,$
+                                          YOFFSET=25,$
+                                          UNAME='intermediate_plots_list_group',$
+                                          set_value=[1,1,1,1])
+
+intermediate_plots_list_validate = widget_button(list_of_plots_base,$
+                                   uname='intermediate_plots_list_validate_REF_M',$
+                                                 value='Validate',$
+                                                 scr_xsize=150,$
+                                                 xoffset=30,$
+                                                 yoffset=180)
+
+intermediate_plots_list_cancel = widget_button(list_of_plots_base,$
+                                               uname='intermediate_plots_list_cancel_REF_M',$
+                                               value='Cancel',$
+                                               scr_xsize=100,$
+                                               xoffset=200,$
+                                               yoffset=180)
+                                               
+;TOP LEFT BOX - OPEN NEXUS
+nexus_run_number_base = widget_base(MAIN_BASE,$
+                                    xoffset=5,$
+                                    yoffset=5,$
+                                    scr_xsize=300,$
+                                    scr_ysize=40,$
+                                    frame=1)
+
+nexus_run_number_title = widget_label(nexus_run_number_base,$
+                                      xoffset=5,$
+                                      yoffset=10,$
+                                      value='Run number')
+nexus_run_number_box = widget_text(nexus_run_number_base,$
+                                   xoffset=80,$
+                                   yoffset=5,$
+                                   /editable,$
+                                   /align_left,$
+                                   scr_xsize=80,$
+                                   scr_ysize=30,$
+                                   uname='nexus_run_number_box',$
+                                  /all_events)
+nexus_run_number_go_REF_M = widget_button(nexus_run_number_base,$
+                                    xoffset=180,$
+                                    yoffset=7,$
+                                    scr_xsize=100,$
+                                    value='O P E N',$
+                                    uname='nexus_run_number_go_REF_M')
+
+;SNS logo
+sns_logo_drawing = widget_draw(MAIN_BASE,$
+                               uname='sns_logo_drawing',$
+                               xoffset=310,$
+                               yoffset=3,$
+                               scr_xsize=1030,$
+                               scr_ysize=45,$
+                               /MOTION_EVENTS)
+
+
+;BOTTOM LEFT BOX - DISPLAY DATA
+display_data_base = widget_draw(MAIN_BASE,$
+                                xoffset=5,$
+                                yoffset=50,$  
+                                scr_xsize=2*304,$
+                                scr_ysize=2*256,$
+                                uname='display_data_base',$
+                                retain=2,$
+                                /BUTTON_EVENTS,$
+                                /MOTION_EVENTS)
+
+
+;INFORMATION ABOUT DISTANCES
+info_distance_base = widget_base(MAIN_BASE,$
+                                 xoffset=2,$
+                                 yoffset=568,$
+                                 scr_xsize=800,$
+                                 scr_ysize=60,$
+                                 frame=1)
+
+distance_sample_detector_das_label = widget_label(info_distance_base,$
+                                                  xoffset=5,$
+                                                  yoffset=0,$
+                                                  scr_ysize=30,$
+                                                  value='Distance sample - detector (DAS):')
+
+distanace_sample_detector_das = widget_label(info_distance_base,$
+                                             uname='distance_sample_detector_das',$
+                                             xoffset=220,$
+                                             yoffset=0,$
+                                             scr_xsize=150,$
+                                             scr_ysize=30,$
+                                             value='',$
+                                             /align_left)
+
+distance_sample_detector_nexus_label = widget_label(info_distance_base,$
+                                                    xoffset=5,$
+                                                    yoffset=25,$
+                                                    scr_ysize=30,$
+                                                    value='Distance sample - detector (NeXus):')
+
+distance_sample_detector_nexus = widget_label(info_distance_base,$
+                                              uname='distance_sample_detector_nexus',$
+                                              xoffset=230,$
+                                              yoffset=25,$
+                                              scr_xsize=150,$
+                                              scr_ysize=30,$
+                                              value='',$
+                                             /align_left)
+                                           
+
+
+;distance moderator detector (it's in fact mode to sample)
+xoff = 400
+distance_moderator_detector_das_label = widget_label(info_distance_base,$
+                                                  xoffset=5+xoff,$
+                                                  yoffset=0,$
+                                                  scr_ysize=30,$
+                                                  value='Distance moderator - sample (DAS):')
+
+distanace_moderator_detector_das = widget_label(info_distance_base,$
+                                             uname='distance_moderator_detector_das',$
+                                             xoffset=230+xoff,$
+                                             yoffset=0,$
+                                             scr_xsize=190,$
+                                             scr_ysize=30,$
+                                             value='',$
+                                               /align_left)
+
+distance_moderator_detector_nexus_label = widget_label(info_distance_base,$
+                                                    xoffset=5+xoff,$
+                                                    yoffset=25,$
+                                                    scr_ysize=30,$
+                                                    value='Distance moderator - sample (NeXus):')
+
+distance_moderator_detector_nexus = widget_label(info_distance_base,$
+                                                 uname='distance_moderator_detector_nexus',$
+                                                 xoffset=240+xoff,$
+                                                 yoffset=25,$
+                                                 scr_xsize=150,$
+                                                 scr_ysize=30,$
+                                                 value='',$
+                                                 /align_left)
+                                           
+
+
+;SELECT SIGNAL and BACKGROUND INTERFACE
+select_signal_base = widget_base(MAIN_BASE,$
+                                 xoffset=615,$
+                                 yoffset=495,$
+                                 scr_xsize=301,$
+                                 scr_ysize=58,$
+                                 frame=1)
+selection_title = widget_label(select_signal_base,$
+                               xoffset=5,$
+                               yoffset=5,$
+                               value='Selection:')
+selection_list = ['Signal ',$
+                  'Back_1 ',$
+                  'Back_2']
+selection_list_group= CW_BGROUP(select_signal_base,$ 
+                                selection_list,$
+                                /exclusive,$
+                                /RETURN_NAME,$
+                                XOFFSET=80,$
+                                YOFFSET=0,$
+                                SET_VALUE=0.0,$
+                                row=1,$
+                                UNAME='selection_list_group')
+
+clear_selection_button = widget_button(select_signal_base,$
+                                       uname='clear_selection_button',$
+                                       xoffset=15,$
+                                       yoffset=32,$
+                                       scr_xsize=120,$
+                                       value='CLEAR SELECTION',$
+                                       sensitive=0)
+
+save_selection_button = widget_button(select_signal_base,$
+                                      uname='save_selection_button',$
+                                      xoffset=155,$
+                                      yoffset=32,$
+                                      scr_xsize=120,$
+                                      value='SAVE SELECTION',$
+                                      sensitive=0)
+
+;keep current pid when opening other run number
+keep_current_selection_base = widget_base(MAIN_BASE,$
+                                          uname='keep_current_selection_base',$
+                                          xoffset=925,$
+                                          yoffset=495,$
+                                          scr_xsize=220,$
+                                          scr_ysize=58,$
+                                          frame=1,$
+                                          map=1)
+
+keep_selection_list = ['Signal ',$
+                       'Background']
+keep_selection_list_group= CW_BGROUP(keep_current_selection_base,$
+                                     keep_selection_list,$
+                                     /RETURN_NAME,$
+                                     /nonexclusive,$
+                                     XOFFSET=30,$
+                                     YOFFSET=25,$
+                                     row=1,$
+                                     set_value=[0,0],$
+                                     UNAME='keep_selection_list_group')
+
+keep_selection_label = widget_label(keep_current_selection_base,$
+                                    xoffset=5,$
+                                    yoffset=5,$
+                                    value='Selection(s) to keep:')
+
+
+;Selection or Info mode
+selection_mode_base = widget_base(MAIN_BASE,$
+                                  xoffset=1155,$
+                                  yoffset=495,$
+                                  scr_xsize=77,$
+                                  scr_ysize=58,$
+                                  frame=1)
+
+selection_mode_list = ['Select.',$
+                       'Info']
+selection_mode_group = CW_BGROUP(selection_mode_base,$ 
+                                 selection_mode_list,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=0,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
+                                  uname='selection_mode_group')
+
+;info drawing
+info_schema_base = widget_base(MAIN_BASE,$
+                               uname='info_schema_base',$
+                               xoffset=1240,$
+                               yoffset=495,$
+                               scr_xsize=100,$
+                               scr_ysize=58,$
+                               frame=0,$
+                              map=0)
+
+schema_drawing = widget_draw(info_schema_base,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=100,$
+                             scr_ysize=58,$
+                             uname='schema_drawing')
+
+;REF_M logo
+REF_M_logo_base = widget_base(MAIN_BASE,$
+                              uname='REF_M_logo_base',$
+                              xoffset=815,$
+                              yoffset=568,$
+                              scr_xsize=530,$
+                              scr_ysize=60,$
+                              map=1)
+
+
+REF_M_logo = widget_draw(REF_M_logo_base,$
+                         uname='REF_M_logo',$
+                         xoffset=0,$
+                         yoffset=0,$
+                         scr_xsize=530,$
+                         scr_ysize=60,$
+                         /MOTION_EVENTS)
+                         
+
+;x and y axis interaction box of data reduction plot
+x_y_axis_interaction_base = widget_base(main_base,$
+                                        uname='x_y_axis_interaction_base',$
+                                        xoffset=815,$
+                                        yoffset=568,$
+                                        scr_xsize=530,$
+                                        scr_ysize=60,$
+                                        map=0,$
+                                        frame=1)
+
+x_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=7,$
+                            value='X-axis:',$
+                            font='lucidasans-bold-10')
+
+axis_lin_log = ['lin',$
+                'log']
+x_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=0,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='x_axis_lin_log_REF')
+x_off_min = 150
+x_off_max = 275
+x_off_min_box = 185
+x_off_max_box = 310
+left_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_min,$
+                               yoffset=7,$
+                               value='Min:')
+
+left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                             uname='xmin',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+
+right_side_label_x = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=7,$
+                               value='Max:')
+right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                              uname='xmax',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+yoff = 32
+y_axis_label = widget_label(x_y_axis_interaction_base,$
+                            xoffset=5,$
+                            yoffset=4+yoff,$
+                            value='Y-axis:',$
+                            font='lucidasans-bold-10')
+
+y_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
+                                 axis_lin_log,$
+                                 /exclusive,$
+                                 /RETURN_NAME,$
+                                 XOFFSET=50,$
+                                 YOFFSET=yoff-3,$
+                                 SET_VALUE=0.0,$
+                                 row=1,$
+                                 uname='y_axis_lin_log_REF')
+
+left_side_label_y = widget_label(x_y_axis_interaction_base,$
+                                 xoffset=x_off_min,$
+                                 yoffset=5+yoff,$
+                                 value='Min:')
+
+left_side_text_y = widget_text(x_y_axis_interaction_base,$
+                             uname='ymin',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0+yoff,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left,$
+                             font='lucidasans-bold-10')
+
+right_side_label_y = widget_label(x_y_axis_interaction_base,$
+                               xoffset=x_off_max,$
+                               yoffset=5+yoff,$
+                               value='Max:')
+right_side_text_y = widget_text(x_y_axis_interaction_base,$
+                              uname='ymax',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0+yoff,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left,$
+                              font='lucidasans-bold-10')
+
+
+restore_button = widget_button(x_y_axis_interaction_base,$
+                               uname='restore_button',$
+                               xoffset=395,$
+                               yoffset=1,$
+                               scr_xsize=130,$
+                               scr_ysize=60,$
+                               value='RESTORE')
+
+;data_reduction and other_plots tab
+;DATA REDUCTION and PLOTS BASE
+xsize_of_tabs = 730
+ysize_of_tabs = 430
+data_reduction_plots_base = widget_base(MAIN_BASE,$
+                                        xoffset=615,$ ;615
+                                        yoffset=50,$   ;5
+                                        scr_xsize=xsize_of_tabs,$
+                                        scr_ysize=ysize_of_tabs)
+
+data_reduction_tab = widget_tab(data_reduction_plots_base,$
+                                uname='data_reduction_tab',$
+                                location=0,$
+                                xoffset=0,$
+                                yoffset=0,$
+                                scr_xsize=xsize_of_tabs,$
+                                scr_ysize=ysize_of_tabs,$
+                                /tracking_events)
+  
+;data reduction tab
+first_tab_base = widget_base(data_reduction_tab,$
+                                  uname='first_tab_base',$
+                                  TITLE='Data Reduction',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+data_reduction_base = widget_base(first_tab_base,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  scr_xsize=305,$
+                                  scr_ysize=390,$
+                                  frame=1)
+
+;Wavelength part (min, max, width)
+wavelength_label = widget_label(data_reduction_base,$
+                                uname='wavelength_label',$
+                                xoffset=10,$
+                                yoffset=3,$
+                                value='Wavelength')
+
+WAVELENGTH_base = widget_base(data_reduction_base,$
+                              UNAME='WAVELENGTH_LABEL',$
+                              XOFFSET=5,$
+                              YOFFSET=12,$
+                              scr_xsize=150,$
+                              scr_ysize=115,$
+                              frame=1)
+
+wavelength_frame_x_offset = 5
+wavelength_frame_y_offset = 20 
+
+;min
+min_y_offset = wavelength_frame_y_offset
+min_x_offset = wavelength_frame_x_offset
+WAVELENGTH_MIN_LABEL= widget_label(wavelength_base,$
+                                   UNAME='wavelength_min_label',$
+                                   XOFFSET=min_x_offset,$
+                                   YOFFSET=min_y_offset,$
+                                   VALUE="min")
+
+WAVELENGTH_MIN_TEXT = widget_text(wavelength_base,$
+                                  UNAME='wavelength_min_text',$
+                                  XOFFSET=min_x_offset+30,$
+                                  YOFFSET=min_y_offset-10,$
+                                  SCR_XSIZE=50,$
+                                  VALUE='0',$
+                                  /editable,$
+                                  /all_events,$
+                                 /no_newline)
+
+WAVELENGTH_MIN_A_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_MIN_A_LABEL',$
+                                     XOFFSET=min_x_offset+80,$
+                                     YOFFSET=min_y_offset,$
+                                     VALUE="Angstroms")
+
+; max
+max_y_offset = wavelength_frame_y_offset+30
+max_x_offset = wavelength_frame_x_offset   
+WAVELENGTH_MAX_LABEL= widget_label(wavelength_base,$
+                                   UNAME='WAVELENGTH_MAX_LABEL',$
+                                   XOFFSET=max_x_offset,$
+                                   YOFFSET=max_y_offset,$
+                                   VALUE="max")
+
+WAVELENGTH_MAX_TEXT = widget_text(wavelength_base,$
+                                  UNAME='wavelength_max_text',$
+                                  XOFFSET=max_x_offset+30,$
+                                  YOFFSET=max_y_offset-5,$
+                                  SCR_XSIZE=50,$
+                                  VALUE='10',$
+                                  /editable,$
+                                  /all_events)
+
+WAVELENGTH_MAX_A_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_MAX_A_LABEL',$
+                                     XOFFSET=max_x_offset+80,$
+                                     YOFFSET=max_y_offset,$
+                                     VALUE="Angstroms")
+
+; width
+width_y_offset =  wavelength_frame_y_offset +65
+width_x_offset = wavelength_frame_x_offset - 10
+WAVELENGTH_WIDTH_LABEL= widget_label(wavelength_base,$
+                                     UNAME='WAVELENGTH_WIDTH_LABEL',$
+                                     XOFFSET=width_x_offset,$
+                                     YOFFSET=width_y_offset,$
+                                     VALUE="width")
+
+WAVELENGTH_WIDTH_TEXT = widget_text(wavelength_base,$
+                                    UNAME='wavelength_width_text',$
+                                    XOFFSET=width_x_offset+40,$
+                                    YOFFSET=width_y_offset-5,$
+                                    SCR_XSIZE=50,$
+                                    VALUE='0.1',$
+                                    /editable,$
+                                    /all_events)
+
+WAVELENGTH_WIDTH_A_LABEL= widget_label(wavelength_base,$
+                                       UNAME='WAVELENGTH_WIDTH_A_LABEL',$
+                                       XOFFSET=width_x_offset+90,$
+                                       YOFFSET=width_y_offset,$
+                                       VALUE="Angstroms")
+
+;detector angle base
+detector_label = widget_label(data_reduction_base,$
+                              xoffset=165,$
+                              yoffset=3,$
+                              value='Detector angle')
+
+detector_base = widget_base(data_reduction_base,$
+                            uname='detector_base',$
+                            xoffset=160,$
+                            yoffset=12,$
+                            scr_xsize=135,$
+                            scr_ysize=75,$
+                            frame=1)
+
+DETECTOR_ANGLE_VALUE = widget_text(detector_base,$
+                                   UNAME='detector_angle_value',$
+                                   XOFFSET=0,$
+                                   YOFFSET=10,$
+                                   SCR_XSIZE=50,$
+                                   VALUE='0',$
+                                   /editable,$
+                                   /all_events)
+
+DETECTOR_ANGLE_ERR = widget_text(detector_base,$
+                                 UNAME='detector_angle_err',$
+                                 XOFFSET=80,$
+                                 YOFFSET=10,$
+                                 SCR_XSIZE=50,$
+                                 VALUE='0',$
+                                 /editable,$
+                                 /all_events)
+
+DETECTOR_ANGLE_PLUS_MINUS = widget_label(detector_base,$
+                                         UNAME='DETECTOR_ANGLE_PLUS_MINUS',$
+                                         XOFFSET=55,$
+                                         YOFFSET=15,$
+                                         VALUE='+/-')
+
+angle_units = ["radians","degres"]
+DETECTOR_ANGLE_UNITS = widget_droplist(detector_base,$
+                                       UNAME='detector_angle_units',$
+                                       XOFFSET=15,$
+                                       YOFFSET=40,$
+                                       VALUE=angle_units, $
+                                       title='')
+
+;signal Pid file
+signal_pid_file_button = widget_button(data_reduction_base,$
+                                       uname='signal_pid_file_button',$
+                                       xoffset=5,$
+                                       yoffset=135,$
+                                       value='Signal - Pid file',$
+                                       scr_xsize=137)
+
+signal_pid_text = widget_text(data_reduction_base,$
+                              uname='signal_pid_text',$
+                              xoffset=160,$
+                              yoffset=130,$
+                              scr_xsize=140,$
+                              /editable,$
+                              /all_events)
+
+ background_title = widget_label(data_reduction_base,$
+                                 xoffset=160,$
+                                 yoffse=100,$
+                                value='Background:')
+ background_list = ['Y',$
+                    'N']
+ background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                   background_list,$
+                                   /exclusive,$
+                                   /RETURN_NAME,$
+                                   XOFFSET=230,$
+                                   YOFFSET=95,$
+                                   SET_VALUE=0.0,$
+                                   row=1,$
+                                   uname='background_list_group')
+
+background_pid_file_button = widget_button(data_reduction_base,$
+                                             uname='background_pid_file_button',$
+                                             xoffset=5,$
+                                             yoffset=164,$
+                                             value='Background - Pid file')
+
+background_pid_text = widget_text(data_reduction_base,$
+                                  uname='background_pid_text',$
+                                  xoffset=160,$
+                                  yoffset=160,$
+                                  scr_xsize=140,$
+                                  value='',$
+                                  /align_left,$
+                                  /editable,$
+                                  /all_events)
+
+normalization_label = widget_label(data_reduction_base,$
+                                   xoffset=5,$
+                                   yoffset=196,$
+                                   value='Normalization:')
+
+normalization_list = ['Yes',$
+                      'No']
+normalization_list_group_REF_M = CW_BGROUP(data_reduction_base,$ 
+                                           normalization_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=90,$
+                                           YOFFSET=190,$
+                                           SET_VALUE=1.0,$
+                                           row=1,$
+                                           uname='normalization_list_group_REF_M')
+
+norm_run_number_base = widget_base(data_reduction_base,$
+                                   uname='norm_run_number_base',$
+                                   xoffset=175,$
+                                   yoffset=190,$
+                                   scr_xsize=200,$
+                                   scr_ysize=30,$
+                                   map=0)
+
+normalization_label = widget_label(norm_run_number_base,$
+                                   xoffset=0,$
+                                   yoffset=7,$
+                                   value='-> Run #')
+
+normalization_text = widget_text(norm_run_number_base,$
+                                 xoffset=52,$
+                                 yoffset=0,$
+                                 scr_xsize=73,$
+                                 value='',$
+                                 uname='normalization_text',$
+                                 /editable,$
+                                 /align_left,$
+                                 /all_events)
+
+;help window
+help_base = widget_base(data_reduction_base,$
+                        uname='help_base',$
+                        xoffset=3,$
+                        yoffset=223,$
+                        scr_xsize=140,$
+                        scr_ysize=30,$
+                        frame=1,$
+                        map=0)
+
+help_label = widget_label(help_base,$
+                          xoffset=5,$
+                          yoffset=5,$
+                          value='1600   or   1600-1620')
+
+;one or several runs to process in the same time
+runs_to_process_label = widget_label(data_reduction_base,$
+                                     uname='runs_to_process_label',$
+                                     xoffset=3,$
+                                     yoffset=233,$
+                                     scr_xsize=60,$
+                                     value=' 0 run #')
+
+list_value = (*global).initial_list_of_runs
+several_nexus_combobox = widget_combobox(data_reduction_base,$
+                                         uname='several_nexus_combobox',$
+                                          xoffset=65,$
+                                          yoffset=225,$
+                                          scr_ysize=30,$
+                                          scr_xsize=80,$
+                                          /editable,$
+                                          value=list_value)
+
+several_nexus_combobox_help = widget_button(data_reduction_base,$
+                                            uname='several_nexus_combobox_help',$
+                                            xoffset=148,$
+                                            yoffset=225,$
+                                            scr_xsize=25,$
+                                            scr_ysize=30,$
+                                            value='?',$
+                                            /pushbutton_events,$
+                                            tooltip='Click to see the format of input to use')
+
+
+;norm-bkg
+norm_background_title = widget_label(data_reduction_base,$
+                                     xoffset=5,$
+                                     yoffset=270,$
+                                     value='Norm. bkg.:')
+
+norm_background_list = ['Yes',$
+                        'No']
+norm_background_list_group = CW_BGROUP(data_reduction_base,$ 
+                                       norm_background_list,$
+                                       /exclusive,$
+                                       /RETURN_NAME,$
+                                       XOFFSET=80,$
+                                       YOFFSET=263,$
+                                       SET_VALUE=1.0,$
+                                       row=1,$
+                                       uname='norm_background_list_group')
+
+;intermediate files/plots
+intermediate_file_label = widget_button(data_reduction_base,$
+                                       xoffset=180,$
+                                       yoffset=233,$
+                                       value='Intermediate plots',$
+                                       uname='access_to_list_of_intermediate_plots_button')
+
+intermediate_file_output_list = ['Yes',$
+                                 'No ']
+intermediate_file_output_list_group = CW_BGROUP(data_reduction_base,$ 
+                                                intermediate_file_output_list,$
+                                                /exclusive,$
+                                                /RETURN_NAME,$
+                                                XOFFSET=190,$
+                                                YOFFSET=255,$
+                                                SET_VALUE=1.0,$
+                                                row=1,$
+                                          uname='intermediate_file_output_list_group_REF_M')
+
+intermediate_file_frame = widget_base(data_reduction_base,$
+                                      xoffset=177,$
+                                      yoffset=222,$
+                                      scr_xsize=122,$
+                                      scr_ysize=65,$
+                                      frame=1)
+
+;instrument_geometry base
+instrument_geometry_base = widget_base(data_reduction_base,$
+                                      xoffset=5,$
+                                      yoffset=290,$
+                                      scr_xsize=295,$
+                                      scr_ysize=40,$
+                                      uname='instrument_geometry_base',$
+                                      map=0)
+
+instrument_geometry_label = widget_label(instrument_geometry_base,$
+                                         uname='instrument_geometry_label',$
+                                         xoffset=5,$
+                                         yoffset=13,$
+                                         value='Overwrite instrument geometry: ')
+
+instrument_geometry_list_group = CW_BGROUP(instrument_geometry_base,$ 
+                                           intermediate_file_output_list,$
+                                           /exclusive,$
+                                           /RETURN_NAME,$
+                                           XOFFSET=195,$
+                                           YOFFSET=7,$
+                                           SET_VALUE=1.0,$
+                                           row=1,$
+                                           uname='instrument_geometry_list_group')
+
+;start data reduction base
+start_data_reduction_base = widget_base(data_reduction_base,$
+                                        xoffset=5,$
+                                        yoffset=290,$
+                                        scr_xsize=295,$
+                                        scr_ysize=40)
+
+start_data_reduction_button = widget_button(start_data_reduction_base,$
+                                            xoffset=0,$
+                                            yoffset=5,$
+                                            scr_xsize=190,$
+                                            scr_ysize=35,$
+                                            value='START DATA REDUCTION',$
+                                            uname='start_data_reduction_button',$
+                                            sensitive=0)
+
+;overwrite instrument geometry 
+instrument_geometry_button = widget_button(start_data_reduction_base,$
+                                           xoffset=195,$
+                                           yoffset=5,$
+                                           scr_xsize=100,$
+                                           scr_ysize=35,$
+                                           value='Instr. Geom.',$
+                                           uname='instrument_geometry_button',$
+                                           sensitive=1)
+
+
+
+;info text box 
+info_text_REF_M = widget_text(data_reduction_base,$
+                              xoffset=5,$
+                              yoffset=265+65,$
+                              scr_xsize=295,$
+                              scr_ysize=55,$
+                              /scroll,$
+                              /wrap,$
+                              uname='info_text')
+
+data_reduction_plot = widget_draw(first_tab_base,$
+                                  xoffset=315,$
+                                  yoffset=5,$
+                                  scr_xsize=405,$
+                                  scr_ysize=393,$
+                                  uname='data_reduction_plot')
+
+;selection boxes info tab
+fourth_tab_base = widget_base(data_reduction_tab,$
+                                  uname='fourth_tab_base',$
+                                  TITLE='Selection infos',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+
+selection_tab = widget_tab(fourth_tab_base,$
+                                  location=0,$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=xsize_of_tabs-10,$
+                                  scr_ysize=ysize_of_tabs-30)
+  
+
+;signal_selection_tab
+signal_tab_base = widget_base(selection_tab,$
+                              uname='signal_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_info = widget_text(signal_tab_base,$
+                          uname='signal_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;background_1_selection_tab
+background_1_tab_base = widget_base(selection_tab,$
+                                    uname='background_1_tab_base',$
+                                    TITLE='',$
+                                    XOFFSET=0,$
+                                    YOFFSET=0)
+
+background_1_info = widget_text(background_1_tab_base,$
+                          uname='background_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;background_2_selection_tab
+background_2_tab_base = widget_base(selection_tab,$
+                                  uname='background_2_tab_base',$
+                                  TITLE='',$
+                                  XOFFSET=0,$
+                                  YOFFSET=0)
+
+background_2_info = widget_text(background_2_tab_base,$
+                          uname='background_2_info',$
+                          xoffset=0,$
+                          yoffset=5,$
+                          scr_xsize=710,$
+                          scr_ysize=370,$
+                          /wrap,$
+                          /scroll)
+
+;other plots tab
+other_plots_base = widget_base(data_reduction_tab,$
+                               uname='other_plots_base',$
+                               TITLE='Extra plots',$
+                               XOFFSET=0,$
+                               YOFFSET=0)
+
+screen_base = widget_base(other_plots_base,$
+                          uname='screen_base',$
+                          xoffset=0,$
+                          yoffset=0,$
+                          scr_xsize=730,$
+                          scr_ysize=400,$
+                          map=1)
+
+other_plots_tab = widget_tab(other_plots_base,$
+                             uname='other_plots_tab',$
+                             location=0,$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=xsize_of_tabs-10,$
+                             scr_ysize=ysize_of_tabs-30,$
+                             /tracking_events)
+
+;signal region plot
+signal_region_tab_base = widget_base(other_plots_tab,$
+                              uname='signal_region_tab_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+signal_region_draw = widget_draw(signal_region_tab_base,$
+                                 uname='signal_region_draw',$
+                                 xoffset=2,$
+                                 yoffset=2,$
+                                 scr_xsize=710,$
+                                 scr_ysize=383)
+
+;background summed TOF plot
+background_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='background_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+background_summed_tof_draw = widget_draw(background_summed_tof_tab_base,$
+                                         uname='background_summed_tof_draw',$
+                                         xoffset=2,$
+                                         yoffset=2,$
+                                         scr_xsize=710,$
+                                         scr_ysize=383)
+
+;normalization region summed tof plot
+normalization_region_summed_tof_tab_base = widget_base(other_plots_tab,$
+                              uname='normalization_region_summed_tof_base',$
+                              TITLE='',$
+                              XOFFSET=0,$
+                              YOFFSET=0)
+
+normalization_region_summed_tof_draw = widget_draw(normalization_region_summed_tof_tab_base,$
+                                         uname='normalization_region_summed_tof_draw',$
+                                                   xoffset=2,$
+                                                   yoffset=2,$
+                                                   scr_xsize=710,$
+                                                   scr_ysize=383)
+
+;background region from normalization summed tof
+background_region_from_normalization_region_summed_tof_tab_base = $
+  widget_base(other_plots_tab,$
+              uname='background_region_from_normalization_region_summed_tof_base',$
+              TITLE='',$
+              XOFFSET=0,$
+              YOFFSET=0)
+
+background_region_from_normalization_region_summed_tof_draw = $
+  widget_draw($
+               background_region_from_normalization_region_summed_tof_tab_base,$
+               uname='background_region_from_normalization_region_summed_tof_draw',$
+               xoffset=2,$
+               yoffset=2,$
+               scr_xsize=710,$
+               scr_ysize=383)
+
+;log book tab
+log_book_base = widget_base(data_reduction_tab,$
+                            uname='log_book_base',$
+                            TITLE='Log book',$
+                            XOFFSET=0,$
+                            YOFFSET=0)
+
+log_book_text_REF_M = widget_text(log_book_base,$
+                                  uname='log_book_text',$
+                                  scr_xsize=720,$
+                                  scr_ysize=395,$
+                                  xoffset=5,$
+                                  yoffset=5,$
+                                  /scroll,$
+                                  /wrap)
+
+FILE_MENU_REF_M = Widget_Button(WID_BASE_0_MBAR, $
+                                UNAME='FILE_MENU_REF_M',$
+                                /MENU,$
+                                VALUE='File')
+
+working_path = widget_button(FILE_MENU_REF_M,$
+                             uname='working_path',$
+                             value='working Path...')
+
+CTOOL_MENU = Widget_Button(FILE_MENU_REF_M, UNAME='CTOOL_MENU'  $
+                           ,VALUE='Color Tool...')
+
+
+EXIT_MENU_REF_M = Widget_Button(FILE_MENU_REF_M, UNAME='EXIT_MENU_REF_M'  $
+                                ,VALUE='Exit')
+
+
+idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
+                               UNAME='idl_tools_menu',$
+                               /MENU,$
+                               VALUE='sns_idl_tools')
+
+sns_idl_button = widget_button(idl_tools_menu,$
+                               value="launch sns_idl_tools...",$
+                               uname="sns_idl_button")
+
+Widget_Control, /REALIZE, MAIN_BASE
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+sns_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/sns_logo.bmp"
+id = widget_info(main_base,find_by_uname="sns_logo_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(sns_logo)
+tv, image,0,0,/true
+
+
+REF_M_logo=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/REF_M_logo.bmp"
+id = widget_info(main_base,find_by_uname="REF_M_logo")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(REF_M_logo)
+tv, image,0,0,/true
+
+detector_layout=$
+  "/SNS/users/j35/SVN/HistoTool/trunk/gui/images/detector_layout.bmp"
+id = widget_info(main_base,find_by_uname="schema_drawing")
+WIDGET_CONTROL, id, GET_VALUE=id_value
+wset, id_value
+image = read_bmp(detector_layout)
+tv, image,0,0,/true
+
+end
+
+
+
+
+
+
+
+
+
+;
+; Empty stub procedure used for autoloading.
+;
+pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+wTLC, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_, 1, user ;GUI for REF_M
+end
+
+
+
+
+
