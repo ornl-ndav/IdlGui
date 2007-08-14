@@ -1,8 +1,8 @@
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 .run system_utilities.pro
+
+cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/utilities/"
 .run nexus_utilities.pro
-.run prenexus_utilities.pro
-.run parsing_functions.pro
 
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiMainTab.pro
@@ -22,6 +22,12 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiSettingsTab.pro
 	
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
+.run ref_reduction_get.pro
+.run ref_reduction_put.pro
+
+
+.run ref_reduction_LoadDataFile.pro
+
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
 .run MainBaseEvent.pro

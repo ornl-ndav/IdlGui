@@ -14,8 +14,8 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ()
-
+global = ptr_new ({instrument : 'REF_L'$ ;name of the current selected REF instrument
+                  })
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -33,6 +33,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          SPACE=0,$
                          XPAD=0,$
                          YPAD=0)
+
+
+;attach global structure with widget ID of widget main base widget ID
+widget_control, MAIN_BASE, set_uvalue=global
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize
