@@ -37,7 +37,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize
 
-
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 

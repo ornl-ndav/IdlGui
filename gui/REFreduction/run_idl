@@ -7,6 +7,15 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
+.run MakeGuiLoadDataNormalizationTab.pro
+.run MakeGuiLoadDataTab.pro
+.run MakeGuiLoadData1D2DTab.pro
+.run MakeGuiLoadData1DTab.pro
+.run MakeGuiLoadData2DTab.pro
+.run MakeGuiLoadNormalizationTab.pro
+.run MakeGuiLoadNormalization1D2DTab.pro
+.run MakeGuiLoadNormalization1DTab.pro
+.run MakeGuiLoadNormalization2DTab.pro
 .run MakeGuiReduceTab.pro
 .run MakeGuiPlotsTab.pro
 .run MakeGuiLogBookTab.pro

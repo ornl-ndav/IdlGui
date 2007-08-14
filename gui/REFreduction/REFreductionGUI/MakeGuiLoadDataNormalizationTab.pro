@@ -1,12 +1,15 @@
-PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE
+PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE,$
+                                     MainBaseSize,$
+                                     D_DD_TabSize,$
+                                     D_DD_TabTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-DataNormalizationTabSize = [0,0,1000,600]
+DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-DataTitle          = '       DATA       '
-NormalizationTitle = '  NORMALIZATION   '
+DataTitle          = '         D A T A          '
+NormalizationTitle = '      N O R M A L I Z A T I O N      '
 
 ;build widgets
 DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
@@ -20,12 +23,17 @@ DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
 
 ;build DATA tab
 MakeGuiLoadDataTab, DataNormalizationTab,$
-                    DataNormalizationTabSize,$
-                    Datatitle
+  DataNormalizationTabSize,$
+  DataTitle,$
+  D_DD_TabSize,$
+  D_DD_TabTitle
+
 
 ;build NORMALIZATION tab
 MakeGuiLoadNormalizationTab, DataNormalizationTab,$
-                             DataNormalizationTabSize,$
-                             NormalizationTitle
+  DataNormalizationTabSize,$
+  NormalizationTitle,$
+  D_DD_TabSize,$
+  D_DD_TabTitle
 
 END
