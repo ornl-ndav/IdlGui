@@ -22,9 +22,12 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiSettingsTab.pro
 	
 cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
+.run ref_reduction_string.pro
 .run ref_reduction_get.pro
 .run ref_reduction_put.pro
 
+
+.run ref_reduction_DumpBinaryData.pro
 
 .run ref_reduction_LoadDataFile.pro
 
