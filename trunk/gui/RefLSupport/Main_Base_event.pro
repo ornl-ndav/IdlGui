@@ -105,6 +105,10 @@ PRO MAIN_BASE_event, Event
          manualCEfitting, Event
      end
        
+     ;manual scaling of CE file
+     Widget_Info(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): begin
+         manualCEscaling, Event
+     end
 
 ;--step 3--
      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
