@@ -7,8 +7,8 @@ widget_control,id,get_uvalue=global
 ;get Data Run Number from DataTextField
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
 LogBookText = '-> Openning Run Number: ' + DataRunNumber + '...'
-putLogBookMessage, Event, LogBookText, 0
-putDataLogBookMessage, Event, LogBookText, 0
+putLogBookMessage, Event, LogBookText
+putDataLogBookMessage, Event, LogBookText
 
 if (DataRunNumber EQ '') then begin ;Run number field is empty
 
@@ -20,7 +20,7 @@ endif else begin
     widget_control,/hourglass
 
     LogBookText = '----> Checking if NeXus run number exist....'
-    putLogBookMessage, Event, LogBookText,1
+    putLogBookMessage, Event, LogBookText, Append=1
 
 ;check if nexus exist and if it does, returns the full path
         
@@ -34,11 +34,17 @@ endif else begin
     
     if (~isNeXusFound) then begin ;NeXus has not been found
 
+;get log book full text
         LogBookText = getLogBookText(Event)
-        help, LogBookText
+;tells the user that the NeXus file has not been found
+        putTextAtEndOfLogBookLastLine, Event, LogBookText, 'FAILED'
 
     endif else begin ;NeXus has been found
 
+;get log book full text
+        LogBookText = getLogBookText(Event)
+;tells the user that the NeXus file has been found
+        putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK'
 
     endelse
 
