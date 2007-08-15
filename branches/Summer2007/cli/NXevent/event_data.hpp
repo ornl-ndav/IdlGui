@@ -57,15 +57,22 @@ std::string seconds_to_iso8601(uint32_t seconds);
  * \class EventData
  * \brief Holds all the data from the event file and
  *        includes the functions for working on the
- *        data
+ *        data. The template parameters are EventNumT
+ *        and PulseNumT. These parameters describe what
+ *        format the event numbers and pulse numbers 
+ *        should be stored and written in. For exampls,
+ *        Since the time of pulse offsets are kept 
+ *        in nanoseconds, one might want to store the 
+ *        pulse information in uint64s to avoid an overflow. 
  */
-template <typename NumT>
+template <typename EventNumT, typename PulseNumT>
 class EventData
 {
   private:
-    std::vector<NumT> pixel_id_map;
+    std::vector<EventNumT> pixel_id_map;
     std::string pulse_time_offset;
-    std::vector<Bank<NumT> *> bank_map;
+    std::vector<Bank<EventNumT, PulseNumT> *> banks;
+    std::vector<Bank<EventNumT, PulseNumT> *> bank_map;
     std::vector<int> bank_numbers;
    
     /**
@@ -117,7 +124,7 @@ class EventData
      * \param bank_number The bank number of the data being written.
      */
     void write_private_data(NexusUtil & nexus_util, 
-                            std::vector<NumT> & nx_data,
+                            std::vector<uint32_t> & nx_data,
                             std::string & data_name,
                             const int bank_number);
 

@@ -108,7 +108,7 @@ int main(int32_t argc,
     }
 
   // Create a bank of information for the nexus file  
-  EventData <uint32_t>event_data;
+  EventData <uint32_t, uint32_t>event_data;
   
   // Create the pixel map
   if (config.mapping_file != "")

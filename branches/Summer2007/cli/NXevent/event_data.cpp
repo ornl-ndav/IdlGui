@@ -25,37 +25,37 @@ using std::ifstream;
 // Declaring these functions prevent from having to include 
 // event_data.cpp in event_data.hpp
 template 
-void EventData<uint32_t>::read_data(const string & event_file,
+void EventData<uint32_t, uint32_t>::read_data(const string & event_file,
                                     const string & pulse_id_file,
                                     const string & bank_file);
 
 template 
-void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util,
+void EventData<uint32_t, uint32_t>::write_nexus_file(NexusUtil & nexus_util,
                                            const string & pulse_id_file);
 
 template 
-void EventData<uint32_t>::write_nexus_file(NexusUtil & nexus_util);
+void EventData<uint32_t, uint32_t>::write_nexus_file(NexusUtil & nexus_util);
 
 template 
-void EventData<uint32_t>::read_data(const string & event_file,
+void EventData<uint32_t, uint32_t>::read_data(const string & event_file,
                                     const string & bank_file);
 
 template 
-void EventData<uint32_t>::create_pixel_map(const string & mapping_file);
+void EventData<uint32_t, uint32_t>::create_pixel_map(const string & mapping_file);
 
 template 
-EventData<uint32_t>::EventData();
+EventData<uint32_t, uint32_t>::EventData();
 
 template 
-EventData<uint32_t>::~EventData();
+EventData<uint32_t, uint32_t>::~EventData();
 
-template<typename NumT>
-EventData<NumT>::EventData()
+template<typename EventNumT, typename PulseNumT>
+EventData<EventNumT, PulseNumT>::EventData()
 {
 }
 
-template<typename NumT>
-EventData<NumT>::~EventData()
+template<typename EventNumT, typename PulseNumT>
+EventData<EventNumT, PulseNumT>::~EventData()
 {
 }
 
@@ -71,14 +71,14 @@ inline e_nx_data_type typename_to_nexus_type<int32_t>()
   return INT32;
 }
 
-template<typename NumT>
+template<typename EventNumT, typename PulseNumT>
 inline e_nx_data_type typename_to_nexus_type()
 {
   throw runtime_error("Invalid nexus data type");
 }
 
-template <typename NumT>
-string EventData<NumT>::get_nx_data_name(const e_data_name nx_data_type)
+template <typename EventNumT, typename PulseNumT>
+string EventData<EventNumT, PulseNumT>::get_nx_data_name(const e_data_name nx_data_type)
 {
   if (nx_data_type == TOF)
     {
@@ -102,8 +102,8 @@ string EventData<NumT>::get_nx_data_name(const e_data_name nx_data_type)
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::write_attr(NexusUtil & nexus_util, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::write_attr(NexusUtil & nexus_util, 
                                  const string & attr_name,
                                  const string & attr_value,
                                  const e_data_name nx_data_name,
@@ -141,8 +141,8 @@ bool is_positive_int(string str)
   return true;
 }
 
-template <typename NumT>
-void EventData<NumT>::add_to_bank_map(const string & number, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::add_to_bank_map(const string & number, 
                                       const int bank_number)
 {
 cout << "adding num " << number << endl;
@@ -159,8 +159,8 @@ cout << "adding num " << number << endl;
   this->bank_map[num] = this->banks[bank_number];
 }
 
-template <typename NumT>
-void EventData<NumT>::add_to_bank_map(const string & start, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::add_to_bank_map(const string & start, 
                                       const string & stop, 
                                       int bank_number)
 {
@@ -168,8 +168,8 @@ cout << "adding nums " << start << " - " << stop << endl;
   this->add_to_bank_map(start, stop, "1", bank_number);
 }
 
-template <typename NumT>
-void EventData<NumT>::add_to_bank_map(const string & start, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::add_to_bank_map(const string & start, 
                                       const string & stop, 
                                       const string & step, 
                                       const int bank_number)
@@ -208,8 +208,8 @@ cout << "adding nums " << start << " - " << stop  << " with step " << step << en
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::create_arbitrary(xmlNodePtr bank_node,
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::create_arbitrary(xmlNodePtr bank_node,
                                        int bank_number)
 {
   if (bank_node->children == NULL ||
@@ -294,8 +294,8 @@ void EventData<NumT>::create_arbitrary(xmlNodePtr bank_node,
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::create_cont_list(xmlNodePtr bank_node,
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::create_cont_list(xmlNodePtr bank_node,
                                        int bank_number)
 {
   string start;
@@ -338,8 +338,8 @@ void EventData<NumT>::create_cont_list(xmlNodePtr bank_node,
   this->add_to_bank_map(start, stop, bank_number);
 }
 
-template <typename NumT>
-void EventData<NumT>::create_step_list(xmlNodePtr bank_node,
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::create_step_list(xmlNodePtr bank_node,
                                        int bank_number)
 {
   string start;
@@ -394,8 +394,8 @@ void EventData<NumT>::create_step_list(xmlNodePtr bank_node,
   this->add_to_bank_map(start, stop, step, bank_number);
 }
 
-template <typename NumT>
-void EventData<NumT>::parse_bank_file(const string & bank_file)
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::parse_bank_file(const string & bank_file)
 {
   xmlDocPtr doc = NULL;
   xmlLineNumbersDefault(1);
@@ -442,7 +442,7 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
                 }
               this->bank_numbers.push_back(
                 bank_number);
-              this->banks[bank_number] = new Bank<NumT>();
+              this->banks[bank_number] = new Bank<EventNumT, PulseNumT>();
             }
           else if (xmlStrcmp(bank_node->name,
                    (const xmlChar *)"step_list") == 0)
@@ -475,8 +475,8 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
   xmlCleanupParser();
 }
 
-template <typename NumT>
-const string & EventData<NumT>::get_pulse_time_offset(void)
+template <typename EventNumT, typename PulseNumT>
+const string & EventData<EventNumT, PulseNumT>::get_pulse_time_offset(void)
 {
   if (this->pulse_time_offset.empty())
     {
@@ -488,8 +488,8 @@ const string & EventData<NumT>::get_pulse_time_offset(void)
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util)
 {
   // First layout the nexus file
   nexus_util.make_group("entry", "NXentry");
@@ -518,8 +518,8 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util)
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util, 
                                        const string & pulse_id_file)
 {
   // First layout the nexus file
@@ -556,8 +556,8 @@ void EventData<NumT>::write_nexus_file(NexusUtil & nexus_util,
     }
 }
 
-template <typename NumT>
-void EventData<NumT>::open_bank(NexusUtil & nexus_util,
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::open_bank(NexusUtil & nexus_util,
                                 const int bank_number)
 {
   stringstream bank_num;
@@ -565,24 +565,24 @@ void EventData<NumT>::open_bank(NexusUtil & nexus_util,
   nexus_util.open_path(bank_num.str());
 }
 
-template <typename NumT>
-void EventData<NumT>::write_private_data(NexusUtil & nexus_util,
-                                         vector<NumT> & nx_data, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::write_private_data(NexusUtil & nexus_util,
+                                         vector<uint32_t> & nx_data, 
                                          string & data_name,
                                          const int bank_number)
 {
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
-  e_nx_data_type nexus_data_type = typename_to_nexus_type<NumT>();
+  e_nx_data_type nexus_data_type = typename_to_nexus_type<EventNumT>();
   this->open_bank(nexus_util, bank_number);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
   nexus_util.put_data_with_slabs(nx_data, 16777215);
 }
 
-template <typename NumT>
-void EventData<NumT>::write_data(NexusUtil & nexus_util, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::write_data(NexusUtil & nexus_util, 
                                  const e_data_name nx_data_name,
                                  const int bank_number)
 {
@@ -625,7 +625,6 @@ void EventData<NumT>::write_data(NexusUtil & nexus_util,
     }
 }
  
-template <typename NumT>
 void open_file_and_get_sizes(ifstream & fp,
                              const string & file_name,
                              size_t & file_size, 
@@ -643,22 +642,22 @@ void open_file_and_get_sizes(ifstream & fp,
     }
 
   fp.seekg(0, std::ios::end);
-  file_size = fp.tellg() / sizeof(NumT);
+  file_size = fp.tellg() / sizeof(uint32_t);
 
   buffer_size = (file_size < BLOCK_SIZE) ?
                   file_size : BLOCK_SIZE;
 }
 
-template <typename NumT>
-void EventData<NumT>::create_pixel_map(const string & mapping_file)
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::create_pixel_map(const string & mapping_file)
 {
   size_t file_size;
   size_t buffer_size;
   ifstream file;
-  open_file_and_get_sizes<NumT>(file,
-                                mapping_file,
-                                file_size,
-                                buffer_size);
+  open_file_and_get_sizes(file,
+                          mapping_file,
+                          file_size,
+                          buffer_size);
   
   // Go to the start of file and begin reading
   file.seekg(0, std::ios::beg);
@@ -667,7 +666,7 @@ void EventData<NumT>::create_pixel_map(const string & mapping_file)
   while(offset < file_size)
     {
       file.read(reinterpret_cast<char *>(buffer), 
-                buffer_size * sizeof(NumT));
+                buffer_size * sizeof(uint32_t));
 
       // For each mapping index, map the pixel id
       // in the mapping file to that index
@@ -703,30 +702,30 @@ string seconds_to_iso8601(uint32_t seconds)
   return time;  
 }
 
-template <typename NumT>
-void EventData<NumT>::read_data(const string & event_file, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::read_data(const string & event_file, 
                                 const string & bank_file)
 {
   // Open the event file and get the file and buffer sizes
   size_t event_file_size;
   size_t event_buffer_size;
   ifstream event_fp; 
-  open_file_and_get_sizes<NumT>(event_fp,
-                                event_file,
-                                event_file_size,
-                                event_buffer_size);
+  open_file_and_get_sizes(event_fp,
+                          event_file,
+                          event_file_size,
+                          event_buffer_size);
 
   // Parse the bank file and fill in the banking map
   this->parse_bank_file(bank_file);
 
   // Go to the start of file and begin reading
   event_fp.seekg(0, std::ios::beg);
-  NumT event_buffer[BLOCK_SIZE];
+  uint32_t event_buffer[BLOCK_SIZE];
   size_t event_fp_offset = 0;
   while(event_fp_offset < event_file_size)
     {
       event_fp.read(reinterpret_cast<char *>(event_buffer), 
-                    event_buffer_size * sizeof(NumT));
+                    event_buffer_size * sizeof(uint32_t));
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
@@ -736,7 +735,7 @@ void EventData<NumT>::read_data(const string & event_file,
           if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              Bank<NumT> *bank = this->bank_map[*(event_buffer + event_i + 1)];
+              Bank<EventNumT, PulseNumT> *bank = this->bank_map[*(event_buffer + event_i + 1)];
              
               // Put the pixel ids and time of flights in their proper bank 
               bank->tof.push_back(*(event_buffer + event_i));
@@ -757,48 +756,48 @@ void EventData<NumT>::read_data(const string & event_file,
   event_fp.close();
 }
 
-template <typename NumT>
-void EventData<NumT>::read_data(const string & event_file, 
+template <typename EventNumT, typename PulseNumT>
+void EventData<EventNumT, PulseNumT>::read_data(const string & event_file, 
                                 const string & pulse_id_file,
                                 const string & bank_file)
 {
-  NumT event_buffer[BLOCK_SIZE];
-  NumT pulse_buffer[BLOCK_SIZE];
+  uint32_t event_buffer[BLOCK_SIZE];
+  uint32_t pulse_buffer[BLOCK_SIZE];
 
   // Open the event file and determine file size and buffer size
   size_t event_file_size;
   size_t event_buffer_size;
   ifstream event_fp;
-  open_file_and_get_sizes<NumT>(event_fp,
-                                event_file,
-                                event_file_size,
-                                event_buffer_size);
+  open_file_and_get_sizes(event_fp,
+                          event_file,
+                          event_file_size,
+                          event_buffer_size);
 
   // Open the pulse id file and determine file size and buffer size
   size_t pulse_file_size;
   size_t pulse_buffer_size; 
   ifstream pulse_fp; 
-  open_file_and_get_sizes<NumT>(pulse_fp,
-                                pulse_id_file,
-                                pulse_file_size,
-                                pulse_buffer_size);
+  open_file_and_get_sizes(pulse_fp,
+                          pulse_id_file,
+                          pulse_file_size,
+                          pulse_buffer_size);
 
   // Get the first block from the pulse id file and read in the initial 
   // values
   pulse_fp.seekg(0, std::ios::beg);
   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), 
-                pulse_buffer_size * sizeof(NumT));
+                pulse_buffer_size * sizeof(uint32_t));
 
   // Get the first time from the pulse id and use this as the offset
-  NumT init_seconds = static_cast<NumT>(*(pulse_buffer + 1));
+  uint32_t init_seconds = static_cast<uint32_t>(*(pulse_buffer + 1));
   this->pulse_time_offset = seconds_to_iso8601(init_seconds);
 
   // Get the initial time offset of the event
-  NumT event_time_offset = static_cast<NumT>(*(pulse_buffer));  
+  uint32_t event_time_offset = static_cast<uint32_t>(*(pulse_buffer));  
 
   // Since the first pulse offset is zero and doesn't matter, skip to the 
   // next one and start with it.
-  NumT pulse_index = static_cast<NumT>(*(pulse_buffer + 6));
+  uint32_t pulse_index = static_cast<uint32_t>(*(pulse_buffer + 6));
 
   // Parse configuration file and read in the bank map
   this->parse_bank_file(bank_file);
@@ -813,7 +812,7 @@ void EventData<NumT>::read_data(const string & event_file,
   while(event_fp_offset < event_file_size)
     {
       event_fp.read(reinterpret_cast<char *>(event_buffer),
-                    event_buffer_size * sizeof(NumT));
+                    event_buffer_size * sizeof(uint32_t));
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
@@ -824,9 +823,9 @@ void EventData<NumT>::read_data(const string & event_file,
           if (event_number == pulse_index)
             {
               event_time_offset = 
-                ((static_cast<NumT>(*(pulse_buffer + pulse_buf_i + 1))
+                ((static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i + 1))
                 * NANOSECS_PER_SEC)
-                + static_cast<NumT>(*(pulse_buffer + pulse_buf_i)))
+                + static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i)))
                 - ((init_seconds * NANOSECS_PER_SEC));
               pulse_buf_i += 4;
               if (pulse_buf_i == pulse_buffer_size)
@@ -838,16 +837,16 @@ void EventData<NumT>::read_data(const string & event_file,
                       pulse_buffer_size = pulse_file_size - pulse_fp_offset;
                     }
                   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer),
-                                pulse_buffer_size * sizeof(NumT));
+                                pulse_buffer_size * sizeof(uint32_t));
                 }
-              pulse_index = static_cast<NumT>(*(pulse_buffer + pulse_buf_i + 2));
+              pulse_index = static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i + 2));
             }
 
           // Filter out error codes
           if ((*(event_buffer + event_buf_i + 1) & ERROR) != ERROR)
             {
               // Get the proper bank from the bank map based on the pixel id
-              Bank<NumT> *bank = this->bank_map[*(event_buffer + event_buf_i + 1)];
+              Bank<EventNumT, PulseNumT> *bank = this->bank_map[*(event_buffer + event_buf_i + 1)];
              
               // Place the pixel id and time of flight in the appropriate bank
               bank->tof.push_back(*(event_buffer + event_buf_i));
