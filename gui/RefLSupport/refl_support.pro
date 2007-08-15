@@ -5,7 +5,7 @@ Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callbac
 ;define initial global values - these could be input via external file or other means
 
 ;get ucams of user if running on linux 
-;and set ucams to 'j35' if runningon darwin
+;and set ucams to 'j35' if running on darwin
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
