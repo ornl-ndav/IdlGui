@@ -624,7 +624,8 @@ void EventData<EventNumT, PulseNumT>::write_data(NexusUtil & nexus_util,
       throw runtime_error("Invalid enumerated data type");
     }
 }
- 
+
+template<typename DataT> 
 void open_file_and_get_sizes(ifstream & fp,
                              const string & file_name,
                              size_t & file_size, 
@@ -642,7 +643,7 @@ void open_file_and_get_sizes(ifstream & fp,
     }
 
   fp.seekg(0, std::ios::end);
-  file_size = fp.tellg() / sizeof(uint32_t);
+  file_size = fp.tellg() / sizeof(DataT);
 
   buffer_size = (file_size < BLOCK_SIZE) ?
                   file_size : BLOCK_SIZE;
@@ -654,10 +655,10 @@ void EventData<EventNumT, PulseNumT>::create_pixel_map(const string & mapping_fi
   size_t file_size;
   size_t buffer_size;
   ifstream file;
-  open_file_and_get_sizes(file,
-                          mapping_file,
-                          file_size,
-                          buffer_size);
+  open_file_and_get_sizes<uint32_t>(file,
+                                    mapping_file,
+                                    file_size,
+                                    buffer_size);
   
   // Go to the start of file and begin reading
   file.seekg(0, std::ios::beg);
@@ -710,37 +711,39 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
   size_t event_file_size;
   size_t event_buffer_size;
   ifstream event_fp; 
-  open_file_and_get_sizes(event_fp,
-                          event_file,
-                          event_file_size,
-                          event_buffer_size);
+  open_file_and_get_sizes<EventLayout >(event_fp,
+                                 event_file,
+                                 event_file_size,
+                                 event_buffer_size);
 
   // Parse the bank file and fill in the banking map
   this->parse_bank_file(bank_file);
 
   // Go to the start of file and begin reading
   event_fp.seekg(0, std::ios::beg);
-  uint32_t event_buffer[BLOCK_SIZE];
+  EventLayout event_buffer[BLOCK_SIZE];
   size_t event_fp_offset = 0;
   while(event_fp_offset < event_file_size)
     {
       event_fp.read(reinterpret_cast<char *>(event_buffer), 
-                    event_buffer_size * sizeof(uint32_t));
+                    event_buffer_size * sizeof(EventLayout));
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
-      for(size_t event_i = 0; event_i < event_buffer_size; event_i+=2)
+      for(size_t event_i = 0; event_i < event_buffer_size; event_i++)
         {
+          EventLayout event = *(event_buffer + event_i);
           // Filter out error codes
-          if ((*(event_buffer + event_i + 1) & ERROR) != ERROR)
+          if ((static_cast<EventNumT>(event.pixel_id) & ERROR) != ERROR)
             {
               // Use pointer arithmetic for speed
-              Bank<EventNumT, PulseNumT> *bank = this->bank_map[*(event_buffer + event_i + 1)];
+              Bank<EventNumT, PulseNumT> *bank = 
+                this->bank_map[static_cast<EventNumT>(event.pixel_id)];
              
               // Put the pixel ids and time of flights in their proper bank 
-              bank->tof.push_back(*(event_buffer + event_i));
+              bank->tof.push_back(static_cast<EventNumT>(event.tof));
               bank->pixel_id.push_back(
-                this->pixel_id_map[*(event_buffer + event_i + 1)]);
+                this->pixel_id_map[static_cast<EventNumT>(event.pixel_id)]);
             }
         }
 
@@ -761,73 +764,74 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
                                 const string & pulse_id_file,
                                 const string & bank_file)
 {
-  uint32_t event_buffer[BLOCK_SIZE];
-  uint32_t pulse_buffer[BLOCK_SIZE];
+  EventLayout event_buffer[BLOCK_SIZE];
+  PulseLayout pulse_buffer[BLOCK_SIZE];
 
   // Open the event file and determine file size and buffer size
   size_t event_file_size;
   size_t event_buffer_size;
   ifstream event_fp;
-  open_file_and_get_sizes(event_fp,
-                          event_file,
-                          event_file_size,
-                          event_buffer_size);
+  open_file_and_get_sizes<EventLayout>(event_fp,
+                                 event_file,
+                                 event_file_size,
+                                 event_buffer_size);
 
   // Open the pulse id file and determine file size and buffer size
   size_t pulse_file_size;
   size_t pulse_buffer_size; 
   ifstream pulse_fp; 
-  open_file_and_get_sizes(pulse_fp,
-                          pulse_id_file,
-                          pulse_file_size,
-                          pulse_buffer_size);
+  open_file_and_get_sizes<PulseLayout>(pulse_fp,
+                                 pulse_id_file,
+                                 pulse_file_size,
+                                 pulse_buffer_size);
 
   // Get the first block from the pulse id file and read in the initial 
   // values
   pulse_fp.seekg(0, std::ios::beg);
   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer), 
-                pulse_buffer_size * sizeof(uint32_t));
+                pulse_buffer_size * sizeof(PulseLayout));
 
   // Get the first time from the pulse id and use this as the offset
-  uint32_t init_seconds = static_cast<uint32_t>(*(pulse_buffer + 1));
+  size_t pulse_buf_i = 0;
+  PulseLayout pulse = *(pulse_buffer + pulse_buf_i);
+  PulseNumT init_seconds = static_cast<PulseNumT>(pulse.seconds);
   this->pulse_time_offset = seconds_to_iso8601(init_seconds);
 
   // Get the initial time offset of the event
-  uint32_t event_time_offset = static_cast<uint32_t>(*(pulse_buffer));  
+  PulseNumT event_time_offset = static_cast<PulseNumT>(pulse.nanoseconds);  
+
+  pulse_buf_i++;
+  pulse = *(pulse_buffer + pulse_buf_i);
 
   // Since the first pulse offset is zero and doesn't matter, skip to the 
   // next one and start with it.
-  uint32_t pulse_index = static_cast<uint32_t>(*(pulse_buffer + 6));
+  PulseNumT pulse_index = static_cast<PulseNumT>(pulse.index);
 
   // Parse configuration file and read in the bank map
   this->parse_bank_file(bank_file);
 
-  // Since 4 int32's have already been read in from the pulse buffer, set the 
-  // initial value of the pulse buffer index to 4
-  size_t pulse_buf_i = 4;
   size_t pulse_fp_offset = 0;
   size_t event_fp_offset = 0;
-  uint32_t event_number = 0;
+  PulseNumT event_number = 0;
   event_fp.seekg(0, std::ios::beg);
   while(event_fp_offset < event_file_size)
     {
       event_fp.read(reinterpret_cast<char *>(event_buffer),
-                    event_buffer_size * sizeof(uint32_t));
+                    event_buffer_size * sizeof(EventLayout));
 
       // Populate the time of flight and pixel id
       // vectors with the data from the event file
-      for(size_t event_buf_i = 0; event_buf_i < event_buffer_size; event_buf_i += 2)
+      for(size_t event_buf_i = 0; event_buf_i < event_buffer_size; event_buf_i++)
         {
           // If the event_number is the same as the pulse index, then read from the 
           // pulse id buffer to get a new event time and pulse index
           if (event_number == pulse_index)
             {
-              event_time_offset = 
-                ((static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i + 1))
-                * NANOSECS_PER_SEC)
-                + static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i)))
-                - ((init_seconds * NANOSECS_PER_SEC));
-              pulse_buf_i += 4;
+              event_time_offset = static_cast<PulseNumT> 
+                (((pulse.seconds * NANOSECS_PER_SEC) + pulse.nanoseconds)
+                   - ((init_seconds * NANOSECS_PER_SEC)));
+
+              pulse_buf_i++;
               if (pulse_buf_i == pulse_buffer_size)
                 {
                   pulse_buf_i = 0;
@@ -837,21 +841,24 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
                       pulse_buffer_size = pulse_file_size - pulse_fp_offset;
                     }
                   pulse_fp.read(reinterpret_cast<char *>(pulse_buffer),
-                                pulse_buffer_size * sizeof(uint32_t));
+                                pulse_buffer_size * sizeof(PulseLayout));
                 }
-              pulse_index = static_cast<uint32_t>(*(pulse_buffer + pulse_buf_i + 2));
+              pulse = *(pulse_buffer + pulse_buf_i);
+              pulse_index = static_cast<PulseNumT>(pulse.index);
             }
 
+          EventLayout event = *(event_buffer + event_buf_i);
           // Filter out error codes
-          if ((*(event_buffer + event_buf_i + 1) & ERROR) != ERROR)
+          if ((event.pixel_id & ERROR) != ERROR)
             {
               // Get the proper bank from the bank map based on the pixel id
-              Bank<EventNumT, PulseNumT> *bank = this->bank_map[*(event_buffer + event_buf_i + 1)];
+              Bank<EventNumT, PulseNumT> *bank = 
+                this->bank_map[static_cast<EventNumT>(event.pixel_id)];
              
               // Place the pixel id and time of flight in the appropriate bank
-              bank->tof.push_back(*(event_buffer + event_buf_i));
+              bank->tof.push_back(static_cast<EventNumT>(event.tof));
               bank->pixel_id.push_back(
-                this->pixel_id_map[*(event_buffer + event_buf_i + 1)]);
+                this->pixel_id_map[static_cast<EventNumT>(event.pixel_id)]);
              
               // If the bank has no pulse index or if a new event time has been
               // encountered, start with 1 as the events per pulse, and push back a 

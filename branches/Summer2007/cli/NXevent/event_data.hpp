@@ -33,7 +33,88 @@ typedef enum e_data_name
   PULSE_TIME = 2,
   EVENTS_PER_PULSE = 3
 };
-    
+
+/**
+ * \struct Pulse
+ * \brief Holds a pulse read in from a pulse id file. It
+ *        is templated based on how the pulse id file is
+ *        layed out. For example, making a 
+ *        Pulse<uint32_t, uint32_t, uint64_t> struct will
+ *        make a pulse struct with uint32_t nanosecond values,
+ *        uint32_t second values, and uint64_t index values.
+ */
+template<typename NanosecondsT, 
+         typename SecondsT, 
+         typename IndexT>  
+struct Pulse
+{
+  NanosecondsT nanoseconds;
+  SecondsT seconds;
+  IndexT index;
+};
+
+/**
+ * \struct Event
+ * \brief Holds an event read from a neutron event file. It
+ *        is templated based on how the neutron event file is 
+ *        layed out. For example, making a Event<uint32_t, uint32_t>
+ *        struct will make an Event struct with uint32_t time of
+ *        flight values and uint32_t pixel id values.
+ */
+template<typename TofT,
+         typename PixelIdT>
+struct Event
+{
+  TofT tof;
+  PixelIdT pixel_id;
+};
+
+/**
+ * \typedef TofType
+ * \brief The type that a time of flight value is from the neutron
+ *        event file.
+ */
+typedef uint32_t TofType;
+
+/**
+ * \typedef PixelIdType
+ * \brief The type that a pixel id value is from the neutron event
+ *        file.
+ */
+typedef uint32_t PixelIdType;
+
+/**
+ * \typedef NanosecondType
+ * \brief The type that a nanosecond value is from the pulse id file.
+ */
+typedef uint32_t NanosecondType;
+
+/**
+ * \typedef SecondType
+ * \brief The type that a second value is from the pulse id file.
+ */
+typedef uint32_t SecondType;
+
+/**
+ * \typedef PulseIndexType
+ * \brief The type that a pulse index is from the pulse id file.
+ */
+typedef uint64_t PulseIndexType;
+
+/** 
+ * \typedef EventLayout
+ * \brief Describes how an event in the neutron event file is structured.
+ *        It is used throughout the program when reading in event structures.
+ */
+typedef Event<TofType, PixelIdType> EventLayout;
+
+/**
+ * \typedef PulseLayout
+ * \brief Describes how pulse data in the pulse id file is structured.
+ *        It is used throughout the program when reading in pulse structures.
+ */
+typedef Pulse<NanosecondType, SecondType, PulseIndexType> PulseLayout;
+
 /**
  * \brief Turns a type (like uint32_t) into a valid nexus
  *        type. 
