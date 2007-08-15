@@ -10,3 +10,9 @@ END
 FUNCTION getLogBookText, Event
 return, getTextFieldValue(Event,'log_book_text_field')
 END
+
+
+;This function returns the contain of the Data Log Book text field
+FUNCTION getDataLogBookText, Event
+return, getTextFieldValue(Event, 'data_log_book_text_field')
+END

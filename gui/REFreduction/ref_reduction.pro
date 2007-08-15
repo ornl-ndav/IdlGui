@@ -14,8 +14,16 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : 'REF_L'$ ;name of the current selected REF instrument
+global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF instrument
+                   processing_message : '(PROCESSING)',$;processing message to display
+                   data_tmp_dat_file : 'tmp_data.dat',$ ;default name of tmp binary data file
+                   norm_tmp_dat_file : 'tmp_nor.dat',$ ;default name of tmp binary norm file
+                   working_path : '~/local/',$ ;where the tmp file will be created
+                   ucams : ucams $ ;ucams of the current user
                   })
+
+
+
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
