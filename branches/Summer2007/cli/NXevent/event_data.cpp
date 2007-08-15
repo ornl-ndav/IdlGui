@@ -141,24 +141,70 @@ bool is_positive_int(string str)
   return true;
 }
 
-int get_xml_int(xmlNodePtr node)
+template <typename NumT>
+void EventData<NumT>::add_to_bank_map(const string & number, 
+                                      const int bank_number)
 {
-  if (node->children == NULL ||
-      node->children->content == NULL)
+cout << "adding num " << number << endl;
+  if (number.empty() || !is_positive_int(number))
     {
-      throw runtime_error("In function get_xml_int: No number found");
+      throw runtime_error("Invalid number in arbitrary data: "
+                          + number);
     }
-  else
+  int num = atoi(number.c_str());
+  if (num > this->bank_map.size())
     {
-      string number_str(reinterpret_cast<const char *>
-                        (node->children->content));
-      // Make sure the bank number is a valid integer
-      // before conversion
-      if (!is_positive_int(number_str))
-        {
-          throw runtime_error("Invalid number: " + number_str);
-        }
-      return atoi(number_str.c_str());
+      this->bank_map.resize(num + 1);
+    }
+  this->bank_map[num] = this->banks[bank_number];
+}
+
+template <typename NumT>
+void EventData<NumT>::add_to_bank_map(const string & start, 
+                                      const string & stop, 
+                                      int bank_number)
+{
+cout << "adding nums " << start << " - " << stop << endl;
+  this->add_to_bank_map(start, stop, "1", bank_number);
+}
+
+template <typename NumT>
+void EventData<NumT>::add_to_bank_map(const string & start, 
+                                      const string & stop, 
+                                      const string & step, 
+                                      const int bank_number)
+{
+cout << "adding nums " << start << " - " << stop  << " with step " << step << endl;
+  if (start.empty() || !is_positive_int(start))
+    {
+      throw runtime_error("Invalid start number: "
+                          + start);
+    }
+  if (stop.empty() || !is_positive_int(stop))
+    {
+      throw runtime_error("Invalid stop number: "
+                          + stop);
+    }
+  if (step.empty() || !is_positive_int(step))
+    {
+      throw runtime_error("Invalid step number: "
+                          + step);
+    }
+  if (start >= stop)
+    {
+      throw runtime_error(
+        "Start number must be less than stop number");
+    }
+  int start_num = atoi(start.c_str());
+  int stop_num = atoi(stop.c_str());
+  int step_num = atoi(step.c_str());
+  if (stop_num > this->bank_map.size())
+    {
+      this->bank_map.resize(stop_num + 1);
+    }
+  for (int i = start_num; i < stop_num; i+=step_num)
+    {
+      this->bank_map[i] = this->banks[bank_number];
     }
 }
 
@@ -180,11 +226,63 @@ void EventData<NumT>::create_arbitrary(xmlNodePtr bank_node,
         {
           if (isdigit(number_str[i]))
             {
-              string first_num;
+              string first_num_str;
               while(isdigit(number_str[i]))
                 {
-                  first_num.append(reinterpret_cast<const char *>(number_str[i]));
+                  first_num_str.push_back(number_str[i]);
                   i++;
+                  if (i == size)
+                    {
+                      this->add_to_bank_map(first_num_str, bank_number);
+                      return;
+                    }
+                }
+              while(isspace(number_str[i]))
+                {
+                  i++;
+                  if (i == size)
+                    {
+                      return;
+                    }
+                }
+              if (number_str[i] == '-')
+                {
+                  string second_num_str;
+                  i++;
+                  if (i == size)
+                    {
+                      throw runtime_error("Invalid data in arbitrary data");
+                    }
+                  while(isspace(number_str[i]))
+                    {
+                      i++;
+                      if (i == size)
+                        {
+                          throw runtime_error("Invalid data in arbitrary data");
+                        }
+                    }
+                  if (!isdigit(number_str[i]))
+                    {
+                      throw runtime_error("Invalid data in arbitrary data");
+                    }
+                  while(i != size && isdigit(number_str[i]))
+                    {
+                      second_num_str.push_back(number_str[i]);
+                      i++;
+                    }
+                  // Add the first through the second number, not including the second
+                  this->add_to_bank_map(first_num_str, second_num_str, bank_number);
+                  // Add the second separately
+                  this->add_to_bank_map(second_num_str, bank_number);
+                }
+              else if (number_str[i] == ',')
+                {
+                  this->add_to_bank_map(first_num_str, bank_number);
+                }
+              else
+                {
+                  throw runtime_error("Invalid character found in arbitrary data: "
+                                      + number_str[i]);
                 }
             }
           else if (!isspace(number_str[i]))
@@ -200,8 +298,8 @@ template <typename NumT>
 void EventData<NumT>::create_cont_list(xmlNodePtr bank_node,
                                        int bank_number)
 {
-  int start = -1;
-  int stop = -1;
+  string start;
+  string stop;
   if (bank_number == -1)
     {
       throw runtime_error(
@@ -214,51 +312,39 @@ void EventData<NumT>::create_cont_list(xmlNodePtr bank_node,
       if (xmlStrcmp(cont_list_node->name,
           (const xmlChar *)"start") == 0)
         {
-          start = get_xml_int(cont_list_node);
+          if(cont_list_node->children == NULL ||
+             cont_list_node->children->content == NULL)
+            {
+              throw runtime_error("No start number found");
+            }
+          start = reinterpret_cast<const char *>
+                    (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"stop") == 0)
         {
-          stop = get_xml_int(cont_list_node);
+          if(cont_list_node->children == NULL ||
+             cont_list_node->children->content == NULL)
+            {
+              throw runtime_error("No stop number found");
+            }
+          stop = reinterpret_cast<const char *>
+                  (cont_list_node->children->content);
         }
     }
-  // Make sure the starting, and stopping numbers were
-  // found for the continuous list and that the start isn't
-  // >= to the stop
-  if (start == -1)
-    {
-      throw runtime_error(
-        "No start number found for step list");
-    }
-  if (stop == -1)
-    {
-      throw runtime_error(
-        "No stop number found for step list");
-    }
-  if (start >= stop)
-    {
-      throw runtime_error(
-        "Start number must be less than stop number");
-    }
-  if (stop > this->bank_map.size())
-    {
-      this->bank_map.resize(stop + 1);
-    }
-  // Fill in a step list for the bank map once
+  
+  // Fill in a continuous list for the bank map once
   // valid numbers have been found
-  for (int i = start; i < stop; i++)
-    {
-      this->bank_map[i] = this->banks[bank_number];
-    }
+  this->add_to_bank_map(start, stop, bank_number);
 }
 
 template <typename NumT>
 void EventData<NumT>::create_step_list(xmlNodePtr bank_node,
                                        int bank_number)
 {
-  int start = -1;
-  int stop = -1;
-  int step = -1;
+  string start;
+  string stop;
+  string step;
   if (bank_number == -1)
     {
       throw runtime_error(
@@ -271,52 +357,41 @@ void EventData<NumT>::create_step_list(xmlNodePtr bank_node,
       if (xmlStrcmp(cont_list_node->name,
           (const xmlChar *)"start") == 0)
         {
-          start = get_xml_int(cont_list_node);
+          if(cont_list_node->children == NULL ||
+             cont_list_node->children->content == NULL)
+            {
+              throw runtime_error("No start number found");
+            }
+          start = reinterpret_cast<const char *>
+                  (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"step") == 0)
         {
-          step = get_xml_int(cont_list_node);
+          if(cont_list_node->children == NULL ||
+             cont_list_node->children->content == NULL)
+            {
+              throw runtime_error("No step number found");
+            }
+          step = reinterpret_cast<const char *>
+                  (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"stop") == 0)
         {
-          stop = get_xml_int(cont_list_node);
+          if(cont_list_node->children == NULL ||
+             cont_list_node->children->content == NULL)
+            {
+              throw runtime_error("No stop number found");
+            }
+          stop = reinterpret_cast<const char *>
+                  (cont_list_node->children->content);
         }
     }
-    // Make sure the starting, stopping, and step numbers were
-    // found for the step list and that the start isn't
-    // >= to the stop
-    if (start == -1)
-      {
-        throw runtime_error(
-          "No start number found for step list");
-      }
-    if (stop == -1)
-      {
-        throw runtime_error(
-          "No stop number found for step list");
-      }
-    if (step == -1)
-      {
-        throw runtime_error(
-          "No step number found for step list");
-      }
-    if (start >= stop)
-      {
-        throw runtime_error(
-          "Start number must be less than stop number");
-      }
-    if (stop > this->bank_map.size())
-      {
-        this->bank_map.resize(stop + 1);
-      }
-    // Fill in a step list for the bank map once
-    // valid numbers have been found
-    for (int i = start; i < stop; i+=step)
-      {
-        this->bank_map[i] = this->banks[bank_number];
-      }
+
+  // Fill in a step list for the bank map once
+  // valid numbers have been found
+  this->add_to_bank_map(start, stop, step, bank_number);
 }
 
 template <typename NumT>
@@ -347,7 +422,19 @@ void EventData<NumT>::parse_bank_file(const string & bank_file)
             {
               // When a valid bank number is found, push it on
               // the bank numbers vector
-              bank_number = get_xml_int(bank_node);
+              if(bank_node->children == NULL ||
+                 bank_node->children->content == NULL)
+                {
+                  throw runtime_error("No step number found");
+                }
+              string number_str = reinterpret_cast<const char *>
+                             (bank_node->children->content);
+              if (!is_positive_int(number_str))
+                {
+                  throw runtime_error("Invalid number: "
+                                      + number_str);
+                }
+              bank_number = atoi(number_str.c_str());
               if (bank_number > max_bank_number) 
                 { 
                   max_bank_number = bank_number;

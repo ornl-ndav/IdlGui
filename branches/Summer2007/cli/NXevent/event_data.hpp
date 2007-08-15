@@ -67,20 +67,33 @@ class EventData
     std::string pulse_time_offset;
     std::vector<Bank<NumT> *> bank_map;
     std::vector<int> bank_numbers;
-    std::vector<NumT> events_per_pulse;
-    std::vector<Bank<NumT> *> banks;
    
     /**
      * \brief Opens a bank in a nexus file.
      * \param nexus_util The nexus utility
      * \param bank_number The number of the bank to open
      */
-    void open_bank(NexusUtil & nexus_util, const int bank_number);
+    void open_bank(NexusUtil & nexus_util, 
+                   const int bank_number);
 
-    void create_step_list(xmlNodePtr bank_node, int bank_number);
+    void create_step_list(xmlNodePtr bank_node, 
+                          const int bank_number);
 
-    void create_cont_list(xmlNodePtr bank_node, int bank_number);
+    void create_cont_list(xmlNodePtr bank_node, 
+                          const int bank_number);
+  
+    void add_to_bank_map(const std::string & number, 
+                         const int bank_number);
+    
+    void add_to_bank_map(const std::string & start, 
+                         const std::string & stop,
+                         const int bank_number);
    
+    void add_to_bank_map(const std::string & start,
+                         const std::string & stop,
+                         const std::string & step, 
+                         const int bank_number);
+     
     void create_arbitrary(xmlNodePtr bank_node, int bank_number);
  
     /**
