@@ -3,6 +3,18 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 REFreduction_LoadDataFile, Event, isNeXusFound ;first Load the data file
 if (isNeXusFound) then begin
     REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+
+;get global structure
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+
+;tell the user that the load and plot process is done
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      ' Done', $
+      (*global).processing_message
 endif
 END
 
@@ -12,6 +24,18 @@ PRO  REFreductionEventcb_LoadAndPlotNormalizationFile, Event
 REFreduction_LoadNormalizationFile, Event, isNeXusFound ;first Load the normalization file
 if (isNeXusFound) then begin 
     REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
+
+;get global structure
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+
+;tell the user that the load and plot process is done
+    InitialStrarr = getNormalizationLogBookText(Event)
+    putTextAtEndOfNormalizationLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      ' Done', $
+      (*global).processing_message
 endif
 END
 

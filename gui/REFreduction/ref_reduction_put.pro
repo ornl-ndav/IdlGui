@@ -140,3 +140,7 @@ endelse
 ;put it back in uname text field
 putNormalizationLogBookMessage, Event, FinalStrarr
 END
+
+
+
+

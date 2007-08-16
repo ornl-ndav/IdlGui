@@ -1,5 +1,5 @@
-;this function plots the 1D view (main view) of the DATA file only
-PRO REFreduction_Plot1DDataFile, Event
+;this function plots the 1D view (main view) of the NORMALIZATION file only
+PRO REFreduction_Plot1DNormalizationFile, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -9,9 +9,9 @@ widget_control,id,get_uvalue=global
 instrument = (*global).instrument
 
 if (instrument EQ (*global).REF_L) then begin
-    Plot1DDataFileForRefL, Event ;REF_L
+    Plot1DNormalizationFileForRefL, Event ;REF_L
 endif else begin
-    Plot1DDataFileForRefM, EVENT ;REF_M
+    Plot1DNormalizationFileForRefM, EVENT ;REF_M
 endelse
 
 END
@@ -21,18 +21,18 @@ END
 ;**********************************************************************
 ;REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L*
 ;**********************************************************************
-;Plots the 1D view of the data file for the REF_L
-PRO Plot1DDataFileForRefL, Event
+;Plots the 1D view of the normalization file for the REF_L
+PRO Plot1DNormalizationFileForRefL, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 N = (*global).Ny_REF_L ; 304
-img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
+img = (*(*global).NORM_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3)
 
-Plot1DDataFile, Event, img, N
+Plot1DNormalizationFile, Event, img, N
 END
 
 
@@ -40,18 +40,18 @@ END
 ;**********************************************************************
 ;REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M*
 ;**********************************************************************
-;Plots the 1D view of the data file for the REF_M
-PRO Plot1DDataFileForRefM, Event
+;Plots the 1D view of the normalization file for the REF_M
+PRO Plot1DNormalizationFileForRefM, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 N = (*global).Nx_REF_M ; 304
-img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
+img = (*(*global).NORM_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)
 
-Plot1DDataFile, Event, img, N
+Plot1DNormalizationFile, Event, img, N
 
 END
 
@@ -60,9 +60,9 @@ END
 
 
 ;**********************************************************************
-;Procedure that plots REF_L and REF_M 1D data plots                   *
+;Procedure that plots REF_L and REF_M 1D normalization plots          *
 ;**********************************************************************
-PRO Plot1DDataFile, Event, img, N
+PRO Plot1DNormalizationFile, Event, img, N
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -70,7 +70,7 @@ widget_control,id,get_uvalue=global
 
 ;retrieve parameters
 PROCESSING = (*global).processing_message
-tmp_file = (*global).full_data_tmp_dat_file
+tmp_file = (*global).full_norm_tmp_dat_file
 
 ;tells user that we are now plotting the 2D data
 LogBookText = '----> Plotting 1D view ...... ' + PROCESSING
@@ -82,12 +82,12 @@ putLogBookMessage, Event, LogBookText, Append=1
 DEVICE, DECOMPOSED = 0
 loadct,5
 
-id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
 
 ;rebin data to fill up all graph
-new_Ntof = (*global).Ntof_DATA
+new_Ntof = (*global).Ntof_NORM
 new_N = 2 * N
 tvimg = rebin(img, new_Ntof, new_N,/sample)
 tvscl, tvimg, /device
