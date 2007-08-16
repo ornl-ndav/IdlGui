@@ -106,7 +106,7 @@ int main(int32_t argc,
   EventData <uint32_t, uint32_t>event_data;
   
   // Create the pixel map
-  if (config.mapping_file != "")
+  if (!config.mapping_file.empty())
     {
       event_data.create_pixel_map(config.mapping_file);
     }

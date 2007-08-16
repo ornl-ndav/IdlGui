@@ -124,11 +124,11 @@ void EventData<EventNumT, PulseNumT>::write_attr(NexusUtil & nexus_util,
 
 bool is_positive_int(string str)
 {
-  int size = str.length();
-  if (size == 0)
-    {
+  if (str.empty())
+    { 
       return false;
     }
+  int size = str.length();
   if (str[0] == '0' && size > 1)
     {
       return false;
