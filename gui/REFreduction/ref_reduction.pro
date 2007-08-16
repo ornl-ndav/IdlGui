@@ -15,15 +15,29 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF instrument
-                   processing_message : '(PROCESSING)',$;processing message to display
+                   REF_L : 'REF_L',$ ;name of REF_L instrument
+                   REF_M : 'REF_M',$ ;name of REF_M instrument
+                   Nx_REF_L : 256L,$ ;Nx for REF_L instrument
+                   Ny_REF_L : 304L,$ ;Ny for REF_L instrument
+                   Nx_REF_M : 304L,$ ;Nx for REF_M instrument
+                   Ny_REF_M : 256L,$ ;Ny for REF_M instrument
+                   Ntof_DATA : 0L, $ ;TOF for data file
+                   Ntof_NORM : 0L, $ ;TOF for norm file
+                   processing_message : '(PROCESSING)',$ ;processing message to display
                    data_tmp_dat_file : 'tmp_data.dat',$ ;default name of tmp binary data file
+                   full_data_tmp_dat_file : '',$ ;full path of tmp .dat file for data
                    norm_tmp_dat_file : 'tmp_nor.dat',$ ;default name of tmp binary norm file
+                   full_norm_tmp_dat_file : '',$ ;full path of tmp .dat file for normalization
                    working_path : '~/local/',$ ;where the tmp file will be created
-                   ucams : ucams $ ;ucams of the current user
+                   ucams : ucams, $ ;ucams of the current user
+                   DATA_DD_ptr : ptr_new(0L),$ ;detector view of DATA (2D)
+                   DATA_D_ptr : ptr_new(0L)$ ;(Ntof,Ny,Nx) array of DATA
                   })
 
-
-
+full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
+(*global).full_data_tmp_dat_file = full_data_tmp_dat_file
+full_norm_tmp_dat_file = (*global).working_path + (*global).full_norm_tmp_dat_file
+(*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

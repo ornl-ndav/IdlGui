@@ -1,3 +1,5 @@
+;this function load the given nexus file and dump the binary file
+;in the tmp data file
 PRO REFreduction_LoadDatafile, Event
 
 ;get global structure
@@ -10,7 +12,7 @@ PROCESSING = (*global).processing_message ;processing message
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
 LogBookText = '-> Openning Run Number: ' + DataRunNumber
 putLogBookMessage, Event, LogBookText
-LogBookText += '.....'
+LogBookText += '.....' + PROCESSING
 putDataLogBookMessage, Event, LogBookText
 
 if (DataRunNumber EQ '') then begin ;Run number field is empty
@@ -45,7 +47,11 @@ endif else begin
         putTextAtEndOfLogBookLastLine, Event, LogBookText, Message
 ;get data log book full text
         DataLogBookText = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine, Event, DataLogBookText, 'NeXus does not exist!'
+        putTextAtEndOfDataLogBookLastLine,$
+          Event,$
+          DataLogBookText,$
+          'NeXus does not exist!',$
+          PROCESSING
         
 ;no needs to do anything more
         
@@ -56,9 +62,6 @@ endif else begin
         LogBookText = getLogBookText(Event)
         Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
         putTextAtEndOfLogBookLastLine, Event, LogBookText, Message
-;get data log book full text
-        DataLogBookText = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine, Event, DataLogBookText, PROCESSING
 
 ;continue here by displaying the info required by the instrument
 ;proton charge and distances
@@ -71,16 +74,11 @@ endif else begin
         putLogBookMessage, Event, LogBookText, Append=1
         RefReduction_DumpBinaryData, Event, full_nexus_name, working_path
         
-
-
-    endelse                     ;end of ~isNeXusFound
+      endelse                     ;end of ~isNeXusFound
 
     
 endelse                         ;end of DataRunNumber NE ''
 
-
-stop
-    
 
 
 END
