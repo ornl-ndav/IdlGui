@@ -46,9 +46,13 @@ int main(int32_t argc,
                        "name of output file (default is <toolname>.nxl)",
                        false, default_file_name, "output file name", cmd);
       
-      ValueArg<string> data_file("i", "input", 
-                       "basename of data file to read from. example - BSS_60",
-                       false, "", "data file basename", cmd);
+      ValueArg<string> event_file("i", "input", 
+                       "full name of the neutron event file to read from",
+                       false, "", "event file name", cmd);
+
+      ValueArg<string> pulse_file("p", "pulse",
+                       "full name of the pulse id file to read from",
+                       false, "", "pulse file name", cmd);
 
       ValueArg<string> mapping_file("m", "mapping",
                        "mapping file for pixel ids",
@@ -69,15 +73,15 @@ int main(int32_t argc,
       // Parse the command-line
       cmd.parse(argc, argv); 
       
-      if (!data_file.isSet()) 
+      if (!event_file.isSet()) 
         {
           throw runtime_error("Error: Must specify an input file");
         }
     
       // Fill out the config object
       config.out_path = out_path.getValue();
-      config.event_file = data_file.getValue() + "_neutron_event.dat";
-      config.pulse_id_file = data_file.getValue() + "_pulseid.dat";
+      config.event_file = event_file.getValue();
+      config.pulse_id_file = pulse_file.getValue();
       config.format = format.getValue();
       config.mapping_file = mapping_file.getValue();
       config.bank_file = bank_file.getValue();
