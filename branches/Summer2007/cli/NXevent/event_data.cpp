@@ -13,6 +13,9 @@
 #include <iostream>
 #include <sstream>
 #include <ctime>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+#include <locale>
 
 using std::stringstream;
 using std::cout;

@@ -12,8 +12,6 @@
 #include <vector>
 #include <string>
 #include <cstdlib>
-#include <locale>
-#include <libxml/parser.h>
 #include <libxml/tree.h>
 
 namespace EventNexus
