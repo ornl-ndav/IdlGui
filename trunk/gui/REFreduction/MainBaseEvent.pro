@@ -15,7 +15,7 @@ CASE Event.id OF
 ;LOAD DATA file button    
 
     widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_button'): begin
-        REFreduction_LoadDataFile, Event
+        REFreductionEventcb_LoadAndPlotDataFile, Event
     end
 
 ;**REDUCE TAB**
