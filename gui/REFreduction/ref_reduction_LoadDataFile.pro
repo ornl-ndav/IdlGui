@@ -17,7 +17,7 @@ if (text[0] EQ '') then begin
 endif else begin
     putLogBookMessage, Event, LogBookText, Append=1
 endelse
-LogBookText += '.....' + PROCESSING 
+LogBookText += '..... ' + PROCESSING 
 putDataLogBookMessage, Event, LogBookText
 
 if (DataRunNumber EQ '') then begin ;Run number field is empty
@@ -30,7 +30,7 @@ endif else begin
 ;indicate reading data with hourglass icon
     widget_control,/hourglass
 
-    LogBookText = '----> Checking if NeXus run number exist........'
+    LogBookText = '----> Checking if NeXus run number exist........ '
     putLogBookMessage, Event, LogBookText, Append=1
 
 ;check if nexus exist and if it does, returns the full path
