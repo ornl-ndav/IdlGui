@@ -31,14 +31,4 @@ struct Config
   std::string bank_file;
 };
 
-/**
- * \brief Creates the nexus file and makes and opens
- *        the groups.
- * \param nexus_util The nexus utility.
- * \param config Contains the format of the file and the
- *        name of the file.
- */
-void layout_nexus_file(NexusUtil & nexus_util,
-                       const Config & config);
-
 #endif

@@ -129,8 +129,7 @@ inline e_nx_data_type typename_to_nexus_type(void);
  * \brief Takes a number of seconds since jan 1, 1990
  *        and converts it to an iso8601 date string.
  * \param seconds The number of seconds since jan 1, 1990.
- * \param nanoseconds The nanoseconds of the current second.
- * \param time The variable to store the ISO8601 date string in.
+ * \return The iso8601 string of the time.
  */
 std::string seconds_to_iso8601(uint32_t seconds);
 
@@ -291,8 +290,8 @@ class EventData
      *        writes an attribute for it.
      * \param nexus_util The nexus utility.
      * \param attr_name The name of the attribute.
-     * \param group_value The value associated with
-     *                    the attribute.
+     * \param attr_value The value associated with
+     *                   the attribute.
      * \param nx_data_name The enumeration specifying which
      *                     piece of data to write.
      * \param bank_number The bank number of the data.
