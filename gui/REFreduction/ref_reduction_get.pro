@@ -16,3 +16,9 @@ END
 FUNCTION getDataLogBookText, Event
 return, getTextFieldValue(Event, 'data_log_book_text_field')
 END
+
+
+;This function returns the contain of the Normalization Log Book text field
+FUNCTION getNormalizationLogBookText, Event
+return, getTextFieldValue(Event, 'normalization_log_book_text_field')
+END

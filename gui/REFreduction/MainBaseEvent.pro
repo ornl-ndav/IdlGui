@@ -13,9 +13,13 @@ CASE Event.id OF
 
 ;**LOAD TAB**
 ;LOAD DATA file button    
-
     widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_button'): begin
         REFreductionEventcb_LoadAndPlotDataFile, Event
+    end
+
+;LOAD NORMALIZATION file button
+    widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_button'): begin
+        REFreductionEventcb_LoadAndPlotNormalizationFile, Event
     end
 
 ;**REDUCE TAB**

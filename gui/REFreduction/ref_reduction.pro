@@ -30,13 +30,17 @@ global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF inst
                    full_norm_tmp_dat_file : '',$ ;full path of tmp .dat file for normalization
                    working_path : '~/local/',$ ;where the tmp file will be created
                    ucams : ucams, $ ;ucams of the current user
+                   data_run_number: 0L,$ ;run number of the data file loaded and plotted
+                   norm_run_number: 0L,$ ;run number of the norm. file loaded and plotted
                    DATA_DD_ptr : ptr_new(0L),$ ;detector view of DATA (2D)
-                   DATA_D_ptr : ptr_new(0L)$ ;(Ntof,Ny,Nx) array of DATA
+                   DATA_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of DATA
+                   NORM_DD_ptr : ptr_new(0L),$ ;detector view of NORMALIZATION (2D)
+                   NORM_D_ptr : ptr_new(0L)$ ;(Ntof,Ny,Nx) array of NORMALIZATION
                   })
 
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
-full_norm_tmp_dat_file = (*global).working_path + (*global).full_norm_tmp_dat_file
+full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
 
 ;define Main Base variables
