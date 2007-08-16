@@ -696,8 +696,7 @@ string seconds_to_iso8601(uint32_t seconds)
   // Since the times start at a different epoch (jan 1, 1990) than
   // the unix epoch (jan 1, 1970), add the number of seconds
   // between the epochs to use the ctime library
-  const uint32_t epoch_diff = 631152000;
-  time_t pulse_seconds = epoch_diff + seconds;
+  time_t pulse_seconds = EventNexus::EPOCH_DIFF + seconds;
   struct tm *pulse_time = localtime(&pulse_seconds);
   strftime(date, sizeof(date), "%Y-%m-%dT%X-04:00", pulse_time);
   string time(date);
