@@ -1,10 +1,10 @@
 #$Id$
 CXX = g++ -g
-ALL = rand2nxl event2nxl nxl2event nxl_diff
+ALL = rand2nxl event2nxl nxl_diff
 
 RAND_OBJS 	= 	rand2nxl.o
 
-EVENT2NXL_OBJS  =	event2nxl.o nexus_util.o event_data.o 
+EVENT2NXL_OBJS  =	event2nxl.o nexus_util.o event_data.o bank_data.o 
 
 NXL2EVENT_OBJS 	= 	nxl2event.o nexus_util.o
 
@@ -41,6 +41,9 @@ nexus_util.o: nexus_util.cpp nexus_util.hpp
 
 event_data.o: event_data.cpp 
 	$(CXX) `xml2-config --cflags` -c -I../../inc -I/usr/include/libxml2/ event_data.cpp
+
+bank_data.o: bank_data.cpp bank_data.hpp
+	$(CXX) `xml2-config --cflags` -c -I../../inc -I/usr/include/libxml2/ bank_data.cpp
 
 docs:
 	cd doc && make docs

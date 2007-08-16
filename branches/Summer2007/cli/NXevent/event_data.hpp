@@ -8,7 +8,7 @@
 #define _EVENT_DATA_HPP 1
 
 #include "nexus_util.hpp"
-#include "Bank.hpp"
+#include "bank_data.hpp"
 #include <vector>
 #include <string>
 #include <cstdlib>
@@ -184,43 +184,9 @@ class EventData
      *        be written to the nexus file later.
      */
     std::string pulse_time_offset;
-    /**
-     * \brief The vector that holds the pointers to the allocated
-     *        banks. This vector is indexed by the bank number.
-     */
-    std::vector<Bank<EventNumT, PulseNumT> *> banks;
-    /** 
-     * \brief The vector used when finding out what bank a pixel id
-     *        belongs to. 
-     */ 
-    std::vector<Bank<EventNumT, PulseNumT> *> bank_map;
-    /**
-     * \brief The vector that holds the bank numbers. The bank numbers
-     *        have to be stored since they will need to be know when
-     *        writing the nexus file.
-     */
-    std::vector<int> bank_numbers;
    
-    void create_step_list(xmlNodePtr bank_node, 
-                          const int bank_number);
+    BankData<EventNumT, PulseNumT> * bank_data;
 
-    void create_cont_list(xmlNodePtr bank_node, 
-                          const int bank_number);
-  
-    void add_to_bank_map(const std::string & number, 
-                         const int bank_number);
-    
-    void add_to_bank_map(const std::string & start, 
-                         const std::string & stop,
-                         const int bank_number);
-   
-    void add_to_bank_map(const std::string & start,
-                         const std::string & stop,
-                         const std::string & step, 
-                         const int bank_number);
-     
-    void create_arbitrary(xmlNodePtr bank_node, int bank_number);
- 
     /**
      * \brief Writes the private data from EventData to a nexus file.
      * \param nexus_util The nexus utility with the open file handle.
@@ -243,15 +209,6 @@ class EventData
      */
     const std::string & get_pulse_time_offset(void);
 
-    /**
-     * \brief Parses the banking configuration file and sets up the
-     *        bank data structures and maps.
-     * \param bank_file The name of the xml bank configuration file.
-     * \exception runtime_error Thrown if any error happens in the xml 
-     *                          parsing.
-     */
-    void parse_bank_file(const std::string & bank_file);
- 
     /**
      * \brief Reads information from the event file and populates
      *        the tof and pixel id vectors.
@@ -290,6 +247,8 @@ class EventData
      */
     void write_nexus_file(NexusUtil & nexus_util);
 
+    void write_bank(NexusUtil & nexus_util, 
+                    const int bank_number);
     /**
      * \brief Templated function that writes data to a nexus
      *        file.

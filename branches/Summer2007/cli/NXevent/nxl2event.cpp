@@ -7,7 +7,7 @@
 
 #include "napi.h"
 #include "nexus_util.hpp"
-#include "Bank.hpp"
+#include "bank.hpp"
 #include <stdexcept>
 #include <tclap/CmdLine.h>
 #include <iostream>

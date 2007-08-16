@@ -1,3 +1,6 @@
+#ifndef _BANK_HPP
+#define _BANK_HPP 1
+
 #include <vector>
 
 template <typename EventNumT, typename PulseNumT>
@@ -17,3 +20,5 @@ class Bank
     {
     }
 };
+
+#endif
