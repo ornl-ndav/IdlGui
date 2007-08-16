@@ -20,19 +20,23 @@ template
 BankData<uint32_t, uint32_t>::~BankData();
 
 template
-Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>::get_bank_by_pixel_id(const uint32_t pixel_id);
+Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>
+::get_bank_by_pixel_id(const uint32_t pixel_id);
 
 template
-Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>::get_bank_by_bank_number(int bank_number);
+Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>
+::get_bank_by_bank_number(int bank_number);
 
 template<typename EventNumT, typename PulseNumT>
-Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::get_bank_by_pixel_id(const EventNumT pixel_id)
+Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>
+::get_bank_by_pixel_id(const EventNumT pixel_id)
 {
   return this->bank_map[pixel_id];
 }
 
 template<typename EventNumT, typename PulseNumT>
-Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::get_bank_by_bank_number(const int bank_number)
+Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>
+::get_bank_by_bank_number(const int bank_number)
 {
   return this->banks[bank_number];
 }

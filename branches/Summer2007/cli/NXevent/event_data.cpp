@@ -143,11 +143,8 @@ void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util)
   cout << "bank numbers size: " << size << endl;
   for (int i = 0; i < size; i++)
     { 
-cout << "bank number " << i << " : " << this->bank_data->bank_numbers[i] << endl;
       stringstream bank_num;
-cout << "1\n";
       bank_num << "bank" << this->bank_data->bank_numbers[i];
-cout << "1\n";
       nexus_util.make_group(bank_num.str(), "NXevent_data");
       nexus_util.open_group(bank_num.str(), "NXevent_data");
       nexus_util.close_group();
@@ -214,7 +211,8 @@ void EventData<EventNumT, PulseNumT>::write_data(NexusUtil & nexus_util,
                                  const int bank_number)
 {
   string data_name;
-  Bank<EventNumT, PulseNumT> * bank = this->bank_data->get_bank_by_bank_number(bank_number);
+  Bank<EventNumT, PulseNumT> * bank = 
+    this->bank_data->get_bank_by_bank_number(bank_number);
 
   // Fill in the values that are associated with the 
   // given e_data_name
@@ -373,7 +371,8 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
           if ((static_cast<EventNumT>(event.pixel_id) & EventNexus::ERROR) != EventNexus::ERROR)
             {
               // Use pointer arithmetic for speed
-              Bank<EventNumT, PulseNumT> *bank = bank_data->get_bank_by_pixel_id(static_cast<EventNumT>(event.pixel_id));
+              Bank<EventNumT, PulseNumT> *bank = 
+                bank_data->get_bank_by_pixel_id(static_cast<EventNumT>(event.pixel_id));
              
               // Put the pixel ids and time of flights in their proper bank 
               bank->tof.push_back(static_cast<EventNumT>(event.tof));
@@ -488,7 +487,8 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
           if ((event.pixel_id & EventNexus::ERROR) != EventNexus::ERROR)
             {
               // Get the proper bank from the bank map based on the pixel id
-              Bank<EventNumT, PulseNumT> *bank = bank_data->get_bank_by_pixel_id(static_cast<EventNumT>(event.pixel_id));
+              Bank<EventNumT, PulseNumT> *bank = 
+                bank_data->get_bank_by_pixel_id(static_cast<EventNumT>(event.pixel_id));
              
               // Place the pixel id and time of flight in the appropriate bank
               bank->tof.push_back(static_cast<EventNumT>(event.tof));
