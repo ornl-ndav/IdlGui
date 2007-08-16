@@ -170,10 +170,32 @@ template <typename EventNumT, typename PulseNumT>
 class EventData
 {
   private:
+    /**
+     * \brief The vector used for mapping one pixel
+     *        number to another.
+     */
     std::vector<EventNumT> pixel_id_map;
+    /**
+     * \brief When the first time offset is read, it is converted to
+     *        iso8601 form and stored in this variable so it can
+     *        be written to the nexus file later.
+     */
     std::string pulse_time_offset;
+    /**
+     * \brief The vector that holds the pointers to the allocated
+     *        banks. This vector is indexed by the bank number.
+     */
     std::vector<Bank<EventNumT, PulseNumT> *> banks;
+    /** 
+     * \brief The vector used when finding out what bank a pixel id
+     *        belongs to. 
+     */ 
     std::vector<Bank<EventNumT, PulseNumT> *> bank_map;
+    /**
+     * \brief The vector that holds the bank numbers. The bank numbers
+     *        have to be stored since they will need to be know when
+     *        writing the nexus file.
+     */
     std::vector<int> bank_numbers;
    
     void create_step_list(xmlNodePtr bank_node, 
