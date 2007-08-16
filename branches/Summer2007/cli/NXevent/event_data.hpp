@@ -16,8 +16,11 @@
 #include <libxml/parser.h>
 #include <libxml/tree.h>
 
-const uint32_t ERROR = 0x80000000;
-const uint32_t NANOSECS_PER_SEC = 1000000000;
+namespace EventNexus
+{
+  const uint32_t ERROR = 0x80000000;
+  const uint32_t NANOSECS_PER_SEC = 1000000000;
+};
 
 /** 
  * \enum e_data_name

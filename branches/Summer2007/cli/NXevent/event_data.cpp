@@ -734,7 +734,7 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
         {
           EventLayout event = *(event_buffer + event_i);
           // Filter out error codes
-          if ((static_cast<EventNumT>(event.pixel_id) & ERROR) != ERROR)
+          if ((static_cast<EventNumT>(event.pixel_id) & EventNexus::ERROR) != EventNexus::ERROR)
             {
               // Use pointer arithmetic for speed
               Bank<EventNumT, PulseNumT> *bank = 
@@ -828,8 +828,8 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
           if (event_number == pulse_index)
             {
               event_time_offset = static_cast<PulseNumT> 
-                (((pulse.seconds * NANOSECS_PER_SEC) + pulse.nanoseconds)
-                   - ((init_seconds * NANOSECS_PER_SEC)));
+                (((pulse.seconds * EventNexus::NANOSECS_PER_SEC) + pulse.nanoseconds)
+                   - ((init_seconds * EventNexus::NANOSECS_PER_SEC)));
 
               pulse_buf_i++;
               if (pulse_buf_i == pulse_buffer_size)
@@ -849,7 +849,7 @@ void EventData<EventNumT, PulseNumT>::read_data(const string & event_file,
 
           EventLayout event = *(event_buffer + event_buf_i);
           // Filter out error codes
-          if ((event.pixel_id & ERROR) != ERROR)
+          if ((event.pixel_id & EventNexus::ERROR) != EventNexus::ERROR)
             {
               // Get the proper bank from the bank map based on the pixel id
               Bank<EventNumT, PulseNumT> *bank = 
