@@ -1,6 +1,6 @@
 ;this function load the given nexus file and dump the binary file
 ;in the tmp data file
-PRO REFreduction_LoadDatafile, Event
+PRO REFreduction_LoadDatafile, Event, isNeXusFound
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
