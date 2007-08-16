@@ -19,6 +19,8 @@ namespace EventNexus
   const uint32_t ERROR = 0x80000000;
   const uint32_t NANOSECS_PER_SEC = 1000000000;
   const uint32_t EPOCH_DIFF = 631152000;
+  const std::string EST_WITH_DST = "04:00";
+  const std::string EST_WITHOUT_DST = "05:00";
 };
 
 /** 

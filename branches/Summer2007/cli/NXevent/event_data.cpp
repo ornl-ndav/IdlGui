@@ -674,8 +674,16 @@ string seconds_to_iso8601(uint32_t seconds)
   // between the epochs to use the ctime library
   time_t pulse_seconds = EventNexus::EPOCH_DIFF + seconds;
   struct tm *pulse_time = localtime(&pulse_seconds);
-  strftime(date, sizeof(date), "%Y-%m-%dT%X-04:00", pulse_time);
+  strftime(date, sizeof(date), "%Y-%m-%dT%X-", pulse_time);
   string time(date);
+  if (pulse_time->tm_isdst == 1)
+    {
+      time += EventNexus::EST_WITH_DST;
+    }
+  else
+    {
+      time += EventNexus::EST_WITHOUT_DST;
+    }
   return time;  
 }
 
