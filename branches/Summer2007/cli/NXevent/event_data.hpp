@@ -133,6 +133,26 @@ inline e_nx_data_type typename_to_nexus_type(void);
  * \return The iso8601 string of the time.
  */
 std::string seconds_to_iso8601(uint32_t seconds);
+    
+/**
+ * \brief Fills in the nexus values associated with the
+ *        e_data_name enumeration.
+ * \param nx_data_type The enumeration specifying which piece
+ *                     of data. Ex - TOF for time of flight.
+ * \exception runtime_error Thrown if the enumeration value is 
+ *                          invalid.
+ * \return The string representation of the data. Ex - 
+ *         "time_of_flight" for TOF.
+ */
+std::string get_nx_data_name(const e_data_name nx_data_type);
+
+/** 
+ * \brief Opens a bank in a nexus file
+ * \param nexus_util The nexus utility with the open file handle.
+ * \param bank_number The bank number to open.
+ */
+void open_bank(NexusUtil & nexus_util,
+               const int bank_number);
 
 /** 
  * \class EventData
@@ -156,14 +176,6 @@ class EventData
     std::vector<Bank<EventNumT, PulseNumT> *> bank_map;
     std::vector<int> bank_numbers;
    
-    /**
-     * \brief Opens a bank in a nexus file.
-     * \param nexus_util The nexus utility
-     * \param bank_number The number of the bank to open
-     */
-    void open_bank(NexusUtil & nexus_util, 
-                   const int bank_number);
-
     void create_step_list(xmlNodePtr bank_node, 
                           const int bank_number);
 
@@ -183,18 +195,6 @@ class EventData
                          const int bank_number);
      
     void create_arbitrary(xmlNodePtr bank_node, int bank_number);
- 
-    /**
-     * \brief Fills in the nexus values associated with the
-     *        e_data_name enumeration.
-     * \param nx_data_type The enumeration specifying which piece
-     *                     of data. Ex - TOF for time of flight.
-     * \exception runtime_error Thrown if the enumeration value is 
-     *                          invalid.
-     * \return The string representation of the data. Ex - 
-     *         "time_of_flight" for TOF.
-     */
-    std::string get_nx_data_name(const e_data_name nx_data_type);
  
     /**
      * \brief Writes the private data from EventData to a nexus file.

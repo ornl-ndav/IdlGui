@@ -80,8 +80,7 @@ inline e_nx_data_type typename_to_nexus_type()
   throw runtime_error("Invalid nexus data type");
 }
 
-template <typename EventNumT, typename PulseNumT>
-string EventData<EventNumT, PulseNumT>::get_nx_data_name(const e_data_name nx_data_type)
+string get_nx_data_name(const e_data_name nx_data_type)
 {
   if (nx_data_type == TOF)
     {
@@ -116,9 +115,9 @@ void EventData<EventNumT, PulseNumT>::write_attr(NexusUtil & nexus_util,
   
   // Fill in the values that are associated with the
   // given e_data_name
-  data_name = this->get_nx_data_name(nx_data_name);  
+  data_name = get_nx_data_name(nx_data_name);  
 
-  this->open_bank(nexus_util, bank_number);
+  open_bank(nexus_util, bank_number);
   nexus_util.open_data(data_name);
   nexus_util.put_attr(attr_name, attr_value);
 }
@@ -559,8 +558,7 @@ void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util,
     }
 }
 
-template <typename EventNumT, typename PulseNumT>
-void EventData<EventNumT, PulseNumT>::open_bank(NexusUtil & nexus_util,
+void open_bank(NexusUtil & nexus_util,
                                 const int bank_number)
 {
   stringstream bank_num;
@@ -578,7 +576,7 @@ void EventData<EventNumT, PulseNumT>::write_private_data(NexusUtil & nexus_util,
   
   // Get the nexus data type of the template
   e_nx_data_type nexus_data_type = typename_to_nexus_type<EventNumT>();
-  this->open_bank(nexus_util, bank_number);
+  open_bank(nexus_util, bank_number);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
   nexus_util.put_data_with_slabs(nx_data, 16777215);
@@ -593,7 +591,7 @@ void EventData<EventNumT, PulseNumT>::write_data(NexusUtil & nexus_util,
   
   // Fill in the values that are associated with the 
   // given e_data_name
-  data_name = this->get_nx_data_name(nx_data_name);
+  data_name = get_nx_data_name(nx_data_name);
   if (nx_data_name == TOF)
     {
       this->write_private_data(nexus_util, 
