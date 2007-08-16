@@ -60,6 +60,14 @@ EventData<EventNumT, PulseNumT>::EventData()
 template<typename EventNumT, typename PulseNumT>
 EventData<EventNumT, PulseNumT>::~EventData()
 {
+  if (!this->bank_numbers.empty())
+    {
+      int size = bank_numbers.size();
+      for (int i = 0; i < size; i++)
+        {
+          delete this->banks[this->bank_numbers[i]];
+        }
+    }
 }
 
 template<>
