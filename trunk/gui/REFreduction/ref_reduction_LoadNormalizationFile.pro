@@ -11,7 +11,12 @@ PROCESSING = (*global).processing_message ;processing message
 ;get Data Run Number from DataTextField
 NormalizationRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
 LogBookText = '-> Openning NORMALIZATION Run Number: ' + NormalizationRunNumber
-putLogBookMessage, Event, LogBookText
+text = getLogBookText(Event)
+if (text[0] EQ '') then begin
+    putLogBookMessage, Event, LogBookText
+endif else begin
+    putLogBookMessage, Event, LogBookText, Append=1
+endelse
 LogBookText += '.....' + PROCESSING
 putNormalizationLogBookMessage, Event, LogBookText
 

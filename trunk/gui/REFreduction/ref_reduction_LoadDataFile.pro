@@ -11,8 +11,13 @@ PROCESSING = (*global).processing_message ;processing message
 ;get Data Run Number from DataTextField
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
 LogBookText = '-> Openning DATA Run Number: ' + DataRunNumber
-putLogBookMessage, Event, LogBookText
-LogBookText += '.....' + PROCESSING
+text = getLogBookText(Event)
+if (text[0] EQ '') then begin
+    putLogBookMessage, Event, LogBookText
+endif else begin
+    putLogBookMessage, Event, LogBookText, Append=1
+endelse
+LogBookText += '.....' + PROCESSING 
 putDataLogBookMessage, Event, LogBookText
 
 if (DataRunNumber EQ '') then begin ;Run number field is empty
