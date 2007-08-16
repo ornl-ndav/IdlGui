@@ -325,7 +325,7 @@ class EventData
     /**
      * \brief The destructor for the EventData class.
      */
-    ~EventData();
+    virtual ~EventData();
 };
 
 #endif
