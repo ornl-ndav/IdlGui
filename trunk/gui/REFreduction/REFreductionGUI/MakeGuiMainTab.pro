@@ -1,6 +1,4 @@
-PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize
-
-instrument = 'REF_L'
+PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

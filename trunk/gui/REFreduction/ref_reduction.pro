@@ -14,7 +14,7 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF instrument
+global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF instrument
                    REF_L : 'REF_L',$ ;name of REF_L instrument
                    REF_M : 'REF_M',$ ;name of REF_M instrument
                    Nx_REF_L : 256L,$ ;Nx for REF_L instrument
@@ -61,7 +61,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-MakeGuiMainTab, MAIN_BASE, MainBaseSize
+MakeGuiMainTab, MAIN_BASE, MainBaseSize, (*global).instrument
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

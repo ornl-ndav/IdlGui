@@ -20,9 +20,19 @@ END
 
 
 
-;----------------------------------------------------------
-;----------------------------------------------------------
 
+
+
+
+
+
+
+
+
+
+;**********************************************************************
+;REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L*
+;**********************************************************************
 ;Plots the 2D view of the data file for the REF_L
 PRO Plot2DDataFileForRefL, Event
 
@@ -33,6 +43,39 @@ widget_control,id,get_uvalue=global
 ;retrieve parameters
 Nx         = (*global).Nx_REF_L ;256
 Ny         = (*global).Ny_REF_L ;304
+
+Plot2DDataFile, Event, Nx, Ny
+END
+
+
+;**********************************************************************
+;REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M - REF_M*
+;**********************************************************************
+;Plots the 2D view of the data file for the REF_M
+PRO Plot2DDataFileForRefM, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
+Nx         = (*global).Nx_REF_M ;304
+Ny         = (*global).Ny_REF_M ;256
+
+Plot2DDataFile, Event, Nx, Ny
+END
+
+
+;**********************************************************************
+;Procedure that plots REF_L and REF_M 2D data plots                   *
+;**********************************************************************
+PRO Plot2DDataFile, Event, Nx, Ny
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
 PROCESSING = (*global).processing_message
 tmp_file = (*global).full_data_tmp_dat_file
 
@@ -83,5 +126,7 @@ free_lun,u
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
 
-
 END
+
+
+
