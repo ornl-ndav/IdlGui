@@ -62,7 +62,6 @@ int main(int32_t argc,
       vector<string> allowed_types;
       allowed_types.push_back("hdf4");
       allowed_types.push_back("hdf5");
-      allowed_types.push_back("xml");
       ValueArg<string> format("f", "format",
                        "format for the nexus file (default is hdf5)",
                        false, "hdf5", allowed_types, cmd);
@@ -91,10 +90,6 @@ int main(int32_t argc,
       else if (format.getValue() =="hdf5")
         {
           file_access = HDF_FIVE;
-        }
-      else if (format.getValue() == "xml")
-        {
-          file_access = XML;
         }
       else
         {
