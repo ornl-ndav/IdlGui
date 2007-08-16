@@ -1,14 +1,14 @@
 #include <vector>
 
-template <typename NumT>
+template <typename EventNumT, typename PulseNumT>
 class Bank
 {
   public:
   int pulse_index;
-  std::vector<NumT> tof;
-  std::vector<NumT> pixel_id;
-  std::vector<NumT> pulse_time;
-  std::vector<NumT> events_per_pulse;
+  std::vector<EventNumT> tof;
+  std::vector<EventNumT> pixel_id;
+  std::vector<PulseNumT> pulse_time;
+  std::vector<PulseNumT> events_per_pulse;
   Bank()
     {
       this->pulse_index = -1;
