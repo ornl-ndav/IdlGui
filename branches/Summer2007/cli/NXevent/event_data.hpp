@@ -282,17 +282,8 @@ class EventData
     void create_pixel_map(const std::string & mapping_file);
 
     /**
-     * \brief Writes the data to a nexus file. This is the overloaded 
-     *        function for when a pulse id file is present.
-     * \param nexus_util The nexus utility with the open file handle.
-     * \param pulse_id_file The name of the pulse id file. This parameter
-     *                      isn't used. It is only for overloading the function.
-     */
-    void write_nexus_file(NexusUtil & nexus_util, const std::string & pulse_id_file);
-
-    /**
-     * \brief Writes the data to a nexus file. This is the overloaded
-     *        function for when a pulse id file isn't present. 
+     * \brief Writes the data to a nexus file. If pulse information
+     *        hasn't been read in, then it only writes event information. 
      * \param nexus_util The nexus utility with the open file handle.
      */
     void write_nexus_file(NexusUtil & nexus_util);

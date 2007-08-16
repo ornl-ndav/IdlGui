@@ -130,13 +130,7 @@ int main(int32_t argc,
   NexusUtil nexus_util(config.out_path, file_access);
   
   // Write the nexus file
-  if (config.pulse_id_file.empty())
-    {
-      event_data.write_nexus_file(nexus_util);
-    }
-  else
-    {
-      event_data.write_nexus_file(nexus_util, config.pulse_id_file);
-    }
+  event_data.write_nexus_file(nexus_util);
+  
   return 0;
 }

@@ -33,10 +33,6 @@ void EventData<uint32_t, uint32_t>::read_data(const string & event_file,
                                     const string & bank_file);
 
 template 
-void EventData<uint32_t, uint32_t>::write_nexus_file(NexusUtil & nexus_util,
-                                           const string & pulse_id_file);
-
-template 
 void EventData<uint32_t, uint32_t>::write_nexus_file(NexusUtil & nexus_util);
 
 template 
@@ -514,37 +510,6 @@ void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util)
       nexus_util.close_group();
     }
   nexus_util.close_group();
-  // Write out each bank's information
-  size = this->bank_numbers.size();
-  for (int i = 0; i < size; i++)
-    {
-      if (this->banks[bank_numbers[i]]->tof.size() > 0)
-        {
-          this->write_data(nexus_util, TOF, this->bank_numbers[i]);
-          this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "units", "10^-7second", 
-                           TOF, this->bank_numbers[i]);
-        }
-    }
-}
-
-template <typename EventNumT, typename PulseNumT>
-void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util, 
-                                       const string & pulse_id_file)
-{
-  // First layout the nexus file
-  nexus_util.make_group("entry", "NXentry");
-  nexus_util.open_group("entry", "NXentry");
-  int size = bank_numbers.size();
-  for (int i = 0; i < size; i++)
-    { 
-      stringstream bank_num;
-      bank_num << "bank" << this->bank_numbers[i];
-      nexus_util.make_group(bank_num.str(), "NXevent_data");
-      nexus_util.open_group(bank_num.str(), "NXevent_data");
-      nexus_util.close_group();
-    }
-  nexus_util.close_group();
   
   // Write out each bank's information
   size = this->bank_numbers.size();
@@ -554,14 +519,17 @@ void EventData<EventNumT, PulseNumT>::write_nexus_file(NexusUtil & nexus_util,
         {
           this->write_data(nexus_util, TOF, this->bank_numbers[i]);
           this->write_data(nexus_util, PIXEL_ID, this->bank_numbers[i]);
-          this->write_data(nexus_util, PULSE_TIME, this->bank_numbers[i]);
-          this->write_data(nexus_util, EVENTS_PER_PULSE, this->bank_numbers[i]);
           this->write_attr(nexus_util, "units", "10^-7second", 
                            TOF, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "units", "10^-9second", 
-                           PULSE_TIME, this->bank_numbers[i]);
-          this->write_attr(nexus_util, "offset", this->get_pulse_time_offset(), 
-                           PULSE_TIME, this->bank_numbers[i]);
+          if (!this->banks[this->bank_numbers[i]]->pulse_time.empty())
+            {
+              this->write_data(nexus_util, PULSE_TIME, this->bank_numbers[i]);
+              this->write_data(nexus_util, EVENTS_PER_PULSE, this->bank_numbers[i]);
+              this->write_attr(nexus_util, "units", "10^-9second", 
+                               PULSE_TIME, this->bank_numbers[i]);
+              this->write_attr(nexus_util, "offset", this->get_pulse_time_offset(), 
+                               PULSE_TIME, this->bank_numbers[i]);
+            }
         }
     }
 }
