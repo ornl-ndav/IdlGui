@@ -1,6 +1,6 @@
 ;this function load the given nexus file and dump the binary file
-;in the tmp data file
-PRO REFreduction_LoadDatafile, Event
+;in the tmp norm file
+PRO REFreduction_LoadNormalizationfile, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -9,13 +9,13 @@ widget_control,id,get_uvalue=global
 PROCESSING = (*global).processing_message ;processing message
 
 ;get Data Run Number from DataTextField
-DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
-LogBookText = '-> Openning DATA Run Number: ' + DataRunNumber
+NormalizationRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
+LogBookText = '-> Openning NORMALIZATION Run Number: ' + NormalizationRunNumber
 putLogBookMessage, Event, LogBookText
 LogBookText += '.....' + PROCESSING
-putDataLogBookMessage, Event, LogBookText
+putNormalizationLogBookMessage, Event, LogBookText
 
-if (DataRunNumber EQ '') then begin ;Run number field is empty
+if (NormalizationRunNumber EQ '') then begin ;Run number field is empty
 
 ;this should never be reached because the program will only enable the
 ;switch if a valid number is in the Text Field
@@ -34,7 +34,7 @@ endif else begin
     instrument=(*global).instrument ;retrieve name of instrument
     isNeXusFound = 0 ;by default, NeXus not found
     full_nexus_name = find_full_nexus_name(Event,$
-                                           DataRunNumber,$
+                                           NormalizationRunNumber,$
                                            instrument,$
                                            isNeXusFound)
     
@@ -46,20 +46,20 @@ endif else begin
         Message = 'FAILED - NeXus file does not exist'
         putTextAtEndOfLogBookLastLine, Event, LogBookText, Message
 ;get data log book full text
-        DataLogBookText = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine,$
+        NormalizationLogBookText = getNormalizationLogBookText(Event)
+        putTextAtEndOfNormalizationLogBookLastLine,$
           Event,$
-          DataLogBookText,$
+          NormalizationLogBookText,$
           'NeXus does not exist!',$
           PROCESSING
         
 ;no needs to do anything more
         
     endif else begin            ;NeXus has been found
-        
-;store run number of data file
-        (*global).data_run_number = DataRunNumber
 
+;store run number of normalization file
+        (*global).norm_run_number = NormalizationRunNumber
+        
 ;tells the user that the NeXus file has been found
 ;get log book full text
         LogBookText = getLogBookText(Event)
@@ -75,7 +75,7 @@ endif else begin
         working_path = (*global).working_path
         LogBookText = '----> Dump binary data at this location: ' + working_path
         putLogBookMessage, Event, LogBookText, Append=1
-        RefReduction_DumpBinaryData, Event, full_nexus_name, working_path
+        RefReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
         
       endelse                     ;end of ~isNeXusFound
 
