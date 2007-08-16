@@ -69,30 +69,70 @@ class BankData
      * \param number The string representing the pixel number.
      * \param bank_number The number of the bank the pixel will be 
      *                    mapped to.
-     * \exception 
+     * \exception runtime_error Thrown when an invalid number is given.
      */
     void add_to_bank_map(const std::string & number,
                          const int bank_number);
-
+    
+    /**
+     * \brief Takes a continuous range of pixel numbers and add them to
+     *        the bank map. 
+     * \param start The string representing the starting pixel number.
+     * \param stop The string representing the ending pixel number 
+     *             (not included in the map).
+     * \param bank_number The number of the bank the pixels will be 
+     *                    mapped to.
+     * \exception runtime_error Thrown when an invalid number is given.
+     */
     void add_to_bank_map(const std::string & start,
                          const std::string & stop,
                          const int bank_number);
 
+    /**
+     * \brief Takes a continuous range of pixel numbers with an increment
+     *        value and adds them to the bank map. 
+     * \param start The string representing the starting pixel number.
+     * \param stop The string representing the ending pixel number
+     *             (not included in the map).
+     * \param step The string representing the amount to increment by when
+     *             looping through the start and the stop.
+     * \param bank_number The number of the bank the pixels will be 
+     *                    mapped to.
+     * \exception runtime_error Thrown when an invalid number is given
+     */
     void add_to_bank_map(const std::string & start,
                          const std::string & stop,
                          const std::string & step,
                          const int bank_number);
 
-
   public:
+    /**
+     * \brief The vector containing the numbers of the banks in order.
+     */
     std::vector<int> bank_numbers;
 
+    /**
+     * \brief Gets a bank based off a pixel id.
+     * \param pixel_id The pixel id number associated with the bank.
+     */
     Bank<EventNumT, PulseNumT> * get_bank_by_pixel_id(const EventNumT pixel_id);
 
+    /**
+     * \brief Get a bank based off a bank number.
+     * \param The bank number of the bank.
+     */
     Bank<EventNumT, PulseNumT> * get_bank_by_bank_number(const int bank_number);
 
+    /**
+     * \brief The constructor of the BankData class.
+     * \param bank_file The xml bank configuration file to be parsed.
+     */
     BankData(const std::string & bank_file);
 
+    /** 
+     * \brief The destructor for the BankData class. Frees all the banks that are
+     *        newed.
+     */
     ~BankData();
 };
 
