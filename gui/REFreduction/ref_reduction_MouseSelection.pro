@@ -5,10 +5,11 @@ PRO REFreduction_SelectionPressLeft, event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-x=event.x
-y=event.y
 
-print, 'Left clicking the mouse'
+;x=event.x
+;y=event.y
+
+
 
 
 END
