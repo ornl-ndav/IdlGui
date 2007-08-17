@@ -14,35 +14,38 @@ using std::string;
 using std::runtime_error;
 
 template 
-BankData<uint32_t, uint32_t>::BankData(const string & bank_file);
+BankData<uint32_t, uint32_t>::
+BankData(const string & bank_file);
 
 template 
-BankData<uint32_t, uint32_t>::~BankData();
+BankData<uint32_t, uint32_t>::
+~BankData();
 
 template
-Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>
-::get_bank_by_pixel_id(const uint32_t pixel_id);
+Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>::
+get_bank_by_pixel_id(const uint32_t pixel_id);
 
 template
-Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>
-::get_bank_by_bank_number(int bank_number);
+Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>::
+get_bank_by_bank_number(int bank_number);
 
 template<typename EventNumT, typename PulseNumT>
-Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>
-::get_bank_by_pixel_id(const EventNumT pixel_id)
+Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::
+get_bank_by_pixel_id(const EventNumT pixel_id)
 {
   return this->bank_map[pixel_id];
 }
 
 template<typename EventNumT, typename PulseNumT>
-Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>
-::get_bank_by_bank_number(const int bank_number)
+Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::
+get_bank_by_bank_number(const int bank_number)
 {
   return this->banks[bank_number];
 }
 
 template<typename EventNumT, typename PulseNumT>
-BankData<EventNumT, PulseNumT>::~BankData()
+BankData<EventNumT, PulseNumT>::
+~BankData()
 {
   if (!this->bank_numbers.empty())
     {
@@ -76,8 +79,9 @@ bool is_positive_int(string str)
 }
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::add_to_bank_map(const string & number,
-                                      const int bank_number)
+void BankData<EventNumT, PulseNumT>::
+add_to_bank_map(const string & number,
+                const int bank_number)
 {
   if (number.empty() || !is_positive_int(number))
     {
@@ -93,18 +97,20 @@ void BankData<EventNumT, PulseNumT>::add_to_bank_map(const string & number,
 }
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::add_to_bank_map(const string & start,
-                                      const string & stop,
-                                      int bank_number)
+void BankData<EventNumT, PulseNumT>::
+add_to_bank_map(const string & start,
+                const string & stop,
+                int bank_number)
 {
   this->add_to_bank_map(start, stop, "1", bank_number);
 }
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::add_to_bank_map(const string & start,
-                                      const string & stop,
-                                      const string & step,
-                                      const int bank_number)
+void BankData<EventNumT, PulseNumT>::
+add_to_bank_map(const string & start,
+                const string & stop,
+                const string & step,
+                const int bank_number)
 {
   if (start.empty() || !is_positive_int(start))
     {
@@ -141,7 +147,8 @@ void BankData<EventNumT, PulseNumT>::add_to_bank_map(const string & start,
 
 
 template<typename EventNumT, typename PulseNumT>
-BankData<EventNumT, PulseNumT>::BankData(const string & bank_file)
+BankData<EventNumT, PulseNumT>::
+BankData(const string & bank_file)
 {
   xmlDocPtr doc = NULL;
   xmlLineNumbersDefault(1);
@@ -222,8 +229,9 @@ BankData<EventNumT, PulseNumT>::BankData(const string & bank_file)
 }
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::create_step_list(xmlNodePtr bank_node,
-                                                      int bank_number)
+void BankData<EventNumT, PulseNumT>::
+create_step_list(xmlNodePtr bank_node,
+                 int bank_number)
 {
   string start;
   string stop;
@@ -278,8 +286,9 @@ void BankData<EventNumT, PulseNumT>::create_step_list(xmlNodePtr bank_node,
 }
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::create_cont_list(xmlNodePtr bank_node,
-                                                      int bank_number)
+void BankData<EventNumT, PulseNumT>::
+create_cont_list(xmlNodePtr bank_node,
+                 int bank_number)
 {
   string start;
   string stop;
@@ -323,8 +332,9 @@ void BankData<EventNumT, PulseNumT>::create_cont_list(xmlNodePtr bank_node,
 
 
 template <typename EventNumT, typename PulseNumT>
-void BankData<EventNumT, PulseNumT>::create_arbitrary(xmlNodePtr bank_node,
-                                       int bank_number)
+void BankData<EventNumT, PulseNumT>::
+create_arbitrary(xmlNodePtr bank_node,
+                 int bank_number)
 {
   if (bank_node->children == NULL ||
       bank_node->children->content == NULL)
