@@ -87,25 +87,21 @@ BankData<EventNumT, PulseNumT>::
     }
 }
 
-bool is_positive_int(const string & str)
+void check_positive_int(const string & str)
 {
   if (str.empty())
     {
-      return false;
+      throw runtime_error("Invalid empty number in bank config");
     }
   int size = str.length();
-  if (str[0] == '0' && size > 1)
-    {
-      return false;
-    }
   for (int i = 1; i < size; i++)
     {
       if (!isdigit(str[i]))
         {
-          return false;
+          throw runtime_error("Invalid number in bank config: "
+                              + str);
         }
     }
-  return true;
 }
 
 template <typename EventNumT, typename PulseNumT>
@@ -113,11 +109,7 @@ void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & number,
                 const int bank_number)
 {
-  if (number.empty() || !is_positive_int(number))
-    {
-      throw runtime_error("Invalid number in arbitrary data: "
-                          + number);
-    }
+  check_positive_int(number);
   int num = atoi(number.c_str());
   if (num > this->bank_map.size())
     {
@@ -142,21 +134,9 @@ add_to_bank_map(const string & start,
                 const string & step,
                 const int bank_number)
 {
-  if (start.empty() || !is_positive_int(start))
-    {
-      throw runtime_error("Invalid start number: "
-                          + start);
-    }
-  if (stop.empty() || !is_positive_int(stop))
-    {
-      throw runtime_error("Invalid stop number: "
-                          + stop);
-    }
-  if (step.empty() || !is_positive_int(step))
-    {
-      throw runtime_error("Invalid step number: "
-                          + step);
-    }
+  check_positive_int(start);
+  check_positive_int(stop);
+  check_positive_int(step);
   if (start >= stop)
     {
       throw runtime_error(
@@ -212,11 +192,7 @@ parse_bank_file(const string & bank_file)
                 }
               string number_str = reinterpret_cast<const char *>
                              (bank_node->children->content);
-              if (!is_positive_int(number_str))
-                {
-                  throw runtime_error("Invalid number: "
-                                      + number_str);
-                }
+              check_positive_int(number_str);
               bank_number = atoi(number_str.c_str());
               if (bank_number > max_bank_number)
                 {
