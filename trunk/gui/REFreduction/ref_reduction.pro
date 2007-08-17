@@ -35,7 +35,15 @@ global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF inst
                    DATA_DD_ptr : ptr_new(0L),$ ;detector view of DATA (2D)
                    DATA_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of DATA
                    NORM_DD_ptr : ptr_new(0L),$ ;detector view of NORMALIZATION (2D)
-                   NORM_D_ptr : ptr_new(0L)$ ;(Ntof,Ny,Nx) array of NORMALIZATION
+                   NORM_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of NORMALIZATION
+                   select_data_back_1 : 0,$ ;Select first border of background region (data)
+                   select_data_back_2 : 0,$ ;Select second border of background region (data)
+                   select_data_signal_1 : 0,$ ;Select first border of signal exclusion (data)
+                   select_data_signal_2 : 0,$ ;Select second border of signal exclusion (data)
+                   select_norm_back_1 : 0,$ ;Select first border of background region (norm)
+                   select_norm_back_2 : 0,$ ;Select second border of background region (norm)
+                   select_norm_signal_1 : 0,$ ;Select first border of signal exclusion (norm)
+                   select_norm_signal_2 : 0$ ;Select second border of signal exclusion (norm)
                   })
 
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
