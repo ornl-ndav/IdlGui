@@ -253,30 +253,30 @@ create_step_list(xmlNodePtr bank_node,
       throw runtime_error(
         "Bank number must be specified before step list");
     }
-  xmlNodePtr cont_list_node;
-  for (cont_list_node = bank_node->children; cont_list_node;
-       cont_list_node = cont_list_node->next)
+  xmlNodePtr step_list_node;
+  for (step_list_node = bank_node->children; step_list_node;
+       step_list_node = step_list_node->next)
     {
-      if (xmlStrcmp(cont_list_node->name,
+      if (xmlStrcmp(step_list_node->name,
           (const xmlChar *)"start") == 0)
         {
-          check_xml_content(cont_list_node);
+          check_xml_content(step_list_node);
           start = reinterpret_cast<const char *>
-                  (cont_list_node->children->content);
+                  (step_list_node->children->content);
         }
-      else if (xmlStrcmp(cont_list_node->name,
+      else if (xmlStrcmp(step_list_node->name,
                (const xmlChar *)"step") == 0)
         {
-          check_xml_content(cont_list_node->children);
+          check_xml_content(step_list_node->children);
           step = reinterpret_cast<const char *>
-                  (cont_list_node->children->content);
+                  (step_list_node->children->content);
         }
-      else if (xmlStrcmp(cont_list_node->name,
+      else if (xmlStrcmp(step_list_node->name,
                (const xmlChar *)"stop") == 0)
         {
-          check_xml_content(cont_list_node);
+          check_xml_content(step_list_node);
           stop = reinterpret_cast<const char *>
-                  (cont_list_node->children->content);
+                  (step_list_node->children->content);
         }
     }
 
