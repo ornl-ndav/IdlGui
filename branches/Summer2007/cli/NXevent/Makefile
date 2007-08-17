@@ -1,6 +1,6 @@
 #$Id$
 CXX = g++ -g
-ALL = rand2nxl event2nxl nxl_diff
+ALL = rand2nxl event2nxl nxl_diff nxl2event
 
 RAND_OBJS 	= 	rand2nxl.o
 

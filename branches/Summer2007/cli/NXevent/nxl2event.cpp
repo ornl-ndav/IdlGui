@@ -206,7 +206,7 @@ int get_xml_int(xmlNodePtr node)
 
 void parse_bank_file(const string & bank_file,
                      vector<uint32_t> & bank_numbers,
-                     vector<Bank<uint32_t> *> & banks)
+                     vector<Bank<uint32_t, uint32_t> *> & banks)
 {
   xmlDocPtr doc = NULL;
   xmlLineNumbersDefault(1);
@@ -241,7 +241,7 @@ void parse_bank_file(const string & bank_file,
                 }
               bank_numbers.push_back(
                 bank_number);
-              banks[bank_number] = new Bank<uint32_t>();
+              banks[bank_number] = new Bank<uint32_t, uint32_t>();
             }
         }
     }
@@ -336,7 +336,7 @@ int main(int argc, char * argv[])
   NexusUtil nexus_util(input_file, nx_access);
   
   vector<uint32_t> bank_numbers;
-  vector<Bank<uint32_t> *> banks;
+  vector<Bank<uint32_t, uint32_t> *> banks;
   parse_bank_file(banking_file, bank_numbers, banks);
 
   // Open the event file
