@@ -104,6 +104,16 @@ void check_positive_int(const string & str)
     }
 }
 
+void check_xml_content(xmlNodePtr node)
+{
+  if(node->children == NULL ||
+     node->children->content == NULL)
+    {
+      throw runtime_error("No content found under xml tag: " 
+        + string(reinterpret_cast<const char *>(node->name)));
+    }
+}
+
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & number,
@@ -185,11 +195,7 @@ parse_bank_file(const string & bank_file)
             {
               // When a valid bank number is found, push it on
               // the bank numbers vector
-              if(bank_node->children == NULL ||
-                 bank_node->children->content == NULL)
-                {
-                  throw runtime_error("No bank number found");
-                }
+              check_xml_content(bank_node);
               string number_str = reinterpret_cast<const char *>
                              (bank_node->children->content);
               check_positive_int(number_str);
@@ -254,33 +260,21 @@ create_step_list(xmlNodePtr bank_node,
       if (xmlStrcmp(cont_list_node->name,
           (const xmlChar *)"start") == 0)
         {
-          if(cont_list_node->children == NULL ||
-             cont_list_node->children->content == NULL)
-            {
-              throw runtime_error("No start number found");
-            }
+          check_xml_content(cont_list_node);
           start = reinterpret_cast<const char *>
                   (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"step") == 0)
         {
-          if(cont_list_node->children == NULL ||
-             cont_list_node->children->content == NULL)
-            {
-              throw runtime_error("No step number found");
-            }
+          check_xml_content(cont_list_node->children);
           step = reinterpret_cast<const char *>
                   (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"stop") == 0)
         {
-          if(cont_list_node->children == NULL ||
-             cont_list_node->children->content == NULL)
-            {
-              throw runtime_error("No stop number found");
-            }
+          check_xml_content(cont_list_node);
           stop = reinterpret_cast<const char *>
                   (cont_list_node->children->content);
         }
@@ -310,22 +304,14 @@ create_cont_list(xmlNodePtr bank_node,
       if (xmlStrcmp(cont_list_node->name,
           (const xmlChar *)"start") == 0)
         {
-          if(cont_list_node->children == NULL ||
-             cont_list_node->children->content == NULL)
-            {
-              throw runtime_error("No start number found");
-            }
+          check_xml_content(cont_list_node);
           start = reinterpret_cast<const char *>
                     (cont_list_node->children->content);
         }
       else if (xmlStrcmp(cont_list_node->name,
                (const xmlChar *)"stop") == 0)
         {
-          if(cont_list_node->children == NULL ||
-             cont_list_node->children->content == NULL)
-            {
-              throw runtime_error("No stop number found");
-            }
+          check_xml_content(cont_list_node);
           stop = reinterpret_cast<const char *>
                   (cont_list_node->children->content);
         }
@@ -342,84 +328,77 @@ void BankData<EventNumT, PulseNumT>::
 create_arbitrary(xmlNodePtr bank_node,
                  const int bank_number)
 {
-  if (bank_node->children == NULL ||
-      bank_node->children->content == NULL)
+  check_xml_content(bank_node);
+  string number_str(reinterpret_cast<const char *>
+                    (bank_node->children->content));
+  int size = number_str.length();
+  for (int i = 0; i < size; i++)
     {
-      throw runtime_error("No data found in arbitrary list");
-    }
-  else
-    {
-      string number_str(reinterpret_cast<const char *>
-                        (bank_node->children->content));
-      int size = number_str.length();
-      for (int i = 0; i < size; i++)
+      if (isdigit(number_str[i]))
         {
-          if (isdigit(number_str[i]))
+          string first_num_str;
+          while(isdigit(number_str[i]))
             {
-              string first_num_str;
-              while(isdigit(number_str[i]))
+              first_num_str.push_back(number_str[i]);
+              i++;
+              if (i == size)
                 {
-                  first_num_str.push_back(number_str[i]);
-                  i++;
-                  if (i == size)
-                    {
-                      this->add_to_bank_map(first_num_str, bank_number);
-                      return;
-                    }
+                  this->add_to_bank_map(first_num_str, bank_number);
+                  return;
+                }
+            }
+          while(isspace(number_str[i]))
+            {
+              i++;
+              if (i == size)
+                {
+                  return;
+                }
+            }
+          if (number_str[i] == '-')
+            {
+              string second_num_str;
+              i++;
+              if (i == size)
+                {
+                  throw runtime_error("Invalid data in arbitrary data");
                 }
               while(isspace(number_str[i]))
                 {
                   i++;
                   if (i == size)
                     {
-                      return;
+                      throw runtime_error("Invalid data in arbitrary data");
                     }
                 }
-              if (number_str[i] == '-')
+              if (!isdigit(number_str[i]))
                 {
-                  string second_num_str;
+                  throw runtime_error("Invalid data in arbitrary data");
+                }
+              while(i != size && isdigit(number_str[i]))
+                {
+                  second_num_str.push_back(number_str[i]);
                   i++;
-                  if (i == size)
-                    {
-                      throw runtime_error("Invalid data in arbitrary data");
-                    }
-                  while(isspace(number_str[i]))
-                    {
-                      i++;
-                      if (i == size)
-                        {
-                          throw runtime_error("Invalid data in arbitrary data");
-                        }
-                    }
-                  if (!isdigit(number_str[i]))
-                    {
-                      throw runtime_error("Invalid data in arbitrary data");
-                    }
-                  while(i != size && isdigit(number_str[i]))
-                    {
-                      second_num_str.push_back(number_str[i]);
-                      i++;
-                    }
-                  // Add the first through the second number, not including the second
-                  this->add_to_bank_map(first_num_str, second_num_str, bank_number);
-                  // Add the second separately
-                  this->add_to_bank_map(second_num_str, bank_number);
                 }
-              else if (number_str[i] == ',')
-                {
-                  this->add_to_bank_map(first_num_str, bank_number);
-                }
-              else
-                {
-                  throw runtime_error("Invalid character found in arbitrary data: "
-                                      + number_str[i]);
-                }
+              // Add the first through the second number, not including the second
+              this->add_to_bank_map(first_num_str, second_num_str, bank_number);
+              // Add the second separately
+              this->add_to_bank_map(second_num_str, bank_number);
             }
-          else if (!isspace(number_str[i]))
+          else if (number_str[i] == ',')
+            {
+              this->add_to_bank_map(first_num_str, bank_number);
+            }
+          else
             {
               throw runtime_error("Invalid character found in arbitrary data: "
                                   + number_str[i]);
             }
+        }
+      else if (!isspace(number_str[i]))
+        {
+          throw runtime_error("Invalid character found in arbitrary data: "
+                              + number_str[i]);
         }
     }
 }
