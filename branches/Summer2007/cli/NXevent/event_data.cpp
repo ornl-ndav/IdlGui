@@ -54,6 +54,33 @@ template
 EventData<uint32_t, uint32_t>::
 ~EventData();
 
+template 
+void EventData<uint32_t, uint64_t>::
+read_data(const string & event_file,
+          const string & pulse_id_file,
+          const string & bank_file);
+
+template 
+void EventData<uint32_t, uint64_t>::
+write_nexus_file(NexusUtil & nexus_util);
+
+template 
+void EventData<uint32_t, uint64_t>::
+read_data(const string & event_file,
+          const string & bank_file);
+
+template 
+void EventData<uint32_t, uint64_t>::
+create_pixel_map(const string & mapping_file);
+
+template 
+EventData<uint32_t, uint64_t>::
+EventData();
+
+template 
+EventData<uint32_t, uint64_t>::
+~EventData();
+
 template<typename EventNumT, typename PulseNumT>
 EventData<EventNumT, PulseNumT>::
 EventData()
@@ -65,6 +92,26 @@ EventData<EventNumT, PulseNumT>::
 ~EventData()
 {
   delete this->bank_data;
+}
+
+template<>
+inline e_nx_data_type typename_to_nexus_type<uint64_t>()
+{
+#ifdef NX_UINT64
+  return UINT64;
+#else
+  throw runtime_error("No nexus support for uint64");
+#endif
+}
+
+template<>
+inline e_nx_data_type typename_to_nexus_type<int64_t>()
+{
+#ifdef NX_INT64
+  return INT64;
+#else
+  throw runtime_error("No nexus support for int64");
+#endif
 }
 
 template<>
@@ -214,7 +261,7 @@ write_private_data(NexusUtil & nexus_util,
   int dimensions = nx_data.size();
   
   // Get the nexus data type of the template
-  e_nx_data_type nexus_data_type = typename_to_nexus_type<EventNumT>();
+  e_nx_data_type nexus_data_type = typename_to_nexus_type<DataNumT>();
   open_bank(nexus_util, bank_number);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);

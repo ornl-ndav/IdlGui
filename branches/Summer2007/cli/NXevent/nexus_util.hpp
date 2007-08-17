@@ -44,6 +44,14 @@ typedef enum e_nx_data_type
   UINT16 =  NX_UINT16, 
   INT32 = NX_INT32, 
   UINT32 = NX_UINT32
+
+#ifdef NX_INT64
+  , INT64 = NX_INT64
+#endif
+
+#ifdef NX_UINT64
+  , UINT64 = NX_UINT64
+#endif
 };
 
 /** 
