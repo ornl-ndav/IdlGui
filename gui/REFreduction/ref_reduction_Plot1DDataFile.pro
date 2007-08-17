@@ -90,10 +90,33 @@ wset,id_value
 new_Ntof = (*global).Ntof_DATA
 new_N = 2 * N
 tvimg = rebin(img, new_Ntof, new_N,/sample)
+(*(*global).tvimg_ptr) = tvimg ;remove_me
 tvscl, tvimg, /device
 
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
+
+END
+
+
+
+
+;**********************************************************************
+;Procedure that replots REF_L                                         *
+;**********************************************************************
+PRO RePlot1DDataFile, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tvimg = (*(*global).tvimg_ptr)
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+
+tvscl, tvimg, /device
 
 END
