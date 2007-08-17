@@ -136,7 +136,7 @@ inline e_nx_data_type typename_to_nexus_type(void);
  * \return The iso8601 string of the time.
  */
 template <typename NumT>
-std::string seconds_to_iso8601(NumT seconds);
+std::string seconds_to_iso8601(const NumT seconds);
     
 /**
  * \brief Fills in the nexus values associated with the
@@ -199,7 +199,7 @@ class EventData
     template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
                             std::vector<DataNumT> & nx_data,
-                            std::string & data_name,
+                            const std::string & data_name,
                             const int bank_number);
 
   public:

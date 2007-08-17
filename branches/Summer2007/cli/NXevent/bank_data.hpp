@@ -62,7 +62,8 @@ class BankData
      * \exception runtime_error Thrown when an invalid number is read in 
      *                          or when a parsing error occurs.
      */
-    void create_arbitrary(xmlNodePtr bank_node, int bank_number);
+    void create_arbitrary(xmlNodePtr bank_node, 
+                          const int bank_number);
     
     /**
      * \brief Takes a single pixel number and adds it to the bank map. 

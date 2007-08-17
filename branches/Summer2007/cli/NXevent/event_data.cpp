@@ -254,7 +254,7 @@ template <typename DataNumT>
 void EventData<EventNumT, PulseNumT>::
 write_private_data(NexusUtil & nexus_util,
                    vector<DataNumT> & nx_data, 
-                   string & data_name,
+                   const string & data_name,
                    const int bank_number)
 {
   int dimensions = nx_data.size();
@@ -380,7 +380,7 @@ create_pixel_map(const string & mapping_file)
 }
 
 template <typename NumT>
-string seconds_to_iso8601(NumT seconds)
+string seconds_to_iso8601(const NumT seconds)
 {
   char date[100];
   // Since the times start at a different epoch (jan 1, 1990) than

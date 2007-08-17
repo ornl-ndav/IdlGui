@@ -87,7 +87,7 @@ BankData<EventNumT, PulseNumT>::
     }
 }
 
-bool is_positive_int(string str)
+bool is_positive_int(const string & str)
 {
   if (str.empty())
     {
@@ -130,7 +130,7 @@ template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & start,
                 const string & stop,
-                int bank_number)
+                const int bank_number)
 {
   this->add_to_bank_map(start, stop, "1", bank_number);
 }
@@ -261,7 +261,7 @@ parse_bank_file(const string & bank_file)
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_step_list(xmlNodePtr bank_node,
-                 int bank_number)
+                 const int bank_number)
 {
   string start;
   string stop;
@@ -318,7 +318,7 @@ create_step_list(xmlNodePtr bank_node,
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_cont_list(xmlNodePtr bank_node,
-                 int bank_number)
+                 const int bank_number)
 {
   string start;
   string stop;
@@ -364,7 +364,7 @@ create_cont_list(xmlNodePtr bank_node,
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_arbitrary(xmlNodePtr bank_node,
-                 int bank_number)
+                 const int bank_number)
 {
   if (bank_node->children == NULL ||
       bank_node->children->content == NULL)
