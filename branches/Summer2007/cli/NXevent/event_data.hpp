@@ -186,7 +186,11 @@ class EventData
      *        be written to the nexus file later.
      */
     std::string pulse_time_offset;
-   
+ 
+    /**
+     * \brief The data that holds all the information from the banks.
+     *        This includes the event and pulse id information.
+     */  
     BankData<EventNumT, PulseNumT> bank_data;
 
     /**
@@ -250,6 +254,12 @@ class EventData
      */
     void write_nexus_file(NexusUtil & nexus_util);
 
+    /**
+     * \brief Writes a bank to a nexus file, using the write_data and
+     *        write_attr functions.
+     * \param nexus_util The nexus utility that has the open file handle.
+     * \param bank_number The number of the bank to write.
+     */
     void write_bank(NexusUtil & nexus_util, 
                     const int bank_number);
     /**
