@@ -17,6 +17,21 @@ CASE Event.id OF
         REFreductionEventcb_LoadAndPlotDataFile, Event
     end
 
+;1D plot of DATA
+    widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
+        if( Event.type EQ 0 )then begin
+            if (Event.press EQ 1) then $
+                REFreduction_SelectionPressLeft, Event ;left button
+            if (Event.press EQ 4) then $
+              REFreduction_selectionPressRight, Event ;right button
+        endif
+        if (Event.type EQ 1) then $ ;release
+          REFreduction_SelectionRelease, Event
+        if (Event.type EQ 2) then $ ;move
+          REFreduction_SelectionMove, Event
+    end
+    
+    
 ;LOAD NORMALIZATION file button
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_button'): begin
         REFreductionEventcb_LoadAndPlotNormalizationFile, Event

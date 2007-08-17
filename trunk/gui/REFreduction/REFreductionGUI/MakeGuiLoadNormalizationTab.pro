@@ -7,7 +7,10 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  GlobalRunNumber,$
                                  RunNumberTitles,$
                                  GlobalLoadDataGraphs,$
-                                 FileInfoSize
+                                 FileInfoSize,$
+                                 LeftInteractionHelpsize,$
+                                 LeftInteractionHelpMessageLabeltitle
+
  
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
