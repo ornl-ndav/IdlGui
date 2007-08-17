@@ -333,7 +333,8 @@ create_pixel_map(const string & mapping_file)
   file.close();
 }
 
-string seconds_to_iso8601(uint32_t seconds)
+template <typename NumT>
+string seconds_to_iso8601(NumT seconds)
 {
   char date[100];
   // Since the times start at a different epoch (jan 1, 1990) than

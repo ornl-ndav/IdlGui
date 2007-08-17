@@ -135,7 +135,8 @@ inline e_nx_data_type typename_to_nexus_type(void);
  * \param seconds The number of seconds since jan 1, 1990.
  * \return The iso8601 string of the time.
  */
-std::string seconds_to_iso8601(uint32_t seconds);
+template <typename NumT>
+std::string seconds_to_iso8601(NumT seconds);
     
 /**
  * \brief Fills in the nexus values associated with the
