@@ -7,7 +7,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
                         GlobalRunNumber,$
                         RunNumberTitles,$
                         GlobalLoadDataGraphs,$
-                        FileInfoSize
+                        FileInfoSize,$
+                        LeftInteractionHelpsize,$
+                        LeftInteractionHelpMessageLabeltitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -66,6 +68,30 @@ data_file_info_label = widget_label(LOAD_DATA_BASE,$
                                     scr_ysize=FileInfoSize[3],$
                                     frame=1,$
                                     value='')
+
+;Help base and text field that will show what is going on in the
+;drawing region
+LeftInteractionHelpMessageBase = widget_base(LOAD_DATA_BASE,$
+                                             uname='left_interaction_help_message_base',$
+                                             xoffset=LeftInteractionHelpsize[0],$
+                                             yoffset=LeftInteractionHelpsize[1],$
+                                             scr_xsize=LeftInteractionHelpsize[2],$
+                                             scr_ysize=LeftInteractionHelpsize[3],$
+                                             frame=1)
+
+LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
+                                               xoffset=LeftInteractionHelpSize[4],$
+                                               yoffset=LeftInteractionHelpSize[5],$
+                                               value=LeftInteractionHelpMessageLabelTitle)
+
+LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
+                                           xoffset=LeftInteractionHelpSize[6],$
+                                           yoffset=LeftInteractionHelpSize[7],$
+                                           scr_xsize=LeftInteractionHelpSize[8],$
+                                           scr_ysize=LeftInteractionHelpSize[9],$
+                                           uname='DATA_left_interaction_help_text')
+                                           
+
 
 ;Text field box to get info about current process
 data_log_book_text_field = widget_text(LOAD_DATA_BASE,$

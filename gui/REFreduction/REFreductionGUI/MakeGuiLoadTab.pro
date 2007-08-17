@@ -62,12 +62,26 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
 FileInfoSize_1 = [D_DD_TabSize[2]+50,$
                   15,$
                   495,$
-                  600]
+                  400]
+
+;help text box to explain what is going on on the left
+LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
+                                      425,$
+                                      495,$
+                                      190]
+LeftInteractionHelpMessageLabelSize = [5,5]
+LeftInteractionHelpMessageLabelTitle = 'H E L P'
+LeftInteractionHelpTextSize = [5,25,485,160]
+LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
+                           LeftInteractionHelpMessageLabelSize,$
+                           LeftInteractionHelpTextsize]
+                           
 ;bottom text field
 FileInfoSize_2 = [FileInfoSize_1[0],$
-                  630,$
-                  495,$
+                  625,$
+                  498,$
                   190]
+
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 
 ;----Build widgets-----
@@ -89,6 +103,9 @@ MakeGuiLoadDataNormalizationTab,$
   GlobalRunNumber,$
   RunNumberTitles,$
   GlobalLoadDataGraphs,$
-  FileInfoSize
+  FileInfoSize,$
+  LeftInteractionHelpsize,$
+  LeftInteractionHelpMessageLabeltitle
+
   
 END

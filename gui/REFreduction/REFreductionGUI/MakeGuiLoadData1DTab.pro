@@ -11,7 +11,7 @@ Data1DSelectionSize                = [5, 5]
 
 ;Ymin and Ymax
 Data1DSelectionBackgroundLabelSize  = [5,45]
-Data1DSelectionBackgroundLabelTitle = 'Background Range Selected ...... ' 
+Data1DSelectionBackgroundLabelTitle = 'Background Range ............... ' 
 d_L_L= 200
 Data1DSelectionBackgroundYminLabelSize = [Data1DSelectionBackgroundLabelSize[0]+$
                                           d_L_L,$
