@@ -13,6 +13,8 @@ using std::vector;
 using std::string;
 using std::runtime_error;
 
+// Declare instantiations of the types of templated functions needed 
+// so the compiler doesn't complain
 template 
 BankData<uint32_t, uint32_t>::
 BankData();
@@ -77,6 +79,8 @@ template<typename EventNumT, typename PulseNumT>
 BankData<EventNumT, PulseNumT>::
 ~BankData()
 {
+  // Traverse through all the banks, and delete all
+  // the newed memory
   if (!this->bank_numbers.empty())
     {
       int size = bank_numbers.size();
@@ -89,6 +93,8 @@ BankData<EventNumT, PulseNumT>::
 
 void check_positive_int(const string & str)
 {
+  // Make sure that the string only consists of digits. If it starts
+  // with a 0 then that is fine.
   if (str.empty())
     {
       throw runtime_error("Invalid empty number in bank config");
@@ -121,6 +127,7 @@ add_to_bank_map(const string & number,
 {
   check_positive_int(number);
   int num = atoi(number.c_str());
+  // Resize the bank map if the pixel number is bigger than it
   if (num > this->bank_map.size())
     {
       this->bank_map.resize(num + 1);
@@ -134,6 +141,8 @@ add_to_bank_map(const string & start,
                 const string & stop,
                 const int bank_number)
 {
+  // Simply call the other overloaded function with 1 as the
+  // step value
   this->add_to_bank_map(start, stop, "1", bank_number);
 }
 
@@ -159,6 +168,8 @@ add_to_bank_map(const string & start,
     {
       this->bank_map.resize(stop_num + 1);
     }
+  // Fill in the bank map excluding the last number with the
+  // proper step value
   for (int i = start_num; i < stop_num; i+=step_num)
     {
       this->bank_map[i] = this->banks[bank_number];
@@ -169,6 +180,9 @@ template<typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_bank(const int bank_number)
 {
+  // Allocated a new bank when requested and add it to
+  // the bank vector. This vector is keyed on the 
+  // bank's number
   if (bank_number >= this->banks.size())
     {
       this->banks.resize(bank_number + 1);
@@ -195,6 +209,8 @@ parse_bank_file(const string & bank_file)
   for (cur_node = cur_node->children; cur_node;
        cur_node = cur_node->next)
     {
+      // The bank number needs to be before any list is 
+      // specified, and this variable keeps track of that
       bool bank_is_found = false;
       xmlNodePtr bank_node;
       for (bank_node = cur_node->children; bank_node;
@@ -217,6 +233,8 @@ parse_bank_file(const string & bank_file)
           else if (xmlStrcmp(bank_node->name,
                    (const xmlChar *)"step_list") == 0)
             {
+              // Make sure the bank number was found, and then create a 
+              // new step list. This is the same for every type of list
               if (bank_is_found)
                 {
                   create_step_list(bank_node, bank_number);
@@ -340,6 +358,7 @@ create_cont_list(xmlNodePtr bank_node,
 
 bool isdelimiter(char c)
 {
+  // Check the valid delimiters in arbitrary data
   if (c == '-' || c == ',')
     {
       return true;
@@ -355,13 +374,21 @@ void validate_arbitrary_data(const string & data)
   int size = data.length();
   string prev_sequence;
   bool new_sequence = false;
+  // A vector of delimiters is kept for checking that hypens 
+  // only separate two numbers at a time and no more
   vector<char> delimiters;
+  // Keep track if the first non whitespace is found, since 
+  // arbitrary data can't start with a delimiter.
   bool first_found = false;
+  // Also keep track of the last non whitespace that was found
+  // since arbitrary data can't end with a delimiter
   string last_found;
   for (int i = 0; i < size; i++)
     {
       if (isdigit(data[i]))
         {
+          // If it is a new sequence of digits, and the previous sequence wasn't a
+          // delimiter, then there are two numbers in a row.
           if (new_sequence && isdigit(prev_sequence[0]))
             {
               throw runtime_error("Arbitrary data has non delimited numbers");
@@ -388,6 +415,9 @@ void validate_arbitrary_data(const string & data)
         {
           if (!prev_sequence.empty())
             {
+              // new_sequence is basically just for checking if two numbers appear
+              // after each other without a delimiter between them (ie , with space
+              // between them)
               new_sequence = true; 
             }
         }
@@ -410,6 +440,8 @@ void validate_arbitrary_data(const string & data)
       throw runtime_error("Arbitrary data ends with a delimiter");
     }
 
+  // Now check all the delimiters and make sure that only two numbers
+  // are separated by a hypen at a time.
   size = delimiters.size();
   char prev_delimiter;
   for (int i = 0; i < size; i++)
@@ -435,6 +467,8 @@ add_arbitrary_to_bank_map(const string & number_set,
   int size = number_set.length();
   string start_num;
   string end_num;
+  // If a dash is found, then there are two numbers in a
+  // sequence. If not, there is only one number
   bool dash_is_found = false;
   for (int i = 0; i < size; i++)
     {
@@ -450,6 +484,7 @@ add_arbitrary_to_bank_map(const string & number_set,
             }
           else
             {
+              // If a dash is found, start creating the second number
               end_num.push_back(number_set[i]);
             }
         }
@@ -473,6 +508,8 @@ create_arbitrary(xmlNodePtr bank_node,
   check_xml_content(bank_node);
   string arbitrary_str(reinterpret_cast<const char *>
                         (bank_node->children->content));
+  // Validate the arbitrary data. This checks for invalid
+  // characters and if the data is in the correct form
   validate_arbitrary_data(arbitrary_str);
   int size = arbitrary_str.length();
   string number_set;
@@ -484,6 +521,9 @@ create_arbitrary(xmlNodePtr bank_node,
         }
       else
         {
+          // When a comma is found, then either one number or a 
+          // group of numbers was made in the number_set. Parse this
+          // string and add it to the bank_map
           this->add_arbitrary_to_bank_map(number_set, bank_number);
           number_set.clear();
         }
