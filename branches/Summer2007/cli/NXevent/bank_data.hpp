@@ -30,10 +30,9 @@ class BankData
     /**
      * \brief Adds a new bank to the bank vector and also adds the 
      *        bank number to the bank_numbers vector.
-     * \param bank_number_str The string representation of the number
-     *                        of the bank.
+     * \param bank_number The number of the bank.
      */
-    void create_bank(const std::string & bank_number_str);
+    void create_bank(const int bank_number);
  
     /**
      * \brief When a step list is found in a banking configuration 
@@ -113,6 +112,19 @@ class BankData
                          const std::string & stop,
                          const std::string & step,
                          const int bank_number);
+
+    /**
+     * \brief Takes a string representation of a set of numbers and
+     *        adds those numbers to the bank map. Used when parsing
+     *        arbitrary numbers.
+     * \param number_set A string representation of a number set. The
+     *                   set is either a single number, or two numbers
+     *                   separated by a hyphen.
+     * \param bank_number The number of the bank the pixel number set
+     *                    will be mapped to.
+     */
+    void add_arbitrary_to_bank_map(const std::string & number_set,
+                                   const int bank_number);
 
   public:
     /**

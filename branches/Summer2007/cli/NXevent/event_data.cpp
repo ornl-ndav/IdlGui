@@ -578,6 +578,7 @@ read_data(const string & event_file,
                   bank->pulse_index++;
                   bank->events_per_pulse.push_back(1);
                   bank->pulse_time.push_back(event_time_offset);
+
                 }
               // If the event is still in the same pulse time, then simply 
               // increment the event number for that pulse time
