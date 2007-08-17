@@ -165,6 +165,19 @@ add_to_bank_map(const string & start,
     }
 }
 
+template<typename EventNumT, typename PulseNumT>
+void BankData<EventNumT, PulseNumT>::
+create_bank(const string & bank_number_str)
+{
+  check_positive_int(bank_number_str);
+  int bank_number = atoi(bank_number_str.c_str());
+  if (bank_number >= this->banks.size())
+    {
+      this->banks.resize(bank_number + 1);
+    }
+  this->bank_numbers.push_back(bank_number);
+  this->banks[bank_number] = new Bank<EventNumT, PulseNumT>();
+}
 
 template<typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
@@ -180,8 +193,6 @@ parse_bank_file(const string & bank_file)
     }
 
   xmlNodePtr cur_node = xmlDocGetRootElement(doc);
-  int max_bank_number = -1;
-  int bank_number = -1;
 
   for (cur_node = cur_node->children; cur_node;
        cur_node = cur_node->next)
@@ -190,6 +201,8 @@ parse_bank_file(const string & bank_file)
       for (bank_node = cur_node->children; bank_node;
            bank_node = bank_node->next)
         {
+          bool bank_is_found = false;
+          int bank_number;
           if (xmlStrcmp(bank_node->name,
               (const xmlChar *)"number") == 0)
             {
@@ -198,40 +211,55 @@ parse_bank_file(const string & bank_file)
               check_xml_content(bank_node);
               string number_str = reinterpret_cast<const char *>
                              (bank_node->children->content);
-              check_positive_int(number_str);
-              bank_number = atoi(number_str.c_str());
-              if (bank_number > max_bank_number)
-                {
-                  max_bank_number = bank_number;
-                  this->banks.resize(max_bank_number + 1);
-                }
-              this->bank_numbers.push_back(
-                bank_number);
-              this->banks[bank_number] = new Bank<EventNumT, PulseNumT>();
+              this->create_bank(number_str);
+              bank_is_found = true;
             }
           else if (xmlStrcmp(bank_node->name,
                    (const xmlChar *)"step_list") == 0)
             {
-              create_step_list(bank_node, bank_number);
+              if (bank_is_found)
+                {
+                  create_step_list(bank_node, bank_number);
+                }
+              else
+                {
+                  throw runtime_error(
+                    "Bank number must be specified before step list");
+                }
               break;
             }
           else if (xmlStrcmp(bank_node->name,
                    (const xmlChar *)"continuous_list") == 0)
             {
-              create_cont_list(bank_node, bank_number);
+              if (bank_is_found)
+                {
+                  create_cont_list(bank_node, bank_number);
+                }
+              else
+                {
+                  throw runtime_error(
+                    "Bank number must be specified before continuous list");
+                }
               break;
             }
           else if (xmlStrcmp(bank_node->name,
                    (const xmlChar *)"arbitrary") == 0)
             {
-              create_arbitrary(bank_node, bank_number);
+              if (bank_is_found)
+                {
+                  create_arbitrary(bank_node, bank_number);
+                }
+              else 
+                {
+                  throw runtime_error(
+                    "Bank number must be specified before arbitrary list");
+                }
               break;
             }
         }
-      bank_number = -1;
     }
 
-  if (max_bank_number == -1)
+  if (this->banks.empty())
     {
       throw runtime_error("No banks found in bank configuration");
     }
@@ -248,11 +276,6 @@ create_step_list(xmlNodePtr bank_node,
   string start;
   string stop;
   string step;
-  if (bank_number == -1)
-    {
-      throw runtime_error(
-        "Bank number must be specified before step list");
-    }
   xmlNodePtr step_list_node;
   for (step_list_node = bank_node->children; step_list_node;
        step_list_node = step_list_node->next)
@@ -292,11 +315,6 @@ create_cont_list(xmlNodePtr bank_node,
 {
   string start;
   string stop;
-  if (bank_number == -1)
-    {
-      throw runtime_error(
-        "Bank number must be specified before step list");
-    }
   xmlNodePtr cont_list_node;
   for (cont_list_node = bank_node->children; cont_list_node;
        cont_list_node = cont_list_node->next)

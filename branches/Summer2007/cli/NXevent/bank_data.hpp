@@ -26,7 +26,15 @@ class BankData
      *        belongs to.
      */
     std::vector<Bank<EventNumT, PulseNumT> *> bank_map;
-    
+   
+    /**
+     * \brief Adds a new bank to the bank vector and also adds the 
+     *        bank number to the bank_numbers vector.
+     * \param bank_number_str The string representation of the number
+     *                        of the bank.
+     */
+    void create_bank(const std::string & bank_number_str);
+ 
     /**
      * \brief When a step list is found in a banking configuration 
      *        file, this function is used to parse the values from
