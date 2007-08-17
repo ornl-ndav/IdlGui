@@ -36,15 +36,22 @@ global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF inst
                    DATA_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of DATA
                    NORM_DD_ptr : ptr_new(0L),$ ;detector view of NORMALIZATION (2D)
                    NORM_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of NORMALIZATION
-                   select_data_back_1 : 0,$ ;Select first border of background region (data)
-                   select_data_back_2 : 0,$ ;Select second border of background region (data)
-                   select_data_signal_1 : 0,$ ;Select first border of signal exclusion (data)
-                   select_data_signal_2 : 0,$ ;Select second border of signal exclusion (data)
-                   select_norm_back_1 : 0,$ ;Select first border of background region (norm)
+                   select_data_status : 0,$ ;Status of the data selection (see below)
+                   select_norm_back_1 : 1,$ ;Select first border of background region (norm)
                    select_norm_back_2 : 0,$ ;Select second border of background region (norm)
                    select_norm_signal_1 : 0,$ ;Select first border of signal exclusion (norm)
                    select_norm_signal_2 : 0$ ;Select second border of signal exclusion (norm)
                   })
+
+;------------------------------------------------------------------------
+;explanation of the select_data_status
+;0 nothing has been done yet
+;1 user left click first and is now in back selection 1st border
+;2 user release click and is done with back selection 1st border
+;3 user right click and is now entering the back selection of 2nd border
+;4 user left click and is now selecting the 2nd border
+;5 user release click and is done with selection of 2nd border
+;------------------------------------------------------------------------
 
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
