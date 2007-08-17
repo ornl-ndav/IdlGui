@@ -6,7 +6,11 @@
 #include <stdexcept>
 #include <vector>
 #include <iostream>
+#include <sstream>
+#include <list>
 
+using std::stringstream;
+using std::list;
 using std::cout;
 using std::endl;
 using std::vector;
@@ -123,7 +127,8 @@ void check_xml_content(xmlNodePtr node)
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & number,
-                const int bank_number)
+                const int bank_number,
+                list<EventNumT> & pixel_numbers)
 {
   check_positive_int(number);
   int num = atoi(number.c_str());
@@ -133,17 +138,19 @@ add_to_bank_map(const string & number,
       this->bank_map.resize(num + 1);
     }
   this->bank_map[num] = this->banks[bank_number];
+  pixel_numbers.push_back(num);
 }
 
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & start,
                 const string & stop,
-                const int bank_number)
+                const int bank_number,
+                list<EventNumT> & pixel_numbers)
 {
   // Simply call the other overloaded function with 1 as the
   // step value
-  this->add_to_bank_map(start, stop, "1", bank_number);
+  this->add_to_bank_map(start, stop, "1", bank_number, pixel_numbers);
 }
 
 template <typename EventNumT, typename PulseNumT>
@@ -151,7 +158,8 @@ void BankData<EventNumT, PulseNumT>::
 add_to_bank_map(const string & start,
                 const string & stop,
                 const string & step,
-                const int bank_number)
+                const int bank_number,
+                list<EventNumT> & pixel_numbers)
 {
   check_positive_int(start);
   check_positive_int(stop);
@@ -173,6 +181,7 @@ add_to_bank_map(const string & start,
   for (int i = start_num; i < stop_num; i+=step_num)
     {
       this->bank_map[i] = this->banks[bank_number];
+      pixel_numbers.push_back(i);
     }
 }
 
@@ -191,6 +200,33 @@ create_bank(const int bank_number)
   this->banks[bank_number] = new Bank<EventNumT, PulseNumT>();
 }
 
+template <typename EventNumT>
+void check_for_all_pixels(const int total_pixel_number,
+                          list<EventNumT> & pixel_numbers)
+{
+  // Sort the list first since it can be in any order
+  pixel_numbers.sort();
+  int size = pixel_numbers.size();
+  typename list<EventNumT>::iterator pixel_num_iter;
+  typename list<EventNumT>::iterator begin = pixel_numbers.begin();
+
+  // Traverse through the list and make sure every pixel from 0 up
+  // to total_pixel_number-1 was read in from the bank config file
+  int i; 
+  for(i = 0, pixel_num_iter = begin; 
+      i < total_pixel_number; 
+      pixel_num_iter++, i++) 
+    {
+      if (*pixel_num_iter != i)
+        {
+          stringstream num;
+          num << i;
+          throw runtime_error("Pixel number " + num.str()
+                              + " not found in bank configuration file");
+        }
+    }
+}
+
 template<typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 parse_bank_file(const string & bank_file)
@@ -205,81 +241,108 @@ parse_bank_file(const string & bank_file)
     }
 
   xmlNodePtr cur_node = xmlDocGetRootElement(doc);
+  int total_pixel_number = -1;
+  list<EventNumT> pixel_numbers;
 
   for (cur_node = cur_node->children; cur_node;
        cur_node = cur_node->next)
     {
-      // The bank number needs to be before any list is 
-      // specified, and this variable keeps track of that
-      bool bank_is_found = false;
-      xmlNodePtr bank_node;
-      for (bank_node = cur_node->children; bank_node;
-           bank_node = bank_node->next)
+      // When the total pixel number is found
+      if (xmlStrcmp(cur_node->name,
+          (const xmlChar *)"total_pixel_number") == 0)
         {
-          int bank_number;
-          if (xmlStrcmp(bank_node->name,
-              (const xmlChar *)"number") == 0)
+          // Get the total pixel number from the bank config
+          check_xml_content(cur_node);
+          string number_str = reinterpret_cast<const char *>
+            (cur_node->children->content);
+          check_positive_int(number_str);
+          total_pixel_number = atoi(number_str.c_str());
+        }
+      // When a bank is found
+      else if (xmlStrcmp(cur_node->name,
+               (const xmlChar *)"bank") == 0)
+        {
+          // The bank number needs to be before any list is 
+          // specified, and this variable keeps track of that
+          bool bank_is_found = false;
+          xmlNodePtr bank_node;
+          for (bank_node = cur_node->children; bank_node;
+               bank_node = bank_node->next)
             {
-              // When a valid bank number is found, push it on
-              // the bank numbers vector
-              check_xml_content(bank_node);
-              string number_str = reinterpret_cast<const char *>
-                             (bank_node->children->content);
-              check_positive_int(number_str);
-              bank_number = atoi(number_str.c_str());
-              this->create_bank(bank_number);
-              bank_is_found = true;
-            }
-          else if (xmlStrcmp(bank_node->name,
-                   (const xmlChar *)"step_list") == 0)
-            {
-              // Make sure the bank number was found, and then create a 
-              // new step list. This is the same for every type of list
-              if (bank_is_found)
+              int bank_number;
+              if (xmlStrcmp(bank_node->name,
+                  (const xmlChar *)"number") == 0)
                 {
-                  create_step_list(bank_node, bank_number);
+                  // When a valid bank number is found, push it on
+                  // the bank numbers vector
+                  check_xml_content(bank_node);
+                  string number_str = reinterpret_cast<const char *>
+                    (bank_node->children->content);
+                  check_positive_int(number_str);
+                  bank_number = atoi(number_str.c_str());
+                  this->create_bank(bank_number);
+                  bank_is_found = true;
                 }
-              else
+              else if (xmlStrcmp(bank_node->name,
+                       (const xmlChar *)"step_list") == 0)
                 {
-                  throw runtime_error(
-                    "Bank number must be specified before step list");
+                  // Make sure the bank number was found, and then create a 
+                  // new step list. This is the same for every type of list
+                  if (bank_is_found)
+                    {
+                      create_step_list(bank_node, bank_number, pixel_numbers);
+                    }
+                  else
+                    {
+                      throw runtime_error(
+                        "Bank number must be specified before step list");
+                    }
+                  break;
                 }
-              break;
-            }
-          else if (xmlStrcmp(bank_node->name,
-                   (const xmlChar *)"continuous_list") == 0)
-            {
-              if (bank_is_found)
+              else if (xmlStrcmp(bank_node->name,
+                       (const xmlChar *)"continuous_list") == 0)
                 {
-                  create_cont_list(bank_node, bank_number);
+                  if (bank_is_found)
+                    {
+                      create_cont_list(bank_node, bank_number, pixel_numbers);
+                    }
+                  else
+                    {
+                      throw runtime_error(
+                        "Bank number must be specified before continuous list");
+                    }
+                  break;
                 }
-              else
+              else if (xmlStrcmp(bank_node->name,
+                       (const xmlChar *)"arbitrary") == 0)
                 {
-                  throw runtime_error(
-                    "Bank number must be specified before continuous list");
+                  if (bank_is_found)
+                    {
+                      create_arbitrary(bank_node, bank_number, pixel_numbers);
+                    }
+                  else 
+                    {
+                      throw runtime_error(
+                        "Bank number must be specified before arbitrary list");
+                    }
+                  break;
                 }
-              break;
-            }
-          else if (xmlStrcmp(bank_node->name,
-                   (const xmlChar *)"arbitrary") == 0)
-            {
-              if (bank_is_found)
-                {
-                  create_arbitrary(bank_node, bank_number);
-                }
-              else 
-                {
-                  throw runtime_error(
-                    "Bank number must be specified before arbitrary list");
-                }
-              break;
             }
         }
     }
+
   if (this->banks.empty())
     {
       throw runtime_error("No banks found in bank configuration");
     }
+
+  if (total_pixel_number == -1)
+    {
+      throw runtime_error("Must specify the total pixel number");
+    }
+ 
+  check_for_all_pixels(total_pixel_number, pixel_numbers);
+  
   xmlFreeDoc(doc);
   xmlCleanupParser();
 }
@@ -287,7 +350,8 @@ parse_bank_file(const string & bank_file)
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_step_list(xmlNodePtr bank_node,
-                 const int bank_number)
+                 const int bank_number,
+                 list<EventNumT> & pixel_numbers)
 {
   string start;
   string stop;
@@ -321,13 +385,14 @@ create_step_list(xmlNodePtr bank_node,
 
   // Fill in a step list for the bank map once
   // valid numbers have been found
-  this->add_to_bank_map(start, stop, step, bank_number);
+  this->add_to_bank_map(start, stop, step, bank_number, pixel_numbers);
 }
 
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_cont_list(xmlNodePtr bank_node,
-                 const int bank_number)
+                 const int bank_number,
+                 list<EventNumT> & pixel_numbers)
 {
   string start;
   string stop;
@@ -353,7 +418,7 @@ create_cont_list(xmlNodePtr bank_node,
 
   // Fill in a continuous list for the bank map once
   // valid numbers have been found
-  this->add_to_bank_map(start, stop, bank_number);
+  this->add_to_bank_map(start, stop, bank_number, pixel_numbers);
 }
 
 bool isdelimiter(char c)
@@ -458,7 +523,8 @@ void validate_arbitrary_data(const string & data)
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 add_arbitrary_to_bank_map(const string & number_set,
-                          const int bank_number)
+                          const int bank_number,
+                          list<EventNumT> & pixel_numbers)
 {
   if (number_set.empty())
     {
@@ -491,19 +557,20 @@ add_arbitrary_to_bank_map(const string & number_set,
     }
   if (end_num.empty())
     {
-      this->add_to_bank_map(start_num, bank_number);
+      this->add_to_bank_map(start_num, bank_number, pixel_numbers);
     }
   else
     {
-      this->add_to_bank_map(start_num, end_num, bank_number);
-      this->add_to_bank_map(end_num, bank_number);
+      this->add_to_bank_map(start_num, end_num, bank_number, pixel_numbers);
+      this->add_to_bank_map(end_num, bank_number, pixel_numbers);
     }
 }
 
 template <typename EventNumT, typename PulseNumT>
 void BankData<EventNumT, PulseNumT>::
 create_arbitrary(xmlNodePtr bank_node,
-                 const int bank_number)
+                 const int bank_number,
+                 list<EventNumT> & pixel_numbers)
 {
   check_xml_content(bank_node);
   string arbitrary_str(reinterpret_cast<const char *>
@@ -524,9 +591,9 @@ create_arbitrary(xmlNodePtr bank_node,
           // When a comma is found, then either one number or a 
           // group of numbers was made in the number_set. Parse this
           // string and add it to the bank_map
-          this->add_arbitrary_to_bank_map(number_set, bank_number);
+          this->add_arbitrary_to_bank_map(number_set, bank_number, pixel_numbers);
           number_set.clear();
         }
     }
-  this->add_arbitrary_to_bank_map(number_set, bank_number);
+  this->add_arbitrary_to_bank_map(number_set, bank_number, pixel_numbers);
 }

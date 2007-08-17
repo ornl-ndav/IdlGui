@@ -4,6 +4,7 @@
 #include "bank.hpp"
 #include <string>
 #include <vector>
+#include <list>
 #include <libxml/tree.h>
 
 /**
@@ -40,11 +41,16 @@ class BankData
      *        it and store them.
      * \param bank_node The root node of the step list in the xml tree.
      * \param bank_number The number of the bank.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers in the
+     *                      step list.
      * \exception runtime_error Thrown when an invalid number is read in 
      *                          or when a parsing error occurs.
      */
     void create_step_list(xmlNodePtr bank_node,
-                          const int bank_number);
+                          const int bank_number,
+                          std::list<EventNumT> & pixel_numbers);
 
     /**
      * \brief When a continuous list is found in a banking configuration 
@@ -53,11 +59,16 @@ class BankData
      * \param bank_node The root node of the continuous list in the xml 
      *                  tree.
      * \param bank_number The number of the bank.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers in the
+     *                      continuous list.
      * \exception runtime_erro Thrown when an invalid number is read in 
      *                         or when a parsing error occurs.
      */
     void create_cont_list(xmlNodePtr bank_node,
-                          const int bank_number);
+                          const int bank_number,
+                          std::list<EventNumT> & pixel_numbers);
 
     /**
      * \brief When an arbitrary list is found in a banking configuration 
@@ -66,21 +77,31 @@ class BankData
      * \param bank_node The root node of the arbitrary list in the xml 
      *                  tree.
      * \param bank_number The number of the bank.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers in the
+     *                      arbitrary list.
      * \exception runtime_error Thrown when an invalid number is read in 
      *                          or when a parsing error occurs.
      */
     void create_arbitrary(xmlNodePtr bank_node, 
-                          const int bank_number);
+                          const int bank_number,
+                          std::list<EventNumT> & pixel_numbers);
     
     /**
      * \brief Takes a single pixel number and adds it to the bank map. 
      * \param number The string representing the pixel number.
      * \param bank_number The number of the bank the pixel will be 
      *                    mapped to.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers that are
+     *                      added.
      * \exception runtime_error Thrown when an invalid number is given.
      */
     void add_to_bank_map(const std::string & number,
-                         const int bank_number);
+                         const int bank_number,
+                         std::list<EventNumT> & pixel_numbers);
     
     /**
      * \brief Takes a continuous range of pixel numbers and add them to
@@ -90,11 +111,16 @@ class BankData
      *             (not included in the map).
      * \param bank_number The number of the bank the pixels will be 
      *                    mapped to.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers that are
+     *                      added.
      * \exception runtime_error Thrown when an invalid number is given.
      */
     void add_to_bank_map(const std::string & start,
                          const std::string & stop,
-                         const int bank_number);
+                         const int bank_number,
+                         std::list<EventNumT> & pixel_numbers);
 
     /**
      * \brief Takes a continuous range of pixel numbers with an increment
@@ -106,12 +132,17 @@ class BankData
      *             looping through the start and the stop.
      * \param bank_number The number of the bank the pixels will be 
      *                    mapped to.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers that are
+     *                      added.
      * \exception runtime_error Thrown when an invalid number is given
      */
     void add_to_bank_map(const std::string & start,
                          const std::string & stop,
                          const std::string & step,
-                         const int bank_number);
+                         const int bank_number,
+                         std::list<EventNumT> & pixel_numbers);
 
     /**
      * \brief Takes a string representation of a set of numbers and
@@ -122,9 +153,14 @@ class BankData
      *                   separated by a hyphen.
      * \param bank_number The number of the bank the pixel number set
      *                    will be mapped to.
+     * \param pixel_numbers The vector of pixel numbers that have been
+     *                      specified in the bank configuration file. This
+     *                      will be filled with all the numbers that are
+     *                      added.
      */
     void add_arbitrary_to_bank_map(const std::string & number_set,
-                                   const int bank_number);
+                                   const int bank_number,
+                                   std::list<EventNumT> & pixel_numbers);
 
   public:
     /**
