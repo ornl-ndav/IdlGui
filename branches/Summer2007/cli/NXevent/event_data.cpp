@@ -264,7 +264,7 @@ write_private_data(NexusUtil & nexus_util,
   open_bank(nexus_util, bank_number);
   nexus_util.make_data(data_name, nexus_data_type, 1, &dimensions);
   nexus_util.open_data(data_name);
-  nexus_util.put_data_with_slabs(nx_data, 16777215);
+  nexus_util.put_data_with_slabs(nx_data, EventNexus::DATA_SLAB_SIZE);
 }
 
 template <typename EventNumT, typename PulseNumT>
