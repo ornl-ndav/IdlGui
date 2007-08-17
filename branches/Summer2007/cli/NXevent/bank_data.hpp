@@ -139,7 +139,7 @@ class BankData
      * \brief The destructor for the BankData class. Frees all the banks that are
      *        newed.
      */
-    ~BankData();
+    virtual ~BankData();
 };
 
 #endif
