@@ -21,14 +21,14 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
         if( Event.type EQ 0 )then begin
             if (Event.press EQ 1) then $
-                REFreduction_SelectionPressLeft, Event ;left button
+                REFreduction_DataSelectionPressLeft, Event ;left button
             if (Event.press EQ 4) then $
-              REFreduction_selectionPressRight, Event ;right button
+              REFreduction_DataselectionPressRight, Event ;right button
         endif
         if (Event.type EQ 1) then $ ;release
-          REFreduction_SelectionRelease, Event
+          REFreduction_DataSelectionRelease, Event
         if (Event.type EQ 2) then $ ;move
-          REFreduction_SelectionMove, Event
+          REFreduction_DataSelectionMove, Event
     end
     
     
