@@ -204,9 +204,10 @@ void open_bank(NexusUtil & nexus_util,
 }
 
 template <typename EventNumT, typename PulseNumT>
+template <typename DataNumT>
 void EventData<EventNumT, PulseNumT>::
 write_private_data(NexusUtil & nexus_util,
-                   vector<uint32_t> & nx_data, 
+                   vector<DataNumT> & nx_data, 
                    string & data_name,
                    const int bank_number)
 {

@@ -195,8 +195,9 @@ class EventData
      *                  (ex. time_of_flight).
      * \param bank_number The bank number of the data being written.
      */
+    template <typename DataNumT>
     void write_private_data(NexusUtil & nexus_util, 
-                            std::vector<uint32_t> & nx_data,
+                            std::vector<DataNumT> & nx_data,
                             std::string & data_name,
                             const int bank_number);
 
