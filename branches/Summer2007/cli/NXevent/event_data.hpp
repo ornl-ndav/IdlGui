@@ -186,7 +186,7 @@ class EventData
      */
     std::string pulse_time_offset;
    
-    BankData<EventNumT, PulseNumT> * bank_data;
+    BankData<EventNumT, PulseNumT> bank_data;
 
     /**
      * \brief Writes the private data from EventData to a nexus file.

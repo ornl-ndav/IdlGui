@@ -124,10 +124,15 @@ class BankData
     Bank<EventNumT, PulseNumT> * get_bank_by_bank_number(const int bank_number);
 
     /**
-     * \brief The constructor of the BankData class.
-     * \param bank_file The xml bank configuration file to be parsed.
+     * \brief parses the bank configuration file and fills in the bank data.
+     * \param bank_file The xml bank configuration file
      */
-    BankData(const std::string & bank_file);
+    void parse_bank_file(const std::string & bank_file);
+
+    /**
+     * \brief The constructor of the BankData class.
+     */
+    BankData();
 
     /** 
      * \brief The destructor for the BankData class. Frees all the banks that are

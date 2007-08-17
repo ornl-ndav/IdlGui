@@ -91,7 +91,6 @@ template<typename EventNumT, typename PulseNumT>
 EventData<EventNumT, PulseNumT>::
 ~EventData()
 {
-  delete this->bank_data;
 }
 
 template<>
@@ -197,11 +196,11 @@ write_nexus_file(NexusUtil & nexus_util)
   nexus_util.make_group("entry", "NXentry");
   nexus_util.open_group("entry", "NXentry");
   
-  int size = this->bank_data->bank_numbers.size();
+  int size = this->bank_data.bank_numbers.size();
   for (int i = 0; i < size; i++)
     { 
       stringstream bank_num;
-      bank_num << "bank" << this->bank_data->bank_numbers[i];
+      bank_num << "bank" << this->bank_data.bank_numbers[i];
       nexus_util.make_group(bank_num.str(), "NXevent_data");
       nexus_util.open_group(bank_num.str(), "NXevent_data");
       nexus_util.close_group();
@@ -211,7 +210,7 @@ write_nexus_file(NexusUtil & nexus_util)
   // Write out each bank's information
   for (int i = 0; i < size; i++)
     {
-      this->write_bank(nexus_util, this->bank_data->bank_numbers[i]);
+      this->write_bank(nexus_util, this->bank_data.bank_numbers[i]);
     }
 }
 
@@ -221,7 +220,7 @@ write_bank(NexusUtil & nexus_util,
            const int bank_number)
 {
   Bank<EventNumT, PulseNumT> * bank = 
-    this->bank_data->get_bank_by_bank_number(bank_number);
+    this->bank_data.get_bank_by_bank_number(bank_number);
   
   if (bank->tof.size() > 0)
     {
@@ -276,7 +275,7 @@ write_data(NexusUtil & nexus_util,
 {
   string data_name;
   Bank<EventNumT, PulseNumT> * bank = 
-    this->bank_data->get_bank_by_bank_number(bank_number);
+    this->bank_data.get_bank_by_bank_number(bank_number);
 
   // Fill in the values that are associated with the 
   // given e_data_name
@@ -417,8 +416,7 @@ read_data(const string & event_file,
                                  event_buffer_size);
 
   // Parse the bank file and fill in the banking map
-  //this->parse_bank_file(bank_file);
-  this->bank_data = new BankData<EventNumT, PulseNumT>(bank_file);
+  this->bank_data.parse_bank_file(bank_file);
 
   // Go to the start of file and begin reading
   event_fp.seekg(0, std::ios::beg);
@@ -440,7 +438,7 @@ read_data(const string & event_file,
             {
               // Use pointer arithmetic for speed
               Bank<EventNumT, PulseNumT> *bank = 
-                bank_data->get_bank_by_pixel_id(
+                this->bank_data.get_bank_by_pixel_id(
                 static_cast<EventNumT>(event.pixel_id));
              
               // Put the pixel ids and time of flights in their proper bank 
@@ -513,8 +511,7 @@ read_data(const string & event_file,
   PulseNumT pulse_index = static_cast<PulseNumT>(pulse.index);
 
   // Parse configuration file and read in the bank map
-  //this->parse_bank_file(bank_file);
-  this->bank_data = new BankData<EventNumT, PulseNumT>(bank_file);
+  this->bank_data.parse_bank_file(bank_file);
 
   size_t pulse_fp_offset = 0;
   size_t event_fp_offset = 0;
@@ -563,7 +560,7 @@ read_data(const string & event_file,
             {
               // Get the proper bank from the bank map based on the pixel id
               Bank<EventNumT, PulseNumT> *bank = 
-                bank_data->get_bank_by_pixel_id(
+                this->bank_data.get_bank_by_pixel_id(
                 static_cast<EventNumT>(event.pixel_id));
              
               // Place the pixel id and time of flight in the appropriate bank

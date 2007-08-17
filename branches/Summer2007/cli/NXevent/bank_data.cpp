@@ -15,7 +15,7 @@ using std::runtime_error;
 
 template 
 BankData<uint32_t, uint32_t>::
-BankData(const string & bank_file);
+BankData();
 
 template 
 BankData<uint32_t, uint32_t>::
@@ -29,9 +29,13 @@ template
 Bank<uint32_t, uint32_t> * BankData<uint32_t, uint32_t>::
 get_bank_by_bank_number(int bank_number);
 
+template
+void BankData<uint32_t, uint32_t>::
+parse_bank_file(const string & bank_file);
+
 template 
 BankData<uint32_t, uint64_t>::
-BankData(const string & bank_file);
+BankData();
 
 template 
 BankData<uint32_t, uint64_t>::
@@ -45,6 +49,10 @@ template
 Bank<uint32_t, uint64_t> * BankData<uint32_t, uint64_t>::
 get_bank_by_bank_number(int bank_number);
 
+template
+void BankData<uint32_t, uint64_t>::
+parse_bank_file(const string & bank_file);
+
 template<typename EventNumT, typename PulseNumT>
 Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::
 get_bank_by_pixel_id(const EventNumT pixel_id)
@@ -57,6 +65,12 @@ Bank<EventNumT, PulseNumT> * BankData<EventNumT, PulseNumT>::
 get_bank_by_bank_number(const int bank_number)
 {
   return this->banks[bank_number];
+}
+
+template<typename EventNumT, typename PulseNumT>
+BankData<EventNumT, PulseNumT>::
+BankData()
+{
 }
 
 template<typename EventNumT, typename PulseNumT>
@@ -163,8 +177,8 @@ add_to_bank_map(const string & start,
 
 
 template<typename EventNumT, typename PulseNumT>
-BankData<EventNumT, PulseNumT>::
-BankData(const string & bank_file)
+void BankData<EventNumT, PulseNumT>::
+parse_bank_file(const string & bank_file)
 {
   xmlDocPtr doc = NULL;
   xmlLineNumbersDefault(1);

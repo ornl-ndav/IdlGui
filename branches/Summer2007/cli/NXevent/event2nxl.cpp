@@ -77,6 +77,14 @@ int main(int32_t argc,
         {
           throw runtime_error("Error: Must specify an input file");
         }
+      if (!mapping_file.isSet())
+        {
+          throw runtime_error("Error: Must specify a mapping file");
+        }
+      if (!bank_file.isSet())
+        {
+          throw runtime_error("Error: Must specify a bank configuration file");
+        }
     
       // Fill out the config object
       config.out_path = out_path.getValue();
@@ -110,10 +118,7 @@ int main(int32_t argc,
   EventData <uint32_t, uint32_t>event_data;
   
   // Create the pixel map
-  if (!config.mapping_file.empty())
-    {
-      event_data.create_pixel_map(config.mapping_file);
-    }
+  event_data.create_pixel_map(config.mapping_file);
  
   // Gather the information from the event file
   if (config.pulse_id_file.empty())
@@ -124,7 +129,6 @@ int main(int32_t argc,
     {
       event_data.read_data(config.event_file, config.pulse_id_file, config.bank_file);
     }
-
 
   // Create a new nexus utility
   NexusUtil nexus_util(config.out_path, file_access);
