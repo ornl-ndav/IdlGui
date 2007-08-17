@@ -487,6 +487,11 @@ read_data(const string & event_file,
                                  pulse_file_size,
                                  pulse_buffer_size);
 
+  if (pulse_file_size == 0)
+    {
+      throw runtime_error("Pulse id file has no information in it");
+    }
+
   // Get the first block from the pulse id file and read in the initial 
   // values
   pulse_fp.seekg(0, std::ios::beg);
