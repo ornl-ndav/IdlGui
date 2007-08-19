@@ -43,6 +43,24 @@ load_data_run_number_text_field = widget_text(LOAD_DATA_BASE,$
                                               /all_events,$
                                               uname='load_data_run_number_text_field')
 
+;; Load_data_run_number_text_field = CW_FIELD(LOAD_DATA_BASE,$
+;;                                            row=1,$
+;;                                            xsize=100,$
+;;                                            ysize=GlobalRunNumber[5],$
+;;                                            /integer,$
+;;                                            return_events=1,$
+;;                                            title='Data Run Number:',$
+;;                                            uname='new_load_data_run_number_text_field')
+
+
+ ;; info.data_file_id = CW_FIELD( BASE80,VALUE='', $
+;;       ROW=1, $
+;;       RETURN_EVENTS=1, $
+;;       STRING=1, $
+;;       TITLE='Data file:', $
+;;       UVALUE='wplot_data_file_input', $
+;;       XSIZE=15)
+
 load_data_run_number_button = widget_button(LOAD_DATA_BASE,$
                                             xoffset=GlobalRunNumber[6],$
                                             yoffset=GlobalRunNumber[7],$

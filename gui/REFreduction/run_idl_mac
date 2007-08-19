@@ -1,25 +1,46 @@
 cd, "~/SVN/HistoTool/trunk/gui/utilities/"
 .run system_utilities.pro
+
+cd, "~/SVN/HistoTool/trunk/gui/REFreduction/utilities/"
 .run nexus_utilities.pro
-.run prenexus_utilities.pro
-.run parsing_functions.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
 .run MakeGuiLoadDataNormalizationTab.pro
 .run MakeGuiLoadDataTab.pro
+.run MakeGuiLoadData1D2DTab.pro
+.run MakeGuiLoadData1DTab.pro
+.run MakeGuiLoadData2DTab.pro
 .run MakeGuiLoadNormalizationTab.pro
+.run MakeGuiLoadNormalization1D2DTab.pro
+.run MakeGuiLoadNormalization1DTab.pro
+.run MakeGuiLoadNormalization2DTab.pro
 .run MakeGuiReduceTab.pro
 .run MakeGuiPlotsTab.pro
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
 	
 cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
+.run ref_reduction_string.pro
+.run ref_reduction_get.pro
+.run ref_reduction_put.pro
+
+
+.run ref_reduction_DumpBinary.pro
+.run ref_reduction_LoadDataFile.pro
+.run ref_reduction_Plot1D2DDataFile.pro
+.run ref_reduction_Plot2DDataFile.pro
+.run ref_reduction_Plot1DDataFile.pro
+.run ref_reduction_LoadNormalizationFile.pro
+.run ref_reduction_Plot1D2DNormalizationFile.pro
+.run ref_reduction_Plot2DNormalizationFile.pro
+.run ref_reduction_Plot1DNormalizationFile.pro
+
+.run ref_reduction_DataMouseSelection.pro
+
 .run ref_reduction_eventcb.pro
-.run ref_reduction.pro
+.run ref_reduction.proatheistic
 .run MainBaseEvent.pro
 ref_reduction
-
-
 
