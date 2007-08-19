@@ -37,6 +37,12 @@ CASE Event.id OF
         REFreductionEventcb_LoadAndPlotNormalizationFile, Event
     end
 
+;LOAD NORMALIZATION file button
+    widget_info(wWidget, FIND_BY_UNAME='new_load_data_run_number_text_field'): begin
+       print, 'here'
+    end
+
+
 ;**REDUCE TAB**
 
 ;**PLOTS TAB**
