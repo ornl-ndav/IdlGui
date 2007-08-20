@@ -10,6 +10,7 @@ PROCESSING = (*global).processing_message ;processing message
 
 ;get Data Run Number from DataTextField
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
+DataRunNumber = strcompress(DataRunNumber)
 LogBookText = '-> Openning DATA Run Number: ' + DataRunNumber
 text = getLogBookText(Event)
 if (text[0] EQ '') then begin

@@ -27,31 +27,22 @@ LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
                                       SCR_XSIZE=LoadNormalizationTabSize[2],$
                                       SCR_YSIZE=LoadNormalizationTabSize[3])
 
-;Run Number widgets (label - text_field - LOAD button)
-load_normalization_run_number_label = widget_label(LOAD_NORMALIZATION_BASE,$
-                                                   value=RunNumberTitles[0],$
-                                                   xoffset=GlobalRunNumber[0],$
-                                                   yoffset=GlobalRunNumber[1])
+;Run Number base and inside CW_FIELD
+load_normalization_run_number_base = widget_base(LOAD_NORMALIZATION_BASE,$
+                                                 uname='load_normalization_run_number_base',$
+                                                 xoffset=GlobalRunNumber[0],$
+                                                 yoffset=GlobalRunNumber[1],$
+                                                 scr_xsize=GlobalRunNumber[2],$
+                                                 scr_ysize=globalRunNumber[3])
 
-load_normalization_run_number_text_field = widget_text(LOAD_NORMALIZATION_BASE,$
-                                                       xoffset=GlobalRunNumber[2],$
-                                                       yoffset=GlobalRunNumber[3],$
-                                                       scr_xsize=GlobalRunNumber[4],$
-                                                       scr_ysize=GlobalRunNumber[5],$
-                                                       /editable,$
-                                                       /align_left,$
-                                                       /all_events,$
-                                                       uname='load_normalization_run_number_text_field')
-
-load_normalization_run_number_button = widget_button(LOAD_NORMALIZATION_BASE,$
-                                                     xoffset=GlobalRunNumber[6],$
-                                                     yoffset=GlobalRunNumber[7],$
-                                                     scr_xsize=GlobalRunNumber[8],$
-                                                     scr_ysize=GlobalRunNumber[9],$
-                                                     sensitive=1,$
-                                                     value=RunNumberTitles[1],$
-                                                     uname='load_normalization_run_number_button')
-
+Load_data_run_number_text_field = CW_FIELD(load_normalization_run_number_base,$
+                                           row=1,$
+                                           xsize=GlobalRunNumber[4],$
+                                           ysize=GlobalRunNumber[5],$
+                                           /integer,$
+                                           return_events=1,$
+                                           title=RunNumberTitles[1],$
+                                           uname='load_normalization_run_number_text_field')
 
 
 ;Build 1D and 2D tabs

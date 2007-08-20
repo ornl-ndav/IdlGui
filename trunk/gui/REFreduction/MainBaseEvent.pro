@@ -12,11 +12,17 @@ CASE Event.id OF
     end
 
 ;**LOAD TAB**
-;LOAD DATA file button    
-    widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_button'): begin
+;LOAD DATA file
+    widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotDataFile, Event
     end
 
+;LOAD NORMALIZATION file
+    widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_text_field'): begin
+        REFreductionEventcb_LoadAndPlotNormalizationFile, Event
+    end
+
+;**1D PLOT TAB**
 ;1D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
         if( Event.type EQ 0 )then begin
@@ -31,18 +37,6 @@ CASE Event.id OF
           REFreduction_DataSelectionMove, Event
     end
     
-    
-;LOAD NORMALIZATION file button
-    widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_button'): begin
-        REFreductionEventcb_LoadAndPlotNormalizationFile, Event
-    end
-
-;LOAD NORMALIZATION file button
-    widget_info(wWidget, FIND_BY_UNAME='new_load_data_run_number_text_field'): begin
-       print, 'here'
-    end
-
-
 ;**REDUCE TAB**
 
 ;**PLOTS TAB**

@@ -3,23 +3,13 @@ PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-;RunNumber widgets (label - text_field and button)
-d_L_T = 85
-d_L_B = 200
-RunNumberLabelSize      = [300,15]
-RunNumberTextFieldSize  = [RunNumberLabelSize[0] + d_L_T,$
-                           RunNumberLabelSize[1]-5,$
-                           100,$
-                           30]
-RunNumberLoadButtonSize = [RunNumberLabelSize[0]+d_L_B,$
-                           RunNumberLabelSize[1]-5,$
-                           100,$
-                           30]
-GlobalRunNumber         = [RunNumberLabelSize,$
-                           RunNumberTextFieldSize,$
-                           RunNumberLoadButtonSize]
-RunNumberTitles         =  ['RUN NUMBER: ',$
-                            'L O A D ']
+;RunNumber label and inside CW_FIELD
+RunNumberBaseSize    = [300,10,300,35]
+RunNumberCWFieldSize = [0,0]
+GlobalRunNumber      = [RunNumberBaseSize,$
+                        RunNumberCWFieldSize]
+RunNumberTitles      =  ['DATA RUN NUMBER:',$
+                         'NORMALIZATION RUN NUMBER:']
 
 ;1D and 2D tabs
 LoadTabSize   = [0,$
