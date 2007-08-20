@@ -10,6 +10,7 @@ PROCESSING = (*global).processing_message ;processing message
 
 ;get Data Run Number from DataTextField
 NormalizationRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
+NormalizationRunNumber = strcompress(NormalizationRunNumber)
 LogBookText = '-> Openning NORMALIZATION Run Number: ' + NormalizationRunNumber
 text = getLogBookText(Event)
 if (text[0] EQ '') then begin
