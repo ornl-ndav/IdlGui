@@ -54,13 +54,15 @@ MakeGuiLoadData1D2DTab,$
   GlobalLoadDataGraphs
 
 ;File info huge label
-data_file_info_label = widget_label(LOAD_DATA_BASE,$
-                                    xoffset=FileInfoSize[0],$
-                                    yoffset=FileInfoSize[1],$
-                                    scr_xsize=FileInfoSize[2],$
-                                    scr_ysize=FileInfoSize[3],$
-                                    frame=1,$
-                                    value='')
+data_file_info_text = widget_text(LOAD_DATA_BASE,$
+                                  xoffset=FileInfoSize[0],$
+                                  yoffset=FileInfoSize[1],$
+                                  scr_xsize=FileInfoSize[2],$
+                                  scr_ysize=FileInfoSize[3],$
+                                  /wrap,$
+                                  /scroll,$
+                                  value='',$
+                                  uname='data_file_info_text')
 
 ;Help base and text field that will show what is going on in the
 ;drawing region
@@ -73,8 +75,10 @@ LeftInteractionHelpMessageBase = widget_base(LOAD_DATA_BASE,$
                                              frame=1)
 
 LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
+                                               uname='left_data_interaction_help_message_help',$
                                                xoffset=LeftInteractionHelpSize[4],$
                                                yoffset=LeftInteractionHelpSize[5],$
+                                               scr_xsize=LeftInteractionHelpSize[8],$
                                                value=LeftInteractionHelpMessageLabelTitle)
 
 LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
@@ -82,7 +86,9 @@ LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
                                            yoffset=LeftInteractionHelpSize[7],$
                                            scr_xsize=LeftInteractionHelpSize[8],$
                                            scr_ysize=LeftInteractionHelpSize[9],$
-                                           uname='DATA_left_interaction_help_text')
+                                           uname='DATA_left_interaction_help_text',$
+                                           /wrap,$
+                                           /scroll)
                                            
 
 

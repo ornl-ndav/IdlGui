@@ -8,54 +8,66 @@ Data1DSelectionList = ['Select Background Range    ',$
                        'Select Peak Exclusion      ']
 Data1DSelectionBaseSize            = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
 Data1DSelectionSize                = [5, 5]
+ 
+d_L_B= 170
+BaseLengthYmin = 90
+BaseLengthYmax = 120
+BaseHeight = 35
+;Background Ymin and Ymax bases and cw_fields
+;Ymin base and cw_field
+Data1DSelectionBackgroundLabelSize  = [3,45]
+Data1DSelectionBackgroundLabelTitle = 'Background Range ......... ' 
+Data1DSelectionBackgroundYminBaseSize = [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
+                                         Data1DSelectionBackgroundLabelSize[1]-7,$
+                                         BaseLengthYmin,BaseHeight]
+Data1DSelectionBackgroundYminCWFieldSize = [5,30]
+Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
+;Ymax base and cw_field
+Data1DSelectionBackgroundYmaxBaseSize = [Data1DSelectionBackgroundYminBaseSize[0]+$
+                                         Data1DSelectionBackgroundYminBasesize[2],$
+                                         Data1DSelectionBackgroundYminBaseSize[1],$
+                                         BaseLengthYmax,BaseHeight]
+Data1DSelectionBackgroundYmaxCWFieldSize = Data1DSelectionBackgroundYminCWFieldSize
+Data1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 
-;Ymin and Ymax
-Data1DSelectionBackgroundLabelSize  = [5,45]
-Data1DSelectionBackgroundLabelTitle = 'Background Range ............... ' 
-d_L_L= 200
-Data1DSelectionBackgroundYminLabelSize = [Data1DSelectionBackgroundLabelSize[0]+$
-                                          d_L_L,$
-                                          Data1DSelectionBackgroundLabelSize[1]]
-Data1DSelectionBackgroundYminLabelTitle = 'Ymin'
-d_L_T = 30
-Data1DSelectionBackgroundYminTextSize = [Data1DSelectionBackgroundYminLabelSize[0]+$
-                                         d_L_T,$
-                                         Data1DSelectionBackgroundYminLabelSize[1]-5,$
-                                         45,30]
-d_T_L = 50
-Data1DSelectionBackgroundYmaxLabelSize = [Data1DSelectionBackgroundYminTextSize[0]+$
-                                          d_T_L,$
-                                          Data1DSelectionBackgroundYminLabelSize[1]]
-Data1DSelectionBackgroundYmaxLabelTitle = '..... Ymax'
-d_L_T_2 = d_L_T + 37
-Data1DSelectionBackgroundYmaxTextSize = [Data1DSelectionbackgroundYmaxLabelSize[0]+$
-                                         d_L_T_2,$
-                                         Data1DSelectionBackgroundYminTextSize[1],$
-                                         Data1DSelectionBackgroundYminTextSize[2],$
-                                         Data1DSelectionBackgroundYminTextSize[3]]
+;SAVE and LOAD buttons
+SaveLoadButtonSize = [113,30]
+SaveButtonSize      = [384,Data1DselectionBackgroundYmaxBaseSize[1]+3,$
+                       SaveLoadButtonSize[0],$
+                       SaveLoadButtonSize[1]]
+SaveButtonTitle     = 'S A V E'  
+LoadButtonSize      = [SaveButtonSize[0]+SaveLoadButtonSize[0],$
+                       SaveButtonSize[1],$
+                       SaveLoadButtonSize[0],$
+                       SaveLoadButtonSize[1]]
+LoadButtonTitle     = 'L O A D'
 
-d_vertical_L_L = 30
-Data1DSelectionPeakLabelTitle = 'Peak Exclusion ................. ' 
-Data1DSelectionPeakLabelSize       = [5, Data1DSelectionBackgroundLabelSize[1]+$
-                                      d_vertical_L_L]
-Data1DSelectionPeakYminLabelSize = [Data1DSelectionPeakLabelSize[0]+$
-                                    d_L_L,$
-                                    Data1DSelectionPeakLabelSize[1]]
-Data1DSelectionPeakYminLabelTitle = 'Ymin'
-Data1DSelectionPeakYminTextSize = [Data1DSelectionPeakYminLabelSize[0]+$
-                                   d_L_T,$
-                                   Data1DSelectionPeakYminLabelSize[1]-5,$
-                                   Data1DSelectionBackgroundYminTextSize[2],$
-                                   Data1DSelectionBackgroundYminTextSize[3]]
-Data1DSelectionPeakYmaxLabelSize = [Data1DSelectionPeakYminTextSize[0]+$
-                                    d_T_L,$
-                                    Data1DSelectionPeakYminLabelSize[1]]
-Data1DSelectionPeakYmaxLabelTitle = '..... Ymax'
-Data1DSelectionPeakYmaxTextSize = [Data1DSelectionbackgroundYmaxLabelSize[0]+$
-                                   d_L_T_2,$
-                                   Data1DSelectionPeakYminTextSize[1],$
-                                   Data1DSelectionPeakYminTextSize[2],$
-                                   Data1DSelectionPeakYminTextSize[3]]
+d_vertical_L_L = 77
+DataBackgroundSelectionFileLabelSize = [3,Data1DSelectionBackgroundLabelSize[0]+$
+                                        d_vertical_L_L]
+DataBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
+d_L_B_2 = 170
+DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
+                                            DataBackgroundSelectionFileLabelSize[1]-4,$
+                                            440,30]
+                                    
+;Peak Ymin and Ymax bases and cw_fields
+d_vertical_L_L = 70
+Data1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
+Data1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
+Data1DSelectionPeakYminBaseSize = [Data1DSelectionPeakLabelSize[0]+d_L_B,$
+                                   Data1DSelectionPeakLabelSize[1]-7,$
+                                   BaseLengthYmin,BaseHeight]
+Data1DSelectionPeakYminCWFieldSize = Data1DSelectionBackgroundYmaxCWFieldSize
+Data1DSelectionPeakYminCWFieldTitle = 'Ymin:'
+;Ymax base and cw_field
+Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
+                                   Data1DSelectionPeakYminBasesize[2],$
+                                   Data1DSelectionPeakYminBaseSize[1],$
+                                   BaseLengthYmax,BaseHeight]
+Data1DSelectionPeakYmaxCWFieldSize = Data1DSelectionPeakYminCWFieldSize
+Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
+
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -98,91 +110,122 @@ Data1DSelection = cw_bgroup(Data1DSelectionBase,$
 
 
 ;background selection
-Data_1d_selection_background_label = widget_label(Data1DSelectionBase,$
-                                                  xoffset=Data1DSelectionBackgroundLabelSize[0],$
-                                                  yoffset=Data1DSelectionBackgroundLabelSize[1],$
-                                                  value=Data1DSelectionBackgroundLabelTitle)
-
-Data_1d_selection_background_ymin_label = $
+Data_1d_selection_background_label = $
   widget_label(Data1DSelectionBase,$
-               xoffset=Data1DSelectionBackgroundYminLabelSize[0],$
-               yoffset=Data1DSelectionBackgroundYminLabelSize[1],$
-               value=Data1DSelectionBackgroundYminLabelTitle)
+               xoffset=Data1DSelectionBackgroundLabelSize[0],$
+               yoffset=Data1DSelectionBackgroundLabelSize[1],$
+               value=Data1DSelectionBackgroundLabelTitle)
 
-Data_1d_selection_background_ymin_text = $
-  widget_text(Data1DSelectionBase,$
-              xoffset=Data1DSelectionBackgroundYminTextSize[0],$
-              yoffset=Data1DSelectionBackgroundYminTextSize[1],$
-              scr_xsize=Data1DSelectionBackgroundYminTextSize[2],$
-              scr_ysize=Data1DSelectionBackgroundYminTextSize[3],$
-              value='',$
-              uname='data_1d_selection_background_ymin_text',$
-              /editable,$
-              /align_left,$
-              /all_events)
+Data1DSelectionBackgroundYminBase = $
+  widget_base(Data1DSelectionBase,$
+              xoffset=Data1DSelectionBackgroundYminBaseSize[0],$
+              yoffset=Data1DSelectionBackgroundYminBaseSize[1],$
+              scr_xsize=Data1DSelectionBackgroundYminBaseSize[2],$
+              scr_ysize=Data1DSelectionBackgroundYminBaseSize[3],$
+              uname='Data1SelectionBackgroundYminBase')
 
+Data1DSelectionBackgroundYminCWField = $
+  CW_FIELD(Data1DSelectionBackgroundYminBase,$
+           row=1,$
+           xsize=Data1DSelectionBackgroundYminCWFieldSize[0],$
+           ysize=Data1DSelectionBackgroundYminCWFieldSize[1],$
+           /integer,$
+           return_events=1,$
+           title=Data1DSelectionBackgroundYminCWFieldTitle,$
+           uname='data_d_selection_background_ymin_cw_field')
 
-Data_1d_selection_background_ymax_label = $
+Data1DSelectionBackgroundYmaxBase = $
+  widget_base(Data1DSelectionBase,$
+              xoffset=Data1DSelectionBackgroundYmaxBaseSize[0],$
+              yoffset=Data1DSelectionBackgroundYmaxBaseSize[1],$
+              scr_xsize=Data1DSelectionBackgroundYmaxBaseSize[2],$
+              scr_ysize=Data1DSelectionBackgroundYmaxBaseSize[3],$
+              uname='Data1SelectionBackgroundYmaxBase')
+
+Data1DSelectionBackgroundYmaxCWField = $
+  CW_FIELD(Data1DSelectionBackgroundYmaxBase,$
+           row=1,$
+           xsize=Data1DSelectionBackgroundYmaxCWFieldSize[0],$
+           ysize=Data1DSelectionBackgroundYmaxCWFieldSize[1],$
+           /integer,$
+           return_events=1,$
+           title=Data1DSelectionBackgroundYmaxCWFieldTitle,$
+           uname='data_d_selection_background_ymax_cw_field')
+
+SaveButton = widget_button(Data1DSelectionBase,$,$
+                           xoffset=SaveButtonSize[0],$
+                           yoffset=SaveButtonSize[1],$
+                           scr_xsize=SaveButtonSize[2],$
+                           scr_ysize=SaveButtonSize[3],$
+                           value=SaveButtonTitle,$
+                           uname='data_roi_save_button')
+                           
+LoadButton = widget_button(Data1DSelectionBase,$,$
+                           xoffset=LoadButtonSize[0],$
+                           yoffset=LoadButtonSize[1],$
+                           scr_xsize=LoadButtonSize[2],$
+                           scr_ysize=LoadButtonSize[3],$
+                           value=LoadButtonTitle,$
+                           uname='data_roi_load_button')
+                           
+DataBackgroundSelectionFileLabel = $
   widget_label(Data1DSelectionBase,$
-               xoffset=Data1DSelectionBackgroundYmaxLabelSize[0],$
-               yoffset=Data1DSelectionBackgroundYmaxLabelSize[1],$
-               value=Data1DSelectionBackgroundYmaxLabelTitle)
+               xoffset=DataBackgroundSelectionFileLabelSize[0],$
+               yoffset=DataBackgroundSelectionFileLabelSize[1],$ 
+               value=DataBackgroundSelectionFileLabelTitle)
 
-Data_1d_selection_background_ymax_text = $
-  widget_text(Data1DSelectionBase,$
-              xoffset=Data1DSelectionBackgroundYmaxTextSize[0],$
-              yoffset=Data1DSelectionBackgroundYmaxTextSize[1],$
-              scr_xsize=Data1DSelectionBackgroundYmaxTextSize[2],$
-              scr_ysize=Data1DSelectionBackgroundYmaxTextSize[3],$
-              value='',$
-              uname='data_1d_selection_background_ymax_text',$
-              /editable,$
+DataBackgroundSelectionFileTextField = $
+  widget_Text(Data1DSelectionBase,$
+              xoffset=DataBackgroundSelectionFileTextFieldSize[0],$
+              yoffset=DataBackgroundSelectionFileTextFieldSize[1],$
+              scr_xsize=DataBackgroundSelectionFileTextFieldSize[2],$
+              scr_ysize=DataBackgroundSelectionFileTextFieldSize[3],$
+              uname='data_background_selection_file_text_field',$
               /align_left,$
-              /all_events)
-
+              /editable)
 
 ;Peak exclusion
-Data_1d_selection_peak_label = widget_label(Data1DSelectionBase,$
-                                                  xoffset=Data1DSelectionPeakLabelSize[0],$
-                                                  yoffset=Data1DSelectionPeakLabelSize[1],$
-                                                  value=Data1DSelectionPeakLabelTitle)
-
-Data_1d_selection_peak_ymin_label = $
+Data_1d_selection_peak_label = $
   widget_label(Data1DSelectionBase,$
-               xoffset=Data1DSelectionPeakYminLabelSize[0],$
-               yoffset=Data1DSelectionPeakYminLabelSize[1],$
-               value=Data1DSelectionPeakYminLabelTitle)
+               xoffset=Data1DSelectionPeakLabelSize[0],$
+               yoffset=Data1DSelectionPeakLabelSize[1],$
+               value=Data1DSelectionPeakLabelTitle)
 
-Data_1d_selection_peak_ymin_text = $
-  widget_text(Data1DSelectionBase,$
-              xoffset=Data1DSelectionPeakYminTextSize[0],$
-              yoffset=Data1DSelectionPeakYminTextSize[1],$
-              scr_xsize=Data1DSelectionPeakYminTextSize[2],$
-              scr_ysize=Data1DSelectionPeakYminTextSize[3],$
-              value='',$
-              uname='data_1d_selection_peak_ymin_text',$
-              /editable,$
-              /align_left,$
-              /all_events)
+Data1DSelectionPeakYminBase = $
+  widget_base(Data1DSelectionBase,$
+              xoffset=Data1DSelectionPeakYminBaseSize[0],$
+              yoffset=Data1DSelectionPeakYminBaseSize[1],$
+              scr_xsize=Data1DSelectionPeakYminBaseSize[2],$
+              scr_ysize=Data1DSelectionPeakYminBaseSize[3],$
+              uname='Data1SelectionPeakYminBase')
 
+Data1DSelectionPeakYminCWField = $
+  CW_FIELD(Data1DSelectionPeakYminBase,$
+           row=1,$
+           xsize=Data1DSelectionPeakYminCWFieldSize[0],$
+           ysize=Data1DSelectionPeakYminCWFieldSize[1],$
+           /integer,$
+           return_events=1,$
+           title=Data1DSelectionPeakYminCWFieldTitle,$
+           uname='data_d_selection_peak_ymin_cw_field')
 
-Data_1d_selection_peak_ymax_label = $
-  widget_label(Data1DSelectionBase,$
-               xoffset=Data1DSelectionPeakYmaxLabelSize[0],$
-               yoffset=Data1DSelectionPeakYmaxLabelSize[1],$
-               value=Data1DSelectionPeakYmaxLabelTitle)
+Data1DSelectionPeakYmaxBase = $
+  widget_base(Data1DSelectionBase,$
+              xoffset=Data1DSelectionPeakYmaxBaseSize[0],$
+              yoffset=Data1DSelectionPeakYmaxBaseSize[1],$
+              scr_xsize=Data1DSelectionPeakYmaxBaseSize[2],$
+              scr_ysize=Data1DSelectionPeakYmaxBaseSize[3],$
+              uname='Data1SelectionPeakYmaxBase')
 
-Data_1d_selection_peak_ymax_text = $
-  widget_text(Data1DSelectionBase,$
-              xoffset=Data1DSelectionPeakYmaxTextSize[0],$
-              yoffset=Data1DSelectionPeakYmaxTextSize[1],$
-              scr_xsize=Data1DSelectionPeakYmaxTextSize[2],$
-              scr_ysize=Data1DSelectionPeakYmaxTextSize[3],$
-              value='',$
-              uname='data_1d_selection_peak_ymax_text',$
-              /editable,$
-              /align_left,$
-              /all_events)
+Data1DSelectionPeakYmaxCWField = $
+  CW_FIELD(Data1DSelectionPeakYmaxBase,$
+           row=1,$
+           xsize=Data1DSelectionPeakYmaxCWFieldSize[0],$
+           ysize=Data1DSelectionPeakYmaxCWFieldSize[1],$
+           /integer,$
+           return_events=1,$
+           title=Data1DSelectionPeakYmaxCWFieldTitle,$
+           uname='data_d_selection_peak_ymax_cw_field')
 
 END
 
