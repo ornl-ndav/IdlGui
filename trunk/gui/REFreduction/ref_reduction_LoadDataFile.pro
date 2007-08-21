@@ -96,10 +96,11 @@ endif else begin
         putDataBackgroundPeakYMinMaxValueInTextFields, Event
 
       endelse                     ;end of ~isNeXusFound
-
+      
+      ;update GUI according to result of NeXus found or not
+      RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
     
 endelse                         ;end of DataRunNumber NE ''
-
 
 
 END
