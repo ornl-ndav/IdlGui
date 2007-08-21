@@ -54,14 +54,42 @@ MakeGuiLoadNormalization1D2DTab,$
   GlobalLoadDataGraphs
 
 ;File info huge label
-normalization_file_info_label = widget_label(LOAD_NORMALIZATION_BASE,$
-                                             xoffset=FileInfoSize[0],$
-                                             yoffset=FileInfoSize[1],$
-                                             scr_xsize=FileInfoSize[2],$
-                                             scr_ysize=FileInfoSize[3],$
-                                             frame=1,$
-                                             value='')
+normalization_file_info_text = widget_text(LOAD_NORMALIZATION_BASE,$
+                                            xoffset=FileInfoSize[0],$
+                                            yoffset=FileInfoSize[1],$
+                                            scr_xsize=FileInfoSize[2],$
+                                            scr_ysize=FileInfoSize[3],$
+                                            /wrap,$
+                                            /scroll,$
+                                            uname='normalization_file_info_text',$
+                                            value='')
 
+;Help base and text field that will show what is going on in the
+;drawing region
+LeftInteractionHelpMessageBase = widget_base(LOAD_NORMALIZATION_BASE,$
+                                             uname='left_interaction_help_message_base',$
+                                             xoffset=LeftInteractionHelpsize[0],$
+                                             yoffset=LeftInteractionHelpsize[1],$
+                                             scr_xsize=LeftInteractionHelpsize[2],$
+                                             scr_ysize=LeftInteractionHelpsize[3],$
+                                             frame=1)
+
+LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
+                                               uname='left_norm_interaction_help_message_help',$
+                                               xoffset=LeftInteractionHelpSize[4],$
+                                               yoffset=LeftInteractionHelpSize[5],$
+                                               scr_xsize=LeftInteractionHelpSize[8],$
+                                               value=LeftInteractionHelpMessageLabelTitle)
+
+LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
+                                           xoffset=LeftInteractionHelpSize[6],$
+                                           yoffset=LeftInteractionHelpSize[7],$
+                                           scr_xsize=LeftInteractionHelpSize[8],$
+                                           scr_ysize=LeftInteractionHelpSize[9],$
+                                           uname='NORM_left_interaction_help_text',$
+                                           /wrap,$
+                                           /scroll)
+                                           
 ;Text field box to get info about current process
 normalization_log_book_text_field = widget_text(LOAD_NORMALIZATION_BASE,$
                                                 uname='normalization_log_book_text_field',$
