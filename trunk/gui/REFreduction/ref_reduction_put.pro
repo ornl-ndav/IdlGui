@@ -9,6 +9,31 @@ endelse
 END
 
 
+;Put the contain of the string array in the specified text field
+PRO putTextFieldArray, Event, uname, array, NbrToDisplay
+;size of array
+putTextFieldValue, Event, uname,array[0],0
+if (NbrToDisplay LE (size(array))(1)) then begin
+    NbrLines = NbrToDisplay
+endif else begin
+    NbrLines = (size(array))(1)
+endelse
+if (NbrLines GT 1) then begin
+    for i=1,(NbrLines-1) do begin
+        putTextFieldValue, Event, uname,array[i],1
+    endfor
+endif
+
+END
+
+
+;set the value of the widget_label
+PRO putLabelValue, Event, uname, value
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value= value
+END
+
+
 ;display message in Main Log Book (default is to not append the new message)
 PRO putLogBookMessage, Event, LogBookText, Append=Append
 if (n_elements(Append) EQ 0) then begin
@@ -108,8 +133,6 @@ putDataLogBookMessage, Event, FinalStrarr
 END
 
 
-
-
 ;Add the given message at the end of the last string array element and
 ;put it back in the NormalizationLogBook text field given
 PRO putTextAtEndOfNormalizationLogBookLastLine, $
@@ -139,6 +162,74 @@ endif else begin ;remove given string from last line
 endelse
 ;put it back in uname text field
 putNormalizationLogBookMessage, Event, FinalStrarr
+END
+
+
+
+;This function put an integer in his cw_fields
+PRO putCWFieldValue, Event, Uname, value
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=value
+END
+
+
+
+;Put all the peak and background Ymin and Ymax values in their
+;respective cw_fields for DATA
+PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get Background Ymin, Ymax
+BackSelection = (*(*global).data_back_selection)
+Ymin = Min(BackSelection,max=Ymax)
+(*(*global).data_back_selection) = [Ymin,Ymax]
+if (Ymin LT 0) then Ymin = 0
+if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
+putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
+putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+
+;get Peak Ymin and Ymax
+PeakSelection = (*(*global).data_peak_selection)
+Ymin = Min(PeakSelection,max=Ymax)
+if (Ymin LT 0) then Ymin = 0
+if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
+(*(*global).data_peak_selection) = [Ymin,Ymax]
+putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+
+END
+
+
+
+;Put all the peak and background Ymin and Ymax values in their
+;respective cw_fields for NORM
+PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get Background Ymin, Ymax
+BackSelection = (*(*global).norm_back_selection)
+Ymin = Min(BackSelection,max=Ymax)
+(*(*global).norm_back_selection) = [Ymin,Ymax]
+if (Ymin LT 0) then Ymin = 0
+if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
+putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
+putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+
+;get Peak Ymin and Ymax
+PeakSelection = (*(*global).norm_peak_selection)
+Ymin = Min(PeakSelection,max=Ymax)
+if (Ymin LT 0) then Ymin = 0
+if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
+(*(*global).data_peak_selection) = [Ymin,Ymax]
+putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
+putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
+
 END
 
 
