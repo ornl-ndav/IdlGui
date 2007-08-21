@@ -25,10 +25,11 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_string.pro
 .run ref_reduction_get.pro
 .run ref_reduction_put.pro
-
+.run ref_reduction_is.pro
 
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_LoadDataFile.pro
+.run ref_reduction_NXsummary.pro
 .run ref_reduction_Plot1D2DDataFile.pro
 .run ref_reduction_Plot2DDataFile.pro
 .run ref_reduction_Plot1DDataFile.pro
@@ -38,6 +39,12 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_Plot1DNormalizationFile.pro
 
 .run ref_reduction_DataMouseSelection.pro
+.run ref_reduction_NormMouseSelection.pro
+.run ref_reduction_DataBackgroundPeakSelection.pro
+.run ref_reduction_NormBackgroundPeakSelection.pro
+.run ref_reduction_CreateBackgroundROIFile.pro
+.run ref_reduction_CreateBackgroundROIFileName.pro
+.run ref_reduction_DisplayPreviewOfRoiFile.pro
 
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
