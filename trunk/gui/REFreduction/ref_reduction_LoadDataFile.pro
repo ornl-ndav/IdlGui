@@ -72,17 +72,29 @@ endif else begin
         Message = 'OK  ' + '( Full Path is: ' + strcompress(full_nexus_name) + ')'
         putTextAtEndOfLogBookLastLine, Event, LogBookText, Message
 
-;continue here by displaying the info required by the instrument
-;proton charge and distances
-;;;;populate_distance_labels, event, full_nexus_name
-;;;;populate_proton_charge, event, full_nexus_name
-        
+        ;display info about nexus file selected
+        LogBookText = '----> Displaying information about run number using nxsummary ..... ' + PROCESSING
+        putLogBookMessage, Event, LogBookText, Append=1
+        RefReduction_NXsummary, Event, full_nexus_name, 'data_file_info_text'
+        LogBookText = getLogBookText(Event)        
+        Message = 'OK'
+        putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
 ;dump binary data into local directory of user
         working_path = (*global).working_path
         LogBookText = '----> Dump binary data at this location: ' + working_path
         putLogBookMessage, Event, LogBookText, Append=1
-        RefReduction_DumpBinaryData, Event, full_nexus_name, working_path
+        REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
         
+;create name of BackgroundROIFile and put it in its box
+        REFreduction_CreateDefaultBackgroundROIFileName, Event, $
+          instrument, $
+          working_path, $
+          DataRunNumber
+        
+;populate Background and Peak Ymin and Ymax cw_fields
+        putDataBackgroundPeakYMinMaxValueInTextFields, Event
+
       endelse                     ;end of ~isNeXusFound
 
     
