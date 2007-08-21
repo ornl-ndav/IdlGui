@@ -14,8 +14,8 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF instrument
-                   xsize_1d_draw : 2*304L,$ ;size of 1D draw
+global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF instrument
+                   xsize_1d_draw : 2*304L,$ ;size of 1D draw (should be Ntof)
                    REF_L : 'REF_L',$ ;name of REF_L instrument
                    REF_M : 'REF_M',$ ;name of REF_M instrument
                    Nx_REF_L : 256L,$ ;Nx for REF_L instrument
@@ -24,8 +24,6 @@ global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF inst
                    Ny_REF_M : 256L,$ ;Ny for REF_M instrument
                    Ntof_DATA : 0L, $ ;TOF for data file
                    Ntof_NORM : 0L, $ ;TOF for norm file
-                   back_selection_color : 250L,$ ;color of background selection
-                   peak_selection_color : 100L,$ ;color of peak exclusion
                    processing_message : '(PROCESSING)',$ ;processing message to display
                    data_tmp_dat_file : 'tmp_data.dat',$ ;default name of tmp binary data file
                    full_data_tmp_dat_file : '',$ ;full path of tmp .dat file for data
@@ -39,14 +37,23 @@ global = ptr_new ({instrument : 'REF_L',$ ;name of the current selected REF inst
                    DATA_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of DATA
                    NORM_DD_ptr : ptr_new(0L),$ ;detector view of NORMALIZATION (2D)
                    NORM_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of NORMALIZATION
-                   tvimg_ptr : ptr_new(0L),$ ;rebin data img
+                   tvimg_data_ptr : ptr_new(0L),$ ;rebin data img
+                   tvimg_norm_ptr : ptr_new(0L),$ ;rebin norm img
+                   back_selection_color : 250L,$ ;color of background selection
+                   peak_selection_color : 100L,$ ;color of peak exclusion
                    data_back_selection : ptr_new(0L),$ ;Ymin and Ymax for data background
-                   data_back_peak : ptr_new(0L),$ ;Ymin and Ymax for data peak
-                   select_data_status : 0$ ;Status of the data selection (see below)
+                   norm_back_selection : ptr_new(0L),$ ;Ymin and Ymax for norm background
+                   data_peak_selection : ptr_new(0L),$ ;Ymin and Ymax for data peak
+                   norm_peak_selection : ptr_new(0L),$ ;Ymin and Ymax for norm peak
+                   data_back_roi_ext : '_data_roi.dat',$ ;extension file name of back data ROI
+                   norm_back_roi_ext : '_norm_roi.dat',$ ;extension file name of back norm ROI
+                   roi_file_preview_nbr_line : 20L,$ ;nbr of line to display in preview
+                   select_data_status : 0,$ ;Status of the data selection (see below)
+                   select_norm_status : 0$ ;Status of the norm selection (see below)
                   })
 
 ;------------------------------------------------------------------------
-;explanation of the select_data_status
+;explanation of the select_data_status and select_norm_status
 ;0 nothing has been done yet
 ;1 user left click first and is now in back selection 1st border
 ;2 user release click and is done with back selection 1st border
@@ -59,8 +66,11 @@ full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
 full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
-(*(*global).data_back_selection) = [0,0]
-(*(*global).data_back_peak) = [0,0]
+(*(*global).data_back_selection) = [0,2*303]
+(*(*global).data_peak_selection) = [0,2*303]
+(*(*global).norm_back_selection) = [0,2*303]
+(*(*global).norm_peak_selection) = [0,2*303]
+
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainBaseSize       = [50,50,1200,880]
