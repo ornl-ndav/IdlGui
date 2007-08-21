@@ -46,6 +46,9 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_CreateBackgroundROIFileName.pro
 .run ref_reduction_DisplayPreviewOfRoiFile.pro
 
+.run ref_reduction_GUIinteraction.pro
+.run ref_reduction_UpdateDataNormGui.pro
+
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
 .run MainBaseEvent.pro
