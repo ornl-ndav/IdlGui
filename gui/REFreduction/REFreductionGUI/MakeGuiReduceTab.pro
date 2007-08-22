@@ -29,4 +29,7 @@ MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 ;create intermediate plot base
 MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth
 
+;create other component of base
+MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+
 END
