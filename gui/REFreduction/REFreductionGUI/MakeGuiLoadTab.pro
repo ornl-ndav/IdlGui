@@ -58,19 +58,19 @@ FileInfoSize_1 = [D_DD_TabSize[2]+50,$
 LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
                                       425,$
                                       495,$
-                                      190]
+                                      190+100]
 LeftInteractionHelpMessageLabelSize = [5,5]
 LeftInteractionHelpMessageLabelTitle = 'H E L P'
-LeftInteractionHelpTextSize = [5,25,485,160]
+LeftInteractionHelpTextSize = [5,25,485,160+100]
 LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpMessageLabelSize,$
                            LeftInteractionHelpTextsize]
                            
 ;bottom text field
 FileInfoSize_2 = [FileInfoSize_1[0],$
-                  625,$
+                  625+100,$
                   498,$
-                  190]
+                  190-100]
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 

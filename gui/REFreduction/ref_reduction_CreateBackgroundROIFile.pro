@@ -6,8 +6,8 @@ widget_control,id,get_uvalue=global
 
 ;get Background Ymin and Ymax
 SelectionBackArray = (*(*global).data_back_selection)
-Ymin = SelectionBackArray[0]
-Ymax = SelectionBackArray[1]
+Ymin = SelectionBackArray[0]/2
+Ymax = SelectionBackArray[1]/2
 YNbr = (Ymax-Ymin)
 
 
@@ -43,7 +43,7 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     
     if (instrument EQ (*global).REF_L) then begin ;REF_L
         
-        i=0
+        i=0L
         NxMax = (*global).Nx_REF_L
         OutputArray = strarr(NxMax*YNbr)
         for y=(Ymin+1),(Ymax-1) do begin
@@ -58,9 +58,10 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
     endif else begin            ;REF_M
         
-        i=0
+        i=0L
         NxMax = (*global).Nx_REF_M
-        OutputArray = strarr(NxMax*YNbr)	
+        OutputArray = strarr((NxMax-1)*YNbr)	
+        
         for y=(Ymin+1),(Ymax-1) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)

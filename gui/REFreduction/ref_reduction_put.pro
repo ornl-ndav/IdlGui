@@ -10,20 +10,31 @@ END
 
 
 ;Put the contain of the string array in the specified text field
-PRO putTextFieldArray, Event, uname, array, NbrToDisplay
-;size of array
-putTextFieldValue, Event, uname,array[0],0
-if (NbrToDisplay LE (size(array))(1)) then begin
-    NbrLines = NbrToDisplay
+PRO putTextFieldArray, Event, uname, array, NbrToDisplay, iteration
+if (iteration EQ 0) then begin  ;no append
+    putTextFieldValue, Event, uname,array[0],0
+    if (NbrToDisplay LE (size(array))(1)) then begin
+        NbrLines = NbrToDisplay
+    endif else begin
+        NbrLines = (size(array))(1)
+    endelse
+    if (NbrLines GT 1) then begin
+        for k=1,(NbrLines-1) do begin
+            putTextFieldValue, Event, uname,array[k],1
+        endfor
+    endif
 endif else begin
-    NbrLines = (size(array))(1)
+    if (NbrToDisplay LE (size(array))(1)) then begin
+        NbrLines = NbrToDisplay
+    endif else begin
+        NbrLines = (size(array))(1)
+    endelse
+    if (NbrLines GT 1) then begin
+        for k=0,(NbrLines-1) do begin
+            putTextFieldValue, Event, uname,array[k],1
+        endfor
+    endif
 endelse
-if (NbrLines GT 1) then begin
-    for i=1,(NbrLines-1) do begin
-        putTextFieldValue, Event, uname,array[i],1
-    endfor
-endif
-
 END
 
 
