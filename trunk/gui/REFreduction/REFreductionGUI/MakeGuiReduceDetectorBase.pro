@@ -1,7 +1,7 @@
 PRO MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-DetectorBaseSize   = [0,70,IndividualBaseWidth, 60]
+DetectorBaseSize   = [0,470,IndividualBaseWidth, 60]
 
 DetectorLabelSize  = [20,2]
 DetectorLabelTitle = 'Detector Angle'

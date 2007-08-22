@@ -105,8 +105,16 @@ CASE Event.id OF
         REFreduction_CreateNormBackgroundROIFile, Event
     end
 
-    
 ;**REDUCE TAB**
+    ;yes or no normalization
+    widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
+        REFreduction_ReduceNormalizationUpdateGui, Event
+    end
+
+
+
+
+
 
 ;**PLOTS TAB**
 

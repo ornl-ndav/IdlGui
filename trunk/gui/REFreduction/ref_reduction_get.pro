@@ -22,3 +22,11 @@ END
 FUNCTION getNormalizationLogBookText, Event
 return, getTextFieldValue(Event, 'normalization_log_book_text_field')
 END
+
+
+;This function returns the result of cw_bgroup
+FUNCTION getCWBgroupValue, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=value
+return, value
+END
