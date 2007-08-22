@@ -97,8 +97,8 @@ CASE Event.id OF
     end
 
 ;SAVE Background Selection into a file
-    widget_info(wWidget, FIND_BY_UNAME='data_roi_save_button'): begin
-        REFreduction_CreateDataBackgroundROIFile, Event
+    widget_info(wWidget, FIND_BY_UNAME='normalization_roi_save_button'): begin
+        REFreduction_CreateNormBackgroundROIFile, Event
     end
 
     

@@ -86,11 +86,20 @@ endif else begin
         putLogBookMessage, Event, LogBookText, Append=1
         RefReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
         
-      endelse                     ;end of ~isNeXusFound
+;create name of BackgroundROIFile and put it in its box
+        REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
+          instrument, $
+          working_path, $
+          NormalizationRunNumber
+        
+;populate Background and Peak Ymin and Ymax cw_fields
+        putNormBackgroundPeakYMinMaxValueInTextFields, Event
 
+    endelse                     ;end of ~isNeXusFound
+    
+                                ;update GUI according to result of NeXus found or not
+    RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
     
 endelse                         ;end of DataRunNumber NE ''
-
-
 
 END
