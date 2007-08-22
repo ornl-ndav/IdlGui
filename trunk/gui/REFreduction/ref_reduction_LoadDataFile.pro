@@ -87,7 +87,7 @@ endif else begin
         REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
         
 ;create name of BackgroundROIFile and put it in its box
-        REFreduction_CreateDefaultBackgroundROIFileName, Event, $
+        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
           instrument, $
           working_path, $
           DataRunNumber

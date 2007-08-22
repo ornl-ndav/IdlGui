@@ -75,7 +75,7 @@ LeftInteractionHelpMessageBase = widget_base(LOAD_NORMALIZATION_BASE,$
                                              frame=1)
 
 LeftInteractionHelpMessageLabel = widget_label(LeftInteractionHelpMessageBase,$
-                                               uname='left_norm_interaction_help_message_help',$
+                                               uname='left_normalization_interaction_help_message_help',$
                                                xoffset=LeftInteractionHelpSize[4],$
                                                yoffset=LeftInteractionHelpSize[5],$
                                                scr_xsize=LeftInteractionHelpSize[8],$
