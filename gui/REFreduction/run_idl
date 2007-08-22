@@ -16,7 +16,11 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiLoadNormalization1D2DTab.pro
 .run MakeGuiLoadNormalization1DTab.pro
 .run MakeGuiLoadNormalization2DTab.pro
+
 .run MakeGuiReduceTab.pro
+.run MakeGuiReduceQbase.pro
+.run MakeGuiReduceDetectorBase.pro
+
 .run MakeGuiPlotsTab.pro
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
