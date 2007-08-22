@@ -11,7 +11,6 @@ Ymin = SelectionBackArray[0]/2
 Ymax = SelectionBackArray[1]/2
 YNbr = (Ymax-Ymin)
 
-
 if (YNbr LE 1) then begin
     
 ;display error message saying that selection is invalid
@@ -46,7 +45,8 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_L
-        OutputArray = strarr(NxMax*YNbr)
+        YNbr = YNbr-1
+        OutputArray = strarr((NxMax)*YNbr)
         for y=(Ymin+1),(Ymax-1) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(x,/remove_all)
@@ -61,8 +61,8 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_M
-        OutputArray = strarr((NxMax-1)*YNbr)	
-        
+        YNbr = YNbr-1
+        OutputArray = strarr((NxMax)*YNbr)	
         for y=(Ymin+1),(Ymax-1) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
@@ -144,8 +144,9 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_L
+        YNbr = YNbr-1
         OutputArray = strarr(NxMax*YNbr)
-        for y=(Ymin+1),(Ymax-1) do begin
+        for y=(Ymin+1),(Ymax) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(x,/remove_all)
                 text += '_' + strcompress(y,/remove_all)
@@ -159,8 +160,8 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_M
-        OutputArray = strarr((NxMax-1)*YNbr)	
-        
+        YNbr = YNbr-1
+        OutputArray = strarr((NxMax)*YNbr)	
         for y=(Ymin+1),(Ymax-1) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
