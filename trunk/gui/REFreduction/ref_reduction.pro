@@ -15,6 +15,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF instrument
+                   DataNeXusFound : 0, $ ;no data nexus found by default
+                   NormNeXusFound : 0, $ ;no norm nexus found by default
                    xsize_1d_draw : 2*304L,$ ;size of 1D draw (should be Ntof)
                    REF_L : 'REF_L',$ ;name of REF_L instrument
                    REF_M : 'REF_M',$ ;name of REF_M instrument

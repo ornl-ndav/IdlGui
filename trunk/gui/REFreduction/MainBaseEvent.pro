@@ -21,16 +21,18 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
-        if( Event.type EQ 0 )then begin
-            if (Event.press EQ 1) then $
-                REFreduction_DataSelectionPressLeft, Event ;left button
-            if (Event.press EQ 4) then $
-              REFreduction_DataselectionPressRight, Event ;right button
+        if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
+            if( Event.type EQ 0 )then begin
+                if (Event.press EQ 1) then $
+                  REFreduction_DataSelectionPressLeft, Event ;left button
+                if (Event.press EQ 4) then $
+                  REFreduction_DataselectionPressRight, Event ;right button
+            endif
+            if (Event.type EQ 1) then $ ;release
+              REFreduction_DataSelectionRelease, Event
+            if (Event.type EQ 2) then $ ;move
+              REFreduction_DataSelectionMove, Event
         endif
-        if (Event.type EQ 1) then $ ;release
-          REFreduction_DataSelectionRelease, Event
-        if (Event.type EQ 2) then $ ;move
-          REFreduction_DataSelectionMove, Event
     end
 
 ;Background Ymin and Ymax
@@ -66,16 +68,18 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D plot of NORM
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_D_draw'): begin
-        if( Event.type EQ 0 )then begin
-            if (Event.press EQ 1) then $
-                REFreduction_NormSelectionPressLeft, Event ;left button
-            if (Event.press EQ 4) then $
-              REFreduction_NormselectionPressRight, Event ;right button
-        endif
-        if (Event.type EQ 1) then $ ;release
-          REFreduction_NormSelectionRelease, Event
-        if (Event.type EQ 2) then $ ;move
+        if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
+            if( Event.type EQ 0 )then begin
+                if (Event.press EQ 1) then $
+                  REFreduction_NormSelectionPressLeft, Event ;left button
+                if (Event.press EQ 4) then $
+                  REFreduction_NormselectionPressRight, Event ;right button
+            endif
+            if (Event.type EQ 1) then $ ;release
+              REFreduction_NormSelectionRelease, Event
+            if (Event.type EQ 2) then $ ;move
           REFreduction_NormSelectionMove, Event
+        endif
     end
 
 ;Background Ymin and Ymax
