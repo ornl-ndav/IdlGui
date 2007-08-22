@@ -44,6 +44,8 @@ endif else begin
                                            instrument,$
                                            isNeXusFound)
     
+    (*global).NormNeXusFound = isNeXusFound
+
     if (~isNeXusFound) then begin ;NeXus has not been found
 
 ;tells the user that the NeXus file has not been found
