@@ -26,7 +26,7 @@ RegionOfInterestTextFieldSize = [230,$
 ;Exclusion peak region
 ExclusionPeakRegionLabelSize = [RunsLabelSize[0],$
                                 RegionOfInterestLabelSize[1]+d_vertical_L_L]
-ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region '
+ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region:'
 
 ;low bin
 ExclusionLowBinLabelSize = [ExclusionPeakRegionLabelSize[0]+200,$
@@ -152,9 +152,6 @@ BackgroundBGroup = cw_bgroup(data_base,$
                              set_value=0,$
                              uname='data_background_cw_bgroup',$
                              row=1)
-
-
-
 
 
 
