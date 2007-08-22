@@ -1,7 +1,7 @@
 PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-QBaseSize   = [0,10,IndividualBaseWidth, 55]
+QBaseSize   = [0,410,IndividualBaseWidth, 55]
 
 QLabelSize  = [20,2]
 QLabelTitle = 'Q'

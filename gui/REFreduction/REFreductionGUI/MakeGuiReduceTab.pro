@@ -14,6 +14,11 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           SCR_XSIZE=ReduceTabSize[2],$
                           SCR_YSIZE=ReduceTabSize[3])
 
+;create data base
+MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
+
+;create normalization base
+MakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create Q base
 MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth

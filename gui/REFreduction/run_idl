@@ -18,6 +18,8 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiLoadNormalization2DTab.pro
 
 .run MakeGuiReduceTab.pro
+.run MakeGuiReduceDataBase.pro
+.run MakeGuiReduceNormalizationBase.pro
 .run MakeGuiReduceQbase.pro
 .run MakeGuiReduceDetectorBase.pro
 
@@ -52,6 +54,7 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 
 .run ref_reduction_GUIinteraction.pro
 .run ref_reduction_UpdateDataNormGui.pro
+.run ref_reduction_UpdateReduceTabGui.pro
 
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
