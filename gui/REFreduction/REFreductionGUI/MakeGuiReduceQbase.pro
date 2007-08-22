@@ -1,7 +1,7 @@
 PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-QBaseSize   = [0,410,IndividualBaseWidth, 55]
+QBaseSize   = [0,400,IndividualBaseWidth, 55]
 
 QLabelSize  = [20,2]
 QLabelTitle = 'Q'
@@ -33,8 +33,9 @@ QwidthTextFieldSize = [QwidthLabelSize[0]+d_L_T_2,$
                        QminTextFieldSize[3]]
 
 ;Qscale
-QScaleBGroupList = [' linear    ',' log    ' ]
-QScaleBGroupSize = [QwidthTextFieldSize[0]+2*d_L_T,$
+QScaleBGroupList = [' linear   ',' log   ' ]
+d_L_T_3 = d_L_T + 30
+QScaleBGroupSize = [QwidthTextFieldSize[0]+d_L_T_3,$
                     QminTextFieldSize[1]]
                     
 

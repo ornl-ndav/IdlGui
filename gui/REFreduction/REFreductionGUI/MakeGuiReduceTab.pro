@@ -3,7 +3,7 @@ PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 ReduceTabSize  = [0,0,MainTabSize[2],MainTabSize[3]]
-IndividualBaseWidth = MainTabSize[2]
+IndividualBaseWidth = 720
 
 ;Build widgets
 REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
@@ -26,6 +26,7 @@ MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 ;create detector angle
 MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
-
+;create intermediate plot base
+MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 END

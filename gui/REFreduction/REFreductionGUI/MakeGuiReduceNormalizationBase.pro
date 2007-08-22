@@ -40,7 +40,7 @@ RegionOfInterestTextFieldSize = [230,$
 ;Exclusion peak region
 ExclusionPeakRegionLabelSize = [RunsLabelSize[0],$
                                 RegionOfInterestLabelSize[1]+d_vertical_L_L]
-ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region '
+ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region:'
 
 ;low bin
 ExclusionLowBinLabelSize = [ExclusionPeakRegionLabelSize[0]+200,$

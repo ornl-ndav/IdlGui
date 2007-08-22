@@ -111,6 +111,10 @@ CASE Event.id OF
         REFreduction_ReduceNormalizationUpdateGui, Event
     end
 
+    ;Intermediate plots
+    widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_cwbgroup'): begin
+        REFreduction_ReduceIntermediatePlotUpdateGui, Event
+    end
 
 
 
