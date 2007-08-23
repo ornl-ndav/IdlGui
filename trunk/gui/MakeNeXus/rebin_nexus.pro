@@ -51,6 +51,15 @@ case Event.id of
               CREATE_NEXUS_CB, Event
         end
         
+    Widget_Info(wWidget, FIND_BY_UNAME='CREATE_SHARE_NEXUS'): begin
+        CREATE_NEXUS_CB, Event
+        COPY_NEXUS_INTO_SHARE, Event
+    end
+
+
+
+
+        
         Widget_Info(wWidget, FIND_BY_UNAME='DISPLAY_BUTTON'): begin
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
               DISPLAY_BUTTON, Event
@@ -199,6 +208,7 @@ instrument_list = ['REF_L', 'REF_M', 'BSS']
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
+                   full_local_nexus_name: '',$ ;full path to local nexus file created
                    output_folder : '',$
                    file_extension : 'tmp_event_neutron.dat',$
                    nbr_nexus_file : 1,$
@@ -250,7 +260,7 @@ global = ptr_new({$
                    experiment_number : '',$
                    proposal_number		: '',$
                    proposal_number_BSS	: '2006_1_2_SCI/',$
-                   proposal_number_REF_L	: '2006_1_4B_SCI/',$
+                   proposal_number_REF_L: '2006_1_4B_SCI/',$
                    proposal_number_REF_M	: '2006_1_4A_SCI/',$
                    instrument_run_number	: '',$
                    run_number		: '',$
@@ -349,28 +359,6 @@ HISTO_EVENT_FILE_TEXT_BOX = cw_field(histo_event_file_run_number_base,$
                                      title='Run #:',$
                                      row=1)
                                                                           
-
-; HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
-;                                         UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
-;                                         XOFFSET=40,$
-;                                         YOFFSET=5,$
-;                                         SCR_XSIZE=120,$
-;                                         SCR_YSIZE=30,$
-;                                         VALUE='',$   
-;                                         /align_left,$
-;                                         /editable)
-
-; OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
-;                                                   UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
-;                                                   XOFFSET= 160,$
-;                                                   YOFFSET = 5,$
-;                                                   SCR_XSIZE=40,$ 
-;                                                   SCR_YSIZE=30, $
-;                                                   VALUE= "OPEN",$
-;                                                   tooltip="NeXus file to load")
-
-
-
 HISTO_EVENT_FILE_TYPE = widget_label(wt1,$
                                      UNAME='HISTO_EVENT_FILE_TYPE',$
                                      XOFFSET=220,$
@@ -824,13 +812,21 @@ DEFAULT_GEOMETRY_FILE_tab2 = WIDGET_label(wT2,$
 ;   Create a base widget to hold the 'Create NeXus' button, and
 ;   the button itself.
 wControl = WIDGET_BASE(MAIN_BASE)
-CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus file',$
+CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus',$
                              UNAME = "CREATE_NEXUS",$
                              XOFFSET=5,$
                              YOFFSET=277,$
-                             SCR_XSIZE=200,$
+                             SCR_XSIZE=130,$
                              SCR_YSIZE=30,$
-                             tooltip="Create NeXus")
+                             tooltip="Create local NeXus file only")
+
+CREATE_SHARE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local/share NeXus',$
+                             UNAME = 'CREATE_SHARE_NEXUS',$
+                             XOFFSET=135,$
+                             YOFFSET=277,$
+                             SCR_XSIZE=160,$
+                             SCR_YSIZE=30,$
+                             tooltip="Create local and share NeXus file")
 
 ; exist_frame = WIDGET_BASE(MAIN_BASE, $
 ;                           UNAME="exist_FRAME",$
@@ -851,9 +847,9 @@ CREATE_NEXUS = WIDGET_BUTTON(wControl, VALUE='Create local NeXus file',$
 ;archive or not
 already_archived_base = widget_base(MAIN_BASE,$
                                     uname='already_archived_base',$
-                                    xoffset=240,$
+                                    xoffset=300,$
                                     yoffset=275,$
-                                    scr_xsize=270,$
+                                    scr_xsize=250,$
                                     scr_ysize=30,$
                                     frame=2,$
                                     map=0)
