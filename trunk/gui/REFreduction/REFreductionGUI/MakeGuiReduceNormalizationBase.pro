@@ -122,7 +122,7 @@ RunsTextField = widget_text(normalization_base,$
                             scr_ysize=RunsTextFieldSize[3],$
                             /editable,$
                             /align_left,$
-                            uname='reduce_data_runs_text_field')
+                            uname='reduce_normalization_runs_text_field')
 
 ;region of interest label
 RegionOfInterestLabel = widget_label(normalization_base,$
@@ -137,7 +137,7 @@ RegionOfInterestTextField = widget_text(normalization_base,$
                                         scr_xsize=RegionOfInterestTextFieldSize[2],$
                                         scr_ysize=RegionOfInterestTextFieldSize[3],$
                                         /align_left,$
-                                        uname='reduce_data_region_of_interest_file_name')
+                                        uname='reduce_normalization_region_of_interest_file_name')
 
 ;exclusion peak region
 ExclusionPeakRegionLabel = widget_label(normalization_base,$
@@ -153,12 +153,12 @@ ExclusionLowBinLabel = widget_label(normalization_base,$
 
 ;exclusion low bin text field
 ExclusionLowBinTextField = widget_text(normalization_base,$
+                                       uname='norm_exclusion_low_bin_text',$
                                        xoffset=ExclusionLowBinTextFieldSize[0],$
                                        yoffset=ExclusionLowBinTextFieldSize[1],$
                                        scr_xsize=ExclusionLowBinTExtFieldSize[2],$
                                        scr_ysize=ExclusionLowBinTextFieldSize[3],$
                                        /align_left)
-
 
 ;exclusion high bin
 ExclusionHighBinLabel = widget_label(normalization_base,$
@@ -168,11 +168,12 @@ ExclusionHighBinLabel = widget_label(normalization_base,$
 
 ;exclusion High bin text field
 ExclusionHighBinTextField = widget_text(normalization_base,$
-                                       xoffset=ExclusionHighBinTextFieldSize[0],$
-                                       yoffset=ExclusionHighBinTextFieldSize[1],$
-                                       scr_xsize=ExclusionHighBinTExtFieldSize[2],$
-                                       scr_ysize=ExclusionHighBinTextFieldSize[3],$
-                                       /align_left)
+                                        uname='norm_exclusion_high_bin_text',$
+                                        xoffset=ExclusionHighBinTextFieldSize[0],$
+                                        yoffset=ExclusionHighBinTextFieldSize[1],$
+                                        scr_xsize=ExclusionHighBinTExtFieldSize[2],$
+                                        scr_ysize=ExclusionHighBinTextFieldSize[3],$
+                                        /align_left)
 
 ;background
 BackgroundLabel = widget_label(normalization_base,$
@@ -186,7 +187,7 @@ BackgroundBGroup = cw_bgroup(normalization_base,$
                              xoffset=BackgroundBGroupSize[0],$
                              yoffset=BackgroundBGroupSize[1],$
                              set_value=0,$
-                             uname='data_background_cw_bgroup',$
+                             uname='normalization_background_cw_bgroup',$
                              row=1)
 
 ;frame

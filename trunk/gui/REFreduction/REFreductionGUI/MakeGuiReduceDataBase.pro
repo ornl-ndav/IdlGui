@@ -117,6 +117,7 @@ ExclusionLowBinLabel = widget_label(data_base,$
 
 ;exclusion low bin text field
 ExclusionLowBinTextField = widget_text(data_base,$
+                                       uname='data_exclusion_low_bin_text',$
                                        xoffset=ExclusionLowBinTextFieldSize[0],$
                                        yoffset=ExclusionLowBinTextFieldSize[1],$
                                        scr_xsize=ExclusionLowBinTExtFieldSize[2],$
@@ -132,11 +133,12 @@ ExclusionHighBinLabel = widget_label(data_base,$
 
 ;exclusion High bin text field
 ExclusionHighBinTextField = widget_text(data_base,$
-                                       xoffset=ExclusionHighBinTextFieldSize[0],$
-                                       yoffset=ExclusionHighBinTextFieldSize[1],$
-                                       scr_xsize=ExclusionHighBinTExtFieldSize[2],$
-                                       scr_ysize=ExclusionHighBinTextFieldSize[3],$
-                                       /align_left)
+                                        uname='data_exclusion_high_bin_text',$
+                                        xoffset=ExclusionHighBinTextFieldSize[0],$
+                                        yoffset=ExclusionHighBinTextFieldSize[1],$
+                                        scr_xsize=ExclusionHighBinTExtFieldSize[2],$
+                                        scr_ysize=ExclusionHighBinTextFieldSize[3],$
+                                        /align_left)
 
 ;background
 BackgroundLabel = widget_label(data_base,$

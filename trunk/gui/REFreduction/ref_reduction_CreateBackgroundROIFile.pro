@@ -30,9 +30,17 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     file_name = $
       getTextFieldValue(Event,$
                         'data_background_selection_file_text_field')
-    
+    file_name = file_name[0]
+
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'reduce_data_region_of_interest_file_name',$
+      file_name,$
+      0 ;do not append
+
 ;display preview message
-    Message = 'Preview of ' + file_name[0]
+    Message = 'Preview of ' + file_name
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
 
 ;get instrument
@@ -129,9 +137,17 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     file_name = $
       getTextFieldValue(Event,$
                         'normalization_background_selection_file_text_field')
-    
+    file_name = file_name[0]
+
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'reduce_normalization_region_of_interest_file_name',$
+      file_name,$
+      0 ;do not append
+
 ;display preview message
-    Message = 'Preview of ' + file_name[0]
+    Message = 'Preview of ' + file_name
     putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
 
 ;get instrument

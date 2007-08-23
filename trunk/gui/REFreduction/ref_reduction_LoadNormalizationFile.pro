@@ -68,6 +68,13 @@ endif else begin
 ;store run number of normalization file
         (*global).norm_run_number = NormalizationRunNumber
         
+;display run number in REDUCE tab
+        putTextFieldValue, $
+          event, $
+          'reduce_normalization_runs_text_field', $
+          strcompress(NormalizationRunNumber,/remove_all), $
+          0  ;do not append
+
 ;tells the user that the NeXus file has been found
 ;get log book full text
         LogBookText = getLogBookText(Event)
