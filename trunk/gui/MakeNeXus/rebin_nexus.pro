@@ -11,8 +11,7 @@ case Event.id of
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
     
-    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_HISTO_EVENT_FILE_BUTTON_tab1'): begin
-        if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+    Widget_Info(wWidget, FIND_BY_UNAME='HISTO_EVENT_FILE_TEXT_BOX'): begin
           OPEN_HISTO_EVENT_FILE_CB, Event
     end
     
@@ -87,7 +86,6 @@ case Event.id of
             WIDGET_control, id, GET_VALUE=instrument
             ucams = get_ucams()
 
-            
             if (check_access(Event, instrument, ucams) NE -1) then begin
                 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
                 WIDGET_CONTROL, id, /destroy
@@ -336,33 +334,40 @@ wT1 = WIDGET_BASE(wTab, TITLE='Input file',$
                   UNAME="wT1",$
                   SCR_XSIZE=550, SCR_YSIZE=250)
 
-HISTO_EVENT_FILE_RUN_NUMBER = widget_label(wT1,$
-                                           UNAME='HISTO_EVENT_FILE_RUN_NUMBER',$
-                                           XOFFSET=5,$
-                                           YOFFSET=5,$
-                                           SCR_XSIZE=35,$
-                                           SCR_YSIZE=30,$
-                                           VALUE='Run#',$
-                                           /align_left)
+histo_event_file_run_number_base = widget_base(wT1,$
+                                               xoffset=15,$
+                                               yoffset=0,$
+                                               scr_xsize=170,$
+                                               scr_ysize=40)
 
-HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
-                                        UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
-                                        XOFFSET=40,$
-                                        YOFFSET=5,$
-                                        SCR_XSIZE=120,$
-                                        SCR_YSIZE=30,$
-                                        VALUE='',$   
-                                        /align_left,$
-                                        /editable)
+HISTO_EVENT_FILE_TEXT_BOX = cw_field(histo_event_file_run_number_base,$
+                                     uname='HISTO_EVENT_FILE_TEXT_BOX',$
+                                     xsize=15,$
+                                     ysize=30,$
+                                     /integer,$
+                                     return_events=1,$
+                                     title='Run #:',$
+                                     row=1)
+                                                                          
 
-OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
-                                                  UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
-                                                  XOFFSET= 160,$
-                                                  YOFFSET = 5,$
-                                                  SCR_XSIZE=40,$ 
-                                                  SCR_YSIZE=30, $
-                                                  VALUE= "OPEN",$
-                                                  tooltip="NeXus file to load")
+; HISTO_EVENT_FILE_TEXT_BOX = widget_text(wT1,$
+;                                         UNAME='HISTO_EVENT_FILE_TEXT_BOX',$
+;                                         XOFFSET=40,$
+;                                         YOFFSET=5,$
+;                                         SCR_XSIZE=120,$
+;                                         SCR_YSIZE=30,$
+;                                         VALUE='',$   
+;                                         /align_left,$
+;                                         /editable)
+
+; OPEN_HISTO_EVENT_FILE_BUTTON_tab1 = WIDGET_BUTTON(wT1, $
+;                                                   UNAME="OPEN_HISTO_EVENT_FILE_BUTTON_tab1",$
+;                                                   XOFFSET= 160,$
+;                                                   YOFFSET = 5,$
+;                                                   SCR_XSIZE=40,$ 
+;                                                   SCR_YSIZE=30, $
+;                                                   VALUE= "OPEN",$
+;                                                   tooltip="NeXus file to load")
 
 
 
