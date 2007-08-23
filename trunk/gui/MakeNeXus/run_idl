@@ -1,8 +1,6 @@
 cd, "~/SVN/HistoTool/trunk/gui/utilities/"
 .run nexus_utilities.pro
 .run system_utilities.pro
-.run make_date.pro
-.run make_iso_date_string.pro
 
 cd, "~/SVN/HistoTool/trunk/gui/MakeNeXus/"
 .run rebin_nexus_eventcb.pro
