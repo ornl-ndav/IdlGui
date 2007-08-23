@@ -121,6 +121,12 @@ CASE Event.id OF
         REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
     end
 
+    
+
+
+
+
+
 ;**PLOTS TAB**
 
 ;**LOG_BOOK TAB**
@@ -130,5 +136,33 @@ CASE Event.id OF
     ELSE:
     
 ENDCASE
+
+
+;**REDUCE TAB**
+;command line generator
+SWITCH Event.id OF
+
+    widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='reduce_normalization_runs_text_field'):     
+    widget_info(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_cwbgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_list'): 
+    widget_info(wWidget, FIND_BY_UNAME='detector_value_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='detector_error_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='detector_units_b_group'): 
+    widget_info(wWidget, FIND_BY_UNAME='q_min_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='q_max_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='q_width_text_field'): 
+    widget_info(wWidget, FIND_BY_UNAME='q_scale_b_group'): 
+    widget_info(wWidget, FIND_BY_UNAME='filtering_data_cwbgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='delta_t_over_t_cwbgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
+        REFreduction_CommandLineGenerator, Event
+    end
+
+    Else:
+ENDSWITCH
 
 END

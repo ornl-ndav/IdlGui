@@ -56,6 +56,7 @@ DetectorValueTextField = widget_text(detector_base,$
                                      scr_xsize=DetectorValueTextFieldSize[2],$
                                      scr_ysize=DetectorValueTextFieldSize[3],$
                                      /align_left,$
+                                     /all_events,$
                                      /editable,$
                                      uname='detector_value_text_field')
 
@@ -73,6 +74,7 @@ DetectorErrorTextField = widget_text(detector_base,$
                                      scr_ysize=DetectorErrorTextFieldSize[3],$
                                      /align_left,$
                                      /editable,$
+                                     /all_events,$
                                      uname='detector_error_text_field')
 ;Detector units
 DetectorUnitsBGroup = cw_bgroup(detector_base,$

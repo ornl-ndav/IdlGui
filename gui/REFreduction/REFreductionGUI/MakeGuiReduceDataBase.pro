@@ -86,6 +86,7 @@ RunsTextField = widget_text(data_base,$
                             scr_ysize=RunsTextFieldSize[3],$
                             /editable,$
                             /align_left,$
+                            /all_events,$
                             uname='reduce_data_runs_text_field')
 
 ;region of interest label
