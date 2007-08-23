@@ -116,9 +116,10 @@ CASE Event.id OF
         REFreduction_ReduceIntermediatePlotUpdateGui, Event
     end
 
-
-
-
+    ;Overwrite Instrument Geometry
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
+        REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
+    end
 
 ;**PLOTS TAB**
 
