@@ -112,7 +112,7 @@ OverwriteInsrumentGeometryButton = widget_button(OverwriteInstrumentGeometryBase
                                                  
 ;Start data reduction button
 StartDataReductionButton = widget_button(REDUCE_BASE,$
-                                         uname='start_data_redution_button',$
+                                         uname='start_data_reduction_button',$
                                          xoffset=StartDRButtonSize[0],$
                                          yoffset=StartDRButtonSize[1],$
                                          scr_xsize=StartDRButtonSize[2],$

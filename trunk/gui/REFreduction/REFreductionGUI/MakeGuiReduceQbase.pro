@@ -68,6 +68,7 @@ QMinTextField = widget_text(Q_base,$
                             scr_xsize=QMinTextFieldSize[2],$
                             scr_ysize=QMinTextFieldSize[3],$
                             /align_left,$
+                            /all_events,$
                             /editable,$
                             uname='q_min_text_field')
 
@@ -85,6 +86,7 @@ QMaxTextField = widget_text(Q_base,$
                             scr_ysize=QMaxTextFieldSize[3],$
                             /align_left,$
                             /editable,$
+                            /all_events,$
                             uname='q_max_text_field')
 
 ;Qwidth label
@@ -95,13 +97,14 @@ QwidthLabel = widget_label(Q_base,$
 
 ;Qwidth Text Field
 QwidthTextField = widget_text(Q_base,$
-                            xoffset=QwidthTextFieldSize[0],$
-                            yoffset=QwidthTextFieldSize[1],$
-                            scr_xsize=QwidthTextFieldSize[2],$
-                            scr_ysize=QwidthTextFieldSize[3],$
-                            /align_left,$
-                            /editable,$
-                            uname='q_width_text_field')
+                              xoffset=QwidthTextFieldSize[0],$
+                              yoffset=QwidthTextFieldSize[1],$
+                              scr_xsize=QwidthTextFieldSize[2],$
+                              scr_ysize=QwidthTextFieldSize[3],$
+                              /align_left,$
+                              /editable,$
+                              /all_events,$
+                              uname='q_width_text_field')
 
 ;QScale label
 QScaleBGroup = cw_bgroup(Q_base,$
