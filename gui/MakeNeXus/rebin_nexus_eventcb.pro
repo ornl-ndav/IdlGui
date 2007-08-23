@@ -995,42 +995,45 @@ for i =0, 9 do begin
    endif
 endfor
 
-;check if user is autorized for this instrument
-CASE instrument OF		
-   ;REF_L
-   0: CASE user_index OF
-        -1:
-        0:                      ;authorized
-        1:                      ;authorized
-        2:                      ;authorized
-        3:                      ;authorized
-        7:                      ;authorized
-        8:                      ;authorized
-        else: user_index=-1	;unauthorized
-      ENDCASE
-   ;REF_M
-   1: CASE user_index OF
-	-1:
-	0: 
-	1: 
-	2: 
-	3: 
-	4: 
-	5: 
-	6: 
-	else: user_index=-1
-      ENDCASE
-   ;BSS
-   2: CASE user_index OF
-	-1:
-	0: 
-	1: 
-	2: 
-	3: 
-        9:
-	else: user_index=-1
-      ENDCASE
-ENDCASE	 
+;for now, all users have access
+user_index = 0
+
+;;check if user is autorized for this instrument
+; CASE instrument OF		
+;    ;REF_L
+;    0: CASE user_index OF
+;         -1:
+;         0:                      ;authorized
+;         1:                      ;authorized
+;         2:                      ;authorized
+;         3:                      ;authorized
+;         7:                      ;authorized
+;         8:                      ;authorized
+;         else: user_index=-1	;unauthorized
+;       ENDCASE
+;    ;REF_M
+;    1: CASE user_index OF
+; 	-1:
+; 	0: 
+; 	1: 
+; 	2: 
+; 	3: 
+; 	4: 
+; 	5: 
+; 	6: 
+; 	else: user_index=-1
+;       ENDCASE
+;    ;BSS
+;    2: CASE user_index OF
+; 	-1:
+; 	0: 
+; 	1: 
+; 	2: 
+; 	3: 
+;         9:
+; 	else: user_index=-1
+;       ENDCASE
+; ENDCASE	 
 	
 RETURN, user_index
 
