@@ -10,7 +10,6 @@ MapBase, Event, 'normalization_base', MapStatus
 END
 
 
-
 PRO REFreduction_ReduceIntermediatePlotUpdateGui, Event
 ;check status of with or without intermediate plots
 isWithIntermediatePlot = getCWBgroupValue(Event, 'intermediate_plot_cwbgroup')
@@ -21,7 +20,6 @@ endif else begin ;with intermediate
 endelse
 MapBase, Event, 'intermediate_base', MapStatus
 END
-
 
 
 PRO REFreduction_ReduceOverwriteInstrumentGeometryGui, Event

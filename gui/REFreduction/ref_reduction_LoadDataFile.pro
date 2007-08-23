@@ -68,6 +68,13 @@ endif else begin
 ;store run number of data file
         (*global).data_run_number = DataRunNumber
 
+;display run number in REDUCE tab
+        putTextFieldValue, $
+          event, $
+          'reduce_data_runs_text_field', $
+          strcompress(DataRunNumber,/remove_all), $
+          0  ;do not append
+
 ;tells the user that the NeXus file has been found
 ;get log book full text
         LogBookText = getLogBookText(Event)

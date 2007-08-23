@@ -125,7 +125,7 @@ plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
 plots, 0, y_array[1], /device, color=color
 plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 
-(*global).select_data_status = mouse_status_new
+(*global).select_norm_status = mouse_status_new
 
 ;update Back and Peak Ymin and Ymax cw_fields
 putNormBackgroundPeakYMinMaxValueInTextFields, Event
@@ -268,12 +268,29 @@ endcase
 ;signal or peak selection
 if (isPeakSelected) then begin  ;peak selection
     (*(*global).norm_peak_selection) = y_array
+
+    ymin = min(y_array,max=ymax)
+    
+    ;populate exclusion peak low and high bin
+    putTextFieldValue,$
+      Event,$
+      'norm_exclusion_low_bin_text',$
+      strcompress(ymin/2,/remove_all),$
+      0 ;do not append
+      
+    putTextFieldValue,$
+      Event,$
+      'norm_exclusion_high_bin_text',$
+      strcompress(ymax/2,/remove_all),$
+      0 ;do not append
+
     color = (*global).back_selection_color
     y_array = (*(*global).norm_back_selection)
     plots, 0, y_array[0], /device, color=color
     plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
     plots, 0, y_array[1], /device, color=color
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
 endif else begin                ;background selection
     (*(*global).norm_back_selection) = y_array
     color = (*global).peak_selection_color
