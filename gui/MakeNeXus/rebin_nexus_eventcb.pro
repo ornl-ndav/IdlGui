@@ -1311,6 +1311,7 @@ instrument = (*global).instrument  ;REF_M, REF_L or BSS
 ;store run_number
 run_number_id = widget_info(Event.top, FIND_BY_UNAME='HISTO_EVENT_FILE_TEXT_BOX')
 widget_control, run_number_id, get_value=run_number
+run_number=strcompress(run_number,/remove_all)
 
 ;check if there is only 1 run number or not
 run_number_array = strsplit(run_number,',',/extract,count=length)
@@ -1406,7 +1407,7 @@ endif else begin
         widget_control, full_view_info, set_value=full_text, /append
         widget_control, already_archived_label_id, set_value=full_text
         find_nexus = 1
-        widget_control, CREATE_NEXUS_id, set_value='Create local NeXus file'
+        widget_control, CREATE_NEXUS_id, set_value='Create local NeXus'
         widget_control, already_archived_base_id, map=1
 
     endif else begin ;file not archived yet
@@ -2463,9 +2464,12 @@ widget_control, full_view_info, set_value=full_text,/append
 
 ;check if NeXus is where it should be
 full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
+(*global).full_local_nexus_name = full_nexus_name
 
 ;activate "Create local NeXus" button
 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
+widget_control, id_create_nexus, sensitive=1
+id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_SHARE_NEXUS")
 widget_control, id_create_nexus, sensitive=1
 
 if ((*global).find_nexus EQ 1) then begin
@@ -2597,6 +2601,47 @@ end
 
 
 
+PRO COPY_NEXUS_INTO_SHARE, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;display what is going on
+view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+
+full_nexus_name = (*global).full_local_nexus_name
+
+instrument = (*global).instrument
+proposal_number = (*global).proposal_number
+run_number = (*global).run_number
+run_number = strcompress(run_number,/remove_all)
+
+ShareFolder = '/SNS/' + instrument
+ShareFolder += '/' + proposal_number
+ShareFolder += '/shared'
+ShareFolder += '/'
+
+DateTime = Systime(0)
+DateTime = strcompress(DateTime,/remove_all)
+
+nexusFileName = instrument + '_' + run_number
+nexusFileName += '_' + DateTime + '.nxs'
+
+DestNeXus = ShareFolder + nexusFileName
+
+cp_cmd = 'cp ' + full_nexus_name
+cp_cmd += ' ' + DestNexus
+cp_cmd_text = '> ' + cp_cmd
+widget_control, full_view_info, set_value=cp_cmd_text, /append
+WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
+spawn, cp_cmd, listening
+status_text = ' .... copy done'
+widget_control, full_view_info, set_value=status_text, /append
+WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+
+END
 
 
 
