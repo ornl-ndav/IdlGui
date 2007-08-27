@@ -15,6 +15,12 @@ if (isNeXusFound) then begin
       InitialStrarr, $
       ' Done', $
       (*global).processing_message
+
+;display full path to NeXus in Data log book
+    full_nexus_name = (*global).data_full_nexus_name
+    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+    putDataLogBookMessage, Event, text, Append=1
+    
 endif
 END
 
@@ -36,6 +42,12 @@ if (isNeXusFound) then begin
       InitialStrarr, $
       ' Done', $
       (*global).processing_message
+
+;display full path to NeXus in Norm log book
+    full_nexus_name = (*global).norm_full_nexus_name
+    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+    putNormalizationLogBookMessage, Event, text, Append=1
+
 endif
 END
 
