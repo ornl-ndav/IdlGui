@@ -118,7 +118,7 @@ StartDataReductionButton = widget_button(REDUCE_BASE,$
                                          scr_xsize=StartDRButtonSize[2],$
                                          scr_ysize=StartDRButtonSize[3],$
                                          value=StartDRButtonTitle,$
-                                         sensitive=1)
+                                         sensitive=0)
 
 ;command line preview
 cmdLinePreviewLabel = widget_label(REDUCE_BASE,$
