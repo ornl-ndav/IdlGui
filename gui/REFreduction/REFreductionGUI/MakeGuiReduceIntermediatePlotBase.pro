@@ -9,17 +9,18 @@ IntermediatePlotCWBgroupList = [' Yes   ', ' No    ']
 
 ;intermdiate plot base
 InterBaseSize = [IndividualBaseWidth,40,$
-                 510,190]
-InterMainFramesize = [5,5,450,155]
+                 510,230]
+InterMainFramesize = [5,5,450,210]
 
 ;intermediate plots list
-InterList = ['Intermediate plot #1',$
-             'Intermediate plot #2',$
-             'Intermediate plot #3',$
-             'Intermediate plot #4',$
-             'Intermediate plot #5']
+InterList = ['Data Specular Intermediate Plot',$
+             'Data Background Plot',$
+             'Data Sub. Plot',$
+             'Normalization Specular Intermediate Plot',$
+             'Normalization Background Plot',$
+             'Normalization Sub. Plot',$
+             'Uncombine Plot']
 InterListSize = [ 10, 10]
-                 
 
 ;*********************************************************
 ;Create GUI

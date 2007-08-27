@@ -43,7 +43,6 @@ endif else begin
                                            DataRunNumber,$
                                            instrument,$
                                            isNeXusFound)
-    
     (*global).DataNeXusFound = isNeXusFound
 
     if (~isNeXusFound) then begin ;NeXus has not been found
@@ -68,6 +67,9 @@ endif else begin
 ;store run number of data file
         (*global).data_run_number = DataRunNumber
 
+;store full path to NeXus
+        (*global).data_full_nexus_name = full_nexus_name
+        
 ;display run number in REDUCE tab
         putTextFieldValue, $
           event, $

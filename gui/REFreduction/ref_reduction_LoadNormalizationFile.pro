@@ -68,6 +68,9 @@ endif else begin
 ;store run number of normalization file
         (*global).norm_run_number = NormalizationRunNumber
         
+;store full path to nexus file
+        (*global).norm_full_nexus_name = full_nexus_name
+
 ;display run number in REDUCE tab
         putTextFieldValue, $
           event, $
