@@ -32,4 +32,7 @@ MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth
 ;create other component of base
 MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
 
+;create GeneralInfoTextField
+MakeGuiReduceInfo, Event, REDUCE_BASE
+
 END

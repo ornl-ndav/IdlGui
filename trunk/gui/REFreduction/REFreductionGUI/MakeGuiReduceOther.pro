@@ -127,6 +127,7 @@ cmdLinePreviewLabel = widget_label(REDUCE_BASE,$
                                    value=cmdLinePreviewLabelTitle)
 
 cmdLinePreviewText = widget_text(REDUCE_BASE,$
+                                 uname='reduce_cmd_line_preview',$
                                  xoffset=cmdLinePreviewTextSize[0],$
                                  yoffset=cmdLinePreviewTextSize[1],$
                                  scr_xsize=cmdLinePreviewTextSize[2],$

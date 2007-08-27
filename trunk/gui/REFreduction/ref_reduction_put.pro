@@ -244,5 +244,12 @@ putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
 END
 
 
-
+;Put the given string in the Reduction status text field
+PRO putInfoInReductionStatus, Event, string, append
+putTextFieldValue, $
+  Event, $
+  'reduction_status_text_field', $
+  string, $
+  append
+END
 

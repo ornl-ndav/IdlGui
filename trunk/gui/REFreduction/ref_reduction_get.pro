@@ -30,3 +30,27 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, get_value=value
 return, value
 END
+
+
+;This function returns the Reduction Q scale desired (lin or log)
+FUNCTION getQScale, Event
+id = widget_info(Event.top,find_by_uname='q_scale_b_group')
+widget_control, id, get_value=value
+if (value EQ 0) then begin
+    return, 'lin'
+endif else begin
+    return, 'log'
+endelse
+END
+
+
+;This function gives the Detector angle units (degrees or radians)
+FUNCTION getDetectorAngleUnits, Event
+id = widget_info(Event.top,find_by_uname='detector_units_b_group')
+widget_control, id, get_value=value
+if (value EQ 0) then begin
+    return, 'degrees'
+endif else begin
+    return, 'radians'
+endelse
+END
