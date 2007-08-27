@@ -1,3 +1,24 @@
+;this function is trigerred each time the user changes tab
+PRO tab_event, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tab_id = widget_info(Event.top,find_by_uname='main_tab')
+CurrTabSelect = widget_info(tab_id,/tab_current)
+PrevTabSelect = (*global).PrevTabSelect
+
+if (PrevTabSelect NE CurrTabSelect) then begin
+    if (CurrTabSelect EQ 1) then begin ;reduce tab
+        REFreduction_CommandLineGenerator, Event
+    endif
+    (*global).PrevTabSelect = CurrTabSelect
+endif
+
+
+END
+
+
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 REFreduction_LoadDataFile, Event, isNeXusFound ;first Load the data file

@@ -11,6 +11,10 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+    widget_info(wWidget, FIND_BY_UNAME='main_tab'): begin
+        tab_event, Event
+    end
+
 ;**LOAD TAB**DATA**
 
 ;LOAD DATA file
