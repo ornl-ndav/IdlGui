@@ -1,3 +1,28 @@
+;This function defines the instrument if the program is started from 
+;heater
+PRO REFreductionEventcb_InstrumentSelected, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
+widget_control, id, get_value=instrument_selected
+if (instrument_selected EQ 0) then begin
+   (*global).instrument = 'REF_L'
+endif else begin
+   (*global).instrument = 'REF_M'
+endelse
+
+;descativate instrument selection base and activate main base
+ISBaseID = widget_info(Event.top,find_by_uname='instrument_selection_base')
+widget_control, ISBaseId, map=0
+
+MainTabId = widget_info(Event.top,find_by_uname='main_tab')
+widget_control, MainTabId, sensitive=1
+
+END
+
+
 ;this function is trigerred each time the user changes tab
 PRO tab_event, Event
 ;get global structure
