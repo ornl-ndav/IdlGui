@@ -72,6 +72,11 @@ endif else begin
     StatusMessage += 1
 endelse
 
+;check if user wants data background or not
+if (isDataWithBackground(Event)) then begin ;yes, with background
+   cmd += ' TBD '
+endif
+
 ;check if user wants to use normalization or not
 if (isReductionWithNormalization(Event)) then begin
 ;get normalization run numbers
@@ -144,9 +149,14 @@ if (isReductionWithNormalization(Event)) then begin
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
-    endelse
-
-endif                           ;end of (~isWithoutNormalization)
+     endelse
+    
+;check if user wants normalization background or not
+    if (isNormWithBackground(Event)) then begin ;yes, with background
+       cmd += ' TBD '
+    endif
+    
+ endif                          ;end of (~isWithoutNormalization)
 
 ;get name of instrument
 cmd += ' --inst=' + (*global).instrument
