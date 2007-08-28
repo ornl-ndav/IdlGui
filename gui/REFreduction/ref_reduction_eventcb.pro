@@ -5,15 +5,15 @@ PRO REFreductionEventcb_InstrumentSelected, Event
 id = widget_info(Event.top,find_by_uname='instrument_selection_cw_bgroup')
 widget_control, id, get_value=instrument_selected
 
-if (instrument_selected EQ 0) then begin
-   BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'REF_L'
-endif else begin
-      BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, 'REF_M'
-endelse
-
 ;descativate instrument selection base and activate main base
-ISBaseID = widget_info(Event.top,find_by_uname='instrument_selection_base')
-widget_control, ISBaseId, /destroy
+ISBaseID = widget_info(Event.top,find_by_uname='MAIN_BASE')
+widget_control, ISBaseId, map=0
+
+if (instrument_selected EQ 0) then begin
+   BuildGui, 'REF_L', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+endif else begin
+   BuildGui, 'REF_M', GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+endelse
 
 END
 

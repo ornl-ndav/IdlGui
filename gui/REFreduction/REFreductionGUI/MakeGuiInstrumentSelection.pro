@@ -18,7 +18,7 @@ MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
                        SPACE=0,$
                        XPAD=0,$
                        YPAD=0,$
-                       uname='instrument_selection_base',$
+                       uname='MAIN_BASE',$
                        frame=2)
 global = ptr_new ()
 
