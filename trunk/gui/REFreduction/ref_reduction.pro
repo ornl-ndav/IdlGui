@@ -9,9 +9,9 @@ END
 
 
 
-PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
+PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+;Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -110,7 +110,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, (*global).instrument
+MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
