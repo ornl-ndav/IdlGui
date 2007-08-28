@@ -14,7 +14,7 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF instrument
+global = ptr_new ({instrument : '',$ ;name of the current selected REF instrument
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -57,6 +57,16 @@ global = ptr_new ({instrument : 'REF_M',$ ;name of the current selected REF inst
                    select_norm_status : 0$ ;Status of the norm selection (see below)
                   })
 
+
+;check instrument here
+spawn, 'hostname',listening
+CASE (listening) OF
+   'lrac': (*global).instrument = 'REF_L'
+   'mrac': (*global).instrument = 'REF_M'
+   'heater': (*global).instrument = 'UNDEFINED'
+   else: (*global).instrument = 'UNDEFINED'
+ENDCASE
+
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
 ;0 nothing has been done yet
@@ -96,6 +106,10 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
+
+if ((*global).instrument EQ 'UNDEFINED') then begin
+   MakeGuiInstrumentSelection, MAIN_BASE
+endif
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, (*global).instrument

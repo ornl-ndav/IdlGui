@@ -19,10 +19,11 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       YOFFSET=MainTabSize[1],$
                       SCR_XSIZE=MainTabSize[2],$
                       SCR_YSIZE=MainTabSize[3],$
-                      /TRACKING_EVENTS)
+                      /TRACKING_EVENTS,$
+                      sensitive=0)
 
 ;first tab selected
-widget_control, Main_Tab, set_tab_current = 1 ;REDUCE
+widget_control, Main_Tab, set_tab_current = 0 ;LOAD
 
 ;build LOAD tab
 MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument

@@ -15,6 +15,11 @@ CASE Event.id OF
         tab_event, Event
     end
 
+;Instrument Selection
+    widget_info(wWidget, FIND_BY_UNAME='instrument_selection_validate_button'): begin
+       REFreductionEventcb_InstrumentSelected, Event
+    end
+    
 ;**LOAD TAB**DATA**
 
 ;LOAD DATA file
