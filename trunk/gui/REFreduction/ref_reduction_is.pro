@@ -4,6 +4,15 @@ widget_control, id, get_value=isPeakSelected
 return, isPeakSelected
 END
 
+Function isDataWithBackground, Event
+id = widget_info(Event.top,find_by_uname='data_background_cw_bgroup')
+widget_control, id, get_value=isWithBackground
+if (isWithBackground EQ 0) then begin
+   return, 1
+endif else begin
+   return, 0
+endelse
+END
 
 Function isNormPeakSelectionSelected, Event
 id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
@@ -11,6 +20,15 @@ widget_control, id, get_value=isPeakSelected
 return, isPeakSelected
 END
 
+Function isNormWithBackground, Event
+id = widget_info(Event.top,find_by_uname='normalization_background_cw_bgroup')
+widget_control, id, get_value=isWithBackground
+if (isWithBackground EQ 0) then begin
+   return, 1
+endif else begin
+   return, 0
+endelse
+END
 
 Function isReductionWithNormalization, Event
 id = widget_info(Event.top,find_by_uname='yes_no_normalization_bgroup')
