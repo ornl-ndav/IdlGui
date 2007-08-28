@@ -1,5 +1,15 @@
-PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+
+;build the Instrument Selection base
+MakeGuiInstrumentSelection, wGroup
+
+END
+
+
+
+PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
 
 Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
@@ -14,7 +24,7 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : '',$ ;name of the current selected REF instrument
+global = ptr_new ({instrument : instrument,$ ;name of the current selected REF instrument
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -58,14 +68,6 @@ global = ptr_new ({instrument : '',$ ;name of the current selected REF instrumen
                   })
 
 
-;check instrument here
-spawn, 'hostname',listening
-CASE (listening) OF
-   'lrac': (*global).instrument = 'REF_L'
-   'mrac': (*global).instrument = 'REF_M'
-   'heater': (*global).instrument = 'UNDEFINED'
-   else: (*global).instrument = 'UNDEFINED'
-ENDCASE
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
@@ -107,10 +109,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-if ((*global).instrument EQ 'UNDEFINED') then begin
-   MakeGuiInstrumentSelection, MAIN_BASE
-endif
-
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, (*global).instrument
 
@@ -124,7 +122,21 @@ END
 ; Empty stub procedure used for autoloading.
 ;
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-BuildGui, GROUP_LEASER=wGroup, _EXTRA=_VWBExtra_
+
+;check instrument here
+spawn, 'hostname',listening
+CASE (listening) OF
+   'lrac': instrument = 'REF_L'
+   'mrac': instrument = 'REF_M'
+   'heater': instrument = 'UNDEFINED'
+   else: instrument = 'UNDEFINED'
+ENDCASE
+
+if (instrument EQ 'UNDEFINED') then begin
+   BuildInstrumentGui, GROUP_LEADER=wGroup, _Extra=_VWBExtra_
+endif else begin
+   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
+endelse
 end
 
 
