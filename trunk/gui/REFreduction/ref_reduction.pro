@@ -25,6 +25,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
+                   PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
@@ -90,6 +91,15 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_back_selection) = [0,2*303]
 (*(*global).norm_peak_selection) = [0,2*303]
 
+PlotsTitle = ['Data Specular Intermediate Plot',$
+              'Data Background Plot',$
+              'Data Sub. Plot',$
+              'Normalization Specular Intermediate Plot',$
+              'Normalization Background Plot',$
+              'Normalization Sub. Plot',$
+              'Uncombine Plot']
+(*(*global).PlotsTitle) = PlotsTitle
+
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainBaseSize       = [50,50,1200,880]
@@ -112,7 +122,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument
+MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

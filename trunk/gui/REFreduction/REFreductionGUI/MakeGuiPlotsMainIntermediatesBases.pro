@@ -1,19 +1,10 @@
-PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
+PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainPlotBaseSize = [ 200,40,970,680]
-MainPlotDrawSize = [0,0,MainPlotBaseSize[2],MainPlotBasesize[3]]
-
-;Tab Titles
-MainPlotTitle          = 'Main Output Plot'
-IntermediatePlot1Title = 'Data Specular'
-IntermediatePlot2Title = 'Data Background'
-IntermediatePlot3Title = 'Data Sub'
-IntermediatePlot4Title = 'Normalization Specular'
-IntermediatePlot5Title = 'Normalization Background'
-IntermediatePlot6Title = 'Normalization Sub'
-IntermediatePlot7Title = 'Uncombine'
+MainPlotBaseSize  = [ 200,40,970,680]
+MainPlotDrawSize  = [0,0,MainPlotBaseSize[2],MainPlotBasesize[3]]
+PlotsDropListSize = [500,0]
 
 ;build widgets
 MainPlotBase = Widget_base(PLOTS_BASE,$
@@ -31,6 +22,10 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            scr_xsize=MainPlotDrawSize[2],$
                            scr_ysize=MainPlotDrawSize[3])
 
-
-
+PlotsDropList = widget_droplist(PLOTS_BASE,$
+                                xoffset=PlotsDropListSize[0],$
+                                yoffset=PlotsDropListSize[1],$
+                                value=PlotsTitle)
+                                
+                               
 END

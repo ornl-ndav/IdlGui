@@ -1,4 +1,4 @@
-PRO MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle
+PRO MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -14,6 +14,6 @@ PLOTS_BASE = WIDGET_BASE(MAIN_TAB,$
                          SCR_YSIZE=PlotsTabSize[3])
 
 ;Build Main plot and Intermediate plots tab
-MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
+MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 END
