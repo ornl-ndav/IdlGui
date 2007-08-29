@@ -29,7 +29,7 @@ CurrTabSelect = widget_info(tab_id,/tab_current)
 PrevTabSelect = (*global).PrevTabSelect
 
 if (PrevTabSelect NE CurrTabSelect) then begin
-    if (CurrTabSelect EQ 1) then begin ;reduce tab
+    if (CurrTabSelect EQ 1) then begin ;if REDUCE tab is now selected
         REFreduction_CommandLineGenerator, Event
     endif
     (*global).PrevTabSelect = CurrTabSelect
