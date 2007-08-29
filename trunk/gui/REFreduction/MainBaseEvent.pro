@@ -130,11 +130,10 @@ CASE Event.id OF
         REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
     end
 
-    
-
-
-
-
+    ;Run data reduction
+    widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
+        REFreductionEventcb_ProcessingCommandLine, Event
+    end
 
 ;**PLOTS TAB**
 

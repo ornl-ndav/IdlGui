@@ -41,7 +41,7 @@ endelse
 ;get data peak exclusion
 data_peak_exclusion_min = getTextFieldValue(Event,'data_exclusion_low_bin_text')
 data_peak_exclusion_max = getTextFieldValue(Event,'data_exclusion_high_bin_text')
-cmd += ' --data-peak-excl=' + strcompress(data_peak_exclusion_min,/remove_all)
+cmd += ' --data-peak-excl='
 if (data_peak_exclusion_min NE '') then begin
     cmd += ' ' + strcompress(data_peak_exclusion_min,/remove_all)
 endif else begin

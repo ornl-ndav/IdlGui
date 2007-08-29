@@ -28,6 +28,8 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiReduceInfo.pro
 
 .run MakeGuiPlotsTab.pro
+.run MakeGuiPlotsMainIntermediatesBases.pro
+
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
 	
@@ -61,6 +63,9 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_UpdateReduceTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
+.run ref_reduction_RunCommandLine.pro
+.run ref_reduction_LoadOutputFiles.pro
+.run ref_reduction_PlotOutputFiles.pro
 
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
