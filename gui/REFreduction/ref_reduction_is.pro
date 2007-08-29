@@ -4,6 +4,7 @@ widget_control, id, get_value=isPeakSelected
 return, isPeakSelected
 END
 
+
 Function isDataWithBackground, Event
 id = widget_info(Event.top,find_by_uname='data_background_cw_bgroup')
 widget_control, id, get_value=isWithBackground
@@ -14,11 +15,13 @@ endif else begin
 endelse
 END
 
+
 Function isNormPeakSelectionSelected, Event
 id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
 widget_control, id, get_value=isPeakSelected
 return, isPeakSelected
 END
+
 
 Function isNormWithBackground, Event
 id = widget_info(Event.top,find_by_uname='normalization_background_cw_bgroup')
@@ -29,6 +32,7 @@ endif else begin
    return, 0
 endelse
 END
+
 
 Function isReductionWithNormalization, Event
 id = widget_info(Event.top,find_by_uname='yes_no_normalization_bgroup')
@@ -60,4 +64,11 @@ if (isWithDeltaToverT EQ 0) then begin
 endif else begin
     return, 0
 endelse
+END
+
+
+Function isBaseMap, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+isMap = widget_info(id, /map)
+return, isMap
 END

@@ -74,11 +74,11 @@ endelse
 
 ;check if user wants data background or not
 if (isDataWithBackground(Event)) then begin ;yes, with background
-   cmd += ' TBD '
 ;activate DATA Intermediate Plots
     MapBase, Event, 'reduce_plot2_base', 0
     MapBase, Event, 'reduce_plot3_base', 0
 endif else begin
+    cmd += ' --no-bkg'
 ;desactivate DATA Intermediate Plots
     MapBase, Event, 'reduce_plot2_base', 1
     MapBase, Event, 'reduce_plot3_base', 1
@@ -166,9 +166,9 @@ if (isReductionWithNormalization(Event)) then begin
     
 ;check if user wants normalization background or not
      if (isNormWithBackground(Event)) then begin ;yes, with background
-         cmd += ' TBD '
          MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
      endif else begin
+         cmd += ' --no-norm-bkg'
          MapBase, Event, 'reduce_plot5_base', 1 ;back. norm. is not available
      endelse
 
@@ -278,6 +278,10 @@ endif
 if (isWithDeltaToverT(Event)) then begin ;store deltaT over T
     cmd += ' --store-dtot'
 endif
+
+;generate intermediate plots command line
+IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
+cmd += IP_cmd
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
