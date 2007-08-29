@@ -13,4 +13,7 @@ PLOTS_BASE = WIDGET_BASE(MAIN_TAB,$
                          SCR_XSIZE=PlotsTabSize[2],$
                          SCR_YSIZE=PlotsTabSize[3])
 
+;Build Main plot and Intermediate plots tab
+MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
+
 END

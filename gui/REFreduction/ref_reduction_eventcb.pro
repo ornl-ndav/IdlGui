@@ -1,3 +1,17 @@
+;This function run the command line and will output the 
+PRO REFreductionEventcb_ProcessingCommandLine, Event
+
+;first run the command line
+RefReduction_RunCommandLine, Event
+
+;if the data reduction was successful, then plot main and intermediate
+;plots
+RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
+RefReduction_PlotOutputFiles, Event
+
+END
+
+
 ;This function defines the instrument if the program is started from 
 ;heater
 PRO REFreductionEventcb_InstrumentSelected, Event

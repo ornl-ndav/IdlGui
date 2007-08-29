@@ -25,6 +25,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
+                   IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -64,10 +65,11 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of t
                    norm_back_roi_ext : '_norm_roi.dat',$ ;extension file name of back norm ROI
                    roi_file_preview_nbr_line : 20L,$ ;nbr of line to display in preview
                    select_data_status : 0,$ ;Status of the data selection (see below)
-                   select_norm_status : 0$ ;Status of the norm selection (see below)
+                   select_norm_status : 0,$ ;Status of the norm selection (see below)
+                   flt0_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the x-axis
+                   flt1_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the y-axis
+                   flt2_ptr : ptrarr(8,/allocate_heap)$ ;arrays of all the y-error data
                   })
-
-
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
