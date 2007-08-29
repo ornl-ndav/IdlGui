@@ -22,6 +22,21 @@ END
 
 
 
+
+;this function will disabled or not the cw_fields and buttons
+;if no NeXus has been found
+PRO updateNormWidget, Event, isNeXusFound
+if (isNeXusFound) then begin    ;NeXus has been found
+
+endif else begin                ;NeXus not found
+
+    
+endelse
+END
+
+
+
+
 ;this function will clear the text field if no nexus has been found
 PRO updateDataTextFields, Event, isNeXusFound
 if (isNeXusFound) then begin ;NeXus has been found
@@ -32,16 +47,50 @@ endelse
 END
 
 
+;this function will clear the text field if no nexus has been found
+PRO updateNormTextFields, Event, isNeXusFound
+if (isNeXusFound) then begin ;NeXus has been found
+endif else begin ;Nexus not found
+
+
+endelse
+END
+
 
 ;This function will clear the 1D and 2D Data draw if no NeXus found
 PRO clearOffDatadisplay, Event, isNeXusFound
-if (~isNexusFound) then begin ;NeXus not found
-
-
-
+if (~isNexusFound) then begin   ;NeXus not found
+    
+    id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    erase
+    
+    id_draw = widget_info(Event.top, find_by_uname='load_data_DD_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    erase
+    
 endif 
 END
 
+
+;This function will clear the 1D and 2D Normalization draw if no NeXus found
+PRO clearOffNormdisplay, Event, isNeXusFound
+if (~isNexusFound) then begin   ;NeXus not found
+    
+    id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    erase
+    
+    id_draw = widget_info(Event.top, find_by_uname='load_normalization_DD_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    erase
+    
+endif 
+END
 
 
 ;****************************** M A I N ****************************
@@ -51,12 +100,18 @@ PRO RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
 
 updateDataWidget, Event, isNeXusFound ;update cw_fields and buttons
 updateDataTextFields, Event, isNeXusFound ;update text_fields contain
+clearOffDatadisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
 
 END
 
 ;This function updates the GUI according to the result of Norm NeXus
 ;found or not
 PRO RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
+
+updateNormWidget, Event, isNeXusFound ;update cw_fields and buttons
+updateNormTextFields, Event, isNeXusFound ;update text_fields contain
+clearOffNormdisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
+
 
 END
 

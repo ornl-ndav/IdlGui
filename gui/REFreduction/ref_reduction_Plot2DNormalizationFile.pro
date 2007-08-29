@@ -112,6 +112,7 @@ loadct,5
 id_draw = widget_info(Event.top, find_by_uname='load_normalization_DD_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
+erase
 
 New_Ny = 2*Ny
 New_Nx = 2*Nx
