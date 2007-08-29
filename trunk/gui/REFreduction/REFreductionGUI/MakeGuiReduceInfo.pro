@@ -1,10 +1,10 @@
 PRO MakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info label framed
-GeneralInfoFrameSize    = [725,280,450,350]
-GeneralInfoLabelSize    = [850,273]
+GeneralInfoFrameSize    = [725,260,450,380]
+GeneralInfoLabelSize    = [740,250]
 GeneralInfoLabelTitle   = 'R E D U C T I O N    S T A T U S'
-GeneralInfoTextFieldSize = [730,290,440,335] 
+GeneralInfoTextFieldSize = [730,270,440,365] 
 
 ;makeGuI
 ;general info label
