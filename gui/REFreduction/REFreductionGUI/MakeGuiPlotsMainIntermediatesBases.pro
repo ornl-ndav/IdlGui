@@ -2,7 +2,7 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainPlotBaseSize = [ 200,20,970,700]
+MainPlotBaseSize = [ 200,40,970,680]
 MainPlotDrawSize = [0,0,MainPlotBaseSize[2],MainPlotBasesize[3]]
 
 ;Tab Titles
@@ -30,9 +30,6 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            yoffset=MainPlotDrawSize[1],$
                            scr_xsize=MainPlotDrawSize[2],$
                            scr_ysize=MainPlotDrawSize[3])
-
-
-
 
 
 
