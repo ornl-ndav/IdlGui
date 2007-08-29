@@ -1,4 +1,4 @@
-PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle
+PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -27,7 +27,7 @@ MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create intermediate plot base
-MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth
+MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
 
 ;create other component of base
 MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth

@@ -1,4 +1,4 @@
-PRO MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth
+PRO MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
 
 InterLabelTitle = 'I N T E R M E D I A T E   P L O T S'
 InterLabelSize = [IndividualBasewidth+20,10]
@@ -36,13 +36,7 @@ plot7Basesize = [plot1BaseSize[0],$
                  plot1Basesize[3]]
 
 ;intermediate plots list
-InterList = ['Data Specular Intermediate Plot',$
-             'Data Background Plot',$
-             'Data Sub. Plot',$
-             'Normalization Specular Intermediate Plot',$
-             'Normalization Background Plot',$
-             'Normalization Sub. Plot',$
-             'Uncombine Plot']
+InterList = PlotsTitle
 InterListSize = [ 10, 15]
 NotAvailableTitle = ' -- NOT AVAILABLE! --'
 

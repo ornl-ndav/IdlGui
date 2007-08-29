@@ -1,4 +1,4 @@
-PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument
+PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -29,10 +29,10 @@ widget_control, Main_Tab, set_tab_current = 2 ;PLOTS
 MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 
 ;build REDUCE tab
-MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle
+MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 
 ;build PLOTS tab
-MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle
+MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
 ;build LOG_BOOK tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
