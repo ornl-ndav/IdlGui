@@ -75,10 +75,22 @@ endelse
 ;check if user wants data background or not
 if (isDataWithBackground(Event)) then begin ;yes, with background
    cmd += ' TBD '
-endif
+;activate DATA Intermediate Plots
+    MapBase, Event, 'reduce_plot2_base', 0
+    MapBase, Event, 'reduce_plot3_base', 0
+endif else begin
+;desactivate DATA Intermediate Plots
+    MapBase, Event, 'reduce_plot2_base', 1
+    MapBase, Event, 'reduce_plot3_base', 1
+end
 
 ;check if user wants to use normalization or not
 if (isReductionWithNormalization(Event)) then begin
+    
+;activate Normalization Intermediate Plots
+    MapBase, Event, 'reduce_plot4_base', 0
+    MapBase, Event, 'reduce_plot6_base', 0
+    
 ;get normalization run numbers
     norm_run_numbers = getTextFieldValue(Event,'reduce_normalization_runs_text_field')
     cmd += ' --norm=' 
@@ -95,6 +107,7 @@ if (isReductionWithNormalization(Event)) then begin
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
+
     endelse
     
 ;get normalization roi file
@@ -152,11 +165,21 @@ if (isReductionWithNormalization(Event)) then begin
      endelse
     
 ;check if user wants normalization background or not
-    if (isNormWithBackground(Event)) then begin ;yes, with background
-       cmd += ' TBD '
-    endif
-    
- endif                          ;end of (~isWithoutNormalization)
+     if (isNormWithBackground(Event)) then begin ;yes, with background
+         cmd += ' TBD '
+         MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
+     endif else begin
+         MapBase, Event, 'reduce_plot5_base', 1 ;back. norm. is not available
+     endelse
+
+ endif else begin ;no normalization file
+
+;remove Normalization Intermediate Plots
+     MapBase, Event, 'reduce_plot4_base', 1
+     MapBase, Event, 'reduce_plot5_base', 1
+     MapBase, Event, 'reduce_plot6_base', 1
+     
+ endelse                        ;end of (~isWithoutNormalization)
 
 ;get name of instrument
 cmd += ' --inst=' + (*global).instrument
