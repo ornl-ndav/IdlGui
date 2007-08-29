@@ -162,7 +162,7 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         NxMax = (*global).Nx_REF_L
         YNbr = YNbr-1
         OutputArray = strarr(NxMax*YNbr)
-        for y=(Ymin+1),(Ymax) do begin
+        for y=(Ymin+1),(Ymax-1) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(x,/remove_all)
                 text += '_' + strcompress(y,/remove_all)

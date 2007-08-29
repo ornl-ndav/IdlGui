@@ -166,7 +166,7 @@ InterList = cw_bgroup(InterBase,$
                       yoffset=InterListSize[1],$
                       uname='intermediate_plot_list',$
                       /nonexclusive,$
-                      set_value=[1,1,1,1,1,1,1])
+                      set_value=[0,0,0,0,0,0,0])
                             
 InterMainFrame = widget_label(InterBase,$
                               xoffset=InterMainFrameSize[0],$

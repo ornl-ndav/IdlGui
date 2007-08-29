@@ -24,7 +24,7 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : instrument,$ ;name of the current selected REF instrument
+global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default

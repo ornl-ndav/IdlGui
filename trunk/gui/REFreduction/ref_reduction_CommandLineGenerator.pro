@@ -287,6 +287,7 @@ if (StatusMessage NE 0) then begin ;do not activate button
     activate = 0
 endif else begin
     activate = 1
+    putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
 endelse
 ActivateWidget, Event,'start_data_reduction_button',activate
 
