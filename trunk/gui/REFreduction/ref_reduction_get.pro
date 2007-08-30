@@ -56,3 +56,8 @@ endelse
 END
 
 
+;this function gives the droplist value
+FUNCTION getDropListSelectedIndex, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+return, widget_info(id, /droplist_select)
+END

@@ -137,6 +137,12 @@ CASE Event.id OF
 
 ;**PLOTS TAB**
 
+    ;droplist of plots to plot
+    widget_info(wWidget, FIND_BY_UNAME='plots_droplist'): begin
+         RefReduction_PlotMainIntermediateFiles, Event
+    end
+    
+
 ;**LOG_BOOK TAB**
 
 ;**SETTINGS TAB**

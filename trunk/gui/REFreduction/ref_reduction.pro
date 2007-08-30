@@ -28,6 +28,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of t
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ ;title of main data reduction
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
+                   CurrentPlotsFullFileName:ptr_new(0L),$ ;full path name of the plot currently plotted
+                   ExtOfAllPlots : intarr(8),$ ;extension of all the files created
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -103,6 +105,15 @@ PlotsTitle = ['Data Specular Intermediate Plot',$
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
 
+ExtOfAllPlots = ['.txt',$
+                 '.sdc',$
+                 '.bkg',$
+                 '.sub',$
+                 '.sdc',$
+                 '.bkg',$
+                 '.sub',$
+                 '.uncombine']
+
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 MainBaseSize       = [50,50,1200,880]
@@ -133,9 +144,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 END
 
 
-;
 ; Empty stub procedure used for autoloading.
-;
 pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;check instrument here
