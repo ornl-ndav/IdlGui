@@ -1,5 +1,5 @@
 ;this function repopulates (updates) the Plots droplist
-PRO putDropListContain, event, ContainTextArray
+PRO putPlotsDropListContain, event, ContainTextArray
 id = widget_info(Event.top,find_by_uname='plots_droplist')
 widget_control, id, set_value=ContainTextArray
 END
@@ -183,13 +183,11 @@ putNormalizationLogBookMessage, Event, FinalStrarr
 END
 
 
-
 ;This function put an integer in his cw_fields
 PRO putCWFieldValue, Event, Uname, value
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=value
 END
-
 
 
 ;Put all the peak and background Ymin and Ymax values in their
@@ -221,7 +219,6 @@ putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
 END
 
 
-
 ;Put all the peak and background Ymin and Ymax values in their
 ;respective cw_fields for NORM
 PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
@@ -247,7 +244,6 @@ if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
 (*(*global).data_peak_selection) = [Ymin,Ymax]
 putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
 putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
-
 END
 
 

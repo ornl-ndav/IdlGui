@@ -7,7 +7,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;get list of intermediate plots selected
-IntermPlots = (*(*global).IntermPlots)
+IntermPlots = (*global).IntermPlots
 ;get title of intermediate plots
 PlotsTitle = (*(*global).PlotsTitle)
 ;get title of main data reduction plot
@@ -27,6 +27,6 @@ for i=0,(InterPlotsNbr-1) do begin
     endif
 endfor
 
-
+putPlotsDropListContain, event, DropListArray
 
 END

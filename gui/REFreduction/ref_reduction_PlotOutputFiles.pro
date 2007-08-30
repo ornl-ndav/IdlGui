@@ -1,8 +1,20 @@
 ;This function plots the Main data reduction file for the first time
 PRO RefReduction_PlotMainDataReductionFileFirstTime, Event
 
+END
+
+
+
+;This function plots the plot selected
+PRO RefReduction_PlotMainIntermediateFiles, Event
+
+;get index of droplist plot selected
+SelectedIndex = getDropListSelectedIndex(Event,'plots_droplist')
+
 
 END
+
+
 
 
 

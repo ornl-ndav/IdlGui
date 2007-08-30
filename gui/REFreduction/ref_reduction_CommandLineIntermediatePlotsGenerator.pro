@@ -109,6 +109,9 @@ endif
 ;create array of Intermediate files to plot
 PopulateIntermPLotsArray, Event
 
+;refresh PLOTS drop list
+RefReduction_updatePlotsDropList, Event
+
 return, IP_cmd
 END
 
