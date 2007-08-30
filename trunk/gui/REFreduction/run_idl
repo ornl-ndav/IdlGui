@@ -61,6 +61,7 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_GUIinteraction.pro
 .run ref_reduction_UpdateDataNormGui.pro
 .run ref_reduction_UpdateReduceTabGui.pro
+.run ref_reduction_UpdatePlotsTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
 .run ref_reduction_RunCommandLine.pro

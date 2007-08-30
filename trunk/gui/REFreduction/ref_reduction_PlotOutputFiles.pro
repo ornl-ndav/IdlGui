@@ -1,3 +1,12 @@
+;This function plots the Main data reduction file for the first time
+PRO RefReduction_PlotMainDataReductionFileFirstTime, Event
+
+
+END
+
+
+
+;Function that plots the Main data reduction plot
 PRO RefReduction_PlotOutputFiles, Event
 
 ;retrieve global structure
@@ -20,5 +29,4 @@ loadct,5
 ;      flt1 = *flt1_ptr[index_to_plot[i]]
 ;      flt2 = *flt2_ptr[index_to_plot[i]]
       
-
 END

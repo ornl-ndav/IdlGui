@@ -23,6 +23,7 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            scr_ysize=MainPlotDrawSize[3])
 
 PlotsDropList = widget_droplist(PLOTS_BASE,$
+                                uname='plots_droplist',$
                                 xoffset=PlotsDropListSize[0],$
                                 yoffset=PlotsDropListSize[1],$
                                 value=PlotsTitle)

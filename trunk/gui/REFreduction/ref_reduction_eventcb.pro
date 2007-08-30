@@ -4,10 +4,16 @@ PRO REFreductionEventcb_ProcessingCommandLine, Event
 ;first run the command line
 RefReduction_RunCommandLine, Event
 
-;if the data reduction was successful, then plot main and intermediate
-;plots
+;if the data reduction was successful, then load main data reduction
+;and all intermediate files (if any)
 RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
-RefReduction_PlotOutputFiles, Event
+
+;update droplist of PLOTS tab and select first one (Main data
+;reduction plot)
+RefReduction_updatePlotsDropList, Event
+
+;Plot main data reduction plot for the first time
+RefReduction_PlotMainDataReductionFileFirstTime, Event
 
 END
 
