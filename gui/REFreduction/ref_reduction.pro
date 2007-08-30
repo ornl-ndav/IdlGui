@@ -26,6 +26,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
+                   MainPlotTitle : '',$ ;title of main data reduction
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
@@ -99,6 +100,8 @@ PlotsTitle = ['Data Specular Intermediate Plot',$
               'Normalization Sub. Plot',$
               'Uncombine Plot']
 (*(*global).PlotsTitle) = PlotsTitle
+MainPlotTitle = 'Main Data Reduction Plot'
+(*global).MainPlotTitle = MainPlotTitle
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

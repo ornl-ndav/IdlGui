@@ -1,3 +1,10 @@
+;this function repopulates (updates) the Plots droplist
+PRO putDropListContain, event, ContainTextArray
+id = widget_info(Event.top,find_by_uname='plots_droplist')
+widget_control, id, set_value=ContainTextArray
+END
+
+
 ;set the value of the specified uname with text
 PRO putTextFieldValue, event, uname, text, append
 TextFieldId = widget_info(Event.top,find_by_uname=uname)
