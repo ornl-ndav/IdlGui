@@ -12,13 +12,13 @@ cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
 ;display command line in log-book
 cmd_text = 'Running Command Line:'
 putLogBookMessage, Event, cmd_text, Append=1
-cmd_text = ' > ' + cmd
+cmd_text = ' -> ' + cmd
 putLogBookMessage, Event, cmd_text, Append=1
 cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 
-;spawn, cmd, listening
-;print, listening
+spawn, cmd, listening
+print, listening
 
 LogBookText = getLogBookText(Event)
 Message = 'Done'

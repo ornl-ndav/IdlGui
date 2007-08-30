@@ -8,10 +8,6 @@ RefReduction_RunCommandLine, Event
 ;and all intermediate files (if any)
 RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
 
-;update droplist of PLOTS tab and select first one (Main data
-;reduction plot)
-RefReduction_updatePlotsDropList, Event
-
 ;Plot main data reduction plot for the first time
 RefReduction_PlotMainDataReductionFileFirstTime, Event
 

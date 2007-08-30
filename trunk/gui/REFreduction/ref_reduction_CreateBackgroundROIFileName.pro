@@ -8,8 +8,8 @@ PRO REFreduction_CreateDefaultDataBackgroundROIFileName, Event,$
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-DefaultBackRoiFileName = working_path + instrument
-DefaultBackRoiFileName += '_' + run_number
+DefaultBackRoiFileName = working_path + strcompress(instrument,/remove_all)
+DefaultBackRoiFileName += '_' + strcompress(run_number,/remove_all)
 DefaultBackRoiFileName += (*global).data_back_roi_ext
 
 putTextFieldValue, Event,$
@@ -30,8 +30,8 @@ PRO REFreduction_CreateDefaultNormBackgroundROIFileName, Event,$
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-DefaultBackRoiFileName = working_path + instrument
-DefaultBackRoiFileName += '_' + run_number
+DefaultBackRoiFileName = working_path + strcompress(instrument,/remove_all)
+DefaultBackRoiFileName += '_' + strcompress(run_number,/remove_all)
 DefaultBackRoiFileName += (*global).norm_back_roi_ext
 
 putTextFieldValue, Event,$

@@ -6,7 +6,8 @@ widget_control,id,get_uvalue=global
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
-cmd = 'reflect_reduction' ;name of function to call
+;cmd = 'reflect_reduction' ;name of function to call
+cmd = '/SNS/users/j35/usr/bin/reflect_reduction ' ;REMOVE_ME
 
 ;get Data run numbers text field
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
@@ -43,7 +44,7 @@ data_peak_exclusion_min = getTextFieldValue(Event,'data_exclusion_low_bin_text')
 data_peak_exclusion_max = getTextFieldValue(Event,'data_exclusion_high_bin_text')
 cmd += ' --data-peak-excl='
 if (data_peak_exclusion_min NE '') then begin
-    cmd += ' ' + strcompress(data_peak_exclusion_min,/remove_all)
+    cmd += strcompress(data_peak_exclusion_min,/remove_all)
 endif else begin
     cmd += '?'
     status_text = '- Please provide a data low range Peak of Exclusion.'
@@ -189,7 +190,7 @@ Q_min = getTextFieldValue(Event, 'q_min_text_field')
 Q_max = getTextFieldValue(Event, 'q_max_text_field')
 Q_width = getTextfieldValue(Event, 'q_width_text_field')
 Q_scale = getQSCale(Event)
-cmd += ' --mon-trans-bins='
+cmd += ' --mom-trans-bins='
 
 if (Q_min NE '') then begin     ;Q_min
     cmd += strcompress(Q_min,/remove_all)

@@ -94,13 +94,13 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_back_selection) = [0,2*303]
 (*(*global).norm_peak_selection) = [0,2*303]
 
-PlotsTitle = ['Data Specular Intermediate Plot',$
-              'Data Background Plot',$
-              'Data Sub. Plot',$
-              'Normalization Specular Intermediate Plot',$
-              'Normalization Background Plot',$
-              'Normalization Sub. Plot',$
-              'Uncombine Plot']
+PlotsTitle = ['Data Combined Specular TOF Plot',$
+              'Data Combined Background TOF Plot',$
+              'Data Combined Subtracted TOF Plot',$
+              'Normalization Combined Specular TOF Plot',$
+              'Normalization Combined Background TOF Plot',$
+              'Normalization Combined Subtracted TOF Plot',$
+              'R vs TOF Plot']
 (*(*global).PlotsTitle) = PlotsTitle
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
@@ -112,7 +112,7 @@ ExtOfAllPlots = ['.txt',$
                  '.sdc',$
                  '.bkg',$
                  '.sub',$
-                 '.uncombine']
+                 '.rtof']
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
