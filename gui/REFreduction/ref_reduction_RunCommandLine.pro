@@ -17,11 +17,22 @@ putLogBookMessage, Event, cmd_text, Append=1
 cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 
-spawn, cmd, listening
-print, listening
+spawn, cmd, listening, err_listening
+help, err_listening
 
-LogBookText = getLogBookText(Event)
-Message = 'Done'
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+if (err_listening[0] NE '') then begin
+    (*global).DataReductionStatus = 'ERROR'
+    LogBookText = getLogBookText(Event)
+    Message = '* ERROR! *'
+    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+    ErrorLabel = 'ERROR MESSAGE:'
+    putLogBookMessage, Event, ErrorLabel, Append=1
+    putLogBookMessage, Event, err_listening, Append=1
+endif else begin
+    (*global).DataReductionStatus = 'OK'
+    LogBookText = getLogBookText(Event)
+    Message = 'Done'
+    putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+end
 
 END

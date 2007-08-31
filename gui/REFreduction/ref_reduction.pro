@@ -25,11 +25,13 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
+                   DataReductionStatus : 'ERROR',$; status of the data reduction 'OK' or 'ERROR'
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ ;title of main data reduction
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName:ptr_new(0L),$ ;full path name of the plot currently plotted
-                   ExtOfAllPlots : intarr(8),$ ;extension of all the files created
+                   OutputFileName : '',$ ; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
+                   ExtOfAllPlots : strarr(8),$ ;extension of all the files created
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -113,6 +115,7 @@ ExtOfAllPlots = ['.txt',$
                  '.bkg',$
                  '.sub',$
                  '.rtof']
+(*global).ExtOfAllPlots = ExtOfAllPlots
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

@@ -1,15 +1,22 @@
 ;This function run the command line and will output the 
 PRO REFreductionEventcb_ProcessingCommandLine, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;first run the command line
 RefReduction_RunCommandLine, Event
 
-;if the data reduction was successful, then load main data reduction
-;and all intermediate files (if any)
-RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
-
+if ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
+    
+;Load main data reduction and all intermediate files (if any)
+    RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
+    
 ;Plot main data reduction plot for the first time
-RefReduction_PlotMainDataReductionFileFirstTime, Event
+    RefReduction_PlotMainDataReductionFileFirstTime, Event
+
+endif
 
 END
 

@@ -280,6 +280,16 @@ if (isWithDeltaToverT(Event)) then begin ;store deltaT over T
     cmd += ' --store-dtot'
 endif
 
+;force name of output file according to time stamp
+IsoTimeStamp = RefReduction_GenerateIsoTimeStamp()
+NewOutputFileName = (*global).instrument
+NewOutputFileName += '_' + strcompress((*global).data_run_number,/remove_all)
+NewOutputFileName += '_' + strcompress(IsoTimeStamp,/remove_all)
+(*global).OutputFileName = NewOutputFileName
+ExtOfAllPlots = (*global).ExtOfAllPlots
+NewOutputFileName += ExtOfAllPlots[0]
+cmd += ' --output=' + NewOutputFileName
+
 ;generate intermediate plots command line
 IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
 cmd += IP_cmd
