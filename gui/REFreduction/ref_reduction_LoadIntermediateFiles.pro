@@ -1,4 +1,4 @@
-PRO RefReduction_LoadMainOutputFile, Event, FilesToPlotList
+PRO RefReduction_LoadIntermediateFiles, Event, FilesToPlotList
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

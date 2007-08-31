@@ -24,11 +24,10 @@ IsoTimeStamp = (*global).IsoTimeStamp
                            instrument,$ ;REF_L
                            data_run_number) ;3454
     
-    print, FilesToPlotList
-
 ;;Load main data reduction and all intermediate files (if any)
 ;;get flt0, flt1 and flt2 and put them into array
-;    RefReduction_LoadOutputFiles, Event, FilesToPlotList 
+;    RefReduction_LoadMainOutputFile, Event, FilesToPlotList
+;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
     
 ;;Plot main data reduction plot for the first time
 ;    RefReduction_PlotMainDataReductionFileFirstTime, Event
