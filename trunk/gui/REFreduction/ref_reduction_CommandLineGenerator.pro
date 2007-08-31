@@ -282,17 +282,21 @@ endif
 
 ;force name of output file according to time stamp
 IsoTimeStamp = RefReduction_GenerateIsoTimeStamp()
+(*global).IsoTimeStamp = IsoTimeStamp
 NewOutputFileName = (*global).instrument
 NewOutputFileName += '_' + strcompress((*global).data_run_number,/remove_all)
 NewOutputFileName += '_' + strcompress(IsoTimeStamp,/remove_all)
 (*global).OutputFileName = NewOutputFileName
-ExtOfAllPlots = (*global).ExtOfAllPlots
+ExtOfAllPlots = (*(*global).ExtOfAllPlots)
 NewOutputFileName += ExtOfAllPlots[0]
 cmd += ' --output=' + NewOutputFileName
 
 ;generate intermediate plots command line
 IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
 cmd += IP_cmd
+
+;REMOVE_ME
+CMD = '/SNS/users/j35/usr/bin/reflect_reduction  3000 --data-roi-file=~/local/REF_L_3000_data_roi.dat --data-peak-excl=153 164 --norm=3001  --norm-roi-file=~/local/REF_L_3001_norm_roi.dat --norm-peak-excl=152 158 --inst=REF_L --mom-trans-bins=1,10,0.5,lin --det-angle=1,0.5,units=degrees --no-filter --output=REF_L_3000_2007-08-31T12:08:05-04:00.txt --dump-specular --dump-bkg --dump-sub --dump-rtof'
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
@@ -305,5 +309,10 @@ endif else begin
     putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
 endelse
 ActivateWidget, Event,'start_data_reduction_button',activate
+
+;REMOVE_ME
+ActivateWidget, Event,'start_data_reduction_button',1
+
+
 
 END

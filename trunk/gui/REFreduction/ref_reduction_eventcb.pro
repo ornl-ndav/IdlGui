@@ -8,15 +8,32 @@ widget_control,id,get_uvalue=global
 ;first run the command line
 RefReduction_RunCommandLine, Event
 
-if ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
+;if ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
     
-;Load main data reduction and all intermediate files (if any)
-    RefReduciton_LoadOutputFiles, Event ;get flt0, flt1 and flt2 and put them into array
-    
-;Plot main data reduction plot for the first time
-    RefReduction_PlotMainDataReductionFileFirstTime, Event
+instrument = (*global).instrument
+IntermPlots = (*global).IntermPlots
+ExtOfAllPlots = (*(*global).ExtOfAllPlots)
+data_run_number = (*global).data_run_number
+IsoTimeStamp = (*global).IsoTimeStamp
 
-endif
+;create array of all files to plot
+    FilesToPlotList = $
+      getListOfFilesToPlot(IntermPlots,$ ;[0,0,1,1,0,0,1]
+                           ExtOfAllPlots,$ ;[.txt,.sdc,.....]
+                           IsoTimeStamp,$ ;2007-08-31T09:24:45-04:00
+                           instrument,$ ;REF_L
+                           data_run_number) ;3454
+    
+    print, FilesToPlotList
+
+;;Load main data reduction and all intermediate files (if any)
+;;get flt0, flt1 and flt2 and put them into array
+;    RefReduction_LoadOutputFiles, Event, FilesToPlotList 
+    
+;;Plot main data reduction plot for the first time
+;    RefReduction_PlotMainDataReductionFileFirstTime, Event
+
+;endif
 
 END
 
