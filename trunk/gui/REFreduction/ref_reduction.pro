@@ -25,6 +25,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
+                   PreviewFileNbrLine : 25,$ ;nbr of line to get from files
                    DataReductionStatus : 'ERROR',$; status of the data reduction 'OK' or 'ERROR'
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ ;title of main data reduction
@@ -75,7 +76,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of t
                    select_norm_status : 0,$ ;Status of the norm selection (see below)
                    flt0_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the x-axis
                    flt1_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the y-axis
-                   flt2_ptr : ptrarr(8,/allocate_heap)$ ;arrays of all the y-error data
+                   flt2_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the y-error data
+                   fltPreview_ptr : ptrarr(8,/allocate_heap)$;metadata of all files
                   })
 
 ;------------------------------------------------------------------------
@@ -103,13 +105,15 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Normalization Combined Specular TOF Plot',$
               'Normalization Combined Background TOF Plot',$
               'Normalization Combined Subtracted TOF Plot',$
-              'R vs TOF Plot']
+              'R vs TOF Plot',$
+              'XML output file']
 (*(*global).PlotsTitle) = PlotsTitle
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
 
 
 ExtOfAllPlots = ['.txt',$
+                 '.rmd',$
                  '_data.sdc',$
                  '_data.bkg',$
                  '_data.sub',$
