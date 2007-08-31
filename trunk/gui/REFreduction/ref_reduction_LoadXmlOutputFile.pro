@@ -1,13 +1,8 @@
-PRO RefReduction_LoadMainOutputFile, Event, MainOutputFile
+PRO RefReduction_LoadXmlOutputFile, Event, FileToPlot
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-;get flt0, flt1 and flt2 pointers
-flt0_ptr = (*global).flt0_ptr
-flt1_ptr = (*global).flt1_ptr
-flt2_ptr = (*global).flt2_ptr
 
 error_plot_status = 0
 catch, error_plot_status
@@ -17,7 +12,7 @@ if (error_plot_status NE 0) then begin
         
 endif else begin
     
-    openr,u,MainOutputFile,/get
+    openr,u,FileToPlot,/get
     fs = fstat(u)
     
 ;define an empty string variable to hold results from reading the file
@@ -94,18 +89,7 @@ endif else begin
     DEVICE, DECOMPOSED = 0
     loadct,5
     
-    
-;store flt0, ftl1 and flt2 in ptrarr
-    *flt0_ptr[0] = flt0
-    *flt1_ptr[0] = flt1
-    *flt2_ptr[0] = flt2
-    
 endelse
-
-;store flt0, ftl1 and flt2 in ptrarr
-(*global).flt0_ptr = flt0_ptr
-(*global).flt1_ptr = flt1_ptr
-(*global).flt2_ptr = flt2_ptr
 
 END
 

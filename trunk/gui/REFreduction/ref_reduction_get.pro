@@ -79,6 +79,10 @@ BaseName = './' + instrument + '_' + strcompress(run_number,/remove_all)
 MainFile = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[0]
 FilesToPlotList[0] = MainFile
 
+;xml file (.rdc)
+XmlFile = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[1]
+FilesToPlotList = [FilesToPlotList,XmlFile]
+
 ;other intermediate files
 sz=size(IntermPlots)
 Nbr = sz[1]

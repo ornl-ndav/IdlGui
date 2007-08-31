@@ -1,4 +1,4 @@
-;This function run the command line and will output the 
+;This function run the command line and will output the plot and info text
 PRO REFreductionEventcb_ProcessingCommandLine, Event
 
 ;get global structure
@@ -10,27 +10,41 @@ RefReduction_RunCommandLine, Event
 
 ;if ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
     
-instrument = (*global).instrument
-IntermPlots = (*global).IntermPlots
-ExtOfAllPlots = (*(*global).ExtOfAllPlots)
+instrument      = (*global).instrument
+IntermPlots     = (*global).IntermPlots
+ExtOfAllPlots   = (*(*global).ExtOfAllPlots)
 data_run_number = (*global).data_run_number
-IsoTimeStamp = (*global).IsoTimeStamp
+IsoTimeStamp    = (*global).IsoTimeStamp
 
-;create array of all files to plot
-    FilesToPlotList = $
-      getListOfFilesToPlot(IntermPlots,$ ;[0,0,1,1,0,0,1]
-                           ExtOfAllPlots,$ ;[.txt,.sdc,.....]
-                           IsoTimeStamp,$ ;2007-08-31T09:24:45-04:00
-                           instrument,$ ;REF_L
-                           data_run_number) ;3454
-    
-;;Load main data reduction and all intermediate files (if any)
-;;get flt0, flt1 and flt2 and put them into array
-;    RefReduction_LoadMainOutputFile, Event, FilesToPlotList
+;creates array of all files to plot
+FilesToPlotList = $
+  getListOfFilesToPlot(IntermPlots,$ ;[0,0,1,1,0,0,1]
+                       ExtOfAllPlots,$ ;[.txt,.sdc,.....]
+                       IsoTimeStamp,$ ;2007-08-31T09:24:45-04:00
+                       instrument,$ ;REF_L
+                       data_run_number) ;3454
+
+;REMOVE_ME
+FilesToPlotList[1] = $
+  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.txt' 
+FilesToPlotList[0] = $
+  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.rmd' 
+
+;get metadata
+NbrLine = (*global).PreviewFileNbrLine
+RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
+;Display main data reduction metadata
+RefReduction_DisplayMainDataReductionMetadataFile, Event
+
+;Load main data reduction and all intermediate files (if any)
+;get flt0, flt1 and flt2 and put them into array
+    RefReduction_LoadMainOutputFile, Event, FilesToPlotList[0]
+;    RefReduction_LoadXmlOutputFile, Event, FilesToPlotList[1]
 ;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
     
 ;;Plot main data reduction plot for the first time
 ;    RefReduction_PlotMainDataReductionFileFirstTime, Event
+
 
 ;endif
 

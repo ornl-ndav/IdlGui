@@ -67,8 +67,11 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_CommandLineGenerator.pro
 .run ref_reduction_RunCommandLine.pro
 .run ref_reduction_LoadMainOutputFile.pro
+.run ref_reduction_LoadXmlOutputFile.pro
 .run ref_reduction_LoadIntermediateFiles.pro
 .run ref_reduction_PlotOutputFiles.pro
+.run ref_reduction_DisplayMetadataFile.pro
+.run ref_reduction_SaveFileInfo.pro
 
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro

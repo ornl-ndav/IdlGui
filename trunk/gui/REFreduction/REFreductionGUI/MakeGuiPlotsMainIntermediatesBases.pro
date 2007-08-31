@@ -2,9 +2,11 @@ PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainPlotBaseSize  = [ 200,40,970,680]
-MainPlotDrawSize  = [0,0,MainPlotBaseSize[2],MainPlotBasesize[3]]
-PlotsDropListSize = [500,0]
+PlotsDropListSize = [420,0]
+MainPlotBaseSize  = [200,40,780,800]
+MainPlotDrawSize  = [0,0,MainPlotBaseSize[2],MainPlotBasesize[3]-190]
+PlotTextFieldSize = [0,MainPlotDrawSize[1]+MainPlotDrawSize[3],$
+                     MainPlotBaseSize[2],190]
 
 ;build widgets
 MainPlotBase = Widget_base(PLOTS_BASE,$
@@ -22,11 +24,20 @@ MainPlotDraw = widget_draw(MainPlotBase,$
                            scr_xsize=MainPlotDrawSize[2],$
                            scr_ysize=MainPlotDrawSize[3])
 
+;text field
+PlotTextField = widget_text(MainPlotBase,$
+                            xoffset=PlotTextFieldSize[0],$
+                            yoffset=PlotTextFieldSize[1],$
+                            scr_xsize=PlotTextFieldSize[2],$
+                            scr_ysize=PlotTextFieldSize[3],$
+                            /scroll,$
+                            /wrap,$
+                            uname='plots_text_field')
+
 PlotsDropList = widget_droplist(PLOTS_BASE,$
                                 uname='plots_droplist',$
                                 xoffset=PlotsDropListSize[0],$
                                 yoffset=PlotsDropListSize[1],$
                                 value=PlotsTitle)
-                                
-                               
+                                                            
 END
