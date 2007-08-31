@@ -26,7 +26,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
                    PreviewFileNbrLine : 25,$ ;nbr of line to get from files
-                   DataReductionStatus : 'ERROR',$; status of the data reduction 'OK' or 'ERROR'
+                   DataReductionStatus : 'ERROR',$ ; status of the data reduction 'OK' or 'ERROR'
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ ;title of main data reduction
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
