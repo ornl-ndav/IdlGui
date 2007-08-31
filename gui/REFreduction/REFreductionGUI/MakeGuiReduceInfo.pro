@@ -1,10 +1,18 @@
 PRO MakeGuiReduceInfo, Event, REDUCE_BASE
 
-;general info label framed
-GeneralInfoFrameSize    = [725,260,450,315]
-GeneralInfoLabelSize    = [740,250]
-GeneralInfoLabelTitle   = 'C O M M A N D   L I N E   G E N E R A T O R   S T A T U S'
-GeneralInfoTextFieldSize = [730,269,440,305] 
+;general info and xml preview tab
+GeneralInfoAndXmlBaseSize = [725,260,450,315]
+GeneralInfoTabSize = [0,0,GeneralInfoAndXmlBaseSize[2],$
+                      GeneralInfoAndXmlBaseSize[3]]
+ReduceTab1BaseSize = [0,0,GeneralInfoTabSize[2],$
+                      GeneralInfoTabSize[3]]
+ReduceTab1BaseTitle = 'COMMAND  LINE  GENERATOR  STATUS'
+ReduceTab2BaseSize = [0,0,GeneralInfoTabSize[2],$
+                      GeneralInfoTabSize[3]]
+ReduceTab2BaseTitle = 'REDUCTION XML FILE'
+
+;general info label frame
+GeneralInfoTextFieldSize = [0,0,443,290] 
 
 DataReductionStatusFrameSize = [725,595,450,40]
 DataReductionStatusLabelSize = [740,585]
@@ -12,14 +20,33 @@ DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
 DataReductionStatusTextFieldSize = [730,604,440,30]
 
 ;makeGuI
-;general info label
-GeneralInfoLabel = widget_label(REDUCE_BASE,$
-                                xoffset=GeneralInfoLabelSize[0],$
-                                yoffset=GeneralInfoLabelSize[1],$
-                                value=GeneralInfoLabelTitle)
-                                
+GeneralInfoAndXmlBase = widget_base(REDUCE_BASE,$
+                                    xoffset=GeneralInfoAndXmlBaseSize[0],$
+                                    yoffset=GeneralInfoAndXmlBaseSize[1],$
+                                    scr_xsize=GeneralInfoAndXmlBaseSize[2],$
+                                    scr_ysize=GeneralInfoAndXmlBaseSize[3],$
+                                    uname='general_info_and_xml_base')
+
+GeneralInfoTab = widget_tab(GeneralInfoAndXmlBase,$
+                            uname='GeneralInfoTab',$
+                            location=0,$
+                            xoffset=GeneralInfoTabSize[0],$
+                            yoffset=GeneralInfoTabSize[1],$
+                            scr_xsize=GeneralInfoTabSize[2],$
+                            scr_ysize=GeneralInfoTabSize[3],$
+                            sensitive=1)
+
+;tab1
+reduce_tab1_base = widget_base(GeneralInfoTab,$
+                               uname='reduce_tab1_base',$
+                               title=ReduceTab1BaseTitle,$
+                               xoffset=ReduceTab1BaseSize[0],$
+                               yoffset=ReduceTab1BaseSize[1],$
+                               scr_xsize=ReduceTab1BaseSize[2],$
+                               scr_ysize=ReduceTab1BaseSize[3])
+                               
 ;Text field
-GeneralInfoTextField = widget_text(REDUCE_BASE,$
+GeneralInfoTextField = widget_text(reduce_tab1_base,$
                                    xoffset=GeneralInfoTextFieldSize[0],$
                                    yoffset=GeneralInfoTextFieldSize[1],$
                                    scr_xsize=GeneralInfoTextFieldSize[2],$
@@ -28,14 +55,34 @@ GeneralInfoTextField = widget_text(REDUCE_BASE,$
                                    /scroll,$
                                    uname='reduction_status_text_field')
 
-;frame
-GeneralInfoFrame = widget_label(REDUCE_BASE,$
-                               frame=1,$
-                               xoffset=GeneralInfoFrameSize[0],$
-                               yoffset=GeneralInfoFrameSize[1],$
-                               scr_xsize=GeneralInfoFrameSize[2],$
-                               scr_ysize=GeneralInfoFrameSize[3],$
-                               value='')
+;tab2
+reduce_tab2_base = widget_base(GeneralInfoTab,$
+                               uname='reduce_tab2_base',$
+                               title=ReduceTab2BaseTitle,$
+                               xoffset=ReduceTab2BaseSize[0],$
+                               yoffset=ReduceTab2BaseSize[1],$
+                               scr_xsize=ReduceTab2BaseSize[2],$
+                               scr_ysize=ReduceTab2BaseSize[3])
+
+
+;Text field
+XmlTextField = widget_text(reduce_tab2_base,$
+                           xoffset=GeneralInfoTextFieldSize[0],$
+                           yoffset=GeneralInfoTextFieldSize[1],$
+                           scr_xsize=GeneralInfoTextFieldSize[2],$
+                           scr_ysize=GeneralInfoTextFieldSize[3],$
+                           /wrap,$
+                           /scroll,$
+                           uname='xml_text_field')
+
+
+
+
+
+
+
+
+
 
 ;Data reduction status label
 DataReductionStatusLabel = widget_label(REDUCE_BASE,$

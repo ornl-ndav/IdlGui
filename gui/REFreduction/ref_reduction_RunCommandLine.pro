@@ -24,6 +24,7 @@ putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 err_listening =strarr(1) ;remove_ME
 
 if (err_listening[0] NE '') then begin
+
     (*global).DataReductionStatus = 'ERROR'
     LogBookText = getLogBookText(Event)
     Message = '* ERROR! *'
@@ -36,6 +37,7 @@ if (err_listening[0] NE '') then begin
     putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
 endif else begin
+
     (*global).DataReductionStatus = 'OK'
     LogBookText = getLogBookText(Event)
     Message = 'Done'
@@ -43,6 +45,7 @@ endif else begin
 
     status_text = 'Data Reduction ........ DONE'
     putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+
 end
 
 END

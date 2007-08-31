@@ -25,16 +25,20 @@ FilesToPlotList = $
                        data_run_number) ;3454
 
 ;REMOVE_ME
-FilesToPlotList[1] = $
-  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.txt' 
 FilesToPlotList[0] = $
+  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.txt' 
+FilesToPlotList[1] = $
   '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.rmd' 
 
 ;get metadata
 NbrLine = (*global).PreviewFileNbrLine
 RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
-;Display main data reduction metadata
+RefReduction_SaveXmlInfo, Event, FilesToPlotList[1]
+
+;Display main data reduction metadata in Plots tab
+;and XML file in Reduce tab
 RefReduction_DisplayMainDataReductionMetadataFile, Event
+REfReduction_DisplayXmlFile, Event
 
 ;Load main data reduction and all intermediate files (if any)
 ;get flt0, flt1 and flt2 and put them into array
