@@ -31,7 +31,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of t
                    IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName:ptr_new(0L),$ ;full path name of the plot currently plotted
                    OutputFileName : '',$ ; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
-                   ExtOfAllPlots : strarr(8),$ ;extension of all the files created
+                   IsoTimeStamp : '',$ ; ex: 2007-08-31T09:28:59-04:00
+                   ExtOfAllPlots : ptr_new(0L),$ ;extension of all the files created
                    PrevTabSelect : 0,$ ;name of previous main tab selected
                    DataNeXusFound : 0, $ ;no data nexus found by default
                    NormNeXusFound : 0, $ ;no norm nexus found by default
@@ -107,15 +108,16 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
 
+
 ExtOfAllPlots = ['.txt',$
-                 '.sdc',$
-                 '.bkg',$
-                 '.sub',$
-                 '.sdc',$
-                 '.bkg',$
-                 '.sub',$
+                 '_data.sdc',$
+                 '_data.bkg',$
+                 '_data.sub',$
+                 '_norm.sdc',$
+                 '_norm.bkg',$
+                 '_norm.sub',$
                  '.rtof']
-(*global).ExtOfAllPlots = ExtOfAllPlots
+(*(*global).ExtOfAllPlots) = ExtOfAllPlots
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

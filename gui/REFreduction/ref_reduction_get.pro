@@ -61,3 +61,38 @@ FUNCTION getDropListSelectedIndex, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
 return, widget_info(id, /droplist_select)
 END
+
+
+;This function returns the full path name of all the file to plot
+FUNCTION getListOfFilestoPlot, IntermPlots, $
+                               ExtOfAllPlots, $
+                               IsoTimeStamp, $
+                               instrument, $
+                               run_number
+
+FilesToPlotList = strarr(1)
+
+;base name    ex: REF_L_3000
+BaseName = './' + instrument + '_' + strcompress(run_number,/remove_all)
+
+;main data reduction plot (.txt)
+MainFile = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[0]
+FilesToPlotList[0] = MainFile
+
+;other intermediate files
+sz=size(IntermPlots)
+Nbr = sz[1]
+for i=0,(Nbr-1) do begin
+    if (IntermPlots[i] EQ 1) then begin
+        FileName = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[i+1]
+        FilesToPlotList = [FilesToPlotList,FileName]
+    endif
+endfor
+
+return, FilesToPlotList
+END
+
+
+
+
+

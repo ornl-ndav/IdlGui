@@ -20,8 +20,8 @@ putLogBookMessage, Event, cmd_text, Append=1
 status_text = 'Data Reduction ........ ' + PROCESSING
 putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
-spawn, cmd, listening, err_listening
-help, err_listening
+;spawn, cmd, listening, err_listening ;remove comments
+err_listening =strarr(1) ;remove_ME
 
 if (err_listening[0] NE '') then begin
     (*global).DataReductionStatus = 'ERROR'
