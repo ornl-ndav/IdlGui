@@ -35,9 +35,12 @@ plot7Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[2],$
                  plot1Basesize[3]]
 
+;remove last plot title from list
+sz = (size(PlotsTitle))(1)
 ;intermediate plots list
-InterList = PlotsTitle
-InterListSize = [ 10, 15]
+InterList = PlotsTitle[0:sz-2]
+
+InterListSize = [10,15]
 NotAvailableTitle = ' -- NOT AVAILABLE! --'
 
 ;*********************************************************
