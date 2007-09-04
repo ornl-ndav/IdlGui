@@ -114,6 +114,12 @@ CASE Event.id OF
         REFreduction_CreateNormBackgroundROIFile, Event
     end
 
+;LOAD background selection
+    widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
+        REFreduction_ZoomPlot, Event
+    end
+    
+
 ;**REDUCE TAB**
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
