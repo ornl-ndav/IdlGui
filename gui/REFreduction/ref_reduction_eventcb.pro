@@ -160,6 +160,17 @@ END
 
 
 
+PRO REFreduction_ZoomPlot, Event
+
+draw_id = widget_info(Event.top, find_by_uname='load_data_D_draw')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+zoom, fact=2, xsize=405, ysize=393, /keep
+
+END
+
+
 
 
 

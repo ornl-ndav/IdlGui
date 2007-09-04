@@ -50,6 +50,7 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_Plot1D2DNormalizationFile.pro
 .run ref_reduction_Plot2DNormalizationFile.pro
 .run ref_reduction_Plot1DNormalizationFile.pro
+.run ref_reduction_Zoom.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
