@@ -24,11 +24,13 @@ FilesToPlotList = $
                        instrument,$ ;REF_L
                        data_run_number) ;3454
 
+(*(*global).FilesToPlotList) = FilesToPlotList
+
 ;REMOVE_ME
 FilesToPlotList[0] = $
-  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.txt' 
+  '~/REF_L_3000_2007-08-31T12:08:05-04:00.txt' 
 FilesToPlotList[1] = $
-  '~/SVN/HistoTool/trunk/gui/REFreduction/REF_L_2000_2007-08-31T09:28:59-04:00.rmd' 
+  '~/REF_L_3000_2007-08-31T12:08:05-04:00.rmd' 
 
 ;get metadata
 NbrLine = (*global).PreviewFileNbrLine
@@ -47,7 +49,7 @@ REfReduction_DisplayXmlFile, Event
 ;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
     
 ;;Plot main data reduction plot for the first time
-;    RefReduction_PlotMainDataReductionFileFirstTime, Event
+    RefReduction_PlotMainDataReductionFileFirstTime, Event
 
 
 ;endif
@@ -86,9 +88,16 @@ CurrTabSelect = widget_info(tab_id,/tab_current)
 PrevTabSelect = (*global).PrevTabSelect
 
 if (PrevTabSelect NE CurrTabSelect) then begin
-    if (CurrTabSelect EQ 1) then begin ;if REDUCE tab is now selected
+    CASE (CurrTabSelect) OF
+    1: begin ;if REDUCE tab is now selected
         REFreduction_CommandLineGenerator, Event
-    endif
+    END
+    2: begin ;if PLOTS tab is now selected
+        FilesToPlotList = (*(*global).FilesToPlotList)
+        RefReduction_LoadMainOutputFile, Event, FilesToPlotList[0]
+    END
+    else:
+    ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
 endif
 

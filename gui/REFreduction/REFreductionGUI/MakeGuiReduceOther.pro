@@ -135,7 +135,5 @@ cmdLinePreviewText = widget_text(REDUCE_BASE,$
                                  value='',$
                                  /scroll,$
                                  /wrap)
-
-
-
+                               
 END
