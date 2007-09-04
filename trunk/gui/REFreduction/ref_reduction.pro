@@ -24,61 +24,120 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
-                   FilesToPlotList : ptr_new(0L),$ ;list of files to plot (main,rmd and intermediate files)
-                   PreviewFileNbrLine : 30,$ ;nbr of line to get from files
-                   DataReductionStatus : 'ERROR',$ ; status of the data reduction 'OK' or 'ERROR'
-                   PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
-                   MainPlotTitle : '',$ ;title of main data reduction
-                   IntermPlots : intarr(7),$ ;0 for inter. plot no desired, 1 for desired
-                   CurrentPlotsFullFileName:ptr_new(0L),$ ;full path name of the plot currently plotted
-                   OutputFileName : '',$ ; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
-                   IsoTimeStamp : '',$ ; ex: 2007-08-31T09:28:59-04:00
-                   ExtOfAllPlots : ptr_new(0L),$ ;extension of all the files created
-                   PrevTabSelect : 0,$ ;name of previous main tab selected
-                   DataNeXusFound : 0, $ ;no data nexus found by default
-                   NormNeXusFound : 0, $ ;no norm nexus found by default
-                   data_full_nexus_name : '',$ ;full path to data nexus file
-                   norm_full_nexus_name : '',$ ;full path to norm nexus file
-                   xsize_1d_draw : 2*304L,$ ;size of 1D draw (should be Ntof)
-                   REF_L : 'REF_L',$ ;name of REF_L instrument
-                   REF_M : 'REF_M',$ ;name of REF_M instrument
-                   Nx_REF_L : 256L,$ ;Nx for REF_L instrument
-                   Ny_REF_L : 304L,$ ;Ny for REF_L instrument
-                   Nx_REF_M : 304L,$ ;Nx for REF_M instrument
-                   Ny_REF_M : 256L,$ ;Ny for REF_M instrument
-                   Ntof_DATA : 0L, $ ;TOF for data file
-                   Ntof_NORM : 0L, $ ;TOF for norm file
-                   processing_message : '(PROCESSING)',$ ;processing message to display
-                   data_tmp_dat_file : 'tmp_data.dat',$ ;default name of tmp binary data file
-                   full_data_tmp_dat_file : '',$ ;full path of tmp .dat file for data
-                   norm_tmp_dat_file : 'tmp_nor.dat',$ ;default name of tmp binary norm file
-                   full_norm_tmp_dat_file : '',$ ;full path of tmp .dat file for normalization
-                   working_path : '~/local/',$ ;where the tmp file will be created
-                   ucams : ucams, $ ;ucams of the current user
-                   data_run_number: 0L,$ ;run number of the data file loaded and plotted
-                   norm_run_number: 0L,$ ;run number of the norm. file loaded and plotted
-                   DATA_DD_ptr : ptr_new(0L),$ ;detector view of DATA (2D)
-                   DATA_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of DATA
-                   NORM_DD_ptr : ptr_new(0L),$ ;detector view of NORMALIZATION (2D)
-                   NORM_D_ptr : ptr_new(0L),$ ;(Ntof,Ny,Nx) array of NORMALIZATION
-                   tvimg_data_ptr : ptr_new(0L),$ ;rebin data img
-                   tvimg_norm_ptr : ptr_new(0L),$ ;rebin norm img
-                   back_selection_color : 250L,$ ;color of background selection
-                   peak_selection_color : 100L,$ ;color of peak exclusion
-                   data_back_selection : ptr_new(0L),$ ;Ymin and Ymax for data background
-                   norm_back_selection : ptr_new(0L),$ ;Ymin and Ymax for norm background
-                   data_peak_selection : ptr_new(0L),$ ;Ymin and Ymax for data peak
-                   norm_peak_selection : ptr_new(0L),$ ;Ymin and Ymax for norm peak
-                   data_back_roi_ext : '_data_roi.dat',$ ;extension file name of back data ROI
-                   norm_back_roi_ext : '_norm_roi.dat',$ ;extension file name of back norm ROI
-                   roi_file_preview_nbr_line : 20L,$ ;nbr of line to display in preview
-                   select_data_status : 0,$ ;Status of the data selection (see below)
-                   select_norm_status : 0,$ ;Status of the norm selection (see below)
-                   flt0_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the x-axis
-                   flt1_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the y-axis
-                   flt2_ptr : ptrarr(8,/allocate_heap),$ ;arrays of all the y-error data
-                   fltPreview_ptr : ptrarr(8,/allocate_heap)$;metadata of all files
+global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
+;name of the current selected REF instrument
+                   FilesToPlotList : ptr_new(0L),$ 
+;list of files to plot (main,rmd and intermediate files)
+                   PreviewFileNbrLine : 30,$ 
+;nbr of line to get from files
+                   DataReductionStatus : 'ERROR',$ 
+; status of the data reduction 'OK' or 'ERROR'
+                   PlotsTitle : ptr_new(0L),$ 
+;title of all the plots (main and intermediate)
+                   MainPlotTitle : '',$ 
+;title of main data reduction
+                   IntermPlots : intarr(7),$ 
+;0 for inter. plot no desired, 1 for desired
+                   CurrentPlotsFullFileName:ptr_new(0L),$ 
+;full path name of the plot currently plotted
+                   OutputFileName : '',$ 
+; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
+                   IsoTimeStamp : '',$ 
+; ex: 2007-08-31T09:28:59-04:00
+                   ExtOfAllPlots : ptr_new(0L),$ 
+;extension of all the files created
+                   PrevTabSelect : 0,$ 
+;name of previous main tab selected
+                   DataNeXusFound : 0, $ 
+;no data nexus found by default
+                   NormNeXusFound : 0, $ 
+;no norm nexus found by default
+                   data_full_nexus_name : '',$ 
+;full path to data nexus file
+                   norm_full_nexus_name : '',$ 
+;full path to norm nexus file
+                   xsize_1d_draw : 2*304L,$ 
+;size of 1D draw (should be Ntof)
+                   REF_L : 'REF_L',$ 
+;name of REF_L instrument
+                   REF_M : 'REF_M',$ 
+;name of REF_M instrument
+                   Nx_REF_L : 256L,$ 
+;Nx for REF_L instrument
+                   Ny_REF_L : 304L,$ 
+;Ny for REF_L instrument
+                   Nx_REF_M : 304L,$ 
+;Nx for REF_M instrument
+                   Ny_REF_M : 256L,$ 
+;Ny for REF_M instrument
+                   Ntof_DATA : 0L, $ 
+;TOF for data file
+                   Ntof_NORM : 0L, $ 
+;TOF for norm file
+                   processing_message : '(PROCESSING)',$ 
+;processing message to display
+                   data_tmp_dat_file : 'tmp_data.dat',$ 
+;default name of tmp binary data file
+                   full_data_tmp_dat_file : '',$ 
+;full path of tmp .dat file for data
+                   norm_tmp_dat_file : 'tmp_nor.dat',$ 
+;default name of tmp binary norm file
+                   full_norm_tmp_dat_file : '',$ 
+;full path of tmp .dat file for normalization
+                   working_path : '~/local/',$ 
+;where the tmp file will be created
+                   ucams : ucams, $ 
+;ucams of the current user
+                   data_run_number: 0L,$ 
+;run number of the data file loaded and plotted
+                   norm_run_number: 0L,$ 
+;run number of the norm. file loaded and plotted
+                   DATA_DD_ptr : ptr_new(0L),$ 
+;detector view of DATA (2D)
+                   DATA_D_ptr : ptr_new(0L),$ 
+;(ntot,Ny,Nx) array of DATA
+                   NORM_DD_ptr : ptr_new(0L),$ 
+;detector view of NORMALIZATION (2D)
+                   NORM_D_ptr : ptr_new(0L),$ 
+;(Ntof,Ny,Nx) array of NORMALIZATION
+                   tvimg_data_ptr : ptr_new(0L),$ 
+;rebin data img
+                   tvimg_norm_ptr : ptr_new(0L),$ 
+;rebin norm img
+                   back_selection_color : 250L,$ 
+;color of background selection
+                   peak_selection_color : 100L,$ 
+;color of peak exclusion
+                   data_back_selection : ptr_new(0L),$ 
+;Ymin and Ymax for data background
+                   norm_back_selection : ptr_new(0L),$ 
+;Ymin and Ymax for norm background
+                   data_peak_selection : ptr_new(0L),$ 
+;Ymin and Ymax for data peak
+                   norm_peak_selection : ptr_new(0L),$
+;Ymin and Ymax for norm peak
+                   data_back_roi_ext : '_data_roi.dat',$ 
+;extension file name of back data ROI
+                   norm_back_roi_ext : '_norm_roi.dat',$
+;extension file name of back norm ROI
+                   roi_file_preview_nbr_line : 20L,$ 
+;nbr of line to display in preview
+                   select_data_status : 0,$ 
+;Status of the data selection (see below)
+                   select_norm_status : 0,$ 
+;Status of the norm selection (see below)
+                   flt0_ptr : ptrarr(8,/allocate_heap),$ 
+;arrays of all the x-axis
+                   flt1_ptr : ptrarr(8,/allocate_heap),$ 
+;arrays of all the y-axis
+                   flt2_ptr : ptrarr(8,/allocate_heap),$ 
+;arrays of all the y-error data
+                   fltPreview_ptr : ptrarr(8,/allocate_heap),$
+;metadata of all files
+                   InstrumentGeometryPath : '',$
+;default path where to get the instrument geometry to overwrite
+                   InstrumentGeometryFileName : ''$
+;full path to instrument geometry to overwrite
                   })
 
 ;------------------------------------------------------------------------
@@ -112,6 +171,13 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
 MainPlotTitle = 'Main Data Reduction Plot'
 (*global).MainPlotTitle = MainPlotTitle
 
+;instrument geometry
+if (instrument EQ 'REF_L') then begin ;REF_L
+    InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
+endif else begin
+    InstrumentGeoemtryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
+endelse
+(*global).InstrumentGeometryPath = InstrumentGeometryPath
 
 ExtOfAllPlots = ['.txt',$
                  '.rmd',$

@@ -298,6 +298,29 @@ if (isWithDeltaToverT(Event)) then begin ;store deltaT over T
     cmd += ' --store-dtot'
 endif
 
+;overwrite instrument geometry file
+if (isWithInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
+    cmd += ' --inst_geom=' 
+    IGFile = (*global).InstrumentGeometryFileName
+    if (IGFile NE '') then begin ;instrument geometry file is not empty
+        cmd += IGFile
+;display last part of file name in button
+        button_value = getFileNameOnly(IGFIle)
+    endif else begin
+        cmd += '?'
+        status_text = '- Please select an instrument geometry'
+        if (StatusMessage GT 0) then begin
+            append = 1
+        endif else begin
+            append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+        button_value = 'Select an Instrument Geometry File'
+    endelse
+    setButtonValue, Event, 'overwrite_intrument_geometry_button', button_value
+endif
+
 ;force name of output file according to time stamp
 IsoTimeStamp = RefReduction_GenerateIsoTimeStamp()
 (*global).IsoTimeStamp = IsoTimeStamp

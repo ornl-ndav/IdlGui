@@ -130,6 +130,12 @@ CASE Event.id OF
         REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
     end
 
+    ;Instrument geometry button
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_intrument_geometry_button'): begin
+        REFreduction_OverwriteInstrumentGeometry, Event
+    end
+
+
     ;Run data reduction
     widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
         REFreductionEventcb_ProcessingCommandLine, Event
