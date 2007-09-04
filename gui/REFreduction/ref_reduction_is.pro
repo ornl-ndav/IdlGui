@@ -67,6 +67,18 @@ endelse
 END
 
 
+Function isWithInstrumentGeometryOverwrite, Event
+id = widget_info(Event.top,find_by_uname='overwrite_instrument_geometry_cwbgroup')
+widget_control, id, get_value=isWithIGOverwrite
+if (isWithIGOverwrite EQ 0) then begin
+    return, 1
+endif else begin
+    return, 0
+endelse
+END
+
+
+
 Function isBaseMap, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
 isMap = widget_info(id, /map)

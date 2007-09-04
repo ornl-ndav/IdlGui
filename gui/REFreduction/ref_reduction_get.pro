@@ -98,5 +98,15 @@ END
 
 
 
+;this function returns only the file name (whitout the path)
+FUNCTION getFileNameOnly, file
+part_to_remove="/"
+file_name = strsplit(file,part_to_remove,/extract,/regex,count=length) 
+file_name_only = file_name[length-1]
+return, file_name_only
+END
+
+
+
 
 

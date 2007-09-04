@@ -30,7 +30,7 @@ OverwriteInstrumentGeometryBaseSize = [OverwriteInstrumentGeometryCWBgroupSize[0
                                        340,40]
 
 OverwriteInstrumentGeometryButtonSize = [5,5,320,30]
-OverwriteInstrumentGeometryButtonTitle = 'Select the Geometry File'
+OverwriteInstrumentGeometryButtonTitle = 'Select an Instrument Geometry File'
 
 ;START data reduction button
 StartDRButtonSize = [5,OverwriteInstrumentGeometryLabelSize[1]+d_vertical_L_L,$
@@ -103,13 +103,15 @@ OverwriteInstrumentGeometryBase = widget_base(REDUCE_BASE,$
                                               map=0,$
                                               uname='overwrite_instrument_geometry_base')
 
-OverwriteInsrumentGeometryButton = widget_button(OverwriteInstrumentGeometryBase,$
-                                                 xoffset=OverwriteInstrumentGeometryButtonSize[0],$
-                                                 yoffset=OverwriteInstrumentGeometryButtonSize[1],$
-                                                 scr_xsize=OverwriteInstrumentGeometryButtonSize[2],$
-                                                 scr_ysize=OverwriteInstrumentGeometryButtonSize[3],$
-                                                 value=OverwriteInstrumentGeometryButtonTitle)
-                                                 
+OverwriteInsrumentGeometryButton = $
+  widget_button(OverwriteInstrumentGeometryBase,$
+                uname='overwrite_intrument_geometry_button',$
+                xoffset=OverwriteInstrumentGeometryButtonSize[0],$
+                yoffset=OverwriteInstrumentGeometryButtonSize[1],$
+                scr_xsize=OverwriteInstrumentGeometryButtonSize[2],$
+                scr_ysize=OverwriteInstrumentGeometryButtonSize[3],$
+                value=OverwriteInstrumentGeometryButtonTitle)
+
 ;Start data reduction button
 StartDataReductionButton = widget_button(REDUCE_BASE,$
                                          uname='start_data_reduction_button',$
