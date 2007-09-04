@@ -25,7 +25,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ ;name of the current selected REF instrument
-                   PreviewFileNbrLine : 25,$ ;nbr of line to get from files
+                   FilesToPlotList : ptr_new(0L),$ ;list of files to plot (main,rmd and intermediate files)
+                   PreviewFileNbrLine : 30,$ ;nbr of line to get from files
                    DataReductionStatus : 'ERROR',$ ; status of the data reduction 'OK' or 'ERROR'
                    PlotsTitle : ptr_new(0L),$ ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ ;title of main data reduction
@@ -149,6 +150,14 @@ MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+if (ucams EQ 'j35' OR $
+    ucams EQ '2zr') then begin
+
+    id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+    widget_control, id, /editable
+
+endif
 
 END
 

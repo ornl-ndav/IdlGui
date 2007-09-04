@@ -24,8 +24,14 @@ D_DD_BaseSize = [5,$
                  5,$
                  D_DD_TabSize[2],$
                  D_DD_TabSize[3]]
-D_DD_TabTitle = ['   1 Dimension   ',$
-                 '   2 Dimensions  ']
+if (instrument EQ 'REF_L') then begin
+    DTitle = '   Y vs TOF   '
+endif else begin
+    DTitle = '   X vs TOF   '
+endelse
+
+D_DD_TabTitle = [DTitle,$
+                 '   Y vs X   ']
                    
 ;Size of 1D and 2D graphs
 Nx = 256
