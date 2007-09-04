@@ -26,6 +26,11 @@ DetectorUnitsBGroupList = [' degree   ',' radian   ']
 DetectorUnitsBGroupSize = [DetectorErrorLabelSize[0]+d_L_L,$
                            DetectorErrorTextFieldSize[1]]
                     
+;GUI and NeXus data used labels
+GuiDataUsedSize   = [580,37,100,20]
+GuiDataUsedLabelTitle   = ' GUI data used '
+NexusDataUsedSize = [580,8,100,20]
+NexusDataUsedLabelTitle = 'NeXus data used'
 
 ;*********************************************************
 ;Create GUI
@@ -85,6 +90,27 @@ DetectorUnitsBGroup = cw_bgroup(detector_base,$
                                 set_value=0,$
                                 uname='detector_units_b_group',$
                                 row=1)
+
+;NeXus data used
+NeXusDataUsedLabel = widget_label(detector_base,$
+                                  uname='nexus_data_used_label',$
+                                  xoffset=NexusDataUsedSize[0],$
+                                  yoffset=NexusDataUsedSize[1],$
+                                  scr_xsize=NexusDataUsedSize[2],$
+                                  scr_ysize=NexusDataUsedSize[3],$
+                                  value=NexusDataUsedLabelTitle,$
+                                  frame=1)
+;GUI data used
+ GuiDataUsedLabel = widget_label(detector_base,$
+                                 uname='gui_data_used_label',$
+                                 xoffset=GuiDataUsedSize[0],$
+                                 yoffset=GuiDataUsedSize[1],$
+                                 scr_xsize=GuiDataUsedSize[2],$
+                                 scr_ysize=GuiDataUsedSize[3],$
+                                 value=GuiDataUsedLabelTitle,$
+                                 frame=1,$
+                                 sensitive=0)
+
 
 ;frame
 DetectorFrame = widget_label(detector_base,$
