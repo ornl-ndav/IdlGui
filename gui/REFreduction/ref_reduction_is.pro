@@ -93,3 +93,10 @@ return, CurrTabSelect
 END
 
 
+
+Function isNormZoomTabSelected, Event
+tab_id = widget_info(Event.top,find_by_uname='normalization_nxsummary_zoom_tab')
+CurrTabSelect = widget_info(tab_id,/tab_current)
+return, CurrTabSelect
+END
+

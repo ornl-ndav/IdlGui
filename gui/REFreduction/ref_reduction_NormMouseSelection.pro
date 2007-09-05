@@ -73,6 +73,16 @@ endif else begin                ;background selection
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 endelse
 
+;display zoom if zomm tab is selected
+if (isNormZoomTabSelected(Event)) then begin
+    RefReduction_zoom, $
+      Event, $
+      MouseX=event.x, $
+      MouseY=event.y, $
+      fact=(*global).DataNormalizationZoomFactor,$
+      uname='normalization_zoom_draw'
+endif
+
 (*global).select_norm_status = mouse_status_new
 
 ;update Back and Peak Ymin and Ymax cw_fields
@@ -205,6 +215,22 @@ endif else begin                ;background selection
     plots, 0, y_array[1], /device, color=color
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 endelse
+
+switch (mouse_status) OF
+    1:
+    4:begin
+;display zoom if zomm tab is selected
+        if (isNormZoomTabSelected(Event)) then begin
+            RefReduction_zoom, $
+              Event, $
+              MouseX=event.x, $
+              MouseY=event.y, $
+              fact=(*global).DataNormalizationZoomFactor,$
+              uname='normalization_zoom_draw'
+        endif
+    end
+    else:
+endswitch
 
 ;update Back and Peak Ymin and Ymax cw_fields
 putNormBackgroundPeakYMinMaxValueInTextFields, Event

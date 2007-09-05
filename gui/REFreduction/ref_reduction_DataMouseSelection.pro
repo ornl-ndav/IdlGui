@@ -75,7 +75,12 @@ endelse
 
 ;display zoom if zomm tab is selected
 if (isDataZoomTabSelected(Event)) then begin
-    RefReduction_zoom, Event, MouseX=event.x, MouseY=event.y, fact=2
+    RefReduction_zoom, $
+      Event, $
+      MouseX=event.x, $
+      MouseY=event.y, $
+      fact=(*global).DataNormalizationZoomFactor,$
+      uname='data_zoom_draw'
 endif
 
 (*global).select_data_status = mouse_status_new
@@ -220,7 +225,12 @@ switch (mouse_status) OF
     4:begin
 ;display zoom if zomm tab is selected
         if (isDataZoomTabSelected(Event)) then begin
-            RefReduction_zoom, Event, MouseX=event.x, MouseY=event.y, fact=2
+            RefReduction_zoom, $
+              Event, $
+              MouseX=event.x, $
+              MouseY=event.y, $
+              fact=(*global).DataNormalizationZoomFactor,$
+              uname='data_zoom_draw'
         endif
     end
     else:
