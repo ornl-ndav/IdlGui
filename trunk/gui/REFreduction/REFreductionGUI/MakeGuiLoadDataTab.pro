@@ -9,7 +9,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
                         GlobalLoadDataGraphs,$
                         FileInfoSize,$
                         LeftInteractionHelpsize,$
-                        LeftInteractionHelpMessageLabeltitle
+                        LeftInteractionHelpMessageLabeltitle,$
+                        NxsummaryZoomTabSize,$
+                        NxsummaryZoomTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -53,8 +55,26 @@ MakeGuiLoadData1D2DTab,$
   D_DD_TabTitle,$
   GlobalLoadDataGraphs
 
-;File info huge label
-data_file_info_text = widget_text(LOAD_DATA_BASE,$
+;NXsummary and zoom tab
+NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
+                              uname='data_nxsummary_zoom_tab',$
+                              location=2,$
+                              xoffset=NxsummaryZoomTabSize[0],$
+                              yoffset=NxsummaryZoomTabSize[1],$
+                              scr_xsize=NxsummaryZoomTabSize[2],$
+                              scr_ysize=NxsummaryZoomTabSize[3],$
+                              /tracking_events)
+
+;NXsummary tab #1
+data_Nxsummary_base = widget_base(NxsummaryZoomTab,$
+                                  uname='data_nxsummary_base',$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=NXsummaryZoomTabSize[2],$
+                                  scr_ysize=NXsummaryZoomTabSize[3],$
+                                  title=NxsummaryZoomTitle[0])
+
+data_file_info_text = widget_text(data_Nxsummary_base,$
                                   xoffset=FileInfoSize[0],$
                                   yoffset=FileInfoSize[1],$
                                   scr_xsize=FileInfoSize[2],$
@@ -63,6 +83,23 @@ data_file_info_text = widget_text(LOAD_DATA_BASE,$
                                   /scroll,$
                                   value='',$
                                   uname='data_file_info_text')
+
+;ZOOM tab #2
+data_Zoom_base = widget_base(NxsummaryZoomTab,$
+                             uname='data_zoom_base',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=NXsummaryZoomTabSize[2],$
+                             scr_ysize=NXsummaryZoomTabSize[3],$
+                             title=NxsummaryZoomTitle[1])
+
+data_zoom_draw = widget_draw(data_zoom_base,$
+                             uname='data_zoom_draw',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=NXsummaryZoomTabSize[2],$
+                             scr_ysize=NXsummaryZoomTabSize[3])
+
 
 ;Help base and text field that will show what is going on in the
 ;drawing region
@@ -90,8 +127,6 @@ LeftInteractionHelpTextField = widget_text(LeftInteractionHelpMessageBase,$
                                            /wrap,$
                                            /scroll)
                                            
-
-
 ;Text field box to get info about current process
 data_log_book_text_field = widget_text(LOAD_DATA_BASE,$
                                        uname='data_log_book_text_field',$
