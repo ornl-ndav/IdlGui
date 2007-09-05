@@ -76,6 +76,11 @@ CASE Event.id OF
         REFreduction_CreateDataBackgroundROIFile, Event
     end
 
+;LOAD background selection
+    widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
+        REFreduction_LoadDataBackgroundSelection, Event
+    end
+    
 ;**LOAD TAB**NORMALIZATION**
 
 ;LOAD NORMALIZATION file

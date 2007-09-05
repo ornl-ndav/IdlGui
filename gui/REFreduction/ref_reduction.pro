@@ -110,7 +110,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;rebin norm img
                    back_selection_color : 250L,$ 
 ;color of background selection
-                   peak_selection_color : 100L,$ 
+                   peak_selection_color : 100L,$
 ;color of peak exclusion
                    data_back_selection : ptr_new(0L),$ 
 ;Ymin and Ymax for data background
