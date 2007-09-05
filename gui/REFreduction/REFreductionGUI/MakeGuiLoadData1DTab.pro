@@ -8,6 +8,15 @@ Data1DSelectionList = ['Select Background Range    ',$
                        'Select Peak Exclusion      ']
 Data1DSelectionBaseSize            = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
 Data1DSelectionSize                = [5, 5]
+
+;Y_min and Y_max labels
+dataYminLabelSize  = [390,5,100,25]
+dataYminLabelTitle = 'Border #1'
+dataYmaxLabelSize  = [dataYminLabelSize[0]+113,$
+                      5,$
+                      dataYminLabelSize[2],$
+                      dataYminLabelSize[3]]
+dataYmaxLabelTitle = 'Border #2'
  
 d_L_B= 170
 BaseLengthYmin = 90
@@ -50,7 +59,7 @@ d_L_B_2 = 170
 DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
                                             DataBackgroundSelectionFileLabelSize[1]-4,$
                                             440,30]
-                                    
+
 ;Peak Ymin and Ymax bases and cw_fields
 d_vertical_L_L = 70
 Data1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
@@ -108,6 +117,26 @@ Data1DSelection = cw_bgroup(Data1DSelectionBase,$
                             row=1,$
                             UNAME='data_1d_selection')
 
+dataYminLabel = widget_label(Data1DselectionBase,$
+                             uname='data_ymin_label_frame',$
+                             xoffset=dataYminLabelSize[0],$
+                             yoffset=dataYminLabelSize[1],$
+                             scr_xsize=dataYminLabelSize[2],$
+                             scr_ysize=dataYminLabelSize[3],$
+                             value=dataYminLabelTitle,$
+                             frame=2,$
+                             sensitive=0)
+
+dataYmaxLabel = widget_label(Data1DSelectionBase,$
+                             uname='data_ymax_label_frame',$
+                             xoffset=dataYmaxLabelSize[0],$
+                             yoffset=dataYmaxLabelSize[1],$
+                             scr_xsize=dataYmaxLabelSize[2],$
+                             scr_ysize=dataYmaxLabelSize[3],$
+                             value=dataYmaxLabelTitle,$
+                             frame=2,$
+                             sensitive=0)
+
 
 ;background selection
 Data_1d_selection_background_label = $
@@ -158,7 +187,8 @@ SaveButton = widget_button(Data1DSelectionBase,$,$
                            scr_xsize=SaveButtonSize[2],$
                            scr_ysize=SaveButtonSize[3],$
                            value=SaveButtonTitle,$
-                           uname='data_roi_save_button')
+                           uname='data_roi_save_button',$
+                           sensitive=0)
                            
 LoadButton = widget_button(Data1DSelectionBase,$,$
                            xoffset=LoadButtonSize[0],$
@@ -166,7 +196,8 @@ LoadButton = widget_button(Data1DSelectionBase,$,$
                            scr_xsize=LoadButtonSize[2],$
                            scr_ysize=LoadButtonSize[3],$
                            value=LoadButtonTitle,$
-                           uname='data_roi_load_button')
+                           uname='data_roi_load_button',$
+                           sensitive=0)
                            
 DataBackgroundSelectionFileLabel = $
   widget_label(Data1DSelectionBase,$
@@ -226,6 +257,7 @@ Data1DSelectionPeakYmaxCWField = $
            return_events=1,$
            title=Data1DSelectionPeakYmaxCWFieldTitle,$
            uname='data_d_selection_peak_ymax_cw_field')
+
 
 END
 

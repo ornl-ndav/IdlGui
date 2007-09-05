@@ -137,6 +137,9 @@ plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 
 (*global).select_norm_status = mouse_status_new
 
+;reverse Ymin and Ymax label frame
+RefReduction_UpdateDataNormGui_reverseNormYminYmaxLabelsFrame, Event
+
 ;update Back and Peak Ymin and Ymax cw_fields
 putNormBackgroundPeakYMinMaxValueInTextFields, Event
 
@@ -189,7 +192,7 @@ CASE (mouse_status) OF
         plots, xsize_1d_draw, y1, /device, /continue, color=color
     END
     4: Begin
-        RePlot1DDataFile, Event
+        RePlot1DNormFile, Event
         y1 = y_array[0]
         plots, 0, y1, /device, color=color
         plots, xsize_1d_draw, y1, /device, /continue, color=color
