@@ -53,12 +53,20 @@ LoadDataNormalization2DRefGraphSize = [xoff,yoff,xsize,ysize]
 GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
 
+;NXsummary and Zoom tab
+NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
+                        15,$
+                        495,$
+                        400]
+
+NxsummaryZoomTitle = ['  N X  s u m m a r y  ',' Z  O  O  M ']
+
 ;File info hudge label (empty for now)
 ;top label
-FileInfoSize_1 = [D_DD_TabSize[2]+50,$
-                  15,$
-                  495,$
-                  400]
+FileInfoSize_1 = [0,$
+                  0,$
+                  465,$
+                  393]
 
 ;help text box to explain what is going on on the left
 LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
@@ -73,7 +81,7 @@ LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpTextsize]
                            
 ;bottom text field
-FileInfoSize_2 = [FileInfoSize_1[0],$
+FileInfoSize_2 = [NxsummaryZoomTabSize[0],$
                   625+100,$
                   498,$
                   190-100]
@@ -101,7 +109,9 @@ MakeGuiLoadDataNormalizationTab,$
   GlobalLoadDataGraphs,$
   FileInfoSize,$
   LeftInteractionHelpsize,$
-  LeftInteractionHelpMessageLabeltitle
+  LeftInteractionHelpMessageLabeltitle,$
+  NxsummaryZoomTabSize,$
+  NxsummaryZoomTitle
 
   
 END

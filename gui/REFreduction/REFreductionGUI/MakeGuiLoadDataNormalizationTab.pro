@@ -8,7 +8,9 @@ PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE,$
                                      GlobalLoadDataGraphs,$
                                      FileInfoSize,$
                                      LeftInteractionHelpSize,$
-                                     LeftInteractionHelpMessageLabeltitle
+                                     LeftInteractionHelpMessageLabeltitle,$
+                                     NxsummaryZoomTabSize,$
+                                     NxsummaryZoomTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -29,7 +31,8 @@ DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
                                   /TRACKING_EVENTS)
 
 ;build DATA tab
-MakeGuiLoadDataTab, DataNormalizationTab,$
+MakeGuiLoadDataTab,$
+  DataNormalizationTab,$
   DataNormalizationTabSize,$
   DataTitle,$
   D_DD_TabSize,$
@@ -40,12 +43,13 @@ MakeGuiLoadDataTab, DataNormalizationTab,$
   GlobalLoadDataGraphs,$
   FileInfoSize,$
   LeftInteractionHelpsize,$
-  LeftInteractionHelpMessageLabeltitle
-
-
+  LeftInteractionHelpMessageLabeltitle,$
+  NxsummaryZoomTabSize,$
+  NxsummaryZoomTitle
 
 ;build NORMALIZATION tab
-MakeGuiLoadNormalizationTab, DataNormalizationTab,$
+MakeGuiLoadNormalizationTab,$
+  DataNormalizationTab,$
   DataNormalizationTabSize,$
   NormalizationTitle,$
   D_DD_TabSize,$
@@ -56,7 +60,8 @@ MakeGuiLoadNormalizationTab, DataNormalizationTab,$
   GlobalLoadDataGraphs,$
   FileInfoSize,$
   LeftInteractionHelpsize,$
-  LeftInteractionHelpMessageLabeltitle
-
+  LeftInteractionHelpMessageLabeltitle,$
+  NxsummaryZoomTabSize,$
+  NxsummaryZoomTitle
 
 END

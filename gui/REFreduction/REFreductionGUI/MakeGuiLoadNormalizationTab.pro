@@ -9,8 +9,9 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  GlobalLoadDataGraphs,$
                                  FileInfoSize,$
                                  LeftInteractionHelpsize,$
-                                 LeftInteractionHelpMessageLabeltitle
-
+                                 LeftInteractionHelpMessageLabeltitle,$
+                                 NxsummaryZoomTabSize,$
+                                 NxsummaryZoomTitle
  
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -44,7 +45,6 @@ Load_data_run_number_text_field = CW_FIELD(load_normalization_run_number_base,$
                                            title=RunNumberTitles[1],$
                                            uname='load_normalization_run_number_text_field')
 
-
 ;Build 1D and 2D tabs
 MakeGuiLoadNormalization1D2DTab,$
   LOAD_NORMALIZATION_BASE,$
@@ -53,16 +53,51 @@ MakeGuiLoadNormalization1D2DTab,$
   D_DD_TabTitle,$
   GlobalLoadDataGraphs
 
-;File info huge label
-normalization_file_info_text = widget_text(LOAD_NORMALIZATION_BASE,$
-                                            xoffset=FileInfoSize[0],$
-                                            yoffset=FileInfoSize[1],$
-                                            scr_xsize=FileInfoSize[2],$
-                                            scr_ysize=FileInfoSize[3],$
-                                            /wrap,$
-                                            /scroll,$
-                                            uname='normalization_file_info_text',$
-                                            value='')
+;NXsummary and zoom tab
+NxsummaryZoomTab = widget_tab(LOAD_NORMALIZATION_BASE,$
+                              uname='normalization_nxsummary_zoom_tab',$
+                              location=2,$
+                              xoffset=NxsummaryZoomTabSize[0],$
+                              yoffset=NxsummaryZoomTabSize[1],$
+                              scr_xsize=NxsummaryZoomTabSize[2],$
+                              scr_ysize=NxsummaryZoomTabSize[3],$
+                              /tracking_events)
+
+;NXsummary tab #1
+data_Nxsummary_base = widget_base(NxsummaryZoomTab,$
+                                  uname='normalization_nxsummary_base',$
+                                  xoffset=0,$
+                                  yoffset=0,$
+                                  scr_xsize=NXsummaryZoomTabSize[2],$
+                                  scr_ysize=NXsummaryZoomTabSize[3],$
+                                  title=NxsummaryZoomTitle[0])
+
+normalization_file_info_text = widget_text(data_Nxsummary_base,$
+                                  xoffset=FileInfoSize[0],$
+                                  yoffset=FileInfoSize[1],$
+                                  scr_xsize=FileInfoSize[2],$
+                                  scr_ysize=FileInfoSize[3],$
+                                  /wrap,$
+                                  /scroll,$
+                                  value='',$
+                                  uname='normalization_file_info_text')
+
+;ZOOM tab #2
+normalization_Zoom_base = widget_base(NxsummaryZoomTab,$
+                             uname='normalization_zoom_base',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=NXsummaryZoomTabSize[2],$
+                             scr_ysize=NXsummaryZoomTabSize[3],$
+                             title=NxsummaryZoomTitle[1])
+
+normalization_zoom_draw = widget_draw(normalization_zoom_base,$
+                             uname='normalization_zoom_draw',$
+                             xoffset=0,$
+                             yoffset=0,$
+                             scr_xsize=NXsummaryZoomTabSize[2],$
+                             scr_ysize=NXsummaryZoomTabSize[3])
+
 
 ;Help base and text field that will show what is going on in the
 ;drawing region
