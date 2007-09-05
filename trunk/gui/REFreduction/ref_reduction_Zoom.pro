@@ -10,7 +10,8 @@ pro RefReduction_zoom, $
                        continuous = cont, $
                        keep=keep, $
                        zoom_window=zoom_win, $
-                       new_window=new_win
+                       new_window=new_win,$
+                       uname=uname
 ;+
 ; NAME:
 ;	ZOOM
@@ -133,7 +134,7 @@ ierase = 0		;erase zoom window flag
 
 ;	cursor,x,y,waitflg,/dev	;Wait for change
 
-	case !MOUSE.button of
+;	case !MOUSE.button of
 ;4:	goto, done
 ;2:	if !d.name eq 'SUN' or !d.name eq 'X' then begin	;Sun view?
 ;		s  = ['New Zoom Factor:',strtrim(indgen(19)+2,2)]
@@ -150,7 +151,7 @@ ierase = 0		;erase zoom window flag
 ;			endif
 ;			ierase = 1	;Clean out previous display
 ;	endelse
- else:	begin
+; else:	begin
 	x0 = 0 > (x-xs/(ifact*2)) 	;left edge from center
 	y0 = 0 > (y-ys/(ifact*2)) 	;bottom
 	nx = xs/ifact			;Size of new image
@@ -171,14 +172,15 @@ ierase = 0		;erase zoom window flag
 	xss = nx * ifact	;Make integer rebin factors
 	yss = ny * ifact
         
-        id_draw = widget_info(Event.top, find_by_uname='data_zoom_draw')
+        id_draw = widget_info(Event.top, find_by_uname=uname)
         widget_control, id_draw, get_value=id_value
         wset,id_value
 
 	tv,rebin(a,xss,yss,sample=1-keyword_set(interp))
 	wset,old_w
-	endcase
-endcase
+
+;	endcase
+;endcase
 ;goto,again
 
 done:

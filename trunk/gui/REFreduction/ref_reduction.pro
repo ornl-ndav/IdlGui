@@ -136,8 +136,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;metadata of all files
                    InstrumentGeometryPath : '',$
 ;default path where to get the instrument geometry to overwrite
-                   InstrumentGeometryFileName : ''$
+                   InstrumentGeometryFileName : '',$
 ;full path to instrument geometry to overwrite
+                   DataNormalizationZoomFactor: 2L$
+;scale factor for zoom of Data and Normalization 1D data
                   })
 
 ;------------------------------------------------------------------------
