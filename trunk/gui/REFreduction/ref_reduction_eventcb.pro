@@ -101,8 +101,68 @@ if (PrevTabSelect NE CurrTabSelect) then begin
     (*global).PrevTabSelect = CurrTabSelect
 endif
 
-
 END
+
+
+;This function is trigerred each time the user changes the NXsummary
+;and zoom tab of the data tab
+PRO REFreduction_DataNxsummaryZoomTab, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tab_id = widget_info(Event.top,find_by_uname='data_nxsummary_zoom_tab')
+CurrTabSelect = widget_info(tab_id,/tab_current)
+PrevTabSelect = (*global).PrevDataZoomTabSelect
+
+if (PrevTabSelect NE CurrTabSelect) then begin
+    CASE (CurrTabSelect) OF
+    1: begin ;if Zoom tab selected
+        putTextFieldValue,$
+          Event,$
+          'data_zoom_scale_cwfield',$
+          (*global).DataZoomFactor,$
+          0 ;do not append
+        
+        REFreduction_ZoomRescaleData, Event
+
+    END
+    else:
+    ENDCASE
+    (*global).PrevDataZoomTabSelect = CurrTabSelect
+endif
+END
+
+
+;This function is trigerred each time the user changes the NXsummary
+;and zoom tab of the normalization tab
+PRO REFreduction_NormNxsummaryZoomTab, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+tab_id = widget_info(Event.top,find_by_uname='normalization_nxsummary_zoom_tab')
+CurrTabSelect = widget_info(tab_id,/tab_current)
+PrevTabSelect = (*global).PrevNormZoomTabSelect
+
+if (PrevTabSelect NE CurrTabSelect) then begin
+    CASE (CurrTabSelect) OF
+    1: begin ;if Zoom tab selected
+        putTextFieldValue,$
+          Event,$
+          'normalization_zoom_scale_cwfield',$
+          (*global).NormalizationZoomFactor,$
+          0 ;do not append
+
+        REFreduction_ZoomRescaleNormalization, Event
+
+    END
+    else:
+    ENDCASE
+    (*global).PrevNormZoomTabSelect = CurrTabSelect
+endif
+END
+
 
 
 ;this function is reached by the LOAD button for the DATA file

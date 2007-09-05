@@ -11,7 +11,9 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  LeftInteractionHelpsize,$
                                  LeftInteractionHelpMessageLabeltitle,$
                                  NxsummaryZoomTabSize,$
-                                 NxsummaryZoomTitle
+                                 NxsummaryZoomTitle,$
+                                 ZoomScaleBaseSize,$
+                                 ZoomScaleTitle
  
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -91,13 +93,29 @@ normalization_Zoom_base = widget_base(NxsummaryZoomTab,$
                              scr_ysize=NXsummaryZoomTabSize[3],$
                              title=NxsummaryZoomTitle[1])
 
+;zoom base and droplist inside zoom tab (top right corner)
+normalization_zoom_scale_base = widget_base(normalization_zoom_base,$
+                                            xoffset=ZoomScaleBaseSize[0],$
+                                            yoffset=ZoomScaleBaseSize[1],$
+                                            scr_xsize=ZoomScaleBaseSize[2],$
+                                            scr_ysize=ZoomScaleBaseSize[3],$
+                                            frame=2,$
+                                            uname='normalization_zoom_scale_base')
+
+normalization_zoom_scale_cwfield = cw_field(normalization_zoom_scale_base,$
+                                            Title=ZoomScaleTitle,$
+                                            xsize=2,$
+                                            /integer,$
+                                            return_events=1,$
+                                            ysize=1,$
+                                            uname='normalization_zoom_scale_cwfield')
+
 normalization_zoom_draw = widget_draw(normalization_zoom_base,$
                              uname='normalization_zoom_draw',$
                              xoffset=0,$
                              yoffset=0,$
                              scr_xsize=NXsummaryZoomTabSize[2],$
                              scr_ysize=NXsummaryZoomTabSize[3])
-
 
 ;Help base and text field that will show what is going on in the
 ;drawing region

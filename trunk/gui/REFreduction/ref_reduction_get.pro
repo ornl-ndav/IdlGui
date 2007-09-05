@@ -97,7 +97,6 @@ return, FilesToPlotList
 END
 
 
-
 ;this function returns only the file name (whitout the path)
 FUNCTION getFileNameOnly, file
 part_to_remove="/"
@@ -106,6 +105,21 @@ file_name_only = file_name[length-1]
 return, file_name_only
 END
 
+
+
+FUNCTION getDataZoomFactor, Event
+id=widget_info(Event.top,find_by_uname='data_zoom_scale_cwfield')
+widget_control, id, get_value=value
+return, value
+END
+
+
+
+FUNCTION getNormZoomFactor, Event
+id=widget_info(Event.top,find_by_uname='normalization_zoom_scale_cwfield')
+widget_control, id, get_value=value
+return, value
+END
 
 
 

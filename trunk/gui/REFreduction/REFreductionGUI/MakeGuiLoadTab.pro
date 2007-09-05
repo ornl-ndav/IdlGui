@@ -58,8 +58,10 @@ NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
                         15,$
                         495,$
                         400]
-
 NxsummaryZoomTitle = ['  N X  s u m m a r y  ',' Z  O  O  M ']
+
+ZoomScaleBaseSize = [360,0,110,35]
+ZoomScaleTitle = 'Zoom factor'
 
 ;File info hudge label (empty for now)
 ;top label
@@ -111,7 +113,8 @@ MakeGuiLoadDataNormalizationTab,$
   LeftInteractionHelpsize,$
   LeftInteractionHelpMessageLabeltitle,$
   NxsummaryZoomTabSize,$
-  NxsummaryZoomTitle
-
+  NxsummaryZoomTitle,$
+  ZoomScaleBaseSize,$
+  ZoomScaleTitle
   
 END

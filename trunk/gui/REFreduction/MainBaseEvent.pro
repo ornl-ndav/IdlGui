@@ -44,6 +44,15 @@ CASE Event.id OF
         endif
     end
 
+    ;zoom and nxsummary tab
+    widget_info(wWidget, FIND_BY_UNAME='data_nxsummary_zoom_tab'): begin
+        REFreduction_DataNxsummaryZoomTab, Event
+    end
+
+    widget_info(wWidget, FIND_BY_UNAME='data_zoom_scale_cwfield'): begin
+        REFreduction_ZoomRescaleData, Event
+    end
+
 ;Background Ymin and Ymax
     widget_info(wWidget, FIND_BY_UNAME='data_d_selection_background_ymin_cw_field'): begin
         REFreduction_DataBackgroundPeakSelection, Event
@@ -89,6 +98,15 @@ CASE Event.id OF
             if (Event.type EQ 2) then $ ;move
           REFreduction_NormSelectionMove, Event
         endif
+    end
+
+    ;zoom and nxsummary tab
+    widget_info(wWidget, FIND_BY_UNAME='normalization_nxsummary_zoom_tab'): begin
+        REFreduction_NormNxsummaryZoomTab, Event
+    end
+
+    widget_info(wWidget, FIND_BY_UNAME='normalization_zoom_scale_cwfield'): begin
+        REFreduction_ZoomRescaleNormalization, Event
     end
 
 ;Background Ymin and Ymax

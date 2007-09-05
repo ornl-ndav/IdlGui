@@ -48,6 +48,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;extension of all the files created
                    PrevTabSelect : 0,$ 
 ;name of previous main tab selected
+                   PrevDataZoomTabSelect: 0,$
+;name of previous zoom/NXsummary tab selected (data)
+                   PrevNormZoomTabSelect: 0,$
+;name of previous zoom/NXsummary tab selected (normalization)
                    DataNeXusFound : 0, $ 
 ;no data nexus found by default
                    NormNeXusFound : 0, $ 
@@ -138,8 +142,18 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default path where to get the instrument geometry to overwrite
                    InstrumentGeometryFileName : '',$
 ;full path to instrument geometry to overwrite
-                   DataNormalizationZoomFactor: 2L$
-;scale factor for zoom of Data and Normalization 1D data
+                   DataZoomFactor: 2L,$
+;scale factor for zoom of 1D Data
+                   NormalizationZoomFactor: 2L,$
+;scale factor for zoom of 1D Normalization
+                   DataX : 0L,$
+;last x position of cursor in data 1d drawfor zoom                     
+                   DataY : 0L,$
+;last y position of cursor in data 1d drawfor zoom                     
+                   NormX : 0L,$
+;last x position of cursor in norm. 1d draw for zoom                     
+                   NormY : 0L$
+;last x position of cursor in norm 1d draw for zoom                     
                   })
 
 ;------------------------------------------------------------------------
