@@ -6,6 +6,9 @@ LogBookTabSize  = [0,0,MainTabSize[2],MainTabSize[3]]
 
 LogBookTextFieldSize = [10,10,1175,800]
 
+SendLogBookButtonSize = [500,815,200,30]
+SendLogBookButtonTitle = 'Send log Book to Geek'
+
 ;Build widgets
 LOG_BOOK_BASE = WIDGET_BASE(MAIN_TAB,$
                           UNAME='Log_book_base',$
@@ -23,5 +26,13 @@ Log_book_text_field = widget_text(LOG_BOOK_BASE,$
                                   scr_ysize=LogBookTextFieldSize[3],$
                                   /scroll,$
                                   /wrap)
+
+SendLogBookButton = widget_button(LOG_BOOK_BASE,$
+                                  xoffset=SendLogBookButtonSize[0],$
+                                  yoffset=SendLogBookButtonSize[1],$
+                                  scr_xsize=SendLogBookButtonSize[2],$
+                                  scr_ysize=SendLogBookButtonSize[3],$
+                                  value=SendLogBookButtonTitle,$
+                                  uname='send_log_book_button')
 
 END

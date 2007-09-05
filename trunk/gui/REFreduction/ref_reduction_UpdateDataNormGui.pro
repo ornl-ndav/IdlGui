@@ -66,8 +66,8 @@ END
 PRO updateNormTextFields, Event, isNeXusFound
 if (isNeXusFound) then begin ;NeXus has been found
 endif else begin ;Nexus not found
-
-
+    putTextFieldValue, event, 'normalization_file_info_text','', 0
+    putTextFieldValue, event, 'NORM_left_interaction_help_text','',0
 endelse
 END
 

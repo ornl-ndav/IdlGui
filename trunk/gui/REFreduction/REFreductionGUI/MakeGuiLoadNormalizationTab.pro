@@ -153,8 +153,4 @@ normalization_log_book_text_field = widget_text(LOAD_NORMALIZATION_BASE,$
                                                 /scroll,$
                                                 /wrap)
 
-
-
-
-
 END

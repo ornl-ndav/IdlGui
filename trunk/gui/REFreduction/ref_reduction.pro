@@ -152,8 +152,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;last y position of cursor in data 1d drawfor zoom                     
                    NormX : 0L,$
 ;last x position of cursor in norm. 1d draw for zoom                     
-                   NormY : 0L$
+                   NormY : 0L,$
 ;last x position of cursor in norm 1d draw for zoom                     
+                   LogBookPath : '/SNS/users/j35/IDL_LogBook/'$
+;path where to put the log book
                   })
 
 ;------------------------------------------------------------------------
