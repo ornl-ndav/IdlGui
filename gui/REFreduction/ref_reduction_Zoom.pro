@@ -2,7 +2,8 @@
 
 pro RefReduction_zoom, $
                        Event,$
-                       MouseX=MouseX,MouseY=MouseY,$
+                       MouseX=MouseX,$
+                       MouseY=MouseY,$
                        xsize=xs, $
                        ysize=ys, $
                        fact = fact, $
@@ -85,12 +86,34 @@ pro RefReduction_zoom, $
 ;		keywords.
 ;
 ;-
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 COMPILE_OPT strictarr
 
-x=MouseX
-y=MouseY
+if n_elements(MouseX) le 0 then begin
+    if (uname EQ 'data_zoom_draw') then begin ;data
+        x = (*global).DataX
+    endif else begin            ;normalization
+        x = (*global).NormX
+    endelse
+endif else begin
+    x=MouseX
+endelse
 
-on_error,2              ;Return to caller if an error occurs
+if n_elements(MouseY) le 0 then begin    
+    if (uname EQ 'data_zoom_draw') then begin ;data
+        y = (*global).DataY
+    endif else begin            ;normalization
+        y = (*global).NormY
+    endelse
+endif else begin
+    y=MouseY
+endelse
+
+on_error,2                      ;Return to caller if an error occurs
 common zoom_window, zoom_w
 ;
 if n_elements(xs) le 0 then xs = 512
@@ -99,15 +122,15 @@ if n_elements(fact) le 0 then fact=4
 if keyword_set(cont) then waitflg = 2 else waitflg = 3
 ifact = fact
 old_w = !d.window
-if keyword_set(new_win) then zoom_w = -1	;Don't use old window (if any)
-if n_elements(zoom_w) eq 0 then zoom_w = -1		;No zoom window yet
+if keyword_set(new_win) then zoom_w = -1 ;Don't use old window (if any)
+if n_elements(zoom_w) eq 0 then zoom_w = -1 ;No zoom window yet
 ;
 ;  If an old window is to be used, then make sure it still exists.  (Added by
 ;  William Thompson, 20 May 1993.)
 ;
 if zoom_w ge 0 then begin
-	device, window_state=win_state
-	if not win_state[zoom_w] then zoom_w = -1
+    device, window_state=win_state
+    if not win_state[zoom_w] then zoom_w = -1
 endif
 ;
 ;  Make sure the parameters xs and ys agree with the size of the window, in
@@ -115,14 +138,14 @@ endif
 ;  William Thompson, 20 May 1993.)
 ;
 IF ZOOM_W GE 0 THEN BEGIN
-	OLD_WINDOW = !D.WINDOW
-	WSET, ZOOM_W
-	XS = !D.X_SIZE
-	YS = !D.Y_SIZE
-	WSET, OLD_WINDOW
+    OLD_WINDOW = !D.WINDOW
+    WSET, ZOOM_W
+    XS = !D.X_SIZE
+    YS = !D.Y_SIZE
+    WSET, OLD_WINDOW
 ENDIF
-tvcrs,1			;enable cursor
-ierase = 0		;erase zoom window flag
+tvcrs,1                         ;enable cursor
+ierase = 0                      ;erase zoom window flag
 ;IF KEYWORD_SET(cont) THEN BEGIN
 ;	PRINT,'Cursor position is zoom center, '+$
 ;	      'Middle button for new zoom factor, Right button to quit'
@@ -152,42 +175,123 @@ ierase = 0		;erase zoom window flag
 ;			ierase = 1	;Clean out previous display
 ;	endelse
 ; else:	begin
-	x0 = 0 > (x-xs/(ifact*2)) 	;left edge from center
-	y0 = 0 > (y-ys/(ifact*2)) 	;bottom
-	nx = xs/ifact			;Size of new image
-	ny = ys/ifact
-	nx = nx < (!d.x_vsize-x0)
-	ny = ny < (!d.y_size-y0)
-	x0 = x0 < (!d.x_vsize - nx)
-	y0 = y0 < (!d.y_vsize - ny)
-	a = tvrd(x0,y0,nx,ny)		;Read image
-	;if zoom_w lt 0 then begin	;Make new window?
-	;	window,/free,xsize=xs,ysize=ys,title='Zoomed Image'
-	;	zoom_w = !d.window
-	;endif else begin
-	;	wset,zoom_w
-	;	if ierase then erase		;Erase it?
-	;	ierase = 0
-	;endelse
-	xss = nx * ifact	;Make integer rebin factors
-	yss = ny * ifact
-        
-        id_draw = widget_info(Event.top, find_by_uname=uname)
-        widget_control, id_draw, get_value=id_value
-        wset,id_value
+x0 = 0 > (x-xs/(ifact*2)) 	;left edge from center
+y0 = 0 > (y-ys/(ifact*2)) 	;bottom
+nx = xs/ifact			;Size of new image
+ny = ys/ifact
+nx = nx < (!d.x_vsize-x0)
+ny = ny < (!d.y_size-y0)
+x0 = x0 < (!d.x_vsize - nx)
+y0 = y0 < (!d.y_vsize - ny)
+a = tvrd(x0,y0,nx,ny)		;Read image
+                                ;if zoom_w lt 0 then begin	;Make new window?
+                                ;	window,/free,xsize=xs,ysize=ys,title='Zoomed Image'
+                                ;	zoom_w = !d.window
+                                ;endif else begin
+                                ;	wset,zoom_w
+                                ;	if ierase then erase		;Erase it?
+                                ;	ierase = 0
+                                ;endelse
+xss = nx * ifact                ;Make integer rebin factors
+yss = ny * ifact
 
-	tv,rebin(a,xss,yss,sample=1-keyword_set(interp))
-	wset,old_w
+id_draw = widget_info(Event.top, find_by_uname=uname)
+widget_control, id_draw, get_value=id_value
+wset,id_value
+
+tv,rebin(a,xss,yss,sample=1-keyword_set(interp))
+wset,old_w
 
 ;	endcase
 ;endcase
 ;goto,again
 
+;save X and y
+if (uname EQ 'data_zoom_draw') then begin ;data
+    (*global).DataX = x
+endif else begin                ;normalization
+    (*global).NormX = x
+endelse
+
+if (uname EQ 'data_zoom_draw') then begin ;data
+    (*global).DataY = y
+endif else begin                ;normalization
+    (*global).NormY = y
+endelse
+    
 done:
-IF NOT KEYWORD_SET(KEEP) THEN BEGIN
-        if zoom_w ge 0 then wdelete,zoom_w              ;Done with window
+    IF NOT KEYWORD_SET(KEEP) THEN BEGIN
+        if zoom_w ge 0 then wdelete,zoom_w ;Done with window
         ZOOM_W = -1
-ENDIF
-zoom_win = zoom_w	;Return index of zoom window to user
+    ENDIF
+    zoom_win = zoom_w           ;Return index of zoom window to user
 end
+
+
+
+
+
+;this function is reached when the user click ENTER in the data
+;cw_field rescale box
+PRO REFreduction_ZoomRescaleData, Event
+;get global structure
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+
+if ((*global).DataNeXusFound) then begin ;only if there is a Data NeXus loaded
+    id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+    
+    DataZoomFactor = getDataZoomFactor(Event)
+    (*global).DataZoomFactor = DataZoomFactor
+
+    RefReduction_zoom, $
+      Event, $
+;      MouseX=0, $
+;      MouseY=0, $
+      fact=DataZoomFactor,$
+      uname='data_zoom_draw'
+
+endif
+END
+
+
+;this function is reached when the user click ENTER in the data
+;cw_field rescale box
+PRO REFreduction_ZoomRescaleNormalization, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).NormNeXusFound) then begin ;only if there is a Norm NeXus loaded
+    
+    id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
+    widget_control, id_draw, get_value=id_value
+    wset,id_value
+
+    NormalizationZoomFactor = getNormZoomFactor(Event)
+    (*global).NormalizationZoomFactor = NormalizationZoomFactor
+
+    RefReduction_zoom, $
+      Event, $
+;      MouseX=0, $
+;      MouseY=0, $
+      fact=NormalizationZoomFactor,$
+      uname='normalization_zoom_draw'
+
+endif
+END
+
+
+
+
+
+
+
+
+
+
+
+
 

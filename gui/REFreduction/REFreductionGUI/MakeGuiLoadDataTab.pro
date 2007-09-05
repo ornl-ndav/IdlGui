@@ -11,7 +11,9 @@ PRO MakeGuiLoadDataTab, DataNormalizationTab,$
                         LeftInteractionHelpsize,$
                         LeftInteractionHelpMessageLabeltitle,$
                         NxsummaryZoomTabSize,$
-                        NxsummaryZoomTitle
+                        NxsummaryZoomTitle,$
+                        ZoomScaleBaseSize,$
+                        ZoomScaleTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -45,7 +47,6 @@ Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
                                            return_events=1,$
                                            title=RunNumberTitles[0],$
                                            uname='load_data_run_number_text_field')
-
 
 ;Build 1D and 2D tabs
 MakeGuiLoadData1D2DTab,$
@@ -92,6 +93,23 @@ data_Zoom_base = widget_base(NxsummaryZoomTab,$
                              scr_xsize=NXsummaryZoomTabSize[2],$
                              scr_ysize=NXsummaryZoomTabSize[3],$
                              title=NxsummaryZoomTitle[1])
+
+;zoom base and droplist inside zoom tab (top right corner)
+data_zoom_scale_base = widget_base(data_zoom_base,$
+                                   xoffset=ZoomScaleBaseSize[0],$
+                                   yoffset=ZoomScaleBaseSize[1],$
+                                   scr_xsize=ZoomScaleBaseSize[2],$
+                                   scr_ysize=ZoomScaleBaseSize[3],$
+                                   frame=2,$
+                                   uname='data_zoom_scale_base')
+
+data_zoom_scale_cwfield = cw_field(data_zoom_scale_base,$
+                                   Title=ZoomScaleTitle,$
+                                   xsize=2,$
+                                   /integer,$
+                                   ysize=1,$
+                                   return_events=1,$
+                                   uname='data_zoom_scale_cwfield')
 
 data_zoom_draw = widget_draw(data_zoom_base,$
                              uname='data_zoom_draw',$

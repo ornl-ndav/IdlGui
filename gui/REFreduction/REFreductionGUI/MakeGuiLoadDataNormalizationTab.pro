@@ -10,7 +10,9 @@ PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE,$
                                      LeftInteractionHelpSize,$
                                      LeftInteractionHelpMessageLabeltitle,$
                                      NxsummaryZoomTabSize,$
-                                     NxsummaryZoomTitle
+                                     NxsummaryZoomTitle,$
+                                     ZoomScaleBaseSize,$
+                                     ZoomScaleTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -45,7 +47,9 @@ MakeGuiLoadDataTab,$
   LeftInteractionHelpsize,$
   LeftInteractionHelpMessageLabeltitle,$
   NxsummaryZoomTabSize,$
-  NxsummaryZoomTitle
+  NxsummaryZoomTitle,$
+  ZoomScaleBaseSize,$
+  ZoomScaleTitle
 
 ;build NORMALIZATION tab
 MakeGuiLoadNormalizationTab,$
@@ -62,6 +66,9 @@ MakeGuiLoadNormalizationTab,$
   LeftInteractionHelpsize,$
   LeftInteractionHelpMessageLabeltitle,$
   NxsummaryZoomTabSize,$
-  NxsummaryZoomTitle
+  NxsummaryZoomTitle,$
+  ZoomScaleBaseSize,$
+  ZoomScaleTitle
+
 
 END

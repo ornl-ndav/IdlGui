@@ -79,7 +79,7 @@ if (isNormZoomTabSelected(Event)) then begin
       Event, $
       MouseX=event.x, $
       MouseY=event.y, $
-      fact=(*global).DataNormalizationZoomFactor,$
+      fact=(*global).NormalizationZoomFactor,$
       uname='normalization_zoom_draw'
 endif
 
@@ -225,7 +225,7 @@ switch (mouse_status) OF
               Event, $
               MouseX=event.x, $
               MouseY=event.y, $
-              fact=(*global).DataNormalizationZoomFactor,$
+              fact=(*global).NormalizationZoomFactor,$
               uname='normalization_zoom_draw'
         endif
     end
