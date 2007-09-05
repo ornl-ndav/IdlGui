@@ -172,8 +172,12 @@ CASE Event.id OF
          RefReduction_PlotMainIntermediateFiles, Event
     end
     
-
 ;**LOG_BOOK TAB**
+
+    ;send log book button
+    widget_info(wWidget, FIND_BY_UNAME='send_log_book_button'): begin
+         RefReduction_LogBookInterface, Event
+    end
 
 ;**SETTINGS TAB**
 

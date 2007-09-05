@@ -75,6 +75,8 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_SaveFileInfo.pro
 .run ref_reduction_OverwriteInstrumentGeometry.pro
 
+.run ref_reduction_LogBookInterface.pro
+
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
 .run MainBaseEvent.pro

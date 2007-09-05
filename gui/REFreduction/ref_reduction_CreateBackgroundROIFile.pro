@@ -99,12 +99,6 @@ END
 
 
 
-
-
-
-
-
-
 ;NORMALIZATION SIDE OF LOAD TAB
 PRO REFreduction_CreateNormBackgroundROIFile, Event
 
