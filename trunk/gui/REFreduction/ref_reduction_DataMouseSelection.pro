@@ -137,6 +137,9 @@ plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 
 (*global).select_data_status = mouse_status_new
 
+;reverse Ymin and Ymax label frame
+RefReduction_UpdateDataNormGui_reverseDataYminYmaxLabelsFrame, Event
+
 ;update Back and Peak Ymin and Ymax cw_fields
 putDataBackgroundPeakYMinMaxValueInTextFields, Event
 

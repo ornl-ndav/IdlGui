@@ -2,6 +2,7 @@
 ;if no NeXus has been found
 PRO updateDataWidget, Event, isNeXusFound
 if (isNeXusFound) then begin    ;NeXus has been found
+    ActivateWidget, Event, 'data_ymin_label_frame', 1
     ActivateWidget, Event, 'data_roi_save_button', 1
     ActivateWidget, Event, 'data_1d_selection', 1
     ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 1
@@ -10,6 +11,7 @@ if (isNeXusFound) then begin    ;NeXus has been found
     ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', 1
     ActivateWidget, Event, 'data_roi_load_button', 1 
 endif else begin                ;NeXus not found
+    ActivateWidget, Event, 'data_ymin_label_frame', 0
     ActivateWidget, Event, 'data_roi_save_button', 0
     ActivateWidget, Event, 'data_1d_selection', 0
     ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 0
@@ -27,10 +29,23 @@ END
 ;if no NeXus has been found
 PRO updateNormWidget, Event, isNeXusFound
 if (isNeXusFound) then begin    ;NeXus has been found
-
+    ActivateWidget, Event, 'normalization_ymin_label_frame', 1
+    ActivateWidget, Event, 'normalization_roi_save_button', 1
+    ActivateWidget, Event, 'normalization_1d_selection', 1
+    ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 1
+    ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 1
+    ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', 1
+    ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', 1
+    ActivateWidget, Event, 'normalization_roi_load_button', 1 
 endif else begin                ;NeXus not found
-
-    
+    ActivateWidget, Event, 'normalization_ymin_label_frame', 0
+    ActivateWidget, Event, 'normalization_roi_save_button', 0
+    ActivateWidget, Event, 'normalization_1d_selection', 0
+    ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 0
+    ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 0
+    ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', 0
+    ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', 0
+    ActivateWidget, Event, 'normalization_roi_load_button', 0
 endelse
 END
 
@@ -112,6 +127,35 @@ updateNormWidget, Event, isNeXusFound ;update cw_fields and buttons
 updateNormTextFields, Event, isNeXusFound ;update text_fields contain
 clearOffNormdisplay, Event, isNeXusFound ;erase 1D and 2D widget_draw
 
+END
+
+
+;this function insenstive the Y label framed selected and sensitive
+;the other one in Data world
+PRO RefReduction_UpdateDataNormGui_reverseDataYminYmaxLabelsFrame, Event
+
+if (isWidgetSensitive(Event, 'data_ymin_label_frame')) then begin
+    ActivateWidget, Event, 'data_ymin_label_frame', 0
+    ActivateWidget, Event, 'data_ymax_label_frame', 1
+endif else begin
+    ActivateWidget, Event, 'data_ymin_label_frame', 1
+    ActivateWidget, Event, 'data_ymax_label_frame', 0
+endelse
 
 END
 
+
+
+;this function insenstive the Y label framed selected and sensitive
+;the other one in Norm world
+PRO RefReduction_UpdateDataNormGui_reverseNormYminYmaxLabelsFrame, Event
+
+if (isWidgetSensitive(Event, 'normalization_ymin_label_frame')) then begin
+    ActivateWidget, Event, 'normalization_ymin_label_frame', 0
+    ActivateWidget, Event, 'normalization_ymax_label_frame', 1
+endif else begin
+    ActivateWidget, Event, 'normalization_ymin_label_frame', 1
+    ActivateWidget, Event, 'normalization_ymax_label_frame', 0
+endelse
+
+END

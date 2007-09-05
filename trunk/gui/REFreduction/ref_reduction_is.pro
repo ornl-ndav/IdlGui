@@ -100,3 +100,9 @@ CurrTabSelect = widget_info(tab_id,/tab_current)
 return, CurrTabSelect
 END
 
+
+Function isWidgetSensitive, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+sensitiveStatus = widget_info(id,/sensitive)
+return, sensitiveStatus
+END

@@ -9,6 +9,14 @@ Norm1DSelectionList = ['Select Background Range    ',$
 Norm1DSelectionBaseSize = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
 Norm1DSelectionSize     = [5, 5]
 
+NormYminLabelSize  = [390,5,100,25]
+NormYminLabelTitle = 'Border #1'
+NormYmaxLabelSize  = [NormYminLabelSize[0]+113,$
+                      5,$
+                      NormYminLabelSize[2],$
+                      NormYminLabelSize[3]]
+NormYmaxLabelTitle = 'Border #2'
+ 
 d_L_B= 170
 BaseLengthYmin = 90
 BaseLengthYmax = 120
@@ -108,6 +116,26 @@ Norm1DSelection = cw_bgroup(Norm1DSelectionBase,$
                             SET_VALUE=0.0,$
                             row=1,$
                             UNAME='normalization_1d_selection')
+
+NormYminLabel = widget_label(Norm1DselectionBase,$
+                             uname='normalization_ymin_label_frame',$
+                             xoffset=NormYminLabelSize[0],$
+                             yoffset=NormYminLabelSize[1],$
+                             scr_xsize=NormYminLabelSize[2],$
+                             scr_ysize=NormYminLabelSize[3],$
+                             value=NormYminLabelTitle,$
+                             frame=2,$
+                             sensitive=0)
+
+NormYmaxLabel = widget_label(Norm1DSelectionBase,$
+                             uname='normalization_ymax_label_frame',$
+                             xoffset=NormYmaxLabelSize[0],$
+                             yoffset=NormYmaxLabelSize[1],$
+                             scr_xsize=NormYmaxLabelSize[2],$
+                             scr_ysize=NormYmaxLabelSize[3],$
+                             value=NormYmaxLabelTitle,$
+                             frame=2,$
+                             sensitive=0)
 
 ;background selection
 Norm_1d_selection_background_label = $
