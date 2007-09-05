@@ -17,7 +17,7 @@ FUNCTION getIGfilter, Event, instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-filter = instrument + '_geom_*
+filter = instrument + '_geom_*'
 return, filter
 END
 
