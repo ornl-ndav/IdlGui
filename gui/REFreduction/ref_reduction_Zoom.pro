@@ -1,7 +1,16 @@
 ; $Id: zoom.pro,v 1.11 2000/08/07 17:29:27 chris Exp $
 
-pro zoom,xsize=xs, ysize=ys, fact = fact, interp = interp, continuous = cont, $
-        keep=keep, zoom_window=zoom_win, new_window=new_win
+pro RefReduction_zoom, $
+                       Event,$
+                       MouseX=MouseX,MouseY=MouseY,$
+                       xsize=xs, $
+                       ysize=ys, $
+                       fact = fact, $
+                       interp = interp, $
+                       continuous = cont, $
+                       keep=keep, $
+                       zoom_window=zoom_win, $
+                       new_window=new_win
 ;+
 ; NAME:
 ;	ZOOM
@@ -77,6 +86,9 @@ pro zoom,xsize=xs, ysize=ys, fact = fact, interp = interp, continuous = cont, $
 ;-
 COMPILE_OPT strictarr
 
+x=MouseX
+y=MouseY
+
 on_error,2              ;Return to caller if an error occurs
 common zoom_window, zoom_w
 ;
@@ -118,25 +130,27 @@ ierase = 0		;erase zoom window flag
 ;ENDELSE
 ;again: ;commented out to be sure the zoom is only once (no need to
 ;use right click to quit
-	cursor,x,y,waitflg,/dev	;Wait for change
+
+;	cursor,x,y,waitflg,/dev	;Wait for change
+
 	case !MOUSE.button of
-4:	goto, done
-2:	if !d.name eq 'SUN' or !d.name eq 'X' then begin	;Sun view?
-		s  = ['New Zoom Factor:',strtrim(indgen(19)+2,2)]
-		ifact = wmenu(s, init=ifact-1,title=0)+1
-		IF (!Version.Os NE 'MacOS') THEN $
-			tvcrs,x,y,/dev $	;Restore cursor
-                ELSE tvcrs,1
-		ierase = 1
-	endif else begin
-		Read,'Current factor is',ifact+0,'.  Enter new factor: ',ifact
-		if ifact le 0 then begin
-			ifact = 4
-			print,'Illegal Zoom factor.'
-			endif
-			ierase = 1	;Clean out previous display
-	endelse
-else:	begin
+;4:	goto, done
+;2:	if !d.name eq 'SUN' or !d.name eq 'X' then begin	;Sun view?
+;		s  = ['New Zoom Factor:',strtrim(indgen(19)+2,2)]
+;		ifact = wmenu(s, init=ifact-1,title=0)+1
+;		IF (!Version.Os NE 'MacOS') THEN $
+;			tvcrs,x,y,/dev $	;Restore cursor
+;                ELSE tvcrs,1
+;		ierase = 1
+;	endif else begin
+;		Read,'Current factor is',ifact+0,'.  Enter new factor: ',ifact
+;		if ifact le 0 then begin
+;			ifact = 4
+;			print,'Illegal Zoom factor.'
+;			endif
+;			ierase = 1	;Clean out previous display
+;	endelse
+ else:	begin
 	x0 = 0 > (x-xs/(ifact*2)) 	;left edge from center
 	y0 = 0 > (y-ys/(ifact*2)) 	;bottom
 	nx = xs/ifact			;Size of new image
@@ -146,16 +160,21 @@ else:	begin
 	x0 = x0 < (!d.x_vsize - nx)
 	y0 = y0 < (!d.y_vsize - ny)
 	a = tvrd(x0,y0,nx,ny)		;Read image
-	if zoom_w lt 0 then begin	;Make new window?
-		window,/free,xsize=xs,ysize=ys,title='Zoomed Image'
-		zoom_w = !d.window
-	endif else begin
-		wset,zoom_w
-		if ierase then erase		;Erase it?
-		ierase = 0
-	endelse
+	;if zoom_w lt 0 then begin	;Make new window?
+	;	window,/free,xsize=xs,ysize=ys,title='Zoomed Image'
+	;	zoom_w = !d.window
+	;endif else begin
+	;	wset,zoom_w
+	;	if ierase then erase		;Erase it?
+	;	ierase = 0
+	;endelse
 	xss = nx * ifact	;Make integer rebin factors
 	yss = ny * ifact
+        
+        id_draw = widget_info(Event.top, find_by_uname='data_zoom_draw')
+        widget_control, id_draw, get_value=id_value
+        wset,id_value
+
 	tv,rebin(a,xss,yss,sample=1-keyword_set(interp))
 	wset,old_w
 	endcase

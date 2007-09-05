@@ -73,6 +73,11 @@ endif else begin                ;background selection
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 endelse
 
+;display zoom if zomm tab is selected
+if (isDataZoomTabSelected(Event)) then begin
+    RefReduction_zoom, Event, MouseX=event.x, MouseY=event.y, fact=2
+endif
+
 (*global).select_data_status = mouse_status_new
 
 ;update Back and Peak Ymin and Ymax cw_fields of Data
@@ -168,7 +173,8 @@ CASE (mouse_status) OF
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
-        END
+        
+    END
     2:mouse_status_new = mouse_status
     3: Begin
 ;refresh plot
@@ -177,6 +183,7 @@ CASE (mouse_status) OF
         y1 = y_array[0]
         plots, 0, y1, /device, color=color
         plots, xsize_1d_draw, y1, /device, /continue, color=color
+        
     END
     4: Begin
         RePlot1DDataFile, Event
@@ -187,6 +194,7 @@ CASE (mouse_status) OF
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
         mouse_status_new = mouse_status
+
     END
     5:mouse_status_new = mouse_status
 endcase
@@ -206,6 +214,17 @@ endif else begin                ;background selection
     plots, 0, y_array[1], /device, color=color
     plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 endelse
+
+switch (mouse_status) OF
+    1:
+    4:begin
+;display zoom if zomm tab is selected
+        if (isDataZoomTabSelected(Event)) then begin
+            RefReduction_zoom, Event, MouseX=event.x, MouseY=event.y, fact=2
+        endif
+    end
+    else:
+endswitch
 
 ;update Back and Peak Ymin and Ymax cw_fields
 putDataBackgroundPeakYMinMaxValueInTextFields, Event
