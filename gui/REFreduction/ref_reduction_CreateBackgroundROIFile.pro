@@ -50,7 +50,7 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     openw, 1, file_name
     
     if (instrument EQ (*global).REF_L) then begin ;REF_L
-        
+
         i=0L
         NxMax = (*global).Nx_REF_L
         YNbr = YNbr-1

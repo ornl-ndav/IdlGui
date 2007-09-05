@@ -15,7 +15,7 @@ OutputArray = OutputArray[OutputArraySize-1-NbrToDisplay:outputArraySize-1]
 putTextFieldArray,$
   Event,$
   'DATA_left_interaction_help_text',$
-  OutputArray, NbrToDisplay, 1
+  OutputArray, NbrToDisplay+1, 1
 
 END
 
@@ -39,6 +39,6 @@ OutputArray = OutputArray[OutputArraySize-1-NbrToDisplay:outputArraySize-1]
 putTextFieldArray,$
   Event,$
   'NORM_left_interaction_help_text',$
-  OutputArray, NbrToDisplay, 1
+  OutputArray, NbrToDisplay+1, 1
 
 END

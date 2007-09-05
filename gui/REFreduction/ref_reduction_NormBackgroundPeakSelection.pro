@@ -41,14 +41,14 @@ widget_control,id,get_uvalue=global
 if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
 
 ;get Background Ymin, Ymax
-    BackYmin = getTextFieldValue(Event,'normalization_d_selection_background_ymin_cw_field')
-    BackYmax = getTextFieldValue(Event,'normalization_d_selection_background_ymax_cw_field')
+    BackYmin = 2*getTextFieldValue(Event,'normalization_d_selection_background_ymin_cw_field')
+    BackYmax = 2*getTextFieldValue(Event,'normalization_d_selection_background_ymax_cw_field')
     BackSelection = [BackYmin,BackYmax]
     (*(*global).norm_back_selection) = BackSelection
     
 ;get Peak Ymin and Ymax
-    PeakYmin = getTextFieldValue(Event,'normalization_d_selection_peak_ymin_cw_field')
-    PeakYmax = getTextFieldValue(Event,'normalization_d_selection_peak_ymax_cw_field')
+    PeakYmin = 2*getTextFieldValue(Event,'normalization_d_selection_peak_ymin_cw_field')
+    PeakYmax = 2*getTextFieldValue(Event,'normalization_d_selection_peak_ymax_cw_field')
     PeakSelection = [PeakYmin,PeakYmax]
     (*(*global).norm_peak_selection) = PeakSelection
     
