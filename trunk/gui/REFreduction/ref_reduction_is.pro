@@ -84,3 +84,12 @@ id = widget_info(Event.top,find_by_uname=uname)
 isMap = widget_info(id, /map)
 return, isMap
 END
+
+
+Function isDataZoomTabSelected, Event
+tab_id = widget_info(Event.top,find_by_uname='data_nxsummary_zoom_tab')
+CurrTabSelect = widget_info(tab_id,/tab_current)
+return, CurrTabSelect
+END
+
+
