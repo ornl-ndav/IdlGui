@@ -1,5 +1,4 @@
 PRO DisplayHeadTailBackgroundFile, Event, FileName, uname
-
 ;get the first 20 elements
 cmd = 'head ' + FileName + ' -n 20'
 spawn, cmd, First20Lines
@@ -20,9 +19,7 @@ putTextFieldArray,$
   FinalArray,$
   sz,$
   0
-
 END
-
 
 
 
@@ -33,6 +30,10 @@ END
 
 
 
+PRO DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
+uname = 'NORM_left_interaction_help_text'
+DisplayHeadTailBackgroundFile, Event, BackROIFullFileName, uname
+END
 
 
 
@@ -134,8 +135,60 @@ END
 
 
 
-PRO REFreduction_LoadNormBackgroundSelecton, Event
+PRO REFreduction_LoadNormBackgroundSelection, Event
 
-print, 'here1'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;define filter
+instrument = (*global).instrument
+norm_back_roi_ext = (*global).norm_back_roi_ext
+filter = instrument + '_*' + norm_back_roi_ext
+
+;get default path 
+WorkingPath = (*global).working_path
+
+title = instrument + ' Normalization Background Selection File' ;title of pickfile
+
+;open file
+BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
+                                      get_path=path,$
+                                      title=title,$
+                                      filter=filter,$
+                                      default_extension='.dat',$
+                                      /fix_filter)
+
+if (BackROIFullFileName NE '') then begin
+
+;display name of new file name in text field
+putTextFieldValue,$
+  Event,$
+  'data_background_selection_file_text_field',$
+  BackROIFullFileName,$
+  0 ;do not append
+
+  YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
+
+;put Ymin and Ymax in their text fields
+putTextFieldValue, $
+  Event,$
+  'normalization_d_selection_background_ymin_cw_field',$
+  strcompress(YMinYMaxArray[0],/remove_all),$
+  0 
+
+putTextFieldValue, $
+  Event,$
+  'normalization_d_selection_background_ymax_cw_field',$
+  strcompress(YMinYMaxArray[1],/remove_all),$
+  0 
+
+;replot
+REFreduction_NormBackgroundPeakSelection, Event
+
+;display 20 first data and last 20 in HELP text data box
+DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
+
+endif
 
 END
