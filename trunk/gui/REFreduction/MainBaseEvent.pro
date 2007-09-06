@@ -138,11 +138,10 @@ CASE Event.id OF
     end
 
 ;LOAD background selection
-    widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
-        REFreduction_ZoomPlot, Event
+    widget_info(wWidget, FIND_BY_UNAME='normalization_roi_load_button'): begin
+        REFreduction_LoadNormBackgroundSelection, Event
     end
     
-
 ;**REDUCE TAB**
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin

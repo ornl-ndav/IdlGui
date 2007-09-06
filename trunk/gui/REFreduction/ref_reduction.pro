@@ -193,7 +193,7 @@ MainPlotTitle = 'Main Data Reduction Plot'
 if (instrument EQ 'REF_L') then begin ;REF_L
     InstrumentGeometryPath = '/SNS/REF_L/2006_1_4B_CAL/calibrations/'
 endif else begin
-    InstrumentGeoemtryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
+    InstrumentGeometryPath = '/SNS/REF_M/2006_1_4A_CAL/calibrations/'
 endelse
 (*global).InstrumentGeometryPath = InstrumentGeometryPath
 
