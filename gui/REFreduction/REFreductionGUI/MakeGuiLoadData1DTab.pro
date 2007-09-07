@@ -214,7 +214,8 @@ DataBackgroundSelectionFileTextField = $
               scr_ysize=DataBackgroundSelectionFileTextFieldSize[3],$
               uname='data_background_selection_file_text_field',$
               /align_left,$
-              /editable)
+              /editable,$
+              sensitive=0)
 
 ;Peak exclusion
 Data_1d_selection_peak_label = $

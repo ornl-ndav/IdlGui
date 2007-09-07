@@ -5,8 +5,15 @@ return, isPeakSelected
 END
 
 
-Function isBackPeakZoomSelected, Event
+Function isDataBackPeakZoomSelected, Event
 id = widget_info(Event.top,find_by_uname='data_1d_selection')
+widget_control, id, get_value=SelectionStatus
+return, selectionStatus
+END
+
+
+Function isNormBackPeakZoomSelected, Event
+id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
 widget_control, id, get_value=SelectionStatus
 return, selectionStatus
 END
