@@ -19,7 +19,7 @@ LoadTabSize   = [0,$
 D_DD_TabSize  = [30,$
                  30,$
                  MainTabSize[2]-570,$
-                 MainTabSize[3]-90]
+                 MainTabSize[3]-80]
 D_DD_BaseSize = [5,$
                  5,$
                  D_DD_TabSize[2],$
