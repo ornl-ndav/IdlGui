@@ -130,6 +130,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;Status of the data selection (see below)
                    select_norm_status : 0,$ 
 ;Status of the norm selection (see below)
+                   select_zoom_status : 0,$
+;Status of the zoom (0=no zoom; 1=zoom)
                    flt0_ptr : ptrarr(8,/allocate_heap),$ 
 ;arrays of all the x-axis
                    flt1_ptr : ptrarr(8,/allocate_heap),$ 

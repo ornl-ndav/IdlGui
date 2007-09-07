@@ -4,8 +4,9 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, D_DD_TabSize, D_DD_TabTitle, Global
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;cw_bgroup of selection (back or signal)
-Norm1DSelectionList = ['Select Background Range    ',$
-                       'Select Peak Exclusion      ']
+Norm1DSelectionList = ['Select Background   ',$
+                       'Select Peak   ',$
+                       'ZOOM mode  ']
 Norm1DSelectionBaseSize = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
 Norm1DSelectionSize     = [5, 5]
 
