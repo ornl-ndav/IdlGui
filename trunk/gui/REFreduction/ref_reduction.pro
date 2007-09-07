@@ -69,7 +69,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    Nx_REF_L : 256L,$ 
 ;Nx for REF_L instrument
                    Ny_REF_L : 304L,$ 
-nx;Ny for REF_L instrument
+;Ny for REF_L instrument
                    Nx_REF_M : 304L,$ 
 ;Nx for REF_M instrument
                    Ny_REF_M : 256L,$ 
@@ -84,7 +84,7 @@ nx;Ny for REF_L instrument
 ;default name of tmp binary data file
                    full_data_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for data
-                   norm_tmp_dat_file : 'tmp_nor.dat',$ 
+                   norm_tmp_dat_file : 'tmp_norm.dat',$ 
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for normalization
