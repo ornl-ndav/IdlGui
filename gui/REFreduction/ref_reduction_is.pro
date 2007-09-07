@@ -106,3 +106,15 @@ id = widget_info(Event.top,find_by_uname=uname)
 sensitiveStatus = widget_info(id,/sensitive)
 return, sensitiveStatus
 END
+
+
+Function isArchivedNexusDesired, Event
+id = widget_info(Event.top,find_by_uname='data_archived_or_full_cwbgroup')
+widget_control,id,get_value=status
+if (status EQ 0) then begin
+    return, 1
+endif else begin
+    return, 0
+endelse
+END
+

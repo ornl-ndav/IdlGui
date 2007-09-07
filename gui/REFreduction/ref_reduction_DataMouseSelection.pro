@@ -16,7 +16,7 @@ endif else begin                ;background selection
 endelse
 
 ;where to stop the plot of the lines
-xsize_1d_draw = (*global).Ntof_DATA - 1
+xsize_1d_draw = (*global).Ntof_DATA-1
 
 mouse_status = (*global).select_data_status
 ;print, 'PressLeft mouse_status: ' + strcompress(mouse_status)
@@ -24,21 +24,34 @@ CASE (mouse_status) OF
     0: Begin
 ;refresh plot
         RePlot1DDataFile, Event
+
+;plot y1
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
+
         y2=y_array[1]
-        plots, 0, y2, /device, color=color
-        plots, xsize_1d_draw, y2, /device, /continue, color=color
-        mouse_status_new = 1
+;plot only if y2 is not -1         
+        if (y2 NE -1) then begin
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
+        endif
+
+            mouse_status_new = 1
     END
     1:  mouse_status_new = mouse_status
     2:  mouse_status_new = mouse_status
     3: Begin
         RePlot1DDataFile, Event
+
         y1 = y_array[0]
-        plots, 0, y1, /device, color=color
-        plots, xsize_1d_draw, y1, /device, /continue, color=color
+;plot only if y1 is not -1
+        if (y1 NE -1) then begin
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
+        endif
+
+;plot y2
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
@@ -47,12 +60,18 @@ CASE (mouse_status) OF
     4:mouse_status_new = mouse_status
     5:  Begin
         RePlot1DDataFile, Event
+
         y1 = y_array[0]
-        plots, 0, y1, /device, color=color
-        plots, xsize_1d_draw, y1, /device, /continue, color=color
+;plot only if y1 is not -1
+        if (y1 NE -1) then begin
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
+        endif
+
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
+
         mouse_status_new = 4
     end
 endcase
@@ -60,17 +79,31 @@ endcase
 if (isPeakSelected) then begin  ;peak selection
     color = (*global).back_selection_color
     y_array = (*(*global).data_back_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
+
 endif else begin                ;background selection
     color = (*global).peak_selection_color
     y_array = (*(*global).data_peak_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
+
 endelse
 
 ;display zoom if zomm tab is selected
@@ -122,18 +155,30 @@ isPeakSelected = isDataPeakSelectionSelected(Event)
 ;back
 color = (*global).back_selection_color
 y_array = (*(*global).data_back_selection)
-plots, 0, y_array[0], /device, color=color
-plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-plots, 0, y_array[1], /device, color=color
-plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+if (y_array[0] NE -1) then begin
+    plots, 0, y_array[0], /device, color=color
+    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+endif
+
+if (y_array[1] NE -1) then begin
+    plots, 0, y_array[1], /device, color=color
+    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+endif
 
 ;peak
 color = (*global).peak_selection_color
 y_array = (*(*global).data_peak_selection)
-plots, 0, y_array[0], /device, color=color
-plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-plots, 0, y_array[1], /device, color=color
-plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+if (y_array[0] NE -1) then begin
+    plots, 0, y_array[0], /device, color=color
+    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+endif
+
+if (y_array[1] NE -1) then begin
+    plots, 0, y_array[1], /device, color=color
+    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+endif
 
 (*global).select_data_status = mouse_status_new
 
@@ -174,9 +219,14 @@ CASE (mouse_status) OF
     1: Begin
         RePlot1DDataFile, Event
         mouse_status_new = mouse_status
+
+;check if y2 is not -1
         y2 = y_array[1]
-        plots, 0, y2, /device, color=color
-        plots, xsize_1d_draw, y2, /device, /continue, color=color
+        if (y2 NE -1) then begin
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
+        endif
+
 ;refresh plot
         y=event.y
         plots, 0, y, /device, color=color
@@ -188,16 +238,25 @@ CASE (mouse_status) OF
 ;refresh plot
         RePlot1DDataFile, Event
         mouse_status_new = mouse_status
+
+;check if y1 is not -1
         y1 = y_array[0]
-        plots, 0, y1, /device, color=color
-        plots, xsize_1d_draw, y1, /device, /continue, color=color
+        if (y1 NE -1) then begin
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
+        endif
         
     END
     4: Begin
         RePlot1DDataFile, Event
+
+;check if y1 is not -1
         y1 = y_array[0]
-        plots, 0, y1, /device, color=color
-        plots, xsize_1d_draw, y1, /device, /continue, color=color
+        if (y1 NE -1) then begin
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
+        endif
+
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
@@ -210,17 +269,31 @@ endcase
 if (isPeakSelected) then begin  ;peak selection
     color = (*global).back_selection_color
     y_array = (*(*global).data_back_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
+
 endif else begin                ;background selection
     color = (*global).peak_selection_color
     y_array = (*(*global).data_peak_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
+
 endelse
 
 switch (mouse_status) OF
@@ -277,18 +350,28 @@ CASE (mouse_status) OF
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
+
+;check if y2 is not -1
         y2 = y_array[1]
-        plots, 0, y2, /device, color=color
-        plots, xsize_1d_draw, y2, /device, /continue, color=color
+        if (y2 NE -1) then begin
+            plots, 0, y2, /device, color=color
+            plots, xsize_1d_draw, y2, /device, /continue, color=color
+        endif
+
         y_array = [y,y2]
     END
     2:mouse_status_new = mouse_status
     3: mouse_status_new = mouse_status
     4: Begin
         RePlot1DDataFile, Event
+
+;check if y1 is not -1
         y1 = y_array[0]
-        plots, 0, y1, /device, color=color
-        plots, xsize_1d_draw, y1, /device, /continue, color=color
+        if (y1 NE -1) then begin
+            plots, 0, y1, /device, color=color
+            plots, xsize_1d_draw, y1, /device, /continue, color=color
+        endif
+
         y=event.y
         plots, 0, y, /device, color=color
         plots, xsize_1d_draw, y, /device, /continue, color=color
@@ -319,19 +402,32 @@ if (isPeakSelected) then begin  ;peak selection
 
     color = (*global).back_selection_color
     y_array = (*(*global).data_back_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
     
 endif else begin                ;background selection
     (*(*global).data_back_selection) = y_array
     color = (*global).peak_selection_color
     y_array = (*(*global).data_peak_selection)
-    plots, 0, y_array[0], /device, color=color
-    plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
-    plots, 0, y_array[1], /device, color=color
-    plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+
+    if (y_array[0] NE -1) then begin
+        plots, 0, y_array[0], /device, color=color
+        plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
+    endif
+
+    if (y_array[1] NE -1) then begin
+        plots, 0, y_array[1], /device, color=color
+        plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
+    endif
+
 endelse
 
 (*global).select_data_status = mouse_status_new

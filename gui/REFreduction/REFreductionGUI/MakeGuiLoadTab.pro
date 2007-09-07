@@ -4,8 +4,8 @@ PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [300,10,300,35]
-RunNumberCWFieldSize = [0,0]
+RunNumberBaseSize    = [230,10,250,35]
+RunNumberCWFieldSize = [10,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
 RunNumberTitles      =  ['DATA RUN NUMBER:',$
@@ -37,7 +37,7 @@ D_DD_TabTitle = [DTitle,$
 Nx = 256
 Ny = 304
 if (instrument EQ 'REF_L') then begin
-    xoff = 45
+    xoff = 49
     yoff = 0
     xsize = 2*Nx
     ysize = 2*Ny

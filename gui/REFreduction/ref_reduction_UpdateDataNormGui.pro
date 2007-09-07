@@ -3,7 +3,6 @@
 PRO updateDataWidget, Event, isNeXusFound
 if (isNeXusFound) then begin    ;NeXus has been found
     ActivateWidget, Event, 'data_ymin_label_frame', 1
-    ActivateWidget, Event, 'data_roi_save_button', 1
     ActivateWidget, Event, 'data_1d_selection', 1
     ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 1
     ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', 1
@@ -12,7 +11,6 @@ if (isNeXusFound) then begin    ;NeXus has been found
     ActivateWidget, Event, 'data_roi_load_button', 1 
 endif else begin                ;NeXus not found
     ActivateWidget, Event, 'data_ymin_label_frame', 0
-    ActivateWidget, Event, 'data_roi_save_button', 0
     ActivateWidget, Event, 'data_1d_selection', 0
     ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 0
     ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', 0
@@ -30,7 +28,6 @@ END
 PRO updateNormWidget, Event, isNeXusFound
 if (isNeXusFound) then begin    ;NeXus has been found
     ActivateWidget, Event, 'normalization_ymin_label_frame', 1
-    ActivateWidget, Event, 'normalization_roi_save_button', 1
     ActivateWidget, Event, 'normalization_1d_selection', 1
     ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 1
     ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 1
@@ -39,7 +36,6 @@ if (isNeXusFound) then begin    ;NeXus has been found
     ActivateWidget, Event, 'normalization_roi_load_button', 1 
 endif else begin                ;NeXus not found
     ActivateWidget, Event, 'normalization_ymin_label_frame', 0
-    ActivateWidget, Event, 'normalization_roi_save_button', 0
     ActivateWidget, Event, 'normalization_1d_selection', 0
     ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 0
     ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 0

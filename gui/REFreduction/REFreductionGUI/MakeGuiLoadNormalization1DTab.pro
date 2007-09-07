@@ -10,12 +10,12 @@ Norm1DSelectionBaseSize = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
 Norm1DSelectionSize     = [5, 5]
 
 NormYminLabelSize  = [390,5,100,25]
-NormYminLabelTitle = 'Border #1'
+NormYminLabelTitle = '  Ymin  '
 NormYmaxLabelSize  = [NormYminLabelSize[0]+113,$
                       5,$
                       NormYminLabelSize[2],$
                       NormYminLabelSize[3]]
-NormYmaxLabelTitle = 'Border #2'
+NormYmaxLabelTitle = '  Ymax  '
  
 d_L_B= 170
 BaseLengthYmin = 90
@@ -186,7 +186,8 @@ SaveButton = widget_button(Norm1DSelectionBase,$,$
                            scr_xsize=SaveButtonSize[2],$
                            scr_ysize=SaveButtonSize[3],$
                            value=SaveButtonTitle,$
-                           uname='normalization_roi_save_button')
+                           uname='normalization_roi_save_button',$
+                           sensitive=0)
                            
 LoadButton = widget_button(Norm1DSelectionBase,$,$
                            xoffset=LoadButtonSize[0],$
@@ -194,7 +195,8 @@ LoadButton = widget_button(Norm1DSelectionBase,$,$
                            scr_xsize=LoadButtonSize[2],$
                            scr_ysize=LoadButtonSize[3],$
                            value=LoadButtonTitle,$
-                           uname='normalization_roi_load_button')
+                           uname='normalization_roi_load_button',$
+                           sensitive=0)
                            
 NormBackgroundSelectionFileLabel = $
   widget_label(Norm1DSelectionBase,$
