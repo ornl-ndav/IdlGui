@@ -3,18 +3,26 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, D_DD_TabSize, D_DD_TabTitle, GlobalLoadGraph
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
+;define two tabs (Back/Signal Selection and Rescale)
+BackPeakRescaleTabSize = [4,610,D_DD_TabSize[2]-20,D_DD_TabSize[3]-640]
+BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
+                          BackPeakRescaleTabSize[3]]
+BackPeakBaseTitle      = '  Background and Peak Selection  '
+RescaleBaseSize        = BackPeakBaseSize
+RescaleBaseTitle       = '  Rescale  '
+
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList = ['Select Background   ',$
-                       'Select Peak   ',$
-                       'ZOOM mode  ']
-Data1DSelectionBaseSize            = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
-Data1DSelectionSize                = [5, 5]
+Data1DSelectionList    = ['Select Background   ',$
+                          'Select Peak   ',$
+                          'ZOOM mode  ']
+Data1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
+Data1DSelectionSize     = [5, 0]
 
 ;Y_min and Y_max labels
-dataYminLabelSize  = [390,5,100,25]
+dataYminLabelSize  = [385,0,100,25]
 dataYminLabelTitle = '  Ymin  '
-dataYmaxLabelSize  = [dataYminLabelSize[0]+113,$
-                      5,$
+dataYmaxLabelSize  = [dataYminLabelSize[0]+109,$
+                      0,$
                       dataYminLabelSize[2],$
                       dataYminLabelSize[3]]
 dataYmaxLabelTitle = '  Ymax  '
@@ -25,24 +33,24 @@ BaseLengthYmax = 120
 BaseHeight = 35
 ;Background Ymin and Ymax bases and cw_fields
 ;Ymin base and cw_field
-Data1DSelectionBackgroundLabelSize  = [3,45]
-Data1DSelectionBackgroundLabelTitle = 'Background Range ......... ' 
+Data1DSelectionBackgroundLabelSize    = [3,40]
+Data1DSelectionBackgroundLabelTitle   = 'Background Range ......... ' 
 Data1DSelectionBackgroundYminBaseSize = [Data1DSelectionBackgroundLabelSize[0]+d_L_B,$
                                          Data1DSelectionBackgroundLabelSize[1]-7,$
                                          BaseLengthYmin,BaseHeight]
-Data1DSelectionBackgroundYminCWFieldSize = [5,30]
+Data1DSelectionBackgroundYminCWFieldSize  = [5,25]
 Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 ;Ymax base and cw_field
 Data1DSelectionBackgroundYmaxBaseSize = [Data1DSelectionBackgroundYminBaseSize[0]+$
                                          Data1DSelectionBackgroundYminBasesize[2],$
                                          Data1DSelectionBackgroundYminBaseSize[1],$
                                          BaseLengthYmax,BaseHeight]
-Data1DSelectionBackgroundYmaxCWFieldSize = Data1DSelectionBackgroundYminCWFieldSize
+Data1DSelectionBackgroundYmaxCWFieldSize  = Data1DSelectionBackgroundYminCWFieldSize
 Data1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 
 ;SAVE and LOAD buttons
-SaveLoadButtonSize = [113,30]
-SaveButtonSize      = [384,Data1DselectionBackgroundYmaxBaseSize[1]+3,$
+SaveLoadButtonSize  = [110,30]
+SaveButtonSize      = [381,Data1DselectionBackgroundYmaxBaseSize[1]+3,$
                        SaveLoadButtonSize[0],$
                        SaveLoadButtonSize[1]]
 SaveButtonTitle     = 'S A V E'  
@@ -52,30 +60,32 @@ LoadButtonSize      = [SaveButtonSize[0]+SaveLoadButtonSize[0],$
                        SaveLoadButtonSize[1]]
 LoadButtonTitle     = 'L O A D'
 
-d_vertical_L_L = 77
-DataBackgroundSelectionFileLabelSize = [3,Data1DSelectionBackgroundLabelSize[0]+$
+;Background ROI file
+d_vertical_L_L = 70
+DataBackgroundSelectionFileLabelSize  = [3,Data1DSelectionBackgroundLabelSize[0]+$
                                         d_vertical_L_L]
 DataBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
 d_L_B_2 = 170
 DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
                                             DataBackgroundSelectionFileLabelSize[1]-4,$
-                                            440,30]
+                                            432,30]
 
 ;Peak Ymin and Ymax bases and cw_fields
-d_vertical_L_L = 70
+d_vertical_L_L = 60
 Data1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
 Data1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
 Data1DSelectionPeakYminBaseSize = [Data1DSelectionPeakLabelSize[0]+d_L_B,$
                                    Data1DSelectionPeakLabelSize[1]-7,$
                                    BaseLengthYmin,BaseHeight]
-Data1DSelectionPeakYminCWFieldSize = Data1DSelectionBackgroundYmaxCWFieldSize
+Data1DSelectionPeakYminCWFieldSize  = Data1DSelectionBackgroundYmaxCWFieldSize
 Data1DSelectionPeakYminCWFieldTitle = 'Ymin:'
+
 ;Ymax base and cw_field
 Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
                                    Data1DSelectionPeakYminBasesize[2],$
                                    Data1DSelectionPeakYminBaseSize[1],$
                                    BaseLengthYmax,BaseHeight]
-Data1DSelectionPeakYmaxCWFieldSize = Data1DSelectionPeakYminCWFieldSize
+Data1DSelectionPeakYmaxCWFieldSize  = Data1DSelectionPeakYminCWFieldSize
 Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 
 
@@ -100,8 +110,25 @@ load_data_D_draw = widget_draw(load_data_D_tab_base,$
                                /button_events,$
                                /motion_events)
 
+;create the back/peak and rescale tab
+BackPeakRescaleTab = widget_tab(load_data_D_tab_base,$
+                                uname='data_back_peak_rescale_tab',$
+                                xoffset=BackPeakRescaleTabSize[0],$
+                                yoffset=BackPeakRescaleTabSize[1],$
+                                scr_xsize=BackPeakRescaleTabSize[2],$
+                                scr_ysize=BackPeakRescaleTabSize[3],$
+                                location=0)
+
+BackPeakBase = widget_base(BackPeakRescaleTab,$
+                           uname='data_back_peak_base',$
+                           xoffset=BackPeakBaseSize[0],$
+                           yoffset=BackPeakBaseSize[1],$
+                           scr_xsize=BackPeakBaseSize[2],$
+                           scr_ysize=BackPeakBaseSize[3],$
+                           title=BackPeakBaseTitle)
+
 ;create the widgets for the selection
-Data1DselectionBase = widget_base(load_data_D_tab_base,$
+Data1DselectionBase = widget_base(BackPeakBase,$
                                   uname='data_1d_selection_base',$
                                   xoffset=Data1DSelectionBaseSize[0],$
                                   yoffset=Data1DSelectionBaseSize[1],$
@@ -260,6 +287,15 @@ Data1DSelectionPeakYmaxCWField = $
            title=Data1DSelectionPeakYmaxCWFieldTitle,$
            uname='data_d_selection_peak_ymax_cw_field')
 
+
+;Tab #1 (rescale base)
+RescaleBase = widget_base(BackPeakRescaleTab,$
+                          uname='data_rescale_base',$
+                          xoffset=RescaleBaseSize[0],$
+                          yoffset=RescaleBaseSize[1],$
+                          scr_xsize=RescaleBaseSize[2],$
+                          scr_ysize=RescaleBaseSize[3],$
+                          title=RescaleBaseTitle)
 
 END
 

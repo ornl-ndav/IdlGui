@@ -3,17 +3,24 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, D_DD_TabSize, D_DD_TabTitle, Global
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
+BackPeakRescaleTabSize = [4,610,D_DD_TabSize[2]-20,D_DD_TabSize[3]-640]
+BackPeakBaseSize = [0,0,BackPeakRescaleTabSize[2],$
+                    BackPeakRescaleTabSize[3]]
+BackPeakBaseTitle = '  Background and Peak Selection  '
+RescaleBaseSize = BackPeakBaseSize
+RescaleBaseTitle = '  Rescale  '
+
 ;cw_bgroup of selection (back or signal)
 Norm1DSelectionList = ['Select Background   ',$
                        'Select Peak   ',$
                        'ZOOM mode  ']
-Norm1DSelectionBaseSize = [0,605, D_DD_TabSize[2], D_DD_TabSize[3]]
-Norm1DSelectionSize     = [5, 5]
+Norm1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
+Norm1DSelectionSize     = [5, 0]
 
-NormYminLabelSize  = [390,5,100,25]
+NormYminLabelSize  = [385,0,100,25]
 NormYminLabelTitle = '  Ymin  '
-NormYmaxLabelSize  = [NormYminLabelSize[0]+113,$
-                      5,$
+NormYmaxLabelSize  = [NormYminLabelSize[0]+109,$
+                      0,$
                       NormYminLabelSize[2],$
                       NormYminLabelSize[3]]
 NormYmaxLabelTitle = '  Ymax  '
@@ -24,12 +31,12 @@ BaseLengthYmax = 120
 BaseHeight = 35
 ;Background Ymin and Ymax bases and cw_fields
 ;Ymin base and cw_field
-Norm1DSelectionBackgroundLabelSize    = [3,45]
+Norm1DSelectionBackgroundLabelSize    = [3,40]
 Norm1DSelectionBackgroundLabelTitle   = 'Background Range ......... ' 
 Norm1DSelectionBackgroundYminBaseSize = [Norm1DSelectionBackgroundLabelSize[0]+d_L_B,$
                                          Norm1DSelectionBackgroundLabelSize[1]-7,$
                                          BaseLengthYmin,BaseHeight]
-Norm1DSelectionBackgroundYminCWFieldSize  = [5,30]
+Norm1DSelectionBackgroundYminCWFieldSize  = [5,25]
 Norm1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 ;Ymax base and cw_field
 Norm1DSelectionBackgroundYmaxBaseSize     = [Norm1DSelectionBackgroundYminBaseSize[0]+$
@@ -40,8 +47,8 @@ Norm1DSelectionBackgroundYmaxCWFieldSize  = Norm1DSelectionBackgroundYminCWField
 Norm1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 
 ;SAVE and LOAD buttons
-SaveLoadButtonSize = [113,30]
-SaveButtonSize      = [384,Norm1DselectionBackgroundYmaxBaseSize[1]+3,$
+SaveLoadButtonSize = [110,30]
+SaveButtonSize      = [381,Norm1DselectionBackgroundYmaxBaseSize[1]+3,$
                        SaveLoadButtonSize[0],$
                        SaveLoadButtonSize[1]]
 SaveButtonTitle     = 'S A V E'  
@@ -51,17 +58,18 @@ LoadButtonSize      = [SaveButtonSize[0]+SaveLoadButtonSize[0],$
                        SaveLoadButtonSize[1]]
 LoadButtonTitle     = 'L O A D'
 
-d_vertical_L_L = 77
+;Background ROI file
+d_vertical_L_L = 70
 NormBackgroundSelectionFileLabelSize = [3,Norm1DSelectionBackgroundLabelSize[0]+$
                                         d_vertical_L_L]
 NormBackgroundSelectionFileLabelTitle = 'Background ROI file ......'
 d_L_B_2 = 170
 NormBackgroundSelectionFileTextFieldSize = [NormBackgroundSelectionFileLabelSize[0]+d_L_B_2,$
                                             NormBackgroundSelectionFileLabelSize[1]-4,$
-                                            440,30]
+                                            432,30]
                                     
 ;Peak Ymin and Ymax bases and cw_fields
-d_vertical_L_L = 70
+d_vertical_L_L = 60
 Norm1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
 Norm1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
 Norm1DSelectionPeakYminBaseSize = [Norm1DSelectionPeakLabelSize[0]+d_L_B,$
@@ -99,9 +107,25 @@ load_normalization_D_draw = widget_draw(load_normalization_D_tab_base,$
                                         /button_events,$
                                         /motion_events)
 
+;create the back/peak and rescale tab
+BackPeakRescaleTab = widget_tab(load_normalization_D_tab_base,$
+                                uname='norm_back_peak_rescale_tab',$
+                                xoffset=BackPeakRescaleTabSize[0],$
+                                yoffset=BackPeakRescaleTabSize[1],$
+                                scr_xsize=BackPeakRescaleTabSize[2],$
+                                scr_ysize=BackPeakRescaleTabSize[3],$
+                                location=0)
+
+BackPeakBase = widget_base(BackPeakRescaleTab,$
+                           uname='norm_back_peak_base',$
+                           xoffset=BackPeakBaseSize[0],$
+                           yoffset=BackPeakBaseSize[1],$
+                           scr_xsize=BackPeakBaseSize[2],$
+                           scr_ysize=BackPeakBaseSize[3],$
+                           title=BackPeakBaseTitle)
 
 ;create the widgets for the selection
-Norm1DselectionBase = widget_base(load_normalization_D_tab_base,$
+Norm1DselectionBase = widget_base(BackPeakBase,$
                                   uname='normalization_1d_selection_base',$
                                   xoffset=Norm1DSelectionBaseSize[0],$
                                   yoffset=Norm1DSelectionBaseSize[1],$
@@ -258,5 +282,16 @@ Norm1DSelectionPeakYmaxCWField = $
            return_events=1,$
            title=Norm1DSelectionPeakYmaxCWFieldTitle,$
            uname='normalization_d_selection_peak_ymax_cw_field')
+
+
+;Tab #1 (rescale base)
+RescaleBase = widget_base(BackPeakRescaleTab,$
+                          uname='norm_rescale_base',$
+                          xoffset=RescaleBaseSize[0],$
+                          yoffset=RescaleBaseSize[1],$
+                          scr_xsize=RescaleBaseSize[2],$
+                          scr_ysize=RescaleBaseSize[3],$
+                          title=RescaleBaseTitle)
+
 
 END
