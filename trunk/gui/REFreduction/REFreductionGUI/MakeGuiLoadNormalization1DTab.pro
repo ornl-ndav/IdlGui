@@ -213,7 +213,8 @@ NormBackgroundSelectionFileTextField = $
               scr_ysize=NormBackgroundSelectionFileTextFieldSize[3],$
               uname='normalization_background_selection_file_text_field',$
               /align_left,$
-              /editable)
+              /editable,$
+              sensitive=0)
 
 ;Peak exclusion
 norm_1d_selection_peak_label = $

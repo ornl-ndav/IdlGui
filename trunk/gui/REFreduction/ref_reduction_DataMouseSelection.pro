@@ -6,7 +6,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;signal, peak or zoom selection
-BackSignalZoomStatus = isBackPeakZoomSelected(Event)
+BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF
     0: begin ;back
         color = (*global).back_selection_color
@@ -161,7 +161,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;signal, peak or zoom selection
-BackSignalZoomStatus = isBackPeakZoomSelected(Event)
+BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF
     0: begin ;back
         color = (*global).back_selection_color
@@ -249,7 +249,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;signal, peak or zoom selection
-BackSignalZoomStatus = isBackPeakZoomSelected(Event)
+BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF
     0: begin ;back
         color = (*global).back_selection_color
@@ -400,7 +400,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;signal, peak or zoom selection
-BackSignalZoomStatus = isBackPeakZoomSelected(Event)
+BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF
     0: begin ;back
         color = (*global).back_selection_color

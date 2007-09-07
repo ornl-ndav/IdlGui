@@ -241,6 +241,7 @@ CASE (BackSelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'data_background_selection_file_text_field', ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).data_peak_selection)
@@ -337,6 +338,7 @@ CASE (BackSelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'normalization_roi_save_button', ValidateSaveButton
+ActivateWidget, Event, 'normalization_background_selection_file_text_field', ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).norm_peak_selection)
