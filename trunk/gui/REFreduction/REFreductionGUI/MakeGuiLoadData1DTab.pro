@@ -11,12 +11,12 @@ Data1DSelectionSize                = [5, 5]
 
 ;Y_min and Y_max labels
 dataYminLabelSize  = [390,5,100,25]
-dataYminLabelTitle = 'Border #1'
+dataYminLabelTitle = '  Ymin  '
 dataYmaxLabelSize  = [dataYminLabelSize[0]+113,$
                       5,$
                       dataYminLabelSize[2],$
                       dataYminLabelSize[3]]
-dataYmaxLabelTitle = 'Border #2'
+dataYmaxLabelTitle = '  Ymax  '
  
 d_L_B= 170
 BaseLengthYmin = 90

@@ -198,23 +198,87 @@ PRO putDataBackgroundPeakYMinMaxValueInTextFields, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+xsize_1d_draw = (*global).xsize_1d_draw
+
 ;get Background Ymin, Ymax
 BackSelection = (*(*global).data_back_selection)
-Ymin = Min(BackSelection,max=Ymax)
-(*(*global).data_back_selection) = [Ymin,Ymax]
-if (Ymin LT 0) then Ymin = 0
-if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
-putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
-putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+
+ValidateSaveButton = 0
+;check all cases -1,-1 -1,value value,-1 and value,value
+CASE (BackSelection[0]) OF
+    -1:begin
+        case (BackSelection[1]) OF
+            -1: ;do nothing
+            else:begin
+                Ymax = BackSelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+    else:begin
+        case (BackSelection[1]) OF
+            -1: begin
+                Ymin = BackSelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
+            end
+            else:begin
+                Ymin = Min(BackSelection,max=Ymax)
+                (*(*global).data_back_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+                ValidateSaveButton = 1 ;enable SAVE button
+            end
+        endcase
+    end
+endcase
+
+ActivateWidget, Event, 'data_roi_save_button', ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).data_peak_selection)
-Ymin = Min(PeakSelection,max=Ymax)
-if (Ymin LT 0) then Ymin = 0
-if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
-(*(*global).data_peak_selection) = [Ymin,Ymax]
-putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
-putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+
+;check all cases -1,-1 -1,value value,-1 and value,value
+CASE (PeakSelection[0]) OF
+    -1:begin
+        case (PeakSelection[1]) OF
+            -1: ;do nothing
+            else: begin
+                Ymax = PeakSelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+    else: begin
+        case (PeakSelection[1]) OF
+            -1: begin
+                Ymin = PeakSelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+            end
+            else: begin
+                Ymin = Min(PeakSelection,max=Ymax)
+                (*(*global).data_peak_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+endcase
 
 END
 
@@ -224,26 +288,91 @@ END
 PRO putNormBackgroundPeakYMinMaxValueInTextFields, Event
 
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE') 
 widget_control,id,get_uvalue=global
+
+xsize_1d_draw = (*global).xsize_1d_draw
 
 ;get Background Ymin, Ymax
 BackSelection = (*(*global).norm_back_selection)
-Ymin = Min(BackSelection,max=Ymax)
-(*(*global).norm_back_selection) = [Ymin,Ymax]
-if (Ymin LT 0) then Ymin = 0
-if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
-putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
-putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+
+ValidateSaveButton = 0
+;check all cases -1,-1 -1,value value,-1 and value,value
+CASE (BackSelection[0]) OF
+    -1:begin
+        case (BackSelection[1]) OF
+            -1: ;do nothing
+            else:begin
+                Ymax = BackSelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+    else:begin
+        case (BackSelection[1]) OF
+            -1: begin
+                Ymin = BackSelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
+            end
+            else:begin
+                Ymin = Min(BackSelection,max=Ymax)
+                (*(*global).norm_back_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+                ValidateSaveButton = 1 ;enable SAVE button
+            end
+        endcase
+    end
+endcase
+
+ActivateWidget, Event, 'normalization_roi_save_button', ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).norm_peak_selection)
-Ymin = Min(PeakSelection,max=Ymax)
-if (Ymin LT 0) then Ymin = 0
-if (Ymax GT (*global).xsize_1d_draw) then Ymax = ((*global).xsize_1d_draw)-1
-(*(*global).data_peak_selection) = [Ymin,Ymax]
-putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
-putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
+
+;check all cases -1,-1 -1,value value,-1 and value,value
+CASE (PeakSelection[0]) OF
+    -1:begin
+        case (PeakSelection[1]) OF
+            -1: ;do nothing
+            else: begin
+                Ymax = PeakSelection[1]
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+    else: begin
+        case (PeakSelection[1]) OF
+            -1: begin
+                Ymin = PeakSelection[0]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
+            end
+            else: begin
+                Ymin = Min(PeakSelection,max=Ymax)
+                (*(*global).norm_peak_selection) = [Ymin,Ymax]
+                if (Ymin LT 1) then Ymin = 0
+                if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
+                if (Ymax LT 1) then Ymax = 0
+                if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
+                putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
+            end
+        endcase
+    end
+endcase
+
 END
 
 
@@ -256,3 +385,10 @@ putTextFieldValue, $
   append
 END
 
+
+
+;Put array in droplist specified
+PRO putArrayInDropList, Event, arrayString, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=arrayString
+END

@@ -13,8 +13,12 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  NxsummaryZoomTabSize,$
                                  NxsummaryZoomTitle,$
                                  ZoomScaleBaseSize,$
-                                 ZoomScaleTitle
- 
+                                 ZoomScaleTitle,$
+                                 ArchivedOrAllCWBgroupList,$
+                                 ArchivedOrAllCWBgroupSize,$
+                                 NexusListSizeGlobal,$
+                                 NexusListLabelGlobal
+
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LoadNormalizationTabSize = [0,0,$
@@ -42,10 +46,71 @@ Load_data_run_number_text_field = CW_FIELD(load_normalization_run_number_base,$
                                            row=1,$
                                            xsize=GlobalRunNumber[4],$
                                            ysize=GlobalRunNumber[5],$
-                                           /integer,$
+                                           /long,$
                                            return_events=1,$
                                            title=RunNumberTitles[1],$
                                            uname='load_normalization_run_number_text_field')
+
+
+;Archived or All NeXus list
+NormArchivedOrAllCWBgroup = cw_bgroup(LOAD_NORMALIZATION_BASE,$
+                                      ArchivedOrAllCWBgroupList,$
+                                      uname='normalization_archived_or_full_cwbgroup',$
+                                      xoffset=ArchivedOrAllCWBgroupSize[0],$
+                                      yoffset=ArchivedOrAllCWBgroupSize[1],$
+                                      /exclusive,$
+                                      row=1,$
+                                      set_value=0)
+
+;Nexus list base/label/droplist and buttons
+NormListNexusBase = widget_base(LOAD_normalization_BaSE,$
+                                uname='Norm_list_nexus_base',$
+                                xoffset=NexusListSizeGlobal[0],$
+                                yoffset=NexusListSizeGlobal[1],$
+                                scr_xsize=NexusListSizeGlobal[2],$
+                                scr_ysize=NexusListSizeGlobal[3],$
+                                frame=2,$
+                                map=0)
+
+NormListNexusLabel = widget_label(NormListNexusBase,$
+                                  xoffset=NexusListSizeGlobal[4],$
+                                  yoffset=NexusListSizeGlobal[5],$
+                                  scr_xsize=NexusListSizeGlobal[6],$
+                                  scr_ysize=NexusListSizeGlobal[7],$
+                                  value=NexusListLabelGlobal[0],$
+                                  frame=1)
+
+DropListvalue = ['                                                                        ']
+NormListDropList = widget_droplist(NormListNexusBase,$
+                                   xoffset=NexusListSizeGlobal[8],$
+                                   yoffset=NexusListSizeGlobal[9],$
+                                   value=DropListValue)
+                                   
+NormListNexusNXsummary = widget_text(NormListNexusBase,$
+                                     xoffset=NexusListSizeGlobal[10],$
+                                     yoffset=NexusListSizeGlobal[11],$
+                                     scr_xsize=NexusListSizeGlobal[12],$
+                                     scr_ysize=NexusListSizeGlobal[13],$
+                                     /wrap,$
+                                     /scroll,$
+                                     uname='norm_list_nexus_nxsummary_text_field')
+  
+NormListNexusLoadButton = widget_button(NormListNexusBase,$
+                                        uname='norm_list_nexus_load_button',$
+                                        xoffset=NexusListSizeGlobal[14],$
+                                        yoffset=NexusListSizeGlobal[15],$
+                                        scr_xsize=NexusListSizeGlobal[16],$
+                                        scr_ysize=NexusListSizeGlobal[17],$
+                                        value=NexusListLabelGlobal[1])
+                                        
+NormListNexusCancelButton = widget_button(NormListNexusBase,$
+                                          uname='Norm_list_nexus_cancel_button',$
+                                          xoffset=NexusListSizeGlobal[18],$
+                                          yoffset=NexusListSizeGlobal[19],$
+                                          scr_xsize=NexusListSizeGlobal[20],$
+                                          scr_ysize=NexusListSizeGlobal[21],$
+                                          value=NexusListLabelGlobal[2])
+
 
 ;Build 1D and 2D tabs
 MakeGuiLoadNormalization1D2DTab,$

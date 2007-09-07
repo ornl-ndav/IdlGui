@@ -172,10 +172,10 @@ full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
 full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*global).full_norm_tmp_dat_file = full_norm_tmp_dat_file
-(*(*global).data_back_selection) = [0,2*303]
-(*(*global).data_peak_selection) = [0,2*303]
-(*(*global).norm_back_selection) = [0,2*303]
-(*(*global).norm_peak_selection) = [0,2*303]
+(*(*global).data_back_selection) = [-1,-1]
+(*(*global).data_peak_selection) = [-1,-1]
+(*(*global).norm_back_selection) = [-1,-1]
+(*(*global).norm_peak_selection) = [-1,-1]
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Data Combined Background TOF Plot',$

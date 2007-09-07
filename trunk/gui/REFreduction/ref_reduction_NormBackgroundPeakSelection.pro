@@ -6,23 +6,30 @@ PRO ReplotNormBackPeakSelection, Event, BackArray, PeakArray
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;clear full window_draw
+id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
+
 RePlot1DNormFile, Event
 
+xsize_1d_draw = (*global).Ntof_NORM-1
 ;back
 color = (*global).back_selection_color
 y_array = (*(*global).Norm_back_selection)
 plots, 0, y_array[0], /device, color=color
-plots, (*global).xsize_1d_draw, y_array[0], /device, /continue, color=color
+plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
 plots, 0, y_array[1], /device, color=color
-plots, (*global).xsize_1d_draw, y_array[1], /device, /continue, color=color
+plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
 
 ;peak
 color = (*global).peak_selection_color
 y_array = (*(*global).Norm_peak_selection)
 plots, 0, y_array[0], /device, color=color
-plots, (*global).xsize_1d_draw, y_array[0], /device, /continue, color=color
+plots, xsize_1d_draw, y_array[0], /device, /continue, color=color
 plots, 0, y_array[1], /device, color=color
-plots, (*global).xsize_1d_draw, y_array[1], /device, /continue, color=color
+plots, xsize_1d_draw, y_array[1], /device, /continue, color=color
     
 END
 
