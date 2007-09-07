@@ -133,10 +133,16 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;get path to nexus run #
         instrument=(*global).instrument ;retrieve name of instrument
         isNeXusFound = 0        ;by default, NeXus not found
-        full_nexus_name = find_full_nexus_name(Event,$
-                                               DataRunNumber,$
-                                               instrument,$
-                                               isNeXusFound)
+
+        if (!VERSION.os EQ 'darwin') then begin
+           full_nexus_name = (*global).MacNexusFile
+           isNexusFound = 1
+        endif else begin
+           full_nexus_name = find_full_nexus_name(Event,$
+                                                  DataRunNumber,$
+                                                  instrument,$
+                                                  isNeXusFound)
+        endelse
         (*global).DataNeXusFound = isNeXusFound
         
         if (~isNeXusFound) then begin ;NeXus has not been found
@@ -227,9 +233,5 @@ REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
   instrument, $
   working_path, $
   DataRunNumber
-
-;populate Background and Peak Ymin and Ymax cw_fields
-;putDataBackgroundPeakYMinMaxValueInTextFields, Event
-
 
 END
