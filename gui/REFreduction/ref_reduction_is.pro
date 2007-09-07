@@ -5,6 +5,14 @@ return, isPeakSelected
 END
 
 
+Function isBackPeakZoomSelected, Event
+id = widget_info(Event.top,find_by_uname='data_1d_selection')
+widget_control, id, get_value=SelectionStatus
+return, selectionStatus
+END
+
+
+
 Function isDataWithBackground, Event
 id = widget_info(Event.top,find_by_uname='data_background_cw_bgroup')
 widget_control, id, get_value=isWithBackground

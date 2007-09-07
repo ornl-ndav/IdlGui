@@ -21,3 +21,8 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=text
 END
 
+
+PRO SetTabCurrent, Event, uname, TabIndex
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_tab_current=TabIndex
+END
