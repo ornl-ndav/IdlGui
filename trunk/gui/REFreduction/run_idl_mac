@@ -28,6 +28,8 @@ cd, "~/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiReduceInfo.pro
 
 .run MakeGuiPlotsTab.pro
+.run MakeGuiPlotsMainIntermediatesBases.pro
+
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
 	
@@ -36,6 +38,7 @@ cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_get.pro
 .run ref_reduction_put.pro
 .run ref_reduction_is.pro
+.run ref_reduction_time.pro
 
 .run ref_reduction_DumpBinary.pro
 .run ref_reduction_LoadDataFile.pro
@@ -47,6 +50,7 @@ cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_Plot1D2DNormalizationFile.pro
 .run ref_reduction_Plot2DNormalizationFile.pro
 .run ref_reduction_Plot1DNormalizationFile.pro
+.run ref_reduction_Zoom.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
@@ -55,11 +59,24 @@ cd, "~/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_CreateBackgroundROIFile.pro
 .run ref_reduction_CreateBackgroundROIFileName.pro
 .run ref_reduction_DisplayPreviewOfRoiFile.pro
+.run ref_reduction_LoadBackgroundSelection.pro
 
 .run ref_reduction_GUIinteraction.pro
 .run ref_reduction_UpdateDataNormGui.pro
 .run ref_reduction_UpdateReduceTabGui.pro
+.run ref_reduction_UpdatePlotsTabGui.pro
+.run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
+.run ref_reduction_RunCommandLine.pro
+.run ref_reduction_LoadMainOutputFile.pro
+.run ref_reduction_LoadXmlOutputFile.pro
+.run ref_reduction_LoadIntermediateFiles.pro
+.run ref_reduction_PlotOutputFiles.pro
+.run ref_reduction_DisplayMetadataFile.pro
+.run ref_reduction_SaveFileInfo.pro
+.run ref_reduction_OverwriteInstrumentGeometry.pro
+
+.run ref_reduction_LogBookInterface.pro
 
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro

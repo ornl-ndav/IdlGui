@@ -69,7 +69,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    Nx_REF_L : 256L,$ 
 ;Nx for REF_L instrument
                    Ny_REF_L : 304L,$ 
-;Ny for REF_L instrument
+nx;Ny for REF_L instrument
                    Nx_REF_M : 304L,$ 
 ;Nx for REF_M instrument
                    Ny_REF_M : 256L,$ 
@@ -156,8 +156,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;last x position of cursor in norm. 1d draw for zoom                     
                    NormY : 0L,$
 ;last x position of cursor in norm 1d draw for zoom                     
-                   LogBookPath : '/SNS/users/j35/IDL_LogBook/'$
+                   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$
 ;path where to put the log book
+                   MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs'$
+;full path to NeXus file on the mac
                   })
 
 ;------------------------------------------------------------------------

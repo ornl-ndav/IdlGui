@@ -63,8 +63,10 @@ cmd_dump_text = cmd_dump + '........' + PROCESSING
 cmd_dump_text = '        > ' + cmd_dump_text
 putLogBookMessage, Event, cmd_dump_text, Append=1
 
-;run command
-spawn, cmd_dump, listening
+if (!VERSION.os NE 'darwin') then begin
+   ;run command
+   spawn, cmd_dump, listening
+endif
 
 ;tells user that dump is done
 LogBookText = getLogBookText(Event)
