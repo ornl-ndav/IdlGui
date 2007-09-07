@@ -306,7 +306,10 @@ CASE (BackSelection[0]) OF
                 Ymax = BackSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+                putCWFieldValue, $
+                  event, $
+                  'normalization_d_selection_background_ymax_cw_field', $
+                  Ymax/2
             end
         endcase
     end
