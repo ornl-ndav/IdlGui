@@ -158,8 +158,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;last x position of cursor in norm 1d draw for zoom                     
                    LogBookPath : '/SNS/users/j35/IDL_LogBook/',$
 ;path where to put the log book
-                   MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs'$
+                   MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
 ;full path to NeXus file on the mac
+                   MacNXsummary : '~/local/nxsummary_4146.txt'$
+;full path to NXsummary file that will be read on Mac (instead of using NXsummary)
                   })
 
 ;------------------------------------------------------------------------

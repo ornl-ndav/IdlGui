@@ -87,6 +87,10 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
 ;rebin data to fill up all graph
 new_Ntof = (*global).Ntof_DATA
 new_N = 2 * N
