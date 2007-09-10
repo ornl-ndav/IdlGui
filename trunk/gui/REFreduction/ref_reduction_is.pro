@@ -123,7 +123,7 @@ return, sensitiveStatus
 END
 
 
-Function isArchivedNexusDesired, Event
+Function isArchivedDataNexusDesired, Event
 id = widget_info(Event.top,find_by_uname='data_archived_or_full_cwbgroup')
 widget_control,id,get_value=status
 if (status EQ 0) then begin
@@ -133,3 +133,13 @@ endif else begin
 endelse
 END
 
+
+Function isArchivedNormNexusDesired, Event
+id = widget_info(Event.top,find_by_uname='normalization_archived_or_full_cwbgroup')
+widget_control,id,get_value=status
+if (status EQ 0) then begin
+    return, 1
+endif else begin
+    return, 0
+endelse
+END

@@ -82,6 +82,7 @@ NormListNexusLabel = widget_label(NormListNexusBase,$
 
 DropListvalue = ['                                                                        ']
 NormListDropList = widget_droplist(NormListNexusBase,$
+                                   uname='normalization_list_nexus_droplist',$
                                    xoffset=NexusListSizeGlobal[8],$
                                    yoffset=NexusListSizeGlobal[9],$
                                    value=DropListValue)

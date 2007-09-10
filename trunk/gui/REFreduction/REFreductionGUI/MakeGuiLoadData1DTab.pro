@@ -88,6 +88,10 @@ Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
 Data1DSelectionPeakYmaxCWFieldSize  = Data1DSelectionPeakYminCWFieldSize
 Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 
+;TAB #2 (resale and contrast)
+ContrastButtonSize  = [0,0,130,30]
+ContrastButtonTitle = ' Contrast Editor ' 
+
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -296,6 +300,15 @@ RescaleBase = widget_base(BackPeakRescaleTab,$
                           scr_xsize=RescaleBaseSize[2],$
                           scr_ysize=RescaleBaseSize[3],$
                           title=RescaleBaseTitle)
+
+ContrastButton = widget_button(RescaleBase,$
+                               xoffset=ContrastButtonSize[0],$
+                               yoffset=ContrastButtonSize[1],$
+                               scr_xsize=ContrastButtonSize[2],$
+                               scr_ysize=ContrastButtonSize[3],$
+                               value=ContrastButtonTitle,$
+                               sensitive=1,$
+                               uname='data_contrast_button')
 
 END
 

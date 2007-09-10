@@ -15,7 +15,7 @@ DataRunNumber = strcompress(DataRunNumber)
 if (DataRunNumber NE '') then begin ;data run number is not empty
     
 ;check if user wants archived or all nexus runs
-    if (~isArchivedNexusDesired(Event)) then begin ;get full list of Nexus with this run number
+    if (~isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus
         
         LogBookText = '-> Retrieving full list of DATA Run Number: ' + DataRunNumber
         text = getLogBookText(Event)

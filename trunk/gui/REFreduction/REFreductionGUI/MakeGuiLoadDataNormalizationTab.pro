@@ -47,6 +47,7 @@ NexusListLabelGlobal = [NexusListLabelTitle,$
                         NexusListLoadButtonTitle,$
                         NexusListCancelButtonTitle]
 
+
 ;build widgets
 DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
                                   UNAME='data_normalization_tab',$
