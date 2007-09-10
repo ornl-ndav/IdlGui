@@ -1,6 +1,6 @@
 ;this function load the given nexus file and dump the binary file
 ;in the tmp norm file
-PRO REFreduction_LoadNormalizationfile, Event, isNexusFound
+PRO REFreduction_LoadNormalizationfile, Event, isNexusFound, NbrNexus
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -78,7 +78,7 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                   'normalization_list_nexus_droplist'
                 
 ;map base
-                MapBase, Event, 'normalization_list_nexus_base', 1
+                MapBase, Event, 'norm_list_nexus_base', 1
 
 ;display info in log book
                 LogBookText = getLogBookText(Event)        
@@ -91,7 +91,10 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                     text = '       ' + full_list_of_nexus_name[i]
                     putLogBookMessage, Event,text,Append=1
                 endfor
-
+                LogText = '----> Selecting one NeXus file from the list ..... ' $
+                  + PROCESSING
+                putLogBookMessage, Event, LogText, Append=1
+                
 ;display info in normalization log book
                 NormalizationLogBookText = getNormalizationLogBookText(Event)
                 putTextAtEndOfNormalizationLogBookLastLine,$
@@ -103,6 +106,13 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                 text += ' NeXus file found .....'
                 putNormalizationLogBookMessage, Event, text, Append=1
                                 
+;display nxsummary of first file in 'data_list_nexus_base'
+                RefReduction_NXsummary, $
+                  Event, $
+                  full_list_of_nexus_name[0], $
+                  'normalization_list_nexus_nxsummary_text_field'
+
+
             endif else begin    ;proceed as before
 
                 OpenNormNexusFile, Event, NormalizationRunNumber, full_list_of_nexus_name

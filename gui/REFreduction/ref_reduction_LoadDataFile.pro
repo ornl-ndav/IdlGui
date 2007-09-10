@@ -70,6 +70,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
             sz = (size(full_list_of_nexus_name))(1)
             NbrNexus = sz
             if (sz GT 1) then begin
+
 ;display list in droplist and map=1 base
                 putArrayInDropList, $
                   Event, $
@@ -90,6 +91,9 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                     text = '       ' + full_list_of_nexus_name[i]
                     putLogBookMessage, Event,text,Append=1
                 endfor
+                LogText = '----> Selecting one NeXus file from the list ..... ' $
+                  + PROCESSING
+                putLogBookMessage,Event,LogText,Append=1
 
 ;display info in data log book
                 DataLogBookText = getDataLogBookText(Event)
@@ -101,7 +105,13 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                 text = ' --> Please select one of the ' + strcompress(sz,/remove_all)
                 text += ' NeXus file found .....'
                 putDataLogBookMessage, Event, text, Append=1
-                                
+
+;display nxsummary of first file in 'data_list_nexus_base'
+                RefReduction_NXsummary, $
+                  Event, $
+                  full_list_of_nexus_name[0], $
+                  'data_list_nexus_nxsummary_text_field'
+                
             endif else begin    ;proceed as before
                 
                 OpenNexusFile, Event, DataRunNumber, full_list_of_nexus_name

@@ -140,7 +140,7 @@ endif else begin ;remove given string from last line
     if (ArrSize GE 2) then begin
         NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
         NewLastLine += MessageToAdd
-        FinalStrarr = [InitialStrarr[0:ArrSizae-2],NewLastLine]
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
         NewInitialStrarr = removeStringFromText(InitialStrarr,RemoveString)
         FinalStrarr = NewInitialStrarr + MessageToAdd

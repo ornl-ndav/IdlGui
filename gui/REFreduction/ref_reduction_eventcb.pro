@@ -1,3 +1,119 @@
+;This function get the nexus name from the data droplist and displays
+;the nxsummary of that nexus file
+PRO REFreductionEventcb_DisplayDataNxsummary, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+prevDataNexusIndex = (*global).PreviousDataNexusListSelected
+currDataNexusIndex = getDropListSelectedIndex(Event,'data_list_nexus_droplist')
+
+if (prevDataNexusIndex NE currDataNexusIndex) then begin
+
+;reset value of previous index selected
+    (*global).PreviousDataNexusListSelected = currDataNexusIndex
+
+;get full name of index selected
+    currFullDataNexusName = getDropListSelectedValue(Event, 'data_list_nexus_droplist')
+
+;display NXsummary of that file
+    RefReduction_NXsummary, $
+      Event, $
+      currFullDataNexusName, $
+      'data_list_nexus_nxsummary_text_field'
+endif 
+END
+
+
+
+;This function get the nexus name from the normalization droplist and displays
+;the nxsummary of that nexus file
+PRO REFreductionEventcb_DisplayNormNxsummary, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+prevNormNexusIndex = (*global).PreviousNormNexusListSelected
+currNormNexusIndex = getDropListSelectedIndex(Event,'normalization_list_nexus_droplist')
+
+if (prevNormNexusIndex NE currNormNexusIndex) then begin
+
+;reset value of previous index selected
+    (*global).PreviousNormNexusListSelected = currNormNexusIndex
+
+;get full name of index selected
+    currFullNormNexusName = getDropListSelectedValue(Event, 'normalization_list_nexus_droplist')
+
+;display NXsummary of that file
+    RefReduction_NXsummary, $
+      Event, $
+      currFullNormNexusName, $
+      'normalization_list_nexus_nxsummary_text_field'
+endif 
+END
+
+
+
+PRO REFreductionEventcb_CancelListOfDataNexus, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;map=0 the base
+MapBase, Event, 'data_list_nexus_base', 0
+
+;clear data run number entry
+putTextFieldValue, event, 'load_data_run_number_text_field', '',0
+
+;inform data log book and log book that process has been canceled
+LogBookText = getLogBookText(Event)        
+Message = 'CANCELED
+putTextAtEndOfLogBookLastLine, $
+  Event, $
+  LogBookText, $
+  Message, $
+  (*global).processing_message
+
+Message = ' ' + Message
+DataLogBookText = getDataLogBookText(Event)
+putTextAtEndOfDataLogBookLastLine,$
+  Event,$
+  DataLogBookText,$
+  Message
+END
+
+
+
+PRO REFreductionEventcb_CancelListOfNormNexus, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;map=0 the base
+MapBase, Event, 'norm_list_nexus_base', 0
+
+;clear data run number entry
+putTextFieldValue, event, 'load_normalization_run_number_text_field', '',0
+
+;inform data log book and log book that process has been canceled
+LogBookText = getLogBookText(Event)        
+Message = 'CANCELED
+putTextAtEndOfLogBookLastLine, $
+  Event, $
+  LogBookText, $
+  Message, $
+  (*global).processing_message
+
+Message = ' ' + Message
+NormLogBookText = getNormalizationLogBookText(Event)
+putTextAtEndOfNormalizationLogBookLastLine,$
+  Event,$
+  NormLogBookText,$
+  Message
+END
+
+
+
 ;This function run the command line and will output the plot and info text
 PRO REFreductionEventcb_ProcessingCommandLine, Event
 
@@ -227,7 +343,7 @@ END
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormalizationFile, Event
 
-REFreduction_LoadNormalizationFile, Event, isNeXusFound ;first Load the normalization file
+REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus ;first Load the normalization file
 
 if (isArchivedNormNexusDesired(Event)) then begin ;get full list of NeXus with this run number
 
