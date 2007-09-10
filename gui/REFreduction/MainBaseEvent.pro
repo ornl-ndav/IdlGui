@@ -34,6 +34,9 @@ CASE Event.id OF
     end
     
 ;ok button
+    widget_info(wWidget, FIND_BY_UNAME='data_list_nexus_load_button'): begin
+        REFreductionEventcb_LoadListOfDataNexus, Event
+    end
 
 ;cancel button
     widget_info(wWidget, FIND_BY_UNAME='data_list_nexus_cancel_button'): begin
@@ -113,6 +116,9 @@ CASE Event.id OF
     end
     
 ;ok button
+    widget_info(wWidget, FIND_BY_UNAME='norm_list_nexus_load_button'): begin
+        REFreductionEventcb_LoadListOfNormNexus, Event
+    end
 
 ;cancel button
     widget_info(wWidget, FIND_BY_UNAME='norm_list_nexus_cancel_button'): begin

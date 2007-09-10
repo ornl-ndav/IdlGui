@@ -83,7 +83,6 @@ putTextAtEndOfDataLogBookLastLine,$
 END
 
 
-
 PRO REFreductionEventcb_CancelListOfNormNexus, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -111,6 +110,111 @@ putTextAtEndOfNormalizationLogBookLastLine,$
   NormLogBookText,$
   Message
 END
+
+
+
+PRO REFreductionEventcb_LoadListOfDataNexus, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;get full name of index selected
+currFullDataNexusName = getDropListSelectedValue(Event, 'data_list_nexus_droplist')
+
+;display message in data log book
+InitialStrarr = getDataLogBookText(Event)
+MessageToAdd = ' OK'
+putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
+
+DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+putDataLogBookMessage, Event, DataLogBookMessage, Append=1
+
+;map=0 the base
+MapBase, Event, 'data_list_nexus_base', 0
+
+;get data run number
+DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
+
+;Open That NeXus file
+OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
+
+REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;tell the user that the load and plot process is done
+InitialStrarr = getDataLogBookText(Event)
+putTextAtEndOfDataLogBookLastLine, $
+  Event, $
+  InitialStrarr, $
+  ' Done', $
+  (*global).processing_message
+
+;display full path to NeXus in Norm log book
+full_nexus_name = (*global).data_full_nexus_name
+text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+putDataLogBookMessage, Event, text, Append=1
+
+END
+
+
+
+
+PRO REFreductionEventcb_LoadListOfNormNexus, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;indicate reading data with hourglass icon
+widget_control,/hourglass
+
+;get full name of index selected
+currFullNormNexusName = getDropListSelectedValue(Event, 'normalization_list_nexus_droplist')
+
+;display message in data log book
+InitialStrarr = getNormalizationLogBookText(Event)
+MessageToAdd = ' OK'
+putTextAtEndOfNormalizationLogBookLastLine, Event, InitialStrarr, MessageToAdd
+
+NormLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+putNormalizationLogBookMessage, Event, NormLogBookMessage, Append=1
+
+;map=0 the base
+MapBase, Event, 'norm_list_nexus_base', 0
+
+;get data run number
+NormRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
+
+;Open That NeXus file
+OpenNormNexusFile, Event, NormRunNumber, currFullNormNexusName
+
+REFreduction_Plot1D2DNormalizationFile, Event ;then plot data file (1D and 2D)
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;tell the user that the load and plot process is done
+InitialStrarr = getNormalizationLogBookText(Event)
+putTextAtEndOfNormalizationLogBookLastLine, $
+  Event, $
+  InitialStrarr, $
+  ' Done', $
+  (*global).processing_message
+
+;display full path to NeXus in Norm log book
+full_nexus_name = (*global).norm_full_nexus_name
+text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+putNormalizationLogBookMessage, Event, text, Append=1
+
+END
+
+
 
 
 
@@ -289,6 +393,7 @@ REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data fi
 if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with this run number
 
     if (isNeXusFound) then begin
+
         REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
         
 ;get global structure

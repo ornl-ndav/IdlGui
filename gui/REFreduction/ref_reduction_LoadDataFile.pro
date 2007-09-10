@@ -114,7 +114,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                 
             endif else begin    ;proceed as before
                 
-                OpenNexusFile, Event, DataRunNumber, full_list_of_nexus_name
+                OpenDataNexusFile, Event, DataRunNumber, full_list_of_nexus_name
                 
             endelse             ;end of list is only 1 element long
             
@@ -176,7 +176,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
         endif else begin        ;NeXus has been found
             
             NbrNexus = 1
-            OpenNexusFile, Event, DataRunNumber, full_nexus_name
+            OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
             
         endelse
         
@@ -195,7 +195,7 @@ END
 
 
 
-PRO OpenNeXusFile, Event, DataRunNumber, full_nexus_name
+PRO OpenDataNeXusFile, Event, DataRunNumber, full_nexus_name
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
