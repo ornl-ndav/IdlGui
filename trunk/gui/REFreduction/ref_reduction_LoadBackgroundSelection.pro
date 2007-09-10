@@ -183,7 +183,7 @@ if (BackROIFullFileName NE '') then begin
 ;display name of new file name in text field
     putTextFieldValue,$
       Event,$
-      'data_background_selection_file_text_field',$
+      'normalization_background_selection_file_text_field',$
       BackROIFullFileName,$
       0                         ;do not append
     

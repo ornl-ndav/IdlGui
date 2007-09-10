@@ -64,7 +64,7 @@ NormArchivedOrAllCWBgroup = cw_bgroup(LOAD_NORMALIZATION_BASE,$
 
 ;Nexus list base/label/droplist and buttons
 NormListNexusBase = widget_base(LOAD_normalization_BaSE,$
-                                uname='Norm_list_nexus_base',$
+                                uname='norm_list_nexus_base',$
                                 xoffset=NexusListSizeGlobal[0],$
                                 yoffset=NexusListSizeGlobal[1],$
                                 scr_xsize=NexusListSizeGlobal[2],$
@@ -85,7 +85,8 @@ NormListDropList = widget_droplist(NormListNexusBase,$
                                    uname='normalization_list_nexus_droplist',$
                                    xoffset=NexusListSizeGlobal[8],$
                                    yoffset=NexusListSizeGlobal[9],$
-                                   value=DropListValue)
+                                   value=DropListValue,$
+                                   /tracking_events)
                                    
 NormListNexusNXsummary = widget_text(NormListNexusBase,$
                                      xoffset=NexusListSizeGlobal[10],$
@@ -94,7 +95,7 @@ NormListNexusNXsummary = widget_text(NormListNexusBase,$
                                      scr_ysize=NexusListSizeGlobal[13],$
                                      /wrap,$
                                      /scroll,$
-                                     uname='norm_list_nexus_nxsummary_text_field')
+                                     uname='normalization_list_nexus_nxsummary_text_field')
   
 NormListNexusLoadButton = widget_button(NormListNexusBase,$
                                         uname='norm_list_nexus_load_button',$
@@ -105,7 +106,7 @@ NormListNexusLoadButton = widget_button(NormListNexusBase,$
                                         value=NexusListLabelGlobal[1])
                                         
 NormListNexusCancelButton = widget_button(NormListNexusBase,$
-                                          uname='Norm_list_nexus_cancel_button',$
+                                          uname='norm_list_nexus_cancel_button',$
                                           xoffset=NexusListSizeGlobal[18],$
                                           yoffset=NexusListSizeGlobal[19],$
                                           scr_xsize=NexusListSizeGlobal[20],$

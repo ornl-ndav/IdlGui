@@ -83,10 +83,11 @@ DataListNexusLabel = widget_label(DataListNexusBase,$
 
 DropListvalue = ['                                                                        ']
 DataListNexusDropList = widget_droplist(DataListNexusBase,$
-                                   uname='data_list_nexus_droplist',$
-                                   xoffset=NexusListSizeGlobal[8],$
-                                   yoffset=NexusListSizeGlobal[9],$
-                                   value=DropListValue)
+                                        uname='data_list_nexus_droplist',$
+                                        xoffset=NexusListSizeGlobal[8],$
+                                        yoffset=NexusListSizeGlobal[9],$
+                                        value=DropListValue,$
+                                        /tracking_events)
                                    
 DataListNexusNXsummary = widget_text(DataListNexusBase,$
                                      xoffset=NexusListSizeGlobal[10],$

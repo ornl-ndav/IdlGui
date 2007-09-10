@@ -160,8 +160,13 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;path where to put the log book
                    MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
 ;full path to NeXus file on the mac
-                   MacNXsummary : '~/local/nxsummary_4146.txt'$
-;full path to NXsummary file that will be read on Mac (instead of using NXsummary)
+                   MacNXsummary : '~/local/nxsummary_4146.txt',$
+;full path to NXsummary file that will be read on Mac (instead of
+;using NXsummary)
+                   PreviousDataNexusListSelected: 0,$
+;previous element selected in data nexus droplist
+                   PreviousNormNexusListSelected: 0$
+;previous element selected in normalization nexus droplist
                   })
 
 ;------------------------------------------------------------------------

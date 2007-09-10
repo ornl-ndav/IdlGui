@@ -27,6 +27,19 @@ CASE Event.id OF
         REFreductionEventcb_LoadAndPlotDataFile, Event
     end
 
+;##In list of nexus base##
+;droplist
+    widget_info(wWidget, FIND_BY_UNAME='data_list_nexus_droplist'): begin
+        REFreductionEventcb_DisplayDataNxsummary, Event
+    end
+    
+;ok button
+
+;cancel button
+    widget_info(wWidget, FIND_BY_UNAME='data_list_nexus_cancel_button'): begin
+        REFreductionEventcb_CancelListOfDataNexus, Event
+    end
+
 ;****1D PLOT TAB**
 ;1D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
@@ -44,7 +57,7 @@ CASE Event.id OF
         endif
     end
 
-    ;zoom and nxsummary tab
+;zoom and nxsummary tab
     widget_info(wWidget, FIND_BY_UNAME='data_nxsummary_zoom_tab'): begin
         REFreduction_DataNxsummaryZoomTab, Event
     end
@@ -91,6 +104,19 @@ CASE Event.id OF
 ;LOAD NORMALIZATION file
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotNormalizationFile, Event
+    end
+
+;##In list of nexus base##
+;droplist
+    widget_info(wWidget, FIND_BY_UNAME='normalization_list_nexus_droplist'): begin
+        REFreductionEventcb_DisplayNormNxsummary, Event
+    end
+    
+;ok button
+
+;cancel button
+    widget_info(wWidget, FIND_BY_UNAME='norm_list_nexus_cancel_button'): begin
+        REFreductionEventcb_CancelListOfNormNexus, Event
     end
 
 ;****1D PLOT TAB**
