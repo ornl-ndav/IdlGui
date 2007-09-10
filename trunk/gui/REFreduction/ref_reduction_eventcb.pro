@@ -507,11 +507,25 @@ END
 
 ;start the xloadct window
 PRO REFreductionEventcb_DataContrastEditor, Event
-xloadct
+xloadct,/modal,group=id
+RePlot1DDAtaFile, Event
+REFreduction_DataBackgroundPeakSelection, Event
+END
+
+
+PRO REFreductionEventcb_DataResetContrastEditor, Event
+loadct,5
+RePlot1DDAtaFile, Event
+REFreduction_DataBackgroundPeakSelection, Event
 END
 
 
 
+
+
+
+PRO blabla, Event
+end
 
 pro ref_reduction_eventcb
 end

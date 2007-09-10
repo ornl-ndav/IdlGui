@@ -92,6 +92,11 @@ Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 ContrastButtonSize  = [0,0,130,30]
 ContrastButtonTitle = ' Contrast Editor ' 
 
+ResetContrastButtonSize  = [ContrastButtonSize[0]+ContrastButtonSize[2],$
+                            0,ContrastButtonsize[2],$
+                            ContrastButtonSize[3]]
+ResetContrastButtonTitle = ' Reset Contrast '
+
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -309,6 +314,15 @@ ContrastButton = widget_button(RescaleBase,$
                                value=ContrastButtonTitle,$
                                sensitive=1,$
                                uname='data_contrast_button')
+
+ResetContrastButton = widget_button(RescaleBase,$
+                                    xoffset=ResetContrastButtonSize[0],$
+                                    yoffset=ResetContrastButtonSize[1],$
+                                    scr_xsize=ResetContrastButtonSize[2],$
+                                    scr_ysize=ResetContrastButtonSize[3],$
+                                    value=ResetContrastButtonTitle,$
+                                    sensitive=1,$
+                                    uname='data_reset_contrast_button')
 
 END
 

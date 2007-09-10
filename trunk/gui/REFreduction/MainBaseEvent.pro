@@ -101,7 +101,12 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_contrast_button'): begin
         REFreductionEventcb_DataContrastEditor, Event
     end
-    
+
+;Reset Contrast Editor
+    widget_info(wWidget, FIND_BY_UNAME='data_reset_contrast_button'): begin
+        REFreductionEventcb_DataResetContrastEditor, Event
+    end
+        
 ;**LOAD TAB**NORMALIZATION**
 
 ;LOAD NORMALIZATION file
