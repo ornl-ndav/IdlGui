@@ -80,6 +80,11 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_roi_load_button'): begin
         REFreduction_LoadDataBackgroundSelection, Event
     end
+
+;Contrast editor of data 1D tab
+    widget_info(wWidget, FIND_BY_UNAME='data_contrast_button'): begin
+        REFreductionEventcb_DataContrastEditor, Event
+    end
     
 ;**LOAD TAB**NORMALIZATION**
 

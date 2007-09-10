@@ -170,7 +170,7 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
 REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
 
-if (isArchivedNexusDesired(Event)) then begin ;get full list of Nexus with this run number
+if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with this run number
 
     if (isNeXusFound) then begin
         REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
@@ -224,37 +224,70 @@ endelse
 END
 
 
-
-
-
-
-
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormalizationFile, Event
-REFreduction_LoadNormalizationFile, Event, isNeXusFound ;first Load the normalization file
-if (isNeXusFound) then begin 
-    REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
 
+REFreduction_LoadNormalizationFile, Event, isNeXusFound ;first Load the normalization file
+
+if (isArchivedNormNexusDesired(Event)) then begin ;get full list of NeXus with this run number
+
+    if (isNeXusFound) then begin 
+        REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
+        
 ;get global structure
-    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-    widget_control,id,get_uvalue=global
+        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        widget_control,id,get_uvalue=global
 
 ;tell the user that the load and plot process is done
-    InitialStrarr = getNormalizationLogBookText(Event)
-    putTextAtEndOfNormalizationLogBookLastLine, $
-      Event, $
-      InitialStrarr, $
-      ' Done', $
-      (*global).processing_message
-
+        InitialStrarr = getNormalizationLogBookText(Event)
+        putTextAtEndOfNormalizationLogBookLastLine, $
+          Event, $
+          InitialStrarr, $
+          ' Done', $
+          (*global).processing_message
+        
 ;display full path to NeXus in Norm log book
-    full_nexus_name = (*global).norm_full_nexus_name
-    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-    putNormalizationLogBookMessage, Event, text, Append=1
+        full_nexus_name = (*global).norm_full_nexus_name
+        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+        putNormalizationLogBookMessage, Event, text, Append=1
 
-endif
+    endif 
+
+endif else begin ;get full list of nexus file
+
+    if (NbrNexus EQ 1) then begin
+
+        REFreduction_Plot1D2DNormFile, Event ;the plot norm file (1D and 2D)
+
+;get global structure
+        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        widget_control,id,get_uvalue=global
+        
+;tell the user that the load and plot process is done
+        InitialStrarr = getNormLogBookText(Event)
+        putTextAtEndOfNormLogBookLastLine, $
+          Event, $
+          InitialStrarr, $
+          ' Done', $
+          (*global).processing_message
+        
+;display full path to NeXus in Norm log book
+        full_nexus_name = (*global).norm_full_nexus_name
+        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+        putNormLogBookMessage, Event, text, Append=1
+
+    endif
+
+endelse
+
+
 END
 
+
+;start the xloadct window
+PRO REFreductionEventcb_DataContrastEditor, Event
+xloadct
+END
 
 
 
