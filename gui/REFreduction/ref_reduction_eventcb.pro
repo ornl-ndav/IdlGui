@@ -506,7 +506,6 @@ END
 
 
 ;######## CONTRAST DATA #######
-
 ;start the xloadct window
 PRO REFreductionEventcb_DataContrastEditor, Event
 ;get global structure
@@ -532,11 +531,12 @@ PRO REFreductionEventcb_DataResetContrastEditor, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-if ((*global).DataNexusFound) then begin
 ;reset droplist and sliders
-    setDropListValue, Event, 'data_contrast_droplist', (*global).InitialDataContrastDropList
-    setSliderValue, Event, 'data_contrast_bottom_slider', 0
-    setSliderValue, Event, 'data_contrast_number_slider', 255
+setDropListValue, Event, 'data_contrast_droplist', (*global).InitialDataContrastDropList
+setSliderValue, Event, 'data_contrast_bottom_slider', 0
+setSliderValue, Event, 'data_contrast_number_slider', 255
+
+if ((*global).DataNexusFound) then begin
     REFreduction_refreshDataPlot, Event
 endif
 END
@@ -599,28 +599,99 @@ REFreduction_DataBackgroundPeakSelection, Event
 END
 
 
-
-
-
-
+;######## CONTRAST NORMALIZATION #######
 ;start the xloadct window
-PRO REFreductionEventcb_NormContrastEditor, Event
-xloadct,/modal,group=id
-RePlot1DNormFile, Event
-REFreduction_NormBackgroundPeakSelection, Event
+PRO REFreductionEventcb_NORMContrastEditor, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).NormNexusFound) then begin
+
+    prevIndex = (*global).PreviousNormContrastDroplistIndex
+    currIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
+    
+    if (prevIndex Ne currIndex) then begin
+        REFreduction_refreshNormPlot, Event
+        (*global).PreviousNormContrastDroplistIndex = currIndex
+    endif
+
+endif
 END
 
 
 PRO REFreductionEventcb_NormResetContrastEditor, Event
-loadct,5
-RePlot1DNormFile, Event
-REFreduction_NormBackgroundPeakSelection, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;reset droplist and sliders
+setDropListValue, Event, 'normalization_contrast_droplist', $
+  (*global).InitialNormContrastDropList
+setSliderValue, Event, 'normalization_contrast_bottom_slider', 0
+setSliderValue, Event, 'normalization_contrast_number_slider', 255
+
+if ((*global).NormNexusFound) then begin
+    REFreduction_refreshNormPlot, Event
+endif
 END
 
 
 
+;Data Contrast Bottom Slider
+PRO  REFreductionEventcb_NormContrastBottomSlider, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).NormNexusFound) then begin
+
+    prevIndex = (*global).PreviousNormContrastBottomSliderIndex
+    currIndex = getSliderValue(Event,'normalization_contrast_bottom_slider')
+    
+    if (prevIndex NE currIndex) then begin
+        REFreduction_refreshNormPlot, Event
+        (*global).PreviousNormContrastBottomSliderIndex = currIndex
+    endif
+
+endif
+
+END
 
 
+;Data Contrast Number Slider
+PRO REFreductionEventcb_NormContrastNumberSlider, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).NormNexusFound) then begin
+
+    prevIndex = (*global).PreviousNormContrastNumberSliderIndex
+    currIndex = getSliderValue(Event,'normalization_contrast_number_slider')
+    
+    if (prevIndex NE currIndex) then begin
+        REFreduction_refreshNormPlot, Event
+        (*global).PreviousNormContrastNumberSliderIndex = currIndex
+    endif
+
+endif
+
+END
+
+
+PRO REFreduction_refreshNormPlot, Event
+;get droplist index
+LoadctIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
+;get bottom value of color
+BottomColorValue = getSliderValue(Event,'normalization_contrast_bottom_slider')
+;get number of color
+NumberColorValue = getSliderValue(Event,'normalization_contrast_number_slider')
+
+loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue
+RePlot1DNormFile, Event
+REFreduction_NormBackgroundPeakSelection, Event
+END
 
 
 

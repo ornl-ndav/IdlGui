@@ -2,7 +2,8 @@ PRO MakeGuiLoadNormalization1D2DTab, LOAD_DATA_BASE,$
                                      D_DD_TabSize,$
                                      D_DD_BaseSize,$
                                      D_DD_TabTitle,$
-                                     GlobalLoadGraphs
+                                     GlobalLoadGraphs,$
+                                     loadctList
 
 load_normalization_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
                                          UNAME='load_normalization_d_dd_tab',$
@@ -18,7 +19,8 @@ MakeGuiLoadNormalization1DTab,$
   load_normalization_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
-  GlobalLoadGraphs
+  GlobalLoadGraphs,$
+  loadctList
 
 ;build Load_Data_2D tab
 MakeGuiLoadNormalization2DTab,$

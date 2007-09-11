@@ -205,6 +205,27 @@ CASE Event.id OF
         REFreduction_LoadNormBackgroundSelection, Event
     end
     
+;CONTRAST TAB
+;Contrast editor of norm 1D tab
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_droplist'): begin
+        REFreductionEventcb_NormContrastEditor, Event
+    end
+
+;Reset Contrast Editor
+    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_contrast_button'): begin
+        REFreductionEventcb_NormResetContrastEditor, Event
+    end
+
+;bottom slider
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_bottom_slider'): begin
+        REFreductionEventcb_NormContrastBottomSlider, Event
+    end
+   
+;Number color slider
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_number_slider'): begin
+        REFreductionEventcb_NormContrastNumberSlider, Event
+    end
+
 ;**REDUCE TAB**
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin

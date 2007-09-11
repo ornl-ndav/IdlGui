@@ -312,7 +312,7 @@ Data1DSelectionPeakYmaxCWField = $
            uname='data_d_selection_peak_ymax_cw_field')
 
 
-;Tab #1 (rescale base)
+;Tab #2 (rescale base)
 RescaleBase = widget_base(BackPeakRescaleTab,$
                           uname='data_rescale_base',$
                           xoffset=RescaleBaseSize[0],$
