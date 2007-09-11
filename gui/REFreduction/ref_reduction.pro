@@ -183,7 +183,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous value of norm contrast bottom color slider
                    PreviousNormContrastNumberSliderIndex : 255$
 ;previous value of norm contrast number of color slider
-                  })
+                                     })
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
