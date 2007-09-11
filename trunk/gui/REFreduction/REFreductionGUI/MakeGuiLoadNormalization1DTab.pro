@@ -7,12 +7,18 @@ PRO MakeGuiLoadNormalization1DTab, D_DD_Tab, $
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
+;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
+;Tab#1
 BackPeakRescaleTabSize = [4,610,D_DD_TabSize[2]-20,D_DD_TabSize[3]-640]
-BackPeakBaseSize = [0,0,BackPeakRescaleTabSize[2],$
-                    BackPeakRescaleTabSize[3]]
-BackPeakBaseTitle = '  Background and Peak Selection  '
-RescaleBaseSize = BackPeakBaseSize
-RescaleBaseTitle = '  Contrast Editor  '
+BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
+                          BackPeakRescaleTabSize[3]]
+BackPeakBaseTitle      = '  Background and Peak Selection  '
+;Tab#2
+ContrastBaseSize       = BackPeakBaseSize
+ContrastBaseTitle      = '  Contrast Editor  '
+;Tab#3
+RescaleBaseSize        = BackPeakBaseSize
+RescaleBaseTitle       = '   Rescale   '  
 
 ;cw_bgroup of selection (back or signal)
 Norm1DSelectionList = ['Select Background   ',$
@@ -308,16 +314,16 @@ Norm1DSelectionPeakYmaxCWField = $
            uname='normalization_d_selection_peak_ymax_cw_field')
 
 
-;Tab #2 (rescale base)
-RescaleBase = widget_base(BackPeakRescaleTab,$
-                          uname='normalization_rescale_base',$
-                          xoffset=RescaleBaseSize[0],$
-                          yoffset=RescaleBaseSize[1],$
-                          scr_xsize=RescaleBaseSize[2],$
-                          scr_ysize=RescaleBaseSize[3],$
-                          title=RescaleBaseTitle)
+;Tab #2 (contrast base)
+ContrastBase = widget_base(BackPeakRescaleTab,$
+                           uname='normalization_rescale_base',$
+                           xoffset=ContrastBaseSize[0],$
+                           yoffset=ContrastBaseSize[1],$
+                           scr_xsize=ContrastBaseSize[2],$
+                           scr_ysize=ContrastBaseSize[3],$
+                           title=ContrastBaseTitle)
 
-ContrastDropList = widget_droplist(RescaleBase,$
+ContrastDropList = widget_droplist(ContrastBase,$
                                    value=LoadctList,$
                                    xoffset=ContrastDropListSize[0],$
                                    yoffset=ContrastDropListSize[1],$
@@ -326,7 +332,7 @@ ContrastDropList = widget_droplist(RescaleBase,$
                                    /tracking_events,$
                                    uname='normalization_contrast_droplist')
 
-ContrastBottomSlider = widget_slider(RescaleBase,$
+ContrastBottomSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastBottomSliderSize[0],$
                                      yoffset=ContrastBottomSliderSize[1],$
                                      scr_xsize=ContrastBottomSliderSize[2],$
@@ -338,7 +344,7 @@ ContrastBottomSlider = widget_slider(RescaleBase,$
                                      title=ContrastBottomSliderTitle,$
                                      value=ContrastBottomSliderDefaultValue)
 
-ContrastNumberSlider = widget_slider(RescaleBase,$
+ContrastNumberSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastNumberSliderSize[0],$
                                      yoffset=ContrastNumberSliderSize[1],$
                                      scr_xsize=ContrastNumberSliderSize[2],$
@@ -350,7 +356,7 @@ ContrastNumberSlider = widget_slider(RescaleBase,$
                                      title=ContrastNumberSliderTitle,$
                                      value=ContrastNumberSliderDefaultValue)
 
-ResetContrastButton = widget_button(RescaleBase,$
+ResetContrastButton = widget_button(ContrastBase,$
                                     xoffset=ResetContrastButtonSize[0],$
                                     yoffset=ResetContrastButtonSize[1],$
                                     scr_xsize=ResetContrastButtonSize[2],$
@@ -358,6 +364,16 @@ ResetContrastButton = widget_button(RescaleBase,$
                                     value=ResetContrastButtonTitle,$
                                     sensitive=1,$
                                     uname='normalization_reset_contrast_button')
+
+
+;Tab #3 (rescale base)
+RescaleBase = widget_base(BackPeakRescaleTab,$
+                          uname='normalization_rescale_base',$
+                          xoffset=RescaleBaseSize[0],$
+                          yoffset=RescaleBaseSize[1],$
+                          scr_xsize=RescaleBaseSize[2],$
+                          scr_ysize=RescaleBaseSize[3],$
+                          title=RescaleBaseTitle)
 
 
 END
