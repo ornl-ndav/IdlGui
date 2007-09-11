@@ -165,8 +165,16 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;using NXsummary)
                    PreviousDataNexusListSelected: 0,$
 ;previous element selected in data nexus droplist
-                   PreviousNormNexusListSelected: 0$
+                   PreviousNormNexusListSelected: 0,$
 ;previous element selected in normalization nexus droplist
+                   InitialDataContrastDropList: 5,$
+;initial value of the contrast data droplist
+                   PreviousDataContrastDroplistIndex: 5,$
+;previous value of data contrast droplist
+                   PreviousDataContrastBottomSliderIndex : 0,$
+;previous value of data contrast bottom color slider
+                   PreviousDataContrastNumberSliderIndex : 255$
+;previous value of data contrast number of color slider
                   })
 
 ;------------------------------------------------------------------------
@@ -245,6 +253,10 @@ MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+;initialize contrast droplist
+id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
+widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
 
 if (ucams EQ 'j35' OR $
     ucams EQ '2zr') then begin

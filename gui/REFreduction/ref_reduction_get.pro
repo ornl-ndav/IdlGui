@@ -131,5 +131,9 @@ return, value
 END
 
 
-
+FUNCTION getSliderValue, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=value
+return, value
+END
 
