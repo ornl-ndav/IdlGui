@@ -173,8 +173,16 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous value of data contrast droplist
                    PreviousDataContrastBottomSliderIndex : 0,$
 ;previous value of data contrast bottom color slider
-                   PreviousDataContrastNumberSliderIndex : 255$
+                   PreviousDataContrastNumberSliderIndex : 255,$
 ;previous value of data contrast number of color slider
+                   InitialNormContrastDropList: 5,$
+;initial value of the contrast norm droplist
+                   PreviousNormContrastDroplistIndex: 5,$
+;previous value of norm contrast droplist
+                   PreviousNormContrastBottomSliderIndex : 0,$
+;previous value of norm contrast bottom color slider
+                   PreviousNormContrastNumberSliderIndex : 255$
+;previous value of norm contrast number of color slider
                   })
 
 ;------------------------------------------------------------------------
@@ -257,6 +265,8 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;initialize contrast droplist
 id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
 
 if (ucams EQ 'j35' OR $
     ucams EQ '2zr') then begin

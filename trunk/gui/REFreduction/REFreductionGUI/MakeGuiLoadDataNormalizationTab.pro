@@ -145,6 +145,7 @@ MakeGuiLoadNormalizationTab,$
   ArchivedOrAllCWBgroupList,$
   ArchivedOrAllCWBgroupSize,$
   NexusListSizeGlobal,$
-  NexusListLabelGlobal
+  NexusListLabelGlobal,$
+  loadctList
 
 END

@@ -17,7 +17,8 @@ PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  ArchivedOrAllCWBgroupList,$
                                  ArchivedOrAllCWBgroupSize,$
                                  NexusListSizeGlobal,$
-                                 NexusListLabelGlobal
+                                 NexusListLabelGlobal,$
+                                 loadctList
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -120,7 +121,8 @@ MakeGuiLoadNormalization1D2DTab,$
   D_DD_TabSize,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
-  GlobalLoadDataGraphs
+  GlobalLoadDataGraphs,$
+  loadctList
 
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_NORMALIZATION_BASE,$
