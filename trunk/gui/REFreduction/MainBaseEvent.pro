@@ -97,14 +97,25 @@ CASE Event.id OF
         REFreduction_LoadDataBackgroundSelection, Event
     end
 
+;CONTRAST TAB
 ;Contrast editor of data 1D tab
-    widget_info(wWidget, FIND_BY_UNAME='data_contrast_button'): begin
+    widget_info(wWidget, FIND_BY_UNAME='data_contrast_droplist'): begin
         REFreductionEventcb_DataContrastEditor, Event
     end
 
 ;Reset Contrast Editor
     widget_info(wWidget, FIND_BY_UNAME='data_reset_contrast_button'): begin
         REFreductionEventcb_DataResetContrastEditor, Event
+    end
+
+;bottom slider
+    widget_info(wWidget, FIND_BY_UNAME='data_contrast_bottom_slider'): begin
+        REFreductionEventcb_DataContrastBottomSlider, Event
+    end
+   
+;Number color slider
+    widget_info(wWidget, FIND_BY_UNAME='data_contrast_number_slider'): begin
+        REFreductionEventcb_DataContrastNumberSlider, Event
     end
         
 ;**LOAD TAB**NORMALIZATION**
@@ -177,6 +188,16 @@ CASE Event.id OF
 ;SAVE Background Selection into a file
     widget_info(wWidget, FIND_BY_UNAME='normalization_roi_save_button'): begin
         REFreduction_CreateNormBackgroundROIFile, Event
+    end
+
+;Contrast editor of data 1D tab
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_button'): begin
+        REFreductionEventcb_NormContrastEditor, Event
+    end
+
+;Reset Contrast Editor
+    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_contrast_button'): begin
+        REFreductionEventcb_NormResetContrastEditor, Event
     end
 
 ;LOAD background selection

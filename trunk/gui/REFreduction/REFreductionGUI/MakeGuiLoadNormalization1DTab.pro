@@ -85,6 +85,14 @@ Norm1DSelectionPeakYmaxBaseSize = [Norm1DSelectionPeakYminBaseSize[0]+$
 Norm1DSelectionPeakYmaxCWFieldSize = Norm1DSelectionPeakYminCWFieldSize
 Norm1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 
+;TAB #2 (resale and contrast)
+ContrastButtonSize  = [0,0,130,30]
+ContrastButtonTitle = ' Contrast Editor ' 
+
+ResetContrastButtonSize  = [ContrastButtonSize[0]+ContrastButtonSize[2],$
+                            0,ContrastButtonsize[2],$
+                            ContrastButtonSize[3]]
+ResetContrastButtonTitle = ' Reset Contrast '
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -293,5 +301,22 @@ RescaleBase = widget_base(BackPeakRescaleTab,$
                           scr_ysize=RescaleBaseSize[3],$
                           title=RescaleBaseTitle)
 
+ContrastButton = widget_button(RescaleBase,$
+                               xoffset=ContrastButtonSize[0],$
+                               yoffset=ContrastButtonSize[1],$
+                               scr_xsize=ContrastButtonSize[2],$
+                               scr_ysize=ContrastButtonSize[3],$
+                               value=ContrastButtonTitle,$
+                               sensitive=1,$
+                               uname='normalization_contrast_button')
+
+ResetContrastButton = widget_button(RescaleBase,$
+                                    xoffset=ResetContrastButtonSize[0],$
+                                    yoffset=ResetContrastButtonSize[1],$
+                                    scr_xsize=ResetContrastButtonSize[2],$
+                                    scr_ysize=ResetContrastButtonSize[3],$
+                                    value=ResetContrastButtonTitle,$
+                                    sensitive=1,$
+                                    uname='normalization_reset_contrast_button')
 
 END

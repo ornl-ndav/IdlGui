@@ -47,6 +47,48 @@ NexusListLabelGlobal = [NexusListLabelTitle,$
                         NexusListLoadButtonTitle,$
                         NexusListCancelButtonTitle]
 
+LoadctList = ['Black/White Linear',$
+              'Blue/White',$
+              'Green/Red/Blue/White',$
+              'Red Temperature',$
+              'Blue/Green/Red/Yellow',$
+              'Std Gamma-II',$
+              'Prism',$
+              'Red/Purple',$
+              'Green/White Linear',$
+              'Green/White Exponential',$
+              'Green/Pink',$
+              'Blue/Red',$
+              '16 Level',$
+              'Rainbow',$
+              'Steps',$
+              'Stern Special',$
+              'Haze',$
+              'Blue/Pastel/Red',$
+              'Pastels',$
+              'Hue Sat Lightness 1',$
+              'Hue Sat Lightness 2',$
+              'Hue Sat Value 1',$
+              'Hue Sat Value 2',$
+              'Purple/Red + Stripes',$
+              'Beach',$
+              'Mac Style',$
+              'Eos A',$
+              'Eos B',$
+              'Hardcandy',$
+              'Nature',$
+              'Ocean',$
+              'Peppermint',$
+              'Plasma',$
+              'Blue/Red',$
+              'Rainbow',$
+              'Blue Waves',$
+              'Volcano',$
+              'Waves',$
+              'Rainbow 18',$
+              'Rainbow + White',$
+              'Rainbow + Black']
+
 
 ;build widgets
 DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
@@ -79,7 +121,8 @@ MakeGuiLoadDataTab,$
   ArchivedOrAllCWBgroupList,$
   ArchivedOrAllCWBgroupSize,$
   NexusListSizeGlobal,$
-  NexusListLabelGlobal
+  NexusListLabelGlobal,$
+  LoadctList
 
 ;build NORMALIZATION tab
 MakeGuiLoadNormalizationTab,$

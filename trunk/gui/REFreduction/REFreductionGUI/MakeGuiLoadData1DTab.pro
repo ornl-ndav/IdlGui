@@ -1,4 +1,8 @@
-PRO MakeGuiLoadData1DTab, D_DD_Tab, D_DD_TabSize, D_DD_TabTitle, GlobalLoadGraphs
+PRO MakeGuiLoadData1DTab, D_DD_Tab, $
+                          D_DD_TabSize, $
+                          D_DD_TabTitle, $
+                          GlobalLoadGraphs, $
+                          LoadctList
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -9,7 +13,7 @@ BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
 BackPeakBaseTitle      = '  Background and Peak Selection  '
 RescaleBaseSize        = BackPeakBaseSize
-RescaleBaseTitle       = '  Rescale  '
+RescaleBaseTitle       = '  Contrast Editor  '
 
 ;cw_bgroup of selection (back or signal)
 Data1DSelectionList    = ['Select Background   ',$
@@ -88,15 +92,26 @@ Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
 Data1DSelectionPeakYmaxCWFieldSize  = Data1DSelectionPeakYminCWFieldSize
 Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 
-;TAB #2 (resale and contrast)
-ContrastButtonSize  = [0,0,130,30]
-ContrastButtonTitle = ' Contrast Editor ' 
+;TAB #2 (Contrast Editor)
+ContrastDropListSize      = [5,13,200,30]
 
-ResetContrastButtonSize  = [ContrastButtonSize[0]+ContrastButtonSize[2],$
-                            0,ContrastButtonsize[2],$
-                            ContrastButtonSize[3]]
-ResetContrastButtonTitle = ' Reset Contrast '
+ContrastBottomSliderSize  = [220,0,370,60]
+ContrastBottomSliderTitle = 'Left Range'
+ContrastBottomSliderMin = 0
+ContrastBottomSliderMax = 255
+ContrastBottomSliderDefaultValue = ContrastBottomSliderMin
 
+ContrastNumberSliderSize  = [220,65,370,60]
+ContrastNumberSliderTitle = 'Number color' 
+ContrastNumberSliderMin = 1
+ContrastNumberSliderMax = 255
+ContrastNumberSliderDefaultValue = ContrastNumberSliderMax
+
+ResetContrastButtonSize  = [ContrastDropListSize[0]+10,$
+                            80,$
+                            175,$
+                            30]
+ResetContrastButtonTitle = ' RESET FULL CONTRAST SESSION '
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -306,14 +321,38 @@ RescaleBase = widget_base(BackPeakRescaleTab,$
                           scr_ysize=RescaleBaseSize[3],$
                           title=RescaleBaseTitle)
 
-ContrastButton = widget_button(RescaleBase,$
-                               xoffset=ContrastButtonSize[0],$
-                               yoffset=ContrastButtonSize[1],$
-                               scr_xsize=ContrastButtonSize[2],$
-                               scr_ysize=ContrastButtonSize[3],$
-                               value=ContrastButtonTitle,$
-                               sensitive=1,$
-                               uname='data_contrast_button')
+ContrastDropList = widget_droplist(RescaleBase,$
+                                   value=LoadctList,$
+                                   xoffset=ContrastDropListSize[0],$
+                                   yoffset=ContrastDropListSize[1],$
+                                   scr_xsize=ContrastDropListSize[2],$
+                                   scr_ysize=ContrastDropListSize[3],$
+                                   /tracking_events,$
+                                   uname='data_contrast_droplist')
+
+ContrastBottomSlider = widget_slider(RescaleBase,$
+                                     xoffset=ContrastBottomSliderSize[0],$
+                                     yoffset=ContrastBottomSliderSize[1],$
+                                     scr_xsize=ContrastBottomSliderSize[2],$
+                                     scr_ysize=ContrastBottomSliderSize[3],$
+                                     minimum=ContrastBottomSliderMin,$
+                                     maximum=ContrastBottomSliderMax,$
+                                     uname='data_contrast_bottom_slider',$
+                                     /tracking_events,$
+                                     title=ContrastBottomSliderTitle,$
+                                     value=ContrastBottomSliderDefaultValue)
+
+ContrastNumberSlider = widget_slider(RescaleBase,$
+                                     xoffset=ContrastNumberSliderSize[0],$
+                                     yoffset=ContrastNumberSliderSize[1],$
+                                     scr_xsize=ContrastNumberSliderSize[2],$
+                                     scr_ysize=ContrastNumberSliderSize[3],$
+                                     minimum=ContrastNumberSliderMin,$
+                                     maximum=ContrastNumberSliderMax,$
+                                     uname='data_contrast_number_slider',$
+                                     /tracking_events,$
+                                     title=ContrastNumberSliderTitle,$
+                                     value=ContrastNumberSliderDefaultValue)
 
 ResetContrastButton = widget_button(RescaleBase,$
                                     xoffset=ResetContrastButtonSize[0],$
@@ -323,6 +362,7 @@ ResetContrastButton = widget_button(RescaleBase,$
                                     value=ResetContrastButtonTitle,$
                                     sensitive=1,$
                                     uname='data_reset_contrast_button')
+
 
 END
 

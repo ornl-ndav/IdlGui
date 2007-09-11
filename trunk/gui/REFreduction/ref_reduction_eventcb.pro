@@ -505,16 +505,95 @@ endelse
 END
 
 
+;######## CONTRAST DATA #######
+
 ;start the xloadct window
 PRO REFreductionEventcb_DataContrastEditor, Event
-xloadct,/modal,group=id
-RePlot1DDAtaFile, Event
-REFreduction_DataBackgroundPeakSelection, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).DataNexusFound) then begin
+
+    prevIndex = (*global).PreviousDataContrastDroplistIndex
+    currIndex = getDropListSelectedIndex(Event,'data_contrast_droplist')
+    
+    if (prevIndex Ne currIndex) then begin
+        REFreduction_refreshDataPlot, Event
+        (*global).PreviousDataContrastDroplistIndex = currIndex
+    endif
+
+endif
 END
 
 
 PRO REFreductionEventcb_DataResetContrastEditor, Event
-loadct,5
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).DataNexusFound) then begin
+;reset droplist and sliders
+    setDropListValue, Event, 'data_contrast_droplist', (*global).InitialDataContrastDropList
+    setSliderValue, Event, 'data_contrast_bottom_slider', 0
+    setSliderValue, Event, 'data_contrast_number_slider', 255
+    REFreduction_refreshDataPlot, Event
+endif
+END
+
+
+
+;Data Contrast Bottom Slider
+PRO  REFreductionEventcb_DataContrastBottomSlider, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).DataNexusFound) then begin
+
+    prevIndex = (*global).PreviousDataContrastBottomSliderIndex
+    currIndex = getSliderValue(Event,'data_contrast_bottom_slider')
+    
+    if (prevIndex NE currIndex) then begin
+        REFreduction_refreshDataPlot, Event
+        (*global).PreviousDataContrastBottomSliderIndex = currIndex
+    endif
+
+endif
+
+END
+
+
+;Data Contrast Number Slider
+PRO REFreductionEventcb_DataContrastNumberSlider, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).DataNexusFound) then begin
+
+    prevIndex = (*global).PreviousDataContrastNumberSliderIndex
+    currIndex = getSliderValue(Event,'data_contrast_number_slider')
+    
+    if (prevIndex NE currIndex) then begin
+        REFreduction_refreshDataPlot, Event
+        (*global).PreviousDataContrastNumberSliderIndex = currIndex
+    endif
+
+endif
+
+END
+
+
+PRO REFreduction_refreshDataPlot, Event
+;get droplist index
+LoadctIndex = getDropListSelectedIndex(Event,'data_contrast_droplist')
+;get bottom value of color
+BottomColorValue = getSliderValue(Event,'data_contrast_bottom_slider')
+;get number of color
+NumberColorValue = getSliderValue(Event,'data_contrast_number_slider')
+
+loadct,loadctIndex, Bottom=BottomColorValue,NColors=NumberColorValue
 RePlot1DDAtaFile, Event
 REFreduction_DataBackgroundPeakSelection, Event
 END
@@ -524,8 +603,26 @@ END
 
 
 
-PRO blabla, Event
-end
+;start the xloadct window
+PRO REFreductionEventcb_NormContrastEditor, Event
+xloadct,/modal,group=id
+RePlot1DNormFile, Event
+REFreduction_NormBackgroundPeakSelection, Event
+END
+
+
+PRO REFreductionEventcb_NormResetContrastEditor, Event
+loadct,5
+RePlot1DNormFile, Event
+REFreduction_NormBackgroundPeakSelection, Event
+END
+
+
+
+
+
+
+
 
 pro ref_reduction_eventcb
 end
