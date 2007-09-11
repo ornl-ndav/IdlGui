@@ -586,7 +586,7 @@ FullResetButton = widget_button(RescaleBase,$
                                 yoffset=FullResetButtonSize[1],$
                                 scr_xsize=FullResetButtonSize[2],$
                                 scr_ysize=FullResetButtonSize[3],$
-                                uname='data_full_reset',$
+                                uname='data_full_reset_button',$
                                 value=FullResetButtonTitle)
 
 END
