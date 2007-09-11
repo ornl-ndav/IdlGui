@@ -68,6 +68,17 @@ PRO Plot1DNormalizationFile, Event, img, N
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;get size of img
+sz=size(img)
+zmin=min(img,max=zmax)
+;populate rescale 1D data
+putTextFieldValue,Event, 'normalization_rescale_xmin_cwfield',0,0
+putTextFieldValue,Event, 'normalization_rescale_xmax_cwfield',sz[1],0
+putTextFieldValue,Event, 'normalization_rescale_ymin_cwfield',0,0
+putTextfieldValue,Event, 'normalization_rescale_ymax_cwfield',sz[2],0
+putTextFieldValue,Event, 'normalization_rescale_zmin_cwfield',zmin,0
+putTextFieldValue,Event, 'normalization_rescale_zmax_cwfield',zmax,0
+
 ;retrieve parameters
 PROCESSING = (*global).processing_message
 tmp_file = (*global).full_norm_tmp_dat_file
