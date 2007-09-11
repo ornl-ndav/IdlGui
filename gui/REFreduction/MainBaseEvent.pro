@@ -118,6 +118,27 @@ CASE Event.id OF
         REFreductionEventcb_DataContrastNumberSlider, Event
     end
         
+;RESCALE DATA TAB
+;reset x axis
+    widget_info(wWidget, FIND_BY_UNAME='data_reset_xaxis_button'): begin
+        REFreduction_ResetXDataPlot, Event
+    end
+
+;reset y axis
+    widget_info(wWidget, FIND_BY_UNAME='data_reset_yaxis_button'): begin
+        REFreduction_ResetYDataPlot, Event
+    end
+
+;reset z axis
+    widget_info(wWidget, FIND_BY_UNAME='data_reset_zaxis_button'): begin
+        REFreduction_ResetZDataPlot, Event
+    end
+
+;reset all axis
+    widget_info(wWidget, FIND_BY_UNAME='data_full_reset_button'): begin
+        REFreduction_ResetFullDataPlot, Event
+    end
+
 ;**LOAD TAB**NORMALIZATION**
 
 ;LOAD NORMALIZATION file
@@ -226,6 +247,31 @@ CASE Event.id OF
         REFreductionEventcb_NormContrastNumberSlider, Event
     end
 
+;RESCALE DATA TAB
+;reset x axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_xaxis_button'): begin
+        REFreduction_ResetXNormalizationPlot, Event
+    end
+
+;reset y axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_yaxis_button'): begin
+        REFreduction_ResetYNormalizationPlot, Event
+    end
+
+;reset z axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_zaxis_button'): begin
+        REFreduction_ResetZNormalizationPlot, Event
+    end
+
+;reset all axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization_full_reset_button'): begin
+        REFreduction_ResetFullNormalizationPlot, Event
+    end
+
+
+
+
+
 ;**REDUCE TAB**
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
@@ -246,7 +292,6 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='overwrite_intrument_geometry_button'): begin
         REFreduction_OverwriteInstrumentGeometry, Event
     end
-
 
     ;Run data reduction
     widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
@@ -277,7 +322,7 @@ ENDCASE
 ;**REDUCE TAB**
 ;command line generator
 SWITCH Event.id OF
-
+    
     widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): 
     widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
@@ -297,7 +342,41 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
         REFreduction_CommandLineGenerator, Event
     end
+    
+    Else:
+ENDSWITCH
 
+;RESCALE DATA TAB
+SWITCH Event.id OF
+
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmin_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_x_droplist'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymin_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmin_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_z_droplist'): begin
+        REFreduction_RescaleDataPlot, Event
+    end
+    
+    Else:
+ENDSWITCH
+
+;RESCALE NORMALIZATION TAB
+SWITCH Event.id OF
+
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_xmin_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_xmax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_x_droplist'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_ymin_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_ymax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_zmin_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_zmax_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_z_droplist'): begin
+        REFreduction_RescaleNormalizationPlot, Event
+    end
+    
     Else:
 ENDSWITCH
 
