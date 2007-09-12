@@ -37,8 +37,8 @@ MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 ;build LOG_BOOK tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
-;build SETTINGS tab
-MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
+;;build SETTINGS tab
+;MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
 
 
 END

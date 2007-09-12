@@ -4,7 +4,7 @@ PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [230,10,250,35]
+RunNumberBaseSize    = [220,0,250,35]
 RunNumberCWFieldSize = [10,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
@@ -17,22 +17,26 @@ LoadTabSize   = [0,$
                  MainTabSize[2],$
                  MainTabSize[3]]
 D_DD_TabSize  = [30,$
-                 30,$
+                 35,$
                  MainTabSize[2]-570,$
-                 MainTabSize[3]-80]
+                 MainTabSize[3]-85]
 D_DD_BaseSize = [5,$
                  5,$
                  D_DD_TabSize[2],$
                  D_DD_TabSize[3]]
+
 if (instrument EQ 'REF_L') then begin
-    DTitle = '   Y vs TOF   '
+    DTitle = 'Y vs TOF (2D)'
+    D3DTitle = 'Y vs TOF (3D)'
 endif else begin
-    DTitle = '   X vs TOF   '
+    DTitle = 'X vs TOF'
 endelse
 
 D_DD_TabTitle = [DTitle,$
-                 '   Y vs X   ']
-                   
+                 'Y vs X (2D)',$
+                 D3DTitle,$
+                 'X vs TOF (3D)']
+
 ;Size of 1D and 2D graphs
 Nx = 256
 Ny = 304

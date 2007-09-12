@@ -7,7 +7,7 @@ PRO MakeGuiLoadNormalization1D2DTab, LOAD_DATA_BASE,$
 
 load_normalization_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
                                          UNAME='load_normalization_d_dd_tab',$
-                                         LOCATION=0,$
+                                         LOCATION=1,$
                                          xoffset=D_DD_TabSize[0],$
                                          yoffset=D_DD_TabSize[1],$
                                          scr_xsize=D_DD_TabSize[2],$

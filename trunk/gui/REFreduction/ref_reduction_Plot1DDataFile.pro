@@ -109,6 +109,7 @@ new_Ntof = (*global).Ntof_DATA
 new_N = 2 * N
 tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_data_ptr) = tvimg
+;shade_surf,tvimg
 tvscl, tvimg, /device
 
 ;remove PROCESSING_message from logbook and say ok

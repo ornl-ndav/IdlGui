@@ -245,7 +245,7 @@ ExtOfAllPlots = ['.txt',$
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainBaseSize       = [50,50,1200,880]
+MainBaseSize       = [50,50,1200,885]
 MainBaseTitle      = 'Reflectometer Data Reduction Package'
 
 ;Build Main Base
@@ -258,7 +258,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          TITLE=MainBaseTitle,$
                          SPACE=0,$
                          XPAD=0,$
-                         YPAD=0)
+                         YPAD=2)
 
 
 ;attach global structure with widget ID of widget main base widget ID
