@@ -183,9 +183,13 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous value of norm contrast bottom color slider
                    PreviousNormContrastNumberSliderIndex : 255,$
 ;previous value of norm contrast number of color slider
-                   DataXYZminmaxArray : ptr_new(0L)$
-;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in Plot1DDdataFile.pro
-                                     })
+                   DataXYZminmaxArray : ptr_new(0L),$
+;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
+;Plot1DDdataFile.pro
+                   NormXYZminmaxArray : ptr_new(0L)$
+;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
+;Plot1DDNormalizationFile.pro
+                                          })
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status

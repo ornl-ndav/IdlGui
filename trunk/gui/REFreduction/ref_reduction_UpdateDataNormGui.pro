@@ -1,23 +1,22 @@
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateDataWidget, Event, isNeXusFound
-if (isNeXusFound) then begin    ;NeXus has been found
-    ActivateWidget, Event, 'data_ymin_label_frame', 1
-    ActivateWidget, Event, 'data_1d_selection', 1
-    ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 1
-    ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', 1
-    ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', 1
-    ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', 1
-    ActivateWidget, Event, 'data_roi_load_button', 1 
-endif else begin                ;NeXus not found
-    ActivateWidget, Event, 'data_ymin_label_frame', 0
-    ActivateWidget, Event, 'data_1d_selection', 0
-    ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', 0
-    ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', 0
-    ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', 0
-    ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', 0
-    ActivateWidget, Event, 'data_roi_load_button', 0
-endelse
+ActivateWidget, Event, 'data_ymin_label_frame', isNeXusFound
+ActivateWidget, Event, 'data_1d_selection', isNeXusFound
+ActivateWidget, Event, 'data_d_selection_background_ymin_cw_field', isNeXusFound
+ActivateWidget, Event, 'data_d_selection_peak_ymin_cw_field', isNeXusFound
+ActivateWidget, Event, 'data_d_selection_background_ymax_cw_field', isNeXusFound
+ActivateWidget, Event, 'data_d_selection_peak_ymax_cw_field', isNeXusFound
+ActivateWidget, Event, 'data_roi_load_button', isNeXusFound
+ActivateWidget, Event, 'data_contrast_droplist', isNeXusFound
+ActivateWidget, Event, 'data_contrast_bottom_slider', isNeXusFound
+ActivateWidget, Event, 'data_contrast_number_slider', isNeXusFound
+ActivateWidget, Event, 'data_reset_contrast_button', isNeXusFound
+ActivateWidget, Event, 'data_reset_xaxis_button', isNeXusFound
+ActivateWidget, Event, 'data_reset_yaxis_button', isNeXusFound
+ActivateWidget, Event, 'data_reset_zaxis_button', isNeXusFound
+ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
+ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
 END
 
 
@@ -26,25 +25,23 @@ END
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateNormWidget, Event, isNeXusFound
-if (isNeXusFound) then begin    ;NeXus has been found
-    ActivateWidget, Event, 'normalization_ymin_label_frame', 1
-    ActivateWidget, Event, 'normalization_1d_selection', 1
-    ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 1
-    ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 1
-    ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', 1
-    ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', 1
-    ActivateWidget, Event, 'normalization_roi_load_button', 1 
-endif else begin                ;NeXus not found
-    ActivateWidget, Event, 'normalization_ymin_label_frame', 0
-    ActivateWidget, Event, 'normalization_1d_selection', 0
-    ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', 0
-    ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', 0
-    ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', 0
-    ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', 0
-    ActivateWidget, Event, 'normalization_roi_load_button', 0
-endelse
+ActivateWidget, Event, 'normalization_ymin_label_frame', isNeXusFound
+ActivateWidget, Event, 'normalization_1d_selection', isNeXusFound
+ActivateWidget, Event, 'normalization_d_selection_background_ymin_cw_field', isNeXusFound
+ActivateWidget, Event, 'normalization_d_selection_peak_ymin_cw_field', isNeXusFound
+ActivateWidget, Event, 'normalization_d_selection_background_ymax_cw_field', isNeXusFound
+ActivateWidget, Event, 'normalization_d_selection_peak_ymax_cw_field', isNeXusFound
+ActivateWidget, Event, 'normalization_roi_load_button', isNeXusFound
+ActivateWidget, Event, 'normalization_contrast_droplist', isNeXusFound
+ActivateWidget, Event, 'normalization_contrast_bottom_slider', isNeXusFound
+ActivateWidget, Event, 'normalization_contrast_number_slider', isNeXusFound
+ActivateWidget, Event, 'normalization_reset_contrast_button', isNeXusFound
+ActivateWidget, Event, 'normalization_reset_xaxis_button', isNeXusFound
+ActivateWidget, Event, 'normalization_reset_yaxis_button', isNeXusFound
+ActivateWidget, Event, 'normalization_reset_zaxis_button', isNeXusFound
+ActivateWidget, Event, 'normalization_full_reset_button', isNeXusFound
+ActivateWidget, Event, 'normalizaiton_rescale_z_droplist', isNeXusFound
 END
-
 
 
 
