@@ -18,7 +18,7 @@ ContrastBaseSize       = BackPeakBaseSize
 ContrastBaseTitle      = '  Contrast Editor  '
 ;Tab#3
 RescaleBaseSize        = BackPeakBaseSize
-RescaleBaseTitle       = '   Rescale   '  
+RescaleBaseTitle       = '   Range Displayed   '  
 
 ;cw_bgroup of selection (back or signal)
 Data1DSelectionList    = ['Select Background   ',$
@@ -367,7 +367,8 @@ ContrastDropList = widget_droplist(ContrastBase,$
                                    scr_xsize=ContrastDropListSize[2],$
                                    scr_ysize=ContrastDropListSize[3],$
                                    /tracking_events,$
-                                   uname='data_contrast_droplist')
+                                   uname='data_contrast_droplist',$
+                                   sensitive=0)
 
 ContrastBottomSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastBottomSliderSize[0],$
@@ -379,7 +380,8 @@ ContrastBottomSlider = widget_slider(ContrastBase,$
                                      uname='data_contrast_bottom_slider',$
                                      /tracking_events,$
                                      title=ContrastBottomSliderTitle,$
-                                     value=ContrastBottomSliderDefaultValue)
+                                     value=ContrastBottomSliderDefaultValue,$
+                                     sensitive=0)
 
 ContrastNumberSlider = widget_slider(ContrastBase,$
                                      xoffset=ContrastNumberSliderSize[0],$
@@ -391,7 +393,8 @@ ContrastNumberSlider = widget_slider(ContrastBase,$
                                      uname='data_contrast_number_slider',$
                                      /tracking_events,$
                                      title=ContrastNumberSliderTitle,$
-                                     value=ContrastNumberSliderDefaultValue)
+                                     value=ContrastNumberSliderDefaultValue,$
+                                     sensitive=0)
 
 ResetContrastButton = widget_button(ContrastBase,$
                                     xoffset=ResetContrastButtonSize[0],$
@@ -399,7 +402,7 @@ ResetContrastButton = widget_button(ContrastBase,$
                                     scr_xsize=ResetContrastButtonSize[2],$
                                     scr_ysize=ResetContrastButtonSize[3],$
                                     value=ResetContrastButtonTitle,$
-                                    sensitive=1,$
+                                    sensitive=0,$
                                     uname='data_reset_contrast_button')
 
 
@@ -448,27 +451,29 @@ RescaleXMaxcwfieldBase = widget_base(RescaleXBase,$
                                      scr_ysize=RescaleMaxcwfieldBaseSize[3])
 
 RescaleXMaxCWField = cw_field(RescaleXMaxcwfieldBase,$
-                             xsize=RescaleMaxcwfieldSize[0],$
-                             ysize=RescaleMaxcwFieldSize[1],$
-                             row=1,$
-                             /float,$
-                             return_events=1,$
-                             title=RescaleMaxcwfieldLabel,$
-                             uname='data_rescale_xmax_cwfield')
+                              xsize=RescaleMaxcwfieldSize[0],$
+                              ysize=RescaleMaxcwFieldSize[1],$
+                              row=1,$
+                              /float,$
+                              return_events=1,$
+                              title=RescaleMaxcwfieldLabel,$
+                              uname='data_rescale_xmax_cwfield')
 
 RescaleXScaleDroplist = widget_droplist(RescaleXBase,$
                                        value=RescaleScaleDroplist,$
                                        xoffset=RescaleScaleDroplistSize[0],$
                                        yoffset=RescaleScaleDroplistSize[1],$
-                                       uname='data_rescale_x_droplist')
+                                       uname='data_rescale_x_droplist',$
+                                       sensitive=0)
 
 ResetXScaleButton = widget_button(RescaleXBase,$
-                                 xoffset=ResetScaleButtonSize[0],$
-                                 yoffset=ResetScaleButtonSize[1],$
-                                 scr_xsize=ResetScaleButtonSize[2],$
-                                 scr_ysize=ResetScaleButtonSize[3],$
-                                 value=ResetXScaleButtonTitle,$
-                                 uname='data_reset_xaxis_button')
+                                  xoffset=ResetScaleButtonSize[0],$
+                                  yoffset=ResetScaleButtonSize[1],$
+                                  scr_xsize=ResetScaleButtonSize[2],$
+                                  scr_ysize=ResetScaleButtonSize[3],$
+                                  value=ResetXScaleButtonTitle,$
+                                  uname='data_reset_xaxis_button',$
+                                  sensitive=0)
 
 ;Y base
 RescaleYLabel = widget_label(RescaleBase,$
@@ -477,50 +482,51 @@ RescaleYLabel = widget_label(RescaleBase,$
                              value=RescaleYLabelTitle)
 
 RescaleYBase = widget_base(RescaleBase,$
-                              uname='data_rescale_Y_base',$
-                              xoffset=RescaleYBaseSize[0],$
-                              yoffset=RescaleYBaseSize[1],$
-                              scr_xsize=RescaleYBaseSize[2],$
-                              scr_ysize=RescaleYBaseSize[3],$
-                              frame=1)
+                           uname='data_rescale_Y_base',$
+                           xoffset=RescaleYBaseSize[0],$
+                           yoffset=RescaleYBaseSize[1],$
+                           scr_xsize=RescaleYBaseSize[2],$
+                           scr_ysize=RescaleYBaseSize[3],$
+                           frame=1)
 
 RescaleYMincwfieldBase = widget_base(RescaleYBase,$
-                                    xoffset=RescaleMincwfieldBaseSize[0],$
-                                    yoffset=RescaleMincwfieldBaseSize[1],$
-                                    scr_xsize=RescaleMincwfieldBaseSize[2],$
-                                    scr_ysize=RescaleMincwfieldBaseSize[3])
+                                     xoffset=RescaleMincwfieldBaseSize[0],$
+                                     yoffset=RescaleMincwfieldBaseSize[1],$
+                                     scr_xsize=RescaleMincwfieldBaseSize[2],$
+                                     scr_ysize=RescaleMincwfieldBaseSize[3])
 
 RescaleYMinCWField = cw_field(RescaleYMincwfieldBase,$
-                             xsize=RescaleMincwfieldSize[0],$
-                             ysize=RescaleMincwFieldSize[1],$
-                             row=1,$
-                             /float,$
-                             return_events=1,$
-                             title=RescaleMincwfieldLabel,$
-                             uname='data_rescale_ymin_cwfield')
-                             
+                              xsize=RescaleMincwfieldSize[0],$
+                              ysize=RescaleMincwFieldSize[1],$
+                              row=1,$
+                              /float,$
+                              return_events=1,$
+                              title=RescaleMincwfieldLabel,$
+                              uname='data_rescale_ymin_cwfield')
+
 RescaleYMaxcwfieldBase = widget_base(RescaleYBase,$
-                                    xoffset=RescaleMaxcwfieldBaseSize[0],$
-                                    yoffset=RescaleMaxcwfieldBaseSize[1],$
-                                    scr_xsize=RescaleMaxcwfieldBaseSize[2],$
-                                    scr_ysize=RescaleMaxcwfieldBaseSize[3])
+                                     xoffset=RescaleMaxcwfieldBaseSize[0],$
+                                     yoffset=RescaleMaxcwfieldBaseSize[1],$
+                                     scr_xsize=RescaleMaxcwfieldBaseSize[2],$
+                                     scr_ysize=RescaleMaxcwfieldBaseSize[3])
 
 RescaleYMaxCWField = cw_field(RescaleYMaxcwfieldBase,$
-                             xsize=RescaleMaxcwfieldSize[0],$
-                             ysize=RescaleMaxcwFieldSize[1],$
-                             row=1,$
-                             /float,$
-                             return_events=1,$
-                             title=RescaleMaxcwfieldLabel,$
-                             uname='data_rescale_ymax_cwfield')
+                              xsize=RescaleMaxcwfieldSize[0],$
+                              ysize=RescaleMaxcwFieldSize[1],$
+                              row=1,$
+                              /float,$
+                              return_events=1,$
+                              title=RescaleMaxcwfieldLabel,$
+                              uname='data_rescale_ymax_cwfield')
 
 ResetYScaleButton = widget_button(RescaleYBase,$
-                                 xoffset=ResetScaleButtonSize[0],$
-                                 yoffset=ResetScaleButtonSize[1],$
-                                 scr_xsize=ResetScaleButtonSize[2],$
-                                 scr_ysize=ResetScaleButtonSize[3],$
-                                 value=ResetYScaleButtonTitle,$
-                                 uname='data_reset_yaxis_button')
+                                  xoffset=ResetScaleButtonSize[0],$
+                                  yoffset=ResetScaleButtonSize[1],$
+                                  scr_xsize=ResetScaleButtonSize[2],$
+                                  scr_ysize=ResetScaleButtonSize[3],$
+                                  value=ResetYScaleButtonTitle,$
+                                  uname='data_reset_yaxis_button',$
+                                  sensitive=0)
 
 ;Z base
 RescaleZLabel = widget_label(RescaleBase,$
@@ -529,11 +535,11 @@ RescaleZLabel = widget_label(RescaleBase,$
                              value=RescaleZLabelTitle)
 
 RescaleZBase = widget_base(RescaleBase,$
-                              uname='data_rescale_Z_base',$
-                              xoffset=RescaleZBaseSize[0],$
-                              yoffset=RescaleZBaseSize[1],$
-                              scr_xsize=RescaleZBaseSize[2],$
-                              scr_ysize=RescaleZBaseSize[3],$
+                           uname='data_rescale_Z_base',$
+                           xoffset=RescaleZBaseSize[0],$
+                           yoffset=RescaleZBaseSize[1],$
+                           scr_xsize=RescaleZBaseSize[2],$
+                           scr_ysize=RescaleZBaseSize[3],$
                            frame=1)
 
 RescaleZMincwfieldBase = widget_base(RescaleZBase,$
@@ -566,11 +572,13 @@ RescaleZMaxCWField = cw_field(RescaleZMaxcwfieldBase,$
                               title=RescaleMaxcwfieldLabel,$
                               uname='data_rescale_zmax_cwfield')
 
+
 RescaleZScaleDroplist = widget_droplist(RescaleZBase,$
                                         value=RescaleScaleDroplist,$
                                         xoffset=RescaleScaleDroplistSize[0],$
                                         yoffset=RescaleScaleDroplistSize[1],$
-                                        uname='data_rescale_z_droplist')
+                                        uname='data_rescale_z_droplist',$
+                                        sensitive=0)
 
 ResetZScaleButton = widget_button(RescaleZBase,$
                                   xoffset=ResetScaleButtonSize[0],$
@@ -578,7 +586,8 @@ ResetZScaleButton = widget_button(RescaleZBase,$
                                   scr_xsize=ResetScaleButtonSize[2],$
                                   scr_ysize=ResetScaleButtonSize[3],$
                                   value=ResetZScaleButtonTitle,$
-                                  uname='data_reset_zaxis_button')
+                                  uname='data_reset_zaxis_button',$
+                                  sensitive=0)
 
 ;full reset
 FullResetButton = widget_button(RescaleBase,$
@@ -587,7 +596,8 @@ FullResetButton = widget_button(RescaleBase,$
                                 scr_xsize=FullResetButtonSize[2],$
                                 scr_ysize=FullResetButtonSize[3],$
                                 uname='data_full_reset_button',$
-                                value=FullResetButtonTitle)
+                                value=FullResetButtonTitle,$
+                                sensitive=0)
 
 END
 

@@ -73,14 +73,14 @@ sz=size(img)
 zmin=min(img,max=zmax)
 ;populate rescale 1D data
 putTextFieldValue,Event, 'data_rescale_xmin_cwfield',0,0
-putTextFieldValue,Event, 'data_rescale_xmax_cwfield',sz[1],0
+putTextFieldValue,Event, 'data_rescale_xmax_cwfield',sz[1]-1,0
 putTextFieldValue,Event, 'data_rescale_ymin_cwfield',0,0
-putTextfieldValue,Event, 'data_rescale_ymax_cwfield',sz[2],0
+putTextfieldValue,Event, 'data_rescale_ymax_cwfield',sz[2]-1,0
 putTextFieldValue,Event, 'data_rescale_zmin_cwfield',zmin,0
-putTextFieldValue,Event, 'data_rescale_zmax_cwfield',zmax,0
-(*(*global).DataXYZminmaxArray) = [0,sz[1],$
-                                   0,sz[2],$
-                                   zmin,zmax]
+putTextFieldValue,Event, 'data_rescale_zmax_cwfield',zmax-1,0
+(*(*global).DataXYZminmaxArray) = [0,sz[1]-1,$
+                                   0,sz[2]-1,$
+                                   zmin,zmax-1]
 
 ;retrieve parameters
 PROCESSING = (*global).processing_message
