@@ -11,6 +11,7 @@ PROCESSING = (*global).processing_message ;processing message
 ;get Data Run Number from DataTextField
 NormalizationRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
 NormalizationRunNumber = strcompress(NormalizationRunNumber)
+isNeXusFound = 0                ;by default, NeXus not found
 
 if (NormalizationRunNumber NE '') then begin ;normalization run number is not empty
 
@@ -39,7 +40,6 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
 
 ;get path to nexus run #
         instrument=(*global).instrument ;retrieve name of instrument
-        isNeXusFound = 0        ;by default, NeXus not found
         full_list_of_nexus_name = find_list_nexus_name(Event,$
                                                        NormalizationRunNumber,$
                                                        instrument,$
@@ -154,7 +154,6 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
                                                   instrument,$
                                                   isNeXusFound)
         endelse
-        (*global).NormNeXusFound = isNeXusFound
 
         if (~isNeXusFound) then begin ;NeXus has not been found
         
@@ -186,6 +185,7 @@ if (NormalizationRunNumber NE '') then begin ;normalization run number is not em
     
 endif                            ;end of if(NormalizationRunNumber Ne '')
 
+(*global).NormNeXusFound = isNeXusFound
 ;update GUI according to result of NeXus found or not
 RefReduction_update_normalization_gui_if_NeXus_found, Event, isNeXusFound
 
