@@ -94,7 +94,6 @@ putLogBookMessage, Event, LogBookText, Append=1
 ;img=transpose(img)
 
 DEVICE, DECOMPOSED = 0
-;loadct,5
 
 id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
 widget_control, id_draw, get_value=id_value

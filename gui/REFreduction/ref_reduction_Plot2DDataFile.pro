@@ -107,7 +107,6 @@ img = total(img,1)
 img=transpose(img)
 
 DEVICE, DECOMPOSED = 0
-loadct,5
 
 id_draw = widget_info(Event.top, find_by_uname='load_data_DD_draw')
 widget_control, id_draw, get_value=id_value
