@@ -135,7 +135,6 @@ Device, decomposed=0
 id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
 widget_control, id_draw, get_value=id_value
 wset,id_value
-
 tvscl, tvimg, /device
 
 END

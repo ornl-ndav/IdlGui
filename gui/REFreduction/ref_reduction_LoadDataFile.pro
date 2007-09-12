@@ -11,6 +11,7 @@ PROCESSING = (*global).processing_message ;processing message
 ;get Data Run Number from DataTextField
 DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
 DataRunNumber = strcompress(DataRunNumber)
+isNeXusFound = 0                ;by default, NeXus not found
 
 if (DataRunNumber NE '') then begin ;data run number is not empty
     
@@ -38,7 +39,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
         
 ;get path to nexus run #
         instrument=(*global).instrument ;retrieve name of instrument
-        isNeXusFound = 0        ;by default, NeXus not found
         full_list_of_nexus_name = find_list_nexus_name(Event,$
                                                        DataRunNumber,$
                                                        instrument,$
@@ -153,7 +153,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                                                   instrument,$
                                                   isNeXusFound)
         endelse
-        (*global).DataNeXusFound = isNeXusFound
         
         if (~isNeXusFound) then begin ;NeXus has not been found
         
@@ -183,6 +182,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
     endelse
     
 endif                            ;end of if(DataRunNumber Ne '')
+
+(*global).DataNeXusFound = isNeXusFound
 
 ;update GUI according to result of NeXus found or not
 RefReduction_update_data_gui_if_NeXus_found, Event, isNeXusFound
