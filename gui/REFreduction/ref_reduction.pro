@@ -11,6 +11,8 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+VERSION = 'VERSION: REFreduction_1.0.0'
+
 ;Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
@@ -262,8 +264,16 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
+;add version to program
+version_label = widget_label(MAIN_BASE,$
+                             XOFFSET=1030,$
+                             YOFFSET=2,$
+                             VALUE=VERSION,$
+                             FRAME=0)
+
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
