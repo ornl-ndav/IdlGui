@@ -250,27 +250,23 @@ CASE Event.id OF
 ;RESCALE DATA TAB
 ;reset x axis
     widget_info(wWidget, FIND_BY_UNAME='normalization_reset_xaxis_button'): begin
-        REFreduction_ResetXNormalizationPlot, Event
+        REFreduction_ResetXNormPlot, Event
     end
 
 ;reset y axis
     widget_info(wWidget, FIND_BY_UNAME='normalization_reset_yaxis_button'): begin
-        REFreduction_ResetYNormalizationPlot, Event
+        REFreduction_ResetYNormPlot, Event
     end
 
 ;reset z axis
     widget_info(wWidget, FIND_BY_UNAME='normalization_reset_zaxis_button'): begin
-        REFreduction_ResetZNormalizationPlot, Event
+        REFreduction_ResetZNormPlot, Event
     end
 
 ;reset all axis
     widget_info(wWidget, FIND_BY_UNAME='normalization_full_reset_button'): begin
-        REFreduction_ResetFullNormalizationPlot, Event
+        REFreduction_ResetFullNormPlot, Event
     end
-
-
-
-
 
 ;**REDUCE TAB**
     ;yes or no normalization

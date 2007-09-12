@@ -18,7 +18,7 @@ ContrastBaseSize       = BackPeakBaseSize
 ContrastBaseTitle      = '  Contrast Editor  '
 ;Tab#3
 RescaleBaseSize        = BackPeakBaseSize
-RescaleBaseTitle       = '   Rescale   '  
+RescaleBaseTitle       = '   Range Displayed   '  
 
 ;cw_bgroup of selection (back or signal)
 Norm1DSelectionList = ['Select Background   ',$
