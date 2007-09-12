@@ -22,9 +22,9 @@ END
 
 ;This function creates the name of the Normalization Background ROI file
 PRO REFreduction_CreateDefaultNormBackgroundROIFileName, Event,$
-                                                                  instrument,$
-                                                                  working_path,$
-                                                                  run_number
+                                                         instrument,$
+                                                         working_path,$
+                                                         run_number
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

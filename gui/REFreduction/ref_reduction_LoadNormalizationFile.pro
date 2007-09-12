@@ -237,7 +237,7 @@ putLogBookMessage, Event, LogBookText, Append=1
 REFReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
 
 ;create name of BackgroundROIFile and put it in its box
-REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
   instrument, $
   working_path, $
   NormRunNumber
