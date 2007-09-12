@@ -40,7 +40,7 @@ ActivateWidget, Event, 'normalization_reset_xaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_reset_yaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_reset_zaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_full_reset_button', isNeXusFound
-ActivateWidget, Event, 'normalizaiton_rescale_z_droplist', isNeXusFound
+ActivateWidget, Event, 'normalization_rescale_z_droplist', isNeXusFound
 END
 
 
