@@ -44,7 +44,7 @@ CASE Event.id OF
     end
 
 ;****1D PLOT TAB**
-;1D plot of DATA
+;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
         if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
             if( Event.type EQ 0 )then begin
@@ -137,6 +137,62 @@ CASE Event.id OF
 ;reset all axis
     widget_info(wWidget, FIND_BY_UNAME='data_full_reset_button'): begin
         REFreduction_ResetFullDataPlot, Event
+    end
+
+;****1D_3D PLOT TAB**
+;reset x-axis
+    widget_info(wWidget, FIND_BY_UNAME='data_x_axis_reset_button'): begin
+        REFreduction_ResetData1D3DPlotXaxis, Event
+    end
+    
+;reset y-axis
+    widget_info(wWidget, FIND_BY_UNAME='data_y_axis_reset_button'): begin
+        REFreduction_ResetData1D3DPlotYaxis, Event
+    end
+
+;reset z-axis
+    widget_info(wWidget, FIND_BY_UNAME='data_z_axis_reset_button'): begin
+        REFreduction_ResetData1D3DPlotZaxis, Event
+    end
+
+;Rotation interface (google)
+;x-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='data_google_x_axis_mm_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',-2
+    end
+;x_axis M
+    widget_info(wWidget, FIND_BY_UNAME='data_google_x_axis_m_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',-1
+    end
+;x_axis P
+    widget_info(wWidget, FIND_BY_UNAME='data_google_x_axis_p_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',1
+    end
+;x-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='data_google_x_axis_pp_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',2
+    end
+
+;y-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='data_google_y_axis_mm_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'y-axis',-2
+    end
+;y_axis M
+    widget_info(wWidget, FIND_BY_UNAME='data_google_y_axis_m_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'y-axis',-1
+    end
+;y_axis P
+    widget_info(wWidget, FIND_BY_UNAME='data_google_y_axis_p_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',1
+    end
+;y-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='data_google_y_axis_pp_button'): begin
+        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',2
+    end
+
+;reset
+    widget_info(wWidget, FIND_BY_UNAME='data_google_reset_button'): begin
+        REFreduction_ResetData1D3DPlot_OrientationReset, Event
     end
 
 ;**LOAD TAB**NORMALIZATION**
@@ -375,5 +431,23 @@ SWITCH Event.id OF
     
     Else:
 ENDSWITCH
+
+;1D_3D DATA
+SWITCH Event.id OF
+
+    widget_info(wWidget, FIND_BY_UNAME='data_x_axis_angle_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_x_axis_scale'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_y_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data_y_axis_scale'):
+    widget_info(wWidget, FIND_BY_UNAME='data_z_axis_min_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data_z_axis_max_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data_z_axis_scale'): begin
+        REFreduction_RescaleData1D3DPlot, Event
+    end
+    
+    Else:
+ENDSWITCH
+
+
 
 END
