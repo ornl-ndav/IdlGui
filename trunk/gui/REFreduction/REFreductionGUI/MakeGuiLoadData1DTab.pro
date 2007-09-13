@@ -350,7 +350,6 @@ Data1DSelectionPeakYmaxCWField = $
            title=Data1DSelectionPeakYmaxCWFieldTitle,$
            uname='data_d_selection_peak_ymax_cw_field')
 
-
 ;Tab #2 (contrast base)
 ContrastBase = widget_base(BackPeakRescaleTab,$
                           uname='data_contrast_base',$

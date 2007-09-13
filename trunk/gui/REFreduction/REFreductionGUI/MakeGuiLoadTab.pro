@@ -35,7 +35,7 @@ endelse
 D_DD_TabTitle = [DTitle,$
                  'Y vs X (2D)',$
                  D3DTitle,$
-                 'X vs TOF (3D)']
+                 'Y vs X (3D)']
 
 ;Size of 1D and 2D graphs
 Nx = 256
