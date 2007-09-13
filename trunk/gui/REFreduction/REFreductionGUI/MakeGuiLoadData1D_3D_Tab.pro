@@ -39,8 +39,8 @@ ZaxisMinBaseTitle   = 'Min'
 ZaxisMaxBaseTitle   = 'Max'
 
 AxisScaleList  = ['linear','log']
-x2_offset = 80
-x3_offset = 80
+x2_offset = 75
+x3_offset = 75
 XaxisScaleSize = [XaxisAngleBaseSize[0] + x2_offset,$
                   XaxisAngleBaseSize[1]]
 YaxisScaleSize = [YaxisAngleBaseSize[0] + x2_offset,$
@@ -48,10 +48,22 @@ YaxisScaleSize = [YaxisAngleBaseSize[0] + x2_offset,$
 ZaxisScaleSize = [ZaxisMaxBaseSize[0] + x3_offset,$
                   ZaxisMaxBaseSize[1]]
 
+XaxisResetButtonSize  = [300,XaxisScaleSize[1]+2,60,30]
+XaxisResetButtonTitle = 'RESET X'
+YaxisResetButtonSize  = [XaxisResetButtonSize[0],$
+                         YaxisScaleSize[1]+2,$
+                         XaxisResetButtonSize[2:3]]
+YaxisResetButtonTitle = 'RESET Y'
+ZaxisResetButtonSize  = [XaxisResetButtonSize[0],$
+                         ZaxisScaleSize[1]+2,$
+                         XaxisResetButtonSize[2:3]]
+ZaxisResetButtonTitle = 'RESET Z'
+
 ;'Google' rotation base
-GoogleRotationBaseSize      = [335,12,250,130]
-GoogleRotationBaseTitleSize = [385,2]
-GoogleRotationBaseTitle     = 'Plot Rotation Interface'
+Google_xoff=365
+GoogleRotationBaseSize      = [Google_xoff,12,240,130]
+GoogleRotationBaseTitleSize = [Google_xoff+70,2]
+GoogleRotationBaseTitle     = 'Rotation Interface'
 
 ;google x-axis MM/M/P/PP
 GoogleXaxisMMButtonSize  = [8,50,50,25]
@@ -70,6 +82,13 @@ x3 = 35
 GoogleXaxisPPButtonSize  = [GoogleXaxisPButtonSize[0]+x3,$
                             GoogleXaxisMMButtonSize[1:3]]
 GoogleXaxisPPButtonTitle = '++'
+
+;reset button
+x4=85
+GoogleResetButtonSize    = [GoogleXaxisMMButtonSize[0]+x4,$
+                            GoogleXaxisMMButtonSize[1]+5,$
+                            58,17]
+GoogleResetButtonTitle   = 'RESET'
 
 ;google y-axis PP/P/M/MM
 GoogleYaxisPPButtonSize  = [104,5,40,30]
@@ -151,6 +170,15 @@ XaxisScale = WIDGET_DROPLIST(RescaleBase,$
                              YOFFSET = XaxisScaleSize[1],$
                              UNAME   = 'data_x_axis_scale')
 
+XaxisResetButton = WIDGET_BUTTON(RescaleBase,$
+                                 XOFFSET   = XaxisResetButtonSize[0],$
+                                 YOFFSET   = XaxisResetButtonSize[1],$
+                                 SCR_XSIZE = XaxisResetButtonSize[2],$
+                                 SCR_YSIZE = XaxisResetButtonSize[3],$
+                                 VALUE     = XaxisResetButtonTitle,$
+                                 SENSITIVE = 1,$
+                                 UNAME     = 'data_x_axis_reset_button')
+
 ;Y-AXIS
 YaxisLabel = WIDGET_LABEL(RescaleBase,$
                           XOFFSET  = YaxisLabelSize[0],$
@@ -179,6 +207,15 @@ YaxisScale = WIDGET_DROPLIST(RescaleBase,$
                              XOFFSET = YaxisScaleSize[0],$
                              YOFFSET = YaxisScaleSize[1],$
                              UNAME   = 'data_y_axis_scale')
+
+YaxisResetButton = WIDGET_BUTTON(RescaleBase,$
+                                 XOFFSET   = YaxisResetButtonSize[0],$
+                                 YOFFSET   = YaxisResetButtonSize[1],$
+                                 SCR_XSIZE = YaxisResetButtonSize[2],$
+                                 SCR_YSIZE = YaxisResetButtonSize[3],$
+                                 VALUE     = YaxisResetButtonTitle,$
+                                 SENSITIVE = 1,$
+                                 UNAME     = 'data_y_axis_reset_button')
 
 ;Z-AXIS
 ZaxisLabel = WIDGET_LABEL(RescaleBase,$
@@ -223,6 +260,16 @@ ZaxisScale = WIDGET_DROPLIST(RescaleBase,$
                              XOFFSET = ZaxisScaleSize[0],$
                              YOFFSET = ZaxisScaleSize[1],$
                              UNAME   = 'data_z_axis_scale')
+
+
+ZaxisResetButton = WIDGET_BUTTON(RescaleBase,$
+                                 XOFFSET   = ZaxisResetButtonSize[0],$
+                                 YOFFSET   = ZaxisResetButtonSize[1],$
+                                 SCR_XSIZE = ZaxisResetButtonSize[2],$
+                                 SCR_YSIZE = ZaxisResetButtonSize[3],$
+                                 VALUE     = ZaxisResetButtonTitle,$
+                                 SENSITIVE = 1,$
+                                 UNAME     = 'data_z_axis_reset_button')
 
 ;GOOGLE INTERACTIVE BASE
 GoogleRotationTitle = WIDGET_LABEL(RescaleBase,$
@@ -274,6 +321,16 @@ GoogleXaxisPButton = WIDGET_BUTTON(GoogleRotationBase,$
                                    VALUE     = GoogleXaxisPButtonTitle,$
                                    UNAME     = 'data_google_x_axis_p_button',$
                                    SENSITIVE = 1)
+;RESET
+GoogleResetButton = WIDGET_BUTTON(GoogleRotationBase,$
+                                  XOFFSET   = GoogleResetButtonSize[0],$
+                                  YOFFSET   = GoogleResetButtonSize[1],$
+                                  SCR_XSIZE = GoogleResetButtonSize[2],$
+                                  SCR_YSIZE = GoogleResetButtonSize[3],$
+                                  UNAME     = 'data_google_reset_button',$
+                                  VALUE     = GoogleResetButtonTitle,$
+                                  SENSITIVE = 1)
+
 
 ;GOOGLE Y-AXIS
 GoogleYaxisPPButton = WIDGET_BUTTON(GoogleRotationBase,$
