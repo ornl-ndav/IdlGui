@@ -14,6 +14,10 @@ load_data_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
                                 scr_ysize=D_DD_TabSize[3],$
                                 /tracking_events)
 
+;first tab selected
+widget_control, load_data_D_DD_Tab, set_tab_current = 1 ;1D_3D ;REMOVE_ME
+
+
 ;build Load_Data_1D tab
 MakeGuiLoadData1DTab,$
   load_data_D_DD_Tab,$
