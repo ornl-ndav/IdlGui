@@ -22,8 +22,20 @@ MakeGuiLoadNormalization1DTab,$
   GlobalLoadGraphs,$
   loadctList
 
+MakeGuiLoadNormalization1D_3D_Tab,$
+  load_normalization_D_DD_Tab,$
+  D_DD_BaseSize,$
+  D_DD_TabTitle,$
+  GlobalLoadGraphs
+
 ;build Load_Data_2D tab
 MakeGuiLoadNormalization2DTab,$
+  load_normalization_D_DD_Tab,$
+  D_DD_BaseSize,$
+  D_DD_TabTitle,$
+  GlobalLoadGraphs
+
+MakeGuiLoadNormalization2D_3D_Tab,$
   load_normalization_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
