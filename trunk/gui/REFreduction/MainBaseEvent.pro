@@ -155,44 +155,64 @@ CASE Event.id OF
         REFreduction_ResetData1D3DPlotZaxis, Event
     end
 
-;Rotation interface (google)
-;x-axis MM
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_x_axis_mm_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',-2
-    end
-;x_axis M
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_x_axis_m_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',-1
-    end
-;x_axis P
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_x_axis_p_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',1
-    end
-;x-axis PP
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_x_axis_pp_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',2
+;reset xy_axis
+    widget_info(wWidget, FIND_BY_UNAME='data1d_xy_axis_reset_button'): begin
+        REFreduction_ResetData1D3DPlotXYaxis, Event
     end
 
-;y-axis MM
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_y_axis_mm_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'y-axis',-2
+;reset zz_axis
+    widget_info(wWidget, FIND_BY_UNAME='data1d_zz_axis_reset_button'): begin
+        REFreduction_ResetData1D3DPlotZZaxis, Event
     end
-;y_axis M
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_y_axis_m_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'y-axis',-1
+
+;Rotation interface (google)
+;xy-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_mm_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-4
     end
-;y_axis P
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_y_axis_p_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',1
+;xy_axis M
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_m_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-2
     end
-;y-axis PP
-    widget_info(wWidget, FIND_BY_UNAME='data1d_google_y_axis_pp_button'): begin
-        REFreduction_ResetData1D3DPlot_Orientation, Event, 'x-axis',2
+;xy_axis P
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_p_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',2
+    end
+;xy-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_pp_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',4
+    end
+
+;z-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_mm_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',-4
+    end
+;z_axis M
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_m_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',-2
+    end
+;z_axis P
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_p_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',2
+    end
+;z-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_pp_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',4
     end
 
 ;reset
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_reset_button'): begin
         REFreduction_ResetData1D3DPlot_OrientationReset, Event
+    end
+
+;1d_3d loadct
+    widget_info(wWidget, FIND_BY_UNAME='data_loadct_1d_3d_droplist'): begin
+        CurrentLoadctIndex = getDropListSelectedIndex(Event, 'data_loadct_1d_3d_droplist')
+        PrevLoadctIndex = (*global).PrevData1d3dContrastDropList
+        if (CurrentLoadctIndex NE PrevLoadctIndex) then begin
+            REFreduction_RescaleData1D3DPlot, Event
+            (*global).PrevData1d3dContrastDropList = CurrentLoadctIndex
+        endif
     end
 
 ;**LOAD TAB**NORMALIZATION**
@@ -496,6 +516,8 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data1d_y_axis_scale'):
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_min_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_max_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data1d_xy_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data1d_zz_axis_angle_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_scale'): begin
         REFreduction_RescaleData1D3DPlot, Event
     end

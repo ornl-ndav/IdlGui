@@ -246,12 +246,6 @@ FilesToPlotList = $
 
 (*(*global).FilesToPlotList) = FilesToPlotList
 
-;REMOVE_ME
-FilesToPlotList[0] = $
-  '~/REF_L_3000_2007-08-31T12:08:05-04:00.txt' 
-FilesToPlotList[1] = $
-  '~/REF_L_3000_2007-08-31T12:08:05-04:00.rmd' 
-
 ;get metadata
 NbrLine = (*global).PreviewFileNbrLine
 RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
@@ -264,12 +258,12 @@ REfReduction_DisplayXmlFile, Event
 
 ;Load main data reduction and all intermediate files (if any)
 ;get flt0, flt1 and flt2 and put them into array
-    RefReduction_LoadMainOutputFile, Event, FilesToPlotList[0]
+RefReduction_LoadMainOutputFile, Event, FilesToPlotList[0]
 ;    RefReduction_LoadXmlOutputFile, Event, FilesToPlotList[1]
 ;    RefReduction_LoadIntermediateFiles, Event, FilesToPlotList 
-    
+
 ;;Plot main data reduction plot for the first time
-    RefReduction_PlotMainDataReductionFileFirstTime, Event
+RefReduction_PlotMainDataReductionFileFirstTime, Event
 
 
 ;endif

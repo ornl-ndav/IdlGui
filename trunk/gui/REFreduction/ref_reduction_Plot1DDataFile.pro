@@ -31,8 +31,11 @@ widget_control,id,get_uvalue=global
 N = (*global).Ny_REF_L ; 304
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3)
+(*(*global).DATA_D_TOTAL_ptr) = img
 
 Plot1DDataFile, Event, img, N
+Plot1DData_3D_File, Event, img
+
 END
 
 
@@ -50,8 +53,10 @@ widget_control,id,get_uvalue=global
 N = (*global).Nx_REF_M ; 304
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)
+(*(*global).DATA_D_TOTAL_ptr) = img
 
 Plot1DDataFile, Event, img, N
+Plot1DData_3D_File, Event, img
 
 END
 
@@ -109,8 +114,51 @@ new_Ntof = (*global).Ntof_DATA
 new_N = 2 * N
 tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_data_ptr) = tvimg
-;shade_surf,tvimg
 tvscl, tvimg, /device
+
+;remove PROCESSING_message from logbook and say ok
+LogBookText = getLogBookText(Event)
+putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
+
+END
+
+
+
+;**********************************************************************
+;Procedure that plots REF_L and REF_M 1D 3D data plots                   *
+;**********************************************************************
+PRO Plot1DData_3D_File, Event, img
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
+PROCESSING = (*global).processing_message
+
+;tells user that we are now plotting the 2D data
+LogBookText = '----> Plotting 1D_3D view ...... ' + PROCESSING
+putLogBookMessage, Event, LogBookText, Append=1
+
+DEVICE, DECOMPOSED = 0
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_d_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+XYangle = (*global).PrevData1D3DAx
+ZZangle = (*global).PrevData1D3DAz
+
+shade_surf,img, Ax=XYangle, Az=ZZangle
+
+;put various info in 1D_3D tab
+zmin = MIN(img,MAX=zmax)
+REFreduction_Update1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
 
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)

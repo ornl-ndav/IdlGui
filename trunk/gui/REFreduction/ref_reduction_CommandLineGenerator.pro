@@ -9,6 +9,8 @@ StatusMessage = 0 ;will increase by 1 each time a field is missing
 ;cmd = 'reflect_reduction' ;name of function to call
 cmd = '/SNS/users/j35/usr/bin/reflect_reduction ' ;REMOVE_ME
 
+;cd, (*global).working_path
+
 ;get Data run numbers text field
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
 if (data_run_numbers NE '') then begin
@@ -336,9 +338,6 @@ cmd += ' --output=' + NewOutputFileName
 IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
 cmd += IP_cmd
 
-;;REMOVE_ME
-;CMD = '/SNS/users/j35/usr/bin/reflect_reduction  /SNS/users/2zr/data/REF_L_3852.nxs --data-roi-file=~/local/REF_L_3000_data_roi.dat --data-peak-excl=153 164 --inst=REF_L --mom-trans-bins=1,10,0.5,lin --det-angle=1,0.5,units=degrees --no-filter --output=REF_L_3000_2007-08-31T12:08:05-04:00.txt --dump-specular --dump-bkg --dump-sub --dump-rtof'
-
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
 
@@ -349,6 +348,7 @@ endif else begin
     activate = 1
     putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
 endelse
+
 ActivateWidget, Event,'start_data_reduction_button',activate
 
 END
