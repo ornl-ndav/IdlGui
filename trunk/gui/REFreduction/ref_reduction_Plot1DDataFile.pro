@@ -158,6 +158,7 @@ shade_surf,img, Ax=XYangle, Az=ZZangle
 
 ;put various info in 1D_3D tab
 zmin = MIN(img,MAX=zmax)
+(*(*global).Data_1d_3D_min_max) = [zmin,zmax]
 REFreduction_Update1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
 
 ;remove PROCESSING_message from logbook and say ok

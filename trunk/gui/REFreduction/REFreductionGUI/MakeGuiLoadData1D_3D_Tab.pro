@@ -11,7 +11,10 @@ RescaleBaseSize = [ 0, $
                     D_DD_TabSize[3]-GlobalLoadGraphs[3]]
 
 ;1d_3d_loadct button
-LoadctDroplistSize  = [160,680,100,30]
+LoadctLabelSize     = [220,610]
+LoadctLabelTitle    = 'Contrast'
+LoadctLabelFrameSize = [158,620,195,55]
+LoadctDroplistSize  = [160,630,100,30]
 LoadctDropListTitle = 'Contrast Type'
 
 ;label
@@ -149,6 +152,11 @@ load_data_D_3D_tab_base = widget_base(D_DD_Tab,$
                                       scr_xsize=D_DD_TabSize[2],$
                                       scr_ysize=D_DD_TabSize[3])
 
+LoadctLabel = WIDGET_LABEL(load_data_D_3D_tab_base,$
+                           XOFFSET = LoadctLabelSize[0],$
+                           YOFFSET = LoadctLabelSize[1],$
+                           VALUE   = LoadctLabelTitle)
+
 LoadctDroplist = WIDGET_DROPLIST(load_data_D_3D_tab_base,$
                                  VALUE     = LoadctList,$
                                  UNAME     = 'data_loadct_1d_3d_droplist',$
@@ -157,6 +165,13 @@ LoadctDroplist = WIDGET_DROPLIST(load_data_D_3D_tab_base,$
                                  SENSITIVE = 1,$
                                  /TRACKING_EVENTS)
 
+LoadctLabelFrame = WIDGET_LABEL(load_data_D_3D_tab_base,$
+                                FRAME = 1,$
+                                XOFFSET = LoadctLabelFrameSize[0],$
+                                YOFFSET = LoadctLabelFrameSize[1],$
+                                SCR_XSIZE = LoadctLabelFrameSize[2],$
+                                SCR_YSIZE = LoadctLabelFrameSize[3])
+                                
 load_data_D_3D_draw = widget_draw(load_data_D_3D_tab_base,$
                                   xoffset=GlobalLoadGraphs[0],$
                                   yoffset=GlobalLoadGraphs[1],$

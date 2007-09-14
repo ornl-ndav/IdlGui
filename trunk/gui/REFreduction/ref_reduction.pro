@@ -203,8 +203,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default Az value of data 1D_3D plot
                    InitialData1d3dContrastDropList : 5,$
 ;default value of the data loadct 1d_3d plot
-                   PrevData1d3dContrastDropList : 5$
+                   PrevData1d3dContrastDropList : 5,$
 ;previous value of the data loadct 1d_3d plot
+                   Data_1d_3d_min_max : ptr_new(0L)$
+;[min,max] values of the data img array (used to reset z in 1d_3d)
                    })
 
 ;------------------------------------------------------------------------
