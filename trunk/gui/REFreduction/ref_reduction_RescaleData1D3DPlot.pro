@@ -51,7 +51,6 @@ endif
 END
 
 
-
 ;This function refreshes the 3D plot using the various paremeters
 PRO REFreduction_RescaleData1D3DPlot_RePlot1D3Plot, Event, $
                                                     XaxisScale, $
@@ -133,27 +132,6 @@ ENDCASE
 END
 
 
-;This function reset the x-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotXaxis, Event
-END
-
-;This function reset the y-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotYaxis, Event
-END
-
-;This function reset the z-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotZaxis, Event
-END
-
-;This function reset the xy-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotXYaxis, Event
-END
-
-;This function reset the zz-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotZZaxis, Event
-END
-
-
 ;This function is reached when the user interacts with the google type
 ;orientation tool
 PRO REFreduction_RotateData1D3DPlot_Orientation, Event, Axis, RotationFactor
@@ -192,10 +170,82 @@ REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
 END
 
 
+;This function plots the 3D using the Ax and Az paremeters passed
+PRO REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
+                                                  Data1D3DAx, $
+                                                  Data1D3DAz
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+img = (*(*global).DATA_D_TOTAL_ptr)
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+;DEVICE, DECOMPOSED = 0
+;loadct,
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_d_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+
+shade_surf,img,Ax=Data1D3DAx,Az=Data1D3DAz
+
+END
+
+
+
+
+
+;############ R E S E T ############################
+
+;This function reset the x-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotXaxis, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [1,0,0,0,0]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+;This function reset the y-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotYaxis, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [0,1,0,0,0]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+;This function reset the z-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotZaxis, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [0,0,1,0,0]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+;This function reset the xy-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotXYaxis, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [0,0,0,1,0]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+;This function reset the zz-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotZZaxis, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [0,0,0,0,1]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
 
 ;This function is reached when the RESET button inside the google type
 ;orientation tool is clicked.
 PRO REFreduction_ResetData1D3DPlot_OrientationReset, Event
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [1,1,1,1,1]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+PRO REFreduction_ResetData1D3DPlot, Event, ResetArray
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -225,29 +275,3 @@ REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
 END
 
 
-
-;This function plots the 3D using the Ax and Az paremeters passed
-PRO REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
-                                                  Data1D3DAx, $
-                                                  Data1D3DAz
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-img = (*(*global).DATA_D_TOTAL_ptr)
-
-if (!VERSION.os EQ 'darwin') then begin
-   img = swap_endian(img)
-endif
-
-;DEVICE, DECOMPOSED = 0
-;loadct,
-
-id_draw = widget_info(Event.top, find_by_uname='load_data_d_3d_draw')
-widget_control, id_draw, get_value=id_value
-wset,id_value
-
-shade_surf,img,Ax=Data1D3DAx,Az=Data1D3DAz
-
-END

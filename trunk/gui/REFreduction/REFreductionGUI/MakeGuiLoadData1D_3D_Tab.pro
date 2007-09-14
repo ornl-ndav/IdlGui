@@ -11,7 +11,7 @@ RescaleBaseSize = [ 0, $
                     D_DD_TabSize[3]-GlobalLoadGraphs[3]]
 
 ;1d_3d_loadct button
-LoadctDroplistSize  = [430,0,100,30]
+LoadctDroplistSize  = [160,680,100,30]
 LoadctDropListTitle = 'Contrast Type'
 
 ;label
@@ -187,15 +187,6 @@ XaxisScale = WIDGET_DROPLIST(RescaleBase,$
                              YOFFSET = XaxisScaleSize[1],$
                              UNAME   = 'data1d_x_axis_scale')
 
-XaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-                                 XOFFSET   = XaxisResetButtonSize[0],$
-                                 YOFFSET   = XaxisResetButtonSize[1],$
-                                 SCR_XSIZE = XaxisResetButtonSize[2],$
-                                 SCR_YSIZE = XaxisResetButtonSize[3],$
-                                 VALUE     = XaxisResetButtonTitle,$
-                                 SENSITIVE = 1,$
-                                 UNAME     = 'data1d_x_axis_reset_button')
-
 ;Y-AXIS
 YaxisLabel = WIDGET_LABEL(RescaleBase,$
                           XOFFSET  = YaxisLabelSize[0],$
@@ -207,15 +198,6 @@ YaxisScale = WIDGET_DROPLIST(RescaleBase,$
                              XOFFSET = YaxisScaleSize[0],$
                              YOFFSET = YaxisScaleSize[1],$
                              UNAME   = 'data1d_y_axis_scale')
-
-YaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-                                 XOFFSET   = YaxisResetButtonSize[0],$
-                                 YOFFSET   = YaxisResetButtonSize[1],$
-                                 SCR_XSIZE = YaxisResetButtonSize[2],$
-                                 SCR_YSIZE = YaxisResetButtonSize[3],$
-                                 VALUE     = YaxisResetButtonTitle,$
-                                 SENSITIVE = 1,$
-                                 UNAME     = 'data1d_y_axis_reset_button')
 
 ;Z-AXIS
 ZaxisLabel = WIDGET_LABEL(RescaleBase,$
