@@ -140,32 +140,36 @@ PRO REFreduction_RotateData1D3DPlot_Orientation, Event, Axis, RotationFactor
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-PrevData1D3DAx = (*global).PrevData1D3DAx
-PrevData1D3DAz = (*global).PrevData1D3DAz
-if (Axis EQ 'z-axis') then begin
-    Data1D3DAx = PrevData1D3DAx + RotationFactor
-    (*global).PrevData1D3DAx = Data1D3DAx
-    Data1D3DAz = PrevData1D3DAz
-endif else begin
-    Data1D3DAx = PrevData1D3DAx
-    Data1D3DAz = PrevData1D3DAz + RotationFactor
-    (*global).PrevData1D3DAz = Data1D3DAz
-endelse
-
+IF ((*global).DataNeXusFound) then begin
+    
+    PrevData1D3DAx = (*global).PrevData1D3DAx
+    PrevData1D3DAz = (*global).PrevData1D3DAz
+    if (Axis EQ 'z-axis') then begin
+        Data1D3DAx = PrevData1D3DAx + RotationFactor
+        (*global).PrevData1D3DAx = Data1D3DAx
+        Data1D3DAz = PrevData1D3DAz
+    endif else begin
+        Data1D3DAx = PrevData1D3DAx
+        Data1D3DAz = PrevData1D3DAz + RotationFactor
+        (*global).PrevData1D3DAz = Data1D3DAz
+    endelse
+    
 ;update left part of gui
 ;xy-axis
-putTextFieldValue, Event, '' + $
-  'data1d_xy_axis_angle_cwfield', $
-  Data1D3DAz, 0
-
+    putTextFieldValue, Event, '' + $
+      'data1d_xy_axis_angle_cwfield', $
+      Data1D3DAz, 0
+    
 ;zz-axis
-putTextFieldValue, Event, '' + $
-  'data1d_zz_axis_angle_cwfield',$
-  Data1D3DAx, 0
-
-REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
-  Data1D3DAx, $
-  Data1D3DAz
+    putTextFieldValue, Event, '' + $
+      'data1d_zz_axis_angle_cwfield',$
+      Data1D3DAx, 0
+    
+    REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
+      Data1D3DAx, $
+      Data1D3DAz
+    
+ENDIF
 
 END
 
@@ -202,38 +206,24 @@ END
 
 ;############ R E S E T ############################
 
-;This function reset the x-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotXaxis, Event
-;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [1,0,0,0,0]
-REFreduction_ResetData1D3DPlot, Event, ResetArray
-END
-
-;This function reset the y-axis of data 1D_3D plot
-PRO REFreduction_ResetData1D3DPlotYaxis, Event
-;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [0,1,0,0,0]
-REFreduction_ResetData1D3DPlot, Event, ResetArray
-END
-
 ;This function reset the z-axis of data 1D_3D plot
 PRO REFreduction_ResetData1D3DPlotZaxis, Event
-;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [0,0,1,0,0]
+;[z-axis, xy-axis, zz-axis]
+ResetArray = [1,0,0]
 REFreduction_ResetData1D3DPlot, Event, ResetArray
 END
 
 ;This function reset the xy-axis of data 1D_3D plot
 PRO REFreduction_ResetData1D3DPlotXYaxis, Event
-;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [0,0,0,1,0]
+;[z-axis, xy-axis, zz-axis]
+ResetArray = [0,1,0]
 REFreduction_ResetData1D3DPlot, Event, ResetArray
 END
 
 ;This function reset the zz-axis of data 1D_3D plot
 PRO REFreduction_ResetData1D3DPlotZZaxis, Event
-;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [0,0,0,0,1]
+;[z-axis, xy-axis, zz-axis]
+ResetArray = [0,0,1]
 REFreduction_ResetData1D3DPlot, Event, ResetArray
 END
 
@@ -241,9 +231,11 @@ END
 ;orientation tool is clicked.
 PRO REFreduction_ResetData1D3DPlot_OrientationReset, Event
 ;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
-ResetArray = [1,1,1,1,1]
+ResetArray = [1,1,1]
 REFreduction_ResetData1D3DPlot, Event, ResetArray
 END
+
+
 
 PRO REFreduction_ResetData1D3DPlot, Event, ResetArray
 
@@ -251,22 +243,32 @@ PRO REFreduction_ResetData1D3DPlot, Event, ResetArray
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-Data1D3DAx = (*global).DefaultData1D3DAx
-Data1D3DAz = (*global).DefaultData1D3DAz
+if (ResetArray[0]) then begin ;Zmin and Zmax
 
-(*global).PrevData1D3DAx = Data1D3DAx
-(*global).PrevData1D3DAz = Data1D3DAz
+    Data_1d_3d_min_max = (*(*global).Data_1d_3d_min_max)
+    Zmin = Data_1d_3d_min_max[0]
+    Zmax = Data_1d_3d_min_max[1]
 
-;update left part of gui
-;xy-axis
-putTextFieldValue, Event, '' + $
-  'data1d_xy_axis_angle_cwfield', $
-  Data1D3DAz, 0
+    putTextFieldValue, Event, 'data1d_z_axis_min_cwfield', Zmin, 0
+    putTextFieldValue, Event, 'data1d_z_axis_max_cwfield', Zmax, 0
 
-;zz-axis
-putTextFieldValue, Event, '' + $
-  'data1d_zz_axis_angle_cwfield',$
-  Data1D3DAx, 0
+endif
+
+if (ResetArray[1]) then begin
+
+    Data1D3DAx = (*global).DefaultData1D3DAx
+    putTextFieldValue, Event, 'data1d_xy_axis_angle_cwfield', Data1D3DAx, 0
+    (*global).PrevData1D3DAx = Data1D3DAx
+
+endif
+
+if (ResetArray[2]) then begin
+
+    Data1D3DAz = (*global).DefaultData1D3DAz
+    putTextFieldValue, Event, 'data1d_zz_axis_angle_cwfield', Data1D3DAz, 0
+    (*global).PrevData1D3DAz = Data1D3DAz
+
+endif
 
 REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
   Data1D3DAx, $

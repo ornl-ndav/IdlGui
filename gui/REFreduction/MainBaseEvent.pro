@@ -140,16 +140,6 @@ CASE Event.id OF
     end
 
 ;****1D_3D PLOT TAB**
-;reset x-axis
-    widget_info(wWidget, FIND_BY_UNAME='data1d_x_axis_reset_button'): begin
-        REFreduction_ResetData1D3DPlotXaxis, Event
-    end
-    
-;reset y-axis
-    widget_info(wWidget, FIND_BY_UNAME='data1d_y_axis_reset_button'): begin
-        REFreduction_ResetData1D3DPlotYaxis, Event
-    end
-
 ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_reset_button'): begin
         REFreduction_ResetData1D3DPlotZaxis, Event
