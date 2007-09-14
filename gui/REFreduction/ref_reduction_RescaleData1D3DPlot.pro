@@ -2,7 +2,136 @@
 ;x or y axis. When the scale is changed for x,y and z (linear/log) and
 ;when a new min or max value is entered for Z-axis
 PRO REFreduction_RescaleData1D3DPlot, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+if ((*global).DataNeXusFound) then begin
+
+;retrive various paremeters
+    if (isXaxisScaleLog(Event)) then begin
+        XaxisScale = 'log'
+    endif else begin
+        XaxisScale = 'linear'
+    endelse
+    
+    if (isYaxisScaleLog(Event)) then begin
+        YaxisScale = 'log'
+    endif else begin
+        YaxisScale = 'linear'
+    endelse
+    
+    if (isZaxisScaleLog(Event)) then begin
+        ZaxisScale = 'log'
+    endif else begin
+        ZaxisScale = 'linear'
+    endelse
+    
+    ZMin = getTextFieldValue(Event, 'data1d_z_axis_min_cwfield')
+    ZMax = getTextFieldValue(Event, 'data1d_z_axis_max_cwfield')
+    
+    XYangle = getTextFieldValue(Event, 'data1d_xy_axis_angle_cwfield')
+    ZZAngle = getTextFieldValue(Event, 'data1d_zz_axis_angle_cwfield')
+
+    (*global).PrevData1D3DAx = ZZangle
+    (*global).PrevData1D3DAz = XYangle
+    
+    REFreduction_RescaleData1D3DPlot_RePlot1D3Plot, Event, $
+      XaxisScale, $
+      YaxisScale, $
+      ZaxisScale, $
+      Zmin, $
+      Zmax, $
+      XYangle,$
+      ZZangle
+    
+endif
+
 END
+
+
+
+;This function refreshes the 3D plot using the various paremeters
+PRO REFreduction_RescaleData1D3DPlot_RePlot1D3Plot, Event, $
+                                                    XaxisScale, $
+                                                    YaxisScale, $
+                                                    ZaxisScale, $
+                                                    Zmin, $
+                                                    Zmax, $
+                                                    XYangle,$
+                                                    ZZangle
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+img = (*(*global).DATA_D_TOTAL_ptr)
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+;get loadct for this plot
+LoadctIndex = getDropListSelectedIndex(Event, 'data_loadct_1d_3d_droplist')
+loadct, LoadctIndex
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_d_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+
+if (ZaxisScale EQ 'log') then begin
+    img = alog(img)
+endif
+
+CASE (XaxisScale) OF
+    'linear': BEGIN
+        CASE (YaxisScale) OF
+            'linear': BEGIN
+                shade_surf, $
+                  img, $
+                  Az=XYangle, $
+                  Ax=ZZangle, $
+                  MIN_VALUE = Zmin, $
+                  MAX_VALUE = Zmax
+            END
+            'log' : BEGIN
+                shade_surf, $
+                  img, $
+                  Az=XYangle, $
+                  Ax=ZZangle, $
+                  MIN_VALUE = Zmin, $
+                  MAX_VALUE = Zmax, $
+                  /YLOG
+            END
+        ENDCASE
+    END
+    'log' : BEGIN
+        CASE (YaxisScale) OF
+            'linear': BEGIN
+                shade_surf, $
+                  img, $
+                  Az=XYangle, $
+                  Ax=ZZangle, $
+                  MIN_VALUE = Zmin, $
+                  MAX_VALUE = Zmax, $
+                  /XLOG
+            END
+            'log': BEGIN
+                shade_surf, $
+                  img, $
+                  Az=XYangle, $
+                  Ax=ZZangle, $
+                  MIN_VALUE = Zmin, $
+                  MAX_VALUE = Zmax, $
+                  /XLOG, $
+                  /YLOG
+            END
+        ENDCASE
+    END
+ENDCASE
+END
+
 
 ;This function reset the x-axis of data 1D_3D plot
 PRO REFreduction_ResetData1D3DPlotXaxis, Event
@@ -16,12 +145,109 @@ END
 PRO REFreduction_ResetData1D3DPlotZaxis, Event
 END
 
+;This function reset the xy-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotXYaxis, Event
+END
+
+;This function reset the zz-axis of data 1D_3D plot
+PRO REFreduction_ResetData1D3DPlotZZaxis, Event
+END
+
+
 ;This function is reached when the user interacts with the google type
 ;orientation tool
 PRO REFreduction_RotateData1D3DPlot_Orientation, Event, Axis, RotationFactor
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+PrevData1D3DAx = (*global).PrevData1D3DAx
+PrevData1D3DAz = (*global).PrevData1D3DAz
+if (Axis EQ 'z-axis') then begin
+    Data1D3DAx = PrevData1D3DAx + RotationFactor
+    (*global).PrevData1D3DAx = Data1D3DAx
+    Data1D3DAz = PrevData1D3DAz
+endif else begin
+    Data1D3DAx = PrevData1D3DAx
+    Data1D3DAz = PrevData1D3DAz + RotationFactor
+    (*global).PrevData1D3DAz = Data1D3DAz
+endelse
+
+;update left part of gui
+;xy-axis
+putTextFieldValue, Event, '' + $
+  'data1d_xy_axis_angle_cwfield', $
+  Data1D3DAz, 0
+
+;zz-axis
+putTextFieldValue, Event, '' + $
+  'data1d_zz_axis_angle_cwfield',$
+  Data1D3DAx, 0
+
+REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
+  Data1D3DAx, $
+  Data1D3DAz
+
 END
+
+
 
 ;This function is reached when the RESET button inside the google type
 ;orientation tool is clicked.
 PRO REFreduction_ResetData1D3DPlot_OrientationReset, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Data1D3DAx = (*global).DefaultData1D3DAx
+Data1D3DAz = (*global).DefaultData1D3DAz
+
+(*global).PrevData1D3DAx = Data1D3DAx
+(*global).PrevData1D3DAz = Data1D3DAz
+
+;update left part of gui
+;xy-axis
+putTextFieldValue, Event, '' + $
+  'data1d_xy_axis_angle_cwfield', $
+  Data1D3DAz, 0
+
+;zz-axis
+putTextFieldValue, Event, '' + $
+  'data1d_zz_axis_angle_cwfield',$
+  Data1D3DAx, 0
+
+REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
+  Data1D3DAx, $
+  Data1D3DAz
+
+END
+
+
+
+;This function plots the 3D using the Ax and Az paremeters passed
+PRO REFreduction_RescaleData1D3DPlot_Plot1D3Plot, Event, $
+                                                  Data1D3DAx, $
+                                                  Data1D3DAz
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+img = (*(*global).DATA_D_TOTAL_ptr)
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+;DEVICE, DECOMPOSED = 0
+;loadct,
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_d_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+
+shade_surf,img,Ax=Data1D3DAx,Az=Data1D3DAz
+
 END

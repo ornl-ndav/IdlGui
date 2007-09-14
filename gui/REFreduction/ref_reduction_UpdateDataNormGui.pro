@@ -20,8 +20,6 @@ ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
 END
 
 
-
-
 ;this function will disabled or not the cw_fields and buttons
 ;if no NeXus has been found
 PRO updateNormWidget, Event, isNeXusFound
@@ -138,7 +136,6 @@ endelse
 END
 
 
-
 ;this function insenstive the Y label framed selected and sensitive
 ;the other one in Norm world
 PRO RefReduction_UpdateDataNormGui_reverseNormYminYmaxLabelsFrame, Event
@@ -150,5 +147,31 @@ endif else begin
     ActivateWidget, Event, 'normalization_ymin_label_frame', 1
     ActivateWidget, Event, 'normalization_ymax_label_frame', 0
 endelse
+
+END
+
+
+;This function populate the 1D_3D tab of DATA
+PRO REFreduction_Update1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
+
+;z_min
+putTextFieldValue, event, $
+  'data1d_z_axis_min_cwfield', $
+  strcompress(zmin,/remove_all), 0
+
+;z_max
+putTextFieldValue, event, $
+  'data1d_z_axis_max_cwfield', $
+  strcompress(zmax,/remove_all), 0
+
+;XYangle
+putTextFieldValue, event, $
+  'data1d_xy_axis_angle_cwfield', $
+  strcompress(XYangle,/remove_all), 0
+
+;ZZangle
+putTextFieldValue, event, $
+  'data1d_zz_axis_angle_cwfield', $
+  strcompress(ZZangle,/remove_all), 0
 
 END

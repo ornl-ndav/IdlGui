@@ -93,7 +93,6 @@ endelse
 END
 
 
-
 Function isBaseMap, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
 isMap = widget_info(id, /map)
@@ -106,7 +105,6 @@ tab_id = widget_info(Event.top,find_by_uname='data_nxsummary_zoom_tab')
 CurrTabSelect = widget_info(tab_id,/tab_current)
 return, CurrTabSelect
 END
-
 
 
 Function isNormZoomTabSelected, Event
@@ -143,3 +141,24 @@ endif else begin
     return, 0
 endelse
 END
+
+
+;1D_3D booleans
+FUNCTION isXaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data1d_x_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isYaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data1d_y_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isZaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data1d_z_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+

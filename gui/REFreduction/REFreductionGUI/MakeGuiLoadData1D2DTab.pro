@@ -30,7 +30,8 @@ MakeGuiLoadData1D_3D_Tab,$
   load_data_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
-  GlobalLoadGraphs
+  GlobalLoadGraphs,$
+  LoadctList
   
 ;build Load_Data_2D tab
 MakeGuiLoadData2DTab,$

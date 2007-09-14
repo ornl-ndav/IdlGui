@@ -12,7 +12,7 @@ END
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 VERSION = 'VERSION: REFreduction_1.0.0'
-
+loadct,5
 ;Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
@@ -102,6 +102,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;detector view of DATA (2D)
                    DATA_D_ptr : ptr_new(0L),$ 
 ;(ntot,Ny,Nx) array of DATA
+                   DATA_D_Total_ptr : ptr_new(0L),$
+;img=total(img,x) x=2 for REF_M and x=3 for REF_L
                    NORM_DD_ptr : ptr_new(0L),$ 
 ;detector view of NORMALIZATION (2D)
                    NORM_D_ptr : ptr_new(0L),$ 
@@ -188,10 +190,22 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    DataXYZminmaxArray : ptr_new(0L),$
 ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
 ;Plot1DDdataFile.pro
-                   NormXYZminmaxArray : ptr_new(0L)$
+                   NormXYZminmaxArray : ptr_new(0L),$
 ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
 ;Plot1DDNormalizationFile.pro
-                                          })
+                   PrevData1D3DAx : 30L,$
+;previous Ax value of Data 1D_3D plot
+                   PrevData1D3DAz : 30L,$
+;previsou Az value of data 1D_3D plot
+                   DefaultData1D3DAx : 30L, $
+;default Ax vlaue of data 1D_3D plot
+                   DefaultData1D3DAz : 30L, $
+;default Az value of data 1D_3D plot
+                   InitialData1d3dContrastDropList : 5,$
+;default value of the data loadct 1d_3d plot
+                   PrevData1d3dContrastDropList : 5$
+;previous value of the data loadct 1d_3d plot
+                   })
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
@@ -283,6 +297,8 @@ id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
+id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
 
 if (ucams EQ 'j35' OR $
     ucams EQ '2zr') then begin
