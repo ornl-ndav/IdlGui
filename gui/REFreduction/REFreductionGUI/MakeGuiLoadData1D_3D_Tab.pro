@@ -12,8 +12,8 @@ RescaleTabSize = [5,$
 RescaleBaseSize = [0,0,$                  
                    GlobalLoadGraphs[2], $
                    D_DD_TabSize[3]-GlobalLoadGraphs[3]]
-RescaleTab1Title = 'MANUAL MODE'
-RescaleTab2title = 'AUTOMATIC MODE'
+RescaleTab1Title = 'MANUAL'
+RescaleTab2title = 'AUTOMATIC'
 
 ;1d_3d_loadct button
 LoadctLabelSize     = [220,610]
@@ -95,13 +95,13 @@ ZZAxisAngleResetButtonTitle = 'RST'
 
 ;'Google' rotation base
 Google_xoff=365
-GoogleRotationBaseSize      = [Google_xoff,12,240,130]
-GoogleRotationBaseTitleSize = [Google_xoff+70,2]
-GoogleRotationBaseTitle     = 'Rotation Interface'
+;GoogleRotationBaseTitleSize = [Google_xoff-20,2]
+GoogleRotationBaseTitleSize = [78,2]
+GoogleRotationBaseTitle     = 'R O T A T A T I O N                                I N T E R F A C E'
 
 ;google xy-axis MM/M/P/PP
 ;MMM, MM and M
-GoogleXYaxisMMMButtonSize  = [8,50,70,40]
+GoogleXYaxisMMMButtonSize  = [75,60,70,35]
 GoogleXYaxisMMMButtonTitle = '- - -'
 x1 = 5
 y1 = 3
@@ -136,26 +136,35 @@ GoogleXYaxisPPPButtonSize = [GoogleXYaxisPPButtonSize[0]+GoogleXYaxisPPButtonSiz
 GoogleXYaxisPPPButtonTitle = '+ + +'
 
 ;google z-axis PP/P/M/MM
-GoogleZaxisPPButtonSize  = [102,5,40,30]
-GoogleZaxisPPButtonTitle  = '++'
-y1 = 30
-GoogleZaxisPButtonSize   = [GoogleZaxisPPButtonSize[0]-4,$
-                            GoogleZaxisPPButtonSize[1]+y1,$
-                            GoogleZaxisPPButtonSize[2]+8,$
-                            18]
+xoff = 100
+GoogleZaxisPPPButtonSize  = [255,0,60,30]
+GoogleZaxisPPPButtonTitle = '+ + +'
+x1_off = 4
+y1_off = 1
+scr_xsize = 7
+scr_ysize = 8
+GoogleZaxisPPButtonSize   = [GoogleZaxisPPPButtonSize[0]+x1_off,$
+                             GoogleZaxisPPPButtonSize[1]+GoogleZAxisPPPButtonSize[3]+y1_off,$
+                             GoogleZaxisPPPButtonSize[2]-scr_xsize,$
+                             GoogleZaxisPPPButtonSize[3]-scr_ysize]
+GoogleZaxisPPButtonTitle  = '+ +'
+GoogleZaxisPButtonSize   = [GoogleZaxisPPButtonSize[0]+x1_off,$
+                            GoogleZaxisPPButtonSize[1]+GoogleZaxisPPButtonSize[3]+y1_off,$
+                            GoogleZaxisPPButtonSize[2]-scr_xsize,$
+                            GoogleZaxisPPButtonSize[3]-scr_ysize]
 GoogleZaxisPButtonTitle  = '+'
-y2 = 38
 GoogleZaxisMButtonSize   = [GoogleZaxisPButtonSize[0],$
-                            GoogleZaxisPButtonSize[1]+y2,$
-                            GoogleZaxisPButtonSize[2],$
-                            GoogleZaxisPButtonSize[3]]
+                            GoogleResetButtonSize[1]+GoogleResetButtonSize[3]+y1_off,$
+                            GoogleZaxisPButtonSize[2:3]]
 GoogleZaxisMButtonTitle  = '-'
-y3 = 21
 GoogleZaxisMMButtonSize  = [GoogleZaxisPPButtonSize[0],$
-                            GoogleZaxisMButtonSize[1]+y3,$
-                            GoogleZaxisPPButtonSize[2],$
-                            GoogleZaxisPPButtonSize[3]]
-GoogleZaxisMMButtonTitle = '--'
+                            GoogleZaxisMButtonSize[1]+GoogleZaxisMButtonSize[3]+y1_off,$
+                            GoogleZaxisPPButtonSize[2:3]]
+GoogleZaxisMMButtonTitle = '- -'
+GoogleZaxisMMMButtonSize  = [GoogleZaxisPPPButtonSize[0],$
+                            GoogleZaxisMMButtonSize[1]+GoogleZaxisMMButtonSize[3]+y1_off,$
+                            GoogleZaxisPPPButtonSize[2:3]]
+GoogleZaxisMMMButtonTitle = '- - -'
 
 ;***********************************************************************************
 ;Build 1D_3D tab
@@ -208,13 +217,14 @@ RescaleTab = WIDGET_TAB(load_data_D_3D_tab_base,$
                         SCR_YSIZE = RescaleTabSize[3],$
                         /TRACKING_EVENTS)
 
-; RescaleTab1Base = WIDGET_BASE(RescaleTab,$
-;                               UNAME     = 'data_rescale_tab1_base',$
-;                               XOFFSET   = RescaleBaseSize[0],$
-;                               YOFFSET   = RescaleBaseSize[1],$
-;                               SCR_XSIZE = RescaleBaseSize[2],$
-;                               SCR_YSIZE = RescaleBaseSize[3],$
-;                               TITLE     = RescaleTab1Title)
+;### First tab - Manual mode
+RescaleTab1Base = WIDGET_BASE(RescaleTab,$
+                               UNAME     = 'data_rescale_tab1_base',$
+                               XOFFSET   = RescaleBaseSize[0],$
+                               YOFFSET   = RescaleBaseSize[1],$
+                               SCR_XSIZE = RescaleBaseSize[2],$
+                               SCR_YSIZE = RescaleBaseSize[3],$
+                               TITLE     = RescaleTab1Title)
                               
 
 
@@ -229,7 +239,7 @@ RescaleTab = WIDGET_TAB(load_data_D_3D_tab_base,$
 
 
 
-;GOOGLE INTERACTIVE BASE
+;### Second tab - Automatic mode
 RescaleTab2Base = WIDGET_BASE(RescaleTab,$
                               UNAME     = 'data_rescale_tab2_base',$
                               XOFFSET   = RescaleBaseSize[0],$
@@ -238,10 +248,6 @@ RescaleTab2Base = WIDGET_BASE(RescaleTab,$
                               SCR_YSIZE = RescaleBaseSize[3],$
                               TITLE     = RescaleTab2Title)
 
-GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
-                                   XOFFSET = GoogleRotationBaseTitleSize[0],$
-                                   YOFFSET = GoogleRotationBaseTitleSize[1],$
-                                   VALUE   = GoogleRotationBaseTitle)
 
 ;GOOGLE XY-AXIS
 GoogleXYaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
@@ -309,6 +315,15 @@ GoogleResetButton = WIDGET_BUTTON(RescaleTab2Base,$
 
 
 ;GOOGLE Z-AXIS
+GoogleZaxisPPPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                     XOFFSET   = GoogleZaxisPPPButtonSize[0],$
+                                     YOFFSET   = GoogleZaxisPPPButtonSize[1],$
+                                     SCR_XSIZE = GoogleZaxisPPPButtonSize[2],$
+                                     SCR_YSIZE = GoogleZaxisPPPButtonSize[3],$
+                                     VALUE     = GoogleZaxisPPPButtonTitle,$
+                                     UNAME     = 'data1d_google_z_axis_ppp_button',$
+                                     SENSITIVE = 1)
+
 GoogleZaxisPPButton = WIDGET_BUTTON(RescaleTab2Base,$
                                     XOFFSET   = GoogleZaxisPPButtonSize[0],$
                                     YOFFSET   = GoogleZaxisPPButtonSize[1],$
@@ -345,6 +360,19 @@ GoogleZaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
                                    UNAME     = 'data1d_google_z_axis_mm_button',$
                                    SENSITIVE = 1)
 
+GoogleZaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                     XOFFSET   = GoogleZaxisMMMButtonSize[0],$
+                                     YOFFSET   = GoogleZaxisMMMButtonSize[1],$
+                                     SCR_XSIZE = GoogleZaxisMMMButtonSize[2],$
+                                     SCR_YSIZE = GoogleZaxisMMMButtonSize[3],$
+                                     VALUE     = GoogleZaxisMMMButtonTitle,$
+                                     UNAME     = 'data1d_google_z_axis_mmm_button',$
+                                     SENSITIVE = 1)
+
+GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
+                                   XOFFSET = GoogleRotationBaseTitleSize[0],$
+                                   YOFFSET = GoogleRotationBaseTitleSize[1],$
+                                   VALUE   = GoogleRotationBaseTitle)
 
 END
 
