@@ -4,11 +4,16 @@ PRO MakeGuiLoadData1D_3D_Tab, D_DD_Tab, $
                               GlobalLoadGraphs, $
                               LoadctList
 
-;define dimension and position of various componentsxs
-RescaleBaseSize = [ 0, $
-                    GlobalLoadGraphs[3]+0, $
-                    GlobalLoadGraphs[2], $
-                    D_DD_TabSize[3]-GlobalLoadGraphs[3]]
+;define dimension and position of various components
+RescaleTabSize = [5,$
+                  GlobalLoadGraphs[3]+0, $
+                  GlobalLoadGraphs[2], $
+                  D_DD_TabSize[3]-GlobalLoadGraphs[3]]
+RescaleBaseSize = [0,0,$                  
+                   GlobalLoadGraphs[2], $
+                   D_DD_TabSize[3]-GlobalLoadGraphs[3]]
+RescaleTab1Title = 'MANUAL MODE'
+RescaleTab2title = 'AUTOMATIC MODE'
 
 ;1d_3d_loadct button
 LoadctLabelSize     = [220,610]
@@ -152,25 +157,26 @@ load_data_D_3D_tab_base = widget_base(D_DD_Tab,$
                                       scr_xsize=D_DD_TabSize[2],$
                                       scr_ysize=D_DD_TabSize[3])
 
-LoadctLabel = WIDGET_LABEL(load_data_D_3D_tab_base,$
-                           XOFFSET = LoadctLabelSize[0],$
-                           YOFFSET = LoadctLabelSize[1],$
-                           VALUE   = LoadctLabelTitle)
 
-LoadctDroplist = WIDGET_DROPLIST(load_data_D_3D_tab_base,$
-                                 VALUE     = LoadctList,$
-                                 UNAME     = 'data_loadct_1d_3d_droplist',$
-                                 XOFFSET   = LoadctDroplistSize[0],$
-                                 YOFFSET   = LoadctDroplistSize[1],$
-                                 SENSITIVE = 1,$
-                                 /TRACKING_EVENTS)
+; LoadctLabel = WIDGET_LABEL(load_data_D_3D_tab_base,$
+;                            XOFFSET = LoadctLabelSize[0],$
+;                            YOFFSET = LoadctLabelSize[1],$
+;                            VALUE   = LoadctLabelTitle)
 
-LoadctLabelFrame = WIDGET_LABEL(load_data_D_3D_tab_base,$
-                                FRAME = 1,$
-                                XOFFSET = LoadctLabelFrameSize[0],$
-                                YOFFSET = LoadctLabelFrameSize[1],$
-                                SCR_XSIZE = LoadctLabelFrameSize[2],$
-                                SCR_YSIZE = LoadctLabelFrameSize[3])
+; LoadctDroplist = WIDGET_DROPLIST(load_data_D_3D_tab_base,$
+;                                  VALUE     = LoadctList,$
+;                                  UNAME     = 'data_loadct_1d_3d_droplist',$
+;                                  XOFFSET   = LoadctDroplistSize[0],$
+;                                  YOFFSET   = LoadctDroplistSize[1],$
+;                                  SENSITIVE = 1,$
+;                                  /TRACKING_EVENTS)
+
+; LoadctLabelFrame = WIDGET_LABEL(load_data_D_3D_tab_base,$
+;                                 FRAME = 1,$
+;                                 XOFFSET = LoadctLabelFrameSize[0],$
+;                                 YOFFSET = LoadctLabelFrameSize[1],$
+;                                 SCR_XSIZE = LoadctLabelFrameSize[2],$
+;                                 SCR_YSIZE = LoadctLabelFrameSize[3])
                                 
 load_data_D_3D_draw = widget_draw(load_data_D_3D_tab_base,$
                                   xoffset=GlobalLoadGraphs[0],$
@@ -182,6 +188,139 @@ load_data_D_3D_draw = widget_draw(load_data_D_3D_tab_base,$
                                   /button_events,$
                                   /motion_events)
 
+RescaleTab = WIDGET_TAB(load_data_D_3D_tab_base,$
+                        UNAME     = 'data_rescale_tab',$
+                        LOCATION  = 2,$
+                        XOFFSET   = RescaleTabSize[0],$
+                        YOFFSET   = RescaleTabSize[1],$
+                        SCR_XSIZE = RescaleTabSize[2],$
+                        SCR_YSIZE = RescaleTabSize[3],$
+                        /TRACKING_EVENTS)
+
+RescaleTab1Base = WIDGET_BASE(RescaleTab,$
+                              UNAME     = 'data_rescale_tab1_base',$
+                              XOFFSET   = RescaleBaseSize[0],$
+                              YOFFSET   = RescaleBaseSize[1],$
+                              SCR_XSIZE = RescaleBaseSize[2],$
+                              SCR_YSIZE = RescaleBaseSize[3],$
+                              TITLE     = RescaleTab1Title)
+                              
+
+
+
+
+
+
+
+
+
+
+
+
+
+;GOOGLE INTERACTIVE BASE
+RescaleTab2Base = WIDGET_BASE(RescaleTab,$
+                              UNAME     = 'data_rescale_tab2_base',$
+                              XOFFSET   = RescaleBaseSize[0],$
+                              YOFFSET   = RescaleBaseSize[1],$
+                              SCR_XSIZE = RescaleBaseSize[2],$
+                              SCR_YSIZE = RescaleBaseSize[3],$
+                              TITLE     = RescaleTab2Title)
+
+GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
+                                   XOFFSET = GoogleRotationBaseTitleSize[0],$
+                                   YOFFSET = GoogleRotationBaseTitleSize[1],$
+                                   VALUE   = GoogleRotationBaseTitle)
+
+;GOOGLE XY-AXIS
+GoogleXYaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                    XOFFSET   = GoogleXYaxisMMButtonSize[0],$
+                                    YOFFSET   = GoogleXYaxisMMButtonSize[1],$
+                                    SCR_XSIZE = GoogleXYaxisMMButtonSize[2],$
+                                    SCR_YSIZE = GoogleXYaxisMMButtonSize[3],$
+                                    VALUE     = GoogleXYaxisMMButtonTitle,$
+                                    UNAME     = 'data1d_google_xy_axis_mm_button',$
+                                    SENSITIVE = 1)
+
+GoogleXYaxisMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                   XOFFSET   = GoogleXYaxisMButtonSize[0],$
+                                   YOFFSET   = GoogleXYaxisMButtonSize[1],$
+                                   SCR_XSIZE = GoogleXYaxisMButtonSize[2],$
+                                   SCR_YSIZE = GoogleXYaxisMButtonSize[3],$
+                                   VALUE     = GoogleXYaxisMButtonTitle,$
+                                   UNAME     = 'data1d_google_xy_axis_m_button',$
+                                   SENSITIVE = 1)
+
+GoogleXYaxisPPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                    XOFFSET   = GoogleXYaxisPPButtonSize[0],$
+                                    YOFFSET   = GoogleXYaxisPPButtonSize[1],$
+                                    SCR_XSIZE = GoogleXYaxisPPButtonSize[2],$
+                                    SCR_YSIZE = GoogleXYaxisPPButtonSize[3],$
+                                    VALUE     = GoogleXYaxisPPButtonTitle,$
+                                    UNAME     = 'data1d_google_xy_axis_pp_button',$
+                                    SENSITIVE = 1)
+
+GoogleXYaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                   XOFFSET   = GoogleXYaxisPButtonSize[0],$
+                                   YOFFSET   = GoogleXYaxisPButtonSize[1],$
+                                   SCR_XSIZE = GoogleXYaxisPButtonSize[2],$
+                                   SCR_YSIZE = GoogleXYaxisPButtonSize[3],$
+                                   VALUE     = GoogleXYaxisPButtonTitle,$
+                                   UNAME     = 'data1d_google_xy_axis_p_button',$
+                                   SENSITIVE = 1)
+;RESET
+GoogleResetButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                  XOFFSET   = GoogleResetButtonSize[0],$
+                                  YOFFSET   = GoogleResetButtonSize[1],$
+                                  SCR_XSIZE = GoogleResetButtonSize[2],$
+                                  SCR_YSIZE = GoogleResetButtonSize[3],$
+                                  UNAME     = 'data1d_google_reset_button',$
+                                  VALUE     = GoogleResetButtonTitle,$
+                                  SENSITIVE = 1)
+
+
+;GOOGLE Z-AXIS
+GoogleZaxisPPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                    XOFFSET   = GoogleZaxisPPButtonSize[0],$
+                                    YOFFSET   = GoogleZaxisPPButtonSize[1],$
+                                    SCR_XSIZE = GoogleZaxisPPButtonSize[2],$
+                                    SCR_YSIZE = GoogleZaxisPPButtonSize[3],$
+                                    VALUE     = GoogleZaxisPPButtonTitle,$
+                                    UNAME     = 'data1d_google_z_axis_pp_button',$
+                                    SENSITIVE = 1)
+
+GoogleZaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                   XOFFSET   = GoogleZaxisPButtonSize[0],$
+                                   YOFFSET   = GoogleZaxisPButtonSize[1],$
+                                   SCR_XSIZE = GoogleZaxisPButtonSize[2],$
+                                   SCR_YSIZE = GoogleZaxisPButtonSize[3],$
+                                   VALUE     = GoogleZaxisPButtonTitle,$
+                                   UNAME     = 'data1d_google_z_axis_p_button',$
+                                   SENSITIVE = 1)
+
+GoogleZaxisMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                    XOFFSET   = GoogleZaxisMButtonSize[0],$
+                                    YOFFSET   = GoogleZaxisMButtonSize[1],$
+                                    SCR_XSIZE = GoogleZaxisMButtonSize[2],$
+                                    SCR_YSIZE = GoogleZaxisMButtonSize[3],$
+                                    VALUE     = GoogleZaxisMButtonTitle,$
+                                    UNAME     = 'data1d_google_z_axis_m_button',$
+                                    SENSITIVE = 1)
+
+GoogleZaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                   XOFFSET   = GoogleZaxisMMButtonSize[0],$
+                                   YOFFSET   = GoogleZaxisMMButtonSize[1],$
+                                   SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
+                                   SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
+                                   VALUE     = GoogleZaxisMMButtonTitle,$
+                                   UNAME     = 'data1d_google_z_axis_mm_button',$
+                                   SENSITIVE = 1)
+
+
+END
+
+
+PRO REMOVE_ME
 ;SCALE BASE
 RescaleBase = widget_base(load_data_D_3D_tab_base,$
                           xoffset=RescaleBaseSize[0],$
@@ -329,103 +468,6 @@ ZZaxisAngleCwfield = CW_FIELD(ZZaxisAngleBase,$
                               TITLE         = ZZaxisAngleBaseTitle,$
                               UNAME         = 'data1d_zz_axis_angle_cwfield')
 
-;GOOGLE INTERACTIVE BASE
-GoogleRotationTitle = WIDGET_LABEL(RescaleBase,$
-                                   XOFFSET = GoogleRotationBaseTitleSize[0],$
-                                   YOFFSET = GoogleRotationBaseTitleSize[1],$
-                                   VALUE   = GoogleRotationBaseTitle)
-
-GoogleRotationBase = WIDGET_BASE(RescaleBase,$
-                                 XOFFSET   = GoogleRotationBaseSize[0],$
-                                 YOFFSET   = GoogleRotationBaseSize[1],$
-                                 SCR_XSIZE = GoogleRotationBaseSize[2],$
-                                 SCR_YSIZE = GoogleRotationBaseSize[3],$
-                                 UNAME     = 'data_google_rotation_base',$
-                                 FRAME     = 1)
-
-;GOOGLE XY-AXIS
-GoogleXYaxisMMButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                    XOFFSET   = GoogleXYaxisMMButtonSize[0],$
-                                    YOFFSET   = GoogleXYaxisMMButtonSize[1],$
-                                    SCR_XSIZE = GoogleXYaxisMMButtonSize[2],$
-                                    SCR_YSIZE = GoogleXYaxisMMButtonSize[3],$
-                                    VALUE     = GoogleXYaxisMMButtonTitle,$
-                                    UNAME     = 'data1d_google_xy_axis_mm_button',$
-                                    SENSITIVE = 1)
-
-GoogleXYaxisMButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                   XOFFSET   = GoogleXYaxisMButtonSize[0],$
-                                   YOFFSET   = GoogleXYaxisMButtonSize[1],$
-                                   SCR_XSIZE = GoogleXYaxisMButtonSize[2],$
-                                   SCR_YSIZE = GoogleXYaxisMButtonSize[3],$
-                                   VALUE     = GoogleXYaxisMButtonTitle,$
-                                   UNAME     = 'data1d_google_xy_axis_m_button',$
-                                   SENSITIVE = 1)
-
-GoogleXYaxisPPButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                    XOFFSET   = GoogleXYaxisPPButtonSize[0],$
-                                    YOFFSET   = GoogleXYaxisPPButtonSize[1],$
-                                    SCR_XSIZE = GoogleXYaxisPPButtonSize[2],$
-                                    SCR_YSIZE = GoogleXYaxisPPButtonSize[3],$
-                                    VALUE     = GoogleXYaxisPPButtonTitle,$
-                                    UNAME     = 'data1d_google_xy_axis_pp_button',$
-                                    SENSITIVE = 1)
-
-GoogleXYaxisPButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                   XOFFSET   = GoogleXYaxisPButtonSize[0],$
-                                   YOFFSET   = GoogleXYaxisPButtonSize[1],$
-                                   SCR_XSIZE = GoogleXYaxisPButtonSize[2],$
-                                   SCR_YSIZE = GoogleXYaxisPButtonSize[3],$
-                                   VALUE     = GoogleXYaxisPButtonTitle,$
-                                   UNAME     = 'data1d_google_xy_axis_p_button',$
-                                   SENSITIVE = 1)
-;RESET
-GoogleResetButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                  XOFFSET   = GoogleResetButtonSize[0],$
-                                  YOFFSET   = GoogleResetButtonSize[1],$
-                                  SCR_XSIZE = GoogleResetButtonSize[2],$
-                                  SCR_YSIZE = GoogleResetButtonSize[3],$
-                                  UNAME     = 'data1d_google_reset_button',$
-                                  VALUE     = GoogleResetButtonTitle,$
-                                  SENSITIVE = 1)
-
-
-;GOOGLE Z-AXIS
-GoogleZaxisPPButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                    XOFFSET   = GoogleZaxisPPButtonSize[0],$
-                                    YOFFSET   = GoogleZaxisPPButtonSize[1],$
-                                    SCR_XSIZE = GoogleZaxisPPButtonSize[2],$
-                                    SCR_YSIZE = GoogleZaxisPPButtonSize[3],$
-                                    VALUE     = GoogleZaxisPPButtonTitle,$
-                                    UNAME     = 'data1d_google_z_axis_pp_button',$
-                                    SENSITIVE = 1)
-
-GoogleZaxisPButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                   XOFFSET   = GoogleZaxisPButtonSize[0],$
-                                   YOFFSET   = GoogleZaxisPButtonSize[1],$
-                                   SCR_XSIZE = GoogleZaxisPButtonSize[2],$
-                                   SCR_YSIZE = GoogleZaxisPButtonSize[3],$
-                                   VALUE     = GoogleZaxisPButtonTitle,$
-                                   UNAME     = 'data1d_google_z_axis_p_button',$
-                                   SENSITIVE = 1)
-
-GoogleZaxisMButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                    XOFFSET   = GoogleZaxisMButtonSize[0],$
-                                    YOFFSET   = GoogleZaxisMButtonSize[1],$
-                                    SCR_XSIZE = GoogleZaxisMButtonSize[2],$
-                                    SCR_YSIZE = GoogleZaxisMButtonSize[3],$
-                                    VALUE     = GoogleZaxisMButtonTitle,$
-                                    UNAME     = 'data1d_google_z_axis_m_button',$
-                                    SENSITIVE = 1)
-
-GoogleZaxisMMButton = WIDGET_BUTTON(GoogleRotationBase,$
-                                   XOFFSET   = GoogleZaxisMMButtonSize[0],$
-                                   YOFFSET   = GoogleZaxisMMButtonSize[1],$
-                                   SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
-                                   SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
-                                   VALUE     = GoogleZaxisMMButtonTitle,$
-                                   UNAME     = 'data1d_google_z_axis_mm_button',$
-                                   SENSITIVE = 1)
 
 END
 
