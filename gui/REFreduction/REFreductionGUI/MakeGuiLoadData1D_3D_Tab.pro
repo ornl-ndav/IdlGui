@@ -100,29 +100,40 @@ GoogleRotationBaseTitleSize = [Google_xoff+70,2]
 GoogleRotationBaseTitle     = 'Rotation Interface'
 
 ;google xy-axis MM/M/P/PP
-GoogleXYaxisMMButtonSize  = [8,50,50,25]
-GoogleXYaxisMMButtonTitle = '--'
-x1 = 50
-GoogleXYAxisMButtonSize   = [GoogleXYaxisMMButtonSize[0]+x1,$
-                             GoogleXYaxisMMButtonSize[1]+3,$
-                             GoogleXYaxisMMButtonSize[2]-15,$
-                             GoogleXYaxisMMButtonSize[3]-6]
+;MMM, MM and M
+GoogleXYaxisMMMButtonSize  = [8,50,70,40]
+GoogleXYaxisMMMButtonTitle = '- - -'
+x1 = 5
+y1 = 3
+scr_y = 6
+scr_x = 15
+GoogleXYaxisMMButtonSize   = [GoogleXYaxisMMMButtonSize[0]+GoogleXYaxisMMMButtonSize[2]+x1,$
+                              GoogleXYaxisMMMButtonSize[1]+y1,$
+                              GoogleXYaxisMMMButtonSize[2]-scr_x,$
+                              GoogleXYaxisMMMButtonSize[3]-scr_y]
+GoogleXYaxisMMButtonTitle = '- -'
+GoogleXYAxisMButtonSize   = [GoogleXYaxisMMButtonSize[0]+GoogleXYaxisMMButtonSize[2]+x1,$
+                             GoogleXYaxisMMButtonSize[1]+y1,$
+                             GoogleXYaxisMMButtonSize[2]-scr_x,$
+                             GoogleXYaxisMMButtonSize[3]-scr_y]
 GoogleXYaxisMButtonTitle  = '-'
-x2 = 95
-GoogleXYaxisPButtonSize   = [GoogleXYaxisMButtonSize[0]+x2,$
+;reset button
+GoogleResetButtonSize    = [GoogleXYaxisMButtonSize[0]+GoogleXYaxisMButtonSize[2]+x1,$
+                            GoogleXYaxisMButtonSize[1]+y1,$
+                            60,$
+                            GoogleXYaxisMButtonSize[3]-scr_y]
+GoogleResetButtonTitle   = 'RESET'
+
+;P, PP and PPP
+GoogleXYaxisPButtonSize   = [GoogleResetButtonSize[0]+GoogleResetButtonSize[2]+x1,$
                             GoogleXYaxisMButtonSize[1:3]]
 GoogleXYaxisPButtonTitle  = '+'
-x3 = 35
-GoogleXYaxisPPButtonSize  = [GoogleXYaxisPButtonSize[0]+x3,$
+GoogleXYaxisPPButtonSize  = [GoogleXYaxisPButtonSize[0]+GoogleXYaxisPButtonSize[2]+x1,$
                             GoogleXYaxisMMButtonSize[1:3]]
-GoogleXYaxisPPButtonTitle = '++'
-
-;reset button
-x4=85
-GoogleResetButtonSize    = [GoogleXYaxisMMButtonSize[0]+x4,$
-                            GoogleXYaxisMMButtonSize[1]+5,$
-                            58,17]
-GoogleResetButtonTitle   = 'RESET'
+GoogleXYaxisPPButtonTitle = '+ +'
+GoogleXYaxisPPPButtonSize = [GoogleXYaxisPPButtonSize[0]+GoogleXYaxisPPButtonSize[2]+x1,$
+                             GoogleXYaxisMMMButtonSize[1:3]]
+GoogleXYaxisPPPButtonTitle = '+ + +'
 
 ;google z-axis PP/P/M/MM
 GoogleZaxisPPButtonSize  = [102,5,40,30]
@@ -197,13 +208,13 @@ RescaleTab = WIDGET_TAB(load_data_D_3D_tab_base,$
                         SCR_YSIZE = RescaleTabSize[3],$
                         /TRACKING_EVENTS)
 
-RescaleTab1Base = WIDGET_BASE(RescaleTab,$
-                              UNAME     = 'data_rescale_tab1_base',$
-                              XOFFSET   = RescaleBaseSize[0],$
-                              YOFFSET   = RescaleBaseSize[1],$
-                              SCR_XSIZE = RescaleBaseSize[2],$
-                              SCR_YSIZE = RescaleBaseSize[3],$
-                              TITLE     = RescaleTab1Title)
+; RescaleTab1Base = WIDGET_BASE(RescaleTab,$
+;                               UNAME     = 'data_rescale_tab1_base',$
+;                               XOFFSET   = RescaleBaseSize[0],$
+;                               YOFFSET   = RescaleBaseSize[1],$
+;                               SCR_XSIZE = RescaleBaseSize[2],$
+;                               SCR_YSIZE = RescaleBaseSize[3],$
+;                               TITLE     = RescaleTab1Title)
                               
 
 
@@ -233,6 +244,15 @@ GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
                                    VALUE   = GoogleRotationBaseTitle)
 
 ;GOOGLE XY-AXIS
+GoogleXYaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                    XOFFSET   = GoogleXYaxisMMMButtonSize[0],$
+                                    YOFFSET   = GoogleXYaxisMMMButtonSize[1],$
+                                    SCR_XSIZE = GoogleXYaxisMMMButtonSize[2],$
+                                    SCR_YSIZE = GoogleXYaxisMMMButtonSize[3],$
+                                    VALUE     = GoogleXYaxisMMMButtonTitle,$
+                                    UNAME     = 'data1d_google_xy_axis_mmm_button',$
+                                    SENSITIVE = 1)
+
 GoogleXYaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
                                     XOFFSET   = GoogleXYaxisMMButtonSize[0],$
                                     YOFFSET   = GoogleXYaxisMMButtonSize[1],$
@@ -268,6 +288,15 @@ GoogleXYaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
                                    VALUE     = GoogleXYaxisPButtonTitle,$
                                    UNAME     = 'data1d_google_xy_axis_p_button',$
                                    SENSITIVE = 1)
+
+GoogleXYaxisPPPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                      XOFFSET   = GoogleXYaxisPPPButtonSize[0],$
+                                      YOFFSET   = GoogleXYaxisPPPButtonSize[1],$
+                                      SCR_XSIZE = GoogleXYaxisPPPButtonSize[2],$
+                                      SCR_YSIZE = GoogleXYaxisPPPButtonSize[3],$
+                                      VALUE     = GoogleXYaxisPPPButtonTitle,$
+                                      UNAME     = 'data1d_google_xy_axis_ppp_button',$
+                                      SENSITIVE = 1)
 ;RESET
 GoogleResetButton = WIDGET_BUTTON(RescaleTab2Base,$
                                   XOFFSET   = GoogleResetButtonSize[0],$
