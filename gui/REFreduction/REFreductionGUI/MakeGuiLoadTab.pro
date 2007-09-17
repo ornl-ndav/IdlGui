@@ -4,7 +4,7 @@ PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [220,0,250,35]
+RunNumberBaseSize    = [140,0,250,35]
 RunNumberCWFieldSize = [10,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
