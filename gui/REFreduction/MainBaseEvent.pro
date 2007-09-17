@@ -156,9 +156,13 @@ CASE Event.id OF
     end
 
 ;Rotation interface (google)
+;xy-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_mmm_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-10
+    end
 ;xy-axis MM
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_mm_button'): begin
-        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-4
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-5
     end
 ;xy_axis M
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_m_button'): begin
@@ -170,12 +174,20 @@ CASE Event.id OF
     end
 ;xy-axis PP
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_pp_button'): begin
-        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',4
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',5
+    end
+;xy-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_ppp_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',+10
     end
 
+;z-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_mmm_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',-10
+    end
 ;z-axis MM
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_mm_button'): begin
-        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',-4
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',-5
     end
 ;z_axis M
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_m_button'): begin
@@ -187,7 +199,11 @@ CASE Event.id OF
     end
 ;z-axis PP
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_pp_button'): begin
-        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',4
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',5
+    end
+;z-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='data1d_google_z_axis_ppp_button'): begin
+        REFreduction_RotateData1D3DPlot_Orientation, Event, 'z-axis',10
     end
 
 ;reset

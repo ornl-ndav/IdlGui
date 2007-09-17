@@ -96,8 +96,8 @@ ZZAxisAngleResetButtonTitle = 'RST'
 ;'Google' rotation base
 Google_xoff=365
 ;GoogleRotationBaseTitleSize = [Google_xoff-20,2]
-GoogleRotationBaseTitleSize = [78,2]
-GoogleRotationBaseTitle     = 'R O T A T A T I O N                                I N T E R F A C E'
+GoogleRotationBaseTitleSize = [83,0]
+GoogleRotationBaseTitle     = 'R O T A T I O N                                  I N T E R F A C E'
 
 ;google xy-axis MM/M/P/PP
 ;MMM, MM and M
@@ -226,6 +226,8 @@ RescaleTab1Base = WIDGET_BASE(RescaleTab,$
                                SCR_YSIZE = RescaleBaseSize[3],$
                                TITLE     = RescaleTab1Title)
                               
+
+
 
 
 
