@@ -17,6 +17,10 @@ CASE (BackSignalZoomStatus) OF
     y_array = (*(*global).norm_peak_selection)
     end
     2: begin ;zoom
+;be sure the data draw has been selected
+        id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
+        widget_control, id_draw, get_value=id_value
+        wset,id_value
     end
 ENDCASE
 
@@ -261,6 +265,10 @@ CASE (BackSignalZoomStatus) OF
     y_array = (*(*global).norm_peak_selection)
     end
     2: begin ;zoom
+;be sure the data draw has been selected
+        id_draw = widget_info(Event.top, find_by_uname='load_normalization_D_draw')
+        widget_control, id_draw, get_value=id_value
+        wset,id_value
     end
 ENDCASE
 
