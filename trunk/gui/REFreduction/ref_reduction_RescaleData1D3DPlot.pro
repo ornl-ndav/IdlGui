@@ -235,6 +235,23 @@ ResetArray = [1,1,1]
 REFreduction_ResetData1D3DPlot, Event, ResetArray
 END
 
+;This function is reached when the FULL ESET button inside manual mode
+;is clicked
+PRO REFreduction_FullResetData1D3DPlot_OrientationReset, Event
+;reinitialize x-y and z-axis droplist scales
+setDropListValue, Event, 'data1d_x_axis_scale', 0
+setDropListValue, Event, 'data1d_y_axis_scale', 0
+setDropListValue, Event, 'data1d_z_axis_scale', 0
+
+;reinitialize loadct
+loadct,5
+setDropListValue, Event, 'data_loadct_1d_3d_droplist', 5
+;[x-axis, y-axis, z-axis, xy-axis, zz-axis]
+ResetArray = [1,1,1]
+REFreduction_ResetData1D3DPlot, Event, ResetArray
+END
+
+
 
 
 PRO REFreduction_ResetData1D3DPlot, Event, ResetArray

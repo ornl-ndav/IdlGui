@@ -17,14 +17,14 @@ RescaleTab2title = 'AUTOMATIC'
 
 ;x-axis (droplist)
 XaxisLabelSize      = [10,0]
-XaxisLabeltitle     = 'X-axis:'
-XaxisLabelFrameSize = [5,8,100,45]
+XaxisLabeltitle     = 'X-axis'
+XaxisLabelFrameSize = [5,8,100,40]
 AxisScaleList       = ['linear','log']
 XaxisScaleSize      = [10,15]
 
 ;y-axis (droplist)
 YaxisLabelSize      = [120,0]
-YaxisLabeltitle     = 'Y-axis:'
+YaxisLabeltitle     = 'Y-axis'
 YaxisLabelFrameSize = [YaxisLabelSize[0]-5,XaxisLabelFrameSize[1:3]]
 YaxisScaleSize      = [YaxisLabelSize[0],15]
 
@@ -36,76 +36,65 @@ LoadctLabelFrameSize = [LoadctLabelSize[0]-5,XaxisLabelFrameSize[1],200,$
 LoadctDroplistSize   = [LoadctLabelSize[0],15,100,30]
 
 ;z-axis (droplist-xmin-xmax-reset)
-y_vertical_offset   = 55
+y_vertical_offset   = 50
 ZaxisLabelSize      = [XaxisLabelSize[0],$
                        XaxisLabelSize[1]+y_vertical_offset]
-ZaxisLabelTitle     = 'Z-axis:'
+ZaxisLabelTitle     = 'Z-axis'
 ZaxisLabelFrameSize = [ZaxisLabelSize[0]-5,XaxisLabelFrameSize[1]+y_vertical_offset,$
-                       400,XaxisLabelFrameSize[3]]
+                       420,XaxisLabelFrameSize[3]]
 ZaxisScaleSize      = [ZaxisLabelSize[0],15+y_vertical_offset]
                        
 ;min/max
-; x2_offset= 85
-; ZaxisMinBaseSize    = [ZaxisScaleSize[0]+x2_offset,$
-;                        ZaxisScaleSize[1],$
-;                        80,35]
-; x3_offset = 80
-; ZaxisMaxBaseSize    = [ZaxisMinBaseSize[0]+x3_offset,$
-;                        ZaxisMinBaseSize[1],$
-;                        80,35]
-; ZaxisMinBaseTitle   = 'Min'
-; ZaxisMaxBaseTitle   = 'Max'
+x2_offset = 90
+ZaxisMinBaseSize    = [ZaxisScaleSize[0]+x2_offset,$
+                       ZaxisScaleSize[1],$
+                       80,35]
+x3_offset = 85
+ZaxisMaxBaseSize    = [ZaxisMinBaseSize[0]+x3_offset,$
+                       ZaxisMinBaseSize[1],$
+                       ZaxisMinBaseSize[2:3]]
+ZaxisMinBaseTitle   = 'Min'
+ZaxisMaxBaseTitle   = 'Max'
 
-; XaxisResetButtonSize  = [290,XaxisScaleSize[1]+2,70,30]
-; XaxisResetButtonTitle = 'RESET X'
-; YaxisResetButtonSize  = [XaxisResetButtonSize[0],$
-;                          YaxisScaleSize[1]+2,$
-;                          XaxisResetButtonSize[2:3]]
-; YaxisResetButtonTitle = 'RESET Y'
-; ZaxisResetButtonSize  = [XaxisResetButtonSize[0],$
-;                          ZaxisScaleSize[1]+2,$
-;                          XaxisResetButtonSize[2:3]]
-; ZaxisResetButtonTitle = 'RESET Z'
+ZaxisResetButtonSize  = [ZaxisMaxBaseSize[0]+x2_offset,$
+                         ZaxisScaleSize[1]+2,$
+                         130,30]
+ZaxisResetButtonTitle = 'RESET Z'
 
-; ;XYaxis
-; XYAxisLabelSize      = [ZaxisLabelSize[0],ZaxisLabelSize[1]+y_vertical_offset]
-; XYAxisLabelTitle     = 'XY-axis:'
-; x4_offset= 50
-; XYAxisAngleBaseSize  = [XYAxisLabelSize[0]+x4_offset,$
-;                        XYAxisLabelSize[1]-10,$
-;                        85,35]
-; XYAxisAngleBaseTitle = 'Angle:'
-; x5_offset = 83
-; XYAxisAngleResetButtonSize  = [XYAxisAngleBaseSize[0]+x5_offset,$
-;                                XYAxisAngleBaseSize[1]+3,$
-;                                40,30]
-; XYAxisAngleResetButtonTitle = 'RST'
+;XYaxis
+XYAxisLabelSize               = [XaxisLabelSize[0],ZaxisLabelSize[1]+y_vertical_offset]
+XYAxisLabelTitle              = 'XY-axis:'
+XYAxisLabelFrameSize          = [ZaxisLabelFrameSize[0],ZaxisLabelFrameSize[1]+y_vertical_offset,$
+                                 280,XaxisLabelFrameSize[3]]
+XYAxisAngleBaseSize           = [ZaxisScaleSize[0]+18,$
+                                 ZaxisScaleSize[1]+y_vertical_offset-3,$
+                                 85,35]
+XYAxisAngleBaseTitle          = 'Angle:'
+x1 = 95
+XYAxisAngleResetButtonSize    = [XYAxisAngleBaseSize[0]+x1,$
+                                 XYAxisAngleBaseSize[1]+3,$
+                                 ZaxisResetButtonSize[2:3]]
+XYAxisAngleResetButtonTitle   = 'RESET'
 
-; x6_offset = 180
-; ZZAxisLabelSize      = [XYAxisLabelSize[0]+x6_offset, $
-;                         XYAxisLabelSize[1]]
-; ZZAxisLabelTitle     = 'Z-axis:'
-; ZZAxisAngleBaseSize  = [ZZAxisLabelSize[0]+x4_offset,$
-;                         XYAxisAngleBaseSize[1],$
-;                         XYAxisAngleBaseSize[2:3]]
-; ZZAxisAngleBaseTitle = 'Angle:'
-; ZZAxisAngleResetButtonSize  = [ZZAxisAngleBaseSize[0]+x5_offset,$
-;                                XYAxisAngleResetButtonSize[1],$
-;                                XYAxisAngleResetButtonSize[2:3]]
-; ZZAxisAngleResetButtonTitle = 'RST'
+;ZZaxis
+x2 = 5
+ZZAxisLabelSize               = [XYaxisLabelSize[0]+XYaxisLabelframeSize[2]+10,$
+                                 XYaxisLabelSize[1]]
+ZZAxisLabelTitle              = 'ZZ-axis:'
+ZZAxisLabelFrameSize          = [XYaxisLabelSize[0]+XYaxisLabelFrameSize[2]+x2,$
+                                 XYaxisLabelFrameSize[1:3]]
+ZZAxisAngleBaseSize           = [ZZaxisLabelFrameSize[0]+25,$
+                                 XYaxisAngleBaseSize[1:3]]
+ZZAxisAngleBaseTitle          = 'Angle:'
+x1 = 95
+ZZAxisAngleResetButtonSize    = [ZZAxisAngleBaseSize[0]+x1,$
+                                 ZZAxisAngleBaseSize[1]+3,$
+                                 ZaxisResetButtonSize[2:3]]
+ZZAxisAngleResetButtonTitle   = 'RESET'
 
-
-
-
-
-
-
-
-
-
-
-
-
+;Full reset button
+FullResetButtonSize  = [432,5,148,100]
+FullResetButtonTitle = 'FULL RESET'
 
 ;'Google' rotation base
 Google_xoff=365
@@ -292,6 +281,47 @@ ZaxisScale = WIDGET_DROPLIST(RescaleTab1Base,$
                              YOFFSET = ZaxisScaleSize[1],$
                              UNAME   = 'data1d_z_axis_scale')
 
+ZaxisMinBase = WIDGET_BASE(RescaleTab1Base,$
+                           XOFFSET   = ZaxisMinBaseSize[0],$
+                           YOFFSET   = ZaxisMinBaseSize[1],$
+                           SCR_XSIZE = ZaxisMinBaseSize[2],$
+                           SCR_YSIZE = ZaxisMinBaseSize[3],$
+                           UNAME     = 'data_z_axis_min_base')
+
+ZaxisMinCwfield = CW_FIELD(ZaxisMinBase,$
+                           ROW           = 1,$
+                           XSIZE         = 5,$
+                           YSIZE         = 1,$
+                           /FLOAT,$
+                           RETURN_EVENTS = 1,$
+                           TITLE         = ZaxisMinBaseTitle,$
+                           UNAME         = 'data1d_z_axis_min_cwfield')
+
+ZaxisMaxBase = WIDGET_BASE(RescaleTab1Base,$
+                           XOFFSET   = ZaxisMaxBaseSize[0],$
+                           YOFFSET   = ZaxisMaxBaseSize[1],$
+                           SCR_XSIZE = ZaxisMaxBaseSize[2],$
+                           SCR_YSIZE = ZaxisMaxBaseSize[3],$
+                           UNAME     = 'data1d_z_axis_max_base')
+
+ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
+                           ROW           = 1,$
+                           XSIZE         = 5,$
+                           YSIZE         = 1,$
+                           /FLOAT,$
+                           RETURN_EVENTS = 1,$
+                           TITLE         = ZaxisMaxBaseTitle,$
+                           UNAME         = 'data1d_z_axis_max_cwfield')
+
+ZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
+                                 XOFFSET   = ZaxisResetButtonSize[0],$
+                                 YOFFSET   = ZaxisResetButtonSize[1],$
+                                 SCR_XSIZE = ZaxisResetButtonSize[2],$
+                                 SCR_YSIZE = ZaxisResetButtonSize[3],$
+                                 VALUE     = ZaxisResetButtonTitle,$
+                                 SENSITIVE = 1,$
+                                 UNAME     = 'data1d_z_axis_reset_button')
+
 ZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
                                XOFFSET   = ZaxisLabelFrameSize[0],$
                                YOFFSET   = ZaxisLabelFrameSize[1],$
@@ -300,68 +330,93 @@ ZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
                                VALUE     = '',$
                                FRAME     = 1)
 
+;XY axis angle interaction
+XYaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
+                           XOFFSET  = XYaxisLabelSize[0],$
+                           YOFFSET  = XYaxisLabelSize[1],$
+                           VALUE    = XYaxisLabelTitle)
 
+XYaxisAngleBase = WIDGET_BASE(RescaleTab1Base,$
+                              XOFFSET   = XYaxisAngleBaseSize[0],$
+                              YOFFSET   = XYaxisAngleBaseSize[1],$
+                              SCR_XSIZE = XYaxisAngleBaseSize[2],$
+                              SCR_YSIZE = XYaxisAngleBaseSize[3],$
+                              UNAME     = 'data_xy_axis_angle_base')
 
-; ZaxisMinBase = WIDGET_BASE(RescaleBase,$
-;                            XOFFSET   = ZaxisMinBaseSize[0],$
-;                            YOFFSET   = ZaxisMinBaseSize[1],$
-;                            SCR_XSIZE = ZaxisMinBaseSize[2],$
-;                            SCR_YSIZE = ZaxisMinBaseSize[3],$
-;                            UNAME     = 'data_z_axis_min_base')
+XYaxisAngleCwfield = CW_FIELD(XYaxisAngleBase,$
+                              ROW           = 1,$
+                              XSIZE         = 3,$
+                              YSIZE         = 1,$
+                              /FLOAT,$
+                              RETURN_EVENTS = 1,$
+                              TITLE         = XYaxisAngleBaseTitle,$
+                              UNAME         = 'data1d_xy_axis_angle_cwfield')
 
-; ZaxisMinCwfield = CW_FIELD(ZaxisMinBase,$
-;                            ROW           = 1,$
-;                            XSIZE         = 5,$
-;                            YSIZE         = 1,$
-;                            /FLOAT,$
-;                            RETURN_EVENTS = 1,$
-;                            TITLE         = ZaxisMinBaseTitle,$
-;                            UNAME         = 'data1d_z_axis_min_cwfield')
+XYaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
+                                  XOFFSET   = XYaxisAngleResetButtonSize[0],$
+                                  YOFFSET   = XYaxisAngleResetButtonSize[1],$
+                                  SCR_XSIZE = XYaxisAngleResetButtonSize[2],$
+                                  SCR_YSIZE = XYaxisAngleResetButtonSize[3],$
+                                  VALUE     = XYaxisAngleResetButtonTitle,$
+                                  SENSITIVE = 1,$
+                                  UNAME     = 'data1d_xy_axis_reset_button')
 
-; ZaxisMaxBase = WIDGET_BASE(RescaleBase,$
-;                            XOFFSET   = ZaxisMaxBaseSize[0],$
-;                            YOFFSET   = ZaxisMaxBaseSize[1],$
-;                            SCR_XSIZE = ZaxisMaxBaseSize[2],$
-;                            SCR_YSIZE = ZaxisMaxBaseSize[3],$
-;                            UNAME     = 'data1d_z_axis_max_base')
+XYaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                               XOFFSET   = XYaxisLabelFrameSize[0],$
+                               YOFFSET   = XYaxisLabelFrameSize[1],$
+                               SCR_XSIZE = XYaxisLabelFrameSize[2],$
+                               SCR_YSIZE = XYaxisLabelFrameSize[3],$
+                               VALUE     = '',$
+                               FRAME     = 1)
 
-; ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
-;                            ROW           = 1,$
-;                            XSIZE         = 5,$
-;                            YSIZE         = 1,$
-;                            /FLOAT,$
-;                            RETURN_EVENTS = 1,$
-;                            TITLE         = ZaxisMaxBaseTitle,$
-;                            UNAME         = 'data1d_z_axis_max_cwfield')
+;Z axis angle interaction
+ZZaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
+                           XOFFSET  = ZZaxisLabelSize[0],$
+                           YOFFSET  = ZZaxisLabelSize[1],$
+                           VALUE    = ZZaxisLabelTitle)
 
+ZZaxisAngleBase = WIDGET_BASE(RescaleTab1Base,$
+                              XOFFSET   = ZZaxisAngleBaseSize[0],$
+                              YOFFSET   = ZZaxisAngleBaseSize[1],$
+                              SCR_XSIZE = ZZaxisAngleBaseSize[2],$
+                              SCR_YSIZE = ZZaxisAngleBaseSize[3],$
+                              UNAME     = 'data_zz_axis_angle_base')
 
+ZZaxisAngleCwfield = CW_FIELD(ZZaxisAngleBase,$
+                              ROW           = 1,$
+                              XSIZE         = 3,$
+                              YSIZE         = 1,$
+                              /FLOAT,$
+                              RETURN_EVENTS = 1,$
+                              TITLE         = ZZaxisAngleBaseTitle,$
+                              UNAME         = 'data1d_zz_axis_angle_cwfield')
 
-; ZaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-;                                  XOFFSET   = ZaxisResetButtonSize[0],$
-;                                  YOFFSET   = ZaxisResetButtonSize[1],$
-;                                  SCR_XSIZE = ZaxisResetButtonSize[2],$
-;                                  SCR_YSIZE = ZaxisResetButtonSize[3],$
-;                                  VALUE     = ZaxisResetButtonTitle,$
-;                                  SENSITIVE = 1,$
-;                                  UNAME     = 'data1d_z_axis_reset_button')
+ZZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
+                                  XOFFSET   = ZZaxisAngleResetButtonSize[0],$
+                                  YOFFSET   = ZZaxisAngleResetButtonSize[1],$
+                                  SCR_XSIZE = ZZaxisAngleResetButtonSize[2],$
+                                  SCR_YSIZE = ZZaxisAngleResetButtonSize[3],$
+                                  VALUE     = ZZaxisAngleResetButtonTitle,$
+                                  SENSITIVE = 1,$
+                                  UNAME     = 'data1d_zz_axis_reset_button')
 
+ZZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                               XOFFSET   = ZZaxisLabelFrameSize[0],$
+                               YOFFSET   = ZZaxisLabelFrameSize[1],$
+                               SCR_XSIZE = ZZaxisLabelFrameSize[2],$
+                               SCR_YSIZE = ZZaxisLabelFrameSize[3],$
+                               VALUE     = '',$
+                               FRAME     = 1)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;Full reset button
+FullResetButton = WIDGET_BUTTON(RescaleTab1Base,$
+                                XOFFSET   = FullResetButtonSize[0],$
+                                YOFFSET   = FullResetButtonSize[1],$
+                                SCR_XSIZE = FullResetButtonSize[2],$
+                                SCR_YSIZE = FullResetButtonSize[3],$
+                                VALUE     = FullResetButtonTitle,$
+                                SENSITIVE = 1,$
+                                UNAME     = 'data1d_full_reset_button')
 
 ;### Second tab - Automatic mode
 RescaleTab2Base = WIDGET_BASE(RescaleTab,$
@@ -499,74 +554,3 @@ GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
                                    VALUE   = GoogleRotationBaseTitle)
 
 END
-
-
-
-
-
-PRO REMOVE_ME
-
-;XY and Z axis angle interaction
-XYaxisLabel = WIDGET_LABEL(RescaleBase,$
-                           XOFFSET  = XYaxisLabelSize[0],$
-                           YOFFSET  = XYaxisLabelSize[1],$
-                           VALUE    = XYaxisLabelTitle)
-
-XYaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-                                 XOFFSET   = XYaxisAngleResetButtonSize[0],$
-                                 YOFFSET   = XYaxisAngleResetButtonSize[1],$
-                                 SCR_XSIZE = XYaxisAngleResetButtonSize[2],$
-                                 SCR_YSIZE = XYaxisAngleResetButtonSize[3],$
-                                 VALUE     = XYaxisAngleResetButtonTitle,$
-                                 SENSITIVE = 1,$
-                                 UNAME     = 'data1d_xy_axis_reset_button')
-
-XYaxisAngleBase = WIDGET_BASE(RescaleBase,$
-                              XOFFSET   = XYaxisAngleBaseSize[0],$
-                              YOFFSET   = XYaxisAngleBaseSize[1],$
-                              SCR_XSIZE = XYaxisAngleBaseSize[2],$
-                              SCR_YSIZE = XYaxisAngleBaseSize[3],$
-                              UNAME     = 'data_xy_axis_angle_base')
-
-XYaxisAngleCwfield = CW_FIELD(XYaxisAngleBase,$
-                              ROW           = 1,$
-                              XSIZE         = 3,$
-                              YSIZE         = 1,$
-                              /FLOAT,$
-                              RETURN_EVENTS = 1,$
-                              TITLE         = XYaxisAngleBaseTitle,$
-                              UNAME         = 'data1d_xy_axis_angle_cwfield')
-
-ZZaxisLabel = WIDGET_LABEL(RescaleBase,$
-                           XOFFSET  = ZZaxisLabelSize[0],$
-                           YOFFSET  = ZZaxisLabelSize[1],$
-                           VALUE    = ZZaxisLabelTitle)
-
-ZZaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-                                 XOFFSET   = ZZaxisAngleResetButtonSize[0],$
-                                 YOFFSET   = ZZaxisAngleResetButtonSize[1],$
-                                 SCR_XSIZE = ZZaxisAngleResetButtonSize[2],$
-                                 SCR_YSIZE = ZZaxisAngleResetButtonSize[3],$
-                                 VALUE     = ZZaxisAngleResetButtonTitle,$
-                                 SENSITIVE = 1,$
-                                 UNAME     = 'data1d_zz_axis_reset_button')
-
-ZZaxisAngleBase = WIDGET_BASE(RescaleBase,$
-                              XOFFSET   = ZZaxisAngleBaseSize[0],$
-                              YOFFSET   = ZZaxisAngleBaseSize[1],$
-                              SCR_XSIZE = ZZaxisAngleBaseSize[2],$
-                              SCR_YSIZE = ZZaxisAngleBaseSize[3],$
-                              UNAME     = 'data_zz_axis_angle_base')
-
-ZZaxisAngleCwfield = CW_FIELD(ZZaxisAngleBase,$
-                              ROW           = 1,$
-                              XSIZE         = 3,$
-                              YSIZE         = 1,$
-                              /FLOAT,$
-                              RETURN_EVENTS = 1,$
-                              TITLE         = ZZaxisAngleBaseTitle,$
-                              UNAME         = 'data1d_zz_axis_angle_cwfield')
-
-
-END
-
