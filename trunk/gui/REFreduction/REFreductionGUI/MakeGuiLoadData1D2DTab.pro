@@ -40,10 +40,10 @@ MakeGuiLoadData2DTab,$
   D_DD_TabTitle,$
   GlobalLoadGraphs
 
-MakeGuiLoadData2D_3D_Tab,$
-  load_data_D_DD_Tab,$
-  D_DD_BaseSize,$
-  D_DD_TabTitle,$
-  GlobalLoadGraphs
+; MakeGuiLoadData2D_3D_Tab,$
+;   load_data_D_DD_Tab,$
+;   D_DD_BaseSize,$
+;   D_DD_TabTitle,$
+;   GlobalLoadGraphs
 
 END
