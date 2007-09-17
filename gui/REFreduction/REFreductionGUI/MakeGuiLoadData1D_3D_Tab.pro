@@ -6,92 +6,106 @@ PRO MakeGuiLoadData1D_3D_Tab, D_DD_Tab, $
 
 ;define dimension and position of various components
 RescaleTabSize = [5,$
-                  GlobalLoadGraphs[3]+0, $
+                  GlobalLoadGraphs[3]+1, $
                   GlobalLoadGraphs[2], $
-                  D_DD_TabSize[3]-GlobalLoadGraphs[3]]
+                  D_DD_TabSize[3]-GlobalLoadGraphs[3]-30]
 RescaleBaseSize = [0,0,$                  
                    GlobalLoadGraphs[2], $
                    D_DD_TabSize[3]-GlobalLoadGraphs[3]]
 RescaleTab1Title = 'MANUAL'
 RescaleTab2title = 'AUTOMATIC'
 
+;x-axis (droplist)
+XaxisLabelSize      = [10,0]
+XaxisLabeltitle     = 'X-axis:'
+XaxisLabelFrameSize = [5,8,100,45]
+AxisScaleList       = ['linear','log']
+XaxisScaleSize      = [10,15]
+
+;y-axis (droplist)
+YaxisLabelSize      = [120,0]
+YaxisLabeltitle     = 'Y-axis:'
+YaxisLabelFrameSize = [YaxisLabelSize[0]-5,XaxisLabelFrameSize[1:3]]
+YaxisScaleSize      = [YaxisLabelSize[0],15]
+
 ;1d_3d_loadct button
-LoadctLabelSize     = [220,610]
-LoadctLabelTitle    = 'Contrast'
-LoadctLabelFrameSize = [158,620,195,55]
-LoadctDroplistSize  = [160,630,100,30]
-LoadctDropListTitle = 'Contrast Type'
+LoadctLabelSize      = [230,0]
+LoadctLabelTitle     = 'Contrast'
+LoadctLabelFrameSize = [LoadctLabelSize[0]-5,XaxisLabelFrameSize[1],200,$
+                       XaxisLabelFrameSize[3]]
+LoadctDroplistSize   = [LoadctLabelSize[0],15,100,30]
 
-;label
-y_vertical_offset = 40
-XaxisLabelSize  = [5,15]
-YaxisLabelSize  = [XaxisLabelSize[0],XaxisLabelSize[1]+y_vertical_offset]
-ZaxisLabelSize  = [YaxisLabelSize[0],YaxisLabelSize[1]+y_vertical_offset]
-
-XaxisLabeltitle = 'X-axis:'
-YaxisLabeltitle = 'Y-axis:'
-ZaxisLabelTitle = 'Z-axis:'
-
-;droplist
-AxisScaleList  = ['linear','log']
-x1_offset = 37
-y_offset= 10
-XaxisScaleSize = [XaxisLabelSize[0] + x1_offset,$
-                  XaxisLabelSize[1] - y_offset]
-YaxisScaleSize = [YaxisLabelSize[0] + x1_offset,$
-                  YaxisLabelSize[1] - y_offset]
-ZaxisScaleSize = [ZaxisLabelSize[0] + x1_offset,$
-                  ZaxisLabelSize[1] - y_offset]
-
+;z-axis (droplist-xmin-xmax-reset)
+y_vertical_offset   = 55
+ZaxisLabelSize      = [XaxisLabelSize[0],$
+                       XaxisLabelSize[1]+y_vertical_offset]
+ZaxisLabelTitle     = 'Z-axis:'
+ZaxisLabelFrameSize = [ZaxisLabelSize[0]-5,XaxisLabelFrameSize[1]+y_vertical_offset,$
+                       400,XaxisLabelFrameSize[3]]
+ZaxisScaleSize      = [ZaxisLabelSize[0],15+y_vertical_offset]
+                       
 ;min/max
-x2_offset= 85
-ZaxisMinBaseSize    = [ZaxisScaleSize[0]+x2_offset,$
-                       ZaxisScaleSize[1],$
-                       80,35]
-x3_offset = 80
-ZaxisMaxBaseSize    = [ZaxisMinBaseSize[0]+x3_offset,$
-                       ZaxisMinBaseSize[1],$
-                       80,35]
-ZaxisMinBaseTitle   = 'Min'
-ZaxisMaxBaseTitle   = 'Max'
+; x2_offset= 85
+; ZaxisMinBaseSize    = [ZaxisScaleSize[0]+x2_offset,$
+;                        ZaxisScaleSize[1],$
+;                        80,35]
+; x3_offset = 80
+; ZaxisMaxBaseSize    = [ZaxisMinBaseSize[0]+x3_offset,$
+;                        ZaxisMinBaseSize[1],$
+;                        80,35]
+; ZaxisMinBaseTitle   = 'Min'
+; ZaxisMaxBaseTitle   = 'Max'
 
-XaxisResetButtonSize  = [290,XaxisScaleSize[1]+2,70,30]
-XaxisResetButtonTitle = 'RESET X'
-YaxisResetButtonSize  = [XaxisResetButtonSize[0],$
-                         YaxisScaleSize[1]+2,$
-                         XaxisResetButtonSize[2:3]]
-YaxisResetButtonTitle = 'RESET Y'
-ZaxisResetButtonSize  = [XaxisResetButtonSize[0],$
-                         ZaxisScaleSize[1]+2,$
-                         XaxisResetButtonSize[2:3]]
-ZaxisResetButtonTitle = 'RESET Z'
+; XaxisResetButtonSize  = [290,XaxisScaleSize[1]+2,70,30]
+; XaxisResetButtonTitle = 'RESET X'
+; YaxisResetButtonSize  = [XaxisResetButtonSize[0],$
+;                          YaxisScaleSize[1]+2,$
+;                          XaxisResetButtonSize[2:3]]
+; YaxisResetButtonTitle = 'RESET Y'
+; ZaxisResetButtonSize  = [XaxisResetButtonSize[0],$
+;                          ZaxisScaleSize[1]+2,$
+;                          XaxisResetButtonSize[2:3]]
+; ZaxisResetButtonTitle = 'RESET Z'
 
-;XYaxis
-XYAxisLabelSize      = [ZaxisLabelSize[0],ZaxisLabelSize[1]+y_vertical_offset]
-XYAxisLabelTitle     = 'XY-axis:'
-x4_offset= 50
-XYAxisAngleBaseSize  = [XYAxisLabelSize[0]+x4_offset,$
-                       XYAxisLabelSize[1]-10,$
-                       85,35]
-XYAxisAngleBaseTitle = 'Angle:'
-x5_offset = 83
-XYAxisAngleResetButtonSize  = [XYAxisAngleBaseSize[0]+x5_offset,$
-                               XYAxisAngleBaseSize[1]+3,$
-                               40,30]
-XYAxisAngleResetButtonTitle = 'RST'
+; ;XYaxis
+; XYAxisLabelSize      = [ZaxisLabelSize[0],ZaxisLabelSize[1]+y_vertical_offset]
+; XYAxisLabelTitle     = 'XY-axis:'
+; x4_offset= 50
+; XYAxisAngleBaseSize  = [XYAxisLabelSize[0]+x4_offset,$
+;                        XYAxisLabelSize[1]-10,$
+;                        85,35]
+; XYAxisAngleBaseTitle = 'Angle:'
+; x5_offset = 83
+; XYAxisAngleResetButtonSize  = [XYAxisAngleBaseSize[0]+x5_offset,$
+;                                XYAxisAngleBaseSize[1]+3,$
+;                                40,30]
+; XYAxisAngleResetButtonTitle = 'RST'
 
-x6_offset = 180
-ZZAxisLabelSize      = [XYAxisLabelSize[0]+x6_offset, $
-                        XYAxisLabelSize[1]]
-ZZAxisLabelTitle     = 'Z-axis:'
-ZZAxisAngleBaseSize  = [ZZAxisLabelSize[0]+x4_offset,$
-                        XYAxisAngleBaseSize[1],$
-                        XYAxisAngleBaseSize[2:3]]
-ZZAxisAngleBaseTitle = 'Angle:'
-ZZAxisAngleResetButtonSize  = [ZZAxisAngleBaseSize[0]+x5_offset,$
-                               XYAxisAngleResetButtonSize[1],$
-                               XYAxisAngleResetButtonSize[2:3]]
-ZZAxisAngleResetButtonTitle = 'RST'
+; x6_offset = 180
+; ZZAxisLabelSize      = [XYAxisLabelSize[0]+x6_offset, $
+;                         XYAxisLabelSize[1]]
+; ZZAxisLabelTitle     = 'Z-axis:'
+; ZZAxisAngleBaseSize  = [ZZAxisLabelSize[0]+x4_offset,$
+;                         XYAxisAngleBaseSize[1],$
+;                         XYAxisAngleBaseSize[2:3]]
+; ZZAxisAngleBaseTitle = 'Angle:'
+; ZZAxisAngleResetButtonSize  = [ZZAxisAngleBaseSize[0]+x5_offset,$
+;                                XYAxisAngleResetButtonSize[1],$
+;                                XYAxisAngleResetButtonSize[2:3]]
+; ZZAxisAngleResetButtonTitle = 'RST'
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;'Google' rotation base
 Google_xoff=365
@@ -177,27 +191,6 @@ load_data_D_3D_tab_base = widget_base(D_DD_Tab,$
                                       scr_xsize=D_DD_TabSize[2],$
                                       scr_ysize=D_DD_TabSize[3])
 
-
-; LoadctLabel = WIDGET_LABEL(load_data_D_3D_tab_base,$
-;                            XOFFSET = LoadctLabelSize[0],$
-;                            YOFFSET = LoadctLabelSize[1],$
-;                            VALUE   = LoadctLabelTitle)
-
-; LoadctDroplist = WIDGET_DROPLIST(load_data_D_3D_tab_base,$
-;                                  VALUE     = LoadctList,$
-;                                  UNAME     = 'data_loadct_1d_3d_droplist',$
-;                                  XOFFSET   = LoadctDroplistSize[0],$
-;                                  YOFFSET   = LoadctDroplistSize[1],$
-;                                  SENSITIVE = 1,$
-;                                  /TRACKING_EVENTS)
-
-; LoadctLabelFrame = WIDGET_LABEL(load_data_D_3D_tab_base,$
-;                                 FRAME = 1,$
-;                                 XOFFSET = LoadctLabelFrameSize[0],$
-;                                 YOFFSET = LoadctLabelFrameSize[1],$
-;                                 SCR_XSIZE = LoadctLabelFrameSize[2],$
-;                                 SCR_YSIZE = LoadctLabelFrameSize[3])
-                                
 load_data_D_3D_draw = widget_draw(load_data_D_3D_tab_base,$
                                   xoffset=GlobalLoadGraphs[0],$
                                   yoffset=GlobalLoadGraphs[1],$
@@ -226,6 +219,135 @@ RescaleTab1Base = WIDGET_BASE(RescaleTab,$
                                SCR_YSIZE = RescaleBaseSize[3],$
                                TITLE     = RescaleTab1Title)
                               
+;X-AXIS
+XaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
+                          XOFFSET  = XaxisLabelSize[0],$
+                          YOFFSET  = XaxisLabelSize[1],$
+                          VALUE    = XaxisLabelTitle)
+
+XaxisScale = WIDGET_DROPLIST(RescaleTab1Base,$
+                             VALUE   = AxisScaleList,$
+                             XOFFSET = XaxisScaleSize[0],$
+                             YOFFSET = XaxisScaleSize[1],$
+                             UNAME   = 'data1d_x_axis_scale')
+
+XaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                               XOFFSET   = XaxisLabelFrameSize[0],$
+                               YOFFSET   = XaxisLabelFrameSize[1],$
+                               SCR_XSIZE = XaxisLabelFrameSize[2],$
+                               SCR_YSIZE = XaxisLabelFrameSize[3],$
+                               VALUE     = '',$
+                               FRAME     = 1)
+
+; Y-AXIS
+YaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
+                          XOFFSET  = YaxisLabelSize[0],$
+                          YOFFSET  = YaxisLabelSize[1],$
+                          VALUE    = YaxisLabelTitle)
+
+YaxisScale = WIDGET_DROPLIST(RescaleTab1Base,$
+                             VALUE   = AxisScaleList,$
+                             XOFFSET = YaxisScaleSize[0],$
+                             YOFFSET = YaxisScaleSize[1],$
+                             UNAME   = 'data1d_y_axis_scale')
+
+YaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                               XOFFSET   = YaxisLabelFrameSize[0],$
+                               YOFFSET   = YaxisLabelFrameSize[1],$
+                               SCR_XSIZE = YaxisLabelFrameSize[2],$
+                               SCR_YSIZE = YaxisLabelFrameSize[3],$
+                               VALUE     = '',$
+                               FRAME     = 1)
+
+;loadct
+LoadctLabel = WIDGET_LABEL(RescaleTab1Base,$
+                           XOFFSET = LoadctLabelSize[0],$
+                           YOFFSET = LoadctLabelSize[1],$
+                           VALUE   = LoadctLabelTitle)
+
+LoadctDroplist = WIDGET_DROPLIST(RescaleTab1Base,$
+                                 VALUE     = LoadctList,$
+                                 UNAME     = 'data_loadct_1d_3d_droplist',$
+                                 XOFFSET   = LoadctDroplistSize[0],$
+                                 YOFFSET   = LoadctDroplistSize[1],$
+                                 SENSITIVE = 1,$
+                                 /TRACKING_EVENTS)
+
+LoadctLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                                FRAME = 1,$
+                                XOFFSET = LoadctLabelFrameSize[0],$
+                                YOFFSET = LoadctLabelFrameSize[1],$
+                                SCR_XSIZE = LoadctLabelFrameSize[2],$
+                                SCR_YSIZE = LoadctLabelFrameSize[3])
+
+; Z-AXIS
+ZaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
+                          XOFFSET  = ZaxisLabelSize[0],$
+                          YOFFSET  = ZaxisLabelSize[1],$
+                          VALUE    = ZaxisLabelTitle)
+
+ZaxisScale = WIDGET_DROPLIST(RescaleTab1Base,$
+                             VALUE   = AxisScaleList,$
+                             XOFFSET = ZaxisScaleSize[0],$
+                             YOFFSET = ZaxisScaleSize[1],$
+                             UNAME   = 'data1d_z_axis_scale')
+
+ZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
+                               XOFFSET   = ZaxisLabelFrameSize[0],$
+                               YOFFSET   = ZaxisLabelFrameSize[1],$
+                               SCR_XSIZE = ZaxisLabelFrameSize[2],$
+                               SCR_YSIZE = ZaxisLabelFrameSize[3],$
+                               VALUE     = '',$
+                               FRAME     = 1)
+
+
+
+; ZaxisMinBase = WIDGET_BASE(RescaleBase,$
+;                            XOFFSET   = ZaxisMinBaseSize[0],$
+;                            YOFFSET   = ZaxisMinBaseSize[1],$
+;                            SCR_XSIZE = ZaxisMinBaseSize[2],$
+;                            SCR_YSIZE = ZaxisMinBaseSize[3],$
+;                            UNAME     = 'data_z_axis_min_base')
+
+; ZaxisMinCwfield = CW_FIELD(ZaxisMinBase,$
+;                            ROW           = 1,$
+;                            XSIZE         = 5,$
+;                            YSIZE         = 1,$
+;                            /FLOAT,$
+;                            RETURN_EVENTS = 1,$
+;                            TITLE         = ZaxisMinBaseTitle,$
+;                            UNAME         = 'data1d_z_axis_min_cwfield')
+
+; ZaxisMaxBase = WIDGET_BASE(RescaleBase,$
+;                            XOFFSET   = ZaxisMaxBaseSize[0],$
+;                            YOFFSET   = ZaxisMaxBaseSize[1],$
+;                            SCR_XSIZE = ZaxisMaxBaseSize[2],$
+;                            SCR_YSIZE = ZaxisMaxBaseSize[3],$
+;                            UNAME     = 'data1d_z_axis_max_base')
+
+; ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
+;                            ROW           = 1,$
+;                            XSIZE         = 5,$
+;                            YSIZE         = 1,$
+;                            /FLOAT,$
+;                            RETURN_EVENTS = 1,$
+;                            TITLE         = ZaxisMaxBaseTitle,$
+;                            UNAME         = 'data1d_z_axis_max_cwfield')
+
+
+
+; ZaxisResetButton = WIDGET_BUTTON(RescaleBase,$
+;                                  XOFFSET   = ZaxisResetButtonSize[0],$
+;                                  YOFFSET   = ZaxisResetButtonSize[1],$
+;                                  SCR_XSIZE = ZaxisResetButtonSize[2],$
+;                                  SCR_YSIZE = ZaxisResetButtonSize[3],$
+;                                  VALUE     = ZaxisResetButtonTitle,$
+;                                  SENSITIVE = 1,$
+;                                  UNAME     = 'data1d_z_axis_reset_button')
+
+
+
+
 
 
 
@@ -379,92 +501,10 @@ GoogleRotationTitle = WIDGET_LABEL(RescaleTab2Base,$
 END
 
 
+
+
+
 PRO REMOVE_ME
-;SCALE BASE
-RescaleBase = widget_base(load_data_D_3D_tab_base,$
-                          xoffset=RescaleBaseSize[0],$
-                          yoffset=RescaleBaseSize[1],$
-                          scr_xsize=RescaleBaseSize[2],$
-                          scr_ysize=RescaleBaseSize[3],$
-                          frame=0)
-
-;X-AXIS
-XaxisLabel = WIDGET_LABEL(RescaleBase,$
-                          XOFFSET  = XaxisLabelSize[0],$
-                          YOFFSET  = XaxisLabelSize[1],$
-                          VALUE    = XaxisLabelTitle)
-
-XaxisScale = WIDGET_DROPLIST(RescaleBase,$
-                             VALUE   = AxisScaleList,$
-                             XOFFSET = XaxisScaleSize[0],$
-                             YOFFSET = XaxisScaleSize[1],$
-                             UNAME   = 'data1d_x_axis_scale')
-
-;Y-AXIS
-YaxisLabel = WIDGET_LABEL(RescaleBase,$
-                          XOFFSET  = YaxisLabelSize[0],$
-                          YOFFSET  = YaxisLabelSize[1],$
-                          VALUE    = YaxisLabelTitle)
-
-YaxisScale = WIDGET_DROPLIST(RescaleBase,$
-                             VALUE   = AxisScaleList,$
-                             XOFFSET = YaxisScaleSize[0],$
-                             YOFFSET = YaxisScaleSize[1],$
-                             UNAME   = 'data1d_y_axis_scale')
-
-;Z-AXIS
-ZaxisLabel = WIDGET_LABEL(RescaleBase,$
-                          XOFFSET  = ZaxisLabelSize[0],$
-                          YOFFSET  = ZaxisLabelSize[1],$
-                          VALUE    = ZaxisLabelTitle)
-
-ZaxisMinBase = WIDGET_BASE(RescaleBase,$
-                           XOFFSET   = ZaxisMinBaseSize[0],$
-                           YOFFSET   = ZaxisMinBaseSize[1],$
-                           SCR_XSIZE = ZaxisMinBaseSize[2],$
-                           SCR_YSIZE = ZaxisMinBaseSize[3],$
-                           UNAME     = 'data_z_axis_min_base')
-
-ZaxisMinCwfield = CW_FIELD(ZaxisMinBase,$
-                           ROW           = 1,$
-                           XSIZE         = 5,$
-                           YSIZE         = 1,$
-                           /FLOAT,$
-                           RETURN_EVENTS = 1,$
-                           TITLE         = ZaxisMinBaseTitle,$
-                           UNAME         = 'data1d_z_axis_min_cwfield')
-
-ZaxisMaxBase = WIDGET_BASE(RescaleBase,$
-                           XOFFSET   = ZaxisMaxBaseSize[0],$
-                           YOFFSET   = ZaxisMaxBaseSize[1],$
-                           SCR_XSIZE = ZaxisMaxBaseSize[2],$
-                           SCR_YSIZE = ZaxisMaxBaseSize[3],$
-                           UNAME     = 'data1d_z_axis_max_base')
-
-ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
-                           ROW           = 1,$
-                           XSIZE         = 5,$
-                           YSIZE         = 1,$
-                           /FLOAT,$
-                           RETURN_EVENTS = 1,$
-                           TITLE         = ZaxisMaxBaseTitle,$
-                           UNAME         = 'data1d_z_axis_max_cwfield')
-
-ZaxisScale = WIDGET_DROPLIST(RescaleBase,$
-                             VALUE   = AxisScaleList,$
-                             XOFFSET = ZaxisScaleSize[0],$
-                             YOFFSET = ZaxisScaleSize[1],$
-                             UNAME   = 'data1d_z_axis_scale')
-
-
-ZaxisResetButton = WIDGET_BUTTON(RescaleBase,$
-                                 XOFFSET   = ZaxisResetButtonSize[0],$
-                                 YOFFSET   = ZaxisResetButtonSize[1],$
-                                 SCR_XSIZE = ZaxisResetButtonSize[2],$
-                                 SCR_YSIZE = ZaxisResetButtonSize[3],$
-                                 VALUE     = ZaxisResetButtonTitle,$
-                                 SENSITIVE = 1,$
-                                 UNAME     = 'data1d_z_axis_reset_button')
 
 ;XY and Z axis angle interaction
 XYaxisLabel = WIDGET_LABEL(RescaleBase,$
