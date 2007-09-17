@@ -206,7 +206,8 @@ RescaleTab1Base = WIDGET_BASE(RescaleTab,$
                                YOFFSET   = RescaleBaseSize[1],$
                                SCR_XSIZE = RescaleBaseSize[2],$
                                SCR_YSIZE = RescaleBaseSize[3],$
-                               TITLE     = RescaleTab1Title)
+                               TITLE     = RescaleTab1Title,$
+                              SENSITIVE = 0)
                               
 ;X-AXIS
 XaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
@@ -303,7 +304,6 @@ ZaxisMaxBase = WIDGET_BASE(RescaleTab1Base,$
                            SCR_XSIZE = ZaxisMaxBaseSize[2],$
                            SCR_YSIZE = ZaxisMaxBaseSize[3],$
                            UNAME     = 'data1d_z_axis_max_base')
-
 ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
                            ROW           = 1,$
                            XSIZE         = 5,$
@@ -319,7 +319,6 @@ ZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                  SCR_XSIZE = ZaxisResetButtonSize[2],$
                                  SCR_YSIZE = ZaxisResetButtonSize[3],$
                                  VALUE     = ZaxisResetButtonTitle,$
-                                 SENSITIVE = 1,$
                                  UNAME     = 'data1d_z_axis_reset_button')
 
 ZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
@@ -342,7 +341,6 @@ XYaxisAngleBase = WIDGET_BASE(RescaleTab1Base,$
                               SCR_XSIZE = XYaxisAngleBaseSize[2],$
                               SCR_YSIZE = XYaxisAngleBaseSize[3],$
                               UNAME     = 'data_xy_axis_angle_base')
-
 XYaxisAngleCwfield = CW_FIELD(XYaxisAngleBase,$
                               ROW           = 1,$
                               XSIZE         = 3,$
@@ -358,7 +356,6 @@ XYaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                   SCR_XSIZE = XYaxisAngleResetButtonSize[2],$
                                   SCR_YSIZE = XYaxisAngleResetButtonSize[3],$
                                   VALUE     = XYaxisAngleResetButtonTitle,$
-                                  SENSITIVE = 1,$
                                   UNAME     = 'data1d_xy_axis_reset_button')
 
 XYaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
@@ -397,7 +394,6 @@ ZZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                   SCR_XSIZE = ZZaxisAngleResetButtonSize[2],$
                                   SCR_YSIZE = ZZaxisAngleResetButtonSize[3],$
                                   VALUE     = ZZaxisAngleResetButtonTitle,$
-                                  SENSITIVE = 1,$
                                   UNAME     = 'data1d_zz_axis_reset_button')
 
 ZZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
@@ -415,7 +411,6 @@ FullResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                 SCR_XSIZE = FullResetButtonSize[2],$
                                 SCR_YSIZE = FullResetButtonSize[3],$
                                 VALUE     = FullResetButtonTitle,$
-                                SENSITIVE = 1,$
                                 UNAME     = 'data1d_full_reset_button')
 
 ;### Second tab - Automatic mode
@@ -425,7 +420,8 @@ RescaleTab2Base = WIDGET_BASE(RescaleTab,$
                               YOFFSET   = RescaleBaseSize[1],$
                               SCR_XSIZE = RescaleBaseSize[2],$
                               SCR_YSIZE = RescaleBaseSize[3],$
-                              TITLE     = RescaleTab2Title)
+                              TITLE     = RescaleTab2Title,$
+                              SENSITIVE = 0)
 
 
 ;GOOGLE XY-AXIS
