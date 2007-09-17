@@ -17,6 +17,10 @@ CASE (BackSignalZoomStatus) OF
         y_array = (*(*global).data_peak_selection)
     end
     2: begin ;zoom
+;be sure the data draw has been selected
+        id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+        widget_control, id_draw, get_value=id_value
+        wset,id_value
     end
 ENDCASE
 
@@ -117,6 +121,7 @@ if (BackSignalZoomStatus NE 2) then begin
     
 ;display zoom if zomm tab is selected
     if (isDataZoomTabSelected(Event)) then begin
+
         RefReduction_zoom, $
           Event, $
           MouseX=event.x, $
@@ -377,6 +382,11 @@ endif else begin                     ;zoom selected
 
     CASE ((*global).select_zoom_status) OF
         1: begin
+;be sure the data draw has been selected
+            id_draw = widget_info(Event.top, find_by_uname='load_data_D_draw')
+            widget_control, id_draw, get_value=id_value
+            wset,id_value
+            
             RefReduction_zoom, $
               Event, $
               MouseX=event.x, $

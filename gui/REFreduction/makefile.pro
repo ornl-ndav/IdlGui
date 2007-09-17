@@ -15,11 +15,15 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiLoadDataTab.pro
 .run MakeGuiLoadData1D2DTab.pro
 .run MakeGuiLoadData1DTab.pro
+.run MakeGuiLoadData1D_3D_Tab.pro
 .run MakeGuiLoadData2DTab.pro
+.run MakeGuiLoadData2D_3D_Tab.pro
 .run MakeGuiLoadNormalizationTab.pro
 .run MakeGuiLoadNormalization1D2DTab.pro
 .run MakeGuiLoadNormalization1DTab.pro
+.run MakeGuiLoadNormalization1D_3D_Tab.pro
 .run MakeGuiLoadNormalization2DTab.pro
+.run MakeGuiLoadNormalization2D_3D_Tab.pro
 .run MakeGuiInstrumentSelection.pro
 
 .run MakeGuiReduceTab.pro
@@ -57,6 +61,8 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
 .run ref_reduction_Zoom.pro
 .run ref_reduction_RescaleDataPlot.pro
 .run ref_reduction_RescaleNormalizationPlot.pro
+.run ref_reduction_RescaleData1D3DPlot.pro
+.run ref_reduction_RescaleNormalization1D3DPlot.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro

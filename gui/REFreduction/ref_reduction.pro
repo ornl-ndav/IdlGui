@@ -290,7 +290,6 @@ version_label = widget_label(MAIN_BASE,$
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
-
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
