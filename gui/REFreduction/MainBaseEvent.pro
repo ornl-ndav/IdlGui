@@ -155,6 +155,11 @@ CASE Event.id OF
         REFreduction_ResetData1D3DPlotZZaxis, Event
     end
 
+;Full reset
+    widget_info(wWidget, FIND_BY_UNAME='data1d_full_reset_button'): begin
+        REFreduction_FullResetData1D3DPlot_OrientationReset, Event
+    end
+
 ;Rotation interface (google)
 ;xy-axis MMM
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_mmm_button'): begin
