@@ -6,8 +6,8 @@ widget_control,id,get_uvalue=global
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
-;cmd = 'reflect_reduction' ;name of function to call
-cmd = '/SNS/users/j35/usr/bin/reflect_reduction ' ;REMOVE_ME
+cmd = 'reflect_reduction' ;name of function to call
+;cmd = '/SNS/users/j35/usr/bin/reflect_reduction ' ;REMOVE_ME
 
 ;cd, (*global).working_path
 
