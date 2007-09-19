@@ -1,14 +1,18 @@
-;$Id$
+;define path to dependencies and current folder
+spawn, 'pwd', CurrentFolder
+IdlUtilitiesPath = "../utilities"
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
-cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
+;cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
+cd, IdlUtilitiesPath
 .run system_utilities.pro
 
-cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/utilities/"
+;cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/utilities/"
+cd, CurrentFolder + '/utilities'
 .run nexus_utilities.pro
 
-cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
+cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiLoadTab.pro
 .run MakeGuiLoadDataNormalizationTab.pro
@@ -41,7 +45,7 @@ cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/REFreductionGUI/"
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
 	
-cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/"
+cd, CurrentFolder
 .run ref_reduction_string.pro
 .run ref_reduction_get.pro
 .run ref_reduction_put.pro
@@ -107,6 +111,6 @@ resolve_routine, "uniq",/either
 resolve_routine, "ZOOM",/either
 resolve_routine, "CW_FIELD",/either
 
-save,/routines,filename="ref_reduction.sav"
+save,/routines,filename = CurrentFolder + '/ref_reduction.sav'
 exit
 
