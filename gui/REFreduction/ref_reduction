@@ -1,2 +1,2 @@
-idl -vm="/SNS/users/j35/IDL/REF/REFreduction/ref_reduction.sav"
+idl -vm="/SNS/software/idltools/sav/ref_reduction.sav"
 
