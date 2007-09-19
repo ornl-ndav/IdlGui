@@ -10,19 +10,19 @@ widget_control,id,get_uvalue=global
 if ((*global).DataNeXusFound) then begin
 
 ;retrive various paremeters
-    if (isXaxisScaleLog(Event)) then begin
+    if (isDataXaxisScaleLog(Event)) then begin
         XaxisScale = 'log'
     endif else begin
         XaxisScale = 'linear'
     endelse
     
-    if (isYaxisScaleLog(Event)) then begin
+    if (isDataYaxisScaleLog(Event)) then begin
         YaxisScale = 'log'
     endif else begin
         YaxisScale = 'linear'
     endelse
     
-    if (isZaxisScaleLog(Event)) then begin
+    if (isDataZaxisScaleLog(Event)) then begin
         ZaxisScale = 'log'
     endif else begin
         ZaxisScale = 'linear'

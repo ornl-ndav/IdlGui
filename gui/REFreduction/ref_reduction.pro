@@ -1,6 +1,7 @@
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
+Resolve_Routine, 'ref_reduction_eventcb',$
+  /COMPILE_FULL_FILE            ; Load event callback routines
 
 ;build the Instrument Selection base
 MakeGuiInstrumentSelection, wGroup
@@ -11,9 +12,8 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction_1.0.0'
+VERSION = 'VERSION: REFreduction1.0.0'
 loadct,5
-;Resolve_Routine, 'ref_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -103,6 +103,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    DATA_D_ptr : ptr_new(0L),$ 
 ;(ntot,Ny,Nx) array of DATA
                    DATA_D_Total_ptr : ptr_new(0L),$
+;img=total(img,x) x=2 for REF_M and x=3 for REF_L
+                   NORM_D_Total_ptr : ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
                    NORM_DD_ptr : ptr_new(0L),$ 
 ;detector view of NORMALIZATION (2D)
@@ -201,12 +203,26 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default Ax vlaue of data 1D_3D plot
                    DefaultData1D3DAz : 30L, $
 ;default Az value of data 1D_3D plot
+                   PrevNorm1D3DAx : 30L,$
+;previous Ax value of norm 1D_3D plot
+                   PrevNorm1D3DAz : 30L,$
+;previsou Az value of norm 1D_3D plot
+                   DefaultNorm1D3DAx : 30L, $
+;default Ax vlaue of norm 1D_3D plot
+                   DefaultNorm1D3DAz : 30L, $
+;default Az value of norm 1D_3D plot
                    InitialData1d3dContrastDropList : 5,$
 ;default value of the data loadct 1d_3d plot
                    PrevData1d3dContrastDropList : 5,$
 ;previous value of the data loadct 1d_3d plot
-                   Data_1d_3d_min_max : ptr_new(0L)$
+                   InitialNorm1d3dContrastDropList : 5,$
+;default value of the data loadct 1d_3d plot
+                   PrevNorm1d3dContrastDropList : 5,$
+;previous value of the data loadct 1d_3d plot
+                   Data_1d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 1d_3d)
+                   Normalization_1d_3d_min_max : ptr_new(0L)$
+;[min,max] values of the normalization img array (used to reset z in 1d_3d)
                    })
 
 ;------------------------------------------------------------------------
@@ -300,6 +316,8 @@ id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
 
 if (ucams EQ 'j35' OR $
     ucams EQ '2zr') then begin
@@ -308,6 +326,19 @@ if (ucams EQ 'j35' OR $
     widget_control, id, /editable
 
 endif
+
+;default tabs shown
+id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+widget_control, id1, set_tab_current = 0 ;LOAD
+
+id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+widget_control, id2, set_tab_current = 1 ;Normalization
+
+id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+widget_control, id3, set_tab_current = 1 ;1D_3D
+
+
+
 
 END
 
@@ -318,16 +349,16 @@ pro ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;check instrument here
 spawn, 'hostname',listening
 CASE (listening) OF
-   'lrac': instrument = 'REF_L'
-   'mrac': instrument = 'REF_M'
-   'heater': instrument = 'UNDEFINED'
-   else: instrument = 'UNDEFINED'
+    'lrac': instrument = 'REF_L'
+    'mrac': instrument = 'REF_M'
+    'heater': instrument = 'UNDEFINED'
+    else: instrument = 'UNDEFINED'
 ENDCASE
 
 if (instrument EQ 'UNDEFINED') then begin
-   BuildInstrumentGui, GROUP_LEADER=wGroup, _Extra=_VWBExtra_
+    BuildInstrumentGui, GROUP_LEADER=wGroup, _Extra=_VWBExtra_
 endif else begin
-   BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
+    BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
 endelse
 end
 

@@ -31,8 +31,11 @@ widget_control,id,get_uvalue=global
 N = (*global).Ny_REF_L ; 304
 img = (*(*global).NORM_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,3)
+(*(*global).NORM_D_Total_ptr) = img
 
 Plot1DNormalizationFile, Event, img, N
+Plot1DNormalization_3D_File, Event, img
+
 END
 
 
@@ -50,8 +53,10 @@ widget_control,id,get_uvalue=global
 N = (*global).Nx_REF_M ; 304
 img = (*(*global).NORM_D_ptr) ;data(Ntof,Ny,Nx)
 img = total(img,2)
+(*(*global).NORM_D_Total_ptr) = img
 
 Plot1DNormalizationFile, Event, img, N
+Plot1DNormalization_3D_File, Event, img
 
 END
 
@@ -100,6 +105,10 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
 ;rebin data to fill up all graph
 new_Ntof = (*global).Ntof_NORM
 new_N = 2 * N
@@ -112,6 +121,50 @@ LogBookText = getLogBookText(Event)
 putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
 
 END
+
+
+
+;**********************************************************************
+PRO Plot1DNormalization_3D_File, Event, img
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
+PROCESSING = (*global).processing_message
+
+;tells user that we are now plotting the 2D data
+LogBookText = '----> Plotting 1D_3D view ...... ' + PROCESSING
+putLogBookMessage, Event, LogBookText, Append=1
+
+DEVICE, DECOMPOSED = 0
+
+id_draw = widget_info(Event.top, find_by_uname='load_normalization_d_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+XYangle = (*global).PrevNorm1D3DAx
+ZZangle = (*global).PrevNorm1D3DAz
+
+shade_surf,img, Ax=XYangle, Az=ZZangle
+
+;put various info in 1D_3D tab
+zmin = MIN(img,MAX=zmax)
+(*(*global).Normalization_1d_3d_min_max) = [zmin,zmax]
+REFreduction_UpdateNorm1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
+
+;remove PROCESSING_message from logbook and say ok
+LogBookText = getLogBookText(Event)
+putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
+
+END
+
 
 
 ;**********************************************************************

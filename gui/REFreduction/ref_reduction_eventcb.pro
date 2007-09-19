@@ -440,7 +440,7 @@ END
 
 
 ;this function is reached by the LOAD button for the NORMALIZATION file
-PRO  REFreductionEventcb_LoadAndPlotNormalizationFile, Event
+PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
 
 REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus ;first Load the normalization file
 
