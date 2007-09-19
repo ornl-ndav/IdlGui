@@ -6,6 +6,9 @@
 # Copy the VM program in its final location
 
 all:
-	idl /SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/makefile.pro;
+	idl ./makefile.pro;
 
+install:
+	cp ref_reduction.sav /SNS/software/idltools/sav/
+	cp ref_reduction /SNS/software/idltools/
 
