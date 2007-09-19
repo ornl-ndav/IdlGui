@@ -230,7 +230,7 @@ CASE Event.id OF
 
 ;LOAD NORMALIZATION file
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_text_field'): begin
-        REFreductionEventcb_LoadAndPlotNormalizationFile, Event
+        REFreductionEventcb_LoadAndPlotNormFile, Event
     end
 
 ;##In list of nexus base##
@@ -276,11 +276,13 @@ CASE Event.id OF
     end
 
 ;Background Ymin and Ymax
-    widget_info(wWidget, FIND_BY_UNAME='normalization_d_selection_background_ymin_cw_field'): begin
+    widget_info(wWidget, $
+                FIND_BY_UNAME='normalization_d_selection_background_ymin_cw_field'): begin
         REFreduction_NormBackgroundPeakSelection, Event
     end
 
-    widget_info(wWidget, FIND_BY_UNAME='normalization_d_selection_background_ymax_cw_field'): begin
+    widget_info(wWidget, $
+                FIND_BY_UNAME='normalization_d_selection_background_ymax_cw_field'): begin
         REFreduction_NormBackgroundPeakSelection, Event
     end
 
@@ -298,24 +300,14 @@ CASE Event.id OF
         REFreduction_CreateNormBackgroundROIFile, Event
     end
 
-;Contrast editor of data 1D tab
-    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_button'): begin
-        REFreductionEventcb_NormContrastEditor, Event
-    end
-
-;Reset Contrast Editor
-    widget_info(wWidget, FIND_BY_UNAME='normalization_reset_contrast_button'): begin
-        REFreductionEventcb_NormResetContrastEditor, Event
-    end
-
 ;LOAD background selection
     widget_info(wWidget, FIND_BY_UNAME='normalization_roi_load_button'): begin
         REFreduction_LoadNormBackgroundSelection, Event
     end
-    
+
 ;CONTRAST TAB
-;Contrast editor of norm 1D tab
-    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_droplist'): begin
+;Contrast editor of data 1D tab
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_button'): begin
         REFreductionEventcb_NormContrastEditor, Event
     end
 
@@ -356,58 +348,92 @@ CASE Event.id OF
     end
 
 ;****1D_3D PLOT TAB**
-;reset x-axis
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_x_axis_reset_button'): begin
-        REFreduction_ResetNormalization1D3DPlotXaxis, Event
-    end
-    
-;reset y-axis
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_y_axis_reset_button'): begin
-        REFreduction_ResetNormalization1D3DPlotYaxis, Event
-    end
-
 ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_reset_button'): begin
-        REFreduction_ResetNormalization1D3DPlotZaxis, Event
+        REFreduction_ResetNorm1D3DPlotZaxis, Event
+    end
+
+;reset xy-axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_xy_axis_reset_button'): begin
+        REFreduction_ResetNorm1D3DPlotXYaxis, Event
+    end
+    
+;reset zz-axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_zz_axis_reset_button'): begin
+        REFreduction_ResetNorm1D3DPlotZZaxis, Event
+    end
+
+;Full reset
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_full_reset_button'): begin
+        REFreduction_FullResetNorm1D3DPlot_OrientationReset, Event
     end
 
 ;Rotation interface (google)
-;x-axis MM
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_x_axis_mm_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',-2
+;xy-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_mmm_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',-10
     end
-;x_axis M
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_x_axis_m_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',-1
+;xy-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_mm_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',-5
     end
-;x_axis P
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_x_axis_p_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',1
+;xy_axis M
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_m_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',-2
     end
-;x-axis PP
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_x_axis_pp_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',2
+;xy_axis P
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_p_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',2
     end
-;y-axis MM
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_y_axis_mm_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'y-axis',-2
+;xy-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_pp_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',5
     end
-;y_axis M
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_y_axis_m_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'y-axis',-1
+;xy-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_ppp_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',+10
     end
-;y_axis P
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_y_axis_p_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',1
+
+;z-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_mmm_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',-10
     end
-;y-axis PP
-    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_y_axis_pp_button'): begin
-        REFreduction_RotateNormalization1D3DPlot_Orientation, Event, 'x-axis',2
+;z-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_mm_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',-5
+    end
+;z_axis M
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_m_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',-2
+    end
+;z_axis P
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_p_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',2
+    end
+;z-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_pp_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',5
+    end
+;z-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_z_axis_ppp_button'): begin
+        REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'z-axis',10
     end
 
 ;reset
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_reset_button'): begin
-        REFreduction_ResetNormalization1D3DPlot_OrientationReset, Event
+        REFreduction_ResetNorm1D3DPlot_OrientationReset, Event
+    end
+
+;1d_3d loadct
+    widget_info(wWidget, FIND_BY_UNAME='normalization_loadct_1d_3d_droplist'): begin
+        CurrentLoadctIndex = $
+          getDropListSelectedIndex(Event, $
+                                   'normalization_loadct_1d_3d_droplist')
+        PrevLoadctIndex = (*global).PrevNorm1d3dContrastDropList
+        if (CurrentLoadctIndex NE PrevLoadctIndex) then begin
+            REFreduction_RescaleNorm1D3DPlot, Event
+            (*global).PrevNorm1d3dContrastDropList = CurrentLoadctIndex
+        endif
     end
 
 ;**REDUCE TAB**
@@ -460,7 +486,6 @@ ENDCASE
 ;**REDUCE TAB**
 ;command line generator
 SWITCH Event.id OF
-    
     widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): 
     widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
@@ -480,13 +505,11 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
         REFreduction_CommandLineGenerator, Event
     end
-    
     Else:
 ENDSWITCH
 
 ;RESCALE DATA TAB
 SWITCH Event.id OF
-
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmin_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmax_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_x_droplist'): 
@@ -497,13 +520,11 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_z_droplist'): begin
         REFreduction_RescaleDataPlot, Event
     end
-    
     Else:
 ENDSWITCH
 
 ;RESCALE NORMALIZATION TAB
 SWITCH Event.id OF
-
     widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_xmin_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_xmax_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_x_droplist'): 
@@ -514,13 +535,11 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='normalization_rescale_z_droplist'): begin
         REFreduction_RescaleNormalizationPlot, Event
     end
-    
     Else:
 ENDSWITCH
 
 ;1D_3D DATA
 SWITCH Event.id OF
-
     widget_info(wWidget, FIND_BY_UNAME='data1d_x_axis_angle_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data1d_x_axis_scale'): 
     widget_info(wWidget, FIND_BY_UNAME='data1d_y_axis_angle_cwfield'):
@@ -532,10 +551,23 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_scale'): begin
         REFreduction_RescaleData1D3DPlot, Event
     end
-    
     Else:
 ENDSWITCH
 
-
+;1D_3D NORM
+SWITCH Event.id OF
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_x_axis_angle_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_x_axis_scale'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_y_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_y_axis_scale'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_min_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_max_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_xy_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_zz_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_scale'): begin
+        REFreduction_RescaleNorm1D3DPlot, Event
+    end
+    Else:
+ENDSWITCH
 
 END

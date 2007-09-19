@@ -144,21 +144,38 @@ END
 
 
 ;1D_3D booleans
-FUNCTION isXaxisScaleLog, Event
+FUNCTION isDataXaxisScaleLog, Event
 id = widget_info(Event.top,find_by_uname='data1d_x_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
 
-FUNCTION isYaxisScaleLog, Event
+FUNCTION isDataYaxisScaleLog, Event
 id = widget_info(Event.top,find_by_uname='data1d_y_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
 
-FUNCTION isZaxisScaleLog, Event
+FUNCTION isDataZaxisScaleLog, Event
 id = widget_info(Event.top,find_by_uname='data1d_z_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
 
+FUNCTION isNormXaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization1d_x_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isNormYaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization1d_y_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isNormZaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization1d_z_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
