@@ -75,6 +75,7 @@ END
 
 
 
+
 PRO REFreduction_LoadDataBackgroundSelection, Event
 
 ;get global structure
@@ -115,6 +116,18 @@ if (BackROIFullFileName NE '') then begin
       BackROIFullFileName,$
       0                         ;do not append
     
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'reduce_data_region_of_interest_file_name',$
+      BackROIFullFileName,$
+      0 ;do not append
+
+
+;display preview message in help data box
+    Message = 'Preview of ' + BackROIFullFileName
+    putLabelValue, Event, 'left_data_interaction_help_message_help', Message
+
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
     
 ;put Ymin and Ymax in their text fields
@@ -140,6 +153,7 @@ if (BackROIFullFileName NE '') then begin
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
 
 endif
 
@@ -187,6 +201,17 @@ if (BackROIFullFileName NE '') then begin
       BackROIFullFileName,$
       0                         ;do not append
     
+;update REDUCE gui with name of data background roi file
+    putTextFieldValue,$
+      Event,$
+      'reduce_normalization_region_of_interest_file_name',$
+      BackROIFullFileName,$
+      0 ;do not append
+
+;display preview message in help norm. box
+    Message = 'Preview of ' + file_name
+    putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
+
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
     
 ;put Ymin and Ymax in their text fields
@@ -212,6 +237,7 @@ if (BackROIFullFileName NE '') then begin
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+
 
 endif
 

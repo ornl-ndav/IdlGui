@@ -319,26 +319,23 @@ widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropLis
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
 
-if (ucams EQ 'j35' OR $
-    ucams EQ '2zr') then begin
+IF (ucams EQ 'j35' OR $
+    ucams EQ '2zr') THEN BEGIN
 
     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     widget_control, id, /editable
 
-endif
+ENDIF
 
-;default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 0 ;LOAD
+;; default tabs shown
+; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+; widget_control, id1, set_tab_current = 0 LOAD
 
-id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-widget_control, id2, set_tab_current = 1 ;Normalization
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 0 DATA
 
-id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
-widget_control, id3, set_tab_current = 1 ;1D_3D
-
-
-
+; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+; widget_control, id3, set_tab_current = 0 Y vs TOF (2D)
 
 END
 
