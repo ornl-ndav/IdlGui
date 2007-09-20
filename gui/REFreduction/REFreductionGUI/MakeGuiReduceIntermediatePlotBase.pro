@@ -8,7 +8,7 @@ InterBaseSize = [IndividualBaseWidth,15,$
                  510,235]
 InterMainFramesize = [5,5,450,215]
 
-plot1BaseSize = [15,22,400,28]
+plot1BaseSize = [15,22,400,23]
 plotnYoff = 28
 plot2Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+plotnYoff,$
