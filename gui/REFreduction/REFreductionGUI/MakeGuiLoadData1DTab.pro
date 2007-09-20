@@ -53,7 +53,7 @@ Data1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 Data1DSelectionBackgroundYmaxBaseSize = [Data1DSelectionBackgroundYminBaseSize[0]+$
                                          Data1DSelectionBackgroundYminBasesize[2],$
                                          Data1DSelectionBackgroundYminBaseSize[1],$
-                                         BaseLengthYmax,BaseHeight]
+                                         BaseLengthYmax-4,BaseHeight]
 Data1DSelectionBackgroundYmaxCWFieldSize  = Data1DSelectionBackgroundYminCWFieldSize
 Data1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 

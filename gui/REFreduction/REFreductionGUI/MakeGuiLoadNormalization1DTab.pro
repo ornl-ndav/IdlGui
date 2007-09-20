@@ -52,7 +52,7 @@ Norm1DSelectionBackgroundYminCWFieldTitle = 'Ymin:'
 Norm1DSelectionBackgroundYmaxBaseSize     = [Norm1DSelectionBackgroundYminBaseSize[0]+$
                                              Norm1DSelectionBackgroundYminBasesize[2],$
                                              Norm1DSelectionBackgroundYminBaseSize[1],$
-                                             BaseLengthYmax,BaseHeight]
+                                             BaseLengthYmax-3,BaseHeight]
 Norm1DSelectionBackgroundYmaxCWFieldSize  = Norm1DSelectionBackgroundYminCWFieldSize
 Norm1DSelectionBackgroundYmaxCWFieldTitle = '... Ymax:'
 
