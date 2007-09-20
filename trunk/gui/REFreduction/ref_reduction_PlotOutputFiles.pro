@@ -76,8 +76,20 @@ if (err_plot NE 0) then begin
 
 endif else begin
 
+;display full name of file plotted
+;#1 get index of droplist
+    index = getDropListSelectedIndex(Event, 'plots_droplist')
+    
+;#2 get full name of file
+    ListOfFiles = (*(*global).FilesToPlotList)
+    FullFileName = ListOfFiles[index]
+    
+;#3 put name in text field
+    message = 'File currently displayed: ' + FullFileName
+    putTextFieldValue, event, 'plots_error_message', message, 0
+
 ;Hide error message base    
-    MapStatus = 0
+    MapStatus = 1
 
     plot,flt0,flt1
     errplot, flt0,flt1-flt2,flt1+flt2

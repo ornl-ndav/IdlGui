@@ -8,8 +8,6 @@ widget_control,id,get_uvalue=global
 sz = size(FilesToPLotList)
 FileNbr = sz(1)
 
-;print, 'FileNbr: ' + strcompress(FileNbr,/remove_all) ;REMOVE_ME
-
 fltPreview_ptr = (*global).fltPreview_ptr
 
 for j=0,(FileNbr-1) do begin
@@ -17,8 +15,6 @@ for j=0,(FileNbr-1) do begin
     WriteError = 0
     CATCH, WriteError
     if (WriteError NE 0) then begin
-
-        print, 'error in file # ' + strcompress(j)
 
     endif else begin
 
@@ -28,13 +24,11 @@ for j=0,(FileNbr-1) do begin
             catch,/cancel
             plot_file_found = 0    
         endif else begin
-            print, 'file to plot: ' + FilesToPlotList[j]
             openr,u,FilesToPlotList[j],/get
             fs = fstat(u)
 ;define an empty string variable to hold results from reading the file
             tmp = ''
             info_array = strarr(NbrLine)
-            print, 'NbrLine: ' + strcompress(NbrLine)
             for i=0,((*global).PreviewFileNbrLine-1) do begin
                 readf,u,tmp
                 info_array[i] = tmp

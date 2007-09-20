@@ -67,7 +67,7 @@ putTextFieldValue, event, 'load_data_run_number_text_field', '',0
 
 ;inform data log book and log book that process has been canceled
 LogBookText = getLogBookText(Event)        
-Message = 'CANCELED
+Message = 'CANCELED'
 putTextAtEndOfLogBookLastLine, $
   Event, $
   LogBookText, $
@@ -96,7 +96,7 @@ putTextFieldValue, event, 'load_normalization_run_number_text_field', '',0
 
 ;inform data log book and log book that process has been canceled
 LogBookText = getLogBookText(Event)        
-Message = 'CANCELED
+Message = 'CANCELED'
 putTextAtEndOfLogBookLastLine, $
   Event, $
   LogBookText, $

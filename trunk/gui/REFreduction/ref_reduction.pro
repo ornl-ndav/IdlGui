@@ -30,8 +30,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;name of the current selected REF instrument
                    FilesToPlotList : ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
-                   PreviewFileNbrLine : 30,$ 
-;nbr of line to get from files
+                   PreviewFileNbrLine : 40,$ 
+;nbr of line to get from intermediates files
                    DataReductionStatus : 'ERROR',$ 
 ; status of the data reduction 'OK' or 'ERROR'
                    PlotsTitle : ptr_new(0L),$ 
