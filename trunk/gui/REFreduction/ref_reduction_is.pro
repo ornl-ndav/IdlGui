@@ -179,3 +179,42 @@ id = widget_info(Event.top,find_by_uname='normalization1d_z_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
+
+
+
+;2D_3D booleans
+FUNCTION isData2dXaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data2d_x_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isData2dYaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data2d_y_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isData2dZaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='data2d_z_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isNorm2dXaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization2d_x_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isNorm2dYaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization2d_y_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END
+
+FUNCTION isNorm2dZaxisScaleLog, Event
+id = widget_info(Event.top,find_by_uname='normalization2d_z_axis_scale')
+index = widget_info(id, /droplist_select)
+return, index
+END

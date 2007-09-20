@@ -25,11 +25,6 @@ END
 
 
 
-
-
-
-
-
 ;**********************************************************************
 ;REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L - REF_L*
 ;**********************************************************************
@@ -45,6 +40,8 @@ Nx         = (*global).Nx_REF_L ;256
 Ny         = (*global).Ny_REF_L ;304
 
 Plot2DDataFile, Event, Nx, Ny
+Plot2DData_3D_File, Event
+
 END
 
 
@@ -63,6 +60,8 @@ Nx         = (*global).Nx_REF_M ;304
 Ny         = (*global).Ny_REF_M ;256
 
 Plot2DDataFile, Event, Nx, Ny
+Plot2DData_3D_File, Event
+
 END
 
 
@@ -130,3 +129,51 @@ END
 
 
 
+
+
+
+;**********************************************************************
+;Procedure that plots REF_L and REF_M 2D 3D data plots                *
+;**********************************************************************
+PRO Plot2DData_3D_File, Event
+
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
+PROCESSING = (*global).processing_message
+
+;tells user that we are now plotting the 2D_3D data
+LogBookText = '----> Plotting 2D_3D view ...... ' + PROCESSING
+putLogBookMessage, Event, LogBookText, Append=1
+
+DEVICE, DECOMPOSED = 0
+
+id_draw = widget_info(Event.top, find_by_uname='load_data_dd_3d_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
+
+img = (*(*global).DATA_DD_ptr)
+
+if (!VERSION.os EQ 'darwin') then begin
+   img = swap_endian(img)
+endif
+
+XYangle = (*global).PrevData2D3DAx
+ZZangle = (*global).PrevData2D3DAz
+
+shade_surf,img, Ax=XYangle, Az=ZZangle
+
+;put various info in 1D_3D tab
+zmin = MIN(img,MAX=zmax)
+(*(*global).Data_2d_3D_min_max) = [zmin,zmax]
+REFreduction_UpdateData2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
+
+;remove PROCESSING_message from logbook and say ok
+LogBookText = getLogBookText(Event)
+putTextAtEndOfLogBookLastLine, Event, LogBookText, 'OK', PROCESSING
+
+END

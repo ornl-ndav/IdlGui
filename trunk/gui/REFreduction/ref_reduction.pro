@@ -199,10 +199,18 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous Ax value of Data 1D_3D plot
                    PrevData1D3DAz : 30L,$
 ;previsou Az value of data 1D_3D plot
+                   PrevData2D3DAx : 0L,$
+;previous Ax value of Data 2D_3D plot
+                   PrevData2D3DAz : 30L,$
+;previsou Az value of data 2D_3D plot
                    DefaultData1D3DAx : 30L, $
 ;default Ax vlaue of data 1D_3D plot
                    DefaultData1D3DAz : 30L, $
 ;default Az value of data 1D_3D plot
+                   DefaultData2D3DAx : 0L, $
+;default Ax vlaue of data 2D_3D plot
+                   DefaultData2D3DAz : 30L, $
+;default Az value of data 2D_3D plot
                    PrevNorm1D3DAx : 30L,$
 ;previous Ax value of norm 1D_3D plot
                    PrevNorm1D3DAz : 30L,$
@@ -213,14 +221,20 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default Az value of norm 1D_3D plot
                    InitialData1d3dContrastDropList : 5,$
 ;default value of the data loadct 1d_3d plot
+                   InitialData2d3dContrastDropList : 5,$
+;default value of the data loadct 2d_3d plot
                    PrevData1d3dContrastDropList : 5,$
 ;previous value of the data loadct 1d_3d plot
+                   PrevData2d3dContrastDropList : 5,$
+;previous value of the data loadct 2d_3d plot
                    InitialNorm1d3dContrastDropList : 5,$
 ;default value of the data loadct 1d_3d plot
                    PrevNorm1d3dContrastDropList : 5,$
 ;previous value of the data loadct 1d_3d plot
                    Data_1d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 1d_3d)
+                   Data_2d_3d_min_max : ptr_new(0L),$
+;[min,max] values of the data img array (used to reset z in 2d_3d)
                    Normalization_1d_3d_min_max : ptr_new(0L)$
 ;[min,max] values of the normalization img array (used to reset z in 1d_3d)
                    })

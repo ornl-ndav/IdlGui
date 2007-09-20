@@ -187,7 +187,7 @@ load_data_DD_draw = widget_draw(load_data_DD_3D_tab_base,$
                                 yoffset=GlobalLoadGraphs[5],$
                                 scr_xsize=GlobalLoadGraphs[6],$
                                 scr_ysize=GlobalLoadGraphs[7],$
-                                uname='load_data_DD_3d_draw',$
+                                uname='load_data_dd_3d_draw',$
                                 retain=2,$
                                 /button_events,$
                                 /motion_events)
@@ -259,7 +259,7 @@ LoadctLabel = WIDGET_LABEL(RescaleTab1Base,$
 
 LoadctDroplist = WIDGET_DROPLIST(RescaleTab1Base,$
                                  VALUE     = LoadctList,$
-                                 UNAME     = 'data_loadct_1d_3d_droplist',$
+                                 UNAME     = 'data_loadct_2d_3d_droplist',$
                                  XOFFSET   = LoadctDroplistSize[0],$
                                  YOFFSET   = LoadctDroplistSize[1],$
                                  SENSITIVE = 1,$
