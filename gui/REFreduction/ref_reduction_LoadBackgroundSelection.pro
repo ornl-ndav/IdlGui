@@ -209,7 +209,7 @@ if (BackROIFullFileName NE '') then begin
       0 ;do not append
 
 ;display preview message in help norm. box
-    Message = 'Preview of ' + file_name
+    Message = 'Preview of ' + BackROIFullFileName
     putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
 
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
