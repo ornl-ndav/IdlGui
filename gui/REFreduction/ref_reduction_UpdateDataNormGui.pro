@@ -18,7 +18,9 @@ ActivateWidget, Event, 'data_reset_zaxis_button', isNeXusFound
 ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
 ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
 ActivateWidget, Event, 'data_rescale_tab1_base', isNeXusFound
-ACtivateWidget, Event, 'data_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'data_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
+ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
 END
 
 
@@ -182,6 +184,36 @@ END
 
 
 
+;This function populate the 2D_3D tab of DATA
+PRO REFreduction_UpdateData2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
+
+;z_min
+putTextFieldValue, event, $
+  'data2d_z_axis_min_cwfield', $
+  strcompress(zmin,/remove_all), 0
+
+;z_max
+putTextFieldValue, event, $
+  'data2d_z_axis_max_cwfield', $
+  strcompress(zmax,/remove_all), 0
+
+;XYangle
+putTextFieldValue, event, $
+  'data2d_xy_axis_angle_cwfield', $
+  strcompress(XYangle,/remove_all), 0
+
+;ZZangle
+putTextFieldValue, event, $
+  'data2d_zz_axis_angle_cwfield', $
+  strcompress(ZZangle,/remove_all), 0
+
+END
+
+
+
+
+
+
 ;This function populate the 1D_3D tab of Normalization
 PRO REFreduction_UpdateNorm1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
 
@@ -206,3 +238,7 @@ putTextFieldValue, event, $
   strcompress(ZZangle,/remove_all), 0
 
 END
+
+
+
+

@@ -125,7 +125,7 @@ END
 
 
 ;**********************************************************************
-;Procedure that plots REF_L and REF_M 1D 3D data plots                   *
+;Procedure that plots REF_L and REF_M 1D 3D data plots                *
 ;**********************************************************************
 PRO Plot1DData_3D_File, Event, img
 
