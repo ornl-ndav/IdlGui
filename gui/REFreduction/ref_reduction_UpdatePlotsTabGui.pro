@@ -30,3 +30,23 @@ endfor
 putPlotsDropListContain, event, DropListArray
 
 END
+
+
+
+;This function enables or not the droplist of the PLOTS tab
+PRO RefReduction_UpdatePlotsGui, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+IF ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
+    dropListStatus = 1
+ENDIF ELSE BEGIN
+    dropListStatus = 0
+ENDELSE
+
+ActivateWidget, Event, 'plots_droplist', dropListStatus
+
+
+END
