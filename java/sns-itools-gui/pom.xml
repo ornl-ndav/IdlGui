@@ -5,13 +5,12 @@
                              http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>gov.ornl.sns.itools</groupId>
-    <artifactId>sns-itools</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <relativePath>../sns-itools</relativePath>
+    <groupId>gov.ornl.sns</groupId>
+    <artifactId>sns-asg-pom</artifactId>
+    <version>1.1.0</version>
   </parent>
   <artifactId>sns-itools-gui</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <version>1.0.1-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>SNS iTools GUI</name>
   <description>[TODO short description of project]</description>
@@ -32,7 +31,7 @@
     <dependency>
       <groupId>gov.ornl.sns</groupId>
       <artifactId>sns-util</artifactId>
-      <version>0.1-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
