@@ -215,10 +215,18 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous Ax value of norm 1D_3D plot
                    PrevNorm1D3DAz : 30L,$
 ;previsou Az value of norm 1D_3D plot
+                   PrevNORM2D3DAx : 30L,$
+;previous Ax value of NORM 2D_3D plot
+                   PrevNORM2D3DAz : 30L,$
+;previsou Az value of NORM 2D_3D plot
                    DefaultNorm1D3DAx : 30L, $
 ;default Ax vlaue of norm 1D_3D plot
                    DefaultNorm1D3DAz : 30L, $
 ;default Az value of norm 1D_3D plot
+                   DefaultNorm2D3DAx : 30L, $
+;default Ax vlaue of norm 2D_3D plot
+                   DefaultNorm2D3DAz : 30L, $
+;default Az value of norm 2D_3D plot
                    InitialData1d3dContrastDropList : 5,$
 ;default value of the data loadct 1d_3d plot
                    InitialData2d3dContrastDropList : 5,$
@@ -228,15 +236,21 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    PrevData2d3dContrastDropList : 5,$
 ;previous value of the data loadct 2d_3d plot
                    InitialNorm1d3dContrastDropList : 5,$
-;default value of the data loadct 1d_3d plot
+;default value of the norm loadct 1d_3d plot
+                   InitialNorm2d3dContrastDropList : 5,$
+;default value of the norm loadct 2d_3d plot
                    PrevNorm1d3dContrastDropList : 5,$
-;previous value of the data loadct 1d_3d plot
+;previous value of the norm loadct 1d_3d plot
+                   PrevNorm2d3dContrastDropList : 5,$
+;previous value of the norm loadct 2d_3d plot
                    Data_1d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 1d_3d)
                    Data_2d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 2d_3d)
-                   Normalization_1d_3d_min_max : ptr_new(0L)$
+                   Normalization_1d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the normalization img array (used to reset z in 1d_3d)
+                   Normalization_2d_3d_min_max : ptr_new(0L)$
+;[min,max] values of the normalization img array (used to reset z in 2d_3d)
                    })
 
 ;------------------------------------------------------------------------
@@ -347,11 +361,11 @@ ENDIF
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 ; widget_control, id1, set_tab_current = 0 LOAD
 
-; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-; widget_control, id2, set_tab_current = 0 DATA
+ id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+ widget_control, id2, set_tab_current = 1  ;NORMALIZATION
 
-; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
-; widget_control, id3, set_tab_current = 0 Y vs TOF (2D)
+ id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+ widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
 
 END
 

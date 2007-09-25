@@ -44,7 +44,9 @@ ActivateWidget, Event, 'normalization_reset_zaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_full_reset_button', isNeXusFound
 ActivateWidget, Event, 'normalization_rescale_z_droplist', isNeXusFound
 ActivateWidget, Event, 'normalization_rescale_tab1_base', isNeXusFound
-ACtivateWidget, Event, 'normalization_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'normalization_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'normalization2d_rescale_tab1_base', isNeXusFound
+ActivateWidget, Event, 'normalization2d_rescale_tab2_base', isNeXusFound
 END
 
 
@@ -241,4 +243,30 @@ END
 
 
 
+
+
+;This function populate the 2D_3D tab of NORMALIZATION
+PRO REFreduction_UpdateNorm2D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
+
+;z_min
+putTextFieldValue, event, $
+  'normalization2d_z_axis_min_cwfield', $
+  strcompress(zmin,/remove_all), 0
+
+;z_max
+putTextFieldValue, event, $
+  'normalization2d_z_axis_max_cwfield', $
+  strcompress(zmax,/remove_all), 0
+
+;XYangle
+putTextFieldValue, event, $
+  'normalization2d_xy_axis_angle_cwfield', $
+  strcompress(XYangle,/remove_all), 0
+
+;ZZangle
+putTextFieldValue, event, $
+  'normalization2d_zz_axis_angle_cwfield', $
+  strcompress(ZZangle,/remove_all), 0
+
+END
 

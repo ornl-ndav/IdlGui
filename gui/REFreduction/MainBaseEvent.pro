@@ -524,6 +524,94 @@ CASE Event.id OF
         endif
     end
 
+;############################### 2D_3D PLOT TAB ################################
+;reset z-axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_z_axis_reset_button'): begin
+        REFreduction_ResetNormalization2D3DPlotZaxis, Event
+    end
+
+;reset xy_axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_xy_axis_reset_button'): begin
+        REFreduction_ResetNormalization2D3DPlotXYaxis, Event
+    end
+
+;reset zz_axis
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_zz_axis_reset_button'): begin
+        REFreduction_ResetNormalization2D3DPlotZZaxis, Event
+    end
+
+;Full reset
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_full_reset_button'): begin
+        REFreduction_FullResetNormalization2D3DPlot_OrientationReset, Event
+    end
+
+;Rotation interface (google)
+;xy-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_mmm_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',-10
+    end
+;xy-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_mm_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',-5
+    end
+;xy_axis M
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_m_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',-2
+    end
+;xy_axis P
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_p_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',2
+    end
+;xy-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_pp_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',5
+    end
+;xy-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_ppp_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',+10
+    end
+
+;z-axis MMM
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_mmm_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',-10
+    end
+;z-axis MM
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_mm_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',-5
+    end
+;z_axis M
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_m_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',-2
+    end
+;z_axis P
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_p_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',2
+    end
+;z-axis PP
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_pp_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',5
+    end
+;z-axis PPP
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_z_axis_ppp_button'): begin
+        REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'z-axis',10
+    end
+
+;reset
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_reset_button'): begin
+        REFreduction_ResetNormalization2D3DPlot_OrientationReset, Event
+    end
+
+;1d_3d loadct
+    widget_info(wWidget, FIND_BY_UNAME='normalization_loadct_2d_3d_droplist'): begin
+        CurrentLoadctIndex = getDropListSelectedIndex(Event, $
+                                                      'normalization_loadct_2d_3d_droplist')
+        PrevLoadctIndex = (*global).PrevNorm2d3dContrastDropList
+        if (CurrentLoadctIndex NE PrevLoadctIndex) then begin
+            REFreduction_RescaleNormalization2D3DPlot, Event
+            (*global).PrevNorm2d3dContrastDropList = CurrentLoadctIndex
+        endif
+    end
+
 ;**REDUCE TAB**
     ;yes or no normalization
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): begin
@@ -670,6 +758,22 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='data2d_zz_axis_angle_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data2d_z_axis_scale'): begin
         REFreduction_RescaleData2D3DPlot, Event
+    end
+    Else:
+ENDSWITCH
+
+;2D_3D NORMALIZATION
+SWITCH Event.id OF
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_x_axis_angle_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_x_axis_scale'): 
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_y_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_y_axis_scale'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_z_axis_min_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_z_axis_max_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_xy_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_zz_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_z_axis_scale'): begin
+        REFreduction_RescaleNormalization2D3DPlot, Event
     end
     Else:
 ENDSWITCH
