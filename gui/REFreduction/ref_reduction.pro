@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.1'
+VERSION = 'VERSION: REFreduction1.0.2'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -199,7 +199,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous Ax value of Data 1D_3D plot
                    PrevData1D3DAz : 30L,$
 ;previsou Az value of data 1D_3D plot
-                   PrevData2D3DAx : 0L,$
+                   PrevData2D3DAx : 30L,$
 ;previous Ax value of Data 2D_3D plot
                    PrevData2D3DAz : 30L,$
 ;previsou Az value of data 2D_3D plot
@@ -207,7 +207,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default Ax vlaue of data 1D_3D plot
                    DefaultData1D3DAz : 30L, $
 ;default Az value of data 1D_3D plot
-                   DefaultData2D3DAx : 0L, $
+                   DefaultData2D3DAx : 30L, $
 ;default Ax vlaue of data 2D_3D plot
                    DefaultData2D3DAz : 30L, $
 ;default Az value of data 2D_3D plot
@@ -332,6 +332,8 @@ id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
 
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN

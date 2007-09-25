@@ -314,7 +314,6 @@ CASE Event.id OF
     end
 
 
-
 ;**LOAD TAB**NORMALIZATION**
 
 ;LOAD NORMALIZATION file
@@ -655,6 +654,22 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_zz_axis_angle_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_scale'): begin
         REFreduction_RescaleNorm1D3DPlot, Event
+    end
+    Else:
+ENDSWITCH
+
+;2D_3D DATA
+SWITCH Event.id OF
+    widget_info(wWidget, FIND_BY_UNAME='data2d_x_axis_angle_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data2d_x_axis_scale'): 
+    widget_info(wWidget, FIND_BY_UNAME='data2d_y_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_y_axis_scale'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_z_axis_min_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_z_axis_max_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_xy_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_zz_axis_angle_cwfield'):
+    widget_info(wWidget, FIND_BY_UNAME='data2d_z_axis_scale'): begin
+        REFreduction_RescaleData2D3DPlot, Event
     end
     Else:
 ENDSWITCH
