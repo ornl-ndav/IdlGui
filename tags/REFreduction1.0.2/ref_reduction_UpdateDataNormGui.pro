@@ -19,8 +19,8 @@ ActivateWidget, Event, 'data_full_reset_button', isNeXusFound
 ActivateWidget, Event, 'data_rescale_z_droplist', isNeXusFound
 ActivateWidget, Event, 'data_rescale_tab1_base', isNeXusFound
 ActivateWidget, Event, 'data_rescale_tab2_base', isNeXusFound
-ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
+;ActivateWidget, Event, 'data2d_rescale_tab1_base', isNeXusFound
+;ActivateWidget, Event, 'data2d_rescale_tab2_base', isNeXusFound
 END
 
 
