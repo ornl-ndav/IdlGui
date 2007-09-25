@@ -30,6 +30,7 @@ if (instrument EQ 'REF_L') then begin
     D3DTitle = 'Y vs TOF (3D)'
 endif else begin
     DTitle = 'X vs TOF'
+    D3DTitle = 'X vs TOF (3D)'
 endelse
 
 D_DD_TabTitle = [DTitle,$

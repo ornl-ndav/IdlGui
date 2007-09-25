@@ -40,7 +40,7 @@ Nx         = (*global).Nx_REF_L ;256
 Ny         = (*global).Ny_REF_L ;304
 
 Plot2DDataFile, Event, Nx, Ny
-Plot2DData_3D_File, Event
+;Plot2DData_3D_File, Event
 
 END
 
@@ -60,7 +60,7 @@ Nx         = (*global).Nx_REF_M ;304
 Ny         = (*global).Ny_REF_M ;256
 
 Plot2DDataFile, Event, Nx, Ny
-Plot2DData_3D_File, Event
+;Plot2DData_3D_File, Event
 
 END
 
