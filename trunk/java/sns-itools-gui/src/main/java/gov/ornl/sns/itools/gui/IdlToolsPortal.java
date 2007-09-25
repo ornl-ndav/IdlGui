@@ -26,7 +26,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
   static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
   static String REFL_SCALE = "/SNS/users/j35/IDL/REF/REF_L/RefLScale";
-  //static String REF_REDUCTION = "/SNS/users/j35/IDL/" 
+  static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -88,7 +88,7 @@ public class IdlToolsPortal implements ActionListener{
 		images[3] = createImageIcon("/gov/ornl/sns/itools/images/DataReduction_M.gif");
 		images[4] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
     images[5] = createImageIcon("/gov/ornl/sns/itools/images/RefLScale.gif");
-    images[6] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
+    images[6] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
 		
 		//Define the help text that goes with each tool
 		//plotBSS
@@ -109,7 +109,7 @@ public class IdlToolsPortal implements ActionListener{
     info[5] = "<html>This program rescale a set of files produced by the <b>REF_L data reduction<br>" +
         "program</b>.</html>";
     //REFreduction
-    info[6] = "<html>This will become the new DataReduction GUI.... better, stronger, <br>" +
+    info[6] = "<html>This is the new DataReduction GUI.... better, stronger, <br>" +
       "more beautiful............ just for your pleasure.</html>";
 			
 		/* 
@@ -213,6 +213,8 @@ public class IdlToolsPortal implements ActionListener{
            p = (Runtime.getRuntime()).exec(REFL_SCALE);
            System.exit(0);
          case 6: //REFreduction
+           p = (Runtime.getRuntime()).exec(REF_REDUCTION);
+           System.exit(0);
          default: break;
            }
 	      }
@@ -290,9 +292,8 @@ public class IdlToolsPortal implements ActionListener{
         break;
       case 6: //REFreduction
         switch (localHostname) {
-        //case lrac:
-        //case mrac:
-        //case heater: enableButton = true; break;
+        case lrac:
+        case mrac:enableButton = true; break;
         default: enableButton = false; break;
         };
         break;
