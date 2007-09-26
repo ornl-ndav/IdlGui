@@ -601,7 +601,7 @@ CASE Event.id OF
         REFreduction_ResetNormalization2D3DPlot_OrientationReset, Event
     end
 
-;1d_3d loadct
+;2d_3d loadct
     widget_info(wWidget, FIND_BY_UNAME='normalization_loadct_2d_3d_droplist'): begin
         CurrentLoadctIndex = getDropListSelectedIndex(Event, $
                                                       'normalization_loadct_2d_3d_droplist')

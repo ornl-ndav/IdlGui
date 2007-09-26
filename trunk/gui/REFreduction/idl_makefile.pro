@@ -64,9 +64,11 @@ cd, CurrentFolder
 .run ref_reduction_Plot1DNormalizationFile.pro
 .run ref_reduction_Zoom.pro
 .run ref_reduction_RescaleDataPlot.pro
-.run ref_reduction_RescaleNormalizationPlot.pro
 .run ref_reduction_RescaleData1D3DPlot.pro
+.run ref_reduction_RescaleData2D3DPlot.pro
+.run ref_reduction_RescaleNormalizationPlot.pro
 .run ref_reduction_RescaleNormalization1D3DPlot.pro
+.run ref_reduction_RescaleNormalization2D3DPlot.pro
 
 .run ref_reduction_DataMouseSelection.pro
 .run ref_reduction_NormMouseSelection.pro
