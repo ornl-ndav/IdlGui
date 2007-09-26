@@ -289,3 +289,40 @@ REFreduction_RescaleData2D3DPlot, Event
 END
 
 
+
+
+
+PRO REFreduction_SwitchToManualData2DMode, Event
+
+ManualBaseStatus    = 0
+AutomaticBaseStatus = 1
+
+REFreduction_SwitchToData2DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+PRO REFreduction_SwitchToAutoData2DMode, Event
+
+ManualBaseStatus    = 1
+AutomaticBaseStatus = 0
+
+REFreduction_SwitchToData2DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+
+
+PRO REFreduction_SwitchToData2DMode, Event, $
+                                     ManualBaseStatus, $
+                                     AutomaticBaseStatus
+
+MapBase, Event, 'data2d_rescale_tab1_base', ManualBaseStatus
+MapBase, Event, 'data2d_rescale_tab2_base', AutomaticBaseStatus
+
+END

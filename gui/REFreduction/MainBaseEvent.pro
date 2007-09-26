@@ -247,7 +247,17 @@ CASE Event.id OF
         REFreduction_FullResetData2D3DPlot_OrientationReset, Event
     end
 
+;switch to manual mode
+    widget_info(wWidget, FIND_BY_UNAME='data2d_switch_to_manual_mode_button'): begin
+        REFreduction_SwitchToManualData2DMode, Event
+    end
+
 ;Rotation interface (google)
+;switch to auto mode
+    widget_info(wWidget, FIND_BY_UNAME='data2d_switch_to_auto_mode_button'): begin
+        REFreduction_SwitchToAutoData2DMode, Event
+    end
+
 ;xy-axis MMM
     widget_info(wWidget, FIND_BY_UNAME='data2d_google_xy_axis_mmm_button'): begin
         REFreduction_RotateData2D3DPlot_Orientation, Event, 'xy-axis',-10

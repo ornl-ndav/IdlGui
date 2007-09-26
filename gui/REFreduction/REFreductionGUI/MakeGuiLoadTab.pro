@@ -62,18 +62,18 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
 NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
                         15,$
                         495,$
-                        400]
+                        395]
 NxsummaryZoomTitle = ['  N X  s u m m a r y  ',' Z  O  O  M ']
 
-ZoomScaleBaseSize = [360,0,110,35]
+ZoomScaleBaseSize = [380,0,110,35]
 ZoomScaleTitle = 'Zoom factor'
 
 ;File info hudge label (empty for now)
 ;top label
 FileInfoSize_1 = [0,$
                   0,$
-                  465,$
-                  393]
+                  489,$
+                  370] ;393
 
 ;help text box to explain what is going on on the left
 LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
@@ -81,7 +81,7 @@ LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
                                       495,$
                                       190+100]
 LeftInteractionHelpMessageLabelSize = [5,5]
-LeftInteractionHelpMessageLabelTitle = 'H E L P'
+LeftInteractionHelpMessageLabelTitle = 'I N F O'
 LeftInteractionHelpTextSize = [5,25,485,160+100]
 LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpMessageLabelSize,$

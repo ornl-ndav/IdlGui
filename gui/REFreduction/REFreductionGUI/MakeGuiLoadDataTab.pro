@@ -128,7 +128,7 @@ MakeGuiLoadData1D2DTab,$
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
                               uname='data_nxsummary_zoom_tab',$
-                              location=2,$
+                              location=0,$
                               xoffset=NxsummaryZoomTabSize[0],$
                               yoffset=NxsummaryZoomTabSize[1],$
                               scr_xsize=NxsummaryZoomTabSize[2],$
