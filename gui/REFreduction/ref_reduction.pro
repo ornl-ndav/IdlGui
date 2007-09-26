@@ -215,9 +215,9 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;previous Ax value of norm 1D_3D plot
                    PrevNorm1D3DAz : 30L,$
 ;previsou Az value of norm 1D_3D plot
-                   PrevNORM2D3DAx : 30L,$
+                   PrevNorm2D3DAx : 30L,$
 ;previous Ax value of NORM 2D_3D plot
-                   PrevNORM2D3DAz : 30L,$
+                   PrevNorm2D3DAz : 30L,$
 ;previsou Az value of NORM 2D_3D plot
                    DefaultNorm1D3DAx : 30L, $
 ;default Ax vlaue of norm 1D_3D plot
@@ -348,6 +348,8 @@ id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
 
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN

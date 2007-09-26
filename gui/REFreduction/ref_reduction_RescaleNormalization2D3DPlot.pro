@@ -175,9 +175,9 @@ END
 
 
 ;This function plots the 3D using the Ax and Az paremeters passed
-PRO REFreduction_RescaleNorm2D3DPlot_Plot2D3Plot, Event, $
-                                                  Norm2D3DAx, $
-                                                  Norm2D3DAz
+PRO REFreduction_RescaleNormalization2D3DPlot_Plot2D3Plot, Event, $
+                                                           Norm2D3DAx, $
+                                                           Norm2D3DAz
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -271,7 +271,7 @@ endif
 if (ResetArray[1]) then begin
 
     Norm2D3DAx = (*global).DefaultNorm2D3DAx
-    putTextFieldValue, Event, 'data2d_xy_axis_angle_cwfield', Norm2D3DAx, 0
+    putTextFieldValue, Event, 'normalization2d_xy_axis_angle_cwfield', Norm2D3DAx, 0
     (*global).PrevNorm2D3DAx = Norm2D3DAx
 
 endif
