@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.2'
+VERSION = 'VERSION: REFreduction1.0.3'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -363,10 +363,10 @@ ENDIF
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 ; widget_control, id1, set_tab_current = 0 LOAD
 
- id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
- widget_control, id2, set_tab_current = 1  ;NORMALIZATION
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
 
- id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+ id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
  widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
 
 END
