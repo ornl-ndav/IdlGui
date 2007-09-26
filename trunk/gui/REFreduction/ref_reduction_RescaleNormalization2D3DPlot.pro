@@ -284,9 +284,7 @@ if (ResetArray[2]) then begin
 
 endif
 
-REFreduction_RescaleNormalization2D3DPlot_Plot2D3Plot, Event, $
-  Norm2D3DAx, $
-  Norm2D3DAz
+REFreduction_RescaleNormalization2D3DPlot, Event
 
 END
 
