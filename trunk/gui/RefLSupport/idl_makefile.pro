@@ -5,7 +5,7 @@ IdlUtilitiesPath = "../utilities"
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 
-cd, CurrentFolder + 'RefLSupport/RefLSupportGui/'
+cd, CurrentFolder + '/RefLSupportGui'
 .run "MakeGuiStep1.pro"
 .run "MakeGuiStep2.pro"
 .run "MakeGuiStep3.pro"
@@ -13,7 +13,7 @@ cd, CurrentFolder + 'RefLSupport/RefLSupportGui/'
 .run "MakeGuiSettings.pro"
 .run "MakeGuiMainBaseComponents.pro"
 
-cd, CurrentFolder + '/RefLSupport/'
+cd, CurrentFolder
 .run "getNumeric.pro"
 .run "refl_support_get.pro"
 .run "refl_support_put.pro"
