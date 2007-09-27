@@ -109,7 +109,6 @@ Google_xoff=365
 GoogleRotationBaseTitleSize = [35,5]
 GoogleRotationBaseTitle     = 'ROTATION  INTERFACE'
 
-
 ;Go to automatic mode
 SwitchToAutoModeButtonSize = [430, $
                               130,$
@@ -214,12 +213,12 @@ RescaleTab = WIDGET_BASE(load_data_DD_3D_tab_base,$
 
 ;### First tab - Manual mode
 RescaleTab1Base = WIDGET_BASE(RescaleTab,$
-                               UNAME     = 'data2d_rescale_tab1_base',$
-                               XOFFSET   = RescaleBaseSize[0],$
-                               YOFFSET   = RescaleBaseSize[1],$
-                               SCR_XSIZE = RescaleBaseSize[2],$
-                               SCR_YSIZE = RescaleBaseSize[3],$
-                               TITLE     = RescaleTab1Title,$
+                              UNAME     = 'data2d_rescale_tab1_base',$
+                              XOFFSET   = RescaleBaseSize[0],$
+                              YOFFSET   = RescaleBaseSize[1],$
+                              SCR_XSIZE = RescaleBaseSize[2],$
+                              SCR_YSIZE = RescaleBaseSize[3],$
+                              TITLE     = RescaleTab1Title,$
                               SENSITIVE = 0)
                               
 ;X-AXIS
