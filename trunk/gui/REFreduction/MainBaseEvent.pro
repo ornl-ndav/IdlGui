@@ -575,7 +575,17 @@ CASE Event.id OF
         REFreduction_FullResetNormalization2D3DPlot_OrientationReset, Event
     end
 
+;switch to manual mode
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_switch_to_manual_mode_button'): begin
+        REFreduction_SwitchToManualNorm2DMode, Event
+    end
+
 ;Rotation interface (google)
+;switch to auto mode
+    widget_info(wWidget, FIND_BY_UNAME='normalization2d_switch_to_auto_mode_button'): begin
+        REFreduction_SwitchToAutoNorm2DMode, Event
+    end
+
 ;xy-axis MMM
     widget_info(wWidget, FIND_BY_UNAME='normalization2d_google_xy_axis_mmm_button'): begin
         REFreduction_RotateNormalization2D3DPlot_Orientation, Event, 'xy-axis',-10

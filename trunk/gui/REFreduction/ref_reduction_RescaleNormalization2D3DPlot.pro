@@ -289,3 +289,37 @@ REFreduction_RescaleNormalization2D3DPlot, Event
 END
 
 
+PRO REFreduction_SwitchToManualNorm2DMode, Event
+
+ManualBaseStatus    = 0
+AutomaticBaseStatus = 1
+
+REFreduction_SwitchToNorm2DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+PRO REFreduction_SwitchToAutoNorm2DMode, Event
+
+ManualBaseStatus    = 1
+AutomaticBaseStatus = 0
+
+REFreduction_SwitchToNorm2DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+
+
+PRO REFreduction_SwitchToNorm2DMode, Event, $
+                                     ManualBaseStatus, $
+                                     AutomaticBaseStatus
+
+MapBase, Event, 'normalization2d_rescale_tab1_base', ManualBaseStatus
+MapBase, Event, 'normalization2d_rescale_tab2_base', AutomaticBaseStatus
+
+END
