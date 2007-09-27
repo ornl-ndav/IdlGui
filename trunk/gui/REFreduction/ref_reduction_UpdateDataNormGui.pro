@@ -43,8 +43,8 @@ ActivateWidget, Event, 'normalization_reset_yaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_reset_zaxis_button', isNeXusFound
 ActivateWidget, Event, 'normalization_full_reset_button', isNeXusFound
 ActivateWidget, Event, 'normalization_rescale_z_droplist', isNeXusFound
-ActivateWidget, Event, 'normalization_rescale_tab1_base', isNeXusFound
-ActivateWidget, Event, 'normalization_rescale_tab2_base', isNeXusFound
+ActivateWidget, Event, 'normalization1d_rescale_tab1_base', isNeXusFound
+ActivateWidget, Event, 'normalization1d_rescale_tab2_base', isNeXusFound
 ActivateWidget, Event, 'normalization2d_rescale_tab1_base', isNeXusFound
 ActivateWidget, Event, 'normalization2d_rescale_tab2_base', isNeXusFound
 END

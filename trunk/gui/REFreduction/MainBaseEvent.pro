@@ -455,7 +455,7 @@ CASE Event.id OF
         REFreduction_ResetFullNormPlot, Event
     end
 
-;****1D_3D PLOT TAB**
+;############################### 1D_3D PLOT TAB ################################
 ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_z_axis_reset_button'): begin
         REFreduction_ResetNorm1D3DPlotZaxis, Event
@@ -476,7 +476,17 @@ CASE Event.id OF
         REFreduction_FullResetNorm1D3DPlot_OrientationReset, Event
     end
 
+;switch to manual mode
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_switch_to_manual_mode_button'): begin
+        REFreduction_SwitchToManualNorm1DMode, Event
+    end
+
 ;Rotation interface (google)
+;switch to auto mode
+    widget_info(wWidget, FIND_BY_UNAME='normalization1d_switch_to_auto_mode_button'): begin
+        REFreduction_SwitchToAutoNorm1DMode, Event
+    end
+
 ;xy-axis MMM
     widget_info(wWidget, FIND_BY_UNAME='normalization1d_google_xy_axis_mmm_button'): begin
         REFreduction_RotateNorm1D3DPlot_Orientation, Event, 'xy-axis',-10
