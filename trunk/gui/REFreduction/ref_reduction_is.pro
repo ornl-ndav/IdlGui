@@ -12,12 +12,23 @@ return, selectionStatus
 END
 
 
+Function isDataYminSelected, Event
+id = widget_info(Event.top,find_by_uname='data_ymin_label_frame')
+return, widget_info(id,/sensitive)
+END
+
+
 Function isNormBackPeakZoomSelected, Event
 id = widget_info(Event.top,find_by_uname='normalization_1d_selection')
 widget_control, id, get_value=SelectionStatus
 return, selectionStatus
 END
 
+
+Function isNormYminSelected, Event
+id = widget_info(Event.top,find_by_uname='normalization_ymin_label_frame')
+return, widget_info(id,/sensitive)
+END
 
 
 Function isDataWithBackground, Event

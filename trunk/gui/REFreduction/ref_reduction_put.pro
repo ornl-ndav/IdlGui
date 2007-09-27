@@ -202,7 +202,6 @@ xsize_1d_draw = (*global).xsize_1d_draw
 
 ;get Background Ymin, Ymax
 BackSelection = (*(*global).data_back_selection)
-
 ValidateSaveButton = 0
 ;check all cases -1,-1 -1,value value,-1 and value,value
 CASE (BackSelection[0]) OF

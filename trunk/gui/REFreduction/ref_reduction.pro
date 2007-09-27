@@ -254,8 +254,17 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;2d_3d)
                    DataXMouseSelection : 0L,$
 ;Previous x position of data left click
-                   NormXMouseSelection : 0L$
+                   NormXMouseSelection : 0L,$
 ;Previous x position of normalization left click
+                   DataHiddenWidgetTextId : 0L, $
+;ID of Data Hidden Widget Text
+                   DataHiddenWidgetTextUname : '',$
+;uname of data hidden widget text
+                   NormHiddenWidgetTextId : 0L,$
+;ID of Norm Hidden Widget Text
+                   NormHiddenWidgetTextUname : ''$
+;uname of Norm hidden widget text
+
                    })
 
 ;------------------------------------------------------------------------
@@ -338,6 +347,23 @@ version_label = widget_label(MAIN_BASE,$
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+
+;hidden widget_text
+DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
+                                   XOFFSET = 1,$
+                                   YOFFSET = 1,$
+                                   /ALL_EVENTS,$
+                                   UNAME='data_hidden_widget_text')
+(*global).DataHiddenWidgetTextId = DataHiddenWidgetText
+(*global).DataHiddenWidgetTextUname = 'data_hidden_widget_text'
+
+NormHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
+                                   XOFFSET = 1,$
+                                   YOFFSET = 1,$
+                                   /ALL_EVENTS,$
+                                   UNAME='norm_hidden_widget_text')
+(*global).NormHiddenWidgetTextId = NormHiddenWidgetText
+(*global).NormHiddenWidgetTextUname = 'norm_hidden_widget_text'
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

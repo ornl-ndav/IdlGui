@@ -78,6 +78,7 @@ cd, CurrentFolder
 .run ref_reduction_CreateBackgroundROIFileName.pro
 .run ref_reduction_DisplayPreviewOfRoiFile.pro
 .run ref_reduction_LoadBackgroundSelection.pro
+.run ref_reduction_ManuallyMoveBackPeakSelection.pro
 
 .run ref_reduction_GUIinteraction.pro
 .run ref_reduction_UpdateDataNormGui.pro

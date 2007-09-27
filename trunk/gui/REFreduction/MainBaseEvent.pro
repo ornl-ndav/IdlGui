@@ -46,7 +46,12 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
+
         if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
+
+                                ;put focus on DataHiddenWidgetText
+            Widget_control, (*global).DataHiddenWidgetTextId, /INPUT_FOCUS
+            
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $
                   REFreduction_DataSelectionPressLeft, Event ;left button
@@ -58,6 +63,15 @@ CASE Event.id OF
             if (Event.type EQ 2) then $ ;move
               REFreduction_DataSelectionMove, Event
         endif
+    end
+    
+;hidden data widget_text
+    widget_info(wWidget, FIND_BY_UNAME=(*global).DataHiddenWidgetTextUname): begin
+        CASE (event.ch) OF
+            117: REFreduction_ManuallyMoveDataBackPeakUp, Event
+            100: REFreduction_ManuallyMoveDataBackPeakDown, Event
+            ELSE:
+        ENDCASE
     end
 
 ;zoom and nxsummary tab
@@ -360,7 +374,12 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D plot of NORM
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_D_draw'): begin
+
         if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
+
+            ;put focus on DataHiddenWidgetText
+            Widget_control, (*global).NormHiddenWidgetTextId, /INPUT_FOCUS
+
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $
                   REFreduction_NormSelectionPressLeft, Event ;left button
@@ -374,7 +393,16 @@ CASE Event.id OF
         endif
     end
 
-    ;zoom and nxsummary tab
+;hidden data widget_text
+    widget_info(wWidget, FIND_BY_UNAME=(*global).NormHiddenWidgetTextUname): begin
+        CASE (event.ch) OF
+            117: REFreduction_ManuallyMoveNormBackPeakUp, Event
+            100: REFreduction_ManuallyMoveNormBackPeakDown, Event
+            ELSE:
+        ENDCASE
+    end
+
+;zoom and nxsummary tab
     widget_info(wWidget, FIND_BY_UNAME='normalization_nxsummary_zoom_tab'): begin
         REFreduction_NormNxsummaryZoomTab, Event
     end
