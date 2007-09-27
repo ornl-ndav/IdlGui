@@ -5,6 +5,8 @@ PRO REFreduction_NormSelectionPressLeft, event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+(*global).NormXMouseSelection = event.x
+
 ;signal or peak selection
 BackSignalZoomStatus = isNormBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF

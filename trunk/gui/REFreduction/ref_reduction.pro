@@ -249,8 +249,13 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;[min,max] values of the data img array (used to reset z in 2d_3d)
                    Normalization_1d_3d_min_max : ptr_new(0L),$
 ;[min,max] values of the normalization img array (used to reset z in 1d_3d)
-                   Normalization_2d_3d_min_max : ptr_new(0L)$
-;[min,max] values of the normalization img array (used to reset z in 2d_3d)
+                   Normalization_2d_3d_min_max : ptr_new(0L),$
+;[min,max] values of the normalization img array (used to reset z in
+;2d_3d)
+                   DataXMouseSelection : 0L,$
+;Previous x position of data left click
+                   NormXMouseSelection : 0L$
+;Previous x position of normalization left click
                    })
 
 ;------------------------------------------------------------------------

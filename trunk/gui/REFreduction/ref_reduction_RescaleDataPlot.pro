@@ -1,4 +1,5 @@
-PRO REFReduction_RescaleDataPlot,Event
+PRO REFReduction_RescaleDataPlot, Event
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -95,8 +96,14 @@ if ((*global).DataNexusFound) then begin
         tvimg = alog(tvimg)
     endif
     
-    
     REFreduction_Rescale_PlotData, Event, tvimg
+
+    ;if Zoom window visible update zoom drawing
+
+
+
+
+
 
 endif ;end of if(DataNexusFound)
 

@@ -51,7 +51,7 @@ END
 
 ;This functions retrieves the value of ymin, ymax of Back and peak
 ;text boxes and stores them in their global pointers
-PRO REFreduction_NormBackgroundPeakSelection, Event
+PRO REFreduction_NormBackgroundPeakSelection, Event, type
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -99,6 +99,24 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     
     putNormBackgroundPeakYMinMaxValueInTextFields, Event
     ReplotNormBackPeakSelection, Event, BackSelection, PeakSelection
+
+    CASE (TYPE) OF
+        'back_ymin' : NormYMouseSelection = BackYmin
+        'back_ymax' : NormYMouseSelection = BackYmax
+        'peak_ymin' : NormYMouseSelection = PeakYmin
+        'peak_ymax' : NormYMouseSelection = PeakYmax
+        else        : NormYMouseSelection = 0
+    ENDCASE
+
+;display zoom if zomm tab is selected
+    if (isNormZoomTabSelected(Event)) then begin
+        RefReduction_zoom, $
+          Event, $
+          MouseX=NormXMouseSelection, $
+          MouseY=NormYMouseSelection, $
+          fact=(*global).NormalizationZoomFactor,$
+          uname='normalization_zoom_draw'
+    endif
 
 endif
 
