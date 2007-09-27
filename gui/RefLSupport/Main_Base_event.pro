@@ -191,11 +191,6 @@ PRO MAIN_BASE_event, Event
          ReflSupportStep3_RescaleFile, Event, -0.01
      end
  
-
-
-
-
-
 else:
   endcase
   
