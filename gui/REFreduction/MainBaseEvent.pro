@@ -71,20 +71,20 @@ CASE Event.id OF
 
 ;Background Ymin and Ymax
     widget_info(wWidget, FIND_BY_UNAME='data_d_selection_background_ymin_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event
+        REFreduction_DataBackgroundPeakSelection, Event, 'back_ymin'
     end
 
     widget_info(wWidget, FIND_BY_UNAME='data_d_selection_background_ymax_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event
+        REFreduction_DataBackgroundPeakSelection, Event, 'back_ymax'
     end
 
 ;Peak Ymin and Ymax
     widget_info(wWidget, FIND_BY_UNAME='data_d_selection_peak_ymin_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event
+        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymin'
     end
 
     widget_info(wWidget, FIND_BY_UNAME='data_d_selection_peak_ymax_cw_field'): begin
-        REFreduction_DataBackgroundPeakSelection, Event
+        REFreduction_DataBackgroundPeakSelection, Event, 'peak_ymax'
     end
 
 ;SAVE Background Selection into a file
@@ -386,21 +386,21 @@ CASE Event.id OF
 ;Background Ymin and Ymax
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_d_selection_background_ymin_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event
+        REFreduction_NormBackgroundPeakSelection, Event, 'back_ymin'
     end
 
     widget_info(wWidget, $
                 FIND_BY_UNAME='normalization_d_selection_background_ymax_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event
+        REFreduction_NormBackgroundPeakSelection, Event, 'back_ymax'
     end
 
 ;Peak Ymin and Ymax
     widget_info(wWidget, FIND_BY_UNAME='normalization_d_selection_peak_ymin_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event
+        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymin'
     end
 
     widget_info(wWidget, FIND_BY_UNAME='normalization_d_selection_peak_ymax_cw_field'): begin
-        REFreduction_NormBackgroundPeakSelection, Event
+        REFreduction_NormBackgroundPeakSelection, Event, 'peak_ymax'
     end
 
 ;SAVE Background Selection into a file
@@ -726,17 +726,17 @@ ENDSWITCH
 
 ;RESCALE DATA TAB
 SWITCH Event.id OF
-    widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmin_cwfield'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmin_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_xmax_cwfield'): 
-    widget_info(wWidget, FIND_BY_UNAME='data_rescale_x_droplist'): 
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_x_droplist')  : 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymin_cwfield'):
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_ymax_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmin_cwfield'): 
     widget_info(wWidget, FIND_BY_UNAME='data_rescale_zmax_cwfield'): 
-    widget_info(wWidget, FIND_BY_UNAME='data_rescale_z_droplist'): begin
+    widget_info(wWidget, FIND_BY_UNAME='data_rescale_z_droplist')  : BEGIN
         REFreduction_RescaleDataPlot, Event
-    end
-    Else:
+    END
+    ELSE:
 ENDSWITCH
 
 ;RESCALE NORMALIZATION TAB

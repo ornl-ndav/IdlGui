@@ -5,6 +5,8 @@ PRO REFreduction_DataSelectionPressLeft, event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+(*global).DataXMouseSelection = event.x
+
 ;signal, peak or zoom selection
 BackSignalZoomStatus = isDataBackPeakZoomSelected(Event)
 CASE (BackSignalZoomStatus) OF
