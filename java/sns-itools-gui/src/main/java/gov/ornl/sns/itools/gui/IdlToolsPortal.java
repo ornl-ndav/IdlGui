@@ -25,7 +25,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REALIGN_BSS = "/SNS/users/j35/IDL/BSS/RealignGUI/RealignBSS";
   static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
   static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
-  static String REFL_SCALE = "/SNS/users/j35/IDL/REF/REF_L/RefLScale";
+  static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
@@ -285,7 +285,8 @@ public class IdlToolsPortal implements ActionListener{
         break;
       case 5: //RefLScale
         switch (localHostname) {
-        case lrac:
+        case lrac:  
+        case mrac:  
         case heater: enableButton = true; break;
         default: enableButton = false; break;
         };
