@@ -12,6 +12,8 @@ endif else begin
    ucams = get_ucams()
 endelse
 
+VERSION = 'VERSION: REFScale1.0.1'
+
 global = ptr_new({  $
          angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
                    replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
@@ -155,6 +157,13 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         SCR_YSIZE=MainBaseSize[3], $
                         TITLE=MainTitle,$
                         MBAR=WID_BASE_0_MBAR)
+
+;add version to program
+version_label = widget_label(MAIN_BASE,$
+                             XOFFSET=1060,$
+                             YOFFSET=580,$
+                             VALUE=VERSION,$
+                             FRAME=0)
 
 PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
                           UNAME='plot_window',$
