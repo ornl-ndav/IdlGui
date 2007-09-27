@@ -9,7 +9,7 @@ RescaleTabSize = [5,$
                   GlobalLoadGraphs[3]+1, $
                   GlobalLoadGraphs[2], $
                   D_DD_TabSize[3]-GlobalLoadGraphs[3]-30]
-RescaleBaseSize = [0,0,$                  
+RescaleBaseSize = [8,0,$                  
                    GlobalLoadGraphs[2], $
                    D_DD_TabSize[3]-GlobalLoadGraphs[3]]
 RescaleTab1Title = 'MANUAL'
@@ -93,14 +93,26 @@ ZZAxisAngleResetButtonSize    = [ZZAxisAngleBaseSize[0]+x1,$
 ZZAxisAngleResetButtonTitle   = 'RESET'
 
 ;Full reset button
-FullResetButtonSize  = [432,5,148,100]
+FullResetButtonSize  = [432,5,148,48]
 FullResetButtonTitle = 'FULL RESET'
+
+;Go to manual mode
+SwitchToManualModeButtonSize = [432, $
+                                FullResetButtonSize[1]+FullResetButtonSize[3]+2,$
+                                148,48]
+SwitchToManualModeButtonTitle = 'Switch to Manual Mode'
 
 ;'Google' rotation base
 Google_xoff=365
 ;GoogleRotationBaseTitleSize = [Google_xoff-20,2]
 GoogleRotationBaseTitleSize = [83,0]
-GoogleRotationBaseTitle     = 'R O T A T I O N                                  I N T E R F A C E'
+GoogleRotationBaseTitle     = 'ROTATION  INTERFACE'
+
+;Go to automatic mode
+SwitchToAutoModeButtonSize = [430, $
+                              130,$
+                              165,30]
+SwitchToAutoModeButtonTitle = 'Switch to Automatic Mode'
 
 ;google xy-axis MM/M/P/PP
 ;MMM, MM and M
@@ -191,18 +203,16 @@ load_normalization_D_3D_draw = widget_draw(load_normalization_D_3D_tab_base,$
                                   /motion_events)
 
 
-RescaleTab = WIDGET_TAB(load_normalization_D_3D_tab_base,$
+RescaleTab = WIDGET_BASE(load_normalization_D_3D_tab_base,$
                         UNAME     = 'normalization_rescale_tab',$
-                        LOCATION  = 2,$
                         XOFFSET   = RescaleTabSize[0],$
                         YOFFSET   = RescaleTabSize[1],$
                         SCR_XSIZE = RescaleTabSize[2],$
-                        SCR_YSIZE = RescaleTabSize[3],$
-                        /TRACKING_EVENTS)
+                        SCR_YSIZE = RescaleTabSize[3])
 
 ;### First tab - Manual mode
 RescaleTab1Base = WIDGET_BASE(RescaleTab,$
-                              UNAME     = 'normalization_rescale_tab1_base',$
+                              UNAME     = 'normalization1d_rescale_tab1_base',$
                               XOFFSET   = RescaleBaseSize[0],$
                               YOFFSET   = RescaleBaseSize[1],$
                               SCR_XSIZE = RescaleBaseSize[2],$
@@ -414,9 +424,18 @@ FullResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                 VALUE     = FullResetButtonTitle,$
                                 UNAME     = 'normalization1d_full_reset_button')
 
+;Switch to manual mode
+ManualModeButton = WIDGET_BUTTON(RescaleTab1Base,$
+                                XOFFSET   = SwitchToManualModeButtonSize[0],$
+                                YOFFSET   = SwitchToManualModeButtonSize[1],$
+                                SCR_XSIZE = SwitchToManualModeButtonSize[2],$
+                                SCR_YSIZE = SwitchToManualModeButtonSize[3],$
+                                VALUE     = SwitchToManualModeButtonTitle,$
+                                UNAME     = 'normalization1d_switch_to_manual_mode_button')
+
 ;### Second tab - Automatic mode
 RescaleTab2Base = WIDGET_BASE(RescaleTab,$
-                              UNAME     = 'normalization_rescale_tab2_base',$
+                              UNAME     = 'normalization1d_rescale_tab2_base',$
                               XOFFSET   = RescaleBaseSize[0],$
                               YOFFSET   = RescaleBaseSize[1],$
                               SCR_XSIZE = RescaleBaseSize[2],$
@@ -424,6 +443,14 @@ RescaleTab2Base = WIDGET_BASE(RescaleTab,$
                               TITLE     = RescaleTab2Title,$
                               SENSITIVE = 0)
 
+;Switch to automatic mode
+AutoModeButton = WIDGET_BUTTON(RescaleTab2Base,$
+                               XOFFSET   = SwitchToAutoModeButtonSize[0],$
+                               YOFFSET   = SwitchToAutoModeButtonSize[1],$
+                               SCR_XSIZE = SwitchToAutoModeButtonSize[2],$
+                               SCR_YSIZE = SwitchToAutoModeButtonSize[3],$
+                               VALUE     = SwitchToAutoModeButtonTitle,$
+                               UNAME     = 'normalization1d_switch_to_auto_mode_button')
 
 ;GOOGLE XY-AXIS
 GoogleXYaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
