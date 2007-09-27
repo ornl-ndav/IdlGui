@@ -139,7 +139,7 @@ CASE Event.id OF
         REFreduction_ResetFullDataPlot, Event
     end
 
-;****1D_3D PLOT TAB**
+;############################### 1D_3D PLOT TAB ################################
 ;reset z-axis
     widget_info(wWidget, FIND_BY_UNAME='data1d_z_axis_reset_button'): begin
         REFreduction_ResetData1D3DPlotZaxis, Event
@@ -160,7 +160,17 @@ CASE Event.id OF
         REFreduction_FullResetData1D3DPlot_OrientationReset, Event
     end
 
+;switch to manual mode
+    widget_info(wWidget, FIND_BY_UNAME='data1d_switch_to_manual_mode_button'): begin
+        REFreduction_SwitchToManualData1DMode, Event
+    end
+
 ;Rotation interface (google)
+;switch to auto mode
+    widget_info(wWidget, FIND_BY_UNAME='data1d_switch_to_auto_mode_button'): begin
+        REFreduction_SwitchToAutoData1DMode, Event
+    end
+
 ;xy-axis MMM
     widget_info(wWidget, FIND_BY_UNAME='data1d_google_xy_axis_mmm_button'): begin
         REFreduction_RotateData1D3DPlot_Orientation, Event, 'xy-axis',-10

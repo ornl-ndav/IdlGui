@@ -292,3 +292,38 @@ REFreduction_RescaleData1D3DPlot, Event
 END
 
 
+
+PRO REFreduction_SwitchToManualData1DMode, Event
+
+ManualBaseStatus    = 0
+AutomaticBaseStatus = 1
+
+REFreduction_SwitchToData1DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+PRO REFreduction_SwitchToAutoData1DMode, Event
+
+ManualBaseStatus    = 1
+AutomaticBaseStatus = 0
+
+REFreduction_SwitchToData1DMode, Event, $
+  ManualBaseStatus, $
+  AutomaticBaseStatus
+
+END
+
+
+
+
+PRO REFreduction_SwitchToData1DMode, Event, $
+                                     ManualBaseStatus, $
+                                     AutomaticBaseStatus
+
+MapBase, Event, 'data1d_rescale_tab1_base', ManualBaseStatus
+MapBase, Event, 'data1d_rescale_tab2_base', AutomaticBaseStatus
+
+END
