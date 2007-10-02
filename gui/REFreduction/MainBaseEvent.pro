@@ -74,6 +74,10 @@ CASE Event.id OF
         ENDCASE
     end
 
+    widget_info(wWidget, FIND_BY_UNAME='data_1d_selection'): begin
+        REFreduction_DataBackPeakZoomEvent, Event
+    end
+
 ;zoom and nxsummary tab
     widget_info(wWidget, FIND_BY_UNAME='data_nxsummary_zoom_tab'): begin
         REFreduction_DataNxsummaryZoomTab, Event
@@ -400,6 +404,10 @@ CASE Event.id OF
             100: REFreduction_ManuallyMoveNormBackPeakDown, Event
             ELSE:
         ENDCASE
+    end
+
+    widget_info(wWidget, FIND_BY_UNAME='normalization_1d_selection'): begin
+        REFreduction_NormBackPeakZoomEvent, Event
     end
 
 ;zoom and nxsummary tab
