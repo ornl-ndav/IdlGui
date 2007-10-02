@@ -264,8 +264,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;ID of Norm Hidden Widget Text
                    NormHiddenWidgetTextUname : '',$
 ;uname of Norm hidden widget text
-                   UpDownMessage : ''$
+                   UpDownMessage : '',$
 ;Message to display when left click main plot
+                   REFreductionVersion : ''$
+;Version of REFreduction Tool
                    })
 
 ;------------------------------------------------------------------------
@@ -288,6 +290,7 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_peak_selection) = [-1,-1]
 
 (*global).UpDownMessage = 'Use U(up) or D(down) to move selection vertically pixel per pixel.' 
+(*global).REFreductionVersion = VERSION
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Data Combined Background TOF Plot',$
