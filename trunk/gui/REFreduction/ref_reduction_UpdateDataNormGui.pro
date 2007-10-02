@@ -159,6 +159,43 @@ endelse
 END
 
 
+;This function checks if the zoom option has been selected for the
+;Data tab
+PRO REFreduction_DataBackPeakZoomEvent, Event
+
+value = getCWBgroupValue(Event, 'data_1d_selection')
+if (value EQ 2) then begin
+;erase display only if this one is only 1 line long
+    text = getTextFieldValue(Event, 'DATA_left_interaction_help_text')
+    sz = (size(text))(1)
+    if (sz EQ 1) then begin
+        putTextFieldValue, event, 'DATA_left_interaction_help_text', '', 0
+    endif
+endif
+
+END
+
+
+
+
+;This function checks if the zoom option has been selected for the
+;Normalization tab
+PRO REFreduction_NormBackPeakZoomEvent, Event
+
+value = getCWBgroupValue(Event, 'normalization_1d_selection')
+if (value EQ 2) then begin
+;erase display only if this one is only 1 line long
+    text = getTextFieldValue(Event, 'NORM_left_interaction_help_text')
+    sz = (size(text))(1)
+    if (sz EQ 1) then begin
+        putTextFieldValue, event, 'NORM_left_interaction_help_text', '', 0
+    endif
+endif
+
+END
+
+
+
 ;This function populate the 1D_3D tab of DATA
 PRO REFreduction_UpdateData1D3DTabGui, Event, zmin, zmax, XYangle, ZZangle
 

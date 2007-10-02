@@ -262,9 +262,10 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;uname of data hidden widget text
                    NormHiddenWidgetTextId : 0L,$
 ;ID of Norm Hidden Widget Text
-                   NormHiddenWidgetTextUname : ''$
+                   NormHiddenWidgetTextUname : '',$
 ;uname of Norm hidden widget text
-
+                   UpDownMessage : ''$
+;Message to display when left click main plot
                    })
 
 ;------------------------------------------------------------------------
@@ -285,6 +286,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).data_peak_selection) = [-1,-1]
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
+
+(*global).UpDownMessage = 'Use U(up) or D(down) to move selection vertically pixel per pixel.' 
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Data Combined Background TOF Plot',$
@@ -384,10 +387,8 @@ widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropLis
 
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN
-
     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     widget_control, id, /editable
-
 ENDIF
 
 ;; default tabs shown

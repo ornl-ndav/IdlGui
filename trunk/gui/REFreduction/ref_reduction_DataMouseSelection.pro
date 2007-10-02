@@ -53,6 +53,10 @@ if (BackSignalZoomStatus NE 2) then begin
             endif
             
             mouse_status_new = 1
+            
+            UpDownMessage = (*global).UpDownMessage
+            putTextFieldValue, event, 'DATA_left_interaction_help_text', UpDownMessage, 0
+
         END
         1:  mouse_status_new = mouse_status
         2:  mouse_status_new = mouse_status
@@ -71,6 +75,10 @@ if (BackSignalZoomStatus NE 2) then begin
             plots, 0, y, /device, color=color
             plots, xsize_1d_draw, y, /device, /continue, color=color
             mouse_status_new = 4
+
+            UpDownMessage = (*global).UpDownMessage
+            putTextFieldValue, event, 'DATA_left_interaction_help_text', UpDownMessage, 0
+
         end
         4:mouse_status_new = mouse_status
         5:  Begin
@@ -88,6 +96,10 @@ if (BackSignalZoomStatus NE 2) then begin
             plots, xsize_1d_draw, y, /device, /continue, color=color
             
             mouse_status_new = 4
+
+            UpDownMessage = (*global).UpDownMessage
+            putTextFieldValue, event, 'DATA_left_interaction_help_text', UpDownMessage, 0
+
         end
     endcase
     
