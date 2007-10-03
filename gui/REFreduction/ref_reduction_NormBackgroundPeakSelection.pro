@@ -100,22 +100,34 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     putNormBackgroundPeakYMinMaxValueInTextFields, Event
     ReplotNormBackPeakSelection, Event, BackSelection, PeakSelection
 
-    CASE (TYPE) OF
-        'back_ymin' : NormYMouseSelection = BackYmin
-        'back_ymax' : NormYMouseSelection = BackYmax
-        'peak_ymin' : NormYMouseSelection = PeakYmin
-        'peak_ymax' : NormYMouseSelection = PeakYmax
-        else        : NormYMouseSelection = 0
-    ENDCASE
+    if (n_elements(TYPE) EQ 1) then begin
+        
+        CASE (TYPE) OF
+            'back_ymin' : NormYMouseSelection = BackYmin
+            'back_ymax' : NormYMouseSelection = BackYmax
+            'peak_ymin' : NormYMouseSelection = PeakYmin
+            'peak_ymax' : NormYMouseSelection = PeakYmax
+            else        : NormYMouseSelection = 0
+        ENDCASE
+
+    endif else begin
+
+        NormYMouseSelection = 0
+
+    endelse
 
 ;display zoom if zomm tab is selected
     if (isNormZoomTabSelected(Event)) then begin
+
+        NormXMouseSelection = (*global).NormXMouseSelection
+
         RefReduction_zoom, $
           Event, $
           MouseX=NormXMouseSelection, $
           MouseY=NormYMouseSelection, $
           fact=(*global).NormalizationZoomFactor,$
           uname='normalization_zoom_draw'
+
     endif
 
 endif

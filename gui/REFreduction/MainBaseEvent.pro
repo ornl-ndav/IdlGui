@@ -451,7 +451,7 @@ CASE Event.id OF
 
 ;CONTRAST TAB
 ;Contrast editor of data 1D tab
-    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_button'): begin
+    widget_info(wWidget, FIND_BY_UNAME='normalization_contrast_droplist'): begin
         REFreductionEventcb_NormContrastEditor, Event
     end
 

@@ -50,7 +50,7 @@ END
 
 ;This functions retrieves the value of ymin, ymax of Back and peak
 ;text boxes and stores them in their global pointers
-PRO REFreduction_DataBackgroundPeakSelection, Event, type
+PRO REFreduction_DataBackgroundPeakSelection, Event, TYPE
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -99,14 +99,22 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
     ReplotDataBackPeakSelection, Event, BackSelection, PeakSelection
 
-    CASE (TYPE) OF
-        'back_ymin' : DataYMouseSelection = BackYmin
-        'back_ymax' : DataYMouseSelection = BackYmax
-        'peak_ymin' : DataYMouseSelection = PeakYmin
-        'peak_ymax' : DataYMouseSelection = PeakYmax
-        else        : DataYMouseSelection = 0
-    ENDCASE
+    if (n_elements(TYPE) EQ 1) then begin
 
+        CASE (TYPE) OF
+            'back_ymin' : DataYMouseSelection = BackYmin
+            'back_ymax' : DataYMouseSelection = BackYmax
+            'peak_ymin' : DataYMouseSelection = PeakYmin
+            'peak_ymax' : DataYMouseSelection = PeakYmax
+            else        : DataYMouseSelection = 0
+        ENDCASE
+
+    endif else begin
+
+        DataYMouseSelection = 0
+
+    endelse
+        
 ;display zoom if zomm tab is selected
     if (isDataZoomTabSelected(Event)) then begin
 
