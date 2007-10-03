@@ -97,6 +97,13 @@ Data1DSelectionPeakYmaxBaseSize = [Data1DSelectionPeakYminBaseSize[0]+$
 Data1DSelectionPeakYmaxCWFieldSize  = Data1DSelectionPeakYminCWFieldSize
 Data1DSelectionPeakYmaxCWFieldTitle = '... Ymax:'
 
+;Save Pixel vs TOF (using uncombined format)
+x1 = 120
+Data1DPixelTOFOutputButtonSize = [Data1DSelectionPeakYmaxBaseSize[0]+x1,$
+                                  Data1DSelectionPeakYmaxBaseSize[1]+3,$
+                                  220,30]
+Data1DPixelTOFOutputButtonTitle = 'Output Pixel vs TOF ASCII file'
+
 ;TAB #2 (Contrast Editor)
 ContrastDropListSize      = [5,13,200,30]
 
@@ -151,6 +158,25 @@ ResetZScaleButtonTitle = 'RESET Z-AXIS'
 ;full reset
 FullResetButtonSize = [515,5,85,128]
 FullResetButtonTitle= 'FULL RESET'
+
+;TAB #4 (output file)
+OutputBaseTitle = 'ASCII File Settings'
+
+OutputFileFolderButtonSize     = [5,5,115,30]
+OutputFileFolderButtonTitle    = 'Output File Path:'
+yoff = 5
+OutputFileFolderTextFieldSize  = [OutputFileFolderButtonSize[0] + $
+                                  OutputFileFolderButtonSize[2] + yoff,$
+                                  OutputFileFolderButtonSize[1], $
+                                  200, $
+                                  30]
+yoff_vertical = 35
+OutputFileNameLabelSize        = [OutputFileFolderButtonSize[0] + 2,$
+                                  OutputFileFolderButtonSize[1] + yoff_vertical]
+OutputFileNameLabelTitle       = 'Output File Name:'
+                                  
+
+
 
 ;***********************************************************************************
 ;Build 1D tab
@@ -597,6 +623,7 @@ FullResetButton = widget_button(RescaleBase,$
                                 uname='data_full_reset_button',$
                                 value=FullResetButtonTitle,$
                                 sensitive=0)
+
 
 END
 

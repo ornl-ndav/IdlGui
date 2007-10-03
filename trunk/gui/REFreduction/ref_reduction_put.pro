@@ -123,6 +123,7 @@ putLogBookMessage, Event, FinalStrarr
 END
 
 
+
 ;Add the given message at the end of the last string array element and
 ;put it back in the DataLogBook text field given
 PRO putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
@@ -149,6 +150,7 @@ endelse
 ;put it back in uname text field
 putDataLogBookMessage, Event, FinalStrarr
 END
+
 
 
 ;Add the given message at the end of the last string array element and

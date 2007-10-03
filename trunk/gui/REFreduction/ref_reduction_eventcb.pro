@@ -606,7 +606,7 @@ if ((*global).NormNexusFound) then begin
 
     prevIndex = (*global).PreviousNormContrastDroplistIndex
     currIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
-    
+
     if (prevIndex Ne currIndex) then begin
         REFreduction_refreshNormPlot, Event
         (*global).PreviousNormContrastDroplistIndex = currIndex
@@ -674,6 +674,7 @@ if ((*global).NormNexusFound) then begin
 endif
 
 END
+
 
 
 PRO REFreduction_refreshNormPlot, Event

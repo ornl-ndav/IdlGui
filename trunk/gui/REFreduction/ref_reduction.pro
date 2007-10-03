@@ -404,6 +404,9 @@ ENDIF
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
 
+id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
+widget_control, id4, set_tab_current = 3 ;ouput ascii file
+
 END
 
 
