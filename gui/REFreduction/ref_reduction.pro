@@ -130,6 +130,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;extension file name of back data ROI
                    norm_back_roi_ext : '_norm_roi.dat',$
 ;extension file name of back norm ROI
+                   load_back_roi_ext : '_roi.dat',$
+;filter used to load background ROI files for data and norm
                    roi_file_preview_nbr_line : 20L,$ 
 ;nbr of line to display in preview
                    select_data_status : 0,$ 
@@ -395,8 +397,8 @@ IF (ucams EQ 'j35' OR $
 ENDIF
 
 ; default tabs shown
- id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
- widget_control, id1, set_tab_current = 3 ;log_book
+; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+; widget_control, id1, set_tab_current = 3 ;log_book
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
