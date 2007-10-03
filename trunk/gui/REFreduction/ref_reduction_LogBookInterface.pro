@@ -51,12 +51,28 @@ LogBookText = [ucamsText,LogBookText]
 ;hostname
 spawn, 'hostname', hostname
 
+;get message added by user
+message = getTextFieldValue(Event, 'log_book_output_text_field')
+
 ;email logBook
 text = "'Log Book of RefReduction ("
 text += (*global).REFreductionVersion + ") sent by " + (*global).ucams
 text += " (" + (*global).instrument + ") from " + hostname + "."
-text += " Log Book is: " + FullFileName + "'"
+text += " Log Book is: " + FullFileName 
+text += ". Message is: "
+
+if (message NE '') then begin
+    text += message
+endif else begin
+    text += "No messages added."
+endelse
+text += "'"
+
 cmd =  'echo ' + text + '| mail -s "REFreduction LogBook" j35@ornl.gov'
 spawn, cmd
+
+;tell the user that the email has been sent
+LogBookText = 'LogBook has been sent successfully !'
+putLogBookMessage, Event, LogBookText, Append=1
 
 END

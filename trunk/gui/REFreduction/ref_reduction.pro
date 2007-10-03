@@ -394,9 +394,9 @@ IF (ucams EQ 'j35' OR $
     widget_control, id, /editable
 ENDIF
 
-;; default tabs shown
-; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-; widget_control, id1, set_tab_current = 0 LOAD
+; default tabs shown
+ id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+ widget_control, id1, set_tab_current = 3 ;log_book
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
@@ -404,8 +404,8 @@ ENDIF
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
 
-id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
-widget_control, id4, set_tab_current = 3 ;ouput ascii file
+;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
+;widget_control, id4, set_tab_current = 3 ;ouput ascii file
 
 END
 
