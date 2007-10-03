@@ -84,8 +84,8 @@ widget_control,id,get_uvalue=global
 
 ;define filter
 instrument = (*global).instrument
-data_back_roi_ext = (*global).data_back_roi_ext
-filter = instrument + '_*' + data_back_roi_ext
+load_back_roi_ext = (*global).load_back_roi_ext
+filter = instrument + '_*' + load_back_roi_ext
 
 ;get default path 
 WorkingPath = (*global).working_path
@@ -169,8 +169,8 @@ widget_control,id,get_uvalue=global
 
 ;define filter
 instrument = (*global).instrument
-norm_back_roi_ext = (*global).norm_back_roi_ext
-filter = instrument + '_*' + norm_back_roi_ext
+load_back_roi_ext = (*global).load_back_roi_ext
+filter = instrument + '_*' + load_back_roi_ext
 
 ;get default path 
 WorkingPath = (*global).working_path
