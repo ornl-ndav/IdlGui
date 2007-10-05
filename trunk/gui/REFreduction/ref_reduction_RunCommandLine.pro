@@ -20,9 +20,15 @@ putLogBookMessage, Event, cmd_text, Append=1
 status_text = 'Data Reduction ........ ' + PROCESSING
 putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
-;add called to SLURM
+;add called to SLURM if hostname is not heater,lrac or mrac
+spawn, 'hostname',listening
+CASE (listening) OF
+    'lrac': 
+    'mrac': 
+    'heater': 
+    else: cmd = 'srun -p ref ' + cmd
+ENDCASE
 
-cmd = 'srun -p ref ' + cmd
 spawn, cmd, listening, err_listening
 
 if (err_listening[0] NE '') then begin
