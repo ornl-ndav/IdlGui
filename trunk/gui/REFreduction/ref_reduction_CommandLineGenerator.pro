@@ -244,11 +244,11 @@ angle_units = getDetectorAngleUnits(Event)
 if (angle_value NE '' OR $    ;user wants to input the angle value and err
     angle_err NE '') then begin
     
-    GuiLabelStatus   = 1
-    NexusLabelStatus = 0
-
-    cmd += ' --det-angle='
-
+;    GuiLabelStatus   = 1
+;    NexusLabelStatus = 0
+    
+    cmd += ' --angle-offset='
+    
     if (angle_value NE '') then begin ;angle_value
         cmd += strcompress(angle_value,/remove_all)
     endif else begin
@@ -278,16 +278,16 @@ if (angle_value NE '' OR $    ;user wants to input the angle value and err
     endelse
     
     cmd += ',units=' + strcompress(angle_units,/remove_all)
-
+    
 endif else begin
 
-    GuiLabelStatus   = 0
-    NexusLabelStatus = 1
+;    GuiLabelStatus   = 0
+;    NexusLabelStatus = 1
 
 endelse
 
-ActivateWidget, Event, 'nexus_data_used_label', NexusLabelStatus
-ActivateWidget, Event, 'gui_data_used_label', GuiLabelStatus
+;ActivateWidget, Event, 'nexus_data_used_label', NexusLabelStatus
+;ActivateWidget, Event, 'gui_data_used_label', GuiLabelStatus
 
 ;get info about filter or not
 if (~isWithFiltering(Event)) then begin ;no filtering
