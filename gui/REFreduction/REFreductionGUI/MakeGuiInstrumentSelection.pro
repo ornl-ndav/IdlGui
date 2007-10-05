@@ -1,4 +1,4 @@
-PRO MakeGuiInstrumentSelection, wGroup
+PRO MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 InstrumentSelectionBaseSize = [400,300,240,140]
 InstrumentSelectioncwbgroupSize = [10,5]
@@ -10,17 +10,18 @@ InstrumentSelectionGoButtontitle = 'VALIDATE INSTRUMENT'
 
 ;Build GUI
 MAIN_BASE = widget_base(GROUP_LEADER=wGroup,$
-                       xoffset=InstrumentSelectionBaseSize[0],$
-                       yoffset=InstrumentSelectionBaseSize[1],$
-                       scr_xsize=InstrumentSelectionBaseSize[2],$
-                       scr_ysize=InstrumentSelectionBaseSize[3],$
-                       Title = 'Instument Selection',$
-                       SPACE=0,$
-                       XPAD=0,$
-                       YPAD=0,$
-                       uname='MAIN_BASE',$
-                       frame=2)
-global = ptr_new ()
+                        xoffset=InstrumentSelectionBaseSize[0],$
+                        yoffset=InstrumentSelectionBaseSize[1],$
+                        scr_xsize=InstrumentSelectionBaseSize[2],$
+                        scr_ysize=InstrumentSelectionBaseSize[3],$
+                        Title = 'Instument Selection',$
+                        SPACE=0,$
+                        XPAD=0,$
+                        YPAD=0,$
+                        uname='MAIN_BASE',$
+                        frame=2)
+
+;global = ptr_new()
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
