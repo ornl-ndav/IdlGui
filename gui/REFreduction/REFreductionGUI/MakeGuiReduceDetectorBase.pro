@@ -4,16 +4,21 @@ PRO MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 DetectorBaseSize   = [0,470,IndividualBaseWidth, 60]
 
 DetectorLabelSize  = [20,2]
-DetectorLabelTitle = 'Detector Angle'
+DetectorLabelTitle = 'Angle Offset'
 DetectorFrameSize  = [10,10,IndividualBaseWidth-30,45]
 
+;Nexus Angle value
+NexusAngleLabelSize  = [30,27]
+NexusAngleLabelValue = 'Angle Value: N/A'
+
 ;Detector value
-DetectorValueLabelSize     = [33,27]
+d_L_L = 202
+DetectorValueLabelSize     = [NexusAngleLabelSize[0]+d_L_L,27]
 DetectorValueLabelTitle    = 'Value:'
-d_L_T = 60
+d_L_T = 40
 DetectorValueTextFieldSize = [DetectorValueLabelSize[0]+d_L_T,$
                               DetectorValueLabelSize[1]-5,70,30]
-d_L_L = 180
+d_L_L = 170
 ;Detector error
 DetectorErrorLabelSize     = [DetectorValueLabelSize[0]+d_L_L,$
                               DetectorValueLabelSize[1]]
@@ -22,7 +27,8 @@ DetectorErrorTextFieldSize = [DetectorErrorLabelSize[0]+d_L_T,$
                               DetectorErrorLabelSize[1]-5,70,30]
 
 ;Detector units
-DetectorUnitsBGroupList = [' degree   ',' radian   ']
+d_L_L = 130
+DetectorUnitsBGroupList = [' degree ',' radian ']
 DetectorUnitsBGroupSize = [DetectorErrorLabelSize[0]+d_L_L,$
                            DetectorErrorTextFieldSize[1]]
                     
@@ -47,6 +53,12 @@ DetectorLabel = widget_label(detector_base,$
                              xoffset=DetectorLabelSize[0],$
                              yoffset=DetectorLabelSize[1],$
                              value=DetectorLabelTitle)
+
+;Nexus Angle value
+NexusAngleLabel = WIDGET_LABEL(detector_base,$
+                               XOFFSET=NexusAngleLabelSize[0],$
+                               YOFFSET=NexusAngleLabelSize[1],$
+                               VALUE=NexusAngleLabelValue)
 
 ;Detector value label
 DetectorValueLabel = widget_label(detector_base,$
@@ -91,25 +103,25 @@ DetectorUnitsBGroup = cw_bgroup(detector_base,$
                                 uname='detector_units_b_group',$
                                 row=1)
 
-;NeXus data used
-NeXusDataUsedLabel = widget_label(detector_base,$
-                                  uname='nexus_data_used_label',$
-                                  xoffset=NexusDataUsedSize[0],$
-                                  yoffset=NexusDataUsedSize[1],$
-                                  scr_xsize=NexusDataUsedSize[2],$
-                                  scr_ysize=NexusDataUsedSize[3],$
-                                  value=NexusDataUsedLabelTitle,$
-                                  frame=1)
-;GUI data used
- GuiDataUsedLabel = widget_label(detector_base,$
-                                 uname='gui_data_used_label',$
-                                 xoffset=GuiDataUsedSize[0],$
-                                 yoffset=GuiDataUsedSize[1],$
-                                 scr_xsize=GuiDataUsedSize[2],$
-                                 scr_ysize=GuiDataUsedSize[3],$
-                                 value=GuiDataUsedLabelTitle,$
-                                 frame=1,$
-                                 sensitive=0)
+;;NeXus data used
+;NeXusDataUsedLabel = widget_label(detector_base,$
+;                                  uname='nexus_data_used_label',$
+;                                  xoffset=NexusDataUsedSize[0],$
+;                                  yoffset=NexusDataUsedSize[1],$
+;                                  scr_xsize=NexusDataUsedSize[2],$
+;                                  scr_ysize=NexusDataUsedSize[3],$
+;                                  value=NexusDataUsedLabelTitle,$
+;                                  frame=1)
+;;GUI data used
+; GuiDataUsedLabel = widget_label(detector_base,$
+;                                 uname='gui_data_used_label',$
+;                                 xoffset=GuiDataUsedSize[0],$
+;                                 yoffset=GuiDataUsedSize[1],$
+;                                 scr_xsize=GuiDataUsedSize[2],$
+;                                 scr_ysize=GuiDataUsedSize[3],$
+;                                 value=GuiDataUsedLabelTitle,$
+;                                 frame=1,$
+;                                 sensitive=0)
 
 
 ;frame
