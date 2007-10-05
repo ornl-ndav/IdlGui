@@ -97,6 +97,7 @@ cd, CurrentFolder
 
 .run ref_reduction_LogBookInterface.pro
 
+.run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
-.run MainBaseEvent.pro
+

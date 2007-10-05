@@ -15,6 +15,10 @@ CASE Event.id OF
         tab_event, Event
     end
 
+;instrument selection cwbgroup
+    widget_info(wWidget, FIND_BY_UNAME='instrument_selection_cw_bgroup'): begin
+    end
+
 ;Instrument Selection
     widget_info(wWidget, FIND_BY_UNAME='instrument_selection_validate_button'): begin
        REFreductionEventcb_InstrumentSelected, Event
