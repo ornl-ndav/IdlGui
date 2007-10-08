@@ -19,10 +19,13 @@ loadct,5
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
+
+
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
-   ucams = get_ucams()
+ ;  ucams = get_ucams()
+print, 'dddddddddddddddddfdfdfdfdfdfdfdfdfdfdfdfdffdfdfdfdfdfd'
 endelse
 
 ;define global variables
