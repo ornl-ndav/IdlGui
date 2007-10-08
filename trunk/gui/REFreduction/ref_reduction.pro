@@ -24,8 +24,7 @@ loadct,5
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
- ;  ucams = get_ucams()
-print, 'dddddddddddddddddfdfdfdfdfdfdfdfdfdfdfdfdffdfdfdfdfdfd'
+   ucams = get_ucams()
 endelse
 
 ;define global variables
