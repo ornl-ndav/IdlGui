@@ -44,7 +44,7 @@ cd, CurrentFolder + '/REFreductionGUI/'
 
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
-	
+
 cd, CurrentFolder
 .run ref_reduction_string.pro
 .run ref_reduction_get.pro
@@ -100,4 +100,3 @@ cd, CurrentFolder
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
-
