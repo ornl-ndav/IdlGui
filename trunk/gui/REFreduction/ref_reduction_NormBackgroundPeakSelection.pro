@@ -82,6 +82,10 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     PeakYmin = getTextFieldValue(Event,'normalization_d_selection_peak_ymin_cw_field')
     PeakYmax = getTextFieldValue(Event,'normalization_d_selection_peak_ymax_cw_field')
 
+;update REDUCE tab
+    putTextFieldValue, Event, 'norm_exclusion_low_bin_text', strcompress(PeakYmin),0
+    putTextFieldValue, Event, 'norm_exclusion_high_bin_text', strcompress(PeakYmax),0
+
     if (PeakYmin EQ '') then begin
         PeakYmin = -1
     endif else begin

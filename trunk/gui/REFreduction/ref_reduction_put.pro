@@ -231,10 +231,16 @@ CASE (BackSelection[0]) OF
                 (*(*global).data_back_selection) = [Ymin,Ymax]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
+                putCWFieldValue, $
+                  event, $
+                  'data_d_selection_background_ymin_cw_field', $
+                  Ymin/2
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+                putCWFieldValue, $
+                  event, $
+                  'data_d_selection_background_ymax_cw_field', $
+                  Ymax/2
                 ValidateSaveButton = 1 ;enable SAVE button
             end
         endcase
@@ -247,7 +253,7 @@ ActivateWidget, Event, 'data_background_selection_file_text_field', ValidateSave
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).data_peak_selection)
 
-;check all cases -1,-1 -1,value value,-1 and value,value
+;check all cases -1,-1 and -1,value value,-1 and value,value
 CASE (PeakSelection[0]) OF
     -1:begin
         case (PeakSelection[1]) OF
@@ -257,6 +263,11 @@ CASE (PeakSelection[0]) OF
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+                putTextFieldValue, $
+                  event, $
+                  'data_exclusion_high_bin_text', $
+                  strcompress(Ymax/2), $
+                  0
             end
         endcase
     end
@@ -267,6 +278,12 @@ CASE (PeakSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+                putTextFieldValue, $
+                  event, $
+                  'data_exclusion_low_bin_text', $
+                  strcompress(Ymin/2), $
+                  0
+                
             end
             else: begin
                 Ymin = Min(PeakSelection,max=Ymax)
@@ -274,9 +291,20 @@ CASE (PeakSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+                putTextFieldValue, $
+                  event, $
+                  'data_exclusion_low_bin_text', $
+                  strcompress(Ymin/2), $
+                  0
+                
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+                putTextFieldValue, $
+                  event, $
+                  'data_exclusion_high_bin_text', $
+                  strcompress(Ymax/2), $
+                  0
             end
         endcase
     end
@@ -321,17 +349,20 @@ CASE (BackSelection[0]) OF
                 Ymin = BackSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
+                putCWFieldValue, event, $
+                  'normalization_d_selection_background_ymin_cw_field', Ymin/2
             end
             else:begin
                 Ymin = Min(BackSelection,max=Ymax)
                 (*(*global).norm_back_selection) = [Ymin,Ymax]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_background_ymin_cw_field', Ymin/2
+                putCWFieldValue, event, $
+                  'normalization_d_selection_background_ymin_cw_field', Ymin/2
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_background_ymax_cw_field', Ymax/2
+                putCWFieldValue, event, $
+                  'normalization_d_selection_background_ymax_cw_field', Ymax/2
                 ValidateSaveButton = 1 ;enable SAVE button
             end
         endcase
@@ -339,7 +370,9 @@ CASE (BackSelection[0]) OF
 endcase
 
 ActivateWidget, Event, 'normalization_roi_save_button', ValidateSaveButton
-ActivateWidget, Event, 'normalization_background_selection_file_text_field', ValidateSaveButton
+ActivateWidget, Event, $
+  'normalization_background_selection_file_text_field', $
+  ValidateSaveButton
 
 ;get Peak Ymin and Ymax
 PeakSelection = (*(*global).norm_peak_selection)
@@ -353,8 +386,16 @@ CASE (PeakSelection[0]) OF
                 Ymax = PeakSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
-            end
+                putCWFieldValue, $
+                  event, $
+                  'normalization_d_selection_peak_ymax_cw_field', $
+                  Ymax/2
+                 putTextFieldValue, $
+                   event, $
+                   'norm_exclusion_high_bin_text', $
+                   strcompress(Ymax/2), $
+                   0
+             end
         endcase
     end
     else: begin
@@ -363,17 +404,44 @@ CASE (PeakSelection[0]) OF
                 Ymin = PeakSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
+                putCWFieldValue, $
+                  event, $
+                  'normalization_d_selection_peak_ymin_cw_field', $
+                  Ymin/2
+                putTextFieldValue, $
+                  event, $
+                  'norm_exclusion_low_bin_text', $
+                  strcompress(Ymin/2), $
+                  0
+
             end
             else: begin
                 Ymin = Min(PeakSelection,max=Ymax)
                 (*(*global).norm_peak_selection) = [Ymin,Ymax]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_peak_ymin_cw_field', Ymin/2
+                putCWFieldValue, $
+                  event, $
+                  'normalization_d_selection_peak_ymin_cw_field', $
+                  Ymin/2
+                
+                putTextFieldValue, $
+                  event, $
+                  'norm_exclusion_low_bin_text', $
+                  strcompress(Ymin/2), $
+                  0
+                
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'normalization_d_selection_peak_ymax_cw_field', Ymax/2
+                putCWFieldValue, $
+                  event, $
+                  'normalization_d_selection_peak_ymax_cw_field', $
+                  Ymax/2
+                 putTextFieldValue, $
+                   event, $
+                   'norm_exclusion_high_bin_text', $
+                   strcompress(Ymax/2), $
+                   0
             end
         endcase
     end

@@ -112,6 +112,7 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     (*(*global).data_peak_selection) = PeakSelection
 
     putDataBackgroundPeakYMinMaxValueInTextFields, Event
+
     ReplotDataBackPeakSelection, Event, BackSelection, PeakSelection
 
 ;display zoom if zomm tab is selected
