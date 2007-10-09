@@ -9,7 +9,7 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 7;   //number of tools
+	final static int NUM_IMAGES = 8;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
@@ -27,6 +27,7 @@ public class IdlToolsPortal implements ActionListener{
   static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
   static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
+  static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -89,6 +90,7 @@ public class IdlToolsPortal implements ActionListener{
 		images[4] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
     images[5] = createImageIcon("/gov/ornl/sns/itools/images/RefLScale.gif");
     images[6] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
+    images[7] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
 		
 		//Define the help text that goes with each tool
 		//plotBSS
@@ -111,7 +113,9 @@ public class IdlToolsPortal implements ActionListener{
     //REFreduction
     info[6] = "<html>This is the new DataReduction GUI.... better, stronger, <br>" +
       "more beautiful............ just for your pleasure.</html>";
-			
+    //miniREFreduction
+    info[7] = "<html>This is the mini version of the new DataReduction GUI (REFreduction).<html>";
+      
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -130,8 +134,15 @@ public class IdlToolsPortal implements ActionListener{
 				toolIconLabel.getBorder()));
 		
 		// Create a combobox with IDL tools choices
-		String[] tools = {"plotBSS","RealignBSS","rebinNeXus","DataReduction",
-				"more_NeXus","ReflScale","REFreduction"};
+		String[] tools = {
+        "plotBSS",
+        "RealignBSS",
+        "rebinNeXus",
+        "DataReduction",
+				"more_NeXus",
+        "ReflScale",
+        "REFreduction (high resolution mode)",
+        "REFreduction (low resolution mode)"};
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
 		
@@ -215,6 +226,9 @@ public class IdlToolsPortal implements ActionListener{
          case 6: //REFreduction
            p = (Runtime.getRuntime()).exec(REF_REDUCTION);
            System.exit(0);
+         case 7: //miniREFreduction
+           p = (Runtime.getRuntime()).exec(MINI_REF_REDUCTION);
+           System.exit(0);
          default: break;
            }
 	      }
@@ -297,8 +311,14 @@ public class IdlToolsPortal implements ActionListener{
         case mrac:enableButton = true; break;
         default: enableButton = false; break;
         };
-        break;
-    }
+      case 7: //miniREFreduction
+        switch (localHostname) {
+        case lrac:
+        case mrac:enableButton = true; break;
+        default: enableButton = false; break;
+        };
+        break;  
+    } 
     goButton.setEnabled(enableButton);
   }
   
@@ -320,7 +340,7 @@ public class IdlToolsPortal implements ActionListener{
 	 * Create the GUI and show it. 
 	 */
 	private static void createAndShowGUI() {
-		//make sure w33e have a nice window decorations.
+		//make sure we have a nice window decorations.
 		JFrame.setDefaultLookAndFeelDecorated(true);
 		
 		//Create a new instance of idlToolsPortal
