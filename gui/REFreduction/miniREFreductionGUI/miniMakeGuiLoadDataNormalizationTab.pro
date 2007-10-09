@@ -99,6 +99,7 @@ DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
                                   SCR_YSIZE=DataNormalizationTabSize[3],$
                                   /TRACKING_EVENTS)
 
+
 ;build DATA tab
 miniMakeGuiLoadDataTab,$
   DataNormalizationTab,$
@@ -122,6 +123,9 @@ miniMakeGuiLoadDataTab,$
   NexusListSizeGlobal,$
   NexusListLabelGlobal,$
   LoadctList
+
+end
+pro temp
 
 ;build NORMALIZATION tab
 miniMakeGuiLoadNormalizationTab,$
