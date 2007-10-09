@@ -329,8 +329,21 @@ ExtOfAllPlots = ['.txt',$
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainBaseSize       = [50,50,1200,885]
-MainBaseTitle      = 'Reflectometer Data Reduction Package'
+
+spawn, 'hostname',listening
+SWITCH (listening) OF
+    'lrac':
+    'mrac': 
+    'heater': BEGIN
+        MainBaseSize  = [50,50,1200,885]
+        MainBaseTitle = 'Reflectometer Data Reduction Package'
+        Break
+    END
+    else: BEGIN
+        MainBaseSize = [50,50,1000,680]
+        MainBaseTitle    = 'miniReflectometer Data Reduction Package'
+    END
+ENDSWITCH
 
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
@@ -344,7 +357,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          XPAD=0,$
                          YPAD=2)
 
-
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
@@ -356,7 +368,20 @@ version_label = widget_label(MAIN_BASE,$
                              FRAME=0)
 
 ;Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+SWITCH (listening) OF
+    'lrac':
+    'mrac': REF
+    'heater': BEGIN
+        MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+        Break
+    END
+    else: BEGIN
+        miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+    END
+ENDSWITCH
+
+
+
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
