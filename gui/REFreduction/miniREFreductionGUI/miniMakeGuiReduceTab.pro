@@ -1,4 +1,4 @@
-PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
+PRO miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -15,24 +15,24 @@ REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
                           SCR_YSIZE=ReduceTabSize[3])
 
 ;create data base
-MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create normalization base
-MakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create Q base
-MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create detector angle
-MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create intermediate plot base
-MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
+miniMakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
 
 ;create other component of base
-MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;create GeneralInfoTextField
-MakeGuiReduceInfo, Event, REDUCE_BASE
+miniMakeGuiReduceInfo, Event, REDUCE_BASE
 
 END

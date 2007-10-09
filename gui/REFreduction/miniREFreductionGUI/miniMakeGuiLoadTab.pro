@@ -1,4 +1,4 @@
-PRO MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
+PRO miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -105,7 +105,7 @@ LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
                         SCR_YSIZE=LoadTabSize[3])
 
 ;Build DATA and NORMALIZATION tabs
-MakeGuiLoadDataNormalizationTab,$
+miniMakeGuiLoadDataNormalizationTab,$
   LOAD_BASE,$
   MainTabSize,$
   D_DD_TabSize,$

@@ -1,4 +1,4 @@
-PRO MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
+PRO miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

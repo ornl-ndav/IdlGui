@@ -1,4 +1,4 @@
-PRO MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
+PRO miniMakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

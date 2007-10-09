@@ -1,4 +1,4 @@
-PRO MakeGuiLoadNormalization1D_3D_Tab,D_DD_Tab,$
+PRO miniMakeGuiLoadNormalization1D_3D_Tab,D_DD_Tab,$
                                       D_DD_TabSize,$
                                       D_DD_TabTitle,$
                                       GlobalLoadGraphs,$

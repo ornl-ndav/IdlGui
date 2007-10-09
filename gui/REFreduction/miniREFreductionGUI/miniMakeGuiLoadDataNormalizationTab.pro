@@ -1,18 +1,18 @@
-PRO MakeGuiLoadDataNormalizationTab, LOAD_BASE,$
-                                     MainBaseSize,$
-                                     D_DD_TabSize,$
-                                     D_DD_BaseSize,$
-                                     D_DD_TabTitle,$
-                                     GlobalRunNumber,$
-                                     RunNumberTitles,$
-                                     GlobalLoadDataGraphs,$
-                                     FileInfoSize,$
-                                     LeftInteractionHelpSize,$
-                                     LeftInteractionHelpMessageLabeltitle,$
-                                     NxsummaryZoomTabSize,$
-                                     NxsummaryZoomTitle,$
-                                     ZoomScaleBaseSize,$
-                                     ZoomScaleTitle
+PRO miniMakeGuiLoadDataNormalizationTab, LOAD_BASE,$
+                                         MainBaseSize,$
+                                         D_DD_TabSize,$
+                                         D_DD_BaseSize,$
+                                         D_DD_TabTitle,$
+                                         GlobalRunNumber,$
+                                         RunNumberTitles,$
+                                         GlobalLoadDataGraphs,$
+                                         FileInfoSize,$
+                                         LeftInteractionHelpSize,$
+                                         LeftInteractionHelpMessageLabeltitle,$
+                                         NxsummaryZoomTabSize,$
+                                         NxsummaryZoomTitle,$
+                                         ZoomScaleBaseSize,$
+                                         ZoomScaleTitle
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -100,7 +100,7 @@ DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
                                   /TRACKING_EVENTS)
 
 ;build DATA tab
-MakeGuiLoadDataTab,$
+miniMakeGuiLoadDataTab,$
   DataNormalizationTab,$
   DataNormalizationTabSize,$
   DataTitle,$
@@ -124,7 +124,7 @@ MakeGuiLoadDataTab,$
   LoadctList
 
 ;build NORMALIZATION tab
-MakeGuiLoadNormalizationTab,$
+miniMakeGuiLoadNormalizationTab,$
   DataNormalizationTab,$
   DataNormalizationTabSize,$
   NormalizationTitle,$

@@ -1,4 +1,4 @@
-PRO MakeGuiLoadNormalization1D2DTab, LOAD_DATA_BASE,$
+PRO miniMakeGuiLoadNormalization1D2DTab, LOAD_DATA_BASE,$
                                      D_DD_TabSize,$
                                      D_DD_BaseSize,$
                                      D_DD_TabTitle,$
@@ -15,14 +15,14 @@ load_normalization_D_DD_Tab = WIDGET_TAB(LOAD_DATA_BASE,$
                                          /tracking_events)
 
 ;build Load_Data_1D tab
-MakeGuiLoadNormalization1DTab,$
+miniMakeGuiLoadNormalization1DTab,$
   load_normalization_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
   GlobalLoadGraphs,$
   loadctList
 
- MakeGuiLoadNormalization1D_3D_Tab,$
+miniMakeGuiLoadNormalization1D_3D_Tab,$
    load_normalization_D_DD_Tab,$
    D_DD_BaseSize,$
    D_DD_TabTitle,$
@@ -30,13 +30,13 @@ MakeGuiLoadNormalization1DTab,$
    loadctList
 
 ;build Load_Data_2D tab
-MakeGuiLoadNormalization2DTab,$
+miniMakeGuiLoadNormalization2DTab,$
   load_normalization_D_DD_Tab,$
   D_DD_BaseSize,$
   D_DD_TabTitle,$
   GlobalLoadGraphs
 
- MakeGuiLoadNormalization2D_3D_Tab,$
+miniMakeGuiLoadNormalization2D_3D_Tab,$
    load_normalization_D_DD_Tab,$
    D_DD_BaseSize,$
    D_DD_TabTitle,$

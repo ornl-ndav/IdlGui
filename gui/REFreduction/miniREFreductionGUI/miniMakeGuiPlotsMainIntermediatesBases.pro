@@ -1,4 +1,4 @@
-PRO MakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
+PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]

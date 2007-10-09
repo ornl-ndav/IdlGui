@@ -1,4 +1,4 @@
-PRO MakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;yes or not base
 NormalizationYesNoBaseSize = [0,185,IndividualBaseWidth,40]

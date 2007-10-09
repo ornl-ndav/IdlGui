@@ -1,4 +1,4 @@
-PRO MakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
 DetectorBaseSize   = [0,470,IndividualBaseWidth, 60]
