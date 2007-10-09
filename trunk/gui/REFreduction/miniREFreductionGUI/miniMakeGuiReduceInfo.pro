@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInfo, Event, REDUCE_BASE
+PRO miniMakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
 GeneralInfoAndXmlBaseSize = [725,260,450,315]
@@ -74,14 +74,6 @@ XmlTextField = widget_text(reduce_tab2_base,$
                            /wrap,$
                            /scroll,$
                            uname='xml_text_field')
-
-
-
-
-
-
-
-
 
 
 ;Data reduction status label

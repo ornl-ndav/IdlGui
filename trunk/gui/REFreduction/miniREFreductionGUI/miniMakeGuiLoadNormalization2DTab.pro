@@ -1,4 +1,4 @@
-PRO MakeGuiLoadNormalization2DTab, D_DD_Tab,$
+PRO miniMakeGuiLoadNormalization2DTab, D_DD_Tab,$
                                    D_DD_BaseSize,$
                                    D_DD_TabTitle,$
                                    GlobalLoadGraphs

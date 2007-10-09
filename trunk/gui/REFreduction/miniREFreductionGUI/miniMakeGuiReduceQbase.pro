@@ -1,4 +1,4 @@
-PRO MakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
 QBaseSize   = [0,400,IndividualBaseWidth, 55]

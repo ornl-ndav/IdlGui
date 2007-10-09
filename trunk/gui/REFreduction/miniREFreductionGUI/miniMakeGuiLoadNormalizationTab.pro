@@ -1,4 +1,4 @@
-PRO MakeGuiLoadNormalizationTab, DataNormalizationTab,$
+PRO miniMakeGuiLoadNormalizationTab, DataNormalizationTab,$
                                  DataNormalizationTabSize,$
                                  NormalizationTitle,$
                                  D_DD_TabSize,$
@@ -116,7 +116,7 @@ NormListNexusCancelButton = widget_button(NormListNexusBase,$
 
 
 ;Build 1D and 2D tabs
-MakeGuiLoadNormalization1D2DTab,$
+miniMakeGuiLoadNormalization1D2DTab,$
   LOAD_NORMALIZATION_BASE,$
   D_DD_TabSize,$
   D_DD_BaseSize,$

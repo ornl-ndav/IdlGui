@@ -1,4 +1,4 @@
-PRO MakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;Dimension
 cwbgroup_list = [' Yes    ',' No    ']

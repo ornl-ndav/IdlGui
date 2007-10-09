@@ -1,4 +1,4 @@
-PRO MakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
+PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Data base
 DataBaseSize   = [0,10,IndividualBaseWidth, 170]

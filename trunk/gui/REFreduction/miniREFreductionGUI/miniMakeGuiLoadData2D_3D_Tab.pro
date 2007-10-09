@@ -1,4 +1,4 @@
-PRO MakeGuiLoadData2D_3D_Tab, D_DD_Tab, $
+PRO miniMakeGuiLoadData2D_3D_Tab, D_DD_Tab, $
                               D_DD_TabSize, $
                               D_DD_TabTitle, $
                               GlobalLoadGraphs, $

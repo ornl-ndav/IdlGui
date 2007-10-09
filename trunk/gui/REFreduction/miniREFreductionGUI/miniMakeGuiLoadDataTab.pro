@@ -1,24 +1,24 @@
-PRO MakeGuiLoadDataTab, DataNormalizationTab,$
-                        DataNormalizationTabSize,$
-                        DataTitle,$
-                        D_DD_TabSize,$
-                        D_DD_BaseSize,$
-                        D_DD_TabTitle,$
-                        GlobalRunNumber,$
-                        RunNumberTitles,$
-                        GlobalLoadDataGraphs,$
-                        FileInfoSize,$
-                        LeftInteractionHelpsize,$
-                        LeftInteractionHelpMessageLabeltitle,$
-                        NxsummaryZoomTabSize,$
-                        NxsummaryZoomTitle,$
-                        ZoomScaleBaseSize,$
-                        ZoomScaleTitle,$
-                        ArchivedOrAllCWBgroupList,$
-                        ArchivedOrAllCWBgroupSize,$
-                        NexusListSizeGlobal,$
-                        NexusListLabelGlobal,$
-                        LoadctList
+PRO miniMakeGuiLoadDataTab, DataNormalizationTab,$
+                            DataNormalizationTabSize,$
+                            DataTitle,$
+                            D_DD_TabSize,$
+                            D_DD_BaseSize,$
+                            D_DD_TabTitle,$
+                            GlobalRunNumber,$
+                            RunNumberTitles,$
+                            GlobalLoadDataGraphs,$
+                            FileInfoSize,$
+                            LeftInteractionHelpsize,$
+                            LeftInteractionHelpMessageLabeltitle,$
+                            NxsummaryZoomTabSize,$
+                            NxsummaryZoomTitle,$
+                            ZoomScaleBaseSize,$
+                            ZoomScaleTitle,$
+                            ArchivedOrAllCWBgroupList,$
+                            ArchivedOrAllCWBgroupSize,$
+                            NexusListSizeGlobal,$
+                            NexusListLabelGlobal,$
+                            LoadctList
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -117,7 +117,7 @@ DataListNexusCancelButton = widget_button(DataListNexusBase,$
 
 
 ;Build 1D and 2D tabs
-MakeGuiLoadData1D2DTab,$
+miniMakeGuiLoadData1D2DTab,$
   LOAD_DATA_BASE,$
   D_DD_TabSize,$
   D_DD_BaseSize,$

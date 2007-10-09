@@ -1,4 +1,4 @@
-PRO MakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
+PRO miniMakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
 ;Build 2D tab
 load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$

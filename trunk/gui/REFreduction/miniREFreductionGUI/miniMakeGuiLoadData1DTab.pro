@@ -1,4 +1,4 @@
-PRO MakeGuiLoadData1DTab, D_DD_Tab, $
+PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
                           D_DD_TabSize, $
                           D_DD_TabTitle, $
                           GlobalLoadGraphs, $
