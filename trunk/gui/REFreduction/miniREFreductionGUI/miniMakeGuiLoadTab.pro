@@ -18,7 +18,8 @@ LoadTabSize   = [0,$
                  MainTabSize[3]]
 D_DD_TabSize  = [30,$
                  35,$
-                 MainTabSize[2]-570,$
+;                 MainTabSize[2]-570,$ 
+                 500,$ 
                  MainTabSize[3]-85]
 D_DD_BaseSize = [5,$
                  5,$
@@ -44,17 +45,23 @@ Ny = 304
 if (instrument EQ 'REF_L') then begin
     xoff = 49
     yoff = 0
-    xsize = 2*Nx
-    ysize = 2*Ny
+    xsize = Nx
+    ysize = Ny
 endif else begin
     xoff = 5
     yoff = 40
-    xsize = 2*Ny
-    ysize = 2*Nx
+    xsize = Ny
+    ysize = Nx
 endelse
 
-LoadDataNormalization1DGraphSize    = [5,0,608,608]
-LoadDataNormalization2DRefGraphSize = [xoff,yoff,xsize,ysize]
+LoadDataNormalization1DGraphSize    = [5, $
+                                       0, $
+                                       304, $
+                                       304]
+LoadDataNormalization2DRefGraphSize = [xoff, $
+                                       yoff, $
+                                       xsize, $
+                                       ysize]
 GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
 
@@ -102,7 +109,11 @@ LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
                         XOFFSET=LoadTabSize[0],$
                         YOFFSET=LoadTabSize[1],$
                         SCR_XSIZE=LoadTabSize[2],$
-                        SCR_YSIZE=LoadTabSize[3])
+                        SCR_YSIZE=LoadTabSize[3],$
+                       /scroll,$
+                       x_scroll_size=400,$
+                       y_scroll_size=300)
+
 
 ;Build DATA and NORMALIZATION tabs
 miniMakeGuiLoadDataNormalizationTab,$

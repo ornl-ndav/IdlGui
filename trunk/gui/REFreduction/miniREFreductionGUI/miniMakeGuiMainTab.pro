@@ -22,11 +22,15 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS,$
                       sensitive=1)
 
-;first tab selected
-;widget_control, Main_Tab, set_tab_current = 0 ;LOAD
-
 ;build LOAD tab
 miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
+
+END
+
+
+
+Pro TEMP
+
 
 ;build REDUCE tab
 miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle

@@ -116,6 +116,7 @@ DataListNexusCancelButton = widget_button(DataListNexusBase,$
                                           value=NexusListLabelGlobal[2])
 
 
+
 ;Build 1D and 2D tabs
 miniMakeGuiLoadData1D2DTab,$
   LOAD_DATA_BASE,$
@@ -124,6 +125,10 @@ miniMakeGuiLoadData1D2DTab,$
   D_DD_TabTitle,$
   GlobalLoadDataGraphs,$
   LoadctList
+
+
+end
+pro temp
 
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$

@@ -9,8 +9,13 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
 
 ;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
 ;Tab#1
-BackPeakRescaleTabSize = [4,610,D_DD_TabSize[2]-20,D_DD_TabSize[3]-640]
-BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
+BackPeakRescaleTabSize = [4, $
+                          300, $;610
+                          D_DD_TabSize[2]-20, $
+                          D_DD_TabSize[3]-300] ;-640
+BackPeakBaseSize       = [0, $
+                          0, $
+                          BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
 BackPeakBaseTitle      = '  Background and Peak Selection  '
 ;Tab#2
@@ -24,11 +29,17 @@ RescaleBaseTitle       = '   Range Displayed   '
 Data1DSelectionList    = ['Select Background   ',$
                           'Select Peak   ',$
                           'ZOOM mode  ']
-Data1DSelectionBaseSize = [0,0, D_DD_TabSize[2], D_DD_TabSize[3]]
+Data1DSelectionBaseSize = [0, $
+                           0, $
+                           D_DD_TabSize[2], $
+                           D_DD_TabSize[3]]
 Data1DSelectionSize     = [5, 0]
 
 ;Y_min and Y_max labels
-dataYminLabelSize  = [385,0,100,25]
+dataYminLabelSize  = [385, $
+                      0, $
+                      100, $
+                      25]
 dataYminLabelTitle = '  Ymin  '
 dataYmaxLabelSize  = [dataYminLabelSize[0]+109,$
                       0,$

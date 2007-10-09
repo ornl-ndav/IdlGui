@@ -14,5 +14,4 @@ SETTINGS_BASE = WIDGET_BASE(MAIN_TAB,$
                           SCR_YSIZE=SettingsTabSize[3])
 
 
-
 END
