@@ -61,7 +61,7 @@ FilteringDataCWBgroup = cw_bgroup(REDUCE_BASE,$
                                   yoffset=FilteringDataCWBgroupSize[1],$
                                   row=1,$
                                   /exclusive,$
-                                  set_value=1,$
+                                  set_value=0,$
                                   uname='filtering_data_cwbgroup')
 
 
