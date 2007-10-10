@@ -5,11 +5,11 @@ PRO miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-LoadTabTitle     = '       LOAD       ' 
-ReduceTabTitle   = '      REDUCE      ' 
-PlotsTabTitle    = '       PLOTS      ' 
-LogBookTabTitle  = '     LOG BOOK     ' 
-SettingsTabTitle = '     SETTINGS     ' 
+LoadTabTitle     = '  LOAD    ' 
+ReduceTabTitle   = ' REDUCE   ' 
+PlotsTabTitle    = '  PLOTS   ' 
+LogBookTabTitle  = ' LOG BOOK ' 
+SettingsTabTitle = ' SETTINGS ' 
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
@@ -26,6 +26,9 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 
 END
+
+
+
 
 
 

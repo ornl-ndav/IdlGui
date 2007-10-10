@@ -357,20 +357,8 @@ version_label = widget_label(MAIN_BASE,$
                              VALUE=VERSION,$
                              FRAME=0)
 
-;; Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-; SWITCH (listening) OF
-;     'lrac':
-;     'mrac': REF
-;     'heater': BEGIN
-;         MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;         Break
-;     END
-;     else: BEGIN
-;         miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;     END
-; ENDSWITCH
-
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+;Build main GUI
+miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
@@ -392,25 +380,29 @@ NormHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;initialize contrast droplist
-id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
-widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
-id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
-id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
-id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
-id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
-id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
 
-IF (ucams EQ 'j35' OR $
-    ucams EQ '2zr') THEN BEGIN
-    id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
-    widget_control, id, /editable
-ENDIF
+;///REMOVE_COMMENTS
+; ; initialize contrast droplist
+; id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
+; id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
+; id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+; id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+; id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+; id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+; widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
+
+; IF (ucams EQ 'j35' OR $
+;     ucams EQ '2zr') THEN BEGIN
+;     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+;     widget_control, id, /editable
+; ENDIF
+;///END OF REMOVE_COMMENTS
+
 
 ; default tabs shown
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')

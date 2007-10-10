@@ -70,7 +70,7 @@ NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
                         15,$
                         495,$
                         395]
-NxsummaryZoomTitle = ['  N X  s u m m a r y  ',' Z  O  O  M ']
+NxsummaryZoomTitle = ['NX summary','ZOOM']
 
 ZoomScaleBaseSize = [380,0,110,35]
 ZoomScaleTitle = 'Zoom factor'

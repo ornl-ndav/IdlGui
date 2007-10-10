@@ -14,37 +14,7 @@ cd, CurrentFolder + '/utilities'
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
-.run MakeGuiMainTab.pro
-.run MakeGuiLoadTab.pro
-.run MakeGuiLoadDataNormalizationTab.pro
-.run MakeGuiLoadDataTab.pro
-.run MakeGuiLoadData1D2DTab.pro
-.run MakeGuiLoadData1DTab.pro
-.run MakeGuiLoadData1D_3D_Tab.pro
-.run MakeGuiLoadData2DTab.pro
-.run MakeGuiLoadData2D_3D_Tab.pro
-.run MakeGuiLoadNormalizationTab.pro
-.run MakeGuiLoadNormalization1D2DTab.pro
-.run MakeGuiLoadNormalization1DTab.pro
-.run MakeGuiLoadNormalization1D_3D_Tab.pro
-.run MakeGuiLoadNormalization2DTab.pro
-.run MakeGuiLoadNormalization2D_3D_Tab.pro
 .run MakeGuiInstrumentSelection.pro
-
-.run MakeGuiReduceTab.pro
-.run MakeGuiReduceDataBase.pro
-.run MakeGuiReduceNormalizationBase.pro
-.run MakeGuiReduceQbase.pro
-.run MakeGuiReduceDetectorBase.pro
-.run MakeGuiReduceIntermediatePlotBase.pro
-.run MakeGuiReduceOther.pro
-.run MakeGuiReduceInfo.pro
-
-.run MakeGuiPlotsTab.pro
-.run MakeGuiPlotsMainIntermediatesBases.pro
-
-.run MakeGuiLogBookTab.pro
-.run MakeGuiSettingsTab.pro
 
 ;Build miniREFreduction GUI
 cd, CurrentFolder + '/miniREFreductionGUI/'
