@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.4'
+VERSION = 'VERSION: REFreduction1.0.5'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -331,46 +331,19 @@ ExtOfAllPlots = ['.txt',$
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 MainBaseSize  = [50,50,1200,885]
-spawn, 'hostname',listening
-;listening = 'faregate.ornl.gov'           ;REMOVE_ME
-SWITCH (listening) OF
-    'lrac':
-    'mrac': 
-    'heater': BEGIN
-        xsize = MainBaseSize[2]
-        ysize = MainBaseSize[3]
-        MainBaseTitle = 'Reflectometer Data Reduction Package'
+MainBaseTitle = 'Reflectometer Data Reduction Package'
         
 ;Build Main Base
-        MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
-                                 UNAME='MAIN_BASE',$
-                                 SCR_XSIZE=xsize,$
-                                 SCR_YSIZE=ysize,$
-                                 XOFFSET=MainBaseSize[0],$
-                                 YOFFSET=MainBaseSize[1],$
-                                 TITLE=MainBaseTitle,$
-                                 SPACE=0,$
-                                 XPAD=0,$
-                                 YPAD=2)
-        Break
-    END
-    else: BEGIN
-        xsize = 1000
-        ysize = 680
-        MainBaseTitle    = 'miniReflectometer Data Reduction Package'
-;Build Main Base
-        MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
-                                UNAME='MAIN_BASE',$
-                                SCR_XSIZE=xsize,$
-                                SCR_YSIZE=ysize,$
-                                XOFFSET=MainBaseSize[0],$
-                                YOFFSET=MainBaseSize[1],$
-                                TITLE=MainBaseTitle,$
-                                SPACE=0,$
-                                XPAD=0,$
-                                /scroll)
-    END
-ENDSWITCH
+MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
+                         UNAME='MAIN_BASE',$
+                         SCR_XSIZE=MainBaseSize[2],$
+                         SCR_YSIZE=MainBaseSize[3],$
+                         XOFFSET=MainBaseSize[0],$
+                         YOFFSET=MainBaseSize[1],$
+                         TITLE=MainBaseTitle,$
+                         SPACE=0,$
+                         XPAD=0,$
+                         YPAD=2)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
