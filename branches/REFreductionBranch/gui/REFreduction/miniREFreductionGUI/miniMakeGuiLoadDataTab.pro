@@ -57,7 +57,7 @@ Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
 DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
                                   ArchivedOrAllCWBgroupList,$
                                   uname='data_archived_or_full_cwbgroup',$
-                                  xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
+                                  xoffset=ArchivedOrAllCWBgroupSize[0],$
                                   yoffset=ArchivedOrAllCWBgroupSize[1],$
                                   /exclusive,$
                                   row=1,$

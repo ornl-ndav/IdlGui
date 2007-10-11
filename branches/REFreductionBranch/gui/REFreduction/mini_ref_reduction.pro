@@ -404,25 +404,31 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;///END OF REMOVE_COMMENTS
 
 
+
+
 ; default tabs shown
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 ; widget_control, id1, set_tab_current = 1 ;reduce
 
-id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-widget_control, id2, set_tab_current = 1 ;NORMALIZATION
+; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
+; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
 
-;id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
-;widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
+; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
 
-;to get the manual mode
-;  id6 = widget_info(MAIN_BASE, find_by_uname='data2d_rescale_tab1_base')
-;  widget_control, id6, map=0
+;  to get the manual mode
+; id6 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab1_base')
+; widget_control, id6, map=0
 
-;  id5 = widget_info(MAIN_BASE, find_by_uname='data2d_rescale_tab2_base')
-;  widget_control, id5, map=1
+; id5 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab2_base')
+; widget_control, id5, map=1
+
 
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
 ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
+
+
+
 
 END
 

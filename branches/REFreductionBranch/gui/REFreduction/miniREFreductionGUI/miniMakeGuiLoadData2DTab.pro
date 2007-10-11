@@ -9,7 +9,6 @@ load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
                                     scr_xsize=D_DD_BaseSize[2],$
                                     scr_ysize=D_DD_BaseSize[3])
 
-
 load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
                                 xoffset=GlobalLoadGraphs[4],$
                                 yoffset=GlobalLoadGraphs[5],$
@@ -19,6 +18,5 @@ load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
                                 retain=2,$
                                 /button_events,$
                                 /motion_events)
-
 
 END

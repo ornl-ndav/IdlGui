@@ -1,76 +1,87 @@
 PRO miniMakeGuiLoadNormalization1D_3D_Tab,D_DD_Tab,$
-                                      D_DD_TabSize,$
-                                      D_DD_TabTitle,$
-                                      GlobalLoadGraphs,$
-                                      LoadctList
+                                          D_DD_TabSize,$
+                                          D_DD_TabTitle,$
+                                          GlobalLoadGraphs,$
+                                          LoadctList
 
 ;define dimension and position of various components
-RescaleTabSize = [5,$
+RescaleTabSize = [0,$
                   GlobalLoadGraphs[3]+1, $
-                  GlobalLoadGraphs[2], $
+                  GlobalLoadGraphs[2]+5, $
                   D_DD_TabSize[3]-GlobalLoadGraphs[3]-30]
-RescaleBaseSize = [8,0,$                  
-                   GlobalLoadGraphs[2], $
+RescaleBaseSize = [0,0,$                  
+                   GlobalLoadGraphs[2]+5, $
                    D_DD_TabSize[3]-GlobalLoadGraphs[3]]
 RescaleTab1Title = 'MANUAL'
 RescaleTab2title = 'AUTOMATIC'
 
 ;x-axis (droplist)
-XaxisLabelSize      = [10,0]
+XaxisLabelSize      = [8,0]
 XaxisLabeltitle     = 'X-axis'
-XaxisLabelFrameSize = [5,8,100,40]
+XaxisLabelFrameSize = [5,8,145,40]
 AxisScaleList       = ['linear','log']
-XaxisScaleSize      = [10,15]
+x1 = 25
+XaxisScaleSize      = [XaxisLabelSize[0]+x1,15]
 
 ;y-axis (droplist)
-YaxisLabelSize      = [120,0]
+YaxisLabelSize      = [165,0]
 YaxisLabeltitle     = 'Y-axis'
 YaxisLabelFrameSize = [YaxisLabelSize[0]-5,XaxisLabelFrameSize[1:3]]
-YaxisScaleSize      = [YaxisLabelSize[0],15]
+YaxisScaleSize      = [YaxisLabelSize[0]+x1,15]
 
 ;1d_3d_loadct button
-LoadctLabelSize      = [230,0]
+y_vertical_off = 96
+LoadctLabelSize      = [8,55 + y_vertical_off]
 LoadctLabelTitle     = 'Contrast'
-LoadctLabelFrameSize = [LoadctLabelSize[0]-5,XaxisLabelFrameSize[1],200,$
+LoadctLabelFrameSize = [5,LoadctLabelSize[1]+8,300,$
                        XaxisLabelFrameSize[3]]
-LoadctDroplistSize   = [LoadctLabelSize[0],15,100,30]
+LoadctDroplistSize   = [LoadctLabelSize[0]+50,LoadctLabelFrameSize[1]+5,100,30]
 
 ;z-axis (droplist-xmin-xmax-reset)
 y_vertical_offset   = 50
 ZaxisLabelSize      = [XaxisLabelSize[0],$
                        XaxisLabelSize[1]+y_vertical_offset]
 ZaxisLabelTitle     = 'Z-axis'
-ZaxisLabelFrameSize = [ZaxisLabelSize[0]-5,XaxisLabelFrameSize[1]+y_vertical_offset,$
-                       420,XaxisLabelFrameSize[3]]
-ZaxisScaleSize      = [ZaxisLabelSize[0],15+y_vertical_offset]
+ZaxisLabelFrameSize = [5, $
+                       XaxisLabelFrameSize[1]+y_vertical_offset,$
+                       300, $
+                       XaxisLabelFrameSize[3]]
+ZaxisScaleSize      = [ZaxisLabelSize[0], $
+                       15+y_vertical_offset]
                        
 ;min/max
-x2_offset = 90
+x2_offset = 85
 ZaxisMinBaseSize    = [ZaxisScaleSize[0]+x2_offset,$
                        ZaxisScaleSize[1],$
                        80,35]
-x3_offset = 85
+x3_offset = 80
 ZaxisMaxBaseSize    = [ZaxisMinBaseSize[0]+x3_offset,$
                        ZaxisMinBaseSize[1],$
                        ZaxisMinBaseSize[2:3]]
 ZaxisMinBaseTitle   = 'Min'
 ZaxisMaxBaseTitle   = 'Max'
 
-ZaxisResetButtonSize  = [ZaxisMaxBaseSize[0]+x2_offset,$
+ZaxisResetButtonSize  = [ZaxisMaxBaseSize[0]+x2_offset-5,$
                          ZaxisScaleSize[1]+2,$
-                         130,30]
-ZaxisResetButtonTitle = 'RESET Z'
+                         50,30]
+ZaxisResetButtonTitle = 'RESET'
+
+y_vertical_offset   = 50
 
 ;XYaxis
-XYAxisLabelSize               = [XaxisLabelSize[0],ZaxisLabelSize[1]+y_vertical_offset]
+XYAxisLabelSize               = [XaxisLabelSize[0], $
+                                 ZaxisLabelSize[1]+y_vertical_offset]
 XYAxisLabelTitle              = 'XY-axis:'
-XYAxisLabelFrameSize          = [ZaxisLabelFrameSize[0],ZaxisLabelFrameSize[1]+y_vertical_offset,$
-                                 280,XaxisLabelFrameSize[3]]
-XYAxisAngleBaseSize           = [ZaxisScaleSize[0]+18,$
+XYAxisLabelFrameSize          = [5,$
+                                 ZaxisLabelFrameSize[1]+y_vertical_offset,$
+                                 147, $
+                                 XaxisLabelFrameSize[3]]
+XYAxisAngleBaseSize           = [ZaxisScaleSize[0]+5,$
                                  ZaxisScaleSize[1]+y_vertical_offset-3,$
-                                 85,35]
+                                 85, $
+                                 35]
 XYAxisAngleBaseTitle          = 'Angle:'
-x1 = 95
+x1 = 85
 XYAxisAngleResetButtonSize    = [XYAxisAngleBaseSize[0]+x1,$
                                  XYAxisAngleBaseSize[1]+3,$
                                  ZaxisResetButtonSize[2:3]]
@@ -81,43 +92,46 @@ x2 = 5
 ZZAxisLabelSize               = [XYaxisLabelSize[0]+XYaxisLabelframeSize[2]+10,$
                                  XYaxisLabelSize[1]]
 ZZAxisLabelTitle              = 'ZZ-axis:'
-ZZAxisLabelFrameSize          = [XYaxisLabelSize[0]+XYaxisLabelFrameSize[2]+x2,$
-                                 XYaxisLabelFrameSize[1:3]]
-ZZAxisAngleBaseSize           = [ZZaxisLabelFrameSize[0]+25,$
+ZZAxisLabelFrameSize          = [XYaxisLabelSize[0] + $
+                                 XYaxisLabelFrameSize[2]+5,$
+                                 XYaxisLabelFrameSize[1],$
+                                 XYaxisLabelFrameSize[2]-2,$
+                                 XYaxisLabelFrameSize[3]]
+ZZAxisAngleBaseSize           = [ZZaxisLabelFrameSize[0]+8,$
                                  XYaxisAngleBaseSize[1:3]]
 ZZAxisAngleBaseTitle          = 'Angle:'
-x1 = 95
 ZZAxisAngleResetButtonSize    = [ZZAxisAngleBaseSize[0]+x1,$
                                  ZZAxisAngleBaseSize[1]+3,$
                                  ZaxisResetButtonSize[2:3]]
 ZZAxisAngleResetButtonTitle   = 'RESET'
 
 ;Full reset button
-FullResetButtonSize  = [432,5,148,48]
+FullResetButtonSize  = [5,210,148,30]
 FullResetButtonTitle = 'FULL RESET'
 
 ;Go to manual mode
-SwitchToManualModeButtonSize = [432, $
-                                FullResetButtonSize[1]+FullResetButtonSize[3]+2,$
-                                148,48]
+SwitchToManualModeButtonSize = [160,$
+                                FullResetButtonSize[1],$
+                                148, $
+                                30]
 SwitchToManualModeButtonTitle = 'Switch to Manual Mode'
 
 ;'Google' rotation base
 Google_xoff=365
 ;GoogleRotationBaseTitleSize = [Google_xoff-20,2]
-GoogleRotationBaseTitleSize = [83,0]
+GoogleRotationBaseTitleSize = [100,0]
 GoogleRotationBaseTitle     = 'ROTATION  INTERFACE'
 
 ;Go to automatic mode
-SwitchToAutoModeButtonSize = [430, $
-                              130,$
-                              165,30]
+SwitchToAutoModeButtonSize = [5, $
+                              213,$
+                              300,30]
 SwitchToAutoModeButtonTitle = 'Switch to Automatic Mode'
 
 ;google xy-axis MM/M/P/PP
 ;MMM, MM and M
-GoogleXYaxisMMMButtonSize  = [75,60,70,35]
-GoogleXYaxisMMMButtonTitle = '- - -'
+GoogleXYaxisMMMButtonSize  = [5,95,50,35]
+GoogleXYaxisMMMButtonTitle = '---'
 x1 = 5
 y1 = 3
 scr_y = 6
@@ -126,7 +140,7 @@ GoogleXYaxisMMButtonSize   = [GoogleXYaxisMMMButtonSize[0]+GoogleXYaxisMMMButton
                               GoogleXYaxisMMMButtonSize[1]+y1,$
                               GoogleXYaxisMMMButtonSize[2]-scr_x,$
                               GoogleXYaxisMMMButtonSize[3]-scr_y]
-GoogleXYaxisMMButtonTitle = '- -'
+GoogleXYaxisMMButtonTitle = '--'
 GoogleXYAxisMButtonSize   = [GoogleXYaxisMMButtonSize[0]+GoogleXYaxisMMButtonSize[2]+x1,$
                              GoogleXYaxisMMButtonSize[1]+y1,$
                              GoogleXYaxisMMButtonSize[2]-scr_x,$
@@ -145,15 +159,15 @@ GoogleXYaxisPButtonSize   = [GoogleResetButtonSize[0]+GoogleResetButtonSize[2]+x
 GoogleXYaxisPButtonTitle  = '+'
 GoogleXYaxisPPButtonSize  = [GoogleXYaxisPButtonSize[0]+GoogleXYaxisPButtonSize[2]+x1,$
                             GoogleXYaxisMMButtonSize[1:3]]
-GoogleXYaxisPPButtonTitle = '+ +'
+GoogleXYaxisPPButtonTitle = '++'
 GoogleXYaxisPPPButtonSize = [GoogleXYaxisPPButtonSize[0]+GoogleXYaxisPPButtonSize[2]+x1,$
                              GoogleXYaxisMMMButtonSize[1:3]]
-GoogleXYaxisPPPButtonTitle = '+ + +'
+GoogleXYaxisPPPButtonTitle = '+++'
 
 ;google z-axis PP/P/M/MM
-xoff = 100
-GoogleZaxisPPPButtonSize  = [255,0,60,30]
-GoogleZaxisPPPButtonTitle = '+ + +'
+xoff = 60
+GoogleZaxisPPPButtonSize  = [130,35,50,30]
+GoogleZaxisPPPButtonTitle = '+++'
 x1_off = 4
 y1_off = 1
 scr_xsize = 7
@@ -162,7 +176,7 @@ GoogleZaxisPPButtonSize   = [GoogleZaxisPPPButtonSize[0]+x1_off,$
                              GoogleZaxisPPPButtonSize[1]+GoogleZAxisPPPButtonSize[3]+y1_off,$
                              GoogleZaxisPPPButtonSize[2]-scr_xsize,$
                              GoogleZaxisPPPButtonSize[3]-scr_ysize]
-GoogleZaxisPPButtonTitle  = '+ +'
+GoogleZaxisPPButtonTitle  = '++'
 GoogleZaxisPButtonSize   = [GoogleZaxisPPButtonSize[0]+x1_off,$
                             GoogleZaxisPPButtonSize[1]+GoogleZaxisPPButtonSize[3]+y1_off,$
                             GoogleZaxisPPButtonSize[2]-scr_xsize,$
@@ -175,40 +189,41 @@ GoogleZaxisMButtonTitle  = '-'
 GoogleZaxisMMButtonSize  = [GoogleZaxisPPButtonSize[0],$
                             GoogleZaxisMButtonSize[1]+GoogleZaxisMButtonSize[3]+y1_off,$
                             GoogleZaxisPPButtonSize[2:3]]
-GoogleZaxisMMButtonTitle = '- -'
+GoogleZaxisMMButtonTitle = '--'
 GoogleZaxisMMMButtonSize  = [GoogleZaxisPPPButtonSize[0],$
                             GoogleZaxisMMButtonSize[1]+GoogleZaxisMMButtonSize[3]+y1_off,$
                             GoogleZaxisPPPButtonSize[2:3]]
-GoogleZaxisMMMButtonTitle = '- - -'
+GoogleZaxisMMMButtonTitle = '---'
 
 ;***********************************************************************************
 ;Build 1D_3D tab
 ;***********************************************************************************
-load_normalization_D_3D_tab_base = widget_base(D_DD_Tab,$
-                                      uname='load_normalization_d_3d_tab_base',$
-                                      title=D_DD_TabTitle[2],$
-                                      xoffset=D_DD_TabSize[0],$
-                                      yoffset=D_DD_TabSize[1],$
-                                      scr_xsize=D_DD_TabSize[2],$
-                                      scr_ysize=D_DD_TabSize[3])
+load_normalization_D_3D_tab_base = $
+  WIDGET_BASE(D_DD_Tab,$
+              UNAME     = 'load_normalization_d_3d_tab_base',$
+              TITLE     = D_DD_TabTitle[2],$
+              XOFFSET   = D_DD_TabSize[0],$
+              YOFFSET   = D_DD_TabSize[1],$
+              SCR_XSIZE = D_DD_TabSize[2],$
+              SCR_YSIZE = D_DD_TabSize[3])
 
-load_normalization_D_3D_draw = widget_draw(load_normalization_D_3D_tab_base,$
-                                  xoffset=GlobalLoadGraphs[0],$
-                                  yoffset=GlobalLoadGraphs[1],$
-                                  scr_xsize=GlobalLoadGraphs[2],$
-                                  scr_ysize=GlobalLoadGraphs[3],$
-                                  uname='load_normalization_d_3d_draw',$
-                                  retain=2,$
-                                  /button_events,$
-                                  /motion_events)
-
+load_normalization_D_3D_draw = $
+  WIDGET_DRAW(load_normalization_D_3D_tab_base,$
+              XOFFSET   = GlobalLoadGraphs[0],$
+              YOFFSET   = GlobalLoadGraphs[1],$
+              SCR_XSIZE = GlobalLoadGraphs[2],$
+              SCR_YSIZE = GlobalLoadGraphs[3],$
+              UNAME     = 'load_normalization_d_3d_draw',$
+              RETAIN    = 2,$
+              /BUTTON_EVENTS,$
+              /MOTION_EVENTS)
 
 RescaleTab = WIDGET_BASE(load_normalization_D_3D_tab_base,$
-                        UNAME     = 'normalization_rescale_tab',$
-                        XOFFSET   = RescaleTabSize[0],$
-                        YOFFSET   = RescaleTabSize[1],$
-                        SCR_XSIZE = RescaleTabSize[2],$
-                        SCR_YSIZE = RescaleTabSize[3])
+                         UNAME     = 'normalization_rescale_tab',$
+                         XOFFSET   = RescaleTabSize[0],$
+                         YOFFSET   = RescaleTabSize[1],$
+                         SCR_XSIZE = RescaleTabSize[2],$
+                         SCR_YSIZE = RescaleTabSize[3])
 
 ;### First tab - Manual mode
 RescaleTab1Base = WIDGET_BASE(RescaleTab,$
@@ -219,7 +234,7 @@ RescaleTab1Base = WIDGET_BASE(RescaleTab,$
                               SCR_YSIZE = RescaleBaseSize[3],$
                               TITLE     = RescaleTab1Title,$
                               SENSITIVE = 0)
-                              
+
 ;X-AXIS
 XaxisLabel = WIDGET_LABEL(RescaleTab1Base,$
                           XOFFSET  = XaxisLabelSize[0],$
@@ -408,12 +423,12 @@ ZZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                   UNAME     = 'normalization1d_zz_axis_reset_button')
 
 ZZaxisLabelFrame = WIDGET_LABEL(RescaleTab1Base,$
-                               XOFFSET   = ZZaxisLabelFrameSize[0],$
-                               YOFFSET   = ZZaxisLabelFrameSize[1],$
-                               SCR_XSIZE = ZZaxisLabelFrameSize[2],$
-                               SCR_YSIZE = ZZaxisLabelFrameSize[3],$
-                               VALUE     = '',$
-                               FRAME     = 1)
+                                XOFFSET   = ZZaxisLabelFrameSize[0],$
+                                YOFFSET   = ZZaxisLabelFrameSize[1],$
+                                SCR_XSIZE = ZZaxisLabelFrameSize[2],$
+                                SCR_YSIZE = ZZaxisLabelFrameSize[3],$
+                                VALUE     = '',$
+                                FRAME     = 1)
 
 ;Full reset button
 FullResetButton = WIDGET_BUTTON(RescaleTab1Base,$
@@ -426,12 +441,12 @@ FullResetButton = WIDGET_BUTTON(RescaleTab1Base,$
 
 ;Switch to manual mode
 ManualModeButton = WIDGET_BUTTON(RescaleTab1Base,$
-                                XOFFSET   = SwitchToManualModeButtonSize[0],$
-                                YOFFSET   = SwitchToManualModeButtonSize[1],$
-                                SCR_XSIZE = SwitchToManualModeButtonSize[2],$
-                                SCR_YSIZE = SwitchToManualModeButtonSize[3],$
-                                VALUE     = SwitchToManualModeButtonTitle,$
-                                UNAME     = 'normalization1d_switch_to_manual_mode_button')
+                                 XOFFSET   = SwitchToManualModeButtonSize[0],$
+                                 YOFFSET   = SwitchToManualModeButtonSize[1],$
+                                 SCR_XSIZE = SwitchToManualModeButtonSize[2],$
+                                 SCR_YSIZE = SwitchToManualModeButtonSize[3],$
+                                 VALUE     = SwitchToManualModeButtonTitle,$
+                                 UNAME     = 'normalization1d_switch_to_manual_mode_button')
 
 ;### Second tab - Automatic mode
 RescaleTab2Base = WIDGET_BASE(RescaleTab,$
@@ -454,49 +469,49 @@ AutoModeButton = WIDGET_BUTTON(RescaleTab2Base,$
 
 ;GOOGLE XY-AXIS
 GoogleXYaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                    XOFFSET   = GoogleXYaxisMMMButtonSize[0],$
-                                    YOFFSET   = GoogleXYaxisMMMButtonSize[1],$
-                                    SCR_XSIZE = GoogleXYaxisMMMButtonSize[2],$
-                                    SCR_YSIZE = GoogleXYaxisMMMButtonSize[3],$
-                                    VALUE     = GoogleXYaxisMMMButtonTitle,$
-                                    UNAME     = 'normalization1d_google_xy_axis_mmm_button',$
-                                    SENSITIVE = 1)
+                                      XOFFSET   = GoogleXYaxisMMMButtonSize[0],$
+                                      YOFFSET   = GoogleXYaxisMMMButtonSize[1],$
+                                      SCR_XSIZE = GoogleXYaxisMMMButtonSize[2],$
+                                      SCR_YSIZE = GoogleXYaxisMMMButtonSize[3],$
+                                      VALUE     = GoogleXYaxisMMMButtonTitle,$
+                                      UNAME     = 'normalization1d_google_xy_axis_mmm_button',$
+                                      SENSITIVE = 1)
 
 GoogleXYaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                    XOFFSET   = GoogleXYaxisMMButtonSize[0],$
-                                    YOFFSET   = GoogleXYaxisMMButtonSize[1],$
-                                    SCR_XSIZE = GoogleXYaxisMMButtonSize[2],$
-                                    SCR_YSIZE = GoogleXYaxisMMButtonSize[3],$
-                                    VALUE     = GoogleXYaxisMMButtonTitle,$
-                                    UNAME     = 'normalization1d_google_xy_axis_mm_button',$
-                                    SENSITIVE = 1)
+                                     XOFFSET   = GoogleXYaxisMMButtonSize[0],$
+                                     YOFFSET   = GoogleXYaxisMMButtonSize[1],$
+                                     SCR_XSIZE = GoogleXYaxisMMButtonSize[2],$
+                                     SCR_YSIZE = GoogleXYaxisMMButtonSize[3],$
+                                     VALUE     = GoogleXYaxisMMButtonTitle,$
+                                     UNAME     = 'normalization1d_google_xy_axis_mm_button',$
+                                     SENSITIVE = 1)
 
 GoogleXYaxisMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                   XOFFSET   = GoogleXYaxisMButtonSize[0],$
-                                   YOFFSET   = GoogleXYaxisMButtonSize[1],$
-                                   SCR_XSIZE = GoogleXYaxisMButtonSize[2],$
-                                   SCR_YSIZE = GoogleXYaxisMButtonSize[3],$
-                                   VALUE     = GoogleXYaxisMButtonTitle,$
-                                   UNAME     = 'normalization1d_google_xy_axis_m_button',$
-                                   SENSITIVE = 1)
-
-GoogleXYaxisPPButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                    XOFFSET   = GoogleXYaxisPPButtonSize[0],$
-                                    YOFFSET   = GoogleXYaxisPPButtonSize[1],$
-                                    SCR_XSIZE = GoogleXYaxisPPButtonSize[2],$
-                                    SCR_YSIZE = GoogleXYaxisPPButtonSize[3],$
-                                    VALUE     = GoogleXYaxisPPButtonTitle,$
-                                    UNAME     = 'normalization1d_google_xy_axis_pp_button',$
+                                    XOFFSET   = GoogleXYaxisMButtonSize[0],$
+                                    YOFFSET   = GoogleXYaxisMButtonSize[1],$
+                                    SCR_XSIZE = GoogleXYaxisMButtonSize[2],$
+                                    SCR_YSIZE = GoogleXYaxisMButtonSize[3],$
+                                    VALUE     = GoogleXYaxisMButtonTitle,$
+                                    UNAME     = 'normalization1d_google_xy_axis_m_button',$
                                     SENSITIVE = 1)
 
+GoogleXYaxisPPButton = WIDGET_BUTTON(RescaleTab2Base,$
+                                     XOFFSET   = GoogleXYaxisPPButtonSize[0],$
+                                     YOFFSET   = GoogleXYaxisPPButtonSize[1],$
+                                     SCR_XSIZE = GoogleXYaxisPPButtonSize[2],$
+                                     SCR_YSIZE = GoogleXYaxisPPButtonSize[3],$
+                                     VALUE     = GoogleXYaxisPPButtonTitle,$
+                                     UNAME     = 'normalization1d_google_xy_axis_pp_button',$
+                                     SENSITIVE = 1)
+
 GoogleXYaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                   XOFFSET   = GoogleXYaxisPButtonSize[0],$
-                                   YOFFSET   = GoogleXYaxisPButtonSize[1],$
-                                   SCR_XSIZE = GoogleXYaxisPButtonSize[2],$
-                                   SCR_YSIZE = GoogleXYaxisPButtonSize[3],$
-                                   VALUE     = GoogleXYaxisPButtonTitle,$
-                                   UNAME     = 'normalization1d_google_xy_axis_p_button',$
-                                   SENSITIVE = 1)
+                                    XOFFSET   = GoogleXYaxisPButtonSize[0],$
+                                    YOFFSET   = GoogleXYaxisPButtonSize[1],$
+                                    SCR_XSIZE = GoogleXYaxisPButtonSize[2],$
+                                    SCR_YSIZE = GoogleXYaxisPButtonSize[3],$
+                                    VALUE     = GoogleXYaxisPButtonTitle,$
+                                    UNAME     = 'normalization1d_google_xy_axis_p_button',$
+                                    SENSITIVE = 1)
 
 GoogleXYaxisPPPButton = WIDGET_BUTTON(RescaleTab2Base,$
                                       XOFFSET   = GoogleXYaxisPPPButtonSize[0],$
@@ -546,22 +561,22 @@ GoogleZaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
                                    SENSITIVE = 1)
 
 GoogleZaxisMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                    XOFFSET   = GoogleZaxisMButtonSize[0],$
-                                    YOFFSET   = GoogleZaxisMButtonSize[1],$
-                                    SCR_XSIZE = GoogleZaxisMButtonSize[2],$
-                                    SCR_YSIZE = GoogleZaxisMButtonSize[3],$
-                                    VALUE     = GoogleZaxisMButtonTitle,$
-                                    UNAME     = 'normalization1d_google_z_axis_m_button',$
-                                    SENSITIVE = 1)
+                                   XOFFSET   = GoogleZaxisMButtonSize[0],$
+                                   YOFFSET   = GoogleZaxisMButtonSize[1],$
+                                   SCR_XSIZE = GoogleZaxisMButtonSize[2],$
+                                   SCR_YSIZE = GoogleZaxisMButtonSize[3],$
+                                   VALUE     = GoogleZaxisMButtonTitle,$
+                                   UNAME     = 'normalization1d_google_z_axis_m_button',$
+                                   SENSITIVE = 1)
 
 GoogleZaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                   XOFFSET   = GoogleZaxisMMButtonSize[0],$
-                                   YOFFSET   = GoogleZaxisMMButtonSize[1],$
-                                   SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
-                                   SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
-                                   VALUE     = GoogleZaxisMMButtonTitle,$
-                                   UNAME     = 'normalization1d_google_z_axis_mm_button',$
-                                   SENSITIVE = 1)
+                                    XOFFSET   = GoogleZaxisMMButtonSize[0],$
+                                    YOFFSET   = GoogleZaxisMMButtonSize[1],$
+                                    SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
+                                    SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
+                                    VALUE     = GoogleZaxisMMButtonTitle,$
+                                    UNAME     = 'normalization1d_google_z_axis_mm_button',$
+                                    SENSITIVE = 1)
 
 GoogleZaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
                                      XOFFSET   = GoogleZaxisMMMButtonSize[0],$
