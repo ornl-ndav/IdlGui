@@ -411,11 +411,18 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
 
-; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
-; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
+ id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
+ widget_control, id3, set_tab_current = 1  ;Y vs TOF (2D)
 
-id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
-widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
+;to get the manual mode
+ id6 = widget_info(MAIN_BASE, find_by_uname='data1d_rescale_tab1_base')
+ widget_control, id6, map=0
+
+ id5 = widget_info(MAIN_BASE, find_by_uname='data1d_rescale_tab2_base')
+ widget_control, id5, map=1
+
+;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
+;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
 
 END
 

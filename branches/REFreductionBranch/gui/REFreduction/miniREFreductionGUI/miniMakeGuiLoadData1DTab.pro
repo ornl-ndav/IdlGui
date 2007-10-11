@@ -202,80 +202,79 @@ OutputFileNameLabelTitle       = 'Output File Name:'
 ;***********************************************************************************
 ;Build 1D tab
 ;***********************************************************************************
-load_data_D_tab_base = widget_base(D_DD_Tab,$
-                                   uname='load_data_d_tab_base',$
-                                   title=D_DD_TabTitle[0],$
-                                   xoffset=D_DD_TabSize[0],$
-                                   yoffset=D_DD_TabSize[1],$
-                                   scr_xsize=D_DD_TabSize[2],$
-                                   scr_ysize=D_DD_TabSize[3])
+load_data_D_tab_base = WIDGET_BASE(D_DD_Tab,$
+                                   UNAME     = 'load_data_d_tab_base',$
+                                   TITLE     = D_DD_TabTitle[0],$
+                                   XOFFSET   = D_DD_TabSize[0],$
+                                   YOFFSET   = D_DD_TabSize[1],$
+                                   SCR_XSIZE = D_DD_TabSize[2],$
+                                   SCR_YSIZE = D_DD_TabSize[3])
 
-load_data_D_draw = widget_draw(load_data_D_tab_base,$
-                               xoffset=GlobalLoadGraphs[0],$
-                               yoffset=GlobalLoadGraphs[1],$
-                               scr_xsize=GlobalLoadGraphs[2],$
-                               scr_ysize=GlobalLoadGraphs[3],$
-                               uname='load_data_D_draw',$
-                               retain=2,$
-                               /button_events,$
-                               /motion_events)
+load_data_D_draw = WIDGET_DRAW(load_data_D_tab_base,$
+                               XOFFSET   = GlobalLoadGraphs[0],$
+                               YOFFSET   = GlobalLoadGraphs[1],$
+                               SCR_XSIZE = GlobalLoadGraphs[2],$
+                               SCR_YSIZE = GlobalLoadGraphs[3],$
+                               UNAME     = 'load_data_D_draw',$
+                               RETAIN    = 2,$
+                               /BUTTON_EVENTS,$
+                               /MOTION_EVENTS)
 
 ;create the back/peak and rescale tab
-BackPeakRescaleTab = widget_tab(load_data_D_tab_base,$
-                                uname='data_back_peak_rescale_tab',$
-                                xoffset=BackPeakRescaleTabSize[0],$
-                                yoffset=BackPeakRescaleTabSize[1],$
-                                scr_xsize=BackPeakRescaleTabSize[2],$
-                                scr_ysize=BackPeakRescaleTabSize[3],$
-                                location=0)
+BackPeakRescaleTab = WIDGET_TAB(load_data_D_tab_base,$
+                                UNAME     = 'data_back_peak_rescale_tab',$
+                                XOFFSET   = BackPeakRescaleTabSize[0],$
+                                YOFFSET   = BackPeakRescaleTabSize[1],$
+                                SCR_XSIZE = BackPeakRescaleTabSize[2],$
+                                SCR_YSIZE = BackPeakRescaleTabSize[3],$
+                                LOCATION  = 0)
 
-BackPeakBase = widget_base(BackPeakRescaleTab,$
-                           uname='data_back_peak_base',$
-                           xoffset=BackPeakBaseSize[0],$
-                           yoffset=BackPeakBaseSize[1],$
-                           scr_xsize=BackPeakBaseSize[2],$
-                           scr_ysize=BackPeakBaseSize[3],$
-                           title=BackPeakBaseTitle)
-
+BackPeakBase = WIDGET_BASE(BackPeakRescaleTab,$
+                           UNAME     = 'data_back_peak_base',$
+                           XOFFSET   = BackPeakBaseSize[0],$
+                           YOFFSET   = BackPeakBaseSize[1],$
+                           SCR_XSIZE = BackPeakBaseSize[2],$
+                           SCR_YSIZE = BackPeakBaseSize[3],$
+                           TITLE     = BackPeakBaseTitle)
 
 ;create the widgets for the selection
-Data1DselectionBase = widget_base(BackPeakBase,$
-                                  uname='data_1d_selection_base',$
-                                  xoffset=Data1DSelectionBaseSize[0],$
-                                  yoffset=Data1DSelectionBaseSize[1],$
-                                  scr_xsize=Data1DSelectionBaseSize[2],$
-                                  scr_ysize=Data1DSelectionBaseSize[3])
+Data1DselectionBase = WIDGET_BASE(BackPeakBase,$
+                                  UNAME     = 'data_1d_selection_base',$
+                                  XOFFSET   = Data1DSelectionBaseSize[0],$
+                                  YOFFSET   = Data1DSelectionBaseSize[1],$
+                                  SCR_XSIZE = Data1DSelectionBaseSize[2],$
+                                  SCR_YSIZE = Data1DSelectionBaseSize[3])
 
-Data1DSelection = cw_bgroup(Data1DSelectionBase,$
+Data1DSelection = CW_BGROUP(Data1DSelectionBase,$
                             Data1DSelectionList,$
-                            /exclusive,$
+                            /EXCLUSIVE,$
                             /RETURN_NAME,$
-                            XOFFSET=Data1DSelectionSize[0],$
-                            YOFFSET=Data1DSelectionSize[1],$
-                            SET_VALUE=0.0,$
-                            row=1,$
-                            FONT = 'lucidasans-10',$
-                            UNAME='data_1d_selection')
+                            XOFFSET     = Data1DSelectionSize[0],$
+                            YOFFSET     = Data1DSelectionSize[1],$
+                            SET_VALUE   = 0.0,$
+                            ROW         = 1,$
+                            FONT        = 'lucidasans-10',$
+                            UNAME       = 'data_1d_selection')
 
-dataYminLabel = widget_label(BackPeakBase,$
-                             uname='data_ymin_label_frame',$
-                             xoffset=dataYminLabelSize[0],$
-                             yoffset=dataYminLabelSize[1],$
-                             scr_xsize=dataYminLabelSize[2],$
-                             scr_ysize=dataYminLabelSize[3],$
-                             value=dataYminLabelTitle,$
-                             frame=2,$
-                             sensitive=0)
+dataYminLabel = WIDGET_LABEL(BackPeakBase,$
+                             UNAME     = 'data_ymin_label_frame',$
+                             XOFFSET   = dataYminLabelSize[0],$
+                             YOFFSET   = dataYminLabelSize[1],$
+                             SCR_XSIZE = dataYminLabelSize[2],$
+                             SCR_YSIZE = dataYminLabelSize[3],$
+                             VALUE     = dataYminLabelTitle,$
+                             FRAME     = 2,$
+                             SENSITIVE = 0)
 
-dataYmaxLabel = widget_label(BackPeakBase,$
-                             uname='data_ymax_label_frame',$
-                             xoffset=dataYmaxLabelSize[0],$
-                             yoffset=dataYmaxLabelSize[1],$
-                             scr_xsize=dataYmaxLabelSize[2],$
-                             scr_ysize=dataYmaxLabelSize[3],$
-                             value=dataYmaxLabelTitle,$
-                             frame=2,$
-                             sensitive=0)
+dataYmaxLabel = WIDGET_LABEL(BackPeakBase,$
+                             UNAME     = 'data_ymax_label_frame',$
+                             XOFFSET   = dataYmaxLabelSize[0],$
+                             YOFFSET   = dataYmaxLabelSize[1],$
+                             SCR_XSIZE = dataYmaxLabelSize[2],$
+                             SCR_YSIZE = dataYmaxLabelSize[3],$
+                             VALUE     = dataYmaxLabelTitle,$
+                             FRAME     = 2,$
+                             SENSITIVE = 0)
 
 ;background selection
 Data_1d_selection_background_label = $
