@@ -19,12 +19,12 @@ PRO miniMakeGuiLoadDataNormalizationTab, LOAD_BASE,$
 DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-DataTitle          = '         D A T A          '
-NormalizationTitle = '      N O R M A L I Z A T I O N      '
+DataTitle          = 'D A T A'
+NormalizationTitle = 'N O R M A L I Z A T I O N'
 
 ;Archived or Full NeXus list cw_bgroup
-ArchivedOrAllCWBgroupList = ['Local/Archived ','All NeXus ']
-ArchivedOrAllCWBgroupSize = [420,2]
+ArchivedOrAllCWBgroupList = ['Archived ','All NeXus ']
+ArchivedOrAllCWBgroupSize = [230,2]
 
 ;base that displays the full list of NeXus found
 NeXusListBaseSize          = [90,110,500,500]
