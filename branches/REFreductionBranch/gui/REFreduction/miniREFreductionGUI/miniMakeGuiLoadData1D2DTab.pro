@@ -31,10 +31,6 @@ miniMakeGuiLoadData1D_3D_Tab,$
   D_DD_TabTitle,$
   GlobalLoadGraphs,$
   LoadctList
-
-
-end
-pro temp
   
 ;build Load_Data_2D tab
 miniMakeGuiLoadData2DTab,$

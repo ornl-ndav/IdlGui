@@ -42,8 +42,8 @@ D_DD_TabTitle = [DTitle,$
 Nx = 256
 Ny = 304
 if (instrument EQ 'REF_L') then begin
-    xoff = 49
-    yoff = 0
+    xoff = 35
+    yoff = 10
     xsize = Nx
     ysize = Ny
 endif else begin
