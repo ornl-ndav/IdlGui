@@ -59,6 +59,12 @@ widget_control,id,get_uvalue=global
 
 if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
 
+    if ((*global).miniVersion) then begin
+        coeff = 1
+    endif else begin
+        coeff = 2
+    endelse
+    
 ;get Background Ymin, Ymax
     BackYmin = getTextFieldValue(Event,'normalization_d_selection_background_ymin_cw_field')
     BackYmax = getTextFieldValue(Event,'normalization_d_selection_background_ymax_cw_field')
@@ -66,13 +72,13 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     if (BackYmin EQ '') then begin
         BackYmin = -1
     endif else begin
-        BackYmin *= 2
+        BackYmin *= coeff
     endelse
 
     if (BackYmax EQ '') then begin
         BackYmax = -1
     endif else begin
-        BackYmax *= 2
+        BackYmax *= coeff
     endelse
 
     BackSelection = [BackYmin,BackYmax]
@@ -89,13 +95,13 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     if (PeakYmin EQ '') then begin
         PeakYmin = -1
     endif else begin
-        PeakYmin *= 2
+        PeakYmin *= coeff
     endelse
 
     if (PeakYmax EQ '') then begin
         PeakYmax = -1
     endif else begin
-        PeakYmax *= 2
+        PeakYmax *= coeff
     endelse
 
     PeakSelection = [PeakYmin,PeakYmax]

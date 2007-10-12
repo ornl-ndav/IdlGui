@@ -30,6 +30,8 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   miniVersion : 1,$
+;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
                    PreviewFileNbrLine : 40,$ 
@@ -378,28 +380,25 @@ NormHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+; initialize contrast droplist
+id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
+widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
+id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
+widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
 
-;///REMOVE_COMMENTS
-; ; initialize contrast droplist
-; id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
-; id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
-; id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
-; id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
-; id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
-; id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-; widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
-
-; IF (ucams EQ 'j35' OR $
-;     ucams EQ '2zr') THEN BEGIN
-;     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
-;     widget_control, id, /editable
-; ENDIF
-;///END OF REMOVE_COMMENTS
+IF (ucams EQ 'j35' OR $
+    ucams EQ '2zr') THEN BEGIN
+    id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
+    widget_control, id, /editable
+ENDIF
 
 ; default tabs shown
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
@@ -418,12 +417,8 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ; id5 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab2_base')
 ; widget_control, id5, map=1
 
-
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
 ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
-
-
-
 
 END
 
