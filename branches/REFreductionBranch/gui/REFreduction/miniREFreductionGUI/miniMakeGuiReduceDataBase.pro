@@ -1,27 +1,27 @@
 PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Data base
-DataBaseSize   = [0,10,IndividualBaseWidth, 170]
+DataBaseSize   = [0,0,IndividualBaseWidth, 170]
 
 DataLabelSize  = [20,2]
 DataLabelTitle = 'D A T A'
-DataFrameSize  = [10,10,IndividualBaseWidth-30,150]
+DataFrameSize  = [10,10,IndividualBaseWidth-30,135]
 
 ;runs number
-RunsLabelSize     = [33,27]
+RunsLabelSize     = [15,27]
 RunsLabelTitle    = 'Runs:'
-d_L_T = 50
+d_L_T = 40
 RunsTextFieldSize = [RunsLabelSize[0]+d_L_T,$
-                     RunsLabelSize[1]-5,600,30]
+                     RunsLabelSize[1]-5,498,30]
 
-d_vertical_L_L = 35
+d_vertical_L_L = 30
 ;region of interest 
 RegionOfInterestLabelSize = [RunsLabelSize[0],$
                              RunsLabelSize[1]+d_vertical_L_L]
 RegionOfInterestLabelTitle = 'Region of interest (ROI) file:'
-RegionOfInterestTextFieldSize = [230,$
+RegionOfInterestTextFieldSize = [200,$
                                  RegionOfInterestLabelSize[1]-5,$
-                                 453,30]
+                                 353,30]
                              
 ;Exclusion peak region
 ExclusionPeakRegionLabelSize = [RunsLabelSize[0],$
@@ -32,7 +32,7 @@ ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region:'
 ExclusionLowBinLabelSize = [ExclusionPeakRegionLabelSize[0]+200,$
                             ExclusionPeakRegionLabelSize[1]]
 ExclusionLowBinLabelTitle = 'Low bin:'
-d_L_T_2 = d_L_T + 10
+d_L_T_2 = d_L_T + 20
 ExclusionLowBinTextFieldSize = [ExclusionLowBinLabelSize[0]+d_L_T_2,$
                                 ExclusionLowBinLabelSize[1]-5,$
                                 70,30]
@@ -56,8 +56,9 @@ BackgroundBGroupSize = [BackgroundLabelSize[0]+d_L_T_3,$
 BackgroundBGroupList = [' Yes    ',' No    ']
 
 
-;*********************************************************
-;Create GUI
+;###############################################################################
+;############################### Create GUI ####################################
+;###############################################################################
 
 ;base
 data_base = widget_base(REDUCE_BASE,$

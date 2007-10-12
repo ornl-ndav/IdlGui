@@ -3,7 +3,7 @@ PRO miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 ReduceTabSize  = [0,0,MainTabSize[2],MainTabSize[3]]
-IndividualBaseWidth = 720
+IndividualBaseWidth = 580
 
 ;Build widgets
 REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$

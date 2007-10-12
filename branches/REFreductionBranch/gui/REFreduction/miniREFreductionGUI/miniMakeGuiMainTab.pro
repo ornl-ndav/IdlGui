@@ -25,6 +25,9 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 ;build LOAD tab
 miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 
+;build REDUCE tab
+miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
+
 END
 
 
@@ -33,11 +36,6 @@ END
 
 
 Pro TEMP
-
-
-;build REDUCE tab
-miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
-
 ;build PLOTS tab
 miniMakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
