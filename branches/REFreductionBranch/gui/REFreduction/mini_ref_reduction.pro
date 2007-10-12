@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.4'
+VERSION = 'VERSION: REFreduction1.0.5'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -351,8 +351,14 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, SET_UVALUE=global
 
 ;add version to program
+if ((*global).miniVersion) then begin
+    xoff = 715
+endif else begin
+    xoff = 1030
+endelse
+
 version_label = WIDGET_LABEL(MAIN_BASE,$
-                             XOFFSET = 1030,$
+                             XOFFSET = xoff,$
                              YOFFSET = 2,$
                              VALUE   = VERSION,$
                              FRAME   = 0)
@@ -366,6 +372,7 @@ DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
                                    YOFFSET = 1,$
                                    /ALL_EVENTS,$
                                    UNAME='data_hidden_widget_text')
+
 (*global).DataHiddenWidgetTextId = DataHiddenWidgetText
 (*global).DataHiddenWidgetTextUname = 'data_hidden_widget_text'
 
