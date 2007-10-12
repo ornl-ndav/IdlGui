@@ -16,7 +16,7 @@ PRO miniMakeGuiLoadDataNormalizationTab, LOAD_BASE,$
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
+DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]-32]
 
 ;Tab titles
 DataTitle          = 'D A T A'

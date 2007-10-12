@@ -65,8 +65,8 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
 
 ;NXsummary and Zoom tab
-NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
-                        15,$
+NxsummaryZoomTabSize = [D_DD_TabSize[2]+35,$
+                        5,$
                         495,$
                         395]
 NxsummaryZoomTitle = ['NX summary','ZOOM']
@@ -74,7 +74,7 @@ NxsummaryZoomTitle = ['NX summary','ZOOM']
 ZoomScaleBaseSize = [380,0,110,35]
 ZoomScaleTitle = 'Zoom factor'
 
-;File info hudge label (empty for now)
+;File info hudge label (previous of roi file...)
 ;top label
 FileInfoSize_1 = [0,$
                   0,$
@@ -82,22 +82,22 @@ FileInfoSize_1 = [0,$
                   370] ;393
 
 ;help text box to explain what is going on on the left
-LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
-                                      425,$
-                                      495,$
-                                      190+100]
+LeftInteractionHelpMessageBaseSize = [NxsummaryZoomTabSize[0],$
+                                      405,$
+                                      493,$
+                                      150]
 LeftInteractionHelpMessageLabelSize = [5,5]
 LeftInteractionHelpMessageLabelTitle = 'I N F O'
-LeftInteractionHelpTextSize = [5,25,485,160+100]
+LeftInteractionHelpTextSize = [5,25,485,123]
 LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpMessageLabelSize,$
                            LeftInteractionHelpTextsize]
                            
 ;bottom text field
-FileInfoSize_2 = [NxsummaryZoomTabSize[0],$
-                  625+100,$
+FileInfoSize_2 = [NxsummaryZoomTabSize[0]-3,$
+                  565,$
                   498,$
-                  190-100]
+                  60]
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 

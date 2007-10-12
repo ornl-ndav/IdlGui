@@ -330,32 +330,30 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,1200,885]
+MainBaseSize  = [50,50,880,690]
 
-xsize = 1000
-ysize = 680
 MainBaseTitle    = 'miniReflectometer Data Reduction Package'
 ;Build Main Base
-MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
-                        UNAME='MAIN_BASE',$
-                        SCR_XSIZE=xsize,$
-                        SCR_YSIZE=ysize,$
-                        XOFFSET=MainBaseSize[0],$
-                        YOFFSET=MainBaseSize[1],$
-                        TITLE=MainBaseTitle,$
-                        SPACE=0,$
-                        XPAD=0)
+MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
+                        UNAME        = 'MAIN_BASE',$
+                        SCR_XSIZE    = MainBaseSize[2],$
+                        SCR_YSIZE    = MainBaseSize[3],$
+                        XOFFSET      = MainBaseSize[0],$
+                        YOFFSET      = MainBaseSize[1],$
+                        TITLE        = MainBaseTitle,$
+                        SPACE        = 0,$
+                        XPAD         = 0)
 
 
 ;attach global structure with widget ID of widget main base widget ID
-widget_control, MAIN_BASE, set_uvalue=global
+widget_control, MAIN_BASE, SET_UVALUE=global
 
 ;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1030,$
-                             YOFFSET=2,$
-                             VALUE=VERSION,$
-                             FRAME=0)
+version_label = WIDGET_LABEL(MAIN_BASE,$
+                             XOFFSET = 1030,$
+                             YOFFSET = 2,$
+                             VALUE   = VERSION,$
+                             FRAME   = 0)
 
 ;Build main GUI
 miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle

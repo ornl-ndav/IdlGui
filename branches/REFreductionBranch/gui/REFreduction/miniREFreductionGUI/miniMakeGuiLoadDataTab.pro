@@ -127,9 +127,6 @@ miniMakeGuiLoadData1D2DTab,$
   LoadctList
 
 
-end
-pro temp
-
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_DATA_BASE,$
                               uname='data_nxsummary_zoom_tab',$

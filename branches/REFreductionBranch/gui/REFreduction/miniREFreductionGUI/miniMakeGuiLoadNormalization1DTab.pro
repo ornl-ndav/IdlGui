@@ -354,6 +354,14 @@ NormBackgroundSelectionFileTextField = $
               /EDITABLE,$
               SENSITIVE = 0)
 
+BackFrame = WIDGET_LABEL(BackPeakBase,$
+                         XOFFSET   = BackFrameSize[0],$
+                         YOFFSET   = BackFrameSize[1],$
+                         SCR_XSIZE = BackFrameSize[2],$
+                         SCR_YSIZE = BackFrameSize[3],$
+                         FRAME     = 1,$
+                         VALUE     = '')
+
 ;Peak exclusion
 norm_1d_selection_peak_label = $
   WIDGET_LABEL(BackPeakBase,$

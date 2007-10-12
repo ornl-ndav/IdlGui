@@ -136,11 +136,6 @@ miniMakeGuiLoadNormalization1D2DTab,$
   GlobalLoadDataGraphs,$
   loadctList
 
-
-end
-
-pro temp
-
 ;NXsummary and zoom tab
 NxsummaryZoomTab = widget_tab(LOAD_NORMALIZATION_BASE,$
                               uname='normalization_nxsummary_zoom_tab',$
