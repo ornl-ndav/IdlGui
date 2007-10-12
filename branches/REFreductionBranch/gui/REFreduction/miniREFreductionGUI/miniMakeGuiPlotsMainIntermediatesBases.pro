@@ -2,7 +2,7 @@ PRO miniMakeGuiPlotsMainIntermediatesBases, PLOTS_BASE, PlotsTitle
 
 ;define widgets variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-PlotsDropListSize         = [190,0]
+PlotsDropListSize         = [0,0]
 
 PlotsErrorMessageBaseSize = [500, $
                              2, $
@@ -14,20 +14,20 @@ PlotsErrorMessageSize     = [0, $
                              481, $
                              30]
 
-MainPlotBaseSize          = [200, $
-                             40, $
-                             780, $
+MainPlotBaseSize          = [250, $
+                             5, $
+                             600, $
                              800]
 
-MainPlotDrawSize          = [0, $
+MainPlotDrawSize          = [50, $
                              0, $
-                             MainPlotBaseSize[2], $
-                             MainPlotBasesize[3]-190]
+                             500, $
+                             500]
 
 PlotTextFieldSize         = [0, $
-                             MainPlotDrawSize[1]+MainPlotDrawSize[3],$
+                             MainPlotDrawSize[1]+MainPlotDrawSize[3]+5,$
                              MainPlotBaseSize[2], $
-                             190]
+                             150]
 
 ;############### BUILD WIDGETS ##########################################
 MainPlotBase = Widget_base(PLOTS_BASE,$
@@ -35,8 +35,8 @@ MainPlotBase = Widget_base(PLOTS_BASE,$
                            XOFFSET   = MainPlotBaseSize[0],$
                            YOFFSET   = MainPlotBaseSize[1],$
                            SCR_XSIZE = MainPlotBaseSize[2],$
-                           SCR_YSIZE = MainPlotBaseSize[3],$
-                           FRAME     = 3)
+                           SCR_YSIZE = MainPlotBaseSize[3])
+                          
                           
 ;drawing region
 MainPlotDraw = widget_draw(MainPlotBase,$

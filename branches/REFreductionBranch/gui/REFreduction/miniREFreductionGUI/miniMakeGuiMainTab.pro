@@ -28,14 +28,6 @@ miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;build REDUCE tab
 miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 
-END
-
-
-
-
-
-
-Pro TEMP
 ;build PLOTS tab
 miniMakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
@@ -44,6 +36,5 @@ miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
 ;;build SETTINGS tab
 ;MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
-
 
 END

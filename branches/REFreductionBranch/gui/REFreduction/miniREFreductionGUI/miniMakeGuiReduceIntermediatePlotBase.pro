@@ -10,7 +10,7 @@ InterBaseSize = [IndividualBaseWidth-5, $
                  235]
 InterMainFramesize = [5,5,288,215]
 
-plot1BaseSize = [15,22,200,23]
+plot1BaseSize = [15,22,280,23]
 plotnYoff = 28
 plot2Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+plotnYoff,$
@@ -43,7 +43,7 @@ sz = (size(PlotsTitle))(1)
 InterList = PlotsTitle[0:sz-2]
 
 InterListSize = [10,15]
-NotAvailableTitle = ' -- NOT AVAILABLE! --'
+NotAvailableTitle = '- No Dispo.'
 
 ;*********************************************************
 ;Create GUI

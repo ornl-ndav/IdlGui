@@ -4,12 +4,13 @@ PRO miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LogBookTabSize  = [0,0,MainTabSize[2],MainTabSize[3]]
 
-LogBookTextFieldSize = [10,10,1175,800]
+LogBookTextFieldSize = [10,10,LogBookTabSize[2]-20,605]
 
-LabelSize  = [7,825]
+LabelSize  = [7, $
+              LogBookTextFieldSize[3]+25]
 LabelTitle = 'Message to add:'
 
-OutputTextFieldSize = [105,LabelSize[1]-8,930,35]
+OutputTextFieldSize = [105,LabelSize[1]-8,610,35]
  
 SendLogBookButtonSize = [OutputTextFieldSize[0]+OutputTextFieldSize[2], $
                          OutputTextFieldSize[1], $
