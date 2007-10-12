@@ -13,14 +13,14 @@ SettingsTabTitle = ' SETTINGS '
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME='main_tab',$
-                      LOCATION=0,$
-                      XOFFSET=MainTabSize[0],$
-                      YOFFSET=MainTabSize[1],$
-                      SCR_XSIZE=MainTabSize[2],$
-                      SCR_YSIZE=MainTabSize[3],$
-                      /TRACKING_EVENTS,$
-                      sensitive=1)
+                      UNAME     = 'main_tab',$
+                      LOCATION  = 0,$
+                      XOFFSET   = MainTabSize[0],$
+                      YOFFSET   = MainTabSize[1],$
+                      SCR_XSIZE = MainTabSize[2],$
+                      SCR_YSIZE = MainTabSize[3],$
+                      sensitive = 1,$
+                      /TRACKING_EVENTS)
 
 ;build LOAD tab
 miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument

@@ -7,12 +7,12 @@ IndividualBaseWidth = 580
 
 ;Build widgets
 REDUCE_BASE = WIDGET_BASE(MAIN_TAB,$
-                          UNAME='reduce_base',$
-                          TITLE=ReduceTabTitle,$
-                          XOFFSET=ReduceTabSize[0],$
-                          YOFFSET=ReduceTabSize[1],$
-                          SCR_XSIZE=ReduceTabSize[2],$
-                          SCR_YSIZE=ReduceTabSize[3])
+                          UNAME     = 'reduce_base',$
+                          TITLE     = ReduceTabTitle,$
+                          XOFFSET   = ReduceTabSize[0],$
+                          YOFFSET   = ReduceTabSize[1],$
+                          SCR_XSIZE = ReduceTabSize[2],$
+                          SCR_YSIZE = ReduceTabSize[3])
 
 ;create data base
 miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth

@@ -18,28 +18,31 @@ SendLogBookButtonSize = [OutputTextFieldSize[0]+OutputTextFieldSize[2], $
 
 SendLogBookButtonTitle = 'Send log Book to Geek'
 
-;Build widgets
-LOG_BOOK_BASE = WIDGET_BASE(MAIN_TAB,$
-                          UNAME='Log_book_base',$
-                          TITLE=LogBookTabTitle,$
-                          XOFFSET=LogBookTabSize[0],$
-                          YOFFSET=LogBookTabSize[1],$
-                          SCR_XSIZE=LogBookTabSize[2],$
-                          SCR_YSIZE=LogBookTabSize[3])
+;###############################################################################
+;############################### Create GUI ####################################
+;###############################################################################
 
-Log_book_text_field = widget_text(LOG_BOOK_BASE,$
-                                  UNAME='log_book_text_field',$
-                                  xoffset=LogBookTextFieldSize[0],$
-                                  yoffset=LogBookTextFieldSize[1],$
-                                  scr_xsize=LogBookTextFieldSize[2],$
-                                  scr_ysize=LogBookTextFieldSize[3],$
-                                  /scroll,$
-                                  /wrap)
+LOG_BOOK_BASE = WIDGET_BASE(MAIN_TAB,$
+                          UNAME     = 'Log_book_base',$
+                          TITLE     = LogBookTabTitle,$
+                          XOFFSET   = LogBookTabSize[0],$
+                          YOFFSET   = LogBookTabSize[1],$
+                          SCR_XSIZE = LogBookTabSize[2],$
+                          SCR_YSIZE = LogBookTabSize[3])
+
+Log_book_text_field = WIDGET_TEXT(LOG_BOOK_BASE,$
+                                  UNAME     = 'log_book_text_field',$
+                                  XOFFSET   = LogBookTextFieldSize[0],$
+                                  YOFFSET   = LogBookTextFieldSize[1],$
+                                  SCR_XSIZE = LogBookTextFieldSize[2],$
+                                  SCR_YSIZE = LogBookTextFieldSize[3],$
+                                  /SCROLL,$
+                                  /WRAP)
 
 LabelMessage = WIDGET_LABEL(LOG_BOOK_BASE,$
-                            XOFFSET=LabelSize[0],$
-                            YOFFSET=LabelSize[1],$
-                            VALUE=LabelTitle)
+                            XOFFSET = LabelSize[0],$
+                            YOFFSET = LabelSize[1],$
+                            VALUE   = LabelTitle)
 
 OutputTextField = WIDGET_TEXT(LOG_BOOK_BASE,$
                               XOFFSET   = OutputTextFieldSize[0],$
@@ -49,12 +52,12 @@ OutputTextField = WIDGET_TEXT(LOG_BOOK_BASE,$
                               UNAME     = 'log_book_output_text_field',$
                               /EDITABLE)
 
-SendLogBookButton = widget_button(LOG_BOOK_BASE,$
-                                  xoffset=SendLogBookButtonSize[0],$
-                                  yoffset=SendLogBookButtonSize[1],$
-                                  scr_xsize=SendLogBookButtonSize[2],$
-                                  scr_ysize=SendLogBookButtonSize[3],$
-                                  value=SendLogBookButtonTitle,$
-                                  uname='send_log_book_button')
+SendLogBookButton = WIDGET_BUTTON(LOG_BOOK_BASE,$
+                                  XOFFSET   = SendLogBookButtonSize[0],$
+                                  YOFFSET   = SendLogBookButtonSize[1],$
+                                  SCR_XSIZE = SendLogBookButtonSize[2],$
+                                  SCR_YSIZE = SendLogBookButtonSize[3],$
+                                  VALUE     = SendLogBookButtonTitle,$
+                                  UNAME     = 'send_log_book_button')
 
 END

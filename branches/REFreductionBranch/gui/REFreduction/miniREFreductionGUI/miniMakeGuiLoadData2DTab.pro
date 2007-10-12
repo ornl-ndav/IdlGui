@@ -1,22 +1,22 @@
 PRO miniMakeGuiLoadData2DTab, D_DD_Tab, D_DD_BaseSize, D_DD_TabTitle, GlobalLoadGraphs
 
 ;Build 2D tab
-load_data_DD_TAB_BASE = widget_base(D_DD_Tab,$
-                                    uname='load_data_dd_tab_base',$
-                                    title=D_DD_TabTitle[1],$
-                                    xoffset=D_DD_BaseSize[0],$
-                                    yoffset=D_DD_BaseSize[1],$
-                                    scr_xsize=D_DD_BaseSize[2],$
-                                    scr_ysize=D_DD_BaseSize[3])
+load_data_DD_TAB_BASE = WIDGET_BASE(D_DD_Tab,$
+                                    UNAME     = 'load_data_dd_tab_base',$
+                                    TITLE     = D_DD_TabTitle[1],$
+                                    XOFFSET   = D_DD_BaseSize[0],$
+                                    YOFFSET   = D_DD_BaseSize[1],$
+                                    SCR_XSIZE = D_DD_BaseSize[2],$
+                                    SCR_YSIZE = D_DD_BaseSize[3])
 
-load_data_DD_draw = widget_draw(load_data_DD_tab_base,$
-                                xoffset=GlobalLoadGraphs[4],$
-                                yoffset=GlobalLoadGraphs[5],$
-                                scr_xsize=GlobalLoadGraphs[6],$
-                                scr_ysize=GlobalLoadGraphs[7],$
-                                uname='load_data_DD_draw',$
-                                retain=2,$
-                                /button_events,$
-                                /motion_events)
+load_data_DD_draw = WIDGET_DRAW(load_data_DD_tab_base,$
+                                XOFFSET   = GlobalLoadGraphs[4],$
+                                YOFFSET   = GlobalLoadGraphs[5],$
+                                SCR_XSIZE = GlobalLoadGraphs[6],$
+                                SCR_YSIZE = GlobalLoadGraphs[7],$
+                                UNAME     = 'load_data_DD_draw',$
+                                RETAIN    = 2,$
+                                /BUTTON_EVENTS,$
+                                /MOTION_EVENTS)
 
 END

@@ -91,12 +91,12 @@ LoadctList = ['Black/White Linear',$
 
 ;build widgets
 DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
-                                  UNAME='data_normalization_tab',$
-                                  LOCATION=0,$
-                                  XOFFSET=DataNormalizationTabSize[0],$
-                                  YOFFSET=DataNormalizationTabSize[1],$
-                                  SCR_XSIZE=DataNormalizationTabSize[2],$
-                                  SCR_YSIZE=DataNormalizationTabSize[3],$
+                                  UNAME     = 'data_normalization_tab',$
+                                  LOCATION  = 0,$
+                                  XOFFSET   = DataNormalizationTabSize[0],$
+                                  YOFFSET   = DataNormalizationTabSize[1],$
+                                  SCR_XSIZE = DataNormalizationTabSize[2],$
+                                  SCR_YSIZE = DataNormalizationTabSize[3],$
                                   /TRACKING_EVENTS)
 
 

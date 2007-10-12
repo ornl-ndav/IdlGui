@@ -299,10 +299,10 @@ ZaxisMinCwfield = CW_FIELD(ZaxisMinBase,$
                            ROW           = 1,$
                            XSIZE         = 5,$
                            YSIZE         = 1,$
-                           /FLOAT,$
                            RETURN_EVENTS = 1,$
                            TITLE         = ZaxisMinBaseTitle,$
-                           UNAME         = 'data1d_z_axis_min_cwfield')
+                           UNAME         = 'data1d_z_axis_min_cwfield',$
+                           /FLOAT)
 
 ZaxisMaxBase = WIDGET_BASE(RescaleTab1Base,$
                            XOFFSET   = ZaxisMaxBaseSize[0],$
@@ -310,14 +310,15 @@ ZaxisMaxBase = WIDGET_BASE(RescaleTab1Base,$
                            SCR_XSIZE = ZaxisMaxBaseSize[2],$
                            SCR_YSIZE = ZaxisMaxBaseSize[3],$
                            UNAME     = 'data1d_z_axis_max_base')
+
 ZaxisMaxCwfield = CW_FIELD(ZaxisMaxBase,$
                            ROW           = 1,$
                            XSIZE         = 5,$
                            YSIZE         = 1,$
-                           /FLOAT,$
                            RETURN_EVENTS = 1,$
                            TITLE         = ZaxisMaxBaseTitle,$
-                           UNAME         = 'data1d_z_axis_max_cwfield')
+                           UNAME         = 'data1d_z_axis_max_cwfield',$
+                           /FLOAT)
 
 ZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                  XOFFSET   = ZaxisResetButtonSize[0],$
@@ -374,10 +375,10 @@ XYaxisAngleCwfield = CW_FIELD(XYaxisAngleBase,$
                               ROW           = 1,$
                               XSIZE         = 3,$
                               YSIZE         = 1,$
-                              /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = XYaxisAngleBaseTitle,$
-                              UNAME         = 'data1d_xy_axis_angle_cwfield')
+                              UNAME         = 'data1d_xy_axis_angle_cwfield',$
+                              /FLOAT)
 
 XYaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                   XOFFSET   = XYaxisAngleResetButtonSize[0],$
@@ -412,10 +413,10 @@ ZZaxisAngleCwfield = CW_FIELD(ZZaxisAngleBase,$
                               ROW           = 1,$
                               XSIZE         = 3,$
                               YSIZE         = 1,$
-                              /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = ZZaxisAngleBaseTitle,$
-                              UNAME         = 'data1d_zz_axis_angle_cwfield')
+                              UNAME         = 'data1d_zz_axis_angle_cwfield',$
+                              /FLOAT)
 
 ZZaxisResetButton = WIDGET_BUTTON(RescaleTab1Base,$
                                   XOFFSET   = ZZaxisAngleResetButtonSize[0],$
@@ -557,22 +558,22 @@ GoogleZaxisPButton = WIDGET_BUTTON(RescaleTab2Base,$
                                    SENSITIVE = 1)
 
 GoogleZaxisMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                    XOFFSET   = GoogleZaxisMButtonSize[0],$
-                                    YOFFSET   = GoogleZaxisMButtonSize[1],$
-                                    SCR_XSIZE = GoogleZaxisMButtonSize[2],$
-                                    SCR_YSIZE = GoogleZaxisMButtonSize[3],$
-                                    VALUE     = GoogleZaxisMButtonTitle,$
-                                    UNAME     = 'data1d_google_z_axis_m_button',$
-                                    SENSITIVE = 1)
+                                   XOFFSET   = GoogleZaxisMButtonSize[0],$
+                                   YOFFSET   = GoogleZaxisMButtonSize[1],$
+                                   SCR_XSIZE = GoogleZaxisMButtonSize[2],$
+                                   SCR_YSIZE = GoogleZaxisMButtonSize[3],$
+                                   VALUE     = GoogleZaxisMButtonTitle,$
+                                   UNAME     = 'data1d_google_z_axis_m_button',$
+                                   SENSITIVE = 1)
 
 GoogleZaxisMMButton = WIDGET_BUTTON(RescaleTab2Base,$
-                                   XOFFSET   = GoogleZaxisMMButtonSize[0],$
-                                   YOFFSET   = GoogleZaxisMMButtonSize[1],$
-                                   SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
-                                   SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
-                                   VALUE     = GoogleZaxisMMButtonTitle,$
-                                   UNAME     = 'data1d_google_z_axis_mm_button',$
-                                   SENSITIVE = 1)
+                                    XOFFSET   = GoogleZaxisMMButtonSize[0],$
+                                    YOFFSET   = GoogleZaxisMMButtonSize[1],$
+                                    SCR_XSIZE = GoogleZaxisMMButtonSize[2],$
+                                    SCR_YSIZE = GoogleZaxisMMButtonSize[3],$
+                                    VALUE     = GoogleZaxisMMButtonTitle,$
+                                    UNAME     = 'data1d_google_z_axis_mm_button',$
+                                    SENSITIVE = 1)
 
 GoogleZaxisMMMButton = WIDGET_BUTTON(RescaleTab2Base,$
                                      XOFFSET   = GoogleZaxisMMMButtonSize[0],$
@@ -596,7 +597,5 @@ AutoModeButton = WIDGET_BUTTON(RescaleTab2Base,$
                                SCR_YSIZE = SwitchToAutoModeButtonSize[3],$
                                VALUE     = SwitchToAutoModeButtonTitle,$
                                UNAME     = 'data1d_switch_to_auto_mode_button')
-
-
 
 END

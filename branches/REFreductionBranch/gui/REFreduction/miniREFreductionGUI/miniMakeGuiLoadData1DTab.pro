@@ -199,9 +199,10 @@ OutputFileNameLabelTitle       = 'Output File Name:'
 
 
 
-;***********************************************************************************
-;Build 1D tab
-;***********************************************************************************
+;*******************************************************************************
+;################################Build 1D tab###################################
+;*******************************************************************************
+
 load_data_D_tab_base = WIDGET_BASE(D_DD_Tab,$
                                    UNAME     = 'load_data_d_tab_base',$
                                    TITLE     = D_DD_TabTitle[0],$
@@ -247,14 +248,14 @@ Data1DselectionBase = WIDGET_BASE(BackPeakBase,$
 
 Data1DSelection = CW_BGROUP(Data1DSelectionBase,$
                             Data1DSelectionList,$
-                            /EXCLUSIVE,$
-                            /RETURN_NAME,$
                             XOFFSET     = Data1DSelectionSize[0],$
                             YOFFSET     = Data1DSelectionSize[1],$
                             SET_VALUE   = 0.0,$
                             ROW         = 1,$
                             FONT        = 'lucidasans-10',$
-                            UNAME       = 'data_1d_selection')
+                            UNAME       = 'data_1d_selection',$
+                            /EXCLUSIVE,$
+                            /RETURN_NAME)
 
 dataYminLabel = WIDGET_LABEL(BackPeakBase,$
                              UNAME     = 'data_ymin_label_frame',$
@@ -424,9 +425,9 @@ ContrastDropList = WIDGET_DROPLIST(ContrastBase,$
                                    YOFFSET   = ContrastDropListSize[1],$
                                    SCR_XSIZE = ContrastDropListSize[2],$
                                    SCR_YSIZE = ContrastDropListSize[3],$
-                                   /TRACKING_EVENTS,$
                                    UNAME     = 'data_contrast_droplist',$
-                                   SENSITIVE = 0)
+                                   SENSITIVE = 0,$
+                                   /TRACKING_EVENTS)
 
 ContrastBottomSlider = WIDGET_SLIDER(ContrastBase,$
                                      XOFFSET   = ContrastBottomSliderSize[0],$
@@ -614,10 +615,10 @@ RescaleZMinCWField = CW_FIELD(RescaleZMincwfieldBase,$
                               XSIZE         = RescaleMincwfieldSize[0],$
                               YSIZE         = RescaleMincwFieldSize[1],$
                               ROW           = 1,$
-                              /FLOAT,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMincwfieldLabel,$
-                              UNAME         = 'data_rescale_zmin_cwfield')
+                              UNAME         = 'data_rescale_zmin_cwfield',$
+                              /FLOAT)
 
 RescaleZMaxcwfieldBase = WIDGET_BASE(RescaleZBase,$
                                      XOFFSET   = RescaleMaxcwfieldBaseSize[0],$
@@ -626,13 +627,13 @@ RescaleZMaxcwfieldBase = WIDGET_BASE(RescaleZBase,$
                                      SCR_YSIZE = RescaleMaxcwfieldBaseSize[3])
 
 RescaleZMaxCWField = CW_FIELD(RescaleZMaxcwfieldBase,$
-                              XSIZE        = RescaleMaxcwfieldSize[0],$
-                              YSIZE        = RescaleMaxcwFieldSize[1],$
-                              ROW          = 1,$
-                              /FLOAT,$
+                              XSIZE         = RescaleMaxcwfieldSize[0],$
+                              YSIZE         = RescaleMaxcwFieldSize[1],$
+                              ROW           = 1,$
                               RETURN_EVENTS = 1,$
                               TITLE         = RescaleMaxcwfieldLabel,$
-                              UNAME         = 'data_rescale_zmax_cwfield')
+                              UNAME         = 'data_rescale_zmax_cwfield',$
+                              /FLOAT)
 
 
 RescaleZScaleDroplist = WIDGET_DROPLIST(RescaleZBase,$

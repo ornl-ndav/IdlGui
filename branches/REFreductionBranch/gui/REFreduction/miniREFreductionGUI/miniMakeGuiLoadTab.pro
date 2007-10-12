@@ -101,17 +101,20 @@ FileInfoSize_2 = [NxsummaryZoomTabSize[0]-3,$
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 
-;----Build widgets-----
+;###############################################################################
+;############################# Build widgets ###################################
+;###############################################################################
+
 LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
-                        UNAME='load_base',$
-                        TITLE=LoadTabTitle,$
-                        XOFFSET=LoadTabSize[0],$
-                        YOFFSET=LoadTabSize[1],$
-                        SCR_XSIZE=LoadTabSize[2],$
-                        SCR_YSIZE=LoadTabSize[3],$
-                       /scroll,$
-                       x_scroll_size=400,$
-                       y_scroll_size=300)
+                        UNAME         = 'load_base',$
+                        TITLE         = LoadTabTitle,$
+                        XOFFSET       = LoadTabSize[0],$
+                        YOFFSET       = LoadTabSize[1],$
+                        SCR_XSIZE     = LoadTabSize[2],$
+                        SCR_YSIZE     = LoadTabSize[3],$
+                        x_scroll_size = 400,$
+                        y_scroll_size = 300,$
+                       /scroll)
 
 
 ;Build DATA and NORMALIZATION tabs
