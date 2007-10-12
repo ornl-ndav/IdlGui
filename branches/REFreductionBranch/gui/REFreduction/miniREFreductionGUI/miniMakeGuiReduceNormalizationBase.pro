@@ -1,7 +1,7 @@
 PRO miniMakeGuiReduceNormalizationBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;yes or not base
-NormalizationYesNoBaseSize = [0,185,IndividualBaseWidth,40]
+NormalizationYesNoBaseSize = [0,155,IndividualBaseWidth,30]
 
 ;yes or not offset
 NormalizationBGroupLabelSize = [10,5]
@@ -12,30 +12,32 @@ NormalizationBGroupSize = [NormalizationBGroupLabelSize[0]+d1,$
                            NormalizationBGroupLabelSize[1]-5]
 
 ;size of Norm base
-NormalizationBaseSize   = [0,NormalizationYesNoBaseSize[1]+40,$
-                           IndividualBaseWidth, 180]
+NormalizationBaseSize   = [0, $
+                           NormalizationYesNoBaseSize[1]+30,$
+                           IndividualBaseWidth, $
+                           155]
 
 ;frame
 Yoffset= 0
 NormalizationLabelSize  = [20,2+Yoffset]
 NormalizationLabelTitle = 'N O R M A L I Z A T I O N'
-NormalizationFrameSize  = [10,10+Yoffset,IndividualBaseWidth-30,150]
+NormalizationFrameSize  = [10,10+Yoffset,IndividualBaseWidth-30,135]
 
 ;runs number
-RunsLabelSize     = [33,27+Yoffset]
+RunsLabelSize     = [15,27+Yoffset]
 RunsLabelTitle    = 'Runs:'
-d_L_T = 50
+d_L_T = 40
 RunsTextFieldSize = [RunsLabelSize[0]+d_L_T,$
-                     RunsLabelSize[1]-5,600,30]
+                     RunsLabelSize[1]-5,498,30]
 
-d_vertical_L_L = 35
+d_vertical_L_L = 30
 ;region of interest 
 RegionOfInterestLabelSize = [RunsLabelSize[0],$
                              RunsLabelSize[1]+d_vertical_L_L]
 RegionOfInterestLabelTitle = 'Region of interest (ROI) file:'
-RegionOfInterestTextFieldSize = [230,$
+RegionOfInterestTextFieldSize = [200,$
                                  RegionOfInterestLabelSize[1]-5,$
-                                 453,30]
+                                 353,30]
                              
 ;Exclusion peak region
 ExclusionPeakRegionLabelSize = [RunsLabelSize[0],$
@@ -46,7 +48,7 @@ ExclusionPeakRegionLabelTitle = 'Exclusion Peak Region:'
 ExclusionLowBinLabelSize = [ExclusionPeakRegionLabelSize[0]+200,$
                             ExclusionPeakRegionLabelSize[1]]
 ExclusionLowBinLabelTitle = 'Low bin:'
-d_L_T_2 = d_L_T + 10
+d_L_T_2 = d_L_T + 20
 ExclusionLowBinTextFieldSize = [ExclusionLowBinLabelSize[0]+d_L_T_2,$
                                 ExclusionLowBinLabelSize[1]-5,$
                                 70,30]

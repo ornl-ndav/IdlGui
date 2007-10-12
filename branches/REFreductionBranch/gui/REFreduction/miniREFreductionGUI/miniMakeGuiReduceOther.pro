@@ -4,11 +4,11 @@ PRO miniMakeGuiReduceOther, Event, REDUCE_BASE, IndividualBaseWidth
 cwbgroup_list = [' Yes    ',' No    ']
 
 ;filtering data
-FilteringDataLabelSize    = [20,550]
+FilteringDataLabelSize    = [15,455]
 FilteringDataLabelTitle   = 'Filtering Data:'
 FilteringDataCWBgroupSize = [220,FilteringDataLabelSize[1]-5]
 
-d_vertical_L_L = 35
+d_vertical_L_L = 30
 ;Store dt/t
 DeltaToverTLabelSize    = [FilteringDataLabelSize[0],$
                            FilteringDataLabelSize[1]+d_vertical_L_L]
@@ -33,17 +33,21 @@ OverwriteInstrumentGeometryButtonSize = [5,5,320,30]
 OverwriteInstrumentGeometryButtonTitle = 'Select an Instrument Geometry File'
 
 ;START data reduction button
-StartDRButtonSize = [5,OverwriteInstrumentGeometryLabelSize[1]+d_vertical_L_L,$
-                     1180,40]
-StartDRButtonTitle = '>          >         >        >       >      >     >    >   >  > >> S T A R T    D A T A    R E D U C T I O N << <  <   <    <     <      <       <        <         <          < '
+StartDRButtonSize = [5, $
+                     OverwriteInstrumentGeometryLabelSize[1]+d_vertical_L_L+3,$
+                     865, $
+                     35]
+StartDRButtonTitle = '>        >       >      >     >    >   >  > >> S T A R T    D A T A    R E D U C T I O N << <  <   <    <     <      <       <        <'
 
 ;command line preview/generator
-d_vertical_L_L_2 = d_vertical_L_L + 20
+d_vertical_L_L_2 = d_vertical_L_L + 10
 cmdLinePreviewLabelSize = [5,StartDRButtonSize[1]+d_vertical_L_L_2]
 cmdLinePreviewLabelTitle = 'Preview of the Command Line'
 d_vertical_L_L_3 = 20
-cmdLinePreviewTextSize = [5,cmdLinePreviewLabelSize[1]+d_vertical_L_L_3,$
-                          1180,100]
+cmdLinePreviewTextSize = [5, $
+                          cmdLinePreviewLabelSize[1]+d_vertical_L_L_3,$
+                          865, $
+                          55]
                            
 
 ;************************************************************************************

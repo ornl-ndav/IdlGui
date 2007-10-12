@@ -1,23 +1,30 @@
 PRO miniMakeGuiReduceInfo, Event, REDUCE_BASE
 
 ;general info and xml preview tab
-GeneralInfoAndXmlBaseSize = [725,260,450,315]
-GeneralInfoTabSize = [0,0,GeneralInfoAndXmlBaseSize[2],$
+GeneralInfoAndXmlBaseSize = [580,240,292,245]
+GeneralInfoTabSize = [0, $
+                      0, $
+                      GeneralInfoAndXmlBaseSize[2],$
                       GeneralInfoAndXmlBaseSize[3]]
-ReduceTab1BaseSize = [0,0,GeneralInfoTabSize[2],$
+ReduceTab1BaseSize = [0, $
+                      0, $
+                      GeneralInfoTabSize[2],$
                       GeneralInfoTabSize[3]]
-ReduceTab1BaseTitle = 'COMMAND  LINE  GENERATOR  STATUS'
-ReduceTab2BaseSize = [0,0,GeneralInfoTabSize[2],$
+ReduceTab1BaseTitle = 'COMMAND  LINE STATUS'
+ReduceTab2BaseSize = [0, $
+                      0, $
+                      GeneralInfoTabSize[2],$
                       GeneralInfoTabSize[3]]
 ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 
 ;general info label frame
-GeneralInfoTextFieldSize = [0,0,443,290] 
+GeneralInfoTextFieldSize = [0,0,445,218] 
 
-DataReductionStatusFrameSize = [725,595,450,40]
-DataReductionStatusLabelSize = [740,585]
+DataReductionStatusFrameSize = [580,500,288,40]
+DataReductionStatusLabelSize = [585,493]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
-DataReductionStatusTextFieldSize = [730,604,440,30]
+DataReductionStatusTextFieldSize = [585,509,280,30]
+
 
 ;makeGuI
 GeneralInfoAndXmlBase = widget_base(REDUCE_BASE,$
@@ -80,6 +87,7 @@ XmlTextField = widget_text(reduce_tab2_base,$
 DataReductionStatusLabel = widget_label(REDUCE_BASE,$
                                         xoffset=DataReductionStatusLabelSize[0],$
                                         yoffset=DataReductionStatusLabelSize[1],$
+                                        FONT = 'lucidasans-10',$
                                         value=DataReductionStatusLabelTitle)
 
 ;text field

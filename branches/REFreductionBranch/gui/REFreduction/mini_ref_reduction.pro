@@ -299,9 +299,9 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Data Combined Background TOF Plot',$
               'Data Combined Subtracted TOF Plot',$
-              'Normalization Combined Specular TOF Plot',$
-              'Normalization Combined Background TOF Plot',$
-              'Normalization Combined Subtracted TOF Plot',$
+              'Norm. Combined Specular TOF Plot',$
+              'Norm. Combined Background TOF Plot',$
+              'Norm. Combined Subtracted TOF Plot',$
               'R vs TOF Plot',$
               'XML output file']
 (*(*global).PlotsTitle) = PlotsTitle
@@ -400,9 +400,6 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;     widget_control, id, /editable
 ; ENDIF
 ;///END OF REMOVE_COMMENTS
-
-
-
 
 ; default tabs shown
  id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')

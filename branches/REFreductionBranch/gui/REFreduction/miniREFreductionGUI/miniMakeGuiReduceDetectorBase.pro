@@ -1,24 +1,24 @@
 PRO miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-DetectorBaseSize   = [0,470,IndividualBaseWidth, 60]
+DetectorBaseSize   = [0,390,IndividualBaseWidth, 60]
 
 DetectorLabelSize  = [20,2]
-DetectorLabelTitle = 'Angle Offset'
+DetectorLabelTitle = 'A N G L E   O F F S E T'
 DetectorFrameSize  = [10,10,IndividualBaseWidth-30,45]
 
 ;Nexus Angle value
-NexusAngleLabelSize  = [30,27]
+NexusAngleLabelSize  = [15,27]
 NexusAngleLabelValue = 'Angle Value: N/A'
 
 ;Detector value
-d_L_L = 202
+d_L_L = 150
 DetectorValueLabelSize     = [NexusAngleLabelSize[0]+d_L_L,27]
 DetectorValueLabelTitle    = 'Value:'
 d_L_T = 40
 DetectorValueTextFieldSize = [DetectorValueLabelSize[0]+d_L_T,$
                               DetectorValueLabelSize[1]-5,70,30]
-d_L_L = 170
+d_L_L = 120
 ;Detector error
 DetectorErrorLabelSize     = [DetectorValueLabelSize[0]+d_L_L,$
                               DetectorValueLabelSize[1]]
@@ -28,7 +28,7 @@ DetectorErrorTextFieldSize = [DetectorErrorLabelSize[0]+d_L_T,$
 
 ;Detector units
 d_L_L = 130
-DetectorUnitsBGroupList = [' degree ',' radian ']
+DetectorUnitsBGroupList = ['degree','radian']
 DetectorUnitsBGroupSize = [DetectorErrorLabelSize[0]+d_L_L,$
                            DetectorErrorTextFieldSize[1]]
                     

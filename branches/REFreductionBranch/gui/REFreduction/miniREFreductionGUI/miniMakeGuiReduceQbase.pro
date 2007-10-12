@@ -1,19 +1,19 @@
 PRO miniMakeGuiReduceQBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-QBaseSize   = [0,400,IndividualBaseWidth, 55]
+QBaseSize   = [0,335,IndividualBaseWidth, 55]
 
 QLabelSize  = [20,2]
 QLabelTitle = 'Q'
 QFrameSize  = [10,10,IndividualBaseWidth-30,40]
 
 ;Qmin
-QminLabelSize     = [33,23]
+QminLabelSize     = [15,23]
 QminLabelTitle    = 'Minimum:'
 d_L_T = 60
 QminTextFieldSize = [QminLabelSize[0]+d_L_T,$
                      QminLabelSize[1]-5,70,30]
-d_L_L = 180
+d_L_L = 145
 ;Qmax
 QmaxLabelSize     = [QminLabelSize[0]+d_L_L,$
                      QminLabelSize[1]]
@@ -33,7 +33,7 @@ QwidthTextFieldSize = [QwidthLabelSize[0]+d_L_T_2,$
                        QminTextFieldSize[3]]
 
 ;Qscale
-QScaleBGroupList = [' linear   ',' log   ' ]
+QScaleBGroupList = ['linear','log' ]
 d_L_T_3 = d_L_T + 30
 QScaleBGroupSize = [QwidthTextFieldSize[0]+d_L_T_3,$
                     QminTextFieldSize[1]]

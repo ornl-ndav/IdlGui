@@ -1,7 +1,7 @@
 PRO miniMakeGuiReduceDataBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Data base
-DataBaseSize   = [0,0,IndividualBaseWidth, 170]
+DataBaseSize   = [0,0,IndividualBaseWidth, 155]
 
 DataLabelSize  = [20,2]
 DataLabelTitle = 'D A T A'

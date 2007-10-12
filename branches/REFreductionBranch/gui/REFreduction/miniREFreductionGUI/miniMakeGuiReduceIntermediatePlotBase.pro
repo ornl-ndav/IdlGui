@@ -1,14 +1,16 @@
 PRO miniMakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
 
 InterLabelTitle = 'I N T E R M E D I A T E   P L O T S'
-InterLabelSize = [IndividualBasewidth+20,10]
+InterLabelSize = [IndividualBasewidth+10,0]
 
 ;intermdiate plot base
-InterBaseSize = [IndividualBaseWidth,15,$
-                 510,235]
-InterMainFramesize = [5,5,450,215]
+InterBaseSize = [IndividualBaseWidth-5, $
+                 5,$
+                 298, $
+                 235]
+InterMainFramesize = [5,5,288,215]
 
-plot1BaseSize = [15,22,400,23]
+plot1BaseSize = [15,22,200,23]
 plotnYoff = 28
 plot2Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+plotnYoff,$
