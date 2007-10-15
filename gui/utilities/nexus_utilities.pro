@@ -1,4 +1,3 @@
-
 ;
 ;                     SNS IDL GUI tools
 ;           A part of the SNS Analysis Software Suite.
@@ -56,19 +55,26 @@ if (local) then begin
 endif
 cmd += " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name, err_listening
+sz = (size(full_nexus_name))(1)
+if (sz EQ 1) then begin
 
 ;check if nexus exists
-result = strmatch(full_nexus_name,"ERROR*")
+    result = strmatch(full_nexus_name,"ERROR*")
+    
+    if (result GE 1) then begin
+        find_nexus = 0
+    endif else begin
+        find_nexus = 1
+    endelse
+    
+    (*global).find_nexus = find_nexus
+    return, full_nexus_name
 
-if (result GE 1) then begin
-    find_nexus = 0
 endif else begin
     find_nexus = 1
+    (*global).find_nexus = find_nexus
+    return, full_nexus_name[0]
 endelse
-
-(*global).find_nexus = find_nexus
-
-return, full_nexus_name
 
 end
 ; \}

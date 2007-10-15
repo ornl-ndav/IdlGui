@@ -3680,7 +3680,6 @@ endif else begin
         free_lun,u
 
 ;plot of scale
-        print, 'here'
         data_reduction_scale_id = widget_info(Event.top,FIND_BY_UNAME='data_reduction_scale')
         WIDGET_CONTROL, data_reduction_scale_id, GET_VALUE=id
         wset, id
