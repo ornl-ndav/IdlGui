@@ -111,7 +111,13 @@ endif
 
 ;rebin data to fill up all graph
 new_Ntof = (*global).Ntof_NORM
-new_N = 2 * N
+
+if ((*global).miniVersion) then begin
+    new_N = N
+endif else begin
+    new_N = 2 * N
+endelse
+
 tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_norm_ptr) = tvimg
 tvscl, tvimg, /device

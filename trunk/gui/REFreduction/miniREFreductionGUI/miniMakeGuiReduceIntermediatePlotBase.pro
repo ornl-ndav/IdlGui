@@ -1,14 +1,16 @@
 PRO miniMakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
 
 InterLabelTitle = 'I N T E R M E D I A T E   P L O T S'
-InterLabelSize = [IndividualBasewidth+20,10]
+InterLabelSize = [IndividualBasewidth+10,0]
 
 ;intermdiate plot base
-InterBaseSize = [IndividualBaseWidth,15,$
-                 510,235]
-InterMainFramesize = [5,5,450,215]
+InterBaseSize = [IndividualBaseWidth-5, $
+                 5,$
+                 298, $
+                 235]
+InterMainFramesize = [5,5,288,215]
 
-plot1BaseSize = [15,22,400,23]
+plot1BaseSize = [15,22,280,23]
 plotnYoff = 28
 plot2Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+plotnYoff,$
@@ -41,137 +43,138 @@ sz = (size(PlotsTitle))(1)
 InterList = PlotsTitle[0:sz-2]
 
 InterListSize = [10,15]
-NotAvailableTitle = ' -- NOT AVAILABLE! --'
+NotAvailableTitle = '- No Dispo.'
 
-;*********************************************************
-;Create GUI
+;###############################################################################
+;############################### Create GUI ####################################
+;###############################################################################
 
-IndividualLabel = widget_label(REDUCE_BASE,$
-                               xoffset=InterLabelSize[0],$
-                               yoffset=InterLabelSize[1],$
-                               value=InterLabeltitle)
+IndividualLabel = WIDGET_LABEL(REDUCE_BASE,$
+                               XOFFSET = InterLabelSize[0],$
+                               YOFFSET = InterLabelSize[1],$
+                               VALUE   = InterLabeltitle)
 
 ;base
-InterBase = widget_base(REDUCE_BASE,$
-                        uname='intermediate_base',$
-                        xoffset=InterBaseSize[0],$
-                        yoffset=InterBaseSize[1],$
-                        scr_xsize=InterBaseSize[2],$
-                        scr_ysize=InterBasesize[3])
+InterBase = WIDGET_BASE(REDUCE_BASE,$
+                        UNAME     = 'intermediate_base',$
+                        XOFFSET   = InterBaseSize[0],$
+                        YOFFSET   = InterBaseSize[1],$
+                        SCR_XSIZE = InterBaseSize[2],$
+                        SCR_YSIZE = InterBasesize[3])
 
 ;plot 1 base/label
-plot1Base = widget_base(InterBase,$
-                        xoffset=plot1BaseSize[0],$
-                        yoffset=plot1Basesize[1],$
-                        scr_xsize=plot1BaseSize[2],$
-                        scr_ysize=plot1Basesize[3],$
-                        uname='reduce_plot1_base',$
-                        map=0)
+plot1Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot1BaseSize[0],$
+                        YOFFSET   = plot1Basesize[1],$
+                        SCR_XSIZE = plot1BaseSize[2],$
+                        SCR_YSIZE = plot1Basesize[3],$
+                        UNAME     = 'reduce_plot1_base',$
+                        MAP       = 0)
 
-plot1Label = widget_label(plot1Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[0] + NotAvailableTitle)
+plot1Label = WIDGET_LABEL(plot1Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[0] + NotAvailableTitle)
 
 ;plot 2 base/label
-plot2Base = widget_base(InterBase,$
-                        xoffset=plot2BaseSize[0],$
-                        yoffset=plot2Basesize[1],$
-                        scr_xsize=plot2BaseSize[2],$
-                        scr_ysize=plot2Basesize[3],$
-                        uname='reduce_plot2_base',$
-                        map=0)
+plot2Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot2BaseSize[0],$
+                        YOFFSET   = plot2Basesize[1],$
+                        SCR_XSIZE = plot2BaseSize[2],$
+                        SCR_YSIZE = plot2Basesize[3],$
+                        UNAME     = 'reduce_plot2_base',$
+                        MAP       = 0)
 
-plot2Label = widget_label(plot2Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[1] + NotAvailableTitle)
+plot2Label = WIDGET_LABEL(plot2Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[1] + NotAvailableTitle)
 
 ;plot 3 base/label
-plot3Base = widget_base(InterBase,$
-                        xoffset=plot3BaseSize[0],$
-                        yoffset=plot3Basesize[1],$
-                        scr_xsize=plot3BaseSize[2],$
-                        scr_ysize=plot3Basesize[3],$
-                        uname='reduce_plot3_base',$
-                        map=0)
+plot3Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot3BaseSize[0],$
+                        YOFFSET   = plot3Basesize[1],$
+                        SCR_XSIZE = plot3BaseSize[2],$
+                        SCR_YSIZE = plot3Basesize[3],$
+                        UNAME     = 'reduce_plot3_base',$
+                        MAP       = 0)
 
-plot3Label = widget_label(plot3Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[2] + NotAvailableTitle)
+plot3Label = WIDGET_LABEL(plot3Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[2] + NotAvailableTitle)
 
 ;plot 4 base/label
-plot4Base = widget_base(InterBase,$
-                        xoffset=plot4BaseSize[0],$
-                        yoffset=plot4Basesize[1],$
-                        scr_xsize=plot4BaseSize[2],$
-                        scr_ysize=plot4Basesize[3],$
-                        uname='reduce_plot4_base',$
-                        map=0)
+plot4Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot4BaseSize[0],$
+                        YOFFSET   = plot4Basesize[1],$
+                        SCR_XSIZE = plot4BaseSize[2],$
+                        SCR_YSIZE = plot4Basesize[3],$
+                        UNAME     = 'reduce_plot4_base',$
+                        MAP       = 0)
 
-plot4Label = widget_label(plot4Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[3] + NotAvailableTitle)
+plot4Label = WIDGET_LABEL(plot4Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[3] + NotAvailableTitle)
 
 ;plot 5 base/label
-plot5Base = widget_base(InterBase,$
-                        xoffset=plot5BaseSize[0],$
-                        yoffset=plot5Basesize[1],$
-                        scr_xsize=plot5BaseSize[2],$
-                        scr_ysize=plot5Basesize[3],$
-                        uname='reduce_plot5_base',$
-                        map=0)
+plot5Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot5BaseSize[0],$
+                        YOFFSET   = plot5Basesize[1],$
+                        SCR_XSIZE = plot5BaseSize[2],$
+                        SCR_YSIZE = plot5Basesize[3],$
+                        UNAME     = 'reduce_plot5_base',$
+                        MAP       = 0)
 
-plot5Label = widget_label(plot5Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[4] + NotAvailableTitle)
+plot5Label = WIDGET_LABEL(plot5Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[4] + NotAvailableTitle)
 
 ;plot 6 base/label
-plot6Base = widget_base(InterBase,$
-                        xoffset=plot6BaseSize[0],$
-                        yoffset=plot6Basesize[1],$
-                        scr_xsize=plot6BaseSize[2],$
-                        scr_ysize=plot6Basesize[3],$
-                        uname='reduce_plot6_base',$
-                        map=0)
+plot6Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot6BaseSize[0],$
+                        YOFFSET   = plot6Basesize[1],$
+                        SCR_XSIZE = plot6BaseSize[2],$
+                        SCR_YSIZE = plot6Basesize[3],$
+                        UNAME     = 'reduce_plot6_base',$
+                        MAP       = 0)
 
-plot6Label = widget_label(plot6Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[5] + NotAvailableTitle)
+plot6Label = WIDGET_LABEL(plot6Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[5] + NotAvailableTitle)
 
 ;plot 7 base/label
-plot7Base = widget_base(InterBase,$
-                        xoffset=plot7BaseSize[0],$
-                        yoffset=plot7Basesize[1],$
-                        scr_xsize=plot7BaseSize[2],$
-                        scr_ysize=plot7Basesize[3],$
-                        uname='reduce_plot7_base',$
-                        map=0)
+plot7Base = WIDGET_BASE(InterBase,$
+                        XOFFSET   = plot7BaseSize[0],$
+                        YOFFSET   = plot7Basesize[1],$
+                        SCR_XSIZE = plot7BaseSize[2],$
+                        SCR_YSIZE = plot7Basesize[3],$
+                        UNAME     = 'reduce_plot7_base',$
+                        MAP       = 0)
 
-plot7Label = widget_label(plot7Base,$
-                          xoffset=0,$
-                          yoffset=0,$
-                          value=InterList[6] + NotAvailableTitle)
+plot7Label = WIDGET_LABEL(plot7Base,$
+                          XOFFSET = 0,$
+                          YOFFSET = 0,$
+                          VALUE   = InterList[6] + NotAvailableTitle)
 
-InterList = cw_bgroup(InterBase,$
+InterList = CW_BGROUP(InterBase,$
                       InterList,$
-                      xoffset=InterListSize[0],$
-                      yoffset=InterListSize[1],$
-                      uname='intermediate_plot_list',$
-                      /nonexclusive,$
-                      set_value=[0,0,0,0,0,0,0])
+                      XOFFSET   =InterListSize[0],$
+                      YOFFSET   =InterListSize[1],$
+                      UNAME     ='intermediate_plot_list',$
+                      SET_VALUE =[0,0,0,0,0,0,0],$
+                      /NONEXCLUSIVE)
                             
-InterMainFrame = widget_label(InterBase,$
-                              xoffset=InterMainFrameSize[0],$
-                              yoffset=InterMainFrameSize[1],$
-                              scr_xsize=InterMainFrameSize[2],$
-                              scr_ysize=InterMainFrameSize[3],$
-                              frame=1,$
-                              value='')
+InterMainFrame = WIDGET_LABEL(InterBase,$
+                              XOFFSET   = InterMainFrameSize[0],$
+                              YOFFSET   = InterMainFrameSize[1],$
+                              SCR_XSIZE = InterMainFrameSize[2],$
+                              SCR_YSIZE = InterMainFrameSize[3],$
+                              FRAME     = 1,$
+                              VALUE='')
 
 
 END

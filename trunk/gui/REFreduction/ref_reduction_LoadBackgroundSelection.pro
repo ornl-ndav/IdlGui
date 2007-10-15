@@ -69,7 +69,7 @@ spawn, cmd, last_line
 Ymin = ParseBackgroundFileString(Event, first_line)
 Ymax = ParseBackgroundFileString(Event, last_line)
 
-return, [Ymin,Ymax]
+return, [Ymin-1,Ymax+1]
 END
 
 

@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.4'
+VERSION = 'VERSION: REFreduction1.0.5'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -30,6 +30,8 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   miniVersion : 1,$
+;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
                    PreviewFileNbrLine : 40,$ 
@@ -299,9 +301,9 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Data Combined Background TOF Plot',$
               'Data Combined Subtracted TOF Plot',$
-              'Normalization Combined Specular TOF Plot',$
-              'Normalization Combined Background TOF Plot',$
-              'Normalization Combined Subtracted TOF Plot',$
+              'Norm. Combined Specular TOF Plot',$
+              'Norm. Combined Background TOF Plot',$
+              'Norm. Combined Subtracted TOF Plot',$
               'R vs TOF Plot',$
               'XML output file']
 (*(*global).PlotsTitle) = PlotsTitle
@@ -330,47 +332,39 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,1200,885]
+MainBaseSize  = [50,50,880,690]
 
-xsize = 1000
-ysize = 680
 MainBaseTitle    = 'miniReflectometer Data Reduction Package'
 ;Build Main Base
-MAIN_BASE = Widget_Base(GROUP_LEADER=wGroup,$
-                        UNAME='MAIN_BASE',$
-                        SCR_XSIZE=xsize,$
-                        SCR_YSIZE=ysize,$
-                        XOFFSET=MainBaseSize[0],$
-                        YOFFSET=MainBaseSize[1],$
-                        TITLE=MainBaseTitle,$
-                        SPACE=0,$
-                        XPAD=0,$
-                        /scroll)
+MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
+                        UNAME        = 'MAIN_BASE',$
+                        SCR_XSIZE    = MainBaseSize[2],$
+                        SCR_YSIZE    = MainBaseSize[3],$
+                        XOFFSET      = MainBaseSize[0],$
+                        YOFFSET      = MainBaseSize[1],$
+                        TITLE        = MainBaseTitle,$
+                        SPACE        = 0,$
+                        XPAD         = 0)
+
 
 ;attach global structure with widget ID of widget main base widget ID
-widget_control, MAIN_BASE, set_uvalue=global
+widget_control, MAIN_BASE, SET_UVALUE=global
 
 ;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1030,$
-                             YOFFSET=2,$
-                             VALUE=VERSION,$
-                             FRAME=0)
+if ((*global).miniVersion) then begin
+    xoff = 715
+endif else begin
+    xoff = 1030
+endelse
 
-;; Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
-; SWITCH (listening) OF
-;     'lrac':
-;     'mrac': REF
-;     'heater': BEGIN
-;         MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;         Break
-;     END
-;     else: BEGIN
-;         miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-;     END
-; ENDSWITCH
+version_label = WIDGET_LABEL(MAIN_BASE,$
+                             XOFFSET = xoff,$
+                             YOFFSET = 2,$
+                             VALUE   = VERSION,$
+                             FRAME   = 0)
 
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+;Build main GUI
+miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
@@ -378,6 +372,7 @@ DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
                                    YOFFSET = 1,$
                                    /ALL_EVENTS,$
                                    UNAME='data_hidden_widget_text')
+
 (*global).DataHiddenWidgetTextId = DataHiddenWidgetText
 (*global).DataHiddenWidgetTextUname = 'data_hidden_widget_text'
 
@@ -392,7 +387,7 @@ NormHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;initialize contrast droplist
+; initialize contrast droplist
 id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
@@ -417,13 +412,20 @@ ENDIF
 ; widget_control, id1, set_tab_current = 1 ;reduce
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
-; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
+; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
 
-; id3 = widget_info(MAIN_BASE, find_by_uname='load_data_d_dd_tab')
-; widget_control, id3, set_tab_current = 3  ;Y vs X (2D)
+; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
+; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
+
+;  to get the manual mode
+; id6 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab1_base')
+; widget_control, id6, map=0
+
+; id5 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab2_base')
+; widget_control, id5, map=1
 
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
-;widget_control, id4, set_tab_current = 3 ;ouput ascii file
+;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
 
 END
 

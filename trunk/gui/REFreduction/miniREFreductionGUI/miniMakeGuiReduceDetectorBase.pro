@@ -1,24 +1,24 @@
 PRO miniMakeGuiReduceDetectorBase, Event, REDUCE_BASE, IndividualBaseWidth
 
 ;size of Q base
-DetectorBaseSize   = [0,470,IndividualBaseWidth, 60]
+DetectorBaseSize   = [0,390,IndividualBaseWidth, 60]
 
 DetectorLabelSize  = [20,2]
-DetectorLabelTitle = 'Angle Offset'
+DetectorLabelTitle = 'A N G L E   O F F S E T'
 DetectorFrameSize  = [10,10,IndividualBaseWidth-30,45]
 
 ;Nexus Angle value
-NexusAngleLabelSize  = [30,27]
+NexusAngleLabelSize  = [15,27]
 NexusAngleLabelValue = 'Angle Value: N/A'
 
 ;Detector value
-d_L_L = 202
+d_L_L = 150
 DetectorValueLabelSize     = [NexusAngleLabelSize[0]+d_L_L,27]
 DetectorValueLabelTitle    = 'Value:'
 d_L_T = 40
 DetectorValueTextFieldSize = [DetectorValueLabelSize[0]+d_L_T,$
                               DetectorValueLabelSize[1]-5,70,30]
-d_L_L = 170
+d_L_L = 120
 ;Detector error
 DetectorErrorLabelSize     = [DetectorValueLabelSize[0]+d_L_L,$
                               DetectorValueLabelSize[1]]
@@ -28,7 +28,7 @@ DetectorErrorTextFieldSize = [DetectorErrorLabelSize[0]+d_L_T,$
 
 ;Detector units
 d_L_L = 130
-DetectorUnitsBGroupList = [' degree ',' radian ']
+DetectorUnitsBGroupList = ['degree','radian']
 DetectorUnitsBGroupSize = [DetectorErrorLabelSize[0]+d_L_L,$
                            DetectorErrorTextFieldSize[1]]
                     
@@ -38,101 +38,80 @@ GuiDataUsedLabelTitle   = ' GUI data used '
 NexusDataUsedSize = [580,8,100,20]
 NexusDataUsedLabelTitle = 'NeXus data used'
 
-;*********************************************************
-;Create GUI
+;###############################################################################
+;############################### Create GUI ####################################
+;###############################################################################
 
 ;base
-detector_base = widget_base(REDUCE_BASE,$
-                            xoffset=DetectorBaseSize[0],$
-                            yoffset=DetectorBaseSize[1],$
-                            scr_xsize=DetectorBaseSize[2],$
-                            scr_ysize=DetectorBaseSize[3])
+detector_base = WIDGET_BASE(REDUCE_BASE,$
+                            XOFFSET   = DetectorBaseSize[0],$
+                            YOFFSET   = DetectorBaseSize[1],$
+                            SCR_XSIZE = DetectorBaseSize[2],$
+                            SCR_YSIZE = DetectorBaseSize[3])
 
 ;label that goes on top of frame
-DetectorLabel = widget_label(detector_base,$
-                             xoffset=DetectorLabelSize[0],$
-                             yoffset=DetectorLabelSize[1],$
-                             value=DetectorLabelTitle)
+DetectorLabel = WIDGET_LABEL(detector_base,$
+                             XOFFSET = DetectorLabelSize[0],$
+                             YOFFSET = DetectorLabelSize[1],$
+                             VALUE   = DetectorLabelTitle)
 
 ;Nexus Angle value
 NexusAngleLabel = WIDGET_LABEL(detector_base,$
-                               XOFFSET=NexusAngleLabelSize[0],$
-                               YOFFSET=NexusAngleLabelSize[1],$
-                               VALUE=NexusAngleLabelValue)
+                               XOFFSET = NexusAngleLabelSize[0],$
+                               YOFFSET = NexusAngleLabelSize[1],$
+                               VALUE   = NexusAngleLabelValue)
 
 ;Detector value label
-DetectorValueLabel = widget_label(detector_base,$
-                                  xoffset=DetectorValueLabelSize[0],$
-                                  yoffset=DetectorValueLabelSize[1],$
-                                  value=DetectorValueLabelTitle)
+DetectorValueLabel = WIDGET_LABEL(detector_base,$
+                                  XOFFSET = DetectorValueLabelSize[0],$
+                                  YOFFSET = DetectorValueLabelSize[1],$
+                                  VALUE   = DetectorValueLabelTitle)
 
 ;Detector Value Text Field
-DetectorValueTextField = widget_text(detector_base,$
-                                     xoffset=DetectorValueTextFieldSize[0],$
-                                     yoffset=DetectorValueTextFieldSize[1],$
-                                     scr_xsize=DetectorValueTextFieldSize[2],$
-                                     scr_ysize=DetectorValueTextFieldSize[3],$
-                                     /align_left,$
-                                     /all_events,$
-                                     /editable,$
-                                     uname='detector_value_text_field')
+DetectorValueTextField = WIDGET_TEXT(detector_base,$
+                                     XOFFSET   = DetectorValueTextFieldSize[0],$
+                                     YOFFSET   = DetectorValueTextFieldSize[1],$
+                                     SCR_XSIZE = DetectorValueTextFieldSize[2],$
+                                     SCR_YSIZE = DetectorValueTextFieldSize[3],$
+                                     UNAME     = 'detector_value_text_field',$
+                                     /ALIGN_LEFT,$
+                                     /ALL_EVENTS,$
+                                     /EDITABLE)
 
 ;Detector error label
-DetectorErrorLabel = widget_label(detector_base,$
-                                  xoffset=DetectorErrorLabelSize[0],$
-                                  yoffset=DetectorErrorLabelSize[1],$
-                                  value=DetectorErrorLabelTitle)
+DetectorErrorLabel = WIDGET_LABEL(detector_base,$
+                                  XOFFSET = DetectorErrorLabelSize[0],$
+                                  YOFFSET = DetectorErrorLabelSize[1],$
+                                  VALUE   = DetectorErrorLabelTitle)
 
 ;Detector error Text Field
-DetectorErrorTextField = widget_text(detector_base,$
-                                     xoffset=DetectorErrorTextFieldSize[0],$
-                                     yoffset=DetectorErrorTextFieldSize[1],$
-                                     scr_xsize=DetectorErrorTextFieldSize[2],$
-                                     scr_ysize=DetectorErrorTextFieldSize[3],$
-                                     /align_left,$
-                                     /editable,$
-                                     /all_events,$
-                                     uname='detector_error_text_field')
+DetectorErrorTextField = WIDGET_TEXT(detector_base,$
+                                     XOFFSET   = DetectorErrorTextFieldSize[0],$
+                                     YOFFSET   = DetectorErrorTextFieldSize[1],$
+                                     SCR_XSIZE = DetectorErrorTextFieldSize[2],$
+                                     SCR_YSIZE = DetectorErrorTextFieldSize[3],$
+                                     UNAME     = 'detector_error_text_field',$
+                                     /ALIGN_LEFT,$
+                                     /EDITABLE,$
+                                     /ALL_EVENTS)
+
 ;Detector units
-DetectorUnitsBGroup = cw_bgroup(detector_base,$
+DetectorUnitsBGroup = CW_BGROUP(detector_base,$
                                 DetectorUnitsBGroupList,$
-                                /exclusive,$
-                                xoffset=DetectorUnitsBGroupSize[0],$
-                                yoffset=DetectorUnitsBGroupSize[1],$
-                                set_value=0,$
-                                uname='detector_units_b_group',$
-                                row=1)
-
-;;NeXus data used
-;NeXusDataUsedLabel = widget_label(detector_base,$
-;                                  uname='nexus_data_used_label',$
-;                                  xoffset=NexusDataUsedSize[0],$
-;                                  yoffset=NexusDataUsedSize[1],$
-;                                  scr_xsize=NexusDataUsedSize[2],$
-;                                  scr_ysize=NexusDataUsedSize[3],$
-;                                  value=NexusDataUsedLabelTitle,$
-;                                  frame=1)
-;;GUI data used
-; GuiDataUsedLabel = widget_label(detector_base,$
-;                                 uname='gui_data_used_label',$
-;                                 xoffset=GuiDataUsedSize[0],$
-;                                 yoffset=GuiDataUsedSize[1],$
-;                                 scr_xsize=GuiDataUsedSize[2],$
-;                                 scr_ysize=GuiDataUsedSize[3],$
-;                                 value=GuiDataUsedLabelTitle,$
-;                                 frame=1,$
-;                                 sensitive=0)
-
+                                XOFFSET   = DetectorUnitsBGroupSize[0],$
+                                YOFFSET   = DetectorUnitsBGroupSize[1],$
+                                SET_VALUE = 0,$
+                                UNAME     = 'detector_units_b_group',$
+                                ROW       = 1,$
+                                /EXCLUSIVE)
 
 ;frame
-DetectorFrame = widget_label(detector_base,$
-                             xoffset=DetectorFrameSize[0],$
-                             yoffset=DetectorFrameSize[1],$
-                             scr_xsize=DetectorFrameSize[2],$
-                             scr_ysize=DetectorFrameSize[3],$
-                             frame=1,$
-                             value='')
-
-
+DetectorFrame = WIDGET_LABEL(detector_base,$
+                             XOFFSET   = DetectorFrameSize[0],$
+                             YOFFSET   = DetectorFrameSize[1],$
+                             SCR_XSIZE = DetectorFrameSize[2],$
+                             SCR_YSIZE = DetectorFrameSize[3],$
+                             FRAME     = 1,$
+                             VALUE='')
 
 END

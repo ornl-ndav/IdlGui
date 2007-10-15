@@ -16,15 +16,15 @@ PRO miniMakeGuiLoadDataNormalizationTab, LOAD_BASE,$
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
+DataNormalizationTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]-32]
 
 ;Tab titles
-DataTitle          = '         D A T A          '
-NormalizationTitle = '      N O R M A L I Z A T I O N      '
+DataTitle          = 'D A T A'
+NormalizationTitle = 'N O R M A L I Z A T I O N'
 
 ;Archived or Full NeXus list cw_bgroup
-ArchivedOrAllCWBgroupList = ['Local/Archived ','All NeXus ']
-ArchivedOrAllCWBgroupSize = [420,2]
+ArchivedOrAllCWBgroupList = ['Archived ','All NeXus ']
+ArchivedOrAllCWBgroupSize = [230-50,2]
 
 ;base that displays the full list of NeXus found
 NeXusListBaseSize          = [90,110,500,500]
@@ -91,12 +91,12 @@ LoadctList = ['Black/White Linear',$
 
 ;build widgets
 DataNormalizationTab = WIDGET_TAB(LOAD_BASE,$
-                                  UNAME='data_normalization_tab',$
-                                  LOCATION=0,$
-                                  XOFFSET=DataNormalizationTabSize[0],$
-                                  YOFFSET=DataNormalizationTabSize[1],$
-                                  SCR_XSIZE=DataNormalizationTabSize[2],$
-                                  SCR_YSIZE=DataNormalizationTabSize[3],$
+                                  UNAME     = 'data_normalization_tab',$
+                                  LOCATION  = 0,$
+                                  XOFFSET   = DataNormalizationTabSize[0],$
+                                  YOFFSET   = DataNormalizationTabSize[1],$
+                                  SCR_XSIZE = DataNormalizationTabSize[2],$
+                                  SCR_YSIZE = DataNormalizationTabSize[3],$
                                   /TRACKING_EVENTS)
 
 
@@ -123,9 +123,6 @@ miniMakeGuiLoadDataTab,$
   NexusListSizeGlobal,$
   NexusListLabelGlobal,$
   LoadctList
-
-end
-pro temp
 
 ;build NORMALIZATION tab
 miniMakeGuiLoadNormalizationTab,$

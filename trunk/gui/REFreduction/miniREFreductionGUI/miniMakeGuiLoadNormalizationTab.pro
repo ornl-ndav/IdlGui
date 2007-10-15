@@ -1,24 +1,24 @@
 PRO miniMakeGuiLoadNormalizationTab, DataNormalizationTab,$
-                                 DataNormalizationTabSize,$
-                                 NormalizationTitle,$
-                                 D_DD_TabSize,$
-                                 D_DD_BaseSize,$
-                                 D_DD_TabTitle,$
-                                 GlobalRunNumber,$
-                                 RunNumberTitles,$
-                                 GlobalLoadDataGraphs,$
-                                 FileInfoSize,$
-                                 LeftInteractionHelpsize,$
-                                 LeftInteractionHelpMessageLabeltitle,$
-                                 NxsummaryZoomTabSize,$
-                                 NxsummaryZoomTitle,$
-                                 ZoomScaleBaseSize,$
-                                 ZoomScaleTitle,$
-                                 ArchivedOrAllCWBgroupList,$
-                                 ArchivedOrAllCWBgroupSize,$
-                                 NexusListSizeGlobal,$
-                                 NexusListLabelGlobal,$
-                                 loadctList
+                                     DataNormalizationTabSize,$
+                                     NormalizationTitle,$
+                                     D_DD_TabSize,$
+                                     D_DD_BaseSize,$
+                                     D_DD_TabTitle,$
+                                     GlobalRunNumber,$
+                                     RunNumberTitles,$
+                                     GlobalLoadDataGraphs,$
+                                     FileInfoSize,$
+                                     LeftInteractionHelpsize,$
+                                     LeftInteractionHelpMessageLabeltitle,$
+                                     NxsummaryZoomTabSize,$
+                                     NxsummaryZoomTitle,$
+                                     ZoomScaleBaseSize,$
+                                     ZoomScaleTitle,$
+                                     ArchivedOrAllCWBgroupList,$
+                                     ArchivedOrAllCWBgroupSize,$
+                                     NexusListSizeGlobal,$
+                                     NexusListLabelGlobal,$
+                                     loadctList
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -26,93 +26,105 @@ LoadNormalizationTabSize = [0,0,$
                             DataNormalizationTabSize[2],$
                             DataNormalizationTabSize[3]]
 
-;Build widgets
+;###############################################################################
+;################################Build widgets##################################
+;###############################################################################
+
 LOAD_NORMALIZATION_BASE = WIDGET_BASE(DataNormalizationTab,$
-                                      UNAME='load_normalization_base',$
-                                      TITLE=NormalizationTitle,$
-                                      XOFFSET=LoadNormalizationTabSize[0],$
-                                      YOFFSET=LoadNormalizationTabSize[1],$
-                                      SCR_XSIZE=LoadNormalizationTabSize[2],$
-                                      SCR_YSIZE=LoadNormalizationTabSize[3])
+                                      UNAME     = 'load_normalization_base',$
+                                      TITLE     = NormalizationTitle,$
+                                      XOFFSET   = LoadNormalizationTabSize[0],$
+                                      YOFFSET   = LoadNormalizationTabSize[1],$
+                                      SCR_XSIZE = LoadNormalizationTabSize[2],$
+                                      SCR_YSIZE = LoadNormalizationTabSize[3])
 
 ;Run Number base and inside CW_FIELD
-load_normalization_run_number_base = widget_base(LOAD_NORMALIZATION_BASE,$
-                                                 uname='load_normalization_run_number_base',$
-                                                 xoffset=GlobalRunNumber[0],$
-                                                 yoffset=GlobalRunNumber[1],$
-                                                 scr_xsize=GlobalRunNumber[2],$
-                                                 scr_ysize=globalRunNumber[3])
+load_normalization_run_number_base = $
+  WIDGET_BASE(LOAD_NORMALIZATION_BASE,$
+              UNAME     = 'load_normalization_run_number_base',$
+              XOFFSET   = GlobalRunNumber[0],$
+              YOFFSET   = GlobalRunNumber[1],$
+              SCR_XSIZE = GlobalRunNumber[2]-50,$
+              SCR_YSIZE = globalRunNumber[3])
 
-Load_data_run_number_text_field = CW_FIELD(load_normalization_run_number_base,$
-                                           row=1,$
-                                           xsize=GlobalRunNumber[4],$
-                                           ysize=GlobalRunNumber[5],$
-                                           /long,$
-                                           return_events=1,$
-                                           title=RunNumberTitles[1],$
-                                           uname='load_normalization_run_number_text_field')
+Load_data_run_number_text_field = $
+  CW_FIELD(load_normalization_run_number_base,$
+           ROW           = 1,$
+           XSIZE         = GlobalRunNumber[4],$
+           YSIZE         = GlobalRunNumber[5],$
+           /LONG,$
+           RETURN_EVENTS = 1,$
+           TITLE         = RunNumberTitles[1],$
+           UNAME         = 'load_normalization_run_number_text_field')
 
 
 ;Archived or All NeXus list
-NormArchivedOrAllCWBgroup = cw_bgroup(LOAD_NORMALIZATION_BASE,$
-                                      ArchivedOrAllCWBgroupList,$
-                                      uname='normalization_archived_or_full_cwbgroup',$
-                                      xoffset=ArchivedOrAllCWBgroupSize[0],$
-                                      yoffset=ArchivedOrAllCWBgroupSize[1],$
-                                      /exclusive,$
-                                      row=1,$
-                                      set_value=0)
+NormArchivedOrAllCWBgroup = $
+  CW_BGROUP(LOAD_NORMALIZATION_BASE,$
+            ArchivedOrAllCWBgroupList,$
+            UNAME     = 'normalization_archived_or_full_cwbgroup',$
+            XOFFSET   = ArchivedOrAllCWBgroupSize[0],$
+            YOFFSET   = ArchivedOrAllCWBgroupSize[1],$
+            /EXCLUSIVE,$
+            ROW       = 1,$
+            SET_VALUE = 0)
 
 ;Nexus list base/label/droplist and buttons
-NormListNexusBase = widget_base(LOAD_normalization_BaSE,$
-                                uname='norm_list_nexus_base',$
-                                xoffset=NexusListSizeGlobal[0],$
-                                yoffset=NexusListSizeGlobal[1],$
-                                scr_xsize=NexusListSizeGlobal[2],$
-                                scr_ysize=NexusListSizeGlobal[3],$
-                                frame=2,$
-                                map=0)
+NormListNexusBase = $
+  WIDGET_BASE(LOAD_normalization_Base,$
+              UNAME     = 'norm_list_nexus_base',$
+              XOFFSET   = NexusListSizeGlobal[0],$
+              YOFFSET   = NexusListSizeGlobal[1],$
+              SCR_XSIZE = NexusListSizeGlobal[2],$
+              SCR_YSIZE = NexusListSizeGlobal[3],$
+              FRAME     = 2,$
+              MAP       = 0)
 
-NormListNexusLabel = widget_label(NormListNexusBase,$
-                                  xoffset=NexusListSizeGlobal[4],$
-                                  yoffset=NexusListSizeGlobal[5],$
-                                  scr_xsize=NexusListSizeGlobal[6],$
-                                  scr_ysize=NexusListSizeGlobal[7],$
-                                  value=NexusListLabelGlobal[0],$
-                                  frame=1)
+NormListNexusLabel = $
+  WIDGET_LABEL(NormListNexusBase,$
+               XOFFSET   = NexusListSizeGlobal[4],$
+               YOFFSET   = NexusListSizeGlobal[5],$
+               SCR_XSIZE = NexusListSizeGlobal[6],$
+               SCR_YSIZE = NexusListSizeGlobal[7],$
+               VALUE     = NexusListLabelGlobal[0],$
+               FRAME     = 1)
 
 DropListvalue = ['                                                                        ']
-NormListDropList = widget_droplist(NormListNexusBase,$
-                                   uname='normalization_list_nexus_droplist',$
-                                   xoffset=NexusListSizeGlobal[8],$
-                                   yoffset=NexusListSizeGlobal[9],$
-                                   value=DropListValue,$
-                                   /tracking_events)
+NormListDropList = $
+  widget_droplist(NormListNexusBase,$
+                  UNAME   = 'normalization_list_nexus_droplist',$
+                  XOFFSET = NexusListSizeGlobal[8],$
+                  YOFFSET = NexusListSizeGlobal[9],$
+                  VALUE   = DropListValue,$
+                  /TRACKING_EVENTS)
                                    
-NormListNexusNXsummary = widget_text(NormListNexusBase,$
-                                     xoffset=NexusListSizeGlobal[10],$
-                                     yoffset=NexusListSizeGlobal[11],$
-                                     scr_xsize=NexusListSizeGlobal[12],$
-                                     scr_ysize=NexusListSizeGlobal[13],$
-                                     /wrap,$
-                                     /scroll,$
-                                     uname='normalization_list_nexus_nxsummary_text_field')
+NormListNexusNXsummary = $
+  WIDGET_TEXT(NormListNexusBase,$
+              XOFFSET   = NexusListSizeGlobal[10],$
+              YOFFSET   = NexusListSizeGlobal[11],$
+              SCR_XSIZE = NexusListSizeGlobal[12],$
+              SCR_YSIZE = NexusListSizeGlobal[13],$
+              /WRAP,$
+              /SCROLL,$
+              UNAME     = 'normalization_list_nexus_nxsummary_text_field')
   
-NormListNexusLoadButton = widget_button(NormListNexusBase,$
-                                        uname='norm_list_nexus_load_button',$
-                                        xoffset=NexusListSizeGlobal[14],$
-                                        yoffset=NexusListSizeGlobal[15],$
-                                        scr_xsize=NexusListSizeGlobal[16],$
-                                        scr_ysize=NexusListSizeGlobal[17],$
-                                        value=NexusListLabelGlobal[1])
+NormListNexusLoadButton = $
+  WIDGET_BUTTON(NormListNexusBase,$
+                UNAME     = 'norm_list_nexus_load_button',$
+                XOFFSET   = NexusListSizeGlobal[14],$
+                YOFFSET   = NexusListSizeGlobal[15],$
+                SCR_XSIZE = NexusListSizeGlobal[16],$
+                SCR_YSIZE = NexusListSizeGlobal[17],$
+                VALUE     = NexusListLabelGlobal[1])
                                         
-NormListNexusCancelButton = widget_button(NormListNexusBase,$
-                                          uname='norm_list_nexus_cancel_button',$
-                                          xoffset=NexusListSizeGlobal[18],$
-                                          yoffset=NexusListSizeGlobal[19],$
-                                          scr_xsize=NexusListSizeGlobal[20],$
-                                          scr_ysize=NexusListSizeGlobal[21],$
-                                          value=NexusListLabelGlobal[2])
+NormListNexusCancelButton = $
+  WIDGET_BUTTON(NormListNexusBase,$
+                UNAME     = 'norm_list_nexus_cancel_button',$
+                XOFFSET   = NexusListSizeGlobal[18],$
+                YOFFSET   = NexusListSizeGlobal[19],$
+                SCR_XSIZE = NexusListSizeGlobal[20],$
+                SCR_YSIZE = NexusListSizeGlobal[21],$
+                VALUE     = NexusListLabelGlobal[2])
 
 
 ;Build 1D and 2D tabs

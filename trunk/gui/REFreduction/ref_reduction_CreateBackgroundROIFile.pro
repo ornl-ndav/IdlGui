@@ -7,8 +7,15 @@ widget_control,id,get_uvalue=global
 
 ;get Background Ymin and Ymax
 SelectionBackArray = (*(*global).data_back_selection)
-Ymin = SelectionBackArray[0]/2
-Ymax = SelectionBackArray[1]/2
+
+if ((*global).miniVersion) then begin
+    coeff = 1
+endif else begin
+    coeff = 2
+endelse
+
+Ymin = SelectionBackArray[0]/coeff
+Ymax = SelectionBackArray[1]/coeff
 YNbr = (Ymax-Ymin)
 
 if (YNbr LE 1) then begin
@@ -106,10 +113,16 @@ PRO REFreduction_CreateNormBackgroundROIFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+if ((*global).miniVersion) then begin
+    coeff = 1
+endif else begin
+    coeff = 2
+endelse
+
 ;get Background Ymin and Ymax
 SelectionBackArray = (*(*global).norm_back_selection)
-Ymin = SelectionBackArray[0]/2
-Ymax = SelectionBackArray[1]/2
+Ymin = SelectionBackArray[0]/coeff
+Ymax = SelectionBackArray[1]/coeff
 YNbr = (Ymax-Ymin)
 
 if (YNbr LE 1) then begin

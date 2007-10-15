@@ -4,23 +4,22 @@ PRO miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
 ;RunNumber label and inside CW_FIELD
-RunNumberBaseSize    = [140,0,250,35]
+RunNumberBaseSize    = [20,0,210,35]
 RunNumberCWFieldSize = [10,0]
 GlobalRunNumber      = [RunNumberBaseSize,$
                         RunNumberCWFieldSize]
-RunNumberTitles      =  ['DATA RUN NUMBER:',$
-                         'NORMALIZATION RUN NUMBER:']
+RunNumberTitles      =  ['RUN NUMBER:',$
+                         'RUN NUMBER:']
 
 ;1D and 2D tabs
 LoadTabSize   = [0,$
                  0,$
                  MainTabSize[2],$
                  MainTabSize[3]]
-D_DD_TabSize  = [30,$
+D_DD_TabSize  = [20,$
                  35,$
-;                 MainTabSize[2]-570,$ 
-                 500,$ 
-                 MainTabSize[3]-85]
+                 330,$ 
+                 590]
 D_DD_BaseSize = [5,$
                  5,$
                  D_DD_TabSize[2],$
@@ -43,8 +42,8 @@ D_DD_TabTitle = [DTitle,$
 Nx = 256
 Ny = 304
 if (instrument EQ 'REF_L') then begin
-    xoff = 49
-    yoff = 0
+    xoff = 35
+    yoff = 10
     xsize = Nx
     ysize = Ny
 endif else begin
@@ -66,16 +65,16 @@ GlobalLoadDataGraphs = [LoadDataNormalization1DGraphSize,$
                         LoadDataNormalization2DRefGraphSize]
 
 ;NXsummary and Zoom tab
-NxsummaryZoomTabSize = [D_DD_TabSize[2]+50,$
-                        15,$
+NxsummaryZoomTabSize = [D_DD_TabSize[2]+35,$
+                        5,$
                         495,$
                         395]
-NxsummaryZoomTitle = ['  N X  s u m m a r y  ',' Z  O  O  M ']
+NxsummaryZoomTitle = ['NX summary','ZOOM']
 
 ZoomScaleBaseSize = [380,0,110,35]
 ZoomScaleTitle = 'Zoom factor'
 
-;File info hudge label (empty for now)
+;File info hudge label (previous of roi file...)
 ;top label
 FileInfoSize_1 = [0,$
                   0,$
@@ -83,36 +82,39 @@ FileInfoSize_1 = [0,$
                   370] ;393
 
 ;help text box to explain what is going on on the left
-LeftInteractionHelpMessageBaseSize = [D_DD_TabSize[2]+50,$
-                                      425,$
-                                      495,$
-                                      190+100]
+LeftInteractionHelpMessageBaseSize = [NxsummaryZoomTabSize[0],$
+                                      405,$
+                                      493,$
+                                      150]
 LeftInteractionHelpMessageLabelSize = [5,5]
 LeftInteractionHelpMessageLabelTitle = 'I N F O'
-LeftInteractionHelpTextSize = [5,25,485,160+100]
+LeftInteractionHelpTextSize = [5,25,485,123]
 LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
                            LeftInteractionHelpMessageLabelSize,$
                            LeftInteractionHelpTextsize]
                            
 ;bottom text field
-FileInfoSize_2 = [NxsummaryZoomTabSize[0],$
-                  625+100,$
+FileInfoSize_2 = [NxsummaryZoomTabSize[0]-3,$
+                  565,$
                   498,$
-                  190-100]
+                  60]
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 
-;----Build widgets-----
+;###############################################################################
+;############################# Build widgets ###################################
+;###############################################################################
+
 LOAD_BASE = WIDGET_BASE(MAIN_TAB,$
-                        UNAME='load_base',$
-                        TITLE=LoadTabTitle,$
-                        XOFFSET=LoadTabSize[0],$
-                        YOFFSET=LoadTabSize[1],$
-                        SCR_XSIZE=LoadTabSize[2],$
-                        SCR_YSIZE=LoadTabSize[3],$
-                       /scroll,$
-                       x_scroll_size=400,$
-                       y_scroll_size=300)
+                        UNAME         = 'load_base',$
+                        TITLE         = LoadTabTitle,$
+                        XOFFSET       = LoadTabSize[0],$
+                        YOFFSET       = LoadTabSize[1],$
+                        SCR_XSIZE     = LoadTabSize[2],$
+                        SCR_YSIZE     = LoadTabSize[3],$
+                        x_scroll_size = 400,$
+                        y_scroll_size = 300,$
+                       /scroll)
 
 
 ;Build DATA and NORMALIZATION tabs
