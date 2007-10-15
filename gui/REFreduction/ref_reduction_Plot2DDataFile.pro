@@ -112,8 +112,13 @@ widget_control, id_draw, get_value=id_value
 wset,id_value
 erase
 
-New_Ny = 2*Ny
-New_Nx = 2*Nx
+if ((*global).miniVersion) then begin
+    New_Ny = Ny
+    New_Nx = Nx
+endif else begin
+    New_Ny = 2*Ny
+    New_Nx = 2*Nx
+endelse
 
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device

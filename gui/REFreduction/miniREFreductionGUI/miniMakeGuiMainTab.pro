@@ -5,32 +5,25 @@ PRO miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-LoadTabTitle     = '       LOAD       ' 
-ReduceTabTitle   = '      REDUCE      ' 
-PlotsTabTitle    = '       PLOTS      ' 
-LogBookTabTitle  = '     LOG BOOK     ' 
-SettingsTabTitle = '     SETTINGS     ' 
+LoadTabTitle     = '  LOAD    ' 
+ReduceTabTitle   = ' REDUCE   ' 
+PlotsTabTitle    = '  PLOTS   ' 
+LogBookTabTitle  = ' LOG BOOK ' 
+SettingsTabTitle = ' SETTINGS ' 
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME='main_tab',$
-                      LOCATION=0,$
-                      XOFFSET=MainTabSize[0],$
-                      YOFFSET=MainTabSize[1],$
-                      SCR_XSIZE=MainTabSize[2],$
-                      SCR_YSIZE=MainTabSize[3],$
-                      /TRACKING_EVENTS,$
-                      sensitive=1)
+                      UNAME     = 'main_tab',$
+                      LOCATION  = 0,$
+                      XOFFSET   = MainTabSize[0],$
+                      YOFFSET   = MainTabSize[1],$
+                      SCR_XSIZE = MainTabSize[2],$
+                      SCR_YSIZE = MainTabSize[3],$
+                      sensitive = 1,$
+                      /TRACKING_EVENTS)
 
 ;build LOAD tab
 miniMakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
-
-END
-
-
-
-Pro TEMP
-
 
 ;build REDUCE tab
 miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
@@ -43,6 +36,5 @@ miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
 ;;build SETTINGS tab
 ;MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
-
 
 END

@@ -202,6 +202,12 @@ widget_control,id,get_uvalue=global
 
 xsize_1d_draw = (*global).xsize_1d_draw
 
+if ((*global).miniVersion) then begin
+    coeff = 1
+endif else begin
+    coeff = 2
+endelse
+
 ;get Background Ymin, Ymax
 BackSelection = (*(*global).data_back_selection)
 ValidateSaveButton = 0
@@ -214,7 +220,7 @@ CASE (BackSelection[0]) OF
                 Ymax = BackSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/2
+                putCWFieldValue, event, 'data_d_selection_background_ymax_cw_field', Ymax/coeff
             end
         endcase
     end
@@ -224,7 +230,7 @@ CASE (BackSelection[0]) OF
                 Ymin = BackSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/2
+                putCWFieldValue, event, 'data_d_selection_background_ymin_cw_field', Ymin/coeff
             end
             else:begin
                 Ymin = Min(BackSelection,max=Ymax)
@@ -234,13 +240,13 @@ CASE (BackSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'data_d_selection_background_ymin_cw_field', $
-                  Ymin/2
+                  Ymin/coeff
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, $
                   event, $
                   'data_d_selection_background_ymax_cw_field', $
-                  Ymax/2
+                  Ymax/coeff
                 ValidateSaveButton = 1 ;enable SAVE button
             end
         endcase
@@ -262,11 +268,11 @@ CASE (PeakSelection[0]) OF
                 Ymax = PeakSelection[1]
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_high_bin_text', $
-                  strcompress(Ymax/2), $
+                  strcompress(Ymax/coeff), $
                   0
             end
         endcase
@@ -277,11 +283,11 @@ CASE (PeakSelection[0]) OF
                 Ymin = PeakSelection[0]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_low_bin_text', $
-                  strcompress(Ymin/2), $
+                  strcompress(Ymin/coeff), $
                   0
                 
             end
@@ -290,20 +296,20 @@ CASE (PeakSelection[0]) OF
                 (*(*global).data_peak_selection) = [Ymin,Ymax]
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/2
+                putCWFieldValue, event, 'data_d_selection_peak_ymin_cw_field', Ymin/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_low_bin_text', $
-                  strcompress(Ymin/2), $
+                  strcompress(Ymin/coeff), $
                   0
                 
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
-                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/2
+                putCWFieldValue, event, 'data_d_selection_peak_ymax_cw_field', Ymax/coeff
                 putTextFieldValue, $
                   event, $
                   'data_exclusion_high_bin_text', $
-                  strcompress(Ymax/2), $
+                  strcompress(Ymax/coeff), $
                   0
             end
         endcase
@@ -323,6 +329,12 @@ widget_control,id,get_uvalue=global
 
 xsize_1d_draw = (*global).xsize_1d_draw
 
+if ((*global).miniVersion) then begin
+    coeff = 1
+endif else begin
+    coeff = 2
+endelse
+
 ;get Background Ymin, Ymax
 BackSelection = (*(*global).norm_back_selection)
 
@@ -339,7 +351,7 @@ CASE (BackSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'normalization_d_selection_background_ymax_cw_field', $
-                  Ymax/2
+                  Ymax/coeff
             end
         endcase
     end
@@ -350,7 +362,7 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', Ymin/2
+                  'normalization_d_selection_background_ymin_cw_field', Ymin/coeff
             end
             else:begin
                 Ymin = Min(BackSelection,max=Ymax)
@@ -358,11 +370,11 @@ CASE (BackSelection[0]) OF
                 if (Ymin LT 1) then Ymin = 0
                 if (Ymin GT xsize_1d_draw) then Ymin = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymin_cw_field', Ymin/2
+                  'normalization_d_selection_background_ymin_cw_field', Ymin/coeff
                 if (Ymax LT 1) then Ymax = 0
                 if (Ymax GT xsize_1d_draw) then Ymax = (xsize_1d_draw)-1
                 putCWFieldValue, event, $
-                  'normalization_d_selection_background_ymax_cw_field', Ymax/2
+                  'normalization_d_selection_background_ymax_cw_field', Ymax/coeff
                 ValidateSaveButton = 1 ;enable SAVE button
             end
         endcase
@@ -389,11 +401,11 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'normalization_d_selection_peak_ymax_cw_field', $
-                  Ymax/2
+                  Ymax/coeff
                  putTextFieldValue, $
                    event, $
                    'norm_exclusion_high_bin_text', $
-                   strcompress(Ymax/2), $
+                   strcompress(Ymax/coeff), $
                    0
              end
         endcase
@@ -407,11 +419,11 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'normalization_d_selection_peak_ymin_cw_field', $
-                  Ymin/2
+                  Ymin/coeff
                 putTextFieldValue, $
                   event, $
                   'norm_exclusion_low_bin_text', $
-                  strcompress(Ymin/2), $
+                  strcompress(Ymin/coeff), $
                   0
 
             end
@@ -423,12 +435,12 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'normalization_d_selection_peak_ymin_cw_field', $
-                  Ymin/2
+                  Ymin/coeff
                 
                 putTextFieldValue, $
                   event, $
                   'norm_exclusion_low_bin_text', $
-                  strcompress(Ymin/2), $
+                  strcompress(Ymin/coeff), $
                   0
                 
                 if (Ymax LT 1) then Ymax = 0
@@ -436,11 +448,11 @@ CASE (PeakSelection[0]) OF
                 putCWFieldValue, $
                   event, $
                   'normalization_d_selection_peak_ymax_cw_field', $
-                  Ymax/2
+                  Ymax/coeff
                  putTextFieldValue, $
                    event, $
                    'norm_exclusion_high_bin_text', $
-                   strcompress(Ymax/2), $
+                   strcompress(Ymax/coeff), $
                    0
             end
         endcase
