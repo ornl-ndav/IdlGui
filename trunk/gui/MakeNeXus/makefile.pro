@@ -16,5 +16,6 @@ resolve_routine, "XMANAGER", /either
 resolve_routine, "STRSPLIT", /either
 resolve_routine, "REVERSE",/either
 resolve_routine, "read_bmp",/either
+resolve_routine, "cw_field",/either
 save,/routines,filename="rebin_nexus.sav"
 exit
