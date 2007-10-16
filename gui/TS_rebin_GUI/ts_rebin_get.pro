@@ -9,11 +9,11 @@ END
 ;Get type of bin
 FUNCTION getBinType, Event
 id = widget_info(Event.top,find_by_uname='bin_type')
-widget_control, id, get_vale=value
+widget_control, id, get_value=value
 if (value EQ 0) then begin
     type = 'linear'
 endif else begin
     type = 'log'
 endelse
-RETURNb, type
+RETURN, type
 END
