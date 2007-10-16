@@ -90,7 +90,7 @@ public class IdlToolsPortal implements ActionListener{
 		images[4] = createImageIcon("/gov/ornl/sns/itools/images/under_construction.gif");
     images[5] = createImageIcon("/gov/ornl/sns/itools/images/RefLScale.gif");
     images[6] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
-    images[7] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
+    images[7] = createImageIcon("/gov/ornl/sns/itools/images/miniREFreduction.gif");
 		
 		//Define the help text that goes with each tool
 		//plotBSS
