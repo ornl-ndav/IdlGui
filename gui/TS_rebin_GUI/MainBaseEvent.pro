@@ -48,6 +48,11 @@ CASE Event.id OF
         ts_rebin_ValidateGoButtonAndBuildCMD, Event
     end
 
+;go button
+    Widget_Info(wWidget, FIND_BY_UNAME='go'): begin
+        ts_rebin_RunCMD, event
+    end
+
     ELSE:
     
 ENDCASE

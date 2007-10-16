@@ -20,7 +20,8 @@ global = ptr_new ({instrument : '',$
                    output_path : '',$
                    staging_area : '',$
                    ts_rebin_batch : $ $
-                   '/SNS/users/j35/SVN/ASGIntegration/trunk/python/TS_rebin_batch'$
+                   '/SNS/users/j35/SVN/ASGIntegration/trunk/python/TS_rebin_batch',$
+                   PROCESSING : 'Processing ..... '$
                   })
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
