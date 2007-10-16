@@ -12,6 +12,9 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder
 .run MakeGui.pro
 
+.run ts_rebin_put.pro
+.run ts_rebin_get.pro
+
 .run MainBaseEvent.pro
 .run ts_rebin_eventcb.pro
 .run ts_rebin.pro

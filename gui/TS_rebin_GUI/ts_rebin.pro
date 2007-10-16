@@ -16,7 +16,11 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({instrument : ''$
+global = ptr_new ({instrument : '',$
+                   output_path : '',$
+                   staging_area : '',$
+                   ts_rebin_batch : $ $
+                   '/SNS/users/j35/SVN/ASGIntegration/trunk/python/TS_rebin_batch'$
                   })
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -40,8 +44,28 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
+;get instrument
+spawn, 'hostname',listening
+CASE (listening) OF
+    'lrac': instrument = 'REF_L'
+    'mrac': instrument = 'REF_M'
+    'heater': instrument = ''
+    else: instrument = ''
+ENDCASE
+
+output_path = '/SNS/users/' + ucams + '/local'
+
+WidgetInit = {instrument:instrument,$
+              bin_width : 5L,$
+              output_path : output_path,$
+              staging_area : '~/local'$
+             }
+
+(*global).output_path = WidgetInit.output_path
+(*global).staging_area = WidgetInit.staging_area
+
 ;Build GUI
-MakeGui, MAIN_BASE
+MakeGui, MAIN_BASE, WidgetInit
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
