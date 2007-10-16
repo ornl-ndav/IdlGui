@@ -1,4 +1,4 @@
-PRO MakeGui, MAIN_BASE
+PRO MakeGui, MAIN_BASE, WidgetInit
 
 ;main base (without ok or cancel buttons)
 main = WIDGET_BASE(MAIN_BASE,$
@@ -16,7 +16,8 @@ label = WIDGET_LABEL(first_base,$
 text  = WIDGET_TEXT(first_base,$
                     UNAME = 'runs',$
                     /EDITABLE,$
-                    XSIZE = 20)
+                    XSIZE = 20,$
+                    /ALL_EVENTS)
 
 label = WIDGET_LABEL(first_base,$
                      VALUE = '  Instrument:')
@@ -24,7 +25,9 @@ label = WIDGET_LABEL(first_base,$
 text  = WIDGET_TEXT(first_base,$
                     UNAME = 'instrument',$
                     /EDITABLE,$
-                    XSIZE = 5)
+                    XSIZE = 5,$
+                    VALUE = WidgetInit.instrument,$
+                    /ALL_EVENTS)
 
 label = WIDGET_LABEL(first_base,$
                      VALUE = ' Proposal number:')
@@ -48,7 +51,9 @@ label = WIDGET_LABEL(second_base,$
 text = WIDGET_TEXT(second_base,$
                    UNAME = 'bin_width',$
                    /EDITABLE,$
-                   XSIZE=5)
+                   XSIZE = 5,$
+                   VALUE = strcompress(WidgetInit.bin_width,/remove_all),$
+                   /ALL_EVENTS)
 
 type_list = ['linear','log']
 group = cw_bgroup(second_base,$
@@ -83,14 +88,15 @@ label = WIDGET_LABEL(third_base,$
 text = WIDGET_TEXT(third_base,$
                    UNAME = 'output_path',$
                    /EDITABLE,$
-                   XSIZE=55)
+                   XSIZE=55,$
+                   VALUE = WidgetInit.staging_area,$
+                   /ALL_EVENTS)
 
 button = WIDGET_BUTTON(third_base,$
                        UNAME = 'output_path_button',$
                        SCR_XSIZE = 100,$
                        VALUE = 'Browse...')
                          
-
 ;staging area
 fourth_base = WIDGET_BASE(main,$
                           ROW=1)
@@ -99,9 +105,11 @@ label = WIDGET_LABEL(fourth_base,$
                      VALUE = 'Staging area:')
 
 text = WIDGET_TEXT(fourth_base,$
-                   UNAME = 'staging_area_path',$
+                   UNAME = 'staging_area',$
                    /EDITABLE,$
-                   XSIZE=54)
+                   XSIZE=54,$
+                   VALUE = WidgetInit.staging_area,$
+                   /ALL_EVENTS)
 
 button = WIDGET_BUTTON(fourth_base,$
                        UNAME = 'staging_area_button',$
@@ -117,7 +125,8 @@ button = WIDGET_BUTTON(bbase,$
                        UNAME = 'go',$
                        SCR_XSIZE = 530,$
                        SCR_YSIZE = 30,$
-                       VALUE = 'REBIN NEXUS FILES')
+                       VALUE = '>   >  > > REBIN NEXUS FILES < <  <   <',$
+                       SENSITIVE=0)
 
 ;MESSAGE BOX
 text_base = WIDGET_BASE(MAIN_BASE,$
