@@ -51,22 +51,32 @@ END
 ; - 'bin_width' is not empty
 PRO ts_rebin_ValidateGoButtonAndBuildCMD, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ValidateGo = 1
 
 ;get runs
 runs_field = getTextFieldValue(Event, 'runs')
-if (runs_filed EQ '') then ValidateGo = 0
+if (runs_field EQ '') then ValidateGo = 0
 
 ;get instrument
 instrument_field = getTextFieldValue(Event, 'instrument')
-if (instrument_field EQ '') then ValidateGo = 0
+if (instrument_field EQ '') then begin
+    ValidateGo = 0
+    instrument_field = '?'
+endif
 
 ;get proposal
 proposal_field = getTextFieldValue(Event, 'proposal_number')
 
 ;get bin_width
 bin_width_field = getTextFieldValue(Event, 'bin_width')
-if (bin_width_field EQ '') then ValidateGo = 0
+if (bin_width_field EQ '') then begin
+    ValidateGo = 0
+    bin_width_field = '?'
+endif
 
 ;get bin_type
 bin_type = getBinType(Event)
@@ -79,11 +89,17 @@ max_time_field = getTextFieldValue(Event, 'max_time')
 
 ;output_path
 output_path_field = getTextFieldValue(Event,'output_path')
-if (output_path_field EQ '') then ValidateGo = 0
+if (output_path_field EQ '') then begin
+    ValidateGo = 0
+    output_path_field = '?'
+endif
 
 ;staging_area
 staging_area_field = getTextFieldValue(Event,'staging_area')
-if (staging_area_field EQ '') then ValidateGo = 0
+if (staging_area_field EQ '') then begin
+    ValidateGo = 0
+    staging_area_field = '?'
+endif
 
 
 ;****Validate or not Go button****
@@ -93,13 +109,19 @@ widget_control, id, sensitive=ValidateGo
 
 ;****Build Command Line****
 cmd = (*global).ts_rebin_batch
-cmd += ' ' + strcompress(run_field,/remove_all) ;runs
+cmd += ' ' + strcompress(runs_field,/remove_all) ;runs
 cmd += ' --inst=' + strcompress(instrument_field,/remove_all) ;instrument
-cmd += ' --proposal=' + strcompress(proposal_field, /remove_all) ;proposal
+
+if (proposal_field NE '') then begin
+    cmd += ' --proposal=' + strcompress(proposal_field, /remove_all) ;proposal
+endif
+
 cmd += ' --time_width=' + strcompress(bin_width_field, /remove_all) ;bin_width
 cmd += ' --hist_type=' + strcompress(bin_type,/remove_all) ;bin_type
-cmd += ' --output_path=' + strcompress(output_path,/remove_all) ;output_path
+cmd += ' --output_path=' + strcompress(output_path_field,/remove_all) ;output_path
 cmd += ' --temp_dir=' + strcompress(staging_area_field,/remove_all) ;staging area
+
+put_text_field_value, Event, 'log_book', cmd
 
 
 END
