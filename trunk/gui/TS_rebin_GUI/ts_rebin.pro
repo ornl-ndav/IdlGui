@@ -1,7 +1,7 @@
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: TSrebin1.0.0'
+VERSION = '(VERSION: TSrebin1.0.0)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -21,8 +21,8 @@ global = ptr_new ({instrument : ''$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,550,300]
-MainBaseTitle = 'Translation Service Rebin Tool'
+MainBaseSize  = [50,50,550,305]
+MainBaseTitle = 'Translation Service Rebin Tool ' + VERSION
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
@@ -40,13 +40,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1030,$
-                             YOFFSET=2,$
-                             VALUE=VERSION,$
-                             FRAME=0)
-
+;Build GUI
 MakeGui, MAIN_BASE
 
 Widget_Control, /REALIZE, MAIN_BASE
