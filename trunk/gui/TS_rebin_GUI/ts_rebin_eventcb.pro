@@ -123,13 +123,38 @@ cmd += ' --temp_dir=' + strcompress(staging_area_field,/remove_all) ;staging are
 
 put_text_field_value, Event, 'log_book', cmd
 
-
 END
 
 
 
+;This procedure will run the command line
+PRO ts_rebin_RunCMD, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
+PROCESSING = (*global).PROCESSING
+
+;get the CMD
+cmd = getTextFieldValue(Event, 'log_book')
+
+add_text_field_value, Event, 'log_book', PROCESSING
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;spawn, cmd, listening
+
+;turn off hourglass
+widget_control,hourglass=0
+
+;remove PROCESSING word
+InitialStrarr = getTextfieldValue(Event, 'log_book')
+MessageToAdd  = 'DONE'
+RemoveString  = PROCESSING
+putTextAtEndOfLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
+
+END
 
 
 
