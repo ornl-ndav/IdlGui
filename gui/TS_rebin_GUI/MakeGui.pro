@@ -35,7 +35,8 @@ label = WIDGET_LABEL(first_base,$
 text = WIDGET_TEXT(first_base,$
                    UNAME = 'proposal_number',$
                    /EDITABLE,$
-                   XSIZE = 13)
+                   XSIZE = 13,$
+                   /ALL_EVENTS)
 
 ;Bins width and type
 second_base = WIDGET_BASE(main,$
@@ -68,7 +69,8 @@ label = WIDGET_LABEL(second_base,$
 text = WIDGET_TEXT(second_base,$
                    UNAME = 'time_offset',$
                    /EDITABLE,$
-                   XSIZE=5)
+                   XSIZE=5,$
+                   /ALL_EVENTS)
                    
 label = WIDGET_LABEL(second_base,$
                      VALUE = ' Max. time:')
@@ -76,7 +78,8 @@ label = WIDGET_LABEL(second_base,$
 text = WIDGET_TEXT(second_base,$
                    UNAME = 'max_time',$
                    /EDITABLE,$
-                   XSIZE=7)
+                   XSIZE=7,$
+                   /ALL_EVENTS)
                    
 ;output path
 third_base = WIDGET_BASE(main,$
