@@ -53,3 +53,16 @@ endelse
 ;put it back in uname text field
 put_text_field_value, Event, 'log_book', FinalStrarr
 END
+
+
+
+
+;Put the contain of the string array in the specified text field
+PRO putTextFieldArray, Event, uname, array
+NbrLines = (size(array))(1)
+if (NbrLines GT 1) then begin
+    for k=0,(NbrLines-1) do begin
+        add_text_field_value, Event, Uname, array[k]
+    endfor
+endif
+END
