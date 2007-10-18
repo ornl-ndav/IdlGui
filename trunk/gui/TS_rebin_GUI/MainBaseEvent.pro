@@ -31,6 +31,11 @@ CASE Event.id OF
         ts_rebin_ValidateGoButtonAndBuildCMD, Event
     end
 
+;Bin type
+    Widget_Info(wWidget, FIND_BY_UNAME='bin_type'): begin
+        ts_rebin_ValidateGoButtonAndBuildCMD, Event
+    end
+    
 ;Staging area text 
     Widget_Info(wWidget, FIND_BY_UNAME='staging_area_path'): begin
         ts_rebin_ValidateGoButtonAndBuildCMD, Event
