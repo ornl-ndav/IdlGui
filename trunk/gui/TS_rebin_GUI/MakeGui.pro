@@ -61,7 +61,8 @@ group = cw_bgroup(second_base,$
                   type_list,$
                   UNAME = 'bin_type',$
                   /EXCLUSIVE,$
-                  /ROW)
+                  /ROW,$
+                  SET_VALUE=0)
 
 label = WIDGET_LABEL(second_base,$
                      VALUE = '  Time offset:')

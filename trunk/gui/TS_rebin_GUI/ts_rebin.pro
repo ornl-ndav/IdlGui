@@ -57,7 +57,7 @@ ENDCASE
 output_path = '/SNS/users/' + ucams + '/local'
 
 WidgetInit = {instrument:instrument,$
-              bin_width : 5L,$
+              bin_width : 10L,$
               output_path : output_path,$
               staging_area : '~/local'$
              }
