@@ -9,16 +9,17 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 8;   //number of tools
+	final static int NUM_IMAGES = 9;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
-  enum enumHostname {dev, heater, mrac, lrac, bac, unknown}
+  enum enumHostname {dev, heater, mrac, lrac, bac, bac2, unknown}
   static String DEV = "dev.ornl.gov";
   static String HEATER = "heater";
   static String LRAC = "lrac";
   static String MRAC = "mrac";
   static String BAC = "bac.sns.gov";
+  static String BAC2 = "bac2";
   static String UNKNOWN = "unknown";
   
   static String PLOTBSS = "/SNS/users/j35/IDL/BSS/plotBSS";
@@ -28,6 +29,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
+  static String TS_REBIN_GUI = "/SNS/software/idltools/ts_rebin_gui";
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -91,6 +93,7 @@ public class IdlToolsPortal implements ActionListener{
     images[5] = createImageIcon("/gov/ornl/sns/itools/images/RefLScale.gif");
     images[6] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
     images[7] = createImageIcon("/gov/ornl/sns/itools/images/miniREFreduction.gif");
+    images[8] = createImageIcon("/gov/ornl/sns/itools/images/TS_rebin_batch.gif");
 		
 		//Define the help text that goes with each tool
 		//plotBSS
@@ -114,7 +117,9 @@ public class IdlToolsPortal implements ActionListener{
     info[6] = "<html>This is the new DataReduction GUI.... better, stronger, <br>" +
       "more beautiful............ just for your pleasure.</html>";
     //miniREFreduction
-    info[7] = "<html>This is the mini version of the new DataReduction GUI (REFreduction).<html>";
+    info[7] = "<html>This is the mini version of the new DataReduction GUI (REFreduction).</html>";
+    //TS_rebin_batch
+    info[8] = "<html>This programs rebin a set of run numbers.</html>";
       
 		/* 
 		 * Create a label for displaying the tools preview and put
@@ -142,7 +147,8 @@ public class IdlToolsPortal implements ActionListener{
 				"more_NeXus",
         "ReflScale",
         "REFreduction (high resolution mode)",
-        "REFreduction (low resolution mode)"};
+        "REFreduction (low resolution mode)",
+        "TS_rebin_gui"};
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
 		
@@ -229,6 +235,9 @@ public class IdlToolsPortal implements ActionListener{
          case 7: //miniREFreduction
            p = (Runtime.getRuntime()).exec(MINI_REF_REDUCTION);
            System.exit(0);
+         case 8: //TS_rebin_gui
+           p = (Runtime.getRuntime()).exec(TS_REBIN_GUI);
+           System.exit(0);
          default: break;
            }
 	      }
@@ -257,6 +266,8 @@ public class IdlToolsPortal implements ActionListener{
       localHostname = enumHostname.lrac;
     } else if (hostname.compareTo(BAC) == 0) {
       localHostname = enumHostname.bac;
+    } else if (hostname.compareTo(BAC2) == 0) {
+      localHostname = enumHostname.bac2;
     } else {
       localHostname = enumHostname.unknown;
     }
@@ -264,12 +275,14 @@ public class IdlToolsPortal implements ActionListener{
     switch (toolChoices.getSelectedIndex()) {
       case 0: //plotBSS
         switch (localHostname) {
+        case bac2:
         case bac: enableButton = true; break;
         default: enableButton = false; break;
         };
         break;
       case 1: //RealignBSS
         switch (localHostname) {
+        case bac2:
         case bac: enableButton = true; break;
         default: enableButton = false; break;
         };
@@ -279,6 +292,7 @@ public class IdlToolsPortal implements ActionListener{
         case lrac:
         case mrac:
         case heater:
+        case bac2:
         case bac: enableButton = true; break;
         default: enableButton = false; break;
         };
@@ -317,7 +331,13 @@ public class IdlToolsPortal implements ActionListener{
         case mrac:enableButton = true; break;
         default: enableButton = false; break;
         };
-        break;  
+        break;
+      case 8: //TS_rebin_gui
+        switch (localHostname) {
+        default:enableButton = false; break;      //REMOVE false and put true to open it
+        };
+        break;
+      
     } 
     goButton.setEnabled(enableButton);
   }
