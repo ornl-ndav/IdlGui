@@ -154,9 +154,8 @@ MessageToAdd  = 'DONE'
 RemoveString  = PROCESSING
 putTextAtEndOfLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
 
-
 ;add Message
-
+putTextFieldArray, Event, 'log_book', listening
 
 END
 
