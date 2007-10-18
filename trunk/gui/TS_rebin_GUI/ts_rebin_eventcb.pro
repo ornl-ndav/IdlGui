@@ -116,10 +116,10 @@ if (proposal_field NE '') then begin
     cmd += ' --proposal=' + strcompress(proposal_field, /remove_all) ;proposal
 endif
 
-cmd += ' --time_width=' + strcompress(bin_width_field, /remove_all) ;bin_width
-cmd += ' --hist_type=' + strcompress(bin_type,/remove_all) ;bin_type
-cmd += ' --output_path=' + strcompress(output_path_field,/remove_all) ;output_path
-cmd += ' --temp_dir=' + strcompress(staging_area_field,/remove_all) ;staging area
+cmd += ' --time-width=' + strcompress(bin_width_field, /remove_all) ;bin_width
+cmd += ' --hist-type=' + strcompress(bin_type,/remove_all) ;bin_type
+cmd += ' --output-path=' + strcompress(output_path_field,/remove_all) ;output_path
+cmd += ' --temp-dir=' + strcompress(staging_area_field,/remove_all) ;staging area
 
 put_text_field_value, Event, 'log_book', cmd
 

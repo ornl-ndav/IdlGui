@@ -21,6 +21,11 @@ CASE Event.id OF
         ts_rebin_ValidateGoButtonAndBuildCMD, Event
     end
 
+;Proposal number
+    Widget_Info(wWidget, FIND_BY_UNAME='proposal_number'): begin
+        ts_rebin_ValidateGoButtonAndBuildCMD, Event
+    end
+
 ;Bin width
     Widget_Info(wWidget, FIND_BY_UNAME='bin_width'): begin
         ts_rebin_ValidateGoButtonAndBuildCMD, Event
