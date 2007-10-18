@@ -143,7 +143,7 @@ add_text_field_value, Event, 'log_book', PROCESSING
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
-;spawn, cmd, listening
+spawn, cmd, listening
 
 ;turn off hourglass
 widget_control,hourglass=0
@@ -153,6 +153,10 @@ InitialStrarr = getTextfieldValue(Event, 'log_book')
 MessageToAdd  = 'DONE'
 RemoveString  = PROCESSING
 putTextAtEndOfLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
+
+
+;add Message
+
 
 END
 
