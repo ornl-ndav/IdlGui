@@ -143,6 +143,17 @@ add_text_field_value, Event, 'log_book', PROCESSING
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
+;check hostname
+spawn, 'hostname',listening
+CASE (listening) OF
+    'lrac': 
+    'mrac': 
+    'heater':
+    else: cmd = 'srun ' + cmd
+ENDCASE
+
+print, cmd
+
 spawn, cmd, listening
 
 ;turn off hourglass
