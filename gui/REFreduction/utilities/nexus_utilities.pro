@@ -22,9 +22,10 @@
 ;
 ;
 
+;when we want only the archived one
 FUNCTION find_full_nexus_name, Event, run_number, instrument, isNexusExist
 
-cmd = "findnexus -i" + instrument 
+cmd = "findnexus --archive -i" + instrument 
 cmd += " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name, err_listening
 ;check if nexus exists
