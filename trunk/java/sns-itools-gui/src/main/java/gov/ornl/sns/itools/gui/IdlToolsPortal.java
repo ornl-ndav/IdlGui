@@ -29,7 +29,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
-  static String TS_REBIN_GUI = "/SNS/software/idltools/ts_rebin_gui";
+  static String TS_REBIN_GUI = "/SNS/software/idltools/TS_rebin_GUI";
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -334,7 +334,7 @@ public class IdlToolsPortal implements ActionListener{
         break;
       case 8: //TS_rebin_gui
         switch (localHostname) {
-        default:enableButton = false; break;      //REMOVE false and put true to open it
+        default:enableButton = true; break;
         };
         break;
       
