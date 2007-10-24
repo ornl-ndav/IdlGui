@@ -15,7 +15,7 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({  })
+global = ptr_new ({empty:0 })
 
 MainBaseSize  = [50,50,1200,885]
 MainBaseTitle = 'BSS selection tool'
