@@ -7,10 +7,8 @@
 
 all:
 	idl ./makefile.pro;
-	idl ./mini_makefile.pro;
 install:
-	cp ref_reduction.sav /SNS/software/idltools/sav/
-	cp ref_reduction /SNS/software/idltools/
-	cp mini_ref_reduction.sav /SNS/software/idltools/sav/
-	cp mini_ref_reduction /SNS/software/idltools/
+	cp bss_selection.sav /SNS/software/idltools/sav/
+	cp bss_selection /SNS/software/idltools/
+
 

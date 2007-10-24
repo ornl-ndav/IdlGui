@@ -1,5 +1,5 @@
 @idl_makefile.pro
-ref_reduction
+bss_selection
 
 
 
