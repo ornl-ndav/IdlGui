@@ -17,7 +17,7 @@ endelse
 ;define global variables
 global = ptr_new ({empty:0 })
 
-MainBaseSize  = [50,50,1200,885]
+MainBaseSize  = [50,200,880,800]
 MainBaseTitle = 'BSS selection tool'
         
 ;Build Main Base

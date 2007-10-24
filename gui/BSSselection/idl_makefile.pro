@@ -11,6 +11,8 @@ cd, IdlUtilitiesPath
 ;Build BSSselection GUI
 cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiMainTab.pro
+.run MakeGuiSelectionTab.pro
+.run MakeGuiLogBookTab.pro
 
 ;Build main procedures
 cd, CurrentFolder
