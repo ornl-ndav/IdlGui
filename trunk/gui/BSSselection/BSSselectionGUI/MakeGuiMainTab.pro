@@ -1,4 +1,4 @@
-PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize
+PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -20,7 +20,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;build SELECTION tab
-MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle
+MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 
 ;build REDUCE tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTitle

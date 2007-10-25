@@ -1,4 +1,4 @@
-PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle
+PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 
 ;***********************************************************************************
 ;                             Define size arrays
@@ -13,8 +13,8 @@ OpenNeXusSelectionTab = [428,10,425,190]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
-Xfactor = 15
-Yfactor = 4
+Xfactor = XYfactor.Xfactor 
+Yfactor = XYfactor.Yfactor
 TopBankSize    = [15, $
                   240, $
                   56*Xfactor, $

@@ -20,15 +20,32 @@ fbase = WIDGET_BASE(NeXusRoiTabBase,$
 text   = CW_FIELD(fbase,$
                   UNAME          = 'nexus_run_number',$
                   RETURN_EVENTS  = 1,$
-                  TITLE          = 'RUN #:',$
+                  TITLE          = 'RUN NUMBER:',$
                   ROW            = 1,$
-                  XSIZE          = 43)
+                  XSIZE          = 30,$
+                  /INTEGER)
 
 button = WIDGET_BUTTON(fbase,$
-                       VALUE     = 'BROWSE ...',$
+                       VALUE     = 'B R O W S E ...',$
                        UNAME     = 'nexus_run_number_button',$
-                       SCR_XSIZE = 80,$
+                       SCR_XSIZE = 120,$
                        SCR_YSIZE = 30)
+
+;full path of nexus file loaded
+ffbase = WIDGET_BASE(NeXusRoiTabBase,$
+                     ROW         = 1,$
+                     /BASE_ALIGN_CENTER)
+
+label = WIDGET_LABEL(ffbase,$
+                     VALUE       = 'NeXus full path:',$
+                     SCR_XSIZE   = 110,$
+                     SCR_YSIZE   = 30)
+
+label = WIDGET_LABEL(ffbase,$
+                     VALUE       = '',$
+                     UNAME       = 'nexus_full_path_label',$
+                     SCR_XSIZE   = 300,$
+                     SCR_YSIZE   = 30)
 
 ;Create Load roi file
 sbase = WIDGET_BASE(NeXusRoiTabBase,$

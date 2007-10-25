@@ -13,9 +13,17 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiSelectionTab.pro
 .run MakeGuiLogBookTab.pro
+.run MakeGuiNeXusRoiBase.pro
+.run MakeGuiSelectionBase.pro
 
 ;Build main procedures
 cd, CurrentFolder
+.run bss_selection_put.pro
+.run bss_selection_get.pro
+.run bss_selection_nexus.pro
+
+.run bss_selection_LoadNexus.pro
+.run bss_selection_PlotBanks.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro
