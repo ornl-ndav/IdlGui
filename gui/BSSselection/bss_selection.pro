@@ -15,7 +15,20 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({empty:0 })
+global = ptr_new ({processing : 'PROCESSING',$
+                   ok : 'OK',$
+                   failed : 'FAILED',$
+                   bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
+                   bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
+                   nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
+                   nexus_bank2_path : '/entry/bank2/data',$ ;nxdir path to bank2 data
+                   Nx : 56,$
+                   Ny : 64,$
+                   Xfactor : 15,$ ;coefficient in X direction for rebining img
+                   Yfactor : 4$ ; coefficient in Y direction for rebining img
+                  })
+
+XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
 
 MainBaseSize  = [50,200,880,800]
 MainBaseTitle = 'BSS selection tool'
@@ -37,12 +50,12 @@ widget_control, MAIN_BASE, set_uvalue=global
 
 ;add version to program
 version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1030,$
+                             XOFFSET=700,$
                              YOFFSET=2,$
                              VALUE=VERSION,$
                              FRAME=0)
 
-MakeGuiMainTab, MAIN_BASE, MainBaseSize
+MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

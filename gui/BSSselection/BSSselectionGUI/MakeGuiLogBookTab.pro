@@ -5,7 +5,40 @@ LogBookBase = WIDGET_BASE(MAIN_TAB,$
                           YOFFSET   = 0,$
                           SCR_XSIZE = MainTabSize[2],$
                           SCR_YSIZE = MainTabSize[3],$
-                          TITLE     = LogBookTitle)
+                          TITLE     = LogBookTitle,$
+                          COLUMN    = 1)
 
+;log book text
+fbase = WIDGET_BASE(LogBookBase,$
+                    /BASE_ALIGN_CENTER)
+
+text = WIDGET_TEXT(fbase,$
+                   VALUE = '',$
+                   UNAME = 'log_book',$
+                   SCR_XSIZE=870,$
+                   SCR_YSIZE=730,$
+                   /SCROLL,/WRAP)
+
+;debug log_book
+sbase = WIDGET_BASE(LogBookBase,$
+                    /BASE_ALIGN_CENTER,$
+                    ROW=1)
+
+label = WIDGET_LABEL(sbase,$
+                     VALUE='Add message:')
+
+text = WIDGET_TEXT(sbase,$
+                   UNAME='log_book_message',$
+                   SCR_XSIZE = 645,$
+                   SCR_YSIZE = 30,$
+                   VALUE = '',$
+                   /EDITABLE)
+
+button = WIDGET_BUTTON(sbase,$
+                       UNAME='send_log_book',$
+                       VALUE='SEND LogBook TO GEEK',$
+                       SCR_XSIZE=140,$
+                       SCR_YSIZE=30)
+                    
 
 END

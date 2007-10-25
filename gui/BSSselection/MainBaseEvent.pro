@@ -11,6 +11,14 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+    Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
+        bss_selection_LoadNexus, Event
+    end
+
+
+
+
+
     ELSE:
     
 ENDCASE
