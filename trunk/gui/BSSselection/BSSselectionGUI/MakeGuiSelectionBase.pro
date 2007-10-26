@@ -69,7 +69,7 @@ tbase = WIDGET_BASE(SelectionTabBase,$
 text = WIDGET_TEXT(tbase,$
                    VALUE         = '',$
                    SCR_XSIZE     = 330,$
-                   SCR_YSIZE     = 80,$
+                   SCR_YSIZE     = 70,$
                    UNAME         = 'pixel_tube_list',$
                    /SCROLL,/WRAP)
 
@@ -77,7 +77,7 @@ button = WIDGET_BUTTON(tbase,$
                        UNAME     = 'reset_button',$
                        VALUE     = 'FULL RESET',$
                        SCR_XSIZE = 80,$
-                       SCR_YSIZE = 80)
+                       SCR_YSIZE = 70)
                        
 
 END

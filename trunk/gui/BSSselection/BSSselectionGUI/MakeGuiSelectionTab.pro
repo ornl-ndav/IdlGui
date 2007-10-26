@@ -5,18 +5,33 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;***********************************************************************************
 
 CountsVsTofSize = [15,$
-                   10,$
+                   8,$
                    400,$
-                   215]
+                   225]
 
-OpenNeXusSelectionTab = [428,10,425,190]
+OpenNeXusSelectionTab = [427,5,425,170]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
+
+XYPixelIDBaseSize     = [427,200,425,35]
+xbaseSize             = [20,0,60,35]
+ybasesize             = [xbaseSize[0]+80,$
+                         xbaseSize[1],$
+                         xbaseSize[2],$
+                         xbaseSize[3]]
+bankBaseSize          = [xbaseSize[0]+150,$
+                         xbaseSize[1],$
+                         80,$
+                         xbaseSize[3]]
+pixelIDbaseSize       = [xbaseSize[0]+250,$
+                         xbaseSize[1],$
+                         150,$
+                         xbaseSize[3]]
 
 Xfactor = XYfactor.Xfactor 
 Yfactor = XYfactor.Yfactor
 TopBankSize    = [15, $
-                  240, $
+                  245, $
                   56*Xfactor, $
                   64*Yfactor]
 BottomBankSize = [TopBankSize[0], $
@@ -61,6 +76,72 @@ MakeGuiNeXusRoiBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, OpenNeXusTitle
 
 ;make Selection tab (tab#2)
 MakeGuiSelectionBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, SelectionTitle
+
+;X, Y and pixelID info box
+XYPixelIDBase = WIDGET_BASE(SelectionBase,$
+                            XOFFSET   = XYPixelIDBaseSize[0],$
+                            YOFFSET   = XYPixelIDBaseSize[1],$
+                            SCR_XSIZE = XYPixelIDBaseSize[2],$
+                            SCR_YSIZE = XYPixelIDBaseSize[3],$
+                            FRAME     = 1)
+
+xbase = WIDGET_BASE(XYPixelIDBase,$
+                    XOFFSET   = xbaseSize[0],$
+                    YOFFSET   = ybaseSize[1],$
+                    SCR_XSIZE = xbaseSize[2],$
+                    SCR_YSIZE = xbaseSize[3])
+
+Xfield = CW_FIELD(xbase,$
+                  UNAME         = 'x_value',$
+                  RETURN_EVENTS = 1,$
+                  TITLE         = 'X:',$
+                  ROW           = 1,$
+                  XSIZE         = 2)
+
+ybase = WIDGET_BASE(XYPixelIDBase,$
+                    XOFFSET   = ybaseSize[0],$
+                    YOFFSET   = ybaseSize[1],$
+                    SCR_XSIZE = ybaseSize[2],$
+                    SCR_YSIZE = ybaseSize[3])
+
+Yfield = CW_FIELD(ybase,$
+                  UNAME         = 'y_value',$
+                  RETURN_EVENTS = 1,$
+                  TITLE         = 'Y:',$
+                  ROW           = 1,$
+                  XSIZE         = 2)
+
+bankBase = WIDGET_BASE(XYPixelIDBase,$
+                       XOFFSET   = bankBaseSize[0],$
+                       YOFFSET   = bankBaseSize[1],$
+                       SCR_XSIZE = bankBaseSize[2],$
+                       SCR_YSIZE = bankBaseSize[3])
+
+bankfield = CW_FIELD(bankBase,$
+                     UNAME         = 'bank_value',$
+                     RETURN_EVENTS = 1,$
+                     TITLE         = 'Bank:',$
+                     ROW           = 1,$
+                     XSIZE         = 1)
+
+
+pixelIDbase = WIDGET_BASE(XYPixelIDBase,$
+                    XOFFSET   = pixelIDbaseSize[0],$
+                    YOFFSET   = pixelIDbaseSize[1],$
+                    SCR_XSIZE = pixelIDbaseSize[2],$
+                    SCR_YSIZE = pixelIDbaseSize[3])
+
+Pixelfield = CW_FIELD(pixelIDbase,$
+                      UNAME         = 'pixel_value',$
+                      RETURN_EVENTS = 1,$
+                      TITLE         = 'PixelID:',$
+                      ROW           = 1,$
+                      XSIZE         = 5)
+
+
+
+
+
 
 ;TOP_BANK
 TOP_BANK_DRAW = WIDGET_DRAW(SelectionBase,$
