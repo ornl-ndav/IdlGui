@@ -11,10 +11,16 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
         bss_selection_LoadNexus, Event
     end
 
+;BROWSE button run number
+    Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number_button'): begin
+        bss_selection_BrowseNexus, Event
+    end
+    
 
 
 

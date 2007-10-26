@@ -5,8 +5,8 @@ PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-SelectionTitle   = '     S E L E C T I O N    '
-LogBookTitle     = '      L O G   B O O K     '
+SelectionTitle   = 'SELECTION'
+LogBookTitle     = 'LOG BOOK'
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$

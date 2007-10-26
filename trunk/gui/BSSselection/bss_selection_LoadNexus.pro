@@ -44,46 +44,23 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
     PutLogBookMessage, Event, message
     message = '  -> Checking if run number exists ... ' + PROCESSING
     AppendLogBookMessage, Event, message
-
+    
     NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
-
-    IF (isNeXusExist) THEN BEGIN ;continue only if the nexus file has been found
-
-;display full name of nexus in his label
-        PutNexusNameInLabel, Event, NexusFullPath[0]
+    
+    IF (isNexusExist) THEN BEGIN
 
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-        message = '  -> NeXus file location: ' + NexusFullPath
-        AppendLogBookMessage, Event, message
-
-;retrieve bank1 and bank2
-        message = '  -> Retrieving bank1 and bank2 data ... ' + PROCESSING
-        AppendLogBookMessage, Event, message
-        retrieveBanksData, Event, strcompress(NexusFullPath[0],/remove_all)
-        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-
-;plot bank1 and bank2
-        message = '  -> Plot bank1 and bank2 ... ' + PROCESSING
-        AppendLogBookMessage, Event, message
-
-        success = 0
-        bss_selection_PlotBanks, Event, success
-
-        if (success EQ 0) then begin
-            putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
-        endif else begin
-            putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-        endelse
-
-    ENDIF ELSE BEGIN ;tells that we didn't find the nexus file
-
+;move on to step2 of loading nexus
+        BSSselection_LoadNexus_step2, Event, NexusFullPath[0]
+        
+    ENDIF ELSE BEGIN         ;tells that we didn't find the nexus file
+        
 ;display full name of nexus in his label
         PutNexusNameInLabel, Event, 'N/A'
-
         putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
-
+        
     ENDELSE
-
+    
 ENDIF
 
 ;turn off hourglass

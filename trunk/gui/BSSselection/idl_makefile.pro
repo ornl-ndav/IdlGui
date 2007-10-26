@@ -23,6 +23,8 @@ cd, CurrentFolder
 .run bss_selection_nexus.pro
 
 .run bss_selection_LoadNexus.pro
+.run bss_selection_LoadNexusStep2.pro
+.run bss_selection_BrowseNexus.pro
 .run bss_selection_PlotBanks.pro
 
 .run MainBaseEvent.pro
