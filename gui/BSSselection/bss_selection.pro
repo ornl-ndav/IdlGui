@@ -25,7 +25,9 @@ global = ptr_new ({processing : 'PROCESSING',$
                    Nx : 56,$
                    Ny : 64,$
                    Xfactor : 15,$ ;coefficient in X direction for rebining img
-                   Yfactor : 4$ ; coefficient in Y direction for rebining img
+                   Yfactor : 4,$ ; coefficient in Y direction for rebining img
+                   DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
+                   DefaultFilter : '*.nxs'$ ;default filter for the nexus file
                   })
 
 XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
