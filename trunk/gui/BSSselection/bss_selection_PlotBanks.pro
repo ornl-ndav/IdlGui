@@ -17,9 +17,14 @@ for i=1,56 do begin
   plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
 endfor
 
-for i=1,32 do begin
-  plots, 0,i*y_coeff*2, /device,color=300
-  plots, 64*x_coeff, i*y_coeff*2, /device, /continue, color=300
+;for i=1,32 do begin
+;  plots, 0,i*y_coeff*2, /device,color=300
+;  plots, 64*x_coeff, i*y_coeff*2, /device, /continue, color=300
+;endfor
+
+for i=1,64 do begin
+  plots, 0,i*y_coeff, /device,color=300
+  plots, 64*x_coeff, i*y_coeff, /device, /continue, color=300
 endfor
 
 END
