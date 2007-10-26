@@ -25,3 +25,11 @@ id = widget_info(Event.top,find_by_uname='bank_value')
 widget_control, id, get_value=bank
 RETURN, bank
 END
+
+
+
+FUNCTION getPixelIDvalue, Event
+id = widget_info(Event.top,find_by_uname='pixel_value')
+widget_control, id, get_value=pixelid
+RETURN, pixelid
+END
