@@ -21,6 +21,25 @@ CASE Event.id OF
         bss_selection_BrowseNexus, Event
     end
     
+;counts vs tof draw
+    widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
+        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+
+            if (Event.release EQ 1) then begin ;mouse released
+                BSSselection_ZoomInCountsVsTofReleased, Event
+            endif
+            
+            if (Event.press EQ 1) then begin ;mouse pressed
+                if (Event.type EQ 0 ) then begin ;left click
+                    BSSselection_ZoomInCountsVsTofPressed, Event
+                endif
+                
+            endif
+
+          endif
+            
+        end
+    
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded

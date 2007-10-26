@@ -9,6 +9,10 @@ bank = getBankValue(Event)
 X    = getXValue(Event)
 Y    = getYValue(Event)
 
+(*global).counts_vs_tof_x = X
+(*global).counts_vs_tof_y = Y
+(*global).counts_vs_tof_bank = bank
+
 IF (bank EQ 1) THEN BEGIN ;bank1
     bank = (*(*global).bank1)
 ENDIF ELSE BEGIN ;bank2
@@ -23,7 +27,5 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 plot, data, POSITION=[0.1,0.1,0.95,0.99]
-
-
 
 END
