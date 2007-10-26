@@ -16,6 +16,11 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   counts_vs_tof_click_pressed : 1.0,$ ;left click pressed value
+                   counts_vs_tof_x : 0L,$ ;x of actual counts vs tof plotted
+                   counts_vs_tof_y : 0L,$ ;y of actual counts vs tof plotted
+                   counts_vs_tof_bank : 0,$ ;bank of actual counts vs tof plotted
+                   NbTOF : 0L,$ ;number of tof for counts vs tof plot
                    NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus has been found
                    ok : 'OK',$
                    failed : 'FAILED',$
