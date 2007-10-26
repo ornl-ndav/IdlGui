@@ -14,16 +14,21 @@ OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
 XYPixelIDBaseSize     = [427,200,425,35]
-xbaseSize             = [20,0,60,35]
-ybasesize             = [xbaseSize[0]+80,$
+xbaseSize             = [0,0,55,35]
+ybasesize             = [xbaseSize[0]+60,$
                          xbaseSize[1],$
                          xbaseSize[2],$
                          xbaseSize[3]]
-bankBaseSize          = [xbaseSize[0]+150,$
+bankBaseSize          = [xbaseSize[0]+120,$
                          xbaseSize[1],$
-                         80,$
+                         65,$
                          xbaseSize[3]]
-pixelIDbaseSize       = [xbaseSize[0]+250,$
+pixelIDbaseSize       = [xbaseSize[0]+190,$
+                         xbaseSize[1],$
+                         110,$
+                         xbaseSize[3]]
+
+countsBaseSize        = [xbasesize[0]+300,$
                          xbaseSize[1],$
                          150,$
                          xbaseSize[3]]
@@ -124,7 +129,6 @@ bankfield = CW_FIELD(bankBase,$
                      ROW           = 1,$
                      XSIZE         = 1)
 
-
 pixelIDbase = WIDGET_BASE(XYPixelIDBase,$
                     XOFFSET   = pixelIDbaseSize[0],$
                     YOFFSET   = pixelIDbaseSize[1],$
@@ -138,10 +142,18 @@ Pixelfield = CW_FIELD(pixelIDbase,$
                       ROW           = 1,$
                       XSIZE         = 5)
 
+countsBase = WIDGET_BASE(XYPixelIDBase,$
+                         XOFFSET = countsBaseSize[0],$
+                         YOFFSET = countsBaseSize[1],$
+                         SCR_XSIZE=countsBaseSize[2],$
+                         SCR_YSIZE=countsBaseSize[3])
 
-
-
-
+countsfield = CW_FIELD(countsbase,$
+                       UNAME         = 'counts_value',$
+                       RETURN_EVENTS = 1,$
+                       TITLE         = 'Counts:',$
+                       ROW           = 1,$
+                       XSIZE         = 8)
 
 ;TOP_BANK
 TOP_BANK_DRAW = WIDGET_DRAW(SelectionBase,$
@@ -162,7 +174,5 @@ BOTTOM_BANK_DRAW = WIDGET_DRAW(SelectionBase,$
                                SCR_YSIZE = BottomBankSize[3],$
                                /BUTTON_EVENTS,$
                                /MOTION_EVENTS)
-
-
 
 END

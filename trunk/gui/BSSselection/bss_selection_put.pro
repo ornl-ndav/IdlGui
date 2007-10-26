@@ -94,3 +94,9 @@ id = widget_info(event.top,find_by_uname='pixel_value')
 widget_control, id, set_value=strcompress(pixelid,/remove_all)
 END
 
+
+;Put counts value of pixel selected in cw_field counts_value:
+PRO PutCountsValue, Event, counts
+id = widget_info(event.top,find_by_uname='counts_value')
+widget_control, id, set_value=strcompress(counts,/remove_all)
+END

@@ -96,6 +96,10 @@ bank2 = (*(*global).bank2)
 ;remove useless last rack
     bank1_sum = bank1_sum(0:63,0:55)
     bank2_sum = bank2_sum(0:63,0:55)
+
+;store banks sum
+    (*(*global).bank1_sum) = bank1_sum
+    (*(*global).bank2_sum) = bank2_sum
     
 ;transpose data
     bank1_sum_transpose = transpose(bank1_sum)
