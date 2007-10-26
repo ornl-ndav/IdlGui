@@ -27,6 +27,7 @@ cd, CurrentFolder
 .run bss_selection_BrowseNexus.pro
 .run bss_selection_PlotBanks.pro
 .run bss_selection_DisplayXYBankPixelInfo.pro
+.run bss_selection_DisplayCountsVsTof.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro
