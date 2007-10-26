@@ -16,6 +16,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus has been found
                    ok : 'OK',$
                    failed : 'FAILED',$
                    bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
