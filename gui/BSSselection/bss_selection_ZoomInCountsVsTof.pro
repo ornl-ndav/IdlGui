@@ -42,8 +42,6 @@ PRO BSSselection_ZoomInCountsVsTofReleased, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;if ((*global).leftClick EQ 1) then begin
-
 ;retrieve bank, x and y infos
 bank = (*global).counts_vs_tof_bank
 X    = (*global).counts_vs_tof_x
@@ -82,7 +80,7 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 plot, data, xrange=[xmin,xmax],POSITION=[0.1,0.1,0.95,0.99]
-;endif
+
 END
 
 

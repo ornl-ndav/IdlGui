@@ -40,6 +40,33 @@ CASE Event.id OF
             
         end
     
+;X: Y: Bank: and PixelID cw_fields       
+;X
+    Widget_Info(wWidget, FIND_BY_UNAME='x_value'): begin
+              BSSselection_DisplayCountsVsTof, Event
+              BSSselection_UpdatePixelIDField, Event
+    end
+
+;Y        
+    Widget_Info(wWidget, FIND_BY_UNAME='y_value'): begin
+              BSSselection_DisplayCountsVsTof, Event
+              BSSselection_UpdatePixelIDField, Event
+    end
+
+;Bank
+    Widget_Info(wWidget, FIND_BY_UNAME='bank_value'): begin
+              BSSselection_DisplayCountsVsTof, Event
+              BSSselection_UpdatePixelIDField, Event
+    end
+
+;PixelID
+    Widget_Info(wWidget, FIND_BY_UNAME='pixel_value'): begin
+              BSSselection_DisplayCountsVsTof, Event
+              BSSselection_UpdateXYBankFields, Event
+    end
+
+
+
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
