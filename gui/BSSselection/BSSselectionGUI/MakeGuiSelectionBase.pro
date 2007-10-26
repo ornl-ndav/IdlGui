@@ -7,7 +7,7 @@ PRO MakeGuiSelectionBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, title
 SelectionTabBase = WIDGET_BASE(NeXusRoiSelectionTab,$
                                XOFFSET   = 0,$
                                YOFFSET   = 0,$
-                               SCR_XSIZE = OpenNeXusSelectionTab[2],$
+                               SCR_XSIZE = OpenNeXusSelectionTab[2]-5,$
                                SCR_YSIZE = OpenNeXusSelectionTab[3],$
                                TITLE     = title,$
                                COLUMN    = 1)
@@ -36,6 +36,32 @@ button = WIDGET_BUTTON(fbase,$
                        SCR_XSIZE = 50,$
                        SCR_YSIZE = 30)
 
+
+;Row of pixels
+abase = WIDGET_BASE(SelectionTabBase,$
+                    /BASE_ALIGN_CENTER,$
+                    ROW          = 1)
+
+text   = CW_FIELD(abase,$
+                  UNAME          = 'pixel_row',$
+                  RETURN_EVENTS  = 1,$
+                  TITLE          = 'Row of x:',$
+                  ROW            = 1,$
+                  XSIZE          = 40)
+
+button = WIDGET_BUTTON(abase,$
+                       VALUE     = 'ADD',$
+                       UNAME     = 'add_pixel_row',$
+                       SCR_XSIZE = 30,$
+                       SCR_YSIZE = 30)
+
+button = WIDGET_BUTTON(abase,$
+                       VALUE     = 'REMOVE',$
+                       UNAME     = 'remove_pixel_row',$
+                       SCR_XSIZE = 50,$
+                       SCR_YSIZE = 30)
+
+
 ;Tube base
 sbase = WIDGET_BASE(SelectionTabBase,$
                     /BASE_ALIGN_CENTER,$
@@ -61,23 +87,15 @@ button = WIDGET_BUTTON(sbase,$
                        SCR_YSIZE = 30)
 
 
-;list of pixel and tubes removed
-tbase = WIDGET_BASE(SelectionTabBase,$
+;full reset
+fbase = WIDGET_BASE(SelectionTabBase,$
                     /BASE_ALIGN_CENTER,$
                     ROW          = 1)
 
-text = WIDGET_TEXT(tbase,$
-                   VALUE         = '',$
-                   SCR_XSIZE     = 330,$
-                   SCR_YSIZE     = 70,$
-                   UNAME         = 'pixel_tube_list',$
-                   /SCROLL,/WRAP)
-
-button = WIDGET_BUTTON(tbase,$
+button = WIDGET_BUTTON(fbase,$
                        UNAME     = 'reset_button',$
                        VALUE     = 'FULL RESET',$
-                       SCR_XSIZE = 80,$
-                       SCR_YSIZE = 70)
-                       
+                       SCR_XSIZE = 410,$
+                       SCR_YSIZE = 25)                       
 
 END
