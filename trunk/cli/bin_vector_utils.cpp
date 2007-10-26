@@ -222,7 +222,8 @@ namespace BinVectorUtils
       {
         t1 = t2;
         //delta_t/t=log_rebin_coeff
-        t2 = float((t1) *(log_rebin_coeff + 1));
+        // t2 = float((t1) *(log_rebin_coeff + 1));
+        t2 = t1 * ( log_rebin_coeff + 1.0 );
         if (t2 == t1)
           {
             t2=t1+1;
