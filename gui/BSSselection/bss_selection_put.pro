@@ -65,3 +65,32 @@ PRO PutNexusNameInLabel, Event, NeXusName
 id = widget_info(event.top,find_by_uname='nexus_full_path_label')
 widget_control, id, set_value=NeXusName
 END
+
+
+;Put Bank name (bank1 or bank2) in the cw_field BANK:
+PRO PutBankValue, Event, bank
+id = widget_info(event.top,find_by_uname='bank_value')
+widget_control, id, set_value=strcompress(bank,/remove_all)
+END
+
+
+;Put X value (0-55) in the cw_field X:
+PRO PutXValue, Event, x
+id = widget_info(event.top,find_by_uname='x_value')
+widget_control, id, set_value=strcompress(x,/remove_all)
+END
+
+
+;Put Y value (0-63) in the cw_field Y:
+PRO PutYValue, Event, y
+id = widget_info(event.top,find_by_uname='y_value')
+widget_control, id, set_value=strcompress(y,/remove_all)
+END
+
+
+;Put pixelID value (0-9216) in the cw_field PixelID:
+PRO PutPixelIDValue, Event, pixelid
+id = widget_info(event.top,find_by_uname='pixel_value')
+widget_control, id, set_value=strcompress(pixelid,/remove_all)
+END
+

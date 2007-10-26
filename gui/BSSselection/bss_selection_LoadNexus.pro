@@ -63,6 +63,8 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
     
 ENDIF
 
+(*global).NeXusFound = isNexusExist
+
 ;turn off hourglass
 widget_control,hourglass=0
 

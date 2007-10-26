@@ -21,10 +21,38 @@ CASE Event.id OF
         bss_selection_BrowseNexus, Event
     end
     
-
-
-
-
+;bank1 widget_draw
+    widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
+        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+            BSSselection_DisplayXYBankPixelInfo, Event, 'bank1'
+            if( Event.type EQ 0 )then begin
+;            if (Event.press EQ 1) then $ ;left click
+;              if 
+;            if ((Event.press EQ 4) then $ ;right click
+;            endif
+;            if (Event.type EQ 1) then $ ;release
+;              if (Event.type EQ 2) then $ ;move
+;              endif
+            endif
+        endif
+    end
+    
+;bank2 widget_draw
+    widget_info(wWidget, FIND_BY_UNAME='bottom_bank_draw'): begin
+        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+            BSSselection_DisplayXYBankPixelInfo, Event, 'bank2'
+            if( Event.type EQ 0 )then begin
+;            if (Event.press EQ 1) then $ ;left click
+;              if 
+;            (Event.press EQ 4) then $ ;right click
+;            endif
+;            if (Event.type EQ 1) then $ ;release
+;              if (Event.type EQ 2) then $ ;move
+;              endif
+            endif
+        endif
+    end
+    
     ELSE:
     
 ENDCASE
