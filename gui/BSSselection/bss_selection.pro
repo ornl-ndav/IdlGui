@@ -20,7 +20,9 @@ global = ptr_new ({processing : 'PROCESSING',$
                    ok : 'OK',$
                    failed : 'FAILED',$
                    bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
+                   bank1_sum: ptr_new(0L),$ ;array of bank1 data (Nx, Ny)
                    bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
+                   bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
                    nexus_bank2_path : '/entry/bank2/data',$ ;nxdir path to bank2 data
                    Nx : 56,$
