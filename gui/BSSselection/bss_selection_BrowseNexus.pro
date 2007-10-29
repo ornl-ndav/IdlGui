@@ -4,6 +4,9 @@ PRO bss_selection_BrowseNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 DefaultPath = (*global).DefaultPath
 Filter = (*global).DefaultFilter
 Title = 'Select a NeXus file to load'
@@ -24,11 +27,15 @@ if (FullNexusFileName NE '') then begin
     (*global).DefaultPath = path
 ;nexus has been found and can be opened
     BSSselection_LoadNexus_step2, Event, FullNexusFileName
+    (*global).NeXusFound = 1
 
 endif else begin
 
 ;left browse box without doing anything
 
 endelse
+
+;turn off hourglass
+widget_control,hourglass=0
 
 END
