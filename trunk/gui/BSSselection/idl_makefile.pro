@@ -21,6 +21,7 @@ cd, CurrentFolder
 .run bss_selection_put.pro
 .run bss_selection_get.pro
 .run bss_selection_nexus.pro
+.run bss_selection_utilities.pro
 
 .run bss_selection_LoadNexus.pro
 .run bss_selection_LoadNexusStep2.pro
@@ -30,7 +31,10 @@ cd, CurrentFolder
 .run bss_selection_DisplayCountsVsTof.pro
 .run bss_selection_ZoomInCountsVsTof.pro
 .run bss_selection_UpdateFields.pro
+
 .run bss_selection_IncludeExcludePixel.pro
+.run bss_selection_IncludeExclude.pro
+.run bss_selection_IncludeExcludeUtilities.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro

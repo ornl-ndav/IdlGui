@@ -29,13 +29,13 @@ text   = CW_FIELD(fbase,$
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'EXCLUDE',$
-                       UNAME     = 'add_pixelid',$
+                       UNAME     = 'exclude_pixelid',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'INCLUDE',$
-                       UNAME     = 'remove_pixelid',$
+                       UNAME     = 'include_pixelid',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 
@@ -48,19 +48,19 @@ abase = WIDGET_BASE(SelectionTabBase,$
 text   = CW_FIELD(abase,$
                   UNAME          = 'pixel_row',$
                   RETURN_EVENTS  = 1,$
-                  TITLE          = 'Row of x:',$
+                  TITLE          = 'Row:     ',$
                   ROW            = 1,$
                   XSIZE          = cw_field_xsize)
 
 button = WIDGET_BUTTON(abase,$
                        VALUE     = 'EXCLUDE',$
-                       UNAME     = 'add_pixel_row',$
+                       UNAME     = 'exclude_pixel_row',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 
 button = WIDGET_BUTTON(abase,$
                        VALUE     = 'INCLUDE',$
-                       UNAME     = 'remove_pixel_row',$
+                       UNAME     = 'include_pixel_row',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 
@@ -73,19 +73,19 @@ sbase = WIDGET_BASE(SelectionTabBase,$
 text   = CW_FIELD(sbase,$
                   UNAME          = 'tube',$
                   RETURN_EVENTS  = 1,$
-                  TITLE          = 'Tube # : ',$
+                  TITLE          = 'Tube #:  ',$
                   ROW            = 1,$
                   XSIZE          = cw_field_xsize)
 
 button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'EXCLUDE',$
-                       UNAME     = 'add_tube',$
+                       UNAME     = 'exclude_tube',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 
 button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'INCLUDE',$
-                       UNAME     = 'remove_tube',$
+                       UNAME     = 'include_tube',$
                        SCR_XSIZE = 55,$
                        SCR_YSIZE = 30)
 

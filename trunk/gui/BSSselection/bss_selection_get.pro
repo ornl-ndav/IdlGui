@@ -45,3 +45,24 @@ y = (pixelid MOD 64)
 x = (pixelid / 64)
 RETURN, [x,y]
 END
+
+
+FUNCTION getSelectionBasePixelidText, Event
+id = widget_info(Event.top,find_by_uname='pixelid')
+widget_control, id, get_value=text
+RETURN, text
+END
+
+
+FUNCTION getSelectionBaseRowText, Event
+id = widget_info(Event.top,find_by_uname='pixel_row')
+widget_control, id, get_value=text
+RETURN, text
+END
+
+
+FUNCTION getSelectionBaseTubeText, Event
+id = widget_info(Event.top,find_by_uname='tube')
+widget_control, id, get_value=text
+RETURN, text
+END
