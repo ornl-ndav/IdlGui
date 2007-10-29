@@ -32,15 +32,15 @@ global = ptr_new ({processing : 'PROCESSING',$
                    nexus_bank2_path : '/entry/bank2/data',$ ;nxdir path to bank2 data
                    Nx : 56,$
                    Ny : 64,$
-                   Xfactor : 15,$ ;coefficient in X direction for rebining img
-                   Yfactor : 4,$ ; coefficient in Y direction for rebining img
+                   Xfactor : 13,$ ;coefficient in X direction for rebining img
+                   Yfactor : 5,$ ; coefficient in Y direction for rebining img
                    DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
                    DefaultFilter : '*.nxs'$ ;default filter for the nexus file
                   })
 
 XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
 
-MainBaseSize  = [50,200,880,800]
+MainBaseSize  = [50,200,1200,730]
 MainBaseTitle = 'BSS selection tool'
         
 ;Build Main Base
@@ -60,7 +60,7 @@ widget_control, MAIN_BASE, set_uvalue=global
 
 ;add version to program
 version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=700,$
+                             XOFFSET=1035,$
                              YOFFSET=2,$
                              VALUE=VERSION,$
                              FRAME=0)

@@ -4,16 +4,16 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;                             Define size arrays
 ;***********************************************************************************
 
-CountsVsTofSize = [15,$
-                   8,$
-                   400,$
+CountsVsTofSize = [755,$
+                   250,$
+                   430,$
                    225]
 
-OpenNeXusSelectionTab = [427,5,425,170]
+OpenNeXusSelectionTab = [755,5,425,170]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
-XYPixelIDBaseSize     = [427,200,425,35]
+XYPixelIDBaseSize     = [150,330,425,35]
 xbaseSize             = [0,0,55,35]
 ybasesize             = [xbaseSize[0]+60,$
                          xbaseSize[1],$
@@ -36,11 +36,11 @@ countsBaseSize        = [xbasesize[0]+300,$
 Xfactor = XYfactor.Xfactor 
 Yfactor = XYfactor.Yfactor
 TopBankSize    = [15, $
-                  245, $
+                  5, $
                   56*Xfactor, $
                   64*Yfactor]
 BottomBankSize = [TopBankSize[0], $
-                  510, $
+                  375, $
                   TopBankSize[2], $
                   TopBanksize[3]]
 
