@@ -33,7 +33,7 @@ CASE Event.id OF
                 if (Event.type EQ 0 ) then begin ;left click
                     BSSselection_ZoomInCountsVsTofPressed, Event
                 endif
-                
+
             endif
 
           endif
@@ -72,14 +72,10 @@ CASE Event.id OF
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
             BSSselection_DisplayXYBankPixelInfo, Event, 'bank1'
             if( Event.type EQ 0 )then begin
-            if (Event.press EQ 1) then $ ;left click
-              BSSselection_DisplayCountsVsTof, Event
-;              if 
-;            if ((Event.press EQ 4) then $ ;right click
-;            endif
-;            if (Event.type EQ 1) then $ ;release
-;              if (Event.type EQ 2) then $ ;move
-;              endif
+                if (Event.press EQ 1) then $ ;left click
+                  BSSselection_DisplayCountsVsTof, Event
+                if (Event.press EQ 4) then $ 
+                  BSSselection_IncludeExcludePixel, Event
             endif
         endif
     end
@@ -89,14 +85,10 @@ CASE Event.id OF
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
             BSSselection_DisplayXYBankPixelInfo, Event, 'bank2'
             if( Event.type EQ 0 )then begin
-            if (Event.press EQ 1) then $ ;left click
-              BSSselection_DisplayCountsVsTof, Event
-;              if 
-;            (Event.press EQ 4) then $ ;right click
-;            endif
-;            if (Event.type EQ 1) then $ ;release
-;              if (Event.type EQ 2) then $ ;move
-;              endif
+                if (Event.press EQ 1) then $ ;left click
+                  BSSselection_DisplayCountsVsTof, Event
+                if (Event.press EQ 4) then $ 
+                  BSSselection_IncludeExcludePixel, Event
             endif
         endif
     end

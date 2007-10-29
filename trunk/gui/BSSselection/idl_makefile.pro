@@ -30,6 +30,7 @@ cd, CurrentFolder
 .run bss_selection_DisplayCountsVsTof.pro
 .run bss_selection_ZoomInCountsVsTof.pro
 .run bss_selection_UpdateFields.pro
+.run bss_selection_IncludeExcludePixel.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro
