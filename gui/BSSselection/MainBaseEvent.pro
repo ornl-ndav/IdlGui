@@ -66,7 +66,6 @@ CASE Event.id OF
     end
 
 
-
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
@@ -93,6 +92,38 @@ CASE Event.id OF
         endif
     end
     
+;EXCLUDE pixelID
+    Widget_Info(wWidget, FIND_BY_UNAME='exclude_pixelid'): begin
+        BSSselection_ExcludePixelid, Event
+    end
+
+;INCLUDE pixelID
+    Widget_Info(wWidget, FIND_BY_UNAME='include_pixelid'): begin
+        BSSselection_IncludePixelid, Event
+    end
+
+
+;EXCLUDE row of pixels
+    Widget_Info(wWidget, FIND_BY_UNAME='exclude_pixel_row'): begin
+        BSSselection_ExcludePixelRow, Event
+    end
+
+;INCLUDE row of pixels
+    Widget_Info(wWidget, FIND_BY_UNAME='include_pixel_row'): begin
+        BSSselection_IncludePixelRow, Event
+    end
+
+
+;EXCLUDE tubes
+    Widget_Info(wWidget, FIND_BY_UNAME='exclude_tube'): begin
+        BSSselection_ExcludeTube, Event
+    end
+
+;INCLUDE tubes
+    Widget_Info(wWidget, FIND_BY_UNAME='include_tube'): begin
+        BSSselection_IncludeTube, Event
+    end
+
     ELSE:
     
 ENDCASE

@@ -29,6 +29,7 @@ global = ptr_new ({processing : 'PROCESSING',$
                    bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
                    bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
                    pixel_excluded : ptr_new(0L),$ ;list of pixel excluded 
+                   pixel_excluded_size : 64*2*64L,$ ; total number of pixels
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
                    nexus_bank2_path : '/entry/bank2/data',$ ;nxdir path to bank2 data
                    Nx : 56,$
@@ -40,7 +41,7 @@ global = ptr_new ({processing : 'PROCESSING',$
                   })
 
 XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
-pixel_excluded = intarr(65*2*64)
+pixel_excluded = intarr((*global).pixel_excluded_size)
 (*(*global).pixel_excluded) = pixel_excluded
 
 MainBaseSize  = [50,200,1200,730]
