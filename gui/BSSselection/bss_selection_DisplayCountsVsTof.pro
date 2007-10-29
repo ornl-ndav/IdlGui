@@ -5,9 +5,16 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;retrieve bank, x and y infos
-bank = getBankValue(Event)
-X    = getXValue(Event)
-Y    = getYValue(Event)
+bank    = getBankValue(Event)
+X       = getXValue(Event)
+Y       = getYValue(Event)
+PixelID = getPixelIDvalue(Event)
+
+;display X, Y, Bank and pixelID value in counts vs tof info box
+putCountsVsTofBankValue, Event, bank[0]
+putCountsVsTofXValue, Event, X[0]
+putCountsVsTofYValue, Event, Y[0]
+putCountsVsTofPixelIDValue, Event, PixelID[0]
 
 (*global).counts_vs_tof_x = X
 (*global).counts_vs_tof_y = Y
