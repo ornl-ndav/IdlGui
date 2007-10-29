@@ -15,8 +15,8 @@ fbase = WIDGET_BASE(LogBookBase,$
 text = WIDGET_TEXT(fbase,$
                    VALUE = '',$
                    UNAME = 'log_book',$
-                   SCR_XSIZE=870,$
-                   SCR_YSIZE=730,$
+                   SCR_XSIZE=1190,$
+                   SCR_YSIZE=655,$
                    /SCROLL,/WRAP)
 
 ;debug log_book
@@ -29,7 +29,7 @@ label = WIDGET_LABEL(sbase,$
 
 text = WIDGET_TEXT(sbase,$
                    UNAME='log_book_message',$
-                   SCR_XSIZE = 645,$
+                   SCR_XSIZE = 955,$
                    SCR_YSIZE = 30,$
                    VALUE = '',$
                    /EDITABLE)
