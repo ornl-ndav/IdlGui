@@ -27,9 +27,21 @@ RETURN, bank
 END
 
 
-
 FUNCTION getPixelIDvalue, Event
 id = widget_info(Event.top,find_by_uname='pixel_value')
 widget_control, id, get_value=pixelid
 RETURN, pixelid
+END
+
+
+FUNCTION getPixelIDfromXY, Event, pixelID
+IF (pixelID LT 4096) THEN BEGIN
+    bank = 1
+ENDIF ELSE BEGIN
+    bank = 2
+    pixelid -= 4096
+ENDELSE
+y = (pixelid MOD 64)
+x = (pixelid / 64)
+RETURN, [x,y]
 END

@@ -17,18 +17,12 @@ for i=1,56 do begin
   plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
 endfor
 
-;for i=1,32 do begin
-;  plots, 0,i*y_coeff*2, /device,color=300
-;  plots, 64*x_coeff, i*y_coeff*2, /device, /continue, color=300
-;endfor
-
 for i=1,64 do begin
   plots, 0,i*y_coeff, /device,color=300
   plots, 64*x_coeff, i*y_coeff, /device, /continue, color=300
 endfor
 
 END
-
 
 
 
@@ -52,11 +46,6 @@ for i=1,56 do begin
   plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
 endfor
 
-;for i=1,32 do begin
-;  plots, 0,i*y_coeff*2, /device,color=300
-;  plots, 64*x_coeff, i*y_coeff*2, /device, /continue, color=300
-;endfor
-
 for i=1,64 do begin
   plots, 0,i*y_coeff, /device,color=300
   plots, 64*x_coeff, i*y_coeff, /device, /continue, color=300
@@ -72,6 +61,67 @@ PRO PlotBanksGrid, Event
 PlotBank1Grid, Event
 PlotBank2Grid, Event
 END
+
+
+
+
+
+PRO bss_selection_PlotBank1, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+bank1_sum = (*(*global).bank1_sum)
+
+;transpose data
+bank1_sum_transpose = transpose(bank1_sum)
+    
+;rebin data
+Nx = (*global).Nx
+Ny = (*global).Ny
+    
+Xfactor = (*global).Xfactor
+Yfactor = (*global).Yfactor
+    
+tvimg_bank1 = rebin(bank1_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
+    
+;plot data
+;top bank = bank1
+view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+tvscl, tvimg_bank1
+END
+
+
+
+PRO bss_selection_PlotBank2, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+bank2_sum = (*(*global).bank2_sum)
+    
+;transpose data
+bank2_sum_transpose = transpose(bank2_sum)
+    
+;rebin data
+Nx = (*global).Nx
+Ny = (*global).Ny
+
+Xfactor = (*global).Xfactor
+Yfactor = (*global).Yfactor
+
+tvimg_bank2 = rebin(bank2_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
+    
+;bottom bank = bank2
+    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+    WIDGET_CONTROL, view_info, GET_VALUE=id
+    wset, id
+    tvscl, tvimg_bank2
+END
+
+
 
 
 
@@ -106,32 +156,8 @@ bank2 = (*(*global).bank2)
     (*(*global).bank1_sum) = bank1_sum
     (*(*global).bank2_sum) = bank2_sum
     
-;transpose data
-    bank1_sum_transpose = transpose(bank1_sum)
-    bank2_sum_transpose = transpose(bank2_sum)
-    
-;rebin data
-    Nx = (*global).Nx
-    Ny = (*global).Ny
-    
-    Xfactor = (*global).Xfactor
-    Yfactor = (*global).Yfactor
-    
-    tvimg_bank1 = rebin(bank1_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
-    tvimg_bank2 = rebin(bank2_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
-    
-;plot data
-;top bank = bank1
-    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
-    WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
-    tvscl, tvimg_bank1
-    
-;bottom bank = bank2
-    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-    WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
-    tvscl, tvimg_bank2
+    bss_selection_PlotBank1, Event
+    bss_selection_PlotBank2, Event
 
 ;plot grid
     PlotBanksGrid, Event

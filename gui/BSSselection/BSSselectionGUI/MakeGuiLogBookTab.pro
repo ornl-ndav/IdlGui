@@ -38,7 +38,6 @@ button = WIDGET_BUTTON(sbase,$
                        UNAME='send_log_book',$
                        VALUE='SEND LogBook TO GEEK',$
                        SCR_XSIZE=140,$
-                       SCR_YSIZE=30)
-                    
+                       SCR_YSIZE=30)                    
 
 END
