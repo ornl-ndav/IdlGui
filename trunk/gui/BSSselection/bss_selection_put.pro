@@ -73,11 +73,25 @@ id = widget_info(event.top,find_by_uname='bank_value')
 widget_control, id, set_value=strcompress(bank,/remove_all)
 END
 
+;Put Bank value (1-2) in the counts_vs_tof label Bank:
+PRO PutCountsVsTofBankValue, Event, bank
+id = widget_info(event.top,find_by_uname='counts_vs_tof_bank_label')
+text = 'Bank: ' + strcompress(bank,/remove_all)
+widget_control, id, set_value = text
+END
+
 
 ;Put X value (0-55) in the cw_field X:
 PRO PutXValue, Event, x
 id = widget_info(event.top,find_by_uname='x_value')
 widget_control, id, set_value=strcompress(x,/remove_all)
+END
+
+;Put X value (0-55) in the counts_vs_tof label X:
+PRO PutCountsVsTofXValue, Event, x
+id = widget_info(event.top,find_by_uname='counts_vs_tof_x_label')
+text = 'X: ' + strcompress(x,/remove_all)
+widget_control, id, set_value = text
 END
 
 
@@ -87,11 +101,25 @@ id = widget_info(event.top,find_by_uname='y_value')
 widget_control, id, set_value=strcompress(y,/remove_all)
 END
 
+;Put Y value (0-63) in the counts_vs_tof label Y:
+PRO PutCountsVsTofYValue, Event, y
+id = widget_info(event.top,find_by_uname='counts_vs_tof_y_label')
+text = 'Y: ' + strcompress(y,/remove_all)
+widget_control, id, set_value=text
+END
 
-;Put pixelID value (0-9216) in the cw_field PixelID:
+
+;Put pixelID value (0-9215) in the cw_field PixelID:
 PRO PutPixelIDValue, Event, pixelid
 id = widget_info(event.top,find_by_uname='pixel_value')
 widget_control, id, set_value=strcompress(pixelid,/remove_all)
+END
+
+;Put pixelID value (0-9215) in the counts_vs_tof label PixelID:
+PRO PutCountsVsTofPixelIDValue, Event, pixelid
+id = widget_info(event.top,find_by_uname='counts_vs_tof_pixel_label')
+text = 'PixelID: ' + strcompress(pixelid,/remove_all)
+widget_control, id, set_value=text
 END
 
 

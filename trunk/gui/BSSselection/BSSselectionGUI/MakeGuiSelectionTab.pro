@@ -4,10 +4,28 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;                             Define size arrays
 ;***********************************************************************************
 
+CountsVsTofLabelSize  = [890,210]
+CountsVsTofLabelTitle = ' C O U N T S   vs   T O F'
+
 CountsVsTofSize = [755,$
-                   250,$
+                   230,$
                    430,$
                    225]
+
+;X, Y, PixelID and Bank of data display in counts vs tof
+CountsVsTofXLabelSize = [750,450,100,30]
+xoff = 100
+CountsVsTofYLabelSize = [CountsVsTofXLabelSize[0]+xoff,$
+                         CountsVsTofXLabelSize[1:3]]
+CountsVsTofBankLabelSize = [CountsVsTofXLabelSize[0]+2*xoff,$
+                            CountsVsTofXLabelSize[1:3]]
+xoff = 105
+CountsVsTofPixelLabelSize = [CountsVsTofXLabelSize[0]+3*xoff,$
+                             CountsVsTofXLabelSize[1:3]]
+
+CountsVsTofFrameSize = [748,205,440,275]
+
+
 
 OpenNeXusSelectionTab = [755,5,425,170]
 OpenNeXusTitle        = ' NEXUS / ROI '
@@ -56,6 +74,11 @@ SelectionBase = WIDGET_BASE(MAIN_TAB,$
                             TITLE     = SelectionTitle)
 
 ;COUNTS VS TOF
+counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
+                                   XOFFSET = CountsVsTofLabelSize[0],$
+                                   YOFFSET = CountsVsTofLabelSize[1],$
+                                   VALUE   = CountsVsTofLabelTitle)
+
 COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
                             UNAME     = 'counts_vs_tof_draw',$
                             XOFFSET   = CountsVsTofSize[0],$
@@ -64,6 +87,45 @@ COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
                             SCR_YSIZE = CountsVsTofSize[3],$
                             /MOTION_EVENTS,$
                             /BUTTON_EVENTS)
+
+CountsVsTofXLabel = WIDGET_LABEL (SelectionBase,$
+                                  UNAME     = 'counts_vs_tof_x_label',$
+                                  XOFFSET   = CountsVsTofXLabelSize[0],$
+                                  YOFFSET   = CountsVsTofXLabelSize[1],$
+                                  SCR_XSIZE = CountsVsTofXLabelSize[2],$
+                                  SCR_YSIZE = CountsVsTofXLabelSize[3],$
+                                  VALUE     = 'X:')
+
+CountsVsTofYLabel = WIDGET_LABEL (SelectionBase,$
+                                  UNAME     = 'counts_vs_tof_y_label',$
+                                  XOFFSET   = CountsVsTofYLabelSize[0],$
+                                  YOFFSET   = CountsVsTofYLabelSize[1],$
+                                  SCR_XSIZE = CountsVsTofYLabelSize[2],$
+                                  SCR_YSIZE = CountsVsTofYLabelSize[3],$
+                                  VALUE     = 'Y:')
+
+CountsVsTofBankLabel = WIDGET_LABEL (SelectionBase,$
+                                     UNAME     = 'counts_vs_tof_bank_label',$
+                                     XOFFSET   = CountsVsTofBankLabelSize[0],$
+                                     YOFFSET   = CountsVsTofBankLabelSize[1],$
+                                     SCR_XSIZE = CountsVsTofBankLabelSize[2],$
+                                     SCR_YSIZE = CountsVsTofBankLabelSize[3],$
+                                     VALUE     = 'Bank:')
+
+CountsVsTofPixelLabel = WIDGET_LABEL (SelectionBase,$
+                                      UNAME     = 'counts_vs_tof_pixel_label',$
+                                      XOFFSET   = CountsVsTofPixelLabelSize[0],$
+                                      YOFFSET   = CountsVsTofPixelLabelSize[1],$
+                                      SCR_XSIZE = CountsVsTofPixelLabelSize[2],$
+                                      SCR_YSIZE = CountsVsTofPixelLabelSize[3],$
+                                      VALUE     = 'Pixel:')
+
+CountsVsTofFrame = WIDGET_LABEL(SelectionBase,$
+                                XOFFSET   = CountsVsTofFrameSize[0],$
+                                YOFFSET   = CountsVsTofFrameSize[1],$
+                                SCR_XSIZE = CountsVsTofFrameSize[2],$
+                                SCR_YSIZE = CountsVsTofFrameSize[3],$
+                                FRAME     = 1)
 
 ;NeXus/ROI & SELECTION tab
 NeXusRoiSelectionTab = WIDGET_TAB(SelectionBase,$
