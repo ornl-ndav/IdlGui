@@ -92,6 +92,11 @@ CASE Event.id OF
         endif
     end
     
+;check-in
+    Widget_Info(wWidget, FIND_BY_UNAME='pixelid'): begin
+        BSSselection_IncludeExcludeCheckPixelField, Event
+    end
+    
 ;EXCLUDE pixelID
     Widget_Info(wWidget, FIND_BY_UNAME='exclude_pixelid'): begin
         BSSselection_ExcludePixelid, Event
@@ -102,6 +107,10 @@ CASE Event.id OF
         BSSselection_IncludePixelid, Event
     end
 
+;check-in
+    Widget_Info(wWidget, FIND_BY_UNAME='pixel_row'): begin
+        BSSselection_IncludeExcludeCheckPixelRowField, Event
+    end
 
 ;EXCLUDE row of pixels
     Widget_Info(wWidget, FIND_BY_UNAME='exclude_pixel_row'): begin
@@ -113,6 +122,10 @@ CASE Event.id OF
         BSSselection_IncludePixelRow, Event
     end
 
+;check-in
+    Widget_Info(wWidget, FIND_BY_UNAME='tube'): begin
+        BSSselection_IncludeExcludeCheckTubeField, Event
+    end
 
 ;EXCLUDE tubes
     Widget_Info(wWidget, FIND_BY_UNAME='exclude_tube'): begin

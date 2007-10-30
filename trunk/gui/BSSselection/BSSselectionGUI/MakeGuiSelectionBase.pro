@@ -31,13 +31,15 @@ button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'EXCLUDE',$
                        UNAME     = 'exclude_pixelid',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'INCLUDE',$
                        UNAME     = 'include_pixelid',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 
 ;Row of pixels
@@ -56,13 +58,15 @@ button = WIDGET_BUTTON(abase,$
                        VALUE     = 'EXCLUDE',$
                        UNAME     = 'exclude_pixel_row',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 button = WIDGET_BUTTON(abase,$
                        VALUE     = 'INCLUDE',$
                        UNAME     = 'include_pixel_row',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 
 ;Tube base
@@ -81,13 +85,15 @@ button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'EXCLUDE',$
                        UNAME     = 'exclude_tube',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'INCLUDE',$
                        UNAME     = 'include_tube',$
                        SCR_XSIZE = 55,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 
 ;full reset

@@ -22,6 +22,7 @@ cd, CurrentFolder
 .run bss_selection_get.pro
 .run bss_selection_nexus.pro
 .run bss_selection_utilities.pro
+.run bss_selection_Gui.pro
 
 .run bss_selection_LoadNexus.pro
 .run bss_selection_LoadNexusStep2.pro
