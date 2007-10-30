@@ -11,7 +11,6 @@ fileID  = h5f_open(FullNexusName)
 fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
 (*(*global).bank1) = h5d_read(fieldID)
 
-
 ;get bank2 data
 fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
 (*(*global).bank2) = h5d_read(fieldID)
@@ -49,7 +48,9 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
     NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
     
     IF (isNexusExist) THEN BEGIN
-
+        
+        (*global).RunNumber = RunNumber
+        
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 ;move on to step2 of loading nexus
         BSSselection_LoadNexus_step2, Event, NexusFullPath[0]

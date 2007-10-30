@@ -16,7 +16,10 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
-;                   counts_vs_tof_click_pressed : 1.0,$ ;left click pressed value
+                   RunNumber : 0L, $ ;NeXus run number
+                   roi_path : '~/local',$ ;path where to save the ROI file
+                   roi_ext : '_ROI.dat' ,$ ;extension of ROI files
+                   roi_default_file_name : '',$ ;default roi file name
                    counts_vs_tof_x : 0L,$ ;x of actual counts vs tof plotted
                    counts_vs_tof_y : 0L,$ ;y of actual counts vs tof plotted
                    counts_vs_tof_bank : 0,$ ;bank of actual counts vs tof plotted
