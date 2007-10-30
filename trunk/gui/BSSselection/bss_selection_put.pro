@@ -109,6 +109,13 @@ widget_control, id, set_value=text
 END
 
 
+;Put row value (0-127) in the cw_field row_value:
+PRO PutRowValue, Event, row
+id = widget_info(event.top,find_by_uname='row_value')
+widget_control, id, set_value=strcompress(row,/remove_all)
+END
+
+
 ;Put pixelID value (0-9215) in the cw_field PixelID:
 PRO PutPixelIDValue, Event, pixelid
 id = widget_info(event.top,find_by_uname='pixel_value')

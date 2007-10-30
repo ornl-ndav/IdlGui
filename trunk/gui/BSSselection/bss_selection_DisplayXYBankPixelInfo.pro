@@ -47,6 +47,10 @@ PutXValue, Event, x
 ;display Y info
 PutYValue, Event, y
 
+;display Row info (Y*bank)
+row = y + (bank-1)*64
+PutRowValue, Event, row
+
 ;calculate pixelid
 pixelid = CalculatePixelID(Event, bank, x, y)
 ;display pixelid info
