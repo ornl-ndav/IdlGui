@@ -25,28 +25,34 @@ CountsVsTofPixelLabelSize = [CountsVsTofXLabelSize[0]+3*xoff,$
 
 CountsVsTofFrameSize = [748,205,440,275]
 
-
-
 OpenNeXusSelectionTab = [755,5,425,170]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
-XYPixelIDBaseSize     = [150,330,425,35]
+XYPixelIDBaseSize     = [120,330,515,35]
 xbaseSize             = [0,0,55,35]
-ybasesize             = [xbaseSize[0]+60,$
+xoff = 60
+ybasesize             = [xbaseSize[0]+xoff,$
                          xbaseSize[1],$
                          xbaseSize[2],$
                          xbaseSize[3]]
-bankBaseSize          = [xbaseSize[0]+120,$
+xoff = 60
+bankBaseSize          = [ybaseSize[0]+xoff,$
                          xbaseSize[1],$
                          65,$
                          xbaseSize[3]]
-pixelIDbaseSize       = [xbaseSize[0]+190,$
+xoff = 70
+rowBaseSize           = [bankbaseSize[0]+xoff,$
+                         xbaseSize[1],$
+                         80,$
+                         xbaseSize[3]]
+xoff = 80
+pixelIDbaseSize       = [rowbaseSize[0]+xoff,$
                          xbaseSize[1],$
                          110,$
                          xbaseSize[3]]
-
-countsBaseSize        = [xbasesize[0]+300,$
+xoff = 110
+countsBaseSize        = [pixelIDbasesize[0]+xoff,$
                          xbaseSize[1],$
                          150,$
                          xbaseSize[3]]
@@ -190,6 +196,19 @@ bankfield = CW_FIELD(bankBase,$
                      TITLE         = 'Bank:',$
                      ROW           = 1,$
                      XSIZE         = 1)
+
+rowBase = WIDGET_BASE(XYPixelIDBase,$
+                      XOFFSET   = rowBaseSize[0],$
+                      YOFFSET   = rowBaseSize[1],$
+                      SCR_XSIZE = rowBaseSize[2],$
+                      SCR_YSIZE = rowBaseSize[3])
+
+rowfield = CW_FIELD(rowbase,$
+                    UNAME         = 'row_value',$
+                    RETURN_EVENTS = 1,$
+                    TITLE         = 'Row:',$
+                    ROW           = 1,$
+                    XSIZE         = 3)
 
 pixelIDbase = WIDGET_BASE(XYPixelIDBase,$
                     XOFFSET   = pixelIDbaseSize[0],$

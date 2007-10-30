@@ -48,7 +48,7 @@ abase = WIDGET_BASE(SelectionTabBase,$
 text   = CW_FIELD(abase,$
                   UNAME          = 'pixel_row',$
                   RETURN_EVENTS  = 1,$
-                  TITLE          = 'Row:     ',$
+                  TITLE          = 'Row (Y): ',$
                   ROW            = 1,$
                   XSIZE          = cw_field_xsize)
 
