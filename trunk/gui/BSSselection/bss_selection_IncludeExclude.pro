@@ -1,4 +1,4 @@
-;Pixelid
+;Exclude Pixelid
 PRO BSSselection_ExcludePixelid, Event
 
 ;retrieve text
@@ -22,6 +22,7 @@ END
 
 
 
+;Include Pixelid
 PRO BSSselection_IncludePixelid, Event
 
 ;retrieve text
@@ -45,9 +46,43 @@ ResetSelectionBasePixelidText, Event
 END
 
 
-;Pixel Row
+
+;Exclude Pixel Row
 PRO BSSselection_ExcludePixelRow, Event
+
+;retrieve text
+RowText = getSelectionBaseRowText(Event)
+
+;create list of row
+RowList = RetrieveList(RowText)
+
+;convert list to integer
+RowListInt = ConvertListToInt(RowList)
+
+;Remove list of pixels to exclude list
+RemoveRowToExcludeList, Event, RowListInt
+
+;remove pixel to list of excluded pixels for bank1 and bank2
+PlotExcludedPixels, Event
+
+;remove contents of cw_field
+ResetSelectionBaseRowText, Event
+
+
 END
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 PRO BSSselection_IncludePixelRow, Event
 END
