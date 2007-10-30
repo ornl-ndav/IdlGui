@@ -110,3 +110,47 @@ FOR i=0,3584L DO BEGIN
     ENDIF
 ENDFOR
 END
+
+
+
+
+
+PRO PlotIncludedPixels, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+x_coeff = (*global).Xfactor
+y_coeff = (*global).Yfactor
+
+;plot main plots + grid
+bss_selection_PlotBank1, Event
+PlotBank1Grid, Event
+bss_selection_PlotBank2, Event
+PlotBank2Grid, Event
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+pixel_excluded = (*(*global).pixel_excluded)
+FOR i=0,3584L DO BEGIN
+    IF (pixel_excluded[i] EQ 1) THEN BEGIN
+        XY = getPixelIDfromXY(Event, i)
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+    ENDIF
+ENDFOR
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+pixelid_min = 4096L
+FOR i=0,3584L DO BEGIN
+    pixel = pixelid_min + i    
+    IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
+        XY = getPixelIDfromXY(Event, pixel)
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+    ENDIF
+ENDFOR
+END
