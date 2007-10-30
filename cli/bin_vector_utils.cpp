@@ -43,6 +43,7 @@ namespace BinVectorUtils
   {
     vector<int32_t> time_bin_vector;
     int32_t i=0;  //use for debugging tool only
+    int32_t time_start;
     
     if (verbose && !debug) 
       {
@@ -58,7 +59,24 @@ namespace BinVectorUtils
         cout << "\n\n";
       } 
     
-    for (size_t t_bin=time_offset_100ns; 
+    int32_t minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN;
+
+    // first value of time_bin_vector is time_offset_100ns if:
+    // - time_offset_100ns is greater
+    // - time_offset_100ns is 0, for "secret special mode",
+    //       where we count all those impossible neutrons with
+    //       tofs less than the supposed DAS clock resolution... :-D
+    if ( minimum_time_bin_100ns_local < time_offset_100ns
+        || time_offset_100ns == 0 )
+      {
+        time_start = time_offset_100ns;
+      }
+    else
+      {
+        time_start = minimum_time_bin_100ns_local;
+      }
+
+    for (size_t t_bin=time_start; 
          t_bin<=max_time_bin_100ns; 
          t_bin+=time_rebin_width_100ns)
       {
@@ -110,8 +128,13 @@ namespace BinVectorUtils
 
     float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN;
 
-    //first value of time_bin_vector is time_offset_100ns if time_offset_100ns is greater
-    if (minimum_time_bin_100ns_local < time_offset_100ns)
+    // first value of time_bin_vector is time_offset_100ns if:
+    // - time_offset_100ns is greater
+    // - time_offset_100ns is 0, for "secret special mode",
+    //       where we count all those impossible neutrons with
+    //       tofs less than the supposed DAS clock resolution... :-D
+    if ( minimum_time_bin_100ns_local < time_offset_100ns
+        || time_offset_100ns == 0 )
       {
         time_bin_vector.push_back(static_cast<int32_t>(time_offset_100ns));
       }
@@ -189,8 +212,13 @@ namespace BinVectorUtils
     
     float minimum_time_bin_100ns_local = EventHisto::SMALLEST_TIME_BIN;
 
-    //first value of time_bin_vector is time_offset_100ns if time_offset_100ns is greater
-    if (minimum_time_bin_100ns_local < time_offset_100ns)
+    // first value of time_bin_vector is time_offset_100ns if:
+    // - time_offset_100ns is greater
+    // - time_offset_100ns is 0, for "secret special mode",
+    //       where we count all those impossible neutrons with
+    //       tofs less than the supposed DAS clock resolution... :-D
+    if ( minimum_time_bin_100ns_local < time_offset_100ns
+        || time_offset_100ns == 0 )
       {
         time_bin_vector.push_back(static_cast<int32_t>(time_offset_100ns));
       }

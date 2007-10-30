@@ -118,9 +118,14 @@ int32_t main(int32_t argc, char *argv[])
                             "Use old linear histogramming algorithm",
                             false, cmd);
 
+      // set default time offset to 1, not 0...
+      // - time_offset_100ns == 0 is for "secret special mode",
+      //       where we count all those impossible neutrons with
+      //       tofs less than the supposed DAS clock resolution... :-D
+      // - time_offset_100ns == 1 will get clamped to SMALLEST_TIME_BIN
       ValueArg<float> time_offset_cmd("", "time_offset",
                             "initial offset time (microS)",
-                            false, 0, "time offset (microS)",cmd);
+                            false, 1, "time offset (microS)",cmd);
 
       ValueArg<float> log_rebin_coeff_cmd("L","logarithmic",
                             "delta_t/t coefficient",
@@ -239,7 +244,11 @@ int32_t main(int32_t argc, char *argv[])
         //check that the time_offset in 100ns scale is at least 1
         int32_t time_offset_100ns
           = static_cast<int32_t>(time_offset_cmd.getValue() * 10.);
-        if (time_offset_100ns !=0 && 
+        // round up time offset to smallest time bin (clock resolution)
+        // - UNLESS time_offset_100ns is 0, for "secret special mode",
+        //       where we count all those impossible neutrons with
+        //       tofs less than the supposed DAS clock resolution... :-D
+        if (time_offset_100ns != 0 && 
             time_offset_100ns < EventHisto::SMALLEST_TIME_BIN)
         {
            time_offset_100ns = EventHisto::SMALLEST_TIME_BIN;
@@ -348,6 +357,7 @@ int32_t main(int32_t argc, char *argv[])
 
         //this is the new number of time bins in the histo file
         size_t new_Nt = time_bin_vector.size() - 1;
+        printf( "new_Nt = %d\n", new_Nt );
 
         size_t histo_array_size = new_Nt * pixel_number;
         uint32_t * histo_array = new uint32_t [histo_array_size];
