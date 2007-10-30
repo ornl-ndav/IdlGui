@@ -36,6 +36,26 @@ END
 
 
 
+PRO BSSselection_IncludeExcludeCheckTubeField, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve text
+TubeText = getSelectionBaseTubeText(Event)
+IF (TubeText[0] NE '' AND (*global).NeXusFound EQ 1) THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activate_button, Event, 'exclude_tube', activate_status
+activate_button, Event, 'include_tube', activate_status
+END
+
+
+
+
+
 ;Exclude Pixelid
 PRO BSSselection_ExcludePixelid, Event
 
@@ -149,14 +169,56 @@ END
 
 
 
-
-
-
-
-
-;Tube
+;Exclude Tube
 PRO BSSselection_ExcludeTube, Event
+
+;retrieve text
+TubeText = getSelectionBaseTubeText(Event)
+
+;create list of tubes
+TubeList = RetrieveList(TubeText)
+
+;convert list to integer
+TubeListInt = ConvertListToInt(TubeList)
+
+;Add list of pixels to exclude list
+AddTubeToExcludeList, Event, TubeListInt
+
+;remove pixel to list of excluded pixels for bank1 and bank2
+PlotExcludedPixels, Event
+
+;remove contents of cw_field
+ResetSelectionBaseTubeText, Event
+
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckTubeField, Event
+
 END
 
+
+
+;include tube
 PRO BSSselection_IncludeTube, Event
+
+;retrieve text
+TubeText = getSelectionBaseTubeText(Event)
+
+;create list of tubes
+TubeList = RetrieveList(TubeText)
+
+;convert list to integer
+TubeListInt = ConvertListToInt(TubeList)
+
+;Remove list of pixels to exclude list
+RemoveTubeToExcludeList, Event, TubeListInt
+
+;remove pixel to list of excluded pixels for bank1 and bank2
+PlotIncludedPixels, Event
+
+;remove contents of cw_field
+ResetSelectionBaseTubeText, Event
+
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckTubeField, Event
+
 END
