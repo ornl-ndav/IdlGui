@@ -128,3 +128,11 @@ PRO PutCountsValue, Event, counts
 id = widget_info(event.top,find_by_uname='counts_value')
 widget_control, id, set_value=strcompress(counts,/remove_all)
 END
+
+
+;Put '' into pixelid cw_field Selection base
+PRO ResetSelectionBasePixelidText, Event
+id = widget_info(Event.top,find_by_uname='pixelid')
+widget_control, id, set_value=''
+END
+

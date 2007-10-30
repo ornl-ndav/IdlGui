@@ -32,9 +32,9 @@ cd, CurrentFolder
 .run bss_selection_ZoomInCountsVsTof.pro
 .run bss_selection_UpdateFields.pro
 
+.run bss_selection_IncludeExcludeUtilities.pro
 .run bss_selection_IncludeExcludePixel.pro
 .run bss_selection_IncludeExclude.pro
-.run bss_selection_IncludeExcludeUtilities.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro
