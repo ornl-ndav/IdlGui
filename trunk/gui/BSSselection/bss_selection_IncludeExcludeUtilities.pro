@@ -86,6 +86,33 @@ END
 
 
 
+PRO AddRowToExcludeList, Event, RowListInt
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = (*(*global).pixel_excluded)
+sz = (size(RowListInt))(1)
+FOR i=0,(sz-1) DO BEGIN
+    
+    IF (RowListINT[i] GT 63) THEN BEGIN
+        offset = 4096
+    ENDIF ELSE BEGIN
+        offset = 0
+    ENDELSE
+    
+    FOR j=0,56 DO BEGIN
+        pixel_excluded[RowListInt[i]+j*64+offset] = 1
+    ENDFOR
+
+ENDFOR
+(*(*global).pixel_excluded) = pixel_excluded
+
+END
+
+
+
 PRO RemoveRowToExcludeList, Event, RowListInt
 
 ;get global structure
@@ -103,7 +130,7 @@ FOR i=0,(sz-1) DO BEGIN
     ENDELSE
     
     FOR j=0,56 DO BEGIN
-        pixel_excluded[RowListInt[i]+j*64+offset]=1
+        pixel_excluded[RowListInt[i]+j*64+offset] = 0
     ENDFOR
 
 ENDFOR

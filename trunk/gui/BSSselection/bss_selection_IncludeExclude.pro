@@ -57,6 +57,9 @@ PlotExcludedPixels, Event
 ;remove contents of cw_field
 ResetSelectionBasePixelidText, Event
 
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckPixelField, Event
+
 END
 
 
@@ -82,6 +85,9 @@ PlotIncludedPixels, Event
 ;remove contents of cw_field
 ResetSelectionBasePixelidText, Event
 
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckPixelField, Event
+
 END
 
 
@@ -98,8 +104,8 @@ RowList = RetrieveList(RowText)
 ;convert list to integer
 RowListInt = ConvertListToInt(RowList)
 
-;Remove list of pixels to exclude list
-RemoveRowToExcludeList, Event, RowListInt
+;Add list of pixels to exclude list
+AddRowToExcludeList, Event, RowListInt
 
 ;remove pixel to list of excluded pixels for bank1 and bank2
 PlotExcludedPixels, Event
@@ -107,24 +113,45 @@ PlotExcludedPixels, Event
 ;remove contents of cw_field
 ResetSelectionBaseRowText, Event
 
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckPixelRowField, Event
 
 END
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 PRO BSSselection_IncludePixelRow, Event
+
+;retrieve text
+RowText = getSelectionBaseRowText(Event)
+
+;create list of row
+RowList = RetrieveList(RowText)
+
+;convert list to integer
+RowListInt = ConvertListToInt(RowList)
+
+;Remove list of pixels to exclude list
+RemoveRowToExcludeList, Event, RowListInt
+
+;remove pixel to list of excluded pixels for bank1 and bank2
+PlotIncludedPixels, Event
+
+;remove contents of cw_field
+ResetSelectionBaseRowText, Event
+
+;disable include and exclude buttons
+BSSselection_IncludeExcludeCheckPixelRowField, Event
+
 END
+
+
+
+
+
+
+
+
 
 
 ;Tube
