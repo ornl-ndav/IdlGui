@@ -66,3 +66,10 @@ id = widget_info(Event.top,find_by_uname='tube')
 widget_control, id, get_value=text
 RETURN, text
 END
+
+
+FUNCTION getRoiPathButtonValue, Event
+id = widget_info(Event.top,find_by_uname='roi_path_button')
+widget_control, id, get_value=text
+RETURN, text
+END

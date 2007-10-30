@@ -1,16 +1,12 @@
 PRO PutLogBookMessage, Event, Message
-
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, set_value=Message
-
 END
 
 
 PRO AppendLogBookMessage, Event, Message
-
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, set_value=Message,/append
-
 END
 
 
@@ -32,7 +28,6 @@ END
 ;If the optional RemoveString is present, the given String will be
 ;removed before adding the new MessageToAdd
 PRO putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
-
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, get_value=InitialStrarr
 
@@ -155,4 +150,16 @@ END
 PRO ResetSelectionBaseTubeText, Event
 id = widget_info(Event.top,find_by_uname='tube')
 widget_control, id, set_value=''
+END
+
+;change label of ROI path button
+PRO putRoiPathButtonValue, Event, text
+id = widget_info(Event.top,find_by_uname='roi_path_button')
+widget_control, id, set_value=text
+END
+
+;put the value of the new ROI file
+PRO putRoiFileName, Event, fileName
+id = widget_info(Event.top,find_by_uname='save_roi_file_text')
+widget_control, id, set_value=fileName
 END

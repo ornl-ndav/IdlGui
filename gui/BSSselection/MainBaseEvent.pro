@@ -21,6 +21,20 @@ CASE Event.id OF
         bss_selection_BrowseNexus, Event
     end
     
+;Determine Path for saving ROI file
+    Widget_Info(wWidget, FIND_BY_UNAME='roi_path_button'): begin
+        BSSselection_SetRoiPath, Event
+    end
+
+
+
+
+
+
+
+
+
+
 ;counts vs tof draw
     widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded

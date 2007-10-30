@@ -23,6 +23,7 @@ cd, CurrentFolder
 .run bss_selection_nexus.pro
 .run bss_selection_utilities.pro
 .run bss_selection_Gui.pro
+.run bss_selection_time.pro
 
 .run bss_selection_LoadNexus.pro
 .run bss_selection_LoadNexusStep2.pro
@@ -36,6 +37,8 @@ cd, CurrentFolder
 .run bss_selection_IncludeExcludeUtilities.pro
 .run bss_selection_IncludeExcludePixel.pro
 .run bss_selection_IncludeExclude.pro
+
+.run bss_selection_SaveRoiFile.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro
