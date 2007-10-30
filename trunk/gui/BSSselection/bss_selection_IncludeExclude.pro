@@ -6,7 +6,6 @@ PixelidText = getSelectionBasePixelidText(Event)
 
 ;create list of pixelids
 PixelidList = RetrieveList(PixelidText)
-
 ;convert list to integer
 PixelidListInt = ConvertListToInt(PixelidList)
 
@@ -21,7 +20,28 @@ ResetSelectionBasePixelidText, Event
 
 END
 
+
+
 PRO BSSselection_IncludePixelid, Event
+
+;retrieve text
+PixelidText = getSelectionBasePixelidText(Event)
+
+;create list of pixelids
+PixelidList = RetrieveList(PixelidText)
+
+;convert list to integer
+PixelidListInt = ConvertListToInt(PixelidList)
+
+;Remove list of pixels to exclude list
+RemoveListToExcludeList, Event, PixelidListInt
+
+;remove pixel to list of excluded pixels for bank1 and bank2
+PlotIncludedPixels, Event
+
+;remove contents of cw_field
+ResetSelectionBasePixelidText, Event
+
 END
 
 
