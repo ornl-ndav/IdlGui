@@ -138,6 +138,10 @@ widget_control,id,get_uvalue=global
 bank1 = (*(*global).bank1)
 bank2 = (*(*global).bank2)
 
+tof_array = bank1(*,0,0)
+NbTOF = (size(tof_array))(1)
+(*global).NBTOF = NbTOF
+
 ;error = 0
 ;CATCH, error
 ;if (error NE 0) then begin
@@ -145,25 +149,25 @@ bank2 = (*(*global).bank2)
 ;endif else begin
 
 ;sum over TOF
-    bank1_sum = total(bank1,1)
-    bank2_sum = total(bank2,1)
-    
+bank1_sum = total(bank1,1)
+bank2_sum = total(bank2,1)
+
 ;remove useless last rack
-    bank1_sum = bank1_sum(0:63,0:55)
-    bank2_sum = bank2_sum(0:63,0:55)
+bank1_sum = bank1_sum(0:63,0:55)
+bank2_sum = bank2_sum(0:63,0:55)
 
 ;store banks sum
-    (*(*global).bank1_sum) = bank1_sum
-    (*(*global).bank2_sum) = bank2_sum
-    
-    bss_selection_PlotBank1, Event
-    bss_selection_PlotBank2, Event
+(*(*global).bank1_sum) = bank1_sum
+(*(*global).bank2_sum) = bank2_sum
+
+bss_selection_PlotBank1, Event
+bss_selection_PlotBank2, Event
 
 ;plot grid
-    PlotBanksGrid, Event
+PlotBanksGrid, Event
 
-    success = 1
-
+success = 1
+    
 ;endelse
 
 END
