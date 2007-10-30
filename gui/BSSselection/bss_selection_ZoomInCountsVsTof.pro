@@ -18,19 +18,25 @@ ENDIF ELSE BEGIN ;bank2
     bank = (*(*global).bank2)
 ENDELSE
 
-data = bank(*,Y,X)
-
 ;Nbr tof
-NbTOF = (size(data))(1)
-(*global).NBTOF = NbTOF
+NbTOF = (*global).NBTOF
 
 IF (XRatio LT 0) THEN XRAtio = 0
 IF (XRatio GT 1) THEN XRatio = 1
 
-;find out in which bin we clicked
-left_click = XRatio * (NBTOF-1)
+xmin = (*global).true_x_min
+xmax = (*global).true_x_max
 
-(*global).counts_vs_tof_click_pressed = left_click
+;find out in which bin we clicked
+IF (xmax GT 0.00001 AND $
+    XRatio NE 0 AND $
+    XRatio NE 1) THEN BEGIN
+    left_click = XRatio * (xmax-xmin) + xmin
+ENDIF ELSE BEGIN
+    left_click = XRatio * (NBTOF-1)
+ENDELSE
+
+(*global).true_x_min = left_click
 
 END
 
@@ -56,20 +62,27 @@ ENDIF ELSE BEGIN                ;bank2
     bank = (*(*global).bank2)
 ENDELSE
 
-data = bank(*,Y,X)
-
 NbTOF = (*global).NBTOF
 
 IF (XRatio LT 0) THEN XRAtio = 0
 IF (XRatio GT 1) THEN XRatio = 1
 
 ;find out in which bin we clicked
-left_click = XRatio * (NBTOF-1)
+xmin = (*global).true_x_min
+xmax = (*global).true_x_max
+IF (xmax GT 0.0001 AND $
+    XRatio NE 0 AND $
+    XRatio NE 1) THEN BEGIN
+    left_click = XRatio * (xmax-xmin) + xmin
+ENDIF ELSE BEGIN
+    left_click = XRatio * (NBTOF-1)
+ENDELSE
 
 ;plot new plot
 ;from xmin to xmax
-x1 = (*global).counts_vs_tof_click_pressed
+x1 = (*global).true_x_min
 x2 = left_click
+(*global).true_x_max = x2
 
 ;get true xmin and xmax
 xmin = min([x1,x2],max=xmax)
@@ -79,7 +92,8 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='counts_vs_tof_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-plot, data, xrange=[xmin,xmax],POSITION=[0.1,0.1,0.95,0.99]
+data = bank(*,Y,X)
+plot, data, xrange=[xmin,xmax],POSITION=[0.1,0.1,0.95,0.99], XSTYLE=1
 
 END
 

@@ -11,6 +11,7 @@ fileID  = h5f_open(FullNexusName)
 fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
 (*(*global).bank1) = h5d_read(fieldID)
 
+
 ;get bank2 data
 fieldID = h5d_open(fileID,(*global).nexus_bank2_path)
 (*(*global).bank2) = h5d_read(fieldID)
