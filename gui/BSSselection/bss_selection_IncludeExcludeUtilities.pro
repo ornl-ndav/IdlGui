@@ -31,7 +31,8 @@ FOR i=0,(sz-1) DO BEGIN
     sz = (size(text2))(1)
     IF (sz GT 1) THEN BEGIN ;'10-15'
         list_to_add = CreateList(text2)
-        IF (list_to_add NE ['']) THEN BEGIN
+        IF (list_to_add NE [''] OR $
+            list_to_add[0] EQ 0) THEN BEGIN
             list_to_add = string(list_to_add)
             IF (i EQ 0) THEN BEGIN ;only for first iteration
                 List = list_to_add
@@ -61,6 +62,22 @@ pixel_excluded = (*(*global).pixel_excluded)
 sz = (size(PixelidListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
     pixel_excluded[PixelidListInt[i]] = 1
+ENDFOR
+(*(*global).pixel_excluded) = pixel_excluded
+
+END
+
+
+
+PRO RemoveListToExcludeList, Event, PixelidListInt
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = (*(*global).pixel_excluded)
+sz = (size(PixelidListInt))(1)
+FOR i=0,(sz-1) DO BEGIN
+    pixel_excluded[PixelidListInt[i]] = 0
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
 
