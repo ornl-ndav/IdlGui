@@ -29,7 +29,7 @@ OpenNeXusSelectionTab = [755,5,425,170]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
-XYPixelIDBaseSize     = [120,330,515,35]
+XYPixelIDBaseSize     = [80,330,580,35]
 xbaseSize             = [0,0,55,35]
 xoff = 60
 ybasesize             = [xbaseSize[0]+xoff,$
@@ -46,8 +46,13 @@ rowBaseSize           = [bankbaseSize[0]+xoff,$
                          xbaseSize[1],$
                          80,$
                          xbaseSize[3]]
+xoff = 75
+tubeBaseSize          = [rowBaseSize[0]+xoff,$
+                         xbaseSize[1],$
+                         80,$
+                         xbaseSize[3]]
 xoff = 80
-pixelIDbaseSize       = [rowbaseSize[0]+xoff,$
+pixelIDbaseSize       = [tubeBaseSize[0]+xoff,$
                          xbaseSize[1],$
                          110,$
                          xbaseSize[3]]
@@ -210,6 +215,19 @@ rowfield = CW_FIELD(rowbase,$
                     ROW           = 1,$
                     XSIZE         = 3)
 
+tubeBase = WIDGET_BASE(XYPixelIDBase,$
+                       XOFFSET   = tubeBaseSize[0],$
+                       YOFFSET   = tubeBaseSize[1],$
+                       SCR_XSIZE = tubeBaseSize[2],$
+                       SCR_YSIZE = tubeBaseSize[3])
+
+tubefield = CW_FIELD(tubeBase,$
+                    UNAME         = 'tube_value',$
+                    RETURN_EVENTS = 1,$
+                    TITLE         = 'Tube:',$
+                    ROW           = 1,$
+                    XSIZE         = 3)
+                     
 pixelIDbase = WIDGET_BASE(XYPixelIDBase,$
                     XOFFSET   = pixelIDbaseSize[0],$
                     YOFFSET   = pixelIDbaseSize[1],$

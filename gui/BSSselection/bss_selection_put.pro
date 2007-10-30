@@ -108,13 +108,17 @@ text = 'Y: ' + strcompress(y,/remove_all)
 widget_control, id, set_value=text
 END
 
-
 ;Put row value (0-127) in the cw_field row_value:
 PRO PutRowValue, Event, row
 id = widget_info(event.top,find_by_uname='row_value')
 widget_control, id, set_value=strcompress(row,/remove_all)
 END
 
+;Put tube value (0-55 and 64-119) in the cw_field tube_value:
+PRO PutTubeValue, Event, tube
+id = widget_info(event.top,find_by_uname='tube_value')
+widget_control, id, set_value=strcompress(tube,/remove_all)
+END
 
 ;Put pixelID value (0-9215) in the cw_field PixelID:
 PRO PutPixelIDValue, Event, pixelid
@@ -144,5 +148,11 @@ END
 ;Put '' into row cw_field Selection base
 PRO ResetSelectionBaseRowText, Event
 id = widget_info(Event.top,find_by_uname='pixel_row')
+widget_control, id, set_value=''
+END
+
+;Put '' into tube cw_field Selection base
+PRO ResetSelectionBaseTubeText, Event
+id = widget_info(Event.top,find_by_uname='tube')
 widget_control, id, set_value=''
 END

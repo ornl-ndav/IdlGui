@@ -84,10 +84,7 @@ ENDFOR
 END
 
 
-
-
 PRO AddRowToExcludeList, Event, RowListInt
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -108,13 +105,11 @@ FOR i=0,(sz-1) DO BEGIN
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
-
 END
 
 
 
 PRO RemoveRowToExcludeList, Event, RowListInt
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -135,5 +130,41 @@ FOR i=0,(sz-1) DO BEGIN
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
+END
 
+
+PRO AddTubeToExcludeList, Event, TubeListInt
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = (*(*global).pixel_excluded)
+sz = (size(TubeListInt))(1)
+FOR i=0,(sz-1) DO BEGIN
+    
+    FOR j=0,63 DO BEGIN
+        pixel_excluded[TubeListInt[i]*64+j] = 1
+    ENDFOR
+
+ENDFOR
+(*(*global).pixel_excluded) = pixel_excluded
+END
+
+
+
+PRO RemoveTubeToExcludeList, Event, TubeListInt
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = (*(*global).pixel_excluded)
+sz = (size(TubeListInt))(1)
+FOR i=0,(sz-1) DO BEGIN
+    
+    FOR j=0,63 DO BEGIN
+        pixel_excluded[TubeListInt[i]*64+j] = 0
+    ENDFOR
+
+ENDFOR
+(*(*global).pixel_excluded) = pixel_excluded
 END

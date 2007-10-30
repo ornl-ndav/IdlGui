@@ -51,6 +51,10 @@ PutYValue, Event, y
 row = y + (bank-1)*64
 PutRowValue, Event, row
 
+;display Tube info
+tube = x + (bank-1)*64
+PutTubeValue, Event, tube
+
 ;calculate pixelid
 pixelid = CalculatePixelID(Event, bank, x, y)
 ;display pixelid info
