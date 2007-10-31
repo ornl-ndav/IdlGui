@@ -30,14 +30,15 @@ bss_selection_PlotBanks, Event, success
 if (success EQ 0) then begin
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
 
-;populate ROI file name
-    BSSselection_CreateRoiFileName, Event
 ;desactivate button
     activate_status = 0
 
 endif else begin
 
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+
+;populate ROI file name
+    BSSselection_CreateRoiFileName, Event
 ;activate button
     activate_status = 1
 

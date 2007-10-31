@@ -94,3 +94,9 @@ id = widget_info(Event.top,find_by_uname='save_roi_file_text')
 widget_control, id, get_value=FullFileName
 RETURN, FullFileName
 END
+
+
+FUNCTION getCurrentSelectedMainTab, Event
+id = widget_info(Event.top,find_by_uname='main_tab')
+RETURN, widget_info(id, /tab_current)
+END

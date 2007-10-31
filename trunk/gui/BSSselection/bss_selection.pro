@@ -16,6 +16,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   previous_tab : 0,$ ;default tab is 0 (Selection big tab)
                    RunNumber : 0L, $ ;NeXus run number
                    roi_path : '~/local/',$ ;path where to save the ROI file
                    roi_ext : '_ROI.dat' ,$ ;extension of ROI files
