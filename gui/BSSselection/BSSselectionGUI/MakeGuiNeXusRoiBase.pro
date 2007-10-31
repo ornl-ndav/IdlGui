@@ -54,7 +54,7 @@ sbase = WIDGET_BASE(NeXusRoiTabBase,$
 
 button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'LOAD ROI FILE ..',$
-                       UNAME     = 'laod_roi_file_button',$
+                       UNAME     = 'load_roi_file_button',$
                        SCR_XSIZE = 110,$
                        SCR_YSIZE = 30,$
                        SENSITIVE = 0)

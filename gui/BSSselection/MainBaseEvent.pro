@@ -11,6 +11,11 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
 
+;when going from tab to tab
+    Widget_Info(wWidget, FIND_BY_UNAME='main_tab'): begin
+        BSSselection_TabRefresh, Event
+    end
+
 ;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
         bss_selection_LoadNexus, Event
