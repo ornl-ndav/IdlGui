@@ -64,6 +64,9 @@ widget_control,id,get_uvalue=global
 ;get ROI full file name
 RoiFullFileName = getRoiFullFileName(Event)
 
+LogBookText = 'ROI file has been created: ' + RoiFullFileName
+AppendLogBookMessage, Event, LogBookText
+
 ;get ROI array
 pixel_excluded = (*(*global).pixel_excluded)
 sz = (size(pixel_excluded))(1)
