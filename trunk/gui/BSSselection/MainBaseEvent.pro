@@ -26,6 +26,11 @@ CASE Event.id OF
         BSSselection_SetRoiPath, Event
     end
 
+;Save ROI file 
+    Widget_Info(wWidget, FIND_BY_UNAME='save_roi_file_button'): begin
+        BSSselection_SaveRoiFile, Event
+    end    
+
 ;Regenerate new name for ROI file
     Widget_Info(wWidget, FIND_BY_UNAME='roi_file_name_generator'): begin
         BSSselection_CreateRoiFileName, Event

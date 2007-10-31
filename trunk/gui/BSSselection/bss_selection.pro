@@ -17,7 +17,7 @@ endelse
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
                    RunNumber : 0L, $ ;NeXus run number
-                   roi_path : '~/local',$ ;path where to save the ROI file
+                   roi_path : '~/local/',$ ;path where to save the ROI file
                    roi_ext : '_ROI.dat' ,$ ;extension of ROI files
                    roi_default_file_name : '',$ ;default roi file name
                    counts_vs_tof_x : 0L,$ ;x of actual counts vs tof plotted
