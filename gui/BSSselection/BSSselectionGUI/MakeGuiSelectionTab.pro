@@ -4,7 +4,10 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;                             Define size arrays
 ;***********************************************************************************
 
-CountsVsTofLabelSize  = [890,250]
+;Message box
+MessageTextSize = [755,247,430,30]
+
+CountsVsTofLabelSize  = [890,290]
 CountsVsTofLabelTitle = ' C O U N T S   vs   T O F'
 
 CountsVsTofSize = [755,$
@@ -86,6 +89,15 @@ SelectionBase = WIDGET_BASE(MAIN_TAB,$
                             SCR_XSIZE = MainTabSize[2],$
                             SCR_YSIZE = MainTabSize[3],$
                             TITLE     = SelectionTitle)
+
+;Message box
+MessageText = WIDGET_TEXT(SelectionBase,$
+                          XOFFSET   = MessageTextSize[0],$
+                          YOFFSET   = MessageTextSize[1],$
+                          SCR_XSIZE = MessageTextsize[2],$
+                          SCR_YSIZE = MessageTextSize[3],$
+                          UNAME     = 'message_text',$
+                          /ALIGN_LEFT)
 
 ;COUNTS VS TOF
 counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
