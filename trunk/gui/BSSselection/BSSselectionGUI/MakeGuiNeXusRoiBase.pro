@@ -56,7 +56,8 @@ button = WIDGET_BUTTON(sbase,$
                        VALUE     = 'LOAD ROI FILE ..',$
                        UNAME     = 'laod_roi_file_button',$
                        SCR_XSIZE = 110,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 text   = WIDGET_TEXT(sbase,$
                      VALUE       = '',$
@@ -72,7 +73,8 @@ button = WIDGET_BUTTON(tbase,$
                        VALUE     = 'SAVE ROI',$
                        UNAME     = 'save_roi_file_button',$
                        SCR_XSIZE = 74,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 text   = WIDGET_TEXT(tbase,$
                      UNAME       = 'save_roi_file_text',$
@@ -89,11 +91,13 @@ button = WIDGET_BUTTON(fbase,$
                        VALUE     = '~/local/',$
                        UNAME     = 'roi_path_button',$
                        SCR_XSIZE = 335,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'Auto. Name',$
                        UNAME     = 'roi_file_name_generator',$
                        SCR_XSIZE = 75,$
-                       SCR_YSIZE = 30)
+                       SCR_YSIZE = 30,$
+                       SENSITIVE = 0)
 END

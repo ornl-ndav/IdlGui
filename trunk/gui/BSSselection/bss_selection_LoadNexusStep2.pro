@@ -29,11 +29,25 @@ bss_selection_PlotBanks, Event, success
 
 if (success EQ 0) then begin
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
-endif else begin
-    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
-endelse
 
 ;populate ROI file name
-BSSselection_CreateRoiFileName, Event
+    BSSselection_CreateRoiFileName, Event
+;desactivate button
+    activate_status = 0
+
+endif else begin
+
+    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+;activate button
+    activate_status = 1
+
+endelse
+
+;activate or not 'save_roi_file_button', 'roi_path_button',
+;'roi_file_name_generator', 'load_roi_file_button'
+activate_button, event, 'load_roi_file_button', activate_status
+activate_button, event, 'save_roi_file_button', activate_status
+activate_button, event, 'roi_path_button', activate_status
+activate_button, event, 'roi_file_name_generator', activate_status
 
 END    
