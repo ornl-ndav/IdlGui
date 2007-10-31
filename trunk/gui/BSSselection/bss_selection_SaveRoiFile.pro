@@ -71,31 +71,51 @@ AppendLogBookMessage, Event, LogBookText
 pixel_excluded = (*(*global).pixel_excluded)
 sz = (size(pixel_excluded))(1)
 
+error = 0
+CATCH, error
+
+IF (error NE 0) then begin
+
+    CATCH, /CANCEL
+    LogBookText = 'ERROR: ROI file has not been saved:'
+    AppendLogBookMessage, Event, LogBookText
+    LogBookText = '   -> ROI file name: ' + RoiFullFileName
+    AppendLogBookMessage, Event, LogBookText
+    MessageBox = 'ROI file creation -> ERROR !'
+
+ENDIF ELSE BEGIN
+    
 ;open output file
-openw, 1, RoiFullFileName
-
-FOR i=0,(sz-1) DO BEGIN
-
-    IF (pixel_excluded[i] EQ 0) THEN BEGIN
-
-        IF (i LT 4096) THEN BEGIN ;bank1
-            bank = 'bank1_'
-        ENDIF ELSE BEGIN        ;bank2
-            bank = 'bank2_'
-        ENDELSE
+    openw, 1, RoiFullFileName
+    
+    FOR i=0,(sz-1) DO BEGIN
         
-        XY = getPixelIDfromXY_Untouched(i)
-        X = strcompress(XY[0],/remove_all)
-        Y = strcompress(XY[1],/remove_all)
+        IF (pixel_excluded[i] EQ 0) THEN BEGIN
+            
+            IF (i LT 4096) THEN BEGIN ;bank1
+                bank = 'bank1_'
+            ENDIF ELSE BEGIN    ;bank2
+                bank = 'bank2_'
+            ENDELSE
+            
+            XY = getPixelIDfromXY_Untouched(i)
+            X = strcompress(XY[0],/remove_all)
+            Y = strcompress(XY[1],/remove_all)
+            
+            text = strcompress(i) + ': ' + bank + X + '_' + Y
+            printf, 1, text
+            
+        ENDIF
         
-        text = strcompress(i) + ': ' + bank + X + '_' + Y
-        printf, 1, text
+    ENDFOR
+    
+    close, 1
+    free_lun, 1
+    
+    MessageBox = 'ROI file creation -> SUCCESS !'
 
-    ENDIF
+ENDELSE
 
-ENDFOR
-
-close, 1
-free_lun, 1
+putMessageBoxInfo, Event, MessageBox
 
 END

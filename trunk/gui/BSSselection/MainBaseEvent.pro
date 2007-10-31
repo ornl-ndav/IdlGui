@@ -83,7 +83,7 @@ CASE Event.id OF
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $ ;left click
                   BSSselection_DisplayCountsVsTof, Event
-                if (Event.press EQ 4) then $ 
+                if (Event.press EQ 4) then $ ;right click
                   BSSselection_IncludeExcludePixel, Event
             endif
         endif
@@ -96,7 +96,7 @@ CASE Event.id OF
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $ ;left click
                   BSSselection_DisplayCountsVsTof, Event
-                if (Event.press EQ 4) then $ 
+                if (Event.press EQ 4) then $ ;right click
                   BSSselection_IncludeExcludePixel, Event
             endif
         endif

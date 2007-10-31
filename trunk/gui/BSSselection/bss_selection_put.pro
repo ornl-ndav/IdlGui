@@ -163,3 +163,9 @@ PRO putRoiFileName, Event, fileName
 id = widget_info(Event.top,find_by_uname='save_roi_file_text')
 widget_control, id, set_value=fileName
 END
+
+;put the message text in the message box (selection tab)
+PRO putMessageBoxInfo, Event, text
+id = widget_info(Event.top,find_by_uname='message_text')
+widget_control, id, set_value=text
+END

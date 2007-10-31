@@ -17,6 +17,9 @@ PRO BSSselection_IncludeExcludePixel, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;clear contain of message box
+putMessageBoxInfo, Event, ''
+
 ;retrieve bank, x and y infos
 bank    = getBankValue(Event)
 PixelID = getPixelIDvalue(Event)
