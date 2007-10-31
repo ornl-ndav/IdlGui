@@ -1,29 +1,3 @@
-PRO BSSselection_CreateRoiFileName, Event
-
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-path = (*global).roi_path
-first_part = '/BASIS_'
-get_iso8601, second_part
-ext_part = (*global).roi_ext
-
-name = path + first_part + second_part + ext_part
-
-;put new name into field
-putRoiFileName, Event, name
-print, name
-
-END
-
-
-
-
-
-
-
-
 PRO BSSselection_LoadNexus_step2, Event, NexusFullName
 
 ;get global structure
