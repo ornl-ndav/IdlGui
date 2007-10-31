@@ -4,16 +4,19 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;                             Define size arrays
 ;***********************************************************************************
 
-CountsVsTofLabelSize  = [890,210]
+CountsVsTofLabelSize  = [890,250]
 CountsVsTofLabelTitle = ' C O U N T S   vs   T O F'
 
 CountsVsTofSize = [755,$
-                   230,$
+                   CountsVsTofLabelSize[1]+20,$
                    430,$
                    225]
 
 ;X, Y, PixelID and Bank of data display in counts vs tof
-CountsVsTofXLabelSize = [750,450,100,30]
+CountsVsTofXLabelSize = [750, $
+                         CountsVsTofLabelSize[1]+242, $
+                         100, $
+                         30]
 xoff = 100
 CountsVsTofYLabelSize = [CountsVsTofXLabelSize[0]+xoff,$
                          CountsVsTofXLabelSize[1:3]]
@@ -23,9 +26,9 @@ xoff = 105
 CountsVsTofPixelLabelSize = [CountsVsTofXLabelSize[0]+3*xoff,$
                              CountsVsTofXLabelSize[1:3]]
 
-CountsVsTofFrameSize = [748,205,440,275]
+CountsVsTofFrameSize = [748,CountsVsTofLabelSize[1]-5,440,275]
 
-OpenNeXusSelectionTab = [755,5,425,170]
+OpenNeXusSelectionTab = [755,5,425,210]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 

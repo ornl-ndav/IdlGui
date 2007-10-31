@@ -71,19 +71,29 @@ tbase = WIDGET_BASE(NeXusRoiTabBase,$
 button = WIDGET_BUTTON(tbase,$
                        VALUE     = 'SAVE ROI',$
                        UNAME     = 'save_roi_file_button',$
-                       SCR_XSIZE = 70,$
+                       SCR_XSIZE = 74,$
                        SCR_YSIZE = 30)
 
 text   = WIDGET_TEXT(tbase,$
                      UNAME       = 'save_roi_file_text',$
                      VALUE       = '',$
-                     XSIZE       = 38,$
+                     XSIZE       = 53,$
                      /EDITABLE)
 
-button = WIDGET_BUTTON(tbase,$
+;ROI path button
+fbase = WIDGET_BASE(NeXusRoiTabBase,$
+                    ROW = 1,$
+                    /BASE_ALIGN_CENTER)
+
+button = WIDGET_BUTTON(fbase,$
                        VALUE     = '~/local/',$
                        UNAME     = 'roi_path_button',$
-                       SCR_XSIZE = 90,$
+                       SCR_XSIZE = 335,$
                        SCR_YSIZE = 30)
 
+button = WIDGET_BUTTON(fbase,$
+                       VALUE     = 'Auto. Name',$
+                       UNAME     = 'roi_file_name_generator',$
+                       SCR_XSIZE = 75,$
+                       SCR_YSIZE = 30)
 END

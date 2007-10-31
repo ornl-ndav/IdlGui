@@ -26,47 +26,38 @@ CASE Event.id OF
         BSSselection_SetRoiPath, Event
     end
 
-
-
-
-
-
-
-
-
-
+;Regenerate new name for ROI file
+    Widget_Info(wWidget, FIND_BY_UNAME='roi_file_name_generator'): begin
+        BSSselection_CreateRoiFileName, Event
+    end
+    
 ;counts vs tof draw
     widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
-
             if (Event.release EQ 1) then begin ;mouse released
                 BSSselection_ZoomInCountsVsTofReleased, Event
             endif
-            
             if (Event.press EQ 1) then begin ;mouse pressed
                 if (Event.type EQ 0 ) then begin ;left click
                     BSSselection_ZoomInCountsVsTofPressed, Event
                 endif
-
             endif
-
-          endif
-            
-        end
+        endif
+    end
     
 ;X: Y: Bank: and PixelID cw_fields       
 ;X
     Widget_Info(wWidget, FIND_BY_UNAME='x_value'): begin
-              BSSselection_DisplayCountsVsTof, Event
-              BSSselection_UpdatePixelIDField, Event
+        BSSselection_DisplayCountsVsTof, Event
+        BSSselection_UpdatePixelIDField, Event
     end
-
+    
 ;Y        
     Widget_Info(wWidget, FIND_BY_UNAME='y_value'): begin
-              BSSselection_DisplayCountsVsTof, Event
-              BSSselection_UpdatePixelIDField, Event
+        BSSselection_DisplayCountsVsTof, Event
+        BSSselection_UpdatePixelIDField, Event
     end
-
+    
 ;Bank
     Widget_Info(wWidget, FIND_BY_UNAME='bank_value'): begin
               BSSselection_DisplayCountsVsTof, Event
