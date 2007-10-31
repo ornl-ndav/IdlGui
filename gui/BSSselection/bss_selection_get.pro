@@ -36,13 +36,27 @@ END
 
 FUNCTION getPixelIDfromXY, Event, pixelID
 IF (pixelID LT 4096) THEN BEGIN
-    bank = 1
+;    bank = 1
 ENDIF ELSE BEGIN
-    bank = 2
+;    bank = 2
     pixelid -= 4096
 ENDELSE
 y = (pixelid MOD 64)
 x = (pixelid / 64)
+RETURN, [x,y]
+END
+
+
+;this function does the same as the previous one but does not
+;touch the pixelid value
+FUNCTION getPixelIDfromXY_Untouched, pixelID
+IF (pixelID LT 4096) THEN BEGIN
+    a = pixelID
+ENDIF ELSE BEGIN
+    a = pixelid - 4096
+ENDELSE
+y = (a MOD 64)
+x = (a / 64)
 RETURN, [x,y]
 END
 
@@ -72,4 +86,11 @@ FUNCTION getRoiPathButtonValue, Event
 id = widget_info(Event.top,find_by_uname='roi_path_button')
 widget_control, id, get_value=text
 RETURN, text
+END
+
+
+FUNCTION getRoiFullFileName, Event
+id = widget_info(Event.top,find_by_uname='save_roi_file_text')
+widget_control, id, get_value=FullFileName
+RETURN, FullFileName
 END
