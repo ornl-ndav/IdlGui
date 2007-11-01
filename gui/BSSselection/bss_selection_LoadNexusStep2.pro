@@ -28,6 +28,7 @@ success = 0
 bss_selection_PlotBanks, Event, success
 
 if (success EQ 0) then begin
+
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
 
 ;desactivate button
