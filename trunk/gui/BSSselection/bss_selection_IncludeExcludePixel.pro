@@ -157,3 +157,23 @@ FOR i=0,3584L DO BEGIN
     ENDIF
 ENDFOR
 END
+
+
+
+
+
+PRO BSSselection_FullResetButton, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = intarr((*global).pixel_excluded_size)
+(*(*global).pixel_excluded) = pixel_excluded
+
+PlotIncludedPixels, Event
+
+LogBookText = '-> ROI has been fully reset.'
+AppendLogBookMessage, Event, LogBookText
+
+END
