@@ -176,3 +176,8 @@ id = widget_info(Event.top,find_by_uname='load_roi_file_text')
 widget_control, id, set_value=text
 END
 
+;put the given string in the 'nexus_run_number' cw_field
+PRO putRunNumberValue, Event, text
+id = widget_info(Event.top,find_by_uname='nexus_run_number')
+widget_control, id, set_value = text
+END

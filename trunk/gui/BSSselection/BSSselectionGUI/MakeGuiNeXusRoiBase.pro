@@ -22,8 +22,8 @@ text   = CW_FIELD(fbase,$
                   RETURN_EVENTS  = 1,$
                   TITLE          = 'RUN NUMBER:',$
                   ROW            = 1,$
-                  XSIZE          = 30,$
-                  /INTEGER)
+                  XSIZE          = 30)
+;                  /INTEGER)
 
 button = WIDGET_BUTTON(fbase,$
                        VALUE     = 'B R O W S E ...',$

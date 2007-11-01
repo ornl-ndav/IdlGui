@@ -28,6 +28,11 @@ if (FullNexusFileName NE '') then begin
 ;nexus has been found and can be opened
     BSSselection_LoadNexus_step2, Event, FullNexusFileName
     (*global).NeXusFound = 1
+
+    (*global).RunNumber = ''
+
+;reset NeXus run number cw_field
+    putRunNumberValue, Event, ''
     
 endif else begin
 

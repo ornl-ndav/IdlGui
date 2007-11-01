@@ -5,6 +5,12 @@ widget_control,id,get_uvalue=global
 
 path = (*global).roi_path
 first_part = 'BASIS_'
+
+RunNumber = (*global).RunNumber
+IF (RunNumber NE '') THEN BEGIN
+    first_part += strcompress(RunNumber,/remove_all) + '_'
+ENDIF
+
 get_iso8601, second_part
 ext_part = (*global).roi_ext
 
