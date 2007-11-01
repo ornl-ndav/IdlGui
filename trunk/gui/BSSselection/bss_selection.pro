@@ -21,6 +21,8 @@ global = ptr_new ({processing : 'PROCESSING',$
                    roi_path : '~/local/',$ ;path where to save the ROI file
                    roi_ext : '_ROI.dat' ,$ ;extension of ROI files
                    roi_default_file_name : '',$ ;default roi file name
+                   ROI_error_status : 0,$ ;error status of the ROI process
+                   RoiPreviewArray : [0,10,50,100],$ ;roi array
                    counts_vs_tof_x : 0L,$ ;x of actual counts vs tof plotted
                    counts_vs_tof_y : 0L,$ ;y of actual counts vs tof plotted
                    counts_vs_tof_bank : 0,$ ;bank of actual counts vs tof plotted
