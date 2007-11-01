@@ -39,6 +39,7 @@ cd, CurrentFolder
 .run bss_selection_IncludeExclude.pro
 
 .run bss_selection_SaveRoiFile.pro
+.run bss_selection_LoadRoiFile.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro

@@ -26,6 +26,11 @@ CASE Event.id OF
         bss_selection_BrowseNexus, Event
     end
     
+;Load ROI file
+    Widget_Info(wWidget, FIND_BY_UNAME='load_roi_file_button'): begin
+        BSSselection_LoadRoiFile, Event
+    end
+
 ;Determine Path for saving ROI file
     Widget_Info(wWidget, FIND_BY_UNAME='roi_path_button'): begin
         BSSselection_SetRoiPath, Event

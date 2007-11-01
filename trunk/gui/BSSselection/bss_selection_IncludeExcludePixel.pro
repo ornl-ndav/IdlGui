@@ -66,7 +66,7 @@ ENDIF ELSE BEGIN                ;include pixel
     FOR i = 0, 3584L DO BEGIN
         pixel = pixelid_min + i
         IF (pixel_excluded(pixel) EQ 1) THEN BEGIN ;plot lines around this pixel
-            XY = getPixelIDfromXY(Event, pixel)
+            XY = getXYfromPixelID(Event, pixel)
             PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
         ENDIF        
     ENDFOR
@@ -95,7 +95,7 @@ wset, id
 pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
-        XY = getPixelIDfromXY(Event, i)
+        XY = getXYfromPixelID(Event, i)
         PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
     ENDIF
 ENDFOR
@@ -108,7 +108,7 @@ pixelid_min = 4096L
 FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
-        XY = getPixelIDfromXY(Event, pixel)
+        XY = getXYfromPixelID(Event, pixel)
         PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
     ENDIF
 ENDFOR
@@ -139,7 +139,7 @@ wset, id
 pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
-        XY = getPixelIDfromXY(Event, i)
+        XY = getXYfromPixelID(Event, i)
         PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
     ENDIF
 ENDFOR
@@ -152,7 +152,7 @@ pixelid_min = 4096L
 FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
-        XY = getPixelIDfromXY(Event, pixel)
+        XY = getXYfromPixelID(Event, pixel)
         PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
     ENDIF
 ENDFOR
