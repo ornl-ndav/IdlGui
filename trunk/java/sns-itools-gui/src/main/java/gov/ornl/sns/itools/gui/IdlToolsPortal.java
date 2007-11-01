@@ -9,7 +9,7 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 9;   //number of tools
+	final static int NUM_IMAGES = 10;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
@@ -30,6 +30,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
   static String TS_REBIN_GUI = "/SNS/software/idltools/TS_rebin_GUI";
+  static String BSS_SELECTION = "/SNS/software/idltools/BSSselection";
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -63,7 +64,7 @@ public class IdlToolsPortal implements ActionListener{
       hostname = "unknown";
     }
         
-    //Add various widgets tot he sub panels;
+    //Add various widgets to the sub panels;
 		addWidgets();
 		
 		//Create the main panel to contain the two sub panels
@@ -94,7 +95,8 @@ public class IdlToolsPortal implements ActionListener{
     images[6] = createImageIcon("/gov/ornl/sns/itools/images/REFreduction.gif");
     images[7] = createImageIcon("/gov/ornl/sns/itools/images/miniREFreduction.gif");
     images[8] = createImageIcon("/gov/ornl/sns/itools/images/TS_rebin_batch.gif");
-		
+    images[9] = createImageIcon("/gov/ornl/sns/itools/images/BSSselection.gif");
+    
 		//Define the help text that goes with each tool
 		//plotBSS
 		info[0] = "<html>This program plots data for the Backscattering instrument. It is also<br>" +
@@ -120,7 +122,8 @@ public class IdlToolsPortal implements ActionListener{
     info[7] = "<html>This is the mini version of the new DataReduction GUI (REFreduction).</html>";
     //TS_rebin_batch
     info[8] = "<html>This programs rebin a set of run numbers.</html>";
-      
+    //BSSselection
+    info[9] = "<html>Program that allows users to create a Region Of Interest (ROI) file for BASIS</html>";
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -148,7 +151,9 @@ public class IdlToolsPortal implements ActionListener{
         "ReflScale",
         "REFreduction (high resolution mode)",
         "REFreduction (low resolution mode)",
-        "TS_rebin_gui"};
+        "TS_rebin_gui",
+        "BSSselection"};
+    
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
 		
@@ -237,6 +242,9 @@ public class IdlToolsPortal implements ActionListener{
            System.exit(0);
          case 8: //TS_rebin_gui
            p = (Runtime.getRuntime()).exec(TS_REBIN_GUI);
+           System.exit(0);
+         case 9: //BSSselection
+           p = (Runtime.getRuntime()).exec(BSS_SELECTION);
            System.exit(0);
          default: break;
            }
@@ -337,8 +345,14 @@ public class IdlToolsPortal implements ActionListener{
         default:enableButton = true; break;
         };
         break;
-      
-    } 
+      case 9: //BSSselection
+        switch (localHostname) {
+        case bac2:
+        case bac: enableButton = true; break;
+        default: enableButton = false; break;
+        };  
+        
+    }   
     goButton.setEnabled(enableButton);
   }
   
