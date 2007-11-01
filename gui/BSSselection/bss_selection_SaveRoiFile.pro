@@ -154,4 +154,7 @@ ENDELSE
 putMessageBoxInfo, Event, MessageBox
 LogBookMessage = ' -> ROI file has been saved with success'
 
+;remove name of file loaded from Loaded ROI text
+putLoadedRoiFileName, Event, ''
+
 END

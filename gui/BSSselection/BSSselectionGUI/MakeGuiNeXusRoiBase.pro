@@ -60,6 +60,7 @@ button = WIDGET_BUTTON(sbase,$
                        SENSITIVE = 0)
 
 text   = WIDGET_TEXT(sbase,$
+                     UNAME       = 'load_roi_file_text',$
                      VALUE       = '',$
                      XSIZE       = 47,$
                      /EDITABLE)
