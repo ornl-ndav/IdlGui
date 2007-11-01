@@ -65,8 +65,12 @@ END
 
 ;this function gives the pixelID of the given bank, x and y value
 ;retrieve from the string type 'bank1_34_4'
-FUNCTION getPixelIDfromRoiString, RoiString
+FUNCTION getPixelIDfromRoiString, Event, RoiString, display_info, error_status
+
 RoiStringArray = strsplit(RoiString,'_',/EXTRACT)
+
+ON_IOERROR, L1
+
 bank = RoiStringArray[0]
 Y    = Fix(RoiStringArray[1])
 X    = Fix(RoiStringArray[2])
@@ -76,9 +80,24 @@ IF (bank EQ 'bank1') THEN BEGIN
 ENDIF ELSE BEGIN
     pixel_offset = 4096
 ENDELSE
-
 pixelid = pixel_offset + Y * 64 + X
+
+IF (display_info EQ 1) THEN BEGIN
+    
+    LogBookMessage = '      -> ' + RoiString
+    LogBookMessage += ' : => bank: ' + bank
+    LogBookMessage += ' , Y: ' + strcompress(Y,/remove_all)
+    LogBookMessage += ' , X: ' + strcompress(X,/remove_all) 
+    LogBookMessage += ' ==> PixelID: ' + strcompress(pixelid,/remove_all)
+    AppendLogBookMessage, Event, LogBookMessage
+    
+ENDIF
+
 RETURN, pixelid
+
+L1: error_status = 1
+return, 0
+
 END
 
 

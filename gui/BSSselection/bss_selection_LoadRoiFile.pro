@@ -48,13 +48,35 @@ FileArray = BSSselection_retrieveStringArray(Event, FileName, NbrElement)
 pixel_excluded_size = (*global).pixel_excluded_size
 PixelExcludedArray = MAKE_ARRAY(pixel_excluded_size,/INTEGER,VALUE=1)
 
+LogBookText = '   -> Nbr of pixels to include: ' + $
+  strcompress(NbrElement,/remove_all)
+AppendLogBookMessage, Event, LogBookText
+LogBookText = '   -> Sample data from file  : '
+AppendLogBookMessage, Event, LogBookText
+
+;display_info = 1 if we want to see a sample
+RoiPreviewArray = (*global).RoiPreviewArray
+error_status = 0
+
 FOR i=0,(NbrElement-1) DO BEGIN
 
-    pixelid = getPixelIDfromRoiString(FileArray[i])
+    IF (WHERE(i EQ RoiPreviewArray) NE -1) THEN BEGIN
+        display_info = 1
+    ENDIF
+       
+    pixelid = getPixelIDfromRoiString(Event, FileArray[i],display_info, error_status)
+    
+    IF (error_status EQ 1) THEN BEGIN
+        break
+    ENDIF
+    
     PixelExcludedArray[pixelid] = 0
+    
+    IF (display_info EQ 1) THEN display_info = 0 
 
 ENDFOR
 
+(*global).ROI_error_status = error_status
 (*(*global).pixel_excluded) = PixelExcludedArray
 
 END
@@ -83,16 +105,44 @@ RoiFullFileName = DIALOG_PICKFILE(PATH = RoiPath,$
                                   FILTER = filter,$
                                   DEFAULT_EXTENSION = roi_ext)
 
+no_error = 0
+CATCH, no_error
+
 IF (RoiFullFileName NE '') THEN BEGIN
     
+    IF (no_error NE 0) then begin
+        
+        CATCH, /CANCEL
+        messageBox = 'ROI File Loading -> ERROR !'
+        LogBookMessage = 'ERROR loading the ROI file ' + RoiFullFileName
+        AppendLogBookMessage, Event, LogBookMessage
+
+    ENDIF ELSE BEGIN
+        
+        LogBookText = 'Loading ROI file: ' + RoiFullFileName
+        AppendLogBookMessage, Event, LogBookText
+
 ;Read ROI file
-    BSSselection_retrievePixelExcludedArray, Event, RoiFullFileName
-    
+        BSSselection_retrievePixelExcludedArray, Event, RoiFullFileName
+       
+        IF ((*global).ROI_error_status EQ 1) THEN BEGIN
+            messageBox = 'ROI File Loading -> ERROR !'
+            LogBookMessage = 'ERROR loading the ROI file ' + RoiFullFileName
+            AppendLogBookMessage, Event, LogBookMessage
+        ENDIF ELSE BEGIN
 ;plot new ROI file
-    PlotIncludedPixels, Event
+            PlotIncludedPixels, Event
+            
+            message = 'ROI File Loading -> SUCCESS !'
+            LogBookMessage = '   -> ROI File has been loaded with SUCCESS !'
+            AppendLogBookMessage, Event, LogBookMessage
+        ENDELSE
+
+    ENDELSE
+    
+    putMessageBoxInfo, Event, MessageBox
     
 ENDIF ELSE BEGIN                ;don't do anything
-    
     
 ENDELSE
 

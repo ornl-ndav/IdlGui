@@ -81,7 +81,7 @@ IF (error NE 0) then begin
     AppendLogBookMessage, Event, LogBookText
     LogBookText = '   -> ROI file name: ' + RoiFullFileName
     AppendLogBookMessage, Event, LogBookText
-    MessageBox = 'ROI file creation -> ERROR !'
+    MessageBox = 'ROI File Creation -> ERROR !'
 
 ENDIF ELSE BEGIN
     
@@ -112,7 +112,7 @@ ENDIF ELSE BEGIN
     close, 1
     free_lun, 1
     
-    MessageBox = 'ROI file creation -> SUCCESS !'
+    MessageBox = 'ROI File Creation -> SUCCESS !'
 
 ENDELSE
 
