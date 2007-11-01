@@ -169,3 +169,10 @@ PRO putMessageBoxInfo, Event, text
 id = widget_info(Event.top,find_by_uname='message_text')
 widget_control, id, set_value=text
 END
+
+;put the name of the loaded ROI file name
+PRO putLoadedRoiFileName, Event, text
+id = widget_info(Event.top,find_by_uname='load_roi_file_text')
+widget_control, id, set_value=text
+END
+

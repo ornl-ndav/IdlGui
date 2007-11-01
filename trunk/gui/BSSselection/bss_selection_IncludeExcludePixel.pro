@@ -176,4 +176,7 @@ PlotIncludedPixels, Event
 LogBookText = '-> ROI has been fully reset.'
 AppendLogBookMessage, Event, LogBookText
 
+;remove name of file loaded from Loaded ROI text
+putLoadedRoiFileName, Event, ''
+
 END

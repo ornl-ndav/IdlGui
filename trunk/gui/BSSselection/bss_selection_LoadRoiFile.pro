@@ -117,10 +117,16 @@ IF (RoiFullFileName NE '') THEN BEGIN
         LogBookMessage = 'ERROR loading the ROI file ' + RoiFullFileName
         AppendLogBookMessage, Event, LogBookMessage
 
+;remove name of file loaded from Loaded ROI text
+        putLoadedRoiFileName, Event, ''
+
     ENDIF ELSE BEGIN
         
         LogBookText = 'Loading ROI file: ' + RoiFullFileName
         AppendLogBookMessage, Event, LogBookText
+
+;remove name of file loaded from Loaded ROI text
+        putLoadedRoiFileName, Event, RoiFullFileName
 
 ;Read ROI file
         BSSselection_retrievePixelExcludedArray, Event, RoiFullFileName
