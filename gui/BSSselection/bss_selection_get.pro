@@ -34,7 +34,8 @@ RETURN, pixelid
 END
 
 
-FUNCTION getPixelIDfromXY, Event, pixelID
+;FUNCTION getPixelIDfromXY, Event, pixelID
+FUNCTION getXYfromPixelID, Event, pixelID
 IF (pixelID LT 4096) THEN BEGIN
 ;    bank = 1
 ENDIF ELSE BEGIN
@@ -49,7 +50,8 @@ END
 
 ;this function does the same as the previous one but does not
 ;touch the pixelid value
-FUNCTION getPixelIDfromXY_Untouched, pixelID
+;FUNCTION getPixelIDfromXY_Untouched, pixelID
+FUNCTION getXYfromPixelID_Untouched, pixelID
 IF (pixelID LT 4096) THEN BEGIN
     a = pixelID
 ENDIF ELSE BEGIN
@@ -58,6 +60,25 @@ ENDELSE
 y = (a MOD 64)
 x = (a / 64)
 RETURN, [x,y]
+END
+
+
+;this function gives the pixelID of the given bank, x and y value
+;retrieve from the string type 'bank1_34_4'
+FUNCTION getPixelIDfromRoiString, RoiString
+RoiStringArray = strsplit(RoiString,'_',/EXTRACT)
+bank = RoiStringArray[0]
+Y    = Fix(RoiStringArray[1])
+X    = Fix(RoiStringArray[2])
+
+IF (bank EQ 'bank1') THEN BEGIN
+    pixel_offset = 0
+ENDIF ELSE BEGIN
+    pixel_offset = 4096
+ENDELSE
+
+pixelid = pixel_offset + Y * 64 + X
+RETURN, pixelid
 END
 
 
@@ -100,3 +121,12 @@ FUNCTION getCurrentSelectedMainTab, Event
 id = widget_info(Event.top,find_by_uname='main_tab')
 RETURN, widget_info(id, /tab_current)
 END
+
+
+FUNCTION getNbrLines, FileName
+cmd = 'wc -l ' + FileName
+spawn, cmd, result
+Split = strsplit(result[0],' ',/extract)
+RETURN, Split[0]
+END
+

@@ -98,11 +98,11 @@ ENDIF ELSE BEGIN
                 bank = 'bank2_'
             ENDELSE
             
-            XY = getPixelIDfromXY_Untouched(i)
+            XY = getXYfromPixelID_Untouched(i)
             X = strcompress(XY[0],/remove_all)
             Y = strcompress(XY[1],/remove_all)
             
-            text = strcompress(i) + ': ' + bank + X + '_' + Y
+            text = bank + X + '_' + Y
             printf, 1, text
             
         ENDIF
