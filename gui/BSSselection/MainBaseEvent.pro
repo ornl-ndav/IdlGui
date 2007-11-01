@@ -157,6 +157,11 @@ CASE Event.id OF
         BSSselection_IncludeTube, Event
     end
 
+;Full reset of Excluded pixels
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_button'): begin
+        BSSselection_FullResetButton, Event
+    end
+
     ELSE:
     
 ENDCASE
