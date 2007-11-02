@@ -59,9 +59,13 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalPixels = (*global).TotalPixels
+
 sz = (size(PixelidListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
-    pixel_excluded[PixelidListInt[i]] = 1
+    IF (PixelidListInt[i] LE (TotalPixels)) THEN BEGIN
+        pixel_excluded[PixelidListInt[i]] = 1
+    ENDIF
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
 
@@ -75,9 +79,13 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalPixels = (*global).TotalPixels
+
 sz = (size(PixelidListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
-    pixel_excluded[PixelidListInt[i]] = 0
+    IF (PixelidListInt[i] LT (TotalPixels)) THEN BEGIN
+        pixel_excluded[PixelidListInt[i]] = 0
+    ENDIF
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
 
@@ -90,18 +98,24 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalRows = (*global).TotalRows
+
 sz = (size(RowListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
     
-    IF (RowListINT[i] GT 63) THEN BEGIN
-        offset = 4096
-    ENDIF ELSE BEGIN
-        offset = 0
-    ENDELSE
-    
-    FOR j=0,56 DO BEGIN
-        pixel_excluded[RowListInt[i]+j*64+offset] = 1
-    ENDFOR
+    IF (RowListINT[i] LT TotalRows) THEN BEGIN
+        
+        IF (RowListINT[i] GT 63) THEN BEGIN
+            offset = 4096
+        ENDIF ELSE BEGIN
+            offset = 0
+        ENDELSE
+        
+        FOR j=0,56 DO BEGIN
+            pixel_excluded[RowListInt[i]+j*64+offset] = 1
+        ENDFOR
+
+    ENDIF
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
@@ -115,18 +129,24 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalRows = (*global).TotalRows
+
 sz = (size(RowListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
     
-    IF (RowListINT[i] GT 63) THEN BEGIN
-        offset = 4096
-    ENDIF ELSE BEGIN
-        offset = 0
-    ENDELSE
-    
-    FOR j=0,56 DO BEGIN
-        pixel_excluded[RowListInt[i]+j*64+offset] = 0
-    ENDFOR
+    IF (RowListINT[i] LT TotalRows) THEN BEGIN
+        
+        IF (RowListINT[i] GT 63) THEN BEGIN
+            offset = 4096
+        ENDIF ELSE BEGIN
+            offset = 0
+        ENDELSE
+        
+        FOR j=0,56 DO BEGIN
+            pixel_excluded[RowListInt[i]+j*64+offset] = 0
+        ENDFOR
+
+    ENDIF
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
@@ -139,12 +159,18 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalTubes = (*global).TotalTubes
+
 sz = (size(TubeListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
     
-    FOR j=0,63 DO BEGIN
-        pixel_excluded[TubeListInt[i]*64+j] = 1
-    ENDFOR
+    IF (TubeListInt[i] LT TotalTubes) THEN BEGIN
+
+        FOR j=0,63 DO BEGIN
+            pixel_excluded[TubeListInt[i]*64+j] = 1
+        ENDFOR
+
+    ENDIF
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
@@ -158,12 +184,18 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 pixel_excluded = (*(*global).pixel_excluded)
+TotalTubes = (*global).TotalTubes
+
 sz = (size(TubeListInt))(1)
 FOR i=0,(sz-1) DO BEGIN
     
-    FOR j=0,63 DO BEGIN
-        pixel_excluded[TubeListInt[i]*64+j] = 0
-    ENDFOR
+    IF (TubeListInt[i] LT TotalTubes) THEN BEGIN
+        
+        FOR j=0,63 DO BEGIN
+            pixel_excluded[TubeListInt[i]*64+j] = 0
+        ENDFOR
+
+    ENDIF
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
