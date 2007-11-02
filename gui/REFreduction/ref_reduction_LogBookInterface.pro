@@ -41,12 +41,8 @@ PRO REFreduction_EmailLogBook, Event, FullFileName
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;get full text of LogBook
-LogBookText = getLogBookText(Event)
-
 ;add ucams 
 ucamsText = 'Ucams: ' + (*global).ucams
-LogBookText = [ucamsText,LogBookText]
 
 ;hostname
 spawn, 'hostname', hostname
