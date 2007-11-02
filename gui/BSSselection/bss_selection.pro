@@ -88,6 +88,12 @@ MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+;initialize droplists (selection and main_plot color)
+id = widget_info(Main_base,Find_by_Uname='selection_color_droplist')
+widget_control, id, set_droplist_select= 4
+id = widget_info(Main_base,Find_by_Uname='main_plot_color_droplist')
+widget_control, id, set_droplist_select= 5
+
 END
 
 

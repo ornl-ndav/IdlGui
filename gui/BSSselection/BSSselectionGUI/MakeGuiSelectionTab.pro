@@ -79,6 +79,53 @@ BottomBankSize = [TopBankSize[0], $
                   TopBankSize[2], $
                   TopBanksize[3]]
 
+;COLOR SELECTION and MAIN_PLOT BASE
+ColorBaseSize       = [748,570,440,85]
+SelectionColorValue = ['Black','Blue','Red','Orange','Yellow','White']
+
+LoadctList = ['Black/White Linear',$
+              'Blue/White',$
+              'Green/Red/Blue/White',$
+              'Red Temperature',$
+              'Blue/Green/Red/Yellow',$
+              'Std Gamma-II',$
+              'Prism',$
+              'Red/Purple',$
+              'Green/White Linear',$
+              'Green/White Exponential',$
+              'Green/Pink',$
+              'Blue/Red',$
+              '16 Level',$
+              'Rainbow',$
+              'Steps',$
+              'Stern Special',$
+              'Haze',$
+              'Blue/Pastel/Red',$
+              'Pastels',$
+              'Hue Sat Lightness 1',$
+              'Hue Sat Lightness 2',$
+              'Hue Sat Value 1',$
+              'Hue Sat Value 2',$
+              'Purple/Red + Stripes',$
+              'Beach',$
+              'Mac Style',$
+              'Eos A',$
+              'Eos B',$
+              'Hardcandy',$
+              'Nature',$
+              'Ocean',$
+              'Peppermint',$
+              'Plasma',$
+              'Blue/Red',$
+              'Rainbow',$
+              'Blue Waves',$
+              'Volcano',$
+              'Waves',$
+              'Rainbow 18',$
+              'Rainbow + White',$
+              'Rainbow + Black']
+
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -288,5 +335,62 @@ BOTTOM_BANK_DRAW = WIDGET_DRAW(SelectionBase,$
                                SCR_YSIZE = BottomBankSize[3],$
                                /BUTTON_EVENTS,$
                                /MOTION_EVENTS)
+
+;SELECTION COLOR TOOL
+ColorBase = WIDGET_BASE(SelectionBase,$
+                        XOFFSET   = ColorBaseSize[0],$
+                        YOFFSET   = ColorBaseSize[1],$
+                        SCR_XSIZE = ColorBaseSize[2],$
+                        SCR_YSIZE = ColorBaseSize[3],$
+                        FRAME     = 1,$
+                        COLUMN    = 1)
+
+;SelectionColor
+SelectionColorBase = WIDGET_BASE(ColorBase,$
+                                 /BASE_ALIGN_CENTER,$
+                                 ROW = 1)
+
+label = WIDGET_LABEL(SelectionColorBase,$
+                     VALUE = 'Selection Color:',$
+                     SCR_XSIZE = 100,$
+                     SCR_YSIZE = 35)
+
+list = WIDGET_DROPLIST(SelectionColorBase,$
+                       VALUE = SelectionColorValue,$
+                       UNAME = 'selection_color_droplist')
+
+label = widget_label(SelectionColorBase,$
+                     value = '                ')
+
+button = WIDGET_BUTTON(SelectionColorBase,$
+                       VALUE = 'RESET',$
+                       SCR_XSIZE = 130,$
+                       SCR_YSIZE = 30,$
+                       UNAME = 'selection_color_reset_button')
+                       
+
+;MainPlotColor
+MainPLotColorBase = WIDGET_BASE(ColorBase,$
+                                /BASE_ALIGN_CENTER,$
+                                ROW = 1)
+
+label = WIDGET_LABEL(MainPlotColorBase,$
+                     VALUE = 'Main Plot Color:',$
+                     SCR_XSIZE = 100,$
+                     SCR_YSIZE = 35)
+
+list = WIDGET_DROPLIST(MainPlotColorBase,$
+                       VALUE = LoadctList,$
+                       UNAME = 'main_plot_color_droplist')
+
+button = WIDGET_BUTTON(MainPlotColorBase,$
+                       VALUE = 'RESET',$
+                       SCR_XSIZE = 130,$
+                       SCR_YSIZE = 30,$
+                       UNAME = 'main_plot_color_reset_button')
+                       
+
+
+
 
 END
