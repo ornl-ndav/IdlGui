@@ -25,12 +25,13 @@ sbase = WIDGET_BASE(LogBookBase,$
                     ROW=1)
 
 label = WIDGET_LABEL(sbase,$
-                     VALUE='Add message:')
+                     VALUE='Add message:',$
+                     SCR_YSIZE = 30)
 
 text = WIDGET_TEXT(sbase,$
                    UNAME='log_book_message',$
                    SCR_XSIZE = 955,$
-                   SCR_YSIZE = 30,$
+                   SCR_YSIZE = 35,$
                    VALUE = '',$
                    /EDITABLE)
 

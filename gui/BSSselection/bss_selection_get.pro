@@ -1,3 +1,11 @@
+;This function returns the contain of the Text Field
+FUNCTION getTextFieldValue, Event, uname
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = TextFieldValue
+RETURN, TextFieldValue
+END
+
+
 ;This function returns the contain of the nexus run number
 FUNCTION getRunNumber, Event
 RunNumberID = widget_info(Event.top,find_by_uname='nexus_run_number')
@@ -149,3 +157,7 @@ Split = strsplit(result[0],' ',/extract)
 RETURN, Split[0]
 END
 
+
+FUNCTION getLogBookText, Event
+return, getTextFieldValue(Event,'log_book')
+END
