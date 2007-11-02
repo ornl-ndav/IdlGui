@@ -23,7 +23,7 @@ BEGIN {
 		}
 	}
 	# print "numStates = " numStates
-	print "-ns " numStates
+	print "-S " numStates
 }
 
 #
@@ -46,7 +46,7 @@ BEGIN {
 	# that the XML specifies the states sanely in order, too!  :-D
 	# (this is way easier to parse...! :-)
 	# print "-po " stateIndex " " pixelOffset
-	print "-po " pixelOffset
+	print "-P " pixelOffset
 }
 
 #
