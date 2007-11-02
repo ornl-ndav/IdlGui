@@ -7,6 +7,7 @@ resolve_routine, "read_bmp",/either
 resolve_routine, "loadct",/either
 resolve_routine, "xloadct",/either
 resolve_routine, "xregistered",/either
+resolve_routine, "cw_field",/either
 
 save,/routines,filename = CurrentFolder + '/bss_selection.sav'
 exit
