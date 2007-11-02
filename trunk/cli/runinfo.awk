@@ -42,7 +42,11 @@ BEGIN {
 		}
 	}
 	# print "pixel_offset[" stateIndex "]=" pixelOffset
-	print "-po " stateIndex " " pixelOffset
+	# omit stateIndex from output, just dump out in order and hope
+	# that the XML specifies the states sanely in order, too!  :-D
+	# (this is way easier to parse...! :-)
+	# print "-po " stateIndex " " pixelOffset
+	print "-po " pixelOffset
 }
 
 #
