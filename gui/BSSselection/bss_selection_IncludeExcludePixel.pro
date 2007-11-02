@@ -1,13 +1,13 @@
-PRO PlotExcludedBox, x, y, x_coeff, y_coeff
-    plots, x*x_coeff, y*y_coeff, /device, color=600
-    plots, x*x_coeff, (y+1)*y_coeff, /device, /continue, color=600
-    plots, (x+1)*x_coeff, y*y_coeff, /device, color=600
-    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=600
+PRO PlotExcludedBox, x, y, x_coeff, y_coeff, color
+    plots, x*x_coeff, y*y_coeff, /device, color=color
+    plots, x*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
+    plots, (x+1)*x_coeff, y*y_coeff, /device, color=color
+    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
     
-    plots, x*x_coeff,y*y_coeff, /device,color=600
-    plots, (x+1)*x_coeff, y*y_coeff, /device, /continue, color=600
-    plots, x*x_coeff,(y+1)*y_coeff, /device,color=600
-    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=600
+    plots, x*x_coeff,y*y_coeff, /device,color=color
+    plots, (x+1)*x_coeff, y*y_coeff, /device, /continue, color=color
+    plots, x*x_coeff,(y+1)*y_coeff, /device,color=color
+    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
 END
 
 
@@ -44,11 +44,12 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
+color   = (*global).ColorExcludedPixels
 
 IF (new_state) THEN BEGIN ;exclude pixel
     x       = getXValue(Event)
     y       = getYValue(Event)
-    PlotExcludedBox, x, y, x_coeff, y_coeff
+    PlotExcludedBox, x, y, x_coeff, y_coeff, color
 ENDIF ELSE BEGIN                ;include pixel
 
 ;first replot bank + lines
@@ -67,7 +68,7 @@ ENDIF ELSE BEGIN                ;include pixel
         pixel = pixelid_min + i
         IF (pixel_excluded(pixel) EQ 1) THEN BEGIN ;plot lines around this pixel
             XY = getXYfromPixelID(Event, pixel)
-            PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+            PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
         ENDIF        
     ENDFOR
 
@@ -87,6 +88,7 @@ widget_control,id,get_uvalue=global
 
 x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
+color   = (*global).ColorExcludedPixels
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
@@ -96,7 +98,7 @@ pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, i)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 
@@ -109,7 +111,7 @@ FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, pixel)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 END
@@ -125,6 +127,7 @@ widget_control,id,get_uvalue=global
 
 x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
+color   = (*global).ColorExcludedPixels
 
 ;plot main plots + grid
 bss_selection_PlotBank1, Event
@@ -140,7 +143,7 @@ pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, i)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 
@@ -153,7 +156,7 @@ FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, pixel)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff
+        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 END

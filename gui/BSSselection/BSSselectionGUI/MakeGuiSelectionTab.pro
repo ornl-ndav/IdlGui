@@ -80,9 +80,26 @@ BottomBankSize = [TopBankSize[0], $
                   TopBanksize[3]]
 
 ;COLOR SELECTION and MAIN_PLOT BASE
-ColorBaseSize       = [748,570,440,85]
-SelectionColorValue = ['Black','Blue','Red','Orange','Yellow','White']
+ColorBaseSize       = [748,565,440,130]
+ColorLabelSize      = [ 115,5,200,0]
 
+SelectionDropListSize = [0,30,80,30]
+SelectionDropList     = ['Grid: Vertical Lines', $
+                         'Grid: Horizontal Lines',$
+                         'Excluded pixels',$
+                         'Main Plot']
+
+ResetColorButtonSize       = [190,32,80,30]
+ResetColorButtonTitle      = 'R E S E T'
+
+FullResetColorButtonSize   = [280,32,150,30]
+FullResetColorButtonTitle  = 'F U L L  R E S E T'
+
+ColorSliderBaseSize   = [10,65,415,45]
+ColorSliderLabelSize  = [13,0,420,30]
+ColorSliderLabelTitle = 'Black       Green      Red        Pink       Purple       White'
+ColorSliderSize       = [10,25,390,20]
+LoadctDropListSize    = [120,15,300,30]
 LoadctList = ['Black/White Linear',$
               'Blue/White',$
               'Green/Red/Blue/White',$
@@ -124,7 +141,6 @@ LoadctList = ['Black/White Linear',$
               'Rainbow 18',$
               'Rainbow + White',$
               'Rainbow + Black']
-
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -342,54 +358,84 @@ ColorBase = WIDGET_BASE(SelectionBase,$
                         YOFFSET   = ColorBaseSize[1],$
                         SCR_XSIZE = ColorBaseSize[2],$
                         SCR_YSIZE = ColorBaseSize[3],$
-                        FRAME     = 1,$
-                        COLUMN    = 1)
+                        FRAME     = 1)
 
-;SelectionColor
-SelectionColorBase = WIDGET_BASE(ColorBase,$
-                                 /BASE_ALIGN_CENTER,$
-                                 ROW = 1)
+ColorLabel = WIDGET_LABEL(ColorBase,$
+                          XOFFSET = ColorLabelSize[0],$
+                          YOFFSET = ColorLabelSize[1],$
+                          SCR_XSIZE = ColorLabelSize[2],$
+                          SCR_YSIZE = ColorLabelSize[3],$
+                          VALUE = 'C O L O R   S E T T I N G S')
 
-label = WIDGET_LABEL(SelectionColorBase,$
-                     VALUE = 'Selection Color:',$
-                     SCR_XSIZE = 100,$
-                     SCR_YSIZE = 35)
+SelectionDropList = WIDGET_DROPLIST(ColorBase,$
+                                    VALUE     = SelectionDropList,$
+                                    XOFFSET   = SelectionDropListSize[0],$
+                                    YOFFSET   = SelectionDropListSize[1],$
+                                    SCR_XSIZE = SelectionDropListSize[2],$
+                                    SCR_YSIZE = SelectionDropListSize[3],$
+                                    UNAME     = 'selection_droplist')
 
-list = WIDGET_DROPLIST(SelectionColorBase,$
-                       VALUE = SelectionColorValue,$
-                       UNAME = 'selection_color_droplist')
+ResetColorButton = WIDGET_BUTTON(ColorBase,$
+                                 VALUE     = ResetColorButtonTitle,$
+                                 XOFFSET   = ResetColorButtonSize[0],$
+                                 YOFFSET   = ResetColorButtonSize[1],$
+                                 SCR_XSIZE = ResetColorButtonSize[2],$
+                                 SCR_YSIZE = ResetColorButtonSize[3],$
+                                 UNAME     = 'reset_color_button')
 
-label = widget_label(SelectionColorBase,$
-                     value = '                ')
+FullResetColorButton = WIDGET_BUTTON(ColorBase,$
+                                     VALUE     = FullResetColorButtonTitle,$
+                                     XOFFSET   = FullResetColorButtonSize[0],$
+                                     YOFFSET   = FullResetColorButtonSize[1],$
+                                     SCR_XSIZE = FullResetColorButtonSize[2],$
+                                     SCR_YSIZE = FullResetColorButtonSize[3],$
+                                     UNAME     = 'full_reset_color_button')
 
-button = WIDGET_BUTTON(SelectionColorBase,$
-                       VALUE = 'RESET',$
-                       SCR_XSIZE = 130,$
-                       SCR_YSIZE = 30,$
-                       UNAME = 'selection_color_reset_button')
-                       
+;Color Slider base
+ColorSliderBase = WIDGET_BASE(ColorBase,$
+                              XOFFSET   = ColorSliderBaseSize[0],$
+                              YOFFSET   = ColorSliderBaseSize[1],$
+                              SCR_XSIZE = ColorSliderBaseSize[2],$
+                              SCR_YSIZE = ColorSliderBaseSize[3],$
+                              UNAME     = 'color_slider_base',$
+                              FRAME     = 0,$
+                              MAP       = 1)
 
-;MainPlotColor
-MainPLotColorBase = WIDGET_BASE(ColorBase,$
-                                /BASE_ALIGN_CENTER,$
-                                ROW = 1)
+ColorSlider = WIDGET_SLIDER(ColorSliderBase,$
+                            UNAME     = 'color_slider',$
+                            MAXIMUM   = 250,$
+                            MINIMUM   = 0,$
+                            XOFFSET   = ColorSliderSize[0],$
+                            YOFFSET   = ColorSlidersize[1],$
+                            SCR_XSIZE = ColorSliderSize[2],$
+                            SCR_YSIZE = ColorSliderSize[3])
 
-label = WIDGET_LABEL(MainPlotColorBase,$
-                     VALUE = 'Main Plot Color:',$
-                     SCR_XSIZE = 100,$
-                     SCR_YSIZE = 35)
+ColorSliderLabel = WIDGET_LABEL(ColorSliderBase,$
+                                XOFFSET   = ColorSliderLabelSize[0],$
+                                YOFFSET   = ColorSliderLabelSize[1],$
+                                SCR_XSIZE = ColorSliderLabelSize[2],$
+                                SCR_YSIZE = ColorSliderLabelSize[3],$
+                                VALUE     = ColorSliderLabelTitle,$
+                                /ALIGN_LEFT)
 
-list = WIDGET_DROPLIST(MainPlotColorBase,$
-                       VALUE = LoadctList,$
-                       UNAME = 'main_plot_color_droplist')
+;loadct base
+LoadctBase = WIDGET_BASE(ColorBase,$
+                         XOFFSET   = ColorSliderBaseSize[0],$
+                         YOFFSET   = ColorSliderBaseSize[1],$
+                         SCR_XSIZE = ColorSliderBaseSize[2],$
+                         SCR_YSIZE = ColorSliderBaseSize[3],$
+                         UNAME     = 'Loadct_base',$
+                         FRAME     = 0,$
+                         MAP       = 0)
 
-button = WIDGET_BUTTON(MainPlotColorBase,$
-                       VALUE = 'RESET',$
-                       SCR_XSIZE = 130,$
-                       SCR_YSIZE = 30,$
-                       UNAME = 'main_plot_color_reset_button')
-                       
-
+LoadctDropList = WIDGET_DROPLIST(LoadctBase,$
+                                 UNAME     = 'loadct_droplist',$
+                                 Value     = LoadctList,$
+                                 XOFFSET   = LoadctDropListSize[0],$
+                                 YOFFSET   = LoadctDropListSize[1],$
+                                 SCR_XSIZE = LoadctDropListSize[2],$
+                                 SCR_YSIZE = LoadctDropListSize[3])
+                                 
 
 
 

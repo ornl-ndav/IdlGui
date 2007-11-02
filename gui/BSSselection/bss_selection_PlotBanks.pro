@@ -11,15 +11,17 @@ wset, id
 
 x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
+colorY  = (*global).ColorVerticalGrid
+colorX  = (*global).ColorHorizontalGrid
 
 for i=1,56 do begin
-  plots, i*x_coeff, 0, /device, color=200
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
+  plots, i*x_coeff, 0, /device, color=colorY
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=colorY
 endfor
 
 for i=1,64 do begin
-  plots, 0,i*y_coeff, /device,color=300
-  plots, 64*x_coeff, i*y_coeff, /device, /continue, color=300
+  plots, 0,i*y_coeff, /device,color=colorX
+  plots, 64*x_coeff, i*y_coeff, /device, /continue, color=colorX
 endfor
 
 END
@@ -40,15 +42,17 @@ wset, id
 
 x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
+colorY  = (*global).ColorVerticalGrid
+colorX  = (*global).ColorHorizontalGrid
 
 for i=1,56 do begin
-  plots, i*x_coeff, 0, /device, color=200
-  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=200
+  plots, i*x_coeff, 0, /device, color=colorY
+  plots, i*x_coeff, 64*y_coeff, /device, /continue, color=colorY
 endfor
 
 for i=1,64 do begin
-  plots, 0,i*y_coeff, /device,color=300
-  plots, 64*x_coeff, i*y_coeff, /device, /continue, color=300
+  plots, 0,i*y_coeff, /device,color=colorX
+  plots, 64*x_coeff, i*y_coeff, /device, /continue, color=colorX
 endfor
 
 END

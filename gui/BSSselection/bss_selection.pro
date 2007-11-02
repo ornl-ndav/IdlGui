@@ -16,6 +16,10 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   ColorVerticalGrid : 200,$
+                   ColorHorizontalGrid : 50,$
+                   ColorExcludedPixels : 150,$
+                   LoadctMainPlot : 5,$
                    BSSselectionVersion : version,$ ;version of current program
                    ucams : ucams,$ ;ucams of user
                    previous_tab : 0,$ ;default tab is 0 (Selection big tab)
@@ -88,11 +92,13 @@ MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;initialize droplists (selection and main_plot color)
-id = widget_info(Main_base,Find_by_Uname='selection_color_droplist')
-widget_control, id, set_droplist_select= 4
-id = widget_info(Main_base,Find_by_Uname='main_plot_color_droplist')
-widget_control, id, set_droplist_select= 5
+; initialize slider (Grid: Vertical Lines)
+id = widget_info(Main_base,Find_by_Uname='color_slider')
+widget_control, id, set_value = 200
+; id = widget_info(Main_base,Find_by_Uname='selection_color_droplist')
+; widget_control, id, set_droplist_select= 4 white
+; id = widget_info(Main_base,Find_by_Uname='main_plot_color_droplist')
+; widget_control, id, set_droplist_select= 5 STD GAMMA-II
 
 END
 
