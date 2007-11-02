@@ -191,6 +191,126 @@ void generate_histo(const size_t array_size,
   return;
 }
 
+void generate_histo_pstates(const size_t array_size,
+                    const int32_t new_Nt,
+                    const int32_t num_states,
+                    const vector<int32_t> pixel_offsets,
+                    const int32_t pixel_number,
+                    const int32_t * binary_array,
+                    uint32_t ** histo_array,
+                    const size_t * histo_array_size,
+                    const vector<int32_t> time_bin_vector,
+                    const int32_t max_time_bin_100ns,
+                    const int32_t time_offset_100ns,
+                    const bool debug,
+                    const bool verbose)
+{
+  int32_t pixelid;
+  int32_t psindex;
+  int32_t time_bin;
+  int32_t time_stamp;
+  int32_t processing_percent = 0;
+  
+  //initialize histo arrays
+  for (size_t s=0 ; s < num_states ; s++ ) {
+      initialize_array(histo_array[s],
+                       histo_array_size[s]);
+  }
+
+  if (debug)
+    {
+      cout << "\n\n**In generate_histo**\n\n";
+      cout << "\tarray_size= " << array_size << endl;
+      cout << "\tnew_Nt= " << new_Nt << endl;
+      cout << "\tnum_states= " << num_states << endl;
+      cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
+      cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
+      cout << "\nLegend:";
+      cout << "\t\t#     : index number" << endl;
+      cout << "------\t\t";
+      cout << "Pid   : PixelID" << endl;
+      cout << "\t\t    t_ms  : time in micro seconds" << endl;
+      cout << "\t\t    tbin: time_bin" << endl << endl;
+    }
+
+  //loop over entire binary file data (from 0 to file_size/2 because we use
+  //the variable 2*i into the for loop. Like this, the all file is covered.
+  size_t time_bin_vector_size = time_bin_vector.size();
+  for (size_t i=0 ; i<array_size/2; i++) 
+  {
+    if (verbose && !debug)
+      {
+        processing_percent = (2*i*100/array_size);
+        cout << "\r" << processing_percent << "%";
+      }
+    
+      // determine polarization state & tweak pixelid
+      pixelid = binary_array[2 * i + 1];
+      for (size_t s=0 ; s < num_states ; s++ ) {
+          if ( s < num_states - 1 ) {
+              if ( pixelid > pixel_offsets[s]
+                      && pixelid < pixel_offsets[s+1] ) {
+                  psindex = s;
+                  pixelid -= pixel_offsets[s];
+                  break;
+              }
+          }
+          else {
+              if ( pixelid > pixel_offsets[s]
+                      && pixelid < pixel_number ) {
+                  psindex = s;
+                  pixelid -= pixel_offsets[s];
+                  break;
+              }
+          }
+      }
+
+      // determine histogram time bin
+      time_stamp = binary_array[2 * i];
+      time_bin = binarySearch(time_bin_vector,time_stamp,
+          time_bin_vector_size);
+
+      if (debug)
+        {
+          cout << "#" << i << "\t";
+          cout << "PSIndex= " << psindex << "\t";
+          cout << "Pid= " << pixelid << "\t";
+          cout << "t_ms= " << time_stamp <<"\t";
+          cout << "tstamp_value= ";
+          cout << floor(time_bin_vector[time_bin]);
+          cout << "\ttbin_position= " << time_bin;
+        }
+
+      //remove data that are oustide the scope of range
+      if (pixelid < 0 ||                             
+          pixelid >= pixel_number ||
+          time_stamp < time_offset_100ns ||
+          time_stamp > max_time_bin_100ns)
+        {
+          if (debug)
+            {
+              cout << "......OUT OF RANGE" << endl;
+            }
+          continue;
+        }
+      else
+        {
+          if (debug)
+            {
+              cout << "......OK" << endl;
+            }
+          //record data that is inside the scope of range
+          histo_array[psindex][time_bin + pixelid * new_Nt] += 1;
+        }
+  }
+  if (verbose && !debug)
+    {
+      cout << "\r.done\n";
+    }
+  
+  return;
+}
+
 void generate_histo_old_way(const size_t array_size,
                             const int32_t new_Nt,
                             const int32_t pixel_number,
@@ -268,6 +388,121 @@ void generate_histo_old_way(const size_t array_size,
             }
           //record data that is inside the scope of range
           histo_array[time_bin + pixelid * new_Nt] += 1;
+        }
+  }
+  if (verbose && !debug)
+    {
+      cout << "\r.done\n";
+    }
+  
+  return;
+}
+
+void generate_histo_pstates_old_way(const size_t array_size,
+                            const int32_t new_Nt,
+                            const int32_t num_states,
+                            const vector<int32_t> pixel_offsets,
+                            const int32_t pixel_number,
+                            const int32_t * binary_array,
+                            uint32_t ** histo_array,
+                            const size_t * histo_array_size,
+                            const int32_t max_time_bin_100ns,
+                            const int32_t time_offset_100ns,
+                            const int32_t time_rebin_width_100ns,
+                            const bool debug,
+                            const bool verbose)
+{
+  int32_t pixelid;
+  int32_t psindex;
+  int32_t time_bin;
+  int32_t time_stamp;
+  int32_t processing_percent = 0;
+  
+  //initialize histo arrays
+  for (size_t s=0 ; s < num_states ; s++ ) {
+      initialize_array(histo_array[s],
+                       histo_array_size[s]);
+  }
+
+  if (debug)
+    {
+      cout << "\n\n**In generate_histo (the old way)**\n\n";
+      cout << "\tarray_size= " << array_size << endl;
+      cout << "\tnew_Nt= " << new_Nt << endl;
+      cout << "\tnum_states= " << num_states << endl;
+      cout << "\tmax_time_bin_100ns= " << max_time_bin_100ns << endl;
+      cout << "\ttime_offset_100ns= " << time_offset_100ns << endl;
+      cout << "\nLegend:";
+      cout << "\t\t#     : index number" << endl;
+      cout << "------\t\t";
+      cout << "Pid   : PixelID" << endl;
+      cout << "\t\t    t_ms  : time in micro seconds" << endl;
+      cout << "\t\t    tbin: time_bin" << endl << endl;
+    }
+
+  for (size_t i=0 ; i<array_size/2; i++) 
+  {
+    if (verbose && !debug)
+      {
+        processing_percent = (2*i*100/array_size);
+        cout << "\r" << processing_percent << "%";
+      }
+
+    // determine polarization state & tweak pixelid
+    pixelid = binary_array[2 * i + 1];
+    for (size_t s=0 ; s < num_states ; s++ ) {
+        if ( s < num_states - 1 ) {
+            if ( pixelid > pixel_offsets[s]
+                    && pixelid < pixel_offsets[s+1] ) {
+                psindex = s;
+                pixelid -= pixel_offsets[s];
+                break;
+            }
+        }
+        else {
+            if ( pixelid > pixel_offsets[s]
+                    && pixelid < pixel_number ) {
+                psindex = s;
+                pixelid -= pixel_offsets[s];
+                break;
+            }
+        }
+    }
+
+    // determine histogram time bin
+    time_stamp = binary_array[2*i];
+    time_bin = int(floor(time_stamp/time_rebin_width_100ns));
+
+    if (debug)
+      {
+        cout << "#" << i << "\t";
+        cout << "PSIndex= " << psindex << "\t";
+        cout << "Pid= " << pixelid << "\t";
+        cout << "t_ms= " << time_stamp <<"\t";
+        cout << "tstamp_value= " << time_stamp << "\t";
+        cout << "\ttbin_position= " << time_bin;
+      }
+
+      //remove data that are oustide the scope of range
+      if (pixelid < 0 ||                             
+          pixelid >= pixel_number ||
+          time_stamp < time_offset_100ns ||
+          time_stamp > max_time_bin_100ns)
+        {
+          if (debug)
+            {
+              cout << "......OUT OF RANGE" << endl;
+            }
+          continue;
+        }
+      else
+        {
+          if (debug)
+            {
+              cout << "......OK" << endl;
+            }
+          //record data that is inside the scope of range
+          histo_array[psindex][time_bin + pixelid * new_Nt] += 1;
         }
   }
   if (verbose && !debug)
