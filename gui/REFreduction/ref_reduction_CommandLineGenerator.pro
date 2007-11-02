@@ -41,8 +41,12 @@ endif else begin
 endelse
 
 ;get data peak exclusion
-data_peak_exclusion_min = getTextFieldValue(Event,'data_exclusion_low_bin_text')
-data_peak_exclusion_max = getTextFieldValue(Event,'data_exclusion_high_bin_text')
+data_peak_exclusion_min = $
+  strcompress(getTextFieldValue(Event,'data_exclusion_low_bin_text'), $
+              /remove_all)
+data_peak_exclusion_max = $
+  strcompress(getTextFieldValue(Event,'data_exclusion_high_bin_text'),$ $
+              /remove_all)
 
 cmd += ' --data-peak-excl='
 if (data_peak_exclusion_min NE '') then begin
@@ -74,6 +78,34 @@ endif else begin
     putInfoInReductionStatus, Event, status_text, append
     StatusMessage += 1
 endelse
+
+;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+Ymin_peak = data_peak_exclusion_min
+Ymax_peak = data_peak_exclusion_max
+Ymin_back = $
+  strcompress(getTextFieldValue(Event, $
+                                'data_d_selection_background_ymin_cw_field'), $
+              /remove_all)
+Ymax_back = $
+  strcompress(getTextFieldValue(Event, $
+                                'data_d_selection_background_ymax_cw_field'), $
+              /remove_all)
+IF (Ymin_peak NE '' AND $
+    Ymax_peak NE '' AND $
+    Ymin_back NE '' AND $
+    Ymax_back NE '') THEN BEGIN
+    IF ((Ymin_peak EQ Ymin_back) AND (Ymax_peak EQ Ymax_back)) THEN BEGIN
+        StatusMessage += 1
+        status_text = '- Data Background and Peak have the same Ymin and Ymax values.'
+        status_text += ' Please changes at least 1 of the data.'
+        if (StatusMessage GT 0) then begin
+            append = 1
+        endif else begin
+            append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+    ENDIF
+ENDIF
 
 ;check if user wants data background or not
 if (isDataWithBackground(Event)) then begin ;yes, with background
@@ -132,8 +164,12 @@ if (isReductionWithNormalization(Event)) then begin
     endelse
     
 ;get norm peak exclusion
-    norm_peak_exclusion_min = getTextFieldValue(Event,'norm_exclusion_low_bin_text')
-    norm_peak_exclusion_max = getTextFieldValue(Event,'norm_exclusion_high_bin_text')
+    norm_peak_exclusion_min = $
+      strcompress(getTextFieldValue(Event,'norm_exclusion_low_bin_text'),$
+                  /remove_all)
+    norm_peak_exclusion_max = $
+      strcompress(getTextFieldValue(Event,'norm_exclusion_high_bin_text'),$
+                  /remove_all)
     cmd += ' --norm-peak-excl='
     if (norm_peak_exclusion_min NE '') then begin
         cmd += strcompress(norm_peak_exclusion_min,/remove_all)
@@ -167,6 +203,42 @@ if (isReductionWithNormalization(Event)) then begin
         StatusMessage += 1
      endelse
     
+    if (StatusMessage GT 0) then begin
+        append = 1
+    endif else begin
+        append = 0
+    endelse
+    putInfoInReductionStatus, Event, status_text, append
+
+;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
+Ymin_peak = norm_peak_exclusion_min
+Ymax_peak = norm_peak_exclusion_max
+Ymin_back = $
+  strcompress(getTextFieldValue(Event, $
+                                'normalization_d_selection_background_ymin_cw_field'), $
+              /remove_all)
+Ymax_back = $
+  strcompress(getTextFieldValue(Event, $
+                                'normalization_d_selection_background_ymax_cw_field'),$
+              /remove_all)
+
+IF (Ymin_peak NE '' AND $
+    Ymax_peak NE '' AND $
+    Ymin_back NE '' AND $
+    Ymax_back NE '') THEN BEGIN
+    IF ((Ymin_peak EQ Ymin_back) AND (Ymax_peak EQ Ymax_back)) THEN BEGIN
+        StatusMessage += 1
+        status_text = '- Normalization Background and Peak have the same Ymin and Ymax values.'
+        status_text += ' Please changes at least 1 of the data.'
+        if (StatusMessage GT 0) then begin
+            append = 1
+        endif else begin
+            append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+    ENDIF
+ENDIF
+
 ;check if user wants normalization background or not
      if (isNormWithBackground(Event)) then begin ;yes, with background
          MapBase, Event, 'reduce_plot5_base', 0 ;back. norm. plot is available
