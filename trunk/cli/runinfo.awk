@@ -23,7 +23,7 @@ BEGIN {
 		}
 	}
 	# print "numStates = " numStates
-	print "-S " numStates
+	print "-N " numStates
 }
 
 #
