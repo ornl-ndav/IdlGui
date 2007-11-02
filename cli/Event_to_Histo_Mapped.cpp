@@ -546,7 +546,7 @@ int32_t main(int32_t argc, char *argv[])
                 char *output_filename_pstate =
                     new char [ strlen(output_filename.c_str()) + 20 ];
                 for ( int32_t i=0 ; i < num_states ; i++ ) {
-                    sprintf( output_filename_pstate, "%s.p%d.dat",
+                    sprintf( output_filename_pstate, "%s_p%d.dat",
                         output_filename.substr(0,
                             output_filename.rfind(".dat")).c_str(), i );
                     /* if ( debug ) { */
@@ -605,7 +605,7 @@ int32_t main(int32_t argc, char *argv[])
                 char *output_filename_pstate =
                     new char [ strlen(output_filename.c_str()) + 20 ];
                 for ( int32_t i=0 ; i < num_states ; i++ ) {
-                    sprintf( output_filename_pstate, "%s.p%d.dat",
+                    sprintf( output_filename_pstate, "%s_p%d.dat",
                         output_filename.substr(0,
                             output_filename.rfind(".dat")).c_str(), i );
                     if ( debug ) {
