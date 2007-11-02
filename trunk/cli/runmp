@@ -25,5 +25,12 @@ set args = `awk -f runinfo.awk ${fileroot}_runinfo.xml`
 # Generate and Map Polarization Histograms...
 #
 
-echo "Event_to_Histo_Mapped $args $mapfile ${fileroot}_neutron_event.dat"
+echo
+echo "Running:"
+echo
+echo "Event_to_Histo_Mapped " $args $mapfile \
+	${fileroot}"_neutron_event.dat"
+echo
+
+Event_to_Histo_Mapped $args $mapfile ${fileroot}_neutron_event.dat
 
