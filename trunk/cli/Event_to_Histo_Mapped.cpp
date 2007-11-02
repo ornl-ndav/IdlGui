@@ -123,7 +123,7 @@ int32_t main(int32_t argc, char *argv[])
       //       where we count all those impossible neutrons with
       //       tofs less than the supposed DAS clock resolution... :-D
       // - time_offset_100ns == 1 will get clamped to SMALLEST_TIME_BIN
-      ValueArg<float> time_offset_cmd("", "time_offset",
+      ValueArg<float> time_offset_cmd("O", "time_offset",
                             "initial offset time (microS)",
                             false, 1, "time offset (microS)",cmd);
 
@@ -141,7 +141,16 @@ int32_t main(int32_t argc, char *argv[])
       // Add command-line options
       ValueArg<string> mapArg("m", "mapping",
                             "Name of the mapping file", 
-                            true, "map.dat", "filename", cmd);
+                            false, "map.dat", "filename", cmd);
+
+      // Polarization State Args...
+      ValueArg<int> num_states_cmd( "N", "num_states",
+                            "number of polarization states",
+                            false, 0, "number of polarization states",
+                            cmd);
+      MultiArg<int> pixel_offset_cmd( "P", "pixel_offset",
+                            "pixel offset for next polarization state",
+                            false, "pixel offset", cmd);
 
       // Parse the command-line
       cmd.parse(argc, argv);
@@ -353,57 +362,143 @@ int32_t main(int32_t argc, char *argv[])
         printf("%ld seconds to generate time bins\n",
           (time_bin_end-time_read_end)); //REMOVE_ME
 
-        int32_t pixel_number = pixel_number_cmd.getValue();
-
         //this is the new number of time bins in the histo file
         size_t new_Nt = time_bin_vector.size() - 1;
         printf( "new_Nt = %d\n", new_Nt );
 
-        size_t histo_array_size = new_Nt * pixel_number;
-        uint32_t * histo_array = new uint32_t [histo_array_size];
-        
-        //generate histo binary data array
-        
-        if (time_rebin_width_cmd.isSet() &&    //linear rebinning and
-            old_linear_rebin_method_cmd.isSet())  //old way
-        {
-          if (verbose || debug)
-          {
-            cout <<
-              "--> generate_histo - old_way (processing).\n"; //1st
-          }
-          generate_histo_old_way(array_size,
-                  new_Nt,
-                  pixel_number,
-                  binary_array,
-                  histo_array,
-                  histo_array_size,
-                  max_time_bin_100ns,
-                  time_offset_100ns,
-                  time_rebin_width_100ns,
-                  debug,
-                  verbose);
+        // get number of pixels, with any polarization states/offsets...
+        int32_t pixel_number = pixel_number_cmd.getValue();
+        int32_t num_states = num_states_cmd.getValue();
+        vector<int32_t> pixel_offsets = pixel_offset_cmd.getValue();
+
+        // Declare Arrays of Histograms...
+        size_t *histo_array_size = NULL;
+        uint32_t ** histo_array = NULL;
+
+        // Multiple Polarization States
+        if ( num_states > 0 ) {
+
+            // Allocate Histogram(s) Storage...
+            histo_array_size = new size_t[num_states];
+            histo_array = new uint32_t *[num_states];
+            size_t last_offset = pixel_offsets[0];
+            for ( int32_t i=0 ; i < num_states ; i++ ) {
+                if ( i < num_states - 1 ) {
+                    histo_array_size[i] = new_Nt
+                            * ( pixel_offsets[i+1] - pixel_offsets[i] );
+                }
+                else {
+                    histo_array_size[i] = new_Nt
+                            * ( pixel_number - pixel_offsets[i] );
+                }
+                histo_array[i] = new uint32_t [histo_array_size[i]];
+            }
+
+            // Generate Binary Histogram Data Array
+            if (time_rebin_width_cmd.isSet() //linear rebinning and
+                && old_linear_rebin_method_cmd.isSet())  //old way
+            {
+                if (verbose || debug)
+                {
+                    cout <<
+                      "--> generate_histo - old_way (processing).\n";
+                    //1st
+                }
+                generate_histo_pstates_old_way(array_size,
+                        new_Nt,
+                        num_states,
+                        pixel_offsets,
+                        pixel_number,
+                        binary_array,
+                        histo_array,
+                        histo_array_size,
+                        max_time_bin_100ns,
+                        time_offset_100ns,
+                        time_rebin_width_100ns,
+                        debug,
+                        verbose);
+            }
+
+            else
+            {
+                if (verbose || debug)
+                {
+                    cout <<
+                    "--> generate_histo - binary (processing).\n";
+                    //1st
+                }
+
+                generate_histo_pstates(array_size,
+                        new_Nt,
+                        num_states,
+                        pixel_offsets,
+                        pixel_number,
+                        binary_array,
+                        histo_array,
+                        histo_array_size,
+                        time_bin_vector,
+                        max_time_bin_100ns,
+                        time_offset_100ns,
+                        debug,
+                        verbose);
+            }
         }
 
-        else
-        {
-          if (verbose || debug)
-          {
-            cout
-              << "--> generate_histo - binary (processing).\n"; //1st
-          }
+        // Single Polarization State
+        else {
 
-          generate_histo(array_size,
-                  new_Nt,
-                  pixel_number,
-                  binary_array,
-                  histo_array,
-                  histo_array_size,
-                  time_bin_vector,
-                  max_time_bin_100ns,
-                  time_offset_100ns,
-                  debug,
-                  verbose);
+            // Allocate Histogram(s) Storage...
+
+            histo_array_size = new size_t[1];
+            histo_array_size[0] = new_Nt * pixel_number;
+
+            histo_array = new uint32_t *[1];
+            histo_array[0] = new uint32_t [histo_array_size[0]];
+        
+            // Generate Binary Histogram Data Array
+            if (time_rebin_width_cmd.isSet() //linear rebinning and
+                && old_linear_rebin_method_cmd.isSet())  //old way
+            {
+                if (verbose || debug)
+                {
+                    cout <<
+                      "--> generate_histo - old_way (processing).\n";
+                    //1st
+                }
+                generate_histo_old_way(array_size,
+                        new_Nt,
+                        pixel_number,
+                        binary_array,
+                        histo_array[0],
+                        histo_array_size[0],
+                        max_time_bin_100ns,
+                        time_offset_100ns,
+                        time_rebin_width_100ns,
+                        debug,
+                        verbose);
+            }
+
+            else
+            {
+                if (verbose || debug)
+                {
+                    cout <<
+                    "--> generate_histo - binary (processing).\n";
+                    //1st
+                }
+
+                generate_histo(array_size,
+                        new_Nt,
+                        pixel_number,
+                        binary_array,
+                        histo_array[0],
+                        histo_array_size[0],
+                        time_bin_vector,
+                        max_time_bin_100ns,
+                        time_offset_100ns,
+                        debug,
+                        verbose);
+            }
         }
 
         // free memory allocated to binary_array
@@ -416,7 +511,17 @@ int32_t main(int32_t argc, char *argv[])
           {
             cout << "--> swap_endian.";  //1st
           }
-          EventHisto::swap_endian(histo_array_size, histo_array);
+          // Multiple Polarization States
+          if ( num_states > 0 ) {
+              for ( int32_t i=0 ; i < num_states ; i++ ) {
+                  EventHisto::swap_endian(histo_array_size[i],
+                      histo_array[i]);
+              }
+          }
+          // Single Polarization State
+          else
+              EventHisto::swap_endian(histo_array_size[0],
+                      histo_array[0]);
           if (verbose || debug)
           {
             cout << "done\n";
@@ -426,79 +531,125 @@ int32_t main(int32_t argc, char *argv[])
         time_t time_histo_end; //REMOVE_ME
         time_histo_end = time(NULL); //REMOVE_ME
 
-        printf("%ld seconds to generate histogram\n",
+        printf("%ld seconds to generate histogram(s)\n",
           (time_histo_end-time_bin_end)); //REMOVE_ME
 
         printf("(effective rate = %lf events per second)\n",
           (double)file_size / (double)(time_histo_end-time_bin_end));
           //REMOVE_ME
 
-        // if (debug || verbose)
-        // {
-        //   cout << "--> write_data_block.";  //1st
-        // }
+        // Do Histogram Pixel Geometry Mapping (if present)
+        if ( mapArg.isSet() ) {
 
-        // // write new histogram file
-        // ofstream histo_file(output_filename.c_str(),
-        //                          ios::binary);
-        // size_t block_size=MAX_BLOCK_SIZE;
-        // if(histo_array_size<block_size){
-        //   block_size=histo_array_size;
-        // }
-        // size_t offset=0;
-        // while(offset<histo_array_size)
-        // {
-        //   write_data_block(histo_file,
-        //           histo_array,
-        //           offset,block_size,
-        //           EventHisto::SIZEOF_UINT32_T);
-        //   offset+=block_size;
-        //   if(offset+block_size>histo_array_size)
-        //   {
-        //     block_size=histo_array_size-offset;
-        //   }
-        // }
+            // Multiple Polarization States
+            if ( num_states > 0 ) {
+                char *output_filename_pstate =
+                    new char [ strlen(output_filename.c_str()) + 20 ];
+                for ( int32_t i=0 ; i < num_states ; i++ ) {
+                    sprintf( output_filename_pstate, "%s.p%d.dat",
+                        output_filename.substr(0,
+                            output_filename.rfind(".dat")).c_str(), i );
+                    /* if ( debug ) { */
+                        cout << "state#" << i << ": "
+                            << "output_filename_pstate="
+                            << output_filename_pstate << endl;
+                    /* } */
+                    // Create the pixel map
+                    map<int32_t, int32_t> pixel_map;
+                    pixel_map = make_pixel_map(mapArg.getValue(),
+                            ( i < num_states - 1 ) ?
+                                (pixel_offsets[i+1] - pixel_offsets[i])
+                                : (pixel_number - pixel_offsets[i]),
+                            debug);
+                    // Create the mapped binary data
+                    create_mapped_data_incore(
+                            histo_array[i], histo_array_size[i],
+                            make_mapped_filename(
+                                    output_filename_pstate,
+                                    alt_out_path_cmd.getValue(),
+                                    debug),
+                            new_Nt, pixel_map, 
+                            debug);
+                }
+            }
 
-        // if (verbose || debug)
-        // {
-        //   cout << "done\n"; 
-        // }
+            // Single Polarization State
+            else {
+                // Create the pixel map
+                map<int32_t, int32_t> pixel_map;
+                pixel_map = make_pixel_map(mapArg.getValue(),
+                            pixel_number,
+                            debug);
+                // Create the mapped binary data
+                create_mapped_data_incore(
+                        histo_array[0], histo_array_size[0],
+                        make_mapped_filename(output_filename.c_str(),
+                                alt_out_path_cmd.getValue(),
+                                debug),
+                        new_Nt, pixel_map, 
+                        debug);
+            }
 
-        // if (verbose || debug)
-        // {
-        //   cout << "--> close histo_file.";  //1st 
-        // }
-        // histo_file.close();
-        // if (verbose || debug)
-        // {
-        //   cout << "done\n"; 
-        // }
+            time_t time_map_end; //REMOVE_ME
+            time_map_end = time(NULL); //REMOVE_ME
+
+            printf("%ld seconds to map histogram data & write file\n",
+                (time_map_end-time_histo_end)); //REMOVE_ME
+        }
+
+        // Still write the unmapped histogram(s)...  :-/
+        else {
+
+            // Multiple Polarization States
+            if ( num_states > 0 ) {
+                char *output_filename_pstate =
+                    new char [ strlen(output_filename.c_str()) + 20 ];
+                for ( int32_t i=0 ; i < num_states ; i++ ) {
+                    sprintf( output_filename_pstate, "%s.p%d.dat",
+                        output_filename.substr(0,
+                            output_filename.rfind(".dat")).c_str(), i );
+                    if ( debug ) {
+                        cout << "state#" << i << ": "
+                            << "output_filename_pstate="
+                            << output_filename_pstate << endl;
+                    }
+                    // Write new histogram file
+                    ofstream histo_file(output_filename_pstate,
+                            ios::binary);
+                    if ( !histo_file.is_open() ) {
+                        throw runtime_error(
+                            "Failed opening binary histogram file");
+                    }
+                    histo_file.write(
+                            reinterpret_cast<char *>(histo_array[i]),
+                            histo_array_size[i]
+                                    * EventHisto::SIZEOF_UINT32_T);
+                    histo_file.close();
+                }
+            }
+
+            // Single Polarization State
+            else {
+                // Write new histogram file
+                ofstream histo_file(output_filename.c_str(),
+                        ios::binary);
+                if ( !histo_file.is_open() ) {
+                    throw runtime_error(
+                        "Failed opening binary histogram file");
+                }
+                histo_file.write(
+                        reinterpret_cast<char *>(histo_array[0]),
+                        histo_array_size[0]
+                                * EventHisto::SIZEOF_UINT32_T);
+                histo_file.close();
+            }
         
-        // time_t time_write_end; //REMOVE_ME
-        // time_write_end = time(NULL); //REMOVE_ME
+            time_t time_write_end; //REMOVE_ME
+            time_write_end = time(NULL); //REMOVE_ME
 
-        // printf("%ld seconds to write histogram file\n",
-        //   (time_write_end-time_histo_end)); //REMOVE_ME
-
-        // Create the pixel map
-        map<int32_t, int32_t> pixel_map;
-        pixel_map = make_pixel_map(mapArg.getValue(),
-                pixel_number,
-                debug);
-
-        // Create the mapped binary data
-        create_mapped_data_incore(histo_array, histo_array_size,
-                make_mapped_filename(output_filename.c_str(),
-                        alt_out_path_cmd.getValue(),
-                        debug),
-                new_Nt, pixel_map, 
-                debug);
-  
-        time_t time_map_end; //REMOVE_ME
-        time_map_end = time(NULL); //REMOVE_ME
-
-        printf("%ld seconds to map histogram data & write file\n",
-          (time_map_end-time_histo_end)); //REMOVE_ME
+            printf("%ld seconds to write histogram file\n",
+                (time_write_end-time_histo_end)); //REMOVE_ME
+        }
 
         // if (verbose || debug)
         // {
