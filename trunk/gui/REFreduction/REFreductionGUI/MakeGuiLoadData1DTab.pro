@@ -176,8 +176,6 @@ OutputFileNameLabelSize        = [OutputFileFolderButtonSize[0] + 2,$
 OutputFileNameLabelTitle       = 'Output File Name:'
                                   
 
-
-
 ;***********************************************************************************
 ;Build 1D tab
 ;***********************************************************************************
