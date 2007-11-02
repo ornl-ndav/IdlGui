@@ -80,7 +80,7 @@ BottomBankSize = [TopBankSize[0], $
                   TopBanksize[3]]
 
 ;COLOR SELECTION and MAIN_PLOT BASE
-ColorBaseSize       = [748,565,440,130]
+ColorBaseSize       = [748,565,440,135]
 ColorLabelSize      = [ 115,5,200,0]
 
 SelectionDropListSize = [0,30,80,30]
