@@ -9,6 +9,6 @@ all:
 	idl ./makefile.pro;
 install:
 	cp bss_selection.sav /SNS/software/idltools/sav/
-	cp bss_selection /SNS/software/idltools/
+	cp BSSselection /SNS/software/idltools/
 
 
