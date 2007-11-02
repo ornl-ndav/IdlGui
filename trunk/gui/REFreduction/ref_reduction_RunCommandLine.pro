@@ -25,8 +25,13 @@ spawn, 'hostname',listening
 CASE (listening) OF
     'lrac': 
     'mrac': 
-    'heater': 
-    else: cmd = 'srun -p ref ' + cmd
+    else: BEGIN
+        if ((*global).instrument EQ (*global).REF_L) then begin
+            cmd = 'srun -p lracq ' + cmd
+        endif else begin
+            cmd = 'srun -p mracq ' + cmd
+        endelse
+    END
 ENDCASE
 
 spawn, cmd, listening, err_listening
