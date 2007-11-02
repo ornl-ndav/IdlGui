@@ -60,9 +60,9 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
 
         i=0L
         NxMax = (*global).Nx_REF_L
-        YNbr = YNbr-1
+        YNbr = YNbr+1
         OutputArray = strarr((NxMax)*YNbr)
-        for y=(Ymin+1),(Ymax-1) do begin
+        for y=(Ymin),(Ymax) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(x,/remove_all)
                 text += '_' + strcompress(y,/remove_all)
@@ -76,9 +76,9 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_M
-        YNbr = YNbr-1
+        YNbr = YNbr+1
         OutputArray = strarr((NxMax)*YNbr)	
-        for y=(Ymin+1),(Ymax-1) do begin
+        for y=(Ymin),(Ymax) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
                 text += '_' + strcompress(x,/remove_all)
@@ -167,9 +167,9 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_L
-        YNbr = YNbr-1
+        YNbr = YNbr+1
         OutputArray = strarr(NxMax*YNbr)
-        for y=(Ymin+1),(Ymax-1) do begin
+        for y=(Ymin),(Ymax) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(x,/remove_all)
                 text += '_' + strcompress(y,/remove_all)
@@ -183,9 +183,9 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         
         i=0L
         NxMax = (*global).Nx_REF_M
-        YNbr = YNbr-1
+        YNbr = YNbr+1
         OutputArray = strarr((NxMax)*YNbr)	
-        for y=(Ymin+1),(Ymax-1) do begin
+        for y=(Ymin),(Ymax) do begin
             for x=0,(NxMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
                 text += '_' + strcompress(x,/remove_all)
