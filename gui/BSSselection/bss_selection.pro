@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: BSSselection1.0.0'
+VERSION = 'VERSION: BSSselection1.0.1'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -20,6 +20,10 @@ global = ptr_new ({processing : 'PROCESSING',$
                    ColorHorizontalGrid : 50,$
                    ColorExcludedPixels : 150,$
                    LoadctMainPlot : 5,$
+                   DefaultColorVerticalGrid : 200,$
+                   DefaultColorHorizontalGrid : 50,$
+                   DefaultColorExcludedPixels : 150,$
+                   DefaultLoadctMainPlot : 5,$
                    BSSselectionVersion : version,$ ;version of current program
                    ucams : ucams,$ ;ucams of user
                    previous_tab : 0,$ ;default tab is 0 (Selection big tab)

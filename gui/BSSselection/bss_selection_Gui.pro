@@ -13,3 +13,9 @@ PRO SetColorSliderValue, Event, index
 id = widget_info(Event.top,find_by_uname='color_slider')
 widget_control, id, set_value=index
 END
+
+
+PRO SetDropListIndex, Event, index
+id = widget_info(Event.top,find_by_uname='loadct_droplist')
+widget_control, id, set_droplist_select = index
+END

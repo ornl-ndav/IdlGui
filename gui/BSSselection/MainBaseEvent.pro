@@ -182,6 +182,16 @@ CASE Event.id OF
         BSSselection_ColorLoadctDropList, Event
     end
 
+;ColorReset
+    Widget_Info(wWidget, FIND_BY_UNAME='reset_color_button'): begin
+        BSSselection_ColorSliderReset, Event
+    end
+
+;FullColorReset
+    Widget_Info(wWidget, FIND_BY_UNAME='full_reset_color_button'): begin
+        BSSselection_ColorSliderFullReset, Event
+    end
+
     ELSE:
     
 ENDCASE

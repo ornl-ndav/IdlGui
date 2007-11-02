@@ -71,3 +71,83 @@ LoadctIndex = getLoadctDropListSelectedIndex(Event)
 ;replot everything
 
 END
+
+
+
+PRO BSSselection_ColorSliderReset, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get DroplistValue
+DropListValue = getColorDropListSelectedIndex(Event)
+
+CASE (DropListValue) OF
+    0: BEGIN                    ;Grid: Vertical Lines
+        SelectedIndex = (*global).DefaultColorVerticalGrid
+        (*global).ColorVerticalGrid = SelectedIndex
+        SetColorSliderValue, Event, Selectedindex
+    END
+    1: BEGIN                    ;Grid: Horizontal Lines
+        SelectedIndex = (*global).DefaultColorHorizontalGrid
+        (*global).ColorHorizontalGrid = SelectedIndex
+        SetColorSliderValue, Event, Selectedindex
+    END
+    2: BEGIN                    ;Excluded pixels
+        SelectedIndex = (*global).DefaultColorExcludedPixels
+        (*global).ColorExcludedPixels = SelectedIndex
+        SetColorSliderValue, Event, Selectedindex
+    END
+    3: BEGIN
+        SelectedIndex = (*global).DefaultLoadctMainPlot
+        (*global).LoadctMainPlot = SelectedIndex
+        SetDropListValue, Event, Selectedindex
+    END
+ENDCASE
+
+;replot everything
+PlotIncludedPixels, Event        
+
+END
+
+
+
+PRO BSSselection_ColorSliderFullReset, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get DroplistValue
+DropListValue = getColorDropListSelectedIndex(Event)
+
+(*global).ColorVerticalGrid   = (*global).DefaultColorVerticalGrid
+(*global).ColorHorizontalGrid = (*global).DefaultColorHorizontalGrid
+(*global).ColorExcludedPixels = (*global).DefaultColorExcludedPixels
+(*global).LoadctMainPlot      = (*global).DefaultLoadctMainPlot
+
+CASE (DropListValue) OF
+    0: BEGIN                    ;Grid: Vertical Lines
+        SelectedIndex = (*global).DefaultColorVerticalGrid
+        SetColorSliderValue, Event, Selectedindex
+    END
+    1: BEGIN                    ;Grid: Horizontal Lines
+        SelectedIndex = (*global).DefaultColorHorizontalGrid
+        SetColorSliderValue, Event, Selectedindex
+    END
+    2: BEGIN                    ;Excluded pixels
+        SelectedIndex = (*global).DefaultColorExcludedPixels
+        SetColorSliderValue, Event, Selectedindex
+    END
+    3: BEGIN                    ;Loadct
+        SelectedIndex = (*global).DefaultLoadctMainPlot
+        SetDropListIndex, Event, Selectedindex
+    END
+ENDCASE
+
+;replot everything
+PlotIncludedPixels, Event        
+
+END
+
