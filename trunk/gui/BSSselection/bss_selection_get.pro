@@ -161,3 +161,32 @@ END
 FUNCTION getLogBookText, Event
 return, getTextFieldValue(Event,'log_book')
 END
+
+
+FUNCTION getColorSliderValue, Event
+id = widget_info(Event.top,find_by_uname='color_slider')
+widget_control, id, get_value=value
+RETURN, VALUE
+END
+
+
+FUNCTION getColorDropListSelectedIndex, Event
+id = widget_info(Event.top, find_by_uname = 'selection_droplist')
+RETURN, widget_info(id, /droplist_select)
+END
+
+
+FUNCTION getColorDropListSelectedValue, Event
+id = widget_info(Event.top, find_by_uname = 'selection_droplist')
+widget_control, id, get_value=list
+selected_index = getColorDropListSelectedIndex(Event)
+RETURN, list[selected_index]
+END
+
+
+FUNCTION getLoadctDropListSelectedIndex, Event
+id = widget_info(Event.top, find_by_uname = 'loadct_droplist')
+RETURN, widget_info(id, /droplist_select)
+END
+
+

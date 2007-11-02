@@ -167,6 +167,20 @@ CASE Event.id OF
         BSSselection_LogBook, Event
     end
 
+;Color selection droplist
+    Widget_Info(wWidget, FIND_BY_UNAME='selection_droplist'): begin
+        BSSselection_ColorSelection, Event
+    end
+
+;color slider
+    Widget_Info(wWidget, FIND_BY_UNAME='color_slider'): begin
+        BSSselection_ColorSlider, Event
+    end
+
+;color droplist
+    Widget_Info(wWidget, FIND_BY_UNAME='loadct_droplist'): begin
+        BSSselection_ColorLoadctDropList, Event
+    end
 
     ELSE:
     
