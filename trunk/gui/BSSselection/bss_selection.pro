@@ -16,6 +16,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   BSSselectionVersion : version,$ ;version of current program
+                   ucams : ucams,$ ;ucams of user
                    previous_tab : 0,$ ;default tab is 0 (Selection big tab)
                    RunNumber : 0L, $ ;NeXus run number
                    roi_path : '~/local/',$ ;path where to save the ROI file
@@ -47,6 +49,7 @@ global = ptr_new ({processing : 'PROCESSING',$
                    Ny : 64,$
                    Xfactor : 13,$ ;coefficient in X direction for rebining img
                    Yfactor : 5,$ ; coefficient in Y direction for rebining img
+                   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
                    DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
                    DefaultFilter : '*.nxs'$ ;default filter for the nexus file
                   })

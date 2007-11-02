@@ -40,6 +40,7 @@ cd, CurrentFolder
 
 .run bss_selection_SaveRoiFile.pro
 .run bss_selection_LoadRoiFile.pro
+.run bss_selection_LogBook.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro

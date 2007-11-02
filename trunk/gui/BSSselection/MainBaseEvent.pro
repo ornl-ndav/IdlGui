@@ -162,6 +162,12 @@ CASE Event.id OF
         BSSselection_FullResetButton, Event
     end
 
+;Send log book to geek button
+    Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin
+        BSSselection_LogBook, Event
+    end
+
+
     ELSE:
     
 ENDCASE
