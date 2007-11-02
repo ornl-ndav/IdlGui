@@ -76,6 +76,39 @@ void generate_histo_old_way(const size_t array_size,
                             const bool verbose);
 
 /**
+ * \brief This function generates the final histogram array using
+ * the old way to determine the time bin
+ *
+ * \param array_size (INPUT) is the size of the histogram array
+ * \param new_Nt (INPUT) is the new number of time bins
+ * \param num_states (INPUT) is the number of polarization states (ps)
+ * \param pixel_offsets (INPUT) is the vector of ps pixel offsets
+ * \param pixel_number (INPUT) is the number of pixelids
+ * \param binary_array (INPUT) is the array of values coming from the event
+ *  binary file
+ * \param histo_array (OUTPUT) is the array of histogram arrays
+ * \param histo_array_size (INPUT) is the array of sizes of the histogram arrays
+ * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
+ * \param time_offset_100ns (INPUT) is the time offset (x100ns)
+ * \param time_rebin_width_100ns (INPUT) is the size of the rebin (x100ns)
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
+ * \param verbose (INPUT) is a flag for printing processing info
+ */
+void generate_histo_pstates_old_way(const size_t array_size,
+                            const int32_t new_Nt,
+                            const int32_t num_states,
+                            std::vector<int32_t> pixel_offsets,
+                            const int32_t pixel_number,
+                            const int32_t * binary_array,
+                            uint32_t ** histo_array,
+                            const size_t * histo_array_size,
+                            const int32_t max_time_bin_100ns,
+                            const int32_t time_offset_100ns,
+                            const int32_t time_rebin_width_100ns,
+                            const bool debug,
+                            const bool verbose);
+
+/**
  * \brief This function generates the final histogram array
  *
  * \param array_size (INPUT) is the size of the array
@@ -97,6 +130,38 @@ void generate_histo(const size_t array_size,
                     const int32_t * binary_array,
                     uint32_t * histo_array,
                     const size_t histo_array_size,
+                    const std::vector<int32_t> time_bin_vector,
+                    const int32_t max_time_bin_100ns,
+                    const int32_t time_offset_100ns,
+                    const bool debug,
+                    const bool verbose);
+
+/**
+ * \brief This function generates the final histogram array
+ *
+ * \param array_size (INPUT) is the size of the array
+ * \param new_Nt (INPUT) is the new number of time bins
+ * \param num_states (INPUT) is the number of polarization states (ps)
+ * \param pixel_offsets (INPUT) is the vector of ps pixel offsets
+ * \param pixel_number (INPUT) is the number of pixelids
+ * \param binary_array (INPUT) is the array of values coming from the event
+ *  binary file
+ * \param histo_array (OUTPUT) is the array of histogram arrays
+ * \param histo_array_size (INPUT) is the array of sizes of the histogram arrays
+ * \param time_bin_vector (INPUT) is the look up table bin vector
+ * \param max_time_bin_100ns (INPUT) is the maximum time bin (x100ns)
+ * \param time_offset_100ns (INPUT) is the time offset (x100ns)
+ * \param debug (INPUT) is a switch that trigger or not the debugging tools
+ * \param verbose (INPUT) is a flag for printing processing info
+ */
+void generate_histo_pstates(const size_t array_size,
+                    const int32_t new_Nt,
+                    const int32_t num_states,
+                    const std::vector<int32_t> pixel_offsets,
+                    const int32_t pixel_number,
+                    const int32_t * binary_array,
+                    uint32_t ** histo_array,
+                    const size_t * histo_array_size,
                     const std::vector<int32_t> time_bin_vector,
                     const int32_t max_time_bin_100ns,
                     const int32_t time_offset_100ns,
