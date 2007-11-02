@@ -31,7 +31,7 @@ BEGIN {
 #
 /<State / {
 	for ( i=1 ; i <= NF ; i++ ) {
-		nf = split( $i, attr, "=" )
+		split( $i, attr, "=" )
 		if ( attr[1] == "index" ) {
 			split( attr[2], siVal, "\"" )
 			stateIndex = siVal[2]
@@ -43,6 +43,16 @@ BEGIN {
 	}
 	# print "pixel_offset[" stateIndex "]=" pixelOffset
 	print "-po " stateIndex " " pixelOffset
+}
+
+#
+# Get Total Number of Pixels
+#
+
+/<NumPixels>/ {
+	nf = split( $1, npVal, "[<>,]" )
+	numPixels = npVal[3]
+	print "-p " numPixels
 }
 
 #
