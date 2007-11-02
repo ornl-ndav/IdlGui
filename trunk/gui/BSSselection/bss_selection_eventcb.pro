@@ -7,13 +7,16 @@ widget_control,id,get_uvalue=global
 current_tab = getCurrentSelectedMainTab(Event)
 prev_tab = (*global).previous_tab
 
-IF (current_tab NE prev_tab) THEN BEGIN
-
-    (*global).previous_tab = current_tab
-
+IF ((*global).NeXusFound) THEN BEGIN
+    
+    IF (current_tab NE prev_tab) THEN BEGIN
+        
+        (*global).previous_tab = current_tab
+        
 ;plot bank1, bank2, grid and unselected data
-    PlotIncludedPixels, Event
-
+        PlotIncludedPixels, Event
+        
+    ENDIF
 ENDIF
 
 END
