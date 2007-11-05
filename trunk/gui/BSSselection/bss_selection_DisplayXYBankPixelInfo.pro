@@ -96,6 +96,6 @@ color   = (*global).ColorSelectedPixel
 
 x       = getXValue(Event)
 y       = getYValue(Event)
-PlotExcludedBox, x, y, x_coeff, y_coeff, color
+PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
 
 END

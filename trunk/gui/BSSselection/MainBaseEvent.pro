@@ -185,6 +185,11 @@ CASE Event.id OF
         BSSselection_IncludeTube, Event
     end
 
+;Excluded pixel type
+    Widget_Info(wWidget, FIND_BY_UNAME='excluded_pixel_type'): begin
+        BSSselection_ExcludedPixelType, Event
+    end
+
 ;Full reset of Excluded pixels
     Widget_Info(wWidget, FIND_BY_UNAME='reset_button'): begin
         BSSselection_FullResetButton, Event
