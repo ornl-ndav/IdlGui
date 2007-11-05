@@ -67,6 +67,8 @@ countsBaseSize        = [pixelIDbasesize[0]+xoff,$
                          xbaseSize[1],$
                          150,$
                          xbaseSize[3]]
+countsLabelSize       = [0,10]
+countsTextSize        = [50,3,60,30]
 
 Xfactor = XYfactor.Xfactor 
 Yfactor = XYfactor.Yfactor
@@ -325,12 +327,17 @@ countsBase = WIDGET_BASE(XYPixelIDBase,$
                          SCR_XSIZE=countsBaseSize[2],$
                          SCR_YSIZE=countsBaseSize[3])
 
-countsfield = CW_FIELD(countsbase,$
-                       UNAME         = 'counts_value',$
-                       RETURN_EVENTS = 1,$
-                       TITLE         = 'Counts:',$
-                       ROW           = 1,$
-                       XSIZE         = 8)
+countslabel = WIDGET_LABEL(countsbase,$
+                           XOFFSET = countsLabelSize[0],$
+                           YOFFSET = countsLabelSize[1],$
+                           VALUE = 'Counts:')
+
+countsfield = WIDGET_TEXT(countsbase,$
+                          XOFFSET   = countsTextSize[0],$
+                          YOFFSET   = countsTextSize[1],$
+                          SCR_XSIZE = countsTextSize[2],$
+                          SCR_YSIZE = countsTextSize[3],$
+                          UNAME = 'counts_value')
 
 ;TOP_BANK
 TOP_BANK_DRAW = WIDGET_DRAW(SelectionBase,$

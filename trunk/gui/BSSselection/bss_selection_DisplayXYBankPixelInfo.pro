@@ -66,3 +66,36 @@ counts = RetrieveCounts(Event, bank, x, y)
 PutCountsValue, Event, strcompress(counts,/remove_all)
 
 END
+
+
+
+
+
+PRO BSSselection_DisplaySelectedPixel, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+PlotIncludedPixels, Event
+
+;plot selected pixel on top of it
+bank    = getBankValue(Event)
+
+IF (bank EQ 1) THEN BEGIN       ;bank 1
+    view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')
+ENDIF ELSE BEGIN                ;bank 2    
+    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+ENDELSE
+
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+x_coeff = (*global).Xfactor
+y_coeff = (*global).Yfactor
+color   = (*global).ColorSelectedPixel
+
+x       = getXValue(Event)
+y       = getYValue(Event)
+PlotExcludedBox, x, y, x_coeff, y_coeff, color
+
+END
