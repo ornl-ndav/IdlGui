@@ -62,6 +62,7 @@ global = ptr_new ({processing : 'PROCESSING',$
                    DefaultFilter : '*.nxs'$ ;default filter for the nexus file
                   })
 
+Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
 XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
 pixel_excluded = intarr((*global).pixel_excluded_size)

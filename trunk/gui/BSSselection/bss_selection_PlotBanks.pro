@@ -119,10 +119,11 @@ Yfactor = (*global).Yfactor
 tvimg_bank2 = rebin(bank2_sum_transpose,Nx*Xfactor, Ny*Yfactor,/sample)
     
 ;bottom bank = bank2
-    view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
-    WIDGET_CONTROL, view_info, GET_VALUE=id
-    wset, id
-    tvscl, tvimg_bank2
+view_info = widget_info(Event.top,FIND_BY_UNAME='bottom_bank_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+tvscl, tvimg_bank2
+
 END
 
 
@@ -160,6 +161,8 @@ bank2_sum = bank2_sum(0:63,0:55)
 ;store banks sum
 (*(*global).bank1_sum) = bank1_sum
 (*(*global).bank2_sum) = bank2_sum
+
+DEVICE, DECOMPOSED = 0
 
 bss_selection_PlotBank1, Event
 bss_selection_PlotBank2, Event
