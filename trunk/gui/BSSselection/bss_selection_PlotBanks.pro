@@ -132,9 +132,6 @@ END
 
 PRO bss_selection_PlotBanks, Event, success
 
-DEVICE, DECOMPOSED=0
-LOADCT,2
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
