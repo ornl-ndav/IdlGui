@@ -65,26 +65,29 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='x_value'): begin
         BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdatePixelIDField, Event
+        BSSselection_UpdateRowTubefield, Event
     end
     
 ;Y        
     Widget_Info(wWidget, FIND_BY_UNAME='y_value'): begin
         BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdatePixelIDField, Event
+        BSSselection_UpdateRowTubefield, Event
     end
     
 ;Bank
     Widget_Info(wWidget, FIND_BY_UNAME='bank_value'): begin
-              BSSselection_DisplayCountsVsTof, Event
-              BSSselection_UpdatePixelIDField, Event
+        BSSselection_DisplayCountsVsTof, Event
+        BSSselection_UpdatePixelIDField, Event
+        BSSselection_UpdateRowTubefield, Event
     end
 
 ;PixelID
     Widget_Info(wWidget, FIND_BY_UNAME='pixel_value'): begin
-              BSSselection_DisplayCountsVsTof, Event
-              BSSselection_UpdateXYBankFields, Event
+        BSSselection_DisplayCountsVsTof, Event
+        BSSselection_UpdateXYBankFields, Event
+        BSSselection_UpdateRowTubefield, Event
     end
-
 
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
