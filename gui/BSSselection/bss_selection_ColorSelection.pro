@@ -117,7 +117,7 @@ CASE (DropListValue) OF
     3: BEGIN
         SelectedIndex = (*global).DefaultLoadctMainPlot
         (*global).LoadctMainPlot = SelectedIndex
-        SetDropListValue, Event, Selectedindex
+        SetDropListIndex, Event, Selectedindex
     END
 ENDCASE
 
