@@ -73,6 +73,7 @@ CASE Event.id OF
         BSSselection_UpdateXYBankFromRowTubeFields, Event
         BSSselection_UpdatePixelIDField, Event
         BSSselection_DisplayCountsVsTof, Event
+        BSSselection_DisplaySelectedPixel, Event
     end
 
 ;Y        
@@ -80,6 +81,7 @@ CASE Event.id OF
         BSSselection_UpdatePixelIDField, Event
         BSSselection_UpdateRowTubefield, Event
         BSSselection_DisplayCountsVsTof, Event
+        BSSselection_DisplaySelectedPixel, Event
     end
     
 ;Row
@@ -87,6 +89,7 @@ CASE Event.id OF
         BSSselection_UpdateXYBankFromRowTubeFields, Event
         BSSselection_UpdatePixelIDField, Event
         BSSselection_DisplayCountsVsTof, Event
+        BSSselection_DisplaySelectedPixel, Event
     end
 
 ;Bank
@@ -94,6 +97,7 @@ CASE Event.id OF
         BSSselection_UpdatePixelIDField, Event
         BSSselection_UpdateRowTubefield, Event
         BSSselection_DisplayCountsVsTof, Event
+        BSSselection_DisplaySelectedPixel, Event
     end
 
 ;PixelID
@@ -101,6 +105,7 @@ CASE Event.id OF
         BSSselection_UpdateXYBankFields, Event
         BSSselection_UpdateRowTubefield, Event
         BSSselection_DisplayCountsVsTof, Event
+        BSSselection_DisplaySelectedPixel, Event
     end
 
 ;bank1 widget_draw

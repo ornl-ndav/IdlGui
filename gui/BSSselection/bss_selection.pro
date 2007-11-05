@@ -16,6 +16,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   ColorSelectedPixel : 100,$
                    ColorVerticalGrid : 85,$
                    ColorHorizontalGrid : 85,$
                    ColorExcludedPixels : 150,$
