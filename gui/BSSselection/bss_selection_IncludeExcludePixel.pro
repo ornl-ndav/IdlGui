@@ -1,14 +1,43 @@
-PRO PlotExcludedBox, x, y, x_coeff, y_coeff, color
+;Only the sides of the excluded pixels are shown
+PRO PlotExcludedBoxEmpty, x, y, x_coeff, y_coeff, color
+plots, x*x_coeff, y*y_coeff, /device, color=color
+plots, x*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
+plots, (x+1)*x_coeff, y*y_coeff, /device, color=color
+plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
+
+plots, x*x_coeff,y*y_coeff, /device,color=color
+plots, (x+1)*x_coeff, y*y_coeff, /device, /continue, color=color
+plots, x*x_coeff,(y+1)*y_coeff, /device,color=color
+plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
+END
+
+
+
+;The excluded pixels are shown as a rectangle area
+PRO PlotExcludedBoxFull, x, y, x_coeff, y_coeff, color
+FOR i=0,(x_coeff) do begin
     plots, x*x_coeff, y*y_coeff, /device, color=color
     plots, x*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
-    plots, (x+1)*x_coeff, y*y_coeff, /device, color=color
-    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
-    
-    plots, x*x_coeff,y*y_coeff, /device,color=color
-    plots, (x+1)*x_coeff, y*y_coeff, /device, /continue, color=color
-    plots, x*x_coeff,(y+1)*y_coeff, /device,color=color
-    plots, (x+1)*x_coeff, (y+1)*y_coeff, /device, /continue, color=color
+    plots, (x*x_coeff+i), y*y_coeff, /device, color=color
+    plots, (x*x_coeff+i), (y+1)*y_coeff, /device, /continue, color=color
+endfor
+
 END
+
+
+
+
+PRO PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
+;check status of empty or full box
+IF (isPixelExcludedSymbolFull(Event)) THEN BEGIN
+    PlotExcludedBoxFull, x, y, x_coeff, y_coeff, color
+ENDIF ELSE BEGIN
+    PlotExcludedBoxEmpty, x, y, x_coeff, y_coeff, color
+ENDELSE
+END
+
+
+
 
 
 
@@ -49,7 +78,7 @@ color   = (*global).ColorExcludedPixels
 IF (new_state) THEN BEGIN ;exclude pixel
     x       = getXValue(Event)
     y       = getYValue(Event)
-    PlotExcludedBox, x, y, x_coeff, y_coeff, color
+    PlotExcludedBox, Event, x, y, x_coeff, y_coeff, color
 ENDIF ELSE BEGIN                ;include pixel
 
 ;first replot bank + lines
@@ -68,7 +97,7 @@ ENDIF ELSE BEGIN                ;include pixel
         pixel = pixelid_min + i
         IF (pixel_excluded(pixel) EQ 1) THEN BEGIN ;plot lines around this pixel
             XY = getXYfromPixelID(Event, pixel)
-            PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
+            PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
         ENDIF        
     ENDFOR
 
@@ -98,7 +127,7 @@ pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, i)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 
@@ -111,7 +140,7 @@ FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, pixel)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 END
@@ -149,7 +178,7 @@ pixel_excluded = (*(*global).pixel_excluded)
 FOR i=0,3584L DO BEGIN
     IF (pixel_excluded[i] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, i)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 
@@ -162,7 +191,7 @@ FOR i=0,3584L DO BEGIN
     pixel = pixelid_min + i    
     IF (pixel_excluded[pixel] EQ 1) THEN BEGIN
         XY = getXYfromPixelID(Event, pixel)
-        PlotExcludedBox, XY[0], XY[1], x_coeff, y_coeff, color
+        PlotExcludedBox, Event, XY[0], XY[1], x_coeff, y_coeff, color
     ENDIF
 ENDFOR
 END
@@ -189,3 +218,24 @@ AppendLogBookMessage, Event, LogBookText
 putLoadedRoiFileName, Event, ''
 
 END
+
+
+
+
+PRO BSSselection_ExcludedPixelType, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+currentSelectedSymbol  = isPixelExcludedSymbolFull(Event)
+previousSelectedSymbol = (*global).PrevExcludedSymbol
+
+IF (currentSelectedSymbol NE previousSelectedSymbol) THEN BEGIN
+    PlotIncludedPixels, Event
+    (*global).PrevExcludedSymbol = currentSelectedSymbol
+ENDIF
+
+END
+
+

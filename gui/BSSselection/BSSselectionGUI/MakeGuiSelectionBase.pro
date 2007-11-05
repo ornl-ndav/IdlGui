@@ -96,6 +96,23 @@ button = WIDGET_BUTTON(sbase,$
                        SENSITIVE = 0)
 
 
+;Excluded type (full or empty box)
+base = WIDGET_BASE(SelectionTabBase,$
+                   /BASE_ALIGN_CENTER,$
+                   ROW = 1)
+
+EcludedTypeLable = WIDGET_LABEL(base,$
+                                VALUE = 'Excluded Pixel Symbol:   ')
+
+excludedTypeList = ['Empty Box  ', 'Full Box  ']
+ExcludedType = CW_BGROUP(base, $
+                         excludedTypeList, $
+                         /EXCLUSIVE, $
+                         SET_VALUE = 0, $
+                         UNAME = 'excluded_pixel_type', $
+                         ROW = 1)
+
+
 ;full reset
 fbase = WIDGET_BASE(SelectionTabBase,$
                     /BASE_ALIGN_CENTER,$

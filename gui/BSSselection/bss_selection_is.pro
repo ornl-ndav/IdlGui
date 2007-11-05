@@ -6,30 +6,41 @@ FUNCTION IsXYRowTubePixelidBankInputCorrect, X=X,$
                                              Bank=Bank
 
 IF (n_elements(X) EQ 1) THEN BEGIN
-    IF (~(X GE 0 AND X LT 56)) THEN return, 0
+    IF (~(X GE 0 AND X LT 56)) THEN RETURN, 0
 ENDIF
 
 IF (n_elements(Y) EQ 1) THEN BEGIN
-    IF (~(Y GE 0 AND Y LT 64)) THEN return, 0
+    IF (~(Y GE 0 AND Y LT 64)) THEN RETURN, 0
 ENDIF
 
 IF (n_elements(Row) EQ 1) THEN BEGIN
-    IF (~(Row GE 0 AND Row LT 128)) THEN return, 0
+    IF (~(Row GE 0 AND Row LT 128)) THEN RETURN, 0
 ENDIF
 
 IF (n_elements(Tube) EQ 1) THEN BEGIN
     IF (~((Tube GE 0 AND Tube LT 56) OR $
-          (Tube GE 64 AND Tube LT 120))) THEN return, 0
+          (Tube GE 64 AND Tube LT 120))) THEN RETURN, 0
 ENDIF
 
 IF (n_elements(PixelID) EQ 1) THEN BEGIN
     IF (~((PixelID GE 0 AND PixelID LT 3584) OR $
-          (PixelID GE 4096 AND PixelID LT 7680))) THEN return, 0
+          (PixelID GE 4096 AND PixelID LT 7680))) THEN RETURN, 0
 ENDIF
 
 IF (n_elements(Bank) EQ 1) THEN BEGIN
-    IF (~(Bank EQ 1 OR Bank EQ 2)) THEN return, 0
+    IF (~(Bank EQ 1 OR Bank EQ 2)) THEN RETURN, 0
 ENDIF
 
-return, 1
+RETURN, 1
 END
+
+
+
+
+FUNCTION isPixelExcludedSymbolFull, Event
+id = widget_info(Event.top,find_by_uname='excluded_pixel_type')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
