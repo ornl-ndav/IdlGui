@@ -56,6 +56,13 @@ RETURN, pixelid
 END
 
 
+FUNCTION getPixelidColorIndex, Event
+id = widget_info(Event.top,find_by_uname='pixel_color_index')
+widget_control, id, get_value=color
+RETURN, color
+END
+
+
 ;FUNCTION getPixelIDfromXY, Event, pixelID
 FUNCTION getXYfromPixelID, Event, pixelID
 IF (pixelID LT 4096) THEN BEGIN
