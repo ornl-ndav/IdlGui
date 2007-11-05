@@ -17,12 +17,44 @@ Y    = getYValue(Event)
 pixelid = CalculatePixelID(Event, bank, X, Y)
 ;display pixelid info
 PutPixelIDValue, Event, pixelid
+END
+
+
+PRO BSSselection_UpdateXYBankFromRowTubeFields, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get row value
+row = getRowValue(Event)
+;get tube value
+tube = getTubeValue(Event)
+
+IF (row LT 64) THEN BEGIN
+    Y = row
+    bank = 1
+ENDIF ELSE BEGIN
+    Y = row - 64
+    bank = 2
+ENDELSE
+
+IF (tube LT 64) THEN BEGIN
+    X = tube
+ENDIF ELSE BEGIN
+    X = tube - 64
+ENDELSE
+
+;update bank, X, Y
+;put value in the cw_fields
+putXValue, Event, X
+putYValue, Event, Y
+putBankValue, Event, bank
 
 END
 
 
-PRO BSSselection_UpdateXYBankFields, Event
 
+PRO BSSselection_UpdateXYBankFields, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global

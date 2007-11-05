@@ -60,33 +60,47 @@ CASE Event.id OF
         endif
     end
     
-;X: Y: Bank: and PixelID cw_fields       
+;X: Y: Bank: Row: Tube: and PixelID: cw_fields       
 ;X
     Widget_Info(wWidget, FIND_BY_UNAME='x_value'): begin
-        BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdatePixelIDField, Event
         BSSselection_UpdateRowTubefield, Event
+        BSSselection_DisplayCountsVsTof, Event
     end
     
+;Tube 
+    Widget_Info(wWidget, FIND_BY_UNAME='tube_value'): begin
+        BSSselection_UpdateXYBankFromRowTubeFields, Event
+        BSSselection_UpdatePixelIDField, Event
+        BSSselection_DisplayCountsVsTof, Event
+    end
+
 ;Y        
     Widget_Info(wWidget, FIND_BY_UNAME='y_value'): begin
-        BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdatePixelIDField, Event
         BSSselection_UpdateRowTubefield, Event
+        BSSselection_DisplayCountsVsTof, Event
     end
     
+;Row
+    Widget_Info(wWidget, FIND_BY_UNAME='row_value'): begin
+        BSSselection_UpdateXYBankFromRowTubeFields, Event
+        BSSselection_UpdatePixelIDField, Event
+        BSSselection_DisplayCountsVsTof, Event
+    end
+
 ;Bank
     Widget_Info(wWidget, FIND_BY_UNAME='bank_value'): begin
-        BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdatePixelIDField, Event
         BSSselection_UpdateRowTubefield, Event
+        BSSselection_DisplayCountsVsTof, Event
     end
 
 ;PixelID
     Widget_Info(wWidget, FIND_BY_UNAME='pixel_value'): begin
-        BSSselection_DisplayCountsVsTof, Event
         BSSselection_UpdateXYBankFields, Event
         BSSselection_UpdateRowTubefield, Event
+        BSSselection_DisplayCountsVsTof, Event
     end
 
 ;bank1 widget_draw
