@@ -64,34 +64,35 @@ global = ptr_new ({processing : 'PROCESSING',$
 
 Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
-XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
-pixel_excluded = intarr((*global).pixel_excluded_size)
+
+XYfactor                    = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
+pixel_excluded              = intarr((*global).pixel_excluded_size)
 (*(*global).pixel_excluded) = pixel_excluded
 
 MainBaseSize  = [50,200,1200,730]
 MainBaseTitle = 'BSS selection tool'
         
 ;Build Main Base
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
-                         UNAME='MAIN_BASE',$
-                         SCR_XSIZE=MainBaseSize[2],$
-                         SCR_YSIZE=MainBaseSize[3],$
-                         XOFFSET=MainBaseSize[0],$
-                         YOFFSET=MainBaseSize[1],$
-                         TITLE=MainBaseTitle,$
-                         SPACE=0,$
-                         XPAD=0,$
-                         YPAD=2)
+MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+                         UNAME        = 'MAIN_BASE',$
+                         SCR_XSIZE    = MainBaseSize[2],$
+                         SCR_YSIZE    = MainBaseSize[3],$
+                         XOFFSET      = MainBaseSize[0],$
+                         YOFFSET      = MainBaseSize[1],$
+                         TITLE        = MainBaseTitle,$
+                         SPACE        = 0,$
+                         XPAD         = 0,$
+                         YPAD         = 2)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;add version to program
 version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1035,$
-                             YOFFSET=2,$
-                             VALUE=VERSION,$
-                             FRAME=0)
+                             XOFFSET = 1035,$
+                             YOFFSET = 2,$
+                             VALUE   = VERSION,$
+                             FRAME   = 0)
 
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
