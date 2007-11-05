@@ -33,8 +33,18 @@ ENDCASE
 activate_base, Event, 'color_slider_base', SliderMap
 activate_base, Event, 'Loadct_base', LoadctMap
 
+SWITCH (DropListValue) OF
+    0:
+    1:
+    2: BEGIN
 ;reset slider position
-SetColorSliderValue, Event, SelectedIndex
+        SetColorSliderValue, Event, SelectedIndex
+        BREAK
+    END
+    3: BEGIN
+        SetDropListIndex, Event, SelectedIndex
+    END
+ENDSWITCH
 
 END
 
@@ -55,7 +65,9 @@ CASE (DropListValue) OF
 ENDCASE
 
 ;replot everything
-PlotIncludedPixels, Event        
+IF ((*global).NeXusFound) THEN BEGIN
+    PlotIncludedPixels, Event        
+ENDIF
 
 END
 
@@ -69,6 +81,9 @@ LoadctIndex = getLoadctDropListSelectedIndex(Event)
 (*global).LoadctMainPlot = LoadctIndex
 
 ;replot everything
+IF ((*global).NeXusFound) THEN BEGIN
+    PlotIncludedPixels, Event
+ENDIF
 
 END
 
@@ -107,7 +122,9 @@ CASE (DropListValue) OF
 ENDCASE
 
 ;replot everything
-PlotIncludedPixels, Event        
+IF ((*global).NeXusFound) THEN BEGIN
+    PlotIncludedPixels, Event        
+ENDIF
 
 END
 
@@ -147,7 +164,9 @@ CASE (DropListValue) OF
 ENDCASE
 
 ;replot everything
-PlotIncludedPixels, Event        
+IF ((*global).NeXusFound) THEN BEGIN
+    PlotIncludedPixels, Event        
+ENDIF
 
 END
 

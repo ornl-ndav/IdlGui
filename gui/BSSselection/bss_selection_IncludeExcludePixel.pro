@@ -129,10 +129,16 @@ x_coeff = (*global).Xfactor
 y_coeff = (*global).Yfactor
 color   = (*global).ColorExcludedPixels
 
+DEVICE, DECOMPOSED = 0
+loadct, (*global).LoadctMainPlot
+
 ;plot main plots + grid
 bss_selection_PlotBank1, Event
+DEVICE, DECOMPOSED = 0
 PlotBank1Grid, Event
+loadct, (*global).LoadctMainPlot
 bss_selection_PlotBank2, Event
+DEVICE, DECOMPOSED = 0
 PlotBank2Grid, Event
 
 view_info = widget_info(Event.top,FIND_BY_UNAME='top_bank_draw')

@@ -97,9 +97,9 @@ FullResetColorButtonTitle  = 'F U L L  R E S E T'
 
 ColorSliderBaseSize   = [10,65,415,45]
 ColorSliderLabelSize  = [13,0,420,30]
-ColorSliderLabelTitle = 'Black       Green      Red        Pink       Purple       White'
+ColorSliderLabelTitle = ' 0           50       100        150          200         250 '
 ColorSliderSize       = [10,25,390,20]
-LoadctDropListSize    = [120,15,300,30]
+LoadctDropListSize    = [120,10,300,30]
 LoadctList = ['Black/White Linear',$
               'Blue/White',$
               'Green/Red/Blue/White',$

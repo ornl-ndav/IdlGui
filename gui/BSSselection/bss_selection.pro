@@ -1,7 +1,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 VERSION = 'VERSION: BSSselection1.0.1'
-loadct,5
+
 
 ;define initial global values - these could be input via external file or other means
 
@@ -16,12 +16,12 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
-                   ColorVerticalGrid : 200,$
-                   ColorHorizontalGrid : 50,$
+                   ColorVerticalGrid : 85,$
+                   ColorHorizontalGrid : 85,$
                    ColorExcludedPixels : 150,$
                    LoadctMainPlot : 5,$
-                   DefaultColorVerticalGrid : 200,$
-                   DefaultColorHorizontalGrid : 50,$
+                   DefaultColorVerticalGrid : 85,$
+                   DefaultColorHorizontalGrid : 85,$
                    DefaultColorExcludedPixels : 150,$
                    DefaultLoadctMainPlot : 5,$
                    BSSselectionVersion : version,$ ;version of current program
@@ -62,6 +62,7 @@ global = ptr_new ({processing : 'PROCESSING',$
                    DefaultFilter : '*.nxs'$ ;default filter for the nexus file
                   })
 
+loadct, (*global).DefaultLoadctMainPlot
 XYfactor = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
 pixel_excluded = intarr((*global).pixel_excluded_size)
 (*(*global).pixel_excluded) = pixel_excluded
@@ -98,11 +99,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ; initialize slider (Grid: Vertical Lines)
 id = widget_info(Main_base,Find_by_Uname='color_slider')
-widget_control, id, set_value = 200
-; id = widget_info(Main_base,Find_by_Uname='selection_color_droplist')
-; widget_control, id, set_droplist_select= 4 white
-; id = widget_info(Main_base,Find_by_Uname='main_plot_color_droplist')
-; widget_control, id, set_droplist_select= 5 STD GAMMA-II
+widget_control, id, set_value = (*global).ColorVerticalGrid
 
 END
 
