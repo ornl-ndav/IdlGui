@@ -108,6 +108,12 @@ CASE Event.id OF
         BSSselection_DisplaySelectedPixel, Event
     end
 
+;Pixelid Color Index
+    Widget_Info(wWidget, FIND_BY_UNAME='pixel_color_index'): begin
+        (*global).ColorSelectedPixel = getPixelidColorIndex(Event)
+        BSSselection_DisplaySelectedPixel, Event
+    end
+
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded

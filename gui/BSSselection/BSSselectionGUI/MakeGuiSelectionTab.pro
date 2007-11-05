@@ -35,8 +35,8 @@ OpenNeXusSelectionTab = [755,5,425,210]
 OpenNeXusTitle        = ' NEXUS / ROI '
 SelectionTitle        = '  SELECTION  '
 
-XYPixelIDBaseSize     = [80,330,580,35]
-xbaseSize             = [0,0,55,35]
+XYPixelIDBaseSize     = [15,330,725,35]
+xbaseSize             = [5,0,55,35]
 xoff = 60
 ybasesize             = [xbaseSize[0]+xoff,$
                          xbaseSize[1],$
@@ -65,10 +65,16 @@ pixelIDbaseSize       = [tubeBaseSize[0]+xoff,$
 xoff = 110
 countsBaseSize        = [pixelIDbasesize[0]+xoff,$
                          xbaseSize[1],$
-                         150,$
+                         120,$
                          xbaseSize[3]]
 countsLabelSize       = [0,10]
 countsTextSize        = [50,3,60,30]
+
+xoff = 120
+ColorIndexBaseSize    = [countsBaseSize[0]+xoff,$
+                         xbaseSize[1],$
+                         250,$
+                         xbaseSize[3]]
 
 Xfactor = XYfactor.Xfactor 
 Yfactor = XYfactor.Yfactor
@@ -338,6 +344,21 @@ countsfield = WIDGET_TEXT(countsbase,$
                           SCR_XSIZE = countsTextSize[2],$
                           SCR_YSIZE = countsTextSize[3],$
                           UNAME = 'counts_value')
+
+ColorIndexbase = WIDGET_BASE(XYPixelIDBase,$
+                             XOFFSET   = colorIndexBaseSize[0],$
+                             YOFFSET   = colorIndexBaseSize[1],$
+                             SCR_XSIZE = colorIndexBaseSize[2],$
+                             SCR_YSIZE = colorIndexBaseSize[3])
+
+colorIndexfield = CW_FIELD(ColorIndexbase,$
+                           UNAME         = 'pixel_color_index',$
+                           RETURN_EVENTS = 1,$
+                           TITLE         = 'Color Index:',$
+                           ROW           = 1,$
+                           XSIZE         = 3,$
+                           /INTEGER,$
+                           VALUE         = 100)
 
 ;TOP_BANK
 TOP_BANK_DRAW = WIDGET_DRAW(SelectionBase,$
