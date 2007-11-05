@@ -163,7 +163,6 @@ bank2_sum = bank2_sum(0:63,0:55)
 (*(*global).bank2_sum) = bank2_sum
 
 DEVICE, DECOMPOSED = 0
-
 bss_selection_PlotBank1, Event
 bss_selection_PlotBank2, Event
 

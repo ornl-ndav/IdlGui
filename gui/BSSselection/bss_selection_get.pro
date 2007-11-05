@@ -21,10 +21,24 @@ return, x
 END
 
 
+FUNCTION getTubeValue, Event
+id = widget_info(Event.top,find_by_uname='tube_value')
+widget_control, id, get_value=tube
+return, tube
+END
+
+
 FUNCTION getYValue, Event
 id = widget_info(Event.top,find_by_uname='y_value')
 widget_control, id, get_value=y
 RETURN, y
+END
+
+
+FUNCTION getRowValue, Event
+id = widget_info(Event.top,find_by_uname='row_value')
+widget_control, id, get_value=row
+return, row
 END
 
 
