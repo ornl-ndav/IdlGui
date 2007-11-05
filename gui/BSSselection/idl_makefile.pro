@@ -20,6 +20,7 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 cd, CurrentFolder
 .run bss_selection_put.pro
 .run bss_selection_get.pro
+.run bss_selection_is.pro
 .run bss_selection_nexus.pro
 .run bss_selection_utilities.pro
 .run bss_selection_Gui.pro
