@@ -11,22 +11,34 @@ CountsVsTofLabelSize  = [890,290]
 CountsVsTofLabel1Size = [780,288]
 CountsVsTofLabelTitle = ' C O U N T S (                             ) vs   T O F'
 
-CountsVsTofSize = [755,$
-                   CountsVsTofLabelSize[1]+20,$
+CountsVsTofSize = [5,$
+                   35,$
                    430,$
                    225]
 
-xoff = 110
-yoff = -33
-LinLogBgroup = { size : [CountsVsTofSize[0]+xoff,$
-                         CountsVsTofSize[1]+yoff],$
-                 label : '',$
-                 uname : 'counts_scale_cwbgroup',$
+FullCountsVsTofSize = [5,$
+                       35,$
+                       430,$
+                       245]
+
+LinLogBgroup = { size : [95,$
+                         0],$
+                 label : 'Y-axis:',$
+                 uname : ['counts_scale_cwbgroup',$
+                          'full_counts_scale_cwbgroup'],$
                  list : ['Linear','Logarithmic']}
 
+;CountsVsTof
+CountsVsTofTabSize = [748,$
+                      273,$
+                      444,$
+                      310]
+CountsVsTofTab1Label = 'Counts Vs Tof (Selection)'
+CountsVsTofTab2Label = 'Counts Vs Tof (Individual Pixel)'
+
 ;X, Y, PixelID and Bank of data display in counts vs tof
-CountsVsTofXLabelSize = [750, $
-                         CountsVsTofLabelSize[1]+242, $
+CountsVsTofXLabelSize = [0, $
+                         257, $
                          100, $
                          30]
 xoff = 100
@@ -97,26 +109,26 @@ BottomBankSize = [TopBankSize[0], $
                   TopBanksize[3]]
 
 ;COLOR SELECTION and MAIN_PLOT BASE
-ColorBaseSize       = [748,565,440,135]
-ColorLabelSize      = [ 115,5,200,0]
-
-SelectionDropListSize = [0,30,80,30]
+ColorBaseSize       = [748,587,440,105]
+yoff = 10
+ColorLabelSize      = [ 115,15-yoff,200,0]
+SelectionDropListSize = [0,35-yoff,80,30]
 SelectionDropList     = ['Grid: Vertical Lines', $
                          'Grid: Horizontal Lines',$
                          'Excluded pixels',$
                          'Main Plot']
 
-ResetColorButtonSize       = [190,32,80,30]
+ResetColorButtonSize       = [190,38-yoff,80,30]
 ResetColorButtonTitle      = 'R E S E T'
 
-FullResetColorButtonSize   = [280,32,150,30]
+FullResetColorButtonSize   = [280,38-yoff,150,30]
 FullResetColorButtonTitle  = 'F U L L  R E S E T'
 
-ColorSliderBaseSize   = [10,65,415,45]
+ColorSliderBaseSize   = [10,67-yoff,415,45]
 ColorSliderLabelSize  = [13,0,420,30]
 ColorSliderLabelTitle = ' 0           50       100        150          200         250 '
 ColorSliderSize       = [10,25,390,20]
-LoadctDropListSize    = [120,10,300,30]
+LoadctDropListSize    = [120,5,300,30]
 LoadctList = ['Black/White Linear',$
               'Blue/White',$
               'Green/Red/Blue/White',$
@@ -179,33 +191,78 @@ MessageText = WIDGET_TEXT(SelectionBase,$
                           UNAME     = 'message_text',$
                           /ALIGN_LEFT)
 
-;COUNTS VS TOF
-COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
-                            UNAME     = 'counts_vs_tof_draw',$
-                            XOFFSET   = CountsVsTofSize[0],$
-                            YOFFSET   = CountsVsTofSize[1],$
-                            SCR_XSIZE = CountsVsTofSize[2],$
-                            SCR_YSIZE = CountsVsTofSize[3],$
-                            /MOTION_EVENTS,$
-                            /BUTTON_EVENTS)
+;counts vs tof (full selection and left click)
+counts_vs_tof_tab = WIDGET_TAB(SelectionBase,$
+                               UNAME     = 'counts_vs_tof_tab',$
+                               LOCATION  = 0,$
+                               XOFFSET   = CountsVsTofTabSize[0],$
+                               YOFFSET   = CountsVsTofTabSize[1],$
+                               SCR_XSIZE = CountsVsTofTabSize[2],$
+                               SCR_YSIZE = CountsVsTofTabSize[3],$
+                               SENSITIVE = 1,$
+                               /TRACKING_EVENTS)
 
-bgroup = CW_BGROUP(SelectionBase,$
+;CountsVsTof of full selection
+CountsVsTofTab1 = WIDGET_BASE(counts_vs_tof_tab,$
+                              XOFFSET   = 0,$
+                              YOFFSET   = 0,$
+                              SCR_XSIZE = CountsVsTofTabSize[2],$
+                              SCR_YSIZE = CountsVsTofTabSize[2],$
+                              TITLE     = CountsVsTofTab1Label)
+
+draw = WIDGET_DRAW(CountsVsTofTab1,$
+                   UNAME     = 'full_counts_vs_tof_draw',$
+                   XOFFSET   = FullCountsVsTofSize[0],$
+                   YOFFSET   = FullCountsVsTofSize[1],$
+                   SCR_XSIZE = FullCountsVsTofSize[2],$
+                   SCR_YSIZE = FullCountsVsTofSize[3],$
+                   /MOTION_EVENTS,$
+                   /BUTTON_EVENTS)
+
+bgroup = CW_BGROUP(CountsVsTofTab1,$
                    LinLogBgroup.list,$
                    XOFFSET    = LinLogBgroup.size[0],$
                    YOFFSET    = LinLogBgroup.size[1],$
                    LABEL_LEFT = LinLogBgroup.label,$
                    ROW        = 1,$
-                   UNAME      = LinLogBgroup.uname,$
+                   UNAME      = LinLogBgroup.uname[1],$
                    /EXCLUSIVE,$
                    SET_VALUE  = 0)
 
-counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
+;CountsVsTof of pixel selected
+CountsVsTofTab2 = WIDGET_BASE(counts_vs_tof_tab,$
+                              XOFFSET   = 0,$
+                              YOFFSET   = 0,$
+                              SCR_XSIZE = CountsVsTofTabSize[2],$
+                              SCR_YSIZE = CountsVsTofTabSize[2],$
+                              TITLE     = CountsVsTofTab2Label)
+
+draw = WIDGET_DRAW(CountsVsTofTab2,$
+                   UNAME     = 'counts_vs_tof_draw',$
+                   XOFFSET   = CountsVsTofSize[0],$
+                   YOFFSET   = CountsVsTofSize[1],$
+                   SCR_XSIZE = CountsVsTofSize[2],$
+                   SCR_YSIZE = CountsVsTofSize[3],$
+                   /MOTION_EVENTS,$
+                   /BUTTON_EVENTS)
+
+bgroup = CW_BGROUP(CountsVsTofTab2,$
+                   LinLogBgroup.list,$
+                   XOFFSET    = LinLogBgroup.size[0],$
+                   YOFFSET    = LinLogBgroup.size[1],$
+                   LABEL_LEFT = LinLogBgroup.label,$
+                   ROW        = 1,$
+                   UNAME      = LinLogBgroup.uname[0],$
+                   /EXCLUSIVE,$
+                   SET_VALUE  = 0)
+
+counts_vs_tof_label = WIDGET_LABEL(CountsVsTofTab2,$
                                    XOFFSET = CountsVsTofLabel1Size[0],$
                                    YOFFSET = CountsVsTofLabel1Size[1],$
                                    VALUE   = CountsVsTofLabelTitle)
 
 
-CountsVsTofXLabel = WIDGET_LABEL (SelectionBase,$
+CountsVsTofXLabel = WIDGET_LABEL (CountsVsTofTab2,$
                                   UNAME     = 'counts_vs_tof_x_label',$
                                   XOFFSET   = CountsVsTofXLabelSize[0],$
                                   YOFFSET   = CountsVsTofXLabelSize[1],$
@@ -213,7 +270,7 @@ CountsVsTofXLabel = WIDGET_LABEL (SelectionBase,$
                                   SCR_YSIZE = CountsVsTofXLabelSize[3],$
                                   VALUE     = 'X:')
 
-CountsVsTofYLabel = WIDGET_LABEL (SelectionBase,$
+CountsVsTofYLabel = WIDGET_LABEL (CountsVsTofTab2,$
                                   UNAME     = 'counts_vs_tof_y_label',$
                                   XOFFSET   = CountsVsTofYLabelSize[0],$
                                   YOFFSET   = CountsVsTofYLabelSize[1],$
@@ -221,7 +278,7 @@ CountsVsTofYLabel = WIDGET_LABEL (SelectionBase,$
                                   SCR_YSIZE = CountsVsTofYLabelSize[3],$
                                   VALUE     = 'Y:')
 
-CountsVsTofBankLabel = WIDGET_LABEL (SelectionBase,$
+CountsVsTofBankLabel = WIDGET_LABEL (CountsVsTofTab2,$
                                      UNAME     = 'counts_vs_tof_bank_label',$
                                      XOFFSET   = CountsVsTofBankLabelSize[0],$
                                      YOFFSET   = CountsVsTofBankLabelSize[1],$
@@ -229,20 +286,13 @@ CountsVsTofBankLabel = WIDGET_LABEL (SelectionBase,$
                                      SCR_YSIZE = CountsVsTofBankLabelSize[3],$
                                      VALUE     = 'Bank:')
 
-CountsVsTofPixelLabel = WIDGET_LABEL (SelectionBase,$
+CountsVsTofPixelLabel = WIDGET_LABEL (CountsVsTofTab2,$
                                       UNAME     = 'counts_vs_tof_pixel_label',$
                                       XOFFSET   = CountsVsTofPixelLabelSize[0],$
                                       YOFFSET   = CountsVsTofPixelLabelSize[1],$
                                       SCR_XSIZE = CountsVsTofPixelLabelSize[2],$
                                       SCR_YSIZE = CountsVsTofPixelLabelSize[3],$
                                       VALUE     = 'Pixel:')
-
-CountsVsTofFrame = WIDGET_LABEL(SelectionBase,$
-                                XOFFSET   = CountsVsTofFrameSize[0],$
-                                YOFFSET   = CountsVsTofFrameSize[1],$
-                                SCR_XSIZE = CountsVsTofFrameSize[2],$
-                                SCR_YSIZE = CountsVsTofFrameSize[3],$
-                                FRAME     = 1)
 
 ;NeXus/ROI & SELECTION tab
 NeXusRoiSelectionTab = WIDGET_TAB(SelectionBase,$
