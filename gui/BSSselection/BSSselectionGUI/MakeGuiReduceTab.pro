@@ -8,7 +8,7 @@ ReduceBaseTitle      = 'REDUCE'
 ReduceInputTabSettings       = {size : [0, $
                                         0, $
                                         750, $
-                                        500],$
+                                        575],$
                                 title : [' Input Data Setup ', $
                                          ' Process Setup ', $
                                          ' Time-Independent Background ', $ 
@@ -17,13 +17,14 @@ ReduceInputTabSettings       = {size : [0, $
                                 tab1 : {size : [0, $
                                                 0, $
                                                 750, $
-                                                500]}}
+                                                575]}}
 xoff = 5
+yoff = 48
 ReduceClgXmlTabSettings = {Size : [ReduceInputTabSettings.Size[0]+$
                                    ReduceInputTabSettings.Size[2]+xoff, $
                                    ReduceInputTabSettings.Size[1], $
                                    440, $
-                                   550],$
+                                   ReduceInputTabSettings.size[3]+yoff],$
                            title : ['Command Line Generator Status', $
                                     'XML Reduce File']}
 
@@ -36,8 +37,10 @@ SubmitButton = {Size : [0, $
                 title : 'START DATA REDUCTION', $
                 uname : 'submit_button'}
 
-xoff = 5
-yoff = -7
+xoff  = 5
+xoff1 = 10
+yoff  = -7
+yoff1 = 10
 status = {frame : {size : [SubmitButton.size[0] +$
                            SubmitButton.size[2] + xoff, $
                            SubmitButton.size[1], $
@@ -45,7 +48,29 @@ status = {frame : {size : [SubmitButton.size[0] +$
                            40]}, $
           label : {size : [500, $
                            SubmitButton.size[1] + yoff],$
-                   title : 'Data Reduction Status'}}
+                   title : 'Data Reduction Status'}, $
+          text : {size: [SubmitButton.size[0] +$
+                         SubmitButton.size[2] + xoff1, $
+                         SubmitButton.size[1] + yoff1, $
+                         330, $
+                         30]}}
+
+yoff  = 10
+xoff  = 498
+yoff1 = 0 
+clg = {text : {size : [0,$
+                       SubmitButton.size[1]+$
+                       SubmitButton.size[3] + yoff,$
+                       ReduceInputTabSettings.size[2]+$
+                       ReduceClgXmlTabSettings.size[2],$
+                       63],$
+               uname : 'command_line_generator_text'},$
+       label : {size : [xoff,$
+                        SubmitButton.size[1]+$
+                        SubmitButton.size[3] + yoff1],$
+                title : 'COMMAND LINE GENERATOR'}}
+
+                        
 
 
 
@@ -82,15 +107,36 @@ label = WIDGET_LABEL(ReduceBase,$
                      YOFFSET   = Status.label.size[1],$
                      VALUE     = Status.label.title)
                      
+text = WIDGET_TEXT(ReduceBase,$
+                   XOFFSET   = Status.text.size[0],$
+                   YOFFSET   = Status.text.size[1],$
+                   SCR_XSIZE = Status.text.size[2],$
+                   SCR_YSIZE = Status.text.size[3],$
+                   /ALIGN_LEFT)
+
 frame = WIDGET_LABEL(ReduceBase,$
-                     XOFFSET   = Status.Frame.size[0],$
-                     YOFFSET   = Status.Frame.size[1],$
-                     SCR_XSIZE = Status.Frame.size[2],$
-                     SCR_YSIZE = Status.Frame.size[3],$
+                     XOFFSET   = Status.frame.size[0],$
+                     YOFFSET   = Status.frame.size[1],$
+                     SCR_XSIZE = Status.frame.size[2],$
+                     SCR_YSIZE = Status.frame.size[3],$
                      FRAME     = 1,$
                      VALUE     = '')
 
+;Command Line Generator
+label = WIDGET_LABEL(ReduceBase,$
+                     XOFFSET = clg.label.size[0],$
+                     YOFFSET = clg.label.size[1],$
+                     VALUE   = clg.label.title)
 
+text = WIDGET_TEXT(ReduceBase,$
+                   XOFFSET = clg.text.size[0],$
+                   YOFFSET = clg.text.size[1],$
+                   SCR_XSIZE = clg.text.size[2],$
+                   SCR_YSIZE = clg.text.size[3],$
+                   UNAME = clg.text.uname,$
+                   /ALIGN_LEFT,$
+                   /WRAP,$
+                   /SCROLL)
 
 
 END
