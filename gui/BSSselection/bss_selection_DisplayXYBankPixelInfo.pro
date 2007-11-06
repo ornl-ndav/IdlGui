@@ -32,39 +32,45 @@ widget_control,id,get_uvalue=global
 x=(event.X)/(*global).Xfactor
 y=(event.y)/(*global).Yfactor
 
-IF (bank EQ 'bank1') THEN BEGIN ;bank1
-    bank = 1
-ENDIF ELSE BEGIN ;bank2
-    bank = 2
-ENDELSE
+IF (x GE 0 AND x LT 56 $
+    AND $
+    y GE 0 AND y LT 64) THEN BEGIN
 
+    IF (bank EQ 'bank1') THEN BEGIN ;bank1
+        bank = 1
+    ENDIF ELSE BEGIN            ;bank2
+        bank = 2
+    ENDELSE
+    
 ;display bank info
-PutBankValue, Event, bank
-
+    PutBankValue, Event, bank
+    
 ;display X info
-PutXValue, Event, x
-
+    PutXValue, Event, x
+    
 ;display Y info
-PutYValue, Event, y
-
+    PutYValue, Event, y
+    
 ;display Row info (Y*bank)
-row = y + (bank-1)*64
-PutRowValue, Event, row
-
+    row = y + (bank-1)*64
+    PutRowValue, Event, row
+    
 ;display Tube info
-tube = x + (bank-1)*64
-PutTubeValue, Event, tube
-
+    tube = x + (bank-1)*64
+    PutTubeValue, Event, tube
+    
 ;calculate pixelid
-pixelid = CalculatePixelID(Event, bank, x, y)
+    pixelid = CalculatePixelID(Event, bank, x, y)
 ;display pixelid info
-PutPixelIDValue, Event, pixelid
-
+    PutPixelIDValue, Event, pixelid
+    
 ;get number of counts
-counts = RetrieveCounts(Event, bank, x, y)
+    counts = RetrieveCounts(Event, bank, x, y)
 ;display counts
-PutCountsValue, Event, strcompress(counts,/remove_all)
-
+    PutCountsValue, Event, strcompress(counts,/remove_all)
+   
+ENDIF
+ 
 END
 
 
