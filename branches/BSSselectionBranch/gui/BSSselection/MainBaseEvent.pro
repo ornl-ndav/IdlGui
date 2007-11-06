@@ -59,6 +59,11 @@ CASE Event.id OF
             endif
         endif
     end
+
+;log/lin of counts vs tof
+    Widget_Info(wWidget, FIND_BY_UNAME='counts_scale_cwbgroup'): begin
+        BSSselection_LinLogCountsVsTof, Event
+    end
     
 ;X: Y: Bank: Row: Tube: and PixelID: cw_fields       
 ;X

@@ -211,3 +211,9 @@ RETURN, widget_info(id, /droplist_select)
 END
 
 
+FUNCTION getLinLogValue, Event
+id = widget_info(Event.top,find_by_uname='counts_scale_cwbgroup')
+widget_control, id, get_value=value
+RETURN, value
+END
+

@@ -5,15 +5,24 @@ PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 ;***********************************************************************************
 
 ;Message box
-MessageTextSize = [755,247,430,30]
+MessageTextSize = [755,240,430,30]
 
 CountsVsTofLabelSize  = [890,290]
-CountsVsTofLabelTitle = ' C O U N T S   vs   T O F'
+CountsVsTofLabel1Size = [780,288]
+CountsVsTofLabelTitle = ' C O U N T S (                             ) vs   T O F'
 
 CountsVsTofSize = [755,$
                    CountsVsTofLabelSize[1]+20,$
                    430,$
                    225]
+
+xoff = 110
+yoff = -33
+LinLogBgroup = { size : [CountsVsTofSize[0]+xoff,$
+                         CountsVsTofSize[1]+yoff],$
+                 label : '',$
+                 uname : 'counts_scale_cwbgroup',$
+                 list : ['Linear','Logarithmic']}
 
 ;X, Y, PixelID and Bank of data display in counts vs tof
 CountsVsTofXLabelSize = [750, $
@@ -29,7 +38,7 @@ xoff = 105
 CountsVsTofPixelLabelSize = [CountsVsTofXLabelSize[0]+3*xoff,$
                              CountsVsTofXLabelSize[1:3]]
 
-CountsVsTofFrameSize = [748,CountsVsTofLabelSize[1]-5,440,275]
+CountsVsTofFrameSize = [748,CountsVsTofLabelSize[1]-15,440,285]
 
 OpenNeXusSelectionTab = [755,5,425,210]
 OpenNeXusTitle        = ' NEXUS / ROI '
@@ -171,11 +180,6 @@ MessageText = WIDGET_TEXT(SelectionBase,$
                           /ALIGN_LEFT)
 
 ;COUNTS VS TOF
-counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
-                                   XOFFSET = CountsVsTofLabelSize[0],$
-                                   YOFFSET = CountsVsTofLabelSize[1],$
-                                   VALUE   = CountsVsTofLabelTitle)
-
 COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
                             UNAME     = 'counts_vs_tof_draw',$
                             XOFFSET   = CountsVsTofSize[0],$
@@ -184,6 +188,22 @@ COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
                             SCR_YSIZE = CountsVsTofSize[3],$
                             /MOTION_EVENTS,$
                             /BUTTON_EVENTS)
+
+bgroup = CW_BGROUP(SelectionBase,$
+                   LinLogBgroup.list,$
+                   XOFFSET    = LinLogBgroup.size[0],$
+                   YOFFSET    = LinLogBgroup.size[1],$
+                   LABEL_LEFT = LinLogBgroup.label,$
+                   ROW        = 1,$
+                   UNAME      = LinLogBgroup.uname,$
+                   /EXCLUSIVE,$
+                   SET_VALUE  = 0)
+
+counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
+                                   XOFFSET = CountsVsTofLabel1Size[0],$
+                                   YOFFSET = CountsVsTofLabel1Size[1],$
+                                   VALUE   = CountsVsTofLabelTitle)
+
 
 CountsVsTofXLabel = WIDGET_LABEL (SelectionBase,$
                                   UNAME     = 'counts_vs_tof_x_label',$

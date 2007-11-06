@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({processing : 'PROCESSING',$
+                   PrevLinLogValue : 0,$ ;previously saved lin or log counts vs tof scale
                    PrevExcludedSymbol : 0,$
                    ColorSelectedPixel : 100,$
                    ColorVerticalGrid : 85,$
@@ -106,7 +107,7 @@ widget_control, id, set_value = (*global).ColorVerticalGrid
 
 ; default tabs shown
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+widget_control, id1, set_tab_current = 0 ;selection
 
 END
 

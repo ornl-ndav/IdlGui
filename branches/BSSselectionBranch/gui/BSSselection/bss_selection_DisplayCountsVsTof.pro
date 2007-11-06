@@ -33,6 +33,10 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='counts_vs_tof_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-plot, data, POSITION=[0.1,0.1,0.95,0.99]
+IF ((*global).PrevLinLogValue) THEN BEGIN ;log
+    plot, data, POSITION=[0.1,0.1,0.95,0.99],/YLOG,MIN_VALUE=0.000001
+ENDIF ELSE BEGIN
+    plot, data, POSITION=[0.1,0.1,0.95,0.99]
+ENDELSE
 
 END
