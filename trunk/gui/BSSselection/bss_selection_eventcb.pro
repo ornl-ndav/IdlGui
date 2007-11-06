@@ -10,12 +10,11 @@ prev_tab = (*global).previous_tab
 IF ((*global).NeXusFound) THEN BEGIN
     
     IF (current_tab NE prev_tab) THEN BEGIN
-        
-        (*global).previous_tab = current_tab
-        
+        IF (current_tab EQ 0) THEN BEGIN
 ;plot bank1, bank2, grid and unselected data
-        PlotIncludedPixels, Event
-        
+            PlotIncludedPixels, Event
+        ENDIF 
+        (*global).previous_tab = current_tab
     ENDIF
 ENDIF
 

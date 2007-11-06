@@ -12,6 +12,16 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiSelectionTab.pro
+.run MakeGuiReduceTab.pro
+.run MakeGuiReduceInputTab.pro
+.run MakeGuiReduceInputTab1.pro
+.run MakeGuiReduceInputTab2.pro
+.run MakeGuiReduceInputTab3.pro
+.run MakeGuiReduceInputTab4.pro
+.run MakeGuiReduceClgXmlTab.pro
+.run MakeGuiReduceClgXmlTab1.pro
+.run MakeGuiReduceClgXmlTab2.pro
+
 .run MakeGuiLogBookTab.pro
 .run MakeGuiNeXusRoiBase.pro
 .run MakeGuiSelectionBase.pro
