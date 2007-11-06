@@ -1,0 +1,50 @@
+package gov.ornl.sns.iontools;
+
+public class OtherPlotsUtils {
+
+  /*
+   * This functions checks that the selection is valid 
+   */
+  static boolean isSelectionValid(int xmin, int xmax, int ymin, int ymax) {
+    if (xmin == 0 && xmax == 0 && ymin == 0 && ymax ==0) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+  
+  /*
+   * Checks that 0 <= TBinMin <= Ntof and TBinMin <= TBinMax <= Ntof
+   */
+  static boolean isTBinMinMaxCorrect(int TBinMin, int TBinMax) {
+    
+    String sNtof = DataReduction.sNtof;
+    if (sNtof.compareTo("")!=0) {
+      int NTof = Integer.parseInt(DataReduction.sNtof);
+      if (0 <= TBinMin &&
+          TBinMin < NTof &&
+          TBinMin <= TBinMax &&
+          TBinMax < NTof) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  
+  /*
+   * Checks that the PixelID input is valid
+   * valid = is an integer and between 0 and 77823
+   */
+  static boolean isPixelIdValid(String sPixelID) {
+    if (UtilsFunction.isInputInteger(sPixelID)) {
+      int iPixelID = Integer.parseInt(sPixelID);
+      if (0 <= iPixelID && iPixelID < IParameters.PIXELID_TOTAL) {
+        return true; 
+      }
+    } 
+    return false;
+  }
+}

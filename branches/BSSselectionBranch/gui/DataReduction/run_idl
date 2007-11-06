@@ -1,0 +1,11 @@
+cd, "~/SVN/HistoTool/trunk/gui/utilities"
+.run system_utilities.pro
+.run nexus_utilities.pro
+.run prenexus_utilities.pro
+.run parsing_functions.pro
+
+cd, "~/SVN/HistoTool/trunk/gui/DataReduction/"
+.run data_reduction_eventcb.pro
+.run data_reduction.pro
+data_reduction
+
