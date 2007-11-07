@@ -134,7 +134,24 @@ END
 
 ;plot full counts_vs_tof
 PRO BSSselection_PlotFullCountsVsTof, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;disable refresh button
+ActivateRefreshButton, event, 0
+;inform user that full counts vs tof is refreshing
+MessageBox = 'Refreshing Full Counts vs TOF ... ' + (*global).processing
+putMessageBoxInfo, Event, MessageBox
+
 BSSselection_PlotCountsVsTofOfSelection, Event
+
+MessageBox = 'Refreshing Full Counts vs TOF ... DONE'
+putMessageBoxInfo, Event, MessageBox
+
+
+;enable refresh button
+ActivateRefreshButton, event, 1
 END
 
 

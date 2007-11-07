@@ -19,3 +19,9 @@ PRO SetDropListIndex, Event, index
 id = widget_info(Event.top,find_by_uname='loadct_droplist')
 widget_control, id, set_droplist_select = index
 END
+
+
+PRO ActivateRefreshButton, event, activate_status
+id = widget_info(event.top,find_by_uname='full_counts_vs_tof_refresh_button')
+widget_control, id, sensitive=activate_status
+END

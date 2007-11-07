@@ -43,6 +43,7 @@ cd, CurrentFolder
 .run bss_selection_DisplayXYBankPixelInfo.pro
 .run bss_selection_DisplayCountsVsTof.pro
 .run bss_selection_ZoomInCountsVsTof.pro
+.run bss_selection_ZoomInFullCountsVsTof.pro
 .run bss_selection_CountsVsTof.pro
 .run bss_selection_UpdateFields.pro
 

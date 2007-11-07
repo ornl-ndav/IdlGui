@@ -27,9 +27,6 @@ AppendLogBookMessage, Event, message
 success = 0
 bss_selection_PlotBanks, Event, success
 
-;plot counts vs TOF of full selection
-BSSselection_PlotCountsVsTofOfSelection, Event
-
 if (success EQ 0) then begin
 
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
@@ -39,6 +36,12 @@ if (success EQ 0) then begin
 
 endif else begin
 
+    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+
+;plot counts vs TOF of full selection
+    message = '  -> Plot Counts vs TOF of full selection ... ' + PROCESSING
+    AppendLogBookMessage, Event, message
+    BSSselection_PlotCountsVsTofOfSelection, Event
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;populate ROI file name

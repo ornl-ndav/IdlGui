@@ -61,6 +61,19 @@ CASE Event.id OF
         BSSselection_LinLogFullCountsVsTof, Event
     end
 
+    widget_info(wWidget, FIND_BY_UNAME='full_counts_vs_tof_draw'): begin
+        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+            if (Event.release EQ 1) then begin ;mouse released
+                BSSselection_ZoomInFullCountsVsTofReleased, Event
+            endif
+            if (Event.press EQ 1) then begin ;mouse pressed
+                if (Event.type EQ 0 ) then begin ;left click
+                    BSSselection_ZoomInFullCountsVsTofPressed, Event
+                endif
+            endif
+        endif
+    end
+
 ;counts vs tof draw
     widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded

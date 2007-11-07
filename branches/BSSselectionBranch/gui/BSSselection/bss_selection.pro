@@ -46,8 +46,13 @@ global = ptr_new ({processing : 'PROCESSING',$
                    counts_vs_tof_bank : 0,$ ;bank of actual counts vs tof plotted
                    true_x_min : 0.0000001,$ ;tof min for counts vs tof zoom plot
                    true_x_max : 0.0000001,$ ;tof max for counts vs tof zoom plot
+                   true_full_x_min : 0.0000001,$ 
+;tof min for full counts vs tof zoom plot
+                   true_full_x_max : 0.0000001,$ 
+;tof max for full counts vs tof zoom plot
                    NbTOF : 0L,$ ;number of tof for counts vs tof plot
-                   NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus has been found
+                   NeXusFound : 0,$ 
+;0: nexus has not been found, 1 nexus has been found
                    ok : 'OK',$
                    failed : 'FAILED',$
                    bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
