@@ -16,6 +16,11 @@ CASE Event.id OF
         BSSselection_TabRefresh, Event
     end
 
+;when changing counts vs tof tab
+    Widget_Info(wWidget, FIND_BY_UNAME='counts_vs_tof_tab'): begin
+        BSSselection_CountsVsTofTab, Event 
+    end
+
 ;cw_field run number
     Widget_Info(wWidget, FIND_BY_UNAME='nexus_run_number'): begin
         bss_selection_LoadNexus, Event
@@ -46,6 +51,16 @@ CASE Event.id OF
         BSSselection_CreateRoiFileName, Event
     end
     
+;Full counts vs tof draw and refresh button
+    Widget_Info(wWidget, FIND_BY_UNAME='full_counts_vs_tof_refresh_button'): begin
+        BSSselection_PlotFullCountsVsTof, Event
+    end
+    
+;full counts vs tof log/lin of counts vs tof
+    Widget_Info(wWidget, FIND_BY_UNAME='full_counts_scale_cwbgroup'): begin
+        BSSselection_LinLogFullCountsVsTof, Event
+    end
+
 ;counts vs tof draw
     widget_info(wWidget, FIND_BY_UNAME='counts_vs_tof_draw'): begin
         if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded

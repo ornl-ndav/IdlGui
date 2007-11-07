@@ -34,7 +34,7 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 IF ((*global).PrevLinLogValue) THEN BEGIN ;log
-    plot, data, POSITION=[0.1,0.1,0.95,0.99],/YLOG,MIN_VALUE=0.000001
+    plot, data, POSITION=[0.1,0.1,0.95,0.99], /YLOG, MIN_VALUE=0.1
 ENDIF ELSE BEGIN
     plot, data, POSITION=[0.1,0.1,0.95,0.99]
 ENDELSE

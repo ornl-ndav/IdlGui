@@ -1,5 +1,4 @@
 PRO BSSselection_LinLogCountsVsTof, Event
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -15,8 +14,51 @@ IF (CurrentValueSelected NE PrevValueSelected) THEN BEGIN
     BSSselection_DisplayCountsVsTof, Event
 
 ENDIF
-
 END
+
+
+PRO BSSselection_LinLogFullCountsVsTof, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get current selected value (lin or log)
+CurrentValueSelected = getFullLinLogValue(Event)
+PrevValueSelected = (*global).PrevFullLinLogValue
+
+IF (CurrentValueSelected NE PrevValueSelected) THEN BEGIN
+    (*global).PrevFullLinLogValue = CurrentValueSelected
+    
+;replot counts vs tof
+    BSSselection_DisplayFullCountsVsTof, Event, CurrentValueSelected
+
+ENDIF
+END
+
+
+
+;type=0 -> linear | type=1 -> log
+PRO BSSselection_DisplayFullCountsVsTof, Event, type
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+data = (*(*global).full_counts_vs_tof_data)
+
+view_info = widget_info(Event.top,FIND_BY_UNAME='full_counts_vs_tof_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+IF (type EQ 0) THEN BEGIN
+    plot, data, POSITION=[0.1,0.1,0.95,0.99]
+ENDIF ELSE BEGIN
+    plot, data, POSITION=[0.1,0.1,0.95,0.99], /YLOG, MIN_VALUE=0.1
+ENDELSE
+END
+
+
 
 
 PRO BSSselection_PlotCountsVsTofOfSelection, Event
@@ -73,22 +115,28 @@ IF (total_pixel_excluded LT 4096) THEN BEGIN ;less pixel excluded than included
     data = data1 + data2
 ENDIF
 
+(*(*global).full_counts_vs_tof_data) = data
+
 view_info = widget_info(Event.top,FIND_BY_UNAME='full_counts_vs_tof_draw')
 WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
-plot, data, POSITION=[0.1,0.1,0.95,0.99]
+;check status of lin/log
+CurrentValueSelected = getFullLinLogValue(Event)
+IF (CurrentValueSelected EQ 0) THEN BEGIN ;lin
+    plot, data, POSITION=[0.1,0.1,0.95,0.99]
+ENDIF ELSE BEGIN
+    plot, data, POSITION=[0.1,0.1,0.95,0.99], /YLOG, MIN_VALUE=0.1
+ENDELSE
 
 END
-
 
 
 ;plot full counts_vs_tof
 PRO BSSselection_PlotFullCountsVsTof, Event
-
 BSSselection_PlotCountsVsTofOfSelection, Event
-
 END
+
 
 
 

@@ -36,6 +36,10 @@ CountsVsTofTabSize = [748,$
 CountsVsTofTab1Label = 'Counts Vs Tof (Selection)'
 CountsVsTofTab2Label = 'Counts Vs Tof (Individual Pixel)'
 
+CountsVsTofRefreshButton = {size : [335,3,100,30],$
+                            title : 'REFRESH',$
+                            uname : 'full_counts_vs_tof_refresh_button'}
+
 ;X, Y, PixelID and Bank of data display in counts vs tof
 CountsVsTofXLabelSize = [0, $
                          257, $
@@ -228,6 +232,14 @@ bgroup = CW_BGROUP(CountsVsTofTab1,$
                    UNAME      = LinLogBgroup.uname[1],$
                    /EXCLUSIVE,$
                    SET_VALUE  = 0)
+
+button = WIDGET_BUTTON(CountsVsTofTab1,$
+                       XOFFSET   = CountsVsTofRefreshButton.size[0],$
+                       YOFFSET   = CountsVsTofRefreshButton.size[1],$
+                       SCR_XSIZE = CountsVsTofRefreshButton.size[2],$
+                       SCR_YSIZE = CountsVsTofRefreshButton.size[3],$
+                       VALUE     = CountsVsTofRefreshButton.title,$
+                       UNAME     = CountsVsTofRefreshButton.UNAME)
 
 ;CountsVsTof of pixel selected
 CountsVsTofTab2 = WIDGET_BASE(counts_vs_tof_tab,$

@@ -80,9 +80,6 @@ ResetSelectionBasePixelidText, Event
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckPixelField, Event
 
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
-
 END
 
 
@@ -110,9 +107,6 @@ ResetSelectionBasePixelidText, Event
 
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckPixelField, Event
-
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
 
 END
 
@@ -142,9 +136,6 @@ ResetSelectionBaseRowText, Event
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckPixelRowField, Event
 
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
-
 END
 
 
@@ -171,9 +162,6 @@ ResetSelectionBaseRowText, Event
 
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckPixelRowField, Event
-
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
 
 END
 
@@ -205,9 +193,6 @@ ResetSelectionBaseTubeText, Event
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckTubeField, Event
 
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
-
 END
 
 
@@ -235,8 +220,5 @@ ResetSelectionBaseTubeText, Event
 
 ;disable include and exclude buttons
 BSSselection_IncludeExcludeCheckTubeField, Event
-
-;plot full counts_vs_tof
-BSSselection_PlotFullCountsVsTof, Event
 
 END

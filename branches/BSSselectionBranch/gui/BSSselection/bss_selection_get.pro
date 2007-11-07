@@ -171,6 +171,12 @@ RETURN, widget_info(id, /tab_current)
 END
 
 
+FUNCTION getCurrentSelectedCountsVsTofTab, Event
+id = widget_info(Event.top,find_by_uname='counts_vs_tof_tab')
+RETURN, widget_info(id, /tab_current)
+END
+
+
 FUNCTION getNbrLines, FileName
 cmd = 'wc -l ' + FileName
 spawn, cmd, result
@@ -217,3 +223,9 @@ widget_control, id, get_value=value
 RETURN, value
 END
 
+
+FUNCTION getFullLinLogValue, Event
+id = widget_info(Event.top,find_by_uname='full_counts_scale_cwbgroup')
+widget_control, id, get_value=value
+RETURN, value
+END
