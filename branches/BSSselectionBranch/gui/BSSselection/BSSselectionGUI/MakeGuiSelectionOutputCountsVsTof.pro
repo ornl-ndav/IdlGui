@@ -3,7 +3,8 @@ PRO MakeGuiSelectionOutputCountsVsTof, SelectionBase
 ;***********************************************************************************
 ;                             Define size arrays
 ;***********************************************************************************
-base  = { size : [300,200,600,415]}
+base  = { size : [80,130,600,415],$
+          uname : 'output_couts_vs_tof_base'}
 label = { size : [105,5],$
           title : 'O U T P U T    C O U N T S    V S    T O F    A S C I I    F I L E'}
 frame = { size : [0,25,600,1]}
@@ -19,22 +20,22 @@ file_button = { size : [5,70,590,31],$
 message_label = { size : [5,115],$
                   value : 'Message to add:'}
 message_text  = { size : [100,107,495,31],$
-                  uname : 'output_couts_vs_tof_message_text'}
+                  uname : 'output_counts_vs_tof_message_text'}
 
 preview_label = { size : [260,140],$
                   value : 'P R E V I E W'}
 preview_text  = { size : [5,158,590,220],$
-                  uname : 'output_couts_vs_tof_preview_text'}
+                  uname : 'output_counts_vs_tof_preview_text'}
 
 cancel_button = { size : [388,380,100,30],$
                   value : 'CANCEL',$
-                  uname : 'output_couts_vs_tof_cancel_button'}
+                  uname : 'output_counts_vs_tof_cancel_button'}
 xoff = 5
 ok_button     = { size : [cancel_button.size[0]+cancel_button.size[2]+xoff, $
                           cancel_button.size[1], $
                           100,30],$
                   value : 'OK',$
-                  uname : 'output_couts_vs_tof_ok_button'}
+                  uname : 'output_counts_vs_tof_ok_button'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -44,7 +45,9 @@ base = WIDGET_BASE(SelectionBase,$
                    YOFFSET   = base.size[1],$
                    SCR_XSIZE = base.size[2],$
                    SCR_YSIZE = base.size[3],$
-                   FRAME     = 2)
+                   FRAME     = 2,$
+                   UNAME     = base.uname,$
+                   MAP       = 0)
 
 ;title and bar
 label = WIDGET_LABEL(base,$

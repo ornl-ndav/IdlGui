@@ -25,3 +25,10 @@ PRO ActivateRefreshButton, event, activate_status
 id = widget_info(event.top,find_by_uname='full_counts_vs_tof_refresh_button')
 widget_control, id, sensitive=activate_status
 END
+
+
+PRO activate_output_couts_vs_tof_base, Event, activate_status
+id = widget_info(event.top,find_by_uname='output_couts_vs_tof_base')
+widget_control, id, map=activate_status
+END
+
