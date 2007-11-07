@@ -186,6 +186,9 @@ SelectionBase = WIDGET_BASE(MAIN_TAB,$
                             SCR_YSIZE = MainTabSize[3],$
                             TITLE     = SelectionTitle)
 
+;counts vs tof output base
+MakeGuiSelectionOutputCountsVsTof, SelectionBase
+
 ;Message box
 MessageText = WIDGET_TEXT(SelectionBase,$
                           XOFFSET   = MessageTextSize[0],$

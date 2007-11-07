@@ -12,6 +12,7 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiSelectionTab.pro
+.run MakeGuiSelectionOutputCountsVsTof
 .run MakeGuiReduceTab.pro
 .run MakeGuiReduceInputTab.pro
 .run MakeGuiReduceInputTab1.pro
