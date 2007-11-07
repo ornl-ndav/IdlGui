@@ -27,6 +27,9 @@ AppendLogBookMessage, Event, message
 success = 0
 bss_selection_PlotBanks, Event, success
 
+;plot counts vs TOF of full selection
+BSSselection_PlotCountsVsTofOfSelection, Event
+
 if (success EQ 0) then begin
 
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING

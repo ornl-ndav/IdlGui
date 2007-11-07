@@ -49,6 +49,9 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
     
     IF (isNexusExist) THEN BEGIN
         
+;initialize pixeld_excluded
+        (*(*global).pixel_excluded) = intarr((*global).pixel_excluded_size)
+
         (*global).RunNumber = RunNumber
         
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
