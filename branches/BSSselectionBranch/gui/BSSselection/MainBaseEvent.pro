@@ -228,9 +228,9 @@ CASE Event.id OF
         BSSselection_FullResetButton, Event
     end
 
-;Send log book to geek button
-    Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin
-        BSSselection_LogBook, Event
+;select_everything_button
+    Widget_Info(wWidget, FIND_BY_UNAME='select_everything_button'): begin
+        BSSselection_ExcludeEverything, Event
     end
 
 ;Color selection droplist
@@ -256,6 +256,12 @@ CASE Event.id OF
 ;FullColorReset
     Widget_Info(wWidget, FIND_BY_UNAME='full_reset_color_button'): begin
         BSSselection_ColorSliderFullReset, Event
+    end
+
+;LOG_BOOK
+;Send log book to geek button
+    Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin
+        BSSselection_LogBook, Event
     end
 
     ELSE:

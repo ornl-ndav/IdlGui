@@ -102,9 +102,9 @@ base = WIDGET_BASE(SelectionTabBase,$
                    ROW = 1)
 
 EcludedTypeLable = WIDGET_LABEL(base,$
-                                VALUE = 'Excluded Pixel Symbol:   ')
+                                VALUE = 'Excluded Pixel Symbol:')
 
-excludedTypeList = ['Empty Box  ', 'Full Box  ']
+excludedTypeList = ['Empty Box', 'Full Box']
 ExcludedType = CW_BGROUP(base, $
                          excludedTypeList, $
                          /EXCLUSIVE, $
@@ -112,6 +112,12 @@ ExcludedType = CW_BGROUP(base, $
                          UNAME = 'excluded_pixel_type', $
                          ROW = 1)
 
+
+button = WIDGET_BUTTON(base,$
+                       UNAME     = 'select_everything_button',$
+                       SCR_XSIZE = 100,$
+                       SCR_YSIZE = 30,$
+                       VALUE      = 'SELECT ALL')
 
 ;full reset
 fbase = WIDGET_BASE(SelectionTabBase,$

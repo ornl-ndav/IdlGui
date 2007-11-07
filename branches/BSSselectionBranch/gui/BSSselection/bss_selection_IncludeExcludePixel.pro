@@ -223,7 +223,6 @@ END
 
 
 PRO BSSselection_ExcludedPixelType, Event
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -235,7 +234,18 @@ IF (currentSelectedSymbol NE previousSelectedSymbol) THEN BEGIN
     PlotIncludedPixels, Event
     (*global).PrevExcludedSymbol = currentSelectedSymbol
 ENDIF
-
 END
 
 
+
+
+PRO BSSselection_ExcludeEverything, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+sz = (*global).pixel_excluded_size
+pixel_excluded = MAKE_ARRAY(sz,/INTEGER,VALUE=1)
+(*(*global).pixel_excluded) = pixel_excluded
+PlotExcludedPixels, Event
+END
