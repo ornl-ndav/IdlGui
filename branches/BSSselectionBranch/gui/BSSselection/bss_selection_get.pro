@@ -229,3 +229,14 @@ id = widget_info(Event.top,find_by_uname='full_counts_scale_cwbgroup')
 widget_control, id, get_value=value
 RETURN, value
 END
+
+
+
+FUNCTION getgetCountsVsTofMessageToAdd, Event
+id = widget_info(Event.top,find_by_uname='output_counts_vs_tof_message_text')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
+

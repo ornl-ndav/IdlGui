@@ -1,3 +1,22 @@
+PRO BSSselection_UpdatePreviewText, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get message to add
+message = getgetCountsVsTofMessageToAdd(Event)
+
+IF (message NE '') THEN BEGIN
+    PreviewCountsVsTofAsciiArray = (*(*global).PreviewCountsVsTofAsciiArray)
+    message = '#Notes: ' + strcompress(message,/remove_all)
+    NewPreview = [message,PreviewCountsVsTofAsciiArray]
+;display preview
+    putPreviewCountsVsTofArray, Event, NewPreview
+ENDIF
+
+END
+
 ;this function is going to retrive the tof array
 FUNCTION retrieveTOF, Event
 
@@ -19,15 +38,48 @@ PRO BSSselection_CreatePreviewOfCountsVsTofData, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;get tof array (column #1)
+tof_array = retrieveTOF(Event)
+
+;counts (column #2)
 full_counts_vs_tof_data = (*(*global).full_counts_vs_tof_data)
 
-;get tof array
-tof_array = retrieveTOF(Event)
+;err (column #3)
+err_full_counts_vs_tof_data = SQRT(full_counts_vs_tof_data)
 
 ;size of array 
 sz = (*global).NbTOF
 
+;array to create
+CountsVsTofAsciiArray = strarr(sz)
+CountsVsTofAsciiArray[0] = (*global).output_full_counts_vs_tof_legend
 
+FOR i=0,(sz-1) DO BEGIN
+    line =  strcompress(tof_array[i],/remove_all) + ' '
+    line += strcompress(full_counts_vs_tof_data[i],/remove_all) + ' '
+    line += strcompress(err_full_counts_vs_tof_data[i],/remove_all)
+    CountsVsTofAsciiArray[i] = line
+ENDFOR
+
+;add legend
+CountsVsTofAsciiArray = [(*global).output_full_counts_vs_tof_legend , $
+                         CountsVsTofAsciiArray]
+
+(*(*global).CountsVsTofAsciiArray) = CountsVsTofAsciiArray
+
+;create preview file
+IF (sz GT 20) THEN BEGIN
+    PreviewCountsVsTofAscii = CountsVsTofAsciiArray[0:10]
+    PreviewCountsVsTofAscii = [PreviewCountsVsTofAscii,'...']
+    PreviewCountsVsTofAscii = [PreviewCountsVsTofAscii,CountsVsTofAsciiArray[sz-11:sz-1]]
+ENDIF ELSE BEGIN
+    PreviewCountsVsTofAscii = CountsVsTofAsciiArray[0:sz-1]
+ENDELSE
+
+(*(*global).PreviewCountsVsTofAsciiArray) = PreviewCountsVsTofAscii
+
+;display preview
+putPreviewCountsVsTofArray, Event, PreviewCountsVsTofAscii
 
 END
 

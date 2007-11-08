@@ -184,3 +184,21 @@ PRO putRunNumberValue, Event, text
 id = widget_info(Event.top,find_by_uname='nexus_run_number')
 widget_control, id, set_value = text
 END
+
+;put the preview of the full counts vs tof
+PRO putPreviewCountsVsTof, Event, preview, i
+id = widget_info(Event.top,find_by_uname='output_counts_vs_tof_preview_text')
+IF (i EQ 0) THEN BEGIN
+    widget_control, id, set_value = preview
+ENDIF ELSE BEGIN
+    widget_control, id, set_value = preview, /append
+ENDELSE
+END
+
+;put the preview of the full counts vs tof array
+PRO putPreviewCountsVsTofArray, Event, preview
+sz = (size(preview))(1)
+for i=0,(sz-1) do begin
+    putPreviewCountsVsTof, Event, preview[i], i
+endfor
+END

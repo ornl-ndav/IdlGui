@@ -260,6 +260,11 @@ CASE Event.id OF
     end
 
 ;output couts_vs_tof
+;cw_field message to add
+    Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_message_text'): begin
+        BSSselection_UpdatePreviewText, Event
+    end
+    
 ;cancel button
     Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_cancel_button'): begin
         activate_output_couts_vs_tof_base, Event, 0

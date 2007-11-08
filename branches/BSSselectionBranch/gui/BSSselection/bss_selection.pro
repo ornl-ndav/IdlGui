@@ -14,14 +14,18 @@ endif else begin
 endelse
 
 ;define global variables
-global = ptr_new ({processing : 'PROCESSING',$
-                   PrevLinLogValue : 0,$ 
+global = ptr_new ({ $
+  processing : 'PROCESSING',$
+  PrevLinLogValue : 0,$ 
 ;previously saved lin or log counts vs tof scale
-PrevFullLinLogValue : 0,$ 
+  PrevFullLinLogValue : 0,$ 
 ;previously saved lin or log full counts vs tof scale
-full_counts_vs_tof_data : ptr_new(0L),$ 
+  full_counts_vs_tof_data : ptr_new(0L),$ 
 ;counts vs tof of full selected pixels
-PrevExcludedSymbol : 0,$
+  output_full_counts_vs_tof_legend : '#TOF(microS) Counts errCounts',$
+  CountsVsTofAsciiArray : ptr_new(0L),$
+  PreviewCountsVsTofAsciiArray : ptr_new(0L),$  
+  PrevExcludedSymbol : 0,$
   ColorSelectedPixel : 100,$
   ColorVerticalGrid : 85,$
   ColorHorizontalGrid : 85,$
@@ -40,8 +44,8 @@ PrevExcludedSymbol : 0,$
   roi_path : '~/local/',$       ;path where to save the ROI file
   counts_vs_tof_path : '~/local/',$ 
 ;path where to save the counts vs tof ascii file
-roi_ext : '_ROI.dat' ,$         ;extension of ROI files
-  counts_vs_tof_ext : '_IvsTOF.dat' ,$ ;extension of ROI files
+  roi_ext : '_ROI.dat' ,$         ;extension of ROI files
+  counts_vs_tof_ext : '_IvsTOF.txt' ,$ ;extension of ROI files
   roi_default_file_name : '',$  ;default roi file name
   ROI_error_status : 0,$        ;error status of the ROI process
   RoiPreviewArray : [0,10,50,100],$ ;roi array
@@ -52,12 +56,12 @@ roi_ext : '_ROI.dat' ,$         ;extension of ROI files
   true_x_max : 0.0000001,$      ;tof max for counts vs tof zoom plot
   true_full_x_min : 0.0000001,$ 
 ;tof min for full counts vs tof zoom plot
-true_full_x_max : 0.0000001,$ 
+  true_full_x_max : 0.0000001,$ 
 ;tof max for full counts vs tof zoom plot
-NbTOF : 0L,$                    ;number of tof for counts vs tof plot
+  NbTOF : 0L,$                    ;number of tof for counts vs tof plot
   NeXusFound : 0,$ 
 ;0: nexus has not been found, 1 nexus has been found
-ok : 'OK',$
+  ok : 'OK',$
   failed : 'FAILED',$
   bank1: ptr_new(0L),$          ;array of bank1 data (Ntof, Nx, Ny)
   bank1_sum: ptr_new(0L),$      ;array of bank1 data (Nx, Ny)

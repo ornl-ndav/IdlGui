@@ -17,10 +17,10 @@ file_button = { size : [5,70,590,31],$
                 uname : 'output_counts_vs_tof_path_button',$
                 value : '~/local'}
 
-message_label = { size : [5,115],$
-                  value : 'Message to add:'}
-message_text  = { size : [100,107,495,31],$
-                  uname : 'output_counts_vs_tof_message_text'}
+message_base  = { size : [3,107,592,35]}
+message_text  = { size : [79],$
+                  uname : 'output_counts_vs_tof_message_text',$
+                  title : 'Message to add:'}
 
 preview_label = { size : [260,140],$
                   value : 'P R E V I E W'}
@@ -47,7 +47,7 @@ base = WIDGET_BASE(SelectionBase,$
                    SCR_YSIZE = base.size[3],$
                    FRAME     = 2,$
                    UNAME     = base.uname,$
-                   MAP       = 0)
+                   MAP       = 1)
 
 ;title and bar
 label = WIDGET_LABEL(base,$
@@ -87,19 +87,18 @@ button = WIDGET_BUTTON(base,$
                        VALUE     = file_button.value)
 
 ;message to add lable/text
-label = WIDGET_LABEL(base,$
-                     XOFFSET = message_label.size[0],$
-                     YOFFSET = message_label.size[1],$
-                     VALUE   = message_label.value)
+message_base = WIDGET_BASE(base,$
+                           XOFFSET   = message_base.size[0],$
+                           YOFFSET   = message_base.size[1],$
+                           SCR_XSIZE = message_base.size[2],$
+                           SCR_YSIZE = message_base.size[3])
 
-text = WIDGET_TEXT(base,$
-                   XOFFSET   = message_text.size[0],$
-                   YOFFSET   = message_text.size[1],$
-                   SCR_XSIZE = message_text.size[2],$
-                   SCR_YSIZE = message_text.size[3],$
-                   UNAME     = message_text.uname,$
-                   /ALIGN_LEFT,$
-                   /EDITABLE)
+cw_field = CW_FIELD(message_base,$
+                    UNAME         = message_text.uname,$
+                    TITLE         = message_text.title,$
+                    RETURN_EVENTS = 1,$
+                    ROW           = 1,$
+                    XSIZE         = message_text.size[0])
 
 ;preview label/text
 label = WIDGET_LABEL(base,$
@@ -114,7 +113,8 @@ text = WIDGET_TEXT(base,$
                    SCR_YSIZE = preview_text.size[3],$
                    UNAME     = preview_text.uname,$
                    /ALIGN_LEFT,$
-                   /EDITABLE)
+                   /WRAP,$
+                   /SCROLL)
 
 ;cancel/ok buttons
 button1 = WIDGET_BUTTON(base,$
