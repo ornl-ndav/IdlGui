@@ -46,6 +46,7 @@ cd, CurrentFolder
 .run bss_selection_ZoomInCountsVsTof.pro
 .run bss_selection_ZoomInFullCountsVsTof.pro
 .run bss_selection_CountsVsTof.pro
+.run bss_selection_OutputCountsVsTof.pro
 .run bss_selection_UpdateFields.pro
 
 .run bss_selection_IncludeExcludeUtilities.pro

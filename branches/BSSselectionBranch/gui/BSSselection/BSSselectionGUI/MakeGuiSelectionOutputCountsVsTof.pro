@@ -5,8 +5,8 @@ PRO MakeGuiSelectionOutputCountsVsTof, SelectionBase
 ;***********************************************************************************
 base  = { size : [80,130,600,415],$
           uname : 'output_couts_vs_tof_base'}
-label = { size : [105,5],$
-          title : 'O U T P U T    C O U N T S    V S    T O F    A S C I I    F I L E'}
+label = { size : [70,5],$
+          title : '--------- OUTPUT  COUNTS  VS  TOF  OF  SELECTION  INTO  ASCII  FILE ---------'}
 frame = { size : [0,25,600,1]}
 
 file_label  = { size : [5,40],$

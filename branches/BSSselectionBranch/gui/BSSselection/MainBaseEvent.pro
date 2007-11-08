@@ -70,7 +70,7 @@ CASE Event.id OF
                 if (Event.press EQ 1) then $ ;mouse pressed
                   BSSselection_ZoomInFullCountsVsTofPressed, Event
                 if (Event.press EQ 4) then $ ;right click
-                  activate_output_couts_vs_tof_base, Event, 1
+                  BSSselection_OuputCoutsVsTofInitialization, Event
             endif
         endif
     end
@@ -265,6 +265,11 @@ CASE Event.id OF
         activate_output_couts_vs_tof_base, Event, 0
         PlotIncludedPixels, Event
     end
+
+;get path button
+    Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_path_button'): begin
+        BSSselection_GetNewPath, Event
+    end    
 
 ;LOG_BOOK
 ;Send log book to geek button

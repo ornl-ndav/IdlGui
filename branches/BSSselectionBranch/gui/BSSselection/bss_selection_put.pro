@@ -3,13 +3,10 @@ id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, set_value=Message
 END
 
-
 PRO AppendLogBookMessage, Event, Message
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, set_value=Message,/append
 END
-
-
 
 ;this function removes from the intial text the given TextToRemove and 
 ;returns the result.
@@ -20,8 +17,6 @@ step1 = strpos(initialText,TexttoRemove)
 step2 = strmid(initialText,0,step1)
 return, step2
 END
-
-
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
@@ -55,12 +50,10 @@ endelse
 putLogBookMessage, Event, FinalStrarr
 END
 
-
 PRO PutNexusNameInLabel, Event, NeXusName
 id = widget_info(event.top,find_by_uname='nexus_full_path_label')
 widget_control, id, set_value=NeXusName
 END
-
 
 ;Put Bank name (bank1 or bank2) in the cw_field BANK:
 PRO PutBankValue, Event, bank
@@ -75,7 +68,6 @@ text = 'Bank: ' + strcompress(bank,/remove_all)
 widget_control, id, set_value = text
 END
 
-
 ;Put X value (0-55) in the cw_field X:
 PRO PutXValue, Event, x
 id = widget_info(event.top,find_by_uname='x_value')
@@ -88,7 +80,6 @@ id = widget_info(event.top,find_by_uname='counts_vs_tof_x_label')
 text = 'X: ' + strcompress(x,/remove_all)
 widget_control, id, set_value = text
 END
-
 
 ;Put Y value (0-63) in the cw_field Y:
 PRO PutYValue, Event, y
@@ -158,9 +149,21 @@ id = widget_info(Event.top,find_by_uname='roi_path_button')
 widget_control, id, set_value=text
 END
 
+;change label of Counts vs tof path button
+PRO putCountsVsTofPathButtonValue, Event, text
+id = widget_info(Event.top,find_by_uname='output_counts_vs_tof_path_button')
+widget_control, id, set_value=text
+END
+
 ;put the value of the new ROI file
 PRO putRoiFileName, Event, fileName
 id = widget_info(Event.top,find_by_uname='save_roi_file_text')
+widget_control, id, set_value=fileName
+END
+
+;put the value of the new Counts vs TOF ASCII file into own base
+PRO putCountsVsTofFileName, Event, fileName
+id = widget_info(Event.top,find_by_uname='output_counts_vs_tof_file_name_text')
 widget_control, id, set_value=fileName
 END
 

@@ -1,0 +1,109 @@
+;this function is going to retrive the tof array
+FUNCTION retrieveTOF, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+FullNexusName = (*global).NexusFullName
+fileID  = h5f_open(FullNexusName)
+
+;get tof
+fieldID = h5d_open(fileID,(*global).tof_path)
+RETURN, h5d_read(fieldID)
+END
+
+
+PRO BSSselection_CreatePreviewOfCountsVsTofData, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+full_counts_vs_tof_data = (*(*global).full_counts_vs_tof_data)
+
+;get tof array
+tof_array = retrieveTOF(Event)
+
+;size of array 
+sz = (*global).NbTOF
+
+
+
+END
+
+
+
+PRO BSSselection_GetNewPath, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get value of button
+current_path = (*global).counts_vs_tof_path
+
+new_path = dialog_pickfile(PATH = current_path,$
+                           TITLE = 'Select Counts vs TOF output ASCII file destination folder',$
+                           /DIRECTORY)
+
+IF (new_path NE '') THEN BEGIN
+    
+    (*global).counts_vs_tof_path = new_path
+    
+    path_to_display = new_path
+    putCountsVsTofPathButtonValue, Event, path_to_display
+
+;gives new Counts vs tof output path in LogBook
+    LogBookText = 'A new output path for the Counts vs TOF ASCII file has been set:'
+    AppendLogBookMessage, Event, LogBookText
+    LogBookText = '   -> Path was    : ' + current_path
+    AppendLogBookMessage, Event, LogBookText
+    LogBookText = '   -> Path is now : ' + new_path
+    AppendLogBookMessage, Event, LogBookText
+
+;put new path and file name in Counts vs tof ascii file text
+    BSSselection_CreateOutputCountsVsTofFileName, Event
+
+ENDIF
+END
+
+
+
+PRO BSSselection_CreateOutputCountsVsTofFileName, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+path = (*global).Counts_vs_tof_path
+first_part = 'BASIS_'
+
+RunNumber = (*global).RunNumber
+IF (RunNumber NE '') THEN BEGIN
+    first_part += strcompress(RunNumber,/remove_all) + '_'
+ENDIF
+
+get_iso8601, second_part
+ext_part = (*global).counts_vs_tof_ext
+
+name = path + first_part + second_part + ext_part
+
+;put new name into field
+putCountsVsTofFileName, Event, name
+
+END
+
+
+
+PRO BSSselection_OuputCoutsVsTofInitialization, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;create output counts vs tof file name
+BSSselection_CreateOutputCountsVsTofFileName, Event
+
+;populate preview text
+BSSselection_CreatePreviewOfCountsVsTofData, Event
+
+;activate Output counts vs tof base
+activate_output_couts_vs_tof_base, Event, 1
+END
