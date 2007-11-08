@@ -128,7 +128,7 @@ widget_control, id, set_value = (*global).ColorVerticalGrid
 
 ; default tabs shown
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 0 ;selection
+widget_control, id1, set_tab_current = 0 ;reduce
 
 END
 
