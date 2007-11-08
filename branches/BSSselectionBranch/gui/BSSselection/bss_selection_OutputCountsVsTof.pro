@@ -177,7 +177,7 @@ sz = (size(OutputArray))(1)
 OutputFileName = getOuptoutAsciiFileName(Event)
 
 error = 0
-;CATCH, error
+CATCH, error
 
 IF (error NE 0) then begin
 
@@ -191,7 +191,6 @@ IF (error NE 0) then begin
 ENDIF ELSE BEGIN
     
 ;open output file
-help, OutputFileName
     openw, 1, OutputFileName
     
     FOR i=0,(sz-1) DO BEGIN
@@ -203,16 +202,16 @@ help, OutputFileName
 
     MessageBox = 'Counts vs TOF ASCII File creation -> OK !'
 
+    LogBookText = 'ASCII file of the Counts vs TOF of all the included pixels has been created: '
+    LogBookText += OutputFileName
+    AppendLogBookMessage, Event, LogBookText
+    
 ENDELSE
 
 close, 1
 free_lun, 1
 
 putMessageBoxInfo, Event, MessageBox
-
-LogBookText = 'ASCII file of the Counts vs TOF of all the included pixels has been created: '
-LogBookText += OutputFileName
-AppendLogBookMessage, Event, LogBookText
 
 END
 
