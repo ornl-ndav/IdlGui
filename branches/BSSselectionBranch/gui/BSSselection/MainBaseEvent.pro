@@ -264,7 +264,14 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_message_text'): begin
         BSSselection_UpdatePreviewText, Event
     end
-    
+
+;create ASCII output file    
+    Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_ok_button'): begin
+        BSSselection_CreateOutputCountsVsTofFile, Event
+        activate_output_couts_vs_tof_base, Event, 0
+        PlotIncludedPixels, Event
+    end
+
 ;cancel button
     Widget_Info(wWidget, FIND_BY_UNAME='output_counts_vs_tof_cancel_button'): begin
         activate_output_couts_vs_tof_base, Event, 0

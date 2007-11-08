@@ -24,7 +24,8 @@ global = ptr_new ({ $
 ;counts vs tof of full selected pixels
   output_full_counts_vs_tof_legend : '#TOF(microS) Counts errCounts',$
   CountsVsTofAsciiArray : ptr_new(0L),$
-  PreviewCountsVsTofAsciiArray : ptr_new(0L),$  
+  PreviewCountsVsTofAsciiArray : ptr_new(0L),$   
+  OutputMessageToAdd : '',$ ;message to add in output counts vs tof ascii file
   PrevExcludedSymbol : 0,$
   ColorSelectedPixel : 100,$
   ColorVerticalGrid : 85,$

@@ -239,4 +239,11 @@ RETURN, value
 END
 
 
+FUNCTION getOuptoutAsciiFileName, Event
+id = widget_info(Event.top,find_by_uname='output_counts_vs_tof_file_name_text')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
 

@@ -47,7 +47,7 @@ base = WIDGET_BASE(SelectionBase,$
                    SCR_YSIZE = base.size[3],$
                    FRAME     = 2,$
                    UNAME     = base.uname,$
-                   MAP       = 1)
+                   MAP       = 0)
 
 ;title and bar
 label = WIDGET_LABEL(base,$

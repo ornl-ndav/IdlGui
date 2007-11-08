@@ -9,7 +9,8 @@ message = getgetCountsVsTofMessageToAdd(Event)
 
 IF (message NE '') THEN BEGIN
     PreviewCountsVsTofAsciiArray = (*(*global).PreviewCountsVsTofAsciiArray)
-    message = '#Notes: ' + strcompress(message,/remove_all)
+    message = '#Notes: ' + string(message)
+    (*global).OutputMessageToAdd = message
     NewPreview = [message,PreviewCountsVsTofAsciiArray]
 ;display preview
     putPreviewCountsVsTofArray, Event, NewPreview
@@ -159,3 +160,64 @@ BSSselection_CreatePreviewOfCountsVsTofData, Event
 ;activate Output counts vs tof base
 activate_output_couts_vs_tof_base, Event, 1
 END
+
+
+
+PRO BSSselection_CreateOutputCountsVsTofFile, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+messageToAdd = (*global).OutputMessageToAdd
+CountsVsTofAsciiArray = (*(*global).CountsVsTofAsciiArray)
+OutputArray = [messageToAdd,CountsVsTofAsciiArray]
+sz = (size(OutputArray))(1)
+
+;get output file name
+OutputFileName = getOuptoutAsciiFileName(Event)
+
+error = 0
+;CATCH, error
+
+IF (error NE 0) then begin
+
+    CATCH, /CANCEL
+    LogBookText = 'ERROR: Counts vs TOF ASCII file has not been saved:'
+    AppendLogBookMessage, Event, LogBookText
+    LogBookText = '   -> Counts vs TOF file name: ' + OutputFileName
+    AppendLogBookMessage, Event, LogBookText
+    MessageBox = 'Counts vs TOF ASCII File Creation -> ERROR !'
+
+ENDIF ELSE BEGIN
+    
+;open output file
+help, OutputFileName
+    openw, 1, OutputFileName
+    
+    FOR i=0,(sz-1) DO BEGIN
+        
+        text = OutputArray[i]
+        printf, 1, text
+        
+    ENDFOR
+
+    MessageBox = 'Counts vs TOF ASCII File creation -> OK !'
+
+ENDELSE
+
+close, 1
+free_lun, 1
+
+putMessageBoxInfo, Event, MessageBox
+
+LogBookText = 'ASCII file of the Counts vs TOF of all the included pixels has been created: '
+LogBookText += OutputFileName
+AppendLogBookMessage, Event, LogBookText
+
+END
+
+
+
+
+
+
