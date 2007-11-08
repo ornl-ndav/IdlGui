@@ -17,7 +17,7 @@ RDBbase = { size  : [5,10,500,40],$
 ;//////////////////////
 ;Run McStas NeXus file/
 ;//////////////////////
-yoff = 40
+yoff = 35
 RMcNFBase = { size : [RDBbase.size[0],$
                       RDBbase.size[1]+yoff,$
                       200,$
@@ -25,7 +25,79 @@ RMcNFBase = { size : [RDBbase.size[0],$
               button : { uname : 'rmcnf_button',$
                          value : ' --> ',$
                        list : ['Run McStas NeXus Files']}}
-              
+
+;////////
+;Verbose/
+;////////
+VerboseBase = { size : [RDBbase.size[0],$
+                        RMcNFbase.size[1]+yoff,$
+                        200,$
+                        RDBbase.size[3]],$
+                button : { uname : 'verbose_button',$
+                           value : ' --> ',$
+                           list : ['Verbose']}}
+
+;////////////////////////////////////////
+;Alternate Background Subtraction Method/
+;////////////////////////////////////////
+ABSMBase = { size : [Verbosebase.size[0],$
+                     Verbosebase.size[1]+yoff,$
+                     400,$
+                     Verbosebase.size[3]],$
+             button : { uname : 'absm_button',$
+                        value : ' --> ',$
+                        list : ['Alternate Background Subtraction Method']}}
+
+;/////////////////////////
+;No Monitor Normalization/
+;/////////////////////////
+NMNBase = { size : [ABSMbase.size[0],$
+                    ABSMbase.size[1]+yoff,$
+                    400,$
+                    ABSMbase.size[3]],$
+             button : { uname : 'nmn_button',$
+                        value : ' --> ',$
+                        list : ['No Monitor Normalization']}}
+
+;/////////////////////////////////
+;No Monitor Efficiency Correction/
+;/////////////////////////////////
+NMECBase = { size : [NMNbase.size[0],$
+                     NMNbase.size[1]+yoff,$
+                     400,$
+                     NMNbase.size[3]],$
+             button : { uname : 'nmec_button',$
+                        value : ' --> ',$
+                        list : ['No Monitor Efficiency Correction']}}
+
+;///////////////////////////////////////////
+;Normalization Integration Start Wavelength/
+;///////////////////////////////////////////
+NISWBase = { size : [NMECBase.size[0],$
+                     NMECBase.size[1]+yoff+3,$
+                     500,$
+                     NMECBase.size[3]],$
+             field : { xsize : 10,$
+                       value : ' -->   Normalization Integration Start Wavelength (Angstroms):',$
+                       uname : 'nisw_field'},$
+             label2 : { size : [300,0],$
+                        value : 'Angstroms'}}
+
+
+;///////////////////////////////////////////
+;Normalization Integration END Wavelength/
+;///////////////////////////////////////////
+NIEWBase = { size : [NISWBase.size[0],$
+                     NISWBase.size[1]+yoff+3,$
+                     500,$
+                     NISWBase.size[3]],$
+             field : { xsize : 10,$
+                       value : ' -->   Normalization Integration END Wavelength (Angstroms):  ',$
+                       uname : 'nisE_field'},$
+             label2 : { size : [300,0],$
+                        value : 'Angstroms'}}
+
+
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -65,13 +137,114 @@ base = WIDGET_BASE(tab2_base,$
 
 group = CW_BGROUP(base,$
                   RMCNFBASE.button.list,$
+                  UNAME      = RMcNFBase.button.uname,$
                   /NONEXCLUSIVE,$
                   SET_VALUE  = 0,$
                   ROW        = 1,$
                   LABEL_LEFT = RMcNFBase.button.value)
                   
+;////////
+;Verbose/
+;////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = VerboseBase.size[0],$
+                   YOFFSET   = VerboseBase.size[1],$
+                   SCR_XSIZE = VerboseBase.size[2],$
+                   SCR_YSIZE = VerboseBase.size[3])
 
+group = CW_BGROUP(base,$
+                  VerboseBASE.button.list,$
+                  UNAME      = VerboseBase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  LABEL_LEFT = VerboseBase.button.value)
+                  
 
+;////////////////////////////////////////
+;Alternate Background Subtraction Method/
+;////////////////////////////////////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = ABSMBase.size[0],$
+                   YOFFSET   = ABSMBase.size[1],$
+                   SCR_XSIZE = ABSMBase.size[2],$
+                   SCR_YSIZE = ABSMBase.size[3])
+
+group = CW_BGROUP(base,$
+                  ABSMBASE.button.list,$
+                  UNAME      = ABSMBase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  LABEL_LEFT = ABSMBase.button.value)
+                  
+;/////////////////////////
+;No Monitor Normalization/
+;/////////////////////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = NMNBase.size[0],$
+                   YOFFSET   = NMNBase.size[1],$
+                   SCR_XSIZE = NMNBase.size[2],$
+                   SCR_YSIZE = NMNBase.size[3])
+
+group = CW_BGROUP(base,$
+                  NMNBASE.button.list,$
+                  UNAME      = NMNBase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  LABEL_LEFT = NMNBase.button.value)
+
+;/////////////////////////////////
+;No Monitor Efficiency Correction/
+;/////////////////////////////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = NMECBase.size[0],$
+                   YOFFSET   = NMECBase.size[1],$
+                   SCR_XSIZE = NMECBase.size[2],$
+                   SCR_YSIZE = NMECBase.size[3])
+
+group = CW_BGROUP(base,$
+                  NMECBASE.button.list,$
+                  UNAME      = NMECBase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  LABEL_LEFT = NMECBase.button.value)
+
+;///////////////////////////////////////////
+;Normalization Integration Start Wavelength/
+;///////////////////////////////////////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = NISWBase.size[0],$
+                   YOFFSET   = NISWBase.size[1],$
+                   SCR_XSIZE = NISWBase.size[2],$
+                   SCR_YSIZE = NISWBase.size[3])
+
+text = CW_FIELD(base,$
+                UNAME         = NISWBase.field.uname,$
+                RETURN_EVENTS = 1,$
+                TITLE         = NISWBase.field.value,$
+                ROW           = 1,$
+                XSIZE         = NISWBase.field.xsize,$
+                /FLOAT)
+
+;///////////////////////////////////////////
+;Normalization Integration END Wavelength/
+;///////////////////////////////////////////
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = NIEWBase.size[0],$
+                   YOFFSET   = NIEWBase.size[1],$
+                   SCR_XSIZE = NIEWBase.size[2],$
+                   SCR_YSIZE = NIEWBase.size[3])
+
+text = CW_FIELD(base,$
+                UNAME         = NIEWBase.field.uname,$
+                RETURN_EVENTS = 1,$
+                TITLE         = NIEWBase.field.value,$
+                ROW           = 1,$
+                XSIZE         = NIEWBase.field.xsize,$
+                /FLOAT)
 
 
 END
