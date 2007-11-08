@@ -23,7 +23,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 
 ;build REDUCE tab
-;MakeGuiReduceTab, MAIN_TAB, MainTabSize
+MakeGuiReduceTab, MAIN_TAB, MainTabSize
 
 ;build LogBook tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTitle
