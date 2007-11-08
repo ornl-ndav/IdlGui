@@ -83,7 +83,8 @@ ReduceBase = WIDGET_BASE(MAIN_TAB,$
                          YOFFSET   = 0,$
                          SCR_XSIZE = MainTabSize[2],$
                          SCR_YSIZE = MainTabSize[3],$
-                         TITLE     = ReduceBaseTitle)
+                         TITLE     = ReduceBaseTitle,$
+                         UNAME     = 'reduce_base')
 
 ;tabs of 'input data setup', 'process setup' ....
 MakeGuiReduceInputTab, ReduceBase, ReduceInputTabSettings

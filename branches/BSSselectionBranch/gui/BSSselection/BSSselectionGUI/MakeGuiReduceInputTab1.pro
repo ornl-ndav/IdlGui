@@ -7,6 +7,7 @@ PRO MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
 ;/////////////////////
 ;Raw Sample Data File/
 ;/////////////////////
+frameSize = 4
 RSDFframe     = { size  : [5,15,730,80]}
 XYoff         = [10,-10]
 RSDFlabel     = { size  : [RSDFframe.size[0]+XYoff[0],$
@@ -304,7 +305,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = RSDFframe.size[1],$
                      SCR_XSIZE = RSDFframe.size[2],$
                      SCR_YSIZE = RSDFframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\\
@@ -362,7 +363,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = BDFframe.size[1],$
                      SCR_XSIZE = BDFframe.size[2],$
                      SCR_YSIZE = BDFframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 
 
@@ -421,7 +422,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = NDFframe.size[1],$
                      SCR_XSIZE = NDFframe.size[2],$
                      SCR_YSIZE = NDFframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\
@@ -479,7 +480,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = ECDFframe.size[1],$
                      SCR_XSIZE = ECDFframe.size[2],$
                      SCR_YSIZE = ECDFframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -511,7 +512,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = PRoIFframe.size[1],$
                      SCR_XSIZE = PRoIFframe.size[2],$
                      SCR_YSIZE = PRoIFframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Alternate Instrument Geometry\
@@ -542,7 +543,7 @@ frame = WIDGET_LABEL(tab1_base,$
                      YOFFSET   = AIGframe.size[1],$
                      SCR_XSIZE = AIGframe.size[2],$
                      SCR_YSIZE = AIGframe.size[3],$
-                     FRAME     = 1,$
+                     FRAME     = frameSize,$
                      VALUE     = '')
 
 
