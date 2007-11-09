@@ -7,7 +7,7 @@ PRO MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
 ;///////////////////////////////////////////////////
 ;Time Zero Slope Parameter (Angstroms/microseconds)/
 ;///////////////////////////////////////////////////
-yoff = 25
+yoff = 35
 TZSPframe = { size : [5,yoff,730,50],$
                 frame : 4}
 XYoff1 = [10,-14]

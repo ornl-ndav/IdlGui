@@ -7,7 +7,7 @@ PRO MakeGuiReduceInputTab3, ReduceInputTab, ReduceInputTabSettings
 ;////////////////////////////////////////////////////////
 ;Time-Independent Background TOF channels (microSeconds)/
 ;////////////////////////////////////////////////////////
-yoff = 25
+yoff = 35
 TIBtofFrame = { size : [5,yoff,730,50],$
                 frame : 4}
 XYoff = [10,-8]

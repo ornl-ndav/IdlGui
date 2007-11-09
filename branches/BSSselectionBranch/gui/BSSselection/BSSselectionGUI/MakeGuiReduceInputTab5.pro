@@ -7,14 +7,14 @@ PRO MakeGuiReduceInputTab5, ReduceInputTab, ReduceInputTabSettings
 ;//////////////////////////////
 ;Write all intermediate output/
 ;//////////////////////////////
-WAIOBase = { size  : [15,10,500,35],$
+WAIOBase = { size  : [15,20,500,35],$
              button : { uname : 'waio_button',$
                         list : [' Write All Intermediate Output (WARNING: VERGY LARGE FILES AND SLOW)']}}
 
 ;/////////////////////////////////////////////////
 ;Write out Calculated time-independent background/
 ;/////////////////////////////////////////////////
-yoff = 35
+yoff = 50
 WOCTIBbase = { size  : [WAIOBase.size[0], $
                         WAIOBase.size[1]+yoff, $
                         WAIOBase.size[2:3]],$
@@ -87,7 +87,7 @@ WOPETSbase = { size  : [WOPIESbase.size[0], $
 ;//////////////////////////
 ;Wavelength Histogram Axis/
 ;//////////////////////////
-yoff = 40
+;yoff = 50
 WHAbase = { size : [WOPETSbase.size[0],$
                     WOPETSbase.size[1]+yoff,$
                     700,$

@@ -7,7 +7,7 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 ;/////////////////////////
 ;Requested Detector Banks/
 ;/////////////////////////
-RDBbase = { size  : [5,10,500,40],$
+RDBbase = { size  : [5,25,500,40],$
             value : '  Requested Detector Banks:   ',$
             banks : { size : [5,0,100,35],$
                       uname : 'rdbbase_bank1_button',$
@@ -17,7 +17,7 @@ RDBbase = { size  : [5,10,500,40],$
 ;//////////////////////
 ;Run McStas NeXus file/
 ;//////////////////////
-yoff = 35
+yoff = 50;35
 RMcNFBase = { size : [RDBbase.size[0],$
                       RDBbase.size[1]+yoff,$
                       200,$
@@ -78,9 +78,9 @@ NISWBase = { size : [NMECBase.size[0],$
                      500,$
                      NMECBase.size[3]],$
              field : { xsize : 10,$
-                       value : '   Normalization Integration Start Wavelength (Angstroms):',$
+                       value : '   Normalization Integration Start Wavelength :',$
                        uname : 'nisw_field'},$
-             label2 : { size : [300,0],$
+             label : { size : [375,10],$
                         value : 'Angstroms'}}
 
 
@@ -92,9 +92,10 @@ NIEWBase = { size : [NISWBase.size[0],$
                      500,$
                      NISWBase.size[3]],$
              field : { xsize : 10,$
-                       value : '   Normalization Integration END Wavelength (Angstroms):  ',$
+                       value : '   Normalization Integration END Wavelength   :',$
                        uname : 'nisE_field'},$
-             label2 : { size : [300,0],$
+             label : { size : [NISWBase.label.size[0],$
+                              NISWBase.label.size[1]],$
                         value : 'Angstroms'}}
 
 
@@ -221,6 +222,11 @@ base = WIDGET_BASE(tab2_base,$
                    SCR_XSIZE = NISWBase.size[2],$
                    SCR_YSIZE = NISWBase.size[3])
 
+label = WIDGET_LABEL(base,$
+                     XOFFSET = NISWBase.label.size[0],$
+                     YOFFSET = NISWBase.label.size[1],$
+                     VALUE   = NISWBase.label.value)
+
 text = CW_FIELD(base,$
                 UNAME         = NISWBase.field.uname,$
                 RETURN_EVENTS = 1,$
@@ -228,6 +234,8 @@ text = CW_FIELD(base,$
                 ROW           = 1,$
                 XSIZE         = NISWBase.field.xsize,$
                 /FLOAT)
+
+
 
 ;///////////////////////////////////////////
 ;Normalization Integration END Wavelength/
@@ -237,6 +245,11 @@ base = WIDGET_BASE(tab2_base,$
                    YOFFSET   = NIEWBase.size[1],$
                    SCR_XSIZE = NIEWBase.size[2],$
                    SCR_YSIZE = NIEWBase.size[3])
+
+label = WIDGET_LABEL(base,$
+                     XOFFSET = NIEWBase.label.size[0],$
+                     YOFFSET = NIEWBase.label.size[1],$
+                     VALUE   = NIEWBase.label.value)
 
 text = CW_FIELD(base,$
                 UNAME         = NIEWBase.field.uname,$
