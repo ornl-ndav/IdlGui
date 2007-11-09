@@ -21,4 +21,6 @@ MakeGuiReduceInputTab3, ReduceInputTab, ReduceInputTabSettings
 ;Make Tab4
 MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
 
+;Make Tab5
+MakeGuiReduceInputTab5, ReduceInputTab, ReduceInputTabSettings
 END

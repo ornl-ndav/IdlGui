@@ -19,6 +19,7 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiReduceInputTab2.pro
 .run MakeGuiReduceInputTab3.pro
 .run MakeGuiReduceInputTab4.pro
+.run MakeGuiReduceInputTab5.pro
 .run MakeGuiReduceClgXmlTab.pro
 .run MakeGuiReduceClgXmlTab1.pro
 .run MakeGuiReduceClgXmlTab2.pro

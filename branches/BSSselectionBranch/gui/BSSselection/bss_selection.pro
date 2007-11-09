@@ -83,6 +83,7 @@ global = ptr_new ({ $
   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
   DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
   DefaultFilter : '*.nxs'$      ;default filter for the nexus file
+
   })
 
 Device, /decomposed
@@ -130,9 +131,9 @@ widget_control, id, set_value = (*global).ColorVerticalGrid
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 widget_control, id1, set_tab_current = 1 ;reduce
 
-;tab #4
+;tab #5
 id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-widget_control, id1, set_tab_current = 3
+widget_control, id1, set_tab_current = 4
 
 END
 
