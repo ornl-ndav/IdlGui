@@ -54,7 +54,6 @@ TIBtofText4 = { size : [TIBtofLabel4.size[0]+XYoff8[0],$
                         70,30],$
                 uname : 'tibtof_channel4_text'}
 
-
 ;/////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Sample Data/
 ;/////////////////////////////////////////////////////
