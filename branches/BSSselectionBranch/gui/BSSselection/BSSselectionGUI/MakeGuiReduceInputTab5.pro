@@ -83,6 +83,48 @@ WOPETSbase = { size  : [WOPIESbase.size[0], $
                         WOPIESbase.size[2:3]],$
               button : { uname : 'wopets_button',$
                          list : [' Write Out Pixel Energy Transfer Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
+
+;//////////////////////////
+;Wavelength Histogram Axis/
+;//////////////////////////
+yoff = 40
+WHAbase = { size : [WOPETSbase.size[0],$
+                    WOPETSbase.size[1]+yoff,$
+                    700,$
+                    40]}
+XYoff = [5,5]
+WHAlabel = { size : [XYoff[0],$
+                     XYoff[1]],$
+             value : 'Wavelength Histogram (Angstroms)'}
+xoff = 230
+WHAlabel1 = { size : [WHAlabel.size[0]+xoff,$
+                      WHAlabel.size[1]],$
+              value : 'Min:'}
+xoff_LT = 30
+yoff = -5
+WHAtext1  = { size : [WHAlabel1.size[0]+xoff_LT,$
+                      WHAlabel1.size[1]+yoff,$
+                      70,30],$
+              uname : 'wa_min_text'}
+
+xoff_LL = 140
+WHAlabel2 = { size : [WHAlabel1.size[0]+xoff_LL,$
+                      WHAlabel.size[1]],$
+              value : 'Max:'}
+WHAtext2  = { size : [WHAlabel2.size[0]+xoff_LT,$
+                      WHAlabel2.size[1]+yoff,$
+                      WHAtext1.size[2:3]],$
+              uname : 'wa_max_text'}
+
+WHAlabel3 = { size : [WHAlabel2.size[0]+xoff_LL,$
+                      WHAlabel.size[1]],$
+              value : 'Bin Width:'}
+xoff_LT = 68
+WHAtext3  = { size : [WHAlabel3.size[0]+xoff_LT,$
+                      WHAlabel3.size[1]+yoff,$
+                      WHAtext1.size[2:3]],$
+              uname : 'wa_bin_width_text'}
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -237,5 +279,60 @@ group = CW_BGROUP(base,$
                   SET_VALUE  = 0,$
                   ROW        = 1)
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Wavelength Histogram Axis\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = WHAbase.size[0],$
+                   YOFFSET   = WHAbase.size[1],$
+                   SCR_XSIZE = WHAbase.size[2],$
+                   SCR_YSIZE = WHAbase.size[3])
+
+label = WIDGET_LABEL(base,$
+                    XOFFSET = WHAlabel.size[0],$
+                    YOFFSET = WHAlabel.size[1],$
+                    VALUE   = WHAlabel.value)
+
+label1 = WIDGET_LABEL(base,$
+                    XOFFSET = WHAlabel1.size[0],$
+                    YOFFSET = WHAlabel1.size[1],$
+                    VALUE   = WHAlabel1.value)
+
+text1 = WIDGET_TEXT(base,$
+                    XOFFSET   = WHAtext1.size[0],$
+                    YOFFSET   = WHAtext1.size[1],$
+                    SCR_XSIZE = WHAtext1.size[2],$
+                    SCR_YSIZE = WHAtext1.size[3],$
+                    UNAME     = WHAtext1.uname,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+                    
+label2 = WIDGET_LABEL(base,$
+                    XOFFSET = WHAlabel2.size[0],$
+                    YOFFSET = WHAlabel2.size[1],$
+                    VALUE   = WHAlabel2.value)
+
+text2 = WIDGET_TEXT(base,$
+                    XOFFSET   = WHAtext2.size[0],$
+                    YOFFSET   = WHAtext2.size[1],$
+                    SCR_XSIZE = WHAtext2.size[2],$
+                    SCR_YSIZE = WHAtext2.size[3],$
+                    UNAME     = WHAtext2.uname,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
+
+label3 = WIDGET_LABEL(base,$
+                    XOFFSET = WHAlabel3.size[0],$
+                    YOFFSET = WHAlabel3.size[1],$
+                    VALUE   = WHAlabel3.value)
+
+text3 = WIDGET_TEXT(base,$
+                    XOFFSET   = WHAtext3.size[0],$
+                    YOFFSET   = WHAtext3.size[1],$
+                    SCR_XSIZE = WHAtext3.size[2],$
+                    SCR_YSIZE = WHAtext3.size[3],$
+                    UNAME     = WHAtext3.uname,$
+                    /EDITABLE,$
+                    /ALIGN_LEFT)
 
 END

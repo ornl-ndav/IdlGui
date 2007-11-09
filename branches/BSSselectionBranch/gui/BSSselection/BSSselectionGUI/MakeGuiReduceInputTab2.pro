@@ -8,7 +8,7 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 ;Requested Detector Banks/
 ;/////////////////////////
 RDBbase = { size  : [5,10,500,40],$
-            value : '-->    Requested Detector Banks:   ',$
+            value : '  Requested Detector Banks:   ',$
             banks : { size : [5,0,100,35],$
                       uname : 'rdbbase_bank1_button',$
                       value : 'Bank 1'},$
@@ -23,7 +23,7 @@ RMcNFBase = { size : [RDBbase.size[0],$
                       200,$
                       RDBbase.size[3]],$
               button : { uname : 'rmcnf_button',$
-                         value : ' --> ',$
+                         value : '',$
                        list : ['Run McStas NeXus Files']}}
 
 ;////////
@@ -34,7 +34,7 @@ VerboseBase = { size : [RDBbase.size[0],$
                         200,$
                         RDBbase.size[3]],$
                 button : { uname : 'verbose_button',$
-                           value : ' --> ',$
+                           value : RMcNFbase.button.value,$
                            list : ['Verbose']}}
 
 ;////////////////////////////////////////
@@ -45,7 +45,7 @@ ABSMBase = { size : [Verbosebase.size[0],$
                      400,$
                      Verbosebase.size[3]],$
              button : { uname : 'absm_button',$
-                        value : ' --> ',$
+                        value : RMcNFbase.button.value,$
                         list : ['Alternate Background Subtraction Method']}}
 
 ;/////////////////////////
@@ -56,7 +56,7 @@ NMNBase = { size : [ABSMbase.size[0],$
                     400,$
                     ABSMbase.size[3]],$
              button : { uname : 'nmn_button',$
-                        value : ' --> ',$
+                        value : RMcNFbase.button.value,$
                         list : ['No Monitor Normalization']}}
 
 ;/////////////////////////////////
@@ -67,7 +67,7 @@ NMECBase = { size : [NMNbase.size[0],$
                      400,$
                      NMNbase.size[3]],$
              button : { uname : 'nmec_button',$
-                        value : ' --> ',$
+                        value : RMcNFbase.button.value,$
                         list : ['No Monitor Efficiency Correction']}}
 
 ;///////////////////////////////////////////
@@ -78,7 +78,7 @@ NISWBase = { size : [NMECBase.size[0],$
                      500,$
                      NMECBase.size[3]],$
              field : { xsize : 10,$
-                       value : ' -->   Normalization Integration Start Wavelength (Angstroms):',$
+                       value : '   Normalization Integration Start Wavelength (Angstroms):',$
                        uname : 'nisw_field'},$
              label2 : { size : [300,0],$
                         value : 'Angstroms'}}
@@ -92,7 +92,7 @@ NIEWBase = { size : [NISWBase.size[0],$
                      500,$
                      NISWBase.size[3]],$
              field : { xsize : 10,$
-                       value : ' -->   Normalization Integration END Wavelength (Angstroms):  ',$
+                       value : '   Normalization Integration END Wavelength (Angstroms):  ',$
                        uname : 'nisE_field'},$
              label2 : { size : [300,0],$
                         value : 'Angstroms'}}
