@@ -57,7 +57,7 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 ;move on to step2 of loading nexus
         BSSselection_LoadNexus_step2, Event, NexusFullPath[0]
-        (*global).NexusFullName = NexusFullPath[0]
+        (*global).NexusFullName = strcompress(NexusFullPath[0],/remove_all)
 
     ENDIF ELSE BEGIN         ;tells that we didn't find the nexus file
         
