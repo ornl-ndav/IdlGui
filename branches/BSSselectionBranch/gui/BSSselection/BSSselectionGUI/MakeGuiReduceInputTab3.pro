@@ -7,15 +7,16 @@ PRO MakeGuiReduceInputTab3, ReduceInputTab, ReduceInputTabSettings
 ;////////////////////////////////////////////////////////
 ;Time-Independent Background TOF channels (microSeconds)/
 ;////////////////////////////////////////////////////////
-TIBtofFrame = { size : [5,13,730,50],$
-                frame : 1}
+yoff = 25
+TIBtofFrame = { size : [5,yoff,730,50],$
+                frame : 4}
 XYoff = [10,-8]
 TIBtofLabel = { size : [TIBtofFrame.size[0]+XYoff[0],$
                         TIBtofFrame.size[1]+XYoff[1]],$
                 value : 'Time-Independent Background Time-of-Flight Channels (microSeconds)'}
-XYoff1 = [10,28]
+XYoff1 = [10,23]
 TIBtofLabel1 = { size : [TIBtofFrame.size[0]+XYoff1[0],$
-                         TIBtofFrame.size[0]+XYoff1[1]],$
+                         TIBtofFrame.size[1]+XYoff1[1]],$
                 value : 'TOF channels    #1'}
 XYoff2 = [115,-6]
 TIBtofText1 = { size : [TIBtofLabel1.size[0]+XYoff2[0],$
@@ -57,7 +58,7 @@ TIBtofText4 = { size : [TIBtofLabel4.size[0]+XYoff8[0],$
 ;/////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Sample Data/
 ;/////////////////////////////////////////////////////
-yoff = 70
+yoff = 100 
 TIBCfSDframe = { size : [TIBtofFrame.size[0],$
                          TIBtofFrame.size[1]+yoff,$
                          TIBtofFrame.size[2],$
@@ -95,7 +96,7 @@ TIBCfSDerrorText  = { size : [TIBCfSDerrorLabel.size[0]+XYoff13[0],$
 ;/////////////////////////////////////////////////////////
 ;Time-Independent Background Constant for background Data/
 ;/////////////////////////////////////////////////////////
-yoff = 90
+yoff = yoff + 20
 TIBCfBDframe = { size : [TIBtofFrame.size[0],$
                          TIBCfSDbase.size[1]+yoff,$
                          TIBtofFrame.size[2],$
@@ -133,7 +134,6 @@ TIBCfBDerrorText  = { size : [TIBCfBDerrorLabel.size[0]+XYoff13[0],$
 ;////////////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Normalization Data/
 ;////////////////////////////////////////////////////////////
-yoff = 90
 TIBCfNDframe = { size : [TIBtofFrame.size[0],$
                          TIBCfBDbase.size[1]+yoff,$
                          TIBCfBDframe.size[2],$
@@ -167,6 +167,43 @@ TIBCfNDerrorText  = { size : [TIBCfNDerrorLabel.size[0]+XYoff13[0],$
                               TIBCfNDerrorlabel.size[1]+XYoff13[1],$
                               100,30],$
                       uname : 'tibc_for_nd_error_text'}
+
+;////////////////////////////////////////////////////////
+;Time-Independent Background Constant for Empty Can Data/
+;////////////////////////////////////////////////////////
+TIBCfECDframe = { size : [TIBtofFrame.size[0],$
+                         TIBCfNDbase.size[1]+yoff,$
+                         TIBCfNDframe.size[2],$
+                         TIBCfNDframe.size[3]],$
+                 frame: TIBtofFrame.frame}
+
+XYoff9 = [10,-14]
+TIBCfECDBase = { size : [TIBCfECDframe.size[0]+XYoff9[0],$
+                        TIBCfECDframe.size[1]+XYoff9[1],$
+                        375,$
+                        30],$
+                button : { uname : 'tibc_for_nd_button',$
+                           list : ['Time-Independent Background Constant for Empty Can Data']}}
+
+XYoff10 = [10,25]
+TIBCfECDvalueLabel = { size : [TIBCfECDframe.size[0]+XYoff10[0],$
+                              TIBCfECDframe.size[1]+XYoff10[1]],$
+                      value : 'Value:'}
+XYoff11 = [50,-5]
+TIBCfECDvalueText  = { size : [TIBCfECDvalueLabel.size[0]+XYoff11[0],$
+                              TIBCfECDvaluelabel.size[1]+XYoff11[1],$
+                              100,30],$
+                      uname : 'tibc_for_ecd_value_text'}
+
+XYoff12 = [200,0]
+TIBCfECDerrorLabel = { size : [TIBCfECDvalueLabel.size[0]+XYoff12[0],$
+                              TIBCfECDvalueLabel.size[1]+XYoff12[1]],$
+                      value : 'Error:'}
+XYoff13 = [50,-5]
+TIBCfECDerrorText  = { size : [TIBCfECDerrorLabel.size[0]+XYoff13[0],$
+                              TIBCfECDerrorlabel.size[1]+XYoff13[1],$
+                              100,30],$
+                      uname : 'tibc_for_ecd_error_text'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -411,6 +448,59 @@ frame  = WIDGET_LABEL(tab3_base,$
                       SCR_XSIZE = TIBCfNDframe.size[2],$
                       SCR_YSIZE = TIBCfNDframe.size[3],$
                       FRAME     = TIBCfNDframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Time-Independent Background Constant for Empty Can Data\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab3_base,$
+                   XOFFSET   = TIBCfECDbase.size[0],$
+                   YOFFSET   = TIBCfECDbase.size[1],$
+                   SCR_XSIZE = TIBCfECDbase.size[2],$
+                   SCR_YSIZE = TIBCfECDbase.size[3])
+
+group = CW_BGROUP(base,$
+                  TIBCfECDbase.button.list,$
+                  UNAME      = TIBCfECDbase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab3_base,$
+                     XOFFSET = TIBCfECDvalueLabel.size[0],$
+                     YOFFSET = TIBCfECDvalueLabel.size[1],$
+                     VALUE   = TIBCfECDvalueLabel.value)
+
+text = WIDGET_TEXT(tab3_base,$
+                   XOFFSET   = TIBCfECDvalueText.size[0],$
+                   YOFFSET   = TIBCfECDvalueText.size[1],$
+                   SCR_XSIZE = TIBCfECDvalueText.size[2],$
+                   SCR_YSIZE = TIBCfECDvalueText.size[3],$
+                   UNAME     = TIBCfECDvalueText.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab3_base,$
+                     XOFFSET = TIBCfECDerrorLabel.size[0],$
+                     YOFFSET = TIBCfECDerrorLabel.size[1],$
+                     VALUE   = TIBCfECDerrorLabel.value)
+
+text = WIDGET_TEXT(tab3_base,$
+                   XOFFSET   = TIBCfECDerrorText.size[0],$
+                   YOFFSET   = TIBCfECDerrorText.size[1],$
+                   SCR_XSIZE = TIBCfECDerrorText.size[2],$
+                   SCR_YSIZE = TIBCfECDerrorText.size[3],$
+                   UNAME     = TIBCfECDerrorText.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab3_base,$
+                      XOFFSET   = TIBCfECDframe.size[0],$
+                      YOFFSET   = TIBCfECDframe.size[1],$
+                      SCR_XSIZE = TIBCfECDframe.size[2],$
+                      SCR_YSIZE = TIBCfECDframe.size[3],$
+                      FRAME     = TIBCfECDframe.frame,$
                       VALUE     = '')
 
 END
