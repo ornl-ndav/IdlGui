@@ -45,8 +45,13 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
     message = '  -> Checking if run number exists ... ' + PROCESSING
     AppendLogBookMessage, Event, message
     
-    NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
-    
+    if (!VERSION.os EQ 'darwin') then begin
+        NexusFullPath = (*global).nexus_full_path
+        isNeXusExist = 1
+    endif else begin
+        NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
+    endelse
+
     IF (isNexusExist) THEN BEGIN
         
 ;initialize pixeld_excluded
