@@ -90,25 +90,34 @@ EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
                        list : ['Energy Histogram Axis (micro-eV)']}}
 
 XYoff2 = [10,25]
-EHAvalueLabel = { size : [EHAframe.size[0]+XYoff2[0],$
-                          EHAframe.size[1]+XYoff2[1]],$
-                  value : 'Value:'}
+EHAminLabel = { size : [EHAframe.size[0]+XYoff2[0],$
+                        EHAframe.size[1]+XYoff2[1]],$
+                value : 'Min:'}
 XYoff3 = [50,-5]
-EHAvalueText  = { size : [EHAvalueLabel.size[0]+XYoff3[0],$
-                          EHAvaluelabel.size[1]+XYoff3[1],$
+EHAminText  = { size : [EHAminLabel.size[0]+XYoff3[0],$
+                        EHAminlabel.size[1]+XYoff3[1],$
                           100,30],$
-                  uname : 'eha_value_text'}
+                uname : 'eha_min_text'}
 
 XYoff4 = [200,0]
-EHAerrorLabel = { size : [EHAvalueLabel.size[0]+XYoff4[0],$
-                          EHAvalueLabel.size[1]+XYoff4[1]],$
-                  value : 'Error:'}
+EHAmaxLabel = { size : [EHAminLabel.size[0]+XYoff4[0],$
+                        EHAminLabel.size[1]+XYoff4[1]],$
+                value : 'Max:'}
 XYoff5 = [50,-5]
-EHAerrorText  = { size : [EHAerrorLabel.size[0]+XYoff5[0],$
-                          EHAerrorlabel.size[1]+XYoff5[1],$
-                          100,30],$
-                  uname : 'eha_error_text'}
+EHAmaxText  = { size : [EHAmaxLabel.size[0]+XYoff5[0],$
+                        EHAmaxLabel.size[1]+XYoff5[1],$
+                        100,30],$
+                uname : 'eha_max_text'}
 
+XYoff4 = [200,0]
+EHAbinLabel = { size : [EHAmaxLabel.size[0]+XYoff4[0],$
+                        EHAmaxLabel.size[1]+XYoff4[1]],$
+                value : 'Bin Width:'}
+XYoff5 = [85,-5]
+EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
+                        EHAbinLabel.size[1]+XYoff5[1],$
+                        100,30],$
+                uname : 'eha_bin_text'}
 ;///////////////////////////////////////////////
 ;Global Instrument Final Wavelength (Angstroms)/
 ;///////////////////////////////////////////////
@@ -278,30 +287,44 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = EHAvalueLabel.size[0],$
-                     YOFFSET = EHAvalueLabel.size[1],$
-                     VALUE   = EHAvalueLabel.value)
+                     XOFFSET = EHAminLabel.size[0],$
+                     YOFFSET = EHAminLabel.size[1],$
+                     VALUE   = EHAminLabel.value)
 
 text = WIDGET_TEXT(tab4_base,$
-                   XOFFSET   = EHAvalueText.size[0],$
-                   YOFFSET   = EHAvalueText.size[1],$
-                   SCR_XSIZE = EHAvalueText.size[2],$
-                   SCR_YSIZE = EHAvalueText.size[3],$
-                   UNAME     = EHAvalueText.uname,$
+                   XOFFSET   = EHAminText.size[0],$
+                   YOFFSET   = EHAminText.size[1],$
+                   SCR_XSIZE = EHAminText.size[2],$
+                   SCR_YSIZE = EHAminText.size[3],$
+                   UNAME     = EHAminText.uname,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = EHAerrorLabel.size[0],$
-                     YOFFSET = EHAerrorLabel.size[1],$
-                     VALUE   = EHAerrorLabel.value)
+                     XOFFSET = EHAmaxLabel.size[0],$
+                     YOFFSET = EHAmaxLabel.size[1],$
+                     VALUE   = EHAmaxLabel.value)
 
 text = WIDGET_TEXT(tab4_base,$
-                   XOFFSET   = EHAerrorText.size[0],$
-                   YOFFSET   = EHAerrorText.size[1],$
-                   SCR_XSIZE = EHAerrorText.size[2],$
-                   SCR_YSIZE = EHAerrorText.size[3],$
-                   UNAME     = EHAerrorText.uname,$
+                   XOFFSET   = EHAmaxText.size[0],$
+                   YOFFSET   = EHAmaxText.size[1],$
+                   SCR_XSIZE = EHAmaxText.size[2],$
+                   SCR_YSIZE = EHAmaxText.size[3],$
+                   UNAME     = EHAmaxText.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab4_base,$
+                     XOFFSET = EHAbinLabel.size[0],$
+                     YOFFSET = EHAbinLabel.size[1],$
+                     VALUE   = EHAbinLabel.value)
+
+text = WIDGET_TEXT(tab4_base,$
+                   XOFFSET   = EHAbinText.size[0],$
+                   YOFFSET   = EHAbinText.size[1],$
+                   SCR_XSIZE = EHAbinText.size[2],$
+                   SCR_YSIZE = EHAbinText.size[3],$
+                   UNAME     = EHAbinText.uname,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
