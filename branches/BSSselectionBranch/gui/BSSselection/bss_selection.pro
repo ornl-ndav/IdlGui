@@ -94,7 +94,12 @@ XYfactor                    = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfac
 pixel_excluded              = intarr((*global).pixel_excluded_size)
 (*(*global).pixel_excluded) = pixel_excluded
 
-MainBaseSize  = [50,200,1200,730]
+if (!VERSION.os EQ 'darwin') then begin
+    MainBaseSize  = [30,25,1200,730]
+endif else begin
+    MainBaseSize  = [50,200,1200,730]
+endelse
+
 MainBaseTitle = 'BSS selection tool'
         
 ;Build Main Base
