@@ -298,7 +298,8 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = RSDFListOfRuns.size[2],$
                          SCR_YSIZE = RSDFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
-                         UNAME     = RSDFListOfRuns.uname)
+                         UNAME     = RSDFListOfRuns.uname,$
+                         /EDITABLE)
                         
 frame = WIDGET_LABEL(tab1_base,$
                      XOFFSET   = RSDFframe.size[0],$
@@ -356,7 +357,8 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = BDFListOfRuns.size[2],$
                          SCR_YSIZE = BDFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
-                         UNAME     = BDFListOfRuns.uname)
+                         UNAME     = BDFListOfRuns.uname,$
+                         /EDITABLE)
                         
 frame = WIDGET_LABEL(tab1_base,$
                      XOFFSET   = BDFframe.size[0],$
@@ -415,7 +417,8 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = NDFListOfRuns.size[2],$
                          SCR_YSIZE = NDFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
-                         UNAME     = NDFListOfRuns.uname)
+                         UNAME     = NDFListOfRuns.uname,$
+                         /EDITABLE)
                         
 frame = WIDGET_LABEL(tab1_base,$
                      XOFFSET   = NDFframe.size[0],$
@@ -473,6 +476,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = ECDFListOfRuns.size[2],$
                          SCR_YSIZE = ECDFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
+                         /EDITABLE,$
                          UNAME     = ECDFListOfRuns.uname)
                         
 frame = WIDGET_LABEL(tab1_base,$
@@ -505,7 +509,8 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = PRoIFListOfRuns.size[2],$
                          SCR_YSIZE = PRoIFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
-                         UNAME     = PRoIFListOfRuns.uname)
+                         UNAME     = PRoIFListOfRuns.uname,$
+                         /EDITABLE)
                         
 frame = WIDGET_LABEL(tab1_base,$
                      XOFFSET   = PRoIFframe.size[0],$
@@ -536,6 +541,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = AIGListOfRuns.size[2],$
                          SCR_YSIZE = AIGListOfRuns.size[3],$
                          /ALIGN_LEFT,$
+                         /EDITABLE,$
                          UNAME     = AIGListOfRuns.uname)
                         
 frame = WIDGET_LABEL(tab1_base,$
@@ -561,7 +567,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = OFListOfRuns.size[2],$
                          SCR_YSIZE = OFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
+                         /EDITABLE,$
                          UNAME     = OFListOfRuns.uname)
-                        
-
+                       
 END
