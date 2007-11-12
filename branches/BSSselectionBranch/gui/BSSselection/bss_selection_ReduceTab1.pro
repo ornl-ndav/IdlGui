@@ -157,7 +157,6 @@ IF (NexusLoadedName NE '') THEN BEGIN
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;get current text in text_field
-
         CurrentText = getTextFieldValue(Event, uname1)
         IF (CurrentText EQ '') THEN BEGIN
             PutTextInTextField, Event, uname1, NexusLoadedName
@@ -184,3 +183,73 @@ ENDIF
 widget_control,hourglass=0
 
 END
+
+
+
+
+
+;This function is reached by the browse button of the first tab
+PRO BSSselection_ReduceBrowseNexus, Event, type
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+uname = type + '_browse_nexus_button'
+uname1 = type + '_list_of_runs_text'
+
+CASE (type) OF
+    'rsdf' : title1 = 'Raw Sample Data'
+    'bdf'  : title1 = 'Background Data'
+    'ndf'  : title1 = 'Normalization Data'
+    'ecdf' : title1 = 'Empty Can Data'
+ENDCASE
+
+;define ROI filter
+nexus_ext = (*global).nexus_ext
+filter = '*' + nexus_ext
+;get default path
+NeXusPath = (*global).nexus_path
+
+title = 'Select a ' + title1 + ' NeXus File:'
+
+;open ROI file
+NexusFullFileName = DIALOG_PICKFILE(PATH = NeXusPath,$
+                                    TITLE = title,$
+                                    FILTER = filter,$
+                                    DEFAULT_EXTENSION = nexus_ext)
+
+IF (NexusFullFileName NE '') THEN BEGIN
+
+    uname_label = type + '_label'
+    message1  = getLabelValue(event, uname_label)
+    message = ' -> ' + message1 + ' :'
+    AppendLogBookMessage, Event, message
+
+;get current text in text_field
+    CurrentText = getTextFieldValue(Event, uname1)
+    IF (CurrentText EQ '') THEN BEGIN
+        PutTextInTextField, Event, uname1, NexusFullFileName
+    ENDIF ELSE BEGIN
+        AppendTextInTextField, Event, uname1, ',' + NexusFullFileName
+    ENDELSE
+    
+    newText = getTextFieldValue(Event, uname1)
+    IF (newText EQ '') THEN BEGIN
+        newText = 'N/A'
+    ENDIF
+    message = '    - List of files is : ' + newText
+    AppendLogBookMessage, Event, message
+
+ENDIF ELSE BEGIN
+
+ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+
+END
+

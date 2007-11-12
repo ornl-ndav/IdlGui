@@ -15,6 +15,9 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    instrument : 'BSS',$
+                    nexus_path : '/SNS/BSS/',$
+                    nexus_ext : '.nxs',$
   nexus_full_path : '/Users/j35/SVN/HistoTool/branches/BSSselectionBranch/NeXus/BSS/BSS_246.nxs',$
   processing : 'PROCESSING',$
   PrevLinLogValue : 0,$ 

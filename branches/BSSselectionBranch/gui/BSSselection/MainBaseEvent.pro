@@ -296,6 +296,10 @@ CASE Event.id OF
         BSSselection_Reduce_rsdf_nexus_cw_field, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='rsdf_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'rsdf'
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='rsdf_list_of_runs_text'): begin
         BSSselection_Reduce_rsdf_list_of_runs_text, Event
     end    
@@ -306,6 +310,10 @@ CASE Event.id OF
 
     Widget_Info(wWidget, FIND_BY_UNAME='bdf_nexus_cw_field'): begin
         BSSselection_Reduce_bdf_nexus_cw_field, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='bdf_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'bdf'
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='bdf_list_of_runs_text'): begin
@@ -320,6 +328,10 @@ CASE Event.id OF
         BSSselection_Reduce_ndf_nexus_cw_field, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='ndf_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'ndf'
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='ndf_list_of_runs_text'): begin
         BSSselection_Reduce_ndf_list_of_runs_text, Event
     end    
@@ -330,6 +342,10 @@ CASE Event.id OF
 
     Widget_Info(wWidget, FIND_BY_UNAME='ecdf_nexus_cw_field'): begin
         BSSselection_Reduce_ecdf_nexus_cw_field, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='ecdf_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'ecdf'
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='ecdf_list_of_runs_text'): begin
