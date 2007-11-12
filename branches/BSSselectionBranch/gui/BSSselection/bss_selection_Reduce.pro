@@ -266,3 +266,64 @@ PRO BSSselection_Reduce_gifw_error_text, Event
 print, 'in gifw_error_text'
 END
 
+;****************** TAB 5 *************************
+
+;This function is reached by waio_button
+PRO BSSselection_Reduce_waio_button, Event
+print, 'in waio_button'
+END
+
+;This function is reached by woctib_button
+PRO BSSselection_Reduce_woctib_button, Event
+print, 'in woctib_button'
+END
+
+;This function is reached by wopws_button
+PRO BSSselection_Reduce_wopws_button, Event
+print, 'in wopws_button'
+END
+
+;This function is reached by womws_button
+PRO BSSselection_Reduce_womws_button, Event
+print, 'in womws_button'
+END
+
+;This function is reached by womes_button
+PRO BSSselection_Reduce_womes_button, Event
+print, 'in womes_button'
+END
+
+;This function is reached by worms_button
+PRO BSSselection_Reduce_worms_button, Event
+print, 'in worms_button'
+END
+
+;This function is reached by wocpsamn_button
+PRO BSSselection_Reduce_wocpsamn_button, Event
+print, 'in wocpsamn_button'
+END
+
+;This function is reached by wopies_button
+PRO BSSselection_Reduce_wopies_button, Event
+print, 'in wopies_button'
+END
+
+;This function is reached by wopets_button
+PRO BSSselection_Reduce_wopets_button, Event
+print, 'in wopets_button'
+END
+
+;This function is reached by wa_min_text
+PRO BSSselection_Reduce_wa_min_text, Event
+print, 'in wa_min_text'
+END
+
+;This function is reached by wa_max_text
+PRO BSSselection_Reduce_wa_max_text, Event
+print, 'in wa_max_text'
+END
+
+;This function is reached by wa_bin_width_text
+PRO BSSselection_Reduce_wa_bin_width_text, Event
+print, 'in wa_bin_width_text'
+END
