@@ -10,7 +10,7 @@ CASE Event.id OF
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
     end
-
+	
 ;when going from tab to tab
     Widget_Info(wWidget, FIND_BY_UNAME='main_tab'): begin
         BSSselection_TabRefresh, Event
@@ -286,6 +286,8 @@ CASE Event.id OF
 ;*******
 ;REDUCE*
 ;*******
+;tab1
+
     Widget_Info(wWidget, FIND_BY_UNAME='rsdf_run_number_cw_field'): begin
         BSSselection_Reduce_rsdf_run_number_cw_field, Event
     end    
@@ -346,8 +348,39 @@ CASE Event.id OF
         BSSselection_Reduce_of_list_of_runs_text, Event
     end    
 
+;tab2
+    Widget_Info(wWidget, FIND_BY_UNAME='rdbbase_bank_button'): begin
+        BSSselection_Reduce_rdbbase_bank_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='rmcnf_button'): begin
+        BSSselection_Reduce_rmcnf_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='verbose_button'): begin
+        BSSselection_Reduce_verbose_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='absm_button'): begin
+        BSSselection_Reduce_absm_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='nmn_button'): begin
+        BSSselection_Reduce_nmn_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='nmec_button'): begin
+        BSSselection_Reduce_nmec_button, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='nisw_field'): begin
+        BSSselection_Reduce_nisw_field, Event
+    end    
 
 
+    Widget_Info(wWidget, FIND_BY_UNAME='nisE_field'): begin
+        BSSselection_Reduce_nisE_field, Event
+    end    
 
 ;LOG_BOOK
 ;Send log book to geek button

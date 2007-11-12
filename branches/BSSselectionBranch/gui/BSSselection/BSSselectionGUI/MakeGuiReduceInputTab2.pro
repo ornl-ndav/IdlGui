@@ -10,7 +10,7 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 RDBbase = { size  : [5,25,500,40],$
             value : '  Requested Detector Banks:   ',$
             banks : { size : [5,0,100,35],$
-                      uname : 'rdbbase_bank1_button',$
+                      uname : 'rdbbase_bank_button',$
                       value : 'Bank 1'},$
             list : ['Bank 1 ','Bank 2 ']}
             
@@ -125,7 +125,8 @@ banks = CW_BGROUP(base,$
                   /NONEXCLUSIVE,$
                   SET_VALUE  =[1,1],$
                   ROW        = 1,$
-                  LABEL_LEFT = RDBbase.value )
+                  LABEL_LEFT = RDBbase.value,$
+                  UNAME = RDBbase.banks.uname)
 
 ;//////////////////////
 ;Run McStas NeXus file/
