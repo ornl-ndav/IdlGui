@@ -17,6 +17,7 @@ endelse
 global = ptr_new ({ $
                     instrument : 'BSS',$
                     nexus_path : '/SNS/BSS/',$
+                    nexus_geometry_path : '/SNS/BSS/2006_1_2_CAL/calibrations/',$
                     nexus_ext : '.nxs',$
   nexus_full_path : '/Users/j35/SVN/HistoTool/branches/BSSselectionBranch/NeXus/BSS/BSS_246.nxs',$
   processing : 'PROCESSING',$

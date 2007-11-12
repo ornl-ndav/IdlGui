@@ -206,17 +206,23 @@ CASE (type) OF
     'bdf'  : title1 = 'Background Data'
     'ndf'  : title1 = 'Normalization Data'
     'ecdf' : title1 = 'Empty Can Data'
+    'aig'  : title1 = 'Alternate Instrument Geometry'
 ENDCASE
 
 ;define ROI filter
 nexus_ext = (*global).nexus_ext
 filter = '*' + nexus_ext
+
 ;get default path
-NeXusPath = (*global).nexus_path
+IF (type EQ 'aig') THEN BEGIN
+    NeXusPath = (*global).nexus_geometry_path
+ENDIF ELSE BEGIN
+    NeXusPath = (*global).nexus_path
+ENDELSE
 
 title = 'Select a ' + title1 + ' NeXus File:'
 
-;open ROI file
+;open Nexus file
 NexusFullFileName = DIALOG_PICKFILE(PATH = NeXusPath,$
                                     TITLE = title,$
                                     FILTER = filter,$
@@ -241,7 +247,12 @@ IF (NexusFullFileName NE '') THEN BEGIN
     IF (newText EQ '') THEN BEGIN
         newText = 'N/A'
     ENDIF
-    message = '    - List of files is : ' + newText
+
+    IF (type eq 'aig') THEN BEGIN
+        message = '    - File is now : ' + newText
+    ENDIF ELSE BEGIN
+        message = '    - List of files is : ' + newText
+    ENDELSE
     AppendLogBookMessage, Event, message
 
 ENDIF ELSE BEGIN
@@ -253,3 +264,64 @@ widget_control,hourglass=0
 
 END
 
+
+
+
+
+
+;This function is reached by the browse button of the first tab
+PRO BSSselection_ReduceBrowseRoi, Event
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+uname = 'proif_browse_nexus_button'
+uname1 = 'proif_text'
+
+;define ROI filter
+roi_ext = (*global).roi_ext
+filter = '*' + roi_ext
+RoiPath = (*global).roi_path
+
+title = 'Select a Region Of Interest File:'
+
+;open ROI file
+RoiFullFileName = DIALOG_PICKFILE(PATH = RoiPath,$
+                                  TITLE = title,$
+                                  FILTER = filter,$
+                                  DEFAULT_EXTENSION = roi_ext)
+
+IF (RoiFullFileName NE '') THEN BEGIN
+
+    uname_label = 'proif_label'
+    message1  = getLabelValue(event, uname_label)
+    message = ' -> ' + message1 + ' :'
+    AppendLogBookMessage, Event, message
+
+;get current text in text_field
+    CurrentText = getTextFieldValue(Event, uname1)
+    IF (CurrentText EQ '') THEN BEGIN
+        PutTextInTextField, Event, uname1, RoiFullFileName
+    ENDIF ELSE BEGIN
+        AppendTextInTextField, Event, uname1, ',' + RoiFullFileName
+    ENDELSE
+    
+    newText = getTextFieldValue(Event, uname1)
+    IF (newText EQ '') THEN BEGIN
+        newText = 'N/A'
+    ENDIF
+    message = '    - File is now : ' + newText
+    AppendLogBookMessage, Event, message
+
+ENDIF ELSE BEGIN
+
+ENDELSE
+
+;turn off hourglass
+widget_control,hourglass=0
+
+END

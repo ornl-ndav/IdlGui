@@ -352,8 +352,16 @@ CASE Event.id OF
         BSSselection_Reduce_ecdf_list_of_runs_text, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='proif_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseRoi, Event
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='proif_text'): begin
         BSSselection_Reduce_proif_text, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='aig_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'aig'
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='aig_list_of_runs_text'): begin
@@ -361,7 +369,7 @@ CASE Event.id OF
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='of_list_of_runs_text'): begin
-        BSSselection_Reduce_of_list_of_runs_text, Event
+        ;BSSselection_Reduce_of_list_of_runs_text, Event
     end    
 
 ;tab2
