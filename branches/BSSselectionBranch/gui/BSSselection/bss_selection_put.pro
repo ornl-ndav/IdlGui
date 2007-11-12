@@ -1,3 +1,15 @@
+PRO PutTextInTextField, Event, uname, text
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=strcompress(text,/remove_all)
+END
+
+PRO AppendTextInTextField, Event, uname, text
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=strcompress(text,/remove_all),/append
+END
+
+;--------------------------------------------------------------
+
 PRO PutLogBookMessage, Event, Message
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, set_value=Message
@@ -201,4 +213,13 @@ sz = (size(preview))(1)
 for i=0,(sz-1) do begin
     putPreviewCountsVsTof, Event, preview[i], i
 endfor
+END
+
+;------------------REDUCE----------------------
+PRO putReduceRoiFileName, Event, RoiFullFileName
+PutTextInTextField, Event, 'proif_text', RoiFullFileName
+END
+
+PRO putReduceRawSampleDataFile, Event, NexusFullName
+putTextInTextField, Event, 'rsdf_list_of_runs_text', NexusFullName
 END

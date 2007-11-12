@@ -12,7 +12,8 @@ RSDFframe     = { size  : [5,15,730,80]}
 XYoff         = [10,-10]
 RSDFlabel     = { size  : [RSDFframe.size[0]+XYoff[0],$
                            RSDFframe.size[1]+XYoff[1]],$
-                  value : 'Raw Sample Data File'}
+                  value : 'Raw Sample Data File',$
+                  uname : 'rsdf_label'}
 
 XYoff             = [8,5]
 RSDFrunNumberBase = { size  : [RSDFframe.size[0]+XYoff[0],$
@@ -49,7 +50,6 @@ RSDFListOfRuns = { size : [XYoff[0],$
                            723,30],$
                    uname : 'rsdf_list_of_runs_text'}
                    
-
 ;/////////////////////
 ;Background Data File/
 ;/////////////////////
@@ -58,7 +58,8 @@ BDFframe     = { size  : [5,RSDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 BDFlabel     = { size  : [BDFframe.size[0]+XYoff[0],$
                           BDFframe.size[1]+XYoff[1]],$
-                  value : 'Background Data File'}
+                 value : 'Background Data File',$
+                 uname : 'bdf_label'}
 
 XYoff             = [8,5]
 BDFrunNumberBase = { size  : [BDFframe.size[0]+XYoff[0],$
@@ -88,7 +89,6 @@ BDFListOfRuns = { size : [XYoff[0],$
                           723,30],$
                   uname : 'bdf_list_of_runs_text'}
 
-
 ;////////////////////////
 ;Normalization Data File/
 ;////////////////////////
@@ -97,7 +97,8 @@ NDFframe     = { size  : [5,BDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 NDFlabel     = { size  : [NDFframe.size[0]+XYoff[0],$
                           NDFframe.size[1]+XYoff[1]],$
-                  value : 'Normalization Data File'}
+                 value : 'Normalization Data File',$
+                 uname : 'ndf_label'}
 
 XYoff             = [8,5]
 NDFrunNumberBase = { size  : [NDFframe.size[0]+XYoff[0],$
@@ -135,7 +136,8 @@ ECDFframe     = { size  : [5,NDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 ECDFlabel     = { size  : [ECDFframe.size[0]+XYoff[0],$
                           ECDFframe.size[1]+XYoff[1]],$
-                  value : 'Empty Can Data File'}
+                  value : 'Empty Can Data File',$
+                  uname : 'ecdf_label'}
 
 XYoff             = [8,5]
 ECDFrunNumberBase = { size  : [ECDFframe.size[0]+XYoff[0],$
@@ -165,7 +167,6 @@ ECDFListOfRuns = { size : [XYoff[0],$
                           723,30],$
                   uname : 'ecdf_list_of_runs_text'}
 
-
 ;//////////////////////////////
 ;Pixel Region-of-interest file/
 ;//////////////////////////////
@@ -174,7 +175,8 @@ PRoIFframe     = { size  : [5,ECDFframe.size[1]+yoff,730,50]}
 XYoff         = [10,-10]
 PRoIFlabel     = { size  : [PRoIFframe.size[0]+XYoff[0],$
                           PRoIFframe.size[1]+XYoff[1]],$
-                  value : 'Pixel Region of Interest File'}
+                  value : 'Pixel Region of Interest File',$
+                  uname : 'proif_label'}
 
 XYoff             = [10,10]
 PRoIFbrowseButton  = { size  : [PRoIFframe.size[0]+XYoff[0],$
@@ -186,7 +188,7 @@ XYoff = [135,40]
 PRoIFListOfRuns = { size : [PRoIFbrowseButton.size[0]+XYoff[0],$
                           PRoIFbrowseButton.size[1],$
                           583,30],$
-                  uname : 'proif_list_of_runs_text'}
+                  uname : 'proif_text'}
 
 ;//////////////////////////////
 ;Alternate Instrument Geometry/
@@ -196,7 +198,8 @@ AIGframe     = { size  : [5,PRoIFframe.size[1]+yoff,730,50]}
 XYoff         = [10,-10]
 AIGlabel     = { size  : [AIGframe.size[0]+XYoff[0],$
                           AIGframe.size[1]+XYoff[1]],$
-                  value : 'Alternate Instrument Geometry'}
+                 value : 'Alternate Instrument Geometry',$
+                 uname : 'aig_label'}
 
 XYoff             = [10,10]
 AIGbrowseButton  = { size  : [AIGframe.size[0]+XYoff[0],$
@@ -216,7 +219,8 @@ AIGListOfRuns = { size : [AIGbrowseButton.size[0]+XYoff[0],$
 yoff = 65
 OFlabel     = { size  : [10,$
                           AIGframe.size[1]+yoff],$
-                value : 'Outupt File Name:'}
+                value : 'Outupt File Name:',$
+                uname : 'of_label'}
 
 XYoff             = [110,-8]
 OFListOfRuns = { size : [OFlabel.size[0]+XYoff[0],$
@@ -241,7 +245,8 @@ tab1_base = WIDGET_BASE(ReduceInputTab,$
 label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = RSDFlabel.size[0],$
                      YOFFSET = RSDFlabel.size[1],$
-                     VALUE   = RSDFlabel.value)
+                     VALUE   = RSDFlabel.value,$
+                     UNAME   = RSDFlabel.uname)
 
 base = WIDGET_BASE(tab1_base,$
                    XOFFSET   = RSDFrunNumberBase.size[0],$
@@ -315,7 +320,8 @@ frame = WIDGET_LABEL(tab1_base,$
 label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = BDFlabel.size[0],$
                      YOFFSET = BDFlabel.size[1],$
-                     VALUE   = BDFlabel.value)
+                     VALUE   = BDFlabel.value,$
+                     UNAME   = BDFlabel.uname)
 
 base = WIDGET_BASE(tab1_base,$
                    XOFFSET   = BDFrunNumberBase.size[0],$
@@ -368,14 +374,14 @@ frame = WIDGET_LABEL(tab1_base,$
                      FRAME     = frameSize,$
                      VALUE     = '')
 
-
 ;\\\\\\\\\\\\\\\\\\\\\\\\
 ;Normalization Data File\
 ;\\\\\\\\\\\\\\\\\\\\\\\\
 label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = NDFlabel.size[0],$
                      YOFFSET = NDFlabel.size[1],$
-                     VALUE   = NDFlabel.value)
+                     VALUE   = NDFlabel.value,$
+                     UNAME   = NDFlabel.uname)
 
 base = WIDGET_BASE(tab1_base,$
                    XOFFSET   = NDFrunNumberBase.size[0],$
@@ -434,7 +440,8 @@ frame = WIDGET_LABEL(tab1_base,$
 label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = ECDFlabel.size[0],$
                      YOFFSET = ECDFlabel.size[1],$
-                     VALUE   = ECDFlabel.value)
+                     VALUE   = ECDFlabel.value,$
+                     UNAME   = ECDFlabel.uname)
 
 base = WIDGET_BASE(tab1_base,$
                    XOFFSET   = ECDFrunNumberBase.size[0],$
@@ -493,7 +500,8 @@ frame = WIDGET_LABEL(tab1_base,$
 Label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = PRoIFlabel.size[0],$
                      YOFFSET = PRoIFlabel.size[1],$
-                     VALUE   = PRoIFlabel.value)
+                     VALUE   = PRoIFlabel.value,$
+                     UNAME   = PRoIFlabel.uname)
 
 browseNexus = WIDGET_BUTTON(tab1_base,$
                             XOFFSET   = PRoIFbrowseButton.size[0],$
@@ -519,13 +527,15 @@ frame = WIDGET_LABEL(tab1_base,$
                      SCR_YSIZE = PRoIFframe.size[3],$
                      FRAME     = frameSize,$
                      VALUE     = '')
+
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Alternate Instrument Geometry\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 Label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = AIGlabel.size[0],$
                      YOFFSET = AIGlabel.size[1],$
-                     VALUE   = AIGlabel.value)
+                     VALUE   = AIGlabel.value,$
+                     UNAME   = AIGlabel.uname)
 
 browseNexus = WIDGET_BUTTON(tab1_base,$
                             XOFFSET   = AIGbrowseButton.size[0],$
@@ -552,14 +562,14 @@ frame = WIDGET_LABEL(tab1_base,$
                      FRAME     = frameSize,$
                      VALUE     = '')
 
-
 ;\\\\\\\\\\\\\\\\\
 ;Output File Name\
 ;\\\\\\\\\\\\\\\\\
 Label = WIDGET_LABEL(tab1_base,$
                      XOFFSET = OFlabel.size[0],$
                      YOFFSET = OFlabel.size[1],$
-                     VALUE   = OFlabel.value)
+                     VALUE   = OFlabel.value,$
+                     UNAME   = OFlabel.uname)
 
 ListOfRuns = WIDGET_TEXT(tab1_base,$
                          XOFFSET   = OFListOfRuns.size[0],$

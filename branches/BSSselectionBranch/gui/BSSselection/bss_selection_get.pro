@@ -6,6 +6,13 @@ RETURN, TextFieldValue
 END
 
 
+FUNCTION getLabelValue, Event, uname
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = TextFieldValue
+RETURN, TextFieldValue
+END
+
+
 ;This function returns the contain of the nexus run number
 FUNCTION getRunNumber, Event
 RunNumberID = widget_info(Event.top,find_by_uname='nexus_run_number')
@@ -246,4 +253,13 @@ RETURN, value
 END
 
 
-
+FUNCTION getReduceRunNumber, Event, type
+CASE (type) OF
+    'rsdf': uname = 'rsdf_run_number_cw_field'
+    'bdf' : uname = 'bdf_run_number_cw_field'
+    'ndf' : uname = 'ndf_run_number_cw_field'
+    'ecdf': uname = 'ecdf_run_number_cw_field'
+ENDCASE
+RunNumber = getTextFieldValue(Event, uname)
+RETURN, strcompress(RunNumber,/remove_all)
+END

@@ -336,8 +336,8 @@ CASE Event.id OF
         BSSselection_Reduce_ecdf_list_of_runs_text, Event
     end    
 
-    Widget_Info(wWidget, FIND_BY_UNAME='proif_list_of_runs_text'): begin
-        BSSselection_Reduce_proif_list_of_runs_text, Event
+    Widget_Info(wWidget, FIND_BY_UNAME='proif_text'): begin
+        BSSselection_Reduce_proif_text, Event
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='aig_list_of_runs_text'): begin
