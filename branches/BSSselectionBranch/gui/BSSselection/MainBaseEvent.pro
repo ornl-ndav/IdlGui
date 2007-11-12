@@ -459,7 +459,7 @@ CASE Event.id OF
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_ecd_button'): begin
-        BSSselection_Reduce_tibc_for_nd_button, Event
+        BSSselection_Reduce_tibc_for_ecd_button, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_ecd_value_text'): begin

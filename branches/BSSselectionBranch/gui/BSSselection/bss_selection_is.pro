@@ -44,3 +44,9 @@ RETURN, value
 END
 
 
+;if button click or not
+FUNCTION isButtonSelected, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=value
+RETURN, value
+END

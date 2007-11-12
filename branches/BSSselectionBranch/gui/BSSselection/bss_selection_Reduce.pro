@@ -141,7 +141,7 @@ END
 
 ;This function is reached by the tibc_for_sd_button
 PRO BSSselection_Reduce_tibc_for_sd_button, Event
-print, 'in tibc_for_sd_button'
+BSSselection_EnableOrNotFields, Event, 'tibc_for_sd_button'
 END
 
 ;This function is reached by the tibc_for_sd_value_text
@@ -156,7 +156,7 @@ END
 
 ;This function is reached by the tibc_for_bd_button
 PRO BSSselection_Reduce_tibc_for_bd_button, Event
-print, 'in tibc_for_bd_button'
+BSSselection_EnableOrNotFields, Event, 'tibc_for_bd_button'
 END
 
 ;This function is reached by the tibc_for_bd_value_text
@@ -171,7 +171,7 @@ END
 
 ;This function is reached by the tibc_for_nd_button
 PRO BSSselection_Reduce_tibc_for_nd_button, Event
-print, 'in tibc_for_nd_button'
+BSSselection_EnableOrNotFields, Event, 'tibc_for_nd_button'
 END
 
 ;This function is reached by the tibc_for_nd_value_text
@@ -186,7 +186,7 @@ END
 
 ;This function is reduce by the tibc_for_nd_button
 PRO BSSselection_Reduce_tibc_for_ecd_button, Event
-print, 'in tibc_for_ecd_button'
+BSSselection_EnableOrNotFields, Event, 'tibc_for_ecd_button'
 END
 
 ;This function is reduce by the tibc_for_ecd_value_text
@@ -203,7 +203,7 @@ END
 
 ;This function is reached by the tzsp_button
 PRO BSSselection_Reduce_tzsp_button, Event
-print, 'in tzsp_button'
+BSSselection_EnableOrNotFields, Event, 'tzsp_button'
 END
 
 ;This function is reached by tzsp_value_text
@@ -218,7 +218,7 @@ END
 
 ;This function is reached by the tzop_button
 PRO BSSselection_Reduce_tzop_button, Event
-print, 'in tzop_button'
+BSSselection_EnableOrNotFields, Event, 'tzop_button'
 END
 
 ;This function is reached by the tzop_value_text
@@ -233,7 +233,7 @@ END
 
 ;This function is reached by the eha_button
 PRO BSSselection_Reduce_eha_button, Event
-print, 'in eha_button'
+BSSselection_EnableOrNotFields, Event, 'eha_button'
 END
 
 ;This function is reached by the eha_min_text
@@ -253,7 +253,7 @@ END
 
 ;This function is reached by gifw_button
 PRO BSSselection_Reduce_gifw_button, Event
-print, 'in gifw_button'
+BSSselection_EnableOrNotFields, Event, 'gifw_button'
 END
 
 ;This function is reached by gifw_value_text
