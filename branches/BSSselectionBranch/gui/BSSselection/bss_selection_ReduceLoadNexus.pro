@@ -1,12 +1,13 @@
 FUNCTION BSSselection_GetNexusFullPath, Event, RunNumber, type, isNeXusExist
-
 NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
 NeXusFullName = NexusFullPath[0]
-
 RETURN, NeXusFullName
 END
 
 
+
+;This function is reached when the user enters a RunNumber and hits
+;ENTER (REDUCE tab#1)
 PRO BSSselection_NexusFullPath, Event, type
 
 ;indicate initialization with hourglass icon
@@ -73,12 +74,12 @@ ENDIF  ;end of if(RunNumbr NE '')
     
 ;turn off hourglass
 widget_control,hourglass=0
-
 END
 
 
 
-
+;This function is reached when the user updates the text field (remove
+;a nexus full path for example) of REDUCE tab#1
 PRO BSSselection_UpdateListOfNexus, Event, type
 
 ;indicate initialization with hourglass icon
@@ -111,6 +112,73 @@ IF (ListOfNexus EQ '') THEN BEGIN
 ENDIF
 message = '    - List of files is now : ' + ListOfNexus
 AppendLogBookMessage, Event, message
+
+;turn off hourglass
+widget_control,hourglass=0
+END
+
+
+
+;This function is reached when the user enters a Nexus filename (full
+;path) and hits ENTER
+;the program first checks if the file exist and if it does, add it to
+;the list of runs.
+PRO BSSselection_AddNexusFullPath, Event, type
+
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+PROCESSING = (*global).processing
+OK = (*global).ok
+FAILED = (*global).failed
+
+uname = type + '_nexus_cw_field'
+uname1 = type + '_list_of_runs_text'
+NexusLoadedName = getTextFieldValue(Event, uname)
+
+IF (NexusLoadedName NE '') THEN BEGIN
+
+    uname_label = type + '_label'
+    message1  = getLabelValue(event, uname_label)
+    message = ' -> ' + message1 + ' :'
+    AppendLogBookMessage, Event, message
+    message = '    - Checking if following NeXus exists : ' + $
+      strcompress(NexusLoadedName,/remove_all)
+    AppendLogBookMessage, Event, message + ' ... ' + PROCESSING
+        
+    isNexusExist = CheckIfNexusExist(NexusLoadedName)
+
+    IF (isNexusExist EQ 1) THEN BEGIN ;nexus exists
+
+        putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
+
+;get current text in text_field
+
+        CurrentText = getTextFieldValue(Event, uname1)
+        IF (CurrentText EQ '') THEN BEGIN
+            PutTextInTextField, Event, uname1, NexusLoadedName
+        ENDIF ELSE BEGIN
+            AppendTextInTextField, Event, uname1, ',' + NexusLoadedName
+        ENDELSE
+
+    ENDIF ELSE BEGIN ;nexus does not exist
+
+        putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+
+    ENDELSE
+
+    newText = getTextFieldValue(Event, uname1)
+    IF (newText EQ '') THEN BEGIN
+        newText = 'N/A'
+    ENDIF
+    message = '    - List of files is : ' + newText
+    AppendLogBookMessage, Event, message
+    
+ENDIF
 
 ;turn off hourglass
 widget_control,hourglass=0

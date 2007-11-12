@@ -7,7 +7,7 @@ END
 
 ;This function is reached by the rsdf_nexus_cw_field (tab#1)
 PRO BSSselection_Reduce_rsdf_nexus_cw_field, Event
-print, 'in rsdf_nexus_cw_field'
+BSSselection_AddNexusFullPath, Event, 'rsdf'
 END
 
 ;This function is reached by the rsdf_list_of_runs_text (tab#1)
@@ -22,7 +22,7 @@ END
 
 ;This function is reached by the bdf_nexus_cw_field (tab#1)
 PRO BSSselection_Reduce_bdf_nexus_cw_field, Event
-print, 'in bdf_nexus_cw_field'
+BSSselection_AddNexusFullPath, Event, 'bdf'
 END
 
 ;This function is reached by the bdf_list_of_runs_text (tab#1)
@@ -37,7 +37,7 @@ END
 
 ;This function is reached by the ndf_nexus_cw_field (tab#1)
 PRO BSSselection_Reduce_ndf_nexus_cw_field, Event
-print, 'in ndf_nexus_cw_field'
+BSSselection_AddNexusFullPath, Event, 'ndf'
 END
 
 ;This function is reached by the ndf_list_of_runs_text (tab#1)
@@ -52,7 +52,7 @@ END
 
 ;This function is reached by the ecdf_nexus_cw_field (tab#1)
 PRO BSSselection_Reduce_ecdf_nexus_cw_field, Event
-print, 'in ecdf_nexus_cw_field'
+BSSselection_AddNexusFullPath, Event, 'ecdf'
 END
 
 ;This function is reached by the ecdf_list_of_runs_text (tab#1)

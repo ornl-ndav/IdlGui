@@ -22,5 +22,18 @@ endif else begin
         return, full_nexus_name[0]
     endelse
 endelse
-
 end
+
+
+;This function checks if a file exist or not
+FUNCTION CheckIfNexusExist, NexusFullName
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+ENDIF ELSE BEGIN
+    openr, u, NexusFullName, /get
+    RETURN, 1
+ENDELSE
+END
