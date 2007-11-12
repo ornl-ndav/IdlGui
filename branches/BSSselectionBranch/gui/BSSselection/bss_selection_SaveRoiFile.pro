@@ -18,6 +18,7 @@ name = path + first_part + second_part + ext_part
 
 ;put new name into field
 putRoiFileName, Event, name
+
 END
 
 
@@ -78,7 +79,7 @@ pixel_excluded = (*(*global).pixel_excluded)
 sz = (size(pixel_excluded))(1)
 
 error = 0
-;CATCH, error
+CATCH, error
 
 IF (error NE 0) then begin
 
@@ -155,10 +156,12 @@ ENDIF ELSE BEGIN
     
     MessageBox = 'ROI File Creation -> SUCCESS !'
 
+;populate RoI file name in reduce tab1
+    putReduceRoiFileName, Event, RoiFullFileName
+
 ENDELSE
 
 putMessageBoxInfo, Event, MessageBox
-LogBookMessage = ' -> ROI file has been saved with success'
 
 ;remove name of file loaded from Loaded ROI text
 putLoadedRoiFileName, Event, ''
