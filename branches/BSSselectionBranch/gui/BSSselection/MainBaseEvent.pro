@@ -377,9 +377,73 @@ CASE Event.id OF
         BSSselection_Reduce_nisw_field, Event
     end    
 
-
     Widget_Info(wWidget, FIND_BY_UNAME='nisE_field'): begin
         BSSselection_Reduce_nisE_field, Event
+    end    
+
+;tab3
+    Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel1_text'): begin
+        BSSselection_Reduce_tibtof_channel1_text, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel2_text'): begin
+        BSSselection_Reduce_tibtof_channel2_text, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel3_text'): begin
+        BSSselection_Reduce_tibtof_channel3_text, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel4_text'): begin
+        BSSselection_Reduce_tibtof_channel4_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_sd_button'): begin
+        BSSselection_Reduce_tibc_for_sd_button, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_sd_value_text'): begin
+        BSSselection_Reduce_tibc_for_sd_value_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_sd_error_text'): begin
+        BSSselection_Reduce_tibc_for_sd_error_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_bd_button'): begin
+        BSSselection_Reduce_tibc_for_bd_button, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_bd_value_text'): begin
+        BSSselection_Reduce_tibc_for_bd_value_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_bd_error_text'): begin
+        BSSselection_Reduce_tibc_for_bd_error_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_nd_button'): begin
+        BSSselection_Reduce_tibc_for_nd_button, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_nd_value_text'): begin
+        BSSselection_Reduce_tibc_for_nd_value_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_nd_error_text'): begin
+        BSSselection_Reduce_tibc_for_nd_error_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_ecd_button'): begin
+        BSSselection_Reduce_tibc_for_nd_button, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_ecd_value_text'): begin
+        BSSselection_Reduce_tibc_for_ecd_value_text, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='tibc_for_ecd_error_text'): begin
+        BSSselection_Reduce_tibc_for_ecd_error_text, Event
     end    
 
 ;LOG_BOOK

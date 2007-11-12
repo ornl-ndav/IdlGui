@@ -181,7 +181,7 @@ TIBCfECDBase = { size : [TIBCfECDframe.size[0]+XYoff9[0],$
                         TIBCfECDframe.size[1]+XYoff9[1],$
                         375,$
                         30],$
-                button : { uname : 'tibc_for_nd_button',$
+                button : { uname : 'tibc_for_ecd_button',$
                            list : ['Time-Independent Background Constant for Empty Can Data']}}
 
 XYoff10 = [10,25]

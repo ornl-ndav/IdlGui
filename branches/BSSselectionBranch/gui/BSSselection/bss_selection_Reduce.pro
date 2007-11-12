@@ -116,3 +116,86 @@ END
 PRO BSSselection_Reduce_nisE_field, Event
 print, 'in nisE_field'
 END
+
+;****************** TAB 3 *************************
+
+;This function is reached by the tibtof_channel1_text
+PRO BSSselection_Reduce_tibtof_channel1_text, Event
+print, 'in tibtof_channel1_text'
+END
+
+;This function is reached by the tibtof_channel2_text
+PRO BSSselection_Reduce_tibtof_channel2_text, Event
+print, 'in tibtof_channel2_text'
+END
+
+;This function is reached by the tibtof_channel3_text
+PRO BSSselection_Reduce_tibtof_channel3_text, Event
+print, 'in tibtof_channel3_text'
+END
+
+;This function is reached by the tibtof_channel4_text
+PRO BSSselection_Reduce_tibtof_channel4_text, Event
+print, 'in tibtof_channel4_text'
+END
+
+;This function is reached by the tibc_for_sd_button
+PRO BSSselection_Reduce_tibc_for_sd_button, Event
+print, 'in tibc_for_sd_button'
+END
+
+;This function is reached by the tibc_for_sd_value_text
+PRO BSSselection_Reduce_tibc_for_sd_value_text, Event
+print, 'in tibc_for_sd_value_text'
+END
+
+;This function is reached by the tibc_for_sd_error_text
+PRO BSSselection_Reduce_tibc_for_sd_error_text, Event
+print, 'in tibc_for_sd_error_text'
+END
+
+;This function is reached by the tibc_for_bd_button
+PRO BSSselection_Reduce_tibc_for_bd_button, Event
+print, 'in tibc_for_bd_button'
+END
+
+;This function is reached by the tibc_for_bd_value_text
+PRO BSSselection_Reduce_tibc_for_bd_value_text, Event
+print, 'in tibc_for_bd_value_text'
+END
+
+;This function is reached by the tibc_for_bd_error_text
+PRO BSSselection_Reduce_tibc_for_bd_error_text, Event
+print, 'in tibc_for_bd_error_text'
+END
+
+;This function is reached by the tibc_for_nd_button
+PRO BSSselection_Reduce_tibc_for_nd_button, Event
+print, 'in tibc_for_nd_button'
+END
+
+;This function is reached by the tibc_for_nd_value_text
+PRO BSSselection_Reduce_tibc_for_nd_value_text, Event
+print, 'in tibc_for_nd_value_text'
+END
+
+;This function is reached by the tibc_for_nd_error_text
+PRO BSSselection_Reduce_tibc_for_nd_error_text, Event
+print, 'in tibc_for_nd_error_text'
+END
+
+;This function is reduce by the tibc_for_nd_button
+PRO BSSselection_Reduce_tibc_for_ecd_button, Event
+print, 'in tibc_for_ecd_button'
+END
+
+;This function is reduce by the tibc_for_ecd_value_text
+PRO BSSselection_Reduce_tibc_for_ecd_value_text, Event
+print, 'in tibc_for_ecd_value_text'
+END
+
+;This function is reduce by the tibc_for_ecd_error_text
+PRO BSSselection_Reduce_tibc_for_ecd_error_text, Event
+print, 'in tibc_for_ecd_error_text'
+END
+
