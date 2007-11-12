@@ -86,7 +86,7 @@ EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
                     EHaframe.size[1]+XYoff1[1],$
                     225,$
                     30],$
-            button : { uname : 'tzop_button',$
+            button : { uname : 'eha_button',$
                        list : ['Energy Histogram Axis (micro-eV)']}}
 
 XYoff2 = [10,25]

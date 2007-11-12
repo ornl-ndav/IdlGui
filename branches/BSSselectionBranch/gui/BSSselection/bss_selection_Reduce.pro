@@ -199,3 +199,70 @@ PRO BSSselection_Reduce_tibc_for_ecd_error_text, Event
 print, 'in tibc_for_ecd_error_text'
 END
 
+;****************** TAB 4 *************************
+
+;This function is reached by the tzsp_button
+PRO BSSselection_Reduce_tzsp_button, Event
+print, 'in tzsp_button'
+END
+
+;This function is reached by tzsp_value_text
+PRO BSSselection_Reduce_tzsp_value_text, Event
+print, 'in tzsp_value_text'
+END
+
+;This function is reached by the tzsp_error_text
+PRO BSSselection_Reduce_tzsp_error_text, Event
+print, 'in tzsp_error_text'
+END
+
+;This function is reached by the tzop_button
+PRO BSSselection_Reduce_tzop_button, Event
+print, 'in tzop_button'
+END
+
+;This function is reached by the tzop_value_text
+PRO BSSselection_Reduce_tzop_value_text, Event
+print, 'in tzop_value_text'
+END
+
+;This function is reached by the tzop_error_text
+PRO BSSselection_Reduce_tzop_error_text, Event
+print, 'in tzop_error_text'
+END
+
+;This function is reached by the eha_button
+PRO BSSselection_Reduce_eha_button, Event
+print, 'in eha_button'
+END
+
+;This function is reached by the eha_min_text
+PRO BSSselection_Reduce_eha_min_text, Event
+print, 'in eha_min_text'
+END
+
+;This function is reached by eha_max_text
+PRO BSSselection_Reduce_eha_max_text, Event
+print, 'in eha_max_text'
+END
+
+;This function is reached by eha_bin_text
+PRO BSSselection_Reduce_eha_bin_text, Event
+print, 'in eha_bin_text'
+END
+
+;This function is reached by gifw_button
+PRO BSSselection_Reduce_gifw_button, Event
+print, 'in gifw_button'
+END
+
+;This function is reached by gifw_value_text
+PRO BSSselection_Reduce_gifw_value_text, Event
+print, 'in gifw_value_text'
+END
+
+;This function is reached by gifw_error_text
+PRO BSSselection_Reduce_gifw_error_text, Event
+print, 'in gifw_error_text'
+END
+
