@@ -30,15 +30,19 @@ widget_control,id,get_uvalue=global
 current_tab = getCurrentSelectedMainTab(Event)
 prev_tab = (*global).previous_tab
 
-IF ((*global).NeXusFound) THEN BEGIN
-    
-    IF (current_tab NE prev_tab) THEN BEGIN
-        IF (current_tab EQ 0) THEN BEGIN
-;plot bank1, bank2, grid and unselected data
-            PlotIncludedPixels, Event
-        ENDIF 
-        (*global).previous_tab = current_tab
-    ENDIF
+IF (current_tab NE prev_tab) THEN BEGIN
+    CASE (current_tab) OF
+        0: BEGIN          ;plot bank1, bank2, grid and unselected data
+            IF ((*global).NeXusFound) THEN BEGIN
+                PlotIncludedPixels, Event
+            ENDIF
+        END
+        1: BEGIN                ;Reduce tab
+            BSSselection_CommandLineGenerator, Event
+        END
+        ELSE:
+    ENDCASE
+    (*global).previous_tab = current_tab
 ENDIF
 
 END

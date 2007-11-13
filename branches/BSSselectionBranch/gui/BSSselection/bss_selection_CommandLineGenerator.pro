@@ -809,5 +809,4 @@ endelse
 
 Activate_button, Event,'submit_button',activate
 
-
 END
