@@ -4,24 +4,11 @@ PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 ;                           Define size arrays
 ;***********************************************************************************
 
-;/////////////////////////
-;Requested Detector Banks/
-;/////////////////////////
-RDBbase = { size  : [5,25,500,40],$
-            value : '  Requested Detector Banks:   ',$
-            banks : { size : [5,0,100,35],$
-                      uname : 'rdbbase_bank_button',$
-                      value : 'Bank 1'},$
-            list : ['Bank 1 ','Bank 2 ']}
-
 ;//////////////////////
 ;Run McStas NeXus file/
 ;//////////////////////
 yoff = 50             
-RMcNFBase = { size : [RDBbase.size[0],$
-                      RDBbase.size[1]+yoff,$
-                      200,$
-                      RDBbase.size[3]],$
+RMcNFBase = { size : [5,25,500,40],$
               button : { uname : 'rmcnf_button',$
                          value : '',$
                          list : ['Run McStas NeXus Files']}}
@@ -29,10 +16,10 @@ RMcNFBase = { size : [RDBbase.size[0],$
 ;////////
 ;Verbose/
 ;////////
-VerboseBase = { size : [RDBbase.size[0],$
+VerboseBase = { size : [RMcNFbase.size[0],$
                         RMcNFbase.size[1]+yoff,$
                         200,$
-                        RDBbase.size[3]],$
+                        RMcNFbase.size[3]],$
                 button : { uname : 'verbose_button',$
                            value : RMcNFbase.button.value,$
                            list : ['Verbose']}}
@@ -111,24 +98,6 @@ tab2_base = WIDGET_BASE(ReduceInputTab,$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
                         SCR_YSIZE = ReduceInputTabSettings.size[3],$
                         TITLE     = ReduceInputTabSettings.title[1])
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\
-;Requested Detector Banks\
-;\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab2_base,$
-                   XOFFSET   = RDBbase.size[0],$
-                   YOFFSET   = RDBbase.size[1],$
-                   SCR_XSIZE = RDBbase.size[2],$
-                   SCR_YSIZE = RDBbase.size[3])
-
-banks = CW_BGROUP(base,$
-                  XOFFSET = RDBbase.banks.size[0],$
-                  RDBbase.list,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  =[1,1],$
-                  ROW        = 1,$
-                  LABEL_LEFT = RDBbase.value,$
-                  UNAME = RDBbase.banks.uname)
 
 ;//////////////////////
 ;Run McStas NeXus file/
