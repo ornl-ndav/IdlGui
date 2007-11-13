@@ -80,7 +80,7 @@ NIEWBase = { size : [NISWBase.size[0],$
                      500,$
                      NISWBase.size[3]],$
              label1 : { size : [0,5],$
-                        value : '   Normalization Integration Start Wavelength :'},$ 
+                        value : '   Normalization Integration End Wavelength :'},$ 
              field : { size : [290,0,80,30],$
                        uname : 'nisE_field'},$
              label : { size : [NISWBase.label.size[0],$

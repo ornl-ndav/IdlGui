@@ -8,6 +8,8 @@ StatusMessage = 0 ;will increase by 1 each time a field is missing
 
 cmd = 'amorphous_reduction ' ;name of function to call
 
+;****TAB1****
+
 ;get Raw Sample Data Files
 RSDFiles = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
 IF (RSDFiles NE '') THEN BEGIN
@@ -67,8 +69,44 @@ IF(OFile NE '') THEN BEGIN
     cmd += ' --output=' + OFile
 ENDIF
 
+;****TAB2****
 
+;get Run McStas NeXus Files status
+IF (isButtonSelected(Event,'rmcnf_button')) THEN BEGIN
+    cmd += ' --mc'
+ENDIF
 
+;get Verbose status
+IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
+    cmd += ' --verbose'
+ENDIF
+
+;get Alternate Background Subtraction Method
+IF (isButtonSelected(Event,'absm_button')) THEN BEGIN
+    cmd += ' --hwfix'
+ENDIF
+
+;get No Monitor Normalization
+IF (isButtonSelected(Event,'nmn_button')) THEN BEGIN
+    cmd += ' --no-mon-norm'
+ENDIF
+
+;get No Monitor Efficiency Correction
+IF (isButtonSelected(Event,'nmec_button')) THEN BEGIN
+    cmd += ' --no-mon-effc'
+ENDIF
+
+;get Normalization Integration Start Wavelength
+NISW = getTextFieldValue(Event,'nisw_field')
+IF(NISW NE '') THEN BEGIN
+    cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
+ENDIF
+
+;get Normalization Integration End Wavelength
+NIEW = getTextFieldValue(Event,'nisE_field')
+IF(NIEW NE '') THEN BEGIN
+    cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
+ENDIF
 
 
 
