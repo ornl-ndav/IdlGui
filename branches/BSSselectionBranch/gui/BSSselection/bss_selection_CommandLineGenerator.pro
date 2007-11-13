@@ -59,7 +59,7 @@ ENDIF ELSE BEGIN
     cmd += '?'
     status_text = '   -Please provide a Pixel Region of Interest File'
     IF (tab1 EQ 0) THEN BEGIN
-        putInfoInCommandLineStatus, Event, TabName, 1
+        putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
@@ -140,6 +140,14 @@ IF (TIBTOF1 NE '' OR $
         status_text = '   -Please provide a TOF Channel #1'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -154,8 +162,16 @@ IF (TIBTOF1 NE '' OR $
         status_text = '   -Please provide a TOF Channel #2'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
-            putInfoInCommandLineStatus, Event, TabName,1
-        ENDIF 
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
         ++tab3
@@ -168,6 +184,14 @@ IF (TIBTOF1 NE '' OR $
         status_text = '   -Please provide a TOF Channel #3'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -182,8 +206,16 @@ IF (TIBTOF1 NE '' OR $
         status_text = '   -Please provide a TOF Channel #4'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
-        ENDIF 
+        ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
         ++tab3
@@ -204,6 +236,14 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
         status_text += ' Sample Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -220,6 +260,14 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
         status_text += ' Sample Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -242,6 +290,14 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
         status_text += ' Background Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -258,6 +314,14 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
         status_text += ' Background Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -280,6 +344,14 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
         status_text += ' Normalization Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -296,6 +368,14 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
         status_text += ' Normalization Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -318,6 +398,14 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
         status_text += ' Empty Can Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -334,6 +422,14 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
         status_text += ' Empty Can Data'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab3 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -363,6 +459,13 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Slope Parameter Value'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -378,6 +481,13 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Slope Parameter Error'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -399,6 +509,13 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Offset Parameter Value'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -414,6 +531,13 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Offset Parameter Error'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -434,6 +558,13 @@ IF (TIBCMin EQ '') THEN BEGIN
     status_text = '   -Please provide a Energy Histogram Axis Min'
     IF (tab4 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
@@ -449,6 +580,13 @@ IF (TIBCMax EQ '') THEN BEGIN
     status_text = '   -Please provide a Energy Histogram Axis Max'
     IF (tab4 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
@@ -464,6 +602,13 @@ IF (TIBCBin EQ '') THEN BEGIN
     status_text = '   -Please provide a Energy Histogram Axis Bin'
     IF (tab4 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab4 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
@@ -483,6 +628,13 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
         status_text = '   -Please provide a Global Instrument Final Wavelength Value'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -498,6 +650,13 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
         status_text = '   -Please provide a Global Instrument Final Wavelength Error'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
@@ -566,6 +725,13 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
             status_text = '   -Please provide a Wavelength Histogram Min Value'
             IF (tab5 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
@@ -581,6 +747,13 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
             status_text = '   -Please provide a Wavelength Histogram Max Value'
             IF (tab5 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
@@ -595,6 +768,13 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
             status_text = '   -Please provide a Wavelength Histogram Bin Width Value'
             IF (tab5 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab5 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
