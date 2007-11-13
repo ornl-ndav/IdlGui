@@ -13,18 +13,18 @@ RDBbase = { size  : [5,25,500,40],$
                       uname : 'rdbbase_bank_button',$
                       value : 'Bank 1'},$
             list : ['Bank 1 ','Bank 2 ']}
-            
+
 ;//////////////////////
 ;Run McStas NeXus file/
 ;//////////////////////
-yoff = 50;35
+yoff = 50             
 RMcNFBase = { size : [RDBbase.size[0],$
                       RDBbase.size[1]+yoff,$
                       200,$
                       RDBbase.size[3]],$
               button : { uname : 'rmcnf_button',$
                          value : '',$
-                       list : ['Run McStas NeXus Files']}}
+                         list : ['Run McStas NeXus Files']}}
 
 ;////////
 ;Verbose/

@@ -117,7 +117,6 @@ TIBCfBDBase = { size : [TIBCfBDframe.size[0]+XYoff9[0],$
                 button : { uname : 'tibc_for_bd_button',$
                            list : ['Time-Independent Background Constant for Background Data'],$
                            value : 0}}
-
 XYoff10 = [10,25]
 TIBCfBDvalueLabel = { size : [TIBCfBDframe.size[0]+XYoff10[0],$
                               TIBCfBDframe.size[1]+XYoff10[1]],$
@@ -159,29 +158,34 @@ TIBCfNDBase = { size : [TIBCfNDframe.size[0]+XYoff9[0],$
                         385,$
                         30],$
                 button : { uname : 'tibc_for_nd_button',$
-                           list : ['Time-Independent Background Constant for Normalization Data']}}
+                           list : ['Time-Independent Background Constant for Normalization Data'],$
+                           value : 0}}
 
 XYoff10 = [10,25]
 TIBCfNDvalueLabel = { size : [TIBCfNDframe.size[0]+XYoff10[0],$
                               TIBCfNDframe.size[1]+XYoff10[1]],$
                       value : 'Value:',$
-                      uname : 'tibc_for_nd_value_text_label'}
+                      uname : 'tibc_for_nd_value_text_label',$
+                      sensitive : TIBCfNDBase.button.value}
 XYoff11 = [50,-5]
 TIBCfNDvalueText  = { size : [TIBCfNDvalueLabel.size[0]+XYoff11[0],$
                               TIBCfNDvaluelabel.size[1]+XYoff11[1],$
                               100,30],$
-                      uname : 'tibc_for_nd_value_text'}
+                      uname : 'tibc_for_nd_value_text',$
+                      sensitive : TIBCfNDBase.button.value}
 
 XYoff12 = [200,0]
 TIBCfNDerrorLabel = { size : [TIBCfNDvalueLabel.size[0]+XYoff12[0],$
                               TIBCfNDvalueLabel.size[1]+XYoff12[1]],$
                       value : 'Error:',$
-                      uname : 'tibc_for_nd_error_text_label'}
+                      uname : 'tibc_for_nd_error_text_label',$
+                      sensitive : TIBCfNDBase.button.value}
 XYoff13 = [50,-5]
 TIBCfNDerrorText  = { size : [TIBCfNDerrorLabel.size[0]+XYoff13[0],$
                               TIBCfNDerrorlabel.size[1]+XYoff13[1],$
                               100,30],$
-                      uname : 'tibc_for_nd_error_text'}
+                      uname : 'tibc_for_nd_error_text',$
+                      sensitive : TIBCfNDBase.button.value}
 
 ;////////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Empty Can Data/
@@ -198,29 +202,34 @@ TIBCfECDBase = { size : [TIBCfECDframe.size[0]+XYoff9[0],$
                         375,$
                         30],$
                 button : { uname : 'tibc_for_ecd_button',$
-                           list : ['Time-Independent Background Constant for Empty Can Data']}}
+                           list : ['Time-Independent Background Constant for Empty Can Data'],$
+                           value : 0}}
 
 XYoff10 = [10,25]
 TIBCfECDvalueLabel = { size : [TIBCfECDframe.size[0]+XYoff10[0],$
                                TIBCfECDframe.size[1]+XYoff10[1]],$
                        value : 'Value:',$
-                       uname : 'tibc_for_ecd_value_text_label'}
+                       uname : 'tibc_for_ecd_value_text_label',$
+                       sensitive : TIBCfECDBase.button.value}
 XYoff11 = [50,-5]
 TIBCfECDvalueText  = { size : [TIBCfECDvalueLabel.size[0]+XYoff11[0],$
                               TIBCfECDvaluelabel.size[1]+XYoff11[1],$
-                              100,30],$
-                      uname : 'tibc_for_ecd_value_text'}
+                               100,30],$
+                       uname : 'tibc_for_ecd_value_text',$
+                       sensitive : TIBCfECDBase.button.value}
 
 XYoff12 = [200,0]
 TIBCfECDerrorLabel = { size : [TIBCfECDvalueLabel.size[0]+XYoff12[0],$
                                TIBCfECDvalueLabel.size[1]+XYoff12[1]],$
                        value : 'Error:',$
-                       uname : 'tibc_for_ecd_error_text_label'}
+                       uname : 'tibc_for_ecd_error_text_label',$
+                       sensitive : TIBCfECDBase.button.value}
 XYoff13 = [50,-5]
 TIBCfECDerrorText  = { size : [TIBCfECDerrorLabel.size[0]+XYoff13[0],$
                               TIBCfECDerrorlabel.size[1]+XYoff13[1],$
                               100,30],$
-                      uname : 'tibc_for_ecd_error_text'}
+                      uname : 'tibc_for_ecd_error_text',$
+                       sensitive : TIBCfECDBase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -444,10 +453,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab3_base,$
-                     XOFFSET = TIBCfNDvalueLabel.size[0],$
-                     YOFFSET = TIBCfNDvalueLabel.size[1],$
-                     VALUE   = TIBCfNDvalueLabel.value,$
-                     UNAME   = TIBCfNDvalueLabel.uname)
+                     XOFFSET   = TIBCfNDvalueLabel.size[0],$
+                     YOFFSET   = TIBCfNDvalueLabel.size[1],$
+                     VALUE     = TIBCfNDvalueLabel.value,$
+                     UNAME     = TIBCfNDvalueLabel.uname,$
+                     SENSITIVE = TIBCfNDbase.button.value)
 
 text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TIBCfNDvalueText.size[0],$
@@ -455,14 +465,16 @@ text = WIDGET_TEXT(tab3_base,$
                    SCR_XSIZE = TIBCfNDvalueText.size[2],$
                    SCR_YSIZE = TIBCfNDvalueText.size[3],$
                    UNAME     = TIBCfNDvalueText.uname,$
+                   SENSITIVE = TIBCfNDbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
-                     XOFFSET = TIBCfNDerrorLabel.size[0],$
-                     YOFFSET = TIBCfNDerrorLabel.size[1],$
-                     VALUE   = TIBCfNDerrorLabel.value,$
-                     UNAME   = TIBCfNDerrorLabel.uname)
+                     XOFFSET   = TIBCfNDerrorLabel.size[0],$
+                     YOFFSET   = TIBCfNDerrorLabel.size[1],$
+                     VALUE     = TIBCfNDerrorLabel.value,$
+                     UNAME     = TIBCfNDerrorLabel.uname,$
+                     SENSITIVE = TIBCfNDbase.button.value)
 
 text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TIBCfNDerrorText.size[0],$
@@ -470,6 +482,7 @@ text = WIDGET_TEXT(tab3_base,$
                    SCR_XSIZE = TIBCfNDerrorText.size[2],$
                    SCR_YSIZE = TIBCfNDerrorText.size[3],$
                    UNAME     = TIBCfNDerrorText.uname,$
+                   SENSITIVE = TIBCfNDbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
@@ -499,10 +512,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab3_base,$
-                     XOFFSET = TIBCfECDvalueLabel.size[0],$
-                     YOFFSET = TIBCfECDvalueLabel.size[1],$
-                     VALUE   = TIBCfECDvalueLabel.value,$
-                     UNAME   = TIBCfECDvalueLabel.uname)
+                     XOFFSET   = TIBCfECDvalueLabel.size[0],$
+                     YOFFSET   = TIBCfECDvalueLabel.size[1],$
+                     VALUE     = TIBCfECDvalueLabel.value,$
+                     UNAME     = TIBCfECDvalueLabel.uname,$
+                     SENSITIVE = TIBCfECDbase.button.value)
 
 text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TIBCfECDvalueText.size[0],$
@@ -510,14 +524,16 @@ text = WIDGET_TEXT(tab3_base,$
                    SCR_XSIZE = TIBCfECDvalueText.size[2],$
                    SCR_YSIZE = TIBCfECDvalueText.size[3],$
                    UNAME     = TIBCfECDvalueText.uname,$
+                   SENSITIVE = TIBCfECDbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
-                     XOFFSET = TIBCfECDerrorLabel.size[0],$
-                     YOFFSET = TIBCfECDerrorLabel.size[1],$
-                     VALUE   = TIBCfECDerrorLabel.value,$
-                     UNAME   = TIBCfECDerrorLabel.uname)
+                     XOFFSET   = TIBCfECDerrorLabel.size[0],$
+                     YOFFSET   = TIBCfECDerrorLabel.size[1],$
+                     VALUE     = TIBCfECDerrorLabel.value,$
+                     UNAME     = TIBCfECDerrorLabel.uname,$
+                     SENSITIVE = TIBCfECDbase.button.value)
 
 text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TIBCfECDerrorText.size[0],$
@@ -525,6 +541,7 @@ text = WIDGET_TEXT(tab3_base,$
                    SCR_XSIZE = TIBCfECDerrorText.size[2],$
                    SCR_YSIZE = TIBCfECDerrorText.size[3],$
                    UNAME     = TIBCfECDerrorText.uname,$
+                   SENSITIVE = TIBCfECDbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
