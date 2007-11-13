@@ -10,19 +10,23 @@ cmd = 'amorphous_reduction ' ;name of function to call
 
 ;****TAB1****
 
+TabName = 'Tab#1 - INPUT DATA SETUP'
+tab1    = 0
 ;get Raw Sample Data Files
 RSDFiles = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
 IF (RSDFiles NE '') THEN BEGIN
     cmd += ' ' + strcompress(RSDFiles,/remove_all)
     IF (StatusMessage EQ 0) THEN BEGIN
-    putInfoInCommandLineStatus, Event, '', 0
+        putInfoInCommandLineStatus, Event, '', 0
     ENDIF
 ENDIF ELSE BEGIN
     cmd += ' ?'
-    status_text = '- Please provide at least one Raw Sample Data File in -Input Data Setup-'
+    putInfoInCommandLineStatus, Event, TabName, 0
+    status_text = '   -Please provide at least one Raw Sample Data File'
     status_text += ' (Format example: /SNS/BSS/2007_1_2_SCI/1/2454/NeXus/BSS_2454.nxs,/SNS/BSS/2007_1_2_SCI/1/2455/NeXus/BSS_2455.nxs)'
-    putInfoInCommandLineStatus, Event, status_text, 0
+    putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
+    ++tab1
 ENDELSE
 
 ;get Background Data File
@@ -49,18 +53,17 @@ cmd += ' --roi-file='
 IF (PRoIFile NE '') THEN BEGIN
     cmd += strcompress(PRoIFile,/remove_all)
     IF (StatusMessage EQ 0) THEN BEGIN
-    putInfoInCommandLineStatus, Event, '', 0
+        putInfoInCommandLineStatus, Event, '', 0
     ENDIF
 ENDIF ELSE BEGIN
     cmd += '?'
-    status_text = '- Please provide a Pixel Region of Interest File in -Input Data Setup-'
-    IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-    ENDIF ELSE BEGIN
-        append = 0
-    ENDELSE
-    putInfoInCommandLineStatus, Event, status_text, append
+    status_text = '   -Please provide a Pixel Region of Interest File'
+    IF (tab1 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
+    ++tab1
 ENDELSE
 
 ;get Alternate Instrument Geometry
@@ -76,6 +79,8 @@ IF(OFile NE '') THEN BEGIN
 ENDIF
 
 ;****TAB2****
+
+TabName = 'Tab#2 - PROCESS SETUP'
 
 ;get Run McStas NeXus Files status
 IF (isButtonSelected(Event,'rmcnf_button')) THEN BEGIN
@@ -116,6 +121,8 @@ ENDIF
 
 ;****TAB3****
 
+TabName = 'Tab#3 - TIME-INDEPENDENT BACKGROUND'
+tab3    = 0
 ;get Time-Independent Background TOF channels
 TIBTOF1 = getTextFieldValue(Event,'tibtof_channel1_text')
 TIBTOF2 = getTextFieldValue(Event,'tibtof_channel2_text')
@@ -130,56 +137,56 @@ IF (TIBTOF1 NE '' OR $
 
     IF (TIBTOF1 EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a TOF Channel #1 in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a TOF Channel #1'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBTOF1,/remove_all)
     ENDELSE
 
     IF (TIBTOF2 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a TOF Channel #2 in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a TOF Channel #2'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName,1
+        ENDIF 
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF2,/remove_all)
     ENDELSE
 
     IF (TIBTOF3 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a TOF Channel #3 in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a TOF Channel #3'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF3,/remove_all)
     ENDELSE
 
     IF (TIBTOF4 EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a TOF Channel #4 in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a TOF Channel #4'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF 
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBTOF4,/remove_all)
     ENDELSE
@@ -193,15 +200,15 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_sd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Independent Background Constant value for' 
-        status_text += ' Sample Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant value for' 
+        status_text += ' Sample Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -209,15 +216,15 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_sd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Independent Background Constant error for' 
-        status_text += ' Sample Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text += ' Sample Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -231,15 +238,15 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_bd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Independent Background Constant value for' 
-        status_text += ' Background Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant value for' 
+        status_text += ' Background Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -247,15 +254,15 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_bd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Independent Background Constant error for' 
-        status_text += ' Background Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text += ' Background Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -269,15 +276,15 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_nd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Independent Background Constant value for'
-        status_text += ' Normalization Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant value for'
+        status_text += ' Normalization Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -285,15 +292,15 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_nd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Independent Background Constant error for' 
-        status_text += ' Normalization Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text += ' Normalization Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -307,15 +314,15 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Independent Background Constant value for'
-        status_text += ' Empty Can Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant value for'
+        status_text += ' Empty Can Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -323,22 +330,28 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Independent Background Constant error for' 
-        status_text += ' Empty Can Data in -Time Independent Background-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text += ' Empty Can Data'
+        IF (tab3 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab3
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
 
 ENDIF
 
+;add a white space
+putInfoInCommandLineStatus, Event, '', 1
+
 ;*************TAB4*****************
+
+TabName = 'Tab#4 - DATA CONTROL'
+tab4    = 0
 
 ;get Time Zero Slope Parameter
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
@@ -347,15 +360,14 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tzsp_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Zero Slope Parameter Value in' 
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Zero Slope Parameter Value'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -363,15 +375,14 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tzsp_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Zero Slope Parameter Error in' 
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Zero Slope Parameter Error'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -385,15 +396,14 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tzop_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Time Zero Offset Parameter Value in' 
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Zero Offset Parameter Value'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -401,15 +411,14 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tzop_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Time Zero Offset Parameter Error in' 
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Time Zero Offset Parameter Error'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -422,15 +431,14 @@ cmd += ' --energy-bins='
 TIBCMin = getTextFieldValue(Event,'eha_min_text')
 IF (TIBCMin EQ '') THEN BEGIN
     cmd += '?'
-    status_text = '- Please provide a Energy Histogram Axis Min in ' 
-    status_text += ' -Data Control-'
-    IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-    ENDIF ELSE BEGIN
-        append = 0
-    ENDELSE
-    putInfoInCommandLineStatus, Event, status_text, append
+    status_text = '   -Please provide a Energy Histogram Axis Min'
+    IF (tab4 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
+    ++tab4
 ENDIF ELSE BEGIN
     cmd += strcompress(TIBCMin,/remove_all)
 ENDELSE
@@ -438,15 +446,14 @@ ENDELSE
 TIBCMax = getTextFieldValue(Event,'eha_max_text')
 IF (TIBCMax EQ '') THEN BEGIN
     cmd += ',?'
-    status_text = '- Please provide a Energy Histogram Axis Max in '
-    status_text += ' -Data Control-'
-    IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-    ENDIF ELSE BEGIN
-        append = 0
-    ENDELSE
-    putInfoInCommandLineStatus, Event, status_text, append
+    status_text = '   -Please provide a Energy Histogram Axis Max'
+    IF (tab4 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
+    ++tab4
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCMax,/remove_all)
 ENDELSE
@@ -454,15 +461,14 @@ ENDELSE
 TIBCBin = getTextFieldValue(Event,'eha_bin_text')
 IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
-    status_text = '- Please provide a Energy Histogram Axis Bin in '
-    status_text += ' -Data Control-'
-    IF (StatusMessage GT 0) THEN BEGIN
-        append = 1
-    ENDIF ELSE BEGIN
-        append = 0
-    ENDELSE
-    putInfoInCommandLineStatus, Event, status_text, append
+    status_text = '   -Please provide a Energy Histogram Axis Bin'
+    IF (tab4 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
+    ++tab4
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
@@ -474,15 +480,14 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'gifw_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '- Please provide a Global Instrument Final Wavelength Value in' 
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Global Instrument Final Wavelength Value'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -490,22 +495,27 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'gifw_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '- Please provide a Global Instrument Final Wavelength Error in '
-        status_text += ' -Data Control-'
-        IF (StatusMessage GT 0) THEN BEGIN
-            append = 1
-        ENDIF ELSE BEGIN
-            append = 0
-        ENDELSE
-        putInfoInCommandLineStatus, Event, status_text, append
+        status_text = '   -Please provide a Global Instrument Final Wavelength Error'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
+        ++tab4
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
 
 ENDIF
 
+;add a white space
+putInfoInCommandLineStatus, Event, '', 1
+
 ;************TAB5******************
+
+TabName = 'Tab#5 - INTERMEDIATE OUTPUT'
+tab5    = 0
 
 ;Write all Intermediate Output
 IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
@@ -553,15 +563,14 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
         
         IF (WAmin EQ '') THEN BEGIN
             cmd += '?'
-            status_text = '- Please provide a Wavelength Histogram Min Value in ' 
-            status_text += ' -Intermediate Output-'
-            IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-            ENDIF ELSE BEGIN
-                append = 0
-            ENDELSE
-            putInfoInCommandLineStatus, Event, status_text, append
+            status_text = '   -Please provide a Wavelength Histogram Min Value'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
+            ++tab5
         ENDIF ELSE BEGIN
             cmd += strcompress(WAmin,/remove_all)
         ENDELSE
@@ -569,30 +578,28 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
         
         IF (WAmax EQ '') THEN BEGIN
             cmd += ',?'
-            status_text = '- Please provide a Wavelength Histogram Max Value in '
-            status_text += ' -Intermediate Output-'
-            IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-            ENDIF ELSE BEGIN
-                append = 0
-            ENDELSE
-            putInfoInCommandLineStatus, Event, status_text, append
+            status_text = '   -Please provide a Wavelength Histogram Max Value'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
+            ++tab5
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WAmax,/remove_all)
         ENDELSE
         
         IF (WABwidth EQ '') THEN BEGIN
             cmd += ',?'
-            status_text = '- Please provide a Wavelength Histogram Bin Width Value in '
-            status_text += ' -Intermediate Output-'
-            IF (StatusMessage GT 0) THEN BEGIN
-                append = 1
-            ENDIF ELSE BEGIN
-                append = 0
-            ENDELSE
-            putInfoInCommandLineStatus, Event, status_text, append
+            status_text = '   -Please provide a Wavelength Histogram Bin Width Value'
+            IF (tab5 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
+            ++tab5
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WABwidth,/remove_all)
         ENDELSE
