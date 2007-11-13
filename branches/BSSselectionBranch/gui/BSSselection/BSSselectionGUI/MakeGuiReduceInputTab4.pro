@@ -92,17 +92,17 @@ TZOPerrorText  = { size : [TZOPerrorLabel.size[0]+XYoff5[0],$
 ;Energy Histogram Axis (mcro-eV)/
 ;////////////////////////////////
 EHAframe = { size : [TZOPframe.size[0],$
-                      TZOPframe.size[1]+yoff,$
+                     TZOPframe.size[1]+yoff,$
                      TZOPframe.size[2:3]],$
              frame : TZSPframe.frame}
-XYoff1 = [10,-14]
+XYoff1 = [10,-8]
 EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
                     EHaframe.size[1]+XYoff1[1],$
-                    225,$
-                    30],$
+                    205,$
+                    25],$
             button : { uname : 'eha_button',$
-                       list : ['Energy Histogram Axis (micro-eV)'],$
-                       value : 0}}
+                       list : [' Energy Histogram Axis (micro-eV)'],$
+                       value : 1}}
 
 XYoff2 = [10,25]
 EHAminLabel = { size : [EHAframe.size[0]+XYoff2[0],$
@@ -326,13 +326,10 @@ base = WIDGET_BASE(tab4_base,$
                    SCR_XSIZE = EHAbase.size[2],$
                    SCR_YSIZE = EHAbase.size[3])
 
-group = CW_BGROUP(base,$
-                  EHAbase.button.list,$
-                  UNAME      = EHAbase.button.uname,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1,$
-                  /NONEXCLUSIVE)
-
+label = WIDGET_LABEL(base,$
+                     VALUE = EHAbase.button.list[0],$
+                     UNAME = EHAbase.button.uname)
+                     
 label = WIDGET_LABEL(tab4_base,$
                      XOFFSET   = EHAminLabel.size[0],$
                      YOFFSET   = EHAminLabel.size[1],$

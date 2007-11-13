@@ -513,54 +513,67 @@ CASE Event.id OF
 ;tab4
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin
         BSSselection_Reduce_tzsp_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_value_text'): begin
         BSSselection_Reduce_tzsp_value_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_error_text'): begin
         BSSselection_Reduce_tzsp_error_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tzop_button'): begin
         BSSselection_Reduce_tzop_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tzop_value_text'): begin
         BSSselection_Reduce_tzop_value_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='tzop_error_text'): begin
         BSSselection_Reduce_tzop_error_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='eha_button'): begin
         BSSselection_Reduce_eha_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='eha_min_text'): begin
         BSSselection_Reduce_eha_min_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='eha_max_text'): begin
         BSSselection_Reduce_eha_max_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='eha_bin_text'): begin
         BSSselection_Reduce_eha_bin_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='gifw_button'): begin
         BSSselection_Reduce_gifw_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='gifw_value_text'): begin
         BSSselection_Reduce_gifw_value_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='gifw_error_text'): begin
         BSSselection_Reduce_gifw_error_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
 
 ;tab5

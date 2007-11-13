@@ -224,7 +224,6 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
 
 ENDIF
 
-
 ;get Time-independent Background Constant for Background Data
 IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     cmd += ' --tib-back-const='
@@ -262,7 +261,6 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     ENDELSE
 
 ENDIF
-
 
 ;get Time-independent Background Constant for Normalization Data
 IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
@@ -302,7 +300,6 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
 
 ENDIF
 
-
 ;get Time-independent Background Constant for Empty Can Data
 IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     cmd += ' --tib-ecan-const='
@@ -341,7 +338,172 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
 
 ENDIF
 
+;*************TAB4*****************
 
+;get Time Zero Slope Parameter
+IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
+    cmd += ' --time-zero-slope='
+
+    TIBCV = getTextFieldValue(Event,'tzsp_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Zero Slope Parameter Value in' 
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tzsp_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Zero Slope Parameter Error in' 
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+;get Time Zero Offset Parameter
+IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
+    cmd += ' --time-zero-offset='
+
+    TIBCV = getTextFieldValue(Event,'tzop_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Zero Offset Parameter Value in' 
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tzop_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Zero Offset Parameter Error in' 
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+;get Energy Histogram Axis
+cmd += ' --energy-bins='
+
+TIBCMin = getTextFieldValue(Event,'eha_min_text')
+IF (TIBCMin EQ '') THEN BEGIN
+    cmd += '?'
+    status_text = '- Please provide a Energy Histogram Axis Min in ' 
+    status_text += ' -Data Control-'
+    IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+    ENDIF ELSE BEGIN
+        append = 0
+    ENDELSE
+    putInfoInCommandLineStatus, Event, status_text, append
+    StatusMessage += 1
+ENDIF ELSE BEGIN
+    cmd += strcompress(TIBCMin,/remove_all)
+ENDELSE
+
+TIBCMax = getTextFieldValue(Event,'eha_max_text')
+IF (TIBCMax EQ '') THEN BEGIN
+    cmd += ',?'
+    status_text = '- Please provide a Energy Histogram Axis Max in '
+    status_text += ' -Data Control-'
+    IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+    ENDIF ELSE BEGIN
+        append = 0
+    ENDELSE
+    putInfoInCommandLineStatus, Event, status_text, append
+    StatusMessage += 1
+ENDIF ELSE BEGIN
+    cmd += ',' + strcompress(TIBCMax,/remove_all)
+ENDELSE
+
+TIBCBin = getTextFieldValue(Event,'eha_bin_text')
+IF (TIBCBin EQ '') THEN BEGIN
+    cmd += ',?'
+    status_text = '- Please provide a Energy Histogram Axis Bin in '
+    status_text += ' -Data Control-'
+    IF (StatusMessage GT 0) THEN BEGIN
+        append = 1
+    ENDIF ELSE BEGIN
+        append = 0
+    ENDELSE
+    putInfoInCommandLineStatus, Event, status_text, append
+    StatusMessage += 1
+ENDIF ELSE BEGIN
+    cmd += ',' + strcompress(TIBCBin,/remove_all)
+ENDELSE
+
+;get Global Instrument Final Wavelength
+IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
+    cmd += ' --final-wavelength='
+
+    TIBCV = getTextFieldValue(Event,'gifw_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Global Instrument Final Wavelength Value in' 
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'gifw_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Global Instrument Final Wavelength Error in '
+        status_text += ' -Data Control-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
 
 
 
