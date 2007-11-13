@@ -16,27 +16,34 @@ TZSPbase = { size : [TZSPframe.size[0]+XYoff1[0],$
                      330,$
                      30],$
              button : { uname : 'tzsp_button',$
-                        list : ['Time Zero Slope Parameter (Angstroms/microSeconds)']}}
+                        list : ['Time Zero Slope Parameter (Angstroms/microSeconds)'],$
+                        value : 0}}
 
 XYoff2 = [10,25]
 TZSPvalueLabel = { size : [TZSPframe.size[0]+XYoff2[0],$
                            TZSPframe.size[1]+XYoff2[1]],$
-                      value : 'Value:'}
+                   value : 'Value:',$
+                   uname : 'tzsp_value_text_label',$
+                   sensitive : TZSPbase.button.value}
 XYoff3 = [50,-5]
 TZSPvalueText  = { size : [TZSPvalueLabel.size[0]+XYoff3[0],$
                            TZSPvaluelabel.size[1]+XYoff3[1],$
                            100,30],$
-                   uname : 'tzsp_value_text'}
+                   uname : 'tzsp_value_text',$
+                   sensitive : TZSPbase.button.value}
 
 XYoff4 = [200,0]
 TZSPerrorLabel = { size : [TZSPvalueLabel.size[0]+XYoff4[0],$
                            TZSPvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:'}
+                   value : 'Error:',$
+                   uname : 'tzsp_error_text_label',$
+                   sensitive : TZSPbase.button.value}
 XYoff5 = [50,-5]
 TZSPerrorText  = { size : [TZSPerrorLabel.size[0]+XYoff5[0],$
                            TZSPerrorlabel.size[1]+XYoff5[1],$
                            100,30],$
-                   uname : 'tzsp_error_text'}
+                   uname : 'tzsp_error_text',$
+                   sensitive : TZSPbase.button.value}
 
 ;//////////////////////////////////////////
 ;Time Zero Offset Parameter (microseconds)/
@@ -52,27 +59,34 @@ TZOPbase = { size : [TZOPframe.size[0]+XYoff1[0],$
                      260,$
                      30],$
              button : { uname : 'tzop_button',$
-                        list : ['Time Zero Offset Parameter (Angstroms)']}}
+                        list : ['Time Zero Offset Parameter (Angstroms)'],$
+                        value : 0}}
 
 XYoff2 = [10,25]
 TZOPvalueLabel = { size : [TZOPframe.size[0]+XYoff2[0],$
                            TZOPframe.size[1]+XYoff2[1]],$
-                      value : 'Value:'}
+                   value : 'Value:',$
+                   uname : 'tzop_value_text_label',$
+                   sensitive : TZOPbase.button.value}
 XYoff3 = [50,-5]
 TZOPvalueText  = { size : [TZOPvalueLabel.size[0]+XYoff3[0],$
                            TZOPvaluelabel.size[1]+XYoff3[1],$
                            100,30],$
-                   uname : 'tzop_value_text'}
+                   uname : 'tzop_value_text',$
+                   sensitive : TZOPbase.button.value}
 
 XYoff4 = [200,0]
 TZOPerrorLabel = { size : [TZOPvalueLabel.size[0]+XYoff4[0],$
                            TZOPvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:'}
+                   value : 'Error:',$
+                   uname : 'tzop_error_text_label',$
+                   sensitive : TZOPbase.button.value}
 XYoff5 = [50,-5]
 TZOPerrorText  = { size : [TZOPerrorLabel.size[0]+XYoff5[0],$
                            TZOPerrorlabel.size[1]+XYoff5[1],$
                            100,30],$
-                   uname : 'tzop_error_text'}
+                   uname : 'tzop_error_text',$
+                   sensitive : TZOPbase.button.value}
 
 ;////////////////////////////////
 ;Energy Histogram Axis (mcro-eV)/
@@ -87,37 +101,47 @@ EHAbase = { size : [EHAframe.size[0]+XYoff1[0],$
                     225,$
                     30],$
             button : { uname : 'eha_button',$
-                       list : ['Energy Histogram Axis (micro-eV)']}}
+                       list : ['Energy Histogram Axis (micro-eV)'],$
+                       value : 0}}
 
 XYoff2 = [10,25]
 EHAminLabel = { size : [EHAframe.size[0]+XYoff2[0],$
                         EHAframe.size[1]+XYoff2[1]],$
-                value : 'Min:'}
+                value : 'Min:',$
+                uname : 'eha_min_text_label',$
+                sensitive : EHAbase.button.value}
 XYoff3 = [50,-5]
 EHAminText  = { size : [EHAminLabel.size[0]+XYoff3[0],$
                         EHAminlabel.size[1]+XYoff3[1],$
                           100,30],$
-                uname : 'eha_min_text'}
+                uname : 'eha_min_text',$
+                sensitive : EHAbase.button.value}
 
 XYoff4 = [200,0]
 EHAmaxLabel = { size : [EHAminLabel.size[0]+XYoff4[0],$
                         EHAminLabel.size[1]+XYoff4[1]],$
-                value : 'Max:'}
+                value : 'Max:',$
+                uname : 'eha_max_text_label',$
+                sensitive : EHAbase.button.value}
 XYoff5 = [50,-5]
 EHAmaxText  = { size : [EHAmaxLabel.size[0]+XYoff5[0],$
                         EHAmaxLabel.size[1]+XYoff5[1],$
                         100,30],$
-                uname : 'eha_max_text'}
+                uname : 'eha_max_text',$
+                sensitive : EHAbase.button.value}
 
 XYoff4 = [200,0]
 EHAbinLabel = { size : [EHAmaxLabel.size[0]+XYoff4[0],$
                         EHAmaxLabel.size[1]+XYoff4[1]],$
-                value : 'Bin Width:'}
+                value : 'Bin Width:',$
+                uname : 'eha_bin_text_label',$
+                sensitive : EHAbase.button.value}
 XYoff5 = [85,-5]
 EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
                         EHAbinLabel.size[1]+XYoff5[1],$
                         100,30],$
-                uname : 'eha_bin_text'}
+                uname : 'eha_bin_text',$
+                sensitive : EHAbase.button.value}
 ;///////////////////////////////////////////////
 ;Global Instrument Final Wavelength (Angstroms)/
 ;///////////////////////////////////////////////
@@ -131,27 +155,34 @@ GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
                      308,$
                      30],$
              button : { uname : 'gifw_button',$
-                        list : ['Global Instrument Final Wavelength (Angstroms)']}}
+                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
+                        value : 0}}
 
 XYoff2 = [10,25]
 GIFWvalueLabel = { size : [GIFWframe.size[0]+XYoff2[0],$
                           GIFWframe.size[1]+XYoff2[1]],$
-                  value : 'Value:'}
+                   value : 'Value:',$
+                   uname : 'gifw_value_text_label',$
+                   sensitive : GIFWbase.button.value}
 XYoff3 = [50,-5]
 GIFWvalueText  = { size : [GIFWvalueLabel.size[0]+XYoff3[0],$
                           GIFWvaluelabel.size[1]+XYoff3[1],$
                           100,30],$
-                  uname : 'gifw_value_text'}
+                   uname : 'gifw_value_text',$
+                   sensitive : GIFWbase.button.value}
 
 XYoff4 = [200,0]
 GIFWerrorLabel = { size : [GIFWvalueLabel.size[0]+XYoff4[0],$
                           GIFWvalueLabel.size[1]+XYoff4[1]],$
-                  value : 'Error:'}
+                   value : 'Error:',$
+                   uname : 'gifw_error_text_label',$
+                   sensitive : GIFWbase.button.value}
 XYoff5 = [50,-5]
 GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
                           GIFWerrorlabel.size[1]+XYoff5[1],$
-                          100,30],$
-                  uname : 'gifw_error_text'}
+                           100,30],$
+                   uname : 'gifw_error_text',$
+                   sensitive : GIFWbase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -181,9 +212,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = TZSPvalueLabel.size[0],$
-                     YOFFSET = TZSPvalueLabel.size[1],$
-                     VALUE   = TZSPvalueLabel.value)
+                     XOFFSET   = TZSPvalueLabel.size[0],$
+                     YOFFSET   = TZSPvalueLabel.size[1],$
+                     VALUE     = TZSPvalueLabel.value,$
+                     SENSITIVE = TZSPbase.button.value,$
+                     UNAME     = TZSPvalueLabel.uname)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = TZSPvalueText.size[0],$
@@ -191,13 +224,16 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = TZSPvalueText.size[2],$
                    SCR_YSIZE = TZSPvalueText.size[3],$
                    UNAME     = TZSPvalueText.uname,$
+                   SENSITIVE = TZSPbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = TZSPerrorLabel.size[0],$
-                     YOFFSET = TZSPerrorLabel.size[1],$
-                     VALUE   = TZSPerrorLabel.value)
+                     XOFFSET   = TZSPerrorLabel.size[0],$
+                     YOFFSET   = TZSPerrorLabel.size[1],$
+                     VALUE     = TZSPerrorLabel.value,$
+                     UNAME     = TZSPerrorLabel.uname,$
+                     SENSITIVE = TZSPbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = TZSPerrorText.size[0],$
@@ -205,6 +241,7 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = TZSPerrorText.size[2],$
                    SCR_YSIZE = TZSPerrorText.size[3],$
                    UNAME     = TZSPerrorText.uname,$
+                   SENSITIVE = TZSPbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
@@ -234,9 +271,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = TZOPvalueLabel.size[0],$
-                     YOFFSET = TZOPvalueLabel.size[1],$
-                     VALUE   = TZOPvalueLabel.value)
+                     XOFFSET   = TZOPvalueLabel.size[0],$
+                     YOFFSET   = TZOPvalueLabel.size[1],$
+                     VALUE     = TZOPvalueLabel.value,$
+                     UNAME     = TZOPvalueLabel.uname,$
+                     SENSITIVE = TZOPbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = TZOPvalueText.size[0],$
@@ -244,13 +283,16 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = TZOPvalueText.size[2],$
                    SCR_YSIZE = TZOPvalueText.size[3],$
                    UNAME     = TZOPvalueText.uname,$
+                   SENSITIVE = TZOPbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = TZOPerrorLabel.size[0],$
-                     YOFFSET = TZOPerrorLabel.size[1],$
-                     VALUE   = TZOPerrorLabel.value)
+                     XOFFSET   = TZOPerrorLabel.size[0],$
+                     YOFFSET   = TZOPerrorLabel.size[1],$
+                     VALUE     = TZOPerrorLabel.value,$
+                     UNAME     = TZOPerrorLabel.uname,$
+                     SENSITIVE = TZOPbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = TZOPerrorText.size[0],$
@@ -258,6 +300,7 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = TZOPerrorText.size[2],$
                    SCR_YSIZE = TZOPerrorText.size[3],$
                    UNAME     = TZOPerrorText.uname,$
+                   SENSITIVE = TZOPbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
@@ -287,9 +330,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = EHAminLabel.size[0],$
-                     YOFFSET = EHAminLabel.size[1],$
-                     VALUE   = EHAminLabel.value)
+                     XOFFSET   = EHAminLabel.size[0],$
+                     YOFFSET   = EHAminLabel.size[1],$
+                     VALUE     = EHAminLabel.value,$
+                     UNAME     = EHAminLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = EHAminText.size[0],$
@@ -297,13 +342,16 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = EHAminText.size[2],$
                    SCR_YSIZE = EHAminText.size[3],$
                    UNAME     = EHAminText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = EHAmaxLabel.size[0],$
-                     YOFFSET = EHAmaxLabel.size[1],$
-                     VALUE   = EHAmaxLabel.value)
+                     XOFFSET   = EHAmaxLabel.size[0],$
+                     YOFFSET   = EHAmaxLabel.size[1],$
+                     VALUE     = EHAmaxLabel.value,$
+                     UNAME     = EHAmaxLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = EHAmaxText.size[0],$
@@ -311,13 +359,16 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = EHAmaxText.size[2],$
                    SCR_YSIZE = EHAmaxText.size[3],$
                    UNAME     = EHAmaxText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = EHAbinLabel.size[0],$
-                     YOFFSET = EHAbinLabel.size[1],$
-                     VALUE   = EHAbinLabel.value)
+                     XOFFSET   = EHAbinLabel.size[0],$
+                     YOFFSET   = EHAbinLabel.size[1],$
+                     VALUE     = EHAbinLabel.value,$
+                     UNAME     = EHAbinLabel.uname,$
+                     SENSITIVE = EHAbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = EHAbinText.size[0],$
@@ -325,6 +376,7 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = EHAbinText.size[2],$
                    SCR_YSIZE = EHAbinText.size[3],$
                    UNAME     = EHAbinText.uname,$
+                   SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
@@ -354,9 +406,11 @@ group = CW_BGROUP(base,$
                   /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = GIFWvalueLabel.size[0],$
-                     YOFFSET = GIFWvalueLabel.size[1],$
-                     VALUE   = GIFWvalueLabel.value)
+                     XOFFSET   = GIFWvalueLabel.size[0],$
+                     YOFFSET   = GIFWvalueLabel.size[1],$
+                     VALUE     = GIFWvalueLabel.value,$
+                     UNAME     = GIFWvalueLabel.uname,$
+                     SENSITIVE = GIFWbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = GIFWvalueText.size[0],$
@@ -364,13 +418,16 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = GIFWvalueText.size[2],$
                    SCR_YSIZE = GIFWvalueText.size[3],$
                    UNAME     = GIFWvalueText.uname,$
+                   SENSITIVE = GIFWbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
-                     XOFFSET = GIFWerrorLabel.size[0],$
-                     YOFFSET = GIFWerrorLabel.size[1],$
-                     VALUE   = GIFWerrorLabel.value)
+                     XOFFSET   = GIFWerrorLabel.size[0],$
+                     YOFFSET   = GIFWerrorLabel.size[1],$
+                     VALUE     = GIFWerrorLabel.value,$
+                     UNAME     = GIFWerrorLabel.uname,$
+                     SENSITIVE = GIFWbase.button.value)
 
 text = WIDGET_TEXT(tab4_base,$
                    XOFFSET   = GIFWerrorText.size[0],$
@@ -378,6 +435,7 @@ text = WIDGET_TEXT(tab4_base,$
                    SCR_XSIZE = GIFWerrorText.size[2],$
                    SCR_YSIZE = GIFWerrorText.size[3],$
                    UNAME     = GIFWerrorText.uname,$
+                   SENSITIVE = GIFWbase.button.value,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 
@@ -388,9 +446,5 @@ frame  = WIDGET_LABEL(tab4_base,$
                       SCR_YSIZE = GIFWframe.size[3],$
                       FRAME     = GIFWframe.frame,$
                       VALUE     = '')
-
-
-
-
 
 END
