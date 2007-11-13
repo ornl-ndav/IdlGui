@@ -77,10 +77,11 @@ NISWBase = { size : [NMECBase.size[0],$
                      NMECBase.size[1]+yoff+3,$
                      500,$
                      NMECBase.size[3]],$
-             field : { xsize : 10,$
-                       value : '   Normalization Integration Start Wavelength :',$
+             label1 : { size : [0,5],$
+                        value : '   Normalization Integration Start Wavelength :'},$ 
+             field : { size : [290,0,80,30],$
                        uname : 'nisw_field'},$
-             label : { size : [375,10],$
+             label : { size : [375,5],$
                         value : 'Angstroms'}}
 
 
@@ -91,8 +92,9 @@ NIEWBase = { size : [NISWBase.size[0],$
                      NISWBase.size[1]+yoff+3,$
                      500,$
                      NISWBase.size[3]],$
-             field : { xsize : 10,$
-                       value : '   Normalization Integration END Wavelength   :',$
+             label1 : { size : [0,5],$
+                        value : '   Normalization Integration Start Wavelength :'},$ 
+             field : { size : [290,0,80,30],$
                        uname : 'nisE_field'},$
              label : { size : [NISWBase.label.size[0],$
                               NISWBase.label.size[1]],$
@@ -224,20 +226,25 @@ base = WIDGET_BASE(tab2_base,$
                    SCR_YSIZE = NISWBase.size[3])
 
 label = WIDGET_LABEL(base,$
+                     XOFFSET   = NISWBase.label1.size[0],$
+                     YOFFSET   = NISWBase.label1.size[1],$
+                     VALUE     = NISWBase.label1.value)
+
+text = WIDGET_TEXT(base,$
+                   XOFFSET   = NISWBase.field.size[0],$
+                   YOFFSET   = NISWBase.field.size[1],$
+                   SCR_XSIZE = NISWBase.field.size[2],$
+                   SCR_YSIZE = NISWBase.field.size[3],$
+                   UNAME     = NISWBase.field.uname,$
+                   /EDITABLE,$
+                   /ALL_EVENTS)
+
+label = WIDGET_LABEL(base,$
                      XOFFSET = NISWBase.label.size[0],$
                      YOFFSET = NISWBase.label.size[1],$
                      VALUE   = NISWBase.label.value)
 
-text = CW_FIELD(base,$
-                UNAME         = NISWBase.field.uname,$
-                RETURN_EVENTS = 1,$
-                TITLE         = NISWBase.field.value,$
-                ROW           = 1,$
-                XSIZE         = NISWBase.field.xsize,$
-                /FLOAT)
-
-
-
+                   
 ;///////////////////////////////////////////
 ;Normalization Integration END Wavelength/
 ;///////////////////////////////////////////
@@ -248,17 +255,22 @@ base = WIDGET_BASE(tab2_base,$
                    SCR_YSIZE = NIEWBase.size[3])
 
 label = WIDGET_LABEL(base,$
+                     XOFFSET   = NIEWBase.label1.size[0],$
+                     YOFFSET   = NIEWBase.label1.size[1],$
+                     VALUE     = NIEWBase.label1.value)
+
+text = WIDGET_TEXT(base,$
+                   XOFFSET   = NIEWBase.field.size[0],$
+                   YOFFSET   = NIEWBase.field.size[1],$
+                   SCR_XSIZE = NIEWBase.field.size[2],$
+                   SCR_YSIZE = NIEWBase.field.size[3],$
+                   UNAME     = NIEWBase.field.uname,$
+                   /EDITABLE,$
+                   /ALL_EVENTS)
+
+label = WIDGET_LABEL(base,$
                      XOFFSET = NIEWBase.label.size[0],$
                      YOFFSET = NIEWBase.label.size[1],$
                      VALUE   = NIEWBase.label.value)
-
-text = CW_FIELD(base,$
-                UNAME         = NIEWBase.field.uname,$
-                RETURN_EVENTS = 1,$
-                TITLE         = NIEWBase.field.value,$
-                ROW           = 1,$
-                XSIZE         = NIEWBase.field.xsize,$
-                /FLOAT)
-
 
 END

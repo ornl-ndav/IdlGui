@@ -305,6 +305,7 @@ text1 = WIDGET_TEXT(base,$
                     SCR_YSIZE = WHAtext1.size[3],$
                     UNAME     = WHAtext1.uname,$
                     /EDITABLE,$
+                    /ALL_EVENTS,$
                     /ALIGN_LEFT)
                     
 label2 = WIDGET_LABEL(base,$
@@ -319,6 +320,7 @@ text2 = WIDGET_TEXT(base,$
                     SCR_YSIZE = WHAtext2.size[3],$
                     UNAME     = WHAtext2.uname,$
                     /EDITABLE,$
+                    /ALL_EVENTS,$
                     /ALIGN_LEFT)
 
 label3 = WIDGET_LABEL(base,$
@@ -333,6 +335,7 @@ text3 = WIDGET_TEXT(base,$
                     SCR_YSIZE = WHAtext3.size[3],$
                     UNAME     = WHAtext3.uname,$
                     /EDITABLE,$
+                    /ALL_EVENTS,$
                     /ALIGN_LEFT)
 
 END

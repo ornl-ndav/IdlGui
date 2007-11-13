@@ -577,6 +577,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          SCR_XSIZE = OFListOfRuns.size[2],$
                          SCR_YSIZE = OFListOfRuns.size[3],$
                          /ALIGN_LEFT,$
+                         /ALL_EVENTS,$
                          /EDITABLE,$
                          UNAME     = OFListOfRuns.uname)
                        

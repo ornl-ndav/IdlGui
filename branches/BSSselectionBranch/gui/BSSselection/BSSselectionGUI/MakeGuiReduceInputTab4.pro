@@ -226,6 +226,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = TZSPvalueText.uname,$
                    SENSITIVE = TZSPbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
@@ -243,6 +244,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = TZSPerrorText.uname,$
                    SENSITIVE = TZSPbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab4_base,$
@@ -285,6 +287,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = TZOPvalueText.uname,$
                    SENSITIVE = TZOPbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
@@ -302,6 +305,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = TZOPerrorText.uname,$
                    SENSITIVE = TZOPbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab4_base,$
@@ -344,6 +348,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = EHAminText.uname,$
                    SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
@@ -361,6 +366,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = EHAmaxText.uname,$
                    SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
@@ -378,6 +384,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = EHAbinText.uname,$
                    SENSITIVE = EHAbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab4_base,$
@@ -420,6 +427,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = GIFWvalueText.uname,$
                    SENSITIVE = GIFWbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab4_base,$
@@ -437,6 +445,7 @@ text = WIDGET_TEXT(tab4_base,$
                    UNAME     = GIFWerrorText.uname,$
                    SENSITIVE = GIFWbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab4_base,$

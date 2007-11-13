@@ -369,7 +369,7 @@ CASE Event.id OF
     end    
 
     Widget_Info(wWidget, FIND_BY_UNAME='of_list_of_runs_text'): begin
-        ;BSSselection_Reduce_of_list_of_runs_text, Event
+        BSSselection_Reduce_of_list_of_runs_text, Event
     end    
 
 ;tab2

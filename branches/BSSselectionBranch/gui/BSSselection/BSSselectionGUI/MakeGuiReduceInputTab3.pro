@@ -262,6 +262,7 @@ TIBtofText1 = WIDGET_TEXT(tab3_base,$
                           SCR_YSIZE = TIBtofText1.size[3],$
                           UNAME     = TIBtofText1.uname,$
                           /EDITABLE,$
+                          /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
@@ -277,6 +278,7 @@ TIBtofText2 = WIDGET_TEXT(tab3_base,$
                           SCR_YSIZE = TIBtofText2.size[3],$
                           UNAME     = TIBtofText2.uname,$
                           /EDITABLE,$
+                          /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
@@ -292,6 +294,7 @@ TIBtofText3 = WIDGET_TEXT(tab3_base,$
                           SCR_YSIZE = TIBtofText3.size[3],$
                           UNAME     = TIBtofText3.uname,$
                           /EDITABLE,$
+                          /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
@@ -307,6 +310,7 @@ TIBtofText4 = WIDGET_TEXT(tab3_base,$
                           SCR_YSIZE = TIBtofText4.size[3],$
                           UNAME     = TIBtofText4.uname,$
                           /EDITABLE,$
+                          /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 TIBtofFrame = WIDGET_LABEL(tab3_base,$
@@ -349,6 +353,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCFSDvalueText.uname,$
                    SENSITIVE = TIBCFSDvalueText.sensitive,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
@@ -366,6 +371,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCFSDerrorText.uname,$
                    SENSITIVE = TIBCFSDerrorText.sensitive,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab3_base,$
@@ -408,6 +414,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfBDvalueText.uname,$
                    SENSITIVE = TIBCfBDvalueText.sensitive,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
@@ -425,6 +432,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfBDerrorText.uname,$
                    SENSITIVE = TIBCfBDerrorText.sensitive,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab3_base,$
@@ -467,6 +475,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfNDvalueText.uname,$
                    SENSITIVE = TIBCfNDbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
@@ -484,6 +493,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfNDerrorText.uname,$
                    SENSITIVE = TIBCfNDbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab3_base,$
@@ -526,6 +536,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfECDvalueText.uname,$
                    SENSITIVE = TIBCfECDbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 label = WIDGET_LABEL(tab3_base,$
@@ -543,6 +554,7 @@ text = WIDGET_TEXT(tab3_base,$
                    UNAME     = TIBCfECDerrorText.uname,$
                    SENSITIVE = TIBCfECDbase.button.value,$
                    /EDITABLE,$
+                   /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
 frame  = WIDGET_LABEL(tab3_base,$
