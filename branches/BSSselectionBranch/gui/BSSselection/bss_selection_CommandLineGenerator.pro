@@ -540,8 +540,66 @@ ENDIF
 ;Write out Combined Pixel Spectrum After Monitor Normalization
 IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
     cmd += ' --dump-wave-mnorm'
-ENDIF
 
+    WAmin = getTextFieldValue(Event,'wa_min_text')
+    WAmax = getTextFieldValue(Event,'wa_max_text')
+    WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
+
+    IF (WAMIN NE '' OR $
+        WAMAX NE '' OR $
+        WABwidth NE '') THEN BEGIN
+
+        cmd += ' --lambda-bins='
+        
+        IF (WAmin EQ '') THEN BEGIN
+            cmd += '?'
+            status_text = '- Please provide a Wavelength Histogram Min Value in ' 
+            status_text += ' -Intermediate Output-'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInCommandLineStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDIF ELSE BEGIN
+            cmd += strcompress(WAmin,/remove_all)
+        ENDELSE
+        
+        
+        IF (WAmax EQ '') THEN BEGIN
+            cmd += ',?'
+            status_text = '- Please provide a Wavelength Histogram Max Value in '
+            status_text += ' -Intermediate Output-'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInCommandLineStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDIF ELSE BEGIN
+            cmd += ',' + strcompress(WAmax,/remove_all)
+        ENDELSE
+        
+        IF (WABwidth EQ '') THEN BEGIN
+            cmd += ',?'
+            status_text = '- Please provide a Wavelength Histogram Bin Width Value in '
+            status_text += ' -Intermediate Output-'
+            IF (StatusMessage GT 0) THEN BEGIN
+                append = 1
+            ENDIF ELSE BEGIN
+                append = 0
+            ENDELSE
+            putInfoInCommandLineStatus, Event, status_text, append
+            StatusMessage += 1
+        ENDIF ELSE BEGIN
+            cmd += ',' + strcompress(WABwidth,/remove_all)
+        ENDELSE
+        
+    ENDIF
+
+ENDIF
 ;Write out Pixel Initial Energy Spectra
 IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
     cmd += ' --dump-ei'
@@ -553,18 +611,7 @@ IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
 ENDIF
 
 
-
-
-
-
-
-
-
-
-
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
-
-
 
 END

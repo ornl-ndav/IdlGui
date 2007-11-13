@@ -1,5 +1,8 @@
 PRO BSSselection_EnableOrNotFields, Event, type
 
+;Value of button
+ActivateStatus = isButtonSelected(Event,type)
+
 CASE (type) OF
     'tibc_for_sd_button': BEGIN
         text_unames = ['tibc_for_sd_value_text','tibc_for_sd_error_text']
@@ -25,12 +28,13 @@ CASE (type) OF
     'gifw_button': BEGIN
         text_unames = ['gifw_value_text','gifw_error_text']
     END
+    'wocpsamn_button': BEGIN
+        text_unames = ['wa_min_text','wa_max_text','wa_bin_width_text']
+        activate_button, Event, 'wa_label', ActivateStatus
+    END
 ENDCASE
 
 new_text_unames = [text_unames,text_unames + '_label']
-
-;Value of button
-ActivateStatus = isButtonSelected(Event,type)
 
 sz=(size(new_text_unames))(1)
 FOR i=0,(sz-1) DO BEGIN
@@ -38,4 +42,7 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 
 END
+
+
+
 

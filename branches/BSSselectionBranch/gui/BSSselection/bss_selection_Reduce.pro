@@ -262,6 +262,7 @@ END
 
 ;This function is reached by wocpsamn_button
 PRO BSSselection_Reduce_wocpsamn_button, Event
+BSSselection_EnableOrNotFields, Event, 'wocpsamn_button'
 END
 
 ;This function is reached by wopies_button
