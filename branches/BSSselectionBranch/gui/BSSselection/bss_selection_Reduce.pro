@@ -62,12 +62,10 @@ END
 
 ;This function is reached by the proif_text
 PRO BSSselection_Reduce_proif_text, Event
-print, 'in proif_runs'
 END
 
 ;This function is reached by the agi_list_of_runs_text
 PRO BSSselection_Reduce_aig_list_of_runs_text, Event
-print, 'in aig_list_of_runs_text'
 END
 
 ;This function is reached by the of_list_of_runs_text
@@ -112,22 +110,18 @@ END
 
 ;This function is reached by the tibtof_channel1_text
 PRO BSSselection_Reduce_tibtof_channel1_text, Event
-print, 'in tibtof_channel1_text'
 END
 
 ;This function is reached by the tibtof_channel2_text
 PRO BSSselection_Reduce_tibtof_channel2_text, Event
-print, 'in tibtof_channel2_text'
 END
 
 ;This function is reached by the tibtof_channel3_text
 PRO BSSselection_Reduce_tibtof_channel3_text, Event
-print, 'in tibtof_channel3_text'
 END
 
 ;This function is reached by the tibtof_channel4_text
 PRO BSSselection_Reduce_tibtof_channel4_text, Event
-print, 'in tibtof_channel4_text'
 END
 
 ;This function is reached by the tibc_for_sd_button
@@ -137,12 +131,10 @@ END
 
 ;This function is reached by the tibc_for_sd_value_text
 PRO BSSselection_Reduce_tibc_for_sd_value_text, Event
-print, 'in tibc_for_sd_value_text'
 END
 
 ;This function is reached by the tibc_for_sd_error_text
 PRO BSSselection_Reduce_tibc_for_sd_error_text, Event
-print, 'in tibc_for_sd_error_text'
 END
 
 ;This function is reached by the tibc_for_bd_button
@@ -152,12 +144,10 @@ END
 
 ;This function is reached by the tibc_for_bd_value_text
 PRO BSSselection_Reduce_tibc_for_bd_value_text, Event
-print, 'in tibc_for_bd_value_text'
 END
 
 ;This function is reached by the tibc_for_bd_error_text
 PRO BSSselection_Reduce_tibc_for_bd_error_text, Event
-print, 'in tibc_for_bd_error_text'
 END
 
 ;This function is reached by the tibc_for_nd_button
@@ -167,12 +157,10 @@ END
 
 ;This function is reached by the tibc_for_nd_value_text
 PRO BSSselection_Reduce_tibc_for_nd_value_text, Event
-print, 'in tibc_for_nd_value_text'
 END
 
 ;This function is reached by the tibc_for_nd_error_text
 PRO BSSselection_Reduce_tibc_for_nd_error_text, Event
-print, 'in tibc_for_nd_error_text'
 END
 
 ;This function is reduce by the tibc_for_nd_button
@@ -182,12 +170,10 @@ END
 
 ;This function is reduce by the tibc_for_ecd_value_text
 PRO BSSselection_Reduce_tibc_for_ecd_value_text, Event
-print, 'in tibc_for_ecd_value_text'
 END
 
 ;This function is reduce by the tibc_for_ecd_error_text
 PRO BSSselection_Reduce_tibc_for_ecd_error_text, Event
-print, 'in tibc_for_ecd_error_text'
 END
 
 ;****************** TAB 4 *************************

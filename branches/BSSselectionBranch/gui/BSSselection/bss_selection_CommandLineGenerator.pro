@@ -14,6 +14,9 @@ cmd = 'amorphous_reduction ' ;name of function to call
 RSDFiles = getTextFieldValue(Event, 'rsdf_list_of_runs_text')
 IF (RSDFiles NE '') THEN BEGIN
     cmd += ' ' + strcompress(RSDFiles,/remove_all)
+    IF (StatusMessage EQ 0) THEN BEGIN
+    putInfoInCommandLineStatus, Event, '', 0
+    ENDIF
 ENDIF ELSE BEGIN
     cmd += ' ?'
     status_text = '- Please provide at least one Raw Sample Data File in -Input Data Setup-'
@@ -45,6 +48,9 @@ PRoIFile = getTextFieldValue(Event,'proif_text')
 cmd += ' --roi-file='
 IF (PRoIFile NE '') THEN BEGIN
     cmd += strcompress(PRoIFile,/remove_all)
+    IF (StatusMessage EQ 0) THEN BEGIN
+    putInfoInCommandLineStatus, Event, '', 0
+    ENDIF
 ENDIF ELSE BEGIN
     cmd += '?'
     status_text = '- Please provide a Pixel Region of Interest File in -Input Data Setup-'
@@ -107,6 +113,247 @@ NIEW = getTextFieldValue(Event,'nisE_field')
 IF(NIEW NE '') THEN BEGIN
     cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
 ENDIF
+
+;****TAB3****
+
+;get Time-Independent Background TOF channels
+TIBTOF1 = getTextFieldValue(Event,'tibtof_channel1_text')
+TIBTOF2 = getTextFieldValue(Event,'tibtof_channel2_text')
+TIBTOF3 = getTextFieldValue(Event,'tibtof_channel3_text')
+TIBTOF4 = getTextFieldValue(Event,'tibtof_channel4_text')
+IF (TIBTOF1 NE '' OR $
+    TIBTOF2 NE '' OR $
+    TIBTOF3 NE '' OR $
+    TIBTOF4 NE '') THEN BEGIN
+
+    cmd += ' --tib-tofs='
+
+    IF (TIBTOF1 EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a TOF Channel #1 in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBTOF1,/remove_all)
+    ENDELSE
+
+    IF (TIBTOF2 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a TOF Channel #2 in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF2,/remove_all)
+    ENDELSE
+
+    IF (TIBTOF3 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a TOF Channel #3 in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF3,/remove_all)
+    ENDELSE
+
+    IF (TIBTOF4 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a TOF Channel #4 in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF4,/remove_all)
+    ENDELSE
+
+ENDIF
+
+;get Time-independent Background Constant for Sample Data
+IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
+    cmd += ' --tib-data-const='
+
+    TIBCV = getTextFieldValue(Event,'tibc_for_sd_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Independent Background Constant value for' 
+        status_text += ' Sample Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tibc_for_sd_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Independent Background Constant error for' 
+        status_text += ' Sample Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+
+;get Time-independent Background Constant for Background Data
+IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
+    cmd += ' --tib-back-const='
+
+    TIBCV = getTextFieldValue(Event,'tibc_for_bd_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Independent Background Constant value for' 
+        status_text += ' Background Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tibc_for_bd_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Independent Background Constant error for' 
+        status_text += ' Background Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+
+;get Time-independent Background Constant for Normalization Data
+IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
+    cmd += ' --tib-norm-const='
+
+    TIBCV = getTextFieldValue(Event,'tibc_for_nd_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Independent Background Constant value for'
+        status_text += ' Normalization Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tibc_for_nd_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Independent Background Constant error for' 
+        status_text += ' Normalization Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+
+;get Time-independent Background Constant for Empty Can Data
+IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
+    cmd += ' --tib-ecan-const='
+
+    TIBCV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '- Please provide a Time Independent Background Constant value for'
+        status_text += ' Empty Can Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '- Please provide a Time Independent Background Constant error for' 
+        status_text += ' Empty Can Data in -Time Independent Background-'
+        IF (StatusMessage GT 0) THEN BEGIN
+            append = 1
+        ENDIF ELSE BEGIN
+            append = 0
+        ENDELSE
+        putInfoInCommandLineStatus, Event, status_text, append
+        StatusMessage += 1
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
