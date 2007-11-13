@@ -47,6 +47,11 @@ IF (ECDFiles NE '') THEN BEGIN
     cmd += ' --ecan=' + ECDFiles
 ENDIF
 
+;get Direct Scattering Background
+DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
+IF (DSBFiles NE '') THEN BEGIN
+    cmd += ' --dsback=' + DSBFiles
+ENDIF
 
 ;*****TAB2*****
 TabName = 'Tab#2 - INPUT DATA SETUP (2)'
