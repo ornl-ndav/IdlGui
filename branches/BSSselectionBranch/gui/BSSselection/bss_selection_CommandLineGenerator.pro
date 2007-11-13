@@ -505,10 +505,52 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
 
 ENDIF
 
+;************TAB5******************
 
+;Write all Intermediate Output
+IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
+    cmd += ' --dump-all'
+ENDIF
 
+;Write out Calculated Time-Independent Background
+IF (isButtonSelected(Event,'woctib_button')) THEN BEGIN
+    cmd += ' --dump-tib'
+ENDIF
 
+;Write out Pixel Wavelenth Spectra
+IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
+    cmd += ' --dump-wave'
+ENDIF
 
+;Write out Monitor Wavelength Spectrum
+IF (isButtonSelected(Event,'womws_button')) THEN BEGIN
+    cmd += ' --dump-mon-wave'
+ENDIF
+
+;Write out Monitor Efficiency Spectrum
+IF (isButtonSelected(Event,'womes_button')) THEN BEGIN
+    cmd += ' --dump-mon-effc'
+ENDIF
+
+;Write out Rebinned Monitor Spectra
+IF (isButtonSelected(Event,'worms_button')) THEN BEGIN
+    cmd += ' --dump-mon-rebin'
+ENDIF
+
+;Write out Combined Pixel Spectrum After Monitor Normalization
+IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
+    cmd += ' --dump-wave-mnorm'
+ENDIF
+
+;Write out Pixel Initial Energy Spectra
+IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
+    cmd += ' --dump-ei'
+ENDIF
+
+;Write out Pixel Energy Transfer Spectra
+IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
+    cmd += ' --dump-energy'
+ENDIF
 
 
 

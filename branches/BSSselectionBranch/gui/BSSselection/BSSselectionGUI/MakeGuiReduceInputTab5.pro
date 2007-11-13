@@ -37,7 +37,7 @@ WOMWSbase = { size  : [WOPWSbase.size[0], $
                        WOPWSbase.size[1]+yoff, $
                        WOPWSbase.size[2:3]],$
               button : { uname : 'womws_button',$
-                         list : [' Write Out Monitor Wavelenth Spectrum']}}
+                         list : [' Write Out Monitor Wavelength Spectrum']}}
 
 ;//////////////////////////////////////
 ;Write Out Monitor Efficiency Spectrum/

@@ -579,50 +579,62 @@ CASE Event.id OF
 ;tab5
     Widget_Info(wWidget, FIND_BY_UNAME='waio_button'): begin
         BSSselection_Reduce_waio_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='woctib_button'): begin
         BSSselection_Reduce_woctib_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wopws_button'): begin
         BSSselection_Reduce_wopws_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='womws_button'): begin
         BSSselection_Reduce_womws_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='womes_button'): begin
         BSSselection_Reduce_womes_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='worms_button'): begin
         BSSselection_Reduce_worms_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wocpsamn_button'): begin
         BSSselection_Reduce_wocpsamn_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wopies_button'): begin
         BSSselection_Reduce_wopies_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wopets_button'): begin
         BSSselection_Reduce_wopets_button, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wa_min_text'): begin
         BSSselection_Reduce_wa_min_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wa_max_text'): begin
         BSSselection_Reduce_wa_max_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
     Widget_Info(wWidget, FIND_BY_UNAME='wa_bin_width_text'): begin
         BSSselection_Reduce_wa_bin_width_text, Event
+        BSSselection_CommandLineGenerator, Event
     end    
     
 ;LOG_BOOK
