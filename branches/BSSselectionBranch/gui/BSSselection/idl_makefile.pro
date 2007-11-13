@@ -62,6 +62,7 @@ cd, CurrentFolder
 .run bss_selection_Reduce.pro
 .run bss_selection_ReduceTab1.pro
 .run bss_selection_ReduceEnableGui.pro
+.run bss_selection_CommandLineGenerator.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro

@@ -8,6 +8,16 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=strcompress(text,/remove_all),/append
 END
 
+;set the value of the specified uname with text
+PRO putTextFieldValue, event, uname, text, append
+TextFieldId = widget_info(Event.top,find_by_uname=uname)
+if (append) then begin
+    widget_control, TextFieldId, set_value=text,/append
+endif else begin
+    widget_control, TextFieldId, set_value=text
+endelse
+END
+
 ;--------------------------------------------------------------
 
 PRO PutLogBookMessage, Event, Message
@@ -222,4 +232,8 @@ END
 
 PRO putReduceRawSampleDataFile, Event, NexusFullName
 putTextInTextField, Event, 'rsdf_list_of_runs_text', NexusFullName
+END
+
+PRO putInfoInCommandLineStatus, Event, text, append
+putTextFieldValue, event, 'clg_text', text, append
 END

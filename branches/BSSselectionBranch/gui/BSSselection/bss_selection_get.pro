@@ -256,3 +256,8 @@ ENDCASE
 RunNumber = getTextFieldValue(Event, uname)
 RETURN, strcompress(RunNumber,/remove_all)
 END
+
+
+FUNCTION getLabelValue, Event, uname
+RETURN, getTextFieldValue(Event, uname)
+END
