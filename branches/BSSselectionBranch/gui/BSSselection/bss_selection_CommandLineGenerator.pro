@@ -797,8 +797,17 @@ IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
     cmd += ' --dump-energy'
 ENDIF
 
-
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
+
+;validate or not Go data reduction button
+if (StatusMessage NE 0) then begin ;do not activate button
+    activate = 0
+endif else begin
+    activate = 1
+endelse
+
+Activate_button, Event,'submit_button',activate
+
 
 END

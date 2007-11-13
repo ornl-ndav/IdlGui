@@ -34,6 +34,7 @@ SubmitButton = {Size : [0, $
                         ReduceInputTabSettings.size[3]+yoff, $
                         400, $
                         45], $
+                sensitive : 0,$
                 title : 'START DATA REDUCTION', $
                 uname : 'submit_button'}
 
@@ -99,6 +100,7 @@ button = WIDGET_BUTTON(ReduceBase,$
                        SCR_XSIZE = SubmitButton.size[2],$
                        SCR_YSIZE = SubmitButton.size[3],$
                        VALUE     = SubmitButton.title,$
+                       SENSITIVE = SubmitButton.sensitive,$
                        UNAME     = SubmitButton.uname)
 
 
