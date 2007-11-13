@@ -12,6 +12,9 @@ ReduceInputTab = WIDGET_TAB(ReduceBase,$
 ;Make Tab1
 MakeGuiReduceInputTab1, ReduceInputTab, ReduceInputTabSettings
 
+;Make Tab11
+MakeGuiReduceInputTab11, ReduceInputTab, ReduceInputTabSettings
+
 ;Make Tab2
 MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 

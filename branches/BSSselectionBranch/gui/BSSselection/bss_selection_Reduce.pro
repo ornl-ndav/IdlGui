@@ -60,6 +60,24 @@ PRO BSSselection_Reduce_ecdf_list_of_runs_text, Event
 BSSselection_UpdateListOfNexus, Event, 'ecdf'
 END
 
+;This function is reached by the dsb_run_number_cw_field (tab#1)
+PRO BSSselection_Reduce_dsb_run_number_cw_field, Event
+BSSselection_NeXusFullPath, Event, 'dsb'
+END
+
+;This function is reached by the dsb_nexus_cw_field (tab#1)
+PRO BSSselection_Reduce_dsb_nexus_cw_field, Event
+BSSselection_AddNexusFullPath, Event, 'dsb'
+END
+
+;This function is reached by the dsb_list_of_runs_text (tab#1)
+PRO BSSselection_Reduce_dsb_list_of_runs_text, Event
+BSSselection_UpdateListOfNexus, Event, 'dsb'
+END
+
+
+;****************** TAB 11 *************************
+
 ;This function is reached by the proif_text
 PRO BSSselection_Reduce_proif_text, Event
 END

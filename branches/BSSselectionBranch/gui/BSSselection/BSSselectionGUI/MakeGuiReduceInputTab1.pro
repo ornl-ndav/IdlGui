@@ -53,7 +53,7 @@ RSDFListOfRuns = { size : [XYoff[0],$
 ;/////////////////////
 ;Background Data File/
 ;/////////////////////
-yoff = 95
+yoff = 110
 BDFframe     = { size  : [5,RSDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 BDFlabel     = { size  : [BDFframe.size[0]+XYoff[0],$
@@ -92,7 +92,7 @@ BDFListOfRuns = { size : [XYoff[0],$
 ;////////////////////////
 ;Normalization Data File/
 ;////////////////////////
-yoff = 95
+;yoff = 95
 NDFframe     = { size  : [5,BDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 NDFlabel     = { size  : [NDFframe.size[0]+XYoff[0],$
@@ -131,7 +131,7 @@ NDFListOfRuns = { size : [XYoff[0],$
 ;////////////////////
 ;Empty Can Data File/
 ;////////////////////
-yoff = 95
+;yoff = 95
 ECDFframe     = { size  : [5,NDFframe.size[1]+yoff,730,80]}
 XYoff         = [10,-10]
 ECDFlabel     = { size  : [ECDFframe.size[0]+XYoff[0],$
@@ -167,67 +167,46 @@ ECDFListOfRuns = { size : [XYoff[0],$
                           723,30],$
                   uname : 'ecdf_list_of_runs_text'}
 
-;//////////////////////////////
-;Pixel Region-of-interest file/
-;//////////////////////////////
-yoff = 95
-PRoIFframe     = { size  : [5,ECDFframe.size[1]+yoff,730,50]}
+;/////////////////////////////
+;Direct Scattering background/
+;/////////////////////////////
+DSBframe     = { size  : [5, $
+                          ECDFframe.size[1]+yoff, $
+                          730, $
+                          80]}
 XYoff         = [10,-10]
-PRoIFlabel     = { size  : [PRoIFframe.size[0]+XYoff[0],$
-                          PRoIFframe.size[1]+XYoff[1]],$
-                  value : 'Pixel Region of Interest File',$
-                  uname : 'proif_label'}
+DSBlabel     = { size  : [DSBframe.size[0]+XYoff[0],$
+                          DSBframe.size[1]+XYoff[1]],$
+                  value : 'Direct Scattering Background (Sample Data at Baseline T) File',$
+                  uname : 'dsb_label'}
 
-XYoff             = [10,10]
-PRoIFbrowseButton  = { size  : [PRoIFframe.size[0]+XYoff[0],$
-                               PRoIFframe.size[1]+XYoff[1],$
-                               130,30],$
-                      value : 'Browse ROI...',$
-                      uname : 'proif_browse_nexus_button'}
-XYoff = [135,40]
-PRoIFListOfRuns = { size : [PRoIFbrowseButton.size[0]+XYoff[0],$
-                          PRoIFbrowseButton.size[1],$
-                          583,30],$
-                  uname : 'proif_text'}
+XYoff             = [8,5]
+DSBrunNumberBase = { size  : [DSBframe.size[0]+XYoff[0],$
+                              DSBframe.size[1]+XYoff[1],$
+                              150,35],$
+                     title : 'Run Number:',$
+                     xsize : 8,$
+                     uname : 'dsb_run_number_cw_field'}
 
-;//////////////////////////////
-;Alternate Instrument Geometry/
-;//////////////////////////////
-yoff = 65
-AIGframe     = { size  : [5,PRoIFframe.size[1]+yoff,730,50]}
-XYoff         = [10,-10]
-AIGlabel     = { size  : [AIGframe.size[0]+XYoff[0],$
-                          AIGframe.size[1]+XYoff[1]],$
-                 value : 'Alternate Instrument Geometry',$
-                 uname : 'aig_label'}
-
-XYoff             = [10,10]
-AIGbrowseButton  = { size  : [AIGframe.size[0]+XYoff[0],$
-                               AIGframe.size[1]+XYoff[1],$
+XYoff             = [160,4]
+DSBbrowseButton  = { size  : [DSBrunNumberBase.size[0]+XYoff[0],$
+                               DSBrunNumberBase.size[1]+XYoff[1],$
                                130,30],$
                       value : 'Browse NeXus...',$
-                      uname : 'aig_browse_nexus_button'}
-XYoff = [135,40]
-AIGListOfRuns = { size : [AIGbrowseButton.size[0]+XYoff[0],$
-                          AIGbrowseButton.size[1],$
-                          583,30],$
-                  uname : 'aig_list_of_runs_text'}
-
-;////////////////
-;Ouput file name/
-;////////////////
-yoff = 65
-OFlabel     = { size  : [10,$
-                          AIGframe.size[1]+yoff],$
-                value : 'Outupt File Name:',$
-                uname : 'of_label'}
-
-XYoff             = [110,-8]
-OFListOfRuns = { size : [OFlabel.size[0]+XYoff[0],$
-                         OFlabel.size[1]+XYoff[1],$
-                         620,30],$
-                 uname : 'of_list_of_runs_text'}
-
+                      uname : 'dsb_browse_nexus_button'}
+XYoff             = [130,-4]
+DSBNexusField    = { size : [DSBbrowseButton.size[0]+XYoff[0],$
+                             DSBbrowseButton.size[1]+XYoff[1],$
+                             430,35],$
+                     xsize : 65,$
+                     title : 'or',$
+                     uname : 'dsb_nexus_cw_field'}
+               
+XYoff = [10,40]
+DSBListOfRuns = { size : [XYoff[0],$
+                          DSBrunNumberBase.size[1]+XYoff[1],$
+                          723,30],$
+                  uname : 'dsb_list_of_runs_text'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -494,91 +473,65 @@ frame = WIDGET_LABEL(tab1_base,$
                      FRAME     = frameSize,$
                      VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Pixel Region-of-interest file\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
-                     XOFFSET = PRoIFlabel.size[0],$
-                     YOFFSET = PRoIFlabel.size[1],$
-                     VALUE   = PRoIFlabel.value,$
-                     UNAME   = PRoIFlabel.uname)
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Direct Scattering background\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+label = WIDGET_LABEL(tab1_base,$
+                     XOFFSET = DSBlabel.size[0],$
+                     YOFFSET = DSBlabel.size[1],$
+                     VALUE   = DSBlabel.value,$
+                     UNAME   = DSBlabel.uname)
+
+base = WIDGET_BASE(tab1_base,$
+                   XOFFSET   = DSBrunNumberBase.size[0],$
+                   YOFFSET   = DSBrunNumberBase.size[1],$
+                   SCR_XSIZE = DSBrunNumberBase.size[2],$
+                   SCR_YSIZE = DSBrunNumberBase.size[3])
+
+runNumber = CW_FIELD(base,$
+                     UNAME         = DSBrunNumberBase.uname,$
+                     TITLE         = DSBrunNumberBase.title,$
+                     RETURN_EVENTS = 1,$
+                     ROW           = 1,$
+                     XSIZE         = DSBrunNumberBase.xsize)
 
 browseNexus = WIDGET_BUTTON(tab1_base,$
-                            XOFFSET   = PRoIFbrowseButton.size[0],$
-                            YOFFSET   = PRoIFbrowseButton.size[1],$
-                            SCR_XSIZE = PRoIFbrowseButton.size[2],$
-                            SCR_YSIZE = PRoIFbrowseButton.size[3],$
-                            VALUE     = PRoIFbrowseButton.value,$
-                            UNAME     = PRoIFbrowseButton.uname)
+                            XOFFSET   = DSBbrowseButton.size[0],$
+                            YOFFSET   = DSBbrowseButton.size[1],$
+                            SCR_XSIZE = DSBbrowseButton.size[2],$
+                            SCR_YSIZE = DSBbrowseButton.size[3],$
+                            VALUE     = DSBbrowseButton.value,$
+                            UNAME     = DSBbrowseButton.uname)
+
+nexusBase = WIDGET_BASE(tab1_base,$
+                        XOFFSET   = DSBNexusField.size[0],$
+                        YOFFSET   = DSBNexusField.size[1],$
+                        SCR_XSIZE = DSBNexusField.size[2],$
+                        SCR_YSIZE = DSBNexusField.size[3])
+
+nexusField = CW_FIELD(nexusBase,$
+                      UNAME         = DSBNexusField.uname,$
+                      RETURN_EVENTS = 1,$
+                      TITLE         = DSBNexusField.title,$
+                      ROW           = 1,$
+                      XSIZE         = DSBNexusField.xsize)
 
 ListOfRuns = WIDGET_TEXT(tab1_base,$
-                         XOFFSET   = PRoIFListOfRuns.size[0],$
-                         YOFFSET   = PRoIFListOfRuns.size[1],$
-                         SCR_XSIZE = PRoIFListOfRuns.size[2],$
-                         SCR_YSIZE = PRoIFListOfRuns.size[3],$
+                         XOFFSET   = DSBListOfRuns.size[0],$
+                         YOFFSET   = DSBListOfRuns.size[1],$
+                         SCR_XSIZE = DSBListOfRuns.size[2],$
+                         SCR_YSIZE = DSBListOfRuns.size[3],$
                          /ALIGN_LEFT,$
-                         UNAME     = PRoIFListOfRuns.uname,$
-                         /EDITABLE)
+                         /EDITABLE,$
+                         UNAME     = DSBListOfRuns.uname)
                         
 frame = WIDGET_LABEL(tab1_base,$
-                     XOFFSET   = PRoIFframe.size[0],$
-                     YOFFSET   = PRoIFframe.size[1],$
-                     SCR_XSIZE = PRoIFframe.size[2],$
-                     SCR_YSIZE = PRoIFframe.size[3],$
+                     XOFFSET   = DSBframe.size[0],$
+                     YOFFSET   = DSBframe.size[1],$
+                     SCR_XSIZE = DSBframe.size[2],$
+                     SCR_YSIZE = DSBframe.size[3],$
                      FRAME     = frameSize,$
                      VALUE     = '')
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Alternate Instrument Geometry\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
-                     XOFFSET = AIGlabel.size[0],$
-                     YOFFSET = AIGlabel.size[1],$
-                     VALUE   = AIGlabel.value,$
-                     UNAME   = AIGlabel.uname)
-
-browseNexus = WIDGET_BUTTON(tab1_base,$
-                            XOFFSET   = AIGbrowseButton.size[0],$
-                            YOFFSET   = AIGbrowseButton.size[1],$
-                            SCR_XSIZE = AIGbrowseButton.size[2],$
-                            SCR_YSIZE = AIGbrowseButton.size[3],$
-                            VALUE     = AIGbrowseButton.value,$
-                            UNAME     = AIGbrowseButton.uname)
-
-ListOfRuns = WIDGET_TEXT(tab1_base,$
-                         XOFFSET   = AIGListOfRuns.size[0],$
-                         YOFFSET   = AIGListOfRuns.size[1],$
-                         SCR_XSIZE = AIGListOfRuns.size[2],$
-                         SCR_YSIZE = AIGListOfRuns.size[3],$
-                         /ALIGN_LEFT,$
-                         /EDITABLE,$
-                         UNAME     = AIGListOfRuns.uname)
-                        
-frame = WIDGET_LABEL(tab1_base,$
-                     XOFFSET   = AIGframe.size[0],$
-                     YOFFSET   = AIGframe.size[1],$
-                     SCR_XSIZE = AIGframe.size[2],$
-                     SCR_YSIZE = AIGframe.size[3],$
-                     FRAME     = frameSize,$
-                     VALUE     = '')
-
-;\\\\\\\\\\\\\\\\\
-;Output File Name\
-;\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
-                     XOFFSET = OFlabel.size[0],$
-                     YOFFSET = OFlabel.size[1],$
-                     VALUE   = OFlabel.value,$
-                     UNAME   = OFlabel.uname)
-
-ListOfRuns = WIDGET_TEXT(tab1_base,$
-                         XOFFSET   = OFListOfRuns.size[0],$
-                         YOFFSET   = OFListOfRuns.size[1],$
-                         SCR_XSIZE = OFListOfRuns.size[2],$
-                         SCR_YSIZE = OFListOfRuns.size[3],$
-                         /ALIGN_LEFT,$
-                         /ALL_EVENTS,$
-                         /EDITABLE,$
-                         UNAME     = OFListOfRuns.uname)
                        
 END

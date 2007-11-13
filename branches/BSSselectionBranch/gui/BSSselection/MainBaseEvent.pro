@@ -368,6 +368,28 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='dsb_run_number_cw_field'): begin
+        BSSselection_Reduce_dsb_run_number_cw_field, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='dsb_nexus_cw_field'): begin
+        BSSselection_Reduce_dsb_nexus_cw_field, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='dsb_browse_nexus_button'): begin
+        BSSselection_ReduceBrowseNexus, Event, 'dsb'
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='dsb_list_of_runs_text'): begin
+        BSSselection_Reduce_ecdf_list_of_runs_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+
+;tab11
     Widget_Info(wWidget, FIND_BY_UNAME='proif_browse_nexus_button'): begin
         BSSselection_ReduceBrowseRoi, Event
         BSSselection_CommandLineGenerator, Event

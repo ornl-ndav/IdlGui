@@ -31,6 +31,7 @@ IF (RunNumber NE '') THEN BEGIN
         'bdf' : uname = 'bdf_list_of_runs_text'
         'ndf' : uname = 'ndf_list_of_runs_text'
         'ecdf': uname = 'ecdf_list_of_runs_text'
+        'dsb' : uname = 'dsb_list_of_runs_text'
     ENDCASE
     
 ;name of file from Reduce Gui Tab
@@ -94,6 +95,7 @@ CASE (type) OF
     'bdf' : uname = 'bdf_list_of_runs_text'
     'ndf' : uname = 'ndf_list_of_runs_text'
     'ecdf': uname = 'ecdf_list_of_runs_text'
+    'dsb' : uname = 'dsb_list_of_runs_text'
 ENDCASE
 
 ListOfNexus = getTextFieldValue(Event, uname)
@@ -207,6 +209,7 @@ CASE (type) OF
     'ndf'  : title1 = 'Normalization Data'
     'ecdf' : title1 = 'Empty Can Data'
     'aig'  : title1 = 'Alternate Instrument Geometry'
+    'dsb'  : title1 = 'Direct Scattering Background'
 ENDCASE
 
 ;define ROI filter

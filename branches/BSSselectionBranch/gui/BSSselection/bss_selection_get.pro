@@ -252,6 +252,7 @@ CASE (type) OF
     'bdf' : uname = 'bdf_run_number_cw_field'
     'ndf' : uname = 'ndf_run_number_cw_field'
     'ecdf': uname = 'ecdf_run_number_cw_field'
+    'dsb' : uname = 'dsb_run_number_cw_field'
 ENDCASE
 RunNumber = getTextFieldValue(Event, uname)
 RETURN, strcompress(RunNumber,/remove_all)
