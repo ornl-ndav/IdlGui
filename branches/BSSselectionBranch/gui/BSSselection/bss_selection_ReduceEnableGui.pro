@@ -46,3 +46,7 @@ END
 
 
 
+PRO BSSselection_UpdateGui, Event
+
+END
+

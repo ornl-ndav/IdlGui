@@ -120,8 +120,8 @@ END
 PRO BSSselection_Reduce_nisw_field, Event
 END
 
-;This function is reached by the nisE_field
-PRO BSSselection_Reduce_nisE_field, Event
+;This function is reached by the niew_field
+PRO BSSselection_Reduce_niew_field, Event
 END
 
 ;****************** TAB 3 *************************

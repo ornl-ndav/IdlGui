@@ -446,8 +446,8 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-    Widget_Info(wWidget, FIND_BY_UNAME='nisE_field'): begin
-        BSSselection_Reduce_nisE_field, Event
+    Widget_Info(wWidget, FIND_BY_UNAME='niew_field'): begin
+        BSSselection_Reduce_niew_field, Event
         BSSselection_CommandLineGenerator, Event
     end    
 

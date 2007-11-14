@@ -141,9 +141,9 @@ widget_control, id, set_value = (*global).ColorVerticalGrid
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 widget_control, id1, set_tab_current = 1 ;reduce
 
-;tab #1
+;tab #3
 id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-widget_control, id1, set_tab_current = 0
+widget_control, id1, set_tab_current = 2
 
 END
 

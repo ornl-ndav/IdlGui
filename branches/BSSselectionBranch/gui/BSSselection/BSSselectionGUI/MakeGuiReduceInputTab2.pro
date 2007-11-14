@@ -57,37 +57,47 @@ NMECBase = { size : [NMNbase.size[0],$
                         value : RMcNFbase.button.value,$
                         list : ['No Monitor Efficiency Correction']}}
 
-;///////////////////////////////////////////
-;Normalization Integration Start Wavelength/
-;///////////////////////////////////////////
-NISWBase = { size : [NMECBase.size[0],$
-                     NMECBase.size[1]+yoff+3,$
-                     500,$
-                     NMECBase.size[3]],$
-             label1 : { size : [0,5],$
-                        value : '   Normalization Integration Start Wavelength :'},$ 
-             field : { size : [290,0,80,30],$
-                       uname : 'nisw_field'},$
-             label : { size : [375,5],$
-                        value : 'Angstroms'}}
 
+;/////////////////////////////////////
+;Normalization Integration Wavelength/
+;/////////////////////////////////////
+yoff += 10
+NIWframe = { size : [5,NMECBase.size[1]+yoff,730,50],$
+             frame: 4}
 
-;///////////////////////////////////////////
-;Normalization Integration END Wavelength/
-;///////////////////////////////////////////
-NIEWBase = { size : [NISWBase.size[0],$
-                     NISWBase.size[1]+yoff+3,$
-                     500,$
-                     NISWBase.size[3]],$
-             label1 : { size : [0,5],$
-                        value : '   Normalization Integration End Wavelength :'},$ 
-             field : { size : [290,0,80,30],$
-                       uname : 'nisE_field'},$
-             label : { size : [NISWBase.label.size[0],$
-                              NISWBase.label.size[1]],$
-                        value : 'Angstroms'}}
+XYoff9 = [10,-10]
+NIWlabel = { size : [NIWframe.size[0]+XYoff9[0],$
+                     NIWframe.size[1]+XYoff9[1],$
+                     340,$
+                     30],$
+             value : 'Normalization Integration Start and End Wavelength (Angstroms)',$
+             sensitive : 0}
 
+XYoff10 = [20,25]
+NIWlowLabel = { size : [NIWframe.size[0]+XYoff10[0],$
+                        NIWframe.size[1]+XYoff10[1]],$
+                value : 'Start:',$
+                uname : 'nisw_field_label',$
+                sensitive : NIWlabel.sensitive}
+XYoff11 = [50,-5]
+NIWlowText  = { size : [NIWlowLabel.size[0]+XYoff11[0],$
+                        NIWlowlabel.size[1]+XYoff11[1],$
+                        100,30],$
+                uname : 'nisw_field',$
+                sensitive : NIWlabel.sensitive}
 
+XYoff12 = [200,0]
+NIWhighLabel = { size : [NIWlowLabel.size[0]+XYoff12[0],$
+                         NIWlowLabel.size[1]+XYoff12[1]],$
+                 value : 'End:',$
+                 uname : 'niew_field_label',$
+                 sensitive : NIWlabel.sensitive}
+XYoff13 = [50,-5]
+NIWhighText  = { size : [NIWhighLabel.size[0]+XYoff13[0],$
+                         NIWhighlabel.size[1]+XYoff13[1],$
+                         100,30],$
+                 uname : 'niew_field',$
+                 sensitive : NIWlabel.sensitive}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -185,61 +195,58 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   LABEL_LEFT = NMECBase.button.value)
 
-;///////////////////////////////////////////
-;Normalization Integration Start Wavelength/
-;///////////////////////////////////////////
-base = WIDGET_BASE(tab2_base,$
-                   XOFFSET   = NISWBase.size[0],$
-                   YOFFSET   = NISWBase.size[1],$
-                   SCR_XSIZE = NISWBase.size[2],$
-                   SCR_YSIZE = NISWBase.size[3])
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;;Normalization Integration Start and End Wavelength\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = NISWBase.label1.size[0],$
-                     YOFFSET   = NISWBase.label1.size[1],$
-                     VALUE     = NISWBase.label1.value)
+label1 = WIDGET_LABEL(tab2_base,$
+                     XOFFSET   = NIWlabel.size[0],$
+                     YOFFSET   = NIWlabel.size[1],$
+                     VALUE     = NIWlabel.value,$
+                     SENSITIVE = NIWlabel.sensitive)
 
-text = WIDGET_TEXT(base,$
-                   XOFFSET   = NISWBase.field.size[0],$
-                   YOFFSET   = NISWBase.field.size[1],$
-                   SCR_XSIZE = NISWBase.field.size[2],$
-                   SCR_YSIZE = NISWBase.field.size[3],$
-                   UNAME     = NISWBase.field.uname,$
+label = WIDGET_LABEL(tab2_base,$
+                     XOFFSET   = NIWlowLabel.size[0],$
+                     YOFFSET   = NIWlowLabel.size[1],$
+                     VALUE     = NIWlowLabel.value,$
+                     UNAME     = NIWlowLabel.uname,$
+                     SENSITIVE = NIWlabel.sensitive)
+
+text = WIDGET_TEXT(tab2_base,$
+                   XOFFSET   = NIWlowText.size[0],$
+                   YOFFSET   = NIWlowText.size[1],$
+                   SCR_XSIZE = NIWlowText.size[2],$
+                   SCR_YSIZE = NIWlowText.size[3],$
+                   UNAME     = NIWlowText.uname,$
+                   SENSITIVE = NIWlabel.sensitive,$
                    /EDITABLE,$
-                   /ALL_EVENTS)
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-label = WIDGET_LABEL(base,$
-                     XOFFSET = NISWBase.label.size[0],$
-                     YOFFSET = NISWBase.label.size[1],$
-                     VALUE   = NISWBase.label.value)
+label = WIDGET_LABEL(tab2_base,$
+                     XOFFSET   = NIWhighLabel.size[0],$
+                     YOFFSET   = NIWhighLabel.size[1],$
+                     VALUE     = NIWhighLabel.value,$
+                     UNAME     = NIWhighLabel.uname,$
+                     SENSITIVE = NIWlabel.sensitive)
 
-                   
-;///////////////////////////////////////////
-;Normalization Integration END Wavelength/
-;///////////////////////////////////////////
-base = WIDGET_BASE(tab2_base,$
-                   XOFFSET   = NIEWBase.size[0],$
-                   YOFFSET   = NIEWBase.size[1],$
-                   SCR_XSIZE = NIEWBase.size[2],$
-                   SCR_YSIZE = NIEWBase.size[3])
-
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = NIEWBase.label1.size[0],$
-                     YOFFSET   = NIEWBase.label1.size[1],$
-                     VALUE     = NIEWBase.label1.value)
-
-text = WIDGET_TEXT(base,$
-                   XOFFSET   = NIEWBase.field.size[0],$
-                   YOFFSET   = NIEWBase.field.size[1],$
-                   SCR_XSIZE = NIEWBase.field.size[2],$
-                   SCR_YSIZE = NIEWBase.field.size[3],$
-                   UNAME     = NIEWBase.field.uname,$
+text = WIDGET_TEXT(tab2_base,$
+                   XOFFSET   = NIWhighText.size[0],$
+                   YOFFSET   = NIWhighText.size[1],$
+                   SCR_XSIZE = NIWhighText.size[2],$
+                   SCR_YSIZE = NIWhighText.size[3],$
+                   UNAME     = NIWhighText.uname,$
+                   SENSITIVE = NIWlabel.sensitive,$
                    /EDITABLE,$
-                   /ALL_EVENTS)
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
 
-label = WIDGET_LABEL(base,$
-                     XOFFSET = NIEWBase.label.size[0],$
-                     YOFFSET = NIEWBase.label.size[1],$
-                     VALUE   = NIEWBase.label.value)
+frame  = WIDGET_LABEL(tab2_base,$
+                      XOFFSET   = NIWframe.size[0],$
+                      YOFFSET   = NIWframe.size[1],$
+                      SCR_XSIZE = NIWframe.size[2],$
+                      SCR_YSIZE = NIWframe.size[3],$
+                      FRAME     = NIWframe.frame,$
+                      VALUE     = '')
 
 END

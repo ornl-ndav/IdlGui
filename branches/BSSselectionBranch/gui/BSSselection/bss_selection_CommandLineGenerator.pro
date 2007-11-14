@@ -4,6 +4,9 @@ PRO BSSselection_CommandLineGenerator, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;this function update all the reduce widgets (validate or not)
+BSSselection_ReduceUpdateGui, Event
+
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
 cmd = 'amorphous_reduction ' ;name of function to call
@@ -132,7 +135,7 @@ IF(NISW NE '') THEN BEGIN
 ENDIF
 
 ;get Normalization Integration End Wavelength
-NIEW = getTextFieldValue(Event,'nisE_field')
+NIEW = getTextFieldValue(Event,'niew_field')
 IF(NIEW NE '') THEN BEGIN
     cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
 ENDIF
