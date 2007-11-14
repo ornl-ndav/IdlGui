@@ -32,6 +32,10 @@ CASE (type) OF
         text_unames = ['wa_min_text','wa_max_text','wa_bin_width_text']
         activate_button, Event, 'wa_label', ActivateStatus
     END
+    'niw_button': BEGIN
+        text_unames = ['nisw_field','niew_field']
+    END
+    
 ENDCASE
 
 new_text_unames = [text_unames,text_unames + '_label']
@@ -58,8 +62,7 @@ ENDIF ELSE BEGIN ;desactivate widgets
     activate_status = 0
 ENDELSE
 
-widgets = ['nisw_field','niew_field']
-widgets = [widgets,widgets + '_label','niw_label']
+widgets = ['niw_button']
 sz = (size(widgets))(1)
 FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status

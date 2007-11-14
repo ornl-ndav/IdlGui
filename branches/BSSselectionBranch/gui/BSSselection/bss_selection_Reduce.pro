@@ -116,6 +116,11 @@ END
 PRO BSSselection_Reduce_nmec_button, Event
 END
 
+;This funciton is reached by the niw_button
+PRO BSSselection_Reduce_niw_button, Event
+BSSselection_EnableOrNotFields, Event, 'niw_button'
+END
+
 ;This function is reached by the nisw_field
 PRO BSSselection_Reduce_nisw_field, Event
 END

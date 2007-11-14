@@ -65,40 +65,39 @@ yoff += 10
 NIWframe = { size : [5,NMECBase.size[1]+yoff,730,50],$
              frame: 4}
 
-XYoff9 = [10,-10]
-NIWlabel = { size : [NIWframe.size[0]+XYoff9[0],$
-                     NIWframe.size[1]+XYoff9[1],$
-                     340,$
-                     30],$
-             value : 'Normalization Integration Start and End Wavelength (Angstroms)',$
-             uname : 'niw_label',$
-             sensitive : 0}
+XYoff9 = [10,-14]
+NIWBase = { size : [NIWframe.size[0]+XYoff9[0],$
+                    NIWframe.size[1]+XYoff9[1],$
+                    400,30],$
+            button : { uname : 'niw_button',$
+                       list : ['Normalization Integration Start and End Wavelength (Angstroms)'],$
+                       value : 0}}
 
 XYoff10 = [20,25]
 NIWlowLabel = { size : [NIWframe.size[0]+XYoff10[0],$
                         NIWframe.size[1]+XYoff10[1]],$
                 value : 'Start:',$
                 uname : 'nisw_field_label',$
-                sensitive : NIWlabel.sensitive}
+                sensitive : NIWBase.button.value}
 XYoff11 = [50,-5]
 NIWlowText  = { size : [NIWlowLabel.size[0]+XYoff11[0],$
                         NIWlowlabel.size[1]+XYoff11[1],$
                         100,30],$
                 uname : 'nisw_field',$
-                sensitive : NIWlabel.sensitive}
+                sensitive : NIWBase.button.value}
 
 XYoff12 = [200,0]
 NIWhighLabel = { size : [NIWlowLabel.size[0]+XYoff12[0],$
                          NIWlowLabel.size[1]+XYoff12[1]],$
                  value : 'End:',$
                  uname : 'niew_field_label',$
-                 sensitive : NIWlabel.sensitive}
+                 sensitive : NIWBase.button.value}
 XYoff13 = [50,-5]
 NIWhighText  = { size : [NIWhighLabel.size[0]+XYoff13[0],$
                          NIWhighlabel.size[1]+XYoff13[1],$
                          100,30],$
                  uname : 'niew_field',$
-                 sensitive : NIWlabel.sensitive}
+                 sensitive : NIWBase.button.value}
 
 ;//////////////////////////////////////////////////
 ;Low and High values that bracket the elastic peak/
@@ -243,19 +242,25 @@ group = CW_BGROUP(base,$
 ;Normalization Integration Start and End Wavelength\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-label1 = WIDGET_LABEL(tab2_base,$
-                      XOFFSET   = NIWlabel.size[0],$
-                      YOFFSET   = NIWlabel.size[1],$
-                      VALUE     = NIWlabel.value,$
-                      UNAME     = NIWlabel.uname,$
-                      SENSITIVE = NIWlabel.sensitive)
+base = WIDGET_BASE(tab2_base,$
+                   XOFFSET   = NIWBase.size[0],$
+                   YOFFSET   = NIWBase.size[1],$
+                   SCR_XSIZE = NIWBase.size[2],$
+                   SCR_YSIZE = NIWBase.size[3])
+
+group = CW_BGROUP(base,$
+                  NIWBase.button.list,$
+                  UNAME      = NIWBase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
 label = WIDGET_LABEL(tab2_base,$
                      XOFFSET   = NIWlowLabel.size[0],$
                      YOFFSET   = NIWlowLabel.size[1],$
                      VALUE     = NIWlowLabel.value,$
                      UNAME     = NIWlowLabel.uname,$
-                     SENSITIVE = NIWlabel.sensitive)
+                     SENSITIVE = NIWlowLabel.sensitive)
 
 text = WIDGET_TEXT(tab2_base,$
                    XOFFSET   = NIWlowText.size[0],$
@@ -263,7 +268,7 @@ text = WIDGET_TEXT(tab2_base,$
                    SCR_XSIZE = NIWlowText.size[2],$
                    SCR_YSIZE = NIWlowText.size[3],$
                    UNAME     = NIWlowText.uname,$
-                   SENSITIVE = NIWlabel.sensitive,$
+                   SENSITIVE = NIWLowText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
@@ -273,7 +278,7 @@ label = WIDGET_LABEL(tab2_base,$
                      YOFFSET   = NIWhighLabel.size[1],$
                      VALUE     = NIWhighLabel.value,$
                      UNAME     = NIWhighLabel.uname,$
-                     SENSITIVE = NIWlabel.sensitive)
+                     SENSITIVE = NIWhighLabel.sensitive)
 
 text = WIDGET_TEXT(tab2_base,$
                    XOFFSET   = NIWhighText.size[0],$
@@ -281,7 +286,7 @@ text = WIDGET_TEXT(tab2_base,$
                    SCR_XSIZE = NIWhighText.size[2],$
                    SCR_YSIZE = NIWhighText.size[3],$
                    UNAME     = NIWhighText.uname,$
-                   SENSITIVE = NIWlabel.sensitive,$
+                   SENSITIVE = NIWhighText.sensitive,$
                    /EDITABLE,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
