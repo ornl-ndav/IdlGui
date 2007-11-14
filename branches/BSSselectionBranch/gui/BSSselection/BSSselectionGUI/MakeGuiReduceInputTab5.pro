@@ -138,6 +138,51 @@ BCSerrorText  = { size : [BCSerrorLabel.size[0]+XYoff13[0],$
                     uname : 'bcs_error_text',$
                     sensitive : BCSBase.button.value}
 
+;//////////////////////////////////////////////////////////////////
+;Constant to Scale the Background Spectra for Subtraction from the/
+;normalization data associated empty container spectra            /        
+;//////////////////////////////////////////////////////////////////
+yoff = 90
+BCNframe = { size : [BCSframe.size[0], $
+                     BCSframe.size[1]+yoff,$
+                     BCSframe.size[2:3]],$
+             frame : BCSframe.frame}
+
+XYoff = [10,-14]
+BCNbase = { size : [BCNframe.size[0]+XYoff[0],$
+                      BCNframe.size[1]+XYoff[1],$
+                      715,$
+                      30],$
+              button : { uname : 'bcn_button',$
+                         list : ['Constant to Scale the Back. Spectra for Subtraction from the Normalization Data Associated Empty Container Spectra'],$
+              value : 0}}
+
+XYoff10 = [15,25]   
+BCNvalueLabel = { size : [BCNframe.size[0]+XYoff10[0],$
+                            BCNframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'bcn_value_text_label',$
+                    sensitive : BCNBase.button.value}
+XYoff11 = [50,-5]
+BCNvalueText  = { size : [BCNvalueLabel.size[0]+XYoff11[0],$
+                            BCNvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'bcn_value_text',$
+                    sensitive : BCNBase.button.value}
+
+XYoff12 = [200,0]
+BCNerrorLabel = { size : [BCNvalueLabel.size[0]+XYoff12[0],$
+                            BCNvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'bcn_error_text_label',$
+                    sensitive : BCNBase.button.value}
+XYoff13 = [50,-5]
+BCNerrorText  = { size : [BCNerrorLabel.size[0]+XYoff13[0],$
+                            BCNerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'bcn_error_text',$
+                    sensitive : BCNBase.button.value}
+
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -331,6 +376,67 @@ frame  = WIDGET_LABEL(tab5_base,$
                       SCR_XSIZE = BCSframe.size[2],$
                       SCR_YSIZE = BCSframe.size[3],$
                       FRAME     = BCSframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Background Spectra for Subtraction from the\
+;normalization data associated empty container spectra            \        
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = BCNbase.size[0],$
+                   YOFFSET   = BCNbase.size[1],$
+                   SCR_XSIZE = BCNbase.size[2],$
+                   SCR_YSIZE = BCNbase.size[3])
+
+group = CW_BGROUP(base,$
+                  BCNbase.button.list,$
+                  UNAME      = BCNbase.button.uname,$
+                  SET_VALUE  = BCNbase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCNvalueLabel.size[0],$
+                     YOFFSET   = BCNvalueLabel.size[1],$
+                     VALUE     = BCNvalueLabel.value,$
+                     UNAME     = BCNvalueLabel.uname,$
+                     SENSITIVE = BCNvalueLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCNvalueText.size[0],$
+                   YOFFSET   = BCNvalueText.size[1],$
+                   SCR_XSIZE = BCNvalueText.size[2],$
+                   SCR_YSIZE = BCNvalueText.size[3],$
+                   UNAME     = BCNvalueText.uname,$
+                   SENSITIVE = BCNvalueText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = BCNerrorLabel.size[0],$
+                     YOFFSET   = BCNerrorLabel.size[1],$
+                     VALUE     = BCNerrorLabel.value,$
+                     UNAME     = BCNerrorLabel.uname,$
+                     SENSITIVE = BCNerrorLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = BCNerrorText.size[0],$
+                   YOFFSET   = BCNerrorText.size[1],$
+                   SCR_XSIZE = BCNerrorText.size[2],$
+                   SCR_YSIZE = BCNerrorText.size[3],$
+                   UNAME     = BCNerrorText.uname,$
+                   SENSITIVE = BCNerrorText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = BCNframe.size[0],$
+                      YOFFSET   = BCNframe.size[1],$
+                      SCR_XSIZE = BCNframe.size[2],$
+                      SCR_YSIZE = BCNframe.size[3],$
+                      FRAME     = BCNframe.frame,$
                       VALUE     = '')
 
 

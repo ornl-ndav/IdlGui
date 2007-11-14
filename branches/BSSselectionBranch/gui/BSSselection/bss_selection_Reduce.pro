@@ -272,6 +272,18 @@ PRO BSSselection_Reduce_bcs_error_text, Event
 END
 
 
+PRO BSSselection_Reduce_bcn_button, Event
+BSSselection_EnableOrNotFields, Event, 'bcn_button'
+END
+
+;This function is reached by bcn_value_text
+PRO BSSselection_Reduce_bcn_value_text, Event
+END
+
+;This function is reached by bcn_error_text
+PRO BSSselection_Reduce_bcn_error_text, Event
+END
+
 
 ;****************** TAB 6 *************************
 
