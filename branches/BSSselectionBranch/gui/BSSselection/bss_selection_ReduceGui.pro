@@ -53,7 +53,9 @@ CASE (type) OF
     'csn_button': BEGIN
         text_unames = ['csn_value_text','csn_error_text']
     END
-    
+    'bcs_button': BEGIN
+        text_unames = ['bcs_value_text','bcs_error_text']
+    END
 ENDCASE
 
 new_text_unames = [text_unames,text_unames + '_label']

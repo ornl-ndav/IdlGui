@@ -602,6 +602,23 @@ CASE Event.id OF
         BSSselection_Reduce_csn_error_text, Event
         BSSselection_CommandLineGenerator, Event
     end    
+
+
+    Widget_Info(wWidget, FIND_BY_UNAME='bcs_button'): begin
+        BSSselection_Reduce_bcs_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='bcs_value_text'): begin
+        BSSselection_Reduce_bcs_value_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='bcs_error_text'): begin
+        BSSselection_Reduce_bcs_error_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
 ;tab6
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin
         BSSselection_Reduce_tzsp_button, Event

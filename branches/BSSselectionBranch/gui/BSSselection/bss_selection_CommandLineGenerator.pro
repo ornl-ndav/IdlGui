@@ -693,6 +693,58 @@ IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
 ENDIF
 
 
+;get constant to scale the back. spectra for subtraction from the
+;sample data associated empty container spectra
+IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
+    cmd += ' --scale-bcs='
+
+    Value = getTextFieldValue(Event,'bcs_value_text')
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Associated Empty Container Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all)
+    ENDELSE
+
+    Error = getTextFieldValue(Event,'bcs_error_text')
+    IF (Error EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Associated Empty Container Error'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(Error,/remove_all)
+    ENDELSE
+
+ENDIF
 
 
 
