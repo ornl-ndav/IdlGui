@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab5, ReduceInputTab, ReduceInputTabSettings
+PRO MakeGuiReduceInputTab7, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -142,7 +142,7 @@ WOLIDSBbase = { size  : [WOPETSbase.size[0], $
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab5_base = WIDGET_BASE(ReduceInputTab,$
+tab7_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -152,7 +152,7 @@ tab5_base = WIDGET_BASE(ReduceInputTab,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write all intermediate output\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WAIOBase.size[0],$
                    YOFFSET   = WAIOBase.size[1],$
                    SCR_XSIZE = WAIOBase.size[2],$
@@ -168,7 +168,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Calculated time-independent background\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOCTIBbase.size[0],$
                    YOFFSET   = WOCTIBbase.size[1],$
                    SCR_XSIZE = WOCTIBbase.size[2],$
@@ -184,7 +184,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Pixel Wavelength Spectra\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOPWSbase.size[0],$
                    YOFFSET   = WOPWSbase.size[1],$
                    SCR_XSIZE = WOPWSbase.size[2],$
@@ -200,7 +200,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Monitor Wavelength Spectrum\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOMWSbase.size[0],$
                    YOFFSET   = WOMWSbase.size[1],$
                    SCR_XSIZE = WOMWSbase.size[2],$
@@ -216,7 +216,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Monitor Efficiency Spectrum\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOMESbase.size[0],$
                    YOFFSET   = WOMESbase.size[1],$
                    SCR_XSIZE = WOMESbase.size[2],$
@@ -232,7 +232,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Rebinned Monitor Spectra\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WORMSbase.size[0],$
                    YOFFSET   = WORMSbase.size[1],$
                    SCR_XSIZE = WORMSbase.size[2],$
@@ -248,7 +248,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write Out Combined Pixel Spectrum After Monitor Normalization\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOCPSAMNbase.size[0],$
                    YOFFSET   = WOCPSAMNbase.size[1],$
                    SCR_XSIZE = WOCPSAMNbase.size[2],$
@@ -264,7 +264,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Wavelength Histogram Axis\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WHAbase.size[0],$
                    YOFFSET   = WHAbase.size[1],$
                    SCR_XSIZE = WHAbase.size[2],$
@@ -334,7 +334,7 @@ text3 = WIDGET_TEXT(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write Out Pixel Initial Energy Spectra\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOPIESbase.size[0],$
                    YOFFSET   = WOPIESbase.size[1],$
                    SCR_XSIZE = WOPIESbase.size[2],$
@@ -350,7 +350,7 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write Out Pixel Energy Transfer Spectra\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOPETSbase.size[0],$
                    YOFFSET   = WOPETSbase.size[1],$
                    SCR_XSIZE = WOPETSbase.size[2],$
@@ -367,7 +367,7 @@ group = CW_BGROUP(base,$
 ;Write Out Linearly Interpolated Direct Scattering Background\
 ;Info. Summed over all Pixel                                 \
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab5_base,$
+base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOLIDSBbase.size[0],$
                    YOFFSET   = WOLIDSBbase.size[1],$
                    SCR_XSIZE = WOLIDSBbase.size[2],$

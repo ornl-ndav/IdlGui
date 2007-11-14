@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
+PRO MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -187,7 +187,7 @@ GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab4_base = WIDGET_BASE(ReduceInputTab,$
+tab6_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -198,7 +198,7 @@ tab4_base = WIDGET_BASE(ReduceInputTab,$
 ;Time Zero Slope Parameter (Angstroms/microseconds)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab6_base,$
                    XOFFSET   = TZSPbase.size[0],$
                    YOFFSET   = TZSPbase.size[1],$
                    SCR_XSIZE = TZSPbase.size[2],$
@@ -211,14 +211,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = TZSPvalueLabel.size[0],$
                      YOFFSET   = TZSPvalueLabel.size[1],$
                      VALUE     = TZSPvalueLabel.value,$
                      SENSITIVE = TZSPbase.button.value,$
                      UNAME     = TZSPvalueLabel.uname)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = TZSPvalueText.size[0],$
                    YOFFSET   = TZSPvalueText.size[1],$
                    SCR_XSIZE = TZSPvalueText.size[2],$
@@ -229,14 +229,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = TZSPerrorLabel.size[0],$
                      YOFFSET   = TZSPerrorLabel.size[1],$
                      VALUE     = TZSPerrorLabel.value,$
                      UNAME     = TZSPerrorLabel.uname,$
                      SENSITIVE = TZSPbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = TZSPerrorText.size[0],$
                    YOFFSET   = TZSPerrorText.size[1],$
                    SCR_XSIZE = TZSPerrorText.size[2],$
@@ -247,7 +247,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab6_base,$
                       XOFFSET   = TZSPframe.size[0],$
                       YOFFSET   = TZSPframe.size[1],$
                       SCR_XSIZE = TZSPframe.size[2],$
@@ -259,7 +259,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Time Zero Offset Parameter (Angstroms/microseconds)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab6_base,$
                    XOFFSET   = TZOPbase.size[0],$
                    YOFFSET   = TZOPbase.size[1],$
                    SCR_XSIZE = TZOPbase.size[2],$
@@ -272,14 +272,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = TZOPvalueLabel.size[0],$
                      YOFFSET   = TZOPvalueLabel.size[1],$
                      VALUE     = TZOPvalueLabel.value,$
                      UNAME     = TZOPvalueLabel.uname,$
                      SENSITIVE = TZOPbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = TZOPvalueText.size[0],$
                    YOFFSET   = TZOPvalueText.size[1],$
                    SCR_XSIZE = TZOPvalueText.size[2],$
@@ -290,14 +290,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = TZOPerrorLabel.size[0],$
                      YOFFSET   = TZOPerrorLabel.size[1],$
                      VALUE     = TZOPerrorLabel.value,$
                      UNAME     = TZOPerrorLabel.uname,$
                      SENSITIVE = TZOPbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = TZOPerrorText.size[0],$
                    YOFFSET   = TZOPerrorText.size[1],$
                    SCR_XSIZE = TZOPerrorText.size[2],$
@@ -308,7 +308,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab6_base,$
                       XOFFSET   = TZOPframe.size[0],$
                       YOFFSET   = TZOPframe.size[1],$
                       SCR_XSIZE = TZOPframe.size[2],$
@@ -320,7 +320,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Energy Histogram Axis (micro-eV)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab6_base,$
                    XOFFSET   = EHAbase.size[0],$
                    YOFFSET   = EHAbase.size[1],$
                    SCR_XSIZE = EHAbase.size[2],$
@@ -330,14 +330,14 @@ label = WIDGET_LABEL(base,$
                      VALUE = EHAbase.button.list[0],$
                      UNAME = EHAbase.button.uname)
                      
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = EHAminLabel.size[0],$
                      YOFFSET   = EHAminLabel.size[1],$
                      VALUE     = EHAminLabel.value,$
                      UNAME     = EHAminLabel.uname,$
                      SENSITIVE = EHAbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = EHAminText.size[0],$
                    YOFFSET   = EHAminText.size[1],$
                    SCR_XSIZE = EHAminText.size[2],$
@@ -348,14 +348,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = EHAmaxLabel.size[0],$
                      YOFFSET   = EHAmaxLabel.size[1],$
                      VALUE     = EHAmaxLabel.value,$
                      UNAME     = EHAmaxLabel.uname,$
                      SENSITIVE = EHAbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = EHAmaxText.size[0],$
                    YOFFSET   = EHAmaxText.size[1],$
                    SCR_XSIZE = EHAmaxText.size[2],$
@@ -366,14 +366,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = EHAbinLabel.size[0],$
                      YOFFSET   = EHAbinLabel.size[1],$
                      VALUE     = EHAbinLabel.value,$
                      UNAME     = EHAbinLabel.uname,$
                      SENSITIVE = EHAbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = EHAbinText.size[0],$
                    YOFFSET   = EHAbinText.size[1],$
                    SCR_XSIZE = EHAbinText.size[2],$
@@ -384,7 +384,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab6_base,$
                       XOFFSET   = EHAframe.size[0],$
                       YOFFSET   = EHAframe.size[1],$
                       SCR_XSIZE = EHAframe.size[2],$
@@ -396,7 +396,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Global Instrument Final Wavelength (Angstroms)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab6_base,$
                    XOFFSET   = GIFWbase.size[0],$
                    YOFFSET   = GIFWbase.size[1],$
                    SCR_XSIZE = GIFWbase.size[2],$
@@ -409,14 +409,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = GIFWvalueLabel.size[0],$
                      YOFFSET   = GIFWvalueLabel.size[1],$
                      VALUE     = GIFWvalueLabel.value,$
                      UNAME     = GIFWvalueLabel.uname,$
                      SENSITIVE = GIFWbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = GIFWvalueText.size[0],$
                    YOFFSET   = GIFWvalueText.size[1],$
                    SCR_XSIZE = GIFWvalueText.size[2],$
@@ -427,14 +427,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab6_base,$
                      XOFFSET   = GIFWerrorLabel.size[0],$
                      YOFFSET   = GIFWerrorLabel.size[1],$
                      VALUE     = GIFWerrorLabel.value,$
                      UNAME     = GIFWerrorLabel.uname,$
                      SENSITIVE = GIFWbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab6_base,$
                    XOFFSET   = GIFWerrorText.size[0],$
                    YOFFSET   = GIFWerrorText.size[1],$
                    SCR_XSIZE = GIFWerrorText.size[2],$
@@ -445,7 +445,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab6_base,$
                       XOFFSET   = GIFWframe.size[0],$
                       YOFFSET   = GIFWframe.size[1],$
                       SCR_XSIZE = GIFWframe.size[2],$

@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab11, ReduceInputTab, ReduceInputTabSettings
+PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -68,7 +68,7 @@ OFListOfRuns = { size : [OFlabel.size[0]+XYoff[0],$
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab1_base = WIDGET_BASE(ReduceInputTab,$
+tab2_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -78,13 +78,13 @@ tab1_base = WIDGET_BASE(ReduceInputTab,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Pixel Region-of-interest file\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
+Label = WIDGET_LABEL(tab2_base,$
                      XOFFSET = PRoIFlabel.size[0],$
                      YOFFSET = PRoIFlabel.size[1],$
                      VALUE   = PRoIFlabel.value,$
                      UNAME   = PRoIFlabel.uname)
 
-browseNexus = WIDGET_BUTTON(tab1_base,$
+browseNexus = WIDGET_BUTTON(tab2_base,$
                             XOFFSET   = PRoIFbrowseButton.size[0],$
                             YOFFSET   = PRoIFbrowseButton.size[1],$
                             SCR_XSIZE = PRoIFbrowseButton.size[2],$
@@ -92,7 +92,7 @@ browseNexus = WIDGET_BUTTON(tab1_base,$
                             VALUE     = PRoIFbrowseButton.value,$
                             UNAME     = PRoIFbrowseButton.uname)
 
-ListOfRuns = WIDGET_TEXT(tab1_base,$
+ListOfRuns = WIDGET_TEXT(tab2_base,$
                          XOFFSET   = PRoIFListOfRuns.size[0],$
                          YOFFSET   = PRoIFListOfRuns.size[1],$
                          SCR_XSIZE = PRoIFListOfRuns.size[2],$
@@ -101,7 +101,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          UNAME     = PRoIFListOfRuns.uname,$
                          /EDITABLE)
                         
-frame = WIDGET_LABEL(tab1_base,$
+frame = WIDGET_LABEL(tab2_base,$
                      XOFFSET   = PRoIFframe.size[0],$
                      YOFFSET   = PRoIFframe.size[1],$
                      SCR_XSIZE = PRoIFframe.size[2],$
@@ -112,13 +112,13 @@ frame = WIDGET_LABEL(tab1_base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Alternate Instrument Geometry\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
+Label = WIDGET_LABEL(tab2_base,$
                      XOFFSET = AIGlabel.size[0],$
                      YOFFSET = AIGlabel.size[1],$
                      VALUE   = AIGlabel.value,$
                      UNAME   = AIGlabel.uname)
 
-browseNexus = WIDGET_BUTTON(tab1_base,$
+browseNexus = WIDGET_BUTTON(tab2_base,$
                             XOFFSET   = AIGbrowseButton.size[0],$
                             YOFFSET   = AIGbrowseButton.size[1],$
                             SCR_XSIZE = AIGbrowseButton.size[2],$
@@ -126,7 +126,7 @@ browseNexus = WIDGET_BUTTON(tab1_base,$
                             VALUE     = AIGbrowseButton.value,$
                             UNAME     = AIGbrowseButton.uname)
 
-ListOfRuns = WIDGET_TEXT(tab1_base,$
+ListOfRuns = WIDGET_TEXT(tab2_base,$
                          XOFFSET   = AIGListOfRuns.size[0],$
                          YOFFSET   = AIGListOfRuns.size[1],$
                          SCR_XSIZE = AIGListOfRuns.size[2],$
@@ -135,7 +135,7 @@ ListOfRuns = WIDGET_TEXT(tab1_base,$
                          /EDITABLE,$
                          UNAME     = AIGListOfRuns.uname)
                         
-frame = WIDGET_LABEL(tab1_base,$
+frame = WIDGET_LABEL(tab2_base,$
                      XOFFSET   = AIGframe.size[0],$
                      YOFFSET   = AIGframe.size[1],$
                      SCR_XSIZE = AIGframe.size[2],$
@@ -146,13 +146,13 @@ frame = WIDGET_LABEL(tab1_base,$
 ;\\\\\\\\\\\\\\\\\
 ;Output File Name\
 ;\\\\\\\\\\\\\\\\\
-Label = WIDGET_LABEL(tab1_base,$
+Label = WIDGET_LABEL(tab2_base,$
                      XOFFSET = OFlabel.size[0],$
                      YOFFSET = OFlabel.size[1],$
                      VALUE   = OFlabel.value,$
                      UNAME   = OFlabel.uname)
 
-ListOfRuns = WIDGET_TEXT(tab1_base,$
+ListOfRuns = WIDGET_TEXT(tab2_base,$
                          XOFFSET   = OFListOfRuns.size[0],$
                          YOFFSET   = OFListOfRuns.size[1],$
                          SCR_XSIZE = OFListOfRuns.size[2],$

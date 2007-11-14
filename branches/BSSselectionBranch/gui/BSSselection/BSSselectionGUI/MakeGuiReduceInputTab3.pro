@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab2, ReduceInputTab, ReduceInputTabSettings
+PRO MakeGuiReduceInputTab3, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -145,7 +145,7 @@ TEhighText  = { size : [TEhighLabel.size[0]+XYoff13[0],$
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab2_base = WIDGET_BASE(ReduceInputTab,$
+tab3_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -155,7 +155,7 @@ tab2_base = WIDGET_BASE(ReduceInputTab,$
 ;//////////////////////
 ;Run McStas NeXus file/
 ;//////////////////////
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = RMcNFBase.size[0],$
                    YOFFSET   = RMcNFBase.size[1],$
                    SCR_XSIZE = RMcNFBase.size[2],$
@@ -172,7 +172,7 @@ group = CW_BGROUP(base,$
 ;////////
 ;Verbose/
 ;////////
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = VerboseBase.size[0],$
                    YOFFSET   = VerboseBase.size[1],$
                    SCR_XSIZE = VerboseBase.size[2],$
@@ -190,7 +190,7 @@ group = CW_BGROUP(base,$
 ;////////////////////////////////////////
 ;Alternate Background Subtraction Method/
 ;////////////////////////////////////////
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = ABSMBase.size[0],$
                    YOFFSET   = ABSMBase.size[1],$
                    SCR_XSIZE = ABSMBase.size[2],$
@@ -207,7 +207,7 @@ group = CW_BGROUP(base,$
 ;/////////////////////////
 ;No Monitor Normalization/
 ;/////////////////////////
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = NMNBase.size[0],$
                    YOFFSET   = NMNBase.size[1],$
                    SCR_XSIZE = NMNBase.size[2],$
@@ -224,7 +224,7 @@ group = CW_BGROUP(base,$
 ;/////////////////////////////////
 ;No Monitor Efficiency Correction/
 ;/////////////////////////////////
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = NMECBase.size[0],$
                    YOFFSET   = NMECBase.size[1],$
                    SCR_XSIZE = NMECBase.size[2],$
@@ -242,7 +242,7 @@ group = CW_BGROUP(base,$
 ;Normalization Integration Start and End Wavelength\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = NIWBase.size[0],$
                    YOFFSET   = NIWBase.size[1],$
                    SCR_XSIZE = NIWBase.size[2],$
@@ -255,14 +255,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab2_base,$
+label = WIDGET_LABEL(tab3_base,$
                      XOFFSET   = NIWlowLabel.size[0],$
                      YOFFSET   = NIWlowLabel.size[1],$
                      VALUE     = NIWlowLabel.value,$
                      UNAME     = NIWlowLabel.uname,$
                      SENSITIVE = NIWlowLabel.sensitive)
 
-text = WIDGET_TEXT(tab2_base,$
+text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = NIWlowText.size[0],$
                    YOFFSET   = NIWlowText.size[1],$
                    SCR_XSIZE = NIWlowText.size[2],$
@@ -273,14 +273,14 @@ text = WIDGET_TEXT(tab2_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab2_base,$
+label = WIDGET_LABEL(tab3_base,$
                      XOFFSET   = NIWhighLabel.size[0],$
                      YOFFSET   = NIWhighLabel.size[1],$
                      VALUE     = NIWhighLabel.value,$
                      UNAME     = NIWhighLabel.uname,$
                      SENSITIVE = NIWhighLabel.sensitive)
 
-text = WIDGET_TEXT(tab2_base,$
+text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = NIWhighText.size[0],$
                    YOFFSET   = NIWhighText.size[1],$
                    SCR_XSIZE = NIWhighText.size[2],$
@@ -291,7 +291,7 @@ text = WIDGET_TEXT(tab2_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab2_base,$
+frame  = WIDGET_LABEL(tab3_base,$
                       XOFFSET   = NIWframe.size[0],$
                       YOFFSET   = NIWframe.size[1],$
                       SCR_XSIZE = NIWframe.size[2],$
@@ -303,7 +303,7 @@ frame  = WIDGET_LABEL(tab2_base,$
 ;Low and High values that bracket the elastic peak\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab2_base,$
+base = WIDGET_BASE(tab3_base,$
                    XOFFSET   = TEBase.size[0],$
                    YOFFSET   = TEBase.size[1],$
                    SCR_XSIZE = TEBase.size[2],$
@@ -316,14 +316,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab2_base,$
+label = WIDGET_LABEL(tab3_base,$
                      XOFFSET   = TElowLabel.size[0],$
                      YOFFSET   = TElowLabel.size[1],$
                      VALUE     = TElowLabel.value,$
                      UNAME     = TElowLabel.uname,$
                      SENSITIVE = TElowLabel.sensitive)
 
-text = WIDGET_TEXT(tab2_base,$
+text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TElowText.size[0],$
                    YOFFSET   = TElowText.size[1],$
                    SCR_XSIZE = TElowText.size[2],$
@@ -334,14 +334,14 @@ text = WIDGET_TEXT(tab2_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab2_base,$
+label = WIDGET_LABEL(tab3_base,$
                      XOFFSET   = TEhighLabel.size[0],$
                      YOFFSET   = TEhighLabel.size[1],$
                      VALUE     = TEhighLabel.value,$
                      UNAME     = TEhighLabel.uname,$
                      SENSITIVE = TEhighLabel.sensitive)
 
-text = WIDGET_TEXT(tab2_base,$
+text = WIDGET_TEXT(tab3_base,$
                    XOFFSET   = TEhighText.size[0],$
                    YOFFSET   = TEhighText.size[1],$
                    SCR_XSIZE = TEhighText.size[2],$
@@ -352,7 +352,7 @@ text = WIDGET_TEXT(tab2_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab2_base,$
+frame  = WIDGET_LABEL(tab3_base,$
                       XOFFSET   = TEframe.size[0],$
                       YOFFSET   = TEframe.size[1],$
                       SCR_XSIZE = TEframe.size[2],$
