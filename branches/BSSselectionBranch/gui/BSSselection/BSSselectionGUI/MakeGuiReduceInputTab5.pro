@@ -183,6 +183,50 @@ BCNerrorText  = { size : [BCNerrorLabel.size[0]+XYoff13[0],$
                     uname : 'bcn_error_text',$
                     sensitive : BCNBase.button.value}
 
+;///////////////////////////////////////////////////////////////////
+;Constant to Scale the Empty Container Spectra for subtraction from/
+;the sample data                                                   /
+;///////////////////////////////////////////////////////////////////
+yoff = 90
+CSframe = { size : [BCNframe.size[0], $
+                     BCNframe.size[1]+yoff,$
+                     BCNframe.size[2:3]],$
+             frame : BCNframe.frame}
+
+XYoff = [10,-14]
+CSbase = { size : [CSframe.size[0]+XYoff[0],$
+                   CSframe.size[1]+XYoff[1],$
+                   525,$
+                   30],$
+           button : { uname : 'cs_button',$
+                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Sample Data'],$
+                      value : 0}}
+
+XYoff10 = [15,25]   
+CSvalueLabel = { size : [CSframe.size[0]+XYoff10[0],$
+                         CSframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'cs_value_text_label',$
+                    sensitive : CSBase.button.value}
+XYoff11 = [50,-5]
+CSvalueText  = { size : [CSvalueLabel.size[0]+XYoff11[0],$
+                            CSvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'cs_value_text',$
+                    sensitive : CSBase.button.value}
+
+XYoff12 = [200,0]
+CSerrorLabel = { size : [CSvalueLabel.size[0]+XYoff12[0],$
+                            CSvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'cs_error_text_label',$
+                    sensitive : CSBase.button.value}
+XYoff13 = [50,-5]
+CSerrorText  = { size : [CSerrorLabel.size[0]+XYoff13[0],$
+                            CSerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'cs_error_text',$
+                    sensitive : CSBase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -439,6 +483,66 @@ frame  = WIDGET_LABEL(tab5_base,$
                       FRAME     = BCNframe.frame,$
                       VALUE     = '')
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Empty Container Spectra for subtraction from\
+;the sample data                                                   \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CSbase.size[0],$
+                   YOFFSET   = CSbase.size[1],$
+                   SCR_XSIZE = CSbase.size[2],$
+                   SCR_YSIZE = CSbase.size[3])
+
+group = CW_BGROUP(base,$
+                  CSbase.button.list,$
+                  UNAME      = CSbase.button.uname,$
+                  SET_VALUE  = CSbase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSvalueLabel.size[0],$
+                     YOFFSET   = CSvalueLabel.size[1],$
+                     VALUE     = CSvalueLabel.value,$
+                     UNAME     = CSvalueLabel.uname,$
+                     SENSITIVE = CSvalueLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSvalueText.size[0],$
+                   YOFFSET   = CSvalueText.size[1],$
+                   SCR_XSIZE = CSvalueText.size[2],$
+                   SCR_YSIZE = CSvalueText.size[3],$
+                   UNAME     = CSvalueText.uname,$
+                   SENSITIVE = CSvalueText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CSerrorLabel.size[0],$
+                     YOFFSET   = CSerrorLabel.size[1],$
+                     VALUE     = CSerrorLabel.value,$
+                     UNAME     = CSerrorLabel.uname,$
+                     SENSITIVE = CSerrorLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CSerrorText.size[0],$
+                   YOFFSET   = CSerrorText.size[1],$
+                   SCR_XSIZE = CSerrorText.size[2],$
+                   SCR_YSIZE = CSerrorText.size[3],$
+                   UNAME     = CSerrorText.uname,$
+                   SENSITIVE = CSerrorText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CSframe.size[0],$
+                      YOFFSET   = CSframe.size[1],$
+                      SCR_XSIZE = CSframe.size[2],$
+                      SCR_YSIZE = CSframe.size[3],$
+                      FRAME     = CSframe.frame,$
+                      VALUE     = '')
 
 
 END
