@@ -14,7 +14,8 @@ ReduceInputTabSettings       = {size : [0, $
                                          'Time-Independent Back.', $ 
                                          'Data Control', $
                                          'Intermediate Output',$
-                                         'Input Data (2)'], $
+                                         'Input Data (2)',$
+                                        'Scalling Constant'], $
                                 tab1 : {size : [0, $
                                                 0, $
                                                 750, $

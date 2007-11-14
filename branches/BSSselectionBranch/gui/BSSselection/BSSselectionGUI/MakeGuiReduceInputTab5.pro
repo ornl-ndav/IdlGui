@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
+PRO MakeGuiReduceInputTab5, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -295,7 +295,7 @@ TIBCfScatDerrorText  = { size : [TIBCfScatDerrorLabel.size[0]+XYoff13[0],$
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab4_base = WIDGET_BASE(ReduceInputTab,$
+tab5_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -306,7 +306,7 @@ tab4_base = WIDGET_BASE(ReduceInputTab,$
 ;Time-Independent Background TOF channels (microSeconds)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBtofBase.size[0],$
                    YOFFSET   = TIBtofBase.size[1],$
                    SCR_XSIZE = TIBtofBase.size[2],$
@@ -319,14 +319,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-TIBtofLabel1 = WIDGET_LABEL(tab4_base,$
+TIBtofLabel1 = WIDGET_LABEL(tab5_base,$
                             XOFFSET   = TIBtofLabel1.size[0],$
                             YOFFSET   = TIBtofLabel1.size[1],$
                             SENSITIVE = TIBtofBase.button.sensitive,$
                             UNAME     = TIBtofLabel1.uname,$
                             VALUE     = TIBtofLabel1.value)
 
-TIBtofText1 = WIDGET_TEXT(tab4_base,$
+TIBtofText1 = WIDGET_TEXT(tab5_base,$
                           XOFFSET    = TIBtofText1.size[0],$
                           YOFFSET    = TIBtofText1.size[1],$
                           SCR_XSIZE  = TIBtofText1.size[2],$
@@ -338,14 +338,14 @@ TIBtofText1 = WIDGET_TEXT(tab4_base,$
                           /ALIGN_LEFT)
 
 
-TIBtofLabel2 = WIDGET_LABEL(tab4_base,$
+TIBtofLabel2 = WIDGET_LABEL(tab5_base,$
                             XOFFSET   = TIBtofLabel2.size[0],$
                             YOFFSET   = TIBtofLabel2.size[1],$
                             SENSITIVE = TIBtofBase.button.sensitive,$
                             UNAME     = TIBtofLabel2.uname,$
                             VALUE     = TIBtofLabel2.value)
 
-TIBtofText2 = WIDGET_TEXT(tab4_base,$
+TIBtofText2 = WIDGET_TEXT(tab5_base,$
                           XOFFSET    = TIBtofText2.size[0],$
                           YOFFSET    = TIBtofText2.size[1],$
                           SCR_XSIZE  = TIBtofText2.size[2],$
@@ -357,14 +357,14 @@ TIBtofText2 = WIDGET_TEXT(tab4_base,$
                           /ALIGN_LEFT)
 
 
-TIBtofLabel3 = WIDGET_LABEL(tab4_base,$
+TIBtofLabel3 = WIDGET_LABEL(tab5_base,$
                             XOFFSET   = TIBtofLabel3.size[0],$
                             YOFFSET   = TIBtofLabel3.size[1],$
                             SENSITIVE = TIBtofBase.button.sensitive,$
                             UNAME     = TIBtofLabel3.uname,$
                             VALUE     = TIBtofLabel3.value)
 
-TIBtofText3 = WIDGET_TEXT(tab4_base,$
+TIBtofText3 = WIDGET_TEXT(tab5_base,$
                           XOFFSET    = TIBtofText3.size[0],$
                           YOFFSET    = TIBtofText3.size[1],$
                           SCR_XSIZE  = TIBtofText3.size[2],$
@@ -376,14 +376,14 @@ TIBtofText3 = WIDGET_TEXT(tab4_base,$
                           /ALIGN_LEFT)
 
 
-TIBtofLabel4 = WIDGET_LABEL(tab4_base,$
+TIBtofLabel4 = WIDGET_LABEL(tab5_base,$
                             XOFFSET   = TIBtofLabel4.size[0],$
                             YOFFSET   = TIBtofLabel4.size[1],$
                             SENSITIVE = TIBtofBase.button.sensitive,$
                             UNAME     = TIBtofLabel4.uname,$
                             VALUE     = TIBtofLabel4.value)
 
-TIBtofText4 = WIDGET_TEXT(tab4_base,$
+TIBtofText4 = WIDGET_TEXT(tab5_base,$
                           XOFFSET    = TIBtofText4.size[0],$
                           YOFFSET    = TIBtofText4.size[1],$
                           SCR_XSIZE  = TIBtofText4.size[2],$
@@ -394,7 +394,7 @@ TIBtofText4 = WIDGET_TEXT(tab4_base,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
-TIBtofFrame = WIDGET_LABEL(tab4_base,$
+TIBtofFrame = WIDGET_LABEL(tab5_base,$
                            XOFFSET   = TIBtofFrame.size[0],$
                            YOFFSET   = TIBtofFrame.size[1],$
                            SCR_XSIZE = TIBtofFrame.size[2],$
@@ -406,7 +406,7 @@ TIBtofFrame = WIDGET_LABEL(tab4_base,$
 ;Time-Independent Background Constant for Sample Data\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBCfSDbase.size[0],$
                    YOFFSET   = TIBCfSDbase.size[1],$
                    SCR_XSIZE = TIBCfSDbase.size[2],$
@@ -419,14 +419,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfSDvalueLabel.size[0],$
                      YOFFSET   = TIBCfSDvalueLabel.size[1],$
                      VALUE     = TIBCfSDvalueLabel.value,$
                      UNAME     = TIBCfSDvalueLabel.uname,$
                      SENSITIVE = TIBCfSDvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCFSDvalueText.size[0],$
                    YOFFSET   = TIBCFSDvalueText.size[1],$
                    SCR_XSIZE = TIBCFSDvalueText.size[2],$
@@ -437,14 +437,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfSDerrorLabel.size[0],$
                      YOFFSET   = TIBCfSDerrorLabel.size[1],$
                      VALUE     = TIBCfSDerrorLabel.value,$
                      UNAME     = TIBCfSDerrorLabel.uname,$
                      SENSITIVE = TIBCfSDerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCFSDerrorText.size[0],$
                    YOFFSET   = TIBCFSDerrorText.size[1],$
                    SCR_XSIZE = TIBCFSDerrorText.size[2],$
@@ -455,7 +455,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = TIBCfSDframe.size[0],$
                       YOFFSET   = TIBCfSDframe.size[1],$
                       SCR_XSIZE = TIBCfSDframe.size[2],$
@@ -467,7 +467,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Time-Independent Background Constant for Background Data\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBCfBDbase.size[0],$
                    YOFFSET   = TIBCfBDbase.size[1],$
                    SCR_XSIZE = TIBCfBDbase.size[2],$
@@ -480,14 +480,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfBDvalueLabel.size[0],$
                      YOFFSET   = TIBCfBDvalueLabel.size[1],$
                      VALUE     = TIBCfBDvalueLabel.value,$
                      UNAME     = TIBCfBDvalueLabel.uname,$
                      SENSITIVE = TIBCfBDvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfBDvalueText.size[0],$
                    YOFFSET   = TIBCfBDvalueText.size[1],$
                    SCR_XSIZE = TIBCfBDvalueText.size[2],$
@@ -498,14 +498,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfBDerrorLabel.size[0],$
                      YOFFSET   = TIBCfBDerrorLabel.size[1],$
                      VALUE     = TIBCfBDerrorLabel.value,$
                      UNAME     = TIBCfBDerrorLabel.uname,$
                      SENSITIVE = TIBCfBDerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfBDerrorText.size[0],$
                    YOFFSET   = TIBCfBDerrorText.size[1],$
                    SCR_XSIZE = TIBCfBDerrorText.size[2],$
@@ -516,7 +516,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = TIBCfBDframe.size[0],$
                       YOFFSET   = TIBCfBDframe.size[1],$
                       SCR_XSIZE = TIBCfBDframe.size[2],$
@@ -528,7 +528,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Time-Independent Background Constant for Normalization Data\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBCfNDbase.size[0],$
                    YOFFSET   = TIBCfNDbase.size[1],$
                    SCR_XSIZE = TIBCfNDbase.size[2],$
@@ -541,14 +541,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfNDvalueLabel.size[0],$
                      YOFFSET   = TIBCfNDvalueLabel.size[1],$
                      VALUE     = TIBCfNDvalueLabel.value,$
                      UNAME     = TIBCfNDvalueLabel.uname,$
                      SENSITIVE = TIBCfNDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfNDvalueText.size[0],$
                    YOFFSET   = TIBCfNDvalueText.size[1],$
                    SCR_XSIZE = TIBCfNDvalueText.size[2],$
@@ -559,14 +559,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfNDerrorLabel.size[0],$
                      YOFFSET   = TIBCfNDerrorLabel.size[1],$
                      VALUE     = TIBCfNDerrorLabel.value,$
                      UNAME     = TIBCfNDerrorLabel.uname,$
                      SENSITIVE = TIBCfNDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfNDerrorText.size[0],$
                    YOFFSET   = TIBCfNDerrorText.size[1],$
                    SCR_XSIZE = TIBCfNDerrorText.size[2],$
@@ -577,7 +577,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = TIBCfNDframe.size[0],$
                       YOFFSET   = TIBCfNDframe.size[1],$
                       SCR_XSIZE = TIBCfNDframe.size[2],$
@@ -589,7 +589,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Time-Independent Background Constant for Empty Can Data\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBCfECDbase.size[0],$
                    YOFFSET   = TIBCfECDbase.size[1],$
                    SCR_XSIZE = TIBCfECDbase.size[2],$
@@ -602,14 +602,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfECDvalueLabel.size[0],$
                      YOFFSET   = TIBCfECDvalueLabel.size[1],$
                      VALUE     = TIBCfECDvalueLabel.value,$
                      UNAME     = TIBCfECDvalueLabel.uname,$
                      SENSITIVE = TIBCfECDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfECDvalueText.size[0],$
                    YOFFSET   = TIBCfECDvalueText.size[1],$
                    SCR_XSIZE = TIBCfECDvalueText.size[2],$
@@ -620,14 +620,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfECDerrorLabel.size[0],$
                      YOFFSET   = TIBCfECDerrorLabel.size[1],$
                      VALUE     = TIBCfECDerrorLabel.value,$
                      UNAME     = TIBCfECDerrorLabel.uname,$
                      SENSITIVE = TIBCfECDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfECDerrorText.size[0],$
                    YOFFSET   = TIBCfECDerrorText.size[1],$
                    SCR_XSIZE = TIBCfECDerrorText.size[2],$
@@ -638,7 +638,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = TIBCfECDframe.size[0],$
                       YOFFSET   = TIBCfECDframe.size[1],$
                       SCR_XSIZE = TIBCfECDframe.size[2],$
@@ -650,7 +650,7 @@ frame  = WIDGET_LABEL(tab4_base,$
 ;Time-Independent Background Constant for Scattering Data\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = TIBCfScatDbase.size[0],$
                    YOFFSET   = TIBCfScatDbase.size[1],$
                    SCR_XSIZE = TIBCfScatDbase.size[2],$
@@ -663,14 +663,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfScatDvalueLabel.size[0],$
                      YOFFSET   = TIBCfScatDvalueLabel.size[1],$
                      VALUE     = TIBCfScatDvalueLabel.value,$
                      UNAME     = TIBCfScatDvalueLabel.uname,$
                      SENSITIVE = TIBCfScatDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfScatDvalueText.size[0],$
                    YOFFSET   = TIBCfScatDvalueText.size[1],$
                    SCR_XSIZE = TIBCfScatDvalueText.size[2],$
@@ -681,14 +681,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = TIBCfScatDerrorLabel.size[0],$
                      YOFFSET   = TIBCfScatDerrorLabel.size[1],$
                      VALUE     = TIBCfScatDerrorLabel.value,$
                      UNAME     = TIBCfScatDerrorLabel.uname,$
                      SENSITIVE = TIBCfScatDbase.button.value)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = TIBCfScatDerrorText.size[0],$
                    YOFFSET   = TIBCfScatDerrorText.size[1],$
                    SCR_XSIZE = TIBCfScatDerrorText.size[2],$
@@ -699,7 +699,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = TIBCfScatDframe.size[0],$
                       YOFFSET   = TIBCfScatDframe.size[1],$
                       SCR_XSIZE = TIBCfScatDframe.size[2],$
