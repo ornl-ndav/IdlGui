@@ -451,6 +451,16 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='te_low_field'): begin
+        BSSselection_Reduce_te_low_field, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='te_high_field'): begin
+        BSSselection_Reduce_te_high_field, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
 ;tab3
     Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel1_text'): begin
         BSSselection_Reduce_tibtof_channel1_text, Event

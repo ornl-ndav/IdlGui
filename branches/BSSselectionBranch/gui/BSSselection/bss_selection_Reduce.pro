@@ -124,6 +124,14 @@ END
 PRO BSSselection_Reduce_niew_field, Event
 END
 
+;This function is reached by the te_low_field
+PRO BSSselection_Reduce_te_low_field, Event
+END
+
+;This function is reached by the te_high_field
+PRO BSSselection_Reduce_te_high_field, Event
+END
+
 ;****************** TAB 3 *************************
 
 ;This function is reached by the tibtof_channel1_text

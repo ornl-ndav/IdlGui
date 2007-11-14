@@ -100,6 +100,49 @@ NIWhighText  = { size : [NIWhighLabel.size[0]+XYoff13[0],$
                  uname : 'niew_field',$
                  sensitive : NIWlabel.sensitive}
 
+;//////////////////////////////////////////////////
+;Low and High values that bracket the elastic peak/
+;//////////////////////////////////////////////////
+yoff += 25
+TEframe = { size : [5,NIWframe.size[1]+yoff, $
+                    NIWframe.size[2:3]],$
+            frame: NIWframe.frame}
+
+XYoff9 = [10,-10]
+TElabel = { size : [TEframe.size[0]+XYoff9[0],$
+                     TEframe.size[1]+XYoff9[1],$
+                     340,$
+                     30],$
+             value : 'Low and High Time-of-Flight Values that Bracket the Elastic Peak (microSeconds)',$
+             uname : 'te_label',$
+             sensitive : 0}
+
+XYoff10 = [20,25]
+TElowLabel = { size : [TEframe.size[0]+XYoff10[0],$
+                        TEframe.size[1]+XYoff10[1]],$
+                value : 'Low:',$
+                uname : 'te_low_field_label',$
+                sensitive : TElabel.sensitive}
+XYoff11 = [50,-5]
+TElowText  = { size : [TElowLabel.size[0]+XYoff11[0],$
+                        TElowlabel.size[1]+XYoff11[1],$
+                        100,30],$
+                uname : 'te_low_field',$
+                sensitive : TElabel.sensitive}
+
+XYoff12 = [200,0]
+TEhighLabel = { size : [TElowLabel.size[0]+XYoff12[0],$
+                         TElowLabel.size[1]+XYoff12[1]],$
+                 value : 'High:',$
+                 uname : 'te_high_field_label',$
+                 sensitive : TElabel.sensitive}
+XYoff13 = [50,-5]
+TEhighText  = { size : [TEhighLabel.size[0]+XYoff13[0],$
+                         TEhighlabel.size[1]+XYoff13[1],$
+                         100,30],$
+                 uname : 'te_high_field',$
+                 sensitive : TElabel.sensitive}
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -196,9 +239,9 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   LABEL_LEFT = NMECBase.button.value)
 
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;;Normalization Integration Start and End Wavelength\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Normalization Integration Start and End Wavelength\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 label1 = WIDGET_LABEL(tab2_base,$
                       XOFFSET   = NIWlabel.size[0],$
@@ -249,6 +292,61 @@ frame  = WIDGET_LABEL(tab2_base,$
                       SCR_XSIZE = NIWframe.size[2],$
                       SCR_YSIZE = NIWframe.size[3],$
                       FRAME     = NIWframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Low and High values that bracket the elastic peak\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+label1 = WIDGET_LABEL(tab2_base,$
+                      XOFFSET   = TElabel.size[0],$
+                      YOFFSET   = TElabel.size[1],$
+                      VALUE     = TElabel.value,$
+                      UNAME     = TElabel.uname,$
+                      SENSITIVE = TElabel.sensitive)
+
+label = WIDGET_LABEL(tab2_base,$
+                     XOFFSET   = TElowLabel.size[0],$
+                     YOFFSET   = TElowLabel.size[1],$
+                     VALUE     = TElowLabel.value,$
+                     UNAME     = TElowLabel.uname,$
+                     SENSITIVE = TElabel.sensitive)
+
+text = WIDGET_TEXT(tab2_base,$
+                   XOFFSET   = TElowText.size[0],$
+                   YOFFSET   = TElowText.size[1],$
+                   SCR_XSIZE = TElowText.size[2],$
+                   SCR_YSIZE = TElowText.size[3],$
+                   UNAME     = TElowText.uname,$
+                   SENSITIVE = TElabel.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab2_base,$
+                     XOFFSET   = TEhighLabel.size[0],$
+                     YOFFSET   = TEhighLabel.size[1],$
+                     VALUE     = TEhighLabel.value,$
+                     UNAME     = TEhighLabel.uname,$
+                     SENSITIVE = TElabel.sensitive)
+
+text = WIDGET_TEXT(tab2_base,$
+                   XOFFSET   = TEhighText.size[0],$
+                   YOFFSET   = TEhighText.size[1],$
+                   SCR_XSIZE = TEhighText.size[2],$
+                   SCR_YSIZE = TEhighText.size[3],$
+                   UNAME     = TEhighText.uname,$
+                   SENSITIVE = TElabel.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab2_base,$
+                      XOFFSET   = TEframe.size[0],$
+                      YOFFSET   = TEframe.size[1],$
+                      SCR_XSIZE = TEframe.size[2],$
+                      SCR_YSIZE = TEframe.size[3],$
+                      FRAME     = TEframe.frame,$
                       VALUE     = '')
 
 END

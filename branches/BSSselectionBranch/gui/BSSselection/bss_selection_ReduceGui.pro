@@ -54,12 +54,27 @@ PRO BSSselection_ReduceUpdateGui, Event
 NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
 IF (NDFiles NE '') THEN BEGIN ;activate widgets
     activate_status = 1
-ENDIF ELSE BEGIN
+ENDIF ELSE BEGIN ;desactivate widgets
     activate_status = 0
 ENDELSE
 
 widgets = ['nisw_field','niew_field']
 widgets = [widgets,widgets + '_label','niw_label']
+sz = (size(widgets))(1)
+FOR i=0,(sz-1) DO BEGIN
+    activate_button, Event, widgets[i], activate_status
+ENDFOR
+
+;If dsback is not null, then activate in tab3
+;Low and High values that bracket the elastic peak
+DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
+IF (DSBFiles NE '') THEN BEGIN ;activate widgets
+    activate_status = 1
+ENDIF ELSE BEGIN ;desactivate widgets
+    activate_status = 0
+ENDELSE
+widgets = ['te_low_field','te_high_field']
+widgets = [widgets,widgets + '_label','te_label']
 sz = (size(widgets))(1)
 FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status

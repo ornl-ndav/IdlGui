@@ -102,7 +102,7 @@ ENDIF
 ;****TAB3****
 
 TabName = 'Tab#3 - PROCESS SETUP'
-
+tab3 = 0
 ;get Run McStas NeXus Files status
 IF (isButtonSelected(Event,'rmcnf_button')) THEN BEGIN
     cmd += ' --mc'
@@ -141,6 +141,63 @@ IF (NDFiles NE '') THEN BEGIN ;only if there is a normalization file loaded
         cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
     ENDIF
 ENDIF
+
+IF (DSBFiles NE '') THEN BEGIN ;only if there is a direct scattering background
+;sample data file
+    TEL = getTextFieldValue(Event,'te_low_field')
+    TEH = getTextFieldValue(Event,'te_high_field')
+    IF (TEL NE '' OR $
+        TEH NE '') THEN BEGIN
+
+        cmd += ' --tof-elastic='
+
+        IF (TEL EQ '') THEN BEGIN
+            cmd += '?'
+            status_text = '   -Please provide a Low Value that Bracket the Elastic Peak'
+            IF (tab3 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab3 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab3 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab3
+        ENDIF ELSE BEGIN
+            cmd += strcompress(TEL,/remove_all)
+        ENDELSE
+
+        IF (TEH EQ '') THEN BEGIN
+            cmd += ',?'
+            status_text = '   -Please provide a High Value that Bracket the Elastic Peak'
+            IF (tab3 EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, '', 1
+                putInfoInCommandLineStatus, Event, '', 1
+            ENDIF
+            IF (tab3 EQ 0 AND $
+                StatusMessage EQ 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 0
+            ENDIF
+            IF (tab3 EQ 0 AND $
+                StatusMessage NE 0) THEN BEGIN
+                putInfoInCommandLineStatus, Event, TabName, 1
+            ENDIF
+            putInfoInCommandLineStatus, Event, status_text, 1
+            StatusMessage += 1
+            ++tab3
+        ENDIF ELSE BEGIN
+            cmd += ',' + strcompress(TEH,/remove_all)
+        ENDELSE
+
+    ENDIF
+ENDIF
+
 ;****TAB4****
 
 TabName = 'Tab#4 - TIME-INDEPENDENT BACKGROUND'
