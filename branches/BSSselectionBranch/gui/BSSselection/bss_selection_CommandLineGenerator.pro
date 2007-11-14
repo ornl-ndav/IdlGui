@@ -128,18 +128,19 @@ IF (isButtonSelected(Event,'nmec_button')) THEN BEGIN
     cmd += ' --no-mon-effc'
 ENDIF
 
+IF (NDFiles NE '') THEN BEGIN ;only if there is a normalization file loaded
 ;get Normalization Integration Start Wavelength
-NISW = getTextFieldValue(Event,'nisw_field')
-IF(NISW NE '') THEN BEGIN
-    cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
-ENDIF
-
+    NISW = getTextFieldValue(Event,'nisw_field')
+    IF(NISW NE '') THEN BEGIN
+        cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
+    ENDIF
+    
 ;get Normalization Integration End Wavelength
-NIEW = getTextFieldValue(Event,'niew_field')
-IF(NIEW NE '') THEN BEGIN
-    cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
+    NIEW = getTextFieldValue(Event,'niew_field')
+    IF(NIEW NE '') THEN BEGIN
+        cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
+    ENDIF
 ENDIF
-
 ;****TAB4****
 
 TabName = 'Tab#4 - TIME-INDEPENDENT BACKGROUND'

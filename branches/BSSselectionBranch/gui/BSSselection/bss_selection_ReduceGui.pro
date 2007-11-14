@@ -46,7 +46,25 @@ END
 
 
 
-PRO BSSselection_UpdateGui, Event
+;This procedure upate the GUI
+PRO BSSselection_ReduceUpdateGui, Event
+
+;If there is a normalization run then activate in tab3
+;Normalization Integration Start and End Wavelength (Angstroms)
+NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
+IF (NDFiles NE '') THEN BEGIN ;activate widgets
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+
+widgets = ['nisw_field','niew_field']
+widgets = [widgets,widgets + '_label','niw_label']
+sz = (size(widgets))(1)
+FOR i=0,(sz-1) DO BEGIN
+    activate_button, Event, widgets[i], activate_status
+ENDFOR
+
 
 END
 

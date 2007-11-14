@@ -71,6 +71,7 @@ NIWlabel = { size : [NIWframe.size[0]+XYoff9[0],$
                      340,$
                      30],$
              value : 'Normalization Integration Start and End Wavelength (Angstroms)',$
+             uname : 'niw_label',$
              sensitive : 0}
 
 XYoff10 = [20,25]
@@ -200,10 +201,11 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
 label1 = WIDGET_LABEL(tab2_base,$
-                     XOFFSET   = NIWlabel.size[0],$
-                     YOFFSET   = NIWlabel.size[1],$
-                     VALUE     = NIWlabel.value,$
-                     SENSITIVE = NIWlabel.sensitive)
+                      XOFFSET   = NIWlabel.size[0],$
+                      YOFFSET   = NIWlabel.size[1],$
+                      VALUE     = NIWlabel.value,$
+                      UNAME     = NIWlabel.uname,$
+                      SENSITIVE = NIWlabel.sensitive)
 
 label = WIDGET_LABEL(tab2_base,$
                      XOFFSET   = NIWlowLabel.size[0],$
