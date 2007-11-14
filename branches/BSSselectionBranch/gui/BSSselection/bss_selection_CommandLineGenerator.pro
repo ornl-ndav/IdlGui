@@ -319,7 +319,7 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_sd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant value for' 
+        status_text = '   -Please provide a Time Independent Background Constant Value for' 
         status_text += ' Sample Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -343,7 +343,7 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_sd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text = '   -Please provide a Time Independent Background Constant Error for' 
         status_text += ' Sample Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -373,7 +373,7 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_bd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant value for' 
+        status_text = '   -Please provide a Time Independent Background Constant Value for' 
         status_text += ' Background Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -397,7 +397,7 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_bd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text = '   -Please provide a Time Independent Background Constant Error for' 
         status_text += ' Background Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -427,7 +427,7 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_nd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant value for'
+        status_text = '   -Please provide a Time Independent Background Constant Value for'
         status_text += ' Normalization Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -451,7 +451,7 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_nd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text = '   -Please provide a Time Independent Background Constant Error for' 
         status_text += ' Normalization Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -481,7 +481,7 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     TIBCV = getTextFieldValue(Event,'tibc_for_ecd_value_text')
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant value for'
+        status_text = '   -Please provide a Time Independent Background Constant Value for'
         status_text += ' Empty Can Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -505,8 +505,63 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     TIBCE = getTextFieldValue(Event,'tibc_for_ecd_error_text')
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant error for' 
+        status_text = '   -Please provide a Time Independent Background Constant Error for' 
         status_text += ' Empty Can Data'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBCE,/remove_all)
+    ENDELSE
+
+ENDIF
+
+
+;get Time-independent Background Constant for Empty Can Data
+IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
+    cmd += ' --tib-dsback-const='
+
+    TIBCV = getTextFieldValue(Event,'tibc_for_scatd_value_text')
+    IF (TIBCV EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Time Independent Background Constant Value for'
+        status_text += ' Scattering Data'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBCV,/remove_all)
+    ENDELSE
+    
+    TIBCE = getTextFieldValue(Event,'tibc_for_scatd_error_text')
+    IF (TIBCE EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text += ' Scattering Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1

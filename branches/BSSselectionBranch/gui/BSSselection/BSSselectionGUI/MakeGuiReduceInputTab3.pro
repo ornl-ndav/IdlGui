@@ -73,7 +73,7 @@ TIBtofText4 = { size : [TIBtofLabel4.size[0]+XYoff8[0],$
 ;/////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Sample Data/
 ;/////////////////////////////////////////////////////
-yoff = 100 
+yoff = 80
 TIBCfSDframe = { size : [TIBtofFrame.size[0],$
                          TIBtofFrame.size[1]+yoff,$
                          TIBtofFrame.size[2],$
@@ -215,7 +215,7 @@ TIBCfECDframe = { size : [TIBtofFrame.size[0],$
 XYoff9 = [10,-14]
 TIBCfECDBase = { size : [TIBCfECDframe.size[0]+XYoff9[0],$
                         TIBCfECDframe.size[1]+XYoff9[1],$
-                        375,$
+                        360,$
                         30],$
                 button : { uname : 'tibc_for_ecd_button',$
                            list : ['Time-Independent Background Constant for Empty Can Data'],$
@@ -246,6 +246,51 @@ TIBCfECDerrorText  = { size : [TIBCfECDerrorLabel.size[0]+XYoff13[0],$
                               100,30],$
                       uname : 'tibc_for_ecd_error_text',$
                        sensitive : TIBCfECDBase.button.value}
+
+;/////////////////////////////////////////////////////////
+;Time-Independent Background Constant for Scattering Data/
+;/////////////////////////////////////////////////////////
+yoff = 80
+TIBCfScatDframe = { size : [TIBCfECDframe.size[0],$
+                            TIBCfECDframe.size[1]+yoff,$
+                            TIBCfECDframe.size[2],$
+                            55],$
+                    frame: TIBtofFrame.frame}
+
+XYoff9 = [10,-14]
+TIBCfScatDBase = { size : [TIBCfScatDframe.size[0]+XYoff9[0],$
+                        TIBCfScatDframe.size[1]+XYoff9[1],$
+                        365,$
+                        30],$
+                button : { uname : 'tibc_for_scatd_button',$
+                           list : ['Time-Independent Background Constant for Scattering Data'],$
+                           value : 0}}
+
+XYoff10 = [10,25]
+TIBCfScatDvalueLabel = { size : [TIBCfScatDframe.size[0]+XYoff10[0],$
+                              TIBCfScatDframe.size[1]+XYoff10[1]],$
+                      value : 'Value:',$
+                      uname : 'tibc_for_scatd_value_text_label',$
+                      sensitive : TIBCfScatDBase.button.value}
+XYoff11 = [50,-5]
+TIBCfScatDvalueText  = { size : [TIBCfScatDvalueLabel.size[0]+XYoff11[0],$
+                              TIBCfScatDvaluelabel.size[1]+XYoff11[1],$
+                              100,30],$
+                      uname : 'tibc_for_scatd_value_text',$
+                      sensitive : TIBCfScatDBase.button.value}
+
+XYoff12 = [200,0]
+TIBCfScatDerrorLabel = { size : [TIBCfScatDvalueLabel.size[0]+XYoff12[0],$
+                              TIBCfScatDvalueLabel.size[1]+XYoff12[1]],$
+                      value : 'Error:',$
+                      uname : 'tibc_for_scatd_error_text_label',$
+                      sensitive : TIBCfScatDBase.button.value}
+XYoff13 = [50,-5]
+TIBCfScatDerrorText  = { size : [TIBCfScatDerrorLabel.size[0]+XYoff13[0],$
+                              TIBCfScatDerrorlabel.size[1]+XYoff13[1],$
+                              100,30],$
+                      uname : 'tibc_for_scatd_error_text',$
+                      sensitive : TIBCfScatDBase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -599,6 +644,67 @@ frame  = WIDGET_LABEL(tab3_base,$
                       SCR_XSIZE = TIBCfECDframe.size[2],$
                       SCR_YSIZE = TIBCfECDframe.size[3],$
                       FRAME     = TIBCfECDframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Time-Independent Background Constant for Scattering Data\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab3_base,$
+                   XOFFSET   = TIBCfScatDbase.size[0],$
+                   YOFFSET   = TIBCfScatDbase.size[1],$
+                   SCR_XSIZE = TIBCfScatDbase.size[2],$
+                   SCR_YSIZE = TIBCfScatDbase.size[3])
+
+group = CW_BGROUP(base,$
+                  TIBCfScatDbase.button.list,$
+                  UNAME      = TIBCfScatDbase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab3_base,$
+                     XOFFSET   = TIBCfScatDvalueLabel.size[0],$
+                     YOFFSET   = TIBCfScatDvalueLabel.size[1],$
+                     VALUE     = TIBCfScatDvalueLabel.value,$
+                     UNAME     = TIBCfScatDvalueLabel.uname,$
+                     SENSITIVE = TIBCfScatDbase.button.value)
+
+text = WIDGET_TEXT(tab3_base,$
+                   XOFFSET   = TIBCfScatDvalueText.size[0],$
+                   YOFFSET   = TIBCfScatDvalueText.size[1],$
+                   SCR_XSIZE = TIBCfScatDvalueText.size[2],$
+                   SCR_YSIZE = TIBCfScatDvalueText.size[3],$
+                   UNAME     = TIBCfScatDvalueText.uname,$
+                   SENSITIVE = TIBCfScatDbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab3_base,$
+                     XOFFSET   = TIBCfScatDerrorLabel.size[0],$
+                     YOFFSET   = TIBCfScatDerrorLabel.size[1],$
+                     VALUE     = TIBCfScatDerrorLabel.value,$
+                     UNAME     = TIBCfScatDerrorLabel.uname,$
+                     SENSITIVE = TIBCfScatDbase.button.value)
+
+text = WIDGET_TEXT(tab3_base,$
+                   XOFFSET   = TIBCfScatDerrorText.size[0],$
+                   YOFFSET   = TIBCfScatDerrorText.size[1],$
+                   SCR_XSIZE = TIBCfScatDerrorText.size[2],$
+                   SCR_YSIZE = TIBCfScatDerrorText.size[3],$
+                   UNAME     = TIBCfScatDerrorText.uname,$
+                   SENSITIVE = TIBCfScatDbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab3_base,$
+                      XOFFSET   = TIBCfScatDframe.size[0],$
+                      YOFFSET   = TIBCfScatDframe.size[1],$
+                      SCR_XSIZE = TIBCfScatDframe.size[2],$
+                      SCR_YSIZE = TIBCfScatDframe.size[3],$
+                      FRAME     = TIBCfScatDframe.frame,$
                       VALUE     = '')
 
 END

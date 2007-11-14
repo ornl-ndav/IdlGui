@@ -217,6 +217,19 @@ END
 PRO BSSselection_Reduce_tibc_for_ecd_error_text, Event
 END
 
+;This function is reduce by the tibc_for_scatd_button
+PRO BSSselection_Reduce_tibc_for_scatd_button, Event
+BSSselection_EnableOrNotFields, Event, 'tibc_for_scatd_button'
+END
+
+;This function is reduce by the tibc_for_scatd_value_text
+PRO BSSselection_Reduce_tibc_for_scatd_value_text, Event
+END
+
+;This function is reduce by the tibc_for_scatd_error_text
+PRO BSSselection_Reduce_tibc_for_scatd_error_text, Event
+END
+
 ;****************** TAB 4 *************************
 
 ;This function is reached by the tzsp_button

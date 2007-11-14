@@ -38,6 +38,9 @@ CASE (type) OF
     'te_button': BEGIN
         text_unames = ['te_low_field','te_high_field']
     END
+    'tibc_for_scatd_button': BEGIN
+        text_unames = ['tibc_for_scatd_value_text','tibc_for_scatd_error_text']
+    END
     'tib_tof_button': BEGIN
         text_unames = ['tibtof_channel1_text', $
                        'tibtof_channel2_text', $
