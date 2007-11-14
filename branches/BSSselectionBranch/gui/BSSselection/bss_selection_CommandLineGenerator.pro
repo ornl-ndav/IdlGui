@@ -23,7 +23,6 @@ ENDIF ELSE BEGIN
     cmd += ' ?'
     putInfoInCommandLineStatus, Event, TabName, 0
     status_text = '   -Please provide at least one Raw Sample Data File'
-    status_text += ' (Format example: /SNS/BSS/2007_1_2_SCI/1/2454/NeXus/BSS_2454.nxs,/SNS/BSS/2007_1_2_SCI/1/2455/NeXus/BSS_2455.nxs)'
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
     ++tab1
@@ -69,6 +68,7 @@ ENDIF ELSE BEGIN
     cmd += '?'
     status_text = '   -Please provide a Pixel Region of Interest File'
     IF (tab2 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
     IF (tab2 EQ 0 AND $
