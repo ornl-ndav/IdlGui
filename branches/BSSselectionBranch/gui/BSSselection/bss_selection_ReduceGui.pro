@@ -1,7 +1,7 @@
 PRO BSSselection_EnableOrNotFields, Event, type
 
 ;Value of button
-ActivateStatus = isButtonSelected(Event,type)
+ActivateStatus = isButtonSelectedAndEnabled(Event,type)
 
 CASE (type) OF
     'tibc_for_sd_button': BEGIN
@@ -35,6 +35,9 @@ CASE (type) OF
     'niw_button': BEGIN
         text_unames = ['nisw_field','niew_field']
     END
+    'te_button': BEGIN
+        text_unames = ['te_low_field','te_high_field']
+    END
     
 ENDCASE
 
@@ -55,34 +58,35 @@ PRO BSSselection_ReduceUpdateGui, Event
 
 ;If there is a normalization run then activate in tab3
 ;Normalization Integration Start and End Wavelength (Angstroms)
+widgets = ['niw_button']
 NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
 IF (NDFiles NE '') THEN BEGIN ;activate widgets
     activate_status = 1
 ENDIF ELSE BEGIN ;desactivate widgets
     activate_status = 0
 ENDELSE
-
-widgets = ['niw_button']
 sz = (size(widgets))(1)
 FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status
 ENDFOR
+IF (activate_status EQ 0) THEN BEGIN
+    BSSselection_EnableOrNotFields, Event, widgets[0]
+ENDIF
 
 ;If dsback is not null, then activate in tab3
 ;Low and High values that bracket the elastic peak
+widgets = ['te_button']
 DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
 IF (DSBFiles NE '') THEN BEGIN ;activate widgets
     activate_status = 1
 ENDIF ELSE BEGIN ;desactivate widgets
     activate_status = 0
 ENDELSE
-widgets = ['te_low_field','te_high_field']
-widgets = [widgets,widgets + '_label','te_label']
 sz = (size(widgets))(1)
 FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status
 ENDFOR
-
+IF (activate_status EQ 0) THEN BSSselection_EnableOrNotFields, Event, widgets[0]
 
 END
 

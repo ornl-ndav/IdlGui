@@ -129,6 +129,11 @@ END
 PRO BSSselection_Reduce_niew_field, Event
 END
 
+;This funciton is reached by the te_button
+PRO BSSselection_Reduce_te_button, Event
+BSSselection_EnableOrNotFields, Event, 'te_button'
+END
+
 ;This function is reached by the te_low_field
 PRO BSSselection_Reduce_te_low_field, Event
 END

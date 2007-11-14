@@ -128,33 +128,33 @@ IF (isButtonSelected(Event,'nmec_button')) THEN BEGIN
     cmd += ' --no-mon-effc'
 ENDIF
 
-IF (isButtonSelected(Event,'niw_button')) THEN BEGIN
+IF (isButtonSelected(Event,'niw_button') AND $
+    NDFiles NE '') THEN BEGIN
 
-    IF (NDFiles NE '') THEN BEGIN ;only if there is a normalization file loaded
 ;get Normalization Integration Start Wavelength
-        NISW = getTextFieldValue(Event,'nisw_field')
-        IF(NISW NE '') THEN BEGIN
-            cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
-        ENDIF
-        
-;get Normalization Integration End Wavelength
-        NIEW = getTextFieldValue(Event,'niew_field')
-        IF(NIEW NE '') THEN BEGIN
-            cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
-        ENDIF
+    NISW = getTextFieldValue(Event,'nisw_field')
+    IF(NISW NE '') THEN BEGIN
+        cmd += ' --norm-start=' + strcompress(NISW,/remove_all)
     ENDIF
-
+    
+;get Normalization Integration End Wavelength
+    NIEW = getTextFieldValue(Event,'niew_field')
+    IF(NIEW NE '') THEN BEGIN
+        cmd += ' --norm-end=' + strcompress(NIEW,/remove_all)
+    ENDIF
 ENDIF
 
-IF (DSBFiles NE '') THEN BEGIN ;only if there is a direct scattering background
+if (isButtonSelected(Event,'te_button') AND $
+    DSBFiles NE '') THEN BEGIN
+
 ;sample data file
     TEL = getTextFieldValue(Event,'te_low_field')
     TEH = getTextFieldValue(Event,'te_high_field')
     IF (TEL NE '' OR $
         TEH NE '') THEN BEGIN
-
+        
         cmd += ' --tof-elastic='
-
+        
         IF (TEL EQ '') THEN BEGIN
             cmd += '?'
             status_text = '   -Please provide a Low Value that Bracket the Elastic Peak'

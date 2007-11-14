@@ -50,3 +50,22 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, get_value=value
 RETURN, value
 END
+
+
+;if button is activated
+FUNCTION isButtonEnabled, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+sensitiveStatus = widget_info(id,/sensitive)
+RETURN, sensitiveStatus
+END
+
+
+;if button is click and activated
+FUNCTION isButtonSelectedAndEnabled, Event, uname
+IF ((isButtonSelected(event,uname) EQ 1) AND $
+    isButtonEnabled(event,uname) EQ 1) THEN BEGIN
+    return, 1
+ENDIF ELSE BEGIN
+    return, 0
+ENDELSE
+END
