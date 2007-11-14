@@ -388,8 +388,7 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-
-;tab11
+;tab2
     Widget_Info(wWidget, FIND_BY_UNAME='proif_browse_nexus_button'): begin
         BSSselection_ReduceBrowseRoi, Event
         BSSselection_CommandLineGenerator, Event
@@ -415,7 +414,7 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-;tab2
+;tab3
     Widget_Info(wWidget, FIND_BY_UNAME='rmcnf_button'): begin
         BSSselection_Reduce_rmcnf_button, Event
         BSSselection_CommandLineGenerator, Event
@@ -471,7 +470,7 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-;tab3
+;tab4
     Widget_Info(wWidget, FIND_BY_UNAME='tib_tof_button'): begin
         BSSselection_Reduce_tib_tof_button, Event
         BSSselection_CommandLineGenerator, Event
@@ -572,7 +571,11 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-;tab4
+;tab5
+
+
+
+;tab6
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin
         BSSselection_Reduce_tzsp_button, Event
         BSSselection_CommandLineGenerator, Event
@@ -638,7 +641,7 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
-;tab5
+;tab7
     Widget_Info(wWidget, FIND_BY_UNAME='waio_button'): begin
         BSSselection_Reduce_waio_button, Event
         BSSselection_CommandLineGenerator, Event

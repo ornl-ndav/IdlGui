@@ -587,9 +587,27 @@ ENDIF
 putInfoInCommandLineStatus, Event, '', 1
 
 ;*************TAB5*****************
-
-TabName = 'Tab#5 - DATA CONTROL'
+TabName = 'Tab#5 - SCALLING CONTROL'
 tab5    = 0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+;*************TAB6*****************
+TabName = 'Tab#6 - DATA CONTROL'
+tab6    = 0
 
 ;get Time Zero Slope Parameter
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
@@ -599,20 +617,20 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Time Zero Slope Parameter Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -621,20 +639,20 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Slope Parameter Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -649,20 +667,20 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Time Zero Offset Parameter Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -671,20 +689,20 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Offset Parameter Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -698,20 +716,20 @@ TIBCMin = getTextFieldValue(Event,'eha_min_text')
 IF (TIBCMin EQ '') THEN BEGIN
     cmd += '?'
     status_text = '   -Please provide a Energy Histogram Axis Min'
-    IF (tab5 EQ 0) THEN BEGIN
+    IF (tab6 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab5
+    ++tab6
 ENDIF ELSE BEGIN
     cmd += strcompress(TIBCMin,/remove_all)
 ENDELSE
@@ -720,20 +738,20 @@ TIBCMax = getTextFieldValue(Event,'eha_max_text')
 IF (TIBCMax EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Max'
-    IF (tab5 EQ 0) THEN BEGIN
+    IF (tab6 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab5
+    ++tab6
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCMax,/remove_all)
 ENDELSE
@@ -742,20 +760,20 @@ TIBCBin = getTextFieldValue(Event,'eha_bin_text')
 IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Bin'
-    IF (tab5 EQ 0) THEN BEGIN
+    IF (tab6 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 0
     ENDIF
-    IF (tab5 EQ 0 AND $
+    IF (tab6 EQ 0 AND $
         StatusMessage NE 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, TabName, 1
     ENDIF
     putInfoInCommandLineStatus, Event, status_text, 1
     StatusMessage += 1
-    ++tab5
+    ++tab6
 ENDIF ELSE BEGIN
     cmd += ',' + strcompress(TIBCBin,/remove_all)
 ENDELSE
@@ -768,20 +786,20 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
         status_text = '   -Please provide a Global Instrument Final Wavelength Value'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += strcompress(TIBCV,/remove_all)
     ENDELSE
@@ -790,20 +808,20 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Global Instrument Final Wavelength Error'
-        IF (tab5 EQ 0) THEN BEGIN
+        IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 0
         ENDIF
-        IF (tab5 EQ 0 AND $
+        IF (tab6 EQ 0 AND $
             StatusMessage NE 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, TabName, 1
         ENDIF
         putInfoInCommandLineStatus, Event, status_text, 1
         StatusMessage += 1
-        ++tab5
+        ++tab6
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
@@ -813,10 +831,10 @@ ENDIF
 ;add a white space
 putInfoInCommandLineStatus, Event, '', 1
 
-;************TAB6******************
+;************TAB7******************
 
-TabName = 'Tab#5 - INTERMEDIATE OUTPUT'
-tab5    = 0
+TabName = 'Tab#7 - INTERMEDIATE OUTPUT'
+tab7    = 0
 
 ;Write all Intermediate Output
 IF (isButtonSelected(Event,'waio_button')) THEN BEGIN
@@ -865,20 +883,20 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
         IF (WAmin EQ '') THEN BEGIN
             cmd += '?'
             status_text = '   -Please provide a Wavelength Histogram Min Value'
-            IF (tab6 EQ 0) THEN BEGIN
+            IF (tab7 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab6
+            ++tab7
         ENDIF ELSE BEGIN
             cmd += strcompress(WAmin,/remove_all)
         ENDELSE
@@ -887,20 +905,20 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
         IF (WAmax EQ '') THEN BEGIN
             cmd += ',?'
             status_text = '   -Please provide a Wavelength Histogram Max Value'
-            IF (tab6 EQ 0) THEN BEGIN
+            IF (tab7 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab6
+            ++tab7
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WAmax,/remove_all)
         ENDELSE
@@ -908,20 +926,20 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
         IF (WABwidth EQ '') THEN BEGIN
             cmd += ',?'
             status_text = '   -Please provide a Wavelength Histogram Bin Width Value'
-            IF (tab6 EQ 0) THEN BEGIN
+            IF (tab7 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 0
             ENDIF
-            IF (tab6 EQ 0 AND $
+            IF (tab7 EQ 0 AND $
                 StatusMessage NE 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, TabName, 1
             ENDIF
             putInfoInCommandLineStatus, Event, status_text, 1
             StatusMessage += 1
-            ++tab6
+            ++tab7
         ENDIF ELSE BEGIN
             cmd += ',' + strcompress(WABwidth,/remove_all)
         ENDELSE

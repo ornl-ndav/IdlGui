@@ -76,7 +76,7 @@ BSSselection_UpdateListOfNexus, Event, 'dsb'
 END
 
 
-;****************** TAB 11 *************************
+;****************** TAB 2 *************************
 
 ;This function is reached by the proif_text
 PRO BSSselection_Reduce_proif_text, Event
@@ -90,7 +90,7 @@ END
 PRO BSSselection_Reduce_of_list_of_runs_text, Event
 END
 
-;****************** TAB 2 *************************
+;****************** TAB 3 *************************
 
 ;This function is reached by the rdbbase_bank_button
 PRO BSSselection_Reduce_rdbbase_bank_button, Event
@@ -142,7 +142,7 @@ END
 PRO BSSselection_Reduce_te_high_field, Event
 END
 
-;****************** TAB 3 *************************
+;****************** TAB 4 *************************
 
 ;This function is reached by the tib_tof_button
 PRO BSSselection_Reduce_tib_tof_button, Event
@@ -230,7 +230,15 @@ END
 PRO BSSselection_Reduce_tibc_for_scatd_error_text, Event
 END
 
-;****************** TAB 4 *************************
+;****************** TAB 5 *************************
+
+
+
+
+
+
+
+;****************** TAB 6 *************************
 
 ;This function is reached by the tzsp_button
 PRO BSSselection_Reduce_tzsp_button, Event
@@ -288,7 +296,7 @@ END
 PRO BSSselection_Reduce_gifw_error_text, Event
 END
 
-;****************** TAB 5 *************************
+;****************** TAB 7 *************************
 
 ;This function is reached by waio_button
 PRO BSSselection_Reduce_waio_button, Event
