@@ -228,6 +228,52 @@ CSerrorText  = { size : [CSerrorLabel.size[0]+XYoff13[0],$
                     uname : 'cs_error_text',$
                     sensitive : CSBase.button.value}
 
+;///////////////////////////////////////////////////////////////////
+;Constant to Scale the Empty Container Spectra for subtraction from/
+;the normalization data                                            /
+;///////////////////////////////////////////////////////////////////
+yoff = 90
+CNframe = { size : [CSframe.size[0], $
+                    CSframe.size[1]+yoff,$
+                    CSframe.size[2:3]],$
+            frame : CSframe.frame}
+
+XYoff = [10,-14]
+CNbase = { size : [CNframe.size[0]+XYoff[0],$
+                   CNframe.size[1]+XYoff[1],$
+                   565,$
+                   30],$
+           button : { uname : 'cn_button',$
+                      list : ['Constant to Scale the Empty Container Spectra for Subtraction from the Normalization Data'],$
+                      value : 0}}
+
+XYoff10 = [15,25]   
+CNvalueLabel = { size : [CNframe.size[0]+XYoff10[0],$
+                         CNframe.size[1]+XYoff10[1]],$
+                    value : 'Value:',$
+                    uname : 'cn_value_text_label',$
+                    sensitive : CNBase.button.value}
+XYoff11 = [50,-5]
+CNvalueText  = { size : [CNvalueLabel.size[0]+XYoff11[0],$
+                            CNvaluelabel.size[1]+XYoff11[1],$
+                            100,30],$
+                    uname : 'cn_value_text',$
+                    sensitive : CNBase.button.value}
+
+XYoff12 = [200,0]
+CNerrorLabel = { size : [CNvalueLabel.size[0]+XYoff12[0],$
+                            CNvalueLabel.size[1]+XYoff12[1]],$
+                    value : 'Error:',$
+                    uname : 'cn_error_text_label',$
+                    sensitive : CNBase.button.value}
+XYoff13 = [50,-5]
+CNerrorText  = { size : [CNerrorLabel.size[0]+XYoff13[0],$
+                            CNerrorlabel.size[1]+XYoff13[1],$
+                            100,30],$
+                    uname : 'cn_error_text',$
+                    sensitive : CNBase.button.value}
+
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -542,6 +588,67 @@ frame  = WIDGET_LABEL(tab5_base,$
                       SCR_XSIZE = CSframe.size[2],$
                       SCR_YSIZE = CSframe.size[3],$
                       FRAME     = CSframe.frame,$
+                      VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Constant to Scale the Empty Container Spectra for subtraction from\
+;the normalization data                                            \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = CNbase.size[0],$
+                   YOFFSET   = CNbase.size[1],$
+                   SCR_XSIZE = CNbase.size[2],$
+                   SCR_YSIZE = CNbase.size[3])
+
+group = CW_BGROUP(base,$
+                  CNbase.button.list,$
+                  UNAME      = CNbase.button.uname,$
+                  SET_VALUE  = CNbase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CNvalueLabel.size[0],$
+                     YOFFSET   = CNvalueLabel.size[1],$
+                     VALUE     = CNvalueLabel.value,$
+                     UNAME     = CNvalueLabel.uname,$
+                     SENSITIVE = CNvalueLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CNvalueText.size[0],$
+                   YOFFSET   = CNvalueText.size[1],$
+                   SCR_XSIZE = CNvalueText.size[2],$
+                   SCR_YSIZE = CNvalueText.size[3],$
+                   UNAME     = CNvalueText.uname,$
+                   SENSITIVE = CNvalueText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab5_base,$
+                     XOFFSET   = CNerrorLabel.size[0],$
+                     YOFFSET   = CNerrorLabel.size[1],$
+                     VALUE     = CNerrorLabel.value,$
+                     UNAME     = CNerrorLabel.uname,$
+                     SENSITIVE = CNerrorLabel.sensitive)
+
+text = WIDGET_TEXT(tab5_base,$
+                   XOFFSET   = CNerrorText.size[0],$
+                   YOFFSET   = CNerrorText.size[1],$
+                   SCR_XSIZE = CNerrorText.size[2],$
+                   SCR_YSIZE = CNerrorText.size[3],$
+                   UNAME     = CNerrorText.uname,$
+                   SENSITIVE = CNerrorText.sensitive,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab5_base,$
+                      XOFFSET   = CNframe.size[0],$
+                      YOFFSET   = CNframe.size[1],$
+                      SCR_XSIZE = CNframe.size[2],$
+                      SCR_YSIZE = CNframe.size[3],$
+                      FRAME     = CNframe.frame,$
                       VALUE     = '')
 
 

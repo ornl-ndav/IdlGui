@@ -297,6 +297,18 @@ END
 PRO BSSselection_Reduce_cs_error_text, Event
 END
 
+
+PRO BSSselection_Reduce_cn_button, Event
+BSSselection_EnableOrNotFields, Event, 'cn_button'
+END
+
+;This function is reached by cn_value_text
+PRO BSSselection_Reduce_cn_value_text, Event
+END
+
+;This function is reached by cn_error_text
+PRO BSSselection_Reduce_cn_error_text, Event
+END
 ;****************** TAB 6 *************************
 
 ;This function is reached by the tzsp_button

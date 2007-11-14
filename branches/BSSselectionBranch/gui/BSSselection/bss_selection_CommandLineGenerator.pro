@@ -854,6 +854,59 @@ IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
 ENDIF
 
 
+;get constant to scale the Empty Container for subtraction from
+;the normalization data
+IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
+    cmd += ' --scale-cn='
+
+    Value = getTextFieldValue(Event,'cn_value_text')
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Normalization Data Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all)
+    ENDELSE
+
+    Error = getTextFieldValue(Event,'cn_error_text')
+    IF (Error EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Normalization Data Error'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(Error,/remove_all)
+    ENDELSE
+
+ENDIF
+
 
 
 ;*************TAB6*****************
