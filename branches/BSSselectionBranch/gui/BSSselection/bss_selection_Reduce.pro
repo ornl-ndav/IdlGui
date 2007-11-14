@@ -306,14 +306,6 @@ PRO BSSselection_Reduce_wocpsamn_button, Event
 BSSselection_EnableOrNotFields, Event, 'wocpsamn_button'
 END
 
-;This function is reached by wopies_button
-PRO BSSselection_Reduce_wopies_button, Event
-END
-
-;This function is reached by wopets_button
-PRO BSSselection_Reduce_wopets_button, Event
-END
-
 ;This function is reached by wa_min_text
 PRO BSSselection_Reduce_wa_min_text, Event
 END
@@ -324,4 +316,16 @@ END
 
 ;This function is reached by wa_bin_width_text
 PRO BSSselection_Reduce_wa_bin_width_text, Event
+END
+
+;This function is reached by wopies_button
+PRO BSSselection_Reduce_wopies_button, Event
+END
+
+;This function is reached by wopets_button
+PRO BSSselection_Reduce_wopets_button, Event
+END
+
+;This function is reached by wolidsb_button
+PRO BSSselection_Reduce_wolidsb_button, Event
 END

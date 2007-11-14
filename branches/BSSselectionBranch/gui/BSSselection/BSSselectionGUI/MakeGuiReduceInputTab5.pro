@@ -14,7 +14,7 @@ WAIOBase = { size  : [15,20,500,35],$
 ;/////////////////////////////////////////////////
 ;Write out Calculated time-independent background/
 ;/////////////////////////////////////////////////
-yoff = 50
+yoff = 45
 WOCTIBbase = { size  : [WAIOBase.size[0], $
                         WAIOBase.size[1]+yoff, $
                         WAIOBase.size[2:3]],$
@@ -129,6 +129,15 @@ WOPETSbase = { size  : [WOPIESbase.size[0], $
               button : { uname : 'wopets_button',$
                          list : [' Write Out Pixel Energy Transfer Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
 
+;/////////////////////////////////////////////////////////////
+;Write Out Linearly Interpolated Direct Scattering Background/
+;Info. Summed over all Pixel                                 /
+;/////////////////////////////////////////////////////////////
+WOLIDSBbase = { size  : [WOPETSbase.size[0], $
+                         WOPETSbase.size[1]+yoff, $
+                         WOPETSbase.size[2:3]],$
+                button : { uname : 'wolidsb_button',$
+                         list : [' Write Out Linearly Interpolated Direct Scattering Background Information Summed over all Pixels']}}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -350,6 +359,23 @@ base = WIDGET_BASE(tab5_base,$
 group = CW_BGROUP(base,$
                   WOPETSbase.button.list,$
                   UNAME      = WOPETSbase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Write Out Linearly Interpolated Direct Scattering Background\
+;Info. Summed over all Pixel                                 \
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+base = WIDGET_BASE(tab5_base,$
+                   XOFFSET   = WOLIDSBbase.size[0],$
+                   YOFFSET   = WOLIDSBbase.size[1],$
+                   SCR_XSIZE = WOLIDSBbase.size[2],$
+                   SCR_YSIZE = WOLIDSBbase.size[3])
+
+group = CW_BGROUP(base,$
+                  WOLIDSBbase.button.list,$
+                  UNAME      = WOLIDSBbase.button.uname,$
                   /NONEXCLUSIVE,$
                   SET_VALUE  = 0,$
                   ROW        = 1)

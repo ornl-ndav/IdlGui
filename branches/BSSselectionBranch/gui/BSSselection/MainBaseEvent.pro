@@ -659,16 +659,6 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
     
-    Widget_Info(wWidget, FIND_BY_UNAME='wopies_button'): begin
-        BSSselection_Reduce_wopies_button, Event
-        BSSselection_CommandLineGenerator, Event
-    end    
-    
-    Widget_Info(wWidget, FIND_BY_UNAME='wopets_button'): begin
-        BSSselection_Reduce_wopets_button, Event
-        BSSselection_CommandLineGenerator, Event
-    end    
-    
     Widget_Info(wWidget, FIND_BY_UNAME='wa_min_text'): begin
         BSSselection_Reduce_wa_min_text, Event
         BSSselection_CommandLineGenerator, Event
@@ -681,6 +671,21 @@ CASE Event.id OF
     
     Widget_Info(wWidget, FIND_BY_UNAME='wa_bin_width_text'): begin
         BSSselection_Reduce_wa_bin_width_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='wopies_button'): begin
+        BSSselection_Reduce_wopies_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='wopets_button'): begin
+        BSSselection_Reduce_wopets_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='wolidsb_button'): begin
+        BSSselection_Reduce_wolidsb_button, Event
         BSSselection_CommandLineGenerator, Event
     end    
     

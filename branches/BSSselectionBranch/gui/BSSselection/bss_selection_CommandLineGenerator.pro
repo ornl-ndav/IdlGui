@@ -884,6 +884,12 @@ IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
     cmd += ' --dump-energy'
 ENDIF
 
+;Write out Linearly Interpolated Direct Scattering Back. Info. summed
+;over all Pixels
+IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
+    cmd += ' --dump-dslin'
+ENDIF
+
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0
 
