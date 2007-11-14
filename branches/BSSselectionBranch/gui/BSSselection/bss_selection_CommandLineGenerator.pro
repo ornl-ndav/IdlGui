@@ -214,104 +214,99 @@ IF (isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
     TIBTOF2 = getTextFieldValue(Event,'tibtof_channel2_text')
     TIBTOF3 = getTextFieldValue(Event,'tibtof_channel3_text')
     TIBTOF4 = getTextFieldValue(Event,'tibtof_channel4_text')
-    IF (TIBTOF1 NE '' OR $
-        TIBTOF2 NE '' OR $
-        TIBTOF3 NE '' OR $
-        TIBTOF4 NE '') THEN BEGIN
-        
-        cmd += ' --tib-tofs='
-        
-        IF (TIBTOF1 EQ '') THEN BEGIN
-            cmd += '?'
-            status_text = '   -Please provide a TOF Channel #1'
-            IF (tab4 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab4
-        ENDIF ELSE BEGIN
-            cmd += strcompress(TIBTOF1,/remove_all)
-        ENDELSE
-        
-        IF (TIBTOF2 EQ '') THEN BEGIN
-            cmd += ',?'
-            status_text = '   -Please provide a TOF Channel #2'
-            IF (tab4 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab4
-        ENDIF ELSE BEGIN
-            cmd += ',' + strcompress(TIBTOF2,/remove_all)
-        ENDELSE
-        
-        IF (TIBTOF3 EQ '') THEN BEGIN
-            cmd += ',?'
-            status_text = '   -Please provide a TOF Channel #3'
-            IF (tab4 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab4
-        ENDIF ELSE BEGIN
-            cmd += ',' + strcompress(TIBTOF3,/remove_all)
-        ENDELSE
-        
-        IF (TIBTOF4 EQ '') THEN BEGIN
-            cmd += ',?'
-            status_text = '   -Please provide a TOF Channel #4'
-            IF (tab4 EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, '', 1
-                putInfoInCommandLineStatus, Event, '', 1
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage EQ 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 0
-            ENDIF
-            IF (tab4 EQ 0 AND $
-                StatusMessage NE 0) THEN BEGIN
-                putInfoInCommandLineStatus, Event, TabName, 1
-            ENDIF
-            putInfoInCommandLineStatus, Event, status_text, 1
-            StatusMessage += 1
-            ++tab4
-        ENDIF ELSE BEGIN
-            cmd += ',' + strcompress(TIBTOF4,/remove_all)
-        ENDELSE
-        
-    ENDIF
 
+    cmd += ' --tib-tofs='
+    
+    IF (TIBTOF1 EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a TOF Channel #1'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += strcompress(TIBTOF1,/remove_all)
+    ENDELSE
+    
+    IF (TIBTOF2 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a TOF Channel #2'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF2,/remove_all)
+    ENDELSE
+    
+    IF (TIBTOF3 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a TOF Channel #3'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF3,/remove_all)
+    ENDELSE
+    
+    IF (TIBTOF4 EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a TOF Channel #4'
+        IF (tab4 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab4 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab4
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(TIBTOF4,/remove_all)
+    ENDELSE
+    
 ENDIF
+
 ;get Time-independent Background Constant for Sample Data
 IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     cmd += ' --tib-data-const='
@@ -583,20 +578,65 @@ IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
 
 ENDIF
 
-;add a white space
-putInfoInCommandLineStatus, Event, '', 1
+;;add a white space
+;putInfoInCommandLineStatus, Event, '', 1
 
 ;*************TAB5*****************
 TabName = 'Tab#5 - SCALLING CONTROL'
 tab5    = 0
 
+;get constant to scale the back. spectra for subtraction from the
+;sample data spectra
+IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
+    cmd += ' --scale-bs='
 
+    Value = getTextFieldValue(Event,'csbss_value_text')
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Value'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all)
+    ENDELSE
 
+    Error = getTextFieldValue(Event,'csbss_error_text')
+    IF (Error EQ '') THEN BEGIN
+        cmd += ',?'
+        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Error'
+        IF (tab5 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab5 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab5
+    ENDIF ELSE BEGIN
+        cmd += ',' + strcompress(Error,/remove_all)
+    ENDELSE
 
-
-
-
-
+ENDIF
 
 
 
@@ -619,6 +659,7 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Slope Parameter Value'
         IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
@@ -640,6 +681,7 @@ IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Slope Parameter Error'
         IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $
@@ -669,6 +711,7 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
         status_text = '   -Please provide a Time Zero Offset Parameter Value'
         IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
@@ -690,6 +733,7 @@ IF (isButtonSelected(Event,'tzop_button')) THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Time Zero Offset Parameter Error'
         IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $
@@ -718,6 +762,7 @@ IF (TIBCMin EQ '') THEN BEGIN
     status_text = '   -Please provide a Energy Histogram Axis Min'
     IF (tab6 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, '', 1
     ENDIF
     IF (tab6 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
@@ -740,6 +785,7 @@ IF (TIBCMax EQ '') THEN BEGIN
     status_text = '   -Please provide a Energy Histogram Axis Max'
     IF (tab6 EQ 0) THEN BEGIN
         putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, '', 1
     ENDIF
     IF (tab6 EQ 0 AND $
         StatusMessage EQ 0) THEN BEGIN
@@ -761,6 +807,7 @@ IF (TIBCBin EQ '') THEN BEGIN
     cmd += ',?'
     status_text = '   -Please provide a Energy Histogram Axis Bin'
     IF (tab6 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
         putInfoInCommandLineStatus, Event, '', 1
     ENDIF
     IF (tab6 EQ 0 AND $
@@ -788,6 +835,7 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
         status_text = '   -Please provide a Global Instrument Final Wavelength Value'
         IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $
             StatusMessage EQ 0) THEN BEGIN
@@ -809,6 +857,7 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
         cmd += ',?'
         status_text = '   -Please provide a Global Instrument Final Wavelength Error'
         IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
         ENDIF
         IF (tab6 EQ 0 AND $

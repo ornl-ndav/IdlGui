@@ -1,4 +1,4 @@
-PRO MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
+Pro MakeGuiReduceInputTab5, ReduceInputTab, ReduceInputTabSettings
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -52,7 +52,7 @@ CSBSSerrorText  = { size : [CSBSSerrorLabel.size[0]+XYoff13[0],$
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-tab4_base = WIDGET_BASE(ReduceInputTab,$
+tab5_base = WIDGET_BASE(ReduceInputTab,$
                         XOFFSET   = ReduceInputTabSettings.size[0],$
                         YOFFSET   = ReduceInputTabSettings.size[1],$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
@@ -63,7 +63,7 @@ tab4_base = WIDGET_BASE(ReduceInputTab,$
 ;Time-Independent Background TOF channels (microSeconds)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-base = WIDGET_BASE(tab4_base,$
+base = WIDGET_BASE(tab5_base,$
                    XOFFSET   = CSBSSbase.size[0],$
                    YOFFSET   = CSBSSbase.size[1],$
                    SCR_XSIZE = CSBSSbase.size[2],$
@@ -76,14 +76,14 @@ group = CW_BGROUP(base,$
                   ROW        = 1,$
                   /NONEXCLUSIVE)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = CSBSSvalueLabel.size[0],$
                      YOFFSET   = CSBSSvalueLabel.size[1],$
                      VALUE     = CSBSSvalueLabel.value,$
                      UNAME     = CSBSSvalueLabel.uname,$
                      SENSITIVE = CSBSSvalueLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = CSBSSvalueText.size[0],$
                    YOFFSET   = CSBSSvalueText.size[1],$
                    SCR_XSIZE = CSBSSvalueText.size[2],$
@@ -94,14 +94,14 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-label = WIDGET_LABEL(tab4_base,$
+label = WIDGET_LABEL(tab5_base,$
                      XOFFSET   = CSBSSerrorLabel.size[0],$
                      YOFFSET   = CSBSSerrorLabel.size[1],$
                      VALUE     = CSBSSerrorLabel.value,$
                      UNAME     = CSBSSerrorLabel.uname,$
                      SENSITIVE = CSBSSerrorLabel.sensitive)
 
-text = WIDGET_TEXT(tab4_base,$
+text = WIDGET_TEXT(tab5_base,$
                    XOFFSET   = CSBSSerrorText.size[0],$
                    YOFFSET   = CSBSSerrorText.size[1],$
                    SCR_XSIZE = CSBSSerrorText.size[2],$
@@ -112,7 +112,7 @@ text = WIDGET_TEXT(tab4_base,$
                    /ALL_EVENTS,$
                    /ALIGN_LEFT)
 
-frame  = WIDGET_LABEL(tab4_base,$
+frame  = WIDGET_LABEL(tab5_base,$
                       XOFFSET   = CSBSSframe.size[0],$
                       YOFFSET   = CSBSSframe.size[1],$
                       SCR_XSIZE = CSBSSframe.size[2],$

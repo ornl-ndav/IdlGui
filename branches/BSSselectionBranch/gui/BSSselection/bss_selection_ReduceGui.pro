@@ -47,6 +47,9 @@ CASE (type) OF
                        'tibtof_channel3_text',$
                        'tibtof_channel4_text']
     END
+    'csbss_button': BEGIN
+        text_unames = ['csbss_value_text','csbss_error_text']
+    END
     
 ENDCASE
 

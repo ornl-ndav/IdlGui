@@ -572,8 +572,20 @@ CASE Event.id OF
     end    
 
 ;tab5
+    Widget_Info(wWidget, FIND_BY_UNAME='csbss_button'): begin
+        BSSselection_Reduce_csbss_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='csbss_value_text'): begin
+        BSSselection_Reduce_csbss_value_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='csbss_error_text'): begin
+        BSSselection_Reduce_csbss_error_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
 
 ;tab6
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin

@@ -204,35 +204,45 @@ END
 PRO BSSselection_Reduce_tibc_for_nd_error_text, Event
 END
 
-;This function is reduce by the tibc_for_nd_button
+;This function is reached by the tibc_for_nd_button
 PRO BSSselection_Reduce_tibc_for_ecd_button, Event
 BSSselection_EnableOrNotFields, Event, 'tibc_for_ecd_button'
 END
 
-;This function is reduce by the tibc_for_ecd_value_text
+;This function is replaced by the tibc_for_ecd_value_text
 PRO BSSselection_Reduce_tibc_for_ecd_value_text, Event
 END
 
-;This function is reduce by the tibc_for_ecd_error_text
+;This function is replaced by the tibc_for_ecd_error_text
 PRO BSSselection_Reduce_tibc_for_ecd_error_text, Event
 END
 
-;This function is reduce by the tibc_for_scatd_button
+;This function is replaced by the tibc_for_scatd_button
 PRO BSSselection_Reduce_tibc_for_scatd_button, Event
 BSSselection_EnableOrNotFields, Event, 'tibc_for_scatd_button'
 END
 
-;This function is reduce by the tibc_for_scatd_value_text
+;This function is replaced by the tibc_for_scatd_value_text
 PRO BSSselection_Reduce_tibc_for_scatd_value_text, Event
 END
 
-;This function is reduce by the tibc_for_scatd_error_text
+;This function is replaced by the tibc_for_scatd_error_text
 PRO BSSselection_Reduce_tibc_for_scatd_error_text, Event
 END
 
 ;****************** TAB 5 *************************
+;This function is reached by csbss_button
+PRO BSSselection_Reduce_csbss_button, Event
+BSSselection_EnableOrNotFields, Event, 'csbss_button'
+END
 
+;This function is reached by csbss_value_text
+PRO BSSselection_Reduce_csbss_value_text, Event
+END
 
+;This function is reached by csbss_error_text
+PRO BSSselection_Reduce_csbss_error_text, Event
+END
 
 
 
