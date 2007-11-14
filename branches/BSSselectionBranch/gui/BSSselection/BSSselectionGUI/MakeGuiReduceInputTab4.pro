@@ -4,7 +4,7 @@ PRO MakeGuiReduceInputTab4, ReduceInputTab, ReduceInputTabSettings
 ;                           Define size arrays
 ;***********************************************************************************
 
-yoff = 35
+yoff = 20
 ;//////////////////////////////////////////////////////////////////
 ;Constant to Scale the Background Spectra for Subtraction from the/
 ;sample data spectra                                              /        
@@ -16,14 +16,14 @@ CSBSSframe = { size : [5, yoff,730,55],$
 XYoff = [10,-14]
 CSBSSbase = { size : [CSBSSframe.size[0]+XYoff[0],$
                       CSBSSframe.size[1]+XYoff[1],$
-                      425,$
+                      540,$
                       30],$
               button : { uname : 'csbss_button',$
                          list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Spectra'],$
               value : 0}}
 
 
-XYoff10 = [10,25]   
+XYoff10 = [15,25]   
 CSBSSvalueLabel = { size : [CSBSSframe.size[0]+XYoff10[0],$
                             CSBSSframe.size[1]+XYoff10[1]],$
                     value : 'Value:',$
