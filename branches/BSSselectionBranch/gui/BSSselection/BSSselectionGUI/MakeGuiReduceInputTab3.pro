@@ -10,49 +10,65 @@ PRO MakeGuiReduceInputTab3, ReduceInputTab, ReduceInputTabSettings
 yoff = 35
 TIBtofFrame = { size : [5,yoff,730,50],$
                 frame : 4}
-XYoff = [10,-8]
-TIBtofLabel = { size : [TIBtofFrame.size[0]+XYoff[0],$
-                        TIBtofFrame.size[1]+XYoff[1]],$
-                value : 'Time-Independent Background Time-of-Flight Channels (microSeconds)'}
+XYoff = [10,-14]
+TIBtofBase = { size : [TIBtofFrame.size[0]+XYoff[0],$
+                       TIBtofFrame.size[1]+XYoff[1],$
+                       425,$
+                       30],$
+               button : { uname : 'tib_tof_button',$
+                          list : ['Time-Independent Background Time-of-Flight Channels (microSeconds)'],$
+                          value : 0,$
+                          sensitive : 0}}
 XYoff1 = [10,23]
 TIBtofLabel1 = { size : [TIBtofFrame.size[0]+XYoff1[0],$
                          TIBtofFrame.size[1]+XYoff1[1]],$
-                value : 'TOF channels    #1'}
+                 uname : 'tibtof_channel1_text_label',$
+                 value : 'TOF channels    #1'}
 XYoff2 = [115,-6]
 TIBtofText1 = { size : [TIBtofLabel1.size[0]+XYoff2[0],$
                         TIBtofLabel1.size[1]+XYoff2[1],$
                         70,30],$
-                uname : 'tibtof_channel1_text'}
+                uname : 'tibtof_channel1_text',$
+                sensitive : TIBtofBase.button.value}
                 
 XYoff3 = [243,1]
 TIBtofLabel2 = { size : [TIBtofLabel1.size[0]+XYoff3[0],$
                          TIBtofLabel1.size[1]],$
-                 value : '#2'}
+                 value : '#2',$
+                 uname : 'tibtof_channel2_text_label',$
+                 sensitive : TIBtofBase.button.value}
 XYoff4 = [20,0]
 TIBtofText2 = { size : [TIBtofLabel2.size[0]+XYoff4[0],$
                         TIBtofText1.size[1],$
                         70,30],$
-                uname : 'tibtof_channel2_text'}
+                uname : 'tibtof_channel2_text',$
+                sensitive : TIBtofBase.button.value}
 
 XYoff5 = [150,1]
 TIBtofLabel3 = { size : [TIBtofLabel2.size[0]+XYoff5[0],$
                          TIBtofLabel2.size[1]],$
-                 value : '#3'}
+                 value : '#3',$
+                 uname : 'tibtof_channel3_text_label',$
+                 sensitive : TIBtofBase.button.value}
 XYoff6 = [20,0]
 TIBtofText3 = { size : [TIBtofLabel3.size[0]+XYoff6[0],$
                         TIBtofText2.size[1],$
                         70,30],$
-                uname : 'tibtof_channel3_text'}
+                uname : 'tibtof_channel3_text',$
+                sensitive : TIBtofBase.button.value}
 
 XYoff7 = [150,1]
 TIBtofLabel4 = { size : [TIBtofLabel3.size[0]+XYoff7[0],$
                          TIBtofLabel3.size[1]],$
-                 value : '#4'}
+                 value : '#4',$
+                 uname : 'tibtof_channel4_text_label',$
+                 sensitive : TIBtofBase.button.value}
 XYoff8 = [20,0]
 TIBtofText4 = { size : [TIBtofLabel4.size[0]+XYoff8[0],$
                         TIBtofText3.size[1],$
                         70,30],$
-                uname : 'tibtof_channel4_text'}
+                uname : 'tibtof_channel4_text',$
+                sensitive : TIBtofBase.button.value}
 
 ;/////////////////////////////////////////////////////
 ;Time-Independent Background Constant for Sample Data/
@@ -245,70 +261,90 @@ tab3_base = WIDGET_BASE(ReduceInputTab,$
 ;Time-Independent Background TOF channels (microSeconds)\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
-TIBtofLabel = WIDGET_LABEL(tab3_base,$
-                           XOFFSET = TIBtofLabel.size[0],$
-                           YOFFSET = TIBtofLabel.size[1],$
-                           VALUE   = TIBtofLabel.value)
+base = WIDGET_BASE(tab3_base,$
+                   XOFFSET   = TIBtofBase.size[0],$
+                   YOFFSET   = TIBtofBase.size[1],$
+                   SCR_XSIZE = TIBtofBase.size[2],$
+                   SCR_YSIZE = TIBtofBase.size[3])
+                   
+group = CW_BGROUP(base,$
+                  TIBtofBase.button.list,$
+                  UNAME      = TIBtofBase.button.uname,$
+                  SET_VALUE  = TIBtofBase.button.value,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
 
 TIBtofLabel1 = WIDGET_LABEL(tab3_base,$
-                            XOFFSET = TIBtofLabel1.size[0],$
-                            YOFFSET = TIBtofLabel1.size[1],$
-                            VALUE   = TIBtofLabel1.value)
+                            XOFFSET   = TIBtofLabel1.size[0],$
+                            YOFFSET   = TIBtofLabel1.size[1],$
+                            SENSITIVE = TIBtofBase.button.sensitive,$
+                            UNAME     = TIBtofLabel1.uname,$
+                            VALUE     = TIBtofLabel1.value)
 
 TIBtofText1 = WIDGET_TEXT(tab3_base,$
-                          XOFFSET   = TIBtofText1.size[0],$
-                          YOFFSET   = TIBtofText1.size[1],$
-                          SCR_XSIZE = TIBtofText1.size[2],$
-                          SCR_YSIZE = TIBtofText1.size[3],$
-                          UNAME     = TIBtofText1.uname,$
+                          XOFFSET    = TIBtofText1.size[0],$
+                          YOFFSET    = TIBtofText1.size[1],$
+                          SCR_XSIZE  = TIBtofText1.size[2],$
+                          SCR_YSIZE  = TIBtofText1.size[3],$
+                          UNAME      = TIBtofText1.uname,$
+                          SENSITIVE  = TIBtofBase.button.sensitive,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
 TIBtofLabel2 = WIDGET_LABEL(tab3_base,$
-                            XOFFSET = TIBtofLabel2.size[0],$
-                            YOFFSET = TIBtofLabel2.size[1],$
-                            VALUE   = TIBtofLabel2.value)
+                            XOFFSET   = TIBtofLabel2.size[0],$
+                            YOFFSET   = TIBtofLabel2.size[1],$
+                            SENSITIVE = TIBtofBase.button.sensitive,$
+                            UNAME     = TIBtofLabel2.uname,$
+                            VALUE     = TIBtofLabel2.value)
 
 TIBtofText2 = WIDGET_TEXT(tab3_base,$
-                          XOFFSET   = TIBtofText2.size[0],$
-                          YOFFSET   = TIBtofText2.size[1],$
-                          SCR_XSIZE = TIBtofText2.size[2],$
-                          SCR_YSIZE = TIBtofText2.size[3],$
-                          UNAME     = TIBtofText2.uname,$
+                          XOFFSET    = TIBtofText2.size[0],$
+                          YOFFSET    = TIBtofText2.size[1],$
+                          SCR_XSIZE  = TIBtofText2.size[2],$
+                          SCR_YSIZE  = TIBtofText2.size[3],$
+                          UNAME      = TIBtofText2.uname,$
+                          SENSITIVE  = TIBtofBase.button.sensitive,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
 TIBtofLabel3 = WIDGET_LABEL(tab3_base,$
-                            XOFFSET = TIBtofLabel3.size[0],$
-                            YOFFSET = TIBtofLabel3.size[1],$
-                            VALUE   = TIBtofLabel3.value)
+                            XOFFSET   = TIBtofLabel3.size[0],$
+                            YOFFSET   = TIBtofLabel3.size[1],$
+                            SENSITIVE = TIBtofBase.button.sensitive,$
+                            UNAME     = TIBtofLabel3.uname,$
+                            VALUE     = TIBtofLabel3.value)
 
 TIBtofText3 = WIDGET_TEXT(tab3_base,$
-                          XOFFSET   = TIBtofText3.size[0],$
-                          YOFFSET   = TIBtofText3.size[1],$
-                          SCR_XSIZE = TIBtofText3.size[2],$
-                          SCR_YSIZE = TIBtofText3.size[3],$
-                          UNAME     = TIBtofText3.uname,$
+                          XOFFSET    = TIBtofText3.size[0],$
+                          YOFFSET    = TIBtofText3.size[1],$
+                          SCR_XSIZE  = TIBtofText3.size[2],$
+                          SCR_YSIZE  = TIBtofText3.size[3],$
+                          UNAME      = TIBtofText3.uname,$
+                          SENSITIVE  = TIBtofBase.button.sensitive,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)
 
 
 TIBtofLabel4 = WIDGET_LABEL(tab3_base,$
-                            XOFFSET = TIBtofLabel4.size[0],$
-                            YOFFSET = TIBtofLabel4.size[1],$
-                            VALUE   = TIBtofLabel4.value)
+                            XOFFSET   = TIBtofLabel4.size[0],$
+                            YOFFSET   = TIBtofLabel4.size[1],$
+                            SENSITIVE = TIBtofBase.button.sensitive,$
+                            UNAME     = TIBtofLabel4.uname,$
+                            VALUE     = TIBtofLabel4.value)
 
 TIBtofText4 = WIDGET_TEXT(tab3_base,$
-                          XOFFSET   = TIBtofText4.size[0],$
-                          YOFFSET   = TIBtofText4.size[1],$
-                          SCR_XSIZE = TIBtofText4.size[2],$
-                          SCR_YSIZE = TIBtofText4.size[3],$
-                          UNAME     = TIBtofText4.uname,$
+                          XOFFSET    = TIBtofText4.size[0],$
+                          YOFFSET    = TIBtofText4.size[1],$
+                          SCR_XSIZE  = TIBtofText4.size[2],$
+                          SCR_YSIZE  = TIBtofText4.size[3],$
+                          UNAME      = TIBtofText4.uname,$
+                          SENSITIVE  = TIBtofBase.button.sensitive,$
                           /EDITABLE,$
                           /ALL_EVENTS,$
                           /ALIGN_LEFT)

@@ -38,6 +38,12 @@ CASE (type) OF
     'te_button': BEGIN
         text_unames = ['te_low_field','te_high_field']
     END
+    'tib_tof_button': BEGIN
+        text_unames = ['tibtof_channel1_text', $
+                       'tibtof_channel2_text', $
+                       'tibtof_channel3_text',$
+                       'tibtof_channel4_text']
+    END
     
 ENDCASE
 

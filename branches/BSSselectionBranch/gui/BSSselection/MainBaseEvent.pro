@@ -472,6 +472,11 @@ CASE Event.id OF
     end    
 
 ;tab3
+    Widget_Info(wWidget, FIND_BY_UNAME='tib_tof_button'): begin
+        BSSselection_Reduce_tib_tof_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='tibtof_channel1_text'): begin
         BSSselection_Reduce_tibtof_channel1_text, Event
         BSSselection_CommandLineGenerator, Event

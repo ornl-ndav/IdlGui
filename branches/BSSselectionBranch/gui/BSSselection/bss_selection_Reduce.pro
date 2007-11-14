@@ -144,6 +144,11 @@ END
 
 ;****************** TAB 3 *************************
 
+;This function is reached by the tib_tof_button
+PRO BSSselection_Reduce_tib_tof_button, Event
+BSSselection_EnableOrNotFields, Event, 'tib_tof_button'
+END
+
 ;This function is reached by the tibtof_channel1_text
 PRO BSSselection_Reduce_tibtof_channel1_text, Event
 END
