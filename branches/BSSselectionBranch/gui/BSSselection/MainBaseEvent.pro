@@ -587,6 +587,21 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
 
+
+    Widget_Info(wWidget, FIND_BY_UNAME='csn_button'): begin
+        BSSselection_Reduce_csn_button, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='csn_value_text'): begin
+        BSSselection_Reduce_csn_value_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='csn_error_text'): begin
+        BSSselection_Reduce_csn_error_text, Event
+        BSSselection_CommandLineGenerator, Event
+    end    
 ;tab6
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin
         BSSselection_Reduce_tzsp_button, Event

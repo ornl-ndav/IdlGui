@@ -246,6 +246,19 @@ END
 
 
 
+PRO BSSselection_Reduce_csn_button, Event
+BSSselection_EnableOrNotFields, Event, 'csn_button'
+END
+
+;This function is reached by csn_value_text
+PRO BSSselection_Reduce_csn_value_text, Event
+END
+
+;This function is reached by csn_error_text
+PRO BSSselection_Reduce_csn_error_text, Event
+END
+
+
 
 
 ;****************** TAB 6 *************************

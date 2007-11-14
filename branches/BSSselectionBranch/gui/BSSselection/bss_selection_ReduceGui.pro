@@ -50,6 +50,9 @@ CASE (type) OF
     'csbss_button': BEGIN
         text_unames = ['csbss_value_text','csbss_error_text']
     END
+    'csn_button': BEGIN
+        text_unames = ['csn_value_text','csn_error_text']
+    END
     
 ENDCASE
 
