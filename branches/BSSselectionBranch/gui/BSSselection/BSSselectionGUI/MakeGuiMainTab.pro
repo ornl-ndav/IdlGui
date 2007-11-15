@@ -5,8 +5,9 @@ PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 
 ;Tab titles
-SelectionTitle   = 'SELECTION'
-LogBookTitle     = 'LOG BOOK'
+SelectionTitle   = '  S E L E C T I O N  '
+ReduceTitle      = '  R E D U C E  '
+LogBookTitle     = '  L O G   B O O K  '
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
@@ -23,7 +24,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
 MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 
 ;build REDUCE tab
-MakeGuiReduceTab, MAIN_TAB, MainTabSize
+MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle
 
 ;build LogBook tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTitle

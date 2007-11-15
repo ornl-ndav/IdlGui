@@ -1,10 +1,8 @@
-PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize
+PRO MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceBaseTitle
 
 ;***********************************************************************************
 ;                             Define size arrays
 ;***********************************************************************************
-ReduceBaseTitle      = 'REDUCE'
-
 ReduceInputTabSettings       = {size : [0, $
                                         0, $
                                         750, $
