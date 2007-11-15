@@ -41,7 +41,13 @@ RunNumber = getRunNumber(Event)
 IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
 
     message = 'Loading run number ' + strcompress(RunNumber,/remove_all) + ':'
-    PutLogBookMessage, Event, message
+    InitialLogBookMessage = getLogBookText(Event)
+    IF (InitialLogBookMessage[0] EQ '') THEN BEGIN
+        PutLogBookMessage, Event, message
+    ENDIF ELSE BEGIN
+        AppendLogBookMessage, Event, message
+    ENDELSE
+
     message = '  -> Checking if run number exists ... ' + PROCESSING
     AppendLogBookMessage, Event, message
     

@@ -110,39 +110,55 @@ PRO BSSselection_LoadingConfigurationFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/cancel
+ENDIF ELSE BEGIN
+
 ;read config file
-FileName = (*global).DefaultConfigFileName
-
-openr, u, FileName, /get
-
-onebyte = 0b
-tmp = ''
-i = 0
-NbrLine = getNbrLines(FileName)
-FileArray = strarr(NbrLine)
-
-while (NOT eof(u)) do begin
+    FileName = (*global).DefaultConfigFileName
     
-    readu,u,onebyte
-    fs = fstat(u)
+    openr, u, FileName, /get
     
-    if (fs.cur_ptr EQ 0) then begin
-        point_lun,u,0
-    endif else begin
-        point_lun,u,fs.cur_ptr - 1
-    endelse
+    onebyte = 0b
+    tmp = ''
+    i = 0
+    NbrLine = getNbrLines(FileName)
+    FileArray = strarr(NbrLine)
     
-    readf,u,tmp
-    FileArray[i++] = tmp
-            
-endwhile
+    while (NOT eof(u)) do begin
+        
+        readu,u,onebyte
+        fs = fstat(u)
+        
+        if (fs.cur_ptr EQ 0) then begin
+            point_lun,u,0
+        endif else begin
+            point_lun,u,fs.cur_ptr - 1
+        endelse
+        
+        readf,u,tmp
+        FileArray[i++] = tmp
+        
+    endwhile
+    
+    close, u
+    free_lun,u
+    NbrElement = i              ;nbr of lines
+    
+    BSSselection_PopulateGui, Event, FileArray
 
-close, u
-free_lun,u
-NbrElement = i ;nbr of lines
-
-BSSselection_PopulateGui, Event, FileArray
-
+    LogBookMessage = '-> Configuration file (' + FileName + ') has been loaded'
+    InitialLogBookMessage = getLogBookText(Event)
+    IF (InitialLogBookMessage[0] EQ '') THEN BEGIN
+        PutLogBookMessage, Event, LogBookMessage
+    ENDIF ELSE BEGIN
+        AppendLogBookMessage, Event, LogBookMessage
+    ENDELSE
+    
+ENDELSE    
+    
 END
 
 

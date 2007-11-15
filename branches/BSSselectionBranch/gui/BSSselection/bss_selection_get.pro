@@ -6,6 +6,13 @@ RETURN, TextFieldValue
 END
 
 
+FUNCTION getLogBookText, Event
+id = widget_info(Event.top,find_by_uname='log_book')
+widget_control, id, get_value=text
+RETURN, text
+END
+
+
 ;This function returns the contain of the nexus run number
 FUNCTION getRunNumber, Event
 RunNumberID = widget_info(Event.top,find_by_uname='nexus_run_number')
