@@ -109,7 +109,7 @@ BCSbase = { size : [BCSframe.size[0]+XYoff[0],$
                       710,$
                       30],$
               button : { uname : 'bcs_button',$
-                         list : ['Constant to Scale the Background Spectra for Subtraction from the SSample Data Associated Empty Container Spectra'],$
+                         list : ['Constant to Scale the Background Spectra for Subtraction from the Sample Data Associated Empty Container Spectra'],$
               value : 0}}
 
 XYoff10 = [15,25]   

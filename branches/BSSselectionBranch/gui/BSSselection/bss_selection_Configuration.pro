@@ -112,8 +112,15 @@ widget_control,id,get_uvalue=global
 
 no_error = 0
 CATCH, no_error
+
+;message saying that config file is loaded
+MessageBox = 'Loading Configuration File ... ' + (*global).processing
+putMessageBoxInfo, Event, MessageBox
+
 IF (no_error NE 0) THEN BEGIN
     CATCH,/cancel
+    MessageBox = 'Loading Configuration File ... FAILED'
+    putMessageBoxInfo, Event, MessageBox
 ENDIF ELSE BEGIN
 
 ;read config file
@@ -121,6 +128,7 @@ ENDIF ELSE BEGIN
     
     openr, u, FileName, /get
     
+
     onebyte = 0b
     tmp = ''
     i = 0
@@ -156,6 +164,9 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN
         AppendLogBookMessage, Event, LogBookMessage
     ENDELSE
+
+    MessageBox = 'Loading Configuration File ... OK'
+    putMessageBoxInfo, Event, MessageBox
     
 ENDELSE    
     
