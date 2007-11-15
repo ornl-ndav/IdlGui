@@ -114,17 +114,17 @@ tab3 = 0
 ;get Run McStas NeXus Files status
 IF (isButtonSelected(Event,'rmcnf_button')) THEN BEGIN
     cmd += ' --mc'
-    (*global).Configuration.Reduce.tab2.RunMcStat = 1
+    (*global).Configuration.Reduce.tab3.RunMcStat = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab2.RunMcStat = 0
+    (*global).Configuration.Reduce.tab3.RunMcStat = 0
 ENDELSE
 
 ;get Verbose status
 IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
     cmd += ' --verbose'
-    (*global).Configuration.Reduce.tab2.Verbose = 1
+    (*global).Configuration.Reduce.tab3.Verbose = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab2.Verbose = 0
+    (*global).Configuration.Reduce.tab3.Verbose = 0
 ENDELSE
 
 ;get Alternate Background Subtraction Method
@@ -152,11 +152,10 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 
-
 IF (isButtonSelected(Event,'niw_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab3.NormIntelLabelButton = 1
+    (*global).Configuration.Reduce.tab3.NormInteLabelButton = 1
 ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab3.NormIntelLabelButton = 0
+    (*global).Configuration.Reduce.tab3.NormInteLabelButton = 0
 ENDELSE
 
 IF (isButtonSelected(Event,'niw_button') AND $

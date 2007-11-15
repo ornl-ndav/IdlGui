@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DefaultConfigFileName : '~/.bss_selection.cfg',$ 
                     instrument : 'BSS',$
                     nexus_path : '/SNS/BSS/',$
                     nexus_geometry_path : '/SNS/BSS/2006_1_2_CAL/calibrations/',$
@@ -89,7 +90,7 @@ global = ptr_new ({ $
   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
   DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
     DefaultFilter : '*.nxs',$   ;default filter for the nexus file
-    Configuration : { Input : {RunNumber           : 0L,$
+    Configuration : { Input : {RunNumber           : '',$
                                ColorVerticalGrid   : 85,$
                                ColorHorizontalGrid : 85,$
                                ColorExcludedPixels : 150,$

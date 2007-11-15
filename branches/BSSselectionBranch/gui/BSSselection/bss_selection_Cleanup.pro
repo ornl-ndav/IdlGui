@@ -1,13 +1,9 @@
-PRO BSSselection_Cleanup, global
+PRO BSSselection_Cleanup, Main_Base
 
-;Retrieve value of parameters to keep for various tabs
-;tab SELECTION
+Widget_Control, Main_Base, get_uvalue=global
 
-
-
-
-
-
+;Create Config File Name
+BSSselection_CreateConfigFile, global
 
 END
 
