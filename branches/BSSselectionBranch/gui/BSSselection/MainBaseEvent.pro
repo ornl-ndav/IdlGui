@@ -799,6 +799,11 @@ CASE Event.id OF
         BSSselection_CommandLineGenerator, Event
     end    
     
+;Start Data Reduction
+    Widget_Info(wWidget, FIND_BY_UNAME='submit_button'): begin
+        BSSselection_RunCommandLine, Event
+    end    
+
 ;LOG_BOOK
 ;Send log book to geek button
     Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin

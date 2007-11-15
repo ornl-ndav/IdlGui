@@ -7,13 +7,13 @@ ReduceInputTabSettings       = {size : [0, $
                                         0, $
                                         750, $
                                         575],$
-                                title : ['Input Data (1)', $
-                                         'Process Setup', $
-                                         'Time-Independent Back.', $ 
-                                         'Data Control', $
-                                         'Intermediate Output',$
-                                         'Input Data (2)',$
-                                        'Scalling Constant'], $
+                                title : ['1) Input Data', $
+                                         '3) Process Setup', $
+                                         '4) Time-Indep. Back.', $ 
+                                         '6) Data Control', $
+                                         '7) Inter. Output',$
+                                         '2) Input Data',$
+                                         '5) Scalling Cst.'], $
                                 tab1 : {size : [0, $
                                                 0, $
                                                 750, $
@@ -54,7 +54,8 @@ status = {frame : {size : [SubmitButton.size[0] +$
                          SubmitButton.size[2] + xoff1, $
                          SubmitButton.size[1] + yoff1, $
                          330, $
-                         30]}}
+                         30],$
+                  uname : 'data_reduction_status_text'}}
 
 yoff  = 10
 xoff  = 498
@@ -115,6 +116,7 @@ text = WIDGET_TEXT(ReduceBase,$
                    YOFFSET   = Status.text.size[1],$
                    SCR_XSIZE = Status.text.size[2],$
                    SCR_YSIZE = Status.text.size[3],$
+                   UNAME     = Status.text.uname,$
                    /ALIGN_LEFT)
 
 frame = WIDGET_LABEL(ReduceBase,$
