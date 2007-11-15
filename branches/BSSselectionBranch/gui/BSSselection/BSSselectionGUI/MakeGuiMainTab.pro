@@ -7,6 +7,7 @@ MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 ;Tab titles
 SelectionTitle   = '  S E L E C T I O N  '
 ReduceTitle      = '  R E D U C E  '
+OutputTitle      = '  O U T P U T '
 LogBookTitle     = '  L O G   B O O K  '
 
 ;build widgets
@@ -25,6 +26,9 @@ MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
 
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle
+
+;build OUTPUT tab
+MakeGuiOutputTab, MAIN_TAB, MainTabsize, OutputTitle
 
 ;build LogBook tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTitle

@@ -13,6 +13,7 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiMainTab.pro
 .run MakeGuiSelectionTab.pro
 .run MakeGuiSelectionOutputCountsVsTof
+
 .run MakeGuiReduceTab.pro
 .run MakeGuiReduceInputTab.pro
 .run MakeGuiReduceInputTab1.pro
@@ -26,7 +27,10 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 .run MakeGuiReduceClgXmlTab1.pro
 .run MakeGuiReduceClgXmlTab2.pro
 
+.run MakeGuiOutputTab.pro
+
 .run MakeGuiLogBookTab.pro
+
 .run MakeGuiNeXusRoiBase.pro
 .run MakeGuiSelectionBase.pro
 
