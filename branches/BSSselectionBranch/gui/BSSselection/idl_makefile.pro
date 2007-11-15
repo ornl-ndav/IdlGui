@@ -67,6 +67,7 @@ cd, CurrentFolder
 .run bss_selection_CommandLineGenerator.pro
 
 .run bss_selection_Cleanup.pro
+.run bss_selection_Configuration.pro
 
 .run MainBaseEvent.pro
 .run bss_selection_eventcb.pro

@@ -159,6 +159,8 @@ ENDIF ELSE BEGIN
 ;populate RoI file name in reduce tab1
     putReduceRoiFileName, Event, RoiFullFileName
 
+    (*global).SavedRoiFullFileName = RoiFullFileName
+
 ENDELSE
 
 putMessageBoxInfo, Event, MessageBox

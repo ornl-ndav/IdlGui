@@ -58,9 +58,18 @@ DropListValue = getColorDropListSelectedIndex(Event)
 ColorValue = getColorSliderValue(Event)
 
 CASE (DropListValue) OF
-    0: (*global).ColorVerticalGrid = ColorValue
-    1: (*global).ColorHorizontalGrid = ColorValue
-    2: (*global).ColorExcludedPixels = ColorValue
+    0: BEGIN
+        (*global).ColorVerticalGrid = ColorValue
+        (*global).Configuration.Input.ColorVerticalGrid = ColorValue
+    END
+    1: BEGIN
+        (*global).ColorHorizontalGrid = ColorValue
+        (*global).Configuration.Input.ColorHorizontalGrid = ColorValue
+    END
+    2: BEGIN
+        (*global).ColorExcludedPixels = ColorValue
+        (*global).Configuration.Input.ColorExcludedPixels = ColorValue
+    END
     else:
 ENDCASE
 
@@ -102,21 +111,25 @@ CASE (DropListValue) OF
     0: BEGIN                    ;Grid: Vertical Lines
         SelectedIndex = (*global).DefaultColorVerticalGrid
         (*global).ColorVerticalGrid = SelectedIndex
+        (*global).Configuration.Input.ColorVerticalGrid = SelectedIndex
         SetColorSliderValue, Event, Selectedindex
     END
     1: BEGIN                    ;Grid: Horizontal Lines
         SelectedIndex = (*global).DefaultColorHorizontalGrid
         (*global).ColorHorizontalGrid = SelectedIndex
+        (*global).Configuration.Input.ColorHorizontalGrid = SelectedIndex
         SetColorSliderValue, Event, Selectedindex
     END
     2: BEGIN                    ;Excluded pixels
         SelectedIndex = (*global).DefaultColorExcludedPixels
         (*global).ColorExcludedPixels = SelectedIndex
+        (*global).Configuration.Input.ColorExcludedPixels = SelectedIndex
         SetColorSliderValue, Event, Selectedindex
     END
     3: BEGIN
         SelectedIndex = (*global).DefaultLoadctMainPlot
         (*global).LoadctMainPlot = SelectedIndex
+        (*global).Configuration.Input.LoadctMainPlot = SelectedIndex
         SetDropListIndex, Event, Selectedindex
     END
 ENDCASE
@@ -143,6 +156,11 @@ DropListValue = getColorDropListSelectedIndex(Event)
 (*global).ColorHorizontalGrid = (*global).DefaultColorHorizontalGrid
 (*global).ColorExcludedPixels = (*global).DefaultColorExcludedPixels
 (*global).LoadctMainPlot      = (*global).DefaultLoadctMainPlot
+
+(*global).Configuration.Input.ColorVerticalGrid   = (*global).DefaultColorVerticalGrid
+(*global).Configuration.Input.ColorHorizontalGrid = (*global).DefaultColorHorizontalGrid
+(*global).Configuration.Input.ColorExcludedPixels = (*global).DefaultColorExcludedPixels
+(*global).Configuration.Input.LoadctMainPlot      = (*global).DefaultLoadctMainPlot
 
 CASE (DropListValue) OF
     0: BEGIN                    ;Grid: Vertical Lines

@@ -262,3 +262,10 @@ END
 FUNCTION getLabelValue, Event, uname
 RETURN, getTextFieldValue(Event, uname)
 END
+
+
+FUNCTION getExcludedPixelSymbol, Event
+id = widget_info(Event.top,find_by_uname='excluded_pixel_type')
+widget_control, id, get_value=value
+RETURN, value
+END

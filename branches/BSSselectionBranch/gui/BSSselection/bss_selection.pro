@@ -48,6 +48,7 @@ global = ptr_new ({ $
   RunNumber : 0L, $             ;NeXus run number
   NexusFullName : '',$          ;Full nexus file name
   roi_path : '~/local/',$       ;path where to save the ROI file
+  SavedRoiFullFileName : '',$   ;full file name of ROI file
   counts_vs_tof_path : '~/local/',$ 
 ;path where to save the counts vs tof ascii file
   roi_ext : '_ROI.dat' ,$         ;extension of ROI files
@@ -87,10 +88,99 @@ global = ptr_new ({ $
   Yfactor : 5,$          ; coefficient in Y direction for rebining img
   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
   DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
-  DefaultFilter : '*.nxs'$      ;default filter for the nexus file
-
+    DefaultFilter : '*.nxs',$   ;default filter for the nexus file
+    Configuration : { Input : {RunNumber           : 0L,$
+                               ColorVerticalGrid   : 85,$
+                               ColorHorizontalGrid : 85,$
+                               ColorExcludedPixels : 150,$
+                               ColorSelectedPixel  : 100,$
+                               LoadctMainPlot      : 5,$
+                               ExcludedPixelSymbol : 0},$
+                      Reduce : {tab1 : { RawSampleDataFileText      : '',$
+                                         RawSampleDataFileMultiRuns : 0,$
+                                         BackDataFileText           : '',$
+                                         NormDataFileText           : '',$
+                                         EmptyCanDataFileText       : '',$
+                                         DirectScatBackText         : ''},$
+                                tab2 : { PixelRegionOfInterest       : '',$
+                                         AlternateInstrumentGeometry : '',$
+                                         OutputFileName              : ''},$
+                                tab3 : { RunMcStat            : 0,$
+                                         Verbose              : 0,$
+                                         AlternateBack        : 0,$
+                                         NoMonitorNorm        : 0,$
+                                         NoMonitorEfficiency  : 0,$
+                                         NormInteLabelButton  : 0,$
+                                         NormInteStart        : '',$
+                                         NormInteEnd          : '',$
+                                         HighTOFButton     : 0,$
+                                         HighTOFLow        : '',$
+                                         HighTOFHigh       : ''},$
+                                tab4 : { tofButton : 0,$
+                                         tof1 : '',$
+                                         tof2 : '',$
+                                         tof3 : '',$
+                                         tof4 : '',$
+                                         SDButton : 0,$
+                                         SDvalue : '',$
+                                         SDerror : '',$
+                                         BackButton : 0,$
+                                         BackValue : '',$
+                                         BackError : '',$
+                                         NormButton : 0,$
+                                         NormValue : '',$
+                                         NormError : '',$
+                                         ECButton : 0,$
+                                         ECValue : '',$
+                                         ECError : '',$
+                                         ScatButton : 0,$
+                                         ScatValue : '',$
+                                         ScatError : ''},$
+                                tab5 : { BackSDButton : 0,$
+                                         BackSDValue : '',$
+                                         BackSDError : '',$
+                                         BackNButton : 0,$
+                                         BackNValue : '',$
+                                         BackNError : '',$
+                                         BackSECButton : 0,$
+                                         BackSECValue : '',$
+                                         BackSECError : '',$
+                                         BackNECButton : 0,$
+                                         BackNECValue : '',$
+                                         BackNECError : '',$
+                                         ECSDButton : 0,$
+                                         ECSDValue : '',$
+                                         ECSDError : '',$
+                                         ECNButton : 0,$
+                                         ECNValue : '',$
+                                         ECNError : ''},$
+                                tab6 : { SlopButton : 0,$
+                                         SlopValue : '',$
+                                         SlopError : '',$
+                                         OffsetButton : 0,$
+                                         OffsetValue : '',$
+                                         OffsetError : '',$
+                                         HistoMin : '',$
+                                         HistoMax : '',$
+                                         HistoBin : '',$
+                                         GlobalButton : 0,$
+                                         GlobalValue : '',$
+                                         GlobalError : ''},$
+                                 tab7 : { All : 0,$
+                                          CalcTIB : 0,$
+                                          PixelWS : 0,$
+                                          MonitorWS : 0,$
+                                          MonitorES : 0,$
+                                          RebinnedMS : 0,$
+                                          CombinedPSbutton : 0,$
+                                          WHistoMin : '',$
+                                          WHistoMax : '',$
+                                          WHistoBin : '',$
+                                          PixelIES : 0,$
+                                          PixelETS : 0,$
+                                          LinearlyIDS : 0}}}$
   })
-
+  
 Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
 
@@ -131,7 +221,7 @@ version_label = widget_label(MAIN_BASE,$
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSselection_Cleanup'
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSselection_Cleanup' 
 
 ; initialize slider (Grid: Vertical Lines)
 id = widget_info(Main_base,Find_by_Uname='color_slider')

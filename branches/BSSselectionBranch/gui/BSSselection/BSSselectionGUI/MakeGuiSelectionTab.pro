@@ -58,7 +58,7 @@ CountsVsTofFrameSize = [748,CountsVsTofLabelSize[1]-15,440,285]
 
 OpenNeXusSelectionTab = [755,5,425,210]
 OpenNeXusTitle        = ' NEXUS / ROI '
-SelectionTitle        = ' REDUCE '
+SelectionTitle        = ' SELECTION '
 
 XYPixelIDBaseSize     = [15,330,725,35]
 xbaseSize             = [5,0,55,35]
