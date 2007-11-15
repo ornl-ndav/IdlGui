@@ -129,7 +129,7 @@ CASE (DropListValue) OF
     3: BEGIN
         SelectedIndex = (*global).DefaultLoadctMainPlot
         (*global).LoadctMainPlot = SelectedIndex
-        (*global).Configuration.Input.LoadctMainPlot = SelectedIndex
+        (*global).Configuration.Input.Loadct_droplist = SelectedIndex
         SetDropListIndex, Event, Selectedindex
     END
 ENDCASE
@@ -160,7 +160,7 @@ DropListValue = getColorDropListSelectedIndex(Event)
 (*global).Configuration.Input.ColorVerticalGrid   = (*global).DefaultColorVerticalGrid
 (*global).Configuration.Input.ColorHorizontalGrid = (*global).DefaultColorHorizontalGrid
 (*global).Configuration.Input.ColorExcludedPixels = (*global).DefaultColorExcludedPixels
-(*global).Configuration.Input.LoadctMainPlot      = (*global).DefaultLoadctMainPlot
+(*global).Configuration.Input.Loadct_droplist     = (*global).DefaultLoadctMainPlot
 
 CASE (DropListValue) OF
     0: BEGIN                    ;Grid: Vertical Lines

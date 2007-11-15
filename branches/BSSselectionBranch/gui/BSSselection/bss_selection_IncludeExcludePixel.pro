@@ -231,7 +231,10 @@ currentSelectedSymbol  = isPixelExcludedSymbolFull(Event)
 previousSelectedSymbol = (*global).PrevExcludedSymbol
 
 IF (currentSelectedSymbol NE previousSelectedSymbol) THEN BEGIN
-    PlotIncludedPixels, Event
+
+    IF ((*global).NeXusFound) THEN BEGIN
+        PlotIncludedPixels, Event
+    ENDIF
     (*global).PrevExcludedSymbol = currentSelectedSymbol
 ENDIF
 END
@@ -244,8 +247,12 @@ PRO BSSselection_ExcludeEverything, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-sz = (*global).pixel_excluded_size
-pixel_excluded = MAKE_ARRAY(sz,/INTEGER,VALUE=1)
-(*(*global).pixel_excluded) = pixel_excluded
-PlotExcludedPixels, Event
+IF ((*global).NeXusFound) THEN BEGIN 
+
+    sz = (*global).pixel_excluded_size
+    pixel_excluded = MAKE_ARRAY(sz,/INTEGER,VALUE=1)
+    (*(*global).pixel_excluded) = pixel_excluded
+    PlotExcludedPixels, Event
+
+ENDIF
 END

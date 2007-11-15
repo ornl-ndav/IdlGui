@@ -215,7 +215,10 @@ CountsVsTofTab1 = WIDGET_BASE(counts_vs_tof_tab,$
                               YOFFSET   = 0,$
                               SCR_XSIZE = CountsVsTofTabSize[2],$
                               SCR_YSIZE = CountsVsTofTabSize[2],$
-                              TITLE     = CountsVsTofTab1Label)
+                              TITLE     = CountsVsTofTab1Label,$
+                              UNAME     = 'counts_vs_tof_tab1',$
+                              SENSITIVE = 0)
+
 
 draw = WIDGET_DRAW(CountsVsTofTab1,$
                    UNAME     = 'full_counts_vs_tof_draw',$
@@ -250,7 +253,9 @@ CountsVsTofTab2 = WIDGET_BASE(counts_vs_tof_tab,$
                               YOFFSET   = 0,$
                               SCR_XSIZE = CountsVsTofTabSize[2],$
                               SCR_YSIZE = CountsVsTofTabSize[2],$
-                              TITLE     = CountsVsTofTab2Label)
+                              TITLE     = CountsVsTofTab2Label,$
+                              UNAME     = 'counts_vs_tof_tab2',$
+                              SENSITIVE = 0)
 
 draw = WIDGET_DRAW(CountsVsTofTab2,$
                    UNAME     = 'counts_vs_tof_draw',$
@@ -338,7 +343,9 @@ xbase = WIDGET_BASE(XYPixelIDBase,$
                     XOFFSET   = xbaseSize[0],$
                     YOFFSET   = ybaseSize[1],$
                     SCR_XSIZE = xbaseSize[2],$
-                    SCR_YSIZE = xbaseSize[3])
+                    SCR_YSIZE = xbaseSize[3],$
+                    UNAME     = 'xbase',$
+                    SENSITIVE = 0)
 
 Xfield = CW_FIELD(xbase,$
                   UNAME         = 'x_value',$
@@ -351,7 +358,9 @@ ybase = WIDGET_BASE(XYPixelIDBase,$
                     XOFFSET   = ybaseSize[0],$
                     YOFFSET   = ybaseSize[1],$
                     SCR_XSIZE = ybaseSize[2],$
-                    SCR_YSIZE = ybaseSize[3])
+                    SCR_YSIZE = ybaseSize[3],$
+                    UNAME     = 'ybase',$
+                    SENSITIVE = 0)
 
 Yfield = CW_FIELD(ybase,$
                   UNAME         = 'y_value',$
@@ -364,7 +373,9 @@ bankBase = WIDGET_BASE(XYPixelIDBase,$
                        XOFFSET   = bankBaseSize[0],$
                        YOFFSET   = bankBaseSize[1],$
                        SCR_XSIZE = bankBaseSize[2],$
-                       SCR_YSIZE = bankBaseSize[3])
+                       SCR_YSIZE = bankBaseSize[3],$
+                       UNAME     = 'bank_base',$
+                       SENSITIVE = 0)
 
 bankfield = CW_FIELD(bankBase,$
                      UNAME         = 'bank_value',$
@@ -377,7 +388,9 @@ rowBase = WIDGET_BASE(XYPixelIDBase,$
                       XOFFSET   = rowBaseSize[0],$
                       YOFFSET   = rowBaseSize[1],$
                       SCR_XSIZE = rowBaseSize[2],$
-                      SCR_YSIZE = rowBaseSize[3])
+                      SCR_YSIZE = rowBaseSize[3],$
+                      UNAME     = 'row_base',$
+                      SENSITIVE = 0)
 
 rowfield = CW_FIELD(rowbase,$
                     UNAME         = 'row_value',$
@@ -390,7 +403,9 @@ tubeBase = WIDGET_BASE(XYPixelIDBase,$
                        XOFFSET   = tubeBaseSize[0],$
                        YOFFSET   = tubeBaseSize[1],$
                        SCR_XSIZE = tubeBaseSize[2],$
-                       SCR_YSIZE = tubeBaseSize[3])
+                       SCR_YSIZE = tubeBaseSize[3],$
+                       UNAME     = 'tube_base',$
+                       SENSITIVE = 0)
 
 tubefield = CW_FIELD(tubeBase,$
                     UNAME         = 'tube_value',$
@@ -400,10 +415,12 @@ tubefield = CW_FIELD(tubeBase,$
                     XSIZE         = 3)
                      
 pixelIDbase = WIDGET_BASE(XYPixelIDBase,$
-                    XOFFSET   = pixelIDbaseSize[0],$
-                    YOFFSET   = pixelIDbaseSize[1],$
-                    SCR_XSIZE = pixelIDbaseSize[2],$
-                    SCR_YSIZE = pixelIDbaseSize[3])
+                          XOFFSET   = pixelIDbaseSize[0],$
+                          YOFFSET   = pixelIDbaseSize[1],$
+                          SCR_XSIZE = pixelIDbaseSize[2],$
+                          SCR_YSIZE = pixelIDbaseSize[3],$
+                          UNAME     = 'pixelid_base',$
+                          SENSITIVE = 0)
 
 Pixelfield = CW_FIELD(pixelIDbase,$
                       UNAME         = 'pixel_value',$
@@ -413,28 +430,32 @@ Pixelfield = CW_FIELD(pixelIDbase,$
                       XSIZE         = 5)
 
 countsBase = WIDGET_BASE(XYPixelIDBase,$
-                         XOFFSET = countsBaseSize[0],$
-                         YOFFSET = countsBaseSize[1],$
-                         SCR_XSIZE=countsBaseSize[2],$
-                         SCR_YSIZE=countsBaseSize[3])
+                         XOFFSET   = countsBaseSize[0],$
+                         YOFFSET   = countsBaseSize[1],$
+                         SCR_XSIZE = countsBaseSize[2],$
+                         SCR_YSIZE = countsBaseSize[3],$
+                         UNAME     = 'counts_base',$
+                         SENSITIVE = 0)
 
 countslabel = WIDGET_LABEL(countsbase,$
                            XOFFSET = countsLabelSize[0],$
                            YOFFSET = countsLabelSize[1],$
-                           VALUE = 'Counts:')
+                           VALUE   = 'Counts:')
 
 countsfield = WIDGET_TEXT(countsbase,$
                           XOFFSET   = countsTextSize[0],$
                           YOFFSET   = countsTextSize[1],$
                           SCR_XSIZE = countsTextSize[2],$
                           SCR_YSIZE = countsTextSize[3],$
-                          UNAME = 'counts_value')
+                          UNAME     = 'counts_value')
 
 ColorIndexbase = WIDGET_BASE(XYPixelIDBase,$
                              XOFFSET   = colorIndexBaseSize[0],$
                              YOFFSET   = colorIndexBaseSize[1],$
                              SCR_XSIZE = colorIndexBaseSize[2],$
-                             SCR_YSIZE = colorIndexBaseSize[3])
+                             SCR_YSIZE = colorIndexBaseSize[3],$
+                             UNAME     = 'color_index_base',$
+                             SENSITIVE = 0)
 
 colorIndexfield = CW_FIELD(ColorIndexbase,$
                            UNAME         = 'pixel_color_index',$
@@ -471,6 +492,8 @@ ColorBase = WIDGET_BASE(SelectionBase,$
                         YOFFSET   = ColorBaseSize[1],$
                         SCR_XSIZE = ColorBaseSize[2],$
                         SCR_YSIZE = ColorBaseSize[3],$
+                        UNAME     = 'color_base',$
+                        SENSITIVE = 0,$
                         FRAME     = 1)
 
 ColorLabel = WIDGET_LABEL(ColorBase,$
@@ -512,7 +535,8 @@ ColorSliderBase = WIDGET_BASE(ColorBase,$
                               SCR_YSIZE = ColorSliderBaseSize[3],$
                               UNAME     = 'color_slider_base',$
                               FRAME     = 0,$
-                              MAP       = 1)
+                              MAP       = 1,$
+                              SENSITIVE = 0)
 
 ColorSlider = WIDGET_SLIDER(ColorSliderBase,$
                             UNAME     = 'color_slider',$

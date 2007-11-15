@@ -46,6 +46,7 @@ endif else begin
 
 ;populate ROI file name
     BSSselection_CreateRoiFileName, Event
+
 ;activate button
     activate_status = 1
 
@@ -53,9 +54,10 @@ endelse
 
 ;activate or not 'save_roi_file_button', 'roi_path_button',
 ;'roi_file_name_generator', 'load_roi_file_button'
-activate_button, event, 'load_roi_file_button', activate_status
-activate_button, event, 'save_roi_file_button', activate_status
-activate_button, event, 'roi_path_button', activate_status
-activate_button, event, 'roi_file_name_generator', activate_status
+ActivateArray = (*(*global).WidgetsToActivate)
+sz = (size(ActivateArray))(1)
+FOR i=0,(sz-1) DO BEGIN
+    activate_button, event, ActivateArray[i], activate_status
+ENDFOR
 
 END    

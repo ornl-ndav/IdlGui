@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    WidgetsToActivate : ptr_new(0L),$
                     LoadingConfig : 0,$ ;will be 1 after loading config file
                     DefaultConfigFileName : '~/.bss_selection.cfg',$ 
                     instrument : 'BSS',$
@@ -189,6 +190,31 @@ loadct, (*global).DefaultLoadctMainPlot
 XYfactor                    = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
 pixel_excluded              = intarr((*global).pixel_excluded_size)
 (*(*global).pixel_excluded) = pixel_excluded
+
+(*(*global).WidgetsToActivate) = ['load_roi_file_button',$
+                                  'save_roi_file_button',$
+                                  'roi_path_button',$
+                                  'roi_file_name_generator',$
+                                  'xbase',$
+                                  'ybase',$
+                                  'bank_base',$
+                                  'row_base',$
+                                  'pixelid_base',$
+                                  'counts_base',$
+                                  'color_index_base',$
+                                  'color_slider_base',$
+                                  'color_base',$
+                                  'counts_vs_tof_tab2',$
+                                  'counts_vs_tof_tab1',$
+                                  'sbase',$
+                                  'symbol_base',$
+                                  'fbase']
+
+    
+
+
+
+
 
 if (!VERSION.os EQ 'darwin') then begin
     MainBaseSize  = [30,25,1200,730]

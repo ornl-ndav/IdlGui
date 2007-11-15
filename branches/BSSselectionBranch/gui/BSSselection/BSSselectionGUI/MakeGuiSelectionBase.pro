@@ -72,6 +72,8 @@ button = WIDGET_BUTTON(abase,$
 ;Tube base
 sbase = WIDGET_BASE(SelectionTabBase,$
                     /BASE_ALIGN_CENTER,$
+                    UNAME        = 'sbase',$
+                    SENSITIVE    = 0,$
                     ROW          = 1)
 
 text   = CW_FIELD(sbase,$
@@ -99,7 +101,9 @@ button = WIDGET_BUTTON(sbase,$
 ;Excluded type (full or empty box)
 base = WIDGET_BASE(SelectionTabBase,$
                    /BASE_ALIGN_CENTER,$
-                   ROW = 1)
+                   UNAME     = 'symbol_base',$
+                   SENSITIVE = 0,$
+                   ROW       = 1)
 ExcludedTypeLabel = WIDGET_LABEL(base,$
                                 VALUE = 'Excluded Pixel Symbol:')
 
@@ -121,7 +125,9 @@ button = WIDGET_BUTTON(base,$
 ;full reset
 fbase = WIDGET_BASE(SelectionTabBase,$
                     /BASE_ALIGN_CENTER,$
-                    ROW          = 1)
+                    SENSITIVE = 0,$
+                    UNAME     = 'fbase',$
+                    ROW       = 1)
 
 button = WIDGET_BUTTON(fbase,$
                        UNAME     = 'reset_button',$
