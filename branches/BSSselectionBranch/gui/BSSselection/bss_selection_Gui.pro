@@ -8,6 +8,11 @@ id = widget_info(event.top,find_by_uname=uname)
 widget_control, id, map=activate_status
 END
 
+PRO SetButton, event, uname, valueStatus
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=valueStatus
+END
+
 
 PRO SetColorSliderValue, Event, index
 id = widget_info(Event.top,find_by_uname='color_slider')

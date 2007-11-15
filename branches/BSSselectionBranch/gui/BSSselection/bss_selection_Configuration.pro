@@ -27,3 +27,123 @@ close, 1
 free_lun, 1
 
 END
+
+
+
+
+PRO BSSselection_PopulateGui, Event, FileArray
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+  sz = (size(FileArray))(1)
+  FOR i=0,(sz-1) DO BEGIN
+    
+      NameValue = strsplit(FileArray[i],' ',/EXTRACT)
+      sz = (size(NameValue))(1)
+    
+      IF (sz GT 1) THEN BEGIN
+        
+          IF (STRMATCH(NameValue[0],'*button*',/FOLD_CASE)) THEN BEGIN ;it's a button
+            
+              IF (STRLOWCASE(NameValue[0]) NE 'rsdf_multiple_runs_button') THEN BEGIN
+                  
+                  IF(NameValue[1] EQ '0') THEN BEGIN
+                      SetButton, event, STRLOWCASE(NameValue[0]), 0
+                  ENDIF ELSE BEGIN
+                      SetButton, event, STRLOWCASE(NameValue[0]), 1
+                  ENDELSE
+
+                  BSSselection_EnableOrNotFields, Event, STRLOWCASE(NameValue[0])
+            
+              ENDIF
+
+          ENDIF ELSE BEGIN
+            
+              IF (STRMATCH(NameValue[0],'*color*',/FOLD_CASE)) THEN BEGIN ;it's a slider
+                
+                  value = Fix(NameValue[1])
+                
+                  CASE (STRLOWCASE(NameValue[0])) OF
+                      'colorverticalgrid': (*global).ColorVerticalGrid = value
+                      'colorhorizontalgrid' : (*global).ColorHorizontalGrid = value
+                      'colorexcludedpixels' : (*global).ColorExcludedPixels = value
+                      'colorselectedpixel' : (*global).ColorSelectedPixel = value
+                  ENDCASE
+                
+              ENDIF ELSE BEGIN
+                
+                  IF (STRMATCH(NameValue[0],'*loadct*',/FOLD_CASE)) THEN BEGIN ;loadct
+                    
+                      (*global).LoadctMainPlot = Fix(NameValue[1])
+                    
+                  ENDIF ELSE BEGIN
+                    
+                      putTextInTextField, Event, STRLOWCASE(NameValue[0]), STRLOWCASE(NameValue[1])
+                    
+                  ENDELSE
+                
+              ENDELSE
+            
+          ENDELSE
+        
+      ENDIF ELSE BEGIN
+          putTextInTextField, Event, STRLOWCASE(NameValue[0]), ''
+      ENDELSE
+  ENDFOR
+
+;Load Nexus if there is one
+bss_selection_LoadNexus, Event
+
+;Load ROI if there is one
+
+
+END
+
+
+
+
+PRO BSSselection_LoadingConfigurationFile, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;read config file
+FileName = (*global).DefaultConfigFileName
+
+openr, u, FileName, /get
+
+onebyte = 0b
+tmp = ''
+i = 0
+NbrLine = getNbrLines(FileName)
+FileArray = strarr(NbrLine)
+
+while (NOT eof(u)) do begin
+    
+    readu,u,onebyte
+    fs = fstat(u)
+    
+    if (fs.cur_ptr EQ 0) then begin
+        point_lun,u,0
+    endif else begin
+        point_lun,u,fs.cur_ptr - 1
+    endelse
+    
+    readf,u,tmp
+    FileArray[i++] = tmp
+            
+endwhile
+
+close, u
+free_lun,u
+NbrElement = i ;nbr of lines
+
+BSSselection_PopulateGui, Event, FileArray
+
+END
+
+
+

@@ -809,4 +809,9 @@ CASE Event.id OF
     
 ENDCASE
 
+IF ((*global).LoadingConfig EQ 0) THEN BEGIN
+    BSSselection_LoadingConfigurationFile, Event
+    (*global).LoadingConfig = 1
+ENDIF
+
 END

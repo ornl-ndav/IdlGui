@@ -58,7 +58,7 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         (*(*global).pixel_excluded) = intarr((*global).pixel_excluded_size)
 
         (*global).RunNumber = RunNumber
-        (*global).Configuration.Input.RunNumber = RunNumber
+        (*global).Configuration.Input.nexus_run_number = RunNumber
         
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 

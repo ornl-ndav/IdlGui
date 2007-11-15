@@ -49,7 +49,7 @@ END
 
 
 
-pro bss_selection_eventcb
+pro bss_selection_eventcb, event
 end
 
 

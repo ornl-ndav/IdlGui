@@ -65,14 +65,20 @@ CASE (type) OF
     'cn_button': BEGIN
         text_unames = ['cn_value_text','cn_error_text']
     END
+    ELSE: BEGIN
+        text_unames  = ['']
+    END
 ENDCASE
 
-new_text_unames = [text_unames,text_unames + '_label']
+IF ((size(text_unames))(1) GT 1) THEN BEGIN
+    new_text_unames = [text_unames,text_unames + '_label']
+    
+    sz=(size(new_text_unames))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        activate_button, Event, new_text_unames[i], ActivateStatus
+    ENDFOR
 
-sz=(size(new_text_unames))(1)
-FOR i=0,(sz-1) DO BEGIN
-    activate_button, Event, new_text_unames[i], ActivateStatus
-ENDFOR
+ENDIF
 
 END
 

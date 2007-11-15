@@ -42,7 +42,7 @@ RSDFMultipleRun   = { base : {size : [RSDFNexusField.size[0] + XYoff[0],$
                                       90,35]},$
                       size : [0,0,10,30],$
                       value : 'Multi. Runs',$
-                      uname : 'rsdf_multiple_runs_cw_group'}
+                      uname : 'rsdf_multiple_runs_button'}
                
 XYoff = [10,40]
 RSDFListOfRuns = { size : [XYoff[0],$

@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    LoadingConfig : 0,$ ;will be 1 after loading config file
                     DefaultConfigFileName : '~/.bss_selection.cfg',$ 
                     instrument : 'BSS',$
                     nexus_path : '/SNS/BSS/',$
@@ -90,96 +91,96 @@ global = ptr_new ({ $
   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
   DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
     DefaultFilter : '*.nxs',$   ;default filter for the nexus file
-    Configuration : { Input : {RunNumber           : '',$
+    Configuration : { Input : {nexus_run_number    : '',$
                                ColorVerticalGrid   : 85,$
                                ColorHorizontalGrid : 85,$
                                ColorExcludedPixels : 150,$
                                ColorSelectedPixel  : 100,$
-                               LoadctMainPlot      : 5,$
-                               ExcludedPixelSymbol : 0},$
-                      Reduce : {tab1 : { RawSampleDataFileText      : '',$
-                                         RawSampleDataFileMultiRuns : 0,$
-                                         BackDataFileText           : '',$
-                                         NormDataFileText           : '',$
-                                         EmptyCanDataFileText       : '',$
-                                         DirectScatBackText         : ''},$
-                                tab2 : { PixelRegionOfInterest       : '',$
-                                         AlternateInstrumentGeometry : '',$
-                                         OutputFileName              : ''},$
-                                tab3 : { RunMcStat            : 0,$
-                                         Verbose              : 0,$
-                                         AlternateBack        : 0,$
-                                         NoMonitorNorm        : 0,$
-                                         NoMonitorEfficiency  : 0,$
-                                         NormInteLabelButton  : 0,$
-                                         NormInteStart        : '',$
-                                         NormInteEnd          : '',$
-                                         HighTOFButton     : 0,$
-                                         HighTOFLow        : '',$
-                                         HighTOFHigh       : ''},$
-                                tab4 : { tofButton : 0,$
-                                         tof1 : '',$
-                                         tof2 : '',$
-                                         tof3 : '',$
-                                         tof4 : '',$
-                                         SDButton : 0,$
-                                         SDvalue : '',$
-                                         SDerror : '',$
-                                         BackButton : 0,$
-                                         BackValue : '',$
-                                         BackError : '',$
-                                         NormButton : 0,$
-                                         NormValue : '',$
-                                         NormError : '',$
-                                         ECButton : 0,$
-                                         ECValue : '',$
-                                         ECError : '',$
-                                         ScatButton : 0,$
-                                         ScatValue : '',$
-                                         ScatError : ''},$
-                                tab5 : { BackSDButton : 0,$
-                                         BackSDValue : '',$
-                                         BackSDError : '',$
-                                         BackNButton : 0,$
-                                         BackNValue : '',$
-                                         BackNError : '',$
-                                         BackSECButton : 0,$
-                                         BackSECValue : '',$
-                                         BackSECError : '',$
-                                         BackNECButton : 0,$
-                                         BackNECValue : '',$
-                                         BackNECError : '',$
-                                         ECSDButton : 0,$
-                                         ECSDValue : '',$
-                                         ECSDError : '',$
-                                         ECNButton : 0,$
-                                         ECNValue : '',$
-                                         ECNError : ''},$
-                                tab6 : { SlopButton : 0,$
-                                         SlopValue : '',$
-                                         SlopError : '',$
-                                         OffsetButton : 0,$
-                                         OffsetValue : '',$
-                                         OffsetError : '',$
-                                         HistoMin : '',$
-                                         HistoMax : '',$
-                                         HistoBin : '',$
-                                         GlobalButton : 0,$
-                                         GlobalValue : '',$
-                                         GlobalError : ''},$
-                                 tab7 : { All : 0,$
-                                          CalcTIB : 0,$
-                                          PixelWS : 0,$
-                                          MonitorWS : 0,$
-                                          MonitorES : 0,$
-                                          RebinnedMS : 0,$
-                                          CombinedPSbutton : 0,$
-                                          WHistoMin : '',$
-                                          WHistoMax : '',$
-                                          WHistoBin : '',$
-                                          PixelIES : 0,$
-                                          PixelETS : 0,$
-                                          LinearlyIDS : 0}}}$
+                               loadct_droplist     : 5,$
+                               excluded_pixel_type : 0},$
+                      Reduce : {tab1 : { rsdf_list_of_runs_text    : '',$
+                                         rsdf_multiple_runs_button : 0,$
+                                         bdf_list_of_runs_text     : '',$
+                                         ndf_list_of_runs_text     : '',$
+                                         ecdf_list_of_runs_text    : '',$
+                                         dsb_list_of_runs_text     : ''},$
+                                tab2 : { proif_text            : '',$
+                                         aig_list_of_runs_text : '',$
+                                         of_list_of_runs_text  : ''},$
+                                tab3 : { rmcnf_button            : 0,$
+                                         verbose_button             : 0,$
+                                         absm_button       : 0,$
+                                         nmn_button        : 0,$
+                                         nmec_button          : 0,$
+                                         niw_button  : 0,$
+                                         nisw_field        : '',$
+                                         niew_field          : '',$
+                                         te_button     : 0,$
+                                         te_low_field        : '',$
+                                         te_high_field      : ''},$
+                                tab4 : { tib_tof_button : 0,$
+                                         tibtof_channel1_text : '',$
+                                         tibtof_channel2_text: '',$
+                                         tibtof_channel3_text: '',$
+                                         tibtof_channel4_text : '',$
+                                         tibc_for_sd_button: 0,$
+                                         tibc_for_sd_value_text: '',$
+                                         tibc_for_sd_error_text: '',$
+                                         tibc_for_bd_button: 0,$
+                                         tibc_for_bd_value_text: '',$
+                                         tibc_for_bd_error_text: '',$
+                                         tibc_for_nd_button: 0,$
+                                         tibc_for_nd_value_text: '',$
+                                         tibc_for_nd_error_text: '',$
+                                         tibc_for_ecd_button: 0,$
+                                         tibc_for_ecd_value_text: '',$
+                                         tibc_for_ecd_error_text: '',$
+                                         tibc_for_scatd_button : 0,$
+                                         tibc_for_scatd_value_text: '',$
+                                         tibc_for_scatd_error_text: ''},$
+                                tab5 : { csbss_button : 0,$
+                                         csbss_value_text : '',$
+                                         csbss_error_text: '',$
+                                         csn_button: 0,$
+                                         csn_value_text : '',$
+                                         csn_error_text: '',$
+                                         bcs_button : 0,$
+                                         bcs_value_text : '',$
+                                         bcs_error_text: '',$
+                                         bcn_button : 0,$
+                                         bcn_value_text : '',$
+                                         bcn_error_text: '',$
+                                         cs_button : 0,$
+                                         cs_value_text : '',$
+                                         cs_error_text: '',$
+                                         cn_button: 0,$
+                                         cn_value_text: '',$
+                                         cn_error_text: ''},$
+                                tab6 : { tzsp_button : 0,$  ;Data Control
+                                         tzsp_value_text: '',$
+                                         tzsp_error_text: '',$
+                                         tzop_button: 0,$
+                                         tzop_value_text : '',$
+                                         tzop_error_text: '',$
+                                         eha_min_text: '',$
+                                         eha_max_text: '',$
+                                         eha_bin_text : '',$
+                                         gifw_button : 0,$
+                                         gifw_value_text : '',$
+                                         gifw_error_text: ''},$
+                                 tab7 : { waio_button: 0,$
+                                          woctib_button: 0,$
+                                          wopws_button: 0,$
+                                          womws_button: 0,$
+                                          womes_button: 0,$
+                                          worms_button: 0,$
+                                          wocpsamn_button : 0,$
+                                          wa_min_text: '',$
+                                          wa_max_text: '',$
+                                          wa_bin_width_text : '',$
+                                          wopies_button: 0,$
+                                          wopets_button: 0,$
+                                          wolidsb_button: 0}}}$
   })
   
 Device, /decomposed
