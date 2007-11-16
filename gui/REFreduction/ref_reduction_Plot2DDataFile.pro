@@ -95,7 +95,9 @@ readu,u,data
 
 indx1 = where(data GT 0, Ngt0)
 img = intarr(Ntof,Ny,Nx)
-img(indx1)=data(indx1)
+IF (Ngt0 GT 0) THEN BEGIN
+    img(indx1)=data(indx1)
+ENDIF 
 ;store big array that will be used by 1D plot
 (*(*global).DATA_D_ptr) = img ;data(Ntof,Ny,Nx)
 img = total(img,1)
