@@ -1364,8 +1364,8 @@ endif else begin
     widget_control, full_view_info, set_value=full_text
 
     cmd_findnexus = "findnexus -i" + instrument
-    cmd_findnexus += " " + run_number
-    cmd_findprenexus = cmd_findnexus + " --prenexus"
+    cmd_findnexus += " " + run_number + ' --archive '
+    cmd_findprenexus = cmd_findnexus + " --prenexus "
 
     full_text = 'Find NeXus path: >' + cmd_findnexus
     widget_control, full_view_info, set_value=full_text, /append
@@ -2154,6 +2154,7 @@ endif else begin                ; file is on DAS
                 widget_control, view_info, set_value=text, /append
                 widget_control, full_view_info, set_value=full_text, /append
                 full_text = 'NeXus: ' + full_nexus_name
+                (*global).full_local_nexus_name = full_nexus_name
                 widget_control, full_view_info, set_value=full_text, /append
             endif else begin
                 text = '..ERROR'
@@ -2478,6 +2479,7 @@ if ((*global).find_nexus EQ 1) then begin
     WIDGET_CONTROL, view_info, SET_VALUE=text, /append
     widget_control, full_view_info, set_value=full_text, /append
     full_text = 'NeXus: ' + full_nexus_name
+    (*global).full_local_nexus_name = full_nexus_name
     text = full_text
     widget_control, full_view_info, set_value=full_text, /append
     WIDGET_CONTROL, view_info, SET_VALUE=text, /append
@@ -2612,6 +2614,7 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 
 full_nexus_name = (*global).full_local_nexus_name
+print, 'full_nexus_name: ' + full_nexus_name
 
 instrument = (*global).instrument
 proposal_number = (*global).proposal_number
@@ -2635,6 +2638,7 @@ DestNeXus = ShareFolder + nexusFileName
 cp_cmd = 'cp ' + full_nexus_name
 cp_cmd += ' ' + DestNexus
 cp_cmd_text = '> ' + cp_cmd
+print, 'cp_cmk: ' + cp_cmd
 widget_control, full_view_info, set_value=cp_cmd_text, /append
 WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
 spawn, cp_cmd, listening
