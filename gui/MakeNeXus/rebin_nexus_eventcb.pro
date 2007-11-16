@@ -1355,8 +1355,9 @@ if (wrong_run_number_format ne 0) then begin ;run number is not a number
 endif else begin
     
 ;Display button becomes sensitive
-    id_display = widget_info(Event.top, FIND_BY_UNAME="DISPLAY_BUTTON")
-    widget_control, id_display, sensitive=1
+;    id_display = widget_info(Event.top,
+;    FIND_BY_UNAME="DISPLAY_BUTTON")  ;REMOVE ME WHEN IT WILL WORK
+;    widget_control, id_display, sensitive=1
 
 ;get full preNeXus and NeXus path
     run_number = strcompress(run_number,/remove_all)
@@ -2614,7 +2615,6 @@ view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
 full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
 
 full_nexus_name = (*global).full_local_nexus_name
-print, 'full_nexus_name: ' + full_nexus_name
 
 instrument = (*global).instrument
 proposal_number = (*global).proposal_number
@@ -2626,6 +2626,12 @@ ShareFolder += '/' + proposal_number
 ShareFolder += '/shared'
 ShareFolder += '/'
 
+Sharefolder2 = '/SNS/' + instrument
+Sharefolder2 += '/shared/'
+
+print, '#1: '+  shareFolder
+print, '#2: ' + ShareFolder2
+
 ;get the iso8601 format date and time
 formated_date = ''
 get_iso8601, formated_date
@@ -2633,12 +2639,21 @@ get_iso8601, formated_date
 nexusFileName = instrument + '_' + run_number
 nexusFileName += '_' + formated_date + '.nxs'
 
-DestNeXus = ShareFolder + nexusFileName
+DestNeXus  = ShareFolder + nexusFileName
+DestNeXus2 = ShareFolder2 + nexusFileName 
 
 cp_cmd = 'cp ' + full_nexus_name
 cp_cmd += ' ' + DestNexus
-cp_cmd_text = '> ' + cp_cmd
-print, 'cp_cmk: ' + cp_cmd
+
+cp_cmd2 = 'cp ' + full_nexus_name
+cp_cmd2 += ' ' + DestNexus2
+
+cp_cmd_text  = '> ' + cp_cmd
+cp_cmd_text2 = '> ' + cp_cmd2
+
+print, cp_cmd
+print, cp_cmd2
+
 widget_control, full_view_info, set_value=cp_cmd_text, /append
 WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
 spawn, cp_cmd, listening
@@ -2646,6 +2661,12 @@ status_text = ' .... copy done'
 widget_control, full_view_info, set_value=status_text, /append
 WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
 
+widget_control, full_view_info, set_value=cp_cmd_text2, /append
+WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text2, /append
+spawn, cp_cmd2, listening
+status_text = ' .... copy done'
+widget_control, full_view_info, set_value=status_text, /append
+WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
 END
 
 
