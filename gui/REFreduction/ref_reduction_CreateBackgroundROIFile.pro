@@ -75,11 +75,11 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     endif else begin            ;REF_M
         
         i=0L
-        NxMax = (*global).Nx_REF_M
+        NyMax = (*global).Ny_REF_M
         YNbr = YNbr+1
-        OutputArray = strarr((NxMax)*YNbr)	
+        OutputArray = strarr((NyMax)*YNbr)	
         for y=(Ymin),(Ymax) do begin
-            for x=0,(NxMax-1) do begin
+            for x=0,(NyMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
                 text += '_' + strcompress(x,/remove_all)
                 printf,1,text
@@ -182,11 +182,11 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     endif else begin            ;REF_M
         
         i=0L
-        NxMax = (*global).Nx_REF_M
+        NyMax = (*global).Ny_REF_M
         YNbr = YNbr+1
-        OutputArray = strarr((NxMax)*YNbr)	
+        OutputArray = strarr((NyMax)*YNbr)	
         for y=(Ymin),(Ymax) do begin
-            for x=0,(NxMax-1) do begin
+            for x=0,(NyMax-1) do begin
                 text = 'bank1_' + strcompress(y,/remove_all)
                 text += '_' + strcompress(x,/remove_all)
                 printf,1,text
