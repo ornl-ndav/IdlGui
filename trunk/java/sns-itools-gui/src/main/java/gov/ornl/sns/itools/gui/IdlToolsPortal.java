@@ -22,10 +22,10 @@ public class IdlToolsPortal implements ActionListener{
   static String BAC2 = "bac2";
   static String UNKNOWN = "unknown";
   
-  static String PLOTBSS = "/SNS/users/j35/IDL/BSS/plotBSS";
-  static String REALIGN_BSS = "/SNS/users/j35/IDL/BSS/RealignGUI/RealignBSS";
-  static String REBIN_NEXUS = "/SNS/users/j35/IDL/RebinNeXus/rebinNeXus";
-  static String DATA_REDUCTION = "/SNS/users/j35/IDL/DataReduction/data_reduction";
+  static String PLOTBSS = "/SNS/software/idltools/plotBSS";
+  static String REALIGN_BSS = "/SNS/software/idltools/RealignGUI/RealignBSS";
+  static String REBIN_NEXUS = "/SNS/software/idltools/rebinNeXus";
+  static String DATA_REDUCTION = "/SNS/software/idltools/data_reduction";
   static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
