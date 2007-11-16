@@ -43,6 +43,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                                                        DataRunNumber,$
                                                        instrument,$
                                                        isNeXusFound)
+
+        print, full_list_of_nexus_name
         
         if (~isNexusFound) then begin ;no nexus found
             
@@ -69,6 +71,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;before
             sz = (size(full_list_of_nexus_name))(1)
             NbrNexus = sz
+            print, sz
             if (sz GT 1) then begin
 
 ;display list in droplist and map=1 base
