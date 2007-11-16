@@ -205,6 +205,9 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 
+;turn on or off the new font
+font = 0
+
 combine_results = get_up_to_date_map_geo_tran_files (instrument_list[instrument])
 
 global = ptr_new({$
@@ -319,15 +322,25 @@ endif else begin
     map_hide_log_book_tab = 1
 endelse
 
-general_message = widget_label(MAIN_BASE,$
-                               uname='general_message',$
-                               xoffset=260,$
-                               yoffset=0,$
-                               scr_xsize=200,$
-                               scr_ysize=20,$
-                               font='lucidasans-bold-10',$
-                               value='')
-
+if (font) then begin
+    general_message = widget_label(MAIN_BASE,$
+                                   uname='general_message',$
+                                   xoffset=260,$
+                                   yoffset=0,$
+                                   scr_xsize=200,$
+                                   scr_ysize=20,$
+                                   font='lucidasans-bold-10',$
+                                   value='')
+endif else begin
+    general_message = widget_label(MAIN_BASE,$
+                                   uname='general_message',$
+                                   xoffset=260,$
+                                   yoffset=0,$
+                                   scr_xsize=200,$
+                                   scr_ysize=20,$
+                                   value='')
+endelse
+    
 
 hide_log_book_tab_blocker = widget_base(MAIN_BASE,$
                                         xoffset=130,$
