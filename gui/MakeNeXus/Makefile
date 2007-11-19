@@ -6,6 +6,10 @@
 # Copy the VM program in its final location
 
 all:
-	idl /SNS/users/j35/SVN/HistoTool/trunk/gui/MakeNeXus/makefile.pro;
+	idl ./makefile.pro;
+install:
+	cp rebin_nexus.sav /SNS/software/idltools/sav/
+	cp rebinNeXus /SNS/software/idltools/
+
 
 

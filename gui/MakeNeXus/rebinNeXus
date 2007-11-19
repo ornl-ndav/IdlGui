@@ -1,1 +1,1 @@
-idl -vm=/SNS/users/j35/IDL/RebinNeXus/rebin_nexus.sav
+idl -vm='/SNS/software/idltools/sav/rebin_nexus.sav'
