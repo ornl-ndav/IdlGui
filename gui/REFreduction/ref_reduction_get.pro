@@ -137,3 +137,14 @@ widget_control, id, get_value=value
 return, value
 END
 
+
+FUNCTION getUDCoefficienT,Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+IF ((*global).miniVersion EQ 1) THEN BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
+    RETURN, 2
+ENDELSE
+END
+
