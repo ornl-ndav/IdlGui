@@ -889,22 +889,32 @@ end
 
 function display_xml_info, filename, item_name
 
-oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
 
-oDocList = oDoc->GetElementsByTagName('DetectorInfo')
-obj1 = oDocList->item(0)
+    CATCH,/CANCEL
+    return, ''
 
-obj2=obj1->GetElementsByTagName('Scattering')
-obj3=obj2->item(0)
+ENDIF ELSE BEGIN
+    
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+    
+    oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+    obj1 = oDocList->item(0)
+    
+    obj2=obj1->GetElementsByTagName('Scattering')
+    obj3=obj2->item(0)
+    
+    obj4=obj3->GetElementsByTagName('NumTimeChannels')
+    obj5=obj4->item(0)
+    
+    obj5b=obj5->getattributes()
+    obj5c=obj5b->getnameditem(item_name)
 
-obj4=obj3->GetElementsByTagName('NumTimeChannels')
-obj5=obj4->item(0)
+    return, obj5c->getvalue()
 
-obj5b=obj5->getattributes()
-obj5c=obj5b->getnameditem(item_name)
-
-return, obj5c->getvalue()
-
+ENDELSE
 end
 
 
@@ -940,19 +950,27 @@ END
 
 ;function that creates the XML object
 function get_xml_value, NodeName, filename
+
+no_error = 0
+CATCH, no_error
+if (no_error NE 0) THEN BEGIN
+    catch,/cancel
+    return, ''
+endif else begin
 ;create XML object and load file
-   oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=filename)
 ;now load it with our xml file of interest
 ;   oDoc->Load, filename
 ;initiate the variable that will contain the data we're interested in
-   return_value = ''
+    return_value = ''
 ;recurse the object tree and find what we're looking for
-   xml_object_recurse, oDoc, NodeName, return_value
+    xml_object_recurse, oDoc, NodeName, return_value
 ;	print,'Return Value: ',return_value
 ;send the findings back to the calling program
-	return, return_value
+    return, return_value
 ;cleanup memory and destroy the object
-   OBJ_DESTROY, oDoc
+    OBJ_DESTROY, oDoc
+endelse
 END
 
 
