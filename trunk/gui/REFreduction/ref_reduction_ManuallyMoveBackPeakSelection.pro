@@ -1,17 +1,21 @@
 PRO REFreduction_ManuallyMoveDataBackPeakUp, Event
-REFreduction_ManuallyMoveDataBackPeak, Event, 2
+coefficient = getUDCoefficient(Event)
+REFreduction_ManuallyMoveDataBackPeak, Event, coefficient
 END
 
 PRO REFreduction_ManuallyMoveDataBackPeakDown, Event
-REFreduction_ManuallyMoveDataBackPeak, Event, -2
+coefficient = getUDCoefficient(Event)
+REFreduction_ManuallyMoveDataBackPeak, Event, -coefficient
 END
 
 PRO REFreduction_ManuallyMoveNormBackPeakUp, Event
-REFreduction_ManuallyMoveNormBackPeak, Event, 2
+coefficient = getUDCoefficient(Event)
+REFreduction_ManuallyMoveNormBackPeak, Event, coefficient
 END
 
 PRO REFreduction_ManuallyMoveNormBackPeakDown, Event
-REFreduction_ManuallyMoveNormBackPeak, Event, -2
+coefficient = getUDCoefficient(Event)
+REFreduction_ManuallyMoveNormBackPeak, Event, -coefficient
 END
 
 
@@ -21,6 +25,8 @@ PRO REFreduction_ManuallyMoveDataBackPeak, Event, coefficient
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+MiniVersion = (*global).miniVersion ;1 for miniVersion, 0 for normal version
 
 if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     
@@ -60,13 +66,16 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     if (BackYmin EQ '') then begin
         BackYmin = -1
     endif else begin
-        BackYmin *= 2
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmin *= 2
+        ENDIF
     endelse
-
     if (BackYmax EQ '') then begin
         BackYmax = -1
     endif else begin
-        BackYmax *= 2
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmax *= 2
+        ENDIF
     endelse
 
 ;get Peak Ymin, Ymax
@@ -76,13 +85,17 @@ if ((*global).DataNeXusFound) then begin ;only if there is a NeXus loaded
     if (PeakYmin EQ '') then begin
         PeakYmin = -1
     endif else begin
-        PeakYmin *= 2
+        IF (MiniVersion EQ 0) THEN BEGIN
+            PeakYmin *= 2
+        ENDIF
     endelse
 
     if (PeakYmax EQ '') then begin
         PeakYmax = -1
     endif else begin
-        PeakYmax *= 2
+        IF (MiniVersion EQ 0) THEN BEGIN
+            PeakYmax *= 2
+        ENDIF
     endelse
 
     CASE (TYPE) OF
