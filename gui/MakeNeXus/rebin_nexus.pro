@@ -36,10 +36,10 @@ case Event.id of
     end
 
 
-;    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
-;      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-;        OPEN_MAPPING_FILE_BUTTON_CB, Event
-;	end
+    Widget_Info(wWidget, FIND_BY_UNAME='OPEN_MAPPING_FILE_BUTTON'): begin
+      if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+        OPEN_MAPPING_FILE_BUTTON_CB, Event
+	end
     
     Widget_Info(wWidget, FIND_BY_UNAME='DEFAULT_PATH_BUTTON'): begin
         if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -60,10 +60,10 @@ case Event.id of
 
 
         
-        Widget_Info(wWidget, FIND_BY_UNAME='DISPLAY_BUTTON'): begin
-            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
-              DISPLAY_BUTTON, Event
-        end
+;        Widget_Info(wWidget, FIND_BY_UNAME='DISPLAY_BUTTON'): begin
+;            if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
+;              DISPLAY_BUTTON, Event
+;        end
         
         Widget_Info(wWidget, FIND_BY_UNAME='COMPLETE_RUNINFO_FILE'): begin
             if( Tag_Names(Event, /STRUCTURE_NAME) eq 'WIDGET_BUTTON' )then $
@@ -391,17 +391,15 @@ HISTO_EVENT_FILE_TYPE_RESULT = widget_label(wt1,$
                                             FRAME=1)
 
 
-DISPLAY_BUTTON = WIDGET_BUTTON(wt1,$
-                               UNAME="DISPLAY_BUTTON",$
-                               XOFFSET=418,$
-                               YOFFSET=5,$
-                               SCR_XSIZE=120,$
-                               SCR_YSIZE=30,$
-                               VALUE="Activate preview",$
-;	/tracking_events,$
-;	/pushbutton_events,$
-                               sensitive=0,$
-                               tooltip="Preview of the data")
+;DISPLAY_BUTTON = WIDGET_BUTTON(wt1,$
+;                               UNAME="DISPLAY_BUTTON",$
+;                               XOFFSET=418,$
+;                               YOFFSET=5,$
+;                               SCR_XSIZE=120,$
+;                               SCR_YSIZE=30,$
+;                               VALUE="Activate preview",$
+;                               sensitive=0,$
+;                               tooltip="Preview of the data")
                                
 DISPLAY_WINDOW_1_BASE = widget_base(MAIN_BASE,$ ;draw windows for BSS
                                     UNAME="DISPLAY_WINDOW_1_BASE",$
