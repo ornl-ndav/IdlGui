@@ -1748,7 +1748,6 @@ end
 
 
 pro NUMBER_PIXEL_IDS_CB, event
-print,'NUMBER_PIXEL_IDS_CB'
 ;can insert here a routine to check for valid field values - for example, discard letter, keep numbers
 end
 
@@ -1756,7 +1755,6 @@ end
 
 
 pro REBINNING_TEXT_CB, event
-print,'REBINNING_TEXT_CB'
 ;can insert here a routine to check for valid field values - for example, discard letter, keep numbers
 end
 
@@ -1764,7 +1762,6 @@ end
 
 
 pro MAX_TIME_BIN_TEXT_CB, event
-print,'MAX_TIME_BIN_TEXT_CB'
 ;can insert here a routine to check for valid field values - for example, discard letter, keep numbers
 end
 
@@ -2647,9 +2644,6 @@ ShareFolder += '/'
 Sharefolder2 = '/SNS/' + instrument
 Sharefolder2 += '/shared/'
 
-print, '#1: '+  shareFolder
-print, '#2: ' + ShareFolder2
-
 ;get the iso8601 format date and time
 formated_date = ''
 get_iso8601, formated_date
@@ -2668,9 +2662,6 @@ cp_cmd2 += ' ' + DestNexus2
 
 cp_cmd_text  = '> ' + cp_cmd
 cp_cmd_text2 = '> ' + cp_cmd2
-
-print, cp_cmd
-print, cp_cmd2
 
 widget_control, full_view_info, set_value=cp_cmd_text, /append
 WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
