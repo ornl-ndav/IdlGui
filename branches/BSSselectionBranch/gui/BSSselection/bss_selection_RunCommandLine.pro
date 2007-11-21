@@ -1,4 +1,4 @@
-PRO BSSselection_RunCommandLine, Event
+PRO BSSreduction_RunCommandLine, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

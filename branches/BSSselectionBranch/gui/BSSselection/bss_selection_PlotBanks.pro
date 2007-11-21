@@ -70,7 +70,7 @@ END
 
 
 
-PRO bss_selection_PlotBank1, Event
+PRO bss_reduction_PlotBank1, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -99,7 +99,7 @@ END
 
 
 
-PRO bss_selection_PlotBank2, Event
+PRO bss_reduction_PlotBank2, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -131,7 +131,7 @@ END
 
 
 
-PRO bss_selection_PlotBanks, Event, success
+PRO bss_reduction_PlotBanks, Event, success
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -163,8 +163,8 @@ bank2_sum = bank2_sum(0:63,0:55)
 (*(*global).bank2_sum) = bank2_sum
 
 DEVICE, DECOMPOSED = 0
-bss_selection_PlotBank1, Event
-bss_selection_PlotBank2, Event
+bss_reduction_PlotBank1, Event
+bss_reduction_PlotBank2, Event
 
 ;plot grid
 PlotBanksGrid, Event

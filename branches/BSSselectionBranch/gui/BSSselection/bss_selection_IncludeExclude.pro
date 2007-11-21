@@ -1,6 +1,6 @@
 ;######################## CHECK - IN UTILITY #######################
 ;check if it's worth validating exclude and include buttons
-PRO BSSselection_IncludeExcludeCheckPixelField, Event
+PRO BSSreduction_IncludeExcludeCheckPixelField, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -18,7 +18,7 @@ END
 
 
 
-PRO BSSselection_IncludeExcludeCheckPixelRowField, Event
+PRO BSSreduction_IncludeExcludeCheckPixelRowField, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -36,7 +36,7 @@ END
 
 
 
-PRO BSSselection_IncludeExcludeCheckTubeField, Event
+PRO BSSreduction_IncludeExcludeCheckTubeField, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -57,7 +57,7 @@ END
 
 
 ;Exclude Pixelid
-PRO BSSselection_ExcludePixelid, Event
+PRO BSSreduction_ExcludePixelid, Event
 
 ;retrieve text
 PixelidText = getSelectionBasePixelidText(Event)
@@ -78,14 +78,14 @@ PlotExcludedPixels, Event
 ResetSelectionBasePixelidText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckPixelField, Event
+BSSreduction_IncludeExcludeCheckPixelField, Event
 
 END
 
 
 
 ;Include Pixelid
-PRO BSSselection_IncludePixelid, Event
+PRO BSSreduction_IncludePixelid, Event
 
 ;retrieve text
 PixelidText = getSelectionBasePixelidText(Event)
@@ -106,14 +106,14 @@ PlotIncludedPixels, Event
 ResetSelectionBasePixelidText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckPixelField, Event
+BSSreduction_IncludeExcludeCheckPixelField, Event
 
 END
 
 
 
 ;Exclude Pixel Row
-PRO BSSselection_ExcludePixelRow, Event
+PRO BSSreduction_ExcludePixelRow, Event
 
 ;retrieve text
 RowText = getSelectionBaseRowText(Event)
@@ -134,13 +134,13 @@ PlotExcludedPixels, Event
 ResetSelectionBaseRowText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckPixelRowField, Event
+BSSreduction_IncludeExcludeCheckPixelRowField, Event
 
 END
 
 
 
-PRO BSSselection_IncludePixelRow, Event
+PRO BSSreduction_IncludePixelRow, Event
 
 ;retrieve text
 RowText = getSelectionBaseRowText(Event)
@@ -161,7 +161,7 @@ PlotIncludedPixels, Event
 ResetSelectionBaseRowText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckPixelRowField, Event
+BSSreduction_IncludeExcludeCheckPixelRowField, Event
 
 END
 
@@ -170,7 +170,7 @@ END
 
 
 ;Exclude Tube
-PRO BSSselection_ExcludeTube, Event
+PRO BSSreduction_ExcludeTube, Event
 
 ;retrieve text
 TubeText = getSelectionBaseTubeText(Event)
@@ -191,14 +191,14 @@ PlotExcludedPixels, Event
 ResetSelectionBaseTubeText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckTubeField, Event
+BSSreduction_IncludeExcludeCheckTubeField, Event
 
 END
 
 
 
 ;include tube
-PRO BSSselection_IncludeTube, Event
+PRO BSSreduction_IncludeTube, Event
 
 ;retrieve text
 TubeText = getSelectionBaseTubeText(Event)
@@ -219,6 +219,6 @@ PlotIncludedPixels, Event
 ResetSelectionBaseTubeText, Event
 
 ;disable include and exclude buttons
-BSSselection_IncludeExcludeCheckTubeField, Event
+BSSreduction_IncludeExcludeCheckTubeField, Event
 
 END

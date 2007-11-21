@@ -1,4 +1,4 @@
-PRO BSSselection_LoadNexus_step2, Event, NexusFullName
+PRO BSSreduction_LoadNexus_step2, Event, NexusFullName
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -25,7 +25,7 @@ message = '  -> Plot bank1 and bank2 ... ' + PROCESSING
 AppendLogBookMessage, Event, message
 
 success = 0
-bss_selection_PlotBanks, Event, success
+bss_reduction_PlotBanks, Event, success
 
 if (success EQ 0) then begin
 
@@ -41,11 +41,11 @@ endif else begin
 ;plot counts vs TOF of full selection
     message = '  -> Plot Counts vs TOF of full selection ... ' + PROCESSING
     AppendLogBookMessage, Event, message
-    BSSselection_PlotCountsVsTofOfSelection, Event
+    BSSreduction_PlotCountsVsTofOfSelection, Event
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;populate ROI file name
-    BSSselection_CreateRoiFileName, Event
+    BSSreduction_CreateRoiFileName, Event
 
 ;activate button
     activate_status = 1
