@@ -8,11 +8,11 @@ IdlUtilitiesPath = "../utilities"
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 
-;Build BSSselection GUI
-cd, CurrentFolder + '/BSSselectionGUI/'
+;Build BSSreduction GUI
+cd, CurrentFolder + '/BSSreductionGUI/'
 .run MakeGuiMainTab.pro
-.run MakeGuiSelectionTab.pro
-.run MakeGuiSelectionOutputCountsVsTof
+.run MakeGuiReductionTab.pro
+.run MakeGuiReductionOutputCountsVsTof
 
 .run MakeGuiReduceTab.pro
 .run MakeGuiReduceInputTab.pro
@@ -36,44 +36,44 @@ cd, CurrentFolder + '/BSSselectionGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
-.run bss_selection_put.pro
-.run bss_selection_get.pro
-.run bss_selection_is.pro
-.run bss_selection_nexus.pro
-.run bss_selection_utilities.pro
-.run bss_selection_Gui.pro
-.run bss_selection_time.pro
+.run bss_reduction_put.pro
+.run bss_reduction_get.pro
+.run bss_reduction_is.pro
+.run bss_reduction_nexus.pro
+.run bss_reduction_utilities.pro
+.run bss_reduction_Gui.pro
+.run bss_reduction_time.pro
 
-.run bss_selection_LoadNexus.pro
-.run bss_selection_LoadNexusStep2.pro
-.run bss_selection_BrowseNexus.pro
-.run bss_selection_PlotBanks.pro
-.run bss_selection_DisplayXYBankPixelInfo.pro
-.run bss_selection_DisplayCountsVsTof.pro
-.run bss_selection_ZoomInCountsVsTof.pro
-.run bss_selection_ZoomInFullCountsVsTof.pro
-.run bss_selection_CountsVsTof.pro
-.run bss_selection_OutputCountsVsTof.pro
-.run bss_selection_UpdateFields.pro
+.run bss_reduction_LoadNexus.pro
+.run bss_reduction_LoadNexusStep2.pro
+.run bss_reduction_BrowseNexus.pro
+.run bss_reduction_PlotBanks.pro
+.run bss_reduction_DisplayXYBankPixelInfo.pro
+.run bss_reduction_DisplayCountsVsTof.pro
+.run bss_reduction_ZoomInCountsVsTof.pro
+.run bss_reduction_ZoomInFullCountsVsTof.pro
+.run bss_reduction_CountsVsTof.pro
+.run bss_reduction_OutputCountsVsTof.pro
+.run bss_reduction_UpdateFields.pro
 
-.run bss_selection_IncludeExcludeUtilities.pro
-.run bss_selection_IncludeExcludePixel.pro
-.run bss_selection_IncludeExclude.pro
+.run bss_reduction_IncludeExcludeUtilities.pro
+.run bss_reduction_IncludeExcludePixel.pro
+.run bss_reduction_IncludeExclude.pro
 
-.run bss_selection_SaveRoiFile.pro
-.run bss_selection_LoadRoiFile.pro
-.run bss_selection_LogBook.pro
-.run bss_selection_ColorSelection.pro
+.run bss_reduction_SaveRoiFile.pro
+.run bss_reduction_LoadRoiFile.pro
+.run bss_reduction_LogBook.pro
+.run bss_reduction_ColorSelection.pro
 
-.run bss_selection_Reduce.pro
-.run bss_selection_ReduceTab1.pro
-.run bss_selection_ReduceGui.pro
-.run bss_selection_CommandLineGenerator.pro
-.run bss_selection_RunCommandLine.pro
+.run bss_reduction_Reduce.pro
+.run bss_reduction_ReduceTab1.pro
+.run bss_reduction_ReduceGui.pro
+.run bss_reduction_CommandLineGenerator.pro
+.run bss_reduction_RunCommandLine.pro
 
-.run bss_selection_Cleanup.pro
-.run bss_selection_Configuration.pro
+.run bss_reduction_Cleanup.pro
+.run bss_reduction_Configuration.pro
 
 .run MainBaseEvent.pro
-.run bss_selection_eventcb.pro
-.run bss_selection.pro
+.run bss_reduction_eventcb.pro
+.run bss_reduction.pro
