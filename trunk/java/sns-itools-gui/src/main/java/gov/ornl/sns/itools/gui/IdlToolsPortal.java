@@ -23,7 +23,7 @@ public class IdlToolsPortal implements ActionListener{
   static String UNKNOWN = "unknown";
   
   static String PLOTBSS = "/SNS/software/idltools/plotBSS";
-  static String REALIGN_BSS = "/SNS/software/idltools/RealignGUI/RealignBSS";
+  static String REALIGN_BSS = "/SNS/software/idltools/RealignBSS";
   static String REBIN_NEXUS = "/SNS/software/idltools/rebinNeXus";
   static String DATA_REDUCTION = "/SNS/software/idltools/data_reduction";
   static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
