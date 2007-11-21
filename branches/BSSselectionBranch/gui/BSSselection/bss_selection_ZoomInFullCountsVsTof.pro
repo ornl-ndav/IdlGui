@@ -1,4 +1,4 @@
-PRO BSSselection_ZoomInFullCountsVsTofPressed, Event
+PRO BSSreduction_ZoomInFullCountsVsTofPressed, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -31,7 +31,7 @@ END
 
 
 
-PRO BSSselection_ZoomInFullCountsVsTofReleased, Event
+PRO BSSreduction_ZoomInFullCountsVsTofReleased, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -85,7 +85,7 @@ END
 
 
 ;reset of plot
-PRO BSSselection_ResetFullCountsVsTof, Event
+PRO BSSreduction_ResetFullCountsVsTof, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

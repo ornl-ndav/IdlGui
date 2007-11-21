@@ -1,4 +1,4 @@
-PRO BSSselection_CreateConfigFile, global
+PRO BSSreduction_CreateConfigFile, global
 
 ConfigFileName = (*global).DefaultConfigFileName
 openw, 1, ConfigFileName
@@ -31,7 +31,7 @@ END
 
 
 
-PRO BSSselection_PopulateGui, Event, FileArray
+PRO BSSreduction_PopulateGui, Event, FileArray
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -55,7 +55,7 @@ widget_control,id,get_uvalue=global
                       SetButton, event, STRLOWCASE(NameValue[0]), 1
                   ENDELSE
 
-                  BSSselection_EnableOrNotFields, Event, STRLOWCASE(NameValue[0])
+                  BSSreduction_EnableOrNotFields, Event, STRLOWCASE(NameValue[0])
             
               ENDIF
 
@@ -94,7 +94,7 @@ widget_control,id,get_uvalue=global
   ENDFOR
 
 ;Load Nexus if there is one
-bss_selection_LoadNexus, Event
+bss_reduction_LoadNexus, Event
 
 ;Load ROI if there is one
 
@@ -104,7 +104,7 @@ END
 
 
 
-PRO BSSselection_LoadingConfigurationFile, Event
+PRO BSSreduction_LoadingConfigurationFile, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -155,7 +155,7 @@ ENDIF ELSE BEGIN
     free_lun,u
     NbrElement = i              ;nbr of lines
     
-    BSSselection_PopulateGui, Event, FileArray
+    BSSreduction_PopulateGui, Event, FileArray
 
     LogBookMessage = '-> Configuration file (' + FileName + ') has been loaded'
     InitialLogBookMessage = getLogBookText(Event)

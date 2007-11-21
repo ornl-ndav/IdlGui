@@ -1,4 +1,4 @@
-PRO BSSselection_ColorSelection, Event
+PRO BSSreduction_ColorSelection, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -49,7 +49,7 @@ ENDSWITCH
 END
 
 
-PRO  BSSselection_ColorSlider, Event
+PRO  BSSreduction_ColorSlider, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -81,7 +81,7 @@ ENDIF
 END
 
 
-PRO BSSselection_ColorLoadctDropList, Event
+PRO BSSreduction_ColorLoadctDropList, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -98,7 +98,7 @@ END
 
 
 
-PRO BSSselection_ColorSliderReset, Event
+PRO BSSreduction_ColorSliderReset, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -143,7 +143,7 @@ END
 
 
 
-PRO BSSselection_ColorSliderFullReset, Event
+PRO BSSreduction_ColorSliderFullReset, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

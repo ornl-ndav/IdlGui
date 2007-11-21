@@ -1,11 +1,11 @@
-PRO BSSselection_CommandLineGenerator, Event
+PRO BSSreduction_CommandLineGenerator, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;this function update all the reduce widgets (validate or not)
-BSSselection_ReduceUpdateGui, Event
+BSSreduction_ReduceUpdateGui, Event
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
