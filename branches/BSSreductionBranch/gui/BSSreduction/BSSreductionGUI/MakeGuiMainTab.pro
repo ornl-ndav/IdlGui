@@ -22,7 +22,7 @@ MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
                       /TRACKING_EVENTS)
 
 ;build SELECTION tab
-MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor
+MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor, MAIN_BASE
 
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle

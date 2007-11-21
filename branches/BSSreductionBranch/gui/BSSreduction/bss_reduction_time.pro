@@ -34,7 +34,7 @@ END
 
 
 
-Function BSSselection_GenerateIsoTimeStamp
+Function BSSreduction_GenerateIsoTimeStamp
 
 dateUnformated = systime()      ;ex: Thu Aug 23 16:15:23 2007
 DateArray = strsplit(dateUnformated,' ',/extract) 

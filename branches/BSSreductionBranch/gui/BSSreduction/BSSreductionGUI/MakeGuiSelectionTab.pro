@@ -1,4 +1,4 @@
-PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, MainSelectionTitle, XYfactor
+PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, MainSelectionTitle, XYfactor, MainBase
 
 ;***********************************************************************************
 ;                             Define size arrays
@@ -187,7 +187,7 @@ SelectionBase = WIDGET_BASE(MAIN_TAB,$
                             TITLE     = MainSelectionTitle)
 
 ;counts vs tof output base
-MakeGuiSelectionOutputCountsVsTof, SelectionBase
+MakeGuiSelectionOutputCountsVsTof, SelectionBase, MainBase
 
 ;Message box
 MessageText = WIDGET_TEXT(SelectionBase,$

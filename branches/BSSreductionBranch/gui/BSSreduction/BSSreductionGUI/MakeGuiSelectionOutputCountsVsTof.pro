@@ -1,4 +1,4 @@
-PRO MakeGuiSelectionOutputCountsVsTof, SelectionBase
+PRO MakeGuiSelectionOutputCountsVsTof, SelectionBase, MainBase
 
 ;***********************************************************************************
 ;                             Define size arrays
@@ -40,22 +40,22 @@ ok_button     = { size : [cancel_button.size[0]+cancel_button.size[2]+xoff, $
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
-base = WIDGET_BASE(SelectionBase,$
-                   XOFFSET   = base.size[0],$
-                   YOFFSET   = base.size[1],$
-                   SCR_XSIZE = base.size[2],$
-                   SCR_YSIZE = base.size[3],$
-                   FRAME     = 2,$
-                   UNAME     = base.uname,$
-                   MAP       = 0)
+output_base = WIDGET_BASE(SelectionBase,$
+                          XOFFSET   = base.size[0],$
+                          YOFFSET   = base.size[1],$
+                          SCR_XSIZE = base.size[2],$
+                          SCR_YSIZE = base.size[3],$
+                          FRAME     = 2,$
+                          UNAME     = base.uname,$
+                          MAP       = 0)
 
 ;title and bar
-label = WIDGET_LABEL(base,$
+label = WIDGET_LABEL(output_base,$
                      XOFFSET = label.size[0],$
                      YOFFSET = label.size[1],$
                      VALUE   = label.title)
 
-frame = WIDGET_LABEL(base,$
+frame = WIDGET_LABEL(output_base,$
                      XOFFSET   = frame.size[0],$
                      YOFFSET   = frame.size[1],$
                      SCR_XSIZE = frame.size[2],$
@@ -64,12 +64,12 @@ frame = WIDGET_LABEL(base,$
                      VALUE     = '')
 
 ;file label/text/button
-label = WIDGET_LABEL(base,$
+label = WIDGET_LABEL(output_base,$
                      XOFFSET = file_label.size[0],$
                      YOFFSET = file_label.size[1],$
                      VALUE   = file_label.value)
 
-text = WIDGET_TEXT(base,$
+text = WIDGET_TEXT(output_base,$
                    XOFFSET   = file_text.size[0],$
                    YOFFSET   = file_text.size[1],$
                    SCR_XSIZE = file_text.size[2],$
@@ -78,7 +78,7 @@ text = WIDGET_TEXT(base,$
                    /ALIGN_LEFT,$
                    /EDITABLE)
 
-button = WIDGET_BUTTON(base,$
+button = WIDGET_BUTTON(output_base,$
                        XOFFSET   = file_button.size[0],$
                        YOFFSET   = file_button.size[1],$
                        SCR_XSIZE = file_button.size[2],$
@@ -87,7 +87,7 @@ button = WIDGET_BUTTON(base,$
                        VALUE     = file_button.value)
 
 ;message to add lable/text
-message_base = WIDGET_BASE(base,$
+message_base = WIDGET_BASE(output_base,$
                            XOFFSET   = message_base.size[0],$
                            YOFFSET   = message_base.size[1],$
                            SCR_XSIZE = message_base.size[2],$
@@ -101,12 +101,12 @@ cw_field = CW_FIELD(message_base,$
                     XSIZE         = message_text.size[0])
 
 ;preview label/text
-label = WIDGET_LABEL(base,$
+label = WIDGET_LABEL(output_base,$
                      XOFFSET = preview_label.size[0],$
                      YOFFSET = preview_label.size[1],$
                      VALUE   = preview_label.value)
 
-text = WIDGET_TEXT(base,$
+text = WIDGET_TEXT(output_base,$
                    XOFFSET   = preview_text.size[0],$
                    YOFFSET   = preview_text.size[1],$
                    SCR_XSIZE = preview_text.size[2],$
@@ -117,7 +117,7 @@ text = WIDGET_TEXT(base,$
                    /SCROLL)
 
 ;cancel/ok buttons
-button1 = WIDGET_BUTTON(base,$
+button1 = WIDGET_BUTTON(output_base,$
                         XOFFSET   = cancel_button.size[0],$
                         YOFFSET   = cancel_button.size[1],$
                         SCR_XSIZE = cancel_button.size[2],$
@@ -125,7 +125,7 @@ button1 = WIDGET_BUTTON(base,$
                         UNAME     = cancel_button.uname,$
                         VALUE     = cancel_button.value)
 
-button1 = WIDGET_BUTTON(base,$
+button1 = WIDGET_BUTTON(output_base,$
                         XOFFSET   = ok_button.size[0],$
                         YOFFSET   = ok_button.size[1],$
                         SCR_XSIZE = ok_button.size[2],$
