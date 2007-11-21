@@ -2019,7 +2019,7 @@ if ((*global).already_archived EQ 1) then begin ;file has already been archived
 
         archive_run_dir = get_archive_run_dir(file)
 
-        cmd_translate = 'TS_translate.sh '
+        cmd_translate = '/SNS/software/bin/TS_translate.sh '
         cmd_translate += archive_run_dir
 ;tmp directory
         cmd_translate += ' --tempdir ' + (*global).full_tmp_nxdir_folder_path 
