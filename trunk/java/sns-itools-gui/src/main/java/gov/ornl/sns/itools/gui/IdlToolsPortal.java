@@ -30,7 +30,7 @@ public class IdlToolsPortal implements ActionListener{
   static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
   static String TS_REBIN_GUI = "/SNS/software/idltools/TS_rebin_GUI";
-  static String BSS_SELECTION = "/SNS/software/idltools/BSSselection";
+  static String BSS_REDUCTION = "/SNS/software/idltools/BSSreduction";
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -123,7 +123,8 @@ public class IdlToolsPortal implements ActionListener{
     //TS_rebin_batch
     info[8] = "<html>This programs rebin a set of run numbers.</html>";
     //BSSselection
-    info[9] = "<html>Program that allows users to create a Region Of Interest (ROI) file for BASIS</html>";
+    info[9] = "<html>Program that allows users to create a Region Of Interest (ROI) file for BASIS<br>" +
+    " and reduce the Backscattering Data.</html>";  
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -152,7 +153,7 @@ public class IdlToolsPortal implements ActionListener{
         "REFreduction (high resolution mode)",
         "REFreduction (low resolution mode)",
         "TS_rebin_gui",
-        "BSSselection"};
+        "BSSreduction"};
     
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
@@ -244,7 +245,7 @@ public class IdlToolsPortal implements ActionListener{
            p = (Runtime.getRuntime()).exec(TS_REBIN_GUI);
            System.exit(0);
          case 9: //BSSselection
-           p = (Runtime.getRuntime()).exec(BSS_SELECTION);
+           p = (Runtime.getRuntime()).exec(BSS_REDUCTION);
            System.exit(0);
          default: break;
            }
@@ -345,7 +346,7 @@ public class IdlToolsPortal implements ActionListener{
         default:enableButton = true; break;
         };
         break;
-      case 9: //BSSselection
+      case 9: //BSSreduction
         switch (localHostname) {
         case bac2:
         case bac: enableButton = true; break;
