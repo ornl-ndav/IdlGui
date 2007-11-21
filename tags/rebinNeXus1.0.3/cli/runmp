@@ -1,0 +1,36 @@
+#!/bin/tcsh
+
+#
+# Parse arguments...
+#
+
+if ( "#$1#" == '##' ) then
+	echo "usage: runmp <fileroot> [<mapfile>]"
+	exit 0
+else
+	set fileroot = "$1"
+endif
+
+set mapfile = ""
+if ( "#$2#" != '##' ) then
+	set mapfile = "-m $2"
+endif
+
+#
+# Parse Runinfo File for Basic Command Parameters...
+#
+set args = `awk -f runinfo.awk ${fileroot}_runinfo.xml`
+
+#
+# Generate and Map Polarization Histograms...
+#
+
+echo
+echo "Running:"
+echo
+echo "Event_to_Histo_Mapped " $args $mapfile \
+	${fileroot}"_neutron_event.dat"
+echo
+
+Event_to_Histo_Mapped $args $mapfile ${fileroot}_neutron_event.dat
+
