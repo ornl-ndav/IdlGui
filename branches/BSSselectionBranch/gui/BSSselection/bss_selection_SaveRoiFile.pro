@@ -1,4 +1,4 @@
-PRO BSSselection_CreateRoiFileName, Event
+PRO BSSreduction_CreateRoiFileName, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -24,7 +24,7 @@ END
 
 
 
-PRO BSSselection_SetRoiPath, Event
+PRO BSSreduction_SetRoiPath, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -55,7 +55,7 @@ IF (new_path NE '') THEN BEGIN ;change label of ROI path
     AppendLogBookMessage, Event, LogBookText
 
 ;put new path and file name in Save ROI text
-    BSSselection_CreateRoiFileName, Event
+    BSSreduction_CreateRoiFileName, Event
 
 ENDIF
 END
@@ -63,7 +63,7 @@ END
 
 
 
-PRO BSSselection_SaveRoiFile, Event
+PRO BSSreduction_SaveRoiFile, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global

@@ -1,4 +1,4 @@
-PRO BSSselection_CountsVsTofTab, Event
+PRO BSSreduction_CountsVsTofTab, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -11,7 +11,7 @@ IF ((*global).NeXusFound) THEN BEGIN
     IF (current_tab NE prev_tab) THEN BEGIN
         IF (current_tab EQ 0) THEN BEGIN
 ;plot counts vs tof            
-            BSSselection_PlotCountsVsTofOfSelection, Event
+            BSSreduction_PlotCountsVsTofOfSelection, Event
         ENDIF 
         (*global).previous_counts_vs_tof_tab = current_tab
     ENDIF
@@ -21,7 +21,7 @@ END
 
 
 
-PRO BSSselection_TabRefresh, Event
+PRO BSSreduction_TabRefresh, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -38,7 +38,7 @@ IF (current_tab NE prev_tab) THEN BEGIN
             ENDIF
         END
         1: BEGIN                ;Reduce tab
-            BSSselection_CommandLineGenerator, Event
+            BSSreduction_CommandLineGenerator, Event
         END
         ELSE:
     ENDCASE
@@ -49,7 +49,7 @@ END
 
 
 
-pro bss_selection_eventcb, event
+pro bss_reduction_eventcb, event
 end
 
 

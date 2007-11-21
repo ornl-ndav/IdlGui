@@ -1,4 +1,4 @@
-PRO BSSselection_UpdatePixelIDField, Event
+PRO BSSreduction_UpdatePixelIDField, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -27,7 +27,7 @@ ENDIF
 END
 
 
-PRO BSSselection_UpdateXYBankFromRowTubeFields, Event
+PRO BSSreduction_UpdateXYBankFromRowTubeFields, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -66,7 +66,7 @@ END
 
 
 
-PRO BSSselection_UpdateXYBankFields, Event
+PRO BSSreduction_UpdateXYBankFields, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -97,7 +97,7 @@ END
 
 
 
-PRO BSSselection_UpdateRowTubefield, Event
+PRO BSSreduction_UpdateRowTubefield, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
