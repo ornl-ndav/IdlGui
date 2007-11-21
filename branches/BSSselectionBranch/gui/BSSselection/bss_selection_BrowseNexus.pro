@@ -1,4 +1,4 @@
-PRO bss_selection_BrowseNexus, Event
+PRO bss_reduction_BrowseNexus, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -26,7 +26,7 @@ if (FullNexusFileName NE '') then begin
 
     (*global).DefaultPath = path
 ;nexus has been found and can be opened
-    BSSselection_LoadNexus_step2, Event, FullNexusFileName
+    BSSreduction_LoadNexus_step2, Event, FullNexusFileName
     (*global).NeXusFound = 1
 
     (*global).RunNumber = ''
