@@ -1,4 +1,4 @@
-PRO BSSselection_UpdatePreviewText, Event
+PRO BSSreduction_UpdatePreviewText, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -34,7 +34,7 @@ RETURN, h5d_read(fieldID)
 END
 
 
-PRO BSSselection_CreatePreviewOfCountsVsTofData, Event
+PRO BSSreduction_CreatePreviewOfCountsVsTofData, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -86,7 +86,7 @@ END
 
 
 
-PRO BSSselection_GetNewPath, Event
+PRO BSSreduction_GetNewPath, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -114,14 +114,14 @@ IF (new_path NE '') THEN BEGIN
     AppendLogBookMessage, Event, LogBookText
 
 ;put new path and file name in Counts vs tof ascii file text
-    BSSselection_CreateOutputCountsVsTofFileName, Event
+    BSSreduction_CreateOutputCountsVsTofFileName, Event
 
 ENDIF
 END
 
 
 
-PRO BSSselection_CreateOutputCountsVsTofFileName, Event
+PRO BSSreduction_CreateOutputCountsVsTofFileName, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -146,16 +146,16 @@ END
 
 
 
-PRO BSSselection_OuputCoutsVsTofInitialization, Event
+PRO BSSreduction_OuputCoutsVsTofInitialization, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;create output counts vs tof file name
-BSSselection_CreateOutputCountsVsTofFileName, Event
+BSSreduction_CreateOutputCountsVsTofFileName, Event
 
 ;populate preview text
-BSSselection_CreatePreviewOfCountsVsTofData, Event
+BSSreduction_CreatePreviewOfCountsVsTofData, Event
 
 ;activate Output counts vs tof base
 activate_output_couts_vs_tof_base, Event, 1
@@ -163,7 +163,7 @@ END
 
 
 
-PRO BSSselection_CreateOutputCountsVsTofFile, Event
+PRO BSSreduction_CreateOutputCountsVsTofFile, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global

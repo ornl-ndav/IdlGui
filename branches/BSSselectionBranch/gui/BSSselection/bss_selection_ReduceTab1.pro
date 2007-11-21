@@ -1,4 +1,4 @@
-FUNCTION BSSselection_GetNexusFullPath, Event, RunNumber, type, isNeXusExist
+FUNCTION BSSreduction_GetNexusFullPath, Event, RunNumber, type, isNeXusExist
 NexusFullPath = find_full_nexus_name(Event, RunNumber, isNeXusExist)
 NeXusFullName = NexusFullPath[0]
 RETURN, NeXusFullName
@@ -8,7 +8,7 @@ END
 
 ;This function is reached when the user enters a RunNumber and hits
 ;ENTER (REDUCE tab#1)
-PRO BSSselection_NexusFullPath, Event, type
+PRO BSSreduction_NexusFullPath, Event, type
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -44,7 +44,7 @@ IF (RunNumber NE '') THEN BEGIN
     
 ;searching for nexus file
     isNeXusExist = 0            ;by default, nexus file does not exist
-    NeXusFullName = BSSselection_GetNexusFullPath(Event, RunNumber, type, isNeXusExist)
+    NeXusFullName = BSSreduction_GetNexusFullPath(Event, RunNumber, type, isNeXusExist)
     
     IF (isNeXusExist EQ 1) THEN BEGIN
         
@@ -81,7 +81,7 @@ END
 
 ;This function is reached when the user updates the text field (remove
 ;a nexus full path for example) of REDUCE tab#1
-PRO BSSselection_UpdateListOfNexus, Event, type
+PRO BSSreduction_UpdateListOfNexus, Event, type
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -125,7 +125,7 @@ END
 ;path) and hits ENTER
 ;the program first checks if the file exist and if it does, add it to
 ;the list of runs.
-PRO BSSselection_AddNexusFullPath, Event, type
+PRO BSSreduction_AddNexusFullPath, Event, type
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -191,7 +191,7 @@ END
 
 
 ;This function is reached by the browse button of the first tab
-PRO BSSselection_ReduceBrowseNexus, Event, type
+PRO BSSreduction_ReduceBrowseNexus, Event, type
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -273,7 +273,7 @@ END
 
 
 ;This function is reached by the browse button of the first tab
-PRO BSSselection_ReduceBrowseRoi, Event
+PRO BSSreduction_ReduceBrowseRoi, Event
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass

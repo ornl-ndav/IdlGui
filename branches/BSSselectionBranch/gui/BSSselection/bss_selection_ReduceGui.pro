@@ -1,4 +1,4 @@
-PRO BSSselection_EnableOrNotFields, Event, type
+PRO BSSreduction_EnableOrNotFields, Event, type
 
 ;Value of button
 ActivateStatus = isButtonSelectedAndEnabled(Event,type)
@@ -86,7 +86,7 @@ END
 
 
 ;This procedure upate the GUI
-PRO BSSselection_ReduceUpdateGui, Event
+PRO BSSreduction_ReduceUpdateGui, Event
 
 ;If there is a normalization run then activate in tab3
 ;Normalization Integration Start and End Wavelength (Angstroms)
@@ -102,7 +102,7 @@ FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status
 ENDFOR
 IF (activate_status EQ 0) THEN BEGIN
-    BSSselection_EnableOrNotFields, Event, widgets[0]
+    BSSreduction_EnableOrNotFields, Event, widgets[0]
 ENDIF
 
 ;If dsback is not null, then activate in tab3
@@ -118,7 +118,7 @@ sz = (size(widgets))(1)
 FOR i=0,(sz-1) DO BEGIN
     activate_button, Event, widgets[i], activate_status
 ENDFOR
-IF (activate_status EQ 0) THEN BSSselection_EnableOrNotFields, Event, widgets[0]
+IF (activate_status EQ 0) THEN BSSreduction_EnableOrNotFields, Event, widgets[0]
 
 END
 
