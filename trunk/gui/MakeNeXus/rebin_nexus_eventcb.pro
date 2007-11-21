@@ -1372,18 +1372,14 @@ if (wrong_run_number_format ne 0) then begin ;run number is not a number
     
 endif else begin
     
-;Display button becomes sensitive
-;    id_display = widget_info(Event.top,
-;    FIND_BY_UNAME="DISPLAY_BUTTON")  ;REMOVE ME WHEN IT WILL WORK
-;    widget_control, id_display, sensitive=1
-
 ;get full preNeXus and NeXus path
     run_number = strcompress(run_number,/remove_all)
     full_text = 'Opening run # ' + run_number
     widget_control, full_view_info, set_value=full_text
 
     cmd_findnexus = "findnexus -i" + instrument
-    cmd_findnexus += " " + run_number + ' --archive '
+    cmd_findnexus += " " + run_number 
+;    cmd_findnexus += " " + run_number + ' --archive '
     cmd_findprenexus = cmd_findnexus + " --prenexus "
 
     full_text = 'Find NeXus path: >' + cmd_findnexus
@@ -1410,16 +1406,23 @@ endif else begin
     full_path_to_prenexus = get_full_path_to_preNeXus_path(listening_prenexus,$
                                                            instrument,$
                                                            run_number)
-
     (*global).full_path_to_nexus = full_path_to_nexus
     
-    result_archived = strmatch(full_path_to_nexus,"ERROR*")
+;/SNSlocal/instrument/
+    local_string = '/SNSlocal/' + (*global).instrument + '/*'
+    result_local = strmatch(full_path_to_nexus,local_string)
+
+;/SNS/instrument/
+;    result_archived = strmatch(full_path_to_nexus,"ERROR*")
+    archived_string = 'SNS/'+(*global).instrument + '/*'
+    result_archived = strmatch(full_path_to_nexus,archived_string)
+
 ;    archive_nexus_base_id = widget_info(Event.top,find_by_uname='archive_nexus_base')
     already_archived_label_id = widget_info(Event.top,find_by_uname='already_archived_label')
     already_archived_base_id = widget_info(Event.top,find_by_uname='already_archived_base')
     CREATE_NEXUS_id = widget_info(Event.top, find_by_uname='CREATE_NEXUS')
 
-    if (result_archived[0] EQ 0) then begin ;file already archived
+    if (result_archived[0] EQ 1) then begin ;file already archived
 
         (*global).already_archived = 1
         full_text = 'Run number already archived'
@@ -1431,11 +1434,22 @@ endif else begin
 
     endif else begin ;file not archived yet
 
-        (*global).already_archived = 0
-        full_text = 'Run number has not been archived yet'
-        widget_control, full_view_info, set_value=full_text, /append
-        widget_control, already_archived_label_id, set_value=full_text
-        find_nexus = 0
+        if (result_local[0] EQ 1) then begin ;NeXus is in /SNSlocal/instrument/
+            
+            full_text = 'Not archived but in /SNSlocal/' + (*global).instrument
+            widget_control, full_view_info, set_value=full_text, /append
+            widget_control, already_archived_label_id, set_value=full_text
+            find_nexus = 1
+            
+        endif else begin
+
+            (*global).already_archived = 0
+            full_text = 'Run number has not been archived yet'
+            widget_control, full_view_info, set_value=full_text, /append
+            widget_control, already_archived_label_id, set_value=full_text
+            find_nexus = 0
+
+        endelse
 
     endelse
     widget_control, already_archived_base_id, map=1
