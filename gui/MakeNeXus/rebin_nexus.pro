@@ -204,7 +204,7 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
-VERSION = 'rebinNeXus1.0.1'
+VERSION = 'rebinNeXus1.0.3'
 
 ;turn on or off the new font
 font = 0
