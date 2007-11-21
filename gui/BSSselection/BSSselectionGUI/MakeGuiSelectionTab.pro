@@ -15,6 +15,14 @@ CountsVsTofSize = [755,$
                    430,$
                    225]
 
+xoff = 5
+yoff = 5
+LinLogBgroup = { size : [CountsVsTofSize[0]+xoff,$
+                         CountsVsTofSize[1]+yoff],$
+                 label : '',$
+                 uname : 'counts_scale_cwbgroup',$
+                 list : ['Lin','Log']}
+
 ;X, Y, PixelID and Bank of data display in counts vs tof
 CountsVsTofXLabelSize = [750, $
                          CountsVsTofLabelSize[1]+242, $
@@ -171,10 +179,19 @@ MessageText = WIDGET_TEXT(SelectionBase,$
                           /ALIGN_LEFT)
 
 ;COUNTS VS TOF
-counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
-                                   XOFFSET = CountsVsTofLabelSize[0],$
-                                   YOFFSET = CountsVsTofLabelSize[1],$
-                                   VALUE   = CountsVsTofLabelTitle)
+;counts_vs_tof_label = WIDGET_LABEL(SelectionBase,$
+;                                   XOFFSET = CountsVsTofLabelSize[0],$
+;                                   YOFFSET = CountsVsTofLabelSize[1],$
+;                                   VALUE   = CountsVsTofLabelTitle)
+
+bgroup = CW_BGROUP(SelectionBase,$
+                   LinLogBgroup.list,$
+                   XOFFSET = LinLogBgroup.size[0],$
+                   YOFFSET = LinLogBgroup.size[1],$
+;                   LABEL_LEFT = LinLogBgroup.label,$
+                   ROW = 1,$
+                   UNAME = LinLogBgroup.uname,$
+                   /EXCLUSIVE)
 
 COUNTS_VS_TOF = WIDGET_DRAW(SelectionBase,$
                             UNAME     = 'counts_vs_tof_draw',$

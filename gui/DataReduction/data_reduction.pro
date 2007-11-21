@@ -1713,6 +1713,9 @@ Resolve_Routine, 'data_reduction_eventcb',/COMPILE_FULL_FILE ; Load event callba
 
 instrument_list = ['REF_L', 'REF_M']
 
+;do we want it with special font or not
+Font = 0
+
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
                          SCR_XSIZE=1350,$   ;1050
@@ -2143,11 +2146,18 @@ x_y_axis_interaction_base = widget_base(main_base,$
                                         map=0,$
                                         frame=1)
 
-x_axis_label = widget_label(x_y_axis_interaction_base,$
-                            xoffset=5,$
-                            yoffset=7,$
-                            value='X-axis:',$
-                            font='lucidasans-bold-10')
+if (Font) then begin
+    x_axis_label = widget_label(x_y_axis_interaction_base,$
+                                xoffset=5,$
+                                yoffset=7,$
+                                value='X-axis:',$
+                                font='lucidasans-bold-10')
+endif else begin
+    x_axis_label = widget_label(x_y_axis_interaction_base,$
+                                xoffset=5,$
+                                yoffset=7,$
+                                value='X-axis:')
+endelse
 
 axis_lin_log = ['lin',$
                 'log']
@@ -2169,39 +2179,71 @@ left_side_label_x = widget_label(x_y_axis_interaction_base,$
                                yoffset=7,$
                                value='Min:')
 
-left_side_text_x = widget_text(x_y_axis_interaction_base,$
-                             uname='xmin',$
-                             xoffset=x_off_min_box,$
-                             yoffset=0,$
-                             scr_xsize=80,$
-                             scr_ysize=30,$
-                             value='0',$
-                             /editable,$
-                             /align_left,$
-                             font='lucidasans-bold-10')
-
+if (Font) then begin
+    left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                                   uname='xmin',$
+                                   xoffset=x_off_min_box,$
+                                   yoffset=0,$
+                                   scr_xsize=80,$
+                                   scr_ysize=30,$
+                                   value='0',$
+                                   /editable,$
+                                   /align_left,$
+                                   font='lucidasans-bold-10')
+endif else begin
+    left_side_text_x = widget_text(x_y_axis_interaction_base,$
+                                   uname='xmin',$
+                                   xoffset=x_off_min_box,$
+                                   yoffset=0,$
+                                   scr_xsize=80,$
+                                   scr_ysize=30,$
+                                   value='0',$
+                                   /editable,$
+                                   /align_left)
+endelse
 
 right_side_label_x = widget_label(x_y_axis_interaction_base,$
                                xoffset=x_off_max,$
                                yoffset=7,$
                                value='Max:')
-right_side_text_x = widget_text(x_y_axis_interaction_base,$
-                              uname='xmax',$
-                              xoffset=x_off_max_box,$
-                              yoffset=0,$
-                              scr_xsize=80,$
-                              scr_ysize=30,$
-                              value='200000',$
-                              /editable,$
-                              /align_left,$
-                              font='lucidasans-bold-10')
+
+if (Font) then begin
+    right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                                    uname='xmax',$
+                                    xoffset=x_off_max_box,$
+                                    yoffset=0,$
+                                    scr_xsize=80,$
+                                    scr_ysize=30,$
+                                    value='200000',$
+                                    /editable,$
+                                    /align_left,$
+                                    font='lucidasans-bold-10')
+endif else begin
+    right_side_text_x = widget_text(x_y_axis_interaction_base,$
+                                    uname='xmax',$
+                                    xoffset=x_off_max_box,$
+                                    yoffset=0,$
+                                    scr_xsize=80,$
+                                    scr_ysize=30,$
+                                    value='200000',$
+                                    /editable,$
+                                    /align_left)
+endelse
 
 yoff = 32
-y_axis_label = widget_label(x_y_axis_interaction_base,$
-                            xoffset=5,$
-                            yoffset=4+yoff,$
-                            value='Y-axis:',$
-                            font='lucidasans-bold-10')
+if (Font) then begin
+    y_axis_label = widget_label(x_y_axis_interaction_base,$
+                                xoffset=5,$
+                                yoffset=4+yoff,$
+                                value='Y-axis:',$
+                                font='lucidasans-bold-10')
+endif else begin
+    y_axis_label = widget_label(x_y_axis_interaction_base,$
+                                xoffset=5,$
+                                yoffset=4+yoff,$
+                                value='Y-axis:')
+endelse
+
 
 y_axis_lin_log_REF = CW_BGROUP(x_y_axis_interaction_base,$ 
                                  axis_lin_log,$
@@ -2218,6 +2260,7 @@ left_side_label_y = widget_label(x_y_axis_interaction_base,$
                                  yoffset=5+yoff,$
                                  value='Min:')
 
+if (Font) then begin
 left_side_text_y = widget_text(x_y_axis_interaction_base,$
                              uname='ymin',$
                              xoffset=x_off_min_box,$
@@ -2228,11 +2271,24 @@ left_side_text_y = widget_text(x_y_axis_interaction_base,$
                              /editable,$
                              /align_left,$
                              font='lucidasans-bold-10')
+endif else begin
+left_side_text_y = widget_text(x_y_axis_interaction_base,$
+                             uname='ymin',$
+                             xoffset=x_off_min_box,$
+                             yoffset=0+yoff,$
+                             scr_xsize=80,$
+                             scr_ysize=30,$
+                             value='0',$
+                             /editable,$
+                             /align_left)
+endelse
 
 right_side_label_y = widget_label(x_y_axis_interaction_base,$
                                xoffset=x_off_max,$
                                yoffset=5+yoff,$
                                value='Max:')
+
+if (Font) then begin
 right_side_text_y = widget_text(x_y_axis_interaction_base,$
                               uname='ymax',$
                               xoffset=x_off_max_box,$
@@ -2243,6 +2299,17 @@ right_side_text_y = widget_text(x_y_axis_interaction_base,$
                               /editable,$
                               /align_left,$
                               font='lucidasans-bold-10')
+endif else begin
+right_side_text_y = widget_text(x_y_axis_interaction_base,$
+                              uname='ymax',$
+                              xoffset=x_off_max_box,$
+                              yoffset=0+yoff,$
+                              scr_xsize=80,$
+                              scr_ysize=30,$
+                              value='200000',$
+                              /editable,$
+                              /align_left)
+endelse
 
 
 restore_button = widget_button(x_y_axis_interaction_base,$

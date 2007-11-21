@@ -18,13 +18,24 @@ ReduceInputTabSettings       = {size : [0, $
                                                 0, $
                                                 750, $
                                                 575]}}
-xoff = 5
-yoff = 48
+xoff  = 5
+yoff  = 48
+yoff1 = 18
 ReduceClgXmlTabSettings = {Size : [ReduceInputTabSettings.Size[0]+$
                                    ReduceInputTabSettings.Size[2]+xoff, $
                                    ReduceInputTabSettings.Size[1], $
                                    440, $
                                    ReduceInputTabSettings.size[3]+yoff],$
+                           tab : { size : [0, $
+                                            0, $
+                                            440, $
+                                            ReduceInputTabSettings.size[3]+yoff]},$
+                           text : {size: [0,$
+                                          2,$
+                                          435, $
+                                          ReduceInputTabSettings.size[3]+yoff1],$
+                                   uname : ['command_line_generator_status_text',$
+                                            'xml_reduce_file_text']},$
                            title : ['Command Line Generator Status', $
                                     'XML Reduce File']}
 
@@ -34,7 +45,7 @@ SubmitButton = {Size : [0, $
                         ReduceInputTabSettings.size[3]+yoff, $
                         400, $
                         45], $
-                title : 'START DATA REDUCTION', $
+                title : '>     >    >   >  > >>START DATA REDUCTION<< <  <   <    <     <', $
                 uname : 'submit_button'}
 
 xoff  = 5
@@ -70,11 +81,7 @@ clg = {text : {size : [0,$
                         SubmitButton.size[3] + yoff1],$
                 title : 'COMMAND LINE GENERATOR'}}
 
-                        
-
-
-
-
+                       
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -98,7 +105,8 @@ button = WIDGET_BUTTON(ReduceBase,$
                        SCR_XSIZE = SubmitButton.size[2],$
                        SCR_YSIZE = SubmitButton.size[3],$
                        VALUE     = SubmitButton.title,$
-                       UNAME     = SubmitButton.uname)
+                       UNAME     = SubmitButton.uname,$
+                       SENSITIVE = 0)
 
 
 ;Data Reduction status
