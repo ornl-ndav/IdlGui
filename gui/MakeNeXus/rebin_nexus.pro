@@ -204,6 +204,7 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
+VERSION = 'rebinNeXus1.0.1'
 
 ;turn on or off the new font
 font = 0
@@ -316,11 +317,13 @@ output_path = (*global).output_path
                           title=title,$
                           MBAR=WID_BASE_0_MBAR)
   
-if (user EQ 'j35' OR user EQ 'ele') then begin
-    map_hide_log_book_tab = 0
-endif else begin
-    map_hide_log_book_tab = 1
-endelse
+
+version_label = WIDGET_LABEL(MAIN_BASE,$
+                             xoffset = 750,$
+                             yoffset = 0,$
+                             value = VERSION)
+
+map_hide_log_book_tab = 0
 
 if (font) then begin
     general_message = widget_label(MAIN_BASE,$
@@ -915,25 +918,12 @@ log_book_text = widget_text(log_book_base,$
                             /wrap)
 
 
-
-idl_tools_menu = Widget_Button(WID_BASE_0_MBAR, $
-                               UNAME='idl_tools_menu',$
-                               /MENU,$
-                               VALUE='sns_idl_tools')
-
-sns_idl_button = widget_button(idl_tools_menu,$
-                               value="launch sns_idl_tools...",$
-                               uname="sns_idl_button")
-
-exit_button = widget_button(idl_tools_menu,$
-                            value='Exit',$
-                            uname='exit')
-
 ;   Realize the widgets, set the user value of the top-level
 ;  base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global ;we've used global, not stash as the structure name
 Widget_Control, CREATE_NEXUS, sensitive=0
+Widget_Control, CREATE_SHARE_NEXUS, sensitive=0
 Widget_control, DISPLAY_WINDOW_1_BASE, map=0
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 

@@ -1322,6 +1322,8 @@ reinitialize_display, Event
 ;desactive 'CREATE_NEXUS' button
 rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_NEXUS')
 widget_control,rb_id,sensitive=0
+rb_id=widget_info(Event.top, FIND_BY_UNAME='CREATE_SHARE_NEXUS')
+widget_control,rb_id,sensitive=0
 
 ;name of current instrument
 instrument = (*global).instrument  ;REF_M, REF_L or BSS
@@ -1650,12 +1652,17 @@ endif else begin
 ;will create a local nexus file
                 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
                 widget_control, id_create_nexus, sensitive=1
+                id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_SHARE_NEXUS")
+                widget_control, id_create_nexus, sensitive=1
+                
             end
             
             0: begin            ;file is event
                 
 ;activate "Create local NeXus" button
                 id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_NEXUS")
+                widget_control, id_create_nexus, sensitive=1
+                id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_SHARE_NEXUS")
                 widget_control, id_create_nexus, sensitive=1
                 
                 id = widget_info(Event.top, FIND_BY_UNAME="HISTO_EVENT_FILE_TYPE_RESULT")
@@ -1999,6 +2006,8 @@ widget_control,id,get_uvalue=global
 ;desactivate GO_NEXUS button
 rb_id=widget_info(wWidget, FIND_BY_UNAME='CREATE_NEXUS')
 widget_control,rb_id,sensitive=0
+id_create_nexus = widget_info(Event.top, FIND_BY_UNAME="CREATE_SHARE_NEXUS")
+widget_control, id_create_nexus, sensitive=0
 
 ;display what is going on
 view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
