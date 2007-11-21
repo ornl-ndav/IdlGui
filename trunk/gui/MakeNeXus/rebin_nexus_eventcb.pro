@@ -111,11 +111,12 @@ DAS_has_experiment_number=(*global).DAS_has_experiment_number
 file_parsed = strsplit(file,"/",/regex,/extract,count=length)
 
 if (archived EQ 0) then begin  ;file is on DAS
+
     if (DAS_has_experiment_number EQ 1) then begin ;no experiment number
         proposal_number = file_parsed[length-4]
         experiment_number = file_parsed[length-3]
     endif else begin            ;DAS has experiment number
-        proposal_number = file_parsed[length-3]
+        proposal_number = file_parsed[2]
         experiment_number = "/"
     endelse 
 
@@ -2080,6 +2081,7 @@ endif else begin                ; file is on DAS
         result = get_proposal_experiment_number(event, $
                                                 file,$
                                                 (*global).already_archived) 
+
         proposal_number = result[0]
         experiment_number = result[1]
         
@@ -2248,6 +2250,7 @@ instrument = (*global).instrument
 result = get_proposal_experiment_number(event, $
                                         file,$
                                         already_archived) 
+
 proposal_number = result[0]
 experiment_number = result[1]
 
@@ -2692,19 +2695,30 @@ IF ((*global).find_nexus EQ 1) THEN BEGIN
     cp_cmd_text  = '> ' + cp_cmd
     cp_cmd_text2 = '> ' + cp_cmd2
     
+    spawn, cp_cmd, listening, err_listening
     widget_control, full_view_info, set_value=cp_cmd_text, /append
-    WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
-    spawn, cp_cmd, listening
-    status_text = ' .... copy done'
-    widget_control, full_view_info, set_value=status_text, /append
-    WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
-    
+    IF (err_listening[0] EQ '') THEN BEGIN
+        WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
+        status_text = ' .... copy done'
+        widget_control, full_view_info, set_value=status_text, /append
+        WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+    ENDIF ELSE BEGIN
+        status_text = ' .... copy FAILED'
+        widget_control, full_view_info, set_value=status_text, /append
+    ENDELSE
+
+    spawn, cp_cmd2, listening, err_listening
     widget_control, full_view_info, set_value=cp_cmd_text2, /append
-    WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text2, /append
-    spawn, cp_cmd2, listening
-    status_text = ' .... copy done'
-    widget_control, full_view_info, set_value=status_text, /append
-    WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+    IF (err_listening[0] EQ '') THEN BEGIN
+        WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text2, /append
+        status_text = ' .... copy done'
+        widget_control, full_view_info, set_value=status_text, /append
+        WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+    ENDIF ELSE BEGIN
+        status_text = ' .... copy FAILED'
+        widget_control, full_view_info, set_value=status_text, /append
+    ENDELSE
+
 ENDIF
 
 END
