@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: BSSselection1.0.3'
+VERSION = 'VERSION: BSSreduction1.0.3'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -17,12 +17,12 @@ endelse
 global = ptr_new ({ $
                     WidgetsToActivate : ptr_new(0L),$
                     LoadingConfig : 0,$ ;will be 1 after loading config file
-                    DefaultConfigFileName : '~/.bss_selection.cfg',$ 
+                    DefaultConfigFileName : '~/.bss_reduction.cfg',$ 
                     instrument : 'BSS',$
                     nexus_path : '/SNS/BSS/',$
                     nexus_geometry_path : '/SNS/BSS/2006_1_2_CAL/calibrations/',$
                     nexus_ext : '.nxs',$
-  nexus_full_path : '/Users/j35/SVN/HistoTool/branches/BSSselectionBranch/NeXus/BSS/BSS_246.nxs',$
+  nexus_full_path : '/Users/j35/SVN/HistoTool/branches/BSSreductionBranch/NeXus/BSS/BSS_246.nxs',$
   processing : 'PROCESSING',$
   PrevLinLogValue : 0,$ 
 ;previously saved lin or log counts vs tof scale
@@ -222,7 +222,7 @@ endif else begin
     MainBaseSize  = [50,200,1200,730]
 endelse
 
-MainBaseTitle = 'BSS selection tool'
+MainBaseTitle = 'BSS reduction tool'
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -249,15 +249,15 @@ version_label = widget_label(MAIN_BASE,$
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSselection_Cleanup' 
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup' 
 
 ; initialize slider (Grid: Vertical Lines)
 id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
-;default tabs shown
+;;default tabs shown
 ;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 1 ;reduce
+;widget_control, id1, set_tab_current = 2 ;Output
 
 ;tab #5
 ;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
@@ -267,7 +267,7 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro bss_selection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro bss_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 
