@@ -1,4 +1,4 @@
-PRO BSSselection_LogBook, Event
+PRO BSSreduction_LogBook, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -6,7 +6,7 @@ widget_control,id,get_uvalue=global
 
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
-TimeStamp   = BSSselection_GenerateIsoTimeStamp()
+TimeStamp   = BSSreduction_GenerateIsoTimeStamp()
 instrument  = 'BASIS'
 FullFileName = LogBookPath + instrument + '_' 
 FullFileName += TimeStamp + '.log'
@@ -28,13 +28,13 @@ endfor
 close,1
 free_lun,1
 
-BSSselection_EmailLogBook, Event, FullFileName
+BSSreduction_EmailLogBook, Event, FullFileName
 
 END
 
 
 ;This function send by email a copy of the logBook
-PRO BSSselection_EmailLogBook, Event, FullFileName
+PRO BSSreduction_EmailLogBook, Event, FullFileName
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -50,8 +50,8 @@ spawn, 'hostname', hostname
 message = getTextFieldValue(Event, 'log_book_message')
 
 ;email logBook
-text = "'Log Book of BSSselection ("
-text += (*global).BSSselectionVersion + ") sent by " + (*global).ucams
+text = "'Log Book of BSSreduction ("
+text += (*global).BSSreductionVersion + ") sent by " + (*global).ucams
 text += " (BASIS) from " + hostname + "."
 text += " Log Book is: " + FullFileName 
 text += ". Message is: "
@@ -63,7 +63,7 @@ endif else begin
 endelse
 text += "'"
 
-cmd =  'echo ' + text + '| mail -s "BSSselection LogBook" j35@ornl.gov'
+cmd =  'echo ' + text + '| mail -s "BSSreduction LogBook" j35@ornl.gov'
 spawn, cmd
 
 ;tell the user that the email has been sent

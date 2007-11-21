@@ -1,4 +1,4 @@
-FUNCTION BSSselection_retrieveStringArray, Event, FileName, NbrElement
+FUNCTION BSSreduction_retrieveStringArray, Event, FileName, NbrElement
 
 openr, u, FileName, /get
 
@@ -34,7 +34,7 @@ END
 
 
 
-PRO BSSselection_retrievePixelExcludedArray, Event, FileName
+PRO BSSreduction_retrievePixelExcludedArray, Event, FileName
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -42,7 +42,7 @@ widget_control,id,get_uvalue=global
 
 ;put each line of the file into a strarray
 NbrElement = 0
-FileArray = BSSselection_retrieveStringArray(Event, FileName, NbrElement)
+FileArray = BSSreduction_retrieveStringArray(Event, FileName, NbrElement)
 
 ;Create Excluded Array
 pixel_excluded_size = (*global).pixel_excluded_size
@@ -84,7 +84,7 @@ END
 
 
 
-PRO BSSselection_LoadRoiFile, Event
+PRO BSSreduction_LoadRoiFile, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -129,7 +129,7 @@ IF (RoiFullFileName NE '') THEN BEGIN
         putLoadedRoiFileName, Event, RoiFullFileName
 
 ;Read ROI file
-        BSSselection_retrievePixelExcludedArray, Event, RoiFullFileName
+        BSSreduction_retrievePixelExcludedArray, Event, RoiFullFileName
        
         IF ((*global).ROI_error_status EQ 1) THEN BEGIN
             messageBox = 'ROI File Loading -> ERROR !'
