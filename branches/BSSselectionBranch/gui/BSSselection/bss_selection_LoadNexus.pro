@@ -20,7 +20,7 @@ END
 
 
 
-PRO bss_selection_LoadNexus, Event
+PRO bss_reduction_LoadNexus, Event
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -69,7 +69,7 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;move on to step2 of loading nexus
-        BSSselection_LoadNexus_step2, Event, NexusFullPath[0]
+        BSSreduction_LoadNexus_step2, Event, NexusFullPath[0]
 
         NexusFullName = strcompress(NexusFullPath[0],/remove_all)
         (*global).NexusFullName = NexusFullName

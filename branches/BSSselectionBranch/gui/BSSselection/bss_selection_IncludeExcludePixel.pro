@@ -41,7 +41,7 @@ END
 
 
 
-PRO BSSselection_IncludeExcludePixel, Event
+PRO BSSreduction_IncludeExcludePixel, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -83,11 +83,11 @@ ENDIF ELSE BEGIN                ;include pixel
 
 ;first replot bank + lines
     IF (bank EQ 1) THEN BEGIN ;bank1
-        bss_selection_PlotBank1, Event
+        bss_reduction_PlotBank1, Event
         PlotBank1Grid, Event
         pixelid_min = 0L
     ENDIF ELSE BEGIN
-        bss_selection_PlotBank2, Event
+        bss_reduction_PlotBank2, Event
         PlotBank2Grid, Event
         pixelid_min = 4096L
     ENDELSE
@@ -162,11 +162,11 @@ DEVICE, DECOMPOSED = 0
 loadct, (*global).LoadctMainPlot
 
 ;plot main plots + grid
-bss_selection_PlotBank1, Event
+bss_reduction_PlotBank1, Event
 DEVICE, DECOMPOSED = 0
 PlotBank1Grid, Event
 loadct, (*global).LoadctMainPlot
-bss_selection_PlotBank2, Event
+bss_reduction_PlotBank2, Event
 DEVICE, DECOMPOSED = 0
 PlotBank2Grid, Event
 
@@ -200,7 +200,7 @@ END
 
 
 
-PRO BSSselection_FullResetButton, Event
+PRO BSSreduction_FullResetButton, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -222,7 +222,7 @@ END
 
 
 
-PRO BSSselection_ExcludedPixelType, Event
+PRO BSSreduction_ExcludedPixelType, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -242,7 +242,7 @@ END
 
 
 
-PRO BSSselection_ExcludeEverything, Event
+PRO BSSreduction_ExcludeEverything, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
