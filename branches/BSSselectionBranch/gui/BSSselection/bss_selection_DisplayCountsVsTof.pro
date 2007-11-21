@@ -1,4 +1,4 @@
-PRO BSSselection_DisplayCountsVsTof, Event
+PRO BSSreduction_DisplayCountsVsTof, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

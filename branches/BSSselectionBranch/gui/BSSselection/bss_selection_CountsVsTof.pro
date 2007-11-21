@@ -1,4 +1,4 @@
-PRO BSSselection_LinLogCountsVsTof, Event
+PRO BSSreduction_LinLogCountsVsTof, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -11,13 +11,13 @@ IF (CurrentValueSelected NE PrevValueSelected) THEN BEGIN
     (*global).PrevLinLogValue = CurrentValueSelected
     
 ;replot counts vs tof
-    BSSselection_DisplayCountsVsTof, Event
+    BSSreduction_DisplayCountsVsTof, Event
 
 ENDIF
 END
 
 
-PRO BSSselection_LinLogFullCountsVsTof, Event
+PRO BSSreduction_LinLogFullCountsVsTof, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -31,7 +31,7 @@ IF (CurrentValueSelected NE PrevValueSelected) THEN BEGIN
     (*global).PrevFullLinLogValue = CurrentValueSelected
     
 ;replot counts vs tof
-    BSSselection_DisplayFullCountsVsTof, Event, CurrentValueSelected
+    BSSreduction_DisplayFullCountsVsTof, Event, CurrentValueSelected
 
 ENDIF
 END
@@ -39,7 +39,7 @@ END
 
 
 ;type=0 -> linear | type=1 -> log
-PRO BSSselection_DisplayFullCountsVsTof, Event, type
+PRO BSSreduction_DisplayFullCountsVsTof, Event, type
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -65,7 +65,7 @@ END
 
 
 
-PRO BSSselection_PlotCountsVsTofOfSelection, Event
+PRO BSSreduction_PlotCountsVsTofOfSelection, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -141,7 +141,7 @@ END
 
 
 ;plot full counts_vs_tof
-PRO BSSselection_PlotFullCountsVsTof, Event
+PRO BSSreduction_PlotFullCountsVsTof, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -154,7 +154,7 @@ IF ((*global).NeXusFound) THEN BEGIN
     MessageBox = 'Refreshing Full Counts vs TOF ... ' + (*global).processing
     putMessageBoxInfo, Event, MessageBox
     
-    BSSselection_PlotCountsVsTofOfSelection, Event
+    BSSreduction_PlotCountsVsTofOfSelection, Event
     
     MessageBox = 'Refreshing Full Counts vs TOF ... DONE'
     putMessageBoxInfo, Event, MessageBox

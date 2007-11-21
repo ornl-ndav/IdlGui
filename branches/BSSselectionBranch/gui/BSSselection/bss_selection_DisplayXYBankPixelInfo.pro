@@ -24,7 +24,7 @@ END
 
 
 
-PRO BSSselection_DisplayXYBankPixelInfo, Event, bank
+PRO BSSreduction_DisplayXYBankPixelInfo, Event, bank
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -77,7 +77,7 @@ END
 
 
 
-PRO BSSselection_DisplaySelectedPixel, Event
+PRO BSSreduction_DisplaySelectedPixel, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
