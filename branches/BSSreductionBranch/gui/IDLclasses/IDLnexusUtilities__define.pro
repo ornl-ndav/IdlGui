@@ -12,7 +12,7 @@ IF (n_elements(instrument) EQ 0) THEN BEGIN
     instrument = self->hostname()
     IF (instrument EQ '') THEN RETURN, 0
 ENDIF
-self.instrument = instrument
+self.instrument = strcompress(instrument,/remove_all)
 
 RETURN,1
 
@@ -35,10 +35,18 @@ FUNCTION IDLnexusUtilities::getRunNumber
 RETURN, self.run_number
 END
 
+;***** Get Archived NeXus path *****
+FUNCTION IDLnexusUtilities::getArchivedNeXusPath
+cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
+cmd += ' --archive'
+spawn, cmd, listening
+RETURN, listening[0]
+END
 
-
-
-
+;***** Get Full List of NeXus path *****
+FUNCTION IDLnexusUtilities::getFullListNeXusPath
+cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
+cmd += ' --list_all'
 
 
 ;***** Methods Use By the Class *****
@@ -60,7 +68,7 @@ END
 PRO IDLnexusUtilities__define
 
 define = {IDLnexusUtilities,$
-          run_number        : 0L,$
+          run_number        : '',$
           full_nexus_path   : ptr_new(),$
           proposal_number   : '',$
           experiment_number : 0L,$
