@@ -2156,7 +2156,8 @@ endif else begin                ; file is on DAS
             full_text = ' > ' + cmd_translate
             widget_control, full_view_info, set_value=full_text, /append
             spawn, cmd_translate, listening, err_listening
-            output_error, Event, 'log_book_text', err_listening
+
+
             
 ;check if NeXus is where it should be
             full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
@@ -2173,7 +2174,9 @@ endif else begin                ; file is on DAS
                 (*global).full_local_nexus_name = full_nexus_name
                 widget_control, full_view_info, set_value=full_text, /append
             endif else begin
-                text = '..ERROR'
+                text = '... ERROR (consult Log Book)'
+                output_error, Event, 'log_book_text', err_listening
+                widget_control, full_view_info, set_value=listening, /append
                 full_text = '.. process failed'
                 widget_control, view_info, set_value=text, /append
                 widget_control, full_view_info, set_value=full_text, /append
@@ -2503,7 +2506,7 @@ if ((*global).find_nexus EQ 1) then begin
     widget_control, full_view_info, set_value=full_text, /append
 endif else begin
     text = "... ERROR (consult log book)"
-    full_text = "... create NeXsu failed"
+    full_text = "... create NeXus failed"
     WIDGET_CONTROL, view_info, SET_VALUE=text, /append
     widget_control, full_view_info, set_value=full_text, /append
 endelse
@@ -2625,57 +2628,62 @@ PRO COPY_NEXUS_INTO_SHARE, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;continue only if process has been successful
+IF ((*global).find_nexus EQ 1) THEN BEGIN
+
 ;display what is going on
-view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
-full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
-
-full_nexus_name = (*global).full_local_nexus_name
-
-instrument = (*global).instrument
-proposal_number = (*global).proposal_number
-run_number = (*global).run_number
-run_number = strcompress(run_number,/remove_all)
-
-ShareFolder = '/SNS/' + instrument
-ShareFolder += '/' + proposal_number
-ShareFolder += '/shared'
-ShareFolder += '/'
-
-Sharefolder2 = '/SNS/' + instrument
-Sharefolder2 += '/shared/'
-
+    view_info = widget_info(Event.top,FIND_BY_UNAME='HISTOGRAM_STATUS')
+    full_view_info = widget_info(Event.top,find_by_uname='log_book_text')
+    
+    full_nexus_name = (*global).full_local_nexus_name
+    
+    instrument = (*global).instrument
+    proposal_number = (*global).proposal_number
+    run_number = (*global).run_number
+    run_number = strcompress(run_number,/remove_all)
+    
+    ShareFolder = '/SNS/' + instrument
+    ShareFolder += '/' + proposal_number
+    ShareFolder += '/shared'
+    ShareFolder += '/'
+    
+    Sharefolder2 = '/SNS/' + instrument
+    Sharefolder2 += '/shared/'
+    
 ;get the iso8601 format date and time
-formated_date = ''
-get_iso8601, formated_date
+    formated_date = ''
+    get_iso8601, formated_date
+    
+    nexusFileName = instrument + '_' + run_number
+    nexusFileName += '_' + formated_date + '.nxs'
+    
+    DestNeXus  = ShareFolder + nexusFileName
+    DestNeXus2 = ShareFolder2 + nexusFileName 
+    
+    cp_cmd = 'cp ' + full_nexus_name
+    cp_cmd += ' ' + DestNexus
+    
+    cp_cmd2 = 'cp ' + full_nexus_name
+    cp_cmd2 += ' ' + DestNexus2
+    
+    cp_cmd_text  = '> ' + cp_cmd
+    cp_cmd_text2 = '> ' + cp_cmd2
+    
+    widget_control, full_view_info, set_value=cp_cmd_text, /append
+    WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
+    spawn, cp_cmd, listening
+    status_text = ' .... copy done'
+    widget_control, full_view_info, set_value=status_text, /append
+    WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+    
+    widget_control, full_view_info, set_value=cp_cmd_text2, /append
+    WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text2, /append
+    spawn, cp_cmd2, listening
+    status_text = ' .... copy done'
+    widget_control, full_view_info, set_value=status_text, /append
+    WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
+ENDIF
 
-nexusFileName = instrument + '_' + run_number
-nexusFileName += '_' + formated_date + '.nxs'
-
-DestNeXus  = ShareFolder + nexusFileName
-DestNeXus2 = ShareFolder2 + nexusFileName 
-
-cp_cmd = 'cp ' + full_nexus_name
-cp_cmd += ' ' + DestNexus
-
-cp_cmd2 = 'cp ' + full_nexus_name
-cp_cmd2 += ' ' + DestNexus2
-
-cp_cmd_text  = '> ' + cp_cmd
-cp_cmd_text2 = '> ' + cp_cmd2
-
-widget_control, full_view_info, set_value=cp_cmd_text, /append
-WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text, /append
-spawn, cp_cmd, listening
-status_text = ' .... copy done'
-widget_control, full_view_info, set_value=status_text, /append
-WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
-
-widget_control, full_view_info, set_value=cp_cmd_text2, /append
-WIDGET_CONTROL, view_info, SET_VALUE=cp_cmd_text2, /append
-spawn, cp_cmd2, listening
-status_text = ' .... copy done'
-widget_control, full_view_info, set_value=status_text, /append
-WIDGET_CONTROL, view_info, SET_VALUE=status_text, /append
 END
 
 
