@@ -32,8 +32,8 @@ print, '>>Create an instance of the IDLnexusUtilities class'
 print, "instance1 = obj_new('IDLnexusUtilities',350,instrument='BSS')"
 
 if (with_findnexus) then begin
-    print, '> Archived nexus path: instance1->getArchivedNeXusPath()'
-    print, '> List All NeXus path: + instance1->getFullListNeXusPath()'
+    print, '> Get archived nexus path: instance1->getArchivedNeXusPath()'
+    print, '> List All NeXus path    : + instance1->getFullListNeXusPath()'
 endif
 
 end
