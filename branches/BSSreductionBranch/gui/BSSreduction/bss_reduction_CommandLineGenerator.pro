@@ -353,7 +353,11 @@ IF (isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
         cmd += ',' + strcompress(TIBTOF4,/remove_all)
     ENDELSE
     
-ENDIF
+    ip_base_activate_status = 0
+ENDIF ELSE BEGIN
+    ip_base_activate_status = 1
+ENDELSE
+activate_base, event, 'na_woctibbase', ip_base_activate_status
 
 ;get Time-independent Background Constant for Sample Data
 IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN

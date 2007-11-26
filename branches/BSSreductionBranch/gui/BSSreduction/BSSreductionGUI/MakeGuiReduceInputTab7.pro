@@ -21,6 +21,12 @@ WOCTIBbase = { size  : [WAIOBase.size[0], $
                button : { uname : 'woctib_button',$
                           list : [' Write Out Calculated Time-Independent Background']}}
 
+NA_WOCTIBbase = { size : [WOCTIBbase.size[0]+5,$
+                          WOCTIBbase.size[1]-5,$
+                          WOCTIBbase.size[2:3]],$
+                  value : 'Calculated Time-Independent Background - NOT AVAILABLE',$
+                  uname : 'na_woctibbase'}
+                          
 ;///////////////////////////////////
 ;Write Out Pixel Wavelength Spectra/
 ;///////////////////////////////////
@@ -168,6 +174,19 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Calculated time-independent background\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WOCTIBbase.uname,$
+                      XOFFSET   = NA_WOCTIBbase.size[0],$
+                      YOFFSET   = NA_WOCTIBbase.size[1],$
+                      SCR_XSIZE = NA_WOCTIBbase.size[2],$
+                      SCR_YSIZE = NA_WOCTIBbase.size[3],$
+                      MAP       = 1,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WOCTIBbase.value)
+
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOCTIBbase.size[0],$
                    YOFFSET   = WOCTIBbase.size[1],$
