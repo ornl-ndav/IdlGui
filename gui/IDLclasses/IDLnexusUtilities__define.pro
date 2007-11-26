@@ -21,7 +21,7 @@ END
 
 ;***** Class Destructor *****
 PRO IDLnexusUtilities::cleanup
-ptr_free, self.full_nexus_path
+ptr_free, self.full_list_nexus
 END
 
 
@@ -37,10 +37,15 @@ END
 
 ;***** Get Archived NeXus path *****
 FUNCTION IDLnexusUtilities::getArchivedNeXusPath
-cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
-cmd += ' --archive'
-spawn, cmd, listening
-RETURN, listening[0]
+if (self.archived_nexus NE '') then begin
+    cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
+    cmd += ' --archive'
+    spawn, cmd, listening
+    RETURN, listening[0]
+endif else begin
+    print, 'here'
+    RETURN, self.archived_nexus
+endelse
 END
 
 ;***** Get Full List of NeXus path *****
@@ -55,6 +60,7 @@ END
 FUNCTION IDLnexusUtilities::hostname
 spawn, 'hostname',listening
 CASE (listening) OF
+    'arcs1'      : return, 'ARCS'
     'arcs2'      : return, 'ARCS'
     'bac.sns.gov': return, 'BSS'
     'bac2'       : return, 'BSS'
@@ -71,7 +77,8 @@ PRO IDLnexusUtilities__define
 
 define = {IDLnexusUtilities,$
           run_number        : '',$
-          full_nexus_path   : ptr_new(),$
+          full_list_nexus   : ptr_new(),$
+          archived_nexus    : '',$
           proposal_number   : '',$
           experiment_number : 0L,$
           instrument        : ''}
