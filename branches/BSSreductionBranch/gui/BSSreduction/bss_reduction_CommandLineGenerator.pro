@@ -1307,60 +1307,67 @@ ENDIF ELSE BEGIN
     (*global).Configuration.Reduce.tab7.waio_button = 0
 ENDELSE
 
+IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+
 ;Write out Calculated Time-Independent Background
-IF (isButtonSelected(Event,'woctib_button')) THEN BEGIN
-    cmd += ' --dump-tib'
-    (*global).Configuration.Reduce.tab7.woctib_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.woctib_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'woctib_button')) THEN BEGIN
+        cmd += ' --dump-tib'
+        (*global).Configuration.Reduce.tab7.woctib_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.woctib_button = 0
+    ENDELSE
+    
 ;Write out Pixel Wavelenth Spectra
-IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
-    cmd += ' --dump-wave'
-    (*global).Configuration.Reduce.tab7.wopws_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.wopws_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
+        cmd += ' --dump-wave'
+        (*global).Configuration.Reduce.tab7.wopws_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wopws_button = 0
+    ENDELSE
+    
 ;Write out Monitor Wavelength Spectrum
-IF (isButtonSelected(Event,'womws_button')) THEN BEGIN
-    cmd += ' --dump-mon-wave'
-    (*global).Configuration.Reduce.tab7.womws_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.womws_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'womws_button')) THEN BEGIN
+        cmd += ' --dump-mon-wave'
+        (*global).Configuration.Reduce.tab7.womws_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.womws_button = 0
+    ENDELSE
+    
 ;Write out Monitor Efficiency Spectrum
-IF (isButtonSelected(Event,'womes_button')) THEN BEGIN
-    cmd += ' --dump-mon-effc'
-    (*global).Configuration.Reduce.tab7.womes_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.womes_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'womes_button')) THEN BEGIN
+        cmd += ' --dump-mon-effc'
+        (*global).Configuration.Reduce.tab7.womes_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.womes_button = 0
+    ENDELSE
+    
 ;Write out Rebinned Monitor Spectra
-IF (isButtonSelected(Event,'worms_button')) THEN BEGIN
-    cmd += ' --dump-mon-rebin'
-    (*global).Configuration.Reduce.tab7.worms_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.worms_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'worms_button')) THEN BEGIN
+        cmd += ' --dump-mon-rebin'
+        (*global).Configuration.Reduce.tab7.worms_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.worms_button = 0
+    ENDELSE
+    
 ;Write out Combined Pixel Spectrum After Monitor Normalization
-IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
-    (*global).Configuration.Reduce.tab7.wocpsamn_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
-ENDELSE
+    IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
+        (*global).Configuration.Reduce.tab7.wocpsamn_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
+    ENDELSE
+
+ENDIF    
 
 IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
-    cmd += ' --dump-wave-mnorm'
+
+    IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+        cmd += ' --dump-wave-mnorm'
+    ENDIF 
 
     WAmin = getTextFieldValue(Event,'wa_min_text')
     WAmax = getTextFieldValue(Event,'wa_max_text')
     WABwidth = getTextFieldValue(Event,'wa_bin_width_text')
-
+    
     (*global).Configuration.Reduce.tab7.wa_min_text = WAmin
     (*global).Configuration.Reduce.tab7.wa_max_text = WAmax
     (*global).Configuration.Reduce.tab7.wa_bin_width_text = WABwidth
@@ -1368,7 +1375,7 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
     IF (WAMIN NE '' OR $
         WAMAX NE '' OR $
         WABwidth NE '') THEN BEGIN
-
+        
         cmd += ' --lambda-bins='
         
         IF (WAmin EQ '') THEN BEGIN
@@ -1438,30 +1445,34 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
     ENDIF
 
 ENDIF
+
+IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
 ;Write out Pixel Initial Energy Spectra
-IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
-    cmd += ' --dump-ei'
-    (*global).Configuration.Reduce.tab7.wopies_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.wopies_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
+        cmd += ' --dump-ei'
+        (*global).Configuration.Reduce.tab7.wopies_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wopies_button = 0
+    ENDELSE
+    
 ;Write out Pixel Energy Transfer Spectra
-IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
-    cmd += ' --dump-energy'
-    (*global).Configuration.Reduce.tab7.wopets_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.wopets_button = 0
-ENDELSE
-
+    IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
+        cmd += ' --dump-energy'
+        (*global).Configuration.Reduce.tab7.wopets_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wopets_button = 0
+    ENDELSE
+    
 ;Write out Linearly Interpolated Direct Scattering Back. Info. summed
 ;over all Pixels
-IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
-    cmd += ' --dump-dslin'
-    (*global).Configuration.Reduce.tab7.wolidsb_button = 1
-ENDIF ELSE BEGIN
-    (*global).Configuration.Reduce.tab7.wolidsb_button = 0
-ENDELSE
+    IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
+        cmd += ' --dump-dslin'
+        (*global).Configuration.Reduce.tab7.wolidsb_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wolidsb_button = 0
+    ENDELSE
+    
+ENDIF
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'command_line_generator_text', cmd, 0

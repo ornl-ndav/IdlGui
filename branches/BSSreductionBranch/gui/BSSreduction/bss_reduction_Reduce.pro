@@ -373,32 +373,69 @@ END
 PRO BSSreduction_Reduce_waio_button, Event
 IF (isButtonSelected(Event, 'waio_button')) THEN BEGIN
 ;select all button of field
-
+button_array = ['woctib_button',$
+                'wopws_button',$
+                'womws_button',$
+                'womes_button',$
+                'worms_button',$
+                'wocpsamn_button',$
+                'wopies_button',$
+                'wopets_button',$
+                'wolidsb_button']
+sz = (size(button_array))(1)
+FOR i=0,(sz-1) DO BEGIN
+    SetButton, event, button_array[i], 1
+ENDFOR
+BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button'
 ENDIF
 END
 
 ;This function is reached by woctib_button
 PRO BSSreduction_Reduce_woctib_button, Event
+IF (isButtonSelected(Event, 'woctib_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by wopws_button
 PRO BSSreduction_Reduce_wopws_button, Event
+IF (isButtonSelected(Event, 'wopws_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by womws_button
 PRO BSSreduction_Reduce_womws_button, Event
+IF (isButtonSelected(Event, 'womws_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by womes_button
 PRO BSSreduction_Reduce_womes_button, Event
+IF (isButtonSelected(Event, 'womes_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by worms_button
 PRO BSSreduction_Reduce_worms_button, Event
+IF (isButtonSelected(Event, 'worms_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by wocpsamn_button
 PRO BSSreduction_Reduce_wocpsamn_button, Event
+IF (isButtonSelected(Event, 'wocpsamn_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button'
 END
 
@@ -416,13 +453,24 @@ END
 
 ;This function is reached by wopies_button
 PRO BSSreduction_Reduce_wopies_button, Event
+IF (isButtonSelected(Event, 'wopies_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by wopets_button
 PRO BSSreduction_Reduce_wopets_button, Event
+IF (isButtonSelected(Event, 'wopets_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
 
 ;This function is reached by wolidsb_button
 PRO BSSreduction_Reduce_wolidsb_button, Event
-
+IF (isButtonSelected(Event, 'wolidsb_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
 END
