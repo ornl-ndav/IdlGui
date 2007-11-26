@@ -45,6 +45,12 @@ WOMWSbase = { size  : [WOPWSbase.size[0], $
               button : { uname : 'womws_button',$
                          list : [' Write Out Monitor Wavelength Spectrum']}}
 
+NA_WOMWSbase = { size : [WOMWSbase.size[0]+5,$
+                         WOMWSbase.size[1]-5,$
+                         WOMWSbase.size[2:3]],$
+                  value : 'Monitor Wavelength Spectrum - NOT AVAILABLE',$
+                  uname : 'na_womwsbase'}
+
 ;//////////////////////////////////////
 ;Write Out Monitor Efficiency Spectrum/
 ;//////////////////////////////////////
@@ -63,6 +69,12 @@ WORMSbase = { size  : [WOMESbase.size[0], $
               button : { uname : 'worms_button',$
                          list : [' Write Out Rebinned Monitor Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
 
+NA_WORMSbase = { size : [WORMSbase.size[0]+5,$
+                         WORMSbase.size[1]-5,$
+                         WORMSbase.size[2:3]],$
+                  value : 'Rebinned Monitor Spectra - NOT AVAILABLE',$
+                  uname : 'na_wormsbase'}
+
 ;//////////////////////////////////////////////////////////////
 ;Write Out Combined Pixel Spectrum After Monitor Normalization/
 ;//////////////////////////////////////////////////////////////
@@ -71,6 +83,13 @@ WOCPSAMNbase = { size  : [WORMSbase.size[0], $
                           WORMSbase.size[2:3]],$
               button : { uname : 'wocpsamn_button',$
                          list : [' Write Out Combined Pixel Spectrum After Monitor Normalization']}}
+
+NA_WOCPSAMNbase = { size : [WOCPSAMNbase.size[0]+5,$
+                            WOCPSAMNbase.size[1]-5,$
+                            WOCPSAMNbase.size[2:3]],$
+                  value : 'Combined Pixel Spectrum After Monitor Normalization - NOT AVAILABLE',$
+                  uname : 'na_wocpsamnbase'}
+
 ;//////////////////////////
 ;Wavelength Histogram Axis/
 ;//////////////////////////
@@ -180,12 +199,11 @@ NA_base = WIDGET_BASE(tab7_base,$
                       YOFFSET   = NA_WOCTIBbase.size[1],$
                       SCR_XSIZE = NA_WOCTIBbase.size[2],$
                       SCR_YSIZE = NA_WOCTIBbase.size[3],$
-                      MAP       = 1,$
+                      MAP       = 0,$
                       ROW       = 1)
 
 NA_label = WIDGET_LABEL(NA_base,$
                         VALUE = NA_WOCTIBbase.value)
-
 
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOCTIBbase.size[0],$
@@ -219,6 +237,18 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Monitor Wavelength Spectrum\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WOMWSbase.uname,$
+                      XOFFSET   = NA_WOMWSbase.size[0],$
+                      YOFFSET   = NA_WOMWSbase.size[1],$
+                      SCR_XSIZE = NA_WOMWSbase.size[2],$
+                      SCR_YSIZE = NA_WOMWSbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WOMWSbase.value)
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOMWSbase.size[0],$
                    YOFFSET   = WOMWSbase.size[1],$
@@ -251,6 +281,18 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Rebinned Monitor Spectra\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WORMSbase.uname,$
+                      XOFFSET   = NA_WORMSbase.size[0],$
+                      YOFFSET   = NA_WORMSbase.size[1],$
+                      SCR_XSIZE = NA_WORMSbase.size[2],$
+                      SCR_YSIZE = NA_WORMSbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WORMSbase.value)
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WORMSbase.size[0],$
                    YOFFSET   = WORMSbase.size[1],$
@@ -267,6 +309,18 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write Out Combined Pixel Spectrum After Monitor Normalization\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WOCPSAMNbase.uname,$
+                      XOFFSET   = NA_WOCPSAMNbase.size[0],$
+                      YOFFSET   = NA_WOCPSAMNbase.size[1],$
+                      SCR_XSIZE = NA_WOCPSAMNbase.size[2],$
+                      SCR_YSIZE = NA_WOCPSAMNbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WOCPSAMNbase.value)
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOCPSAMNbase.size[0],$
                    YOFFSET   = WOCPSAMNbase.size[1],$

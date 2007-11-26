@@ -1,7 +1,11 @@
-PRO BSSreduction_EnableOrNotFields, Event, type
+PRO BSSreduction_EnableOrNotFields, Event, type, force_enabled
 
+IF (n_elements(force_enabled) NE 0) THEN BEGIN
+    ActivateStatus = force_enabled
+ENDIF ELSE BEGIN
 ;Value of button
-ActivateStatus = isButtonSelectedAndEnabled(Event,type)
+    ActivateStatus = isButtonSelectedAndEnabled(Event,type)
+ENDELSE
 
 CASE (type) OF
     'tibc_for_sd_button': BEGIN

@@ -69,3 +69,10 @@ ENDIF ELSE BEGIN
     return, 0
 ENDELSE
 END
+
+;if base is map or not
+FUNCTION isBaseMapped, Event, uname
+id = widget_info(event.top,find_by_uname=uname)
+status = widget_info(id,/map)
+RETURN, status
+END

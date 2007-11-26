@@ -137,11 +137,21 @@ ENDELSE
 
 ;get No Monitor Normalization
 IF (isButtonSelected(Event,'nmn_button')) THEN BEGIN
+    na_base_status = 1
     cmd += ' --no-mon-norm'
     (*global).Configuration.Reduce.tab3.nmn_button = 1
 ENDIF ELSE BEGIN
+    na_base_status = 0
     (*global).Configuration.Reduce.tab3.nmn_button = 0
 ENDELSE
+activate_base, event, 'na_womwsbase', na_base_status
+activate_base, event, 'na_wormsbase', na_base_status
+activate_base, event, 'na_wocpsamnbase', na_base_status
+IF (na_base_status) then begin
+    BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button', 0
+endif else begin
+    BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button'
+endelse
 
 ;get No Monitor Efficiency Correction
 IF (isButtonSelected(Event,'nmec_button')) THEN BEGIN
@@ -1359,7 +1369,6 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     ENDIF ELSE BEGIN
         (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
     ENDELSE
-
 ENDIF    
 
 IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN

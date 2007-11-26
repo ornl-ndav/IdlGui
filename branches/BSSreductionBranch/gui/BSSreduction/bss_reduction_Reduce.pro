@@ -439,6 +439,7 @@ ENDIF
 BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button'
 END
 
+
 ;This function is reached by wa_min_text
 PRO BSSreduction_Reduce_wa_min_text, Event
 END
