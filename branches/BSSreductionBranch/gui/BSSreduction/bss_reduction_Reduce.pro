@@ -371,6 +371,10 @@ END
 
 ;This function is reached by waio_button
 PRO BSSreduction_Reduce_waio_button, Event
+IF (isButtonSelected(Event, 'waio_button')) THEN BEGIN
+;select all button of field
+
+ENDIF
 END
 
 ;This function is reached by woctib_button
@@ -419,5 +423,6 @@ PRO BSSreduction_Reduce_wopets_button, Event
 END
 
 ;This function is reached by wolidsb_button
-PRO BSSselection_Reduce_wolidsb_button, Event
+PRO BSSreduction_Reduce_wolidsb_button, Event
+
 END

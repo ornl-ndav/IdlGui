@@ -733,7 +733,7 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
-;tab7
+;tab7 (intermediate plots)
     Widget_Info(wWidget, FIND_BY_UNAME='waio_button'): begin
         BSSreduction_Reduce_waio_button, Event
         BSSreduction_CommandLineGenerator, Event
