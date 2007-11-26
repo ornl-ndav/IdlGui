@@ -817,6 +817,7 @@ ENDCASE
 IF ((*global).LoadingConfig EQ 0) THEN BEGIN
     BSSreduction_LoadingConfigurationFile, Event
     (*global).LoadingConfig = 1
+    BSSreduction_CommandLineGenerator, Event
 ENDIF
 
 END
