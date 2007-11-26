@@ -15,14 +15,13 @@ ENDIF
 self.instrument = strcompress(instrument,/remove_all)
 
 RETURN,1
-
 END
                           
-
 ;***** Class Destructor *****
 PRO IDLnexusUtilities::cleanup
 ptr_free, self.full_list_nexus
 END
+
 
 
 ;***** Get Instrument *****
@@ -37,15 +36,11 @@ END
 
 ;***** Get Archived NeXus path *****
 FUNCTION IDLnexusUtilities::getArchivedNeXusPath
-if (self.archived_nexus NE '') then begin
-    cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
-    cmd += ' --archive'
-    spawn, cmd, listening
-    RETURN, listening[0]
-endif else begin
-    print, 'here'
-    RETURN, self.archived_nexus
-endelse
+cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
+cmd += ' --archive'
+spawn, cmd, listening
+self.archived_nexus = listening[0]
+RETURN, listening[0]
 END
 
 ;***** Get Full List of NeXus path *****
@@ -53,10 +48,45 @@ FUNCTION IDLnexusUtilities::getFullListNeXusPath
 cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
 cmd += ' --listall'
 spawn, cmd, listening
+self.full_list_nexus = listening
 RETURN, listening
 END
 
-;***** Methods Use By the Class *****
+;***** Get bank data *****
+FUNCTION IDLnexusUtilties::getBankData, $
+                         nexus_path = nexus_path, $
+                         bank
+if (n_elements(nexus_path) EQ 0) then begin
+    nexus_file_name = self.archived_nexus
+endif else begin
+    nexus_file_name = nexus_path
+endelse
+fileID  = h5f_open(nexus_file_name)
+bank_path = '/entry/' + bank + '/data'
+fieldID = h5d_open(fileID,bank_path)
+RETURN, h5d_read(fieldID)
+END
+
+;***** getNXsummary *****
+FUNCTION IDLnexusUtilities::getNXsummary
+RETURN,''
+END
+
+;***** getHDF5field *****
+FUNCTION IDLnexusUtilities::getHDF5field, $
+                          nexus_path = nexus_path, $
+                          field
+if (n_elements(nexus_path) EQ 0) then begin
+    nexus_file_name = self.archived_nexus
+endif else begin
+    nexus_file_name = nexus_path
+endelse
+fileID  = h5f_open(nexus_file_name)
+fieldID = h5d_open(fileID,field)
+RETURN, h5d_read(fieldID)
+END
+
+;***** Methods Used By the Class *****
 FUNCTION IDLnexusUtilities::hostname
 spawn, 'hostname',listening
 CASE (listening) OF
@@ -70,7 +100,6 @@ CASE (listening) OF
     ELSE         : return, ''
 ENDCASE
 END
-
 
 ;***** Class Define Method *****
 PRO IDLnexusUtilities__define
