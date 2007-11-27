@@ -60,6 +60,12 @@ WOMESbase = { size  : [WOMWSbase.size[0], $
               button : { uname : 'womes_button',$
                          list : [' Write Out Monitor Efficiency Spectrum']}}
 
+NA_WOMESbase = { size : [WOMESbase.size[0]+5,$
+                         WOMESbase.size[1]-5,$
+                         WOMESbase.size[2:3]],$
+                  value : 'Monitor Efficiency Spectrum - NOT AVAILABLE',$
+                  uname : 'na_womesbase'}
+
 ;///////////////////////////////////
 ;Write Out Rebinned Monitor Spectra/
 ;///////////////////////////////////
@@ -164,6 +170,12 @@ WOLIDSBbase = { size  : [WOPETSbase.size[0], $
                 button : { uname : 'wolidsb_button',$
                          list : [' Write Out Linearly Interpolated Direct Scattering Background Information Summed over all Pixels']}}
 
+NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
+                           WOLIDSBbase.size[1]-5,$
+                           WOLIDSBbase.size[2:3]],$
+                  value : 'Linearly Interpolated Direct Scatt. Back. Information Summed over all Pixels - NOT AVAILABLE',$
+                  uname : 'na_wolidsbbase'}
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -265,6 +277,18 @@ group = CW_BGROUP(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write out Monitor Efficiency Spectrum\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WOMESbase.uname,$
+                      XOFFSET   = NA_WOMESbase.size[0],$
+                      YOFFSET   = NA_WOMESbase.size[1],$
+                      SCR_XSIZE = NA_WOMESbase.size[2],$
+                      SCR_YSIZE = NA_WOMESbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WOMESbase.value)
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOMESbase.size[0],$
                    YOFFSET   = WOMESbase.size[1],$
@@ -440,6 +464,18 @@ group = CW_BGROUP(base,$
 ;Write Out Linearly Interpolated Direct Scattering Background\
 ;Info. Summed over all Pixel                                 \
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WOLIDSBbase.uname,$
+                      XOFFSET   = NA_WOLIDSBbase.size[0],$
+                      YOFFSET   = NA_WOLIDSBbase.size[1],$
+                      SCR_XSIZE = NA_WOLIDSBbase.size[2],$
+                      SCR_YSIZE = NA_WOLIDSBbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WOLIDSBbase.value)
+
 base = WIDGET_BASE(tab7_base,$
                    XOFFSET   = WOLIDSBbase.size[0],$
                    YOFFSET   = WOLIDSBbase.size[1],$

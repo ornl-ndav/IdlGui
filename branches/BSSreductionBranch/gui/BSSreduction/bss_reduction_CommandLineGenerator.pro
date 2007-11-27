@@ -58,7 +58,11 @@ DSBFiles = getTextFieldValue(Event,'dsb_list_of_runs_text')
 (*global).Configuration.Reduce.tab1.dsb_list_of_runs_text= DSBFiles
 IF (DSBFiles NE '') THEN BEGIN
     cmd += ' --dsback=' + DSBFiles
-ENDIF
+    na_base_status = 0
+ENDIF ELSE BEGIN
+    na_base_status = 1
+ENDELSE
+activate_base, event, 'na_wolidsbbase', na_base_status
 
 ;*****TAB2*****
 TabName = 'Tab#2 - INPUT DATA SETUP (2)'
@@ -161,7 +165,17 @@ ENDIF ELSE BEGIN
     (*global).Configuration.Reduce.tab3.nmec_button = 0
 ENDELSE
 
+;if --no-mon-norm is not set or
+;   --no-mon-effc is not set then validate --mon-effc
+IF (isButtonSelected(Event,'nmn_button') EQ 0 OR $
+    isButtonSelected(Event,'nmec_button') EQ 0) THEN BEGIN
+    na_base_status = 0
+ENDIF ELSE BEGIN
+    na_base_status = 1
+ENDELSE
+activate_base, event, 'na_womesbase', na_base_status
 
+;get Normalization Integration Wavelength
 IF (isButtonSelected(Event,'niw_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab3.niw_button= 1
 ENDIF ELSE BEGIN
