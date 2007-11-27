@@ -53,6 +53,8 @@ global = ptr_new ({ $
                                       wopies   : '.ixl',$
                                       wopets   : '.exl',$
                                       wolidsb  : '.lin'},$
+                    MainDRPlotsExt : { etr  : '.etr',$
+                                       setr : '.setr'},$
                     WidgetsToActivate : ptr_new(0L),$
                     LoadingConfig : 0,$ ;will be 1 after loading config file
                     DefaultConfigFileName : '~/.bss_reduction.cfg',$ 

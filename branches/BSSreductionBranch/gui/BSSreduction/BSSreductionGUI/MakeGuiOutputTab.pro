@@ -4,7 +4,7 @@ PRO MakeGuiOutputTab, MAIN_TAB, MainTabSize, OutputBaseTitle
 ;                             Define size arrays
 ;***********************************************************************************
 FileNameDroplist = { size  : [5,5,150,40],$
-                     list  : ['Main Data Reduction Plot'],$
+                     list  : [''],$
                      uname : 'output_file_name_droplist'}
 
 XYoff = [220,40]

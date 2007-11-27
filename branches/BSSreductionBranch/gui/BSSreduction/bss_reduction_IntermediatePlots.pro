@@ -88,7 +88,7 @@ ListOfOutputPlots.wolidsb_button  = wolidsb_status
 (*global).ListOfOutputPlots = ListOfOutputPlots
 
 NameOfOutputPlots = (*global).NameOfOutputPlots
-FinalOutputPlotsList = ['Main Data Reduction Plot']
+FinalOutputPlotsList = ['S(E)','sigma(E)']
 
 sz = N_TAGS(ListOfOutputPlots)
 FOR I=0,(sz-1) DO BEGIN
