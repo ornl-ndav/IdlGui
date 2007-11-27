@@ -307,7 +307,6 @@ end
 
 
 
-
 FUNCTION getXmlConfigFileName, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -325,7 +324,39 @@ IF (output_file_name EQ '') THEN BEGIN
     cd, CURRENT=current_path
     output_file_name = current_path + '/' + output_file_name
 
-ENDIF
+ENDIF ELSE BEGIN
+    
+;get path (if any)
+    pathArray = strsplit(output_file_name,'/',/extract)
+    sz = (size(pathArray))(1)
+    if (sz GT 1) then begin     ;a path has been given
+        
+;if left part is '~' or '/' do not do anything
+        IF (pathArray[0] EQ '~' OR $
+            strmatch(output_file_name,'/*')) THEN BEGIN ;nothing to do here
+            
+        endif else begin
+
+;get current path
+            cd, CURRENT=current_path
+            output_file_name = current_path + '/' + output_file_name
+            
+        endelse
+        
+    endif else begin            ;just a file name
+        
+;get current path
+        cd, CURRENT=current_path
+        output_file_name = current_path + '/' + output_file_name
+        
+    endelse
+
+;remove '.' if any and put (*global).DR_xml_config_ext
+dotArray = strsplit(output_file_name,'.',/extract)
+output_file_name = dotArray[0]+ (*global).DR_xml_config_ext
+    
+ENDELSE
+
 RETURN, output_file_name
 END
 

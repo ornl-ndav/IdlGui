@@ -61,7 +61,7 @@ OFlabel     = { size  : [10,$
 XYoff             = [110,-8]
 OFListOfRuns = { size : [OFlabel.size[0]+XYoff[0],$
                          OFlabel.size[1]+XYoff[1],$
-                         620,30],$
+                         620,32],$
                  uname : 'of_list_of_runs_text'}
 
 
