@@ -24,6 +24,7 @@ putMessageBoxInfo, Event, status_text
 cmd = 'srun -p bss ' + cmd
 
 ;spawn, cmd, listening, err_listening
+err_listening = '' ;remove_me
 
 IF (err_listening[0] NE '') THEN BEGIN
 
@@ -43,6 +44,8 @@ ENDIF ELSE BEGIN
     status_text = 'Data Reduction ... DONE'
     putMessageBoxInfo, Event, status_text
 
+;update list of intermediate plots in OUTPUT tab droplist
+    BSSreduction_IntermediatePlotsUpdateDroplist, Event
 
 ENDELSE
 

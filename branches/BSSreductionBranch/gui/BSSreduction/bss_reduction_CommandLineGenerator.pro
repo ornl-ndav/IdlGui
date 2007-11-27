@@ -1345,7 +1345,7 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         (*global).Configuration.Reduce.tab7.woctib_button = 0
     ENDELSE
     
-;Write out Pixel Wavelenth Spectra
+;Write out Pixel Wavelength Spectra
     IF (isButtonSelected(Event,'wopws_button')) THEN BEGIN
         cmd += ' --dump-wave'
         (*global).Configuration.Reduce.tab7.wopws_button = 1
@@ -1474,6 +1474,7 @@ IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
 ENDIF
 
 IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
+
 ;Write out Pixel Initial Energy Spectra
     IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
         cmd += ' --dump-ei'
@@ -1490,7 +1491,7 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         (*global).Configuration.Reduce.tab7.wopets_button = 0
     ENDELSE
     
-;Write out Linearly Interpolated Direct Scattering Back. Info. summed
+;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
     IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
         cmd += ' --dump-dslin'
