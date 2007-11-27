@@ -6,6 +6,7 @@ openw, 1, ConfigFileName
 ;Input
 sz = N_TAGS(((*global).Configuration.Input))
 TagNames = tag_names((*global).Configuration.Input)
+
 FOR I=0,(sz-1) DO BEGIN
     text = TagNames[i] + ' ' + strcompress((*global).Configuration.Input.(i),/remove_all)
     printf, 1, text
@@ -80,7 +81,7 @@ widget_control,id,get_uvalue=global
                     
                   ENDIF ELSE BEGIN
                     
-                      putTextInTextField, Event, STRLOWCASE(NameValue[0]), STRLOWCASE(NameValue[1])
+                      putTextInTextField, Event, STRLOWCASE(NameValue[0]), NameValue[1]
                     
                   ENDELSE
                 
@@ -89,7 +90,9 @@ widget_control,id,get_uvalue=global
           ENDELSE
         
       ENDIF ELSE BEGIN
+          
           putTextInTextField, Event, STRLOWCASE(NameValue[0]), ''
+
       ENDELSE
   ENDFOR
 
