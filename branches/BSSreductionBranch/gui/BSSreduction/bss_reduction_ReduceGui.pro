@@ -124,5 +124,8 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 IF (activate_status EQ 0) THEN BSSreduction_EnableOrNotFields, Event, widgets[0]
 
+;update or not the intermediate files flags
+BSSreduction_Reduce_waio_button, Event
+
 END
 
