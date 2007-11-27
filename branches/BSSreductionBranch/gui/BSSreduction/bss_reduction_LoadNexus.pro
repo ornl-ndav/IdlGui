@@ -20,7 +20,7 @@ END
 
 
 
-PRO bss_reduction_LoadNexus, Event
+PRO bss_reduction_LoadNexus, Event, config
 
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -74,8 +74,12 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         NexusFullName = strcompress(NexusFullPath[0],/remove_all)
         (*global).NexusFullName = NexusFullName
 
+        if (n_elements(config) EQ 0) then begin
+
 ;put nexus file name in data text field (Reduce tab#1)
-        putReduceRawSampleDatafile, Event, NexusFullName
+            putReduceRawSampleDatafile, Event, NexusFullName
+
+        endif
 
     ENDIF ELSE BEGIN         ;tells that we didn't find the nexus file
         

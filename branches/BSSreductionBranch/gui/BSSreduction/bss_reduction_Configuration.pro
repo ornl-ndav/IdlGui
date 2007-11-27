@@ -97,7 +97,7 @@ widget_control,id,get_uvalue=global
   ENDFOR
 
 ;Load Nexus if there is one
-bss_reduction_LoadNexus, Event
+bss_reduction_LoadNexus, Event, 1
 
 ;Load ROI if there is one
 
