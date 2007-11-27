@@ -276,3 +276,57 @@ id = widget_info(Event.top,find_by_uname='excluded_pixel_type')
 widget_control, id, get_value=value
 RETURN, value
 END
+
+
+
+
+;retrieve the first run number from the list of nexus
+FUNCTION getDRrunNumber, Event
+List =  getTextFieldValue(Event,'rsdf_list_of_runs_text')
+
+;get the first nexus file name
+FirstSplit = strsplit(List,',',/extract)
+FirstNexus = FirstSplit[0]
+
+;get the nexus file name only
+SecondSplit = strsplit(FirstNexus,'/',/extract)
+sz = (size(secondSplit))(1)
+NexusNameOnly = SecondSplit[sz-1]
+
+;split using '_'
+ThirdSplit = strsplit(NexusNameOnly,'_',/extract)
+RunNumber1 = ThirdSplit[1]
+
+;split using '.'
+FourthSplit = strsplit(RunNUmber1,'.',/extract)
+RunNumber = FourthSplit[0]
+
+return, RunNumber
+end
+
+
+
+
+
+FUNCTION getXmlConfigFileName, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+output_file_name = getTextFieldValue(Event, 'of_list_of_runs_text')
+IF (output_file_name EQ '') THEN BEGIN
+
+;get run number used by Data Reduction
+    run_number = getDRrunNumber(Event)
+    output_file_name = 'BSS_' + strcompress(run_number,/remove_all)
+    output_file_name += (*global).DR_xml_config_ext
+
+;get path
+    cd, CURRENT=current_path
+    output_file_name = current_path + '/' + output_file_name
+
+ENDIF
+RETURN, output_file_name
+END
+
+

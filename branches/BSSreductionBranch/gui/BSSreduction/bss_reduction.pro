@@ -15,6 +15,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DR_xml_config_ext : '.rmd',$
+                    DR_xml_config_file : '',$
                     ListOfOutputPlots : {woctib_button   : 0,$
                                          wopws_button    : 0,$
                                          womws_button    : 0,$
@@ -42,6 +44,15 @@ global = ptr_new ({ $
                                          'Pixel Energy Transfer Spectrum',$
                                          wolidsb_button  : $
                                          'linearly Interpolated Direct Scattering Back. Info. Summed over all Pixels'},$
+                    OutputPlotsExt : {woctib   : '.tib',$
+                                      wopws    : '.pxl',$
+                                      womws    : '.mxl',$
+                                      womes    : '.mel',$
+                                      worms    : '.mrl',$
+                                      wocpsamn : '.pml',$
+                                      wopies   : '.ixl',$
+                                      wopets   : '.exl',$
+                                      wolidsb  : '.lin'},$
                     WidgetsToActivate : ptr_new(0L),$
                     LoadingConfig : 0,$ ;will be 1 after loading config file
                     DefaultConfigFileName : '~/.bss_reduction.cfg',$ 
