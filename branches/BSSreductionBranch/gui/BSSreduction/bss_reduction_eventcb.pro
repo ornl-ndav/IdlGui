@@ -40,6 +40,9 @@ IF (current_tab NE prev_tab) THEN BEGIN
         1: BEGIN                ;Reduce tab
             BSSreduction_CommandLineGenerator, Event
         END
+        2: BEGIN
+            BSSreduction_DisplayOutputFiles, Event
+        END
         ELSE:
     ENDCASE
     (*global).previous_tab = current_tab

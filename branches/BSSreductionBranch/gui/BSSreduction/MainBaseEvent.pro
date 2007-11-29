@@ -804,6 +804,11 @@ CASE Event.id OF
         BSSreduction_RunCommandLine, Event
     end    
 
+;Output File Tab
+    Widget_Info(wWidget, FIND_BY_UNAME='output_file_name_droplist'): begin
+        BSSreduction_DisplayOutputFiles, Event
+    end    
+    
 ;LOG_BOOK
 ;Send log book to geek button
     Widget_Info(wWidget, FIND_BY_UNAME='send_log_book'): begin

@@ -72,9 +72,11 @@ cd, CurrentFolder
 .run bss_reduction_RunCommandLine.pro
 .run bss_reduction_IntermediatePlots.pro
 .run bss_reduction_DisplayDRxmlConfigFile.pro
+.run IDLoutputFile__define.pro
 
 .run bss_reduction_Cleanup.pro
 .run bss_reduction_Configuration.pro
+
 
 .run MainBaseEvent.pro
 .run bss_reduction_eventcb.pro

@@ -102,3 +102,19 @@ id = widget_info(event.top,find_by_uname='output_file_name_droplist')
 widget_control, id, set_value=FinalOutputPlotsList
 
 END
+
+
+;This procedure display the current selected plot as well as the data
+;file and the metadata.
+PRO BSSreduction_DisplayOutputFiles, Event
+
+;get selected file name
+SelectedFileName = getOutputDroplistFileName(Event)
+
+;create instance of the IDLoutputFile class
+SelectedFile = obj_new('IDLoutputFile', Event, SelectedFileName)
+print, SelectedFile->getFileExtension()
+print, SelectedFile->GetFullFileName()
+print, SelectedFile->GetMetadata()
+print, SelectedFile->GetY()
+END

@@ -18,7 +18,7 @@ cmd_text = ' ... ' + PROCESSING
 AppendLogBookMessage, Event, cmd_text
 
 status_text = 'Data Reduction ... ' + PROCESSING
-putMessageBoxInfo, Event, status_text
+putDRstatusInfo, Event, status_text
 
 ;add called to SLURM
 cmd = 'srun -p bss ' + cmd
@@ -36,7 +36,7 @@ IF (err_listening[0] NE '') THEN BEGIN
     putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
     
     status_text = 'Data Reduction ... ERROR! (-> Check Log Book)'
-    putMessageBoxInfo, Event, status_text
+    putDRstatusInfo, Event, status_text
 
 ENDIF ELSE BEGIN
 
@@ -45,7 +45,7 @@ ENDIF ELSE BEGIN
     putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
 
     status_text = 'Data Reduction ... DONE'
-    putMessageBoxInfo, Event, status_text
+    putDRstatusInfo, Event, status_text
 
     LogBookText = '>>>>>>>>>> Data Reduction Information <<<<<<<<<<<'
     AppendLogBookMessage, Event, LogBookText

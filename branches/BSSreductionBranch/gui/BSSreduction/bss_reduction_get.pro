@@ -360,4 +360,18 @@ ENDELSE
 RETURN, output_file_name
 END
 
+;these two functions are use by the Output tab
+FUNCTION getOutputFileNameSelectedIndex, Event
+id = widget_info(Event.top, find_by_uname = 'output_file_name_droplist')
+RETURN, widget_info(id, /droplist_select)
+END
+
+FUNCTION getOutputDroplistFileName, Event
+id = widget_info(Event.top, find_by_uname = 'output_file_name_droplist')
+widget_control, id, get_value=list
+selected_index = getOutputFileNameSelectedIndex(Event)
+RETURN, list[selected_index]
+END
+
+
 
