@@ -26,8 +26,8 @@ cmd = 'srun -p bss ' + cmd
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
-;spawn, cmd, listening, err_listening
-err_listening = '' ;remove_me
+spawn, cmd, listening, err_listening
+;err_listening = '' ;remove_me
 
 IF (err_listening[0] NE '') THEN BEGIN
 

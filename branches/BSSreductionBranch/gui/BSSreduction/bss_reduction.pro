@@ -253,7 +253,6 @@ endfor
                                   'sbase',$
                                   'symbol_base',$
                                   'fbase']
-
     
 if (!VERSION.os EQ 'darwin') then begin
     MainBaseSize  = [30,25,1200,730]

@@ -107,14 +107,30 @@ END
 ;This procedure display the current selected plot as well as the data
 ;file and the metadata.
 PRO BSSreduction_DisplayOutputFiles, Event
-
 ;get selected file name
 SelectedFileName = getOutputDroplistFileName(Event)
-
 ;create instance of the IDLoutputFile class
 SelectedFile = obj_new('IDLoutputFile', Event, SelectedFileName)
-print, SelectedFile->getFileExtension()
-print, SelectedFile->GetFullFileName()
-print, SelectedFile->GetMetadata()
-print, SelectedFile->GetY()
+;display metadata
+IF (SelectedFile->getErrorStatus() NE 1) THEN BEGIN
+    Metadata = SelectedFile->GetMetadata()
+    PutUncompressedTextInTextField, Event, 'output_file_header_text', Metadata
+;create data array for display
+    X     = SelectedFile->GetX()
+    Y     = SelectedFile->GetY()
+    Error = SelectedFile->GetError()
+    sz    = (size(x))(1)
+    data  = strarr(sz)
+    FOR i=0,(sz-1) DO BEGIN
+        str = strcompress(X[i],/remove_all)
+        str += '  ' + strcompress(Y[i],/remove_all)
+        str += '  ' + strcompress(Error[i],/remove_all)
+        data[i]=str
+    ENDFOR
+    PutUncompressedTextInTextField, Event, 'output_file_data_text', data
+ENDIF ELSE BEGIN
+    PutUncompressedTextInTextField, Event, 'output_file_header_text', 'FILE NOT FOUND'
+    PutUncompressedTextInTextField, Event, 'output_file_data_text', 'FILE NOT FOUND'
+ENDELSE
+
 END

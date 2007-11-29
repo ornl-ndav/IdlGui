@@ -1,17 +1,17 @@
 ;internal class method to get the extension
 FUNCTION IDLoutputFile::getExtension, file_title
 CASE (file_title) OF
-    'Calculated Time-Independent Background': return, 'tib'
-    'Pixel Wavelength Spectrum': return, 'pxl'
-    'Monitor Wavelngth Spectrum': return, 'mxl'
-    'Monitor Efficiency Spectrum': return, 'mel'
-    'Rebinned Monitor Spectrum': return, 'mrl'
-    'Combined Pixel Spectrum After Monitor Normalization': return, 'pml'
-    'Pixel Initial Energy Spectrum': return, 'ixl'
-    'Pixel Energy Transfer Spectrum': return, 'exl'
-    'linearly Interpolated Direct Scattering Back. Info. Summed over all Pixels': return, 'lin'
-    'S(E)': return, 'etr'
-    'sigma(E)': return, 'setr'
+    'Calculated Time-Independent Background': return, '_data.tib'
+    'Pixel Wavelength Spectrum': return, '_data.pxl'
+    'Monitor Wavelngth Spectrum': return, '_data.mxl'
+    'Monitor Efficiency Spectrum': return, '_data.mel'
+    'Rebinned Monitor Spectrum': return, '_data.mrl'
+    'Combined Pixel Spectrum After Monitor Normalization': return, '_data.pml'
+    'Pixel Initial Energy Spectrum': return, '_data.ixl'
+    'Pixel Energy Transfer Spectrum': return, '_data.exl'
+    'linearly Interpolated Direct Scattering Back. Info. Summed over all Pixels': return, '_data.lin'
+    'S(E)': return, '.etr'
+    'sigma(E)': return, '.setr'
     else: 
 ENDCASE
 return, ''
@@ -28,7 +28,7 @@ IF (output_file_name EQ '') THEN BEGIN
 ;get run number used by Data Reduction
     run_number = getDRrunNumber(Event)
     output_file_name = 'BSS_' + strcompress(run_number,/remove_all)
-    output_file_name += '.' + FileExt
+    output_file_name += FileExt
 ;get path
     cd, CURRENT=current_path
     output_file_name = current_path + '/' + output_file_name
@@ -68,7 +68,7 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     spawn, cmd, listening
     EmptyLine = where(listening EQ '') 
-    return, listening[0:EmptyLine]
+    return, listening[0:EmptyLine-1]
 ENDELSE
 END
 
@@ -80,7 +80,7 @@ FullFileName = self.full_file_name
 error_plot_status = 0
 ;catch, error_plot_status
 if (error_plot_status NE 0) then begin
-    CATCH,/cancel
+;    CATCH,/cancel
 endif else begin
     openr,u,FullFileName,/get
     fs = fstat(u)
@@ -146,7 +146,7 @@ endif else begin
     self.x_axis = ptr_new(flt0)
     self.y_axis = ptr_new(flt1)
     self.error_axis = ptr_new(flt2)
-    
+
 ENDELSE
 END
 
@@ -157,8 +157,15 @@ IF (n_elements(file_title) EQ 0) THEN RETURN, 0
 self.file_title = file_title
 self.file_extension = self->getExtension(file_title)
 self.full_file_name = self->getOutputFileName(Event)
-self.metadata = ptr_new(self->getMD())
-self->getD
+
+;check if file exists
+spawn, 'ls ' + self.full_file_name, listening
+if(strmatch(self.full_file_name,listening[0])) THEN BEGIN
+    self.metadata = ptr_new(self->getMD())
+    self->getD
+endif else begin
+    self.error = 1
+endelse
 RETURN, 1
 END
 
@@ -206,15 +213,20 @@ FUNCTION IDLoutputFile::getError
 RETURN, *self.error_axis
 END
 
+;***** Get error status *****
+FUNCTION IDLoutputFile::getErrorStatus
+RETURN, self.error
+END
 
 
 PRO IDLoutputFile__define
 define = {IDLoutputFile,$
-          file_title : '',$
+          error          : 0,$
+          file_title     : '',$
           full_file_name : '',$
           file_extension : '',$
-          metadata : ptr_new(),$
-          x_axis : ptr_new(),$
-          y_axis : ptr_new(),$
-          error_axis : ptr_new()}
+          metadata       : ptr_new(),$
+          x_axis         : ptr_new(),$
+          y_axis         : ptr_new(),$
+          error_axis     : ptr_new()}
 END

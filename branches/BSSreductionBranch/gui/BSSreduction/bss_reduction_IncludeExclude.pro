@@ -120,7 +120,7 @@ RowText = getSelectionBaseRowText(Event)
 
 ;create list of row
 RowList = RetrieveList(RowText)
-
+print, RowList
 ;convert list to integer
 RowListInt = ConvertListToInt(RowList)
 

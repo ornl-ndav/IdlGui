@@ -27,8 +27,8 @@ MakeGuiSelectionTab, MAIN_TAB, MainTabSize, SelectionTitle, XYfactor, MAIN_BASE
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTitle
 
-;build OUTPUT tab
-MakeGuiOutputTab, MAIN_TAB, MainTabsize, OutputTitle
+;;build OUTPUT tab
+;MakeGuiOutputTab, MAIN_TAB, MainTabsize, OutputTitle
 
 ;build LogBook tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTitle

@@ -3,6 +3,11 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=strcompress(text,/remove_all)
 END
 
+PRO PutUncompressedTextInTextField, Event, uname, text
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=text
+END
+
 PRO AppendTextInTextField, Event, uname, text
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=strcompress(text,/remove_all),/append

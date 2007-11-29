@@ -96,7 +96,7 @@ ENDIF ELSE BEGIN
     openw, 1, RoiFullFileName
     
 ;initialize info parameters
-    ExcludedBank1Pixels = (*global).pixel_excluded_size / 2
+    ExcludedBank1Pixels = 4096
     ExcludedBank2Pixels = ExcludedBank1Pixels
     IncludedBank1Pixels = 0
     IncludedBank2Pixels = 0

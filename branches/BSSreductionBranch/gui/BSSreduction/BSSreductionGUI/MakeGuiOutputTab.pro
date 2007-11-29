@@ -15,10 +15,10 @@ HeaderLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
 XYoff = [0,19]
 HeaderText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                               HeaderLabel.size[1]+XYoff[1],$
-                              550,200],$
+                              550,100],$
                      uname : 'output_file_header_text'}
                              
-XYoff = [230,210]
+XYoff = [230,110]
 DataLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             HeaderText.size[1]+XYoff[1]],$
                    value : 'D  A  T  A'}
@@ -26,7 +26,7 @@ DataLabel      = { size  : [FileNameDroplist.size[0]+XYoff[0],$
 XYoff = [0,19]
 DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             DataLabel.size[1]+XYoff[1],$
-                            550,400],$
+                            550,500],$
                      uname : 'output_file_data_text'}
                              
 XYoff = [570,15]
