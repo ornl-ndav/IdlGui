@@ -27,7 +27,7 @@ global = ptr_new ({ $
                                          wopets_button   : 0,$
                                          wolidsb_button  : 0},$
                     NameOfOutputPlots : {woctib_button   : $
-                                         'Calculated Time-Independent Background,', $
+                                         'Calculated Time-Independent Background', $
                                          wopws_button    : $
                                          'Pixel Wavelength Spectrum',$
                                          womws_button    : $
@@ -44,15 +44,15 @@ global = ptr_new ({ $
                                          'Pixel Energy Transfer Spectrum',$
                                          wolidsb_button  : $
                                          'linearly Interpolated Direct Scattering Back. Info. Summed over all Pixels'},$
-                    OutputPlotsExt : {woctib   : '.tib',$
-                                      wopws    : '.pxl',$
-                                      womws    : '.mxl',$
-                                      womes    : '.mel',$
-                                      worms    : '.mrl',$
-                                      wocpsamn : '.pml',$
-                                      wopies   : '.ixl',$
-                                      wopets   : '.exl',$
-                                      wolidsb  : '.lin'},$
+                    OutputPlotsExt : {woctib   : '_data.tib',$
+                                      wopws    : '_data.pxl',$
+                                      womws    : '_data.mxl',$
+                                      womes    : '_data.mel',$
+                                      worms    : '_data.mrl',$
+                                      wocpsamn : '_data.pml',$
+                                      wopies   : '_data.ixl',$
+                                      wopets   : '_data.exl',$
+                                      wolidsb  : '_data.lin'},$
                     MainDRPlotsExt : { etr  : '.etr',$
                                        setr : '.setr'},$
                     WidgetsToActivate : ptr_new(0L),$
@@ -232,6 +232,7 @@ pixel_excluded              = intarr((*global).pixel_excluded_size)
                                   'xbase',$
                                   'ybase',$
                                   'bank_base',$
+                                  'tube_base',$
                                   'row_base',$
                                   'pixelid_base',$
                                   'counts_base',$
@@ -289,13 +290,13 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
 id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
-;default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+;;default tabs shown
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 1 ;reduce
 
-;tab #7
-id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-widget_control, id1, set_tab_current = 6
+;;tab #7
+;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
+;widget_control, id1, set_tab_current = 6
 
 END
 
