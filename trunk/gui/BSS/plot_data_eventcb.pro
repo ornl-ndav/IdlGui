@@ -8,7 +8,7 @@ cmd = "findnexus -iBSS" + " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name
 
 ;check if nexus exists
-result = strmatch(full_nexus_name,"ERROR*")
+result = strmatch(full_nexus_name[0],"ERROR*")
 
 if (result GE 1) then begin
     find_nexus = 0
@@ -18,7 +18,7 @@ endelse
 
 (*global).find_nexus = find_nexus
 
-return, full_nexus_name
+return, full_nexus_name[0]
 
 end
 
@@ -375,7 +375,6 @@ wset, id
 erase
 
 max_top = max(top_bank)
-print, max_top
 cscl = lindgen(20,New_Ny-10)
 tvscl,cscl,40,5,/device
 plot,[0,20],[0,max_top*y_coeff],/device,pos=[35,5,35,240],/noerase,/nodata,$
