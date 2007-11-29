@@ -106,15 +106,13 @@ FOR i=0,(sz-1) DO BEGIN
     IF (RowListINT[i] LT TotalRows) THEN BEGIN
         
         IF (RowListINT[i] GT 63) THEN BEGIN
-            offset = 4096
+            offset = 4096-64
         ENDIF ELSE BEGIN
             offset = 0
         ENDELSE
-        
-        FOR j=0,56 DO BEGIN
-            pixel_excluded[RowListInt[i]+j*64+offset] = 1
+        FOR j=0,55 DO BEGIN
+            pixel_excluded[(RowListInt[i])+j*64+offset] = 1
         ENDFOR
-
     ENDIF
 
 ENDFOR
