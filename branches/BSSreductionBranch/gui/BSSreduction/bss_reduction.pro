@@ -112,6 +112,7 @@ global = ptr_new ({ $
                     bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
                     bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
                     pixel_excluded : ptr_new(0L),$ ;list of pixel excluded 
+                    default_pixel_excluded : ptr_new(0L),$
                     pixel_excluded_size : 64*2*64L,$ ; total number of pixels
                     TotalPixels : 8192L,$ ;Total number of pixels
                     TotalRows   : 128L,$ ;total number of rows
@@ -222,8 +223,16 @@ Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
 
 XYfactor                    = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
-pixel_excluded              = intarr((*global).pixel_excluded_size)
-(*(*global).pixel_excluded) = pixel_excluded
+default_pixel_excluded      = intarr((*global).pixel_excluded_size)
+
+;default exclusion are tubes 56-63 and 120-127
+for j=0,1 do begin
+    for i=3584L,4095L do begin
+        default_pixel_excluded[i+j*4096L]=1
+    endfor
+endfor
+(*(*global).default_pixel_excluded) = default_pixel_excluded
+(*(*global).pixel_excluded) = default_pixel_excluded
 
 (*(*global).WidgetsToActivate) = ['load_roi_file_button',$
                                   'save_roi_file_button',$
@@ -246,11 +255,6 @@ pixel_excluded              = intarr((*global).pixel_excluded_size)
                                   'fbase']
 
     
-
-
-
-
-
 if (!VERSION.os EQ 'darwin') then begin
     MainBaseSize  = [30,25,1200,730]
 endif else begin
