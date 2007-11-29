@@ -6,5 +6,7 @@
 # Copy the VM program in its final location
 
 all:
-	idl /SNS/users/j35/SVN/HistoTool/trunk/gui/BSS/make_plotBSS.pro;
-	idl /SNS/users/j35/SVN/HistoTool/trunk/gui/BSS/make_RealignGUI.pro;
+	idl ./makefile_plotBSS.pro
+install:
+	cp plot_data.sav /SNS/software/idltools/sav/
+	cp plotBSS /SNS/software/idltools/
