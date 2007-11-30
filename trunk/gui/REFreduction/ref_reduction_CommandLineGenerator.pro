@@ -372,17 +372,17 @@ if (isWithDeltaToverT(Event)) then begin ;store deltaT over T
     cmd += ' --store-dtot'
 endif
 
-;overwrite instrument geometry file
-if (isWithInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
-    cmd += ' --inst_geom=' 
-    IGFile = (*global).InstrumentGeometryFileName
+;overwrite data instrument geometry file
+if (isWithDataInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
+    cmd += ' --data-inst-geom=' 
+    IGFile = (*global).InstrumentDataGeometryFileName
     if (IGFile NE '') then begin ;instrument geometry file is not empty
         cmd += IGFile
 ;display last part of file name in button
         button_value = getFileNameOnly(IGFIle)
     endif else begin
         cmd += '?'
-        status_text = '- Please select an instrument geometry'
+        status_text = '- Please select a Data instrument geometry'
         if (StatusMessage GT 0) then begin
             append = 1
         endif else begin
@@ -390,9 +390,33 @@ if (isWithInstrumentGeometryOverwrite(Event)) then begin ;with instrument geomet
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
-        button_value = 'Select an Instrument Geometry File'
+        button_value = 'Select a Data Instrument Geometry File'
     endelse
-    setButtonValue, Event, 'overwrite_intrument_geometry_button', button_value
+    setButtonValue, Event, 'overwrite_data_intrument_geometry_button', button_value
+endif
+
+;overwrite norm instrument geometry file
+if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
+    cmd += ' --norm-inst-geom=' 
+    IGFile = (*global).InstrumentNormGeometryFileName
+    if (IGFile NE '') then begin ;instrument geometry file is not empty
+        cmd += IGFile
+;display last part of file name in button
+        button_value = getFileNameOnly(IGFIle)
+    endif else begin
+        cmd += '?'
+        status_text = '- Please select a Normalization instrument geometry'
+        if (StatusMessage GT 0) then begin
+            append = 1
+        endif else begin
+            append = 0
+        endelse
+        putInfoInReductionStatus, Event, status_text, append
+        StatusMessage += 1
+        button_value = 'Select a Normalization Instrument Geometry File'
+    endelse
+    setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', button_value
+
 endif
 
 ;force name of output file according to time stamp

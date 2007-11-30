@@ -22,15 +22,26 @@ MapBase, Event, 'intermediate_base', MapStatus
 END
 
 
-PRO REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
+PRO REFreduction_ReduceOverwriteDataInstrumentGeometryGui, Event
 ;check status of overwrite instrument geometry
-isOverwriteInstGeometry = getCWBgroupValue(Event, 'overwrite_instrument_geometry_cwbgroup')
+isOverwriteInstGeometry = getCWBgroupValue(Event, 'overwrite_data_instrument_geometry_cwbgroup')
 if (~isOverwriteInstGeometry) then begin ;overwrite geometry
     MapStatus = 1
 endif else begin                ;do not overwrite geometry
     MapStatus = 0
 endelse
-MapBase, Event, 'overwrite_instrument_geometry_base', MapStatus
+MapBase, Event, 'overwrite_data_instrument_geometry_base', MapStatus
 END
 
+
+PRO REFreduction_ReduceOverwriteNormInstrumentGeometryGui, Event
+;check status of overwrite instrument geometry
+isOverwriteInstGeometry = getCWBgroupValue(Event, 'overwrite_norm_instrument_geometry_cwbgroup')
+if (~isOverwriteInstGeometry) then begin ;overwrite geometry
+    MapStatus = 1
+endif else begin                ;do not overwrite geometry
+    MapStatus = 0
+endelse
+MapBase, Event, 'overwrite_norm_instrument_geometry_base', MapStatus
+END
 

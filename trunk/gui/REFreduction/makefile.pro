@@ -13,6 +13,6 @@ resolve_routine, "uniq",/either
 resolve_routine, "ZOOM",/either
 resolve_routine, "CW_FIELD",/either
 
-save,/routines,filename = CurrentFolder + '/ref_reduction.sav'
+save,/routines,filename = 'ref_reduction.sav'
 exit
 
