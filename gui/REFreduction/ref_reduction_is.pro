@@ -93,8 +93,19 @@ endelse
 END
 
 
-Function isWithInstrumentGeometryOverwrite, Event
-id = widget_info(Event.top,find_by_uname='overwrite_instrument_geometry_cwbgroup')
+Function isWithDataInstrumentGeometryOverwrite, Event
+id = widget_info(Event.top,find_by_uname='overwrite_data_instrument_geometry_cwbgroup')
+widget_control, id, get_value=isWithIGOverwrite
+if (isWithIGOverwrite EQ 0) then begin
+    return, 1
+endif else begin
+    return, 0
+endelse
+END
+
+
+Function isWithNormInstrumentGeometryOverwrite, Event
+id = widget_info(Event.top,find_by_uname='overwrite_norm_instrument_geometry_cwbgroup')
 widget_control, id, get_value=isWithIGOverwrite
 if (isWithIGOverwrite EQ 0) then begin
     return, 1

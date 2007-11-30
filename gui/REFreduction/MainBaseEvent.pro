@@ -703,14 +703,24 @@ CASE Event.id OF
         REFreduction_ReduceIntermediatePlotUpdateGui, Event
     end
 
-    ;Overwrite Instrument Geometry
-    widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
-        REFreduction_ReduceOverwriteInstrumentGeometryGui, Event
+    ;Overwrite Data Instrument Geometry
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_data_instrument_geometry_cwbgroup'): begin
+        REFreduction_ReduceOverwriteDataInstrumentGeometryGui, Event
     end
 
-    ;Instrument geometry button
-    widget_info(wWidget, FIND_BY_UNAME='overwrite_intrument_geometry_button'): begin
-        REFreduction_OverwriteInstrumentGeometry, Event
+    ;Data Instrument geometry button
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_data_intrument_geometry_button'): begin
+        REFreduction_OverwriteDataInstrumentGeometry, Event
+    end
+
+    ;Overwrite Norm Instrument Geometry
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_norm_instrument_geometry_cwbgroup'): begin
+        REFreduction_ReduceOverwriteNormInstrumentGeometryGui, Event
+    end
+
+    ;Norm Instrument geometry button
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_norm_instrument_geometry_button'): begin
+        REFreduction_OverwriteNormInstrumentGeometry, Event
     end
 
     ;Run data reduction
@@ -758,7 +768,8 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='q_scale_b_group'): 
     widget_info(wWidget, FIND_BY_UNAME='filtering_data_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='delta_t_over_t_cwbgroup'): 
-    widget_info(wWidget, FIND_BY_UNAME='overwrite_instrument_geometry_cwbgroup'): begin
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_data_instrument_geometry_cwbgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='overwrite_norm_instrument_geometry_cwbgroup'): begin
         REFreduction_CommandLineGenerator, Event
     end
     Else:

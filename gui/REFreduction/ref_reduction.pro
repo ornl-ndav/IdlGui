@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.5'
+VERSION = 'VERSION: REFreduction1.0.6'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -154,7 +154,9 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;metadata of all files
                    InstrumentGeometryPath : '',$
 ;default path where to get the instrument geometry to overwrite
-                   InstrumentGeometryFileName : '',$
+                   InstrumentDataGeometryFileName : '',$
+;full path to instrument geometry to overwrite
+                   InstrumentNormGeometryFileName : '',$
 ;full path to instrument geometry to overwrite
                    DataZoomFactor: 2L,$
 ;scale factor for zoom of 1D Data
