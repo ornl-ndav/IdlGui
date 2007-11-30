@@ -119,18 +119,40 @@ IF (SelectedFile->getErrorStatus() NE 1) THEN BEGIN
     X     = SelectedFile->GetX()
     Y     = SelectedFile->GetY()
     Error = SelectedFile->GetError()
-    sz    = (size(x))(1)
-    data  = strarr(sz)
-    FOR i=0,(sz-1) DO BEGIN
-        str = strcompress(X[i],/remove_all)
-        str += '  ' + strcompress(Y[i],/remove_all)
-        str += '  ' + strcompress(Error[i],/remove_all)
-        data[i]=str
-    ENDFOR
+    sz    = (size(X))(2)
+
+    if (sz GT 41) then begin
+        data = strarr(41)
+        FOR i=0,20 DO BEGIN
+            str = strcompress(X[i],/remove_all)
+            str += '  ' + strcompress(Y[i],/remove_all)
+            str += '  ' + strcompress(Error[i],/remove_all)
+            data[i]=str
+        ENDFOR
+        data[20] = '...'
+        FOR i=0,19 DO BEGIN
+            str = strcompress(X[sz-21+i],/remove_all)
+            str += '  ' + strcompress(Y[sz-21+i],/remove_all)
+            str += '  ' + strcompress(Error[sz-21+i],/remove_all)
+            data[i+21]=str
+        ENDFOR
+    endif else begin
+        data  = strarr(sz)
+        FOR i=0,(sz-1) DO BEGIN
+            str = strcompress(X[i],/remove_all)
+            str += '  ' + strcompress(Y[i],/remove_all)
+            str += '  ' + strcompress(Error[i],/remove_all)
+            data[i]=str
+        ENDFOR
+    ENDELSE
+
     PutUncompressedTextInTextField, Event, 'output_file_data_text', data
+
 ENDIF ELSE BEGIN
+
     PutUncompressedTextInTextField, Event, 'output_file_header_text', 'FILE NOT FOUND'
     PutUncompressedTextInTextField, Event, 'output_file_data_text', 'FILE NOT FOUND'
+
 ENDELSE
 
 END
