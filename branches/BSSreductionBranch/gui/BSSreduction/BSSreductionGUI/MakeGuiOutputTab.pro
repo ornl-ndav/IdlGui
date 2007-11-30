@@ -29,11 +29,16 @@ DataText       = { size  : [FileNameDroplist.size[0]+XYoff[0],$
                             550,500],$
                      uname : 'output_file_data_text'}
                              
-XYoff = [570,15]
+XYoff = [570,40]
 draw           = { size  : [XYoff[0],$
                             XYoff[1],$
                             610,550],$
                    uname : 'output_file_plot'}
+
+FileNameLabel  = { Size  : [draw.size[0],$
+                            5,200,30],$
+                   uname : 'output_file_name',$
+                   value : ''}
 
 
 ;***********************************************************************************
@@ -82,6 +87,14 @@ Data = WIDGET_TEXT(OutputBase,$
                      SCR_XSIZE = DataText.size[2],$
                      SCR_YSIZE = DataText.size[3],$
                      UNAME     = DataText.uname)
+
+label = WIDGET_LABEL(OutputBase,$
+                     XOFFSET   = FileNameLabel.size[0],$
+                     YOFFSET   = FileNameLabel.size[1],$
+                     SCR_XSIZE = FileNameLabel.size[2],$
+                     SCR_YSIZE = FileNameLabel.size[3],$
+                     UNAME     = FileNameLabel.uname,$
+                     VALUE     = FileNameLabel.value)
 
 draw = WIDGET_DRAW(OutputBase,$
                    XOFFSET = draw.size[0],$

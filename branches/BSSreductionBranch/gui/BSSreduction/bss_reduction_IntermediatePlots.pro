@@ -1,3 +1,26 @@
+PRO BSSreduction_PlotIntermediateFile, Event, X, Y, Error
+
+draw_id = widget_info(Event.top, find_by_uname='output_file_plot')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+DEVICE, DECOMPOSED = 0
+loadct,5
+
+err_plot = 0
+CATCH, err_plot
+if (err_plot NE 0) then begin
+    CATCH,/cancel
+endif else begin
+    plot,X,Y
+    errplot, X,Y-Error,Y+Error
+endelse
+END
+
+
+
+
+
 PRO BSSreduction_IntermediatePlotsUpdateDroplist, Event
 
 ;get global structure
@@ -109,8 +132,13 @@ END
 PRO BSSreduction_DisplayOutputFiles, Event
 ;get selected file name
 SelectedFileName = getOutputDroplistFileName(Event)
+
 ;create instance of the IDLoutputFile class
 SelectedFile = obj_new('IDLoutputFile', Event, SelectedFileName)
+
+;display name of file plotted
+PutTextInTextField, Event, 'output_file_name',SelectedFile->getFullFileName()
+
 ;display metadata
 IF (SelectedFile->getErrorStatus() NE 1) THEN BEGIN
     Metadata = SelectedFile->GetMetadata()
@@ -147,6 +175,9 @@ IF (SelectedFile->getErrorStatus() NE 1) THEN BEGIN
     ENDELSE
 
     PutUncompressedTextInTextField, Event, 'output_file_data_text', data
+
+    ;plot data
+    BSSreduction_PlotIntermediateFile, Event, X, Y, Error
 
 ENDIF ELSE BEGIN
 
