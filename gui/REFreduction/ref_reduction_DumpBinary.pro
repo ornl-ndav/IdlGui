@@ -59,13 +59,26 @@ cmd_dump += ' -p /entry/bank1/data/ --dump '
 cmd_dump += (*global).working_path + tmp_file_name
 cmd_dump_text = cmd_dump + '........' + PROCESSING
 
+spawn, 'hostname',listening
+CASE (listening) OF
+    'lrac': 
+    'mrac': 
+    else: BEGIN
+        if ((*global).instrument EQ (*global).REF_L) then begin
+            cmd = 'srun -p lracq ' + cmd_dump
+        endif else begin
+            cmd = 'srun -p mracq ' + cmd_dump
+        endelse
+    END
+ENDCASE
+
 ;display in log book what is going on
 cmd_dump_text = '        > ' + cmd_dump_text
 putLogBookMessage, Event, cmd_dump_text, Append=1
 
 if (!VERSION.os NE 'darwin') then begin
    ;run command
-   spawn, cmd_dump, listening
+   spawn, cmd, listening
 endif
 
 ;tells user that dump is done

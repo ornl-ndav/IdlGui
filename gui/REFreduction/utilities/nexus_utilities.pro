@@ -50,9 +50,27 @@ end
 
 FUNCTION find_list_nexus_name, Event, run_number, instrument, isNexusExist
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 cmd = "findnexus -i" + instrument 
 cmd += " " + strcompress(run_number,/remove_all)
 cmd += " --listall"
+
+spawn, 'hostname',listening
+CASE (listening) OF
+    'lrac': 
+    'mrac': 
+    else: BEGIN
+        if ((*global).instrument EQ (*global).REF_L) then begin
+            cmd = 'srun -p lracq ' + cmd
+        endif else begin
+            cmd = 'srun -p mracq ' + cmd
+        endelse
+    END
+ENDCASE
+
 spawn, cmd, full_nexus_name, err_listening
 
 ;get size of result
