@@ -94,6 +94,15 @@ MakeGuiReduceInputTab, ReduceBase, ReduceInputTabSettings
 ;tabs of 'CLG status' and 'XML reduce file'
 MakeGuiReduceClgXmlTab, ReduceBase, ReduceClgXmlTabSettings
 
+;;REMOVE ME REMOVE ME REMOVE ME REMOVE ME
+;;temp button
+; button = widget_button(ReduceBase,$
+;                        xoffset = SubmitButton.size[0],$
+;                        yoffset = SubmitButton.size[1],$
+;                        scr_xsize = 100,$
+;                        scr_ysize = 30,$
+;                        uname = 'temp_button')
+
 ;Submit Button
 button = WIDGET_BUTTON(ReduceBase,$
                        XOFFSET   = SubmitButton.size[0],$

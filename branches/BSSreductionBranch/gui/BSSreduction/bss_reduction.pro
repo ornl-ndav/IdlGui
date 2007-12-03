@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: BSSreduction1.0.3'
+VERSION = 'VERSION: BSSreduction1.0.4'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    unit : 0,$
                     BSSreductionVersion : VERSION,$
                     DR_xml_config_ext : '.rmd',$
                     DR_xml_config_file : '',$
@@ -295,12 +296,12 @@ id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
 ;;default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 1 ;reduce
 
 ;;tab #7
-id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-widget_control, id1, set_tab_current = 6
+;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
+;widget_control, id1, set_tab_current = 6
 
 END
 

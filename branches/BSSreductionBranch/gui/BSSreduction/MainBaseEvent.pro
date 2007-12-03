@@ -815,6 +815,14 @@ CASE Event.id OF
         BSSreduction_LogBook, Event
     end
 
+;;REMOVE-ME REMOVE_ME REMOVE_ME REMOVE_ME
+  ;   Widget_Info(wWidget, FIND_BY_UNAME='temp_button'): begin
+;         print, 'in MainBaseEvent: ' + strcompress((*global).unit)
+;         readf, (*global).unit, answer
+;         print, 'answer: ' + answer
+;     end
+
+
     ELSE:
     
 ENDCASE
