@@ -87,20 +87,23 @@ tmp_file = (*global).full_norm_tmp_dat_file ;tmp file of norm binary data dumped
 LogBookText = '----> Plotting 2D view ...... ' + PROCESSING
 putLogBookMessage, Event, LogBookText, Append=1
 
-openr,u,tmp_file,/get
-;find out file info
-fs = fstat(u)
-Nimg = long(Nx)*long(Ny)
-Ntof = fs.size/(Nimg*4L)
-(*global).Ntof_NORM = Ntof ;store Number of TOF for normalization file
+; openr,u,tmp_file,/get
+; ;find out file info
+; fs = fstat(u)
+; Nimg = long(Nx)*long(Ny)
+; Ntof = fs.size/(Nimg*4L)
+; (*global).Ntof_NORM = Ntof ;store Number of TOF for normalization file
 
-;read data
-data=lonarr(Ntof*Nimg)
-readu,u,data
+; ;read data
+; data=lonarr(Ntof*Nimg)
+; readu,u,data
 
-indx1 = where(data GT 0, Ngt0)
-img = intarr(Ntof,Ny,Nx)
-img(indx1)=data(indx1)
+; indx1 = where(data GT 0, Ngt0)
+; img = intarr(Ntof,Ny,Nx)
+; img(indx1)=data(indx1)
+
+img = (*(*global).bank1_norm)
+(*global).Ntof_NORM = (size(img))(1)
 ;store big array that will be used by 1D plot
 (*(*global).NORM_D_ptr) = img ;data(Ntof,Ny,Nx)
 img = total(img,1)
@@ -128,8 +131,8 @@ endelse
 tvimg = rebin(img, New_Nx, New_Ny,/sample)
 tvscl, tvimg, /device
 
-close,u
-free_lun,u
+; close,u
+; free_lun,u
 
 ;remove PROCESSING_message from logbook and say ok
 LogBookText = getLogBookText(Event)
