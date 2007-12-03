@@ -30,6 +30,9 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
+                   bank1_data : ptr_new(0L),$ ;
+                   bank1_norm : ptr_new(0L),$ ;
                    miniVersion : 0,$
 ;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
