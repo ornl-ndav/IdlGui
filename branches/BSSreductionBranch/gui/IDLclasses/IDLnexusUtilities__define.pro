@@ -46,8 +46,10 @@ END
 ;***** Get Full List of NeXus path *****
 FUNCTION IDLnexusUtilities::getFullListNeXusPath
 cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
-cmd += ' --list_all'
-
+cmd += ' --listall'
+spawn, cmd, listening
+RETURN, listening
+END
 
 ;***** Methods Use By the Class *****
 FUNCTION IDLnexusUtilities::hostname
