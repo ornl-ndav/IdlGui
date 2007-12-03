@@ -7,6 +7,20 @@ if (!VERSION.os EQ 'darwin') then begin
    cmd = 'head -n 22 ' + (*global).MacNXsummary
 endif else begin
    cmd = 'nxsummary ' + FileName + ' --verbose'
+
+   spawn, 'hostname',listening
+   CASE (listening) OF
+       'lrac': 
+       'mrac': 
+       else: BEGIN
+           if ((*global).instrument EQ (*global).REF_L) then begin
+               cmd = 'srun -p lracq ' + cmd
+           endif else begin
+               cmd = 'srun -p mracq ' + cmd
+           endelse
+       END
+   ENDCASE
+
 endelse
 
 spawn, cmd, listening

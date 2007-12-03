@@ -44,8 +44,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                                                        instrument,$
                                                        isNeXusFound)
 
-        print, full_list_of_nexus_name
-        
         if (~isNexusFound) then begin ;no nexus found
             
 ;tells the user that the NeXus file has not been found
@@ -71,7 +69,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;before
             sz = (size(full_list_of_nexus_name))(1)
             NbrNexus = sz
-            print, sz
             if (sz GT 1) then begin
 
 ;display list in droplist and map=1 base
@@ -241,7 +238,6 @@ working_path = (*global).working_path
 LogBookText = '----> Dump binary data at this location: ' + working_path
 putLogBookMessage, Event, LogBookText, Append=1
 REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
-
 ;create name of BackgroundROIFile and put it in its box
 REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
   instrument, $
