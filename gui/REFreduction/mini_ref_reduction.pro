@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.5'
+VERSION = 'VERSION: REFreduction1.0.6'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -30,7 +30,10 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   miniVersion : 1,$
+                   nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
+                   bank1_data : ptr_new(0L),$ ;
+                   bank1_norm : ptr_new(0L),$ ;
+                   miniVersion : 0,$
 ;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
