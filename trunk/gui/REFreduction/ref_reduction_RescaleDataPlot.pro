@@ -76,8 +76,11 @@ if ((*global).DataNexusFound) then begin
         putTextfieldValue,Event, 'data_rescale_ymax_cwfield',ymax,0
     endif
     
-    ymin *= 2
-    ymax *= 2
+    if (~(*global).miniVersion) then begin
+        ymin *= 2
+        ymax *= 2
+    endif
+
     new_tvimg(*,ymin:ymax) = tvimg(*,ymin:ymax)
     tvimg=new_tvimg
     
