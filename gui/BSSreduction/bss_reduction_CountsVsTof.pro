@@ -199,7 +199,7 @@ IF ((*global).NeXusFound) THEN BEGIN
     ENDIF
     
     (*(*global).full_counts_vs_tof_data) = data
-    
+
 ENDIF
 
 END
