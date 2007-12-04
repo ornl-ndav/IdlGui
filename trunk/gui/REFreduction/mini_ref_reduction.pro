@@ -157,7 +157,9 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;metadata of all files
                    InstrumentGeometryPath : '',$
 ;default path where to get the instrument geometry to overwrite
-                   InstrumentGeometryFileName : '',$
+                   InstrumentDataGeometryFileName : '',$
+;full path to instrument geometry to overwrite
+                   InstrumentNormGeometryFileName : '',$
 ;full path to instrument geometry to overwrite
                    DataZoomFactor: 2L,$
 ;scale factor for zoom of 1D Data
@@ -410,7 +412,7 @@ IF (ucams EQ 'j35' OR $
     widget_control, id, /editable
 ENDIF
 
-; default tabs shown
+;; default tabs shown
 ; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 ; widget_control, id1, set_tab_current = 1 ;reduce
 
