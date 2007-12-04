@@ -474,15 +474,15 @@ endif else begin ;get full list of nexus file
 
     if (NbrNexus EQ 1) then begin
 
-        REFreduction_Plot1D2DNormFile, Event ;the plot norm file (1D and 2D)
+        REFreduction_Plot1D2DNormalizationFile, Event ;the plot norm file (1D and 2D)
 
 ;get global structure
         id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
         widget_control,id,get_uvalue=global
         
 ;tell the user that the load and plot process is done
-        InitialStrarr = getNormLogBookText(Event)
-        putTextAtEndOfNormLogBookLastLine, $
+        InitialStrarr = getNormalizationLogBookText(Event)
+        putTextAtEndOfNormalizationLogBookLastLine, $
           Event, $
           InitialStrarr, $
           ' Done', $
@@ -491,7 +491,7 @@ endif else begin ;get full list of nexus file
 ;display full path to NeXus in Norm log book
         full_nexus_name = (*global).norm_full_nexus_name
         text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putNormLogBookMessage, Event, text, Append=1
+        putNormalizationLogBookMessage, Event, text, Append=1
 
     endif
 
