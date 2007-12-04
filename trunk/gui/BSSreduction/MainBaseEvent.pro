@@ -53,7 +53,8 @@ CASE Event.id OF
     
 ;Full counts vs tof draw and refresh button
     Widget_Info(wWidget, FIND_BY_UNAME='full_counts_vs_tof_refresh_button'): begin
-    BSSreduction_DisplayLinLogFullCountsVsTof, Event
+        BSSreduction_PlotCountsVsTofOfSelection_light, Event
+        BSSreduction_DisplayLinLogFullCountsVsTof, Event
 ;        BSSreduction_PlotFullCountsVsTof, Event
     end
     

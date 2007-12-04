@@ -11,7 +11,8 @@ IF ((*global).NeXusFound) THEN BEGIN
     IF (current_tab NE prev_tab) THEN BEGIN
         IF (current_tab EQ 0) THEN BEGIN
 ;plot counts vs tof            
-            BSSreduction_PlotCountsVsTofOfSelection, Event
+;            BSSreduction_PlotCountsVsTofOfSelection, Event
+    BSSreduction_DisplayLinLogFullCountsVsTof, Event
         ENDIF 
         (*global).previous_counts_vs_tof_tab = current_tab
     ENDIF
