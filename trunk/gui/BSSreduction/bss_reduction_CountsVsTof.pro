@@ -64,7 +64,6 @@ END
 
 
 
-
 PRO BSSreduction_PlotCountsVsTofOfSelection, Event
 
 ;get global structure
@@ -138,6 +137,75 @@ IF ((*global).NeXusFound) THEN BEGIN
 ENDIF
 
 END
+
+
+
+
+
+PRO BSSreduction_PlotCountsVsTofOfSelection_light, Event
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+IF ((*global).NeXusFound) THEN BEGIN
+
+    bank1 = (*(*global).bank1)
+    bank2 = (*(*global).bank2)
+    pixel_excluded = (*(*global).pixel_excluded)
+    
+;initialize counts vs tof array
+    TOF_sz = (size(bank1))(1)
+    data = lonarr(TOF_sz)
+    
+    sz = (size(pixel_excluded))(1)
+    total_pixel_excluded = total(pixel_excluded) ;number of pixel excluded
+    
+    IF (total_pixel_excluded GE 4096) THEN BEGIN ;less pixel excluded than included
+        data = lonarr(TOF_sz)
+    END
+    
+    FOR i=0,(sz-1) DO BEGIN
+        IF (total_pixel_excluded LT 4096) THEN BEGIN ;less pixel excluded than included
+            IF (pixel_excluded[i] EQ 1) THEN BEGIN ;add data to final array
+                XY = getXYfromPixelID_Untouched(i)
+                IF (i LT 4096) THEN BEGIN
+                    bank1[*,XY[1],XY[0]]=0
+                ENDIF ELSE BEGIN
+                    bank2[*,XY[1],XY[0]]=0
+                ENDELSE
+            ENDIF
+        ENDIF ELSE BEGIN        ;more pixel excluded than included
+            IF (pixel_excluded[i] EQ 0) THEN BEGIN
+                XY = getXYfromPixelID_Untouched(i)
+                
+                IF (i LT 4096) THEN BEGIN
+                    data += bank1[*,XY[1],XY[0]]
+                ENDIF ELSE BEGIN
+                    data += bank2[*,XY[1],XY[0]]
+                ENDELSE
+            ENDIF
+        ENDELSE
+    ENDFOR
+    
+    IF (total_pixel_excluded LT 4096) THEN BEGIN ;less pixel excluded than included
+        data1 = total(bank1,2)
+        data1 = total(data1,2)
+        
+        data2 = total(bank2,2)
+        data2 = total(data2,2)
+        
+        data = data1 + data2
+    ENDIF
+    
+    (*(*global).full_counts_vs_tof_data) = data
+    
+ENDIF
+
+END
+
+
+
 
 
 ;plot full counts_vs_tof

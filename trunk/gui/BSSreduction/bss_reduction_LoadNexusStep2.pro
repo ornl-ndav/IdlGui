@@ -41,7 +41,14 @@ endif else begin
 ;plot counts vs TOF of full selection
     message = '  -> Plot Counts vs TOF of full selection ... ' + PROCESSING
     AppendLogBookMessage, Event, message
-    BSSreduction_PlotCountsVsTofOfSelection, Event
+
+    if ((*global).true_full_x_min EQ 0.0000001) then begin
+        BSSreduction_PlotCountsVsTofOfSelection, Event
+    endif else begin
+        BSSreduction_PlotCountsVsTofOfSelection_Light, Event
+        BSSreduction_DisplayLinLogFullCountsVsTof, Event
+    endelse
+
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;populate ROI file name
