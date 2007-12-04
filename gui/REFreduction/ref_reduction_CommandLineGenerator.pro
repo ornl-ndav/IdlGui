@@ -390,7 +390,11 @@ if (isWithDataInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
-        button_value = 'Select a Data Instrument Geometry File'
+        if ((*global).miniVersion EQ 0) then begin
+            button_value = 'Select a Data Instrument Geometry File'
+        endif else begin 
+            button_value = 'Select a Data Instr. Geometry File'
+        endelse
     endelse
     setButtonValue, Event, 'overwrite_data_intrument_geometry_button', button_value
 endif
@@ -413,7 +417,11 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
-        button_value = 'Select a Normalization Instrument Geometry File'
+        if ((*global).miniVersion EQ 0) then begin
+            button_value = 'Select a Normalization Instrument Geometry File'
+        endif else begin
+            button_value = 'Select a Norm. Instr. Geometry File'
+        endelse
     endelse
     setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', button_value
 
