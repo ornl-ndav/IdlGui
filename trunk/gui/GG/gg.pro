@@ -40,7 +40,7 @@ InstrumentList = ['',$
                   'ARCS']
                   
 instrumentShortList = ['',$
-                       'BASIS',$
+                       'BSS',$
                        'REF_L',$
                        'REF_M',$
                        'ARCS']

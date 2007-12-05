@@ -29,3 +29,49 @@ END
 FUNCTION getCvinfoFileName, Event
 RETURN, getTextFieldValue(Event,'cvinfo_text_field')
 END
+
+;Returns the instrument Selected
+FUNCTION getInstrument, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+index = getInstrumentSelectedIndex(Event)
+instrumentShortList = (*(*global).instrumentShortList)
+RETURN, instrumentShortlist[index]
+END
+
+;Returns the result of finding or not the prenexus folder of the given
+;run number for the given instrument. The prenexus path is also
+;returns as an argument
+FUNCTION getPreNexus, instrument, RunNumber, prenexus_path
+cmd = 'findnexus --prenexus -i' + strcompress(instrument,/remove_all)
+cmd += ' ' + strcompress(RunNumber,/remove_all)
+spawn, cmd, result
+IF (STRMATCH(result[0],'ERROR*')) THEN BEGIN
+    prenexus_path = ''
+    RETURN, 0
+ENDIF ELSE BEGIN
+    prenexus_path = strcompress(result[0],/remove_all)
+    RETURN, 1
+ENDELSE
+END
+
+
+;Rturns the cvinfo file name of the run number given
+FUNCTION get_cvinfo_file_name, Event
+;get instrument
+instrument = getInstrument(Event)
+;get RunNumber
+RunNumber = getTextFieldValue(Event, 'cvinfo_run_number_field')
+;find preNeXus
+result = getPreNexus(instrument, RunNumber, prenexus_path)
+IF (result EQ 1) THEN BEGIN
+;append cvinfo file name to path found (if found)
+    full_cvinfo_file_name = prenexus_path + '/' + instrument
+    full_cvinfo_file_name += '_' + strcompress(RunNumber,/remove_all) + '_cvinfo.xml'
+;return fileName
+    RETURN, full_cvinfo_file_name
+ENDIF ELSE BEGIN
+    RETURN, ''
+ENDELSE
+END
