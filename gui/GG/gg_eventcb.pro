@@ -20,11 +20,23 @@ END
 
 
 PRO retrieve_cvinfo_file_name, Event
+;show user that program is looking for cvinfo file
+;get instrument
+instrument = getInstrument(Event)
+;get RunNumber
+RunNumber = getTextFieldValue(Event, 'cvinfo_run_number_field')
+text = 'Sarching for ' 
+file_name = instrument + '_' + strcompress(RunNumber,/remove_all) + '_cvinfo.xml'
+full_text = text + file_name + ' ...'
+putFileNameInTextField, Event, 'cvinfo', full_text
 ;get cvinfo file name
 cvinfo_file_name = get_cvinfo_file_name(Event)
 IF (cvinfo_file_name NE '') THEN BEGIN ;display file name found
     putFileNameInTextField, Event, 'cvinfo', cvinfo_file_name
-ENDIF
+ENDIF ELSE BEGIN
+    message = file_name + ' CAN NOT BE FOUND'
+    putFileNameInTextField, Event, 'cvinfo', message
+ENDELSE
 END
 
 
