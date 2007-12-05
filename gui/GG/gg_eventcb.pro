@@ -19,6 +19,14 @@ instrumentShortList = (*(*global).instrumentShortList)
 END
 
 
+PRO retrieve_cvinfo_file_name, Event
+;get cvinfo file name
+cvinfo_file_name = get_cvinfo_file_name(Event)
+IF (cvinfo_file_name NE '') THEN BEGIN ;display file name found
+    putFileNameInTextField, Event, 'cvinfo', cvinfo_file_name
+ENDIF
+END
+
 
 
 
