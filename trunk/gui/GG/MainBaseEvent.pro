@@ -60,6 +60,12 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_text_field'): begin
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
     end
+
+;#1### LOADING GEOMETRY button
+    widget_info(wWidget, FIND_BY_UNAME='loading_geometry_button'): begin
+        load_geometry, Event ;in gg_eventcb.pro
+    end
+    
     
     ELSE:
     

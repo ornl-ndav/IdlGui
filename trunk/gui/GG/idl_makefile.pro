@@ -12,6 +12,7 @@ cd, IdlUtilitiesPath
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/ggGUI/'
 .run MakeGuiLoadingGeometry.pro
+.run MakeGuiInputGeometry.pro
 
 ;Build all procedures
 cd, CurrentFolder
