@@ -22,6 +22,60 @@ table_widget = { size         : [200,0,500,300,4,15],$
                  label        : ['STATUS','N A M E','VALUE','UNITS'],$
                  column_width : [60,180,120,110]}
 
+;///////////
+;Input base/
+;///////////
+input_base = { size  : [200,300,500,200],$
+               uname : 'input_base'}
+name_label = { size  : [20,20,60,30],$
+               value : 'N A M E :'}
+XYoff = [50,0]
+name_value = { size : [name_label.size[0]+XYoff[0],$
+                       name_label.size[1]+XYoff[1],$
+                       150,$
+                       30],$
+               uname : 'name_value'}
+XYoff = [200,0]
+value_label = { size  : [name_label.size[0]+XYoff[0],$
+                         name_label.size[1]+XYoff[1]],$
+                value : 'Value'}
+XYoff = [160,0]
+Units_label = { size  : [value_label.size[0]+XYoff[0],$
+                         value_label.size[1]+XYoff[1]],$
+                value : 'Units'}
+XYoff = [80,40]
+original_label = { size : [name_label.size[0]+XYoff[0],$
+                           name_label.size[1]+XYoff[1]],$
+                   value : 'Original'}
+XYoff = [0,60]
+current_label  = { size : [original_label.size[0]+XYoff[0],$
+                           original_label.size[1]+XYoff[1]],$
+                   value : 'Current'}
+
+XYoff = [80,0]
+original_value_label = { size : [original_label.size[0]+XYoff[0],$
+                                 original_label.size[1]+XYoff[1],$
+                                 130,30],$
+                         uname : 'original_value_label'}
+XYoff = [160,0]
+original_units_label = { size : [original_value_label.size[0]+XYoff[0],$
+                                 original_value_label.size[1]+XYoff[1],$
+                                 130,30],$
+                         uname : 'original_units_label'}
+XYoff = [75,-5]
+current_value_base = { size : [current_label.size[0]+XYoff[0],$
+                               current_label.size[1]+XYoff[1],$
+                               150,40],$
+                       xsize : 20,$
+                       uname : 'current_value_text_field'}
+
+XYoff = [235,-5]
+current_units_base = { size : [current_label.size[0]+XYoff[0],$
+                               current_label.size[1]+XYoff[1],$
+                               150,40],$
+                       xsize : current_value_base.xsize,$
+                       uname : 'current_units_text_field'}
+
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -126,6 +180,103 @@ table = WIDGET_TABLE(base,$
                      /NO_ROW_HEADERS,$
                      /ROW_MAJOR,$
                      /RESIZEABLE_COLUMNS)
+
+;\\\\\\\\\\\
+;Input base\
+;\\\\\\\\\\\
+input_base = WIDGET_BASE(base,$
+                         XOFFSET   = input_base.size[0],$
+                         YOFFSET   = input_base.size[1],$
+                         SCR_XSIZE = input_base.size[2],$
+                         SCR_YSIZE = input_base.size[3],$
+                         UNAME     = input_base.uname)
+
+label = WIDGET_LABEL(input_base,$
+                     XOFFSET   = name_label.size[0],$
+                     YOFFSET   = name_label.size[1],$
+                     SCR_XSIZE = name_label.size[2],$
+                     SCR_YSIZE = name_label.size[3],$
+                     VALUE     = name_label.value)
+
+value = WIDGET_LABEL(input_base,$
+                     XOFFSET   = name_value.size[0],$
+                     YOFFSET   = name_value.size[1],$
+                     SCR_XSIZE = name_value.size[2],$
+                     SCR_YSIZE = name_value.size[3],$
+                     UNAME     = name_value.uname,$
+                     VALUE     = '')
+
+value_label = WIDGET_LABEL(input_base,$
+                           XOFFSET   = value_label.size[0],$
+                           YOFFSET   = value_label.size[1],$
+                           SCR_YSIZE = name_value.size[3],$
+                           VALUE     = value_label.value)
+                           
+units_label = WIDGET_LABEL(input_base,$
+                           XOFFSET   = units_label.size[0],$
+                           YOFFSET   = units_label.size[1],$
+                           SCR_YSIZE = name_value.size[3],$
+                           VALUE     = units_label.value)
+
+original_label = WIDGET_LABEL(input_base,$
+                              XOFFSET   = original_label.size[0],$
+                              YOFFSET   = original_label.size[1],$
+                              SCR_YSIZE = name_value.size[3],$
+                              VALUE     = original_label.value)
+
+original_value_label = WIDGET_LABEL(input_base,$
+                                    XOFFSET   = original_value_label.size[0],$
+                                    YOFFSET   = original_value_label.size[1],$
+                                    SCR_XSIZE = original_value_label.size[2],$
+                                    SCR_YSIZE = original_value_label.size[3],$
+                                    VALUE     = '',$
+                                    FRAME     = 1)
+
+original_units_label = WIDGET_LABEL(input_base,$
+                                    XOFFSET   = original_units_label.size[0],$
+                                    YOFFSET   = original_units_label.size[1],$
+                                    SCR_XSIZE = original_units_label.size[2],$
+                                    SCR_YSIZE = original_units_label.size[3],$
+                                    VALUE     = '',$
+                                    FRAME     = 1)
+
+current_label = WIDGET_LABEL(input_base,$
+                              XOFFSET   = current_label.size[0],$
+                              YOFFSET   = current_label.size[1],$
+                              SCR_YSIZE = name_value.size[3],$
+                              VALUE     = current_label.value)
+
+value_base = WIDGET_BASE(input_base,$
+                         XOFFSET   = current_value_base.size[0],$
+                         YOFFSET   = current_value_base.size[1],$
+                         SCR_XSIZE = current_value_base.size[2],$
+                         SCR_YSIZE = current_value_base.size[3])
+
+field1 = CW_FIELD(value_base,$
+                  XSIZE         = current_value_base.xsize,$
+                  UNAME         = current_value_base.uname,$
+                  RETURN_EVENTS = 1,$
+                  ROW           = 1,$
+                  TITLE = '')
+                  
+units_base = WIDGET_BASE(input_base,$
+                         XOFFSET   = current_units_base.size[0],$
+                         YOFFSET   = current_units_base.size[1],$
+                         SCR_XSIZE = current_units_base.size[2],$
+                         SCR_YSIZE = current_units_base.size[3])
+
+field2 = CW_FIELD(units_base,$
+                  XSIZE         = current_units_base.xsize,$
+                  UNAME         = current_units_base.uname,$
+                  RETURN_EVENTS = 1,$
+                  ROW           = 1,$
+                  TITLE = '')
+                  
+                                 
+
+
+
+
                      
 
 END
