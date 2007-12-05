@@ -1,5 +1,8 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+;get the current folder
+cd, current=current_folder
+
 VERSION = 'VERSION: GG1.0.0'
 
 ;define initial global values - these could be input via external file or other means
@@ -46,6 +49,14 @@ instrumentShortList = ['',$
                        'ARCS']
 (*(*global).instrumentShortList) = instrumentShortList
 
+images_structure = { images_path : [current_folder,$
+                                    'images'],$
+                     images : ['numbers.bmp',$
+                               'angles.bmp',$
+                               'lengths.bmp',$
+                               'wavelength.bmp',$
+                               'other.bmp']}
+
 MainBaseSize  = [30,25,700,500]
 MainBaseTitle = 'Geometry Generator'
         
@@ -73,6 +84,7 @@ version_label = widget_label(MAIN_BASE,$
                              FRAME   = 0)
 
 MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+MakeGuiInputGeometry, MAIN_BASE, MainBaseSize, images_structure
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

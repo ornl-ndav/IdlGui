@@ -40,6 +40,15 @@ ENDELSE
 END
 
 
+;Reach by the LOADING GEOMETRY button of the first base
+PRO load_geometry, Event
+
+;desactivate first base
+activateFirstBase, Event, 0
+
+END
+
+
 
 
 pro MAIN_REALIZE, wWidget

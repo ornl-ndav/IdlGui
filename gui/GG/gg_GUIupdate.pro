@@ -4,6 +4,10 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, sensitive = sensitive_status
 END
 
+PRO activateMap, Event, uname , activate_status
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, map=activate_status
+END
 
 ;*************** Particular Functions ********************
 
@@ -24,7 +28,6 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 END
 
-
 ;activate or not the 'LOADING GEOMETRY' button in the first base
 PRO loading_geometry_button_status, Event
 ;check that the geometry and cvinfo file field are not empty and that
@@ -38,4 +41,9 @@ ENDIF ELSE BEGIN
     loading_geometry_button_sensitive = 0
 ENDELSE
 sensitive_widget, Event, 'loading_geometry_button', loading_geometry_button_sensitive
+END
+
+;activate or not the first base
+PRO activateFirstBase, Event, activate_status
+activateMap, Event, 'loading_geometry_base', activate_status
 END
