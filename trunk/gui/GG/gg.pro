@@ -13,9 +13,38 @@ endif else begin
    ucams = get_ucams()
 endelse
 
+;get hostname
+spawn, 'hostname', hostname
+CASE (hostname) OF
+    'heater': instrumentIndex = 0
+    'lrac'  : instrumentIndex = 2
+    'mrac'  : instrumentIndex = 3
+    'bac1'  : instrumentIndex = 1
+    'bac2'  : instrumentIndex = 1
+    else    : instrumentIndex = 0
+ENDCASE 
+
 ;define global variables
-global = ptr_new ({ $
+global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    cvinfo_default_path   : '~/',$
+                    geometry_default_path : '~/',$
+                    geometry_xml_filtering: '*.xml',$
+                    cvinfo_xml_filtering  : '*_cvinfo.xml',$
+                    default_extension     : 'xml',$
                     version : VERSION })
+
+InstrumentList = ['',$
+                  'Backscattering',$
+                  'Liquids Reflectometer',$
+                  'Magnetism Reflectometer',$
+                  'ARCS']
+                  
+instrumentShortList = ['',$
+                       'BASIS',$
+                       'REF_L',$
+                       'REF_M',$
+                       'ARCS']
+(*(*global).instrumentShortList) = instrumentShortList
 
 MainBaseSize  = [30,25,700,500]
 MainBaseTitle = 'Geometry Generator'
@@ -43,7 +72,7 @@ version_label = widget_label(MAIN_BASE,$
                              VALUE   = VERSION,$
                              FRAME   = 0)
 
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
+MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

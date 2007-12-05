@@ -11,11 +11,21 @@ cd, IdlUtilitiesPath
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/ggGUI/'
-.run MakeGuiMainTab.pro
+.run MakeGuiLoadingGeometry.pro
 
-;Build main procedures
+;Build all procedures
 cd, CurrentFolder
 
+;utils functions
+.run gg_get.pro
+.run gg_put.pro
+.run gg_GUIupdate.pro
+
+;procedures
+.run gg_Preview.pro
+.run gg_Browse.pro
+
+;main functions
 .run MainBaseEvent.pro
 .run gg_eventcb.pro
 .run gg.pro
