@@ -75,9 +75,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
-MakeGuiInputGeometry, MAIN_BASE, MainBaseSize, images_structure
 
+MakeGuiInputGeometry, MAIN_BASE, MainBaseSize, images_structure
 ;add version to program
 VersionLength = strlen(VERSION)
 version_label = widget_label(MAIN_BASE,$
@@ -85,6 +84,9 @@ version_label = widget_label(MAIN_BASE,$
                              YOFFSET = 2,$
                              VALUE   = VERSION,$
                              FRAME   = 0)
+MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+
+
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
