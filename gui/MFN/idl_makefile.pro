@@ -8,25 +8,23 @@ cd, IdlUtilitiesPath
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
-
-;Build BSSreduction GUI
-cd, CurrentFolder + '/ggGUI/'
-.run MakeGuiLoadingGeometry.pro
-.run MakeGuiInputGeometry.pro
+;Build MFN GUI
+cd, CurrentFolder + '/mfnGUI/'
+.run MakeGui.pro
 
 ;Build all procedures
 cd, CurrentFolder
 
 ;utils functions
-.run gg_get.pro
-.run gg_put.pro
-.run gg_GUIupdate.pro
+.run mfn_get.pro
+.run mfn_put.pro
+.run mfn_is.pro
+.run mfn_GUIupdate.pro
+.run mfn_utilities.pro
 
 ;procedures
-.run gg_Preview.pro
-.run gg_Browse.pro
 
 ;main functions
 .run MainBaseEvent.pro
-.run gg_eventcb.pro
-.run gg.pro
+.run mfn_eventcb.pro
+.run mfn.pro

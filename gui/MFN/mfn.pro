@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'VERSION: GG1.0.0'
+VERSION = 'VERSION: MFN1.0.0'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -29,14 +29,17 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
-                    cvinfo_default_path   : '~/',$
-                    geometry_default_path : '~/',$
-                    geometry_xml_filtering: '*.xml',$
-                    cvinfo_xml_filtering  : '*_cvinfo.xml',$
-                    default_extension     : 'xml',$
-                    version : VERSION })
+                    ucams                 : ucams,$
+                    geek                  : 'j35',$
+                    prenexus_path         : '',$
+                    output_path_1         : '~/local',$
+                    staging_folder        : '~/.mfn_staging',$
+                    processing            : '(PROCESSING)',$
+                    ok                    : 'OK',$
+                    failed                : 'FAILED',$
+                    version               : VERSION })
 
-InstrumentList = ['',$
+InstrumentList = ['Select your instrument...',$
                   'Backscattering',$
                   'Liquids Reflectometer',$
                   'Magnetism Reflectometer',$
@@ -49,16 +52,13 @@ instrumentShortList = ['',$
                        'ARCS']
 (*(*global).instrumentShortList) = instrumentShortList
 
-images_structure = { images_path : [current_folder,$
-                                    'images'],$
-                     images : ['numbers.bmp',$
-                               'angles.bmp',$
-                               'lengths.bmp',$
-                               'wavelength.bmp',$
-                               'other.bmp']}
+IF ((*global).ucams NE (*global).geek) THEN BEGIN
+    MainBaseSize  = [700,500,400,340]
+endif else begin
+    MainBaseSize  = [700,500,800,500]
+endelse
 
-MainBaseSize  = [30,25,700,500]
-MainBaseTitle = 'Geometry Generator'
+MainBaseTitle = 'My First NeXus'
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -75,8 +75,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-
-MakeGuiInputGeometry, MAIN_BASE, MainBaseSize, images_structure
+MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
 ;add version to program
 VersionLength = strlen(VERSION)
 version_label = widget_label(MAIN_BASE,$
@@ -84,28 +83,42 @@ version_label = widget_label(MAIN_BASE,$
                              YOFFSET = 2,$
                              VALUE   = VERSION,$
                              FRAME   = 0)
-MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
-
-
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;????????????????????????? FOR DEVELOPMENT ONLY ??????????????????????????
-;;default tabs shown
-;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 1 ;reduce
+;set the instrument droplist
+id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
+widget_control, id, set_droplist_select=InstrumentIndex
 
-;;tab #7
-;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-;widget_control, id1, set_tab_current = 6
-;?????????????????????????????????????????????????????????????????????????
+IF (InstrumentIndex NE 0) THEN BEGIN
+    validateOuputPath2, Event,0
+ENDIF
+
+
+;REMOVE ME
+;set the instrument droplist
+id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
+widget_control, id, set_droplist_select=3
+
+id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
+widget_control,id,set_value='2968'
+
+id = widget_info(MAIN_BASE,find_by_uname='create_nexus_button')
+widget_control, id, sensitive=1
+
+(*global).prenexus_path = '/REF_M-DAS-FS/2008_1_4A_SCI/REF_M_2968/'
+
+;END OF REMOVE
+
+
+
 
 END
 
 
 ; Empty stub procedure used for autoloading.
-pro gg, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro mfn, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 

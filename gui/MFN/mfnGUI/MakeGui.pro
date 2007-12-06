@@ -1,136 +1,74 @@
-PRO MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+PRO MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
 
 ;***********************************************************************************
 ;                           Define size arrays
 ;***********************************************************************************
 
 base = { size  : [0,0,MainBaseSize[2:3]],$
-         uname : 'loading_geometry_base'} 
+         uname : 'first_base'} 
 
-IF (InstrumentIndex EQ 0) THEN BEGIN
-    sensitiveStatus = 0
-endif else begin
-    sensitiveStatus = 1
-endelse
+XYoff = [10,10]
+run_number_base = { size  : [XYoff[0],$
+                             XYoff[1],$
+                             160,$
+                             35],$
+                    uname : 'run_number_cw_field',$
+                    xsize : 10,$
+                    title : 'Run Number:'}
 
-;///////////
-;Instrument/
-;///////////
-instrumentLabel    = { size  : [10,25],$
-                       value : 'Select your instrument:'}
-
-XYoff = [150,-8]
-instrumentDroplist = { size  : [instrumentLabel.size[0]+XYoff[0],$
-                                instrumentLabel.size[1]+XYoff[1]],$
+XYOff = [180,0]
+instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
+                               run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}
 
-;/////////////
-;Geometry.xml/
-;/////////////
-XYoff = [0,60]
-geometryFrame    = { size  : [5, $
-                              instrumentLabel.size[1]+XYoff[1], $
-                              MainBaseSize[2]-13, $
-                              110],$
-                     frame : 1}
+XYoff = [0,45]
+output_button = { size  : [run_number_base.size[0]+XYoff[0],$
+                           run_number_base.size[1]+XYoff[1],$
+                           130,35],$
+                  uname : 'output_button',$
+                  value : 'Main Output path...'}
 
-XYoff = [15,-8]
-geometryLabel    = { size  : [geometryFrame.size[0]+XYoff[0],$
-                              geometryFrame.size[1]+XYoff[1]],$
-                     value : 'geometry.xml'}
+XYoff = [130,0]
+output_text = { size  : [output_button.size[0]+XYoff[0],$
+                         output_button.size[1]+XYoff[1],$
+                         255,35],$
+                uname : 'output_path_text',$
+                value : '~/local/'}
 
-XYoff = [-5,20]
-geometryDroplist = { size  : [geometryLabel.size[0]+XYoff[0],$
-                              geometryLabel.size[1]+XYoff[1]],$
-                     list  : ['                                                            '],$
-                     uname : 'geometry_droplist'}
+XYoff = [0,40]
+output_button2 = { size  : [output_button.size[0]+XYoff[0],$
+                            output_button.size[1]+XYoff[1],$
+                            output_button.size[2],$
+                            output_button.size[3]],$
+                   uname : 'output_button2',$
+                   value : '2nd Output path...'}
 
-XYoff = [430,10]
-geometryOrLabel  = { size  : [geometryDroplist.size[0]+XYoff[0],$
-                              geometryDroplist.size[1]+XYoff[1]],$
-                     value : 'OR'}
+XYoff = [130,0]
+output_text2 = { size  : [output_button2.size[0]+XYoff[0],$
+                          output_button2.size[1]+XYoff[1],$
+                          output_text.size[2],$
+                          output_text.size[3]],$
+                 uname : 'output_path_text2',$
+                 value : ''}
 
-XYoff = [35,-7]
-geometryButton   = { size  : [geometryOrLabel.size[0]+XYoff[0],$
-                              geometryOrLabel.size[1]+XYoff[1],$
-                              100, $
-                              30],$
-                     uname : 'geometry_browse_button',$
-                     title : ' BROWSE ... '}
+XYoff = [0,45]
+go_button = { size  : [output_button2.size[0]+XYoff[0],$
+                       output_button2.size[1]+XYoff[1],$
+                       380,30],$
+              uname : 'create_nexus_button',$
+              value : 'C R E A T E   N E X U S'}
 
+XYOFF = [0,45]
+log_book = { size  : [go_button.size[0]+XYoff[0],$
+                      go_button.size[1]+XYoff[1],$
+                      380,150],$
+             uname : 'log_book'}
 
-XYoff = [605,15]
-geometryPreview  = { size  : [geometryLabel.size[0]+XYoff[0],$
-                              geometryLabel.size[1]+XYoff[1],$
-                              65,100],$
-                     value : 'PREVIEW',$
-                     uname : 'geometry_preview'}
-
-
-XYoff = [10,50]
-geometryText     = { size  : [geometryDroplist.size[0]+XYoff[0],$
-                              geometryDroplist.size[1]+XYoff[1],$
-                              595,35],$
-                     uname : 'geometry_text_field',$
-                     value : ''}
-
-;///////////
-;cvinfo.xml/
-;///////////
-XYoff = [0,60]
-cvinfoFrame      = { size  : [5, $
-                              geometryFrame.size[1]+geometryFrame.size[3]+XYoff[1], $
-                              MainBaseSize[2]-13, $
-                              100],$
-                     frame : 1}
-
-XYoff = [15,-8]
-cvinfoLabel      = { size  : [cvinfoFrame.size[0]+XYoff[0],$
-                              cvinfoFrame.size[1]+XYoff[1]],$
-                     value : 'cvinfo.xml'}
-
-XYoff = [5,25]
-runNumberBase    = { title : 'Run Number:',$
-                     size  : [cvinfoLabel.size[0]+XYoff[0],$
-                             cvinfoLabel.size[1]+XYoff[1],$
-                             150,35],$
-                     uname : 'cvinfo_base',$ 
-                     cw_field : { uname : 'cvinfo_run_number_field',$
-                                  size  : 8}}
-
-XYoff = [160,10]
-orLabel = { size  : [runNumberBase.size[0]+XYoff[0],$
-                     runNumberBase.size[1]+XYoff[1]],$
-            value : 'OR'}
-
-XYoff = [40,-5]
-browseButton = { size  : [orLabel.size[0]+XYoff[0],$
-                          orLabel.size[1]+XYoff[1],$
-                          100,30],$
-                 value : 'BROWSE...',$
-                 uname : 'cvinfo_browse_button'}
-
-XYoff = [400,-18]
-cvinfoPreview  = { size  : [BrowseButton.size[0]+XYoff[0],$
-                            BrowseButton.size[1]+XYoff[1],$
-                            65,93],$
-                   value : 'PREVIEW',$
-                   uname : 'cvinfo_preview'}
-
-
-XYoff = [20,40]
-cvinfoText = { size : [XYoff[0],$
-                       browseButton.size[1]+XYoff[1],$
-                       600,35],$
-               uname : 'cvinfo_text_field',$
-               value : ''}
-
-;////////////////////////
-;Loading Geometry Button/
-;////////////////////////
-loadingGeometryButton = {size  : [30,400,650,40],$
-                         value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
-                         uname : 'loading_geometry_button'}
+XYOFF = [0,log_book.size[3]+5]
+my_log_book = { size  : [log_book.size[0]+XYoff[0],$
+                         log_book.size[1]+XYoff[1],$
+                         780,150],$
+                uname : 'my_log_book'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -143,154 +81,93 @@ base = WIDGET_BASE(MAIN_BASE,$
                    SCR_YSIZE = base.size[3],$
                    map=1)  ;REMOVE 0 and put back 1
 
-;\\\\\\\\\\\
-;Instrument\
-;\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET = instrumentLabel.size[0],$
-                     YOFFSET = instrumentLabel.size[1],$
-                     VALUE   = instrumentLabel.value)
+run_base = WIDGET_BASE(base,$
+                       XOFFSET   = run_number_base.size[0],$
+                       YOFFSET   = run_number_base.size[1],$
+                       SCR_XSIZE = run_number_base.size[2],$
+                       SCR_YSIZE = run_number_base.size[3])
 
-droplist = WIDGET_DROPLIST(base,$
-                           VALUE   = InstrumentList,$
-                           XOFFSET = instrumentDroplist.size[0],$
-                           YOFFSET = instrumentDroplist.size[1],$
-                           UNAME   = instrumentDroplist.uname)
-
-;\\\\\\\\\\\\\
-;Geometry.xml\
-;\\\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET = geometryOrLabel.size[0],$
-                     YOFFSET = geometryOrLabel.size[1],$
-                     VALUE   = geometryOrLabel.value)
-
-droplist = WIDGET_DROPLIST(base,$
-                           value     = geometryDroplist.list,$
-                           XOFFSET   = geometryDroplist.size[0],$
-                           YOFFSET   = geometryDroplist.size[1],$
-                           UNAME     = geometryDroplist.uname,$
-                           SENSITIVE = sensitiveStatus,$
-                           /DYNAMIC_RESIZE)
+run_number = CW_FIELD(run_base,$
+                      XSIZE         = run_number_base.xsize,$
+                      UNAME         = run_number_base.uname,$
+                      RETURN_EVENTS = 1,$
+                      ROW           = 1,$
+                      TITLE         = run_number_base.title,$
+                      /INTEGER)
+                              
+Instrument_droplist = WIDGET_DROPLIST(base,$
+                                      VALUE   = InstrumentList,$
+                                      XOFFSET = instrumentDroplist.size[0],$
+                                      YOFFSET = instrumentDroplist.size[1],$
+                                      UNAME   = instrumentDroplist.uname)
 
 button = WIDGET_BUTTON(base,$
-                       XOFFSET   = geometryPreview.size[0],$
-                       YOFFSET   = geometryPreview.size[1],$
-                       SCR_XSIZE = geometryPreview.size[2],$
-                       SCR_YSIZE = geometryPreview.size[3],$
-                       UNAME     = geometryPreview.uname,$
-                       VALUE     = geometryPreview.value,$
-                       SENSITIVE = sensitiveStatus)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = geometryButton.size[0],$
-                       YOFFSET   = geometryButton.size[1],$
-                       SCR_XSIZE = geometryButton.size[2],$
-                       SCR_YSIZE = geometryButton.size[3],$
-                       VALUE     = geometryButton.title,$
-                       UNAME     = geometryButton.uname,$
-                       SENSITIVE = sensitiveStatus)
+                       XOFFSET   = output_button.size[0],$
+                       YOFFSET   = output_button.size[1],$
+                       SCR_XSIZE = output_button.size[2],$
+                       SCR_YSIZE = output_button.size[3],$
+                       UNAME     = output_button.uname,$
+                       VALUE     = output_button.value)
 
 text = WIDGET_TEXT(base,$
-                   XOFFSET   = geometryText.size[0],$
-                   YOFFSET   = geometryText.size[1],$
-                   SCR_XSIZE = geometryText.size[2],$
-                   SCR_YSIZE = geometryText.size[3],$
-                   UNAME     = geometryText.uname,$
-                   VALUE     = geometryText.value,$
-                   SENSITIVE = sensitiveStatus,$
-                   /EDITABLE,$
-                   /ALL_EVENTS)
+                   XOFFSET   = output_text.size[0],$
+                   YOFFSET   = output_text.size[1],$
+                   SCR_XSIZE = output_text.size[2],$
+                   SCR_YSIZE = output_text.size[3],$
+                   VALUE     = output_text.value,$
+                   UNAME     = output_text.uname,$
+                   /EDITABLE)
 
-label = WIDGET_LABEL(base,$
-                     XOFFSET = geometryLabel.size[0],$
-                     YOFFSET = geometryLabel.size[1],$
-                     VALUE   = geometryLabel.value)
+button2 = WIDGET_BUTTON(base,$
+                        XOFFSET   = output_button2.size[0],$
+                        YOFFSET   = output_button2.size[1],$
+                        SCR_XSIZE = output_button2.size[2],$
+                        SCR_YSIZE = output_button2.size[3],$
+                        UNAME     = output_button2.uname,$
+                        VALUE     = output_button2.value,$
+                        SENSITIVE = 0)
 
-frame = WIDGET_LABEL(base,$
-                     XOFFSET   = geometryFrame.size[0],$
-                     YOFFSET   = geometryFrame.size[1],$
-                     SCR_XSIZE = geometryFrame.size[2],$
-                     SCR_YSIZE = geometryFrame.size[3],$
-                     FRAME     = geometryFrame.frame,$
-                     VALUE     = '')
-
-;\\\\\\\\\\\
-;cvinfo.xml\
-;\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET = cvinfoLabel.size[0],$
-                     YOFFSET = cvinfoLabel.size[1],$
-                     VALUE   = cvinfoLabel.value)
-
-field_base = WIDGET_BASE(base,$
-                         XOFFSET   = runNumberBase.size[0],$
-                         YOFFSET   = runNumberBase.size[1],$
-                         SCR_XSIZE = runNumberBase.size[2],$
-                         SCR_YSIZE = runNumberBase.size[3],$
-                         SENSITIVE = sensitiveStatus,$
-                         UNAME     = runNumberBase.uname)
-
-field = CW_FIELD(field_base,$
-                 XSIZE         = runNumberBase.cw_field.size[0],$
-                 ROW           = 1,$
-                 UNAME         = runNumberBase.cw_field.uname,$
-                 RETURN_EVENTS = 1,$
-                 TITLE         = runNumberBase.title,$
-                 /INTEGER)
-                   
-orLabel = WIDGET_LABEL(base,$
-                       XOFFSET = orLabel.size[0],$
-                       YOFFSET = orLabel.size[1],$
-                       VALUE   = orLabel.value)
+text2 = WIDGET_TEXT(base,$
+                    XOFFSET   = output_text2.size[0],$
+                    YOFFSET   = output_text2.size[1],$
+                    SCR_XSIZE = output_text2.size[2],$
+                    SCR_YSIZE = output_text2.size[3],$
+                    VALUE     = output_text2.value,$
+                    UNAME     = output_text2.uname,$
+                    SENSITIVE = 0,$
+                   /EDITABLE)
 
 button = WIDGET_BUTTON(base,$
-                       XOFFSET   = browseButton.size[0],$
-                       YOFFSET   = browseButton.size[1],$
-                       SCR_XSIZE = browseButton.size[2],$
-                       SCR_YSIZE = browseButton.size[3],$
-                       UNAME     = browseButton.uname,$
-                       VALUE     = browseButton.value,$
-                       SENSITIVE = sensitiveStatus)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = cvinfoPreview.size[0],$
-                       YOFFSET   = cvinfoPreview.size[1],$
-                       SCR_XSIZE = cvinfoPreview.size[2],$
-                       SCR_YSIZE = cvinfoPreview.size[3],$
-                       UNAME     = cvinfoPreview.uname,$
-                       VALUE     = cvinfoPreview.value,$
-                       SENSITIVE = sensitiveStatus)
+                       XOFFSET   = go_button.size[0],$
+                       YOFFSET   = go_button.size[1],$
+                       SCR_XSIZE = go_button.size[2],$
+                       SCR_YSIZE = go_button.size[3],$
+                       UNAME     = go_button.uname,$
+                       VALUE     = go_button.value,$
+                       SENSITIVE = 0)
 
 text = WIDGET_TEXT(base,$
-                   XOFFSET   = cvinfoText.size[0],$
-                   YOFFSET   = cvinfoText.size[1],$
-                   SCR_XSIZE = cvinfoText.size[2],$
-                   SCR_YSIZE = cvinfoText.size[3],$
-                   UNAME     = cvinfoText.uname,$
-                   VALUE     = cvinfoText.value,$
-                   SENSITIVE = sensitiveStatus,$
+                   XOFFSET   = log_book.size[0],$
+                   YOFFSET   = log_book.size[1],$
+                   SCR_XSIZE = log_book.size[2],$
+                   SCR_YSIZE = log_book.size[3],$
+                   VALUE     = '',$
+                   UNAME     = log_book.uname,$
                    /EDITABLE,$
-                   /ALL_EVENTS)
+                   /WRAP,$
+                   /SCROLL)
 
-frame = WIDGET_LABEL(base,$
-                     XOFFSET   = cvinfoFrame.size[0],$
-                     YOFFSET   = cvinfoFrame.size[1],$
-                     SCR_XSIZE = cvinfoFrame.size[2],$
-                     SCR_YSIZE = cvinfoFrame.size[3],$
-                     FRAME     = cvinfoFrame.frame,$
-                     VALUE     = '')
+text = WIDGET_TEXT(base,$
+                   XOFFSET   = my_log_book.size[0],$
+                   YOFFSET   = my_log_book.size[1],$
+                   SCR_XSIZE = my_log_book.size[2],$
+                   SCR_YSIZE = my_log_book.size[3],$
+                   VALUE     = '',$
+                   UNAME     = my_log_book.uname,$
+                   /EDITABLE,$
+                   /WRAP,$
+                   /SCROLL)
 
-;\\\\\\\\\\\\\\\\\
-;LOADING GEOMETRY\
-;\\\\\\\\\\\\\\\\\
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = loadingGeometryButton.size[0],$
-                       YOFFSET   = loadingGeometryButton.size[1],$
-                       SCR_XSIZE = loadingGeometryButton.size[2],$
-                       SCR_YSIZE = loadingGeometryButton.size[3],$
-                       UNAME     = loadingGeometryButton.uname,$
-                       VALUE     = loadingGeometryButton.value,$
-                       SENSITIVE = sensitiveStatus)
+
 
 END
