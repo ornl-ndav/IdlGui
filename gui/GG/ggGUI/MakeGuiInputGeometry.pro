@@ -10,10 +10,36 @@ base = { size  : [0,0,MainBaseSize[2:3]],$
 ;////////////
 ;tree widget/
 ;////////////
-tree_widget = { size  : [0,0,200,MainBaseSize[3]],$
+tree_widget = { size  : [0,0,200,MainBaseSize[3]-90],$
                 uname : 'tree_widget'}
 
 
+;//////////////////
+;Main button panel/
+;//////////////////
+XYoff = [0,MainBaseSize[3]-90]
+full_reset = { size  : [XYoff[0], $
+                        XYoff[1], $
+                        tree_widget.size[2], $
+                        30],$
+               value : 'FULL RESET',$
+               uname : 'full_reset_button'}
+
+XYoff = [0,30]
+load_new_geometry = { size  : [full_reset.size[0]+XYoff[0],$
+                               full_reset.size[1]+XYoff[1],$
+                               full_reset.size[2],$
+                               full_reset.size[3]],$
+                      value : 'LOAD NEW BASE GEOMETRY',$
+                      uname : 'load_new_geometry_button'}
+
+create_geometry = { size  : [full_reset.size[0]+XYoff[0],$
+                             load_new_geometry.size[1]+XYoff[1],$
+                             full_reset.size[2],$
+                             full_reset.size[3]],$
+                    value : 'CREATE GEOMETRY FILE',$
+                    uname : 'create_geometry_file_button'}
+                            
 ;/////////////
 ;table widget/
 ;/////////////
@@ -47,7 +73,7 @@ XYoff = [80,40]
 original_label = { size : [name_label.size[0]+XYoff[0],$
                            name_label.size[1]+XYoff[1]],$
                    value : 'Original'}
-XYoff = [0,60]
+XYoff = [0,50]
 current_label  = { size : [original_label.size[0]+XYoff[0],$
                            original_label.size[1]+XYoff[1]],$
                    value : 'Current'}
@@ -75,6 +101,17 @@ current_units_base = { size : [current_label.size[0]+XYoff[0],$
                                150,40],$
                        xsize : current_value_base.xsize,$
                        uname : 'current_units_text_field'}
+
+reset_button = { size  : [35,165,80,30],$
+                 value : 'RESET',$
+                 uname : 'reset_selected_element_button'}
+
+XYoff = [143,0]
+validate_button = {size  : [reset_button.size[0]+XYoff[0],$
+                            reset_button.size[1]+XYoff[1],$
+                            297,30],$
+                   value : 'VALIDATE CHANGES',$
+                   uname : 'validate_selected_element_button'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -163,6 +200,38 @@ wtLeaf5 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'other',$
                       uvalue = 'LEAF',$
                       BITMAP = myIcon2)
+
+;\\\\\\\\\\\\\\\\\\
+;Main button panel\
+;\\\\\\\\\\\\\\\\\\
+button1 = WIDGET_BUTTON(base,$
+                        XOFFSET   = full_reset.size[0],$
+                        YOFFSET   = full_reset.size[1],$
+                        SCR_XSIZE = full_reset.size[2],$
+                        SCR_YSIZE = full_reset.size[3],$
+                        VALUE     = full_reset.value,$
+                        UNAME     = full_reset.uname)
+
+button1 = WIDGET_BUTTON(base,$
+                        XOFFSET   = load_new_geometry.size[0],$
+                        YOFFSET   = load_new_geometry.size[1],$
+                        SCR_XSIZE = load_new_geometry.size[2],$
+                        SCR_YSIZE = load_new_geometry.size[3],$
+                        VALUE     = load_new_geometry.value,$
+                        UNAME     = load_new_geometry.uname)
+
+button1 = WIDGET_BUTTON(base,$
+                        XOFFSET   = create_geometry.size[0],$
+                        YOFFSET   = create_geometry.size[1],$
+                        SCR_XSIZE = create_geometry.size[2],$
+                        SCR_YSIZE = create_geometry.size[3],$
+                        VALUE     = create_geometry.value,$
+                        UNAME     = create_geometry.uname)
+
+
+
+
+
 
 ;\\\\\\\\\\\\\
 ;table widget\
@@ -271,8 +340,23 @@ field2 = CW_FIELD(units_base,$
                   RETURN_EVENTS = 1,$
                   ROW           = 1,$
                   TITLE = '')
+
+button = WIDGET_BUTTON(input_base,$
+                       XOFFSET   = reset_button.size[0],$
+                       YOFFSET   = reset_button.size[1],$
+                       SCR_XSIZE = reset_button.size[2],$
+                       SCR_YSIZE = reset_button.size[3],$
+                       VALUE     = reset_button.value,$
+                       UNAME     = reset_button.uname)
                   
-                                 
+button = WIDGET_BUTTON(input_base,$
+                       XOFFSET   = validate_button.size[0],$
+                       YOFFSET   = validate_button.size[1],$
+                       SCR_XSIZE = validate_button.size[2],$
+                       SCR_YSIZE = validate_button.size[3],$
+                       VALUE     = validate_button.value,$
+                       UNAME     = validate_button.uname)
+                  
 
 
 
