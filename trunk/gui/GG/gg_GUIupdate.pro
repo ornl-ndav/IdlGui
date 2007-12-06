@@ -47,3 +47,8 @@ END
 PRO activateFirstBase, Event, activate_status
 activateMap, Event, 'loading_geometry_base', activate_status
 END
+
+;activate or not the second base
+PRO activateSecondBase, Event, activate_status
+activateMap, Event, 'input_geometry_base', activate_status
+END

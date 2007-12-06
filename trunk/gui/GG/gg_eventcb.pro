@@ -45,7 +45,8 @@ PRO load_geometry, Event
 
 ;desactivate first base
 activateFirstBase, Event, 0
-
+;activate second base
+activateSecondBase, Event, 1
 END
 
 
