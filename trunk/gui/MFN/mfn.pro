@@ -55,7 +55,7 @@ instrumentShortList = ['',$
 IF ((*global).ucams NE (*global).geek) THEN BEGIN
     MainBaseSize  = [700,500,400,340]
 endif else begin
-    MainBaseSize  = [700,500,800,500]
+    MainBaseSize  = [100,50,800,500]
 endelse
 
 MainBaseTitle = 'My First NeXus'
@@ -92,7 +92,7 @@ id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=InstrumentIndex
 
 IF (InstrumentIndex NE 0) THEN BEGIN
-    validateOuputPath2, Event,0
+    validateOuputPath2, Event, 1
 ENDIF
 
 

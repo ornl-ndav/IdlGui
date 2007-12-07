@@ -36,12 +36,13 @@ output_text = { size  : [output_button.size[0]+XYoff[0],$
                 value : '~/local/'}
 
 XYoff = [0,40]
-output_button2 = { size  : [output_button.size[0]+XYoff[0],$
-                            output_button.size[1]+XYoff[1],$
-                            output_button.size[2],$
-                            output_button.size[3]],$
-                   uname : 'output_button2',$
-                   value : '2nd Output path...'}
+output_button2 = { size    : [output_button.size[0]+XYoff[0],$
+                              output_button.size[1]+XYoff[1],$
+                              output_button.size[2],$
+                              output_button.size[3]],$
+                   uname   : 'output_button2',$
+                   value   : '2nd Output path...',$
+                   tooltip : 'Tips: /SNS/<instrument>/shared -> is accessible by all users of the instrument; /SNS/<instrument>/<proposa>/shared -> is accessible by all users of given proposal'}
 
 XYoff = [130,0]
 output_text2 = { size  : [output_button2.size[0]+XYoff[0],$
@@ -125,7 +126,8 @@ button2 = WIDGET_BUTTON(base,$
                         SCR_YSIZE = output_button2.size[3],$
                         UNAME     = output_button2.uname,$
                         VALUE     = output_button2.value,$
-                        SENSITIVE = 0)
+                        SENSITIVE = 0,$
+                        TOOLTIP   = output_button2.tooltip)
 
 text2 = WIDGET_TEXT(base,$
                     XOFFSET   = output_text2.size[0],$
