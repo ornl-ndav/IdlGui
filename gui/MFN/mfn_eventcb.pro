@@ -227,18 +227,18 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             IF (err_listening01[0] NE '') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
                 AppendMyLogBook, Event, '-> ERROR'
-                AppendMyLogBook, Event, err_listening
+                AppendMyLogBook, Event, err_listening01
             ENDIF ELSE BEGIN
                 putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 
                 cmd = 'nxtranslate ' + instrument + '_' + RunNumber + '.nxt'
                 text = '->Translate file: ' + cmd + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, text
-                spawn, cmd, listening, err_listening01
-                IF (err_listening01[0] NE '') THEN BEGIN
+                spawn, cmd, listening, err_listening02
+                IF (err_listening02[0] NE '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
                     AppendMyLogBook, Event, '-> ERROR'
-                    AppendMyLogBook, Event, err_listening
+                    AppendMyLogBook, Event, err_listening02
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, OK, PROCESSING
                 ENDELSE
