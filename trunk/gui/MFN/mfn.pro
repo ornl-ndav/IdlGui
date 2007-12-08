@@ -32,7 +32,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     hostname              : hostname,$
                     MacHostName           : 'jcbilheux12.local',$
                     debugGeomFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
-                    debugTranFileName     : 'SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006.nxt',$
+                    debugTranFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt',$
                     ucams                 : ucams,$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
