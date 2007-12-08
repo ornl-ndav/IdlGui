@@ -36,25 +36,17 @@ output_text = { size  : [output_button.size[0]+XYoff[0],$
                 value : '~/local/'}
 
 XYoff = [0,40]
-output_button2 = { size    : [output_button.size[0]+XYoff[0],$
-                              output_button.size[1]+XYoff[1],$
-                              output_button.size[2],$
-                              output_button.size[3]],$
-                   uname   : 'output_button2',$
-                   value   : '2nd Output path...',$
-                   tooltip : 'Tips: /SNS/<instrument>/shared -> is accessible by all users of the instrument; /SNS/<instrument>/<proposa>/shared -> is accessible by all users of given proposal'}
-
-XYoff = [130,0]
-output_text2 = { size  : [output_button2.size[0]+XYoff[0],$
-                          output_button2.size[1]+XYoff[1],$
-                          output_text.size[2],$
-                          output_text.size[3]],$
-                 uname : 'output_path_text2',$
-                 value : ''}
+shared_base = { size : [output_button.size[0]+XYoff[0],$
+                        output_button.size[1]+XYoff[1],$
+                        380,35],$
+                uname : 'shared_base'}
+button_list = { list : ['Instrument Shared Folder   ',$
+                        'Proposal Shared Folder     '],$
+                uname : 'shared_button'}
 
 XYoff = [0,45]
-go_button = { size  : [output_button2.size[0]+XYoff[0],$
-                       output_button2.size[1]+XYoff[1],$
+go_button = { size  : [shared_base.size[0]+XYoff[0],$
+                       shared_base.size[1]+XYoff[1],$
                        380,30],$
               uname : 'create_nexus_button',$
               value : 'C R E A T E   N E X U S'}
@@ -119,25 +111,19 @@ text = WIDGET_TEXT(base,$
                    UNAME     = output_text.uname,$
                    /EDITABLE)
 
-button2 = WIDGET_BUTTON(base,$
-                        XOFFSET   = output_button2.size[0],$
-                        YOFFSET   = output_button2.size[1],$
-                        SCR_XSIZE = output_button2.size[2],$
-                        SCR_YSIZE = output_button2.size[3],$
-                        UNAME     = output_button2.uname,$
-                        VALUE     = output_button2.value,$
-                        SENSITIVE = 0,$
-                        TOOLTIP   = output_button2.tooltip)
-
-text2 = WIDGET_TEXT(base,$
-                    XOFFSET   = output_text2.size[0],$
-                    YOFFSET   = output_text2.size[1],$
-                    SCR_XSIZE = output_text2.size[2],$
-                    SCR_YSIZE = output_text2.size[3],$
-                    VALUE     = output_text2.value,$
-                    UNAME     = output_text2.uname,$
-                    SENSITIVE = 0,$
-                   /EDITABLE)
+base_shared = WIDGET_BASE(base,$
+                          XOFFSET   = shared_base.size[0],$
+                          YOFFSET   = shared_base.size[1],$
+                          SCR_XSIZE = shared_base.size[2],$
+                          SCR_YSIZE = shared_base.size[3],$
+                          UNAME     = shared_base.uname)
+                          
+group = CW_BGROUP(base_shared,$
+                  button_list.list,$
+                  UNAME      = button_list.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = [0,0],$
+                  ROW        = 1)
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = go_button.size[0],$
@@ -154,8 +140,8 @@ text = WIDGET_TEXT(base,$
                    SCR_XSIZE = log_book.size[2],$
                    SCR_YSIZE = log_book.size[3],$
                    VALUE     = '',$
-                   UNAME     = log_book.uname,$
                    /EDITABLE,$
+                   UNAME     = log_book.uname,$
                    /WRAP,$
                    /SCROLL)
 
@@ -166,7 +152,6 @@ text = WIDGET_TEXT(base,$
                    SCR_YSIZE = my_log_book.size[3],$
                    VALUE     = '',$
                    UNAME     = my_log_book.uname,$
-                   /EDITABLE,$
                    /WRAP,$
                    /SCROLL)
 
