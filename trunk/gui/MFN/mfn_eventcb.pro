@@ -41,23 +41,6 @@ ENDIF
 END
 
 
-
-
-PRO output_path2, Event ;in mfn_eventcb.pro
-title = 'Select a Second Directory where the NeXus will be copied'
-Instrument = getInstrument(Event)
-path  = '/SNS/' + Instrument + '/'
-OutputPath2 = DIALOG_PICKFILE(TITLE             = title,$
-                             PATH              = path,$
-                             /MUST_EXIST,$
-                             /DIRECTORY)
-IF (OutputPath2 NE '') THEN BEGIN
-    putOutputPath2, Event, OutputPath2
-ENDIF
-END
-
-
-
 PRO validateOrNotGoButton, Event
 RunNumber = getRunNumber(Event)
 outputPath = getOutputPath(Event)
@@ -71,20 +54,6 @@ ENDELSE
 ;validate go button
 validateCreateNexusButton, Event, validate_status
 END
-
-
-
-PRO validateOrNotSecondPath, Event
-Instrument = getInstrument(Event)
-IF (Instrument NE '') THEN BEGIN
-    validate_status = 1
-ENDIF else begin
-    validate_status = 0
-ENDELSE
-;validate or notsecond path
-validateOuputPath2, Event,validate_status
-END
-
 
 
 PRO CreateNexus, Event
@@ -388,33 +357,6 @@ END
 ;;     putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
 ;;     message = '> Merging and Translation ........ ' + PROCESSING
 ;;     AppendLogBook, Event, message
-
-;; ENDELSE
-
-
-
-
-
-
-
-
-
-
-;; END
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 pro MAIN_REALIZE, wWidget
