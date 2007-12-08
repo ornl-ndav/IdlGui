@@ -21,6 +21,7 @@ cd, CurrentFolder
 .run mfn_is.pro
 .run mfn_GUIupdate.pro
 .run mfn_utilities.pro
+.run mfn_LogBookInterface.pro
 
 ;procedures
 

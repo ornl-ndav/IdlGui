@@ -57,7 +57,23 @@ log_book = { size  : [go_button.size[0]+XYoff[0],$
                       380,150],$
              uname : 'log_book'}
 
-XYOFF = [0,log_book.size[3]+5]
+XYoff = [0,Log_book.size[3]+10]
+STGlabel = { size  : [log_book.size[0]+XYoff[0],$
+                      log_book.size[1]+XYoff[1]],$
+             value : 'Message:'}
+XYoff = [55,-5]
+STGtext = { size  : [STGlabel.size[0]+XYoff[0],$
+                     STGlabel.size[1]+XYoff[1],$
+                     228,35],$
+            uname : 'send_to_geek_text'}
+XYoff = [STGtext.size[2],0]
+STGbutton = { size  : [STGtext.size[0]+XYoff[0],$
+                       STGtext.size[1]+XYoff[1],$
+                       100,35],$
+              uname : 'send_to_geek_button',$
+              value : 'Send To Geek'}
+                     
+XYOFF = [0,log_book.size[3]+45]
 my_log_book = { size  : [log_book.size[0]+XYoff[0],$
                          log_book.size[1]+XYoff[1],$
                          780,150],$
@@ -140,10 +156,32 @@ text = WIDGET_TEXT(base,$
                    SCR_XSIZE = log_book.size[2],$
                    SCR_YSIZE = log_book.size[3],$
                    VALUE     = '',$
-                   /EDITABLE,$
                    UNAME     = log_book.uname,$
                    /WRAP,$
                    /SCROLL)
+
+label = WIDGET_LABEL(base,$
+                     XOFFSET = STGlabel.size[0],$
+                     YOFFSET = STGlabel.size[1],$
+                     VALUE   = STGlabel.value)
+
+text = WIDGET_TEXT(base,$
+                   XOFFSET   = STGtext.size[0],$
+                   YOFFSET   = STGtext.size[1],$
+                   SCR_XSIZE = STGtext.size[2],$
+                   SCR_YSIZE = STGtext.size[3],$
+                    UNAME     = STGtext.uname,$
+                   /EDITABLE)
+
+button = WIDGET_BUTTON(base,$
+                       XOFFSET   = STGbutton.size[0],$
+                       YOFFSET   = STGbutton.size[1],$
+                       SCR_XSIZE = STGbutton.size[2],$
+                       SCR_YSIZE = STGbutton.size[3],$
+                       VALUE     = STGbutton.value,$
+                       UNAME     = STGbutton.uname)
+
+
 
 text = WIDGET_TEXT(base,$
                    XOFFSET   = my_log_book.size[0],$

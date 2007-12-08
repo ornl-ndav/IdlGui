@@ -29,6 +29,8 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    instrument            : '',$
+                    LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
                     hostname              : hostname,$
                     MacHostName           : 'jcbilheux12.local',$
                     debugGeomFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
@@ -55,12 +57,13 @@ instrumentShortList = ['',$
                        'REF_M',$
                        'ARCS']
 (*(*global).instrumentShortList) = instrumentShortList
+(*global).instrument = instrumentShortList[instrumentIndex]
 
 IF ((*global).ucams NE (*global).geek) THEN BEGIN
     MainBaseSize  = [700,500,400,340]
 endif else begin
-    MainBaseSize  = [100,50,800,500]
-endelse
+    MainBaseSize  = [100,50,800,540]
+ endelse
 
 MainBaseTitle = 'My First NeXus'
         
