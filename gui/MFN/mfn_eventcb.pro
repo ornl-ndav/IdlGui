@@ -96,70 +96,80 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).FAILED
 
-putMyLogBook, Event, '#### DEBUGGING TOOL ####'
+putMyLogBook, Event, '############ GENERAL VARIABLE #############'
 
 ;get RunNumber
 RunNumber = getRunNumber(Event)
-AppendMyLogBook, Event, 'Run Number: ' + RunNumber
+AppendMyLogBook, Event, 'Run Number     : ' + RunNumber
 ;get instrument
 instrument = getInstrument(Event)
-AppendMyLogBook, Event, 'Instrument: ' + Instrument
+AppendMyLogBook, Event, 'Instrument     : ' + Instrument
 ;get prenexus path
 prenexus_path  = (*global).prenexus_path
-AppendMyLogBook, Event, 'Prenexus_path : ' + prenexus_path
+AppendMyLogBook, Event, 'Prenexus_path  : ' + prenexus_path
 ;create base file name
 base_file_name = prenexus_path + '/' + instrument + '_' + RunNumber
+AppendMyLogBook, Event, 'Base file name : ' + base_file_name
 ;staging area
 stagingArea = (*global).staging_folder
-
+AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
+AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
+AppendMyLogBook, Event, ''
 ;####### run the runmp_flags tool first ######
-message = '>Creating Histo. Mapped Files ... ' + processing
+message = '> Creating Histo. Mapped Files ... ' + processing
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
-cmd_text = 'Creating Histo Mapped Files : ' + cmd
+cmd_text = '> Creating Histo Mapped Files : '
 AppendMyLogBook, Event, cmd_text
-;spawn, cmd, listening, err_listening       ;remove_me
+cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+AppendMyLogBook, Event, cmd_text
+;spawn, cmd, listening, err_listening ;remove_me
 err_listening = '' ;remove_me
 IF (err_listening[0] NE '') THEN BEGIN
-    AppendMyLogBook, Event, '-> ERROR'
-    AppendMyLogBook, Event, err_listening
-    putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+   AppendMyLogBook, Event, err_listening
+   putTextAtEndOfLogBook, Event, FAILED, PROCESSING
 ENDIF ELSE BEGIN
-    putTextAtEndOfLogBook, Event, OK, PROCESSING
-    AppendMyLogBook, Event, '... DONE'
+   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+   putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
 
 ;###### Copy the prenexus file into stagging area ######
-message = '>Importing staging files ... ' + processing
+message = '> Importing staging files ........ ' + processing
 appendLogBook, Event, message
+appendMyLogBook, Event, ''
 ;importing beamtime and cvlist
 cmd = 'cp ' + prenexus_path + '/../*.xml ' + stagingArea
-cmd_text = 'Importing beamtime and cvlist xml files: ' + cmd
+cmd_text = '> Importing beamtime and cvlist xml files: '
+AppendMyLogBook, Event, cmd_text
+cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
 ;spawn, cmd, listening,err_listening1 ;remove_me
 err_listening1 = ''
 IF (err_listening1[0] NE '') THEN BEGIN
-    AppendMyLogBook, Event, '-> ERROR'
-    AppendMyLogBook, Event, err_listening
+   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+   AppendMyLogBook, Event, err_listening
 ENDIF ELSE BEGIN
-    AppendMyLogBook, Event, '... DONE'
+   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
 
 ;importing other xml files
 cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
-cmd_text = 'Importing cvinfo and runinfo xml files: ' + cmd
+cmd_text = '> Importing cvinfo and runinfo xml files: '
+AppendMyLogBook, Event, cmd_text
+cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
 ;spawn, cmd, listening,err_listening2
 err_listening2 = ''
 IF (err_listening[0] NE '') THEN BEGIN
-    AppendMyLogBook, Event, '-> ERROR'
-    AppendMyLogBook, Event, err_listening
+   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+   AppendMyLogBook, Event, err_listening
 ENDIF ELSE BEGIN
-    AppendMyLogBook, Event, '... DONE'
+   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
 
 ;##### get the geometry file from its location
-text = 'Importing geometry and translation files: '
+text = '> Importing geometry and translation files: '
 AppendMyLogBook, Event, text
 text = '-> Get up to date geometry and translation files:'
 AppendMyLogBook, Event, text
@@ -197,11 +207,11 @@ base_name = stagingArea + '/'+ instrument + '_' + RunNumber
 base_name += '_neutron_histo'
 base_histo_name = base_name + '_mapped.dat'
 p0_file_name = base_name + '_p0.dat'
-text = 'Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
+text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
 AppendMyLogBook, Event, text
 IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
     putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
-    message = '>Working on Multi Polarization States Files:'
+    message = '> Working on Multi Polarization States Files:'
     AppendLogBook, Event, message
 
     another_state = 1
@@ -211,7 +221,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         
         cmd = 'mv ' + p_file_name + ' ' + base_histo_name
         cmd_text = '--> ' + cmd_text
-        text = '->Renaming p' + strcompress(state_index,/remove_all)
+        text = '-> Renaming p' + strcompress(state_index,/remove_all)
         text += ' state : ' + cmd_text + ' ... ' + PROCESSING
         AppendMyLogBook, Event, text    
         spawn, cmd, listening, err_listening0
@@ -221,7 +231,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 
             cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + stagingArea
-            text = '->Merging xml files: ' + cmd + ' ... ' + PROCESSING
+            text = '-> Merging xml files: ' + cmd + ' ... ' + PROCESSING
             AppendMyLogBook, Event, text
             spawn, cmd, listening, err_listening01
             IF (err_listening01[0] NE '') THEN BEGIN
@@ -232,7 +242,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
                 putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 
                 cmd = 'nxtranslate ' + instrument + '_' + RunNumber + '.nxt'
-                text = '->Translate file: ' + cmd + ' ... ' + PROCESSING
+                text = '-> Translate file: ' + cmd + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, text
                 spawn, cmd, listening, err_listening02
                 IF (err_listening02[0] NE '') THEN BEGIN
@@ -247,7 +257,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             
 ;removing *histo_mapped.dat file
         cmd = 'rm ' + base_histo_name
-        text = '->Removing base file: ' + cmd + ' ... ' + PROCESSING
+        text = '-> Removing base file: ' + cmd + ' ... ' + PROCESSING
         AppendMyLogBook, Event, text
         spawn, cmd, listening, err_listening02
         IF (err_listening02[0] NE '') THEN BEGIN
@@ -269,7 +279,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         
 ENDIF ELSE BEGIN
     putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-    message = '>Merging and Translation ... ' + PROCESSING
+    message = '> Merging and Translation ........ ' + PROCESSING
     AppendLogBook, Event, message
 
 ENDELSE
