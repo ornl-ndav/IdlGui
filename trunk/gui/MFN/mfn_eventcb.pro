@@ -95,6 +95,7 @@ widget_control,id,get_uvalue=global
 PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).FAILED
+NbrSteps   = strcompress(3,/remove_all)
 
 putMyLogBook, Event, '############ GENERAL VARIABLE #############'
 
@@ -116,10 +117,12 @@ AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
 ;####### run the runmp_flags tool first ######
-message = '> Creating Histo. Mapped Files ... ' + processing
+message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files ... ' + processing
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
-cmd_text = '> Creating Histo Mapped Files : '
+cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
+AppendMyLogBook, Event, cmd_text
+cmd_text = '> Creating Histo Mapped Files: '
 AppendMyLogBook, Event, cmd_text
 cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
@@ -135,9 +138,10 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;###### Copy the prenexus file into stagging area ######
-message = '> Importing staging files ........ ' + processing
+message = '>(2/'+NbrSteps+') Importing staging files ........ ' + processing
 appendLogBook, Event, message
 appendMyLogBook, Event, ''
+AppendMyLogBook, Event, 'PHASE 2/' + NbrSteps + ': IMPORT FILES'
 ;importing beamtime and cvlist
 cmd = 'cp ' + prenexus_path + '/../*.xml ' + stagingArea
 cmd_text = '> Importing beamtime and cvlist xml files: '
@@ -152,6 +156,7 @@ IF (err_listening1[0] NE '') THEN BEGIN
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
+AppendMyLogBook, Event, ''
 
 ;importing other xml files
 cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
@@ -167,32 +172,39 @@ IF (err_listening[0] NE '') THEN BEGIN
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
+AppendMyLogBook, Event, ''
 
 ;##### get the geometry file from its location
-text = '> Importing geometry and translation files: '
+text = '> Importing translation file: '
 AppendMyLogBook, Event, text
 text = '-> Get up to date geometry and translation files:'
 AppendMyLogBook, Event, text
-file_array = get_up_to_date_geo_tran_file(instrument)
-geometry_file    = file_array[0]
-translation_file = file_array[1]
-text = '--> geometry file is: ' + geometry_file
+IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
+   geometry_file    = (*global).debugGeomFileName 
+   translation_file = (*global).debugTranFileName
+ENDIF ELSE BEGIN
+   file_array = get_up_to_date_geo_tran_file(instrument)
+   geometry_file    = file_array[0]
+   translation_file = file_array[1]
+ENDELSE
+text = '--> geometry file is   : ' + geometry_file
 AppendMyLogBook, Event, text
 text = '--> translation file is: ' + translation_file
 AppendMyLogBook, Event, text
-text = '-> Copy geometry and translation files in staging area:'
+text = '-> Copy translation file in staging area:'
 AppendMyLogBook, Event, text
-cmd = 'cp ' + geometry_file + ' ' + translation_file + ' ' + stagingArea
-cmd_text = '> ' + cmd
+cmd = 'cp ' + translation_file + ' ' + stagingArea
+cmd_text = '--> ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
 ;spawn, cmd, listening, err_listening3
 err_listening3 = ''
 IF (err_listening3[0] NE '') THEN BEGIN
-    AppendMyLogBook, Event, '-> ERROR'
-    AppendMyLogBook, Event, err_listening
+   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+   AppendMyLogBook, Event, err_listening
 ENDIF ELSE BEGIN
-    AppendMyLogBook, Event, '... DONE'
+   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
+AppendMyLogBook, Event, ''
 
 IF (err_listening1[0] NE '' AND $
     err_listening2[0] NE '' AND $
@@ -202,6 +214,9 @@ ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
 
+end
+
+pro temp
 ;if there is more that 1 histo, rename first one
 base_name = stagingArea + '/'+ instrument + '_' + RunNumber
 base_name += '_neutron_histo'
