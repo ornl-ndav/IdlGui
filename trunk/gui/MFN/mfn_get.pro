@@ -37,3 +37,8 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, get_value=value
 RETURN, value
 END
+
+FUNCTION getProposalNumber, Event, prenexus_path
+textSplit = strsplit(prenexus_path,'/',/extract)
+RETURN, textSplit[1]
+END
