@@ -10,7 +10,7 @@ IF (instrument NE '') THEN BEGIN
     text = message + 'PROCESSING'
     putLogBook, Event, text
 ;check if runNumber exist
-    result=isPreNexusExist(Event, RunNumber, Instrument)
+    result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
     IF (result) THEN BEGIN      ;prenexus exist
         putLogBook, Event, message + 'OK'
     ENDIF ELSE BEGIN
