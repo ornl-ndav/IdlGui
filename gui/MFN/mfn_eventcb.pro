@@ -304,10 +304,10 @@ ENDIF ELSE BEGIN
       message = '--> Check if Instrument Shared Folder is selected ... YES'
       AppendMyLogBook, Event, message
       InstrSharedFolder = '/SNS/' + instrument + '/shared/'
-      message = '--> Instrument Shared Folder is: ' + InstrSharedFolder
+      message = '---> Instrument Shared Folder is: ' + InstrSharedFolder
       AppendMyLogBook, Event, message
    ENDIF ELSE BEGIN
-      message = '--> Check if Instrument Shared Folder is selected ... NO'
+      message = '---> Check if Instrument Shared Folder is selected ... NO'
       AppendMyLogBook, Event, message
       InstrSharedFolder = ''
    ENDELSE
@@ -317,12 +317,12 @@ ENDIF ELSE BEGIN
       message = '--> Check if Proposal Shared Folder is selected ..... YES'
       AppendMyLogBook, Event, message
       proposalNumber = getProposalNumber(Event, prenexus_path)
-      ProposalSharedFolder = '/SNS/' + instrument + '/proposalNumber/'
-      ProposalSharedFolder += 'shared'
-      message = '--> Proposal Shared Folder is: ' + ProposalSharedFolder
+      ProposalSharedFolder = '/SNS/' + instrument + '/' + proposalNumber
+      ProposalSharedFolder += '/shared/'
+      message = '---> Proposal Shared Folder is: ' + ProposalSharedFolder
       AppendMyLogBook, Event, message
    ENDIF ELSE BEGIN
-      message = '--> Check if Proposal Shared Folder is selected ..... NO'
+      message = '---> Check if Proposal Shared Folder is selected ..... NO'
       AppendMyLogBook, Event, message
       ProposalSharedFolder = ''
    ENDELSE
