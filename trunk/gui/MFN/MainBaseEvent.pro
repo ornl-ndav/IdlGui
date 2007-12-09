@@ -33,14 +33,14 @@ CASE Event.id OF
         validateOrNotGoButton, Event
     end
     
-;Output path
-    widget_info(wWidget, FIND_BY_UNAME='output_button2'): begin
-        output_path2, Event     ;in mfn_eventcb.pro
-    end
-    
 ;Create NeXus
     widget_info(wWidget, FIND_BY_UNAME='create_nexus_button'): begin
         CreateNexus, Event
+    end
+
+;Send to Geek
+    widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
+       mfn_LogBookInterface, Event
     end
 
     ELSE:
