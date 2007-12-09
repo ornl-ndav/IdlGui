@@ -64,12 +64,12 @@ STGlabel = { size  : [log_book.size[0]+XYoff[0],$
 XYoff = [55,-5]
 STGtext = { size  : [STGlabel.size[0]+XYoff[0],$
                      STGlabel.size[1]+XYoff[1],$
-                     228,35],$
+                     228,30],$
             uname : 'send_to_geek_text'}
 XYoff = [STGtext.size[2],0]
 STGbutton = { size  : [STGtext.size[0]+XYoff[0],$
                        STGtext.size[1]+XYoff[1],$
-                       100,35],$
+                       100,30],$
               uname : 'send_to_geek_button',$
               value : 'Send To Geek'}
                      

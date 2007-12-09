@@ -216,6 +216,7 @@ ENDIF ELSE BEGIN
    AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
    message += '(Normal): .... ' + PROCESSING
    appendLogBook, Event, message
+   AppendMyLogBook, Event, ''
 
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
@@ -233,7 +234,8 @@ ENDIF ELSE BEGIN
    ENDIF ELSE BEGIN
       putTextAtEndOfMyLogBook, Event, OK, PROCESSING
    ENDELSE
-   
+   AppendMyLogBook, Event, ''
+
 ;merging xml files
    AppendMyLogBook, Event, '-> Merging the xml files:'
    cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
@@ -249,6 +251,7 @@ ENDIF ELSE BEGIN
    ENDIF ELSE BEGIN
       putTextAtEndOfMyLogBook, Event, OK, PROCESSING
    ENDELSE
+   AppendMyLogBook, Event, ''
 
 ;translating the file
    AppendMyLogBook, Event, '-> Translating the files:'
@@ -267,29 +270,63 @@ ENDIF ELSE BEGIN
    ENDIF ELSE BEGIN
       putTextAtEndOfMyLogBook, Event, OK, PROCESSING
    ENDELSE
+   AppendMyLogBook, Event, ''
    
 ;move final nexus file into predefined location(s)
 ;moving the final nexus file created
    AppendMyLogBook, Event, '-> Moving the NeXus file:'
    NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
    AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
-;get destination folders
 
-;; cmd = 'nxtranslate ' + TranslationFile + ' --hdf5'
-;;    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-;;    AppendMyLogBook, Event, cmd_text
-;; ;spawn, cmd, listening, translation_error
-;;    translation_error = ''                  ;REMOVE_ME
-;;    IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
-;;       putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-;;       AppendMyLogBook, Event, err_listening
-;;       ;jump to end of full process and display error in LogBook
-;;       ;?????????????????????????
-;;    ENDIF ELSE BEGIN
-;;       putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-;;    ENDELSE
-   
-   
+;get destination folders
+;Main output path
+   output_path = getTextFieldValue(Event, 'output_path_text')
+   IF (output_path NE '') THEN BEGIN
+      message = '--> Check if there is a Main Output Path ... YES'
+      AppendMyLogBook, Event, message
+      message = '---> Main output path is : ' + output_path
+      AppendMyLogBook, Event, message
+      message = '---> Check if output path exists ... ' + PROCESSING
+      AppendMyLogBook, Event, message
+      IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+         putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
+      ENDIF ELSE BEGIN
+         putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+         output_path = ''
+      ENDELSE
+   ENDIF ELSE BEGIN
+      message = '--> Check if there is a Main Output Path ... NO'
+      AppendMyLogBook, Event, message
+   ENDELSE
+
+;Instrument Shared Folder
+   IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
+      message = '--> Check if Instrument Shared Folder is selected ... YES'
+      AppendMyLogBook, Event, message
+      InstrSharedFolder = '/SNS/' + instrument + '/shared/'
+      message = '--> Instrument Shared Folder is: ' + InstrSharedFolder
+      AppendMyLogBook, Event, message
+   ENDIF ELSE BEGIN
+      message = '--> Check if Instrument Shared Folder is selected ... NO'
+      AppendMyLogBook, Event, message
+      InstrSharedFolder = ''
+   ENDELSE
+
+;Proposal Shared Folder
+   IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
+      message = '--> Check if Proposal Shared Folder is selected ..... YES'
+      AppendMyLogBook, Event, message
+      proposalNumber = getProposalNumber(Event, prenexus_path)
+      ProposalSharedFolder = '/SNS/' + instrument + '/proposalNumber/'
+      ProposalSharedFolder += 'shared'
+      message = '--> Proposal Shared Folder is: ' + ProposalSharedFolder
+      AppendMyLogBook, Event, message
+   ENDIF ELSE BEGIN
+      message = '--> Check if Proposal Shared Folder is selected ..... NO'
+      AppendMyLogBook, Event, message
+      ProposalSharedFolder = ''
+   ENDELSE
+
 ENDELSE ;end of normal mode (no polarization)
 
 IF (TranslationError EQ 1) THEN BEGIN
