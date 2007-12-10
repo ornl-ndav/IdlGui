@@ -27,7 +27,7 @@ END
 
 
 
-PRO output_path, Event ;in mfn_eventcb.pro
+PRO output_path, Event ;in makenexus_eventcb.pro
 title = 'Select the Main Output Directory'
 path  = '~/'
 OutputPath = DIALOG_PICKFILE(TITLE             = title,$
@@ -213,7 +213,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
     
 ENDIF ELSE BEGIN
  
-    multi_pola_state = 1 ;we are working with the multi_polarization state
+    multi_pola_state = 0 ;we are working in normal mode
     putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
     AppendMyLogBook, Event, ''
     AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
@@ -295,18 +295,21 @@ if (multi_pola_state) then begin
 
 
 endif else begin
+
     NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
     AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
     AppendMyLogBook, Event, ''
+    NexusToMove = [NexusFile]
+
 endelse
 
 ;get destination folders
 ;Main output path
 output_path = getTextFieldValue(Event, 'output_path_text')
 IF (output_path NE '') THEN BEGIN
-    message = '--> Check if there is a Main Output Path ... YES (' + output_path + ')'
+    message = '-> Check if there is a Main Output Path ... YES (' + output_path + ')'
     AppendMyLogBook, Event, message
-    message = '---> Check if output path exists ........... ' + PROCESSING
+    message = '--> Check if output path exists ........... ' + PROCESSING
     AppendMyLogBook, Event, message
     IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
         putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
@@ -315,7 +318,7 @@ IF (output_path NE '') THEN BEGIN
         output_path = ''
     ENDELSE
 ENDIF ELSE BEGIN
-    message = '--> Check if there is a Main Output Path ... NO'
+    message = '-> Check if there is a Main Output Path ... NO'
     AppendMyLogBook, Event, message
 ENDELSE
 AppendMyLogBook, Event, ''
@@ -323,19 +326,19 @@ AppendMyLogBook, Event, ''
 ;Instrument Shared Folder
 IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
     InstrSharedFolder = '/SNS/' + instrument + '/shared/'
-    message = '--> Check if Instrument Shared Folder is selected ... YES (' + $
+    message = '-> Check if Instrument Shared Folder is selected ... YES (' + $
       InstrSharedFolder + ')'
     AppendMyLogBook, Event, message
     IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
-        message = '--> Check if Instrument Shared Folder exists ........ YES'
+        message = '--> Check if Instrument Shared Folder exists ....... YES'
         AppendMyLogBook, Event, message
     ENDIF ELSE BEGIN
-        message = '--> Check if Instrument Shared Folder exists ........ NO'
+        message = '--> Check if Instrument Shared Folder exists ....... NO'
         AppendMyLogBook, Event, message
         InstrSharedFolder = ''
     ENDELSE
 ENDIF ELSE BEGIN
-    message = '---> Check if Instrument Shared Folder is selected ... NO'
+    message = '-> Check if Instrument Shared Folder is selected ... NO'
     AppendMyLogBook, Event, message
     InstrSharedFolder = ''
 ENDELSE
@@ -346,24 +349,84 @@ IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
     proposalNumber = getProposalNumber(Event, prenexus_path)
     ProposalSharedFolder = '/SNS/' + instrument + '/' + proposalNumber
     ProposalSharedFolder += '/shared/'
-    message = '--> Check if Proposal Shared Folder is selected ..... YES (' +$
+    message = '-> Check if Proposal Shared Folder is selected ..... YES (' +$
       ProposalSharedFolder + ')'
     AppendMyLogBook, Event, message
     IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
-        message = '--> Check if Proposal Shared Folder exists .......... YES'
+        message = '--> Check if Proposal Shared Folder exists ......... YES'
         AppendMyLogBook, Event, message
     ENDIF ELSE BEGIN
-        message = '--> Check if Proposal Shared Folder exists .......... NO'
+        message = '--> Check if Proposal Shared Folder exists ......... NO'
         AppendMyLogBook, Event, message
         ProposalSharedFolder = ''
     ENDELSE
 ENDIF ELSE BEGIN
-    message = '---> Check if Proposal Shared Folder is selected ..... NO'
+    message = '-> Check if Proposal Shared Folder is selected ..... NO'
     AppendMyLogBook, Event, message
     ProposalSharedFolder = ''
 ENDELSE
 AppendMyLogBook, Event, ''
 
+;move only if at least one of the three path exists
+IF (output_path NE '' OR $
+    InstrSharedFolder NE '' OR $
+    ProposalSharedFolder NE '') THEN BEGIN
+
+    sz = (size(NexusToMove))(1)
+    IF (sz EQ 1) THEN BEGIN
+        message = '-> Moving nexus file:'
+        AppendMyLogBook, Event, message
+        cmd = 'cp ' + NeXusToMove[0] 
+        IF (output_path NE '') THEN BEGIN
+            cmd1 = cmd + ' ' + output_path
+            cmd1_text = '> ' + cmd1 + ' ... ' + PROCESSING
+            AppendMyLogBook, Event, cmd1_text
+            ;spawn, cmd1, listening
+            listening = ['']  ;remove_me
+            IF (listening[0] EQ '') THEN BEGIN
+                putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+            ENDIF ELSE BEGIN
+                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+            ENDELSE
+        ENDIF
+
+        IF (InstrSharedFolder NE '') THEN BEGIN
+            cmd2 = cmd + ' ' + InstrSharedFolder
+            cmd2_text = '> ' + cmd2 + ' ... ' + PROCESSING
+            AppendMyLogBook, Event, cmd2_text
+            ;spawn, cmd2, listening
+            listening = ['']  ;remove_me
+            IF (listening[0] EQ '') THEN BEGIN
+                putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+            ENDIF ELSE BEGIN
+                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+            ENDELSE
+        ENDIF
+
+        IF (ProposalSharedFolder NE '') THEN BEGIN
+            cmd3 = cmd +' ' + ProposalSharedFolder
+            cmd3_text = '> ' + cmd3 + ' ... ' + PROCESSING
+            AppendMyLogBook, Event, cmd3_text
+            ;spawn, cmd3, listening
+            listening = ['']    ;REMOVE_ME
+            IF (listening[0] EQ '') THEN BEGIN ;it worked
+                putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+            ENDIF ELSE BEGIN
+                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+            ENDELSE
+        ENDIF
+        AppendMyLogBook, Event, ''
+        
+    ENDIF ELSE BEGIN
+        message = '-> Moving nexus files:'
+        AppendMyLogBook, Event, message
+        
+    ENDELSE
+
+ENDIF ELSE BEGIN
+
+
+ENDELSE
 
 
 
@@ -452,6 +515,6 @@ widget_control,/hourglass
 widget_control,hourglass=0
 end
 
-pro mfn_eventcb, event
+pro makenexus_eventcb, event
 end
 

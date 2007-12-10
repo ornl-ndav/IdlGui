@@ -1,4 +1,4 @@
-Function mfn_GenerateIsoTimeStamp
+Function makenexus_GenerateIsoTimeStamp
 dateUnformated = systime()      ;ex: Thu Aug 23 16:15:23 2007
 DateArray = strsplit(dateUnformated,' ',/extract) 
 ;ISO8601 : 2007-08-23T12:20:34-04:00
@@ -27,7 +27,7 @@ END
 
 
 ;This function send by email a copy of the logBook
-PRO mfn_EmailLogBook, Event, FullFileName
+PRO makenexus_EmailLogBook, Event, FullFileName
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -42,7 +42,7 @@ spawn, 'hostname', hostname
 message = getTextFieldValue(Event, 'send_to_geek_text')
 
 ;email logBook
-text = "'Log Book of MFN - My First Nexus ("
+text = "'Log Book of MakeNeXus - My First Nexus ("
 text += (*global).version + ") sent by " + (*global).ucams
 text += " (" + (*global).instrument + ") from " + hostname + "."
 text += " Log Book is: " + FullFileName 
@@ -55,7 +55,7 @@ endif else begin
 endelse
 text += "'"
 
-cmd =  'echo ' + text + '| mail -s "MFN LogBook" j35@ornl.gov'
+cmd =  'echo ' + text + '| mail -s "MakeNeXus LogBook" j35@ornl.gov'
 spawn, cmd
 
 ;;; copy ROI files into /SNS/<instrument>/shared folder
@@ -101,7 +101,7 @@ END
 
 
 ;This function output the log book in the IDL_LogBook folder of j35
-PRO mfn_LogBookInterface, Event
+PRO makenexus_LogBookInterface, Event
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -109,7 +109,7 @@ widget_control,id,get_uvalue=global
 
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
-TimeStamp   = mfn_GenerateIsoTimeStamp()
+TimeStamp   = makenexus_GenerateIsoTimeStamp()
 program_name= (*global).program_name
 instrument  = (*global).instrument
 FullFileName = LogBookPath + program_name + '_' + instrument + '_'
@@ -141,7 +141,7 @@ endfor
 close,1
 free_lun,1
 
-mfn_EmailLogBook, Event, FullFileName
+makenexus_EmailLogBook, Event, FullFileName
 
 END
 
