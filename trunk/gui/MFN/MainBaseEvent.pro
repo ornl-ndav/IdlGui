@@ -13,7 +13,6 @@ CASE Event.id OF
     
 ;Instrument
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
-        validateOrNotSecondPath, Event
     end
 
 ;Run Number 

@@ -48,7 +48,7 @@ IF (RunNumber NE '' AND $
     RunNumber NE 0  AND $
     outputPath NE '') THEN BEGIN
     validate_status = 1
-ENDIF else begin
+ENDIF ELSE BEGIN
     validate_status = 0
 ENDELSE
 ;validate go button
@@ -64,15 +64,16 @@ widget_control,id,get_uvalue=global
 PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).FAILED
-NbrSteps   = strcompress(3,/remove_all)
+NbrSteps   = strcompress(4,/remove_all)
 
-putMyLogBook, Event, '############ GENERAL VARIABLE #############'
+putMyLogBook, Event, '############ GENERAL VARIABLES #############'
 
 ;get RunNumber
 RunNumber = getRunNumber(Event)
 AppendMyLogBook, Event, 'Run Number     : ' + RunNumber
 ;get instrument
 instrument = getInstrument(Event)
+(*global).instrument = instrument
 AppendMyLogBook, Event, 'Instrument     : ' + Instrument
 ;get prenexus path
 prenexus_path  = (*global).prenexus_path
@@ -86,7 +87,7 @@ AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
 ;####### run the runmp_flags tool first ######
-message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files ... ' + processing
+message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files ..... ' + processing
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
 cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
@@ -107,7 +108,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;###### Copy the prenexus file into stagging area ######
-message = '>(2/'+NbrSteps+') Importing staging files ........ ' + processing
+message = '>(2/'+NbrSteps+') Importing staging files .......... ' + processing
 appendLogBook, Event, message
 appendMyLogBook, Event, ''
 AppendMyLogBook, Event, 'PHASE 2/' + NbrSteps + ': IMPORT FILES'
@@ -203,137 +204,184 @@ text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSI
 AppendMyLogBook, Event, text
 TranslationError = 0 ;by default, everything is going to run smoothly
 IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
-
-   putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
-   AppendMyLogBook, Event, '=> Entering the multi-polarization states mode'
-   message += '(Multi-Polarization): ... ' + PROCESSING
-   appendLogBook, Event, message
-
+    
+    multi_pola_state = 1 ;we are working with the multi_polarization state
+    putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
+    AppendMyLogBook, Event, '=> Entering the multi-polarization states mode'
+    message += '(Multi-Polarization): ..... ' + PROCESSING
+    appendLogBook, Event, message
+    
 ENDIF ELSE BEGIN
  
-   putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-   AppendMyLogBook, Event, ''
-   AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
-   message += '(Normal): .... ' + PROCESSING
-   appendLogBook, Event, message
-   AppendMyLogBook, Event, ''
+    multi_pola_state = 1 ;we are working with the multi_polarization state
+    putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+    AppendMyLogBook, Event, ''
+    AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
+    message += '(Normal): ...... ' + PROCESSING
+    appendLogBook, Event, message
+    AppendMyLogBook, Event, ''
 
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
-   AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
-   cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
-   cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-   AppendMyLogBook, Event, cmd_text
+    AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
+    cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
+    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+    AppendMyLogBook, Event, cmd_text
 ;   spawn, cmd, listening, renaming_error
-   renaming_error = '' ;REMOVE_ME
-   IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
-      putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-      AppendMyLogBook, Event, err_listening
-      ;jump to end of full process and display error in LogBook
-      ;?????????????????????????
-   ENDIF ELSE BEGIN
-      putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-   ENDELSE
-   AppendMyLogBook, Event, ''
-
+    renaming_error = ''         ;REMOVE_ME
+    IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+                                ;jump to end of full process and display error in LogBook
+                                ;?????????????????????????
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
+    AppendMyLogBook, Event, ''
+    
 ;merging xml files
-   AppendMyLogBook, Event, '-> Merging the xml files:'
-   cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
-   cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-   AppendMyLogBook, Event, cmd_text
+    AppendMyLogBook, Event, '-> Merging the xml files:'
+    cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
+    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+    AppendMyLogBook, Event, cmd_text
 ;spawn, cmd, listening, merging_error
-   merging_error = ''                  ;REMOVE_ME
-   IF (merging_error[0] NE '') THEN BEGIN ;a problem in the merging occured
-      putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-      AppendMyLogBook, Event, err_listening
-      ;jump to end of full process and display error in LogBook
-      ;?????????????????????????
-   ENDIF ELSE BEGIN
-      putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-   ENDELSE
-   AppendMyLogBook, Event, ''
-
+    merging_error = ''          ;REMOVE_ME
+    IF (merging_error[0] NE '') THEN BEGIN ;a problem in the merging occured
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+                                ;jump to end of full process and display error in LogBook
+                                ;?????????????????????????
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
+    AppendMyLogBook, Event, ''
+    
 ;translating the file
-   AppendMyLogBook, Event, '-> Translating the files:'
-   TranslationFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxt'
-   AppendMyLogBook, Event, ' Translation file: ' + TranslationFile 
-   cmd = 'nxtranslate ' + TranslationFile + ' --hdf5'
-   cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-   AppendMyLogBook, Event, cmd_text
+    AppendMyLogBook, Event, '-> Translating the files:'
+    TranslationFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxt'
+    AppendMyLogBook, Event, ' Translation file: ' + TranslationFile 
+    cmd = 'nxtranslate ' + TranslationFile + ' --hdf5'
+    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+    AppendMyLogBook, Event, cmd_text
 ;spawn, cmd, listening, translation_error
-   translation_error = ''                  ;REMOVE_ME
-   IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
-      putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-      AppendMyLogBook, Event, err_listening
-      ;jump to end of full process and display error in LogBook
-      ;?????????????????????????
-   ENDIF ELSE BEGIN
-      putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-   ENDELSE
-   AppendMyLogBook, Event, ''
-   
-;move final nexus file into predefined location(s)
-;moving the final nexus file created
-   AppendMyLogBook, Event, '-> Moving the NeXus file:'
-   NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
-   AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
+    translation_error = ''      ;REMOVE_ME
+    IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+                                ;jump to end of full process and display error in LogBook
+                                ;?????????????????????????
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
+    AppendMyLogBook, Event, ''
+    
+ENDELSE                         ;end of normal mode (no polarization)
+
+IF (TranslationError EQ 1) THEN BEGIN
+    putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+ENDIF ELSE BEGIN
+    putTextAtEndOfLogBook, Event, OK, PROCESSING
+ENDELSE
+
+;move final nexus file(s) into predefined location(s)
+;moving the final nexus file(s) created
+message = '>(4/'+NbrSteps+') Moving NeXus to Final Location ... ' + processing
+appendLogBook, Event, message
+AppendMyLogBook, Event, 'PHASE 4/' + NbrSteps + ': MOVING FILES TO THEIR FINAL LOCATION'
+
+if (multi_pola_state) then begin
+
+
+
+
+endif else begin
+    NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
+    AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
+    AppendMyLogBook, Event, ''
+endelse
 
 ;get destination folders
 ;Main output path
-   output_path = getTextFieldValue(Event, 'output_path_text')
-   IF (output_path NE '') THEN BEGIN
-      message = '--> Check if there is a Main Output Path ... YES'
-      AppendMyLogBook, Event, message
-      message = '---> Main output path is : ' + output_path
-      AppendMyLogBook, Event, message
-      message = '---> Check if output path exists ... ' + PROCESSING
-      AppendMyLogBook, Event, message
-      IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
-         putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
-      ENDIF ELSE BEGIN
-         putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-         output_path = ''
-      ENDELSE
-   ENDIF ELSE BEGIN
-      message = '--> Check if there is a Main Output Path ... NO'
-      AppendMyLogBook, Event, message
-   ENDELSE
+output_path = getTextFieldValue(Event, 'output_path_text')
+IF (output_path NE '') THEN BEGIN
+    message = '--> Check if there is a Main Output Path ... YES (' + output_path + ')'
+    AppendMyLogBook, Event, message
+    message = '---> Check if output path exists ........... ' + PROCESSING
+    AppendMyLogBook, Event, message
+    IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+        output_path = ''
+    ENDELSE
+ENDIF ELSE BEGIN
+    message = '--> Check if there is a Main Output Path ... NO'
+    AppendMyLogBook, Event, message
+ENDELSE
+AppendMyLogBook, Event, ''
 
 ;Instrument Shared Folder
-   IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
-      message = '--> Check if Instrument Shared Folder is selected ... YES'
-      AppendMyLogBook, Event, message
-      InstrSharedFolder = '/SNS/' + instrument + '/shared/'
-      message = '---> Instrument Shared Folder is: ' + InstrSharedFolder
-      AppendMyLogBook, Event, message
-   ENDIF ELSE BEGIN
-      message = '---> Check if Instrument Shared Folder is selected ... NO'
-      AppendMyLogBook, Event, message
-      InstrSharedFolder = ''
-   ENDELSE
+IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
+    InstrSharedFolder = '/SNS/' + instrument + '/shared/'
+    message = '--> Check if Instrument Shared Folder is selected ... YES (' + $
+      InstrSharedFolder + ')'
+    AppendMyLogBook, Event, message
+    IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
+        message = '--> Check if Instrument Shared Folder exists ........ YES'
+        AppendMyLogBook, Event, message
+    ENDIF ELSE BEGIN
+        message = '--> Check if Instrument Shared Folder exists ........ NO'
+        AppendMyLogBook, Event, message
+        InstrSharedFolder = ''
+    ENDELSE
+ENDIF ELSE BEGIN
+    message = '---> Check if Instrument Shared Folder is selected ... NO'
+    AppendMyLogBook, Event, message
+    InstrSharedFolder = ''
+ENDELSE
+AppendMyLogBook, Event, ''
 
 ;Proposal Shared Folder
-   IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
-      message = '--> Check if Proposal Shared Folder is selected ..... YES'
-      AppendMyLogBook, Event, message
-      proposalNumber = getProposalNumber(Event, prenexus_path)
-      ProposalSharedFolder = '/SNS/' + instrument + '/' + proposalNumber
-      ProposalSharedFolder += '/shared/'
-      message = '---> Proposal Shared Folder is: ' + ProposalSharedFolder
-      AppendMyLogBook, Event, message
-   ENDIF ELSE BEGIN
-      message = '---> Check if Proposal Shared Folder is selected ..... NO'
-      AppendMyLogBook, Event, message
-      ProposalSharedFolder = ''
-   ENDELSE
-
-ENDELSE ;end of normal mode (no polarization)
-
-IF (TranslationError EQ 1) THEN BEGIN
-   putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
+    proposalNumber = getProposalNumber(Event, prenexus_path)
+    ProposalSharedFolder = '/SNS/' + instrument + '/' + proposalNumber
+    ProposalSharedFolder += '/shared/'
+    message = '--> Check if Proposal Shared Folder is selected ..... YES (' +$
+      ProposalSharedFolder + ')'
+    AppendMyLogBook, Event, message
+    IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
+        message = '--> Check if Proposal Shared Folder exists .......... YES'
+        AppendMyLogBook, Event, message
+    ENDIF ELSE BEGIN
+        message = '--> Check if Proposal Shared Folder exists .......... NO'
+        AppendMyLogBook, Event, message
+        ProposalSharedFolder = ''
+    ENDELSE
 ENDIF ELSE BEGIN
-   putTextAtEndOfLogBook, Event, OK, PROCESSING
+    message = '---> Check if Proposal Shared Folder is selected ..... NO'
+    AppendMyLogBook, Event, message
+    ProposalSharedFolder = ''
 ENDELSE
+AppendMyLogBook, Event, ''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
    
 END
 
