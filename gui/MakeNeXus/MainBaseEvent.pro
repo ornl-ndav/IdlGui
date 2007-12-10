@@ -17,13 +17,13 @@ CASE Event.id OF
 
 ;Run Number 
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
-        run_number, Event       ;in mfn_eventcb.pro
+        run_number, Event       ;in makenexus_eventcb.pro
         validateOrNotGoButton, Event
     end
     
 ;Output path
     widget_info(wWidget, FIND_BY_UNAME='output_button'): begin
-        output_path, Event      ;in mfn_eventcb.pro
+        output_path, Event      ;in makenexus_eventcb.pro
         validateOrNotGoButton, Event
     end
     
@@ -39,7 +39,7 @@ CASE Event.id OF
 
 ;Send to Geek
     widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
-       mfn_LogBookInterface, Event
+       makenexus_LogBookInterface, Event
     end
 
     ELSE:

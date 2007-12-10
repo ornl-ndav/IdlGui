@@ -9,23 +9,23 @@ cd, IdlUtilitiesPath
 ;and create the VM file.
 
 ;Build MFN GUI
-cd, CurrentFolder + '/mfnGUI/'
+cd, CurrentFolder + '/makenexusGUI/'
 .run MakeGui.pro
 
 ;Build all procedures
 cd, CurrentFolder
 
 ;utils functions
-.run mfn_get.pro
-.run mfn_put.pro
-.run mfn_is.pro
-.run mfn_GUIupdate.pro
-.run mfn_utilities.pro
-.run mfn_LogBookInterface.pro
+.run makenexus_get.pro
+.run makenexus_put.pro
+.run makenexus_is.pro
+.run makenexus_GUIupdate.pro
+.run makenexus_utilities.pro
+.run makenexus_LogBookInterface.pro
 
 ;procedures
 
 ;main functions
 .run MainBaseEvent.pro
-.run mfn_eventcb.pro
-.run mfn.pro
+.run makenexus_eventcb.pro
+.run makenexus.pro

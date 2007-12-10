@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'VERSION: MFN1.0.0'
+VERSION = 'VERSION: MakeNeXus1.0.0'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -28,7 +28,7 @@ CASE (hostname) OF
 ENDCASE 
 
 ;define global variables
-global = ptr_new ({ program_name          : 'MFN',$
+global = ptr_new ({ program_name          : 'MakeNeXus',$
                     instrumentShortList   : ptr_new(0L),$
                     instrument            : '',$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
@@ -40,7 +40,7 @@ global = ptr_new ({ program_name          : 'MFN',$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
                     output_path_1         : '~/local',$
-                    staging_folder        : '~/.mfn_staging',$
+                    staging_folder        : '~/.makenexus_staging',$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
@@ -65,7 +65,7 @@ endif else begin
     MainBaseSize  = [100,50,800,540]
  endelse
 
-MainBaseTitle = 'My First NeXus'
+MainBaseTitle = 'Make NeXus'
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -125,7 +125,7 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro mfn, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro makenexus, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 

@@ -40,8 +40,8 @@ shared_base = { size : [output_button.size[0]+XYoff[0],$
                         output_button.size[1]+XYoff[1],$
                         380,35],$
                 uname : 'shared_base'}
-button_list = { list : ['Instrument Shared Folder   ',$
-                        'Proposal Shared Folder     '],$
+button_list = { list : ['Copy -> Instrument Shared ',$
+                        'Copy -> Proposal Shared'],$
                 uname : 'shared_button'}
 
 XYoff = [0,45]
