@@ -9,28 +9,29 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 10;   //number of tools
+	final static int NUM_IMAGES = 11;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
   enum enumHostname {dev, heater, mrac, lrac, bac, bac2, unknown}
-  static String DEV = "dev.ornl.gov";
-  static String HEATER = "heater";
-  static String LRAC = "lrac";
-  static String MRAC = "mrac";
-  static String BAC = "bac.sns.gov";
-  static String BAC2 = "bac2";
+  static String DEV     = "dev.ornl.gov";
+  static String HEATER  = "heater";
+  static String LRAC    = "lrac";
+  static String MRAC    = "mrac";
+  static String BAC     = "bac.sns.gov";
+  static String BAC2    = "bac2";
   static String UNKNOWN = "unknown";
   
-  static String PLOTBSS = "/SNS/software/idltools/plotBSS";
-  static String REALIGN_BSS = "/SNS/software/idltools/RealignBSS";
-  static String REBIN_NEXUS = "/SNS/software/idltools/rebinNeXus";
-  static String DATA_REDUCTION = "/SNS/software/idltools/data_reduction";
-  static String REFL_SCALE = "/SNS/software/idltools/RefLScale";
-  static String REF_REDUCTION = "/SNS/software/idltools/ref_reduction"; 
+  static String PLOTBSS            = "/SNS/software/idltools/plotBSS";
+  static String REALIGN_BSS        = "/SNS/software/idltools/RealignBSS";
+  static String REBIN_NEXUS        = "/SNS/software/idltools/rebinNeXus";
+  static String DATA_REDUCTION     = "/SNS/software/idltools/data_reduction";
+  static String REFL_SCALE         = "/SNS/software/idltools/RefLScale";
+  static String REF_REDUCTION      = "/SNS/software/idltools/ref_reduction"; 
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
-  static String TS_REBIN_GUI = "/SNS/software/idltools/TS_rebin_GUI";
-  static String BSS_REDUCTION = "/SNS/software/idltools/BSSreduction";
+  static String TS_REBIN_GUI       = "/SNS/software/idltools/TS_rebin_GUI";
+  static String BSS_REDUCTION      = "/SNS/software/idltools/BSSreduction";
+  static String MAKENEXUS          = "/SNS/software/idltools/makeNeXus"; 
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -96,7 +97,8 @@ public class IdlToolsPortal implements ActionListener{
     images[7] = createImageIcon("/gov/ornl/sns/itools/images/miniREFreduction.gif");
     images[8] = createImageIcon("/gov/ornl/sns/itools/images/TS_rebin_batch.gif");
     images[9] = createImageIcon("/gov/ornl/sns/itools/images/BSSselection.gif");
-    
+    images[10]= createImageIcon("/gov/ornl/sns/itools/images/MakeNeXus.gif");
+      
 		//Define the help text that goes with each tool
 		//plotBSS
 		info[0] = "<html>This program plots data for the Backscattering instrument. It is also<br>" +
@@ -124,7 +126,9 @@ public class IdlToolsPortal implements ActionListener{
     info[8] = "<html>This programs rebin a set of run numbers.</html>";
     //BSSselection
     info[9] = "<html>Program that allows users to create a Region Of Interest (ROI) file for BASIS<br>" +
-    " and reduce the Backscattering Data.</html>";  
+    " and reduce the Backscattering Data.</html>";
+    //MakeNeXus
+    info[10] = "<html>Create NeXus files of normal or multi-polarization states event files</html>";
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -153,7 +157,8 @@ public class IdlToolsPortal implements ActionListener{
         "REFreduction (high resolution mode)",
         "REFreduction (low resolution mode)",
         "TS_rebin_gui",
-        "BSSreduction"};
+        "BSSreduction",
+        "makeNeXus"};
     
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
@@ -246,6 +251,9 @@ public class IdlToolsPortal implements ActionListener{
            System.exit(0);
          case 9: //BSSselection
            p = (Runtime.getRuntime()).exec(BSS_REDUCTION);
+           System.exit(0);
+         case 10: //makeNeXus
+           p = (Runtime.getRuntime()).exec(MAKENEXUS);
            System.exit(0);
          default: break;
            }
@@ -350,6 +358,10 @@ public class IdlToolsPortal implements ActionListener{
         switch (localHostname) {
         case bac2:
         case bac: enableButton = true; break;
+        default: enableButton = false; break;
+        };  
+      case 10: //makeNeXus
+        switch (localHostname) {
         default: enableButton = false; break;
         };  
         
