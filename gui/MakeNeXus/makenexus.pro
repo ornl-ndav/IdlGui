@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'VERSION: MakeNeXus1.0.0'
+VERSION = 'MakeNeXus1.0.0'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -61,12 +61,11 @@ instrumentShortList = ['',$
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF ((*global).ucams NE (*global).geek) THEN BEGIN
-    MainBaseSize  = [700,500,400,340]
+    MainBaseSize  = [700,500,450,375]
 endif else begin
-    MainBaseSize  = [100,50,800,540]
- endelse
-
-MainBaseTitle = 'Make NeXus'
+    MainBaseSize  = [100,50,850,590]
+endelse
+MainBaseTitle = 'Make NeXus (version: ' + VERSION + ')'
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -84,14 +83,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
-;add version to program
-VersionLength = strlen(VERSION)
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET = MainBaseSize[2]-VersionLength*6.5,$
-                             YOFFSET = 2,$
-                             VALUE   = VERSION,$
-                             FRAME   = 0)
-
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
@@ -103,24 +94,16 @@ IF (InstrumentIndex NE 0) THEN BEGIN
     validateOuputPath2, Event, 1
 ENDIF
 
-
-;REMOVE ME
-;set the instrument droplist
-id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
-widget_control, id, set_droplist_select=3
-
-id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
-widget_control,id,set_value='2968'
-
-id = widget_info(MAIN_BASE,find_by_uname='create_nexus_button')
-widget_control, id, sensitive=1
-
-(*global).prenexus_path = '/REF_M-DAS-FS/2008_1_4A_SCI/REF_M_2968/'
-
+;;REMOVE ME
+;;set the instrument droplist
+;id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
+;widget_control, id, set_droplist_select=3
+;id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
+;widget_control,id,set_value='2968'
+;id = widget_info(MAIN_BASE,find_by_uname='create_nexus_button')
+;widget_control, id, sensitive=1
+;(*global).prenexus_path = '/REF_M-DAS-FS/2008_1_4A_SCI/REF_M_2968/'
 ;END OF REMOVE
-
-
-
 
 END
 

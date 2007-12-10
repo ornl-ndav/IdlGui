@@ -13,6 +13,8 @@ CASE Event.id OF
     
 ;Instrument
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
+        run_number, Event       ;in makenexus_eventcb.pro
+        validateOrNotGoButton, Event
     end
 
 ;Run Number 

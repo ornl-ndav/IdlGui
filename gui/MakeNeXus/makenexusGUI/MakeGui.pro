@@ -16,7 +16,7 @@ run_number_base = { size  : [XYoff[0],$
                     xsize : 10,$
                     title : 'Run Number:'}
 
-XYOff = [180,0]
+XYOff = [150,0]
 instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
                                run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}
@@ -31,30 +31,30 @@ output_button = { size  : [run_number_base.size[0]+XYoff[0],$
 XYoff = [130,0]
 output_text = { size  : [output_button.size[0]+XYoff[0],$
                          output_button.size[1]+XYoff[1],$
-                         255,35],$
+                         305,35],$
                 uname : 'output_path_text',$
                 value : '~/local/'}
 
 XYoff = [0,40]
 shared_base = { size : [output_button.size[0]+XYoff[0],$
                         output_button.size[1]+XYoff[1],$
-                        380,35],$
+                        430,35],$
                 uname : 'shared_base'}
-button_list = { list : ['Copy -> Instrument Shared ',$
-                        'Copy -> Proposal Shared'],$
+button_list = { list : ['Copy -> Instrument Shared Folder',$
+                        'Copy -> Proposal Shared Folder  '],$
                 uname : 'shared_button'}
 
 XYoff = [0,45]
 go_button = { size  : [shared_base.size[0]+XYoff[0],$
                        shared_base.size[1]+XYoff[1],$
-                       380,30],$
+                       430,30],$
               uname : 'create_nexus_button',$
               value : 'C R E A T E   N E X U S'}
 
 XYOFF = [0,45]
 log_book = { size  : [go_button.size[0]+XYoff[0],$
                       go_button.size[1]+XYoff[1],$
-                      380,150],$
+                      430,150],$
              uname : 'log_book'}
 
 XYoff = [0,Log_book.size[3]+10]
@@ -64,7 +64,7 @@ STGlabel = { size  : [log_book.size[0]+XYoff[0],$
 XYoff = [55,-5]
 STGtext = { size  : [STGlabel.size[0]+XYoff[0],$
                      STGlabel.size[1]+XYoff[1],$
-                     228,30],$
+                     278,30],$
             uname : 'send_to_geek_text'}
 XYoff = [STGtext.size[2],0]
 STGbutton = { size  : [STGtext.size[0]+XYoff[0],$
@@ -76,7 +76,7 @@ STGbutton = { size  : [STGtext.size[0]+XYoff[0],$
 XYOFF = [0,log_book.size[3]+45]
 my_log_book = { size  : [log_book.size[0]+XYoff[0],$
                          log_book.size[1]+XYoff[1],$
-                         780,150],$
+                         830,200],$
                 uname : 'my_log_book'}
 
 ;***********************************************************************************
