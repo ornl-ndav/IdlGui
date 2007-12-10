@@ -42,11 +42,11 @@ END
 
 
 PRO validateOrNotGoButton, Event
-RunNumber = getRunNumber(Event)
-outputPath = getOutputPath(Event)
+RunNumber  = getRunNumber(Event)
+instrument = getInstrument(Event)
 IF (RunNumber NE '' AND $
     RunNumber NE 0  AND $
-    outputPath NE '') THEN BEGIN
+    instrument NE '') THEN BEGIN
     validate_status = 1
 ENDIF ELSE BEGIN
     validate_status = 0
@@ -83,6 +83,8 @@ base_file_name = prenexus_path + '/' + instrument + '_' + RunNumber
 AppendMyLogBook, Event, 'Base file name : ' + base_file_name
 ;staging area
 stagingArea = (*global).staging_folder
+;move to staging area
+CD, stagingArea
 AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
@@ -260,15 +262,10 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         AppendMyLogBook, Event, '--> Translating the files:'
         TranslationFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxt'
         AppendMyLogBook, Event, ' Translation file: ' + TranslationFile 
-        ;move to staging folder
-        CD, stagingArea
         cmd = 'nxtranslate ' + TranslationFile + ' --hdf5 '
         cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
         AppendMyLogBook, Event, cmd_text
         spawn, cmd, listening, translation_error
-        print, cmd
-        help, translation_error
-        print, translation_error[0]
         IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
             putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
             AppendMyLogBook, Event, err_listening
