@@ -95,7 +95,7 @@ spawn, cmd
 
 ;tell the user that the email has been sent
 LogBookText = 'LogBook has been sent successfully !'
-putLogBookMessage, Event, LogBookText, Append=1
+AppendLogBook, Event, LogBookText
 END
 
 
@@ -110,25 +110,26 @@ widget_control,id,get_uvalue=global
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
 TimeStamp   = mfn_GenerateIsoTimeStamp()
+program_name= (*global).program_name
 instrument  = (*global).instrument
-FullFileName = LogBookPath + instrument + '_' 
+FullFileName = LogBookPath + program_name + '_' + instrument + '_'
 FullFileName += TimeStamp + '.log'
 
 ;get full text of LogBook
 LogBookText = getLogBookText(Event)
-LogBook = ['COPY OF GENERAL LOG BOOK',LogBookText]
+LogBook = ['COPY OF GENERAL USER LOG BOOK',LogBookText]
 ;get full text of myLogBook
 MyLogBookText = getMyLogBookText(Event)
 LogBook = [LogBook,$
            '',$
-           '####################################',$
+           '#############################################################',$
            '',$
-           'COPY OF DEBUGGING LOG BOOK',$
+           'COPY OF DEBUGGING TOOL LOG BOOK',$
            MyLogBookText]
 
 ;add ucams 
 ucamsText = 'Ucams: ' + (*global).ucams
-LogBookText = [ucamsText,LogBookText]
+LogBookText = [ucamsText,LogBook]
 
 ;output file
 openw, 1, FullFileName

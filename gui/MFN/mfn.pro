@@ -28,7 +28,8 @@ CASE (hostname) OF
 ENDCASE 
 
 ;define global variables
-global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+global = ptr_new ({ program_name          : 'MFN',$
+                    instrumentShortList   : ptr_new(0L),$
                     instrument            : '',$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
                     hostname              : hostname,$
@@ -57,7 +58,6 @@ instrumentShortList = ['',$
                        'REF_M',$
                        'ARCS']
 (*(*global).instrumentShortList) = instrumentShortList
-(*global).instrument = instrumentShortList[instrumentIndex]
 
 IF ((*global).ucams NE (*global).geek) THEN BEGIN
     MainBaseSize  = [700,500,400,340]
