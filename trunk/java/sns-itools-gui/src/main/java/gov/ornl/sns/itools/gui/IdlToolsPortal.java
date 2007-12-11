@@ -13,7 +13,7 @@ public class IdlToolsPortal implements ActionListener{
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
-  enum enumHostname {dev, heater, mrac, lrac, bac, bac2, unknown}
+  enum enumHostname {dev, heater, mrac, lrac, bac, bac2, arcs1, arcs2, unknown}
   static String DEV     = "dev.ornl.gov";
   static String HEATER  = "heater";
   static String LRAC    = "lrac";
@@ -21,6 +21,8 @@ public class IdlToolsPortal implements ActionListener{
   static String BAC     = "bac.sns.gov";
   static String BAC2    = "bac2";
   static String UNKNOWN = "unknown";
+  static String ARCS1   = "arcs1";
+  static String ARCS2   = "arcs2";
   
   static String PLOTBSS            = "/SNS/software/idltools/plotBSS";
   static String REALIGN_BSS        = "/SNS/software/idltools/RealignBSS";
@@ -31,7 +33,7 @@ public class IdlToolsPortal implements ActionListener{
   static String MINI_REF_REDUCTION = "/SNS/software/idltools/mini_ref_reduction"; 
   static String TS_REBIN_GUI       = "/SNS/software/idltools/TS_rebin_GUI";
   static String BSS_REDUCTION      = "/SNS/software/idltools/BSSreduction";
-  static String MAKENEXUS          = "/SNS/software/idltools/makeNeXus"; 
+  static String MAKENEXUS          = "/SNS/software/idltools/MakeNeXus"; 
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -285,6 +287,10 @@ public class IdlToolsPortal implements ActionListener{
       localHostname = enumHostname.bac;
     } else if (hostname.compareTo(BAC2) == 0) {
       localHostname = enumHostname.bac2;
+    } else if (hostname.compareTo(ARCS1) == 0) {
+      localHostname = enumHostname.arcs1;
+    } else if (hostname.compareTo(ARCS2) == 0) {
+      localHostname = enumHostname.arcs2;
     } else {
       localHostname = enumHostname.unknown;
     }
@@ -362,9 +368,12 @@ public class IdlToolsPortal implements ActionListener{
         };  
       case 10: //makeNeXus
         switch (localHostname) {
-        default: enableButton = false; break;
+        case bac2:
+        case bac:
+        case arcs1:
+        case arcs2: enableButton = false; break;
+        default: enableButton = true; break;
         };  
-        
     }   
     goButton.setEnabled(enableButton);
   }
