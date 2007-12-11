@@ -35,6 +35,8 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    RunNumber             : '',$
+                    output_geometry_ext   : '_geom',$
                     cvinfo_default_path   : '~/',$
                     geometry_default_path : '~/',$
                     geometry_xml_filtering: '*.xml',$
@@ -104,6 +106,13 @@ MakeGuiLoadingGeometry, $
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+
+;populate geometry droplist
+GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
+id = widget_info(MAIN_BASE, find_by_uname='geometry_droplist')
+widget_control, id, set_value=GeoArray
+id = widget_info(MAIN_BASE, find_by_uname='geometry_text_field')
+widget_control, id, set_value=GeoArray[0]
 
 ;????????????????????????? FOR DEVELOPMENT ONLY ??????????????????????????
 ;;default tabs shown

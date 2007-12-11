@@ -15,6 +15,8 @@ CASE Event.id OF
 ;Instrument Selection
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
         ggEventcb_InstrumentSelection, Event ;in gg_eventcb.pro
+        putGeometryFileInDroplist, Event ;in gg_put.pro
+        populateNameOfOutputFile, Event ;in gg_eventcb.pro
     end
     
 ;#1### geometry.xml #####
@@ -41,12 +43,14 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_run_number_field'): begin
         retrieve_cvinfo_file_name, Event ;in gg_eventcb.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+        populateNameOfOutputFile, Event ;in gg_eventcb.pro
     end
     
 ;Browsing
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_browse_button'): begin
         gg_Browse, Event, 'cvinfo' ;in gg_Browse.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+        populateNameOfOutputFile, Event ;in gg_eventcb.pro
     end
     
 ;#1### cvinfo.xml #####

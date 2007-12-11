@@ -40,7 +40,20 @@ IF (FILE_TEST(geometry_file_name) AND $
 ENDIF ELSE BEGIN
     loading_geometry_button_sensitive = 0
 ENDELSE
-sensitive_widget, Event, 'loading_geometry_button', loading_geometry_button_sensitive
+uname_array = ['loading_geometry_button',$
+               'geo_name_text_field',$
+               'auto_name_with_time_button',$
+               'geo_path_text_field',$
+               'geo_path_button']
+sz = (size(uname_array))(1)
+FOR i=0,(sz-1) DO BEGIN
+    sensitive_widget, $
+      Event, $
+      uname_array[i], $
+      loading_geometry_button_sensitive
+ENDFOR
+
+
 END
 
 ;activate or not the first base
