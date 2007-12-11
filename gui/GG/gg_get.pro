@@ -47,6 +47,7 @@ FUNCTION getPreNexus, instrument, RunNumber, prenexus_path
 cmd = 'findnexus --prenexus -i' + strcompress(instrument,/remove_all)
 cmd += ' ' + strcompress(RunNumber,/remove_all)
 spawn, cmd, result
+print, cmd
 IF (STRMATCH(result[0],'ERROR*')) THEN BEGIN
     prenexus_path = ''
     RETURN, 0
@@ -57,7 +58,7 @@ ENDELSE
 END
 
 
-;Rturns the cvinfo file name of the run number given
+;Returns the cvinfo file name of the run number given
 FUNCTION get_cvinfo_file_name, Event
 ;get instrument
 instrument = getInstrument(Event)
@@ -75,3 +76,23 @@ ENDIF ELSE BEGIN
     RETURN, ''
 ENDELSE
 END
+
+
+;Get the list of geometry files
+FUNCTION getGeometryList, instrument
+cmd = 'findcalib -g -i' + instrument
+spawn, cmd, listening, err_listening
+IF (err_listening[0] EQ '') THEN BEGIN
+    RETURN, listening
+ENDIF ELSE BEGIN
+    RETURN, ['']
+ENDELSE
+END
+
+
+
+
+
+
+
+

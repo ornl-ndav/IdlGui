@@ -1,12 +1,10 @@
 PRO ggEventcb_InstrumentSelection, Event
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;get instrument selected
 InstrumentSelectedIndex = getInstrumentSelectedIndex(Event)
-
 ;if instrument selected is not 0 then activate 'loading geometry' GUI
 IF (InstrumentSelectedIndex EQ 0) THEN BEGIN
     sensitiveStatus = 0
@@ -20,6 +18,10 @@ END
 
 
 PRO retrieve_cvinfo_file_name, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;show user that program is looking for cvinfo file
 ;get instrument
 instrument = getInstrument(Event)
@@ -33,24 +35,43 @@ putFileNameInTextField, Event, 'cvinfo', full_text
 cvinfo_file_name = get_cvinfo_file_name(Event)
 IF (cvinfo_file_name NE '') THEN BEGIN ;display file name found
     putFileNameInTextField, Event, 'cvinfo', cvinfo_file_name
+    (*global).RunNumber = RunNumber
 ENDIF ELSE BEGIN
     message = file_name + ' CAN NOT BE FOUND'
     putFileNameInTextField, Event, 'cvinfo', message
+    (*global).RunNumber = ''
 ENDELSE
 END
 
 
+PRO populateNameOfOutputFile, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+instrument          = getInstrument(Event)
+output_geometry_ext = (*global).output_geometry_ext
+RunNumber           = (*global).RunNumber
+IF (RunNumber EQ '') THEN RunNumber = '?'
+output_file_name    = instrument + output_geometry_ext + $
+  '_' + strcompress(RunNumber,/remove_all) + '.' + (*global).default_extension
+putGeometryFileNameInTextField, Event, output_file_name
+END
+
+
+
+
+
+
 ;Reach by the LOADING GEOMETRY button of the first base
 PRO load_geometry, Event
-
 ;desactivate first base
 activateFirstBase, Event, 0
 ;activate second base
 activateSecondBase, Event, 1
 END
 
-
-
+;------------------------------------------------------------
 
 pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)

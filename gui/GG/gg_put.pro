@@ -13,3 +13,17 @@ PRO putFileNameInTextField, Event, type, file_name
 uname = type + '_text_field'
 putInTextField, Event, uname, file_name
 END
+
+PRO putGeometryFileNameInTextField, Event, file_name
+uname = 'geo_name_text_field'
+putInTextField, Event, uname, file_name
+END
+
+PRO putGeometryFileInDroplist, Event
+instrument = getInstrument(Event)
+GeoArray = getGeometryList(instrument)
+id = widget_info(Event.top, find_by_uname='geometry_droplist')
+widget_control, id, set_value=GeoArray
+id = widget_info(Event.top, find_by_uname='geometry_text_field')
+widget_control, id, set_value=GeoArray[0]
+END

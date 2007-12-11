@@ -29,8 +29,17 @@ IF (filter NE '') THEN BEGIN
                                      PATH              = path,$
                                      /MUST_EXIST)
     
-    IF (full_file_name NE '') THEN BEGIN
+    IF (full_file_name NE '') THEN BEGIN ;we found a file
         putFileNameInTextField, Event, type, full_file_name
+
+        IF (type EQ 'cvinfo') THEN BEGIN ;retrieve run number
+            array1 = strsplit(full_file_name,'/',/extract)
+            sz1    = (size(array1))(1)
+            array2 = strsplit(array1[sz1-1],'_',/extract)
+            sz2    = (size(array2))(1)
+            (*global).RunNumber = array2[sz2-2]
+        ENDIF
+
     ENDIF
     
 ENDIF
