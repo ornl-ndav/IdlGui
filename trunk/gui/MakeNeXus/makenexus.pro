@@ -19,12 +19,12 @@ endelse
 ;get hostname
 spawn, 'hostname', hostname
 CASE (hostname) OF
-    'heater': instrumentIndex = 0
-    'lrac'  : instrumentIndex = 2
-    'mrac'  : instrumentIndex = 3
-    'bac1'  : instrumentIndex = 1
-    'bac2'  : instrumentIndex = 1
-    else    : instrumentIndex = 0
+    'heater'      : instrumentIndex = 0
+    'lrac'        : instrumentIndex = 2
+    'mrac'        : instrumentIndex = 3
+    'bac.sns.gov' : instrumentIndex = 1
+    'bac2'        : instrumentIndex = 1
+    else          : instrumentIndex = 0
 ENDCASE 
 
 ;define global variables
@@ -89,10 +89,6 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup'
 ;set the instrument droplist
 id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=InstrumentIndex
-
-IF (InstrumentIndex NE 0) THEN BEGIN
-    validateOuputPath2, Event, 1
-ENDIF
 
 ;;REMOVE ME
 ;;set the instrument droplist

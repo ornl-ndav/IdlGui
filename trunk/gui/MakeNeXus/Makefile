@@ -8,7 +8,7 @@
 all:
 	idl ./makefile.pro;
 install:
-	cp mfn.sav /SNS/software/idltools/sav/
-	cp MFN /SNS/software/idltools/
+	cp makenexus.sav /SNS/software/idltools/sav/
+	cp MakeNeXus /SNS/software/idltools/
 
 
