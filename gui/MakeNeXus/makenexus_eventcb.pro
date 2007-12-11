@@ -532,13 +532,140 @@ IF (output_path NE '' OR $
         
         cmd = 'cp ' + NeXusToMove[i] 
         IF (output_path NE '') THEN BEGIN
-            cmd1 = cmd + ' ' + output_path
+            IF (i EQ 0) THEN BEGIN
+
+;output_path/RunNumber/NeXus/nexus/file
+;output_path/RunNumber/preNeXus/*.xml
+;output_path/RunNumber/preNeXus/*.dat
+;output_path/RunNumber/preNeXus/*.nxt
+;create NeXus and preNeXus folders
+                AppendMyLogBook, Event, 'Iteration #0:'
+                NeXus_folder    = output_path + RunNumber + '/NeXus/'
+                preNeXus_folder = output_path + RunNumber + '/preNeXus/'
+
+                AppendMyLogBook, Event, 'Checking if NeXus Folder (' + NeXus_folder + $
+                  ') exists ... ' + PROCESSING
+                IF (FILE_TEST(NeXus_folder,/DIRECTORY)) THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
+                    AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
+                    cmd_rm = 'rm -f ' + NeXus_folder + '*.nxs'
+                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
+                    AppendMyLogBook, Event, cmd_rm_text
+                    spawn, cmd_rm, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+                    cmd_spawn = 'mkdir -p ' + Nexus_folder 
+                    AppendMyLogBook, Event, 'Create NeXus folder:'
+                    cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
+                    AppendMyLogBook, Event, cmd_spawn_text
+                    spawn, cmd_spawn, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
+                    AppendMyLogBook, Event, ''
+                ENDELSE
+                
+                AppendMyLogBook, Event, 'Checking if preNeXus Folder (' + preNeXus_folder + $
+                  ') exists ... ' + PROCESSING
+                IF (FILE_TEST(preNeXus_folder,/DIRECTORY)) THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
+                    AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
+                    cmd_rm = 'rm -f ' + preNeXus_folder + '*.*'
+                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
+                    AppendMyLogBook, Event, cmd_rm_text
+                    spawn, cmd_rm, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+                    cmd_spawn = 'mkdir -p ' + preNexus_folder 
+                    AppendMyLogBook, Event, 'Create preNeXus folder:'
+                    cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
+                    AppendMyLogBook, Event, cmd_spawn_text
+                    spawn, cmd_spawn, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
+                    AppendMyLogBook, Event, ''
+                ENDELSE
+                
+;copy *.xml files from prenexus path
+                AppendMyLogBook, Event, $
+                  'Copy runinfo.xml, cvinfo.xml ... files from DAS/preNeXus folder:'
+                cmd_xml = 'cp ' + prenexus_path + '/*.xml' + ' ' + preNeXus_folder
+                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + PROCESSING
+                AppendMyLogBook, Event, cmd_xml_text
+                spawn, cmd_xml, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
+                AppendMyLogBook, Event, ''
+                
+                AppendMyLogBook, Event, $
+                  'Copy beamtimeinfo.xml and cvlist.xml files from DAS/preNeXus folder:'
+                cmd_xml = 'cp ' + prenexus_path + '/../*.xml' + ' ' + preNeXus_folder
+                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + PROCESSING
+                AppendMyLogBook, Event, cmd_xml_text
+                spawn, cmd_xml, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
+                AppendMyLogBook, Event, ''
+                
+;copy .nxt file from stagingArea
+                AppendMyLogBook, Event, $
+                  'Copy translation file from Staging Area:'
+                cmd_nxt = 'cp ' + StagingArea + '/*.nxt' + ' ' + preNeXus_folder
+                cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + PROCESSING
+                AppendMyLogBook, Event, cmd_nxt_text
+                spawn, cmd_nxt, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
+                AppendMyLogBook, Event, ''
+                
+;copy *.dat file from prenexus path
+                AppendMyLogBook, Event, $
+                  'Copy *.dat files from DAS/preNeXus folder:'
+                cmd_dat = 'cp ' + prenexus_path + '/*.dat' + ' ' + preNeXus_folder
+                cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + PROCESSING
+                AppendMyLogBook, Event, cmd_dat_text
+                spawn, cmd_dat, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
+                AppendMyLogBook, Event, ''
+            ENDIF
+            
+            cmd1 = cmd + ' ' + NeXus_folder
             cmd1_text = 'cmd: ' + cmd1 + ' ... ' + PROCESSING
             AppendMyLogBook, Event, cmd1_text
             spawn, cmd1, listening
             IF (listening[0] EQ '') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
-                text = [text,'> ' + output_path + ShortNexusToMove[i]]
+                msg = '> ' + NeXus_folder + ShortNexusToMove[i] + $
+                  ' (For Archive)'
+                text = [text, msg]
             ENDIF ELSE BEGIN
                 putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
             ENDELSE
