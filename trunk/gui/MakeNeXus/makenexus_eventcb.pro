@@ -2,25 +2,31 @@
 PRO run_number, Event
 ;get run number
 RunNumber = getRunNumber(Event)
-;get instrument
-Instrument = getInstrument(Event)
-IF (instrument NE '') THEN BEGIN    
-    message = 'Checking if Run Number ' + strcompress(RunNumber,/remove_all)
-    message += ' for ' + Instrument + ' exists ... ' 
-    text = message + 'PROCESSING'
-    putLogBook, Event, text
-;check if runNumber exist
-    result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
-    IF (result) THEN BEGIN      ;prenexus exist
-        putLogBook, Event, message + 'OK'
-    ENDIF ELSE BEGIN
-        putLogBook, Event, message + 'FAILED'
-;remove run number
-        resetRunNumberField, Event
-    ENDELSE
-ENDIF ELSE BEGIN
-    message = 'Please Select an instrument'
+IF (RunNumber EQ 0) THEN BEGIN
+    message = 'Please Enter a Run Number'
     putLogBook, Event, message
+ENDIF ELSE BEGIN
+
+;get instrument
+    Instrument = getInstrument(Event)
+    IF (instrument NE '' ) THEN BEGIN    
+        message = 'Checking if Run Number ' + strcompress(RunNumber,/remove_all)
+        message += ' for ' + Instrument + ' exists ... ' 
+        text = message + 'PROCESSING'
+        putLogBook, Event, text
+;check if runNumber exist
+        result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+        IF (result) THEN BEGIN  ;prenexus exist
+            putLogBook, Event, message + 'OK'
+        ENDIF ELSE BEGIN
+            putLogBook, Event, message + 'FAILED'
+;remove run number
+            resetRunNumberField, Event
+        ENDELSE
+    ENDIF ELSE BEGIN
+        message = 'Please Select an instrument'
+        putLogBook, Event, message
+    ENDELSE
 ENDELSE
 END
 
@@ -53,6 +59,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 ;validate go button
 validateCreateNexusButton, Event, validate_status
+validateSendToGeekButton, Event, validate_status
 END
 
 
@@ -83,11 +90,39 @@ base_file_name = prenexus_path + '/' + instrument + '_' + RunNumber
 AppendMyLogBook, Event, 'Base file name : ' + base_file_name
 ;staging area
 stagingArea = (*global).staging_folder
-;move to staging area
-CD, stagingArea
 AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
+
+;make sure the staging area exist and is empty
+AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
+IF (FILE_TEST(stagingArea,/DIRECTORY)) THEN BEGIN
+    AppendMyLogBook, Event, '--> Folder exists and needs to be cleaned up'
+    cmd = 'rm ' + stagingArea + '/*.* -f '
+    cmd_text = '   cmd: ' + cmd
+    AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
+    spawn, cmd, listening_rm, error_rm
+    IF (error_rm[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        goto, error
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
+ENDIF ELSE BEGIN
+    AppendMyLogBook, Event, '--> Folder does not exist and needs to be created'
+    cmd = 'mkdir ' + stagingArea
+    cmd_text = '   cmd: ' + cmd
+    AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
+    spawn, cmd, listening_rm, error_mk
+    IF (error_mk[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        goto, error
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
+ENDELSE
+AppendMyLogBook, Event, ''
+
 ;####### run the runmp_flags tool first ######
 message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
 appendLogBook, Event, message
@@ -102,6 +137,7 @@ spawn, cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN BEGIN
    putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
    AppendMyLogBook, Event, err_listening
+   goto, error
    putTextAtEndOfLogBook, Event, FAILED, PROCESSING
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
@@ -124,6 +160,7 @@ err_listening1 = ''
 IF (err_listening1[0] NE '') THEN BEGIN
    putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
    AppendMyLogBook, Event, err_listening
+   goto, error
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
@@ -140,6 +177,7 @@ err_listening2 = ''
 IF (err_listening[0] NE '') THEN BEGIN
    putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
    AppendMyLogBook, Event, err_listening
+   goto, error
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
@@ -177,6 +215,7 @@ err_listening3 = ''
 IF (err_listening3[0] NE '') THEN BEGIN
    putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
    AppendMyLogBook, Event, err_listening
+   goto, error
 ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
@@ -186,6 +225,7 @@ IF (err_listening1[0] NE '' AND $
     err_listening2[0] NE '' AND $
     err_listening3[0] NE '') THEN BEGIN
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+    goto, error
 ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
@@ -195,7 +235,8 @@ message = '>(3/'+NbrSteps+') Translating files '
 AppendMyLogBook, Event, 'PHASE 3/' + NbrSteps + ': TRANSLATING FILES'
 
 ;if there is more that 1 histo, rename first one
-base_name = stagingArea + '/'+ instrument + '_' + RunNumber
+ShortNexusName = instrument + '_' + RunNumber
+base_name = stagingArea + '/'+ ShortNexusName
 base_nexus = base_name 
 base_name += '_neutron_histo'
 base_ext_name = base_name + '.dat'
@@ -206,6 +247,7 @@ AppendMyLogBook, Event, '-> base_ext_name   : ' + base_ext_name
 AppendMyLogBook, Event, '-> base_histo_name : ' + base_histo_name
 AppendMyLogBook, Event, '-> p0_file_name    : ' + p0_file_name
 AppendMyLogBook, Event, '-> base_nexus      : ' + base_nexus
+AppendMyLogBook, Event, '-> ShortNexusName  : ' + ShortNexusName
 AppendMyLogBook, Event, ''
 
 text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
@@ -251,8 +293,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
             putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
             AppendMyLogBook, Event, err_listening
-                                ;jump to end of full process and display error in LogBook
-                                ;?????????????????????????
+            goto, error
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         ENDELSE
@@ -265,12 +306,13 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         cmd = 'nxtranslate ' + TranslationFile + ' --hdf5 '
         cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
         AppendMyLogBook, Event, cmd_text
+;move to staging area
+        CD, stagingArea
         spawn, cmd, listening, translation_error
         IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
             putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
             AppendMyLogBook, Event, err_listening
-                                ;jump to end of full process and display error in LogBook
-                                ;?????????????????????????
+            goto, error
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         ENDELSE
@@ -287,14 +329,17 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             message = cmd_text + OK
         ENDIF ELSE BEGIN
             message = cmd_text + FAILED
+            goto, error
         ENDELSE
         AppendMyLogBook, Event, message
 
-
         if (PolaIndex EQ 0) THEN BEGIN
             NexusToMove = [nexus_file_name]
+            ShortNexusToMove = [ShortNexusName + '_p0.nxs']
         ENDIF ELSE BEGIN
             NexusToMove = [NexusToMove,nexus_file_name]
+            ShortNexusToMove = [ShortNexusToMove, ShortNexusName + '_p' + $
+                                strcompress(polaIndex,/remove_all) + '.nxs']
         ENDELSE
 
         ++polaIndex
@@ -329,8 +374,7 @@ ENDIF ELSE BEGIN
     IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
         putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
         AppendMyLogBook, Event, err_listening
-                                ;jump to end of full process and display error in LogBook
-                                ;?????????????????????????
+        goto, error
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     ENDELSE
@@ -342,11 +386,10 @@ ENDIF ELSE BEGIN
     cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
     AppendMyLogBook, Event, cmd_text
     spawn, cmd, listening, merging_error
-    IF (merging_error[0] NE '') THEN BEGIN ;a problem in the merging occured
+    IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
         putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
         AppendMyLogBook, Event, err_listening
-                                ;jump to end of full process and display error in LogBook
-                                ;?????????????????????????
+        goto, error
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     ENDELSE
@@ -359,12 +402,13 @@ ENDIF ELSE BEGIN
     cmd = 'nxtranslate ' + TranslationFile + ' --hdf5'
     cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
     AppendMyLogBook, Event, cmd_text
+;move to staging area
+    CD, stagingArea
     spawn, cmd, listening, translation_error
     IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
         putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
         AppendMyLogBook, Event, err_listening
-                                ;jump to end of full process and display error in LogBook
-                                ;?????????????????????????
+        goto, error
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     ENDELSE
@@ -397,6 +441,7 @@ endif else begin
     NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
     AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
     NexusToMove = [NexusFile]
+    ShortNexusToMove = [ShortNexusName + '.nxs']
 
 endelse
 AppendMyLogBook, Event, ''
@@ -479,6 +524,10 @@ IF (output_path NE '' OR $
         AppendMyLogBook, Event, message
     ENDELSE
     
+    text = ['']
+    text = [text,'#### NEXUS FILES CREATED ####']
+    text = [text, '']
+
     FOR i=0,(sz-1) DO BEGIN
         
         cmd = 'cp ' + NeXusToMove[i] 
@@ -489,6 +538,7 @@ IF (output_path NE '' OR $
             spawn, cmd1, listening
             IF (listening[0] EQ '') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                text = [text,'> ' + output_path + ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
                 putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
             ENDELSE
@@ -501,6 +551,7 @@ IF (output_path NE '' OR $
             spawn, cmd2, listening
             IF (listening[0] EQ '') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                text = [text,'> ' + InstrSharedFolder + ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
                 putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
             ENDELSE
@@ -513,6 +564,7 @@ IF (output_path NE '' OR $
             spawn, cmd3, listening
             IF (listening[0] EQ '') THEN BEGIN ;it worked
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                text = [text,'> ' + ProposalSharedFolder+ ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
                 putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
             ENDELSE
@@ -522,10 +574,14 @@ IF (output_path NE '' OR $
     ENDFOR
     
     putTextAtEndOfLogBook, Event, OK, PROCESSING ;moving files worked
-    
+    AppendLogBook, Event, text
+
 ENDIF ELSE BEGIN
     
+error: 
+
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING ;0 output folder defined
+    validateCreateNexusButton, Event, 0
     
 ENDELSE
 
