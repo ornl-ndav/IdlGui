@@ -16,6 +16,12 @@ endif else begin
    ucams = get_ucams()
 endelse
 
+;Which version to load
+;1 is for version that never shows the base #2. It only allows user to
+;load the xml files and create the geometry file
+versionLight = 1  
+;0 is for full version that displays the base #2.
+
 ;get hostname
 spawn, 'hostname', hostname
 CASE (hostname) OF
@@ -75,8 +81,11 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-
-MakeGuiInputGeometry, MAIN_BASE, MainBaseSize, images_structure
+;BASE #2
+MakeGuiInputGeometry, $ 
+  MAIN_BASE, $
+  MainBaseSize, $
+  images_structure
 ;add version to program
 VersionLength = strlen(VERSION)
 version_label = widget_label(MAIN_BASE,$
@@ -84,9 +93,14 @@ version_label = widget_label(MAIN_BASE,$
                              YOFFSET = 2,$
                              VALUE   = VERSION,$
                              FRAME   = 0)
-MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
 
-
+;BASE #1
+MakeGuiLoadingGeometry, $
+  MAIN_BASE, $
+  MainBaseSize, $
+  InstrumentList, $
+  InstrumentIndex, $
+  versionLight
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK

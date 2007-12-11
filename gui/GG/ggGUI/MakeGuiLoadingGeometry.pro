@@ -1,4 +1,8 @@
-PRO MakeGuiLoadingGeometry, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+PRO MakeGuiLoadingGeometry, MAIN_BASE, $
+                            MainBaseSize, $
+                            InstrumentList, $
+                            InstrumentIndex, $
+                            VersionLight
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -27,7 +31,12 @@ instrumentDroplist = { size  : [instrumentLabel.size[0]+XYoff[0],$
 ;/////////////
 ;Geometry.xml/
 ;/////////////
-XYoff = [0,60]
+IF (VersionLight) THEN BEGIN
+    XYoff = [0,40]
+ENDIF ELSE BEGIN
+    XYoff = [0,60]
+ENDELSE
+
 geometryFrame    = { size  : [5, $
                               instrumentLabel.size[1]+XYoff[1], $
                               MainBaseSize[2]-13, $
@@ -77,7 +86,11 @@ geometryText     = { size  : [geometryDroplist.size[0]+XYoff[0],$
 ;///////////
 ;cvinfo.xml/
 ;///////////
-XYoff = [0,60]
+IF (VersionLight) THEN BEGIN
+    XYoff = [0,25]
+ENDIF ELSE BEGIN
+    XYoff = [0,60]
+ENDELSE
 cvinfoFrame      = { size  : [5, $
                               geometryFrame.size[1]+geometryFrame.size[3]+XYoff[1], $
                               MainBaseSize[2]-13, $
@@ -125,12 +138,87 @@ cvinfoText = { size : [XYoff[0],$
                uname : 'cvinfo_text_field',$
                value : ''}
 
+
+;////////////////////////
+;Geometry File Generator/
+;////////////////////////
+IF (VersionLight) THEN BEGIN
+    XYoff = [0,25]
+    GeoFileFrame      = { size  : [5, $
+                                  cvinfoFrame.size[1]+cvinfoFrame.size[3]+XYoff[1], $
+                                  MainBaseSize[2]-13, $
+                                  100],$
+                         frame : 1}
+    
+    XYoff = [15,-8]
+    GeoFileLabel      = { size  : [GeoFileFrame.size[0]+XYoff[0],$
+                                   GeoFileFrame.size[1]+XYoff[1]],$
+                          value : 'New Geometry File Name'}
+
+    XYoff = [5,30]
+    GeoNameLabel      = { size  : [GeoFileLabel.size[0]+XYoff[0],$
+                                   GeoFileLabel.size[1]+XYoff[1]],$
+                          value : 'Name:'}
+    XYoff = [40,-5]
+    GeoNameTextField  = { size  : [GeoNameLabel.size[0]+XYoff[0],$
+                                   GeoNameLabel.size[1]+XYoff[1],$
+                                   300,35],$
+                          uname : 'geo_name_text_field'}
+    XYoff = [GeoNameTextField.size[2],0]
+    AutoNameButton1   = { size  : [GeoNameTextField.size[0]+XYoff[0],$
+                                   GeoNameTextField.size[1]+XYoff[1],$
+                                   163,35],$
+                          uname : 'auto_name_with_run_button',$
+                          value : 'Generate Name with Run#'}
+    XYoff = [AutoNameButton1.size[2],0]
+    AutoNameButton2   = { size  : [AutoNameButton1.size[0]+XYoff[0],$
+                                   AutoNameButton1.size[1]+XYoff[1],$
+                                   AutoNameButton1.size[2],35],$
+                          uname : 'auto_name_with_time_button',$
+                          value : 'Generate Name with Time'}
+    XYoff = [0,40]
+    GeoPathLabel      = { size  : [GeoNameLabel.size[0]+XYoff[0],$
+                                   GeoNameLabel.size[1]+XYoff[1]],$
+                          value : 'Path:'}
+    XYoff = [40,-5]
+    GeoPathTextField  = { size  : [GeoPathLabel.size[0]+XYoff[0],$
+                                   GeoPathLabel.size[1]+XYoff[1],$
+                                   485,35],$
+                          uname : 'geo_path_text_field'}
+
+    XYoff = [GeoPathTextField.size[2],5]
+    GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
+                                   GeoPathTextField.size[1]+XYoff[1]],$
+                          value : 'OR'}
+    XYoff = [20,0]
+    GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
+                                   GeoPathTextField.size[1]+XYOff[1],$
+                                   120,35],$
+                          uname : 'geo_path_button',$
+                          value : 'Select Path...'}
+ENDIF
+
 ;////////////////////////
 ;Loading Geometry Button/
 ;////////////////////////
-loadingGeometryButton = {size  : [30,400,650,40],$
-                         value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
-                         uname : 'loading_geometry_button'}
+IF (VersionLight) THEN BEGIN
+    loadingGeometryButton = {size  : [30,445,650,40],$
+                             value : 'C  R  E  A  T  E    G  E  O  M  E  T  R  Y',$
+                             uname : 'loading_geometry_button'}
+ENDIF ELSE BEGIN
+    loadingGeometryButton = {size  : [30,400,650,40],$
+                             value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
+                             uname : 'loading_geometry_button'}
+ENDELSE
+
+
+
+
+
+
+
+
+
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -280,6 +368,88 @@ frame = WIDGET_LABEL(base,$
                      SCR_YSIZE = cvinfoFrame.size[3],$
                      FRAME     = cvinfoFrame.frame,$
                      VALUE     = '')
+
+
+;\\\\\\\\\\\\\\\\\\\\\\\\
+;Geometry File Generator\
+;\\\\\\\\\\\\\\\\\\\\\\\\
+IF (VersionLight) THEN BEGIN
+
+label = WIDGET_LABEL(base,$
+                     XOFFSET = GeoFileLabel.size[0],$
+                     YOFFSET = GeoFileLabel.size[1],$
+                     VALUE   = GeoFileLabel.value)
+
+label = WIDGET_LABEL(base,$
+                     XOFFSET = GeoNameLabel.size[0],$
+                     YOFFSET = GeoNameLabel.size[1],$
+                     VALUE   = GeoNameLabel.value)
+
+text  = WIDGET_TEXT(base,$
+                    XOFFSET   = GeoNameTextField.size[0],$
+                    YOFFSET   = GeoNameTextField.size[1],$
+                    SCR_XSIZE = GeoNameTextField.size[2],$
+                    SCR_YSIZE = GeoNameTextField.size[3],$
+                    UNAME     = GeoNameTextField.uname,$
+                    SENSITIVE = 0,$
+                    /EDITABLE)
+
+button1 = WIDGET_BUTTON(base,$
+                        XOFFSET   = AutoNameButton1.size[0],$
+                        YOFFSET   = AutoNameButton1.size[1],$
+                        SCR_XSIZE = AutoNameButton1.size[2],$
+                        SCR_YSIZE = AutoNameButton1.size[3],$
+                        UNAME     = AutoNameButton1.uname,$
+                        VALUE     = AutoNameButton1.value,$
+                        SENSITIVE = 0)
+
+button2 = WIDGET_BUTTON(base,$
+                        XOFFSET   = AutoNameButton2.size[0],$
+                        YOFFSET   = AutoNameButton2.size[1],$
+                        SCR_XSIZE = AutoNameButton2.size[2],$
+                        SCR_YSIZE = AutoNameButton2.size[3],$
+                        UNAME     = AutoNameButton2.uname,$
+                        VALUE     = AutoNameButton2.value,$
+                        SENSITIVE = 0)
+                    
+label = WIDGET_LABEL(base,$
+                     XOFFSET = GeoPathLabel.size[0],$
+                     YOFFSET = GeoPathLabel.size[1],$
+                     VALUE   = GeoPathLabel.value)
+
+text  = WIDGET_TEXT(base,$
+                    XOFFSET   = GeoPathTextField.size[0],$
+                    YOFFSET   = GeoPathTextField.size[1],$
+                    SCR_XSIZE = GeoPathTextField.size[2],$
+                    SCR_YSIZE = GeoPathTextField.size[3],$
+                    UNAME     = GeoPathTextField.uname,$
+                    SENSITIVE = 0,$
+                    /EDITABLE)
+
+label = WIDGET_LABEL(base,$
+                     XOFFSET = GeoOrLabel.size[0],$
+                     YOFFSET = GeoOrLabel.size[1],$
+                     VALUE   = GeoOrLabel.value)
+
+button1 = WIDGET_BUTTON(base,$
+                        XOFFSET   = GeoPathButton.size[0],$
+                        YOFFSET   = GeoPathButton.size[1],$
+                        SCR_XSIZE = GeoPathButton.size[2],$
+                        SCR_YSIZE = GeoPathButton.size[3],$
+                        UNAME     = GeoPathButton.uname,$
+                        VALUE     = GeoPathButton.value,$
+                        SENSITIVE = 0)
+
+frame = WIDGET_LABEL(base,$
+                     XOFFSET   = GeoFileFrame.size[0],$
+                     YOFFSET   = GeoFileFrame.size[1],$
+                     SCR_XSIZE = GeoFileFrame.size[2],$
+                     SCR_YSIZE = GeoFileFrame.size[3],$
+                     FRAME     = GeoFileFrame.frame,$
+                     VALUE     = '')
+
+
+ENDIF
 
 ;\\\\\\\\\\\\\\\\\
 ;LOADING GEOMETRY\
