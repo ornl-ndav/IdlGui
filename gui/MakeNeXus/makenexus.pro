@@ -41,7 +41,7 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
                     output_path_1         : '~/local',$
-                    staging_folder        : '~/.makenexus_staging',$
+                    staging_folder        : '~/local/.makenexus_staging',$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
@@ -84,7 +84,7 @@ widget_control, MAIN_BASE, set_uvalue=global
 
 MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup' 
 
 ;set the instrument droplist
 id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')

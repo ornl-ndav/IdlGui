@@ -38,7 +38,7 @@ output_text = { size  : [output_button.size[0]+XYoff[0],$
 XYoff = [0,40]
 shared_base = { size : [output_button.size[0]+XYoff[0],$
                         output_button.size[1]+XYoff[1],$
-                        430,35],$
+                        460,35],$
                 uname : 'shared_base'}
 button_list = { list : ['Copy -> Instrument Shared Folder',$
                         'Copy -> Proposal Shared Folder  '],$
@@ -179,9 +179,8 @@ button = WIDGET_BUTTON(base,$
                        SCR_XSIZE = STGbutton.size[2],$
                        SCR_YSIZE = STGbutton.size[3],$
                        VALUE     = STGbutton.value,$
-                       UNAME     = STGbutton.uname)
-
-
+                       UNAME     = STGbutton.uname,$
+                       SENSITIVE = 0)
 
 text = WIDGET_TEXT(base,$
                    XOFFSET   = my_log_book.size[0],$

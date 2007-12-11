@@ -24,6 +24,7 @@ cd, CurrentFolder
 .run makenexus_LogBookInterface.pro
 
 ;procedures
+.run makenexus_Cleanup.pro
 
 ;main functions
 .run MainBaseEvent.pro
