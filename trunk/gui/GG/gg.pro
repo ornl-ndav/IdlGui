@@ -19,7 +19,7 @@ endelse
 ;Which version to load
 ;1 is for version that never shows the base #2. It only allows user to
 ;load the xml files and create the geometry file
-versionLight = 1  
+versionLight = 1
 ;0 is for full version that displays the base #2.
 
 ;get hostname
@@ -36,6 +36,7 @@ ENDCASE
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     cmd_command           : 'TS_geom_calc.sh ',$
+                    geek                  : 'j35',$
                     output_default_geometry_path : '~/local',$
                     RunNumber             : '',$
                     output_geometry_ext   : '_geom',$
@@ -68,7 +69,16 @@ images_structure = { images_path : [current_folder,$
                                'wavelength.bmp',$
                                'other.bmp']}
 
-MainBaseSize  = [30,25,700,500]
+
+IF (versionLight) THEN BEGIN
+    IF (ucams EQ (*global).geek) THEN BEGIN
+        MainBaseSize  = [30,25,700,700]
+    ENDIF ELSE BEGIN
+        MainBaseSize  = [30,25,700,530]
+    ENDELSE
+ENDIF ELSE BEGIN
+    MainBaseSize  = [30,25,700,500]
+ENDELSE
 MainBaseTitle = 'Geometry Generator'
         
 ;Build Main Base

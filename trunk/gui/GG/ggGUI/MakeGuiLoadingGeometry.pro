@@ -31,11 +31,7 @@ instrumentDroplist = { size  : [instrumentLabel.size[0]+XYoff[0],$
 ;/////////////
 ;Geometry.xml/
 ;/////////////
-IF (VersionLight) THEN BEGIN
-    XYoff = [0,40]
-ENDIF ELSE BEGIN
-    XYoff = [0,60]
-ENDELSE
+XYoff = [0,40]
 
 geometryFrame    = { size  : [5, $
                               instrumentLabel.size[1]+XYoff[1], $
@@ -89,11 +85,8 @@ geometryText     = { size  : [geometryDroplist.size[0]+XYoff[0],$
 ;///////////
 ;cvinfo.xml/
 ;///////////
-IF (VersionLight) THEN BEGIN
-    XYoff = [0,25]
-ENDIF ELSE BEGIN
-    XYoff = [0,60]
-ENDELSE
+XYoff = [0,25]
+
 cvinfoFrame      = { size  : [5, $
                               geometryFrame.size[1]+geometryFrame.size[3]+XYoff[1], $
                               MainBaseSize[2]-13, $
@@ -144,71 +137,68 @@ cvinfoText = { size : [XYoff[0],$
                uname : 'cvinfo_text_field',$
                value : ''}
 
-
 ;////////////////////////
 ;Geometry File Generator/
 ;////////////////////////
-IF (VersionLight) THEN BEGIN
-    XYoff = [0,25]
-    GeoFileFrame      = { size  : [5, $
-                                  cvinfoFrame.size[1]+cvinfoFrame.size[3]+XYoff[1], $
-                                  MainBaseSize[2]-13, $
-                                  100],$
-                          frame : 1,$
-                          uname : 'geo_file_frame'}
-    
-    XYoff = [15,-8]
-    GeoFileLabel      = { size  : [GeoFileFrame.size[0]+XYoff[0],$
-                                   GeoFileFrame.size[1]+XYoff[1]],$
-                          value : 'New Geometry File Name',$
-                          uname : 'geo_file_label'}
+XYoff = [0,25]
+GeoFileFrame      = { size  : [5, $
+                               cvinfoFrame.size[1]+cvinfoFrame.size[3]+XYoff[1], $
+                               MainBaseSize[2]-13, $
+                               100],$
+                      frame : 1,$
+                      uname : 'geo_file_frame'}
 
-    XYoff = [5,30]
-    GeoNameLabel      = { size  : [GeoFileLabel.size[0]+XYoff[0],$
-                                   GeoFileLabel.size[1]+XYoff[1]],$
-                          value : 'Name:',$
-                          uname : 'geo_name_label'}
-    XYoff = [40,-5]
-    GeoNameTextField  = { size  : [GeoNameLabel.size[0]+XYoff[0],$
-                                   GeoNameLabel.size[1]+XYoff[1],$
-                                   300,35],$
-                          uname : 'geo_name_text_field'}
-    XYoff = [GeoNameTextField.size[2],0]
-    AutoNameButton1   = { size  : [GeoNameTextField.size[0]+XYoff[0],$
-                                   GeoNameTextField.size[1]+XYoff[1],$
-                                   163,35],$
-                          uname : 'auto_name_with_run_button',$
-                          value : 'Generate Name with Run#'}
-    XYoff = [AutoNameButton1.size[2],0]
-    AutoNameButton2   = { size  : [AutoNameButton1.size[0]+XYoff[0],$
-                                   AutoNameButton1.size[1]+XYoff[1],$
-                                   AutoNameButton1.size[2],35],$
-                          uname : 'auto_name_with_time_button',$
-                          value : 'Generate Name with Time'}
-    XYoff = [0,40]
-    GeoPathLabel      = { size  : [GeoNameLabel.size[0]+XYoff[0],$
-                                   GeoNameLabel.size[1]+XYoff[1]],$
-                          value : 'Path:',$
-                          uname : 'geo_path_label'}
-    XYoff = [40,-5]
-    GeoPathTextField  = { size  : [GeoPathLabel.size[0]+XYoff[0],$
-                                   GeoPathLabel.size[1]+XYoff[1],$
-                                   485,35],$
-                          value : '~/local',$
-                          uname : 'geo_path_text_field'}
+XYoff = [15,-8]
+GeoFileLabel      = { size  : [GeoFileFrame.size[0]+XYoff[0],$
+                               GeoFileFrame.size[1]+XYoff[1]],$
+                      value : 'New Geometry File Name',$
+                      uname : 'geo_file_label'}
 
-    XYoff = [GeoPathTextField.size[2]+3,8]
-    GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
-                                   GeoPathTextField.size[1]+XYoff[1]],$
-                          value : 'OR',$
-                          uname : 'geo_or_label'}
-    XYoff = [20,0]
-    GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
-                                   GeoPathTextField.size[1]+XYOff[1],$
-                                   118,35],$
-                          uname : 'geo_path_button',$
-                          value : 'Select Path...'}
-ENDIF
+XYoff = [5,30]
+GeoNameLabel      = { size  : [GeoFileLabel.size[0]+XYoff[0],$
+                               GeoFileLabel.size[1]+XYoff[1]],$
+                      value : 'Name:',$
+                      uname : 'geo_name_label'}
+XYoff = [40,-5]
+GeoNameTextField  = { size  : [GeoNameLabel.size[0]+XYoff[0],$
+                               GeoNameLabel.size[1]+XYoff[1],$
+                               300,35],$
+                      uname : 'geo_name_text_field'}
+XYoff = [GeoNameTextField.size[2],0]
+AutoNameButton1   = { size  : [GeoNameTextField.size[0]+XYoff[0],$
+                               GeoNameTextField.size[1]+XYoff[1],$
+                               163,35],$
+                      uname : 'auto_name_with_run_button',$
+                      value : 'Generate Name with Run#'}
+XYoff = [AutoNameButton1.size[2],0]
+AutoNameButton2   = { size  : [AutoNameButton1.size[0]+XYoff[0],$
+                               AutoNameButton1.size[1]+XYoff[1],$
+                               AutoNameButton1.size[2],35],$
+                      uname : 'auto_name_with_time_button',$
+                      value : 'Generate Name with Time'}
+XYoff = [0,40]
+GeoPathLabel      = { size  : [GeoNameLabel.size[0]+XYoff[0],$
+                               GeoNameLabel.size[1]+XYoff[1]],$
+                      value : 'Path:',$
+                      uname : 'geo_path_label'}
+XYoff = [40,-5]
+GeoPathTextField  = { size  : [GeoPathLabel.size[0]+XYoff[0],$
+                               GeoPathLabel.size[1]+XYoff[1],$
+                               485,35],$
+                      value : '~/local',$
+                      uname : 'geo_path_text_field'}
+
+XYoff = [GeoPathTextField.size[2]+3,8]
+GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
+                               GeoPathTextField.size[1]+XYoff[1]],$
+                      value : 'OR',$
+                      uname : 'geo_or_label'}
+XYoff = [20,0]
+GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
+                               GeoPathTextField.size[1]+XYOff[1],$
+                               118,35],$
+                      uname : 'geo_path_button',$
+                      value : 'Select Path...'}
 
 ;////////////////////////
 ;Loading Geometry Button/
@@ -217,8 +207,22 @@ IF (VersionLight) THEN BEGIN
     loadingGeometryButton = {size  : [30,445,650,40],$
                              value : 'C  R  E  A  T  E    G  E  O  M  E  T  R  Y',$
                              uname : 'loading_geometry_button'}
+
+    XYoff = [0,50]
+    status_label          = {size  : [LoadingGeometryButton.size[0],$
+                                      LoadingGeometryButton.size[1]+XYoff[1],$
+                                      650,40],$
+                             uname : 'status_label',$
+                             value : ''}
+
+    XYoff = [0,40]
+    debug_text            = {size  : [status_label.size[0]+XYoff[0],$
+                                      status_label.size[1]+XYoff[1],$
+                                      650,150],$
+                             uname : 'debug_text_field'}
+
 ENDIF ELSE BEGIN
-    loadingGeometryButton = {size  : [30,400,650,40],$
+    loadingGeometryButton = {size  : [30,445,650,40],$
                              value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
                              uname : 'loading_geometry_button'}
 ENDELSE
@@ -389,7 +393,6 @@ frame = WIDGET_LABEL(base,$
 ;\\\\\\\\\\\\\\\\\\\\\\\\
 ;Geometry File Generator\
 ;\\\\\\\\\\\\\\\\\\\\\\\\
-IF (VersionLight) THEN BEGIN
 
 label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoFileLabel.size[0],$
@@ -476,9 +479,6 @@ frame = WIDGET_LABEL(base,$
                      SENSITIVE = sensitiveStatus,$
                      UNAME     = GeoFileFrame.uname)
 
-
-ENDIF
-
 ;\\\\\\\\\\\\\\\\\
 ;LOADING GEOMETRY\
 ;\\\\\\\\\\\\\\\\\
@@ -490,5 +490,28 @@ button = WIDGET_BUTTON(base,$
                        UNAME     = loadingGeometryButton.uname,$
                        VALUE     = loadingGeometryButton.value,$
                        SENSITIVE = sensitiveStatus)
+
+IF (VersionLight) THEN BEGIN
+    label1 = WIDGET_LABEL(base,$
+                          XOFFSET = status_label.size[0],$
+                          YOFFSET = status_label.size[1],$
+                          VALUE   = status_label.value,$
+                          UNAME   = status_label.uname,$
+                          /DYNAMIC_RESIZE)
+
+    text_widget = WIDGET_TEXT(base,$
+                              XOFFSET   = debug_text.size[0],$
+                              YOFFSET   = debug_text.size[1],$
+                              SCR_XSIZE = debug_text.size[2],$
+                              SCR_YSIZE = debug_text.size[3],$
+                              UNAME     = debug_text.uname,$
+                              /SCROLL,$
+                              /WRAP)
+
+
+ENDIF
+
+
+
 
 END
