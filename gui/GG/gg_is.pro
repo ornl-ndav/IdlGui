@@ -16,3 +16,10 @@ IF (FILE_TEST(geo_file_name) AND $
 RETURN, 0
 END
 
+
+FUNCTION isOutputGeometryPathValidate, Event
+;get path of output geometry file
+path_name = getTextFieldValue(Event,'geo_path_text_field')
+IF (FILE_TEST(path_name,/DIRECTORY)) THEN RETURN, 1
+RETURN, 0
+END

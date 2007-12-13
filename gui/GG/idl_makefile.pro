@@ -20,8 +20,9 @@ cd, CurrentFolder
 ;utils functions
 .run gg_get.pro
 .run gg_put.pro
-.run gg_GUIupdate.pro
 .run gg_is.pro
+.run gg_GUIupdate.pro
+.run gg_time.pro
 
 ;procedures
 .run gg_Preview.pro

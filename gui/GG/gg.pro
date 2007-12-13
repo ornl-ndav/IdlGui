@@ -35,6 +35,8 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    cmd_command           : 'TS_geom_calc.sh ',$
+                    output_default_geometry_path : '~/local',$
                     RunNumber             : '',$
                     output_geometry_ext   : '_geom',$
                     cvinfo_default_path   : '~/',$
@@ -42,6 +44,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     geometry_xml_filtering: '*.xml',$
                     cvinfo_xml_filtering  : '*_cvinfo.xml',$
                     default_extension     : 'xml',$
+                    version_light         : versionLight,$
                     version : VERSION })
 
 InstrumentList = ['',$

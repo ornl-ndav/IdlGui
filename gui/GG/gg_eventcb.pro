@@ -1,3 +1,50 @@
+PRO determine_Geometry_path, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+path  = (*global).output_default_geometry_path
+title = 'Select where you want to write the geometry file created:'
+path_name = DIALOG_PICKFILE(TITLE             = title,$
+                            PATH              = path,$
+                            /MUST_EXIST,$
+                            /DIRECTORY)
+IF (path_name NE '') THEN BEGIN
+    putInTextField, Event, 'geo_path_text_field', path_name
+ENDIF
+END
+
+
+PRO gg_generate_light_command, Event ;in gg_eventcb
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;;;;;Collect all info necessary
+;get geometry input file name
+geometry_file    = getGeometryFile(Event)
+;get cvinfo file name
+cvinfo_file_name = get_cvinfo_file_name(Event)
+;get output path
+output_geo_path  = get_output_path(Event)
+;get output name
+output_geo_name  = get_output_name(Event)
+;full output name
+full_output_geo_name = output_geo_path + '/' + output_geo_name
+
+;start building the command line
+cmd = (*global).cmd_command
+cmd += ' ' + geometry_file
+cmd += ' -m ' + cvinfo_file_name
+cmd += ' -o ' + full_output_geo_name
+print, cmd
+;spawn, cmd, listening, err_listening
+err_listening = ['']
+IF (err_listening[0] NE '') THEN BEGIN ;an error occured
+ENDIF ELSE BEGIN
+ENDELSE
+
+END
+
+
 PRO clearCvinfoBase, Event
 putInTextField, Event, 'cvinfo_run_number_field', ''
 putInTextField, Event, 'cvinfo_text_field', ''
@@ -56,17 +103,21 @@ ENDELSE
 END
 
 
-PRO populateNameOfOutputFile, Event
+PRO populateNameOfOutputFile, Event, type
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 instrument          = getInstrument(Event)
 output_geometry_ext = (*global).output_geometry_ext
-RunNumber           = (*global).RunNumber
-IF (RunNumber EQ '') THEN RunNumber = '?'
+default_extension   = (*global).default_extension
+IF (type EQ 'run') THEN BEGIN ;ext is with run 'REF_L_10_geom.xml'
+    ext           = strcompress((*global).RunNumber,/remove_all)
+    IF (ext EQ '') THEN ext = '?'
+ENDIF ELSE BEGIN
+    ext = gg_GenerateIsoTimeStamp()
+ENDELSE
 output_file_name    = instrument + output_geometry_ext + $
-  '_' + strcompress(RunNumber,/remove_all) + '.' + (*global).default_extension
+  '_' + ext + '.' + default_extension
 putGeometryFileNameInTextField, Event, output_file_name
 END
 
@@ -77,10 +128,17 @@ END
 
 ;Reach by the LOADING GEOMETRY button of the first base
 PRO load_geometry, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+IF ((*global).version_light) THEN BEGIN ;version light
+    gg_generate_light_command, Event ;in gg_eventcb
+ENDIF ELSE BEGIN ;version complete
 ;desactivate first base
-activateFirstBase, Event, 0
+    activateFirstBase, Event, 0
 ;activate second base
-activateSecondBase, Event, 1
+    activateSecondBase, Event, 1
+ENDELSE
 END
 
 ;------------------------------------------------------------

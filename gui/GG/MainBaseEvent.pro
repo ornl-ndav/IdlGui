@@ -17,7 +17,7 @@ CASE Event.id OF
         ggEventcb_InstrumentSelection, Event ;in gg_eventcb.pro
         putGeometryFileInDroplist, Event ;in gg_put.pro
         putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
-        populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        populateNameOfOutputFile, Event, 'run' ;in gg_eventcb.pro
         clearCvinfoBase, Event ;in gg_eventcb.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
@@ -54,7 +54,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_run_number_field'): begin
         retrieve_cvinfo_file_name, Event ;in gg_eventcb.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
-        populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        populateNameOfOutputFile, Event, 'run' ;in gg_eventcb.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
@@ -62,7 +62,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_browse_button'): begin
         gg_Browse, Event, 'cvinfo' ;in gg_Browse.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
-        populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        populateNameOfOutputFile, Event, 'run' ;in gg_eventcb.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
@@ -84,19 +84,30 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='auto_name_with_run_button'): begin
         sensitive_widget, Event, 'auto_name_with_run_button' , 0
         sensitive_widget, Event, 'auto_name_with_time_button', 1
+        populateNameOfOutputFile, Event, 'run' ;in gg_eventcb.pro
     END
 
 ;Auto name generator with date
     widget_info(wWidget, FIND_BY_UNAME='auto_name_with_time_button'): begin
         sensitive_widget, Event, 'auto_name_with_run_button' , 1
         sensitive_widget, Event, 'auto_name_with_time_button', 0
+        populateNameOfOutputFile, Event, 'time' ;in gg_eventcb.pro
     END
 
+;Geometry path 
+    widget_info(wWidget, FIND_BY_UNAME='geo_path_button'): begin
+        determine_Geometry_path, Event ;in gg_eventcb.pro
+    END
+
+;Geometry path text field
+    widget_info(wWidget, FIND_BY_UNAME='geo_path_text_field'): BEGIN
+        loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+    END
+    
 ;#1### LOADING GEOMETRY button
     widget_info(wWidget, FIND_BY_UNAME='loading_geometry_button'): begin
         load_geometry, Event ;in gg_eventcb.pro
     end
-    
     
     ELSE:
     

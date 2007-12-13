@@ -47,7 +47,6 @@ FUNCTION getPreNexus, instrument, RunNumber, prenexus_path
 cmd = 'findnexus --prenexus -i' + strcompress(instrument,/remove_all)
 cmd += ' ' + strcompress(RunNumber,/remove_all)
 spawn, cmd, result
-print, cmd
 IF (STRMATCH(result[0],'ERROR*')) THEN BEGIN
     prenexus_path = ''
     RETURN, 0
@@ -90,12 +89,12 @@ ENDELSE
 END
 
 
-
 ;Returns the index of the geometry file selected
 FUNCTION getGeometrySelectedIndex, Event
 id = widget_info(Event.top, find_by_uname ='geometry_droplist')
 RETURN, widget_info(id, /droplist_select)
 END
+
 
 ;Returns the array of geometry files
 FUNCTION getGeometryValue, Event
@@ -114,6 +113,15 @@ RETURN, value[index]
 END
 
 
+;Returns the path of the output geometry file
+FUNCTION get_output_path, Event
+RETURN, getTextFieldValue(Event, 'geo_path_text_field')
+END
 
+
+;Returns the name of the output geometry file
+FUNCTION get_output_name, Event
+RETURN, getTextFieldValue(Event, 'geo_name_text_field')
+END
 
 
