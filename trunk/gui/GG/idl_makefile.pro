@@ -21,6 +21,7 @@ cd, CurrentFolder
 .run gg_get.pro
 .run gg_put.pro
 .run gg_GUIupdate.pro
+.run gg_is.pro
 
 ;procedures
 .run gg_Preview.pro

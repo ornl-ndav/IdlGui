@@ -41,12 +41,14 @@ geometryFrame    = { size  : [5, $
                               instrumentLabel.size[1]+XYoff[1], $
                               MainBaseSize[2]-13, $
                               110],$
-                     frame : 1}
+                     frame : 1,$
+                     uname : 'geometry_frame'}
 
 XYoff = [15,-8]
 geometryLabel    = { size  : [geometryFrame.size[0]+XYoff[0],$
                               geometryFrame.size[1]+XYoff[1]],$
-                     value : 'geometry.xml'}
+                     value : 'geometry.xml',$
+                     uname : 'geometry_label'}
 
 XYoff = [-5,20]
 geometryDroplist = { size  : [geometryLabel.size[0]+XYoff[0],$
@@ -57,7 +59,8 @@ geometryDroplist = { size  : [geometryLabel.size[0]+XYoff[0],$
 XYoff = [430,10]
 geometryOrLabel  = { size  : [geometryDroplist.size[0]+XYoff[0],$
                               geometryDroplist.size[1]+XYoff[1]],$
-                     value : 'OR'}
+                     value : 'OR',$
+                     uname : 'geometry_or_label'}
 
 XYoff = [35,-7]
 geometryButton   = { size  : [geometryOrLabel.size[0]+XYoff[0],$
@@ -95,12 +98,14 @@ cvinfoFrame      = { size  : [5, $
                               geometryFrame.size[1]+geometryFrame.size[3]+XYoff[1], $
                               MainBaseSize[2]-13, $
                               100],$
-                     frame : 1}
+                     frame : 1,$
+                     uname : 'cvinfo_frame'}
 
 XYoff = [15,-8]
 cvinfoLabel      = { size  : [cvinfoFrame.size[0]+XYoff[0],$
                               cvinfoFrame.size[1]+XYoff[1]],$
-                     value : 'cvinfo.xml'}
+                     value : 'cvinfo.xml',$
+                     uname : 'cvinfo_label'}
 
 XYoff = [5,25]
 runNumberBase    = { title : 'Run Number:',$
@@ -114,7 +119,8 @@ runNumberBase    = { title : 'Run Number:',$
 XYoff = [160,10]
 orLabel = { size  : [runNumberBase.size[0]+XYoff[0],$
                      runNumberBase.size[1]+XYoff[1]],$
-            value : 'OR'}
+            value : 'OR',$
+            uname : 'or_label'}
 
 XYoff = [40,-5]
 browseButton = { size  : [orLabel.size[0]+XYoff[0],$
@@ -148,17 +154,20 @@ IF (VersionLight) THEN BEGIN
                                   cvinfoFrame.size[1]+cvinfoFrame.size[3]+XYoff[1], $
                                   MainBaseSize[2]-13, $
                                   100],$
-                         frame : 1}
+                          frame : 1,$
+                          uname : 'geo_file_frame'}
     
     XYoff = [15,-8]
     GeoFileLabel      = { size  : [GeoFileFrame.size[0]+XYoff[0],$
                                    GeoFileFrame.size[1]+XYoff[1]],$
-                          value : 'New Geometry File Name'}
+                          value : 'New Geometry File Name',$
+                          uname : 'geo_file_label'}
 
     XYoff = [5,30]
     GeoNameLabel      = { size  : [GeoFileLabel.size[0]+XYoff[0],$
                                    GeoFileLabel.size[1]+XYoff[1]],$
-                          value : 'Name:'}
+                          value : 'Name:',$
+                          uname : 'geo_name_label'}
     XYoff = [40,-5]
     GeoNameTextField  = { size  : [GeoNameLabel.size[0]+XYoff[0],$
                                    GeoNameLabel.size[1]+XYoff[1],$
@@ -179,17 +188,20 @@ IF (VersionLight) THEN BEGIN
     XYoff = [0,40]
     GeoPathLabel      = { size  : [GeoNameLabel.size[0]+XYoff[0],$
                                    GeoNameLabel.size[1]+XYoff[1]],$
-                          value : 'Path:'}
+                          value : 'Path:',$
+                          uname : 'geo_path_label'}
     XYoff = [40,-5]
     GeoPathTextField  = { size  : [GeoPathLabel.size[0]+XYoff[0],$
                                    GeoPathLabel.size[1]+XYoff[1],$
                                    485,35],$
+                          value : '~/local',$
                           uname : 'geo_path_text_field'}
 
     XYoff = [GeoPathTextField.size[2],5]
     GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
                                    GeoPathTextField.size[1]+XYoff[1]],$
-                          value : 'OR'}
+                          value : 'OR',$
+                          uname : 'geo_or_label'}
     XYoff = [20,0]
     GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
                                    GeoPathTextField.size[1]+XYOff[1],$
@@ -241,9 +253,11 @@ droplist = WIDGET_DROPLIST(base,$
 ;Geometry.xml\
 ;\\\\\\\\\\\\\
 label = WIDGET_LABEL(base,$
-                     XOFFSET = geometryOrLabel.size[0],$
-                     YOFFSET = geometryOrLabel.size[1],$
-                     VALUE   = geometryOrLabel.value)
+                     XOFFSET   = geometryOrLabel.size[0],$
+                     YOFFSET   = geometryOrLabel.size[1],$
+                     VALUE     = geometryOrLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = geometryOrLabel.uname)
 
 droplist = WIDGET_DROPLIST(base,$
                            value     = geometryDroplist.list,$
@@ -283,9 +297,11 @@ text = WIDGET_TEXT(base,$
                    /ALL_EVENTS)
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET = geometryLabel.size[0],$
-                     YOFFSET = geometryLabel.size[1],$
-                     VALUE   = geometryLabel.value)
+                     XOFFSET   = geometryLabel.size[0],$
+                     YOFFSET   = geometryLabel.size[1],$
+                     VALUE     = geometryLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = geometryLabel.uname)
 
 frame = WIDGET_LABEL(base,$
                      XOFFSET   = geometryFrame.size[0],$
@@ -293,15 +309,19 @@ frame = WIDGET_LABEL(base,$
                      SCR_XSIZE = geometryFrame.size[2],$
                      SCR_YSIZE = geometryFrame.size[3],$
                      FRAME     = geometryFrame.frame,$
-                     VALUE     = '')
+                     VALUE     = '',$
+                     UNAME     = geometryFrame.uname,$
+                     SENSITIVE = sensitiveStatus)
 
 ;\\\\\\\\\\\
 ;cvinfo.xml\
 ;\\\\\\\\\\\
 label = WIDGET_LABEL(base,$
-                     XOFFSET = cvinfoLabel.size[0],$
-                     YOFFSET = cvinfoLabel.size[1],$
-                     VALUE   = cvinfoLabel.value)
+                     XOFFSET   = cvinfoLabel.size[0],$
+                     YOFFSET   = cvinfoLabel.size[1],$
+                     VALUE     = cvinfoLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = cvinfoLabel.uname)
 
 field_base = WIDGET_BASE(base,$
                          XOFFSET   = runNumberBase.size[0],$
@@ -320,9 +340,11 @@ field = CW_FIELD(field_base,$
                  /INTEGER)
                    
 orLabel = WIDGET_LABEL(base,$
-                       XOFFSET = orLabel.size[0],$
-                       YOFFSET = orLabel.size[1],$
-                       VALUE   = orLabel.value)
+                       XOFFSET   = orLabel.size[0],$
+                       YOFFSET   = orLabel.size[1],$
+                       VALUE     = orLabel.value,$
+                       SENSITIVE = sensitiveStatus,$
+                       UNAME     = orLabel.uname)
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = browseButton.size[0],$
@@ -359,7 +381,9 @@ frame = WIDGET_LABEL(base,$
                      SCR_XSIZE = cvinfoFrame.size[2],$
                      SCR_YSIZE = cvinfoFrame.size[3],$
                      FRAME     = cvinfoFrame.frame,$
-                     VALUE     = '')
+                     VALUE     = '',$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = cvinfoFrame.uname)
 
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\
@@ -368,14 +392,18 @@ frame = WIDGET_LABEL(base,$
 IF (VersionLight) THEN BEGIN
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET = GeoFileLabel.size[0],$
-                     YOFFSET = GeoFileLabel.size[1],$
-                     VALUE   = GeoFileLabel.value)
+                     XOFFSET   = GeoFileLabel.size[0],$
+                     YOFFSET   = GeoFileLabel.size[1],$
+                     VALUE     = GeoFileLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = GeoFileLabel.uname)
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET = GeoNameLabel.size[0],$
-                     YOFFSET = GeoNameLabel.size[1],$
-                     VALUE   = GeoNameLabel.value)
+                     XOFFSET   = GeoNameLabel.size[0],$
+                     YOFFSET   = GeoNameLabel.size[1],$
+                     VALUE     = GeoNameLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = GeoNameLabel.uname)
 
 text  = WIDGET_TEXT(base,$
                     XOFFSET   = GeoNameTextField.size[0],$
@@ -405,9 +433,11 @@ button2 = WIDGET_BUTTON(base,$
                         SENSITIVE = 0)
                     
 label = WIDGET_LABEL(base,$
-                     XOFFSET = GeoPathLabel.size[0],$
-                     YOFFSET = GeoPathLabel.size[1],$
-                     VALUE   = GeoPathLabel.value)
+                     XOFFSET   = GeoPathLabel.size[0],$
+                     YOFFSET   = GeoPathLabel.size[1],$
+                     VALUE     = GeoPathLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = GeoPathLabel.uname)
 
 text  = WIDGET_TEXT(base,$
                     XOFFSET   = GeoPathTextField.size[0],$
@@ -415,13 +445,16 @@ text  = WIDGET_TEXT(base,$
                     SCR_XSIZE = GeoPathTextField.size[2],$
                     SCR_YSIZE = GeoPathTextField.size[3],$
                     UNAME     = GeoPathTextField.uname,$
+                    VALUE     = GeoPathTextField.value,$
                     SENSITIVE = 0,$
                     /EDITABLE)
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET = GeoOrLabel.size[0],$
-                     YOFFSET = GeoOrLabel.size[1],$
-                     VALUE   = GeoOrLabel.value)
+                     XOFFSET   = GeoOrLabel.size[0],$
+                     YOFFSET   = GeoOrLabel.size[1],$
+                     VALUE     = GeoOrLabel.value,$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = GeoOrLabel.uname)
 
 button1 = WIDGET_BUTTON(base,$
                         XOFFSET   = GeoPathButton.size[0],$
@@ -438,7 +471,9 @@ frame = WIDGET_LABEL(base,$
                      SCR_XSIZE = GeoFileFrame.size[2],$
                      SCR_YSIZE = GeoFileFrame.size[3],$
                      FRAME     = GeoFileFrame.frame,$
-                     VALUE     = '')
+                     VALUE     = '',$
+                     SENSITIVE = sensitiveStatus,$
+                     UNAME     = GeoFileFrame.uname)
 
 
 ENDIF

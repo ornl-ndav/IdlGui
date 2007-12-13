@@ -18,11 +18,14 @@ CASE Event.id OF
         putGeometryFileInDroplist, Event ;in gg_put.pro
         putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
         populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        clearCvinfoBase, Event ;in gg_eventcb.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
 ;geometry file selection droplist
     widget_info(wWidget, FIND_BY_UNAME='geometry_droplist'): begin
         putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
 
 ;#1### geometry.xml #####
@@ -30,6 +33,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='geometry_browse_button'): begin
         gg_Browse, Event, 'geometry' ;in gg_Browse.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro	
     end
     
 ;#1### geometry.xml #####
@@ -42,6 +46,7 @@ CASE Event.id OF
 ;geometry.xml text field
     widget_info(wWidget, FIND_BY_UNAME='geometry_text_field'): begin
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
 ;#1### cvinfo.xml #####
@@ -50,6 +55,7 @@ CASE Event.id OF
         retrieve_cvinfo_file_name, Event ;in gg_eventcb.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
         populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
 ;Browsing
@@ -57,6 +63,7 @@ CASE Event.id OF
         gg_Browse, Event, 'cvinfo' ;in gg_Browse.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
         populateNameOfOutputFile, Event ;in gg_eventcb.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
     
 ;#1### cvinfo.xml #####
