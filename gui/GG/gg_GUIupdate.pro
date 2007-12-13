@@ -35,6 +35,7 @@ ENDFOR
 END
 
 
+
 PRO ValidateOrNotOutputGeometryFileBase, Event
 IF (isGeometryAndCvinfoXmlValide(Event)) THEN BEGIN
     ActivateStatus = 1

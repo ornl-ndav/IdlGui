@@ -56,7 +56,7 @@ geometryDroplist = { size  : [geometryLabel.size[0]+XYoff[0],$
                      list  : ['                                                            '],$
                      uname : 'geometry_droplist'}
 
-XYoff = [430,10]
+XYoff = [435,10]
 geometryOrLabel  = { size  : [geometryDroplist.size[0]+XYoff[0],$
                               geometryDroplist.size[1]+XYoff[1]],$
                      value : 'OR',$
@@ -197,7 +197,7 @@ IF (VersionLight) THEN BEGIN
                           value : '~/local',$
                           uname : 'geo_path_text_field'}
 
-    XYoff = [GeoPathTextField.size[2],5]
+    XYoff = [GeoPathTextField.size[2]+3,8]
     GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
                                    GeoPathTextField.size[1]+XYoff[1]],$
                           value : 'OR',$
@@ -205,7 +205,7 @@ IF (VersionLight) THEN BEGIN
     XYoff = [20,0]
     GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
                                    GeoPathTextField.size[1]+XYOff[1],$
-                                   120,35],$
+                                   118,35],$
                           uname : 'geo_path_button',$
                           value : 'Select Path...'}
 ENDIF
