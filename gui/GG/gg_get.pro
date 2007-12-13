@@ -16,7 +16,7 @@ END
 ;Returns the index of the instrument selected in the 'loading
 ;geometry' base
 FUNCTION getInstrumentSelectedIndex, Event
-id = widget_info(Event.top, find_by_uname = 'instrument_droplist')
+id = widget_info(Event.top, find_by_uname ='instrument_droplist')
 RETURN, widget_info(id, /droplist_select)
 END
 
@@ -80,7 +80,7 @@ END
 
 ;Get the list of geometry files
 FUNCTION getGeometryList, instrument
-cmd = 'findcalib -g -i' + instrument
+cmd = 'findcalib -g --listall -i' + instrument
 spawn, cmd, listening, err_listening
 IF (err_listening[0] EQ '') THEN BEGIN
     RETURN, listening
@@ -91,6 +91,27 @@ END
 
 
 
+;Returns the index of the geometry file selected
+FUNCTION getGeometrySelectedIndex, Event
+id = widget_info(Event.top, find_by_uname ='geometry_droplist')
+RETURN, widget_info(id, /droplist_select)
+END
+
+;Returns the array of geometry files
+FUNCTION getGeometryValue, Event
+id = widget_info(Event.top, find_by_uname ='geometry_droplist')
+widget_control, id, get_value=array
+return, array
+END
+
+
+;Returns the geometry file selected
+FUNCTION getGeometryFile, Event
+;get global structure
+index = getGeometrySelectedIndex(Event)
+value = getGeometryValue(Event)
+RETURN, value[index]
+END
 
 
 
