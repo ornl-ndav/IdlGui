@@ -9,7 +9,7 @@ import java.io.*; //to run IDL tools on command line
 
 public class IdlToolsPortal implements ActionListener{
 
-	final static int NUM_IMAGES = 11;   //number of tools
+	final static int NUM_IMAGES = 12;   //number of tools
 	final static int START_INDEX = 0;
 	
   Boolean enableButton = false;  //default behavior of the GO button
@@ -34,6 +34,7 @@ public class IdlToolsPortal implements ActionListener{
   static String TS_REBIN_GUI       = "/SNS/software/idltools/TS_rebin_GUI";
   static String BSS_REDUCTION      = "/SNS/software/idltools/BSSreduction";
   static String MAKENEXUS          = "/SNS/software/idltools/MakeNeXus"; 
+  static String GG                 = "/SNS/software/idltools/GG";
   
 	ImageIcon[] images = new ImageIcon[NUM_IMAGES];
 	String[] info = new String[NUM_IMAGES];
@@ -100,6 +101,7 @@ public class IdlToolsPortal implements ActionListener{
     images[8] = createImageIcon("/gov/ornl/sns/itools/images/TS_rebin_batch.gif");
     images[9] = createImageIcon("/gov/ornl/sns/itools/images/BSSselection.gif");
     images[10]= createImageIcon("/gov/ornl/sns/itools/images/MakeNeXus.gif");
+    images[11]= createImageIcon("/gov/ornl/sns/itools/images/gg.gif"); 
       
 		//Define the help text that goes with each tool
 		//plotBSS
@@ -131,6 +133,8 @@ public class IdlToolsPortal implements ActionListener{
     " and reduce the Backscattering Data.</html>";
     //MakeNeXus
     info[10] = "<html>Create NeXus files of normal or multi-polarization states event files</html>";
+    //GG
+    info[11] = "<html>Generator of geometry file.</html>";
 		/* 
 		 * Create a label for displaying the tools preview and put
 		 * a border around it
@@ -160,7 +164,8 @@ public class IdlToolsPortal implements ActionListener{
         "REFreduction (low resolution mode)",
         "TS_rebin_gui",
         "BSSreduction",
-        "makeNeXus"};
+        "makeNeXus",
+        "Geometry Generator"};
     
 		toolChoices = new JComboBox(tools);
 		toolChoices.setSelectedIndex(START_INDEX);
@@ -256,6 +261,9 @@ public class IdlToolsPortal implements ActionListener{
            System.exit(0);
          case 10: //makeNeXus
            p = (Runtime.getRuntime()).exec(MAKENEXUS);
+           System.exit(0);
+         case 11: //GG
+           p = (Runtime.getRuntime()).exec(GG);
            System.exit(0);
          default: break;
            }
@@ -374,6 +382,10 @@ public class IdlToolsPortal implements ActionListener{
         case arcs2: enableButton = false; break;
         default: enableButton = true; break;
         };  
+      case 11: //GG
+        switch (localHostname) {
+        default: enableButton = true; break;
+        }
     }   
     goButton.setEnabled(enableButton);
   }
