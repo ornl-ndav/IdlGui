@@ -1,3 +1,9 @@
+PRO clearCvinfoBase, Event
+putInTextField, Event, 'cvinfo_run_number_field', ''
+putInTextField, Event, 'cvinfo_text_field', ''
+END
+
+
 PRO putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
 ;get Selected Geometry File
 geometry_file = getGeometryFile(Event)
