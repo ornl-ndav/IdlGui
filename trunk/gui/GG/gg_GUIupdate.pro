@@ -1,4 +1,5 @@
 ;**************** Generic Functions ********************
+
 PRO sensitive_widget, Event, uname, sensitive_status
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, sensitive = sensitive_status
@@ -8,6 +9,7 @@ PRO activateMap, Event, uname , activate_status
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, map=activate_status
 END
+
 
 ;*************** Particular Functions ********************
 
@@ -35,7 +37,6 @@ ENDFOR
 END
 
 
-
 PRO ValidateOrNotOutputGeometryFileBase, Event
 IF (isGeometryAndCvinfoXmlValide(Event)) THEN BEGIN
     ActivateStatus = 1
@@ -61,7 +62,6 @@ ENDFOR
 END
 
 
-
 ;activate or not the 'LOADING GEOMETRY' button in the first base
 PRO loading_geometry_button_status, Event
 ;check that the geometry and cvinfo file field are not empty and that
@@ -69,29 +69,25 @@ PRO loading_geometry_button_status, Event
 geometry_file_name = getGeometryFileName(Event)
 cvinfo_file_name   = getCvinfoFileName(Event)
 IF (FILE_TEST(geometry_file_name) AND $
-    FILE_TEST(cvinfo_file_name)) THEN BEGIN
+    FILE_TEST(cvinfo_file_name) AND $
+    isOutputGeometryPathValidate(Event)) THEN BEGIN
     loading_geometry_button_sensitive = 1
 ENDIF ELSE BEGIN
     loading_geometry_button_sensitive = 0
 ENDELSE
-uname_array = ['loading_geometry_button',$
-               'geo_name_text_field',$
-               'auto_name_with_time_button',$
-               'geo_path_text_field',$
-               'geo_path_button']
-sz = (size(uname_array))(1)
-FOR i=0,(sz-1) DO BEGIN
-    sensitive_widget, $
-      Event, $
-      uname_array[i], $
-      loading_geometry_button_sensitive
-ENDFOR
+uname_array = ['loading_geometry_button']
+sensitive_widget, $
+  Event, $
+  uname_array[0], $
+  loading_geometry_button_sensitive
 END
+
 
 ;activate or not the first base
 PRO activateFirstBase, Event, activate_status
 activateMap, Event, 'loading_geometry_base', activate_status
 END
+
 
 ;activate or not the second base
 PRO activateSecondBase, Event, activate_status

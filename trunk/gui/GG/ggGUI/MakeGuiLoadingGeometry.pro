@@ -447,6 +447,7 @@ text  = WIDGET_TEXT(base,$
                     UNAME     = GeoPathTextField.uname,$
                     VALUE     = GeoPathTextField.value,$
                     SENSITIVE = 0,$
+                    /ALL_EVENTS,$
                     /EDITABLE)
 
 label = WIDGET_LABEL(base,$
