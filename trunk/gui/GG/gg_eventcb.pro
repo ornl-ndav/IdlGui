@@ -1,8 +1,15 @@
+PRO putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
+;get Selected Geometry File
+geometry_file = getGeometryFile(Event)
+;put geometry file in text_field
+putXmlGeometryFileInTextField, Event, geometry_file
+END
+
+
 PRO ggEventcb_InstrumentSelection, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get instrument selected
 InstrumentSelectedIndex = getInstrumentSelectedIndex(Event)
 ;if instrument selected is not 0 then activate 'loading geometry' GUI
@@ -12,7 +19,6 @@ ENDIF ELSE BEGIN
     sensitiveStatus = 1
 ENDELSE
 update_loading_geometry_gui_sensitivity, Event, sensitiveStatus
-
 instrumentShortList = (*(*global).instrumentShortList)
 END
 

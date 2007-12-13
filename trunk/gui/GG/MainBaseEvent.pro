@@ -16,9 +16,15 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
         ggEventcb_InstrumentSelection, Event ;in gg_eventcb.pro
         putGeometryFileInDroplist, Event ;in gg_put.pro
+        putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
         populateNameOfOutputFile, Event ;in gg_eventcb.pro
     end
     
+;geometry file selection droplist
+    widget_info(wWidget, FIND_BY_UNAME='geometry_droplist'): begin
+        putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
+    end
+
 ;#1### geometry.xml #####
 ;Browsing
     widget_info(wWidget, FIND_BY_UNAME='geometry_browse_button'): begin
