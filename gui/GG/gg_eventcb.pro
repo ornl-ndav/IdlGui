@@ -15,6 +15,8 @@ END
 
 
 PRO gg_generate_light_command, Event ;in gg_eventcb
+putInTextField, Event, 'status_label', 'Create Geometry File ... (PROCESSING)'
+putInTextField, EVENt, 'debug_text_field', ''
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -35,13 +37,18 @@ cmd = (*global).cmd_command
 cmd += ' ' + geometry_file
 cmd += ' -m ' + cvinfo_file_name
 cmd += ' -o ' + full_output_geo_name
-print, cmd
-;spawn, cmd, listening, err_listening
-err_listening = ['']
+spawn, cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN BEGIN ;an error occured
-ENDIF ELSE BEGIN
+    text = 'Process FAILED !'
+    putInTextField, Event, 'status_label', text
+    putInTextField, EVENt, 'debug_text_field', err_listening
+ENDIF ELSE BEGIN ;it works 
+    text = 'Geometry file created with SUCCESS (' + full_output_geo_name + ')'
+    putInTextField, Event, 'status_label', text
+    putInTextField, EVENt, 'debug_text_field', ''
 ENDELSE
-
+;desactivate loading_geometry_button
+sensitive_widget, Event, 'loading_geometry_button', 0
 END
 
 
