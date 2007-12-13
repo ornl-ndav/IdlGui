@@ -75,8 +75,22 @@ CASE Event.id OF
 ;#1### cvinfo.xml #####
 ;cvinfo.xml text field
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_text_field'): begin
-        loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+;        loading_geometry_button_status, Event ;in gg_GUIupdate.pro
+        ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
+
+;#Geometry Name Generator
+;Auto name generator without date
+    widget_info(wWidget, FIND_BY_UNAME='auto_name_with_run_button'): begin
+        sensitive_widget, Event, 'auto_name_with_run_button' , 0
+        sensitive_widget, Event, 'auto_name_with_time_button', 1
+    END
+
+;Auto name generator with date
+    widget_info(wWidget, FIND_BY_UNAME='auto_name_with_time_button'): begin
+        sensitive_widget, Event, 'auto_name_with_run_button' , 1
+        sensitive_widget, Event, 'auto_name_with_time_button', 0
+    END
 
 ;#1### LOADING GEOMETRY button
     widget_info(wWidget, FIND_BY_UNAME='loading_geometry_button'): begin
