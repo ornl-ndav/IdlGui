@@ -40,18 +40,18 @@ endif
 #
 # Parse Runinfo File for Basic Command Parameters...
 #
-set args = `awk -f ~/SVN/HistoTool/trunk/cli/runinfo.awk ${fileroot}_runinfo.xml`
+set args = `awk -f /usr/local/SNS/bin/runinfo.awk ${fileroot}_runinfo.xml`
 
 #
 # Generate and Map Polarization Histograms...
 #
 
-echo
-echo "Running:"
-echo
-echo "~/SVN/HistoTool/trunk/cli/Event_to_Histo_Mapped " $args $mapfile $outputfile \
-	${fileroot}"_neutron_event.dat" $mapfile
-echo
+#echo
+#echo "Running:"
+#echo
+#echo "/usr/local/SNS/bin/Event_to_Histo_Mapped " $args $mapfile $outputfile \
+#	${fileroot}"_neutron_event.dat" $mapfile
+#echo
 
-~/SVN/HistoTool/trunk/cli/Event_to_Histo_Mapped $args $mapfile ${fileroot}_neutron_event.dat $outputfile
+/usr/local/SNS/bin/Event_to_Histo_Mapped $args $mapfile ${fileroot}_neutron_event.dat $outputfile
 
