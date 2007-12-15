@@ -34,6 +34,9 @@ END
 
 
 PRO output_path, Event ;in makenexus_eventcb.pro
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 title = 'Select the Main Output Directory'
 path  = '~/'
 OutputPath = DIALOG_PICKFILE(TITLE             = title,$
