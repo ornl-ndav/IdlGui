@@ -53,7 +53,7 @@ table_widget = { size         : [200,0,500,300,4,15],$
 ;///////////
 input_base = { size  : [200,300,500,200],$
                uname : 'input_base'}
-name_label = { size  : [20,20,60,30],$
+name_label = { size  : [5,0,60,30],$
                value : 'N A M E :'}
 XYoff = [50,0]
 name_value = { size : [name_label.size[0]+XYoff[0],$
@@ -61,22 +61,20 @@ name_value = { size : [name_label.size[0]+XYoff[0],$
                        150,$
                        30],$
                uname : 'name_value'}
-XYoff = [200,0]
-value_label = { size  : [name_label.size[0]+XYoff[0],$
-                         name_label.size[1]+XYoff[1]],$
-                value : 'Value'}
-XYoff = [160,0]
-Units_label = { size  : [value_label.size[0]+XYoff[0],$
-                         value_label.size[1]+XYoff[1]],$
-                value : 'Units'}
-XYoff = [80,40]
-original_label = { size : [name_label.size[0]+XYoff[0],$
-                           name_label.size[1]+XYoff[1]],$
-                   value : 'Original'}
-XYoff = [0,50]
-current_label  = { size : [original_label.size[0]+XYoff[0],$
+XYoff = [5,35]
+original_label = { size : [name_value.size[0]+XYoff[0],$
+                           name_value.size[1]+XYoff[1]],$
+                   value : 'Setpoint:'}
+
+XYoff = [0,45]
+readback_label = { size : [original_label.size[0]+XYoff[0],$
                            original_label.size[1]+XYoff[1]],$
-                   value : 'Current'}
+                   value : 'Readback:'}
+
+XYoff = [0,45]
+current_label  = { size : [readback_label.size[0]+XYoff[0],$
+                           readback_label.size[1]+XYoff[1]],$
+                   value : 'Value:'}
 
 XYoff = [80,0]
 original_value_label = { size : [original_label.size[0]+XYoff[0],$
@@ -88,6 +86,17 @@ original_units_label = { size : [original_value_label.size[0]+XYoff[0],$
                                  original_value_label.size[1]+XYoff[1],$
                                  130,30],$
                          uname : 'original_units_label'}
+XYoff = [80,0]
+readback_value_label = { size : [readback_label.size[0]+XYoff[0],$
+                                 readback_label.size[1]+XYoff[1],$
+                                 130,30],$
+                         uname : 'readback_value_label'}
+XYoff = [160,0]
+readback_units_label = { size : [readback_value_label.size[0]+XYoff[0],$
+                                 readback_value_label.size[1]+XYoff[1],$
+                                 130,30],$
+                         uname : 'readback_units_label'}
+
 XYoff = [75,-5]
 current_value_base = { size : [current_label.size[0]+XYoff[0],$
                                current_label.size[1]+XYoff[1],$
@@ -275,18 +284,6 @@ value = WIDGET_LABEL(input_base,$
                      UNAME     = name_value.uname,$
                      VALUE     = '')
 
-value_label = WIDGET_LABEL(input_base,$
-                           XOFFSET   = value_label.size[0],$
-                           YOFFSET   = value_label.size[1],$
-                           SCR_YSIZE = name_value.size[3],$
-                           VALUE     = value_label.value)
-                           
-units_label = WIDGET_LABEL(input_base,$
-                           XOFFSET   = units_label.size[0],$
-                           YOFFSET   = units_label.size[1],$
-                           SCR_YSIZE = name_value.size[3],$
-                           VALUE     = units_label.value)
-
 original_label = WIDGET_LABEL(input_base,$
                               XOFFSET   = original_label.size[0],$
                               YOFFSET   = original_label.size[1],$
@@ -308,6 +305,36 @@ original_units_label = WIDGET_LABEL(input_base,$
                                     SCR_YSIZE = original_units_label.size[3],$
                                     VALUE     = '',$
                                     FRAME     = 1)
+
+readback_label = WIDGET_LABEL(input_base,$
+                              XOFFSET   = readback_label.size[0],$
+                              YOFFSET   = readback_label.size[1],$
+                              SCR_YSIZE = name_value.size[3],$
+                              VALUE     = readback_label.value)
+
+readback_value_label = WIDGET_LABEL(input_base,$
+                                    XOFFSET   = readback_value_label.size[0],$
+                                    YOFFSET   = readback_value_label.size[1],$
+                                    SCR_XSIZE = readback_value_label.size[2],$
+                                    SCR_YSIZE = readback_value_label.size[3],$
+                                    VALUE     = '',$
+                                    FRAME     = 1)
+
+readback_units_label = WIDGET_LABEL(input_base,$
+                                    XOFFSET   = readback_units_label.size[0],$
+                                    YOFFSET   = readback_units_label.size[1],$
+                                    SCR_XSIZE = readback_units_label.size[2],$
+                                    SCR_YSIZE = readback_units_label.size[3],$
+                                    VALUE     = '',$
+                                    FRAME     = 1)
+
+
+
+
+
+
+
+
 
 current_label = WIDGET_LABEL(input_base,$
                               XOFFSET   = current_label.size[0],$

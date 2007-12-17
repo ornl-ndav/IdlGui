@@ -19,7 +19,7 @@ endelse
 ;Which version to load
 ;1 is for version that never shows the base #2. It only allows user to
 ;load the xml files and create the geometry file
-versionLight = 1
+versionLight = 0
 ;0 is for full version that displays the base #2.
 
 ;get hostname
@@ -69,17 +69,20 @@ images_structure = { images_path : [current_folder,$
                                'wavelength.bmp',$
                                'other.bmp']}
 
-
 IF (versionLight) THEN BEGIN
+    MainBaseTitle = 'Geometry Generator (version light)'
     IF (ucams EQ (*global).geek) THEN BEGIN
         MainBaseSize  = [30,25,700,700]
     ENDIF ELSE BEGIN
         MainBaseSize  = [30,25,700,530]
     ENDELSE
 ENDIF ELSE BEGIN
+    MainBaseTitle = 'Geometry Generator'
     MainBaseSize  = [30,25,700,500]
 ENDELSE
-MainBaseTitle = 'Geometry Generator'
+
+
+
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$

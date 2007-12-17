@@ -1,6 +1,6 @@
 #$Id$
 
-# Makefile for BSSreduction
+# Makefile for GG (Geometry Generator)
 # Compile the necessary modules
 # Create the VM programs 
 # Copy the VM programs in their final location
@@ -8,7 +8,6 @@
 all:
 	idl ./makefile.pro;
 install:
-	cp bss_reduction.sav /SNS/software/idltools/sav/
-	cp BSSreduction /SNS/software/idltools/
-
+	cp gg.sav /SNS/software/idltools/sav/
+	cp GG /SNS/software/idltools/
 
