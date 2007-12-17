@@ -27,6 +27,8 @@ cd, CurrentFolder
 ;procedures
 .run gg_Preview.pro
 .run gg_Browse.pro
+.run gg_ReadXml.pro
+.run myParser__define.pro
 
 ;main functions
 .run MainBaseEvent.pro
