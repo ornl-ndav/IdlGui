@@ -1,23 +1,23 @@
 PRO xmlParser::StartElement, URI, Local, strName, attrName, attrValue
 CASE strName OF
-    'Solar_System': 
-    'inputs':
-    'group' : self.Group = attrValue[0]
-    'Planet': begin
-        self.currentPlanet={PLANET,"",0ull,'',0.0,'',0,'',self.Group}
-        self.currentPlanet.Name = attrValue[0]
+    'parameters': 
+    'inputs'    :
+    'group'     : self.Group = attrValue[0]
+    'motor'     :
+    'name'      : begin
+        self.currentMotor={MOTOR,"",0ull,'',0.0,'',0,'',self.Group}
     end
-    'Orbit': begin
+    'setpoint'  : begin
         self.charbuffer=''
-        self.currentPlanet.OrbitUnits = attrValue[0]
+        self.currentMotor.setpointUnits = attrValue[0]
     end
-    'Period':begin
+    'readback':begin
         self.charbuffer=''
-        self.currentPlanet.PeriodUnits = attrValue[0]
+        self.currentMotor.readbackUnits = attrValue[0]
     end
-    'Moons':begin
+    'value':begin
         self.charbuffer=''
-        self.currentPlanet.MoonsUnits = attrValue[0]
+        self.currentMotor.valueUnits = attrValue[0]
     end
 ENDCASE
 END
@@ -25,29 +25,30 @@ END
 
 PRO xmlParser::EndElement, URI, Local, strName
 CASE strName OF
-    'Solar_System': 
-    'inputs':
-    'group' :
-    'Planet': begin
-        self.Planets(self.planetNum)=self.currentPlanet
-        self.planetNum = self.planetNum + 1
+    'parameters': 
+    'inputs'    :
+    'group'     :
+    'motor'     : begin
+        self.motors(self.MotorNum) = self.currentMotor
+        self.MotorNum              = self.MotorNum + 1
     end
-    'Orbit': self.currentPlanet.Orbit = self.charBuffer
-    'Period': self.currentPlanet.Period = self.charBuffer
-    'Moons': self.currentPlanet.Moons = self.charBuffer
+    'name'      : self.currentMotor.name     = self.charbuffer
+    'setpoint'  : self.currentMotor.setpoint = self.charBuffer
+    'readback'  : self.currentMotor.readback = self.charBuffer
+    'value'     : self.currentMotor.value    = self.charBuffer
 ENDCASE
 END
 
 
 FUNCTION xmlParser::Init
-self.PlanetNum = 0
+self.MotorNum = 0
 RETURN, self->IDLffXMLSAX::Init()
 END
 
 
 FUNCTION xmlParser::GetArray
-IF (self.planetNum EQ 0) THEN RETURN, -1 $
-ELSE RETURN, self.Planets[0:self.planetNum-1]
+IF (self.MotorNum EQ 0) THEN RETURN, -1 $
+ELSE RETURN, self.Motors[0:self.MotorNum-1]
 END
 
 
@@ -62,20 +63,20 @@ END
 
 
 PRO xmlParser__define
-void = {PLANET, name: '', $
-        Orbit       : 0ull, $
-        OrbitUnits  : '', $
-        Period      : 0.0, $
-        PeriodUnits : '',$
-        Moons       : 0,$
-        MoonsUnits  : '',$
-        group       : ''}
+void = {MOTOR, name   : '', $
+        setpoint      : 0.0, $
+        setpointUnits : '', $
+        readback      : 0.0, $
+        readbackUnits : '',$
+        value         : 0,$
+        valueUnits    : '',$
+        group         : ''}
 void = {xmlParser, $
         INHERITS IDLffXMLSAX, $
         CharBuffer   : "",$
-        PlanetNum    :0,$
+        MotorNum     :0,$
         Group        : '',$
-        currentPlanet:{PLANET},$
-        Planets      : Make_array(5,value={PLANET})}
+        currentMotor :{MOTOR},$
+        Motors       : Make_array(50,value={MOTOR})}
 
 END
