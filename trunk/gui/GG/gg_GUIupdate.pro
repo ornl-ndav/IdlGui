@@ -93,3 +93,11 @@ END
 PRO activateSecondBase, Event, activate_status
 activateMap, Event, 'input_geometry_base', activate_status
 END
+
+
+;populate table
+PRO populateTable, Event, FinalArray
+id = widget_info(Event.top,find_by_uname='table_widget')
+widget_control, id, set_value=FinalArray
+END
+

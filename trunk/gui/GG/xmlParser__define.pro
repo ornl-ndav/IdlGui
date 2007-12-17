@@ -1,10 +1,14 @@
 PRO xmlParser::StartElement, URI, Local, strName, attrName, attrValue
 CASE strName OF
-    'parameters': 
-    'inputs'    :
-    'group'     : self.Group = attrValue[0]
-    'motor'     :
+    'parameters': self.charbuffer=''
+    'inputs'    : self.charbuffer=''
+    'group'     : begin
+        self.charbuffer=''
+        self.Group = attrValue[0]
+    end
+    'motor'     : self.charbuffer=''
     'name'      : begin
+        self.charbuffer=''
         self.currentMotor={MOTOR,"",0ull,'',0.0,'',0,'',self.Group}
     end
     'setpoint'  : begin
@@ -68,13 +72,13 @@ void = {MOTOR, name   : '', $
         setpointUnits : '', $
         readback      : 0.0, $
         readbackUnits : '',$
-        value         : 0,$
+        value         : 0.0,$
         valueUnits    : '',$
         group         : ''}
 void = {xmlParser, $
         INHERITS IDLffXMLSAX, $
         CharBuffer   : "",$
-        MotorNum     :0,$
+        MotorNum     : 0L,$
         Group        : '',$
         currentMotor :{MOTOR},$
         Motors       : Make_array(50,value={MOTOR})}

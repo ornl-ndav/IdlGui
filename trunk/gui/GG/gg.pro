@@ -35,6 +35,9 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    setpointStatus        : 'S',$
+                    userStatus            : 'U',$
+                    readbackStatus        : 'R',$
                     cmd_command           : 'TS_geom_calc.sh ',$
                     geek                  : 'j35',$
                     output_default_geometry_path : '~/local',$
