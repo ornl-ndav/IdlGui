@@ -46,7 +46,8 @@ END
 FUNCTION getPreNexus, instrument, RunNumber, prenexus_path
 cmd = 'findnexus --prenexus -i' + strcompress(instrument,/remove_all)
 cmd += ' ' + strcompress(RunNumber,/remove_all)
-spawn, cmd, result
+spawn, cmd, result, err_listening
+if (err_listening[0] NE '') THEN RETURN, 0
 IF (STRMATCH(result[0],'ERROR*')) THEN BEGIN
     prenexus_path = ''
     RETURN, 0
