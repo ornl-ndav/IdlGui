@@ -80,9 +80,6 @@ ENDIF ELSE BEGIN
     MainBaseTitle = 'Geometry Generator'
     MainBaseSize  = [30,25,700,500]
 ENDELSE
-
-
-
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$

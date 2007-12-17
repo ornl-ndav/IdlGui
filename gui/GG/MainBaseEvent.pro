@@ -11,6 +11,8 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+;1111111111111111111111111111111111111111111111111111111111111111111111111111111
+
 ;#1### Instrument Selection #####
 ;Instrument Selection
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
@@ -107,6 +109,12 @@ CASE Event.id OF
 ;#1### LOADING GEOMETRY button
     widget_info(wWidget, FIND_BY_UNAME='loading_geometry_button'): begin
         load_geometry, Event ;in gg_eventcb.pro
+    end
+    
+;2222222222222222222222222222222222222222222222222222222222222222222222222222222
+;full reset (read xml and populate table)
+    widget_info(wWidget, FIND_BY_UNAME='full_reset_button'): begin
+        ReadXmlFile, Event ;in gg_ReadXml.pro
     end
     
     ELSE:
