@@ -7,5 +7,10 @@ xmlFile = OBJ_NEW('xmlParser')
 xmlFile->ParseFile, file
 
 motors = xmlFile->GetArray()
-help, motors
+sz = (size(motors))(1)
+
+;create table
+FinalArray = gg_createTableArray(Event, motors)
+;populate Table array
+populateTable, Event, FinalArray
 END
