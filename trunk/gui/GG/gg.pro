@@ -49,6 +49,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     cvinfo_xml_filtering  : '*_cvinfo.xml',$
                     default_extension     : 'xml',$
                     version_light         : versionLight,$
+                    motors                : ptr_new(0L),$
                     version : VERSION })
 
 InstrumentList = ['',$
