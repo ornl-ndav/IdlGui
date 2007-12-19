@@ -140,7 +140,9 @@ id = widget_info(Event.top,find_by_uname='table_widget')
 selection = widget_info(id,/table_select)
 columnIndex = selection[1]
 
-motors = (*(*global).motors)
+motors = (*(*global).motor_group)
+
+;index = getMotorsIndexOfName(Event, 
 
 name           = motors[columnIndex].name
 setpoint_value = motors[columnIndex].setpoint
@@ -157,5 +159,26 @@ putInTextField, Event, 'readback_value_label', readback
 putInTextField, Event, 'readback_units_label', readback_units
 putInTextField, Event, 'current_value_text_field', value
 putInTextField, Event, 'current_units_text_field', value_units
+END
 
+
+
+;display the value of the selected element
+PRO DisplayGivenElement, Event, $
+                         name, $
+                         set_v, $
+                         set_u, $
+                         read_v,$
+                         read_u,$
+                         value_v,$
+                         value_u
+
+;display data
+putInTextField, Event, 'name_value', name
+putInTextField, Event, 'setpoint_value_label', set_v
+putInTextField, Event, 'setpoint_units_label', set_u
+putInTextField, Event, 'readback_value_label', read_v
+putInTextField, Event, 'readback_units_label', read_u
+putInTextField, Event, 'current_value_text_field', value_v
+putInTextField, Event, 'current_units_text_field', value_u
 END

@@ -115,10 +115,10 @@ reset_button = { size  : [35,165,80,30],$
                  value : 'RESET',$
                  uname : 'reset_selected_element_button'}
 
-XYoff = [143,0]
+XYoff = [138,0]
 validate_button = {size  : [reset_button.size[0]+XYoff[0],$
                             reset_button.size[1]+XYoff[1],$
-                            297,30],$
+                            290,30],$
                    value : 'VALIDATE CHANGES',$
                    uname : 'validate_selected_element_button'}
 
@@ -159,7 +159,7 @@ myIcon2[*,*,0] = myIcon1[0,*,*]
 myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf1 = WIDGET_TREE(wtRoot,$
-                      VALUE  = 'numbers',$
+                      VALUE  = 'number',$
                       UVALUE = 'LEAF',$
                       BITMAP = myIcon2,$
                       UNAME  = 'leaf1')
@@ -172,7 +172,7 @@ myIcon2[*,*,0] = myIcon1[0,*,*]
 myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf2 = WIDGET_TREE(wtRoot,$
-                      VALUE  = 'angles',$
+                      VALUE  = 'angle',$
                       UVALUE = 'LEAF',$
                       BITMAP = myIcon2,$
                       UNAME  = 'leaf2')
@@ -185,7 +185,7 @@ myIcon2[*,*,0] = myIcon1[0,*,*]
 myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf3 = WIDGET_TREE(wtRoot,$
-                      VALUE  = 'lengths',$
+                      VALUE  = 'length',$
                       UVALUE = 'LEAF',$
                       BITMAP = myIcon2,$
                       UNAME  = 'leaf3')
@@ -256,6 +256,7 @@ table = WIDGET_TABLE(base,$
                      UNAME         = table_widget.uname,$
                      COLUMN_LABELS = table_widget.label,$
                      COLUMN_WIDTHS = table_widget.column_width,$
+                     SENSITIVE     = 0,$
                      /NO_ROW_HEADERS,$
                      /ROW_MAJOR,$
                      /RESIZEABLE_COLUMNS,$

@@ -50,6 +50,8 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     default_extension     : 'xml',$
                     version_light         : versionLight,$
                     motors                : ptr_new(0L),$
+                    untouched_motors      : ptr_new(0L),$
+                    motor_group           : ptr_new(0L),$
                     version : VERSION })
 
 InstrumentList = ['',$

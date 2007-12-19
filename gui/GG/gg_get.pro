@@ -126,3 +126,9 @@ RETURN, getTextFieldValue(Event, 'geo_name_text_field')
 END
 
 
+FUNCTION getMotorsIndexOfName, Event, name, motors
+ListOfName = motors.name
+index = where(ListOfName EQ name)
+return, index
+end
+

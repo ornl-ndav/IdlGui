@@ -11,6 +11,7 @@ xmlFile->ParseFile, file
 motors = xmlFile->GetArray()
 ;help, motors
 (*(*global).motors) = motors
+(*(*global).untouched_motors) = motors
 sz = (size(motors))(1)
 
 ;create table
@@ -26,4 +27,6 @@ TableNbrLines, Event, sz
 ;display data of first element selected (top one)
 displayDataOfFirstElement, Event, motors
 
+;activate table
+sensitive_widget, Event, 'table_widget', 1
 END

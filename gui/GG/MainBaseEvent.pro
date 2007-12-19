@@ -114,23 +114,23 @@ CASE Event.id OF
 ;2222222222222222222222222222222222222222222222222222222222222222222222222222222
 ;tree selection
     widget_info(wWidget, FIND_BY_UNAME='widget_tree_root'): begin
-       print, 'here'
+        root_selected, Event ;in gg_Table.pro
      end
     
    widget_info(wWidget, FIND_BY_UNAME='leaf1'): begin
-       print, 'in leaf1'
+       leaf_selected, Event, 'leaf1' ;in gg_Table.pro
      end
  
    widget_info(wWidget, FIND_BY_UNAME='leaf2'): begin
-       print, 'in leaf2'
-     end
+       leaf_selected, Event, 'leaf2' ;in gg_Table.pro
+   end
 
    widget_info(wWidget, FIND_BY_UNAME='leaf3'): begin
-       print, 'in leaf3'
+       leaf_selected, Event, 'leaf3' ;in gg_Table.pro
      end
 
    widget_info(wWidget, FIND_BY_UNAME='leaf4'): begin
-       print, 'in leaf4'
+       leaf_selected, Event, 'leaf4' ;in gg_Table.pro
      end
 
 ;full reset (read xml and populate table)
@@ -143,6 +143,21 @@ CASE Event.id OF
         DisplaySelectedElement, Event ;in gg_GUIupdate.pro
     end
     
+;validate value change
+    widget_info(wWidget, FIND_BY_UNAME='current_value_text_field'): begin
+        changeValue, Event ;in gg_Table.pro
+    end
+    
+;validate units change
+    widget_info(wWidget, FIND_BY_UNAME='current_units_text_field'): begin
+        changeUnits, Event ;in gg_Table.pro
+    end
+
+;validate value and units change
+    widget_info(wWidget, FIND_BY_UNAME='validate_selected_element_button'): begin
+        changeValueAndUnits, Event ;in gg_Table.pro
+    end
+
     
     ELSE:
     
