@@ -143,10 +143,12 @@ wTree = WIDGET_TREE(base,$
                    SCR_YSIZE = tree_widget.size[3],$
                    UNAME     = tree_widget.uname)
                    
+                   
 wtRoot = WIDGET_TREE(wTree,$
                      VALUE = 'Types',$
                      /FOLDER,$
-                     /EXPANDED)
+                     /EXPANDED,$
+                     UNAME = 'widget_tree_root')
 
 
 file = strjoin(images_structure.images_path,'/')
@@ -158,8 +160,9 @@ myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf1 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'numbers',$
-                      uvalue = 'LEAF',$
-                      BITMAP = myIcon2)
+                      UVALUE = 'LEAF',$
+                      BITMAP = myIcon2,$
+                      UNAME  = 'leaf1')
 
 file = strjoin(images_structure.images_path,'/')
 file += '/' + images_structure.images[1]
@@ -170,8 +173,9 @@ myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf2 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'angles',$
-                      uvalue = 'LEAF',$
-                      BITMAP = myIcon2)
+                      UVALUE = 'LEAF',$
+                      BITMAP = myIcon2,$
+                      UNAME  = 'leaf2')
 
 file = strjoin(images_structure.images_path,'/')
 file += '/' + images_structure.images[2]
@@ -182,8 +186,9 @@ myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf3 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'lengths',$
-                      uvalue = 'LEAF',$
-                      BITMAP = myIcon2)
+                      UVALUE = 'LEAF',$
+                      BITMAP = myIcon2,$
+                      UNAME  = 'leaf3')
 
 
 file = strjoin(images_structure.images_path,'/')
@@ -195,8 +200,9 @@ myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf4 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'wavelength',$
-                      uvalue = 'LEAF',$
-                      BITMAP = myIcon2)
+                      UVALUE = 'LEAF',$
+                      BITMAP = myIcon2,$
+                      UNAME  = 'leaf4')
 
 file = strjoin(images_structure.images_path,'/')
 file += '/' + images_structure.images[4]
@@ -207,8 +213,9 @@ myIcon2[*,*,1] = myIcon1[1,*,*]
 myIcon2[*,*,2] = myIcon1[2,*,*]
 wtLeaf5 = WIDGET_TREE(wtRoot,$
                       VALUE  = 'other',$
-                      uvalue = 'LEAF',$
-                      BITMAP = myIcon2)
+                      UVALUE = 'LEAF',$
+                      BITMAP = MYICON2,$
+                      UNAME  = 'leaf5')
 
 ;\\\\\\\\\\\\\\\\\\
 ;Main button panel\
@@ -236,12 +243,6 @@ button1 = WIDGET_BUTTON(base,$
                         SCR_YSIZE = create_geometry.size[3],$
                         VALUE     = create_geometry.value,$
                         UNAME     = create_geometry.uname)
-
-
-
-
-
-
 ;\\\\\\\\\\\\\
 ;table widget\
 ;\\\\\\\\\\\\\
@@ -327,14 +328,6 @@ readback_units_label = WIDGET_LABEL(input_base,$
                                     SCR_YSIZE = readback_units_label.size[3],$
                                     VALUE     = '',$
                                     FRAME     = 1)
-
-
-
-
-
-
-
-
 
 current_label = WIDGET_LABEL(input_base,$
                               XOFFSET   = current_label.size[0],$
