@@ -137,6 +137,12 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='full_reset_button'): begin
         ReadXmlFile, Event ;in gg_ReadXml.pro
     end
+
+;Table 
+    widget_info(wWidget, FIND_BY_UNAME='table_widget'): begin
+        DisplaySelectedElement, Event ;in gg_GUIupdate.pro
+    end
+    
     
     ELSE:
     

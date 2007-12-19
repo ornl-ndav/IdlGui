@@ -43,7 +43,7 @@ create_geometry = { size  : [full_reset.size[0]+XYoff[0],$
 ;/////////////
 ;table widget/
 ;/////////////
-table_widget = { size         : [200,0,500,300,4,15],$
+table_widget = { size         : [200,0,500,300,4,50],$
                  uname        : 'table_widget',$
                  label        : ['STATUS','N A M E','VALUE','UNITS'],$
                  column_width : [60,180,120,110]}
@@ -55,7 +55,7 @@ input_base = { size  : [200,300,500,200],$
                uname : 'input_base'}
 name_label = { size  : [5,0,60,30],$
                value : 'N A M E :'}
-XYoff = [50,0]
+XYoff = [80,0]
 name_value = { size : [name_label.size[0]+XYoff[0],$
                        name_label.size[1]+XYoff[1],$
                        150,$
@@ -80,12 +80,12 @@ XYoff = [80,0]
 original_value_label = { size : [original_label.size[0]+XYoff[0],$
                                  original_label.size[1]+XYoff[1],$
                                  130,30],$
-                         uname : 'original_value_label'}
+                         uname : 'setpoint_value_label'}
 XYoff = [160,0]
 original_units_label = { size : [original_value_label.size[0]+XYoff[0],$
                                  original_value_label.size[1]+XYoff[1],$
                                  130,30],$
-                         uname : 'original_units_label'}
+                         uname : 'setpoint_units_label'}
 XYoff = [80,0]
 readback_value_label = { size : [readback_label.size[0]+XYoff[0],$
                                  readback_label.size[1]+XYoff[1],$
@@ -258,7 +258,8 @@ table = WIDGET_TABLE(base,$
                      COLUMN_WIDTHS = table_widget.column_width,$
                      /NO_ROW_HEADERS,$
                      /ROW_MAJOR,$
-                     /RESIZEABLE_COLUMNS)
+                     /RESIZEABLE_COLUMNS,$
+                     /ALL_EVENTS)
 
 ;\\\\\\\\\\\
 ;Input base\
@@ -283,7 +284,8 @@ value = WIDGET_LABEL(input_base,$
                      SCR_XSIZE = name_value.size[2],$
                      SCR_YSIZE = name_value.size[3],$
                      UNAME     = name_value.uname,$
-                     VALUE     = '')
+                     VALUE     = '',$
+                     /ALIGN_LEFT)
 
 original_label = WIDGET_LABEL(input_base,$
                               XOFFSET   = original_label.size[0],$
@@ -296,6 +298,7 @@ original_value_label = WIDGET_LABEL(input_base,$
                                     YOFFSET   = original_value_label.size[1],$
                                     SCR_XSIZE = original_value_label.size[2],$
                                     SCR_YSIZE = original_value_label.size[3],$
+                                    UNAME     = original_value_label.uname,$
                                     VALUE     = '',$
                                     FRAME     = 1)
 
@@ -304,6 +307,7 @@ original_units_label = WIDGET_LABEL(input_base,$
                                     YOFFSET   = original_units_label.size[1],$
                                     SCR_XSIZE = original_units_label.size[2],$
                                     SCR_YSIZE = original_units_label.size[3],$
+                                    UNAME     = original_units_label.uname,$
                                     VALUE     = '',$
                                     FRAME     = 1)
 
@@ -318,6 +322,7 @@ readback_value_label = WIDGET_LABEL(input_base,$
                                     YOFFSET   = readback_value_label.size[1],$
                                     SCR_XSIZE = readback_value_label.size[2],$
                                     SCR_YSIZE = readback_value_label.size[3],$
+                                    UNAME     = readback_value_label.uname,$
                                     VALUE     = '',$
                                     FRAME     = 1)
 
@@ -326,6 +331,7 @@ readback_units_label = WIDGET_LABEL(input_base,$
                                     YOFFSET   = readback_units_label.size[1],$
                                     SCR_XSIZE = readback_units_label.size[2],$
                                     SCR_YSIZE = readback_units_label.size[3],$
+                                    UNAME     = readback_units_label.uname,$
                                     VALUE     = '',$
                                     FRAME     = 1)
 

@@ -101,3 +101,61 @@ id = widget_info(Event.top,find_by_uname='table_widget')
 widget_control, id, set_value=FinalArray
 END
 
+
+;number of lines in Table
+PRO TableNbrLines, Event, nbrLines
+id = widget_info(Event.top,find_by_uname='table_widget')
+widget_control, id, table_ysize=nbrLines
+END
+
+
+;display the data (name, value, units...) of first element of table
+PRO displayDataOfFirstElement, Event, motors
+;retrive value of first element selected
+name           = motors[0].name
+setpoint_value = motors[0].setpoint
+setpoint_units = motors[0].setpointUnits
+readback       = motors[0].readback
+readback_units = motors[0].readbackUnits
+value          = motors[0].value
+value_units    = motors[0].valueUnits
+;display data
+putInTextField, Event, 'name_value', name
+putInTextField, Event, 'setpoint_value_label', setpoint_value
+putInTextField, Event, 'setpoint_units_label', setpoint_units
+putInTextField, Event, 'readback_value_label', readback
+putInTextField, Event, 'readback_units_label', readback_units
+putInTextField, Event, 'current_value_text_field', value
+putInTextField, Event, 'current_units_text_field', value_units
+END
+
+
+;display the value of the selected element
+PRO DisplaySelectedElement, Event ;in gg_GUIupdate.pro
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;get line selected
+id = widget_info(Event.top,find_by_uname='table_widget')
+selection = widget_info(id,/table_select)
+columnIndex = selection[1]
+
+motors = (*(*global).motors)
+
+name           = motors[columnIndex].name
+setpoint_value = motors[columnIndex].setpoint
+setpoint_units = motors[columnIndex].setpointUnits
+readback       = motors[columnIndex].readback
+readback_units = motors[columnIndex].readbackUnits
+value          = motors[columnIndex].value
+value_units    = motors[columnIndex].valueUnits
+;display data
+putInTextField, Event, 'name_value', name
+putInTextField, Event, 'setpoint_value_label', setpoint_value
+putInTextField, Event, 'setpoint_units_label', setpoint_units
+putInTextField, Event, 'readback_value_label', readback
+putInTextField, Event, 'readback_units_label', readback_units
+putInTextField, Event, 'current_value_text_field', value
+putInTextField, Event, 'current_units_text_field', value_units
+
+END
