@@ -62,10 +62,6 @@ END
 
 
 
-
-
-
-
 PRO xmlParser__define
 void = {MOTOR, name   : '', $
         setpoint      : 0.0, $

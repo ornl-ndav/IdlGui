@@ -182,3 +182,33 @@ putInTextField, Event, 'readback_units_label', read_u
 putInTextField, Event, 'current_value_text_field', value_v
 putInTextField, Event, 'current_units_text_field', value_u
 END
+
+
+PRO activateTableGui, Event, activate_status
+array = ['table_widget',$
+         'reset_selected_element_button',$
+         'validate_selected_element_button',$
+         'current_value_text_base',$
+         'current_units_text_base']
+sz = (size(array))(1)
+FOR i=0,(sz-1) DO BEGIN
+    sensitive_widget, Event, array[i], activate_status
+ENDFOR
+END
+
+
+;select first line of table
+PRO selectFirstTableLine, Event
+id = widget_info(event.top,find_by_uname='table_widget')
+widget_control, id, set_table_select=[0,0,0,0]
+END
+
+
+;select root from tree
+PRO selectTreeRoot, Event
+id = widget_info(event.top,find_by_uname='tree_widget')
+widget_control, id, set_tree_select=0
+END
+
+
+

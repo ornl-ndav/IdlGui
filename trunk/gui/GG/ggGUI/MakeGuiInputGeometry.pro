@@ -101,6 +101,7 @@ XYoff = [75,-5]
 current_value_base = { size : [current_label.size[0]+XYoff[0],$
                                current_label.size[1]+XYoff[1],$
                                150,40],$
+                       base_uname : 'current_value_text_base',$
                        xsize : 20,$
                        uname : 'current_value_text_field'}
 
@@ -108,6 +109,7 @@ XYoff = [235,-5]
 current_units_base = { size : [current_label.size[0]+XYoff[0],$
                                current_label.size[1]+XYoff[1],$
                                150,40],$
+                       base_uname : 'current_units_text_base',$
                        xsize : current_value_base.xsize,$
                        uname : 'current_units_text_field'}
 
@@ -346,7 +348,9 @@ value_base = WIDGET_BASE(input_base,$
                          XOFFSET   = current_value_base.size[0],$
                          YOFFSET   = current_value_base.size[1],$
                          SCR_XSIZE = current_value_base.size[2],$
-                         SCR_YSIZE = current_value_base.size[3])
+                         SCR_YSIZE = current_value_base.size[3],$
+                         SENSITIVE = 0,$
+                         UNAME     = current_value_base.base_uname)
 
 field1 = CW_FIELD(value_base,$
                   XSIZE         = current_value_base.xsize,$
@@ -359,7 +363,9 @@ units_base = WIDGET_BASE(input_base,$
                          XOFFSET   = current_units_base.size[0],$
                          YOFFSET   = current_units_base.size[1],$
                          SCR_XSIZE = current_units_base.size[2],$
-                         SCR_YSIZE = current_units_base.size[3])
+                         SCR_YSIZE = current_units_base.size[3],$
+                         SENSITIVE = 0,$
+                         UNAME     = current_units_base.base_uname)
 
 field2 = CW_FIELD(units_base,$
                   XSIZE         = current_units_base.xsize,$
@@ -374,7 +380,8 @@ button = WIDGET_BUTTON(input_base,$
                        SCR_XSIZE = reset_button.size[2],$
                        SCR_YSIZE = reset_button.size[3],$
                        VALUE     = reset_button.value,$
-                       UNAME     = reset_button.uname)
+                       UNAME     = reset_button.uname,$
+                       SENSITIVE = 0)
                   
 button = WIDGET_BUTTON(input_base,$
                        XOFFSET   = validate_button.size[0],$
@@ -382,12 +389,7 @@ button = WIDGET_BUTTON(input_base,$
                        SCR_XSIZE = validate_button.size[2],$
                        SCR_YSIZE = validate_button.size[3],$
                        VALUE     = validate_button.value,$
-                       UNAME     = validate_button.uname)
+                       UNAME     = validate_button.uname,$
+                       SENSITIVE = 0)
                   
-
-
-
-
-                     
-
 END
