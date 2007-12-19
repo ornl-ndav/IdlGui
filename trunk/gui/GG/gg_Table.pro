@@ -15,7 +15,7 @@ status     = strarr(sz)
 name       = strarr(sz)
 value      = strarr(sz)
 units      = strarr(sz)
-FinalArray = strarr(sz,4)
+FinalArray = strarr(4,sz)
 
 FOR i=0,(sz-1) DO BEGIN
     name[i]  = strcompress(motors[i].name,/remove_all)
@@ -40,10 +40,9 @@ FOR i=0,(sz-1) DO BEGIN
     status[i] = stat
     
     Array = [status[i],name[i],value[i],units[i]]
-    FinalArray[i] = Array
+    FinalArray[*,i] = Array
 
 ENDFOR
-help, finalArray
 
 RETURN, FinalArray
 END

@@ -30,6 +30,7 @@ cd, CurrentFolder
 .run gg_Table.pro
 .run gg_ReadXml.pro
 .run xmlParser__define.pro
+.run gg_Tree.pro
 
 ;main functions
 .run MainBaseEvent.pro

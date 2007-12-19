@@ -112,6 +112,27 @@ CASE Event.id OF
     end
     
 ;2222222222222222222222222222222222222222222222222222222222222222222222222222222
+;tree selection
+    widget_info(wWidget, FIND_BY_UNAME='widget_tree_root'): begin
+       print, 'here'
+     end
+    
+   widget_info(wWidget, FIND_BY_UNAME='leaf1'): begin
+       print, 'in leaf1'
+     end
+ 
+   widget_info(wWidget, FIND_BY_UNAME='leaf2'): begin
+       print, 'in leaf2'
+     end
+
+   widget_info(wWidget, FIND_BY_UNAME='leaf3'): begin
+       print, 'in leaf3'
+     end
+
+   widget_info(wWidget, FIND_BY_UNAME='leaf4'): begin
+       print, 'in leaf4'
+     end
+
 ;full reset (read xml and populate table)
     widget_info(wWidget, FIND_BY_UNAME='full_reset_button'): begin
         ReadXmlFile, Event ;in gg_ReadXml.pro
