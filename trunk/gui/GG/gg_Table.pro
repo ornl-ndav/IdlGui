@@ -17,7 +17,6 @@ value      = strarr(sz)
 units      = strarr(sz)
 FinalArray = strarr(4,sz)
 
-
 FOR i=0,(sz-1) DO BEGIN
     name[i]  = strcompress(motors[i].name,/remove_all)
     value[i] = strcompress(motors[i].value,/remove_all)
@@ -44,7 +43,6 @@ FOR i=0,(sz-1) DO BEGIN
     FinalArray[*,i] = Array
 
 ENDFOR
-
 RETURN, FinalArray
 END
 
@@ -63,7 +61,7 @@ sz           = (size(motors))(1)
 
 IF (group EQ 'root') THEN BEGIN
     array = gg_createTableArray(Event, motors)
-    return, array
+    RETURN, array
 ENDIF
 
 ;make tmp structure of only group values
