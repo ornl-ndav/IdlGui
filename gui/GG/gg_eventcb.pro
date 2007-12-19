@@ -148,6 +148,52 @@ ENDIF ELSE BEGIN ;version complete
 ENDELSE
 END
 
+
+;Reach by the load new base geometry of base #2
+PRO LoadNewGeometryButton, Event
+activateFirstBase,  Event, 1
+activateSecondBase, Event, 0
+END
+
+
+
+;Reached by the 'CREATE GEOMETRY FILE' button
+PRO CreateNewGeometryFile, Event      ;in gg_evenctb
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve value of untouched motor and touched motor data
+new_motor = (*(*global).motors)
+old_motor = (*(*global).untouched_motors)
+
+
+
+;isolate values that changed
+sz = (size(new_motor))(1)
+FOR i=0,(sz-1) DO BEGIN
+    old_value = old_motor[i].value
+    old_units = old_motor[i].valueUnits
+    new_value = new_motor[i].value
+    new_units = new_motor[i].valueUnits
+    IF ((old_value NE new_value) OR $
+        (old_units NE new_units)) THEN BEGIN
+        name      = old_motor[i].name
+        new_value = new_motor[i].value
+        new_units = new_motor[i].valueUnits
+    ENDIF
+ENDFOR
+
+END
+
+
+
+
+
+
+
+
+
+
 ;------------------------------------------------------------
 
 pro MAIN_REALIZE, wWidget

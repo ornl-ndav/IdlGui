@@ -138,6 +138,16 @@ CASE Event.id OF
         ReadXmlFile, Event ;in gg_ReadXml.pro
     end
 
+;load new base geometry (show base 1)
+    widget_info(wWidget, FIND_BY_UNAME='load_new_geometry_button'): begin
+        LoadNewGeometryButton, Event      ;in gg_evenctb
+    end
+
+;Create new geometry file
+    widget_info(wWidget, FIND_BY_UNAME='create_geometry_file_button'): begin
+        CreateNewGeometryFile, Event      ;in gg_evenctb
+    end
+
 ;Table 
     widget_info(wWidget, FIND_BY_UNAME='table_widget'): begin
         DisplaySelectedElement, Event ;in gg_GUIupdate.pro
