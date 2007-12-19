@@ -64,11 +64,11 @@ END
 
 PRO xmlParser__define
 void = {MOTOR, name   : '', $
-        setpoint      : 0.0, $
+        setpoint      : double(0.0), $
         setpointUnits : '', $
-        readback      : 0.0, $
+        readback      : double(0.0), $
         readbackUnits : '',$
-        value         : 0.0,$
+        value         : double(0.0),$
         valueUnits    : '',$
         group         : ''}
 void = {xmlParser, $
