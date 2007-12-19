@@ -155,7 +155,7 @@ activateFirstBase,  Event, 1
 activateSecondBase, Event, 0
 END
 
-
+¢
 
 ;Reached by the 'CREATE GEOMETRY FILE' button
 PRO CreateNewGeometryFile, Event      ;in gg_evenctb
