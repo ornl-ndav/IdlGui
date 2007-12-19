@@ -35,6 +35,7 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    leaf_array            : ptr_new(0L),$
                     setpointStatus        : 'S',$
                     userStatus            : 'U',$
                     readbackStatus        : 'R',$
@@ -49,10 +50,21 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     cvinfo_xml_filtering  : '*_cvinfo.xml',$
                     default_extension     : 'xml',$
                     version_light         : versionLight,$
-                    motors                : ptr_new(0L),$
-                    untouched_motors      : ptr_new(0L),$
-                    motor_group           : ptr_new(0L),$
+                    motors                : ptr_new(0L),$   ;full xml
+                    untouched_motors      : ptr_new(0L),$   ;full untouched xml
+                    motor_group           : ptr_new(0L),$   ;xml of selected group only
                     version : VERSION })
+
+(*(*global).leaf_array) = { uname : ['leaf1',$
+                                     'leaf2',$
+                                     'leaf3',$
+                                     'leaf4',$
+                                     'leaf5'],$
+                            name : ['number',$
+                                    'angle',$
+                                    'length',$
+                                    'wavelength',$
+                                    'other']}
 
 InstrumentList = ['',$
                   'Backscattering',$

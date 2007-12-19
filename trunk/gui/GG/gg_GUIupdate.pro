@@ -127,6 +127,7 @@ putInTextField, Event, 'readback_value_label', readback
 putInTextField, Event, 'readback_units_label', readback_units
 putInTextField, Event, 'current_value_text_field', value
 putInTextField, Event, 'current_units_text_field', value_units
+
 END
 
 
@@ -159,6 +160,7 @@ putInTextField, Event, 'readback_value_label', readback
 putInTextField, Event, 'readback_units_label', readback_units
 putInTextField, Event, 'current_value_text_field', value
 putInTextField, Event, 'current_units_text_field', value_units
+
 END
 
 
@@ -211,4 +213,18 @@ widget_control, id, set_tree_select=0
 END
 
 
+;get tree group selected
+FUNCTION treeGroupSelected, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+leaf_array = (*(*global).leaf_array)
+sz = (size(leaf_array.uname))(1)
+FOR i=0,(sz-1) DO BEGIN
+    id = widget_info(Event.top,find_by_uname=leaf_array.uname[i])
+    index = widget_info(id, /tree_select)
+    IF (index) THEN RETURN, leaf_array.name[i]
+ENDFOR
+RETURN, 'root'
+END
 
