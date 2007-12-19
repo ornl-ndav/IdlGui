@@ -201,7 +201,15 @@ widget_control,id,get_uvalue=global
 motors = (*(*global).motors)
 ;get name of variable to change
 name = getTextFieldValue(Event, 'name_value')
-print, name
+;find out where this name is in the motors structure
+index = getMotorsIndexOfName(Event, name, motors)
+;put new value of value and units
+motors[index].value = value
+;save new motors array
+(*(*global).motors) = motors
+;and refresh table
+array = gg_createTableArray(Event, motors)
+populateTable, Event, Array
 END
 
 
@@ -214,7 +222,15 @@ widget_control,id,get_uvalue=global
 motors = (*(*global).motors)
 ;get name of variable to change
 name = getTextFieldValue(Event, 'name_value')
-print, name
+;find out where this name is in the motors structure
+index = getMotorsIndexOfName(Event, name, motors)
+;put new value of value and units
+motors[index].valueUnits = units
+;save new motors array
+(*(*global).motors) = motors
+;and refresh table
+array = gg_createTableArray(Event, motors)
+populateTable, Event, Array
 END
 
 
@@ -227,7 +243,38 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 motors = (*(*global).motors)
 ;get name of variable to change
-name = getTextFieldValue(Event, 'name_value')
+name   = getTextFieldValue(Event, 'name_value')
 ;find out where this name is in the motors structure
 index = getMotorsIndexOfName(Event, name, motors)
+;put new value of value and units
+motors[index].value      = value
+motors[index].valueUnits = units
+;save new motors array
+(*(*global).motors)      = motors
+;and refresh table
+array = gg_createTableArray(Event, motors)
+populateTable, Event, Array
+END
+
+
+PRO resetValueAndUnits, Event
+;get motors structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+motors           = (*(*global).motors)
+untouched_motors = (*(*global).untouched_motors)
+;get name of variable to change
+name   = getTextFieldValue(Event, 'name_value')
+;find out where this name is in the motors structure
+index = getMotorsIndexOfName(Event, name, motors)
+;put new value of value and units
+motors[index].value      = untouched_motors[index].value
+motors[index].valueUnits = untouched_motors[index].valueUnits
+;save new motors array
+(*(*global).motors)      = motors
+;and refresh table
+array = gg_createTableArray(Event, motors)
+populateTable, Event, Array
+;reinitialize input gui
+DisplaySelectedElement, Event
 END

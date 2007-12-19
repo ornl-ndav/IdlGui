@@ -10,7 +10,8 @@ xmlFile->ParseFile, file
 
 motors = xmlFile->GetArray()
 ;help, motors
-(*(*global).motors) = motors
+(*(*global).motors)           = motors
+(*(*global).motor_group)      = motors
 (*(*global).untouched_motors) = motors
 sz = (size(motors))(1)
 
@@ -27,6 +28,13 @@ TableNbrLines, Event, sz
 ;display data of first element selected (top one)
 displayDataOfFirstElement, Event, motors
 
-;activate table
-sensitive_widget, Event, 'table_widget', 1
+;activate gui
+activateTableGui, Event, 1
+
+;select first element in tree
+selectTreeRoot, Event
+
+;select first line in table
+selectFirstTableLine, Event
+
 END

@@ -158,6 +158,10 @@ CASE Event.id OF
         changeValueAndUnits, Event ;in gg_Table.pro
     end
 
+;Selected element Reset
+    widget_info(wWidget, FIND_BY_UNAME='reset_selected_element_button'): begin
+        resetValueAndUnits, Event ;in gg_Table.pro
+    end
     
     ELSE:
     
