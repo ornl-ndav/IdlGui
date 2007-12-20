@@ -198,6 +198,10 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 END
 
+PRO activateTreeGui, Event, activate_status
+sensitive_widget, Event, 'tree_widget', activate_status
+END
+
 
 ;select first line of table
 PRO selectFirstTableLine, Event

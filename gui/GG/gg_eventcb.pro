@@ -141,6 +141,15 @@ widget_control,id,get_uvalue=global
 IF ((*global).version_light) THEN BEGIN ;version light
     gg_generate_light_command, Event ;in gg_eventcb
 ENDIF ELSE BEGIN ;version complete
+    geometry_file = getGeometryFileName(Event)
+    cvinfo_file   = getCvinfoFileName(Event)
+;run TS_geom_calc.sh
+    cmd = (*global).ts_geom_calc_path
+    cmd += ' ' + geometry_file
+    cmd += ' -m ' + cvinfo_file
+    cmd += ' -l ' + (*global).tmp_xml_file
+    spawn, cmd
+    ReadXmlFile, Event  
 ;desactivate first base
     activateFirstBase, Event, 0
 ;activate second base

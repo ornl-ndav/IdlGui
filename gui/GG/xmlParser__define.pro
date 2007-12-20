@@ -13,15 +13,36 @@ CASE strName OF
     end
     'setpoint'  : begin
         self.charbuffer=''
-        self.currentMotor.setpointUnits = attrValue[0]
+        no_error = 0
+        catch, no_error
+        if (no_error NE 0) THEN BEGIN
+            catch,/cancel
+            self.currentMotor.setpointUnits = ''
+        endif else begin
+            self.currentMotor.setpointUnits = attrValue[0]
+        endelse
     end
     'readback':begin
         self.charbuffer=''
-        self.currentMotor.readbackUnits = attrValue[0]
+        no_error = 0
+        catch, no_error
+        if (no_error NE 0) THEN BEGIN
+            catch,/cancel
+            self.currentMotor.readbackUnits = ''
+        endif else begin
+            self.currentMotor.readbackUnits = attrValue[0]
+        endelse
     end
     'value':begin
         self.charbuffer=''
-        self.currentMotor.valueUnits = attrValue[0]
+        no_error = 0
+        catch, no_error
+        if (no_error NE 0) THEN BEGIN
+            catch,/cancel
+            self.currentMotor.valueUnits = ''
+        endif else begin
+            self.currentMotor.valueUnits = attrValue[0]
+        endelse
     end
 ENDCASE
 END
