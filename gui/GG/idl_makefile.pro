@@ -11,9 +11,9 @@ cd, IdlUtilitiesPath
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/ggGUI/'
+.run MakeGuiConfirmationBase.pro
 .run MakeGuiLoadingGeometry.pro
 .run MakeGuiInputGeometry.pro
-.run MakeGuiConfirmationBase.pro
 
 ;Build all procedures
 cd, CurrentFolder
@@ -31,7 +31,7 @@ cd, CurrentFolder
 .run gg_Table.pro
 .run gg_ReadXml.pro
 .run xmlParser__define.pro
-.run gg_Tree.pro
+.run gg_ConfirmationBase.pro
 
 ;main functions
 .run MainBaseEvent.pro

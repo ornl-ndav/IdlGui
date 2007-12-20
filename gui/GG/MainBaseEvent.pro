@@ -140,7 +140,17 @@ CASE Event.id OF
 
 ;load new base geometry (show confirm base)
     widget_info(wWidget, FIND_BY_UNAME='load_new_geometry_button'): begin
-        LoadNewGeometryButton, Event      ;in gg_evenctb
+        LoadNewGeometryButton, Event ;in gg_evenctb
+    end
+    
+;yes validate new base geometry (in confirm base)
+    widget_info(wWidget, FIND_BY_UNAME='yes_confirmation_button'): begin
+        YesLoadNewGeometry, Event ;in gg_evenctb
+    end
+
+;no validate new base geometry (in confirm base)
+    widget_info(wWidget, FIND_BY_UNAME='no_confirmation_button'): begin
+        NoLoadNewGeometry, Event ;in gg_evenctb
     end
 
 ;Create new geometry file

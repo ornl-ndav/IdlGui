@@ -152,13 +152,31 @@ END
 ;Reach by the load new base geometry of base #2
 ;this will display a confirmation base
 PRO LoadNewGeometryButton, Event
-
-
-
-;activateFirstBase,  Event, 1
-;activateSecondBase, Event, 0
+;activate confirmation base
+activateMap, Event, 'confirmation_base', 1
+;desactivate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 0
 END
 
+
+;Reach by the YES button of the confirmation base
+PRO YesLoadNewGeometry, Event
+;desactivate confirmation base
+activateMap, Event, 'confirmation_base', 0
+;activate first base
+activateMap, Event, 'loading_geometry_base',1
+;desactivate second base
+activateMap, Event, 'input_geometry_base',0
+END
+
+
+;Reach by the NO button of the confirmation base
+PRO NoLoadNewGeometry, Event
+;desactivate confirmation base
+activateMap, Eventg, 'confirmation_base', 0
+;activate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 1
+END
 
 
 ;Reached by the 'CREATE GEOMETRY FILE' button
