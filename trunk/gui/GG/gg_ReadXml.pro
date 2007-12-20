@@ -3,7 +3,7 @@ PRO ReadXmlFile, Event  ;full reset of intput file
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-file = '~/SVN/HistoTool/trunk/gui/GG/j35motorlist.xml'
+file = (*global).tmp_xml_file
 
 xmlFile = OBJ_NEW('xmlParser')
 xmlFile->ParseFile, file
@@ -30,6 +30,7 @@ displayDataOfFirstElement, Event, motors
 
 ;activate gui
 activateTableGui, Event, 1
+activateTreeGui, Event, 1
 
 ;select first element in tree
 selectTreeRoot, Event

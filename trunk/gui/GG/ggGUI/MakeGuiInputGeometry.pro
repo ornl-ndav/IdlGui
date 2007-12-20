@@ -133,7 +133,7 @@ base = WIDGET_BASE(MAIN_BASE,$
                    YOFFSET   = 0,$
                    SCR_XSIZE = base.size[2],$
                    SCR_YSIZE = base.size[3],$
-                   map=1) ;remove 1 and put 0 back
+                   map=0) ;remove 1 and put 0 back
 
 ;\\\\\\\\\\\\
 ;tree widget\
