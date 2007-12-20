@@ -150,12 +150,16 @@ END
 
 
 ;Reach by the load new base geometry of base #2
+;this will display a confirmation base
 PRO LoadNewGeometryButton, Event
-activateFirstBase,  Event, 1
-activateSecondBase, Event, 0
+
+
+
+;activateFirstBase,  Event, 1
+;activateSecondBase, Event, 0
 END
 
-¢
+
 
 ;Reached by the 'CREATE GEOMETRY FILE' button
 PRO CreateNewGeometryFile, Event      ;in gg_evenctb
