@@ -139,12 +139,13 @@ base = WIDGET_BASE(MAIN_BASE,$
 ;tree widget\
 ;\\\\\\\\\\\\
 wTree = WIDGET_TREE(base,$
-                   XOFFSET   = tree_widget.size[0],$
-                   YOFFSET   = tree_widget.size[1],$
-                   SCR_XSIZE = tree_widget.size[2],$
-                   SCR_YSIZE = tree_widget.size[3],$
-                   UNAME     = tree_widget.uname)
-                   
+                    XOFFSET   = tree_widget.size[0],$
+                    YOFFSET   = tree_widget.size[1],$
+                    SCR_XSIZE = tree_widget.size[2],$
+                    SCR_YSIZE = tree_widget.size[3],$
+                    UNAME     = tree_widget.uname,$
+                    SENSITIVE = 0)
+
                    
 wtRoot = WIDGET_TREE(wTree,$
                      VALUE = 'Types',$

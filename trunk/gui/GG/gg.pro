@@ -115,6 +115,8 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;confirmation base
+;MakeGuiConfirmationBase, MAIN_BASE
+
 MakeGuiConfirmationBase, MAIN_BASE
 
 ;BASE #2
