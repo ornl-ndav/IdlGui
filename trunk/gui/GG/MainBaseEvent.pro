@@ -138,7 +138,7 @@ CASE Event.id OF
         ReadXmlFile, Event ;in gg_ReadXml.pro
     end
 
-;load new base geometry (show base 1)
+;load new base geometry (show confirm base)
     widget_info(wWidget, FIND_BY_UNAME='load_new_geometry_button'): begin
         LoadNewGeometryButton, Event      ;in gg_evenctb
     end

@@ -114,6 +114,9 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
+;confirmation base
+MakeGuiConfirmationBase, MAIN_BASE
+
 ;BASE #2
 MakeGuiInputGeometry, $ 
   MAIN_BASE, $

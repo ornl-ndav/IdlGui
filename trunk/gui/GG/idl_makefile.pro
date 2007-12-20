@@ -13,6 +13,7 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder + '/ggGUI/'
 .run MakeGuiLoadingGeometry.pro
 .run MakeGuiInputGeometry.pro
+.run MakeGuiConfirmationBase.pro
 
 ;Build all procedures
 cd, CurrentFolder
