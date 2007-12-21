@@ -153,6 +153,11 @@ CASE Event.id OF
         NoLoadNewGeometry, Event ;in gg_evenctb
     end
 
+;final result status base
+    widget_info(wWidget, FIND_BY_UNAME='final_result_ok_button'): begin
+        final_result_ok, Event ;in gg_evenctb
+    end
+
 ;Create new geometry file
     widget_info(wWidget, FIND_BY_UNAME='create_geometry_file_button'): begin
         CreateNewGeometryFile, Event      ;in gg_evenctb
