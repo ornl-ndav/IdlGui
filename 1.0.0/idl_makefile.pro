@@ -34,7 +34,6 @@ cd, CurrentFolder
 .run gg_ConfirmationBase.pro
 
 ;main functions
-.run gg_Cleanup.pro
 .run MainBaseEvent.pro
 .run gg_eventcb.pro
 .run gg.pro
