@@ -11,11 +11,11 @@ PRO MakeGuiLoadingGeometry, MAIN_BASE, $
 base = { size  : [0,0,MainBaseSize[2:3]],$
          uname : 'loading_geometry_base'} 
 
-IF (InstrumentIndex EQ 0) THEN BEGIN
-    sensitiveStatus = 0
-endif else begin
-    sensitiveStatus = 1
-endelse
+;IF (InstrumentIndex EQ 0) THEN BEGIN
+;    sensitiveStatus = 0
+;endif else begin
+;    sensitiveStatus = 1
+;endelse
 
 ;///////////
 ;Instrument/
@@ -394,11 +394,12 @@ frame = WIDGET_LABEL(base,$
 ;Geometry File Generator\
 ;\\\\\\\\\\\\\\\\\\\\\\\\
 
+sensitiveStatus = 0
 label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoFileLabel.size[0],$
                      YOFFSET   = GeoFileLabel.size[1],$
                      VALUE     = GeoFileLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoFileLabel.uname)
 
 label = WIDGET_LABEL(base,$
