@@ -130,9 +130,6 @@ END
 
 
 
-
-
-
 ;Reach by the LOADING GEOMETRY button of the first base
 PRO load_geometry, Event
 ;get global structure
@@ -154,6 +151,8 @@ ENDIF ELSE BEGIN ;version complete
     activateFirstBase, Event, 0
 ;activate second base
     activateSecondBase, Event, 1
+;desactivate all widgets of base2
+    sensitive_widget, Event, 'input_geometry_base', 1
 ENDELSE
 END
 
@@ -182,7 +181,7 @@ END
 ;Reach by the NO button of the confirmation base
 PRO NoLoadNewGeometry, Event
 ;desactivate confirmation base
-activateMap, Eventg, 'confirmation_base', 0
+activateMap, Event, 'confirmation_base', 0
 ;activate all widgets of base2
 sensitive_widget, Event, 'input_geometry_base', 1
 END
@@ -193,37 +192,64 @@ PRO CreateNewGeometryFile, Event      ;in gg_evenctb
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+;activate confirmation base
+activateMap, Event, 'final_result_base', 1
+;desactivate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 0
+;display message processing
+message = 'Creating geometry file ... ' + (*global).processing
+putInTextField, Event, 'final_result_text_field', message
 ;retrieve value of untouched motor and touched motor data
 new_motor = (*(*global).motors)
-old_motor = (*(*global).untouched_motors)
-
-
-
 ;isolate values that changed
 sz = (size(new_motor))(1)
+;get runinfo and geometry file names
+geometry_file = getGeometryFileName(Event)
+cvinfo_file   = getCvinfoFileName(Event)
+cmd = (*global).ts_geom_calc_path
+cmd += ' ' + geometry_file
+cmd += ' -m ' + cvinfo_file
 FOR i=0,(sz-1) DO BEGIN
-    old_value = old_motor[i].value
-    old_units = old_motor[i].valueUnits
     new_value = new_motor[i].value
     new_units = new_motor[i].valueUnits
-    IF ((old_value NE new_value) OR $
-        (old_units NE new_units)) THEN BEGIN
-        name      = old_motor[i].name
-        new_value = new_motor[i].value
-        new_units = new_motor[i].valueUnits
+    readback_value = new_motor[i].readback
+    readback_units = new_motor[i].readbackUnits
+    IF ((new_value NE readback_value) OR $
+        (new_units NE readback_units)) THEN BEGIN
+        cmd += ' -D ' + new_motor[i].name + '='
+        cmd += strcompress(new_value,/remove_all) + $
+          strcompress(new_units,/remove_all)
     ENDIF
 ENDFOR
-
+;get output path
+outputPath     = get_output_path(Event)
+;get output file name
+outputFileName = get_output_name(Event)
+cmd += ' -o ' + outputPath + '/' + outputFileName
+spawn, cmd, listening, err_listening
+err_listening = ['']
+IF (err_listening[0] NE 0) THEN BEGIN ;procedure failed
+    message = 'Creating geometry file ... ' + (*global).failed
+    putInTextField, Event, 'final_result_text_field', message
+    message = 'Error log book: '
+    appendInTextField, Event, 'final_result_text_field', message
+    appendInTextField, Event, 'final_result_text_field', err_listening
+ENDIF else begin                ;procedure worked
+    message = 'Creating geometry file ... ' + (*global).ok
+    putInTextField, Event, 'final_result_text_field', message
+    message = 'File created: ' + outputPath + '/' + outputFileName
+    appendInTextField, Event, 'final_result_text_field', message
+ENDELSE
 END
 
 
 
-
-
-
-
-
-
+PRO final_result_ok, Event
+;activate confirmation base
+activateMap, Event, 'final_result_base', 0
+;desactivate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 1
+END
 
 ;------------------------------------------------------------
 

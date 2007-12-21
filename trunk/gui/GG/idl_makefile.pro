@@ -1,17 +1,17 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
 
-IdlUtilitiesPath = "../utilities"
+IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
 
-
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/ggGUI/'
 .run MakeGuiConfirmationBase.pro
+.run MakeGuiFinalResultBase.pro
 .run MakeGuiLoadingGeometry.pro
 .run MakeGuiInputGeometry.pro
 
@@ -34,6 +34,7 @@ cd, CurrentFolder
 .run gg_ConfirmationBase.pro
 
 ;main functions
+.run gg_Cleanup.pro
 .run MainBaseEvent.pro
 .run gg_eventcb.pro
 .run gg.pro

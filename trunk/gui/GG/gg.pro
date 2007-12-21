@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'VERSION: GG1.0.0'
+VERSION = '(1.0.0)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -35,6 +35,9 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    processing            : '(PROCESSING)',$
+                    ok                    : 'OK',$
+                    failed                : 'FAILED',$
                     ts_geom_calc_path     : '~/translation-service-cli-1.10-SNAPSHOT/bin/TS_geom_calc.sh',$
                     tmp_xml_file          : '~/local/tmp_gg_xml_file.xml',$
                     leaf_array            : ptr_new(0L),$
@@ -50,7 +53,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     geometry_default_path : '~/',$
                     geometry_xml_filtering: '*.xml',$
                     cvinfo_xml_filtering  : '*_cvinfo.xml',$
-                    default_extension     : 'xml',$
+                    default_extension     : 'nxs',$
                     version_light         : versionLight,$
                     motors                : ptr_new(0L),$   ;full xml
                     untouched_motors      : ptr_new(0L),$   ;full untouched xml
@@ -101,6 +104,7 @@ ENDIF ELSE BEGIN
     MainBaseSize  = [30,25,700,500]
 ENDELSE
         
+MainBaseTitle += ' - ' + VERSION
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
@@ -117,22 +121,15 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;confirmation base
-;MakeGuiConfirmationBase, MAIN_BASE
-
 MakeGuiConfirmationBase, MAIN_BASE
+;final status base
+MakeGuiFinalResultBase, MAIN_BASE
 
 ;BASE #2
 MakeGuiInputGeometry, $ 
   MAIN_BASE, $
   MainBaseSize, $
   images_structure
-;add version to program
-VersionLength = strlen(VERSION)
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET = MainBaseSize[2]-VersionLength*6.5,$
-                             YOFFSET = 2,$
-                             VALUE   = VERSION,$
-                             FRAME   = 0)
 
 ;BASE #1
 MakeGuiLoadingGeometry, $
@@ -143,24 +140,16 @@ MakeGuiLoadingGeometry, $
   versionLight
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
-
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
 ;populate geometry droplist
 GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
 id = widget_info(MAIN_BASE, find_by_uname='geometry_droplist')
 widget_control, id, set_value=GeoArray
 id = widget_info(MAIN_BASE, find_by_uname='geometry_text_field')
 widget_control, id, set_value=GeoArray[0]
-
-;????????????????????????? FOR DEVELOPMENT ONLY ??????????????????????????
-;;default tabs shown
-;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 1 ;reduce
-
-;;tab #7
-;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-;widget_control, id1, set_tab_current = 6
-;?????????????????????????????????????????????????????????????????????????
+;show selected instrument
+id = widget_info(MAIN_BASE, find_by_uname='instrument_droplist')
+widget_control, id, set_droplist_select=instrumentIndex
 
 END
 
