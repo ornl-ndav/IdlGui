@@ -140,7 +140,7 @@ MakeGuiLoadingGeometry, $
   versionLight
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;populate geometry droplist
 GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
 id = widget_info(MAIN_BASE, find_by_uname='geometry_droplist')
