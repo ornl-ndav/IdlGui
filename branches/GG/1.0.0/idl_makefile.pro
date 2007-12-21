@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/ggGUI/'
 .run MakeGuiConfirmationBase.pro
+.run MakeGuiFinalResultBase.pro
 .run MakeGuiLoadingGeometry.pro
 .run MakeGuiInputGeometry.pro
 

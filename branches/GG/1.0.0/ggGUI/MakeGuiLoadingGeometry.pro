@@ -119,7 +119,7 @@ XYoff = [40,-5]
 browseButton = { size  : [orLabel.size[0]+XYoff[0],$
                           orLabel.size[1]+XYoff[1],$
                           100,30],$
-                 value : 'BROWSE...',$
+                 value : 'BROWSE ...',$
                  uname : 'cvinfo_browse_button'}
 
 XYoff = [400,-18]

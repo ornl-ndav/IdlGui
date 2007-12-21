@@ -192,6 +192,13 @@ PRO CreateNewGeometryFile, Event      ;in gg_evenctb
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+;activate confirmation base
+activateMap, Event, 'final_result_base', 1
+;desactivate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 0
+;display message processing
+message = 'Creating geometry file ... ' + (*global).processing
+putInTextField, Event, 'final_result_text_field', message
 ;retrieve value of untouched motor and touched motor data
 new_motor = (*(*global).motors)
 ;isolate values that changed
@@ -219,13 +226,30 @@ outputPath     = get_output_path(Event)
 ;get output file name
 outputFileName = get_output_name(Event)
 cmd += ' -o ' + outputPath + '/' + outputFileName
-print, cmd
-
-
+spawn, cmd, listening, err_listening
+err_listening = ['']
+IF (err_listening[0] NE 0) THEN BEGIN ;procedure failed
+    message = 'Creating geometry file ... ' + (*global).failed
+    putInTextField, Event, 'final_result_text_field', message
+    message = 'Error log book: '
+    appendInTextField, Event, 'final_result_text_field', message
+    appendInTextField, Event, 'final_result_text_field', err_listening
+ENDIF else begin                ;procedure worked
+    message = 'Creating geometry file ... ' + (*global).ok
+    putInTextField, Event, 'final_result_text_field', message
+    message = 'File created: ' + outputPath + '/' + outputFileName
+    appendInTextField, Event, 'final_result_text_field', message
+ENDELSE
 END
 
 
 
+PRO final_result_ok, Event
+;activate confirmation base
+activateMap, Event, 'final_result_base', 0
+;desactivate all widgets of base2
+sensitive_widget, Event, 'input_geometry_base', 1
+END
 
 ;------------------------------------------------------------
 
