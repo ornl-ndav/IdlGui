@@ -4,6 +4,11 @@ id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=strcompress(file_name)
 END
 
+PRO appendInTextField, Event, uname, text
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=text,/append
+END
+
 
 ;*************** Particular Functions ********************
 
