@@ -46,7 +46,7 @@ IF (current_tab NE prev_tab) THEN BEGIN
         END
         ELSE:
     ENDCASE
-    (*global).previous_tab = current_ta
+    (*global).previous_tab = current_tab
 ENDIF
 
 END
