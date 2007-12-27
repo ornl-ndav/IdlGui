@@ -1,5 +1,0 @@
-cd, "~/SVN/HistoTool/trunk/gui/DataReduction/"
-.run data_reduction_eventcb.pro
-.run data_reduction.pro
-data_reduction
-
