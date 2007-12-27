@@ -1,5 +1,0 @@
-.reset
-.compile IDLnexusUtilities__define
-instance1 = obj_new('IDLnexusUtilities',350,instrument='BSS')
-print, '> Archived nexus path: ' + instance1->getArchivedNeXusPath()
-print, '> List All NeXus path: ' + instance1->getFullListNeXusPath()

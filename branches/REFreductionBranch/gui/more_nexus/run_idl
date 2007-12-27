@@ -1,9 +1,0 @@
-cd, "~/SVN/HistoTool/trunk/gui/utilities/"
-.run nexus_utilities.pro
-.run system_utilities.pro
-
-cd, "~/SVN/HistoTool/trunk/gui/more_nexus/"
-.run more_nexus_eventcb.pro
-.run more_nexus.pro
-more_nexus
-
