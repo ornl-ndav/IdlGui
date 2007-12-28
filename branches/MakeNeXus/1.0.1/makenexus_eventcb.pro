@@ -130,6 +130,14 @@ AppendMyLogBook, Event, ''
 message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
+;get mapping file
+IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
+   mapping_file     = (*global).debugMapFileName
+ENDIF ELSE BEGIN
+   file_array = get_up_to_date_geo_tran_map_file(instrument)
+   mapping_file     = file_array[2]
+ENDELSE
+cmd += ' -m ' + mapping_file
 cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
 AppendMyLogBook, Event, cmd_text
 cmd_text = '> Creating Histo Mapped Files: '
@@ -369,20 +377,25 @@ ENDIF ELSE BEGIN
 
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
-    AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
-    cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
-    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-    AppendMyLogBook, Event, cmd_text
-    spawn, cmd, listening, renaming_error
-    IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        AppendMyLogBook, Event, err_listening
-        goto, error
+    ;check that histo_mapped is not there already
+    IF (~FILE_TEST(base_histo_name)) THEN BEGIN
+        AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
+        cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
+        cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+        AppendMyLogBook, Event, cmd_text
+        spawn, cmd, listening, renaming_error
+        IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            AppendMyLogBook, Event, err_listening
+            goto, error
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        ENDELSE
     ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        AppendMyLogBook, Event, '-> final histo_mapped file name is already there (*_histo_mapped.dat)'
     ENDELSE
     AppendMyLogBook, Event, ''
-    
+        
 ;merging xml files
     AppendMyLogBook, Event, '-> Merging the xml files:'
     cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
