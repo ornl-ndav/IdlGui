@@ -13,7 +13,7 @@ FUNCTION isPreNexusExistOnDas, Event, RunNumber, Instrument
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-cmd = 'findnexus --prenexus -i' + Instrument
+cmd = 'findnexus --prenexus --listall -i' + Instrument
 cmd += ' ' + RunNumber
 spawn, cmd, listening
 sz = (size(listening))(1)
