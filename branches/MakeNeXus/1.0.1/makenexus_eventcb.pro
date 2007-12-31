@@ -34,6 +34,7 @@ END
 
 
 PRO output_path, Event ;in makenexus_eventcb.pro
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -71,7 +72,12 @@ PRO CreateNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-progressBar = Obj_New("SHOWPROGRESS")
+progressBar = Obj_New("SHOWPROGRESS",Xoffset=50,Yoffset=50)
+progressBar->SetColor, 250
+progressBar->SetLabel, 'Translation in progress ...'
+progressBar->Start
+
+nbrphase    = 17./100.
 
 PROCESSING = (*global).processing
 OK         = (*global).ok
@@ -814,8 +820,6 @@ IF (output_path NE '' OR $
     putTextAtEndOfLogBook, Event, OK, PROCESSING ;moving files worked
     AppendLogBook, Event, text
 
-    Widget_Control, info.top, /Destroy
-
 ENDIF ELSE BEGIN
     
 error: 
@@ -825,11 +829,14 @@ error:
     
 ENDELSE
 
+progressBar->Destroy
+Obj_Destroy, progressBar
+
 END
 
 
 pro MAIN_REALIZE, wWidget
-Device, Decomposed=0
+;Device, Decomposed=0
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
 widget_control,/hourglass

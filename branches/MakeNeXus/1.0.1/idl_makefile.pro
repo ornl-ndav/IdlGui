@@ -22,7 +22,7 @@ cd, CurrentFolder
 .run makenexus_GUIupdate.pro
 .run makenexus_utilities.pro
 .run makenexus_LogBookInterface.pro
-.run showprogress.pro
+.run showprogress__define.pro
 
 ;procedures
 .run makenexus_Cleanup.pro
