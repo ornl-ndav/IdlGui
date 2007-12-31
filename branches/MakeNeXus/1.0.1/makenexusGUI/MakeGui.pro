@@ -10,13 +10,13 @@ base = { size  : [0,0,MainBaseSize[2:3]],$
 XYoff = [10,10]
 run_number_base = { size  : [XYoff[0],$
                              XYoff[1],$
-                             160,$
+                             240,$
                              35],$
                     uname : 'run_number_cw_field',$
-                    xsize : 10,$
-                    title : 'Run Number:'}
+                    xsize : 27,$
+                    title : 'Runs #:'}
 
-XYOff = [150,0]
+XYOff = [235,0]
 instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
                                run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}

@@ -71,6 +71,25 @@ PRO CreateNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;call the progress widget and get it on the screen
+;start by getting the current offsets
+Widget_Control, event.top, TLB_Get_Offset=offsets
+info = ShowProgress(Message='Performing Translation ...', $
+                    XOffset=offsets(0)+50, $
+                    YOffset=offsets(1)+50, $
+                    DrawSize=200, $
+                    ButtonTitle='Cancel Translation')
+; Set the y coordinates of the red box. These never change
+ybox_coords = [0, 10, 10, 0, 0]
+; Take over color index 1 to draw a red box in the draw widget
+TVLct, r, g, b, /Get
+oldDrawColor = [r(1), g(1), b(1)]
+TVLct, 255, 0, 0, 1
+;WSet, info.wid
+percentIncrement = 0.1
+percentDone      = 0.0
+nbrPhase         = 17.
+
 PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).FAILED
@@ -96,6 +115,14 @@ stagingArea = (*global).staging_folder
 AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 1
+phase       = 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 ;make sure the staging area exist and is empty
 AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
@@ -126,6 +153,14 @@ ENDIF ELSE BEGIN
 ENDELSE
 AppendMyLogBook, Event, ''
 
+;END OF PHASE 2
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;####### run the runmp_flags tool first ######
 message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
 appendLogBook, Event, message
@@ -155,6 +190,14 @@ ENDIF ELSE BEGIN
    putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
 
+;END OF PHASE 3
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;###### Copy the prenexus file into stagging area ######
 message = '>(2/'+NbrSteps+') Importing staging files ................... ' + processing
 appendLogBook, Event, message
@@ -177,6 +220,14 @@ ENDIF ELSE BEGIN
 ENDELSE
 AppendMyLogBook, Event, ''
 
+;END OF PHASE 4
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;importing other xml files
 cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
 cmd_text = '> Importing cvinfo and runinfo xml files: '
@@ -193,6 +244,14 @@ ENDIF ELSE BEGIN
    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDELSE
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 5
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 ;##### get the geometry file from its location
 text = '> Importing translation file: '
@@ -215,6 +274,14 @@ text = '--> translation file is: ' + translation_file
 AppendMyLogBook, Event, text
 text = '--> mapping file is    : ' + mapping_file
 AppendMyLogBook, Event, text
+
+;END OF PHASE 6
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 text = '-> Copy translation and mapping file in staging area:'
 AppendMyLogBook, Event, text
@@ -241,6 +308,14 @@ ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
 
+;END OF PHASE 7
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;####### Translation of files
 message = '>(3/'+NbrSteps+') Translating files '
 AppendMyLogBook, Event, 'PHASE 3/' + NbrSteps + ': TRANSLATING FILES'
@@ -260,6 +335,14 @@ AppendMyLogBook, Event, '-> p0_file_name    : ' + p0_file_name
 AppendMyLogBook, Event, '-> base_nexus      : ' + base_nexus
 AppendMyLogBook, Event, '-> ShortNexusName  : ' + ShortNexusName
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 8
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
 AppendMyLogBook, Event, text
@@ -375,6 +458,14 @@ ENDIF ELSE BEGIN
     appendLogBook, Event, message
     AppendMyLogBook, Event, ''
 
+;END OF PHASE 9
+    phase       += 1.
+    percentDone = phase/nbrPhase
+    xextent = Fix(info.drawsize*percentDone)
+    xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
     ;check that histo_mapped is not there already
@@ -396,7 +487,16 @@ ENDIF ELSE BEGIN
     ENDELSE
     AppendMyLogBook, Event, ''
         
-;merging xml files
+
+;END OF PHASE 10
+    phase       += 1.
+    percentDone = phase/nbrPhase
+    xextent = Fix(info.drawsize*percentDone)
+    xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+    
+;merging xml fIles
     AppendMyLogBook, Event, '-> Merging the xml files:'
     cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
     cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
@@ -410,6 +510,14 @@ ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     ENDELSE
     AppendMyLogBook, Event, ''
+    
+;END OF PHASE 11
+    phase       += 1.
+    percentDone = phase/nbrPhase
+    xextent = Fix(info.drawsize*percentDone)
+    xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
     
 ;translating the file
     AppendMyLogBook, Event, '-> Translating the files:'
@@ -438,6 +546,14 @@ ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDELSE
 
+;END OF PHASE 12
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;move final nexus file(s) into predefined location(s)
 ;moving the final nexus file(s) created
 message = '>(4/'+NbrSteps+') Moving NeXus to Final Location ............ ' + processing
@@ -462,6 +578,14 @@ endif else begin
 endelse
 AppendMyLogBook, Event, ''
 
+;END OF PHASE 13
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+
 ;get destination folders
 ;Main output path
 output_path = getTextFieldValue(Event, 'output_path_text')
@@ -481,6 +605,14 @@ ENDIF ELSE BEGIN
     AppendMyLogBook, Event, message
 ENDELSE
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 14
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 ;Instrument Shared Folder
 IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
@@ -502,6 +634,14 @@ ENDIF ELSE BEGIN
     InstrSharedFolder = ''
 ENDELSE
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 15
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 ;Proposal Shared Folder
 IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
@@ -525,6 +665,14 @@ ENDIF ELSE BEGIN
     ProposalSharedFolder = ''
 ENDELSE
 AppendMyLogBook, Event, ''
+
+;END OF PHASE 16
+phase       += 1.
+percentDone = phase/nbrPhase
+xextent = Fix(info.drawsize*percentDone)
+xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 
 ;move only if at least one of the three path exists
 IF (output_path NE '' OR $
@@ -715,9 +863,19 @@ IF (output_path NE '' OR $
         AppendMyLogBook, Event, ''
         
     ENDFOR
+
+;END OF PHASE 17
+    phase       += 1.
+    percentDone = phase/nbrPhase
+    xextent = Fix(info.drawsize*percentDone)
+    xbox_coords = [0, 0, xextent, xextent, 0]
+; Draw the box
+    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
     
     putTextAtEndOfLogBook, Event, OK, PROCESSING ;moving files worked
     AppendLogBook, Event, text
+
+    Widget_Control, info.top, /Destroy
 
 ENDIF ELSE BEGIN
     
