@@ -13,20 +13,25 @@ FUNCTION isPreNexusExistOnDas, Event, RunNumber, Instrument
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-cmd = 'findnexus --prenexus --listall -i' + Instrument
-cmd += ' ' + RunNumber
-spawn, cmd, listening
-sz = (size(listening))(1)
-FOR i=0,(sz-1) DO BEGIN
-   prenexus_path = listening[i]
-   text_to_compare = '/' + instrument + '-DAS-FS/*'
-   isOnDas = strmatch(prenexus_path,text_to_compare)
-   IF (isOnDas) THEN BEGIN
-      (*global).prenexus_path = prenexus_path
-      RETURN, 1
-   ENDIF
-ENDFOR
-RETURN,0
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    (*global).prenexus_path = (*global).mac.prenexus_path
+    return, 1
+ENDIF eLSE BEGIN
+    cmd = 'findnexus --prenexus --listall -i' + Instrument
+    cmd += ' ' + RunNumber
+    spawn, cmd, listening
+    sz = (size(listening))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        prenexus_path = listening[i]
+        text_to_compare = '/' + instrument + '-DAS-FS/*'
+        isOnDas = strmatch(prenexus_path,text_to_compare)
+        IF (isOnDas) THEN BEGIN
+            (*global).prenexus_path = prenexus_path
+            RETURN, 1
+        ENDIF
+    ENDFOR
+    RETURN,0
+ENDELSE
 ;(*global).prenexus_path = listening[0]
 ;result = STRMATCH(listening[0],'ERROR*')
 ;RETURN, ~result

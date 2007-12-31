@@ -29,14 +29,14 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
+                            mapping_file  : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
+                            geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
+                            translation_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
                     instrumentShortList   : ptr_new(0L),$
                     instrument            : '',$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
                     hostname              : hostname,$
-                    MacHostName           : 'jcbilheux12.local',$
-                    debugGeomFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
-                    debugTranFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt',$
-                    debugMapFileName      : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
                     ucams                 : ucams,$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
@@ -89,6 +89,14 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup'
 ;set the instrument droplist
 id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=InstrumentIndex
+
+;if on mac, instrument is REF_L and run number is 2000
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
+    widget_control, id, set_droplist_select=2
+    id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
+    widget_control,id,set_value='2000'   
+ENDIF 
 
 ;;REMOVE ME
 ;;set the instrument droplist

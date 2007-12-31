@@ -71,25 +71,7 @@ PRO CreateNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;call the progress widget and get it on the screen
-;start by getting the current offsets
-Widget_Control, event.top, TLB_Get_Offset=offsets
-info = ShowProgress(Message='Performing Translation ...', $
-                    XOffset=offsets(0)+50, $
-                    YOffset=offsets(1)+50, $
-                    DrawSize=200, $
-                    ButtonTitle='Cancel Translation')
-; Set the y coordinates of the red box. These never change
-ybox_coords = [0, 10, 10, 0, 0]
-; Take over color index 1 to draw a red box in the draw widget
-TVLct, r, g, b, /Get
-oldDrawColor = [r(1), g(1), b(1)]
-TVLct, 255, 0, 0, 1
-WSet, info.wid
-;WSet, info.wid
-percentIncrement = 0.1
-percentDone      = 0.0
-nbrPhase         = 17.
+progressBar = Obj_New("SHOWPROGRESS")
 
 PROCESSING = (*global).processing
 OK         = (*global).ok
@@ -119,10 +101,7 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 1
 phase       = 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -137,11 +116,7 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 2
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-WSet, info.wid
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -163,10 +138,7 @@ if (error_status) then goto, ERROR
 ;END OF PHASE 3
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -183,10 +155,7 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 4
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -202,10 +171,7 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 5
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -219,10 +185,7 @@ GetGeoMapTranFile, Event, geometry_file, translation_file, mapping_file, $
 ;END OF PHASE 6
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 
@@ -238,10 +201,7 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 7
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 ;###############################################################################
@@ -267,16 +227,14 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 8
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone
 ;###############################################################################
 
 text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
 AppendMyLogBook, Event, text
 TranslationError = 0 ;by default, everything is going to run smoothly
-IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
+IF (!VERSION.os NE 'darwin' AND $
+    FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
     
     multi_pola_state = 1 ;we are working with the multi_polarization state
     putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
@@ -284,7 +242,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
     message += '(Multi-Polarization): ... ' + PROCESSING
     appendLogBook, Event, message
     
-    ;work on first polarization state
+                                ;work on first polarization state
     polaIndex    = 0
     anotherState = 1
     WHILE (anotherState) DO BEGIN
@@ -306,7 +264,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
         ENDELSE
         AppendMyLogBook, Event, message
         AppendMyLogBook, Event, ''
-
+        
 ;merging xml files
         AppendMyLogBook, Event, '--> Merging the xml files:'
         cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
@@ -321,7 +279,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         ENDELSE
         AppendMyLogBook, Event, ''
-
+        
 ;translating the file
         AppendMyLogBook, Event, '--> Translating the files:'
         TranslationFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxt'
@@ -340,7 +298,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         ENDELSE
         AppendMyLogBook, Event, ''
-
+        
 ;renaming nexus file
         AppendMyLogBook, Event, '--> Renaming Nexus file:'
         pre_nexus_name = base_nexus + '.nxs'
@@ -355,7 +313,7 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             goto, error
         ENDELSE
         AppendMyLogBook, Event, message
-
+        
         if (PolaIndex EQ 0) THEN BEGIN
             NexusToMove = [nexus_file_name]
             ShortNexusToMove = [ShortNexusName + '_p0.nxs']
@@ -364,88 +322,90 @@ IF (FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
             ShortNexusToMove = [ShortNexusToMove, ShortNexusName + '_p' + $
                                 strcompress(polaIndex,/remove_all) + '.nxs']
         ENDELSE
-
+        
         ++polaIndex
-        ;check if next file exist
+                                ;check if next file exist
         file_name = base_name + '_p' + strcompress(PolaIndex,/remove_all) + '.dat'
         IF (FILE_TEST(file_name)) THEN BEGIN
-            anotherState = 1 ;YES, CONTINUE
+            anotherState = 1    ;YES, CONTINUE
         ENDIF ELSE BEGIN
-            anotherState = 0 ;NO, STOP NOW
+            anotherState = 0    ;NO, STOP NOW
         ENDELSE
         AppendMyLogBook, Event, ''
-
+        
     ENDWHILE
-
+    
 ENDIF ELSE BEGIN
- 
-    multi_pola_state = 0 ;we are working in normal mode
+    
+    multi_pola_state = 0        ;we are working in normal mode
     putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
     AppendMyLogBook, Event, ''
     AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
     message += '(Normal): ............... ' + PROCESSING
     appendLogBook, Event, message
     AppendMyLogBook, Event, ''
-
+    
 ;END OF PHASE 9
     phase       += 1.
     percentDone = phase/nbrPhase
-    xextent = Fix(info.drawsize*percentDone)
-    xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
-
+    progressBar->Update,percentDone    
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
-    ;check that histo_mapped is not there already
-    IF (~FILE_TEST(base_histo_name)) THEN BEGIN
+;check that histo_mapped is not there already
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
         AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
         cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
         cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
         AppendMyLogBook, Event, cmd_text
-        spawn, cmd, listening, renaming_error
-        IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
-            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-            AppendMyLogBook, Event, err_listening
-            goto, error
-        ENDIF ELSE BEGIN
-            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-        ENDELSE
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     ENDIF ELSE BEGIN
-        AppendMyLogBook, Event, '-> final histo_mapped file name is already there (*_histo_mapped.dat)'
+        IF (~FILE_TEST(base_histo_name)) THEN BEGIN
+            AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
+            cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
+            cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+            AppendMyLogBook, Event, cmd_text
+            spawn, cmd, listening, renaming_error
+            IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
+                putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+                AppendMyLogBook, Event, err_listening
+                goto, error
+            ENDIF ELSE BEGIN
+                putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+            ENDELSE
+        ENDIF ELSE BEGIN
+            AppendMyLogBook, Event, '-> final histo_mapped file name is already there (*_histo_mapped.dat)'
+        ENDELSE
     ENDELSE
     AppendMyLogBook, Event, ''
-        
+    
 ;END OF PHASE 10
     phase       += 1.
     percentDone = phase/nbrPhase
-    xextent = Fix(info.drawsize*percentDone)
-    xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+    progressBar->Update,percentDone    
     
 ;merging xml fIles
     AppendMyLogBook, Event, '-> Merging the xml files:'
     cmd = 'TS_merge_preNeXus.sh ' + translation_file + ' ' + geometry_file + ' ' + stagingArea
     cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
     AppendMyLogBook, Event, cmd_text
-    spawn, cmd, listening, merging_error
-    IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        AppendMyLogBook, Event, err_listening
-        goto, error
-    ENDIF ELSE BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDIF ELSE BEGIN
+        spawn, cmd, listening, merging_error
+        IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            AppendMyLogBook, Event, err_listening
+            goto, error
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        ENDELSE
     ENDELSE
     AppendMyLogBook, Event, ''
     
 ;END OF PHASE 11
     phase       += 1.
     percentDone = phase/nbrPhase
-    xextent = Fix(info.drawsize*percentDone)
-    xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+    progressBar->Update,percentDone    
     
 ;translating the file
     AppendMyLogBook, Event, '-> Translating the files:'
@@ -456,31 +416,36 @@ ENDIF ELSE BEGIN
     AppendMyLogBook, Event, cmd_text
 ;move to staging area
     CD, stagingArea
-    spawn, cmd, listening, translation_error
-    IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        AppendMyLogBook, Event, err_listening
-        goto, error
-    ENDIF ELSE BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDIF ELSE BEGIN
+        spawn, cmd, listening, translation_error
+        IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            AppendMyLogBook, Event, err_listening
+            goto, error
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        ENDELSE
     ENDELSE
     AppendMyLogBook, Event, ''
     
 ENDELSE                         ;end of normal mode (no polarization)
 
-IF (TranslationError EQ 1) THEN BEGIN
-    putTextAtEndOfLogBook, Event, FAILED, PROCESSING
-ENDIF ELSE BEGIN
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
     putTextAtEndOfLogBook, Event, OK, PROCESSING
+ENDIF ELSE BEGIN
+    IF (TranslationError EQ 1) THEN BEGIN
+        putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+    ENDIF ELSE BEGIN
+        putTextAtEndOfLogBook, Event, OK, PROCESSING
+    ENDELSE
 ENDELSE
 
 ;END OF PHASE 12
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone    
 
 ;move final nexus file(s) into predefined location(s)
 ;moving the final nexus file(s) created
@@ -488,31 +453,24 @@ message = '>(4/'+NbrSteps+') Moving NeXus to Final Location ............ ' + pro
 appendLogBook, Event, message
 AppendMyLogBook, Event, 'PHASE 4/' + NbrSteps + ': MOVING FILES TO THEIR FINAL LOCATION'
 
-if (multi_pola_state) then begin
-
+IF (multi_pola_state) THEN BEGIN
     sz = (size(NexusToMove))(1)
     FOR i=0,(sz-1) DO BEGIN
         message = 'Nexus File #' + strcompress(i,/remove_all) + ': ' + NexusToMove[i]
         AppendMyLogBook, Event, message
     ENDFOR
-
-endif else begin
-
+ENDIF ELSE BEGIN
     NexusFile = stagingArea + '/' + instrument + '_' + RunNumber + '.nxs'
     AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
     NexusToMove = [NexusFile]
     ShortNexusToMove = [ShortNexusName + '.nxs']
-
-endelse
+ENDELSE
 AppendMyLogBook, Event, ''
 
 ;END OF PHASE 13
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone    
 
 ;get destination folders
 ;Main output path
@@ -522,11 +480,15 @@ IF (output_path NE '') THEN BEGIN
     AppendMyLogBook, Event, message
     message = '--> Check if output path exists ........... ' + PROCESSING
     AppendMyLogBook, Event, message
-    IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
     ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-        output_path = ''
+        IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+            putTextAtEndOfMyLogBook, Event, 'YES' , PROCESSING
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+            output_path = ''
+        ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if there is a Main Output Path ... NO'
@@ -537,10 +499,7 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 14
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone    
 
 ;Instrument Shared Folder
 IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
@@ -548,13 +507,18 @@ IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
     message = '-> Check if Instrument Shared Folder is selected ... YES (' + $
       InstrSharedFolder + ')'
     AppendMyLogBook, Event, message
-    IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
         message = '--> Check if Instrument Shared Folder exists ....... YES'
         AppendMyLogBook, Event, message
     ENDIF ELSE BEGIN
-        message = '--> Check if Instrument Shared Folder exists ....... NO'
-        AppendMyLogBook, Event, message
-        InstrSharedFolder = ''
+        IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
+            message = '--> Check if Instrument Shared Folder exists ....... YES'
+            AppendMyLogBook, Event, message
+        ENDIF ELSE BEGIN
+            message = '--> Check if Instrument Shared Folder exists ....... NO'
+            AppendMyLogBook, Event, message
+            InstrSharedFolder = ''
+        ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Instrument Shared Folder is selected ... NO'
@@ -566,10 +530,7 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 15
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone    
 
 ;Proposal Shared Folder
 IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
@@ -579,13 +540,18 @@ IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
     message = '-> Check if Proposal Shared Folder is selected ..... YES (' +$
       ProposalSharedFolder + ')'
     AppendMyLogBook, Event, message
-    IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
-        message = '--> Check if Proposal Shared Folder exists ......... YES'
-        AppendMyLogBook, Event, message
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+            message = '--> Check if Proposal Shared Folder exists ......... YES'
+            AppendMyLogBook, Event, message        
     ENDIF ELSE BEGIN
-        message = '--> Check if Proposal Shared Folder exists ......... NO'
-        AppendMyLogBook, Event, message
-        ProposalSharedFolder = ''
+        IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
+            message = '--> Check if Proposal Shared Folder exists ......... YES'
+            AppendMyLogBook, Event, message
+        ENDIF ELSE BEGIN
+            message = '--> Check if Proposal Shared Folder exists ......... NO'
+            AppendMyLogBook, Event, message
+            ProposalSharedFolder = ''
+        ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Proposal Shared Folder is selected ..... NO'
@@ -597,10 +563,7 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 16
 phase       += 1.
 percentDone = phase/nbrPhase
-xextent = Fix(info.drawsize*percentDone)
-xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+progressBar->Update,percentDone    
 
 ;move only if at least one of the three path exists
 IF (output_path NE '' OR $
@@ -637,58 +600,76 @@ IF (output_path NE '' OR $
 
                 AppendMyLogBook, Event, 'Checking if NeXus Folder (' + NeXus_folder + $
                   ') exists ... ' + PROCESSING
-                IF (FILE_TEST(NeXus_folder,/DIRECTORY)) THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
                     AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
                     cmd_rm = 'rm -f ' + NeXus_folder + '*.nxs'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
-                    spawn, cmd_rm, listening
-                    IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
-                    ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
-                    ENDELSE
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-                    cmd_spawn = 'mkdir -p ' + Nexus_folder 
-                    AppendMyLogBook, Event, 'Create NeXus folder:'
-                    cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
-                    AppendMyLogBook, Event, cmd_spawn_text
-                    spawn, cmd_spawn, listening
-                    IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    IF (FILE_TEST(NeXus_folder,/DIRECTORY)) THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
+                        AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
+                        cmd_rm = 'rm -f ' + NeXus_folder + '*.nxs'
+                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
+                        AppendMyLogBook, Event, cmd_rm_text
+                        spawn, cmd_rm, listening
+                        IF (listening[0] EQ '') THEN BEGIN
+                            putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                        ENDIF ELSE BEGIN
+                            putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        ENDELSE
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+                        cmd_spawn = 'mkdir -p ' + Nexus_folder 
+                        AppendMyLogBook, Event, 'Create NeXus folder:'
+                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
+                        AppendMyLogBook, Event, cmd_spawn_text
+                        spawn, cmd_spawn, listening
+                        IF (listening[0] EQ '') THEN BEGIN
+                            putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                        ENDIF ELSE BEGIN
+                            putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        ENDELSE
                     ENDELSE
                     AppendMyLogBook, Event, ''
                 ENDELSE
                 
                 AppendMyLogBook, Event, 'Checking if preNeXus Folder (' + preNeXus_folder + $
                   ') exists ... ' + PROCESSING
-                IF (FILE_TEST(preNeXus_folder,/DIRECTORY)) THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
                     AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
                     cmd_rm = 'rm -f ' + preNeXus_folder + '*.*'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
-                    spawn, cmd_rm, listening
-                    IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
-                    ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
-                    ENDELSE
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
-                    cmd_spawn = 'mkdir -p ' + preNexus_folder 
-                    AppendMyLogBook, Event, 'Create preNeXus folder:'
-                    cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
-                    AppendMyLogBook, Event, cmd_spawn_text
-                    spawn, cmd_spawn, listening
-                    IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    IF (FILE_TEST(preNeXus_folder,/DIRECTORY)) THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, 'YES', PROCESSING
+                        AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
+                        cmd_rm = 'rm -f ' + preNeXus_folder + '*.*'
+                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + PROCESSING
+                        AppendMyLogBook, Event, cmd_rm_text
+                        spawn, cmd_rm, listening
+                        IF (listening[0] EQ '') THEN BEGIN
+                            putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                        ENDIF ELSE BEGIN
+                            putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        ENDELSE
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        putTextAtEndOfMyLogBook, Event, 'NO', PROCESSING
+                        cmd_spawn = 'mkdir -p ' + preNexus_folder 
+                        AppendMyLogBook, Event, 'Create preNeXus folder:'
+                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + PROCESSING
+                        AppendMyLogBook, Event, cmd_spawn_text
+                        spawn, cmd_spawn, listening
+                        IF (listening[0] EQ '') THEN BEGIN
+                            putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                        ENDIF ELSE BEGIN
+                            putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                        ENDELSE
                     ENDELSE
                     AppendMyLogBook, Event, ''
                 ENDELSE
@@ -699,11 +680,15 @@ IF (output_path NE '' OR $
                 cmd_xml = 'cp ' + prenexus_path + '/*.xml' + ' ' + preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
-                spawn, cmd_xml, listening
-                IF (listening[0] EQ '') THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    spawn, cmd_xml, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
                 
@@ -712,11 +697,15 @@ IF (output_path NE '' OR $
                 cmd_xml = 'cp ' + prenexus_path + '/../*.xml' + ' ' + preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
-                spawn, cmd_xml, listening
-                IF (listening[0] EQ '') THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    spawn, cmd_xml, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
                 
@@ -726,11 +715,15 @@ IF (output_path NE '' OR $
                 cmd_nxt = 'cp ' + StagingArea + '/*.nxt' + ' ' + preNeXus_folder
                 cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, cmd_nxt_text
-                spawn, cmd_nxt, listening
-                IF (listening[0] EQ '') THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    spawn, cmd_nxt, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
                 
@@ -740,11 +733,15 @@ IF (output_path NE '' OR $
                 cmd_dat = 'cp ' + prenexus_path + '/*.dat' + ' ' + preNeXus_folder
                 cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + PROCESSING
                 AppendMyLogBook, Event, cmd_dat_text
-                spawn, cmd_dat, listening
-                IF (listening[0] EQ '') THEN BEGIN
+                IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    spawn, cmd_dat, listening
+                    IF (listening[0] EQ '') THEN BEGIN
+                        putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    ENDIF ELSE BEGIN
+                        putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                    ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
             ENDIF
@@ -752,14 +749,21 @@ IF (output_path NE '' OR $
             cmd1 = cmd + ' ' + NeXus_folder
             cmd1_text = 'cmd: ' + cmd1 + ' ... ' + PROCESSING
             AppendMyLogBook, Event, cmd1_text
-            spawn, cmd1, listening
-            IF (listening[0] EQ '') THEN BEGIN
+            IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 msg = '> ' + NeXus_folder + ShortNexusToMove[i] + $
                   ' (For Archive)'
                 text = [text, msg]
             ENDIF ELSE BEGIN
-                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                spawn, cmd1, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    msg = '> ' + NeXus_folder + ShortNexusToMove[i] + $
+                      ' (For Archive)'
+                    text = [text, msg]
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
             ENDELSE
         ENDIF
         
@@ -767,12 +771,17 @@ IF (output_path NE '' OR $
             cmd2 = cmd + ' ' + InstrSharedFolder
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + PROCESSING
             AppendMyLogBook, Event, cmd2_text
-            spawn, cmd2, listening
-            IF (listening[0] EQ '') THEN BEGIN
+            IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 text = [text,'> ' + InstrSharedFolder + ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
-                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                spawn, cmd2, listening
+                IF (listening[0] EQ '') THEN BEGIN
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    text = [text,'> ' + InstrSharedFolder + ShortNexusToMove[i]]
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
             ENDELSE
         ENDIF
 
@@ -780,12 +789,17 @@ IF (output_path NE '' OR $
             cmd3 = cmd +' ' + ProposalSharedFolder
             cmd3_text = 'cmd: ' + cmd3 + ' ... ' + PROCESSING
             AppendMyLogBook, Event, cmd3_text
-            spawn, cmd3, listening
-            IF (listening[0] EQ '') THEN BEGIN ;it worked
+            IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, OK , PROCESSING
                 text = [text,'> ' + ProposalSharedFolder+ ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
-                putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                spawn, cmd3, listening
+                IF (listening[0] EQ '') THEN BEGIN ;it worked
+                    putTextAtEndOfMyLogBook, Event, OK , PROCESSING
+                    text = [text,'> ' + ProposalSharedFolder+ ShortNexusToMove[i]]
+                ENDIF ELSE BEGIN
+                    putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
+                ENDELSE
             ENDELSE
         ENDIF
         AppendMyLogBook, Event, ''
@@ -795,10 +809,7 @@ IF (output_path NE '' OR $
 ;END OF PHASE 17
     phase       += 1.
     percentDone = phase/nbrPhase
-    xextent = Fix(info.drawsize*percentDone)
-    xbox_coords = [0, 0, xextent, xextent, 0]
-; Draw the box
-    Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+    progressBar->Update,percentDone    
     
     putTextAtEndOfLogBook, Event, OK, PROCESSING ;moving files worked
     AppendLogBook, Event, text

@@ -6,34 +6,41 @@ FUNCTION CreateStagingArea, Event, $
                             OK
 
 error_status = 0
-AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
-IF (FILE_TEST(stagingArea,/DIRECTORY)) THEN BEGIN
-    AppendMyLogBook, Event, '--> Folder exists and needs to be cleaned up'
-    cmd = 'rm ' + stagingArea + '/*.* -f '
-    cmd_text = '   cmd: ' + cmd
-    AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
-    spawn, cmd, listening_rm, error_rm
-    IF (error_rm[0] NE '') THEN BEGIN
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        error_status = 1
-    ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-    ENDELSE
-ENDIF ELSE BEGIN
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
     AppendMyLogBook, Event, '--> Folder does not exist and needs to be created'
     cmd = 'mkdir ' + stagingArea
     cmd_text = '   cmd: ' + cmd
     AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
-    spawn, cmd, listening_rm, error_mk
-    IF (error_mk[0] NE '') THEN BEGIN
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        error_status = 1
+    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+ENDIF ELSE BEGIN    
+    AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
+    IF (FILE_TEST(stagingArea,/DIRECTORY)) THEN BEGIN
+        AppendMyLogBook, Event, '--> Folder exists and needs to be cleaned up'
+        cmd = 'rm ' + stagingArea + '/*.* -f '
+        cmd_text = '   cmd: ' + cmd
+        AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
+        spawn, cmd, listening_rm, error_rm
+        IF (error_rm[0] NE '') THEN BEGIN
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            error_status = 1
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        ENDELSE
     ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        AppendMyLogBook, Event, '--> Folder does not exist and needs to be created'
+        cmd = 'mkdir ' + stagingArea
+        cmd_text = '   cmd: ' + cmd
+        AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
+        spawn, cmd, listening_rm, error_mk
+        IF (error_mk[0] NE '') THEN BEGIN
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            error_status = 1
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        ENDELSE
     ENDELSE
+    AppendMyLogBook, Event, ''
 ENDELSE
-AppendMyLogBook, Event, ''
-
 RETURN, error_status
 END
 
@@ -62,31 +69,38 @@ error_status = 0
 message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
-;get mapping file
-IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
-   mapping_file     = (*global).debugMapFileName
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    mapping_file = (*global).mac.mapping_file
+    cmd += ' -m ' + mapping_file
+    cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
+    AppendMyLogBook, Event, cmd_text
+    cmd_text = '> Creating Histo Mapped Files: '
+    AppendMyLogBook, Event, cmd_text
+    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+    AppendMyLogBook, Event, cmd_text
+    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
-   file_array = get_up_to_date_geo_tran_map_file(instrument)
-   mapping_file     = file_array[2]
+    file_array = get_up_to_date_geo_tran_map_file(instrument)
+    mapping_file     = file_array[2]
+    cmd += ' -m ' + mapping_file
+    cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
+    AppendMyLogBook, Event, cmd_text
+    cmd_text = '> Creating Histo Mapped Files: '
+    AppendMyLogBook, Event, cmd_text
+    cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
+    AppendMyLogBook, Event, cmd_text
+    spawn, cmd, listening, err_listening
+    IF (err_listening[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+        error_status = 1
+        putTextAtEndOfLogBook, Event, FAILED, PROCESSING
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+        putTextAtEndOfLogBook, Event, OK, PROCESSING
+    ENDELSE
 ENDELSE
-cmd += ' -m ' + mapping_file
-cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
-AppendMyLogBook, Event, cmd_text
-cmd_text = '> Creating Histo Mapped Files: '
-AppendMyLogBook, Event, cmd_text
-cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening, err_listening
-IF (err_listening[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   error_status = 1
-   putTextAtEndOfLogBook, Event, FAILED, PROCESSING
-ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-   putTextAtEndOfLogBook, Event, OK, PROCESSING
-ENDELSE
-
 RETURN, error_status
 END
 
@@ -111,17 +125,20 @@ cmd_text = '> Importing beamtime and cvlist xml files: '
 AppendMyLogBook, Event, cmd_text
 cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening,err_listening1
-err_listening1 = ''
-IF (err_listening1[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   error_status = 1
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    spawn, cmd, listening,err_listening1
+    err_listening1 = ''
+    IF (err_listening1[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+        error_status = 1
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
 ENDELSE
 AppendMyLogBook, Event, ''
-
 RETURN, error_status
 END
 
@@ -140,14 +157,18 @@ cmd_text = '> Importing cvinfo and runinfo xml files: '
 AppendMyLogBook, Event, cmd_text
 cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening,err_listening2
-err_listening2 = ''
-IF (err_listening2[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   error_status = 1
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    spawn, cmd, listening,err_listening2
+    err_listening2 = ''
+    IF (err_listening2[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+        error_status = 1
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
 ENDELSE
 AppendMyLogBook, Event, ''
 
@@ -171,10 +192,10 @@ text = '> Importing translation file: '
 AppendMyLogBook, Event, text
 text = '-> Get up to date geometry and translation files:'
 AppendMyLogBook, Event, text
-IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
-   geometry_file    = (*global).debugGeomFileName 
-   translation_file = (*global).debugTranFileName
-   mapping_file     = (*global).debugMapFileName
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   geometry_file    = (*global).mac.geometry_file
+   translation_file = (*global).mac.translation_file
+   mapping_file     = (*global).mac.mapping_file
 ENDIF ELSE BEGIN
    file_array = get_up_to_date_geo_tran_map_file(instrument)
    geometry_file    = file_array[0]
@@ -206,19 +227,21 @@ AppendMyLogBook, Event, text
 cmd = 'cp ' + translation_file + ' ' + mapping_file + ' ' + stagingArea
 cmd_text = ' cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening, err_listening3
-err_listening3 = ''
-IF (err_listening3[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   error_status = 1
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    spawn, cmd, listening, err_listening3
+    err_listening3 = ''
+    IF (err_listening3[0] NE '') THEN BEGIN
+        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+        AppendMyLogBook, Event, err_listening
+        error_status = 1
+    ENDIF ELSE BEGIN
+        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+    ENDELSE
 ENDELSE
 AppendMyLogBook, Event, ''
-
 putTextAtEndOfLogBook, Event, OK, PROCESSING
-
 RETURN, error_status
 END
 
