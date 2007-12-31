@@ -85,6 +85,7 @@ ybox_coords = [0, 10, 10, 0, 0]
 TVLct, r, g, b, /Get
 oldDrawColor = [r(1), g(1), b(1)]
 TVLct, 255, 0, 0, 1
+WSet, info.wid
 ;WSet, info.wid
 percentIncrement = 0.1
 percentDone      = 0.0
@@ -189,29 +190,15 @@ Polyfill, xbox_coords, ybox_coords, Color=1, /Device
 ;###############################################################################
 
 
-
-
-
-
-
-
+;###############################################################################
 ;importing other xml files
-cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
-cmd_text = '> Importing cvinfo and runinfo xml files: '
-AppendMyLogBook, Event, cmd_text
-cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening,err_listening2
-err_listening2 = ''
-IF (err_listening2[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   goto, error
-ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-ENDELSE
-AppendMyLogBook, Event, ''
-
+error_status = ImportXml(Event,$
+                         processing,$
+                         ok,$
+                         failed,$
+                         prenexus_path,$
+                         stagingArea)                         
+IF (error_status) then goto, ERROR
 ;END OF PHASE 5
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -219,29 +206,16 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
-;##### get the geometry file from its location
-text = '> Importing translation file: '
-AppendMyLogBook, Event, text
-text = '-> Get up to date geometry and translation files:'
-AppendMyLogBook, Event, text
-IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
-   geometry_file    = (*global).debugGeomFileName 
-   translation_file = (*global).debugTranFileName
-   mapping_file     = (*global).debugMapFileName
-ENDIF ELSE BEGIN
-   file_array = get_up_to_date_geo_tran_map_file(instrument)
-   geometry_file    = file_array[0]
-   translation_file = file_array[1]
-   mapping_file     = file_array[2]
-ENDELSE
-text = '--> geometry file is   : ' + geometry_file
-AppendMyLogBook, Event, text
-text = '--> translation file is: ' + translation_file
-AppendMyLogBook, Event, text
-text = '--> mapping file is    : ' + mapping_file
-AppendMyLogBook, Event, text
 
+;###############################################################################
+;Get the geometry file from its location
+geometry_file    = ''
+translation_file = ''
+mapping_file     = ''
+GetGeoMapTranFile, Event, geometry_file, translation_file, mapping_file, $
+  instrument
 ;END OF PHASE 6
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -249,25 +223,18 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
-text = '-> Copy translation and mapping file in staging area:'
-AppendMyLogBook, Event, text
-cmd = 'cp ' + translation_file + ' ' + mapping_file + ' ' + stagingArea
-cmd_text = ' cmd: ' + cmd + ' ... ' + PROCESSING
-AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening, err_listening3
-err_listening3 = ''
-IF (err_listening3[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   goto, error
-ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-ENDELSE
-AppendMyLogBook, Event, ''
 
-putTextAtEndOfLogBook, Event, OK, PROCESSING
-
+;###############################################################################
+error_status = CopyTranMapFiles(Event,$
+                                processing,$
+                                ok,$
+                                failed,$
+                                translation_file,$
+                                mapping_file,$
+                                stagingArea)
+IF (error_status) then goto, ERROR
 ;END OF PHASE 7
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -275,7 +242,9 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
+;###############################################################################
 ;####### Translation of files
 message = '>(3/'+NbrSteps+') Translating files '
 AppendMyLogBook, Event, 'PHASE 3/' + NbrSteps + ': TRANSLATING FILES'
@@ -295,7 +264,6 @@ AppendMyLogBook, Event, '-> p0_file_name    : ' + p0_file_name
 AppendMyLogBook, Event, '-> base_nexus      : ' + base_nexus
 AppendMyLogBook, Event, '-> ShortNexusName  : ' + ShortNexusName
 AppendMyLogBook, Event, ''
-
 ;END OF PHASE 8
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -303,6 +271,7 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
 text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + PROCESSING
 AppendMyLogBook, Event, text
@@ -447,7 +416,6 @@ ENDIF ELSE BEGIN
     ENDELSE
     AppendMyLogBook, Event, ''
         
-
 ;END OF PHASE 10
     phase       += 1.
     percentDone = phase/nbrPhase
@@ -850,6 +818,7 @@ END
 
 
 pro MAIN_REALIZE, wWidget
+Device, Decomposed=0
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
