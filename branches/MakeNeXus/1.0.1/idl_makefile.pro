@@ -26,6 +26,7 @@ cd, CurrentFolder
 
 ;procedures
 .run makenexus_Cleanup.pro
+.run makenexus_CreateNexusRoutines.pro
 
 ;main functions
 .run MainBaseEvent.pro

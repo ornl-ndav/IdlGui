@@ -95,8 +95,8 @@ OK         = (*global).ok
 FAILED     = (*global).FAILED
 NbrSteps   = strcompress(4,/remove_all)
 
+;###############################################################################
 putMyLogBook, Event, '############ GENERAL VARIABLES #############'
-
 ;get RunNumber
 RunNumber = getRunNumber(Event)
 AppendMyLogBook, Event, 'Run Number     : ' + RunNumber
@@ -115,7 +115,6 @@ stagingArea = (*global).staging_folder
 AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
 AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
 AppendMyLogBook, Event, ''
-
 ;END OF PHASE 1
 phase       = 1.
 percentDone = phase/nbrPhase
@@ -123,73 +122,43 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
-;make sure the staging area exist and is empty
-AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
-IF (FILE_TEST(stagingArea,/DIRECTORY)) THEN BEGIN
-    AppendMyLogBook, Event, '--> Folder exists and needs to be cleaned up'
-    cmd = 'rm ' + stagingArea + '/*.* -f '
-    cmd_text = '   cmd: ' + cmd
-    AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
-    spawn, cmd, listening_rm, error_rm
-    IF (error_rm[0] NE '') THEN BEGIN
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        goto, error
-    ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-    ENDELSE
-ENDIF ELSE BEGIN
-    AppendMyLogBook, Event, '--> Folder does not exist and needs to be created'
-    cmd = 'mkdir ' + stagingArea
-    cmd_text = '   cmd: ' + cmd
-    AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
-    spawn, cmd, listening_rm, error_mk
-    IF (error_mk[0] NE '') THEN BEGIN
-        putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-        goto, error
-    ENDIF ELSE BEGIN
-        putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-    ENDELSE
-ENDELSE
-AppendMyLogBook, Event, ''
 
+;###############################################################################
+;Make sure the staging area exist and is empty
+error_status = CreateStagingArea( Event, $
+  stagingArea, $
+  PROCESSING,$
+  FAILED,$
+  OK)
+IF (error_status) then goto, ERROR
 ;END OF PHASE 2
 phase       += 1.
 percentDone = phase/nbrPhase
 xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
+WSet, info.wid
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
-;####### run the runmp_flags tool first ######
-message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
-appendLogBook, Event, message
-cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
-;get mapping file
-IF ((*global).hostname eq (*global).MacHostName) THEN BEGIN
-   mapping_file     = (*global).debugMapFileName
-ENDIF ELSE BEGIN
-   file_array = get_up_to_date_geo_tran_map_file(instrument)
-   mapping_file     = file_array[2]
-ENDELSE
-cmd += ' -m ' + mapping_file
-cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
-AppendMyLogBook, Event, cmd_text
-cmd_text = '> Creating Histo Mapped Files: '
-AppendMyLogBook, Event, cmd_text
-cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening, err_listening
-IF (err_listening[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   goto, error
-   putTextAtEndOfLogBook, Event, FAILED, PROCESSING
-ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-   putTextAtEndOfLogBook, Event, OK, PROCESSING
-ENDELSE
 
+;###############################################################################
+;Run the runmp_flags tool first
+mapping_file = ''
+file_array   = ['']
+error_status = RunmpFlags(Event, $
+                          instrument, $
+                          processing,$
+                          failed,$
+                          ok,$
+                          stagingArea,$
+                          base_file_name,$
+                          Nbrsteps,$
+                          mapping_file,$
+                          file_array)
+if (error_status) then goto, ERROR
 ;END OF PHASE 3
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -197,29 +166,19 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
 
-;###### Copy the prenexus file into stagging area ######
-message = '>(2/'+NbrSteps+') Importing staging files ................... ' + processing
-appendLogBook, Event, message
-appendMyLogBook, Event, ''
-AppendMyLogBook, Event, 'PHASE 2/' + NbrSteps + ': IMPORT FILES'
-;importing beamtime and cvlist
-cmd = 'cp ' + prenexus_path + '/../*.xml ' + stagingArea
-cmd_text = '> Importing beamtime and cvlist xml files: '
-AppendMyLogBook, Event, cmd_text
-cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
-AppendMyLogBook, Event, cmd_text
-spawn, cmd, listening,err_listening1
-err_listening1 = ''
-IF (err_listening1[0] NE '') THEN BEGIN
-   putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
-   AppendMyLogBook, Event, err_listening
-   goto, error
-ENDIF ELSE BEGIN
-   putTextAtEndOfMyLogBook, Event, OK, PROCESSING
-ENDELSE
-AppendMyLogBook, Event, ''
 
+;###############################################################################
+;Copy the prenexus file into stagging area
+error_status = CopyPreNexus(Event,$
+                            processing, $
+                            ok,$
+                            failed,$
+                            NbrSteps,$
+                            stagingArea,$
+                            prenexus_path)
+IF (error_status) then goto, ERROR
 ;END OF PHASE 4
 phase       += 1.
 percentDone = phase/nbrPhase
@@ -227,6 +186,14 @@ xextent = Fix(info.drawsize*percentDone)
 xbox_coords = [0, 0, xextent, xextent, 0]
 ; Draw the box
 Polyfill, xbox_coords, ybox_coords, Color=1, /Device
+;###############################################################################
+
+
+
+
+
+
+
 
 ;importing other xml files
 cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
@@ -236,7 +203,7 @@ cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
 spawn, cmd, listening,err_listening2
 err_listening2 = ''
-IF (err_listening[0] NE '') THEN BEGIN
+IF (err_listening2[0] NE '') THEN BEGIN
    putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
    AppendMyLogBook, Event, err_listening
    goto, error
@@ -299,14 +266,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 AppendMyLogBook, Event, ''
 
-IF (err_listening1[0] NE '' AND $
-    err_listening2[0] NE '' AND $
-    err_listening3[0] NE '') THEN BEGIN
-    putTextAtEndOfLogBook, Event, FAILED, PROCESSING
-    goto, error
-ENDIF ELSE BEGIN
-    putTextAtEndOfLogBook, Event, OK, PROCESSING
-ENDELSE
+putTextAtEndOfLogBook, Event, OK, PROCESSING
 
 ;END OF PHASE 7
 phase       += 1.
