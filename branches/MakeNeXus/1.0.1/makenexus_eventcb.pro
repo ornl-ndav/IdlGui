@@ -72,12 +72,13 @@ PRO CreateNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;define progress bar object
 progressBar = Obj_New("SHOWPROGRESS",Xoffset=50,Yoffset=50,/CancelButton)
 progressBar->SetColor, 250
 progressBar->SetLabel, 'Translation in progress ...'
 progressBar->Start
 
-nbrphase    = 17./100.
+nbrphase    = 17./100. ;that will change according to the number of files to process
 
 ;Create Main Structure
 CNstruct = { processing       : (*global).processing,$
@@ -91,287 +92,99 @@ CNstruct = { processing       : (*global).processing,$
              stagingArea      : (*global).staging_folder,$
              mapping_file     : '',$
              geometry_file    : '',$
-             translation_file : ''}
+             translation_file : '',$
+             phase            : 1,$
+             NbrPhase         : 17./100,$
+             base_name        : '',$
+             base_ext_name    : '',$
+             base_histo_name  : '',$
+             p0_file_name     : '',$
+             base_nexus       : '',$
+             ShortNexusName   : '',$
+             anotherState     : 0,$
+             polaIndex        : 0,$
+             NexusToMove      : ptr_new(),$
+             ShortNexusToMove : ptr_new(),$
+             multi_pola_state : 0}
 
-;###############################################################################
-putMyLogBook, Event, '############ GENERAL VARIABLES #############'
-;get RunNumber
-RunNumber          = getRunNumber(Event)
-CNstruct.RunNumber = strcompress(RunNumber,/remove_all)
-AppendMyLogBook, Event, 'Run Number     : ' + RunNumber
-;get instrument
-instrument           = getInstrument(Event)
-CNstruct.instrument  = instrument
-(*global).instrument = instrument
-AppendMyLogBook, Event, 'Instrument     : ' + Instrument
-;get prenexus path
-prenexus_path  = CNstruct.prenexus_path
-AppendMyLogBook, Event, 'Prenexus_path  : ' + prenexus_path
-;create base file name
-base_file_name          = prenexus_path + '/' + instrument + '_' + RunNumber
-CNstruct.base_file_name = base_file_name
-AppendMyLogBook, Event, 'Base file name : ' + base_file_name
-;staging area
-stagingArea = CNstruct.stagingArea
-AppendMyLogBook, Event, 'Staging area   : ' + stagingArea
-AppendMyLogBook, Event, '######### END OF GENERAL VARIABLE #########'
-AppendMyLogBook, Event, ''
-;END OF PHASE 1
-phase       = 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
+;STEP1_global : will define and show the general variables that will be used
+DefineGeneralVariablePart1, Event, CNstruct
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-
-;###############################################################################
-;Make sure the staging area exist and is empty
-
+;STEP2_global : make sure the staging area exist and is empty
 error_status = CreateStagingArea( Event, CNstruct)
+IF (error_status) THEN GOTO, ERROR
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-IF (error_status) then goto, ERROR
-;END OF PHASE 2
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
-
-;###############################################################################
-;Run the runmp_flags tool first
-mapping_file = ''
-file_array   = ['']
-
+;STEP3_global : run runmp_flags - that will create the histos files
 error_status = RunmpFlags(Event, CNstruct)
+IF (error_status) THEN GOTO, ERROR
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-if (error_status) then goto, ERROR
-;END OF PHASE 3
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
-
-;###############################################################################
-;Copy the prenexus file into stagging area
-
+;STEP4_global : copy the prenexus file into stagging area
 error_status = CopyPreNexus(Event, CNstruct)
+IF (error_status) THEN GOTO, ERROR
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-IF (error_status) then goto, ERROR
-;END OF PHASE 4
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
-
-;###############################################################################
-;importing other xml files
-
+;STEP5_global : importing other xml files
 error_status = ImportXml(Event, CNstruct)
+IF (error_status) THEN GOTO, ERROR
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-IF (error_status) then goto, ERROR
-;END OF PHASE 5
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
-
-;###############################################################################
-;Get the geometry file from its location
-
+;STEP6_global : get the geometry file from its location
 GetGeoMapTranFile, Event, CNstruct
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-;END OF PHASE 6
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
-
-;###############################################################################
-
+;STEP7_global : copy the tranlation/mapping file to staging area
 error_status = CopyTranMapFiles(Event, CNstruct)
+IF (error_status) THEN GOTO, ERROR
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-IF (error_status) then goto, ERROR
-;END OF PHASE 7
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
+;STEP8_global : define the variables used in the second part
+DefineGeneralVariablePart2, Event, CNstruct
+IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-;###############################################################################
-;####### Translation of files
-message = '>(3/' + CNstruct.NbrSteps + ') Translating files '
-AppendMyLogBook, Event, 'PHASE 3/' + CNstruct.NbrSteps + ': TRANSLATING FILES'
-
-;if there is more that 1 histo, rename first one
-ShortNexusName = instrument + '_' + RunNumber
-base_name = stagingArea + '/'+ ShortNexusName
-base_nexus = base_name 
-base_name += '_neutron_histo'
-base_ext_name = base_name + '.dat'
-base_histo_name = base_name + '_mapped.dat'
-p0_file_name = base_name + '_p0.dat'
-AppendMyLogBook, Event, '-> base_name       : ' + base_name
-AppendMyLogBook, Event, '-> base_ext_name   : ' + base_ext_name
-AppendMyLogBook, Event, '-> base_histo_name : ' + base_histo_name
-AppendMyLogBook, Event, '-> p0_file_name    : ' + p0_file_name
-AppendMyLogBook, Event, '-> base_nexus      : ' + base_nexus
-AppendMyLogBook, Event, '-> ShortNexusName  : ' + ShortNexusName
-AppendMyLogBook, Event, ''
-;END OF PHASE 8
-phase       += 1.
-percentDone = phase/nbrPhase
-cancelled = progressBar->CheckCancel()
-IF cancelled THEN BEGIN
-    ok = Dialog_Message('User cancelled operation.')
-    progressBar->Destroy
-    goto, ERROR1
-ENDIF
-progressBar->Update,percentDone
-;###############################################################################
-
+;STEP9_global ; define polarization state (single or multi)
 text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, text
 TranslationError = 0 ;by default, everything is going to run smoothly
 IF (!VERSION.os NE 'darwin' AND $
     FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
     
-    multi_pola_state = 1 ;we are working with the multi_polarization state
+    CNStruct.multi_pola_state = 1 ;we are working with the multi_polarization state
     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
     AppendMyLogBook, Event, '=> Entering the multi-polarization states mode'
     message += '(Multi-Polarization): ... ' + CNstruct.PROCESSING
     appendLogBook, Event, message
     
-                                ;work on first polarization state
-    polaIndex    = 0
-    anotherState = 1
-    WHILE (anotherState) DO BEGIN
+ ;work on first polarization state
+    CNstruct.polaIndex    = 0
+    CNstruct.anotherState = 1
+    WHILE (CNstruct.anotherState) DO BEGIN
         message = '-> Polarization state file #' + strcompress(polaIndex,/remove_all)
         CurrentPolaStateFileName = base_name + '_p' + strcompress(PolaIndex,/remove_all) + '.dat'
         message += ' is: ' + CurrentPolaStateFileName
         AppendMyLogBook, Event, message
         
-        message = '--> Rename file into generic histogram mapped file name (' + base_histo_name
-        message += '):'
-        AppendMyLogBook, Event, message
-        cmd = 'mv ' + CurrentPolaStateFileName + ' ' + base_histo_name
-        cmd_text = 'cmd: ' + cmd
-        spawn, cmd, listening, err_listening
-        IF (err_listening[0] EQ '') THEN BEGIN
-            message = cmd + ' ... OK'
-        ENDIF ELSE BEGIN
-            message = cmd + ' ... FAILED'
-        ENDELSE
-        AppendMyLogBook, Event, message
-        AppendMyLogBook, Event, ''
-        
+;renaming file into generic histogram mapped file
+        error_status = MultiPola_renamingFile(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+
 ;merging xml files
-        AppendMyLogBook, Event, '--> Merging the xml files:'
-        cmd = 'TS_merge_preNeXus.sh ' + CNstruct.translation_file + ' ' $
-          + CNstruct.geometry_file + ' ' + CNstruct.stagingArea
-        cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
-        AppendMyLogBook, Event, cmd_text
-        spawn, cmd, listening, merging_error
-        IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
-            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
-            AppendMyLogBook, Event, err_listening
-            goto, error
-        ENDIF ELSE BEGIN
-            putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
-        ENDELSE
-        AppendMyLogBook, Event, ''
+        error_status = MultiPola_mergingFile(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
         
 ;translating the file
-        AppendMyLogBook, Event, '--> Translating the files:'
-        TranslationFile = stagingArea + '/' + CNstruct.instrument + '_' + $
-          CNstruct.RunNumber + '.nxt'
-        AppendMyLogBook, Event, ' Translation file: ' + CNstruct.TranslationFile 
-        cmd = 'nxtranslate ' + TranslationFile + ' --hdf5 '
-        cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
-        AppendMyLogBook, Event, cmd_text
-;move to staging area
-        CD, stagingArea
-        spawn, cmd, listening, translation_error
-        IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
-            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
-            AppendMyLogBook, Event, err_listening
-            goto, error
-        ENDIF ELSE BEGIN
-            putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
-        ENDELSE
-        AppendMyLogBook, Event, ''
-        
+        error_status = MultiPola_translatingFile(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+
 ;renaming nexus file
-        AppendMyLogBook, Event, '--> Renaming Nexus file:'
-        pre_nexus_name = base_nexus + '.nxs'
-        nexus_file_name = base_nexus + '_p' + strcompress(PolaIndex,/remove_all) + '.nxs'
-        cmd = 'mv ' + pre_nexus_name + ' ' + nexus_file_name
-        cmd_text = 'cmd: ' + cmd + ' ... ' 
-        spawn, cmd, listening, err_listening
-        IF (err_listening[0] EQ '') THEN BEGIN
-            message = cmd_text + CNstruct.OK
-        ENDIF ELSE BEGIN
-            message = cmd_text + CNstruct.FAILED
-            goto, error
-        ENDELSE
-        AppendMyLogBook, Event, message
-        
-        if (PolaIndex EQ 0) THEN BEGIN
-            NexusToMove = [nexus_file_name]
-            ShortNexusToMove = [ShortNexusName + '_p0.nxs']
-        ENDIF ELSE BEGIN
-            NexusToMove = [NexusToMove,nexus_file_name]
-            ShortNexusToMove = [ShortNexusToMove, ShortNexusName + '_p' + $
-                                strcompress(polaIndex,/remove_all) + '.nxs']
-        ENDELSE
-        
-        ++polaIndex
-                                ;check if next file exist
-        file_name = base_name + '_p' + strcompress(PolaIndex,/remove_all) + '.dat'
+        error_status = MultiPola(Event,CNstruct)
+        IF (error_status) THEN GOTO, ERROR
+
+;checking if there is another pola. (check if nexus exist)
+        ++CNstruct.polaIndex
+        file_name = CNstruct.base_name + '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
         IF (FILE_TEST(file_name)) THEN BEGIN
             anotherState = 1    ;YES, CONTINUE
         ENDIF ELSE BEGIN
@@ -383,24 +196,12 @@ IF (!VERSION.os NE 'darwin' AND $
     
 ENDIF ELSE BEGIN
     
-    multi_pola_state = 0        ;we are working in normal mode
-    putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
-    AppendMyLogBook, Event, ''
-    AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
-    message += '(Normal): ............... ' + CNstruct.PROCESSING
-    appendLogBook, Event, message
-    AppendMyLogBook, Event, ''
-    
-;END OF PHASE 9
-    phase       += 1.
-    percentDone = phase/nbrPhase
-    cancelled = progressBar->CheckCancel()
-    IF cancelled THEN BEGIN
-        ok = Dialog_Message('User cancelled operation.')
-        progressBar->Destroy
-        goto, ERROR1
-    ENDIF
-    progressBar->Update,percentDone    
+    SinglePola_message, Event, CNstruct
+    IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
+   
+
+
+
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
 ;check that histo_mapped is not there already
@@ -431,8 +232,8 @@ ENDIF ELSE BEGIN
     AppendMyLogBook, Event, ''
     
 ;END OF PHASE 10
-    phase       += 1.
-    percentDone = phase/nbrPhase
+    CNstruct.phase       += 1.
+    percentDone = CNstruct.phase/nbrPhase
     cancelled = progressBar->CheckCancel()
     IF cancelled THEN BEGIN
         ok = Dialog_Message('User cancelled operation.')
@@ -463,8 +264,8 @@ ENDIF ELSE BEGIN
     AppendMyLogBook, Event, ''
     
 ;END OF PHASE 11
-    phase       += 1.
-    percentDone = phase/nbrPhase
+    CNstruct.phase       += 1.
+    percentDone = CNstruct.phase/nbrPhase
     cancelled = progressBar->CheckCancel()
     IF cancelled THEN BEGIN
         ok = Dialog_Message('User cancelled operation.')
@@ -481,11 +282,12 @@ ENDIF ELSE BEGIN
     cmd = 'nxtranslate ' + CNstruct.Translation_file + ' --hdf5'
     cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
     AppendMyLogBook, Event, cmd_text
-;move to staging area
-    CD, stagingArea
+
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
     ENDIF ELSE BEGIN
+;move to staging area
+        CD, stagingArea
         spawn, cmd, listening, translation_error
         IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
             putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
@@ -510,8 +312,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;END OF PHASE 12
-phase       += 1.
-percentDone = phase/nbrPhase
+CNstruct.phase       += 1.
+percentDone = CNstruct.phase/nbrPhase
 cancelled = progressBar->CheckCancel()
 IF cancelled THEN BEGIN
     ok = Dialog_Message('User cancelled operation.')
@@ -533,7 +335,7 @@ IF (multi_pola_state) THEN BEGIN
         AppendMyLogBook, Event, message
     ENDFOR
 ENDIF ELSE BEGIN
-    NexusFile = stagingArea + '/' + CNstruct.instrument + '_' + CNstruct.RunNumber + '.nxs'
+    NexusFile = CNStruct.stagingArea + '/' + CNstruct.instrument + '_' + CNstruct.RunNumber + '.nxs'
     AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
     NexusToMove = [NexusFile]
     ShortNexusToMove = [ShortNexusName + '.nxs']
@@ -541,8 +343,8 @@ ENDELSE
 AppendMyLogBook, Event, ''
 
 ;END OF PHASE 13
-phase       += 1.
-percentDone = phase/nbrPhase
+CNstruct.phase       += 1.
+percentDone = CNstruct.phase/nbrPhase
 cancelled = progressBar->CheckCancel()
 IF cancelled THEN BEGIN
     ok = Dialog_Message('User cancelled operation.')
@@ -576,8 +378,8 @@ ENDELSE
 AppendMyLogBook, Event, ''
 
 ;END OF PHASE 14
-phase       += 1.
-percentDone = phase/nbrPhase
+CNstruct.phase       += 1.
+percentDone = CNstruct.phase/nbrPhase
 cancelled = progressBar->CheckCancel()
 IF cancelled THEN BEGIN
     ok = Dialog_Message('User cancelled operation.')
@@ -613,8 +415,8 @@ ENDELSE
 AppendMyLogBook, Event, ''
 
 ;END OF PHASE 15
-phase       += 1.
-percentDone = phase/nbrPhase
+CNstruct.phase       += 1.
+percentDone = CNstruct.phase/nbrPhase
 cancelled = progressBar->CheckCancel()
 IF cancelled THEN BEGIN
     ok = Dialog_Message('User cancelled operation.')
@@ -652,8 +454,8 @@ ENDELSE
 AppendMyLogBook, Event, ''
 
 ;END OF PHASE 16
-phase       += 1.
-percentDone = phase/nbrPhase
+CNstruct.phase       += 1.
+percentDone = CNstruct.phase/nbrPhase
 cancelled = progressBar->CheckCancel()
 IF cancelled THEN BEGIN
     ok = Dialog_Message('User cancelled operation.')
@@ -774,7 +576,7 @@ IF (output_path NE '' OR $
 ;copy *.xml files from prenexus path
                 AppendMyLogBook, Event, $
                   'Copy runinfo.xml, cvinfo.xml ... files from DAS/preNeXus folder:'
-                cmd_xml = 'cp ' + prenexus_path + '/*.xml' + ' ' + preNeXus_folder
+                cmd_xml = 'cp ' + CNstruct.prenexus_path + '/*.xml' + ' ' + preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -791,7 +593,7 @@ IF (output_path NE '' OR $
                 
                 AppendMyLogBook, Event, $
                   'Copy beamtimeinfo.xml and cvlist.xml files from DAS/preNeXus folder:'
-                cmd_xml = 'cp ' + prenexus_path + '/../*.xml' + ' ' + preNeXus_folder
+                cmd_xml = 'cp ' + CNStruct.prenexus_path + '/../*.xml' + ' ' + preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -809,7 +611,7 @@ IF (output_path NE '' OR $
 ;copy .nxt file from stagingArea
                 AppendMyLogBook, Event, $
                   'Copy translation file from Staging Area:'
-                cmd_nxt = 'cp ' + StagingArea + '/*.nxt' + ' ' + preNeXus_folder
+                cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + preNeXus_folder
                 cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_nxt_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -827,7 +629,7 @@ IF (output_path NE '' OR $
 ;copy *.dat file from prenexus path
                 AppendMyLogBook, Event, $
                   'Copy *.dat files from DAS/preNeXus folder:'
-                cmd_dat = 'cp ' + prenexus_path + '/*.dat' + ' ' + preNeXus_folder
+                cmd_dat = 'cp ' + CNstruct.prenexus_path + '/*.dat' + ' ' + preNeXus_folder
                 cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_dat_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -904,8 +706,8 @@ IF (output_path NE '' OR $
     ENDFOR
 
 ;END OF PHASE 17
-    phase       += 1.
-    percentDone = phase/nbrPhase
+    CNstruct.phase       += 1.
+    percentDone = CNstruct.phase/nbrPhase
     cancelled = progressBar->CheckCancel()
     IF cancelled THEN BEGIN
         ok = Dialog_Message('User cancelled operation.')
