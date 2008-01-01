@@ -513,7 +513,6 @@ IF N_Elements(color) EQ 0 THEN color = !P.Color
 IF N_Elements(xsize) EQ 0 THEN xsize = 150
 IF N_Elements(ysize) EQ 0 THEN ysize = 10
 Device, Get_Screen_Size=sizes
-print, sizes
 IF N_Elements(xoffset) EQ 0 THEN $
    xlocation = (sizes(0) / 2.0) - 75 ELSE xlocation = xoffset
 IF N_Elements(yoffset) EQ 0 THEN $

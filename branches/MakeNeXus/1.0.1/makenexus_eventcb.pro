@@ -72,7 +72,7 @@ PRO CreateNexus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-progressBar = Obj_New("SHOWPROGRESS",Xoffset=50,Yoffset=50)
+progressBar = Obj_New("SHOWPROGRESS",Xoffset=50,Yoffset=50,/CancelButton)
 progressBar->SetColor, 250
 progressBar->SetLabel, 'Translation in progress ...'
 progressBar->Start
@@ -107,6 +107,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 1
 phase       = 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -122,6 +128,12 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 2
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -144,6 +156,12 @@ if (error_status) then goto, ERROR
 ;END OF PHASE 3
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -161,6 +179,12 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 4
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -177,6 +201,12 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 5
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -191,6 +221,12 @@ GetGeoMapTranFile, Event, geometry_file, translation_file, mapping_file, $
 ;END OF PHASE 6
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -207,6 +243,12 @@ IF (error_status) then goto, ERROR
 ;END OF PHASE 7
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -233,6 +275,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 8
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone
 ;###############################################################################
 
@@ -354,6 +402,12 @@ ENDIF ELSE BEGIN
 ;END OF PHASE 9
     phase       += 1.
     percentDone = phase/nbrPhase
+    cancelled = progressBar->CheckCancel()
+    IF cancelled THEN BEGIN
+        ok = Dialog_Message('User cancelled operation.')
+        progressBar->Destroy
+        goto, ERROR1
+    ENDIF
     progressBar->Update,percentDone    
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
@@ -387,6 +441,12 @@ ENDIF ELSE BEGIN
 ;END OF PHASE 10
     phase       += 1.
     percentDone = phase/nbrPhase
+    cancelled = progressBar->CheckCancel()
+    IF cancelled THEN BEGIN
+        ok = Dialog_Message('User cancelled operation.')
+        progressBar->Destroy
+        goto, ERROR1
+    ENDIF
     progressBar->Update,percentDone    
     
 ;merging xml fIles
@@ -411,6 +471,12 @@ ENDIF ELSE BEGIN
 ;END OF PHASE 11
     phase       += 1.
     percentDone = phase/nbrPhase
+    cancelled = progressBar->CheckCancel()
+    IF cancelled THEN BEGIN
+        ok = Dialog_Message('User cancelled operation.')
+        progressBar->Destroy
+        goto, ERROR1
+    ENDIF
     progressBar->Update,percentDone    
     
 ;translating the file
@@ -451,6 +517,12 @@ ENDELSE
 ;END OF PHASE 12
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone    
 
 ;move final nexus file(s) into predefined location(s)
@@ -476,6 +548,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 13
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone    
 
 ;get destination folders
@@ -505,6 +583,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 14
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone    
 
 ;Instrument Shared Folder
@@ -536,6 +620,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 15
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone    
 
 ;Proposal Shared Folder
@@ -569,6 +659,12 @@ AppendMyLogBook, Event, ''
 ;END OF PHASE 16
 phase       += 1.
 percentDone = phase/nbrPhase
+cancelled = progressBar->CheckCancel()
+IF cancelled THEN BEGIN
+    ok = Dialog_Message('User cancelled operation.')
+    progressBar->Destroy
+    goto, ERROR1
+ENDIF
 progressBar->Update,percentDone    
 
 ;move only if at least one of the three path exists
@@ -815,6 +911,12 @@ IF (output_path NE '' OR $
 ;END OF PHASE 17
     phase       += 1.
     percentDone = phase/nbrPhase
+    cancelled = progressBar->CheckCancel()
+    IF cancelled THEN BEGIN
+        ok = Dialog_Message('User cancelled operation.')
+        progressBar->Destroy
+        goto, ERROR1
+    ENDIF
     progressBar->Update,percentDone    
     
     putTextAtEndOfLogBook, Event, OK, PROCESSING ;moving files worked
@@ -823,10 +925,15 @@ IF (output_path NE '' OR $
 ENDIF ELSE BEGIN
     
 error: 
-
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING ;0 output folder defined
     validateCreateNexusButton, Event, 0
     
+error1:
+    AppendMyLogBook, Event, ''
+    AppendMyLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    appendLogBook, Event, ''
+    appendLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    validateCreateNexusButton, Event, 1
 ENDELSE
 
 progressBar->Destroy
