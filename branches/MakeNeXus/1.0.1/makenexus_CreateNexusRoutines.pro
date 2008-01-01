@@ -293,10 +293,6 @@ END
 
 PRO DefineGeneralVariablePart2, Event, CNstruct
 
-;####### Translation of files
-message = '>(3/' + CNstruct.NbrSteps + ') Translating files '
-AppendMyLogBook, Event, 'PHASE 3/' + CNstruct.NbrSteps + ': TRANSLATING FILES'
-
 ;if there is more that 1 histo, rename first one
 CNstruct.ShortNexusName = CNStruct.instrument + '_' + CNStruct.RunNumber
 CNstruct.base_name = CNstruct.stagingArea + '/'+ CNstruct.ShortNexusName
@@ -424,8 +420,6 @@ CNstruct.multi_pola_state = 0            ;we are working in normal mode
 putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
 AppendMyLogBook, Event, ''
 AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
-message += '(Normal): ............... ' + CNstruct.PROCESSING
-appendLogBook, Event, message
 AppendMyLogBook, Event, ''
 
 END

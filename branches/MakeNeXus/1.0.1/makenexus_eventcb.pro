@@ -105,7 +105,14 @@ CNstruct = { processing       : (*global).processing,$
              polaIndex        : 0,$
              NexusToMove      : ptr_new(),$
              ShortNexusToMove : ptr_new(),$
-             multi_pola_state : 0}
+             multi_pola_state : 0,$
+             NexusFile        : '',$
+             output_path      : '',$
+             InstrSharedFolder : '',$
+             proposalNumber   : '',$
+             proposalSharedFolder : '',$
+             NexusFolder      : '',$
+             preNeXus_folder  : ''}
 
 ;STEP1_global : will define and show the general variables that will be used
 DefineGeneralVariablePart1, Event, CNstruct
@@ -141,15 +148,18 @@ IF (error_status) THEN GOTO, ERROR
 IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
 ;STEP8_global : define the variables used in the second part
+;####### Translation of files
+message = '>(3/' + CNstruct.NbrSteps + ') Translating files '
+AppendMyLogBook, Event, 'PHASE 3/' + CNstruct.NbrSteps + ': TRANSLATING FILES'
 DefineGeneralVariablePart2, Event, CNstruct
 IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
 ;STEP9_global ; define polarization state (single or multi)
-text = '> Checking if p0 state file exist: ' + p0_file_name + ' ... ' + CNstruct.PROCESSING
+text = '> Checking if p0 state file exist: ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, text
 TranslationError = 0 ;by default, everything is going to run smoothly
 IF (!VERSION.os NE 'darwin' AND $
-    FILE_TEST(p0_file_name)) THEN BEGIN ;multi_polarization state
+    FILE_TEST(CNstruct.p0_file_name)) THEN BEGIN ;multi_polarization state
     
     CNStruct.multi_pola_state = 1 ;we are working with the multi_polarization state
     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
@@ -161,8 +171,10 @@ IF (!VERSION.os NE 'darwin' AND $
     CNstruct.polaIndex    = 0
     CNstruct.anotherState = 1
     WHILE (CNstruct.anotherState) DO BEGIN
-        message = '-> Polarization state file #' + strcompress(polaIndex,/remove_all)
-        CurrentPolaStateFileName = base_name + '_p' + strcompress(PolaIndex,/remove_all) + '.dat'
+        message = '-> Polarization state file #' + $
+          strcompress(CNstruct.polaIndex,/remove_all)
+        CurrentPolaStateFileName = base_name + '_p' + $
+          strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
         message += ' is: ' + CurrentPolaStateFileName
         AppendMyLogBook, Event, message
         
@@ -197,6 +209,8 @@ IF (!VERSION.os NE 'darwin' AND $
 ENDIF ELSE BEGIN
     
     SinglePola_message, Event, CNstruct
+    message += '(Normal): ............... ' + CNstruct.PROCESSING
+    appendLogBook, Event, message
     IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
    
 
@@ -207,14 +221,14 @@ ENDIF ELSE BEGIN
 ;check that histo_mapped is not there already
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
         AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
-        cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
+        cmd = 'mv ' + CNstruct.base_ext_name + ' ' + CNstruct.base_histo_name
         cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
         AppendMyLogBook, Event, cmd_text
         putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
     ENDIF ELSE BEGIN
-        IF (~FILE_TEST(base_histo_name)) THEN BEGIN
+        IF (~FILE_TEST(CNstruct.base_histo_name)) THEN BEGIN
             AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
-            cmd = 'mv ' + base_ext_name + ' ' + base_histo_name
+            cmd = 'mv ' + CNstruct.base_ext_name + ' ' + CNstruct.base_histo_name
             cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd_text
             spawn, cmd, listening, renaming_error
@@ -328,17 +342,18 @@ message = '>(4/' + CNstruct.NbrSteps + ') Moving NeXus to Final Location .......
 appendLogBook, Event, message
 AppendMyLogBook, Event, 'PHASE 4/' + CNstruct.NbrSteps + ': MOVING FILES TO THEIR FINAL LOCATION'
 
-IF (multi_pola_state) THEN BEGIN
-    sz = (size(NexusToMove))(1)
+IF (CNstruct.multi_pola_state) THEN BEGIN
+    sz = (size(CNstruct.NexusToMove))(1)
     FOR i=0,(sz-1) DO BEGIN
-        message = 'Nexus File #' + strcompress(i,/remove_all) + ': ' + NexusToMove[i]
+        message = 'Nexus File #' + strcompress(i,/remove_all) + ': ' + CNstruct.NexusToMove[i]
         AppendMyLogBook, Event, message
     ENDFOR
 ENDIF ELSE BEGIN
-    NexusFile = CNStruct.stagingArea + '/' + CNstruct.instrument + '_' + CNstruct.RunNumber + '.nxs'
-    AppendMyLogBook, Event, ' NeXus file: ' + NexusFile
-    NexusToMove = [NexusFile]
-    ShortNexusToMove = [ShortNexusName + '.nxs']
+    CNstruct.NexusFile = CNStruct.stagingArea + '/' + $
+      CNstruct.instrument + '_' + CNstruct.RunNumber + '.nxs'
+    AppendMyLogBook, Event, ' NeXus file: ' + CNstruct.NexusFile
+    CNstruct.NexusToMove = [CNstruct.NexusFile]
+    CNstruct.ShortNexusToMove = [CNstruct.ShortNexusName + '.nxs']
 ENDELSE
 AppendMyLogBook, Event, ''
 
@@ -355,9 +370,9 @@ progressBar->Update,percentDone
 
 ;get destination folders
 ;Main output path
-output_path = getTextFieldValue(Event, 'output_path_text')
-IF (output_path NE '') THEN BEGIN
-    message = '-> Check if there is a Main Output Path ... YES (' + output_path + ')'
+CNstruct.output_path = getTextFieldValue(Event, 'output_path_text')
+IF (CNstruct.output_path NE '') THEN BEGIN
+    message = '-> Check if there is a Main Output Path ... YES (' + CNstruct.output_path + ')'
     AppendMyLogBook, Event, message
     message = '--> Check if output path exists ........... ' + CNstruct.PROCESSING
     AppendMyLogBook, Event, message
@@ -368,7 +383,7 @@ IF (output_path NE '') THEN BEGIN
             putTextAtEndOfMyLogBook, Event, 'YES' , CNstruct.PROCESSING
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
-            output_path = ''
+            CNstruct.output_path = ''
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
@@ -390,27 +405,27 @@ progressBar->Update,percentDone
 
 ;Instrument Shared Folder
 IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
-    InstrSharedFolder = '/SNS/' + CNstruct.instrument + '/shared/'
+    CNstruct.InstrSharedFolder = '/SNS/' + CNstruct.instrument + '/shared/'
     message = '-> Check if Instrument Shared Folder is selected ... YES (' + $
-      InstrSharedFolder + ')'
+      CNstruct.InstrSharedFolder + ')'
     AppendMyLogBook, Event, message
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
         message = '--> Check if Instrument Shared Folder exists ....... YES'
         AppendMyLogBook, Event, message
     ENDIF ELSE BEGIN
-        IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
+        IF (FILE_TEST(CNstruct.InstrSharedFolder,/DIRECTORY)) THEN BEGIN
             message = '--> Check if Instrument Shared Folder exists ....... YES'
             AppendMyLogBook, Event, message
         ENDIF ELSE BEGIN
             message = '--> Check if Instrument Shared Folder exists ....... NO'
             AppendMyLogBook, Event, message
-            InstrSharedFolder = ''
+            CNstruct.InstrSharedFolder = ''
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Instrument Shared Folder is selected ... NO'
     AppendMyLogBook, Event, message
-    InstrSharedFolder = ''
+    CNstruct.InstrSharedFolder = ''
 ENDELSE
 AppendMyLogBook, Event, ''
 
@@ -427,29 +442,29 @@ progressBar->Update,percentDone
 
 ;Proposal Shared Folder
 IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
-    proposalNumber = getProposalNumber(Event, prenexus_path)
-    ProposalSharedFolder = '/SNS/' + CNstruct.instrument + '/' + proposalNumber
-    ProposalSharedFolder += '/shared/'
+    CNstruct.proposalNumber = getProposalNumber(Event, CNstruct.prenexus_path)
+    CNstruct.ProposalSharedFolder = '/SNS/' + CNstruct.instrument + '/' + CNstruct.proposalNumber
+    CNstruct.ProposalSharedFolder += '/shared/'
     message = '-> Check if Proposal Shared Folder is selected ..... YES (' +$
-      ProposalSharedFolder + ')'
+      CNstruct.ProposalSharedFolder + ')'
     AppendMyLogBook, Event, message
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
             message = '--> Check if Proposal Shared Folder exists ......... YES'
             AppendMyLogBook, Event, message        
     ENDIF ELSE BEGIN
-        IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
+        IF (FILE_TEST(CNstruct.ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
             message = '--> Check if Proposal Shared Folder exists ......... YES'
             AppendMyLogBook, Event, message
         ENDIF ELSE BEGIN
             message = '--> Check if Proposal Shared Folder exists ......... NO'
             AppendMyLogBook, Event, message
-            ProposalSharedFolder = ''
+            CNstruct.ProposalSharedFolder = ''
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Proposal Shared Folder is selected ..... NO'
     AppendMyLogBook, Event, message
-    ProposalSharedFolder = ''
+    CNstruct.ProposalSharedFolder = ''
 ENDELSE
 AppendMyLogBook, Event, ''
 
@@ -465,11 +480,11 @@ ENDIF
 progressBar->Update,percentDone    
 
 ;move only if at least one of the three path exists
-IF (output_path NE '' OR $
-    InstrSharedFolder NE '' OR $
-    ProposalSharedFolder NE '') THEN BEGIN
+IF (CNstruct.output_path NE '' OR $
+    CNstruct.InstrSharedFolder NE '' OR $
+    CNstruct.ProposalSharedFolder NE '') THEN BEGIN
 
-    sz = (size(NexusToMove))(1)
+    sz = (size(CNStruct.NexusToMove))(1)
     IF (sz EQ 1) THEN BEGIN ;only 1 nexus
         message = '-> Moving nexus file:'
         AppendMyLogBook, Event, message
@@ -484,8 +499,8 @@ IF (output_path NE '' OR $
 
     FOR i=0,(sz-1) DO BEGIN
         
-        cmd = 'cp ' + NeXusToMove[i] 
-        IF (output_path NE '') THEN BEGIN
+        cmd = 'cp ' + CNstruct.NeXusToMove[i] 
+        IF (CNstruct.output_path NE '') THEN BEGIN
             IF (i EQ 0) THEN BEGIN
 
 ;output_path/RunNumber/NeXus/nexus/file
@@ -494,23 +509,23 @@ IF (output_path NE '' OR $
 ;output_path/RunNumber/preNeXus/*.nxt
 ;create NeXus and preNeXus folders
                 AppendMyLogBook, Event, 'Iteration #0:'
-                NeXus_folder    = output_path + CNstruct.RunNumber + '/NeXus/'
-                preNeXus_folder = output_path + CNstruct.RunNumber + '/preNeXus/'
+                CNstruct.NeXus_folder    = CNstruct.output_path + CNstruct.RunNumber + '/NeXus/'
+                CNstruct.preNeXus_folder = CNstruct.output_path + CNstruct.RunNumber + '/preNeXus/'
 
                 AppendMyLogBook, Event, 'Checking if NeXus Folder (' + NeXus_folder + $
                   ') exists ... ' + CNstruct.PROCESSING
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
                     AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
-                    cmd_rm = 'rm -f ' + NeXus_folder + '*.nxs'
+                    cmd_rm = 'rm -f ' + CNstruct.NeXus_folder + '*.nxs'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
-                    IF (FILE_TEST(NeXus_folder,/DIRECTORY)) THEN BEGIN
+                    IF (FILE_TEST(CNstruct.NeXus_folder,/DIRECTORY)) THEN BEGIN
                         putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
                         AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
-                        cmd_rm = 'rm -f ' + NeXus_folder + '*.nxs'
+                        cmd_rm = 'rm -f ' + CNstruct.NeXus_folder + '*.nxs'
                         cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_rm_text
                         spawn, cmd_rm, listening
@@ -521,7 +536,7 @@ IF (output_path NE '' OR $
                         ENDELSE
                     ENDIF ELSE BEGIN
                         putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
-                        cmd_spawn = 'mkdir -p ' + Nexus_folder 
+                        cmd_spawn = 'mkdir -p ' + CNstruct.Nexus_folder 
                         AppendMyLogBook, Event, 'Create NeXus folder:'
                         cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_spawn_text
@@ -535,20 +550,21 @@ IF (output_path NE '' OR $
                     AppendMyLogBook, Event, ''
                 ENDELSE
                 
-                AppendMyLogBook, Event, 'Checking if preNeXus Folder (' + preNeXus_folder + $
+                AppendMyLogBook, Event, 'Checking if preNeXus Folder (' + $
+                  CNstruct.preNeXus_folder + $
                   ') exists ... ' + CNstruct.PROCESSING
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
                     AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
-                    cmd_rm = 'rm -f ' + preNeXus_folder + '*.*'
+                    cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
-                    IF (FILE_TEST(preNeXus_folder,/DIRECTORY)) THEN BEGIN
+                    IF (FILE_TEST(CNstruct.preNeXus_folder,/DIRECTORY)) THEN BEGIN
                         putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
                         AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
-                        cmd_rm = 'rm -f ' + preNeXus_folder + '*.*'
+                        cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
                         cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_rm_text
                         spawn, cmd_rm, listening
@@ -559,7 +575,7 @@ IF (output_path NE '' OR $
                         ENDELSE
                     ENDIF ELSE BEGIN
                         putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
-                        cmd_spawn = 'mkdir -p ' + preNexus_folder 
+                        cmd_spawn = 'mkdir -p ' + CNstruct.preNexus_folder 
                         AppendMyLogBook, Event, 'Create preNeXus folder:'
                         cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_spawn_text
@@ -576,7 +592,8 @@ IF (output_path NE '' OR $
 ;copy *.xml files from prenexus path
                 AppendMyLogBook, Event, $
                   'Copy runinfo.xml, cvinfo.xml ... files from DAS/preNeXus folder:'
-                cmd_xml = 'cp ' + CNstruct.prenexus_path + '/*.xml' + ' ' + preNeXus_folder
+                cmd_xml = 'cp ' + CNstruct.prenexus_path + '/*.xml' $
+                  + ' ' + CNstruct.preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -593,7 +610,8 @@ IF (output_path NE '' OR $
                 
                 AppendMyLogBook, Event, $
                   'Copy beamtimeinfo.xml and cvlist.xml files from DAS/preNeXus folder:'
-                cmd_xml = 'cp ' + CNStruct.prenexus_path + '/../*.xml' + ' ' + preNeXus_folder
+                cmd_xml = 'cp ' + CNStruct.prenexus_path + '/../*.xml' $
+                  + ' ' + CNstruct.preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -611,7 +629,7 @@ IF (output_path NE '' OR $
 ;copy .nxt file from stagingArea
                 AppendMyLogBook, Event, $
                   'Copy translation file from Staging Area:'
-                cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + preNeXus_folder
+                cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + CNstruct.preNeXus_folder
                 cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_nxt_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -629,7 +647,7 @@ IF (output_path NE '' OR $
 ;copy *.dat file from prenexus path
                 AppendMyLogBook, Event, $
                   'Copy *.dat files from DAS/preNeXus folder:'
-                cmd_dat = 'cp ' + CNstruct.prenexus_path + '/*.dat' + ' ' + preNeXus_folder
+                cmd_dat = 'cp ' + CNstruct.prenexus_path + '/*.dat' + ' ' + CNstruct.preNeXus_folder
                 cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_dat_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -645,19 +663,19 @@ IF (output_path NE '' OR $
                 AppendMyLogBook, Event, ''
             ENDIF
             
-            cmd1 = cmd + ' ' + NeXus_folder
+            cmd1 = cmd + ' ' + CNstruct.NeXus_folder
             cmd1_text = 'cmd: ' + cmd1 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd1_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                msg = '> ' + NeXus_folder + ShortNexusToMove[i] + $
+                msg = '> ' + CNstruct.NeXus_folder + CNstruct.ShortNexusToMove[i] + $
                   ' (For Archive)'
                 text = [text, msg]
             ENDIF ELSE BEGIN
                 spawn, cmd1, listening
                 IF (listening[0] EQ '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                    msg = '> ' + NeXus_folder + ShortNexusToMove[i] + $
+                    msg = '> ' + CNstruct.NeXus_folder + CNstruct.ShortNexusToMove[i] + $
                       ' (For Archive)'
                     text = [text, msg]
                 ENDIF ELSE BEGIN
@@ -666,26 +684,26 @@ IF (output_path NE '' OR $
             ENDELSE
         ENDIF
         
-        IF (InstrSharedFolder NE '') THEN BEGIN
-            cmd2 = cmd + ' ' + InstrSharedFolder
+        IF (CNstruct.InstrSharedFolder NE '') THEN BEGIN
+            cmd2 = cmd + ' ' + CNstruct.InstrSharedFolder
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd2_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
                 putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                text = [text,'> ' + InstrSharedFolder + ShortNexusToMove[i]]
+                text = [text,'> ' + CNstruct.InstrSharedFolder + CNstruct.ShortNexusToMove[i]]
             ENDIF ELSE BEGIN
                 spawn, cmd2, listening
                 IF (listening[0] EQ '') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                    text = [text,'> ' + InstrSharedFolder + ShortNexusToMove[i]]
+                    text = [text,'> ' + CNstruct.InstrSharedFolder + CNstruct.ShortNexusToMove[i]]
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
                 ENDELSE
             ENDELSE
         ENDIF
 
-        IF (ProposalSharedFolder NE '') THEN BEGIN
-            cmd3 = cmd +' ' + ProposalSharedFolder
+        IF (CNstruct.ProposalSharedFolder NE '') THEN BEGIN
+            cmd3 = cmd +' ' + CNstruct.ProposalSharedFolder
             cmd3_text = 'cmd: ' + cmd3 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd3_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -695,7 +713,7 @@ IF (output_path NE '' OR $
                 spawn, cmd3, listening
                 IF (listening[0] EQ '') THEN BEGIN ;it worked
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                    text = [text,'> ' + ProposalSharedFolder+ ShortNexusToMove[i]]
+                    text = [text,'> ' + CNstruct.ProposalSharedFolder+ CNstruct.ShortNexusToMove[i]]
                 ENDIF ELSE BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
                 ENDELSE
