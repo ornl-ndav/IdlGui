@@ -1,9 +1,11 @@
 ;###############################################################################
-FUNCTION CreateStagingArea, Event, $
-                            stagingArea, $
-                            PROCESSING,$
-                            FAILED,$
-                            OK
+FUNCTION CreateStagingArea, Event, CNstruct
+
+;retrieve parameters
+stagingArea = CNstruct.stagingArea
+processing  = CNstruct.processing
+failed      = CNstruct.failed
+ok          = CNstruct.ok
 
 error_status = 0
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
@@ -50,16 +52,16 @@ END
 
 
 
-FUNCTION RunmpFlags, Event, $
-                     instrument, $
-                     processing,$
-                     failed,$
-                     ok,$
-                     stagingArea,$
-                     base_file_name,$
-                     Nbrsteps,$
-                     mapping_file,$
-                     file_array
+FUNCTION RunmpFlags, Event, CNstruct
+
+;retrieving parameters
+instrument = CNstruct.instrument
+processing = CNstruct.processing
+failed     = CNstruct.failed
+ok         = CNstruct.ok
+stagingArea = CNstruct.stagingArea
+base_file_name = CNstruct.base_file_name
+NbrSteps   = CNstruct.NbrSteps
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -70,7 +72,13 @@ message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + pro
 appendLogBook, Event, message
 cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    mapping_file = (*global).mac.mapping_file
+    geometry_file             = (*global).mac.geometry_file
+    CNstruct.geometry_file    = geometry_file
+    translation_file          = (*global).mac.translation_file
+    CNstruct.translation_file = translation_file
+    mapping_file              = (*global).mac.mapping_file
+    CNstruct.mapping_file     = mapping_file
+    
     cmd += ' -m ' + mapping_file
     cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
     AppendMyLogBook, Event, cmd_text
@@ -81,8 +89,14 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     putTextAtEndOfMyLogBook, Event, OK, PROCESSING
     putTextAtEndOfLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
-    file_array = get_up_to_date_geo_tran_map_file(instrument)
-    mapping_file     = file_array[2]
+    file_array                = get_up_to_date_geo_tran_map_file(instrument)
+    geometry_file             = file_array[0]
+    CNstruct.geometry_file    = geometry_file
+    translation_file          = file_array[1]
+    CNstruct.translation_file = translation_file
+    mapping_file              = file_array[2]
+    CNstruct.mapping_file     = mapping_file
+
     cmd += ' -m ' + mapping_file
     cmd_text = 'PHASE 1/' + Nbrsteps + ': CREATE HISTOGRAM'
     AppendMyLogBook, Event, cmd_text
@@ -106,13 +120,15 @@ END
 
 ;###############################################################################
 
-FUNCTION CopyPreNexus, Event,$
-                       processing, $
-                       ok,$
-                       failed,$
-                       NbrSteps,$
-                       stagingArea,$
-                       prenexus_path
+FUNCTION CopyPreNexus, Event,CNstruct
+
+;retrieving parameters
+processing    = CNstruct.processing
+ok            = CNstruct.ok
+failed        = CNstruct.failed
+NbrSteps      = CNstruct.NbrSteps
+stagingArea   = CNstruct.stagingArea
+prenexus_path = CNstruct.prenexus_path
 
 error_status = 0
 message = '>(2/'+NbrSteps+') Importing staging files ................... ' + processing
@@ -144,12 +160,14 @@ END
 
 ;###############################################################################
 
-FUNCTION ImportXml, Event,$
-                    processing,$
-                    ok,$
-                    failed,$
-                    prenexus_path,$
-                    stagingArea
+FUNCTION ImportXml, Event, CNstruct
+
+;retrieving parameters
+processing    = CNstruct.processing
+ok            = CNstruct.ok
+failed        = CNstruct.failed
+prenexus_path = CNstruct.prenexus_path
+stagingArea   = CNstruct.stagingArea
 
 error_status = 0                       
 cmd = 'cp ' + prenexus_path + '/*.xml ' + stagingArea
@@ -161,7 +179,6 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN
     spawn, cmd, listening,err_listening2
-    err_listening2 = ''
     IF (err_listening2[0] NE '') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
         AppendMyLogBook, Event, err_listening
@@ -177,35 +194,22 @@ END
 
 ;###############################################################################
 
-PRO GetGeoMapTranFile, Event, $
-                       geometry_file,$
-                       translation_file,$
-                       mapping_file,$
-                       instrument
+PRO GetGeoMapTranFile, Event, CNstruct
                                  
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-error_status = 0
-
 text = '> Importing translation file: '
 AppendMyLogBook, Event, text
 text = '-> Get up to date geometry and translation files:'
 AppendMyLogBook, Event, text
-IF (!VERSION.os EQ 'darwin') THEN BEGIN
-   geometry_file    = (*global).mac.geometry_file
-   translation_file = (*global).mac.translation_file
-   mapping_file     = (*global).mac.mapping_file
-ENDIF ELSE BEGIN
-   file_array = get_up_to_date_geo_tran_map_file(instrument)
-   geometry_file    = file_array[0]
-   translation_file = file_array[1]
-   mapping_file     = file_array[2]
-ENDELSE
+geometry_file    = CNstruct.geometry_file
+translation_file = CNstruct.translation_file
+mapping_file     = CNstruct.mapping_file
+
 text = '--> geometry file is   : ' + geometry_file
 AppendMyLogBook, Event, text
+
 text = '--> translation file is: ' + translation_file
 AppendMyLogBook, Event, text
+
 text = '--> mapping file is    : ' + mapping_file
 AppendMyLogBook, Event, text
 
@@ -213,13 +217,15 @@ END
 
 ;###############################################################################
 
-FUNCTION CopyTranMapFiles, Event,$
-                           processing,$
-                           ok,$
-                           failed,$
-                           translation_file,$
-                           mapping_file,$
-                           stagingArea
+FUNCTION CopyTranMapFiles, Event, CNstruct
+
+;retrieving parameters
+processing = CNstruct.processing
+ok         = CNstruct.ok
+failed     = CNstruct.failed
+translation_file = CNStruct.translation_file
+mapping_file     = CNstruct.mapping_file
+stagingArea      = CNstruct.stagingArea
 
 error_status = 0
 text = '-> Copy translation and mapping file in staging area:'
