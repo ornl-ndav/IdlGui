@@ -217,6 +217,10 @@ FOR i=0,(sz-1) DO BEGIN
                      currentMappedPolaStateFileName : '' }
         
         CNstruct.NbrPhase = (9. + 6. + float((*global).NbrPhase))/100
+
+        AppendLogBook, Event, ''
+        message = '#### Working on run # ' + (*global).RunNumber
+        AppendLogBook, Event, message
         
 ;STEP1_global : will define and show the general variables that will be used
         DefineGeneralVariablePart1, Event, CNstruct
