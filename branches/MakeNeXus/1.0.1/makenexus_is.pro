@@ -29,9 +29,11 @@ ENDIF eLSE BEGIN
         isOnDas = strmatch(prenexus_path,text_to_compare)
         IF (isOnDas) THEN BEGIN
             (*global).prenexus_path = prenexus_path
+            (*global).prenexus_found_nbr = (*global).prenexus_found_nbr + 1
             RETURN, 1
-        ENDIF
+        ENDIF 
     ENDFOR
+    (*global).prenexus_path = ''
     RETURN,0
 ENDELSE
 ;(*global).prenexus_path = listening[0]

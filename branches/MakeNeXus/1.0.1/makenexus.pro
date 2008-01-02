@@ -29,6 +29,8 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    prenexus_found_nbr    : 0,$
+                    validate_go           : 0,$
                     RunNumber             : '',$
                     RunNumberArray        : ptr_new(0L),$
                     Instrument            : '',$
@@ -44,6 +46,8 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                     ucams                 : ucams,$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
+                    prenexus_path_array   : ptr_new(0L),$
+                    RunNumber_array       : ptr_new(0L),$
                     output_path_1         : '~/local',$
                     staging_folder        : '~/local/.makenexus_staging',$
                     processing            : '(PROCESSING)',$

@@ -16,11 +16,13 @@ END
 PRO run_number, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+(*global).prenexus_found_nbr = 0
 ;get run number
 RunNumber = getRunNumber(Event)
 IF (RunNumber EQ 0) THEN BEGIN
     message = 'Please Enter a Run Number'
     putLogBook, Event, message
+    validate_go = 0               
 ENDIF ELSE BEGIN
 ;get instrument
     Instrument = getInstrument(Event)
@@ -46,21 +48,31 @@ ENDIF ELSE BEGIN
             ENDIF ELSE BEGIN
                 putLogBook, Event, message + 'FAILED'
             ENDELSE
+            (*(*global).prenexus_path_array) = (*global).prenexus_path
         ENDIF ELSE BEGIN        ;more than 1 run
             message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
             message += ' for ' + Instrument + $
               ' exist (this may take a while) ... '
             text = message + (*global).processing
             putLogBook, Event, text
-            AppendLogBook, Event, ''
 ;this will be used to replace processing by done
             message_array = strarr(sz+1)
             message_array[0] = message
             at_least_one_found = 0 ;by default, no prenexus found
+            validate_go        = 0
             FOR i=0,(sz-1) DO BEGIN
                 RunNumber = RunNumberArray[i]
                                 ;check if runNumber exist
                 result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+                IF (i EQ 0) THEN BEGIN
+                    (*(*global).prenexus_path_array) = (*global).prenexus_path
+                    (*(*global).RunNumber_array)     = RunNumber
+                ENDIF ELSE BEGIN
+                (*(*global).prenexus_path_array) = [(*(*global).prenexus_path_array), $
+                                                    (*global).prenexus_path]
+                (*(*global).RunNumber_array)     = [(*(*global).RunNumber_array),$
+                                                    RunNumber]
+                ENDELSE
                 message = 'Run Number ' + RunNumber + ' --- '
                 IF(result) THEN BEGIN 
                     at_least_one_found = 1
@@ -69,9 +81,10 @@ ENDIF ELSE BEGIN
                     message += (*global).failed
                 ENDELSE
                 message_array[i+1] = message
-                Append
-            ENDFOR¢
+                AppendLogBook, Event, message
+            ENDFOR
             IF (at_least_one_found) THEN BEGIN ;prenexus exist
+                validate_go = 1
                 message_array[0] = message_array[0] + 'DONE'
             ENDIF ELSE BEGIN
                 message_array[0] = message_array[0] + (*global).FAILED
@@ -84,15 +97,16 @@ ENDIF ELSE BEGIN
     ENDIF ELSE BEGIN
         message = 'Please Select an instrument'
         putLogBook, Event, message
+        validate_go = 0               
     ENDELSE
 ENDELSE
+(*global).validate_go = validate_go
 END
 
 
 
 
 PRO output_path, Event ;in makenexus_eventcb.pro
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -110,11 +124,10 @@ END
 
 
 PRO validateOrNotGoButton, Event
-RunNumber  = getRunNumber(Event)
-instrument = getInstrument(Event)
-IF (RunNumber NE '' AND $
-    RunNumber NE 0  AND $
-    instrument NE '') THEN BEGIN
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+IF ((*global).validate_go) THEN BEGIN
     validate_status = 1
 ENDIF ELSE BEGIN
     validate_status = 0
