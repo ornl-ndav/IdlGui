@@ -29,6 +29,9 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    RunNumber             : '',$
+                    RunNumberArray        : ptr_new(0L),$
+                    Instrument            : '',$
                     MainBaseXoffset       : 0,$
                     MainBaseYoffset       : 0,$
                     mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
@@ -36,7 +39,6 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                             geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
                             translation_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
                     instrumentShortList   : ptr_new(0L),$
-                    instrument            : '',$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
                     hostname              : hostname,$
                     ucams                 : ucams,$

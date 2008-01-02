@@ -101,8 +101,7 @@ run_number = CW_FIELD(run_base,$
                       UNAME         = run_number_base.uname,$
                       RETURN_EVENTS = 1,$
                       ROW           = 1,$
-                      TITLE         = run_number_base.title,$
-                      /INTEGER)
+                      TITLE         = run_number_base.title)
                               
 Instrument_droplist = WIDGET_DROPLIST(base,$
                                       VALUE   = InstrumentList,$

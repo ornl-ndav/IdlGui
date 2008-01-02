@@ -22,22 +22,62 @@ IF (RunNumber EQ 0) THEN BEGIN
     message = 'Please Enter a Run Number'
     putLogBook, Event, message
 ENDIF ELSE BEGIN
-
 ;get instrument
     Instrument = getInstrument(Event)
     IF (instrument NE '' ) THEN BEGIN    
-        message = 'Checking if Run Number ' + strcompress(RunNumber,/remove_all)
-        message += ' for ' + Instrument + ' exists ... ' 
-        text = message + 'PROCESSING'
-        putLogBook, Event, text
+        (*global).Instrument = Instrument
+        ;get list of runs
+        RunNumberArray = getListOfRuns(RunNumber)
+        (*(*global).RunNumberArray) = RunNumberArray
+        sz = (size(RunNumberArray))(1)
+        IF (sz EQ 1) THEN BEGIN ;only 1 run
+            RunNumber = RunNumberArray[0]
+            message = 'Checking if Run ' + strcompress(RunNumber,/remove_all)
+            message += ' for ' + Instrument + ' exists ... '
+            text = message + (*global).processing
+            putLogBook, Event, text
 ;check if runNumber exist
-        result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
-        IF (result) THEN BEGIN  ;prenexus exist
-            ;check the number of steps it will have
-            checkNumberSteps, Event, (*global).prenexus_path, RunNumber, Instrument
-            putLogBook, Event, message + 'OK'
-        ENDIF ELSE BEGIN
-            putLogBook, Event, message + 'FAILED'
+            result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+            IF (result) THEN BEGIN ;prenexus exist
+                putLogBook, Event, message + 'DONE'
+                AppendLogBook, Event, ''
+                message = 'Run Number ' + RunNumber + ' --- OK'
+                AppendLogBook, Event, message
+            ENDIF ELSE BEGIN
+                putLogBook, Event, message + 'FAILED'
+            ENDELSE
+        ENDIF ELSE BEGIN        ;more than 1 run
+            message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
+            message += ' for ' + Instrument + $
+              ' exist (this may take a while) ... '
+            text = message + (*global).processing
+            putLogBook, Event, text
+            AppendLogBook, Event, ''
+;this will be used to replace processing by done
+            message_array = strarr(sz+1)
+            message_array[0] = message
+            at_least_one_found = 0 ;by default, no prenexus found
+            FOR i=0,(sz-1) DO BEGIN
+                RunNumber = RunNumberArray[i]
+                                ;check if runNumber exist
+                result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+                message = 'Run Number ' + RunNumber + ' --- '
+                IF(result) THEN BEGIN 
+                    at_least_one_found = 1
+                    message += (*global).ok
+                ENDIF ELSE BEGIN
+                    message += (*global).failed
+                ENDELSE
+                message_array[i+1] = message
+                Append
+            ENDFOR¢
+            IF (at_least_one_found) THEN BEGIN ;prenexus exist
+                message_array[0] = message_array[0] + 'DONE'
+            ENDIF ELSE BEGIN
+                message_array[0] = message_array[0] + (*global).FAILED
+            ENDELSE
+            putLogBook, Event, message_array
+                
 ;remove run number
             resetRunNumberField, Event
         ENDELSE
@@ -90,6 +130,12 @@ FUNCTION CreateNexus, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;check the number of steps it will have
+checkNumberSteps, Event, $
+  (*global).prenexus_path, $
+  (*global).RunNumber, $
+  (*global).Instrument
 
 ;define progress bar object
 progressBar = Obj_New("SHOWPROGRESS", $
