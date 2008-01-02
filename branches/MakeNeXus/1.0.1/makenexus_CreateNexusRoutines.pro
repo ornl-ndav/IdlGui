@@ -656,7 +656,6 @@ IF (CNstruct.output_path NE '' OR $
     ENDELSE
     
     text = [text,'#### NEXUS FILES CREATED ####']
-    text = [text, '']
     
     FOR i=0,(sz-1) DO BEGIN
         

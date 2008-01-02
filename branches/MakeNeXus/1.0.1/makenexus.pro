@@ -57,12 +57,16 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                     runinfo_ext           : '_runinfo.xml',$
                     version               : VERSION })
 
+
+(*(*global).prenexus_path_array) = strarr(1)
+(*(*global).RunNumber_array)     = strarr(1)
+
 InstrumentList = ['Select your instrument...',$
                   'Backscattering',$
                   'Liquids Reflectometer',$
                   'Magnetism Reflectometer',$
                   'ARCS']
-                  
+
 instrumentShortList = ['',$
                        'BSS',$
                        'REF_L',$

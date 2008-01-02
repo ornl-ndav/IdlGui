@@ -45,12 +45,12 @@ ENDIF ELSE BEGIN
                 message = 'Run Number ' + RunNumber + ' --- OK'
                 AppendLogBook, Event, message
                 validate_go = 1
-                (*(*global).prenexus_path_array) = (*global).prenexus_path
-                (*(*global).RunNumber_array)     = RunNumber
+                (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
+                (*(*global).RunNumber_array)[0]     = RunNumber
             ENDIF ELSE BEGIN
                 putLogBook, Event, message + 'FAILED'
+                (*(*global).prenexus_path_array) = (*global).prenexus_path            
             ENDELSE
-            (*(*global).prenexus_path_array) = (*global).prenexus_path
         ENDIF ELSE BEGIN        ;more than 1 run
             message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
             message += ' for ' + Instrument + $
@@ -67,8 +67,8 @@ ENDIF ELSE BEGIN
                                 ;check if runNumber exist
                 result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
                 IF (i EQ 0) THEN BEGIN
-                    (*(*global).prenexus_path_array) = (*global).prenexus_path
-                    (*(*global).RunNumber_array)     = RunNumber
+                    (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
+                    (*(*global).RunNumber_array)[0]     = RunNumber
                 ENDIF ELSE BEGIN
                 (*(*global).prenexus_path_array) = [(*(*global).prenexus_path_array), $
                                                     (*global).prenexus_path]
@@ -152,14 +152,11 @@ run_number_array    = (*(*global).RunNumber_array)
 prenexus_found_nbr  = (*global).prenexus_found_nbr
 sz = (size(prenexus_path_array))(1)
 
-print, prenexus_path_array
+FOR j=0,(sz-1) DO BEGIN
 
-FOR i=0,(sz-1) DO BEGIN
-    
-    print, i
-    IF(prenexus_path_array[i] NE '') THEN BEGIN
-        (*global).prenexus_path = prenexus_path_array[i]
-        (*global).RunNumber     = run_number_array[i]
+    IF(prenexus_path_array[j] NE '') THEN BEGIN
+        (*global).prenexus_path = prenexus_path_array[j]
+        (*global).RunNumber     = run_number_array[j]
         
 ;check the number of steps it will have
         checkNumberSteps, Event, $
@@ -168,7 +165,7 @@ FOR i=0,(sz-1) DO BEGIN
           (*global).Instrument
         
 ;define progress bar object
-        title = 'Translation ... ' + strcompress(i+1,/remove_all)
+        title = 'Translation ... ' + strcompress(j+1,/remove_all)
         title += '/' + strcompress(prenexus_found_nbr,/remove_all)
         progressBar = Obj_New("SHOWPROGRESS", $
                               Xoffset =(*global).MainBaseXoffset+ 200, $
@@ -222,7 +219,7 @@ FOR i=0,(sz-1) DO BEGIN
         CNstruct.NbrPhase = (9. + 6. + float((*global).NbrPhase))/100
 
         AppendLogBook, Event, ''
-        message = '#### Working on run # ' + (*global).RunNumber
+        message = '#### WORKING ON RUN # ' + (*global).RunNumber + ' ####'
         AppendLogBook, Event, message
         
 ;STEP1_global : will define and show the general variables that will be used
