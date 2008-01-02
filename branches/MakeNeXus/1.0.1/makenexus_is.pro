@@ -17,7 +17,9 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).prenexus_path = (*global).mac.prenexus_path
     return, 1
 ENDIF eLSE BEGIN
-    cmd = 'findnexus --prenexus --listall -i' + Instrument
+    defaultPath = instrument + '-DAS-FS'
+    cmd = 'findnexus --prenexus --listall --prefix=' $
+      + defaultPath + ' -i' + Instrument
     cmd += ' ' + RunNumber
     spawn, cmd, listening
     sz = (size(listening))(1)
