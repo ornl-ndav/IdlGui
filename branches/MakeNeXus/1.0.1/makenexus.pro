@@ -29,6 +29,8 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    MainBaseXoffset       : 0,$
+                    MainBaseYoffset       : 0,$
                     mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
                             mapping_file  : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
                             geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
@@ -68,6 +70,9 @@ endif else begin
     MainBaseSize  = [100,50,850,590]
 endelse
 MainBaseTitle = 'Make NeXus (version: ' + VERSION + ')'
+
+(*global).MainBaseXoffset = MainBaseSize[0]
+(*global).MainBaseYoffset = MainBaseSize[1]
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$

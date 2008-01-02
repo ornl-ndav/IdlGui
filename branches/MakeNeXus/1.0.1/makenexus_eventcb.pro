@@ -92,7 +92,10 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;define progress bar object
-progressBar = Obj_New("SHOWPROGRESS",Xoffset=50,Yoffset=50,/CancelButton)
+progressBar = Obj_New("SHOWPROGRESS", $
+                      Xoffset=(*global).MainBaseXoffset+ 200, $
+                      Yoffset=(*global).MainBaseYoffset + 50, $
+                      /CancelButton)
 progressBar->SetColor, 250
 progressBar->SetLabel, 'Translation in progress ...'
 progressBar->Start
