@@ -67,7 +67,8 @@ validateSendToGeekButton, Event, validate_status
 END
 
 
-PRO CreateNexus, Event
+
+FUNCTION CreateNexus, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -93,26 +94,32 @@ CNstruct = { processing       : (*global).processing,$
              mapping_file     : '',$
              geometry_file    : '',$
              translation_file : '',$
+             nxtTranslationFile : '',$
              phase            : 1,$
              NbrPhase         : 17./100,$
              base_name        : '',$
              base_ext_name    : '',$
              base_histo_name  : '',$
              p0_file_name     : '',$
+             p0_mapped_file_name : '',$
+             pre_nexus_name   : '',$ ;REF_M_2967.nxs
+             nexus_file_name  : '',$ ;REF_M_2967_p#.nxs
              base_nexus       : '',$
              ShortNexusName   : '',$
              anotherState     : 0,$
              polaIndex        : 0,$
-             NexusToMove      : [''],$
-             ShortNexusToMove : [''],$
+             NexusToMove      : ptr_new(0L),$
+             ShortNexusToMove : ptr_new(0L),$
              multi_pola_state : 0,$
              NexusFile        : '',$
              output_path      : '',$
              InstrSharedFolder : '',$
-             proposalNumber   : '',$
+             proposalNumber    : '',$
              proposalSharedFolder : '',$
-             Nexus_folder     : '',$
-             preNeXus_folder  : ''}
+             nexus_folder     : '',$
+             preNeXus_folder  : '',$
+             currentPolaStateFileName       : '',$
+             currentMappedPolaStateFileName : '' }
 
 ;STEP1_global : will define and show the general variables that will be used
 DefineGeneralVariablePart1, Event, CNstruct
@@ -155,15 +162,18 @@ DefineGeneralVariablePart2, Event, CNstruct
 IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
 ;STEP9_global ; define polarization state (single or multi)
-text = '> Checking if p0 state file exist: ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
+text = '> Checking if p0 state file exist: ' + CNstruct.p0_mapped_file_name $
+  + ' or ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, text
 TranslationError = 0 ;by default, everything is going to run smoothly
 IF (!VERSION.os NE 'darwin' AND $
-    FILE_TEST(CNstruct.p0_file_name)) THEN BEGIN ;multi_polarization state
+    (FILE_TEST(CNstruct.p0_mapped_file_name) OR $
+     FILE_TEST(CNstruct.p0_file_name))) THEN BEGIN ;multi_polarization state
     
     CNStruct.multi_pola_state = 1 ;we are working with the multi_polarization state
     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-    AppendMyLogBook, Event, '=> Entering the multi-polarization states mode'
+    AppendMyLogBook, Event, '=> Entering the multi-polarization state mode'
+    AppendMyLogBook, Event, ''
     message += '(Multi-Polarization): ... ' + CNstruct.PROCESSING
     appendLogBook, Event, message
     
@@ -173,15 +183,18 @@ IF (!VERSION.os NE 'darwin' AND $
     WHILE (CNstruct.anotherState) DO BEGIN
         message = '-> Polarization state file #' + $
           strcompress(CNstruct.polaIndex,/remove_all)
-        CurrentPolaStateFileName = base_name + '_p' + $
+        CNstruct.CurrentPolaStateFileName = CNstruct.base_name + '_p' + $
           strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
-        message += ' is: ' + CurrentPolaStateFileName
+        CNstruct.CurrentMappedPolaStateFileName = CNstruct.base_name + '_p' + $
+          strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
+        message += ' is: ' + CNstruct.CurrentMappedPolaStateFileName
+        message += ' or ' + CNstruct.CurrentPolaStateFileName
         AppendMyLogBook, Event, message
         
 ;renaming file into generic histogram mapped file
-        error_status = MultiPola_renamingFile(Event,CNstruct)
+        error_status = MultiPola_renamingHistoFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
-
+        
 ;merging xml files
         error_status = MultiPola_mergingFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
@@ -191,16 +204,19 @@ IF (!VERSION.os NE 'darwin' AND $
         IF (error_status) THEN GOTO, ERROR
 
 ;renaming nexus file
-        error_status = MultiPola(Event,CNstruct)
+        error_status = MultiPola_renamingFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
 
 ;checking if there is another pola. (check if nexus exist)
         ++CNstruct.polaIndex
-        file_name = CNstruct.base_name + '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
-        IF (FILE_TEST(file_name)) THEN BEGIN
-            anotherState = 1    ;YES, CONTINUE
+        file_name = CNstruct.base_name + '_p' + $
+          strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
+        file_name_mapped = CNstruct.base_name + $
+          '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
+        IF (FILE_TEST(file_name) OR FILE_TEST(file_name_mapped)) THEN BEGIN
+            CNstruct.anotherState = 1    ;YES, CONTINUE
         ENDIF ELSE BEGIN
-            anotherState = 0    ;NO, STOP NOW
+            CNstruct.anotherState = 0    ;NO, STOP NOW
         ENDELSE
         AppendMyLogBook, Event, ''
         
@@ -230,8 +246,8 @@ ENDIF ELSE BEGIN
     
 ENDELSE                         ;end of normal mode (no polarization)
 
-;display translation status in log book
-TranslationStatusMessage,Event, CNstruct
+;display translation status in log book (ok if we reach that point)
+putTextAtEndOfLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
 IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
 ;move nexus to final location
@@ -258,27 +274,31 @@ putTextAtEndOfLogBook, Event, CNstruct.OK, CNstruct.PROCESSING ;moving files wor
 AppendLogBook, Event, text
 IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
 
-;GOTO
-
-IF (error_status EQ 1) THEN BEGIN
-    error: BEGIN
-        print, 'here'
-        putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
-        validateCreateNexusButton, Event, 0
-    END
-    
-    error1: BEGIN
-        print, 'there'
-        AppendMyLogBook, Event, ''
-        AppendMyLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
-        appendLogBook, Event, ''
-        appendLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
-        validateCreateNexusButton, Event, 1
-    END
-ENDIF
-
 progressBar->Destroy
 Obj_Destroy, progressBar
+
+return, 1
+
+;GOTO
+
+error: BEGIN
+    putTextAtEndOfLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING 
+    validateCreateNexusButton, Event, 0
+    progressBar->Destroy
+    Obj_Destroy, progressBar
+    return, 0
+END
+
+error1: BEGIN
+    AppendMyLogBook, Event, ''
+    AppendMyLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    appendLogBook, Event, ''
+    appendLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    validateCreateNexusButton, Event, 1
+    progressBar->Destroy
+    Obj_Destroy, progressBar
+    return, 0
+END
 
 END
 

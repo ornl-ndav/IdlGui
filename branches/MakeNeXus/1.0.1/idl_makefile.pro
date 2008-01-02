@@ -29,6 +29,6 @@ cd, CurrentFolder
 .run makenexus_CreateNexusRoutines.pro
 
 ;main functions
-.run MainBaseEvent.pro
 .run makenexus_eventcb.pro
+.run MainBaseEvent.pro
 .run makenexus.pro
