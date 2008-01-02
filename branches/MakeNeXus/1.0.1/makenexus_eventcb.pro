@@ -1,5 +1,21 @@
+PRO checkNumberSteps, Event, prenexus_full_path, RunNumber, Instrument
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+runinfoFullPath             = prenexus_full_path + '/' + Instrument
+runinfoFullPath            += '_' + strcompress(RunNumber,/remove_all)
+runinfoFullPath            += (*global).runinfo_ext
+NbrPolaStates = getNbrPolaState(Event, runinfoFullPath)
+IF (NbrPolaStates EQ 0) THEN BEGIN
+    (*global).NbrPhase = 4
+ENDIF ELSE BEGIN
+    (*global).NbrPhase = NbrPolaStates * 5
+ENDELSE
+END
+
 ;this function will check if the prenexus can be found
 PRO run_number, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 ;get run number
 RunNumber = getRunNumber(Event)
 IF (RunNumber EQ 0) THEN BEGIN
@@ -17,6 +33,8 @@ ENDIF ELSE BEGIN
 ;check if runNumber exist
         result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
         IF (result) THEN BEGIN  ;prenexus exist
+            ;check the number of steps it will have
+            checkNumberSteps, Event, (*global).prenexus_path, RunNumber, Instrument
             putLogBook, Event, message + 'OK'
         ENDIF ELSE BEGIN
             putLogBook, Event, message + 'FAILED'
@@ -79,8 +97,6 @@ progressBar->SetColor, 250
 progressBar->SetLabel, 'Translation in progress ...'
 progressBar->Start
 
-nbrphase    = 17./100. ;that will change according to the number of files to process
-
 ;Create Main Structure
 CNstruct = { processing       : (*global).processing,$
              ok               : (*global).ok,$
@@ -96,7 +112,7 @@ CNstruct = { processing       : (*global).processing,$
              translation_file : '',$
              nxtTranslationFile : '',$
              phase            : 1,$
-             NbrPhase         : 17./100,$
+             NbrPhase         : 0.0,$
              base_name        : '',$
              base_ext_name    : '',$
              base_histo_name  : '',$
@@ -120,6 +136,8 @@ CNstruct = { processing       : (*global).processing,$
              preNeXus_folder  : '',$
              currentPolaStateFileName       : '',$
              currentMappedPolaStateFileName : '' }
+
+CNstruct.NbrPhase = (9. + 6. + float((*global).NbrPhase))/100
 
 ;STEP1_global : will define and show the general variables that will be used
 DefineGeneralVariablePart1, Event, CNstruct
@@ -194,18 +212,22 @@ IF (!VERSION.os NE 'darwin' AND $
 ;renaming file into generic histogram mapped file
         error_status = MultiPola_renamingHistoFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
-        
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+
 ;merging xml files
         error_status = MultiPola_mergingFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
         
 ;translating the file
         error_status = MultiPola_translatingFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
 
 ;renaming nexus file
         error_status = MultiPola_renamingFile(Event,CNstruct)
         IF (error_status) THEN GOTO, ERROR
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
 
 ;checking if there is another pola. (check if nexus exist)
         ++CNstruct.polaIndex
@@ -219,7 +241,9 @@ IF (!VERSION.os NE 'darwin' AND $
             CNstruct.anotherState = 0    ;NO, STOP NOW
         ENDELSE
         AppendMyLogBook, Event, ''
-        
+
+        IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+
     ENDWHILE
     
 ENDIF ELSE BEGIN

@@ -42,3 +42,21 @@ FUNCTION getProposalNumber, Event, prenexus_path
 textSplit = strsplit(prenexus_path,'/',/extract)
 RETURN, textSplit[1]
 END
+
+
+FUNCTION getNbrPolaState, Event, file_name
+oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    return, 0
+ENDIF ELSE BEGIN
+    oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+    obj1 = oDocList->item(0)
+    obj2=obj1->GetElementsByTagName('States')
+    obj3=obj2->item(0)
+    obj3b=obj3->getattributes()
+    obj3c=obj3b->getnameditem('number')
+    return, fix(obj3c->getvalue())
+ENDELSE
+END

@@ -45,6 +45,8 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
+                    NbrPhase              : 0,$
+                    runinfo_ext           : '_runinfo.xml',$
                     version               : VERSION })
 
 InstrumentList = ['Select your instrument...',$
