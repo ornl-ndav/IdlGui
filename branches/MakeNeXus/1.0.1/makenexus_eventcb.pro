@@ -152,8 +152,11 @@ run_number_array    = (*(*global).RunNumber_array)
 prenexus_found_nbr  = (*global).prenexus_found_nbr
 sz = (size(prenexus_path_array))(1)
 
+print, prenexus_path_array
+
 FOR i=0,(sz-1) DO BEGIN
     
+    print, i
     IF(prenexus_path_array[i] NE '') THEN BEGIN
         (*global).prenexus_path = prenexus_path_array[i]
         (*global).RunNumber     = run_number_array[i]
