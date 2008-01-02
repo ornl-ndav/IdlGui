@@ -7,7 +7,7 @@ widget_control,id,get_uvalue=global
 putMyLogBook, Event, '############ GENERAL VARIABLES #############'
 
 ;get RunNumber
-RunNumber          = getRunNumber(Event)
+RunNumber          = (*global).RunNumber
 CNstruct.RunNumber = strcompress(RunNumber,/remove_all)
 AppendMyLogBook, Event, 'Run Number     : ' + RunNumber
 
