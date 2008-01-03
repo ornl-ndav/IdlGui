@@ -14,6 +14,10 @@ END
 
 ;this function will check if the prenexus can be found
 PRO run_number, Event
+;first thing to do, clear off mylogbook
+PutMyLogBook, Event, ''
+putTextField, Event, 'send_to_geek_text',''
+
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 (*global).prenexus_found_nbr = 0
