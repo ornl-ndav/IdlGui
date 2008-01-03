@@ -68,11 +68,12 @@ geometryButton   = { size  : [geometryOrLabel.size[0]+XYoff[0],$
 
 
 XYoff = [605,15]
-geometryPreview  = { size  : [geometryLabel.size[0]+XYoff[0],$
-                              geometryLabel.size[1]+XYoff[1],$
-                              65,100],$
-                     value : 'PREVIEW',$
-                     uname : 'geometry_preview'}
+geometryPreview  = { size      : [geometryLabel.size[0]+XYoff[0],$
+                                  geometryLabel.size[1]+XYoff[1],$
+                                  65,100],$
+                     value     : 'PREVIEW',$
+                     uname     : 'geometry_preview',$
+                     sensitive : 0}
 
 
 XYoff = [10,50]
@@ -123,11 +124,12 @@ browseButton = { size  : [orLabel.size[0]+XYoff[0],$
                  uname : 'cvinfo_browse_button'}
 
 XYoff = [400,-18]
-cvinfoPreview  = { size  : [BrowseButton.size[0]+XYoff[0],$
-                            BrowseButton.size[1]+XYoff[1],$
-                            65,93],$
-                   value : 'PREVIEW',$
-                   uname : 'cvinfo_preview'}
+cvinfoPreview  = { size      : [BrowseButton.size[0]+XYoff[0],$
+                                BrowseButton.size[1]+XYoff[1],$
+                                65,93],$
+                   value     : 'PREVIEW',$
+                   uname     : 'cvinfo_preview',$
+                   sensitive : 0}
 
 
 XYoff = [20,40]
