@@ -35,6 +35,9 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    error_list            : ['Failed',$ ;list of error found in SNSproblem_log
+                                             'Fatal error',$
+                                             'Error'],$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$

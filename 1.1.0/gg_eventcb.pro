@@ -242,6 +242,8 @@ ENDIF else begin                ;procedure worked
     ;get Contents of <SNSproblem_log> tab in geometry file created
     FullOutputFileName = '/SNS/users/' + (*global).ucams + '/local/' + outputFileName
     logText = getXmlTagContent(Event, tag_name, FullOutputFileName)
+    print, getNumberOfError(Event,LogText)
+
 ENDELSE
 END
 
