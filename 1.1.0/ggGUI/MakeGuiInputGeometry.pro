@@ -40,16 +40,14 @@ create_geometry = { size  : [full_reset.size[0]+XYoff[0],$
                     value : 'CREATE GEOMETRY FILE',$
                     uname : 'create_geometry_file_button'}
                             
-check_error_log = { size  : [full_reset.size[0]+XYoff[0],$
-                             create_geometry.size[1]+XYoff[1],$
-                             full_reset.size[2],$
-                             full_reset.size[3]],$
-                    value : 'CHECK ERROR GENERATED',$
-                    uname : 'check_error_log_button'}
+check_error_log = { size      : [full_reset.size[0]+XYoff[0],$
+                                 create_geometry.size[1]+XYoff[1],$
+                                 full_reset.size[2],$
+                                 full_reset.size[3]],$
+                    value     : 'ERROR LOG BOOK',$
+                    sensitive : 0,$
+                    uname     : 'check_error_log_button'}
                             
-
-
-
 ;/////////////
 ;table widget/
 ;/////////////
@@ -263,6 +261,7 @@ button4 = WIDGET_BUTTON(base,$
                         SCR_XSIZE = check_error_log.size[2],$
                         SCR_YSIZE = check_error_log.size[3],$
                         VALUE     = check_error_log.value,$
+                        SENSITIVE = check_error_log.sensitive,$
                         UNAME     = check_error_log.uname)
 ;\\\\\\\\\\\\\
 ;table widget\
