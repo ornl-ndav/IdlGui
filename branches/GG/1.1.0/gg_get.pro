@@ -152,3 +152,25 @@ no_error = 0
     return, obj4->GetNodeValue()
 ;ENDELSE
 END
+
+
+FUNCTION getNumberOfError, Event, text
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;list_of_error
+list_of_error = (*global).error_list
+sz = (size(list_of_error))(1)
+Nbr_error = 0
+FOR i=0,(sz-1) DO BEGIN
+    n=0
+    pos=0
+    while (pos NE -1) do begin
+        pos = strpos(text,list_of_error[i],pos)
+        if (pos ne -1) then ++pos
+        ++n
+    endwhile
+    Nbr_error += (n-1)
+ENDFOR
+RETURN, Nbr_error
+END
