@@ -35,6 +35,7 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
