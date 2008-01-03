@@ -52,8 +52,7 @@ uname_array = ['geo_file_frame',$
                'geo_path_text_field',$
                'geo_or_label',$
                'geo_path_button',$
-               'loading_geometry_button',$
-               'check_error_log_button']
+               'loading_geometry_button']
 sz = (size(uname_array))(1)
 FOR i=0,(sz-1) DO BEGIN
     sensitive_widget, $

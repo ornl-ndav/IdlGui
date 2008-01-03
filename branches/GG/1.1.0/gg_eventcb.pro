@@ -194,8 +194,14 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;activate confirmation base
 activateMap, Event, 'final_result_base', 1
+
+;desactivate final_result_ok_button and final_result_error_button
+sensitive_widget, Event, 'final_result_ok_button', 0
+sensitive_widget, Event, 'final_result_error_button', 0
+
 ;desactivate all widgets of base2
 sensitive_widget, Event, 'input_geometry_base', 0
+
 ;display message processing
 message = 'Creating geometry file ... ' + (*global).processing
 putInTextField, Event, 'final_result_text_field', message
@@ -242,18 +248,44 @@ ENDIF else begin                ;procedure worked
     ;get Contents of <SNSproblem_log> tab in geometry file created
     FullOutputFileName = '/SNS/users/' + (*global).ucams + '/local/' + outputFileName
     logText = getXmlTagContent(Event, tag_name, FullOutputFileName)
-    print, getNumberOfError(Event,LogText)
-
+    (*global).error_log_book = logText
+    IF (logText NE '') THEN BEGIN
+        sensitive_widget, Event, 'final_result_error_button', 1
+        NbrError = getNumberOfError(Event,logText)
+                                ;get number of error in log_book_error (<SNSproblem_log>)
+        NbrError = getNumberOfError(Event,logText)
+        message = 'Translation produced ' + strcompress(NbrError,/remove_all)
+        message += ' error(s). Click ERROR LOG BOOK to check error(s).'
+        appendInTextField, Event, 'final_result_text_field', message
+    ENDIF 
 ENDELSE
+;Activate final_result_ok_button and final_result_error_button
+sensitive_widget, Event, 'final_result_ok_button', 1
 END
 
+
+PRO reset_parameters, Event 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).error_log_book = ''
+sensitive_widget, Event, 'check_error_log_button',0
+END
 
 
 PRO final_result_ok, Event
 ;activate confirmation base
 activateMap, Event, 'final_result_base', 0
-;desactivate all widgets of base2
+;activate all widgets of base2
 sensitive_widget, Event, 'input_geometry_base', 1
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+IF ((*global).error_log_book NE '') THEN BEGIN
+    sensitive_widget, Event, 'check_error_log_button',1
+ENDIF ELSE BEGIN
+    sensitive_widget, Event, 'check_error_log_button',0
+ENDELSE
 END
 
 ;------------------------------------------------------------
