@@ -239,6 +239,9 @@ ENDIF else begin                ;procedure worked
     putInTextField, Event, 'final_result_text_field', message
     message = 'File created: ' + outputPath + '/' + outputFileName
     appendInTextField, Event, 'final_result_text_field', message
+    ;get Contents of <SNSproblem_log> tab in geometry file created
+    FullOutputFileName = '/SNS/users/' + (*global).ucams + '/local/' + outputFileName
+    logText = getXmlTagContent(Event, tag_name, FullOutputFileName)
 ENDELSE
 END
 
