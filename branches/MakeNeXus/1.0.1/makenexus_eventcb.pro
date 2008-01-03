@@ -14,13 +14,18 @@ END
 
 ;this function will check if the prenexus can be found
 PRO run_number, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).prenexus_found_nbr = 0
+
+;invalidate send_to_geek and create_nexus
+(*global).validate_go = 0
+validateOrNotGoButton, Event
+
 ;first thing to do, clear off mylogbook
 PutMyLogBook, Event, ''
 putTextField, Event, 'send_to_geek_text',''
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).prenexus_found_nbr = 0
 ;get run number
 RunNumber = getRunNumber(Event)
 validate_go = 0               
@@ -140,7 +145,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 ;validate go button
 validateCreateNexusButton, Event, validate_status
-validateSendToGeekButton, Event, validate_status
+validateSendToGeek, Event, validate_status
+
 END
 
 

@@ -60,7 +60,8 @@ log_book = { size  : [go_button.size[0]+XYoff[0],$
 XYoff = [0,Log_book.size[3]+10]
 STGlabel = { size  : [log_book.size[0]+XYoff[0],$
                       log_book.size[1]+XYoff[1]],$
-             value : 'Message:'}
+             value : 'Message:',$
+             uname : 'send_to_geek_label'}
 XYoff = [55,-5]
 STGtext = { size  : [STGlabel.size[0]+XYoff[0],$
                      STGlabel.size[1]+XYoff[1],$
@@ -160,9 +161,11 @@ text = WIDGET_TEXT(base,$
                    /SCROLL)
 
 label = WIDGET_LABEL(base,$
-                     XOFFSET = STGlabel.size[0],$
-                     YOFFSET = STGlabel.size[1],$
-                     VALUE   = STGlabel.value)
+                     XOFFSET   = STGlabel.size[0],$
+                     YOFFSET   = STGlabel.size[1],$
+                     VALUE     = STGlabel.value,$
+                     UNAME     = STGlabel.uname,$
+                     SENSITIVE = 0)
 
 text = WIDGET_TEXT(base,$
                    XOFFSET   = STGtext.size[0],$
