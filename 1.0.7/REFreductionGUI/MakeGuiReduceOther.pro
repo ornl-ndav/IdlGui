@@ -61,15 +61,63 @@ StartDRButtonTitle += ' <   <    <     <      <       <        <         <      
 StartDRButtonTitle += '    < '
 
 ;command line preview/generator
-d_vertical_L_L_2       = d_vertical_L_L + 20
+d_vertical_L_L_2       = d_vertical_L_L + 10
 CLpreviewLabelSize     = [5, $
                           StartDRButtonSize[1]+d_vertical_L_L_2]
-CLpreviewLabelTitle    = 'Preview of the Command Line'
-d_vertical_L_L_3       = 20
+CLpreviewLabelTitle    = 'Preview of the Command Line (CL)'
+d_vertical_L_L_3       = 15
 cmdLinePreviewTextSize = [5, $
                           CLpreviewLabelSize[1]+d_vertical_L_L_3,$
                           1180, $
                           100]
+
+;OUTPUT COMMAND LINE INTO A FILE
+BDbutton = { size  : [cmdLinePreviewTextSize[0],$
+                      cmdLinePreviewTextSize[1]+cmdLinePreviewTextSize[3],$
+                      120,35],$
+             uname : 'cml_directory_button',$
+             value : 'CL DIRECTORY ... '}
+XYoff   = [BDbutton.size[2],10]
+BDorLabel = { size   : [BDbutton.size[0]+XYoff[0],$
+                        BDbutton.size[1]+XYoff[1]],$
+              value  : 'OR'}
+XYoff   = [18,1]
+BDtext = { size  : [BDorLabel.size[0]+XYoff[0],$
+                    BDbutton.size[1]+XYoff[1],$
+                    350,35],$
+           uname : 'browse_directory_text',$
+           value : ''}
+XYoff   = [BDtext.size[2],10]
+BDandLabel = { size  : [BDtext.size[0]+XYoff[0],$
+                        BDtext.size[1]+XYoff[1]],$
+               value : 'AND'}
+XYoff   = [22,0]
+BFbutton = { size  : [BDandLabel.size[0]+XYoff[0],$
+                      BDbutton.size[1],$
+                      100,35],$
+             uname : 'browse_file_button',$
+             value : 'CL FILE ... '}
+XYoff   = [BFbutton.size[2],10]
+BForLabel = { size   : [BFbutton.size[0]+XYoff[0],$
+                        BFbutton.size[1]+XYoff[1]],$
+              value  : 'OR'}
+XYoff = [18,1]
+BFtext = { size  : [BForLabel.size[0]+XYoff[0],$
+                    BDtext.size[1],$
+                    BDtext.size[2],$
+                    BDtext.size[3]],$
+           uname : 'browse_file_text',$
+           value : ''}
+XYoff   = [BFtext.size[2],10]
+BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
+                        BFtext.size[1]+XYoff[1]],$
+              value  : '==>'}
+XYoff   = [22,0]
+OGbutton = { size  : [BDBFLabel.size[0]+XYoff[0],$
+                      BDbutton.size[1],$
+                      181,35],$
+             uname : 'output_cmdl_button',$
+             value : 'CREATE COMMAND LINE FILE'}
 
 ;************************************************************************************
 ;BUILD GUI
@@ -195,5 +243,71 @@ cmdLinePreviewText = WIDGET_TEXT(REDUCE_BASE,$
                                  VALUE     = '',$
                                  /SCROLL,$
                                  /WRAP)
-                               
+
+;output command line into a file
+button1 = WIDGET_BUTTON(REDUCE_BASE,$
+                        UNAME     = BDbutton.uname,$
+                        XOFFSET   = BDbutton.size[0],$
+                        YOFFSET   = BDbutton.size[1],$
+                        SCR_XSIZE = BDbutton.size[2],$
+                        SCR_YSIZE = BDbutton.size[3],$
+                        VALUE     = BDbutton.value)
+
+label1 = WIDGET_LABEL(REDUCE_BASE,$
+                      XOFFSET = BDorLabel.size[0],$
+                      YOFFSET = BDorLabel.size[1],$
+                      VALUE   = BDorLabel.value)
+                              
+text1 = WIDGET_TEXT(REDUCE_BASE,$
+                    XOFFSET   = BDtext.size[0],$
+                    YOFFSET   = BDtext.size[1],$
+                    SCR_XSIZE = BDtext.size[2],$
+                    SCR_YSIZE = BDtext.size[3],$
+                    UNAME     = BDtext.uname,$
+                    VALUE     = BDtext.value,$
+                    /EDITABLE)
+
+label2 = WIDGET_LABEL(REDUCE_BASE,$
+                      XOFFSET = BDandLabel.size[0],$
+                      YOFFSET = BDandLabel.size[1],$
+                      VALUE   = BDandLabel.value)
+                              
+button2 = WIDGET_BUTTON(REDUCE_BASE,$
+                        UNAME     = BFbutton.uname,$
+                        XOFFSET   = BFbutton.size[0],$
+                        YOFFSET   = BFbutton.size[1],$
+                        SCR_XSIZE = BFbutton.size[2],$
+                        SCR_YSIZE = BFbutton.size[3],$
+                        VALUE     = BFbutton.value)
+
+label3 = WIDGET_LABEL(REDUCE_BASE,$
+                      XOFFSET = BForLabel.size[0],$
+                      YOFFSET = BForLabel.size[1],$
+                      VALUE   = BForLabel.value)
+                              
+text2 = WIDGET_TEXT(REDUCE_BASE,$
+                    XOFFSET   = BFtext.size[0],$
+                    YOFFSET   = BFtext.size[1],$
+                    SCR_XSIZE = BFtext.size[2],$
+                    SCR_YSIZE = BFtext.size[3],$
+                    UNAME     = BFtext.uname,$
+                    VALUE     = BFtext.value,$
+                    /EDITABLE)
+
+label4 = WIDGET_LABEL(REDUCE_BASE,$
+                      XOFFSET = BDBFLabel.size[0],$
+                      YOFFSET = BDBFLabel.size[1],$
+                      VALUE   = BDBFLabel.value)
+                              
+button3 = WIDGET_BUTTON(REDUCE_BASE,$
+                        UNAME     = OGbutton.uname,$
+                        XOFFSET   = OGbutton.size[0],$
+                        YOFFSET   = OGbutton.size[1],$
+                        SCR_XSIZE = OGbutton.size[2],$
+                        SCR_YSIZE = OGbutton.size[3],$
+                        VALUE     = OGbutton.value)
+
+
+                    
+
 END
