@@ -124,6 +124,7 @@ cd, CurrentFolder
 .run ref_reduction_DisplayMetadataFile.pro
 .run ref_reduction_SaveFileInfo.pro
 .run ref_reduction_OverwriteInstrumentGeometry.pro
+.run ref_reduction_CL.pro
 
 .run ref_reduction_LogBookInterface.pro
 
