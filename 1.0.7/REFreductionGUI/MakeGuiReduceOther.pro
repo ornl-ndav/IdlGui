@@ -75,7 +75,7 @@ cmdLinePreviewTextSize = [5, $
 BDbutton = { size  : [cmdLinePreviewTextSize[0],$
                       cmdLinePreviewTextSize[1]+cmdLinePreviewTextSize[3],$
                       120,35],$
-             uname : 'cml_directory_button',$
+             uname : 'cl_directory_button',$
              value : 'CL DIRECTORY ... '}
 XYoff   = [BDbutton.size[2],10]
 BDorLabel = { size   : [BDbutton.size[0]+XYoff[0],$
@@ -85,7 +85,7 @@ XYoff   = [18,1]
 BDtext = { size  : [BDorLabel.size[0]+XYoff[0],$
                     BDbutton.size[1]+XYoff[1],$
                     350,35],$
-           uname : 'browse_directory_text',$
+           uname : 'cl_directory_text',$
            value : ''}
 XYoff   = [BDtext.size[2],10]
 BDandLabel = { size  : [BDtext.size[0]+XYoff[0],$
@@ -95,7 +95,7 @@ XYoff   = [22,0]
 BFbutton = { size  : [BDandLabel.size[0]+XYoff[0],$
                       BDbutton.size[1],$
                       100,35],$
-             uname : 'browse_file_button',$
+             uname : 'cl_file_button',$
              value : 'CL FILE ... '}
 XYoff   = [BFbutton.size[2],10]
 BForLabel = { size   : [BFbutton.size[0]+XYoff[0],$
@@ -106,7 +106,7 @@ BFtext = { size  : [BForLabel.size[0]+XYoff[0],$
                     BDtext.size[1],$
                     BDtext.size[2],$
                     BDtext.size[3]],$
-           uname : 'browse_file_text',$
+           uname : 'cl_file_text',$
            value : ''}
 XYoff   = [BFtext.size[2],10]
 BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
@@ -116,7 +116,7 @@ XYoff   = [22,0]
 OGbutton = { size  : [BDBFLabel.size[0]+XYoff[0],$
                       BDbutton.size[1],$
                       181,35],$
-             uname : 'output_cmdl_button',$
+             uname : 'output_cl_button',$
              value : 'CREATE COMMAND LINE FILE'}
 
 ;************************************************************************************
@@ -265,6 +265,7 @@ text1 = WIDGET_TEXT(REDUCE_BASE,$
                     SCR_YSIZE = BDtext.size[3],$
                     UNAME     = BDtext.uname,$
                     VALUE     = BDtext.value,$
+                    /ALL_EVENTS,$
                     /EDITABLE)
 
 label2 = WIDGET_LABEL(REDUCE_BASE,$
@@ -292,6 +293,7 @@ text2 = WIDGET_TEXT(REDUCE_BASE,$
                     SCR_YSIZE = BFtext.size[3],$
                     UNAME     = BFtext.uname,$
                     VALUE     = BFtext.value,$
+                    /ALL_EVENTS,$
                     /EDITABLE)
 
 label4 = WIDGET_LABEL(REDUCE_BASE,$
