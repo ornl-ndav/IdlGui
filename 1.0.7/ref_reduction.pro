@@ -30,6 +30,8 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   cl_output_path : '~/',$
+;default path where to put the command line output file
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
                    bank1_data : ptr_new(0L),$ ;
                    bank1_norm : ptr_new(0L),$ ;
