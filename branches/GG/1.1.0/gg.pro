@@ -43,7 +43,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
-                    ts_geom_calc_path     : '~/translation-service-cli-1.10-SNAPSHOT/bin/TS_geom_calc.sh',$
+                    ts_geom_calc_path     : 'TS_geom_calc.sh',$
                     tmp_xml_file          : '~/local/tmp_gg_xml_file.xml',$
                     leaf_array            : ptr_new(0L),$
                     setpointStatus        : 'S',$
