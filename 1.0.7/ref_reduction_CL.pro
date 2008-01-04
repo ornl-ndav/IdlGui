@@ -22,7 +22,20 @@ END
 
 ;REACH by the CL directory text
 PRO CL_directoryText, Event
-print, 'in CL_directoryText'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;get text content
+output_path = getTextFieldValue(Event,'cl_directory_text')
+IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+    (*global).cl_output_path = output_path
+;activate output_cl_button
+    activateButton = 1
+ENDIF ELSE BEGIN
+;desactivate output_cl_button
+    activateButton = 0
+ENDELSE
+    ActivateWidget, Event, 'output_cl_button', activateButton
 END
 
 ;REACH by 'CL FILE ...' button
