@@ -75,5 +75,9 @@ output_name = getTextFieldValue(Event,'cl_file_text')
 full_output_filename = output_path + '/' + output_name
 ;get command line string
 cml_text = getTextFieldValue(Event,'reduce_cmd_line_preview')
-
+;create file
+openw, 1, full_output_filename
+printf,1,cml_text
+close, 1
+free_lun, 1
 END
