@@ -368,7 +368,7 @@ button = WIDGET_BUTTON(base,$
                        SCR_YSIZE = cvinfoPreview.size[3],$
                        UNAME     = cvinfoPreview.uname,$
                        VALUE     = cvinfoPreview.value,$
-                       SENSITIVE = sensitiveStatus)
+                       SENSITIVE = cvinfoPreview.sensitive)
 
 text = WIDGET_TEXT(base,$
                    XOFFSET   = cvinfoText.size[0],$
@@ -400,14 +400,14 @@ label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoFileLabel.size[0],$
                      YOFFSET   = GeoFileLabel.size[1],$
                      VALUE     = GeoFileLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoFileLabel.uname)
 
 label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoNameLabel.size[0],$
                      YOFFSET   = GeoNameLabel.size[1],$
                      VALUE     = GeoNameLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoNameLabel.uname)
 
 text  = WIDGET_TEXT(base,$
@@ -441,7 +441,7 @@ label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoPathLabel.size[0],$
                      YOFFSET   = GeoPathLabel.size[1],$
                      VALUE     = GeoPathLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoPathLabel.uname)
 
 text  = WIDGET_TEXT(base,$
@@ -459,7 +459,7 @@ label = WIDGET_LABEL(base,$
                      XOFFSET   = GeoOrLabel.size[0],$
                      YOFFSET   = GeoOrLabel.size[1],$
                      VALUE     = GeoOrLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoOrLabel.uname)
 
 button1 = WIDGET_BUTTON(base,$
@@ -478,7 +478,7 @@ frame = WIDGET_LABEL(base,$
                      SCR_YSIZE = GeoFileFrame.size[3],$
                      FRAME     = GeoFileFrame.frame,$
                      VALUE     = '',$
-                     SENSITIVE = sensitiveStatus,$
+                     SENSITIVE = 0,$
                      UNAME     = GeoFileFrame.uname)
 
 ;\\\\\\\\\\\\\\\\\

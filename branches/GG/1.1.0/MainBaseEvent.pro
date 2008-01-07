@@ -56,6 +56,7 @@ CASE Event.id OF
 ;run number
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_run_number_field'): begin
         sensitive_widget, Event, 'cvinfo_preview', 0 ;disable preview button
+        sensitive_widget, Event, 'loading_geometry_button', 0 ;disable LOADING GEOMETRY
         retrieve_cvinfo_file_name, Event ;in gg_eventcb.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
         populateNameOfOutputFile, Event, 'run' ;in gg_eventcb.pro
