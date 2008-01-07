@@ -426,7 +426,6 @@ widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropLis
 ;initialize CommandLineOutput widgets (path and file name)
 id = widget_info(Main_base, find_by_uname='cl_directory_text')
 widget_control, id, set_value=(*global).cl_output_path
-
 time = RefReduction_GenerateIsoTimeStamp()
 file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
 id = widget_info(Main_Base, find_by_uname='cl_file_text')
@@ -438,9 +437,9 @@ IF (ucams EQ 'j35' OR $
     widget_control, id, /editable
 ENDIF
 
-; default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+;; default tabs shown
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 1 ;reduce
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
