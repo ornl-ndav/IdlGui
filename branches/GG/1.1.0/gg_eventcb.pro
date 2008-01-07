@@ -233,8 +233,7 @@ outputPath     = get_output_path(Event)
 outputFileName = get_output_name(Event)
 cmd += ' -o ' + outputPath + '/' + outputFileName
 spawn, cmd, listening, err_listening
-err_listening = ['']
-IF (err_listening[0] NE 0) THEN BEGIN ;procedure failed
+IF (err_listening[0] NE '') THEN BEGIN ;procedure failed
     message = 'Creating geometry file ... ' + (*global).failed
     putInTextField, Event, 'final_result_text_field', message
     message = 'Error log book: '
