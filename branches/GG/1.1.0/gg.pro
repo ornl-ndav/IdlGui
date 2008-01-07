@@ -28,7 +28,7 @@ CASE (hostname) OF
     'heater': instrumentIndex = 0
     'lrac'  : instrumentIndex = 2
     'mrac'  : instrumentIndex = 3
-    'bac1'  : instrumentIndex = 1
+    'bac.sns.gov'  : instrumentIndex = 1
     'bac2'  : instrumentIndex = 1
     else    : instrumentIndex = 0
 ENDCASE 
