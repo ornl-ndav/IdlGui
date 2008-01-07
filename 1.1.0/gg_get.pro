@@ -138,11 +138,11 @@ end
 ;nxs geometry file created.
 FUNCTION getXmlTagContent, Event, tag_name, fullFileName
 no_error = 0
-;CATCH, no_error
-;IF (no_error NE 0) THEN BEGIN
-;    CATCH,/CANCEL
-;    return, ''
-;ENDIF ELSE BEGIN
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    return, ''
+ENDIF ELSE BEGIN
     oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=fullFileName)
     oDocList = oDoc->GetElementsByTagName('NXroot')
     obj1 = oDocList->Item(0)
@@ -150,7 +150,7 @@ no_error = 0
     obj3 = obj2->Item(0)
     obj4 = obj3->GetFirstChild()
     return, obj4->GetNodeValue()
-;ENDELSE
+ENDELSE
 END
 
 
