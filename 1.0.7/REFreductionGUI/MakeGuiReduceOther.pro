@@ -119,7 +119,7 @@ OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
                           181,35],$
              uname     : 'output_cl_button',$
              value     : 'CREATE COMMAND LINE FILE',$
-             sensitive : 0}
+             sensitive : 1}
 
 ;************************************************************************************
 ;BUILD GUI
