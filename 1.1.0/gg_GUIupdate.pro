@@ -137,14 +137,33 @@ END
 
 ;display the data (name, value, units...) of first element of table
 PRO displayDataOfFirstElement, Event, motors
+
+type = (size(motors))(2)
+
+IF (type EQ 8) THEN BEGIN
+
 ;retrive value of first element selected
-name           = motors[0].name
-setpoint_value = motors[0].setpoint
-setpoint_units = motors[0].setpointUnits
-readback       = motors[0].readback
-readback_units = motors[0].readbackUnits
-value          = motors[0].value
-value_units    = motors[0].valueUnits
+    name           = motors[0].name
+    setpoint_value = motors[0].setpoint
+    setpoint_units = motors[0].setpointUnits
+    readback       = motors[0].readback
+    readback_units = motors[0].readbackUnits
+    value          = motors[0].value
+    value_units    = motors[0].valueUnits
+    
+ENDIF ELSE BEGIN
+    
+;retrive value of first element selected
+    name           = ''
+    setpoint_value = ''
+    setpoint_units = ''
+    readback       = ''
+    readback_units = ''
+    value          = ''
+    value_units    = ''
+    
+endelse
+
 ;display data
 putInTextField, Event, 'name_value', name
 putInTextField, Event, 'setpoint_value_label', setpoint_value
