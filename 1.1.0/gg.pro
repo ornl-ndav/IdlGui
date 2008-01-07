@@ -146,12 +146,14 @@ MakeGuiLoadingGeometry, $
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
+
 ;populate geometry droplist
 GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
 id = widget_info(MAIN_BASE, find_by_uname='geometry_droplist')
 widget_control, id, set_value=GeoArray
 id = widget_info(MAIN_BASE, find_by_uname='geometry_text_field')
 widget_control, id, set_value=GeoArray[0]
+
 ;show selected instrument
 id = widget_info(MAIN_BASE, find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=instrumentIndex

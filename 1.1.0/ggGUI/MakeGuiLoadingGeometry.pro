@@ -13,9 +13,9 @@ base = { size  : [0,0,MainBaseSize[2:3]],$
 
 IF (InstrumentIndex EQ 0) THEN BEGIN
     sensitiveStatus = 0
-endif else begin
+ENDIF ELSE BEGIN
     sensitiveStatus = 1
-endelse
+ENDELSE
 
 ;///////////
 ;Instrument/
@@ -491,7 +491,7 @@ button = WIDGET_BUTTON(base,$
                        SCR_YSIZE = loadingGeometryButton.size[3],$
                        UNAME     = loadingGeometryButton.uname,$
                        VALUE     = loadingGeometryButton.value,$
-                       SENSITIVE = sensitiveStatus)
+                       SENSITIVE = 0)
 
 IF (VersionLight) THEN BEGIN
     label1 = WIDGET_LABEL(base,$
