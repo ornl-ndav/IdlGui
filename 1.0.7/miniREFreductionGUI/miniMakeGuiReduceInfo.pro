@@ -20,10 +20,11 @@ ReduceTab2BaseTitle = 'REDUCTION XML FILE'
 ;general info label frame
 GeneralInfoTextFieldSize = [0,0,445,218] 
 
-DataReductionStatusFrameSize = [580,500,288,40]
-DataReductionStatusLabelSize = [585,493]
+XYoff = [0,-5]
+DataReductionStatusFrameSize = [580,500+XYoff[1],288,40]
+DataReductionStatusLabelSize = [585,493+XYoff[1]]
 DataReductionStatusLabelTitle = 'R E D U C T I O N   S T A T U S'
-DataReductionStatusTextFieldSize = [585,509,280,30]
+DataReductionStatusTextFieldSize = [585,509+XYoff[1],280,30]
 
 ;###############################################################################
 ;############################### Create GUI ####################################
