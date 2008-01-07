@@ -70,6 +70,7 @@ cmdLinePreviewTextSize = [5, $
                           CLpreviewLabelSize[1]+d_vertical_L_L_3,$
                           1180, $
                           100]
+cmdLinePreviewTextUname = 'reduce_cmd_line_preview'
 
 ;OUTPUT COMMAND LINE INTO A FILE
 BDbutton = { size  : [cmdLinePreviewTextSize[0],$
@@ -113,11 +114,12 @@ BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
                         BFtext.size[1]+XYoff[1]],$
               value  : '==>'}
 XYoff   = [22,0]
-OGbutton = { size  : [BDBFLabel.size[0]+XYoff[0],$
-                      BDbutton.size[1],$
-                      181,35],$
-             uname : 'output_cl_button',$
-             value : 'CREATE COMMAND LINE FILE'}
+OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
+                          BDbutton.size[1],$
+                          181,35],$
+             uname     : 'output_cl_button',$
+             value     : 'CREATE COMMAND LINE FILE',$
+             sensitive : 0}
 
 ;************************************************************************************
 ;BUILD GUI
@@ -235,7 +237,7 @@ cmdLinePreviewLabel = WIDGET_LABEL(REDUCE_BASE,$
                                    VALUE   = CLpreviewLabelTitle)
 
 cmdLinePreviewText = WIDGET_TEXT(REDUCE_BASE,$
-                                 UNAME     = 'reduce_cmd_line_preview',$
+                                 UNAME     = cmdLinePreviewTextUname,$
                                  XOFFSET   = cmdLinePreviewTextSize[0],$
                                  YOFFSET   = cmdLinePreviewTextSize[1],$
                                  SCR_XSIZE = cmdLinePreviewTextSize[2],$
@@ -307,7 +309,8 @@ button3 = WIDGET_BUTTON(REDUCE_BASE,$
                         YOFFSET   = OGbutton.size[1],$
                         SCR_XSIZE = OGbutton.size[2],$
                         SCR_YSIZE = OGbutton.size[3],$
-                        VALUE     = OGbutton.value)
+                        VALUE     = OGbutton.value,$
+                        SENSITIVE = OGbutton.sensitive)
 
 
                     
