@@ -71,6 +71,11 @@ END
 PRO CL_outputButton, Event
 ;get output_path and output_filename
 output_path = getTextFieldValue(Event,'cl_directory_text')
+;if this one does not exist, create it
+IF (~FILE_TEST(output_path,/directory)) THEN BEGIN
+    spawn, 'mkdir ' + output_path, listening, err_listening
+ENDIF
+
 output_name = getTextFieldValue(Event,'cl_file_text')
 full_output_filename = output_path + '/' + output_name
 ;get command line string

@@ -30,7 +30,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   cl_output_path : '~/',$
+                   cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
                    cl_file_ext1    : 'REFreduction_CL_',$
 ;default first part of output command line file
