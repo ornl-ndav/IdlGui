@@ -13,10 +13,10 @@ transpose_ok = 1
 ; get_path = path)
 ;;****************************************************************
 
-file = "/Users/j35/CD4/DAS/REF/DAS_60_neutron_histo.dat"
+file = "~/local/REF_L_4899_neutron_histo.dat"
 openr,1,file
 fs = fstat(1)
-N=fs.size        ;size of file
+N  = fs.size        ;size of file
 
 Nbytes = 4       ;data are Uint32 = 4 bytes
 N = fs.size/Nbytes
@@ -26,10 +26,10 @@ data = swap_endian(data)    ;swap endian because PC -> Mac
 close,1			    ;close file
 
 ;################################
-Nx = 256L  	;information from xxx_runnumber_runinfo.xml
-Ny = 304L
+Nx = 304L  	;information from xxx_runnumber_runinfo.xml
+Ny = 256L
 ;Nt = 834L
-Nt=84
+Nt = long(N)/(long(Nx * Ny))
 ;#################################
 
 ;find the non-null elements
@@ -46,6 +46,7 @@ endif
 ;format of graph
 if transpose_ok EQ 1 then begin
 	xtitle = "pixel y"
+
 	ytitle = "pixel x"
 endif else begin
 	xtitle="pixel x"
