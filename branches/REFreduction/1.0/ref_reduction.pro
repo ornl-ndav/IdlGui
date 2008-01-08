@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.8'
+VERSION = ' (version: 1.0.8)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -349,7 +349,8 @@ ExtOfAllPlots = ['.txt',$
 
 MainBaseSize  = [50,50,1200,885]
 MainBaseTitle = 'Reflectometer Data Reduction Package'
-        
+MainBaseTitle += VERSION
+
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
                          UNAME='MAIN_BASE',$
@@ -365,13 +366,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1030,$
-                             YOFFSET=2,$
-                             VALUE=VERSION,$
-                             FRAME=0)
-
 ;; Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 ; SWITCH (listening) OF
 ;     'lrac':
@@ -386,8 +380,6 @@ version_label = widget_label(MAIN_BASE,$
 ; ENDSWITCH
 
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
-
-
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
