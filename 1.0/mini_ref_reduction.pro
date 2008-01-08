@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.0.8)'
+VERSION = ' (version: 1.0.9)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -20,7 +20,7 @@ loadct,5
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
-
+ 
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
