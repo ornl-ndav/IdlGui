@@ -9,6 +9,11 @@ step2 = strmid(initialText,0,step1)
 return, step2
 END
 
+PRO putTextField, Event, uname, text
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=text
+END
+
 
 
 ;MAIN FUNCTIONS
