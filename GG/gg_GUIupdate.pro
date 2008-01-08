@@ -13,6 +13,33 @@ END
 
 ;*************** Particular Functions ********************
 
+PRO gg_GuiUpdate_selectPreviewButtons, Event
+gg_GuiUpdate_selectGeometryPreviewButton, Event
+gg_GuiUpdate_selectCvinfoPreviewButton, Event
+END
+
+
+PRO gg_GuiUpdate_selectGeometryPreviewButton, Event
+IF (getTextFieldValue(Event,'geometry_text_field') NE '') THEN BEGIN
+    sensitive_widget, Event, 'geometry_preview', 1
+ENDIF ELSE BEGIN
+    sensitive_widget, Event, 'geometry_preview', 0
+ENDELSE
+END
+
+
+PRO gg_GuiUpdate_selectCvinfoPreviewButton, Event
+text = getTextFieldValue(Event,'cvinfo_text_field')
+IF (text EQ '' OR $
+    strmatch(text,'*CAN NOT BE FOUND*')) THEN BEGIN
+    sensitive_widget, Event, 'cvinfo_preview', 0
+ENDIF ELSE BEGIN
+    sensitive_widget, Event, 'cvinfo_preview', 1
+ENDELSE
+END
+
+
+
 ;activate or not most of the widgets of the first base according to
 ;yes or not an instrument has been selected in the top droplist
 PRO update_loading_geometry_gui_sensitivity, Event, sensitiveStatus
@@ -22,8 +49,6 @@ loading_geometry_uname = ['geometry_droplist',$
                           'cvinfo_base',$
                           'cvinfo_browse_button',$
                           'cvinfo_text_field',$
-                          'cvinfo_preview',$
-                          'geometry_preview',$
                           'geometry_frame',$
                           'geometry_label',$
                           'geometry_or_label',$
@@ -112,14 +137,33 @@ END
 
 ;display the data (name, value, units...) of first element of table
 PRO displayDataOfFirstElement, Event, motors
+
+type = (size(motors))(2)
+
+IF (type EQ 8) THEN BEGIN
+
 ;retrive value of first element selected
-name           = motors[0].name
-setpoint_value = motors[0].setpoint
-setpoint_units = motors[0].setpointUnits
-readback       = motors[0].readback
-readback_units = motors[0].readbackUnits
-value          = motors[0].value
-value_units    = motors[0].valueUnits
+    name           = motors[0].name
+    setpoint_value = motors[0].setpoint
+    setpoint_units = motors[0].setpointUnits
+    readback       = motors[0].readback
+    readback_units = motors[0].readbackUnits
+    value          = motors[0].value
+    value_units    = motors[0].valueUnits
+    
+ENDIF ELSE BEGIN
+    
+;retrive value of first element selected
+    name           = ''
+    setpoint_value = ''
+    setpoint_units = ''
+    readback       = ''
+    readback_units = ''
+    value          = ''
+    value_units    = ''
+    
+endelse
+
 ;display data
 putInTextField, Event, 'name_value', name
 putInTextField, Event, 'setpoint_value_label', setpoint_value

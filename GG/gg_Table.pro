@@ -1,5 +1,9 @@
 FUNCTION gg_createTableArray, Event, motors
 
+type = (size(motors))(2)
+
+IF (type EQ 8) THEN BEGIN
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -43,7 +47,16 @@ FOR i=0,(sz-1) DO BEGIN
     FinalArray[*,i] = Array
 
 ENDFOR
+
+ENDIF ELSE BEGIN
+
+    FinalArray = ['','','','']
+
+ENDELSE
+
 RETURN, FinalArray
+
+
 END
 
 

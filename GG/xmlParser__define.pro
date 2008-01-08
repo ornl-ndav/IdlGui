@@ -72,8 +72,22 @@ END
 
 
 FUNCTION xmlParser::GetArray
-IF (self.MotorNum EQ 0) THEN RETURN, -1 $
-ELSE RETURN, self.Motors[0:self.MotorNum-1]
+;IF (self.MotorNum EQ 0) THEN return, -1 $
+;ELSE RETURN, self.Motors[0:self.MotorNum-1]
+IF (self.MotorNum EQ 0) THEN BEGIN
+    RETURN, -1
+;     self.Motors.name           = ''
+;     self.Motors.setpoint       = 0.0
+;     self.Motors.setpointUnits  = ''
+;     self.Motors.readback       = 0.0
+;     self.Motors.readbackUnits  = ''
+;     self.Motors.value          = 0.0
+;     self.Motors.valueUnits     = ''
+;     self.Motors.group          = ''
+;     RETURN, self.Motors
+ENDIF ELSE BEGIN
+    RETURN, self.Motors[0:self.MotorNum-1]
+ENDELSE
 END
 
 
