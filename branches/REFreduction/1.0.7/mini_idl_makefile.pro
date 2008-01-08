@@ -6,7 +6,6 @@ IdlUtilitiesPath = "utilities/"
 ;and create the VM file.
 cd, CurrentFolder + '/utilities'
 .run system_utilities.pro
-.run nexus_utilities.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
