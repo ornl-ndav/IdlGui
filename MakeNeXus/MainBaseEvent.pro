@@ -36,7 +36,8 @@ CASE Event.id OF
     
 ;Create NeXus
     widget_info(wWidget, FIND_BY_UNAME='create_nexus_button'): begin
-        CreateNexus, Event
+        validateCreateNexusButton, Event, 0
+        status = CreateNexus(Event)
     end
 
 ;Send to Geek

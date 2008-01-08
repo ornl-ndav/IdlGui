@@ -1,7 +1,7 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
 
-IdlUtilitiesPath = "../utilities"
+IdlUtilitiesPath = "./utilities"
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 
@@ -22,11 +22,13 @@ cd, CurrentFolder
 .run makenexus_GUIupdate.pro
 .run makenexus_utilities.pro
 .run makenexus_LogBookInterface.pro
+.run showprogress__define.pro
 
 ;procedures
 .run makenexus_Cleanup.pro
+.run makenexus_CreateNexusRoutines.pro
 
 ;main functions
-.run MainBaseEvent.pro
 .run makenexus_eventcb.pro
+.run MainBaseEvent.pro
 .run makenexus.pro

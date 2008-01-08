@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'MakeNeXus1.0.0'
+VERSION = 'MakeNeXus1.0.1'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -29,30 +29,44 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    prenexus_found_nbr    : 0,$
+                    validate_go           : 0,$
+                    RunNumber             : '',$
+                    RunNumberArray        : ptr_new(0L),$
+                    Instrument            : '',$
+                    MainBaseXoffset       : 0,$
+                    MainBaseYoffset       : 0,$
+                    mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
+                            mapping_file  : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
+                            geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
+                            translation_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
                     instrumentShortList   : ptr_new(0L),$
-                    instrument            : '',$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
                     hostname              : hostname,$
-                    MacHostName           : 'jcbilheux12.local',$
-                    debugGeomFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
-                    debugTranFileName     : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt',$
-                    debugMapFileName      : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
                     ucams                 : ucams,$
                     geek                  : 'j35',$
                     prenexus_path         : '',$
+                    prenexus_path_array   : ptr_new(0L),$
+                    RunNumber_array       : ptr_new(0L),$
                     output_path_1         : '~/local',$
                     staging_folder        : '~/local/.makenexus_staging',$
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$
+                    NbrPhase              : 0,$
+                    runinfo_ext           : '_runinfo.xml',$
                     version               : VERSION })
+
+
+(*(*global).prenexus_path_array) = strarr(1)
+(*(*global).RunNumber_array)     = strarr(1)
 
 InstrumentList = ['Select your instrument...',$
                   'Backscattering',$
                   'Liquids Reflectometer',$
                   'Magnetism Reflectometer',$
                   'ARCS']
-                  
+
 instrumentShortList = ['',$
                        'BSS',$
                        'REF_L',$
@@ -66,6 +80,9 @@ endif else begin
     MainBaseSize  = [100,50,850,590]
 endelse
 MainBaseTitle = 'Make NeXus (version: ' + VERSION + ')'
+
+(*global).MainBaseXoffset = MainBaseSize[0]
+(*global).MainBaseYoffset = MainBaseSize[1]
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -89,6 +106,14 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup'
 ;set the instrument droplist
 id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=InstrumentIndex
+
+;if on mac, instrument is REF_L and run number is 2000
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    id = widget_info(MAIN_BASE,find_by_uname='instrument_droplist')
+    widget_control, id, set_droplist_select=2
+    id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
+    widget_control,id,set_value='2000'   
+ENDIF 
 
 ;;REMOVE ME
 ;;set the instrument droplist
