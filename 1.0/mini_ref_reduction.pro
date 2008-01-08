@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.6'
+VERSION = 'VERSION: REFreduction1.0.8'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
