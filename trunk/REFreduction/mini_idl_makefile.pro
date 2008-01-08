@@ -1,16 +1,11 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "../utilities"
+IdlUtilitiesPath = "utilities/"
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
-;cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/utilities/"
-cd, IdlUtilitiesPath
-.run system_utilities.pro
-
-;cd, "/SNS/users/j35/SVN/HistoTool/trunk/gui/REFreduction/utilities/"
 cd, CurrentFolder + '/utilities'
-.run nexus_utilities.pro
+.run system_utilities.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
@@ -99,6 +94,7 @@ cd, CurrentFolder
 .run ref_reduction_DisplayMetadataFile.pro
 .run ref_reduction_SaveFileInfo.pro
 .run ref_reduction_OverwriteInstrumentGeometry.pro
+.run ref_reduction_CL.pro
 
 .run ref_reduction_LogBookInterface.pro
 

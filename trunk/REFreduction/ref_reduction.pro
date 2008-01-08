@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.6'
+VERSION = 'VERSION: REFreduction1.0.7'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -30,6 +30,16 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   cl_output_path : '~/',$
+;default path where to put the command line output file
+                   cl_file_ext1    : 'REFreduction_CL_',$
+;default first part of output command line file
+                   cl_file_ext2    : '.txt',$
+;default extension of output command line file
+                   cl_file_ext3    : '*-04:00.txt',$
+;default extension of output command line used in dialog_pickfile
+                   cl_output_name : '',$
+;name of file that will contain a copy of the command line 
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
                    bank1_data : ptr_new(0L),$ ;
                    bank1_norm : ptr_new(0L),$ ;
@@ -413,15 +423,23 @@ widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropLis
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
 
+;initialize CommandLineOutput widgets (path and file name)
+id = widget_info(Main_base, find_by_uname='cl_directory_text')
+widget_control, id, set_value=(*global).cl_output_path
+time = RefReduction_GenerateIsoTimeStamp()
+file_name = (*global).cl_file_ext1 + time + (*global).cl_file_ext2
+id = widget_info(Main_Base, find_by_uname='cl_file_text')
+widget_control, id, set_value=file_name
+
 IF (ucams EQ 'j35' OR $
     ucams EQ '2zr') THEN BEGIN
     id = widget_info(MAIN_BASE,find_by_uname='reduce_cmd_line_preview')
     widget_control, id, /editable
 ENDIF
 
-; default tabs shown
-; id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-; widget_control, id1, set_tab_current = 1 ;reduce
+;; default tabs shown
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 1 ;reduce
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
