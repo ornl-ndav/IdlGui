@@ -10,14 +10,14 @@ base = { size  : [0,0,MainBaseSize[2:3]],$
 ;////////////
 ;tree widget/
 ;////////////
-tree_widget = { size  : [0,0,200,MainBaseSize[3]-90],$
+tree_widget = { size  : [0,0,200,MainBaseSize[3]-120],$
                 uname : 'tree_widget'}
 
 
 ;//////////////////
 ;Main button panel/
 ;//////////////////
-XYoff = [0,MainBaseSize[3]-90]
+XYoff = [0,MainBaseSize[3]-120]
 full_reset = { size  : [XYoff[0], $
                         XYoff[1], $
                         tree_widget.size[2], $
@@ -39,6 +39,14 @@ create_geometry = { size  : [full_reset.size[0]+XYoff[0],$
                              full_reset.size[3]],$
                     value : 'CREATE GEOMETRY FILE',$
                     uname : 'create_geometry_file_button'}
+                            
+check_error_log = { size      : [full_reset.size[0]+XYoff[0],$
+                                 create_geometry.size[1]+XYoff[1],$
+                                 full_reset.size[2],$
+                                 full_reset.size[3]],$
+                    value     : 'ERROR LOG BOOK',$
+                    sensitive : 0,$
+                    uname     : 'check_error_log_button'}
                             
 ;/////////////
 ;table widget/
@@ -231,7 +239,7 @@ button1 = WIDGET_BUTTON(base,$
                         VALUE     = full_reset.value,$
                         UNAME     = full_reset.uname)
 
-button1 = WIDGET_BUTTON(base,$
+button2 = WIDGET_BUTTON(base,$
                         XOFFSET   = load_new_geometry.size[0],$
                         YOFFSET   = load_new_geometry.size[1],$
                         SCR_XSIZE = load_new_geometry.size[2],$
@@ -239,13 +247,22 @@ button1 = WIDGET_BUTTON(base,$
                         VALUE     = load_new_geometry.value,$
                         UNAME     = load_new_geometry.uname)
 
-button1 = WIDGET_BUTTON(base,$
+button3 = WIDGET_BUTTON(base,$
                         XOFFSET   = create_geometry.size[0],$
                         YOFFSET   = create_geometry.size[1],$
                         SCR_XSIZE = create_geometry.size[2],$
                         SCR_YSIZE = create_geometry.size[3],$
                         VALUE     = create_geometry.value,$
                         UNAME     = create_geometry.uname)
+
+button4 = WIDGET_BUTTON(base,$
+                        XOFFSET   = check_error_log.size[0],$
+                        YOFFSET   = check_error_log.size[1],$
+                        SCR_XSIZE = check_error_log.size[2],$
+                        SCR_YSIZE = check_error_log.size[3],$
+                        VALUE     = check_error_log.value,$
+                        SENSITIVE = check_error_log.sensitive,$
+                        UNAME     = check_error_log.uname)
 ;\\\\\\\\\\\\\
 ;table widget\
 ;\\\\\\\\\\\\\

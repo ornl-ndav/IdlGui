@@ -9,6 +9,7 @@ xmlFile = OBJ_NEW('xmlParser')
 xmlFile->ParseFile, file
 
 motors = xmlFile->GetArray()
+
 ;help, motors
 (*(*global).motors)           = motors
 (*(*global).motor_group)      = motors
@@ -28,9 +29,22 @@ TableNbrLines, Event, sz
 ;display data of first element selected (top one)
 displayDataOfFirstElement, Event, motors
 
+;check if motors is structure or not
+;if not, disable table and interactive part
+type= (size(motors))(2)
+IF (type EQ 8) THEN BEGIN
 ;activate gui
-activateTableGui, Event, 1
-activateTreeGui, Event, 1
+    activateTableGui, Event, 1
+    activateTreeGui, Event, 1
+    sensitive_widget, Event, 'create_geometry_file_button', 1
+    sensitive_widget, Event, 'full_reset_button', 1
+ENDIF ELSE BEGIN
+    activateTableGui, Event, 0
+    activateTreeGui, Event, 0
+;disable button that creates geometry
+    sensitive_widget, Event, 'create_geometry_file_button', 0
+    sensitive_widget, Event, 'full_reset_button', 0
+ENDELSE
 
 ;select first element in tree
 selectTreeRoot, Event
