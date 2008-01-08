@@ -728,6 +728,33 @@ CASE Event.id OF
         REFreductionEventcb_ProcessingCommandLine, Event
     end
 
+;****output command line****
+    ;CL folder button
+    widget_info(wWidget, FIND_BY_UNAME='cl_directory_button'): begin
+        CL_directoryButton, Event
+    end
+
+    ;CL folder text
+    widget_info(wWidget, FIND_BY_UNAME='cl_directory_text'): begin
+        CL_directoryText, Event
+    end
+
+    ;CL file button
+    widget_info(wWidget, FIND_BY_UNAME='cl_file_button'): begin
+        CL_fileButton, Event
+    end
+
+    ;CL file text
+    widget_info(wWidget, FIND_BY_UNAME='cl_file_text'): begin
+        CL_fileText, Event
+    end
+
+    ;output cl into file
+    widget_info(wWidget, FIND_BY_UNAME='output_cl_button'): begin
+        CL_outputButton, Event
+    end
+
+
 ;**PLOTS TAB**
 
     ;droplist of plots to plot
