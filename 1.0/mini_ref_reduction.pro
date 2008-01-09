@@ -347,7 +347,7 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,880,690]
+MainBaseSize  = [50,50,880,677]
 
 MainBaseTitle = 'miniReflectometer Data Reduction Package'
 MainBaseTitle += VERSION
