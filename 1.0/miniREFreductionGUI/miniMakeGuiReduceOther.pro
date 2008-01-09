@@ -65,12 +65,12 @@ d_vertical_L_L_3 = -5
 cmdLinePreviewTextSize = [5, $
                           cmdLinePreviewLabelSize[1]+d_vertical_L_L_3,$
                           865, $
-                          55]
+                          45]
            
 ;OUTPUT COMMAND LINE INTO A FILE
 BDbutton = { size  : [cmdLinePreviewTextSize[0],$
                       cmdLinePreviewTextSize[1]+cmdLinePreviewTextSize[3],$
-                      75,35],$
+                      75,30],$
              uname : 'cl_directory_button',$
              value : 'CL PATH...'}
 XYoff   = [BDbutton.size[2],10]
@@ -80,7 +80,8 @@ BDorLabel = { size   : [BDbutton.size[0]+XYoff[0],$
 XYoff   = [18,1]
 BDtext = { size  : [BDorLabel.size[0]+XYoff[0],$
                     BDbutton.size[1]+XYoff[1],$
-                    200,35],$
+                    200,$
+                    BDbutton.size[3]],$
            uname : 'cl_directory_text',$
            value : ''}
 XYoff   = [BDtext.size[2],10]
@@ -90,7 +91,8 @@ BDandLabel = { size  : [BDtext.size[0]+XYoff[0],$
 XYoff   = [22,0]
 BFbutton = { size  : [BDandLabel.size[0]+XYoff[0],$
                       BDbutton.size[1],$
-                      75,35],$
+                      75, $
+                      BDbutton.size[3]],$
              uname : 'cl_file_button',$
              value : 'CL FILE...'}
 XYoff   = [BFbutton.size[2],10]
@@ -111,7 +113,8 @@ BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
 XYoff   = [22,0]
 OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
                           BDbutton.size[1],$
-                          135,35],$
+                          135, $
+                          BDbutton.size[3]],$
              uname     : 'output_cl_button',$
              value     : 'CREATE CL FILE',$
              sensitive : 1}
