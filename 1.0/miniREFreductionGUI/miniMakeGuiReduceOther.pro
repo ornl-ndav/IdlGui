@@ -43,7 +43,7 @@ NormIGgroup = { size : [NormIGlabel.size[0]+220,$
                         NormIGLabel.size[1]-5],$
                 uname : 'overwrite_norm_instrument_geometry_cwbgroup'}
 NormIGbase = { size : [NormIGgroup.size[0]+d_group_base-25,$
-                       NormIGgroup.size[1]-5,230,40],$
+                       NormIGgroup.size[1]-5,230,30],$
                uname : 'overwrite_norm_instrument_geometry_base'}
 NormIGbutton = {size : [0,5,230,25],$
                 title : 'Select a Norm. Instr. Geometry File',$
