@@ -19,7 +19,7 @@ LoadTabSize   = [0,$
 D_DD_TabSize  = [20,$
                  35,$
                  330,$ 
-                 590]
+                 582];590
 D_DD_BaseSize = [5,$
                  5,$
                  D_DD_TabSize[2],$
@@ -97,7 +97,7 @@ LeftInteractionHelpSize = [LeftInteractionHelpMessageBaseSize,$
 FileInfoSize_2 = [NxsummaryZoomTabSize[0]-3,$
                   565,$
                   498,$
-                  60]
+                  50]
 
 FileInfoSize = [FileInfoSize_1,FileInfoSize_2]
 
