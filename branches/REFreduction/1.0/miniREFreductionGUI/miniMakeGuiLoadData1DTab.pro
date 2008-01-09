@@ -9,7 +9,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
 BackPeakRescaleTabSize = [4, $
                           305, $;610
                           310, $
-                          253] ;-640
+                          242] ;253
 
 ;###############################################################################
 ;############################ TAB #1 ###########################################
@@ -91,7 +91,7 @@ BackFrameSize = [2,65,298,115]
 
 ;Peak Ymin and Ymax bases and cw_fields
 d_vertical_L_L = 60
-Data1DSelectionPeakLabelSize  = [5,200]
+Data1DSelectionPeakLabelSize  = [5,190]
 Data1DSelectionPeakLabelTitle = 'Peak Exclusion:' 
 Data1DSelectionPeakYminBaseSize = [Data1DSelectionPeakLabelSize[0]+100,$
                                    Data1DSelectionPeakLabelSize[1]-9,$
@@ -151,7 +151,7 @@ RescaleXBaseSize  = [1,8,300,35]
 RescaleXLabelSize = [10,0]
 RescaleXLabelTitle= 'X-axis' 
 
-Y_base_offset = 65
+Y_base_offset = 60
 RescaleYBaseSize  = [1,8+Y_base_offset,RescaleXBaseSize[2],35]
 RescaleYLabelSize = [10,0+Y_base_offset]
 RescaleYLabelTitle= 'Y-axis' 
@@ -177,7 +177,7 @@ ResetYScaleButtonTitle = 'RESET'
 ResetZScaleButtonTitle = 'RESET'
 
 ;full reset
-FullResetButtonSize = [8,190,290,30]
+FullResetButtonSize = [8,180,290,30]
 FullResetButtonTitle= 'FULL RESET'
 
 ;TAB #4 (output file)

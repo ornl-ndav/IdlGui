@@ -4,7 +4,7 @@ PRO miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 LogBookTabSize  = [0,0,MainTabSize[2],MainTabSize[3]]
 
-LogBookTextFieldSize = [10,10,LogBookTabSize[2]-20,605]
+LogBookTextFieldSize = [10,10,LogBookTabSize[2]-20,595]
 
 LabelSize  = [7, $
               LogBookTextFieldSize[3]+25]

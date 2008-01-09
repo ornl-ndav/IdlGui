@@ -106,14 +106,14 @@ ZZAxisAngleResetButtonSize    = [ZZAxisAngleBaseSize[0]+x1,$
 ZZAxisAngleResetButtonTitle   = 'RESET'
 
 ;Full reset button
-FullResetButtonSize  = [5,210,148,30]
+FullResetButtonSize  = [5,210,148,25]
 FullResetButtonTitle = 'FULL RESET'
 
 ;Go to manual mode
 SwitchToManualModeButtonSize = [160,$
                                 FullResetButtonSize[1],$
                                 148, $
-                                30]
+                                25]
 SwitchToManualModeButtonTitle = 'Switch to Manual Mode'
 
 ;'Google' rotation base
@@ -124,8 +124,8 @@ GoogleRotationBaseTitle     = 'ROTATION  INTERFACE'
 
 ;Go to automatic mode
 SwitchToAutoModeButtonSize = [5, $
-                              213,$
-                              300,30]
+                              205,$
+                              300,25]
 SwitchToAutoModeButtonTitle = 'Switch to Automatic Mode'
 
 ;google xy-axis MM/M/P/PP
