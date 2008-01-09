@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: REFreduction1.0.6'
+VERSION = ' (version: 1.0.9)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -20,7 +20,7 @@ loadct,5
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
-
+ 
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
@@ -30,7 +30,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   cl_output_path : '~/',$
+                   cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
                    cl_file_ext1    : 'REFreduction_CL_',$
 ;default first part of output command line file
@@ -347,9 +347,10 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,880,690]
+MainBaseSize  = [50,50,880,677]
 
-MainBaseTitle    = 'miniReflectometer Data Reduction Package'
+MainBaseTitle = 'miniReflectometer Data Reduction Package'
+MainBaseTitle += VERSION
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
                         UNAME        = 'MAIN_BASE',$
@@ -371,12 +372,6 @@ if ((*global).miniVersion) then begin
 endif else begin
     xoff = 1030
 endelse
-
-version_label = WIDGET_LABEL(MAIN_BASE,$
-                             XOFFSET = xoff,$
-                             YOFFSET = 2,$
-                             VALUE   = VERSION,$
-                             FRAME   = 0)
 
 ;Build main GUI
 miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle

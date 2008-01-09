@@ -27,7 +27,7 @@ MainPlotDrawSize          = [50, $
 PlotTextFieldSize         = [0, $
                              MainPlotDrawSize[1]+MainPlotDrawSize[3]+5,$
                              MainPlotBaseSize[2], $
-                             150]
+                             140]
 
 ;###############################################################################
 ;############################### Create GUI ####################################

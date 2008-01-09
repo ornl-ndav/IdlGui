@@ -31,8 +31,8 @@ OIGBsize     = [OIGCWBgroupSize[0]+$
                 OIGCWBgroupSize[1]-5,$
                 230,30]
 
-OIGBsize  = [0,5,230,25]
-OIGBtitle = 'Select a Data Instr. Geometry File'
+OIGButtonsize  = [0,5,230,25]
+OIGButtontitle = 'Select a Data Instr. Geometry File'
 
 ;overwrite norm instrument geometry
 yoff += 3
@@ -43,7 +43,7 @@ NormIGgroup = { size : [NormIGlabel.size[0]+220,$
                         NormIGLabel.size[1]-5],$
                 uname : 'overwrite_norm_instrument_geometry_cwbgroup'}
 NormIGbase = { size : [NormIGgroup.size[0]+d_group_base-25,$
-                       NormIGgroup.size[1]-5,230,40],$
+                       NormIGgroup.size[1]-5,230,30],$
                uname : 'overwrite_norm_instrument_geometry_base'}
 NormIGbutton = {size : [0,5,230,25],$
                 title : 'Select a Norm. Instr. Geometry File',$
@@ -65,12 +65,12 @@ d_vertical_L_L_3 = -5
 cmdLinePreviewTextSize = [5, $
                           cmdLinePreviewLabelSize[1]+d_vertical_L_L_3,$
                           865, $
-                          55]
+                          45]
            
 ;OUTPUT COMMAND LINE INTO A FILE
 BDbutton = { size  : [cmdLinePreviewTextSize[0],$
                       cmdLinePreviewTextSize[1]+cmdLinePreviewTextSize[3],$
-                      75,35],$
+                      75,30],$
              uname : 'cl_directory_button',$
              value : 'CL PATH...'}
 XYoff   = [BDbutton.size[2],10]
@@ -80,7 +80,8 @@ BDorLabel = { size   : [BDbutton.size[0]+XYoff[0],$
 XYoff   = [18,1]
 BDtext = { size  : [BDorLabel.size[0]+XYoff[0],$
                     BDbutton.size[1]+XYoff[1],$
-                    200,35],$
+                    200,$
+                    BDbutton.size[3]],$
            uname : 'cl_directory_text',$
            value : ''}
 XYoff   = [BDtext.size[2],10]
@@ -90,7 +91,8 @@ BDandLabel = { size  : [BDtext.size[0]+XYoff[0],$
 XYoff   = [22,0]
 BFbutton = { size  : [BDandLabel.size[0]+XYoff[0],$
                       BDbutton.size[1],$
-                      75,35],$
+                      75, $
+                      BDbutton.size[3]],$
              uname : 'cl_file_button',$
              value : 'CL FILE...'}
 XYoff   = [BFbutton.size[2],10]
@@ -111,7 +113,8 @@ BDBFLabel = { size   : [BFtext.size[0]+XYoff[0],$
 XYoff   = [22,0]
 OGbutton = { size      : [BDBFLabel.size[0]+XYoff[0],$
                           BDbutton.size[1],$
-                          135,35],$
+                          135, $
+                          BDbutton.size[3]],$
              uname     : 'output_cl_button',$
              value     : 'CREATE CL FILE',$
              sensitive : 1}
@@ -150,7 +153,7 @@ DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                 UNAME     = 'delta_t_over_t_cwbgroup',$
                                 /EXCLUSIVE)
 
-;overwrite instrument geometry
+;overwrite data instrument geometry
 OverwriteInstrumentGeometryLabel = $
   WIDGET_LABEL(REDUCE_BASE,$
                XOFFSET = OIGLsize[0],$
@@ -179,11 +182,11 @@ OverwriteInstrumentGeometryBase = $
 OverwriteInsrumentGeometryButton = $
   WIDGET_BUTTON(OverwriteInstrumentGeometryBase,$
                 UNAME     = 'overwrite_data_intrument_geometry_button',$
-                XOFFSET   = OIGBsize[0],$
-                YOFFSET   = OIGBsize[1],$
-                SCR_XSIZE = OIGBsize[2],$
-                SCR_YSIZE = OIGBsize[3],$
-                VALUE     = OIGBtitle)
+                XOFFSET   = OIGButtonsize[0],$
+                YOFFSET   = OIGButtonsize[1],$
+                SCR_XSIZE = OIGButtonsize[2],$
+                SCR_YSIZE = OIGButtonsize[3],$
+                VALUE     = OIGButtontitle)
 
 ;overwrite norm instrument geometry
 label = WIDGET_LABEL(REDUCE_BASE,$
