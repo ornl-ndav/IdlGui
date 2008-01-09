@@ -31,8 +31,8 @@ OIGBsize     = [OIGCWBgroupSize[0]+$
                 OIGCWBgroupSize[1]-5,$
                 230,30]
 
-OIGBsize  = [0,5,230,25]
-OIGBtitle = 'Select a Data Instr. Geometry File'
+OIGButtonsize  = [0,5,230,25]
+OIGButtontitle = 'Select a Data Instr. Geometry File'
 
 ;overwrite norm instrument geometry
 yoff += 3
@@ -150,7 +150,7 @@ DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
                                 UNAME     = 'delta_t_over_t_cwbgroup',$
                                 /EXCLUSIVE)
 
-;overwrite instrument geometry
+;overwrite data instrument geometry
 OverwriteInstrumentGeometryLabel = $
   WIDGET_LABEL(REDUCE_BASE,$
                XOFFSET = OIGLsize[0],$
@@ -179,11 +179,11 @@ OverwriteInstrumentGeometryBase = $
 OverwriteInsrumentGeometryButton = $
   WIDGET_BUTTON(OverwriteInstrumentGeometryBase,$
                 UNAME     = 'overwrite_data_intrument_geometry_button',$
-                XOFFSET   = OIGBsize[0],$
-                YOFFSET   = OIGBsize[1],$
-                SCR_XSIZE = OIGBsize[2],$
-                SCR_YSIZE = OIGBsize[3],$
-                VALUE     = OIGBtitle)
+                XOFFSET   = OIGButtonsize[0],$
+                YOFFSET   = OIGButtonsize[1],$
+                SCR_XSIZE = OIGButtonsize[2],$
+                SCR_YSIZE = OIGButtonsize[3],$
+                VALUE     = OIGButtontitle)
 
 ;overwrite norm instrument geometry
 label = WIDGET_LABEL(REDUCE_BASE,$
