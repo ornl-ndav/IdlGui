@@ -99,7 +99,7 @@ END
 
 FUNCTION getNbrPolaState, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    return, 1
+    return, 0
 ENDIF ELSE BEGIN
     oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
     no_error = 0

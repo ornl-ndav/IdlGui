@@ -15,6 +15,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).prenexus_path = (*global).mac.prenexus_path
+    (*global).prenexus_found_nbr = 1
     return, 1
 ENDIF eLSE BEGIN
     defaultPath = instrument + '-DAS-FS'
