@@ -231,6 +231,14 @@ FOR j=0,(sz-1) DO BEGIN
         AppendLogBook, Event, ''
         message = '#### WORKING ON RUN # ' + (*global).RunNumber + ' ####'
         AppendLogBook, Event, message
+        message = '######### WORKING ON RUN # ' + (*global).RunNumber $
+          + ' #########'
+        IF (j EQ 0) THEN BEGIN
+            putMyLogBook, Event, message
+        ENDIF ELSE BEGIN
+            AppendMyLogBook, Event, message
+        ENDELSE
+        AppendmyLogBook, Event, ''
         
 ;STEP1_global : will define and show the general variables that will be used
         DefineGeneralVariablePart1, Event, CNstruct

@@ -4,7 +4,7 @@ PRO DefineGeneralVariablePart1, Event, CNstruct
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-putMyLogBook, Event, '############ GENERAL VARIABLES #############'
+AppendMyLogBook, Event, '############ GENERAL VARIABLES #############'
 
 ;get RunNumber
 RunNumber          = (*global).RunNumber
