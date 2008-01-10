@@ -48,6 +48,7 @@ XYoff = [0,45]
 go_button = { size  : [shared_base.size[0]+XYoff[0],$
                        shared_base.size[1]+XYoff[1],$
                        430,30],$
+
               uname : 'create_nexus_button',$
               value : 'C R E A T E   N E X U S'}
 

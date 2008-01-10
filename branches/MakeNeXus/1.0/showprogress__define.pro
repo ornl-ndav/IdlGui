@@ -406,7 +406,7 @@ ENDELSE
 self.labelID = Widget_Label(self.tlb, Value=self.message, /Dynamic_Resize)
 self.drawID = Widget_Draw(self.tlb, XSize=self.xsize, YSize=self.ysize)
 IF self.cancel THEN BEGIN
-   self.cancelID = Widget_Button(self.tlb, Value='Cancel')
+   self.cancelID = Widget_Button(self.tlb, Value='Cancel Translation')
 ENDIF ELSE self.cancelID = -1L
 
 Widget_Control, self.tlb, Set_UValue=self
@@ -550,7 +550,7 @@ self.drawID = Widget_Draw(self.tlb, XSize=self.xsize, YSize=self.ysize)
 Widget_Control, self.tlb, Set_UValue=self
 
 IF self.cancelButton THEN BEGIN
-   self.cancelID = Widget_Button(self.tlb, Value='Cancel')
+   self.cancelID = Widget_Button(self.tlb, Value='Cancel Translation')
 ENDIF ELSE self.cancelID = -1L
 
    ; Center the top-level base.
