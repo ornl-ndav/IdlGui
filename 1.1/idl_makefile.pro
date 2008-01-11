@@ -24,6 +24,7 @@ cd, CurrentFolder
 .run gg_is.pro
 .run gg_GUIupdate.pro
 .run gg_time.pro
+.run xdisplayfile.pro
 
 ;procedures
 .run gg_Preview.pro
