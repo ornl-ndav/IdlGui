@@ -138,6 +138,8 @@ widget_control,id,get_uvalue=global
 IF ((*global).version_light) THEN BEGIN ;version light
     gg_generate_light_command, Event ;in gg_eventcb
 ENDIF ELSE BEGIN ;version complete
+;disable loading button
+    sensitive_widget, Event, 'loading_geometry_button',0
     geometry_file = getGeometryFileName(Event)
     cvinfo_file   = getCvinfoFileName(Event)
 ;run TS_geom_calc.sh
@@ -153,6 +155,8 @@ ENDIF ELSE BEGIN ;version complete
     activateSecondBase, Event, 1
 ;desactivate all widgets of base2
     sensitive_widget, Event, 'input_geometry_base', 1
+;enable loading button
+    sensitive_widget, Event, 'loading_geometry_button',1
 ENDELSE
 END
 
