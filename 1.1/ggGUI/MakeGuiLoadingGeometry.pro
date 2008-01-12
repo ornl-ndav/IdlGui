@@ -71,7 +71,7 @@ XYoff = [605,15]
 geometryPreview  = { size      : [geometryLabel.size[0]+XYoff[0],$
                                   geometryLabel.size[1]+XYoff[1],$
                                   65,100],$
-                     value     : 'PREVIEW',$
+                     value     : 'VIEW/EDIT',$
                      uname     : 'geometry_preview',$
                      sensitive : 0}
 
