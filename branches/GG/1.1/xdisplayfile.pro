@@ -77,10 +77,17 @@ PRO XDISPLAYFILE_event, event
         widget_control,id,get_uvalue=global
         (*global).new_geo_xml_filename  = state.filename
 		IF (STRLEN(state.filename) GT 0) THEN BEGIN
-			XDISPLAYFILE_write, state.filetext, state.filename
-			WIDGET_CONTROL, event.top, SET_UVALUE=state
-			IF state.notitle THEN WIDGET_CONTROL, event.top, $
-				TLB_SET_TITLE=state.filename
+            XDISPLAYFILE_write, state.filetext, state.filename
+            WIDGET_CONTROL, event.top, SET_UVALUE=state
+            geom_xml_file_title = (*global).geom_xml_file_title
+            title = geom_xml_file_title + state.filename
+            WIDGET_CONTROL, event.top, $
+              TLB_SET_TITLE=title
+            
+            id = WIDGET_INFO(event.top,find_by_uname='EXIT')
+            title2 = 'Done with ' + state.filename
+            widget_control, id, set_value=title2
+            
 		ENDIF
 		RETURN
 	END
@@ -308,7 +315,7 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
   ; Done button
   if n_elements(done_button) eq 0 then done_button = "Done with " + TITLE
   filequit = WIDGET_BUTTON(menu_bar, SEPARATOR=editable, $
-		VALUE = extra+done_button, UVALUE = "EXIT")
+		VALUE = extra+done_button, UVALUE = "EXIT", UNAME = 'EXIT')
 
   ; Create a text widget to display the text
   IF n_elements(font) gt 0 then begin
