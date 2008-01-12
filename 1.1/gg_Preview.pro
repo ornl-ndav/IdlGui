@@ -1,9 +1,19 @@
-PRO gg_Preview, Event, type
-
+PRO gg_previewUpdateGeoXmlTextField, Event 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+file_name = (*global).new_geo_xml_filename
+putInTextField, Event, 'geometry_text_field', file_name
+END
 
+
+
+
+
+PRO gg_Preview, Event, type
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 CASE type OF 
     'geometry': BEGIN
         full_file_name = getGeometryFileName(Event)
@@ -27,6 +37,8 @@ CASE type OF
     END
     ELSE: 
 ENDCASE
-
 END
     
+
+
+

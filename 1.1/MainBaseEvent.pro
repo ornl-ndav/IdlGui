@@ -45,6 +45,7 @@ CASE Event.id OF
 ;Preview of geometry.xml
     widget_info(wWidget, FIND_BY_UNAME='geometry_preview'): begin
         gg_Preview, Event, 'geometry' ;in gg_Preview.pro
+        gg_previewUpdateGeoXmlTextField, Event ;in gg_Preview.pro
     end
     
 ;#1### geometry.xml #####
