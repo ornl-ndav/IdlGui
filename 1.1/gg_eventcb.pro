@@ -138,6 +138,8 @@ widget_control,id,get_uvalue=global
 IF ((*global).version_light) THEN BEGIN ;version light
     gg_generate_light_command, Event ;in gg_eventcb
 ENDIF ELSE BEGIN ;version complete
+;showloading geometry processing label base
+    activateMap, Event, 'loading_geometry_processing_label_base' , 1
 ;disable loading button
     sensitive_widget, Event, 'loading_geometry_button',0
     geometry_file = getGeometryFileName(Event)
@@ -157,6 +159,8 @@ ENDIF ELSE BEGIN ;version complete
     sensitive_widget, Event, 'input_geometry_base', 1
 ;enable loading button
     sensitive_widget, Event, 'loading_geometry_button',1
+;hide loading geometry processing label base
+    activateMap, Event, 'loading_geometry_processing_label_base' , 0
 ENDELSE
 END
 
