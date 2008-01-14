@@ -40,7 +40,7 @@ IF (err_listening[0] NE '') THEN BEGIN
 ;display err_listening
     AppendLogBookMessage, Event, err_listening
     
-    status_text = 'Data Reduction ... ERROR! (-> Check Log Book)'
+    status_text = (*global).DRstatusFAILED
     putDRstatusInfo, Event, status_text
     
 ENDIF ELSE BEGIN
@@ -49,7 +49,7 @@ ENDIF ELSE BEGIN
     MessageToRemove = PROCESSING
     putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
     
-    status_text = 'Data Reduction ... DONE'
+    status_text = (*global).DRstatusOK
     putDRstatusInfo, Event, status_text
 
     IF (isButtonSelected(Event,'verbose_button')) THEN BEGIN
