@@ -263,7 +263,7 @@ endif else begin
     MainBaseSize  = [50,200,1200,730]
 endelse
 
-MainBaseTitle = 'BSS reduction tool'
+MainBaseTitle = 'BSS reduction tool' + VERSION
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -279,13 +279,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
-
-;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET = 1035,$
-                             YOFFSET = 2,$
-                             VALUE   = VERSION,$
-                             FRAME   = 0)
 
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
