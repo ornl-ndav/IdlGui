@@ -110,7 +110,7 @@ TEframe = { size : [5,NIWframe.size[1]+yoff, $
 XYoff9 = [10,-14]
 TEBase = {size : [TEframe.size[0]+XYoff9[0],$
                   TEframe.size[1]+XYoff9[1],$
-                  500,$
+                  510,$
                   30],$
           button : { uname : 'te_button',$
                      list : ['Low and High Time-of-Flight Values that Bracket the Elastic Peak (microSeconds)'],$
