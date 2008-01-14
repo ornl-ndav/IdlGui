@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: BSSreduction1.0.4'
+VERSION = ' (version: 1.0.4)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -155,7 +155,7 @@ global = ptr_new ({ $
                                                          nisw_field        : '',$
                                                          niew_field          : '',$
                                                          te_button     : 0,$
-                                                         te_low_field        : '',$
+                                                         te_low_field       : '',$
                                                          te_high_field      : ''},$
                                                 tab4 : { tib_tof_button : 0,$
                                                          tibtof_channel1_text : '',$
