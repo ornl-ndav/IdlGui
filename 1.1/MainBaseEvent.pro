@@ -152,7 +152,8 @@ CASE Event.id OF
 
 ;bank1 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='top_bank_draw'): begin
-        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+        if ((*global).NeXusFound AND $
+            (*global).NeXusFormatWrong EQ 0) then begin ;only if there is a NeXus loaded
             BSSreduction_DisplayXYBankPixelInfo, Event, 'bank1'
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $ ;left click
@@ -165,7 +166,8 @@ CASE Event.id OF
     
 ;bank2 widget_draw
     widget_info(wWidget, FIND_BY_UNAME='bottom_bank_draw'): begin
-        if ((*global).NeXusFound) then begin ;only if there is a NeXus loaded
+        if ((*global).NeXusFound AND $
+            (*global).NeXusFormatWrong EQ 0) then begin ;only if there is a NeXus loaded
             BSSreduction_DisplayXYBankPixelInfo, Event, 'bank2'
             if( Event.type EQ 0 )then begin
                 if (Event.press EQ 1) then $ ;left click

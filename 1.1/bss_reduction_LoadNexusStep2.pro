@@ -17,25 +17,33 @@ AppendLogBookMessage, Event, message
 ;retrieve bank1 and bank2
 message = '  -> Retrieving bank1 and bank2 data ... ' + PROCESSING
 AppendLogBookMessage, Event, message
-retrieveBanksData, Event, strcompress(NexusFullName,/remove_all)
-putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
+;check if file is hdf5
+nexus_file_name = strcompress(NeXusFullName,/remove_all)
+IF (H5F_IS_HDF5(nexus_file_name)) THEN BEGIN
+   
+    retrieveBanksData, Event, strcompress(NexusFullName,/remove_all)
+    putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 ;plot bank1 and bank2
-message = '  -> Plot bank1 and bank2 ... ' + PROCESSING
-AppendLogBookMessage, Event, message
-
-success = 0
-bss_reduction_PlotBanks, Event, success
+    message = '  -> Plot bank1 and bank2 ... ' + PROCESSING
+    AppendLogBookMessage, Event, message
+    success = 0
+    bss_reduction_PlotBanks, Event, success
+ENDIF ELSE BEGIN
+    success = 0
+ENDELSE
 
 if (success EQ 0) then begin
 
     putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
-
+    (*global).NeXusFound = 0
+    (*global).NexusFormatWrong = 1 ;wrong format
 ;desactivate button
     activate_status = 0
 
 endif else begin
 
+    (*global).NexusFormatWrong = 0 ;right format
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
 ;plot counts vs TOF of full selection

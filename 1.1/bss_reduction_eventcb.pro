@@ -34,7 +34,8 @@ prev_tab = (*global).previous_tab
 IF (current_tab NE prev_tab) THEN BEGIN
     CASE (current_tab) OF
         0: BEGIN          ;plot bank1, bank2, grid and unselected data
-            IF ((*global).NeXusFound) THEN BEGIN
+            IF ((*global).NeXusFound AND $
+               (*global).NeXusFormatWrong EQ 0) THEN BEGIN
                 PlotIncludedPixels, Event
             ENDIF
         END
