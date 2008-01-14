@@ -110,6 +110,7 @@ global = ptr_new ({ $
                     true_full_x_max : 0.0000001,$ ;tof max for full counts vs tof zoom plot
                     NbTOF : 0L,$ ;number of tof for counts vs tof plot
                     NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus has been found
+                    NeXusFormatWrong : 0,$ ;if we are trying to open using hdf4
                     ok : 'OK',$
                     failed : 'FAILED',$
                     bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
