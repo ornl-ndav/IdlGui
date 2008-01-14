@@ -211,9 +211,9 @@ IF (isButtonSelected(Event,'te_button') AND $
 
 ;sample data file
     TEL = getTextFieldValue(Event,'te_low_field')
-    (*global).Configuration.Reduce.te_low_field = TEL
+    (*global).Configuration.Reduce.tab3.te_low_field = TEL
     TEH = getTextFieldValue(Event,'te_high_field')
-    (*global).Configuration.Reduce.te_high_field = TEH
+    (*global).Configuration.Reduce.tab3.te_high_field = TEH
 	        
     cmd += ' --tof-elastic='
     
