@@ -15,6 +15,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DRstatusOK : 'Data Reduction ... DONE',$
+                    DRstatusFAILED : 'Data Reduction ... ERROR! (-> Check Log Book)',$
                     unit : 0,$
                     BSSreductionVersion : VERSION,$
                     DR_xml_config_ext : '.rmd',$
