@@ -80,7 +80,12 @@ PRO XDISPLAYFILE_event, event
             XDISPLAYFILE_write, state.filetext, state.filename
             WIDGET_CONTROL, event.top, SET_UVALUE=state
             geom_xml_file_title = (*global).geom_xml_file_title
-            title = geom_xml_file_title + state.filename
+
+            ;get only the last part of the full file name
+            filename_array = strsplit(state.filename,'/',count=nbr)
+            short_filename = filename_array[nbr-1]
+
+            title = 'Done with ' + short_filename
             WIDGET_CONTROL, event.top, $
               TLB_SET_TITLE=title
             
@@ -146,11 +151,21 @@ end
 
 
 
-PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, $
-                  HEIGHT = HEIGHT, TEXT = TEXT, FONT = font, $
-                  DONE_BUTTON=done_button, MODAL=MODAL, $
-                  EDITABLE=editable, GROW_TO_SCREEN=grow_to_screen, $
-                  WTEXT=filetext, BLOCK=block, RETURN_ID=return_id
+PRO XDisplayFile, Event, $
+                  FILENAME, $
+                  TITLE = TITLE, $
+                  GROUP = GROUP, $
+                  WIDTH = WIDTH, $
+                  HEIGHT = HEIGHT, $
+                  TEXT = TEXT, $
+                  FONT = font, $
+                  DONE_BUTTON=done_button, $
+                  MODAL=MODAL, $
+                  EDITABLE=editable, $
+                  GROW_TO_SCREEN=grow_to_screen, $
+                  WTEXT=filetext, $
+                  BLOCK=block, $
+                  RETURN_ID=return_id
 ;+
 ; NAME:
 ;	XDISPLAYFILE
@@ -165,6 +180,8 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
 ;	XDISPLAYFILE, Filename
 ;
 ; INPUTS:
+;     Event   : the top Event of the calling widget
+;
 ;     Filename:	A scalar string that contains the filename of the file
 ;		to display.  The filename can include a path to that file.
 ;
@@ -183,7 +200,8 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
 ;
 ;	EDITABLE: Set this keyword to allow modifications to the text
 ;		displayed in XDISPLAYFILE.  Setting this keyword also
-;		adds a "Save" button in addition to the Done button.
+;		adds a "Save" button in addition to the Done button, and
+;               a set of widgets to find a string.
 ;
 ;	FONT:   The name of the font to use.  If omitted use the default
 ;		font.
@@ -237,6 +255,7 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
 ;			button align on left, removed padding.
 ;	19 Nov 2004, GROW_TO_SCREEN and RETURN_ID keywords. Allow for
 ;                       user to resize display. General updating.
+;       January 2008, Add possibility to find a string (Jean Bilheux - ORNL-SNS)
 ;-
 
   ; Establish defaults if keywords not specified
@@ -295,7 +314,6 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
   endelse
   return_id = filebase
 
-
   extra = ''
   IF (menu_bar NE filebase) THEN BEGIN
     IF (!VERSION.OS_FAMILY EQ 'Windows') THEN extra = '&'
@@ -303,29 +321,87 @@ PRO XDisplayFile, Event, FILENAME, TITLE = TITLE, GROUP = GROUP, WIDTH = WIDTH, 
   ENDIF ELSE $
     menu_bar = WIDGET_BASE(filebase, /ROW)
 
-
   IF (editable) THEN BEGIN
     ; add 'Save', 'Save as...' buttons here
     saveButton = WIDGET_BUTTON(menu_bar, VALUE = extra+'Save', UVALUE = "SAVE")
     saveAsButton = WIDGET_BUTTON(menu_bar, $
 		VALUE = 'Save '+extra+'As...', UVALUE = "SAVE_AS")
-
   ENDIF
 
   ; Done button
-  if n_elements(done_button) eq 0 then done_button = "Done with " + TITLE
-  filequit = WIDGET_BUTTON(menu_bar, SEPARATOR=editable, $
-		VALUE = extra+done_button, UVALUE = "EXIT", UNAME = 'EXIT')
+  ;get only the last part of the full file name
 
-  ; Create a text widget to display the text
+  IF n_elements(done_button) eq 0 THEN BEGIN
+      filename_array = strsplit(filename,'/',count=nbr,/extract)
+      short_filename = filename_array[nbr-1]
+      done_button = "Done with " + short_filename
+  ENDIF
+
+  filequit = WIDGET_BUTTON(menu_bar, SEPARATOR=editable, $
+                           VALUE = extra+done_button, UVALUE = "EXIT", UNAME = 'EXIT')
+  
+                                ; Create a text widget to display the text
   IF n_elements(font) gt 0 then begin
-   filetext = WIDGET_TEXT(filebase, XSIZE = WIDTH, YSIZE = HEIGHT, $
-		EDITABLE = editable, UVALUE='TEXT', /SCROLL, VALUE = a, $
-		FONT = font)
+      filetext = WIDGET_TEXT(filebase, $
+                             XSIZE    = WIDTH, $
+                             YSIZE    = HEIGHT, $
+                             EDITABLE = editable, $
+                             UVALUE   = 'TEXT', $
+                             /SCROLL, $
+                             VALUE    = a, $
+                             FONT      = font)
   endif else begin
-    filetext = WIDGET_TEXT(filebase, XSIZE = WIDTH, YSIZE = HEIGHT, $
-		EDITABLE = editable, UVALUE='TEXT', /SCROLL, VALUE = a)
+      filetext = WIDGET_TEXT(filebase, $
+                             XSIZE    = WIDTH, $
+                             YSIZE    = HEIGHT, $
+                             EDITABLE = $
+                             editable, $
+                             UVALUE   = 'TEXT', $
+                             /SCROLL, $
+                             VALUE    = a)
   endelse
+  
+;add find widgets  
+  IF (editable) THEN BEGIN
+      find_bar = WIDGET_BASE(filebase, /ROW)
+      
+      ;find label
+      findLabel = WIDGET_LABEL(find_bar, VALUE = 'Find:')
+      findText  = WIDGET_TEXT(find_bar,  $
+                              VALUE  = '', $
+                              UVALUE = 'find_text',$
+                              XSIZE  = 30,$
+                              YSIZE  = 1,$
+                              /EDITABLE,$
+                              FONT   = font)
+      findPreviousButton = WIDGET_BUTTON(find_bar,$
+                                         VALUE  = '<- Find Previous',$
+                                         UVALUE = 'find_previous',$
+                                         SCR_XSIZE = 110,$
+                                         SCR_YSIZE = 30)
+      findNextButton = WIDGET_BUTTON(find_bar,$
+                                     VALUE  = 'Find Next ->',$
+                                     UVALUE = 'find_next',$
+                                     SCR_XSIZE = 90,$
+                                     SCR_YSIZE = 30)
+      findCancel = WIDGET_BUTTON(find_bar,$
+                                 VALUE     = 'Cancel',$
+                                 UVALUE    = 'find_cancel',$
+                                 SCR_XSIZE = 70,$
+                                 SCR_YSIZE = 30)
+
+      find_status_bar = WIDGET_BASE(filebase, /ROW)
+      findStatusText  = WIDGET_LABEL(find_status_bar,  $
+                                     VALUE      = 'Status: ', $
+                                     UVALUE     = 'find_status',$
+                                     SCR_XSIZE  = 510,$
+                                     SCR_YSIZE  = 30,$
+                                     FONT       = font,$
+                                     /ALIGN_LEFT,$
+                                     FRAME      = 1)
+                                     
+  ENDIF
+
 
 if (keyword_set(grow_to_screen)) then $
   XDisplayFileGrowToScreen, filebase, filetext, height, nlines
@@ -343,8 +419,8 @@ state={ ourGroup:ourGroup, $
         notitle:noTitle, $
         x_reserve:geo_base.scr_xsize - geo_text.scr_xsize, $
         y_reserve:geo_base.scr_ysize - geo_text.scr_ysize }
-WIDGET_CONTROL, filebase, SET_UVALUE = state
 
+WIDGET_CONTROL, filebase, SET_UVALUE = state
 xmanager, "XDISPLAYFILE", filebase, GROUP_LEADER = GROUP, $
 	NO_BLOCK=(NOT(FLOAT(block)))
 
