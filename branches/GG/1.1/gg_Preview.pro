@@ -17,7 +17,7 @@ widget_control,id,get_uvalue=global
 CASE type OF 
     'geometry': BEGIN
         full_file_name = getGeometryFileName(Event)
-        title = 'geometry.xml file: ' + full_file_name
+        title = full_file_name
         IF (full_file_name NE '') THEN BEGIN
             XDISPLAYFILE, Event, $
               full_file_name, $
@@ -28,7 +28,7 @@ CASE type OF
     END
     'cvinfo': BEGIN
         full_file_name = getCvinfoFileName(Event)
-        title = 'cvinfo.xml file: ' + full_file_name
+        title = full_file_name
         IF (full_file_name NE '') THEN BEGIN
             XDISPLAYFILE, Event, $
               full_file_name, $
