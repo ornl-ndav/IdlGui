@@ -35,7 +35,7 @@ ENDELSE
 
 if (success EQ 0) then begin
 
-    putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
+    putTextAtEndOfLogBookLastLine, Event, FAILED + ' --> Wrong NeXus Format!', PROCESSING
     (*global).NeXusFound = 0
     (*global).NexusFormatWrong = 1 ;wrong format
 ;desactivate button
