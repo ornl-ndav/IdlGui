@@ -119,8 +119,15 @@ PRO XDISPLAYFILE_event, event
             widget_control, id, GET_VALUE = stringToFind
             sz_stringToFind = strlen(stringToFind)
             IF (stringToFind NE '') THEN BEGIN
-;looks for first position of stringToFind
-                position = strpos(text,stringToFind)
+;is it case sensitive or not
+                id = widget_info(event.top,find_by_uname='case_sensitive')
+                widget_control, id, get_value=isCaseSensitive
+                IF (isCaseSensitive) THEN BEGIN ;case sensitive search
+                    position = strpos(text,stringToFind)
+                ENDIF ELSE BEGIN
+                    position = strpos(STRUPCASE(text),$
+                                      STRUPCASE(StringToFind))
+                ENDELSE
                 a=where(position NE -1,NbrStrFound)
 ;inform user of the number of time the string has been located
                 message = 'String <' + stringToFind + '> '
@@ -199,8 +206,15 @@ PRO XDISPLAYFILE_event, event
             id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
             widget_control, id, GET_VALUE = stringToFind
             sz_stringToFind = strlen(stringToFind)
-;looks for first position of stringToFind
-            position = strpos(text,stringToFind)
+;is it case sensitive or not
+            id = widget_info(event.top,find_by_uname='case_sensitive')
+            widget_control, id, get_value=isCaseSensitive
+            IF (isCaseSensitive) THEN BEGIN ;case sensitive search
+                position = strpos(text,stringToFind)
+            ENDIF ELSE BEGIN
+                position = strpos(STRUPCASE(text),$
+                                  STRUPCASE(StringToFind))
+            ENDELSE
             a=where(position NE -1,NbrStrFound)
 ;inform user which iteration of string found is selected
             id = widget_info(Event.top,find_by_uname='iteration_label')
@@ -251,8 +265,15 @@ PRO XDISPLAYFILE_event, event
             id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
             widget_control, id, GET_VALUE = stringToFind
             sz_stringToFind = strlen(stringToFind)
-;looks for first position of stringToFind
-            position = strpos(text,stringToFind)
+;is it case sensitive or not
+            id = widget_info(event.top,find_by_uname='case_sensitive')
+            widget_control, id, get_value=isCaseSensitive
+            IF (isCaseSensitive) THEN BEGIN ;case sensitive search
+                position = strpos(text,stringToFind)
+            ENDIF ELSE BEGIN
+                position = strpos(STRUPCASE(text),$
+                                  STRUPCASE(StringToFind))
+            ENDELSE
             a=where(position NE -1,NbrStrFound)
 ;inform user which iteration of string found is selected
             id = widget_info(Event.top,find_by_uname='iteration_label')
@@ -305,6 +326,96 @@ PRO XDISPLAYFILE_event, event
             widget_control, id, sensitive = 0
             id = widget_info(Event.top,find_by_uname='iteration_label')
             widget_control, id, set_value = ''
+        END
+
+
+        "case_sensitive": BEGIN
+;reinitialize find_iteration counter
+            id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            (*global).stringFoundIteration = 1
+;retrieve full text
+            id = widget_info(event.top,find_by_uname='text')
+            widget_control, id, get_value=text
+            sz   = (size(text))(1)
+;get text to find
+            id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+            widget_control, id, GET_VALUE = stringToFind
+            sz_stringToFind = strlen(stringToFind)
+            IF (stringToFind NE '') THEN BEGIN
+;is it case sensitive or not
+                id = widget_info(event.top,find_by_uname='case_sensitive')
+                widget_control, id, get_value=isCaseSensitive
+                IF (isCaseSensitive) THEN BEGIN ;case sensitive search
+                    position = strpos(text,stringToFind)
+                ENDIF ELSE BEGIN
+                    position = strpos(STRUPCASE(text),$
+                                      STRUPCASE(StringToFind))
+                ENDELSE
+                a=where(position NE -1,NbrStrFound)
+;inform user of the number of time the string has been located
+                message = 'String <' + stringToFind + '> '
+                CASE NbrStrFound OF
+                    0: BEGIN
+                        message += 'can not be found'
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = ''
+                    END
+                    1: BEGIN
+                        message += 'has been located 1 time'
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 1
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                    END
+                    ELSE: BEGIN
+                        message += 'has been located ' + $
+                          strcompress(NbrStrFound,/remove_all) + $
+                          ' times'
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 1
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                    END
+                ENDCASE
+                id = widget_info(Event.top,find_by_uname='find_status')
+                widget_control, id, set_value = 'Status: ' + message[0]
+                
+;id of widget_text
+                id = widget_info(event.top,FIND_BY_UNAME='text')
+                position_offset = 0
+                
+                FOR i=0,(sz-1) DO BEGIN
+                    IF (position[i] NE -1) THEN BEGIN ;we found it in this line
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[position_offset+position[i], $
+                                           sz_stringToFind]
+                        break
+                    ENDIF ELSE BEGIN
+                        position_offset += strlen(text[i]) + 1
+                        widget_control, id, SET_TEXT_SELECT=[1]
+                    ENDELSE
+                ENDFOR
+                id = widget_info(event.top,find_by_uname='find_cancel')
+                widget_control, id, sensitive = 1
+            ENDIF ELSE BEGIN    ;if (stringToFind NE '')
+                id = widget_info(event.top,find_by_uname='find_cancel')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_next')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_previous')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_status')
+                widget_control, id, SET_VALUE = 'Status: '
+                id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+                widget_control, id, SET_VALUE = ''
+                id = widget_info(event.top,FIND_BY_UNAME='text')
+                widget_control, id, $
+                  SET_TEXT_SELECT=[0]
+                id = widget_info(Event.top,find_by_uname='iteration_label')
+                widget_control, id, set_value = ''
+            ENDELSE
+
         END
 
 	ELSE:
@@ -579,23 +690,36 @@ PRO XDisplayFile, Event, $
                               VALUE  = '', $
                               UVALUE = 'find_text',$
                               UNAME  = 'find_text_uname',$
-                              XSIZE  = 30,$
+                              XSIZE  = 20,$
                               YSIZE  = 1,$
                               /EDITABLE,$
                               FONT   = font,$
                               /ALL_EVENTS)
+      CaseSensitiveBase = WIDGET_BASE(find_bar,$
+                                      UNAME = 'case_sensitive_base',$
+                                      SCR_XSIZE = 115,$
+                                      SCR_YSIZE = 35)
+                                      
+      caseSensitiveGroup = CW_BGROUP(CaseSensitiveBase,$
+                                     'Case sensitive',$
+                                     UNAME     = 'case_sensitive',$
+                                     UVALUE    = 'case_sensitive',$
+                                     ROW       = 1,$
+                                     SET_VALUE = 1,$
+                                     /NONEXCLUSIVE)
+
       findPreviousButton = WIDGET_BUTTON(find_bar,$
-                                         VALUE  = '<- Find Previous',$
+                                         VALUE  = '<-- Previous',$
                                          UVALUE = 'find_previous',$
                                          UNAME  = 'find_previous',$
-                                         SCR_XSIZE = 110,$
+                                         SCR_XSIZE = 85,$
                                          SCR_YSIZE = 30,$
                                          SENSITIVE = 0)
       findNextButton = WIDGET_BUTTON(find_bar,$
-                                     VALUE  = 'Find Next ->',$
+                                     VALUE  = 'Next -->',$
                                      UVALUE = 'find_next',$
                                      UNAME  = 'find_next',$
-                                     SCR_XSIZE = 90,$
+                                     SCR_XSIZE = 70,$
                                      SCR_YSIZE = 30,$
                                      SENSITIVE = 0)
       findCancel = WIDGET_BUTTON(find_bar,$
@@ -603,7 +727,7 @@ PRO XDisplayFile, Event, $
                                  UVALUE    = 'find_cancel',$
                                  UNAME     = 'find_cancel',$
                                  SENSITIVE = 0,$
-                                 SCR_XSIZE = 70,$
+                                 SCR_XSIZE = 60,$
                                  SCR_YSIZE = 30)
 
       find_status_bar = WIDGET_BASE(filebase, /ROW)
