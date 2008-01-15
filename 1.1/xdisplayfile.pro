@@ -790,6 +790,10 @@ WIDGET_CONTROL, filebase, SET_UVALUE = state
 xmanager, "XDISPLAYFILE", filebase, GROUP_LEADER = GROUP, $
 	NO_BLOCK=(NOT(FLOAT(block)))
 
+id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).new_geo_xml_filename  = state.filename
+
 end
 
 
