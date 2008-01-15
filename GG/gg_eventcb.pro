@@ -138,6 +138,10 @@ widget_control,id,get_uvalue=global
 IF ((*global).version_light) THEN BEGIN ;version light
     gg_generate_light_command, Event ;in gg_eventcb
 ENDIF ELSE BEGIN ;version complete
+;showloading geometry processing label base
+    activateMap, Event, 'loading_geometry_processing_label_base' , 1
+;disable loading button
+    sensitive_widget, Event, 'loading_geometry_button',0
     geometry_file = getGeometryFileName(Event)
     cvinfo_file   = getCvinfoFileName(Event)
 ;run TS_geom_calc.sh
@@ -153,6 +157,10 @@ ENDIF ELSE BEGIN ;version complete
     activateSecondBase, Event, 1
 ;desactivate all widgets of base2
     sensitive_widget, Event, 'input_geometry_base', 1
+;enable loading button
+    sensitive_widget, Event, 'loading_geometry_button',1
+;hide loading geometry processing label base
+    activateMap, Event, 'loading_geometry_processing_label_base' , 0
 ENDELSE
 END
 
@@ -233,7 +241,10 @@ outputPath     = get_output_path(Event)
 outputFileName = get_output_name(Event)
 cmd += ' -o ' + outputPath + '/' + outputFileName
 spawn, cmd, listening, err_listening
-IF (err_listening[0] NE '') THEN BEGIN ;procedure failed
+TCompileMessage = (*global).TCompileMessage
+IF (err_listening[0] NE '' AND $
+    ~strmatch(err_listening[0],TCompileMessage)) THEN BEGIN $
+;procedure failed
     message = 'Creating geometry file ... ' + (*global).failed
     putInTextField, Event, 'final_result_text_field', message
     message = 'Error log book: '

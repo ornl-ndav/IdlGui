@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.1.0)'
+VERSION = '(1.1.3)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -35,6 +35,10 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    stringFoundIteration  : 1,$
+                    geom_xml_file_title   : 'Geometry.xml file: ',$
+                    new_geo_xml_filename  : '',$
+                    TCompileMessage       : '*processing modified jar*',$
                     error_log_book        : '',$
                     error_list            : ['Failed',$ ;list of error found in SNSproblem_log
                                              'Fatal error',$

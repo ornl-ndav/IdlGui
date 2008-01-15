@@ -29,6 +29,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='geometry_droplist'): begin
         putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
+        gg_GuiUpdate_selectPreviewButtons, Event
     end
 
 ;#1### geometry.xml #####
@@ -37,12 +38,14 @@ CASE Event.id OF
         gg_Browse, Event, 'geometry' ;in gg_Browse.pro
         loading_geometry_button_status, Event ;in gg_GUIupdate.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro	
+        gg_GuiUpdate_selectPreviewButtons, Event
     end
     
 ;#1### geometry.xml #####
 ;Preview of geometry.xml
     widget_info(wWidget, FIND_BY_UNAME='geometry_preview'): begin
         gg_Preview, Event, 'geometry' ;in gg_Preview.pro
+        gg_previewUpdateGeoXmlTextField, Event ;in gg_Preview.pro
     end
     
 ;#1### geometry.xml #####
