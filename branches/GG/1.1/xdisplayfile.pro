@@ -566,12 +566,19 @@ PRO XDisplayFile, Event, $
       findStatusText  = WIDGET_LABEL(find_status_bar,  $
                                      VALUE      = 'Status: ', $
                                      UNAME      = 'find_status',$
-                                     SCR_XSIZE  = 510,$
+                                     SCR_XSIZE  = 460,$
                                      SCR_YSIZE  = 30,$
                                      FONT       = font,$
                                      /ALIGN_LEFT,$
                                      FRAME      = 1)
-                                     
+      iterationDisplayed = WIDGET_LABEL(find_status_bar,$
+                                        VALUE     = '',$
+                                        UNAME     = 'iteration_label',$
+                                        SCR_XSIZE = 50,$
+                                        SCR_YSIZE = 30,$
+                                        FONT      = font,$
+                                        FRAME     = 1)
+                                        
   ENDIF
 
 
