@@ -136,6 +136,15 @@ PRO XDISPLAYFILE_event, event
                         message += 'can not be found'
                         id = widget_info(Event.top,find_by_uname='iteration_label')
                         widget_control, id, set_value = ''
+                        id = widget_info(event.top,find_by_uname='find_cancel')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(Event.top,find_by_uname='find_previous')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(event.top,FIND_BY_UNAME='text')
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[0]
                     END
                     1: BEGIN
                         message += 'has been located 1 time'
@@ -360,6 +369,15 @@ PRO XDISPLAYFILE_event, event
                         message += 'can not be found'
                         id = widget_info(Event.top,find_by_uname='iteration_label')
                         widget_control, id, set_value = ''
+                        id = widget_info(event.top,find_by_uname='find_cancel')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(Event.top,find_by_uname='find_previous')
+                        widget_control, id, sensitive = 0
+                        id = widget_info(event.top,FIND_BY_UNAME='text')
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[0]
                     END
                     1: BEGIN
                         message += 'has been located 1 time'
@@ -415,7 +433,6 @@ PRO XDISPLAYFILE_event, event
                 id = widget_info(Event.top,find_by_uname='iteration_label')
                 widget_control, id, set_value = ''
             ENDELSE
-
         END
 
 	ELSE:
