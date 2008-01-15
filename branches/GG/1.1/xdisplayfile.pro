@@ -109,7 +109,7 @@ PRO XDISPLAYFILE_event, event
 ;reinitialize find_iteration counter
             id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
             widget_control,id,get_uvalue=global
-            (*global).stringFoundIteration = 0
+            (*global).stringFoundIteration = 1
 ;retrieve full text
             id = widget_info(event.top,find_by_uname='text')
             widget_control, id, get_value=text
@@ -125,11 +125,17 @@ PRO XDISPLAYFILE_event, event
 ;inform user of the number of time the string has been located
                 message = 'String <' + stringToFind + '> '
                 CASE NbrStrFound OF
-                    0: message += 'can not be found'
+                    0: BEGIN
+                        message += 'can not be found'
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = ''
+                    END
                     1: BEGIN
                         message += 'has been located 1 time'
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
                     END
                     ELSE: BEGIN
                         message += 'has been located ' + $
@@ -137,6 +143,8 @@ PRO XDISPLAYFILE_event, event
                           ' times'
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
+                        id = widget_info(Event.top,find_by_uname='iteration_label')
+                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
                     END
                 ENDCASE
                 id = widget_info(Event.top,find_by_uname='find_status')
@@ -173,6 +181,8 @@ PRO XDISPLAYFILE_event, event
                 id = widget_info(event.top,FIND_BY_UNAME='text')
                 widget_control, id, $
                   SET_TEXT_SELECT=[0]
+                id = widget_info(Event.top,find_by_uname='iteration_label')
+                widget_control, id, set_value = ''
             ENDELSE
         END
         
@@ -191,6 +201,12 @@ PRO XDISPLAYFILE_event, event
             sz_stringToFind = strlen(stringToFind)
 ;looks for first position of stringToFind
             position = strpos(text,stringToFind)
+            a=where(position NE -1,NbrStrFound)
+;inform user which iteration of string found is selected
+            id = widget_info(Event.top,find_by_uname='iteration_label')
+            value = strcompress(find_iteration,/remove_all)
+            value += '/' + strcompress(NbrStrFound,/remove_all)
+            widget_control, id, set_value = value
 ;id of widget_text
             id = widget_info(event.top,FIND_BY_UNAME='text')
             position_offset = 0
@@ -210,6 +226,16 @@ PRO XDISPLAYFILE_event, event
                     widget_control, id, SET_TEXT_SELECT=[1]
                 ENDELSE
             ENDFOR
+;desactivate find_previous if find_itearation = 1
+            IF (find_iteration EQ 1) THEN BEGIN
+                id = widget_info(Event.top,find_by_uname='find_previous')
+                widget_control, id, sensitive = 0
+            ENDIF
+;activate find_next if find_iteration is less than NbrSTrFound-1
+            IF (find_iteration LT NbrStrFound) THEN BEGIN
+                id = widget_info(Event.top,find_by_uname='find_next')
+                widget_control, id, sensitive = 1
+            ENDIF
         END
 
         "find_next": BEGIN
@@ -227,6 +253,12 @@ PRO XDISPLAYFILE_event, event
             sz_stringToFind = strlen(stringToFind)
 ;looks for first position of stringToFind
             position = strpos(text,stringToFind)
+            a=where(position NE -1,NbrStrFound)
+;inform user which iteration of string found is selected
+            id = widget_info(Event.top,find_by_uname='iteration_label')
+            value = strcompress(find_iteration,/remove_all)
+            value += '/' + strcompress(NbrStrFound,/remove_all)
+            widget_control, id, set_value = value
 ;id of widget_text
             id = widget_info(event.top,FIND_BY_UNAME='text')
             position_offset = 0
@@ -246,6 +278,16 @@ PRO XDISPLAYFILE_event, event
                     widget_control, id, SET_TEXT_SELECT=[1]
                 ENDELSE
             ENDFOR
+;desactivate find_next if find_itearation = NbrStrFound
+            IF (find_iteration EQ NbrStrFound) THEN BEGIN
+                id = widget_info(Event.top,find_by_uname='find_next')
+                widget_control, id, sensitive = 0
+            ENDIF
+;activate find_previous if find_iteration is at least 2
+            IF (find_iteration GT 1) THEN BEGIN
+                id = widget_info(Event.top,find_by_uname='find_previous')
+                widget_control, id, sensitive = 1
+            ENDIF
         END
         "find_cancel": BEGIN
             id = widget_info(Event.top,find_by_uname='find_status')
@@ -261,6 +303,8 @@ PRO XDISPLAYFILE_event, event
             widget_control, id, sensitive = 0
             id = widget_info(event.top,find_by_uname='find_cancel')
             widget_control, id, sensitive = 0
+            id = widget_info(Event.top,find_by_uname='iteration_label')
+            widget_control, id, set_value = ''
         END
 
 	ELSE:
