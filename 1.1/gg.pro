@@ -35,6 +35,7 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
+                    stringFoundIteration  : 0,$
                     geom_xml_file_title   : 'Geometry.xml file: ',$
                     new_geo_xml_filename  : '',$
                     TCompileMessage       : '*processing modified jar*',$

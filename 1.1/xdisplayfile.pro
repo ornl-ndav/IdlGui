@@ -106,6 +106,81 @@ PRO XDISPLAYFILE_event, event
 	END
 
         "find_text": BEGIN
+;reinitialize find_iteration counter
+            id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            (*global).stringFoundIteration = 0
+;retrieve full text
+            id = widget_info(event.top,find_by_uname='text')
+            widget_control, id, get_value=text
+            sz   = (size(text))(1)
+;get text to find
+            id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+            widget_control, id, GET_VALUE = stringToFind
+            sz_stringToFind = strlen(stringToFind)
+            IF (stringToFind NE '') THEN BEGIN
+;looks for first position of stringToFind
+                position = strpos(text,stringToFind)
+                a=where(position NE -1,NbrStrFound)
+;inform user of the number of time the string has been located
+                message = 'String <' + stringToFind + '> '
+                CASE NbrStrFound OF
+                    0: message += 'can not be found'
+                    1: BEGIN
+                        message += 'has been located 1 time'
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 1
+                    END
+                    ELSE: BEGIN
+                        message += 'has been located ' + $
+                          strcompress(NbrStrFound,/remove_all) + $
+                          ' times'
+                        id = widget_info(Event.top,find_by_uname='find_next')
+                        widget_control, id, sensitive = 1
+                    END
+                ENDCASE
+                id = widget_info(Event.top,find_by_uname='find_status')
+                widget_control, id, set_value = 'Status: ' + message[0]
+                
+;id of widget_text
+                id = widget_info(event.top,FIND_BY_UNAME='text')
+                position_offset = 0
+                
+                FOR i=0,(sz-1) DO BEGIN
+                    IF (position[i] NE -1) THEN BEGIN ;we found it in this line
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[position_offset+position[i], $
+                                           sz_stringToFind]
+                        break
+                    ENDIF ELSE BEGIN
+                        position_offset += strlen(text[i]) + 1
+                        widget_control, id, SET_TEXT_SELECT=[1]
+                    ENDELSE
+                ENDFOR
+                id = widget_info(event.top,find_by_uname='find_cancel')
+                widget_control, id, sensitive = 1
+            ENDIF ELSE BEGIN    ;if (stringToFind NE '')
+                id = widget_info(event.top,find_by_uname='find_cancel')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_next')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_previous')
+                widget_control, id, sensitive = 0
+                id = widget_info(Event.top,find_by_uname='find_status')
+                widget_control, id, SET_VALUE = 'Status: '
+                id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+                widget_control, id, SET_VALUE = ''
+                id = widget_info(event.top,FIND_BY_UNAME='text')
+                widget_control, id, $
+                  SET_TEXT_SELECT=[0]
+            ENDELSE
+        END
+        
+        "find_previous": BEGIN
+            id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            (*global).stringFoundIteration = (*global).stringFoundIteration - 1
+            find_iteration = (*global).stringFoundIteration
 ;retrieve full text
             id = widget_info(event.top,find_by_uname='text')
             widget_control, id, get_value=text
@@ -116,45 +191,78 @@ PRO XDISPLAYFILE_event, event
             sz_stringToFind = strlen(stringToFind)
 ;looks for first position of stringToFind
             position = strpos(text,stringToFind)
-            a=where(position NE -1,NbrStrFound)
-;inform user of the number of time the string has been located
-            message = 'String <' + stringToFind + '> '
-            CASE NbrStrFound OF
-                0: message += 'can not be found'
-                1: message += 'has been located 1 time'
-                else: BEGIN
-                    message += 'has been located ' + $
-                      strcompress(NbrStrFound,/remove_all) + $
-                      ' times'
-                END
-            ENDCASE
-            help, message
-            id = widget_info(Event.top,find_by_uname='find_status')
-            widget_control, id, set_value = 'Status: ' + message[0]
-
 ;id of widget_text
             id = widget_info(event.top,FIND_BY_UNAME='text')
             position_offset = 0
-
-
+            string_found = 0
             FOR i=0,(sz-1) DO BEGIN
                 IF (position[i] NE -1) THEN BEGIN ;we found it in this line
-;                    print, 'line #' + strcompress(i) + ' position: ' + strcompress(position[i])
-                    widget_control, id, $
-                      SET_TEXT_SELECT=[position_offset+position[i], $
-                                       sz_stringToFind]
-                    break
+                    ++string_found 
+                    IF (string_found EQ find_iteration) THEN BEGIN
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[position_offset+position[i], $
+                                           sz_stringToFind]
+                        BREAK
+                    ENDIF
+                    position_offset += strlen(text[i]) + 1
                 ENDIF ELSE BEGIN
                     position_offset += strlen(text[i]) + 1
                     widget_control, id, SET_TEXT_SELECT=[1]
                 ENDELSE
             ENDFOR
-
-            print, '###################'
-;            widget_control, id, SET_TEXT_SELECT=[50,10]
-
         END
-        
+
+        "find_next": BEGIN
+            id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            (*global).stringFoundIteration = (*global).stringFoundIteration + 1
+            find_iteration = (*global).stringFoundIteration
+;retrieve full text
+            id = widget_info(event.top,find_by_uname='text')
+            widget_control, id, get_value=text
+            sz   = (size(text))(1)
+;get text to find
+            id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+            widget_control, id, GET_VALUE = stringToFind
+            sz_stringToFind = strlen(stringToFind)
+;looks for first position of stringToFind
+            position = strpos(text,stringToFind)
+;id of widget_text
+            id = widget_info(event.top,FIND_BY_UNAME='text')
+            position_offset = 0
+            string_found = 0
+            FOR i=0,(sz-1) DO BEGIN
+                IF (position[i] NE -1) THEN BEGIN ;we found it in this line
+                    ++string_found 
+                    IF (string_found EQ find_iteration) THEN BEGIN
+                        widget_control, id, $
+                          SET_TEXT_SELECT=[position_offset+position[i], $
+                                           sz_stringToFind]
+                        BREAK
+                    ENDIF
+                    position_offset += strlen(text[i]) + 1
+                ENDIF ELSE BEGIN
+                    position_offset += strlen(text[i]) + 1
+                    widget_control, id, SET_TEXT_SELECT=[1]
+                ENDELSE
+            ENDFOR
+        END
+        "find_cancel": BEGIN
+            id = widget_info(Event.top,find_by_uname='find_status')
+            widget_control, id, SET_VALUE = 'Status: '
+            id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+            widget_control, id, SET_VALUE = ''
+            id = widget_info(event.top,FIND_BY_UNAME='text')
+            widget_control, id, $
+              SET_TEXT_SELECT=[0]
+            id = widget_info(Event.top,find_by_uname='find_next')
+            widget_control, id, sensitive = 0
+            id = widget_info(Event.top,find_by_uname='find_previous')
+            widget_control, id, sensitive = 0
+            id = widget_info(event.top,find_by_uname='find_cancel')
+            widget_control, id, sensitive = 0
+        END
+
 	ELSE:
   ENDCASE
 
@@ -435,16 +543,22 @@ PRO XDisplayFile, Event, $
       findPreviousButton = WIDGET_BUTTON(find_bar,$
                                          VALUE  = '<- Find Previous',$
                                          UVALUE = 'find_previous',$
+                                         UNAME  = 'find_previous',$
                                          SCR_XSIZE = 110,$
-                                         SCR_YSIZE = 30)
+                                         SCR_YSIZE = 30,$
+                                         SENSITIVE = 0)
       findNextButton = WIDGET_BUTTON(find_bar,$
                                      VALUE  = 'Find Next ->',$
                                      UVALUE = 'find_next',$
+                                     UNAME  = 'find_next',$
                                      SCR_XSIZE = 90,$
-                                     SCR_YSIZE = 30)
+                                     SCR_YSIZE = 30,$
+                                     SENSITIVE = 0)
       findCancel = WIDGET_BUTTON(find_bar,$
                                  VALUE     = 'Cancel',$
                                  UVALUE    = 'find_cancel',$
+                                 UNAME     = 'find_cancel',$
+                                 SENSITIVE = 0,$
                                  SCR_XSIZE = 70,$
                                  SCR_YSIZE = 30)
 
@@ -469,15 +583,16 @@ WIDGET_CONTROL, filebase, /REALIZE
 geo_base = WIDGET_INFO(filebase, /geometry)
 geo_text = WIDGET_INFO(filetext, /geometry)
 
-state={ ourGroup     : ourGroup, $
-        full_text    : a,$
-        filename     : filename, $
-        new_filename : '',$
-        event_str    : event,$
-        filetext     : filetext, $
-        notitle      : noTitle, $
-        x_reserve    : geo_base.scr_xsize - geo_text.scr_xsize, $
-        y_reserve    : geo_base.scr_ysize - geo_text.scr_ysize }
+state={ ourGroup       : ourGroup, $
+        find_iteration : 0,$
+        full_text      : a,$
+        filename       : filename, $
+        new_filename   : '',$
+        event_str      : event,$
+        filetext       : filetext, $
+        notitle        : noTitle, $
+        x_reserve      : geo_base.scr_xsize - geo_text.scr_xsize, $
+        y_reserve      : geo_base.scr_ysize - geo_text.scr_ysize }
 
 WIDGET_CONTROL, filebase, SET_UVALUE = state
 xmanager, "XDISPLAYFILE", filebase, GROUP_LEADER = GROUP, $
