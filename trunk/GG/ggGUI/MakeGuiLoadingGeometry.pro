@@ -71,7 +71,7 @@ XYoff = [605,15]
 geometryPreview  = { size      : [geometryLabel.size[0]+XYoff[0],$
                                   geometryLabel.size[1]+XYoff[1],$
                                   65,100],$
-                     value     : 'PREVIEW',$
+                     value     : 'VIEW/EDIT',$
                      uname     : 'geometry_preview',$
                      sensitive : 0}
 
@@ -227,6 +227,15 @@ ENDIF ELSE BEGIN
     loadingGeometryButton = {size  : [30,445,650,40],$
                              value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
                              uname : 'loading_geometry_button'}
+
+    LGPbase = { size  : [30,445,645,36],$
+                uname : 'loading_geometry_processing_label_base',$
+                frame : 3,$
+                map   : 0}
+
+    LGPlabel = { size  : [0,0,LGPBase.size[2],LGPbase.size[3]],$
+                 value : 'L O A D I N G   G E O M E T R Y  ...  (PROCESSING)'}
+
 ENDELSE
 
 
@@ -484,6 +493,23 @@ frame = WIDGET_LABEL(base,$
 ;\\\\\\\\\\\\\\\\\
 ;LOADING GEOMETRY\
 ;\\\\\\\\\\\\\\\\\
+
+base1 = WIDGET_BASE(base,$
+                    XOFFSET   = LGPbase.size[0],$
+                    YOFFSET   = LGPbase.size[1],$
+                    SCR_XSIZE = LGPbase.size[2],$
+                    SCR_YSIZE = LGPbase.size[3],$
+                    UNAME     = LGPbase.uname,$
+                    FRAME     = LGPbase.frame,$
+                    MAP       = LGPbase.map)
+
+label1 = WIDGET_LABEL(base1,$
+                      XOFFSET   = LGPlabel.size[0],$
+                      YOFFSET   = LGPlabel.size[1],$
+                      SCR_XSIZE = LGPlabel.size[2],$
+                      SCR_YSIZE = LGPlabel.size[3],$
+                      VALUE     = LGPlabel.value)
+
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = loadingGeometryButton.size[0],$
                        YOFFSET   = loadingGeometryButton.size[1],$
@@ -492,7 +518,7 @@ button = WIDGET_BUTTON(base,$
                        UNAME     = loadingGeometryButton.uname,$
                        VALUE     = loadingGeometryButton.value,$
                        SENSITIVE = 0)
-
+                      
 IF (VersionLight) THEN BEGIN
     label1 = WIDGET_LABEL(base,$
                           XOFFSET = status_label.size[0],$
@@ -509,7 +535,6 @@ IF (VersionLight) THEN BEGIN
                               UNAME     = debug_text.uname,$
                               /SCROLL,$
                               /WRAP)
-
 
 ENDIF
 
