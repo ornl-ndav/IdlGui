@@ -23,6 +23,9 @@ done_writing:
   endelse
 END
 
+
+
+
 PRO XDISPLAYFILE_event, event
 
   COMPILE_OPT hidden
@@ -101,6 +104,57 @@ PRO XDISPLAYFILE_event, event
 		IF (WIDGET_INFO(state.ourGroup, /VALID)) THEN $
 			WIDGET_CONTROL, state.ourGroup, /DESTROY
 	END
+
+        "find_text": BEGIN
+;retrieve full text
+            id = widget_info(event.top,find_by_uname='text')
+            widget_control, id, get_value=text
+            sz   = (size(text))(1)
+;get text to find
+            id = widget_info(event.top,FIND_BY_UNAME='find_text_uname')
+            widget_control, id, GET_VALUE = stringToFind
+            sz_stringToFind = strlen(stringToFind)
+;looks for first position of stringToFind
+            position = strpos(text,stringToFind)
+            a=where(position NE -1,NbrStrFound)
+;inform user of the number of time the string has been located
+            message = 'String <' + stringToFind + '> '
+            CASE NbrStrFound OF
+                0: message += 'can not be found'
+                1: message += 'has been located 1 time'
+                else: BEGIN
+                    message += 'has been located ' + $
+                      strcompress(NbrStrFound,/remove_all) + $
+                      ' times'
+                END
+            ENDCASE
+            help, message
+            id = widget_info(Event.top,find_by_uname='find_status')
+            widget_control, id, set_value = 'Status: ' + message[0]
+
+;id of widget_text
+            id = widget_info(event.top,FIND_BY_UNAME='text')
+            position_offset = 0
+
+
+            FOR i=0,(sz-1) DO BEGIN
+                IF (position[i] NE -1) THEN BEGIN ;we found it in this line
+;                    print, 'line #' + strcompress(i) + ' position: ' + strcompress(position[i])
+                    widget_control, id, $
+                      SET_TEXT_SELECT=[position_offset+position[i], $
+                                       sz_stringToFind]
+                    break
+                ENDIF ELSE BEGIN
+                    position_offset += strlen(text[i]) + 1
+                    widget_control, id, SET_TEXT_SELECT=[1]
+                ENDELSE
+            ENDFOR
+
+            print, '###################'
+;            widget_control, id, SET_TEXT_SELECT=[50,10]
+
+        END
+        
 	ELSE:
   ENDCASE
 
@@ -347,6 +401,7 @@ PRO XDisplayFile, Event, $
                              YSIZE    = HEIGHT, $
                              EDITABLE = editable, $
                              UVALUE   = 'TEXT', $
+                             UNAME    = 'text',$
                              /SCROLL, $
                              VALUE    = a, $
                              FONT      = font)
@@ -357,6 +412,7 @@ PRO XDisplayFile, Event, $
                              EDITABLE = $
                              editable, $
                              UVALUE   = 'TEXT', $
+                             UNAME    = 'text',$
                              /SCROLL, $
                              VALUE    = a)
   endelse
@@ -370,10 +426,12 @@ PRO XDisplayFile, Event, $
       findText  = WIDGET_TEXT(find_bar,  $
                               VALUE  = '', $
                               UVALUE = 'find_text',$
+                              UNAME  = 'find_text_uname',$
                               XSIZE  = 30,$
                               YSIZE  = 1,$
                               /EDITABLE,$
-                              FONT   = font)
+                              FONT   = font,$
+                              /ALL_EVENTS)
       findPreviousButton = WIDGET_BUTTON(find_bar,$
                                          VALUE  = '<- Find Previous',$
                                          UVALUE = 'find_previous',$
@@ -393,7 +451,7 @@ PRO XDisplayFile, Event, $
       find_status_bar = WIDGET_BASE(filebase, /ROW)
       findStatusText  = WIDGET_LABEL(find_status_bar,  $
                                      VALUE      = 'Status: ', $
-                                     UVALUE     = 'find_status',$
+                                     UNAME      = 'find_status',$
                                      SCR_XSIZE  = 510,$
                                      SCR_YSIZE  = 30,$
                                      FONT       = font,$
@@ -411,14 +469,15 @@ WIDGET_CONTROL, filebase, /REALIZE
 geo_base = WIDGET_INFO(filebase, /geometry)
 geo_text = WIDGET_INFO(filetext, /geometry)
 
-state={ ourGroup:ourGroup, $
-        filename: filename, $
+state={ ourGroup     : ourGroup, $
+        full_text    : a,$
+        filename     : filename, $
         new_filename : '',$
-        event_str : event,$
-        filetext:filetext, $
-        notitle:noTitle, $
-        x_reserve:geo_base.scr_xsize - geo_text.scr_xsize, $
-        y_reserve:geo_base.scr_ysize - geo_text.scr_ysize }
+        event_str    : event,$
+        filetext     : filetext, $
+        notitle      : noTitle, $
+        x_reserve    : geo_base.scr_xsize - geo_text.scr_xsize, $
+        y_reserve    : geo_base.scr_ysize - geo_text.scr_ysize }
 
 WIDGET_CONTROL, filebase, SET_UVALUE = state
 xmanager, "XDISPLAYFILE", filebase, GROUP_LEADER = GROUP, $
