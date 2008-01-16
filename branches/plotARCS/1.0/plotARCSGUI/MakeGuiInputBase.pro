@@ -169,9 +169,61 @@ iTextCH   = { size  : [iButtonCH.size[0]+XYoff[0],$
               value : '',$
               uname : 'histo_mapped_text_field'}
                        
+;/////////////////// PLOT ///////////////////////////////////////////
+XYoff  = [0,15]
+iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
+                           iFrameCH.size[1]+iFrameCH.size[3]+XYoff[1],$
+                           MainBaseSize[2]-10,35],$
+              uname     : 'plot_button',$
+              value     : '> > > >     > > >     > >     >     P  L  O  T     <     < <     < < <     < < < <',$
+              sensitive : 1}
 
+;///////////////// STATUS ///////////////////////////////////////////
+XYoff  = [5,15]
+iStatusLabel = { size  : [iButtonP.size[0]+XYoff[0],$
+                          iButtonP.size[1]+iButtonP.size[3]+XYoff[1],$
+                          MainBaseSize[2]-20,30],$
+                 value : 'STATUS:',$
+                 frame : 1,$
+                 uname : 'status_label'}
 
+;//////////////// SEND TO GEEK //////////////////////////////////////
+XYoff     = [0,50]
+iFrameSTG = { size  : [iStatusLabel.size[0]+XYoff[0],$
+                       iStatusLabel.size[1]+XYoff[1],$
+                       MainBaseSize[2]-15,45],$
+              frame : 1}
+XYoff    = [10,-8]
+iLabelSTG  = { size  : [iFrameSTG.size[0]+XYoff[0],$
+                        iFrameSTG.size[1]+XYoff[1]],$
+               value : 'S E N D  T O  G E E K'}
+                         
+XYoff      = [5,25]
+iSTGMlabel = { size  : [iLabelSTG.size[0]+XYoff[0],$
+                        iLabelSTG.size[1]+XYoff[1]],$
+               value : 'Message:',$
+               uname : 'send_to_geek_message_label'}
+XYoff      = [60,-7]
+iSTGtext   = { size  : [iSTGMlabel.size[0]+XYoff[0],$
+                        iSTGMlabel.size[1]+XYoff[1],$
+                        500,30],$
+               uname : 'send_to_geek_message_text',$
+               value : '>> Put your message here <<'}
+XYoff      = [5,0]
+iSTGbutton = { size  : [iSTGtext.size[0]+iSTGtext.size[2]+XYoff[0],$
+                        iSTGtext.size[1],$
+                        100,30],$
+               value : 'SEND TO GEEK',$
+               uname : 'send_to_geek_button'}
 
+;/////////////////////// LOG BOOK ////////////////////////////////////
+XYoff      = [0,15]
+iLogBook   = { size  : [iFrameSTG.size[0]+XYoff[0],$
+                        iFrameSTG.size[1]+iFrameSTG.size[3]+XYoff[1],$
+                        MainBaseSize[2]-15,$
+                        160],$
+               uname : 'log_book'}
+               
 ;********************************************************************************
 ;                                Build GUI
 ;********************************************************************************
@@ -372,13 +424,6 @@ wTextCH = WIDGET_TEXT(wBase,$
                       /ALIGN_LEFT,$
                       /EDITABLE)
 
-
-
-
-
-
-
-
 wFrameCH = WIDGET_LABEL(wBase,$
                        XOFFSET   = iFrameCH.size[0],$
                        YOFFSET   = iFrameCH.size[1],$
@@ -387,6 +432,73 @@ wFrameCH = WIDGET_LABEL(wBase,$
                        FRAME     = iFrameCH.frame,$
                        VALUE     = '')
 
+;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wButtonP = WIDGET_BUTTON(wBase,$
+                         XOFFSET   = iButtonP.size[0],$
+                         YOFFSET   = iButtonP.size[1],$
+                         SCR_XSIZE = iButtonP.size[2],$
+                         SCR_YSIZE = iButtonP.size[3],$
+                         UNAME     = iButtonP.uname,$
+                         VALUE     = iButtonP.value,$
+                         SENSITIVE = iButtonP.sensitive)
+
+;\\\\\\\\\\\\\\\\\\STATUS LABEL\\\\\\\\\\\\\\\\\\\\\\\\\
+wStatusLabel = WIDGET_LABEL(wBase,$
+                            XOFFSET   = iStatusLabel.size[0],$
+                            YOFFSET   = iStatusLabel.size[1],$
+                            SCR_XSIZE = iStatusLabel.size[2],$
+                            SCR_YSIZE = iStatusLabel.size[3],$
+                            VALUE     = iStatusLabel.value,$
+                            UNAME     = iStatusLabel.uname,$
+                            FRAME     = iStatusLabel.frame,$
+                            /ALIGN_LEFT)
+
+;\\\\\\\\\\\\\\\\\\SEND TO GEEK\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLabelSTG = WIDGET_LABEL(wBase,$
+                         XOFFSET = iLabelSTG.size[0],$
+                         YOFFSET = iLabelSTG.size[1],$
+                         VALUE   = iLabelSTG.value)
+
+wLabelSTGM = WIDGET_LABEL(wBase,$
+                          XOFFSET = iSTGMlabel.size[0],$
+                          YOFFSET = iSTGMlabel.size[1],$
+                          VALUE   = iSTGMlabel.value,$
+                          UNAME   = iSTGMlabel.uname)
+
+wSTGtext = WIDGET_TEXT(wBase,$
+                       XOFFSET   = iSTGtext.size[0],$
+                       YOFFSET   = iSTGtext.size[1],$
+                       SCR_XSIZE = iSTGtext.size[2],$
+                       SCR_YSIZE = iSTGtext.size[3],$
+                       UNAME     = iSTGtext.uname,$
+                       /EDITABLE,$
+                       /ALIGN_LEFT)
+
+WSTGbutton = WIDGET_BUTTON(wBase,$
+                           XOFFSET = iSTGbutton.size[0],$
+                           YOFFSET = iSTGbutton.size[1],$
+                           SCR_XSIZE = iSTGbutton.size[2],$
+                           SCR_YSIZE = iSTGbutton.size[3],$
+                           VALUE     = iSTGbutton.value,$
+                           UNAME     = iSTGbutton.uname)
+
+wFrameSTG = WIDGET_LABEL(wBase,$
+                         XOFFSET   = iFrameSTG.size[0],$
+                         YOFFSET   = iFrameSTG.size[1],$
+                         SCR_XSIZE = iFrameSTG.size[2],$
+                         SCR_YSIZE = iFrameSTG.size[3],$
+                         FRAME     = iFrameSTG.frame,$
+                         VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\ LOG BOOK \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLogBook = WIDGET_TEXT(wBase,$
+                       XOFFSET = iLogBook.size[0],$
+                       YOFFSET = iLogBook.size[1],$
+                       SCR_XSIZE = iLogBook.size[2],$
+                       SCR_YSIZE = iLogBook.size[3],$
+                       UNAME     = iLogBook.uname,$
+                       /SCROLL,$
+                       /WRAP)
 
 
 END
