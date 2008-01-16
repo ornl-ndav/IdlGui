@@ -18,6 +18,11 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    processing            : '(PROCESSING)',$
+                    ok                    : 'OK',$
+                    failed                : 'FAILED',$
+                    status                : 'STATUS: ',$
+                    neutron_event_dat_ext : '_neutron_event.dat',$
                     debugger              : 'j35'})
 
 

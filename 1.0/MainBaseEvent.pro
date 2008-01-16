@@ -10,10 +10,23 @@ CASE Event.id OF
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
-    
-    widget_info(wWidget, FIND_BY_UNAME=''): begin
+
+;'Run #' cw_field in INPUT base
+    widget_info(wWidget, FIND_BY_UNAME='run_number'): begin
+        InputRunNumber, Event ;in plot_arcs_Input.pro
+        ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
     end
     
+;'BROWSE EVENT FILE' button in INPUT base
+    widget_info(wWidget, FIND_BY_UNAME='browse_event_file_button'): begin
+        print, 'in browse event file'
+    end
+
+;'Event File' widget_text in INPUT base
+    widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
+        print, 'in event file text field'
+    end
+
 
     ELSE:
     

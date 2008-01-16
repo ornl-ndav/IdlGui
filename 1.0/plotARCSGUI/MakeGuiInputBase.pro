@@ -37,7 +37,7 @@ XYoff    = [30,-5]
 iButton1 = { size  : [iLabel2.size[0]+XYoff[0],$
                       iLabel2.size[1]+XYoff[1],$
                       350,30],$
-             uname : 'browse_run_number_button',$
+             uname : 'browse_event_file_button',$
              value : 'B R O W S E   E V E N T   F I L E ...'}
                       
 XYoff       = [0,40]
@@ -53,14 +53,17 @@ iBaseField2 = { size : [iBaseField1.size[0]+XYoff[0],$
 
 ;///////////////////HISTOGRAMMING BASE//////////////////////////////////////////
 XYoff   = [0,20]
+histogramming_sensitive = 0
 iFrame3 = {size  : [iFrame1.size[0]+XYoff[0],$
                     iFrame1.size[1]+iFrame1.size[3]+XYoff[1], $
                     MainBaseSize[2]-15,53], $
+           uname : 'histo_frame',$
            frame : 1}
 
 XYoff    = [10,-8]
 iLabel4  = { size  : [iFrame3.size[0]+XYoff[0],$
                       iFrame3.size[1]+XYoff[1]],$
+             uname : 'histo_frame_label',$
              value : 'H I S T O G R A M M I N G'}
 
 Xoff     = 10 ;x_off between two label/text consecutive parts
@@ -121,11 +124,13 @@ XYOFF   = [0,20]
 iFrame2 = { size  : [iFrame3.size[0]+XYoff[0], $
                      iFrame3.size[1]+iFrame3.size[3]+XYoff[1], $
                      MainBaseSize[2]-15,53], $
+            uname : 'mapping_frame',$
             frame : 1}
 
 XYoff    = [10,-8]
 iLabel3  = { size  : [iFrame2.size[0]+XYoff[0],$
                       iFrame2.size[1]+XYoff[1]],$
+             uname : 'mapping_label',$
              value : 'M A P P I N G   F I L E'}
 
 XYoff      = [10,10]
@@ -183,7 +188,7 @@ XYoff  = [5,15]
 iStatusLabel = { size  : [iButtonP.size[0]+XYoff[0],$
                           iButtonP.size[1]+iButtonP.size[3]+XYoff[1],$
                           MainBaseSize[2]-20,30],$
-                 value : 'STATUS:',$
+                 value : '',$
                  frame : 1,$
                  uname : 'status_label'}
 
@@ -295,15 +300,18 @@ wFrame1 = WIDGET_LABEL(wBase,$
 
 ;\\\\\\\\\\\\\\\\\\\HISTOGRAMMING\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wLabel4 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel4.size[0],$
-                       YOFFSET = iLabel4.size[1],$
-                       VALUE   = iLabel4.value)
+                       XOFFSET   = iLabel4.size[0],$
+                       YOFFSET   = iLabel4.size[1],$
+                       VALUE     = iLabel4.value,$
+                       UNAME     = iLabel4.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wLabel5 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel5.size[0],$
-                       YOFFSET = iLabel5.size[1],$
-                       VALUE   = iLabel5.value,$
-                       UNAME   = iLabel5.uname)
+                       XOFFSET   = iLabel5.size[0],$
+                       YOFFSET   = iLabel5.size[1],$
+                       VALUE     = iLabel5.value,$
+                       UNAME     = iLabel5.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wText1 = WIDGET_TEXT(wBase,$
                      XOFFSET   = iText1.size[0],$
@@ -311,14 +319,16 @@ wText1 = WIDGET_TEXT(wBase,$
                      SCR_XSIZE = iText1.size[2],$
                      SCR_YSIZE = iText1.size[3],$
                      UNAME     = iText1.uname,$
+                     SENSITIVE = histogramming_sensitive,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
 wLabel6 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel6.size[0],$
-                       YOFFSET = iLabel6.size[1],$
-                       VALUE   = iLabel6.value,$
-                       UNAME   = iLabel6.uname)
+                       XOFFSET   = iLabel6.size[0],$
+                       YOFFSET   = iLabel6.size[1],$
+                       VALUE     = iLabel6.value,$
+                       UNAME     = iLabel6.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wText2 = WIDGET_TEXT(wBase,$
                      XOFFSET   = iText2.size[0],$
@@ -326,14 +336,16 @@ wText2 = WIDGET_TEXT(wBase,$
                      SCR_XSIZE = iText2.size[2],$
                      SCR_YSIZE = iText2.size[3],$
                      UNAME     = iText2.uname,$
+                     SENSITIVE = histogramming_sensitive,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
 wLabel7 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel7.size[0],$
-                       YOFFSET = iLabel7.size[1],$
-                       VALUE   = iLabel7.value,$
-                       UNAME   = iLabel7.uname)
+                       XOFFSET   = iLabel7.size[0],$
+                       YOFFSET   = iLabel7.size[1],$
+                       VALUE     = iLabel7.value,$
+                       UNAME     = iLabel7.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wText1 = WIDGET_TEXT(wBase,$
                      XOFFSET   = iText3.size[0],$
@@ -341,20 +353,23 @@ wText1 = WIDGET_TEXT(wBase,$
                      SCR_XSIZE = iText3.size[2],$
                      SCR_YSIZE = iText3.size[3],$
                      UNAME     = iText3.uname,$
+                     SENSITIVE = histogramming_sensitive,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
 wLabel8 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel8.size[0],$
-                       YOFFSET = iLabel8.size[1],$
-                       VALUE   = iLabel8.value,$
-                       UNAME   = iLabel8.uname)
+                       XOFFSET   = iLabel8.size[0],$
+                       YOFFSET   = iLabel8.size[1],$
+                       VALUE     = iLabel8.value,$
+                       UNAME     = iLabel8.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wDroplist2 = WIDGET_DROPLIST(wBase,$
                              VALUE     = iDroplist2.list,$
                              XOFFSET   = iDroplist2.size[0],$
                              YOFFSET   = iDroplist2.size[1],$
                              UNAME     = iDroplist2.uname,$
+                             SENSITIVE = histogramming_sensitive,$
                              /DYNAMIC_RESIZE)
 
 wFrame3 = WIDGET_LABEL(wBase,$
@@ -363,20 +378,24 @@ wFrame3 = WIDGET_LABEL(wBase,$
                        SCR_XSIZE = iFrame3.size[2],$
                        SCR_YSIZE = iFrame3.size[3],$
                        FRAME     = iFrame3.frame,$
-                       VALUE     = '')
+                       UNAME     = iFrame3.uname,$
+                       VALUE     = '',$
+                       SENSITIVE = histogramming_sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\MAPPING FILE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wLabel3 = WIDGET_LABEL(wBase,$
-                       XOFFSET = iLabel3.size[0],$
-                       YOFFSET = iLabel3.size[1],$
-                       VALUE   = iLabel3.value)
+                       XOFFSET   = iLabel3.size[0],$
+                       YOFFSET   = iLabel3.size[1],$
+                       UNAME     = iLabel3.uname,$
+                       SENSITIVE = histogramming_sensitive,$
+                       VALUE     = iLabel3.value)
 
 wDroplist1 = WIDGET_DROPLIST(wBase,$
                              VALUE     = iDroplist1.list,$
                              XOFFSET   = iDroplist1.size[0],$
                              YOFFSET   = iDroplist1.size[1],$
                              UNAME     = iDroplist1.uname,$
-                             SENSITIVE = iDroplist1.sensitive,$
+                             SENSITIVE = histogramming_sensitive,$
                              /DYNAMIC_RESIZE)
 
 wFrame2 = WIDGET_LABEL(wBase,$
@@ -385,6 +404,8 @@ wFrame2 = WIDGET_LABEL(wBase,$
                        SCR_XSIZE = iFrame2.size[2],$
                        SCR_YSIZE = iFrame2.size[3],$
                        FRAME     = iFrame2.frame,$
+                       UNAME     = iFrame2.uname,$
+                       SENSITIVE = histogramming_sensitive,$
                        VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\CREATE HISTO BASE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
@@ -399,6 +420,7 @@ wButtonCH = WIDGET_BUTTON(wBase,$
                           SCR_XSIZE = iButtonCH.size[2],$
                           SCR_YSIZE = iButtonCH.size[3],$
                           VALUE     = iButtonCH.value,$
+                          SENSITIVE = histogramming_sensitive,$
                           UNAME     = iButtonCH.uname)
 
 iLabelCH1 = WIDGET_LABEL(wBase,$

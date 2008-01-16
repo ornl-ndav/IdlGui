@@ -16,8 +16,12 @@ cd, CurrentFolder + '/plotARCSGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run plot_arcs_get.pro
+.run plot_arcs_put.pro
 
 ;procedures
+.run plot_arcs_Input.pro
+.run plot_arcs_GUIupdate.pro
 
 ;main functions
 .run MainBaseEvent.pro
