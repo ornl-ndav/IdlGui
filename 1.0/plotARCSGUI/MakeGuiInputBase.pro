@@ -1,543 +1,391 @@
-PRO MakeGuiLoadingGeometry, MAIN_BASE, $
-                            MainBaseSize, $
-                            InstrumentList, $
-                            InstrumentIndex, $
-                            VersionLight
+PRO MakeGuiInputBase, MAIN_BASE, MainBaseSize
 
-;***********************************************************************************
+
+;********************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
-
-base = { size  : [0,0,MainBaseSize[2:3]],$
-         uname : 'loading_geometry_base'} 
-
-IF (InstrumentIndex EQ 0) THEN BEGIN
-    sensitiveStatus = 0
-ENDIF ELSE BEGIN
-    sensitiveStatus = 1
-ENDELSE
-
-;///////////
-;Instrument/
-;///////////
-instrumentLabel    = { size  : [10,25],$
-                       value : 'Select your instrument:'}
-
-XYoff = [150,-8]
-instrumentDroplist = { size  : [instrumentLabel.size[0]+XYoff[0],$
-                                instrumentLabel.size[1]+XYoff[1]],$
-                       uname : 'instrument_droplist'}
-
-;/////////////
-;Geometry.xml/
-;/////////////
-XYoff = [0,40]
-
-geometryFrame    = { size  : [5, $
-                              instrumentLabel.size[1]+XYoff[1], $
-                              MainBaseSize[2]-13, $
-                              110],$
-                     frame : 1,$
-                     uname : 'geometry_frame'}
-
-XYoff = [15,-8]
-geometryLabel    = { size  : [geometryFrame.size[0]+XYoff[0],$
-                              geometryFrame.size[1]+XYoff[1]],$
-                     value : 'geometry.xml',$
-                     uname : 'geometry_label'}
-
-XYoff = [-5,20]
-geometryDroplist = { size  : [geometryLabel.size[0]+XYoff[0],$
-                              geometryLabel.size[1]+XYoff[1]],$
-                     list  : ['                                                            '],$
-                     uname : 'geometry_droplist'}
-
-XYoff = [435,10]
-geometryOrLabel  = { size  : [geometryDroplist.size[0]+XYoff[0],$
-                              geometryDroplist.size[1]+XYoff[1]],$
-                     value : 'OR',$
-                     uname : 'geometry_or_label'}
-
-XYoff = [35,-7]
-geometryButton   = { size  : [geometryOrLabel.size[0]+XYoff[0],$
-                              geometryOrLabel.size[1]+XYoff[1],$
-                              100, $
-                              30],$
-                     uname : 'geometry_browse_button',$
-                     title : ' BROWSE ... '}
-
-
-XYoff = [605,15]
-geometryPreview  = { size      : [geometryLabel.size[0]+XYoff[0],$
-                                  geometryLabel.size[1]+XYoff[1],$
-                                  65,100],$
-                     value     : 'VIEW/EDIT',$
-                     uname     : 'geometry_preview',$
-                     sensitive : 0}
-
-
-XYoff = [10,50]
-geometryText     = { size  : [geometryDroplist.size[0]+XYoff[0],$
-                              geometryDroplist.size[1]+XYoff[1],$
-                              595,35],$
-                     uname : 'geometry_text_field',$
-                     value : ''}
-
-;///////////
-;cvinfo.xml/
-;///////////
-XYoff = [0,25]
-
-cvinfoFrame      = { size  : [5, $
-                              geometryFrame.size[1]+geometryFrame.size[3]+XYoff[1], $
-                              MainBaseSize[2]-13, $
-                              100],$
-                     frame : 1,$
-                     uname : 'cvinfo_frame'}
-
-XYoff = [15,-8]
-cvinfoLabel      = { size  : [cvinfoFrame.size[0]+XYoff[0],$
-                              cvinfoFrame.size[1]+XYoff[1]],$
-                     value : 'cvinfo.xml',$
-                     uname : 'cvinfo_label'}
-
-XYoff = [5,25]
-runNumberBase    = { title : 'Run Number:',$
-                     size  : [cvinfoLabel.size[0]+XYoff[0],$
-                             cvinfoLabel.size[1]+XYoff[1],$
-                             150,35],$
-                     uname : 'cvinfo_base',$ 
-                     cw_field : { uname : 'cvinfo_run_number_field',$
-                                  size  : 8}}
-
-XYoff = [160,10]
-orLabel = { size  : [runNumberBase.size[0]+XYoff[0],$
-                     runNumberBase.size[1]+XYoff[1]],$
-            value : 'OR',$
-            uname : 'or_label'}
-
-XYoff = [40,-5]
-browseButton = { size  : [orLabel.size[0]+XYoff[0],$
-                          orLabel.size[1]+XYoff[1],$
-                          100,30],$
-                 value : 'BROWSE...',$
-                 uname : 'cvinfo_browse_button'}
-
-XYoff = [400,-18]
-cvinfoPreview  = { size      : [BrowseButton.size[0]+XYoff[0],$
-                                BrowseButton.size[1]+XYoff[1],$
-                                65,93],$
-                   value     : 'PREVIEW',$
-                   uname     : 'cvinfo_preview',$
-                   sensitive : 0}
-
-
-XYoff = [20,40]
-cvinfoText = { size : [XYoff[0],$
-                       browseButton.size[1]+XYoff[1],$
-                       600,35],$
-               uname : 'cvinfo_text_field',$
-               value : ''}
-
-;////////////////////////
-;Geometry File Generator/
-;////////////////////////
-XYoff = [0,25]
-GeoFileFrame      = { size  : [5, $
-                               cvinfoFrame.size[1]+cvinfoFrame.size[3]+XYoff[1], $
-                               MainBaseSize[2]-13, $
-                               100],$
-                      frame : 1,$
-                      uname : 'geo_file_frame'}
-
-XYoff = [15,-8]
-GeoFileLabel      = { size  : [GeoFileFrame.size[0]+XYoff[0],$
-                               GeoFileFrame.size[1]+XYoff[1]],$
-                      value : 'New Geometry File Name',$
-                      uname : 'geo_file_label'}
-
-XYoff = [5,30]
-GeoNameLabel      = { size  : [GeoFileLabel.size[0]+XYoff[0],$
-                               GeoFileLabel.size[1]+XYoff[1]],$
-                      value : 'Name:',$
-                      uname : 'geo_name_label'}
-XYoff = [40,-5]
-GeoNameTextField  = { size  : [GeoNameLabel.size[0]+XYoff[0],$
-                               GeoNameLabel.size[1]+XYoff[1],$
-                               300,35],$
-                      uname : 'geo_name_text_field'}
-XYoff = [GeoNameTextField.size[2],0]
-AutoNameButton1   = { size  : [GeoNameTextField.size[0]+XYoff[0],$
-                               GeoNameTextField.size[1]+XYoff[1],$
-                               163,35],$
-                      uname : 'auto_name_with_run_button',$
-                      value : 'Generate Name with Run#'}
-XYoff = [AutoNameButton1.size[2],0]
-AutoNameButton2   = { size  : [AutoNameButton1.size[0]+XYoff[0],$
-                               AutoNameButton1.size[1]+XYoff[1],$
-                               AutoNameButton1.size[2],35],$
-                      uname : 'auto_name_with_time_button',$
-                      value : 'Generate Name with Time'}
-XYoff = [0,40]
-GeoPathLabel      = { size  : [GeoNameLabel.size[0]+XYoff[0],$
-                               GeoNameLabel.size[1]+XYoff[1]],$
-                      value : 'Path:',$
-                      uname : 'geo_path_label'}
-XYoff = [40,-5]
-GeoPathTextField  = { size  : [GeoPathLabel.size[0]+XYoff[0],$
-                               GeoPathLabel.size[1]+XYoff[1],$
-                               485,35],$
-                      value : '~/local',$
-                      uname : 'geo_path_text_field'}
-
-XYoff = [GeoPathTextField.size[2]+3,8]
-GeoOrLabel        = { size  : [GeoPathTextField.size[0]+XYoff[0],$
-                               GeoPathTextField.size[1]+XYoff[1]],$
-                      value : 'OR',$
-                      uname : 'geo_or_label'}
-XYoff = [20,0]
-GeoPathButton     = { size  : [GeoOrLabel.size[0]+XYoff[0],$
-                               GeoPathTextField.size[1]+XYOff[1],$
-                               118,35],$
-                      uname : 'geo_path_button',$
-                      value : 'Select Path...'}
-
-;////////////////////////
-;Loading Geometry Button/
-;////////////////////////
-IF (VersionLight) THEN BEGIN
-    loadingGeometryButton = {size  : [30,445,650,40],$
-                             value : 'C  R  E  A  T  E    G  E  O  M  E  T  R  Y',$
-                             uname : 'loading_geometry_button'}
-
-    XYoff = [0,50]
-    status_label          = {size  : [LoadingGeometryButton.size[0],$
-                                      LoadingGeometryButton.size[1]+XYoff[1],$
-                                      650,40],$
-                             uname : 'status_label',$
-                             value : ''}
-
-    XYoff = [0,40]
-    debug_text            = {size  : [status_label.size[0]+XYoff[0],$
-                                      status_label.size[1]+XYoff[1],$
-                                      650,150],$
-                             uname : 'debug_text_field'}
-
-ENDIF ELSE BEGIN
-    loadingGeometryButton = {size  : [30,445,650,40],$
-                             value : 'L  O  A  D  I  N  G     G  E  O  M  E  T  R  Y',$
-                             uname : 'loading_geometry_button'}
-
-    LGPbase = { size  : [30,445,645,36],$
-                uname : 'loading_geometry_processing_label_base',$
-                frame : 3,$
-                map   : 0}
-
-    LGPlabel = { size  : [0,0,LGPBase.size[2],LGPbase.size[3]],$
-                 value : 'L O A D I N G   G E O M E T R Y  ...  (PROCESSING)'}
-
-ENDELSE
-
-
-;***********************************************************************************
-;                                Build GUI
-;***********************************************************************************
-base = WIDGET_BASE(MAIN_BASE,$
-                   UNAME     = base.uname,$
-                   XOFFSET   = 0,$
-                   YOFFSET   = 0,$
-                   SCR_XSIZE = base.size[2],$
-                   SCR_YSIZE = base.size[3],$
-                   map=1)  ;REMOVE 0 and put back 1
-
-;\\\\\\\\\\\
-;Instrument\
-;\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET = instrumentLabel.size[0],$
-                     YOFFSET = instrumentLabel.size[1],$
-                     VALUE   = instrumentLabel.value)
-
-droplist = WIDGET_DROPLIST(base,$
-                           VALUE   = InstrumentList,$
-                           XOFFSET = instrumentDroplist.size[0],$
-                           YOFFSET = instrumentDroplist.size[1],$
-                           UNAME   = instrumentDroplist.uname)
-
-;\\\\\\\\\\\\\
-;Geometry.xml\
-;\\\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = geometryOrLabel.size[0],$
-                     YOFFSET   = geometryOrLabel.size[1],$
-                     VALUE     = geometryOrLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
-                     UNAME     = geometryOrLabel.uname)
-
-droplist = WIDGET_DROPLIST(base,$
-                           value     = geometryDroplist.list,$
-                           XOFFSET   = geometryDroplist.size[0],$
-                           YOFFSET   = geometryDroplist.size[1],$
-                           UNAME     = geometryDroplist.uname,$
-                           SENSITIVE = sensitiveStatus,$
-                           /DYNAMIC_RESIZE)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = geometryPreview.size[0],$
-                       YOFFSET   = geometryPreview.size[1],$
-                       SCR_XSIZE = geometryPreview.size[2],$
-                       SCR_YSIZE = geometryPreview.size[3],$
-                       UNAME     = geometryPreview.uname,$
-                       VALUE     = geometryPreview.value,$
-                       SENSITIVE = sensitiveStatus)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = geometryButton.size[0],$
-                       YOFFSET   = geometryButton.size[1],$
-                       SCR_XSIZE = geometryButton.size[2],$
-                       SCR_YSIZE = geometryButton.size[3],$
-                       VALUE     = geometryButton.title,$
-                       UNAME     = geometryButton.uname,$
-                       SENSITIVE = sensitiveStatus)
-
-text = WIDGET_TEXT(base,$
-                   XOFFSET   = geometryText.size[0],$
-                   YOFFSET   = geometryText.size[1],$
-                   SCR_XSIZE = geometryText.size[2],$
-                   SCR_YSIZE = geometryText.size[3],$
-                   UNAME     = geometryText.uname,$
-                   VALUE     = geometryText.value,$
-                   SENSITIVE = sensitiveStatus,$
-                   /EDITABLE,$
-                   /ALL_EVENTS)
-
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = geometryLabel.size[0],$
-                     YOFFSET   = geometryLabel.size[1],$
-                     VALUE     = geometryLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
-                     UNAME     = geometryLabel.uname)
-
-frame = WIDGET_LABEL(base,$
-                     XOFFSET   = geometryFrame.size[0],$
-                     YOFFSET   = geometryFrame.size[1],$
-                     SCR_XSIZE = geometryFrame.size[2],$
-                     SCR_YSIZE = geometryFrame.size[3],$
-                     FRAME     = geometryFrame.frame,$
-                     VALUE     = '',$
-                     UNAME     = geometryFrame.uname,$
-                     SENSITIVE = sensitiveStatus)
-
-;\\\\\\\\\\\
-;cvinfo.xml\
-;\\\\\\\\\\\
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = cvinfoLabel.size[0],$
-                     YOFFSET   = cvinfoLabel.size[1],$
-                     VALUE     = cvinfoLabel.value,$
-                     SENSITIVE = sensitiveStatus,$
-                     UNAME     = cvinfoLabel.uname)
-
-field_base = WIDGET_BASE(base,$
-                         XOFFSET   = runNumberBase.size[0],$
-                         YOFFSET   = runNumberBase.size[1],$
-                         SCR_XSIZE = runNumberBase.size[2],$
-                         SCR_YSIZE = runNumberBase.size[3],$
-                         SENSITIVE = sensitiveStatus,$
-                         UNAME     = runNumberBase.uname)
-
-field = CW_FIELD(field_base,$
-                 XSIZE         = runNumberBase.cw_field.size[0],$
-                 ROW           = 1,$
-                 UNAME         = runNumberBase.cw_field.uname,$
-                 RETURN_EVENTS = 1,$
-                 TITLE         = runNumberBase.title,$
-                 /INTEGER)
-                   
-orLabel = WIDGET_LABEL(base,$
-                       XOFFSET   = orLabel.size[0],$
-                       YOFFSET   = orLabel.size[1],$
-                       VALUE     = orLabel.value,$
-                       SENSITIVE = sensitiveStatus,$
-                       UNAME     = orLabel.uname)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = browseButton.size[0],$
-                       YOFFSET   = browseButton.size[1],$
-                       SCR_XSIZE = browseButton.size[2],$
-                       SCR_YSIZE = browseButton.size[3],$
-                       UNAME     = browseButton.uname,$
-                       VALUE     = browseButton.value,$
-                       SENSITIVE = sensitiveStatus)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = cvinfoPreview.size[0],$
-                       YOFFSET   = cvinfoPreview.size[1],$
-                       SCR_XSIZE = cvinfoPreview.size[2],$
-                       SCR_YSIZE = cvinfoPreview.size[3],$
-                       UNAME     = cvinfoPreview.uname,$
-                       VALUE     = cvinfoPreview.value,$
-                       SENSITIVE = cvinfoPreview.sensitive)
-
-text = WIDGET_TEXT(base,$
-                   XOFFSET   = cvinfoText.size[0],$
-                   YOFFSET   = cvinfoText.size[1],$
-                   SCR_XSIZE = cvinfoText.size[2],$
-                   SCR_YSIZE = cvinfoText.size[3],$
-                   UNAME     = cvinfoText.uname,$
-                   VALUE     = cvinfoText.value,$
-                   SENSITIVE = sensitiveStatus,$
-                   /EDITABLE,$
-                   /ALL_EVENTS)
-
-frame = WIDGET_LABEL(base,$
-                     XOFFSET   = cvinfoFrame.size[0],$
-                     YOFFSET   = cvinfoFrame.size[1],$
-                     SCR_XSIZE = cvinfoFrame.size[2],$
-                     SCR_YSIZE = cvinfoFrame.size[3],$
-                     FRAME     = cvinfoFrame.frame,$
-                     VALUE     = '',$
-                     SENSITIVE = sensitiveStatus,$
-                     UNAME     = cvinfoFrame.uname)
-
-
-;\\\\\\\\\\\\\\\\\\\\\\\\
-;Geometry File Generator\
-;\\\\\\\\\\\\\\\\\\\\\\\\
-
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = GeoFileLabel.size[0],$
-                     YOFFSET   = GeoFileLabel.size[1],$
-                     VALUE     = GeoFileLabel.value,$
-                     SENSITIVE = 0,$
-                     UNAME     = GeoFileLabel.uname)
-
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = GeoNameLabel.size[0],$
-                     YOFFSET   = GeoNameLabel.size[1],$
-                     VALUE     = GeoNameLabel.value,$
-                     SENSITIVE = 0,$
-                     UNAME     = GeoNameLabel.uname)
-
-text  = WIDGET_TEXT(base,$
-                    XOFFSET   = GeoNameTextField.size[0],$
-                    YOFFSET   = GeoNameTextField.size[1],$
-                    SCR_XSIZE = GeoNameTextField.size[2],$
-                    SCR_YSIZE = GeoNameTextField.size[3],$
-                    UNAME     = GeoNameTextField.uname,$
-                    SENSITIVE = 0,$
-                    /EDITABLE)
-
-button1 = WIDGET_BUTTON(base,$
-                        XOFFSET   = AutoNameButton1.size[0],$
-                        YOFFSET   = AutoNameButton1.size[1],$
-                        SCR_XSIZE = AutoNameButton1.size[2],$
-                        SCR_YSIZE = AutoNameButton1.size[3],$
-                        UNAME     = AutoNameButton1.uname,$
-                        VALUE     = AutoNameButton1.value,$
-                        SENSITIVE = 0)
-
-button2 = WIDGET_BUTTON(base,$
-                        XOFFSET   = AutoNameButton2.size[0],$
-                        YOFFSET   = AutoNameButton2.size[1],$
-                        SCR_XSIZE = AutoNameButton2.size[2],$
-                        SCR_YSIZE = AutoNameButton2.size[3],$
-                        UNAME     = AutoNameButton2.uname,$
-                        VALUE     = AutoNameButton2.value,$
-                        SENSITIVE = 0)
-                    
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = GeoPathLabel.size[0],$
-                     YOFFSET   = GeoPathLabel.size[1],$
-                     VALUE     = GeoPathLabel.value,$
-                     SENSITIVE = 0,$
-                     UNAME     = GeoPathLabel.uname)
-
-text  = WIDGET_TEXT(base,$
-                    XOFFSET   = GeoPathTextField.size[0],$
-                    YOFFSET   = GeoPathTextField.size[1],$
-                    SCR_XSIZE = GeoPathTextField.size[2],$
-                    SCR_YSIZE = GeoPathTextField.size[3],$
-                    UNAME     = GeoPathTextField.uname,$
-                    VALUE     = GeoPathTextField.value,$
-                    SENSITIVE = 0,$
-                    /ALL_EVENTS,$
-                    /EDITABLE)
-
-label = WIDGET_LABEL(base,$
-                     XOFFSET   = GeoOrLabel.size[0],$
-                     YOFFSET   = GeoOrLabel.size[1],$
-                     VALUE     = GeoOrLabel.value,$
-                     SENSITIVE = 0,$
-                     UNAME     = GeoOrLabel.uname)
-
-button1 = WIDGET_BUTTON(base,$
-                        XOFFSET   = GeoPathButton.size[0],$
-                        YOFFSET   = GeoPathButton.size[1],$
-                        SCR_XSIZE = GeoPathButton.size[2],$
-                        SCR_YSIZE = GeoPathButton.size[3],$
-                        UNAME     = GeoPathButton.uname,$
-                        VALUE     = GeoPathButton.value,$
-                        SENSITIVE = 0)
-
-frame = WIDGET_LABEL(base,$
-                     XOFFSET   = GeoFileFrame.size[0],$
-                     YOFFSET   = GeoFileFrame.size[1],$
-                     SCR_XSIZE = GeoFileFrame.size[2],$
-                     SCR_YSIZE = GeoFileFrame.size[3],$
-                     FRAME     = GeoFileFrame.frame,$
-                     VALUE     = '',$
-                     SENSITIVE = 0,$
-                     UNAME     = GeoFileFrame.uname)
-
-;\\\\\\\\\\\\\\\\\
-;LOADING GEOMETRY\
-;\\\\\\\\\\\\\\\\\
-
-base1 = WIDGET_BASE(base,$
-                    XOFFSET   = LGPbase.size[0],$
-                    YOFFSET   = LGPbase.size[1],$
-                    SCR_XSIZE = LGPbase.size[2],$
-                    SCR_YSIZE = LGPbase.size[3],$
-                    UNAME     = LGPbase.uname,$
-                    FRAME     = LGPbase.frame,$
-                    MAP       = LGPbase.map)
-
-label1 = WIDGET_LABEL(base1,$
-                      XOFFSET   = LGPlabel.size[0],$
-                      YOFFSET   = LGPlabel.size[1],$
-                      SCR_XSIZE = LGPlabel.size[2],$
-                      SCR_YSIZE = LGPlabel.size[3],$
-                      VALUE     = LGPlabel.value)
-
-button = WIDGET_BUTTON(base,$
-                       XOFFSET   = loadingGeometryButton.size[0],$
-                       YOFFSET   = loadingGeometryButton.size[1],$
-                       SCR_XSIZE = loadingGeometryButton.size[2],$
-                       SCR_YSIZE = loadingGeometryButton.size[3],$
-                       UNAME     = loadingGeometryButton.uname,$
-                       VALUE     = loadingGeometryButton.value,$
-                       SENSITIVE = 0)
+;********************************************************************************
+
+base   = { size  : [0,0,MainBaseSize[2:3]],$
+           uname : 'create_histo_mapped_base'} 
+
+;///////////////////INPUT BASE///////////////////////////////////////////////////
+iFrame1 = { size  : [5,10,MainBaseSize[2]-15,95],$
+            frame : 1}
+
+XYoff    = [10,-8]
+iLabel1  = { size  : [iFrame1.size[0]+XYoff[0],$
+                      iFrame1.size[1]+XYoff[1]],$
+             value : 'I N P U T'}
+
+XYoff       = [20,10]
+iBaseField1 = { size  : [iFrame1.size[0]+XYoff[0],$
+                         iFrame1.size[1]+XYoff[1],$
+                         120,$
+                         35],$
+                sensitive  : 1,$
+                title      : 'Run #',$
+                xsize      : 10,$
+                base_uname : 'run_number_base',$
+                uname      : 'run_number'}
+
+XYoff   = [10,10]
+iLabel2 = { size  : [iBaseField1.size[0]+iBaseField1.size[2]+XYoff[0],$
+                     iBaseField1.size[1]+XYoff[1]],$
+            value : 'OR'}
+
+XYoff    = [30,-5]
+iButton1 = { size  : [iLabel2.size[0]+XYoff[0],$
+                      iLabel2.size[1]+XYoff[1],$
+                      350,30],$
+             uname : 'browse_run_number_button',$
+             value : 'B R O W S E   E V E N T   F I L E ...'}
                       
-IF (VersionLight) THEN BEGIN
-    label1 = WIDGET_LABEL(base,$
-                          XOFFSET = status_label.size[0],$
-                          YOFFSET = status_label.size[1],$
-                          VALUE   = status_label.value,$
-                          UNAME   = status_label.uname,$
-                          /DYNAMIC_RESIZE)
+XYoff       = [0,40]
+iBaseField2 = { size : [iBaseField1.size[0]+XYoff[0],$
+                        iBaseField1.size[1]+XYoff[1],$
+                        660,$
+                        35],$
+                sensitive  : 1,$
+                title      : 'Event File ',$
+                xsize      : 93,$
+                base_uname : 'event_file_base',$
+                uname      : 'event_file'}
 
-    text_widget = WIDGET_TEXT(base,$
-                              XOFFSET   = debug_text.size[0],$
-                              YOFFSET   = debug_text.size[1],$
-                              SCR_XSIZE = debug_text.size[2],$
-                              SCR_YSIZE = debug_text.size[3],$
-                              UNAME     = debug_text.uname,$
-                              /SCROLL,$
-                              /WRAP)
+;///////////////////HISTOGRAMMING BASE//////////////////////////////////////////
+XYoff   = [0,20]
+iFrame3 = {size  : [iFrame1.size[0]+XYoff[0],$
+                    iFrame1.size[1]+iFrame1.size[3]+XYoff[1], $
+                    MainBaseSize[2]-15,53], $
+           frame : 1}
 
-ENDIF
+XYoff    = [10,-8]
+iLabel4  = { size  : [iFrame3.size[0]+XYoff[0],$
+                      iFrame3.size[1]+XYoff[1]],$
+             value : 'H I S T O G R A M M I N G'}
 
+Xoff     = 10 ;x_off between two label/text consecutive parts
+;----------------
+XYoff    = [15,20]
+iLabel5  = { size  : [iFrame3.size[0]+XYoff[0],$
+                      iFrame3.size[1]+XYoff[1]],$
+             value : 'Min. time bin:',$
+             uname : 'min_time_bin_label'}
+XYoff    = [90,-5]
+iText1   = { size  : [iLabel5.size[0]+XYoff[0],$
+                      iLabel5.size[1]+XYoff[1],$
+                      50,30],$
+             uname : 'min_time_bin',$
+             value : ''}
+             
+;---------------
+XYoff    = [10+Xoff,0]
+iLabel6  = { size  : [iText1.size[0]+iText1.size[2]+XYoff[0],$
+                      iLabel5.size[1]],$
+             value : 'Max. time bin:',$
+             uname : 'max_time_bin_label'}
+XYoff    = [90,-5]
+iText2   = { size  : [iLabel6.size[0]+XYoff[0],$
+                      iLabel6.size[1]+XYoff[1],$
+                      80,30],$
+             uname : 'max_time_bin',$
+             value : ''}
+
+;---------------
+XYoff    = [10+Xoff,0]
+iLabel7  = { size  : [iText2.size[0]+iText2.size[2]+XYoff[0],$
+                      iLabel5.size[1]],$
+             value : 'Bin width:',$
+             uname : 'bin_width_label'}
+XYoff    = [70,-5]
+iText3   = { size  : [iLabel7.size[0]+XYoff[0],$
+                      iLabel7.size[1]+XYoff[1],$
+                      80,30],$
+             uname : 'bin_width',$
+             value : ''}
+
+;---------------
+XYoff    = [10+Xoff,0]
+iLabel8  = { size  : [iText3.size[0]+iText3.size[2]+XYoff[0],$
+                      iLabel5.size[1]],$
+             value : 'Bin type:',$
+             uname : 'bin_type_label'}
+XYoff      = [53,-9]
+iDroplist2 = { size  : [iLabel8.size[0]+XYoff[0],$
+                        iLabel8.size[1]+XYoff[1]],$
+               uname : 'bin_type_droplist',$
+               list  : ['Linear','Log.']}
+ 
+
+;///////////////////MAPPING FILE  BASE//////////////////////////////////////////
+XYOFF   = [0,20]
+iFrame2 = { size  : [iFrame3.size[0]+XYoff[0], $
+                     iFrame3.size[1]+iFrame3.size[3]+XYoff[1], $
+                     MainBaseSize[2]-15,53], $
+            frame : 1}
+
+XYoff    = [10,-8]
+iLabel3  = { size  : [iFrame2.size[0]+XYoff[0],$
+                      iFrame2.size[1]+XYoff[1]],$
+             value : 'M A P P I N G   F I L E'}
+
+XYoff      = [10,10]
+iDroplist1 = { size      : [iFrame2.size[0]+XYoff[0],$
+                            iFrame2.size[1]+XYoff[1]],$
+               uname     : 'mapping_droplist',$
+               sensitive : 1,$
+               list      : '                                                              '}
+
+;/////////////////////CREATE HISTO BASE//////////////////////////////////////////
+XYoff    = [0,20]
+iFrameCH = { size  : [iFrame2.size[0]+XYoff[0],$
+                      iFrame2.size[1]+iFrame2.size[3]+XYoff[1],$
+                      MainBaseSize[2]-15,90],$
+             frame : 1}
+XYoff     = [10,-8]
+iLabelCH  = { size  : [iFrameCH.size[0]+XYoff[0],$
+                       iFrameCH.size[1]+XYoff[1]],$
+              value : 'C R E A T E / G E T   H I S T O _ M A P P E D    F I L E '}
+XYoff     = [10,15]
+iButtonCH = { size  : [iFrameCH.size[0]+XYoff[0],$
+                       iFrameCH.size[1]+XYoff[1],$
+                       310,30],$
+              value : 'C R E A T E   H I S T O _ M A P P E D',$
+              uname : 'create_histo_mapped_button'}
+XYoff     = [5,7]
+iLabelCH1 = { size  : [iButtonCH.size[0]+iButtonCH.size[2]+XYoff[0],$
+                       iButtonCH.size[1]+XYoff[1]],$
+              value : 'OR'}
+XYoff     = [20,0]
+iButtonCH1 = { size  : [iLabelCh1.size[0]+XYoff[0],$
+                        iButtonCH.size[1]+XYoff[1],$
+                        330,$
+                        iButtonCH.size[3]],$
+               value : 'B R O W S E   H I S T O _ M A P P E D   F I L E ...',$
+               uname : 'browse_histo_mapped_button'}
+XYoff     = [0,10]
+iTextCH   = { size  : [iButtonCH.size[0]+XYoff[0],$
+                       iButtonCH.size[1]+iButtonCH.size[3]+XYoff[1],$
+                       665,30],$
+              value : '',$
+              uname : 'histo_mapped_text_field'}
+                       
+
+
+
+;********************************************************************************
+;                                Build GUI
+;********************************************************************************
+wBase = WIDGET_BASE(MAIN_BASE,$
+                    UNAME     = base.uname,$
+                    XOFFSET   = 0,$
+                    YOFFSET   = 0,$
+                    SCR_XSIZE = base.size[2],$
+                    SCR_YSIZE = base.size[3],$
+                    map       = 1)
+
+;\\\\\\\\\\\\\\\\\\\INPUT BASE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLabel1 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel1.size[0],$
+                       YOFFSET = iLabel1.size[1],$
+                       VALUE   = iLabel1.value)
+
+wBase1 = WIDGET_BASE(wBase,$
+                     XOFFSET   = iBaseField1.size[0],$
+                     YOFFSET   = iBaseField1.size[1],$
+                     SCR_XSIZE = iBaseField1.size[2],$
+                     SCR_YSIZE = iBaseField1.size[3],$
+                     UNAME     = iBaseField1.base_uname,$
+                     SENSITIVE = iBaseField1.sensitive)
+
+wField1 = CW_FIELD(wBase1,$
+                   XSIZE         = iBaseField1.xsize,$
+                   ROW           = 1,$
+                   UNAME         = iBaseField1.uname,$
+                   RETURN_EVENTS = 1,$
+                   TITLE         = iBaseField1.title,$
+                   /INTEGER)
+
+wLabel2 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel2.size[0],$
+                       YOFFSET = iLabel2.size[1],$
+                       VALUE   = iLabel2.value)
+
+wButton1 = WIDGET_BUTTON(wBase,$
+                         XOFFSET   = iButton1.size[0],$
+                         YOFFSET   = iButton1.size[1],$
+                         SCR_XSIZE = iButton1.size[2],$
+                         SCR_YSIZE = iButton1.size[3],$
+                         UNAME     = iButton1.uname,$
+                         VALUE     = iButton1.value)
+
+wBase2 = WIDGET_BASE(wBase,$
+                     XOFFSET   = iBaseField2.size[0],$
+                     YOFFSET   = iBaseField2.size[1],$
+                     SCR_XSIZE = iBaseField2.size[2],$
+                     SCR_YSIZE = iBaseField2.size[3],$
+                     UNAME     = iBaseField2.base_uname,$
+                     SENSITIVE = iBaseField2.sensitive)
+
+wField2 = CW_FIELD(wBase2,$
+                   XSIZE         = iBaseField2.xsize,$
+                   ROW           = 1,$
+                   UNAME         = iBaseField2.uname,$
+                   RETURN_EVENTS = 1,$
+                   TITLE         = iBaseField2.title)
+
+wFrame1 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iFrame1.size[0],$
+                       YOFFSET   = iFrame1.size[1],$
+                       SCR_XSIZE = iFrame1.size[2],$
+                       SCR_YSIZE = iFrame1.size[3],$
+                       FRAME     = iFrame1.frame,$
+                       VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\HISTOGRAMMING\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLabel4 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel4.size[0],$
+                       YOFFSET = iLabel4.size[1],$
+                       VALUE   = iLabel4.value)
+
+wLabel5 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel5.size[0],$
+                       YOFFSET = iLabel5.size[1],$
+                       VALUE   = iLabel5.value,$
+                       UNAME   = iLabel5.uname)
+
+wText1 = WIDGET_TEXT(wBase,$
+                     XOFFSET   = iText1.size[0],$
+                     YOFFSET   = iText1.size[1],$
+                     SCR_XSIZE = iText1.size[2],$
+                     SCR_YSIZE = iText1.size[3],$
+                     UNAME     = iText1.uname,$
+                     /EDITABLE,$
+                     /ALIGN_LEFT)
+
+wLabel6 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel6.size[0],$
+                       YOFFSET = iLabel6.size[1],$
+                       VALUE   = iLabel6.value,$
+                       UNAME   = iLabel6.uname)
+
+wText2 = WIDGET_TEXT(wBase,$
+                     XOFFSET   = iText2.size[0],$
+                     YOFFSET   = iText2.size[1],$
+                     SCR_XSIZE = iText2.size[2],$
+                     SCR_YSIZE = iText2.size[3],$
+                     UNAME     = iText2.uname,$
+                     /EDITABLE,$
+                     /ALIGN_LEFT)
+
+wLabel7 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel7.size[0],$
+                       YOFFSET = iLabel7.size[1],$
+                       VALUE   = iLabel7.value,$
+                       UNAME   = iLabel7.uname)
+
+wText1 = WIDGET_TEXT(wBase,$
+                     XOFFSET   = iText3.size[0],$
+                     YOFFSET   = iText3.size[1],$
+                     SCR_XSIZE = iText3.size[2],$
+                     SCR_YSIZE = iText3.size[3],$
+                     UNAME     = iText3.uname,$
+                     /EDITABLE,$
+                     /ALIGN_LEFT)
+
+wLabel8 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel8.size[0],$
+                       YOFFSET = iLabel8.size[1],$
+                       VALUE   = iLabel8.value,$
+                       UNAME   = iLabel8.uname)
+
+wDroplist2 = WIDGET_DROPLIST(wBase,$
+                             VALUE     = iDroplist2.list,$
+                             XOFFSET   = iDroplist2.size[0],$
+                             YOFFSET   = iDroplist2.size[1],$
+                             UNAME     = iDroplist2.uname,$
+                             /DYNAMIC_RESIZE)
+
+wFrame3 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iFrame3.size[0],$
+                       YOFFSET   = iFrame3.size[1],$
+                       SCR_XSIZE = iFrame3.size[2],$
+                       SCR_YSIZE = iFrame3.size[3],$
+                       FRAME     = iFrame3.frame,$
+                       VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\MAPPING FILE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLabel3 = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabel3.size[0],$
+                       YOFFSET = iLabel3.size[1],$
+                       VALUE   = iLabel3.value)
+
+wDroplist1 = WIDGET_DROPLIST(wBase,$
+                             VALUE     = iDroplist1.list,$
+                             XOFFSET   = iDroplist1.size[0],$
+                             YOFFSET   = iDroplist1.size[1],$
+                             UNAME     = iDroplist1.uname,$
+                             SENSITIVE = iDroplist1.sensitive,$
+                             /DYNAMIC_RESIZE)
+
+wFrame2 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iFrame2.size[0],$
+                       YOFFSET   = iFrame2.size[1],$
+                       SCR_XSIZE = iFrame2.size[2],$
+                       SCR_YSIZE = iFrame2.size[3],$
+                       FRAME     = iFrame2.frame,$
+                       VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\CREATE HISTO BASE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wLabelCH = WIDGET_LABEL(wBase,$
+                       XOFFSET = iLabelCH.size[0],$
+                       YOFFSET = iLabelCH.size[1],$
+                       VALUE   = iLabelCH.value)
+
+wButtonCH = WIDGET_BUTTON(wBase,$
+                          XOFFSET   = iButtonCH.size[0],$
+                          YOFFSET   = iButtonCH.size[1],$
+                          SCR_XSIZE = iButtonCH.size[2],$
+                          SCR_YSIZE = iButtonCH.size[3],$
+                          VALUE     = iButtonCH.value,$
+                          UNAME     = iButtonCH.uname)
+
+iLabelCH1 = WIDGET_LABEL(wBase,$
+                         XOFFSET = iLabelCH1.size[0],$
+                         YOFFSET = iLabelCH1.size[1],$
+                         VALUE   = iLabelCH1.value)
+                         
+wButtonCH1 = WIDGET_BUTTON(wBase,$
+                           XOFFSET   = iButtonCH1.size[0],$
+                           YOFFSET   = iButtonCH1.size[1],$
+                           SCR_XSIZE = iButtonCH1.size[2],$
+                           SCR_YSIZE = iButtonCH1.size[3],$
+                           VALUE     = iButtonCH1.value,$
+                           UNAME     = iButtonCH1.uname)
+
+wTextCH = WIDGET_TEXT(wBase,$
+                      XOFFSET   = iTextCH.size[0],$
+                      YOFFSET   = iTextCH.size[1],$
+                      SCR_XSIZE = iTextCH.size[2],$
+                      SCR_YSIZE = iTextCH.size[3],$
+                      UNAME     = iTextCH.uname,$
+                      VALUE     = iTextCH.value,$
+                      /ALIGN_LEFT,$
+                      /EDITABLE)
+
+
+
+
+
+
+
+
+wFrameCH = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iFrameCH.size[0],$
+                       YOFFSET   = iFrameCH.size[1],$
+                       SCR_XSIZE = iFrameCH.size[2],$
+                       SCR_YSIZE = iFrameCH.size[3],$
+                       FRAME     = iFrameCH.frame,$
+                       VALUE     = '')
 
 
 
