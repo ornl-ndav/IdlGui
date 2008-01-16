@@ -17,9 +17,15 @@ endelse
 spawn, 'hostname', hostname
 
 ;define global variables
-global = ptr_new ({ ucams                 : ucams })
+global = ptr_new ({ ucams                 : ucams,$
+                    debugger              : 'j35'})
 
-MainBaseSize  = [30,25,700,700]
+
+IF (ucams EQ (*global).debugger) THEN BEGIN
+    MainBaseSize  = [30,25,700,700]
+ENDIF ELSE BEGIN
+    MainBaseSize  = [30,25,700,530]
+ENDELSE
 MainBaseTitle = 'Plot ARCS'
 MainBaseTitle += ' - ' + VERSION
 
