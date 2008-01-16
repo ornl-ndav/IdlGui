@@ -17,8 +17,7 @@ endelse
 spawn, 'hostname', hostname
 
 ;define global variables
-global = ptr_new ({ ucams                 : ucams,$
-                  })
+global = ptr_new ({ ucams                 : ucams })
 
 MainBaseSize  = [30,25,700,700]
 MainBaseTitle = 'Plot ARCS'
@@ -39,8 +38,12 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
+;Create main base
+MakeGuiInputBase, MAIN_BASE, MainBaseSize
+
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+;XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
 
 END
 
