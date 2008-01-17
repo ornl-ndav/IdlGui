@@ -25,7 +25,7 @@ CASE Event.id OF
 
 ;'Event File' widget_text in INPUT base
     widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
-        print, 'in event file text field'
+        ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro
     end
 
 
