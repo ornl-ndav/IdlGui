@@ -18,6 +18,9 @@ END
 ;example: /ARCS-DAS-FS/2007_1_18_SCI/ARCS_16/
 FUNCTION getRunPath, Event, RunNumber, runFullPath
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
+;get global structure
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
     runFullPath = (*global).mac_arcs_folder
     RETURN, 1
 ENDIF ELSE BEGIN
@@ -27,7 +30,7 @@ ENDIF ELSE BEGIN
         catch,/cancel
         RETURN, 0
     ENDIF ELSE BEGIN
-        sp   awn, 'findnexus -iARCS --prenexus ' + RunNumber, listening
+        spawn, 'findnexus -iARCS --prenexus ' + RunNumber, listening
         IF (strmatch(listening[0],'*ERROR*')) THEN BEGIN
             RETURN, 0
         ENDIF ELSE BEGIN
