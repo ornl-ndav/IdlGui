@@ -58,6 +58,12 @@ Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
 
+;if it's on mac, fill up run number with 1
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    id = widget_info(Main_base,find_by_uname='run_number')
+    widget_control, id, set_value = '1'
+ENDIF 
+
 END
 
 

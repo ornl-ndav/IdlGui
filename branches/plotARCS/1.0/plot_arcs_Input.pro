@@ -7,12 +7,9 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
 
-if (!VERSION.os EQ 'darwin') then begin
-endif else begin
-endelse
-
-;get run number loaded
+;get Run Number
 RunNumber = getEventRunNumber(Event)
+
 message = 'Looking for folder with run number ' + RunNumber + ' ... ' + PROCESSING
 putLogBook, Event, message
 putStatus, Event, message
