@@ -19,7 +19,8 @@ CASE Event.id OF
     
 ;'BROWSE EVENT FILE' button in INPUT base
     widget_info(wWidget, FIND_BY_UNAME='browse_event_file_button'): begin
-        print, 'in browse event file'
+        BrowseEventRunNumber, Event ;in plot_arcs_Browse.pro
+        ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
     end
 
 ;'Event File' widget_text in INPUT base

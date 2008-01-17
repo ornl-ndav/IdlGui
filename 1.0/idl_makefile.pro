@@ -21,6 +21,7 @@ cd, CurrentFolder
 
 ;procedures
 .run plot_arcs_Input.pro
+.run plot_arcs_Browse.pro
 .run plot_arcs_GUIupdate.pro
 
 ;main functions

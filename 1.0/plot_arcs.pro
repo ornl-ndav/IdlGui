@@ -18,6 +18,7 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    event_file.filter     : '*_neutron_event.dat',$
                     mac_arcs_folder       : './MAC-DAS-FS/ARCS_1/',$
 ;for mac use only
                     processing            : '(PROCESSING)',$
