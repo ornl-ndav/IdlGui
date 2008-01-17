@@ -260,7 +260,7 @@ wField1 = CW_FIELD(wBase1,$
                    UNAME         = iBaseField1.uname,$
                    RETURN_EVENTS = 1,$
                    TITLE         = iBaseField1.title,$
-                   /INTEGER)
+                   /LONG)
 
 wLabel2 = WIDGET_LABEL(wBase,$
                        XOFFSET = iLabel2.size[0],$
