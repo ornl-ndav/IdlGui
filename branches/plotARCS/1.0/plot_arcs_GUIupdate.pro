@@ -55,3 +55,18 @@ activateHistogrammingBase, Event, activate_status
 activateMappingBase, Event, activate_status
 activateCreateHistoMapButton, Event, activate_status
 END
+
+
+
+PRO ActivateHistoMappingBaseFromWidgetText, Event
+;get event file name entered in widget_text
+EventFile = getEventFile(Event)
+IF (FILE_TEST(EventFile)) THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activateHistogrammingBase, Event, activate_status
+activateMappingBase, Event, activate_status
+activateCreateHistoMapButton, Event, activate_status
+END
