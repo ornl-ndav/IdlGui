@@ -40,16 +40,16 @@ iButton1 = { size  : [iLabel2.size[0]+XYoff[0],$
              uname : 'browse_event_file_button',$
              value : 'B R O W S E   E V E N T   F I L E ...'}
                       
-XYoff       = [0,40]
-iBaseField2 = { size : [iBaseField1.size[0]+XYoff[0],$
-                        iBaseField1.size[1]+XYoff[1],$
-                        660,$
-                        35],$
-                sensitive  : 1,$
-                title      : 'Event File ',$
-                xsize      : 93,$
-                base_uname : 'event_file_base',$
-                uname      : 'event_file'}
+XYoff   = [0,50]
+iElabel = { size  : [iBaseField1.size[0]+XYoff[0],$
+                     iBaseField1.size[1]+XYoff[1]],$
+            value : 'Event File:'}
+XYoff   = [70,-5]
+iEtext  = { size  : [iElabel.size[0]+XYoff[0],$
+                     iElabel.size[1]+XYoff[1],$
+                     580,30],$
+            value : '',$
+            uname : 'event_file'}
 
 ;///////////////////HISTOGRAMMING BASE//////////////////////////////////////////
 XYoff   = [0,20]
@@ -275,20 +275,19 @@ wButton1 = WIDGET_BUTTON(wBase,$
                          UNAME     = iButton1.uname,$
                          VALUE     = iButton1.value)
 
-wBase2 = WIDGET_BASE(wBase,$
-                     XOFFSET   = iBaseField2.size[0],$
-                     YOFFSET   = iBaseField2.size[1],$
-                     SCR_XSIZE = iBaseField2.size[2],$
-                     SCR_YSIZE = iBaseField2.size[3],$
-                     UNAME     = iBaseField2.base_uname,$
-                     SENSITIVE = iBaseField2.sensitive)
+wElabel = WIDGET_LABEL(wBase,$
+                       XOFFSET = iElabel.size[0],$
+                       YOFFSET = iElabel.size[1],$
+                       VALUE   = iElabel.value)
 
-wField2 = CW_FIELD(wBase2,$
-                   XSIZE         = iBaseField2.xsize,$
-                   ROW           = 1,$
-                   UNAME         = iBaseField2.uname,$
-                   RETURN_EVENTS = 1,$
-                   TITLE         = iBaseField2.title)
+wEtext = WIDGET_TEXT(wBase,$
+                     XOFFSET   = iEtext.size[0],$
+                     YOFFSET   = iEtext.size[1],$
+                     SCR_XSIZE = iEtext.size[2],$
+                     SCR_YSIZE = iEtext.size[3],$
+                     UNAME     = iEtext.uname,$
+                     /ALL_EVENTS,$
+                     /EDITABLE)
 
 wFrame1 = WIDGET_LABEL(wBase,$
                        XOFFSET   = iFrame1.size[0],$
