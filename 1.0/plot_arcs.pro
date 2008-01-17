@@ -18,6 +18,8 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    mac_arcs_folder       : './MAC-DAS-FS/ARCS_1/',$
+;for mac use only
                     processing            : '(PROCESSING)',$
                     ok                    : 'OK',$
                     failed                : 'FAILED',$

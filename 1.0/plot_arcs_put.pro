@@ -93,19 +93,3 @@ END
 
 
 
-FUNCTION getRunPath, Event, RunNumber, runFullPath
-no_error = 0
-CATCH, no_error
-IF (no_error NE 0) THEN BEGIN
-    catch,/cancel
-    return, 0
-ENDIF ELSE BEGIN
-    spawn, 'findnexus -iARCS --prenexus ' + RunNumber, listening
-    IF (strmatch(listening[0],'*ERROR*')) THEN BEGIN
-        return, 0
-    ENDIF ELSE BEGIN
-        runFullPath = listening[0]
-        return, 1
-    ENDELSE
-ENDELSE
-END
