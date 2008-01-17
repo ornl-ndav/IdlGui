@@ -27,7 +27,8 @@ uname_array = ['histo_frame',$
                'max_time_bin',$
                'bin_width_label',$
                'bin_width',$
-               'bin_type_label']
+               'bin_type_label',$
+               'bin_type_droplist']
 sz = (size(uname_array))(1)
 FOR i=0,(sz-1) DO BEGIN
     id = widget_info(Event.top,find_by_uname=uname_array[i])
