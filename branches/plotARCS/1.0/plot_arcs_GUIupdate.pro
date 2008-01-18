@@ -4,7 +4,6 @@ widget_control, id, sensitive=activate_status
 END
 
 
-
 PRO activateMappingBase, Event, activate_status
 uname_array = ['mapping_frame',$
                'mapping_label',$
@@ -15,7 +14,6 @@ FOR i=0,(sz-1) DO BEGIN
     widget_control, id, sensitive=activate_status
 ENDFOR
 END
-
 
 
 PRO activateHistogrammingBase, Event, activate_status
@@ -37,12 +35,6 @@ ENDFOR
 END
 
 
-
-
-
-
-
-
 PRO ActivateHistoMappingBasesStatus, Event
 ;get value of input event file widget_text
 EventFile = getEventFile(Event)
@@ -53,9 +45,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateHistogrammingBase, Event, activate_status
 activateMappingBase, Event, activate_status
-activateCreateHistoMapButton, Event, activate_status
 END
-
 
 
 PRO ActivateHistoMappingBaseFromWidgetText, Event
@@ -68,5 +58,38 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateHistogrammingBase, Event, activate_status
 activateMappingBase, Event, activate_status
-activateCreateHistoMapButton, Event, activate_status
+END
+
+
+PRO ActivateOrNotCreateHistogramMapped, Event
+activate_go_histo_mapped_status = 1
+;if there is an event file and file exist
+EventFile = getEventFile(Event)
+IF (FILE_TEST(EventFile)) THEN BEGIN
+;nothing to do, everything is ok so far
+ENDIF ELSE BEGIN
+    activate_go_histo_mapped_status = 0
+ENDELSE
+;if the mandatory paramters of the histogram are there
+max_time_bin = getTextFieldValue(Event,'max_time_bin')
+bin_width    = getTextFieldValue(Event,'bin_width')
+IF (max_time_bin NE '' AND bin_width NE '') THEN BEGIN
+;nothing to do, everything is ok so far
+ENDIF ELSE BEGIN
+    activate_go_histo_mapped_status = 0
+ENDELSE
+;if there is at least one mapping
+mapping_file = getMappingFile(Event)
+IF (mapping_file NE '') THEN BEGIN
+;nothing to do, everything is ok so far
+ENDIF ELSE BEGIN
+    activate_go_histo_mapped_status = 0
+ENDELSE
+;activate or not go_histo_mapped
+IF (activate_go_histo_mapped_status) THEN BEGIN
+    activateCreateHistoMapButton, Event, 1
+ENDIF ELSE BEGIN
+    activateCreateHistoMapButton, Event, 0
+ENDELSE
+
 END

@@ -329,6 +329,7 @@ wText2 = WIDGET_TEXT(wBase,$
                      SCR_YSIZE = iText2.size[3],$
                      UNAME     = iText2.uname,$
                      SENSITIVE = histogramming_sensitive,$
+                     /ALL_EVENTS,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
@@ -346,6 +347,7 @@ wText1 = WIDGET_TEXT(wBase,$
                      SCR_YSIZE = iText3.size[3],$
                      UNAME     = iText3.uname,$
                      SENSITIVE = histogramming_sensitive,$
+                     /ALL_EVENTS,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
