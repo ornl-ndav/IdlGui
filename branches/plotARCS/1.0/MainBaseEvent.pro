@@ -41,6 +41,11 @@ CASE Event.id OF
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
 
+;'BROWSE HISTO FILE' button
+    widget_info(wWidget, FIND_BY_UNAME='browse_histo_mapped_button'): begin
+        BrowseHistoFile, Event ;in plot_arcs_Browse.pro
+    end
+
     ELSE:
     
 ENDCASE
