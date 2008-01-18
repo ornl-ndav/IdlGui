@@ -23,6 +23,7 @@ cd, CurrentFolder
 .run plot_arcs_Input.pro
 .run plot_arcs_Browse.pro
 .run plot_arcs_GUIupdate.pro
+.run plot_arcs_CreateHistoMapped.pro
 
 ;main functions
 .run MainBaseEvent.pro
