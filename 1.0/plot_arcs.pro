@@ -20,6 +20,7 @@ spawn, 'hostname', hostname
 global = ptr_new ({ ucams                 : ucams,$
                     mapping_list_mac      : ['./mapping/ARCS_TS_2007_10_10.dat'],$
                     event_file_filter     : '*_neutron_event.dat',$
+                    histo_map_filter      : '*_neutron_histo_mapped.dat',$
                     default_extension     : '.dat',$
                     event_filter          : '*neutron_event.dat',$
                     mac_arcs_folder       : './MAC-DAS-FS/ARCS_1/',$
