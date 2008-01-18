@@ -201,7 +201,7 @@ iFrameSTG = { size  : [iStatusLabel.size[0]+XYoff[0],$
 XYoff    = [10,-8]
 iLabelSTG  = { size  : [iFrameSTG.size[0]+XYoff[0],$
                         iFrameSTG.size[1]+XYoff[1]],$
-               value : 'S E N D  T O  G E E K'}
+               value : 'S E N D   T O   G E E K'}
                          
 XYoff      = [5,25]
 iSTGMlabel = { size  : [iLabelSTG.size[0]+XYoff[0],$
