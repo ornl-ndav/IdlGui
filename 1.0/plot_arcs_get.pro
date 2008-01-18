@@ -70,3 +70,10 @@ widget_control, id, get_value=array
 RETURN, array[index_selected]
 END
 
+
+;get histogram type 0:linear 1:log
+FUNCTION getHistogramType, Event
+id = widget_info(Event.top, find_by_uname ='bin_type_droplist')
+index_selected = widget_info(id, /droplist_select)
+RETURN, index_selected
+END
