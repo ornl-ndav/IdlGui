@@ -1,3 +1,9 @@
+PRO activateWidget, Event, uname, activate_status
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, sensitive=activate_status
+END
+
+
 PRO activateCreateHistoMapButton, Event, activate_status
 id = widget_info(Event.top,find_by_uname='create_histo_mapped_button')
 widget_control, id, sensitive=activate_status
@@ -91,5 +97,16 @@ IF (activate_go_histo_mapped_status) THEN BEGIN
 ENDIF ELSE BEGIN
     activateCreateHistoMapButton, Event, 0
 ENDELSE
+END
 
+
+PRO ActivateOrNotPlotButton, Event
+;get histo_mapped file name
+histo_mapped_file = getTextFieldValue(Event,'histo_mapped_text_field')
+IF (FILE_TEST(histo_mapped_file)) THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activateWidget, Event, 'plot_button', activate_status
 END
