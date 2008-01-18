@@ -44,6 +44,7 @@ CASE Event.id OF
 ;'BROWSE HISTO FILE' button
     widget_info(wWidget, FIND_BY_UNAME='browse_histo_mapped_button'): begin
         BrowseHistoFile, Event ;in plot_arcs_Browse.pro
+        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
     end
 
 ;'histo_mapped text_field'
