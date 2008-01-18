@@ -40,3 +40,15 @@ ENDIF ELSE BEGIN
     ENDELSE
 ENDELSE
 END
+
+
+;Get the list of mapping files
+FUNCTION getMappingFileList
+cmd = 'findcalib -m --listall -iARCS'
+spawn, cmd, listening, err_listening
+IF (err_listening[0] EQ '') THEN BEGIN
+    RETURN, listening
+ENDIF ELSE BEGIN
+    RETURN, ['']
+ENDELSE
+END
