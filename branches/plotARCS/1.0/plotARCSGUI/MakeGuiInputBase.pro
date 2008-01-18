@@ -211,7 +211,7 @@ iSTGMlabel = { size  : [iLabelSTG.size[0]+XYoff[0],$
 XYoff      = [60,-7]
 iSTGtext   = { size  : [iSTGMlabel.size[0]+XYoff[0],$
                         iSTGMlabel.size[1]+XYoff[1],$
-                        500,30],$
+                        500,33],$
                uname : 'send_to_geek_message_text',$
                value : '>> Put your message here <<'}
 XYoff      = [5,0]
@@ -495,6 +495,7 @@ wSTGtext = WIDGET_TEXT(wBase,$
                        SCR_XSIZE = iSTGtext.size[2],$
                        SCR_YSIZE = iSTGtext.size[3],$
                        UNAME     = iSTGtext.uname,$
+                       VALUE     = iSTGtext.value,$
                        /EDITABLE,$
                        /ALIGN_LEFT)
 
