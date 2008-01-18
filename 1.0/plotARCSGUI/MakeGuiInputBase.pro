@@ -170,7 +170,7 @@ iButtonCH1 = { size  : [iLabelCh1.size[0]+XYoff[0],$
 XYoff     = [0,10]
 iTextCH   = { size  : [iButtonCH.size[0]+XYoff[0],$
                        iButtonCH.size[1]+iButtonCH.size[3]+XYoff[1],$
-                       665,30],$
+                       665,33],$
               value : '',$
               uname : 'histo_mapped_text_field'}
                        
