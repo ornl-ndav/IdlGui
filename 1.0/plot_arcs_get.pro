@@ -52,3 +52,21 @@ ENDIF ELSE BEGIN
     RETURN, ['']
 ENDELSE
 END
+
+
+;get value of text field 
+FUNCTION getTextFieldValue, Event, Uname
+id = widget_info(Event.top,find_by_uname=Uname)
+widget_control, id, get_value=value
+RETURN, strcompress(value,/remove_all)
+END
+
+;retrieve selected mapping file from droplist
+FUNCTION getMappingFile, Event
+;get selected index
+id = widget_info(Event.top, find_by_uname ='mapping_droplist')
+index_selected = widget_info(id, /droplist_select)
+widget_control, id, get_value=array
+RETURN, array[index_selected]
+END
+
