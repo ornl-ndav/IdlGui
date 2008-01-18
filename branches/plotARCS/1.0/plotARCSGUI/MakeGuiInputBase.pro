@@ -181,7 +181,7 @@ iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
                            MainBaseSize[2]-10,35],$
               uname     : 'plot_button',$
               value     : '> > > >     > > >     > >     >     P  L  O  T     <     < <     < < <     < < < <',$
-              sensitive : 1}
+              sensitive : 0}
 
 ;///////////////// STATUS ///////////////////////////////////////////
 XYoff  = [5,15]
@@ -444,6 +444,7 @@ wTextCH = WIDGET_TEXT(wBase,$
                       SCR_YSIZE = iTextCH.size[3],$
                       UNAME     = iTextCH.uname,$
                       VALUE     = iTextCH.value,$
+                      /ALL_EVENTS,$
                       /ALIGN_LEFT,$
                       /EDITABLE)
 

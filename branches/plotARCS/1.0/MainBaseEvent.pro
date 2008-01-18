@@ -46,6 +46,11 @@ CASE Event.id OF
         BrowseHistoFile, Event ;in plot_arcs_Browse.pro
     end
 
+;'histo_mapped text_field'
+    widget_info(wWidget, FIND_BY_UNAME='histo_mapped_text_field'): begin
+        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
+    end
+
     ELSE:
     
 ENDCASE
