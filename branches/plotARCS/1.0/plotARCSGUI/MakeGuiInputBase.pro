@@ -64,7 +64,7 @@ XYoff    = [10,-8]
 iLabel4  = { size  : [iFrame3.size[0]+XYoff[0],$
                       iFrame3.size[1]+XYoff[1]],$
              uname : 'histo_frame_label',$
-             value : 'H I S T O G R A M M I N G'}
+             value : 'H I S T O G R A M M I N G - (*) : mandatory fields'}
 
 Xoff     = 10 ;x_off between two label/text consecutive parts
 ;----------------
@@ -84,30 +84,30 @@ iText1   = { size  : [iLabel5.size[0]+XYoff[0],$
 XYoff    = [10+Xoff,0]
 iLabel6  = { size  : [iText1.size[0]+iText1.size[2]+XYoff[0],$
                       iLabel5.size[1]],$
-             value : 'Max. time bin:',$
+             value : 'Max. time bin:           (*)',$
              uname : 'max_time_bin_label'}
 XYoff    = [90,-5]
 iText2   = { size  : [iLabel6.size[0]+XYoff[0],$
                       iLabel6.size[1]+XYoff[1],$
-                      80,30],$
+                      60,30],$
              uname : 'max_time_bin',$
              value : ''}
 
 ;---------------
-XYoff    = [10+Xoff,0]
+XYoff    = [30+Xoff,0]
 iLabel7  = { size  : [iText2.size[0]+iText2.size[2]+XYoff[0],$
                       iLabel5.size[1]],$
-             value : 'Bin width:',$
+             value : 'Bin width:            (*)',$
              uname : 'bin_width_label'}
 XYoff    = [70,-5]
 iText3   = { size  : [iLabel7.size[0]+XYoff[0],$
                       iLabel7.size[1]+XYoff[1],$
-                      80,30],$
+                      60,30],$
              uname : 'bin_width',$
              value : ''}
 
 ;---------------
-XYoff    = [10+Xoff,0]
+XYoff    = [30+Xoff,0]
 iLabel8  = { size  : [iText3.size[0]+iText3.size[2]+XYoff[0],$
                       iLabel5.size[1]],$
              value : 'Bin type:',$
@@ -305,13 +305,6 @@ wLabel4 = WIDGET_LABEL(wBase,$
                        UNAME     = iLabel4.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wLabel5 = WIDGET_LABEL(wBase,$
-                       XOFFSET   = iLabel5.size[0],$
-                       YOFFSET   = iLabel5.size[1],$
-                       VALUE     = iLabel5.value,$
-                       UNAME     = iLabel5.uname,$
-                       SENSITIVE = histogramming_sensitive)
-
 wText1 = WIDGET_TEXT(wBase,$
                      XOFFSET   = iText1.size[0],$
                      YOFFSET   = iText1.size[1],$
@@ -322,11 +315,11 @@ wText1 = WIDGET_TEXT(wBase,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
-wLabel6 = WIDGET_LABEL(wBase,$
-                       XOFFSET   = iLabel6.size[0],$
-                       YOFFSET   = iLabel6.size[1],$
-                       VALUE     = iLabel6.value,$
-                       UNAME     = iLabel6.uname,$
+wLabel5 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iLabel5.size[0],$
+                       YOFFSET   = iLabel5.size[1],$
+                       VALUE     = iLabel5.value,$
+                       UNAME     = iLabel5.uname,$
                        SENSITIVE = histogramming_sensitive)
 
 wText2 = WIDGET_TEXT(wBase,$
@@ -339,11 +332,11 @@ wText2 = WIDGET_TEXT(wBase,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
-wLabel7 = WIDGET_LABEL(wBase,$
-                       XOFFSET   = iLabel7.size[0],$
-                       YOFFSET   = iLabel7.size[1],$
-                       VALUE     = iLabel7.value,$
-                       UNAME     = iLabel7.uname,$
+wLabel6 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iLabel6.size[0],$
+                       YOFFSET   = iLabel6.size[1],$
+                       VALUE     = iLabel6.value,$
+                       UNAME     = iLabel6.uname,$
                        SENSITIVE = histogramming_sensitive)
 
 wText1 = WIDGET_TEXT(wBase,$
@@ -355,6 +348,13 @@ wText1 = WIDGET_TEXT(wBase,$
                      SENSITIVE = histogramming_sensitive,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
+
+wLabel7 = WIDGET_LABEL(wBase,$
+                       XOFFSET   = iLabel7.size[0],$
+                       YOFFSET   = iLabel7.size[1],$
+                       VALUE     = iLabel7.value,$
+                       UNAME     = iLabel7.uname,$
+                       SENSITIVE = histogramming_sensitive)
 
 wLabel8 = WIDGET_LABEL(wBase,$
                        XOFFSET   = iLabel8.size[0],$
