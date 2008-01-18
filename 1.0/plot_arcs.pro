@@ -18,6 +18,7 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    mapping_list_mac      : ['./mapping/ARCS_TS_2007_10_10.dat'],$
                     event_file_filter     : '*_neutron_event.dat',$
                     default_extension     : '.dat',$
                     event_filter          : '*neutron_event.dat',$
@@ -66,6 +67,15 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     id = widget_info(Main_base,find_by_uname='run_number')
     widget_control, id, set_value = '1'
 ENDIF 
+
+;populate mapping droplist
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    MapArray = (*global).mapping_list_mac
+ENDIF ELSE BEGIN
+    MapArray = getMappingFileList()
+ENDELSE
+id = widget_info(MAIN_BASE, find_by_uname='mapping_droplist')
+widget_control, id, set_value=MapArray
 
 END
 
