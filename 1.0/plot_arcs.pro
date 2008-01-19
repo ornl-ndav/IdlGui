@@ -18,6 +18,8 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    version               : VERSION,$
+                    LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$ 
                     staging_folder        : '~/.plotARCS_tmp/',$
                     mapping_list_mac      : ['./mapping/ARCS_TS_2007_10_10.dat'],$
                     event_file_filter     : '*_neutron_event.dat',$

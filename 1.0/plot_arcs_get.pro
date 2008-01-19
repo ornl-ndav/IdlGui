@@ -86,3 +86,12 @@ file_base = strsplit(event_file_full_name,'event.dat',/extract,/regex,count=leng
 histo_file_full_name = file_base + 'histo_mapped.dat'
 RETURN, histo_file_full_name
 END
+
+
+
+;get full contain of log book
+FUNCTION getLogBookText, Event
+id = widget_info(Event.top,find_by_uname='log_book')
+widget_control, id, get_value=text
+RETURN, text
+END
