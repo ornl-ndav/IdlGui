@@ -57,6 +57,11 @@ CASE Event.id OF
         ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
     end
 
+;send to geek button
+    widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
+        LogBook, Event ;in plot_arcs_SendToGeek.pro
+    end
+
     ELSE:
     
 ENDCASE
