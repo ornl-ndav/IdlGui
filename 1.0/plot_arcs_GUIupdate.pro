@@ -109,4 +109,6 @@ ENDIF ELSE BEGIN
     activate_status = 0
 ENDELSE
 activateWidget, Event, 'plot_button', activate_status
+;activate SAVE_AS button as well
+activateWidget, Event, 'save_as_histo_mapped_button', activate_status
 END
