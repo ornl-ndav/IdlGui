@@ -170,10 +170,17 @@ iButtonCH1 = { size  : [iLabelCh1.size[0]+XYoff[0],$
 XYoff     = [0,10]
 iTextCH   = { size  : [iButtonCH.size[0]+XYoff[0],$
                        iButtonCH.size[1]+iButtonCH.size[3]+XYoff[1],$
-                       665,33],$
+                       565,33],$
               value : '',$
               uname : 'histo_mapped_text_field'}
-                       
+XYoff      = [0,0]
+iButtonCH2 = { size      : [iTextCH.size[0]+iTextCH.size[2]+XYoff[0],$
+                            iTextCH.size[1]+XYoff[1],$
+                            100,33],$
+               value     : 'SAVE AS ...',$
+               sensitive : 0,$
+               uname     : 'save_as_histo_mapped_button'}
+
 ;/////////////////// PLOT ///////////////////////////////////////////
 XYoff  = [0,15]
 iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
@@ -447,6 +454,15 @@ wTextCH = WIDGET_TEXT(wBase,$
                       /ALL_EVENTS,$
                       /ALIGN_LEFT,$
                       /EDITABLE)
+
+wButtonCH2 = WIDGET_BUTTON(wBase,$
+                           XOFFSET   = iButtonCH2.size[0],$
+                           YOFFSET   = iButtonCH2.size[1],$
+                           SCR_XSIZE = iButtonCH2.size[2],$
+                           SCR_YSIZE = iButtonCH2.size[3],$
+                           VALUE     = iButtonCH2.value,$
+                           UNAME     = iButtonCH2.uname,$
+                           SENSITIVE = iButtonCH2.sensitive)
 
 wFrameCH = WIDGET_LABEL(wBase,$
                        XOFFSET   = iFrameCH.size[0],$
