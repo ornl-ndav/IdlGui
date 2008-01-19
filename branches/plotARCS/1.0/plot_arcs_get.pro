@@ -61,6 +61,7 @@ widget_control, id, get_value=value
 RETURN, strcompress(value,/remove_all)
 END
 
+
 ;retrieve selected mapping file from droplist
 FUNCTION getMappingFile, Event
 ;get selected index
@@ -76,4 +77,12 @@ FUNCTION getHistogramType, Event
 id = widget_info(Event.top, find_by_uname ='bin_type_droplist')
 index_selected = widget_info(id, /droplist_select)
 RETURN, index_selected
+END
+
+
+;get full name of histo mapped file
+FUNCTION getHistoMappedFileName, event_file_full_name
+file_base = strsplit(event_file_full_name,'event.dat',/extract,/regex,count=length) 
+histo_file_full_name = file_base + 'histo_mapped.dat'
+RETURN, histo_file_full_name
 END
