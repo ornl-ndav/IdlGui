@@ -37,13 +37,13 @@ FAILED     = (*global).failed
 staging_folder = (*global).staging_folder
 appendLogBook, Event, '-> Staging folder : ' + staging_folder
 ;check if staging folder exists
-IF (FILE_TEST(staging_fodler,/directory)) THEN BEGIN
+IF (FILE_TEST(staging_folder,/directory)) THEN BEGIN
 ;;yes 
     appendLogBook, Event, '--> Staging folder exists ? ... YES'
 ;;then clear contain
     cmd_clear = 'rm -rf *.dat ' + staging_folder
-    apppendLogBook, Event, '--> Clear contain :'
-    cmd = '> ' + cmd_clear + ' ... ' + PROCESSING
+    appendLogBook, Event, '--> Clear contain :'
+    cmd = '---> ' + cmd_clear + ' ... ' + PROCESSING
     appendLogBook, Event, cmd
     spawn, cmd, listening, err_listening
     IF (err_listening[0] EQ '') THEN BEGIN
@@ -56,8 +56,9 @@ ENDIF ELSE BEGIN
 ;;no 
     appendLogBook, Event, '--> Staging folder exists ? ... NO'
 ;;create it
+    apppendLogBook, Event, '--> Create staging folder'
     cmd_create = 'mkdir ' + staging_folder
-    cmd = '> ' + cmd_create + ' ... ' + PROCESSING
+    cmd = '---> ' + cmd_create + ' ... ' + PROCESSING
     appendLogBook, Event, cmd
     spawn, cmd_create, listening, err_listening
     IF (err_listening[0] EQ '') THEN BEGIN
@@ -73,16 +74,18 @@ cmd = ''
 
 ;name of histo mapped file
 histo_mapped_file = getHistoMappedFileName(event_file_full_name)
-appendLogBook, Event, '-> Output file:
+appendLogBook, Event, '-> Output file:'
 appendLogBook, Event, '--> histo_mapped_file : ' + histo_mapped_file
 IF (ERROR EQ 0 AND $
     FILE_TEST(histo_mapped_file)) THEN BEGIN
     appendLogBook, Event, '---> Is histo_mapped_file located ... YES'
 ;display name of histo_mapped file in text_field
     putTextInTextField, Event, 'histo_mapped_text_field', histo_mapped_file
+    appendLogBook, Event, '**** PLOT BUTTON HAS BEEN VALIDATED ****'
 ENDIF ELSE BEGIN
     appendLogBook, Event, '---> Is histo_mapped_file located ... NO'
     putTextInTextField, Event, 'histo_mapped_text_field', ''
+    appendLogBook, Event, '**** PLOT BUTTON CAN NOT BE VALIDATED ****'
 ENDELSE
 
 ;enable or not PLOT BUTTON
