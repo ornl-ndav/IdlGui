@@ -18,6 +18,7 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    img                   : ptr_new(0L),$
                     nbr_pixel             : 117760L,$
                     version               : VERSION,$
                     LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$ 
