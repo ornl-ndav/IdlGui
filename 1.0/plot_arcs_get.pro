@@ -81,9 +81,11 @@ END
 
 
 ;get full name of histo mapped file
-FUNCTION getHistoMappedFileName, event_file_full_name
-file_base = strsplit(event_file_full_name,'event.dat',/extract,/regex,count=length) 
-histo_file_full_name = file_base + 'histo_mapped.dat'
+FUNCTION getHistoMappedFileName, event_file_full_name, staging_folder
+event_file_only_array = strsplit(event_file_full_name,'/',/extract,/regex,count=length)
+file_base = strsplit(event_file_only_array[length-1] ,'event.dat',/extract,/regex,count=length) 
+histo_file_name = file_base + 'histo_mapped.dat'
+histo_file_full_name = staging_folder + histo_file_name
 RETURN, histo_file_full_name
 END
 
