@@ -62,6 +62,15 @@ RETURN, strcompress(value,/remove_all)
 END
 
 
+
+;get value status text_field
+FUNCTION getStatusTextFieldValue, Event
+id = widget_info(Event.top,find_by_uname='send_to_geek_message_text')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
 ;retrieve selected mapping file from droplist
 FUNCTION getMappingFile, Event
 ;get selected index
