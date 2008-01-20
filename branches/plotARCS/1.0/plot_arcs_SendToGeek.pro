@@ -7,8 +7,8 @@ widget_control,id,get_uvalue=global
 ;create full name of log Book file
 LogBookPath = (*global).LogBookPath
 TimeStamp   = GenerateIsoTimeStamp()
-instrument  = 'ARCS'
-FullFileName = LogBookPath + instrument + '_' 
+application  = 'plotARCS'
+FullFileName = LogBookPath + application + '_' 
 FullFileName += TimeStamp + '.log'
 
 ;get full text of LogBook
@@ -54,7 +54,7 @@ ucamsText = 'Ucams: ' + (*global).ucams
 spawn, 'hostname', hostname
 
 ;get message added by user
-message = getTextFieldValue(Event,'send_to_geek_message_text')
+message = getStatusTextFieldValue(Event)
 
 ;email logBook
 text = "'Log Book of plotARCS "
