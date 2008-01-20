@@ -44,7 +44,7 @@ IF (FILE_TEST(staging_folder,/directory)) THEN BEGIN
 ;;yes 
     appendLogBook, Event, '--> Staging folder exists ? ... YES'
 ;;then clear contain
-    cmd_clear = 'rm -rf ' + staging_folder + ' *.dat '
+    cmd_clear = 'rm -rf ' + staging_folder + '*.dat '
     appendLogBook, Event, '--> Clear contain :'
     cmd = '---> ' + cmd_clear + ' ... ' + PROCESSING
     appendLogBook, Event, cmd
