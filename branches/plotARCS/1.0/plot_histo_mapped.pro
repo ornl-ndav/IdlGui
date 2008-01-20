@@ -8,7 +8,7 @@ Ycoeff  = 128 * Yfactor
 off     = 5
 xoff    = 10
 
-histo_mapped_file = '~/local/ARCS_5_neutron_histo_mapped.dat'
+histo_mapped_file = '~/local/ARCS_1_neutron_histo_mapped.dat'
 openr,u,histo_mapped_file,/get
 fs=fstat(u)
 
