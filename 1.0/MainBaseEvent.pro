@@ -67,6 +67,11 @@ CASE Event.id OF
         LogBook, Event ;in plot_arcs_SendToGeek.pro
     end
 
+;PLOT button
+    widget_info(wWidget, FIND_BY_UNAME='plot_button'): begin
+        plotMainPlot, Event ;in plot_arcs_PlotMainPlot
+    end
+
     ELSE:
     
 ENDCASE

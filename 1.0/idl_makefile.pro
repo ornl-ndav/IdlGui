@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/plotARCSGUI/'
 .run MakeGuiInputBase.pro
+.run MakeGuiMainPlot.pro
 
 ;Build all procedures
 cd, CurrentFolder
@@ -27,6 +28,7 @@ cd, CurrentFolder
 .run plot_arcs_CreateHistoMapped.pro
 .run plot_arcs_SaveAsHistoMapped.pro
 .run plot_arcs_SendToGeek.pro
+.run plot_arcs_PlotMainPlot.pro
 
 ;main functions
 .run MainBaseEvent.pro
