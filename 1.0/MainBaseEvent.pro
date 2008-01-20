@@ -69,7 +69,10 @@ CASE Event.id OF
 
 ;PLOT button
     widget_info(wWidget, FIND_BY_UNAME='plot_button'): begin
-        plotMainPlot, Event ;in plot_arcs_PlotMainPlot
+        ;get name of histo_mapped_file
+        histo_mapped_file = getTextFieldValue(Event, 'histo_mapped_text_field')
+        histo_mapped_file = '~/.plotARCS_tmp/ARCS_1_neutron_histo_mapped.dat' ;REMOVE_ME
+        plotMainPlot, histo_mapped_file ;in plot_arcs_PlotMainPlot
     end
 
     ELSE:
