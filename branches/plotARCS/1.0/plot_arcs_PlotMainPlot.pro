@@ -7,29 +7,172 @@ CASE event.id OF
 ;selection of mbar button - DAS view
     widget_info(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
         plotDASviewFullInstrument, global1
+        activateWidget, event, 'tof_scale_button', 0
     end
 
 ;selection of mbar button - tof view 
     widget_info(event.top, FIND_BY_UNAME='plot_tof_view_button_mbar'): begin
         plotTOFviewFullInstrument, global1
+        activateWidget, event, 'tof_scale_button', 1
+    end
+
+;tof scale /9
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d9'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 9
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 9)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /8
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d8'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 8
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 8)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /7
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d7'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 7
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 7)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /6
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d6'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 6
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 6)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /5
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d5'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 5
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 5)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /4
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d4'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 4
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 4)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /3
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d3'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 3
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 3)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale /2
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_d2'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched / 2
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (/ 2)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale reset
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_reset'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 1)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *2
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m2'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 2
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 2)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *3
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m3'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 3
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 3)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *4
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m4'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 4
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 4)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *5
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m5'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 5
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 5)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *6
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m6'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 6
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 6)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *7
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m7'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 7
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 7)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *8
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m8'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 8
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 8)'
+        widget_control, id, set_value= title
+    end
+
+;tof scale *9
+    widget_info(event.top, FIND_BY_UNAME='tof_scale_m9'): begin
+        (*global1).Ytof = (*global1).Ytof_untouched * 9
+        plotTOFviewFullInstrument, global1
+        id = widget_info(event.top,find_by_uname='tof_scale_button')
+        title = (*global1).tof_scale_title + ' (* 9)'
+        widget_control, id, set_value= title
     end
 
 ELSE:
 ENDCASE
 
 END
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -125,13 +268,18 @@ Xcoeff  = (*global1).Xcoeff
 Ycoeff  = (*global1).Ycoeff
 off     = (*global1).off
 xoff    = (*global1).xoff
+wbase   = (*global1).wBase
 
 ;main data array
 tvimg = total(img,1)
 tvimg = transpose(tvimg)
 
+;change title
+id = widget_info(wBase,find_by_uname='main_plot_base')
+widget_control, id, base_set_title= 'Real View of Instrument (Y vs X integrated over TOF)'
+
 ;select plot area
-id = widget_info((*global1).wBase,find_by_uname='main_plot')
+id = widget_info(wBase,find_by_uname='main_plot')
 WIDGET_CONTROL, id, GET_VALUE=id_value
 WSET, id_value
 ERASE
@@ -141,7 +289,7 @@ bank = lonarr(8,128)
 ;plot bottom  banks
 for i=0,(38-1) do begin
     bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128*Yfactor,/sample)
+    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
     tvscl, bank_rebin, /device, i*(Xcoeff)+i*off+xoff,  off
 endfor
 
@@ -149,7 +297,7 @@ endfor
 yoff   = Ycoeff + 2*off
 for i=38,68 do begin
     bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128*Yfactor,/sample)
+    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
     tvscl, bank_rebin, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff
 endfor
 
@@ -161,7 +309,7 @@ endfor
 yoff   = 2*Ycoeff + 3*off
 for i=77,114 do begin
     bank = tvimg[i*8:(i+1)*8-1,*]
-    bank_rebin = rebin(bank,8*Xfactor, 128*Yfactor,/sample)
+    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
     tvscl, bank_rebin, /device, (i-77)*(Xcoeff)+(i-77)*off+xoff, yoff
 endfor
 
@@ -180,12 +328,6 @@ PRO plotTOFviewFullInstrument, global1
 ;############# Plot x,tof integrated over y ###############
 ;##########################################################
 
-;select plot area
-id = widget_info((*global1).wBase,find_by_uname='main_plot')
-WIDGET_CONTROL, id, GET_VALUE=id_value
-WSET, id_value
-ERASE
-
 ;retrieve values from inside structure
 img     = (*(*global1).img)
 Xfactor = (*global1).Xfactor
@@ -195,6 +337,18 @@ Ycoeff  = (*global1).Ycoeff
 off     = (*global1).off
 xoff    = (*global1).xoff
 img     = (*(*global1).img)
+wBase   = (*global1).wBase
+Ytof    = (*global1).Ytof
+
+;change title
+id = widget_info(wBase,find_by_uname='main_plot_base')
+widget_control, id, base_set_title= 'TOF View (TOF vs X integrated over Y)'
+
+;select plot area
+id = widget_info(wBase,find_by_uname='main_plot')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+ERASE
 
 ;find out the range of non-zero values using bank #41
 bank_index = 49
@@ -212,9 +366,9 @@ index_stop  = NZindexes[ngt0-1]
 ;keep only all data between index_start and index_stop
 tvimg2     = tvimg1[*,index_start:index_stop]
 Npts       = (size(tvimg2))(2) ;number of tof that survive the where GT 0 routine
-dim_new    = Ycoeff            ;number of points we want in the Y axis (tof here)
+dim_new    = Ytof            ;number of points we want in the Y axis (tof here)
 ds         = Npts/dim_new      ;resulting downsampling ratio - how many points 
-dim_new    *= 2
+;dim_new    *= 2
 ;to become one point
 
 ;isolate various banks of data
@@ -258,34 +412,21 @@ END
 
 
 
-
-
-
-
-
-
-
-
-
-
 PRO PlotMainPlot, histo_mapped_file
 
 ;build gui
 wBase = ''
 MakeGuiMainPlot, wBase
-;main parameters
-Xfactor = 4
-Yfactor = 2
-Xcoeff  = 8   * Xfactor
-Ycoeff  = 128 * Yfactor
-off     = 5
-xoff    = 10
 
 global1 = ptr_new({ histo_file_name : histo_mapped_file,$
+                    tof_scale_title : 'TOF scale',$
                     Xfactor : 4,$
                     Yfactor : 2,$
+                    Yfactor_untouched : 2,$
                     Xcoeff  : 8 * 4,$
                     Ycoeff  : 128L * 2,$
+                    Ytof    : 128L * 2,$
+                    Ytof_untouched : 128L*2,$
                     off     : 5,$
                     xoff    : 10,$
                     img     : ptr_new(0L),$
