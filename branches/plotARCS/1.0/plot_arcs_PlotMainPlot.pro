@@ -302,8 +302,22 @@ for i=38,68 do begin
 endfor
 
 ;plot 32A and 32B of middle banks
+i=70 ;32B (bottom one)
+bank       = tvimg[i*8:(i+1)*8-1,*]
+bank_rebin = rebin(bank,8*Xfactor,128L*Yfactor/2,/sample)
+tvscl, bank_rebin, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
+
+i=69 ; 32A (top one)
+bank       = tvimg[i*8:(i+1)*8-1,*]
+bank_rebin = rebin(bank,8*Xfactor,128L*Yfactor/2,/sample)
+tvscl, bank_rebin, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff+Ycoeff/2
 
 ;plot 33 to 38 of middle banks
+FOR i=71,76 DO BEGIN
+    bank = tvimg[i*8:(i+1)*8-1,*]
+    bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
+    tvscl, bank_rebin, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
+ENDFOR
 
 ;plot top banks
 yoff   = 2*Ycoeff + 3*off
@@ -390,10 +404,25 @@ for i=38,68 do begin
 endfor
 
 ;plot 32A and 32B of middle banks
+i = 70 ;32B (bottom one)
+bank         = tvimg2[i*8:(i+1)*8-1,*]
+bank_smooth  = smooth(bank,ds,/edge)
+bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+tvscl, bank_congrid, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
 
+i = 69 ;32A (top one)
+bank         = tvimg2[i*8:(i+1)*8-1,*]
+bank_smooth  = smooth(bank,ds,/edge)
+bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+tvscl, bank_congrid, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff+Ycoeff/2
 
 ;plot 33 to 38 of middle banks
-
+FOR i=71,76 DO BEGIN
+    bank         = tvimg2[i*8:(i+1)*8-1,*]
+    bank_smooth  = smooth(bank,ds,/edge)
+    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+    tvscl, bank_congrid, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
+ENDFOR
 
 ;plot top banks
 yoff   = 2*Ycoeff + 3*off
