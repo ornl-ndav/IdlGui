@@ -99,10 +99,59 @@ RETURN, histo_file_full_name
 END
 
 
-
 ;get full contain of log book
 FUNCTION getLogBookText, Event
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, get_value=text
 RETURN, text
 END
+
+
+;return the column of the bank selected
+FUNCTION getColumnMainPlot, X
+Xwidth = 32
+FOR i=0,10 DO BEGIN
+    xoff = i*36
+    xmin = 10 + xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN RETURN, (i+1)
+ENDFOR
+RETURN, 0
+END
+
+;return the row of the bank selected
+FUNCTION getRowMainPlot, Y
+IF (Y GE 4 AND Y LE 261) THEN RETURN, 'B'
+RETURN, ''
+END
+
+
+
+
+;return the bank number
+FUNCTION getBank, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global1
+X = Event.X
+Y = Event.Y
+print, 'X: ' + strcompress(X) + '    Y: ' + strcompress(Y)
+column = getColumnMainPlot(X)
+row    = getRowMainPlot(Y)
+print, '    column is: ' + strcompress(column)
+
+;Special case for 32A and 32B
+IF (column EQ 32 AND row EQ 'M') THEN BEGIN
+    IF (Y LT 394) THEN column = '32B'
+    IF (Y GT 394) THEN column = '32A'
+    IF (Y EQ 394) THEN column = ''
+ENDIF
+
+IF (Row NE '' AND Column NE 0) THEN BEGIN ;we click inside a bank
+    RETURN, Row + strcompress(Column,/remove_all)
+ENDIF ELSE BEGIN ;if we click outside a bank
+    RETURN, ''
+ENDELSE
+END
+
+
+
