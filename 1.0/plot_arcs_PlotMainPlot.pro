@@ -8,12 +8,14 @@ CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
         plotDASviewFullInstrument, global1
         activateWidget, event, 'tof_scale_button', 0
+        (*global1).real_or_tof = 0
     end
 
 ;selection of mbar button - tof view 
     widget_info(event.top, FIND_BY_UNAME='plot_tof_view_button_mbar'): begin
         plotTOFviewFullInstrument, global1
         activateWidget, event, 'tof_scale_button', 1
+        (*global1).real_or_tof = 1
     end
 
 ;tof scale /9
@@ -281,7 +283,7 @@ tvimg = transpose(tvimg)
 
 ;change title
 id = widget_info(wBase,find_by_uname='main_plot_base')
-widget_control, id, base_set_title= 'Real View of Instrument (Y vs X integrated over TOF)'
+widget_control, id, base_set_title= (*global1).main_plot_real_title
 
 ;select plot area
 id = widget_info(wBase,find_by_uname='main_plot')
@@ -361,7 +363,7 @@ Ytof    = (*global1).Ytof
 
 ;change title
 id = widget_info(wBase,find_by_uname='main_plot_base')
-widget_control, id, base_set_title= 'TOF View (TOF vs X integrated over Y)'
+widget_control, id, base_set_title= (*global1).main_plot_tof_title
 
 ;select plot area
 id = widget_info(wBase,find_by_uname='main_plot')
@@ -453,6 +455,7 @@ wBase = ''
 MakeGuiMainPlot, wBase
 
 global1 = ptr_new({ histo_file_name : histo_mapped_file,$
+                    real_or_tof : 0,$;0:REAL das view, 1:tof view
                     tof_scale_title : 'TOF scale',$
                     Xfactor : 4,$
                     Yfactor : 2,$
@@ -464,7 +467,13 @@ global1 = ptr_new({ histo_file_name : histo_mapped_file,$
                     off     : 5,$
                     xoff    : 10,$
                     img     : ptr_new(0L),$
+                    main_plot_real_title : 'Real View of Instrument (Y vs X integrated over TOF)',$
+                    main_plot_tof_title : 'TOF View (TOF vs X integrated over Y)',$
                     wbase   : wbase})
+
+file_ext = ' - File: ' + histo_mapped_file
+(*global1).main_plot_real_title += file_ext
+(*global1).main_plot_tof_title += file_ext
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global1
 XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK

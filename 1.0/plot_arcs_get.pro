@@ -110,8 +110,8 @@ END
 ;return the column of the bank selected
 FUNCTION getColumnMainPlot, X
 Xwidth = 32
-FOR i=0,10 DO BEGIN
-    xoff = i*36
+FOR i=0,37 DO BEGIN
+    xoff = i*37
     xmin = 10 + xoff
     xmax = xmin + Xwidth
     IF (X GE xmin AND X LE xmax) THEN RETURN, (i+1)
@@ -121,7 +121,14 @@ END
 
 ;return the row of the bank selected
 FUNCTION getRowMainPlot, Y
-IF (Y GE 4 AND Y LE 261) THEN RETURN, 'B'
+YposArray = ['L','M','T']
+Ywidth    = 256
+FOR i=0,2 DO BEGIN
+    yoff = i * (256+5)
+    ymin = 5 + yoff
+    ymax = ymin + Ywidth
+    IF (Y GE ymin AND Y LE ymax) THEN RETURN, YposArray[i]
+ENDFOR
 RETURN, ''
 END
 
@@ -134,10 +141,9 @@ FUNCTION getBank, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global1
 X = Event.X
 Y = Event.Y
-print, 'X: ' + strcompress(X) + '    Y: ' + strcompress(Y)
+
 column = getColumnMainPlot(X)
 row    = getRowMainPlot(Y)
-print, '    column is: ' + strcompress(column)
 
 ;Special case for 32A and 32B
 IF (column EQ 32 AND row EQ 'M') THEN BEGIN
