@@ -169,6 +169,11 @@ CASE event.id OF
         widget_control, id, set_value= title
     end
 
+;Main plot
+    widget_info(event.top, FIND_BY_UNAME='main_plot'): begin
+        MainPlotInteraction, Event
+    end
+
 ELSE:
 ENDCASE
 

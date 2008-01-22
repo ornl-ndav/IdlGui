@@ -78,7 +78,9 @@ wMainDraw = WIDGET_DRAW(wBase,$
                         YOFFSET   = MainDraw.size[1],$
                         SCR_XSIZE = MainDraw.size[2],$
                         SCR_YSIZE = MainDraw.size[3],$
-                        UNAME     = MainDraw.uname)
+                        UNAME     = MainDraw.uname,$
+                        /BUTTON_EVENTS,$
+                        /MOTION_EVENTS)
 
 plot_selection_button = WIDGET_BUTTON(MBAR,$
                                       UNAME = PSbutton.uname,$
