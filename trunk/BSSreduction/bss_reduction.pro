@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = 'VERSION: BSSreduction1.0.4'
+VERSION = ' (version: 1.1.1)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -15,6 +15,8 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DRstatusOK : 'Data Reduction ... DONE',$
+                    DRstatusFAILED : 'Data Reduction ... ERROR! (-> Check Log Book)',$
                     unit : 0,$
                     BSSreductionVersion : VERSION,$
                     DR_xml_config_ext : '.rmd',$
@@ -108,6 +110,7 @@ global = ptr_new ({ $
                     true_full_x_max : 0.0000001,$ ;tof max for full counts vs tof zoom plot
                     NbTOF : 0L,$ ;number of tof for counts vs tof plot
                     NeXusFound : 0,$ ;0: nexus has not been found, 1 nexus has been found
+                    NeXusFormatWrong : 0,$ ;if we are trying to open using hdf4
                     ok : 'OK',$
                     failed : 'FAILED',$
                     bank1: ptr_new(0L),$ ;array of bank1 data (Ntof, Nx, Ny)
@@ -155,7 +158,7 @@ global = ptr_new ({ $
                                                          nisw_field        : '',$
                                                          niew_field          : '',$
                                                          te_button     : 0,$
-                                                         te_low_field        : '',$
+                                                         te_low_field       : '',$
                                                          te_high_field      : ''},$
                                                 tab4 : { tib_tof_button : 0,$
                                                          tibtof_channel1_text : '',$
@@ -263,7 +266,7 @@ endif else begin
     MainBaseSize  = [50,200,1200,730]
 endelse
 
-MainBaseTitle = 'BSS reduction tool'
+MainBaseTitle = 'BSS reduction tool' + VERSION
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -279,13 +282,6 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
-
-;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET = 1035,$
-                             YOFFSET = 2,$
-                             VALUE   = VERSION,$
-                             FRAME   = 0)
 
 MakeGuiMainTab, MAIN_BASE, MainBaseSize, XYfactor
 
