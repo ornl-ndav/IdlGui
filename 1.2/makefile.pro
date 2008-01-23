@@ -9,6 +9,6 @@ resolve_routine, "xloadct",/either
 resolve_routine, "xregistered",/either
 resolve_routine, "cw_field",/either
 
-save,/routines,filename = CurrentFolder + '/bss_reduction.sav'
+save,/routines,filename = CurrentFolder + '/bss_reduction_sqe.sav'
 exit
 
