@@ -15,6 +15,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DriverName : 'amorphous_reduction_sqe',$
                     DRstatusOK : 'Data Reduction ... DONE',$
                     DRstatusFAILED : 'Data Reduction ... ERROR! (-> Check Log Book)',$
                     unit : 0,$

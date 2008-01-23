@@ -9,7 +9,7 @@ BSSreduction_ReduceUpdateGui, Event
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
-cmd = 'amorphous_reduction ' ;name of function to call
+cmd = (*global).DriverName + ' ' ;name of function to call
 
 ;****TAB1****
 
