@@ -304,7 +304,7 @@ END
 
 
 ; Empty stub procedure used for autoloading.
-pro bss_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro bss_reduction_sqe, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 

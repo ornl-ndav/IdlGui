@@ -8,7 +8,7 @@
 all:
 	idl ./makefile.pro;
 install:
-	cp bss_reduction.sav /SNS/software/idltools/sav/
-	cp BSSreduction /SNS/software/idltools/
+	cp bss_reduction_sqe.sav /SNS/software/idltools/sav/
+	cp BSSreduction_sqe /SNS/software/idltools/
 
 
