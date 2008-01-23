@@ -55,7 +55,7 @@ END
 
 
 
-pro bss_reduction_eventcb, event
+pro bss_reduction_sqe_eventcb, event
 end
 
 
