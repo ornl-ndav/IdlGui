@@ -367,6 +367,17 @@ END
 PRO BSSreduction_Reduce_gifw_error_text, Event
 END
 
+;This function is reached by the mtha_min_text
+PRO BSSreduction_Reduce_mtha_min_text, Event
+END
+
+;This function is reached by mtha_max_text
+PRO BSSreduction_Reduce_mtha_max_text, Event
+END
+
+;This function is reached by mtha_bin_text
+PRO BSSreduction_Reduce_mtha_bin_text, Event
+END
 ;****************** TAB 7 *************************
 
 ;This function is reached by waio_button

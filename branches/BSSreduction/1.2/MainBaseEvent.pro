@@ -737,6 +737,21 @@ CASE Event.id OF
         BSSreduction_CommandLineGenerator, Event
     end    
 
+    Widget_Info(wWidget, FIND_BY_UNAME='mtha_min_text'): begin
+        BSSreduction_Reduce_mtha_min_text, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='mtha_max_text'): begin
+        BSSreduction_Reduce_mtha_max_text, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='mtha_bin_text'): begin
+        BSSreduction_Reduce_mtha_bin_text, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
 ;tab7 (intermediate plots)
     Widget_Info(wWidget, FIND_BY_UNAME='waio_button'): begin
         BSSreduction_Reduce_waio_button, Event
