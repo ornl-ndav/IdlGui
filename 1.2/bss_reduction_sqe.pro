@@ -210,7 +210,10 @@ global = ptr_new ({ $
                                                          eha_bin_text : '',$
                                                          gifw_button : 0,$
                                                          gifw_value_text : '',$
-                                                         gifw_error_text: ''},$
+                                                         gifw_error_text: '',$
+                                                         mtha_min_text: '',$
+                                                         mtha_max_text:'',$
+                                                         mtha_bin_text:''},$
                                                 tab7 : { waio_button: 0,$
                                                          woctib_button: 0,$
                                                          wopws_button: 0,$

@@ -1,5 +1,5 @@
 @idl_makefile.pro
-bss_reduction
+bss_reduction_sqe
 
 
 

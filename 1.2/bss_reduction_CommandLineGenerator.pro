@@ -1316,8 +1316,82 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
-
 ENDIF
+
+;get Momentum Transfer Histogram Axis
+cmd += ' --mom-trans-bin='
+
+TIBCMin = getTextFieldValue(Event,'mtha_min_text')
+(*global).Configuration.Reduce.tab6.mtha_min_text= TIBCMin
+IF (TIBCMin EQ '') THEN BEGIN
+    cmd += '?'
+    status_text = '   -Please provide a Momentum Transfer Histogram Axis Min'
+    IF (tab6 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
+    StatusMessage += 1
+    ++tab6
+ENDIF ELSE BEGIN
+    cmd += strcompress(TIBCMin,/remove_all)
+ENDELSE
+
+TIBCMax = getTextFieldValue(Event,'mtha_max_text')
+(*global).Configuration.Reduce.tab6.mtha_max_text = TIBCMax
+IF (TIBCMax EQ '') THEN BEGIN
+    cmd += ',?'
+    status_text = '   -Please provide a Momentum Transfer Histogram Axis Max'
+    IF (tab6 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
+    StatusMessage += 1
+    ++tab6
+ENDIF ELSE BEGIN
+    cmd += ',' + strcompress(TIBCMax,/remove_all)
+ENDELSE
+
+TIBCBin = getTextFieldValue(Event,'mtha_bin_text')
+(*global).Configuration.Reduce.tab6.mtha_bin_text = TIBCBin
+IF (TIBCBin EQ '') THEN BEGIN
+    cmd += ',?'
+    status_text = '   -Please provide a Momentum Transfer Histogram Axis Bin'
+    IF (tab6 EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, '', 1
+        putInfoInCommandLineStatus, Event, '', 1
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage EQ 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 0
+    ENDIF
+    IF (tab6 EQ 0 AND $
+        StatusMessage NE 0) THEN BEGIN
+        putInfoInCommandLineStatus, Event, TabName, 1
+    ENDIF
+    putInfoInCommandLineStatus, Event, status_text, 1
+    StatusMessage += 1
+    ++tab6
+ENDIF ELSE BEGIN
+    cmd += ',' + strcompress(TIBCBin,/remove_all)
+ENDELSE
 
 ;add a white space
 putInfoInCommandLineStatus, Event, '', 1

@@ -133,7 +133,7 @@ EHAmaxText  = { size : [EHAmaxLabel.size[0]+XYoff5[0],$
 XYoff4 = [200,0]
 EHAbinLabel = { size : [EHAmaxLabel.size[0]+XYoff4[0],$
                         EHAmaxLabel.size[1]+XYoff4[1]],$
-                value : 'Bin Width:',$
+                value : '  Width:',$
                 uname : 'eha_bin_text_label',$
                 sensitive : EHAbase.button.value}
 XYoff5 = [85,-5]
@@ -183,6 +183,61 @@ GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
                            100,30],$
                    uname : 'gifw_error_text',$
                    sensitive : GIFWbase.button.value}
+
+;//////////////////////////////////////////////
+;Momentum Transfer Histogram Axis (1/Angstroms)
+;//////////////////////////////////////////////
+MTHAframe = { size : [GIFWframe.size[0],$
+                     GIFWframe.size[1]+yoff,$
+                     GIFWframe.size[2:3]],$
+             frame : GIFWframe.frame}
+XYoff1 = [10,-8]
+MTHAbase = { size : [MTHAframe.size[0]+XYoff1[0],$
+                     MTHAframe.size[1]+XYoff1[1],$
+                     290,$
+                     25],$
+             button : { uname : 'mtha_button',$
+                       list : [' Momentum Transfer Histogram Axis (1/Angstroms)'],$
+                       value : 1}}
+
+XYoff2 = [10,25]
+MTHAminLabel = { size : [MTHAframe.size[0]+XYoff2[0],$
+                         MTHAframe.size[1]+XYoff2[1]],$
+                 value : 'Min:',$
+                 uname : 'mtha_min_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff3 = [50,-5]
+MTHAminText  = { size : [MTHAminLabel.size[0]+XYoff3[0],$
+                         MTHAminlabel.size[1]+XYoff3[1],$
+                         100,30],$
+                 uname : 'mtha_min_text',$
+                 sensitive : MTHAbase.button.value}
+
+XYoff4 = [200,0]
+MTHAmaxLabel = { size : [MTHAminLabel.size[0]+XYoff4[0],$
+                         MTHAminLabel.size[1]+XYoff4[1]],$
+                 value : 'Max:',$
+                 uname : 'mtha_max_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff5 = [50,-5]
+MTHAmaxText  = { size : [MTHAmaxLabel.size[0]+XYoff5[0],$
+                         MTHAmaxLabel.size[1]+XYoff5[1],$
+                         100,30],$
+                 uname : 'mtha_max_text',$
+                 sensitive : MTHAbase.button.value}
+
+XYoff4 = [200,0]
+MTHAbinLabel = { size : [MTHAmaxLabel.size[0]+XYoff4[0],$
+                         MTHAmaxLabel.size[1]+XYoff4[1]],$
+                 value : '  Width:',$
+                 uname : 'mtha_bin_text_label',$
+                 sensitive : MTHAbase.button.value}
+XYoff5 = [85,-5]
+MTHAbinText  = { size : [MTHAbinLabel.size[0]+XYoff5[0],$
+                         MTHAbinLabel.size[1]+XYoff5[1],$
+                         100,30],$
+                 uname : 'mtha_bin_text',$
+                 sensitive : MTHAbase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -453,4 +508,79 @@ frame  = WIDGET_LABEL(tab6_base,$
                       FRAME     = GIFWframe.frame,$
                       VALUE     = '')
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Momentum Transfer Histogram Axis
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = MTHAbase.size[0],$
+                   YOFFSET   = MTHAbase.size[1],$
+                   SCR_XSIZE = MTHAbase.size[2],$
+                   SCR_YSIZE = MTHAbase.size[3])
+
+label = WIDGET_LABEL(base,$
+                     VALUE = MTHAbase.button.list[0],$
+                     UNAME = MTHAbase.button.uname)
+                     
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAminLabel.size[0],$
+                     YOFFSET   = MTHAminLabel.size[1],$
+                     VALUE     = MTHAminLabel.value,$
+                     UNAME     = MTHAminLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAminText.size[0],$
+                   YOFFSET   = MTHAminText.size[1],$
+                   SCR_XSIZE = MTHAminText.size[2],$
+                   SCR_YSIZE = MTHAminText.size[3],$
+                   UNAME     = MTHAminText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAmaxLabel.size[0],$
+                     YOFFSET   = MTHAmaxLabel.size[1],$
+                     VALUE     = MTHAmaxLabel.value,$
+                     UNAME     = MTHAmaxLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAmaxText.size[0],$
+                   YOFFSET   = MTHAmaxText.size[1],$
+                   SCR_XSIZE = MTHAmaxText.size[2],$
+                   SCR_YSIZE = MTHAmaxText.size[3],$
+                   UNAME     = MTHAmaxText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = MTHAbinLabel.size[0],$
+                     YOFFSET   = MTHAbinLabel.size[1],$
+                     VALUE     = MTHAbinLabel.value,$
+                     UNAME     = MTHAbinLabel.uname,$
+                     SENSITIVE = MTHAbase.button.value)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = MTHAbinText.size[0],$
+                   YOFFSET   = MTHAbinText.size[1],$
+                   SCR_XSIZE = MTHAbinText.size[2],$
+                   SCR_YSIZE = MTHAbinText.size[3],$
+                   UNAME     = MTHAbinText.uname,$
+                   SENSITIVE = MTHAbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = MTHAframe.size[0],$
+                      YOFFSET   = MTHAframe.size[1],$
+                      SCR_XSIZE = MTHAframe.size[2],$
+                      SCR_YSIZE = MTHAframe.size[3],$
+                      FRAME     = MTHAframe.frame,$
+                      VALUE     = '')
 END
