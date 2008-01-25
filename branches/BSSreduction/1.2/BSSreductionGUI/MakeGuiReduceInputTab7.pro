@@ -88,7 +88,7 @@ WODWSMbase = { size  : [WORMSbase.size[0], $
                         WORMSbase.size[1]+yoff, $
                         WORMSbase.size[2:3]],$
                button : { uname : 'wodwsm_button',$
-                          list : [' Write Out Dimensionless Wavelength Spectrum Momentum']}}
+                          list : [' Write Out Dimensionless Monitor Wavelength Spetrum']}}
 
 NA_WODWSMbase = { size : [WODWSMbase.size[0]+5,$
                           WODWSMbase.size[1]-5,$
