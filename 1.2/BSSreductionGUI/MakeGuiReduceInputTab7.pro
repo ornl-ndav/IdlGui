@@ -81,12 +81,27 @@ NA_WORMSbase = { size : [WORMSbase.size[0]+5,$
                   value : 'Rebinned Monitor Spectra - NOT AVAILABLE',$
                   uname : 'na_wormsbase'}
 
+;/////////////////////////////////////////////////////
+;Write Out Dimensionless Wavelength Spectrum Momentum/
+;/////////////////////////////////////////////////////
+WODWSMbase = { size  : [WORMSbase.size[0], $
+                        WORMSbase.size[1]+yoff, $
+                        WORMSbase.size[2:3]],$
+               button : { uname : 'wodwsm_button',$
+                          list : [' Write Out Dimensionless Wavelength Spectrum Momentum']}}
+
+NA_WODWSMbase = { size : [WODWSMbase.size[0]+5,$
+                          WODWSMbase.size[1]-5,$
+                          WODWSMbase.size[2:3]],$
+                   value : 'Dimensionless Wavelength Spectrum Momentum - NOT AVAILABLE',$
+                   uname : 'na_wodwsmbase'}
+
 ;//////////////////////////////////////////////////////////////
 ;Write Out Combined Pixel Spectrum After Monitor Normalization/
 ;//////////////////////////////////////////////////////////////
-WOCPSAMNbase = { size  : [WORMSbase.size[0], $
-                          WORMSbase.size[1]+yoff, $
-                          WORMSbase.size[2:3]],$
+WOCPSAMNbase = { size  : [WODWSMbase.size[0], $
+                          WODWSMbase.size[1]+yoff, $
+                          WODWSMbase.size[2:3]],$
               button : { uname : 'wocpsamn_button',$
                          list : [' Write Out Combined Pixel Spectrum After Monitor Normalization']}}
 
@@ -175,21 +190,6 @@ NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
                            WOLIDSBbase.size[2:3]],$
                   value : 'Linearly Interpolated Direct Scatt. Back. Information Summed over all Pixels - NOT AVAILABLE',$
                   uname : 'na_wolidsbbase'}
-
-;/////////////////////////////////////////////////////
-;Write Out Dimensionless Wavelength Spectrum Momentum/
-;/////////////////////////////////////////////////////
-WODWSMbase = { size  : [WOLIDSBbase.size[0], $
-                        WOLIDSBbase.size[1]+yoff, $
-                        WOLIDSBbase.size[2:3]],$
-               button : { uname : 'wodwsm_button',$
-                          list : [' Write Out Dimensionless Wavelength Spectrum Momentum']}}
-
-NA_WODWSMbase = { size : [WODWSMbase.size[0]+5,$
-                          WODWSMbase.size[1]-5,$
-                          WODWSMbase.size[2:3]],$
-                   value : 'Dimensionless Wavelength Spectrum Momentum - NOT AVAILABLE',$
-                   uname : 'na_wodwsmbase'}
 
 ;***********************************************************************************
 ;                                Build GUI
