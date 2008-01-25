@@ -817,6 +817,12 @@ CASE Event.id OF
         BSSreduction_Reduce_wolidsb_button, Event
         BSSreduction_CommandLineGenerator, Event
     end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='wodwsm_button'): begin
+        BSSreduction_Reduce_wodwsm_button, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
     
 ;Start Data Reduction
     Widget_Info(wWidget, FIND_BY_UNAME='submit_button'): begin

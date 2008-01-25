@@ -151,6 +151,7 @@ ENDELSE
 activate_base, event, 'na_womwsbase', na_base_status
 activate_base, event, 'na_wormsbase', na_base_status
 activate_base, event, 'na_wocpsamnbase', na_base_status
+activate_base, event, 'na_wodwsmbase', na_base_status
 IF (na_base_status) then begin
     BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button', 0
 endif else begin
@@ -1574,6 +1575,14 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         (*global).Configuration.Reduce.tab7.wolidsb_button = 0
     ENDELSE
     
+;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
+;over all Pixels
+    IF (isButtonSelected(Event,'wodwsm_button')) THEN BEGIN
+        cmd += ' --dump-mom-diml'
+        (*global).Configuration.Reduce.tab7.wodwsm_button = 1
+    ENDIF ELSE BEGIN
+        (*global).Configuration.Reduce.tab7.wodwsm_button = 0
+    ENDELSE
 ENDIF
 
 ;display command line in Reduce text box

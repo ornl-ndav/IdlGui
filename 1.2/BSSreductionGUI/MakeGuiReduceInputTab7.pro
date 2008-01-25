@@ -14,7 +14,7 @@ WAIOBase = { size  : [15,20,500,35],$
 ;/////////////////////////////////////////////////
 ;Write out Calculated time-independent background/
 ;/////////////////////////////////////////////////
-yoff = 45
+yoff = 40
 WOCTIBbase = { size  : [WAIOBase.size[0], $
                         WAIOBase.size[1]+yoff, $
                         WAIOBase.size[2:3]],$
@@ -175,6 +175,21 @@ NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
                            WOLIDSBbase.size[2:3]],$
                   value : 'Linearly Interpolated Direct Scatt. Back. Information Summed over all Pixels - NOT AVAILABLE',$
                   uname : 'na_wolidsbbase'}
+
+;/////////////////////////////////////////////////////
+;Write Out Dimensionless Wavelength Spectrum Momentum/
+;/////////////////////////////////////////////////////
+WODWSMbase = { size  : [WOLIDSBbase.size[0], $
+                        WOLIDSBbase.size[1]+yoff, $
+                        WOLIDSBbase.size[2:3]],$
+               button : { uname : 'wodwsm_button',$
+                          list : [' Write Out Dimensionless Wavelength Spectrum Momentum']}}
+
+NA_WODWSMbase = { size : [WODWSMbase.size[0]+5,$
+                          WODWSMbase.size[1]-5,$
+                          WODWSMbase.size[2:3]],$
+                   value : 'Dimensionless Wavelength Spectrum Momentum - NOT AVAILABLE',$
+                   uname : 'na_wodwsmbase'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -489,5 +504,32 @@ group = CW_BGROUP(base,$
                   SET_VALUE  = 0,$
                   ROW        = 1)
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Write Out Dimensionless Wavelength Spectrum Momentum\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+NA_base = WIDGET_BASE(tab7_base,$
+                      UNAME     = NA_WODWSMbase.uname,$
+                      XOFFSET   = NA_WODWSMbase.size[0],$
+                      YOFFSET   = NA_WODWSMbase.size[1],$
+                      SCR_XSIZE = NA_WODWSMbase.size[2],$
+                      SCR_YSIZE = NA_WODWSMbase.size[3],$
+                      MAP       = 0,$
+                      ROW       = 1)
+
+NA_label = WIDGET_LABEL(NA_base,$
+                        VALUE = NA_WODWSMbase.value)
+
+base = WIDGET_BASE(tab7_base,$
+                   XOFFSET   = WODWSMbase.size[0],$
+                   YOFFSET   = WODWSMbase.size[1],$
+                   SCR_XSIZE = WODWSMbase.size[2],$
+                   SCR_YSIZE = WODWSMbase.size[3])
+
+group = CW_BGROUP(base,$
+                  WODWSMbase.button.list,$
+                  UNAME      = WODWSMbase.button.uname,$
+                  /NONEXCLUSIVE,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1)
 
 END
