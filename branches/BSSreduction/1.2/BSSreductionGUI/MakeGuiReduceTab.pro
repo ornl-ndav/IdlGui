@@ -13,7 +13,7 @@ ReduceInputTabSettings       = {size : [0, $
                                          '6) Data Control', $
                                          '7) Inter. Output',$
                                          '2) Input Data',$
-                                         '5) Scalling Cst.'], $
+                                         '5) Scaling Cst.'], $
                                 tab1 : {size : [0, $
                                                 0, $
                                                 750, $
