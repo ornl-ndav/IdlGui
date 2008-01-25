@@ -51,8 +51,14 @@ spawn, 'hostname', hostname
 message = getTextFieldValue(Event, 'log_book_output_text_field')
 
 ;email logBook
-text = "'Log Book of RefReduction ("
-text += (*global).REFreductionVersion + ") sent by " + (*global).ucams
+
+text = "'Log Book of REFreduction "
+IF ((*global).miniVersion EQ 0) THEN BEGIN
+    text += '- low resolution version - "
+ENDIF ELSE BEGIN
+    text += '- high resolution version - "
+ENDELSE
+text += (*global).REFreductionVersion + " sent by " + (*global).ucams
 text += " (" + (*global).instrument + ") from " + hostname + "."
 text += " Log Book is: " + FullFileName 
 text += ". Message is: "
