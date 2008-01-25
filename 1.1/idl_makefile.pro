@@ -32,7 +32,7 @@ cd, CurrentFolder
 .run gg_Table.pro
 .run gg_ReadXml.pro
 .run xmlParser__define.pro
-.run gg_ConfirmationBase.pro
+;.run gg_ConfirmationBase.pro
 .run gg_ErrorLogBook.pro
 
 ;main functions

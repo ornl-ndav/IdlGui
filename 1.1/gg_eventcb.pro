@@ -155,7 +155,7 @@ ENDIF ELSE BEGIN ;version complete
     activateFirstBase, Event, 0
 ;activate second base
     activateSecondBase, Event, 1
-;desactivate all widgets of base2
+;activate all widgets of base2
     sensitive_widget, Event, 'input_geometry_base', 1
 ;enable loading button
     sensitive_widget, Event, 'loading_geometry_button',1
@@ -215,6 +215,8 @@ message = 'Creating geometry file ... ' + (*global).processing
 putInTextField, Event, 'final_result_text_field', message
 ;retrieve value of untouched motor and touched motor data
 new_motor = (*(*global).motors)
+type= (size(new_motor))(2)
+
 ;isolate values that changed
 sz = (size(new_motor))(1)
 ;get runinfo and geometry file names
@@ -223,18 +225,21 @@ cvinfo_file   = getCvinfoFileName(Event)
 cmd = (*global).ts_geom_calc_path
 cmd += ' ' + geometry_file
 cmd += ' -m ' + cvinfo_file
-FOR i=0,(sz-1) DO BEGIN
-    new_value = new_motor[i].value
-    new_units = new_motor[i].valueUnits
-    readback_value = new_motor[i].readback
-    readback_units = new_motor[i].readbackUnits
-    IF ((new_value NE readback_value) OR $
-        (new_units NE readback_units)) THEN BEGIN
-        cmd += ' -D ' + new_motor[i].name + '='
-        cmd += strcompress(new_value,/remove_all) + $
-          strcompress(new_units,/remove_all)
-    ENDIF
-ENDFOR
+IF (type EQ 8) THEN BEGIN
+    FOR i=0,(sz-1) DO BEGIN
+        new_value = new_motor[i].value
+        new_units = new_motor[i].valueUnits
+        readback_value = new_motor[i].readback
+        readback_units = new_motor[i].readbackUnits
+        IF ((new_value NE readback_value) OR $
+            (new_units NE readback_units)) THEN BEGIN
+            cmd += ' -D ' + new_motor[i].name + '='
+            cmd += strcompress(new_value,/remove_all) + $
+              strcompress(new_units,/remove_all)
+        ENDIF
+    ENDFOR
+ENDIF
+
 ;get output path
 outputPath     = get_output_path(Event)
 ;get output file name
@@ -269,6 +274,8 @@ ENDIF else begin                ;procedure worked
         appendInTextField, Event, 'final_result_text_field', message
     ENDIF 
 ENDELSE
+
+
 ;Activate final_result_ok_button and final_result_error_button
 sensitive_widget, Event, 'final_result_ok_button', 1
 END
