@@ -188,8 +188,6 @@ columnIndex = selection[1]
 
 motors = (*(*global).motor_group)
 
-;index = getMotorsIndexOfName(Event, 
-
 name           = motors[columnIndex].name
 setpoint_value = motors[columnIndex].setpoint
 setpoint_units = motors[columnIndex].setpointUnits

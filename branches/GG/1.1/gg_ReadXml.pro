@@ -36,13 +36,13 @@ IF (type EQ 8) THEN BEGIN
 ;activate gui
     activateTableGui, Event, 1
     activateTreeGui, Event, 1
-    sensitive_widget, Event, 'create_geometry_file_button', 1
+;    sensitive_widget, Event, 'create_geometry_file_button', 1
     sensitive_widget, Event, 'full_reset_button', 1
 ENDIF ELSE BEGIN
     activateTableGui, Event, 0
     activateTreeGui, Event, 0
 ;disable button that creates geometry
-    sensitive_widget, Event, 'create_geometry_file_button', 0
+;    sensitive_widget, Event, 'create_geometry_file_button', 0
     sensitive_widget, Event, 'full_reset_button', 0
 ENDELSE
 
