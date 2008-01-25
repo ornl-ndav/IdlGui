@@ -44,7 +44,14 @@ NDFiles = getTextFieldValue(Event,'ndf_list_of_runs_text')
 (*global).Configuration.Reduce.tab1.ndf_list_of_runs_text = NDFiles
 IF (NDFiles NE '') THEN BEGIN
     cmd += ' --norm=' + NDFiles
-ENDIF
+    na_base_status = 0
+ENDIF ELSE BEGIN
+    na_base_status = 1
+ENDELSE
+activate_base, event, 'na_womwsbase', na_base_status
+activate_base, event, 'na_wormsbase', na_base_status
+activate_base, event, 'na_wocpsamnbase', na_base_status
+activate_base, event, 'na_wodwsmbase', na_base_status
 
 ;get Empty Can Data File
 ECDFiles = getTextFieldValue(Event,'ecdf_list_of_runs_text')
@@ -444,7 +451,6 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
-
 ENDIF
 
 ;get Time-independent Background Constant for Background Data
@@ -566,7 +572,6 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
-
 ENDIF
 
 ;get Time-independent Background Constant for Empty Can Data
@@ -627,7 +632,6 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
-
 ENDIF
 
 
@@ -689,7 +693,6 @@ IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(TIBCE,/remove_all)
     ENDELSE
-
 ENDIF
 
 ;;add a white space
@@ -756,7 +759,6 @@ IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
-
 ENDIF
 
 
@@ -817,7 +819,6 @@ IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
-
 ENDIF
 
 
@@ -938,7 +939,6 @@ IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
-
 ENDIF
 
 
@@ -999,7 +999,6 @@ IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
-
 ENDIF
 
 
@@ -1060,9 +1059,7 @@ IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
     ENDIF ELSE BEGIN
         cmd += ',' + strcompress(Error,/remove_all)
     ENDELSE
-
 ENDIF
-
 
 
 ;*************TAB6*****************
@@ -1414,7 +1411,8 @@ ENDELSE
 IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
 
 ;Write out Calculated Time-Independent Background
-    IF (isButtonSelected(Event,'woctib_button')) THEN BEGIN
+    IF (isButtonSelected(Event,'woctib_button') AND $
+        isButtonSelected(Event,'tib_tof_button')) THEN BEGIN
         cmd += ' --dump-tib'
         (*global).Configuration.Reduce.tab7.woctib_button = 1
     ENDIF ELSE BEGIN
@@ -1439,7 +1437,9 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     ENDELSE
     
 ;Write out Monitor Efficiency Spectrum
-    IF (isButtonSelected(Event,'womes_button')) THEN BEGIN
+    IF (isButtonSelected(Event,'womes_button') AND $
+        isButtonUnselected(Event,'nmn_button') AND $
+        isButtonUnselected(Event,'nmec_button')) THEN BEGIN
         cmd += ' --dump-mon-effc'
         (*global).Configuration.Reduce.tab7.womes_button = 1
     ENDIF ELSE BEGIN
@@ -1457,7 +1457,7 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     
 ;Write out Combined Pixel Spectrum After Monitor Normalization
     IF (isButtonSelected(Event,'wocpsamn_button') AND $
-        isButtonUnSelected(Event,'nmn_button')  THEN BEGIN
+        isButtonUnSelected(Event,'nmn_button'))  THEN BEGIN
         (*global).Configuration.Reduce.tab7.wocpsamn_button = 1
     ENDIF ELSE BEGIN
         (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
