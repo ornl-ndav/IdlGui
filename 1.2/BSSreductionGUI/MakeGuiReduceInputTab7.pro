@@ -513,7 +513,7 @@ NA_base = WIDGET_BASE(tab7_base,$
                       YOFFSET   = NA_WODWSMbase.size[1],$
                       SCR_XSIZE = NA_WODWSMbase.size[2],$
                       SCR_YSIZE = NA_WODWSMbase.size[3],$
-                      MAP       = 0,$
+                      MAP       = 1,$
                       ROW       = 1)
 
 NA_label = WIDGET_LABEL(NA_base,$

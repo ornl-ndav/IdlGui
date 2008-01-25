@@ -52,6 +52,15 @@ RETURN, value
 END
 
 
+
+FUNCTION isButtonUnSelected, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=value
+IF (value EQ 0) THEN RETURN, 1
+RETURN, 0
+END
+
+
 ;if button is activated
 FUNCTION isButtonEnabled, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
