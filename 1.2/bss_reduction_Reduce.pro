@@ -26,7 +26,7 @@ BSSreduction_AddNexusFullPath, Event, 'bdf'
 END
 
 ;This function is reached by the bdf_list_of_runs_text (tab#1)
-PRO BSSreduction_Reduce_bdf_list_of_runs_text, Evvent
+PRO BSSreduction_Reduce_bdf_list_of_runs_text, Event
 BSSreduction_UpdateListOfNexus, Event, 'bdf'
 END
 
