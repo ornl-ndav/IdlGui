@@ -142,55 +142,14 @@ EHAbinText  = { size : [EHAbinLabel.size[0]+XYoff5[0],$
                         100,30],$
                 uname : 'eha_bin_text',$
                 sensitive : EHAbase.button.value}
-;///////////////////////////////////////////////
-;Global Instrument Final Wavelength (Angstroms)/
-;///////////////////////////////////////////////
-GIFWframe = { size : [EHAframe.size[0],$
-                      EHAframe.size[1]+yoff,$
-                      EHAframe.size[2:3]],$
-              frame : EHAframe.frame}
-XYoff1 = [10,-14]
-GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
-                     GIFWframe.size[1]+XYoff1[1],$
-                     308,$
-                     30],$
-             button : { uname : 'gifw_button',$
-                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
-                        value : 0}}
-
-XYoff2 = [10,25]
-GIFWvalueLabel = { size : [GIFWframe.size[0]+XYoff2[0],$
-                          GIFWframe.size[1]+XYoff2[1]],$
-                   value : 'Value:',$
-                   uname : 'gifw_value_text_label',$
-                   sensitive : GIFWbase.button.value}
-XYoff3 = [50,-5]
-GIFWvalueText  = { size : [GIFWvalueLabel.size[0]+XYoff3[0],$
-                          GIFWvaluelabel.size[1]+XYoff3[1],$
-                          100,30],$
-                   uname : 'gifw_value_text',$
-                   sensitive : GIFWbase.button.value}
-
-XYoff4 = [200,0]
-GIFWerrorLabel = { size : [GIFWvalueLabel.size[0]+XYoff4[0],$
-                          GIFWvalueLabel.size[1]+XYoff4[1]],$
-                   value : 'Error:',$
-                   uname : 'gifw_error_text_label',$
-                   sensitive : GIFWbase.button.value}
-XYoff5 = [50,-5]
-GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
-                          GIFWerrorlabel.size[1]+XYoff5[1],$
-                           100,30],$
-                   uname : 'gifw_error_text',$
-                   sensitive : GIFWbase.button.value}
 
 ;//////////////////////////////////////////////
 ;Momentum Transfer Histogram Axis (1/Angstroms)
 ;//////////////////////////////////////////////
-MTHAframe = { size : [GIFWframe.size[0],$
-                     GIFWframe.size[1]+yoff,$
-                     GIFWframe.size[2:3]],$
-             frame : GIFWframe.frame}
+MTHAframe = { size : [EHAframe.size[0],$
+                      EHAframe.size[1]+yoff,$
+                      EHAframe.size[2:3]],$
+              frame : EHAframe.frame}
 XYoff1 = [10,-8]
 MTHAbase = { size : [MTHAframe.size[0]+XYoff1[0],$
                      MTHAframe.size[1]+XYoff1[1],$
@@ -238,6 +197,48 @@ MTHAbinText  = { size : [MTHAbinLabel.size[0]+XYoff5[0],$
                          100,30],$
                  uname : 'mtha_bin_text',$
                  sensitive : MTHAbase.button.value}
+
+;///////////////////////////////////////////////
+;Global Instrument Final Wavelength (Angstroms)/
+;///////////////////////////////////////////////
+GIFWframe = { size : [MTHAframe.size[0],$
+                      MTHAframe.size[1]+yoff,$
+                      MTHAframe.size[2:3]],$
+              frame : MTHAframe.frame}
+XYoff1 = [10,-14]
+GIFWbase = { size : [GIFWframe.size[0]+XYoff1[0],$
+                     GIFWframe.size[1]+XYoff1[1],$
+                     308,$
+                     30],$
+             button : { uname : 'gifw_button',$
+                        list : ['Global Instrument Final Wavelength (Angstroms)'],$
+                        value : 0}}
+
+XYoff2 = [10,25]
+GIFWvalueLabel = { size : [GIFWframe.size[0]+XYoff2[0],$
+                          GIFWframe.size[1]+XYoff2[1]],$
+                   value : 'Value:',$
+                   uname : 'gifw_value_text_label',$
+                   sensitive : GIFWbase.button.value}
+XYoff3 = [50,-5]
+GIFWvalueText  = { size : [GIFWvalueLabel.size[0]+XYoff3[0],$
+                          GIFWvaluelabel.size[1]+XYoff3[1],$
+                          100,30],$
+                   uname : 'gifw_value_text',$
+                   sensitive : GIFWbase.button.value}
+
+XYoff4 = [200,0]
+GIFWerrorLabel = { size : [GIFWvalueLabel.size[0]+XYoff4[0],$
+                          GIFWvalueLabel.size[1]+XYoff4[1]],$
+                   value : 'Error:',$
+                   uname : 'gifw_error_text_label',$
+                   sensitive : GIFWbase.button.value}
+XYoff5 = [50,-5]
+GIFWerrorText  = { size : [GIFWerrorLabel.size[0]+XYoff5[0],$
+                          GIFWerrorlabel.size[1]+XYoff5[1],$
+                           100,30],$
+                   uname : 'gifw_error_text',$
+                   sensitive : GIFWbase.button.value}
 
 ;***********************************************************************************
 ;                                Build GUI
