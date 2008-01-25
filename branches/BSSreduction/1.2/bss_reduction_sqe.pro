@@ -226,7 +226,8 @@ global = ptr_new ({ $
                                                          wa_bin_width_text : '',$
                                                          wopies_button: 0,$
                                                          wopets_button: 0,$
-                                                         wolidsb_button: 0}}}$
+                                                         wolidsb_button: 0,$
+                                                         wodwsm_button: 0}}}$
                   })
 
 Device, /decomposed

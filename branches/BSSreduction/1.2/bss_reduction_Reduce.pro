@@ -486,3 +486,11 @@ IF (isButtonSelected(Event, 'wolidsb_button') NE 1 AND $
     SetButton, event, 'waio_button', 0
 ENDIF
 END
+
+;This function is reached by wodwsm_button
+PRO BSSreduction_Reduce_wodwsm_button, Event
+IF (isButtonSelected(Event, 'wodwsm_button') NE 1 AND $
+    isButtonSelected(Event, 'waio_button') EQ 1) THEN BEGIN
+    SetButton, event, 'waio_button', 0
+ENDIF
+END
