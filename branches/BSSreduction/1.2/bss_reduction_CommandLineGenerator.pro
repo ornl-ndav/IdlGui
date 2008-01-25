@@ -170,7 +170,7 @@ ENDELSE
 
 ;if --no-mon-norm is not set or
 ;   --no-mon-effc is not set then validate --mon-effc
-IF (isButtonSelected(Event,'nmn_button') EQ 0 OR $
+IF (isButtonSelected(Event,'nmn_button') EQ 0 AND $
     isButtonSelected(Event,'nmec_button') EQ 0) THEN BEGIN
     na_base_status = 0
 ENDIF ELSE BEGIN
