@@ -152,6 +152,7 @@ activate_base, event, 'na_womwsbase', na_base_status
 activate_base, event, 'na_wormsbase', na_base_status
 activate_base, event, 'na_wocpsamnbase', na_base_status
 activate_base, event, 'na_wodwsmbase', na_base_status
+
 IF (na_base_status) then begin
     BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button', 0
 endif else begin
@@ -1429,7 +1430,8 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     ENDELSE
     
 ;Write out Monitor Wavelength Spectrum
-    IF (isButtonSelected(Event,'womws_button')) THEN BEGIN
+    IF (isButtonSelected(Event,'womws_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-wave'
         (*global).Configuration.Reduce.tab7.womws_button = 1
     ENDIF ELSE BEGIN
@@ -1445,7 +1447,8 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     ENDELSE
     
 ;Write out Rebinned Monitor Spectra
-    IF (isButtonSelected(Event,'worms_button')) THEN BEGIN
+    IF (isButtonSelected(Event,'worms_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mon-rebin'
         (*global).Configuration.Reduce.tab7.worms_button = 1
     ENDIF ELSE BEGIN
@@ -1453,15 +1456,17 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
     ENDELSE
     
 ;Write out Combined Pixel Spectrum After Monitor Normalization
-    IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
+    IF (isButtonSelected(Event,'wocpsamn_button') AND $
+        isButtonUnSelected(Event,'nmn_button')  THEN BEGIN
         (*global).Configuration.Reduce.tab7.wocpsamn_button = 1
     ENDIF ELSE BEGIN
         (*global).Configuration.Reduce.tab7.wocpsamn_button = 0
     ENDELSE
 ENDIF    
 
-IF (isButtonSelected(Event,'wocpsamn_button')) THEN BEGIN
-
+IF (isButtonSelected(Event,'wocpsamn_button') AND $
+    isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
+    
     IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         cmd += ' --dump-wave-mnorm'
     ENDIF 
@@ -1575,9 +1580,9 @@ IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
         (*global).Configuration.Reduce.tab7.wolidsb_button = 0
     ENDELSE
     
-;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
-;over all Pixels
-    IF (isButtonSelected(Event,'wodwsm_button')) THEN BEGIN
+;Write out Dimensionless Wavelength Spectrum Momentum
+    IF (isButtonSelected(Event,'wodwsm_button') AND $
+        isButtonUnSelected(Event,'nmn_button')) THEN BEGIN
         cmd += ' --dump-mom-diml'
         (*global).Configuration.Reduce.tab7.wodwsm_button = 1
     ENDIF ELSE BEGIN
