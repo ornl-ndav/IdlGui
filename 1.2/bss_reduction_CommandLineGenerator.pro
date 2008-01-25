@@ -148,14 +148,11 @@ ENDIF ELSE BEGIN
     na_base_status = 0
     (*global).Configuration.Reduce.tab3.nmn_button = 0
 ENDELSE
-IF (NDFiles EQ '') THEN na_base_status = 1
-
 activate_base, event, 'na_womwsbase', na_base_status
 activate_base, event, 'na_wormsbase', na_base_status
 activate_base, event, 'na_wocpsamnbase', na_base_status
 activate_base, event, 'na_wodwsmbase', na_base_status
 activate_base, event, 'na_womesbase', na_base_status
-
 
 IF (na_base_status) then begin
     BSSreduction_EnableOrNotFields, Event, 'wocpsamn_button', 0
@@ -179,7 +176,6 @@ IF (isButtonSelected(Event,'nmn_button') EQ 0 OR $
 ENDIF ELSE BEGIN
     na_base_status = 1
 ENDELSE
-IF (NDFiles EQ '') THEN na_base_status = 1
 activate_base, event, 'na_womesbase', na_base_status
 
 ;get Normalization Integration Wavelength
