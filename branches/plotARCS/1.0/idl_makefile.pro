@@ -19,6 +19,7 @@ cd, CurrentFolder
 ;utils functions
 .run plot_arcs_get.pro
 .run plot_arcs_time.pro
+.run plot_arcs_put.pro
 
 ;procedures
 ;first base
