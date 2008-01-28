@@ -110,5 +110,5 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateWidget, Event, 'plot_button', activate_status
 ;activate SAVE_AS button as well
-activateWidget, Event, 'save_as_histo_mapped_button', activate_status
+;activateWidget, Event, 'save_as_histo_mapped_button', activate_status ;REMOVE_COMMENTS
 END
