@@ -1,5 +1,7 @@
 @idl_makefile
 
+resolve_routine, "loadct",/either
+resolve_routine, "congrid",/either
 resolve_routine, "strsplit", /either
 resolve_routine, "xdisplayfile",/either
 resolve_routine, "read_bmp", /either
