@@ -84,8 +84,8 @@ id = widget_info(MAIN_BASE, find_by_uname='mapping_droplist')
 widget_control, id, set_value=MapArray
 
 ;validate plot button ;REMOVE_ME
-id = widget_info(MAIN_BASE, find_by_uname='plot_button') ;REMOVE_ME
-widget_control, id, sensitive=1 ;REMOVE_ME
+;id = widget_info(MAIN_BASE, find_by_uname='plot_button') ;REMOVE_ME
+;widget_control, id, sensitive=1 ;REMOVE_ME
 
 END
 
