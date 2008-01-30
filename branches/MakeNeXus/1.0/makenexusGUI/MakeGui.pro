@@ -21,9 +21,55 @@ instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
                                run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}
 
-XYoff = [0,45]
-output_button = { size  : [run_number_base.size[0]+XYoff[0],$
-                           run_number_base.size[1]+XYoff[1],$
+;///////////////HISTOGRAMMING PARAMETERS BASE/////////////////////
+XYoff = [0,40]
+BinningBase = { size  : [run_number_base.size[0]+XYoff[0],$
+                         run_number_base.size[1]+XYoff[1],$
+                         430,40],$
+                uname : 'binning_base',$
+                frame : 1}
+                         
+XYoff = [0,10]
+offsetLabel = { size  : [XYoff[0],$
+                         XYoff[1]],$
+                value : 'Time Min.:'}
+XYoff = [65,-8]
+offsetText = { size  : [offsetLabel.size[0]+XYoff[0],$
+                        offsetLabel.size[1]+XYoff[1],$
+                        60,35],$
+               uname : 'time_offset',$
+               value : ''}
+XYoff = [5,0]
+maxLabel = { size  : [offsetText.size[0]+offsetText.size[2]+XYoff[0],$
+                      offsetLabel.size[1]],$
+             value : 'Max.:'}
+XYoff = [35,-8]
+maxText = { size  : [maxLabel.size[0]+XYoff[0],$
+                     maxLabel.size[1]+XYoff[1],$
+                     60,35],$
+            uname : 'time_max',$
+            value : ''}
+XYoff = [10,0]
+binLabel = { size  : [maxText.size[0]+offsetText.size[2]+XYoff[0],$
+                      offsetLabel.size[1]],$
+             value : 'Size:'}
+XYoff = [35,-8]
+binText = { size  : [binLabel.size[0]+XYoff[0],$
+                     binLabel.size[1]+XYoff[1],$
+                     60,35],$
+            uname : 'time_bin',$
+            value : ''}
+XYoff      = [5,-8]
+binTypeDroplist = { size  : [binText.size[0]+binText.size[2]+XYoff[0],$
+                             offsetLabel.size[1]+XYoff[1]],$
+                    uname : 'bin_type_droplist',$
+                    list  : ['Linear','Log.']}
+
+;-----------------------
+
+XYoff = [0,48]
+output_button = { size  : [BinningBase.size[0]+XYoff[0],$
+                           BinningBase.size[1]+XYoff[1],$
                            130,35],$
                   uname : 'output_button',$
                   value : 'Main Output path...'}
@@ -110,6 +156,72 @@ Instrument_droplist = WIDGET_DROPLIST(base,$
                                       XOFFSET = instrumentDroplist.size[0],$
                                       YOFFSET = instrumentDroplist.size[1],$
                                       UNAME   = instrumentDroplist.uname)
+
+
+;///////////////////HISTOGRAMMING BASE//////////////////////////
+BinningBase = WIDGET_BASE(base,$
+                          XOFFSET    = BinningBase.size[0],$
+                          YOFFSET    = BinningBase.size[1],$
+                          SCR_XSIZE  = BinningBase.size[2],$
+                          SCR_YSIZE  = BinningBase.size[3],$
+                          UNAME      = BinningBase.uname,$
+                          FRAME      = BinningBase.frame)
+
+wOffsetLabel = WIDGET_LABEL(BinningBase,$
+                            XOFFSET = offsetLabel.size[0],$
+                            YOFFSET = offsetLabel.size[1],$
+                            VALUE   = offsetLabel.value)
+
+wOffsetText = WIDGET_TEXT(BinningBase,$
+                          XOFFSET   = offsetText.size[0],$
+                          YOFFSET   = offsetText.size[1],$
+                          SCR_XSIZE = offsetText.size[2],$
+                          SCR_YSIZE = offsetText.size[3],$
+                          VALUE     = offsetText.value,$
+                          UNAME     = offsetText.uname,$
+                          /editable)
+
+wMaxLabel = WIDGET_LABEL(BinningBase,$
+                            XOFFSET = maxLabel.size[0],$
+                            YOFFSET = maxLabel.size[1],$
+                            VALUE   = maxLabel.value)
+
+wMaxText = WIDGET_TEXT(BinningBase,$
+                          XOFFSET   = maxText.size[0],$
+                          YOFFSET   = maxText.size[1],$
+                          SCR_XSIZE = maxText.size[2],$
+                          SCR_YSIZE = maxText.size[3],$
+                          VALUE     = maxText.value,$
+                          UNAME     = maxText.uname,$
+                          /editable)
+
+wbinLabel = WIDGET_LABEL(BinningBase,$
+                            XOFFSET = binLabel.size[0],$
+                            YOFFSET = binLabel.size[1],$
+                            VALUE   = binLabel.value)
+
+wbinText = WIDGET_TEXT(BinningBase,$
+                          XOFFSET   = binText.size[0],$
+                          YOFFSET   = binText.size[1],$
+                          SCR_XSIZE = binText.size[2],$
+                          SCR_YSIZE = binText.size[3],$
+                          VALUE     = binText.value,$
+                          UNAME     = binText.uname,$
+                          /editable)
+
+wDroplist2 = WIDGET_DROPLIST(BinningBase,$
+                             VALUE     = binTypeDroplist.list,$
+                             XOFFSET   = binTypeDroplist.size[0],$
+                             YOFFSET   = binTypeDroplist.size[1],$
+                             UNAME     = binTypeDroplist.uname,$
+                             SENSITIVE = 1,$
+                             /DYNAMIC_RESIZE)
+
+
+
+
+
+
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = output_button.size[0],$

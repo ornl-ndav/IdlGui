@@ -75,9 +75,9 @@ instrumentShortList = ['',$
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF ((*global).ucams NE (*global).geek) THEN BEGIN
-    MainBaseSize  = [700,500,450,375]
+    MainBaseSize  = [700,500,450,422]
 endif else begin
-    MainBaseSize  = [100,50,850,590]
+    MainBaseSize  = [100,50,850,630]
 endelse
 MainBaseTitle = 'Make NeXus (version: ' + VERSION + ')'
 
