@@ -50,15 +50,35 @@ NormIGbutton = {size  : [5,5,310,30],$
                 title : 'Select a Normalization Instrument Geometry File',$
                 uname : 'overwrite_norm_instrument_geometry_button'}
 
+;output path and file name
+XYoff    = [15,30]
+OPFlabel = { size  : [5+XYoff[0],$ $
+                      OIGlabelSize[1]+d_vertical_L_L+XYoff[1]],$
+             value : 'Output'}
+XYoff    = [60,-5]
+OPbutton = { size  : [XYoff[0],$
+                      OPFlabel.size[1]+XYoff[1],$
+                      300,35],$
+             value : '~/',$
+             uname : 'of_button'}
+XYoff    = [10,0]
+OFlabel  = { size  : [OPbutton.size[0]+OPbutton.size[2]+XYoff[0],$
+                      OPFlabel.size[1]],$
+             value : 'File Name:'}
+XYoff    = [70,-5]
+OFtext   = { size  : [OFlabel.size[0]+XYoff[0],$
+                      OFlabel.size[1]+XYoff[1],$
+                      250,35],$
+             value : '',$
+             uname : 'of_text'}
+
 ;START data reduction button
-StartDRButtonSize = [5, $
+XYoff = [720,0]
+StartDRButtonSize = [XYoff[0], $
                      OIGlabelSize[1]+d_vertical_L_L+30,$
-                     1180, $
+                     462, $
                      40]
-StartDRButtonTitle =  '>          >         >        >       >      >     >    > '
-StartDRButtonTitle += '  >  > >> S T A R T    D A T A    R E D U C T I O N << < '
-StartDRButtonTitle += ' <   <    <     <      <       <        <         <      '
-StartDRButtonTitle += '    < '
+StartDRButtonTitle = '  >  > >> S T A R T    D A T A    R E D U C T I O N << <  <'
 
 ;command line preview/generator
 d_vertical_L_L_2       = d_vertical_L_L + 10
@@ -219,6 +239,35 @@ group = CW_BGROUP(REDUCE_BASE,$
                         SCR_XSIZE = NormIGbutton.size[2],$
                         SCR_YSIZE = NormIGbutton.size[3],$
                         VALUE     = NormIGbutton.title)
+
+;output path and file name
+label = WIDGET_LABEL(REDUCE_BASE,$
+                     XOFFSET = OPFlabel.size[0],$
+                     YOFFSET = OPFlabel.size[1],$
+                     VALUE   = OPFlabel.value)
+
+button = WIDGET_BUTTON(REDUCE_BASE,$
+                       XOFFSET   = OPbutton.size[0],$
+                       YOFFSET   = OPbutton.size[1],$
+                       SCR_XSIZE = OPbutton.size[2],$
+                       SCR_YSIZE = OPbutton.size[3],$
+                       VALUE     = OPbutton.value,$
+                       UNAME     = OPbutton.uname)
+
+label = WIDGET_LABEL(REDUCE_BASE,$
+                     XOFFSET = OFlabel.size[0],$
+                     YOFFSET = OFlabel.size[1],$
+                     VALUE   = OFlabel.value)
+
+text = WIDGET_TEXT(REDUCE_BASE,$
+                   XOFFSET = OFtext.size[0],$
+                   YOFFSET = OFtext.size[1],$
+                   SCR_XSIZE = OFtext.size[2],$
+                   SCR_YSIZE = OFtext.size[3],$
+                   VALUE     = OFtext.value,$
+                   UNAME     = OFtext.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
 
 ;Start data reduction button
 StartDataReductionButton = WIDGET_BUTTON(REDUCE_BASE,$
