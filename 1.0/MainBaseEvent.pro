@@ -723,6 +723,11 @@ CASE Event.id OF
         REFreduction_OverwriteNormInstrumentGeometry, Event
     end
 
+    ;output path/file
+    widget_info(wWidget, FIND_BY_UNAME='of_button'): begin
+        REFreduction_DefineOutputPath, Event
+    end
+    
     ;Run data reduction
     widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
         REFreductionEventcb_ProcessingCommandLine, Event
