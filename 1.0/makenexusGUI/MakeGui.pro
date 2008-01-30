@@ -217,12 +217,6 @@ wDroplist2 = WIDGET_DROPLIST(BinningBase,$
                              SENSITIVE = 1,$
                              /DYNAMIC_RESIZE)
 
-
-
-
-
-
-
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = output_button.size[0],$
                        YOFFSET   = output_button.size[1],$

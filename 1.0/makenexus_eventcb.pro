@@ -1,10 +1,53 @@
-PRO checkNumberSteps, Event, prenexus_full_path, RunNumber, Instrument
+PRO populateHistogrammingBase, Event, RunNumber, Instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+prenexus_full_path = (*(*global).prenexus_path_array)[0]
+runinfoFullPath  = prenexus_full_path + '/' + Instrument
+runinfoFullPath  += '_' + strcompress(RunNumber,/remove_all)
+runinfoFullPath  += (*global).runinfo_ext
+
+;bin type
+BinType = getBinTypeFromDas(Event, runinfoFullPath)
+(*global).BinType = BinType
+IF (BinType EQ 'linear') THEN BEGIN
+    index = 0
+ENDIF ELSE BEGIN
+    index = 1
+ENDELSE
+setHistogrammingTypeValue, Event, index
+
+;bin offset
+BinOffset = getBinOffsetFromDas(Event, runinfoFullPath)
+(*global).BinOffset = BinOffset
+putTextField, Event, 'time_offset', BinOffset
+
+;bin max
+BinMax = getBinMaxSetFromDas(Event, runinfoFullPath)
+(*global).BinMax = BinMax
+putTextField, Event, 'time_max', BinMax
+
+;bin width
+BinWidth =  getBinWidthSetFromDas(Event, runinfoFullPath)
+(*global).BinWidth = BinWidth
+putTextField, Event, 'time_bin', BinWidth
+
+END
+
+
+
+
+PRO checkParameters, Event, prenexus_full_path, RunNumber, Instrument
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 runinfoFullPath             = prenexus_full_path + '/' + Instrument
 runinfoFullPath            += '_' + strcompress(RunNumber,/remove_all)
 runinfoFullPath            += (*global).runinfo_ext
+
+;get the number of steps
 NbrPolaStates = getNbrPolaState(Event, runinfoFullPath)
+(*global).NbrPolaStates = NbrPolaStates
 IF (NbrPolaStates EQ 0) THEN BEGIN
     (*global).NbrPhase = 4
 ENDIF ELSE BEGIN
@@ -56,6 +99,10 @@ ENDIF ELSE BEGIN
                 validate_go = 1
                 (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
                 (*(*global).RunNumber_array)[0]     = RunNumber
+
+;populate histogramming base
+                populateHistogrammingBase, Event, RunNumber, Instrument
+
             ENDIF ELSE BEGIN
                 putLogBook, Event, message + 'FAILED'
                 (*(*global).prenexus_path_array) = (*global).prenexus_path            
@@ -78,6 +125,12 @@ ENDIF ELSE BEGIN
                 IF (i EQ 0) THEN BEGIN
                     (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
                     (*(*global).RunNumber_array)[0]     = RunNumber
+
+                    IF (result) THEN BEGIN
+;populate histogramming base using parameters from first run number
+                        populateHistogrammingBase, Event, RunNumber, Instrument
+                    ENDIF
+
                 ENDIF ELSE BEGIN
                 (*(*global).prenexus_path_array) = [(*(*global).prenexus_path_array), $
                                                     (*global).prenexus_path]
@@ -97,6 +150,7 @@ ENDIF ELSE BEGIN
             IF (at_least_one_found) THEN BEGIN ;prenexus exist
                 validate_go = 1
                 message_array[0] = message_array[0] + 'DONE'
+                
             ENDIF ELSE BEGIN
                 message_array[0] = message_array[0] + (*global).FAILED
             ENDELSE
@@ -169,7 +223,7 @@ FOR j=0,(sz-1) DO BEGIN
         (*global).RunNumber     = run_number_array[j]
         
 ;check the number of steps it will have
-        checkNumberSteps, Event, $
+        checkParameters, Event, $
           (*global).prenexus_path, $
           (*global).RunNumber, $
           (*global).Instrument
