@@ -84,8 +84,6 @@ ENDIF ELSE BEGIN
         RunNumberArray = getListOfRuns(RunNumber)
         (*(*global).RunNumberArray) = RunNumberArray
         sz = (size(RunNumberArray))(1)
-        print, sz
-        print, RunNumberArray
         IF (sz EQ 1) THEN BEGIN ;only 1 run
             RunNumber = RunNumberArray[0]
             message = 'Checking if Run ' + strcompress(RunNumber,/remove_all)
