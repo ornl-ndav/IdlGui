@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = 'MakeNeXus1.0.1'
+VERSION = '(1.0.2)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -79,7 +79,7 @@ IF ((*global).ucams NE (*global).geek) THEN BEGIN
 endif else begin
     MainBaseSize  = [100,50,850,630]
 endelse
-MainBaseTitle = 'Make NeXus (version: ' + VERSION + ')'
+MainBaseTitle = 'Make NeXus ' + VERSION
 
 (*global).MainBaseXoffset = MainBaseSize[0]
 (*global).MainBaseYoffset = MainBaseSize[1]
