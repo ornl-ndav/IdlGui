@@ -430,8 +430,8 @@ IF (ucams EQ 'j35' OR $
 ENDIF
 
 ;; default tabs shown
-;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 1 ;reduce
+id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+widget_control, id1, set_tab_current = 1 ;reduce
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
