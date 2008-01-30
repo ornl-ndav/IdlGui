@@ -208,11 +208,11 @@ instrument = (*global).instrument
 ;store full path to NeXus
 (*global).norm_full_nexus_name = full_nexus_name
 
-;display run number in REDUCE tab
+;display full nexus name in REDUCE tab
 putTextFieldValue, $
   event, $
   'reduce_normalization_runs_text_field', $
-  strcompress(NormRunNumber,/remove_all), $
+  strcompress(full_nexus_name,/remove_all), $
   0                             ;do not append
 
 ;tells the user that the NeXus file has been found
