@@ -29,6 +29,11 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name          : 'MakeNeXus',$
+                    NbrPolaStates         : 1,$
+                    binType               : 'linear',$
+                    BinOffset             : 0.0,$
+                    BinMax                : 0L,$
+                    BinWidth              : 200L,$
                     prenexus_found_nbr    : 0,$
                     validate_go           : 0,$
                     RunNumber             : '',$
@@ -36,6 +41,7 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                     Instrument            : '',$
                     MainBaseXoffset       : 0,$
                     MainBaseYoffset       : 0,$
+                    Event_to_Histo_Mapped : '/usr/local/SNS/bin/Event_to_Histo_Mapped',$
                     mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
                             mapping_file  : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
                             geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$

@@ -19,3 +19,8 @@ id = widget_info(event.top,find_by_uname='run_number_cw_field')
 widget_control, id, set_value=''
 END
 
+PRO setHistogrammingTypeValue, Event, index
+id = widget_info(Event.top,find_by_uname='bin_type_droplist')
+widget_control, id, set_droplist_select=index
+END
+

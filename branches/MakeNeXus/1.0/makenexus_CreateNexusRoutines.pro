@@ -93,22 +93,53 @@ END
 FUNCTION RunmpFlags, Event, CNstruct
 
 ;retrieving parameters
-instrument = CNstruct.instrument
-processing = CNstruct.processing
-failed     = CNstruct.failed
-ok         = CNstruct.ok
-stagingArea = CNstruct.stagingArea
+instrument     = CNstruct.instrument
+processing     = CNstruct.processing
+failed         = CNstruct.failed
+ok             = CNstruct.ok
+stagingArea    = CNstruct.stagingArea
 base_file_name = CNstruct.base_file_name
-NbrSteps   = CNstruct.NbrSteps
+NbrSteps       = CNstruct.NbrSteps
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 error_status = 0
 
+;name of event file
+event_file = base_file_name + '_neutron_event.dat'
+
 message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
 appendLogBook, Event, message
-cmd = 'runmp_flags ' + base_file_name + ' -a ' + stagingArea
+cmd = (*global).Event_to_Histo_Mapped 
+cmd += ' -a ' + stagingArea + ' ' + event_file
+
+;NbrPhase
+NbrPolaStates = (*global).NbrPolaStates
+cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
+pixel_offset = 0
+FOR i=0,(NbrPolaStates-1) DO BEGIN
+    cmd += ' -P ' + strcompress(pixel_offset,/remove_all)
+    pixel_offset += 77824
+ENDFOR
+
+;total number of pixels
+cmd += ' -p ' + strcompress(pixel_offset,/remove_all)
+
+;BinningType
+IF (getBinType(Event) EQ 0) THEN BEGIN ;linear
+    cmd += ' -l ' 
+ENDIF ELSE BEGIN
+    cmd += ' -L '
+ENDELSE
+cmd += getBinWidth(Event)
+
+;Binning offset
+cmd += ' -O ' + getBinOffset(Event)
+
+;max time
+cmd += ' -M ' + getBinMax(Event)
+
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     geometry_file             = (*global).mac.geometry_file
     CNstruct.geometry_file    = geometry_file
