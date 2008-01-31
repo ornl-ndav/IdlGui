@@ -55,13 +55,13 @@ Load_data_run_number_text_field = CW_FIELD(load_data_run_number_base,$
 
 ;Archived or All NeXus list
 DataArchivedOrAllCWBgroup = cw_bgroup(LOAD_DATA_BASE,$
-                                  ArchivedOrAllCWBgroupList,$
-                                  uname='data_archived_or_full_cwbgroup',$
-                                  xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
-                                  yoffset=ArchivedOrAllCWBgroupSize[1],$
-                                  /exclusive,$
-                                  row=1,$
-                                  set_value=0)
+                                      ArchivedOrAllCWBgroupList,$
+                                      uname='data_archived_or_full_cwbgroup',$
+                                      xoffset=ArchivedOrAllCWBgroupSize[0]-50,$
+                                      yoffset=ArchivedOrAllCWBgroupSize[1],$
+                                      /exclusive,$
+                                      row=1,$
+                                      set_value=0)
 
 
 ;Nexus list base/label/droplist and buttons
