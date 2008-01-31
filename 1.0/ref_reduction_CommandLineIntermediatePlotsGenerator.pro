@@ -57,11 +57,18 @@ endif else begin
     IntermPlots[5] = 0
 endelse
 
-;Combine plot
+;rtof uncombined
 if (InterPlotsStatus[6] EQ 1) then begin
     IntermPlots[6] = 1
 endif else begin
     IntermPlots[6] = 0
+endelse
+
+;rtof_combined plot
+if (InterPlotsStatus[7] EQ 1) then begin
+    IntermPlots[7] = 1
+endif else begin
+    IntermPlots[7] = 0
 endelse
 
 (*global).IntermPlots = IntermPlots
@@ -101,9 +108,14 @@ if (isBaseMap(Event,'reduce_plot3_base') EQ 0 OR $
     endif
 endif
 
-;Combine plot
+;rtof plot
 if (InterPlotsStatus[6] EQ 1) then begin
     IP_cmd += ' --dump-rtof'
+endif
+
+;rtof combined plot
+if (InterPlotsStatus[7] EQ 1) then begin
+    IP_cmd += ' --dump-crtof'
 endif
 
 ;create array of Intermediate files to plot

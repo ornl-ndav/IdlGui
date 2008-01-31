@@ -5,12 +5,12 @@ InterLabelSize = [IndividualBasewidth+10,0]
 
 ;intermdiate plot base
 InterBaseSize = [IndividualBaseWidth-5, $
-                 5,$
+                 0,$
                  298, $
-                 235]
-InterMainFramesize = [5,5,288,215]
+                 236]
+InterMainFramesize = [5,0,288,215]
 
-plot1BaseSize = [15,22,280,23]
+plot1BaseSize = [15,9,280,23]
 plotnYoff = 28
 plot2Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+plotnYoff,$
@@ -36,23 +36,27 @@ plot7Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+6*plotnYoff,$
                  plot1BaseSize[2],$
                  plot1Basesize[3]]
+plot8Basesize = [plot1BaseSize[0],$
+                 plot1BaseSize[1]+7*plotnYoff,$
+                 plot1BaseSize[2],$
+                 plot1Basesize[3]]
 
 ;remove last plot title from list
 sz = (size(PlotsTitle))(1)
 ;intermediate plots list
 InterList = PlotsTitle[0:sz-2]
 
-InterListSize = [10,15]
+InterListSize = [10,5]
 NotAvailableTitle = '- No Dispo.'
 
 ;###############################################################################
 ;############################### Create GUI ####################################
 ;###############################################################################
 
-IndividualLabel = WIDGET_LABEL(REDUCE_BASE,$
-                               XOFFSET = InterLabelSize[0],$
-                               YOFFSET = InterLabelSize[1],$
-                               VALUE   = InterLabeltitle)
+;IndividualLabel = WIDGET_LABEL(REDUCE_BASE,$
+;                               XOFFSET = InterLabelSize[0],$
+;                               YOFFSET = InterLabelSize[1],$
+;                               VALUE   = InterLabeltitle)
 
 ;base
 InterBase = WIDGET_BASE(REDUCE_BASE,$
@@ -160,21 +164,39 @@ plot7Label = WIDGET_LABEL(plot7Base,$
                           YOFFSET = 0,$
                           VALUE   = InterList[6] + NotAvailableTitle)
 
+;plot 8 base/label
+plot8Base = widget_base(InterBase,$
+                        xoffset=plot8BaseSize[0],$
+                        yoffset=plot8Basesize[1],$
+                        scr_xsize=plot8BaseSize[2],$
+                        scr_ysize=plot8Basesize[3],$
+                        uname='reduce_plot8_base',$
+                        map=0)
+
+plot8Label = widget_label(plot8Base,$
+                          xoffset=0,$
+                          yoffset=0,$
+                          value=InterList[7] + NotAvailableTitle)
+
+
+
+
+
 InterList = CW_BGROUP(InterBase,$
                       InterList,$
                       XOFFSET   =InterListSize[0],$
                       YOFFSET   =InterListSize[1],$
                       UNAME     ='intermediate_plot_list',$
-                      SET_VALUE =[0,0,0,0,0,0,0],$
+                      SET_VALUE =[0,0,0,0,0,0,0,0],$
                       /NONEXCLUSIVE)
                             
-InterMainFrame = WIDGET_LABEL(InterBase,$
-                              XOFFSET   = InterMainFrameSize[0],$
-                              YOFFSET   = InterMainFrameSize[1],$
-                              SCR_XSIZE = InterMainFrameSize[2],$
-                              SCR_YSIZE = InterMainFrameSize[3],$
-                              FRAME     = 1,$
-                              VALUE='')
+; InterMainFrame = WIDGET_LABEL(InterBase,$
+;                               XOFFSET   = InterMainFrameSize[0],$
+;                               YOFFSET   = InterMainFrameSize[1],$
+;                               SCR_XSIZE = InterMainFrameSize[2],$
+;                               SCR_YSIZE = InterMainFrameSize[3],$
+;                               FRAME     = 1,$
+;                               VALUE='')
 
 
 END

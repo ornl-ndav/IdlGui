@@ -105,7 +105,7 @@ sz=size(IntermPlots)
 Nbr = sz[1]
 for i=0,(Nbr-1) do begin
     if (IntermPlots[i] EQ 1) then begin
-        FileName = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[i+1]
+        FileName = Base_name + '_' + IsoTimeStamp + ExtOfAllPlots[i+1]
         FilesToPlotList = [FilesToPlotList,FileName]
     endif
 endfor

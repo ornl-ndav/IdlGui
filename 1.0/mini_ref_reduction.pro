@@ -58,7 +58,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ 
 ;title of main data reduction
-                   IntermPlots : intarr(7),$ 
+                   IntermPlots : intarr(8),$ 
 ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName:ptr_new(0L),$ 
 ;full path name of the plot currently plotted
@@ -323,6 +323,7 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Norm. Combined Background TOF Plot',$
               'Norm. Combined Subtracted TOF Plot',$
               'R vs TOF Plot',$
+              'R vs TOF Combined Plot',$
               'XML output file']
 (*(*global).PlotsTitle) = PlotsTitle
 MainPlotTitle = 'Main Data Reduction Plot'
@@ -344,7 +345,8 @@ ExtOfAllPlots = ['.txt',$
                  '_norm.sdc',$
                  '_norm.bkg',$
                  '_norm.sub',$
-                 '.rtof']
+                 '.rtof',$
+                 '.crtof']
 (*(*global).ExtOfAllPlots) = ExtOfAllPlots
 
 ;define Main Base variables
