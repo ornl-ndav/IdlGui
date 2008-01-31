@@ -428,7 +428,7 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
 endif
 
 ;get name from output path and name
-outputPath     = getOutputPath(Event)
+outputPath     = (*global).dr_output_path
 outputFileName = getOutputFileName(Event)
 NewOutputFileName = outputPath + outputFileName
 cmd += ' --output=' + NewOutputFileName

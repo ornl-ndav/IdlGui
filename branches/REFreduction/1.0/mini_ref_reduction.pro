@@ -30,6 +30,8 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   dr_output_path : '~/',$
+;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
                    cl_file_ext1    : 'REFreduction_CL_',$
@@ -426,8 +428,8 @@ IF (ucams EQ 'j35' OR $
 ENDIF
 
 ;; default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 1 ;reduce
  
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
