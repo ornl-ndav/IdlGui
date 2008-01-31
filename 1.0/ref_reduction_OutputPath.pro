@@ -48,5 +48,8 @@ PRO REFreduciton_DefineOutputFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 NewOutputFileName = getOutputFileName(Event)
+;remove .txt if any
+StringArray = strsplit(NewOutputFileName,'.',/extract)
+newOutputFileName = StringArray[0]
 (*global).OutputFileName = NewOutputFileName
 END
