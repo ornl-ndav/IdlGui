@@ -427,15 +427,10 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
 
 endif
 
-;force name of output file according to time stamp
-IsoTimeStamp = RefReduction_GenerateIsoTimeStamp()
-(*global).IsoTimeStamp = IsoTimeStamp
-NewOutputFileName = (*global).instrument
-NewOutputFileName += '_' + strcompress((*global).data_run_number,/remove_all)
-NewOutputFileName += '_' + strcompress(IsoTimeStamp,/remove_all)
-(*global).OutputFileName = NewOutputFileName
-ExtOfAllPlots = (*(*global).ExtOfAllPlots)
-NewOutputFileName += ExtOfAllPlots[0]
+;get name from output path and name
+outputPath     = getOutputPath(Event)
+outputFileName = getOutputFileName(Event)
+NewOutputFileName = outputPath + outputFileName
 cmd += ' --output=' + NewOutputFileName
 
 ;generate intermediate plots command line

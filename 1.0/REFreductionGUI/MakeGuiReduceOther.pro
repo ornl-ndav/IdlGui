@@ -68,7 +68,7 @@ OFlabel  = { size  : [OPbutton.size[0]+OPbutton.size[2]+XYoff[0],$
 XYoff    = [70,-5]
 OFtext   = { size  : [OFlabel.size[0]+XYoff[0],$
                       OFlabel.size[1]+XYoff[1],$
-                      250,35],$
+                      270,35],$
              value : '',$
              uname : 'of_text'}
 
@@ -266,6 +266,7 @@ text = WIDGET_TEXT(REDUCE_BASE,$
                    SCR_YSIZE = OFtext.size[3],$
                    VALUE     = OFtext.value,$
                    UNAME     = OFtext.uname,$
+                   /ALL_EVENTS,$
                    /EDITABLE,$
                    /ALIGN_LEFT)
 

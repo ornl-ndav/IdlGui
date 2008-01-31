@@ -29,6 +29,7 @@ CASE Event.id OF
 ;LOAD DATA file
     widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotDataFile, Event
+        DefineDefaultOutputName, Event
     end
 
 ;##In list of nexus base##
@@ -725,7 +726,8 @@ CASE Event.id OF
 
     ;output path/file
     widget_info(wWidget, FIND_BY_UNAME='of_button'): begin
-        REFreduction_DefineOutputPath, Event
+        REFreduction_DefineOutputPath, Event ;in ref_reduction_OutputPath.pro
+        REFreduction_CommandLineGenerator, Event
     end
     
     ;Run data reduction
@@ -800,6 +802,7 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='q_scale_b_group'): 
     widget_info(wWidget, FIND_BY_UNAME='filtering_data_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='delta_t_over_t_cwbgroup'): 
+    widget_info(wWidget, FIND_BY_UNAME='of_text'): 
     widget_info(wWidget, FIND_BY_UNAME='overwrite_data_instrument_geometry_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='overwrite_norm_instrument_geometry_cwbgroup'): begin
         REFreduction_CommandLineGenerator, Event
