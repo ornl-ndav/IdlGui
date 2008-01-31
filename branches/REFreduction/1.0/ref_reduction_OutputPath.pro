@@ -3,6 +3,7 @@ PRO REFreduction_DefineOutputPath, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 path = DIALOG_PICKFILE(/DIRECTORY,$
+                       PATH = (*global).dr_output_path,$
                        TITLE = 'Select a folder',$
                        /MUST_EXIST)
 miniVersionLength = 10
