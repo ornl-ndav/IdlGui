@@ -34,10 +34,19 @@ widget_control,id,get_uvalue=global
 IsoTimeStamp = RefReduction_GenerateIsoTimeStamp()
 (*global).IsoTimeStamp = IsoTimeStamp
 NewOutputFileName = (*global).instrument
-NewOutputFileName += '_' + strcompress((*global).data_run_number,/remove_all)
+NewOutputFileName += '_' + (*global).DataRunNumber
 NewOutputFileName += '_' + strcompress(IsoTimeStamp,/remove_all)
 (*global).OutputFileName = NewOutputFileName
 ExtOfAllPlots = (*(*global).ExtOfAllPlots)
 NewOutputFileName += ExtOfAllPlots[0]
 putTextFieldValue, event, 'of_text', NewOutputFileName, 0
+END
+
+
+PRO REFreduciton_DefineOutputFile, Event 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+NewOutputFileName = getOutputFileName(Event)
+(*global).OutputFileName = NewOutputFileName
 END

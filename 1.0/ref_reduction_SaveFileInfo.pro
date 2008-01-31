@@ -15,7 +15,6 @@ for j=0,(FileNbr-1) do begin
     WriteError = 0
     CATCH, WriteError
     if (WriteError NE 0) then begin
-
     endif else begin
 
         no_file = 0
