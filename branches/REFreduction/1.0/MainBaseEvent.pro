@@ -729,6 +729,11 @@ CASE Event.id OF
         REFreduction_DefineOutputPath, Event ;in ref_reduction_OutputPath.pro
         REFreduction_CommandLineGenerator, Event
     end
+
+    widget_info(wWidget, FIND_BY_UNAME='of_text'): begin
+        REFreduciton_DefineOutputFile, Event ;in ref_reduction_OutputPath.pro
+        REFreduction_CommandLineGenerator, Event
+    end
     
     ;Run data reduction
     widget_info(wWidget, FIND_BY_UNAME='start_data_reduction_button'): begin
@@ -802,7 +807,6 @@ SWITCH Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='q_scale_b_group'): 
     widget_info(wWidget, FIND_BY_UNAME='filtering_data_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='delta_t_over_t_cwbgroup'): 
-    widget_info(wWidget, FIND_BY_UNAME='of_text'): 
     widget_info(wWidget, FIND_BY_UNAME='overwrite_data_instrument_geometry_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='overwrite_norm_instrument_geometry_cwbgroup'): begin
         REFreduction_CommandLineGenerator, Event

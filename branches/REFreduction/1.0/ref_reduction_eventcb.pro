@@ -238,14 +238,15 @@ IF ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was succes
 
 ;creates array of all files to plot
     FilesToPlotList = $
-      getListOfFilesToPlot(IntermPlots,$ ;[0,0,1,1,0,0,1]
+      getListOfFilesToPlot(Event,$
+                           IntermPlots,$ ;[0,0,1,1,0,0,1]
                            ExtOfAllPlots,$ ;[.txt,.sdc,.....]
                            IsoTimeStamp,$ ;2007-08-31T09:24:45-04:00
                            instrument,$ ;REF_L
                            data_run_number) ;3454
     
     (*(*global).FilesToPlotList) = FilesToPlotList
-    
+
 ;get metadata
     NbrLine = (*global).PreviewFileNbrLine
     RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine

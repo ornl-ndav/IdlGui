@@ -15,6 +15,8 @@ isNeXusFound = 0                ;by default, NeXus not found
 
 if (DataRunNumber NE '') then begin ;data run number is not empty
     
+    (*global).DataRunNumber = strcompress(DataRunNumber,/remove_all)
+
 ;check if user wants archived or all nexus runs
     if (~isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus
         

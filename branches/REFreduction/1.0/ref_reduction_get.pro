@@ -73,23 +73,31 @@ END
 
 
 ;This function returns the full path name of all the file to plot
-FUNCTION getListOfFilestoPlot, IntermPlots, $
+FUNCTION getListOfFilestoPlot, Event, $
+                               IntermPlots, $
                                ExtOfAllPlots, $
                                IsoTimeStamp, $
                                instrument, $
                                run_number
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 FilesToPlotList = strarr(1)
 
 ;base name    ex: REF_L_3000
-BaseName = './' + instrument + '_' + strcompress(run_number,/remove_all)
+path      = (*global).dr_output_path
+file_name = (*global).OutputFileName
+base_name = path + file_name
 
 ;main data reduction plot (.txt)
-MainFile = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[0]
+
+MainFile = base_name + ExtOfAllPlots[0]
 FilesToPlotList[0] = MainFile
 
 ;xml file (.rdc)
-XmlFile = BaseName + '_' + IsoTimeStamp + ExtOfAllPlots[1]
+XmlFile = base_name + ExtOfAllPlots[1]
 FilesToPlotList = [FilesToPlotList,XmlFile]
 
 ;other intermediate files
