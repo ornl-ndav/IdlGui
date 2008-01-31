@@ -26,12 +26,20 @@ CASE Event.id OF
     
 ;**LOAD TAB**DATA**
 
-;LOAD DATA file
+;LOAD DATA file cw_field
     widget_info(wWidget, FIND_BY_UNAME='load_data_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotDataFile, Event
         DefineDefaultOutputName, Event
-    end
+    END
 
+;LOAD DATA file archived cwbgroup
+    widget_info(wWidget, FIND_BY_UNAME='data_archived_or_full_cwbgroup'): BEGIN
+        IF (getTextFieldValue(Event,'load_data_run_number_text_field') NE 0) THEN BEGIN
+            REFreductionEventcb_LoadAndPlotDataFile, Event
+            DefineDefaultOutputName, Event
+        ENDIF
+    end
+    
 ;##In list of nexus base##
 ;droplist
     widget_info(wWidget, FIND_BY_UNAME='data_list_nexus_droplist'): begin
@@ -362,6 +370,13 @@ CASE Event.id OF
 ;LOAD NORMALIZATION file
     widget_info(wWidget, FIND_BY_UNAME='load_normalization_run_number_text_field'): begin
         REFreductionEventcb_LoadAndPlotNormFile, Event
+    end
+
+    widget_info(wWidget, FIND_BY_UNAME='normalization_archived_or_full_cwbgroup'): begin
+        IF (getTextFieldValue(Event, $
+                              'load_normalization_run_number_text_field') NE 0) THEN BEGIN
+            REFreductionEventcb_LoadAndPlotNormFile, Event
+        ENDIF
     end
 
 ;##In list of nexus base##
