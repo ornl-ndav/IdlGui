@@ -5,8 +5,8 @@ InterLabelSize = [IndividualBasewidth+20,10]
 
 ;intermdiate plot base
 InterBaseSize = [IndividualBaseWidth,15,$
-                 510,235]
-InterMainFramesize = [5,5,450,215]
+                 510,248]
+InterMainFramesize = [5,5,450,235]
 
 plot1BaseSize = [15,22,400,23]
 plotnYoff = 28
@@ -32,6 +32,10 @@ plot6Basesize = [plot1BaseSize[0],$
                  plot1Basesize[3]]
 plot7Basesize = [plot1BaseSize[0],$
                  plot1BaseSize[1]+6*plotnYoff,$
+                 plot1BaseSize[2],$
+                 plot1Basesize[3]]
+plot8Basesize = [plot1BaseSize[0],$
+                 plot1BaseSize[1]+7*plotnYoff,$
                  plot1BaseSize[2],$
                  plot1Basesize[3]]
 
@@ -157,13 +161,27 @@ plot7Label = widget_label(plot7Base,$
                           yoffset=0,$
                           value=InterList[6] + NotAvailableTitle)
 
+;plot 8 base/label
+plot8Base = widget_base(InterBase,$
+                        xoffset=plot8BaseSize[0],$
+                        yoffset=plot8Basesize[1],$
+                        scr_xsize=plot8BaseSize[2],$
+                        scr_ysize=plot8Basesize[3],$
+                        uname='reduce_plot8_base',$
+                        map=0)
+
+plot8Label = widget_label(plot8Base,$
+                          xoffset=0,$
+                          yoffset=0,$
+                          value=InterList[7] + NotAvailableTitle)
+
 InterList = cw_bgroup(InterBase,$
                       InterList,$
                       xoffset=InterListSize[0],$
                       yoffset=InterListSize[1],$
                       uname='intermediate_plot_list',$
                       /nonexclusive,$
-                      set_value=[0,0,0,0,0,0,0])
+                      set_value=[0,0,0,0,0,0,0,0])
                             
 InterMainFrame = widget_label(InterBase,$
                               xoffset=InterMainFrameSize[0],$
