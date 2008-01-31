@@ -42,39 +42,6 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiLogBookTab.pro
 .run MakeGuiSettingsTab.pro
 
-;Build miniREFreduction GUI
-cd, CurrentFolder + '/miniREFreductionGUI/'
-.run miniMakeGuiMainTab.pro
-.run miniMakeGuiLoadTab.pro
-.run miniMakeGuiLoadDataNormalizationTab.pro
-.run miniMakeGuiLoadDataTab.pro
-.run miniMakeGuiLoadData1D2DTab.pro
-.run miniMakeGuiLoadData1DTab.pro
-.run miniMakeGuiLoadData1D_3D_Tab.pro
-.run miniMakeGuiLoadData2DTab.pro
-.run miniMakeGuiLoadData2D_3D_Tab.pro
-.run miniMakeGuiLoadNormalizationTab.pro
-.run miniMakeGuiLoadNormalization1D2DTab.pro
-.run miniMakeGuiLoadNormalization1DTab.pro
-.run miniMakeGuiLoadNormalization1D_3D_Tab.pro
-.run miniMakeGuiLoadNormalization2DTab.pro
-.run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-
-.run miniMakeGuiReduceTab.pro
-.run miniMakeGuiReduceDataBase.pro
-.run miniMakeGuiReduceNormalizationBase.pro
-.run miniMakeGuiReduceQbase.pro
-.run miniMakeGuiReduceDetectorBase.pro
-.run miniMakeGuiReduceIntermediatePlotBase.pro
-.run miniMakeGuiReduceOther.pro
-.run miniMakeGuiReduceInfo.pro
-
-.run miniMakeGuiPlotsTab.pro
-.run miniMakeGuiPlotsMainIntermediatesBases.pro
-
-.run miniMakeGuiLogBookTab.pro
-.run miniMakeGuiSettingsTab.pro
-
 ;Build main procedures
 cd, CurrentFolder
 .run ref_reduction_string.pro

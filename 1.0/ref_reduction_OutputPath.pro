@@ -1,8 +1,24 @@
 PRO REFreduction_DefineOutputPath, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 path = DIALOG_PICKFILE(/DIRECTORY,$
                        TITLE = 'Select a folder',$
                        /MUST_EXIST)
+miniVersionLength = 10
+maxiVersionLength = 40
 IF (path NE '') THEN BEGIN
+    (*global).dr_output_path = path
+    length = strlen(path)
+    IF ((*global).miniVersion EQ 1) THEN BEGIN
+        IF (length GT miniVersionLength) THEN BEGIN
+            path = '[...]' + strmid(path,length-miniVersionLength,miniVersionLength)
+        ENDIF
+    ENDIF ELSE BEGIN
+        IF (length GT maxiVersionLength) THEN BEGIN
+            path = '[...]' + strmid(path,length-maxiVersionLength,maxiVersionLength)
+        ENDIF
+    ENDELSE
 ;replace title of button
     SetButtonValue, Event, 'of_button', path
 ENDIF
