@@ -138,7 +138,7 @@ return, value
 END
 
 
-FUNCTION getUDCoefficienT,Event
+FUNCTION getUDCoefficienT, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 IF ((*global).miniVersion EQ 1) THEN BEGIN
@@ -148,3 +148,15 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+
+FUNCTION getOutputPath, Event
+id = widget_info(Event.top,find_by_uname='of_button')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+FUNCTION getOutputFileName, Event
+id = widget_info(Event.top,find_by_uname='of_text')
+widget_control, id, get_value=value
+RETURN, value
+END
