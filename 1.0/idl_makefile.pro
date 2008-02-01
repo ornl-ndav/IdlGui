@@ -25,6 +25,7 @@ cd, CurrentFolder
 ;first base
 .run plot_arcs_Input.pro
 .run plot_arcs_Browse.pro
+.run plot_arcs_PreviewRuninfoFile.pro
 .run plot_arcs_CollectHistoInfo.pro
 .run plot_arcs_GUIupdate.pro
 .run plot_arcs_CreateHistoMapped.pro

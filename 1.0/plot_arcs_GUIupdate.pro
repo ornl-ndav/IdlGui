@@ -4,6 +4,11 @@ widget_control, id, sensitive=activate_status
 END
 
 
+PRO activatePreviewButton, Event, status
+activateWidget, Event, 'preview_runinfo_file', status
+END
+
+
 PRO activateCreateHistoMapButton, Event, activate_status
 id = widget_info(Event.top,find_by_uname='create_histo_mapped_button')
 widget_control, id, sensitive=activate_status
@@ -92,12 +97,17 @@ ENDIF ELSE BEGIN
     activate_go_histo_mapped_status = 0
 ENDELSE
 ;activate or not go_histo_mapped
+;and activate or not preview runinfo file
 IF (activate_go_histo_mapped_status) THEN BEGIN
     activateCreateHistoMapButton, Event, 1
+    activatePreviewButton, Event, 1
 ENDIF ELSE BEGIN
     activateCreateHistoMapButton, Event, 0
+    activatePreviewButton, Event, 0
 ENDELSE
 END
+
+
 
 
 PRO ActivateOrNotPlotButton, Event

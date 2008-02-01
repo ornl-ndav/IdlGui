@@ -27,6 +27,11 @@ CASE Event.id OF
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
 
+;preview runinfo file
+    widget_info(wWidget, FIND_BY_UNAME='preview_runinfo_file'): begin
+        PreviewRuninfoFile, Event ;in plot_arcs_PreviewRuninfoFile.pro
+    end
+
 ;'Event File' widget_text in INPUT base
     widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
         ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro

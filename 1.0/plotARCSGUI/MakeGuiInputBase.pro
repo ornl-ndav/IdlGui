@@ -40,6 +40,15 @@ iButton1 = { size  : [iLabel2.size[0]+XYoff[0],$
              uname : 'browse_event_file_button',$
              value : 'B R O W S E   E V E N T   F I L E ...'}
                       
+;Display runinfo file
+XYOff    = [0,0]
+iDisplayButton = { size      : [iButton1.size[0]+iButton1.size[2]+XYoff[0],$
+                                iButton1.size[1],$
+                                140,30],$
+                   value     : 'PREVIEW RUNINFO FILE',$
+                   uname     : 'preview_runinfo_file',$
+                   sensitive : 0}
+
 XYoff   = [0,50]
 iElabel = { size  : [iBaseField1.size[0]+XYoff[0],$
                      iBaseField1.size[1]+XYoff[1]],$
@@ -281,6 +290,16 @@ wButton1 = WIDGET_BUTTON(wBase,$
                          SCR_YSIZE = iButton1.size[3],$
                          UNAME     = iButton1.uname,$
                          VALUE     = iButton1.value)
+
+;display runinfo file
+wDisplayButton = WIDGET_BUTTON(wBase,$
+                               XOFFSET   = iDisplayButton.size[0],$
+                               YOFFSET   = iDisplayButton.size[1],$
+                               SCR_XSIZE = iDisplayButton.size[2],$
+                               SCR_YSIZE = iDisplayButton.size[3],$
+                               UNAME     = iDisplayButton.uname,$
+                               SENSITIVE = iDisplayButton.sensitive,$
+                               VALUE     = iDisplayButton.value)
 
 wElabel = WIDGET_LABEL(wBase,$
                        XOFFSET = iElabel.size[0],$
