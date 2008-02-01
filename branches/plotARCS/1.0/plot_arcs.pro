@@ -18,6 +18,8 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    bin_width             : '200',$
+                    runinfoFileName       : '',$
                     img                   : ptr_new(0L),$
                     nbr_pixel             : 117760L,$
                     version               : VERSION,$

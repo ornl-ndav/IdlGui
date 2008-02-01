@@ -30,17 +30,24 @@ IF (getRunPath(Event, RunNumber, runFullPath)) THEN BEGIN
         putTextAtEndOfStatus, Event, OK, PROCESSING
 ;display name of event file name in event file widget_text
         putTextInTextField, Event, 'event_file', full_event_file
+;determine full name of runinfo file name
+        runinfoFileName = runFullPath + '/ARCS_' + RunNumber + '_runinfo.xml'
+        (*global).runinfoFileName = runinfoFileName
     ENDIF ELSE BEGIN
         putTextAtEndOfLogBook, Event, FAILED, PROCESSING
         putTextAtEndOfStatus, Event, FAILED, PROCESSING
 ;display name of event file name in event file widget_text
         putTextInTextField, Event, 'event_file', ''
+;reset name of runinfo file name
+        (*global).runinfoFileName = ''
     ENDELSE
 ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING
     message = ' -> prenexus folder can not be located'
     appendLogBook, Event, message
     putTextAtEndOfStatus, Event, FAILED, PROCESSING
+;reset name of runinfo file name
+    (*global).runinfoFileName = ''
 ENDELSE
 
 

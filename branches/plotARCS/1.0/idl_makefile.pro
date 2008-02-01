@@ -25,10 +25,12 @@ cd, CurrentFolder
 ;first base
 .run plot_arcs_Input.pro
 .run plot_arcs_Browse.pro
+.run plot_arcs_CollectHistoInfo.pro
 .run plot_arcs_GUIupdate.pro
 .run plot_arcs_CreateHistoMapped.pro
 .run plot_arcs_SaveAsHistoMapped.pro
 .run plot_arcs_SendToGeek.pro
+
 ;main plot base
 .run plot_arcs_PlotMainPlot.pro
 .run plot_arcs_MainPlot.pro
