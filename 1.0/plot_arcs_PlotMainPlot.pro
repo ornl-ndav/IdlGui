@@ -175,8 +175,13 @@ CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='main_plot'): begin
         MainPlotInteraction, Event
         IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
-            getBankIndex, Event, Event.X, Event.Y
-;            PlotBank ;launch the bank view
+            X = Event.X
+            Y = Event.Y
+            index = getBankIndex(Event, X, Y)
+            IF (index NE -1) THEN BEGIN
+                bankName = getBank(Event)
+                PlotBank, (*(*global1).img), index, bankName ;launch the bank view
+            ENDIF
         ENDIF
     END
 
