@@ -372,6 +372,7 @@ xoff    = (*global1).xoff
 img     = (*(*global1).img)
 wBase   = (*global1).wBase
 Ytof    = (*global1).Ytof
+Y_factor_display = 2 ;this allow the tof to fill up exactly the vertical space allowed
 
 ;change title
 id = widget_info(wBase,find_by_uname='main_plot_base')
@@ -412,8 +413,12 @@ ds         = Npts/dim_new      ;resulting downsampling ratio - how many points
 ;plot bottom  banks
 for i=0,(38-1) do begin
     bank         = tvimg2[i*8:(i+1)*8-1,*]
-    bank_smooth  = smooth(bank,ds,/edge)
-    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new)
+    IF (ds LT (size(bank))(1)) THEN BEGIN
+        bank_smooth  = smooth(bank,ds,/edge)
+    ENDIF ELSE BEGIN
+        bank_smooth = bank
+    ENDELSE
+    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new*Y_factor_display)
     tvscl, bank_congrid, /device, i*(Xcoeff)+i*off+xoff, off
 endfor
 
@@ -422,7 +427,7 @@ yoff   = Ycoeff + 2*off
 for i=38,68 do begin
     bank         = tvimg2[i*8:(i+1)*8-1,*]
     bank_smooth  = smooth(bank,ds,/edge)
-    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new)
+    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new*Y_factor_display)
     tvscl, bank_congrid, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff
 endfor
 
@@ -430,20 +435,20 @@ endfor
 i = 70 ;32B (bottom one)
 bank         = tvimg2[i*8:(i+1)*8-1,*]
 bank_smooth  = smooth(bank,ds,/edge)
-bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+bank_congrid = congrid(bank_smooth,Xcoeff,dim_new)
 tvscl, bank_congrid, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
 
 i = 69 ;32A (top one)
 bank         = tvimg2[i*8:(i+1)*8-1,*]
 bank_smooth  = smooth(bank,ds,/edge)
-bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+bank_congrid = congrid(bank_smooth,Xcoeff,dim_new)
 tvscl, bank_congrid, /device, (i-38)*(Xcoeff)+(i-38)*off+xoff, yoff+Ycoeff/2
 
 ;plot 33 to 38 of middle banks
 FOR i=71,76 DO BEGIN
     bank         = tvimg2[i*8:(i+1)*8-1,*]
     bank_smooth  = smooth(bank,ds,/edge)
-    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new/2)
+    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new*Y_factor_display)
     tvscl, bank_congrid, /device, (i-39)*(Xcoeff)+(i-39)*off+xoff, yoff
 ENDFOR
 
@@ -452,7 +457,7 @@ yoff   = 2*Ycoeff + 3*off
 for i=77,114 do begin
     bank         = tvimg2[i*8:(i+1)*8-1,*]
     bank_smooth  = smooth(bank,ds,/edge)
-    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new)
+    bank_congrid = congrid(bank_smooth,Xcoeff,dim_new*Y_factor_display)
     tvscl, bank_congrid, /device, (i-77)*(Xcoeff)+(i-77)*off+xoff, yoff
 endfor
 
