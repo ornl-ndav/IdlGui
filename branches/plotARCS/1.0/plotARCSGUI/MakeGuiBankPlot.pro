@@ -6,8 +6,8 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
 BankPlotBase = { size  : [50, $
                           50, $
-                          8*Xfactor, $
-                          128*Yfactor],$
+                          8L*Xfactor, $
+                          128L*Yfactor],$
                  uname : 'bank_plot_base',$
                  title : 'BANK VIEW'}
 
