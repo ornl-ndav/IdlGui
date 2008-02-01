@@ -15,6 +15,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='run_number'): begin
         InputRunNumber, Event ;in plot_arcs_Input.pro
         ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
+        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
     
@@ -22,6 +23,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='browse_event_file_button'): begin
         BrowseEventRunNumber, Event ;in plot_arcs_Browse.pro
         ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
+        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
     end
 
@@ -29,6 +31,7 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
         ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+        GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
     end
 
 ;'max_time_bin' 

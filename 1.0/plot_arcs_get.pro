@@ -161,3 +161,103 @@ END
 
 
 
+FUNCTION getBinTypeFromDas, Event, file_name
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    return, 'linear'
+ENDIF ELSE BEGIN
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        return, 0
+    ENDIF ELSE BEGIN
+        oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+        obj1 = oDocList->item(0)
+        obj2=obj1->GetElementsByTagName('Scattering')
+        obj3=obj2->item(0)
+        obj4=obj3->GetElementsByTagName('NumTimeChannels')
+        obj4a=obj4->item(0)
+        obj4b=obj4a->getattributes()
+        obj4c=obj4b->getnameditem('scale')
+        return, strcompress(obj4c->getvalue())
+    ENDELSE
+ENDELSE
+END
+
+
+
+FUNCTION getBinOffsetFromDas, Event, file_name
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    return, '0'
+ENDIF ELSE BEGIN
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        return, 0
+    ENDIF ELSE BEGIN
+        oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+        obj1 = oDocList->item(0)
+        obj2=obj1->GetElementsByTagName('Scattering')
+        obj3=obj2->item(0)
+        obj4=obj3->GetElementsByTagName('NumTimeChannels')
+        obj4a=obj4->item(0)
+        obj4b=obj4a->getattributes()
+        obj4c=obj4b->getnameditem('startbin')
+        return, strcompress(obj4c->getvalue())
+    ENDELSE
+ENDELSE
+END
+
+
+
+FUNCTION getBinMaxSetFromDas, Event, file_name
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    return, '100000'
+ENDIF ELSE BEGIN
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        return, 0
+    ENDIF ELSE BEGIN
+        oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+        obj1 = oDocList->item(0)
+        obj2=obj1->GetElementsByTagName('Scattering')
+        obj3=obj2->item(0)
+        obj4=obj3->GetElementsByTagName('NumTimeChannels')
+        obj4a=obj4->item(0)
+        obj4b=obj4a->getattributes()
+        obj4c=obj4b->getnameditem('endbin')
+        return, strcompress(obj4c->getvalue())
+    ENDELSE
+ENDELSE
+END
+
+
+
+FUNCTION getBinWidthSetFromDas, Event, file_name
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    return, '200'
+ENDIF ELSE BEGIN
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        return, 0
+    ENDIF ELSE BEGIN
+        oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+        obj1 = oDocList->item(0)
+        obj2=obj1->GetElementsByTagName('Scattering')
+        obj3=obj2->item(0)
+        obj4=obj3->GetElementsByTagName('NumTimeChannels')
+        obj4a=obj4->item(0)
+        obj4b=obj4a->getattributes()
+        obj4c=obj4b->getnameditem('width')
+        return, strcompress(obj4c->getvalue())
+    ENDELSE
+ENDELSE
+END
+
+
+

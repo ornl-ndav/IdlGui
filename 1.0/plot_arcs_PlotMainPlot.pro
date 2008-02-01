@@ -371,16 +371,20 @@ WIDGET_CONTROL, id, GET_VALUE=id_value
 WSET, id_value
 ERASE
 
-;find out the range of non-zero values using bank #41
-bank_index = 49
+;find out the range of non-zero values using the first non-empty bank
+;bank_index = 49
+bank_index = 0
 ;img = [1000,128,920]
 tvimg1     = total(img,2)       ;tvimg1 = [1000,920]
 tvimg1     = transpose(tvimg1)  ;tvimg1 = [920,1000]
-
+ngt0 = 0
+WHILE (ngt0 EQ 0) DO BEGIN
 ;sum the 8 tubes together
-tvimg2     = tvimg1[bank_index*8:(bank_index+1)*8-1,*]
-tvimg2     = total(tvimg2,1)
-NZindexes  = WHERE(tvimg2 GT 0, ngt0)
+    tvimg2     = tvimg1[bank_index*8:(bank_index+1)*8-1,*]
+    tvimg2     = total(tvimg2,1)
+    NZindexes  = WHERE(tvimg2 GT 0, ngt0)
+    bank_index++
+ENDWHILE
 index_start = NZindexes[0]
 index_stop  = NZindexes[ngt0-1]
 

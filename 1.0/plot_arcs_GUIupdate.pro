@@ -112,3 +112,11 @@ activateWidget, Event, 'plot_button', activate_status
 ;activate SAVE_AS button as well
 ;activateWidget, Event, 'save_as_histo_mapped_button', activate_status ;REMOVE_COMMENTS
 END
+
+
+PRO setHistogrammingTypeValue, Event, index
+id = widget_info(Event.top,find_by_uname='bin_type_droplist')
+widget_control, id, set_droplist_select=index
+END
+
+
