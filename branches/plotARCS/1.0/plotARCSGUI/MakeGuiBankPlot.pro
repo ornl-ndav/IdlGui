@@ -1,15 +1,13 @@
-PRO MakeGuiBankPlot, wBase
+PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
 ;********************************************************************************
 ;                           Define size arrays
 ;********************************************************************************
 
-xcoeff = 10
-ycoeff = 5
 BankPlotBase = { size  : [50, $
                           50, $
-                          8*xcoeff, $
-                          128*ycoeff],$
+                          8*Xfactor, $
+                          128*Yfactor],$
                  uname : 'bank_plot_base',$
                  title : 'BANK VIEW'}
 

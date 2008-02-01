@@ -292,15 +292,15 @@ END
 
 
 
-PRO getBankIndex, Event, X, Y
+FUNCTION getBankIndex, Event, X, Y
 ;retrieve bank number
 bank_number = getBank(Event)
 
 ColumnIndex = getColumnMainPlotIndex(X)
 RowIndex    = getRowMainPlotIndex(Y)
 
-;print, ColumnIndex
-;print, RowIndex
+IF (ColumnIndex EQ -1) THEN RETURN, -1
+IF (RowIndex EQ -1) THEN RETURN, -1
 
 index = ColumnIndex + 38*RowIndex
 
@@ -315,4 +315,5 @@ IF (ColumnIndex GT 31 AND RowIndex EQ 1 OR $
     ++index
 ENDIF
 
+RETURN, index
 END
