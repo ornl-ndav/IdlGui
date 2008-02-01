@@ -3,6 +3,10 @@ PRO InputRunNumber, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;clear log_book and status message
+putStatus, Event, ''
+putLogBook, Event, ''
+
 PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
@@ -46,11 +50,12 @@ ENDIF ELSE BEGIN
     message = ' -> prenexus folder can not be located'
     appendLogBook, Event, message
     putTextAtEndOfStatus, Event, FAILED, PROCESSING
+    putTextInTextField, Event, 'event_file', ''
 ;reset name of runinfo file name
     (*global).runinfoFileName = ''
 ENDELSE
 
-
-
+;clear histo_mapped text box
+putTextInTextField, Event, 'histo_mapped_text_field', ''
 
 END
