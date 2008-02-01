@@ -46,10 +46,8 @@ index_stop  = NZindexes[ngt0-1]
 ;keep only all data between index_start and index_stop
 tvimg2     = tvimg1[*,index_start:index_stop]
 Npts       = (size(tvimg2))(2) ;number of tof that survive the where GT 0 routine
-print, Npts
-dim_new    = 10            ;number of points we want in the Y axis (tof here)
+dim_new    = 10                ;ratio of points we want to remove in the Y axis (tof here)
 ds         = Npts/dim_new      ;resulting downsampling ratio - how many points 
-print, ds
 ;dim_new    *= 2
 ;to become one point
 
