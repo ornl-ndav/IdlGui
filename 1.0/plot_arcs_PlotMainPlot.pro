@@ -8,7 +8,7 @@ CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='plot_das_view_button_mbar'): begin
         plotDASviewFullInstrument, global1
         activateWidget, event, 'tof_scale_button', 0
-        (*global1).real_or_tof = 0
+        (*global1).real_or_tof =0 
     end
 
 ;selection of mbar button - tof view 
@@ -180,7 +180,10 @@ CASE event.id OF
             index = getBankIndex(Event, X, Y)
             IF (index NE -1) THEN BEGIN
                 bankName = getBank(Event)
-                PlotBank, (*(*global1).img), index, bankName ;launch the bank view
+                PlotBank, (*(*global1).img), $ ;launch the bank view
+                  index, $
+                  bankName, $
+                  (*global1).real_or_tof
             ENDIF
         ENDIF
     END
