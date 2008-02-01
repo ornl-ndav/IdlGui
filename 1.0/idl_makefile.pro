@@ -12,6 +12,7 @@ cd, IdlUtilitiesPath
 cd, CurrentFolder + '/plotARCSGUI/'
 .run MakeGuiInputBase.pro
 .run MakeGuiMainPlot.pro
+.run MakeGuiBankPlot.pro
 
 ;Build all procedures
 cd, CurrentFolder
@@ -35,6 +36,9 @@ cd, CurrentFolder
 ;main plot base
 .run plot_arcs_PlotMainPlot.pro
 .run plot_arcs_MainPlot.pro
+
+;bank plot base
+.run plot_arcs_PlotBank.pro
 
 ;main functions
 .run MainBaseEvent.pro

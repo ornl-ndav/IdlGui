@@ -174,7 +174,11 @@ CASE event.id OF
 ;Main plot
     widget_info(event.top, FIND_BY_UNAME='main_plot'): begin
         MainPlotInteraction, Event
-    end
+        IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
+            getBankIndex, Event, Event.X, Event.Y
+;            PlotBank ;launch the bank view
+        ENDIF
+    END
 
 ELSE:
 ENDCASE

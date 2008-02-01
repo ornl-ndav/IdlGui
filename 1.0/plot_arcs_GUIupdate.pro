@@ -108,8 +108,6 @@ ENDELSE
 END
 
 
-
-
 PRO ActivateOrNotPlotButton, Event
 ;get histo_mapped file name
 histo_mapped_file = getTextFieldValue(Event,'histo_mapped_text_field')
@@ -128,5 +126,8 @@ PRO setHistogrammingTypeValue, Event, index
 id = widget_info(Event.top,find_by_uname='bin_type_droplist')
 widget_control, id, set_droplist_select=index
 END
+
+
+
 
 

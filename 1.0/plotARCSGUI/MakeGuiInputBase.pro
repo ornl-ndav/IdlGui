@@ -58,8 +58,7 @@ iEtext  = { size  : [iElabel.size[0]+XYoff[0],$
                      iElabel.size[1]+XYoff[1],$
                      580,30],$
             value : '',$
-            uname : '
-event_file'}
+            uname : 'event_file'}
 
 ;///////////////////HISTOGRAMMING BASE//////////////////////////////////////////
 XYoff   = [0,20]

@@ -119,6 +119,21 @@ ENDFOR
 RETURN, 0
 END
 
+
+;this is used to determine the index of the bank
+;L1 -> 0, L2 -> 1, M1 -> 38 ....
+FUNCTION getColumnMainPlotIndex, X
+Xwidth = 32
+FOR i=0,37 DO BEGIN
+    xoff = i*37
+    xmin = 10 + xoff
+    xmax = xmin + Xwidth
+    IF (X GE xmin AND X LE xmax) THEN RETURN, (i)
+ENDFOR
+RETURN, -1
+END
+
+
 ;return the row of the bank selected
 FUNCTION getRowMainPlot, Y
 YposArray = ['L','M','T']
@@ -130,6 +145,22 @@ FOR i=0,2 DO BEGIN
     IF (Y GE ymin AND Y LE ymax) THEN RETURN, YposArray[i]
 ENDFOR
 RETURN, ''
+END
+
+
+
+;this is used to determine the index of the bank
+;L1 -> 0, L2 -> 1, M1 -> 38 ....
+FUNCTION getRowMainPlotIndex, Y
+YposArray = [0,1,2]
+Ywidth    = 256
+FOR i=0,2 DO BEGIN
+    yoff = i * (256+5)
+    ymin = 5 + yoff
+    ymax = ymin + Ywidth
+    IF (Y GE ymin AND Y LE ymax) THEN RETURN, YposArray[i]
+ENDFOR
+RETURN, -1
 END
 
 
@@ -261,3 +292,27 @@ END
 
 
 
+PRO getBankIndex, Event, X, Y
+;retrieve bank number
+bank_number = getBank(Event)
+
+ColumnIndex = getColumnMainPlotIndex(X)
+RowIndex    = getRowMainPlotIndex(Y)
+
+;print, ColumnIndex
+;print, RowIndex
+
+index = ColumnIndex + 38*RowIndex
+
+;Special case for 32A and 32B
+IF (ColumnIndex EQ 31 AND RowIndex EQ 1) THEN BEGIN
+    IF (Y LE 394) THEN ++index 
+ENDIF
+
+;add 1 to all the banks that are after bank 32B
+IF (ColumnIndex GT 31 AND RowIndex EQ 1 OR $
+    RowIndex EQ 2) THEN BEGIN
+    ++index
+ENDIF
+
+END
