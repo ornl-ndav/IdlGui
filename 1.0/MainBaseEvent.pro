@@ -17,6 +17,7 @@ CASE Event.id OF
         ActivateHistoMappingBasesStatus, Event ;in plot_arcs_GUIupdate.pro
         GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
+        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
     end
     
 ;'BROWSE EVENT FILE' button in INPUT base
@@ -34,6 +35,8 @@ CASE Event.id OF
 
 ;'Event File' widget_text in INPUT base
     widget_info(wWidget, FIND_BY_UNAME='event_file'): begin
+        putTextInTextField, Event, 'histo_mapped_text_field', ''
+        ActivateOrNotPlotButton, Event ;in plot_arcs_GUIupdate.pro
         ActivateHistoMappingBaseFromWidgetText, Event ;in plot_arcs_GUIupdate.pro
         ActivateOrNotCreateHistogramMapped, Event ;in plot_arcs_GUIupdate.pro
         GetHistogramInfo, Event ;in plot_arcs_CollectHistoInfo.pro
