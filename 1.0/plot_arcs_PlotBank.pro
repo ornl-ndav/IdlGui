@@ -5,6 +5,15 @@ WIDGET_CONTROL, event.top, GET_UVALUE=global2
 CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='bank_plot'): begin
         BankPlotInteraction, Event ;to continuously get the pixelid, X and Y
+        IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
+            img     = (*global2).img
+            bank    = (*global2).bankName
+            x       = Event.X
+            y       = Event.Y
+            pixelID = getPixelIdFromBankBase(Event)
+            PlotTof, img, bank, x, y, pixelID
+        ENDIF
+
     END
 ELSE:
 ENDCASE
