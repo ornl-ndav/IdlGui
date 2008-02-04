@@ -39,6 +39,7 @@ cd, CurrentFolder
 
 ;bank plot base
 .run plot_arcs_PlotBank.pro
+.run plot_arcs_PlotBankEventcb.pro
 
 ;main functions
 .run MainBaseEvent.pro

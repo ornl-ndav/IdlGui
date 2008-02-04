@@ -4,10 +4,11 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
 ;                           Define size arrays
 ;********************************************************************************
 
+Yoff = 50
 BankPlotBase = { size  : [50, $
                           50, $
                           8L*Xfactor, $
-                          128L*Yfactor],$
+                          128L*Yfactor+Yoff],$
                  uname : 'bank_plot_base',$
                  title : 'BANK VIEW'}
 
@@ -28,8 +29,8 @@ wBase = WIDGET_BASE(TITLE        = BankPlotBase.title,$
                     SCR_XSIZE    = BankPlotBase.size[2],$
                     SCR_YSIZE    = BankPlotBase.size[3],$
                     MAP          = 1,$
-                    GROUP_LEADER = ourGroup,$
-                    MBAR         = MBAR)
+                    GROUP_LEADER = ourGroup)
+;                    MBAR         = MBAR)
 
 wBankDraw = WIDGET_DRAW(wBase,$
                         XOFFSET   = BankDraw.size[0],$

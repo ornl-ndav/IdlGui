@@ -15,8 +15,6 @@ ENDIF
 ;change title
 id = widget_info(wBase,find_by_uname='main_plot_base')
 widget_control, id, base_set_title= text
-IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
-ENDIF
 END
 
 
