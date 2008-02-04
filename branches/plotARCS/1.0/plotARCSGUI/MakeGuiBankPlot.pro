@@ -4,7 +4,7 @@ PRO MakeGuiBankPlot, wBase, Xfactor, Yfactor
 ;                           Define size arrays
 ;********************************************************************************
 
-Yoff = 50
+Yoff = 150
 BankPlotBase = { size  : [50, $
                           50, $
                           8L*Xfactor, $
@@ -12,6 +12,21 @@ BankPlotBase = { size  : [50, $
                  uname : 'bank_plot_base',$
                  title : 'BANK VIEW'}
 
+InfoBase = { size  : [0,0,8L*Xfactor,Yoff]}
+Xinput   = { size  : [0,0,8L*Xfactor,40],$
+             uname : 'x_input',$
+             value : 'Tube:',$
+             xsize : 1}
+Yinput   = { size  : [0,Xinput.size[3],8L*Xfactor,Xinput.size[3]],$
+             uname : 'y_input',$
+             value : 'Row:',$
+             xsize : 3}
+PixelID  = { size  : [0,Yinput.size[3]+Yinput.size[1],8L*Xfactor,2*Xinput.size[3]],$
+             uname : 'pixelid_input',$
+             value : 'PixelID:',$
+             xsize : 6}
+
+;draw
 BankDraw     = { size  : [0, $
                           0, $
                           BankPlotBase.size[2],$
@@ -32,6 +47,59 @@ wBase = WIDGET_BASE(TITLE        = BankPlotBase.title,$
                     GROUP_LEADER = ourGroup)
 ;                    MBAR         = MBAR)
 
+wInputBase = WIDGET_BASE(wBase,$
+                         XOFFSET   = InfoBase.size[0],$
+                         YOFFSET   = InfoBase.size[1],$
+                         SCR_XSIZE = InfoBase.size[2],$
+                         SCR_YSIZE = InfoBase.size[3])
+
+wXinputBase = WIDGET_BASE(wInputBase,$
+                          XOFFSET   = Xinput.size[0],$
+                          YOFFSET   = Xinput.size[1],$
+                          SCR_XSIZE = Xinput.size[2],$
+                          SCR_YSIZE = Xinput.size[3])
+
+wXinputField = CW_FIELD(wXinputBase,$
+                        XSIZE = Xinput.xsize,$
+                        UNAME = Xinput.uname,$
+                        TITLE = Xinput.value,$
+                        /ALL_EVENTS,$
+                        /ROW,$
+                        /INTEGER)
+
+wYinputBase = WIDGET_BASE(wInputBase,$
+                          XOFFSET   = Yinput.size[0],$
+                          YOFFSET   = Yinput.size[1],$
+                          SCR_XSIZE = Yinput.size[2],$
+                          SCR_YSIZE = Yinput.size[3])
+
+wYinputField = CW_FIELD(wYinputBase,$
+                        XSIZE = Yinput.xsize,$
+                        UNAME = Yinput.uname,$
+                        TITLE = Yinput.value,$
+                        /ALL_EVENTS,$
+                        /ROW,$
+                        /INTEGER)
+
+wPixelidBase = WIDGET_BASE(wInputBase,$
+                           XOFFSET   = PixelID.size[0],$
+                           YOFFSET   = PixelID.size[1],$
+                           SCR_XSIZE = PixelID.size[2],$
+                           SCR_YSIZE = PixelID.size[3])
+
+wPixelidField = CW_FIELD(wPixelidBase,$
+                        XSIZE = Pixelid.xsize,$
+                        UNAME = Pixelid.uname,$
+                        TITLE = Pixelid.value,$
+                        /ALL_EVENTS,$
+                        /COLUMN,$
+                        /LONG)
+
+
+
+
+
+                   
 wBankDraw = WIDGET_DRAW(wBase,$
                         XOFFSET   = BankDraw.size[0],$
                         YOFFSET   = BankDraw.size[1],$
