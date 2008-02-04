@@ -63,7 +63,7 @@ pxOffset = BankY + 128*BankX
 PixelID = pxoffset + PixelIDoffset
 putTextInTextField, Event, 'pixelid_input', PixelID
 
-
+;get number of counts
 
 
 ;change title
