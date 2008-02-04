@@ -3,7 +3,7 @@ FUNCTION CalculatePixelIDOffset, BankID
 StrLength = STRLEN(BankID)
 Row = strmid(BankID,0,1)
 CASE (Row) OF
-    'B': ColumnOffset = 0L
+    'L': ColumnOffset = 0L
     'M': ColumnOffset = 38912L
     'T': ColumnOffset = 78848L
 ENDCASE
@@ -11,7 +11,7 @@ ENDCASE
 ;case of banks 32A and 32B
 Column = strmid(BankID,1,StrLength-1)
 CASE (Row) OF 
-    'B':BEGIN
+    'L':BEGIN
         Row = LONG(Column)
         RowOffset = (Row-1)*1024L+ColumnOffset
     END
