@@ -64,9 +64,6 @@ PixelID = pxoffset + PixelIDoffset
 putTextInTextField, Event, 'pixelid_input', PixelID
 
 ;get number of counts
-
-
-;change title
-;id = widget_info(wBase,find_by_uname='main_plot_base')
-;widget_control, id, base_set_title= text
+tvimg = (*(*global2).tvimg)
+putTextInTextField, Event, 'counts', tvimg[PixelID]
 END

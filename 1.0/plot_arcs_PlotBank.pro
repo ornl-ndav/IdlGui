@@ -89,7 +89,9 @@ MakeGuiBankPlot, wBase, Xfactor, Yfactor
 global2 = ptr_new({ wbase    : wbase,$
                     Xfactor  : Xfactor,$
                     Yfactor  : Yfactor,$  
-                    bankName : bankName})  ;ex:T16
+                    bankName : bankName,$ ;ex:T16
+                    tvimg    : ptr_new(0L),$
+                    img      : img})     
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2
 XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
@@ -104,6 +106,7 @@ WSET, id_value
 
 ;main data array
 tvimg = total(img,1)
+(*(*global2).tvimg) = tvimg
 tvimg = transpose(tvimg)
 
 IF (bDasView EQ 0) THEN BEGIN 
