@@ -12,6 +12,15 @@ TofPlotDraw = { size  : [0,0, $
                          TofPlotBase.size[3]],$
                 uname : 'tof_plot_draw' }
 
+ScaleButton = { uname : 'plot_scale_type',$
+                value : 'Linear Y-axis      '}
+
+LinearButton = { uname : 'linear_scale',$
+                 value : 'Linear'}
+
+LogButton    = { uname : 'log_scale',$
+                 value : 'Logarithmic'}
+
 ;********************************************************************************
 ;                                Build GUI
 ;********************************************************************************
@@ -23,8 +32,8 @@ wBase = WIDGET_BASE(TITLE        = TofPlotBase.title,$
                     SCR_XSIZE    = TofPlotBase.size[2],$
                     SCR_YSIZE    = TofPlotBase.size[3],$
                     MAP          = 1,$
-                    GROUP_LEADER = ourGroup)
-;                    MBAR         = MBAR)
+                    GROUP_LEADER = ourGroup,$
+                    MBAR         = MBAR)
 
 wTofDraw = WIDGET_DRAW(wBase,$
                        XOFFSET   = TofPLotDraw.size[0],$
@@ -34,6 +43,19 @@ wTofDraw = WIDGET_DRAW(wBase,$
                        UNAME     = TofPLotDraw.uname,$
                        /BUTTON_EVENTS,$
                        /MOTION_EVENTS)
+
+wScaleButton = WIDGET_BUTTON(MBAR,$
+                             UNAME = ScaleButton.uname,$
+                             VALUE = ScaleButton.value,$
+                             /MENU)
+
+wLinearButton = WIDGET_BUTTON(wScaleButton,$
+                              UNAME = LinearButton.uname,$
+                              VALUE = LinearButton.value)
+
+wLogButton = WIDGET_BUTTON(wScaleButton,$
+                           UNAME = LogButton.uname,$
+                           VALUE = LogButton.value)
 
 WIDGET_CONTROL, wBase, /REALIZE
 

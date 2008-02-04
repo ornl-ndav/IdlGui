@@ -62,12 +62,44 @@ WIDGET_CONTROL, view_info, GET_VALUE=id
 wset, id
 
 data = (*(*global3).IvsTOF)
-;IF ((*global).PrevLinLogValue) THEN BEGIN ;log
-;    plot, data, xrange=[xmin,xmax],POSITION=[0.1,0.1,0.95,0.99], XSTYLE=1, $
-;      /YLOG, $
-;      MIN_VALUE=1
-;ENDIF ELSE BEGIN
-plot, data, xrange=[xmin,xmax], XSTYLE=1
-;ENDELSE
+;get type desired
+type = getTypeDesired(Event)
+
+(*global3).xmin_for_refresh = xmin
+(*global3).xmax_for_refresh = xmax
+
+IF (type EQ 'log') THEN BEGIN ;log
+    plot, data, xrange=[xmin,xmax], XSTYLE=1, /YLOG, MIN_VALUE=1
+ENDIF ELSE BEGIN
+    plot, data, xrange=[xmin,xmax], XSTYLE=1
+ENDELSE
+
+END
+
+
+
+
+
+PRO RefreshPlotInTof, Event
+;get global structure
+WIDGET_CONTROL, event.top, GET_UVALUE=global3
+
+;plot data (counts vs tof)
+view_info = widget_info(Event.top,FIND_BY_UNAME='tof_plot_draw')
+WIDGET_CONTROL, view_info, GET_VALUE=id
+wset, id
+
+data = (*(*global3).IvsTOF)
+;get type desired
+type = getTypeDesired(Event)
+
+xmin = (*global3).xmin_for_refresh
+xmax = (*global3).xmax_for_refresh
+
+IF (type EQ 'log') THEN BEGIN ;log
+    plot, data, xrange=[xmin,xmax], XSTYLE=1, /YLOG, MIN_VALUE=1
+ENDIF ELSE BEGIN
+    plot, data, xrange=[xmin,xmax], XSTYLE=1
+ENDELSE
 
 END
