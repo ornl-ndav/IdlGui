@@ -40,10 +40,12 @@ WSET, id_value
 
 ;display bank number in title ba
 id = widget_info(wBase,find_by_uname='tof_plot_base')
-title = 'Bank:' + strcompress(bank,/remove_all)
+title = 'Counts vs TOF - '
+title += '(Bank:' + strcompress(bank,/remove_all)
 title += ' ,X:' + strcompress(x,/remove_all)
 title += ' ,Y:' + strcompress(y,/remove_all)
 title += ' ,PixelID:' + strcompress(pixelID,/remove_all)
+title += ')'
 widget_control, id, base_set_title= title
 
 ;plot data
