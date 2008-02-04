@@ -331,4 +331,8 @@ END
 
 
 
-
+;return the pixelID from the widget_text found in the bank base
+FUNCTION getPixelIdFromBankBase, Event
+value = getTextFieldValue(Event,'pixelid_input')
+RETURN, value
+END
