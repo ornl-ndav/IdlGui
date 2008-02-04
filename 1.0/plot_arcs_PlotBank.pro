@@ -86,12 +86,13 @@ Yfactor = 5
 wBase = ''
 MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
-global2 = ptr_new({ wbase   : wbase,$
-                    Xfactor : Xfactor,$
-                    Yfactor : Yfactor})
+global2 = ptr_new({ wbase    : wbase,$
+                    Xfactor  : Xfactor,$
+                    Yfactor  : Yfactor,$  
+                    bankName : bankName})  ;ex:T16
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2
-XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
+XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
 
 DEVICE, DECOMPOSED = 0
 loadct, 5
