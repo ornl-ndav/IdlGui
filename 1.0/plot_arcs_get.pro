@@ -336,3 +336,16 @@ FUNCTION getPixelIdFromBankBase, Event
 value = getTextFieldValue(Event,'pixelid_input')
 RETURN, value
 END
+
+
+
+;get type desired 'lin' or 'log'
+FUNCTION getTypeDesired, Event
+id = widget_info(Event.top,find_by_uname='plot_scale_type')
+widget_control, id, get_value=value
+IF (value EQ 'Linear Y-axis      ') THEN RETURN, 'lin'
+RETURN, 'log'
+END
+    
+
+
