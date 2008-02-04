@@ -44,6 +44,7 @@ cd, CurrentFolder
 
 ;tof plot base
 .run plot_arcs_PlotTof.pro
+.run plot_arcs_PlotTofEventcb.pro
 
 ;main functions
 .run MainBaseEvent.pro

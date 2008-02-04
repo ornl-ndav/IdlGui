@@ -1,9 +1,15 @@
 PRO MakeGuiTofBase_Event, event
 
-WIDGET_CONTROL, event.top, GET_UVALUE=global2
+WIDGET_CONTROL, event.top, GET_UVALUE=global3
 
 CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='tof_plot_draw'): begin
+        IF (Event.press EQ 1) THEN BEGIN ;left mouse pressed
+            PressMouseInTOF, Event
+        ENDIF
+        IF (Event.release EQ 1) THEN BEGIN ;left mouse released
+            ReleaseMouseInTof, Event
+        ENDIF
     END
 ELSE:
 ENDCASE
@@ -24,6 +30,10 @@ wBase = ''
 MakeGuiTofBase, wBase
 
 global3 = ptr_new({ wbase    : wbase,$
+                    IvsTOF   : ptr_new(0L),$
+                    true_x_min : 0.00000001,$
+                    true_x_max : 0.000000001,$
+                    tof      : 0L,$
                     tvimg    : ptr_new(0L),$
                     img      : img})     
 
@@ -50,7 +60,10 @@ widget_control, id, base_set_title= title
 
 ;plot data
 tof = (size(img))(1)
+(*global3).tof = tof
 tof_array = REFORM(img,tof,117760)
-plot, tof_array(*,pixelID)
+IvsTOF = tof_array(*,pixelID)
+(*(*global3).IvsTOF) = IvsTOF
+plot, IvsTOF
 
 END
