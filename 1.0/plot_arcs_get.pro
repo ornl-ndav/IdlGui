@@ -172,17 +172,14 @@ FUNCTION getBank, Event
 WIDGET_CONTROL,Event.top,GET_UVALUE=global1
 X = Event.X
 Y = Event.Y
-
 column = getColumnMainPlot(X)
 row    = getRowMainPlot(Y)
-
 ;Special case for 32A and 32B
 IF (column EQ 32 AND row EQ 'M') THEN BEGIN
     IF (Y LT 394) THEN column = '32B'
     IF (Y GT 394) THEN column = '32A'
     IF (Y EQ 394) THEN column = ''
 ENDIF
-
 IF (Row NE '' AND Column NE 0) THEN BEGIN ;we click inside a bank
     RETURN, Row + strcompress(Column,/remove_all)
 ENDIF ELSE BEGIN ;if we click outside a bank
@@ -295,25 +292,43 @@ END
 FUNCTION getBankIndex, Event, X, Y
 ;retrieve bank number
 bank_number = getBank(Event)
-
 ColumnIndex = getColumnMainPlotIndex(X)
 RowIndex    = getRowMainPlotIndex(Y)
-
 IF (ColumnIndex EQ -1) THEN RETURN, -1
 IF (RowIndex EQ -1) THEN RETURN, -1
-
 index = ColumnIndex + 38*RowIndex
-
 ;Special case for 32A and 32B
 IF (ColumnIndex EQ 31 AND RowIndex EQ 1) THEN BEGIN
     IF (Y LE 394) THEN ++index 
 ENDIF
-
 ;add 1 to all the banks that are after bank 32B
 IF (ColumnIndex GT 31 AND RowIndex EQ 1 OR $
     RowIndex EQ 2) THEN BEGIN
     ++index
 ENDIF
-
 RETURN, index
 END
+
+
+;return the tube number from the bank view
+FUNCTION getBankPlotX, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global2
+Xfactor = (*global2).Xfactor
+X = Event.X
+return, strcompress(X/Xfactor,/remove_all)
+END
+
+
+;return the Y from the bank view
+FUNCTION getBankPlotY, Event
+;get global structure
+WIDGET_CONTROL,Event.top,GET_UVALUE=global2
+Yfactor = (*global2).Yfactor
+Y = Event.Y
+return, strcompress(Y/Yfactor,/remove_all)
+END
+
+
+
+

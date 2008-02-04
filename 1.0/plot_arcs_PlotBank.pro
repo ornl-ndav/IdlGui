@@ -3,7 +3,9 @@ PRO MakeGuiBankPlot_Event, event
 WIDGET_CONTROL, event.top, GET_UVALUE=global2
 
 CASE event.id OF
-
+    widget_info(event.top, FIND_BY_UNAME='bank_plot'): begin
+        BankPlotInteraction, Event ;to continuously get the pixelid, X and Y
+    END
 ELSE:
 ENDCASE
 
@@ -84,7 +86,9 @@ Yfactor = 5
 wBase = ''
 MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
-global2 = ptr_new({ wbase   : wbase})
+global2 = ptr_new({ wbase   : wbase,$
+                    Xfactor : Xfactor,$
+                    Yfactor : Yfactor})
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2
 XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
