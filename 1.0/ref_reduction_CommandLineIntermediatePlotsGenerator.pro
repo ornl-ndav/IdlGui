@@ -115,7 +115,7 @@ endif
 
 ;rtof combined plot
 if (InterPlotsStatus[7] EQ 1) then begin
-    IP_cmd += ' --dump-crtof'
+    IP_cmd += ' --dump-rtof-comb'
 endif
 
 ;create array of Intermediate files to plot
