@@ -17,7 +17,13 @@ CASE event.id OF
                                                   (*global2).yLeftCorner,$
                                                   xRightCorner,$
                                                   yRightCorner)
-            PlotTof, (*global2).img, (*global2).bankName, x, y, pixelID
+            PlotTof, (*global2).img, $
+              (*global2).bankName, $
+              (*global2).xLeftCorner, $
+              (*global2).yLeftCorner, $
+              xRightCorner, $
+              yRightCorner, $
+              pixelID
         ENDIF
         
     END
