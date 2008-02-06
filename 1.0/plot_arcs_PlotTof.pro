@@ -82,7 +82,10 @@ tof = (size(img))(1)
 (*global3).tof = tof
 tof_array = REFORM(img,tof,117760)
 IvsTOF = tof_array(*,pixelID)
-IvsTOF = total(IvsTOF,2)
+sz = (size(IvsTOF))(0)
+IF (sz EQ 2) THEN BEGIN
+    IvsTOF = total(IvsTOF,2)
+ENDIF
 (*(*global3).IvsTOF) = IvsTOF
 plot, IvsTOF
 END
