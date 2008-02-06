@@ -81,9 +81,8 @@ WSET, id_value
 tof = (size(img))(1)
 (*global3).tof = tof
 tof_array = REFORM(img,tof,117760)
-
 IvsTOF = tof_array(*,pixelID)
-IvsTOF = total(IvsTOF,1)
+IvsTOF = total(IvsTOF,2)
 (*(*global3).IvsTOF) = IvsTOF
 plot, IvsTOF
 END
