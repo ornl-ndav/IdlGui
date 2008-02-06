@@ -36,7 +36,7 @@ END
 
 
 
-PRO PlotTof, img, bank, x, y, pixelID
+PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID
 ;build gui
 wBase = ''
 MakeGuiTofBase, wBase
@@ -62,20 +62,24 @@ id = widget_info(wBase,find_by_uname='tof_plot_draw')
 WIDGET_CONTROL, id, GET_VALUE=id_value
 WSET, id_value
 
-;display bank number in title ba
-;id = widget_info(wBase,find_by_uname='tof_plot_base')
-; title = 'Counts vs TOF - '
-; title += '(Bank:' + strcompress(bank,/remove_all)
-; IF ((size(pixelID))(1) EQ 1) THEN BEGIN
-; title += ' ,X:' + strcompress(x,/remove_all)
-; title += ' ,Y:' + strcompress(y,/remove_all)
-
-;     title += ' ,PixelID:' + strcompress(pixelID[0],/remove_all)
-; ENDIF ELSE BEGIN
-;     title += ' ,PixelID:'
-
-; title += ')'
-; widget_control, id, base_set_title= title
+;display bank number in title bar
+id = widget_info(wBase,find_by_uname='tof_plot_base')
+title = 'Counts vs TOF - '
+title += '(Bank:' + strcompress(bank,/remove_all)
+IF ((size(pixelID))(1) EQ 1) THEN BEGIN
+    title += ' ,X:' + strcompress(xRight,/remove_all)
+    title += ' ,Y:' + strcompress(yRight,/remove_all)
+    title += ' ,PixelID:' + strcompress(pixelID[0],/remove_all)
+ENDIF ELSE BEGIN
+    nbr = (size(pixelID))(1)
+    title += ' ,Xrange:'+strcompress(xLeft,/remove_all)
+    title += '->'+strcompress(xRight,/remove_all)
+    title += ' ,Yrange:'+strcompress(yLeft,/remove_all)
+    title += '->'+strcompress(yRight,/remove_all)
+    title += ' , Number of Pixel selected:'+strcompress(nbr,/remove_all)
+ENDELSE
+title += ')'
+widget_control, id, base_set_title= title
 
 ;plot data
 tof = (size(img))(1)
