@@ -36,7 +36,7 @@ END
 
 
 
-PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID
+PRO PlotTof, img, bank, xLeft, yLeft, xRight, yRight, pixelID, tmpImg
 ;build gui
 wBase = ''
 MakeGuiTofBase, wBase
@@ -92,4 +92,10 @@ IF (sz EQ 2) THEN BEGIN
 ENDIF
 (*(*global3).IvsTOF) = IvsTOF
 plot, IvsTOF
+
+id = widget_info(wBase,find_by_uname='preview_draw')
+WIDGET_CONTROL, id, GET_VALUE=id_value
+WSET, id_value
+tv, tmpImg
+
 END
