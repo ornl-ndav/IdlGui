@@ -21,7 +21,9 @@ CASE event.id OF
             (*global2).yLeftCorner = Event.y/(*global2).Yfactor
         ENDIF
         IF (Event.release EQ 1) THEN BEGIN ;mouse pressed
-            
+            refreshBank, Event
+            plotSelection, Event 
+            takeScreenshot, Event ;that will be dispayed on the right of the IvsTOF plot
             xRightCorner = Event.x/(*global2).Xfactor
             yRightCorner = Event.y/(*global2).Yfactor
             pixelID = getPixelIdRangeFromBankBase((*global2).bankName,$
@@ -29,13 +31,17 @@ CASE event.id OF
                                                   (*global2).yLeftCorner,$
                                                   xRightCorner,$
                                                   yRightCorner)
+
+
             PlotTof, (*global2).img, $
               (*global2).bankName, $
               (*global2).xLeftCorner, $
               (*global2).yLeftCorner, $
               xRightCorner, $
               yRightCorner, $
-              pixelID
+              pixelID,$
+              (*(*global2).tmpImg)
+
             (*global2).MousePressed = 0
         ENDIF
         
@@ -131,6 +137,7 @@ global2 = ptr_new({ wbase    : wbase,$
                     bankName : bankName,$ ;ex:T16
                     tvimg    : ptr_new(0L),$
                     tvimg_transpose : ptr_new(0L),$
+                    tmpImg : ptr_new(0L),$
                     bank_rebin : ptr_new(0L),$
                     bank_congrid : ptr_new(0L),$
                     img      : img})     

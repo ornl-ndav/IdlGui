@@ -53,6 +53,8 @@ END
 
 
 PRO PlotSelectionBox, xmin, ymin, xmax, ymax, x_coeff, y_coeff, color
+IF (xmin EQ xmax) THEN ++xmax
+IF (ymin EQ ymax) THEN ++ymax
 plots, xmin*x_coeff, ymin*y_coeff, /device, color=color
 plots, xmin*x_coeff, ymax*y_coeff, /device, /continue, color=color
 plots, xmax*x_coeff, ymin*y_coeff, /device, color=color
@@ -108,4 +110,17 @@ xmax = Fix(xmax/xfactor)
 ymax = Fix(ymax/yfactor)
 
 PlotSelectionBox, xmin, ymin, xmax, ymax, xfactor, yfactor, 50
+
+END
+
+
+
+
+PRO takeScreenshot, Event
+WIDGET_CONTROL, event.top, GET_UVALUE=global2
+DEVICE, RETAIN=2
+tmpImg = tvrd(TRUE=3)
+sz = size(tmpImg)
+tmpImg = rebin(tmpImg, sz(1)/2,sz(2)/2,sz(3))
+(*(*global2).tmpImg) = tmpImg
 END

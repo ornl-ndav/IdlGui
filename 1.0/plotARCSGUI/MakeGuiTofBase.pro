@@ -3,14 +3,21 @@ PRO MakeGuiTofBase, wBase
 ;********************************************************************************
 ;                           Define size arrays
 ;********************************************************************************
-TofPlotBase = { size  : [0,0,650,500],$
+TofPlotBase = { size  : [0,0,730,500],$
                 uname : 'tof_plot_base',$
                 title : '' }
 
 TofPlotDraw = { size  : [0,0, $
-                         TofPlotBase.size[2], $
+                         650, $
                          TofPlotBase.size[3]],$
                 uname : 'tof_plot_draw' }
+
+PreviewDraw = { size : [TofPlotDraw.size[2]+20,$
+                        80,$
+                        40,$
+;                        TofPlotBase.size[2]-TofPlotDraw.size[2],$
+                        TofPlotBase.size[3]-180],$
+                uname : 'preview_draw'}
 
 ScaleButton = { uname : 'plot_scale_type',$
                 value : 'Linear Y-axis      '}
@@ -43,6 +50,13 @@ wTofDraw = WIDGET_DRAW(wBase,$
                        UNAME     = TofPLotDraw.uname,$
                        /BUTTON_EVENTS,$
                        /MOTION_EVENTS)
+
+wPreviewDraw = WIDGET_DRAW(wBase,$
+                           XOFFSET   = PreviewDraw.size[0],$
+                           YOFFSET   = PreviewDraw.size[1],$
+                           SCR_XSIZE = PreviewDraw.size[2],$
+                           SCR_YSIZE = PreviewDraw.size[3],$
+                           UNAME     = PreviewDraw.uname)
 
 wScaleButton = WIDGET_BUTTON(MBAR,$
                              UNAME = ScaleButton.uname,$

@@ -33,9 +33,9 @@ Counts   = { size   : [0,120,$
 
 ;draw
 BankDraw     = { size  : [0, $
-                          0, $
+                          Yoff, $
                           BankPlotBase.size[2],$
-                          BankPlotBase.size[3]],$
+                          128L*Yfactor],$
                  uname : 'bank_plot'}
 
 ;********************************************************************************
@@ -57,6 +57,7 @@ wInputBase = WIDGET_BASE(wBase,$
                          YOFFSET   = InfoBase.size[1],$
                          SCR_XSIZE = InfoBase.size[2],$
                          SCR_YSIZE = InfoBase.size[3])
+
 
 ;X
 wXinputBase = WIDGET_BASE(wInputBase,$
@@ -130,3 +131,4 @@ wBankDraw = WIDGET_DRAW(wBase,$
 WIDGET_CONTROL, wBase, /REALIZE
 
 END
+
