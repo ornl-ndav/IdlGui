@@ -164,7 +164,7 @@ IF (bDasView EQ 0) THEN BEGIN
     (*(*global2).bank_rebin) = bank_rebin
 ENDIF ELSE BEGIN
     plotTofView, img, i, Xfactor, Yfactor, bank_congrid
-    (*(*global2).bank_congrild) = bank_congrid
+    (*(*global2).bank_congrid) = bank_congrid
 ENDELSE
 
 ;display bank number in title bar
