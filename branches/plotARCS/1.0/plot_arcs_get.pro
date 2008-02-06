@@ -349,3 +349,79 @@ END
     
 
 
+FUNCTION getPixelIDOffset, BankID
+
+StrLength = STRLEN(BankID)
+Row = strmid(BankID,0,1)
+CASE (Row) OF
+    'L': ColumnOffset = 0L
+    'M': ColumnOffset = 38912L
+    'T': ColumnOffset = 78848L
+ENDCASE
+
+;case of banks 32A and 32B
+Column = strmid(BankID,1,StrLength-1)
+CASE (Row) OF 
+    'L':BEGIN
+        Row = LONG(Column)
+        RowOffset = (Row-1)*1024L+ColumnOffset
+    END
+    'M':BEGIN
+        IF (STRMATCH(Row,'*A')) THEN BEGIN 
+            RowOffset = 71680L   ;it is 32A
+        ENDIF ELSE BEGIN
+            IF (STRMATCH(Row,'*B')) THEN BEGIN 
+                RowOffset = 70783L ;it is 32B
+            ENDIF ELSE BEGIN
+                Row = LONG(Column)
+                IF (Row GE 33) THEN BEGIN
+                    RowOffset = 72704L+(Row-33)*1024L
+                ENDIF ELSE BEGIN
+                    RowOffset = ColumnOffset+(Row-1)*1024L
+                ENDELSE
+            ENDELSE
+        ENDELSE
+    END
+    'T':BEGIN
+        ROW = LONG(Column)
+        RowOffset = (Row-1)*1024L+ColumnOffset
+    END
+ENDCASE         
+RETURN, RowOffset
+END
+
+
+
+
+;get pixelID using bank name (M12), tube (X) and row (Y) position
+FUNCTION getPixelID, BankID, X, Y
+PixelIDoffset = getPixelIDOffset(BankID)
+pxOffset = Long(Y) + 128*Long(X)
+PixelID = pxoffset + PixelIDoffset
+RETURN, PixelID
+END
+
+
+;get range of pixel selected
+FUNCTION getPixelIdRangeFromBankBase, BankID, xleft, yleft, xright, yright
+
+Xfix = FIX([xleft,xright])
+xmin = MIN(Xfix,MAX=xmax)
+
+Yfix = FIX([yleft,yright])
+ymin = MIN(Yfix,MAX=ymax)
+
+nbr = (xmax-xmin+1)*(ymax-ymin+1)
+pixelIDRange = lonarr(nbr)
+k=0
+FOR i=xmin,xmax DO BEGIN
+    FOR j=ymin,ymax DO BEGIN
+        print, '(bankID,i,j)=('+strcompress(bankID)+','+strcompress(i)+','+strcompress(j)+')'
+        
+        pixelIDRange[k]=getPixelID(BankID,i,j)
+        ++k
+    ENDFOR
+ENDFOR
+RETURN, pixelIDRange
+END
+
