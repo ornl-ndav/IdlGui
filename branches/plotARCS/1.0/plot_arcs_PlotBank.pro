@@ -10,6 +10,11 @@ CASE event.id OF
             refreshBank, Event
             plotPixel, Event    ;in plot_arcs_PlotBankEventcb.pro
         ENDIF 
+        IF (Event.press NE 1 AND $
+            (*global2).MousePressed EQ 1) THEN BEGIN ;if left click pressed
+            refreshBank, Event
+            plotSelection, Event 
+        ENDIF
         IF (Event.press EQ 1) THEN BEGIN
             (*global2).MousePressed = 1
             (*global2).xLeftCorner = Event.x/(*global2).Xfactor
