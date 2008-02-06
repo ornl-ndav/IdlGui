@@ -5,15 +5,21 @@ WIDGET_CONTROL, event.top, GET_UVALUE=global2
 CASE event.id OF
     widget_info(event.top, FIND_BY_UNAME='bank_plot'): begin
         BankPlotInteraction, Event ;to continuously get the pixelid, X and Y
-        IF (Event.press EQ 1) THEN BEGIN ;mouse pressed
-            img     = (*global2).img
-            bank    = (*global2).bankName
-            x       = Event.X
-            y       = Event.Y
-            pixelID = getPixelIdFromBankBase(Event)
-            PlotTof, img, bank, x, y, pixelID
+        IF (Event.press EQ 1) THEN BEGIN
+            (*global2).xLeftCorner = Event.x/(*global2).Xfactor
+            (*global2).yLeftCorner = Event.y/(*global2).Yfactor
         ENDIF
-
+        IF (Event.release EQ 1) THEN BEGIN ;mouse pressed
+            xRightCorner = Event.x/(*global2).Xfactor
+            yRightCorner = Event.y/(*global2).Yfactor
+            pixelID = getPixelIdRangeFromBankBase((*global2).bankName,$
+                                                  (*global2).xLeftCorner,$
+                                                  (*global2).yLeftCorner,$
+                                                  xRightCorner,$
+                                                  yRightCorner)
+            PlotTof, (*global2).img, (*global2).bankName, x, y, pixelID
+        ENDIF
+        
     END
 ELSE:
 ENDCASE
@@ -96,6 +102,8 @@ wBase = ''
 MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
 global2 = ptr_new({ wbase    : wbase,$
+                    xLeftCorner : 0,$
+                    yLeftCorner : 0,$
                     Xfactor  : Xfactor,$
                     Yfactor  : Yfactor,$  
                     bankName : bankName,$ ;ex:T16

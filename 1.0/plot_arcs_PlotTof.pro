@@ -63,20 +63,27 @@ WIDGET_CONTROL, id, GET_VALUE=id_value
 WSET, id_value
 
 ;display bank number in title ba
-id = widget_info(wBase,find_by_uname='tof_plot_base')
-title = 'Counts vs TOF - '
-title += '(Bank:' + strcompress(bank,/remove_all)
-title += ' ,X:' + strcompress(x,/remove_all)
-title += ' ,Y:' + strcompress(y,/remove_all)
-title += ' ,PixelID:' + strcompress(pixelID,/remove_all)
-title += ')'
-widget_control, id, base_set_title= title
+;id = widget_info(wBase,find_by_uname='tof_plot_base')
+; title = 'Counts vs TOF - '
+; title += '(Bank:' + strcompress(bank,/remove_all)
+; IF ((size(pixelID))(1) EQ 1) THEN BEGIN
+; title += ' ,X:' + strcompress(x,/remove_all)
+; title += ' ,Y:' + strcompress(y,/remove_all)
+
+;     title += ' ,PixelID:' + strcompress(pixelID[0],/remove_all)
+; ENDIF ELSE BEGIN
+;     title += ' ,PixelID:'
+
+; title += ')'
+; widget_control, id, base_set_title= title
 
 ;plot data
 tof = (size(img))(1)
 (*global3).tof = tof
 tof_array = REFORM(img,tof,117760)
+
 IvsTOF = tof_array(*,pixelID)
+IvsTOF = total(IvsTOF,1)
 (*(*global3).IvsTOF) = IvsTOF
 plot, IvsTOF
 END

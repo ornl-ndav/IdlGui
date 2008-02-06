@@ -86,7 +86,7 @@ id = widget_info(MAIN_BASE, find_by_uname='mapping_droplist')
 widget_control, id, set_value=MapArray
 
 ;REMOVE_ME
-file = '~/.plotARCS_tmp/ARCS_55_neutron_histo_mapped.dat' ;REMOVE_ME
+file = '~/.plotARCS_tmp/ARCS_50_neutron_histo_mapped.dat' ;REMOVE_ME
 id = widget_info(Main_base,find_by_uname='histo_mapped_text_field')
 widget_control, id, set_value=file
 ;validate plot button ;REMOVE_ME
