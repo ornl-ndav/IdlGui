@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.3)'
+VERSION = '(1.0.4)'
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
