@@ -95,9 +95,9 @@ cmd += ' -a ' + staging_folder
 cmd_text = '-> ' + cmd + ' ... ' + PROCESSING
 AppendLogBook, Event, cmd_text
 no_error = 0
-;CATCH, no_error
+CATCH, no_error
 IF (no_error NE 0) THEN BEGIN
-;    CATCH,/CANCEL
+    CATCH,/CANCEL
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING
     putTextAtEndOfStatus, Event, FAILED, PROCESSING
 ENDIF ELSE BEGIN
