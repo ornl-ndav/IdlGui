@@ -104,7 +104,7 @@ img = (*(*global).bank1_data)
 
 ;store big array that will be used by 1D plot
 (*(*global).DATA_D_ptr) = img ;data(Ntof,Ny,Nx)
-img = total(img,1)
+img = total(img,1) ; data(Ntof,Nx)
 ;load data up in global ptr array
 (*(*global).DATA_DD_ptr) = img
 

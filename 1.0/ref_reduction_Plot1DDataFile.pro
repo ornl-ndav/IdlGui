@@ -30,7 +30,7 @@ widget_control,id,get_uvalue=global
 
 N = (*global).Ny_REF_L ; 304
 img = (*(*global).DATA_D_ptr) ;data(Ntof,Ny,Nx)
-img = total(img,3)
+img = total(img,3) ;data(Ntof,Ny)
 (*(*global).DATA_D_TOTAL_ptr) = img
 
 Plot1DDataFile, Event, img, N
@@ -110,7 +110,8 @@ if (!VERSION.os EQ 'darwin') then begin
 endif
 
 ;rebin data to fill up all graph
-new_Ntof = (*global).Ntof_DATA
+display_Ntof = (*global).Ntof_DATA
+file_Ntof    = (size(img))(1)
 
 if ((*global).miniVersion) then begin
     new_N = N
@@ -118,7 +119,10 @@ endif else begin
     new_N = 2 * N
 endelse
 
-tvimg = rebin(img, new_Ntof, new_N,/sample)
+;change the size of the data draw true plotting area
+widget_control, id_draw, DRAW_XSIZE=file_Ntof
+
+tvimg = rebin(img, file_Ntof, new_N,/sample)
 (*(*global).tvimg_data_ptr) = tvimg
 tvscl, tvimg, /device
 

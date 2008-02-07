@@ -9,7 +9,7 @@ PRO MakeGuiLoadData1DTab, D_DD_Tab, $
 
 ;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
 ;Tab#1
-BackPeakRescaleTabSize = [4,610,D_DD_TabSize[2]-20,D_DD_TabSize[3]-640]
+BackPeakRescaleTabSize = [4,615,D_DD_TabSize[2]-20,D_DD_TabSize[3]-645]
 BackPeakBaseSize       = [0,0,BackPeakRescaleTabSize[2],$
                           BackPeakRescaleTabSize[3]]
 BackPeakBaseTitle      = '  Background and Peak Selection  '
@@ -80,7 +80,7 @@ DataBackgroundSelectionFileTextFieldSize = [DataBackgroundSelectionFileLabelSize
                                             432,30]
 
 ;Peak Ymin and Ymax bases and cw_fields
-d_vertical_L_L = 60
+d_vertical_L_L = 58
 Data1DSelectionPeakLabelSize  = [3,45+d_vertical_L_L]
 Data1DSelectionPeakLabelTitle = 'Peak Exclusion ........... ' 
 Data1DSelectionPeakYminBaseSize = [Data1DSelectionPeakLabelSize[0]+d_L_B,$
@@ -188,13 +188,16 @@ load_data_D_tab_base = widget_base(D_DD_Tab,$
                                    scr_ysize=D_DD_TabSize[3])
 
 load_data_D_draw = widget_draw(load_data_D_tab_base,$
-                               xoffset=GlobalLoadGraphs[0],$
-                               yoffset=GlobalLoadGraphs[1],$
-                               scr_xsize=GlobalLoadGraphs[2],$
-                               scr_ysize=GlobalLoadGraphs[3],$
+                               Xoffset = 0,$
+                               yoffset = 0,$
+                               x_scroll_size = GlobalLoadGraphs[2]-20,$
+                               y_scroll_size = GlobalLoadGraphs[3]-24,$
+                               xsize = GlobalLoadGraphs[2]-20,$
+                               ysize = GlobalLoadGraphs[3]-24,$
                                uname='load_data_D_draw',$
                                retain=2,$
                                /button_events,$
+                               /scroll,$
                                /motion_events)
 
 ;create the back/peak and rescale tab
