@@ -155,6 +155,8 @@ PRO REFreduction_ManuallyMoveNormBackPeak, Event, coefficient
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+MiniVersion = (*global).miniVersion ;1 for miniVersion, 0 for normal version
+
 if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
 
 ;check what we need to move
@@ -190,33 +192,41 @@ if ((*global).NormNeXusFound) then begin ;only if there is a NeXus loaded
     BackYmin = getTextFieldValue(Event,'normalization_d_selection_background_ymin_cw_field')
     BackYmax = getTextFieldValue(Event,'normalization_d_selection_background_ymax_cw_field')
 
-    if (BackYmin EQ '') then begin
+    IF (BackYmin EQ '') THEN BEGIN
         BackYmin = -1
-    endif else begin
-        BackYmin *= 2
-    endelse
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmin *= 2
+        ENDIF
+    ENDELSE
 
-    if (BackYmax EQ '') then begin
+    IF (BackYmax EQ '') THEN BEGIN
         BackYmax = -1
-    endif else begin
-        BackYmax *= 2
-    endelse
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            BackYmax *= 2
+            ENDIF
+    ENDELSE
     
 ;get Peak Ymin and Ymax
     PeakYmin = getTextFieldValue(Event,'normalization_d_selection_peak_ymin_cw_field')
     PeakYmax = getTextFieldValue(Event,'normalization_d_selection_peak_ymax_cw_field')
 
-    if (PeakYmin EQ '') then begin
+    IF (PeakYmin EQ '') THEN BEGIN
         PeakYmin = -1
-    endif else begin
-        PeakYmin *= 2
-    endelse
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            PeakYmin *= 2
+        ENDIF
+    ENDELSE
 
-    if (PeakYmax EQ '') then begin
+    IF (PeakYmax EQ '') THEN BEGIN
         PeakYmax = -1
-    endif else begin
-        PeakYmax *= 2
-    endelse
+    ENDIF ELSE BEGIN
+        IF (MiniVersion EQ 0) THEN BEGIN
+            PeakYmax *= 2
+        ENDIF
+    ENDELSE
 
     CASE (TYPE) OF
         'back_ymin' : begin
