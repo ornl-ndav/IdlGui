@@ -110,13 +110,17 @@ if (!VERSION.os EQ 'darwin') then begin
 endif
 
 ;rebin data to fill up all graph
-new_Ntof = (*global).Ntof_NORM
+new_Ntof  = (*global).Ntof_NORM
+file_Ntof = (size(img))(1)
 
 if ((*global).miniVersion) then begin
     new_N = N
 endif else begin
     new_N = 2 * N
 endelse
+
+;change the size of the data draw true plotting area
+widget_control, id_draw, DRAW_XSIZE=file_Ntof
 
 tvimg = rebin(img, new_Ntof, new_N,/sample)
 (*(*global).tvimg_norm_ptr) = tvimg
