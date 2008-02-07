@@ -32,6 +32,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;name of the current selected REF instrument
                    DataRunNumber : '',$
                    dr_output_path : '~/',$
+                   archived_data_flag : 1,$
+                   archived_norm_flag : 1,$
 ;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
