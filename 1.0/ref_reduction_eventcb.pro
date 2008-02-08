@@ -129,19 +129,19 @@ InitialStrarr = getDataLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-    DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
-    putDataLogBookMessage, Event, DataLogBookMessage, Append=1
-    
+DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+putDataLogBookMessage, Event, DataLogBookMessage, Append=1
+
 ;map=0 the base
-    MapBase, Event, 'data_list_nexus_base', 0
-    
+MapBase, Event, 'data_list_nexus_base', 0
+
 ;get data run number
-    DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
+DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
     
 ;Open That NeXus file
-    OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
+OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
     
-    IF ((*global).isHDF5format) THEN BEGIN
+IF ((*global).isHDF5format) THEN BEGIN
         
         REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
         
@@ -164,7 +164,7 @@ putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
         
     ENDIF
 
-;to see the last line
+;to see the last line of the data log book
 showLastDataLogBookLine, Event
 
 END
@@ -200,24 +200,31 @@ NormRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_fiel
 ;Open That NeXus file
 OpenNormNexusFile, Event, NormRunNumber, currFullNormNexusName
 
-REFreduction_Plot1D2DNormalizationFile, Event ;then plot data file (1D and 2D)
+IF ((*global).isHDF5format) THEN BEGIN
 
+    REFreduction_Plot1D2DNormalizationFile, Event ;then plot data file (1D and 2D)
+    
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
+    id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+    widget_control,id,get_uvalue=global
+    
 ;tell the user that the load and plot process is done
-InitialStrarr = getNormalizationLogBookText(Event)
-putTextAtEndOfNormalizationLogBookLastLine, $
-  Event, $
-  InitialStrarr, $
-  ' Done', $
-  (*global).processing_message
-
+    InitialStrarr = getNormalizationLogBookText(Event)
+    putTextAtEndOfNormalizationLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      ' Done', $
+      (*global).processing_message
+    
 ;display full path to NeXus in Norm log book
-full_nexus_name = (*global).norm_full_nexus_name
-text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-putNormalizationLogBookMessage, Event, text, Append=1
+    full_nexus_name = (*global).norm_full_nexus_name
+    text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+    putNormalizationLogBookMessage, Event, text, Append=1
+    
+ENDIF
+
+;to see the last line of the norm log book
+showLastNormLogBookLine, Event
 
 END
 
@@ -464,59 +471,66 @@ END
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
 
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus ;first Load the normalization file
 
 if (isArchivedNormNexusDesired(Event)) then begin ;get full list of NeXus with this run number
-
     if (isNeXusFound) then begin 
-        REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
         
-;get global structure
-        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        widget_control,id,get_uvalue=global
-
+        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
+            
+            REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
+            
 ;tell the user that the load and plot process is done
-        InitialStrarr = getNormalizationLogBookText(Event)
-        putTextAtEndOfNormalizationLogBookLastLine, $
-          Event, $
-          InitialStrarr, $
-          ' Done', $
-          (*global).processing_message
-        
+            InitialStrarr = getNormalizationLogBookText(Event)
+            putTextAtEndOfNormalizationLogBookLastLine, $
+              Event, $
+              InitialStrarr, $
+              ' Done', $
+              (*global).processing_message
+            
 ;display full path to NeXus in Norm log book
-        full_nexus_name = (*global).norm_full_nexus_name
-        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putNormalizationLogBookMessage, Event, text, Append=1
+            full_nexus_name = (*global).norm_full_nexus_name
+            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            putNormalizationLogBookMessage, Event, text, Append=1
 
-    endif 
+        ENDIF
 
-endif else begin ;get full list of nexus file
+    ENDIF 
+    
+ENDIF ELSE BEGIN                ;get full list of nexus file
 
-    if (NbrNexus EQ 1) then begin
+    IF (NbrNexus EQ 1) THEN BEGIN
 
-        REFreduction_Plot1D2DNormalizationFile, Event ;the plot norm file (1D and 2D)
+        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
 
+            REFreduction_Plot1D2DNormalizationFile, Event ;the plot norm file (1D and 2D)
+            
 ;get global structure
-        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        widget_control,id,get_uvalue=global
-        
+            id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            
 ;tell the user that the load and plot process is done
-        InitialStrarr = getNormalizationLogBookText(Event)
-        putTextAtEndOfNormalizationLogBookLastLine, $
-          Event, $
-          InitialStrarr, $
-          ' Done', $
-          (*global).processing_message
-        
+            InitialStrarr = getNormalizationLogBookText(Event)
+            putTextAtEndOfNormalizationLogBookLastLine, $
+              Event, $
+              InitialStrarr, $
+              ' Done', $
+              (*global).processing_message
+            
 ;display full path to NeXus in Norm log book
-        full_nexus_name = (*global).norm_full_nexus_name
-        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putNormalizationLogBookMessage, Event, text, Append=1
+            full_nexus_name = (*global).norm_full_nexus_name
+            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            putNormalizationLogBookMessage, Event, text, Append=1
 
-    endif
+        ENDIF
 
-endelse
+    ENDIF
 
+ENDELSE
 
 END
 
