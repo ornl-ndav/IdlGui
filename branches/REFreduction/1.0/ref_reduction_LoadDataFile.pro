@@ -252,6 +252,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
           DataRunNumber
     ENDIF
 ENDIF ELSE BEGIN
+
     (*global).isHDF5format = 0
     LogBookText = '---- Is format of NeXus hdf5 ? NO'
     putLogBookMessage, Event, LogBookText, Append=1
@@ -259,8 +260,14 @@ ENDIF ELSE BEGIN
     LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
     putLogBookMessage, Event, LogBookText, Append=1
 
-;FIXME
-;add message in data logbook
+    ;tells the data log book that the format is wrong
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+
 ENDELSE
 
 END

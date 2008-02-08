@@ -103,6 +103,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;TOF for data file
                    Ntof_NORM : 0L, $ 
 ;TOF for norm file
+                   failed : 'FAILED',$
+;failed message to display
                    processing_message : '(PROCESSING)',$ 
 ;processing message to display
                    data_tmp_dat_file : 'tmp_data.dat',$ 

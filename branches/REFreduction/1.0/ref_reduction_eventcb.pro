@@ -129,36 +129,43 @@ InitialStrarr = getDataLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
-putDataLogBookMessage, Event, DataLogBookMessage, Append=1
-
+    DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+    putDataLogBookMessage, Event, DataLogBookMessage, Append=1
+    
 ;map=0 the base
-MapBase, Event, 'data_list_nexus_base', 0
-
+    MapBase, Event, 'data_list_nexus_base', 0
+    
 ;get data run number
-DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
-
+    DataRunNumber = getTextFieldValue(Event,'load_data_run_number_text_field')
+    
 ;Open That NeXus file
-OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
-
-REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
-
+    OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
+    
+    IF ((*global).isHDF5format) THEN BEGIN
+        
+        REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+        
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
+        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+        widget_control,id,get_uvalue=global
+        
 ;tell the user that the load and plot process is done
-InitialStrarr = getDataLogBookText(Event)
-putTextAtEndOfDataLogBookLastLine, $
-  Event, $
-  InitialStrarr, $
-  ' Done', $
-  (*global).processing_message
-
+        InitialStrarr = getDataLogBookText(Event)
+        putTextAtEndOfDataLogBookLastLine, $
+          Event, $
+          InitialStrarr, $
+          ' Done', $
+          (*global).processing_message
+        
 ;display full path to NeXus in Norm log book
-full_nexus_name = (*global).data_full_nexus_name
-text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-putDataLogBookMessage, Event, text, Append=1
+        full_nexus_name = (*global).data_full_nexus_name
+        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+        putDataLogBookMessage, Event, text, Append=1
+        
+    ENDIF
+
+;to see the last line
+showLastDataLogBookLine, Event
 
 END
 
@@ -387,14 +394,13 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
 REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
 
-;stop here if the file is not HDF5
 ;get global structure
-;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,Event.top,get_uvalue=global
 
-if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with this run number
+IF (isArchivedDataNexusDesired(Event)) THEN BEGIN 
+;get full list of Nexus with this run number
     
-    if (isNeXusFound) then begin
+    IF (isNeXusFound) THEN BEGIN
         
         IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
             
@@ -419,12 +425,13 @@ if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with t
             
         ENDIF
     ENDIF
-        
-    endif else begin            ;get full list of nexus file
-        
-        if (NbrNexus EQ 1) then begin
+    
+ENDIF ELSE BEGIN                ;get full list of nexus file
+    
+    IF (NbrNexus EQ 1) THEN BEGIN
 
-;FIXME 
+        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file        
+
 ;check also format of file loaded in the list            
             REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
             
@@ -445,9 +452,11 @@ if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with t
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
-        endif
-        
-endelse
+        ENDIF
+
+    ENDIF
+    
+ENDELSE
 
 END
 
