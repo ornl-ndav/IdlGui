@@ -31,6 +31,7 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                    DataRunNumber : '',$
+                   isHDF5format : 1,$
                    dr_output_path : '~/',$
                    archived_data_flag : 1,$
                    archived_norm_flag : 1,$

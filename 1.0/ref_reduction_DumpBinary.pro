@@ -6,16 +6,26 @@ PRO retrieveBanksData, Event, FullNexusName, type
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-fileID  = h5f_open(FullNexusName)
+not_hdf5_format = 0
+CATCH, not_hdf5_format
+IF (not_hdf5_format NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    (*global).isHDF5format = 0
+    ;display message about invalid file format
+    putDataLogBookMessage, Event, 'Nexus formt not supported by this application', APPEND=1
+ENDIF ELSE BEGIN
+    fileID  = h5f_open(FullNexusName)
+    (*global).isHDF5format = 1
 ;get bank data
-fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
-
-if (type EQ 'data') then begin
-    data = h5d_read(fieldID)
-    (*(*global).bank1_data) = data
-endif else begin
-    (*(*global).bank1_norm) = h5d_read(fieldID)
-endelse
+    fieldID = h5d_open(fileID,(*global).nexus_bank1_path)
+    
+    if (type EQ 'data') then begin
+        data = h5d_read(fieldID)
+        (*(*global).bank1_data) = data
+    endif else begin
+        (*(*global).bank1_norm) = h5d_read(fieldID)
+    endelse
+ENDELSE
 END
 
 
