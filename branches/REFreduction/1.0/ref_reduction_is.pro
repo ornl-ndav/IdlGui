@@ -240,3 +240,4 @@ id = widget_info(Event.top,find_by_uname='normalization2d_z_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
+

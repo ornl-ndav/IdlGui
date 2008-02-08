@@ -387,56 +387,66 @@ PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
 REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
 
+;stop here if the file is not HDF5
+;get global structure
+;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,Event.top,get_uvalue=global
+
 if (isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus with this run number
-
+    
     if (isNeXusFound) then begin
-
-        REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
         
+        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
+            
+            REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+            
 ;get global structure
-        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        widget_control,id,get_uvalue=global
-        
+            id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            
 ;tell the user that the load and plot process is done
-        InitialStrarr = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine, $
-          Event, $
-          InitialStrarr, $
-          ' Done', $
-          (*global).processing_message
-        
+            InitialStrarr = getDataLogBookText(Event)
+            putTextAtEndOfDataLogBookLastLine, $
+              Event, $
+              InitialStrarr, $
+              ' Done', $
+              (*global).processing_message
+            
 ;display full path to NeXus in Data log book
-        full_nexus_name = (*global).data_full_nexus_name
-        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putDataLogBookMessage, Event, text, Append=1
+            full_nexus_name = (*global).data_full_nexus_name
+            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            putDataLogBookMessage, Event, text, Append=1
+            
+        ENDIF
+    ENDIF
         
-    endif
-
-endif else begin ;get full list of nexus file
-
-    if (NbrNexus EQ 1) then begin
-
-        REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+    endif else begin            ;get full list of nexus file
         
+        if (NbrNexus EQ 1) then begin
+
+;FIXME 
+;check also format of file loaded in the list            
+            REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+            
 ;get global structure
-        id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-        widget_control,id,get_uvalue=global
-        
+            id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+            widget_control,id,get_uvalue=global
+            
 ;tell the user that the load and plot process is done
-        InitialStrarr = getDataLogBookText(Event)
-        putTextAtEndOfDataLogBookLastLine, $
-          Event, $
-          InitialStrarr, $
-          ' Done', $
-          (*global).processing_message
-        
+            InitialStrarr = getDataLogBookText(Event)
+            putTextAtEndOfDataLogBookLastLine, $
+              Event, $
+              InitialStrarr, $
+              ' Done', $
+              (*global).processing_message
+            
 ;display full path to NeXus in Data log book
-        full_nexus_name = (*global).data_full_nexus_name
-        text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
-        putDataLogBookMessage, Event, text, Append=1
-
-    endif
-
+            full_nexus_name = (*global).data_full_nexus_name
+            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            putDataLogBookMessage, Event, text, Append=1
+            
+        endif
+        
 endelse
 
 END
