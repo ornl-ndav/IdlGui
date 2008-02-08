@@ -230,16 +230,42 @@ LogBookText = getLogBookText(Event)
 Message = 'OK'
 putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
-;dump binary data into local directory of user
-working_path = (*global).working_path
-LogBookText = '----> Dump binary data at this location: ' + working_path
-putLogBookMessage, Event, LogBookText, Append=1
-REFReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
+IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
 
+    (*global).isHDF5format = 1
+    LogBookText = '----> Is format of NeXus hdf5 ? YES'
+    putLogBookMessage, Event, LogBookText, Append=1
+    
+;dump binary data into local directory of user
+    working_path = (*global).working_path
+    LogBookText = '----> Dump binary data at this location: ' + working_path
+    putLogBookMessage, Event, LogBookText, Append=1
+    REFReduction_DumpBinaryNormalization, Event, full_nexus_name, working_path
+
+    IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
-REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
-  instrument, $
-  working_path, $
-  NormRunNumber
+    REFreduction_CreateDefaultNormBackgroundROIFileName, Event, $
+      instrument, $
+      working_path, $
+      NormRunNumber
+    ENDIF
+ENDIF ELSE BEGIN
+
+    (*global).isHDF5format = 0
+    LogBookText = '---- Is format of NeXus hdf5 ? NO'
+    putLogBookMessage, Event, LogBookText, Append=1
+    LogBookText = ' !!! REFreduction does not support this file format. '
+    LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
+    putLogBookMessage, Event, LogBookText, Append=1
+
+    ;tells the norm log book that the format is wrong
+    InitialStrarr = getNormalizationLogBookText(Event)
+    putTextAtEndOfNormalizationLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+
+ENDELSE
 
 END
