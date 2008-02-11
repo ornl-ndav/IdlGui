@@ -86,6 +86,7 @@ ENDIF ELSE BEGIN
         (*global).Instrument = Instrument
         ;reinitialize prenexus_path_array
         (*(*global).prenexus_path_array) = strarr(1)
+        (*(*global).RunNumber_array)     = strarr(1)
         ;get list of runs
         RunNumberArray = getListOfRuns(RunNumber)
         sz = (size(RunNumberArray))(1)
@@ -115,7 +116,7 @@ ENDIF ELSE BEGIN
         ENDIF ELSE BEGIN        ;more than 1 run
             message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
             message += ' for ' + Instrument + $
-              ' exist (this may take a while):'
+              ' exist (this may take a while) :'
             putLogBook, Event, message
 ;this will be used to replace processing by done
             message_array = strarr(sz+1)
