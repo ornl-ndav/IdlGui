@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.4)'
+VERSION = '(1.0.5)'
 
 ;define initial global values - these could be input via external file or other means
 
