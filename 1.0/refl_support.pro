@@ -12,7 +12,7 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION = 'VERSION: REFScale1.0.1'
+VERSION = ' (version: 1.0.2)'
 
 global = ptr_new({  $
          angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
@@ -146,7 +146,7 @@ Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
 ListOfFiles  = ['                            ']  
-MainTitle = "REFLECTOMETER SUPPORT - RESCALLING PROGRAM"
+MainTitle = "REFLECTOMETER SUPPORT - RESCALLING PROGRAM" + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -157,13 +157,6 @@ MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                         SCR_YSIZE=MainBaseSize[3], $
                         TITLE=MainTitle,$
                         MBAR=WID_BASE_0_MBAR)
-
-;add version to program
-version_label = widget_label(MAIN_BASE,$
-                             XOFFSET=1060,$
-                             YOFFSET=580,$
-                             VALUE=VERSION,$
-                             FRAME=0)
 
 PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
                           UNAME='plot_window',$
