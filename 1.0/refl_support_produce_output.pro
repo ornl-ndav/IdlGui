@@ -81,11 +81,11 @@ for i=0,(nbrFiles-1) do begin
    flt1 = flt1(index)
    flt2 = flt2(index)
      
-   ;remove data where DeltaR>R
-   index = getArrayRangeOfErrorGEValue(flt1, flt2)
-   flt0 = flt0(index)
-   flt1 = flt1(index)
-   flt2 = flt2(index)
+;   ;remove data where DeltaR>R
+;   index = getArrayRangeOfErrorGEValue(flt1, flt2)
+;   flt0 = flt0(index)
+;   flt1 = flt1(index)
+;   flt2 = flt2(index)
 
    flt0Size = (size(flt0))(1)
    for j=0,(flt0Size-1) do begin
