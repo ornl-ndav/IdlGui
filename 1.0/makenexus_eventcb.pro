@@ -80,9 +80,10 @@ ENDIF ELSE BEGIN
     Instrument = getInstrument(Event)
     IF (instrument NE '' ) THEN BEGIN    
         (*global).Instrument = Instrument
+        ;reinitialize prenexus_path_array
+        (*(*global).prenexus_path_array) = strarr(1)
         ;get list of runs
         RunNumberArray = getListOfRuns(RunNumber)
-        (*(*global).RunNumberArray) = RunNumberArray
         sz = (size(RunNumberArray))(1)
         IF (sz EQ 1) THEN BEGIN ;only 1 run
             RunNumber = RunNumberArray[0]
