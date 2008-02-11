@@ -1,10 +1,13 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "../utilities"
+IdlUtilitiesPath = "/utilities"
 
-cd, IdlUtilitiesPath
+;Makefile that automatically compile the necessary modules
+;and create the VM file.
+cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
 
+;Build REFscale GUI
 cd, CurrentFolder + '/RefLSupportGui'
 .run "MakeGuiStep1.pro"
 .run "MakeGuiStep2.pro"
@@ -13,6 +16,7 @@ cd, CurrentFolder + '/RefLSupportGui'
 .run "MakeGuiSettings.pro"
 .run "MakeGuiMainBaseComponents.pro"
 
+;Build main procedures
 cd, CurrentFolder
 .run "getNumeric.pro"
 .run "refl_support_get.pro"
