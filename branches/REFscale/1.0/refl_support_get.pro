@@ -1,10 +1,11 @@
 ;This function gives a list of point to keep, for which the Y value is
 ;greater than the error bar
 FUNCTION getArrayRangeOfErrorGEValue, flt1, flt2
-index = where(flt2 LT flt1)
+new_flt2 = flt2 ^ 2
+new_flt1 = flt1 ^ 2
+index = where(flt2 LE flt1)
 return, index
 END
-
 
 
 ;This function returns 1 if the specified axis scale is linear
