@@ -7,7 +7,7 @@ all:
 	idl ./makefile.pro;
 
 install: 
-	cp refl_support.sav /SNS/software/idltools/sav/
-	cp RefScale /SNS/software/idltools/
+	cp john_refl_support.sav /SNS/software/idltools/sav/
+	cp JohnRefScale /SNS/software/idltools/
 
 
