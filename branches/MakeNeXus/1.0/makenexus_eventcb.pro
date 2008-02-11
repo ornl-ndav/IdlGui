@@ -59,7 +59,11 @@ END
 PRO run_number, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
 (*global).prenexus_found_nbr = 0
+processing = (*global).processing
+ok         = (*global).ok
+failed     = (*global).failed
 
 ;invalidate send_to_geek and create_nexus
 (*global).validate_go = 0
@@ -89,7 +93,7 @@ ENDIF ELSE BEGIN
             RunNumber = RunNumberArray[0]
             message = 'Checking if Run ' + strcompress(RunNumber,/remove_all)
             message += ' for ' + Instrument + ' exists ... '
-            text = message + (*global).processing
+            text = message + processing
             putLogBook, Event, text
 ;check if runNumber exist
             result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
@@ -111,9 +115,8 @@ ENDIF ELSE BEGIN
         ENDIF ELSE BEGIN        ;more than 1 run
             message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
             message += ' for ' + Instrument + $
-              ' exist (this may take a while) ... '
-            text = message + (*global).processing
-            putLogBook, Event, text
+              ' exist (this may take a while):'
+            putLogBook, Event, message
 ;this will be used to replace processing by done
             message_array = strarr(sz+1)
             message_array[0] = message
@@ -121,7 +124,10 @@ ENDIF ELSE BEGIN
             validate_go        = 0
             FOR i=0,(sz-1) DO BEGIN
                 RunNumber = RunNumberArray[i]
+                message = "Does Run Number " + strcompress(RunNumber,/remove_all)
+                message += " exist ? ... " + processing
                                 ;check if runNumber exist
+                appendLogBook, Event, message
                 result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
                 IF (i EQ 0) THEN BEGIN
                     (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
@@ -138,24 +144,19 @@ ENDIF ELSE BEGIN
                 (*(*global).RunNumber_array)     = [(*(*global).RunNumber_array),$
                                                     RunNumber]
                 ENDELSE
-                message = 'Run Number ' + RunNumber + ' --- '
                 IF(result) THEN BEGIN 
                     at_least_one_found = 1
-                    message += (*global).ok
+                    putTextAtEndOfLogBook, Event, ok, processing
                 ENDIF ELSE BEGIN
                     message += (*global).failed
+                    putTextAtEndOfLogBook, Event, failed, processing
                 ENDELSE
                 message_array[i+1] = message
-                AppendLogBook, Event, message
             ENDFOR
             IF (at_least_one_found) THEN BEGIN ;prenexus exist
                 validate_go = 1
-                message_array[0] = message_array[0] + 'DONE'
-                
             ENDIF ELSE BEGIN
-                message_array[0] = message_array[0] + (*global).FAILED
             ENDELSE
-            putLogBook, Event, message_array
                 
 ;remove run number
             resetRunNumberField, Event
