@@ -155,7 +155,7 @@ text = CW_FIELD(ExclusionBase,$
                 TITLE         = 'Exclude pixels with counts <= to',$
                 ROW           = 1,$
                 XSIZE         = 7,$
-                /INTEGER)
+                /LONG)
 
 button = WIDGET_BUTTON(SelectionTabBase,$
                        XOFFSET   = 305,$

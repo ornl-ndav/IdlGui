@@ -137,6 +137,12 @@ return, 0
 END
 
 
+FUNCTION getCountsToExcludeValue, Event
+value =  getTextFieldValue(Event, 'counts_exclusion')
+RETURN, value
+END
+
+
 FUNCTION getSelectionBasePixelidText, Event
 id = widget_info(Event.top,find_by_uname='pixelid')
 widget_control, id, get_value=text
