@@ -198,3 +198,34 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
 END
+
+
+
+PRO AddPixelsToExcludedList, Event, Counts
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+pixel_excluded = (*(*global).pixel_excluded)
+
+;check value that are <= Counts in bank1
+bank1_integrated_counts = (*(*global).bank1_sum)
+sz_1 = (size(bank1_integrated_counts))(1) * (size(bank1_integrated_counts))(2)
+FOR i=0,(sz_1-1) DO BEGIN
+    IF (bank1_integrated_counts[i] LE Counts) THEN BEGIN
+        pixel_excluded[i]=1
+    ENDIF 
+ENDFOR
+
+print, sz_1
+;check value that are <= Counts in bank2
+bank2_integrated_counts = (*(*global).bank2_sum)
+sz_2 = (size(bank2_integrated_counts))(1) * (size(bank2_integrated_counts))(2)
+FOR i=0,(sz_2-1) DO BEGIN
+    IF (bank2_integrated_counts[i] LE Counts) THEN BEGIN
+        pixel_excluded[i+4096] = 1
+    ENDIF
+ENDFOR
+(*(*global).pixel_excluded) = pixel_excluded
+
+END

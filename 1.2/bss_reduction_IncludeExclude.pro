@@ -222,3 +222,20 @@ ResetSelectionBaseTubeText, Event
 BSSreduction_IncludeExcludeCheckTubeField, Event
 
 END
+
+
+
+
+;excluse pixel that have value less or equal to X
+PRO  BSSreduction_ExcludedPixelCounts, Event
+
+;retrieve counts value
+Counts = getCountsToExcludeValue(Event)
+
+;remove pixel that have value <= counts
+AddPixelsToExcludedList, Event, Counts
+
+;replot
+PlotIncludedPixels, Event
+
+END
