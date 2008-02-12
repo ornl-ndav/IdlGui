@@ -16,9 +16,11 @@ yoffset = 40
 
 ;Pixel id base
 fbase = WIDGET_BASE(SelectionTabBase,$
+                    UNAME        = 'fbase',$
                     XOFFSET      = 0,$
                     YOFFSET      = 0,$
                     /BASE_ALIGN_CENTER,$
+                    SENSITIVE    = 0,$
                     ROW          = 1)
 
 text   = CW_FIELD(fbase,$
@@ -45,9 +47,11 @@ button = WIDGET_BUTTON(fbase,$
 
 ;Row of pixels
 abase = WIDGET_BASE(SelectionTabBase,$
+                    UNAME        = 'abase',$
                     XOFFSET      = 0,$
                     YOFFSET      = yoffset,$
                     /BASE_ALIGN_CENTER,$
+                    SENSITIVE    = 0,$
                     ROW          = 1)
 
 text   = CW_FIELD(abase,$
@@ -131,6 +135,7 @@ button = WIDGET_BUTTON(base,$
 
 ;excluded pixel that have value LE than ... and full reset
 ExclusionBase = WIDGET_BASE(SelectionTabBase,$
+                            UNAME     = 'exclusion_base',$
                             XOFFSET   = 0,$
                             YOFFSET   = 4*yoffset,$
                             SCR_XSIZE = 290,$

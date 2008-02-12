@@ -261,9 +261,13 @@ endfor
                                   'color_base',$
                                   'counts_vs_tof_tab2',$
                                   'counts_vs_tof_tab1',$
+                                  'fbase',$
                                   'sbase',$
+                                  'abase',$
                                   'symbol_base',$
-                                  'fbase']
+                                  'ebase',$
+                                  'exclusion_base',$
+                                  'reset_button']
     
 if (!VERSION.os EQ 'darwin') then begin
     MainBaseSize  = [30,25,1200,730]
