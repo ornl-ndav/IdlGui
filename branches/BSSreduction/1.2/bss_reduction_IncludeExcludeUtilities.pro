@@ -68,7 +68,7 @@ FOR i=0,(sz-1) DO BEGIN
     ENDIF
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
-
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -88,7 +88,7 @@ FOR i=0,(sz-1) DO BEGIN
     ENDIF
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
-
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -117,6 +117,7 @@ FOR i=0,(sz-1) DO BEGIN
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -148,6 +149,7 @@ FOR i=0,(sz-1) DO BEGIN
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -172,6 +174,7 @@ FOR i=0,(sz-1) DO BEGIN
 
 ENDFOR
 (*(*global).pixel_excluded) = pixel_excluded
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -196,7 +199,8 @@ FOR i=0,(sz-1) DO BEGIN
     ENDIF
 
 ENDFOR
-(*(*global).pixel_excluded) = pixel_excluded
+(*(*global).pixel_excluded)      = pixel_excluded
+(*(*global).pixel_excluded_base) = pixel_excluded
 END
 
 
@@ -206,7 +210,7 @@ PRO AddPixelsToExcludedList, Event, Counts
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-pixel_excluded = (*(*global).pixel_excluded)
+pixel_excluded      = (*(*global).pixel_excluded_base)
 
 ;check value that are <= Counts in bank1
 bank1_integrated_counts = (*(*global).bank1_sum)
