@@ -119,6 +119,8 @@ global = ptr_new ({ $
                     bank2: ptr_new(0L),$ ;array of bank2 data (Ntof, Nx, Ny)
                     bank2_sum: ptr_new(0L),$ ;array of bank2 data (Nx, Ny)
                     pixel_excluded : ptr_new(0L),$ ;list of pixel excluded 
+                    pixel_excluded_base : ptr_new(0L),$
+ ;list of pixel excluded without counts removing
                     default_pixel_excluded : ptr_new(0L),$
                     pixel_excluded_size : 64*2*64L,$ ; total number of pixels
                     TotalPixels : 8192L,$ ;Total number of pixels
@@ -244,6 +246,7 @@ for j=0,1 do begin
 endfor
 (*(*global).default_pixel_excluded) = default_pixel_excluded
 (*(*global).pixel_excluded) = default_pixel_excluded
+(*(*global).pixel_excluded_base) = default_pixel_excluded
 
 (*(*global).WidgetsToActivate) = ['load_roi_file_button',$
                                   'save_roi_file_button',$
