@@ -27,9 +27,9 @@ CASE (listening) OF
     'mrac': 
     else: BEGIN
         if ((*global).instrument EQ (*global).REF_L) then begin
-            cmd = 'srun -p lracq ' + cmd
+            cmd = 'srun -Q -p lracq ' + cmd
         endif else begin
-            cmd = 'srun -p mracq ' + cmd
+            cmd = 'srun -Q -p mracq ' + cmd
         endelse
     END
 ENDCASE
