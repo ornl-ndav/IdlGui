@@ -34,7 +34,10 @@ CASE (listening) OF
     END
 ENDCASE
 
+print, 'cmd: ' + cmd ;remove_me
 spawn, cmd, listening, err_listening
+print, 'listening: ' + listening ;remove_me
+print, 'err_listening: ' + err_listening ;remove_me
 
 if (err_listening[0] NE '') then begin
 

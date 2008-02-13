@@ -54,50 +54,63 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     instrument = (*global).instrument
     
 ;open output file
-    openw, 1, file_name
-    
-    if (instrument EQ (*global).REF_L) then begin ;REF_L
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        message = 'ERROR: The ROI file can not be saved at this location ('
+        message += file_name + ')'
+        putLogbookMessage, Event, message, Append=1
+        data_message = 'ERROR saving the Data ROI file (check LogBook)'
+        putDataLogBookMessage, Event, data_message, Append=1
+    ENDIF ELSE BEGIN
 
-        i=0L
-        NxMax = (*global).Nx_REF_L
-        YNbr = YNbr+1
-        OutputArray = strarr((NxMax)*YNbr)
-        for y=(Ymin),(Ymax) do begin
-            for x=0,(NxMax-1) do begin
-                text = 'bank1_' + strcompress(x,/remove_all)
-                text += '_' + strcompress(y,/remove_all)
-                printf,1,text
-                OutputArray[i] = text
-                i++
-            endfor
-        endfor
+        openw, 1, file_name
         
-    endif else begin            ;REF_M
-        
-        i=0L
-        NyMax = (*global).Ny_REF_M
-        YNbr = YNbr+1
-        OutputArray = strarr((NyMax)*YNbr)	
-        for y=(Ymin),(Ymax) do begin
-            for x=0,(NyMax-1) do begin
-                text = 'bank1_' + strcompress(y,/remove_all)
-                text += '_' + strcompress(x,/remove_all)
-                printf,1,text
-                OutputArray[i] = text
-                i++
+        if (instrument EQ (*global).REF_L) then begin ;REF_L
+            
+            i=0L
+            NxMax = (*global).Nx_REF_L
+            YNbr = YNbr+1
+            OutputArray = strarr((NxMax)*YNbr)
+            for y=(Ymin),(Ymax) do begin
+                for x=0,(NxMax-1) do begin
+                    text = 'bank1_' + strcompress(x,/remove_all)
+                    text += '_' + strcompress(y,/remove_all)
+                    printf,1,text
+                    OutputArray[i] = text
+                    i++
+                endfor
             endfor
-        endfor
-
-    endelse                     ;end of (instrument is REF_L)
-
-    close, 1
-    free_lun, 1
+            
+        endif else begin        ;REF_M
+            
+            i=0L
+            NyMax = (*global).Ny_REF_M
+            YNbr = YNbr+1
+            OutputArray = strarr((NyMax)*YNbr)	
+            for y=(Ymin),(Ymax) do begin
+                for x=0,(NyMax-1) do begin
+                    text = 'bank1_' + strcompress(y,/remove_all)
+                    text += '_' + strcompress(x,/remove_all)
+                    printf,1,text
+                    OutputArray[i] = text
+                    i++
+                endfor
+            endfor
+            
+        endelse                 ;end of (instrument is REF_L)
+        
+        close, 1
+        free_lun, 1
     
 ;display file_name in info box (display x first lines)
-REFreduction_DisplayPreviewOfDataRoiFile, $
-  Event, $
-  OutputArray, $
-  (*global).roi_file_preview_nbr_line
+        REFreduction_DisplayPreviewOfDataRoiFile, $
+          Event, $
+          OutputArray, $
+          (*global).roi_file_preview_nbr_line
+        
+    ENDELSE
 
 endelse ;end of (Ynbr LE 1)
 
@@ -161,51 +174,64 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
     instrument = (*global).instrument
     
 ;open output file
-    openw, 1, file_name
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        message = 'ERROR: The ROI file can not be saved at this location ('
+        message += file_name + ')'
+        putLogbookMessage, Event, message, Append=1
+        norm_message = 'ERROR saving the Normalization ROI file (check LogBook)'
+        putNormalizationLogBookMessage, Event, norm_message, Append=1
+    ENDIF ELSE BEGIN
+        
+        openw, 1, file_name
     
-    if (instrument EQ (*global).REF_L) then begin ;REF_L
-        
-        i=0L
-        NxMax = (*global).Nx_REF_L
-        YNbr = YNbr+1
-        OutputArray = strarr(NxMax*YNbr)
-        for y=(Ymin),(Ymax) do begin
-            for x=0,(NxMax-1) do begin
-                text = 'bank1_' + strcompress(x,/remove_all)
-                text += '_' + strcompress(y,/remove_all)
-                printf,1,text
-                OutputArray[i] = text
-                i++
+        if (instrument EQ (*global).REF_L) then begin ;REF_L
+            
+            i=0L
+            NxMax = (*global).Nx_REF_L
+            YNbr = YNbr+1
+            OutputArray = strarr(NxMax*YNbr)
+            for y=(Ymin),(Ymax) do begin
+                for x=0,(NxMax-1) do begin
+                    text = 'bank1_' + strcompress(x,/remove_all)
+                    text += '_' + strcompress(y,/remove_all)
+                    printf,1,text
+                    OutputArray[i] = text
+                    i++
+                endfor
             endfor
-        endfor
-        
-    endif else begin            ;REF_M
-        
-        i=0L
-        NyMax = (*global).Ny_REF_M
-        YNbr = YNbr+1
-        OutputArray = strarr((NyMax)*YNbr)	
-        for y=(Ymin),(Ymax) do begin
-            for x=0,(NyMax-1) do begin
-                text = 'bank1_' + strcompress(y,/remove_all)
-                text += '_' + strcompress(x,/remove_all)
-                printf,1,text
-                OutputArray[i] = text
-                i++
+            
+        endif else begin        ;REF_M
+            
+            i=0L
+            NyMax = (*global).Ny_REF_M
+            YNbr = YNbr+1
+            OutputArray = strarr((NyMax)*YNbr)	
+            for y=(Ymin),(Ymax) do begin
+                for x=0,(NyMax-1) do begin
+                    text = 'bank1_' + strcompress(y,/remove_all)
+                    text += '_' + strcompress(x,/remove_all)
+                    printf,1,text
+                    OutputArray[i] = text
+                    i++
+                endfor
             endfor
-        endfor
-
-    endelse                     ;end of (instrument is REF_L)
-
-    close, 1
-    free_lun, 1
-    
+            
+        endelse                 ;end of (instrument is REF_L)
+        
+        close, 1
+        free_lun, 1
+        
 ;display file_name in info box (display x first lines)
-REFreduction_DisplayPreviewOfNormRoiFile, $
-  Event, $
-  OutputArray, $
-  (*global).roi_file_preview_nbr_line
+        REFreduction_DisplayPreviewOfNormRoiFile, $
+          Event, $
+          OutputArray, $
+          (*global).roi_file_preview_nbr_line
 
-endelse ;end of (Ynbr LE 1)
+    ENDELSE
+
+endelse                         ;end of (Ynbr LE 1)
 
 END
