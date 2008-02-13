@@ -84,6 +84,7 @@ cd, CurrentFolder
 .run ref_reduction_UpdatePlotsTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
+.run ref_reduction_ReplaceRunNumber.pro
 .run ref_reduction_RunCommandLine.pro
 .run ref_reduction_LoadMainOutputFile.pro
 .run ref_reduction_LoadXmlOutputFile.pro

@@ -124,6 +124,33 @@ END
 
 
 
+PRO AppendReplaceLogBookMessage, Event, MessageToAdd, RemoveString
+InitialStrarr = getLogBookText(Event)
+;get size of InitialStrarr
+ArrSize = (size(InitialStrarr))(1)
+if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+    if (ArrSize GE 2) then begin
+        NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    endif else begin
+        FinalStrarr = InitialStrarr + MessageToAdd
+    endelse
+endif else begin ;remove given string from last line
+    if (ArrSize GE 2) then begin
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine += MessageToAdd
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    endif else begin
+        NewInitialStrarr = removeStringFromText(InitialStrarr,RemoveString)
+        FinalStrarr = NewInitialStrarr + MessageToAdd
+    endelse
+endelse
+;put it back in uname text field
+putLogBookMessage, Event, FinalStrarr
+END
+
+
+
 ;Add the given message at the end of the last string array element and
 ;put it back in the DataLogBook text field given
 PRO putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
