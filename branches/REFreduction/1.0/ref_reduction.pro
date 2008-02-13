@@ -1,4 +1,4 @@
-1PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 Resolve_Routine, 'ref_reduction_eventcb',$
   /COMPILE_FULL_FILE            ; Load event callback routines
