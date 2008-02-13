@@ -1,4 +1,4 @@
-PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+1PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 Resolve_Routine, 'ref_reduction_eventcb',$
   /COMPILE_FULL_FILE            ; Load event callback routines
@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.0.14)'
+VERSION = ' (version: 1.0.15)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
