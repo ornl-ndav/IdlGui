@@ -13,7 +13,7 @@ cmd = 'reflect_reduction' ;name of function to call
 ;get Data run numbers text field
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
 if (data_run_numbers NE '') then begin
-    cmd += ' ' + strcompress(data_run_numbers,/remove_all)
+    cmd += ' ' + data_run_numbers
 endif else begin
     cmd += ' ?'
     status_text = '- Please provide at least one data run number'
@@ -130,7 +130,7 @@ if (isReductionWithNormalization(Event)) then begin
     norm_run_numbers = getTextFieldValue(Event,'reduce_normalization_runs_text_field')
     cmd += ' --norm=' 
     if (norm_run_numbers NE '') then begin
-        cmd += strcompress(norm_run_numbers,/remove_all)
+        cmd += norm_run_numbers
     endif else begin
         cmd += '?'
         status_text = '- Please provide at least one normalization run number'

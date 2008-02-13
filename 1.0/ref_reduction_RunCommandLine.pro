@@ -6,6 +6,19 @@ widget_control,id,get_uvalue=global
 
 PROCESSING = (*global).processing_message ;processing message
 
+status_text = 'Data Reduction ........ ' + PROCESSING
+putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+
+;check the run numbers and replace them by full nexus path
+;check first DATA run numbers
+ReplaceDataRunNumbersByFullPath, Event
+;check second NORM run numbers
+IF (isReductionWithNormalization(Event)) THEN BEGIN
+    ReplaceNormRunNumbersByFullPath, Event
+ENDIF
+;re-run the CommandLineGenerator
+REFreduction_CommandLineGenerator, Event
+
 ;get command line to generate
 cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
 
@@ -16,9 +29,6 @@ cmd_text = ' -> ' + cmd
 putLogBookMessage, Event, cmd_text, Append=1
 cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
-
-status_text = 'Data Reduction ........ ' + PROCESSING
-putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
 ;add called to SLURM if hostname is not heater,lrac or mrac
 spawn, 'hostname',listening
@@ -34,10 +44,7 @@ CASE (listening) OF
     END
 ENDCASE
 
-print, 'cmd: ' + cmd ;remove_me
 spawn, cmd, listening, err_listening
-print, 'listening: ' + listening ;remove_me
-print, 'err_listening: ' + err_listening ;remove_me
 
 if (err_listening[0] NE '') then begin
 
