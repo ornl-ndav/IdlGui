@@ -39,8 +39,10 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiPlotsTab.pro
 .run MakeGuiPlotsMainIntermediatesBases.pro
 
+.run MakeGuiBatchTab.pro
+
 .run MakeGuiLogBookTab.pro
-.run MakeGuiSettingsTab.pro
+
 
 ;Build main procedures
 cd, CurrentFolder
