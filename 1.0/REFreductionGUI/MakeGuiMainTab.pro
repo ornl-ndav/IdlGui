@@ -8,8 +8,9 @@ MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 LoadTabTitle     = '       LOAD       ' 
 ReduceTabTitle   = '      REDUCE      ' 
 PlotsTabTitle    = '       PLOTS      ' 
+BatchTabTitle    = '    BATCH MODE    ' 
 LogBookTabTitle  = '     LOG BOOK     ' 
-SettingsTabTitle = '     SETTINGS     ' 
+
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
@@ -34,11 +35,12 @@ MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 ;build PLOTS tab
 MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
+;;build BATCH MODE tab
+MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
+
 ;build LOG_BOOK tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
-;;build SETTINGS tab
-;MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
 
 
 END
