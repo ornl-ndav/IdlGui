@@ -1,4 +1,4 @@
-PRO MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
+PRO miniMakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
 
 ;***********************************************************************************
 ;                           Define size arrays
@@ -12,7 +12,7 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Table Widget
-dTable = { size      : [0,0,MainTabSize[2],420,6,20],$
+dTable = { size      : [0,0,MainTabSize[2],320,6,20],$
            uname     : 'batch_table_widget',$
            sensitive : 1,$
            label     : ['ACTIVE', $
@@ -21,7 +21,7 @@ dTable = { size      : [0,0,MainTabSize[2],420,6,20],$
                         'S1 (mm)', $
                         'S2 (mm)', $
                         'Command Line'],$
-           column_width : [60,100,120,80,80,745]}
+           column_width : [60,100,120,80,80,430]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
@@ -29,8 +29,8 @@ dTable = { size      : [0,0,MainTabSize[2],420,6,20],$
 XYoff  = [5,15]
 dFrame = { size  : [0+XYoff[0],$
                     dTable.size[1]+dTable.size[3]+XYoff[1],$
-                    1178,$
-                    270],$
+                    860,$
+                    200],$
            frame : 1}
 
 ;title 
@@ -49,7 +49,7 @@ dActive = { size  : [dFrame.size[0]+XYoff[0],$
             uname : 'batch_run_active_status'}
 
 ;Run number field
-XYOff = [230,0]
+XYOff = [200,0]
 dRunBase = { size  : [dActive.size[0]+XYoff[0],$
                       dActive.size[1]+XYoff[1],$
                       180,40],$
@@ -58,7 +58,7 @@ dRunField = { size  : [10,1],$
               uname : 'batch_run_field_status',$
               title : 'MAIN RUN #: '}
           
-xoff = 40 ;distance between components of first row    
+xoff = 0 ;distance between components of first row    
 ;Angle value
 XYoff = [xoff,0]
 dAngleLabel = { size  : [dRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
@@ -84,7 +84,7 @@ dS2Label = { size  : [dS1Label.size[0]+dS1Label.size[2]+XYoff[0],$
              value : 'Slit 2 : ? mm'}
 
 ;Command line preview
-XYoff = [10,55]
+XYoff = [10,45]
 dCMDlineLabel = { size  : [dFrame.size[0]+XYoff[0],$
                            dActive.size[1]+XYoff[1]],$
                   value : 'COMMAND LINE PREVIEW :'}
@@ -92,7 +92,7 @@ XYoff = [0,25]
 dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
                           dCMDlineLabel.size[1]+XYoff[1],$
                           dFrame.size[2]-20,$
-                          150],$
+                          100],$
                  uname : 'cmd_status_preview'}
                           
 ;/////////////////////////////////////////////////////////
@@ -121,7 +121,7 @@ dSaveasLabel = { size  : [dDeleteButton.size[0]+XYoff[0],$
 XYoff = [70,-8]
 dSApathButton = { size  : [ dSaveasLabel.size[0]+XYoff[0],$
                             dSaveasLabel.size[1]+XYoff[1],$
-                            450,35],$
+                            320,35],$
                   uname : 'save_as_path',$
                   value : '~/'}
 
@@ -136,9 +136,9 @@ dSAfileText = { size  : [dSApathButton.size[0]+dSApathButton.size[2]+XYoff[0],$
 XYoff = [0,0]
 dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                          dSAfileText.size[1]+XYoff[1],$
-                         200,35],$
+                         150,35],$
                 uname : 'save_as_file_button',$
-                value : 'SAVE SET OF COMMAND LINES'}
+                value : 'SAVE COMMAND LINES'}
 
 ;***********************************************************************************
 ;                                Build GUI
