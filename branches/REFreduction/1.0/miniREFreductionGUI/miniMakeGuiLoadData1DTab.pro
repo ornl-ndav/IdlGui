@@ -39,9 +39,9 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['Select Back.   ',$
-                          'Select Peak    ',$
-                          'Zoom ']
+Data1DSelectionList    = ['Select Back.',$
+                          'Select Peak ',$
+                          'Zoom']
 Data1DSelectionBaseSize = [5, $
                            0, $
                            400, $
