@@ -42,6 +42,8 @@ cd, CurrentFolder + '/miniREFreductionGUI/'
 .run miniMakeGuiPlotsTab.pro
 .run miniMakeGuiPlotsMainIntermediatesBases.pro
 
+.run miniMakeGuiBatchTab.pro
+
 .run miniMakeGuiLogBookTab.pro
 
 ;Build main procedures
