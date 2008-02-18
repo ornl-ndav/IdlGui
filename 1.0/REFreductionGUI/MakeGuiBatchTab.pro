@@ -139,6 +139,13 @@ dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                uname : 'run_active_button',$
                value : 'R U N   A C T I V E'}
                           
+;frame for batch widgets
+XYoff = [5,45]
+dBatchFrame = { size  : [XYoff[0],$
+                         dDeleteButton.size[1]+XYoff[1],$
+                         1178,90],$
+                frame : 1}
+
 ;save as label
 XYoff = [0,60]
 dSaveasLabel = { size  : [dMUButton.size[0]+XYoff[0],$
@@ -168,7 +175,7 @@ dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                 value : 'SAVE SET OF COMMAND LINES'}
 
 ;Load batch file
-XYoff = [0,45]
+XYoff = [0,35]
 dLoadBatchButton = { size  : [dSaveasLabel.size[0]+XYoff[0],$
                               dSaveasLabel.size[1]+XYoff[1],$
                               dDeleteButton.size[2:3]],$
@@ -472,4 +479,15 @@ wBatchFileName = WIDGET_LABEL(BATCH_BASE,$
                               VALUE      = dBatchFileName.value,$
                               UNAME      = dBatchFileName.uname,$
                               /ALIGN_LEFT)
+;\\\\\\\\\\\\
+;Batch Frame\
+;\\\\\\\\\\\\
+wBatchFrame = WIDGET_LABEL(BATCH_BASE,$
+                           XOFFSET   = dBatchFrame.size[0],$
+                           YOFFSET   = dBatchFrame.size[1],$
+                           SCR_XSIZE = dBatchFrame.size[2],$
+                           SCR_YSIZE = dBatchFrame.size[3],$
+                           FRAME     = dBatchFrame.frame,$
+                           VALUE     = '')
+
 END
