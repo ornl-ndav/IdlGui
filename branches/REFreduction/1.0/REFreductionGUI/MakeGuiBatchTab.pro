@@ -113,9 +113,9 @@ dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
 XYoff = [10,10]
 dMUButton = { size  : [XYoff[0],$
                        dFrame.size[1]+dFrame.size[3]+XYoff[1],$
-                       120,35],$
+                       140,35],$
               uname : 'move_up_active_button',$
-              value : 'MOVE UP ACTIVE'}
+              value : 'MOVE UP SELECTION'}
 
 XYoff = [10,0]
 dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
@@ -123,7 +123,7 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
                        dMUButton.size[2],$
                        dMUButton.size[3]],$
               uname : 'move_down_active_button',$
-              value : 'MOVE DOWN ACTIVE'}
+              value : 'MOVE DOWN SELECTION'}
 
 XYoff = [10,0]
 dDeleteButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
