@@ -50,8 +50,14 @@ print, 'change Norm run number'
 END
 
 
+PRO BatchTab_MoveUpActive, Event
+print, 'in move up Active'
+END
 
 
+PRO BatchTab_MoveDownActive, Event
+print, 'in move down Active'
+END
 
 
 

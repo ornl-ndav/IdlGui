@@ -46,7 +46,7 @@ dTitle = { size  : [(long(dFrame.size[2])-STRLEN(title)*5)/2L,$
 XYoff = [10,20]
 dActive = { size  : [dFrame.size[0]+XYoff[0],$
                      dFrame.size[1]+XYoff[1]],$
-            title : 'ACTIVE: ',$
+            title : 'ACTIVE:',$
             list  : ['YES','NO'],$
             uname : 'batch_run_active_status'}
 
@@ -111,10 +111,24 @@ dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
                           
 ;/////////////////////////////////////////////////////////
 ;widgets_buttons 
-
 XYoff = [10,10]
-dDeleteButton = { size  : [XYoff[0],$
-                           dFrame.size[1]+dFrame.size[3]+XYoff[1],$
+dMUButton = { size  : [XYoff[0],$
+                       dFrame.size[1]+dFrame.size[3]+XYoff[1],$
+                       120,35],$
+              uname : 'move_up_active_button',$
+              value : 'MOVE UP ACTIVE'}
+
+XYoff = [10,0]
+dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
+                       dMUButton.size[1],$
+                       dMUButton.size[2],$
+                       dMUButton.size[3]],$
+              uname : 'move_down_active_button',$
+              value : 'MOVE DOWN ACTIVE'}
+
+XYoff = [10,0]
+dDeleteButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
+                           dMDbutton.size[1]+XYoff[1],$
                            200,35],$
                   uname : 'delete_active_button',$
                   value : 'D E L E T E   A C T I V E'}
@@ -128,7 +142,7 @@ dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                           
 ;save as label
 XYoff = [0,60]
-dSaveasLabel = { size  : [dDeleteButton.size[0]+XYoff[0],$
+dSaveasLabel = { size  : [dMUButton.size[0]+XYoff[0],$
                           dDeleteButton.size[1]+XYoff[1]],$
                  value : 'SAVE AS :'}
 
@@ -318,6 +332,29 @@ wFrame = WIDGET_LABEL(BATCH_BASE,$
                       SCR_YSIZE = dFrame.size[3],$
                       FRAME     = dFrame.frame,$
                       VALUE     = '')
+
+
+;\\\\\\\\\\\\\\\\\\\\\\
+;MOVE UP ACTIVE BUTTON\
+;\\\\\\\\\\\\\\\\\\\\\\
+wMUButton = WIDGET_BUTTON(BATCH_BASE,$
+                          XOFFSET   = dMUButton.size[0],$
+                          YOFFSET   = dMUButton.size[1],$
+                          SCR_XSIZE = dMUButton.size[2],$
+                          SCR_YSIZE = dMUButton.size[3],$
+                          UNAME     = dMUButton.uname,$
+                          VALUE     = dMUButton.value)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\
+;MOVE DOWN ACTIVE BUTTON\
+;\\\\\\\\\\\\\\\\\\\\\\\\
+wMDButton = WIDGET_BUTTON(BATCH_BASE,$
+                          XOFFSET   = dMDButton.size[0],$
+                          YOFFSET   = dMDButton.size[1],$
+                          SCR_XSIZE = dMDButton.size[2],$
+                          SCR_YSIZE = dMDButton.size[3],$
+                          UNAME     = dMDButton.uname,$
+                          VALUE     = dMDButton.value)
 
 
 ;\\\\\\\\\\\\\\\\\\\\\
