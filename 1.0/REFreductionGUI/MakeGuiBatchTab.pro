@@ -139,13 +139,6 @@ dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                uname : 'run_active_button',$
                value : 'R U N   A C T I V E'}
                           
-XYoff = [300,0]
-dLoadBatchButton = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
-                              dDeleteButton.size[1]+XYoff[1],$
-                              dDeleteButton.size[2:3]],$
-                     uname : 'load_batch_button',$
-                     value : 'LOAD BATCH FILE'}
-
 ;save as label
 XYoff = [0,60]
 dSaveasLabel = { size  : [dMUButton.size[0]+XYoff[0],$
@@ -174,10 +167,18 @@ dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                 uname : 'save_as_file_button',$
                 value : 'SAVE SET OF COMMAND LINES'}
 
+;Load batch file
+XYoff = [0,45]
+dLoadBatchButton = { size  : [dSaveasLabel.size[0]+XYoff[0],$
+                              dSaveasLabel.size[1]+XYoff[1],$
+                              dDeleteButton.size[2:3]],$
+                     uname : 'load_batch_button',$
+                     value : 'LOAD BATCH FILE'}
+
 ;current batch file name is
-XYoff = [0,50]
-dBatchNameLabel = { size  : [dSaveasLabel.size[0]+XYoff[0],$
-                             dSaveasLabel.size[1]+XYoff[1]],$
+XYoff = [30,8]
+dBatchNameLabel = { size  : [dLoadBatchButton.size[0]+dLoadBatchButton.size[2]+XYoff[0],$
+                             dLoadBatchButton.size[1]+XYoff[1]],$
                     value : 'Current Batch file Name is: '}
 XYoff = [180,0]
 dBatchFileName = { size  : [dBatchNameLabel.size[0]+XYoff[0],$
