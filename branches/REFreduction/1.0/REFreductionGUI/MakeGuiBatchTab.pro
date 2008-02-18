@@ -130,14 +130,14 @@ dDeleteButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
                            dMDButton.size[1],$
                            200,35],$
                   uname : 'delete_active_button',$
-                  value : 'D E L E T E   A C T I V E'}
+                  value : 'DELETE  ACTIVE'}
 
 XYoff = [10,0]
 dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                         dDeleteButton.size[1]+XYoff[1],$
                         dDeleteButton.size[2:3]],$
                uname : 'run_active_button',$
-               value : 'R U N   A C T I V E'}
+               value : 'RUN  ACTIVE'}
                           
 ;frame for batch widgets
 XYoff = [5,45]
@@ -172,7 +172,7 @@ dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                          dSAfileText.size[1]+XYoff[1],$
                          200,35],$
                 uname : 'save_as_file_button',$
-                value : 'SAVE SET OF COMMAND LINES'}
+                value : 'SAVE ACTIVE(S)'}
 
 ;Load batch file
 XYoff = [0,35]
