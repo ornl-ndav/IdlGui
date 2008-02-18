@@ -110,7 +110,6 @@ dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
                           
 ;/////////////////////////////////////////////////////////
 ;widgets_buttons 
-
 XYoff = [10,10]
 dMUButton = { size  : [XYoff[0],$
                        dFrame.size[1]+dFrame.size[3]+XYoff[1],$
@@ -140,6 +139,13 @@ dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                uname : 'run_active_button',$
                value : 'R U N   A C T I V E'}
                           
+XYoff = [300,0]
+dLoadBatchButton = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
+                              dDeleteButton.size[1]+XYoff[1],$
+                              dDeleteButton.size[2:3]],$
+                     uname : 'load_batch_button',$
+                     value : 'LOAD BATCH FILE'}
+
 ;save as label
 XYoff = [0,60]
 dSaveasLabel = { size  : [dMUButton.size[0]+XYoff[0],$
@@ -380,6 +386,17 @@ wRunButton = WIDGET_BUTTON(BATCH_BASE,$
                            SCR_YSIZE = dRunButton.size[3],$
                            UNAME     = dRunButton.uname,$
                            VALUE     = dRunButton.value)
+
+;\\\\\\\\\\\\\\\\\\
+;Load batch button\
+;\\\\\\\\\\\\\\\\\\
+wLoadBatchButton = WIDGET_BUTTON(BATCH_BASE,$
+                           XOFFSET   = dLoadBatchButton.size[0],$
+                           YOFFSET   = dLoadBatchButton.size[1],$
+                           SCR_XSIZE = dLoadBatchButton.size[2],$
+                           SCR_YSIZE = dLoadBatchButton.size[3],$
+                           UNAME     = dLoadBatchButton.uname,$
+                           VALUE     = dLoadBatchButton.value)
 
 ;\\\\\\\\\\\\\\
 ;save as label\

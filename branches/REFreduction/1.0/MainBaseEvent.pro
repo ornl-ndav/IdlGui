@@ -839,6 +839,11 @@ CASE Event.id OF
         BatchTab_RunActive, Event
     end
 
+;;Load Batch File
+    widget_info(wWidget, FIND_BY_UNAME='load_batch_button'): begin
+        BatchTab_LoadBatchFile, Event
+    end
+
 ;;Browse for path
     widget_info(wWidget, FIND_BY_UNAME='save_as_path'): begin
         BatchTab_BrowsePath, Event
