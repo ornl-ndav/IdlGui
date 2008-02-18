@@ -63,43 +63,26 @@ END
 
 ;This class method returns the thi angle value
 FUNCTION get_thi, fileID
-thi_path   = '/entry/instrument/aperture1/
-
-
-;This function returns the angle (2*tthd - thi)
-FUNCTION getAngleInDegrees, fileID
-tthd         = get_tthd(fileID)
-;tthd_units   = get_tthd_units(fileID)
-
-;tthd_degrees = get_tthd_degrees(tthd,tthd_units)
-
-thi         = get_thi(fileID)
-;thi_units   = get_thi_units(nexus_full_path)
-;thi_degrees = get_thi_degrees(thi,thi_units) 
-
-;angle = 2*tthd_degrees - thi_degrees
-
-;RETURN, strcompress(angle,/remove_all)
-RETURN, strcompress(tthd,/remove_all) ;remove_me
+thi_path   = '/entry/instrument/aperture1/thi'
+pathID     = h5d_open(fileID,thi_path)
+thi        = h5d_read(pathID)
+h5d_close, pathID
+RETURN, thi
 END
 
-
-
 ;This class method returns the S1 value (in mm)
-FUNCTION getS1InMm, fileID
+FUNCTION get_s1_mm, fileID
 S1       = get_s1(fileID)
 S1_units = get_s2_units(fileID)
-S1_mm    = getValueInMm(S1,S1_units)
+S1_mm    = get_value_mm(S1,S1_units)
 RETURN, strcompress(S1_mm,/remove_all)
 END
 
-
-
 ;This class method returns the S2 value (in mm)
-FUNCTION getS2InMm, fileID
+FUNCTION get_s1_mm, fileID
 S2       = get_s2(fileID)
 S2_units = get_s2_units(fileID)
-S2_mm    = getValueInMm(S2,S2_units)
+S2_mm    = get_value_mm(S2,S2_units)
 RETURN, strcompress(S2_mm,/remove_all)
 END
 
