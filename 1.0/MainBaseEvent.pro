@@ -795,14 +795,56 @@ CASE Event.id OF
          RefReduction_PlotMainIntermediateFiles, Event
     end
     
+;*******************************************************************************
+; BATCH MODE TAB
+;*******************************************************************************
+
+;;Main table
+    widget_info(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
+	BatchTab_WidgetTable, Event ;in ref_reduction_batch_tab.pro
+    end
+    
+;;Activate or not
+    widget_info(wWidget, FIND_BY_UNAME='batch_run_active_status'): begin
+        BatchTab_ActivateRow, Event ;in ref_reduction_batch_tab.pro
+    end
+
+;;Change Data Run number
+    widget_info(wWidget, FIND_BY_UNAME='batch_data_run_field_status'): begin
+        BatchTab_ChangeDataRunNumber, Event
+    end
+
+;;Change Normalization Run number
+    widget_info(wWidget, FIND_BY_UNAME='batch_norm_run_field_status'): begin
+        BatchTab_ChangeNormRunNumber, Event
+    end
+
+;;Delete Active
+    widget_info(wWidget, FIND_BY_UNAME='delete_active_button'): begin
+        BatchTab_DeleteActive, Event
+    end
+
+;;Run Active
+    widget_info(wWidget, FIND_BY_UNAME='run_active_button'): begin
+        BatchTab_RunActive, Event
+    end
+
+;;Browse for path
+    widget_info(wWidget, FIND_BY_UNAME='save_as_path'): begin
+        BatchTab_BrowsePath, Event
+    end
+
+;;Save set of command lines
+    widget_info(wWidget, FIND_BY_UNAME='save_as_file_button'): begin
+        BatchTab_SaveCommands, Event
+    end
+
 ;**LOG_BOOK TAB**
 
     ;send log book button
     widget_info(wWidget, FIND_BY_UNAME='send_log_book_button'): begin
          RefReduction_LogBookInterface, Event
     end
-
-;**SETTINGS TAB**
 
     ELSE:
     
