@@ -12,7 +12,7 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Table Widget
-dTable = { size      : [0,0,MainTabSize[2],420,7,20],$
+dTable = { size      : [0,0,MainTabSize[2],420,8,20],$
            uname     : 'batch_table_widget',$
            sensitive : 1,$
            label     : ['ACTIVE', $
@@ -21,8 +21,9 @@ dTable = { size      : [0,0,MainTabSize[2],420,7,20],$
                         'ANGLE (degrees)', $
                         'S1 (mm)', $
                         'S2 (mm)', $
+                        'DATE',$
                         'Command Line'],$
-           column_width : [60,150,150,120,80,80,545]}
+           column_width : [60,150,150,120,80,80,130,425]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #

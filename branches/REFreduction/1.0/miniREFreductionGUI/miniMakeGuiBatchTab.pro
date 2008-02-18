@@ -12,16 +12,18 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Table Widget
-dTable = { size      : [0,0,MainTabSize[2],320,6,20],$
+dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
            uname     : 'batch_table_widget',$
            sensitive : 1,$
            label     : ['ACTIVE', $
-                        'RUNS', $
-                        'ANGLE (degrees)', $
+                        'DATA', $
+                        'NORM.',$
+                        'ANGLE (deg.)', $
                         'S1 (mm)', $
                         'S2 (mm)', $
+                        'DATE',$
                         'Command Line'],$
-           column_width : [60,100,120,80,80,430]}
+           column_width : [50,70,70,95,80,80,90,320]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
@@ -83,7 +85,7 @@ dAngleLabel = { size  : [dNormRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
 XYoff = [0,0]
 dS1Label = { size  : [dAngleLabel.size[0]+dAngleLabel.size[2]+XYoff[0],$
                       dAngleLabel.size[1]+XYoff[1],$
-                      135,35],$
+                      125,35],$
              uname : 's1_value_status',$
              value : 'Slit 1 : ? mm'}
 
@@ -91,7 +93,7 @@ dS1Label = { size  : [dAngleLabel.size[0]+dAngleLabel.size[2]+XYoff[0],$
 XYoff = [0,0]
 dS2Label = { size  : [dS1Label.size[0]+dS1Label.size[2]+XYoff[0],$
                       dS1Label.size[1]+XYoff[1],$
-                      135,35],$
+                      125,35],$
              uname : 's2_value_status',$
              value : 'Slit 2 : ? mm'}
 
