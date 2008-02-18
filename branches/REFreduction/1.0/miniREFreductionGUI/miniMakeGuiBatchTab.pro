@@ -150,7 +150,7 @@ dLoadBatchButton = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
                      value : 'LOAD BATCH'}
 
 ;save as label
-XYoff = [0,60]
+XYoff = [0,50]
 dSaveasLabel = { size  : [dMUButton.size[0]+XYoff[0],$
                           dDeleteButton.size[1]+XYoff[1]],$
                  value : 'SAVE AS :'}
@@ -176,6 +176,18 @@ dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                          150,35],$
                 uname : 'save_as_file_button',$
                 value : 'SAVE COMMAND LINES'}
+
+;current batch file name is
+XYoff = [0,35]
+dBatchNameLabel = { size  : [dSaveasLabel.size[0]+XYoff[0],$
+                             dSaveasLabel.size[1]+XYoff[1]],$
+                    value : 'Current Batch file Name is: '}
+XYoff = [180,0]
+dBatchFileName = { size  : [dBatchNameLabel.size[0]+XYoff[0],$
+                            dBatchNameLabel.size[1]+XYoff[1],$
+                            300,40],$
+                   uname : 'current_batch_file_name',$
+                   value : '?'}
 
 ;***********************************************************************************
 ;                                Build GUI
@@ -442,6 +454,25 @@ wSaveButton = WIDGET_BUTTON(BATCH_BASE,$
                               SCR_YSIZE = dSaveButton.size[3],$
                               UNAME     = dSaveButton.uname,$
                               VALUE     = dSaveButton.value)
+
+;\\\\\\\\\\\\\\\\\\\\\\
+;Batch file name Label\
+;\\\\\\\\\\\\\\\\\\\\\\
+wBatchNameLabel = WIDGET_LABEL(BATCH_BASE,$
+                               XOFFSET = dBatchNameLabel.size[0],$
+                               YOFFSET = dBatchNameLabel.size[1],$
+                               VALUE   = dBatchNameLabel.value)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\
+;Current Batch File Name\
+;\\\\\\\\\\\\\\\\\\\\\\\\
+wBatchFileName = WIDGET_LABEL(BATCH_BASE,$
+                              XOFFSET    = dBatchFileName.size[0],$
+                              YOFFSET    = dBatchFileName.size[1],$
+                              SCR_XSIZE  = dBatchFileName.size[2],$
+                              VALUE      = dBatchFileName.value,$
+                              UNAME      = dBatchFileName.uname,$
+                              /ALIGN_LEFT)
 
 
 END
