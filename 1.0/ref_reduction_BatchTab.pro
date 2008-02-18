@@ -73,6 +73,10 @@ print, 'in run active'
 END
 
 
+PRO BatchTab_LoadBatchFile, Event
+print, 'in load batch file'
+END
+
 PRO BatchTab_BrowsePath, Event
 print, 'in browse for path'
 END
