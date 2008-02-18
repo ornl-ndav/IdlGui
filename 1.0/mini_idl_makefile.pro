@@ -7,6 +7,7 @@ IdlUtilitiesPath = "utilities/"
 cd, CurrentFolder + '/utilities'
 .run system_utilities.pro
 .run nexus_utilities.pro
+.run math_conversion.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
