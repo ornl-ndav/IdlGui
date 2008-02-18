@@ -1,3 +1,18 @@
+;Procedure that will return all the global variables for this routine
+FUNCTION getGlobalVariable, var
+CASE (var) OF
+    'NbrColumn' : RETURN, 6
+ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
+
+
+
+
+
+
 ;This function retrieves the row of the selected cell and select the
 ;full row
 PRO SelectFullRow, Event, RowSelected
@@ -6,7 +21,8 @@ id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
 SelectedCell = widget_Info(id,/table_select)
 RowSelected  = SelectedCell[1]
 ;force selection of full row
-widget_control, id, set_table_select=[0,RowSelected,5,RowSelected]
+NbrColumn = getGlobalVariable('NbrColumn')
+widget_control, id, set_table_select=[0,RowSelected,NbrColumn,RowSelected]
 END
 
 
