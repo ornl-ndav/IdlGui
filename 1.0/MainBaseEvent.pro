@@ -819,6 +819,16 @@ CASE Event.id OF
         BatchTab_ChangeNormRunNumber, Event
     end
 
+;;Move Up Active
+    widget_info(wWidget, FIND_BY_UNAME='move_up_active_button'): begin
+        BatchTab_MoveUpActive, Event
+    end
+
+;;Move Down Active
+    widget_info(wWidget, FIND_BY_UNAME='move_down_active_button'): begin
+        BatchTab_MoveDownActive, Event
+    end
+
 ;;Delete Active
     widget_info(wWidget, FIND_BY_UNAME='delete_active_button'): begin
         BatchTab_DeleteActive, Event
