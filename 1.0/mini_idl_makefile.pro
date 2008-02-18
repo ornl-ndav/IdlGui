@@ -100,6 +100,9 @@ cd, CurrentFolder
 .run ref_reduction_CL.pro
 .run ref_reduction_OutputPath.pro
 
+.run IDLgetMetadata__define.pro
+.run ref_reduction_BatchTab.pro
+
 .run ref_reduction_LogBookInterface.pro
 
 .run MainBaseEvent.pro
