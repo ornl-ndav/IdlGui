@@ -327,6 +327,10 @@ if (PrevTabSelect NE CurrTabSelect) then begin
             RefReduction_PlotMainIntermediateFiles, Event
         ENDIF
     END
+    3: begin ;if BATCH tab is now selected
+;retrieve info for batch mode
+        UpdateBatchTable, Event  ;in ref_reduction_BatchTab.pro
+    END
     else:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
@@ -399,6 +403,8 @@ END
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
+RetrieveBatchData = 0 ;by default, do not retrieve batch data
+
 REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
 
 ;get global structure
@@ -430,6 +436,8 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
+            RetrieveBatchData = 1 ;NeXus has been loaded and we can retrive Batch info
+
         ENDIF
     ENDIF
     
@@ -459,11 +467,18 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
+            RetrieveBatchData = 1 ;NeXus has been loaded and we can retrive Batch info
+
         ENDIF
 
     ENDIF
     
 ENDELSE
+
+;We can retrieve info for Batch Tab
+IF (RetrieveBatchData EQ 1) THEN BEGIN
+    RetrieveBatchInfoAtLoading, Event
+ENDIF
 
 END
 

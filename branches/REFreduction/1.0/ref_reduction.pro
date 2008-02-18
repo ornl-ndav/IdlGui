@@ -30,11 +30,14 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   isHDF5format : 1,$
-                   DataRunNumber : '',$
-                   archived_data_flag : 1,$
-                   archived_norm_flag : 1,$
-                   dr_output_path : '~/',$
+                   CurrentBatchTableIndex : 0,$
+                   PreviousRunReductionValidated : 0,$  
+                   BatchTable : ptr_new(0L),$ ;big array of batch table
+                     isHDF5format : 1,$
+                     DataRunNumber : '',$
+                     archived_data_flag : 1,$
+                     archived_norm_flag : 1,$
+                     dr_output_path : '~/',$
 ;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
@@ -47,9 +50,9 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    cl_output_name : '',$
 ;name of file that will contain a copy of the command line 
                    nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
-                   bank1_data : ptr_new(0L),$ ;
-                   bank1_norm : ptr_new(0L),$ ;
-                   miniVersion : 0,$
+                     bank1_data : ptr_new(0L),$ ;
+                     bank1_norm : ptr_new(0L),$ ;
+                     miniVersion : 0,$
 ;1 if this is the miniVersion and 0 if it's not
                    FilesToPlotList : ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
@@ -298,7 +301,21 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    REFreductionVersion : ''$
 ;Version of REFreduction Tool
                    })
+                   
+BatchTable = { BT,$
+               index    :  0,$
+               active   : 1,$
+               data     : '',$
+               norm     : '',$
+               angle    : '',$
+               s1       : '',$
+               s2       : '',$
+               date     : '',$
+               cmd_line :''}
 
+BatchTableArray = replicate({BT},20)
+(*(*global).BatchTable) = BatchTableArray
+                   
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
 ;0 nothing has been done yet
@@ -308,7 +325,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;4 user left click and is now selecting the 2nd border
 ;5 user release click and is done with selection of 2nd border
 ;------------------------------------------------------------------------
-
+                   
 full_data_tmp_dat_file = (*global).working_path + (*global).data_tmp_dat_file 
 (*global).full_data_tmp_dat_file = full_data_tmp_dat_file
 full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file

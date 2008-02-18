@@ -31,6 +31,8 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                    DataRunNumber : '',$
+                   PreviousRunReductionValidated : 0,$  
+                   BatchTable : ptr_new(0L),$ ;big array of batch table
                    isHDF5format : 1,$
                    dr_output_path : '~/',$
                    archived_data_flag : 1,$
@@ -298,6 +300,20 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    REFreductionVersion : ''$
 ;Version of REFreduction Tool
                    })
+
+BatchTable = { BT,$
+               index    :  0,$
+               active   : 1,$
+               data     : '',$
+               norm     : '',$
+               angle    : '',$
+               s1       : '',$
+               s2       : '',$
+               date     : '',$
+               cmd_line :''}
+
+BatchTableArray = replicate({BT},20)
+(*(*global).BatchTable) = BatchTableArray
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
