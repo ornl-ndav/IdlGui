@@ -1,7 +1,7 @@
 ;Procedure that will return all the global variables for this routine
 FUNCTION getGlobalVariable, var
 CASE (var) OF
-    'NbrColumn' : RETURN, 6
+    'NbrColumn' : RETURN, 7 ;number of columns in the Table (active/data/norm/s1/s2...)
 ELSE:
 ENDCASE
 RETURN, 'NA'
