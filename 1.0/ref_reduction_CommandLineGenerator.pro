@@ -448,6 +448,8 @@ endif else begin
     putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
 endelse
 
+(*global).PreviousRunReductionValidated = activate
+
 ActivateWidget, Event,'start_data_reduction_button',activate
 
 END

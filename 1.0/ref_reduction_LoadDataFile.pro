@@ -177,7 +177,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
             
             NbrNexus = 1
             OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
-            
+        
         endelse
         
     endelse

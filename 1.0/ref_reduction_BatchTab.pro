@@ -8,9 +8,50 @@ RETURN, 'NA'
 END
 
 
+;This function determines the current table index
+;It's +1 each time a new data is loaded and if the previous
+;GO REDUCTION has been validated
+FUNCTION getCurrentBatchTableIndex, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+CurrentBatchTableIndex = (*global).CurrentBatchTableIndex
+;Move to next index only if previous GO DATA REDUCTION button has been
+;validated
+IF ((*global).PreviousRunReductionValidated EQ 1) THEN BEGIN
+    ++CurrentBatchTableIndex
+    IF (CurrentBatchTableIndex EQ 20) THEN BEGIN
+        CurrentBatchTableIndex = 0
+        (*global).CurrentBatchTableIndex = CurrentBatchTableIndex
+    ENDIF ELSE BEGIN
+        (*global).CurrentBatchTableIndex = CurrentBatchTableIndex
+    ENDELSE
+ENDIF
+RETURN, CurrentBatchTableIndex
+END
+
+;This function reset all the structure fields of the current index
+PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
+BatchTable[CurrentBatchTableIndex] = { BT,$
+                                       index    :  0,$
+                                       active   : 1,$
+                                       data     : '',$
+                                       norm     : '',$
+                                       angle    : '',$
+                                       s1       : '',$
+                                       s2       : '',$
+                                       date     : '',$
+                                       cmd_line :''}
+END
 
 
-
+;This function will use the instance of the class to populate the
+;structure with angle, S1, S2 values
+PRO PopulateClassWithInfo, Event, instance, Table, index
+Table[index].angle = instance->getAngle()
+Table[index].s1    = instance->getS1()
+Table[index].s2    = instance->getS2()
+END
 
 
 ;This function retrieves the row of the selected cell and select the
@@ -84,4 +125,38 @@ END
 
 PRO BatchTab_SaveCommands, Event
 print, 'in save set of command lines'
+END
+
+
+
+;-------------------------------------------------------------------------------
+;This function is reached each time the Batch Tab is reached by the
+;user. In this function, the table will be updated with info from the
+;current run.
+PRO UpdateBatchTable, Event
+print, 'here'
+END
+
+
+PRO RetrieveBatchInfoAtLoading, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get current index in Batch table
+CurrentBatchTableIndex = getCurrentBatchTableIndex(Event)
+;get current data NeXus file name
+Nexus_full_name = (*global).data_full_nexus_name
+;retrieve current Batch Table
+BatchTable = (*(*global).BatchTable)
+;clear fields of current structure index
+ClearStructureFields, BatchTable, CurrentBatchTableIndex
+;create instance of a class to retrieve info
+ClassInstance = obj_new('IDLgetMetadata',Nexus_full_name)
+;populate current index with info from class
+PopulateClassWithInfo, Event, ClassInstance, BatchTable, CurrentBatchTableIndex
+
+print, BatchTable[CurrentBatchTableIndex].angle 
+
+
 END
