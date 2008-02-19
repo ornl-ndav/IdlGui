@@ -114,7 +114,7 @@ XYoff = [10,10]
 dMUButton = { size  : [XYoff[0],$
                        dFrame.size[1]+dFrame.size[3]+XYoff[1],$
                        140,35],$
-              uname : 'move_up_active_button',$
+              uname : 'move_up_selection_button',$
               value : 'MOVE UP SELECTION'}
 
 XYoff = [10,0]
@@ -122,7 +122,7 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
                        dMUButton.size[1],$
                        dMUButton.size[2],$
                        dMUButton.size[3]],$
-              uname : 'move_down_active_button',$
+              uname : 'move_down_selection_button',$
               value : 'MOVE DOWN SELECTION'}
 
 XYoff = [10,0]
@@ -347,6 +347,7 @@ wCMDlineText = WIDGET_TEXT(BATCH_BASE,$
                            YOFFSET   = dCMDlineText.size[1],$
                            SCR_XSIZE = dCMDlineText.size[2],$
                            SCR_YSIZE = dCMDlineText.size[3],$
+                           UNAME     = dCMDlineText.uname,$
                            /WRAP,$
                            /SCROLL)
 
