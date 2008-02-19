@@ -127,21 +127,31 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
               value : 'MOVE DOWN SELECTION'}
 
 XYoff = [10,0]
-dDeleteButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
+dDeleteSelectionButton = { size  : [dMDButton.size[0]+ $
+                                    dMDButton.size[2]+XYoff[0],$
+                                    dMDbutton.size[1]+XYoff[1],$
+                                    130,35],$
+                           uname : 'delete_selection_button',$
+                           value : 'DELETE SELECTION'}
+
+XYoff = [10,0]
+dDeleteButton = { size  : [dDeleteSelectionButton.size[0] + $
+                           dDeleteSelectionButton.size[2] + $
+                           XYoff[0],$
                            dMDbutton.size[1]+XYoff[1],$
-                           200,35],$
+                           dDeleteSelectionButton.size[2:3]],$
                   uname : 'delete_active_button',$
-                  value : 'DELETE  ACTIVE'}
+                  value : 'DELETE ACTIVE'}
 
 XYoff = [10,0]
 dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
                         dDeleteButton.size[1]+XYoff[1],$
                         dDeleteButton.size[2:3]],$
                uname : 'run_active_button',$
-               value : 'RUN  ACTIVE'}
+               value : 'RUN ACTIVE'}
                  
 
-XYoff = [40,0]
+XYoff = [21,0]
 dLoadBatchButton = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
                               dDeleteButton.size[1]+XYoff[1],$
                               150,$
@@ -377,6 +387,18 @@ wMDButton = WIDGET_BUTTON(BATCH_BASE,$
                           UNAME     = dMDButton.uname,$
                           VALUE     = dMDButton.value)
 
+
+;\\\\\\\\\\\\\\\\\\\\\\\\
+;Delete Selection Button\
+;\\\\\\\\\\\\\\\\\\\\\\\\
+wDeleteSelectionButton = $
+  WIDGET_BUTTON(BATCH_BASE,$
+                XOFFSET   = dDeleteSelectionButton.size[0],$
+                YOFFSET   = dDeleteSelectionButton.size[1],$
+                SCR_XSIZE = dDeleteSelectionButton.size[2],$
+                SCR_YSIZE = dDeleteSelectionButton.size[3],$
+                UNAME     = dDeleteSelectionButton.uname,$
+                VALUE     = dDeleteSelectionButton.value)
 
 ;\\\\\\\\\\\\\\\\\\\\\
 ;Delete Active Button\
