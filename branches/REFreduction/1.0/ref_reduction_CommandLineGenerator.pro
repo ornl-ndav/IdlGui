@@ -9,10 +9,11 @@ StatusMessage = 0 ;will increase by 1 each time a field is missing
 ;add called to SLURM if hostname is not heater,lrac or mrac
 spawn, 'hostname', listening
 CASE (listening[0]) OF
-    'lrac' : 'srun -Q -p lracq '
-    'mrac' : 'srun -Q -p mracq '
+    'lrac' : cmd = 'srun -Q -p lracq '
+    'mrac' : cmd = 'srun -Q -p mracq '
     ELSE : BEGIN
-        'srun -Q -p heaterq '
+        cmd = 'srun -Q -p heaterq '
+    END
 ENDCASE
 
 cmd += 'reflect_reduction' ;name of function to call
