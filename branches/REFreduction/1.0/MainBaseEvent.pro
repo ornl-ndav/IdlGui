@@ -829,6 +829,11 @@ CASE Event.id OF
         BatchTab_MoveDownSelection, Event
     end
 
+;;Delete Selection
+    widget_info(wWidget, FIND_BY_UNAME='delete_selection_button'): begin
+        BatchTab_DeleteSelection, Event
+    end
+
 ;;Delete Active
     widget_info(wWidget, FIND_BY_UNAME='delete_active_button'): begin
         BatchTab_DeleteActive, Event

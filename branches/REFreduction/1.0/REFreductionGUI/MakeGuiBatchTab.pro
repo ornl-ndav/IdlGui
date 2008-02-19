@@ -126,7 +126,16 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
               value : 'MOVE DOWN SELECTION'}
 
 XYoff = [10,0]
-dDeleteButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
+dDeleteSelectionButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
+                                    dMDButton.size[1],$
+                                    200,35],$
+                           uname : 'delete_selection_button',$
+                           value : 'DELETE  SELECTION'}
+
+XYoff = [10,0]
+dDeleteButton = { size  : [dDeleteSelectionButton.size[0]+ $
+                           dDeleteSelectionButton.size[2]+ $
+                           XYoff[0],$
                            dMDButton.size[1],$
                            200,35],$
                   uname : 'delete_active_button',$
@@ -385,6 +394,17 @@ wMDButton = WIDGET_BUTTON(BATCH_BASE,$
                           UNAME     = dMDButton.uname,$
                           VALUE     = dMDButton.value)
 
+
+;\\\\\\\\\\\\\\\\\\\\\\\\
+;Delete Selection Button\
+;\\\\\\\\\\\\\\\\\\\\\\\\
+wDeleteSelectionButton = WIDGET_BUTTON(BATCH_BASE,$
+                                       XOFFSET   = dDeleteSelectionButton.size[0],$
+                                       YOFFSET   = dDeleteSelectionButton.size[1],$
+                                       SCR_XSIZE = dDeleteSelectionButton.size[2],$
+                                       SCR_YSIZE = dDeleteSelectionButton.size[3],$
+                                       UNAME     = dDeleteSelectionButton.uname,$
+                                       VALUE     = dDeleteSelectionButton.value)
 
 ;\\\\\\\\\\\\\\\\\\\\\
 ;Delete Active Button\
