@@ -146,7 +146,12 @@ END
 
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
-BatchTable[*,CurrentBatchTableIndex] = strarr(8)
+resetArray = strarr(8)
+resetArray[0] = 'NO'
+resetArray[3] = '?'
+resetArray[4] = '?'
+resetArray[5] = '?'
+BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
 
@@ -414,21 +419,25 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve main table
 BatchTable = (*(*global).BatchTable)
-RowIndexes = getGlobalVariable(RowIndexes)
-FOR i = 0,(RowIndexes-1) DO BEGIN
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i = 0,(RowIndexes) DO BEGIN
     k = (RowIndexes-i)
     IF (BatchTable[0,k] EQ 'YES') THEN BEGIN
-        IF (i EQ 0) THEN BEGIN
+
+        IF (k EQ RowIndexes) THEN BEGIN
             ClearStructureFields, BatchTable, k
         ENDIF ELSE BEGIN
-            FOR j = k, k+1 DO BEGIN
-                BatchTable[*,j]=BatchTable[*,k+1]
+            FOR j = k, (RowIndexes-1) DO BEGIN
+                BatchTable[*,j]=BatchTable[*,j+1]
             ENDFOR
         ENDELSE
     ENDIF
 ENDFOR
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
+
+RowSelected = (*global).PrevBatchRowSelected
+DisplayInfoOfSelectedRow, Event, RowSelected
 END
 
 
