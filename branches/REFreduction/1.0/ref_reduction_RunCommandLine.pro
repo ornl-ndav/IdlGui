@@ -31,18 +31,11 @@ cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 
 ;add called to SLURM if hostname is not heater,lrac or mrac
-spawn, 'hostname',listening
-CASE (listening) OF
-    'lrac': 
-    'mrac': 
-    else: BEGIN
-        if ((*global).instrument EQ (*global).REF_L) then begin
-            cmd = 'srun -Q -p lracq ' + cmd
-        endif else begin
-            cmd = 'srun -Q -p mracq ' + cmd
-        endelse
-    END
-ENDCASE
+if ((*global).instrument EQ (*global).REF_L) then begin
+    cmd = 'srun -Q -p lracq ' + cmd
+endif else begin
+    cmd = 'srun -Q -p mracq ' + cmd
+endelse
 
 spawn, cmd, listening, err_listening
 
