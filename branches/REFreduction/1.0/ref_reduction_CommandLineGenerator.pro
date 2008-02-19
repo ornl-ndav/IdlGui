@@ -7,11 +7,13 @@ widget_control,id,get_uvalue=global
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
 ;add called to SLURM if hostname is not heater,lrac or mrac
-if ((*global).instrument EQ (*global).REF_L) then begin
-    cmd = 'srun -Q -p lracq '
-endif else begin
-    cmd = 'srun -Q -p mracq '
-endelse
+spawn, 'hostname', listening
+CASE (listening[0]) OF
+    'lrac' : 'srun -Q -p lracq '
+    'mrac' : 'srun -Q -p mracq '
+    ELSE : BEGIN
+        'srun -Q -p heaterq '
+ENDCASE
 
 cmd += 'reflect_reduction' ;name of function to call
 
