@@ -6,9 +6,14 @@ widget_control,id,get_uvalue=global
 
 StatusMessage = 0 ;will increase by 1 each time a field is missing
 
-;cmd = '~/usr/bin/reflect_reduction' ;REMOVE_ME
-cmd = 'reflect_reduction' ;name of function to call
-;cd, (*global).working_path
+;add called to SLURM if hostname is not heater,lrac or mrac
+if ((*global).instrument EQ (*global).REF_L) then begin
+    cmd = 'srun -Q -p lracq '
+endif else begin
+    cmd = 'srun -Q -p mracq '
+endelse
+
+cmd += 'reflect_reduction' ;name of function to call
 
 ;get Data run numbers text field
 data_run_numbers = getTextFieldValue(Event, 'reduce_data_runs_text_field')
