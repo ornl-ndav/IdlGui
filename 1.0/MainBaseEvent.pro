@@ -801,12 +801,12 @@ CASE Event.id OF
 
 ;;Main table
     widget_info(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
-	BatchTab_WidgetTable, Event ;in ref_reduction_batch_tab.pro
+	BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
     end
     
 ;;Activate or not
     widget_info(wWidget, FIND_BY_UNAME='batch_run_active_status'): begin
-        BatchTab_ActivateRow, Event ;in ref_reduction_batch_tab.pro
+        BatchTab_ActivateRow, Event ;in ref_reduction_BatchTab.pro
     end
 
 ;;Change Data Run number
@@ -819,14 +819,14 @@ CASE Event.id OF
         BatchTab_ChangeNormRunNumber, Event
     end
 
-;;Move Up Active
-    widget_info(wWidget, FIND_BY_UNAME='move_up_active_button'): begin
-        BatchTab_MoveUpActive, Event
+;;Move Up Selection
+    widget_info(wWidget, FIND_BY_UNAME='move_up_selection_button'): begin
+        BatchTab_MoveUpSelection, Event
     end
 
-;;Move Down Active
-    widget_info(wWidget, FIND_BY_UNAME='move_down_active_button'): begin
-        BatchTab_MoveDownActive, Event
+;;Move Down Selection
+    widget_info(wWidget, FIND_BY_UNAME='move_down_selection_button'): begin
+        BatchTab_MoveDownSelection, Event
     end
 
 ;;Delete Active

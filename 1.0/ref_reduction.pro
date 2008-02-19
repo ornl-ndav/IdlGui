@@ -30,6 +30,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   PrevBatchRowSelected : 0,$
                    CurrentBatchTableIndex : 0,$
                    PreviousRunReductionValidated : 0,$  
                    BatchTable : ptr_new(0L),$ ;big array of batch table
@@ -314,6 +315,10 @@ BatchTable = { BT,$
                cmd_line :''}
 
 BatchTableArray = replicate({BT},20)
+;initialize index position of elements
+FOR i=0,19 DO BEGIN
+    BatchTableArray[i].index = i
+ENDFOR
 (*(*global).BatchTable) = BatchTableArray
                    
 ;------------------------------------------------------------------------
@@ -469,6 +474,17 @@ widget_control, id1, set_tab_current = 3 ;batch mode
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
 ;widget_control, id4, set_tab_current = 3 ;ouput ascii file
 
+;populate batch table for debugging only
+BatchTable = [['YES','5225,5454','3443','0.345','0.15','0.15','2008_02_19-01:00:00','reflect_reduction 5225 5454 --norm=3443'], $
+              ['NO','5255','3443','0.345','0.15','0.15','2008_02_19-01:01:00','reflect_reduction 5255 --norm=3443'], $
+              ['NO','5255','3443','0.345','0.15','0.15','2008_02_19-01:01:00','reflect_reduction 5255 --norm=3443'],$
+              ['YES','5255,6000','3443','0.345','0.15','0.15','2008_02_19-01:01:00','reflect_reduction 5255 --norm=3443'], $
+              ['YES','5255,7000,8000,9000','3443','0.345','0.15','0.15','2008_02_19-01:01:00','reflect_reduction 5255 --norm=3443'], $
+              ['NO','1,2,3,4,5','3443','0.345','0.15','0.15','2008_02_19-01:01:00','reflect_reduction 5255 --norm=3443']]
+id = widget_info(Main_base,find_by_uname='batch_table_widget')
+widget_control, id, set_value=BatchTable
+
+(*(*global).BatchTable) = BatchTable
 END
 
 
