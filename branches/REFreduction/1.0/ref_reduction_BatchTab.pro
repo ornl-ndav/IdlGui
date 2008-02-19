@@ -5,7 +5,9 @@
 ;Procedure that will return all the global variables for this routine
 FUNCTION getGlobalVariable, var
 CASE (var) OF
-    'NbrColumn' : RETURN, 7 ;number of columns in the Table (active/data/norm/s1/s2...)
+;number of columns in the Table (active/data/norm/s1/s2...)
+    'NbrColumn' : RETURN, 7 
+    'NbrRow'    : RETURN, 19
 ELSE:
 ENDCASE
 RETURN, 'NA'
@@ -37,10 +39,7 @@ IF ((*global).PreviousRunReductionValidated EQ 1) THEN BEGIN
     ++CurrentBatchTableIndex
 ;move up position of all other indexes in array (position)
 
-
 ;FIX_ME
-
-
 
     IF (CurrentBatchTableIndex EQ 20) THEN BEGIN
         CurrentBatchTableIndex = 0
@@ -50,6 +49,18 @@ IF ((*global).PreviousRunReductionValidated EQ 1) THEN BEGIN
     ENDELSE
 ENDIF
 RETURN, CurrentBatchTableIndex
+END
+
+;This function returns the value of the status of the data run
+FUNCTION getDataStatus, Event
+value = getTextFieldValue(Event,'batch_data_run_field_status')
+RETURN, value
+END
+
+;This function returns the value of the status of the norm run
+FUNCTION getNormStatus, Event
+value = getTextFieldValue(Event,'batch_norm_run_field_status')
+RETURN, value
 END
 
 
@@ -96,7 +107,7 @@ END
 ;**********************************************************************
 ;IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS
 ;**********************************************************************
-FUNCTION IsRowSelectedActive, RowSelected,BatchTable
+FUNCTION IsRowSelectedActive, RowSelected, BatchTable
 IF (BatchTable[0,RowSelected] EQ 'YES') THEN RETURN, 1
 RETURN, 0
 END
@@ -120,6 +131,13 @@ widget_control, id, set_value=value
 END
 
 
+FUNCTION ValueOfActive, Event
+id = widget_info(Event.top,find_by_uname='batch_run_active_status')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
 PRO DisplayBatchTable, Event, BatchTable
 id = widget_info(Event.top,find_by_uname='batch_table_widget')
 widget_control, id, set_value=BatchTable
@@ -128,16 +146,7 @@ END
 
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
-BatchTable[CurrentBatchTableIndex] = { BT,$
-                                       index    :  0,$
-                                       active   : 1,$
-                                       data     : '',$
-                                       norm     : '',$
-                                       angle    : '',$
-                                       s1       : '',$
-                                       s2       : '',$
-                                       date     : '',$
-                                       cmd_line :''}
+BatchTable[*,CurrentBatchTableIndex] = strarr(8)
 END
 
 
@@ -221,6 +230,21 @@ rowSelected = getCurrentRowSelected(Event)
 ;Select Full Row
 SelectFullRow, Event, RowSelected
 
+;validate or not UP and DOWN buttons
+IF ((RowSelected) EQ 0) THEN BEGIN
+    activateUpButtonStatus = 0
+ENDIF ELSE BEGIN
+    activateUpButtonStatus = 1
+ENDELSE
+activateUpButton, Event, activateUpButtonStatus
+
+IF ((RowSelected) EQ 19) THEN BEGIN
+    activateDownButtonStatus = 0
+ENDIF ELSE BEGIN
+    activateDownButtonStatus = 1
+ENDELSE
+activateDownButton, Event, activateDownButtonStatus
+
 ;display info of selected row in INPUT base
 IF (rowSelected NE (*global).PrevBatchRowSelected) THEN BEGIN
     DisplayInfoOfSelectedRow, Event, RowSelected
@@ -231,17 +255,59 @@ END
 
 
 PRO BatchTab_ActivateRow, Event
-print, 'activate or not row'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+;get value of active_button
+ActiveValue = ValueOfActive(Event)
+;get status of active or not (from BatchTable)
+ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
+IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
+    IF (activeValue EQ 0) THEN BEGIN
+        BatchTable[0,RowSelected]='YES'
+    ENDIF ELSE BEGIN
+        BatchTable[0,RowSelected]='NO'
+    ENDELSE
+    (*(*global).BatchTable) = BatchTable
+    DisplayBatchTable, Event, BatchTable
+ENDIF
+
 END
 
 
 PRO BatchTab_ChangeDataRunNumber, Event
-print, 'change Data run number'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+;get value of data status
+dataStatus = getDataStatus(Event)
+BatchTable[1,RowSelected]=dataStatus
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
 END
 
 
 PRO BatchTab_ChangeNormRunNumber, Event
-print, 'change Norm run number'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+;get value of norm status
+NormStatus = getNormStatus(Event)
+BatchTable[2,RowSelected]=NormStatus
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
 END
 
 
@@ -318,10 +384,43 @@ END
 
 
 
+;This method will remove from the main table all the info of the
+;current selected element
+PRO BatchTab_DeleteSelection, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+NbrRow = getGlobalVariable('NbrRow')
+FOR i = RowSelected, (NbrRow-1) DO BEGIN
+    BatchTable[*,i]=BatchTable[*,i+1]
+ENDFOR
+ClearStructureFields, BatchTable, NbrRow
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
+END
+
+
 ;This method will remove from the main table all the row that have
 ;been activated
 PRO BatchTab_DeleteActive, Event
-print, 'in delete active'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+NbrRow = getGlobalVariable('NbrRow')
+FOR i = RowSelected, (NbrRow-1) DO BEGIN
+    BatchTable[*,i]=BatchTable[*,i+1]
+ENDFOR
+ClearStructureFields, BatchTable, NbrRow
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
 END
 
 
