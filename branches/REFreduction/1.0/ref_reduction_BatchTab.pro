@@ -6,8 +6,8 @@
 FUNCTION getGlobalVariable, var
 CASE (var) OF
 ;number of columns in the Table (active/data/norm/s1/s2...)
-    'NbrColumn' : RETURN, 7 
-    'NbrRow'    : RETURN, 19
+    'ColumnIndexes' : RETURN, 7 
+    'RowIndexes'    : RETURN, 19
 ELSE:
 ENDCASE
 RETURN, 'NA'
@@ -119,9 +119,9 @@ END
 ;This function retrieves the row of the selected cell and select the
 ;full row
 PRO SelectFullRow, Event, RowSelected
-NbrColumn = getGlobalVariable('NbrColumn')
+ColumnIndexes = getGlobalVariable('ColumnIndexes')
 id = Widget_Info(Event.top,find_by_uname='batch_table_widget')
-widget_control, id, set_table_select=[0,RowSelected,NbrColumn,RowSelected]
+widget_control, id, set_table_select=[0,RowSelected,ColumnIndexes,RowSelected]
 END
 
 
@@ -238,7 +238,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateUpButton, Event, activateUpButtonStatus
 
-IF ((RowSelected) EQ 19) THEN BEGIN
+RowIndexes = getGlobalVariable('RowIndexes')
+IF ((RowSelected) EQ RowIndexes) THEN BEGIN
     activateDownButtonStatus = 0
 ENDIF ELSE BEGIN
     activateDownButtonStatus = 1
@@ -355,7 +356,8 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
-IF (RowSelected NE 19) THEN BEGIN ;move down
+RowIndexes = getGlobalVariable('RowIndexes')
+IF (RowSelected NE RowIndexes) THEN BEGIN ;move down
     ;get current array at row selected
     ArrayFrom = BatchTable[*,RowSelected]
     ;get array at (row+1) selected
@@ -373,7 +375,7 @@ IF (RowSelected NE 19) THEN BEGIN ;move down
     activateUpButton, Event, 1
 ENDIF
 
-IF ((RowSelected+1) EQ 19) THEN BEGIN
+IF ((RowSelected+1) EQ RowIndexes) THEN BEGIN
     activateDownButtonStatus = 0
 ENDIF ELSE BEGIN
     activateDownButtonStatus = 1
@@ -394,11 +396,11 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
-NbrRow = getGlobalVariable('NbrRow')
-FOR i = RowSelected, (NbrRow-1) DO BEGIN
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i = RowSelected, (RowIndexes-1) DO BEGIN
     BatchTable[*,i]=BatchTable[*,i+1]
 ENDFOR
-ClearStructureFields, BatchTable, NbrRow
+ClearStructureFields, BatchTable, RowIndexes
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
 END
@@ -412,13 +414,19 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve main table
 BatchTable = (*(*global).BatchTable)
-;current row selected
-RowSelected = (*global).PrevBatchRowSelected
-NbrRow = getGlobalVariable('NbrRow')
-FOR i = RowSelected, (NbrRow-1) DO BEGIN
-    BatchTable[*,i]=BatchTable[*,i+1]
+RowIndexes = getGlobalVariable(RowIndexes)
+FOR i = 0,(RowIndexes-1) DO BEGIN
+    k = (RowIndexes-i)
+    IF (BatchTable[0,k] EQ 'YES') THEN BEGIN
+        IF (i EQ 0) THEN BEGIN
+            ClearStructureFields, BatchTable, k
+        ENDIF ELSE BEGIN
+            FOR j = k, k+1 DO BEGIN
+                BatchTable[*,j]=BatchTable[*,k+1]
+            ENDFOR
+        ENDELSE
+    ENDIF
 ENDFOR
-ClearStructureFields, BatchTable, NbrRow
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
 END
