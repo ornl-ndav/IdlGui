@@ -111,11 +111,12 @@ dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
 ;/////////////////////////////////////////////////////////
 ;widgets_buttons 
 XYoff = [10,10]
-dMUButton = { size  : [XYoff[0],$
-                       dFrame.size[1]+dFrame.size[3]+XYoff[1],$
-                       140,35],$
-              uname : 'move_up_selection_button',$
-              value : 'MOVE UP SELECTION'}
+dMUButton = { size      : [XYoff[0],$
+                           dFrame.size[1]+dFrame.size[3]+XYoff[1],$
+                           140,35],$
+              uname     : 'move_up_selection_button',$
+              value     : 'MOVE UP SELECTION',$
+              sensitive : 0}
 
 XYoff = [10,0]
 dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
@@ -126,27 +127,30 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
               value : 'MOVE DOWN SELECTION'}
 
 XYoff = [10,0]
-dDeleteSelectionButton = { size  : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
-                                    dMDButton.size[1],$
-                                    200,35],$
-                           uname : 'delete_selection_button',$
-                           value : 'DELETE  SELECTION'}
+dDeleteSelectionButton = { size      : [dMDButton.size[0]+dMDButton.size[2]+XYoff[0],$
+                                        dMDButton.size[1],$
+                                        200,35],$
+                           uname     : 'delete_selection_button',$
+                           value     : 'DELETE  SELECTION',$
+                           sensitive : 0}
 
 XYoff = [10,0]
-dDeleteButton = { size  : [dDeleteSelectionButton.size[0]+ $
-                           dDeleteSelectionButton.size[2]+ $
-                           XYoff[0],$
-                           dMDButton.size[1],$
-                           200,35],$
-                  uname : 'delete_active_button',$
-                  value : 'DELETE  ACTIVE'}
+dDeleteButton = { size      : [dDeleteSelectionButton.size[0]+ $
+                               dDeleteSelectionButton.size[2]+ $
+                               XYoff[0],$
+                               dMDButton.size[1],$
+                               200,35],$
+                  uname     : 'delete_active_button',$
+                  value     : 'DELETE  ACTIVE',$
+                  sensitive : 0}
 
 XYoff = [10,0]
-dRunButton = { size  : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
-                        dDeleteButton.size[1]+XYoff[1],$
-                        dDeleteButton.size[2:3]],$
-               uname : 'run_active_button',$
-               value : 'RUN  ACTIVE'}
+dRunButton = { size      : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
+                            dDeleteButton.size[1]+XYoff[1],$
+                            dDeleteButton.size[2:3]],$
+               uname     : 'run_active_button',$
+               value     : 'RUN  ACTIVE',$
+               sensitive : 0}
                           
 ;frame for batch widgets
 XYoff = [5,45]
@@ -177,11 +181,12 @@ dSAfileText = { size  : [dSApathButton.size[0]+dSApathButton.size[2]+XYoff[0],$
                 value : ''}
 
 XYoff = [0,0]
-dSaveButton = { size  : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
-                         dSAfileText.size[1]+XYoff[1],$
-                         200,35],$
-                uname : 'save_as_file_button',$
-                value : 'SAVE ACTIVE(S)'}
+dSaveButton = { size      : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
+                             dSAfileText.size[1]+XYoff[1],$
+                             200,35],$
+                uname     : 'save_as_file_button',$
+                value     : 'SAVE ACTIVE(S)',$
+                sensitive : 0}
 
 ;Load batch file
 XYoff = [0,35]
@@ -381,7 +386,8 @@ wMUButton = WIDGET_BUTTON(BATCH_BASE,$
                           SCR_XSIZE = dMUButton.size[2],$
                           SCR_YSIZE = dMUButton.size[3],$
                           UNAME     = dMUButton.uname,$
-                          VALUE     = dMUButton.value)
+                          VALUE     = dMUButton.value,$
+                          SENSITIVE = dMUButton.sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\
 ;MOVE DOWN ACTIVE BUTTON\
@@ -404,7 +410,8 @@ wDeleteSelectionButton = WIDGET_BUTTON(BATCH_BASE,$
                                        SCR_XSIZE = dDeleteSelectionButton.size[2],$
                                        SCR_YSIZE = dDeleteSelectionButton.size[3],$
                                        UNAME     = dDeleteSelectionButton.uname,$
-                                       VALUE     = dDeleteSelectionButton.value)
+                                       VALUE     = dDeleteSelectionButton.value,$
+                                       SENSITIVE = dDeleteSelectionButton.sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\\\
 ;Delete Active Button\
@@ -415,9 +422,9 @@ wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
                               SCR_XSIZE = dDeleteButton.size[2],$
                               SCR_YSIZE = dDeleteButton.size[3],$
                               UNAME     = dDeleteButton.uname,$
-                              VALUE     = dDeleteButton.value)
+                              VALUE     = dDeleteButton.value,$
+                              SENSITIVE = dDeleteButton.sensitive)
 
-;\\\\\\\\\\\\\\\\\\
 ;Run Active Button\
 ;\\\\\\\\\\\\\\\\\\
 wRunButton = WIDGET_BUTTON(BATCH_BASE,$
@@ -426,7 +433,8 @@ wRunButton = WIDGET_BUTTON(BATCH_BASE,$
                            SCR_XSIZE = dRunButton.size[2],$
                            SCR_YSIZE = dRunButton.size[3],$
                            UNAME     = dRunButton.uname,$
-                           VALUE     = dRunButton.value)
+                           VALUE     = dRunButton.value,$
+                           SENSITIVE = dRunButton.sensitive)
 
 ;\\\\\\\\\\\\\\\\\\
 ;Load batch button\
@@ -475,12 +483,13 @@ wSAfileText = WIDGET_TEXT(BATCH_BASE,$
 ;Save Button\
 ;\\\\\\\\\\\\
 wSaveButton = WIDGET_BUTTON(BATCH_BASE,$
-                              XOFFSET   = dSaveButton.size[0],$
-                              YOFFSET   = dSaveButton.size[1],$
-                              SCR_XSIZE = dSaveButton.size[2],$
-                              SCR_YSIZE = dSaveButton.size[3],$
-                              UNAME     = dSaveButton.uname,$
-                              VALUE     = dSaveButton.value)
+                            XOFFSET   = dSaveButton.size[0],$
+                            YOFFSET   = dSaveButton.size[1],$
+                            SCR_XSIZE = dSaveButton.size[2],$
+                            SCR_YSIZE = dSaveButton.size[3],$
+                            UNAME     = dSaveButton.uname,$
+                            VALUE     = dSaveButton.value,$
+                            SENSITIVE = dSaveButton.sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\\\\
 ;Batch file name Label\
