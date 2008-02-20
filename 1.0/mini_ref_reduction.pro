@@ -30,6 +30,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   PrevBatchRowSelected : 0,$
                    DataRunNumber : '',$
                    PreviousRunReductionValidated : 0,$  
                    BatchTable : ptr_new(0L),$ ;big array of batch table
@@ -301,19 +302,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;Version of REFreduction Tool
                    })
 
-BatchTable = { BT,$
-               index    :  0,$
-               active   : 1,$
-               data     : '',$
-               norm     : '',$
-               angle    : '',$
-               s1       : '',$
-               s2       : '',$
-               date     : '',$
-               cmd_line :''}
-
-BatchTableArray = replicate({BT},20)
-(*(*global).BatchTable) = BatchTableArray
+BatchTable = strarr(8,20)
+(*(*global).BatchTable) = BatchTable
 
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status

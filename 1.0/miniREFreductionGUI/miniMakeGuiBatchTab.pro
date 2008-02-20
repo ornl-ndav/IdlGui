@@ -72,20 +72,20 @@ dNormRunLabel = { size  : [0,10],$
 dNormRunField = { size  : [46,3,80,35],$
                   uname : 'batch_norm_run_field_status'}
 
-xoff = 0 ;distance between components of first row    
+xoff = 15 ;distance between components of first row    
 ;Angle value
 XYoff = [xoff,0]
 dAngleLabel = { size  : [dNormRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
                          dNormRunBase.size[1]+XYoff[1],$
-                         135,35],$
+                         150,35],$
                 uname : 'angle_value_status',$
                 value : 'Angle : ? degrees'}
 
 ;S1 value
-XYoff = [0,0]
-dS1Label = { size  : [dAngleLabel.size[0]+dAngleLabel.size[2]+XYoff[0],$
+XYoff = [0,35]
+dS1Label = { size  : [dAngleLabel.size[0]+XYoff[0],$
                       dAngleLabel.size[1]+XYoff[1],$
-                      125,35],$
+                      150,35],$
              uname : 's1_value_status',$
              value : 'Slit 1 : ? mm'}
 
@@ -93,7 +93,7 @@ dS1Label = { size  : [dAngleLabel.size[0]+dAngleLabel.size[2]+XYoff[0],$
 XYoff = [0,0]
 dS2Label = { size  : [dS1Label.size[0]+dS1Label.size[2]+XYoff[0],$
                       dS1Label.size[1]+XYoff[1],$
-                      125,35],$
+                      150,35],$
              uname : 's2_value_status',$
              value : 'Slit 2 : ? mm'}
 
@@ -309,7 +309,8 @@ wAngleLabel = WIDGET_LABEL(BATCH_BASE,$
                            SCR_XSIZE = dAngleLabel.size[2],$
                            SCR_YSIZE = dAngleLabel.size[3],$
                            UNAME     = dAngleLabel.uname,$
-                           VALUE     = dAngleLabel.value)
+                           VALUE     = dAngleLabel.value,$
+                           /ALIGN_LEFT)
 
 ;\\\\\\\\\
 ;S1 value\
@@ -320,7 +321,8 @@ wS1Label = WIDGET_LABEL(BATCH_BASE,$
                         SCR_XSIZE = dS1Label.size[2],$
                         SCR_YSIZE = dS1Label.size[3],$
                         UNAME     = dS1Label.uname,$
-                        VALUE     = dS1Label.value)
+                        VALUE     = dS1Label.value,$
+                        /ALIGN_LEFT)
 
 ;\\\\\\\\\
 ;S2 value\
@@ -331,7 +333,8 @@ wS2Label = WIDGET_LABEL(BATCH_BASE,$
                         SCR_XSIZE = dS2Label.size[2],$
                         SCR_YSIZE = dS2Label.size[3],$
                         UNAME     = dS2Label.uname,$
-                        VALUE     = dS2Label.value)
+                        VALUE     = dS2Label.value,$
+                        /ALIGN_LEFT)
 
 
 ;\\\\\\\\\\\\\\\\\\\
@@ -350,6 +353,7 @@ wCMDlineText = WIDGET_TEXT(BATCH_BASE,$
                            YOFFSET   = dCMDlineText.size[1],$
                            SCR_XSIZE = dCMDlineText.size[2],$
                            SCR_YSIZE = dCMDlineText.size[3],$
+                           UNAME     = dCMDlineText.uname,$
                            /WRAP,$
                            /SCROLL)
 
