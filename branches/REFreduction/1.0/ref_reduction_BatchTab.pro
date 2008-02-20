@@ -29,7 +29,7 @@ END
 ;It's +1 each time a new data is loaded and if the previous
 ;GO REDUCTION has been validated
 FUNCTION getCurrentBatchTableIndex, Event
-;get global structure
+;get global structure			
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CurrentBatchTableIndex = 0
@@ -149,6 +149,48 @@ END
 
 
 
+FUNCTION isThereAnyCmdDefined, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable = (*(*global).BatchTable)
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[7,i] NE 'N/A' AND $
+        BatchTable[7,i] NE '') THEN BEGIN
+        RETURN,1
+    ENDIF
+ENDFOR
+RETURN,0
+END
+
+
+FUNCTION isThereAnyDataActivate, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable = (*(*global).BatchTable)
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[7,0] EQ 'YES' OR $
+        BatchTable[7,0] EQ '> YES <') THEN RETURN, 1
+ENDFOR
+RETURN,0
+END
+
+
+FUNCTION isThereAnyDataInBatchTable, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable      = (*(*global).BatchTable)
+BatchTableReset = strarr(8,20)
+IF (ARRAY_EQUAL(BatchTable,BatchTableReset)) THEN RETURN, 0
+RETURN,1
+END
+
+
+
 ;**********************************************************************
 ;GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI
 ;**********************************************************************
@@ -187,16 +229,44 @@ BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
 
-;This function activate or not the MOVE DOWN SELECTION button
+;This function activates or not the MOVE DOWN SELECTION button
 PRO activateDownButton, Event, status
 id = widget_info(Event.top,find_by_uname='move_down_selection_button')
 widget_control, id, sensitive=status
 END
 
 
-;This function activate or not the MOVE UP SELECTION button
+;This function activates or not the MOVE UP SELECTION button
 PRO activateUpButton, Event, status
 id = widget_info(Event.top,find_by_uname='move_up_selection_button')
+widget_control, id, sensitive=status
+END
+
+
+;This function activates or not the DELETE SELECTION button
+PRO activateDeleteSelectionButton, Event, status
+id = widget_info(Event.top,find_by_uname='delete_selection_button')
+widget_control, id, sensitive=status
+END
+
+
+;This function activates or not the DELETE ACTIVE button
+PRO activateDeleteActiveButton, Event, status
+id = widget_info(Event.top,find_by_uname='delete_active_button')
+widget_control, id, sensitive=status
+END
+
+
+;This function activates or not the RUN ACTIVE button
+PRO activateRunActiveButton, Event, status
+id = widget_info(Event.top,find_by_uname='run_active_button')
+widget_control, id, sensitive=status
+END
+
+
+;This function activates or not the SAVE ACTIVE button
+PRO activateSaveActiveButton, Event, status
+id = widget_info(Event.top,find_by_uname='save_as_file_button')
 widget_control, id, sensitive=status
 END
 
@@ -220,6 +290,38 @@ FOR i = 0, RowIndexes-1 DO BEGIN
     BatchTable[*,k]=BatchTable[*,k-1]
 ENDFOR
 ClearStructureFields, BatchTable, 0
+END
+
+
+;check if there are any not 'N/A' command line, if yes, then activate 
+;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
+PRO UpdateBatchTabGui, Event
+;check if run active can be validated or not
+IF (isThereAnyCmdDefined(Event)) THEN BEGIN
+    activateStatus = 1
+ENDIF ELSE BEGIN
+    activateStatus = 0
+ENDELSE
+activateRunActiveButton, Event, activateStatus
+
+;check if delete active and save activte can be
+;validated or not
+IF (isThereAnyDataActivate(Event)) THEN BEGIN
+    activateStatus = 1
+ENDIF ELSE BEGIN
+    activateStatus = 0
+ENDELSE
+activateDeleteActiveButton, Event, activateStatus
+activateSaveActiveButton, Event, activateStatus
+
+;check if there is anything in the BatchTable
+IF (isThereAnyDataInBatchTable(Event)) THEN BEGIN
+    activateStatus = 1
+ENDIF ELSE BEGIN
+    activateStatus = 0
+ENDELSE
+activateDeleteSelectionButton, Event, activateStatus
+
 END
 
 
@@ -522,6 +624,8 @@ ENDFOR
 ClearStructureFields, BatchTable, RowIndexes
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
+;this function updates the widgets (button) of the tab
+UpdateBatchTabGui, Event
 END
 
 
@@ -553,6 +657,9 @@ DisplayBatchTable, Event, BatchTable
 
 RowSelected = (*global).PrevBatchRowSelected
 DisplayInfoOfSelectedRow, Event, RowSelected
+
+;this function updates the widgets (button) of the tab
+UpdateBatchTabGui, Event
 END
 
 
@@ -595,6 +702,9 @@ ENDIF ELSE BEGIN
     (*global).PrevBatchRowSelected = 0
 ENDELSE
 
+;check if there are any not 'N/A' command line, if yes, then activate 
+;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
+UpdateBatchTabGui, Event
 END
 
 
