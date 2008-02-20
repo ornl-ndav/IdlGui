@@ -304,12 +304,6 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                    })
                    
 BatchTable = strarr(8,20)
-FOR i=0,19 DO BEGIN
-    BatchTable[0,*]='NO'
-    BatchTable[3,*]='?'
-    BatchTable[4,*]='?'
-    BatchTable[5,*]='?'
-ENDFOR
 (*(*global).BatchTable) = BatchTable
                    
 ;------------------------------------------------------------------------
