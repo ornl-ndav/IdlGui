@@ -45,8 +45,6 @@ FOR i=1,RowIndexes DO BEGIN
     BatchTable[*,k]=BatchTable[*,k-1]
 
 
-; 
-
     IF (CurrentBatchTableIndex EQ 20) THEN BEGIN
         CurrentBatchTableIndex = 0
         (*global).CurrentBatchTableIndex = CurrentBatchTableIndex
@@ -57,6 +55,8 @@ ENDFOR
 ENDIF
 RETURN, CurrentBatchTableIndex
 END
+
+
 
 ;This function returns the value of the status of the data run
 FUNCTION getDataStatus, Event
@@ -137,6 +137,16 @@ IF (BatchTable[0,RowSelected] EQ 'YES' OR $
     BatchTable[0,RowSelected] EQ '> YES <') THEN RETURN, 1
 RETURN, 0
 END
+
+
+FUNCTION IsAnyRowSelected, Event
+id = widget_info(Event.top,find_by_uname='batch_table_widget')
+Selection = widget_info(id,/table_select)
+ColumnIndexes = getGlobalVariable('ColumnIndexes')
+IF (Selection[2] EQ ColumnIndexes) THEN RETURN, 1
+RETURN, 0
+END
+
 
 
 ;**********************************************************************
@@ -577,6 +587,14 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 ;display new BatchTable
 DisplayBatchTable, Event, BatchTable
+;check if a row has been already selected, if no, select first row
+IF (IsAnyRowSelected(Event) NE 1) THEN BEGIN
+    SelectFullRow, Event, 0
+ENDIF ELSE BEGIN
+    DisplayInfoOfSelectedRow, Event, 0
+    (*global).PrevBatchRowSelected = 0
+ENDELSE
+
 END
 
 
@@ -619,7 +637,5 @@ PopulateBatchTableWithOthersInfo, Event, BatchTable
 (*(*global).BatchTable) = BatchTable
 ;display new BatchTable
 DisplayBatchTable, Event, BatchTable
-
-print, 'here'
 
 END
