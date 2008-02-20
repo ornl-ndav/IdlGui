@@ -23,7 +23,7 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
                         'S2 (mm)', $
                         'DATE',$
                         'Command Line'],$
-           column_width : [50,70,70,95,80,80,90,320]}
+           column_width : [50,70,70,95,80,80,130,280]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
