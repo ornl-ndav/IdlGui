@@ -451,9 +451,13 @@ putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
 ;validate or not Go data reduction button
 if (StatusMessage NE 0) then begin ;do not activate button
     activate = 0
+;display command line in batch tab of working row
+    PopulateBatchTableWithCMDinfo, Event, 'N/A'
 endif else begin
     activate = 1
     putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
+;display command line in batch tab of working row
+    PopulateBatchTableWithCMDinfo, Event, cmd
 endelse
 
 (*global).PreviousRunReductionValidated = activate

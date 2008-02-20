@@ -80,7 +80,10 @@ RowIndexes = getGlobalVariable('RowIndexes')
 BatchTable = (*(*global).BatchTable)
 FOR i=0,RowIndexes DO BEGIN
     IF (BatchTable[0,i] EQ '> YES <' OR $
-        BatchTable[0,i] EQ '> NO <') THEN RETURN
+        BatchTable[0,i] EQ '> NO <') THEN RETURN, i
+ENDFOR
+RETURN, -1
+END
 
 
 ;**********************************************************************
@@ -287,12 +290,41 @@ PRO PopulateBatchTableWithOthersInfo, Event, BatchTable
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-BatchTable[0,0] = '*YES*'
+;remove old current working row
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i=0,RowIndexes DO BEGIN
+    CASE (BatchTable[0,i]) OF
+        '> YES <': BEGIN
+            BatchTable[0,i]='YES'
+            BREAK
+        END
+        '> NO <': BEGIN
+            BatchTable[0,i]='NO'
+            BREAK
+        END
+        ELSE:
+    ENDCASE
+ENDFOR
+BatchTable[0,0] = '> YES <'
 norm_run_number = (*global).norm_run_number
+IF (norm_run_number EQ 0) THEN norm_run_number = ''
 BatchTable[2,0] = strcompress(norm_run_number,/remove_all)
 BatchTable[7,0] = 'N/A'
 END
 
+
+;This function populate the working row with the command line 
+PRO PopulateBatchTableWithCMDinfo, Event, cmd
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable = (*(*global).BatchTable)
+workingRow = getCurrentWorkingRow(Event)
+IF (workingRow NE -1) THEN BEGIN
+    BatchTable[7,workingRow]=cmd
+ENDIF
+(*(*global).BatchTable) = BatchTable
+END
 
 
 ;This function is reached by the all_events of the main table in the
@@ -539,6 +571,12 @@ END
 ;user. In this function, the table will be updated with info from the
 ;current run.
 PRO UpdateBatchTable, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable = (*(*global).BatchTable)
+;display new BatchTable
+DisplayBatchTable, Event, BatchTable
 END
 
 
@@ -581,5 +619,7 @@ PopulateBatchTableWithOthersInfo, Event, BatchTable
 (*(*global).BatchTable) = BatchTable
 ;display new BatchTable
 DisplayBatchTable, Event, BatchTable
+
+print, 'here'
 
 END
