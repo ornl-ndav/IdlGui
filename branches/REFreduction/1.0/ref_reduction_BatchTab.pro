@@ -78,18 +78,21 @@ END
 
 
 PRO UpdateAngleField, Event, value
+IF (value EQ '') THEN value = '?'
 text = 'Angle: ' + strcompress(value,/remove_all) + ' degrees'
 putTextFieldValue, Event, 'angle_value_status', text, 0
 END
 
 
 PRO UpdateS1Field, Event, value
+IF (value EQ '') THEN value = '?'
 text = 'Slit 1: ' + strcompress(value,/remove_all) + ' mm'
 putTextFieldValue, Event, 's1_value_status', text, 0
 END
 
 
 PRO UpdateS2Field, Event, value
+IF (value EQ '') THEN value = '?'
 text = 'Slit 2: ' + strcompress(value,/remove_all) + ' mm'
 putTextFieldValue, Event, 's2_value_status', text, 0
 END
@@ -147,10 +150,6 @@ END
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
 resetArray = strarr(8)
-resetArray[0] = 'NO'
-resetArray[3] = '?'
-resetArray[4] = '?'
-resetArray[5] = '?'
 BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
@@ -187,9 +186,9 @@ IF (RowSelected EQ -1) THEN BEGIN ;clear input base
 
     UpdateDataField,  Event, ''
     UpdateNormField,  Event, ''
-    UpdateAngleField, Event, '?'
-    UpdateS1Field,    Event, '?'
-    UpdateS2Field,    Event, '?'
+    UpdateAngleField, Event, ''
+    UpdateS1Field,    Event, ''
+    UpdateS2Field,    Event, ''
 ;UpdateDateField,  Event, BatchTable[6,RowSelected]
     UpdateCMDField,   Event, ''
 
