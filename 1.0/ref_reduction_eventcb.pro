@@ -475,12 +475,10 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
     
 ENDELSE
 
-
-;;;;REMOVE_ME  (REMOVE COMMENTS)
 ;We can retrieve info for Batch Tab
-;IF (RetrieveBatchData EQ 1) THEN BEGIN
-;    RetrieveBatchInfoAtLoading, Event
-;ENDIF
+IF (RetrieveBatchData EQ 1) THEN BEGIN
+    RetrieveBatchInfoAtLoading, Event
+ENDIF
 
 END
 

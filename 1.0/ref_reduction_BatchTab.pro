@@ -32,14 +32,20 @@ FUNCTION getCurrentBatchTableIndex, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-CurrentBatchTableIndex = (*global).CurrentBatchTableIndex
+CurrentBatchTableIndex = 0
+
 ;Move to next index only if previous GO DATA REDUCTION button has been
 ;validated
 IF ((*global).PreviousRunReductionValidated EQ 1) THEN BEGIN
-    ++CurrentBatchTableIndex
-;move up position of all other indexes in array (position)
 
-;FIX_ME
+;move up position of all other indexes in array (position)
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i=1,RowIndexes DO BEGIN
+    k=(RowIndexes-i)
+    BatchTable[*,k]=BatchTable[*,k-1]
+
+
+; 
 
     IF (CurrentBatchTableIndex EQ 20) THEN BEGIN
         CurrentBatchTableIndex = 0
@@ -47,6 +53,7 @@ IF ((*global).PreviousRunReductionValidated EQ 1) THEN BEGIN
     ENDIF ELSE BEGIN
         (*global).CurrentBatchTableIndex = CurrentBatchTableIndex
     ENDELSE
+ENDFOR
 ENDIF
 RETURN, CurrentBatchTableIndex
 END
@@ -62,6 +69,18 @@ FUNCTION getNormStatus, Event
 value = getTextFieldValue(Event,'batch_norm_run_field_status')
 RETURN, value
 END
+
+
+;This function gives the index of the current running batch row
+FUNCTION getCurrentWorkingRow, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+RowIndexes = getGlobalVariable('RowIndexes')
+BatchTable = (*(*global).BatchTable)
+FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[0,i] EQ '> YES <' OR $
+        BatchTable[0,i] EQ '> NO <') THEN RETURN
 
 
 ;**********************************************************************
@@ -111,7 +130,8 @@ END
 ;IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS - IS
 ;**********************************************************************
 FUNCTION IsRowSelectedActive, RowSelected, BatchTable
-IF (BatchTable[0,RowSelected] EQ 'YES') THEN RETURN, 1
+IF (BatchTable[0,RowSelected] EQ 'YES' OR $
+    BatchTable[0,RowSelected] EQ '> YES <') THEN RETURN, 1
 RETURN, 0
 END
 
@@ -168,6 +188,34 @@ widget_control, id, sensitive=status
 END
 
 
+;This function removes the given row from the BatchTable
+PRO RemoveGivenRowInBatchTable, BatchTable, Row
+RowIndexes = getGlobalVariable('RowIndexes')
+FOR i = Row, (RowIndexes-1) DO BEGIN
+    BatchTable[*,i]=BatchTable[*,i+1]
+ENDFOR
+ClearStructureFields, BatchTable, RowIndexes
+END
+
+
+;This function insert a clear row on top of batchTable and move
+;everything else down
+PRO AddBlankRowInBatchTable, BatchTable
+RowIndexes = getglobalVariable('RowIndexes')
+FOR i = 0, RowIndexes-1 DO BEGIN
+    k=(RowIndexes-i)
+    BatchTable[*,k]=BatchTable[*,k-1]
+ENDFOR
+ClearStructureFields, BatchTable, 0
+END
+
+
+
+
+
+
+
+
 
 
 
@@ -214,12 +262,36 @@ END
 
 ;This function will use the instance of the class to populate the
 ;structure with angle, S1, S2 values
-PRO PopulateClassWithInfo, Event, instance, Table, index
-Table[index].angle = instance->getAngle()
-Table[index].s1    = instance->getS1()
-Table[index].s2    = instance->getS2()
+PRO PopulateBatchTableWithClassInfo, Table, instance 
+Table[3,0] = strcompress(instance->getAngle(),/remove_all)
+Table[4,0] = strcompress(instance->getS1(),/remove_all)
+Table[5,0] = strcompress(instance->getS2(),/remove_all)
 END
 
+
+;This function get the info from the GUI (data run number and time) to
+;update the new row (index 0) of BatchTable
+PRO PopulateBatchTableWithGuiInfo, Event, BatchTable
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+DataRunNumber = (*global).DataRunNumber
+TimeBatch     = getTimeBatchFormat()
+BatchTable[1,0] = strcompress(DataRunNumber,/remove_all)
+BatchTable[6,0] = strcompress(TimeBatch,/remove_all)
+END
+
+
+;This function populates the index 0 with others infos (NORM and command line)
+PRO PopulateBatchTableWithOthersInfo, Event, BatchTable
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable[0,0] = '*YES*'
+norm_run_number = (*global).norm_run_number
+BatchTable[2,0] = strcompress(norm_run_number,/remove_all)
+BatchTable[7,0] = 'N/A'
+END
 
 
 
@@ -268,7 +340,8 @@ BatchTable = (*(*global).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
 ;get value of active_button
-ActiveValue = ValueOfActive(Event)
+isActive = 0 ;by default, this is not the current working row
+ActiveValue = ValueOfActive(Event,isActive)
 ;get status of active or not (from BatchTable)
 ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
 IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
@@ -410,6 +483,7 @@ DisplayBatchTable, Event, BatchTable
 END
 
 
+
 ;This method will remove from the main table all the row that have
 ;been activated
 PRO BatchTab_DeleteActive, Event
@@ -465,7 +539,6 @@ END
 ;user. In this function, the table will be updated with info from the
 ;current run.
 PRO UpdateBatchTable, Event
-print, 'here'
 END
 
 
@@ -474,18 +547,39 @@ PRO RetrieveBatchInfoAtLoading, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-;get current index in Batch table
-CurrentBatchTableIndex = getCurrentBatchTableIndex(Event)
-;get current data NeXus file name
-Nexus_full_name = (*global).data_full_nexus_name
 ;retrieve current Batch Table
 BatchTable = (*(*global).BatchTable)
-;clear fields of current structure index
-ClearStructureFields, BatchTable, CurrentBatchTableIndex
+
+;check if there is a row in the BatchTable where the Command Line is
+;still undefined. If yes, remove this row, if not, remove last row and
+;move up everything
+RowIndexes    = getGlobalVariable('RowIndexes')
+ColumnIndexes = getglobalVariable('ColumnIndexes')
+FOR i=0,RowIndexes DO BEGIN
+    IF (BatchTable[ColumnIndexes,i] EQ 'N/A') THEN BEGIN
+        RemoveGivenRowInBatchTable, BatchTable, i
+        break
+    ENDIF
+ENDFOR
+
+;move down everything to make room for new load data and insert blank
+;data
+AddBlankRowInBatchTable, BatchTable
+
+;Get info from NeXus into first row
+;get current data NeXus file name
+Nexus_full_name = (*global).data_full_nexus_name
 ;create instance of a class to retrieve info
 ClassInstance = obj_new('IDLgetMetadata',Nexus_full_name)
-;populate current index with info from class
-PopulateClassWithInfo, Event, ClassInstance, BatchTable, CurrentBatchTableIndex
+;populate index 0 with info from class
+PopulateBatchTableWithClassInfo, BatchTable, ClassInstance
+;populate index 0 with info form GUI (DATA run and date)
+PopulateBatchTableWithGuiInfo, Event, BatchTable
+;populate index 0 with missing infos (NORM and command line)
+PopulateBatchTableWithOthersInfo, Event, BatchTable
 
+(*(*global).BatchTable) = BatchTable
+;display new BatchTable
+DisplayBatchTable, Event, BatchTable
 
 END

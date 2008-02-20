@@ -31,7 +31,6 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                    PrevBatchRowSelected : 0,$
-                   CurrentBatchTableIndex : 0,$
                    PreviousRunReductionValidated : 0,$  
                    BatchTable : ptr_new(0L),$ ;big array of batch table
                      isHDF5format : 1,$
@@ -460,39 +459,39 @@ widget_control, id1, set_tab_current = 3 ;batch mode
 ;widget_control, id4, set_tab_current = 3 ;ouput ascii file
 
 ;populate batch table for debugging only
-BatchTable[*,0] = ['YES', $
-                   '5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008_02_19-01:00:00', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,1] = ['NO', $
-                   '7545,5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008_02_19-01:00:00', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,2] = ['NO', $
-                   '6000,7000,5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008_02_19-01:00:00', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,3] = ['YES', $
-                   '5225,10000,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008_02_19-01:00:00', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-(*(*global).BatchTable) = BatchTable
+ BatchTable[*,0] = ['YES', $
+                    '5225,5454', $
+                    '3443', $
+                    '0.345', $
+                    '0.15', $
+                    '0.15', $
+                    '2008_02_19-01:00:00', $
+                    'reflect_reduction 5225 5454 --norm=3443']
+ BatchTable[*,1] = ['NO', $
+                    '7545,5225,5454', $
+                    '3443', $
+                    '0.345', $
+                    '0.15', $
+                    '0.15', $
+                    '2008_02_19-01:00:00', $
+                    'reflect_reduction 5225 5454 --norm=3443']
+ BatchTable[*,2] = ['NO', $
+                    '6000,7000,5225,5454', $
+                    '3443', $
+                    '0.345', $
+                    '0.15', $
+                    '0.15', $
+                    '2008_02_19-01:00:00', $
+                    'reflect_reduction 5225 5454 --norm=3443']
+ BatchTable[*,3] = ['> YES <', $
+                    '5225,10000,5454', $
+                    '3443', $
+                    '0.345', $
+                    '0.15', $
+                    '0.15', $
+                    '2008_02_19-01:00:00', $
+                    'reflect_reduction 5225 5454 --norm=3443']
+ (*(*global).BatchTable) = BatchTable
 
 id = widget_info(Main_base,find_by_uname='batch_table_widget')
 widget_control, id, set_value=BatchTable
