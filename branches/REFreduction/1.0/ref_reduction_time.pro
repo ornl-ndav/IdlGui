@@ -34,3 +34,36 @@ DateIso += strcompress(time[2],/remove_all) + 's'
 
 return, DateIso
 END
+
+
+FUNCTION getTimeBatchFormat
+
+dateUnformated = systime()    
+DateArray = strsplit(dateUnformated,' ',/extract) 
+
+DateIso = strcompress(DateArray[4]) + '/'
+
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01'
+    'Feb':month='02'
+    'Mar':month='03'
+    'Apr':month='04'
+    'May':month='05'
+    'Jun':month='06'
+    'Jul':month='07'
+    'Aug':month='08'
+    'Sep':month='09'
+    'Oct':month='10'
+    'Nov':month='11'
+    'Dec':month='12'
+endcase
+
+DateIso += strcompress(month,/remove_all) + '/'
+DateIso += strcompress(DateArray[2],/remove_all) + '-'
+DateIso += DateArray[3]
+
+RETURN, DateIso
+END
+
+
