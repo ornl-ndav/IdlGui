@@ -213,7 +213,7 @@ dBatchFileName = { size  : [dBatchNameLabel.size[0]+XYoff[0],$
                             dBatchNameLabel.size[1]+XYoff[1],$
                             300,40],$
                    uname : 'current_batch_file_name',$
-                   value : '?'}
+                   value : 'N/A'}
 
 ;***********************************************************************************
 ;                                Build GUI

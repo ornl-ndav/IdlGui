@@ -86,6 +86,20 @@ RETURN, -1
 END
 
 
+;This function retrives the first run number of the top row input
+FUNCTION GetMajorRunNumber, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+BatchTable = (*(*global).BatchTable)
+MajorRuns = BatchTable[1,0]
+MajorRunsArray = strsplit(MajorRuns,',',/extract)
+MajorRun = MajorRunsArray[0]
+RETURN, MajorRun
+END
+
+
 ;**********************************************************************
 ;PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT
 ;**********************************************************************
@@ -300,6 +314,39 @@ FOR i = 0, RowIndexes-1 DO BEGIN
 ENDFOR
 ClearStructureFields, BatchTable, 0
 END
+
+
+;This function changes the label of the Batch Folder button
+PRO putBatchFolderName, Event, new_path
+id = widget_info(Event.top,find_by_uname='save_as_path')
+widget_control, id, set_value=new_path
+END
+
+
+PRO GenerateBatchFileName, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get first part (ex: REF_L_Batch_ )
+file_name = (*global).instrument
+file_name += '_Batch_' 
+
+;add first run number loaded (first row)
+;(ex: REF_L_Batch_Run3454 )
+MainRunNumber = GetMajorRunNumber(Event)
+file_name += 'Run' + strcompress(MainRunNumber,/remove_all)
+
+;add time stamp (ex: REF_L_Batch_3454_2008y_02m_10d )
+TimeBatchFormat = GenerateDateStamp()
+file_name += '_' + TimeBatchFormat
+
+;add extension  (ex: REF_L_Batch_3454_2008y_02m_10d.txt)
+file_name += '.txt'
+
+putTextFieldValue, Event, 'save_as_file_name', file_name, 0
+END
+
 
 
 ;check if there are any not 'N/A' command line, if yes, then activate 
@@ -699,7 +746,21 @@ print, 'in load batch file'
 END
 
 PRO BatchTab_BrowsePath, Event
-print, 'in browse for path'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+new_path = DIALOG_PICKFILE(/DIRECTORY,$
+                           TITLE = 'Pick output folder name ...',$
+                           PATH  = (*global).BatchDefaultPath,$
+                           /MUST_EXIST)
+
+IF (new_path NE '') THEN BEGIN
+    (*global).BatchDefaultPath = new_path
+    ;change name of button
+    putBatchFolderName, Event, new_path
+ENDIF 
+
 END
 
 
@@ -732,6 +793,8 @@ ENDELSE
 ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
 UpdateBatchTabGui, Event
 END
+
+
 
 
 PRO RetrieveBatchInfoAtLoading, Event
@@ -773,5 +836,8 @@ PopulateBatchTableWithOthersInfo, Event, BatchTable
 (*(*global).BatchTable) = BatchTable
 ;display new BatchTable
 DisplayBatchTable, Event, BatchTable
+
+;This autogenerates the name of the batch file name
+GenerateBatchFileName, Event
 
 END
