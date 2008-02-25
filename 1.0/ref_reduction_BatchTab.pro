@@ -382,6 +382,7 @@ ENDIF ELSE BEGIN
     UpdateCMDField,   Event, BatchTable[7,RowSelected]
 
 ENDELSE
+
 END
 
 
@@ -457,8 +458,14 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 rowSelected = getCurrentRowSelected(Event)
+
 ;Select Full Row
 SelectFullRow, Event, RowSelected
+
+IF (RowSelected LT 10) THEN BEGIN
+    id = widget_info(Event.top,find_by_uname='batch_table_widget')
+    widget_control, id, set_table_view=[0,0]
+ENDIF
 
 ;validate or not UP and DOWN buttons
 IF ((RowSelected) EQ 0) THEN BEGIN
@@ -481,6 +488,7 @@ IF (rowSelected NE (*global).PrevBatchRowSelected) THEN BEGIN
     DisplayInfoOfSelectedRow, Event, RowSelected
     (*global).PrevBatchRowSelected = rowSelected
 ENDIF
+
 END
 
 
