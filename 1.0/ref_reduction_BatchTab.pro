@@ -139,6 +139,15 @@ RETURN, 0
 END
 
 
+
+FUNCTION isItCurrentWorkingRow, RowSelected, BatchTable
+IF (BatchTable[0,RowSelected] EQ '> YES <' OR $
+    BatchTable[0,RowSelected] EQ '> NO <') THEN RETURN, 1
+RETURN, 0
+END
+
+
+
 FUNCTION IsAnyRowSelected, Event
 id = widget_info(Event.top,find_by_uname='batch_table_widget')
 Selection = widget_info(id,/table_select)
@@ -172,8 +181,8 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 RowIndexes = getGlobalVariable('RowIndexes')
 FOR i=0,RowIndexes DO BEGIN
-    IF (BatchTable[7,0] EQ 'YES' OR $
-        BatchTable[7,0] EQ '> YES <') THEN RETURN, 1
+    IF (BatchTable[0,i] EQ 'YES' OR $
+        BatchTable[0,i] EQ '> YES <') THEN RETURN, 1
 ENDFOR
 RETURN,0
 END
@@ -296,20 +305,21 @@ END
 ;check if there are any not 'N/A' command line, if yes, then activate 
 ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
 PRO UpdateBatchTabGui, Event
-;check if run active can be validated or not
-IF (isThereAnyCmdDefined(Event)) THEN BEGIN
-    activateStatus = 1
-ENDIF ELSE BEGIN
-    activateStatus = 0
-ENDELSE
-activateRunActiveButton, Event, activateStatus
 
 ;check if delete active and save activte can be
 ;validated or not
 IF (isThereAnyDataActivate(Event)) THEN BEGIN
     activateStatus = 1
+;check if run active can be validated or not
+    IF (isThereAnyCmdDefined(Event)) THEN BEGIN
+        activateStatus2 = 1
+    ENDIF ELSE BEGIN
+        activateStatus2 = 0
+    ENDELSE
+    activateRunActiveButton, Event, activateStatus2
 ENDIF ELSE BEGIN
     activateStatus = 0
+    activateRunActiveButton, Event, activateStatus
 ENDELSE
 activateDeleteActiveButton, Event, activateStatus
 activateSaveActiveButton, Event, activateStatus
@@ -484,20 +494,28 @@ BatchTable = (*(*global).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
 ;get value of active_button
-isActive = 0 ;by default, this is not the current working row
-ActiveValue = ValueOfActive(Event,isActive)
+isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
+ActiveValue = ValueOfActive(Event)
 ;get status of active or not (from BatchTable)
 ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
 IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
     IF (activeValue EQ 0) THEN BEGIN
-        BatchTable[0,RowSelected]='YES'
+        IF (isCurrentWorking) THEN BEGIN
+            BatchTable[0,RowSelected]='> YES <'
+        ENDIF ELSE BEGIN
+            BatchTable[0,RowSelected]='YES'
+        ENDELSE
     ENDIF ELSE BEGIN
-        BatchTable[0,RowSelected]='NO'
+        IF (isCurrentWorking) THEN BEGIN
+            BatchTable[0,RowSelected]='> NO <'
+        ENDIF ELSE BEGIN
+            BatchTable[0,RowSelected]='NO'
+        ENDELSE
     ENDELSE
     (*(*global).BatchTable) = BatchTable
     DisplayBatchTable, Event, BatchTable
 ENDIF
-
+UpdateBatchTabGui, Event
 END
 
 
