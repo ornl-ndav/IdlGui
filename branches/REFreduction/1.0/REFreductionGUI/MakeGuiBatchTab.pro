@@ -23,6 +23,7 @@ dTable = { size      : [0,0,MainTabSize[2],420,8,20],$
                         'S2 (mm)', $
                         'DATE',$
                         'Command Line'],$
+           align        : [1,0,0,1,1,1,1,0],$
            column_width : [60,150,150,120,80,80,130,425]}
 
 ;/////////////////////////////////////////////////////////
@@ -233,6 +234,7 @@ wTable = WIDGET_TABLE(BATCH_BASE,$
                       SENSITIVE     = dTable.sensitive,$
                       COLUMN_LABELS = dTable.label,$
                       COLUMN_WIDTHS = dTable.column_width,$
+                      ALIGNMENT     = dTable.align,$
                       /NO_ROW_HEADERS,$
                       /ROW_MAJOR,$
                       /RESIZEABLE_COLUMNS,$
