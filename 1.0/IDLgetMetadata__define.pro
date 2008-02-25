@@ -92,7 +92,7 @@ END
 FUNCTION get_s1_mm, fileID
 s1t       = get_s1t_mm(fileID)
 s1b       = get_s1b_mm(fileID)
-IF (s1t NE 'N/A' AND s1b NE 'N/A') THEN BEGIN
+IF (strcompress(s1t,/remove_all) NE 'N/A' AND strcompress(s1b,/remove_all) NE 'N/A') THEN BEGIN
     RETURN, ABS(s1t-s1b)
 ENDIF ELSE BEGIN
     RETURN, 'N/A'
@@ -198,7 +198,7 @@ END
 FUNCTION get_s2_mm, fileID
 s2t       = get_s2t_mm(fileID)
 s2b       = get_s2b_mm(fileID)
-IF (s2t NE 'N/A' AND s2b NE 'N/A') THEN BEGIN
+IF (strcompress(s2t,/remove_all) NE 'N/A' AND strcompress(s2b,/remove_all) NE 'N/A') THEN BEGIN
     RETURN, ABS(s2t-s2b)
 ENDIF ELSE BEGIN
     RETURN, 'N/A'
