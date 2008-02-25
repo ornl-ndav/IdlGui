@@ -12,6 +12,12 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Table Widget
+NbrRow = 20
+RowAlign   = [1,0,0,1,1,1,1,0]
+TableAlign = intarr(8,NbrRow)
+FOR i=0,(NbrRow-1) DO BEGIN
+    TableAlign(*,i)=RowAlign
+ENDFOR
 dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
            uname     : 'batch_table_widget',$
            sensitive : 1,$
@@ -23,7 +29,7 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
                         'S2 (mm)', $
                         'DATE',$
                         'Command Line'],$
-           align        : [1,0,0,1,1,1,1,0],$
+           align        : TableAlign,$
            column_width : [50,70,70,95,80,80,130,280]}
 
 ;/////////////////////////////////////////////////////////
