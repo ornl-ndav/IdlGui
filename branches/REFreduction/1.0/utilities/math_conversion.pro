@@ -6,7 +6,7 @@ return, value
 END
 
 ;This function converts a lenght from various units to millimetre
-FUNCTION convert_value_to_mm, value, units
+FUNCTION convert_to_mm, value, units
 CASE (units) OF
     'metre': coefficient = long(1./1000)
     ELSE   : coefficient = 1
