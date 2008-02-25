@@ -67,3 +67,33 @@ RETURN, DateIso
 END
 
 
+
+
+FUNCTION GenerateDateStamp
+
+dateUnformated = systime()    
+DateArray = strsplit(dateUnformated,' ',/extract) 
+
+DateIso = strcompress(DateArray[4]) + 'y_'
+
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01m'
+    'Feb':month='02m'
+    'Mar':month='03m'
+    'Apr':month='04m'
+    'May':month='05m'
+    'Jun':month='06m'
+    'Jul':month='07m'
+    'Aug':month='08m'
+    'Sep':month='09m'
+    'Oct':month='10m'
+    'Nov':month='11m'
+    'Dec':month='12m'
+endcase
+
+DateIso += strcompress(month,/remove_all) + '_'
+DateIso += strcompress(DateArray[2],/remove_all) + 'd'
+
+return, DateIso
+END
