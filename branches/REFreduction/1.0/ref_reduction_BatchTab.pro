@@ -962,6 +962,9 @@ ENDIF
 BatchTable = PopulateBatchTable(BatchFileName)
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
+
+;this function updates the widgets (button) of the tab
+UpdateBatchTabGui, Event
 END
 
 
@@ -981,7 +984,6 @@ IF (new_path NE '') THEN BEGIN
     ;change name of button
     putBatchFolderName, Event, new_path
 ENDIF 
-
 END
 
 
