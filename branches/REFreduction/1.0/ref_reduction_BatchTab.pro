@@ -1,5 +1,5 @@
 ;**********************************************************************
-;GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET
+;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
 ;**********************************************************************
 
 ;Procedure that will return all the global variables for this routine
@@ -8,11 +8,95 @@ CASE (var) OF
 ;number of columns in the Table (active/data/norm/s1/s2...)
     'ColumnIndexes' : RETURN, 7 
     'RowIndexes'    : RETURN, 19
+    'BatchFileHeadingLines' : RETURN, 3
 ELSE:
 ENDCASE
 RETURN, 'NA'
 END
 
+
+
+
+
+;**********************************************************************
+;UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS
+;**********************************************************************
+FUNCTION PopulateFileArray, BatchFileName, NbrLine
+openr, u, BatchFileName, /get
+onebyte = 0b
+tmp = ''
+i = 0
+NbrLine = getNbrLines(BatchFileName)
+FileArray = strarr(NbrLine)
+
+print, BatchFileName
+
+WHILE (NOT eof(u)) DO BEGIN
+    
+    readu,u,onebyte
+    fs = fstat(u)
+    
+    IF (fs.cur_ptr EQ 0) THEN BEGIN
+        point_lun,u,0
+    ENDIF ELSE BEGIN
+        point_lun,u,fs.cur_ptr - 1
+    ENDELSE
+    
+    readf,u,tmp
+    FileArray[i++] = tmp
+    
+ENDWHILE
+
+close, u
+free_lun,u
+NbrElement = i                  ;nbr of lines
+
+RETURN, FileArray
+END
+
+
+
+FUNCTION PopulateBatchTable, BatchFileName
+NbrLine   = 0
+FileArray = PopulateFileArray(BatchFileName, NbrLine)
+BatchTable = strarr(8,20)
+BatchIndex = -1 ;row index
+FileIndex  = 0
+NbrHeadingLines = getGlobalVariable('BatchFileHeadingLines')
+WHILE (FileIndex LT NbrLine) DO BEGIN
+    IF (FileIndex LT NbrHeadingLines) THEN BEGIN
+;add work on header here
+        ++FileIndex 
+    ENDIF ELSE BEGIN
+        IF (FileArray[FileIndex] EQ '') THEN BEGIN
+            ++BatchIndex
+            ++FileIndex
+        ENDIF ELSE BEGIN
+            SplitArray = strsplit(FileArray[FileIndex],' : ',/extract)
+            CASE (SplitArray[0]) OF
+                '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
+                '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
+                '#Norm_Runs' : BatchTable[2,BatchIndex] = SplitArray[1]
+                '#Angle(deg)': BatchTable[3,BatchIndex] = SplitArray[1]
+                '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
+                '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
+                '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+                ELSE         : BEGIN
+                    cmd = strjoin(SplitArray,' ')
+                    BatchTable[7,BatchIndex] = cmd
+                END
+            ENDCASE
+            ++FileIndex
+        ENDELSE
+    ENDELSE
+ENDWHILE
+RETURN, BatchTable
+END
+
+
+;**********************************************************************
+;GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET
+;**********************************************************************
 
 ;Return the current row selected
 FUNCTION getCurrentRowSelected, Event
@@ -21,8 +105,6 @@ SelectedCell = widget_Info(id,/table_select)
 RowSelected  = SelectedCell[1]
 RETURN, RowSelected
 END
-
-
 
 
 ;This function determines the current table index
@@ -356,7 +438,6 @@ file_name += '.txt'
 
 putTextFieldValue, Event, 'save_as_file_name', file_name, 0
 END
-
 
 
 ;check if there are any not 'N/A' command line, if yes, then activate 
@@ -752,8 +833,24 @@ END
 
 
 PRO BatchTab_LoadBatchFile, Event
-print, 'in load batch file'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
+                                PATH     = (*global).BatchDefaultPath,$
+                                FILTER   = (*global).BatchDefaultFileFilter,$
+                                GET_PATH = new_path,$
+                                /MUST_EXIST)
+IF (BatchFileName NE '') THEN BEGIN
+    (*global).BatchDefaultPath = new_path
+    ;change name of button
+ENDIF 
+BatchTable = PopulateBatchTable(BatchFileName)
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
 END
+
+
 
 PRO BatchTab_BrowsePath, Event
 ;get global structure
@@ -795,7 +892,7 @@ NbrColumn = (size(BatchTable))(1)
 text    = STRARR(1)
 text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
 text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
-text    = [text,'#Ucams: ' + (*global).ucams] 
+text    = [text,'#Ucams : ' + (*global).ucams] 
 text    = [text,'']
 
 FOR i=0,(NbrRow-1) DO BEGIN
@@ -812,14 +909,14 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
         active = 'YES'
     ENDELSE
     
-    text    = [text,'#Active:' + active]
+    text    = [text,'#Active : ' + active]
     k=1
-    text    = [text,'#Data Runs:' + BatchTable[k++,i]]
-    text    = [text,'#Norm Runs:' + BatchTable[k++,i]]
-    text    = [text,'#Angle(deg):' + BatchTable[k++,i]]
-    text    = [text,'#S1(mm):' + BatchTable[k++,i]]
-    text    = [text,'#S2(mm):' + BatchTable[k++,i]]
-    text    = [text,'#Date:' + BatchTable[k++,i]]
+    text    = [text,'#Data_Runs : ' + BatchTable[k++,i]]
+    text    = [text,'#Norm_Runs : ' + BatchTable[k++,i]]
+    text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
+    text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
+    text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
+    text    = [text,'#Date : ' + BatchTable[k++,i]]
     text    = [text,FP+BatchTable[k++,i]]
     text    = [text,'']
 
@@ -848,7 +945,6 @@ cmd = 'chmod 700 ' + FullFileName
 spawn, cmd, listening
 
 END
-
 
 
 ;-------------------------------------------------------------------------------

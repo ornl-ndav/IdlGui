@@ -168,3 +168,11 @@ id = widget_info(Event.top,find_by_uname='of_text')
 widget_control, id, get_value=value
 RETURN, value
 END
+
+
+FUNCTION getNbrLines, FileName
+cmd = 'wc -l ' + FileName
+spawn, cmd, result
+Split = strsplit(result[0],' ',/extract)
+RETURN, Split[0]
+END
