@@ -24,13 +24,13 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
            label     : ['ACTIVE', $
                         'DATA', $
                         'NORM.',$
-                        'ANGLE (deg.)', $
+                        'ANGLE (deg)', $
                         'S1 (mm)', $
                         'S2 (mm)', $
                         'DATE',$
                         'Command Line'],$
            align        : TableAlign,$
-           column_width : [50,70,70,95,80,80,130,280]}
+           column_width : [50,140,140,80,50,50,150,360]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #

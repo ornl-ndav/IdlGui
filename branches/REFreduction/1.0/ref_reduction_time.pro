@@ -71,6 +71,10 @@ END
 
 FUNCTION GenerateDateStamp
 
+;Change the format from Thu Aug 23 16:15:23 2007
+;to 2007y_08m_23d_16h_15mn
+Function RefReduction_GenerateIsoTimeStamp
+
 dateUnformated = systime()    
 DateArray = strsplit(dateUnformated,' ',/extract) 
 
@@ -93,7 +97,13 @@ CASE (DateArray[1]) OF
 endcase
 
 DateIso += strcompress(month,/remove_all) + '_'
-DateIso += strcompress(DateArray[2],/remove_all) + 'd'
+DateIso += strcompress(DateArray[2],/remove_all) + 'd_'
+
+;change format of time
+time = strsplit(DateArray[3],':',/extract)
+DateIso += strcompress(time[0],/remove_all) + 'h_'
+DateIso += strcompress(time[1],/remove_all) + 'mn'
 
 return, DateIso
 END
+
