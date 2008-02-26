@@ -78,6 +78,7 @@ ENDFOR
 
 (*global).ROI_error_status = error_status
 (*(*global).pixel_excluded) = PixelExcludedArray
+(*(*global).pixel_excluded_base) = PixelExcludedArray
 
 END
 
