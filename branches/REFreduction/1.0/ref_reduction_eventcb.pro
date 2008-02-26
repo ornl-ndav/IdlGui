@@ -329,7 +329,9 @@ if (PrevTabSelect NE CurrTabSelect) then begin
     END
     3: begin ;if BATCH tab is now selected
 ;retrieve info for batch mode
-        UpdateBatchTable, Event  ;in ref_reduction_BatchTab.pro
+        IF ((*global).debugger) THEN BEGIN
+            UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
+        ENDIF
     END
     else:
     ENDCASE
@@ -475,9 +477,11 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
     
 ENDELSE
 
+IF ((*global).debugger) THEN BEGIN
 ;We can retrieve info for Batch Tab
-IF (RetrieveBatchData EQ 1) THEN BEGIN
-    RetrieveBatchInfoAtLoading, Event
+    IF (RetrieveBatchData EQ 1) THEN BEGIN
+        RetrieveBatchInfoAtLoading, Event
+    ENDIF
 ENDIF
 
 END
