@@ -94,6 +94,72 @@ RETURN, BatchTable
 END
 
 
+;This function takes the name of the output file to create
+;and create the Batch output file
+PRO CreateBatchFile, Event, FullFileName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get Text To copy
+BatchTable = (*(*global).BatchTable)
+
+NbrRow    = (size(BatchTable))(2)
+NbrColumn = (size(BatchTable))(1)
+
+text    = STRARR(1)
+text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
+text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
+text    = [text,'#Ucams : ' + (*global).ucams] 
+text    = [text,'']
+
+FOR i=0,(NbrRow-1) DO BEGIN
+;add information only if row is not blank
+IF (BatchTable[0,i] NE '') THEN BEGIN
+
+    IF (BatchTable[0,i] EQ 'NO' OR $
+        BatchTable[0,i] EQ '> NO <') THEN BEGIN
+        FP     = '#'
+        active = 'NO'
+    ENDIF ELSE BEGIN
+        FP     = ''
+        active = 'YES'
+    ENDELSE
+    
+    text    = [text,'#Active : ' + active]
+    k=1
+    text    = [text,'#Data_Runs : ' + BatchTable[k++,i]]
+    text    = [text,'#Norm_Runs : ' + BatchTable[k++,i]]
+    text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
+    text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
+    text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
+    text    = [text,'#Date : ' + BatchTable[k++,i]]
+    text    = [text,FP+BatchTable[k++,i]]
+    text    = [text,'']
+
+ENDIF
+ENDFOR
+
+file_error = 0
+CATCH, file_error
+IF (file_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    print, 'error'
+ENDIF ELSE BEGIN
+;create output file
+    openw,1,FullFileName
+    sz = (size(text))(1)
+    FOR j=0,(sz-1) DO BEGIN
+        printf, 1, text[j]
+    ENDFOR
+    close,1
+    free_lun,1
+ENDELSE
+;give execute permission to file created
+cmd = 'chmod 700 ' + FullFileName
+spawn, cmd, listening
+END
+
 ;**********************************************************************
 ;GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET
 ;**********************************************************************
@@ -830,7 +896,24 @@ END
 
 
 PRO BatchTab_RunActive, Event
-print, 'in run active'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+BatchTable = (*(*global).BatchTable)
+
+NbrRow = getGlobalVariable('RowIndexes')
+
+;turn on hourglass
+widget_control,/hourglass
+FOR i=0,NbrRow DO BEGIN
+    IF (BatchTable[0,i] EQ '> YES <' OR $
+        BatchTable[0,i] EQ 'YES') THEN BEGIN
+        spawn, BatchTable[7,i], listening, err_listening
+    ENDIF
+ENDFOR
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 
@@ -885,67 +968,8 @@ MyBatchPath = getBatchPath(Event)
 MyBatchFile = getBatchFile(Event)
 ;FullFileName
 FullFileName = MyBatchPath + MyBatchFile
-
-;get Text To copy
-BatchTable = (*(*global).BatchTable)
-
-NbrRow    = (size(BatchTable))(2)
-NbrColumn = (size(BatchTable))(1)
-
-text    = STRARR(1)
-text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
-text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
-text    = [text,'#Ucams : ' + (*global).ucams] 
-text    = [text,'']
-
-FOR i=0,(NbrRow-1) DO BEGIN
-
-;add information only if row is not blank
-IF (BatchTable[0,i] NE '') THEN BEGIN
-
-    IF (BatchTable[0,i] EQ 'NO' OR $
-        BatchTable[0,i] EQ '> NO <') THEN BEGIN
-        FP     = '#'
-        active = 'NO'
-    ENDIF ELSE BEGIN
-        FP     = ''
-        active = 'YES'
-    ENDELSE
-    
-    text    = [text,'#Active : ' + active]
-    k=1
-    text    = [text,'#Data_Runs : ' + BatchTable[k++,i]]
-    text    = [text,'#Norm_Runs : ' + BatchTable[k++,i]]
-    text    = [text,'#Angle(deg) : ' + BatchTable[k++,i]]
-    text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
-    text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
-    text    = [text,'#Date : ' + BatchTable[k++,i]]
-    text    = [text,FP+BatchTable[k++,i]]
-    text    = [text,'']
-
-ENDIF
-
-ENDFOR
-
-file_error = 0
-CATCH, file_error
-IF (file_error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    print, 'error'
-ENDIF ELSE BEGIN
-;create output file
-    openw,1,FullFileName
-    sz = (size(text))(1)
-    FOR j=0,(sz-1) DO BEGIN
-        printf, 1, text[j]
-    ENDFOR
-    close,1
-    free_lun,1
-ENDELSE
-
-;give execute permission to file created
-cmd = 'chmod 700 ' + FullFileName
-spawn, cmd, listening
+;Create the batch output file using the FullFileName
+CreateBatchFile, Event, FullFileName
 
 END
 
@@ -967,9 +991,6 @@ FullFileName = MyBatchPath + MyBatchFile
 
 ;get Text To copy
 BatchTable = (*(*global).BatchTable)
-
-
-
 END
 
 
