@@ -25,29 +25,42 @@ if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
    ucams = get_ucams()
+   ucams = 'zizou' ;REMOVE_ME
+   debugger = 0
+   SWITCH (ucams) OF
+       'j35':
+       '2zr':
+       'pf9':
+       'mid':
+       'ceh':
+       'vuk':
+       'jfb': debugger = 1
+       ELSE :
+   ENDSWITCH
 endelse
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   PrevBatchRowSelected : 0,$
-                     BatchDefaultPath : '~/',$
-                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
-                     PreviousRunReductionValidated : 0,$  
-                     BatchTable : ptr_new(0L),$ ;big array of batch table
-                     isHDF5format : 1,$
-                     DataRunNumber : '',$
-                     archived_data_flag : 1,$
-                     archived_norm_flag : 1,$
-                     dr_output_path : '~/',$
+                  debugger : debugger,$
+                  PrevBatchRowSelected : 0,$
+                    BatchDefaultPath : '~/',$
+                    BatchDefaultFileFilter : '*_Batch_Run*.txt',$
+                    PreviousRunReductionValidated : 0,$  
+                    BatchTable : ptr_new(0L),$ ;big array of batch table
+                    isHDF5format : 1,$
+                    DataRunNumber : '',$
+                    archived_data_flag : 1,$
+                    archived_norm_flag : 1,$
+                    dr_output_path : '~/',$
 ;output path define in the REDUCE tab
-                   cl_output_path : '~/REFreduction_CL/',$
+  cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
-                   cl_file_ext1    : 'REFreduction_CL_',$
+  cl_file_ext1    : 'REFreduction_CL_',$
 ;default first part of output command line file
-                   cl_file_ext2    : '.txt',$
+  cl_file_ext2    : '.txt',$
 ;default extension of output command line file
-                   cl_file_ext3    : '*-04:00.txt',$
+  cl_file_ext3    : '*-04:00.txt',$
 ;default extension of output command line used in dialog_pickfile
                    cl_output_name : '',$
 ;name of file that will contain a copy of the command line 
@@ -397,7 +410,11 @@ widget_control, MAIN_BASE, set_uvalue=global
 ;     END
 ; ENDSWITCH
 
-MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+MakeGuiMainTab, MAIN_BASE, $
+  MainBaseSize, $
+  instrument, $
+  PlotsTitle, $
+  debugger
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
@@ -449,7 +466,7 @@ ENDIF
 
 ; default tabs shown
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 3 ;batch mode
+widget_control, id1, set_tab_current = 0 ;batch mode
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
@@ -461,45 +478,45 @@ widget_control, id1, set_tab_current = 3 ;batch mode
 ;widget_control, id4, set_tab_current = 3 ;ouput ascii file
 
 ;populate batch table for debugging only
-BatchTable[*,0] = ['YES', $
-                   '5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008y_02m_19d_01h_15mn', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,1] = ['NO', $
-                   '7545,5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008y_02m_19d_01h_15mn', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,2] = ['NO', $
-                   '6000,7000,5225,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008y_02m_19d_01h_15mn', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-BatchTable[*,3] = ['> YES <', $
-                   '5225,10000,5454', $
-                   '3443', $
-                   '0.345', $
-                   '0.15', $
-                   '0.15', $
-                   '2008y_02m_19d_01h_15mn', $
-                   'reflect_reduction 5225 5454 --norm=3443']
-(*(*global).BatchTable) = BatchTable
+; BatchTable[*,0] = ['YES', $
+;                    '5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,1] = ['NO', $
+;                    '7545,5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,2] = ['NO', $
+;                    '6000,7000,5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,3] = ['> YES <', $
+;                    '5225,10000,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; (*(*global).BatchTable) = BatchTable
 
-id = widget_info(Main_base,find_by_uname='batch_table_widget')
-widget_control, id, set_value=BatchTable
+; id = widget_info(Main_base,find_by_uname='batch_table_widget')
+; widget_control, id, set_value=BatchTable
  
-id = widget_info(Main_base,find_by_uname='save_as_file_name')
-widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+; id = widget_info(Main_base,find_by_uname='save_as_file_name')
+; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
 
 END
 
