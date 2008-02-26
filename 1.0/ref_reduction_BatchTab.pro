@@ -806,7 +806,8 @@ BatchTable = (*(*global).BatchTable)
 RowIndexes = getGlobalVariable('RowIndexes')
 FOR i = 0,(RowIndexes) DO BEGIN
     k = (RowIndexes-i)
-    IF (BatchTable[0,k] EQ 'YES') THEN BEGIN
+    IF (BatchTable[0,k] EQ 'YES' OR $
+        BatchTable[0,k] EQ '> YES <') THEN BEGIN
 
         IF (k EQ RowIndexes) THEN BEGIN
             ClearStructureFields, BatchTable, k
