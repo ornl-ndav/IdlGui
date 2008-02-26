@@ -203,18 +203,6 @@ dLoadBatchButton = { size  : [dSaveasLabel.size[0]+XYoff[0],$
                      uname : 'load_batch_button',$
                      value : 'LOAD BATCH FILE'}
 
-;current batch file name is
-XYoff = [30,8]
-dBatchNameLabel = { size  : [dLoadBatchButton.size[0]+dLoadBatchButton.size[2]+XYoff[0],$
-                             dLoadBatchButton.size[1]+XYoff[1]],$
-                    value : 'Current Batch file Name is: '}
-XYoff = [180,0]
-dBatchFileName = { size  : [dBatchNameLabel.size[0]+XYoff[0],$
-                            dBatchNameLabel.size[1]+XYoff[1],$
-                            300,40],$
-                   uname : 'current_batch_file_name',$
-                   value : 'N/A'}
-
 ;***********************************************************************************
 ;                                Build GUI
 ;***********************************************************************************
@@ -499,24 +487,6 @@ wSaveButton = WIDGET_BUTTON(BATCH_BASE,$
                             VALUE     = dSaveButton.value,$
                             SENSITIVE = dSaveButton.sensitive)
 
-;\\\\\\\\\\\\\\\\\\\\\\
-;Batch file name Label\
-;\\\\\\\\\\\\\\\\\\\\\\
-wBatchNameLabel = WIDGET_LABEL(BATCH_BASE,$
-                               XOFFSET = dBatchNameLabel.size[0],$
-                               YOFFSET = dBatchNameLabel.size[1],$
-                               VALUE   = dBatchNameLabel.value)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\
-;Current Batch File Name\
-;\\\\\\\\\\\\\\\\\\\\\\\\
-wBatchFileName = WIDGET_LABEL(BATCH_BASE,$
-                              XOFFSET    = dBatchFileName.size[0],$
-                              YOFFSET    = dBatchFileName.size[1],$
-                              SCR_XSIZE  = dBatchFileName.size[2],$
-                              VALUE      = dBatchFileName.value,$
-                              UNAME      = dBatchFileName.uname,$
-                              /ALIGN_LEFT)
 ;\\\\\\\\\\\\
 ;Batch Frame\
 ;\\\\\\\\\\\\

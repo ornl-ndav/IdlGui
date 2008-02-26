@@ -873,6 +873,7 @@ ENDIF
 END
 
 
+
 PRO BatchTab_SaveCommands, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
