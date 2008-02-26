@@ -790,6 +790,7 @@ ClearStructureFields, BatchTable, RowIndexes
 DisplayBatchTable, Event, BatchTable
 ;this function updates the widgets (button) of the tab
 UpdateBatchTabGui, Event
+DisplayInfoOfSelectedRow, Event, RowSelected
 END
 
 

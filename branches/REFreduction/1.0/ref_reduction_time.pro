@@ -69,11 +69,9 @@ END
 
 
 
-FUNCTION GenerateDateStamp
-
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn
-Function RefReduction_GenerateIsoTimeStamp
+FUNCTION GenerateDateStamp
 
 dateUnformated = systime()    
 DateArray = strsplit(dateUnformated,' ',/extract) 
