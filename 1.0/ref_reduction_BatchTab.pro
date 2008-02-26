@@ -843,6 +843,10 @@ ENDIF ELSE BEGIN
     free_lun,1
 ENDELSE
 
+;give execute permission to file created
+cmd = 'chmod 700 ' + FullFileName
+spawn, cmd, listening
+
 END
 
 
