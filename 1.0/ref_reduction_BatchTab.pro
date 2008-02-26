@@ -906,6 +906,9 @@ NbrRow = getGlobalVariable('RowIndexes')
 
 ;turn on hourglass
 widget_control,/hourglass
+;change label of RUN ACTIVE button
+PutTextFieldValue, Event, 'run_active_button', (*global).processing_message + ' ... ', 0
+ActivateWidget, Event, 'run_active_button', 0
 FOR i=0,NbrRow DO BEGIN
     IF (BatchTable[0,i] EQ '> YES <' OR $
         BatchTable[0,i] EQ 'YES') THEN BEGIN
@@ -914,6 +917,8 @@ FOR i=0,NbrRow DO BEGIN
 ENDFOR
 ;turn off hourglass
 widget_control,hourglass=0
+ActivateWidget, Event, 'run_active_button', 1
+PutTextFieldValue, Event, 'run_active_button', 'RUN ACTIVE', 0
 END
 
 
