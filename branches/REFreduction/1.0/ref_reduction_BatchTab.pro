@@ -29,8 +29,6 @@ i = 0
 NbrLine = getNbrLines(BatchFileName)
 FileArray = strarr(NbrLine)
 
-print, BatchFileName
-
 WHILE (NOT eof(u)) DO BEGIN
     
     readu,u,onebyte

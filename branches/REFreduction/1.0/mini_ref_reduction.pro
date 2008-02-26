@@ -31,7 +31,9 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                    PrevBatchRowSelected : 0,$
-                   DataRunNumber : '',$
+                     BatchDefaultPath: '~/',$
+                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
+                     DataRunNumber : '',$
                    PreviousRunReductionValidated : 0,$  
                    BatchTable : ptr_new(0L),$ ;big array of batch table
                    isHDF5format : 1,$
