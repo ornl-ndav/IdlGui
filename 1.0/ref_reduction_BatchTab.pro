@@ -963,13 +963,14 @@ BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
 IF (BatchFileName NE '') THEN BEGIN
     (*global).BatchDefaultPath = new_path
     ;change name of button
-ENDIF 
-BatchTable = PopulateBatchTable(BatchFileName)
-(*(*global).BatchTable) = BatchTable
-DisplayBatchTable, Event, BatchTable
-
+    BatchTable = PopulateBatchTable(BatchFileName)
+    (*(*global).BatchTable) = BatchTable
+    DisplayBatchTable, Event, BatchTable
+    
 ;this function updates the widgets (button) of the tab
-UpdateBatchTabGui, Event
+    UpdateBatchTabGui, Event
+ENDIF 
+
 END
 
 
