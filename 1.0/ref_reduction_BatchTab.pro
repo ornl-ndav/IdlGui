@@ -100,6 +100,20 @@ RETURN, MajorRun
 END
 
 
+;Retrieves the Batch Path 
+FUNCTION getBatchPath, Event
+id = widget_info(Event.top,find_by_uname='save_as_path')
+widget_control, id, get_value=path
+RETURN, Path
+END
+
+;Retrieves the Batch File
+FUNCTION getBatchFile, Event
+id = widget_info(Event.top,find_by_uname='save_as_file_name')
+widget_control, id, get_value=file
+RETURN, file
+END
+
 ;**********************************************************************
 ;PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT - PUT
 ;**********************************************************************
@@ -132,10 +146,6 @@ IF (value EQ '') THEN value = '?'
 text = 'Slit 2: ' + strcompress(value,/remove_all) + ' mm'
 putTextFieldValue, Event, 's2_value_status', text, 0
 END
-
-
-;PRO UpdateDateField, Event, value
-;putTextFieldValue, Event, '
 
 
 PRO UpdateCMDField, Event, value
@@ -765,7 +775,98 @@ END
 
 
 PRO BatchTab_SaveCommands, Event
-print, 'in save set of command lines'
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve path of batch file name
+MyBatchPath = getBatchPath(Event)
+;retrieve batch file name
+MyBatchFile = getBatchFile(Event)
+;FullFileName
+FullFileName = MyBatchPath + MyBatchFile
+
+;get Text To copy
+BatchTable = (*(*global).BatchTable)
+
+NbrRow    = (size(BatchTable))(2)
+NbrColumn = (size(BatchTable))(1)
+
+text    = STRARR(1)
+text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
+text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
+text    = [text,'#Ucams: ' + (*global).ucams] 
+text    = [text,'']
+
+FOR i=0,(NbrRow-1) DO BEGIN
+
+;add information only if row is not blank
+IF (BatchTable[0,i] NE '') THEN BEGIN
+
+    IF (BatchTable[0,i] EQ 'NO' OR $
+        BatchTable[0,i] EQ '> NO <') THEN BEGIN
+        FP     = '#'
+        active = 'NO'
+    ENDIF ELSE BEGIN
+        FP     = ''
+        active = 'YES'
+    ENDELSE
+    
+    text    = [text,'#Active:' + active]
+    k=1
+    text    = [text,'#Data Runs:' + BatchTable[k++,i]]
+    text    = [text,'#Norm Runs:' + BatchTable[k++,i]]
+    text    = [text,'#Angle(deg):' + BatchTable[k++,i]]
+    text    = [text,'#S1(mm):' + BatchTable[k++,i]]
+    text    = [text,'#S2(mm):' + BatchTable[k++,i]]
+    text    = [text,'#Date:' + BatchTable[k++,i]]
+    text    = [text,FP+BatchTable[k++,i]]
+    text    = [text,'']
+
+ENDIF
+
+ENDFOR
+
+file_error = 0
+CATCH, file_error
+IF (file_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    print, 'error'
+ENDIF ELSE BEGIN
+;create output file
+    openw,1,FullFileName
+    sz = (size(text))(1)
+    FOR j=0,(sz-1) DO BEGIN
+        printf, 1, text[j]
+    ENDFOR
+    close,1
+    free_lun,1
+ENDELSE
+
+END
+
+
+
+;-------------------------------------------------------------------------------
+;This function is reached each time the Batch Tab is reached by the
+;user. In this function, the table will be updated with info from the
+;current run.
+PRO UpdateBatchTable, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve path of batch file name
+MyBatchPath = getBatchPath(Event)
+;retrieve batch file name
+MyBatchFile = getBatchFile(Event)
+;FullFileName
+FullFileName = MyBatchPath + MyBatchFile
+
+;get Text To copy
+BatchTable = (*(*global).BatchTable)
+
+
+
 END
 
 

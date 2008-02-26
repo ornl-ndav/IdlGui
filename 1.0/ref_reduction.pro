@@ -497,6 +497,9 @@ BatchTable[*,3] = ['> YES <', $
 id = widget_info(Main_base,find_by_uname='batch_table_widget')
 widget_control, id, set_value=BatchTable
  
+id = widget_info(Main_base,find_by_uname='save_as_file_name')
+widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+
 END
 
 
