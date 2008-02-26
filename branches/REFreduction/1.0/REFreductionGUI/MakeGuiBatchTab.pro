@@ -159,6 +159,24 @@ dRunButton = { size      : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0]
                value     : 'RUN  ACTIVE',$
                sensitive : 0}
                           
+;Progress bar base
+XYoff = [10,0]
+dProgressBarBase = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
+                             dRunButton.size[1]+XYoff[1],$
+                             250,35],$
+                     uname : 'progress_bar_base',$
+                     map   : 0}
+XYoff = [0,2]
+dProgressBarBackground = { size  : [XYoff[0],$
+                                   XYoff[1],$
+                                   150,30],$
+                          uname : 'progress_bar_draw'}
+XYoff = [8,8]
+dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+dProgressBarBackground.size[2]+XYoff[0],$
+                               XYoff[1]],$
+                      uname : 'progress_bar_label',$
+                      value : '( 1 / 2 )'}
+
 ;frame for batch widgets
 XYoff = [5,45]
 dBatchFrame = { size  : [XYoff[0],$
@@ -421,6 +439,7 @@ wDeleteButton = WIDGET_BUTTON(BATCH_BASE,$
                               VALUE     = dDeleteButton.value,$
                               SENSITIVE = dDeleteButton.sensitive)
 
+;\\\\\\\\\\\\\\\\\\
 ;Run Active Button\
 ;\\\\\\\\\\\\\\\\\\
 wRunButton = WIDGET_BUTTON(BATCH_BASE,$
@@ -431,6 +450,30 @@ wRunButton = WIDGET_BUTTON(BATCH_BASE,$
                            UNAME     = dRunButton.uname,$
                            VALUE     = dRunButton.value,$
                            SENSITIVE = dRunButton.sensitive)
+
+;\\\\\\\\\\\\\
+;Progress Bar\
+;\\\\\\\\\\\\\
+wProgressBarBase = WIDGET_BASE(BATCH_BASE,$
+                               XOFFSET   = dProgressBarBase.size[0],$
+                               YOFFSET   = dProgressBarBase.size[1],$
+                               SCR_XSIZE = dProgressBarBase.size[2],$
+                               SCR_YSIZE = dProgressBarBase.size[3],$
+                               UNAME     = dProgressBarBase.uname,$
+                               MAP       = dProgressBarBase.map)
+
+wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
+                                     XOFFSET   = dProgressBarBackground.size[0],$
+                                     YOFFSET   = dProgressBarBackground.size[1],$
+                                     SCR_XSIZE = dProgressBarBackground.size[2],$
+                                     SCR_YSIZE = dProgressBarBackground.size[3],$
+                                     UNAME     = dProgressBarBackground.uname)
+                                     
+wProgressBarLabel = WIDGET_LABEL(wProgressBarBase,$
+                                 XOFFSET = dProgressBarLabel.size[0],$
+                                 YOFFSET = dProgressBarLabel.size[1],$
+                                 VALUE   = dProgressBarLabel.value,$
+                                 UNAME   = dProgressBarLabel.uname)
 
 ;\\\\\\\\\\\\\\\\\\
 ;Load batch button\

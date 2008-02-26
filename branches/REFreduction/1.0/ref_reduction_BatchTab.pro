@@ -899,26 +899,50 @@ PRO BatchTab_RunActive, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 BatchTable = (*(*global).BatchTable)
-
 NbrRow = getGlobalVariable('RowIndexes')
-
+;select progress bar widget_draw
+id_draw = widget_info(Event.top, find_by_uname='progress_bar_draw')
+widget_control, id_draw, get_value=id_value
+wset,id_value
+erase
+;display Progress Bar base
+MapBase, Event, 'progress_bar_base',1
 ;turn on hourglass
 widget_control,/hourglass
 ;change label of RUN ACTIVE button
 PutTextFieldValue, Event, 'run_active_button', (*global).processing_message + ' ... ', 0
 ActivateWidget, Event, 'run_active_button', 0
+;determine the number of process to run
+NbrProcess = 0
 FOR i=0,NbrRow DO BEGIN
     IF (BatchTable[0,i] EQ '> YES <' OR $
         BatchTable[0,i] EQ 'YES') THEN BEGIN
-        spawn, BatchTable[7,i], listening, err_listening
+        ++NbrProcess
     ENDIF
 ENDFOR
+ProcessToRun = 1 ;++1 for only the active processes
+IF (NbrProcess NE 0) THEN BEGIN
+    x_step = (150./float(NbrProcess))
+    FOR i=0,NbrRow DO BEGIN
+        IF (BatchTable[0,i] EQ '> YES <' OR $
+            BatchTable[0,i] EQ 'YES') THEN BEGIN
+            info = '( ' + strcompress(ProcessToRun,/remove_all) + $
+              ' / ' + strcompress(NbrProcess,/remove_all) + ' )'
+            putTextFieldValue, Event, 'progress_bar_label', info, 0
+            spawn, BatchTable[7,i], listening, err_listening
+            x2 = ProcessToRun*x_step
+            polyfill, [0,0,x2,x2,0],[0,35,35,0,0],/Device, Color=200
+            ++ProcessToRun
+        ENDIF
+    ENDFOR
 ;turn off hourglass
-widget_control,hourglass=0
-ActivateWidget, Event, 'run_active_button', 1
-PutTextFieldValue, Event, 'run_active_button', 'RUN ACTIVE', 0
+    widget_control,hourglass=0
+    ActivateWidget, Event, 'run_active_button', 1
+    PutTextFieldValue, Event, 'run_active_button', 'RUN ACTIVE', 0
+ENDIF
+;display Progress Bar base
+MapBase, Event, 'progress_bar_base',0 ;change to 0
 END
 
 
