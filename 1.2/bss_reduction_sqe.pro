@@ -1,6 +1,6 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.2.1)'
+VERSION = ' (version: 1.2.2)'
 
 ;define initial global values - these could be input via external file or other means
 
