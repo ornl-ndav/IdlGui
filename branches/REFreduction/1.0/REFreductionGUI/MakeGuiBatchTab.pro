@@ -192,7 +192,7 @@ dSaveButton = { size      : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
                              dSAfileText.size[1]+XYoff[1],$
                              200,35],$
                 uname     : 'save_as_file_button',$
-                value     : 'SAVE ACTIVE(S)',$
+                value     : 'SAVE BATCH FILE',$
                 sensitive : 0}
 
 ;Load batch file
