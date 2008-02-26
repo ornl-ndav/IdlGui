@@ -923,12 +923,17 @@ FOR i=0,NbrRow DO BEGIN
 ENDFOR
 ProcessToRun = 1 ;++1 for only the active processes
 IF (NbrProcess NE 0) THEN BEGIN
-    x_step = (150./float(NbrProcess))
+    IF ((*global).miniVersion) THEN BEGIN
+        xmax = 100.
+    ENDIF ELSE BEGIN
+        xmax = 150.
+    ENDELSE
+    x_step = (xmax/float(NbrProcess))
     FOR i=0,NbrRow DO BEGIN
         IF (BatchTable[0,i] EQ '> YES <' OR $
             BatchTable[0,i] EQ 'YES') THEN BEGIN
-            info = '( ' + strcompress(ProcessToRun,/remove_all) + $
-              ' / ' + strcompress(NbrProcess,/remove_all) + ' )'
+            info = '(' + strcompress(ProcessToRun,/remove_all) + $
+              '/' + strcompress(NbrProcess,/remove_all) + ')'
             putTextFieldValue, Event, 'progress_bar_label', info, 0
             spawn, BatchTable[7,i], listening, err_listening
             x2 = ProcessToRun*x_step
