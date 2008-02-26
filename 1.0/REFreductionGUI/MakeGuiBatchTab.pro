@@ -30,7 +30,7 @@ dTable = { size      : [0,0,MainTabSize[2],420,8,20],$
                         'DATE',$
                         'Command Line'],$
            align        : TableAlign,$
-           column_width : [60,150,150,120,80,80,130,425]}
+           column_width : [60,150,150,120,80,80,150,425]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #

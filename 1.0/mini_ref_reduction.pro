@@ -461,6 +461,46 @@ widget_control, id1, set_tab_current = 3 ;batch mode
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
 ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
 
+BatchTable[*,0] = ['YES', $
+                   '5225,5454', $
+                   '3443', $
+                   '0.345', $
+                   '0.15', $
+                   '0.15', $
+                   '2008y_02m_19d_01h_15mn', $
+                   'reflect_reduction 5225 5454 --norm=3443']
+BatchTable[*,1] = ['NO', $
+                   '7545,5225,5454', $
+                   '3443', $
+                   '0.345', $
+                   '0.15', $
+                   '0.15', $
+                   '2008y_02m_19d_01h_15mn', $
+                   'reflect_reduction 5225 5454 --norm=3443']
+BatchTable[*,2] = ['NO', $
+                   '6000,7000,5225,5454', $
+                   '3443', $
+                   '0.345', $
+                   '0.15', $
+                   '0.15', $
+                   '2008y_02m_19d_01h_15mn', $
+                   'reflect_reduction 5225 5454 --norm=3443']
+BatchTable[*,3] = ['> YES <', $
+                   '5225,10000,5454', $
+                   '3443', $
+                   '0.345', $
+                   '0.15', $
+                   '0.15', $
+                   '2008y_02m_19d_01h_15mn', $
+                   'reflect_reduction 5225 5454 --norm=3443']
+(*(*global).BatchTable) = BatchTable
+
+id = widget_info(Main_base,find_by_uname='batch_table_widget')
+widget_control, id, set_value=BatchTable
+ 
+id = widget_info(Main_base,find_by_uname='save_as_file_name')
+widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+
 END
 
 

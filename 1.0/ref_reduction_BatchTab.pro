@@ -82,6 +82,8 @@ WHILE (FileIndex LT NbrLine) DO BEGIN
                 '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
                 '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
                 ELSE         : BEGIN
+                    CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
+                    SplitArray[0]=CommentArray[0]
                     cmd = strjoin(SplitArray,' ')
                     BatchTable[7,BatchIndex] = cmd
                 END
@@ -539,8 +541,8 @@ PRO PopulateBatchTableWithGuiInfo, Event, BatchTable
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-DataRunNumber = (*global).DataRunNumber
-TimeBatch     = getTimeBatchFormat()
+DataRunNumber   = (*global).DataRunNumber
+TimeBatch       = GenerateDateStamp()
 BatchTable[1,0] = strcompress(DataRunNumber,/remove_all)
 BatchTable[6,0] = strcompress(TimeBatch,/remove_all)
 END
