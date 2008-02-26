@@ -172,10 +172,12 @@ dProgressBarBackground = { size  : [XYoff[0],$
                                    150,30],$
                           uname : 'progress_bar_draw'}
 XYoff = [8,8]
-dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+dProgressBarBackground.size[2]+XYoff[0],$
-                               XYoff[1]],$
+dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+ $
+                               dProgressBarBackground.size[2]+XYoff[0],$
+                               XYoff[1],$
+                               100,30],$
                       uname : 'progress_bar_label',$
-                      value : '( 1 / 2 )'}
+                      value : ''}
 
 ;frame for batch widgets
 XYoff = [5,45]
@@ -470,10 +472,13 @@ wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
                                      UNAME     = dProgressBarBackground.uname)
                                      
 wProgressBarLabel = WIDGET_LABEL(wProgressBarBase,$
-                                 XOFFSET = dProgressBarLabel.size[0],$
-                                 YOFFSET = dProgressBarLabel.size[1],$
-                                 VALUE   = dProgressBarLabel.value,$
-                                 UNAME   = dProgressBarLabel.uname)
+                                 XOFFSET   = dProgressBarLabel.size[0],$
+                                 YOFFSET   = dProgressBarLabel.size[1],$
+                                 SCR_XSIZE = dProgressBarLabel.size[2],$
+                                 SCR_YSIZE = dProgressbarLabel.size[3],$
+                                 VALUE     = dProgressBarLabel.value,$
+                                 UNAME     = dProgressBarLabel.uname,$
+                                 /ALIGN_LEFT)
 
 ;\\\\\\\\\\\\\\\\\\
 ;Load batch button\
