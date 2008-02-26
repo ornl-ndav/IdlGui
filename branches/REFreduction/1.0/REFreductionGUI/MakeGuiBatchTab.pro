@@ -61,11 +61,11 @@ dActive = { size  : [dFrame.size[0]+XYoff[0],$
 XYOff = [180,0]
 dRunBase = { size  : [dActive.size[0]+XYoff[0],$
                       dActive.size[1]+XYoff[1],$
-                      210,40],$
+                      220,40],$
              uname : 'batch_data_run_base_status'}
 dRunLabel = { size  : [0,10],$
               value : 'DATA RUNS:'}
-dRunField = { size  : [65,3,120,35],$
+dRunField = { size  : [65,3,150,35],$
               uname : 'batch_data_run_field_status'}
           
 xoff = 15                ;distance between components of first row    
@@ -73,11 +73,11 @@ xoff = 15                ;distance between components of first row
 XYOff = [230,0]
 dNormRunBase = { size  : [dRunBase.size[0]+XYoff[0],$
                           dRunBase.size[1]+XYoff[1],$
-                          210,40],$
+                          220,40],$
                  uname : 'batch_norm_run_base_status'}
 dNormRunLabel = { size  : [0,10],$
                   value : 'NORM. RUNS:'}
-dNormRunField = { size  : [70,3,120,35],$
+dNormRunField = { size  : [70,3,150,35],$
                   uname : 'batch_norm_run_field_status'}
 ;Angle value
 XYoff = [xoff,0]

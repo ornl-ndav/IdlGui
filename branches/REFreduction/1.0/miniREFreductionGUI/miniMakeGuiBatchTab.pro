@@ -61,25 +61,25 @@ dActive = { size  : [dFrame.size[0]+XYoff[0],$
 XYOff = [170,0]
 dRunBase = { size  : [dActive.size[0]+XYoff[0],$
                       dActive.size[1]+XYoff[1],$
-                      130,40],$
+                      180,40],$
              uname : 'batch_run_base_status'}
 dRunLabel = { size  : [0,10],$
               value : 'DATA: '}
-dRunField = { size  : [40,3,80,35],$
+dRunField = { size  : [40,3,140,35],$
               uname : 'batch_data_run_field_status'}
           
 ;Norm Run number field
-XYOff = [10,0]
+XYOff = [30,0]
 dNormRunBase = { size  : [dRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
                           dRunBase.size[1]+XYoff[1],$
-                          130,40],$
+                          185,40],$
                  uname : 'batch_norm_run_base_status'}
 dNormRunLabel = { size  : [0,10],$
                   value : 'NORM.: '}
-dNormRunField = { size  : [46,3,80,35],$
+dNormRunField = { size  : [46,3,140,35],$
                   uname : 'batch_norm_run_field_status'}
 
-xoff = 15 ;distance between components of first row    
+xoff = 50 ;distance between components of first row    
 ;Angle value
 XYoff = [xoff,0]
 dAngleLabel = { size  : [dNormRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
@@ -89,7 +89,7 @@ dAngleLabel = { size  : [dNormRunBase.size[0]+dRunBase.size[2]+XYoff[0],$
                 value : 'Angle : ? degrees'}
 
 ;S1 value
-XYoff = [0,35]
+XYoff = [-70,35]
 dS1Label = { size  : [dAngleLabel.size[0]+XYoff[0],$
                       dAngleLabel.size[1]+XYoff[1],$
                       150,35],$
