@@ -249,6 +249,10 @@ ActivateClearFileButton, Event, 0
 ClearColorLabel, Event
 ReflSupportWidget_ClearCElabelStep2, Event
 ActivatePrintFileButton, Event, 0
+;Reset nbr of files loaded
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+(*global).NbrFilesLoaded = 0
 END
 
 
