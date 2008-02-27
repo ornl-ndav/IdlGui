@@ -866,18 +866,28 @@ CASE Event.id OF
          RefReduction_LogBookInterface, Event
     end
 
+    ;DATA runs widget_text
+    widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): begin
+        BatchRetrieveDataRuns, Event
+        BatchRetrieveNormRuns, Event
+        REFreduction_CommandLineGenerator, Event
+    end
+
+    ;NORM runs widget_text
+    widget_info(wWidget, FIND_BY_UNAME='reduce_normalization_runs_text_field'): begin
+        BatchRetrieveNormRuns, Event
+        REFreduction_CommandLineGenerator, Event
+    end
+
     ELSE:
     
 ENDCASE
 
-
 ;**REDUCE TAB**
 ;command line generator
 SWITCH Event.id OF
-    widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): 
     widget_info(wWidget, FIND_BY_UNAME='data_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='yes_no_normalization_bgroup'): 
-    widget_info(wWidget, FIND_BY_UNAME='reduce_normalization_runs_text_field'):     
     widget_info(wWidget, FIND_BY_UNAME='normalization_background_cw_bgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_cwbgroup'): 
     widget_info(wWidget, FIND_BY_UNAME='intermediate_plot_list'): 

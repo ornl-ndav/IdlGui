@@ -1079,10 +1079,8 @@ PRO RetrieveBatchInfoAtLoading, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;retrieve current Batch Table
 BatchTable = (*(*global).BatchTable)
-
 ;check if there is a row in the BatchTable where the Command Line is
 ;still undefined. If yes, remove this row, if not, remove last row and
 ;move up everything
@@ -1094,11 +1092,9 @@ FOR i=0,RowIndexes DO BEGIN
         break
     ENDIF
 ENDFOR
-
 ;move down everything to make room for new load data and insert blank
 ;data
 AddBlankRowInBatchTable, BatchTable
-
 ;Get info from NeXus into first row
 ;get current data NeXus file name
 Nexus_full_name = (*global).data_full_nexus_name
@@ -1117,5 +1113,82 @@ DisplayBatchTable, Event, BatchTable
 
 ;This autogenerates the name of the batch file name
 GenerateBatchFileName, Event
-
 END
+
+
+
+
+;This function will retrieves the DATA run numbers and add them to the
+;Batch File
+PRO BatchRetrieveDataRuns, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve current Batch Table
+BatchTable = (*(*global).BatchTable)
+;retrieve DATA_runs text field
+DataRunsField = getTextFieldValue(Event,'reduce_data_runs_text_field')
+DataArray = strsplit(DataRunsField,',',/extract,count=nbr)
+NewBatchData = ''
+FOR i=0,(Nbr-1) DO BEGIN
+;if there is a full path in it, do not add it
+    tmp = strsplit(DataArray[i],'/',/extract,count=nbr1)
+    IF (nbr1 EQ 1) THEN BEGIN
+        NewBatchData += ',' + strcompress(DataArray[i],/remove_all)
+    ENDIF
+ENDFOR
+IF (NewBatchData NE '') THEN BEGIN
+    DataRunNumber = strcompress((*global).data_run_number,/remove_all) + $
+      NewBatchData
+    (*global).DataRunNumber = DataRunNumber
+ENDIF ELSE BEGIN
+    DataRunNumber = strcompress((*global).data_run_number,/remove_all)
+ENDELSE
+;put info in BatchTable
+WorkingRow = getCurrentWorkingRow(Event)
+IF (WorkingRow NE -1) THEN BEGIN
+    BatchTable[1,WorkingRow] = DataRunNumber
+    (*(*global).BatchTable)  = BatchTable
+ENDIF
+END
+
+
+
+;This function will retrieves the NORM run numbers and add them to the
+;Batch File
+PRO BatchRetrieveNormRuns, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve current Batch Table
+BatchTable = (*(*global).BatchTable)
+;retrieve NORM_runs text field
+NormRunsField = getTextFieldValue(Event,'reduce_normalization_runs_text_field')
+NormArray = strsplit(NormRunsField,',',/extract,count=nbr)
+NewBatchNorm = ''
+FOR i=0,(Nbr-1) DO BEGIN
+;if there is a full path in it, do not add it
+    tmp = strsplit(NormArray[i],'/',/extract,count=nbr1)
+    IF (nbr1 EQ 1) THEN BEGIN
+        NewBatchNorm += ',' + strcompress(NormArray[i],/remove_all)
+    ENDIF
+ENDFOR
+IF (NewBatchNorm NE '') THEN BEGIN
+    NormRunNumber = strcompress((*global).norm_run_number,/remove_all) + $
+      NewBatchNorm
+    (*global).NormRunNumber = NormRunNumber
+ENDIF ELSE BEGIN
+    NormRunNumber = strcompress((*global).norm_run_number,/remove_all)
+ENDELSE
+;put info in BatchTable
+WorkingRow = getCurrentWorkingRow(Event)
+IF (WorkingRow NE -1) THEN BEGIN
+    BatchTable[2,WorkingRow] = NormRunNumber
+    (*(*global).BatchTable)  = BatchTable
+ENDIF
+END
+
+
+
+
+
