@@ -191,8 +191,6 @@ RowIndexes = getGlobalVariable('RowIndexes')
 FOR i=1,RowIndexes DO BEGIN
     k=(RowIndexes-i)
     BatchTable[*,k]=BatchTable[*,k-1]
-
-
     IF (CurrentBatchTableIndex EQ 20) THEN BEGIN
         CurrentBatchTableIndex = 0
         (*global).CurrentBatchTableIndex = CurrentBatchTableIndex
@@ -1011,24 +1009,23 @@ CreateBatchFile, Event, FullFileName
 END
 
 
-;-------------------------------------------------------------------------------
-;This function is reached each time the Batch Tab is reached by the
-;user. In this function, the table will be updated with info from the
-;current run.
-PRO UpdateBatchTable, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;retrieve path of batch file name
-MyBatchPath = getBatchPath(Event)
-;retrieve batch file name
-MyBatchFile = getBatchFile(Event)
-;FullFileName
-FullFileName = MyBatchPath + MyBatchFile
-
-;get Text To copy
-BatchTable = (*(*global).BatchTable)
-END
+; -------------------------------------------------------------------------------
+; This function is reached each time the Batch Tab is reached by the
+; user. In this function, the table will be updated with info from the
+; current run.
+; PRO UpdateBatchTable, Event
+; get global structure
+; id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+; widget_control,id,get_uvalue=global
+; retrieve path of batch file name
+; MyBatchPath = getBatchPath(Event)
+; retrieve batch file name
+; MyBatchFile = getBatchFile(Event)
+; FullFileName
+; FullFileName = MyBatchPath + MyBatchFile
+; get Text To copy
+; BatchTable = (*(*global).BatchTable)
+; END
 
 
 
@@ -1056,6 +1053,25 @@ ENDELSE
 UpdateBatchTabGui, Event
 END
 
+
+
+
+;This function is reached each time the user has loaded a new
+;Normalization run
+PRO AddNormRunToBatchTable, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable = (*(*global).BatchTable)
+NormRun    = (*global).NormRunNumber
+;get current working row
+WorkingRow = getCurrentWorkingRow(Event)
+;add norm_run_number into BatchTable
+IF (WorkingRow NE -1) THEN BEGIN
+    BatchTable[2,WorkingRow] = strcompress(NormRun,/remove_all)
+ENDIF
+(*(*global).BatchTable) = BatchTable
+END
 
 
 
