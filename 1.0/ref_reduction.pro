@@ -25,7 +25,6 @@ if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
 endif else begin
    ucams = get_ucams()
-   ucams = 'zizou' ;REMOVE_ME
    debugger = 0
    SWITCH (ucams) OF
        'j35':
@@ -51,6 +50,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                     BatchTable : ptr_new(0L),$ ;big array of batch table
                     isHDF5format : 1,$
                     DataRunNumber : '',$
+                    NormRunNumber : '',$
                     archived_data_flag : 1,$
                     archived_norm_flag : 1,$
                     dr_output_path : '~/',$
