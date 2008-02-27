@@ -1009,25 +1009,6 @@ CreateBatchFile, Event, FullFileName
 END
 
 
-; -------------------------------------------------------------------------------
-; This function is reached each time the Batch Tab is reached by the
-; user. In this function, the table will be updated with info from the
-; current run.
-; PRO UpdateBatchTable, Event
-; get global structure
-; id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-; widget_control,id,get_uvalue=global
-; retrieve path of batch file name
-; MyBatchPath = getBatchPath(Event)
-; retrieve batch file name
-; MyBatchFile = getBatchFile(Event)
-; FullFileName
-; FullFileName = MyBatchPath + MyBatchFile
-; get Text To copy
-; BatchTable = (*(*global).BatchTable)
-; END
-
-
 
 ;-------------------------------------------------------------------------------
 ;This function is reached each time the Batch Tab is reached by the
