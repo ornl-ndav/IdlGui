@@ -28,9 +28,9 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
                         'S1 (mm)', $
                         'S2 (mm)', $
                         'DATE',$
-                        'Command Line                    '],$
+                        'Command Line                            '],$
            align        : TableAlign,$
-           column_width : [50,140,140,80,50,50,150,360]}
+           column_width : [50,140,140,80,70,70,150,360]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
