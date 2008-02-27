@@ -1,13 +1,11 @@
-#$Id$
-
-# Makefile for refl_support
+x# Makefile for REFscale
 # Compile the necessary modules
 # Create the VM program 
 all:
 	idl ./makefile.pro;
 
 install: 
-	cp refl_support.sav /SNS/software/idltools/sav/
+	cp ref_scale.sav /SNS/software/idltools/sav/
 	cp REFscale /SNS/software/idltools/
 
 

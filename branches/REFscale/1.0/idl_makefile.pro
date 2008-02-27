@@ -8,7 +8,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 .run system_utilities.pro
 
 ;Build REFscale GUI
-cd, CurrentFolder + '/RefLSupportGui'
+cd, CurrentFolder + '/REFscaleGUI/'
 .run "MakeGuiStep1.pro"
 .run "MakeGuiStep2.pro"
 .run "MakeGuiStep3.pro"
@@ -19,23 +19,23 @@ cd, CurrentFolder + '/RefLSupportGui'
 ;Build main procedures
 cd, CurrentFolder
 .run "getNumeric.pro"
-.run "refl_support_get.pro"
-.run "refl_support_put.pro"
-.run "refl_support_is.pro"
+.run "ref_scale_get.pro"
+.run "ref_scale_put.pro"
+.run "ref_scale_is.pro"
 .run "Main_Base_event.pro"
 
-.run "refl_support_widget.pro"
-.run "refl_support_fit.pro"
-.run "refl_support_step2.pro"
-.run "refl_support_step3.pro"
+.run "ref_scale_widget.pro"
+.run "ref_scale_fit.pro"
+.run "ref_scale_step2.pro"
+.run "ref_scale_step3.pro"
 .run "ArrayDelete.pro"
-.run "refl_support_math.pro"
-.run "refl_support_file_utility.pro"
-.run "refl_support_plot_data.pro"
-.run "refl_support_TOF_to_Q.pro"
+.run "ref_scale_math.pro"
+.run "ref_scale_file_utility.pro"
+.run "ref_scale_plot_data.pro"
+.run "ref_scale_TOF_to_Q.pro"
 
-.run "refl_support_open_file.pro"
-.run "refl_support_produce_output.pro"
-.run "refl_support_eventcb.pro"
-.run "refl_support.pro"
-.run "refl_support_eventcb"
+.run "ref_scale_open_file.pro"
+.run "ref_scale_produce_output.pro"
+.run "ref_scale_eventcb.pro"
+.run "ref_scale.pro"
+.run "ref_scale_eventcb"
