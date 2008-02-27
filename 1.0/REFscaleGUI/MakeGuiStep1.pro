@@ -234,7 +234,7 @@ InputFileFormat = CW_BGROUP(STEP1_BASE,$
                             /RETURN_NAME,$
                             XOFFSET=InputFileFormatSize[0],$
                             YOFFSET=InputFileFormatSize[1],$
-                            SET_VALUE=0.0,$
+                            SET_VALUE=1.0,$
                             row=1,$
                             uname='InputFileFormat')                 
 
