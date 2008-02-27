@@ -34,6 +34,7 @@ endif else begin
        'mid':
        'ceh':
        'vuk':
+       'ks6':
        'jfb': debugger = 1
        ELSE :
    ENDSWITCH
