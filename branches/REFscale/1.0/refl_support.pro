@@ -12,7 +12,7 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION = ' (version: 1.0.3)'
+VERSION = ' (version: 1.0.4)'
 
 global = ptr_new({  $
          angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
