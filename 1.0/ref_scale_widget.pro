@@ -252,6 +252,9 @@ PRO ReflSupportWidget_updateDropList, Event, ListOfFiles
  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
  widget_control,id,get_uvalue=global
 
+ IF (ListOfFiles[0] EQ '') THEN BEGIN
+     ListOfFiles = ['                          ']
+ ENDIF
 ;update list of file in droplist of step1
  list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
  widget_control, list_of_files_droplist_id, set_value=ListOfFiles
