@@ -1,6 +1,6 @@
 pro Build_GUI, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
-Resolve_Routine, 'refl_support_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -220,6 +220,6 @@ end
 ;
 ; Empty stub procedure used for autoloading.
 ;
-pro refl_support, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro ref_scale, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 Build_GUI, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 end
