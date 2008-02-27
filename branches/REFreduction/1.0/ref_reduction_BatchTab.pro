@@ -7,7 +7,9 @@ FUNCTION getGlobalVariable, var
 CASE (var) OF
 ;number of columns in the Table (active/data/norm/s1/s2...)
     'ColumnIndexes' : RETURN, 7 
+    'NbrColumn'     : RETURN, 8
     'RowIndexes'    : RETURN, 19
+    'NbrRow'        : RETURN, 20
     'BatchFileHeadingLines' : RETURN, 3
 ELSE:
 ENDCASE
@@ -54,42 +56,55 @@ END
 
 
 
-FUNCTION PopulateBatchTable, BatchFileName
-NbrLine   = 0
-FileArray = PopulateFileArray(BatchFileName, NbrLine)
-BatchTable = strarr(8,20)
-BatchIndex = -1 ;row index
-FileIndex  = 0
-NbrHeadingLines = getGlobalVariable('BatchFileHeadingLines')
-WHILE (FileIndex LT NbrLine) DO BEGIN
-    IF (FileIndex LT NbrHeadingLines) THEN BEGIN
+FUNCTION PopulateBatchTable, Event, BatchFileName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+populate_error = 0
+CATCH, populate_error
+NbrColumn = getGlobalVariable('NbrColumn')
+NbrRow    = getGlobalVariable('NbrRow')
+BatchTable = strarr(NbrColumn,NbrRow)
+IF (populate_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+ENDIF ELSE BEGIN
+    NbrLine   = 0
+    FileArray = PopulateFileArray(BatchFileName, NbrLine)
+    BatchIndex = -1             ;row index
+    FileIndex  = 0
+    NbrHeadingLines = getGlobalVariable('BatchFileHeadingLines')
+    WHILE (FileIndex LT NbrLine) DO BEGIN
+        IF (FileIndex LT NbrHeadingLines) THEN BEGIN
 ;add work on header here
-        ++FileIndex 
-    ENDIF ELSE BEGIN
-        IF (FileArray[FileIndex] EQ '') THEN BEGIN
-            ++BatchIndex
-            ++FileIndex
+            ++FileIndex 
         ENDIF ELSE BEGIN
-            SplitArray = strsplit(FileArray[FileIndex],' : ',/extract)
-            CASE (SplitArray[0]) OF
-                '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
-                '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
-                '#Norm_Runs' : BatchTable[2,BatchIndex] = SplitArray[1]
-                '#Angle(deg)': BatchTable[3,BatchIndex] = SplitArray[1]
-                '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
-                '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
-                '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
-                ELSE         : BEGIN
-                    CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
-                    SplitArray[0]=CommentArray[0]
-                    cmd = strjoin(SplitArray,' ')
-                    BatchTable[7,BatchIndex] = cmd
-                END
-            ENDCASE
-            ++FileIndex
+            IF (FileArray[FileIndex] EQ '') THEN BEGIN
+                ++BatchIndex
+                ++FileIndex
+            ENDIF ELSE BEGIN
+                SplitArray = strsplit(FileArray[FileIndex],' : ',/extract)
+                CASE (SplitArray[0]) OF
+                    '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
+                    '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
+                    '#Norm_Runs' : BatchTable[2,BatchIndex] = SplitArray[1]
+                    '#Angle(deg)': BatchTable[3,BatchIndex] = SplitArray[1]
+                    '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
+                    '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
+                    '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+                    ELSE         : BEGIN
+                        CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
+                        SplitArray[0]=CommentArray[0]
+                        cmd = strjoin(SplitArray,' ')
+                        BatchTable[7,BatchIndex] = cmd
+                    END
+                ENDCASE
+                ++FileIndex
+            ENDELSE
         ENDELSE
-    ENDELSE
-ENDWHILE
+    ENDWHILE
+    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+ENDELSE
 RETURN, BatchTable
 END
 
@@ -100,13 +115,10 @@ PRO CreateBatchFile, Event, FullFileName
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get Text To copy
 BatchTable = (*(*global).BatchTable)
-
 NbrRow    = (size(BatchTable))(2)
 NbrColumn = (size(BatchTable))(1)
-
 text    = STRARR(1)
 text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
 text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
@@ -139,12 +151,11 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
 
 ENDIF
 ENDFOR
-
 file_error = 0
 CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    print, 'error'
+    AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
 ENDIF ELSE BEGIN
 ;create output file
     openw,1,FullFileName
@@ -154,10 +165,24 @@ ENDIF ELSE BEGIN
     ENDFOR
     close,1
     free_lun,1
+    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
 ENDELSE
+permission_error = 0
+CATCH, permission_error
+IF (permission_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    LogText = '-> Give execute permission to file created ... FAILED'
+ENDIF ELSE BEGIN
 ;give execute permission to file created
-cmd = 'chmod 700 ' + FullFileName
-spawn, cmd, listening
+    cmd = 'chmod 700 ' + FullFileName
+    spawn, cmd, listening
+    LogText = '-> Give execute permission to file created ... OK'
+ENDELSE
+putLogBookMessage, Event, LogText, APPEND=1
+;Show contain of file
+LogText = '------------- BATCH FILE : ' + FullFileName + ' --------------'
+putLogBookMessage, Event, LogText, APPEND=1
+putLogBookMessage, Event, text, APPEND=1
 END
 
 ;**********************************************************************
@@ -897,6 +922,10 @@ PRO BatchTab_RunActive, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+LogText = '> Running Active Fields of Batch Table: '
+putLogBookMessage, Event, LogText, APPEND=1
+
 BatchTable = (*(*global).BatchTable)
 NbrRow = getGlobalVariable('RowIndexes')
 ;select progress bar widget_draw
@@ -933,7 +962,30 @@ IF (NbrProcess NE 0) THEN BEGIN
             info = '(' + strcompress(ProcessToRun,/remove_all) + $
               '/' + strcompress(NbrProcess,/remove_all) + ')'
             putTextFieldValue, Event, 'progress_bar_label', info, 0
-            spawn, BatchTable[7,i], listening, err_listening
+
+            LogText = '-> Running command ' + strcompress(ProcessToRun,/remove_all) $
+              + '/' + strcompress(NbrProcess,/remove_all) 
+            putLogBookMessage, Event, LogText, APPEND=1
+            LogText = '--> Command is: ' + BatchTable[7,i]
+            putLogBookMessage, Event, LogText, APPEND=1
+            LogText = '--> Running ... ' + (*global).processing_message
+            putLogBookMessage, Event, LogText, APPEND=1
+            run_error = 0
+            CATCH, run_error
+            IF (run_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+            ENDIF ELSE BEGIN
+                spawn, BatchTable[7,i], listening, err_listening
+                IF (err_listening[0] NE '') THEN BEGIN
+                    AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+                    LogText = '--> ERROR MESSAGE:'
+                    putLogBookMessage, Event, LogText, APPEND=1
+                    putLogBookMessage, Event, err_listening, APPEND=1
+                ENDIF ELSE BEGIN
+                    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+                ENDELSE
+            ENDELSE
             x2 = ProcessToRun*x_step
             polyfill, [0,0,x2,x2,0],[0,35,35,0,0],/Device, Color=200
             ++ProcessToRun
@@ -959,9 +1011,14 @@ BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
                                 GET_PATH = new_path,$
                                 /MUST_EXIST)
 IF (BatchFileName NE '') THEN BEGIN
+    LogText = '> Loading Batch File:'
+    putLogBookMessage, Event, LogText, APPEND=1
+    LogText = '-> File Name : ' + BatchFileName
+    putLogBookMessage, Event, LogText, APPEND=1
     (*global).BatchDefaultPath = new_path
-    ;change name of button
-    BatchTable = PopulateBatchTable(BatchFileName)
+    LogText = '-> Populate Batch Table ... ' + (*global).processing_message
+    putLogBookMessage, Event, LogText, APPEND=1
+    BatchTable = PopulateBatchTable(Event, BatchFileName)
     (*(*global).BatchTable) = BatchTable
     DisplayBatchTable, Event, BatchTable
     
@@ -1003,9 +1060,15 @@ MyBatchPath = getBatchPath(Event)
 MyBatchFile = getBatchFile(Event)
 ;FullFileName
 FullFileName = MyBatchPath + MyBatchFile
+;Add information in log book
+LogText = '> Saving Batch File:'
+putLogBookMessage, Event, LogText, APPEND=1
+LogText = '-> Batch File Name : ' + FullFileName
+putLogBookMessage, Event, LogText, APPEND=1
+LogText = '-> Create Batch File Name ... ' + (*global).processing_message
+putLogBookMessage, Event, LogText, APPEND=1
 ;Create the batch output file using the FullFileName
 CreateBatchFile, Event, FullFileName
-
 END
 
 
