@@ -39,6 +39,26 @@ END
 
 
 
+
+
+;This function moves back the color index when the loading process failed
+PRO ReflSupportOpenFile_MoveColorIndexBack,Event
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ ColorIndex = getColorIndex(Event)
+ 
+ PreviousColorIndex = (*global).PreviousColorIndex
+if (ColorIndex EQ PreviouscolorIndex) Then begin
+     ColorIndex -= 25
+     (*global).PreviousColorIndex = ColorIndex
+     list_of_color_slider_id = widget_info(Event.top,find_by_uname='list_of_color_slider')
+     widget_control, list_of_color_slider_id, set_value=ColorIndex
+ endif 
+END
+
+
+
+
 ;This function plot all the files loaded
 ;This function is only reached by the LOAD button
 PRO ReflSupportOpenFile_PlotLoadedFiles, Event
@@ -320,7 +340,7 @@ end
 
 
 ;This function is going to open and store the new fresh open files
-PRO ReflSupportOpenFile_Storeflts, Event, LongFileName, index
+FUNCTION ReflSupportOpenFile_Storeflts, Event, LongFileName, index
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -335,7 +355,8 @@ if (error_plot_status NE 0) then begin
     CATCH,/cancel
     text = 'ERROR plotting data'
     displayErrorMessage, Event, text
-    
+    return, 0
+
 endif else begin
     
     openr,u,LongFileName,/get
@@ -461,7 +482,8 @@ flt2_rescale_ptr = (*global).flt2_rescale_ptr
 (*global).flt2_rescale_ptr = flt2_rescale_ptr
 
 endelse
-        
+
+RETURN, 1
 END
 
 
@@ -480,34 +502,36 @@ PRO ReflSupportOpenFile_LoadFile, Event
 ;launch the program that open the OPEN IDL FILE window
  LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
 
+file_error = 0
+CATCH, file_error
+IF (file_error NE 0) THEN BEGIN
+    CATCH,/cancel
+;move Back the colorIndex slidebar
+    ReflSupportOpenFile_MoveColorIndexBack,Event
+ENDIF ELSE BEGIN
 ;continue only if a file has been selected
- if (LongfileName NE '') then begin
-
+    if (LongfileName NE '') then begin
 ;get only the file name (without path) of file
-     ShortFileName = get_file_name_only(LongFileName)    
-
+        ShortFileName = get_file_name_only(LongFileName)    
 ;MoveColorIndex to new position 
-     ReflSupportOpenFile_MoveColorIndex,Event
-
+        ReflSupportOpenFile_MoveColorIndex,Event
 ;get the value of the angle (in degree)
-     angleValue = getCurrentAngleValue(Event)
-     (*global).angleValue = angleValue
-     get_angle_value_and_do_conversion, Event, angleValue
-
+        angleValue = getCurrentAngleValue(Event)
+        (*global).angleValue = angleValue
+        get_angle_value_and_do_conversion, Event, angleValue
 ;store flt0, flt1 and flt2 of new files
-     index = (*global).NbrFilesLoaded 
-     ReflSupportOpenFile_Storeflts, Event, LongFileName, index
-
+        index = (*global).NbrFilesLoaded 
+        SuccessStatus = ReflSupportOpenFile_Storeflts(Event, LongFileName, index)
+        IF (SuccessStatus) THEN BEGIN
 ;add all files to step1 and step3 droplist
-     ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
-     display_info_about_selected_file, Event, LongFileName
-     populateColorLabel, Event, LongFileName
-
- endif
-
+            ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
+            display_info_about_selected_file, Event, LongFileName
+            populateColorLabel, Event, LongFileName
 ;plot all loaded files
-
- ReflSupportOpenFile_PlotLoadedFiles, Event
+            ReflSupportOpenFile_PlotLoadedFiles, Event
+        ENDIF
+    ENDIF
+ENDELSE
 
 END
 
