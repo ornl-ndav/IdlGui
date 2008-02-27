@@ -89,7 +89,7 @@ DataReductionStatusLabel = $
   WIDGET_LABEL(REDUCE_BASE,$
                XOFFSET = DataReductionStatusLabelSize[0],$
                YOFFSET = DataReductionStatusLabelSize[1],$
-               FONT    = 'lucidasans-10',$
+;               FONT    = 'lucidasans-10',$
                VALUE   = DataReductionStatusLabelTitle)
 
 ;text field
