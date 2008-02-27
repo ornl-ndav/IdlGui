@@ -141,7 +141,7 @@ if (ListOfFilesSize EQ 1 AND $
     ListOfFiles[0] EQ '') then begin
     plot_loaded_file, Event, 'clear'
 endif else begin
-   plot_loaded_file, Event, 'all
+   plot_loaded_file, Event, 'all'
 endelse
 
 display_info_about_file, Event
