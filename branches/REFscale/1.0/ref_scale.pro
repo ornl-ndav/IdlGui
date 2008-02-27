@@ -12,7 +12,12 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION = ' (version: 1.0.4)'
+VERSION     = ' (version: 1.0.4)'
+VerArray    = strsplit(VERSION,':',/extract)
+TagArray    = strsplit(VerArray[1],')',/extract)
+BranchArray = strsplit(TagArray[0],'.',/extract)
+CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
+  strcompress(BranchArray[1],/remove_all)
 
 global = ptr_new({  $
          angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
@@ -104,11 +109,12 @@ if (!VERSION.os EQ 'darwin') then begin
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
    images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
 endif else begin
-   images_tabs = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Ybefore.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/Yafter.bmp",$
-                  "/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
-   images_tab3 = ["/SNS/users/j35/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
+    path = '/SNS/users/j35/SVN/IdlGui/branches/REFscale/' + CurrentBranch + '/'
+    images_tabs = [path + 'SF.bmp',$
+                   path + 'Ybefore.bmp',$
+                   path + 'Yafter.bmp',$
+                   path + 'BeforeToAfter.bmp']
+    images_tab3 = ["/SNS/users/j35/SVN/IdlGui/branches/REFscale/1.0/SF.bmp"]
 endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_y_before_draw",$
