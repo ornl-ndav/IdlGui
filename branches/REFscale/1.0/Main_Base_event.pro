@@ -17,7 +17,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of the main widget_tab
       Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): begin
-          steps_tab, Event, 0
+          steps_tab, Event, 0  ;(in ref_scale_Tabs.pro)
       end
       
 ;-------------------------------------------------------------------------------     
@@ -85,7 +85,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <Load File> button
       Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
-          ReflSupportEventcb_LoadFileButton, Event 
+          LoadFileButton, Event ;(in ref_scale_Load.pro)
       end
       
 ;Event of 'List of Files:' droplist

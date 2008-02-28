@@ -171,57 +171,6 @@ PRO updateTextField, Event, textString, uname
 END
 
 
-;This function checks the Input File Format GUI
-;and returns:
-; - 0 if it's ok
-; - 1 if data reduction is blank with TOF
-; - 2 if angle is blank with TOF
-; - 3 if data reduction value is wrong with TOF
-; - 4 if angle value is wrong with TOF
-FUNCTION InputParameterStatus, Event
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
- 
- isTOFselected = getButtonValidated(Event,'InputFileFormat')
- Status = 0
- if (isTOFselected EQ 0) then begin ;TOF is selected (else Q)
-     
-     distanceTextFieldValue = $
-       getTextFieldValue(Event,$
-                         'ModeratorDetectorDistanceTextField')
-     distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
-     
-;distance text field is blank
-     if (distanceTextFieldValue EQ '') then begin
-         Status = 1
-     endif else begin
-         
-;distance text field can't be turned into a float
-         if (isValueFloat(distanceTextFieldValue) NE 1) then begin
-             Status = 2
-         endif 
-     endelse
-     
-     angleTextFieldValue = $
-       getTextFieldValue(Event,$
-                         'AngleTextField')
-     angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
-     
-;angle text field is blank
-     if (angleTextFieldValue EQ '') then begin
-         Status += 10
-     endif else begin
-         
-;angle text field can't be turned into a float
-         if (isValueFloat(angleTextFieldValue) NE 1) then begin
-             Status += 20
-         endif else begin       ;else save angleValue
-             (*global).angleValue = float(angleTextFieldValue)
-         endelse
-     endelse
- endif  
- return,Status
-END
 
 
 PRO EnableStep1ClearFile, Event, validate
@@ -391,49 +340,6 @@ PRO ActivateButton, Event, uname, validate
  widget_control, unameId, sensitive=validate
 END
 
-
-;This function will check if the LOAD button can be validated or no
-PRO ReflSupportWidget_checkOpenButtonStatus, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-InputParameter = InputParameterStatus(Event)
-activateErrorBase = 1
-validateLoadButton = 0
-CASE (InputParameter) OF
-    0: BEGIN                    ; ok
-        validateLoadButton = 1
-        activateErrorBase = 0
-    END
-    1: BEGIN                    ;distance empty and angle ok
-        text = 'Dist. is empty'
-    END
-    2: BEGIN                    ;distance wrong and angle ok
-        text = 'Angle has wrong format'
-    END
-    10: BEGIN                   ;distance ok but angle empty
-        text = 'Angle is empty'
-    END
-    11: BEGIN                   ;distance and angle are empty
-        text = 'Dist. & angle are empty'
-    END
-    12: BEGIN                   ;distance wrong and angle empty
-        text = 'Dist. is wrong & angle empty'
-    END
-    20: BEGIN                   ;distance ok and angle wrong
-        text = 'Angle has wrong format'
-    END
-    21: BEGIN                   ;distance is empty and angle is wrong
-        text = 'Dist. empty & wrong angle format'
-    END
-    22: BEGIN                   ;distance and angle are wrong
-        text = 'Dist. & angle have wrong format'
-    END
-ENDCASE
-activateErrorMessageBaseFunction, Event, activateErrorBase
-DisplayErrorMessage, Event, text
-ActivateButton, Event, 'ok_load_button', validateLoadButton
-END
 
 
 ;this function changes the format of the input variable 
