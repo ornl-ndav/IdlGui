@@ -1,9 +1,3 @@
-;This function sets the selected index of the 'uname'
-;droplist
-PRO SetSelectedIndex, Event, uname, index
-droplistId= widget_info(Event.top, find_by_uname=uname)
-widget_control, droplistId, set_droplist_select = index
-END
 
 
 
@@ -24,18 +18,6 @@ endif
 END
 
 
-;This function checks if the newly loaded file has alredy
-;been loaded. Return 1 if yes and 0 if not
-FUNCTION isFileAlreadyInList, ListOfFiles, file
-sizeArray = size(ListOfFiles)
-size = sizeArray[1]
-for i=0, (size-1) do begin
-    if (ListOfFiles[i] EQ file) then begin
-        return, 1
-    endif
-endfor
-return, 0
-end
 
 
 ;this function return 1 if the ListOfFiles is empty (first load)
@@ -94,35 +76,6 @@ EnableMainBaseButtons, Event, validate
 END
 
 
-;This functions displays the first few lines of the newly loaded file
-PRO display_info_about_selected_file, Event, LongFileName
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-no_file = 0
-nbr_line = (*global).NbrInfoLineToDisplay
-catch, no_file
-if (no_file NE 0) then begin
-    plot_file_found = 0    
-endif else begin
-    openr,u,LongFileName,/get
-    fs = fstat(u)
-;define an empty string variable to hold results from reading the file
-    tmp = ''
-    info_array = strarr(nbr_line)
-    for i=0,(nbr_line-1) do begin
-        readf,u,tmp
-        info_array[i] = tmp
-    endfor
-    close,u
-    free_lun,u
-endelse
-;populate text box with array
-TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
-widget_control, TextBoxId, set_value=info_array[0]
-for i=1,(nbr_line-1) do begin
-    widget_control, TextBoxId, set_value=info_array[i],/append
-endfor
-end
 
 
 ;this function clear the info text box
@@ -132,46 +85,6 @@ widget_control, TextBoxId, set_value=''
 END
 
 
-;this function creates and update the Q1, Q2, SF... arrays when a file is added
-PRO ReflSupportFileUtility_CreateArrays, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-;number of files loaded
-(*global).NbrFilesLoaded += 1
-
-Qmin_array = (*(*global).Qmin_array)
-Qmax_array = (*(*global).Qmax_array)
-Q1_array = (*(*global).Q1_array)
-Q2_array = (*(*global).Q2_array)
-SF_array = (*(*global).SF_array)
-angle_array = (*(*global).angle_array)
-color_array = (*(*global).color_array)
-FileHistory = (*(*global).FileHistory)
-
-Qmin_array = [Qmin_array,0]
-Qmax_array = [Qmax_array,0]
-Q1_array = [Q1_array,0]
-Q2_array = [Q2_array,0]
-SF_array = [SF_array,0]
-
-;get current angle value entered
-angleValue = (*global).angleValue
-angle_array = [angle_array,angleValue]
-
-colorIndex = getColorIndex(Event)
-color_array = [color_array, colorIndex]
-FileHistory = [FileHistory,'']
-
-(*(*global).Qmin_array) = Qmin_array
-(*(*global).Qmax_array) = Qmax_array
-(*(*global).Q1_array) = Q1_array
-(*(*global).Q2_array) = Q2_array
-(*(*global).SF_array) = SF_array
-(*(*global).angle_array) = angle_array
-(*(*global).color_array) = color_array
-(*(*global).FileHistory) = FileHistory
-END
 
 
 ;this function removes from the Q1,Q2,SF and List_of_files, the info at 
@@ -295,14 +208,6 @@ color_array[fileIndex] = colorIndex
 END
 
 
-;This function automatically selects the last loaded file
-PRO SelectLastLoadedFile, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-ListOfFiles = (*(*global).list_of_files)
-NbrOfFiles = getSizeOfArray(ListOfFiles)
-SetSelectedIndex, Event, 'list_of_files_droplist', (NbrOfFiles-1)
-END
 
 
 ;This function reset various parameters when a new session is launched (full reset)

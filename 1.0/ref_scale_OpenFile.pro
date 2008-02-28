@@ -1,3 +1,6 @@
+;###############################################################################
+;*******************************************************************************
+
 ;This function displays the OPEN FILE from IDL
 FUNCTION OpenFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -30,20 +33,20 @@ FUNCTION StoreFlts, Event, LongFileName, index
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-if (index EQ 0) then begin
+IF (index EQ 0) THEN BEGIN
     metadata_CE_file = (*(*global).metadata_CE_file)
-endif
+ENDIF
 
 error_plot_status = 0
 catch, error_plot_status
-if (error_plot_status NE 0) then begin
+IF (error_plot_status NE 0) THEN BEGIN
     
-    CATCH,/cancel
+    CATCH,/CANCEL
     text = 'ERROR plotting data'
     displayErrorMessage, Event, text
-    return, 0
+    RETURN, 0
 
-endif else begin
+ENDIF ELSE BEGIN
     
     openr,u,LongFileName,/get
     fs = fstat(u)
@@ -63,55 +66,52 @@ endif else begin
     Ndlines = 0L
     onebyte = 0b
     
-    while (NOT eof(u)) do begin
+    WHILE (NOT eof(u)) DO BEGIN
         
         readu,u,onebyte         ;,format='(a1)'
         fs = fstat(u)
                                 ;print,'onebyte: ',onebyte
                                 ;rewinded file pointer one character
         
-        if fs.cur_ptr EQ 0 then begin 
+        IF (fs.cur_ptr EQ 0) THEN BEGIN 
             point_lun,u,0
-        endif else begin
+        ENDIF ELSE BEGIN
             point_lun,u,fs.cur_ptr - 1
-        endelse
+        ENDELSE
         
         true = 1
-        case true of
+        CASE true OF
             
-            ((onebyte LT 48) OR (onebyte GT 57)): begin
-                                ;case where we have non-numbers
+            ((onebyte LT 48) OR (onebyte GT 57)): BEGIN ;case where we have non-numbers
+                
                 Nelines = Nelines + 1
                 readf,u,tmp
-                if (index EQ 0) then begin
+                
+                IF (index EQ 0) THEN BEGIN
                     metadata_CE_file = [metadata_CE_file,tmp]
-                endif
-            end
+                ENDIF
+                
+            END
             
-            else: begin
-                                ;case where we (should) have data
+            ELSE: BEGIN         ;case where we (should) have data
+                
                 Ndlines = Ndlines + 1
                                 ;print,'Data Line: ',Ndlines
                 
                 catch, Error_Status
-                if Error_status NE 0 then begin
-                    
-                                ;you're done now...
+                IF Error_status NE 0 THEN BEGIN ;you're done now...
                     CATCH, /CANCEL
-                    
-                endif else begin
-                    
+                ENDIF ELSE BEGIN
                     readf,u,tmp0,tmp1,tmp2,format='(3F0)' ;
                     flt0 = [flt0,float(tmp0)] ;x axis
                     flt1 = [flt1,float(tmp1)] ;y axis
                     flt2 = [flt2,float(tmp2)] ;y_error axis
-                    
-                endelse
-                
-            end
-        endcase
+                ENDELSE
+            END
+            
+        ENDCASE
         
-    endwhile
+    ENDWHILE
     
 ;strip -1 from beginning of each array
     flt0 = flt0[1:*]
@@ -121,57 +121,60 @@ endif else begin
     close,u
     free_lun,u
     
-    CATCH,/CANCEL
+    ;CATCH,/CANCEL
     DEVICE, DECOMPOSED = 0
     loadct,5
     
 ;check if input is TOF or Q
     isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
-    if(isTOFvalidated eq '0') then begin ;input file is in TOF
+    
+    IF(isTOFvalidated EQ '0') THEN BEGIN ;input file is in TOF
         
 ;Converts the data from TOF to Q
         (*(*global).flt0_xaxis) = flt0
         angleValue = (*global).angleValue
         convert_TOF_to_Q, Event, angleValue
         flt0 = (*(*global).flt0_xaxis)
-
-    endif
-
+        
+    ENDIF
+    
 ;remove last 4 lines of metadata_CE_only and
 ;store metadata_CE_file for index 0 only
-if (index EQ 0) then begin
-    size = (size(metadata_CE_file))(1)
-    metadata_CE_file = metadata_CE_file[0:size-5]
-    (*(*global).metadata_CE_file) = metadata_CE_file
-endif
-
+    IF (index EQ 0) THEN BEGIN
+        size = (size(metadata_CE_file))(1)
+        metadata_CE_file = metadata_CE_file[0:size-5]
+        (*(*global).metadata_CE_file) = metadata_CE_file
+    ENDIF
+    
 ;store flt0, ftl1 and flt2 in ptrarr
-flt0_ptr = (*global).flt0_ptr
-flt0_rescale_ptr = (*global).flt0_rescale_ptr
-*flt0_ptr[index] = flt0
-*flt0_rescale_ptr[index] = flt0
-(*global).flt0_ptr = flt0_ptr
-(*global).flt0_rescale_ptr = flt0_rescale_ptr
-
-flt1_ptr = (*global).flt1_ptr
-flt1_rescale_ptr = (*global).flt1_rescale_ptr
-*flt1_ptr[index] = flt1
-*flt1_rescale_ptr[index] = flt1
-(*global).flt1_ptr = flt1_ptr
-(*global).flt1_rescale_ptr = flt1_rescale_ptr
-
-flt2_ptr = (*global).flt2_ptr
-flt2_rescale_ptr = (*global).flt2_rescale_ptr
-*flt2_ptr[index] = flt2
-*flt2_rescale_ptr[index] = flt2
-(*global).flt2_ptr = flt2_ptr
-(*global).flt2_rescale_ptr = flt2_rescale_ptr
-
-endelse
+    flt0_ptr = (*global).flt0_ptr
+    flt0_rescale_ptr = (*global).flt0_rescale_ptr
+    *flt0_ptr[index] = flt0
+    *flt0_rescale_ptr[index] = flt0
+    (*global).flt0_ptr = flt0_ptr
+    (*global).flt0_rescale_ptr = flt0_rescale_ptr
+    
+    flt1_ptr = (*global).flt1_ptr
+    flt1_rescale_ptr = (*global).flt1_rescale_ptr
+    *flt1_ptr[index] = flt1
+    *flt1_rescale_ptr[index] = flt1
+    (*global).flt1_ptr = flt1_ptr
+    (*global).flt1_rescale_ptr = flt1_rescale_ptr
+    
+    flt2_ptr = (*global).flt2_ptr
+    flt2_rescale_ptr = (*global).flt2_rescale_ptr
+    *flt2_ptr[index] = flt2
+    *flt2_rescale_ptr[index] = flt2
+    (*global).flt2_ptr = flt2_ptr
+    (*global).flt2_rescale_ptr = flt2_rescale_ptr
+    
+ENDELSE
 
 RETURN, 1
 END
 
+;###############################################################################
+;*******************************************************************************
 
 
 

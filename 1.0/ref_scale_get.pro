@@ -1,3 +1,101 @@
+;###############################################################################
+;*******************************************************************************
+
+;This function gives the size of the array given
+;as a parameter
+FUNCTION getSizeOfArray, ListOfFiles
+sizeArray = size(ListOfFiles)
+RETURN, sizeArray[1]
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function returns the selected index of the droplist uname given
+FUNCTION getSelectedIndex, Event, uname
+id= widget_info(Event.top, find_by_uname=uname)
+TextBoxIndex= widget_info(id,/droplist_select)
+RETURN, TextBoxIndex
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function returns the number of element found in the droplist
+;uname given
+FUNCTION getNbrElementsInDroplist, Event, uname
+id  = widget_info(Event.top,find_by_uname=uname)
+nbr_elements = widget_info(id, /droplist_number)
+RETURN, nbr_elements
+END
+
+;###############################################################################
+;*******************************************************************************
+
+
+;This function returns 1 if the first button is validated
+;and 0 if it's the other one
+FUNCTION getButtonValidated, Event, uname
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, get_value=value
+RETURN, value
+END
+
+;###############################################################################
+;*******************************************************************************
+
+
+;This function will retrieve the values of Xmin/max and Ymin/max
+FUNCTION retrieveXYMinMax, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;min-xaxis
+XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
+widget_control, XminId, get_value=Xmin
+
+;max-xaxis
+XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
+widget_control, XmaxId, get_value=Xmax
+
+;min-yaxis
+YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
+widget_control, YminId, get_value=Ymin
+
+;max-yaxis
+YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
+widget_control, YmaxId, get_value=Ymax
+
+return_array = [Xmin,Xmax,Ymin,Ymax]
+RETURN, return_array
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;###############################################################################
+;*******************************************************************************
+;###############################################################################
+;*******************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ;This function gives a list of point to keep, for which the Y value is
 ;greater than the error bar
 FUNCTION getArrayRangeOfErrorGEValue, flt1, flt2
@@ -162,22 +260,8 @@ FUNCTION getTOFtoQalgorithmSelected, Event
 END
 
 
-;This function returns the selected index of the 'uname'
-;droplist given
-FUNCTION getSelectedIndex, Event, uname
- TextBoxId= widget_info(Event.top, find_by_uname=uname)
- TextBoxIndex= widget_info(TextBoxId,/droplist_select)
- return, TextBoxIndex
-END
 
 
-;This function returns the number of element found in the droplist
-;given
-FUNCTION getNbrElementsInDroplist, Event, uname
-  DropListId = widget_info(Event.top,find_by_uname=uname)
-  nbr_elements = widget_info(DropListId, /droplist_number)
-return, nbr_elements
-END
 
 
 ;This function returns the current angle value from the text box
@@ -199,14 +283,6 @@ FUNCTION getAngleValue, Event
  return, angleValue
 end
 
-
-;This function returns 1 if the first button is validated
-;and 0 if it's the second
-FUNCTION getButtonValidated, Event, uname
-  TOFid = widget_info(Event.top,find_by_uname=uname)
-  widget_control, TOFid, get_value=value
-  return, value
-END
 
 
 ;This function returns the contain of the Text Field
@@ -242,12 +318,6 @@ RETURN, Q1Q2SF
 END
 
 
-;This function gives the size of the array given
-;as a parameter
-FUNCTION getSizeOfArray, ListOfFiles
-sizeArray = size(ListOfFiles)
-return, sizeArray[1]
-END
 
 
 ;this function gives the long name of the file selected in the uname droplist

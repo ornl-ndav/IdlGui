@@ -32,6 +32,7 @@ cd, CurrentFolder
 .run "ArrayDelete.pro"
 .run "ref_scale_math.pro"
 .run "ref_scale_file_utility.pro"
+.run "ref_scale_Arrays.pro"
 .run "ref_scale_plot_data.pro"
 .run "ref_scale_TOF_to_Q.pro"
 
