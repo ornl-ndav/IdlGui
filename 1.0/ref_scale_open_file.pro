@@ -102,7 +102,7 @@ endif else begin
     for i=0,(size-1) do begin
 
         error_plot_status = 0
-;        catch, error_plot_status
+        catch, error_plot_status
         if (error_plot_status NE 0) then begin
 
             CATCH,/cancel

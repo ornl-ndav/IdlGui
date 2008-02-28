@@ -109,12 +109,12 @@ if (!VERSION.os EQ 'darwin') then begin
                   "~/SVN/HistoTool/trunk/gui/RefLSupport/BeforeToAfter.bmp"]
    images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
 endif else begin
-    path = '/SNS/users/j35/SVN/IdlGui/branches/REFscale/' + CurrentBranch + '/'
+    path = '/SNS/software/idltools/images/'
     images_tabs = [path + 'SF.bmp',$
                    path + 'Ybefore.bmp',$
                    path + 'Yafter.bmp',$
                    path + 'BeforeToAfter.bmp']
-    images_tab3 = ["/SNS/users/j35/SVN/IdlGui/branches/REFscale/1.0/SF.bmp"]
+    images_tab3 = [path + 'SF.bmp']
 endelse
 unames_tab2 = ["step2_sf_draw",$
                "step2_y_before_draw",$
