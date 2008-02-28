@@ -83,6 +83,55 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;
+;This function load the file in the first step (first tab)
+;
+PRO ReflSupportOpenFile_LoadFile, Event
+ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+ widget_control,id,get_uvalue=global
+ 
+;launch the program that open the OPEN IDL FILE window
+ LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
+
+file_error = 0
+CATCH, file_error
+IF (file_error NE 0) THEN BEGIN
+    CATCH,/cancel
+;move Back the colorIndex slidebar
+    ReflSupportOpenFile_MoveColorIndexBack,Event
+ENDIF ELSE BEGIN
+;continue only if a file has been selected
+    if (LongfileName NE '') then begin
+;get only the file name (without path) of file
+        ShortFileName = get_file_name_only(LongFileName)    
+;MoveColorIndex to new position 
+        ReflSupportOpenFile_MoveColorIndex,Event
+;get the value of the angle (in degree)
+        angleValue = getCurrentAngleValue(Event)
+        (*global).angleValue = angleValue
+        get_angle_value_and_do_conversion, Event, angleValue
+;store flt0, flt1 and flt2 of new files
+        index = (*global).NbrFilesLoaded 
+        SuccessStatus = ReflSupportOpenFile_Storeflts(Event, LongFileName, index)
+        IF (SuccessStatus) THEN BEGIN
+;add all files to step1 and step3 droplist
+            ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
+            display_info_about_selected_file, Event, LongFileName
+            populateColorLabel, Event, LongFileName
+;plot all loaded files
+            ReflSupportOpenFile_PlotLoadedFiles, Event
+        ENDIF
+    ENDIF
+ENDELSE
+
+END
+
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
+
+;When OK is pressed in dMDAngle base (to load a input file)
+PRO OkLoadButton, Event 
+     ReflSupportOpenFile_LoadFile, Event       
+END
 
 
 
@@ -101,10 +150,6 @@ PRO ReflSupportEventcb_CancelLoadButton, Event
 END
 
 
-;When OK is pressed in dMDAngle base (to load a input file)
-PRO ReflSupportEventcb_OkLoadButton, Event 
-     ReflSupportOpenFile_LoadFile, Event       
-END
 
 
 ;clear file button in step 1

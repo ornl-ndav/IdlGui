@@ -73,8 +73,27 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;This function returns the true min and max value of the first array
+;argument. True min and max means that the flt1 value of the
+;corresponding min and max is defined, not NAN or not negative
+FUNCTION getQminQmaxValue, flt0, flt1
+
+flt1_size_array = size(flt1)
+flt1_size = flt1_size_array[1]
+flt1_GE0_index = where(flt1 GT 0)
+
+flt0_tmp = fltarr(flt1_size)
+flt0_tmp = flt0(flt1_GE0_index)
+
+Qmin = min(flt0_tmp,max=Qmax,/nan)
+QminQmax = [Qmin,Qmax]
+return, QminQmax
+END
+
 ;###############################################################################
 ;*******************************************************************************
+
+
 ;###############################################################################
 ;*******************************************************************************
 
@@ -214,22 +233,6 @@ END
 
 
 
-;This function returns the true min and max value of the first array
-;argument. True min and max means that the flt1 value of the
-;corresponding min and max is defined, not NAN or not negative
-FUNCTION getQminQmaxValue, flt0, flt1
-
-flt1_size_array = size(flt1)
-flt1_size = flt1_size_array[1]
-flt1_GE0_index = where(flt1 GT 0)
-
-flt0_tmp = fltarr(flt1_size)
-flt0_tmp = flt0(flt1_GE0_index)
-
-Qmin = min(flt0_tmp,max=Qmax,/nan)
-QminQmax = [Qmin,Qmax]
-return, QminQmax
-END
 
 
 

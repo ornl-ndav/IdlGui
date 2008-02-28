@@ -114,7 +114,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <OK> button
       Widget_Info(wWidget, FIND_BY_UNAME='ok_load_button'): begin
-          ReflSupportEventcb_OkLoadButton, Event 
+          OkLoadButton, Event 
       end
       
 ;Event of the 'Distance Moderator-Detector (m):' widget_text
