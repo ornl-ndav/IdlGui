@@ -20,7 +20,7 @@ CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
   strcompress(BranchArray[1],/remove_all)
 
 global = ptr_new({  $
-         angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
+                   angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
                    replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
                    flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
                    flt1_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
