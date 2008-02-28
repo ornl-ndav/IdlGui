@@ -85,10 +85,6 @@ END
 
 
 
-PRO ReflSupportWidget_PopulateCELabelStep2, Event, CE_short_name
-cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
-widget_control, cd_label_id, set_value=CE_short_name
-END
 
 
 PRO ReflSupportwidget_ClearCElabelStep2, Event
@@ -173,45 +169,13 @@ END
 
 
 
-PRO EnableStep1ClearFile, Event, validate
-ClearFileId = widget_info(Event.top, find_by_uname='clear_button')
-widget_control, ClearFileId, sensitive=validate
-END
-
-
-PRO ActivatePrintFileButton, Event, validate
-PrintButtonId = widget_info(Event.top, find_by_uname='print_button')
-widget_control, PrintButtonId, sensitive=validate
-END
 
 
 
-;this function enables the main base buttons
-;refresh and reset all
-PRO EnableMainBaseButtons, Event, validate
-reset_all_button_id = widget_info(Event.top,find_by_uname='reset_all_button')
-widget_control, reset_all_button_id, sensitive=validate
-refresh_plot_button_id = widget_info(Event.top,find_by_uname='refresh_plot_button')
-widget_control, refresh_plot_button_id, sensitive=validate
-END
 
 
-;This function refresh the list displays in all the droplist (step1-2 and 3)
-PRO ReflSupportWidget_updateDropList, Event, ListOfFiles
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
 
- IF (ListOfFiles[0] EQ '') THEN BEGIN
-     ListOfFiles = ['                          ']
- ENDIF
-;update list of file in droplist of step1
- list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
- widget_control, list_of_files_droplist_id, set_value=ListOfFiles
-;update list of file in droplists of step3
- step3_work_on_file_droplist_id = widget_info(Event.top,$
-                                              find_by_uname='step3_work_on_file_droplist')
- widget_control, step3_work_on_file_droplist_id, set_value=ListOfFiles
-END
+
 
 
 ;This function clears the contain of all the droplists
@@ -279,31 +243,10 @@ PRO ResetPositionOfSlider, Event
 END
 
 
-PRO populateColorLabel, Event, LongFileName
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
- SelectedIndex = getSelectedIndex(Event,'list_of_files_droplist')
- ListShortFileName = (*(*global).list_of_files)
- fileName = ListShortFileName[SelectedIndex]
- fileName = '(-> ' + fileName + ')'
- ColorLabelIndex = widget_info(Event.top,find_by_uname='ColorFileLabel')
- widget_control, ColorLabelIndex, set_value=fileName
-END
 
 
-;this function activate (if validateMap=1) or desactive-hide(if validateMap=0)
-;the RescaleBase
-PRO ActivateRescaleBase, Event, validateMap
- RescaleBaseId = widget_info(Event.top,find_by_uname='RescaleBase')
- widget_control, RescaleBaseId, map=validateMap
-END
 
 
-;This function activates or not the CLEAR file button
-PRO ActivateClearFileButton, Event, ValidateButton
- ClearButtonId = widget_info(Event.top,find_by_uname='clear_button')
- widget_control, ClearButtonId, sensitive=ValidateButton
-END
 
 
 ;This function clear the contain of the color label 
@@ -313,11 +256,6 @@ PRO ClearColorLabel, Event
 END
 
 
-;This function enable the color slider
-PRO ActivateColorSlider, Event, ValidateSlider
- ColorSliderId = widget_info(Event.top, find_by_uname='list_of_color_slider')
- widget_control, ColorSliderId, sensitive=ValidateSlider
-END
 
 
 ;This function displays the error message in the error message label

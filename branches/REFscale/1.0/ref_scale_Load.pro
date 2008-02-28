@@ -25,8 +25,6 @@ ENDIF ELSE BEGIN                ;Q
 ENDELSE
 END
 
-
-
 ;###############################################################################
 ;*******************************************************************************
 
@@ -61,16 +59,21 @@ ENDIF ELSE BEGIN
         angleValue = getCurrentAngleValue(Event)
         (*global).angleValue = angleValue
         get_angle_value_and_do_conversion, Event, angleValue
+
 ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
         index = (*global).NbrFilesLoaded 
-        SuccessStatus = StoreFlts(Event, LongFileName, index)
+        SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
+
         IF (SuccessStatus) THEN BEGIN
+
 ;add all files to step1 and step3 droplist
-            ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
-            display_info_about_selected_file, Event, LongFileName
-            populateColorLabel, Event, LongFileName
+            AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
+            display_info_about_selected_file, Event, LongFileName ;_Gui
+            populateColorLabel, Event, LongFileName ;_Gui
+
 ;plot all loaded files
-            ReflSupportOpenFile_PlotLoadedFiles, Event
+            PlotLoadedFiles, Event ;_Plot
+
         ENDIF
     ENDIF
 ENDELSE
@@ -79,6 +82,12 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+
+
+
+
+
+
 
 
 
