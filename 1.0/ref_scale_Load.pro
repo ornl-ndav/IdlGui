@@ -1,21 +1,88 @@
+;-------------------------------------------------------------------------------
+;***** STEP 1 - [LOAD FILES] ***************************************************
+;-------------------------------------------------------------------------------
+;Event of <Load File> button
+PRO LoadFileButton, Event 
 
+;check the status of the TOF or Q button:
+;if Q   -> LoadFile_Q
+;if TOF -> display interaction TOF base
+FormatFileSelected = getButtonValidated(Event,'InputFileFormat')   
 
-;Load a file button
-PRO ReflSupportEventcb_LoadFileButton, Event 
-                                ;check the status of the TOF or Q button
-                                ;if Q, go directly to ReflSuppportOpenFile_Loadfile
-                                ;if TOF, display TOF interactive box
- FormatFileSelected = getButtonValidated(Event,'InputFileFormat')   
-  if (FormatFileSelected EQ 0) then begin ;TOF
-         ;display the dMD and angle value base
-     dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
-     widget_control, dMDAngleBaseId, map=1
-                                ;check status of ok_load button
-     ReflSupportWidget_checkOpenButtonStatus, Event 
-  endif else begin              ;Q
-     ReflSupportOpenFile_LoadFile, Event
-  endelse
+IF (FormatFileSelected EQ 0) THEN BEGIN ;TOF
+
+;display the dMD and angle value base
+    dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+    widget_control, dMDAngleBaseId, map=1
+
+;check status of ok_load button
+    CheckOpenButtonStatus, Event 
+
+ENDIF ELSE BEGIN                ;Q
+
+    LoadFile_Q, Event
+
+ENDELSE
 END
+
+
+
+;###############################################################################
+;*******************************************************************************
+
+;This function load the file in the first step (first tab) when the
+;input is in Q
+PRO LoadFile_Q, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+ 
+;launch the program that open the dialog_pickfile
+LongFileName = OpenFile(Event) 
+
+file_error = 0
+CATCH, file_error
+
+IF (file_error NE 0) THEN BEGIN
+
+    CATCH,/cancel
+;move Back the colorIndex slidebar
+    MoveColorIndexBack,Event
+
+ENDIF ELSE BEGIN
+;continue only if a file has been selected
+
+    IF (LongfileName NE '') then begin
+
+;get only the file name (without path) of file
+        ShortFileName = get_file_name_only(LongFileName)    
+;MoveColorIndex to new position 
+        MoveColorIndex,Event
+;get the value of the angle (in degree)
+        angleValue = getCurrentAngleValue(Event)
+        (*global).angleValue = angleValue
+        get_angle_value_and_do_conversion, Event, angleValue
+;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
+        index = (*global).NbrFilesLoaded 
+        SuccessStatus = StoreFlts(Event, LongFileName, index)
+        IF (SuccessStatus) THEN BEGIN
+;add all files to step1 and step3 droplist
+            ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
+            display_info_about_selected_file, Event, LongFileName
+            populateColorLabel, Event, LongFileName
+;plot all loaded files
+            ReflSupportOpenFile_PlotLoadedFiles, Event
+        ENDIF
+    ENDIF
+ENDELSE
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+
+
+
 
 
 ;Cancel Load button

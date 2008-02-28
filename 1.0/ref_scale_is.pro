@@ -2,12 +2,13 @@
 ;a float, and 0 if it can't
 FUNCTION isValueFloat, textString
   result = getNumeric(textString)
-  if (result EQ '') then begin
-     return, 0
-  endif else begin
-     return, 1
-  endelse
+  IF (result EQ '') THEN BEGIN
+     RETURN, 0
+  ENDIF ELSE BEGIN
+     RETURN, 1
+  ENDELSE
 END
+
 
 
 ;This function checks if the 'textString' can be turned
