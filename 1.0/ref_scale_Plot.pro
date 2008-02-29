@@ -278,6 +278,7 @@ ENDIF ELSE BEGIN
 
         error_plot_status = 0
         CATCH, error_plot_status
+
         IF (error_plot_status NE 0) THEN BEGIN
 
             CATCH,/CANCEL

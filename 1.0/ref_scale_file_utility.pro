@@ -52,30 +52,30 @@ end
 
 
 
-;This function updates the GUI
-;droplist, buttons...
-PRO updateGUI, Event, ListOfFiles
-ReflSupportWidget_updateDropList, Event, ListOfFiles
-ArraySize = getSizeOfArray(ListOfFiles)
-if (ArraySize EQ 0) then begin
-   validate = 0
-endif else begin
-   if (ListOfFiles[0] EQ '') then begin
-      validate = 0
-   endif else begin
-      validate = 1
-   endelse
-endelse
-EnableStep1ClearFile, Event, validate
-SelectLastLoadedFile, Event
-EnableMainBaseButtons, Event, validate
-ActivateClearFileButton, Event, validate
-ActivateColorSlider, Event, Validate
-ActivatePrintFileButton, Event, Validate
-EnableMainBaseButtons, Event, validate
-END
+; This function updates the GUI
+; droplist, buttons...
+; PRO updateGUI, Event, ListOfFiles
+; ReflSupportWidget_updateDropList, Event, ListOfFiles
+; ArraySize = getSizeOfArray(ListOfFiles)
+; if (ArraySize EQ 0) then begin
+;    validate = 0
+; endif else begin
+;    if (ListOfFiles[0] EQ '') then begin
+;       validate = 0
+;    endif else begin
+;       validate = 1
+;    endelse
+; endelse
+; EnableStep1ClearFile, Event, validate
+; SelectLastLoadedFile, Event
+; EnableMainBaseButtons, Event, validate
+; ActivateClearFileButton, Event, validate
+; ActivateColorSlider, Event, Validate
+; ActivatePrintFileButton, Event, Validate
+; EnableMainBaseButtons, Event, validate
+; END
 
-
+; c
 
 
 ;this function clear the info text box

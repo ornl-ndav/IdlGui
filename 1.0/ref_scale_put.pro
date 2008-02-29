@@ -14,7 +14,7 @@ id = widget_info(Event.top,find_by_uname=uname)
 sz = (size(ArrayValue))(1)
 widget_control, id, set_value=ArrayValue[0]
 IF (sz GT 1) THEN BEGIN
-    FOR i=1,(nbr_line-1) DO BEGIN
+    FOR i=1,(sz-1) DO BEGIN
         widget_control, id, set_value=ArrayValue[i],/append
     ENDFOR
 ENDIF

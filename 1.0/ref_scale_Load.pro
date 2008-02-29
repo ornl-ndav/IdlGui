@@ -36,9 +36,8 @@ widget_control,id,get_uvalue=global
  
 ;launch the program that open the dialog_pickfile
 LongFileName = OpenFile(Event) 
-
 file_error = 0
-CATCH, file_error
+;CATCH, file_error
 
 IF (file_error NE 0) THEN BEGIN
 
