@@ -27,13 +27,13 @@ FUNCTION InputParameterStatus, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
  
-isTOFselected = getButtonValidated(Event,'InputFileFormat')
+isTOFselected = getButtonValidated(Event,'InputFileFormat') ;_get
 Status = 0
-IF (isTOFselected EQ 0) THEN BEGIN ;TOF is selected (else Q)
+IF (isTOFselected EQ 0) THEN BEGIN ;TOF is selected (else Q) 
     
     distanceTextFieldValue = $
       getTextFieldValue(Event,$
-                        'ModeratorDetectorDistanceTextField')
+                        'ModeratorDetectorDistanceTextField') ;_get
     distanceTextFieldValue = strcompress(distanceTextFieldValue,/remove_all)
     
 ;distance text field is blank
@@ -44,7 +44,7 @@ IF (isTOFselected EQ 0) THEN BEGIN ;TOF is selected (else Q)
     ENDIF ELSE BEGIN
         
 ;distance text field can't be turned into a float
-        IF (isValueFloat(distanceTextFieldValue) NE 1) THEN BEGIN
+        IF (isValueFloat(distanceTextFieldValue) NE 1) THEN BEGIN ;_is
 
             Status = 2
 
@@ -54,7 +54,7 @@ IF (isTOFselected EQ 0) THEN BEGIN ;TOF is selected (else Q)
     
     angleTextFieldValue = $
       getTextFieldValue(Event,$
-                        'AngleTextField')
+                        'AngleTextField') ;_get
     angleTextFieldValue = strcompress(angleTextFieldValue,/remove_all)
     
 ;angle text field is blank
@@ -491,6 +491,153 @@ LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist') ;_get
 
   ENDELSE
 END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function assign to the current selected file the current
+;selected color
+PRO AssignColorToSelectedPlot, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+colorIndex  = getColorIndex(Event) ;_get
+fileIndex   = getSelectedIndex(Event, 'list_of_files_droplist') ;_get
+color_array = (*(*global).color_array)
+color_array[fileIndex] = colorIndex
+(*(*global).color_array) = color_array
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This procedure just put the given value in the text field
+;specified by the uname after doing a strcompression of the 
+;value
+;PRO ReflSupportWidget_setValue, Event, uname, value
+PRO GuiSetValue, Event, uname, value
+TFid = widget_info(Event.top,find_by_uname=uname)
+widget_control, TFid, set_value=strcompress(value,/remove_all)
+END
+
+;*******************************************************************************
+
+;This function displays in the Qmin and Qmax text fields the 
+;Qmin and Qmax of the CE file
+PRO display_Q_values, Event, index, tab
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Qmin_array = (*(*global).Qmin_array)
+Qmax_array = (*(*global).Qmax_array)
+
+IF (tab EQ ) THEN BEGIN
+
+    GuiSetValue, Event, 'step2_q1_text_field', Qmin_array[index] ;_Gui
+    GuiSetValue, Event, 'step2_q2_text_field', Qmax_array[index] ;_Gui
+
+ENDIF ELSE BEGIN
+
+    GuiSetValue, Event, 'step3_q1_text_field', Qmin_array[index] ;_Gui 
+    GuiSetValue, Event, 'step3_q2_text_field', Qmax_array[index] ;_Gui 
+
+endelse
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function replot the SF, ri and delta_ri labels/draw of tab2
+PRO refresh_draw_labels_tab2, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+images      = (*(*global).images_tabs)
+unames      = (*(*global).unames_tab2)
+images_xoff = (*(*global).images_tabs_xoff)
+images_yoff = (*(*global).images_tabs_yoff)
+
+image_size_array = size(images)
+image_size = image_size_array[1]
+
+FOR i=0,(image_size-1) DO BEGIN
+    id = widget_info(Event.top,find_by_uname=unames[i])
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    wset, id_value
+    image = read_bmp(images[i])
+    tv, image,images_xoff[i],images_yoff[i],/true
+ENDFOR
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function replot the SF, ri and delta_ri labels/draw of tab3
+PRO ReflSupportWidget_refresh_draw_labels_tab3, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+images      = (*(*global).images_tab3)
+unames      = (*(*global).unames_tab3)
+images_xoff = (*(*global).images_tabs_xoff)
+images_yoff = (*(*global).images_tabs_yoff)
+
+image_size_array = size(images)
+image_size = image_size_array[1]
+
+FOR i=0,(image_size-1) DO BEGIN
+    id = widget_info(Event.top,find_by_uname=unames[i])
+    WIDGET_CONTROL, id, GET_VALUE=id_value
+    wset, id_value
+    image = read_bmp(images[i])
+    tv, image,images_xoff[i],images_yoff[i],/true
+ENDFOR
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function will enable (editable) or not the text fields of tab3
+PRO enableStep3Widgets,Event,sensitiveBoolean
+
+widget_uname = ['Step3_automatic_rescale_button',$
+                'Step3SFTextField']
+
+uname_size = (size(widget_uname))(1)
+FOR i=0,(uname_size-1) DO BEGIN
+    id = widget_info(Event.top,find_by_uname=widget_uname[i])
+    widget_control, id, editable = sensitiveBoolean
+ENDFOR
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;this function hide or not the base hidden base of the manual scaling
+;mode of step 3
+PRO HideBase, Event, uname, mapBoolean
+widget_id = widget_info(Event.top,find_by_uname=uname)
+widget_control, widget_id, map=mapBoolean
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function activate or not the button given by uname
+PRO ActivateButton, Event, uname, validate
+unameId = widget_info(Event.top,find_by_uname=uname)
+widget_control, unameId, sensitive=validate
+END
+
+;###############################################################################
+;*******************************************************************************
 
 ;###############################################################################
 ;*******************************************************************************

@@ -77,18 +77,6 @@ end
 
 
 
-;This function assign to the current selected file the current
-;selected color
-PRO AssignColorToSelectedPlot, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-colorIndex = getColorIndex(Event)
-fileIndex = getSelectedIndex(Event, 'list_of_files_droplist')
-color_array = (*(*global).color_array)
-color_array[fileIndex] = colorIndex
-(*(*global).color_array) = color_array
-END
-
 
 
 
