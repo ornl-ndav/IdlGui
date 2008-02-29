@@ -33,11 +33,14 @@ CASE (index) OF
    END
    
    '2plots': BEGIN              ;plot index and (index-1) in tab 3
-       nbr_elements = getNbrElementsInDropList(Event,'step3_work_on_file_droplist') ;_get
+       nbr_elements = $
+         getNbrElementsInDropList(Event, $
+                                  'step3_work_on_file_droplist') ;_get
        IF (nbr_elements EQ 1) THEN BEGIN ;if only 1 file, must be CE file
            index_to_plot = [0]
        ENDIF ELSE BEGIN         ;more than 1 file
-           index_to_plot = getSelectedIndex(Event, 'step3_work_on_file_droplist') ;_get
+           index_to_plot = $
+             getSelectedIndex(Event, 'step3_work_on_file_droplist') ;_get
            IF (index_to_plot EQ 0) THEN BEGIN
                index_to_plot = [0]
            ENDIF ELSE BEGIN

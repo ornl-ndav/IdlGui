@@ -1,14 +1,3 @@
-;This function will enable (editable) or not the text fields of tab3
-PRO ReflSupportWidget_enableStep3Widgets,Event,sensitiveBoolean
-widget_uname = ['Step3_automatic_rescale_button',$
-                'Step3SFTextField']
-
-uname_size = (size(widget_uname))(1)
-For i=0,(uname_size-1) do begin
-    widget_id = widget_info(Event.top,find_by_uname=widget_uname[i])
-    widget_control, widget_id, editable = sensitiveBoolean
-endfor
-END
 
 
 ;this function enables or not all the widgets of the manual scaling of
@@ -27,60 +16,15 @@ endfor
 END
 
 
-;this function hide or not the base hidden base of the manual scaling
-;mode of step 3
-PRO ReflSupportWidget_HideBase, Event, uname, mapBoolean
-widget_id = widget_info(Event.top,find_by_uname=uname)
-widget_control, widget_id, map=mapBoolean
-END
 
 
 
-;This function will disable the widgets of step3 if
-;the first file (CE file) is selected 
-PRO ReflSupportWidget_ManageStep3Tab, Event 
-index = getSelectedIndex(Event,'step3_work_on_file_droplist')
-if (index EQ 0) then begin
-    ;disable all widgets of step3
-    ReflSupportWidget_enableStep3Widgets,Event,0
-endif else begin
-    ;enable all widgets of step3
-    ReflSupportWidget_enableStep3Widgets,Event,1
-endelse
-END
 
 
 
-;This procedure just put the given value in the text field
-;specified by the uname after doing a strcompression of the 
-;value
-PRO ReflSupportWidget_setValue, Event, uname, value
-TFid = widget_info(Event.top,find_by_uname=uname)
-widget_control, TFid, set_value=strcompress(value,/remove_all)
-END
 
 
 
-;This function displays in the Qmin and Qmax text fields the 
-;Qmin and Qmax of the CE file
-PRO ReflSupportWidget_display_Q_values, Event, index, tab
-
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-Qmin_array = (*(*global).Qmin_array)
-Qmax_array = (*(*global).Qmax_array)
-
-if (tab EQ 2) then begin
-    ReflSupportWidget_setValue, Event, 'step2_q1_text_field', Qmin_array[index]
-    ReflSupportWidget_setValue, Event, 'step2_q2_text_field', Qmax_array[index]
-endif else begin
-    ReflSupportWidget_setValue, Event, 'step3_q1_text_field', Qmin_array[index]
-    ReflSupportWidget_setValue, Event, 'step3_q2_text_field', Qmax_array[index]
-
-endelse
-
-END
 
 
 
@@ -93,51 +37,6 @@ widget_control, cd_label_id, set_value='No File loaded'
 END
 
 
-
-;This function replot the SF, ri and delta_ri labels/draw of tab2
-PRO ReflSupportWidget_refresh_draw_labels_tab2, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-images = (*(*global).images_tabs)
-unames = (*(*global).unames_tab2)
-images_xoff = (*(*global).images_tabs_xoff)
-images_yoff = (*(*global).images_tabs_yoff)
-
-image_size_array = size(images)
-image_size = image_size_array[1]
-
-for i=0,(image_size-1) do begin
-    id = widget_info(Event.top,find_by_uname=unames[i])
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    wset, id_value
-    image = read_bmp(images[i])
-    tv, image,images_xoff[i],images_yoff[i],/true
-endfor
-END
-
-
-;This function replot the SF, ri and delta_ri labels/draw of tab3
-PRO ReflSupportWidget_refresh_draw_labels_tab3, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-images = (*(*global).images_tab3)
-unames = (*(*global).unames_tab3)
-images_xoff = (*(*global).images_tabs_xoff)
-images_yoff = (*(*global).images_tabs_yoff)
-
-image_size_array = size(images)
-image_size = image_size_array[1]
-
-for i=0,(image_size-1) do begin
-    id = widget_info(Event.top,find_by_uname=unames[i])
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    wset, id_value
-    image = read_bmp(images[i])
-    tv, image,images_xoff[i],images_yoff[i],/true
-endfor
-END
 
 
 ;This function moves the color index to the right position
@@ -258,12 +157,6 @@ PRO activateErrorMessageBaseFunction, Event, activateErrorBase
  widget_control, ErrorMessageBaseid, map = activateErrorBase
 END
 
-
-;This function activate or not the button given by uname
-PRO ActivateButton, Event, uname, validate
- unameId = widget_info(Event.top,find_by_uname=uname)
- widget_control, unameId, sensitive=validate
-END
 
 
 

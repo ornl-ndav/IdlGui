@@ -149,7 +149,7 @@ END
 
 ;This function gives a list of point to keep, for which the Y value is
 ;greater than the error bar
-FUNCTION getArrayRangeOfErrorGEValue, flt1, flt2
+FUNCTION GEValue, flt1, flt2
 new_flt2 = flt2 ^ 2
 new_flt1 = flt1 ^ 2
 index = WHERE(flt2 LT flt1)
@@ -210,9 +210,30 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;This function removes the infinite values of the array
+FUNCTION getArrayOfInfValues, flt1_new
+index = where(~finite(flt1_new),Nindx)
+IF (Nindx) GT 0 THEN BEGIN
+    flt1_new[index] = 0            ;need to get rid of infs
+ENDIF
+RETURN, flt1_new
+END
+
 ;###############################################################################
 ;*******************************************************************************
 
+;This function returns the contain of the Text Field
+FUNCTION getTextFieldValue, Event, uname            
+TextFieldID = widget_info(Event.top,find_by_uname=uname)
+widget_control, TextFieldID, get_value = string
+RETURN, string
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;###############################################################################
+;*******************************************************************************
 
 
 
@@ -270,14 +291,6 @@ END
 
 
 
-;This function removes the infinite values of the array
-FUNCTION getArrayOfInfValues, flt1_new
-index = where(~finite(flt1_new),Nindx)
-if Nindx GT 0 then begin
-    flt1_new[index] = 0            ;need to get rid of infs
-endif
-return, flt1_new
-END
 
 
 
@@ -320,12 +333,6 @@ END
 
 
 
-;This function returns the contain of the Text Field
-FUNCTION getTextFieldValue, Event, uname            
-TextFieldID = widget_info(Event.top,find_by_uname=uname)
-widget_control, TextFieldID, get_value = string
-RETURN, string
-END
 
 
 ;This function returns the value found in the text field given

@@ -128,42 +128,42 @@ PRO MAIN_BASE_event, Event
       
 ;Event triggered by widget_droplist
       Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
-          step3_work_on_file_droplist, Event
+          steps_tab, Event, 1   ;_Tab
       end
       
 ;Event triggered by [Automatic rescaling]
       Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): begin
-          ReflSupportStep3_AutomaticRescaling, Event
+          Step3AutomaticRescaling, Event ;_Step3
       end
       
 ;Event triggered by [+++]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_3increase_button'): begin
-          ReflSupportStep3_RescaleFile, Event, 0.5
+          Step3RescaleFile, Event, 0.5 ;_Step3
       end
       
 ;Event triggered by [++]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_2increase_button'): begin
-          ReflSupportStep3_RescaleFile, Event, 0.1
+          Step3RescaleFile, Event, 0.1 ;_Step3
       end
       
 ;Event triggered by [+]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_1increase_button'): begin
-          ReflSupportStep3_RescaleFile, Event, 0.01
+          Step3RescaleFile, Event, 0.01 ;_Step3
       end
       
 ;Event triggered by [---]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_3decrease_button'): begin
-          ReflSupportStep3_RescaleFile, Event, -0.5
+          Step3RescaleFile, Event, -0.5 ;_Step3
       end
       
 ;Event triggered by [--]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_2decrease_button'): begin
-          ReflSupportStep3_RescaleFile, Event, -0.1
+          Step3RescaleFile, Event, -0.1 ;_Step3
       end
       
 ;Event triggered by [-]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): begin
-          ReflSupportStep3_RescaleFile, Event, -0.01
+          Step3RescaleFile, Event, -0.01 ;_Step3
       end
      
 ELSE:

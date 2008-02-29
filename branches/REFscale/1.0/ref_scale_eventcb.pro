@@ -96,10 +96,6 @@ steps_tab, Event, 1
 end
 
 
-;work on file droplist in step 3
-PRO STEP3_WORK_ON_FILE_DROPLIST, Event
-steps_tab, Event, 1
-end
 
 
 
