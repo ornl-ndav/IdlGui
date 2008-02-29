@@ -109,3 +109,46 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+
+;this function does a full true reset of color index
+;ie: is reset to 100/red
+PRO ReinitializeColorArray, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+color_array               = lonarr(1)
+color_array[0]            = (*global).ColorSliderDefaultValue
+(*(*global).color_array)  = color_array
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function clears the contain of all the droplists
+PRO ClearAllDropLists, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+ 
+;clear off list of file in droplist of step1
+id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
+widget_control, id, set_value=['']
+
+;clear off list of file in droplists of step3
+id = widget_info(Event.top, find_by_uname='step3_work_on_file_droplist')
+widget_control, id, set_value=['']
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+
+
+;###############################################################################
+;*******************************************************************************
+
+;###############################################################################
+;*******************************************************************************

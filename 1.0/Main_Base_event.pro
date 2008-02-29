@@ -17,7 +17,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of the main widget_tab
       Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): begin
-          steps_tab, Event, 0  ;(in ref_scale_Tabs.pro)
+          steps_tab, Event, 0  ;_Tabs
       end
       
 ;-------------------------------------------------------------------------------     
@@ -26,7 +26,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <RESET_FULL_SESSION> button
       Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
-          reset_all_button, Event
+          reset_all_button, Event ;_event
       end
       
 ;Event of <REFRESH PLOTS> button
@@ -98,33 +98,28 @@ PRO MAIN_BASE_event, Event
           clear_file, Event ;_Load
       end
       
-;Event of 'Event file format:' cw_bgroup widget
-      Widget_Info(wWidget, FIND_BY_UNAME='InputFileFormat'): begin
-          InputFileFormat, Event
-      end
-      
 ;-------------------------------------------------------------------------------
 ;****** STEP 1 / In the LOAD TOF base ******************************************
 ;-------------------------------------------------------------------------------
       
 ;Event of <CANCEL> button
       Widget_Info(wWidget, FIND_BY_UNAME='cancel_load_button'): begin
-          ReflSupportEventcb_CancelLoadButton, Event 
+          CancelTOFLoadButton, Event ;_Load
       end
       
 ;Event of <OK> button
       Widget_Info(wWidget, FIND_BY_UNAME='ok_load_button'): begin
-          OkLoadButton, Event 
+          OkLoadButton, Event ;_Load
       end
       
 ;Event of the 'Distance Moderator-Detector (m):' widget_text
       Widget_Info(wWidget, FIND_BY_UNAME='ModeratorDetectorDistanceTextField'): begin
-          ReflSupportWidget_checkOpenButtonStatus, Event 
+          CheckOpenButtonStatus, Event ;_Gui
       end
       
 ;Event of the 'Polar angle:' text_field
       Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): begin
-          ReflSupportWidget_checkOpenButtonStatus, Event 
+          CheckOpenButtonStatus, Event ;_Gui
       end
       
 ;-------------------------------------------------------------------------------

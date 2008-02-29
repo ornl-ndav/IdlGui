@@ -178,19 +178,6 @@ END
 
 
 
-;This function clears the contain of all the droplists
-PRO ClearAllDropLists, Event
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
- 
-;clear off list of file in droplist of step1
- list_of_files_droplist_id = widget_info(Event.top,find_by_uname='list_of_files_droplist')
- widget_control, list_of_files_droplist_id, set_value=['']
-;clear off list of file in droplists of step3
- step3_work_on_file_droplist_id = widget_info(Event.top,$
-                                              find_by_uname='step3_work_on_file_droplist')
- widget_control, step3_work_on_file_droplist_id, set_value=['']
-END
 
 
 ;This function clears the contain of all the text boxes
