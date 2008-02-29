@@ -18,6 +18,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 
 ;Build main procedures
 cd, CurrentFolder
+.run "ArrayDelete.pro"
 .run "getNumeric.pro"
 .run "ref_scale_get.pro"
 .run "ref_scale_put.pro"
@@ -29,7 +30,6 @@ cd, CurrentFolder
 .run "ref_scale_fit.pro"
 .run "ref_scale_step2.pro"
 .run "ref_scale_step3.pro"
-.run "ArrayDelete.pro"
 .run "ref_scale_Arrays.pro"
 .run "ref_scale_math.pro"
 .run "ref_scale_file_utility.pro"
