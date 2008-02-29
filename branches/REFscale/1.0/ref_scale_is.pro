@@ -42,3 +42,23 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+
+;this function return 1 if the ListOfFiles is empty (first load)
+;otherwise it returns 0
+FUNCTION isListOfFilesSize0, ListOfFiles
+         
+sz = (size(ListOfFiles))(1)
+IF (sz EQ 1) THEN BEGIN
+;check if argument is empty string
+    IF (ListOfFiles[0] EQ '') THEN BEGIN
+        RETURN, 1
+    ENDIF ELSE BEGIN
+        RETURN, 0
+    ENDELSE
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
+END
+
+;###############################################################################
+;*******************************************************************************
