@@ -132,6 +132,37 @@ PRO OkLoadButton, Event
      ReflSupportOpenFile_LoadFile, Event       
 END
 
+;###############################################################################
+;*******************************************************************************
+;This procedure is triggers each time the clear file button in step 1
+;is used
+PRO CLEAR_FILE, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get the selected index of the list of file droplist
+TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist') ;_get
+RemoveIndexFromArray, Event, TextBoxIndex ;_utility
+
+;update GUI
+ListOfFiles = (*(*global).list_of_files)
+updateGUI, Event, ListOfFiles
+
+;plot all loaded files if listOfFiles is not empty
+ListOfFilesSize = getSizeOfArray(ListOfFiles)
+if (ListOfFilesSize EQ 1 AND $
+    ListOfFiles[0] EQ '') then begin
+    plot_loaded_file, Event, 'clear'
+endif else begin
+   plot_loaded_file, Event, 'all'
+endelse
+
+display_info_about_file, Event
+angleValue = getAngleValue(Event)
+displayAngleValue, Event, angleValue
+
+END
 
 
 

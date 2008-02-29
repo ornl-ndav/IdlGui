@@ -95,7 +95,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <Clear File>
       Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
-          clear_file, Event
+          clear_file, Event ;_Load
       end
       
 ;Event of 'Event file format:' cw_bgroup widget
