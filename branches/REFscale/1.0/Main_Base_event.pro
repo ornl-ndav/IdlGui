@@ -85,7 +85,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <Load File> button
       Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
-          LoadFileButton, Event ;(in ref_scale_Load.pro)
+          LoadFileButton, Event ;_Load
       end
       
 ;Event of 'List of Files:' droplist

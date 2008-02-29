@@ -120,7 +120,7 @@ END
 FUNCTION getArrayRangeOfErrorGEValue, flt1, flt2
 new_flt2 = flt2 ^ 2
 new_flt1 = flt1 ^ 2
-index = where(flt2 LE flt1)
+index = where(flt2 LT flt1)
 return, index
 END
 
