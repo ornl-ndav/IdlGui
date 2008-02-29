@@ -12,7 +12,7 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION     = ' (version: 1.0.5)'
+VERSION     = ' (version: 1.0.6)'
 VerArray    = strsplit(VERSION,':',/extract)
 TagArray    = strsplit(VerArray[1],')',/extract)
 BranchArray = strsplit(TagArray[0],'.',/extract)
