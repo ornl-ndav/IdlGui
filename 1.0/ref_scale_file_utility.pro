@@ -20,21 +20,6 @@ END
 
 
 
-;this function return 1 if the ListOfFiles is empty (first load)
-;otherwise it returns 0
-FUNCTION isListOfFilesSize0, ListOfFiles
-sizeArray = size(ListOfFiles)
-if (sizeArray[1] EQ 1) then begin
-    ;check if argument is empty string
-    if (ListOfFiles[0] EQ '') then begin
-        return, 1
-    endif else begin
-        return, 0
-    endelse
-endif else begin
-    return, 0
-endelse
-end
 
 
 ;This function remove the short file name and keep
