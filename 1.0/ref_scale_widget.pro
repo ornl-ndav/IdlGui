@@ -295,13 +295,6 @@ END
 
 
 
-PRO displayAngleValue, Event, angleValue
-;get angle value for that index
- angleTextFieldId = widget_info(Event.top,find_by_uname='dMD_angle_info_label')
- ;fnAngleValue = ReflSupportMath_getndigits(Event, angleValue)
- text = '(Angle: ' + strcompress(angleValue) + ' degrees)'
- widget_control, angleTextFieldId, set_value=text
-END
 
 
 
