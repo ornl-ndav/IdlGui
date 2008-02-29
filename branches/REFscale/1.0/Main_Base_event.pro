@@ -90,7 +90,7 @@ PRO MAIN_BASE_event, Event
       
 ;Event of 'List of Files:' droplist
       Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
-          display_info_about_file, Event
+          display_info_about_file, Event ;_Gui
       end
       
 ;Event of <Clear File>

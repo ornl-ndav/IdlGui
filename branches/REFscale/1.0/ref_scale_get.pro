@@ -105,11 +105,41 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;this function gives the long name of the file selected in the uname droplist
+FUNCTION getLongFileNameSelected, Event, uname
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get the selected index of the load list droplist
+TextBoxIndex = getSelectedIndex(Event, uname) ;_get
+ListOfLongFileName = (*(*global).ListOfLongFileName)
+LongFileName = ListOfLongFileName[TextBoxIndex]
+RETURN, LongFileName
+END
 
 
 ;###############################################################################
 ;*******************************************************************************
 
+;This function outputs the value of the angle of the current selected
+;file (degrees)
+FUNCTION getAngleValue, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+angle_array = (*(*global).angle_array)
+fileIndex   = getSelectedIndex(Event,'list_of_files_droplist')
+angleValue  = angle_array[fileIndex]
+RETURN, angleValue
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;###############################################################################
+;*******************************************************************************
 
 
 
@@ -279,16 +309,6 @@ return, angleValue
 END
 
 
-;This function outputs the value of the angle of the current selected
-;file (degrees)
-FUNCTION getAngleValue, Event
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
- angle_array = (*(*global).angle_array)
- fileIndex = getSelectedIndex(Event,'list_of_files_droplist')
- angleValue = angle_array[fileIndex]
- return, angleValue
-end
 
 
 
@@ -327,14 +347,4 @@ END
 
 
 
-;this function gives the long name of the file selected in the uname droplist
-FUNCTION getLongFileNameSelected, Event, uname
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;get the selected index of the load list droplist
-TextBoxIndex = getSelectedIndex(Event, uname)
-ListOfLongFileName = (*(*global).ListOfLongFileName)
-LongFileName = ListOfLongFileName[TextBoxIndex]
-return, LongFileName
-END
 

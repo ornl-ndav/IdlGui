@@ -437,3 +437,60 @@ XYMinMax[3] = max_yaxis
 (*(*global).XYMinMax) = XYMinMax
 END
 
+;###############################################################################
+;*******************************************************************************
+
+;this function clear the info text box
+PRO clear_info_about_selected_file, Event
+TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
+widget_control, TextBoxId, set_value=''
+END
+
+;*******************************************************************************
+
+;This function clear the contain of the color label 
+PRO ClearColorLabel, Event
+id = widget_info(Event.top,find_by_uname='ColorFileLabel')
+widget_control, id, set_value=''
+END
+
+;*******************************************************************************
+
+PRO displayAngleValue, Event, angleValue
+;get angle value for that index
+angleTextFieldId = widget_info(Event.top,find_by_uname='dMD_angle_info_label')
+text = '(Angle: ' + strcompress(angleValue) + ' degrees)'
+widget_control, angleTextFieldId, set_value=text
+END
+
+;*******************************************************************************
+
+;droplist of files in step 1
+PRO display_info_about_file, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get the long name of th selected file
+LongFileName = getLongFileNameSelected(Event,'list_of_files_droplist') ;_get
+
+  IF (LongFileName EQ '') THEN BEGIN
+
+      clear_info_about_selected_file, Event ;_Gui
+      ActivateClearFileButton, Event, 0 ;_Gui
+      ClearColorLabel, Event ;_Gui
+      ActivateColorSlider, Event, 0 ;_Gui
+
+  ENDIF ELSE BEGIN
+
+      display_info_about_selected_file, Event, LongFileName ;_Gui
+      populateColorLabel, Event, LongFileName ;_Gui
+      ActivateColorSlider,Event,1 ;_Gui
+      angleValue = getAngleValue(Event) ;_get
+      displayAngleValue, Event, angleValue ;_Gui
+
+  ENDELSE
+END
+
+;###############################################################################
+;*******************************************************************************

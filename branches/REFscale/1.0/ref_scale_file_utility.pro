@@ -63,11 +63,6 @@ end
 ; c
 
 
-;this function clear the info text box
-PRO clear_info_about_selected_file, Event
-TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
-widget_control, TextBoxId, set_value=''
-END
 
 
 
@@ -182,9 +177,4 @@ widget_control, ClearButtonId, sensitive=ValidateButton
 END
 
 
-;This function clear the contain of the color label 
-PRO ClearColorLabel, Event
-ColorFileLabelId = widget_info(Event.top,find_by_uname='ColorFileLabel')
-widget_control, ColorFileLabelId, set_value=''
-END
 
