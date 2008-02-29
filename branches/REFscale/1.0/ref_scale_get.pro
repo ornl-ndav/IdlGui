@@ -93,10 +93,22 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;This functions gives the index of the color selected
+FUNCTION getColorIndex, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+id = widget_info(event.top,find_by_uname='list_of_color_slider')
+widget_control, id, get_value = ColorIndex
+RETURN, colorIndex
+END
 
 ;###############################################################################
 ;*******************************************************************************
 
+
+
+;###############################################################################
+;*******************************************************************************
 
 
 
@@ -244,14 +256,6 @@ return, tabSelected
 end
 
 
-;This functions gives the index of the color selected
-FUNCTION getColorIndex, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
-widget_control, list_of_color_slider_id, get_value = ColorIndex
-return, colorIndex
-END
 
 
 ;This function gives the algorithm selected to do the TOF to Q 
