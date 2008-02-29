@@ -51,35 +51,19 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-PRO appendValueInTextField, Event, $
-                            uname, $
-                            value
-uname_id = widget_info(Event.top,find_by_uname=uname)
-widget_control, uname_id, set_value=strcompress(value),/append
+;this function changes the value displays inside a label
+PRO putValueInLabel, Event, uname, value
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, set_value=strcompress(value)
 END
 
-
+;###############################################################################
+;*******************************************************************************
 
 ;This function will put the values of Xmin/max and Ymin/max
 ;in their respectives boxes
 PRO putXYMinMax, Event, XYMinMax
+
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
@@ -103,13 +87,41 @@ widget_control, YminId, set_value=strcompress(Ymin)
 ;max-yaxis
 YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
 widget_control, YmaxId, set_value=strcompress(Ymax)
+
 END
 
+;###############################################################################
+;*******************************************************************************
 
-;this function changes the value displays inside a label
-PRO putValueInLabel, Event, uname, value
+;###############################################################################
+;*******************************************************************************
+
+;###############################################################################
+;*******************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PRO appendValueInTextField, Event, $
+                            uname, $
+                            value
 uname_id = widget_info(Event.top,find_by_uname=uname)
-widget_control, uname_id, set_value=strcompress(value)
+widget_control, uname_id, set_value=strcompress(value),/append
 END
+
+
+
+
+
 
 

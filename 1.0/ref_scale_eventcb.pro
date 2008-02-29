@@ -26,12 +26,26 @@ ActivatePrintFileButton, Event, 0
 
 END
 
+;###############################################################################
+;*******************************************************************************
+
+PRO rescale_data_changed, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,GET_UVALUE=global
+(*global).replot_me = 1
+END
 
 ;###############################################################################
 ;*******************************************************************************
 
-
-
+;reset X and Y axis rescalling
+PRO ResetRescaleButton, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
+putXYMinMax, Event, (*(*global).XYMinMax) ;_put
+DoPlot, Event
+END
 
 
 
@@ -131,32 +145,11 @@ widget_control,id,get_uvalue=global
 END
 
 
-;reset X and Y axis rescalling
-PRO ResetRescaleButton, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
-putXYMinMax, Event, (*(*global).XYMinMax)
-DoPlot, Event
-END
 
 
 
-PRO replot_main_plot, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-if (((*global).replot_me) EQ 1) then begin
-    steps_tab, Event,1
-    (*global).replot_me = 0
-endif
-end
 
 
-PRO rescale_data_changed, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).replot_me = 1
-END
 
 
 

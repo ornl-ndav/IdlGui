@@ -6,7 +6,7 @@ PRO MAIN_BASE_event, Event
   
   wWidget =  Event.top          ;widget id
   
-  CASE Event.id OF
+  CASE (Event.id) OF
       
       Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
       end
@@ -20,7 +20,7 @@ PRO MAIN_BASE_event, Event
           steps_tab, Event, 0  ;_Tabs
       end
       
-;-------------------------------------------------------------------------------     
+;-------------------------------------------------------------------------------    
 ;***** MAIN BASE GUI ***********************************************************
 ;-------------------------------------------------------------------------------
       
@@ -31,54 +31,24 @@ PRO MAIN_BASE_event, Event
       
 ;Event of <REFRESH PLOTS> button
       Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
-          steps_tab, Event, 1
+          steps_tab, Event, 1 ;_Tabs
       end
       
 ;Event of <OUTPUT FILE> button
       Widget_Info(wWidget, FIND_BY_UNAME='print_button'):begin
-          ReflSupport_ProduceOutputFile, Event
+          ProduceOutputFile, Event ;_produce_output
       end
       
 ;Event of main Widget_draw
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'):begin
-          replot_main_plot, Event
-      end
-      
-;Event triggered by 'X-axis  min:' widget_text
-      Widget_Info(wWidget, FIND_BY_UNAME='XaxisMinTextField'): begin
-          rescale_data_changed, Event
-      end
-      
-;Event triggered by 'X-axis  max:' widget_text
-      Widget_Info(wWidget, FIND_BY_UNAME='XaxisMaxTextField'): begin
-          rescale_data_changed, Event
-      end
-      
-;Event of lin or log switch of X axis
-      Widget_Info(wWidget, FIND_BY_UNAME='XaxisLinLog'):begin
-          rescale_data_changed, Event
-      end
-      
-;Event triggered by 'Y-axis  min:' widget_text
-      Widget_Info(wWidget, FIND_BY_UNAME='YaxisMinTextField'): begin
-          rescale_data_changed, Event
-      end
-      
-;Event triggered by 'Y-axis  max:' widget_text
-      Widget_Info(wWidget, FIND_BY_UNAME='YaxisMaxTextField'): begin
-          rescale_data_changed, Event
-      end
-      
-;Event of lin or log switch of Y axis
-      Widget_Info(wWidget, FIND_BY_UNAME='YaxisLinLog'):begin
-          rescale_data_changed, Event
+          replot_main_plot, Event ;_Plot
       end
       
 ;Event triggered by 'Reset X/Y'     
-      Widget_Info(wWidget, FIND_BY_UNAME='ResetButton'): begin
-          ResetRescaleButton, Event
-      end
-      
+      Widget_Info(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN
+          ResetRescaleButton, Event ;_eventcb
+       END
+
 ;-------------------------------------------------------------------------------
 ;***** STEP 1 - [LOAD FILES] ***************************************************
 ;-------------------------------------------------------------------------------
@@ -113,7 +83,8 @@ PRO MAIN_BASE_event, Event
       end
       
 ;Event of the 'Distance Moderator-Detector (m):' widget_text
-      Widget_Info(wWidget, FIND_BY_UNAME='ModeratorDetectorDistanceTextField'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME= $
+                  'ModeratorDetectorDistanceTextField'): begin
           CheckOpenButtonStatus, Event ;_Gui
       end
       
@@ -194,8 +165,28 @@ PRO MAIN_BASE_event, Event
       Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): begin
           ReflSupportStep3_RescaleFile, Event, -0.01
       end
-      
+     
 ELSE:
   ENDCASE
   
+;Event triggered by 'X-axis  min:' widget_text
+  SWITCH (Event.id) OF
+;Event triggered by 'X-axis  min:' widget_text
+      Widget_Info(wWidget, FIND_BY_UNAME='XaxisMinTextField'): 
+;Event triggered by 'X-axis  max:' widget_text
+      Widget_Info(wWidget, FIND_BY_UNAME='XaxisMaxTextField'): 
+;Event of lin or log switch of X axis
+      Widget_Info(wWidget, FIND_BY_UNAME='XaxisLinLog'):
+;Event triggered by 'Y-axis  min:' widget_text
+      Widget_Info(wWidget, FIND_BY_UNAME='YaxisMinTextField'): 
+;Event triggered by 'Y-axis  max:' widget_text
+      Widget_Info(wWidget, FIND_BY_UNAME='YaxisMaxTextField'): 
+;Event of lin or log switch of Y axis
+      Widget_Info(wWidget, FIND_BY_UNAME='YaxisLinLog'): BEGIN
+          rescale_data_changed, Event ;_eventcb
+      END
+      ELSE:
+  ENDSWITCH
+  
 END
+
