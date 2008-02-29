@@ -229,65 +229,6 @@ END
 
 
 
-;when using automatic fitting of CE (step2)
-PRO RUN_automatic_fitting, Event
-ReflSupportStep2_fitCE, Event
-END
-
-;when using automatic scaling of CE (step2)
-PRO run_automatic_scaling, Event
-ReflSupportStep2_scaleCE, Event
-END
-
-;when using automatic fitting and scaling of CE (step2)
-PRO run_full_step2, Event
-run_automatic_fitting, Event
-
-;show the scalling factor (but do not replot it)
-;get the average Y value before
-Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field')
-Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field')
-
-;check if Ybefore is numeric or not
-YbeforeIsNumeric = isNumeric(Ybefore)
-YafterIsNumeric  = isNumeric(Yafter)
-
-;Ybefore and Yafter are numeric
-if (YbeforeIsNumeric EQ 1 AND $
-    YafterIsNumeric EQ 1) then begin
-
-   putValueInLabel, Event, 'step2_q1q1_error_label', ''
-   run_automatic_scaling, Event
-
-endif else begin ;scaling factor can be calculated so second step (scaling) 
-;automatic mode can be performed.
-
-;display message in Q1 and Q2 boxe saying that auto stopped
-
-putValueInLabel, Event, 'step2_q1q1_error_label', '**ERROR: Select another range of Qs**'
-
-endelse   
-END
-
-
-;Ce file droplist in step 2
-PRO step2_base_file_droplist, Event
-steps_tab, Event, 1
-END
-
-
-;base file droplist in step 3
-PRO STEP3_BASE_FILE_DROPLIST, Event
-steps_tab, Event, 1
-end
-
-
-;work on file droplist in step 3
-PRO STEP3_WORK_ON_FILE_DROPLIST, Event
-steps_tab, Event, 1
-end
-
-
 ;reset full session
 PRO RESET_ALL_BUTTON, Event
 ;reset all arrays
@@ -309,15 +250,6 @@ ActivatePrintFileButton, Event, 0
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 (*global).NbrFilesLoaded = 0
-END
-
-
-;validate the rescalling parameters
-PRO ValidateButton, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).replot_me = 1
-;DoPlot,Event
 END
 
 
@@ -364,19 +296,6 @@ END
 
 
 
-
-
-PRO REF_SCALE_EVENTCB
-END
-
-
-pro MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;turn off hourglass
-widget_control,hourglass=0
-end
 
 
 

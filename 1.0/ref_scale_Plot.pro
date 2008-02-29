@@ -496,3 +496,106 @@ end
 
 ;###############################################################################
 ;*******************************************************************************
+
+;This function plots the selected file
+PRO plot_rescale_CE_file, Event
+
+;retrieve global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+draw_id = widget_info(Event.top, find_by_uname='plot_window')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+
+IsXlin = getScale(Event,'X') ;_get
+IsYlin = getScale(Event,'Y') ;_get
+
+color_array = (*(*global).color_array)
+
+DEVICE, DECOMPOSED = 0
+loadct,5
+    
+flt0_ptr = (*global).flt0_ptr
+flt1_ptr = (*global).flt1_ptr
+flt2_ptr = (*global).flt2_ptr
+            
+;retrieve particular flt0, flt1 and flt2
+flt0 = *flt0_ptr[0]
+flt1 = *flt1_ptr[0]
+flt2 = *flt2_ptr[0]
+
+;divide by scaling factor
+CE_scaling_factor = (*global).CE_scaling_factor
+flt1              = flt1/CE_scaling_factor
+flt2              = flt2/CE_scaling_factor
+
+cooef = (*(*global).CEcooef)
+IF (cooef[0] NE 0 AND $
+    cooef[1] NE 0) THEN BEGIN
+    cooef[0] /= CE_scaling_factor
+    Cooef[1] /= CE_scaling_Factor
+ENDIF
+(*(*global).CEcooef) = cooef
+
+;save new values
+flt0_rescale_ptr           = (*global).flt0_rescale_ptr
+*flt0_rescale_ptr[0]       = flt0
+(*global).flt0_rescale_ptr = flt0_rescale_ptr
+
+flt1_rescale_ptr           = (*global).flt1_rescale_ptr
+*flt1_rescale_ptr[0]       = flt1
+(*global).flt1_rescale_ptr = flt1_rescale_ptr
+
+flt2_rescale_ptr           = (*global).flt2_rescale_ptr
+*flt2_rescale_ptr[0]       = flt2
+(*global).flt2_rescale_ptr = flt2_rescale_ptr
+;end of rescaling part
+
+colorIndex = color_array[0]
+
+XYMinMax = getXYMinMax(Event)
+xmin     = float(XYMinMax[0])
+xmax     = float(XYMinMax[1])
+ymin     = float(XYMinMax[2])
+ymax     = float(XYMinMax[3])
+
+CASE (IsXlin) OF
+    0:BEGIN
+        CASE (IsYlin) OF
+            0: BEGIN
+                plot,flt0,flt1,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            END
+            1: BEGIN
+                plot,flt0,flt1,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            END
+        ENDCASE
+    END
+    1: BEGIN
+        CASE (IsYlin) OF
+            0: BEGIN
+                plot,flt0,flt1,/xlog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            END
+            1: BEGIN
+                plot,flt0,flt1,/xlog,/ylog,xrange=[xmin,xmax],yrange=[ymin,ymax]
+            END
+        ENDCASE
+    END
+ENDCASE            
+
+errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+
+;polynome of degree 1 for CE 
+IF (cooef[0] NE 0 AND $
+    cooef[1] NE 0) THEN BEGIN
+    show_error_plot=1
+    flt0_new = (*(*global).flt0_CE_range)
+    y_new = cooef(1)*flt0_new + cooef(0)
+    oplot,flt0_new,y_new,color=400,thick=1.5
+ENDIF
+
+END
+
+;###############################################################################
+;*******************************************************************************
+

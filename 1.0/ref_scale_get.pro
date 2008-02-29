@@ -140,7 +140,7 @@ END
 
 ;This function returns an index array of all the not inf data
 FUNCTION getArrayRangeOfNotNanValues, flt1_new
-index = where(finite(flt1_new))
+index = WHERE(FINITE(flt1_new))
 RETURN, index
 END
 
@@ -158,6 +158,54 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+
+;This function takes array as an argument and will
+;return the first index  >= Q1 and the last one <=Q2
+;To determine in which order the search should be done (increasing
+;or decreasing order) the first and last argument will be checked first
+FUNCTION getArrayRangeFromQ1Q2, flt0, Q1, Q2
+
+FirstValue = flt0[0]
+flt0_size  = (size(flt0))[1]
+LastValue  = flt0[flt0_size-1]
+
+left_index  = 0
+right_index = (flt0_size-1)
+
+found_left_index = 0
+IF (FirstValue LT LastValue) THEN BEGIN ;increasing order
+    FOR i=0,(flt0_size-1) DO BEGIN
+        IF (found_left_index EQ 0) THEN BEGIN
+            IF (flt0[i] GE Q1) THEN BEGIN
+                left_index       = i
+                found_left_index = 1
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (flt0[i] GT Q2) THEN BEGIN
+                right_index = i-1
+                BREAK
+            ENDIF
+        ENDELSE
+        ENDFOR
+ENDIF ELSE BEGIN                ;decreasing order
+    FOR i=0,(flt0_size-1) DO BEGIN
+        IF (found_left_index EQ 0) THEN BEGIN
+            IF (flt0[i] LE Q2) THEN BEGIN
+                left_index       = i
+                found_left_index = 1
+            ENDIF
+        ENDIF ELSE BEGIN
+            IF (flt0[i] LT Q1) THEN BEGIN
+                right_index = i-1
+                BREAK
+            ENDIF
+        ENDELSE
+    ENDFOR
+ENDELSE          
+
+returnArray = [left_index, right_index]
+RETURN, returnArray
+END
 
 ;###############################################################################
 ;*******************************************************************************
@@ -232,54 +280,6 @@ return, flt1_new
 END
 
 
-;This function takes array as an argument and will
-;return the first index  >= Q1 and the last one <=Q2
-;
-;To determine in which order the search should be done (increasing
-;or decreasing order) the first and last argument will be checked first
-FUNCTION getArrayRangeFromQ1Q2, flt0, Q1, Q2
-
-FirstValue = flt0[0]
-flt0_size = (size(flt0))[1]
-LastValue  = flt0[flt0_size-1]
-
-left_index = 0
-right_index = (flt0_size-1)
-
-found_left_index = 0
-if (FirstValue LT LastValue) then begin ;increasing order
-    for i=0,(flt0_size-1) do begin
-        if (found_left_index EQ 0) then begin
-            if (flt0[i] GE Q1) then begin
-                left_index = i
-                found_left_index = 1
-            endif
-        endif else begin
-            if (flt0[i] GT Q2) then begin
-                right_index = i-1
-                break
-            endif
-        endelse
-        endfor
-endif else begin                ;decreasing order
-    for i=0,(flt0_size-1) do begin
-        if (found_left_index EQ 0) then begin
-            if (flt0[i] LE Q2) then begin
-                left_index = i
-                found_left_index = 1
-            endif
-        endif else begin
-            if (flt0[i] LT Q1) then begin
-                right_index = i-1
-                break
-            endif
-        endelse
-    endfor
-endelse          
-
-returnArray = [left_index, right_index]
-return, returnArray
-END
 
 
 
