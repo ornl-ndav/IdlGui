@@ -1,3 +1,40 @@
+;###############################################################################
+;*******************************************************************************
+
+;reset full session
+PRO reset_all_button, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;reset all arrays
+ResetArrays, Event ;_utility
+ReinitializeColorArray, Event ;_utility
+ClearAllDropLists, Event   
+ClearAllTextBoxes, Event      ;clear all textBoxes
+ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
+ClearMainPlot, Event          ;clear main plot window
+ResetPositionOfSlider, Event  ;reset color slider and previousColorIndex
+ResetAllOtherParameters, Event
+ResetRescaleBase,Event
+ActivateRescaleBase, Event, 0
+ActivateClearFileButton, Event, 0
+ClearColorLabel, Event
+ReflSupportWidget_ClearCElabelStep2, Event
+ActivatePrintFileButton, Event, 0
+(*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
+
+END
+
+
+;###############################################################################
+;*******************************************************************************
+
+
+
+
+
+
 
 
 ;Load a file button
@@ -18,17 +55,8 @@ PRO ReflSupportEventcb_LoadFileButton, Event
 END
 
 
-;Cancel Load button
-PRO ReflSupportEventcb_CancelLoadButton, Event 
-  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
-  widget_control, dMDAngleBaseId, map=0
-END
 
 
-;When OK is pressed in dMDAngle base (to load a input file)
-PRO ReflSupportEventcb_OkLoadButton, Event 
-     ReflSupportOpenFile_LoadFile, Event       
-END
 
 
 
@@ -92,28 +120,6 @@ steps_tab, Event, 1
 end
 
 
-;reset full session
-PRO RESET_ALL_BUTTON, Event
-;reset all arrays
-ResetArrays, Event            ;reset all arrays
-ReinitializeColorArray, Event
-ClearAllDropLists, Event      ;clear all droplists
-ClearAllTextBoxes, Event      ;clear all textBoxes
-ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
-ClearMainPlot, Event          ;clear main plot window
-ResetPositionOfSlider, Event  ;reset color slider and previousColorIndex
-ResetAllOtherParameters, Event
-ResetRescaleBase,Event
-ActivateRescaleBase, Event, 0
-ActivateClearFileButton, Event, 0
-ClearColorLabel, Event
-ReflSupportWidget_ClearCElabelStep2, Event
-ActivatePrintFileButton, Event, 0
-;Reset nbr of files loaded
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).NbrFilesLoaded = 0
-END
 
 
 ;validate the rescalling parameters
@@ -134,20 +140,6 @@ putXYMinMax, Event, (*(*global).XYMinMax)
 DoPlot, Event
 END
 
-
-;TOF or Q buttons
-PRO InputFileFormat, Event
-;; ValidateButton = getButtonValidated(Event,'InputFileFormat')
-;; if (ValidateButton EQ 0) then begin ;TOF
-;;     Validate = 1
-;; endif else begin ;Q
-;;     Validate = 0
-;; endelse
-;; ModeratorDetectorDistanceBaseId = $
-;;   widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
-;; widget_control, ModeratorDetectorDistanceBaseId, map=Validate
-;; checkLoadButtonStatus, Event
-END
 
 
 PRO replot_main_plot, Event

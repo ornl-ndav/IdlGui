@@ -71,16 +71,6 @@ end
 
 
 
-;this function does a full true reset of color index
-;ie: is reset to 100/red
-PRO ReinitializeColorArray, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-color_array               = lonarr(1)
-color_array[0]            = (*global).ColorSliderDefaultValue
-(*(*global).color_array)  = color_array
-END
 
 
 
