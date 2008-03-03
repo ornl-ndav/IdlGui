@@ -16,6 +16,7 @@ ReplaceDataRunNumbersByFullPath, Event
 IF (isReductionWithNormalization(Event)) THEN BEGIN
     ReplaceNormRunNumbersByFullPath, Event
 ENDIF
+
 ;re-run the CommandLineGenerator
 REFreduction_CommandLineGenerator, Event
 
@@ -55,6 +56,12 @@ endif else begin
     status_text = 'Data Reduction ........ DONE'
     putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
-end
+    IF ((*global).debugger) THEN BEGIN
+;We can retrieve info for Batch Tab
+        RetrieveBatchInfoAtLoading, Event
+    ENDIF
+    PopulateBatchTableWithCMDinfo, Event, cmd
+
+END
 
 END
