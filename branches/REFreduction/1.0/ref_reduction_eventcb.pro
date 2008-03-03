@@ -405,8 +405,6 @@ END
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
-RetrieveBatchData = 0 ;by default, do not retrieve batch data
-
 REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
 
 ;get global structure
@@ -438,8 +436,6 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
-            RetrieveBatchData = 1 ;NeXus has been loaded and we can retrive Batch info
-
         ENDIF
     ENDIF
     
@@ -469,28 +465,17 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
-            RetrieveBatchData = 1 ;NeXus has been loaded and we can retrive Batch info
-
         ENDIF
 
     ENDIF
     
 ENDELSE
 
-IF ((*global).debugger) THEN BEGIN
-;We can retrieve info for Batch Tab
-    IF (RetrieveBatchData EQ 1) THEN BEGIN
-        RetrieveBatchInfoAtLoading, Event
-    ENDIF
-ENDIF
-
 END
 
 
 ;this function is reached by the LOAD button for the NORMALIZATION file
 PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
-
-RetrieveBatchNorm = 0 ;by default, do not retrieve batch Norm
 
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -517,8 +502,6 @@ if (isArchivedNormNexusDesired(Event)) then begin ;get full list of NeXus with t
             full_nexus_name = (*global).norm_full_nexus_name
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
-
-            RetrieveBatchNorm = 1 ;NeXus has been loaded and we can retrive Batch info
 
         ENDIF
 
@@ -549,23 +532,11 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
 
-            RetrieveBatchNorm = 1 ;NeXus has been loaded and we can retrive Batch info
-
         ENDIF
 
     ENDIF
 
 ENDELSE
-
-IF ((*global).debugger) THEN BEGIN
-;We can retrieve info for Batch Tab
-    IF (RetrieveBatchNorm EQ 1) THEN BEGIN
-        (*global).NormRunNumber = (*global).norm_run_number
-    ENDIF ELSE BEGIN
-        (*global).NormRunNumber = 0
-    ENDELSE
-    AddNormRunToBatchTable, Event
-ENDIF
 
 END
 
