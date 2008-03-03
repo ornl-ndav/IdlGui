@@ -108,6 +108,22 @@ IF (norm_roi_file_name NE '') THEN BEGIN
     ENDELSE
 ENDIF
 
+;copy Batch File Name if nay
+IF ((*global).BatchFileName NE '') THEN BEGIN
+    cp_cmd_batch = 'cp ' + (*global).BatchFileName + '  ' + shared_path
+    batch_error = 0
+    CATCH, batch_error
+    IF (batch_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+         LogBookText = 'Copy of ' + (*global).BatchFileName + ' in ' + shared_path + ' ... FAILED'
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE Begin
+        spawn, cp_cmd_batch, listening
+         LogBookText = 'Copy of ' + (*global).BatchFileName + ' in ' + shared_path + ' ... OK'
+         putLogBookMessage, Event, LogBookText, Append=1
+     ENDELSE
+ENDIF
+
 ;tell the user that the email has been sent
 LogBookText = 'LogBook has been sent successfully !'
 putLogBookMessage, Event, LogBookText, Append=1

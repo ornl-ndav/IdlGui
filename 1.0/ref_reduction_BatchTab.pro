@@ -65,9 +65,13 @@ CATCH, populate_error
 NbrColumn = getGlobalVariable('NbrColumn')
 NbrRow    = getGlobalVariable('NbrRow')
 BatchTable = strarr(NbrColumn,NbrRow)
+FileArray = strarr(1)
 IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
     AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+    LogText = '-> FileArray:'
+    putLogBookMessage, Event, LogText, APPEND=1
+    putLogBookMessage, Event, FileArray, APPEND=1
 ENDIF ELSE BEGIN
     NbrLine   = 0
     FileArray = PopulateFileArray(BatchFileName, NbrLine)
@@ -167,22 +171,26 @@ ENDIF ELSE BEGIN
     free_lun,1
     AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
 ENDELSE
-permission_error = 0
-CATCH, permission_error
-IF (permission_error NE 0) THEN BEGIN
-    CATCH,/CANCEL
-    LogText = '-> Give execute permission to file created ... FAILED'
-ENDIF ELSE BEGIN
+
+IF (file_error EQ 0) THEN BEGIN
+    permission_error = 0
+    CATCH, permission_error
+    IF (permission_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        LogText = '-> Give execute permission to file created ... FAILED'
+    ENDIF ELSE BEGIN
 ;give execute permission to file created
-    cmd = 'chmod 700 ' + FullFileName
-    spawn, cmd, listening
-    LogText = '-> Give execute permission to file created ... OK'
-ENDELSE
-putLogBookMessage, Event, LogText, APPEND=1
+        cmd = 'chmod 700 ' + FullFileName
+        spawn, cmd, listening
+        LogText = '-> Give execute permission to file created ... OK'
+        (*global).BatchFileName = FullFileName
+    ENDELSE
+    putLogBookMessage, Event, LogText, APPEND=1
 ;Show contain of file
-LogText = '------------- BATCH FILE : ' + FullFileName + ' --------------'
-putLogBookMessage, Event, LogText, APPEND=1
-putLogBookMessage, Event, text, APPEND=1
+    LogText = '------------- BATCH FILE : ' + FullFileName + ' --------------'
+    putLogBookMessage, Event, LogText, APPEND=1
+    putLogBookMessage, Event, text, APPEND=1
+ENDIF
 END
 
 ;**********************************************************************
@@ -1021,7 +1029,7 @@ IF (BatchFileName NE '') THEN BEGIN
     BatchTable = PopulateBatchTable(Event, BatchFileName)
     (*(*global).BatchTable) = BatchTable
     DisplayBatchTable, Event, BatchTable
-    
+    (*global).BatchFileName = BatchFileName
 ;this function updates the widgets (button) of the tab
     UpdateBatchTabGui, Event
 ENDIF 
