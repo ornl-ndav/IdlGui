@@ -23,6 +23,7 @@ loadct,5
 
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
+   debugger = 1
 endif else begin
    ucams = get_ucams()
    debugger = 0
