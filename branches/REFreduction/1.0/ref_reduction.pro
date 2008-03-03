@@ -34,6 +34,7 @@ endif else begin
        'ceh':
        'vuk':
        'ks6':
+       'oswader':
        'jfb': debugger = 1
        ELSE :
    ENDSWITCH
@@ -46,6 +47,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
                   PrevBatchRowSelected : 0,$
                     BatchDefaultPath : '~/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
+                    BatchFileName : '',$
                     PreviousRunReductionValidated : 0,$  
                     BatchTable : ptr_new(0L),$ ;big array of batch table
                     isHDF5format : 1,$
