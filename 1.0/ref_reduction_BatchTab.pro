@@ -763,18 +763,22 @@ END
 
 
 PRO BatchTab_ChangeDataRunNumber, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+
+
+
+
+;;get global structure
+;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+;widget_control,id,get_uvalue=global
 ;retrieve main table
-BatchTable = (*(*global).BatchTable)
+;BatchTable = (*(*global).BatchTable)
 ;current row selected
-RowSelected = (*global).PrevBatchRowSelected
-;get value of data status
-dataStatus = getDataStatus(Event)
-BatchTable[1,RowSelected]=dataStatus
-(*(*global).BatchTable) = BatchTable
-DisplayBatchTable, Event, BatchTable
+;RowSelected = (*global).PrevBatchRowSelected
+;;get value of data status
+;dataStatus = getDataStatus(Event)
+;BatchTable[1,RowSelected]=dataStatus
+;(*(*global).BatchTable) = BatchTable
+;DisplayBatchTable, Event, BatchTable
 END
 
 
