@@ -10,6 +10,13 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
              uname : 'batch_base',$
              title : BatchTabTitle }
 
+;Processing base
+ProBase = { size  : [350,250,500,50],$
+            uname : 'processing_base',$
+            frame : 5}
+ProLabel = { size  : [30,15],$
+             value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
+
 ;////////////////////////////////////////////////////////
 ;Table Widget
 NbrRow = 20
@@ -63,11 +70,10 @@ dRunBase = { size  : [dActive.size[0]+XYoff[0],$
                       dActive.size[1]+XYoff[1],$
                       220,40],$
              uname : 'batch_data_run_base_status'}
-dRunLabel = { size  : [0,10],$
-              value : 'DATA RUNS:'}
-dRunField = { size  : [65,3,150,35],$
-              uname : 'batch_data_run_field_status'}
-          
+dDataRunField = { size  : [20,1],$
+                  uname : 'batch_data_run_field_status',$
+                  title : 'DATA RUNS:'}
+
 xoff = 15                ;distance between components of first row    
 ;Normalization Run number field
 XYOff = [230,0]
@@ -75,10 +81,9 @@ dNormRunBase = { size  : [dRunBase.size[0]+XYoff[0],$
                           dRunBase.size[1]+XYoff[1],$
                           220,40],$
                  uname : 'batch_norm_run_base_status'}
-dNormRunLabel = { size  : [0,10],$
-                  value : 'NORM. RUNS:'}
-dNormRunField = { size  : [70,3,150,35],$
-                  uname : 'batch_norm_run_field_status'}
+dNormRunField = { size  : [20,1],$
+                  uname : 'batch_norm_run_field_status',$
+                  title : 'NORM. RUNS:'}
 ;Angle value
 XYoff = [xoff,0]
 dAngleLabel = { size  : [dNormRunBase.size[0]+dNormRunBase.size[2]+XYoff[0],$
@@ -234,6 +239,24 @@ BATCH_BASE = WIDGET_BASE(MAIN_TAB,$
                          SCR_XSIZE = BatchTab.size[2],$
                          SCR_YSIZE = BatchTab.size[3])
 
+;\\\\\\\\\\\\\\\\
+;Processing base\
+;\\\\\\\\\\\\\\\\
+wProBase = WIDGET_BASE(BATCH_BASE,$
+                       XOFFSET   = ProBase.size[0],$
+                       YOFFSET   = ProBase.size[1],$
+                       SCR_XSIZE = ProBase.size[2],$
+                       SCR_YSIZE = ProBase.size[3],$
+                       UNAME     = ProBase.uname,$
+                       FRAME     = ProBase.frame,$
+                       MAP       = 0)
+
+wProLabel = WIDGET_LABEL(wProBase,$
+                         XOFFSET = ProLabel.size[0],$
+                         YOFFSET = ProLabel.size[1],$
+                         VALUE   = ProLabel.value,$
+                         /ALIGN_CENTER)
+
 ;\\\\\\\\\\\\\
 ;Table Widget\
 ;\\\\\\\\\\\\\
@@ -287,20 +310,13 @@ wRunBase = WIDGET_BASE(BATCH_BASE,$
                        SCR_YSIZE = dRunBase.size[3])
 
 
-wRunLabel = WIDGET_LABEL(wRunBase,$
-                         XOFFSET = dRunLabel.size[0],$
-                         YOFFSET = dRunLabel.size[1],$
-                         VALUE   = dRunLabel.value)
-
-wRunField = WIDGET_TEXT(wRunBase,$
-                        XOFFSET   = dRunField.size[0],$
-                        YOFFSET   = dRunField.size[1],$
-                        SCR_XSIZE = dRunField.size[2],$
-                        SCR_YSIZE = dRunField.size[3],$
-                        UNAME     = dRunField.uname,$
-                        /EDITABLE,$
-                        /ALL_EVENTS)
-
+wRunField = CW_FIELD(wRunBase,$
+                     XSIZE  = dDataRunField.size[0],$
+                     YSIZE  = dDataRunField.size[1],$
+                     UNAME  = dDataRunField.uname,$
+                     TITLE  = dDataRunField.title,$
+                     /RETURN_EVENTS)
+                     
 ;\\\\\\\\\\\\\\\\
 ;Norm Run Number\
 ;\\\\\\\\\\\\\\\\
@@ -311,20 +327,12 @@ wNormRunBase = WIDGET_BASE(BATCH_BASE,$
                            SCR_XSIZE = dNormRunBase.size[2],$
                            SCR_YSIZE = dNormRunBase.size[3])
 
-wNormRunLabel = WIDGET_LABEL(wNormRunBase,$
-                             XOFFSET = dNormRunLabel.size[0],$
-                             YOFFSET = dNormRunLabel.size[1],$
-                             VALUE   = dNormRunLabel.value)
-
-wNormRunField = WIDGET_TEXT(wNormRunBase,$
-                            XOFFSET   = dNormRunField.size[0],$
-                            YOFFSET   = dNormRunField.size[1],$
-                            SCR_XSIZE = dNormRunField.size[2],$
-                            SCR_YSIZE = dNormRunField.size[3],$
-                            UNAME     = dNormRunField.uname,$
-                            /EDITABLE,$
-                            /ALL_EVENTS)
-
+wNormRunField = CW_FIELD(wNormRunBase,$
+                         XSIZE = dNormRunField.size[0],$
+                         YSIZE = dNormRunField.size[1],$
+                         UNAME = dNormRunField.uname,$
+                         TITLE = dNormRunField.title,$
+                         /RETURN_EVENTS)
                      
 ;\\\\\\\\\\\\
 ;Angle value\
