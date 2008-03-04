@@ -763,6 +763,10 @@ END
 
 
 PRO BatchTab_ChangeDataRunNumber, Event
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;Display processing base
+MapBase, Event, 'processing_base', 1
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -786,10 +790,10 @@ data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
 DataRunsJoined = strjoin(data_runs,',')
 BatchTable[1,RowSelected] = DatarunsJoined
-IF (DataNexus[0] NE -1) THEN BEGIN
+IF (DataNexus[0] NE '') THEN BEGIN
     sz = (size(DataNexus))(1)
     FOR i=0,(sz-1) DO BEGIN
-        cmd += ' ' + DataNexus[i]
+        new_cmd += ' ' + DataNexus[i]
     ENDFOR
 ENDIF
 new_cmd += ' ' + split2 + part2
@@ -798,7 +802,10 @@ BatchTable[7,RowSelected]= new_cmd
 DisplayBatchTable, Event, BatchTable
 ;Update info of selected row
 DisplayInfoOfSelectedRow, Event, RowSelected
-
+;Hide processing base
+MapBase, Event, 'processing_base', 0
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 

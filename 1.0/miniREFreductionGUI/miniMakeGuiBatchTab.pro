@@ -10,6 +10,13 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
              uname : 'batch_base',$
              title : BatchTabTitle }
 
+;Processing base
+ProBase = { size  : [170,150,500,50],$
+            uname : 'processing_base',$
+            frame : 2}
+ProLabel = { size  : [30,15],$
+             value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
+
 ;////////////////////////////////////////////////////////
 ;Table Widget
 NbrRow = 20
@@ -226,6 +233,24 @@ BATCH_BASE = WIDGET_BASE(MAIN_TAB,$
                          YOFFSET   = BatchTab.size[1],$
                          SCR_XSIZE = BatchTab.size[2],$
                          SCR_YSIZE = BatchTab.size[3])
+
+;\\\\\\\\\\\\\\\\
+;Processing base\
+;\\\\\\\\\\\\\\\\
+wProBase = WIDGET_BASE(BATCH_BASE,$
+                       XOFFSET   = ProBase.size[0],$
+                       YOFFSET   = ProBase.size[1],$
+                       SCR_XSIZE = ProBase.size[2],$
+                       SCR_YSIZE = ProBase.size[3],$
+                       UNAME     = ProBase.uname,$
+                       FRAME     = ProBase.frame,$
+                       MAP       = 0)
+
+wProLabel = WIDGET_LABEL(wProBase,$
+                         XOFFSET = ProLabel.size[0],$
+                         YOFFSET = ProLabel.size[1],$
+                         VALUE   = ProLabel.value,$
+                         /ALIGN_CENTER)
 
 ;\\\\\\\\\\\\\
 ;Table Widget\
