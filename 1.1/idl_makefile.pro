@@ -1,6 +1,6 @@
 ;define path to dependencies and current folder
 spawn, 'pwd', CurrentFolder
-IdlUtilitiesPath = "../utilities"
+IdlUtilitiesPath = "utilities/"
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
