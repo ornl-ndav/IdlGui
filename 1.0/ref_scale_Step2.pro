@@ -94,7 +94,7 @@ widget_control,id,get_uvalue=global
 ;get long name of CE file
 CE_LongFileName       = (*global).full_CE_name
 ;get Q1 and Q2
-Q1Q2SF                = getQ1Q2SF(Event, 'STEP2')
+Q1Q2SF                = getQ1Q2SF(Event, 'STEP2') ;_get
 Q1                    = float(Q1Q2SF[0])
 Q2                    = float(Q1Q2SF[1])
 ;store the values of Q1 and Q2 for CE

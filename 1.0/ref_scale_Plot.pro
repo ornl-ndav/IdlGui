@@ -16,8 +16,8 @@ draw_id = widget_info(Event.top, find_by_uname='plot_window')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
-IsXlin = getScale(Event,'X')
-IsYlin = getScale(Event,'Y')
+IsXlin = getScale(Event,'X') ;_get
+IsYlin = getScale(Event,'Y') ;_get
 ClearPlot = 0      ;by default, the display does not have to be erased
 
 CASE (index) OF
@@ -259,8 +259,8 @@ draw_id = widget_info(Event.top, find_by_uname='plot_window')
 WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
 wset,view_plot_id
 
-IsXlin = getScale(Event,'X')
-IsYlin = getScale(Event,'Y')
+IsXlin = getScale(Event,'X') ;_get
+IsYlin = getScale(Event,'Y') ;_get
 
 IF (size EQ 1 AND $
    ListLongFileName[0] EQ '') THEN BEGIN
@@ -557,7 +557,7 @@ flt2_rescale_ptr           = (*global).flt2_rescale_ptr
 
 colorIndex = color_array[0]
 
-XYMinMax = getXYMinMax(Event)
+XYMinMax = getXYMinMax(Event) ;_get
 xmin     = float(XYMinMax[0])
 xmax     = float(XYMinMax[1])
 ymin     = float(XYMinMax[2])
