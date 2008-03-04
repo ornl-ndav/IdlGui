@@ -180,6 +180,7 @@ END
 
 FUNCTION getNexusFromRunArray, Event, data_runs, instrument
 NexusArray = ['']
+NewDataRun = ['']
 split1 = strsplit(data_runs,',',/EXTRACT,COUNT=length)
 FOR i=0,(length-1) DO BEGIN
     isNexusExist = 0
@@ -189,9 +190,11 @@ FOR i=0,(length-1) DO BEGIN
                                          isNexusExist)
     IF (isNexusExist) THEN BEGIN
         NexusArray = [NexusArray,FullNexusName]
+        NewDataRun = [NewDataRun,split1[i]]
     ENDIF
 ENDFOR
-sz = (size(NexusArray))(1)
+sz        = (size(NexusArray))(1)
+data_runs = NewDataRun[1:(sz-1)]
 IF (sz GT 1) THEN RETURN, NexusArray[1:(sz-1)]
 RETURN, [-1]
 END

@@ -784,6 +784,8 @@ new_cmd = part1 + ' ' + split1
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+DataRunsJoined = strjoin(data_runs,',')
+BatchTable[1,RowSelected] = DatarunsJoined
 IF (DataNexus[0] NE -1) THEN BEGIN
     sz = (size(DataNexus))(1)
     FOR i=0,(sz-1) DO BEGIN
@@ -794,8 +796,8 @@ new_cmd += ' ' + split2 + part2
 BatchTable[7,RowSelected]= new_cmd
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
-print, new_cmd
-
+;Update info of selected row
+DisplayInfoOfSelectedRow, Event, RowSelected
 
 END
 
@@ -1058,7 +1060,9 @@ IF (BatchFileName NE '') THEN BEGIN
 ;this function updates the widgets (button) of the tab
     UpdateBatchTabGui, Event
 ENDIF 
-
+RowSelected = (*global).PrevBatchRowSelected
+;Update info of selected row
+DisplayInfoOfSelectedRow, Event, RowSelected
 END
 
 
