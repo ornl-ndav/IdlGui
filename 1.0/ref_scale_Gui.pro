@@ -533,7 +533,7 @@ widget_control,id,get_uvalue=global
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
 
-IF (tab EQ ) THEN BEGIN
+IF (tab EQ 1) THEN BEGIN
 
     GuiSetValue, Event, 'step2_q1_text_field', Qmin_array[index] ;_Gui
     GuiSetValue, Event, 'step2_q2_text_field', Qmax_array[index] ;_Gui

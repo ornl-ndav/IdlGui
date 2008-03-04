@@ -312,7 +312,7 @@ END
 
 ;This function displays the base file name unless the first file is
 ;selected, in this case, it shows that the working file is the CE file
-PRO  ReflSupportStep3_displayLowQFileName, Event, indexSelected
+PRO Step3DisplayLowQFileName, Event, indexSelected
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -337,28 +337,20 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-
-
-
-
-
-
-
-
-
 ;This function displays the SF of the selected file
-PRO ReflSupportStep3_display_SF_values, Event,index
+PRO Step3_display_SF_values, Event,index
+
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 SF_array = (*(*global).SF_array)
 
-if (index NE 0) then begin
+IF (index NE 0) THEN BEGIN
     SF = SF_array[index]
-endif else begin
+ENDIF ELSE BEGIN
     SF = ''
-endelse
-ReflSupportWidget_setValue, Event, 'Step3SFTextField', SF
+ENDELSE
+GuisetValue, Event, 'Step3SFTextField', SF ;_Gui
 END
 
 ;###############################################################################

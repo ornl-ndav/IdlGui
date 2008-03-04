@@ -602,3 +602,29 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;This function takes care of launching the plot function in the right mode
+PRO DoPlot, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;get index of current tab selected
+steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
+CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
+
+CASE (CurrTabSelect) OF
+   0: BEGIN                     ;if the first tab is selected
+       plot_loaded_file, Event, 'all' ;_Plot
+   END
+   1: BEGIN               ;if the second tab is selected, plot index 0 (CE file)
+       plot_loaded_file, Event, 'CE' ;_Plot
+   END
+   2: BEGIN       ;if the third tab is selected plot index and index-1
+
+       plot_loaded_file, Event, '2plots' ;_Plot
+   END
+ENDCASE
+END
+
+;###############################################################################
+;*******************************************************************************
