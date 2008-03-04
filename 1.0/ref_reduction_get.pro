@@ -176,3 +176,22 @@ spawn, cmd, result
 Split = strsplit(result[0],' ',/extract)
 RETURN, Split[0]
 END
+
+
+FUNCTION getNexusFromRunArray, Event, data_runs, instrument
+NexusArray = ['']
+split1 = strsplit(data_runs,',',/EXTRACT,COUNT=length)
+FOR i=0,(length-1) DO BEGIN
+    isNexusExist = 0
+    FullNexusName = find_full_nexus_name(Event, $
+                                         split1[i], $
+                                         instrument, $
+                                         isNexusExist)
+    IF (isNexusExist) THEN BEGIN
+        NexusArray = [NexusArray,FullNexusName]
+    ENDIF
+ENDFOR
+sz = (size(NexusArray))(1)
+IF (sz GT 1) THEN RETURN, NexusArray[1:(sz-1)]
+RETURN, [-1]
+END

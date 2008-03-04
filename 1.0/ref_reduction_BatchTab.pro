@@ -763,38 +763,59 @@ END
 
 
 PRO BatchTab_ChangeDataRunNumber, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;cmd string is
+cmd = BatchTable[7,RowSelected]
+;get first part of cmd ex: srun -Q -p lracq reflect_reduction
+split1      = 'reflect_reduction'
+part1_array = strsplit(cmd,split1,/extract,/regex)
+part1       = part1_array[0]
+;get second part (after data runs)
+split2      = '--data-roi-file'
+part2_array = strsplit(cmd,split2,/extract,/regex)
+part2       = part2_array[1]
+new_cmd = part1 + ' ' + split1
+;get data run cw_field
+data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
+DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+IF (DataNexus[0] NE -1) THEN BEGIN
+    sz = (size(DataNexus))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        cmd += ' ' + DataNexus[i]
+    ENDFOR
+ENDIF
+new_cmd += ' ' + split2 + part2
+BatchTable[7,RowSelected]= new_cmd
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
+print, new_cmd
 
+
+END
+
+
+PRO BatchTab_ChangeNormRunNumber, Event
 
 
 
 ;;get global structure
 ;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 ;widget_control,id,get_uvalue=global
-;retrieve main table
+;;retrieve main table
 ;BatchTable = (*(*global).BatchTable)
-;current row selected
+;;current row selected
 ;RowSelected = (*global).PrevBatchRowSelected
-;;get value of data status
-;dataStatus = getDataStatus(Event)
-;BatchTable[1,RowSelected]=dataStatus
+;;get value of norm status
+;NormStatus = getNormStatus(Event)
+;BatchTable[2,RowSelected]=NormStatus
 ;(*(*global).BatchTable) = BatchTable
 ;DisplayBatchTable, Event, BatchTable
-END
-
-
-PRO BatchTab_ChangeNormRunNumber, Event
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;retrieve main table
-BatchTable = (*(*global).BatchTable)
-;current row selected
-RowSelected = (*global).PrevBatchRowSelected
-;get value of norm status
-NormStatus = getNormStatus(Event)
-BatchTable[2,RowSelected]=NormStatus
-(*(*global).BatchTable) = BatchTable
-DisplayBatchTable, Event, BatchTable
 END
 
 
