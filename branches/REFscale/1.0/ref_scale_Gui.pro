@@ -159,24 +159,22 @@ ENDIF
 END
 
 ;*******************************************************************************
-;*******************************************************************************
 
 ;This function moves the color index to the right position
 PRO MoveColorIndex,Event
 
 index = + 25
-MoveColorIndex_by_index, Event, index
+MoveColorIndex_by_index, Event, index ;_Gui
 
 END
 
-;*******************************************************************************
 ;*******************************************************************************
 
 ;This function moves back the color index when the loading process failed
 PRO MoveColorIndexBack,Event
 
 index = - 25
-MoveColorIndex_by_index, Event, index
+MoveColorIndex_by_index, Event, index ;_Gui
  
 END
 
@@ -634,6 +632,73 @@ END
 PRO ActivateButton, Event, uname, validate
 unameId = widget_info(Event.top,find_by_uname=uname)
 widget_control, unameId, sensitive=validate
+END
+
+;###############################################################################
+;*******************************************************************************
+
+PRO ReflSupportwidget_ClearCElabelStep2, Event
+cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
+widget_control, cd_label_id, set_value='No File loaded'
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function clears the contain of all the text boxes
+PRO ClearAllTextBoxes, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;clear step2 
+putValueInTextField,Event,'step2_q1_text_field','' ;_put
+putValueInTextField,Event,'step2_q2_text_field','' ;_put
+putValueInTextField,Event,'step2_sf_text_field','' ;_put
+;clear step3
+putValueInTextField,Event,'Step3SFTextField',''   ;_put
+putValueInTextField,Event,'Step3ManualQMinTextField','' ;_put
+putValueInTextField,Event,'Step3ManualQMaxTextField','' ;_put
+putValueInLabel, Event, 'Step3ManualModeLowQFileName','' ;_put
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function removes the contain of the info file found in Step1
+PRO ClearFileInfoStep1, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
+widget_control, TextBoxId, set_Value=''
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;clear main plot window
+PRO ClearMainPlot, Event   
+draw_id = widget_info(Event.top, find_by_uname='plot_window')
+WIDGET_CONTROL, draw_id, GET_VALUE = view_plot_id
+wset,view_plot_id
+erase
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;reset the position of the color slider
+PRO ResetPositionOfSlider, Event 
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+defaultColorSliderPosition = (*global).ColorSliderDefaultValue
+list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
+widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
+
+(*global).PreviousColorIndex = defaultColorSliderPosition
 END
 
 ;###############################################################################

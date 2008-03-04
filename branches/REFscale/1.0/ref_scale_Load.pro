@@ -43,7 +43,7 @@ IF (file_error NE 0) THEN BEGIN
 
     CATCH,/cancel
 ;move Back the colorIndex slidebar
-    MoveColorIndexBack,Event
+    MoveColorIndexBack,Event ;_Gui
 
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
@@ -53,7 +53,7 @@ ENDIF ELSE BEGIN
 ;get only the file name (without path) of file
         ShortFileName = get_file_name_only(LongFileName)    
 ;MoveColorIndex to new position 
-        MoveColorIndex,Event
+        MoveColorIndex,Event ;_Gui
 ;get the value of the angle (in degree)
         angleValue = getCurrentAngleValue(Event) ;_get
         (*global).angleValue = angleValue
@@ -97,14 +97,14 @@ CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
 ;move Back the colorIndex slidebar
-    ReflSupportOpenFile_MoveColorIndexBack,Event
+    _MoveColorIndexBack,Event   ;_Gui
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
     if (LongfileName NE '') then begin
 ;get only the file name (without path) of file
         ShortFileName = get_file_name_only(LongFileName)    
 ;MoveColorIndex to new position 
-        ReflSupportOpenFile_MoveColorIndex,Event
+        MoveColorIndex,Event ;_Gui
 ;get the value of the angle (in degree)
         angleValue = getCurrentAngleValue(Event) ;_get
         (*global).angleValue = angleValue
@@ -232,19 +232,19 @@ END
 ;reset full session
 PRO RESET_ALL_BUTTON, Event
 ;reset all arrays
-ResetArrays, Event            ;reset all arrays
+ResetArrays, Event              ;reset all arrays
 ReinitializeColorArray, Event
-ClearAllDropLists, Event      ;clear all droplists
-ClearAllTextBoxes, Event      ;clear all textBoxes
-ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
-ClearMainPlot, Event          ;clear main plot window
-ResetPositionOfSlider, Event  ;reset color slider and previousColorIndex
+ClearAllDropLists, Event        ;_Gui
+ClearAllTextBoxes, Event        ;clear all textBoxes
+ClearFileInfoStep1, Event       ;_Gui
+ClearMainPlot, Event            ;_Gui
+ResetPositionOfSlider, Event    ;_Gui
 ResetAllOtherParameters, Event
 ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
-ClearColorLabel, Event
-ReflSupportWidget_ClearCElabelStep2, Event
+ClearColorLabel, Event          ;_Gui
+ReflSupportWidget_ClearCElabelStep2, Event ;_Gui
 ActivatePrintFileButton, Event, 0
 ;Reset nbr of files loaded
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

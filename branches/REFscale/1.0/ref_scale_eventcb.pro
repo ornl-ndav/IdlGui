@@ -9,17 +9,17 @@ widget_control,id,get_uvalue=global
 
 ;reset all arrays
 ResetArrays, Event ;_utility
-ReinitializeColorArray, Event ;_utility
-ClearAllDropLists, Event   
-ClearAllTextBoxes, Event      ;clear all textBoxes
-ClearFileInfoStep1, Event     ;clear contain of info file (Step1)
-ClearMainPlot, Event          ;clear main plot window
-ResetPositionOfSlider, Event  ;reset color slider and previousColorIndex
+ReinitializeColorArray, Event   ;_utility
+ClearAllDropLists, Event        ;_Gui
+ClearAllTextBoxes, Event        ;_Gui
+ClearFileInfoStep1, Event       ;_Gui
+ClearMainPlot, Event            ;_Gui
+ResetPositionOfSlider, Event    ;_Gui
 ResetAllOtherParameters, Event
 ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
-ClearColorLabel, Event
+ClearColorLabel, Event          ;_Gui
 ReflSupportWidget_ClearCElabelStep2, Event
 ActivatePrintFileButton, Event, 0
 (*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
