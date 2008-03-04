@@ -286,7 +286,7 @@ ENDIF ELSE BEGIN
 
             CATCH,/CANCEL
             text = 'ERROR plotting data'
-            displayErrorMessage, Event, text
+            displayErrorMessage, Event, text ;_Gui
 
         ENDIF ELSE BEGIN
     

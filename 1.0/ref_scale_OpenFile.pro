@@ -43,7 +43,7 @@ IF (error_plot_status NE 0) THEN BEGIN
     
     CATCH,/CANCEL
     text = 'ERROR plotting data'
-    displayErrorMessage, Event, text
+    displayErrorMessage, Event, text ;_Gui
     RETURN, 0
 
 ENDIF ELSE BEGIN
