@@ -204,7 +204,7 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
-VERSION = 'rebinNeXus1.0.3'
+VERSION = ' (version: 1.1.0)'
 
 ;turn on or off the new font
 font = 0
@@ -308,7 +308,7 @@ translation_file = (*global).translation_file
 output_path = (*global).output_path 
 
   ; Create the top-level base and the tab.
-  title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ")"
+  title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ') - ' + VERSION
   MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                           UNAME='MAIN_BASE', $
                           XOFFSET=150, YOFFSET=350, $
@@ -317,12 +317,6 @@ output_path = (*global).output_path
                           title=title,$
                           MBAR=WID_BASE_0_MBAR)
   
-
-version_label = WIDGET_LABEL(MAIN_BASE,$
-                             xoffset = 750,$
-                             yoffset = 0,$
-                             value = VERSION)
-
 map_hide_log_book_tab = 0
 
 if (font) then begin
