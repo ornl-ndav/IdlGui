@@ -232,38 +232,21 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-;###############################################################################
-;*******************************************************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ;This function returns 1 if the specified axis scale is linear
 ;and 0 if it's logarithmic
 FUNCTION getScale, Event, axis
-if (axis EQ 'X') then begin
+IF (axis EQ 'X') THEN BEGIN
    uname = 'XaxisLinLog' 
-endif else begin
+ENDIF ELSE BEGIN
    uname = 'YaxisLinLog'
-endelse
+ENDELSE
 axis_id = widget_info(Event.top,find_by_uname=uname)
 widget_control, axis_id, get_value=value
-return, value
+RETURN, value
 END
 
-
+;###############################################################################
+;*******************************************************************************
 
 ;This function will retrieve the values of Xmin/max and Ymin/max
 FUNCTION getXYMinMax, Event
@@ -285,42 +268,11 @@ YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
 widget_control, YmaxId, get_value=Ymax
 
 return_array = [Xmin,Xmax,Ymin,Ymax]
-return, return_array
+RETURN, return_array
 END
 
-
-
-
-
-
-
-
-
-
-
-
-;this function gives the current selected tab
-FUNCTION getTabSelected, Event
-TabId = widget_info(Event.top,find_by_uname='steps_tab')
-tabSelected = widget_info(TabId,/TAB_CURRENT)
-return, tabSelected
-end
-
-
-
-
-;This function gives the algorithm selected to do the TOF to Q 
-;0 for simple method, 1 for Jacobian (the one uses by Michael)
-FUNCTION getTOFtoQalgorithmSelected, Event
- tof_to_Q_algorithm_id = widget_info(event.top, find_by_uname='tof_to_Q_algorithm')
- widget_control, tof_to_Q_algorithm_id, get_value=algorithm_index
- return, algorithm_index
-END
-
-
-
-
-
+;###############################################################################
+;*******************************************************************************
 
 ;This function returns the current angle value from the text box
 FUNCTION getCurrentAngleValue, Event
@@ -329,19 +281,17 @@ widget_control, angleTextBoxId, get_value=angleValue
 return, angleValue
 END
 
-
-
-
-
-
+;###############################################################################
+;*******************************************************************************
 
 ;This function returns the value found in the text field given
 FUNCTION getValue, Event, uname
 unameId = widget_info(Event.top,find_by_uname=uname)
 widget_control,unameId,get_value=value
-return, value
+RETURN, value
 END
 
+;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
 
 ;This function returns Q1, Q2 and SF of the current selected tab
 FUNCTION getQ1Q2SF, Event, TAB
@@ -359,7 +309,15 @@ Q1Q2SF = [float(Q1),float(Q2),float(SF)]
 RETURN, Q1Q2SF
 END
 
+;###############################################################################
+;*******************************************************************************
 
+;;this function gives the current selected tab
+;FUNCTION getTabSelected, Event
+;TabId = widget_info(Event.top,find_by_uname='steps_tab')
+;tabSelected = widget_info(TabId,/TAB_CURRENT)
+;return, tabSelected
+;end
 
-
-
+;###############################################################################
+;*******************************************************************************

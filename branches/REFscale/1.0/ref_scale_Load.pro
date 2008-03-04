@@ -55,7 +55,7 @@ ENDIF ELSE BEGIN
 ;MoveColorIndex to new position 
         MoveColorIndex,Event
 ;get the value of the angle (in degree)
-        angleValue = getCurrentAngleValue(Event)
+        angleValue = getCurrentAngleValue(Event) ;_get
         (*global).angleValue = angleValue
         get_angle_value_and_do_conversion, Event, angleValue
 
@@ -106,7 +106,7 @@ ENDIF ELSE BEGIN
 ;MoveColorIndex to new position 
         ReflSupportOpenFile_MoveColorIndex,Event
 ;get the value of the angle (in degree)
-        angleValue = getCurrentAngleValue(Event)
+        angleValue = getCurrentAngleValue(Event) ;_get
         (*global).angleValue = angleValue
         get_angle_value_and_do_conversion, Event, angleValue
 ;store flt0, flt1 and flt2 of new files

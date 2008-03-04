@@ -207,7 +207,7 @@ FOR i=0,(max_number-1) DO BEGIN
    IF (i EQ 0) THEN BEGIN
        putValueInTextField,Event,'step3_flt_text_filed',text ;_put
    ENDIF ELSE BEGIN
-       appendValueInTextField,Event,'step3_flt_text_filed',text 
+       appendValueInTextField,Event,'step3_flt_text_filed',text  ;_put
    ENDELSE
 ENDFOR
 END
