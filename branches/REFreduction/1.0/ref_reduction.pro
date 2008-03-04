@@ -44,6 +44,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                  cmd_batch_length : 60,$
                   debugger : debugger,$
                   PrevBatchRowSelected : 0,$
                     BatchDefaultPath : '~/',$

@@ -44,6 +44,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                   cmd_batch_length : 50,$
                    debugger : debugger,$
                    PrevBatchRowSelected : 0,$
                      BatchDefaultPath: '~/',$
@@ -212,7 +213,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;last x position of cursor in norm. 1d draw for zoom                     
                    NormY : 0L,$
 ;last x position of cursor in norm 1d draw for zoom                     
-                   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$
+                   LogBookPath : '/SNS/users/LogBook/',$
 ;path where to put the log book
                    MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
 ;full path to NeXus file on the mac

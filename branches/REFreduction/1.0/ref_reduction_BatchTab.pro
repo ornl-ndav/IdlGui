@@ -429,8 +429,25 @@ END
 
 
 PRO DisplayBatchTable, Event, BatchTable
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;new BatchTable
+NewBatchTable = BatchTable
+
 id = widget_info(Event.top,find_by_uname='batch_table_widget')
-widget_control, id, set_value=BatchTable
+;display only the first part of the cmd line
+NbrRow = getGlobalVariable('NbrRow')
+length = (*global).cmd_batch_length
+
+FOR i=0,(NbrRow-1) DO BEGIN
+    sz = STRLEN(BatchTable[7,i])
+    IF (sz GT length) THEN BEGIN
+        NewBatchTable[7,i] = STRMID(BatchTable[7,i],0,length) + '  (...) '
+    ENDIF
+ENDFOR
+widget_control, id, set_value=NewBatchTable
 END
 
 
