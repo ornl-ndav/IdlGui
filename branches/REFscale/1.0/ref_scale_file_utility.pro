@@ -106,26 +106,6 @@ widget_control, XaxisLinLogId, set_value=0
 widget_control, YaxisLinLogId, set_value=0
 END
 
-;This function takes care of launching the plot function in the right mode
-PRO DoPlot, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;get index of current tab selected
-steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
-CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
-CASE (CurrTabSelect) OF
-   0: begin                     ;if the first tab is selected
-       plot_loaded_file, Event, 'all'
-   end
-   1: begin               ;if the second tab is selected, plot index 0 (CE file)
-       plot_loaded_file, Event, 'CE'
-   end
-   2: begin       ;if the third tab is selected plot index and index-1
-
-       plot_loaded_file, Event, '2plots'
-   end
-ENDCASE
-END
 
 
 PRO populateColorLabel, Event, LongFileName

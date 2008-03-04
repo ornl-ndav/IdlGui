@@ -74,17 +74,17 @@ ENDIF ELSE BEGIN
             IF ((*global).NbrFilesLoaded LE 1) THEN BEGIN
                 ActivateButton, Event, 'Step3_automatic_rescale_button', 0 ;_Gui
             ENDIF ELSE BEGIN
-                ActivateButton, Event, 'Step3_automatic_rescale_button', 1
+                ActivateButton, Event, 'Step3_automatic_rescale_button', 1 ;_Gui
             ENDELSE
 
                                 ;This function displays the base file
                                 ;name unless the first file is
                                 ;selected, in this case, it shows that
                                 ;the working file is the CE file
-            ReflSupportStep3_displayLowQFileName, Event, indexSelected
+            Step3DisplayLowQFileName, Event, indexSelected ;_Step3
             
                                 ;display the SF of the selected file
-            ReflSupportStep3_display_SF_values, Event, indexSelected
+            Step3_display_SF_values, Event, indexSelected ;_Step3
                                 ;if third tab, plot only two file selected
             refresh_draw_labels_tab3, Event ;_Gui
 
