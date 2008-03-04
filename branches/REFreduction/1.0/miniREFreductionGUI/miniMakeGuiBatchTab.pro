@@ -13,7 +13,7 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 ;Processing base
 ProBase = { size  : [170,150,500,50],$
             uname : 'processing_base',$
-            frame : 2}
+            frame : 5}
 ProLabel = { size  : [30,15],$
              value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
 
