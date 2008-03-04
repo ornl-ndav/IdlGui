@@ -118,13 +118,18 @@ cmd += ' -a ' + stagingArea + ' ' + event_file
 NbrPolaStates = (*global).NbrPolaStates
 cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
 pixel_offset = 0
-FOR i=0,(NbrPolaStates-1) DO BEGIN
-    cmd += ' -P ' + strcompress(pixel_offset,/remove_all)
-    pixel_offset += 77824
-ENDFOR
+IF (instrument EQ 'BSS') THEN BEGIN
+    pixel_offset = 9216
+ENDIF ELSE BEGIN
+    FOR i=0,(NbrPolaStates-1) DO BEGIN
+        cmd += ' -P ' + strcompress(pixel_offset,/remove_all)
+        pixel_offset += 77824
+    ENDFOR
+ENDELSE
 
 ;total number of pixels
 cmd += ' -p ' + strcompress(pixel_offset,/remove_all)
+print, cmd
 
 ;BinningType
 IF (getBinType(Event) EQ 0) THEN BEGIN ;linear
