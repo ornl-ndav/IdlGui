@@ -868,14 +868,11 @@ CASE Event.id OF
 
     ;DATA runs widget_text
     widget_info(wWidget, FIND_BY_UNAME='reduce_data_runs_text_field'): begin
-        BatchRetrieveDataRuns, Event
-        BatchRetrieveNormRuns, Event
         REFreduction_CommandLineGenerator, Event
     end
 
     ;NORM runs widget_text
     widget_info(wWidget, FIND_BY_UNAME='reduce_normalization_runs_text_field'): begin
-        BatchRetrieveNormRuns, Event
         REFreduction_CommandLineGenerator, Event
     end
 

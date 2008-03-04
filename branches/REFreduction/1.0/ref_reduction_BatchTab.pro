@@ -810,21 +810,53 @@ END
 
 
 PRO BatchTab_ChangeNormRunNumber, Event
-
-
-
-;;get global structure
-;id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-;widget_control,id,get_uvalue=global
-;;retrieve main table
-;BatchTable = (*(*global).BatchTable)
-;;current row selected
-;RowSelected = (*global).PrevBatchRowSelected
-;;get value of norm status
-;NormStatus = getNormStatus(Event)
-;BatchTable[2,RowSelected]=NormStatus
-;(*(*global).BatchTable) = BatchTable
-;DisplayBatchTable, Event, BatchTable
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;Display processing base
+MapBase, Event, 'processing_base', 1
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;current row selected
+RowSelected = (*global).PrevBatchRowSelected
+;retrieve main table
+BatchTable = (*(*global).BatchTable)
+;cmd string is
+cmd = BatchTable[7,RowSelected]
+;get first part of cmd, before --norm=
+split1      = '--norm='
+part1_array = strsplit(cmd,split1,/extract,/regex)
+part1       = part1_array[0]
+;get second part (after data runs)
+split2      = '--norm-roi-file'
+part2_array = strsplit(cmd,split2,/extract,/regex)
+part2       = part2_array[1]
+new_cmd = part1 + ' ' + split1
+;get data run cw_field
+norm_runs = getTextFieldValue(Event,'batch_norm_run_field_status')
+NormNexus = getNexusFromRunArray(Event, norm_runs, (*global).instrument)
+NormRunsJoined = strjoin(norm_runs,',')
+BatchTable[2,RowSelected] = NormRunsJoined
+IF (NormNexus[0] NE '') THEN BEGIN
+    sz = (size(NormNexus))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        IF (i EQ 0) THEN BEGIN
+            new_cmd += NormNexus[i]
+        ENDIF ELSE BEGIN
+            new_cmd += ',' + NormNexus[i]
+        ENDELSE
+    ENDFOR
+ENDIF
+new_cmd += ' ' + split2 + part2
+BatchTable[7,RowSelected]= new_cmd
+(*(*global).BatchTable) = BatchTable
+DisplayBatchTable, Event, BatchTable
+;Update info of selected row
+DisplayInfoOfSelectedRow, Event, RowSelected
+;Hide processing base
+MapBase, Event, 'processing_base', 0
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 
@@ -833,7 +865,7 @@ PRO BatchTab_MoveUpSelection, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve main table
-BatchTable = (*(*global).BatchTable)
+BatchTable = (*(*xglobal).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
 IF (RowSelected NE 0) THEN BEGIN ;move up
