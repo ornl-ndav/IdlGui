@@ -47,7 +47,7 @@ global = ptr_new ({ program_name          : 'MakeNeXus',$
                             geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
                             translation_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
                     instrumentShortList   : ptr_new(0L),$
-                    LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$
+                    LogBookPath           : '/SNS/users/LogBook/',$
                     hostname              : hostname,$
                     ucams                 : ucams,$
                     geek                  : 'j35',$
