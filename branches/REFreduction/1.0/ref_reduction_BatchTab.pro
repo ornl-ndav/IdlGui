@@ -1115,14 +1115,24 @@ IF (BatchFileName NE '') THEN BEGIN
     (*global).BatchFileName = BatchFileName
 ;this function updates the widgets (button) of the tab
     UpdateBatchTabGui, Event
-ENDIF 
-RowSelected = (*global).PrevBatchRowSelected
+    RowSelected = (*global).PrevBatchRowSelected
 ;Update info of selected row
-DisplayInfoOfSelectedRow, Event, RowSelected
+    DisplayInfoOfSelectedRow, Event, RowSelected
+;display path and file name of file in SAVE AS widgets
+    FileArray = getFilePathAndName(BatchFileName)
+    FilePath  = FileArray[0]
+    FileName  = FileArray[1]
+;put path in PATH button
+    (*global).BatchDefaultPath = FilePath
+    ;change name of button
+    putBatchFolderName, Event, FilePath
+;put name of file in widget_text
+    putBatchFileName, Event, FileName
+ENDIF 
 END
 
 
-
+;Define where the Batch File will be created
 PRO BatchTab_BrowsePath, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')

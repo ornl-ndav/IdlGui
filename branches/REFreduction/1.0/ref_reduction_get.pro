@@ -198,3 +198,17 @@ data_runs = NewDataRun[1:(sz-1)]
 IF (sz GT 1) THEN RETURN, NexusArray[1:(sz-1)]
 RETURN, [-1]
 END
+
+
+
+FUNCTION getFilePathAndName, FullFileName
+FullArray = STRSPLIT(FullFileName,'/',/EXTRACT,COUNT=length)
+IF (length GT 2) THEN BEGIN
+    PathArray = FullArray[0:length-2]
+    Path      = STRJOIN(PathArray,'/')
+ENDIF ELSE BEGIN
+    Path      = FullArray[0]
+ENDELSE
+File = FullArray[length-1]
+RETURN, ['/' + Path + '/', File]
+END
