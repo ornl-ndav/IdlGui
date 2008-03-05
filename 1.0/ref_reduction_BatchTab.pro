@@ -882,7 +882,7 @@ PRO BatchTab_MoveUpSelection, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;retrieve main table
-BatchTable = (*(*xglobal).BatchTable)
+BatchTable = (*(*global).BatchTable)
 ;current row selected
 RowSelected = (*global).PrevBatchRowSelected
 IF (RowSelected NE 0) THEN BEGIN ;move up
