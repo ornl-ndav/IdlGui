@@ -354,8 +354,6 @@ wProNoButton = WIDGET_BUTTON(wProBase,$
                               VALUE     = ProNoButton.value,$
                               UNAME     = ProNoButton.uname)
                               
-
-
 ;\\\\\\\\\\\\\
 ;Table Widget\
 ;\\\\\\\\\\\\\
