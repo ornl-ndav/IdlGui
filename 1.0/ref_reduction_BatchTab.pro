@@ -829,7 +829,7 @@ part1       = part1_array[0]
 split2      = '--data-roi-file'
 part2_array = strsplit(cmd,split2,/extract,/regex)
 part2       = part2_array[1]
-new_cmd     = part1 + ' ' + split1
+new_cmd     = STRTRIM(part1) + ' ' + split1
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
