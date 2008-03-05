@@ -481,13 +481,11 @@ CASE (PeakSelection[0]) OF
                    'norm_exclusion_high_bin_text', $
                    strcompress(Ymax/coeff), $
                    0
-            end
-        endcase
-    end
-endcase
-
+            END
+        ENDCASE
+    END
+ENDCASE
 END
-
 
 ;Put the given string in the Reduction status text field
 PRO putInfoInReductionStatus, Event, string, append
@@ -499,9 +497,14 @@ putTextFieldValue, $
 END
 
 
-
 ;Put array in droplist specified
 PRO putArrayInDropList, Event, arrayString, uname
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=arrayString
+END
+
+
+;Put name of file in widget_text 'save_as_file_name'
+PRO putBatchFileName, Event, FileName
+putTextFieldValue, Event, 'save_as_file_name', FileName, 0
 END
