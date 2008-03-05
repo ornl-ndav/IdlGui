@@ -45,6 +45,7 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                   batch_data_runs : ptr_new(0L),$
+                    batch_percent_error : 0.01,$ ;1% difference acceptebale between angle, s1 and s2
                     batch_DataNexus : ptr_new(0L),$
                     batch_split2 : '',$ 
                     batch_part2 : '',$

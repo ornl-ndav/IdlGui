@@ -434,6 +434,36 @@ RETURN,1
 END
 
 
+FUNCTION areDataIdentical, Event, DataArray
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+PercentError = (*global).batch_percent_error
+process_error = 0
+CATCH, process_error
+IF (process_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    bad_io:
+    RETURN, 0
+ENDIF ELSE BEGIN
+    sz = (size(DataArray))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        ON_IOError, bad_io
+        base_value = float(DataArray[i])
+        FOR j=1,(sz-1) DO BEGIN
+            comp_value = FLOAT(DataArray[j])
+            diff       = ABS(comp_value - base_value)
+            IF (diff GT PercentError) THEN BEGIN
+                RETURN, 0
+            ENDIF
+        ENDFOR
+    ENDFOR
+ENDELSE
+RETURN, 1
+END
+
+
 
 ;**********************************************************************
 ;GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI
@@ -883,18 +913,18 @@ IF (sz GT 1) THEN BEGIN
 ;Check if they are identical or not
     SameStatus = 1
 ;check Angle 
-    AngleEqArray = WHERE(AngleArray EQ AngleArray[0],length)
-    IF (length NE sz) THEN BEGIN
+    AngleAreIdentical = areDataIdentical(Event, AngleArray)
+    IF (AngleAreIdentical NE 1) THEN BEGIN
         SameStatus = 0
     ENDIF ELSE BEGIN
 ;check S1
-        S1EqArray = WHERE(S1Array EQ S1Array[0], length)
-        IF (length NE sz) THEN BEGIN
+        S1AreIdentical = areDataIdentical(Event, S1Array)
+        IF (S1AreIdentical NE 1) THEN BEGIN
             SameStatus = 0
         ENDIF ELSE BEGIN
 ;check S2
-            S2EqArray = WHERE(S2Array EQ S2Array[0], length)
-            IF (length NE sz) THEN BEGIN
+        S2AreIdentical = areDataIdentical(Event, S2Array)
+        IF (S2AreIdentical NE 1) THEN BEGIN
                 SameStatus = 0
             ENDIF
         ENDELSE
