@@ -196,7 +196,6 @@ END
 
 
 FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
-print, 'old_cmd is: ' + new_cmd
 split1      = '--output='
 ArraySplit1 = STRSPLIT(new_cmd,split1,/EXTRACT,/REGEX)
 part1       = ArraySplit1[0] + split1
@@ -222,7 +221,6 @@ NewfileName += '.txt'
 
 ;recreate the cmd
 new_cmd = part1 + NewFileName
-print, 'new_cmd is: ' + new_cmd
 RETURN, new_cmd
 END
 
@@ -578,7 +576,7 @@ MainRunNumber = GetMajorRunNumber(Event)
 file_name += 'Run' + strcompress(MainRunNumber,/remove_all)
 
 ;add time stamp (ex: REF_L_Batch_3454_2008y_02m_10d )
-TimeBatchFormat = GenerateDateStamp()
+TimeBatchFormat = RefReduction_GenerateIsoTimeStamp()
 file_name += '_' + TimeBatchFormat
 
 ;add extension  (ex: REF_L_Batch_3454_2008y_02m_10d.txt)
@@ -831,7 +829,7 @@ part1       = part1_array[0]
 split2      = '--data-roi-file'
 part2_array = strsplit(cmd,split2,/extract,/regex)
 part2       = part2_array[1]
-new_cmd = part1 + ' ' + split1
+new_cmd     = part1 + ' ' + split1
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
@@ -847,7 +845,11 @@ new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
 new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
 ;put new_cmd back in the BatchTable
-BatchTable[7,RowSelected]= new_cmd
+BatchTable[7,RowSelected] = new_cmd
+;update DATE field with new date/time stamp
+NewDate = GenerateDateStamp()
+BatchTable[6,RowSelected] = NewDate
+;Save BatchTable back to Global
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
 ;Update info of selected row
