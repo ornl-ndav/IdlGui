@@ -100,7 +100,8 @@ DateIso += strcompress(DateArray[2],/remove_all) + 'd_'
 ;change format of time
 time = strsplit(DateArray[3],':',/extract)
 DateIso += strcompress(time[0],/remove_all) + 'h_'
-DateIso += strcompress(time[1],/remove_all) + 'mn'
+DateIso += strcompress(time[1],/remove_all) + 'mn_'
+DateIso += strcompress(time[2],/remove_all) + 's'
 
 return, DateIso
 END
