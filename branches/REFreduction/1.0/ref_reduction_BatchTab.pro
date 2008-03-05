@@ -816,6 +816,8 @@ DisplayInfoOfSelectedRow, Event, RowSelected
 MapBase, Event, 'processing_base', 0
 ;turn off hourglass
 widget_control,hourglass=0
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -867,6 +869,8 @@ DisplayInfoOfSelectedRow, Event, RowSelected
 MapBase, Event, 'processing_base', 0
 ;turn off hourglass
 widget_control,hourglass=0
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
