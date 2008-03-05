@@ -827,13 +827,17 @@ part1_array = strsplit(cmd,split1,/extract,/regex)
 part1       = part1_array[0]
 ;get second part (after data runs)
 split2      = '--data-roi-file'
+(*global).batch_split2 = split2
 part2_array = strsplit(cmd,split2,/extract,/regex)
 part2       = part2_array[1]
+(*global).batch_part2 = part2
 new_cmd     = STRTRIM(part1) + ' ' + split1
+(*global).batch_new_cmd = new_cmd
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
-
+(*(*global).batch_data_runs) = data_runs
+(*(*global).batch_DataNexus) = DataNexus
 ;check that the NeXus have the same angle, S1 and S2 values
 sz = (size(DataNeXus))(1)
 IF (sz GT 1) THEN BEGIN
@@ -869,15 +873,56 @@ IF (sz GT 1) THEN BEGIN
 
 ;inform user that the values do not match if SameStatus is not 1
     IF (SameStatus NE 1) THEN BEGIN
-        
+;Populate ProTable with angle, S1 and s2 values
+        ProArray = strarr(4,10)
+        FOR j=0,(sz-1) DO BEGIN
+            ProArray[0,j] = data_runs[j]
+            ProArray[1,j] = AngleArray[j]
+            ProArray[2,j] = S1Array[j]
+            ProArray[3,j] = S2Array[j]
+        ENDFOR
+        id = widget_info(Event.top,find_by_uname='pro_table')
+        widget_control, id, set_value=ProArray
+;change size of processing base
+        SetBaseYSize, Event, 'processing_base', 390
+;change top label
+        value = 'P R O C E S S I N G   N E W   I N P U T  . . .  CONTINUE OR NOT ? '
+        putLabelValue, Event, 'pro_top_label', value
+    ENDIF ELSE BEGIN
+        Continue_ChangeDataRunNumber, Event, $
+          RowSelected,$
+          data_runs, $
+          DataNexus,$
+          split2,$
+          part2,$
+          BatchTable,$
+          new_cmd
+    ENDELSE
+ENDIF ELSE BEGIN
+    Continue_ChangeDataRunNumber, Event, $
+      RowSelected,$
+      data_runs, $
+      DataNexus,$
+      split2,$
+      part2,$
+      BatchTable,$
+      new_cmd
+ENDELSE
+END
 
-    
 
+PRO  Continue_ChangeDataRunNumber, Event, $
+                                   RowSelected,$
+                                   data_runs, $
+                                   DataNexus,$
+                                   split2,$
+                                   part2,$
+                                   BatchTable,$
+                                   new_cmd
 
-    
-    ENDIF    
-    
-ENDIF
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 DataRunsJoined = strjoin(data_runs,',')
 BatchTable[1,RowSelected] = DatarunsJoined
@@ -887,6 +932,7 @@ IF (DataNexus[0] NE '') THEN BEGIN
         new_cmd += ' ' + DataNexus[i]
     ENDFOR
 ENDIF
+
 new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
 new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
@@ -902,11 +948,53 @@ DisplayBatchTable, Event, BatchTable
 DisplayInfoOfSelectedRow, Event, RowSelected
 ;Hide processing base
 MapBase, Event, 'processing_base', 0
+SetBaseYSize, Event, 'processing_base', 50
 ;generate a new batch file name
 GenerateBatchFileName, Event
 ;turn off hourglass
 widget_control,hourglass=0
 END
+
+
+
+PRO BatchTab_ContinueProcessing, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;reset value of top label
+value = 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '
+putLabelValue, Event, 'pro_top_label', value
+SetBaseYSize, Event, 'processing_base', 50
+;continue processing here
+RowSelected = (*global).PrevBatchRowSelected
+data_runs   = (*(*global).batch_data_runs)
+DataNexus   = (*(*global).batch_DataNexus)
+split2      = (*global).batch_split2
+part2       = (*global).batch_part2
+BatchTable  = (*(*global).BatchTable)
+new_cmd     = (*global).batch_new_cmd
+
+Continue_ChangeDataRunNumber, Event, $
+  RowSelected,$
+  data_runs, $
+  DataNexus,$
+  split2,$
+  part2,$
+  BatchTable,$
+  new_cmd
+
+END
+
+
+
+PRO BatchTab_StopProcessing, Event
+MapBase, Event, 'processing_base', 0
+;reset value of top label
+value = 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '
+putLabelValue, Event, 'pro_top_label', value
+SetBaseYSize, Event, 'processing_base', 50
+END
+
 
 
 PRO BatchTab_ChangeNormRunNumber, Event

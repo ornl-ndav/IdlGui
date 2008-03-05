@@ -44,9 +44,14 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                  cmd_batch_length : 60,$
-                  debugger : debugger,$
-                  PrevBatchRowSelected : 0,$
+                  batch_data_runs : ptr_new(0L),$
+                    batch_DataNexus : ptr_new(0L),$
+                    batch_split2 : '',$ 
+                    batch_part2 : '',$
+                    batch_new_cmd : '',$
+                    cmd_batch_length : 60,$
+                    debugger : debugger,$
+                    PrevBatchRowSelected : 0,$
                     BatchDefaultPath : '~/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
                     BatchFileName : '',$
@@ -471,7 +476,7 @@ ENDIF
 
 ; default tabs shown
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 0 ;batch mode
+widget_control, id1, set_tab_current = 3 ;batch mode(3)
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
