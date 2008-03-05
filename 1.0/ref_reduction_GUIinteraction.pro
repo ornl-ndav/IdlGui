@@ -58,3 +58,9 @@ sz = (size(NormLogBook))(1)
 id = widget_info(Event.top,find_by_uname='normalization_log_book_text_field')
 widget_control, id, set_text_top_line=(sz-2)
 END
+
+
+PRO SetBaseYSize, Event, uname, y_size
+id = widget_info(Event.top,find_by_uname=uname)
+widget_control, id, YSIZE = y_size
+END

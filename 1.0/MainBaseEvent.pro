@@ -814,6 +814,16 @@ CASE Event.id OF
         BatchTab_ChangeDataRunNumber, Event
     end
 
+;;Processing Base YES (continue)
+    widget_info(wWidget, FIND_BY_UNAME='pro_yes'): begin
+        BatchTab_ContinueProcessing, Event
+    end
+    
+;;Processing Base NO (continue)
+    widget_info(wWidget, FIND_BY_UNAME='pro_no'): begin
+        BatchTab_StopProcessing, Event
+    end
+
 ;;Change Normalization Run number
     widget_info(wWidget, FIND_BY_UNAME='batch_norm_run_field_status'): begin
         BatchTab_ChangeNormRunNumber, Event
