@@ -769,6 +769,8 @@ IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
     DisplayBatchTable, Event, BatchTable
 ENDIF
 UpdateBatchTabGui, Event
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
