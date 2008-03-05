@@ -155,6 +155,15 @@ dS2Label = { size  : [dS1Label.size[0]+dS1Label.size[2]+XYoff[0],$
              uname : 's2_value_status',$
              value : 'Slit 2 : ? mm'}
 
+;Repopulate GUI
+XYoff = [180,45]
+dPopulateGui = { size  : [dActive.size[0]+XYoff[0],$
+                          dActive.size[1]+XYoff[1],$
+                          450,30],$
+                 value : 'R E P O P U L A T E   G U I',$
+                 uname : 'repopulate_gui',$
+                 sensitive : 0}
+                          
 ;Command line preview
 XYoff = [10,55]
 dCMDlineLabel = { size  : [dFrame.size[0]+XYoff[0],$
@@ -442,7 +451,6 @@ wAngleLabel = WIDGET_LABEL(BATCH_BASE,$
                            UNAME     = dAngleLabel.uname,$
                            VALUE     = dAngleLabel.value)
 
-
 ;\\\\\\\\\
 ;S1 value\
 ;\\\\\\\\\
@@ -465,6 +473,17 @@ wS2Label = WIDGET_LABEL(BATCH_BASE,$
                         UNAME     = dS2Label.uname,$
                         VALUE     = dS2Label.value)
 
+;\\\\\\\\\\\\\\\
+;Repopulate GUI\
+;\\\\\\\\\\\\\\\
+wPopulateGui = WIDGET_BUTTON(BATCH_BASE,$
+                             XOFFSET   = dPopulateGui.size[0],$
+                             YOFFSET   = dPopulateGui.size[1],$
+                             SCR_XSIZE = dPopulateGui.size[2],$
+                             SCR_YSIZE = dPopulateGui.size[3],$
+                             UNAME     = dPopulateGui.uname,$
+                             VALUE     = dPopulateGui.value,$
+                             SENSITIVE = dPopulateGui.sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\
 ;Command line label\
