@@ -833,6 +833,52 @@ new_cmd     = STRTRIM(part1) + ' ' + split1
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
 DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+
+;check that the NeXus have the same angle, S1 and S2 values
+sz = (size(DataNeXus))(1)
+IF (sz GT 1) THEN BEGIN
+    AngleArray = strarr(sz)
+    S1Array    = strarr(sz)
+    S2Array    = strarr(sz)
+    FOR i=0,(sz-1) DO BEGIN
+        entry = obj_new('IDLgetMetadata',DataNexus[i])
+        AngleArray[i] = strcompress(entry->getAngle())
+        S1Array[i]    = strcompress(entry->getS1())
+        S2Array[i]    = strcompress(entry->getS2())
+    ENDFOR
+    
+;Check if they are identical or not
+    SameStatus = 1
+;check Angle 
+    AngleEqArray = WHERE(AngleArray EQ AngleArray[0],length)
+    IF (length NE sz) THEN BEGIN
+        SameStatus = 0
+    ENDIF ELSE BEGIN
+;check S1
+        S1EqArray = WHERE(S1Array EQ S1Array[0], length)
+        IF (length NE sz) THEN BEGIN
+            SameStatus = 0
+        ENDIF ELSE BEGIN
+;check S2
+            S2EqArray = WHERE(S2Array EQ S2Array[0], length)
+            IF (length NE sz) THEN BEGIN
+                SameStatus = 0
+            ENDIF
+        ENDELSE
+    ENDELSE
+
+;inform user that the values do not match if SameStatus is not 1
+    IF (SameStatus NE 1) THEN BEGIN
+        
+
+    
+
+
+    
+    ENDIF    
+    
+ENDIF
+
 DataRunsJoined = strjoin(data_runs,',')
 BatchTable[1,RowSelected] = DatarunsJoined
 IF (DataNexus[0] NE '') THEN BEGIN
