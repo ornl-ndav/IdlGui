@@ -193,6 +193,40 @@ IF (file_error EQ 0) THEN BEGIN
 ENDIF
 END
 
+
+
+FUNCTION UpdateOutputFlag, Event, new_cmd, DataRun
+print, 'old_cmd is: ' + new_cmd
+split1      = '--output='
+ArraySplit1 = STRSPLIT(new_cmd,split1,/EXTRACT,/REGEX)
+part1       = ArraySplit1[0] + split1
+;get path of output file name
+ArrayPath   = STRSPLIT(ArraySplit1[1],'/',/EXTRACT,COUNT=length)
+IF (length GT 1) THEN BEGIN
+    path  = STRJOIN(ArrayPath[0:length-2],'/')
+ENDIF ELSE BEGIN
+    path  = ArrayPath[0]
+ENDELSE
+
+;create new output file name
+;get global structure			
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+NewFileName  = path + '/'
+instrument   = (*global).instrument
+NewFileName += instrument
+NewfileName += '_' + STRCOMPRESS(DataRun,/REMOVE_ALL)
+DateStamp    = GenerateDateStamp()
+NewfileName += '_' + DateStamp 
+NewfileName += '.txt'
+
+;recreate the cmd
+new_cmd = part1 + NewFileName
+print, 'new_cmd is: ' + new_cmd
+RETURN, new_cmd
+END
+
+
 ;**********************************************************************
 ;GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET - GET
 ;**********************************************************************
@@ -774,6 +808,7 @@ GenerateBatchFileName, Event
 END
 
 
+
 PRO BatchTab_ChangeDataRunNumber, Event
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
@@ -809,6 +844,9 @@ IF (DataNexus[0] NE '') THEN BEGIN
     ENDFOR
 ENDIF
 new_cmd += ' ' + split2 + part2
+;change the --output flag in the cmd
+new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
+;put new_cmd back in the BatchTable
 BatchTable[7,RowSelected]= new_cmd
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
@@ -816,10 +854,10 @@ DisplayBatchTable, Event, BatchTable
 DisplayInfoOfSelectedRow, Event, RowSelected
 ;Hide processing base
 MapBase, Event, 'processing_base', 0
-;turn off hourglass
-widget_control,hourglass=0
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 
@@ -869,10 +907,10 @@ DisplayBatchTable, Event, BatchTable
 DisplayInfoOfSelectedRow, Event, RowSelected
 ;Hide processing base
 MapBase, Event, 'processing_base', 0
-;turn off hourglass
-widget_control,hourglass=0
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;turn off hourglass
+widget_control,hourglass=0
 END
 
 
