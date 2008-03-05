@@ -589,13 +589,6 @@ END
 
 
 
-
-
-
-
-
-
-
 ;This function displays all the fields of the current selected row
 ;in the INPUT base below the main batch table
 PRO DisplayInfoOfSelectedRow, Event, RowSelected
@@ -910,6 +903,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateUpButton, Event, activateUpButtonStatus
 
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -947,6 +942,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateDownButton, Event, activateDownButtonStatus
 
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -971,6 +968,9 @@ DisplayBatchTable, Event, BatchTable
 ;this function updates the widgets (button) of the tab
 UpdateBatchTabGui, Event
 DisplayInfoOfSelectedRow, Event, RowSelected
+
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -1006,6 +1006,9 @@ DisplayInfoOfSelectedRow, Event, RowSelected
 
 ;this function updates the widgets (button) of the tab
 UpdateBatchTabGui, Event
+
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -1297,6 +1300,8 @@ IF (WorkingRow NE -1) THEN BEGIN
     BatchTable[1,WorkingRow] = DataRunNumber
     (*(*global).BatchTable)  = BatchTable
 ENDIF
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
@@ -1333,6 +1338,8 @@ IF (WorkingRow NE -1) THEN BEGIN
     BatchTable[2,WorkingRow] = NormRunNumber
     (*(*global).BatchTable)  = BatchTable
 ENDIF
+;generate a new batch file name
+GenerateBatchFileName, Event
 END
 
 
