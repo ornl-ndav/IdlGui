@@ -44,19 +44,24 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                   cmd_batch_length : 50,$
-                   debugger : debugger,$
-                   PrevBatchRowSelected : 0,$
-                     BatchDefaultPath: '~/',$
-                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
-                     BatchFileName : '',$
-                     DataRunNumber : '',$
-                   PreviousRunReductionValidated : 0,$  
-                   BatchTable : ptr_new(0L),$ ;big array of batch table
-                   isHDF5format : 1,$
-                   dr_output_path : '~/',$
-                   archived_data_flag : 1,$
-                   archived_norm_flag : 1,$
+                  batch_data_runs : ptr_new(0L),$
+                    batch_DataNexus : ptr_new(0L),$
+                    batch_split2 : '',$ 
+                    batch_part2 : '',$
+                    batch_new_cmd : '',$
+                    cmd_batch_length : 50,$
+                    debugger : debugger,$
+                    PrevBatchRowSelected : 0,$
+                    BatchDefaultPath: '~/',$
+                    BatchDefaultFileFilter : '*_Batch_Run*.txt',$
+                    BatchFileName : '',$
+                    DataRunNumber : '',$
+                    PreviousRunReductionValidated : 0,$  
+                    BatchTable : ptr_new(0L),$ ;big array of batch table
+                    isHDF5format : 1,$
+                    dr_output_path : '~/',$
+                    archived_data_flag : 1,$
+                    archived_norm_flag : 1,$
 ;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
@@ -467,7 +472,7 @@ ENDIF
 
 ; default tabs shown
 ;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 3 ;batch mode
+;widget_control, id1, set_tab_current = 3 ;batch mode(3)
  
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1 ;NORMALIZATION

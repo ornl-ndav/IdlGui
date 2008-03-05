@@ -10,12 +10,59 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
              uname : 'batch_base',$
              title : BatchTabTitle }
 
+;////////////////////////////////////////////////////////
 ;Processing base
-ProBase = { size  : [170,150,500,50],$
+ProBase = { size  : [170,150,500,50],$ ;50->390
             uname : 'processing_base',$
             frame : 5}
 ProLabel = { size  : [30,15],$
+             uname : 'pro_top_label',$
              value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
+
+XYoff = [0,35]
+ProLign = { size  : [XYoff[0], $
+                     ProLabel.size[1]+XYoff[1]],$
+            value : '_____________________________________________________________________________________'}
+
+XYoff = [10,35]
+ProLabel2 = { size  : [XYoff[0], $
+                       ProLign.size[1]+XYoff[1]],$
+              value : 'The DATA runs you entered DO NOT have the same Angle, S1 or S2 parameters values.'}
+
+XYoff = [35,35]
+TableAlign = INTARR(4,10)+1
+ProTable = { size         : [XYoff[0],$
+                             ProLabel2.size[1]+XYoff[1],$
+                             430, $
+                             200,$
+                             4, $
+                             10],$
+             uname        : 'pro_table',$
+             sensitive    : 1,$
+             label        : ['Run #',$
+                             'Angle (deg.)',$
+                             'S1 (mm)',$
+                             'S2 (mm)'],$
+             align        : TableAlign,$
+             column_width : [100,100,100,100]}
+
+XYoff = [10,20]   
+ProQLabel = { size  : [XYoff[0],$
+                       ProTable.size[1]+ProTable.size[3]+XYoff[1]],$
+              value : 'DO YOU WANT TO CONTINUE ?'}
+XYoff = [170,-8]
+ProYesButton = { size  : [ProQLabel.size[0]+XYoff[0],$
+                          ProQLabel.size[1]+XYoff[1],$
+                          150,35],$
+                 uname : 'pro_yes',$
+                 value : 'Y E S'}
+XYoff = [5,0]
+ProNoButton = { size  : [ProYesButton.size[0]+ProYesButton.size[2]+XYoff[0],$
+                          ProYesButton.size[1],$
+                          ProYesButton.size[2],$
+                          ProYesButton.size[3]],$
+                 uname : 'pro_no',$
+                 value : 'N O'}
 
 ;////////////////////////////////////////////////////////
 ;Table Widget
@@ -250,8 +297,58 @@ wProLabel = WIDGET_LABEL(wProBase,$
                          XOFFSET = ProLabel.size[0],$
                          YOFFSET = ProLabel.size[1],$
                          VALUE   = ProLabel.value,$
+                         UNAME   = ProLabel.uname,$
                          /ALIGN_CENTER)
 
+wProLign = WIDGET_LABEL(wProBase,$
+                        XOFFSET = ProLign.size[0],$
+                        YOFFSET = ProLign.size[1],$
+                        VALUE   = ProLign.value,$
+                        /ALIGN_CENTER)
+
+wProLabel2 = WIDGET_LABEL(wProBase,$
+                          XOFFSET = ProLabel2.size[0],$
+                          YOFFSET = ProLabel2.size[1],$
+                          VALUE   = ProLabel2.value,$
+                          /ALIGN_CENTER)
+
+wProTable = WIDGET_TABLE(wProBase,$
+                         XOFFSET       = ProTable.size[0],$
+                         YOFFSET       = ProTable.size[1],$
+                         SCR_XSIZE     = ProTable.size[2],$
+                         SCR_YSIZE     = ProTable.size[3],$
+                         XSIZE         = ProTable.size[4],$
+                         YSIZE         = ProTable.size[5],$
+                         UNAME         = ProTable.uname,$
+                         SENSITIVE     = ProTable.sensitive,$
+                         COLUMN_LABELS = ProTable.label,$
+                         COLUMN_WIDTHS = ProTable.column_width,$
+                         ALIGNMENT     = ProTable.align,$
+                         /NO_ROW_HEADERS,$
+                         /ROW_MAJOR,$
+                         /RESIZEABLE_COLUMNS)
+
+wProQLabel = WIDGET_LABEL(wProBase,$
+                          XOFFSET = ProQLabel.size[0],$
+                          YOFFSET = ProQLabel.size[1],$
+                          VALUE   = ProQLabel.value)
+
+wProYesButton = WIDGET_BUTTON(wProBase,$
+                              XOFFSET   = ProYesButton.size[0],$
+                              YOFFSET   = ProYesButton.size[1],$
+                              SCR_XSIZE = ProYesButton.size[2],$
+                              SCR_YSIZE = ProYesButton.size[3],$
+                              VALUE     = ProYesButton.value,$
+                              UNAME     = ProYesButton.uname)
+                              
+wProNoButton = WIDGET_BUTTON(wProBase,$
+                              XOFFSET   = ProNoButton.size[0],$
+                              YOFFSET   = ProNoButton.size[1],$
+                              SCR_XSIZE = ProNoButton.size[2],$
+                              SCR_YSIZE = ProNoButton.size[3],$
+                              VALUE     = ProNoButton.value,$
+                              UNAME     = ProNoButton.uname)
+                              
 ;\\\\\\\\\\\\\
 ;Table Widget\
 ;\\\\\\\\\\\\\
