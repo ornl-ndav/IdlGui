@@ -376,9 +376,10 @@ if (~isWithFiltering(Event)) then begin ;no filtering
 endif
 
 ;get info about deltaT/T
-if (isWithDeltaToverT(Event)) then begin ;store deltaT over T
+print, isWithDToT(Event)
+IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
     cmd += ' --store-dtot'
-endif
+ENDIF
 
 ;overwrite data instrument geometry file
 if (isWithDataInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
