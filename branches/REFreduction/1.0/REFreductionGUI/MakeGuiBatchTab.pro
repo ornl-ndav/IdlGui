@@ -15,9 +15,9 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 ProBase = { size  : [350,250,500,50],$ ;50->390
             uname : 'processing_base',$
             frame : 5}
-ProLabel = { size  : [30,15],$
+ProLabel = { size  : [30,15,500],$
              uname : 'pro_top_label',$
-             value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
+             value : 'PROCESSING  DATA NEW  INPUT  . . .  ( P L E A S E   W A I T ) '}
 
 XYoff = [0,35]
 ProLign = { size  : [XYoff[0], $
@@ -310,6 +310,7 @@ wProBase = WIDGET_BASE(BATCH_BASE,$
 wProLabel = WIDGET_LABEL(wProBase,$
                          XOFFSET = ProLabel.size[0],$
                          YOFFSET = ProLabel.size[1],$
+                         XSIZE   = ProLabel.size[2],$
                          VALUE   = ProLabel.value,$
                          UNAME   = ProLabel.uname,$
                          /ALIGN_CENTER)
