@@ -948,6 +948,11 @@ CASE Event.id OF
         BatchTab_ChangeDataNormRunNumber, Event
     end
 
+;;Repopulate GUI
+    widget_info(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
+        RepopulateGUI, Event ;_BatchRepopulateGui
+    end    
+
 ;;Processing Base YES (continue)
     widget_info(wWidget, FIND_BY_UNAME='pro_yes'): begin
         BatchTab_ContinueProcessing, Event

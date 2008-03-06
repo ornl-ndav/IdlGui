@@ -104,6 +104,8 @@ cd, CurrentFolder
 .run IDLgetMetadata__define.pro
 .run ref_reduction_BatchTab.pro
 .run ref_reduction_BatchDataNorm.pro
+.run IDLparseCommandLine__define.pro
+.run ref_reduction_BatchRepopulateGui.pro
 
 .run ref_reduction_LogBookInterface.pro
 
