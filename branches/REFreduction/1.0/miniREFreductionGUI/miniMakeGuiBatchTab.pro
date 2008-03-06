@@ -1,10 +1,9 @@
 PRO miniMakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
 
-;***********************************************************************************
+;*******************************************************************************
 ;                           Define size arrays
 ;                 [xoffset, yoffset, scr_xsize, scr_ysize]
-;***********************************************************************************
-
+;*******************************************************************************
 ;Main Base
 BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
              uname : 'batch_base',$
@@ -12,22 +11,27 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Processing base
-ProBase = { size  : [170,150,500,50],$ ;50->390
+ProBase = { size  : [170,130,500,50],$ ;50->365
             uname : 'processing_base',$
             frame : 5}
-ProLabel = { size  : [30,15],$
+value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+ProLabel = { size  : [0,0,495,45],$
              uname : 'pro_top_label',$
-             value : 'P R O C E S S I N G   N E W   I N P U T  . . .  ( P L E A S E   W A I T ) '}
+             frame : 2,$
+             value : value}
 
 XYoff = [0,35]
+value = '___________________________________________________________________'
+value += '__________________'
 ProLign = { size  : [XYoff[0], $
                      ProLabel.size[1]+XYoff[1]],$
-            value : '_____________________________________________________________________________________'}
+            value : value }
 
 XYoff = [10,35]
 ProLabel2 = { size  : [XYoff[0], $
                        ProLign.size[1]+XYoff[1]],$
-              value : 'The DATA runs you entered DO NOT have the same Angle, S1 or S2 parameters values.'}
+              value : 'The DATA runs you entered DO NOT have the same ' + $
+              'Angle, S1 or S2 parameters values.'}
 
 XYoff = [35,35]
 TableAlign = INTARR(4,10)+1
@@ -49,14 +53,14 @@ ProTable = { size         : [XYoff[0],$
 XYoff = [10,20]   
 ProQLabel = { size  : [XYoff[0],$
                        ProTable.size[1]+ProTable.size[3]+XYoff[1]],$
-              value : 'DO YOU WANT TO CONTINUE ?'}
-XYoff = [170,-8]
+              value : 'DO YOU WANT TO VALIDATE THE NEW INPUT ANYWAY ?'}
+XYoff = [295,-8]
 ProYesButton = { size  : [ProQLabel.size[0]+XYoff[0],$
                           ProQLabel.size[1]+XYoff[1],$
-                          150,35],$
+                          90,35],$
                  uname : 'pro_yes',$
                  value : 'Y E S'}
-XYoff = [5,0]
+XYoff = [10,0]
 ProNoButton = { size  : [ProYesButton.size[0]+ProYesButton.size[2]+XYoff[0],$
                           ProYesButton.size[1],$
                           ProYesButton.size[2],$
@@ -215,7 +219,8 @@ dDeleteButton = { size      : [dDeleteSelectionButton.size[0] + $
                   sensitive : 0}
 
 XYoff = [10,0]
-dRunButton = { size      : [dDeleteButton.size[0]+dDeleteButton.size[2]+XYoff[0],$
+dRunButton = { size      : [dDeleteButton.size[0]+ $
+                            dDeleteButton.size[2]+XYoff[0],$
                             dDeleteButton.size[1]+XYoff[1],$
                             dDeleteButton.size[2:3]],$
                uname     : 'run_active_button',$
@@ -235,7 +240,8 @@ dProgressBarBackground = { size  : [XYoff[0],$
                                    100,30],$
                           uname : 'progress_bar_draw'}
 XYoff = [0,8]
-dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+dProgressBarBackground.size[2]+XYoff[0],$
+dProgressBarLabel = { size  : [dProgressBarBackground.size[0]+ $
+                               dProgressBarBackground.size[2]+XYoff[0],$
                                XYoff[1],$
                                100,30],$
                       uname : 'progress_bar_label',$
@@ -255,7 +261,8 @@ dSApathButton = { size  : [ dSaveasLabel.size[0]+XYoff[0],$
                   value : '~/'}
 
 XYoff = [0,0]
-dSAfileText = { size  : [dSApathButton.size[0]+dSApathButton.size[2]+XYoff[0],$                   
+dSAfileText = { size  : [dSApathButton.size[0]+ $
+                         dSApathButton.size[2]+XYoff[0],$                   
                          dSApathButton.size[1]+XYoff[1],$
                          dSApathButton.size[2], $
                          35],$
@@ -263,7 +270,8 @@ dSAfileText = { size  : [dSApathButton.size[0]+dSApathButton.size[2]+XYoff[0],$
                 value : ''}
 
 XYoff = [0,0]
-dSaveButton = { size      : [dSAfileText.size[0]+dSAfileText.size[2]+XYoff[0],$
+dSaveButton = { size      : [dSAfileText.size[0]+ $
+                             dSAfileText.size[2]+XYoff[0],$
                              dSAfileText.size[1]+XYoff[1],$
                              150,35],$
                 uname     : 'save_as_file_button',$
@@ -279,9 +287,9 @@ dLoadBatchButton = { size  : [dSaveasLabel.size[0]+XYoff[0],$
                      uname : 'load_batch_button',$
                      value : 'LOAD BATCH'}
 
-;***********************************************************************************
+;*******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;*******************************************************************************
 BATCH_BASE = WIDGET_BASE(MAIN_TAB,$
                          UNAME     = BatchTab.uname,$
                          TITLE     = BatchTab.title,$
@@ -305,15 +313,12 @@ wProBase = WIDGET_BASE(BATCH_BASE,$
 wProLabel = WIDGET_LABEL(wProBase,$
                          XOFFSET = ProLabel.size[0],$
                          YOFFSET = ProLabel.size[1],$
+                         XSIZE   = ProLabel.size[2],$
+                         YSIZE   = ProLabel.size[3],$
                          VALUE   = ProLabel.value,$
                          UNAME   = ProLabel.uname,$
+                         FRAME   = ProLabel.frame,$
                          /ALIGN_CENTER)
-
-wProLign = WIDGET_LABEL(wProBase,$
-                        XOFFSET = ProLign.size[0],$
-                        YOFFSET = ProLign.size[1],$
-                        VALUE   = ProLign.value,$
-                        /ALIGN_CENTER)
 
 wProLabel2 = WIDGET_LABEL(wProBase,$
                           XOFFSET = ProLabel2.size[0],$
@@ -588,11 +593,16 @@ wProgressBarBase = WIDGET_BASE(BATCH_BASE,$
                                MAP       = dProgressBarBase.map)
 
 wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
-                                     XOFFSET   = dProgressBarBackground.size[0],$
-                                     YOFFSET   = dProgressBarBackground.size[1],$
-                                     SCR_XSIZE = dProgressBarBackground.size[2],$
-                                     SCR_YSIZE = dProgressBarBackground.size[3],$
-                                     UNAME     = dProgressBarBackground.uname)
+                                     XOFFSET   = $
+                                     dProgressBarBackground.size[0],$
+                                     YOFFSET   = $
+                                     dProgressBarBackground.size[1],$
+                                     SCR_XSIZE = $
+                                     dProgressBarBackground.size[2],$
+                                     SCR_YSIZE = $
+                                     dProgressBarBackground.size[3],$
+                                     UNAME     = $
+                                     dProgressBarBackground.uname)
                                      
 wProgressBarLabel = WIDGET_LABEL(wProgressBarBase,$
                                  XOFFSET   = dProgressBarLabel.size[0],$
