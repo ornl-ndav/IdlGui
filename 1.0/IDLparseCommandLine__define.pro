@@ -1,132 +1,261 @@
-FUNCTION getMainDataNexusFileName
+;This function parse the 'base_string'. 
+;#1 -> it splits the 'base_string' using the 'arg1' string and keeps
+;the 'arg1Index' of the resulting array
+;#2 -> it splits the result from step1 using 'arg2' and keeps
+;the 'arg2Index' of the resulting array
+FUNCTION ValueBetweenArg1Arg2, base_string, $
+                               arg1, arg1Index, $
+                               arg2, arg2Index
+Split1 = STRSPLIT(base_string,arg1,/EXTRACT,/REGEX,COUNT=length)
+IF (length GT 1) THEN BEGIN
+    Split2 = STRSPLIT(Split1[arg1Index],arg2,/EXTRACT,/REGEX)
+    RETURN, Split2[arg2Index]
+ENDIF ELSE BEGIN
+    RETURN, ''
+ENDELSE 
+END
+
+;This function parse the 'base_string' and returns the string found
+;before the string 'arg1'
+FUNCTION ValueBeforeArg1, base_string, arg1
+Split = STRSPLIT(base_string, arg1,/EXTRACT,/REGEX)
+RETURN, Split[0]
+END
+
+;This function parse the 'base_string' and returns the string found
+;after the string 'arg1'
+FUNCTION ValueAfterArg1, base_string, arg1
+Split = STRSPLIT(base_string, arg1,/EXTRACT,/REGEX)
+RETURN, Split[1]
+END
+
+;This function returns 1 if 'arg' has been found in 'base_string'
+FUNCTION isStringFound, base_string, arg
+RETURN, STRMATCH(base_string,'*'+arg+'*')
+END
+
+;This function returns the full string up to the last 'arg' found
+FUNCTION ValueBeforeLastArg, base_string, arg
+Split = STRSPLIT(base_string,arg,/EXTRACT,/REGEX,COUNT=length)
+IF (length GT 1) THEN BEGIN
+    result = STRJOIN(Split[0:length-2],arg)
+    ArgIndex = STRSPLIT(base_string,arg,/REGEX,COUNT=length)
+    IF (ArgIndex[0] EQ 1) THEN BEGIN
+        RETURN, (arg + result + arg)
+    ENDIF 
+    RETURN, (result + arg)
+ENDIF ELSE BEGIN
+    RETURN, ''
+ENDELSE
+END
+
+;This function returns the full string after the last 'arg' found
+FUNCTION ValueAfterLastArg, base_string, arg
+Split = STRSPLIT(base_string,arg,/EXTRACT,/REGEX,COUNT=length)
+RETURN, Split[length-1]
+END
+
+
+;*******************************************************************************
+;***** UTILITIES ***************************************************************
+
+FUNCTION getMainDataNexusFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+FUNCTION getMainDataRunNumber, FullNexusName
+inst = obj_new('IDLgetMetadata',FullNexusName)
+RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
+END
+
+FUNCTION getDataRoiFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+FUNCTION getDataPeakExclYArray, cmd
+Ymin = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 0)
+Ymax = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 1)
+RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
+END
+
+FUNCTION getMainNormNexusFileName, cmd
+result  = ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
+result1 = ValueBeforeArg1(result, ',')
+RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
+END
+
+FUNCTION getMainNormRunNumber, FullNexusName
+inst = obj_new('IDLgetMetadata',FullNexusName)
+RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
+END
+
+FUNCTION getNormRoiFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, '--norm-roi-file=', 1, ' ', 0)
+RETURN, result
+END
+
+FUNCTION getNormPeakExclYArray, cmd
+Ymin = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 0)
+Ymax = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 1)
+RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
+END
+
+FUNCTION isWithDataBackgroundFlagOn, cmd
+IF (isStringFound(cmd,'--no-bkg')) THEN BEGIN
+    RETURN, 'yes'
+ENDIF ELSE BEGIN
+    RETURN, 'no'
+ENDELSE
+END
+
+FUNCTION isWithNormBackgroundFlagOn, cmd
+IF (isStringFound(cmd,'--no-norm-bkg')) THEN BEGIN
+    RETURN, 'yes'
+ENDIF ELSE BEGIN
+    RETURN, 'no'
+ENDELSE
+END
+
+FUNCTION getQmin, cmd
+result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 0)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+FUNCTION getQmax, cmd
+result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 1)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+FUNCTION getQwidth, cmd
+result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 2)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+
+FUNCTION getQtype, cmd
+result  = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 3)
+result1 = ValueBeforeArg1(result, ' ')
+RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
+END
+
+FUNCTION getAngleValue, cmd
+IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+    result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 0)
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+ENDIF
 RETURN, ''
 END
 
-FUNCTION getMainDataRunNumber
+FUNCTION getAngleError, cmd
+IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+    result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 1)
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+ENDIF
 RETURN, ''
 END
 
-FUNCTION getDataRoiFileName
+FUNCTION getAngleUnits, cmd
+IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+    result  = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
+    result1 = ValueBeforeArg1(result,' ')
+    result2 = ValueAfterArg1(result1,'=')
+    RETURN, STRCOMPRESS(result2,/REMOVE_ALL)
+ENDIF
 RETURN, ''
 END
 
-FUNCTION getDataPeakExclYArray
-RETURN, [0,0]
+FUNCTION isWithFilteringDataFlag, cmd
+IF (isStringFound(cmd,'--no-filter=')) THEN BEGIN
+    RETURN, 'no'
+ENDIF ELSE BEGIN
+    RETURN, 'yes'
+ENDELSE
 END
 
-FUNCTION getMainNormNexusFileName
-RETURN, ''
+FUNCTION isWithDeltaTOverT, cmd
+IF (isStringFound(cmd,'--store-dtot')) THEN BEGIN
+    RETURN, 'yes'
+ENDIF ELSE BEGIN
+    RETURN, 'no'
+ENDELSE
 END
 
-FUNCTION getMainNormRunNumber
-RETURN, ''
+FUNCTION isWithOverwriteDataInstrGeo, cmd
+IF (isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
+    RETURN, 'yes'
+ENDIF ELSE BEGIN
+    RETURN, 'no'
+END
 END
 
-FUNCTION getNormRoiFileName
-RETURN, ''
+FUNCTION getDataInstrumentGeoFileName, cmd
+IF (isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
+    result = ValueBetweenArg1Arg2(cmd, '--data-inst-geom=', 1, ' ', 0)
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    RETURN, ''
+END
 END
 
-FUNCTION getNormPeakExclYArray
-RETURN, [0,0]
+FUNCTION isWithOverwriteNormInstrGeo, cmd
+IF (isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
+    RETURN, 'yes'
+ENDIF ELSE BEGIN
+    RETURN, 'no'
+END
 END
 
-FUNCTION isWithDataBackgroundFlagOn
-RETURN, 'yes'
+FUNCTION getNormInstrumentGeoFileName, cmd
+IF (isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
+    result = ValueBetweenArg1Arg2(cmd, '--norm-inst-geom=', 1, ' ', 0)
+    RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    RETURN, ''
+END
 END
 
-FUNCTION isWithNormBackgroundFlagOn
-RETURN, 'yes'
+FUNCTION getOutputPath, cmd
+result = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+result1 = ValueBeforeLastArg(result, '/')
+RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
-FUNCTION getQmin
-RETURN, '0'
+FUNCTION getOutputFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+result1 = ValueAfterLastArg(result, '/')
+RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
-FUNCTION getQmax
-RETURN, '0'
-END
-
-FUNCTION getQwidth
-RETURN, '0'
-END
-
-FUNCTION getQtype
-RETURN, 'linear'
-END
-
-FUNCTION getAngleValue
-RETURN, '0'
-END
-
-FUNCTION getAngleError
-RETURN, '0'
-END
-
-FUNCTION getAngleUnits
-RETURN, 'degree'
-END
-
-FUNCTION isWithFilteringDataFlag
-RETURN, 'yes'
-END
-
-FUNCTION isWithDeltaTOverT
+FUNCTION isWithDataCombinedSpec, cmd
 RETURN, 'no'
 END
 
-FUNCTION isWithOverwriteDataInstrGeo
+FUNCTION isWithDataCombinedBack, cmd
 RETURN, 'no'
 END
 
-FUNCTION getDataInstrumentGeoFileName
-RETURN, ''
-END
-
-FUNCTION isWithOverwriteNormInstrGeo
+FUNCTION isWithDataCombinedSub, cmd
 RETURN, 'no'
 END
 
-FUNCTION getNormInstrumentGeoFileName
-RETURN, ''
-END
-
-FUNCTION getOutputPath
-RETURN, ''
-END
-
-FUNCTION getOutputFileName
-RETURN, ''
-END
-
-FUNCTION isWithDataCombinedSpec
+FUNCTION isWithNormCombinedSpec, cmd
 RETURN, 'no'
 END
 
-FUNCTION isWithDataCombinedBack
+FUNCTION isWithNormCombinedBack, cmd
 RETURN, 'no'
 END
 
-FUNCTION isWithDataCombinedSub
+FUNCTION isWithNormCombinedSub, cmd
 RETURN, 'no'
 END
 
-FUNCTION isWithNormCombinedSpec
+FUNCTION isWithRvsTOF, cmd
 RETURN, 'no'
 END
 
-FUNCTION isWithNormCombinedBack
-RETURN, 'no'
-END
-
-FUNCTION isWithNormCombinedSub
-RETURN, 'no'
-END
-
-FUNCTION isWithRvsTOF
-RETURN, 'no'
-END
-
-FUNCTION isWithRvsTOFcombined
+FUNCTION isWithRvsTOFcombined, cmd
 RETURN, 'no'
 END
 
@@ -143,7 +272,7 @@ FUNCTION IDLparseCommandLine::getDataRoiFileName
 RETURN, self.DataRoiFileName
 END
 
-FUNCTION IDLparseCommandLine::geDataPeakExclYArray
+FUNCTION IDLparseCommandLine::getDataPeakExclYArray
 RETURN, self.DataPeakExclYArray
 END
 
@@ -163,7 +292,7 @@ FUNCTION IDLparseCommandLine::getNormPeakExclYArray
 RETURN, self.NormPeakExclYArray
 END
 
-FUNCTION IDLparseCommandLine::getDataBackgroundFalg
+FUNCTION IDLparseCommandLine::getDataBackgroundFlag
 RETURN, self.DataBackgroundFlag
 END
 
@@ -187,15 +316,15 @@ FUNCTION IDLparseCommandLine::getQtype
 RETURN, self.Qtype
 END
 
-FUNCTION IDLparseCommandLine::getAngValue
+FUNCTION IDLparseCommandLine::getAngleValue
 RETURN, self.AngleValue
 END
 
-FUNCTION IDLparseCommandLine::getAngError
+FUNCTION IDLparseCommandLine::getAngleError
 RETURN, self.AngleError
 END
 
-FUNCTION IDLparseCommandLine::getAngUnits
+FUNCTION IDLparseCommandLine::getAngleUnits
 RETURN, self.AngleUnits
 END
 
@@ -203,11 +332,11 @@ FUNCTION IDLparseCommandLine::getFilteringDataFlag
 RETURN, self.FilteringDataFlag
 END
 
-FUNCTION IDLparseCommandLine::getDeltaTOverT
+FUNCTION IDLparseCommandLine::getDeltaTOverTFlag
 RETURN, self.DeltaTOverT
 END
 
-FUNCTION IDLparseCommandLine::getOverwriteDataInstrGeo
+FUNCTION IDLparseCommandLine::getOverwriteDataInstrGeoFlag
 RETURN, self.OverwriteDataInstrGeo
 END
 
@@ -215,7 +344,7 @@ FUNCTION IDLparseCommandLine::getDataInstrGeoFileName
 RETURN, self.DataInstrGeoFileName
 END
 
-FUNCTION IDLparseCommandLine::getOverwriteNormInstrGeo
+FUNCTION IDLparseCommandLine::getOverwriteNormInstrGeoFlag
 RETURN, self.OverwriteNormInstrGeo
 END
 
@@ -267,68 +396,70 @@ END
 ;******  Class constructor *****************************************************
 FUNCTION IDLparseCommandLine::init, cmd
 
-self.cmd = cmd
-
 ;Work on Data
-self.MainDataNexusFileName = getMainDataNexusFileName()
-self.MainDataRunNUmber     = getMainDataRunNumber()
-self.DataRoiFileName       = getDataRoiFileName()
-self.DataPeakExclYArray    = getDataPeakExclYArray()
+self.MainDataNexusFileName = getMainDataNexusFileName(cmd)
+self.MainDataRunNUmber     = $
+  getMainDataRunNumber(self.MainDataNexusFileName)
+self.DataRoiFileName       = getDataRoiFileName(cmd)
+self.DataPeakExclYArray    = getDataPeakExclYArray(cmd)
 
 ;Work on Normalization
-self.MainNormNexusFileName = getMainNormNexusFileName()
-self.MainNormRunNUmber     = getMainNormRunNumber()
-self.NormRoiFileName       = getNormRoiFileName()
-self.NormPeakExclYArray    = getNormPeakExclYArray()
+self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
+self.MainNormRunNUmber     = $
+  getMainNormRunNumber(self.MainNormNexusFileName)
+self.NormRoiFileName       = getNormRoiFileName(cmd)
+self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
 
 ;;Reduce Tab
 ;Background flags
-self.DataBackgroundFlag    = isWithDataBackgroundFlagOn()
-self.NormBackgroundFlag    = isWithNormBackgroundFlagOn()
+self.DataBackgroundFlag    = isWithDataBackgroundFlagOn(cmd)
+self.NormBackgroundFlag    = isWithNormBackgroundFlagOn(cmd)
 ;Q [Qmin,Qmax,Qwidth,linear/log]
-self.Qmin                  = getQmin()
-self.Qmax                  = getQmax()
-self.Qwidth                = getQwidth()
-self.Qtype                 = getQtype()
+self.Qmin                  = getQmin(cmd)
+self.Qmax                  = getQmax(cmd)
+self.Qwidth                = getQwidth(cmd)
+self.Qtype                 = getQtype(cmd)
 ;Angle Offset
-self.AngleValue            = getAngleValue()
-self.AngleError            = getAngleError()
+self.AngleValue            = getAngleValue(cmd)
+self.AngleError            = getAngleError(cmd)
+self.AngleUnits            = getAngleUnits(cmd)
 ;filtering data
-self.FilteringDataFlag     = isWithFilteringDataFlag()
+self.FilteringDataFlag     = isWithFilteringDataFlag(cmd)
 ;dt/t
-self.DeltaTOverT           = isWithDeltaTOverT()
+self.DeltaTOverT           = isWithDeltaTOverT(cmd)
 ;overwrite data intrument geometry
-self.OverwriteDataInstrGeo = isWithOverwriteDataInstrGeo()
+self.OverwriteDataInstrGeo = isWithOverwriteDataInstrGeo(cmd)
 ;Data instrument geometry file name
-self.DataInstrGeoFileName  = getDataInstrumentGeoFileName()
+self.DataInstrGeoFileName  = getDataInstrumentGeoFileName(cmd)
 ;overwrite norm intrument geometry
-self.OverwriteNormInstrGeo = isWithOverwriteNormInstrGeo()
+self.OverwriteNormInstrGeo = isWithOverwriteNormInstrGeo(cmd)
 ;Norm instrument geometry file name
-self.NormInstrGeoFileName  = getNormInstrumentGeoFileName()
+self.NormInstrGeoFileName  = getNormInstrumentGeoFileName(cmd)
 ;output path
-self.OutputPath            = getOutputPath()
+self.OutputPath            = getOutputPath(cmd)
 ;output file name
-self.OutputFileName        = getOutputFileName()
+self.OutputFileName        = getOutputFileName(cmd)
 ;;Intermediate File Flags
-self.DataCombinedSpecFlag  = isWithDataCombinedSpec()
-self.DataCombinedBackFlag  = isWithDataCombinedBack()
-self.DataCombinedSubFlag   = isWithDataCombinedSub()
-self.NormCombinedSpecFlag  = isWithNormCombinedSpec()
-self.NormCombinedBackFlag  = isWithNormCombinedBack()
-self.NormCombinedSubFlag   = isWithNormCombinedSub()
-self.RvsTOFFlag            = isWithRvsTOF()
-self.RvsTOFcombinedFlag    = isWithRvsTOFcombined()                
+self.DataCombinedSpecFlag  = isWithDataCombinedSpec(cmd)
+self.DataCombinedBackFlag  = isWithDataCombinedBack(cmd)
+self.DataCombinedSubFlag   = isWithDataCombinedSub(cmd)
+self.NormCombinedSpecFlag  = isWithNormCombinedSpec(cmd)
+self.NormCombinedBackFlag  = isWithNormCombinedBack(cmd)
+self.NormCombinedSubFlag   = isWithNormCombinedSub(cmd)
+self.RvsTOFFlag            = isWithRvsTOF(cmd)
+self.RvsTOFcombinedFlag    = isWithRvsTOFcombined(cmd)                
 
+RETURN, 1
 END
 
 ;******  Class Define **** *****************************************************
+
 PRO IDLparseCommandLine__define
 STRUCT = {IDLparseCommandLine,$
-          cmd                   : '',$
           MainDataNexusFileName : '',$
           MainDataRunNumber     : '',$
           DataRoiFileName       : '',$
-          DataPeakExclYArray    : [0,0],$
+          DataPeakExclYArray    : ['',''],$
           MainNormNexusFileName : '',$
           MainNormRunNumber     : '',$
           NormRoiFileName       : '',$
@@ -361,3 +492,5 @@ STRUCT = {IDLparseCommandLine,$
 
 END
 
+;*******************************************************************************
+;*******************************************************************************

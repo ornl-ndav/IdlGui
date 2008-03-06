@@ -1,3 +1,19 @@
+;This class method returns the Run Number of the given nexus
+FUNCTION get_RunNumber, fileID
+run_number_path = '/entry/run_number/'
+error_value = 0
+CATCH, error_value
+IF (error_value NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, ''
+ENDIF ELSE BEGIN
+    pathID     = h5d_open(fileID, run_number_path)
+    run_number = h5d_read(pathID)
+    h5d_close, pathID
+    RETURN, run_number
+ENDELSE
+END
+
 ;This class method returns the s1b value
 FUNCTION get_s1b, fileID
 s1b_path   = '/entry/instrument/aperture1/s1b/value/'
@@ -268,6 +284,11 @@ RETURN, self.S2
 END
 
 
+FUNCTION IDLgetMetadata::getRunNumber
+RETURN, self.RunNumber
+END
+
+
 ;***** Class constructor ******
 FUNCTION IDLgetMetadata::init, nexus_full_path
 
@@ -275,11 +296,13 @@ FUNCTION IDLgetMetadata::init, nexus_full_path
 fileID = h5f_open(nexus_full_path)
 
 ;get angle (theta)
-self.angle = get_theta_degree(fileID)
+self.angle     = get_theta_degree(fileID)
 ;get s1
-self.S1    = get_s1_mm(fileID)
+self.S1        = get_s1_mm(fileID)
 ;get s2
-self.S2    = get_s2_mm(fileID)
+self.S2        = get_s2_mm(fileID)
+;get RunNumber
+self.RunNumber = get_RunNumber(fileID)
 
 IF (self.angle NE '' AND $
     self.S1 NE '' AND $
@@ -294,6 +317,7 @@ END
 
 PRO IDLgetMetadata__define
 struct = {IDLgetMetadata,$
+          RunNumber       : '',$
           nexus_full_path : '',$
           angle           : '',$
           S1              : '',$

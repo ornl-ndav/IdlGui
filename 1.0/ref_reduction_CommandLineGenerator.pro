@@ -376,7 +376,6 @@ if (~isWithFiltering(Event)) then begin ;no filtering
 endif
 
 ;get info about deltaT/T
-print, isWithDToT(Event)
 IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
     cmd += ' --store-dtot'
 ENDIF

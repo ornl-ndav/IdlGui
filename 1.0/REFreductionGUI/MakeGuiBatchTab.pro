@@ -11,7 +11,7 @@ BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
 
 ;////////////////////////////////////////////////////////
 ;Processing base
-ProBase = { size  : [350,250,500,50x],$ ;50->365
+ProBase = { size  : [350,250,500,50],$ ;50->365
             uname : 'processing_base',$
             frame : 5}
 value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
