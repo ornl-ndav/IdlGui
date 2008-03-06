@@ -79,9 +79,9 @@ IF (sz GT 1) THEN BEGIN
         id = widget_info(Event.top,find_by_uname='pro_table')
         widget_control, id, set_value=ProArray
 ;change size of processing base
-        SetBaseYSize, Event, 'processing_base', 390
+        SetBaseYSize, Event, 'processing_base', 365
 ;change top label
-        value = 'PROCESSING  DATA NEW  INPUT  . . .  CONTINUE OR NOT ? '
+        value = 'PROCESSING  NEW  DATA  INPUT  . . .  CONTINUE OR NOT ? '
         putLabelValue, Event, 'pro_top_label', value
     ENDIF ELSE BEGIN
         Continue_ChangeDataRunNumber, Event, $
@@ -133,6 +133,8 @@ new_cmd += ' ' + split2 + part2
 new_cmd = UpdateOutputFlag(Event, new_cmd, DataRunsJoined[0])
 ;put new_cmd back in the BatchTable
 BatchTable[7,RowSelected] = new_cmd
+;update command line
+putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
 ;update DATE field with new date/time stamp
 NewDate = GenerateDateStamp()
 BatchTable[6,RowSelected] = NewDate
@@ -141,7 +143,8 @@ BatchTable[6,RowSelected] = NewDate
 DisplayBatchTable, Event, BatchTable
 SetBaseYSize, Event, 'processing_base', 50
 ;change top label
-value = 'PROCESSING  NORMALIZATION  NEW  INPUT  . . .  ( P L E A S E   W A I T ) '
+value  = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .  '
+value += '( P L E A S E   W A I T ) '
 putLabelValue, Event, 'pro_top_label', value
 
 ;continue with normalization
@@ -181,6 +184,7 @@ part2_array = strsplit(cmd,split2,/extract,/regex)
 part2       = part2_array[1]
 (*global).batch_part2 = part2
 new_cmd = part1 + STRTRIM(split1)
+(*global).batch_new_cmd = new_cmd
 ;get data run cw_field
 norm_runs = getTextFieldValue(Event,'batch_norm_run_field_status')
 NormNexus = getNexusFromRunArray(Event, norm_runs, (*global).instrument)
@@ -232,9 +236,10 @@ IF (sz GT 1) THEN BEGIN
         id = widget_info(Event.top,find_by_uname='pro_table')
         widget_control, id, set_value=ProArray
 ;change size of processing base
-        SetBaseYSize, Event, 'processing_base', 390
+        SetBaseYSize, Event, 'processing_base', 365
 ;change top label
-        value = 'PROCESSING  NORMALIZATION  NEW  INPUT  . . .  CONTINUE OR NOT ? '
+        value = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .  '
+        value += 'CONTINUE OR NOT ? '
         putLabelValue, Event, 'pro_top_label', value
     ENDIF ELSE BEGIN
         Continue_ChangeNormRunNumber, Event, $
@@ -280,7 +285,7 @@ IF (NormNexus[0] NE '') THEN BEGIN
         IF (i EQ 0) THEN BEGIN
             new_cmd += NormNexus[i]
         ENDIF ELSE BEGIN
-            new_cmd += ' ' + NormNexus[i]
+            new_cmd += ',' + NormNexus[i]
         ENDELSE
     ENDFOR
 ENDIF
@@ -306,7 +311,7 @@ GenerateBatchFileName, Event
 ;turn off hourglass
 widget_control,hourglass=0
 
-value = 'PROCESSING  DATA NEW  INPUT  . . .  ( P L E A S E   W A I T ) '
+value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
 putLabelValue, Event, 'pro_top_label', value
 
 (*global).batch_process = 'data'
@@ -323,9 +328,9 @@ widget_control,id,get_uvalue=global
 CurrentProcess = (*global).batch_process 
 IF (CurrentProcess eq 'data') THEN BEGIN
 ;reset value of top label
-    value = 'PROCESSING  DATA  NEW INPUT  . . .  ( P L E A S E   W A I T ) '
-    putLabelValue, Event, 'pro_top_label', value
     SetBaseYSize, Event, 'processing_base', 50
+    value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+    putLabelValue, Event, 'pro_top_label', value
 ;continue processing here
     RowSelected = (*global).PrevBatchRowSelected
     data_runs   = (*(*global).batch_data_runs)
@@ -346,9 +351,10 @@ IF (CurrentProcess eq 'data') THEN BEGIN
 
 ENDIF ELSE BEGIN
 ;reset value of top label
-    value = 'PROCESSING  NORMALIZATION  NEW INPUT  . . .  ( P L E A S E   W A I T ) '
-    putLabelValue, Event, 'pro_top_label', value
     SetBaseYSize, Event, 'processing_base', 50
+    value  = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .'
+    value += '( P L E A S E   W A I T ) '
+    putLabelValue, Event, 'pro_top_label', value
 ;continue processing here
     RowSelected = (*global).PrevBatchRowSelected
     norm_runs   = (*(*global).batch_norm_runs)
@@ -378,175 +384,20 @@ widget_control,id,get_uvalue=global
 CurrentProcess = (*global).batch_process 
 IF (CurrentProcess eq 'data') THEN BEGIN
     SetBaseYSize, Event, 'processing_base', 50
+;change top label
+    value  = 'PROCESSING  NEW  NORMALIZATION  INPUT  . . .  '
+    value += '( P L E A S E   W A I T ) '
+    putLabelValue, Event, 'pro_top_label', value
     ChangeNormRunNumber, Event
 ENDIF ELSE BEGIN
-ENDELSE
-MapBase, Event, 'processing_base', 0
+    MapBase, Event, 'processing_base', 0
 ;reset value of top label
-value = 'PROCESSING  DATA NEW  INPUT  . . .  ( P L E A S E   W A I T ) '
-putLabelValue, Event, 'pro_top_label', value
-SetBaseYSize, Event, 'processing_base', 50
-(*global).batch_process = 'data'
-END
-
-;*******************************************************************************
-;*******************************************************************************
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-PRO Continue_ChangeDataNormRunNumber, Event,$
-                                      RowSelected,$
-                                      norm_runs, $
-                                      NormNexus,$
-                                      split2,$
-                                      part2,$
-                                      BatchTable,$
-                                      new_cmd
-
-print, new_cmd
-;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-NormRunsJoined = strjoin(norm_runs,',')
-BatchTable[2,RowSelected] = NormRunsJoined
-IF (NormNexus[0] NE '') THEN BEGIN
-    sz = (size(NormNexus))(1)
-    FOR i=0,(sz-1) DO BEGIN
-        new_cmd += ' ' + NormNexus[i]
-    ENDFOR
-ENDIF
-new_cmd += ' ' + split2 + part2
-BatchTable[7,RowSelected]= new_cmd
-(*(*global).BatchTable) = BatchTable
-
-;Save BatchTable back to Global
-(*(*global).BatchTable) = BatchTable
-DisplayBatchTable, Event, BatchTable
-
-;change top label
-value = 'PROCESSING  DATA NEW  INPUT  . . .  ( P L E A S E   W A I T ) '
-putLabelValue, Event, 'pro_top_label', value
-
-;cmd string is
-cmd = BatchTable[7,RowSelected]
-;get first part of cmd ex: srun -Q -p lracq reflect_reduction
-split1      = 'reflect_reduction'
-part1_array = strsplit(cmd,split1,/extract,/regex)
-part1       = part1_array[0]
-;get second part (after data runs)
-split2      = '--data-roi-file'
-(*global).batch_split2 = split2
-part2_array = strsplit(cmd,split2,/extract,/regex)
-part2       = part2_array[1]
-(*global).batch_part2 = part2
-new_cmd     = STRTRIM(part1) + ' ' + split1
-(*global).batch_new_cmd = new_cmd
-;get data run cw_field
-data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
-DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
-(*(*global).batch_data_runs) = data_runs
-(*(*global).batch_DataNexus) = DataNexus
-;check that the NeXus have the same angle, S1 and S2 values
-sz = (size(DataNeXus))(1)
-IF (sz GT 1) THEN BEGIN
-    AngleArray = strarr(sz)
-    S1Array    = strarr(sz)
-    S2Array    = strarr(sz)
-    FOR i=0,(sz-1) DO BEGIN
-        entry = obj_new('IDLgetMetadata',DataNexus[i])
-        AngleArray[i] = strcompress(entry->getAngle())
-        S1Array[i]    = strcompress(entry->getS1())
-        S2Array[i]    = strcompress(entry->getS2())
-    ENDFOR
-    
-;Check if they are identical or not
-    SameStatus = 1
-;check Angle 
-    AngleAreIdentical = areDataIdentical(Event, AngleArray)
-    IF (AngleAreIdentical NE 1) THEN BEGIN
-        SameStatus = 0
-    ENDIF ELSE BEGIN
-;check S1
-        S1AreIdentical = areDataIdentical(Event, S1Array)
-        IF (S1AreIdentical NE 1) THEN BEGIN
-            SameStatus = 0
-        ENDIF ELSE BEGIN
-;check S2
-        S2AreIdentical = areDataIdentical(Event, S2Array)
-        IF (S2AreIdentical NE 1) THEN BEGIN
-                SameStatus = 0
-            ENDIF
-        ENDELSE
-    ENDELSE
-
-;inform user that the values do not match if SameStatus is not 1
-    IF (SameStatus NE 1) THEN BEGIN
-;Populate ProTable with angle, S1 and s2 values
-        ProArray = strarr(4,10)
-        FOR j=0,(sz-1) DO BEGIN
-            ProArray[0,j] = data_runs[j]
-            ProArray[1,j] = AngleArray[j]
-            ProArray[2,j] = S1Array[j]
-            ProArray[3,j] = S2Array[j]
-        ENDFOR
-        id = widget_info(Event.top,find_by_uname='pro_table')
-        widget_control, id, set_value=ProArray
-;change size of processing base
-        SetBaseYSize, Event, 'processing_base', 390
-;change top label
-        value = 'PROCESSING  NORMALIZATION  NEW  INPUT  . . .  ( P L E A S E   W A I T ) '
-        putLabelValue, Event, 'pro_top_label', value
-    ENDIF ELSE BEGIN
-        Continue_ChangeDataRunNumber, Event, $
-          RowSelected,$
-          data_runs, $
-          DataNexus,$
-          split2,$
-          part2,$
-          BatchTable,$
-          new_cmd
-    ENDELSE
-ENDIF ELSE BEGIN
-    Continue_ChangeDataRunNumber, Event, $
-      RowSelected,$
-      data_runs, $
-      DataNexus,$
-      split2,$
-      part2,$
-      BatchTable,$
-      new_cmd
+    value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+    putLabelValue, Event, 'pro_top_label', value
+    SetBaseYSize, Event, 'processing_base', 50
+    (*global).batch_process = 'data'
 ENDELSE
 END
 
-
+;*******************************************************************************
+;*******************************************************************************
