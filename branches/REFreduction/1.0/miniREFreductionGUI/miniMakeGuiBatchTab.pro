@@ -167,7 +167,7 @@ dPopulateGui = { size  : [dActive.size[0]+XYoff[0],$
                           200,25],$
                  value : 'R E P O P U L A T E   G U I',$
                  uname : 'repopulate_gui',$
-                 sensitive : 0}
+                 sensitive : 1}
 
 ;Command line preview
 XYoff = [10,45]
