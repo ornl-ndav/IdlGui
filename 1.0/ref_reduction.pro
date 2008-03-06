@@ -15,7 +15,8 @@ PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 VERSION = ' (version: 1.0.20)'
 loadct,5
 
-;define initial global values - these could be input via external file or other means
+;define initial global values - these could be input via external file
+;or other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -45,8 +46,12 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                   batch_data_runs : ptr_new(0L),$
-                    batch_percent_error : 0.01,$ ;1% difference acceptebale between angle, s1 and s2
+                    batch_process : 'data',$
+                    batch_norm_runs : ptr_new(0L),$
+                    batch_percent_error : 0.01,$ ;1% difference acceptebale
+                                ;between angle, s1 and s2
                     batch_DataNexus : ptr_new(0L),$
+                    batch_NormNexus : ptr_new(0L),$
                     batch_split2 : '',$ 
                     batch_part2 : '',$
                     batch_new_cmd : '',$
@@ -449,17 +454,23 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ;initialize contrast droplist
 id = widget_info(Main_base,Find_by_Uname='data_contrast_droplist')
-widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialDataContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNormContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData2d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm2d3DContrastDropList
 
 ;initialize CommandLineOutput widgets (path and file name)
 id = widget_info(Main_base, find_by_uname='cl_directory_text')
