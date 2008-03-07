@@ -221,41 +221,34 @@ result1 = ValueBeforeLastArg(result, '/')
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
-FUNCTION getOutputFileName, cmd
-result = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+FUNCTION class_getOutputFileName, cmd
+result  = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
 result1 = ValueAfterLastArg(result, '/')
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
-FUNCTION isWithDataCombinedSpec, cmd
+FUNCTION isWithDataNormCombinedSpec, cmd
+IF (isStringFound(cmd,'--dump-specular')) THEN RETURN, 'yes'
 RETURN, 'no'
 END
 
-FUNCTION isWithDataCombinedBack, cmd
+FUNCTION isWithDataNormCombinedBack, cmd
+IF (isStringFound(cmd,'--dump-bkg')) THEN RETURN, 'yes'
 RETURN, 'no'
 END
 
-FUNCTION isWithDataCombinedSub, cmd
-RETURN, 'no'
-END
-
-FUNCTION isWithNormCombinedSpec, cmd
-RETURN, 'no'
-END
-
-FUNCTION isWithNormCombinedBack, cmd
-RETURN, 'no'
-END
-
-FUNCTION isWithNormCombinedSub, cmd
+FUNCTION isWithDataNormCombinedSub, cmd
+IF (isStringFound(cmd,'--dump-sub')) THEN RETURN, 'yes'
 RETURN, 'no'
 END
 
 FUNCTION isWithRvsTOF, cmd
+IF (isStringFound(cmd,'--dump-rtof')) THEN RETURN, 'yes'
 RETURN, 'no'
 END
 
 FUNCTION isWithRvsTOFcombined, cmd
+IF (isStringFound(cmd,'--dump-rtof-comb')) THEN RETURN, 'yes'
 RETURN, 'no'
 END
 
@@ -360,28 +353,16 @@ FUNCTION IDLparseCommandLine::getOutputFileName
 RETURN, self.OutputFileName
 END
 
-FUNCTION IDLparseCommandLine::getDataCombinedSpecFlag
-RETURN, self.DataCombinedSpecFlag
+FUNCTION IDLparseCommandLine::getDataNormCombinedSpecFlag
+RETURN, self.DataNormCombinedSpecFlag
 END
 
-FUNCTION IDLparseCommandLine::getDataCombinedBackFlag
-RETURN, self.DataCombinedBackFlag
+FUNCTION IDLparseCommandLine::getDataNormCombinedBackFlag
+RETURN, self.DataNormCombinedBackFlag
 END
 
-FUNCTION IDLparseCommandLine::getDataCombinedSubFlag
-RETURN, self.DataCombinedSubFlag
-END
-
-FUNCTION IDLparseCommandLine::getNormCombinedSpecFlag
-RETURN, self.NormCombinedSpecFlag
-END
-
-FUNCTION IDLparseCommandLine::getNormCombinedBackFlag
-RETURN, self.NormCombinedBackFlag
-END
-
-FUNCTION IDLparseCommandLine::getNormCombinedSubFlag
-RETURN, self.NormCombinedSubFlag
+FUNCTION IDLparseCommandLine::getDataNormCombinedSubFlag
+RETURN, self.DataNormCombinedSubFlag
 END
 
 FUNCTION IDLparseCommandLine::getRvsTOFFlag
@@ -438,16 +419,13 @@ self.NormInstrGeoFileName  = getNormInstrumentGeoFileName(cmd)
 ;output path
 self.OutputPath            = getOutputPath(cmd)
 ;output file name
-self.OutputFileName        = getOutputFileName(cmd)
+self.OutputFileName        = class_getOutputFileName(cmd)
 ;;Intermediate File Flags
-self.DataCombinedSpecFlag  = isWithDataCombinedSpec(cmd)
-self.DataCombinedBackFlag  = isWithDataCombinedBack(cmd)
-self.DataCombinedSubFlag   = isWithDataCombinedSub(cmd)
-self.NormCombinedSpecFlag  = isWithNormCombinedSpec(cmd)
-self.NormCombinedBackFlag  = isWithNormCombinedBack(cmd)
-self.NormCombinedSubFlag   = isWithNormCombinedSub(cmd)
-self.RvsTOFFlag            = isWithRvsTOF(cmd)
-self.RvsTOFcombinedFlag    = isWithRvsTOFcombined(cmd)                
+self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
+self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
+self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
+self.RvsTOFFlag                = isWithRvsTOF(cmd)
+self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)                
 
 RETURN, 1
 END
@@ -456,39 +434,36 @@ END
 
 PRO IDLparseCommandLine__define
 STRUCT = {IDLparseCommandLine,$
-          MainDataNexusFileName : '',$
-          MainDataRunNumber     : '',$
-          DataRoiFileName       : '',$
-          DataPeakExclYArray    : ['',''],$
-          MainNormNexusFileName : '',$
-          MainNormRunNumber     : '',$
-          NormRoiFileName       : '',$
-          NormPeakExclYArray    : [0,0],$
-          DataBackgroundFlag    : 'yes',$
-          NormBackgroundFlag    : 'yes',$
-          Qmin                  : '',$
-          Qmax                  : '',$
-          Qwidth                : '',$
-          Qtype                 : '',$
-          AngleValue            : '',$
-          AngleError            : '',$
-          AngleUnits            : '',$
-          FilteringDataFlag     : 'yes',$
-          DeltaTOverT           : 'no',$
-          OverwriteDataInstrGeo : 'no',$
-          DataInstrGeoFileName  : '',$
-          OverwriteNormInstrGeo : 'no',$
-          NormInstrGeoFileName  : '',$
-          OutputPath            : '',$
-          OutputFileName        : '',$
-          DataCombinedSpecFlag  : 'no',$
-          DataCombinedBackFlag  : 'no',$
-          DataCombinedSubFlag   : 'no',$
-          NormCombinedSpecFlag  : 'no',$
-          NormCombinedBackFlag  : 'no',$
-          NormCombinedSubFlag   : 'no',$
-          RvsTOFFlag            : 'no',$
-          RvsTOFcombinedFlag    : 'no'}
+          MainDataNexusFileName     : '',$
+          MainDataRunNumber         : '',$
+          DataRoiFileName           : '',$
+          DataPeakExclYArray        : ['',''],$
+          MainNormNexusFileName     : '',$
+          MainNormRunNumber         : '',$
+          NormRoiFileName           : '',$
+          NormPeakExclYArray        : [0,0],$
+          DataBackgroundFlag        : 'yes',$
+          NormBackgroundFlag        : 'yes',$
+          Qmin                      : '',$
+          Qmax                      : '',$
+          Qwidth                    : '',$
+          Qtype                     : '',$
+          AngleValue                : '',$
+          AngleError                : '',$
+          AngleUnits                : '',$
+          FilteringDataFlag         : 'yes',$
+          DeltaTOverT               : 'no',$
+          OverwriteDataInstrGeo     : 'no',$
+          DataInstrGeoFileName      : '',$
+          OverwriteNormInstrGeo     : 'no',$
+          NormInstrGeoFileName      : '',$
+          OutputPath                : '',$
+          OutputFileName            : '',$
+          DataNormCombinedSpecFlag  : 'no',$
+          DataNormCombinedBackFlag  : 'no',$
+          DataNormCombinedSubFlag   : 'no',$
+          RvsTOFFlag                : 'no',$
+          RvsTOFcombinedFlag        : 'no'}
 
 END
 
