@@ -86,7 +86,9 @@ InterPlotsStatus = getCWBgroupValue(Event, 'intermediate_plot_list')
 
 IP_cmd = ''
 ;Data and Normalization Specular Intermediate Plot
-if (InterPlotsStatus[0] EQ 1) then begin
+IF (InterPlotsStatus[0] EQ 1 OR $
+    ((isBaseMap(Event,'reduce_plot4_base') EQ 0) AND $
+     InterPlotsStatus[3] EQ 1)) then begin
     IP_cmd += ' --dump-specular'
 endif 
 

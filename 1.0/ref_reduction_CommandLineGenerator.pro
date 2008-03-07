@@ -31,13 +31,15 @@ endif else begin
 endelse
 
 ;get data roi file
-data_roi_file = getTextFieldValue(Event,'reduce_data_region_of_interest_file_name')
+data_roi_file = getTextFieldValue(Event, $
+                                  'reduce_data_region_of_interest_file_name')
 cmd += ' --data-roi-file=' 
 if (data_roi_file NE '') then begin
     cmd += data_roi_file
 endif else begin
     cmd += '?'
-    status_text = '- Please provide a data region of interest file. Go to DATA, '
+    status_text = '- Please provide a data region of interest file. Go to ' + $
+      'DATA, '
     status_text += 'select a background ROI and save it.'
     if (StatusMessage GT 0) then begin
         append = 1
@@ -62,7 +64,8 @@ if (data_peak_exclusion_min NE '') then begin
 endif else begin
     cmd += '?'
     status_text = '- Please provide a data low range Peak of Exclusion.'
-    status_text += ' Go to DATA, and select a low value for the data peak exclusion.'
+    status_text += ' Go to DATA, and select a low value for the data peak ' + $
+      'exclusion.'
     if (StatusMessage GT 0) then begin
         append = 1
     endif else begin
@@ -77,7 +80,8 @@ if (data_peak_exclusion_max NE '') then begin
 endif else begin
     cmd += ' ?'
     status_text = '- Please provide a data high range Peak of Exclusion.'
-    status_text += ' Go to DATA, and select a high value for the data peak exclusion.'
+    status_text += ' Go to DATA, and select a high value for the data peak ' + $
+      'exclusion.'
     if (StatusMessage GT 0) then begin
         append = 1
     endif else begin
@@ -104,7 +108,8 @@ IF (Ymin_peak NE '' AND $
     Ymax_back NE '') THEN BEGIN
     IF ((Ymin_peak EQ Ymin_back) AND (Ymax_peak EQ Ymax_back)) THEN BEGIN
         StatusMessage += 1
-        status_text = '- Data Background and Peak have the same Ymin and Ymax values.'
+        status_text = '- Data Background and Peak have the same Ymin and' + $
+          ' Ymax values.'
         status_text += ' Please changes at least 1 of the data.'
         if (StatusMessage GT 0) then begin
             append = 1
@@ -135,7 +140,8 @@ if (isReductionWithNormalization(Event)) then begin
     MapBase, Event, 'reduce_plot6_base', 0
     
 ;get normalization run numbers
-    norm_run_numbers = getTextFieldValue(Event,'reduce_normalization_runs_text_field')
+    norm_run_numbers = getTextFieldValue(Event, $
+                                         'reduce_normalization_runs_text_field')
     cmd += ' --norm=' 
     if (norm_run_numbers NE '') then begin
         cmd += norm_run_numbers
@@ -154,14 +160,18 @@ if (isReductionWithNormalization(Event)) then begin
     endelse
     
 ;get normalization roi file
-    norm_roi_file = getTextFieldValue(Event,'reduce_normalization_region_of_interest_file_name')
+    norm_roi_file = getTextFieldValue(Event, $
+                                      'reduce_normalization_region_of_' + $
+                                      'interest_file_name')
     cmd += '  --norm-roi-file='
     if (norm_roi_file NE '') then begin
         cmd += strcompress(norm_roi_file,/remove_all)
     endif else begin
         cmd += '?'
-        status_text = '- Please provide a normalization region of interest file.'
-        status_text += ' Go to NORMALIZATION, select a background ROI and save it.'
+        status_text = '- Please provide a normalization region of interest' + $
+          ' file.'
+        status_text += ' Go to NORMALIZATION, select a background ROI and' + $
+          ' save it.'
         if (StatusMessage GT 0) then begin
             append = 1
         endif else begin
@@ -183,7 +193,8 @@ if (isReductionWithNormalization(Event)) then begin
         cmd += strcompress(norm_peak_exclusion_min,/remove_all)
     endif else begin
         cmd += '?'
-        status_text = '- Please provide a normalization low range Peak of Exclusion.'
+        status_text = '- Please provide a normalization low range Peak' + $
+          ' of Exclusion.'
         status_text += ' Go to NORMALIZATION, and select a low'
         status_text += ' value for the normalization peak exclusion.'
         if (StatusMessage GT 0) then begin
@@ -199,7 +210,8 @@ if (isReductionWithNormalization(Event)) then begin
         cmd += ' ' + strcompress(norm_peak_exclusion_max,/remove_all)
     endif else begin
         cmd += '?'
-        status_text = '- Please provide a normalization high range Peak of Exclusion.'
+        status_text = '- Please provide a normalization high range Peak ' + $
+          'of Exclusion.'
         status_text += ' Go to NORMALIZATION, and select a high value'
         status_text += ' for the normalization peak exclusion.'
         if (StatusMessage GT 0) then begin
@@ -223,11 +235,13 @@ Ymin_peak = norm_peak_exclusion_min
 Ymax_peak = norm_peak_exclusion_max
 Ymin_back = $
   strcompress(getTextFieldValue(Event, $
-                                'normalization_d_selection_background_ymin_cw_field'), $
+                                'normalization_d_selection_background_' + $
+                                'ymin_cw_field'), $
               /remove_all)
 Ymax_back = $
   strcompress(getTextFieldValue(Event, $
-                                'normalization_d_selection_background_ymax_cw_field'),$
+                                'normalization_d_selection_background_' + $
+                                'ymax_cw_field'),$
               /remove_all)
 
 IF (Ymin_peak NE '' AND $
@@ -236,7 +250,8 @@ IF (Ymin_peak NE '' AND $
     Ymax_back NE '') THEN BEGIN
     IF ((Ymin_peak EQ Ymin_back) AND (Ymax_peak EQ Ymax_back)) THEN BEGIN
         StatusMessage += 1
-        status_text = '- Normalization Background and Peak have the same Ymin and Ymax values.'
+        status_text = '- Normalization Background and Peak have the same' + $
+          ' Ymin and Ymax values.'
         status_text += ' Please changes at least 1 of the data.'
         if (StatusMessage GT 0) then begin
             append = 1
@@ -381,7 +396,8 @@ IF (isWithDToT(Event)) THEN BEGIN ;store deltaT over T
 ENDIF
 
 ;overwrite data instrument geometry file
-if (isWithDataInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
+if (isWithDataInstrumentGeometryOverwrite(Event)) then BEGIN 
+;with instrument geometry
     cmd += ' --data-inst-geom=' 
     IGFile = (*global).InstrumentDataGeometryFileName
     if (IGFile NE '') then begin ;instrument geometry file is not empty
@@ -404,11 +420,13 @@ if (isWithDataInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
             button_value = 'Select a Data Instr. Geometry File'
         endelse
     endelse
-    setButtonValue, Event, 'overwrite_data_intrument_geometry_button', button_value
+    setButtonValue, Event, 'overwrite_data_intrument_geometry_button', $
+      button_value
 endif
 
 ;overwrite norm instrument geometry file
-if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument geometry
+if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN $
+;with instrument geometry
     cmd += ' --norm-inst-geom=' 
     IGFile = (*global).InstrumentNormGeometryFileName
     if (IGFile NE '') then begin ;instrument geometry file is not empty
@@ -431,7 +449,8 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then begin ;with instrument ge
             button_value = 'Select a Norm. Instr. Geometry File'
         endelse
     endelse
-    setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', button_value
+    setButtonValue, Event, 'overwrite_norm_instrument_geometry_button', $
+      button_value
 
 endif
 
@@ -455,7 +474,8 @@ if (StatusMessage NE 0) then begin ;do not activate button
 ;    PopulateBatchTableWithCMDinfo, Event, 'N/A'
 endif else begin
     activate = 1
-    putInfoInReductionStatus, Event, '', 0 ;clear text field of Commnand line status
+putInfoInReductionStatus, Event, '', 0 
+;clear text field of Commnand line status
 ;;display command line in batch tab of working row
 ;    PopulateBatchTableWithCMDinfo, Event, cmd
 endelse
