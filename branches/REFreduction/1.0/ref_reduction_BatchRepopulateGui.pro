@@ -33,6 +33,11 @@ text = '--> Main Data Run Number (MainDataRunNumber) .......................... 
   MainDataRunNumber
 putLogBookMessage, Event, text, APPEND=1
 
+AllDataNexusFileName = ClassInstance->getAllDataNexusFileName()
+text = '--> List of All Data Nexus File Names (AllDataNexusFileName) .......... ' + $
+  AllDataNexusFileName
+putLogBookMessage, Event, text, APPEND=1
+
 DataRoiFileName = ClassInstance->getDataRoiFileName()
 text = '--> Data ROI Full File Name (DataRoiFileName) ......................... ' + $
   DataRoiFileName
@@ -54,6 +59,11 @@ putLogBookMessage, Event, text, APPEND=1
 MainNormRunNumber = ClassInstance->getMainNormRunNumber()
 text = '--> Main Normalization Run Number (MainNormRunNumber) ................. ' + $
 MainNormRunNumber
+putLogBookMessage, Event, text, APPEND=1
+
+AllNormNexusFileName = ClassInstance->getAllNormNexusFileName()
+text = '--> List of All Norm Nexus File Names (AllNormNexusFileName) .......... ' + $
+  AllNormNexusFileName
 putLogBookMessage, Event, text, APPEND=1
 
 NormRoiFileName = ClassInstance->getNormRoiFileName()
@@ -161,13 +171,16 @@ text = '------------------------------------------------------------------------
 putLogBookMessage, Event, text, APPEND=1
 
 ;Create a structure that will contain all the information
-sRepopulateGui = {MainDataNexusFileName     : MainDataNexusFileName,$
+sRepopulateGui = {Event                     : Event,$
+                  MainDataNexusFileName     : MainDataNexusFileName,$
                   MainDataRunNumber         : MainDataRunNumber,$
+                  AllDataNexusFileName      : AllDataNexusFileName,$
                   DataRoiFileName           : DataRoiFileName,$
                   DataPeakExclYmin          : DataPeakExclYArray[0],$
                   DataPeakExclYmax          : DataPeakExclYArray[1],$
                   MainNormNexusFileName     : MainNormNexusFileName,$
                   MainNormRunNumber         : MainNormRunNumber,$
+                  AllNormNexusFileName      : AllNormNexusFileName,$
                   NormRoiFileName           : NormRoiFileName,$
                   DataBackgroundFlag        : DataBackgroundFlag,$
                   NormBackgroundFlag        : NormBackgroundFlag,$
@@ -189,10 +202,7 @@ sRepopulateGui = {MainDataNexusFileName     : MainDataNexusFileName,$
                   DataNormCombinedBackFlag  : DataNormCombinedBackFlag,$
                   DataNormCombinedSubFlag   : DataNormCombinedSubFlag}
                   
-
-
-
-
+;guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
 
 END
 

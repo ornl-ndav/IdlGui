@@ -69,6 +69,15 @@ inst = obj_new('IDLgetMetadata',FullNexusName)
 RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
+FUNCTION getAllDataNexusFileName, cmd
+result = ValueBetweenArg1Arg2(cmd, $
+                              'reflect_reduction',$
+                              1, $
+                              '--data-roi-file', $
+                              0)
+RETURN, result
+END
+
 FUNCTION getDataRoiFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
@@ -91,6 +100,15 @@ inst = obj_new('IDLgetMetadata',FullNexusName)
 RETURN, STRCOMPRESS(inst->getRunNumber(),/REMOVE_ALL)
 END
 
+FUNCTION getAllNormNexusFileName, cmd
+result = ValueBetweenArg1Arg2(cmd,$
+                              '--norm=',$
+                              1,$
+                              '--norm-roi-file=',$
+                              0)
+RETURN, STRCOMPRESS(result,/REMOVE_ALL)
+END
+   
 FUNCTION getNormRoiFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, '--norm-roi-file=', 1, ' ', 0)
 RETURN, result
@@ -261,6 +279,10 @@ FUNCTION IDLparseCommandLine::getMainDataRunNumber
 RETURN, self.MainDataRunNumber
 END
 
+FUNCTION IDLparseCommandLine::getAllDAtaNexusFileName
+RETURN, self.AllDataNexusFileName
+END
+
 FUNCTION IDLparseCommandLine::getDataRoiFileName
 RETURN, self.DataRoiFileName
 END
@@ -275,6 +297,10 @@ END
 
 FUNCTION IDLparseCommandLine::getMainNormRunNumber
 RETURN, self.MainNormRunNumber
+END
+
+FUNCTION IDLparseCommandLine::getAllNormNexusFileName
+RETURN, self.AllNormNexusFileName
 END
 
 FUNCTION IDLparseCommandLine::getNormRoiFileName
@@ -378,16 +404,18 @@ END
 FUNCTION IDLparseCommandLine::init, cmd
 
 ;Work on Data
-self.MainDataNexusFileName = getMainDataNexusFileName(cmd)
-self.MainDataRunNUmber     = $
+self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
+self.MainDataRunNUmber      = $
   getMainDataRunNumber(self.MainDataNexusFileName)
-self.DataRoiFileName       = getDataRoiFileName(cmd)
-self.DataPeakExclYArray    = getDataPeakExclYArray(cmd)
+self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
+self.DataRoiFileName        = getDataRoiFileName(cmd)
+self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
 
 ;Work on Normalization
 self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
 self.MainNormRunNUmber     = $
   getMainNormRunNumber(self.MainNormNexusFileName)
+self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
 self.NormRoiFileName       = getNormRoiFileName(cmd)
 self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
 
@@ -436,10 +464,12 @@ PRO IDLparseCommandLine__define
 STRUCT = {IDLparseCommandLine,$
           MainDataNexusFileName     : '',$
           MainDataRunNumber         : '',$
+          AllDataNexusFileName      : '',$
           DataRoiFileName           : '',$
           DataPeakExclYArray        : ['',''],$
           MainNormNexusFileName     : '',$
           MainNormRunNumber         : '',$
+          AllNormNexusFileName      : '',$
           NormRoiFileName           : '',$
           NormPeakExclYArray        : [0,0],$
           DataBackgroundFlag        : 'yes',$
