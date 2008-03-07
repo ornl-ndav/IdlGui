@@ -487,6 +487,11 @@ IF (ucams EQ 'j35' OR $
     widget_control, id, /editable
 ENDIF
 
+IF (ucams EQ 'j35') THEN BEGIN
+    id = widget_info(MAIN_BASE,find_by_uname='cmd_status_preview')
+    widget_control, id, /editable
+ENDIF
+
 ; default tabs shown
 id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
 widget_control, id1, set_tab_current = 3 ;batch mode(3)
