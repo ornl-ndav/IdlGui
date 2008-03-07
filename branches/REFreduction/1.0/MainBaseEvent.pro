@@ -67,7 +67,6 @@ CASE Event.id OF
 ;****1D PLOT TAB**
 ;1D_2D plot of DATA
     widget_info(wWidget, FIND_BY_UNAME='load_data_D_draw'): begin
-
         if ((*global).DataNeXusFound) then BEGIN $
 ;only if there is a NeXus loaded
 
