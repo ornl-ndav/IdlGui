@@ -1,4 +1,7 @@
 PRO RepopulateGui, Event
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 ;get cmd of current selected row
 cmd = getTextFieldValue(Event,'cmd_status_preview')
 
@@ -71,6 +74,14 @@ text = '--> Normalization ROI Full File Name (NormRoiFileName) ................ 
   NormRoiFileName
 putLogBookMessage, Event, text, APPEND=1
 
+NormPeakExclYArray = ClassInstance->getNormPeakExclYArray()
+text = '--> Norm Peak Exclusion Ymin (NormPeakExclYArray[0]) .................. ' + $
+  NormPeakExclYArray[0]
+putLogBookMessage, Event, text, APPEND=1
+text = '--> Norm Peak Exclusion Ymax (NormPeakExclYArray[1]) .................. ' + $
+  NormPeakExclYArray[1]
+putLogBookMessage, Event, text, APPEND=1
+
 DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
 text = '--> With Data Background (DataBackgroundFlag) ? ....................... ' + $
   DataBackgroundFlag
@@ -120,6 +131,10 @@ FilteringDataFlag = ClassInstance->getFilteringDataFlag()
 text = '--> With Filtering Data (FilteringDataFlag) ? ......................... ' + $
   FilteringDataFlag
 putLogBookMessage, Event, text, APPEND=1
+
+DeltaToverTFlag = ClassInstance->getDeltaTOverTFlag()
+text = '--> With dt/t (DeltaToverTFlag) ? ..................................... ' + $
+  DeltaToverTFlag
 
 OverwriteDataInstrGeoFlag = ClassInstance->getOverwriteDataInstrGeoFlag()
 text = '--> With Overwrite Data Instr. Geo. (OverwriteDataInstrGeoFlag) ....... ' + $
@@ -182,6 +197,8 @@ sRepopulateGui = {Event                     : Event,$
                   MainNormRunNumber         : MainNormRunNumber,$
                   AllNormNexusFileName      : AllNormNexusFileName,$
                   NormRoiFileName           : NormRoiFileName,$
+                  NormPeakExclYmin          : NormPeakExclYArray[0],$
+                  NormPeakExclYmax          : NormPeakExclYArray[1],$
                   DataBackgroundFlag        : DataBackgroundFlag,$
                   NormBackgroundFlag        : NormBackgroundFlag,$
                   Qmin                      : Qmin,$
@@ -192,6 +209,7 @@ sRepopulateGui = {Event                     : Event,$
                   AngleError                : AngleError,$
                   AngleUnits                : AngleUnits,$
                   FilteringDataFlag         : FilteringDataFlag,$
+                  DeltaToverTFlag           : DeltaToverTFlag,$
                   OverwriteDataInstrGeoFlag : OverwriteDataInstrGeoFlag,$
                   DataInstrGeoFileName      : DataInstrGeoFileName,$
                   OverwriteNormInstrGeoFlag : OverwriteNormInstrGeoFlag,$
@@ -202,7 +220,10 @@ sRepopulateGui = {Event                     : Event,$
                   DataNormCombinedBackFlag  : DataNormCombinedBackFlag,$
                   DataNormCombinedSubFlag   : DataNormCombinedSubFlag}
                   
-;guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
+guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
+
+;turn off hourglass
+widget_control,hourglass=0
 
 END
 

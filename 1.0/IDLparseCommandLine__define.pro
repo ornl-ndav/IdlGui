@@ -471,7 +471,7 @@ STRUCT = {IDLparseCommandLine,$
           MainNormRunNumber         : '',$
           AllNormNexusFileName      : '',$
           NormRoiFileName           : '',$
-          NormPeakExclYArray        : [0,0],$
+          NormPeakExclYArray        : ['',''],$
           DataBackgroundFlag        : 'yes',$
           NormBackgroundFlag        : 'yes',$
           Qmin                      : '',$

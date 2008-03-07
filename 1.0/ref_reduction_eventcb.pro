@@ -170,6 +170,33 @@ showLastDataLogBookLine, Event
 END
 
 
+;This procedure is reached by the IDLupdateGui class
+PRO REFreduction_OpenPlotDataNexus, Event, DataRunNumber, currFullDataNexusName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;Open That NeXus file
+OpenDataNexusFile, Event, DataRunNumber, currFullDataNexusName
+(*global).DataNexusFound  = 1
+
+REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+;tell the user that the load and plot process is done
+InitialStrarr = getDataLogBookText(Event)
+putTextAtEndOfDataLogBookLastLine, $
+  Event, $
+  InitialStrarr, $
+  ' Done', $
+  (*global).processing_message
+;display full path to NeXus in Norm log book
+full_nexus_name = (*global).data_full_nexus_name
+text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+putDataLogBookMessage, Event, text, Append=1
+;to see the last line of the data log book
+showLastDataLogBookLine, Event
+END
+
+
 
 
 PRO REFreductionEventcb_LoadListOfNormNexus, Event
@@ -228,6 +255,40 @@ showLastNormLogBookLine, Event
 
 END
 
+
+;This procedure is reached by the IDLupdateGui class
+PRO REFreduction_OpenPlotNormNexus, Event, $
+                                    NormRunNumber, $
+                                    currFullNormNexusName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+OpenNormNexusFile, Event, NormRunNumber, currFullNormNexusName
+(*global).NormNexusFound = 1
+
+REFreduction_Plot1D2DNormalizationFile, Event ;then plot data file (1D and 2D)
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;tell the user that the load and plot process is done
+InitialStrarr = getNormalizationLogBookText(Event)
+putTextAtEndOfNormalizationLogBookLastLine, $
+  Event, $
+  InitialStrarr, $
+  ' Done', $
+  (*global).processing_message
+
+;display full path to NeXus in Norm log book
+full_nexus_name = (*global).norm_full_nexus_name
+text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+putNormalizationLogBookMessage, Event, text, Append=1
+
+;to see the last line of the norm log book
+showLastNormLogBookLine, Event
+END
 
 
 
