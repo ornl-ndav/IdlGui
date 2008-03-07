@@ -36,6 +36,7 @@ endif else begin
        'vuk':
        'ks6':
        'oswader':
+       'nhenry':
        'jfb': debugger = 1
        ELSE :
    ENDSWITCH
