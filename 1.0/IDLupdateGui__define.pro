@@ -189,6 +189,76 @@ ENDELSE
 MapBase, Event, 'overwrite_norm_instrument_geometry_base',MapBaseStatus
 END
 
+;Work on Output Path and output FileName =======================================
+PRO UpdateOutputPath, Event, OutputPath
+setButtonValue, Event, 'of_button', OutputPath
+END
+
+PRO UpdateOutputFileName, Event, OutputFileName
+putTextFieldValue, Event, 'of_text', OutputFileName, 0
+END
+
+;Work on Intermediate files ====================================================
+;DataNormCombinedSpecFlag
+PRO UpdateIntermediateFiles, Event, $
+                             DataNormCombinedSpecFlag,$
+                             DataNormCombinedBackFlag,$
+                             DataNormCombinedSubFlag,$
+                             RvsTOFFlag,$
+                             RvsTOFcombinedFlag
+
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+IntermPlots = intarr((*global).nbrIntermediateFiles)
+
+IF (DataNormCombinedSpecFlag EQ 'yes') THEN BEGIN
+    IntermPlots[0] = 1
+    IntermPlots[3] = 1
+ENDIF ELSE BEGIN
+    IntermPlots[0] = 0
+    IntermPlots[3] = 0
+ENDELSE
+
+IF (DataNormCombinedBackFlag EQ 'yes') THEN BEGIN
+    IntermPlots[1] = 1
+    IntermPlots[4] = 1
+ENDIF ELSE BEGIN
+    IntermPlots[1] = 0
+    IntermPlots[4] = 0
+ENDELSE
+
+IF (DataNormCombinedSubFlag EQ 'yes') THEN BEGIN
+    IntermPlots[2] = 1
+    IntermPlots[5] = 1
+ENDIF ELSE BEGIN
+    IntermPlots[2] = 0
+    IntermPlots[5] = 0
+ENDELSE
+
+IF (RvsTOFFlag EQ 'yes') THEN BEGIN
+    IntermPlots[6] = 1
+ENDIF ELSE BEGIN
+    IntermPlots[6] = 0
+ENDELSE
+
+IF (RvsTOFcombinedFlag EQ 'yes') THEN BEGIN
+    IntermPlots[7] = 1
+ENDIF ELSE BEGIN
+    IntermPlots[7] = 0
+ENDELSE
+
+setCWBgroup, Event, 'intermediate_plot_list', IntermPlots
+
+END
+
+
+
+
+
+
+
 ;###############################################################################
 ;******  Class constructor *****************************************************
 FUNCTION IDLupdateGui::init, structure
@@ -264,7 +334,19 @@ UpdateOverwriteNormInstrGeoFlag, Event, $
   structure.OverwriteNormInstrGeoFlag, $
   structure.NormInstrGeoFileName
 
-;Work on Output Path and FileName
+;Work on Output Path and Output File Name
+UpdateOutputPath, Event, structure.OutputPath
+UpdateOutputFileName, Event, structure.OutputFileName
+
+;Work Intermediate Files
+;Data/Norm Combined Spec Flag
+UpdateIntermediateFiles, Event, $
+  structure.DataNormCombinedSpecFlag,$
+  structure.DataNormCombinedBackFlag,$
+  structure.DataNormCombinedSubFlag,$
+  structure.RvsTOFFlag,$
+  structure.RvsTOFcombinedFlag
+
 
 RETURN, 1
 END
