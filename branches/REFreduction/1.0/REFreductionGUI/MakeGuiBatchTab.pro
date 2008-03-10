@@ -226,6 +226,16 @@ dRunButton = { size      : [dDeleteButton.size[0]+ $
                value     : 'RUN  ACTIVE',$
                sensitive : 0}
                           
+;RUN ACTIVE in BACKGROUND
+XYoff = [10,0]
+dRunBackgroundButton = { size      : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
+                                      dRunButton.size[1]+XYoff[1],$
+                                      dRunButton.size[2],$
+                                      dRunButton.size[3]],$
+                         uname     : 'run_active_background_button',$
+                         value     : 'RUN ACTIVE in BACKGROUND',$
+                         sensitive : 0}
+
 ;Progress bar base
 XYoff = [10,0]
 dProgressBarBase = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
@@ -588,6 +598,18 @@ wRunButton = WIDGET_BUTTON(BATCH_BASE,$
                            VALUE     = dRunButton.value,$
                            SENSITIVE = dRunButton.sensitive)
 
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Run Active Button in Background\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wRunButtonBackground = WIDGET_BUTTON(BATCH_BASE,$
+                                     XOFFSET   = dRunBackgroundButton.size[0],$
+                                     YOFFSET   = dRunBackgroundButton.size[1],$
+                                     SCR_XSIZE = dRunBackgroundButton.size[2],$
+                                     SCR_YSIZE = dRunBackgroundButton.size[3],$
+                                     UNAME     = dRunBackgroundButton.uname,$
+                                     VALUE     = dRunBackgroundButton.value,$
+                                     SENSITIVE = dRunBackgroundButton.sensitive)
+		
 ;\\\\\\\\\\\\\
 ;Progress Bar\
 ;\\\\\\\\\\\\\
