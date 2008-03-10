@@ -74,23 +74,17 @@ END
 
 ;*******************************************************************************
 ;*******************************************************************************
-
 PRO REFreduction_LoadDataBackgroundSelection, Event
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;define filter
 instrument = (*global).instrument
 load_back_roi_ext = (*global).load_back_roi_ext
 filter = instrument + '_*' + load_back_roi_ext
-
 ;get default path 
 WorkingPath = (*global).working_path
-
 title = instrument + ' Data Background Selection File' ;title of pickfile
-
 ;open file
 BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
                                       get_path=path,$
@@ -98,64 +92,50 @@ BackROIFullFileName = dialog_pickfile(path=WorkingPath,$
                                       filter=filter,$
                                       default_extension='.dat',$
                                       /fix_filter)
-
 if (BackROIFullFileName NE '') then begin
-    
 ;put info in logbook
     text = '-> Loading Data Background Selection File '
     text += BackROIFullFileName
     PROCESSING = (*global).processing_message
     text += '..... ' + PROCESSING
     putLogBookMessage, Event, Text, Append=1
-
 ;display name of new file name in text field
     putTextFieldValue,$
       Event,$
       'data_background_selection_file_text_field',$
       BackROIFullFileName,$
       0                         ;do not append
-    
 ;update REDUCE gui with name of data background roi file
     putTextFieldValue,$
       Event,$
       'reduce_data_region_of_interest_file_name',$
       BackROIFullFileName,$
       0 ;do not append
-
-
 ;display preview message in help data box
     Message = 'Preview of ' + BackROIFullFileName
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
 
     YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
-    
 ;put Ymin and Ymax in their text fields
     putTextFieldValue, $
       Event,$
       'data_d_selection_background_ymin_cw_field',$
       strcompress(YMinYMaxArray[0],/remove_all),$
       0 
-    
     putTextFieldValue, $
       Event,$
       'data_d_selection_background_ymax_cw_field',$
       strcompress(YMinYMaxArray[1],/remove_all),$
       0 
-    
 ;replot
-    REFreduction_DataBackgroundPeakSelection, Event
-    
+    REFreduction_DataBackgroundPeakSelection, Event    
 ;display 20 first data and last 20 in HELP text data box
     DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
-    
 ;put info in logbook
     LogBookText = getLogBookText(Event)
     Message = 'OK  '
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-
-
 endif
-
 END
 
 ;*******************************************************************************
@@ -163,57 +143,35 @@ END
 ;This function is reached by the UpdateDataRoiFileName of the
 ;IDLupdateGUI class
 PRO REFreduction_LoadDataBackFile, Event, DataRoiFileName
-
 BackROIFullFileName = DataRoiFileName
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-;put info in logbook
-text = '-> Loading Data Background Selection File '
-text += BackROIFullFileName
-PROCESSING = (*global).processing_message
-text += '..... ' + PROCESSING
-putLogBookMessage, Event, Text, Append=1
-
 ;update REDUCE gui with name of data background roi file
 putTextFieldValue,$
   Event,$
   'reduce_data_region_of_interest_file_name',$
   BackROIFullFileName,$
   0                             ;do not append
-
 ;display preview message in help data box
 Message = 'Preview of ' + BackROIFullFileName
 putLabelValue, Event, 'left_data_interaction_help_message_help', Message
-
 YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
-
 ;put Ymin and Ymax in their text fields
 putTextFieldValue, $
   Event,$
   'data_d_selection_background_ymin_cw_field',$
   strcompress(YMinYMaxArray[0],/remove_all),$
   0 
-
 putTextFieldValue, $
   Event,$
   'data_d_selection_background_ymax_cw_field',$
   strcompress(YMinYMaxArray[1],/remove_all),$
   0 
-
 ;replot
 REFreduction_DataBackgroundPeakSelection, Event
-
 ;display 20 first data and last 20 in HELP text data box
 DisplayHeadTailBackgroundDataFile, Event, BackROIFullFileName
-
-;put info in logbook
-LogBookText = getLogBookText(Event)
-Message = 'OK  '
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-
 END
 
 
@@ -306,62 +264,40 @@ END
 ;*******************************************************************************
 
 PRO REFreduction_LoadNormBackgroundFile, Event, NormRoiFileName
-
 BackROIFullFileName = NormRoiFileName
-
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-;put info in logbook
-text = '-> Loading Normalization Background Selection File '
-text += BackROIFullFileName
-PROCESSING = (*global).processing_message
-text += '..... ' + PROCESSING
-putLogBookMessage, Event, Text, Append=1
-
 ;display name of new file name in text field
 putTextFieldValue,$
   Event,$
   'normalization_background_selection_file_text_field',$
   BackROIFullFileName,$
   0                             ;do not append
-
 ;update REDUCE gui with name of data background roi file
 putTextFieldValue,$
   Event,$
   'reduce_normalization_region_of_interest_file_name',$
   BackROIFullFileName,$
   0                             ;do not append
-
 ;display preview message in help norm. box
 Message = 'Preview of ' + BackROIFullFileName
-putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
-
+putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+  Message
 YMinYMaxArray = retrieveYMinMaxFromFile(Event, BackROIFullFileName)
-
 ;put Ymin and Ymax in their text fields
 putTextFieldValue, $
   Event,$
   'normalization_d_selection_background_ymin_cw_field',$
   strcompress(YMinYMaxArray[0],/remove_all),$
   0 
-
 putTextFieldValue, $
   Event,$
   'normalization_d_selection_background_ymax_cw_field',$
   strcompress(YMinYMaxArray[1],/remove_all),$
   0 
-
 ;replot
 REFreduction_NormBackgroundPeakSelection, Event
-
 ;display 20 first data and last 20 in HELP text data box
 DisplayHeadTailBackgroundNormFile, Event, BackROIFullFileName
-
-;put info in logbook
-LogBookText = getLogBookText(Event)
-Message = 'OK  '
-putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-
 END
