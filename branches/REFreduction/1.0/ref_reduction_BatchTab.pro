@@ -564,9 +564,11 @@ widget_control, id, sensitive=status
 END
 
 
-;This function activates or not the RUN ACTIVE button
+;This function activates or not the RUN ACTIVE buttons
 PRO activateRunActiveButton, Event, status
 id = widget_info(Event.top,find_by_uname='run_active_button')
+widget_control, id, sensitive=status
+id = widget_info(Event.top,find_by_uname='run_active_background_button')
 widget_control, id, sensitive=status
 END
 
@@ -1077,6 +1079,69 @@ ENDIF
 ;display Progress Bar base
 MapBase, Event, 'progress_bar_base',0 ;change to 0
 END
+
+
+;This function is reached by the [RUN ACTIVE in BACKGROUND] button
+PRO BatchTab_RunActiveBackground, Event
+ActivateWidget, Event, 'run_active_background_button', 0
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+LogText = '> Running Active Fields of Batch Table in Background: '
+putLogBookMessage, Event, LogText, APPEND=1
+
+BatchTable = (*(*global).BatchTable)
+NbrRow = getGlobalVariable('RowIndexes')
+
+;turn on hourglass
+widget_control,/hourglass
+
+;determine the number of process to run (nbr of job to launch)
+NbrProcess = 0
+FOR i=0,NbrRow DO BEGIN
+    IF (BatchTable[0,i] EQ '> YES <' OR $
+        BatchTable[0,i] EQ 'YES') THEN BEGIN
+        ++NbrProcess
+    ENDIF
+ENDFOR
+ProcessToRun = 0
+IF (NbrProcess NE 0) THEN BEGIN
+    FOR i=0,NbrRow DO BEGIN
+        IF (BatchTable[0,i] EQ '> YES <' OR $
+            BatchTable[0,i] EQ 'YES') THEN BEGIN
+
+            LogText = '-> Launching command ' + $
+              strcompress(ProcessToRun,/remove_all) $
+              + '/' + strcompress(NbrProcess,/remove_all) 
+            putLogBookMessage, Event, LogText, APPEND=1
+            run_error = 0
+            CATCH, run_error
+            IF (run_error NE 0) THEN BEGIN
+                CATCH,/CANCEL
+                AppendReplaceLogBookMessage, Event, (*global).FAILED, $
+                  (*global).processing_message
+            ENDIF ELSE BEGIN
+                ;add --batch just after srun
+                cmd       = BatchTable[7,i]
+                cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
+                cmd       = 'srun --batch ' + cmd_array[0]
+                LogText = '--> Command is: ' + cmd
+                putLogBookMessage, Event, LogText, APPEND=1
+                spawn, cmd, listening, err_listening
+                IF (err_listening[0] NE '') THEN BEGIN
+                ENDIF ELSE BEGIN
+                ENDELSE
+            ENDELSE
+            ++ProcessToRun
+        ENDIF
+    ENDFOR
+;turn off hourglass
+    widget_control,hourglass=0
+    ActivateWidget, Event, 'run_active_background_button', 1
+ENDIF
+END
+
 
 
 PRO BatchTab_LoadBatchFile, Event
