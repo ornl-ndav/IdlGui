@@ -987,9 +987,14 @@ CASE Event.id OF
         BatchTab_DeleteActive, Event
     end
 
-;;Run Active
+;;Run Active live
     widget_info(wWidget, FIND_BY_UNAME='run_active_button'): begin
         BatchTab_RunActive, Event
+    end
+
+;;Run Active in Background
+    widget_info(wWidget, FIND_BY_UNAME='run_active_background_button'): begin
+        BatchTab_RunActiveBackground, Event
     end
 
 ;;Load Batch File
