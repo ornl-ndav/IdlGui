@@ -183,7 +183,7 @@ dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
                           
 ;/////////////////////////////////////////////////////////
 ;widgets_buttons 
-XYoff = [10,10]
+XYoff = [5,10]
 dMUButton = { size      : [XYoff[0],$
                            dFrame.size[1]+dFrame.size[3]+XYoff[1],$
                            130,35],$
@@ -191,7 +191,7 @@ dMUButton = { size      : [XYoff[0],$
               value     : 'MOVE UP SELECTION',$
               sensitive : 0}
 
-XYoff = [10,0]
+XYoff = [5,0]
 dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
                        dMUButton.size[1],$
                        dMUButton.size[2],$
@@ -199,7 +199,7 @@ dMDButton = { size  : [dMUButton.size[0]+dMUButton.size[2]+XYoff[0],$
               uname : 'move_down_selection_button',$
               value : 'MOVE DOWN SELECTION'}
 
-XYoff = [10,0]
+XYoff = [5,0]
 dDeleteSelectionButton = { size      : [dMDButton.size[0]+ $
                                         dMDButton.size[2]+XYoff[0],$
                                         dMDbutton.size[1]+XYoff[1],$
@@ -208,7 +208,7 @@ dDeleteSelectionButton = { size      : [dMDButton.size[0]+ $
                            value     : 'DELETE SELECTION',$
                            sensitive : 0}
 
-XYoff = [10,0]
+XYoff = [5,0]
 dDeleteButton = { size      : [dDeleteSelectionButton.size[0] + $
                                dDeleteSelectionButton.size[2] + $
                                XYoff[0],$
@@ -218,14 +218,25 @@ dDeleteButton = { size      : [dDeleteSelectionButton.size[0] + $
                   value     : 'DELETE ACTIVE',$
                   sensitive : 0}
 
-XYoff = [10,0]
+XYoff = [5,0]
 dRunButton = { size      : [dDeleteButton.size[0]+ $
                             dDeleteButton.size[2]+XYoff[0],$
                             dDeleteButton.size[1]+XYoff[1],$
-                            dDeleteButton.size[2:3]],$
+                            160,$
+                            dDeleteButton.size[3]],$
                uname     : 'run_active_button',$
                value     : 'RUN ACTIVE',$
                sensitive : 0}
+
+;RUN ACTIVE in BACKGROUND
+XYoff = [5,0]
+dRunBackgroundButton = { size      : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
+                                      dRunButton.size[1]+XYoff[1],$
+                                      dRunButton.size[2],$
+                                      dRunButton.size[3]],$
+                         uname     : 'run_active_background_button',$
+                         value     : 'RUN ACTIVE in BACKGROUND',$
+                         sensitive : 0}
                  
 ;Progress bar base
 XYoff = [10,0]
@@ -580,6 +591,19 @@ wRunButton = WIDGET_BUTTON(BATCH_BASE,$
                            UNAME     = dRunButton.uname,$
                            VALUE     = dRunButton.value,$
                            SENSITIVE = dRunButton.sensitive)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;Run Active Button in Background\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wRunButtonBackground = WIDGET_BUTTON(BATCH_BASE,$
+                                     XOFFSET   = dRunBackgroundButton.size[0],$
+                                     YOFFSET   = dRunBackgroundButton.size[1],$
+                                     SCR_XSIZE = dRunBackgroundButton.size[2],$
+                                     SCR_YSIZE = dRunBackgroundButton.size[3],$
+                                     UNAME     = dRunBackgroundButton.uname,$
+                                     VALUE     = dRunBackgroundButton.value,$
+                                     SENSITIVE = dRunBackgroundButton.sensitive)
+
 
 ;\\\\\\\\\\\\\
 ;Progress Bar\
