@@ -223,7 +223,7 @@ dRunButton = { size      : [dDeleteButton.size[0]+ $
                             dDeleteButton.size[1]+XYoff[1],$
                             dDeleteButton.size[2:3]],$
                uname     : 'run_active_button',$
-               value     : 'RUN  ACTIVE',$
+               value     : 'RUN  ACTIVE  LIVE',$
                sensitive : 0}
                           
 ;RUN ACTIVE in BACKGROUND
@@ -233,7 +233,7 @@ dRunBackgroundButton = { size      : [dRunButton.size[0]+dRunButton.size[2]+XYof
                                       dRunButton.size[2],$
                                       dRunButton.size[3]],$
                          uname     : 'run_active_background_button',$
-                         value     : 'RUN ACTIVE in BACKGROUND',$
+                         value     : 'RUN  ACTIVE  in  BACKGROUND',$
                          sensitive : 0}
 
 ;Progress bar base
