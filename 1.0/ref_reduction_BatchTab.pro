@@ -148,8 +148,11 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#Date : ' + BatchTable[k++,i]]
-    text    = [text,FP+BatchTable[k++,i]]
-    text    = [text,'']
+;add --batch flag to command line
+    cmd_array = strsplit(BatchTable[k++,i], 'srun', /EXTRACT, /REGEX)
+    cmd       = 'srun --batch ' + cmd_array[0]
+    text    = [text, FP+cmd]
+    text    = [text, '']
 
 ENDIF
 ENDFOR

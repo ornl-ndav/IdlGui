@@ -239,12 +239,13 @@ dRunBackgroundButton = { size      : [dRunButton.size[0]+dRunButton.size[2]+XYof
                          sensitive : 0}
                  
 ;Progress bar base
-XYoff = [10,0]
+XYoff = [2,0]
 dProgressBarBase = { size  : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
                              dRunButton.size[1]+XYoff[1],$
                              250,35],$
                      uname : 'progress_bar_base',$
-                     map   : 0}
+                     map   : 0,$
+                     frame : 0}
 XYoff = [0,2]
 dProgressBarBackground = { size  : [XYoff[0],$
                                    XYoff[1],$
@@ -614,6 +615,7 @@ wProgressBarBase = WIDGET_BASE(BATCH_BASE,$
                                SCR_XSIZE = dProgressBarBase.size[2],$
                                SCR_YSIZE = dProgressBarBase.size[3],$
                                UNAME     = dProgressBarBase.uname,$
+                               FRAME     = dProgressBarBase.frame,$
                                MAP       = dProgressBarBase.map)
 
 wProgressBarBackground = WIDGET_DRAW(wProgressBarBase,$
