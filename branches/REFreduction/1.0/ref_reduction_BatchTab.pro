@@ -16,10 +16,6 @@ ENDCASE
 RETURN, 'NA'
 END
 
-
-
-
-
 ;**********************************************************************
 ;UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS - UTILS
 ;**********************************************************************
@@ -53,7 +49,6 @@ NbrElement = i                  ;nbr of lines
 
 RETURN, FileArray
 END
-
 
 
 FUNCTION PopulateBatchTable, Event, BatchFileName
@@ -471,6 +466,24 @@ END
 ;**********************************************************************
 ;GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI - GUI
 ;**********************************************************************
+;This function enables or not the REPOPULATE GUI button
+PRO CheckRepopulateButton, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BatchTable  = (*(*global).BatchTable)
+SelectedRow = getCurrentRowSelected(Event)
+cmd         = BatchTable[7,SelectedRow]
+IF (cmd NE '') THEN BEGIN
+    activateButtonStatus = 1
+ENDIF ELSE BEGIN
+    activateButtonStatus = 0
+ENDELSE
+id = widget_info(Event.top,find_by_uname='repopulate_gui')
+widget_control, id, sensitive=activateButtonStatus
+END
+
+
 ;This function retrieves the row of the selected cell and select the
 ;full row
 PRO SelectFullRow, Event, RowSelected
@@ -766,17 +779,13 @@ PRO BatchTab_WidgetTable, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 rowSelected = getCurrentRowSelected(Event)
-
 ;Select Full Row
 SelectFullRow, Event, RowSelected
-
 IF (RowSelected LT 10) THEN BEGIN
     id = widget_info(Event.top,find_by_uname='batch_table_widget')
     widget_control, id, set_table_view=[0,0]
 ENDIF
-
 ;validate or not UP and DOWN buttons
 IF ((RowSelected) EQ 0) THEN BEGIN
     activateUpButtonStatus = 0
@@ -784,7 +793,6 @@ ENDIF ELSE BEGIN
     activateUpButtonStatus = 1
 ENDELSE
 activateUpButton, Event, activateUpButtonStatus
-
 RowIndexes = getGlobalVariable('RowIndexes')
 IF ((RowSelected) EQ RowIndexes) THEN BEGIN
     activateDownButtonStatus = 0
@@ -792,13 +800,13 @@ ENDIF ELSE BEGIN
     activateDownButtonStatus = 1
 ENDELSE
 activateDownButton, Event, activateDownButtonStatus
-
 ;display info of selected row in INPUT base
 IF (rowSelected NE (*global).PrevBatchRowSelected) THEN BEGIN
     DisplayInfoOfSelectedRow, Event, RowSelected
     (*global).PrevBatchRowSelected = rowSelected
 ENDIF
-
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
@@ -867,16 +875,16 @@ IF (RowSelected NE 0) THEN BEGIN ;move up
     ;activate down selection button
     activateDownButton, Event, 1
 ENDIF 
-
 IF ((RowSelected-1) EQ 0) THEN BEGIN
     activateUpButtonStatus = 0
 ENDIF ELSE BEGIN
     activateUpButtonStatus = 1
 ENDELSE
 activateUpButton, Event, activateUpButtonStatus
-
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
@@ -906,16 +914,16 @@ IF (RowSelected NE RowIndexes) THEN BEGIN ;move down
     ;activate up selection button
     activateUpButton, Event, 1
 ENDIF
-
 IF ((RowSelected+1) EQ RowIndexes) THEN BEGIN
     activateDownButtonStatus = 0
 ENDIF ELSE BEGIN
     activateDownButtonStatus = 1
 ENDELSE
 activateDownButton, Event, activateDownButtonStatus
-
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
@@ -940,9 +948,10 @@ DisplayBatchTable, Event, BatchTable
 ;this function updates the widgets (button) of the tab
 UpdateBatchTabGui, Event
 DisplayInfoOfSelectedRow, Event, RowSelected
-
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
@@ -972,15 +981,14 @@ FOR i = 0,(RowIndexes) DO BEGIN
 ENDFOR
 (*(*global).BatchTable) = BatchTable
 DisplayBatchTable, Event, BatchTable
-
 RowSelected = (*global).PrevBatchRowSelected
 DisplayInfoOfSelectedRow, Event, RowSelected
-
 ;this function updates the widgets (button) of the tab
 UpdateBatchTabGui, Event
-
 ;generate a new batch file name
 GenerateBatchFileName, Event
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
@@ -1107,6 +1115,8 @@ IF (BatchFileName NE '') THEN BEGIN
     putBatchFolderName, Event, FilePath
 ;put name of file in widget_text
     putBatchFileName, Event, FileName
+;enable or not the REPOPULATE Button
+    CheckRepopulateButton, Event
 ENDIF 
 END
 
@@ -1173,10 +1183,11 @@ ENDIF ELSE BEGIN
     DisplayInfoOfSelectedRow, Event, 0
     (*global).PrevBatchRowSelected = 0
 ENDELSE
-
 ;check if there are any not 'N/A' command line, if yes, then activate 
 ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)
 UpdateBatchTabGui, Event
+;enable or not the REPOPULATE Button
+CheckRepopulateButton, Event
 END
 
 
