@@ -225,7 +225,7 @@ dRunButton = { size      : [dDeleteButton.size[0]+ $
                             160,$
                             dDeleteButton.size[3]],$
                uname     : 'run_active_button',$
-               value     : 'RUN ACTIVE',$
+               value     : 'RUN ACTIVE LIVE',$
                sensitive : 0}
 
 ;RUN ACTIVE in BACKGROUND
