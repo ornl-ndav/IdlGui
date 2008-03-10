@@ -232,7 +232,11 @@ sRepopulateGui = {Event                     : Event,$
                   RvsTOFFlag                : RvsTOFFlag,$
                   RvsTOFcombinedFlag        : RvsTOFcombinedFlag}
                   
+text = '-> Repopulating GUI ... START'
+putLogBookMessage, Event, text, APPEND=1
 guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
+text = '-> Repopulating GUI ... END'
+putLogBookMessage, Event, text, APPEND=1
 
 ;turn off hourglass
 widget_control,hourglass=0

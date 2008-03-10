@@ -126,7 +126,8 @@ BatchTable = (*(*global).BatchTable)
 NbrRow    = (size(BatchTable))(2)
 NbrColumn = (size(BatchTable))(1)
 text    = STRARR(1)
-text[0] = '#This Batch File has been produced by REFreduction ' + (*global).REFreductionVersion
+text[0] = '#This Batch File has been produced by REFreduction ' + $
+  (*global).REFreductionVersion
 text    = [text,'#Date : ' + RefReduction_GenerateIsoTimeStamp()]
 text    = [text,'#Ucams : ' + (*global).ucams] 
 text    = [text,'']
@@ -1003,7 +1004,8 @@ MapBase, Event, 'progress_bar_base',1
 ;turn on hourglass
 widget_control,/hourglass
 ;change label of RUN ACTIVE button
-PutTextFieldValue, Event, 'run_active_button', (*global).processing_message + ' ... ', 0
+PutTextFieldValue, Event, 'run_active_button', (*global).processing_message + $
+  ' ... ', 0
 ActivateWidget, Event, 'run_active_button', 0
 ;determine the number of process to run
 NbrProcess = 0
@@ -1039,16 +1041,19 @@ IF (NbrProcess NE 0) THEN BEGIN
             CATCH, run_error
             IF (run_error NE 0) THEN BEGIN
                 CATCH,/CANCEL
-                AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+                AppendReplaceLogBookMessage, Event, (*global).FAILED, $
+                  (*global).processing_message
             ENDIF ELSE BEGIN
                 spawn, BatchTable[7,i], listening, err_listening
                 IF (err_listening[0] NE '') THEN BEGIN
-                    AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+                    AppendReplaceLogBookMessage, Event, (*global).FAILED, $
+                      (*global).processing_message
                     LogText = '--> ERROR MESSAGE:'
                     putLogBookMessage, Event, LogText, APPEND=1
                     putLogBookMessage, Event, err_listening, APPEND=1
                 ENDIF ELSE BEGIN
-                    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+                    AppendReplaceLogBookMessage, Event, 'OK', $
+                      (*global).processing_message
                 ENDELSE
             ENDELSE
             x2 = ProcessToRun*x_step

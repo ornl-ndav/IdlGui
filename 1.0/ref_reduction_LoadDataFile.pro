@@ -271,3 +271,40 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 END
+
+;Same as previous function but this one is reached by the batch run so
+;without any log book messages
+PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+instrument = (*global).instrument
+;store run number of data file
+(*global).data_run_number = DataRunNumber
+;store full path to NeXus
+(*global).data_full_nexus_name = full_nexus_name
+RefReduction_NXsummary, Event, full_nexus_name, 'data_file_info_text'
+;check format of NeXus file
+IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    (*global).isHDF5format = 1
+;dump binary data into local directory of user
+    working_path = (*global).working_path
+    REFReduction_DumpBinaryData_batch, Event, full_nexus_name, working_path
+    IF ((*global).isHDF5format) THEN BEGIN
+;create name of BackgroundROIFile and put it in its box
+        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+          instrument, $
+          working_path, $
+          DataRunNumber
+    ENDIF
+ENDIF ELSE BEGIN
+    (*global).isHDF5format = 0
+    ;tells the data log book that the format is wrong
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+ENDELSE
+END

@@ -268,85 +268,164 @@ event = structure.Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+PROCESSING = (*global).processing_message
+OK         = 'OK'
+
 ;Activate Data Widgets
+text = '--> Activate Data Widgets .................................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 updateDataWidget, Event, 1
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on MainDataRunNumber
+text = '--> Display Main Data Run Number ............................. ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateMainDataRunNumber, Event, structure.MainDataRunNumber
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on AllDataNexusFileName
+text = '--> Display List of All Data Runs (full nexus name) .......... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateAllDataNexusFileName, Event, structure.AllDataNexusFileName
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on MainDataNexusFileName (Load This Run)
+text = '--> Load and Plot Main Data Run Number ....................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateMainDataNexusFileName, Event, $
   structure.MainDataNexusFileName, $
   structure.MainDataRunNumber
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on DataRoiFileName
+text = '--> Load Data ROI File ....................................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateDataRoiFileName, Event, structure.DataRoiFileName
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on DataPeakExclYmin and DataPeakExclYmax
+text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateDataPeakExclY, Event, $
   structure.DataPeakExclYmin, $
   structure.DataPeakExclYmax
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on Normalization data files
 IF (structure.MainNormRunNumber NE '') THEN BEGIN
+
 ;work on MainNormRunNumber
+    text = '--> Display Main Normalization Run Number .................... ' + $
+      PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
     UpdateMainNormRunNumber, Event, structure.MainNormRunNumber
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on AllNormNexusFileName
+    text = '--> Display List of All Normalization Run .................... ' + $
+      PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
     UpdateAllNormNexusFileName, Event, AllNormNexusFileName
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ;work on MainNormNexusFileName
+    text = '--> Load and Plot Main Normalization Run Number .............. ' + $
+      PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
     UpdateMainNormNexusFileName, Event, $
       structure.MainNormNexusFileName, $
       structure.MainNormRunNumber
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    
 ;work on NormRoiFileName
+    text = '--> Load Normalization ROI File .............................. ' + $
+      PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
     UpdateNormRoiFileName, Event, structure.NormRoiFileName
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    
 ;work on NormPeakExclYmin and NormPeakExclYmax
+    text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax ........... ' + $
+      PROCESSING
+    putLogBookMessage, Event, text, APPEND=1
     UpdateNormPeakExclY, Event, $
       structure.NormPeakExclYmin, $
       structure.NormPeakExclYmax
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
 ENDIF ELSE BEGIN
     (*global).NormNexusFound = 0
 ENDELSE
 
 ;Work on Qmin, Qmax, Qwidth and Qtype
+text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateQ, Event, $
   structure.Qmin, $
   structure.Qmax, $
   structure.Qwidth, $
   structure.Qtype
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on AngleValue and AngleError
+text = '--> Load Angle Value and Error ............................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateAngle, Event, $
   structure.AngleValue, $
   structure.AngleError, $
   structure.AngleUnits
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
-;Work on Flags
+;Work on filtering flag
+text = '--> Load on Filtering Data Flag .............................. ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateFilteringDataFlag, Event, structure.FilteringDataFlag
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
-;Work on dt/t
+;Work on dt/t flag
+text = '--> Load on dt/t Flag ........................................ ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateDeltaToverTFlag, Event, structure.DeltaToverTFlag
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
-;Work on OverwriteDataInstrGeoFlag and DataInstrGeoFilename
+;Work on OverwriteDataInstrGeoFlag and DataInstrGeoFilename 
+text = '--> Load Overwrite Data Instrument Geometry Flag ............. ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateOverwriteDataInstrGeoFlag, Event, $
   structure.OverwriteDataInstrGeoFlag, $
   structure.DataInstrGeoFileName
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on OverwriteNormInstrGeoFlag and NormInstrGeoFileName
+text = '--> Load Overwrite Normalization Instrument Geometry Flag .... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateOverwriteNormInstrGeoFlag, Event, $
   structure.OverwriteNormInstrGeoFlag, $
   structure.NormInstrGeoFileName
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on Output Path and Output File Name
+text = '--> Load Output Path ......................................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateOutputPath, Event, structure.OutputPath
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
+
+text = '--> Load Output File Name .................................... ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateOutputFileName, Event, structure.OutputFileName
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work Intermediate Files
 ;Data/Norm Combined Spec Flag
+text = '--> Load Intermediate Files .................................. ' + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
 UpdateIntermediateFiles, Event, $
   structure.DataNormCombinedSpecFlag,$
   structure.DataNormCombinedBackFlag,$
   structure.DataNormCombinedSubFlag,$
   structure.RvsTOFFlag,$
   structure.RvsTOFcombinedFlag
-
+AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 RETURN, 1
 END
