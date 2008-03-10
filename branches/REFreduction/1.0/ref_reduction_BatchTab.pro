@@ -1180,8 +1180,8 @@ DisplayBatchTable, Event, BatchTable
 IF (IsAnyRowSelected(Event) NE 1) THEN BEGIN
     SelectFullRow, Event, 0
 ENDIF ELSE BEGIN
-    DisplayInfoOfSelectedRow, Event, 0
-    (*global).PrevBatchRowSelected = 0
+    CurrentWorkingRow = getCurrentRowSelected(Event)
+    DisplayInfoOfSelectedRow, Event, CurrentWorkingRow
 ENDELSE
 ;check if there are any not 'N/A' command line, if yes, then activate 
 ;DELETE SELECTION, DELETE ACTIVE, RUN ACTIVE AND SAVE ACTIVE(S)

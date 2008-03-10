@@ -370,27 +370,26 @@ tab_id = widget_info(Event.top,find_by_uname='main_tab')
 CurrTabSelect = widget_info(tab_id,/tab_current)
 PrevTabSelect = (*global).PrevTabSelect
 
-if (PrevTabSelect NE CurrTabSelect) then begin
+IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
     CASE (CurrTabSelect) OF
-    1: begin ;if REDUCE tab is now selected
+    1: BEGIN ;if REDUCE tab is now selected
         REFreduction_CommandLineGenerator, Event
     END
-    2: begin ;if PLOTS tab is now selected
-        IF ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
+    2: BEGIN ;if PLOTS tab is now selected
+        IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN ;data reduction was successful
             RefReduction_PlotMainIntermediateFiles, Event
         ENDIF
     END
-    3: begin ;if BATCH tab is now selected
+    3: BEGIN ;if BATCH tab is now selected
 ;retrieve info for batch mode
         IF ((*global).debugger) THEN BEGIN
             UpdateBatchTable, Event ;in ref_reduction_BatchTab.pro
         ENDIF
     END
-    else:
+    ELSE:
     ENDCASE
     (*global).PrevTabSelect = CurrTabSelect
-endif
-
+ENDIF
 END
 
 
