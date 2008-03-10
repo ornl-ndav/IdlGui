@@ -1,4 +1,9 @@
 PRO RepopulateGui, Event
+
+message = 'REPOPULATING GUI using current selected Row ... (PROCESSING)'
+putLabelValue, Event, 'pro_top_label', message
+MapBase, Event, 'processing_base', 1
+
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 
@@ -238,8 +243,13 @@ guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
 text = '-> Repopulating GUI ... END'
 putLogBookMessage, Event, text, APPEND=1
 
+MapBase, Event, 'processing_base', 0
+message = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+putLabelValue, Event, 'pro_top_label', message
+
 ;turn off hourglass
 widget_control,hourglass=0
+
 
 END
 
