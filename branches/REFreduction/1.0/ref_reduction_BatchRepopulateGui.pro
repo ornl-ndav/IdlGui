@@ -181,6 +181,16 @@ text = '--> With Data/Norm. Comb. Sub. TOF plot (DataNormCombinedSubFlag) ..... 
   DataNormCombinedSubFlag
 putLogBookMessage, Event, text, APPEND=1
 
+RvsTOFFlag = ClassInstance->getRvsTOFFlag()
+text = '--> With R versus TOF plot (RvsTOFFlag) ............................... ' + $
+  RvsTOFFlag
+putLogBookMessage, Event, text, APPEND=1
+
+RvsTOFcombinedFlag = ClassInstance->getRvsTOFcombinedFlag()
+text = '--> With R versus TOF combined plot (RvsTOFcombinedFlag) .............. ' + $
+  RvsTOFcombinedFlag
+putLogBookMessage, Event, text, APPEND=1
+
 text = '------------------------------------------------------------------------' + $
   '--------------------------------------------------------'
 putLogBookMessage, Event, text, APPEND=1
@@ -218,7 +228,9 @@ sRepopulateGui = {Event                     : Event,$
                   OutputFileName            : OutputFileName,$
                   DataNormCombinedSpecFlag  : DataNormCombinedSpecFlag,$
                   DataNormCombinedBackFlag  : DataNormCombinedBackFlag,$
-                  DataNormCombinedSubFlag   : DataNormCombinedSubFlag}
+                  DataNormCombinedSubFlag   : DataNormCombinedSubFlag,$
+                  RvsTOFFlag                : RvsTOFFlag,$
+                  RvsTOFcombinedFlag        : RvsTOFcombinedFlag}
                   
 guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
 
