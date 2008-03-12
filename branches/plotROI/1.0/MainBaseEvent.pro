@@ -13,9 +13,9 @@ CASE Event.id OF
     
 ;1111111111111111111111111111111111111111111111111111111111111111111111111111111
 
-;#1### Instrument Selection #####
-;Comments here
-    widget_info(wWidget, FIND_BY_UNAME='??'): BEGIN
+;#1### NeXus Run Number ####
+    widget_info(wWidget, FIND_BY_UNAME='nexus_run_number'): BEGIN
+        print, 'in run_number'
     END
     
 
