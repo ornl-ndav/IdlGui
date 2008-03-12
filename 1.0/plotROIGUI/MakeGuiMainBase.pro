@@ -186,11 +186,12 @@ wNBrunBase = WIDGET_BASE(MAIN_BASE,$
                           UNAME     = NBrunField.uname_base)
 
 wNBrunField = CW_FIELD(wNBrunBase,$
-                        XSIZE = NBrunField.size[4],$
-                        YSIZE = NBrunField.size[5],$
-                        TITLE = NBrunField.title,$
-                        UNAME = NBrunField.uname,$
-                        /LONG)
+                       XSIZE         = NBrunField.size[4],$
+                       YSIZE         = NBrunField.size[5],$
+                       TITLE         = NBrunField.title,$
+                       UNAME         = NBrunField.uname,$
+                       /RETURN_EVENTS,$
+                       /LONG)
 
 wNBofLabel = WIDGET_LABEL(MAIN_BASE,$
                            XOFFSET = NBor.size[0],$
