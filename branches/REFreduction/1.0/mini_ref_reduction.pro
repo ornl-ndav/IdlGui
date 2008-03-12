@@ -12,7 +12,7 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.0.20)'
+VERSION = ' (version: 1.0.21)'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
