@@ -57,9 +57,8 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     geometry_xml_filtering: '*.xml',$
                     cvinfo_xml_filtering  : '*_cvinfo.xml',$
                     default_extension     : 'nxs',$
-                    version_light         : versionLight,$
-                    motors                : ptr_new(0L),$   ;full xml
-                    untouched_motors      : ptr_new(0L),$   ;full untouched xml
+                    motors                : ptr_new(0L),$ ;full xml
+                    untouched_motors      : ptr_new(0L),$ ;full untouched xml
                     motor_group           : ptr_new(0L),$   ;xml of selected group only
                     version : VERSION })
 
