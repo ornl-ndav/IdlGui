@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.1.3)'
+VERSION = '(1.0.0)'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -15,12 +15,6 @@ if (!VERSION.os EQ 'darwin') then begin
 endif else begin
    ucams = get_ucams()
 endelse
-
-;Which version to load
-;1 is for version that never shows the base #2. It only allows user to
-;load the xml files and create the geometry file
-versionLight = 0
-;0 is for full version that displays the base #2.
 
 ;get hostname
 spawn, 'hostname', hostname
@@ -69,49 +63,8 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     motor_group           : ptr_new(0L),$   ;xml of selected group only
                     version : VERSION })
 
-(*(*global).leaf_array) = { uname : ['leaf1',$
-                                     'leaf2',$
-                                     'leaf3',$
-                                     'leaf4',$
-                                     'leaf5'],$
-                            name : ['number',$
-                                    'angle',$
-                                    'length',$
-                                    'wavelength',$
-                                    'other']}
-
-InstrumentList = ['',$
-                  'Backscattering',$
-                  'Liquids Reflectometer',$
-                  'Magnetism Reflectometer',$
-                  'ARCS']
-                  
-instrumentShortList = ['',$
-                       'BSS',$
-                       'REF_L',$
-                       'REF_M',$
-                       'ARCS']
-(*(*global).instrumentShortList) = instrumentShortList
-
-images_structure = { images_path : [current_folder,$
-                                    'images'],$
-                     images : ['numbers.bmp',$
-                               'angles.bmp',$
-                               'lengths.bmp',$
-                               'wavelength.bmp',$
-                               'other.bmp']}
-
-IF (versionLight) THEN BEGIN
-    MainBaseTitle = 'Geometry Generator (version light)'
-    IF (ucams EQ (*global).geek) THEN BEGIN
-        MainBaseSize  = [30,25,700,700]
-    ENDIF ELSE BEGIN
-        MainBaseSize  = [30,25,700,530]
-    ENDELSE
-ENDIF ELSE BEGIN
-    MainBaseTitle = 'Geometry Generator'
-    MainBaseSize  = [30,25,700,500]
-ENDELSE
+MainBaseSize  = [30,25,700,530]
+MainBaseTitle = 'Plot NeXus and ROI files'
         
 MainBaseTitle += ' - ' + VERSION
 ;Build Main Base
@@ -130,43 +83,16 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 ;confirmation base
-MakeGuiConfirmationBase, MAIN_BASE
-;final status base
-MakeGuiFinalResultBase, MAIN_BASE
-
-;BASE #2
-MakeGuiInputGeometry, $ 
-  MAIN_BASE, $
-  MainBaseSize, $
-  images_structure
-
-;BASE #1
-MakeGuiLoadingGeometry, $
-  MAIN_BASE, $
-  MainBaseSize, $
-  InstrumentList, $
-  InstrumentIndex, $
-  versionLight
+MakeGuiMainBase, MAIN_BASE
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
-
-;populate geometry droplist
-GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
-id = widget_info(MAIN_BASE, find_by_uname='geometry_droplist')
-widget_control, id, set_value=GeoArray
-id = widget_info(MAIN_BASE, find_by_uname='geometry_text_field')
-widget_control, id, set_value=GeoArray[0]
-
-;show selected instrument
-id = widget_info(MAIN_BASE, find_by_uname='instrument_droplist')
-widget_control, id, set_droplist_select=instrumentIndex
 
 END
 
 
 ; Empty stub procedure used for autoloading.
-pro gg, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro plot_roi, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 end
 
