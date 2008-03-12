@@ -47,6 +47,7 @@ endelse
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                   batch_data_runs : ptr_new(0L),$
+                    nbrIntermediateFiles : 8,$
                     batch_process : 'data',$
                     batch_norm_runs : ptr_new(0L),$
                     batch_percent_error : 0.01,$ ;1% difference acceptebale
