@@ -46,7 +46,12 @@ global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     RunNumber             : '',$
                     version               : VERSION })
 
-MainBaseSize  = [30,25,700,530]
+IF (ucams EQ 'j35') THEN BEGIN
+    MainBaseSize  = [30,25,540,635]
+ENDIF ELSE BEGIN
+    MainBaseSize  = [30,25,540,385]
+ENDELSE
+
 MainBaseTitle = 'Plot NeXus and ROI files'
         
 MainBaseTitle += ' - ' + VERSION

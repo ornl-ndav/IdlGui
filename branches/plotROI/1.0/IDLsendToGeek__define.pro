@@ -1,5 +1,5 @@
 ;-------------------------------------------------------------------------------
-;This method define the send_to_geek_base
+;This method defines the send_to_geek_base
 FUNCTION MakeBase, MainBase,$ 
                    XOFFSET, $
                    YOFFSET, $
@@ -18,7 +18,7 @@ END
 
 
 ;-------------------------------------------------------------------------------
-;This method plots the Frame and add the title 
+;This method plots the Frame and adds the title 
 PRO MakeFrame, STGbase, $
                XSIZE, $
                FRAME,$
@@ -51,7 +51,7 @@ wFrame = WIDGET_LABEL(STGbase,$
 END
 
 ;-------------------------------------------------------------------------------
-;This method plots the Frame and add the title 
+;This method adds the label, text_fiels and button
 PRO MakeContain, STGbase, Xsize
 
 ;**Define Structure**
@@ -128,18 +128,16 @@ MakeFrame, STGbase, $
   FRAME, $
   TITLE
 
-  
 RETURN, 1
 END
 
-
-
-
-
-;******  Class Define **** *****************************************************
+;*******************************************************************************
+;******  Class Define **********************************************************
+;*******************************************************************************
 PRO IDLsendToGeek__define
 STRUCT = { IDLsendToGeek,$
            var : ''}
 END
-
+;*******************************************************************************
+;*******************************************************************************
 
