@@ -325,7 +325,7 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     text = '--> Display List of All Normalization Run .................... ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateAllNormNexusFileName, Event, AllNormNexusFileName
+    UpdateAllNormNexusFileName, Event, structure.AllNormNexusFileName
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;work on MainNormNexusFileName
