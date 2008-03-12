@@ -95,8 +95,16 @@ ENDIF ELSE BEGIN
                     '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
                     ELSE         : BEGIN
                         CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
-                        SplitArray[0]=CommentArray[0]
-                        cmd = strjoin(SplitArray,' ')
+                        SplitArray[0] =CommentArray[0]
+                        cmd           = strjoin(SplitArray,' ')
+                        cmd_array     = STRSPLIT(cmd, $
+                                                 ' --batch ', $
+                                                 /EXTRACT, $
+                                                 /REGEX,$
+                                                 COUNT = length)
+                        IF (length NE 0) THEN BEGIN 
+                            cmd = cmd_array[0] + ' ' + cmd_array[1]
+                        ENDIF
                         BatchTable[7,BatchIndex] = cmd
                     END
                 ENDCASE
@@ -149,8 +157,8 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#Date : ' + BatchTable[k++,i]]
 ;add --batch flag to command line
-    cmd_array = strsplit(BatchTable[k++,i], 'srun', /EXTRACT, /REGEX)
-    cmd       = 'srun --batch ' + cmd_array[0]
+    cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
+    cmd       = 'srun --batch' + cmd_array[0]
     text    = [text, FP+cmd]
     text    = [text, '']
 
