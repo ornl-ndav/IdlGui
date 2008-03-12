@@ -156,7 +156,6 @@ if (isReductionWithNormalization(Event)) then begin
         endelse
         putInfoInReductionStatus, Event, status_text, append
         StatusMessage += 1
-
     endelse
     
 ;get normalization roi file
@@ -228,7 +227,6 @@ if (isReductionWithNormalization(Event)) then begin
     endif else begin
         append = 0
     endelse
-    putInfoInReductionStatus, Event, status_text, append
 
 ;Be sure that (Ymin_peak=Ymin_back && Ymax_peak=Ymax_back) is wrong
 Ymin_peak = norm_peak_exclusion_min
@@ -455,14 +453,14 @@ if (isWithNormInstrumentGeometryOverwrite(Event)) then BEGIN $
 endif
 
 ;get name from output path and name
-outputPath     = (*global).dr_output_path
-outputFileName = getOutputFileName(Event)
+outputPath        = (*global).dr_output_path
+outputFileName    = getOutputFileName(Event)
 NewOutputFileName = outputPath + outputFileName
-cmd += ' --output=' + NewOutputFileName
+cmd              += ' --output=' + NewOutputFileName
 
 ;generate intermediate plots command line
 IP_cmd = RefReduction_CommandLineIntermediatePlotsGenerator(Event)
-cmd += IP_cmd
+cmd   += IP_cmd
 
 ;display command line in Reduce text box
 putTextFieldValue, Event, 'reduce_cmd_line_preview', cmd, 0
@@ -474,14 +472,13 @@ if (StatusMessage NE 0) then begin ;do not activate button
 ;    PopulateBatchTableWithCMDinfo, Event, 'N/A'
 endif else begin
     activate = 1
-putInfoInReductionStatus, Event, '', 0 
+    putInfoInReductionStatus, Event, '', 0 
 ;clear text field of Commnand line status
 ;;display command line in batch tab of working row
 ;    PopulateBatchTableWithCMDinfo, Event, cmd
 endelse
 
 (*global).PreviousRunReductionValidated = activate
-
 ActivateWidget, Event,'start_data_reduction_button',activate
 
 END
