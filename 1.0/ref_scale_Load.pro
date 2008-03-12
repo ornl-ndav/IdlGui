@@ -190,109 +190,17 @@ END
 
 
 
-;Cancel Load button
-PRO ReflSupportEventcb_CancelLoadButton, Event 
-  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
-  widget_control, dMDAngleBaseId, map=0
-END
+;;Cancel Load button
+;PRO ReflSupportEventcb_CancelLoadButton, Event 
+;  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
+;  widget_control, dMDAngleBaseId, map=0
+;END
 
 
 
 
-;clear file button in step 1
-PRO CLEAR_FILE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;get the selected index of the load
-;list droplist
-TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist')
-RemoveIndexFromArray, Event, TextBoxIndex
-;update GUI
-ListOfFiles = (*(*global).list_of_files)
-updateGUI, Event, ListOfFiles
-
-;plot all loaded files if listOfFiles is not empty
-ListOfFilesSize = getSizeOfArray(ListOfFiles)
-if (ListOfFilesSize EQ 1 AND $
-    ListOfFiles[0] EQ '') then begin
-    plot_loaded_file, Event, 'clear'
-endif else begin
-   plot_loaded_file, Event, 'all'
-endelse
-
-display_info_about_file, Event
-angleValue = getAngleValue(Event)
-displayAngleValue, Event, angleValue
-
-END
 
 
-
-
-;reset full session
-PRO RESET_ALL_BUTTON, Event
-;reset all arrays
-ResetArrays, Event              ;reset all arrays
-ReinitializeColorArray, Event
-ClearAllDropLists, Event        ;_Gui
-ClearAllTextBoxes, Event        ;clear all textBoxes
-ClearFileInfoStep1, Event       ;_Gui
-ClearMainPlot, Event            ;_Gui
-ResetPositionOfSlider, Event    ;_Gui
-ResetAllOtherParameters, Event
-ResetRescaleBase,Event
-ActivateRescaleBase, Event, 0
-ActivateClearFileButton, Event, 0
-ClearColorLabel, Event          ;_Gui
-ReflSupportWidget_ClearCElabelStep2, Event ;_Gui
-ActivatePrintFileButton, Event, 0
-;Reset nbr of files loaded
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).NbrFilesLoaded = 0
-END
-
-
-;reset X and Y axis rescalling
-PRO ResetRescaleButton, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
-putXYMinMax, Event, (*(*global).XYMinMax)
-DoPlot, Event
-END
-
-
-;TOF or Q buttons
-PRO InputFileFormat, Event
-;; ValidateButton = getButtonValidated(Event,'InputFileFormat')
-;; if (ValidateButton EQ 0) then begin ;TOF
-;;     Validate = 1
-;; endif else begin ;Q
-;;     Validate = 0
-;; endelse
-;; ModeratorDetectorDistanceBaseId = $
-;;   widget_info(Event.top,find_by_uname='ModeratorDetectorDistanceBase')
-;; widget_control, ModeratorDetectorDistanceBaseId, map=Validate
-;; checkLoadButtonStatus, Event
-END
-
-
-PRO replot_main_plot, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-if (((*global).replot_me) EQ 1) then begin
-    steps_tab, Event,1
-    (*global).replot_me = 0
-endif
-end
-
-
-PRO rescale_data_changed, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).replot_me = 1
-END
 
 
 

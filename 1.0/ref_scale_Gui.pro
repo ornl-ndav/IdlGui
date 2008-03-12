@@ -704,5 +704,21 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+;This function displays the error message in the error message label
+PRO displayErrorMessage, Event, text
+ErrorMessageLabelid = widget_info(Event.top,find_by_uname='ErrorMessageLabel')
+widget_control, ErrorMessageLabelid, set_value=text
+END
+
 ;###############################################################################
 ;*******************************************************************************
+
+x;this function map or not the ErrorBase
+PRO activateErrorMessageBaseFunction, Event, activateErrorBase
+ErrorMessageBaseId = widget_info(Event.top,find_by_uname='ErrorMessageBase')
+widget_control, ErrorMessageBaseid, map = activateErrorBase
+END
+
+;###############################################################################
+;*******************************************************************************
+
