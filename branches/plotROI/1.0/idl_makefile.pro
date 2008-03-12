@@ -16,6 +16,7 @@ cd, CurrentFolder + '/plotROIGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run IDLsendToGeek__define.pro
 
 ;procedures
 
