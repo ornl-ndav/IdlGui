@@ -128,6 +128,15 @@ sSTG = { size : [XYoff[0],$
                  MainPlot.size[1]+MainPlot.size[3]+XYoff[1],$
                  GIframe.size[2]]}
          
+;///////////////////////////////////////
+;             LOG BOOK
+;///////////////////////////////////////
+XYoff = [15,60]
+LB = { size : [XYoff[0],$
+               sSTG.size[1]+XYoff[1],$
+               505,240],$
+       uname : 'log_book_text'}
+       
 ;***************************************
 ;            BUILD GUI
 ;***************************************
@@ -259,11 +268,12 @@ wROIframe = WIDGET_LABEL(MAIN_BASE,$
 ;                PLOT
 ;///////////////////////////////////////
 wBank = WIDGET_DROPLIST(MAIN_BASE,$
-                        VALUE   = Bank.value,$
-                        XOFFSET = Bank.size[0],$
-                        YOFFSET = Bank.size[1],$
+                        VALUE     = Bank.value,$
+                        XOFFSET   = Bank.size[0],$
+                        YOFFSET   = Bank.size[1],$
                         SCR_YSIZE = Bank.size[3],$
-                        UNAME   = Bank.uname)
+                        UNAME     = Bank.uname,$
+                        SENSITIVE = 0)
 
 wplot = WIDGET_BUTTON(MAIN_BASE,$
                       XOFFSET   = Mainplot.size[0],$
@@ -271,7 +281,8 @@ wplot = WIDGET_BUTTON(MAIN_BASE,$
                       SCR_XSIZE = Mainplot.size[2],$
                       SCR_YSIZE = Mainplot.size[3],$
                       UNAME     = Mainplot.uname,$
-                      VALUE     = Mainplot.value)
+                      VALUE     = Mainplot.value,$
+                      SENSITIVE = 0)
 
 ;///////////////////////////////////////
 ;             Send To Geek
@@ -281,5 +292,16 @@ STGinstance = obj_new('IDLsendToGeek', $
                       YOFFSET   = sSTG.size[1],$
                       XSIZE     = sSTG.size[2],$
                       MAIN_BASE = MAIN_BASE)
+
+;///////////////////////////////////////
+;             LOG BOOK
+;///////////////////////////////////////
+wLB = WIDGET_TEXT(MAIN_BASE,$
+                  XOFFSET   = LB.size[0],$
+                  YOFFSET   = LB.size[1],$
+                  SCR_XSIZE = LB.size[2],$
+                  SCR_YSIZE = LB.size[3],$
+                  /SCROLL,$
+                  /WRAP)
 
 END
