@@ -121,17 +121,39 @@ Mainplot  = { size  : [Bank.size[0]+XYoff[0],$
               value : 'P L O T'}
 
 ;///////////////////////////////////////
-;             Send To Geek
+;                Status
 ;///////////////////////////////////////
 XYoff = [15,20]
+sStatusFrame = { size : [XYoff[0],$
+                         MainPlot.size[1]+MainPlot.size[3]+XYoff[1],$
+                         GIframe.size[2],$
+                         40],$
+                 frame : 3}
+
+sStatustitle = { size  : [NBframe.size[0]+XYoff_f[0],$
+                          sStatusFrame.size[1]+XYoff_f[1]],$
+                 value : 'Status'}
+
+XYoff = [20,5]
+sStatusLabel = { size : [sStatusFrame.size[0]+XYoff[0],$
+                         sSTatusFrame.size[1]+XYoff[1],$
+                         GIframe.size[2]-40,$
+                         35],$
+                 value : '',$
+                 uname : 'status_message'}
+
+;///////////////////////////////////////
+;             Send To Geek
+;///////////////////////////////////////
+XYoff = [15,25]
 sSTG = { size : [XYoff[0],$
-                 MainPlot.size[1]+MainPlot.size[3]+XYoff[1],$
+                 sStatusFrame.size[1]+sStatusFrame.size[3]+XYoff[1],$
                  GIframe.size[2]]}
-         
+
 ;///////////////////////////////////////
 ;             LOG BOOK
 ;///////////////////////////////////////
-XYoff = [15,60]
+XYoff = [15,70]
 LB = { size : [XYoff[0],$
                sSTG.size[1]+XYoff[1],$
                505,240],$
@@ -284,6 +306,30 @@ wplot = WIDGET_BUTTON(MAIN_BASE,$
                       UNAME     = Mainplot.uname,$
                       VALUE     = Mainplot.value,$
                       SENSITIVE = 0)
+
+;///////////////////////////////////////
+;                Status
+;///////////////////////////////////////
+wStatustitle = WIDGET_LABEL(MAIN_BASE,$
+                            XOFFSET = sStatustitle.size[0],$
+                            YOFFSET = sStatustitle.size[1],$
+                            VALUE   = sStatustitle.value)
+
+wStatusLabel = WIDGET_LABEL(MAIN_BASE,$
+                            XOFFSET   = sStatusLabel.size[0],$
+                            YOFFSET   = sStatusLabel.size[1],$
+                            SCR_XSIZE = sStatusLabel.size[2],$
+                            SCR_YSIZE = sStatusLabel.size[3],$
+                            VALUE     = sStatusLabel.value,$
+                            UNAME     = sStatusLabel.uname)
+
+wStatusframe = WIDGET_LABEL(MAIN_BASE,$
+                            XOFFSET   = sStatusframe.size[0],$
+                            YOFFSET   = sStatusframe.size[1],$
+                            SCR_XSIZE = sStatusframe.size[2],$
+                            SCR_YSIZE = sStatusframe.size[3],$
+                            FRAME     = sStatusframe.frame,$
+                            VALUE     = '')
 
 ;///////////////////////////////////////
 ;             Send To Geek
