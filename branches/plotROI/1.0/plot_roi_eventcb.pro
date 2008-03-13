@@ -1,4 +1,28 @@
-PRO BrowseNexusFile, Event ;_eventcb
+PRO BrowseRoiFile, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+Ext    = (*global).BrowseROIExt
+Filter = (*global).BrowseROIFilter
+Path   = (*global).BrowseROIPath
+
+RoiFileName = DIALOG_PICKFILE(GET_PATH          = newPath,$
+                              PATH              = Path,$
+                              FILTER            = Filter,$
+                              DEFAULT_EXTENSION = Ext,$
+                              TITLE             = 'Select a ROI File ...',$
+                              /MUST_EXIST)
+IF (RoiFileName NE '') THEN BEGIN
+    (*global).BrowseDefaultPath = newPath
+    putRoiFileName, Event, RoiFileName
+ENDIF ELSE BEGIN
+    putRoiFileName, Event, ''
+ENDELSE
+END
+
+;-------------------------------------------------------------------------------
+PRO BrowseNexusFile, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -7,15 +31,15 @@ Ext    = (*global).BrowseNexusDefaultExt
 Filter = (*global).BrowseFilter
 Path   = (*global).BrowseDefaultPath
 
-RoiFileName = DIALOG_PICKFILE(GET_PATH          = newPath,$
-                              PATH              = Path,$
-                              FILTER            = Filter,$
-                              DEFAULT_EXTENSION = Ext,$
-                              TITLE             = 'Select a Nexus File ...',$
-                              /MUST_EXIST)
-IF (RoiFileName NE '') THEN BEGIN
+NexusFileName = DIALOG_PICKFILE(GET_PATH          = newPath,$
+                                PATH              = Path,$
+                                FILTER            = Filter,$
+                                DEFAULT_EXTENSION = Ext,$
+                                TITLE             = 'Select a Nexus File ...',$
+                                /MUST_EXIST)
+IF (NexusFileName NE '') THEN BEGIN
     (*global).BrowseDefaultPath = newPath
-    putNexusFileName, Event, RoiFileName
+    putNexusFileName, Event, NexusFileName
 ENDIF ELSE BEGIN
     putNexusFileName, Event, ''
 ENDELSE
