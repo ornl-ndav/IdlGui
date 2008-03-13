@@ -16,9 +16,11 @@ cd, CurrentFolder + '/plotROIGUI/'
 cd, CurrentFolder
 
 ;utils functions
+.run plot_roi_get.pro
 .run IDLsendToGeek__define.pro
 
 ;procedures
+.run plot_roi_Load.pro
 
 ;main functions
 .run MainBaseEvent.pro
