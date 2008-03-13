@@ -15,9 +15,8 @@ CASE Event.id OF
 
 ;#1### NeXus Run Number ####
     widget_info(wWidget, FIND_BY_UNAME='nexus_run_number'): BEGIN
-        print, 'in run_number'
+        LoadRunNumber, Event ;_Load
     END
-    
 
     ELSE:
     
