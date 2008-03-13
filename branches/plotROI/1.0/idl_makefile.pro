@@ -4,6 +4,8 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
+.run nexus_utilities.pro
+.run IDLnexus__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -17,6 +19,9 @@ cd, CurrentFolder
 
 ;utils functions
 .run plot_roi_get.pro
+.run plot_roi_is.pro
+.run plot_roi_put.pro
+.run plot_roi_GUI.pro
 .run IDLsendToGeek__define.pro
 
 ;procedures

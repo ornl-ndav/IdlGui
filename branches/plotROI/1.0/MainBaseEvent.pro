@@ -13,10 +13,23 @@ CASE Event.id OF
     
 ;1111111111111111111111111111111111111111111111111111111111111111111111111111111
 
-;#1### NeXus Run Number ####
+;#### Instrument Droplist ###
+    widget_info(wWidget, FIND_BY_UNAME='list_of_instrument'): BEGIN
+        ListOfInstrument, Event ;_eventcb
+        ValidatePlotButton, Event ;_GUI
+    END
+
+;##### NeXus Run Number ####
     widget_info(wWidget, FIND_BY_UNAME='nexus_run_number'): BEGIN
         LoadRunNumber, Event ;_Load
+        ValidatePlotButton, Event ;_GUI
     END
+
+;#### Roi file Text Field ####
+    widget_info(wWidget, FIND_BY_UNAME='roi_text_field'): BEGIN
+        ValidatePlotButton, Event ;_GUI
+    END
+    
 
     ELSE:
     
