@@ -30,7 +30,7 @@ CASE (hostname) OF
     ELSE           : instrumentIndex = 0
 ENDCASE 
 
-ListOFInstruments = ['BASIS',$
+ListOFInstruments = ['BSS',$
                      'SNAP',$
                      'REF_L',$
                      'REF_M',$
@@ -77,6 +77,7 @@ Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ;Validate instrument selected
+instrumentIndex = 3 ;REMOVE_ME
 id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
 widget_control, id, set_droplist_select=instrumentIndex
 

@@ -126,7 +126,7 @@ sStatusLabel = { size : [sStatusFrame.size[0]+XYoff[0],$
                  uname : 'status_message'}
 
 ;///////////////////////////////////////
-;             Send To Geek
+;             Send To Geekx
 ;///////////////////////////////////////
 XYoff = [15,25]
 sSTG = { size : [XYoff[0],$
@@ -238,6 +238,7 @@ wROItext = WIDGET_TEXT(MAIN_BASE,$
                        SCR_XSIZE = ROItext.size[2],$
                        SCR_YSIZE = ROItext.size[3],$
                        UNAME     = ROItext.uname,$
+                       /ALL_EVENTS,$
                        /EDITABLE)
 
 wROIframe = WIDGET_LABEL(MAIN_BASE,$
