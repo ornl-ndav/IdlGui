@@ -47,6 +47,9 @@ global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     BrowseNexusDefaultExt : '.nxs',$
                     BrowseDefaultPath     : '~/',$
                     BrowseFilter          : '*.nxs',$
+                    BrowseROIExt          : '.txt',$
+                    BrowseROIPath         : '~/',$
+                    BrowseROIFilter       : '*.txt',$
                     version               : VERSION })
 
 IF (ucams EQ 'j35') THEN BEGIN

@@ -18,5 +18,8 @@ PRO putNexusFileName, Event, FileName
 putTextFieldValue, Event, 'nexus_file_text_field', FileName
 END
 ;-------------------------------------------------------------------------------
-
+PRO putRoiFileName, Event, FileName
+putTextFieldValue, Event, 'roi_text_field', FileName
+END
+;-------------------------------------------------------------------------------
 
