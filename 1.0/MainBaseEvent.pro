@@ -31,6 +31,11 @@ CASE Event.id OF
         ValidatePlotButton, Event ;_GUI
     END
 
+;#### Nexus File Text Field
+    widget_info(wWidget, FIND_BY_UNAME='nexus_file_text_field'): BEGIN
+        ValidatePlotButton, Event ;_GUI
+    END
+
 ;#### Browse Roi file ####
     widget_info(wWidget, FIND_BY_UNAME='browse_roi_button'): BEGIN
         BrowseRoiFile, Event  ;_eventcb

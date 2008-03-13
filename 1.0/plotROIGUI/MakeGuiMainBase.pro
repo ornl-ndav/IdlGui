@@ -206,7 +206,8 @@ wNBField = CW_FIELD(wNBfieldBase,$
                     XSIZE = NBField.size[4],$
                     YSIZE = NBField.size[5],$
                     TITLE = NBField.title,$
-                    UNAME = NBField.uname)
+                    UNAME = NBField.uname,$
+                    /ALL_EVENTS)
 
 wGIframe = WIDGET_LABEL(MAIN_BASE,$
                          XOFFSET   = GIframe.size[0],$
