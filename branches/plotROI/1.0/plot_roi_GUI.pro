@@ -12,12 +12,19 @@ END
 ;*******************************************************************************
 ;*******************************************************************************
 PRO ValidatePlotButton, Event
-;is Full Nexus Name not empty
-IF (isFullNexusNameEmpty(Event) EQ 1 OR $
-    isRoiFileNameEmpty(Event) EQ 1) THEN BEGIN
-    validateStatus = 0
+;check first that the file exist
+RoiFileName   = getRoiFileName(Event)
+NexusFileName = getFullNexusFileName(Event)
+IF (FILE_TEST(RoiFileName) AND FILE_TEST(NexusFileName)) THEN BEGIN
+                                ;is Full Nexus Name not empty
+    IF (isFullNexusNameEmpty(Event) EQ 1 OR $
+        isRoiFileNameEmpty(Event) EQ 1) THEN BEGIN
+        validateStatus = 0
+    ENDIF ELSE BEGIN
+        validateStatus = 1
+    ENDELSE
 ENDIF ELSE BEGIN
-    validateStatus = 1
+    validateStatus = 0
 ENDELSE
 ActivateWidget, Event, 'plot_button', validateStatus
 END
