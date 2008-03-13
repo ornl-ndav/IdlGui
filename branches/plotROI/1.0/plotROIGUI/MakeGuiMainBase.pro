@@ -207,7 +207,7 @@ wNBField = CW_FIELD(wNBfieldBase,$
                     YSIZE = NBField.size[5],$
                     TITLE = NBField.title,$
                     UNAME = NBField.uname,$
-                    /ALL_EVENTS)
+                    /RETURN_EVENTS)
 
 wGIframe = WIDGET_LABEL(MAIN_BASE,$
                          XOFFSET   = GIframe.size[0],$
@@ -259,7 +259,7 @@ wBank = WIDGET_DROPLIST(MAIN_BASE,$
                         YOFFSET   = Bank.size[1],$
                         SCR_YSIZE = Bank.size[3],$
                         UNAME     = Bank.uname,$
-                        SENSITIVE = 0)
+                        SENSITIVE = 1)
 
 wplot = WIDGET_BUTTON(MAIN_BASE,$
                       XOFFSET   = Mainplot.size[0],$

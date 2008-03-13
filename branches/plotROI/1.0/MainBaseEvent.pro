@@ -22,17 +22,20 @@ CASE Event.id OF
 ;##### NeXus Run Number ####
     widget_info(wWidget, FIND_BY_UNAME='nexus_run_number'): BEGIN
         LoadRunNumber, Event ;_Load
+        PopulateNumberOfBanks, Event ;_GUI
         ValidatePlotButton, Event ;_GUI
     END
 
 ;#### Browse Nexus File ####
     widget_info(wWidget, FIND_BY_UNAME='browse_nexus'): BEGIN
         BrowseNexusFile, Event ;_eventcb
+        PopulateNumberOfBanks, Event ;_GUI
         ValidatePlotButton, Event ;_GUI
     END
 
 ;#### Nexus File Text Field
     widget_info(wWidget, FIND_BY_UNAME='nexus_file_text_field'): BEGIN
+        PopulateNumberOfBanks, Event ;_GUI
         ValidatePlotButton, Event ;_GUI
     END
 
