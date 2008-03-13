@@ -49,7 +49,11 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='roi_text_field'): BEGIN
         ValidatePlotButton, Event ;_GUI
     END
-    
+
+;#### PLOT button ####
+    widget_info(wWidget, FIND_BY_UNAME='plot_button'): BEGIN
+        PlotData ;_Plot
+    END
 
     ELSE:
     

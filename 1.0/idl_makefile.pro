@@ -26,6 +26,7 @@ cd, CurrentFolder
 
 ;procedures
 .run plot_roi_Load.pro
+.run plot_roi_Plot.pro
 
 ;main functions
 .run MainBaseEvent.pro
