@@ -27,6 +27,7 @@ cd, CurrentFolder
 ;procedures
 .run plot_roi_Load.pro
 .run plot_roi_Plot.pro
+.run IDLplotData__define.pro
 
 ;main functions
 .run MainBaseEvent.pro
