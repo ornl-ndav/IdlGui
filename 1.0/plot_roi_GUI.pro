@@ -12,10 +12,15 @@ END
 ;*******************************************************************************
 ;*******************************************************************************
 PRO ValidatePlotButton, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 ;check first that the file exist
 RoiFileName   = getRoiFileName(Event)
 NexusFileName = getFullNexusFileName(Event)
-IF (FILE_TEST(RoiFileName) AND FILE_TEST(NexusFileName)) THEN BEGIN
+IF (FILE_TEST(RoiFileName) AND $
+    FILE_TEST(NexusFileName) AND $
+    (*global).ValidNexus EQ 1) THEN BEGIN
                                 ;is Full Nexus Name not empty
     IF (isFullNexusNameEmpty(Event) EQ 1 OR $
         isRoiFileNameEmpty(Event) EQ 1) THEN BEGIN
@@ -27,7 +32,48 @@ ENDIF ELSE BEGIN
     validateStatus = 0
 ENDELSE
 ActivateWidget, Event, 'plot_button', validateStatus
+ActivateWidget, Event, 'bank_droplist', validateStatus
 END
 
+;-------------------------------------------------------------------------------
+PRO setBankDroplistValue, Event, value
+id = widget_info(Event.top,find_by_uname='bank_droplist')
+widget_control, id, set_value=value
+END
 
+;-------------------------------------------------------------------------------
+PRO PopulateBankDroplist, Event, NbrBank
+NbrBank    = LONG(NbrBank)
+prefix     = 'Bank'
+BankArray  = strarr(NbrBank)
+FOR i=0,(NbrBank-1) DO BEGIN
+    BankArray[i] = prefix + STRCOMPRESS(i+1,/REMOVE_ALL)
+ENDFOR
+setBankDroplistValue, Event, BankArray
+END
+
+;^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^
+PRO PopulateNumberOfBanks, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+FullNexusName = getFullNexusFileName(Event)
+IF (FullNexusName NE '') THEN BEGIN
+    NexusInstance = obj_new('IDLgetNexusMetadata', FullNexusName)
+    IF (OBJ_VALID(NexusInstance)) THEN BEGIN
+        NbrBank = NexusInstance->getNbrBank()
+;activate NbrBank
+        (*global).ValidNexus = 1
+    ENDIF ELSE BEGIN
+        NbrBank = 1
+;desactivate NbrBank
+        (*global).ValidNexus = 0
+    ENDELSE
+    PopulateBankDroplist, Event, NbrBank
+ENDIF ELSE BEGIN
+;desactivate NbrBank
+    (*global).ValidNexus = 0
+ENDELSE
+
+END
 

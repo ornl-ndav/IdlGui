@@ -5,6 +5,9 @@ PRO LoadRunNumber, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;reset text_field of full nexus file name
+putNexusFileName, Event, ''
+
 ;get RunNumber
 RunNumber = getRunNumber(Event)
 ;get Instrument
