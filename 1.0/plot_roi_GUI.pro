@@ -59,7 +59,7 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 FullNexusName = getFullNexusFileName(Event)
 IF (FullNexusName NE '') THEN BEGIN
-    NexusInstance = obj_new('IDLgetNexusMetadata', FullNexusName)
+    NexusInstance = obj_new('IDLgetNexusMetadata', FullNexusName, NbrBank=1)
     IF (OBJ_VALID(NexusInstance)) THEN BEGIN
         NbrBank = NexusInstance->getNbrBank()
 ;activate NbrBank

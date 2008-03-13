@@ -17,13 +17,30 @@ WHILE (no_more_banks NE 1) DO BEGIN
 ENDWHILE
 END
 
+;-------------------------------------------------------------------------------
+FUNCTION getBankData, fileID, BankNbr
+banks_path = '/entry/bank' + strcompress(BankNbr,/remove_all) + '/data/'
+pathID     = h5d_open(fileID, banks_path)
+data       = h5d_read(pathID)
+h5d_close,pathID
+help, data
+RETURN, data
+END
+
 ;***** Class methods ***********************************************************
 FUNCTION IDLgetNexusMetadata::getNbrBank
 RETURN, self.bank_number
 END
 
+;-------------------------------------------------------------------------------
+FUNCTION IDLgetNexusMetadata::getData
+RETURN, self.data
+END
+
 ;***** Class constructor *******************************************************
-FUNCTION IDLgetNexusMetadata::init, nexus_full_path
+FUNCTION IDLgetNexusMetadata::init, nexus_full_path, $
+                            NbrBank  = NbrBank,$
+                            BankData = BankData
 ;open hdf5 nexus file
 file_error = 0
 CATCH, file_error
@@ -33,9 +50,16 @@ IF (file_error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
 ENDELSE
+
+IF (n_elements(NbrBank) NE 0) THEN BEGIN
 ;get NumberOfBanks
-self.bank_number = getNumberOfBanks(fileID)
-;IF (self.bank_number EQ 0) THEN RETURN, 0
+    self.bank_number = getNumberOfBanks(fileID)
+ENDIF
+
+IF (n_elements(BankData) NE 0) THEN BEGIN
+;get Bank data
+    self.data = ptr_new(getBankData(fileID,BankData))
+ENDIF
 
 ;close hdf5 nexus file
 h5f_close, fileID
@@ -48,5 +72,6 @@ PRO IDLgetNexusMetadata__define
 struct = {IDLgetNexusMetadata,$
           RunNumber       : '',$
           nexus_full_path : '',$
+          data            : ptr_new(),$
           bank_number     : 0}
 END
