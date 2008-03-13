@@ -52,7 +52,7 @@ CASE Event.id OF
 
 ;#### PLOT button ####
     widget_info(wWidget, FIND_BY_UNAME='plot_button'): BEGIN
-        PlotData ;_Plot
+        PlotData, Event ;_Plot
     END
 
     ELSE:

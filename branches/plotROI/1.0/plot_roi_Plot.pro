@@ -8,7 +8,11 @@ NexusFileName = getFullNexusFileName(Event)
 ;get Bank#
 BankNbr       = getDroplistSelectedIndex(Event,'bank_droplist')
 
+NexusDataInstance = obj_new('IDLgetNexusMetadata', $
+                            FullNexusName, $
+                            BankData=BankNbr)
 
+help, NexusDataInstance->getData()
 
 
 END
