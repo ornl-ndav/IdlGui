@@ -1,70 +1,58 @@
 PRO MakeGuiMainBase, MAIN_BASE, global
 
 ;///////////////////////////////////////
-;         General Information
+;             Nexus File
 ;///////////////////////////////////////
-GIframe           = { size  : [15,15,500,45],$
+GIframe           = { size  : [15,15,500,150],$
                       frame : 3}
 
 XYoff_f           = [20,-8]
 GItitle           = { size  : [GIframe.size[0]+XYoff_f[0],$
                                GIframe.size[1]+XYoff_f[1]],$
-                      value : 'General Information'}
+                      value : 'Nexus File'}
 
-XYoff             = [20,20]
+XYoff             = [15,20]
 GIinstLabel       = { size  : [GIframe.size[0]+XYoff[0],$
                                GIFrame.size[1]+XYoff[1]],$
                       value : 'Instrument:'}
 
 XYoff             = [70,-10]
-ListOfInstruments = ['   PLease Select An Instrument . . . ', $
+ListOfInstruments = ['PLease Select An Instrument ...', $
                      (*global).ListOfInstruments]
 GIdroplist        = { size   : [GIinstLabel.size[0]+XYoff[0],$
                                 GIinstLabel.size[1]+XYoff[1]],$
                       value  : ListOfInstruments,$
                       uname  : 'list_of_instrument'}
 
-;///////////////////////////////////////
-;         Nexus Input Box
-;///////////////////////////////////////
-XYoff    = [0,20]
-NBframe = { size  : [15+XYoff[0], $
-                     15+XYoff[1]+GIframe.size[3], $
-                     GIframe.size[2], $
-                     100],$
-            frame : 3 }
-
-NBtitle = { size  : [NBframe.size[0]+XYoff_f[0],$
-                      NBframe.size[1]+XYoff_f[1]],$
-             value : 'NeXus File'}
-
-XYoff        = [20,15]
-NBrunField  = { size       : [NBframe.size[0]+XYoff[0],$
-                              NBframe.size[1]+XYoff[1],$
-                              200, $
+XYoff        = [235,0]
+NBrunField  = { size       : [GIdroplist.size[0]+XYoff[0],$
+                              GIdroplist.size[1]+XYoff[1],$
+                              175, $
                               35,$
-                              15, $
+                              13, $
                               1],$
-                 title      : 'Run Number: ',$
+                title      : '&  Run #:',$
                 uname_base : 'nexus_run_number_base',$
                 uname      : 'nexus_run_number'}
-XYoff        = [0,8]
-NBor         = { size  : [NBrunField.size[0]+NBrunField.size[2]+XYoff[0],$
-                          NBrunField.size[1]+XYoff[1]],$
-                 value : 'OR',$
-                 uname : 'nexus_file_or_label'}
-XYoff        = [25,-8]
-NBbutton     = { size  : [NBor.size[0]+XYoff[0],$
-                          NBor.size[1]+XYoff[1],$
-                          115,35],$
-                 value : 'BROWSE ...',$
+
+XYoff    =[230,30]
+sOrLabel = { size  : [GIframe.size[0]+XYoff[0],$
+                     GIinstLabel.size[1]+XYoff[1]],$
+             value : 'O R'}
+                 
+XYoff        = [20,25]
+NBbutton     = { size  : [GIframe.size[0]+XYoff[0],$
+                          sOrLabel.size[1]+XYoff[1],$
+                          460,30],$
+                 value : 'B R O W S E   . . .',$
                  uname : 'browse_nexus'}
+
 XYoff        = [20,40]
-NBfield       = { size  : [NBframe.size[0]+XYoff[0],$
+NBfield       = { size  : [GIframe.size[0]+XYoff[0],$
                            NBbutton.size[1]+XYoff[1],$
                            470, $
                            35,$
-                           55, $
+                           56, $
                            1],$
                   title : 'Full Nexus Name:',$
                   uname_base : 'nexus_file_base',$
@@ -75,7 +63,7 @@ NBfield       = { size  : [NBframe.size[0]+XYoff[0],$
 ;///////////////////////////////////////
 XYoff    = [0,20]
 ROIframe = { size  : [15+XYoff[0], $
-                      NBframe.size[1]+XYoff[1]+NBframe.size[3], $
+                      GIframe.size[1]+XYoff[1]+GIframe.size[3], $
                       GIframe.size[2], $
                       55],$
              frame : 3 }
@@ -91,15 +79,10 @@ ROIbutton = { size  : [ROIframe.size[0]+XYoff[0],$
               uname : 'browse_roi_button',$
               value : 'BROWSE ...'}
 
-XYoff    = [5,8]
-ROIor    = { size : [ROIbutton.size[0]+ROIbutton.size[2]+XYoff[0],$
-                     ROIbutton.size[1]+XYoff[1]],$
-             value : 'OR'}
-                     
-XYoff    = [25,0]
-ROItext  = { size  : [ROIor.size[0]+XYoff[0],$
+XYoff    = [120,0]
+ROItext  = { size  : [ROIbutton.size[0]+XYoff[0],$
                       ROIbutton.size[1]+XYoff[1],$
-                      310,35],$
+                      340,35],$
              uname : 'roi_text_field'}
                      
 ;///////////////////////////////////////
@@ -130,7 +113,7 @@ sStatusFrame = { size : [XYoff[0],$
                          40],$
                  frame : 3}
 
-sStatustitle = { size  : [NBframe.size[0]+XYoff_f[0],$
+sStatustitle = { size  : [GIframe.size[0]+XYoff_f[0],$
                           sStatusFrame.size[1]+XYoff_f[1]],$
                  value : 'Status'}
 
@@ -164,7 +147,7 @@ LB = { size : [XYoff[0],$
 ;***************************************
 
 ;///////////////////////////////////////
-;         General Information
+;         Archived Nexus File
 ;///////////////////////////////////////
 
 wGItitle = WIDGET_LABEL(MAIN_BASE,$
@@ -183,23 +166,6 @@ wGIdroplist = WIDGET_DROPLIST(MAIN_BASE,$
                               YOFFSET = GIdroplist.size[1],$
                               UNAME   = GIdroplist.uname)
 
-wGIframe = WIDGET_LABEL(MAIN_BASE,$
-                         XOFFSET   = GIframe.size[0],$
-                         YOFFSET   = GIframe.size[1],$
-                         SCR_XSIZE = GIframe.size[2],$
-                         SCR_YSIZE = GIframe.size[3],$
-                         FRAME     = GIframe.frame,$
-                         VALUE     = '')
-
-;///////////////////////////////////////
-;         Nexus Input Box
-;///////////////////////////////////////
-
-wNBtitle = WIDGET_LABEL(MAIN_BASE,$
-                         XOFFSET = NBtitle.size[0],$
-                         YOFFSET = NBtitle.size[1],$
-                         VALUE   = NBtitle.value)
-
 wNBrunBase = WIDGET_BASE(MAIN_BASE,$
                           XOFFSET   = NBrunField.size[0],$
                           YOFFSET   = NBrunField.size[1],$
@@ -215,11 +181,10 @@ wNBrunField = CW_FIELD(wNBrunBase,$
                        /RETURN_EVENTS,$
                        /LONG)
 
-wNBofLabel = WIDGET_LABEL(MAIN_BASE,$
-                           XOFFSET = NBor.size[0],$
-                           YOFFSET = NBor.size[1],$
-                           VALUE   = NBor.value,$
-                           UNAME   = NBor.uname)
+wOrLabel = WIDGET_LABEL(MAIN_BASE,$
+                        XOFFSET = sOrLabel.size[0],$
+                        YOFFSET = sOrLabel.size[1],$
+                        VALUE   = sOrLabel.value)
 
 wNButton = WIDGET_BUTTON(MAIN_BASE,$
                          XOFFSET   = NBbutton.size[0],$
@@ -228,6 +193,7 @@ wNButton = WIDGET_BUTTON(MAIN_BASE,$
                          SCR_YSIZE = NBbutton.size[3],$
                          VALUE     = NBbutton.value,$
                          UNAME     = NBbutton.uname)
+
 
 wNBfieldBase = WIDGET_BASE(MAIN_BASE,$
                            XOFFSET   = NBField.size[0],$
@@ -242,12 +208,12 @@ wNBField = CW_FIELD(wNBfieldBase,$
                     TITLE = NBField.title,$
                     UNAME = NBField.uname)
 
-wNBframe = WIDGET_LABEL(MAIN_BASE,$
-                         XOFFSET   = NBframe.size[0],$
-                         YOFFSET   = NBframe.size[1],$
-                         SCR_XSIZE = NBframe.size[2],$
-                         SCR_YSIZE = NBframe.size[3],$
-                         FRAME     = NBframe.frame,$
+wGIframe = WIDGET_LABEL(MAIN_BASE,$
+                         XOFFSET   = GIframe.size[0],$
+                         YOFFSET   = GIframe.size[1],$
+                         SCR_XSIZE = GIframe.size[2],$
+                         SCR_YSIZE = GIframe.size[3],$
+                         FRAME     = GIframe.frame,$
                          VALUE     = '')
 
 ;///////////////////////////////////////
@@ -265,11 +231,6 @@ wROIbutton = WIDGET_BUTTON(MAIN_BASE,$
                            SCR_YSIZE = ROIbutton.size[3],$
                            VALUE     = ROIbutton.value,$
                            UNAME     = ROIbutton.uname)
-
-wROIor = WIDGET_LABEL(MAIN_BASE,$
-                      XOFFSET = ROIor.size[0],$
-                      YOFFSET = ROIor.size[1],$
-                      VALUE   = ROIor.value)
 
 wROItext = WIDGET_TEXT(MAIN_BASE,$
                        XOFFSET   = ROItext.size[0],$
