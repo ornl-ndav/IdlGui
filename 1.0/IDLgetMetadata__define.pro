@@ -304,6 +304,9 @@ self.S2        = get_s2_mm(fileID)
 ;get RunNumber
 self.RunNumber = get_RunNumber(fileID)
 
+;close hdf5 nexus file
+h5f_close, fileID
+
 IF (self.angle NE '' AND $
     self.S1 NE '' AND $
     self.S2 NE '') THEN BEGIN
