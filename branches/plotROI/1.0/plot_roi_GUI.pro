@@ -71,6 +71,11 @@ ENDIF ELSE BEGIN
 ;desactivate NbrBank
     (*global).ValidNexus = 0
 ENDELSE
-
 END
 
+;-------------------------------------------------------------------------------
+PRO ClearTextField, Event, uname
+putTextFieldValue, Event, uname, ''
+END
+
+;-------------------------------------------------------------------------------

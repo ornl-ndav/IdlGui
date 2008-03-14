@@ -26,6 +26,12 @@ CASE Event.id OF
         ValidatePlotButton, Event ;_GUI
     END
 
+;#### Nexus Run Number Clear button ####
+    widget_info(wWidget, FIND_BY_UNAME='clear_nexus_run_number'): BEGIN
+        ClearTextField, Event, 'nexus_run_number' ;_Gui
+        ValidatePlotButton, Event ;_Gui
+    END
+
 ;#### Browse Nexus File ####
     widget_info(wWidget, FIND_BY_UNAME='browse_nexus'): BEGIN
         BrowseNexusFile, Event ;_eventcb
@@ -39,6 +45,12 @@ CASE Event.id OF
         ValidatePlotButton, Event ;_GUI
     END
 
+;#### Nexus File Text Field Clear button ####
+    widget_info(wWidget, FIND_BY_UNAME='clear_nexus_file_text_field'): BEGIN
+        ClearTextField, Event, 'nexus_file_text_field' ;_Gui
+        ValidatePlotButton, Event ;_Gui
+    END
+
 ;#### Browse Roi file ####
     widget_info(wWidget, FIND_BY_UNAME='browse_roi_button'): BEGIN
         BrowseRoiFile, Event  ;_eventcb
@@ -48,6 +60,12 @@ CASE Event.id OF
 ;#### Roi file Text Field ####
     widget_info(wWidget, FIND_BY_UNAME='roi_text_field'): BEGIN
         ValidatePlotButton, Event ;_GUI
+    END
+
+;#### ROI Text Field Clear button ####
+    widget_info(wWidget, FIND_BY_UNAME='clear_roi_text_field'): BEGIN
+        ClearTextField, Event, 'roi_text_field' ;_Gui
+        ValidatePlotButton, Event ;_Gui
     END
 
 ;#### PLOT button ####
