@@ -10,6 +10,8 @@ putNexusFileName, Event, ''
 
 ;get RunNumber
 RunNumber = getRunNumber(Event)
+RunNumber = RunNumber[0]
+
 ;get Instrument
 Instrument = getInstrument(Event)
 

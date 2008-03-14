@@ -8,14 +8,18 @@ spawn, cmd, full_nexus_name, err_listening
 sz = (size(full_nexus_name))(1)
 IF (sz EQ 1) then begin
     result = STRMATCH(full_nexus_name,"ERROR*")
-    IF (result GE 1) THEN BEGIN
+    IF (result EQ 1) THEN BEGIN
         isNeXusExist = 0
     ENDIF ELSE BEGIN
         isNeXusExist = 1
     ENDELSE
     RETURN, full_nexus_name
 ENDIF ELSE BEGIN
-    isNeXusExist = 1
+    IF (full_nexus_name EQ '') THEN BEGIN
+        isNexusExist = 0
+    ENDIF ELSE BEGIN
+        isNeXusExist = 1
+    ENDELSE
     RETURN, full_nexus_name[0]
 ENDELSE
 isNexusExist = 0
@@ -41,7 +45,6 @@ FUNCTION IDLnexus::init, $
                  ARCHIVED=archived
                  
 IF (n_elements(ARCHIVED) EQ 0) THEN ARCHIVED = 1
-
 self.FullNexusName = getFullNexusName(instrument, RunNumber, isNexusExist)
 self.isNexusExist = isNexusExist
 RETURN, 1
