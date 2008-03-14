@@ -97,8 +97,14 @@ ENDIF ELSE BEGIN
                         CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
                         SplitArray[0] =CommentArray[0]
                         cmd           = strjoin(SplitArray,' ')
+;check if "-o none" is there or not
+                        IF (STRMATCH(cmd,'*-o none*')) THEN BEGIN
+                            string_split = ' --batch -o none'
+                        ENDIF ELSE BEGIN
+                            string_split = ' --batch'
+                        ENDELSE
                         cmd_array     = STRSPLIT(cmd, $
-                                                 ' --batch ', $
+                                                 string_split, $
                                                  /EXTRACT, $
                                                  /REGEX,$
                                                  COUNT = length)
@@ -158,7 +164,7 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#Date : ' + BatchTable[k++,i]]
 ;add --batch flag to command line
     cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
-    cmd       = 'srun --batch' + cmd_array[0]
+    cmd       = 'srun --batch -o none' + cmd_array[0]
     text    = [text, FP+cmd]
     text    = [text, '']
 
@@ -860,9 +866,6 @@ GenerateBatchFileName, Event
 END
 
 
-
-
-
 PRO BatchTab_MoveUpSelection, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1136,7 +1139,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                 ;add --batch just after srun
                 cmd       = BatchTable[7,i]
                 cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
-                cmd       = 'srun --batch ' + cmd_array[0]
+                cmd       = 'srun --batch -o none' + cmd_array[0]
                 LogText = '--> Command is: ' + cmd
                 putLogBookMessage, Event, LogText, APPEND=1
                 spawn, cmd, listening, err_listening

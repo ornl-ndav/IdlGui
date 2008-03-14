@@ -34,7 +34,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 prevNormNexusIndex = (*global).PreviousNormNexusListSelected
-currNormNexusIndex = getDropListSelectedIndex(Event,'normalization_list_nexus_droplist')
+currNormNexusIndex = getDropListSelectedIndex(Event, $
+                                              'normalization_list_nexus_droplist')
 
 if (prevNormNexusIndex NE currNormNexusIndex) then begin
 
@@ -42,7 +43,9 @@ if (prevNormNexusIndex NE currNormNexusIndex) then begin
     (*global).PreviousNormNexusListSelected = currNormNexusIndex
 
 ;get full name of index selected
-    currFullNormNexusName = getDropListSelectedValue(Event, 'normalization_list_nexus_droplist')
+    currFullNormNexusName = $
+      getDropListSelectedValue(Event, $
+                               'normalization_list_nexus_droplist')
 
 ;display NXsummary of that file
     RefReduction_NXsummary, $
@@ -205,7 +208,8 @@ widget_control,id,get_uvalue=global
 widget_control,/hourglass
 
 ;get full name of index selected
-currFullNormNexusName = getDropListSelectedValue(Event, 'normalization_list_nexus_droplist')
+currFullNormNexusName = getDropListSelectedValue(Event, $
+                                                 'normalization_list_nexus_droplist')
 
 ;display message in data log book
 InitialStrarr = getNormalizationLogBookText(Event)
@@ -376,7 +380,8 @@ IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
         REFreduction_CommandLineGenerator, Event
     END
     2: BEGIN ;if PLOTS tab is now selected
-        IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN ;data reduction was successful
+        IF ((*global).DataReductionStatus EQ 'OK') THEN BEGIN 
+;data reduction was successful
             RefReduction_PlotMainIntermediateFiles, Event
         ENDIF
     END
@@ -495,7 +500,7 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
     
     IF (NbrNexus EQ 1) THEN BEGIN
 
-        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file        
+        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file  
 
 ;check also format of file loaded in the list            
             REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
@@ -533,14 +538,17 @@ PRO  REFreductionEventcb_LoadAndPlotNormFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus ;first Load the normalization file
+;first Load the normalization file
+REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus 
 
-if (isArchivedNormNexusDesired(Event)) then begin ;get full list of NeXus with this run number
+;get full list of NeXus with this run number
+if (isArchivedNormNexusDesired(Event)) then begin 
     if (isNeXusFound) then begin 
         
         IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
             
-            REFreduction_Plot1D2DNormalizationFile, Event ; then plot data file (1D and 2D)
+; then plot data file (1D and 2D)
+            REFreduction_Plot1D2DNormalizationFile, Event 
             
 ;tell the user that the load and plot process is done
             InitialStrarr = getNormalizationLogBookText(Event)
@@ -565,7 +573,8 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
 
         IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
 
-            REFreduction_Plot1D2DNormalizationFile, Event ;the plot norm file (1D and 2D)
+;the plot norm file (1D and 2D)
+            REFreduction_Plot1D2DNormalizationFile, Event 
             
 ;get global structure
             id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -620,7 +629,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;reset droplist and sliders
-setDropListValue, Event, 'data_contrast_droplist', (*global).InitialDataContrastDropList
+setDropListValue, Event, 'data_contrast_droplist', $
+  (*global).InitialDataContrastDropList
 setSliderValue, Event, 'data_contrast_bottom_slider', 0
 setSliderValue, Event, 'data_contrast_number_slider', 255
 
