@@ -12,6 +12,15 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 return, WIDGET_INFO(id, /DROPLIST_SELECT)
 END
 
+;-------------------------------------------------------------------------------
+;This function returns the number of row
+FUNCTION getNbrLines, FileName
+cmd = 'wc -l ' + FileName
+SPAWN, cmd, result
+Split = STRSPLIT(result[0],' ',/EXTRACT)
+RETURN, Split[0]
+END
+
 ;*******************************************************************************
 ;*******************************************************************************
 
@@ -46,3 +55,17 @@ RoiFileName = getTextFieldValue(Event,'roi_text_field')
 RETURN, RoiFileName
 END
 
+;-------------------------------------------------------------------------------
+;This function returns the X and Y array of pixel to exclude
+PRO getXYROI, NbrPixelExcluded, StringArray, Xarray, Yarray
+NbrRow         = NbrPixelExcluded
+FOR i=0,(NbrRow-1) DO BEGIN
+    RoiStringArray = STRSPLIT(StringArray[i],'_',/EXTRACT)
+    ON_IOERROR, L1
+    Xarray[i] = Fix(RoiStringArray[1])
+    Yarray[i] = Fix(RoiStringArray[2])
+ENDFOR
+L1: error_status = 1
+END
+
+;-------------------------------------------------------------------------------

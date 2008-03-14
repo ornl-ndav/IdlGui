@@ -27,16 +27,19 @@ Ntof     = (sz_array)(1)
 Y        = (sz_array)(2)
 X        = (sz_array)(3)
 
+;get ROI file Name
+ROIfileName = getRoiFileName(Event)
+
+;DisplayMainPlot and ROI
+instancePlot = OBJ_NEW('IDLplotData', $
+                       XSIZE       = X, $
+                       YSIZE       = Y, $
+                       DATA        = data,$
+                       RoiFileName = ROIfileName)
+
 ;Informs user that it's done
 message    = 'Plotting Data ... DONE'
 putStatusMessage, Event, message
-
-;DisplayMainPlot
-instancePlot = OBJ_NEW('IDLplotData', $
-                       XSIZE=X, $
-                       YSIZE=Y, $
-                       DATA=data)
-
 
 ;turn off hourglass
 widget_control,hourglass=0

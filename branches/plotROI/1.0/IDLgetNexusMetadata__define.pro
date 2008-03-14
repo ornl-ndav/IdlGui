@@ -23,7 +23,6 @@ banks_path = '/entry/bank' + strcompress(BankNbr,/remove_all) + '/data/'
 pathID     = h5d_open(fileID, banks_path)
 data       = h5d_read(pathID)
 h5d_close,pathID
-help, data
 RETURN, data
 END
 
