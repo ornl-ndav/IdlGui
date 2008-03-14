@@ -1,3 +1,51 @@
+PRO replotRoiData, Event, sMainBase
+END
+
+;-------------------------------------------------------------------------------
+PRO replotMainData, Event, sMainBase
+;change size of base and draw region
+id = widget_info(Event.top,find_by_uname='plot_base')
+widget_control, id, SCR_XSIZE = sMainBase.xsize * sMainBase.xcoeff
+widget_control, id, SCR_YSIZE = sMainBase.ysize * sMainBase.ycoeff
+id = widget_info(Event.top,find_by_uname='draw')
+widget_control, id, SCR_XSIZE = sMainBase.xsize * sMainBase.xcoeff
+widget_control, id, SCR_YSIZE = sMainBase.ysize * sMainBase.ycoeff
+;retrieve info needed to replot
+data  = sMainBase.data
+wbase = sMainBase.wbase
+PlotMainData, data, sMainBase, wbase
+END
+
+;-------------------------------------------------------------------------------
+PRO DefineMainBase_event, Event
+
+WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
+
+wWidget =  Event.top            ;widget id
+xy_coeff = 1
+
+SWITCH Event.id OF
+    
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_10'): ++xy_coeff
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_9'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_8'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_7'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_6'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_5'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_4'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_3'): ++xy_coeff 
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_2'): ++xy_coeff
+    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_1'): BEGIN
+        sMainBase.xcoeff = xy_coeff
+        sMainBase.ycoeff = xy_coeff
+        replotMainData, Event, sMainBase
+        replotRoiData, Event, sMainBase
+    END
+ENDSWITCH
+END
+
+;-------------------------------------------------------------------------------
+
 FUNCTION RetrieveStringArray, ROIfileName, NbrElement
 openr, u, ROIfileName, /get
 onebyte = 0b
@@ -37,11 +85,12 @@ FOR i=0,(NbrPixelExcluded-1) DO BEGIN
     PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, COLOR=color
     PLOTS, Xarray[i] * x_coeff, (Yarray[i]+1) * y_coeff, /DEVICE, /CONTINUE, $
       COLOR=color
-    PLOTS, (Xarray[i]+1) * x_coeff, (Yarray[i]+1) * y_coeff, /DEVICE, /CONTINUE, $
-      COLOR=color
+    PLOTS, (Xarray[i]+1) * x_coeff, (Yarray[i]+1) * y_coeff, /DEVICE, $
+      /CONTINUE, COLOR=color
     PLOTS, (Xarray[i]+1) * x_coeff, Yarray[i] * y_coeff, /DEVICE, /CONTINUE, $
       COLOR=color
-    PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, /CONTINUE, COLOR=color
+    PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, /CONTINUE, $
+      COLOR=color
 ENDFOR    
 
 END
@@ -85,7 +134,8 @@ wBase = WIDGET_BASE(GROUP_LEADER = ourGroup,$
                     SCR_XSIZE    = xsize,$
                     SCR_YSIZE    = ysize,$
                     MAP          = 1,$
-                    UNAME        = sMainBase.uname)
+                    UNAME        = sMainBase.uname,$
+                    MBAR         = MBAR)
 
 wDraw = WIDGET_DRAW(wBase,$
                     XOFFSET   = 0,$
@@ -93,6 +143,20 @@ wDraw = WIDGET_DRAW(wBase,$
                     SCR_XSIZE = xsize,$
                     SCR_YSIZE = ysize,$
                     UNAME     = sMainBase.DrawUname)
+
+wZoom = WIDGET_BUTTON(MBAR,$
+                      VALUE = 'ZOOM',$
+                      /MENU)
+
+ZoomValue = ['1','2','3','4','5','6','7','8','9','10']
+sz = (size(ZoomValue))(1)
+ZoomUname = STRARR(sz) + 'main_plot_zoom_'
+FOR i=0,(sz-1) DO BEGIN
+    ZoomUname[i] += STRCOMPRESS(ZoomValue[i],/REMOVE_ALL)
+    button = WIDGET_BUTTON(wZoom,$
+                           UNAME = ZoomUname[i],$
+                           VALUE = ZoomValue[i])
+ENDFOR
 
 Widget_Control, /REALIZE, wBase
 XManager, 'MAIN_BASE', wBase, /NO_BLOCK
@@ -107,8 +171,8 @@ FUNCTION IDLplotData::init, $
                     ROIfileName = ROIfileName
 
 ;define value of parameters
-self.x         = 2
-self.y         = 2
+self.x         = 1
+self.y         = 1
 self.xoff      = 300
 self.yoff      = 300
 self.title     = 'PLOT'
@@ -125,10 +189,16 @@ sMainBase = { xsize     : xsize,$
               yoff      : self.yoff,$
               uname     : self.uname,$
               DrawUname : self.DrawUname,$
-              gridColor : 200}
+              data      : data,$
+              gridColor : 200,$
+              wbase     : ''}
 
+;Design Main Base
 wBase = ''
 DefineMainBase, sMainBase, wBase
+sMainBase.wBase = wBase
+
+WIDGET_CONTROL, wBase, SET_UVALUE = sMainBase
 XMANAGER, "DefineMainBase", wBase, /NO_BLOCK
 
 ;Plot Main Data
