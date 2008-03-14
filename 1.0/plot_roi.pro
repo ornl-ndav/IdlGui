@@ -47,9 +47,9 @@ global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     BrowseNexusDefaultExt : '.nxs',$
                     BrowseDefaultPath     : '~/',$
                     BrowseFilter          : '*.nxs',$
-                    BrowseROIExt          : '.txt',$
+                    BrowseROIExt          : '.dat',$
                     BrowseROIPath         : '~/',$
-                    BrowseROIFilter       : '*.txt',$
+                    BrowseROIFilter       : '*.dat',$
                     ValidNexus            : 0,$
                     version               : VERSION })
 
@@ -91,6 +91,10 @@ widget_control, id, set_droplist_select=instrumentIndex
 id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
 nexus = '/SNS/REF_L/IPTS-231/2/4000/NeXus/REF_L_4000.nxs'
 widget_control, id, set_value=nexus
+;put default nexus name of ROI file
+id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
+roi_file = '~/REF_L_2454_data_roi.dat'
+widget_control, id, set_value=roi_file
 
 END
 
