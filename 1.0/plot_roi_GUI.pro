@@ -16,14 +16,11 @@ PRO ValidatePlotButton, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ;check first that the file exist
-RoiFileName   = getRoiFileName(Event)
 NexusFileName = getFullNexusFileName(Event)
-IF (FILE_TEST(RoiFileName) AND $
-    FILE_TEST(NexusFileName) AND $
+IF (FILE_TEST(NexusFileName) AND $
     (*global).ValidNexus EQ 1) THEN BEGIN
                                 ;is Full Nexus Name not empty
-    IF (isFullNexusNameEmpty(Event) EQ 1 OR $
-        isRoiFileNameEmpty(Event) EQ 1) THEN BEGIN
+    IF (isFullNexusNameEmpty(Event) EQ 1) THEN BEGIN
         validateStatus = 0
     ENDIF ELSE BEGIN
         validateStatus = 1
