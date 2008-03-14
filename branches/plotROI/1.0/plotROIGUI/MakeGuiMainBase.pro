@@ -207,7 +207,6 @@ wNBrunField = CW_FIELD(wNBrunBase,$
                        TITLE         = NBrunField.title,$
                        UNAME         = NBrunField.uname,$
                        /RETURN_EVENTS)
-;                       /LONG)
 
 wOrLabel = WIDGET_LABEL(MAIN_BASE,$
                         XOFFSET = sOrLabel.size[0],$
@@ -311,7 +310,7 @@ wplot = WIDGET_BUTTON(MAIN_BASE,$
                       SCR_YSIZE = Mainplot.size[3],$
                       UNAME     = Mainplot.uname,$
                       VALUE     = Mainplot.value,$
-                      SENSITIVE = 0)
+                      SENSITIVE = 1) ;remove 1 and put 0
 
 ;///////////////////////////////////////
 ;                Status
