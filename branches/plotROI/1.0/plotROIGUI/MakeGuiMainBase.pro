@@ -268,7 +268,7 @@ wplot = WIDGET_BUTTON(MAIN_BASE,$
                       SCR_YSIZE = Mainplot.size[3],$
                       UNAME     = Mainplot.uname,$
                       VALUE     = Mainplot.value,$
-                      SENSITIVE = 1)  ;REMOVE 1 and put 0
+                      SENSITIVE = 0)
 
 ;///////////////////////////////////////
 ;                Status
