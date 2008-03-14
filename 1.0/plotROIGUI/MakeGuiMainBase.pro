@@ -35,6 +35,13 @@ NBrunField  = { size       : [GIdroplist.size[0]+XYoff[0],$
                 uname_base : 'nexus_run_number_base',$
                 uname      : 'nexus_run_number'}
 
+XYoff = [160,3]
+ClearButton0 = { size  : [NBrunField.size[0]+XYoff[0],$
+                          NBrunField.size[1]+XYoff[1],$
+                          20,30],$
+                 uname : 'clear_nexus_run_number',$
+                 value : 'X'}
+
 XYoff    =[230,30]
 sOrLabel = { size  : [GIframe.size[0]+XYoff[0],$
                      GIinstLabel.size[1]+XYoff[1]],$
@@ -50,13 +57,19 @@ NBbutton     = { size  : [GIframe.size[0]+XYoff[0],$
 XYoff        = [20,40]
 NBfield       = { size  : [GIframe.size[0]+XYoff[0],$
                            NBbutton.size[1]+XYoff[1],$
-                           470, $
+                           483, $
                            35,$
                            56, $
                            1],$
                   title : 'Full Nexus Name:',$
                   uname_base : 'nexus_file_base',$
                   uname : 'nexus_file_text_field'}
+XYoff = [460,3]
+ClearButton1 = { size  : [NBfield.size[0]+XYoff[0],$
+                          NBfield.size[1]+XYoff[1],$
+                          20,30],$
+                 uname : 'clear_nexus_file_text_field',$
+                 value : 'X'}
                  
 ;///////////////////////////////////////
 ;              ROI file
@@ -166,6 +179,14 @@ wGIdroplist = WIDGET_DROPLIST(MAIN_BASE,$
                               YOFFSET = GIdroplist.size[1],$
                               UNAME   = GIdroplist.uname)
 
+wClearButton0 = WIDGET_BUTTON(MAIN_BASE,$
+                              XOFFSET   = ClearButton0.size[0],$
+                              YOFFSET   = ClearButton0.size[1],$
+                              SCR_XSIZE = ClearButton0.size[2],$
+                              SCR_YSIZE = ClearButton0.size[3],$
+                              UNAME     = ClearButton0.uname,$
+                              VALUE     = ClearButton0.value)
+
 wNBrunBase = WIDGET_BASE(MAIN_BASE,$
                           XOFFSET   = NBrunField.size[0],$
                           YOFFSET   = NBrunField.size[1],$
@@ -194,6 +215,13 @@ wNButton = WIDGET_BUTTON(MAIN_BASE,$
                          VALUE     = NBbutton.value,$
                          UNAME     = NBbutton.uname)
 
+wClearButton1 = WIDGET_BUTTON(MAIN_BASE,$
+                              XOFFSET   = ClearButton1.size[0],$
+                              YOFFSET   = ClearButton1.size[1],$
+                              SCR_XSIZE = ClearButton1.size[2],$
+                              SCR_YSIZE = ClearButton1.size[3],$
+                              UNAME     = ClearButton1.uname,$
+                              VALUE     = ClearButton1.value)
 
 wNBfieldBase = WIDGET_BASE(MAIN_BASE,$
                            XOFFSET   = NBField.size[0],$
