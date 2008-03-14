@@ -97,6 +97,13 @@ ROItext  = { size  : [ROIbutton.size[0]+XYoff[0],$
                       ROIbutton.size[1]+XYoff[1],$
                       340,35],$
              uname : 'roi_text_field'}
+
+XYoff = [0,0]
+ClearButton2 = { size  : [ROItext.size[0]+ROItext.size[2]+XYoff[0],$
+                          ROItext.size[1]+XYoff[1],$
+                          20,35],$
+                 uname : 'clear_roi_text_field',$
+                 value : 'X'}
                      
 ;///////////////////////////////////////
 ;         Select bank and PLOT
@@ -199,8 +206,8 @@ wNBrunField = CW_FIELD(wNBrunBase,$
                        YSIZE         = NBrunField.size[5],$
                        TITLE         = NBrunField.title,$
                        UNAME         = NBrunField.uname,$
-                       /RETURN_EVENTS,$
-                       /LONG)
+                       /RETURN_EVENTS)
+;                       /LONG)
 
 wOrLabel = WIDGET_LABEL(MAIN_BASE,$
                         XOFFSET = sOrLabel.size[0],$
@@ -269,6 +276,14 @@ wROItext = WIDGET_TEXT(MAIN_BASE,$
                        UNAME     = ROItext.uname,$
                        /ALL_EVENTS,$
                        /EDITABLE)
+
+wClearButton2 = WIDGET_BUTTON(MAIN_BASE,$
+                              XOFFSET   = ClearButton2.size[0],$
+                              YOFFSET   = ClearButton2.size[1],$
+                              SCR_XSIZE = ClearButton2.size[2],$
+                              SCR_YSIZE = ClearButton2.size[3],$
+                              UNAME     = ClearButton2.uname,$
+                              VALUE     = ClearButton2.value)
 
 wROIframe = WIDGET_LABEL(MAIN_BASE,$
                          XOFFSET   = ROIframe.size[0],$
