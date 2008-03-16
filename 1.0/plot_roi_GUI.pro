@@ -33,6 +33,18 @@ ActivateWidget, Event, 'bank_droplist', validateStatus
 END
 
 ;-------------------------------------------------------------------------------
+PRO ValidatePreviewButton, Event 
+;get Roi file name
+RoiFileName = getRoiFileName(Event)
+IF (FILE_TEST(RoiFileName)) THEN BEGIN
+    activatePreviewButton = 1
+ENDIF ELSE BEGIN
+    activatePreviewButton = 0
+ENDELSE
+ActivateWidget, Event, 'preview_roi_button', activatePreviewButton
+END
+
+;-------------------------------------------------------------------------------
 PRO setBankDroplistValue, Event, value
 id = widget_info(Event.top,find_by_uname='bank_droplist')
 widget_control, id, set_value=value

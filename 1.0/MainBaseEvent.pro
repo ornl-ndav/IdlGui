@@ -54,19 +54,25 @@ CASE Event.id OF
 ;#### Browse Roi file ####
     widget_info(wWidget, FIND_BY_UNAME='browse_roi_button'): BEGIN
         BrowseRoiFile, Event  ;_eventcb
-        ValidatePlotButton, Event ;_GUI
+        ValidatePreviewButton, Event ;_GUI
     END
 
 ;#### Roi file Text Field ####
     widget_info(wWidget, FIND_BY_UNAME='roi_text_field'): BEGIN
-        ValidatePlotButton, Event ;_GUI
+        ValidatePreviewButton, Event  ;_GUI
     END
 
 ;#### ROI Text Field Clear button ####
     widget_info(wWidget, FIND_BY_UNAME='clear_roi_text_field'): BEGIN
         ClearTextField, Event, 'roi_text_field' ;_Gui
-        ValidatePlotButton, Event ;_Gui
+        ValidatePreviewButton, Event  ;_GUI
     END
+
+;#### Roi Preview Button ####
+    widget_info(wWidget, FIND_BY_UNAME='preview_roi_button'): BEGIN
+        PreviewRoiFile, Event ;_eventcb
+    END
+
 
 ;#### PLOT button ####
     widget_info(wWidget, FIND_BY_UNAME='plot_button'): BEGIN
