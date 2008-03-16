@@ -39,6 +39,7 @@ ListOFInstruments = ['BSS',$
 
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
+                    DeployedVersion       : 1,$
                     InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
@@ -84,32 +85,34 @@ MakeGuiMainBase, MAIN_BASE, global
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-;Validate instrument selected
-IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    instrumentIndex = 3         ;REMOVE_ME
-    id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
-    widget_control, id, set_droplist_select=instrumentIndex
+IF ((*global).DeployedVersion EQ 0) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+        instrumentIndex = 3     ;REMOVE_ME
 ;put default nexus name in 'nexus_file_text_field'
-    id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
-    nexus = '/Users/j35/REF_L_4493.nxs'
-    widget_control, id, set_value=nexus
+        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
+        nexus = '/Users/j35/REF_L_4493.nxs'
+        widget_control, id, set_value=nexus
 ;put default nexus name of ROI file
-    id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
-    roi_file = '/Users/j35/REF_L_3000_data_roi.dat'
-    widget_control, id, set_value=roi_file
+        id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
+        roi_file = '/Users/j35/REF_L_3000_data_roi.dat'
+        widget_control, id, set_value=roi_file
+    ENDIF ELSE BEGIN
+        instrumentIndex = 3     ;REMOVE_ME
+;put default nexus name in 'nexus_file_text_field'
+        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
+        nexus = '/SNS/REF_L/IPTS-231/2/4000/NeXus/REF_L_4000.nxs'
+        widget_control, id, set_value=nexus
+;put default nexus name of ROI file
+        id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
+        roi_file = '~/REF_L_2454_data_roi.dat'
+        widget_control, id, set_value=roi_file
+    ENDELSE
 ENDIF ELSE BEGIN
-    instrumentIndex = 3         ;REMOVE_ME
-    id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
-    widget_control, id, set_droplist_select=instrumentIndex
-;put default nexus name in 'nexus_file_text_field'
-    id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
-    nexus = '/SNS/REF_L/IPTS-231/2/4000/NeXus/REF_L_4000.nxs'
-    widget_control, id, set_value=nexus
-;put default nexus name of ROI file
-    id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
-    roi_file = '~/REF_L_2454_data_roi.dat'
-    widget_control, id, set_value=roi_file
+
 ENDELSE
+id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
+widget_control, id, set_droplist_select=instrumentIndex
+
 END
 
 
