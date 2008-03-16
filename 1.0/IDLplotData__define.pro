@@ -27,7 +27,9 @@ SWITCH Event.id OF
         sMainBase.xcoeff = xy_coeff
         sMainBase.ycoeff = xy_coeff
         replotMainData, Event, sMainBase
-        replotRoiData, Event, sMainBase
+        IF (sMainBase.NbrPxExcl NE 0) THEN BEGIN
+            replotRoiData, Event, sMainBase
+        ENDIF
     END
     ELSE:
 ENDSWITCH
@@ -200,22 +202,25 @@ FUNCTION IDLplotData::init, $
                     DATA        = data, $
                     ROIfileName = ROIfileName
 ;define value of parameters
-self.x         = 1
-self.y         = 1
-self.xoff      = 300
-self.yoff      = 300
-self.title     = 'PLOT'
-self.uname     = 'plot_base'
-self.DrawUname = 'draw'
+self.x           = 1
+self.y           = 1
+self.xoff        = 300
+self.yoff        = 300
+self.title       = 'PLOT'
+self.uname       = 'plot_base'
+self.DrawUname   = 'draw'
+NbrPixelExcluded = 0
 ;plot ROI file on top (if any)
 IF (ROIfileName NE '') THEN BEGIN
-    NbrPixelExcluded = 0
     StringArray = RetrieveStringArray(ROIfileName, NbrPixelExcluded)
 ;create the arrays (X and Y) of the pixels to exclude
     Xarray  = INTARR(NbrPixelExcluded)
     Yarray  = INTARR(NbrPixelExcluded)
     getXYROI, NbrPixelExcluded, StringArray,  Xarray, Yarray
-ENDIF
+ENDIF ELSE BEGIN
+    Xarray  = INTARR(1)
+    Yarray  = INTARR(1)
+ENDELSE
 ;design Main Base
 sMainBase = { xsize     : xsize,$
               ysize     : ysize,$
