@@ -1,4 +1,7 @@
 PRO replotRoiData, Event, sMainBase
+;retrieve info needed to replot
+wbase = sMainBase.wbase
+PlotROI, sMainBase, wbase
 END
 
 ;-------------------------------------------------------------------------------
@@ -72,14 +75,17 @@ END
 
 ;-------------------------------------------------------------------------------
 
-PRO PlotROI, sMainBase, wBase, Xarray, Yarray, NbrPixelExcluded
+PRO PlotROI, sMainBase, wBase
 
-x_coeff = sMainBase.xcoeff
-y_coeff = sMainBase.ycoeff
-xsize   = sMainBase.xsize
-ysize   = sMainBase.ysize
-color   = sMainBase.gridColor
-
+NbrPixelExcluded = sMainBase.NbrPxExcl
+Xarray           = sMainBase.Xarray
+Yarray           = sMainBase.Yarray
+x_coeff          = sMainBase.xcoeff
+y_coeff          = sMainBase.ycoeff
+xsize            = sMainBase.xsize
+ysize            = sMainBase.ysize
+color            = sMainBase.gridColor
+ 
 ;plot in x-direction
 FOR i=0,(NbrPixelExcluded-1) DO BEGIN
     PLOTS, Xarray[i] * x_coeff, Yarray[i] * y_coeff, /DEVICE, COLOR=color
@@ -179,6 +185,16 @@ self.title     = 'PLOT'
 self.uname     = 'plot_base'
 self.DrawUname = 'draw'
 
+;plot ROI file on top (if any)
+IF (ROIfileName NE '') THEN BEGIN
+    NbrPixelExcluded = 0
+    StringArray = RetrieveStringArray(ROIfileName, NbrPixelExcluded)
+;create the arrays (X and Y) of the pixels to exclude
+    Xarray  = INTARR(NbrPixelExcluded)
+    Yarray  = INTARR(NbrPixelExcluded)
+    getXYROI, NbrPixelExcluded, StringArray,  Xarray, Yarray
+ENDIF
+
 ;design Main Base
 sMainBase = { xsize     : xsize,$
               ysize     : ysize,$
@@ -191,7 +207,10 @@ sMainBase = { xsize     : xsize,$
               DrawUname : self.DrawUname,$
               data      : data,$
               gridColor : 200,$
-              wbase     : ''}
+              NbrPxExcl : NbrPixelExcluded,$
+              Xarray    : Xarray,$
+              Yarray    : Yarray,$
+              wbase     : 0L}
 
 ;Design Main Base
 wBase = ''
@@ -206,18 +225,7 @@ PlotMainData, data, sMainBase, wBase
 
 ;plot ROI file on top (if any)
 IF (ROIfileName NE '') THEN BEGIN
-    
-    NbrPixelExcluded = 0
-    StringArray = RetrieveStringArray(ROIfileName, NbrPixelExcluded)
-    
-;create the arrays (X and Y) of the pixels to exclude
-    Xarray = INTARR(NbrPixelExcluded)
-    Yarray  = INTARR(NbrPixelExcluded)
-    getXYROI, NbrPixelExcluded, StringArray,  Xarray, Yarray
-
-;plot ROI
-    PlotROI, sMainBase, wBase, Xarray, Yarray, NbrPixelExcluded
-
+    PlotROI, sMainBase, wBase
 ENDIF
 
 RETURN, 1
