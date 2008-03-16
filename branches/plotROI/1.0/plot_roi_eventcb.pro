@@ -56,7 +56,14 @@ ENDELSE
 MapBase, Event, 'nexus_run_number_base', activateStatus
 END
 
-
+;-------------------------------------------------------------------------------
+PRO PreviewRoiFile, Event 
+;get RoiFileName
+RoiFileName = getRoiFileName(Event) 
+FileName    = RoiFileName[0]
+title       = FileName
+XDISPLAYFILE, FileName, TITLE = title
+END
 ;*******************************************************************************
 
 PRO MAIN_REALIZE, wWidget

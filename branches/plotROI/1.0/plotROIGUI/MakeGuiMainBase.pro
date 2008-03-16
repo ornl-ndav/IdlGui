@@ -95,7 +95,7 @@ ROIbutton = { size  : [ROIframe.size[0]+XYoff[0],$
 XYoff    = [120,0]
 ROItext  = { size  : [ROIbutton.size[0]+XYoff[0],$
                       ROIbutton.size[1]+XYoff[1],$
-                      340,35],$
+                      240,35],$
              uname : 'roi_text_field'}
 
 XYoff = [0,0]
@@ -105,6 +105,14 @@ ClearButton2 = { size  : [ROItext.size[0]+ROItext.size[2]+XYoff[0],$
                  uname : 'clear_roi_text_field',$
                  value : 'X'}
                      
+XYoff = [0,0]
+PreviewRoiButton = { size : [ClearButton2.size[0]+ClearButton2.size[2]+XYoff[0],$
+                             ClearButton2.size[1]+XYoff[1],$
+                             98,35],$
+                     uname : 'preview_roi_button',$
+                     sensitive : 0,$
+                     value : 'PREVIEW...'}
+
 ;///////////////////////////////////////
 ;         Select bank and PLOT
 ;///////////////////////////////////////
@@ -283,6 +291,15 @@ wClearButton2 = WIDGET_BUTTON(MAIN_BASE,$
                               SCR_YSIZE = ClearButton2.size[3],$
                               UNAME     = ClearButton2.uname,$
                               VALUE     = ClearButton2.value)
+
+wRoiPreviewButton = WIDGET_BUTTON(MAIN_BASE,$
+                                  XOFFSET   = PreviewRoiButton.size[0],$
+                                  YOFFSET   = PreviewRoiButton.size[1],$
+                                  SCR_XSIZE = PreviewRoiButton.size[2],$
+                                  SCR_YSIZE = PreviewRoiButton.size[3],$
+                                  VALUE     = PreviewRoiButton.value,$
+                                  UNAME     = PreviewRoiButton.uname,$
+                                  SENSITIVE = PreviewRoiButton.sensitive)
 
 wROIframe = WIDGET_LABEL(MAIN_BASE,$
                          XOFFSET   = ROIframe.size[0],$
