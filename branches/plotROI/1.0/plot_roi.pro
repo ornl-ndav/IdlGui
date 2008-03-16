@@ -91,11 +91,11 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     widget_control, id, set_droplist_select=instrumentIndex
 ;put default nexus name in 'nexus_file_text_field'
     id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
-    nexus = '~/REF_L_4493.nxs'
+    nexus = '/Users/j35/REF_L_4493.nxs'
     widget_control, id, set_value=nexus
 ;put default nexus name of ROI file
     id = widget_info(MAIN_BASE,find_by_uname='roi_text_field')
-    roi_file = '~/REF_L_3000_data_roi.dat'
+    roi_file = '/Users/j35/REF_L_3000_data_roi.dat'
     widget_control, id, set_value=roi_file
 ENDIF ELSE BEGIN
     instrumentIndex = 3         ;REMOVE_ME
