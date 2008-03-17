@@ -210,8 +210,9 @@ appendLogBook, Event, message
 appendMyLogBook, Event, ''
 AppendMyLogBook, Event, 'PHASE 2/' + NbrSteps + ': IMPORT FILES'
 ;importing beamtime and cvlist
-cmd = 'cp ' + prenexus_path + '/../*.xml ' + stagingArea
-cmd_text = '> Importing beamtime and cvlist xml files: '
+cmd  = 'cp ' + prenexus_path + '/../*.xml '
+cmd += prenexus_path + '/*_bmon*.dat ' + stagingArea
+cmd_text = '> Importing beamtime, cvlist xml and monitor files: '
 AppendMyLogBook, Event, cmd_text
 cmd_text = 'cmd: ' + cmd + ' ... ' + PROCESSING
 AppendMyLogBook, Event, cmd_text
