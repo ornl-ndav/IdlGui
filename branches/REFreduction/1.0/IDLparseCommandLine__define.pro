@@ -67,6 +67,7 @@ END
 ;-------------------------------------------------------------------------------
 FUNCTION getMainDataNexusFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
@@ -83,26 +84,32 @@ result = ValueBetweenArg1Arg2(cmd, $
                               1, $
                               '--data-roi-file', $
                               0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, result
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getDataRoiFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, '--data-roi-file=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getDataPeakExclYArray, cmd
 Ymin = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 0)
+IF (Ymin EQ '') THEN Ymin=''
 Ymax = ValueBetweenArg1Arg2(cmd, '--data-peak-excl=', 1, ' ', 1)
+IF (Ymax EQ '') THEN Ymax=''
 RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getMainNormNexusFileName, cmd
 result  = ValueBetweenArg1Arg2(cmd, '--norm=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
 result1 = ValueBeforeArg1(result, ',')
+IF (result1 EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
@@ -119,19 +126,23 @@ result = ValueBetweenArg1Arg2(cmd,$
                               1,$
                               '--norm-roi-file=',$
                               0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
    
 ;-------------------------------------------------------------------------------
 FUNCTION getNormRoiFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, '--norm-roi-file=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, result
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getNormPeakExclYArray, cmd
 Ymin = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 0)
+IF (Ymin EQ '') THEN Ymin=''
 Ymax = ValueBetweenArg1Arg2(cmd, '--norm-peak-excl=', 1, ' ', 1)
+IF (Ymax EQ '') THEN Ymax=''
 RETURN, [STRCOMPRESS(Ymin),STRCOMPRESS(Ymax)]
 END
 
@@ -156,25 +167,30 @@ END
 ;-------------------------------------------------------------------------------
 FUNCTION getQmin, cmd
 result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 0)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getQmax, cmd
 result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 1)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getQwidth, cmd
 result = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 2)
+IF (result EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getQtype, cmd
 result  = ValueBetweenArg1Arg2(cmd, '--mom-trans-bins=', 1, ',', 3)
+IF (result EQ '') THEN RETURN, ''
 result1 = ValueBeforeArg1(result, ' ')
+IF (result1 EQ '') THEN RETURN, ''
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
@@ -182,8 +198,9 @@ END
 FUNCTION getAngleValue, cmd
 IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
     result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 0)
+    IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
-ENDIF
+ENDIF  
 RETURN, ''
 END
 
@@ -191,6 +208,7 @@ END
 FUNCTION getAngleError, cmd
 IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
     result = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 1)
+    IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 ENDIF
 RETURN, ''
@@ -202,12 +220,15 @@ units_error = 0
 CATCH, units_error
 IF (units_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    return, 'N/A'
+    return, ''
 ENDIF ELSE BEGIN
     IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
         result  = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
+        IF (result EQ '') THEN RETURN, ''
         result1 = ValueBeforeArg1(result,' ')
+        IF (result1 EQ '') THEN RETURN, ''
         result2 = ValueAfterArg1(result1,'=')
+        IF (result2 EQ '') THEN RETURN, ''
         RETURN, STRCOMPRESS(result2,/REMOVE_ALL)
     ENDIF
     RETURN, ''
@@ -245,6 +266,7 @@ END
 FUNCTION getDataInstrumentGeoFileName, cmd
 IF (isStringFound(cmd,'--data-inst-geom=')) THEN BEGIN
     result = ValueBetweenArg1Arg2(cmd, '--data-inst-geom=', 1, ' ', 0)
+    IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     RETURN, ''
@@ -264,6 +286,7 @@ END
 FUNCTION getNormInstrumentGeoFileName, cmd
 IF (isStringFound(cmd,'--norm-inst-geom=')) THEN BEGIN
     result = ValueBetweenArg1Arg2(cmd, '--norm-inst-geom=', 1, ' ', 0)
+    IF (result EQ '') THEN RETURN, ''
     RETURN, STRCOMPRESS(result,/REMOVE_ALL)
 ENDIF ELSE BEGIN
     RETURN, ''
@@ -273,6 +296,7 @@ END
 ;-------------------------------------------------------------------------------
 FUNCTION getOutputPath, cmd
 result = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
+IF (result EQ '') THEN RETURN, ''
 result1 = ValueBeforeLastArg(result, '/')
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
@@ -494,7 +518,7 @@ ENDIF ELSE BEGIN
         self.MainDataRunNUmber      = $
           getMainDataRunNumber(self.MainDataNexusFileName)
     ENDIF ELSE BEGIN
-        self.MainDataRunNumber  = 'N/A'
+        self.MainDataRunNumber  = ''
     ENDELSE
     self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
     self.DataRoiFileName        = getDataRoiFileName(cmd)
@@ -506,7 +530,7 @@ ENDIF ELSE BEGIN
         self.MainNormRunNUmber     = $
           getMainNormRunNumber(self.MainNormNexusFileName)
     ENDIF ELSE BEGIN
-        self.MainNormRunNumber = 'N/A'
+        self.MainNormRunNumber = ''
     ENDELSE
     self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
     self.NormRoiFileName       = getNormRoiFileName(cmd)
