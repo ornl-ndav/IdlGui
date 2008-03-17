@@ -1,3 +1,16 @@
+FUNCTION getZoomCoeff, Event
+ZoomValue = ['1','2','3','4','5','6','7','8','9','10']
+sz = (size(ZoomValue))(1)
+ZoomUname = STRARR(sz) + 'main_plot_zoom_'
+FOR i=0,(sz-1) DO BEGIN
+    ZoomUname[i] += STRCOMPRESS(ZoomValue[i],/REMOVE_ALL)
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=ZoomUname[i])
+    WIDGET_CONTROL, id, get_value=value
+    IF (STRMATCH(value,'>*<')) THEN RETURN, (i+1)
+ENDFOR
+RETURN, 0
+END
+
 ;-------------------------------------------------------------------------------
 PRO DefineMainBase_event, Event
 WIDGET_CONTROL, event.top, GET_UVALUE=sMainBase
@@ -6,7 +19,8 @@ xy_coeff = 1
 
 CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='draw'): BEGIN
-        DisplayInfoAboutMousePosition, Event, sMainBase
+        ZoomCoeff = getZoomCoeff(Event)
+        DisplayInfoAboutMousePosition, Event, sMainBase, ZoomCoeff
 ;        IF (Event.type EQ 0) THEN BEGIN
 ;        ENDIF	
     END
@@ -44,7 +58,6 @@ sz = (size(ZoomValue))(1)
 ZoomUname = STRARR(sz) + 'main_plot_zoom_'
 FOR i=0,(sz-1) DO BEGIN
     ZoomUname[i] += STRCOMPRESS(ZoomValue[i],/REMOVE_ALL)
-    print, ZoomUname[i]
     id = WIDGET_INFO(Event.top,FIND_BY_UNAME=ZoomUname[i])
     IF ((xy_coeff-1) EQ i) THEN BEGIN
         value = '>' + ZoomValue[i] + '<'
@@ -74,14 +87,14 @@ setBaseTitle, Event, 'plot_base', title
 END
 
 ;-------------------------------------------------------------------------------
-PRO DisplayInfoAboutMousePosition, Event, sMainBase
+PRO DisplayInfoAboutMousePosition, Event, sMainBase, ZoomCoeff
 ;calculate PixelX and Y positions
 X      = Event.X
 Y      = Event.Y
 xcoeff = sMainBase.xcoeff
 ycoeff = sMainBase.ycoeff
-PixelX = floor(X) / xcoeff
-PixelY = floor(Y) / ycoeff
+PixelX = floor(X) / (xcoeff*ZoomCoeff)
+PixelY = floor(Y) / (ycoeff*ZoomCoeff)
 ;calcuate intensity
 data   = sMainBase.data
 dataYX = TOTAL(data,1)
