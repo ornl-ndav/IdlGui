@@ -85,7 +85,7 @@ IF ((*global).ucams NE (*global).geek) THEN BEGIN
 endif else begin
     MainBaseSize  = [100,50,850,630]
 endelse
-MainBaseTitle = 'Make NeXus ' + VERSION
+MainBaseTitle = 'Make NeXus' + ' - ' + VERSION
 
 (*global).MainBaseXoffset = MainBaseSize[0]
 (*global).MainBaseYoffset = MainBaseSize[1]
