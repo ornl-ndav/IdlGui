@@ -136,7 +136,7 @@ BatchTable[7,RowSelected] = new_cmd
 ;update command line
 putTextFieldValue, Event, 'cmd_status_preview', new_cmd, 0
 ;update DATE field with new date/time stamp
-NewDate = GenerateDateStamp()
+NewDate = GenerateDateStamp2()
 BatchTable[6,RowSelected] = NewDate
 ;Save BatchTable back to Global
 (*(*global).BatchTable) = BatchTable
@@ -296,7 +296,7 @@ new_cmd = UpdateOutputFlag(Event, new_cmd, NormRunsJoined[0])
 ;put new_cmd back in the BatchTable
 BatchTable[7,RowSelected] = new_cmd
 ;update DATE field with new date/time stamp
-NewDate = GenerateDateStamp()
+NewDate = GenerateDateStamp2()
 BatchTable[6,RowSelected] = NewDate
 ;Save BatchTable back to Global
 (*(*global).BatchTable) = BatchTable

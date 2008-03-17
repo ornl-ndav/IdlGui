@@ -72,12 +72,9 @@ END
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn
 FUNCTION GenerateDateStamp
-
 dateUnformated = systime()    
 DateArray = strsplit(dateUnformated,' ',/extract) 
-
 DateIso = strcompress(DateArray[4]) + 'y_'
-
 month = 0
 CASE (DateArray[1]) OF
     'Jan':month='01m'
@@ -92,16 +89,45 @@ CASE (DateArray[1]) OF
     'Oct':month='10m'
     'Nov':month='11m'
     'Dec':month='12m'
-endcase
-
+ENDCASE
 DateIso += strcompress(month,/remove_all) + '_'
 DateIso += strcompress(DateArray[2],/remove_all) + 'd_'
-
 ;change format of time
 time = strsplit(DateArray[3],':',/extract)
 DateIso += strcompress(time[0],/remove_all) + 'h_'
 DateIso += strcompress(time[1],/remove_all) + 'mn'
-
-return, DateIso
+RETURN, DateIso
 END
 
+
+
+;Change the format from Thu Aug 23 16:15:23 2007
+;to 2007/08/23-16:15:45
+FUNCTION GenerateDateStamp2
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+DateIso        = STRCOMPRESS(DateArray[4]) + '/'
+month          = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01'
+    'Feb':month='02'
+    'Mar':month='03'
+    'Apr':month='04'
+    'May':month='05'
+    'Jun':month='06'
+    'Jul':month='07'
+    'Aug':month='08'
+    'Sep':month='09'
+    'Oct':month='10'
+    'Nov':month='11'
+    'Dec':month='12'
+ENDCASE
+DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '/'
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + '-'
+;change format of time
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + ':'
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + ':'
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL)
+RETURN, DateIso
+END
