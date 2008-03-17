@@ -1,7 +1,5 @@
 ;*******************************************************************************
-
 ;WORK ON DATA FILE =============================================================
-
 PRO UpdateMainDataRunNumber, Event, DataRunNumber
 putTextFieldValue, Event, $
   'load_data_run_number_text_field', $
@@ -9,6 +7,8 @@ putTextFieldValue, Event, $
   0
 END
 
+
+;-------------------------------------------------------------------------------
 PRO UpdateAllDataNexusFileName, Event, AllDataNexusFileName
 putTextFieldValue, Event, $
   'reduce_data_runs_text_field',$
@@ -16,10 +16,12 @@ putTextFieldValue, Event, $
   0
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
 REFreduction_OpenPlotDataNexus, Event, DataRunNumber, MainDataNexusFileName
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateDataRoiFileName, Event, DataRoiFileName
 putTextFieldValue, Event, $
   'data_background_selection_file_text_field',$
@@ -28,6 +30,7 @@ putTextFieldValue, Event, $
 REFreduction_LoadDataBackFile, Event, DataRoiFileName
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateDataPeakExclY, Event, Ymin, Ymax
 putTextFieldValue, Event, $
   'data_d_selection_peak_ymin_cw_field',$
@@ -41,7 +44,6 @@ REFreduction_DataBackgroundPeakSelection, Event, ''
 END
 
 ;WORK ON NORMALIZATION FILE ====================================================
-
 PRO UpdateMainNormRunNumber, Event, NormRunNumber
 putTextFieldValue, Event, $
   'load_normalization_run_number_text_field', $
@@ -49,6 +51,7 @@ putTextFieldValue, Event, $
   0
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateAllNormNexusFileName, Event, AllNormNexusFileName
 putTextFieldValue, Event, $
   'reduce_normalization_runs_text_field',$
@@ -56,10 +59,12 @@ putTextFieldValue, Event, $
   0
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateMainNormNexusFileName, Event, MainNormNexusFileName, NormRunNumber
 REFreduction_OpenPlotNormNexus, Event, NormRunNumber, MainNormNexusFileName
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateNormRoiFileName, Event, NormRoiFileName
 putTextFieldValue, Event, $
   'normalization_background_selection_file_text_field',$
@@ -68,6 +73,7 @@ putTextFieldValue, Event, $
 REFreduction_LoadNormBackgroundFile, Event, NormRoiFileName
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateNormPeakExclY, Event, Ymin, Ymax
 putTextFieldValue, Event, $
   'normalization_d_selection_peak_ymin_cw_field',$
@@ -194,6 +200,7 @@ PRO UpdateOutputPath, Event, OutputPath
 setButtonValue, Event, 'of_button', OutputPath
 END
 
+;-------------------------------------------------------------------------------
 PRO UpdateOutputFileName, Event, OutputFileName
 putTextFieldValue, Event, 'of_text', OutputFileName, 0
 END
@@ -252,12 +259,6 @@ ENDELSE
 setCWBgroup, Event, 'intermediate_plot_list', IntermPlots
 
 END
-
-
-
-
-
-
 
 ;###############################################################################
 ;******  Class constructor *****************************************************
@@ -430,13 +431,11 @@ AppendReplaceLogBookMessage, Event, OK, PROCESSING
 RETURN, 1
 END
 
+;*******************************************************************************
 ;******  Class Define **** *****************************************************
-
 PRO IDLupdateGui__define
 STRUCT = {IDLupdateGui,$
           var : ''}
-
 END
-
 ;*******************************************************************************
 ;*******************************************************************************
