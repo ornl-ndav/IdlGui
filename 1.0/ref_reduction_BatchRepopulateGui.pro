@@ -239,9 +239,17 @@ sRepopulateGui = {Event                     : Event,$
                   
 text = '-> Repopulating GUI ... START'
 putLogBookMessage, Event, text, APPEND=1
-guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
-text = '-> Repopulating GUI ... END'
-putLogBookMessage, Event, text, APPEND=1
+
+populate_error = 0
+CATCH, populate_error
+IF (populate_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    print, 'error'
+ENDIF ELSE BEGIN
+    guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
+    text = '-> Repopulating GUI ... END'
+    putLogBookMessage, Event, text, APPEND=1
+ENDELSE
 
 MapBase, Event, 'processing_base', 0
 message = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '

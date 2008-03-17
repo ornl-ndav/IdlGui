@@ -1,10 +1,21 @@
 ;*******************************************************************************
 ;WORK ON DATA FILE =============================================================
-PRO UpdateMainDataRunNumber, Event, DataRunNumber
-putTextFieldValue, Event, $
-  'load_data_run_number_text_field', $
-  LONG(DataRunNumber),$
-  0
+FUNCTION UpdateMainDataRunNumber, Event, DataRunNumber
+no_error = 0
+CATCH,no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    io_error:
+    RETURN,0
+ENDIF ELSE BEGIN
+    ON_IOERROR, io_error
+    lDataRunNumber = LONG(DataRunNumber)
+    putTextFieldValue, Event, $
+      'load_data_run_number_text_field', $
+      lDataRunNumber,$
+      0
+ENDELSE
+RETURN,1
 END
 
 
@@ -44,11 +55,22 @@ REFreduction_DataBackgroundPeakSelection, Event, ''
 END
 
 ;WORK ON NORMALIZATION FILE ====================================================
-PRO UpdateMainNormRunNumber, Event, NormRunNumber
-putTextFieldValue, Event, $
-  'load_normalization_run_number_text_field', $
-  LONG(NormRunNumber),$
-  0
+FUNCTION UpdateMainNormRunNumber, Event, NormRunNumber
+no_error = 0
+CATCH, no_error
+IF (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    io_error:
+    RETURN,0
+ENDIF ELSE BEGIN
+    ON_IOERROR, io_error
+    lNormRunNumber = LONG(NormRunNumber)
+    putTextFieldValue, Event, $
+      'load_normalization_run_number_text_field', $
+      lNormRunNumber,$
+      0
+ENDELSE
+RETURN,1
 END
 
 ;-------------------------------------------------------------------------------
@@ -271,79 +293,149 @@ widget_control,id,get_uvalue=global
 
 PROCESSING = (*global).processing_message
 OK         = 'OK'
+NO         = '!! NO !!'
+FAILED     = 'FAILED'
+NbrError   = 0
 
-;Activate Data Widgets
-text = '--> Activate Data Widgets .................................... ' + PROCESSING
-putLogBookMessage, Event, text, APPEND=1
-updateDataWidget, Event, 1
-AppendReplaceLogBookMessage, Event, OK, PROCESSING
-
+DataError  = 0
 ;work on MainDataRunNumber
-text = '--> Display Main Data Run Number ............................. ' + PROCESSING
+text = '--> Display Main Data Run Number ............................. ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-UpdateMainDataRunNumber, Event, structure.MainDataRunNumber
-AppendReplaceLogBookMessage, Event, OK, PROCESSING
+IF (structure.MainDataRunNumber EQ '') THEN BEGIN
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+ENDIF ELSE BEGIN
+    status = UpdateMainDataRunNumber(Event, structure.MainDataRunNumber)
+    IF (status EQ 0) THEN BEGIN
+        AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+        ++NbrError
+        ++DataError
+    ENDIF ELSE BEGIN
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDELSE
+ENDELSE
 
 ;work on AllDataNexusFileName
-text = '--> Display List of All Data Runs (full nexus name) .......... ' + PROCESSING
+text = '--> Display List of All Data Runs (full nexus name) .......... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-UpdateAllDataNexusFileName, Event, structure.AllDataNexusFileName
-AppendReplaceLogBookMessage, Event, OK, PROCESSING
+IF (structure.AllDataNexusFileName EQ '') THEN BEGIN
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+ENDIF ELSE BEGIN
+    UpdateAllDataNexusFileName, Event, structure.AllDataNexusFileName
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+ENDELSE
 
 ;work on MainDataNexusFileName (Load This Run)
-text = '--> Load and Plot Main Data Run Number ....................... ' + PROCESSING
+text = '--> Load and Plot Main Data Run Number ....................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-UpdateMainDataNexusFileName, Event, $
-  structure.MainDataNexusFileName, $
-  structure.MainDataRunNumber
-AppendReplaceLogBookMessage, Event, OK, PROCESSING
+IF (structure.MainDataNexusFileName EQ '' OR $
+    structure.MainDataRunNumber EQ '') THEN BEGIN
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+    ++NbrError
+    ++DataError
+ENDIF ELSE BEGIN
+    UpdateMainDataNexusFileName, Event, $
+      structure.MainDataNexusFileName, $
+      structure.MainDataRunNumber
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+ENDELSE
 
 ;work on DataRoiFileName
-text = '--> Load Data ROI File ....................................... ' + PROCESSING
+text = '--> Load Data ROI File ....................................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-UpdateDataRoiFileName, Event, structure.DataRoiFileName
-AppendReplaceLogBookMessage, Event, OK, PROCESSING
+IF (structure.DataRoiFilename EQ '') THEN BEGIN
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+    ++NbrError
+    ++DataError
+ENDIF ELSE BEGIN
+    UpdateDataRoiFileName, Event, structure.DataRoiFileName
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+ENDELSE
 
 ;work on DataPeakExclYmin and DataPeakExclYmax
-text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' + PROCESSING
+text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateDataPeakExclY, Event, $
   structure.DataPeakExclYmin, $
   structure.DataPeakExclYmax
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
+;Activate Data Widgets
+text = '--> Activate Data Widgets .................................... ' $
+  + PROCESSING
+putLogBookMessage, Event, text, APPEND=1
+IF (DataError EQ 0) THEN BEGIN
+    updateDataWidget, Event, 1
+    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+ENDIF ELSE BEGIN
+    updateDataWidget, Event, 0
+    AppendReplaceLogBookMessage, Event, NO, PROCESSING
+ENDELSE
+
 ;Work on Normalization data files
 IF (structure.MainNormRunNumber NE '') THEN BEGIN
 
+    NormError  = 0
 ;work on MainNormRunNumber
     text = '--> Display Main Normalization Run Number .................... ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateMainNormRunNumber, Event, structure.MainNormRunNumber
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    IF (structure.MainNormRunNumber EQ '') THEN BEGIN
+        AppendReplaceLogBookMessage, Event, NO, PROCESSING
+    ENDIF ELSE BEGIN
+        status = UpdateMainNormRunNumber(Event, structure.MainNormRunNumber)
+        IF (status EQ 0) THEN BEGIN
+            AppendReplaceLogBookMessage, Event, FAILED, PROCESSING
+            ++NbrError
+            ++NormError
+        ENDIF ELSE BEGIN
+            AppendReplaceLogBookMessage, Event, OK, PROCESSING
+        ENDELSE
+    ENDELSE
 
 ;work on AllNormNexusFileName
     text = '--> Display List of All Normalization Run .................... ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateAllNormNexusFileName, Event, structure.AllNormNexusFileName
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    IF (structure.AllNormNexusFileName EQ '') THEN BEGIN
+        AppendReplaceLogBookMessage, Event, NO, PROCESSING
+    ENDIF ELSE BEGIN
+        UpdateAllNormNexusFileName, Event, structure.AllNormNexusFileName
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDELSE
 
 ;work on MainNormNexusFileName
     text = '--> Load and Plot Main Normalization Run Number .............. ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateMainNormNexusFileName, Event, $
-      structure.MainNormNexusFileName, $
-      structure.MainNormRunNumber
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    IF (structure.MainNormNexusFileName EQ '' OR $
+        structure.MainNormRunNumber EQ '') THEN BEGIN
+        AppendReplaceLogBookMessage, Event, NO, PROCESSING
+        ++NbrError
+        ++NormError
+    ENDIF ELSE BEGIN        
+        UpdateMainNormNexusFileName, Event, $
+          structure.MainNormNexusFileName, $
+          structure.MainNormRunNumber
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDELSE
     
 ;work on NormRoiFileName
     text = '--> Load Normalization ROI File .............................. ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    UpdateNormRoiFileName, Event, structure.NormRoiFileName
-    AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    IF (structure.NormRoiFileName EQ '') THEN BEGIN
+        AppendReplaceLogBookMessage, Event, NO, PROCESSING
+        ++NbrError
+        ++NormError
+    ENDIF ELSE BEGIN
+        UpdateNormRoiFileName, Event, structure.NormRoiFileName
+        AppendReplaceLogBookMessage, Event, OK, PROCESSING
+    ENDELSE
     
 ;work on NormPeakExclYmin and NormPeakExclYmax
     text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax ........... ' + $
@@ -359,7 +451,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;Work on Qmin, Qmax, Qwidth and Qtype
-text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' + PROCESSING
+text = '--> Load Qmin, Qmax, Qwidth and Qtype ........................ ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateQ, Event, $
   structure.Qmin, $
@@ -369,7 +462,8 @@ UpdateQ, Event, $
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on AngleValue and AngleError
-text = '--> Load Angle Value and Error ............................... ' + PROCESSING
+text = '--> Load Angle Value and Error ............................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateAngle, Event, $
   structure.AngleValue, $
@@ -378,19 +472,22 @@ UpdateAngle, Event, $
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on filtering flag
-text = '--> Load on Filtering Data Flag .............................. ' + PROCESSING
+text = '--> Load on Filtering Data Flag .............................. ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateFilteringDataFlag, Event, structure.FilteringDataFlag
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on dt/t flag
-text = '--> Load on dt/t Flag ........................................ ' + PROCESSING
+text = '--> Load on dt/t Flag ........................................ ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateDeltaToverTFlag, Event, structure.DeltaToverTFlag
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on OverwriteDataInstrGeoFlag and DataInstrGeoFilename 
-text = '--> Load Overwrite Data Instrument Geometry Flag ............. ' + PROCESSING
+text = '--> Load Overwrite Data Instrument Geometry Flag ............. ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateOverwriteDataInstrGeoFlag, Event, $
   structure.OverwriteDataInstrGeoFlag, $
@@ -398,7 +495,8 @@ UpdateOverwriteDataInstrGeoFlag, Event, $
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on OverwriteNormInstrGeoFlag and NormInstrGeoFileName
-text = '--> Load Overwrite Normalization Instrument Geometry Flag .... ' + PROCESSING
+text = '--> Load Overwrite Normalization Instrument Geometry Flag .... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateOverwriteNormInstrGeoFlag, Event, $
   structure.OverwriteNormInstrGeoFlag, $
@@ -406,19 +504,22 @@ UpdateOverwriteNormInstrGeoFlag, Event, $
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work on Output Path and Output File Name
-text = '--> Load Output Path ......................................... ' + PROCESSING
+text = '--> Load Output Path ......................................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateOutputPath, Event, structure.OutputPath
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
-text = '--> Load Output File Name .................................... ' + PROCESSING
+text = '--> Load Output File Name .................................... ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateOutputFileName, Event, structure.OutputFileName
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
 ;Work Intermediate Files
 ;Data/Norm Combined Spec Flag
-text = '--> Load Intermediate Files .................................. ' + PROCESSING
+text = '--> Load Intermediate Files .................................. ' $
+  + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
 UpdateIntermediateFiles, Event, $
   structure.DataNormCombinedSpecFlag,$
@@ -428,7 +529,9 @@ UpdateIntermediateFiles, Event, $
   structure.RvsTOFcombinedFlag
 AppendReplaceLogBookMessage, Event, OK, PROCESSING
 
+IF (NbrError GT 0) THEN RETURN, 0
 RETURN, 1
+
 END
 
 ;*******************************************************************************

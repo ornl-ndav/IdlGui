@@ -840,7 +840,7 @@ BatchTable = (*(*global).BatchTable)
 RowSelected = (*global).PrevBatchRowSelected
 ;get value of active_button
 isCurrentWorking = isItCurrentWorkingRow(RowSelected,BatchTable)
-ActiveValue = ValueOfActive(Event)
+ActiveValue      = ValueOfActive(Event)
 ;get status of active or not (from BatchTable)
 ActiveSelection = isRowSelectedActive(RowSelected,BatchTable)
 IF (ABS(activeValue - ActiveSelection) NE 1) THEN BEGIN
