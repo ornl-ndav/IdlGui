@@ -13,17 +13,18 @@ CASE Event.id OF
     ELSE:
 ENDCASE
 
-SWITCH Event.id OF
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_10'): ++xy_coeff
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_9'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_8'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_7'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_6'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_5'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_4'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_3'): ++xy_coeff 
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_2'): ++xy_coeff
-    Widget_Info(wWidget, FIND_BY_UNAME='main_plot_zoom_1'): BEGIN
+SWITCH (Event.id) OF
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_10'): ++xy_coeff
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_9') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_8') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_7') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_6') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_5') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_4') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_3') : ++xy_coeff 
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_2') : ++xy_coeff
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_plot_zoom_1') : BEGIN
+        ChangeNameOfZoomButtons, Event, xy_coeff
         sMainBase.xcoeff = xy_coeff
         sMainBase.ycoeff = xy_coeff
         replotMainData, Event, sMainBase
@@ -37,6 +38,23 @@ END
 
 ;-------------------------------------------------------------------------------
 ;-------------------------------------------------------------------------------
+PRO ChangeNameOfZoomButtons, Event, xy_coeff
+ZoomValue = ['1','2','3','4','5','6','7','8','9','10']
+sz = (size(ZoomValue))(1)
+ZoomUname = STRARR(sz) + 'main_plot_zoom_'
+FOR i=0,(sz-1) DO BEGIN
+    ZoomUname[i] += STRCOMPRESS(ZoomValue[i],/REMOVE_ALL)
+    print, ZoomUname[i]
+    id = WIDGET_INFO(Event.top,FIND_BY_UNAME=ZoomUname[i])
+    IF ((xy_coeff-1) EQ i) THEN BEGIN
+        value = '>' + ZoomValue[i] + '<'
+    ENDIF ELSE BEGIN
+        value = ' ' + ZoomValue[i] + ' '
+    ENDELSE
+    WIDGET_CONTROL, id, set_value=value
+ENDFOR
+END
+
 ;-------------------------------------------------------------------------------
 PRO replotRoiData, Event, sMainBase
 ;retrieve info needed to replot
@@ -187,9 +205,14 @@ sz = (size(ZoomValue))(1)
 ZoomUname = STRARR(sz) + 'main_plot_zoom_'
 FOR i=0,(sz-1) DO BEGIN
     ZoomUname[i] += STRCOMPRESS(ZoomValue[i],/REMOVE_ALL)
+    IF (i EQ 0) THEN BEGIN
+        value = '>1<'
+    ENDIF ELSE BEGIN
+        value = ' ' + ZoomValue[i] + ' '
+    ENDELSE
     button = WIDGET_BUTTON(wZoom,$
                            UNAME = ZoomUname[i],$
-                           VALUE = ZoomValue[i])
+                           VALUE = value)
 ENDFOR
 Widget_Control, /REALIZE, wBase
 XManager, 'MAIN_BASE', wBase, /NO_BLOCK
