@@ -1,3 +1,5 @@
+;-------------------------------------------------------------------------------
+;------ UTILITIES --------------------------------------------------------------
 ;This function parse the 'base_string'. 
 ;#1 -> it splits the 'base_string' using the 'arg1' string and keeps
 ;the 'arg1Index' of the resulting array
@@ -61,7 +63,8 @@ RETURN, Split[length-1]
 END
 
 ;-------------------------------------------------------------------------------
-;------ UTILITIES --------------------------------------------------------------
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
 FUNCTION getMainDataNexusFileName, cmd
 result = ValueBetweenArg1Arg2(cmd, 'reflect_reduction', 1, ' ', 0)
 RETURN, STRCOMPRESS(result,/REMOVE_ALL)
@@ -195,13 +198,20 @@ END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getAngleUnits, cmd
-IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
-    result  = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
-    result1 = ValueBeforeArg1(result,' ')
-    result2 = ValueAfterArg1(result1,'=')
-    RETURN, STRCOMPRESS(result2,/REMOVE_ALL)
-ENDIF
-RETURN, ''
+units_error = 0
+CATCH, units_error
+IF (units_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    return, 'N/A'
+ENDIF ELSE BEGIN
+    IF (isStringFound(cmd,'--angle-offset=')) THEN BEGIN
+        result  = ValueBetweenArg1Arg2(cmd, '--angle-offset=', 1, ',', 2)
+        result1 = ValueBeforeArg1(result,' ')
+        result2 = ValueAfterArg1(result1,'=')
+        RETURN, STRCOMPRESS(result2,/REMOVE_ALL)
+    ENDIF
+    RETURN, ''
+ENDELSE
 END
 
 ;-------------------------------------------------------------------------------
@@ -270,7 +280,11 @@ END
 ;-------------------------------------------------------------------------------
 FUNCTION class_getOutputFileName, cmd
 result  = ValueBetweenArg1Arg2(cmd, '--output=', 1, ' ', 0)
-result1 = ValueAfterLastArg(result, '/')
+IF (result NE '') THEN BEGIN
+    result1 = ValueAfterLastArg(result, '/')
+ENDIF ELSE BEGIN
+    result1 = ''
+ENDELSE
 RETURN, STRCOMPRESS(result1,/REMOVE_ALL)
 END
 
@@ -469,57 +483,71 @@ END
 ;******  Class constructor *****************************************************
 FUNCTION IDLparseCommandLine::init, cmd
 
+general_error = 0
+CATCH, general_error 
+IF (general_error NE 0) THEN BEGIN
+    RETURN, 0
+ENDIF ELSE BEGIN
 ;Work on Data
-self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
-self.MainDataRunNUmber      = $
-  getMainDataRunNumber(self.MainDataNexusFileName)
-self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
-self.DataRoiFileName        = getDataRoiFileName(cmd)
-self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
-
+    self.MainDataNexusFileName  = getMainDataNexusFileName(cmd)
+    IF (self.MainDataNexusFileName NE '') THEN BEGIN
+        self.MainDataRunNUmber      = $
+          getMainDataRunNumber(self.MainDataNexusFileName)
+    ENDIF ELSE BEGIN
+        self.MainDataRunNumber  = 'N/A'
+    ENDELSE
+    self.AllDataNexusFileName   = getAllDataNexusFileName(cmd)
+    self.DataRoiFileName        = getDataRoiFileName(cmd)
+    self.DataPeakExclYArray     = getDataPeakExclYArray(cmd)
+    
 ;Work on Normalization
-self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
-self.MainNormRunNUmber     = $
-  getMainNormRunNumber(self.MainNormNexusFileName)
-self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
-self.NormRoiFileName       = getNormRoiFileName(cmd)
-self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
-
+    self.MainNormNexusFileName = getMainNormNexusFileName(cmd)
+    IF (self.MainNormNexusFileName NE '') THEN BEGIN
+        self.MainNormRunNUmber     = $
+          getMainNormRunNumber(self.MainNormNexusFileName)
+    ENDIF ELSE BEGIN
+        self.MainNormRunNumber = 'N/A'
+    ENDELSE
+    self.AllNormNexusFileName  = getAllNormNexusFileName(cmd)
+    self.NormRoiFileName       = getNormRoiFileName(cmd)
+    self.NormPeakExclYArray    = getNormPeakExclYArray(cmd)
+    
 ;;Reduce Tab
 ;Background flags
-self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
-self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
+    self.DataBackgroundFlag        = isWithDataBackgroundFlagOn(cmd)
+    self.NormBackgroundFlag        = isWithNormBackgroundFlagOn(cmd)
 ;Q [Qmin,Qmax,Qwidth,linear/log]
-self.Qmin                      = getQmin(cmd)
-self.Qmax                      = getQmax(cmd)
-self.Qwidth                    = getQwidth(cmd)
-self.Qtype                     = getQtype(cmd)
+    self.Qmin                      = getQmin(cmd)
+    self.Qmax                      = getQmax(cmd)
+    self.Qwidth                    = getQwidth(cmd)
+    self.Qtype                     = getQtype(cmd)
 ;Angle Offset
-self.AngleValue                = getAngleValue(cmd)
-self.AngleError                = getAngleError(cmd)
-self.AngleUnits                = getAngleUnits(cmd)
+    self.AngleValue                = getAngleValue(cmd)
+    self.AngleError                = getAngleError(cmd)
+    self.AngleUnits                = getAngleUnits(cmd)
 ;filtering data
-self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
+    self.FilteringDataFlag         = isWithFilteringDataFlag(cmd)
 ;dt/t
-self.DeltaTOverT               = isWithDeltaTOverT(cmd)
+    self.DeltaTOverT               = isWithDeltaTOverT(cmd)
 ;overwrite data intrument geometry
-self.OverwriteDataInstrGeo     = isWithOverwriteDataInstrGeo(cmd)
+    self.OverwriteDataInstrGeo     = isWithOverwriteDataInstrGeo(cmd)
 ;Data instrument geometry file name
-self.DataInstrGeoFileName      = getDataInstrumentGeoFileName(cmd)
+    self.DataInstrGeoFileName      = getDataInstrumentGeoFileName(cmd)
 ;overwrite norm intrument geometry
-self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
+    self.OverwriteNormInstrGeo     = isWithOverwriteNormInstrGeo(cmd)
 ;Norm instrument geometry file name
-self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
+    self.NormInstrGeoFileName      = getNormInstrumentGeoFileName(cmd)
 ;output path
-self.OutputPath                = getOutputPath(cmd)
+    self.OutputPath                = getOutputPath(cmd)
 ;output file name
-self.OutputFileName            = class_getOutputFileName(cmd)
+    self.OutputFileName            = class_getOutputFileName(cmd)
 ;;Intermediate File Flags
-self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
-self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
-self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
-self.RvsTOFFlag                = isWithRvsTOF(cmd)
-self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)                
+    self.DataNormCombinedSpecFlag  = isWithDataNormCombinedSpec(cmd)
+    self.DataNormCombinedBackFlag  = isWithDataNormCombinedBack(cmd)
+    self.DataNormCombinedSubFlag   = isWithDataNormCombinedSub(cmd)
+    self.RvsTOFFlag                = isWithRvsTOF(cmd)
+    self.RvsTOFcombinedFlag        = isWithRvsTOFcombined(cmd)                
+ENDELSE
 RETURN, 1
 END
 
