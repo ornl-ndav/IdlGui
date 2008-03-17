@@ -318,7 +318,7 @@ wBank = WIDGET_DROPLIST(MAIN_BASE,$
                         YOFFSET   = Bank.size[1],$
                         SCR_YSIZE = Bank.size[3],$
                         UNAME     = Bank.uname,$
-                        SENSITIVE = 1)
+                        SENSITIVE = 0)
 
 wplot = WIDGET_BUTTON(MAIN_BASE,$
                       XOFFSET   = Mainplot.size[0],$
@@ -327,7 +327,7 @@ wplot = WIDGET_BUTTON(MAIN_BASE,$
                       SCR_YSIZE = Mainplot.size[3],$
                       UNAME     = Mainplot.uname,$
                       VALUE     = Mainplot.value,$
-                      SENSITIVE = 1) ;remove 1 and put 0
+                      SENSITIVE = 0)
 
 ;///////////////////////////////////////
 ;                Status
