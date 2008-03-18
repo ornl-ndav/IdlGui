@@ -9,10 +9,11 @@ base   = { size  : [0,0,MainBaseSize[2:3]],$
            uname : 'create_histo_mapped_base'} 
 
 ;/////////////////Histo and Nexus tab///////////////////////////////////////////
-HistoNexusTab = { size : [0, $
-                          0, $
-                          MainBaseSize[2],$
-                          395]}
+HistoNexusTab = { size  : [0, $
+                           0, $
+                           MainBaseSize[2],$
+                           395],$
+                  uname : 'histo_nexus_tab'}
 
 ;///////////////////////////////////////////////////////////////////////////////
 ;////////////////Histo base/////////////////////////////////////////////////////
@@ -205,22 +206,10 @@ iButtonCH2 = { size      : [iTextCH.size[0]+iTextCH.size[2]+XYoff[0],$
                uname     : 'save_as_histo_mapped_button'}
 
 ;///////////////////////////////////////////////////////////////////////////////
-;////////////////Histo base/////////////////////////////////////////////////////
+;////////////////Nexus base/////////////////////////////////////////////////////
 ;///////////////////////////////////////////////////////////////////////////////
 NexusBase = { size  : [0,0,MainBaseSize[2],HistoNexusTab.size[3]],$
               title : 'NEXUS FILES'} 
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;///////////////////////////////////////////////////////////////////////////////
 ;/////////////////// PLOT //////////////////////////////////////////////////////
@@ -297,14 +286,15 @@ wHistoNexusTab = WIDGET_TAB(wBase,$
                             YOFFSET   = HistoNexusTab.size[1],$
                             SCR_XSIZE = HistoNexusTab.size[2],$
                             SCR_YSIZE = HistoNexusTab.size[3],$
+                            UNAME     = HistoNexusTab.uname,$
                             LOCATION  = 0)
                        
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;\\\\\\\\\\\\\\\\\\Histo Base\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wHistoBase = WIDGET_BASE(wHistoNexusTab,$
-                         XOFFSET = HistoBase.size[0],$
-                         YOFFSET = HistoBase.size[1],$
+                         XOFFSET   = HistoBase.size[0],$
+                         YOFFSET   = HistoBase.size[1],$
                          SCR_XSIZE = HistoBase.size[2],$
                          SCR_YSIZE = HistoBase.size[3],$
                          TITLE     = HistoBase.title)
@@ -554,8 +544,15 @@ wNexusBase = WIDGET_BASE(wHistoNexusTab,$
                          SCR_YSIZE = NexusBase.size[3],$
                          TITLE     = NexusBase.title)
 
+sInput = { MainBase              : wNexusBase,$
+           ListInstr             : ['ARCS'],$
+           DefaultInstr          : 'ARCS'}
 
-;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+instanceGui = OBJ_NEW('IDLloadNexus',sInput)
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wButtonP = WIDGET_BUTTON(wBase,$
                          XOFFSET   = iButtonP.size[0],$
                          YOFFSET   = iButtonP.size[1],$
