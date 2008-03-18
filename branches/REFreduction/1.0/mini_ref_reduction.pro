@@ -148,7 +148,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path : '~/local/',$ 
+                   working_path : '~/',$ 
 ;where the tmp file will be created
                    ucams : ucams, $ 
 ;ucams of the current user

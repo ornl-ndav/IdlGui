@@ -151,7 +151,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path : '~/local/',$ 
+                   working_path : '~/',$ 
 ;where the tmp file will be created
                    ucams : ucams, $ 
 ;ucams of the current user
@@ -494,8 +494,8 @@ IF (ucams EQ 'j35') THEN BEGIN
 ENDIF
 
 ; default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 3 ;batch mode(3)
+;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+;widget_control, id1, set_tab_current = 3 ;batch mode(3)
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
