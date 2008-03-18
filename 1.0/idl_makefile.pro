@@ -11,6 +11,7 @@ cd, IdlUtilitiesPath
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/plotARCSGUI/'
 .run MakeGuiInputBase.pro
+.run IDLloadNexus__define.pro
 .run MakeGuiMainPlot.pro
 .run MakeGuiBankPlot.pro
 .run MakeGuiTofBase.pro
