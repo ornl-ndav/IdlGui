@@ -30,7 +30,7 @@ PRO MakeNexusInputGui, sInput
 ;===== Define Structures =======================================================
 
 ;FRAME and main title
-XYoff     = [0,10]
+XYoff     = [3,10]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
                        680,120],$
@@ -171,12 +171,11 @@ wFrame = WIDGET_LABEL(MainBase,$
 END
 
 ;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
 PRO MakeStatusGui, sInput
-
-MainBase = sInput.MainBase
 ;===============================================================================
 ;===== Define Structures =======================================================
-XYoff     = [0,150]
+XYoff     = [3,145]
 sFrame    = { size  : [XYoff[0],$
                        XYoff[1],$
                        680,35],$
@@ -188,6 +187,7 @@ sTitle    = { size  : [sFrame.size[0]+20,$
 
 ;===============================================================================
 ;====== Make GUI ===============================================================
+MainBase = sInput.MainBase
 wTitle = WIDGET_LABEL(MainBase,$
                       XOFFSET = sTitle.size[0],$
                       YOFFSET = sTitle.size[1],$
@@ -198,21 +198,153 @@ wFrame = WIDGET_LABEL(MainBase,$
                       YOFFSET   = sFrame.size[1],$
                       SCR_XSIZE = sFrame.size[2],$
                       SCR_YSIZE = sFrame.size[3],$
-                      VALUE     = 'Processing ...',$
+                      VALUE     = '                                           ' + $
+                                  '                                           ' + $
+                                  '                                           ',$
                       FRAME     = sFrame.frame,$
                       UNAME     = sFrame.uname)
+END
+
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+PRO MakeNexusFileNameGui, sInput
+
+;===============================================================================
+;===== Define Structures =======================================================
+XYoff     = [3,145]
+sBase     = { size  : [XYoff[0],$
+                       XYoff[1],$
+                       680,35],$
+              uname : 'nexus_file_name_base'}
+
+XYoff    = [7,9]
+sLabel   = { size  : [XYoff[0],$
+                      XYoff[1]],$
+             value : 'NeXus File Name:'}
+
+;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+XYoff         = [105,-8]
+sArchivedBase = { size  :  [sLabel.size[0]+XYoff[0],$
+                            sLabel.size[1]+XYoff[1],$
+                            560,35],$
+                  uname : 'archived_base',$
+                  map   : 1}
+XYoff         = [0,0]
+sArchivedLabel = { size  : [XYoff[0],$
+                            XYoff[1],$
+                            sArchivedBase.size[2],$
+                            sArchivedBase.size[3]],$
+                   value : '                                                 ' + $
+                   '                                                         ',$
+                   uname : 'archived_text_field'}
+
+;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+sListAllBase = { size  : sArchivedBase.size,$
+                 uname : 'list_all_base',$
+                 map   : 0}
+XYoff            = [0,0]
+sListallDroplist = { size  : [XYoff[0],$
+                              XYoff[1],$
+                              350,$
+                              sArchivedBase.size[3]],$
+                     uname : 'list_all_droplist',$
+                     value : ['                                               ' + $
+                              '                                      ']}
+                              
+;===============================================================================
+;====== Make GUI ===============================================================
+MainBase = sInput.MainBase
+;Base ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wBase = WIDGET_BASE(MainBase,$
+                    XOFFSET = sBase.size[0],$
+                    YOFFSET = sBase.size[1],$
+                    SCR_XSIZE = sBase.size[2],$
+                    SCR_YSIZE = sBase.size[3],$
+                    frame = 5) ;remove-me
+
+wLabel = WIDGET_LABEL(wBase,$
+                      XOFFSET = sLabel.size[0],$
+                      YOFFSET = sLabel.size[1],$
+                      VALUE   = sLabel.value)
+
+;Archived Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wArchivedBase = WIDGET_BASE(wBase,$
+                            XOFFSET   = sArchivedBase.size[0],$
+                            YOFFSET   = sArchivedBase.size[1],$
+                            SCR_XSIZE = sArchivedBase.size[2],$
+                            SCR_YSIZE = sArchivedBase.size[3],$
+                            UNAME     = sArchivedBase.uname,$
+                            MAP       = sArchivedBase.map)
+
+wArchivedLabel = WIDGET_LABEL(wArchivedBase,$
+                             XOFFSET   = sArchivedLabel.size[0],$
+                             YOFFSET   = sArchivedLabel.size[1],$
+                             SCR_XSIZE = sArchivedLabel.size[2],$
+                             SCR_YSIZE = sArchivedLabel.size[3],$
+                             UNAME     = sArchivedLabel.uname,$
+                             VALUE     = sArchivedLabel.value,$
+                             /ALIGN_LEFT)
+
+;List All Case ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+wListAllBase = WIDGET_BASE(wBase,$
+                           XOFFSET   = sListAllBase.size[0],$
+                           YOFFSET   = sListAllBase.size[1],$
+                           SCR_XSIZE = sListAllBase.size[2],$
+                           SCR_YSIZE = sListAllBase.size[3],$
+                           UNAME     = sListAllBase.uname,$
+                           MAP       = sListAllBase.map)
+
+wListAllDroplist = WIDGET_DROPLIST(wListAllBase,$
+                                   XOFFSET = sListAllDroplist.size[0],$
+                                   YOFFSET = sListAllDroplist.size[1],$
+                                   VALUE   = sListAllDroplist.value,$
+                                   UNAME   = sListAllDroplist.uname)
 
 END
 
-;*******************************************************************************
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+PRO MakeNxSummaryGui, sInput
+
+;===============================================================================
+;===== Define Structures =======================================================
+sBase = { size  : [3,200,685,160],$
+          uname : 'nxsummary_base'}
+sText = { size  : [0,0,sBase.size[2],sBase.size[3]],$
+          uname : 'nxsummary_text_field'}
+
+;===============================================================================
+;====== Make GUI ===============================================================
+MainBase = sInput.MainBase
+wBase = WIDGET_BASE(MainBase,$
+                    XOFFSET   = sBase.size[0],$
+                    YOFFSET   = sBase.size[1],$
+                    SCR_XSIZE = sBase.size[2],$
+                    SCR_YSIZE = sBase.size[3],$
+                    UNAME     = sBase.uname)
+
+wTextField = WIDGET_TEXT(wBase,$
+                         XOFFSET   = sText.size[0],$
+                         YOFFSET   = sText.size[1],$
+                         SCR_XSIZE = sText.size[2],$
+                         SCR_YSIZE = sText.size[3],$
+                         UNAME     = sText.uname,$
+                         /SCROLL,$
+                         /WRAP)
+END
+
+ ;*******************************************************************************
 ;***** Class constructor *******************************************************
 FUNCTION IDLloadNexus::init, sInput
 
 ;Design First Part of GUI (NeXus input)
 MakeNexusInputGui, sInput
-;Design Status box
-MakeStatusGui, sInput
-
+;;Design Status box (not used here because of duplication of status message
+;MakeStatusGui, sInput
+;Design Name of nexus test_field or droplist
+MakeNexusFileNameGui, sInput
+;Design NXsummary text_field
+MakeNxSummaryGui, sInput
 
 RETURN,1
 END
