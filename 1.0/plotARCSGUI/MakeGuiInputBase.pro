@@ -1,14 +1,26 @@
 PRO MakeGuiInputBase, MAIN_BASE, MainBaseSize
 
 
-;********************************************************************************
+;*******************************************************************************
 ;                           Define size arrays
-;********************************************************************************
+;*******************************************************************************
 
 base   = { size  : [0,0,MainBaseSize[2:3]],$
            uname : 'create_histo_mapped_base'} 
 
-;///////////////////INPUT BASE///////////////////////////////////////////////////
+;/////////////////Histo and Nexus tab///////////////////////////////////////////
+HistoNexusTab = { size : [0, $
+                          0, $
+                          MainBaseSize[2],$
+                          395]}
+
+;///////////////////////////////////////////////////////////////////////////////
+;////////////////Histo base/////////////////////////////////////////////////////
+;///////////////////////////////////////////////////////////////////////////////
+HistoBase = { size  : [0,0,MainBaseSize[2],HistoNexusTab.size[3]],$
+              title : 'DAS PRENEXUS FILES'} 
+
+;///////////////////INPUT BASE//////////////////////////////////////////////////
 iFrame1 = { size  : [5,10,MainBaseSize[2]-15,95],$
             frame : 1}
 
@@ -147,7 +159,8 @@ iDroplist1 = { size      : [iFrame2.size[0]+XYoff[0],$
                             iFrame2.size[1]+XYoff[1]],$
                uname     : 'mapping_droplist',$
                sensitive : 1,$
-               list      : '                                                              '}
+               list      : '                                        ' + $
+               '                      '}
 
 ;/////////////////////CREATE HISTO BASE//////////////////////////////////////////
 XYoff    = [0,20]
@@ -158,7 +171,8 @@ iFrameCH = { size  : [iFrame2.size[0]+XYoff[0],$
 XYoff     = [10,-8]
 iLabelCH  = { size  : [iFrameCH.size[0]+XYoff[0],$
                        iFrameCH.size[1]+XYoff[1]],$
-              value : 'C R E A T E / G E T   H I S T O _ M A P P E D    F I L E '}
+              value : 'C R E A T E / G E T   H I S T O _ M A P P E D' + $
+              '    F I L E '}
 XYoff     = [10,15]
 iButtonCH = { size  : [iFrameCH.size[0]+XYoff[0],$
                        iFrameCH.size[1]+XYoff[1],$
@@ -190,13 +204,34 @@ iButtonCH2 = { size      : [iTextCH.size[0]+iTextCH.size[2]+XYoff[0],$
                sensitive : 0,$
                uname     : 'save_as_histo_mapped_button'}
 
-;/////////////////// PLOT ///////////////////////////////////////////
-XYoff  = [0,15]
+;///////////////////////////////////////////////////////////////////////////////
+;////////////////Histo base/////////////////////////////////////////////////////
+;///////////////////////////////////////////////////////////////////////////////
+NexusBase = { size  : [0,0,MainBaseSize[2],HistoNexusTab.size[3]],$
+              title : 'NEXUS FILES'} 
+
+
+
+
+
+
+
+
+
+
+
+
+
+;///////////////////////////////////////////////////////////////////////////////
+;/////////////////// PLOT //////////////////////////////////////////////////////
+;///////////////////////////////////////////////////////////////////////////////
+XYoff  = [0,45]
 iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
                            iFrameCH.size[1]+iFrameCH.size[3]+XYoff[1],$
                            MainBaseSize[2]-10,35],$
               uname     : 'plot_button',$
-              value     : '> > > >     > > >     > >     >     P  L  O  T     <     < <     < < <     < < < <',$
+              value     : '> > > >     > > >     > >     >     P  L  O  T  ' + $
+              '   <     < <     < < <     < < < <',$
               sensitive : 0}
 
 ;///////////////// STATUS ///////////////////////////////////////////
@@ -212,7 +247,7 @@ iStatusLabel = { size  : [iButtonP.size[0]+XYoff[0],$
 XYoff     = [0,50]
 iFrameSTG = { size  : [iStatusLabel.size[0]+XYoff[0],$
                        iStatusLabel.size[1]+XYoff[1],$
-                       MainBaseSize[2]-15,45],$
+                       MainBaseSize[2]-20,45],$
               frame : 1}
 XYoff    = [10,-8]
 iLabelSTG  = { size  : [iFrameSTG.size[0]+XYoff[0],$
@@ -256,13 +291,31 @@ wBase = WIDGET_BASE(MAIN_BASE,$
                     SCR_YSIZE = base.size[3],$
                     map       = 1)
 
+;\\\\\\\\\\\\\\\\\\Histo and Nexus tabs\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wHistoNexusTab = WIDGET_TAB(wBase,$
+                            XOFFSET   = HistoNexusTab.size[0],$
+                            YOFFSET   = HistoNexusTab.size[1],$
+                            SCR_XSIZE = HistoNexusTab.size[2],$
+                            SCR_YSIZE = HistoNexusTab.size[3],$
+                            LOCATION  = 0)
+                       
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\Histo Base\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wHistoBase = WIDGET_BASE(wHistoNexusTab,$
+                         XOFFSET = HistoBase.size[0],$
+                         YOFFSET = HistoBase.size[1],$
+                         SCR_XSIZE = HistoBase.size[2],$
+                         SCR_YSIZE = HistoBase.size[3],$
+                         TITLE     = HistoBase.title)
+
 ;\\\\\\\\\\\\\\\\\\\INPUT BASE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wLabel1 = WIDGET_LABEL(wBase,$
+wLabel1 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET = iLabel1.size[0],$
                        YOFFSET = iLabel1.size[1],$
                        VALUE   = iLabel1.value)
 
-wBase1 = WIDGET_BASE(wBase,$
+wBase1 = WIDGET_BASE(wHistoBase,$
                      XOFFSET   = iBaseField1.size[0],$
                      YOFFSET   = iBaseField1.size[1],$
                      SCR_XSIZE = iBaseField1.size[2],$
@@ -278,12 +331,12 @@ wField1 = CW_FIELD(wBase1,$
                    TITLE         = iBaseField1.title,$
                    /LONG)
 
-wLabel2 = WIDGET_LABEL(wBase,$
+wLabel2 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET = iLabel2.size[0],$
                        YOFFSET = iLabel2.size[1],$
                        VALUE   = iLabel2.value)
 
-wButton1 = WIDGET_BUTTON(wBase,$
+wButton1 = WIDGET_BUTTON(wHistoBase,$
                          XOFFSET   = iButton1.size[0],$
                          YOFFSET   = iButton1.size[1],$
                          SCR_XSIZE = iButton1.size[2],$
@@ -292,7 +345,7 @@ wButton1 = WIDGET_BUTTON(wBase,$
                          VALUE     = iButton1.value)
 
 ;display runinfo file
-wDisplayButton = WIDGET_BUTTON(wBase,$
+wDisplayButton = WIDGET_BUTTON(wHistoBase,$
                                XOFFSET   = iDisplayButton.size[0],$
                                YOFFSET   = iDisplayButton.size[1],$
                                SCR_XSIZE = iDisplayButton.size[2],$
@@ -301,12 +354,12 @@ wDisplayButton = WIDGET_BUTTON(wBase,$
                                SENSITIVE = iDisplayButton.sensitive,$
                                VALUE     = iDisplayButton.value)
 
-wElabel = WIDGET_LABEL(wBase,$
+wElabel = WIDGET_LABEL(wHistoBase,$
                        XOFFSET = iElabel.size[0],$
                        YOFFSET = iElabel.size[1],$
                        VALUE   = iElabel.value)
 
-wEtext = WIDGET_TEXT(wBase,$
+wEtext = WIDGET_TEXT(wHistoBase,$
                      XOFFSET   = iEtext.size[0],$
                      YOFFSET   = iEtext.size[1],$
                      SCR_XSIZE = iEtext.size[2],$
@@ -315,7 +368,7 @@ wEtext = WIDGET_TEXT(wBase,$
                      /ALL_EVENTS,$
                      /EDITABLE)
 
-wFrame1 = WIDGET_LABEL(wBase,$
+wFrame1 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iFrame1.size[0],$
                        YOFFSET   = iFrame1.size[1],$
                        SCR_XSIZE = iFrame1.size[2],$
@@ -324,14 +377,14 @@ wFrame1 = WIDGET_LABEL(wBase,$
                        VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\HISTOGRAMMING\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wLabel4 = WIDGET_LABEL(wBase,$
+wLabel4 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel4.size[0],$
                        YOFFSET   = iLabel4.size[1],$
                        VALUE     = iLabel4.value,$
                        UNAME     = iLabel4.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wText1 = WIDGET_TEXT(wBase,$
+wText1 = WIDGET_TEXT(wHistoBase,$
                      XOFFSET   = iText1.size[0],$
                      YOFFSET   = iText1.size[1],$
                      SCR_XSIZE = iText1.size[2],$
@@ -341,14 +394,14 @@ wText1 = WIDGET_TEXT(wBase,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
-wLabel5 = WIDGET_LABEL(wBase,$
+wLabel5 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel5.size[0],$
                        YOFFSET   = iLabel5.size[1],$
                        VALUE     = iLabel5.value,$
                        UNAME     = iLabel5.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wText2 = WIDGET_TEXT(wBase,$
+wText2 = WIDGET_TEXT(wHistoBase,$
                      XOFFSET   = iText2.size[0],$
                      YOFFSET   = iText2.size[1],$
                      SCR_XSIZE = iText2.size[2],$
@@ -359,14 +412,14 @@ wText2 = WIDGET_TEXT(wBase,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
-wLabel6 = WIDGET_LABEL(wBase,$
+wLabel6 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel6.size[0],$
                        YOFFSET   = iLabel6.size[1],$
                        VALUE     = iLabel6.value,$
                        UNAME     = iLabel6.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wText1 = WIDGET_TEXT(wBase,$
+wText1 = WIDGET_TEXT(wHistoBase,$
                      XOFFSET   = iText3.size[0],$
                      YOFFSET   = iText3.size[1],$
                      SCR_XSIZE = iText3.size[2],$
@@ -377,21 +430,21 @@ wText1 = WIDGET_TEXT(wBase,$
                      /EDITABLE,$
                      /ALIGN_LEFT)
 
-wLabel7 = WIDGET_LABEL(wBase,$
+wLabel7 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel7.size[0],$
                        YOFFSET   = iLabel7.size[1],$
                        VALUE     = iLabel7.value,$
                        UNAME     = iLabel7.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wLabel8 = WIDGET_LABEL(wBase,$
+wLabel8 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel8.size[0],$
                        YOFFSET   = iLabel8.size[1],$
                        VALUE     = iLabel8.value,$
                        UNAME     = iLabel8.uname,$
                        SENSITIVE = histogramming_sensitive)
 
-wDroplist2 = WIDGET_DROPLIST(wBase,$
+wDroplist2 = WIDGET_DROPLIST(wHistoBase,$
                              VALUE     = iDroplist2.list,$
                              XOFFSET   = iDroplist2.size[0],$
                              YOFFSET   = iDroplist2.size[1],$
@@ -399,7 +452,7 @@ wDroplist2 = WIDGET_DROPLIST(wBase,$
                              SENSITIVE = histogramming_sensitive,$
                              /DYNAMIC_RESIZE)
 
-wFrame3 = WIDGET_LABEL(wBase,$
+wFrame3 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iFrame3.size[0],$
                        YOFFSET   = iFrame3.size[1],$
                        SCR_XSIZE = iFrame3.size[2],$
@@ -410,14 +463,14 @@ wFrame3 = WIDGET_LABEL(wBase,$
                        SENSITIVE = histogramming_sensitive)
 
 ;\\\\\\\\\\\\\\\\\\\MAPPING FILE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wLabel3 = WIDGET_LABEL(wBase,$
+wLabel3 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iLabel3.size[0],$
                        YOFFSET   = iLabel3.size[1],$
                        UNAME     = iLabel3.uname,$
                        SENSITIVE = histogramming_sensitive,$
                        VALUE     = iLabel3.value)
 
-wDroplist1 = WIDGET_DROPLIST(wBase,$
+wDroplist1 = WIDGET_DROPLIST(wHistoBase,$
                              VALUE     = iDroplist1.list,$
                              XOFFSET   = iDroplist1.size[0],$
                              YOFFSET   = iDroplist1.size[1],$
@@ -425,7 +478,7 @@ wDroplist1 = WIDGET_DROPLIST(wBase,$
                              SENSITIVE = histogramming_sensitive,$
                              /DYNAMIC_RESIZE)
 
-wFrame2 = WIDGET_LABEL(wBase,$
+wFrame2 = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iFrame2.size[0],$
                        YOFFSET   = iFrame2.size[1],$
                        SCR_XSIZE = iFrame2.size[2],$
@@ -436,12 +489,12 @@ wFrame2 = WIDGET_LABEL(wBase,$
                        VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\CREATE HISTO BASE\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-wLabelCH = WIDGET_LABEL(wBase,$
+wLabelCH = WIDGET_LABEL(wHistoBase,$
                        XOFFSET = iLabelCH.size[0],$
                        YOFFSET = iLabelCH.size[1],$
                        VALUE   = iLabelCH.value)
 
-wButtonCH = WIDGET_BUTTON(wBase,$
+wButtonCH = WIDGET_BUTTON(wHistoBase,$
                           XOFFSET   = iButtonCH.size[0],$
                           YOFFSET   = iButtonCH.size[1],$
                           SCR_XSIZE = iButtonCH.size[2],$
@@ -450,12 +503,12 @@ wButtonCH = WIDGET_BUTTON(wBase,$
                           SENSITIVE = histogramming_sensitive,$
                           UNAME     = iButtonCH.uname)
 
-iLabelCH1 = WIDGET_LABEL(wBase,$
+iLabelCH1 = WIDGET_LABEL(wHistoBase,$
                          XOFFSET = iLabelCH1.size[0],$
                          YOFFSET = iLabelCH1.size[1],$
                          VALUE   = iLabelCH1.value)
                          
-wButtonCH1 = WIDGET_BUTTON(wBase,$
+wButtonCH1 = WIDGET_BUTTON(wHistoBase,$
                            XOFFSET   = iButtonCH1.size[0],$
                            YOFFSET   = iButtonCH1.size[1],$
                            SCR_XSIZE = iButtonCH1.size[2],$
@@ -463,7 +516,7 @@ wButtonCH1 = WIDGET_BUTTON(wBase,$
                            VALUE     = iButtonCH1.value,$
                            UNAME     = iButtonCH1.uname)
 
-wTextCH = WIDGET_TEXT(wBase,$
+wTextCH = WIDGET_TEXT(wHistoBase,$
                       XOFFSET   = iTextCH.size[0],$
                       YOFFSET   = iTextCH.size[1],$
                       SCR_XSIZE = iTextCH.size[2],$
@@ -474,7 +527,7 @@ wTextCH = WIDGET_TEXT(wBase,$
                       /ALIGN_LEFT,$
                       /EDITABLE)
 
-wButtonCH2 = WIDGET_BUTTON(wBase,$
+wButtonCH2 = WIDGET_BUTTON(wHistoBase,$
                            XOFFSET   = iButtonCH2.size[0],$
                            YOFFSET   = iButtonCH2.size[1],$
                            SCR_XSIZE = iButtonCH2.size[2],$
@@ -483,13 +536,24 @@ wButtonCH2 = WIDGET_BUTTON(wBase,$
                            UNAME     = iButtonCH2.uname,$
                            SENSITIVE = iButtonCH2.sensitive)
 
-wFrameCH = WIDGET_LABEL(wBase,$
+wFrameCH = WIDGET_LABEL(wHistoBase,$
                        XOFFSET   = iFrameCH.size[0],$
                        YOFFSET   = iFrameCH.size[1],$
                        SCR_XSIZE = iFrameCH.size[2],$
                        SCR_YSIZE = iFrameCH.size[3],$
                        FRAME     = iFrameCH.frame,$
                        VALUE     = '')
+
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\ NeXus base \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+wNexusBase = WIDGET_BASE(wHistoNexusTab,$
+                         XOFFSET   = NexusBase.size[0],$
+                         YOFFSET   = NexusBase.size[1],$
+                         SCR_XSIZE = NexusBase.size[2],$
+                         SCR_YSIZE = NexusBase.size[3],$
+                         TITLE     = NexusBase.title)
+
 
 ;\\\\\\\\\\\\\\\\\ PLOT \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 wButtonP = WIDGET_BUTTON(wBase,$

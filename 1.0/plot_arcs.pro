@@ -23,7 +23,7 @@ global = ptr_new ({ ucams                 : ucams,$
                     img                   : ptr_new(0L),$
                     nbr_pixel             : 117760L,$
                     version               : VERSION,$
-                    LogBookPath           : '/SNS/users/j35/IDL_LogBook/',$ 
+                    LogBookPath           : '/SNS/users/LogBook/',$ 
                     staging_folder        : '~/.plotARCS_tmp/',$
                     mapping_list_mac      : ['./mapping/ARCS_TS_2007_10_10.dat'],$
                     event_file_filter     : '*_neutron_event.dat',$
@@ -39,11 +39,10 @@ global = ptr_new ({ ucams                 : ucams,$
                     neutron_event_dat_ext : '_neutron_event.dat',$
                     debugger              : 'j35'})
 
-
 IF (ucams EQ (*global).debugger) THEN BEGIN
-    MainBaseSize  = [30,25,700,700]
+    MainBaseSize  = [30,25,700,740]
 ENDIF ELSE BEGIN
-    MainBaseSize  = [30,25,700,530]
+    MainBaseSize  = [30,25,700,560]
 ENDELSE
 MainBaseTitle = 'Plot ARCS'
 MainBaseTitle += ' - ' + VERSION
