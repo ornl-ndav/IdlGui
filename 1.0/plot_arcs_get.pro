@@ -1,3 +1,4 @@
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Returns the Run Number from the INPUT base
 FUNCTION getEventRunNumber, Event
 id = widget_info(Event.top,find_by_uname='run_number')
@@ -5,7 +6,7 @@ widget_control, id, get_value=RunNumber
 RETURN, strcompress(RunNumber,/remove_all)
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Returns the contain of the Event file widget_text (in INPUT base)
 FUNCTION getEventFile, Event
 id = widget_info(Event.top,find_by_uname='event_file')
@@ -13,7 +14,7 @@ widget_control, id, get_value=event_file
 RETURN, event_file
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Returns the full path up to the prenexus folder
 ;example: /ARCS-DAS-FS/2007_1_18_SCI/ARCS_16/
 FUNCTION getRunPath, Event, RunNumber, runFullPath
@@ -41,7 +42,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Get the list of mapping files
 FUNCTION getMappingFileList
 cmd = 'findcalib -m --listall -iARCS'
@@ -53,7 +54,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get value of text field 
 FUNCTION getTextFieldValue, Event, Uname
 id = widget_info(Event.top,find_by_uname=Uname)
@@ -61,8 +62,7 @@ widget_control, id, get_value=value
 RETURN, strcompress(value,/remove_all)
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get value status text_field
 FUNCTION getStatusTextFieldValue, Event
 id = widget_info(Event.top,find_by_uname='send_to_geek_message_text')
@@ -70,7 +70,7 @@ widget_control, id, get_value=value
 RETURN, value
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;retrieve selected mapping file from droplist
 FUNCTION getMappingFile, Event
 ;get selected index
@@ -80,7 +80,7 @@ widget_control, id, get_value=array
 RETURN, array[index_selected]
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get histogram type 0:linear 1:log
 FUNCTION getHistogramType, Event
 id = widget_info(Event.top, find_by_uname ='bin_type_droplist')
@@ -88,7 +88,7 @@ index_selected = widget_info(id, /droplist_select)
 RETURN, index_selected
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get full name of histo mapped file
 FUNCTION getHistoMappedFileName, event_file_full_name, staging_folder
 event_file_only_array = strsplit(event_file_full_name,'/',/extract, $
@@ -100,7 +100,7 @@ histo_file_full_name = staging_folder + histo_file_name
 RETURN, histo_file_full_name
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get full contain of log book
 FUNCTION getLogBookText, Event
 id = widget_info(Event.top,find_by_uname='log_book')
@@ -108,7 +108,7 @@ widget_control, id, get_value=text
 RETURN, text
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the column of the bank selected
 FUNCTION getColumnMainPlot, X
 Xwidth = 32
@@ -121,7 +121,7 @@ ENDFOR
 RETURN, 0
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;this is used to determine the index of the bank
 ;L1 -> 0, L2 -> 1, M1 -> 38 ....
 FUNCTION getColumnMainPlotIndex, X
@@ -135,7 +135,7 @@ ENDFOR
 RETURN, -1
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the row of the bank selected
 FUNCTION getRowMainPlot, Y
 YposArray = ['L','M','T']
@@ -149,8 +149,7 @@ ENDFOR
 RETURN, ''
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;this is used to determine the index of the bank
 ;L1 -> 0, L2 -> 1, M1 -> 38 ....
 FUNCTION getRowMainPlotIndex, Y
@@ -165,9 +164,7 @@ ENDFOR
 RETURN, -1
 END
 
-
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the bank number
 FUNCTION getBank, Event
 ;get global structure
@@ -189,8 +186,7 @@ ENDIF ELSE BEGIN ;if we click outside a bank
 ENDELSE
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBinTypeFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 'linear'
@@ -214,8 +210,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBinOffsetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '0'
@@ -239,8 +234,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBinMaxSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '100000'
@@ -264,8 +258,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBinWidthSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '200'
@@ -289,8 +282,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getBankIndex, Event, X, Y
 ;retrieve bank number
 bank_number = getBank(Event)
@@ -311,7 +303,7 @@ ENDIF
 RETURN, index
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the tube number from the bank view
 FUNCTION getBankPlotX, Event
 ;get global structure
@@ -321,7 +313,7 @@ X = Event.X
 return, strcompress(X/Xfactor,/remove_all)
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the Y from the bank view
 FUNCTION getBankPlotY, Event
 ;get global structure
@@ -331,16 +323,14 @@ Y = Event.Y
 return, strcompress(Y/Yfactor,/remove_all)
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;return the pixelID from the widget_text found in the bank base
 FUNCTION getPixelIdFromBankBase, Event
 value = getTextFieldValue(Event,'pixelid_input')
 RETURN, value
 END
 
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get type desired 'lin' or 'log'
 FUNCTION getTypeDesired, Event
 id = widget_info(Event.top,find_by_uname='plot_scale_type')
@@ -349,10 +339,8 @@ IF (value EQ 'Linear Y-axis      ') THEN RETURN, 'lin'
 RETURN, 'log'
 END
     
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 FUNCTION getPixelIDOffset, BankID
-
 StrLength = STRLEN(BankID)
 Row = strmid(BankID,0,1)
 CASE (Row) OF
@@ -360,7 +348,6 @@ CASE (Row) OF
     'M': ColumnOffset = 38912L
     'T': ColumnOffset = 78848L
 ENDCASE
-
 ;case of banks 32A and 32B
 Column = strmid(BankID,1,StrLength-1)
 CASE (Row) OF 
@@ -392,9 +379,7 @@ ENDCASE
 RETURN, RowOffset
 END
 
-
-
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get pixelID using bank name (M12), tube (X) and row (Y) position
 FUNCTION getPixelID, BankID, X, Y
 PixelIDoffset = getPixelIDOffset(BankID)
@@ -403,16 +388,13 @@ PixelID = pxoffset + PixelIDoffset
 RETURN, PixelID
 END
 
-
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;get range of pixel selected
 FUNCTION getPixelIdRangeFromBankBase, BankID, xleft, yleft, xright, yright
-
 Xfix = FIX([xleft,xright])
 xmin = MIN(Xfix,MAX=xmax)
-
 Yfix = FIX([yleft,yright])
 ymin = MIN(Yfix,MAX=ymax)
-
 nbr = (xmax-xmin+1)*(ymax-ymin+1)
 pixelIDRange = lonarr(nbr)
 k=0
@@ -425,5 +407,33 @@ ENDFOR
 RETURN, pixelIDRange
 END
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;this function gives the droplist index
+FUNCTION getDropListSelectedIndex, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+RETURN, WIDGET_INFO(id, /DROPLIST_SELECT)
+END
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getDroplistValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=list
+RETURN, list
+END
 
+;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
+;get proposal selected
+FUNCTION getSelectedProposal, Event
+proposalIndex = getDroplistSelectedIndex(Event,'proposal_droplist')
+IF (proposalIndex EQ 0) THEN RETURN, ''
+proposalList = getDroplistValue(Event,'proposal_droplist')
+RETURN, proposalList[proposalIndex]
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getCW_BgroupValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END

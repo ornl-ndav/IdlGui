@@ -4,6 +4,7 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
+.run IDLnexusUtilities__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -23,6 +24,7 @@ cd, CurrentFolder
 .run plot_arcs_get.pro
 .run plot_arcs_time.pro
 .run plot_arcs_put.pro
+.run plot_arcs_is.pro
 
 ;procedures
 ;first base
@@ -34,6 +36,9 @@ cd, CurrentFolder
 .run plot_arcs_CreateHistoMapped.pro
 .run plot_arcs_SaveAsHistoMapped.pro
 .run plot_arcs_SendToGeek.pro
+
+;Nexus tab
+.run plot_arcs_Nexus.pro
 
 ;main plot base
 .run plot_arcs_PlotMainPlot.pro
