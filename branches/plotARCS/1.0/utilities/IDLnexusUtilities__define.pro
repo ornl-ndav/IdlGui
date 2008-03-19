@@ -26,11 +26,8 @@ IF (self.proposal NE '') THEN BEGIN
 ENDIF
 spawn, cmd, listening
 self.archived_nexus = listening[0]
-IF (STRMATCH(self.archived_nexus,'ERROR*')) THEN BEGIN
-    self.nexus_found = 0
-    RETURN, ''
-ENDIF
-IF (listening[0] EQ '') THEN BEGIN
+IF (STRMATCH(self.archived_nexus,'ERROR*') OR $
+    listening[0] EQ '') THEN BEGIN
     self.nexus_found = 0
     RETURN, ''
 ENDIF
@@ -44,6 +41,12 @@ cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
 cmd += ' --listall'
 spawn, cmd, listening
 self.full_list_nexus = ptr_new(listening)
+IF (STRMATCH(listening[0],'ERROR*') OR $
+    listening[0] EQ '') THEN BEGIN
+    self.nexus_found = 0
+    RETURN, ['']
+ENDIF
+self.nexus_found = 1
 RETURN, listening
 END
 

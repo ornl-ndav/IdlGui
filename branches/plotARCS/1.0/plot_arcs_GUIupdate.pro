@@ -155,3 +155,7 @@ PRO ShowArchivedListAllBase, Event
 MapBase, Event, 'nexus_file_name_base', 1
 END
 
+;-------------------------------------------------------------------------------
+PRO ActivatePreviewBase, Event, activate_status
+MapBase, Event, 'nxsummary_base', activate_status
+END
