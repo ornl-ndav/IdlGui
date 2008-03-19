@@ -1,20 +1,23 @@
-                          
-;***** Class Destructor *****
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;                           CLASS : IDLnexusUtilities                          +
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+;***** Class Destructor ********************************************************
 PRO IDLnexusUtilities::cleanup
 ptr_free, self.full_list_nexus
 END
 
-;***** Get Instrument *****
+;***** Get Instrument **********************************************************
 FUNCTION IDLnexusUtilities::getInstrument
 RETURN, self.instrument
 END
 
-;***** Get RunNumber *****
+;***** Get RunNumber ***********************************************************
 FUNCTION IDLnexusUtilities::getRunNumber
 RETURN, self.run_number
 END
 
-;***** Get Archived NeXus path *****
+;***** Get Archived NeXus path *************************************************
 FUNCTION IDLnexusUtilities::getArchivedNeXusPath
 cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number 
 cmd += ' --archive'
@@ -23,11 +26,19 @@ IF (self.proposal NE '') THEN BEGIN
 ENDIF
 spawn, cmd, listening
 self.archived_nexus = listening[0]
-IF (STRMATCH(self.archived_nexus,'ERROR*')) THEN self.nexus_found = 0
+IF (STRMATCH(self.archived_nexus,'ERROR*')) THEN BEGIN
+    self.nexus_found = 0
+    RETURN, ''
+ENDIF
+IF (listening[0] EQ '') THEN BEGIN
+    self.nexus_found = 0
+    RETURN, ''
+ENDIF
+self.nexus_found = 1
 RETURN, listening[0]
 END
 
-;***** Get Full List of NeXus path *****
+;***** Get Full List of NeXus path *********************************************
 FUNCTION IDLnexusUtilities::getFullListNeXusPath
 cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
 cmd += ' --listall'
@@ -36,41 +47,41 @@ self.full_list_nexus = ptr_new(listening)
 RETURN, listening
 END
 
-;***** Get bank data *****
+;***** Get bank data ***********************************************************
 FUNCTION IDLnexusUtilties::getBankData, $
-                         nexus_path = nexus_path, $
+                         NEXUS_PATH = nexus_path, $
                          bank
-if (n_elements(nexus_path) EQ 0) then begin
+IF (N_ELEMENTS(NEXUS_PATH) EQ 0) THEN BEGIN
     nexus_file_name = self.archived_nexus
-endif else begin
+ENDIF ELSE BEGIN
     nexus_file_name = nexus_path
-endelse
-fileID  = h5f_open(nexus_file_name)
+ENDELSE
+fileID  = H5F_OPEN(nexus_file_name)
 bank_path = '/entry/' + bank + '/data'
-fieldID = h5d_open(fileID,bank_path)
-RETURN, h5d_read(fieldID)
+fieldID = H5D_OPEN(fileID,bank_path)
+RETURN, H5D_READ(fieldID)
 END
 
-;***** getNXsummary *****
+;***** getNXsummary ************************************************************
 FUNCTION IDLnexusUtilities::getNXsummary
 RETURN,''
 END
 
-;***** getHDF5field *****
+;***** getHDF5field ************************************************************
 FUNCTION IDLnexusUtilities::getHDF5field, $
-                          nexus_path = nexus_path, $
+                          NEXUS_PATH = nexus_path, $
                           field
-if (n_elements(nexus_path) EQ 0) then begin
+IF (N_ELEMENTS(NEXUS_PATH) EQ 0) THEN BEGIN
     nexus_file_name = self.archived_nexus
-endif else begin
+ENDIF ELSE BEGIN
     nexus_file_name = nexus_path
-endelse
-fileID  = h5f_open(nexus_file_name)
-fieldID = h5d_open(fileID,field)
-RETURN, h5d_read(fieldID)
+ENDELSE
+fileID  = H5F_OPEN(nexus_file_name)
+fieldID = H5D_OPEN(fileID,field)
+RETURN, H5D_READ(fieldID)
 END
 
-;***** Methods Used By the Class *****
+;***** Methods Used By the Class ***********************************************
 FUNCTION IDLnexusUtilities::hostname
 spawn, 'hostname',listening
 CASE (listening) OF
@@ -93,33 +104,27 @@ END
 ;***** Class Constructor *******************************************************
 FUNCTION IDLnexusUtilities::init, $
                           run_number,$
-                          proposal = proposal,$
-                          instrument = instrument
+                          PROPOSAL   = proposal,$
+                          INSTRUMENT = instrument
 
 ;store run number
 IF (N_ELEMENTS(run_number) EQ 0) THEN RETURN, 0
 self.run_number = STRCOMPRESS(run_number,/REMOVE_ALL)
-
 ;get instrument
 IF (N_ELEMENTS(instrument) EQ 0) THEN BEGIN
     instrument = self->hostname()
     IF (instrument EQ '') THEN RETURN, 0
 ENDIF
 self.instrument = STRCOMPRESS(instrument,/REMOVE_ALL)
-
 ;proposal number
 IF (N_ELEMENTS(proposal) NE 0) THEN BEGIN
     self.proposal = proposal
 ENDIF
-
-self.nexus_found = 1
-
 RETURN,1
 END
 
-;***** Class Define Method *****
+;***** Class Define Method *****************************************************
 PRO IDLnexusUtilities__define
-
 define = {IDLnexusUtilities,$
           proposal          : '',$
           run_number        : '',$
