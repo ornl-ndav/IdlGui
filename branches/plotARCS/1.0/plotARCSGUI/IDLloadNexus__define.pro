@@ -154,7 +154,7 @@ wBrowseButton = WIDGET_BUTTON(MainBase,$
                               UNAME     = sBrowseButton.uname,$
                               VALUE     = sBrowseButton.value)
 
-;Frame and Main Title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
+;Frame and Main Title ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 
 wTitle = WIDGET_LABEL(MainBase,$
                       XOFFSET = sTitle.size[0],$
                       YOFFSET = sTitle.size[1],$
@@ -198,8 +198,8 @@ wFrame = WIDGET_LABEL(MainBase,$
                       YOFFSET   = sFrame.size[1],$
                       SCR_XSIZE = sFrame.size[2],$
                       SCR_YSIZE = sFrame.size[3],$
-                      VALUE     = '                                           ' + $
-                                  '                                           ' + $
+                      VALUE     = '                                         ' + $
+                                  '                                         ' + $
                                   '                                           ',$
                       FRAME     = sFrame.frame,$
                       UNAME     = sFrame.uname)
@@ -236,7 +236,7 @@ sArchivedLabel = { size  : [XYoff[0],$
                             XYoff[1],$
                             sArchivedBase.size[2],$
                             sArchivedBase.size[3]],$
-                   value : '                                                 ' + $
+                   value : '                                                ' + $
                    '                                                         ',$
                    uname : 'archived_text_field'}
 
@@ -250,7 +250,7 @@ sListallDroplist = { size  : [XYoff[0],$
                               350,$
                               sArchivedBase.size[3]],$
                      uname : 'list_all_droplist',$
-                     value : ['                                               ' + $
+                     value : ['                                             ' + $
                               '                                      ']}
                               
 ;===============================================================================

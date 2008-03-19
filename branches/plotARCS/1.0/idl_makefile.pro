@@ -5,6 +5,7 @@ IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
 .run IDLnexusUtilities__define.pro
+.run showprogress__define.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.

@@ -1,4 +1,5 @@
-FUNCTION retrieveFirstBankData, NexusFileName, BankNumber
+FUNCTION retrieveFirstBankData, NexusFileName, $
+                                BankNumber
 path    = '/entry/bankB' + STRCOMPRESS(BankNumber,/REMOVE_ALL) + '/data'
 fileID  = H5F_OPEN(NexusFileName)
 fieldID = H5D_OPEN(fileID, path)
@@ -7,7 +8,13 @@ RETURN, data
 END
 
 ;-------------------------------------------------------------------------------
-FUNCTION retrieveBottomBankData, NexusFileName, Ntof
+FUNCTION retrieveBottomBankData, NexusFileName, $
+                                 Ntof, $
+                                 progressBar, $
+                                 Nstep, $
+                                 step, $
+                                 progressBarCancel
+
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,38*8)
 FOR i=0,37 DO BEGIN
@@ -15,13 +22,23 @@ FOR i=0,37 DO BEGIN
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
     result[0,0,i*8] = data
+    IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+        progressBarCancel = 1
+        RETURN,result
+    ENDIF
 ENDFOR
 H5F_CLOSE, fileID
 RETURN, result
 END
 
 ;-------------------------------------------------------------------------------
-FUNCTION retrieveMiddleBankData, NexusFileName, Ntof
+FUNCTION retrieveMiddleBankData, NexusFileName, $
+                                 Ntof, $
+                                 progressBar, $
+                                 Nstep, $
+                                 step, $
+                                 progressBarCancel
+
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,39*8)
 FOR i=0,37 DO BEGIN
@@ -30,28 +47,46 @@ FOR i=0,37 DO BEGIN
         fieldID       = H5D_OPEN(fileID, path)
         data          = H5D_READ(fieldID)
         result[0,0,31*8] = data
+        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+            progressBarCancel = 1
+            RETURN,result
+        END
         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + 'B/data'
         fieldID       = H5D_OPEN(fileID, path)
         data          = H5D_READ(fieldID)
         result[0,0,32*8] = data
+        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+            progressBarCancel = 1
+            RETURN,result
+        ENDIF
     ENDIF ELSE BEGIN
         path          = '/entry/bankM' + STRCOMPRESS(i+1,/REMOVE_ALL) + '/data'
         fieldID       = H5D_OPEN(fileID, path)
         data          = H5D_READ(fieldID)
+        IF (i LT 31) THEN BEGIN
+            result[0,0,i*8] = data
+        ENDIF
+        IF (i GT 31) THEN BEGIN
+            result[0,0,(i+1)*8] = data
+        ENDIF
+        IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+            progressBarCancel = 1
+            RETURN,result
+        ENDIF
     ENDELSE
-    IF (i LT 31) THEN BEGIN
-        result[0,0,i*8] = data
-    ENDIF
-    IF (i GT 31) THEN BEGIN
-        result[0,0,(i+1)*8] = data
-    ENDIF
 ENDFOR
 H5F_CLOSE, fileID
 RETURN, result
 END
 
 ;-------------------------------------------------------------------------------
-FUNCTION retrieveTopBankData, NexusFileName, Ntof
+FUNCTION retrieveTopBankData, NexusFileName, $
+                              Ntof, $
+                              progressBar, $
+                              Nstep, $
+                              step, $
+                              progressBarCancel
+
 fileID  = H5F_OPEN(NexusFileName)
 result  = lonarr(Ntof,128,38*8)
 FOR i=0,37 DO BEGIN
@@ -59,26 +94,75 @@ FOR i=0,37 DO BEGIN
     fieldID       = H5D_OPEN(fileID, path)
     data          = H5D_READ(fieldID)
     result[0,0,i*8] = data
+    IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+        progressBarCancel = 1
+        RETURN,result
+    ENDIF
 ENDFOR
 H5F_CLOSE, fileID
 RETURN, result
 END
 
 ;-------------------------------------------------------------------------------
-FUNCTION getIMGfromNexus, NexusFileName
+FUNCTION getIMGfromNexus, NexusFileName, progressBar, Nstep, progressBarCancel
+
 ;retrieve bank1 data
+step       = float(0)           ;0 step so far
 bank1      = retrieveFirstBankData(NexusFileName, 1)
 Ntof       = (size(bank1))(1)
 img        = lonarr(Ntof,128,115*8)
+IF (progressBarCancel) THEN RETURN, img
+;progressBar->Update,(++step/Nstep)*100
+IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+    progressBarCancel = 1
+    RETURN, img
+ENDIF
+
 ;retrieve data from Bottom Bank
-BottomBank = retrieveBottomBankData(NexusFileName,Ntof)
+progressBar->SetLabel, 'Retrieving Bottom Data ...'
+BottomBank = retrieveBottomBankData(NexusFileName, $
+                                    Ntof, $
+                                    progressBar, $
+                                    Nstep, $
+                                    step,$ 
+                                    progressBarCancel)
+IF (progressBarCancel) THEN RETURN, img
 img[0,0,0] = BottomBank
+IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+    progressBarCancel = 1
+    RETURN, img
+ENDIF
+
 ;retrieve data from Middle Bank
-MiddleBank    = retrieveMiddleBankData(NexusFileName,Ntof)
+progressBar->SetLabel, 'Retrieving Middle Data ...'
+MiddleBank    = retrieveMiddleBankData(NexusFileName, $
+                                       Ntof, $
+                                       ProgressBar, $
+                                       Nstep, $
+                                       step,$
+                                       progressBarCancel)
+IF (progressBarCancel) THEN RETURN, img
 img[0,0,38*8] = MiddleBank
+IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+    progressBarCancel = 1
+    RETURN, img
+ENDIF
+
 ;retrieve data from Top Bank
-TopBank     = retrieveTopBankData(NexusFileName,Ntof)
+progressBar->SetLabel, 'Retrieve Top Data ...'
+TopBank     = retrieveTopBankData(NexusFileName, $
+                                  Ntof, $
+                                  ProgressBar, $
+                                  Nstep, $
+                                  step, $
+                                  progressBarCancel)
+IF (progressBarCancel) THEN RETURN, img
 img[0,0,77*8] = TopBank
+IF (UpdateProgressBar(progressBar,(float(++step)/Nstep)*100)) THEN BEGIN
+    progressBarCancel = 1
+    RETURN, img
+ENDIF
+
 RETURN, img
 END
 
@@ -648,10 +732,26 @@ XMANAGER, "MakeGuiMainPlot", wBase, GROUP_LEADER = ourGroup, /NO_BLOCK
 DEVICE, DECOMPOSED = 0
 loadct, 5
 
-img = getIMGfromNexus(NexusFileName)
+Nstep  = FLOAT(120) ;number of steps
+progressBarCancel = 0
+progressBar = OBJ_NEW("SHOWPROGRESS", $
+                      XOFFSET = 100, $
+                      YOFFSET = 50, $
+                      XSIZE   = 200,$
+                      TITLE   = 'Loading Data',$
+                      /CANCELBUTTON)
+progressBar->SetColor, 250
+progressBar->SetLabel, 'Retrieving Ntof ...'
+progressBar->Start
+
+img = getIMGfromNexus(NexusFileName, progressBar, Nstep, progressBarCancel)
 (*(*global1).img)= img
 
 ;plot das view of full instrument
+progressBar->SetLabel, 'Generating Plot ...'
 plotDASviewFullInstrument, global1
+
+progressBar->Destroy
+Obj_Destroy, progressBar
 
 END
