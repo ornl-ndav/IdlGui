@@ -5,6 +5,7 @@
 ;***** Class Destructor ********************************************************
 PRO IDLnexusUtilities::cleanup
 ptr_free, self.full_list_nexus
+ptr_free, self.nxsummary
 END
 
 ;***** Get Instrument **********************************************************
@@ -25,7 +26,8 @@ IF (self.proposal NE '') THEN BEGIN
     cmd += ' --proposal=' + self.proposal
 ENDIF
 spawn, cmd, listening
-self.archived_nexus = listening[0]
+self.archived_nexus  = listening[0]
+self.nexus_nxsummary = listening[0]
 IF (STRMATCH(self.archived_nexus,'ERROR*') OR $
     listening[0] EQ '') THEN BEGIN
     self.nexus_found = 0
@@ -41,6 +43,7 @@ cmd = 'findnexus -i ' + self.instrument + ' ' + self.run_number
 cmd += ' --listall'
 spawn, cmd, listening
 self.full_list_nexus = ptr_new(listening)
+self.nexus_nxsummary = listening[0]
 IF (STRMATCH(listening[0],'ERROR*') OR $
     listening[0] EQ '') THEN BEGIN
     self.nexus_found = 0
@@ -67,7 +70,10 @@ END
 
 ;***** getNXsummary ************************************************************
 FUNCTION IDLnexusUtilities::getNXsummary
-RETURN,''
+cmd = 'nxsummary ' + self.nexus_nxsummary + ' --verbose'
+spawn, cmd, text
+self.nxsummary = ptr_new(text)
+RETURN, text
 END
 
 ;***** getHDF5field ************************************************************
@@ -133,9 +139,11 @@ define = {IDLnexusUtilities,$
           run_number        : '',$
           full_list_nexus   : ptr_new(),$
           archived_nexus    : '',$
+          nexus_nxsummary   : '',$
           proposal_number   : '',$
           experiment_number : 0L,$
           instrument        : '',$
+          nxsummary         : ptr_new(),$
           nexus_found       : 0}
 END
 
