@@ -17,28 +17,29 @@ endelse
 spawn, 'hostname', hostname
 
 ;define global variables
-global = ptr_new ({ ucams                 : ucams,$
-                    browse_nexus_path     : '/SNS/ARCS/',$
-                    bin_width             : '200',$
-                    runinfoFileName       : '',$
-                    img                   : ptr_new(0L),$
-                    nbr_pixel             : 117760L,$
-                    version               : VERSION,$
-                    LogBookPath           : '/SNS/users/LogBook/',$ 
-                    staging_folder        : '~/.plotARCS_tmp/',$
-                    mapping_list_mac      : ['./mapping/ARCS_TS_2007_10_10.dat'],$
-                    event_file_filter     : '*_neutron_event.dat',$
-                    histo_map_filter      : '*_neutron_histo_mapped.dat',$
-                    default_extension     : '.dat',$
-                    event_filter          : '*neutron_event.dat',$
-                    mac_arcs_folder       : './MAC-DAS-FS/ARCS_1/',$
+global = ptr_new ({ ucams                   : ucams,$
+                    browse_nexus_path       : '/SNS/ARCS/',$
+                    browse_OR_list_all_flag : 0,$
+                    bin_width               : '200',$
+                    runinfoFileName         : '',$
+                    img                     : ptr_new(0L),$
+                    nbr_pixel               : 117760L,$
+                    version                 : VERSION,$
+                    LogBookPath             : '/SNS/users/LogBook/',$ 
+                    staging_folder          : '~/.plotARCS_tmp/',$
+                    mapping_list_mac        : ['./mapping/ARCS_TS_2007_10_10.dat'],$
+                    event_file_filter       : '*_neutron_event.dat',$
+                    histo_map_filter        : '*_neutron_histo_mapped.dat',$
+                    default_extension       : '.dat',$
+                    event_filter            : '*neutron_event.dat',$
+                    mac_arcs_folder         : './MAC-DAS-FS/ARCS_1/',$
 ;for mac use only
-                    processing            : '(PROCESSING)',$
-                    ok                    : 'OK',$
-                    failed                : 'FAILED',$
-                    status                : 'STATUS: ',$
-                    neutron_event_dat_ext : '_neutron_event.dat',$
-                    debugger              : 'j35'})
+                    processing              : '(PROCESSING)',$
+                    ok                      : 'OK',$
+                    failed                  : 'FAILED',$
+                    status                  : 'STATUS: ',$
+                    neutron_event_dat_ext   : '_neutron_event.dat',$
+                    debugger                : 'j35'})
 
 IF (ucams EQ (*global).debugger) THEN BEGIN
     MainBaseSize  = [30,25,700,740]

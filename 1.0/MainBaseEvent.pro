@@ -93,6 +93,11 @@ CASE Event.id OF
         RetrieveFullNexusFileName, Event ;_Nexus
     end
 
+;Archived or ListAll
+    widget_info(wWidget, FIND_BY_UNAME='archived_or_list_all'): begin
+        ArchivedOrListAll, Event ;_Nexus
+    end
+
 ;Browse Nexus
     widget_info(wWidget, FIND_BY_UNAME='browse_nexus_button'): begin
         BrowseNexus, Event ;_Nexus
