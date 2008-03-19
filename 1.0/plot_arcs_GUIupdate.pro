@@ -127,10 +127,31 @@ id = widget_info(Event.top,find_by_uname='bin_type_droplist')
 widget_control, id, set_droplist_select=index
 END
 
+;===============================================================================
+PRO MapBase, Event, uname, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, MAP=status
+END
 
 ;-------------------------------------------------------------------------------
-PRO 
+PRO ActivateArchivedBase, Event
+MapBase, Event, 'archived_base', 1
+MapBase, Event, 'list_all_base', 0
+END
 
+;-------------------------------------------------------------------------------
+PRO ActivateListAllBase, Event
+MapBase, Event, 'archived_base', 0
+MapBase, Event, 'list_all_base', 1
+END
 
+;-------------------------------------------------------------------------------
+PRO HideArchivedListAllBase, Event
+MapBase, Event, 'nexus_file_name_base', 0
+END
 
+;-------------------------------------------------------------------------------
+PRO ShowArchivedListAllBase, Event
+MapBase, Event, 'nexus_file_name_base', 1
+END
 
