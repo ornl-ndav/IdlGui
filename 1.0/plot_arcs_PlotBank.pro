@@ -1,3 +1,4 @@
+;-------------------------------------------------------------------------------
 PRO MakeGuiBankPlot_Event, event
 
 WIDGET_CONTROL, event.top, GET_UVALUE=global2
@@ -23,7 +24,8 @@ CASE event.id OF
         IF (Event.release EQ 1) THEN BEGIN ;mouse pressed
             refreshBank, Event
             plotSelection, Event 
-            takeScreenshot, Event ;that will be dispayed on the right of the IvsTOF plot
+            takeScreenshot, Event ;that will be dispayed on the right of the
+                                ;IvsTOF plot
             xRightCorner = Event.x/(*global2).Xfactor
             yRightCorner = Event.y/(*global2).Yfactor
             pixelID = getPixelIdRangeFromBankBase((*global2).bankName,$
@@ -51,22 +53,14 @@ ENDCASE
 
 END
 
-
-
-
-
-
+;-------------------------------------------------------------------------------
 PRO plotDasView, tvimg, i, Xfactor, Yfactor, bank_rebin
 bank = tvimg[i*8:(i+1)*8-1,*]
 bank_rebin = rebin(bank,8*Xfactor, 128L*Yfactor,/sample)
 tvscl, bank_rebin, /device
 END
 
-
-
-
-
-
+;-------------------------------------------------------------------------------
 PRO plotTofView, img, i, Xfactor, Yfactor, bank_congrid
 ;find out the range of non-zero values using the first non-empty bank
 ;bank_index = 49
@@ -88,7 +82,8 @@ index_stop  = NZindexes[ngt0-1]
 ;keep only all data between index_start and index_stop
 tvimg2     = tvimg1[*,index_start:index_stop]
 Npts       = (size(tvimg2))(2) ;number of tof that survive the where GT 0 routine
-dim_new    = 10                ;ratio of points we want to remove in the Y axis (tof here)
+dim_new    = 10            ;ratio of points we want to remove in the Y
+                                ;axis (tof here)
 ds         = Npts/dim_new      ;resulting downsampling ratio - how many points 
 ;dim_new    *= 2
 ;to become one point
@@ -106,41 +101,36 @@ bank_congrid = congrid(bank_smooth,8*Xfactor,dim_new*128)
 tvscl, bank_congrid, /device
 END
 
-
-
-
-
-
-
-
-
-
-
-
+;-------------------------------------------------------------------------------
 PRO PlotBank, img, i, bankName, bDasView
 
 Xfactor = 10
 Yfactor = 5
 
+help, img
+help, i
+help, BankName
+help, bDasView
+
 ;build gui
 wBase = ''
 MakeGuiBankPlot, wBase, Xfactor, Yfactor
 
-global2 = ptr_new({ wbase    : wbase,$
-                    i        : i,$
-                    bDasView : bDasView,$
-                    xLeftCorner : 0,$
-                    yLeftCorner : 0,$
-                    MousePressed : 0,$ ;1 when mouse is pressed and keep pressed
-                    Xfactor  : Xfactor,$
-                    Yfactor  : Yfactor,$  
-                    bankName : bankName,$ ;ex:T16
-                    tvimg    : ptr_new(0L),$
+global2 = ptr_new({ wbase           : wbase,$
+                    i               : i,$
+                    bDasView        : bDasView,$
+                    xLeftCorner     : 0,$
+                    yLeftCorner     : 0,$
+                    MousePressed    : 0,$ ;1 when mouse is pressed and keep pressed
+                    Xfactor         : Xfactor,$
+                    Yfactor         : Yfactor,$  
+                    bankName        : bankName,$ ;ex: T16
+                    tvimg           : ptr_new(0L),$
                     tvimg_transpose : ptr_new(0L),$
-                    tmpImg : ptr_new(0L),$
-                    bank_rebin : ptr_new(0L),$
-                    bank_congrid : ptr_new(0L),$
-                    img      : img})     
+                    tmpImg          : ptr_new(0L),$
+                    bank_rebin      : ptr_new(0L),$
+                    bank_congrid    : ptr_new(0L),$
+                    img             : img})     
 
 WIDGET_CONTROL, wBase, SET_UVALUE = global2
 XMANAGER, "MakeGuiBankPlot", wBase, GROUP_LEADER = ourGroup,/NO_BLOCK
