@@ -1,4 +1,5 @@
-;HELPER FUNCTIONS
+;                             HELPER FUNCTIONS
+;-------------------------------------------------------------------------------
 ;this function removes from the intial text the given TextToRemove and 
 ;returns the result.
 FUNCTION removeStringFromText, initialText, TextToRemove
@@ -9,7 +10,7 @@ step2 = strmid(initialText,0,step1)
 return, step2
 END
 
-
+;-------------------------------------------------------------------------------
 PRO AddInLogBook, Event, message, Append
 id = widget_info(Event.top,find_by_uname='log_book')
 IF (Append) THEN BEGIN
@@ -19,12 +20,17 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
+;-------------------------------------------------------------------------------
 PRO putTextInTextField, Event, uname, text
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=text
 END
 
+;-------------------------------------------------------------------------------
+PRO putDropListValue, Event, uname, value
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
 
 ;========================================================================
 ;MAIN FUNCTION
@@ -32,12 +38,12 @@ PRO putLogBook, Event, message
 AddInLogBook, Event, message, 0
 END
 
-
+;-------------------------------------------------------------------------------
 PRO appendLogBook, Event, message
 AddInLogBook, Event, message, 1
 END
 
-
+;-------------------------------------------------------------------------------
 PRO putStatus, Event, message
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -46,7 +52,7 @@ id = widget_info(Event.top,find_by_uname='status_label')
 widget_control, id, set_value= (*global).STATUS + message
 END
 
-
+;-------------------------------------------------------------------------------
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
@@ -76,7 +82,7 @@ endelse
 putLogBook, Event, FinalStrarr
 END
 
-
+;-------------------------------------------------------------------------------
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
@@ -93,6 +99,12 @@ END
 ;-------------------------------------------------------------------------------
 ;Name of nexus file name label in Nexus tab
 PRO putArchivedNexusFileName, Event, message
-putTextInTextField, Event, 'archived_text_field'
+putTextInTextField, Event, 'archived_text_field', message
 END
 
+;-------------------------------------------------------------------------------
+PRO putListAllDroplistValue, Event, value
+putDropListValue, Event, 'list_all_droplist', value
+END
+
+;-------------------------------------------------------------------------------
