@@ -90,6 +90,9 @@ id = widget_info(Event.top,find_by_uname='status_label')
 widget_control, id, set_value= FinalStr
 END
 
-
-
+;-------------------------------------------------------------------------------
+;Name of nexus file name label in Nexus tab
+PRO putArchivedNexusFileName, Event, message
+putTextInTextField, Event, 'archived_text_field'
+END
 

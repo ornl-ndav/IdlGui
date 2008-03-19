@@ -9,7 +9,7 @@ FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
                        COUNT=length,$
                        /TEST_DIRECTORY)
 ProposalList = STRARR(length+1)
-ProposalList[0] = 'PROPOSAL NUMBER . . .'
+ProposalList[0] = 'PROPOSAL NUMBER UNDEFINED'
 FOR i=1,(length) DO BEGIN
     ParseList = STRSPLIT(FileList[i-1],'/',/extract,COUNT=nbr)
     ProposalList[i] = ParseList[nbr-1]
@@ -47,7 +47,7 @@ InstrDroplist = { size  : [XYoff[0],$
                   value : sInput.ListInstr}
 
 ;Define Proposal Number ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XYoff           = [90,0]
+XYoff           = [75,0]
 ListOfProposal  = getListOfProposal(sInput.DefaultInstr)
 PropNbrDroplist = { size  : [InstrDroplist.size[0]+XYoff[0],$
                              InstrDroplist.size[1]+XYoff[1]],$
@@ -55,7 +55,7 @@ PropNbrDroplist = { size  : [InstrDroplist.size[0]+XYoff[0],$
                     uname : 'proposal_droplist'}
 
 ;Run Number Input ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-XYoff             = [180,0]
+XYoff             = [210,0]
 RunNumberCwField  = { base_size   : [PropNbrDroplist.size[0]+XYoff[0],$
                                      PropNbrDroplist.size[1]+XYoff[1],$
                                      200,40],$
