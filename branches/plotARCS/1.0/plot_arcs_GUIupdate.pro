@@ -159,3 +159,13 @@ END
 PRO ActivatePreviewBase, Event, activate_status
 MapBase, Event, 'nxsummary_base', activate_status
 END
+
+;-------------------------------------------------------------------------------
+PRO ShowLastLineLogBook, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
+WIDGET_CONTROL, id, GET_VALUE = text
+sz = (SIZE(text))(1)
+IF (sz GT 10) THEN BEGIN
+    WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=sz-9
+ENDIF
+END

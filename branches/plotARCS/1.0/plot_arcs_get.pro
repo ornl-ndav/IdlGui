@@ -437,3 +437,17 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getCWFieldValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
+FUNCTION getBrowseOrListAllValue, Event
+value = getCWFieldValue(Event,'archived_or_list_all')
+RETURN, value
+END
+
