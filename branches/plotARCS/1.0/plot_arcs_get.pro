@@ -451,3 +451,47 @@ value = getCWFieldValue(Event,'archived_or_list_all')
 RETURN, value
 END
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION getTabSelected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='histo_nexus_tab')
+tab_current = WIDGET_INFO(id, /TAB_CURRENT)
+RETURN, tab_current
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+FUNCTION isArchivedBaseActivated, Event
+id         = widget_info(Event.top,find_by_uname='archived_base')
+map_status = widget_info(id,/map)
+RETURN, map_status
+END
+
+;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
+FUNCTION getArchivedOrListAllBaseActivated, Event
+ArchivedBaseActivated = isArchivedBaseActivated(Event)
+IF (ArchivedBaseActivated) THEN RETURN, 'archived'
+RETURN, 'list_all'
+END
+
+;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
+FUNCTION getSelectedNexus, Event, uname
+DroplistValue = getDroplistValue(Event, uname)
+DroplistIndex = getDroplistSelectedIndex(Event, uname)
+RETURN, DroplistValue[DroplistIndex]
+END
+
+;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
+FUNCTION getNexusFileName, Event
+BaseActivated = getArchivedOrListAllBaseActivated(Event)
+CASE (BaseActivated) OF
+    'archived': BEGIN
+        FullNexusName = getTextFieldValue(Event,'archived_text_field')
+    END
+    'list_all': BEGIN
+        FullNexusName = getSelectedNexus(Event,'list_all_droplist')
+    END 
+ENDCASE
+RETURN, FullNexusName
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

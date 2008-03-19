@@ -78,13 +78,6 @@ CASE Event.id OF
         LogBook, Event ;in plot_arcs_SendToGeek.pro
     end
 
-;PLOT button
-    widget_info(wWidget, FIND_BY_UNAME='plot_button'): begin
-        ;get name of histo_mapped_file
-        histo_mapped_file = getTextFieldValue(Event, 'histo_mapped_text_field')
-        plotMainPlot, histo_mapped_file ;in plot_arcs_PlotMainPlot
-    end
-
 ;-------------------------------------------------------------------------------
 ;***** NeXus Tab ***************************************************************
 ;-------------------------------------------------------------------------------
@@ -103,6 +96,12 @@ CASE Event.id OF
         BrowseNexus, Event ;_Nexus
     end
 
+;-------------------------------------------------------------------------------
+;***** PLOT BUTTON *************************************************************
+;-------------------------------------------------------------------------------
+    widget_info(wWidget, FIND_BY_UNAME='plot_button'): begin
+        LaunchPlot, Event     ;_eventcb
+    end
 
     ELSE:
     
