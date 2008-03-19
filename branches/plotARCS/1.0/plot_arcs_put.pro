@@ -108,3 +108,8 @@ putDropListValue, Event, 'list_all_droplist', value
 END
 
 ;-------------------------------------------------------------------------------
+PRO putNxSummaryText, Event, text
+putTextInTextField, Event, 'nxsummary_text_field', text
+END
+
+;-------------------------------------------------------------------------------

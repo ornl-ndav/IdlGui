@@ -96,6 +96,7 @@ IF (nexusInstance->isNexusExist()) THEN BEGIN
             ActivateArchivedBase, Event
         ENDELSE
     ENDELSE
+    putNXsummaryText, Event, nexusInstance->getNXsummary()
 ;Show the nxsummary base
     ActivatePreviewBase, Event, 1
 ENDIF ELSE BEGIN
