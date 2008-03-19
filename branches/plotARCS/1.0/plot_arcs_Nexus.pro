@@ -57,23 +57,27 @@ nexusInstance = OBJ_NEW('IDLnexusUtilities',$
                         PROPOSAL   = Proposal,$
                         instrument = 'ARCS')
 
-ENDIF ELSE BEGIN
-
-ENDELSE
-
 IF (nexusInstance->isNexusExist()) THEN BEGIN
+;Show the archived and list_all base
+    ShowArchivedListAllBase, Event
     IF (archivedFlag) THEN BEGIN
         NexusFileName = nexusInstance->getArchivedNexusPath()
         putTextAtEndOfLogBook, Event, OK, PROCESSING
-        putTextAtEndOfStatus, Event, OK, PROCESSING
+        putTextAtEndOfStatus,  Event, OK, PROCESSING
         putArchivedNexusFileName, Event, NexusFileName
+;Activate archived base and desactivate list_all base
+        ActivateArchivedBase, Event
     ENDIF ELSE BEGIN
         NexusFileName = nexusInstance->getFullListNexusPath()
+;Activate List_all and desactivate archived base
+        ActivateListAllBase, Event
     ENDELSE
 ENDIF ELSE BEGIN
     putTextAtEndOfLogBook, Event, FAILED, PROCESSING
-    putTextAtEndOfStatus, Event, FAILED, PROCESSING
+    putTextAtEndOfStatus,  Event, FAILED, PROCESSING
     NexusName = 'N/A'
+;Hide the archived and list_all base
+    HideArchivedListAllBase, Event
 ENDELSE
 
 

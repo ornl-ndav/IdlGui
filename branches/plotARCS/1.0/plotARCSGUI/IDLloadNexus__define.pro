@@ -215,7 +215,9 @@ XYoff     = [3,145]
 sBase     = { size  : [XYoff[0],$
                        XYoff[1],$
                        680,35],$
-              uname : 'nexus_file_name_base'}
+              uname : 'nexus_file_name_base',$
+              frame : 5,$
+              map   : 0}
 
 XYoff    = [7,9]
 sLabel   = { size  : [XYoff[0],$
@@ -256,11 +258,13 @@ sListallDroplist = { size  : [XYoff[0],$
 MainBase = sInput.MainBase
 ;Base ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 wBase = WIDGET_BASE(MainBase,$
-                    XOFFSET = sBase.size[0],$
-                    YOFFSET = sBase.size[1],$
+                    XOFFSET   = sBase.size[0],$
+                    YOFFSET   = sBase.size[1],$
                     SCR_XSIZE = sBase.size[2],$
                     SCR_YSIZE = sBase.size[3],$
-                    frame = 5) ;remove-me
+                    MAP       = sBase.map,$
+                    FRAME     = sBase.frame,$
+                    UNAME     = sBase.uname)
 
 wLabel = WIDGET_LABEL(wBase,$
                       XOFFSET = sLabel.size[0],$
@@ -309,7 +313,8 @@ PRO MakeNxSummaryGui, sInput
 ;===============================================================================
 ;===== Define Structures =======================================================
 sBase = { size  : [3,200,685,160],$
-          uname : 'nxsummary_base'}
+          uname : 'nxsummary_base',$
+          map   : 0}
 sText = { size  : [0,0,sBase.size[2],sBase.size[3]],$
           uname : 'nxsummary_text_field'}
 
@@ -321,7 +326,8 @@ wBase = WIDGET_BASE(MainBase,$
                     YOFFSET   = sBase.size[1],$
                     SCR_XSIZE = sBase.size[2],$
                     SCR_YSIZE = sBase.size[3],$
-                    UNAME     = sBase.uname)
+                    UNAME     = sBase.uname,$
+                    MAP       = sBase.map)
 
 wTextField = WIDGET_TEXT(wBase,$
                          XOFFSET   = sText.size[0],$
