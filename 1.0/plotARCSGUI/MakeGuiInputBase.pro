@@ -221,7 +221,7 @@ iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
               uname     : 'plot_button',$
               value     : '> > > >     > > >     > >     >     P  L  O  T  ' + $
               '   <     < <     < < <     < < < <',$
-              sensitive : 0}
+              sensitive : 1}  ;remove_me
 
 ;///////////////// STATUS ///////////////////////////////////////////
 XYoff  = [5,15]
