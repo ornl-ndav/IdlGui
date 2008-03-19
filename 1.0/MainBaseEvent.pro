@@ -90,10 +90,13 @@ CASE Event.id OF
 ;-------------------------------------------------------------------------------
 ;Run Number CW_FIELD
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
-        RetrieveFullNexusFileName, Event ;_Nexus.pro
+        RetrieveFullNexusFileName, Event ;_Nexus
     end
 
-
+;Browse Nexus
+    widget_info(wWidget, FIND_BY_UNAME='browse_nexus_button'): begin
+        BrowseNexus, Event ;_Nexus
+    end
 
 
     ELSE:

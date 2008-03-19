@@ -1,3 +1,13 @@
+;Returns the NXsummary of a full nexus file name
+FUNCTION getNXsummary, Event, FileName
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+cmd = 'nxsummary ' + FileName + ' --verbose'
+spawn, cmd, listening
+RETURN, listening
+END
+
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;                           CLASS : IDLnexusUtilities                          +
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
