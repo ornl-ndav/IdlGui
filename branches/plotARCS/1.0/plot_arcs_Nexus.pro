@@ -109,10 +109,40 @@ ENDIF ELSE BEGIN
     ActivatePreviewBase, Event, 0
 ENDELSE
 
-
-
-
-
 ;turn off hourglass
 widget_control,hourglass=0
 END
+
+;-------------------------------------------------------------------------------
+PRO BrowseNexus, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+title = 'Select a NeXus file ...'
+path  = (*global).browse_nexus_path
+
+NexusFileName = DIALOG_PICKFILE(TITLE             = title,$
+                                FILTER            = '*.nxs',$
+                                DEFAULT_EXTENSION = 'nxs',$
+                                PATH              = path,$
+                                GET_PATH          = new_path,$
+                                /MUST_EXIST)
+                                
+IF (NexusFileName NE '') THEN BEGIN
+    (*global).browse_nexus_path = new_path
+;Show the archived and list_all base
+    ShowArchivedListAllBase, Event
+    putArchivedNexusFileName, Event, NexusFileName
+;Activate archived base and desactivate list_all base
+    ActivateArchivedBase, Event
+;Get NXsummary
+    nxsummary_text = getNXsummary(Event,NexusFileName)
+    putNXsummaryText, Event, nxsummary_text
+;Show the nxsummary base
+    ActivatePreviewBase, Event, 1
+ENDIF
+
+END
+
+

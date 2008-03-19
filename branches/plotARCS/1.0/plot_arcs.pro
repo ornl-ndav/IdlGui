@@ -18,6 +18,7 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                 : ucams,$
+                    browse_nexus_path     : '/SNS/ARCS/',$
                     bin_width             : '200',$
                     runinfoFileName       : '',$
                     img                   : ptr_new(0L),$
