@@ -310,6 +310,7 @@ Step3ManualQMaxTextField = widget_text(STEP3_BASE,$
                                        /editable,$
                                        /align_left,$
                                        uname='Step3ManualQMaxTextField')
+
 ;--part temporary removed
 
 
