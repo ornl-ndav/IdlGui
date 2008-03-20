@@ -79,6 +79,11 @@ CASE Event.id OF
         PlotData, Event ;_Plot
     END
 
+;#### Send To Geek ####
+    widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+        SendToGeek, Event ;IDLsendToGeek__define
+    END
+    
     ELSE:
     
 ENDCASE
