@@ -221,7 +221,7 @@ iButtonP =  { size      : [iFrameCH.size[0]+XYoff[0],$
               uname     : 'plot_button',$
               value     : '> > > >     > > >     > >     >     P  L  O  T  ' + $
               '   <     < <     < < <     < < < <',$
-              sensitive : 1}  ;remove_me
+              sensitive : 0} 
 
 ;///////////////// STATUS ///////////////////////////////////////////
 XYoff  = [5,15]
@@ -287,7 +287,8 @@ wHistoNexusTab = WIDGET_TAB(wBase,$
                             SCR_XSIZE = HistoNexusTab.size[2],$
                             SCR_YSIZE = HistoNexusTab.size[3],$
                             UNAME     = HistoNexusTab.uname,$
-                            LOCATION  = 0)
+                            LOCATION  = 0,$
+                            /TRACKING_EVENTS)
                        
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;\\\\\\\\\\\\\\\\\\Histo Base\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\

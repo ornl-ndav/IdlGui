@@ -466,11 +466,18 @@ map_status = widget_info(id,/map)
 RETURN, map_status
 END
 
+;-------------------------------------------------------------------------------
+FUNCTION isListAllBaseActivated, Event
+id         = widget_info(Event.top,find_by_uname='list_all_base')
+map_status = widget_info(id,/map)
+RETURN, map_status
+END
+
 ;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 
 FUNCTION getArchivedOrListAllBaseActivated, Event
-ArchivedBaseActivated = isArchivedBaseActivated(Event)
-IF (ArchivedBaseActivated) THEN RETURN, 'archived'
-RETURN, 'list_all'
+IF (isArchivedBaseActivated(Event)) THEN RETURN, 'archived'
+IF (isListAllBaseActivated(Event))  THEN RETURN, 'list_all'
+RETURN, ''
 END
 
 ;+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+^+ 

@@ -1,20 +1,28 @@
+;-------------------------------------------------------------------------------
 PRO activateWidget, Event, uname, activate_status
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, sensitive=activate_status
 END
 
+;-------------------------------------------------------------------------------
+PRO MapBase, Event, uname, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, MAP=status
+END
 
+;===============================================================================
+;===============================================================================
 PRO activatePreviewButton, Event, status
 activateWidget, Event, 'preview_runinfo_file', status
 END
 
-
+;-------------------------------------------------------------------------------
 PRO activateCreateHistoMapButton, Event, activate_status
 id = widget_info(Event.top,find_by_uname='create_histo_mapped_button')
 widget_control, id, sensitive=activate_status
 END
 
-
+;-------------------------------------------------------------------------------
 PRO activateMappingBase, Event, activate_status
 uname_array = ['mapping_frame',$
                'mapping_label',$
@@ -26,7 +34,7 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 END
 
-
+;-------------------------------------------------------------------------------
 PRO activateHistogrammingBase, Event, activate_status
 uname_array = ['histo_frame',$
                'histo_frame_label',$
@@ -45,7 +53,7 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 END
 
-
+;-------------------------------------------------------------------------------
 PRO ActivateHistoMappingBasesStatus, Event
 ;get value of input event file widget_text
 EventFile = getEventFile(Event)
@@ -58,7 +66,7 @@ activateHistogrammingBase, Event, activate_status
 activateMappingBase, Event, activate_status
 END
 
-
+;-------------------------------------------------------------------------------
 PRO ActivateHistoMappingBaseFromWidgetText, Event
 ;get event file name entered in widget_text
 EventFile = getEventFile(Event)
@@ -71,7 +79,7 @@ activateHistogrammingBase, Event, activate_status
 activateMappingBase, Event, activate_status
 END
 
-
+;-------------------------------------------------------------------------------
 PRO ActivateOrNotCreateHistogramMapped, Event
 activate_go_histo_mapped_status = 1
 ;if there is an event file and file exist
@@ -107,7 +115,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-
+;-------------------------------------------------------------------------------
 PRO ActivateOrNotPlotButton, Event
 ;get histo_mapped file name
 histo_mapped_file = getTextFieldValue(Event,'histo_mapped_text_field')
@@ -118,19 +126,27 @@ ENDIF ELSE BEGIN
 ENDELSE
 activateWidget, Event, 'plot_button', activate_status
 ;activate SAVE_AS button as well
-;activateWidget, Event, 'save_as_histo_mapped_button', activate_status ;REMOVE_COMMENTS
+;activateWidget, Event,
+;               'save_as_histo_mapped_button',
+;                activate_status ;REMOVE_COMMENTS
 END
 
+;-------------------------------------------------------------------------------
+PRO ActivateOrNotPlotButton_from_NexusTab, Event
+BaseActivated = getArchivedOrListAllBaseActivated(Event)
+IF (BaseActivated EQ 'archived' OR $
+    BaseActivated EQ 'list_all') THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+activateWidget, Event, 'plot_button', activate_status
+END
 
+;-------------------------------------------------------------------------------
 PRO setHistogrammingTypeValue, Event, index
 id = widget_info(Event.top,find_by_uname='bin_type_droplist')
 widget_control, id, set_droplist_select=index
-END
-
-;===============================================================================
-PRO MapBase, Event, uname, status
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, MAP=status
 END
 
 ;-------------------------------------------------------------------------------
@@ -169,3 +185,6 @@ IF (sz GT 10) THEN BEGIN
     WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=sz-9
 ENDIF
 END
+
+;===============================================================================
+
