@@ -3,7 +3,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.1)'
+VERSION = '(1.0.2)'
 
 ;define initial global values - these could be input via external file or other
 ;means
@@ -39,6 +39,7 @@ ListOFInstruments = ['BSS',$
 
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
+                    LogBookPath           : '/SNS/users/LogBook/',$
                     DeployedVersion       : 1,$
                     InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
@@ -99,7 +100,7 @@ IF ((*global).DeployedVersion EQ 0) THEN BEGIN
     ENDIF ELSE BEGIN
         instrumentIndex = 3     ;REMOVE_ME
 ;put default nexus name in 'nexus_file_text_field'
-        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
+        id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')        
         nexus = '/SNS/REF_L/IPTS-231/2/4000/NeXus/REF_L_4000.nxs'
         widget_control, id, set_value=nexus
 ;put default nexus name of ROI file
