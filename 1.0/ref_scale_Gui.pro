@@ -531,17 +531,12 @@ widget_control,id,get_uvalue=global
 Qmin_array = (*(*global).Qmin_array)
 Qmax_array = (*(*global).Qmax_array)
 
-IF (tab EQ 1) THEN BEGIN
+IF (tab EQ 2) THEN BEGIN
 
     GuiSetValue, Event, 'step2_q1_text_field', Qmin_array[index] ;_Gui
     GuiSetValue, Event, 'step2_q2_text_field', Qmax_array[index] ;_Gui
 
-ENDIF ELSE BEGIN
-
-    GuiSetValue, Event, 'step3_q1_text_field', Qmin_array[index] ;_Gui 
-    GuiSetValue, Event, 'step3_q2_text_field', Qmax_array[index] ;_Gui 
-
-endelse
+ENDIF 
 
 END
 
@@ -576,7 +571,7 @@ END
 ;*******************************************************************************
 
 ;This function replot the SF, ri and delta_ri labels/draw of tab3
-PRO ReflSupportWidget_refresh_draw_labels_tab3, Event
+PRO refresh_draw_labels_tab3, Event
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -695,7 +690,8 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 defaultColorSliderPosition = (*global).ColorSliderDefaultValue
-list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
+list_of_color_slider_id = widget_info(event.top, $
+                                      find_by_uname='list_of_color_slider')
 widget_control, list_of_color_slider_id, set_value = defaultColorSliderPosition
 
 (*global).PreviousColorIndex = defaultColorSliderPosition
@@ -713,7 +709,7 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-x;this function map or not the ErrorBase
+;this function map or not the ErrorBase
 PRO activateErrorMessageBaseFunction, Event, activateErrorBase
 ErrorMessageBaseId = widget_info(Event.top,find_by_uname='ErrorMessageBase')
 widget_control, ErrorMessageBaseid, map = activateErrorBase
