@@ -107,11 +107,6 @@ PRO PlotBank, img, i, bankName, bDasView
 Xfactor = 10
 Yfactor = 5
 
-help, img
-help, i
-help, BankName
-help, bDasView
-
 ;build gui
 wBase = ''
 MakeGuiBankPlot, wBase, Xfactor, Yfactor

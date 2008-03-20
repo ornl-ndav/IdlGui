@@ -10,7 +10,14 @@ CASE Event.id OF
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
+    
+;-------------------------------------------------------------------------------
+;Tab Event (Histo - Nexus)
+    widget_info(wWidget, FIND_BY_UNAME='histo_nexus_tab'): begin
+        TabEventcb, Event ;_eventcb
+    end
 
+;-------------------------------------------------------------------------------
 ;'Run #' cw_field in INPUT base
     widget_info(wWidget, FIND_BY_UNAME='run_number'): begin
         InputRunNumber, Event   ;in plot_arcs_Input.pro
@@ -84,16 +91,19 @@ CASE Event.id OF
 ;Run Number CW_FIELD
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
         RetrieveFullNexusFileName, Event ;_Nexus
+        ActivateOrNotPlotButton_from_NexusTab, Event
     end
 
 ;Archived or ListAll
     widget_info(wWidget, FIND_BY_UNAME='archived_or_list_all'): begin
         ArchivedOrListAll, Event ;_Nexus
+        ActivateOrNotPlotButton_from_NexusTab, Event
     end
 
 ;Browse Nexus
     widget_info(wWidget, FIND_BY_UNAME='browse_nexus_button'): begin
         BrowseNexus, Event ;_Nexus
+        ActivateOrNotPlotButton_from_NexusTab, Event
     end
 
 ;-------------------------------------------------------------------------------

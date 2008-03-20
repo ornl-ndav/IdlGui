@@ -18,6 +18,7 @@ spawn, 'hostname', hostname
 
 ;define global variables
 global = ptr_new ({ ucams                   : ucams,$
+                    HistoNexusTabSelected   : 0,$
                     browse_nexus_path       : '/SNS/ARCS/',$
                     browse_OR_list_all_flag : 0,$
                     bin_width               : '200',$
@@ -87,8 +88,8 @@ id = widget_info(MAIN_BASE, find_by_uname='mapping_droplist')
 widget_control, id, set_value=MapArray
 
 ; default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='histo_nexus_tab')
-widget_control, id1, set_tab_current = 1 ;nexus mode
+;id1 = widget_info(MAIN_BASE, find_by_uname='histo_nexus_tab')
+;widget_control, id1, set_tab_current = 1 ;nexus mode
 
 ;;REMOVE_ME
 ;file = '~/.plotARCS_tmp/ARCS_50_neutron_histo_mapped.dat' ;REMOVE_ME
