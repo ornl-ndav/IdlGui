@@ -1,4 +1,162 @@
+;**********************************************************************
+;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
+;**********************************************************************
+
+;Procedure that will return all the global variables for this routine
+FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+CASE (var) OF
+    'LogBookPath'     : RETURN, (*global).LogBookPath
+    'ApplicationName' : RETURN, 'plotROI'
+    'LogBookUname'    : RETURN, 'log_book_text'
+    'ucams'           : RETURN, (*global).ucams
+    'Version'         : RETURN, (*global).version
+    ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;Change the format from Thu Aug 23 16:15:23 2007
+;to 2007y_08m_23d_16h_15mn_23s
+FUNCTION IDLsendToGeek_GenerateIsoTimeStamp
+dateUnformated = systime()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01m'
+    'Feb':month='02m'
+    'Mar':month='03m'
+    'Apr':month='04m'
+    'May':month='05m'
+    'Jun':month='06m'
+    'Jul':month='07m'
+    'Aug':month='08m'
+    'Sep':month='09m'
+    'Oct':month='10m'
+    'Nov':month='11m'
+    'Dec':month='12m'
+ENDCASE
+DateIso += STRCOMPRESS(month,/REMOVE_ALL) + '_'
+DateIso += STRCOMPRESS(DateArray[2],/REMOVE_ALL) + 'd_'
+;change format of time
+time     = STRSPLIT(DateArray[3],':',/EXTRACT)
+DateIso += STRCOMPRESS(time[0],/REMOVE_ALL) + 'h_'
+DateIso += STRCOMPRESS(time[1],/REMOVE_ALL) + 'mn_'
+DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
+RETURN, DateIso
+END
+
 ;-------------------------------------------------------------------------------
+FUNCTION IDLsendToGeek_getLogBookText, Event
+LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;-------------------------------------------------------------------------------
+FUNCTION IDLsendToGeek_getMessage, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='sent_to_geek_text_field')
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
+
+;-------------------------------------------------------------------------------
+PRO IDLsendToGeek_putLogBookText, Event, text
+LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=value
+END
+
+;-------------------------------------------------------------------------------
+PRO SendToGeek, Event
+;create full name of log Book file
+LogBookPath   = IDLsendToGeek_getGlobalVariable(Event,'LogBookPath')
+TimeStamp     = IDLsendToGeek_GenerateIsoTimeStamp()
+application   = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
+FullFileName  = LogBookPath + application + '_' 
+FullFileName += TimeStamp + '.log'
+
+;get full text of LogBook
+LogBookText   = IDLsendToGeek_getLogBookText(Event)
+
+;add ucams 
+ucams         = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+ucamsText     = 'Ucams: ' + ucams
+LogBookText   = [ucamsText,LogBookText]
+
+;output file
+no_error = 0
+CATCH, no_error
+If (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+;tell the user that the email has not been sent
+    LogBookText = 'An error occured while contacting the GEEK. ' + $
+      'Please email j35@ornl.gov!'
+    IDLsendToGeek_putLogBookText, Event, LogBookText
+ENDIF ELSE BEGIN
+    OPENW, 1, FullFileName
+    sz = (SIZE(LogBookText))(1)
+    FOR i=0,(sz-1) DO BEGIN
+        text = LogBookText[i]
+        PRINTF, 1, text
+    ENDFOR
+    CLOSE,1
+    FREE_LUN,1
+    IDLsendToGeek_EmailLogBook, Event, FullFileName
+ENDELSE
+END
+
+
+;This function send by email a copy of the logBook
+PRO IDLsendToGeek_EmailLogBook, Event, FullFileName
+Version   = IDLsendToGeek_getGlobalVariable(Event,'version')
+ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
+;add ucams 
+ucamsText = 'Ucams: ' + ucams
+;hostname
+spawn, 'hostname', hostname
+;get message added by user
+message   = IDLsendToGeek_getMessage(Event)
+;email logBook
+text = "'Log Book of plotROI "
+text += Version + " sent by " + ucams
+text += " from " + hostname + "."
+text += " Log Book is: " + FullFileName 
+text += ". Message is: "
+
+IF (message NE '') THEN BEGIN
+    text += message
+ENDIF ELSE BEGIN
+    text += "No messages added."
+ENDELSE
+text += "'"
+
+no_error = 0
+CATCH, no_error
+If (no_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+;tell the user that the email has not been sent
+    LogBookText = 'An error occured while contacting the GEEK. ' + $
+      'Please email j35@ornl.gov!'
+    IDLsendToGeek_putLogBookText, Event, LogBookText
+ENDIF ELSE BEGIN
+    application    = IDLsendToGeek_getGlobalVariable(Event,'ApplicationName')
+    subject        = application + " LogBook"
+    cmd  =  'echo ' + text + '| mail -s "' + subject + '" j35@ornl.gov'
+    SPAWN, cmd
+;tell the user that the email has been sent
+    LogBookText = 'LogBook has been sent successfully !'
+    IDLsendToGeek_putLogBookText, Event, LogBookText
+ENDELSE
+END
+
+;===============================================================================
+;===============================================================================
 ;This method defines the send_to_geek_base
 FUNCTION MakeBase, MainBase,$ 
                    XOFFSET, $
@@ -11,7 +169,7 @@ STGbase = WIDGET_BASE(MainBase,$
                       SCR_XSIZE = XSIZE+10,$
                       SCR_YSIZE = 60,$
                       UNAME     = 'send_to_geek_base',$
-                      SENSITIVE = 0)
+                      SENSITIVE = 1)
 RETURN, STGbase
 END
 

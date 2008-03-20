@@ -370,6 +370,7 @@ wLB = WIDGET_TEXT(MAIN_BASE,$
                   YOFFSET   = LB.size[1],$
                   SCR_XSIZE = LB.size[2],$
                   SCR_YSIZE = LB.size[3],$
+                  UNAME     = LB.uname,$
                   /SCROLL,$
                   /WRAP)
 
