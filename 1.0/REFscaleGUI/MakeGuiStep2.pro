@@ -7,124 +7,150 @@ PRO MakeGuiStep2, STEPS_TAB,$
                   ListOfFiles
 
 ;Define position and size of widgets
-BaseFileSize         = [5  , 5  , 250 , 30 ]
+sMainBase      = { size      : Step1Size,$
+                   title     : Step2Title,$
+                   uname     : 'step2' }
 
-BaseFileCELabel      = [5  , 5  , 150  , 30 ]
-BaseFileCEFileName   = [155, 5  , 150 , 30 ]
+sBaseFileLabel = { size      : [5, 5, 250, 30],$
+                   value     : 'Critical edge file:'}
 
-Step2TabSize         = [5  , 50 , 500 , 70 ]
-Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
-Step2Tab2Base        = Step2Tab1Base
-Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
-Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
-                        Step2Q1LabelSize[1],$
-                        80,$
-                        Step2Q1LabelSize[3]]
+sBFceFile      = { size      : [5, 5, 150, 30],$
+                   value     : '',$
+                   uname     : 'short_ce_file_name'}
 
-Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
-                        Step2Q1LabelSize[1],$
-                        Step2Q1LabelSize[2],$
-                        Step2Q1LabelSize[3]]
-Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
-                        Step2Q1LabelSize[1],$
-                        Step2Q1TextFieldSize[2],$
-                        Step2Q1LabelSize[3]]
+sAutoFit       = { size      : [5, 130, 125, 30],$
+                   value     : 'Automatic Fitting',$
+                   sensitive : 1 }
 
-distance_L_L_2 = distance_L_L - 15
-Step2Q1Q2ErrorLabelSize = [Step2Q2LabelSize[0]+distance_L_L_2,$
-                           Step2Q2Labelsize[1],$
-                           250,$
-                           Step2Q1LabelSize[3]]
+XYoff          = [126,5]
+sStep2Label    = { size      : [sAutoFit.size[0]+XYoff[0],$
+                                sAutoFit.size[1]+XYoff[1]],$
+                   value     : '&'}
 
-Step2XLabelSize     = [5  , 5 , 30  , 30 ]
-Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
-                       Step2XLabelSize[1],$
-                       80,$
-                       Step2XLabelSize[3]]
-Step2YLabelSize     = [Step2XLabelSize[0]+distance_L_L, $
-                       Step2XLabelSize[1],$
-                       Step2XLabelSize[2],$
-                       Step2XLabelSize[3]]
-Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
-                       Step2XLabelSize[1],$
-                       Step2XTextFieldSize[2],$
-                       Step2XLabelSize[3]]
+XYoff          = [137,0]
+sAutoScal      = { size      : [sAutoFit.size[0]+XYoff[0],$
+                                sAutoFit.size[1]+XYoff[1],$
+                                sAutoFit.size[2],$
+                                sAutoFit.size[3]],$
+                   uname     : 'step2_automatic_scaling_button',$
+                   value     : 'Automatic Scaling',$
+                   sensitive : 0}
 
-;automatic go button
-Step2AutomaticFittingSize = [5, 130, 125, 30]
-d11 = 126
-Step2ANDlabel = [Step2AutomaticFittingSize[0]+d11,$
-                 Step2AutomaticFittingSize[1]+5]
-d_b1_b2 = 137
-Step2AutomaticScalingsize = [Step2AutomaticFittingSize[0]+d_b1_b2,$
-                             Step2AutomaticFittingSize[1],$
-                             Step2AutomaticFittingSize[2],$
-                             Step2AutomaticFittingSize[3]]
-Step2ORlabel = [Step2AutomaticScalingSize[0]+d11,$
-                Step2AutomaticScalingSize[1]+5]
-d_b2_b3 = 143
-Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
-                        Step2AutomaticScalingSize[1],$
-                        Step2AutomaticScalingSize[2]+97,$
-                        Step2AutomaticScalingSize[3]]
-
-;manual label
-Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 180]
-Step2ManualFittingFrameLabelSize = [20, Step2GoButtonSize[1]+33]
-
-;fitting equation label
-step2FittingEquationLabelSize = [10, Step2GoButtonSize[1]+58]
-distance_1 = 130
-step2FittingEquationATextFieldSize = [step2FittingEquationLabelSize[0]+distance_1,$
-                                      step2FittingEquationLabelSize[1]-5,$
-                                      100,$
-                                      30]
-distance_2 = 100
-step2FittingEquationXLabelSize = [step2FittingEquationATextFieldSize[0]+distance_2,$
-                                  step2FittingEquationLabelSize[1]]
-distance_3 = 17
-step2FittingEquationBTextFieldSize = [step2FittingEquationXLabelSize[0]+distance_3,$
-                                      step2FittingEquationLabelSize[1]-5,$
-                                      100,30]
-distance_4 = 100
-Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
-                           step2FittingEquationLabelSize[1]-5,$
-                           145,30]
-
-;Average Y before and after
-Step2YBeforeDrawSize = [ 25, 245, 60, 40]
-Step2YAfterDrawSize  = [ 25, Step2YBeforeDrawSize[1]+50, 60, 40]
-
-Step2YBeforeTextField = [Step2YBeforeDrawSize[0]+70,$
-                         Step2YBeforeDrawSize[1]+5,$
-                         80, 30]
-Step2YAfterTextField  = [Step2YAfterDrawSize[0]+70,$
-                         Step2YAfterDrawSize[1]+5,$
-                         80, 30]
-
-;From before to after
-Step2BeforeToAfterDrawSize = [185, Step2YBeforeDrawSize[1]-3,$
-                              40, 100]
+XYoff          = [128,8]
+sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
+                                sAutoScal.size[1]+XYoff[1]],$
+                   value     : 'OR'}
 
 
-;SF
-Step2SFdrawSize      = [225,Step2YBeforeDrawSize[1]+25,40,40]
-d1=50
-Step2SFTextFieldSize = [Step2SFdrawSize[0]+d1,$
-                        Step2SFdrawSize[1]+5,80,30]
 
-;Manual scalling of CE file
-Step2ManualScalingButtonSize = [Step2ManualGoButtonSize[0],$
-                                Step2SFTextFieldSize[1],$
-                                Step2ManualGoButtonSize[2],$
-                                STep2ManualGoButtonSize[3]]
+
+
+; BaseFileCEFileName   = [155, 5  , 150 , 30 ]
+
+; Step2TabSize         = [5  , 50 , 500 , 70 ]
+; Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
+; Step2Tab2Base        = Step2Tab1Base
+; Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
+; Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
+;                         Step2Q1LabelSize[1],$
+;                         80,$
+;                         Step2Q1LabelSize[3]]
+
+; Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
+;                         Step2Q1LabelSize[1],$
+;                         Step2Q1LabelSize[2],$
+;                         Step2Q1LabelSize[3]]
+; Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
+;                         Step2Q1LabelSize[1],$
+;                         Step2Q1TextFieldSize[2],$
+;                         Step2Q1LabelSize[3]]
+
+; distance_L_L_2 = distance_L_L - 15
+; Step2Q1Q2ErrorLabelSize = [Step2Q2LabelSize[0]+distance_L_L_2,$
+;                            Step2Q2Labelsize[1],$
+;                            250,$
+;                            Step2Q1LabelSize[3]]
+
+; Step2XLabelSize     = [5  , 5 , 30  , 30 ]
+; Step2XTextFieldSize = [Step2XLabelSize[0]+distance_L_TB, $
+;                        Step2XLabelSize[1],$
+;                        80,$
+;                        Step2XLabelSize[3]]
+; Step2YLabelSize     = [Step2XLabelSize[0]+distance_L_L, $
+;                        Step2XLabelSize[1],$
+;                        Step2XLabelSize[2],$
+;                        Step2XLabelSize[3]]
+; Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
+;                        Step2XLabelSize[1],$
+;                        Step2XTextFieldSize[2],$
+;                        Step2XLabelSize[3]]
+
+; ;automatic go button
+
+
+; d_b2_b3 = 143
+; Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
+;                         Step2AutomaticScalingSize[1],$
+;                         Step2AutomaticScalingSize[2]+97,$
+;                         Step2AutomaticScalingSize[3]]
+
+; ;manual label
+; Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 180]
+; Step2ManualFittingFrameLabelSize = [20, Step2GoButtonSize[1]+33]
+
+; ;fitting equation label
+; step2FittingEquationLabelSize = [10, Step2GoButtonSize[1]+58]
+; distance_1 = 130
+; step2FittingEquationATextFieldSize = [step2FittingEquationLabelSize[0]+distance_1,$
+;                                       step2FittingEquationLabelSize[1]-5,$
+;                                       100,$
+;                                       30]
+; distance_2 = 100
+; step2FittingEquationXLabelSize = [step2FittingEquationATextFieldSize[0]+distance_2,$
+;                                   step2FittingEquationLabelSize[1]]
+; distance_3 = 17
+; step2FittingEquationBTextFieldSize = [step2FittingEquationXLabelSize[0]+distance_3,$
+;                                       step2FittingEquationLabelSize[1]-5,$
+;                                       100,30]
+; distance_4 = 100
+; Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
+;                            step2FittingEquationLabelSize[1]-5,$
+;                            145,30]
+
+; ;Average Y before and after
+; Step2YBeforeDrawSize = [ 25, 245, 60, 40]
+; Step2YAfterDrawSize  = [ 25, Step2YBeforeDrawSize[1]+50, 60, 40]
+
+; Step2YBeforeTextField = [Step2YBeforeDrawSize[0]+70,$
+;                          Step2YBeforeDrawSize[1]+5,$
+;                          80, 30]
+; Step2YAfterTextField  = [Step2YAfterDrawSize[0]+70,$
+;                          Step2YAfterDrawSize[1]+5,$
+;                          80, 30]
+
+; ;From before to after
+; Step2BeforeToAfterDrawSize = [185, Step2YBeforeDrawSize[1]-3,$
+;                               40, 100]
+
+
+; ;SF
+; Step2SFdrawSize      = [225,Step2YBeforeDrawSize[1]+25,40,40]
+; d1=50
+; Step2SFTextFieldSize = [Step2SFdrawSize[0]+d1,$
+;                         Step2SFdrawSize[1]+5,80,30]
+
+; ;Manual scalling of CE file
+; Step2ManualScalingButtonSize = [Step2ManualGoButtonSize[0],$
+;                                 Step2SFTextFieldSize[1],$
+;                                 Step2ManualGoButtonSize[2],$
+;                                 STep2ManualGoButtonSize[3]]
 
 ;Define titles
 BaseFileTitle      = 'Critical edge file:'
 Step2Tab1Title     = 'Determine SF using Q range'
 Step2Tab2Title     = 'Deternine SF using mouse'
-Step2AutomaticFittingButtonTitle = 'Automatic Fitting'
-Step2AutomaticScalingButtonTitle = 'Automatic Scaling'
+
+
 Step2GoButtonTitle = 'Automatic Fitting/Rescaling of CE'
 Step2ManualGoButtonTitle = 'Manual Fitting of CE'
 Step2ManualScalingButtonTitle = 'Manual Scaling of CE'
@@ -139,54 +165,75 @@ Step2YAfterValue = strcompress(1,/remove_all)
 Step2FittingEquationLabel = 'Fitting equation:  Y='
 Step2FittingEquationXLabel = 'X+'
 
-
-;Build GUI
+;===============================================================================
+;+++++++++++++++++++++++++++; Build GUI ++++++++++++++++++++++++++++++++++++++++
+;===============================================================================
 STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
-                         UNAME='step2',$
-                         TITLE=Step2Title,$
-                         XOFFSET=Step1Size[0],$
-                         YOFFSET=Step1Size[1],$
-                         SCR_XSIZE=Step1Size[2],$
-                         SCR_YSIZE=Step1Size[3])
+                         UNAME     = sMainBase.uname,$
+                         TITLE     = sMainBase.title,$
+                         XOFFSET   = sMainBase.size[0],$
+                         YOFFSET   = sMainBase.size[1],$
+                         SCR_XSIZE = sMainBase.size[2],$
+                         SCR_YSIZE = sMainBase.size[3])
 
-BASE_FILE_Label = widget_label(STEP2_BASE,$
-                               xoffset=BaseFileCELabel[0],$
-                               yoffset=BaseFileCELabel[1],$
-                               scr_xsize=BaseFileCELabel[2],$
-                               scr_ysize=BaseFileCELabel[3],$
-                               value=BaseFileTitle)
+wBaseFile  = WIDGET_LABEL(STEP2_BASE,$
+                          XOFFSET   = sBaseFileLabel.size[0],$
+                          YOFFSET   = sBaseFileLabel.size[1],$
+                          SCR_XSIZE = sBaseFileLabel.size[2],$
+                          SCR_YSIZE = sBaseFileLabel.size[3],$
+                          VALUE     = sBaseFileLabel.value)
 
-BASE_FILE_CE_file_name = widget_label(STEP2_BASE,$
-                                      UNAME='short_ce_file_name',$
-                                      xoffset=BaseFileCEFileName[0],$
-                                      yoffset=BaseFileCEFileName[1],$
-                                      scr_xsize=BaseFileCEFileName[2],$
-                                      scr_ysize=BaseFileCEFileName[3],$
-                                      value='',$
-                                      /align_left)
+wBFceFile  = WIDGET_LABEL(STEP2_BASE,$
+                          UNAME     = sBFceFile.uname,$
+                          XOFFSET   = sBFceFile.size[0],$
+                          YOFFSET   = sBFceFile.size[1],$
+                          SCR_XSIZE = sBFceFile.size[2],$
+                          SCR_YSIZE = sBFceFile.size[3],$
+                          VALUE     = sBFceFile.value,$
+                          /ALIGN_LEFT)
 
-STEP2_automatic_fitting_button = WIDGET_BUTTON(STEP2_BASE,$
-                                           UNAME='step2_automatic_fitting_button',$
-                                           XOFFSET=Step2automaticFittingSize[0],$
-                                           YOFFSET=Step2automaticFittingSize[1],$
-                                           SCR_XSIZE=Step2automaticFittingSize[2],$
-                                           SCR_YSIZE=Step2automaticFittingSize[3],$
-                                           SENSITIVE=1,$
-                                           VALUE=Step2AutomaticFittingButtonTitle)
+wAutoFit  = WIDGET_BUTTON(STEP2_BASE,$
+                          XOFFSET   = sAutoFit.size[0],$
+                          YOFFSET   = sAutoFit.size[1],$
+                          SCR_XSIZE = sAutoFit.size[2],$
+                          SCR_YSIZE = sAutoFit.size[3],$
+                          VALUE     = sAutoFit.value,$
+                          SENSITIVE = sAutoFit.sensitive)
 
-Step2_and_label = widget_label(STEP2_BASE,$
-                               xoffset=Step2ANDlabel[0],$
-                               yoffset=Step2ANDlabel[1],$
-                               value='&')
+wStep2And = WIDGET_LABEL(STEP2_BASE,$
+                         XOFFSET    = sStep2Label.size[0],$
+                         YOFFSET    = sStep2Label.size[1],$
+                         VALUE      = sStep2Label.value)
 
-STEP2_automatic_scaling_button = WIDGET_BUTTON(STEP2_BASE,$
-                                               UNAME='step2_automatic_scaling_button',$
-                                               XOFFSET=Step2automaticScalingSize[0],$
-                                               YOFFSET=Step2automaticScalingSize[1],$
-                                               SCR_XSIZE=Step2automaticScalingSize[2],$
-                                               SCR_YSIZE=Step2automaticScalingSize[3],$
-                                               SENSITIVE=0,$
-                                               VALUE=Step2AutomaticScalingButtonTitle)
+wStep2Auto = WIDGET_BUTTON(STEP2_BASE,$
+                           UNAME     = sAutoScal.uname,$
+                           XOFFSET   = sAutoScal.size[0],$
+                           YOFFSET   = sAutoScal.size[1],$
+                           SCR_XSIZE = sAutoScal.size[2],$
+                           SCR_YSIZE = sAutoScal.size[3],$
+                           VALUE     = sAutoScal.value,$
+                           SENSITIVE = sAutoScal.sensitive)
+
+wStep2Or  = WIDGET_LABEL(STEP2_BASE,$
+                         XOFFSET    = sStep2Or.size[0],$
+                         YOFFSET    = sStep2Or.size[1],$
+                         VALUE      = sStep2Or.value)
+
+
+
+END
+
+                       
+PRO tmp
+
+
+
+
+
+
+
+
+
 
 Step2_or_label = widget_label(STEP2_BASE,$
                               xoffset=Step2ORlabel[0],$
