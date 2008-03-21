@@ -22,12 +22,13 @@ sBFceFile      = { size      : [5, 5, 150, 30],$
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Base of Qmin and Qmax ***************************************************
-sB1_QminQmaxInput = { size   : [10,50,495,40],$
+sB1_QminQmaxInput = { size   : [5,50,505,40],$
                       uname  : 'step2QinputBase',$
                       frame  : 5}
 
 ;***** Q title frame ***********************************************************
-sL_QBaseTitle = { size  : [20,42],$
+sL_QBaseTitle = { size  : [sB1_QminQMaxInput.size[0]+15, $
+                           sB1_QminQmaxInput.size[1]-8],$
                   value : 'Range of Q used to calculate the Scalling ' + $
                   'Factor (SF)'}
 
@@ -58,9 +59,22 @@ sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
             value  : ''}
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Auto Mode base **********************************************************
+XYoff        = [0,20]
+sAutoBase    = { size   : [sB1_QminQmaxInput.size[0]+XYoff[0],$
+                           sB1_QminQmaxInput.size[1]+ $
+                           sB1_QminQmaxInput.size[3]+XYoff[1],$
+                           sB1_QminQmaxInput.size[2],40],$
+                 uname  : 'auto_mode_base',$
+                 frame  : 5}
+
+;***** Auto mode base title ****************************************************
+sAutoBaseTitle = { size  : [sAutoBase.size[0]+15, $
+                            sAutoBase.size[1]-8],$
+                   value : 'Automatic Mode'} 
 
 ;***** Auto Fitting Button *****************************************************
-sAutoFit       = { size      : [5, 130, 125, 30],$
+sAutoFit       = { size      : [5, 5, 125, 30],$
                    value     : 'Automatic Fitting',$
                    sensitive : 1 }
 
@@ -90,14 +104,54 @@ sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
 XYoff          = [146,0]
 sB_AutoScalFit = { size      : [sAutoScal.size[0]+XYoff[0],$
                                 sAutoScal.size[1]+XYoff[1],$
-                                230,$
+                                210,$
                                 sAutoScal.size[3]],$
                    uname     : 'step2_button',$
                    sensitive : 1,$
                    value     : 'Automatic Fitting / Rescaling'}
 
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Manual ******************************************************************
+XYoff       = [0,20]
+sManualBase =  { size   : [sAutoBase.size[0]+XYoff[0],$
+                           sAutoBase.size[1]+ $
+                           sAutoBase.size[3]+XYoff[1],$
+                           sAutoBase.size[2],$
+                           150],$
+                 uname  : 'manual_mode_base',$
+                 frame  : 5}
 
+;***** Manual title ************************************************************
+sManualBaseTitle = { size  : [sManualBase.size[0]+15,$
+                              sManualBase.size[1]-8],$
+                     value : 'Manual Mode'}
 
+;***** Manual Fitting Equation Label *******************************************
+sManualFittingLabel = { size  : [5,10],$
+                        value : 'Fitting equation:  Y='}
+
+;***** Manual Fitting a text field *********************************************
+XYoff               = [135,-8]
+sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
+                                 sManualFittingLabel.size[1]+XYoff[1],$
+                                 80,$
+                                 30],$
+                        value : '',$
+                        uname : 'step2_fitting_equation_a_text_field'}
+
+;***** Manual Fitting Equation b label *****************************************
+XYoff              = [5,0]
+sManualFitting_b_L = { size  : [sManualFitting_a_TF.size[0]+ $
+                                sManualFitting_a_TF.size[2]+XYoff[0],$
+                                sManualFittingLabel.size[1]],$
+                       value : 'X +'}
+
+;***** Manual Fitting Equation b text field ************************************
+XYoff               = [25,0]
+sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
+                                 sManualFitting_a_TF.size[1:3]],$
+                        value : '',$
+                        uname : 'step2_fitting_equation_b_text_field'}
 
 
 ; d_b2_b3 = 143
@@ -203,8 +257,9 @@ Step2YLabelTitle = 'Y:'
 
 Step2YAfterValue = strcompress(1,/remove_all)
 
-Step2FittingEquationLabel = 'Fitting equation:  Y='
 Step2FittingEquationXLabel = 'X+'
+
+
 
 ;===============================================================================
 ;+++++++++++++++++++++++++++; Build GUI ++++++++++++++++++++++++++++++++++++++++
@@ -283,8 +338,23 @@ wT_Qmax = WIDGET_TEXT(Step2QBase,$
                       /ALIGN_LEFT)
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Auto ********************************************************************
+wAutoBaseTitle = WIDGET_LABEL(STEP2_BASE,$
+                              XOFFSET = sAutoBaseTitle.size[0],$
+                              YOFFSET = sAutoBaseTitle.size[1],$
+                              VALUE   = sAutoBaseTitle.value)
+
+;***** Auto Mode Base **********************************************************
+wAutoBase = WIDGET_BASE(STEP2_BASE,$
+                        UNAME     = sAutoBase.uname,$
+                        XOFFSET   = sAutoBase.size[0],$
+                        YOFFSET   = sAutoBase.size[1],$
+                        SCR_XSIZE = sAutoBase.size[2],$
+                        SCR_YSIZE = sAutoBase.size[3],$
+                        FRAME     = sAutoBase.frame)
+
 ;***** Auto Fitting Button *****************************************************
-wAutoFit  = WIDGET_BUTTON(STEP2_BASE,$
+wAutoFit  = WIDGET_BUTTON(wAutoBase,$
                           XOFFSET   = sAutoFit.size[0],$
                           YOFFSET   = sAutoFit.size[1],$
                           SCR_XSIZE = sAutoFit.size[2],$
@@ -293,13 +363,13 @@ wAutoFit  = WIDGET_BUTTON(STEP2_BASE,$
                           SENSITIVE = sAutoFit.sensitive)
 
 ;***** & label *****************************************************************
-wStep2And = WIDGET_LABEL(STEP2_BASE,$
+wStep2And = WIDGET_LABEL(wAutoBase,$
                          XOFFSET    = sStep2Label.size[0],$
                          YOFFSET    = sStep2Label.size[1],$
                          VALUE      = sStep2Label.value)
 
 ;***** Auto Scalling ***********************************************************
-wStep2Auto = WIDGET_BUTTON(STEP2_BASE,$
+wStep2Auto = WIDGET_BUTTON(wAutoBase,$
                            UNAME     = sAutoScal.uname,$
                            XOFFSET   = sAutoScal.size[0],$
                            YOFFSET   = sAutoScal.size[1],$
@@ -309,13 +379,13 @@ wStep2Auto = WIDGET_BUTTON(STEP2_BASE,$
                            SENSITIVE = sAutoScal.sensitive)
 
 ;***** OR label ****************************************************************
-wStep2Or  = WIDGET_LABEL(STEP2_BASE,$
+wStep2Or  = WIDGET_LABEL(wAutoBase,$
                          XOFFSET    = sStep2Or.size[0],$
                          YOFFSET    = sStep2Or.size[1],$
                          VALUE      = sStep2Or.value)
 
 ;***** Auto Fitting and Scalling button ****************************************
-wB_autoScaFit = WIDGET_BUTTON(STEP2_BASE,$
+wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               UNAME     = sB_AutoScalFit.uname,$
                               XOFFSET   = sB_AutoScalFit.size[0],$
                               YOFFSET   = sB_AutoScalFit.size[1],$
@@ -324,8 +394,60 @@ wB_autoScaFit = WIDGET_BUTTON(STEP2_BASE,$
                               VALUE     = sB_AutoScalFit.value,$
                               SENSITIVE = sB_AutoScalFit.sensitive)
                            
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Manual Mode Title *******************************************************
+wManualBaseTitle = WIDGET_LABEL(STEP2_BASE,$
+                                XOFFSET = sManualBaseTitle.size[0],$
+                                YOFFSET = sManualBaseTitle.size[1],$
+                                VALUE   = sManualBaseTitle.value)
+
+;***** Manual Mode *************************************************************
+wManualBase = WIDGET_BASE(STEP2_BASE,$
+                          XOFFSET   = sManualBase.size[0],$
+                          YOFFSET   = sManualBase.size[1],$
+                          SCR_XSIZE = sManualBase.size[2],$
+                          SCR_YSIZE = sManualBase.size[3],$
+                          UNAME     = sManualBase.uname,$
+                          FRAME     = sManualBase.frame)
+
+;***** Manual Fitting Equation Label *******************************************
+wManualFittingLabel = WIDGET_LABEL(wManualBase,$
+                                   XOFFSET = sManualFittingLabel.size[0],$
+                                   YOFFSET = sManualFittingLabel.size[1],$
+                                   VALUE   = sManualFittingLabel.value)
+
+;***** Manual Fitting a text field *********************************************
+wManualFitting_a_TF = WIDGET_TEXT(wManualBase,$
+                                  XOFFSET   = sManualFitting_a_TF.size[0],$
+                                  YOFFSET   = sManualFitting_a_TF.size[1],$
+                                  SCR_XSIZE = sManualFitting_a_TF.size[2],$
+                                  SCR_YSIZE = sManualFitting_a_TF.size[3],$
+                                  UNAME     = sManualFitting_a_TF.uname,$
+                                  VALUE     = sManualFitting_a_TF.value,$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT)
+
+;***** Manual Fitting Equation b label *****************************************
+wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
+                                  XOFFSET = sManualFitting_b_L.size[0],$
+                                  YOFFSET = sManualFitting_b_L.size[1],$
+                                  VALUE   = sManualFitting_b_L.value)
+
+;***** Manual Fitting Equation b text field ************************************
+wManualFitting_b_TF = WIDGET_TEXT(wManualBase,$
+                                  XOFFSET   = sManualFitting_b_TF.size[0],$
+                                  YOFFSET   = sManualFitting_b_TF.size[1],$
+                                  SCR_XSIZE = sManualFitting_b_TF.size[2],$
+                                  SCR_YSIZE = sManualFitting_b_TF.size[3],$
+                                  UNAME     = sManualFitting_b_TF.uname,$
+                                  VALUE     = sManualFitting_b_TF.value,$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT)
+
 
 END
+
+
 
                        
 PRO tmp
@@ -351,47 +473,9 @@ Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
                                    scr_xsize=Step2Q1Q2ErrorLabelSize[2],$
                                    scr_ysize=Step2Q1Q2ErrorLabelSize[3],$
                                    value='')
-;;--tab #2 of step 2
 
 
-STEP2_Y_LABEL = WIDGET_LABEL(step2tab2base,$
-                             XOFFSET=Step2YLabelSize[0],$
-                             YOFFSET=Step2YLabelSize[1],$
-                             SCR_XSIZE=Step2YLabelSize[2],$
-                             SCR_YSIZE=Step2YLabelSize[3],$
-                             VALUE=Step2YLabelTitle)
 
-STEP2_Y_TEXT_FIELD = WIDGET_TEXT(step2tab2base,$
-                                 UNAME='step2_Y_text_field',$
-                                 XOFFSET=Step2YTextFieldSize[0],$
-                                 YOFFSET=Step2YTextFieldSize[1],$
-                                 SCR_XSIZE=Step2YTextFieldSize[2],$
-                                 SCR_YSIZE=Step2YTextFieldSize[3],$
-                                 VALUE='',$
-                                 /EDITABLE,$
-                                 /ALIGN_LEFT,$
-                                 /ALL_EVENTS)
-
-;Manual fitting equation label outside tab of step2
-step2FittingEquationLabel = widget_label(STEP2_BASE,$
-                                         value=Step2FittingEquationLabel,$
-                                         xoffset=step2FittingEquationLabelSize[0],$
-                                         yoffset=step2FittingEquationLabelSize[1])
-
-step2FittingEquationATextField = widget_text(STEP2_BASE,$
-                                             uname='step2_fitting_equation_a_text_field',$
-                                             xoffset=step2FittingEquationATextFieldSize[0],$
-                                             yoffset=step2FittingEquationATextFieldSize[1],$
-                                             scr_xsize=step2FittingEquationATextFieldSize[2],$
-                                             scr_ysize=step2FittingEquationATextFieldSize[3],$
-                                             value='',$
-                                             /editable,$
-                                             /align_left)
-
-step2FittingEquationXLabel = widget_label(STEP2_BASE,$
-                                          value=Step2FittingEquationXLabel,$
-                                          xoffset=step2FittingEquationXLabelSize[0],$
-                                          yoffset=step2FittingEquationXLabelSize[1])
 
 step2FittingEquationBTextField = widget_text(STEP2_BASE,$
                                              uname='step2_fitting_equation_b_text_field',$
