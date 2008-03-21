@@ -11,22 +11,43 @@ sMainBase      = { size      : Step1Size,$
                    title     : Step2Title,$
                    uname     : 'step2' }
 
+;***** Top label that presnt the name of the CE file ***************************
 sBaseFileLabel = { size      : [5, 5, 250, 30],$
                    value     : 'Critical edge file:'}
 
+;***** Top label that gives the name of the CE file ****************************
 sBFceFile      = { size      : [5, 5, 150, 30],$
                    value     : '',$
                    uname     : 'short_ce_file_name'}
 
+;*******************************************************************************
+;***** Tab of manual and mouse selection of Qmin and Qmax **********************
+sT_QminQmaxInput  = { size   : [5,50,510,70],$
+                      uname  : 'step2tab'}
+
+;***** Base 1 - Manual load of Qmin and Qmax ***********************************
+sB1_QminQmaxInput = { size   : [0,0,sT_QminQmaxInput.size[2:3]],$
+                      uname  : 'step2tab1base',$
+                      title  : 'Determine SF using Q range'}
+
+;***** Base 2 - Load of Qmin and Qmax using Mouse ******************************
+sB2_QminQmaxInput = { size   : sB1_QminQmaxInput.size,$
+                      uname  : 'step2tab2base',$
+                      title  : 'Deternine SF using mouse'}
+;*******************************************************************************
+
+;***** Auto Fitting Button *****************************************************
 sAutoFit       = { size      : [5, 130, 125, 30],$
                    value     : 'Automatic Fitting',$
                    sensitive : 1 }
 
+;***** & label *****************************************************************
 XYoff          = [126,5]
 sStep2Label    = { size      : [sAutoFit.size[0]+XYoff[0],$
                                 sAutoFit.size[1]+XYoff[1]],$
                    value     : '&'}
 
+;***** Auto Scalling ***********************************************************
 XYoff          = [137,0]
 sAutoScal      = { size      : [sAutoFit.size[0]+XYoff[0],$
                                 sAutoFit.size[1]+XYoff[1],$
@@ -36,10 +57,31 @@ sAutoScal      = { size      : [sAutoFit.size[0]+XYoff[0],$
                    value     : 'Automatic Scaling',$
                    sensitive : 0}
 
-XYoff          = [128,8]
+;***** OR label ****************************************************************
+XYoff          = [128,6.]
 sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
                                 sAutoScal.size[1]+XYoff[1]],$
                    value     : 'OR'}
+
+;***** Auto Fitting and Scalling button ****************************************
+XYoff          = [146,0]
+sB_AutoScalFit = { size      : [sAutoScal.size[0]+XYoff[0],$
+                                sAutoScal.size[1]+XYoff[1],$
+                                230,$
+                                sAutoScal.size[3]],$
+                   uname     : 'step2_button',$
+                   sensitive : 1,$
+                   value     : 'Automatic Fitting / Rescaling'}
+
+
+
+
+
+; d_b2_b3 = 143
+; Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
+;                         Step2AutomaticScalingSize[1],$
+;                         Step2AutomaticScalingSize[2]+97,$
+;                         Step2AutomaticScalingSize[3]]
 
 
 
@@ -47,9 +89,9 @@ sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
 
 ; BaseFileCEFileName   = [155, 5  , 150 , 30 ]
 
-; Step2TabSize         = [5  , 50 , 500 , 70 ]
-; Step2Tab1Base        = [0  , 0  , Step2TabSize[2] , Step2TabSize[3]]
-; Step2Tab2Base        = Step2Tab1Base
+
+
+
 ; Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
 ; Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
 ;                         Step2Q1LabelSize[1],$
@@ -88,11 +130,6 @@ sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
 ; ;automatic go button
 
 
-; d_b2_b3 = 143
-; Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
-;                         Step2AutomaticScalingSize[1],$
-;                         Step2AutomaticScalingSize[2]+97,$
-;                         Step2AutomaticScalingSize[3]]
 
 ; ;manual label
 ; Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 180]
@@ -147,11 +184,11 @@ sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
 
 ;Define titles
 BaseFileTitle      = 'Critical edge file:'
-Step2Tab1Title     = 'Determine SF using Q range'
-Step2Tab2Title     = 'Deternine SF using mouse'
 
 
-Step2GoButtonTitle = 'Automatic Fitting/Rescaling of CE'
+
+
+
 Step2ManualGoButtonTitle = 'Manual Fitting of CE'
 Step2ManualScalingButtonTitle = 'Manual Scaling of CE'
 Step2Q1LabelTitle  = 'Qmin:'
@@ -176,6 +213,7 @@ STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          SCR_XSIZE = sMainBase.size[2],$
                          SCR_YSIZE = sMainBase.size[3])
 
+;***** Top label that presnt the name of the CE file ***************************
 wBaseFile  = WIDGET_LABEL(STEP2_BASE,$
                           XOFFSET   = sBaseFileLabel.size[0],$
                           YOFFSET   = sBaseFileLabel.size[1],$
@@ -183,6 +221,7 @@ wBaseFile  = WIDGET_LABEL(STEP2_BASE,$
                           SCR_YSIZE = sBaseFileLabel.size[3],$
                           VALUE     = sBaseFileLabel.value)
 
+;***** Top label that gives the name of the CE file ****************************
 wBFceFile  = WIDGET_LABEL(STEP2_BASE,$
                           UNAME     = sBFceFile.uname,$
                           XOFFSET   = sBFceFile.size[0],$
@@ -191,7 +230,37 @@ wBFceFile  = WIDGET_LABEL(STEP2_BASE,$
                           SCR_YSIZE = sBFceFile.size[3],$
                           VALUE     = sBFceFile.value,$
                           /ALIGN_LEFT)
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Top tab (Qmin and Qmax - using Q or mouse selection *********************
+STEP2TAB = WIDGET_TAB(STEP2_BASE,$
+                      UNAME     = sT_QminQmaxInput.uname,$
+                      XOFFSET   = sT_QminQmaxInput.size[0],$
+                      YOFFSET   = sT_QminQmaxInput.size[1],$
+                      SCR_XSIZE = sT_QminQmaxInput.size[2],$
+                      SCR_YSIZE = sT_QminQmaxInput.size[3],$
+                      LOCATION  = 0,$
+                      /TRACKING_EVENTS)
 
+;***** Base 1 - Manual load of Qmin and Qmax ***********************************
+Step2Tab1Base = WIDGET_BASE(STEP2TAB,$
+                            UNAME     = sB1_QminQmaxInput.uname,$
+                            XOFFSET   = sB1_QminQmaxInput.size[0],$
+                            YOFFSET   = sB1_QminQmaxInput.size[1],$
+                            SCR_XSIZE = sB1_QminQmaxInput.size[2],$
+                            SCR_YSIZE = sB1_QminQmaxInput.size[3],$
+                            TITLE     = sB1_QminQmaxInput.title)
+
+;***** Base 2 - Load of Qmin and Qmax using Mouse ******************************
+Step2Tab2Base = WIDGET_BASE(STEP2TAB,$
+                            UNAME     = sB2_QminQmaxInput.uname,$
+                            XOFFSET   = sB2_QminQmaxInput.size[0],$
+                            YOFFSET   = sB2_QminQmaxInput.size[1],$
+                            SCR_XSIZE = sB2_QminQmaxInput.size[2],$
+                            SCR_YSIZE = sB2_QminQmaxInput.size[3],$
+                            TITLE     = sB2_QminQmaxInput.title)
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** Auto Fitting Button *****************************************************
 wAutoFit  = WIDGET_BUTTON(STEP2_BASE,$
                           XOFFSET   = sAutoFit.size[0],$
                           YOFFSET   = sAutoFit.size[1],$
@@ -200,11 +269,13 @@ wAutoFit  = WIDGET_BUTTON(STEP2_BASE,$
                           VALUE     = sAutoFit.value,$
                           SENSITIVE = sAutoFit.sensitive)
 
+;***** & label *****************************************************************
 wStep2And = WIDGET_LABEL(STEP2_BASE,$
                          XOFFSET    = sStep2Label.size[0],$
                          YOFFSET    = sStep2Label.size[1],$
                          VALUE      = sStep2Label.value)
 
+;***** Auto Scalling ***********************************************************
 wStep2Auto = WIDGET_BUTTON(STEP2_BASE,$
                            UNAME     = sAutoScal.uname,$
                            XOFFSET   = sAutoScal.size[0],$
@@ -214,12 +285,22 @@ wStep2Auto = WIDGET_BUTTON(STEP2_BASE,$
                            VALUE     = sAutoScal.value,$
                            SENSITIVE = sAutoScal.sensitive)
 
+;***** OR label ****************************************************************
 wStep2Or  = WIDGET_LABEL(STEP2_BASE,$
                          XOFFSET    = sStep2Or.size[0],$
                          YOFFSET    = sStep2Or.size[1],$
                          VALUE      = sStep2Or.value)
 
-
+;***** Auto Fitting and Scalling button ****************************************
+wB_autoScaFit = WIDGET_BUTTON(STEP2_BASE,$
+                              UNAME     = sB_AutoScalFit.uname,$
+                              XOFFSET   = sB_AutoScalFit.size[0],$
+                              YOFFSET   = sB_AutoScalFit.size[1],$
+                              SCR_XSIZE = sB_AutoScalFit.size[2],$
+                              SCR_YSIZE = sB_AutoScalFit.size[3],$
+                              VALUE     = sB_AutoScalFit.value,$
+                              SENSITIVE = sB_AutoScalFit.sensitive)
+                           
 
 END
 
@@ -235,38 +316,10 @@ PRO tmp
 
 
 
-Step2_or_label = widget_label(STEP2_BASE,$
-                              xoffset=Step2ORlabel[0],$
-                              yoffset=Step2ORlabel[1],$
-                              value='or')
 
-STEP2_BUTTON = WIDGET_BUTTON(STEP2_BASE,$
-                             UNAME='Step2_button',$
-                             XOFFSET=Step2GoButtonSize[0],$
-                             YOFFSET=Step2GoButtonSize[1],$
-                             SCR_XSIZE=Step2GoButtonSize[2],$
-                             SCR_YSIZE=Step2GoButtonSize[3],$
-                             SENSITIVE=1,$
-                             VALUE=Step2GoButtonTitle)
 
-;--tabs of step2
-STEP2TAB = WIDGET_TAB(step2_base,$
-                      UNAME='step2tab',$
-                      LOCATION=0,$
-                      XOFFSET=Step2TabSize[0],$
-                      YOFFSET=Step2TabSize[1],$
-                      SCR_XSIZE=Step2TabSize[2],$
-                      SCR_YSIZE=Step2TabSize[3],$
-                      /TRACKING_EVENTS)
 
 ;--tab 1 of step 2
-step2tab1base = widget_base(step2tab,$
-                            uname='step2tab1base',$
-                            xoffset=Step2Tab1Base[0],$
-                            yoffset=Step2Tab1Base[1],$
-                            scr_xsize=Step2Tab1Base[2],$
-                            scr_ysize=Step2Tab1Base[3],$
-                            title=step2Tab1Title)
 
 STEP2_Q1_LABEL = WIDGET_LABEL(step2tab1base,$
                               XOFFSET=Step2Q1LabelSize[0],$
@@ -311,13 +364,6 @@ Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
                                    scr_ysize=Step2Q1Q2ErrorLabelSize[3],$
                                    value='')
 ;;--tab #2 of step 2
-step2tab2base = widget_base(step2tab,$
-                            uname='step2tab2base',$
-                            xoffset=Step2Tab2Base[0],$
-                            yoffset=Step2Tab2Base[1],$
-                            scr_xsize=Step2Tab2Base[2],$
-                            scr_ysize=Step2Tab2Base[3],$
-                            title=step2Tab2Title)
 
 STEP2_X_LABEL = WIDGET_LABEL(step2tab2base,$
                              XOFFSET=Step2XLabelSize[0],$
