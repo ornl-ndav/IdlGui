@@ -20,7 +20,7 @@ sBFceFile      = { size      : [5, 5, 150, 30],$
                    value     : '',$
                    uname     : 'short_ce_file_name'}
 
-;*******************************************************************************
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Tab of manual and mouse selection of Qmin and Qmax **********************
 sT_QminQmaxInput  = { size   : [5,50,510,70],$
                       uname  : 'step2tab'}
@@ -30,11 +30,50 @@ sB1_QminQmaxInput = { size   : [0,0,sT_QminQmaxInput.size[2:3]],$
                       uname  : 'step2tab1base',$
                       title  : 'Determine SF using Q range'}
 
+;***** Qmin label **************************************************************
+sL_Qmin = { size   : [15,15],$
+            value  : 'Qmin:'}
+
+;***** Qmin text field *********************************************************
+XYoff1  = [50,-5]
+sT_Qmin = { size   : [sL_Qmin.size[0]+XYoff1[0],$
+                      sL_Qmin.size[1]+XYoff1[1],$
+                      100,30],$
+            uname  : 'step2_q1_text_field',$
+            value  : ''}
+
+;***** Qmax label **************************************************************
+XYoff   = [200,0]
+sL_Qmax = { size  : [sL_Qmin.size[0]+XYoff[0],$
+                     sL_Qmin.size[1]+XYoff[1]],$
+            value : 'Qmax:'}
+
+;***** Qmax text field *********************************************************
+sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
+                      sL_Qmax.size[1]+XYoff1[1],$
+                      sT_Qmin.size[2],$
+                      sT_Qmin.size[3]],$
+            uname  : 'step2_q2_text_field',$
+            value  : ''}
+
+
+; Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
+;                         Step2Q1LabelSize[1],$
+;                         Step2Q1LabelSize[2],$
+;                         Step2Q1LabelSize[3]]
+; Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
+;                         Step2Q1LabelSize[1],$
+;                         Step2Q1TextFieldSize[2],$
+;                         Step2Q1LabelSize[3]]
+
+
+
+
 ;***** Base 2 - Load of Qmin and Qmax using Mouse ******************************
 sB2_QminQmaxInput = { size   : sB1_QminQmaxInput.size,$
                       uname  : 'step2tab2base',$
                       title  : 'Deternine SF using mouse'}
-;*******************************************************************************
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 ;***** Auto Fitting Button *****************************************************
 sAutoFit       = { size      : [5, 130, 125, 30],$
@@ -92,20 +131,6 @@ sB_AutoScalFit = { size      : [sAutoScal.size[0]+XYoff[0],$
 
 
 
-; Step2Q1LabelSize     = [5  , 5 , 30  , 30 ]
-; Step2Q1TextFieldSize = [Step2Q1LabelSize[0]+distance_L_TB, $
-;                         Step2Q1LabelSize[1],$
-;                         80,$
-;                         Step2Q1LabelSize[3]]
-
-; Step2Q2LabelSize     = [Step2Q1LabelSize[0]+distance_L_L, $
-;                         Step2Q1LabelSize[1],$
-;                         Step2Q1LabelSize[2],$
-;                         Step2Q1LabelSize[3]]
-; Step2Q2TextFieldSize = [Step2Q2LabelSize[0]+distance_L_TB, $
-;                         Step2Q1LabelSize[1],$
-;                         Step2Q1TextFieldSize[2],$
-;                         Step2Q1LabelSize[3]]
 
 ; distance_L_L_2 = distance_L_L - 15
 ; Step2Q1Q2ErrorLabelSize = [Step2Q2LabelSize[0]+distance_L_L_2,$
@@ -191,7 +216,7 @@ BaseFileTitle      = 'Critical edge file:'
 
 Step2ManualGoButtonTitle = 'Manual Fitting of CE'
 Step2ManualScalingButtonTitle = 'Manual Scaling of CE'
-Step2Q1LabelTitle  = 'Qmin:'
+
 Step2Q2LabelTitle  = 'Qmax:'
 Step2SFLabelTitle  = 'SF:'
 Step2XLabelTitle = 'X:'
@@ -249,6 +274,54 @@ Step2Tab1Base = WIDGET_BASE(STEP2TAB,$
                             SCR_XSIZE = sB1_QminQmaxInput.size[2],$
                             SCR_YSIZE = sB1_QminQmaxInput.size[3],$
                             TITLE     = sB1_QminQmaxInput.title)
+
+;***** Qmin label **************************************************************
+wL_Qmin = WIDGET_LABEL(Step2Tab1Base,$
+                       XOFFSET = sL_Qmin.size[0],$
+                       YOFFSET = sL_Qmin.size[1],$
+                       VALUE   = sL_Qmin.value)
+
+;*** Qmin text field ***********************************************************
+wT_Qmin = WIDGET_TEXT(Step2Tab1Base,$
+                      XOFFSET   = sT_Qmin.size[0],$
+                      YOFFSET   = sT_Qmin.size[1],$
+                      SCR_XSIZE = sT_Qmin.size[2],$
+                      SCR_YSIZE = sT_Qmin.size[3],$
+                      VALUE     = sT_Qmin.value,$
+                      UNAME     = sT_Qmin.uname,$
+                      /EDITABLE,$
+                      /ALIGN_LEFT)
+
+;***** Qmax label **************************************************************
+wL_Qmax = WIDGET_LABEL(Step2Tab1Base,$
+                       XOFFSET = sL_Qmax.size[0],$
+                       YOFFSET = sL_Qmax.size[1],$
+                       VALUE   = sL_Qmax.value)
+
+;*** Qmax text field ***********************************************************
+wT_Qmax = WIDGET_TEXT(Step2Tab1Base,$
+                      XOFFSET   = sT_Qmax.size[0],$
+                      YOFFSET   = sT_Qmax.size[1],$
+                      SCR_XSIZE = sT_Qmax.size[2],$
+                      SCR_YSIZE = sT_Qmax.size[3],$
+                      VALUE     = sT_Qmax.value,$
+                      UNAME     = sT_Qmax.uname,$
+                      /EDITABLE,$
+                      /ALIGN_LEFT)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ;***** Base 2 - Load of Qmin and Qmax using Mouse ******************************
 Step2Tab2Base = WIDGET_BASE(STEP2TAB,$
@@ -321,41 +394,6 @@ PRO tmp
 
 ;--tab 1 of step 2
 
-STEP2_Q1_LABEL = WIDGET_LABEL(step2tab1base,$
-                              XOFFSET=Step2Q1LabelSize[0],$
-                              YOFFSET=Step2Q1LabelSize[1],$
-                              SCR_XSIZE=Step2Q1LabelSize[2],$
-                              SCR_YSIZE=Step2Q1LabelSize[3],$
-                              VALUE=Step2Q1LabelTitle)
-
-STEP2_Q1_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
-                                  UNAME='step2_q1_text_field',$
-                                  XOFFSET=Step2Q1TextFieldSize[0],$
-                                  YOFFSET=Step2Q1TextFieldSize[1],$
-                                  SCR_XSIZE=Step2Q1TextFieldSize[2],$
-                                  SCR_YSIZE=Step2Q1TextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
-
-STEP2_Q2_LABEL = WIDGET_LABEL(step2tab1base,$
-                              XOFFSET=Step2Q2LabelSize[0],$
-                              YOFFSET=Step2Q2LabelSize[1],$
-                              SCR_XSIZE=Step2Q2LabelSize[2],$
-                              SCR_YSIZE=Step2Q2LabelSize[3],$
-                              VALUE=Step2Q2LabelTitle)
-
-STEP2_Q2_TEXT_FIELD = WIDGET_TEXT(step2tab1base,$
-                                  UNAME='step2_q2_text_field',$
-                                  XOFFSET=Step2Q2TextFieldSize[0],$
-                                  YOFFSET=Step2Q2TextFieldSize[1],$
-                                  SCR_XSIZE=Step2Q2TextFieldSize[2],$
-                                  SCR_YSIZE=Step2Q2TextFieldSize[3],$
-                                  VALUE='',$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT,$
-                                  /ALL_EVENTS)
 Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
                                    uname='step2_q1q1_error_label',$
                                    xoffset=Step2Q1Q2ErrorLabelSize[0],$
