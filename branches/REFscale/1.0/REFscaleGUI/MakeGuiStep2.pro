@@ -153,6 +153,45 @@ sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
                         value : '',$
                         uname : 'step2_fitting_equation_b_text_field'}
 
+;***** Manual Fitting Button ***************************************************
+XYoff         = [5,0]
+sManualFittingButton = { size      : [sManualFitting_b_TF.size[0]+ $
+                                      sManualFitting_b_TF.size[2]+XYoff[0],$
+                                      sManualFitting_b_TF.size[1]+XYoff[1],$
+                                      165,30],$
+                         uname     : 'step2ManualGoButton',$
+                         value     : 'Manual Fitting of CE',$
+                         sensitive : 0}
+
+;***** Manual Scalling *********************************************************
+
+;***** Average Y Before ********************************************************
+XYoff           = [0,35]
+sAverageYBefore = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
+                             sManualFittingLabel.size[1]+XYoff[1]],$
+                    value : 'Average I[Qmin:Qmax] Before:'}
+
+;***** Average Y Before value **************************************************
+XYoff             = [178,-8]
+sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
+                               sAverageYBefore.size[1]+XYoff[1],$
+                               100,35],$
+                      value : '345.454',$
+                      uname : 'step2_y_before_text_field'}
+
+;***** Average Y After *********************************************************
+XYoff           = [0,35]
+sAverageYAfter  = { size  : [sAverageYBefore.size[0]+XYoff[0],$
+                             sAverageYBefore.size[1]+XYoff[1]],$
+                    value : 'Average I[Qmin:Qmax] After :'}
+
+;***** Average Y After value ***************************************************
+XYoff            = [178,-8]
+sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
+                              sAverageYAfter.size[1]+XYoff[1],$
+                              60,30],$
+                     value : '',$
+                     uname : 'step2_y_after_text_field'}
 
 ; d_b2_b3 = 143
 ; Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
@@ -165,9 +204,6 @@ sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
 
 
 ; BaseFileCEFileName   = [155, 5  , 150 , 30 ]
-
-
-
 
 
 ; distance_L_L_2 = distance_L_L - 15
@@ -444,6 +480,52 @@ wManualFitting_b_TF = WIDGET_TEXT(wManualBase,$
                                   /EDITABLE,$
                                   /ALIGN_LEFT)
 
+;***** Manual Fitting Button ***************************************************
+wManualFittingButton = WIDGET_BUTTON(wManualBase,$
+                                     XOFFSET   = sManualFittingButton.size[0],$
+                                     YOFFSET   = sManualFittingButton.size[1],$
+                                     SCR_XSIZE = sManualFittingButton.size[2],$
+                                     SCR_YSIZE = sManualFittingButton.size[3],$
+                                     UNAME     = sManualFittingButton.uname,$
+                                     VALUE     = sManualFittingButton.value,$
+                                     SENSITIVE = sManualFittingButton.sensitive)
+
+;***** Manual Scalling *********************************************************
+
+;***** Average Y Before ********************************************************
+wAverageYBefore = WIDGET_LABEL(wManualBase,$
+                               XOFFSET = sAverageYBefore.size[0],$
+                               YOFFSET = sAverageYBefore.size[1],$
+                               VALUE   = sAverageYBefore.value)		
+
+;***** Average Y Before value **************************************************
+wAverageYBeforeValue = WIDGET_LABEL(wManualBase,$
+                                    XOFFSET   = sAverYBeforeValue.size[0],$
+                                    YOFFSET   = sAverYBeforeValue.size[1],$
+                                    SCR_XSIZE = sAverYBeforeValue.size[2],$
+                                    SCR_YSIZE = sAverYBeforeValue.size[3],$
+                                    VALUE     = sAverYBeforeValue.value,$
+                                    UNAME     = sAverYBeforeValue.uname,$
+                                    /ALIGN_LEFT)
+
+;***** Average Y After *********************************************************
+wAverageYAfter = WIDGET_LABEL(wManualBase,$
+                              XOFFSET = sAverageYAfter.size[0],$
+                              YOFFSET = sAverageYAfter.size[1],$
+                              VALUE   = sAverageYAfter.value)		
+
+;***** Average Y After value ***************************************************
+wAverageYAfterValue = WIDGET_TEXT(wManualBase,$
+                                  XOFFSET   = sAverYAfterValue.size[0],$
+                                  YOFFSET   = sAverYAfterValue.size[1],$
+                                  SCR_XSIZE = sAverYAfterValue.size[2],$
+                                  SCR_YSIZE = sAverYAfterValue.size[3],$
+                                  VALUE     = sAverYAfterValue.value,$
+                                  UNAME     = sAverYAfterValue.uname,$
+                                  /EDITABLE,$
+                                  /ALIGN_LEFT)
+
+
 
 END
 
@@ -451,18 +533,6 @@ END
 
                        
 PRO tmp
-
-
-
-
-
-
-
-
-
-
-
-
 
 ;--tab 1 of step 2
 
@@ -475,62 +545,6 @@ Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
                                    value='')
 
 
-
-
-step2FittingEquationBTextField = widget_text(STEP2_BASE,$
-                                             uname='step2_fitting_equation_b_text_field',$
-                                             xoffset=step2FittingEquationBTextFieldSize[0],$
-                                             yoffset=step2FittingEquationBTextFieldSize[1],$
-                                             scr_xsize=step2FittingEquationBTextFieldSize[2],$
-                                             scr_ysize=step2FittingEquationBTextFieldSize[3],$
-                                             value='',$
-                                             /editable,$
-                                             /align_left)
-
-
-Step2ManualGoButton = widget_button(STEP2_BASE,$
-                                    uname='step2ManualGoButton',$
-                                    xoffset=Step2ManualGoButtonSize[0],$
-                                    yoffset=Step2ManualGoButtonSize[1],$
-                                    scr_xsize=Step2ManualGoButtonSize[2],$
-                                    scr_ysize=Step2ManualGoButtonSize[3],$
-                                    value=Step2ManualGoButtonTitle)
-
-
-
-;Average Y before and after
-Step2YBeforeDraw = widget_draw(STEP2_BASE,$
-                               uname='step2_y_before_draw',$
-                               xoffset=Step2YBeforeDrawSize[0],$
-                               yoffset=Step2YBeforeDrawSize[1],$
-                               scr_xsize=Step2YBeforeDrawSize[2],$
-                               scr_ysize=Step2YBeforeDrawSize[3])
-
-Step2YBeforeTextField = widget_text(STEP2_BASE,$
-                                    uname='step2_y_before_text_field',$
-                                    xoffset=Step2YBeforeTextField[0],$
-                                    yoffset=Step2YBeforeTextField[1],$
-                                    scr_xsize=Step2YBeforeTextField[2],$
-                                    scr_ysize=Step2YBeforeTextField[3],$
-                                    value='',$
-                                    /align_left)
-
-Step2YAfterDraw = widget_draw(STEP2_BASE,$
-                               uname='step2_y_after_draw',$
-                               xoffset=Step2YAfterDrawSize[0],$
-                               yoffset=Step2YAfterDrawSize[1],$
-                               scr_xsize=Step2YAfterDrawSize[2],$
-                               scr_ysize=Step2YAfterDrawSize[3])
-
-Step2YAfterTextField = widget_text(STEP2_BASE,$
-                                    uname='step2_y_after_text_field',$
-                                    xoffset=Step2YAfterTextField[0],$
-                                    yoffset=Step2YAfterTextField[1],$
-                                    scr_xsize=Step2YAfterTextField[2],$
-                                    scr_ysize=Step2YAfterTextField[3],$
-                                    value=Step2YAfterValue,$
-                                    /editable,$
-                                    /align_left)
 
 Step2BeforeToAfterDraw = widget_draw(STEP2_BASE,$
                                      uname='step2_before_to_after_draw',$
