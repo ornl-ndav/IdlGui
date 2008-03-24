@@ -211,7 +211,7 @@ XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ; default tabs shown 
 id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
-widget_control, id1, set_tab_current = 1  ;remove_me
+widget_control, id1, set_tab_current = 0  ;remove_me
 
 end
 

@@ -54,13 +54,13 @@ CancelLoadButtonTitle = 'CANCEL'
 ;text box that gives info about selected file
 FileInfoSize         = [5 , 80, 510 , 240]
 ListOfColorLabelSize = [5 , 330, 50  , 30 ]
-ListOfColorSize      = [60, 320, 310 , 35 ]
-ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2],$
+ListOfColorSize      = [60, 320, 210 , 35 ]
+ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2]+5,$
                         ListOfColorLabelSize[1],$
                         150,$
                         35]
-BlackLabelsize       = [50, 350, 50  , 30 ]
-ColorYoff = 55
+BlackLabelsize       = [45, 355, 50  , 30 ]
+ColorYoff = 43
 BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
                         BlackLabelSize[1], 50 , 30 ]
 RedLabelSize         = [BlackLabelSize[0]+2*ColorYoff,$
@@ -78,12 +78,12 @@ LoadButtonTitle = 'Load File'
 ClearButtonTitle = 'Clear File'
 ListOfFilesTitle = 'List of files:'
 ListOfColorTitle = 'Color:'
-BlackLabelTitle = 'Black'
-BlueLabelTitle = 'Blue'
-RedLabelTitle = 'Red'
-OrangeLabelTitle = 'Orange'
-YellowLabelTitle = 'Yellow'
-WhiteLabelTitle = 'White'
+BlackLabelTitle  = 'Black'
+BlueLabelTitle   = 'Blue'
+RedLabelTitle    = 'Red'
+OrangeLabelTitle = 'Ora.'
+YellowLabelTitle = 'Yel.'
+WhiteLabelTitle  = 'Whi.'
 input_file_label = 'Input file format:'
 input_file_format = ['TOF','Q']
 
@@ -248,24 +248,6 @@ dMDAngleInfoLabel = widget_label(STEP1_BASE,$
                                  value ='')
                                  ;value='(Angle: 3.14 degrees & dMD: 14.50 m)')
 
-
-
-FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
-                        UNAME='file_info',$
-                        XOFFSET=FileInfoSize[0],$
-                        YOFFSET=FileInfoSize[1],$
-                        SCR_XSIZE=FileInfoSize[2],$
-                        SCR_YSIZE=FileInfoSize[3],$
-                        /SCROLL,$
-                        /WRAP)
-                        
-LIST_OF_COLOR_LABEL = WIDGET_LABEL(STEP1_BASE,$
-                                   VALUE=ListOfColorTitle,$
-                                   XOFFSET=ListOfColorLabelSize[0],$
-                                   YOFFSET=ListOfColorLabelSize[1],$
-                                   SCR_XSIZE=ListOfColorLabelSize[2],$
-                                   SCR_YSIZE=ListOfColorLabelSize[3])
-
 LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      UNAME='list_of_color_slider',$
                                      MINIMUM=0,$
@@ -278,6 +260,43 @@ LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
                                      VALUE=ColorSliderDefaultValue,$
                                      sensitive=1)
 
+BlackLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=BlackLabelSize[0],$
+                          YOFFSET=BlackLabelSize[1],$
+                          VALUE=BlackLabelTitle)
+
+LIST_OF_COLOR_LABEL = WIDGET_LABEL(STEP1_BASE,$
+                                   VALUE=ListOfColorTitle,$
+                                   XOFFSET=ListOfColorLabelSize[0],$
+                                   YOFFSET=ListOfColorLabelSize[1],$
+                                   SCR_XSIZE=ListOfColorLabelSize[2],$
+                                   SCR_YSIZE=ListOfColorLabelSize[3])
+
+BlueLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=BlueLabelSize[0],$
+                          YOFFSET=BlueLabelSize[1],$
+                          VALUE=BlueLabelTitle)
+
+RedLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=RedLabelSize[0],$
+                          YOFFSET=RedLabelSize[1],$
+                          VALUE=RedLabelTitle)
+
+OrangeLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=OrangeLabelSize[0],$
+                          YOFFSET=OrangeLabelSize[1],$
+                          VALUE=OrangeLabelTitle)
+
+YellowLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=YellowLabelSize[0],$
+                          YOFFSET=YellowLabelSize[1],$
+                          VALUE=YellowLabelTitle)
+
+WhiteLabel = WIDGET_LABEL(STEP1_BASE,$
+                          XOFFSET=WhiteLabelSize[0],$
+                          YOFFSET=WhiteLabelSize[1],$
+                          VALUE=WhiteLabelTitle)
+
 ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
                               UNAME='ColorFileLabel',$
                               XOFFSET=ColorFileLabelSize[0],$
@@ -286,47 +305,14 @@ ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
                               SCR_YSIZE=ColorFileLabelSize[3],$
                               VALUE='')
 
-BlackLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlackLabelSize[0],$
-                          YOFFSET=BlackLabelSize[1],$
-                          SCR_XSIZE=BlackLabelSize[2],$
-                          SCR_YSIZE=BlackLabelSize[3],$
-                          VALUE=BlackLabelTitle)
-
-BlueLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlueLabelSize[0],$
-                          YOFFSET=BlueLabelSize[1],$
-                          SCR_XSIZE=BlueLabelSize[2],$
-                          SCR_YSIZE=BlueLabelSize[3],$
-                          VALUE=BlueLabelTitle)
-
-RedLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=RedLabelSize[0],$
-                          YOFFSET=RedLabelSize[1],$
-                          SCR_XSIZE=RedLabelSize[2],$
-                          SCR_YSIZE=RedLabelSize[3],$
-                          VALUE=RedLabelTitle)
-
-OrangeLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=OrangeLabelSize[0],$
-                          YOFFSET=OrangeLabelSize[1],$
-                          SCR_XSIZE=OrangeLabelSize[2],$
-                          SCR_YSIZE=OrangeLabelSize[3],$
-                          VALUE=OrangeLabelTitle)
-
-YellowLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=YellowLabelSize[0],$
-                          YOFFSET=YellowLabelSize[1],$
-                          SCR_XSIZE=YellowLabelSize[2],$
-                          SCR_YSIZE=YellowLabelSize[3],$
-                          VALUE=YellowLabelTitle)
-
-WhiteLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=WhiteLabelSize[0],$
-                          YOFFSET=WhiteLabelSize[1],$
-                          SCR_XSIZE=WhiteLabelSize[2],$
-                          SCR_YSIZE=WhiteLabelSize[3],$
-                          VALUE=WhiteLabelTitle)
+FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
+                        UNAME='file_info',$
+                        XOFFSET=FileInfoSize[0],$
+                        YOFFSET=FileInfoSize[1],$
+                        SCR_XSIZE=FileInfoSize[2],$
+                        SCR_YSIZE=FileInfoSize[3],$
+                        /SCROLL,$
+                        /WRAP)
 
 Return, Step1Size
 END
