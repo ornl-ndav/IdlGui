@@ -86,18 +86,19 @@ END
 ;This function load the file in the first step (first tab)
 ;
 PRO ReflSupportOpenFile_LoadFile, Event
- id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
- widget_control,id,get_uvalue=global
- 
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
 ;launch the program that open the OPEN IDL FILE window
- LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
+;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
+LongFileName=OpenFile(Event) ;_Load
 
 file_error = 0
 CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
 ;move Back the colorIndex slidebar
-    _MoveColorIndexBack,Event   ;_Gui
+    MoveColorIndexBack,Event    ;_Gui
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
     if (LongfileName NE '') then begin
