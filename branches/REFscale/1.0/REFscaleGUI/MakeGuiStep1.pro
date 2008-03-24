@@ -1,318 +1,400 @@
-FUNCTION MakeGuiStep1, StepsTabSize, STEPS_TAB, distanceMD, angleValue, ListOfFiles, Step1Title
+FUNCTION MakeGuiStep1, StepsTabSize, $
+                       STEPS_TAB, $
+                       distanceMD, $
+                       angleValue, $
+                       ListOfFiles, $
+                       Step1Title
 
-;define default values
-ColorSliderDefaultValue = 25
+;===============================================================================
+;+++++++++++++++++++++++++ Define Structures +++++++++++++++++++++++++++++++++++
+;===============================================================================
 
-;Define widgets position and size
-Step1Size                = [0  , 0  , StepsTabSize[2] , StepsTabSize[3]]
-LoadButton               = [5  , 5  , 100 , 30 ]
-ClearButton              = [110, 5  , 100 , 30 ]
-ListOfFilesSize          = [220, 5  , 250 , 30 ]
-InputFileFormatLabelSize = [5  , 45 , 120 , 30 ]
-InputFileFormatSize      = [130 , InputFileFormatLabelSize[1]]
+;***** Main Base ***************************************************************
+sStep1Base = { size  : [0,0,StepsTabSize[2:3]],$
+               uname : 'step1',$
+               title : Step1Title}
+Step1Size = sStep1Base.size                       
 
-;value of selected angle and dMD
-dMDAngleInfoLabelSize = [InputFileFormatSize[0]+100,$
-                         InputFileFormatSize[1],$
-                         300,30]
+;***** Load Button *************************************************************
+XYoff       = [5,5]
+sLoadButton = { size      : [XYoff[0],$
+                             XYoff[1],$
+                             100,30],$
+                uname     : 'load_button',$
+                sensitive : 1,$
+                value     : 'LOAD FILE'}
 
-;base that covers the entire first part and will contain the angle/dMD widgets
-dMDAngleBaseSize      = [5,5,StepsTabSize[2]-20,105]
-dMDAngleMainLabelSize = [5,5]
-dMDAngleMainLabelTitle = 'To go from TOF to Q, the file you are about to'
-dMDAngleMainLabelTitle += ' load will use:'
+;**** Clear Button *************************************************************
+XYOff        = [5,0]
+sClearButton = { size      : [sLoadButton.size[0]+ $
+                              sLoadButton.size[2]+XYoff[0],$
+                              sLoadButton.size[1:3]],$
+                 uname     : 'clear_button',$
+                 value     : 'CLEAR FILE',$
+                 sensitive : 1}
 
-ModeratorDetectorDistanceLabelSize = [5,35]
-ModeratorDetectorDistanceLabelTitle = 'Distance Moderator-Detector (m):'
-ModeratorDetectorDistanceTextFieldSize = [210,$
-                                          ModeratorDetectorDistanceLabelSize[1]-6,$
-                                          100,$
-                                          30]
-yoff = 35
-AngleLabelSize = [5,ModeratorDetectorDistanceLabelSize[1]+yoff]
-                  
-AngleTextFieldSize = [100,$
-                      AngleLabelSize[1]-6,$
-                      100,$
-                      ModeratorDetectorDistanceTextFieldSize[3]]
-AngleUnitsSize = [ 200, AngleLabelSize[1]-6]
+;***** List Of Files ***********************************************************
+XYoff        = [5,0]
+sListOfFiles = { size  : [sClearButton.size[0]+ $
+                          sClearButton.size[2]+XYoff[0],$
+                          sClearButton.size[1]+XYoff[1],$
+                          250,30],$
+                 uname : 'list_of_files_droplist',$
+                 list  : ListOfFiles,$
+                 title : 'List of files:'}
 
-ErrorMessageBaseSize = [ModeratorDetectorDistanceLabelSize[0]+308,$
-                        ModeratorDetectorDistanceLabelSize[1]-8,$
-                        190,$
-                        30]
-ErrorMessageLabelSize = [0, 0, 210, 30]
+;***** Input File Format (TOF or Q) ********************************************
+XYoff            = [5,45]
+sInputFileFormat = { size  : [XYoff[0],$
+                              XYoff[1]],$
+                     title : 'Input File Format:',$
+                     list  : ['TOF','Q'],$
+                     value : 1.0,$
+                     uname : 'InputFileFormat'}
+                              
+;***** Angle and dMD info box **************************************************
+XYoff              = [210,0]
+sAngleDistanceInfo = { size  : [sInputFileFormat.size[0]+XYoff[0],$
+                                sInputFileFormat.size[1]+XYoff[1],$
+                                295,30],$
+                       value : '',$
+                       frame : 1,$
+                       uname : 'dMD_angle_info_label'}
 
-OkLoadButtonSize     = [312,AngleTextFieldSize[1],$
-                        95,30]
-OkLoadButtonTitle = 'OK'
-CancelLoadButtonsize = [412,AngleTextFieldSize[1],$
-                        okLoadButtonsize[2],$
-                        okLoadButtonSize[3]]
-CancelLoadButtonTitle = 'CANCEL'
+;***** File Information ********************************************************
+XYoff     = [5,82]
+sFileInfo = { size  : [XYoff[0],$
+                       XYoff[1],$
+                       510,240],$
+              uname : 'file_info'}
 
-;text box that gives info about selected file
-FileInfoSize         = [5 , 80, 510 , 240]
-ListOfColorLabelSize = [5 , 330, 50  , 30 ]
-ListOfColorSize      = [60, 320, 210 , 35 ]
-ColorFileLabelSize   = [ListOfColorSize[0]+ListOfColorSize[2]+5,$
-                        ListOfColorLabelSize[1],$
-                        150,$
-                        35]
-BlackLabelsize       = [45, 355, 50  , 30 ]
-ColorYoff = 43
-BlueLabelSize        = [BlackLabelSize[0]+ColorYoff,$
-                        BlackLabelSize[1], 50 , 30 ]
-RedLabelSize         = [BlackLabelSize[0]+2*ColorYoff,$
-                        BlackLabelSize[1], 50 , 30 ]
-OrangeLabelSize      = [BlackLabelSize[0]+3*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
-YellowLabelSize      = [BlackLabelSize[0]+4*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
-WhiteLabelSize       = [BlackLabelSize[0]+5*ColorYoff,$
-                        BlackLabelSize[1], 50  , 30 ]
+;***** Color Label *************************************************************
+XYoff       = [5,15]
+sColorLabel = { size  : [sFileInfo.size[0]+XYoff[0],$
+                         sFileInfo.size[1]+sFileInfo.size[3]+XYoff[1]],$
+                value : 'Color:'}
+                         
+;***** Color Slider ************************************************************
+XYoff     = [50,-15]
+sColorSlider = { size         : [sFileInfo.size[0]+XYoff[0],$
+                                 sColorLabel.size[1]+XYoff[1],$
+                                 210,35],$
+                 uname        : 'list_of_color_slider',$
+                 minimum      : 0,$
+                 maximum      : 255,$
+                 defaultValue : 25,$
+                 sensitive    : 1}
 
+;***** List of Colors **********************************************************
+XYoff         = [0,35]
+sListOfColors = { size  : [sColorSlider.size[0]+XYoff[0],$
+                           sColorSlider.size[1]+XYoff[1]],$
+                  value : 'Black  Blue  Red  Oran.  Yel.  Whit.'}
+                           
+;***** Current File displayed Name *********************************************
+XYoff          = [10,15]
+sColorFileName = { size  : [sColorSlider.size[0]+ $
+                            sColorSlider.size[2]+XYoff[0],$
+                            sColorSlider.size[1]+XYoff[1],$
+                            240],$
+                   value : ' ',$
+                   uname : 'ColorFileLabel'}
 
-;Define titles
-LoadButtonTitle = 'Load File'
-ClearButtonTitle = 'Clear File'
-ListOfFilesTitle = 'List of files:'
-ListOfColorTitle = 'Color:'
-BlackLabelTitle  = 'Black'
-BlueLabelTitle   = 'Blue'
-RedLabelTitle    = 'Red'
-OrangeLabelTitle = 'Ora.'
-YellowLabelTitle = 'Yel.'
-WhiteLabelTitle  = 'Whi.'
-input_file_label = 'Input file format:'
-input_file_format = ['TOF','Q']
+;***** TOF Base ****************************************************************
+sTOFbase   = { size  : [5,5,StepsTabSize[2]-20,105],$
+               uname : 'dMD_angle_base',$
+               frame : 1,$
+               map   : 0}
 
+;***** Main Label of TOF base **************************************************
+sMainLabel = { size  : [5,5],$
+               value : 'To go from TOF to Q, the file you are about to' + $
+               ' load will use:'}
 
-;Build GUI
+;***** Distance Moderator-Detector Label ***************************************
+sDistanceMDLabel = { size  : [5,35],$
+                     value : 'Distance Moderator-Detector:              ' + $
+                     '     metres'}
+
+;***** Distance Moderator-Detector Text Field **********************************
+XYoff           = [175,-6]
+sDistanceMDtext = { size  : [sDistanceMDLabel.size[0]+XYoff[0],$
+                             sDistanceMDLabel.size[1]+XYoff[1],$
+                             100,30],$
+                    uname : 'ModeratorDetectorDistanceTextField',$
+                    value : distanceMD}
+
+;***** Angle Label *************************************************************
+XYoff       = [0,35]
+sAngleLabel = { size  : [sDistanceMDLabel.size[0]+XYoff[0],$
+                         sDistanceMDLabel.size[1]+XYoff[1]],$
+                value : 'Polar Angle:'}
+
+;***** Angle Value *************************************************************
+XYoff       = [80,-6]
+sAngleValue = { size  : [sAngleLabel.size[0]+XYoff[0],$
+                         sAngleLabel.size[1]+XYoff[1],$
+                         sDistanceMDtext.size[2:3]],$
+                value : '',$
+                uname : 'AngleTextField'}
+
+;***** Angle Units *************************************************************
+XYoff       = [5,-6]
+sAngleUnits = { size  : [sAngleValue.size[0]+sAngleValue.size[2]+XYoff[0],$
+                         sAngleLabel.size[1]+XYoff[1]],$
+                value : 1,$
+                uname : 'AngleUnits',$
+                list  : ['radians','degrees']}
+
+;***** TOF error base **********************************************************
+XYoff             = [50,-8]
+sErrorMessageBase = { size  : [sDistanceMDtext.size[0]+ $
+                               sDistanceMDtext.size[2]+XYoff[0],$
+                               sDistanceMDlabel.size[1]+XYoff[1],$
+                               170,30],$
+                      uname : 'ErrorMessageBase',$
+                      frame : 1,$
+                      map   : 1}
+
+;***** TOF error label  ********************************************************
+XYoff              = [0,0]
+sErrorMessageLabel = { size  : [XYoff[0],$
+                                XYoff[1],$
+                                166,26],$
+                       uname : 'ErrorMessageLabel',$
+                       value : ' '}
+                       
+;***** TOF Ok Load Button ******************************************************
+XYoff         = [335,0]
+sOkLoadButton = { size      : [XYoff[0],$
+                               sAngleValue.size[1]+XYoff[1],$
+                               80,30],$
+                  uname     : 'ok_load_button',$
+                  value     : 'OK',$
+                  sensitive : 0}
+                           
+;***** TOF Cancel Load Button ******************************************************
+XYoff         = [5,0]
+sCancelLoadButton = { size      : [sOkLoadButton.size[0]+ $
+                               sOkLoadButton.size[2]+XYoff[0],$
+                               sOkLoadButton.size[1]+XYoff[1],$
+                               sOkLoadButton.size[2:3]],$
+                  uname     : 'cancel_load_button',$
+                  value     : 'CANCEL',$
+                  sensitive : 1}
+                           
+;===============================================================================
+;+++++++++++++++++++++++++++; Build GUI ++++++++++++++++++++++++++++++++++++++++
+;===============================================================================
+
+;***** Main Base of Step1 ******************************************************
 STEP1_BASE = WIDGET_BASE(STEPS_TAB,$
-                         UNAME='step1',$
-                         TITLE=Step1Title,$
-                         XOFFSET=Step1Size[0],$
-                         YOFFSET=Step1Size[1],$
-                         SCR_XSIZE=Step1Size[2],$
-                         SCR_YSIZE=Step1Size[3])
+                         UNAME     = sStep1Base.uname,$
+                         XOFFSET   = sStep1Base.size[0],$
+                         YOFFSET   = sStep1Base.size[1],$
+                         SCR_XSIZE = sStep1Base.size[2],$
+                         SCR_YSIZE = sStep1Base.size[3],$
+                         TITLE     = sStep1Base.title)
 
-;---------------------------------------------------------
-dMDAngleBase = widget_base(STEP1_BASE,$
-                           uname='dMD_angle_base',$
-                           xoffset=dMDAngleBaseSize[0],$
-                           yoffset=dMDAngleBaseSize[1],$
-                           scr_xsize=dMDAngleBaseSize[2],$
-                           scr_ysize=dMDAngleBaseSize[3],$
-                           frame=1,$
-                           map=0)
+;***** Load Button *************************************************************
+LoadButton = WIDGET_BUTTON(STEP1_BASE,$
+                           UNAME     = sLoadButton.uname,$
+                           XOFFSET   = sLoadButton.size[0],$
+                           YOFFSET   = sLoadButton.size[1],$
+                           SCR_XSIZE = sLoadButton.size[2],$
+                           SCR_YSIZE = sLoadButton.size[3],$
+                           VALUE     = sLoadButton.value,$
+                           SENSITIVE = sLoadButton.sensitive)
 
-ErrorMessageBase = widget_base(dMDAngleBase,$
-                               xoffset=ErrorMessageBaseSize[0],$
-                               yoffset=ErrorMessageBaseSize[1],$
-                               scr_xsize=ErrorMessageBaseSize[2],$
-                               scr_ysize=ErrorMessageBaseSize[3],$
-                               uname='ErrorMessageBase',$
-                               frame=1,$
-                               map=0)
+;***** Clear Button ************************************************************
+ClearButton = WIDGET_BUTTON(STEP1_BASE,$
+                           UNAME     = sClearButton.uname,$
+                           XOFFSET   = sClearButton.size[0],$
+                           YOFFSET   = sClearButton.size[1],$
+                           SCR_XSIZE = sClearButton.size[2],$
+                           SCR_YSIZE = sClearButton.size[3],$
+                           VALUE     = sClearButton.value,$
+                           SENSITIVE = sClearButton.sensitive)
 
-ErrorMessageLabel = widget_label(ErrorMessageBase,$
-                                 uname='ErrorMessageLabel',$
-                                 xoffset=ErrorMessageLabelSize[0],$
-                                 yoffset=ErrorMessageLabelSize[1],$
-                                 scr_xsize=ErrorMessageLabelSize[2],$
-                                 scr_ysize=ErrorMessageLabelSize[3],$
-                                 value='')
+;***** List of Files ***********************************************************
+ListOfFiles = WIDGET_DROPLIST(STEP1_BASE,$
+                              UNAME = sListOfFiles.uname,$
+                              XOFFSET = sListOfFiles.size[0],$
+                              YOFFSET = sListOfFiles.size[1],$
+                              SCR_XSIZE = sListOfFiles.size[2],$
+                              SCR_YSIZE = sListOfFiles.size[3],$
+                              VALUE     = sListOfFiles.list,$
+                              TITLE     = sListOfFiles.title)
 
-
-dMDAngleMainLabel = widget_label(dMDAngleBase,$
-                                 xoffset=dMDAngleMainLabelSize[0],$
-                                 yoffset=dMDAngleMainLabelSize[1],$
-                                 value=dMDAngleMainLabelTitle)
-
-ModeratorDetectorDistanceLabel = WIDGET_LABEL(dMDAngleBase,$
-                                              XOFFSET=ModeratorDetectorDistanceLabelSize[0],$
-                                              YOFFSET=ModeratorDetectorDistanceLabelSize[1],$
-                                              VALUE=ModeratorDetectorDistanceLabelTitle)
-
-ModeratorDetectorDistanceTextField = WIDGET_TEXT(dMDAngleBase,$
-                                                 XOFFSET=ModeratorDetectorDistanceTextFieldSize[0],$
-                                                 YOFFSET=ModeratorDetectorDistanceTextFieldSize[1],$
-                                                 SCR_XSIZE=ModeratorDetectorDistanceTextFieldSize[2],$
-                                                 SCR_YSIZE=ModeratorDetectorDistanceTextFieldSize[3],$
-                                                 UNAME='ModeratorDetectorDistanceTextField',$
-                                                 VALUE=distanceMD,$
-                                                 /editable,$
-                                                 /align_left,$
-                                                 /all_events)
-
-
-AngleUnitList = ['rad','degree']
-AngleUnits = CW_BGROUP(dMDAngleBase,$
-                       AngleUnitList,$
-                       /exclusive,$
-                       /return_name,$
-                       XOFFSET=AngleUnitsSize[0],$
-                       YOFFSET=AngleUnitsSize[1],$
-                       SET_VALUE=1.0,$
-                       row=1,$
-                       uname='AngleUnits')                 
-
-AngleLabel = WIDGET_LABEL(dMDAngleBase,$
-                          XOFFSET=AngleLabelSize[0],$
-                          YOFFSET=AngleLabelSize[1],$
-                          VALUE='Polar angle:')
-
-AngleTextField = WIDGET_TEXT(dMDAngleBase,$
-                             UNAME='AngleTextField',$
-                             XOFFSET=AngleTextFieldSize[0],$
-                             YOFFSET=AngleTextFieldSize[1],$
-                             SCR_XSIZE=AngleTextFieldSize[2],$
-                             SCR_YSIZE=AngleTextFieldSize[3],$
-                             /EDITABLE,$
-                             /align_left,$
-                             /all_events)
-
-OkLoadButton = widget_button(dMDAngleBase,$
-                             uname='ok_load_button',$
-                             xoffset=OkLoadButtonSize[0],$
-                             yoffset=OkLoadButtonSize[1],$
-                             scr_xsize=OkLoadButtonSize[2],$
-                             scr_ysize=OkLoadButtonSize[3],$
-                             sensitive=0,$
-                             value=okLoadButtonTitle)
-
-CancelLoadButton = widget_button(dMDAngleBase,$
-                                 uname='cancel_load_button',$
-                                 xoffset=CancelLoadButtonSize[0],$
-                                 yoffset=CancelLoadButtonSize[1],$
-                                 scr_xsize=CancelLoadButtonSize[2],$
-                                 scr_ysize=CancelLoadButtonSize[3],$
-                                 sensitive=1,$
-                                 value=CancelLoadButtonTitle)
-
-;------------------end of angle and distance base
-
-LOAD_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
-                            UNAME='load_button',$
-                            XOFFSET=LoadButton[0],$
-                            YOFFSET=LoadButton[1],$
-                            SCR_XSIZE=LoadButton[2],$
-                            SCR_YSIZE=LoadButton[3],$
-                            SENSITIVE=1,$
-                            VALUE=LoadButtonTitle)
-
-CLEAR_BUTTON = WIDGET_BUTTON(STEP1_BASE,$
-                            UNAME='clear_button',$
-                            XOFFSET=ClearButton[0],$
-                            YOFFSET=ClearButton[1],$
-                            SCR_XSIZE=ClearButton[2],$
-                            SCR_YSIZE=ClearButton[3],$
-                            SENSITIVE=0,$
-                            VALUE=ClearButtonTitle)
-
-LIST_OF_FILES_DROPLIST = WIDGET_DROPLIST(STEP1_BASE,$
-                                         UNAME='list_of_files_droplist',$
-                                         XOFFSET=ListOfFilesSize[0],$
-                                         YOFFSET=ListOfFilesSize[1],$
-                                         SCR_XSIZE=ListOfFilesSize[2],$
-                                         SCR_YSIZE=ListOfFilesSize[3],$
-                                         VALUE=ListOfFiles,$
-                                         TITLE=ListOfFilesTitle)
-
-InputFileFormatLabel = WIDGET_LABEL(STEP1_BASE,$
-                                    XOFFSET=InputFileFormatLabelSize[0],$
-                                    YOFFSET=InputFileFormatLabelSize[1],$
-                                    SCR_XSIZE=InputFileFormatLabelSize[2],$
-                                    SCR_YSIZE=InputFileFormatLabelSize[3],$
-                                    VALUE='Input file format:')
-
-
+;***** Input File Format (TOF or Q) ********************************************
 InputFileFormat = CW_BGROUP(STEP1_BASE,$ 
-                            input_file_format,$
-                            /exclusive,$
-                            /RETURN_NAME,$
-                            XOFFSET=InputFileFormatSize[0],$
-                            YOFFSET=InputFileFormatSize[1],$
-                            SET_VALUE=1.0,$
-                            row=1,$
-                            uname='InputFileFormat')                 
+                            sInputFileFormat.list,$
+                            UNAME      = sInputFileFormat.uname,$
+                            XOFFSET    = sInputFileFormat.size[0],$
+                            YOFFSET    = sInputFileFormat.size[1],$
+                            SET_VALUE  = sInputFileFormat.value,$
+                            LABEL_LEFT = sInputFileFormat.title,$
+                            ROW        = 1,$
+                            /EXCLUSIVE,$
+                            /RETURN_NAME)
 
-;Info label that show the current angle value and dMD
-dMDAngleInfoLabel = widget_label(STEP1_BASE,$
-                                 uname='dMD_angle_info_label',$
-                                 xoffset=dMDAngleInfoLabelSize[0],$
-                                 yoffset=dMDAngleInfoLabelSize[1],$
-                                 scr_xsize=dMDAngleInfoLabelSize[2],$
-                                 scr_ysize=dMDAngleInfoLabelSize[3],$
-                                 value ='')
-                                 ;value='(Angle: 3.14 degrees & dMD: 14.50 m)')
+;***** Angle and dMD info box **************************************************
+dMDAngleInfoLabel = WIDGET_LABEL(STEP1_BASE,$
+                                 UNAME     = sAngleDistanceInfo.uname,$
+                                 XOFFSET   = sAngleDistanceInfo.size[0],$
+                                 YOFFSET   = sAngleDistanceInfo.size[1],$
+                                 SCR_XSIZE = sAngleDistanceInfo.size[2],$
+                                 SCR_YSIZE = sAngleDistanceInfo.size[3],$
+                                 VALUE     = sAngleDistanceInfo.value,$
+                                 FRAME     = sAngleDistanceInfo.frame)
 
-LIST_OF_COLOR_SLIDER = WIDGET_SLIDER(STEP1_BASE,$
-                                     UNAME='list_of_color_slider',$
-                                     MINIMUM=0,$
-                                     MAXIMUM=255,$
-                                     XOFFSET=ListOfColorSize[0],$
-                                     YOFFSET=ListOfColorSize[1],$
-                                     SCR_XSIZE=ListOfColorSize[2],$
-                                     SCR_YSIZE=ListOfColorSize[3],$
-                                     TITLE=ListOfColorTitle,$
-                                     VALUE=ColorSliderDefaultValue,$
-                                     sensitive=1)
-
-BlackLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlackLabelSize[0],$
-                          YOFFSET=BlackLabelSize[1],$
-                          VALUE=BlackLabelTitle)
-
-LIST_OF_COLOR_LABEL = WIDGET_LABEL(STEP1_BASE,$
-                                   VALUE=ListOfColorTitle,$
-                                   XOFFSET=ListOfColorLabelSize[0],$
-                                   YOFFSET=ListOfColorLabelSize[1],$
-                                   SCR_XSIZE=ListOfColorLabelSize[2],$
-                                   SCR_YSIZE=ListOfColorLabelSize[3])
-
-BlueLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=BlueLabelSize[0],$
-                          YOFFSET=BlueLabelSize[1],$
-                          VALUE=BlueLabelTitle)
-
-RedLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=RedLabelSize[0],$
-                          YOFFSET=RedLabelSize[1],$
-                          VALUE=RedLabelTitle)
-
-OrangeLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=OrangeLabelSize[0],$
-                          YOFFSET=OrangeLabelSize[1],$
-                          VALUE=OrangeLabelTitle)
-
-YellowLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=YellowLabelSize[0],$
-                          YOFFSET=YellowLabelSize[1],$
-                          VALUE=YellowLabelTitle)
-
-WhiteLabel = WIDGET_LABEL(STEP1_BASE,$
-                          XOFFSET=WhiteLabelSize[0],$
-                          YOFFSET=WhiteLabelSize[1],$
-                          VALUE=WhiteLabelTitle)
-
-ColorFileLabel = WIDGET_LABEL(STEP1_BASE,$
-                              UNAME='ColorFileLabel',$
-                              XOFFSET=ColorFileLabelSize[0],$
-                              YOFFSET=ColorFileLabelSize[1],$
-                              SCR_XSIZE=ColorFileLabelSize[2],$
-                              SCR_YSIZE=ColorFileLabelSize[3],$
-                              VALUE='')
-
-FILE_INFO = WIDGET_TEXT(STEP1_BASE,$
-                        UNAME='file_info',$
-                        XOFFSET=FileInfoSize[0],$
-                        YOFFSET=FileInfoSize[1],$
-                        SCR_XSIZE=FileInfoSize[2],$
-                        SCR_YSIZE=FileInfoSize[3],$
+;***** File Information ********************************************************
+wFileInfo = WIDGET_TEXT(STEP1_BASE,$
+                        UNAME     = sFileInfo.uname,$
+                        XOFFSET   = sFileInfo.size[0],$
+                        YOFFSET   = sFileInfo.size[1],$
+                        SCR_XSIZE = sFileInfo.size[2],$
+                        SCR_YSIZE = sFileInfo.size[3],$
                         /SCROLL,$
                         /WRAP)
 
-Return, Step1Size
+;***** Color Label *************************************************************
+wColorLabel = WIDGET_LABEL(STEP1_BASE,$
+                           XOFFSET = sColorLabel.size[0],$
+                           YOFFSET = sColorLabel.size[1],$
+                           VALUE   = sColorLabel.value)
+
+;***** Color Slider ************************************************************
+wColorSlider = WIDGET_SLIDER(STEP1_BASE,$
+                             UNAME     = sColorSlider.uname,$
+                             MINIMUM   = sColorSlider.minimum,$
+                             MAXIMUM   = sColorSlider.maximum,$
+                             XOFFSET   = sColorSlider.size[0],$
+                             YOFFSET   = sColorSlider.size[1],$
+                             SCR_XSIZE = sColorSlider.size[2],$
+                             SCR_YSIZE = sColorSlider.size[3],$
+                             VALUE     = sColorSlider.defaultValue,$
+                             SENSITIVE = sColorSlider.sensitive)
+
+;***** List of Colors **********************************************************
+wListOfColors = WIDGET_LABEL(STEP1_BASE,$
+                             XOFFSET = sListOfColors.size[0],$
+                             YOFFSET = sListOfColors.size[1],$
+                             VALUE   = sListOfColors.value)
+
+;***** Current File Displayed Name *********************************************
+wColorFileName = WIDGET_LABEL(STEP1_BASE,$
+                              XOFFSET   = sColorFileName.size[0],$
+                              YOFFSET   = sColorFileName.size[1],$
+                              SCR_XSIZE = sColorFileName.size[2],$
+                              UNAME     = sColorFileName.uname,$
+                              VALUE     = sColorFileName.value)
+
+;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** TOF files base **********************************************************
+dMDAngleBase = WIDGET_BASE(STEP1_BASE,$
+                           UNAME     = sTOFbase.uname,$
+                           XOFFSET   = sTOFbase.size[0],$
+                           YOFFSET   = sTOFbase.size[1],$
+                           SCR_XSIZE = sTOFbase.size[2],$
+                           SCR_YSIZE = sTOFbase.size[3],$
+                           FRAME     = sTOFbase.frame,$
+                           MAP       = sTOFbase.map)
+
+;***** Main Label of TOF base **************************************************
+wMainLabel = WIDGET_LABEL(dMDAngleBase,$
+                          XOFFSET = sMainLabel.size[0],$
+                          YOFFSET = sMainLabel.size[1],$
+                          VALUE   = sMainLabel.value)
+
+;***** Distance Moderator-Detector Text Field **********************************
+wDistanceMDtext = WIDGET_TEXT(dMDAngleBase,$
+                              XOFFSET   = sDistanceMDtext.size[0],$
+                              YOFFSET   = sDistanceMDtext.size[1],$
+                              SCR_XSIZE = sDistanceMDtext.size[2],$
+                              SCR_YSIZE = sDistanceMDtext.size[3],$
+                              UNAME     = sDistanceMDtext.uname,$
+                              VALUE     = sDistanceMDtext.value,$
+                              /EDITABLE,$
+                              /ALIGN_LEFT,$
+                              /ALL_EVENTS)
+
+;***** Distance Moderator-Detector Label ***************************************
+wDistanceMDLabel = WIDGET_LABEL(dMDAngleBase,$
+                                XOFFSET = sDistanceMDLabel.size[0],$
+                                YOFFSET = sDistanceMDLabel.size[1],$
+                                VALUE   = sDistanceMDLabel.value)
+
+;***** Angle Label *************************************************************
+wAngleLabel = WIDGET_LABEL(dMDAngleBase,$
+                           XOFFSET = sAngleLabel.size[0],$
+                           YOFFSET = sAngleLabel.size[1],$
+                           VALUE   = sAngleLabel.value)
+
+;***** Angle Value *************************************************************
+wAngleValue = WIDGET_TEXT(dMDAngleBase,$
+                          UNAME = sAngleValue.uname,$
+                          XOFFSET = sAngleValue.size[0],$
+                          YOFFSET = sAngleValue.size[1],$
+                          SCR_XSIZE = sAngleValue.size[2],$
+                          SCR_YSIZE = sAngleValue.size[3],$
+                          VALUE     = sAngleValue.value,$
+                          /EDITABLE,$
+                          /ALIGN_LEFT,$
+                          /ALL_EVENTS)
+
+;***** Angle Units *************************************************************
+wAngleUnits = CW_BGROUP(dMDAngleBase,$
+                        sAngleUnits.list,$
+                        XOFFSET   = sAngleUnits.size[0],$
+                        YOFFSET   = sAngleUnits.size[1],$
+                        UNAME     = sAngleUnits.uname,$
+                        SET_VALUE = sAngleUnits.value,$
+                        ROW       = 1,$
+                        /EXCLUSIVE,$
+                        /RETURN_NAME)
+
+;++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;***** TOF error base **********************************************************
+ErrorMessageBase = WIDGET_BASE(dMDAngleBase,$
+                               XOFFSET   = sErrorMessageBase.size[0],$
+                               YOFFSET   = sErrorMessageBase.size[1],$
+                               SCR_XSIZE = sErrorMessageBase.size[2],$
+                               SCR_YSIZE = sErrorMessageBase.size[3],$
+                               UNAME     = sErrorMessageBase.uname,$
+                               FRAME     = sErrorMessageBase.frame,$
+                               MAP       = sErrorMessageBase.map)
+;***** TOF error label *********************************************************
+ErrorMessageLabel = WIDGET_LABEL(ErrorMessageBase,$
+                                 UNAME     = sErrorMessageLabel.uname,$
+                                 XOFFSET   = sErrorMessageLabel.size[0],$
+                                 YOFFSET   = sErrorMessageLabel.size[1],$
+                                 SCR_XSIZE = sErrorMessageLabel.size[2],$
+                                 SCR_YSIZE = sErrorMessageLabel.size[3],$
+                                 VALUE     = sErrormessageLabel.value)
+
+;***** TOF Ok Load Button ******************************************************
+OkLoadButton = WIDGET_BUTTON(dMDAngleBase,$
+                             UNAME     = sOkLoadButton.uname,$
+                             XOFFSET   = sOkLoadButton.size[0],$
+                             YOFFSET   = sOkLoadButton.size[1],$
+                             SCR_XSIZE = sOkLoadButton.size[2],$
+                             SCR_YSIZE = sOkLoadButton.size[3],$
+                             SENSITIVE = sOkLoadButton.sensitive,$
+                             VALUE     = sOkLoadButton.value)
+
+;***** TOF Cancel Load Button **************************************************
+CancelLoadButton = WIDGET_BUTTON(dMDAngleBase,$
+                             UNAME     = sCancelLoadButton.uname,$
+                             XOFFSET   = sCancelLoadButton.size[0],$
+                             YOFFSET   = sCancelLoadButton.size[1],$
+                             SCR_XSIZE = sCancelLoadButton.size[2],$
+                             SCR_YSIZE = sCancelLoadButton.size[3],$
+                             SENSITIVE = sCancelLoadButton.sensitive,$
+                             VALUE     = sCancelLoadButton.value)
+
+;***** END of TOF error base ;***************************************************
+;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+RETURN, Step1Size
 END
