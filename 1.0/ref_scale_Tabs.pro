@@ -83,8 +83,6 @@ ENDIF ELSE BEGIN
             
                                 ;display the SF of the selected file
             Step3_display_SF_values, Event, indexSelected ;_Step3
-                                ;if third tab, plot only two file selected
-            refresh_draw_labels_tab3, Event ;_Gui
 
          END
 

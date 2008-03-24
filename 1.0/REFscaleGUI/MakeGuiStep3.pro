@@ -171,13 +171,9 @@ Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
                                    scr_ysize=Step3ManualModeHiddenFrameSize[3],$
                                    map=0)
 
-;SF
-Step3SFDraw = widget_draw(STEP3_BASE,$
-                          xoffset=Step3SFDrawSize[0],$
-                          yoffset=Step3SFDrawSize[1],$
-                          scr_xsize=Step3SFDrawSize[2],$
-                          scr_ysize=Step3SFDrawSize[3],$
-                          uname='Step3SFDraw')
+;!!!!!!!!!!!!!!!!!!!!!!!!!!
+;put here the label for SF
+;!!!!!!!!!!!!!!!!!!!!!!!!!
 
 Step3SFTextField = widget_text(STEP3_BASE,$
                                xoffset=Step3SFTextFieldSize[0],$
