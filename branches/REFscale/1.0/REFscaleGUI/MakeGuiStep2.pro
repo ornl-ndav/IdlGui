@@ -6,6 +6,10 @@ PRO MakeGuiStep2, STEPS_TAB,$
                   distanceVertical_L_L,$
                   ListOfFiles
 
+;-----------------------------------
+y_base_off = 35 ;Yoff between bases
+;-----------------------------------
+
 ;Define position and size of widgets
 sMainBase      = { size      : Step1Size,$
                    title     : Step2Title,$
@@ -22,7 +26,10 @@ sBFceFile      = { size      : [5, 5, 150, 30],$
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Base of Qmin and Qmax ***************************************************
-sB1_QminQmaxInput = { size   : [5,50,505,40],$
+sB1_QminQmaxInput = { size   : [5, $
+                                50,$
+                                505, $
+                                40],$
                       uname  : 'step2QinputBase',$
                       frame  : 5}
 
@@ -60,7 +67,7 @@ sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Auto Mode base **********************************************************
-XYoff        = [0,20]
+XYoff        = [0,Y_base_off]
 sAutoBase    = { size   : [sB1_QminQmaxInput.size[0]+XYoff[0],$
                            sB1_QminQmaxInput.size[1]+ $
                            sB1_QminQmaxInput.size[3]+XYoff[1],$
@@ -112,7 +119,7 @@ sB_AutoScalFit = { size      : [sAutoScal.size[0]+XYoff[0],$
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual ******************************************************************
-XYoff       = [0,20]
+XYoff       = [0,y_base_off]
 sManualBase =  { size   : [sAutoBase.size[0]+XYoff[0],$
                            sAutoBase.size[1]+ $
                            sAutoBase.size[3]+XYoff[1],$
@@ -175,8 +182,8 @@ sAverageYBefore = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
 XYoff             = [178,-8]
 sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
                                sAverageYBefore.size[1]+XYoff[1],$
-                               100,35],$
-                      value : '345.454',$
+                               80,35],$
+                      value : '344545455.454',$
                       uname : 'step2_y_before_text_field'}
 
 ;***** Average Y After *********************************************************
@@ -193,109 +200,37 @@ sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
                      value : '',$
                      uname : 'step2_y_after_text_field'}
 
-; d_b2_b3 = 143
-; Step2GoButtonSize    = [Step2AutomaticScalingSize[0]+d_b2_b3,$
-;                         Step2AutomaticScalingSize[1],$
-;                         Step2AutomaticScalingSize[2]+97,$
-;                         Step2AutomaticScalingSize[3]]
+;***** SF base *****************************************************************
+XYoff            = [40,-2]
+sSFbase          = { size  : [sAverYAfterValue.size[0]+ $
+                              sAverYAfterValue.size[2]+XYoff[0],$
+                              sAverageYBefore.size[1]+XYoff[1],$
+                              200,55],$
+                     uname : 'step2_sf_base',$
+                     frame : 5}
 
+;***** SF label ****************************************************************
+XYoff            = [35,0]
+sSFlabel         = { size  : [XYoff[0],$
+                              XYoff[1]],$
+                     value : 'Scaling Factor (SF):'}
 
+;***** SF text field ***********************************************************
+XYoff            = [55,20]
+sSFtextField     = { size  : [XYoff[0],$
+                              XYoff[1],$
+                              80,30],$
+                     value : '',$
+                     uname : 'step2_sf_text_field'}
 
-
-
-; BaseFileCEFileName   = [155, 5  , 150 , 30 ]
-
-
-; distance_L_L_2 = distance_L_L - 15
-; Step2Q1Q2ErrorLabelSize = [Step2Q2LabelSize[0]+distance_L_L_2,$
-;                            Step2Q2Labelsize[1],$
-;                            250,$
-;                            Step2Q1LabelSize[3]]
-
-; Step2YLabelSize     = [Step2XLabelSize[0]+distance_L_L, $
-;                        Step2XLabelSize[1],$
-;                        Step2XLabelSize[2],$
-;                        Step2XLabelSize[3]]
-; Step2YTextFieldSize = [Step2YLabelSize[0]+distance_L_TB, $
-;                        Step2XLabelSize[1],$
-;                        Step2XTextFieldSize[2],$
-;                        Step2XLabelSize[3]]
-
-; ;automatic go button
-
-
-
-; ;manual label
-; Step2ManualFittingFrameSize = [5, Step2GoButtonSize[1]+40, 500, 180]
-; Step2ManualFittingFrameLabelSize = [20, Step2GoButtonSize[1]+33]
-
-; ;fitting equation label
-; step2FittingEquationLabelSize = [10, Step2GoButtonSize[1]+58]
-; distance_1 = 130
-; step2FittingEquationATextFieldSize = [step2FittingEquationLabelSize[0]+distance_1,$
-;                                       step2FittingEquationLabelSize[1]-5,$
-;                                       100,$
-;                                       30]
-; distance_2 = 100
-; step2FittingEquationXLabelSize = [step2FittingEquationATextFieldSize[0]+distance_2,$
-;                                   step2FittingEquationLabelSize[1]]
-; distance_3 = 17
-; step2FittingEquationBTextFieldSize = [step2FittingEquationXLabelSize[0]+distance_3,$
-;                                       step2FittingEquationLabelSize[1]-5,$
-;                                       100,30]
-; distance_4 = 100
-; Step2ManualGoButtonSize = [step2FittingEquationBTextFieldSize[0]+distance_4,$
-;                            step2FittingEquationLabelSize[1]-5,$
-;                            145,30]
-
-; ;Average Y before and after
-; Step2YBeforeDrawSize = [ 25, 245, 60, 40]
-; Step2YAfterDrawSize  = [ 25, Step2YBeforeDrawSize[1]+50, 60, 40]
-
-; Step2YBeforeTextField = [Step2YBeforeDrawSize[0]+70,$
-;                          Step2YBeforeDrawSize[1]+5,$
-;                          80, 30]
-; Step2YAfterTextField  = [Step2YAfterDrawSize[0]+70,$
-;                          Step2YAfterDrawSize[1]+5,$
-;                          80, 30]
-
-; ;From before to after
-; Step2BeforeToAfterDrawSize = [185, Step2YBeforeDrawSize[1]-3,$
-;                               40, 100]
-
-
-; ;SF
-; Step2SFdrawSize      = [225,Step2YBeforeDrawSize[1]+25,40,40]
-; d1=50
-; Step2SFTextFieldSize = [Step2SFdrawSize[0]+d1,$
-;                         Step2SFdrawSize[1]+5,80,30]
-
-; ;Manual scalling of CE file
-; Step2ManualScalingButtonSize = [Step2ManualGoButtonSize[0],$
-;                                 Step2SFTextFieldSize[1],$
-;                                 Step2ManualGoButtonSize[2],$
-;                                 STep2ManualGoButtonSize[3]]
-
-;Define titles
-BaseFileTitle      = 'Critical edge file:'
-
-
-
-
-
-Step2ManualGoButtonTitle = 'Manual Fitting of CE'
-Step2ManualScalingButtonTitle = 'Manual Scaling of CE'
-
-Step2Q2LabelTitle  = 'Qmax:'
-Step2SFLabelTitle  = 'SF:'
-Step2XLabelTitle = 'X:'
-Step2YLabelTitle = 'Y:'
-
-Step2YAfterValue = strcompress(1,/remove_all)
-
-Step2FittingEquationXLabel = 'X+'
-
-
+;***** Manual Scaling Button ***************************************************
+XYoff                = [145,32]
+sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
+                                       sAverageYAfter.size[1]+XYoff[1],$
+                                       200,30],$ $
+                         sensitive : 0,$
+                         uname     : 'step2_manual_scaling_button',$
+                         value     : 'Manual Scaling of CE'}
 
 ;===============================================================================
 ;+++++++++++++++++++++++++++; Build GUI ++++++++++++++++++++++++++++++++++++++++
@@ -525,77 +460,40 @@ wAverageYAfterValue = WIDGET_TEXT(wManualBase,$
                                   /EDITABLE,$
                                   /ALIGN_LEFT)
 
+;***** SF base *****************************************************************
+wSFbase = WIDGET_BASE(wManualBase,$
+                      XOFFSET = sSFbase.size[0],$
+                      YOFFSET = sSFbase.size[1],$
+                      SCR_XSIZE = sSFbase.size[2],$
+                      SCR_YSIZE = sSFbase.size[3],$
+                      UNAME     = sSFbase.uname,$
+                      FRAME     = sSFbase.frame)
 
+;***** SF label ****************************************************************
+wSFlabel = WIDGET_LABEL(wSFbase,$
+                        XOFFSET = sSFlabel.size[0],$
+                        YOFFSET = sSFlabel.size[1],$
+                        VALUE   = sSFlabel.value)
 
-END
-
-
-
-                       
-PRO tmp
-
-;--tab 1 of step 2
-
-Step2Q1Q2ErrorLabel = widget_label(step2tab1base,$
-                                   uname='step2_q1q1_error_label',$
-                                   xoffset=Step2Q1Q2ErrorLabelSize[0],$
-                                   yoffset=Step2Q1Q2ErrorLabelSize[1],$
-                                   scr_xsize=Step2Q1Q2ErrorLabelSize[2],$
-                                   scr_ysize=Step2Q1Q2ErrorLabelSize[3],$
-                                   value='')
-
-
-
-Step2BeforeToAfterDraw = widget_draw(STEP2_BASE,$
-                                     uname='step2_before_to_after_draw',$
-                                     xoffset=Step2BeforeToAfterDrawSize[0],$
-                                     yoffset=Step2BeforeToAfterDrawSize[1],$
-                                     scr_xsize=Step2BeforeToAfterDrawSize[2],$
-                                     scr_ysize=Step2BeforeToAfterDrawSize[3])
-
-
-
-;; --outside tab of step2
- STEP2_SF_draw = WIDGET_draw(STEP2_BASE,$
-                             uname='step2_sf_draw',$
-                             XOFFSET=Step2SFdrawSize[0],$
-                             YOFFSET=Step2SFdrawSize[1],$
-                             SCR_XSIZE=Step2SFdrawSize[2],$
-                             SCR_YSIZE=Step2SFdrawSize[3])
-
-
- STEP2_SF_TEXT_FIELD = WIDGET_TEXT(STEP2_BASE,$
-                                   UNAME='step2_sf_text_field',$
-                                   XOFFSET=Step2SFTextFieldSize[0],$
-                                   YOFFSET=Step2SFTextFieldSize[1],$
-                                   SCR_XSIZE=Step2SFTextFieldSize[2],$
-                                   SCR_YSIZE=Step2SFTextFieldSize[3],$
-                                   VALUE='',$
-                                   /EDITABLE,$
-                                   /ALIGN_LEFT)
-
-Step2ManualScalingButton = widget_button(STEP2_BASE,$
-                                          uname='step2_manual_scaling_button',$
-                                          xoffset=Step2ManualScalingButtonSize[0],$
-                                          yoffset=Step2ManualScalingButtonSize[1],$
-                                          scr_xsize=Step2ManualScalingButtonSize[2],$
-                                          scr_ysize=Step2ManualScalingButtonSize[3],$
-                                          value=Step2ManualScalingButtonTitle)
-
-
- Step2ManualFittingFrameLabel = widget_label(STEP2_BASE,$
-                                             xoffset=Step2ManualFittingFrameLabelSize[0],$
-                                             yoffset=Step2ManualFittingFrameLabelSize[1],$
-                                             value='Manual fitting')
- 
- 
- Step2ManualFittingFrame = widget_label(STEP2_BASE,$
-                                        xoffset=Step2ManualFittingFrameSize[0],$
-                                        yoffset=Step2ManualFittingFrameSize[1],$
-                                        scr_xsize=Step2ManualFittingFrameSize[2],$
-                                        scr_ysize=Step2ManualFittingFrameSize[3],$
-                                        frame=1,$
-                                        value='')
- 
+;***** SF text field ***********************************************************
+wSFtextField = WIDGET_TEXT(wSFbase,$
+                           XOFFSET   = sSFtextField.size[0],$
+                           YOFFSET   = sSFtextField.size[1],$
+                           SCR_XSIZE = sSFtextField.size[2],$
+                           SCR_YSIZE = sSFtextField.size[3],$
+                           UNAME     = sSFtextField.uname,$
+                           VALUE     = '',$
+                           /EDITABLE)
+                           
+;***** Manual Scaling Button ***************************************************
+wManualScalingButton = WIDGET_BUTTON(wManualBase,$
+                                     XOFFSET   = sManualScalingButton.size[0],$
+                                     YOFFSET   = sManualScalingButton.size[1],$
+                                     SCR_XSIZE = sManualScalingButton.size[2],$
+                                     SCR_YSIZE = sManualScalingButton.size[3],$
+                                     UNAME     = sManualScalingButton.uname,$
+                                     VALUE     = sManualScalingButton.value,$
+                                     SENSITIVE = sManualScalingButton.sensitive)
 
 END
+
