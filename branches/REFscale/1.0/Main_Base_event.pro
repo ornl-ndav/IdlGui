@@ -98,7 +98,7 @@ PRO MAIN_BASE_event, Event
 ;-------------------------------------------------------------------------------
       
 ;Event triggered by <Automatic Fitting/Rescaling of CE>     
-      Widget_Info(wWidget, FIND_BY_UNAME='Step2_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_button'): begin
           run_full_step2, Event ;_Step2
       end
       

@@ -184,17 +184,17 @@ YafterIsNumeric  = isNumeric(Yafter) ;_is
 ;Ybefore and Yafter are numeric
 IF (YbeforeIsNumeric EQ 1 AND $
     YafterIsNumeric EQ 1) THEN BEGIN
-
-   putValueInLabel, Event, 'step2_q1q1_error_label', '' ;_put
-   Step2_scaleCE, Event  ;_Step2
-
+    
+    putValueInLabel, Event, 'step2_qminqmax_error_label', '' ;_put
+    Step2_scaleCE, Event        ;_Step2
+    
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
 ;automatic mode can be performed.
-
+    
 ;display message in Q1 and Q2 boxe saying that auto stopped
-    putValueInLabel, Event, 'step2_q1q1_error_label', $
+    putValueInLabel, Event, 'step2_qminqmax_error_label', $
       '**ERROR: Select another range of Qs**'
-
+    
 ENDELSE   
 END
 

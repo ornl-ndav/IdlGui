@@ -20,8 +20,11 @@ sBaseFileLabel = { size      : [10, 10],$
                    value     : 'Critical edge file:'}
 
 ;***** Top label that gives the name of the CE file ****************************
-sBFceFile      = { size      : [5, 5, 150, 30],$
-                   value     : '',$
+XYoff          = [130,10]
+sBFceFile      = { size      : [sBaseFileLabel.size[0]+XYoff[0], $
+                                sBaseFileLabel.size[1],$
+                                370],$
+                   value     : ' ',$
                    uname     : 'short_ce_file_name'}
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -40,19 +43,19 @@ sL_QBaseTitle = { size  : [sB1_QminQMaxInput.size[0]+15, $
                   'Factor (SF)'}
 
 ;***** Qmin label **************************************************************
-sL_Qmin = { size   : [55,11],$
+sL_Qmin = { size   : [5,11],$
             value  : 'Qmin:'}
 
 ;***** Qmin text field *********************************************************
-XYoff1  = [50,-5]
+XYoff1  = [35,-5]
 sT_Qmin = { size   : [sL_Qmin.size[0]+XYoff1[0],$
                       sL_Qmin.size[1]+XYoff1[1],$
-                      100,30],$
+                      80,30],$
             uname  : 'step2_q1_text_field',$
             value  : ''}
 
 ;***** Qmax label **************************************************************
-XYoff   = [200,0]
+XYoff   = [120,0]
 sL_Qmax = { size  : [sL_Qmin.size[0]+XYoff[0],$
                      sL_Qmin.size[1]+XYoff[1]],$
             value : 'Qmax:'}
@@ -64,6 +67,14 @@ sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
                       sT_Qmin.size[3]],$
             uname  : 'step2_q2_text_field',$
             value  : ''}
+
+;***** Qmin/max message ********************************************************
+XYoff      = [10,0]
+sL_QMinMax = { size  : [sT_Qmax.size[0]+sT_Qmax.size[1]+XYoff[0],$
+                        sL_Qmax.size[1]+XYoff[1],$
+                        350],$
+               value : 'Select Qmin and Qmax',$
+               uname : 'step2_qminqmax_error_label'}
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Auto Mode base **********************************************************
@@ -83,6 +94,7 @@ sAutoBaseTitle = { size  : [sAutoBase.size[0]+15, $
 ;***** Auto Fitting Button *****************************************************
 sAutoFit       = { size      : [5, 5, 125, 30],$
                    value     : 'Automatic Fitting',$
+                   uname     : 'step2_automatic_fitting_button',$
                    sensitive : 1 }
 
 ;***** & label *****************************************************************
@@ -183,7 +195,7 @@ XYoff             = [178,-8]
 sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
                                sAverageYBefore.size[1]+XYoff[1],$
                                80,35],$
-                      value : '344545455.454',$
+                      value : '',$
                       uname : 'step2_y_before_text_field'}
 
 ;***** Average Y After *********************************************************
@@ -197,7 +209,7 @@ XYoff            = [178,-8]
 sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
                               sAverageYAfter.size[1]+XYoff[1],$
                               60,30],$
-                     value : '',$
+                     value : '1',$
                      uname : 'step2_y_after_text_field'}
 
 ;***** SF base *****************************************************************
@@ -255,7 +267,6 @@ wBFceFile  = WIDGET_LABEL(STEP2_BASE,$
                           XOFFSET   = sBFceFile.size[0],$
                           YOFFSET   = sBFceFile.size[1],$
                           SCR_XSIZE = sBFceFile.size[2],$
-                          SCR_YSIZE = sBFceFile.size[3],$
                           VALUE     = sBFceFile.value,$
                           /ALIGN_LEFT)
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -297,7 +308,7 @@ wL_Qmax = WIDGET_LABEL(Step2QBase,$
                        YOFFSET = sL_Qmax.size[1],$
                        VALUE   = sL_Qmax.value)
 
-;*** Qmax text field ***********************************************************
+;***** Qmax text field *********************************************************
 wT_Qmax = WIDGET_TEXT(Step2QBase,$
                       XOFFSET   = sT_Qmax.size[0],$
                       YOFFSET   = sT_Qmax.size[1],$
@@ -307,6 +318,14 @@ wT_Qmax = WIDGET_TEXT(Step2QBase,$
                       UNAME     = sT_Qmax.uname,$
                       /EDITABLE,$
                       /ALIGN_LEFT)
+
+;***** Qmin Qmax Error Label ***************************************************
+wL_QMinMax = WIDGET_LABEL(Step2QBase,$
+                          XOFFSET   = sL_QMinMax.size[0],$
+                          YOFFSET   = sL_QMinMax.size[1],$
+                          SCR_XSIZE = sL_QMinMax.size[2],$
+                          UNAME     = sL_QMinMax.uname,$
+                          VALUE     = sL_QminMax.value)
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Auto ********************************************************************
@@ -326,6 +345,7 @@ wAutoBase = WIDGET_BASE(STEP2_BASE,$
 
 ;***** Auto Fitting Button *****************************************************
 wAutoFit  = WIDGET_BUTTON(wAutoBase,$
+                          UNAME     = sAutoFit.uname,$
                           XOFFSET   = sAutoFit.size[0],$
                           YOFFSET   = sAutoFit.size[1],$
                           SCR_XSIZE = sAutoFit.size[2],$

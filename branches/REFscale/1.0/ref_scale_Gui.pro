@@ -543,33 +543,6 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-;This function replot the SF, ri and delta_ri labels/draw of tab2
-PRO refresh_draw_labels_tab2, Event
-
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-images      = (*(*global).images_tabs)
-unames      = (*(*global).unames_tab2)
-images_xoff = (*(*global).images_tabs_xoff)
-images_yoff = (*(*global).images_tabs_yoff)
-
-image_size_array = size(images)
-image_size = image_size_array[1]
-
-FOR i=0,(image_size-1) DO BEGIN
-    id = widget_info(Event.top,find_by_uname=unames[i])
-    WIDGET_CONTROL, id, GET_VALUE=id_value
-    wset, id_value
-    image = read_bmp(images[i])
-    tv, image,images_xoff[i],images_yoff[i],/true
-ENDFOR
-
-END
-
-;###############################################################################
-;*******************************************************************************
-
 ;This function replot the SF, ri and delta_ri labels/draw of tab3
 PRO refresh_draw_labels_tab3, Event
 
