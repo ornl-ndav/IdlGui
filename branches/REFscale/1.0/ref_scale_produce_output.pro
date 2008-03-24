@@ -103,7 +103,7 @@ for i=0,(nbrFiles-1) do begin
    flt2  = flt2(index)
      
    ;remove data where DeltaR>R
-   index = getArrayRangeOfErrorGEValue(flt1, flt2) ;_get
+   index = GEvalue(flt1, flt2) ;_get
    flt0  = flt0(index)
    flt1  = flt1(index)
    flt2  = flt2(index)
