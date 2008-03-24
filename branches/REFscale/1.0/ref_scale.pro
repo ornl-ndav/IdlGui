@@ -64,10 +64,6 @@ global = ptr_new({ $
                    ColorSliderDefaultValue : 25,$ ;default index value of color slider
                    PreviousColorIndex : 25,$ ;color index of previous run
                    ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
-                   images_tab3    : ptr_new(0L),$ ;list of images for tab 3 only
-                   unames_tab3    : ptr_new(0L),$ ;list of widget_draw of tab3
-                   images_tabs_xoff : ptr_new(0L),$ ;images x_offset of tabs
-                   images_tabs_yoff : ptr_new(0L),$ ;images y_offset of tabs  
                    show_CE_fit      : 0,$ ;0 means the step2 has not been performed
                    show_other_fit   : 0$ ;0 means that the step3 has not been done yet
 })
@@ -99,22 +95,6 @@ ListOfLongFileName = strarr(1)
 (*(*global).ListOfLongFileName) = ListOfLongFileName
 (*(*global).metadata_CE_file) = metadata_CE_file
 (*global).ucams            = ucams
-
-if (!VERSION.os EQ 'darwin') then begin
-   images_tab3 = ["~/SVN/HistoTool/trunk/gui/RefLSupport/SF.bmp"]
-endif else begin
-    path = '/SNS/software/idltools/images/'
-    images_tab3 = [path + 'SF.bmp']
-endelse
-unames_tab3 = ["Step3SFDraw"]
-
-images_tabs_xoff = [0,0,0,0]
-images_tabs_yoff = [0,0,0,0]
-
-(*(*global).images_tab3) = images_tab3
-(*(*global).unames_tab3) = unames_tab3
-(*(*global).images_tabs_xoff) = images_tabs_xoff
-(*(*global).images_tabs_yoff) = images_tabs_yoff
 
 if (!VERSION.os EQ 'darwin') then begin
     (*global).input_path = '~/tmp/'
