@@ -19,8 +19,12 @@ FullFileName = dialog_pickfile(PATH     = pid_path,$
                                TITLE    = title,$
                                FILTER   = filter)
 
+IF (FullFileName NE '') THEN BEGIN
+    
 ;redefine the working path
-path = define_new_default_working_path(Event,FullFileName)
+    path = define_new_default_working_path(Event,FullFileName)
+
+ENDIF
 
 RETURN, FullFileName
 END
