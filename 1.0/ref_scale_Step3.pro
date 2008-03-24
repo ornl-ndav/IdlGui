@@ -46,8 +46,7 @@ FOR i=1,(nbrFile-1) DO BEGIN
     flt1_highQ_new = getArrayOfInfValues(flt1_highQ_new) ;_get
     
 ;remove points that have error GE than their values
-    RangeIndexes   = getArrayRangeOfErrorGEValue(flt1_highQ_new, $
-                                               flt2_highQ_new) ;_get
+    RangeIndexes   = GEValue(flt1_highQ_new, flt2_highQ_new) ;_get
     flt0_highQ_new = flt0_highQ_new(RangeIndexes)
     flt1_highQ_new = flt1_highQ_new(RangeIndexes)
     flt2_highQ_new = flt2_highQ_new(RangeIndexes)
@@ -78,8 +77,7 @@ FOR i=1,(nbrFile-1) DO BEGIN
     flt2_lowQ_new = flt2_lowQ_new(RangeIndexes)
 
 ;remove points that have error GE than their values
-    RangeIndexes  = getArrayRangeOfErrorGEValue(flt1_LowQ_new, $
-                                                flt2_LowQ_new) ;_get
+    RangeIndexes  = GEvalue(flt1_LowQ_new, flt2_LowQ_new) ;_get
     flt0_LowQ_new = flt0_LowQ_new(RangeIndexes)
     flt1_LowQ_new = flt1_LowQ_new(RangeIndexes)
     flt2_LowQ_new = flt2_LowQ_new(RangeIndexes)
