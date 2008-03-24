@@ -47,8 +47,6 @@ ENDIF ELSE BEGIN
                                 ;for now, the first file loaded is
                                 ;considered as being the CE file
             display_Q_values, Event, 0, 2  ;_Gui
-                                ;if second tab, plot only CE plot
-            refresh_draw_labels_tab2, Event ;_Gui
         END
 
          2: BEGIN               ;if third tab plot only the file selected
