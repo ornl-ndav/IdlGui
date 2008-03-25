@@ -39,7 +39,7 @@ sB1_QminQmaxInput = { size   : [5, $
 ;***** Q title frame ***********************************************************
 sL_QBaseTitle = { size  : [sB1_QminQMaxInput.size[0]+15, $
                            sB1_QminQmaxInput.size[1]-8],$
-                  value : 'Range of Q used to calculate the Scalling ' + $
+                  value : 'Range of Q used to calculate the Scaling ' + $
                   'Factor (SF)'}
 
 ;***** Qmin label **************************************************************
@@ -91,43 +91,16 @@ sAutoBaseTitle = { size  : [sAutoBase.size[0]+15, $
                             sAutoBase.size[1]-8],$
                    value : 'Automatic Mode'} 
 
-;***** Auto Fitting Button *****************************************************
-sAutoFit       = { size      : [5, 5, 125, 30],$
-                   value     : 'Automatic Fitting',$
-                   uname     : 'step2_automatic_fitting_button',$
-                   sensitive : 1 }
-
-;***** & label *****************************************************************
-XYoff          = [126,5]
-sStep2Label    = { size      : [sAutoFit.size[0]+XYoff[0],$
-                                sAutoFit.size[1]+XYoff[1]],$
-                   value     : '&'}
-
-;***** Auto Scalling ***********************************************************
-XYoff          = [137,0]
-sAutoScal      = { size      : [sAutoFit.size[0]+XYoff[0],$
-                                sAutoFit.size[1]+XYoff[1],$
-                                sAutoFit.size[2],$
-                                sAutoFit.size[3]],$
-                   uname     : 'step2_automatic_scaling_button',$
-                   value     : 'Automatic Scaling',$
-                   sensitive : 0}
-
-;***** OR label ****************************************************************
-XYoff          = [128,6.]
-sStep2Or       = { size      : [sAutoScal.size[0]+XYoff[0],$
-                                sAutoScal.size[1]+XYoff[1]],$
-                   value     : 'OR'}
-
 ;***** Auto Fitting and Scalling button ****************************************
-XYoff          = [146,0]
-sB_AutoScalFit = { size      : [sAutoScal.size[0]+XYoff[0],$
-                                sAutoScal.size[1]+XYoff[1],$
-                                210,$
-                                sAutoScal.size[3]],$
+XYoff          = [5,5]
+sB_AutoScalFit = { size      : [XYoff[0],$
+                                XYoff[1],$
+                                495,$
+                                30],$
                    uname     : 'step2_button',$
                    sensitive : 1,$
-                   value     : 'Automatic Fitting / Rescaling'}
+                   value     : '>     >   >  > >> >>> AUTOMATIC ' + $
+                   'FITTING and RESCALING <<< << <  <   <    <'}
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual ******************************************************************
@@ -327,7 +300,7 @@ wL_QMinMax = WIDGET_LABEL(Step2QBase,$
                           UNAME     = sL_QMinMax.uname,$
                           VALUE     = sL_QminMax.value)
 
-;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;-------------------------------------------------------------------------------
 ;***** Auto ********************************************************************
 wAutoBaseTitle = WIDGET_LABEL(STEP2_BASE,$
                               XOFFSET = sAutoBaseTitle.size[0],$
@@ -343,38 +316,6 @@ wAutoBase = WIDGET_BASE(STEP2_BASE,$
                         SCR_YSIZE = sAutoBase.size[3],$
                         FRAME     = sAutoBase.frame)
 
-;***** Auto Fitting Button *****************************************************
-wAutoFit  = WIDGET_BUTTON(wAutoBase,$
-                          UNAME     = sAutoFit.uname,$
-                          XOFFSET   = sAutoFit.size[0],$
-                          YOFFSET   = sAutoFit.size[1],$
-                          SCR_XSIZE = sAutoFit.size[2],$
-                          SCR_YSIZE = sAutoFit.size[3],$
-                          VALUE     = sAutoFit.value,$
-                          SENSITIVE = sAutoFit.sensitive)
-
-;***** & label *****************************************************************
-wStep2And = WIDGET_LABEL(wAutoBase,$
-                         XOFFSET    = sStep2Label.size[0],$
-                         YOFFSET    = sStep2Label.size[1],$
-                         VALUE      = sStep2Label.value)
-
-;***** Auto Scalling ***********************************************************
-wStep2Auto = WIDGET_BUTTON(wAutoBase,$
-                           UNAME     = sAutoScal.uname,$
-                           XOFFSET   = sAutoScal.size[0],$
-                           YOFFSET   = sAutoScal.size[1],$
-                           SCR_XSIZE = sAutoScal.size[2],$
-                           SCR_YSIZE = sAutoScal.size[3],$
-                           VALUE     = sAutoScal.value,$
-                           SENSITIVE = sAutoScal.sensitive)
-
-;***** OR label ****************************************************************
-wStep2Or  = WIDGET_LABEL(wAutoBase,$
-                         XOFFSET    = sStep2Or.size[0],$
-                         YOFFSET    = sStep2Or.size[1],$
-                         VALUE      = sStep2Or.value)
-
 ;***** Auto Fitting and Scalling button ****************************************
 wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               UNAME     = sB_AutoScalFit.uname,$
@@ -384,7 +325,8 @@ wB_autoScaFit = WIDGET_BUTTON(wAutoBase,$
                               SCR_YSIZE = sB_AutoScalFit.size[3],$
                               VALUE     = sB_AutoScalFit.value,$
                               SENSITIVE = sB_AutoScalFit.sensitive)
-                           
+;-------------------------------------------------------------------------------
+
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;***** Manual Mode Title *******************************************************
 wManualBaseTitle = WIDGET_LABEL(STEP2_BASE,$
