@@ -27,7 +27,9 @@ FUNCTION getNbrElementsInDroplist, Event, uname
 id  = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 nbr_elements = WIDGET_INFO(id, /DROPLIST_NUMBER)
 WIDGET_CONTROL, id, get_value=value
-IF (STRCOMPRESS(value,/REMOVE_ALL) EQ '') THEN RETURN, 0
+IF (nbr_elements EQ 1) THEN BEGIN
+    IF (STRCOMPRESS(value,/REMOVE_ALL) EQ '') THEN RETURN, 0
+ENDIF
 RETURN, nbr_elements
 END
 
