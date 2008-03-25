@@ -29,7 +29,7 @@ nbrDataTextFieldSize = [nbrDataLabelSize[0] + d_L_T_2,$
                         50,30]
 
 ;Define titles
-SettingsTabTitle        = 'Settings'
+SettingsTabTitle        = 'SETTINGS'
 tof_to_Q_label_title    = 'TOF_to_Q algorithm:' 
 MinCrapDataTitle1       = 'Remove the'
 MinCrapDataTitle2       = 'first data for auto-scaling'
