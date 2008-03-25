@@ -119,7 +119,7 @@ distanceVertical_L_L = 35
 Step1Title = 'LOAD FILES'
 Step2Title = 'DEFINE CRITICAL EDGE FILE'
 Step3Title = 'RESCALE FILES'
-ListOfFiles  = ['                            ']  
+ListOfFiles  = ['                              ']  
 MainTitle = "REFLECTOMETER SUPPORT - RESCALING PROGRAM" + VERSION
 
 ;Build Main Base
@@ -167,6 +167,8 @@ MakeGuiStep2, STEPS_TAB,$
               distanceVertical_L_L,$
               ListOfFiles
 
+ListOfFiles = ['                                ' + $
+               '                                ']
 ;Build STEP3 tab
 MakeGuiStep3, STEPS_TAB,$
               Step1Size,$
@@ -191,7 +193,7 @@ XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ; default tabs shown 
 id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
-widget_control, id1, set_tab_current = 0  ;remove_me
+widget_control, id1, set_tab_current = 2  ;remove_me
 
 end
 

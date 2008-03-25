@@ -3,341 +3,388 @@ PRO MakeGuiStep3, STEPS_TAB,$
                   Step3Title,$
                   ListOfFiles
 
-distance_L_TB        = 35
-distance_L_L         = 125
-distanceVertical_L_L = 35
- 
-;Define position and size of widgets
-;**automatic mode
-Step3AutomaticRescaleButtonSize      = [5, 5, 515, 30]
-
-;**manual mode
-;main frame
-Step3ManualModeLabelSize             = [15, 42]
-Step3ManualModeFrameSize             = [8, 50, 504, 305]
-
-;low and Hight Q file names
-Step3ManualModeLowQFileLabelSize     = [25, 65]
-Step3ManualModeLowQFileNameSize      = [105, 60, 100, 30]
-Step3ManualModeHighQFileLabelSize    = [230, 65]
-Step3ManualModeHighQFileDroplistSize = [305, 55, 60, 30]
-
-;frame that will hide all the widgets of the manual scaling box
-Step3ManualModeHiddenFrameSize = [10,90,500,255]
-
-;Qmin and Qmax
-Step3ManualQMinLabelSize              = [25, 120]
-d_L_T = 120
-Step3ManualQMinTextFieldSize         = [Step3ManualQMinLabelSize[0] + d_L_T ,$
-                                        Step3ManualQMinLabelSize[1] - 5,$
-                                        80,30]
-d_L_L = 250
-Step3ManualQMaxLabelSize             = [Step3ManualQMinLabelSize[0] + d_L_L,$
-                                        Step3ManualQMinLabelSize[1]]
-Step3ManualQMaxTextFieldSize         = [Step3ManualQMaxLabelSize[0] + d_L_T,$
-                                        Step3ManualQMinTextFieldSize[1],$
-                                        80,30]
-
-;SF
-Step3SFDrawSize      = [18,130,40,40]
-Step3SFTextFieldSize = [Step3SFDrawSize[0] + 45,$
-                        Step3SFDrawSize[1] + 5,$
-                        120,$
-                        30]
-
-
-;text field to display flt0, ftl1_lowQ and flt2_highQ
-Step3fltTextFieldSize = [200,120,310,225]
-flt0LabelSize     = [215,100]
-
-;yes/no box to show or not values
-displayValueLabelYesNoSize = [10, 300]
-displayValueYesNoSize      = [60,320]
-
-;increase SF 
-Step3_3IncreaseButtonSize = [Step3SFTextFieldSize[0],$
-                             Step3SFTextFieldSize[1]-40,$
-                             40,40]
-d_B_B = 40
-Step3_2IncreaseButtonSize = [Step3_3IncreaseButtonSize[0] + d_B_B,$
-                             Step3_3IncreaseButtonSize[1],$
-                             Step3_3IncreaseButtonSize[2],$
-                             Step3_3IncreaseButtonSize[3]]
-Step3_1IncreaseButtonSize = [Step3_2IncreaseButtonSize[0] + d_B_B,$
-                             Step3_2IncreaseButtonSize[1],$
-                             Step3_2IncreaseButtonSize[2],$
-                             Step3_2IncreaseButtonSize[3]]
-
-;decrease SF 
-Step3_3DecreaseButtonSize = [Step3SFTextFieldSize[0],$
-                             Step3SFTextFieldSize[1]+30,$
-                             40,40]
-d_B_B = 40
-Step3_2DecreaseButtonSize = [Step3_3DecreaseButtonSize[0] + d_B_B,$
-                             Step3_3DecreaseButtonSize[1],$
-                             Step3_3DecreaseButtonSize[2],$
-                             Step3_3DecreaseButtonSize[3]]
-Step3_1DecreaseButtonSize = [Step3_2DecreaseButtonSize[0] + d_B_B,$
-                             Step3_2DecreaseButtonSize[1],$
-                             Step3_2DecreaseButtonSize[2],$
-                             Step3_2DecreaseButtonSize[3]]
-
-
-;;Manual scaling
-;Step3ManualScalingButtonSize = [Step3SFTextFieldSize[0]+90,$
-;                                Step3SFTextFieldSize[1],$
-;                                100,30]
-
-
-
-
-
-;Define titles
-Step3AutomaticRescaleButtonTitle  = 'Automatic rescaling'
-Step3ManualModeLabelTitle         = 'Manual rescaling'
-Step3ManualModeLowQFileLabelTitle = 'Low Q file:'
-Step3ManualModeHighQFileLabelTitle = 'High Q file:'
-Step3ManualQMinLabelTitle            = 'Qmin of high Q file'
-Step3ManualQMaxLabelTitle            = 'Qmax of low Q file'
-Step3ManualScalingButtonTitle        = 'Manual scaling'
-
-
-Step3WorkOnFileTitle = 'File name:'
-Step3GoButtonTitle = 'Rescale Work-on file'
-ListOfFiles  = ['                          ']  
-Step2Q1LabelTitle = 'Qmin:'
-Step2Q2LabelTitle = 'Qmax:'
-
-;Build GUI
-STEP3_BASE = WIDGET_BASE(STEPS_TAB,$
-                         UNAME='step3',$
-                         TITLE=Step3Title,$
-                         XOFFSET=Step1Size[0],$
-                         YOFFSET=Step1Size[1],$
-                         SCR_XSIZE=Step1Size[2],$
-                         SCR_YSIZE=Step1Size[3])
-
-;automatic rescaling button
-STEP3_automatic_rescale_button = WIDGET_BUTTON(STEP3_BASE,$
-                                               UNAME='Step3_automatic_rescale_button',$
-                                               XOFFSET=Step3AutomaticRescaleButtonSize[0],$
-                                               YOFFSET=Step3AutomaticRescaleButtonSize[1],$
-                                               SCR_XSIZE=Step3AutomaticRescaleButtonSize[2],$
-                                               SCR_YSIZE=Step3AutomaticRescaleButtonSize[3],$
-                                               SENSITIVE=0,$
-                                               VALUE=Step3AutomaticRescaleButtonTitle)
-
-
-
-;manual mode
-;low Q label
-Step3ManualModeLowQFileLabel = widget_label(STEP3_BASE,$
-                                            uname='Step3ManualModeLowQFileLabel',$
-                                            xoffset=Step3ManualModeLowQFileLabelSize[0],$
-                                            yoffset=Step3ManualModeLowQFileLabelSize[1],$
-                                            value=Step3ManualModeLowQFileLabelTitle)
-
-;low Q field name
-Step3ManualModeLowQFileName = widget_label(STEP3_BASE,$
-                                           uname='Step3ManualModeLowQFileName',$
-                                           xoffset=Step3ManualModeLowQFileNameSize[0],$
-                                           yoffset=Step3ManualModeLowQFileNameSize[1],$
-                                           scr_xsize=Step3ManualModeLowQFileNameSize[2],$
-                                           scr_ysize=Step3ManualModeLowQFileNameSize[3],$
-                                           value='')
-
-;high Q label
-Step3ManualModeHighQFileLabel = widget_label(STEP3_BASE,$
-                                             uname='Step3ManualModeHighQFileLabel',$
-                                             xoffset=Step3ManualModeHighQFileLabelSize[0],$
-                                             yoffset=Step3ManualModeHighQFileLabelSize[1],$
-                                             value=Step3ManualModeHighQFileLabelTitle)
-
-;high Q droplist
-Step3ManualModeHighQFileDroplist = WIDGET_DROPLIST(STEP3_BASE,$
-                                                   UNAME='step3_work_on_file_droplist',$
-                                                   XOFFSET=Step3ManualModeHighQFileDroplistSize[0],$
-                                                   YOFFSET=Step3ManualModeHighQFileDroplistSize[1],$
-                                                   SCR_XSIZE=Step3ManualModeHighQFileDroplistSize[2],$
-                                                   SCR_YSIZE=Step3ManualModeHighQFileDroplistSize[3],$
-                                                   VALUE=ListOfFiles)
-
-;Manual Mode Hidden Frame
-Step3ManualModeHiddenFrame = widget_base(STEP3_BASE,$
-                                   uname='Step3ManualModeHiddenFrame',$
-                                   xoffset=Step3ManualModeHiddenFrameSize[0],$
-                                   yoffset=Step3ManualModeHiddenFrameSize[1],$
-                                   scr_xsize=Step3ManualModeHiddenFrameSize[2],$
-                                   scr_ysize=Step3ManualModeHiddenFrameSize[3],$
-                                   map=0)
-
-;!!!!!!!!!!!!!!!!!!!!!!!!!!
-;put here the label for SF
-;!!!!!!!!!!!!!!!!!!!!!!!!!
-
-Step3SFTextField = widget_text(STEP3_BASE,$
-                               xoffset=Step3SFTextFieldSize[0],$
-                               yoffset=Step3SFTextFieldSize[1],$
-                               scr_xsize=Step3SFTextFieldSize[2],$
-                               scr_ysize=Step3SFTextFieldSize[3],$
-                               uname='Step3SFTextField',$
-                               /editable,$
-                               /align_left,$
-                               value='1')
-
-;Increase buttons
-Step3_3IncreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_3increase_button',$
-                                      xoffset=Step3_3IncreaseButtonSize[0],$
-                                      yoffset=Step3_3IncreaseButtonSize[1],$
-                                      scr_xsize=Step3_3IncreaseButtonSize[2],$
-                                      scr_ysize=Step3_3IncreaseButtonSize[3],$
-                                      value='+++')
-
-Step3_2IncreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_2increase_button',$
-                                      xoffset=Step3_2IncreaseButtonSize[0],$
-                                      yoffset=Step3_2IncreaseButtonSize[1],$
-                                      scr_xsize=Step3_2IncreaseButtonSize[2],$
-                                      scr_ysize=Step3_2IncreaseButtonSize[3],$
-                                      value='++')
-
-Step3_1IncreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_1increase_button',$
-                                      xoffset=Step3_1IncreaseButtonSize[0],$
-                                      yoffset=Step3_1IncreaseButtonSize[1],$
-                                      scr_xsize=Step3_1IncreaseButtonSize[2],$
-                                      scr_ysize=Step3_1IncreaseButtonSize[3],$
-                                      value='+')
-
-
-;Decrease buttons
-Step3_3DecreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_3decrease_button',$
-                                      xoffset=Step3_3DecreaseButtonSize[0],$
-                                      yoffset=Step3_3DecreaseButtonSize[1],$
-                                      scr_xsize=Step3_3DecreaseButtonSize[2],$
-                                      scr_ysize=Step3_3DecreaseButtonSize[3],$
-                                      value='---')
-
-Step3_2DecreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_2decrease_button',$
-                                      xoffset=Step3_2DecreaseButtonSize[0],$
-                                      yoffset=Step3_2DecreaseButtonSize[1],$
-                                      scr_xsize=Step3_2DecreaseButtonSize[2],$
-                                      scr_ysize=Step3_2DecreaseButtonSize[3],$
-                                      value='--')
-
-Step3_1DecreaseButton = widget_button(STEP3_BASE,$
-                                      uname='step3_1decrease_button',$
-                                      xoffset=Step3_1DecreaseButtonSize[0],$
-                                      yoffset=Step3_1DecreaseButtonSize[1],$
-                                      scr_xsize=Step3_1DecreaseButtonSize[2],$
-                                      scr_ysize=Step3_1DecreaseButtonSize[3],$
-                                      value='-')
-
-;text field to display flt0, flt1_lowQ and flt1_highQ
-Step3fltTextField = widget_text(STEP3_BASE,$
-                                uname='step3_flt_text_filed',$
-                                xoffset=Step3fltTextFieldSize[0],$
-                                yoffset=Step3fltTextFieldSize[1],$
-                                scr_xsize=Step3fltTextFieldSize[2],$
-                                scr_ysize=Step3fltTextFieldSize[3],$
-                                /scroll)
-                                
-flt0Label = widget_label(STEP3_BASE,$
-                         xoffset=flt0LabelSize[0],$
-                         yoffset=flt0LabelSize[1],$
-                         value=' flt0        flt1 Low Q       flt1 High Q')
-       
-;display or not data                
-displayValueLabelYesNo = widget_label(STEP3_BASE,$
-                                      value='Display data:',$
-                                      xoffset=displayValueLabelYesNoSize[0],$
-                                      yoffset=displayValueLabelYesNoSize[1])
-         
-displayValueYesNoList = ['yes','no']
-displayValueYesNo = cw_bgroup(STEP3_BASE,$
-                              displayValueYesNoList,$
-                              uname='display_value_yes_no',$
-                              xoffset=displayValueYesNoSize[0],$
-                              yoffset=displayValueYesNoSize[1],$
-                              /exclusive,$
-                              set_value=1.0,$
-                              row=1)
-                              
-
-;--part tmp removed
-Step3HiddenBaseTmp = widget_base(step3_base,$
-                                 xoffset=Step3ManualQMinLabelSize[0]-5,$
-                                 yoffset=Step3ManualQMinLabelSize[1]-5,$
-                                 scr_xsize=460,$
-                                 scr_ysize=50,$
-                                 map=1)
-
-;Qmin label
-Step3ManualQMinLabel = widget_label(STEP3_BASE,$
-                                    xoffset=Step3ManualQMinLabelSize[0],$
-                                    yoffset=Step3ManualQMinLabelSize[1],$
-                                    value=Step3ManualQMinLabelTitle)
-
-;Qmin value
-Step3ManualQMinTextField = widget_text(STEP3_BASE,$
-                                       xoffset=Step3ManualQMinTextFieldSize[0],$
-                                       yoffset=Step3ManualQMinTextFieldSize[1],$
-                                       scr_xsize=Step3ManualQMinTextFieldSize[2],$
-                                       scr_ysize=Step3ManualQMinTextFieldSize[3],$
-                                       /editable,$
-                                       /align_left,$
-                                       uname='Step3ManualQMinTextField')
-
-;Qmax label
-Step3ManualQMaxLabel = widget_label(STEP3_BASE,$
-                                    xoffset=Step3ManualQMaxLabelSize[0],$
-                                    yoffset=Step3ManualQMaxLabelSize[1],$
-                                    value=Step3ManualQMaxLabelTitle)
-
-;Qmax text field
-Step3ManualQMaxTextField = widget_text(STEP3_BASE,$
-                                       xoffset=Step3ManualQMaxTextFieldSize[0],$
-                                       yoffset=Step3ManualQMaxTextFieldSize[1],$
-                                       scr_xsize=Step3ManualQMaxTextFieldSize[2],$
-                                       scr_ysize=Step3ManualQMaxTextFieldSize[3],$
-                                       /editable,$
-                                       /align_left,$
-                                       uname='Step3ManualQMaxTextField')
-
-;--part temporary removed
-
-
-
-
-
-
-
-STEP3_Manual_mode_label = widget_label(STEP3_BASE,$
-                                       xoffset=Step3ManualModeLabelSize[0],$
-                                       yoffset=Step3ManualModeLabelSize[1],$
-                                       value=Step3ManualModeLabelTitle)
-
-STEP3_Manual_mode_frame = widget_label(STEP3_BASE,$
-                                       xoffset=Step3ManualModeFrameSize[0],$
-                                       yoffset=Step3ManualModeFrameSize[1],$
-                                       scr_xsize=Step3ManualModeFrameSize[2],$
-                                       scr_ysize=Step3ManualModeFrameSize[3],$
-                                       value='',$
-                                       frame=1)
-
-
-
-
-
-
-
-
-
-
-
-
-
+;===============================================================================
+;+++++++++++++++++++++++++ Define Structures +++++++++++++++++++++++++++++++++++
+;===============================================================================
+
+;***** Main Base ***************************************************************
+sMainBase = { size  : Step1Size,$
+              title : Step3Title,$
+              uname : 'step3'}
+
+;***** Automatic Rescaling Button **********************************************
+XYoff              = [5,5]
+sAutoRescaleButton = { size      : [XYoff[0],$
+                                    XYoff[1],$
+                                    515,30],$
+                       value     : '>     >    >   >  > >> >>> AUTOMATIC ' + $
+                       'RESCALING <<< << <  <   <    <     <',$
+                       uname     : 'Step3_automatic_rescale_button',$
+                       sensitive : 0}
+
+;------------------------------------------------------------------------------
+;***** Manual Mode Hidden Base ************************************************
+XYoff            = [10,5]
+sStep3ManualBase = { size  : [XYoff[0],$
+                              sAutoRescaleButton.size[1]+ $
+                              sAutoRescaleButton.size[3]+XYoff[1],$
+                              505,325],$
+                     uname : 'Step3ManualModeFrame',$
+                     frame : 1,$
+                     map   : 1}
+
+;***** Manual Mode Label *******************************************************
+XYoff             = [20,-8]
+sStep3ManualLabel = { size  : [sStep3ManualBase.size[0]+XYoff[0],$
+                               sStep3ManualBase.size[1]+XYoff[1]],$
+                      value : 'Manual Rescaling'}
+                               
+;***** Low Q Label *************************************************************
+XYoff      = [5,10]
+sLowQLabel = { size  : [XYoff[0],$
+                        XYoff[1]],$
+               value : 'Low Q file :',$
+               uname : 'Step3ManualModeLowQFileLabel'}
+
+;**** Low Q File Name value ****************************************************
+XYoff      = [78,0]
+sLowQValue = { size  : [sLowQLabel.size[0]+XYoff[0],$
+                        sLowQLabel.size[1]+XYoff[1],$
+                        415],$
+               uname : 'Step3ManualModeLowQFileName',$
+               value : 'N/A'}
+
+;***** High Q Label ************************************************************
+XYoff      = [0,30]
+sHighQLabel = { size  : [sLowQLabel.size[0]+XYoff[0], $
+                         sLowQLabel.size[1]+XYoff[1]],$
+                value : 'High Q file:',$
+                uname : 'Step3ManualModeHighQFileLabel'}
+
+;***** High Q Droplist *********************************************************
+XYoff       = [67,-10]
+sHighQValue = { size  : [sHighQLabel.size[0]+XYoff[0],$
+                         sHighQLabel.size[1]+XYoff[1],$
+                         365,30],$
+                uname : 'step3_work_on_file_droplist',$
+                list  : ListOfFiles}
+
+;-------------------------------------------------------------------------------
+;***** Hidden Manual Base ******************************************************
+XYoff       = [0,5]
+sHiddenBase = { size  : [XYoff[0],$
+                         sHighQValue.size[1]+sHighQValue.size[3]+XYoff[1],$
+                         500,$
+                         255],$
+                frame : 0,$
+                uname : 'Step3ManualModeHiddenFrame',$
+                map   : 0}
+
+;-------------------------------------------------------------------------------
+;***** Scaling Factor Base *****************************************************
+XYoff        = [5,10]
+sScalingBase = { size  : [XYoff[0],$
+                          XYoff[1],$
+                          188,120],$
+                 frame : 1}
+
+;***** Scaling factor label ****************************************************
+XYoff         = [50,-8]
+sScalingLabel = { size  : [sScalingBase.size[0]+XYoff[0],$
+                           sScalingBase.size[1]+XYoff[1]],$
+                  value : 'SCALING FACTOR'}
+                           
+;-------------------------------------------------------------------------------
+;***** SF CW Field *************************************************************
+XYoff           = [63,40]
+sScalingCWField = { size  : [XYoff[0],$
+                             XYoff[1],$
+                             sScalingBase.size[2]-2*XYoff[0],$
+                             45],$
+                    xsize : 5,$
+                    ysize : 1,$
+                    uname : 'Step3SFTextField',$
+                    value : '1'}
+
+;***** +++ Button **************************************************************
+XYoff = [5,10]
+sButton3Plus = { size  : [XYoff[0],$
+                          XYoff[1],$
+                          55,30],$
+                 value : '+++',$
+                 uname : 'step3_3increase_button'}
+
+;***** ++ Button ***************************************************************
+XYoff = [5,0]
+Xreducer = 0
+sButton2Plus = { size  : [sButton3Plus.size[0]+sButton3Plus.size[2]+XYoff[0],$
+                          sButton3Plus.size[1]+XYoff[1],$
+                          sButton3Plus.size[2]-Xreducer,30],$
+                 value : '++',$
+                 uname : 'step3_2increase_button'}
+
+;***** + Button ****************************************************************
+XYoff = [5,0]
+sButton1Plus = { size  : [sButton2Plus.size[0]+sButton2Plus.size[2]+XYoff[0],$
+                          sButton2Plus.size[1]+XYoff[1],$
+                          sButton2Plus.size[2]-Xreducer,30],$
+                 value : '+',$
+                 uname : 'step3_1increase_button'}
+
+;***** --- Button **************************************************************
+XYoff = [0,85]
+sButton3Less = { size  : [sButton3Plus.size[0]+XYoff[0],$
+                          XYoff[1],$
+                          55,30],$
+                 value : '---',$
+                 uname : 'step3_3decrease_button'}
+
+;***** -- Button ***************************************************************
+XYoff = [0,0]
+sButton2Less = { size  : [sButton2Plus.size[0]+XYoff[0],$
+                          sButton3Less.size[1]+XYoff[1],$
+                          sButton3Plus.size[2]-Xreducer,30],$
+                 value : '--',$
+                 uname : 'step3_2decrease_button'}
+
+;***** - Button ****************************************************************
+XYoff = [0,0]
+sButton1Less = { size  : [sButton1Plus.size[0]+XYoff[0],$
+                          sButton2Less.size[1]+XYoff[1],$
+                          sButton2Plus.size[2]-Xreducer,30],$
+                 value : '-',$
+                 uname : 'step3_1decrease_button'}
+
+;-------------------------------------------------------------------------------
+
+;***** Display or not data *****************************************************
+XYoff             = [35,40]
+sDisplayDataLabel = { size  : [XYoff[0],$
+                               sScalingBase.size[1]+ $
+                               sScalingBase.size[3]+XYoff[1]],$
+                      value : 'Display Data ? ------>'}
+
+;***** Display data cw_bgroup **************************************************
+XYoff             = [0,25]
+SDisplayDataGroup = { size  : [sDisplayDataLabel.size[0]+XYoff[0],$
+                               sDisplayDataLabel.size[1]+XYoff[1]],$
+                      list  : [' Y E S ',' N O'],$
+                      value : 1.0,$
+                      uname : 'display_value_yes_no'}
+
+;-------------------------------------------------------------------------------
+;***** flt0, flt1_low and flt1_high text field *********************************
+XYoff       = [200,15]
+sStep3FltTextField = { size  : [XYoff[0],$
+                                XYoff[1],$
+                                300,240],$
+                       uname : 'step3_flt_text_field'}
+
+;***** flt0, flt1_low and flt1_high label **************************************
+XYoff          = [10,-17]
+sStep3FltLabel = { size  : [sStep3FltTextField.size[0]+XYoff[0],$
+                            sStep3FltTextField.size[1]+XYoff[1]],$
+                   value : ' flt0        flt1 Low Q       flt1 High Q'}
+                          
+;===============================================================================
+;+++++++++++++++++++++++++++; Build GUI ++++++++++++++++++++++++++++++++++++++++
+;===============================================================================
+
+;***** Main Base ***************************************************************
+wMainBase = WIDGET_BASE(STEPS_TAB,$
+                        UNAME     = sMainBase.uname,$
+                        XOFFSET   = sMainBase.size[0],$
+                        YOFFSET   = sMainBase.size[1],$
+                        SCR_XSIZE = sMainBase.size[2],$
+                        SCR_YSIZE = sMainBase.size[3],$
+                        TITLE     = sMainBase.title)
+
+;***** Automatic Rescaling Button **********************************************
+wAutoRescaleButton = WIDGET_BUTTON(wMainBase,$
+                                   UNAME     = sAutoRescaleButton.uname,$
+                                   XOFFSET   = sAutoRescaleButton.size[0],$
+                                   YOFFSET   = sAutoRescaleButton.size[1],$
+                                   SCR_XSIZE = sAutoRescaleButton.size[2],$
+                                   SCR_YSIZE = sAutoRescaleButton.size[3],$
+                                   VALUE     = sAutoRescaleButton.value,$
+                                   SENSITIVE = sAutoRescaleButton.sensitive)
+
+;-------------------------------------------------------------------------------
+;***** Manual Mode Label *******************************************************
+wStep3ManualLabel = WIDGET_LABEL(wMainBase,$
+                                 XOFFSET = sStep3ManualLabel.size[0],$
+                                 YOFFSET = sStep3ManualLabel.size[1],$
+                                 VALUE   = sStep3ManualLabel.value)
+
+;***** Manual Mode Base ********************************************************
+wStep3ManualBase = WIDGET_BASE(wMainBase,$
+                               UNAME     = sStep3ManualBase.uname,$
+                               XOFFSET   = sStep3ManualBase.size[0],$
+                               YOFFSET   = sStep3ManualBase.size[1],$
+                               SCR_XSIZE = sStep3ManualBase.size[2],$
+                               SCR_YSIZE = sStep3ManualBase.size[3],$
+                               MAP       = sStep3ManualBase.map,$
+                               FRAME     = sStep3ManualBase.frame)
+
+;***** Low Q Label *************************************************************
+wLowQLabel = WIDGET_LABEL(wStep3ManualBase,$
+                          UNAME   = sLowQLabel.uname,$
+                          XOFFSET = sLowQLabel.size[0],$
+                          YOFFSET = sLowQLabel.size[1],$
+                          VALUE   = sLowQLabel.value)
+                          
+;**** Low Q File Name Label ****************************************************
+wLowQValue = WIDGET_LABEL(wStep3ManualBase,$
+                          UNAME     = sLowQValue.uname,$
+                          XOFFSET   = sLowQValue.size[0],$
+                          YOFFSET   = sLowQValue.size[1],$
+                          SCR_XSIZE = sLowQValue.size[2],$
+                          VALUE     = sLowQValue.value,$
+                          /ALIGN_LEFT)
+
+;***** High Q Label *************************************************************
+wHighQLabel = WIDGET_LABEL(wStep3ManualBase,$
+                          UNAME   = sHighQLabel.uname,$
+                          XOFFSET = sHighQLabel.size[0],$
+                          YOFFSET = sHighQLabel.size[1],$
+                          VALUE   = sHighQLabel.value)
+
+;***** High Q Droplist **********************************************************
+wHighQValue = WIDGET_DROPLIST(wStep3ManualBase,$
+                              UNAME = sHighQValue.uname,$
+                              XOFFSET = sHighQValue.size[0],$
+                              YOFFSET = sHighQValue.size[1],$
+                              SCR_XSIZE = sHighQValue.size[2],$
+                              SCR_YSIZE = sHighQValue.size[3],$
+                              VALUE     = sHighQValue.list)
+
+;-------------------------------------------------------------------------------
+;***** Hidden Manual Base ******************************************************
+wHiddenBase = WIDGET_BASE(wStep3ManualBase,$
+                          XOFFSET   = sHiddenBase.size[0],$
+                          YOFFSET   = sHiddenBase.size[1],$
+                          SCR_XSIZE = sHiddenBase.size[2],$
+                          SCR_YSIZE = sHiddenBase.size[3],$
+                          UNAME     = sHiddenBase.uname,$
+                          FRAME     = sHiddenBase.frame,$
+                          MAP       = sHiddenBase.map)
+
+;-------------------------------------------------------------------------------
+;***** Scaling Factor Label ****************************************************
+wScalingLabel = WIDGET_LABEL(wHiddenBase,$
+                             XOFFSET = sScalingLabel.size[0],$
+                             YOFFSET = sScalingLabel.size[1],$
+                             VALUE   = sScalingLabel.value)
+
+;***** Scaling Factor Base *****************************************************
+wScalingBase = WIDGET_BASE(wHiddenBase,$
+                           XOFFSET   = sScalingBase.size[0],$
+                           YOFFSET   = sScalingBase.size[1],$
+                           SCR_XSIZE = sScalingBase.size[2],$
+                           SCR_YSIZE = sScalingBase.size[3],$
+                           FRAME     = sScalingBase.frame)
+
+;-------------------------------------------------------------------------------
+;***** SF base and cw_field*****************************************************
+wScalingInputBase = WIDGET_BASE(wScalingBase,$
+                                XOFFSET   = sScalingCWField.size[0],$
+                                YOFFSET   = sScalingCWField.size[1],$
+                                SCR_XSIZE = sScalingCWField.size[2],$
+                                SCR_YSIZE = sScalingCWField.size[3],$
+                                ROW       = 1)
+
+wScalingInput = CW_FIELD(wScalingInputBase,$
+                         XSIZE = sScalingCWField.xsize,$
+                         YSIZE = sScalingCWField.ysize,$
+                         UNAME = sScalingCWField.uname,$
+                         TITLE = '',$
+                         /RETURN_EVENTS,$
+                         /FLOAT)
+
+;***** +++ Button **************************************************************
+wButton3Plus = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton3Plus.uname,$
+                             XOFFSET   = sButton3Plus.size[0],$
+                             YOFFSET   = sButton3Plus.size[1],$
+                             SCR_XSIZE = sButton3Plus.size[2],$
+                             SCR_YSIZE = sButton3Plus.size[3],$
+                             VALUE     = sButton3Plus.value)
+
+;***** ++ Button ***************************************************************
+wButton2Plus = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton2Plus.uname,$
+                             XOFFSET   = sButton2Plus.size[0],$
+                             YOFFSET   = sButton2Plus.size[1],$
+                             SCR_XSIZE = sButton2Plus.size[2],$
+                             SCR_YSIZE = sButton2Plus.size[3],$
+                             VALUE     = sButton2Plus.value)
+
+;***** + Button ****************************************************************
+wButton1Plus = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton1Plus.uname,$
+                             XOFFSET   = sButton1Plus.size[0],$
+                             YOFFSET   = sButton1Plus.size[1],$
+                             SCR_XSIZE = sButton1Plus.size[2],$
+                             SCR_YSIZE = sButton1Plus.size[3],$
+                             VALUE     = sButton1Plus.value)
+
+;***** --- Button **************************************************************
+wButton3Less = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton3Less.uname,$
+                             XOFFSET   = sButton3Less.size[0],$
+                             YOFFSET   = sButton3Less.size[1],$
+                             SCR_XSIZE = sButton3Less.size[2],$
+                             SCR_YSIZE = sButton3Less.size[3],$
+                             VALUE     = sButton3Less.value)
+
+;***** -- Button ***************************************************************
+wButton2Less = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton2Less.uname,$
+                             XOFFSET   = sButton2Less.size[0],$
+                             YOFFSET   = sButton2Less.size[1],$
+                             SCR_XSIZE = sButton2Less.size[2],$
+                             SCR_YSIZE = sButton2Less.size[3],$
+                             VALUE     = sButton2Less.value)
+
+;***** - Button ****************************************************************
+wButton1Less = WIDGET_BUTTON(wScalingBase,$
+                             UNAME     = sButton1Less.uname,$
+                             XOFFSET   = sButton1Less.size[0],$
+                             YOFFSET   = sButton1Less.size[1],$
+                             SCR_XSIZE = sButton1Less.size[2],$
+                             SCR_YSIZE = sButton1Less.size[3],$
+                             VALUE     = sButton1Less.value)
+;-------------------------------------------------------------------------------
+
+;***** Display or not data *****************************************************
+wDisplayDataLabel = WIDGET_LABEL(wHiddenBase,$
+                                 XOFFSET = sDisplayDataLabel.size[0],$
+                                 YOFFSET = sDisplayDataLabel.size[1],$
+                                 VALUE   = sDisplayDataLabel.value)
+
+;***** Display data cw_bgroup **************************************************
+wDisplayDataGroup = CW_BGROUP(wHiddenBase,$
+                              sDisplayDataGroup.list,$
+                              XOFFSET   = sDisplayDataGroup.size[0],$
+                              YOFFSET   = sDisplayDataGroup.size[1],$
+                              SET_VALUE = sDisplayDataGroup.value,$
+                              UNAME     = sDisplayDataGroup.uname,$
+                              ROW       = 1,$
+                              /EXCLUSIVE)
+
+;***** flt0, flt1_low and flt1_high text field *********************************
+wStep3FltTextField = WIDGET_TEXT(wHiddenBase,$
+                                 UNAME     = sStep3FltTextField.uname,$
+                                 XOFFSET   = sStep3FltTextField.size[0],$
+                                 YOFFSET   = sStep3FltTextField.size[1],$
+                                 SCR_XSIZE = sStep3FltTextField.size[2],$
+                                 SCR_YSIZE = sStep3FltTextField.size[3],$
+                                 /SCROLL)
+
+;***** flt0, flt1_low and flt1_high label **************************************
+wStep3FltLabel = WIDGET_LABEL(wHiddenBase,$
+                              XOFFSET = sStep3FltLabel.size[0],$
+                              YOFFSET = sStep3FltLabel.size[1],$
+                              VALUE   = sStep3FltLabel.value)
 END
+

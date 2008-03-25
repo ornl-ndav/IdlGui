@@ -173,7 +173,7 @@ sOkLoadButton = { size      : [XYoff[0],$
                   value     : 'OK',$
                   sensitive : 0}
                            
-;***** TOF Cancel Load Button ******************************************************
+;***** TOF Cancel Load Button **************************************************
 XYoff         = [5,0]
 sCancelLoadButton = { size      : [sOkLoadButton.size[0]+ $
                                sOkLoadButton.size[2]+XYoff[0],$
