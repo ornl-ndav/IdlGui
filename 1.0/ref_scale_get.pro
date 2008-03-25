@@ -320,12 +320,23 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-;;this function gives the current selected tab
-;FUNCTION getTabSelected, Event
-;TabId = widget_info(Event.top,find_by_uname='steps_tab')
-;tabSelected = widget_info(TabId,/TAB_CURRENT)
-;return, tabSelected
-;end
+;this function changes the format of the input variable 
+;into a 3 digit precision float
+Function getndigits, Event, angleValue
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+angleDisplayPrecision = (*global).angleDisplayPrecision
+
+step1Variable = float(angleValue)*angleDisplayPrecision
+print, step1Variable 
+step2Variable = floor(step1Variable)
+print, step2Variable
+step3Variable = float(step2Variable) / angleDisplayPrecision
+print, step3Variable
+RETURN, step3Variable
+END
 
 ;###############################################################################
 ;*******************************************************************************
