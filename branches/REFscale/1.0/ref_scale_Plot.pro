@@ -539,7 +539,6 @@ IF (cooef[0] NE 0 AND $
     cooef[0] /= CE_scaling_factor
     Cooef[1] /= CE_scaling_Factor
 ENDIF
-(*(*global).CEcooef) = cooef
 
 ;save new values
 flt0_rescale_ptr           = (*global).flt0_rescale_ptr
@@ -587,6 +586,7 @@ CASE (IsXlin) OF
 ENDCASE            
 
 errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+
 
 ;polynome of degree 1 for CE 
 IF (cooef[0] NE 0 AND $

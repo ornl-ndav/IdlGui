@@ -104,8 +104,13 @@ PRO MAIN_BASE_event, Event
       
 ;Event triggered by <Manual Scaling of CE>
       Widget_Info(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): begin
-          manualCEscaling, Event
+          manualCEscaling, Event ;_Step2
       end
+
+;Event trigerred when editing the SF text field
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_sf_text_field'): begin
+          manual_sf_editing, Event ;_Step2
+      end      
       
 ;-------------------------------------------------------------------------------
 ;***** STEP 3 - [RESCALE FILES] ************************************************

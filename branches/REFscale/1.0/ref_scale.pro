@@ -117,10 +117,10 @@ distanceVertical_L_L = 35
 
 ;Define titles
 Step1Title = 'LOAD FILES'
-Step2Title = 'DEFINE CRITICAL EDGE FILE'
-Step3Title = 'RESCALE FILES'
+Step2Title = 'WORK ON CRITICAL EDGE FILE'
+Step3Title = 'WORK ON OTHER FILES'
 ListOfFiles  = ['                                                   ']  
-MainTitle = "REFLECTOMETER SUPPORT - RESCALING PROGRAM" + VERSION
+MainTitle = "REFLECTOMETER RESCALING PROGRAM" + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $

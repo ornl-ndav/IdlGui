@@ -40,10 +40,10 @@ plot_loaded_file, Event, 'CE' ;_Plot
 cooef = (*(*global).CEcooef)
 putValueInTextField, Event, $
   'step2_fitting_equation_a_text_field', $
-  strcompress(cooef[1])         ;_put
+  STRCOMPRESS(cooef[1],/REMOVE_ALL)         ;_put
 putValueInTextField, Event, $
   'step2_fitting_equation_b_text_field', $
-  strcompress(cooef[0])         ;_put
+  STRCOMPRESS(cooef[0],/REMOVE_ALL)         ;_put
 
 END
 
@@ -79,7 +79,7 @@ AverageValue = total(y_axis)/(Nbr_elements+1)
 ;display value in Ybefore text field
 putValueInTextField, Event, $
   'step2_y_before_text_field', $
-  strcompress(AverageValue)     ;_put
+  STRCOMPRESS(AverageValue,/REMOVE_ALL)     ;_put
 
 END
 
@@ -114,7 +114,9 @@ CalculateAverageFittedY, Event, Q1, Q2
 ;show the scalling factor (but do not replot it)
 ;get the average Y value before
 Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field')
-Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field')
+Yafter  = 1 ;Average value after is 1 by default
+putValueInTextField, Event, 'step2_y_after_text_field', $
+  STRCOMPRESS(Yafter,/REMOVE_ALL)
 
 ;check if Ybefore is numeric or not
 YbeforeIsNumeric = isNumeric(Ybefore)
@@ -196,8 +198,82 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-;###############################################################################
-;*******************************************************************************
+PRO manualCEscaling, Event
+
+;show the scalling factor (but do not replot it)
+;get the average Y value before and after
+Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field') ;_get
+Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field') ;_get
+
+;check if Ybefore is numeric or not
+YbeforeIsNumeric = isNumeric(Ybefore) ;_is
+YafterIsNumeric  = isNumeric(Yafter) ;_is
+
+;Ybefore and Yafter are numeric
+IF (YbeforeIsNumeric EQ 1 AND $
+    YafterIsNumeric EQ 1) THEN BEGIN
+    
+    putValueInLabel, Event, 'step2_qminqmax_error_label', '' ;_put
+    manual_Step2_scaleCE, Event, Yafter       ;_Step2
+    
+ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
+;automatic mode can be performed.
+    
+;display message in Q1 and Q2 boxe saying that auto stopped
+    putValueInLabel, Event, 'step2_qminqmax_error_label', $
+      '**ERROR: Select another range of Qs**'
+
+ENDELSE
+
+END
 
 ;###############################################################################
 ;*******************************************************************************
+
+;This function is the next step (after the fitting) to
+;bring to 1 the average Q1 to Q2 part of CE
+PRO manual_Step2_scaleCE, Event, Yafter
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;change the value of the ymax and ymin in the zoom box to 1.2 and 0
+putValueInTextField, Event, 'YaxisMaxTextField',  (Yafter + 0.2)    ;_put
+putValueInTextField, Event, 'YaxisMinTextField', (*global).rescaling_ymin ;_put
+
+;Scaling Factor
+ScalingFactor = getTextFieldValue(Event,'step2_sf_text_field')
+(*global).CE_scaling_factor = float(ScalingFactor)
+
+;replot CE data with new scale
+plot_rescale_CE_file, Event ;_Plot
+
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function is reached each time the SF text Field is edited
+PRO manual_sf_editing, Event ;_Step2
+;get the average Y value before
+Ybefore = getTextFieldValue(Event,'step2_y_before_text_field') ;_get
+;get current scaling factor
+sf      = getTextFieldValue(Event,'step2_sf_text_field') ;_get
+sf      = sf[0]
+
+;check if Ybefore is numeric or not
+YbeforeIsNumeric = isNumeric(Ybefore) ;_is
+sfIsNumeric      = isNumeric(sf) ;_is
+
+IF (YbeforeIsNumeric EQ 1 AND $
+    sfIsNumeric EQ 1 AND $
+    float(sf) NE 0) THEN BEGIN
+    newYafter = FLOAT(Ybefore) / FLOAT(sf)
+    newYafter = STRCOMPRESS(newYafter,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    newYafter = 'N/A'
+ENDELSE
+
+putValueInTextField, Event, 'step2_y_after_text_field', newYafter ;_put
+
+END
