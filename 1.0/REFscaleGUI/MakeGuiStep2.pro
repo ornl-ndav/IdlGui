@@ -128,7 +128,8 @@ sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
                                  sManualFittingLabel.size[1]+XYoff[1],$
                                  80,$
                                  30],$
-                        value : '',$
+                        value : 'a',$
+                        frame : 1,$
                         uname : 'step2_fitting_equation_a_text_field'}
 
 ;***** Manual Fitting Equation b label *****************************************
@@ -142,18 +143,9 @@ sManualFitting_b_L = { size  : [sManualFitting_a_TF.size[0]+ $
 XYoff               = [25,0]
 sManualFitting_b_TF = { size  : [sManualFitting_b_L.size[0]+XYoff[0],$
                                  sManualFitting_a_TF.size[1:3]],$
-                        value : '',$
+                        value : 'b',$
+                        frame : 1,$
                         uname : 'step2_fitting_equation_b_text_field'}
-
-;***** Manual Fitting Button ***************************************************
-XYoff         = [5,0]
-sManualFittingButton = { size      : [sManualFitting_b_TF.size[0]+ $
-                                      sManualFitting_b_TF.size[2]+XYoff[0],$
-                                      sManualFitting_b_TF.size[1]+XYoff[1],$
-                                      165,30],$
-                         uname     : 'step2ManualGoButton',$
-                         value     : 'Manual Fitting of CE',$
-                         sensitive : 0}
 
 ;***** Manual Scalling *********************************************************
 
@@ -213,7 +205,7 @@ XYoff                = [145,32]
 sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                                        sAverageYAfter.size[1]+XYoff[1],$
                                        200,30],$ $
-                         sensitive : 0,$
+                         sensitive : 1,$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
 
@@ -350,15 +342,15 @@ wManualFittingLabel = WIDGET_LABEL(wManualBase,$
                                    VALUE   = sManualFittingLabel.value)
 
 ;***** Manual Fitting a text field *********************************************
-wManualFitting_a_TF = WIDGET_TEXT(wManualBase,$
-                                  XOFFSET   = sManualFitting_a_TF.size[0],$
-                                  YOFFSET   = sManualFitting_a_TF.size[1],$
-                                  SCR_XSIZE = sManualFitting_a_TF.size[2],$
-                                  SCR_YSIZE = sManualFitting_a_TF.size[3],$
-                                  UNAME     = sManualFitting_a_TF.uname,$
-                                  VALUE     = sManualFitting_a_TF.value,$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT)
+wManualFitting_a_TF = WIDGET_LABEL(wManualBase,$
+                                   XOFFSET   = sManualFitting_a_TF.size[0],$
+                                   YOFFSET   = sManualFitting_a_TF.size[1],$
+                                   SCR_XSIZE = sManualFitting_a_TF.size[2],$
+                                   SCR_YSIZE = sManualFitting_a_TF.size[3],$
+                                   UNAME     = sManualFitting_a_TF.uname,$
+                                   VALUE     = sManualFitting_a_TF.value,$
+                                   FRAME     = sManualFitting_a_TF.frame,$
+                                   /ALIGN_LEFT)
 
 ;***** Manual Fitting Equation b label *****************************************
 wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
@@ -367,25 +359,15 @@ wManualFitting_b_L = WIDGET_LABEL(wManualBase,$
                                   VALUE   = sManualFitting_b_L.value)
 
 ;***** Manual Fitting Equation b text field ************************************
-wManualFitting_b_TF = WIDGET_TEXT(wManualBase,$
-                                  XOFFSET   = sManualFitting_b_TF.size[0],$
-                                  YOFFSET   = sManualFitting_b_TF.size[1],$
-                                  SCR_XSIZE = sManualFitting_b_TF.size[2],$
-                                  SCR_YSIZE = sManualFitting_b_TF.size[3],$
-                                  UNAME     = sManualFitting_b_TF.uname,$
-                                  VALUE     = sManualFitting_b_TF.value,$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT)
-
-;***** Manual Fitting Button ***************************************************
-wManualFittingButton = WIDGET_BUTTON(wManualBase,$
-                                     XOFFSET   = sManualFittingButton.size[0],$
-                                     YOFFSET   = sManualFittingButton.size[1],$
-                                     SCR_XSIZE = sManualFittingButton.size[2],$
-                                     SCR_YSIZE = sManualFittingButton.size[3],$
-                                     UNAME     = sManualFittingButton.uname,$
-                                     VALUE     = sManualFittingButton.value,$
-                                     SENSITIVE = sManualFittingButton.sensitive)
+wManualFitting_b_TF = WIDGET_LABEL(wManualBase,$
+                                   XOFFSET   = sManualFitting_b_TF.size[0],$
+                                   YOFFSET   = sManualFitting_b_TF.size[1],$
+                                   SCR_XSIZE = sManualFitting_b_TF.size[2],$
+                                   SCR_YSIZE = sManualFitting_b_TF.size[3],$
+                                   UNAME     = sManualFitting_b_TF.uname,$
+                                   VALUE     = sManualFitting_b_TF.value,$
+                                   FRAME     = sManualFitting_b_TF.frame,$
+                                   /ALIGN_LEFT)
 
 ;***** Manual Scalling *********************************************************
 

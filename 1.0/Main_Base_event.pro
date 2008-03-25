@@ -102,21 +102,6 @@ PRO MAIN_BASE_event, Event
           run_full_step2, Event ;_Step2
       end
       
-;Event triggered by <Automatic Fitting>
-      Widget_Info(wWidget, FIND_BY_UNAME='step2_automatic_fitting_button'): begin
-          Step2_fitCE, Event ;_Step2
-      end
-      
-;Event triggered by <Automatic Scaling>
-      Widget_Info(wWidget, FIND_BY_UNAME='step2_automatic_scaling_button'): begin
-          Step2_scaleCE, Event ;_Step2
-      end
-      
-;Event triggered by <Manual Fitting of CE>
-      Widget_Info(wWidget, FIND_BY_UNAME='step2ManualGoButton'): begin
-          manualCEfitting, Event
-      end
-      
 ;Event triggered by <Manual Scaling of CE>
       Widget_Info(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): begin
           manualCEscaling, Event
