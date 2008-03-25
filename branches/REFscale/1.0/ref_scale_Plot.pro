@@ -280,11 +280,11 @@ ENDIF ELSE BEGIN
     for i=0,(size-1) do begin
 
         error_plot_status = 0
-        CATCH, error_plot_status
+;        CATCH, error_plot_status
 
         IF (error_plot_status NE 0) THEN BEGIN
 
-            CATCH,/CANCEL
+;            CATCH,/CANCEL
             text = 'ERROR plotting data'
             displayErrorMessage, Event, text ;_Gui
 
@@ -336,11 +336,18 @@ ENDIF ELSE BEGIN
                     (*(*global).XYMinMax) = [min_xaxis,max_xaxis,$
                                              min_yaxis,max_yaxis]
 
+;reduce the number of digit displayed
+                    min_xaxis_display = NUMBER_FORMATTER(min_xaxis)
+                    max_xaxis_display = NUMBER_FORMATTER(max_xaxis)
+                    min_yaxis_display = NUMBER_FORMATTER(min_yaxis)
+                    max_yaxis_display = NUMBER_FORMATTER(max_yaxis)
+
                     PopulateXYScaleAxis, Event, $ ;_put
-                      min_xaxis, $
-                      max_xaxis, $
-                      min_yaxis, $
-                      max_yaxis
+                      min_xaxis_display, $
+                      max_xaxis_display, $
+                      min_yaxis_display, $
+                      max_yaxis_display
+
                     CreateDefaultXYMinMax,Event,$ ;_gui
                       min_xaxis,$
                       max_xaxis,$

@@ -26,26 +26,11 @@ IF (indexSelected NE 1) THEN BEGIN ;rad
     (*global).angleValue  = f_angle_deg
 ;copy new value into text field
     AngleTextFieldId = widget_info(Event.top,find_by_uname='AngleTextField')
-    widget_control, AngleTextFieldId, set_value=strcompress(f_angle_deg,/remove_all)
+    widget_control, AngleTextFieldId, $
+      set_value=strcompress(f_angle_deg,/remove_all)
 ;reverse status of rad/degree button
     widget_control, AngleUnitsId, set_value=1
  ENDIF
-END
-
-
-;this function changes the format of the input variable 
-;into a 3 digit precision float
-Function ReflSupportMath_getndigits, Event, angleValue
-
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-angleDisplayPrecision = (*global).angleDisplayPrecision
-
-step1Variable = float(angleValue)*angleDisplayPrecision
-step2Variable = floor(step1Variable)
-step3Variable = float(step2Variable) / angleDisplayPrecision
-RETURN, step3Variable
 END
 
 ;###############################################################################
