@@ -127,7 +127,7 @@ XYoff               = [135,-8]
 sManualFitting_a_TF = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
                                  sManualFittingLabel.size[1]+XYoff[1],$
                                  80,$
-                                 30],$
+                                 25],$
                         value : 'a',$
                         frame : 1,$
                         uname : 'step2_fitting_equation_a_text_field'}
@@ -159,8 +159,9 @@ sAverageYBefore = { size  : [sManualFittingLabel.size[0]+XYoff[0],$
 XYoff             = [178,-8]
 sAverYBeforeValue = { size  : [sAverageYBefore.size[0]+XYoff[0], $
                                sAverageYBefore.size[1]+XYoff[1],$
-                               80,35],$
+                               80,25],$
                       value : '',$
+                      frame : 1,$
                       uname : 'step2_y_before_text_field'}
 
 ;***** Average Y After *********************************************************
@@ -170,11 +171,12 @@ sAverageYAfter  = { size  : [sAverageYBefore.size[0]+XYoff[0],$
                     value : 'Average I[Qmin:Qmax] After :'}
 
 ;***** Average Y After value ***************************************************
-XYoff            = [178,-8]
+XYoff            = [178,-6]
 sAverYAfterValue = { size  : [sAverageYAfter.size[0]+XYoff[0],$
                               sAverageYAfter.size[1]+XYoff[1],$
-                              60,30],$
+                              80,25],$
                      value : '1',$
+                     frame : 1,$
                      uname : 'step2_y_after_text_field'}
 
 ;***** SF base *****************************************************************
@@ -182,7 +184,7 @@ XYoff            = [40,-2]
 sSFbase          = { size  : [sAverYAfterValue.size[0]+ $
                               sAverYAfterValue.size[2]+XYoff[0],$
                               sAverageYBefore.size[1]+XYoff[1],$
-                              200,55],$
+                              180,55],$
                      uname : 'step2_sf_base',$
                      frame : 5}
 
@@ -201,10 +203,10 @@ sSFtextField     = { size  : [XYoff[0],$
                      uname : 'step2_sf_text_field'}
 
 ;***** Manual Scaling Button ***************************************************
-XYoff                = [145,32]
+XYoff                = [45,32]
 sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                                        sAverageYAfter.size[1]+XYoff[1],$
-                                       200,30],$ $
+                                       400,30],$ $
                          sensitive : 1,$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
@@ -385,6 +387,7 @@ wAverageYBeforeValue = WIDGET_LABEL(wManualBase,$
                                     SCR_YSIZE = sAverYBeforeValue.size[3],$
                                     VALUE     = sAverYBeforeValue.value,$
                                     UNAME     = sAverYBeforeValue.uname,$
+                                    FRAME     = sAverYBeforeValue.frame,$
                                     /ALIGN_LEFT)
 
 ;***** Average Y After *********************************************************
@@ -394,15 +397,15 @@ wAverageYAfter = WIDGET_LABEL(wManualBase,$
                               VALUE   = sAverageYAfter.value)		
 
 ;***** Average Y After value ***************************************************
-wAverageYAfterValue = WIDGET_TEXT(wManualBase,$
-                                  XOFFSET   = sAverYAfterValue.size[0],$
-                                  YOFFSET   = sAverYAfterValue.size[1],$
-                                  SCR_XSIZE = sAverYAfterValue.size[2],$
-                                  SCR_YSIZE = sAverYAfterValue.size[3],$
-                                  VALUE     = sAverYAfterValue.value,$
-                                  UNAME     = sAverYAfterValue.uname,$
-                                  /EDITABLE,$
-                                  /ALIGN_LEFT)
+wAverageYAfterValue = WIDGET_LABEL(wManualBase,$
+                                   XOFFSET   = sAverYAfterValue.size[0],$
+                                   YOFFSET   = sAverYAfterValue.size[1],$
+                                   SCR_XSIZE = sAverYAfterValue.size[2],$
+                                   SCR_YSIZE = sAverYAfterValue.size[3],$
+                                   VALUE     = sAverYAfterValue.value,$
+                                   UNAME     = sAverYAfterValue.uname,$
+                                   FRAME     = sAverYAfterValue.frame,$
+                                   /ALIGN_LEFT)
 
 ;***** SF base *****************************************************************
 wSFbase = WIDGET_BASE(wManualBase,$
@@ -427,6 +430,7 @@ wSFtextField = WIDGET_TEXT(wSFbase,$
                            SCR_YSIZE = sSFtextField.size[3],$
                            UNAME     = sSFtextField.uname,$
                            VALUE     = '',$
+                           /ALL_EVENTS,$
                            /EDITABLE)
                            
 ;***** Manual Scaling Button ***************************************************
