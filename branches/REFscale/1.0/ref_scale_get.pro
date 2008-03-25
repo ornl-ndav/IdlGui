@@ -24,14 +24,22 @@ END
 ;This function returns the number of element found in the droplist
 ;uname given
 FUNCTION getNbrElementsInDroplist, Event, uname
-id  = widget_info(Event.top,find_by_uname=uname)
-nbr_elements = widget_info(id, /droplist_number)
+id  = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+nbr_elements = WIDGET_INFO(id, /DROPLIST_NUMBER)
+WIDGET_CONTROL, id, get_value=value
+IF (STRCOMPRESS(value,/REMOVE_ALL) EQ '') THEN RETURN, 0
 RETURN, nbr_elements
 END
 
 ;###############################################################################
 ;*******************************************************************************
 
+FUNCTION getNbrOfFiles, Event
+RETURN, getNbrElementsInDroplist(Event,'list_of_files_droplist')
+END
+
+;###############################################################################
+;*******************************************************************************
 
 ;This function returns 1 if the first button is validated
 ;and 0 if it's the other one

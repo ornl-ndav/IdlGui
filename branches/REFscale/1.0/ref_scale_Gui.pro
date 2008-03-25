@@ -8,6 +8,12 @@ RescaleBaseId = widget_info(Event.top,find_by_uname='RescaleBase')
 widget_control, RescaleBaseId, map=validateMap
 END
 
+;*******************************************************************************
+PRO ActivateWidget, Event, uname, validate
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SENSITIVE=validate
+END
+
 ;###############################################################################
 ;#FUNCTION - PROCEDURE #########################################################
 ;###############################################################################
@@ -162,21 +168,17 @@ END
 
 ;This function moves the color index to the right position
 PRO MoveColorIndex,Event
-
 index = + 25
 MoveColorIndex_by_index, Event, index ;_Gui
-
 END
 
 ;*******************************************************************************
 
 ;This function moves back the color index when the loading process failed
 PRO MoveColorIndexBack,Event
-
 index = - 25
 MoveColorIndex_by_index, Event, index ;_Gui
- 
-END
+ END
 
 ;###############################################################################
 ;*******************************************************************************
@@ -271,25 +273,20 @@ END
 
 ;This function updates the GUI (droplist, buttons...)
 PRO updateGUI, Event, ListOfFiles
-
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 updateDropList, Event, ListOfFiles ;_gui
 ArraySize = getSizeOfArray(ListOfFiles)
-
 IF (ArraySize EQ 0) THEN BEGIN
-
     validate = 0
     CE_short_name = 'No file selected'
-
 ENDIF ELSE BEGIN
-
     validate = 1
     CE_short_name = (*global).short_CE_name
-
 ENDELSE
 
+ActivateStep2, Event, validate ;_gui
 PopulateCELabelStep2, Event, CE_short_name ;_gui
 EnableStep1ClearFile, Event, validate ;_gui
 SelectLastLoadedFile, Event     ;_gui
@@ -663,4 +660,33 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+PRO ActivateStep2, Event, validate
+ActivateWidget, Event, 'step2', validate
+END
 
+;******************************************************************************
+;This function updates the GUI (droplist, buttons...)
+PRO StepsUpdateGUI, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+nbr = getNbrOfFiles(Event)
+IF (nbr EQ 0) THEN BEGIN
+    validate = 0
+    CE_short_name = 'No file selected'
+ENDIF ELSE BEGIN
+    validate = 1
+    CE_short_name = (*global).short_CE_name
+ENDELSE
+
+ActivateStep2, Event, validate ;_gui
+PopulateCELabelStep2, Event, CE_short_name ;_gui
+EnableStep1ClearFile, Event, validate ;_gui
+SelectLastLoadedFile, Event     ;_gui
+EnableMainBaseButtons, Event, validate ;_gui
+ActivateClearFileButton, Event, validate ;_gui
+ActivateColorSlider, Event, Validate ;_gui
+ActivatePrintFileButton, Event, Validate ;_gui
+END
+
+;*******************************************************************************

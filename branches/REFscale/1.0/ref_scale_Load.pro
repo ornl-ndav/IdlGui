@@ -77,6 +77,9 @@ ENDIF ELSE BEGIN
     ENDIF
 ENDELSE
 
+;Update GUi
+StepsUpdateGui, Event ;_Gui
+
 END
 
 ;###############################################################################
@@ -152,8 +155,9 @@ updateGUI, Event, ListOfFiles
 
 ;plot all loaded files if listOfFiles is not empty
 ListOfFilesSize = getSizeOfArray(ListOfFiles)
+
 if (ListOfFilesSize EQ 1 AND $
-    ListOfFiles[0] EQ '') then begin
+    STRCOMPRESS(ListOfFiles[0],/REMOVE_ALL) EQ '') then begin
     plot_loaded_file, Event, 'clear'
 endif else begin
    plot_loaded_file, Event, 'all'
@@ -162,6 +166,9 @@ endelse
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
 displayAngleValue, Event, angleValue
+
+;Update GUi
+StepsUpdateGui, Event ;_Gui
 
 END
 

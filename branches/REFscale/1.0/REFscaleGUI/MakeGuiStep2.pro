@@ -13,9 +13,10 @@ y_base_off = 35 ;Yoff between bases
 ;Define position and size of widgets
 sMainBase      = { size      : Step1Size,$
                    title     : Step2Title,$
-                   uname     : 'step2' }
+                   uname     : 'step2',$
+                   sensitive : 0}
 
-;***** Top label that presnt the name of the CE file ***************************
+;***** Top label that present the name of the CE file **************************
 sBaseFileLabel = { size      : [10, 10],$
                    value     : 'Critical edge file:'}
 
@@ -69,7 +70,7 @@ sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
             value  : ''}
 
 ;***** Qmin/max message ********************************************************
-XYoff      = [10,0]
+XYoff      = [25,0]
 sL_QMinMax = { size  : [sT_Qmax.size[0]+sT_Qmax.size[1]+XYoff[0],$
                         sL_Qmax.size[1]+XYoff[1],$
                         350],$
@@ -220,7 +221,8 @@ STEP2_BASE = WIDGET_BASE(STEPS_TAB,$
                          XOFFSET   = sMainBase.size[0],$
                          YOFFSET   = sMainBase.size[1],$
                          SCR_XSIZE = sMainBase.size[2],$
-                         SCR_YSIZE = sMainBase.size[3])
+                         SCR_YSIZE = sMainBase.size[3],$
+                         SENSITIVE = sMainBase.sensitive)
 
 ;***** Top label that presnt the name of the CE file ***************************
 wBaseFile  = WIDGET_LABEL(STEP2_BASE,$
