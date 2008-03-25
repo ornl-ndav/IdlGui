@@ -19,18 +19,20 @@ Step1Size = sStep1Base.size
 XYoff       = [5,5]
 sLoadButton = { size      : [XYoff[0],$
                              XYoff[1],$
-                             100,30],$
+                             65,30],$
                 uname     : 'load_button',$
                 sensitive : 1,$
-                value     : 'LOAD FILE'}
+                value     : 'L O A D'}
 
 ;**** Clear Button *************************************************************
 XYOff        = [5,0]
 sClearButton = { size      : [sLoadButton.size[0]+ $
                               sLoadButton.size[2]+XYoff[0],$
-                              sLoadButton.size[1:3]],$
+                              sLoadButton.size[1],$
+                              sLoadButton.size[2]-15,$
+                              sLoadButton.size[3]],$
                  uname     : 'clear_button',$
-                 value     : 'CLEAR FILE',$
+                 value     : 'CLEAR',$
                  sensitive : 1}
 
 ;***** List Of Files ***********************************************************
@@ -41,7 +43,7 @@ sListOfFiles = { size  : [sClearButton.size[0]+ $
                           250,30],$
                  uname : 'list_of_files_droplist',$
                  list  : ListOfFiles,$
-                 title : 'List of files:'}
+                 title : 'File:'}
 
 ;***** Input File Format (TOF or Q) ********************************************
 XYoff            = [5,45]
