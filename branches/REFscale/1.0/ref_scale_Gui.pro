@@ -567,9 +567,15 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
-PRO ReflSupportwidget_ClearCElabelStep2, Event
+PRO ClearCElabelStep2, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;name of CE file
 cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
 widget_control, cd_label_id, set_value='No File loaded'
+;Qmin and Qmax message
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='step2_qminqmax_error_label')
+WIDGET_CONTROL, id, SET_VALUE=(*global).qminmax_label
 END
 
 ;###############################################################################
@@ -587,8 +593,8 @@ putValueInTextField,Event,'step2_q2_text_field','' ;_put
 putValueInTextField,Event,'step2_sf_text_field','' ;_put
 ;clear step3
 putValueInTextField,Event,'Step3SFTextField',''   ;_put
-putValueInTextField,Event,'Step3ManualQMinTextField','' ;_put
-putValueInTextField,Event,'Step3ManualQMaxTextField','' ;_put
+;putValueInTextField,Event,'Step3ManualQMinTextField','' ;_put
+;putValueInTextField,Event,'Step3ManualQMaxTextField','' ;_put
 putValueInLabel, Event, 'Step3ManualModeLowQFileName','' ;_put
 
 END
@@ -654,6 +660,18 @@ END
 ;*******************************************************************************
 PRO ActivateStep2, Event, validate
 ActivateWidget, Event, 'step2', validate
+END
+
+;###############################################################################
+;*******************************************************************************
+PRO ActivateStep3, Event, validate
+ActivateWidget, Event, 'step3', validate
+END
+
+;###############################################################################
+;*******************************************************************************
+PRO ActivateOutputFileTab, Event, validate
+ActivateWidget, Event, 'output_file_base', validate
 END
 
 ;******************************************************************************

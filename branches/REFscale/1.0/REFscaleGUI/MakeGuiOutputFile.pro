@@ -9,36 +9,34 @@ OutputFileNameLabelStaticTitle = 'Output file name:'
 
 ;Build GUI
 OutputFile_BASE = WIDGET_BASE(STEPS_TAB,$
-                              UNAME='Output File_base',$
-                              TITLE=OutputFileTitle,$
-                              XOFFSET=Step1Size[0],$
-                              YOFFSET=Step1Size[1],$
-                              SCR_XSIZE=Step1Size[2],$
-                              SCR_YSIZE=Step1Size[3])
+                              UNAME     = 'output_file_base',$
+                              TITLE     = OutputFileTitle,$
+                              XOFFSET   = Step1Size[0],$
+                              YOFFSET   = Step1Size[1],$
+                              SCR_XSIZE = Step1Size[2],$
+                              SCR_YSIZE = Step1Size[3],$
+                              MAP       = 0)
 
 OutputFileNameLabelStatic = widget_label(OutputFile_base,$
-                                         xoffset=OutputFileNameLabelStaticSize[0],$
-                                         yoffset=OutputFileNameLabelStaticSize[1],$
-                                         value=OutputFileNameLabelStaticTitle)
+                                         XOFFSET = OutputFileNameLabelStaticSize[0],$
+                                         YOFFSET = OutputFileNameLabelStaticSize[1],$
+                                         VALUE   = OutputFileNameLabelStaticTitle)
 
 OutputFileNameLabelDynamic = widget_label(OutputFile_base,$
-                                          xoffset=OutputFileNameLabelDynamicSize[0],$
-                                          yoffset=OutputFileNameLabelDynamicSize[1],$
-                                          scr_xsize=OutputFileNameLabelDynamicSize[2],$
-                                          scr_ysize=OutputFileNameLabelDynamicSize[3],$
-                                          uname='output_file_name_label_dynmaic',$
-                                          value='',$
-                                         /align_left)
-
+                                          XOFFSET   = OutputFileNameLabelDynamicSize[0],$
+                                          YOFFSET   = OutputFileNameLabelDynamicSize[1],$
+                                          SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
+                                          SCR_YSIZE = OutputFileNameLabelDynamicSize[3],$
+                                          UNAME     = 'output_file_name_label_dynmaic',$
+                                          VALUE     = '',$
+                                          /ALIGN_LEFT)
 
 OutputFileTextfield = widget_text(OutputFile_base,$
-                                  uname='output_file_text_field',$
-                                  xoffset=OutputFileTextFieldSize[0],$
-                                  yoffset=OutputFileTextFieldSize[1],$
-                                  scr_xsize=OutputFileTextFieldSize[2],$
-                                  scr_ysize=OutputFileTextFieldsize[3],$
-                                  /scroll)
+                                  UNAME     = 'output_file_text_field',$
+                                  XOFFSET   = OutputFileTextFieldSize[0],$
+                                  YOFFSET   = OutputFileTextFieldSize[1],$
+                                  SCR_XSIZE = OutputFileTextFieldSize[2],$
+                                  SCR_YSIZE = OutputFileTextFieldsize[3],$
+                                  /SCROLL)
                                   
-
-
 END
