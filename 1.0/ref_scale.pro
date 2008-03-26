@@ -139,7 +139,7 @@ PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
                           SCR_XSIZE = PlotWindowSize[2],$
                           SCR_YSIZE = PlotWindowSize[3],$
                           RETAIN    = 2,$
-                          /TRACKING_EVENTS,$
+                          /BUTTON_EVENTS,$
                           /MOTION_EVENTS)
 
 STEPS_TAB = WIDGET_TAB(MAIN_BASE,$
