@@ -1,13 +1,15 @@
 ;###############################################################################
 ;*******************************************************************************
 
-;This function reset all the arrays (Q1,Q2,SF,list_of_files and ListOfLongFileName)
+;This function reset all the arrays (Q1,Q2,SF,list_of_files and
+;ListOfLongFileName)
 PRO ResetArrays, Event
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 list_of_files      = strarr(1)
+list_OF_files[0]   = '                                                   '
 Qmin_array         = fltarr(1)
 Qmax_array         = fltarr(1)
 Q1_array           = lonarr(1)
