@@ -101,10 +101,8 @@ if (!VERSION.os EQ 'darwin') then begin
     (*global).input_path = '~/tmp/'
 endif else begin
     (*global).input_path = '~' + ucams
+    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
 endelse
-
-(*global).input_path = '/SNS/REF_L/shared/'  ;REMOVE_ME
-
 
 ;MainBaseSize         = [50 , 500, 1200, 600] ;remove_comments
 MainBaseSize         = [50 , 50, 1200, 600]
