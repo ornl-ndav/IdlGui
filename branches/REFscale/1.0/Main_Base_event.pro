@@ -22,17 +22,18 @@ PRO MAIN_BASE_event, Event
       
 ;Main Plot Drawing Window
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
-          IF (getTabSelected(Event)EQ 1) THEN BEGIN
+          IF (getTabSelected(Event) EQ 1 AND $ ;only for CE tab (step2) AND
+              getNbrOfFiles(Event) GE 1) THEN BEGIN ;only if more than 1 file
               CASE (Event.type) OF
                   0 : BEGIN
-                      CASE (Event.press) OF
-                          1 : print, 'pressed left click'
-                          4 : print, 'pressed right click'
+                      CASE (Event.press) OF ;left or right click
+                          1 : ;left click
+                          4 : ;right click
                           ELSE:
                       ENDCASE
                   END
-                  1 : print, 'button has been released'
-                  2 : print, 'mouse is moving'
+                  1 : ;button released
+                  2 : ;mouse is moving
                   ELSE:
               ENDCASE
           ENDIF
