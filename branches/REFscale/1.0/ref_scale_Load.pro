@@ -88,16 +88,14 @@ END
 ;
 ;This function load the file in the first step (first tab)
 ;
-PRO ReflSupportOpenFile_LoadFile, Event
+PRO LoadTOFFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;launch the program that open the OPEN IDL FILE window
 ;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
 LongFileName=OpenFile(Event) ;_Load
-
 file_error = 0
-CATCH, file_error
+;CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
 ;move Back the colorIndex slidebar
@@ -115,10 +113,10 @@ ENDIF ELSE BEGIN
         get_angle_value_and_do_conversion, Event, angleValue
 ;store flt0, flt1 and flt2 of new files
         index = (*global).NbrFilesLoaded 
-        SuccessStatus = ReflSupportOpenFile_Storeflts(Event, LongFileName, index)
+        SuccessStatus = Storeflts(Event, LongFileName, index) ;_OpenFile
         IF (SuccessStatus) THEN BEGIN
 ;add all files to step1 and step3 droplist
-            ReflSupportOpenFile_AddNewFileToDroplist, Event, ShortFileName, LongFileName 
+            AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
             display_info_about_selected_file, Event, LongFileName
             populateColorLabel, Event, LongFileName
 ;plot all loaded files
@@ -133,7 +131,7 @@ END
 
 ;When OK is pressed in dMDAngle base (to load a input file)
 PRO OkLoadButton, Event 
-     ReflSupportOpenFile_LoadFile, Event       
+LoadTOFFile, Event       
 END
 
 ;###############################################################################
