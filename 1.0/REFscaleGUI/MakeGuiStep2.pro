@@ -74,7 +74,7 @@ XYoff      = [25,0]
 sL_QMinMax = { size  : [sT_Qmax.size[0]+sT_Qmax.size[1]+XYoff[0],$
                         sL_Qmax.size[1]+XYoff[1],$
                         350],$
-               value : 'Select Qmin and Qmax',$
+               value : 'Enter or Select Qmin and Qmax',$
                uname : 'step2_qminqmax_error_label'}
 
 ;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

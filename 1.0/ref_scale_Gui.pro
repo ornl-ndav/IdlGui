@@ -311,43 +311,35 @@ ListOfFiles        = (*(*global).list_of_files)
 ListOfLongFileName = (*(*global).ListOfLongFileName)
 
 ;it's the first file loaded (CE file)
-IF (isListOfFilesSize0(ListOfFiles) EQ 1) THEN BEGIN
-    
+IF (getNbrOfFiles(Event) EQ 0) THEN BEGIN
     (*global).full_CE_name   = LongFileName
     (*global).short_CE_name  = ShortFileName
     (*global).NbrFilesLoaded = 1 ;we have now 1 file loaded
-    
+
     ListOfFiles = [ShortFileName]
     ListOfLongFileName = [LongFileName]
     ActivateRescaleBase, Event, 1
-      
-                                ;save angle value
+;save angle value
     angle_array    = (*(*global).angle_array)
     angle_array[0] = (*global).angleValue
     (*(*global).angle_array) = angle_array
-      
-;if's not the first file loaded
-  ENDIF ELSE BEGIN
-
-     ;is this file not already listed 
-     IF(isFileAlreadyInList(ListOfFiles, ShortFileName) EQ 0) THEN BEGIN ;_is
+ENDIF ELSE BEGIN ;if's not the first file loaded
+;is this file not already listed 
+    IF(isFileAlreadyInList(ListOfFiles, ShortFileName) EQ 0) THEN BEGIN ;_is
 ;true newly file
-         (*global).FirstTimePlotting = 0 ;next load won't be the first one anymore
+        (*global).FirstTimePlotting = 0 
+;next load won't be the first one anymore
         ListOfFiles        = [ListOfFiles,ShortFileName]
         ListOfLongFileName = [ListOfLongFileName,LongFileName]
- ;if a file is added, the Q1,Q2,SF... arrays are updated
-        CreateArrays, Event ;_Arrays    
-     
-     ENDIF
-  
-  ENDELSE
-  
-  (*(*global).list_of_files) = ListOfFiles
-  (*(*global).ListOfLongFileName) = ListOfLongFileName
-
+;if a file is added, the Q1,Q2,SF... arrays are updated
+        CreateArrays, Event     ;_Arrays    
+    ENDIF
+ENDELSE
+(*(*global).list_of_files) = ListOfFiles
+(*(*global).ListOfLongFileName) = ListOfLongFileName
 ;update GUI
-  updateGUI,Event, ListOfFiles ;_gui
-end
+updateGUI,Event, ListOfFiles    ;_gui
+END
 
 ;###############################################################################
 ;*******************************************************************************
