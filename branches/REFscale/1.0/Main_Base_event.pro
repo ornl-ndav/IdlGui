@@ -23,7 +23,18 @@ PRO MAIN_BASE_event, Event
 ;Main Plot Drawing Window
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
           IF (getTabSelected(Event)EQ 1) THEN BEGIN
-              print, 'here'
+              CASE (Event.type) OF
+                  0 : BEGIN
+                      CASE (Event.press) OF
+                          1 : print, 'pressed left click'
+                          4 : print, 'pressed right click'
+                          ELSE:
+                      ENDCASE
+                  END
+                  1 : print, 'button has been released'
+                  2 : print, 'mouse is moving'
+                  ELSE:
+              ENDCASE
           ENDIF
       END
 
