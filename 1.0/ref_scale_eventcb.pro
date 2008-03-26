@@ -20,10 +20,12 @@ ResetRescaleBase,Event
 ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
 ClearColorLabel, Event          ;_Gui
-ReflSupportWidget_ClearCElabelStep2, Event
+ClearCElabelStep2, Event        ;_Gui
 ActivatePrintFileButton, Event, 0
 (*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
-
+ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
+ActivateStep3, Event, 0 ;_Gui, desactivate base of step3
+ActivateOutputFileTab, Event, 0 ;_Gui, desactivate Output File tab
 END
 
 ;###############################################################################

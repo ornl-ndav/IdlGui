@@ -10,7 +10,8 @@ PRO MakeGuiStep3, STEPS_TAB,$
 ;***** Main Base ***************************************************************
 sMainBase = { size  : Step1Size,$
               title : Step3Title,$
-              uname : 'step3'}
+              uname : 'step3',$
+              map   : 1}
 
 ;***** Automatic Rescaling Button **********************************************
 XYoff              = [5,5]
@@ -197,7 +198,8 @@ wMainBase = WIDGET_BASE(STEPS_TAB,$
                         YOFFSET   = sMainBase.size[1],$
                         SCR_XSIZE = sMainBase.size[2],$
                         SCR_YSIZE = sMainBase.size[3],$
-                        TITLE     = sMainBase.title)
+                        TITLE     = sMainBase.title,$
+                        MAP       = sMainBase.map)
 
 ;***** Automatic Rescaling Button **********************************************
 wAutoRescaleButton = WIDGET_BUTTON(wMainBase,$
