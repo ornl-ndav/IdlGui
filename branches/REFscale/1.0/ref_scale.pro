@@ -124,30 +124,31 @@ MainTitle = "REFLECTOMETER RESCALING PROGRAM" + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
-                        UNAME='MAIN_BASE',$
-                        XOFFSET=MainBaseSize[0],$
-                        YOFFSET=MainBaseSize[1],$
-                        SCR_XSIZE=MainBaseSize[2], $
-                        SCR_YSIZE=MainBaseSize[3], $
-                        TITLE=MainTitle,$
-                        MBAR=WID_BASE_0_MBAR)
+                        UNAME     = 'MAIN_BASE',$
+                        XOFFSET   = MainBaseSize[0],$
+                        YOFFSET   = MainBaseSize[1],$
+                        SCR_XSIZE = MainBaseSize[2], $
+                        SCR_YSIZE = MainBaseSize[3], $
+                        TITLE     = MainTitle)
+;                        MBAR      = WID_BASE_0_MBAR)
 
 PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
-                          UNAME='plot_window',$
-                          XOFFSET=PlotWindowSize[0],$
-                          YOFFSET=PlotWindowSize[1],$
-                          SCR_XSIZE=PlotWindowSize[2],$
-                          SCR_YSIZE=PlotWindowSize[3],$
-                          RETAIN=2,$
+                          UNAME     = 'plot_window',$
+                          XOFFSET   = PlotWindowSize[0],$
+                          YOFFSET   = PlotWindowSize[1],$
+                          SCR_XSIZE = PlotWindowSize[2],$
+                          SCR_YSIZE = PlotWindowSize[3],$
+                          RETAIN    = 2,$
+                          /TRACKING_EVENTS,$
                           /MOTION_EVENTS)
 
 STEPS_TAB = WIDGET_TAB(MAIN_BASE,$
-                       UNAME='steps_tab',$
-                       LOCATION=0,$
-                       XOFFSET=StepsTabSize[0],$
-                       YOFFSET=StepsTabSize[1],$
-                       SCR_XSIZE=StepsTabSize[2],$
-                       SCR_YSIZE=StepsTabSize[3],$
+                       UNAME     = 'steps_tab',$
+                       LOCATION  = 0,$
+                       XOFFSET   = StepsTabSize[0],$
+                       YOFFSET   = StepsTabSize[1],$
+                       SCR_XSIZE = StepsTabSize[2],$
+                       SCR_YSIZE = StepsTabSize[3],$
                        /TRACKING_EVENTS)
 
 ;Build STEP1 tab

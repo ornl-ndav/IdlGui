@@ -8,41 +8,48 @@ PRO MAIN_BASE_event, Event
   
   CASE (Event.id) OF
       
-      Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): begin
-      end
+      Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+      END
       
 ;-------------------------------------------------------------------------------
 ;***** GENERAL FUNCTION ********************************************************
 ;-------------------------------------------------------------------------------
       
 ;Event of the main widget_tab
-      Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): BEGIN
           steps_tab, Event, 0  ;_Tabs
-      end
+      END
       
+;Main Plot Drawing Window
+      Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
+          IF (getTabSelected(Event)EQ 1) THEN BEGIN
+              print, 'here'
+          ENDIF
+      END
+
 ;------------------------------------------------------------------------------- 
 ;***** MAIN BASE GUI ***********************************************************
 ;-------------------------------------------------------------------------------
       
 ;Event of <RESET_FULL_SESSION> button
-      Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='reset_all_button'): BEGIN
           reset_all_button, Event ;_event
-      end
+      END
       
 ;Event of <REFRESH PLOTS> button
-      Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='refresh_plot_button'): BEGIN
           steps_tab, Event, 1 ;_Tabs
-      end
+      END
       
 ;Event of <OUTPUT FILE> button
-      Widget_Info(wWidget, FIND_BY_UNAME='print_button'):begin
+      Widget_Info(wWidget, FIND_BY_UNAME='print_button'):BEGIN
           ProduceOutputFile, Event ;_produce_output
-      end
+      END
       
 ;Event of main Widget_draw
-      Widget_Info(wWidget, FIND_BY_UNAME='plot_window'):begin
+      Widget_Info(wWidget, FIND_BY_UNAME='plot_window'):BEGIN
           replot_main_plot, Event ;_Plot
-      end
+      END
       
 ;Event triggered by 'Reset X/Y'     
       Widget_Info(wWidget, FIND_BY_UNAME='ResetButton'): BEGIN
@@ -54,107 +61,107 @@ PRO MAIN_BASE_event, Event
 ;-------------------------------------------------------------------------------
       
 ;Event of <Load File> button
-      Widget_Info(wWidget, FIND_BY_UNAME='load_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='load_button'): BEGIN
           LoadFileButton, Event ;_Load
-      end
+      END
       
 ;Event of 'List of Files:' droplist
-      Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='list_of_files_droplist'): BEGIN
           display_info_about_file, Event ;_Gui
-      end
+      END
       
 ;Event of <Clear File>
-      Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='clear_button'): BEGIN
           clear_file, Event ;_Load
-      end
+      END
       
 ;-------------------------------------------------------------------------------
 ;****** STEP 1 / In the LOAD TOF base ******************************************
 ;-------------------------------------------------------------------------------
       
 ;Event of <CANCEL> button
-      Widget_Info(wWidget, FIND_BY_UNAME='cancel_load_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='cancel_load_button'): BEGIN
           CancelTOFLoadButton, Event ;_Load
-      end
+      END
       
 ;Event of <OK> button
-      Widget_Info(wWidget, FIND_BY_UNAME='ok_load_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='ok_load_button'): BEGIN
           OkLoadButton, Event ;_Load
-      end
+      END
       
 ;Event of the 'Distance Moderator-Detector (m):' widget_text
       Widget_Info(wWidget, FIND_BY_UNAME= $
-                  'ModeratorDetectorDistanceTextField'): begin
+                  'ModeratorDetectorDistanceTextField'): BEGIN
           CheckOpenButtonStatus, Event ;_Gui
-      end
+      END
       
 ;Event of the 'Polar angle:' text_field
-      Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='AngleTextField'): BEGIN
           CheckOpenButtonStatus, Event ;_Gui
-      end
+      END
       
 ;-------------------------------------------------------------------------------
 ;***** STEP 2 - [DEFINE CRITICAL EDGE FILE] ************************************
 ;-------------------------------------------------------------------------------
       
 ;Event triggered by <Automatic Fitting/Rescaling of CE>     
-      Widget_Info(wWidget, FIND_BY_UNAME='step2_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_button'): BEGIN
           run_full_step2, Event ;_Step2
-      end
+      END
       
 ;Event triggered by <Manual Scaling of CE>
-      Widget_Info(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_manual_scaling_button'): BEGIN
           manualCEscaling, Event ;_Step2
-      end
+      END
 
 ;Event trigerred when editing the SF text field
-      Widget_Info(wWidget, FIND_BY_UNAME='step2_sf_text_field'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_sf_text_field'): BEGIN
           manual_sf_editing, Event ;_Step2
-      end      
+      END      
       
 ;-------------------------------------------------------------------------------
 ;***** STEP 3 - [RESCALE FILES] ************************************************
 ;-------------------------------------------------------------------------------
       
 ;Event triggered by widget_droplist
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_work_on_file_droplist'): BEGIN
           steps_tab, Event, 1   ;_Tab
-      end
+      END
       
 ;Event triggered by [Automatic rescaling]
-      Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): BEGIN
           Step3AutomaticRescaling, Event ;_Step3
-      end
+      END
       
 ;Event triggered by [+++]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_3increase_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_3increase_button'): BEGIN
           Step3RescaleFile, Event, 0.5 ;_Step3
-      end
+      END
       
 ;Event triggered by [++]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_2increase_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_2increase_button'): BEGIN
           Step3RescaleFile, Event, 0.1 ;_Step3
-      end
+      END
       
 ;Event triggered by [+]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_1increase_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_1increase_button'): BEGIN
           Step3RescaleFile, Event, 0.01 ;_Step3
-      end
+      END
       
 ;Event triggered by [---]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_3decrease_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_3decrease_button'): BEGIN
           Step3RescaleFile, Event, -0.5 ;_Step3
-      end
+      END
       
 ;Event triggered by [--]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_2decrease_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_2decrease_button'): BEGIN
           Step3RescaleFile, Event, -0.1 ;_Step3
-      end
+      END
       
 ;Event triggered by [-]
-      Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): begin
+      Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): BEGIN
           Step3RescaleFile, Event, -0.01 ;_Step3
-      end
+      END
      
 ELSE:
   ENDCASE
