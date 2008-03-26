@@ -33,7 +33,7 @@ sClearButton = { size      : [sLoadButton.size[0]+ $
                               sLoadButton.size[3]],$
                  uname     : 'clear_button',$
                  value     : 'CLEAR',$
-                 sensitive : 1}
+                 sensitive : 0}
 
 ;***** List Of Files ***********************************************************
 XYoff        = [5,0]
