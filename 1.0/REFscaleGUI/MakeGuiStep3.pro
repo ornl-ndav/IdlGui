@@ -26,13 +26,13 @@ sAutoRescaleButton = { size      : [XYoff[0],$
 ;------------------------------------------------------------------------------
 ;***** Manual Mode Hidden Base ************************************************
 XYoff            = [10,5]
-sStep3ManualBase = { size  : [XYoff[0],$
-                              sAutoRescaleButton.size[1]+ $
-                              sAutoRescaleButton.size[3]+XYoff[1],$
-                              505,325],$
-                     uname : 'Step3ManualModeFrame',$
-                     frame : 1,$
-                     map   : 1}
+sStep3ManualBase = { size      : [XYoff[0],$
+                                  sAutoRescaleButton.size[1]+ $
+                                  sAutoRescaleButton.size[3]+XYoff[1],$
+                                  505,325],$
+                     uname     : 'Step3ManualModeFrame',$
+                     frame     : 1,$
+                     sensitive : 0}
 
 ;***** Manual Mode Label *******************************************************
 XYoff             = [20,-8]
@@ -225,7 +225,7 @@ wStep3ManualBase = WIDGET_BASE(wMainBase,$
                                YOFFSET   = sStep3ManualBase.size[1],$
                                SCR_XSIZE = sStep3ManualBase.size[2],$
                                SCR_YSIZE = sStep3ManualBase.size[3],$
-                               MAP       = sStep3ManualBase.map,$
+                               SENSITIVE = sStep3ManualBase.sensitive,$
                                FRAME     = sStep3ManualBase.frame)
 
 ;***** Low Q Label *************************************************************

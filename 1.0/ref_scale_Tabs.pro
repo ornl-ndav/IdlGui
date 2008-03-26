@@ -47,6 +47,9 @@ ENDIF ELSE BEGIN
 
          2: BEGIN               ;if third tab plot only the file selected
 
+;;get nbr of files loaded
+;             IF (getNbrOfFiles, Even
+
             plot_loaded_file, Event, '2plots' ;_Plot
 
                                 ;this function will disable the
