@@ -20,39 +20,47 @@ IsXlin = getScale(Event,'X') ;_get
 IsYlin = getScale(Event,'Y') ;_get
 ClearPlot = 0      ;by default, the display does not have to be erased
 
-CASE (index) OF
+nbr_elements = $        ;check that there is at least one file to plot
+  getNbrElementsInDropList(Event, $
+                           'step3_work_on_file_droplist') ;_get
 
-   'CE': BEGIN                  ;plot CE
-       index_to_plot = [0]
-   END
-
-   'all': BEGIN                 ;plot all the plots
-       nbr_elements = $
-         getNbrElementsInDropList(Event,'step3_work_on_file_droplist') ;_get
-       index_to_plot = indgen(nbr_elements)
-   END
-   
-   '2plots': BEGIN              ;plot index and (index-1) in tab 3
-       nbr_elements = $
-         getNbrElementsInDropList(Event, $
-                                  'step3_work_on_file_droplist') ;_get
-       IF (nbr_elements EQ 1) THEN BEGIN ;if only 1 file, must be CE file
-           index_to_plot = [0]
-       ENDIF ELSE BEGIN         ;more than 1 file
-           index_to_plot = $
-             getSelectedIndex(Event, 'step3_work_on_file_droplist') ;_get
-           IF (index_to_plot EQ 0) THEN BEGIN
-               index_to_plot = [0]
-           ENDIF ELSE BEGIN
-               index_to_plot = [index_to_plot-1,index_to_plot]
-           ENDELSE
-       ENDELSE
-   END
-   
-   'clear': BEGIN               ;no files to plot, just erase display
-       ClearPlot = 1
-   END
-ENDCASE
+IF (nbr_elements GT 0) THEN BEGIN
+    CASE (index) OF
+        
+        'CE': BEGIN             ;plot CE
+            index_to_plot = [0]
+        END
+        
+        'all': BEGIN            ;plot all the plots
+            nbr_elements = $
+              getNbrElementsInDropList(Event,'step3_work_on_file_droplist') ;_get
+            index_to_plot = indgen(nbr_elements)
+        END
+        
+        '2plots': BEGIN         ;plot index and (index-1) in tab 3
+            nbr_elements = $
+              getNbrElementsInDropList(Event, $
+                                       'step3_work_on_file_droplist') ;_get
+            IF (nbr_elements EQ 1) THEN BEGIN ;if only 1 file, must be CE file
+                index_to_plot = [0]
+            ENDIF ELSE BEGIN    ;more than 1 file
+                index_to_plot = $
+                  getSelectedIndex(Event, 'step3_work_on_file_droplist') ;_get
+                IF (index_to_plot EQ 0) THEN BEGIN
+                    index_to_plot = [0]
+                ENDIF ELSE BEGIN
+                    index_to_plot = [index_to_plot-1,index_to_plot]
+                ENDELSE
+            ENDELSE
+        END
+        
+        'clear': BEGIN          ;no files to plot, just erase display
+            ClearPlot = 1
+        END
+    ENDCASE
+ENDIF ELSE BEGIN
+    ClearPlot = 1
+ENDELSE
 
 DEVICE, DECOMPOSED = 0
 loadct,5

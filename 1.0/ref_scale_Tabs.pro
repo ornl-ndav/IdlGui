@@ -43,10 +43,6 @@ ENDIF ELSE BEGIN
 
             plot_loaded_file, Event, 'CE' ;_Plot
             
-                                ;display the Qmin and Qmax for the CE file
-                                ;for now, the first file loaded is
-                                ;considered as being the CE file
-;            display_Q_values, Event, 0, 2  ;_Gui
         END
 
          2: BEGIN               ;if third tab plot only the file selected
