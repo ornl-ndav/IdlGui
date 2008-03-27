@@ -228,25 +228,33 @@ widget_control,id,get_uvalue=global
 (*global).left_mouse_pressed = 1
 CASE ((*global).Q_selection) OF
     1: BEGIN
+        (*global).replot_me = 1
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
         IF ((*global).Q2 NE 0) THEN BEGIN
-            print, 'start to plot Q1 and replot Q2'
+;            print, 'start to plot Q1 and replot Q2'
+            plotQs, Event, Event.x, (*global).Q2x ;_Plot
         ENDIF ELSE BEGIN
-            print, 'start to plot Q1'
+;            print, 'start to plot Q1'
+            plotQ, Event, Event.x ;_Plot
         ENDELSE
     END
     2: BEGIN
+        (*global).replot_me = 1
         ActivateQSelection, Event, 2 ;show that we are working with Qmax
         IF ((*global).Q1 NE 0) THEN BEGIN
-            print, 'start to plot Q2 and replot Q1'
+;            print, 'start to plot Q2 and replot Q1'
+            plotQs, Event, Event.x, (*global).Q2x ;_Plot
         ENDIF ELSE BEGIN
-            print, 'start to plot Q2'
+;            print, 'start to plot Q2'
+            plotQ, Event, Event.x ;_Plot
         ENDELSE
     END
     ELSE: BEGIN
+        (*global).replot_me = 1
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
         (*global).Q_selection = 1
-        print, 'start to plot Q1'
+        plotQ, Event, Event.x   ;_Plot
+;        print, 'start to plot Q1'
     END
 ENDCASE
 END
@@ -260,12 +268,12 @@ widget_control,id,get_uvalue=global
 CASE ((*global).Q_selection) OF
     1: BEGIN
         ActivateQSelection, Event, 2 ;show that we are working with Qmax
-        print, 'Was working with 1 and will now work with 2'
+;        print, 'Was working with 1 and will now work with 2'
         (*global).Q_selection = 2
     END
     2: BEGIN
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
-        print, 'Was working with 2 and will now work with 1'
+;        print, 'Was working with 2 and will now work with 1'
         (*global).Q_selection = 1
     END
     ELSE: 
@@ -285,12 +293,22 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
             Q = (*global).Q1
 ;display Q1
             putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
+            IF ((*global).Q2 NE 0) THEN BEGIN
+                plotQs, Event, (*global).Q2x, Event.x ;_Plot
+            ENDIF ELSE BEGIN
+                plotQ, Event, Event.x ;_Plot
+            ENDELSE
         END
         2: BEGIN
             saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
             Q = (*global).Q2
 ;display Q2
             putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
+            IF ((*global).Q1 NE 0) THEN BEGIN
+                plotQs, Event, (*global).Q1x, Event.x ;_Plot
+            ENDIF ELSE BEGIN
+                plotQ, Event, Event.x ;_Plot
+            ENDELSE
         END
         ELSE:
     ENDCASE      
@@ -307,17 +325,23 @@ widget_control,id,get_uvalue=global
 IF ((*global).left_mouse_pressed) THEN BEGIN
     CASE ((*global).Q_selection) OF
         1: BEGIN
+            (*global).replot_me = 1
             IF ((*global).Q2 NE 0) THEN BEGIN
-                print, 'Move Q1 plot and replot Q2'
+                plotQs, Event, Event.x, (*global).Q2x ;_Plot
+;                print, 'Move Q1 plot and replot Q2'
             ENDIF ELSE BEGIN
-                print, 'Move Q1 plot'
+                plotQ, Event, Event.x ;_Plot
+;                print, 'Move Q1 plot'
             ENDELSE
         END
         2: BEGIN
+            (*global).replot_me = 1
             IF ((*global).Q1 NE 0) THEN BEGIN
-                print, 'Move Q2 plot and replot Q1'
+                plotQs, Event, (*global).Q1x, Event.x ;_Plot
+;                print, 'Move Q2 plot and replot Q1'
             ENDIF ELSE BEGIN
-                print, 'Move Q2 plot'
+                plotQ, Event, Event.x ;_Plot
+;                print, 'Move Q2 plot'
             ENDELSE
         END
         ELSE:
@@ -338,11 +362,11 @@ coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
 coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
 Q         = coeff2 + FLOAT(XMinMax[0])
 IF (Q_NUMBER EQ 1) THEN BEGIN
-    print, 'here'
-    (*global).Q1 = Q
-    print, Q
+    (*global).Q1  = Q
+    (*global).Q1x = x 
 ENDIF ELSE BEGIN
-    (*global).Q2 = Q
+    (*global).Q2  = Q
+    (*global).Q2x = x 
 ENDELSE
 END
 
