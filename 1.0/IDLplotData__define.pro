@@ -21,8 +21,10 @@ CASE Event.id OF
     Widget_Info(wWidget, FIND_BY_UNAME='draw'): BEGIN
         ZoomCoeff = getZoomCoeff(Event)
         DisplayInfoAboutMousePosition, Event, sMainBase, ZoomCoeff
-;        IF (Event.type EQ 0) THEN BEGIN
-;        ENDIF	
+        IF (Event.type EQ 0 AND Event.press EQ 4) THEN BEGIN
+            replotMainData, Event, sMainBase
+            replotRoiData, Event, sMainBase
+        ENDIF
     END
     ELSE:
 ENDCASE
@@ -208,11 +210,13 @@ wDraw = WIDGET_DRAW(wBase,$
                     SCR_XSIZE = xsize,$
                     SCR_YSIZE = ysize,$
                     UNAME     = sMainBase.DrawUname,$
+                    TOOLTIP   = 'Right Click to Refresh the plot.',$
                     /MOTION_EVENTS,$
                     /BUTTON_EVENTS)
 wZoom = WIDGET_BUTTON(MBAR,$
                       VALUE = 'ZOOM',$
                       /MENU)
+
 ZoomValue = ['1','2','3','4','5','6','7','8','9','10']
 sz = (size(ZoomValue))(1)
 ZoomUname = STRARR(sz) + 'main_plot_zoom_'
