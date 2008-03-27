@@ -28,13 +28,13 @@ PRO MAIN_BASE_event, Event
               CASE (Event.type) OF
                   0 : BEGIN
                       CASE (Event.press) OF ;left or right click
-                          1 : ;left click
-                          4 : ;right click
+                          1 : Step2LeftClick, Event ;left click
+                          4 : Step2RightClick, Event ;right click
                           ELSE:
                       ENDCASE
                   END
-                  1 : ;button released
-                  2 : ;mouse is moving
+                  1 : Step2ReleaseClick, Event ;button released
+                  2 : Step2MoveClick, Event ;mouse is moving
                   ELSE:
               ENDCASE
           ENDIF

@@ -21,6 +21,11 @@ CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
 
 global = ptr_new({ $
                    qminmax_label    : 'Enter or Select Qmin and Qmax',$
+                   Q_selection      : 0, $ ;1 or 2
+                   Q1               : 0,$ ;Qmin or Qmax
+                   Q2               : 0,$ ;Qmin or Qmax
+                   X                : 0,$ ;current event.x of Q1 or Q2
+                   Y                : 0,$ ;current event.y of Q1 or Q2
                    angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
                    replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
                    flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
