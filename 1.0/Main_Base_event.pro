@@ -22,6 +22,7 @@ PRO MAIN_BASE_event, Event
       
 ;Main Plot Drawing Window
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
+          replot_main_plot, Event ;_Plot
           IF (getTabSelected(Event) EQ 1 AND $ ;only for CE tab (step2) AND
               getNbrOfFiles(Event) GE 1) THEN BEGIN ;only if more than 1 file
               CASE (Event.type) OF
@@ -56,11 +57,6 @@ PRO MAIN_BASE_event, Event
 ;Event of <OUTPUT FILE> button
       Widget_Info(wWidget, FIND_BY_UNAME='print_button'):BEGIN
           ProduceOutputFile, Event ;_produce_output
-      END
-      
-;Event of main Widget_draw
-      Widget_Info(wWidget, FIND_BY_UNAME='plot_window'):BEGIN
-          replot_main_plot, Event ;_Plot
       END
       
 ;Event triggered by 'Reset X/Y'     
