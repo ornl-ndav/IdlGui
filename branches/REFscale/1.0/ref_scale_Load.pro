@@ -151,15 +151,12 @@ RemoveIndexFromArray, Event, TextBoxIndex ;_utility
 ListOfFiles = (*(*global).list_of_files)
 updateGUI, Event, ListOfFiles
 
-;plot all loaded files if listOfFiles is not empty
-ListOfFilesSize = getSizeOfArray(ListOfFiles)
-
-if (ListOfFilesSize EQ 1 AND $
-    STRCOMPRESS(ListOfFiles[0],/REMOVE_ALL) EQ '') then begin
+IF (getNbrOfFiles(Event) GE 1) THEN BEGIN
     plot_loaded_file, Event, 'clear'
-endif else begin
-   plot_loaded_file, Event, 'all'
-endelse
+ENDIF ELSE BEGIN
+    plot_loaded_file, Event, 'all'
+    reset_all_button, Event ;_event
+ENDELSE
 
 display_info_about_file, Event
 angleValue = getAngleValue(Event)
