@@ -102,6 +102,8 @@ ENDIF ELSE BEGIN                ;at least one file has to be ploted
        xmax = float(XYMinMax[1])
        ymin = float(XYMinMax[2])
        ymax = float(XYMinMax[3])
+
+       print, 'xmin: ' + strcompress(xmin,/remove_all) ;remove_me
        
        IF (i EQ 0) THEN BEGIN
            

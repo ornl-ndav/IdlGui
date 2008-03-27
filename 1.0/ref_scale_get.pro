@@ -117,10 +117,8 @@ END
 
 ;this function gives the long name of the file selected in the uname droplist
 FUNCTION getLongFileNameSelected, Event, uname
-
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get the selected index of the load list droplist
 TextBoxIndex = getSelectedIndex(Event, uname) ;_get
 ListOfLongFileName = (*(*global).ListOfLongFileName)
@@ -342,11 +340,28 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
-
 FUNCTION getTabSelected, Event
 steps_tab_id  = WIDGET_INFO(Event.top, FIND_BY_UNAME='steps_tab')
 CurrTabSelect = WIDGET_INFO(steps_tab_id,/TAB_CURRENT)
 RETURN, CurrTabSelect
+END
+
+;###############################################################################
+;*******************************************************************************
+FUNCTION getDrawXMin, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
+delta_x_draw = (*global).delta_x_draw
+;retrieve xmin and xmax
+XYMinMax  = FLOAT(getXYMinMax(Event))
+xMinAsked = XYMinMax[0]
+xMaxAsked = XYMinMax[1]
+;calculate real xmin and real xmax
+x1    = xMinAsked / delta_x_draw
+x_min = FLOOR(x1) * delta_x_draw
+x2    = xMaxAsked / delta_x_draw
+x_max = FLOOR(x2) * delta_x_draw
+RETURN, [x_min,x_max]
 END
 
 ;###############################################################################
