@@ -21,7 +21,8 @@ CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
 
 global = ptr_new({ $
                    qminmax_label    : 'Enter or Select Qmin and Qmax',$
-                   Q_selection      : 0, $ ;1 or 2
+                   Q_selection      : 0,$ ;1 or 2
+                   left_mouse_pressed : 0,$
                    Q1               : 0,$ ;Qmin or Qmax
                    Q2               : 0,$ ;Qmin or Qmax
                    X                : 0,$ ;current event.x of Q1 or Q2

@@ -225,8 +225,10 @@ END
 PRO Step2LeftClick, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+(*global).left_mouse_pressed = 1
 CASE ((*global).Q_selection) OF
     1: BEGIN
+        ActivateQSelection, Event, 1 ;show that we are working with Qmin
         IF ((*global).Q2 NE 0) THEN BEGIN
             print, 'start to plot Q1 and replot Q2'
         ENDIF ELSE BEGIN
@@ -234,6 +236,7 @@ CASE ((*global).Q_selection) OF
         ENDELSE
     END
     2: BEGIN
+        ActivateQSelection, Event, 2 ;show that we are working with Qmax
         IF ((*global).Q1 NE 0) THEN BEGIN
             print, 'start to plot Q2 and replot Q1'
         ENDIF ELSE BEGIN
@@ -241,6 +244,7 @@ CASE ((*global).Q_selection) OF
         ENDELSE
     END
     ELSE: BEGIN
+        ActivateQSelection, Event, 1 ;show that we are working with Qmin
         (*global).Q_selection = 1
         print, 'start to plot Q1'
     END
@@ -253,12 +257,19 @@ END
 PRO Step2RightClick, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-IF ((*global).Q_selection EQ 1) THEN BEGIN
-    print, 'Was working with 1 and will now work with 2'
-ENDIF ELSE BEGIN
-    print, 'Was working with 2 and will now work with 1'
-ENDELSE
-(*global).Q_selection = 0
+CASE ((*global).Q_selection) OF
+    1: BEGIN
+        ActivateQSelection, Event, 2 ;show that we are working with Qmax
+        print, 'Was working with 1 and will now work with 2'
+        (*global).Q_selection = 2
+    END
+    2: BEGIN
+        ActivateQSelection, Event, 1 ;show that we are working with Qmin
+        print, 'Was working with 2 and will now work with 1'
+        (*global).Q_selection = 1
+    END
+    ELSE: 
+ENDCASE
 END
 
 ;###############################################################################
@@ -267,18 +278,20 @@ END
 PRO Step2ReleaseClick, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-CASE ((*global).Q_selection) OF
-    1: BEGIN
-        (*global).Q1 = Event.X
-        print, 'Save X position of Q1'
-    END
-    2: BEGIN
-        (*global).Q2 = Event.x
-        print, 'Save X position of Q2'
-    END
-    ELSE:
-ENDCASE        
-(*global).Q_selection = 0
+IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
+    CASE ((*global).Q_selection) OF
+        1: BEGIN
+            (*global).Q1 = Event.X
+            print, 'Save X position of Q1'
+        END
+        2: BEGIN
+            (*global).Q2 = Event.x
+            print, 'Save X position of Q2'
+        END
+        ELSE:
+    ENDCASE      
+ENDIF
+(*global).left_mouse_pressed = 0  
 END
 
 ;###############################################################################
@@ -287,23 +300,25 @@ END
 PRO Step2MoveClick, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-CASE ((*global).Q_selection) OF
-    1: BEGIN
-        IF ((*global).Q2 NE 0) THEN BEGIN
-            print, 'Move Q1 plot and replot Q2'
-        ENDIF ELSE BEGIN
-            print, 'Move Q1 plot'
-        ENDELSE
-    END
-    2: BEGIN
-        IF ((*global).Q1 NE 0) THEN BEGIN
-            print, 'Move Q2 plot and replot Q1'
-        ENDIF ELSE BEGIN
-            print, 'Move Q2 plot'
-        ENDELSE
-    END
-    ELSE:
-ENDCASE
+IF ((*global).left_mouse_pressed) THEN BEGIN
+    CASE ((*global).Q_selection) OF
+        1: BEGIN
+            IF ((*global).Q2 NE 0) THEN BEGIN
+                print, 'Move Q1 plot and replot Q2'
+            ENDIF ELSE BEGIN
+                print, 'Move Q1 plot'
+            ENDELSE
+        END
+        2: BEGIN
+            IF ((*global).Q1 NE 0) THEN BEGIN
+                print, 'Move Q2 plot and replot Q1'
+            ENDIF ELSE BEGIN
+                print, 'Move Q2 plot'
+            ENDELSE
+        END
+        ELSE:
+    ENDCASE
+ENDIF
 END
 
 ;###############################################################################

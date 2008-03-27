@@ -701,3 +701,25 @@ ActivatePrintFileButton, Event, Validate ;_gui
 END
 
 ;*******************************************************************************
+;This function activate first Q, second Q or any of them
+;0: none; 1: Qmin; 2: Qmax
+PRO ActivateQSelection, Event, value
+CASE (value) OF
+    0: BEGIN
+        qmin_value = ' '
+        qmin_value = ' '
+    END
+    1: BEGIN
+        qmin_value = '<'
+        qmax_value = ' '
+    END
+    2: BEGIN
+        qmin_value = ' '
+        qmax_value = '<'
+    END
+ENDCASE
+id1 = WIDGET_INFO(Event.top,FIND_BY_UNAME='Qmin_select')
+WIDGET_CONTROL, id1, SET_VALUE=qmin_value
+id2 = WIDGET_INFO(Event.top,FIND_BY_UNAME='Qmax_select')
+WIDGET_CONTROL, id2, SET_VALUE=qmax_value
+END
