@@ -292,7 +292,7 @@ END
 ;selected in the droplist. In this case, all the widgets of the manual
 ;scalling box are hidden
 PRO Step3DisableManualScalingBox, Event
-HideBase, Event, 'Step3ManualModeHiddenFrame', 1
+HideBase, Event, 'Step3ManualModeHiddenFrame', 0
 END
 
 ;###############################################################################
@@ -302,7 +302,7 @@ END
 ;droplist is any of the file except the first one (CE file). In this
 ;case, all the widgets of the manual scalling box are shown.
 PRO Step3EnableManualScalingBox, Event
-HideBase, Event, 'Step3ManualModeHiddenFrame', 0
+HideBase, Event, 'Step3ManualModeHiddenFrame', 1
 END
 
 ;###############################################################################
