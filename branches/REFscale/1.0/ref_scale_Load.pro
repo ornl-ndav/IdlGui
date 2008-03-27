@@ -120,7 +120,7 @@ ENDIF ELSE BEGIN
             display_info_about_selected_file, Event, LongFileName
             populateColorLabel, Event, LongFileName
 ;plot all loaded files
-            ReflSupportOpenFile_PlotLoadedFiles, Event
+            PlotLoadedFiles, Event
         ENDIF
     ENDIF
 ENDELSE
