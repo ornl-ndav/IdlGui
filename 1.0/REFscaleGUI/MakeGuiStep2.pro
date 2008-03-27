@@ -55,8 +55,15 @@ sT_Qmin = { size   : [sL_Qmin.size[0]+XYoff1[0],$
             uname  : 'step2_q1_text_field',$
             value  : ''}
 
+;***** Qselected ***************************************************************
+XYoff   = [0,0]
+sLQminS = { size  : [sT_Qmin.size[0]+sT_Qmin.size[2]+XYoff[0],$
+                     sL_Qmin.size[1]],$
+            uname : 'Qmin_select',$
+            value : ' '}
+
 ;***** Qmax label **************************************************************
-XYoff   = [120,0]
+XYoff   = [140,0]
 sL_Qmax = { size  : [sL_Qmin.size[0]+XYoff[0],$
                      sL_Qmin.size[1]+XYoff[1]],$
             value : 'Qmax:'}
@@ -69,8 +76,15 @@ sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
             uname  : 'step2_q2_text_field',$
             value  : ''}
 
+;***** Qselected ***************************************************************
+XYoff   = [0,0]
+sLQmaxS = { size  : [sT_Qmax.size[0]+sT_Qmax.size[2]+XYoff[0],$
+                     sL_Qmin.size[1]],$
+            uname : 'Qmax_select',$
+            value : ' '}
+
 ;***** Qmin/max message ********************************************************
-XYoff      = [25,0]
+XYoff      = [30,0]
 sL_QMinMax = { size  : [sT_Qmax.size[0]+sT_Qmax.size[1]+XYoff[0],$
                         sL_Qmax.size[1]+XYoff[1],$
                         350],$
@@ -271,6 +285,13 @@ wT_Qmin = WIDGET_TEXT(Step2QBase,$
                       /EDITABLE,$
                       /ALIGN_LEFT)
 
+;***** Qmin Selection Label '<' ************************************************
+wLQminS = WIDGET_LABEL(Step2QBase,$
+                       XOFFSET = sLQminS.size[0],$
+                       YOFFSET = sLQminS.size[1],$
+                       VALUE   = sLQminS.value,$
+                       UNAME   = sLQminS.uname)
+
 ;***** Qmax label **************************************************************
 wL_Qmax = WIDGET_LABEL(Step2QBase,$
                        XOFFSET = sL_Qmax.size[0],$
@@ -287,6 +308,13 @@ wT_Qmax = WIDGET_TEXT(Step2QBase,$
                       UNAME     = sT_Qmax.uname,$
                       /EDITABLE,$
                       /ALIGN_LEFT)
+
+;***** Qmax Selection Label '<' ************************************************
+wLQmaxS = WIDGET_LABEL(Step2QBase,$
+                       XOFFSET = sLQmaxS.size[0],$
+                       YOFFSET = sLQmaxS.size[1],$
+                       VALUE   = sLQmaxS.value,$
+                       UNAME   = sLQmaxS.uname)
 
 ;***** Qmin Qmax Error Label ***************************************************
 wL_QMinMax = WIDGET_LABEL(Step2QBase,$
