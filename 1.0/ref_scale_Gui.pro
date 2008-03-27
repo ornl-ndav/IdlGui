@@ -666,6 +666,7 @@ END
 ;*******************************************************************************
 PRO ActivateStep3, Event, validate
 ActivateWidget, Event, 'step3', validate
+ActivateWidget, Event, 'Step3ManualModeFrame', validate
 END
 
 ;###############################################################################

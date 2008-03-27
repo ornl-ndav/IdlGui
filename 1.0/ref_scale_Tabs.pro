@@ -45,34 +45,32 @@ ENDIF ELSE BEGIN
             
         END
 
-         2: BEGIN               ;if third tab plot only the file selected
+         2: BEGIN ;if third tab plot only the file selected
+             
+;;get nbr of files loaded and activate gui accordingly
+             IF (getNbrOfFiles(Event) GT 1) THEN BEGIN ;enable step3
+                 validate_status = 1
+             ENDIF ELSE BEGIN
+                 validate_status = 0
+             ENDELSE
+             ActivateStep3, Event, validate_status
+             ActivateButton, Event, 'Step3_automatic_rescale_button', validate_status
+ ;activate or not AUTOMATIC SCALLING
 
-;;get nbr of files loaded
-;             IF (getNbrOfFiles, Even
-
-            plot_loaded_file, Event, '2plots' ;_Plot
-
-                                ;this function will disable the
-                                ;editable boxes if first file selected
-            ManageStep3Tab, Event  ;_Step3
             indexSelected = $
               getSelectedIndex(Event,'step3_work_on_file_droplist') ;_get
-
                                 ;no interaction is possible on the CE file
             IF (indexSelected EQ 0) THEN BEGIN
                 Step3DisableManualScalingBox, Event ;_Step3
             ENDIF ELSE BEGIN
                 Step3EnableManualScalingBox, Event ;_Step3
             ENDELSE
+             
+             plot_loaded_file, Event, '2plots' ;_Plot
 
-                                ;this function disable the automatic
-                                ;scaling button is the number of files
-                                ;to scale is 1 or less
-            IF ((*global).NbrFilesLoaded LE 1) THEN BEGIN
-                ActivateButton, Event, 'Step3_automatic_rescale_button', 0 ;_Gui
-            ENDIF ELSE BEGIN
-                ActivateButton, Event, 'Step3_automatic_rescale_button', 1 ;_Gui
-            ENDELSE
+                                ;this function will disable the
+                                ;editable boxes if first file selected
+            ManageStep3Tab, Event  ;_Step3
 
                                 ;This function displays the base file
                                 ;name unless the first file is
