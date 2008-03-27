@@ -23,23 +23,24 @@ PRO MAIN_BASE_event, Event
 ;Main Plot Drawing Window
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
           replot_main_plot, Event ;_Plot
-          IF (getTabSelected(Event) EQ 1 AND $ ;only for CE tab (step2) AND
+          IF (getTabSelected(Event) EQ 1 AND $ only for CE tab (step2) AND
               getNbrOfFiles(Event) GE 1) THEN BEGIN ;only if more than 1 file
+              XMinMax = getDrawXMin(Event)
               CASE (Event.type) OF
                   0 : BEGIN
                       CASE (Event.press) OF ;left or right click
-                          1 : Step2LeftClick, Event ;left click
+                          1 : Step2LeftClick, Event, XMinMax ;left click
                           4 : Step2RightClick, Event ;right click
                           ELSE:
                       ENDCASE
                   END
-                  1 : Step2ReleaseClick, Event ;button released
-                  2 : Step2MoveClick, Event ;mouse is moving
+                  1 : Step2ReleaseClick, Event, XMinMax ;button released
+                  2 : Step2MoveClick, Event, XMinMax ;mouse is moving
                   ELSE:
               ENDCASE
           ENDIF
       END
-
+      
 ;------------------------------------------------------------------------------- 
 ;***** MAIN BASE GUI ***********************************************************
 ;-------------------------------------------------------------------------------

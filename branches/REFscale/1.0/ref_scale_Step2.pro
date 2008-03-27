@@ -222,7 +222,7 @@ END
 ;###############################################################################
 ;*******************************************************************************
 ;This is reach when the user left click on the plot of step2
-PRO Step2LeftClick, Event
+PRO Step2LeftClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 (*global).left_mouse_pressed = 1
@@ -275,18 +275,22 @@ END
 ;###############################################################################
 ;*******************************************************************************
 ;This is reach when the user released the button on the plot of step2
-PRO Step2ReleaseClick, Event
+PRO Step2ReleaseClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
     CASE ((*global).Q_selection) OF
         1: BEGIN
-            (*global).Q1 = Event.X
-            print, 'Save X position of Q1'
+            saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
+            Q = (*global).Q1
+;display Q1
+            putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
         END
         2: BEGIN
-            (*global).Q2 = Event.x
-            print, 'Save X position of Q2'
+            saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
+            Q = (*global).Q2
+;display Q2
+            putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
         END
         ELSE:
     ENDCASE      
@@ -297,7 +301,7 @@ END
 ;###############################################################################
 ;*******************************************************************************
 ;This is reach when the user moves the mouse on the plot of step2
-PRO Step2MoveClick, Event
+PRO Step2MoveClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 IF ((*global).left_mouse_pressed) THEN BEGIN
@@ -319,6 +323,27 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
         ELSE:
     ENDCASE
 ENDIF
+END
+
+;###############################################################################
+;*******************************************************************************
+
+PRO saveQ,  Event, Q_NUMBER = Q_NUMBER, x, XMinMax
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;calculate true Q
+draw_xmin = (*global).draw_xmin
+draw_xmax = (*global).draw_xmax
+coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
+coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
+Q         = coeff2 + FLOAT(XMinMax[0])
+IF (Q_NUMBER EQ 1) THEN BEGIN
+    print, 'here'
+    (*global).Q1 = Q
+    print, Q
+ENDIF ELSE BEGIN
+    (*global).Q2 = Q
+ENDELSE
 END
 
 ;###############################################################################
