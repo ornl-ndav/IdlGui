@@ -103,8 +103,6 @@ ENDIF ELSE BEGIN                ;at least one file has to be ploted
        ymin = float(XYMinMax[2])
        ymax = float(XYMinMax[3])
 
-       print, 'xmin: ' + strcompress(xmin,/remove_all) ;remove_me
-       
        IF (i EQ 0) THEN BEGIN
            
            CASE (IsXlin) OF
@@ -621,10 +619,8 @@ END
 
 ;This function takes care of launching the plot function in the right mode
 PRO DoPlot, Event
-
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
 ;get index of current tab selected
 steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
 CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
@@ -641,6 +637,35 @@ CASE (CurrTabSelect) OF
        plot_loaded_file, Event, '2plots' ;_Plot
    END
 ENDCASE
+END
+
+;###############################################################################
+;*******************************************************************************
+;Plot Qmin and Qmax
+PRO PlotQs, Event, X1, X2
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+ymin = (*global).draw_ymin
+ymax = (*global).draw_ymax
+;plot Q1
+plots, X1, ymin, /device, color=200
+plots, X1, ymax, /device, /continue, color=200
+;plot Q2
+plots, X2, ymin, /device, color=200
+plots, X2, ymax, /device, /continue, color=200
+END
+
+;###############################################################################
+;*******************************************************************************
+;Plot Qmin or Qmax
+PRO PlotQ, Event, X1
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+ymin = (*global).draw_ymin
+ymax = (*global).draw_ymax
+;plot Q
+plots, X1, ymin, /device, color=200
+plots, X1, ymax, /device, /continue, color=200
 END
 
 ;###############################################################################

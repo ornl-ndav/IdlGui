@@ -19,7 +19,7 @@ PRO MAIN_BASE_event, Event
       Widget_Info(wWidget, FIND_BY_UNAME='steps_tab'): BEGIN
           steps_tab, Event, 0  ;_Tabs
       END
-      
+
 ;Main Plot Drawing Window
       Widget_Info(wWidget, FIND_BY_UNAME='plot_window'): BEGIN
           replot_main_plot, Event ;_Plot
