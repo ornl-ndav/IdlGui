@@ -358,16 +358,19 @@ widget_control,id,get_uvalue=global
 ;calculate true Q
 draw_xmin = (*global).draw_xmin
 draw_xmax = (*global).draw_xmax
-coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
-coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
-Q         = coeff2 + FLOAT(XMinMax[0])
-IF (Q_NUMBER EQ 1) THEN BEGIN
-    (*global).Q1  = Q
-    (*global).Q1x = x 
-ENDIF ELSE BEGIN
-    (*global).Q2  = Q
-    (*global).Q2x = x 
-ENDELSE
+IF (x GE draw_xmin AND $
+    X LE draw_xmax) THEN BEGIN
+    coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
+    coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
+    Q         = coeff2 + FLOAT(XMinMax[0])
+    IF (Q_NUMBER EQ 1) THEN BEGIN
+        (*global).Q1  = Q
+        (*global).Q1x = x 
+    ENDIF ELSE BEGIN
+        (*global).Q2  = Q
+        (*global).Q2x = x 
+    ENDELSE
+ENDIF
 END
 
 ;###############################################################################

@@ -647,12 +647,20 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ymin = (*global).draw_ymin
 ymax = (*global).draw_ymax
+xmin = (*global).draw_xmin
+xmax = (*global).draw_xmax
+IF (X1 GE xmin AND $
+    X1 LE xmax) THEN BEGIN
 ;plot Q1
-plots, X1, ymin, /device, color=200
-plots, X1, ymax, /device, /continue, color=200
+    plots, X1, ymin, /device, color=200
+    plots, X1, ymax, /device, /continue, color=200
+ENDIF 
+IF (X2 GE xmin AND $
+    X2 LE xmax) THEN BEGIN
 ;plot Q2
-plots, X2, ymin, /device, color=200
-plots, X2, ymax, /device, /continue, color=200
+    plots, X2, ymin, /device, color=200
+    plots, X2, ymax, /device, /continue, color=200
+ENDIF
 END
 
 ;###############################################################################
@@ -663,9 +671,14 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 ymin = (*global).draw_ymin
 ymax = (*global).draw_ymax
+xmin = (*global).draw_xmin
+xmax = (*global).draw_xmax
+IF (X1 GE xmin AND $
+    X1 LE xmax) THEN BEGIN
 ;plot Q
-plots, X1, ymin, /device, color=200
-plots, X1, ymax, /device, /continue, color=200
+    plots, X1, ymin, /device, color=200
+    plots, X1, ymax, /device, /continue, color=200
+ENDIF
 END
 
 ;###############################################################################
