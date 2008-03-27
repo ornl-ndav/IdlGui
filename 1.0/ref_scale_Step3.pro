@@ -203,9 +203,9 @@ FOR i=0,(max_number-1) DO BEGIN
       i_highQ += 1
    ENDIF
    IF (i EQ 0) THEN BEGIN
-       putValueInTextField,Event,'step3_flt_text_filed',text ;_put
+       putValueInTextField,Event,'step3_flt_text_field',text ;_put
    ENDIF ELSE BEGIN
-       appendValueInTextField,Event,'step3_flt_text_filed',text  ;_put
+       appendValueInTextField,Event,'step3_flt_text_field',text  ;_put
    ENDELSE
 ENDFOR
 END
@@ -262,7 +262,7 @@ displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
 IF (displayData EQ 0) THEN BEGIN
     Step3OutputFlt0Flt1, Event ;_Step3
 ENDIF ELSE BEGIN ;clear text box
-    putValueInTextField, Event,'step3_flt_text_filed','' ;_put
+    putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
 
 END
