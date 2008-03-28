@@ -235,17 +235,21 @@ CASE ((*global).Q_selection) OF
             plotQs, Event, Event.x, (*global).Q2x ;_Plot
         ENDIF ELSE BEGIN
 ;            print, 'start to plot Q1'
+            replot_main_plot, Event ;_Plot
             plotQ, Event, Event.x ;_Plot
         ENDELSE
+
     END
     2: BEGIN
         (*global).replot_me = 1
         ActivateQSelection, Event, 2 ;show that we are working with Qmax
         IF ((*global).Q1 NE 0) THEN BEGIN
 ;            print, 'start to plot Q2 and replot Q1'
-            plotQs, Event, Event.x, (*global).Q2x ;_Plot
+            replot_main_plot, Event ;_Plot
+            plotQs, Event, Event.x, (*global).Q1x ;_Plot
         ENDIF ELSE BEGIN
 ;            print, 'start to plot Q2'
+            replot_main_plot, Event ;_Plot
             plotQ, Event, Event.x ;_Plot
         ENDELSE
     END
@@ -253,6 +257,7 @@ CASE ((*global).Q_selection) OF
         (*global).replot_me = 1
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
         (*global).Q_selection = 1
+        replot_main_plot, Event ;_Plot
         plotQ, Event, Event.x   ;_Plot
 ;        print, 'start to plot Q1'
     END
@@ -294,8 +299,10 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
 ;display Q1
             putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
             IF ((*global).Q2 NE 0) THEN BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q2x, Event.x ;_Plot
             ENDIF ELSE BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQ, Event, Event.x ;_Plot
             ENDELSE
         END
@@ -305,8 +312,10 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
 ;display Q2
             putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
             IF ((*global).Q1 NE 0) THEN BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
             ENDIF ELSE BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQ, Event, Event.x ;_Plot
             ENDELSE
         END
@@ -327,9 +336,11 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
         1: BEGIN
             (*global).replot_me = 1
             IF ((*global).Q2 NE 0) THEN BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQs, Event, Event.x, (*global).Q2x ;_Plot
 ;                print, 'Move Q1 plot and replot Q2'
             ENDIF ELSE BEGIN
+                replot_main_plot, Event ;_Plot	
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q1 plot'
             ENDELSE
@@ -337,9 +348,11 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
         2: BEGIN
             (*global).replot_me = 1
             IF ((*global).Q1 NE 0) THEN BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
 ;                print, 'Move Q2 plot and replot Q1'
             ENDIF ELSE BEGIN
+                replot_main_plot, Event ;_Plot
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q2 plot'
             ENDELSE
