@@ -63,7 +63,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 DEVICE, DECOMPOSED = 0
-loadct,5
+loadct,5,/SILENT
 
 ;check if plot will be with error bars or not
 ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group') ;_get
@@ -303,7 +303,7 @@ ENDIF ELSE BEGIN
             flt2 = *flt2_ptr[i]
             
             DEVICE, DECOMPOSED = 0
-            loadct,5
+            loadct,5,/SILENT
             
             colorIndex = color_array[i]
             IF (FirstPass EQ 1) THEN BEGIN
@@ -532,7 +532,7 @@ IsYlin = getScale(Event,'Y') ;_get
 color_array = (*(*global).color_array)
 
 DEVICE, DECOMPOSED = 0
-loadct,5
+loadct,5,/SILENT
     
 flt0_ptr = (*global).flt0_ptr
 flt1_ptr = (*global).flt1_ptr
