@@ -331,16 +331,15 @@ END
 PRO Step2MoveClick, Event, XMinMax
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+replot_main_plot, Event         ;_Plot
 IF ((*global).left_mouse_pressed) THEN BEGIN
     CASE ((*global).Q_selection) OF
         1: BEGIN
             (*global).replot_me = 1
             IF ((*global).Q2 NE 0) THEN BEGIN
-                replot_main_plot, Event ;_Plot
                 plotQs, Event, Event.x, (*global).Q2x ;_Plot
 ;                print, 'Move Q1 plot and replot Q2'
             ENDIF ELSE BEGIN
-                replot_main_plot, Event ;_Plot	
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q1 plot'
             ENDELSE
@@ -348,18 +347,25 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
         2: BEGIN
             (*global).replot_me = 1
             IF ((*global).Q1 NE 0) THEN BEGIN
-                replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
 ;                print, 'Move Q2 plot and replot Q1'
             ENDIF ELSE BEGIN
-                replot_main_plot, Event ;_Plot
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q2 plot'
             ENDELSE
         END
         ELSE:
     ENDCASE
-ENDIF
+ENDIF ELSE BEGIN ;this is wwhere I replot the main plot and the Qs
+    saveQxFromQ, Event, Q_NUMBER = 1, (*global).Q1x, XMinMax ;_Step2
+    IF ((*global).Q1 NE 0) THEN BEGIN
+        plotQ, Event, (*global).Q1x
+    ENDIF
+    saveQxFromQ, Event, Q_NUMBER = 2, (*global).Q2x, XMinMax ;_Step2
+    IF ((*global).Q2 NE 0) THEN BEGIN
+        plotQ, Event, (*global).Q2x
+    ENDIF
+ENDELSE
 END
 
 ;###############################################################################
@@ -376,6 +382,7 @@ IF (x GE draw_xmin AND $
     coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
     coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
     Q         = coeff2 + FLOAT(XMinMax[0])
+    print, Q ;remove_me
     IF (Q_NUMBER EQ 1) THEN BEGIN
         (*global).Q1  = Q
         (*global).Q1x = x 
@@ -388,3 +395,29 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+;This function determine what is the Qx (widget_draw x position ) of
+;the Q given
+PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER, Q, XMinMax 
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;X position of left and right margins
+draw_xmin = (*global).draw_xmin
+draw_xmax = (*global).draw_xmax
+
+;Qmin on the plot
+draw_Qmin = XMinMax[0]
+draw_Qmax = XMinMax[1]
+
+;Calculate Coeff
+coeff = (float(Q) - float(draw_Qmin))/(float(draw_Qmax)-float(draw_Qmin))
+
+;get new X position of Q
+newX = coeff * (draw_xmax - draw_xmin) + draw_xmin
+
+IF (Q_NUMBER EQ 1) THEN BEGIN
+    (*global).Q1x = newX
+ENDIF ELSE BEGIN
+    (*global).Q2x = newX
+ENDELSE
+END
