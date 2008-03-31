@@ -127,7 +127,7 @@ ENDIF ELSE BEGIN
     
     ;CATCH,/CANCEL
     DEVICE, DECOMPOSED = 0
-    loadct,5
+    loadct,5,/SILENT
     
 ;check if input is TOF or Q
     isTOFvalidated = getButtonValidated(Event,'InputFileFormat')
