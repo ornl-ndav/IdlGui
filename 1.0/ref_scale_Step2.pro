@@ -492,3 +492,18 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+;###############################################################################
+;*******************************************************************************
+PRO ClearStep2GlobalVariable, Event 
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;Qx
+(*global).Q1x = 0L
+(*global).Q2x = 0L
+;Q
+(*global).Q1  = 0.
+(*global).Q2  = 0.
+;X,Y
+(*global).X   = 0
+(*global).Y   = 0
+END
