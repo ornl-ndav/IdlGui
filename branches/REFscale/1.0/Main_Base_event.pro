@@ -134,6 +134,17 @@ PRO MAIN_BASE_event, Event
           manual_sf_editing, Event ;_Step2
       END      
       
+;Event trigerred by Qmin cw_field
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_q1_text_field'): BEGIN
+          print, 'here'
+          ManualNewQ, Event ;_Step2
+      END      
+      
+;Event trigerred by Qmin cw_field
+      Widget_Info(wWidget, FIND_BY_UNAME='step2_q2_text_field'): BEGIN
+          ManualNewQ, Event ;_Step2
+      END      
+      
 ;-------------------------------------------------------------------------------
 ;***** STEP 3 - [RESCALE FILES] ************************************************
 ;-------------------------------------------------------------------------------
