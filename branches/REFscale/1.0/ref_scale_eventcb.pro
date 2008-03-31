@@ -21,6 +21,7 @@ ActivateRescaleBase, Event, 0
 ActivateClearFileButton, Event, 0
 ClearColorLabel, Event          ;_Gui
 ClearCElabelStep2, Event        ;_Gui
+ClearStep2GlobalVariable, Event ;_Step2
 ActivatePrintFileButton, Event, 0
 (*global).NbrFilesLoaded = 0 ;Reset nbr of files loaded
 ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
