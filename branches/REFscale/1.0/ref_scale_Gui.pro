@@ -737,3 +737,21 @@ ENDIF ELSE BEGIN
 ENDELSE
 ActivateWidget, Event, 'step2_button', activate_status
 END
+
+;###############################################################################
+;*******************************************************************************
+;Check if manual buttons (widget_text and button) can be validated
+;according to result of automatic mode
+PRO CheckManualModeStep2Buttons, Event
+;retrieve values of fitting equation (a and b)
+a = getValue(Event,'step2_fitting_equation_a_text_field')
+b = getValue(Event,'step2_fitting_equation_b_text_field')
+;check a and b values
+IF (a NE '-NaN' AND b NE '-NaN') THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+ActivateWidget, Event, 'step2_sf_text_field', activate_status
+ActivateWidget, Event, 'step2_manual_scaling_button', activate_status
+END
