@@ -111,7 +111,7 @@ sB_AutoScalFit = { size      : [XYoff[0],$
                                 495,$
                                 30],$
                    uname     : 'step2_button',$
-                   sensitive : 1,$
+                   sensitive : 0,$
                    value     : '>     >   >  > >> >>> AUTOMATIC ' + $
                    'FITTING and RESCALING <<< << <  <   <    <'}
 
@@ -203,24 +203,26 @@ sSFbase          = { size  : [sAverYAfterValue.size[0]+ $
 
 ;***** SF label ****************************************************************
 XYoff            = [35,0]
-sSFlabel         = { size  : [XYoff[0],$
-                              XYoff[1]],$
-                     value : 'Scaling Factor (SF):'}
+sSFlabel         = { size      : [XYoff[0],$
+                                  XYoff[1]],$
+                     sensitive : 0,$
+                     value     : 'Scaling Factor (SF):'}
 
 ;***** SF text field ***********************************************************
 XYoff            = [55,20]
-sSFtextField     = { size  : [XYoff[0],$
-                              XYoff[1],$
-                              80,30],$
-                     value : '',$
-                     uname : 'step2_sf_text_field'}
+sSFtextField     = { size      : [XYoff[0],$
+                                  XYoff[1],$
+                                  80,30],$
+                     value     : '',$
+                     sensitive : 0,$
+                     uname     : 'step2_sf_text_field'}
 
 ;***** Manual Scaling Button ***************************************************
 XYoff                = [45,32]
 sManualScalingButton = { size      : [ sAverageYBefore.size[0]+XYoff[0],$
                                        sAverageYAfter.size[1]+XYoff[1],$
                                        400,30],$ $
-                         sensitive : 1,$
+                         sensitive : 0,$
                          uname     : 'step2_manual_scaling_button',$
                          value     : 'Manual Scaling of CE'}
 
@@ -444,9 +446,9 @@ wSFbase = WIDGET_BASE(wManualBase,$
 
 ;***** SF label ****************************************************************
 wSFlabel = WIDGET_LABEL(wSFbase,$
-                        XOFFSET = sSFlabel.size[0],$
-                        YOFFSET = sSFlabel.size[1],$
-                        VALUE   = sSFlabel.value)
+                        XOFFSET   = sSFlabel.size[0],$
+                        YOFFSET   = sSFlabel.size[1],$
+                        VALUE     = sSFlabel.value)
 
 ;***** SF text field ***********************************************************
 wSFtextField = WIDGET_TEXT(wSFbase,$
@@ -455,6 +457,7 @@ wSFtextField = WIDGET_TEXT(wSFbase,$
                            SCR_XSIZE = sSFtextField.size[2],$
                            SCR_YSIZE = sSFtextField.size[3],$
                            UNAME     = sSFtextField.uname,$
+                           SENSITIVE = sSFtextField.sensitive,$
                            VALUE     = '',$
                            /ALL_EVENTS,$
                            /EDITABLE)
