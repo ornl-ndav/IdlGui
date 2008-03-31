@@ -151,6 +151,9 @@ ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling)
     putValueInLabel, Event, 'step2_qminqmax_error_label', $
       '**ERROR: Select another range of Qs**'
 ENDELSE   
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
 END
 
 ;###############################################################################
@@ -308,7 +311,8 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
             saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
             Q = (*global).Q1
 ;display Q1
-            putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
+            putValueInTextField, Event, 'step2_q1_text_field', $
+              STRCOMPRESS(Q,/REMOVE_ALL)
             IF ((*global).Q2 NE 0) THEN BEGIN
                 replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q2x, Event.x ;_Plot
@@ -321,7 +325,8 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
             saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
             Q = (*global).Q2
 ;display Q2
-            putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Q,/REMOVE_ALL)
+            putValueInTextField, Event, 'step2_q2_text_field', $
+              STRCOMPRESS(Q,/REMOVE_ALL)
             IF ((*global).Q1 NE 0) THEN BEGIN
                 replot_main_plot, Event ;_Plot
                 plotQs, Event, (*global).Q1x, Event.x ;_Plot
