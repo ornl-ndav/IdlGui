@@ -36,7 +36,6 @@ ENDIF ELSE BEGIN
             plot_loaded_file, Event, 'all' ;_Plot
             angleValue = getAngleValue(Event) ;_get
             displayAngleValue, Event, angleValue ;_Gui
-            
         END
 
          1: BEGIN               ;if second tab plot only CE plot
