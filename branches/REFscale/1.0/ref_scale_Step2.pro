@@ -376,14 +376,19 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
         ELSE:
     ENDCASE
 ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
-;    saveQxFromQ, Event, Q_NUMBER = 1, (*global).Q1x, XMinMax ;_Step2
+    IF ((*global).replotQnew) THEN BEGIN
+        saveQxFromQ, Event, Q_NUMBER = 1 ;_Step2
+    ENDIF
     IF ((*global).Q1 NE 0) THEN BEGIN
         plotQ, Event, (*global).Q1x
     ENDIF
-;    saveQxFromQ, Event, Q_NUMBER = 2, (*global).Q2x, XMinMax ;_Step2
+    IF ((*global).replotQnew) THEN BEGIN
+        saveQxFromQ, Event, Q_NUMBER = 2 ;_Step2
+    ENDIF
     IF ((*global).Q2 NE 0) THEN BEGIN
         plotQ, Event, (*global).Q2x
     ENDIF
+    (*global).replotQnew = 0
 ENDELSE
 END
 
@@ -401,10 +406,9 @@ IF (x GE draw_xmin AND $
     coeff1    = FLOAT(x-draw_xmin)/FLOAT(draw_xmax-draw_xmin)
     coeff2    = FLOAT(XMinMax[1]-XMinMax[0])*coeff1
     Q         = coeff2 + FLOAT(XMinMax[0])
-    print, Q ;remove_me
     IF (Q_NUMBER EQ 1) THEN BEGIN
         (*global).Q1  = Q
-        (*global).Q1x = x 
+        (*global).Q1x = x
     ENDIF ELSE BEGIN
         (*global).Q2  = Q
         (*global).Q2x = x 
@@ -416,20 +420,32 @@ END
 ;*******************************************************************************
 ;This function determine what is the Qx (widget_draw x position ) of
 ;the Q given
-PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER, Q, XMinMax 
+PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+;Qx and Q
+IF (Q_NUMBER EQ 1) THEN BEGIN
+    Qx = (*global).Q1x
+    Q  = (*global).Q1
+ENDIF ELSE BEGIN
+    Qx = (*global).Q2x
+    Q  = (*global).Q2
+ENDELSE
+
+;Xmin and Xmax
+XMinMax   = getDrawXMin(Event)
+draw_Qmin = XMinMax[0]
+draw_Qmax = XMinMax[1]
 
 ;X position of left and right margins
 draw_xmin = (*global).draw_xmin
 draw_xmax = (*global).draw_xmax
 
-;Qmin on the plot
-draw_Qmin = XMinMax[0]
-draw_Qmax = XMinMax[1]
-
 ;Calculate Coeff
-coeff = (float(Q) - float(draw_Qmin))/(float(draw_Qmax)-float(draw_Qmin))
+coeff1  = (float(Q) - float(draw_Qmin))
+coeff2  = (float(draw_Qmax)-float(draw_Qmin))
+coeff   = coeff1 / coeff2
 
 ;get new X position of Q
 newX = coeff * (draw_xmax - draw_xmin) + draw_xmin

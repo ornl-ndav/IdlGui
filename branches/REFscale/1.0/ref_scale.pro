@@ -1,6 +1,6 @@
 pro Build_GUI, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
-Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
+Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  ;Load event callback routines
 
 ;define initial global values - these could be input via external file or other means
 
@@ -36,6 +36,7 @@ global = ptr_new({ $
                    Y                : 0,$ ;current event.y of Q1 or Q2
                    angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
                    replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
+                   replotQnew       : 0,$
                    flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
                    flt1_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
                    flt2_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
