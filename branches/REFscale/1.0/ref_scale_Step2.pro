@@ -235,6 +235,7 @@ CASE ((*global).Q_selection) OF
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
         IF ((*global).Q2 NE 0) THEN BEGIN
 ;            print, 'start to plot Q1 and replot Q2'
+            replot_main_plot, Event ;_Plot
             plotQs, Event, Event.x, (*global).Q2x ;_Plo
         ENDIF ELSE BEGIN
 ;            print, 'start to plot Q1'
