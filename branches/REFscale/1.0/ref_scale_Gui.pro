@@ -723,3 +723,17 @@ WIDGET_CONTROL, id1, SET_VALUE=qmin_value
 id2 = WIDGET_INFO(Event.top,FIND_BY_UNAME='Qmax_select')
 WIDGET_CONTROL, id2, SET_VALUE=qmax_value
 END
+
+;###############################################################################
+;*******************************************************************************
+;Check if Automatic Button can be validated or not
+PRO CheckAutoModeStep2Button, Event
+Q1 = getValue(Event,'step2_q1_text_field')
+Q2 = getValue(Event,'step2_q2_text_field')
+IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+ActivateWidget, Event, 'step2_button', activate_status
+END

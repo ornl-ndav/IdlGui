@@ -136,7 +136,6 @@ PRO MAIN_BASE_event, Event
       
 ;Event trigerred by Qmin cw_field
       Widget_Info(wWidget, FIND_BY_UNAME='step2_q1_text_field'): BEGIN
-          print, 'here'
           ManualNewQ, Event ;_Step2
       END      
       

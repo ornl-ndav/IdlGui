@@ -205,9 +205,9 @@ WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-; default tabs shown 
-id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
-widget_control, id1, set_tab_current = 1  ;remove_me
+;; default tabs shown 
+;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
+;widget_control, id1, set_tab_current = 1  ;remove_me
 
 end
 

@@ -342,6 +342,8 @@ ENDIF
 (*global).left_mouse_pressed = 0  
 ;Sort Q1 and Q2 values 
 SortQs, Event ;_Step2
+;Check if Automatic Button can be validated or not
+CheckAutoModeStep2Button, Event
 END
 
 ;###############################################################################
@@ -492,6 +494,8 @@ ENDIF ELSE BEGIN
         plotQ, Event, (*global).Q2x
     ENDIF
 ENDELSE
+;Check if Automatic Button can be validated or not
+CheckAutoModeStep2Button, Event
 END
 
 ;###############################################################################
