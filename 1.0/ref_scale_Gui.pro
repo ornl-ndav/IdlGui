@@ -18,6 +18,22 @@ END
 ;#FUNCTION - PROCEDURE #########################################################
 ;###############################################################################
 
+;Check if step3 can be validated (if step2 has been run with sucess)
+FUNCTION CheckStep2Status, Event
+;retrieve values of fitting equation (a and b)
+a = getValue(Event,'step2_fitting_equation_a_text_field')
+b = getValue(Event,'step2_fitting_equation_b_text_field')
+;check a and b values
+IF (a NE '-NaN' AND b NE '-NaN') THEN BEGIN
+    activate_status = 1
+ENDIF ELSE BEGIN
+    activate_status = 0
+ENDELSE
+RETURN, activate_status
+END
+
+;###############################################################################
+;*******************************************************************************
 ;This function checks the Input File Format GUI
 ;and returns:
 ; 0  : distance ok and angle ok
@@ -743,15 +759,8 @@ END
 ;Check if manual buttons (widget_text and button) can be validated
 ;according to result of automatic mode
 PRO CheckManualModeStep2Buttons, Event
-;retrieve values of fitting equation (a and b)
-a = getValue(Event,'step2_fitting_equation_a_text_field')
-b = getValue(Event,'step2_fitting_equation_b_text_field')
-;check a and b values
-IF (a NE '-NaN' AND b NE '-NaN') THEN BEGIN
-    activate_status = 1
-ENDIF ELSE BEGIN
-    activate_status = 0
-ENDELSE
+activate_status = CheckStep2Status(Event)
 ActivateWidget, Event, 'step2_sf_text_field', activate_status
 ActivateWidget, Event, 'step2_manual_scaling_button', activate_status
 END
+
