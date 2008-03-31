@@ -154,6 +154,8 @@ ENDELSE
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
+;check if manual widgets can be validated or not
+CheckManualModeStep2Buttons, Event
 END
 
 ;###############################################################################
