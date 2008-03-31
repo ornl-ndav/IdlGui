@@ -34,7 +34,8 @@ END
 PRO rescale_data_changed, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,GET_UVALUE=global
-(*global).replot_me = 1
+(*global).replot_me  = 1
+(*global).replotQnew = 1 ;means we need to replot the Qs
 END
 
 ;###############################################################################
