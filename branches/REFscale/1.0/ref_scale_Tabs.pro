@@ -47,7 +47,9 @@ ENDIF ELSE BEGIN
          2: BEGIN ;if third tab plot only the file selected
              
 ;;get nbr of files loaded and activate gui accordingly
-             IF (getNbrOfFiles(Event) GT 1) THEN BEGIN ;enable step3
+;also, be sure that the step2 has been run with success
+             IF (getNbrOfFiles(Event) GT 1 AND $
+                 CheckStep2Status(Event)) THEN BEGIN ;enable step3
                  validate_status = 1
              ENDIF ELSE BEGIN
                  validate_status = 0
