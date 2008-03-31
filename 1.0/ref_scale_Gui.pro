@@ -24,7 +24,10 @@ FUNCTION CheckStep2Status, Event
 a = getValue(Event,'step2_fitting_equation_a_text_field')
 b = getValue(Event,'step2_fitting_equation_b_text_field')
 ;check a and b values
-IF (a NE '-NaN' AND b NE '-NaN') THEN BEGIN
+IF (a NE '-NaN' AND $
+    a NE 'a' AND $
+    b NE '-NaN' AND $
+    b NE 'b') THEN BEGIN
     activate_status = 1
 ENDIF ELSE BEGIN
     activate_status = 0
