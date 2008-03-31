@@ -607,9 +607,14 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;clear step2 
-putValueInTextField,Event,'step2_q1_text_field','' ;_put
-putValueInTextField,Event,'step2_q2_text_field','' ;_put
-putValueInTextField,Event,'step2_sf_text_field','' ;_put
+putValueInTextField, Event, 'step2_q1_text_field','' ;_put
+putValueInTextField, Event, 'step2_q2_text_field','' ;_put
+putValueInTextField, Event, 'step2_sf_text_field','' ;_put
+putValueInTextField, Event, 'step2_fitting_equation_a_text_field', 'a' ;_put
+putValueInTextField, Event, 'step2_fitting_equation_b_text_field', 'b' ;_put
+putValueInTextField, Event, 'step2_y_before_text_field', '' ;_put
+putValueInTextField, Event, 'step2_sf_text_field', '' ;_put
+
 ;clear step3
 putValueInTextField,Event,'Step3SFTextField',''   ;_put
 ;putValueInTextField,Event,'Step3ManualQMinTextField','' ;_put
@@ -767,3 +772,5 @@ ActivateWidget, Event, 'step2_sf_text_field', activate_status
 ActivateWidget, Event, 'step2_manual_scaling_button', activate_status
 END
 
+;###############################################################################
+;*******************************************************************************
