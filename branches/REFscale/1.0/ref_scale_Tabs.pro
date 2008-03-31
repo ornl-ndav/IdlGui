@@ -39,9 +39,9 @@ ENDIF ELSE BEGIN
         END
 
          1: BEGIN               ;if second tab plot only CE plot
-
             plot_loaded_file, Event, 'CE' ;_Plot
-            
+;plot the Qmin and Qmax if any have been selected
+            plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
         END
 
          2: BEGIN ;if third tab plot only the file selected
