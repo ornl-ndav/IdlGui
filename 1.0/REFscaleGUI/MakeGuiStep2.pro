@@ -55,7 +55,7 @@ sLQmin = { size : [XYoff[0],$
            xsize      : 9}
 
 ;***** Qselected ***************************************************************
-XYoff   = [-5,8]
+XYoff   = [-3,8]
 sLQminS = { size  : [sLQmin.size[0]+sLQmin.size[2]+XYoff[0],$
                      sLQmin.size[1]+XYoff[1],$
                      5],$
@@ -74,7 +74,7 @@ sLQmax = { size : [sLQminS.size[0]+XYoff[0],$
            xsize      : 9}
 
 ;***** Qselected ***************************************************************
-XYoff   = [-5,8]
+XYoff   = [-3,8]
 sLQmaxS = { size  : [sLQmax.size[0]+sLQmax.size[2]+XYoff[0],$
                      sLQmax.size[1]+XYoff[1],$
                      sLQminS.size[2]],$
@@ -286,6 +286,7 @@ wQminField = CW_FIELD(wQmin,$
                       XSIZE = sLQmin.xsize,$
                       TITLE = sLQmin.title,$
                       VALUE = sLQmin.value,$
+                      /RETURN_EVENTS,$
                       /FLOAT)
 
 ;***** Qmax Selection Label '<' ************************************************
@@ -308,6 +309,7 @@ wQmaxField = CW_FIELD(wQmax,$
                       XSIZE = sLQmax.xsize,$
                       TITLE = sLQmax.title,$
                       VALUE = sLQmax.value,$
+                      /RETURN_EVENTS,$
                       /FLOAT)
 
 ;***** Qmin Qmax Error Label ***************************************************

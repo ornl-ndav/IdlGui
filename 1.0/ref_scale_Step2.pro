@@ -432,10 +432,8 @@ widget_control,id,get_uvalue=global
 
 ;Qx and Q
 IF (Q_NUMBER EQ 1) THEN BEGIN
-    Qx = (*global).Q1x
     Q  = (*global).Q1
 ENDIF ELSE BEGIN
-    Qx = (*global).Q2x
     Q  = (*global).Q2
 ENDELSE
 
@@ -465,3 +463,32 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+;This function only reach during step2 when Qmin and Qmax are edited
+PRO ManualNewQ, Event
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;replot main plot
+(*global).replot_me = 1
+replot_main_plot, Event         ;_Plot
+;retrieve values of Qmin and Qmax from the cw-fields
+Q1 = getValue(Event,'step2_q1_text_field')
+Q2 = getValue(Event,'step2_q2_text_field')
+;save new value of Q1 and Q2
+(*global).Q1 = Q1
+(*global).Q2 = Q2
+;calculate new position of selection
+saveQxFromQ, Event, Q_NUMBER=1
+saveQxFromQ, Event, Q_NUMBER=2
+;replot new Qs
+IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
+    plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
+ENDIF ELSE BEGIN
+    IF (Q2 EQ 0 AND Q1 NE 0) THEN BEGIN
+        plotQ, Event, (*global).Q1x ;_Plot
+    ENDIF 
+    IF (Q1 EQ 0 AND Q2 NE 0) THEN BEGIN
+        plotQ, Event, (*global).Q2x
+    ENDIF
+ENDELSE
+END
+
