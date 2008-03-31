@@ -43,51 +43,49 @@ sL_QBaseTitle = { size  : [sB1_QminQMaxInput.size[0]+15, $
                   value : 'Range of Q used to calculate the Scaling ' + $
                   'Factor (SF)'}
 
-;***** Qmin label **************************************************************
-sL_Qmin = { size   : [5,11],$
-            value  : 'Qmin:'}
-
-;***** Qmin text field *********************************************************
-XYoff1  = [35,-5]
-sT_Qmin = { size   : [sL_Qmin.size[0]+XYoff1[0],$
-                      sL_Qmin.size[1]+XYoff1[1],$
-                      80,30],$
-            uname  : 'step2_q1_text_field',$
-            value  : ''}
+;***** Qmin base and cw_field **************************************************
+XYoff  = [5,2]
+sLQmin = { size : [XYoff[0],$
+                   XYoff[1],$
+                   115,35],$
+           base_uname : 'step2_q1_base',$
+           uname      : 'step2_q1_text_field',$
+           title      : 'Qmin:',$
+           value      : '',$
+           xsize      : 9}
 
 ;***** Qselected ***************************************************************
-XYoff   = [0,0]
-sLQminS = { size  : [sT_Qmin.size[0]+sT_Qmin.size[2]+XYoff[0],$
-                     sL_Qmin.size[1]],$
+XYoff   = [-5,8]
+sLQminS = { size  : [sLQmin.size[0]+sLQmin.size[2]+XYoff[0],$
+                     sLQmin.size[1]+XYoff[1],$
+                     5],$
             uname : 'Qmin_select',$
             value : ' '}
 
-;***** Qmax label **************************************************************
-XYoff   = [140,0]
-sL_Qmax = { size  : [sL_Qmin.size[0]+XYoff[0],$
-                     sL_Qmin.size[1]+XYoff[1]],$
-            value : 'Qmax:'}
-
-;***** Qmax text field *********************************************************
-sT_Qmax = { size   : [sL_Qmax.size[0]+XYoff1[0],$
-                      sL_Qmax.size[1]+XYoff1[1],$
-                      sT_Qmin.size[2],$
-                      sT_Qmin.size[3]],$
-            uname  : 'step2_q2_text_field',$
-            value  : ''}
+;***** Qmin base and cw_field **************************************************
+XYoff  = [20,0]
+sLQmax = { size : [sLQminS.size[0]+XYoff[0],$
+                   sLQmin.size[1]+XYoff[1],$
+                   sLQmin.size[2:3]],$
+           base_uname : 'step2_q2_base',$
+           uname      : 'step2_q2_text_field',$
+           title      : 'Qmax:',$
+           value      : '',$
+           xsize      : 9}
 
 ;***** Qselected ***************************************************************
-XYoff   = [0,0]
-sLQmaxS = { size  : [sT_Qmax.size[0]+sT_Qmax.size[2]+XYoff[0],$
-                     sL_Qmin.size[1]],$
+XYoff   = [-5,8]
+sLQmaxS = { size  : [sLQmax.size[0]+sLQmax.size[2]+XYoff[0],$
+                     sLQmax.size[1]+XYoff[1],$
+                     sLQminS.size[2]],$
             uname : 'Qmax_select',$
             value : ' '}
 
 ;***** Qmin/max message ********************************************************
-XYoff      = [30,0]
-sL_QMinMax = { size  : [sT_Qmax.size[0]+sT_Qmax.size[1]+XYoff[0],$
-                        sL_Qmax.size[1]+XYoff[1],$
-                        350],$
+XYoff      = [15,0]
+sL_QMinMax = { size  : [sLQmaxS.size[0]+XYoff[0],$
+                        sLQmaxS.size[1]+XYoff[1],$
+                        220],$
                value : 'Enter or Select Qmin and Qmax',$
                uname : 'step2_qminqmax_error_label'}
 
@@ -268,23 +266,6 @@ Step2QBase = WIDGET_BASE(STEP2_BASE,$
                          SCR_YSIZE = sB1_QminQmaxInput.size[3],$
                          FRAME     = sB1_QminQmaxInput.frame)
                          
-;***** Qmin label **************************************************************
-wL_Qmin = WIDGET_LABEL(Step2QBase,$
-                       XOFFSET = sL_Qmin.size[0],$
-                       YOFFSET = sL_Qmin.size[1],$
-                       VALUE   = sL_Qmin.value)
-
-;*** Qmin text field ***********************************************************
-wT_Qmin = WIDGET_TEXT(Step2QBase,$
-                      XOFFSET   = sT_Qmin.size[0],$
-                      YOFFSET   = sT_Qmin.size[1],$
-                      SCR_XSIZE = sT_Qmin.size[2],$
-                      SCR_YSIZE = sT_Qmin.size[3],$
-                      VALUE     = sT_Qmin.value,$
-                      UNAME     = sT_Qmin.uname,$
-                      /EDITABLE,$
-                      /ALIGN_LEFT)
-
 ;***** Qmin Selection Label '<' ************************************************
 wLQminS = WIDGET_LABEL(Step2QBase,$
                        XOFFSET = sLQminS.size[0],$
@@ -292,22 +273,20 @@ wLQminS = WIDGET_LABEL(Step2QBase,$
                        VALUE   = sLQminS.value,$
                        UNAME   = sLQminS.uname)
 
-;***** Qmax label **************************************************************
-wL_Qmax = WIDGET_LABEL(Step2QBase,$
-                       XOFFSET = sL_Qmax.size[0],$
-                       YOFFSET = sL_Qmax.size[1],$
-                       VALUE   = sL_Qmax.value)
+;***** Qmin BASE and CW_FIELD **************************************************
+wQmin = WIDGET_BASE(Step2QBase,$
+                    XOFFSET   = sLQmin.size[0],$
+                    YOFFSET   = sLQmin.size[1],$
+                    SCR_XSIZE = sLQmin.size[2],$
+                    SCR_YSIZE = sLQmin.size[3],$
+                    UNAME     = sLQmin.base_uname)
 
-;***** Qmax text field *********************************************************
-wT_Qmax = WIDGET_TEXT(Step2QBase,$
-                      XOFFSET   = sT_Qmax.size[0],$
-                      YOFFSET   = sT_Qmax.size[1],$
-                      SCR_XSIZE = sT_Qmax.size[2],$
-                      SCR_YSIZE = sT_Qmax.size[3],$
-                      VALUE     = sT_Qmax.value,$
-                      UNAME     = sT_Qmax.uname,$
-                      /EDITABLE,$
-                      /ALIGN_LEFT)
+wQminField = CW_FIELD(wQmin,$
+                      UNAME = sLQmin.uname,$
+                      XSIZE = sLQmin.xsize,$
+                      TITLE = sLQmin.title,$
+                      VALUE = sLQmin.value,$
+                      /FLOAT)
 
 ;***** Qmax Selection Label '<' ************************************************
 wLQmaxS = WIDGET_LABEL(Step2QBase,$
@@ -315,6 +294,21 @@ wLQmaxS = WIDGET_LABEL(Step2QBase,$
                        YOFFSET = sLQmaxS.size[1],$
                        VALUE   = sLQmaxS.value,$
                        UNAME   = sLQmaxS.uname)
+
+;***** Qmax BASE and CW_FIELD **************************************************
+wQmax = WIDGET_BASE(Step2QBase,$
+                    XOFFSET   = sLQmax.size[0],$
+                    YOFFSET   = sLQmax.size[1],$
+                    SCR_XSIZE = sLQmax.size[2],$
+                    SCR_YSIZE = sLQmax.size[3],$
+                    UNAME     = sLQmax.base_uname)
+
+wQmaxField = CW_FIELD(wQmax,$
+                      UNAME = sLQmax.uname,$
+                      XSIZE = sLQmax.xsize,$
+                      TITLE = sLQmax.title,$
+                      VALUE = sLQmax.value,$
+                      /FLOAT)
 
 ;***** Qmin Qmax Error Label ***************************************************
 wL_QMinMax = WIDGET_LABEL(Step2QBase,$
