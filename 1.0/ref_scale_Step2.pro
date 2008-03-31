@@ -340,6 +340,8 @@ IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
     ENDCASE      
 ENDIF
 (*global).left_mouse_pressed = 0  
+;Sort Q1 and Q2 values 
+SortQs, Event ;_Step2
 END
 
 ;###############################################################################
@@ -507,3 +509,22 @@ widget_control,id,get_uvalue=global
 (*global).X   = 0
 (*global).Y   = 0
 END
+
+;###############################################################################
+;*******************************************************************************
+;This function retrieves Q1 and Q2 and replaces Qmin by the min of
+;Q1,Q2 and replaces Qmax by the max of Q1,Q2
+PRO SortQs, Event
+;retrieve values of Qmin and Qmax from the cw-fields
+Q1 = getValue(Event,'step2_q1_text_field')
+Q2 = getValue(Event,'step2_q2_text_field')
+IF (Q1 NE 0 AND Q2 NE 0) THEN BEGIN
+    Qmin = MIN([Q1,Q2],MAX=Qmax)
+    putValueInTextField, Event, 'step2_q1_text_field', STRCOMPRESS(Qmin,/REMOVE_ALL)
+    putValueInTextField, Event, 'step2_q2_text_field', STRCOMPRESS(Qmax,/REMOVE_ALL)
+    ManualNewQ, Event
+ENDIF
+END
+
+;###############################################################################
+;*******************************************************************************
