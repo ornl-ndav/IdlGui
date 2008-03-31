@@ -129,9 +129,9 @@ distance_L_L         = 130
 distanceVertical_L_L = 35
 
 ;Define titles
-Step1Title = 'LOAD FILES'
-Step2Title = 'WORK ON CRITICAL EDGE FILE'
-Step3Title = 'WORK ON OTHER FILES'
+Step1Title = 'STEP1: Load'
+Step2Title = 'STEP2: Critical Edge'
+Step3Title = 'STEP3: Other Files'
 ListOfFiles  = ['                                                   ']  
 MainTitle = "REFLECTOMETER RESCALING PROGRAM" + VERSION
 
