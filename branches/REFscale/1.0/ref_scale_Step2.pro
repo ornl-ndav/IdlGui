@@ -232,13 +232,16 @@ CASE ((*global).Q_selection) OF
         ActivateQSelection, Event, 1 ;show that we are working with Qmin
         IF ((*global).Q2 NE 0) THEN BEGIN
 ;            print, 'start to plot Q1 and replot Q2'
-            plotQs, Event, Event.x, (*global).Q2x ;_Plot
+            plotQs, Event, Event.x, (*global).Q2x ;_Plo
         ENDIF ELSE BEGIN
 ;            print, 'start to plot Q1'
             replot_main_plot, Event ;_Plot
             plotQ, Event, Event.x ;_Plot
         ENDELSE
-
+        saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
+        putValueInTextField, Event, $
+          'step2_q1_text_field', $
+          STRCOMPRESS((*global).Q1,/REMOVE_ALL)
     END
     2: BEGIN
         (*global).replot_me = 1
@@ -252,6 +255,10 @@ CASE ((*global).Q_selection) OF
             replot_main_plot, Event ;_Plot
             plotQ, Event, Event.x ;_Plot
         ENDELSE
+        saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
+        putValueInTextField, Event, $
+          'step2_q2_text_field', $
+          STRCOMPRESS((*global).Q2,/REMOVE_ALL)
     END
     ELSE: BEGIN
         (*global).replot_me = 1
@@ -260,6 +267,10 @@ CASE ((*global).Q_selection) OF
         replot_main_plot, Event ;_Plot
         plotQ, Event, Event.x   ;_Plot
 ;        print, 'start to plot Q1'
+        saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
+        putValueInTextField, Event, $
+          'step2_q1_text_field', $
+          STRCOMPRESS((*global).Q1,/REMOVE_ALL)
     END
 ENDCASE
 END
@@ -343,6 +354,10 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q1 plot'
             ENDELSE
+        saveQ, Event, Q_NUMBER = 1, Event.x, XMinMax ;_Step2
+        putValueInTextField, Event, $
+          'step2_q1_text_field', $
+          STRCOMPRESS((*global).Q1,/REMOVE_ALL)
         END
         2: BEGIN
             (*global).replot_me = 1
@@ -353,15 +368,19 @@ IF ((*global).left_mouse_pressed) THEN BEGIN
                 plotQ, Event, Event.x ;_Plot
 ;                print, 'Move Q2 plot'
             ENDELSE
+        saveQ, Event, Q_NUMBER = 2, Event.x, XMinMax ;_Step2
+        putValueInTextField, Event, $
+          'step2_q2_text_field', $
+          STRCOMPRESS((*global).Q2,/REMOVE_ALL)
         END
         ELSE:
     ENDCASE
-ENDIF ELSE BEGIN ;this is wwhere I replot the main plot and the Qs
-    saveQxFromQ, Event, Q_NUMBER = 1, (*global).Q1x, XMinMax ;_Step2
+ENDIF ELSE BEGIN ;this is where I replot the main plot and the Qs
+;    saveQxFromQ, Event, Q_NUMBER = 1, (*global).Q1x, XMinMax ;_Step2
     IF ((*global).Q1 NE 0) THEN BEGIN
         plotQ, Event, (*global).Q1x
     ENDIF
-    saveQxFromQ, Event, Q_NUMBER = 2, (*global).Q2x, XMinMax ;_Step2
+;    saveQxFromQ, Event, Q_NUMBER = 2, (*global).Q2x, XMinMax ;_Step2
     IF ((*global).Q2 NE 0) THEN BEGIN
         plotQ, Event, (*global).Q2x
     ENDIF
@@ -421,3 +440,6 @@ ENDIF ELSE BEGIN
     (*global).Q2x = newX
 ENDELSE
 END
+
+;###############################################################################
+;*******************************************************************************
