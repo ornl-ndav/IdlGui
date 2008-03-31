@@ -172,15 +172,15 @@ XaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
                                 /ALIGN_LEFT,$ 
                                 /ALL_EVENTS)    
 
-XaxisLinLog = CW_BGROUP(RescaleBase,$ 
-                         axis_lin_log,$
-                         /exclusive,$
-                         /RETURN_NAME,$
-                         XOFFSET=XaxisLinLogSize[0],$
-                         YOFFSET=XaxisLinLogSize[1],$
-                         SET_VALUE=0.0,$
-                         row=1,$
-                         uname='XaxisLinLog')                 
+; XaxisLinLog = CW_BGROUP(RescaleBase,$ 
+;                          axis_lin_log,$
+;                          /exclusive,$
+;                          /RETURN_NAME,$
+;                          XOFFSET=XaxisLinLogSize[0],$
+;                          YOFFSET=XaxisLinLogSize[1],$
+;                          SET_VALUE=0.0,$
+;                          row=1,$
+;                          uname='XaxisLinLog')                 
 
 ResetButton = WIDGET_BUTTON(RescaleBase,$
                             XOFFSET=ResetButtonSize[0],$

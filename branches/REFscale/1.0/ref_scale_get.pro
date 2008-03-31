@@ -244,12 +244,11 @@ END
 ;and 0 if it's logarithmic
 FUNCTION getScale, Event, axis
 IF (axis EQ 'X') THEN BEGIN
-   uname = 'XaxisLinLog' 
+    value = 0
 ENDIF ELSE BEGIN
-   uname = 'YaxisLinLog'
+    axis_id = widget_info(Event.top,find_by_uname='YaxisLinLog')
+    widget_control, axis_id, get_value=value
 ENDELSE
-axis_id = widget_info(Event.top,find_by_uname=uname)
-widget_control, axis_id, get_value=value
 RETURN, value
 END
 
