@@ -227,7 +227,7 @@ SF  = float(sSF)
 SF += float(delta_SF)
 
 if (SF LE 0) then begin
-    SF = float(0.0001)
+    SF = float(0.001)
 endif
 
 ;put new SF value in text box
