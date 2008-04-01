@@ -40,7 +40,7 @@ ListOFInstruments = ['BSS',$
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     LogBookPath           : '/SNS/users/LogBook/',$
-                    DeployedVersion       : 1,$
+                    DeployedVersion       : 0,$
                     InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
@@ -88,7 +88,7 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 IF ((*global).DeployedVersion EQ 0) THEN BEGIN
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
-        instrumentIndex = 3     ;REMOVE_ME
+        instrumentIndex = 3    ;REMOVE_ME
 ;put default nexus name in 'nexus_file_text_field'
         id = widget_info(MAIN_BASE,find_by_uname='nexus_file_text_field')
         nexus = '/Users/j35/REF_L_4493.nxs'
