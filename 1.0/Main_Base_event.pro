@@ -157,6 +157,12 @@ PRO MAIN_BASE_event, Event
       Widget_Info(wWidget, FIND_BY_UNAME='Step3_automatic_rescale_button'): BEGIN
           Step3AutomaticRescaling, Event ;_Step3
       END
+
+;Event trigerred by the CW_FIELD SF rescaling
+      Widget_Info(wWidget, FIND_BY_UNAME='Step3SFTextField'): BEGIN
+          step = FLOAT(getTextFieldValue(Event,'Step3SFTextField'))
+          Step3RescaleFile2, Event, step ;_Step3
+      END      
       
 ;Event triggered by [+++]
       Widget_Info(wWidget, FIND_BY_UNAME='step3_3increase_button'): BEGIN

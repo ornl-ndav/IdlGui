@@ -264,6 +264,58 @@ IF (displayData EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN ;clear text box
     putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
+END
+
+;###############################################################################
+;*******************************************************************************
+
+;This function rescale manually the working file using the new SF 
+PRO Step3RescaleFile2, Event, delta_SF
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+flt1_ptr = (*global).flt1_ptr
+flt2_ptr = (*global).flt2_ptr
+
+;get value of current SF
+SF  = float(delta_SF)
+
+if (SF LE 0) then begin
+    SF = float(0.0001)
+endif
+
+;get selected index of droplist
+index = getSelectedIndex(Event,'step3_work_on_file_droplist') ;_get
+
+flt1 = *flt1_ptr[index]
+flt2 = *flt2_ptr[index]
+
+SF = SF[0]
+
+;rescale data
+flt1 = flt1 / SF
+flt2 = flt2 / SF
+
+flt1_rescale_ptr = (*global).flt1_rescale_ptr
+flt2_rescale_ptr = (*global).flt2_rescale_ptr
+
+*flt1_rescale_ptr[index] = flt1
+*flt2_rescale_ptr[index] = flt2
+
+(*global).flt1_rescale_ptr = flt1_rescale_ptr
+(*global).flt2_rescale_ptr = flt2_rescale_ptr
+
+plot_loaded_file, Event, '2plots' ;_Plot
+
+;this function displays in step3 the list of flt0, flt1 for low Q file
+;and flt1 for high Q file only if user wants too.
+displayData = getButtonValidated(Event,'display_value_yes_no') ;_get
+IF (displayData EQ 0) THEN BEGIN
+    Step3OutputFlt0Flt1, Event ;_Step3
+ENDIF ELSE BEGIN ;clear text box
+    putValueInTextField, Event,'step3_flt_text_field','' ;_put
+ENDELSE
 
 END
 
