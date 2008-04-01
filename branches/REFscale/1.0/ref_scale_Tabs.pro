@@ -40,6 +40,9 @@ ENDIF ELSE BEGIN
 
          1: BEGIN               ;if second tab plot only CE plot
             plot_loaded_file, Event, 'CE' ;_Plot
+;recalculate Qs
+            saveQxFromQ, Event, Q_NUMBER=1
+            saveQxFromQ, Event, Q_NUMBER=2
 ;plot the Qmin and Qmax if any have been selected
             plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
         END
