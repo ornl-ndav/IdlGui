@@ -17,19 +17,21 @@ OutputFile_BASE = WIDGET_BASE(STEPS_TAB,$
                               SCR_YSIZE = Step1Size[3],$
                               MAP       = 0)
 
-OutputFileNameLabelStatic = WIDGET_LABEL(OutputFile_base,$
-                                         XOFFSET = OutputFileNameLabelStaticSize[0],$
-                                         YOFFSET = OutputFileNameLabelStaticSize[1],$
-                                         VALUE   = OutputFileNameLabelStaticTitle)
+OutputFileNameLabelStatic = $
+  WIDGET_LABEL(OutputFile_base,$
+               XOFFSET = OutputFileNameLabelStaticSize[0],$
+               YOFFSET = OutputFileNameLabelStaticSize[1],$
+               VALUE   = OutputFileNameLabelStaticTitle)
 
-OutputFileNameLabelDynamic = WIDGET_LABEL(OutputFile_base,$
-                                          XOFFSET   = OutputFileNameLabelDynamicSize[0],$
-                                          YOFFSET   = OutputFileNameLabelDynamicSize[1],$
-                                          SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
-                                          SCR_YSIZE = OutputFileNameLabelDynamicSize[3],$
-                                          UNAME     = 'output_file_name_label_dynmaic',$
-                                          VALUE     = '',$
-                                          /ALIGN_LEFT)
+OutputFileNameLabelDynamic = $
+  WIDGET_LABEL(OutputFile_base,$
+               XOFFSET   = OutputFileNameLabelDynamicSize[0],$
+               YOFFSET   = OutputFileNameLabelDynamicSize[1],$
+               SCR_XSIZE = OutputFileNameLabelDynamicSize[2],$
+               SCR_YSIZE = OutputFileNameLabelDynamicSize[3],$
+               UNAME     = 'output_file_name_label_dynmaic',$
+               VALUE     = '',$
+               /ALIGN_LEFT)
 
 OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
                                   UNAME     = 'output_file_text_field',$
