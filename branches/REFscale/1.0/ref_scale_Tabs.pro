@@ -82,14 +82,9 @@ IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
             Step3_display_SF_values, Event, indexSelected ;_Step3
 
          END
-
          ELSE:                  ;if fourth tab (settings tab) is selected
-
       ENDCASE
-
    ENDIF
-
 ENDIF
-
 END
 

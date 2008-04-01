@@ -64,13 +64,10 @@ END
 ;in their respectives boxes
 PRO putXYMinMax, Event, XYMinMax
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-
-Xmin = XYMinMax[0]
-Xmax = XYMinMax[1]
-Ymin = XYMinMax[2]
-Ymax = XYMinMax[3]
+Xmin = Number_Formatter(FLOAT(XYMinMax[0]))
+Xmax = Number_Formatter(FLOAT(XYMinMax[1]))
+Ymin = Number_Formatter(FLOAT(XYMinMax[2]))
+Ymax = Number_Formatter(FLOAT(XYMinMax[3]))
 
 ;min-xaxis
 XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')

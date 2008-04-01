@@ -3,6 +3,7 @@
 
 @idl_makefile
 
+resolve_routine, "CW_FIELD",/either
 resolve_routine, "strsplit",/either
 resolve_routine, "loadct",/either
 resolve_routine, "errplot",/either
