@@ -649,14 +649,14 @@ ymin = (*global).draw_ymin
 ymax = (*global).draw_ymax
 xmin = (*global).draw_xmin
 xmax = (*global).draw_xmax
-IF (X1 GE xmin AND $
-    X1 LE xmax) THEN BEGIN
+IF (X1 GT xmin AND $
+    X1 LT xmax) THEN BEGIN
 ;plot Q1
     plots, X1, ymin, /device, color=200
     plots, X1, ymax, /device, /continue, color=200
 ENDIF 
-IF (X2 GE xmin AND $
-    X2 LE xmax) THEN BEGIN
+IF (X2 GT xmin AND $
+    X2 LT xmax) THEN BEGIN
 ;plot Q2
     plots, X2, ymin, /device, color=200
     plots, X2, ymax, /device, /continue, color=200
