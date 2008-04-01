@@ -30,6 +30,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 ActivateWidget, Event, 'plot_button', validateStatus
 ActivateWidget, Event, 'bank_droplist', validateStatus
+ActivateWidget, Event, 'bank_text', validateStatus
 END
 
 ;-------------------------------------------------------------------------------
@@ -80,6 +81,9 @@ ENDIF ELSE BEGIN
     ENDFOR
 ENDELSE
 setBankDroplistValue, Event, BankArray
+;get bank selected
+BankValue = getDropListSelectedValue(Event, 'bank_droplist')
+putTextFieldValue, Event, 'bank_text', BankValue
 END
 
 ;^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^-^

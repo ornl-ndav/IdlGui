@@ -120,13 +120,21 @@ XYoff    = [0,20]
 Bank     = { size : [ROIframe.size[0]+XYoff[0],$
                      ROIframe.size[1]+ROIframe.size[3]+XYoff[1],$
                      5,35],$
-             value : 'BANKE 1',$
+             value : 'bank1',$
              uname : 'bank_droplist'}
                      
-XYoff     = [100,3]
-Mainplot  = { size  : [Bank.size[0]+XYoff[0],$
+XYoff    = [100,2]
+BankText = { size      : [Bank.size[0]+XYoff[0],$
+                          Bank.size[1]+XYoff[1],$
+                          70,30],$
+             uname     : 'bank_text',$
+             value     : 'bank1',$
+             sensitive : 0}
+
+XYoff     = [15,2]
+Mainplot  = { size  : [BankText.size[0]+BankText.size[2]+XYoff[0],$
                        Bank.size[1]+XYoff[1],$
-                       390,$
+                       310,$
                        30],$
               uname : 'plot_button',$
               value : 'P L O T'}
@@ -319,6 +327,16 @@ wBank = WIDGET_DROPLIST(MAIN_BASE,$
                         SCR_YSIZE = Bank.size[3],$
                         UNAME     = Bank.uname,$
                         SENSITIVE = 0)
+
+wBankText = WIDGET_TEXT(MAIN_BASE,$
+                        UNAME     = BankText.uname,$
+                        XOFFSET   = BankText.size[0],$
+                        YOFFSET   = BankText.size[1],$
+                        SCR_XSIZE = BankText.size[2],$
+                        SCR_YSIZE = BankText.size[3],$
+                        VALUE     = BankText.value,$
+                        SENSITIVE = BankText.sensitive,$
+                        /EDITABLE)
 
 wplot = WIDGET_BUTTON(MAIN_BASE,$
                       XOFFSET   = Mainplot.size[0],$
