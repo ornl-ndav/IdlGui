@@ -17,11 +17,7 @@ CurrTabSelect = widget_info(steps_tab_id,/tab_current) ;current tab selected
 list_of_files       = (*(*global).list_of_files)
 list_of_files_size  = (size(list_of_files))(1)
 
-IF ((list_of_files_size EQ 1) && (list_of_files[0] EQ '')) THEN BEGIN
-
-;nothing to do, no file loaded
-
-ENDIF ELSE BEGIN 
+IF (getNbrOfFiles(Event) GT 0) THEN BEGIN
    
 ;do something only if it's a new tab or refresh button has been clicked
    IF ((PrevTabSelect NE CurrTabSelect) OR (isRefresh EQ 1)) THEN BEGIN          
@@ -93,7 +89,7 @@ ENDIF ELSE BEGIN
 
    ENDIF
 
-ENDELSE
+ENDIF
 
 END
 
