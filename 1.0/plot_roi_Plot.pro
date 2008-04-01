@@ -14,11 +14,12 @@ putStatusMessage, Event, message
 ;get Nexus File Name
 NexusFileName = getFullNexusFileName(Event)
 ;get Bank#
-BankNbr       = getDroplistSelectedIndex(Event,'bank_droplist')
+;BankNbr       = getDroplistSelectedIndex(Event,'bank_droplist')
+BankNbr = getDroplistSelectedValue(Event,'bank_droplist')
 
 NexusDataInstance = obj_new('IDLgetNexusMetadata', $
                             NexusFileName, $
-                            BankData = BankNbr+1)
+                            BankData = BankNbr)
 
 BankData = NexusDataInstance->getData()
 Data     = (*BankData)

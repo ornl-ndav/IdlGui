@@ -19,7 +19,7 @@ END
 
 ;-------------------------------------------------------------------------------
 FUNCTION getBankData, fileID, BankNbr
-banks_path = '/entry/bank' + strcompress(BankNbr,/remove_all) + '/data/'
+banks_path = '/entry/' + BankNbr + '/data/'
 pathID     = h5d_open(fileID, banks_path)
 data       = h5d_read(pathID)
 h5d_close,pathID
@@ -37,9 +37,11 @@ RETURN, self.data
 END
 
 ;***** Class constructor *******************************************************
-FUNCTION IDLgetNexusMetadata::init, nexus_full_path, $
-                            NbrBank  = NbrBank,$
-                            BankData = BankData
+FUNCTION IDLgetNexusMetadata::init, $
+                            nexus_full_path, $
+                            NbrBank    = NbrBank,$
+                            BankData   = BankData,$
+                            Instrument = Instrument
 ;open hdf5 nexus file
 file_error = 0
 CATCH, file_error
@@ -50,10 +52,18 @@ ENDIF ELSE BEGIN
     fileID = h5f_open(nexus_full_path)
 ENDELSE
 
-IF (n_elements(NbrBank) NE 0) THEN BEGIN
+IF (n_elements(Instrument) NE 0) THEN BEGIN
+    IF (Instrument EQ 'ARCS') THEN BEGIN
+        self.bank_number = 115
+    ENDIF ELSE BEGIN
+        self.bank_number = getNumberOfBanks(fileID)
+    ENDELSE
+ENDIF ELSE BEGIN
+    IF (n_elements(NbrBank) NE 0) THEN BEGIN
 ;get NumberOfBanks
-    self.bank_number = getNumberOfBanks(fileID)
-ENDIF
+        self.bank_number = getNumberOfBanks(fileID)
+    ENDIF
+ENDELSE
 
 IF (n_elements(BankData) NE 0) THEN BEGIN
 ;get Bank data

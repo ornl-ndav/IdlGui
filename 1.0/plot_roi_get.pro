@@ -69,3 +69,10 @@ L1: error_status = 1
 END
 
 ;-------------------------------------------------------------------------------
+;this function gives from the droplist the value selected
+FUNCTION getDropListSelectedValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+index = WIDGET_INFO(id, /DROPLIST_SELECT)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value[index]
+END

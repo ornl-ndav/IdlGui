@@ -19,7 +19,7 @@ widget_control,id,get_uvalue=global
 NexusFileName = getFullNexusFileName(Event)
 IF (FILE_TEST(NexusFileName) AND $
     (*global).ValidNexus EQ 1) THEN BEGIN
-                                ;is Full Nexus Name not empty
+;is Full Nexus Name not empty
     IF (isFullNexusNameEmpty(Event) EQ 1) THEN BEGIN
         validateStatus = 0
     ENDIF ELSE BEGIN
@@ -51,13 +51,34 @@ widget_control, id, set_value=value
 END
 
 ;-------------------------------------------------------------------------------
-PRO PopulateBankDroplist, Event, NbrBank
+PRO PopulateBankDroplist, Event, NbrBank, Instrument
 NbrBank    = LONG(NbrBank)
-prefix     = 'Bank'
+prefix     = 'bank'
 BankArray  = strarr(NbrBank)
-FOR i=0,(NbrBank-1) DO BEGIN
-    BankArray[i] = prefix + STRCOMPRESS(i+1,/REMOVE_ALL)
-ENDFOR
+IF (Instrument EQ 'ARCS') THEN BEGIN
+    index=-1
+;work on bottom banks
+    FOR i=1,38 DO BEGIN
+        BankArray[++index] = prefix + 'B' + STRCOMPRESS(i,/REMOVE_ALL)
+    ENDFOR
+;work on middle banks
+    FOR i=1,38 DO BEGIN
+        IF (i EQ 32) THEN BEGIN
+            BankArray[++index] = prefix + 'M' + STRCOMPRESS(i,/REMOVE_ALL) + 'A'
+            BankArray[++index] = prefix + 'M' + STRCOMPRESS(i,/REMOVE_ALL) + 'B'
+        ENDIF ELSE BEGIN
+            BankArray[++index] = prefix + 'M' + STRCOMPRESS(i,/REMOVE_ALL)
+        ENDELSE
+    ENDFOR
+;work on top banks
+    FOR i=1,38 DO BEGIN
+        BankArray[++index] = prefix + 'T' + STRCOMPRESS(i,/REMOVE_ALL)
+    ENDFOR
+ENDIF ELSE BEGIN
+    FOR i=0,(NbrBank-1) DO BEGIN
+        BankArray[i] = prefix + STRCOMPRESS(i+1,/REMOVE_ALL)
+    ENDFOR
+ENDELSE
 setBankDroplistValue, Event, BankArray
 END
 
@@ -68,7 +89,11 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 FullNexusName = getFullNexusFileName(Event)
 IF (FullNexusName NE '') THEN BEGIN
-    NexusInstance = obj_new('IDLgetNexusMetadata', FullNexusName, NbrBank=1)
+    Instrument = getInstrument(Event)
+    NexusInstance = obj_new('IDLgetNexusMetadata', $ ;_IDLgetNexusMetadata
+                            FullNexusName, $
+                            NbrBank    = 1,$
+                            Instrument = Instrument)
     IF (OBJ_VALID(NexusInstance)) THEN BEGIN
         NbrBank = NexusInstance->getNbrBank()
 ;activate NbrBank
@@ -78,7 +103,7 @@ IF (FullNexusName NE '') THEN BEGIN
 ;desactivate NbrBank
         (*global).ValidNexus = 0
     ENDELSE
-    PopulateBankDroplist, Event, NbrBank
+    PopulateBankDroplist, Event, NbrBank, Instrument ;_Gui
 ENDIF ELSE BEGIN
 ;desactivate NbrBank
     (*global).ValidNexus = 0
