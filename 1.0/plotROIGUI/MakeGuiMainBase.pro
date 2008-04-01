@@ -27,9 +27,9 @@ GIdroplist        = { size   : [GIinstLabel.size[0]+XYoff[0],$
 XYoff        = [235,0]
 NBrunField  = { size       : [GIdroplist.size[0]+XYoff[0],$
                               GIdroplist.size[1]+XYoff[1],$
-                              175, $
+                              155, $
                               35,$
-                              13, $
+                              10, $
                               1],$
                 title      : '&  Run #:',$
                 uname_base : 'nexus_run_number_base',$
