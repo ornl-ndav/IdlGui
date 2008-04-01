@@ -73,7 +73,11 @@ CASE Event.id OF
         PreviewRoiFile, Event ;_eventcb
     END
 
-
+;#### Bank Droplist ####
+    widget_info(wWidget, FIND_BY_UNAME='bank_droplist'): BEGIN
+        DisplayBankSelected, Event   ;_eventcb
+    END
+    
 ;#### PLOT button ####
     widget_info(wWidget, FIND_BY_UNAME='plot_button'): BEGIN
         PlotData, Event ;_Plot

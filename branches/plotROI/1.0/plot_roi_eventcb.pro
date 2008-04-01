@@ -64,6 +64,13 @@ FileName    = RoiFileName[0]
 title       = FileName
 XDISPLAYFILE, FileName, TITLE = title
 END
+
+;-------------------------------------------------------------------------------
+PRO DisplayBankSelected, Event 
+value = getDropListSelectedValue(Event, 'bank_droplist')
+putTextFieldValue, Event, 'bank_text', value
+END
+
 ;*******************************************************************************
 
 PRO MAIN_REALIZE, wWidget
