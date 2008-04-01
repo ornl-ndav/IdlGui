@@ -697,6 +697,8 @@ END
 ;*******************************************************************************
 PRO ActivateOutputFileTab, Event, validate
 ActivateWidget, Event, 'output_file_base', validate
+;clear contain of preview file
+putValueInTextField, Event, 'output_file_text_field',''
 END
 
 ;******************************************************************************

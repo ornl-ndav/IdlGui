@@ -88,23 +88,6 @@ widget_control,id,get_uvalue=global
 END
 
 
-;This function reinitialize the Rescale base
-PRO ResetRescaleBase,Event
-;reset X and Y, Min and Max text fields
-XminId = widget_info(Event.top,find_by_uname='XaxisMinTextField')
-XmaxId = widget_info(Event.top,find_by_uname='XaxisMaxTextField')
-YminId = widget_info(Event.top,find_by_uname='YaxisMinTextField')
-YmaxId = widget_info(Event.top,find_by_uname='YaxisMaxTextField')
-XYMinMax = [XminId, XmaxId, YminId, YmaxId]
-for i=0,3 do begin
-   widget_control, XYMinMax[i], set_value=''
-endfor
-;reset X and Y lin/log
-XaxisLinLogId = widget_info(Event.top,find_by_uname='XaxisLinLog')
-YaxisLinLogId = widget_info(Event.top,find_by_uname='YaxisLinLog')
-widget_control, XaxisLinLogId, set_value=0
-widget_control, YaxisLinLogId, set_value=0
-END
 
 
 
