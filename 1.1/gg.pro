@@ -3,7 +3,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.1.4)'
+APPLICATION = 'GeometryGenerator'
+VERSION     = '1.1.4'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -161,6 +162,17 @@ widget_control, id, set_value=GeoArray[0]
 ;show selected instrument
 id = widget_info(MAIN_BASE, find_by_uname='instrument_droplist')
 widget_control, id, set_droplist_select=instrumentIndex
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
