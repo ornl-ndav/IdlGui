@@ -12,12 +12,15 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION     = ' (version: 1.0.7)'
-VerArray    = strsplit(VERSION,':',/extract)
-TagArray    = strsplit(VerArray[1],')',/extract)
-BranchArray = strsplit(TagArray[0],'.',/extract)
-CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
-  strcompress(BranchArray[1],/remove_all)
+
+APPLICATIoN  = 'REFscale' 
+VERSION      = '1.0.8'
+
+StrArray    = strsplit(VERSION,'.',/extract)
+VerArray    = StrArray[0]
+TagArray    = StrArray[1]
+BranchArray = StrArray[2]
+CurrentBranch =  VerArray + '.' + TagArray
 
 global = ptr_new({ $
                    delta_x_draw     : 0.01,$
@@ -133,7 +136,7 @@ Step1Title = 'STEP1: Load'
 Step2Title = 'STEP2: Critical Edge'
 Step3Title = 'STEP3: Other Files'
 ListOfFiles  = ['                                                   ']  
-MainTitle = "REFLECTOMETER RESCALING PROGRAM" + VERSION
+MainTitle = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -208,6 +211,17 @@ XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 ;; default tabs shown 
 ;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
 ;widget_control, id1, set_tab_current = 1  ;remove_me
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 end
 
