@@ -3,7 +3,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.6)'
+APPLICATION = 'MakeNeXus'
+VERSION     = '1.0.7'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -85,7 +86,7 @@ IF ((*global).ucams NE (*global).geek) THEN BEGIN
 endif else begin
     MainBaseSize  = [100,50,850,630]
 endelse
-MainBaseTitle = 'Make NeXus' + ' - ' + VERSION
+MainBaseTitle = 'Make NeXus - ' + VERSION
 
 (*global).MainBaseXoffset = MainBaseSize[0]
 (*global).MainBaseYoffset = MainBaseSize[1]
@@ -131,6 +132,17 @@ ENDIF
 ;widget_control, id, sensitive=1
 ;(*global).prenexus_path = '/REF_M-DAS-FS/2008_1_4A_SCI/REF_M_2968/'
 ;END OF REMOVE
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
