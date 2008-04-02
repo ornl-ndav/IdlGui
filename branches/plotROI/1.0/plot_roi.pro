@@ -3,7 +3,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.4)'
+APPLICATION = 'plotROI'
+VERSION     = '1.0.4'
 
 ;define initial global values - these could be input via external file or other
 ;means
@@ -40,7 +41,7 @@ ListOFInstruments = ['BSS',$
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     LogBookPath           : '/SNS/users/LogBook/',$
-                    DeployedVersion       : 1,$
+                    DeployedVersion       : 0,$
                     InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
@@ -113,6 +114,12 @@ ENDIF ELSE BEGIN
 ENDELSE
 id = widget_info(MAIN_BASE,find_by_uname='list_of_instrument')
 widget_control, id, set_droplist_select=instrumentIndex
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+print, logger_message
+spawn, logger_message
 
 END
 
