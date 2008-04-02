@@ -235,7 +235,7 @@ FOR j=0,(sz-1) DO BEGIN
         title = 'Translation ... ' + strcompress(j+1,/remove_all)
         title += '/' + strcompress(prenexus_found_nbr,/remove_all)
         progressBar = Obj_New("SHOWPROGRESS", $
-                              Xoffset =(*global).MainBaseXoffset+ 200, $
+                              Xoffset =(*global).MainBaseXoffset + 200, $
                               Yoffset =(*global).MainBaseYoffset + 50, $
                               /CancelButton,$
                               title   = title)
