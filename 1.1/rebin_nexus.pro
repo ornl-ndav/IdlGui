@@ -204,7 +204,9 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 ;define initial global values - these could be input via external file or other means
 
 instrument_list = ['REF_L', 'REF_M', 'BSS']
-VERSION = ' (version: 1.1.0)'
+
+APPLIcATION = 'rebinNeXus'
+VERSION     = '1.1.1'
 
 ;turn on or off the new font
 font = 0
@@ -308,7 +310,8 @@ translation_file = (*global).translation_file
 output_path = (*global).output_path 
 
   ; Create the top-level base and the tab.
-  title = "Histogramming - Mapping - Translation  (" + (*global).instrument + ') - ' + VERSION
+title = "Histogramming - Mapping - Translation  (" $
+  + (*global).instrument + ') - ' + VERSION
   MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
                           UNAME='MAIN_BASE', $
                           XOFFSET=150, YOFFSET=350, $
@@ -929,7 +932,17 @@ if ((*global).cvinfo_xml_filename EQ '') then begin
     widget_control, COMPLETE_CVINFO_FILE, sensitive=0
 endif
 
-
+;logger message
+ucams = get_ucams()
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 end
 
