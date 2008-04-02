@@ -1,3 +1,0 @@
-PRO SaveAsHistoMappedFile, Event
-
-END
