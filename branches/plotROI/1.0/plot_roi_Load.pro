@@ -5,6 +5,9 @@ PRO LoadRunNumber, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+OK     = (*global).ok
+FAILED = (*global).failed
+
 ;reset text_field of full nexus file name
 putNexusFileName, Event, ''
 
@@ -22,6 +25,7 @@ PROCESSING = (*global).processing
 message    = 'Searching for Run Number ' + strcompress(RunNumber) 
 message   += ' of ' + Instrument + ' ... ' + PROCESSING
 putStatusMessage, Event, message
+IDLsendToGeek_putLogBookText, Event, message
 
 ;find nexus full name
 isNexusExist = 0 ;by default, NeXus does not exist
@@ -31,9 +35,11 @@ NexusInstance = obj_new('IDLnexus',INSTRUMENT=Instrument, RunNumber=RunNUmber)
 IF (NexusInstance->isNexusExist() EQ 0) THEN BEGIN
     message = 'Archived NeXus File Does Not Exist !'
     nexus   = ''
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
     message = 'Archived NeXus Has Been Localized !'
     nexus   = NexusInstance->getFullNexusName()
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 putStatusMessage, Event, message
 putNexusFileName, Event, nexus

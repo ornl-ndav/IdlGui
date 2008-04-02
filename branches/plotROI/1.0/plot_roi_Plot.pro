@@ -16,6 +16,13 @@ NexusFileName = getFullNexusFileName(Event)
 ;get Bank#
 BankNbr = getTextFieldValue(Event,'bank_text')
 
+;Log Book text
+text = 'Plot Bank: ' + BankNbr + ' of NeXus: ' + NexusFileName
+IDLsendToGeek_addLogBookText, Event, text
+
+;add information in log book
+IDLsendToGeek_addLogBookText, Event, message
+
 NexusDataInstance = obj_new('IDLgetNexusMetadata', $
                             NexusFileName, $
                             BankData = BankNbr)
@@ -41,12 +48,14 @@ IF (OBJ_VALID(NexusDataInstance)) THEN BEGIN
 ;Informs user that it's done
     message    = 'Plotting Data ... DONE'
     putStatusMessage, Event, message
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, (*global).OK
     
 ENDIF ELSE BEGIN
 
 ;Informs user that it's done
     message    = 'Plotting Data ... ERROR !'
     putStatusMessage, Event, message
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, (*global).FAILED
     
 ENDELSE
 

@@ -16,6 +16,8 @@ RoiFileName = DIALOG_PICKFILE(GET_PATH          = newPath,$
 IF (RoiFileName NE '') THEN BEGIN
     (*global).BrowseDefaultPath = newPath
     putRoiFileName, Event, RoiFileName
+    message = 'Browsed for ROI file name: ' + RoiFileName
+    IDLsendToGeek_AddLogBookText, Event, message
 ENDIF ELSE BEGIN
     putRoiFileName, Event, ''
 ENDELSE
@@ -40,6 +42,8 @@ NexusFileName = DIALOG_PICKFILE(GET_PATH          = newPath,$
 IF (NexusFileName NE '') THEN BEGIN
     (*global).BrowseDefaultPath = newPath
     putNexusFileName, Event, NexusFileName
+    message = 'Browsed for NeXus file name: ' + NexusFileName
+    IDLsendToGeek_putLogBookText, Event, message
 ENDIF ELSE BEGIN
     putNexusFileName, Event, ''
 ENDELSE

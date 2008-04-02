@@ -59,17 +59,61 @@ RETURN, value
 END
 
 ;-------------------------------------------------------------------------------
+PRO IDLsendToGeek_putLogBookText, Event, text
+LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text
+END
+
+;-------------------------------------------------------------------------------
+PRO IDLsendToGeek_addLogBookText, Event, text
+LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
+END
+
+;-------------------------------------------------------------------------------
+;this function removes from the intial text the given TextToRemove and 
+;returns the result.
+FUNCTION removeStringFromText, initialText, TextToRemove
+;find where the 'textToRemove' starts
+step1 = strpos(initialText,TexttoRemove)
+;keep the text from the start of the line to the step1 position
+step2 = strmid(initialText,0,step1)
+RETURN, step2
+END
+
+;-------------------------------------------------------------------------------
+PRO IDLsendToGeek_ReplaceLogBookText, Event, OLD_STRING, NEW_STRING
+
+InitialStrarr = IDLsendToGeek_getLogBookText(Event)
+ArrSize       = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN ;do not remove anything from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        FinalStrarr = InitialStrarr + NEW_STRING
+    ENDELSE
+ENDIF ELSE BEGIN ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
+        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1],OLD_STRING)
+        NewLastLine += NEW_STRING
+        FinalStrarr  = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    ENDIF ELSE BEGIN
+        NewInitialStrarr = removeStringFromText(InitialStrarr,OLD_STRING)
+        FinalStrarr      = NewInitialStrarr + NEW_STRING
+    ENDELSE
+ENDELSE
+IDLsendToGeek_putLogBookText, Event, FinalStrarr
+END
+
+;-------- SEND TO GEEK ---------------------------------------------------------
+;-------------------------------------------------------------------------------
 FUNCTION IDLsendToGeek_getMessage, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='sent_to_geek_text_field')
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
-END
-
-;-------------------------------------------------------------------------------
-PRO IDLsendToGeek_putLogBookText, Event, text
-LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
-WIDGET_CONTROL, id, SET_VALUE=value
 END
 
 ;-------------------------------------------------------------------------------
