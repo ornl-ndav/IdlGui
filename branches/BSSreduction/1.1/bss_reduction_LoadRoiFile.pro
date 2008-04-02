@@ -64,7 +64,10 @@ FOR i=0,(NbrElement-1) DO BEGIN
         display_info = 1
     ENDIF
        
-    pixelid = getPixelIDfromRoiString(Event, FileArray[i],display_info, error_status)
+    pixelid = getPixelIDfromRoiString(Event, $
+                                      FileArray[i], $
+                                      display_info, $
+                                      error_status)
     
     IF (error_status EQ 1) THEN BEGIN
         break
