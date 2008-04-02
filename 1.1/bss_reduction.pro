@@ -1,6 +1,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.1.1)'
+APPLICATION = 'BSSreduction'
+VERSION     = '1.1.2'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -266,7 +267,7 @@ endif else begin
     MainBaseSize  = [50,200,1200,730]
 endelse
 
-MainBaseTitle = 'BSS reduction tool' + VERSION
+MainBaseTitle = 'BSS reduction tool - ' + VERSION
         
 ;Build Main Base
 MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
@@ -299,6 +300,17 @@ widget_control, id, set_value = (*global).ColorVerticalGrid
 ;;tab #7
 ;id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
 ;widget_control, id1, set_tab_current = 6
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
