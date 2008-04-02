@@ -3,7 +3,8 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;get the current folder
 cd, current=current_folder
 
-VERSION = '(1.0.5)'
+APPLICATION = 'plotARCS'
+VERSION     = '1.0.5'
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -99,6 +100,16 @@ widget_control, id, set_value=MapArray
 ;id = widget_info(MAIN_BASE, find_by_uname='plot_button') ;REMOVE_ME
 ;widget_control, id, sensitive=1 ;REMOVE_ME
 
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
