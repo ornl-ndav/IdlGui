@@ -248,7 +248,7 @@ IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
         REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
           instrument, $
-      working_path, $
+          working_path, $
           DataRunNumber
     ENDIF
 ENDIF ELSE BEGIN

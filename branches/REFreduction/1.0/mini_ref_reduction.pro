@@ -12,7 +12,8 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.0.21)'
+APPLICATION = 'REFreductionLow'
+VERSION     = '1.0.22'
 loadct,5
 
 ;define initial global values - these could be input via external file or other means
@@ -395,7 +396,7 @@ ExtOfAllPlots = ['.txt',$
 
 MainBaseSize  = [50,50,880,677]
 
-MainBaseTitle = 'miniReflectometer Data Reduction Package'
+MainBaseTitle = 'miniReflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
@@ -540,6 +541,17 @@ ENDIF
  
 ; id = widget_info(Main_base,find_by_uname='save_as_file_name')
 ; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 END
 
