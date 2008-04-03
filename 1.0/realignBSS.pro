@@ -1697,6 +1697,17 @@ tube1_label =  widget_label(tube1_base,$
 
   XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+;logger message
+  logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+  logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+  error = 0
+  CATCH, error
+  IF (error NE 0) THEN BEGIN
+      CATCH,/CANCEL
+  ENDIF ELSE BEGIN
+      spawn, logger_message
+  ENDELSE
+  
 end
 
 ;
