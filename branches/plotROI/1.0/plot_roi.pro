@@ -41,7 +41,7 @@ ListOFInstruments = ['BSS',$
 ;define global variables
 global = ptr_new ({ ListOfInstruments     : ListOfInstruments,$
                     LogBookPath           : '/SNS/users/LogBook/',$
-                    DeployedVersion       : 0,$
+                    DeployedVersion       : 1,$
                     InstrumentSelected    : instrumentIndex,$
                     ucams                 : ucams,$
                     processing            : '(PROCESSING)',$
