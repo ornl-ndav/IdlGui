@@ -2472,7 +2472,7 @@ initialization_of_sliders, Event
 erase_plots, event
 
 ;hide open_nexus interface
-if (n_elements(local) EQ 0) then begin
+if (n_elements(local) EQ 0) then BEGIN ;not local
     (*global).local_nexus = 0
     open_nexus_id = widget_info(Event.top, FIND_BY_UNAME='OPEN_NEXUS_BASE')
     widget_control, open_nexus_id, map=0
@@ -2498,6 +2498,7 @@ endif else begin
     
     (*global).nexus_open = 1
     (*global).run_number = run_number
+    find_nexus = 0
     
     if (n_elements(local) EQ 0) then begin
 
@@ -2508,7 +2509,10 @@ endif else begin
     
 ;get path to nexus run #
         instrument="BSS"
-        full_nexus_name = find_full_nexus_name(Event, 0, run_number, instrument)
+        full_nexus_name = find_full_nexus_name(Event, $
+                                               run_number, $
+                                               instrument, $
+                                               find_nexus)
 
     endif else begin
 
@@ -2519,12 +2523,17 @@ endif else begin
     
 ;get path to local nexus run #
         instrument="BSS"
-        full_nexus_name = find_full_nexus_name(Event, 1, run_number, instrument)
+;        full_nexus_name = find_full_nexus_name(Event, 1, run_number,
+;        instrument)
+        full_nexus_name = find_full_nexus_name(Event, $
+                                               run_number, $
+                                               instrument, $
+                                               find_nexus)
 
     endelse
 
 ;check result of search
-    find_nexus = (*global).find_nexus
+;    find_nexus = (*global).find_nexus
     
     if (find_nexus EQ 0) then begin
         

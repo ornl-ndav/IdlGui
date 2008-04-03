@@ -403,7 +403,7 @@ global = ptr_new({$
                    file_type : '',$
                    file_to_plot_top : '',$
                    file_to_plot_bottom : '',$
-                   full_tmp_nxdir_folder_path : '',$  ;/working_path/tmp_nxdir_folder
+                   full_tmp_nxdir_folder_path : '~/',$  ;/working_path/tmp_nxdir_folder
                    find_nexus : 0,$
                    full_nexus_name : '',$
                    file			      :'',$
