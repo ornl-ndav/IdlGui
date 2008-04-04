@@ -1,5 +1,6 @@
 @idl_makefile
 
+resolve_routine, "REVERSE",/either
 resolve_routine, "loadct",/either
 resolve_routine, "congrid",/either
 resolve_routine, "strsplit", /either
