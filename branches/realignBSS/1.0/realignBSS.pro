@@ -363,7 +363,7 @@ plot_height = 150			;plot box height
 plot_length = 304			;plot box length
 
 APPLICATION = 'realignBSS'
-VERSION     = '1.0.2'
+VERSION     = '1.0.3'
 
 Resolve_Routine, 'realignBSS_eventcb',/COMPILE_FULL_FILE 
 ;Load event callback routines
