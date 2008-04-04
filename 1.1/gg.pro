@@ -4,7 +4,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 cd, current=current_folder
 
 APPLICATION = 'GeometryGenerator'
-VERSION     = '1.1.4'
+VERSION     = '1.1.5'
 
 ;define initial global values - these could be input via external file or other means
 
