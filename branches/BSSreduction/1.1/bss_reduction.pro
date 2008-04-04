@@ -1,7 +1,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'BSSreduction'
-VERSION     = '1.1.1'
+VERSION     = '1.1.2'
 
 ;define initial global values - these could be input via external file or other means
 
