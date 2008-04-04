@@ -13,7 +13,7 @@ END
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'REFreductionHigh'
-VERSION     = '1.0.23'
+VERSION     = '1.0.24'
 loadct,5
 
 ;define initial global values - these could be input via external file
