@@ -4,7 +4,7 @@ PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 cd, current=current_folder
 
 APPLICATION = 'plotARCS'
-VERSION     = '1.0.5'
+VERSION     = '1.0.6'
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
