@@ -138,17 +138,17 @@ plot_length = 304			;plot box length
 Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback routines
 
 MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup, UNAME='MAIN_BASE'  $
-      ,SCR_XSIZE=265 ,SCR_YSIZE=270, XOFFSET=450 ,YOFFSET=50 $
-      ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Make NeXus'  $
-      ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
+                         ,SCR_XSIZE=265 ,SCR_YSIZE=270, XOFFSET=450 ,YOFFSET=50 $
+                         ,NOTIFY_REALIZE='MAIN_REALIZE' ,TITLE='Make NeXus'  $
+                         ,SPACE=3 ,XPAD=3 ,YPAD=3 ,MBAR=WID_BASE_0_MBAR)
 
 ;attach global data structure with widget ID of widget main base widget ID
 widget_control,MAIN_BASE,set_uvalue=global
 
 PORTAL_BASE= widget_base(MAIN_BASE, $
-	UNAME='PORTAL_BASE',$
-	SCR_XSIZE=240, SCR_YSIZE=110, FRAME=10,$
-	SPACE=4, XPAD=3, YPAD=3,column=1)
+                         UNAME='PORTAL_BASE',$
+                         SCR_XSIZE=240, SCR_YSIZE=110, FRAME=10,$
+                         SPACE=4, XPAD=3, YPAD=3,column=1)
 
 PORTAL_LABEL = widget_label(PORTAL_BASE,$
 	XOFFSET=40, YOFFSET=3, VALUE="SELECT YOUR INSTRUMENT")
@@ -206,7 +206,7 @@ Resolve_Routine, 'rebin_nexus_eventcb',/COMPILE_FULL_FILE  ; Load event callback
 instrument_list = ['REF_L', 'REF_M', 'BSS']
 
 APPLIcATION = 'rebinNeXus'
-VERSION     = '1.1.1'
+VERSION     = '1.1.2'
 
 ;turn on or off the new font
 font = 0
