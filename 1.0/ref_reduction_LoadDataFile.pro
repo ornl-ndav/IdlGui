@@ -84,7 +84,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;display info in log book
                 LogBookText = getLogBookText(Event)        
                 Message = 'OK'
-                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
+                  PROCESSING
                 LogText = '----> Found ' + strcompress(sz,/remove_all)
                 LogText += ' NeXus files:'
                 putLogBookMessage,Event, LogText,Append=1
@@ -92,6 +93,14 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                     text = '       ' + full_list_of_nexus_name[i]
                     putLogBookMessage, Event,text,Append=1
                 endfor
+
+;display nxsummary of first file in 'data_list_nexus_base'
+                RefReduction_NXsummary, $
+                  Event, $
+                  full_list_of_nexus_name[0], $
+                  'data_list_nexus_nxsummary_text_field'
+                
+;Inform user that program is waiting for his action
                 LogText = '----> Selecting one NeXus file from the list ..... ' $
                   + PROCESSING
                 putLogBookMessage,Event,LogText,Append=1
@@ -107,12 +116,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                 text += ' NeXus file found .....'
                 putDataLogBookMessage, Event, text, Append=1
 
-;display nxsummary of first file in 'data_list_nexus_base'
-                RefReduction_NXsummary, $
-                  Event, $
-                  full_list_of_nexus_name[0], $
-                  'data_list_nexus_nxsummary_text_field'
-                
             endif else begin    ;proceed as before
                 
                 OpenDataNexusFile, Event, DataRunNumber, full_list_of_nexus_name
@@ -136,8 +139,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING
-        putLogBookMessage, Event, LogBookText, Append=1
+        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING  ;REMOVE_ME YEAH!
+        putLogBookMessage, Event, LogBookText, Append=1  
         
 ;check if nexus exist and if it does, returns the full path
         
