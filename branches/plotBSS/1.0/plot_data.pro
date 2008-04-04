@@ -114,7 +114,7 @@ end
 pro MAIN_BASE, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'plotBSS'
-VERSION     = '1.0.0'
+VERSION     = '1.0.1'
 
 ;define parameters
 scr_x 	      = 930             ;main window width
