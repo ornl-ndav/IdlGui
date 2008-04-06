@@ -8,6 +8,9 @@
       <property name="abouturl">about_REFreduction.txt</property>
       <property name="assistantdocs">.</property>
    </profile>
+<!-- FQA -->
+   <DCF ref="FQA.html" title="Frequently Question Asked"> 	
+   </DCF>	
 <!-- STEP BY STEP MENU -->
    <DCF ref="DRstepBystep.html" title="Data Reduction - Step by Step"> 
 <!-- Step1: load files -->
