@@ -1,0 +1,20 @@
+<html>
+<title>Load a Data or Normalization File</title>
+<body>
+<h2>Load a Data or Normalization File</h2>
+<p>To be able to move to step2 you need to load at least a DATA file. The normalization fiel is only if you want to include to normalize your data during the data reduction process.</p>
+<center><img src='SbSstep1.png'></img></center>
+<center>Picture 1: Load NeXus GUI</center>
+<p>To load a NeXus file, enter the run number in the text box (see Picture 1) and select the location of the NeXus file. 
+<ul>
+<li><b>Archived</b> will retrieve the NeXus automatically created at the end of the run of interest using the default histogramming parameters define on the DAS.</li>
+<li><b>All NeXus</b> will list all the nexus found with the same run number (local directory, user directory, archived...). You can use MakeNeXus to make such NeXus files with different histogramming parameters.</li>
+</ul>
+</p>
+<p><b><u>1. Archived</u></b><br>
+If the file can be located and loaded, a summary of its contain is display in the top right part of the GUI and a message at the bottom of the right part tells you that the process has been successful. You can also check the LogBook to get a live detail view of the loading process. Different view of the data are displayed in the left part (X vs TOF 2d view, X vs TOF 3D view, X vs Y 2d view and X vs Y 3d view).</p>
+<p><b><u>2. All NeXus</u></b><br>
+If only one NeXus file can be found, the NeXus file will be directly loaded (as in Archived mode). If more than 1 NeXus can be found, a list of all the NeXus files that match the run number you are looking for is displayed and a summary of the first NeXus in the list is displayed. Select the NeXus file you want to load and press <font color=blue size=3>OK</font>.</p>
+
+</body>
+</html>
