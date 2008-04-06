@@ -8,6 +8,36 @@
       <property name="abouturl">about_REFreduction.txt</property>
       <property name="assistantdocs">.</property>
    </profile>
+<!-- STEP BY STEP MENU -->
+   <DCF ref="DRstepBystep.html" title="Data Reduction - Step by Step"> 
+<!-- Step1: load files -->
+      <section ref="SBSstep1.html" title="STEP1: Load Files">
+         <keyword ref="SBSstep1.html">STEP1: Load Files</keyword>
+      </section>
+<!-- Step2: Select the Regions of Interest -->
+      <section ref="SBSstep2.html" title="STEP2: Select the Regions of Interest">
+         <keyword ref="SBSstep2.html">STEP2: Select the Regions of Interest</keyword>
+      </section>
+<!-- Step3: Input the Data Reduction Parameters -->
+      <section ref="SBSstep3.html" title="STEP3: Input the Data Reduction Parameters ">
+         <keyword ref="SBSstep3.html">STEP3: Input the Data Reduction Parameters </keyword>
+      </section>
+<!-- Step4: Visualize the Data Reduction Output Files -->
+      <section ref="SBSstep4.html" title="STEP4: Visualize the DR plots">
+         <keyword ref="SBSstep4.html">STEP4: Visualize the DR plots</keyword>
+      </section>
+<!-- Using the Batch Mode -->
+      <section ref="SBSstep5.html" title="Using the Batch Mode ">
+         <keyword ref="SBSstep5.html">Using the Batch Mode </keyword>
+      </section>
+
+
+
+
+
+
+
+   </DCF>
 <!-- OVERVIEW MENU -->
    <DCF ref="Overview.html" title="Overview">
 <!-- LOAD TAB -->
@@ -66,7 +96,5 @@
       <section ref="LOG_BOOKtab.html" title="LOG BOOK">
          <keyword ref="LOG_BOOKtab.html">LOG BOOK tab</keyword>
       </section>
-   </DCF>
-   <DCF ref="DRstepBystep.html" title="Data Reduction Step by Step"> 
    </DCF>
 </assistantconfig>
