@@ -16,13 +16,15 @@ APPLICATION = 'REFreductionHigh'
 VERSION     = '1.0.24'
 loadct,5
 
+;get branch number
+branchArray = strsplit(VERSION,'.',/EXTRACT)
+branch      = strjoin(branchArray[0:1],'.')
+
 ;define initial global values - these could be input via external file
 ;or other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
-
-
 if (!VERSION.os EQ 'darwin') then begin
    ucams = 'j35'
    debugger = 1
@@ -47,6 +49,7 @@ endelse
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                  branch : branch,$
                   batch_data_runs : ptr_new(0L),$
                     nbrIntermediateFiles : 8,$
                     batch_process : 'data',$
@@ -402,19 +405,36 @@ MainBaseTitle = 'Reflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 
 ;Build Main Base
-MAIN_BASE = Widget_Base( GROUP_LEADER=wGroup,$
-                         UNAME='MAIN_BASE',$
-                         SCR_XSIZE=MainBaseSize[2],$
-                         SCR_YSIZE=MainBaseSize[3],$
-                         XOFFSET=MainBaseSize[0],$
-                         YOFFSET=MainBaseSize[1],$
-                         TITLE=MainBaseTitle,$
-                         SPACE=0,$
-                         XPAD=0,$
-                         YPAD=2)
+MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+                         UNAME        = 'MAIN_BASE',$
+                         SCR_XSIZE    = MainBaseSize[2],$
+                         SCR_YSIZE    = MainBaseSize[3],$
+                         XOFFSET      = MainBaseSize[0],$
+                         YOFFSET      = MainBaseSize[1],$
+                         TITLE        = MainBaseTitle,$
+                         SPACE        = 0,$
+                         XPAD         = 0,$
+                         YPAD         = 2,$
+                         MBAR         = WID_BASE_0_MBAR)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
+
+;HELP MENU in Menu Bar
+HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+                          UNAME = 'help_menu',$
+                          VALUE = 'HELP',$
+                          /MENU)
+                          
+HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+                            VALUE = 'HELP',$
+                            UNAME = 'help_button')
+
+IF (ucams EQ 'j35') THEN BEGIN
+    my_help_button = WIDGET_BUTTON(HELP_MENU,$
+                                   VALUE = 'MY HELP',$
+                                   UNAME = 'my_help_button')
+ENDIF
 
 ;; Build LOAD-REDUCE-PLOTS-LOGBOOK-SETTINGS tab
 ; SWITCH (listening) OF
