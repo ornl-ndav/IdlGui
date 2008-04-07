@@ -8,9 +8,9 @@ PROCESSING = (*global).processing_message
 LogText = '----> Display NXsummary of default selected file:'
 putLogBookMessage,Event,LogText,Append=1
 
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
     cmd = 'head -n 22 ' + (*global).MacNXsummary
-endif else begin
+ENDIF ELSE BEGIN
     cmd = 'nxsummary ' + FileName + ' --verbose '
 ;    spawn, 'hostname',listening
 ;    CASE (listening) OF
@@ -24,7 +24,7 @@ endif else begin
 ;            endelse
 ;        END
 ;    ENDCASE
-endelse
+ENDELSE
 logText = '-----> cmd : ' + cmd + ' ... ' + PROCESSING
 putLogBookMessage,Event,LogText,Append=1
 
