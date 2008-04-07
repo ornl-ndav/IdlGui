@@ -12,7 +12,7 @@
    <DCF ref="FQA.html" title="Frequently Question Asked"> 	
    </DCF>	
 <!-- STEP BY STEP MENU -->
-   <DCF ref="DRstepBystep.html" title="Data Reduction - Step by Step"> 
+   <DCF ref="DRstepBYstep.html" title="Data Reduction - Step by Step"> 
 <!-- Step1: load files -->
       <section ref="SBSstep1.html" title="STEP1: Load Files">
          <keyword ref="SBSstep1.html">STEP1: Load Files</keyword>
