@@ -716,6 +716,14 @@ ENDIF ELSE BEGIN
     ENDELSE
     
     UpdateDataField,  Event, BatchTable[1,RowSelected]
+    id = WIDGET_INFO(Event.top,find_by_uname='batch_norm_run_base_status')
+    IF (BatchTable[2,RowSelected] EQ '') THEN BEGIN ;remove norm widgets
+        map_status = 0
+    ENDIF ELSE BEGIN ;add norm widgets
+        map_status = 1
+    ENDELSE
+    WIDGET_CONTROL, id, MAP=map_status
+    
     UpdateNormField,  Event, BatchTable[2,RowSelected]
     UpdateAngleField, Event, BatchTable[3,RowSelected]
     UpdateS1Field,    Event, BatchTable[4,RowSelected]
