@@ -30,59 +30,70 @@ new_cmd     = STRTRIM(part1) + ' ' + split1
 (*global).batch_new_cmd = new_cmd
 ;get data run cw_field
 data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
-DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
-(*(*global).batch_data_runs) = data_runs
-(*(*global).batch_DataNexus) = DataNexus
+IF (data_runs NE '') THEN BEGIN
+    DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+    (*(*global).batch_data_runs) = data_runs
+    (*(*global).batch_DataNexus) = DataNexus
 ;check that the NeXus have the same angle, S1 and S2 values
-sz = (size(DataNeXus))(1)
-IF (sz GT 1) THEN BEGIN
-    AngleArray = strarr(sz)
-    S1Array    = strarr(sz)
-    S2Array    = strarr(sz)
-    FOR i=0,(sz-1) DO BEGIN
-        entry = obj_new('IDLgetMetadata',DataNexus[i])
-        AngleArray[i] = strcompress(entry->getAngle())
-        S1Array[i]    = strcompress(entry->getS1())
-        S2Array[i]    = strcompress(entry->getS2())
-    ENDFOR
-    
+    sz = (size(DataNeXus))(1)
+    IF (sz GT 1) THEN BEGIN
+        AngleArray = strarr(sz)
+        S1Array    = strarr(sz)
+        S2Array    = strarr(sz)
+        FOR i=0,(sz-1) DO BEGIN
+            entry = obj_new('IDLgetMetadata',DataNexus[i])
+            AngleArray[i] = strcompress(entry->getAngle())
+            S1Array[i]    = strcompress(entry->getS1())
+            S2Array[i]    = strcompress(entry->getS2())
+        ENDFOR
+        
 ;Check if they are identical or not
-    SameStatus = 1
+        SameStatus = 1
 ;check Angle 
-    AngleAreIdentical = areDataIdentical(Event, AngleArray)
-    IF (AngleAreIdentical NE 1) THEN BEGIN
-        SameStatus = 0
-    ENDIF ELSE BEGIN
-;check S1
-        S1AreIdentical = areDataIdentical(Event, S1Array)
-        IF (S1AreIdentical NE 1) THEN BEGIN
+        AngleAreIdentical = areDataIdentical(Event, AngleArray)
+        IF (AngleAreIdentical NE 1) THEN BEGIN
             SameStatus = 0
         ENDIF ELSE BEGIN
-;check S2
-        S2AreIdentical = areDataIdentical(Event, S2Array)
-        IF (S2AreIdentical NE 1) THEN BEGIN
+;check S1
+            S1AreIdentical = areDataIdentical(Event, S1Array)
+            IF (S1AreIdentical NE 1) THEN BEGIN
                 SameStatus = 0
-            ENDIF
+            ENDIF ELSE BEGIN
+;check S2
+                S2AreIdentical = areDataIdentical(Event, S2Array)
+                IF (S2AreIdentical NE 1) THEN BEGIN
+                    SameStatus = 0
+                ENDIF
+            ENDELSE
         ENDELSE
-    ENDELSE
-
+        
 ;inform user that the values do not match if SameStatus is not 1
-    IF (SameStatus NE 1) THEN BEGIN
+        IF (SameStatus NE 1) THEN BEGIN
 ;Populate ProTable with angle, S1 and s2 values
-        ProArray = strarr(4,10)
-        FOR j=0,(sz-1) DO BEGIN
-            ProArray[0,j] = data_runs[j]
-            ProArray[1,j] = AngleArray[j]
-            ProArray[2,j] = S1Array[j]
-            ProArray[3,j] = S2Array[j]
-        ENDFOR
-        id = widget_info(Event.top,find_by_uname='pro_table')
-        widget_control, id, set_value=ProArray
+            ProArray = strarr(4,10)
+            FOR j=0,(sz-1) DO BEGIN
+                ProArray[0,j] = data_runs[j]
+                ProArray[1,j] = AngleArray[j]
+                ProArray[2,j] = S1Array[j]
+                ProArray[3,j] = S2Array[j]
+            ENDFOR
+            id = widget_info(Event.top,find_by_uname='pro_table')
+            widget_control, id, set_value=ProArray
 ;change size of processing base
-        SetBaseYSize, Event, 'processing_base', 365
+            SetBaseYSize, Event, 'processing_base', 365
 ;change top label
-        value = 'PROCESSING  NEW  DATA  INPUT  . . .  CONTINUE OR NOT ? '
-        putLabelValue, Event, 'pro_top_label', value
+            value = 'PROCESSING  NEW  DATA  INPUT  . . .  CONTINUE OR NOT ? '
+            putLabelValue, Event, 'pro_top_label', value
+        ENDIF ELSE BEGIN
+            Continue_ChangeDataRunNumber, Event, $
+              RowSelected,$
+              data_runs, $
+              DataNexus,$
+              split2,$
+              part2,$
+              BatchTable,$
+              new_cmd
+        ENDELSE
     ENDIF ELSE BEGIN
         Continue_ChangeDataRunNumber, Event, $
           RowSelected,$
@@ -94,16 +105,21 @@ IF (sz GT 1) THEN BEGIN
           new_cmd
     ENDELSE
 ENDIF ELSE BEGIN
-    Continue_ChangeDataRunNumber, Event, $
-      RowSelected,$
-      data_runs, $
-      DataNexus,$
-      split2,$
-      part2,$
-      BatchTable,$
-      new_cmd
+    value = 'PLEASE SPECIFY AT LEAST ONE DATA RUN NUMBER'
+    putLabelValue, Event, 'pro_top_label', value
+    WAIT, 3
+;Hide processing base
+    MapBase, Event, 'processing_base', 0
+    SetBaseYSize, Event, 'processing_base', 50
+;generate a new batch file name
+    GenerateBatchFileName, Event
+;turn off hourglass
+    widget_control,hourglass=0
+    value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+    putLabelValue, Event, 'pro_top_label', value
+    (*global).batch_process = 'data'
 ENDELSE
-end
+END
 
 ;*******************************************************************************
 
