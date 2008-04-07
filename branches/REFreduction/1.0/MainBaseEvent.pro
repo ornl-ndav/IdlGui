@@ -15,6 +15,16 @@ CASE Event.id OF
         tab_event, Event
     end
 
+;HELP BUTTON
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
+        start_help ;_eventcb
+    END
+
+;MY HELP BUTTON
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='my_help_button'): BEGIN
+        start_my_help, Event ;_eventcb
+    END
+
 ;instrument selection cwbgroup
     widget_info(wWidget, $
                 FIND_BY_UNAME='instrument_selection_cw_bgroup'): begin

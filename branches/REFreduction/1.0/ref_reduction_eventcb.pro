@@ -793,6 +793,24 @@ REFreduction_NormBackgroundPeakSelection, Event
 END
 
 
+;HELP --------------------------------------------------------------------------
+PRO start_help 
+ONLINE_HELP, book='/SNS/software/idltools/help/REFreduction/ref_reduction.adp'
+END
+
+;MY HELP -----------------------------------------------------------------------
+PRO start_my_help, event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BRANCH = (*global).branch
+ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/REFreduction/' + BRANCH + '/REFreductionHELP/ref_reduction.adp'
+
+
+END
+
+
+
 
 pro ref_reduction_eventcb
 end
