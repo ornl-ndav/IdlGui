@@ -13,7 +13,7 @@ END
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION = 'REFreductionLow'
-VERSION     = '1.0.24'
+VERSION     = '1.0.25'
 loadct,5
 
 ;get branch number
