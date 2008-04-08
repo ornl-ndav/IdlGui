@@ -10,19 +10,31 @@ PRO LoadFileButton, Event
 FormatFileSelected = getButtonValidated(Event,'InputFileFormat')   
 
 IF (FormatFileSelected EQ 0) THEN BEGIN ;TOF
-
+    LogBookMessage = 'Loading a TOF File :'
+;Check if the log book is empty or not
+    LogBookText = IDLsendToGeek_getLogBookText(Event)
+    IF (LogBookText[0] EQ '') THEN BEGIN
+        IDLsendToGeek_putLogBookText, Event, LogBookMessage
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_addLogBookText, Event, LogBookMessage
+    ENDELSE
 ;display the dMD and angle value base
     dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
     widget_control, dMDAngleBaseId, map=1
-
 ;check status of ok_load button
     CheckOpenButtonStatus, Event 
-
 ENDIF ELSE BEGIN                ;Q
-
+    LogBookMessage = '> Loading a Q File :'
+;Check if the log book is empty or not
+    LogBookText = IDLsendToGeek_getLogBookText(Event)
+    IF (LogBookText[0] EQ '') THEN BEGIN
+        IDLsendToGeek_putLogBookText, Event, LogBookMessage
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_addLogBookText, Event, LogBookMessage
+    ENDELSE
     LoadFile_Q, Event
-
 ENDELSE
+
 END
 
 ;###############################################################################
@@ -34,52 +46,53 @@ PRO LoadFile_Q, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
  
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;launch the program that open the dialog_pickfile
 LongFileName = OpenFile(Event) 
 file_error = 0
-;CATCH, file_error
+CATCH, file_error
 
 IF (file_error NE 0) THEN BEGIN
-
     CATCH,/cancel
 ;move Back the colorIndex slidebar
     MoveColorIndexBack,Event ;_Gui
-
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
-
     IF (LongfileName NE '') then begin
-
+        IDLsendToGeek_addLogBookText, Event, '-> Long File Name  : ' + $
+          LongFileName
 ;get only the file name (without path) of file
         ShortFileName = get_file_name_only(LongFileName)    
+        IDLsendToGeek_addLogBookText, Event, '-> Short File Name : ' + $
+          ShortFileName
 ;MoveColorIndex to new position 
         MoveColorIndex,Event ;_Gui
-;get the value of the angle (in degree)
-        angleValue = getCurrentAngleValue(Event) ;_get
-        (*global).angleValue = angleValue
-        get_angle_value_and_do_conversion, Event, angleValue
-
 ;store flt0(x-axis), flt1(y-axis) and flt2(y_error-axis) of new files
         index = (*global).NbrFilesLoaded 
+        IDLsendToGeek_addLogBookText, Event, '-> Store data ... ' + $
+          PROCESSING
         SuccessStatus = StoreFlts(Event, LongFileName, index) ;_OpenFile
-
         IF (SuccessStatus) THEN BEGIN
-
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ;add all files to step1 and step3 droplist
             AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
             display_info_about_selected_file, Event, LongFileName ;_Gui
             populateColorLabel, Event, LongFileName ;_Gui
-
 ;plot all loaded files
             PlotLoadedFiles, Event ;_Plot
-
-        ENDIF
-    ENDIF
+        ENDIF ELSE BEGIN
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDELSE
+    ENDIF ELSE BEGIN ;no file has been selected
+        IDLsendToGeek_addLogBookText, Event, '-> Operation Canceled ' + $
+          '(no file loaded)'
+    ENDELSE
 ENDELSE
-
 ;Update GUi
 StepsUpdateGui, Event ;_Gui
-
 END
 
 ;###############################################################################
@@ -95,7 +108,7 @@ widget_control,id,get_uvalue=global
 ;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
 LongFileName=OpenFile(Event) ;_Load
 file_error = 0
-;CATCH, file_error
+CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
 ;move Back the colorIndex slidebar
@@ -103,25 +116,32 @@ IF (file_error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
     if (LongfileName NE '') then begin
+        IDLsendToGeek_addLogBookText, Event, '-> Long File Name  : ' + $
+          LongFileName
 ;get only the file name (without path) of file
         ShortFileName = get_file_name_only(LongFileName)    
+        IDLsendToGeek_addLogBookText, Event, '-> Short File Name : ' + $
+          ShortFileName
 ;MoveColorIndex to new position 
         MoveColorIndex,Event ;_Gui
 ;get the value of the angle (in degree)
         angleValue = getCurrentAngleValue(Event) ;_get
         (*global).angleValue = angleValue
-        get_angle_value_and_do_conversion, Event, angleValue
+        get_angle_value_and_do_conversion, Event, angleValue ;_math
 ;store flt0, flt1 and flt2 of new files
         index = (*global).NbrFilesLoaded 
         SuccessStatus = Storeflts(Event, LongFileName, index) ;_OpenFile
         IF (SuccessStatus) THEN BEGIN
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ;add all files to step1 and step3 droplist
             AddNewFileToDroplist, Event, ShortFileName, LongFileName ;_Gui
             display_info_about_selected_file, Event, LongFileName
             populateColorLabel, Event, LongFileName
 ;plot all loaded files
             PlotLoadedFiles, Event
-        ENDIF
+        ENDIF ELSE BEGIN
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDELSE
     ENDIF
 ENDELSE
 
@@ -145,10 +165,20 @@ widget_control,id,get_uvalue=global
 
 ;get the selected index of the list of file droplist
 TextBoxIndex = getSelectedIndex(Event, 'list_of_files_droplist') ;_get
+;get the list of files
+ListOfFiles  = getValue(Event,'list_of_files_droplist')
+;inform user of file that is going to be removed
+IDLsendToGeek_addLogBookText, Event, '> Removing File : ' + $
+  ListOfFiles[TextBoxIndex]
+
 RemoveIndexFromArray, Event, TextBoxIndex ;_utility
 
 ;update GUI
 ListOfFiles = (*(*global).list_of_files)
+;give new list of Files
+IDLsendToGeek_addLogBookText, Event, '> New List of Files : ' 
+IDLsendToGeek_addLogBookText, Event, '-> ' + ListOfFiles
+
 updateGUI, Event, ListOfFiles
 
 IF (getNbrOfFiles(Event) GE 1) THEN BEGIN
@@ -182,26 +212,6 @@ END
 ;*******************************************************************************
 
 ;*******************************************************************************
-
-
-
-
-
-
-
-
-
-
-
-;;Cancel Load button
-;PRO ReflSupportEventcb_CancelLoadButton, Event 
-;  dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
-;  widget_control, dMDAngleBaseId, map=0
-;END
-
-
-
-
 
 
 

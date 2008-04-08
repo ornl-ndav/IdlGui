@@ -22,6 +22,9 @@ BranchArray   = StrArray[2]
 CurrentBranch =  VerArray + '.' + TagArray
 
 global = PTR_NEW({ $
+                   processing       : '(PROCESSING)',$
+                   ok               : 'OK',$
+                   failed           : 'FAILED',$
                    delta_x_draw     : 0.01,$
                    Q1x              : 0L,$ ;event.x for Q1
                    Q2x              : 0L,$ ;event.x for Q2
@@ -118,7 +121,7 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
 ENDIF ELSE BEGIN
     (*global).input_path = '~' + ucams
-;    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
+   (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
 ENDELSE
 
 MainBaseSize         = [50 , 50, 1200, 600]
@@ -211,8 +214,8 @@ WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ;; default tabs shown 
-id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') 
-widget_control, id1, set_tab_current = 5  ;remove_me (log book)
+;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') 
+;widget_control, id1, set_tab_current = 5  ;remove_me (log book)
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
