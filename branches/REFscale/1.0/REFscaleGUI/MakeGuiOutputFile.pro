@@ -4,7 +4,7 @@ OutputFileNameLabelStaticSize = [5,8]
 OutputfileNameLabelDynamicSize = [150,3,400,30]
 
 OutputFileTextFieldsize = [ 5, 5+30, 515, 365-30]
-OutputFileTitle = 'PREVIEW of OUTPUT FILE'
+OutputFileTitle = 'OUTPUT FILE'
 OutputFileNameLabelStaticTitle = 'Output file name:'
 
 ;Build GUI
