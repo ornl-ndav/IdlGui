@@ -15,6 +15,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 .run MakeGuiOutputFile.pro
 .run MakeGuiSettings.pro
 .run MakeGuiMainBaseComponents.pro
+.run MakeGuiLogBook.pro
 
 ;Build main procedures
 cd, CurrentFolder
@@ -24,6 +25,7 @@ cd, CurrentFolder
 .run ref_scale_get.pro
 .run ref_scale_put.pro
 .run ref_scale_is.pro
+.run IDLsendToGeek__define.pro
 
 .run Main_Base_event.pro
 .run ref_scale_utility.pro

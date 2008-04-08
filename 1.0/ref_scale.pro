@@ -12,17 +12,16 @@ endif else begin
    ucams = get_ucams()
 endelse
 
+APPLICATIoN   = 'REFscale' 
+VERSION       = '1.0.8'
 
-APPLICATIoN  = 'REFscale' 
-VERSION      = '1.0.8'
-
-StrArray    = strsplit(VERSION,'.',/extract)
-VerArray    = StrArray[0]
-TagArray    = StrArray[1]
-BranchArray = StrArray[2]
+StrArray      = strsplit(VERSION,'.',/extract)
+VerArray      = StrArray[0]
+TagArray      = StrArray[1]
+BranchArray   = StrArray[2]
 CurrentBranch =  VerArray + '.' + TagArray
 
-global = ptr_new({ $
+global = PTR_NEW({ $
                    delta_x_draw     : 0.01,$
                    Q1x              : 0L,$ ;event.x for Q1
                    Q2x              : 0L,$ ;event.x for Q2
@@ -86,42 +85,42 @@ global = ptr_new({ $
                    show_other_fit   : 0$ ;0 means that the step3 has not been done yet
 })
 
-CEcooef       = lonarr(3)
-FileHistory   = strarr(1)
-list_of_files = strarr(1)
-metadata_CE_file = strarr(1)
-Qmin_array    = fltarr(1)
-Qmax_array    = fltarr(1)
-Q1_array      = lonarr(1)
-Q2_array      = lonarr(1)
-SF_array      = lonarr(1)
-angle_array   = fltarr(1)
-color_array   = lonarr(1)
+CEcooef          = LONARR(3)
+FileHistory      = STRARR(1)
+list_of_files    = STRARR(1)
+metadata_CE_file = STRARR(1)
+Qmin_array       = FLTARR(1)
+Qmax_array       = FLTARR(1)
+Q1_array         = LONARR(1)
+Q2_array         = LONARR(1)
+SF_array         = LONARR(1)
+angle_array      = FLTARR(1)
+color_array      = LONARR(1)
 ColorSliderDefaultValue = (*global).ColorSliderDefaultValue
-color_array[0] = ColorSliderDefaultValue
-ListOfLongFileName = strarr(1)
-(*(*global).CEcooef)       = CEcooef
-(*(*global).FileHistory)   = FileHistory
-(*(*global).list_of_files) = list_of_files
-(*(*global).Qmin_array)    = Qmin_array
-(*(*global).Qmax_array)    = Qmax_array
-(*(*global).Q1_array)      = Q1_array
-(*(*global).Q2_array)      = Q2_array
-(*(*global).SF_array)      = SF_array
-(*(*global).angle_array)   = angle_array
-(*(*global).color_array)   = color_array
-(*(*global).ListOfLongFileName) = ListOfLongFileName
-(*(*global).metadata_CE_file) = metadata_CE_file
-(*global).ucams            = ucams
+color_array[0]     = ColorSliderDefaultValue
+ListOfLongFileName = STRARR(1)
 
-if (!VERSION.os EQ 'darwin') then begin
+(*(*global).CEcooef)            = CEcooef
+(*(*global).FileHistory)        = FileHistory
+(*(*global).list_of_files)      = list_of_files
+(*(*global).Qmin_array)         = Qmin_array
+(*(*global).Qmax_array)         = Qmax_array
+(*(*global).Q1_array)           = Q1_array
+(*(*global).Q2_array)           = Q2_array
+(*(*global).SF_array)           = SF_array
+(*(*global).angle_array)        = angle_array
+(*(*global).color_array)        = color_array
+(*(*global).ListOfLongFileName) = ListOfLongFileName
+(*(*global).metadata_CE_file)   = metadata_CE_file
+(*global).ucams                 = ucams
+
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
-endif else begin
+ENDIF ELSE BEGIN
     (*global).input_path = '~' + ucams
 ;    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
-endelse
+ENDELSE
 
-;MainBaseSize         = [50 , 500, 1200, 600] ;remove_comments
 MainBaseSize         = [50 , 50, 1200, 600]
 PlotWindowSize       = [5  , 5  , 650 , 590]
 StepsTabSize         = [660, 5  , 530 , 400]
@@ -132,11 +131,11 @@ distance_L_L         = 130
 distanceVertical_L_L = 35
 
 ;Define titles
-Step1Title = 'STEP1: Load'
-Step2Title = 'STEP2: Critical Edge'
-Step3Title = 'STEP3: Other Files'
-ListOfFiles  = ['                                                   ']  
-MainTitle = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
+Step1Title  = 'STEP1: Load'
+Step2Title  = 'STEP2: Critical Edge'
+Step3Title  = 'STEP3: Other Files'
+ListOfFiles = ['                                                   ']  
+MainTitle   = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -199,6 +198,9 @@ MakeGuiOutputFile, STEPS_TAB,$
 ;Build SETTINGS tab
 MakeGuiSettings, STEPS_TAB
 
+;Build LogBook Tab
+MakeGuiLogBook, STEPS_TAB, StepsTabSize
+
 ;Build Main Base Components
 MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
 
@@ -209,8 +211,8 @@ WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 ;; default tabs shown 
-;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
-;widget_control, id1, set_tab_current = 1  ;remove_me
+id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') 
+widget_control, id1, set_tab_current = 5  ;remove_me (log book)
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
