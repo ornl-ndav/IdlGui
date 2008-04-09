@@ -317,7 +317,8 @@ wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
                                ROW        = 1,$
                                UNAME      = sShowError.uname,$
                                LABEL_LEFT = sShowError.title,$
-                               /EXCLUSIVE)
+                               /EXCLUSIVE,$
+                               /NO_RELEASE)
 
 ;Data to display ---------------------------------------------------------------
 wDataToDisplayLabel = WIDGET_LABEL(wSettingsBase,$
