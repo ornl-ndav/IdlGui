@@ -10,7 +10,7 @@ PRO LoadFileButton, Event
 FormatFileSelected = getButtonValidated(Event,'InputFileFormat')   
 
 IF (FormatFileSelected EQ 0) THEN BEGIN ;TOF
-    LogBookMessage = 'Loading a TOF File :'
+    LogBookMessage = '> Loading a TOF File :'
 ;Check if the log book is empty or not
     LogBookText = IDLsendToGeek_getLogBookText(Event)
     IF (LogBookText[0] EQ '') THEN BEGIN
@@ -105,18 +105,24 @@ END
 PRO LoadTOFFile, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
 ;launch the program that open the OPEN IDL FILE window
 ;LongFileName=ReflSupportOpenFile_OPEN_FILE(Event) 
 LongFileName=OpenFile(Event) ;_Load
 file_error = 0
-CATCH, file_error
+;CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
+    IDLsendToGeek_addLogBookText, Event, '> Loading a TOF file .... FAILED '
 ;move Back the colorIndex slidebar
     MoveColorIndexBack,Event    ;_Gui
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
-    if (LongfileName NE '') then begin
+    IF (LongfileName NE '') THEN BEGIN
         IDLsendToGeek_addLogBookText, Event, '-> Long File Name  : ' + $
           LongFileName
 ;get only the file name (without path) of file
@@ -131,6 +137,8 @@ ENDIF ELSE BEGIN
         get_angle_value_and_do_conversion, Event, angleValue ;_math
 ;store flt0, flt1 and flt2 of new files
         index = (*global).NbrFilesLoaded 
+        IDLsendToGeek_addLogBookText, Event, '-> Store data ... ' + $
+          PROCESSING
         SuccessStatus = Storeflts(Event, LongFileName, index) ;_OpenFile
         IF (SuccessStatus) THEN BEGIN
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
@@ -144,6 +152,7 @@ ENDIF ELSE BEGIN
             IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
         ENDELSE
     ENDIF
+    IDLsendToGeek_addLogBookText, Event, '> Loading a TOF file .... DONE'
 ENDELSE
 IDLsendToGeek_showLastLineLogBook, Event
 END

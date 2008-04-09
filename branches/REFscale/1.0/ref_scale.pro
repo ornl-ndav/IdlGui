@@ -199,8 +199,8 @@ MakeGuiStep3, STEPS_TAB,$
 MakeGuiOutputFile, STEPS_TAB,$
                    Step1Size
 
-;Build SETTINGS tab
-MakeGuiSettings, STEPS_TAB
+
+;MakeGuiSettings, STEPS_TAB ;remove_me
 
 ;Build LogBook Tab
 MakeGuiLogBook, STEPS_TAB, StepsTabSize
