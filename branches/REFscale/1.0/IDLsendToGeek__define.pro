@@ -73,6 +73,17 @@ WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
 
 ;-------------------------------------------------------------------------------
+PRO IDLsendToGeek_showLastLineLogBook, Event
+LogBookUname = IDLsendToGeek_getGlobalVariable(Event,'LogBookUname')
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
+WIDGET_CONTROL, id, GET_VALUE = text
+sz = (SIZE(text))(1)
+IF (sz GT 23) THEN BEGIN
+    WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=sz-22
+ENDIF
+END
+
+;-------------------------------------------------------------------------------
 ;this function removes from the intial text the given TextToRemove and 
 ;returns the result.
 FUNCTION removeStringFromText, initialText, TextToRemove

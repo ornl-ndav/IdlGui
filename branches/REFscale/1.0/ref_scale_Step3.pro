@@ -1,12 +1,13 @@
 ;###############################################################################
 ;*******************************************************************************
-
 ;This is the main function that will do the scaling of all the loaded
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+IDLsendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
 
 flt0_rescale_ptr = (*global).flt0_rescale_ptr
 flt1_rescale_ptr = (*global).flt1_rescale_ptr
@@ -16,12 +17,26 @@ Qmax_array       = (*(*global).Qmax_array)
 
 ;get number of files loaded
 nbrFile = (*global).NbrFilesLoaded
+IDLsendToGeek_addLogBookText, Event, '-> Number of files loaded : ' + $
+  STRCOMPRESS(nbrFile,/REMOVE_ALL)
+
 FOR i=1,(nbrFile-1) DO BEGIN
+
+    IDLsendToGeek_addLogBookText, Event, '--> Working with File # ' + $
+      STRCOMPRESS(i,/REMOVE_ALL)
+    
+    CurrentFileName = getFileFromIndex(Event, i)
+    IDLsendToGeek_addLogBookText, Event, '---> Name of File : ' + $
+      CurrentFileName
 
 ;get Qmin and Qmax
     Qmin = float(Qmin_array[i])
     Qmax = float(Qmax_array[i-1])
-
+    IDLsendToGeek_addLogBookText, Event, '---> Qmin : ' + $
+      STRCOMPRESS(Qmin,/REMOVE_ALL)
+    IDLsendToGeek_addLogBookText, Event, '---> Qmax : ' + $
+      STRCOMPRESS(Qmax,/REMOVE_ALL)
+    
 ;Number of data to exclude from auto-fitting
     Ncrap = getTextFieldValue(Event,'min_crap_text_field') ;_get
     Ncrap = fix(Ncrap)
@@ -36,6 +51,10 @@ FOR i=1,(nbrFile-1) DO BEGIN
     RangeIndexes = getArrayRangeFromQ1Q2(flt0_highQ, Qmin, Qmax) ;_get
     left_index   = RangeIndexes[0]
     right_index  = RangeIndexes[1]
+    IDLsendToGeek_addLogBookText, Event, '---> left_index  : ' + $
+      STRCOMPRESS(left_index,/REMOVE_ALL)
+    IDLsendToGeek_addLogBookText, Event, '---> right_index : ' + $
+      STRCOMPRESS(right_index,/REMOVE_ALL)
     
 ;determine working range of low Q file
     flt0_highQ_new = flt0_highQ[left_index:right_index]
@@ -92,6 +111,8 @@ FOR i=1,(nbrFile-1) DO BEGIN
 
 ;SF
     SF = (TLowQflt0 * THighQflt1)/(TLowQflt1 * THighQflt0)
+    IDLsendToGeek_addLogBookText, Event, '---> SF : ' + $
+    STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;store the SF
     SF_array = (*(*global).SF_array)
@@ -117,6 +138,7 @@ FOR i=1,(nbrFile-1) DO BEGIN
 ENDFOR
 
 plot_loaded_file, Event, '2plots' ;_Plot
+IDLsendToGeek_showLastLineLogBook, Event
 
 END
 
@@ -208,6 +230,7 @@ FOR i=0,(max_number-1) DO BEGIN
        appendValueInTextField,Event,'step3_flt_text_field',text  ;_put
    ENDELSE
 ENDFOR
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
@@ -217,6 +240,13 @@ PRO Step3RescaleFile, Event, delta_SF
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
+
+index = getSelectedIndex(Event,'step3_work_on_file_droplist')
+CurrentFileName = getFileFromIndex(Event, index)
+IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+  CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
 flt2_ptr = (*global).flt2_ptr
@@ -229,6 +259,8 @@ SF += float(delta_SF)
 if (SF LE 0) then begin
     SF = float(0.001)
 endif
+
+IDLsendToGeek_addLogBookText, Event, '-> SF : ' + STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;put new SF value in text box
 putValueInTextField, Event,'Step3SFTextField',SF ;_put
@@ -264,6 +296,7 @@ IF (displayData EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN ;clear text box
     putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
@@ -274,6 +307,14 @@ PRO Step3RescaleFile2, Event, delta_SF
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
+
+IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
+
+;get selected index of droplist
+index = getSelectedIndex(Event,'step3_work_on_file_droplist')
+CurrentFileName = getFileFromIndex(Event, index)
+IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling of : ' + $
+  CurrentFileName
 
 flt1_ptr = (*global).flt1_ptr
 flt2_ptr = (*global).flt2_ptr
@@ -292,6 +333,8 @@ flt1 = *flt1_ptr[index]
 flt2 = *flt2_ptr[index]
 
 SF = SF[0]
+
+IDLsendToGeek_addLogBookText, Event, '-> SF : ' + STRCOMPRESS(SF,/REMOVE_ALL)
 
 ;rescale data
 flt1 = flt1 / SF
@@ -316,7 +359,7 @@ IF (displayData EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN ;clear text box
     putValueInTextField, Event,'step3_flt_text_field','' ;_put
 ENDELSE
-
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
