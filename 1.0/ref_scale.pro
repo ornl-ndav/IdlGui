@@ -13,7 +13,7 @@ endif else begin
 endelse
 
 APPLICATIoN   = 'REFscale' 
-VERSION       = '1.0.8'
+VERSION       = '1.0.9'
 
 StrArray      = strsplit(VERSION,'.',/extract)
 VerArray      = StrArray[0]
