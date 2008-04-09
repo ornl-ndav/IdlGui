@@ -36,6 +36,15 @@ END
 ;###############################################################################
 ;*******************************************************************************
 
+FUNCTION getFileFromIndex, Event, index
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='list_of_files_droplist')
+WIDGET_CONTROL, id, GET_VALUE=ListOfFiles
+RETURN, ListOfFiles[index]
+END
+
+;###############################################################################
+;*******************************************************************************
+
 FUNCTION getNbrOfFiles, Event
 RETURN, getNbrElementsInDroplist(Event,'list_of_files_droplist')
 END

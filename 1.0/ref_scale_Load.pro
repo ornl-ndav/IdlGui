@@ -34,7 +34,7 @@ ENDIF ELSE BEGIN                ;Q
     ENDELSE
     LoadFile_Q, Event
 ENDELSE
-
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
@@ -93,6 +93,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 ;Update GUi
 StepsUpdateGui, Event ;_Gui
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
@@ -144,7 +145,7 @@ ENDIF ELSE BEGIN
         ENDELSE
     ENDIF
 ENDELSE
-
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^*^
@@ -194,7 +195,7 @@ displayAngleValue, Event, angleValue
 
 ;Update GUi
 StepsUpdateGui, Event ;_Gui
-
+IDLsendToGeek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
