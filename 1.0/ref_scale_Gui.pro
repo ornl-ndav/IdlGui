@@ -313,6 +313,7 @@ EnableMainBaseButtons, Event, validate ;_gui
 ActivateClearFileButton, Event, validate ;_gui
 ActivateColorSlider, Event, Validate ;_gui
 ActivatePrintFileButton, Event, Validate ;_gui
+ActivateSettingsBase, Event, Validate ;_gui
 END
 
 ;###############################################################################
@@ -724,6 +725,7 @@ EnableMainBaseButtons, Event, validate ;_gui
 ActivateClearFileButton, Event, validate ;_gui
 ActivateColorSlider, Event, Validate ;_gui
 ActivatePrintFileButton, Event, Validate ;_gui
+ActivateSettingsBase, Event, Validate ;_gui
 END
 
 ;*******************************************************************************
@@ -776,3 +778,13 @@ END
 
 ;###############################################################################
 ;*******************************************************************************
+PRO ActivateBase, Event, uname, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, MAP = status
+END
+
+;###############################################################################
+;*******************************************************************************
+PRO ActivateSettingsBase, Event, Validate
+ActivateBase, Event, 'settings_base', Validate
+END

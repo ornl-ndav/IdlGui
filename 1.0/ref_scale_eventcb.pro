@@ -27,6 +27,7 @@ ActivatePrintFileButton, Event, 0
 ActivateStep2, Event, 0 ;_Gui, desactivate base of step2
 ActivateStep3, Event, 0 ;_Gui, desactivate base of step3
 ActivateOutputFileTab, Event, 0 ;_Gui, desactivate Output File tab
+ActivateSettingsBase, Event, 0 ;_gui
 
 IDLsendToGeek_addLogBookText, Event, '> Reset Full Session' 
 

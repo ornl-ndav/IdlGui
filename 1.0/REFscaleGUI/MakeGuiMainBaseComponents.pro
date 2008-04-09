@@ -23,17 +23,18 @@ RescaleBaseSize      = [StepsTabSize[0],$
                         StepsTabSize[3]+yoff,$
                         StepsTabSize[2]-xoff,$
                         80]
-d12 = 50  ;distance between 'x-axis:' and 'min:'
-d23 = 35  ;distance between 'min' and text field
-d34 = 80  ;distance between text field and 'max'
-d45 = d23  ;distance between 'max' and text field
-d56 = 80  ;distance between text field and lin/log
-d67 = 95 ;distance between lin/log and validate button
-d78 = 70  ;distance between validate button and reset button
+d12 = 50                        ;distance between 'x-axis:' and 'min:'
+d23 = 35                        ;distance between 'min' and text field
+d34 = 80                        ;distance between text field and 'max'
+d45 = d23                       ;distance between 'max' and text field
+d56 = 80                      ;distance between text field and lin/log
+d67 = 95                 ;distance between lin/log and validate button
+d78 = 70            ;distance between validate button and reset button
 axis_lin_log = ['lin','log']
-LabelSize    = [35,30]   ;scr_xsize and scr_ysize
-TextBoxSize  = [70,30]   ;scr_xsize and scr_ysize
-ResetButton  = [140,65]  ;scr_xsize and scr_ysize
+LabelSize    = [35,30]          ;scr_xsize and scr_ysize
+TextBoxSize  = [70,30]          ;scr_xsize and scr_ysize
+ResetButton  = [140,65]         ;scr_xsize and scr_ysize
+
 ;xaxis
 XaxisLabelSize       = [5,$
                         5,$
@@ -90,159 +91,260 @@ YaxisLinLogSize      = [YaxisMaxTextFieldSize[0]+d56,$
 RefreshPlotButtonTitle = 'REFRESH PLOT'
 printButtonTitle = 'OUTPUT FILE'
 
-;Build GUI
+;-------------------------------------------------------------------------------
+;Settings Base
+;-------------------------------------------------------------------------------
+XYoff = [660,525]
+sSettingsBase = { size  : [XYoff[0],$
+                           XYoff[1],$
+                           StepsTabSize[2]-5,$
+                           65],$
+                  frame : 1,$
+                  uname : 'settings_base',$
+                  map   : 0}
+
+;Settings Label ----------------------------------------------------------------
+XYoff = [320,38]
+sSettingsLabel = { size  : [XYoff[0],$
+                            XYoff[1]],$
+                   value : 'S   E   T   T   I   N   G   S ',$
+                   frame : 2}
+
+;Show Error Bars ---------------------------------------------------------------
+XYoff = [5,0]
+sShowError = { size  : [XYoff[0],$
+                        XYoff[1]],$
+               title : 'Show Error Bars:',$
+               uname : 'show_error_bar_group',$
+               list  : ['Yes','No']}
+
+;Data to display ---------------------------------------------------------------
+XYoff = [245,8]
+sDataToDisplayLabel = { size  : [XYoff[0],$
+                                sShowError.size[1]+XYoff[1]],$
+                       value : 'Nbr of data to display (Step 3): '}
+XYoff = [450,-8]
+sDataToDisplayText = { size  : [XYoff[0],$
+                                XYoff[1],$
+                                50],$
+                       value : STRCOMPRESS(100,/REMOVE_ALL),$
+                       uname : 'nbrDataTextField' }
+
+;Data to Remove ----------------------------------------------------------------
+XYoff = [8,40]
+sDataToRemoveLabel = { size  : [XYoff[0],$
+                                XYoff[1]],$
+                       value : 'Nbr of data to remove (Auto. Scaling): '}
+XYoff = [248,-8]
+sDataToRemoveText = { size  : [XYoff[0],$
+                               sDataToRemoveLabel.size[1]+XYoff[1],$
+                               50],$
+                      value : STRCOMPRESS(1,/REMOVE_ALL),$
+                      uname : 'min_crap_text_field'}
+                      
+;///////////////////////////////////////////////////////////////////////////////
+;                               Build GUI
+;///////////////////////////////////////////////////////////////////////////////
+
 RESET_ALL_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
-                                 UNAME='reset_all_button',$
-                                 XOFFSET=ResetAllButtonSize[0],$
-                                 YOFFSET=ResetAllButtonSize[1],$
-                                 SCR_XSIZE=ResetAllButtonSize[2],$
-                                 SCR_YSIZE=ResetAllButtonSize[3],$
-                                 VALUE='RESET FULL SESSION',$
-                                 sensitive=0)
+                                 UNAME     = 'reset_all_button',$
+                                 XOFFSET   = ResetAllButtonSize[0],$
+                                 YOFFSET   = ResetAllButtonSize[1],$
+                                 SCR_XSIZE = ResetAllButtonSize[2],$
+                                 SCR_YSIZE = ResetAllButtonSize[3],$
+                                 VALUE     = 'RESET FULL SESSION',$
+                                 SENSITIVE = 0)
 
 REFRESH_PLOT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
-                                    UNAME='refresh_plot_button',$
-                                    XOFFSET=RefreshPlotSize[0],$
-                                    YOFFSET=RefreshPlotSize[1],$
-                                    SCR_XSIZE=RefreshPlotSize[2],$
-                                    SCR_YSIZE=RefreshPlotSize[3],$
-                                    VALUE=RefreshPlotButtonTitle,$
-                                    sensitive=0)
+                                    UNAME     = 'refresh_plot_button',$
+                                    XOFFSET   = RefreshPlotSize[0],$
+                                    YOFFSET   = RefreshPlotSize[1],$
+                                    SCR_XSIZE = RefreshPlotSize[2],$
+                                    SCR_YSIZE = RefreshPlotSize[3],$
+                                    VALUE     = RefreshPlotButtonTitle,$
+                                    SENSITIVE = 0)
 
-PRINT_BUTTON = widget_button(MAIN_BASE,$
-                             uname='print_button',$
-                             xoffset=PrintButtonSize[0],$
-                             yoffset=PrintButtonSize[1],$
-                             scr_xsize=PrintButtonSize[2],$
-                             scr_ysize=PrintButtonSize[3],$
-                             value=printButtonTitle,$
-                             sensitive=0)
+PRINT_BUTTON = WIDGET_BUTTON(MAIN_BASE,$
+                             UNAME     = 'print_button',$
+                             XOFFSET   = PrintButtonSize[0],$
+                             YOFFSET   = PrintButtonSize[1],$
+                             SCR_XSIZE = PrintButtonSize[2],$
+                             SCR_YSIZE = PrintButtonSize[3],$
+                             VALUE     = printButtonTitle,$
+                             SENSITIVE = 0)
 
 ;--rescale base
 RescaleBase = WIDGET_BASE(MAIN_BASE,$
-                          UNAME='RescaleBase',$
-                          XOFFSET=RescaleBaseSize[0],$
-                          YOFFSET=RescaleBaseSize[1],$
-                          SCR_XSIZE=RescaleBaseSize[2],$
-                          SCR_YSIZE=RescaleBaseSize[3],$
-                          FRAME=1,$
-                          MAP=0)
+                          UNAME     = 'RescaleBase',$
+                          XOFFSET   = RescaleBaseSize[0],$
+                          YOFFSET   = RescaleBaseSize[1],$
+                          SCR_XSIZE = RescaleBaseSize[2],$
+                          SCR_YSIZE = RescaleBaseSize[3],$
+                          FRAME     = 1,$
+                          MAP       = 0)
 
 ;xaxis
 XaxisLabel = WIDGET_LABEL(RescaleBase,$
-                          XOFFSET=XaxisLabelSize[0],$
-                          YOFFSET=XaxisLabelSize[1],$
-                          SCR_XSIZE=XaxisLabelSize[2],$
-                          SCR_YSIZE=XaxisLabelSize[3],$
-                          VALUE='X-axis')
+                          XOFFSET   = XaxisLabelSize[0],$
+                          YOFFSET   = XaxisLabelSize[1],$
+                          SCR_XSIZE = XaxisLabelSize[2],$
+                          SCR_YSIZE = XaxisLabelSize[3],$
+                          VALUE     = 'X-axis')
 
 XaxisMinLabel = WIDGET_LABEL(RescaleBase,$
-                             XOFFSET=XaxisMinLabelSize[0],$
-                             YOFFSET=XaxisMinLabelSize[1],$
-                             SCR_XSIZE=XaxisMinLabelSize[2],$
-                             SCR_YSIZE=XaxisMinLabelSize[3],$
-                             VALUE='min:')
+                             XOFFSET   = XaxisMinLabelSize[0],$
+                             YOFFSET   = XaxisMinLabelSize[1],$
+                             SCR_XSIZE = XaxisMinLabelSize[2],$
+                             SCR_YSIZE = XaxisMinLabelSize[3],$
+                             VALUE     = 'min:')
 
 XaxisMinTextField = WIDGET_TEXT(RescaleBase,$
-                                UNAME='XaxisMinTextField',$
-                                XOFFSET=XaxisMinTextFieldSize[0],$
-                                YOFFSET=XaxisMinTextFieldSize[1],$
-                                SCR_XSIZE=XaxisMinTextFieldSize[2],$
-                                SCR_YSIZE=XaxisMinTextFieldSize[3],$
-                                VALUE='',$
+                                UNAME     = 'XaxisMinTextField',$
+                                XOFFSET   = XaxisMinTextFieldSize[0],$
+                                YOFFSET   = XaxisMinTextFieldSize[1],$
+                                SCR_XSIZE = XaxisMinTextFieldSize[2],$
+                                SCR_YSIZE = XaxisMinTextFieldSize[3],$
+                                VALUE     = '',$
                                 /EDITABLE,$ 
                                 /ALIGN_LEFT,$ 
                                 /ALL_EVENTS)
             
 XaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
-                             XOFFSET=XaxisMaxLabelSize[0],$
-                             YOFFSET=XaxisMaxLabelSize[1],$
-                             SCR_XSIZE=XaxisMaxLabelSize[2],$
-                             SCR_YSIZE=XaxisMaxLabelSize[3],$
-                             VALUE='max:')
+                             XOFFSET   = XaxisMaxLabelSize[0],$
+                             YOFFSET   = XaxisMaxLabelSize[1],$
+                             SCR_XSIZE = XaxisMaxLabelSize[2],$
+                             SCR_YSIZE = XaxisMaxLabelSize[3],$
+                             VALUE     = 'max:')
 
 XaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
-                                UNAME='XaxisMaxTextField',$
-                                XOFFSET=XaxisMaxTextFieldSize[0],$
-                                YOFFSET=XaxisMaxTextFieldSize[1],$
-                                SCR_XSIZE=XaxisMaxTextFieldSize[2],$
-                                SCR_YSIZE=XaxisMaxTextFieldSize[3],$
-                                VALUE='',$
+                                UNAME     = 'XaxisMaxTextField',$
+                                XOFFSET   = XaxisMaxTextFieldSize[0],$
+                                YOFFSET   = XaxisMaxTextFieldSize[1],$
+                                SCR_XSIZE = XaxisMaxTextFieldSize[2],$
+                                SCR_YSIZE = XaxisMaxTextFieldSize[3],$
+                                VALUE     = '',$
                                 /EDITABLE,$ 
                                 /ALIGN_LEFT,$ 
                                 /ALL_EVENTS)    
 
-; XaxisLinLog = CW_BGROUP(RescaleBase,$ 
-;                          axis_lin_log,$
-;                          /exclusive,$
-;                          /RETURN_NAME,$
-;                          XOFFSET=XaxisLinLogSize[0],$
-;                          YOFFSET=XaxisLinLogSize[1],$
-;                          SET_VALUE=0.0,$
-;                          row=1,$
-;                          uname='XaxisLinLog')                 
-
 ResetButton = WIDGET_BUTTON(RescaleBase,$
-                            XOFFSET=ResetButtonSize[0],$
-                            YOFFSET=ResetButtonSize[1],$
-                            SCR_XSIZE=ResetButtonSize[2],$
-                            SCR_YSIZE=ResetButtonSize[3],$
-                            UNAME='ResetButton',$
-                            VALUE='Reset X/Y')
+                            XOFFSET   = ResetButtonSize[0],$
+                            YOFFSET   = ResetButtonSize[1],$
+                            SCR_XSIZE = ResetButtonSize[2],$
+                            SCR_YSIZE = ResetButtonSize[3],$
+                            UNAME     = 'ResetButton',$
+                            VALUE     = 'Reset X/Y')
 
 ;yaxis
 YaxisLabel = WIDGET_LABEL(RescaleBase,$
-                          XOFFSET=YaxisLabelSize[0],$
-                          YOFFSET=YaxisLabelSize[1],$
-                          SCR_XSIZE=YaxisLabelSize[2],$
-                          SCR_YSIZE=YaxisLabelSize[3],$
-                          VALUE='Y-axis')
+                          XOFFSET   = YaxisLabelSize[0],$
+                          YOFFSET   = YaxisLabelSize[1],$
+                          SCR_XSIZE = YaxisLabelSize[2],$
+                          SCR_YSIZE = YaxisLabelSize[3],$
+                          VALUE     = 'Y-axis')
 
 YaxisMinLabel = WIDGET_LABEL(RescaleBase,$
-                             XOFFSET=YaxisMinLabelSize[0],$
-                             YOFFSET=YaxisMinLabelSize[1],$
-                             SCR_XSIZE=YaxisMinLabelSize[2],$
-                             SCR_YSIZE=YaxisMinLabelSize[3],$
-                             VALUE='min:')
+                             XOFFSET   = YaxisMinLabelSize[0],$
+                             YOFFSET   = YaxisMinLabelSize[1],$
+                             SCR_XSIZE = YaxisMinLabelSize[2],$
+                             SCR_YSIZE = YaxisMinLabelSize[3],$
+                             VALUE     = 'min:')
 
 YaxisMinTextField = WIDGET_TEXT(RescaleBase,$
-                                UNAME='YaxisMinTextField',$
-                                XOFFSET=YaxisMinTextFieldSize[0],$
-                                YOFFSET=YaxisMinTextFieldSize[1],$
-                                SCR_XSIZE=YaxisMinTextFieldSize[2],$
-                                SCR_YSIZE=YaxisMinTextFieldSize[3],$
-                                VALUE='',$
+                                UNAME     = 'YaxisMinTextField',$
+                                XOFFSET   = YaxisMinTextFieldSize[0],$
+                                YOFFSET   = YaxisMinTextFieldSize[1],$
+                                SCR_XSIZE = YaxisMinTextFieldSize[2],$
+                                SCR_YSIZE = YaxisMinTextFieldSize[3],$
+                                VALUE     = '',$
                                 /EDITABLE,$ 
                                 /ALIGN_LEFT,$ 
                                 /ALL_EVENTS)
             
 YaxisMaxLabel = WIDGET_LABEL(RescaleBase,$
-                             XOFFSET=YaxisMaxLabelSize[0],$
-                             YOFFSET=YaxisMaxLabelSize[1],$
-                             SCR_XSIZE=YaxisMaxLabelSize[2],$
-                             SCR_YSIZE=YaxisMaxLabelSize[3],$
-                             VALUE='max:')
+                             XOFFSET   = YaxisMaxLabelSize[0],$
+                             YOFFSET   = YaxisMaxLabelSize[1],$
+                             SCR_XSIZE = YaxisMaxLabelSize[2],$
+                             SCR_YSIZE = YaxisMaxLabelSize[3],$
+                             VALUE     = 'max:')
 
 YaxisMaxTextField = WIDGET_TEXT(RescaleBase,$
-                                UNAME='YaxisMaxTextField',$
-                                XOFFSET=YaxisMaxTextFieldSize[0],$
-                                YOFFSET=YaxisMaxTextFieldSize[1],$
-                                SCR_XSIZE=YaxisMaxTextFieldSize[2],$
-                                SCR_YSIZE=YaxisMaxTextFieldSize[3],$
-                                VALUE='',$
+                                UNAME     = 'YaxisMaxTextField',$
+                                XOFFSET   = YaxisMaxTextFieldSize[0],$
+                                YOFFSET   = YaxisMaxTextFieldSize[1],$
+                                SCR_XSIZE = YaxisMaxTextFieldSize[2],$
+                                SCR_YSIZE = YaxisMaxTextFieldSize[3],$
+                                VALUE     = '',$
                                 /EDITABLE,$ 
                                 /ALIGN_LEFT,$ 
                                 /ALL_EVENTS)                     
 
 YaxisLinLog = CW_BGROUP(RescaleBase,$ 
                         axis_lin_log,$
-                        /exclusive,$
-                        /RETURN_NAME,$
-                        XOFFSET=YaxisLinLogSize[0],$
-                        YOFFSET=YaxisLinLogSize[1],$
-                        SET_VALUE=0.0,$
-                        row=1,$
-                        uname='YaxisLinLog')      
+                        XOFFSET   = YaxisLinLogSize[0],$
+                        YOFFSET   = YaxisLinLogSize[1],$
+                        SET_VALUE = 0.0,$
+                        ROW       = 1,$
+                        UNAME     = 'YaxisLinLog',$
+                        /EXCLUSIVE,$
+                        /RETURN_NAME)
 
+;-------------------------------------------------------------------------------
+;Settings Base
+;-------------------------------------------------------------------------------
+wSettingsBase = WIDGET_BASE(MAIN_BASE,$
+                            UNAME     = sSettingsBase.uname,$
+                            XOFFSET   = sSettingsBase.size[0],$
+                            YOFFSET   = sSettingsBase.size[1],$
+                            SCR_XSIZE = sSettingsBase.size[2],$
+                            SCR_YSIZE = sSettingsBase.size[3],$
+                            FRAME     = sSettingsBase.frame,$
+                            MAP       = sSettingsBase.map)
+                        
+;Settings Label ----------------------------------------------------------------
+wSettingsLabel = WIDGET_LABEL(wSettingsBase,$
+                              XOFFSET = sSettingsLabel.size[0],$
+                              YOFFSET = sSettingsLabel.size[1],$
+                              VALUE   = sSettingsLabel.value,$
+                              FRAME   = sSettingsLabel.frame)
+
+;Show Error Bars ---------------------------------------------------------------
+wShowErrorBarGroup = CW_BGROUP(wSettingsBase,$
+                               sShowError.list,$
+                               XOFFSET    = sShowError.size[0],$
+                               YOFFSET    = sShowError.size[1],$
+                               SET_VALUE  = 0.0,$
+                               ROW        = 1,$
+                               UNAME      = sShowError.uname,$
+                               LABEL_LEFT = sShowError.title,$
+                               /EXCLUSIVE)
+
+;Data to display ---------------------------------------------------------------
+wDataToDisplayLabel = WIDGET_LABEL(wSettingsBase,$
+                                  XOFFSET = sDataToDisplayLabel.size[0],$
+                                  YOFFSET = sDataToDisplayLabel.size[1],$
+                                  VALUE   = sDataToDisplayLabel.value)
+wDataToDisplayText = WIDGET_TEXT(wSettingsBase,$
+                                UNAME     = sDataToDisplayText.uname,$
+                                XOFFSET   = sDataToDisplayText.size[0],$
+                                YOFFSET   = sDataToDisplayText.size[1],$
+                                SCR_XSIZE = sDataToDisplayText.size[2],$
+                                VALUE     = sDataToDisplayText.value,$
+                                /EDITABLE,$
+                                /ALIGN_LEFT)
+
+;Data to Remove ----------------------------------------------------------------
+wDataToRemoveLabel = WIDGET_LABEL(wSettingsBase,$
+                                  XOFFSET = sDataToRemoveLabel.size[0],$
+                                  YOFFSET = sDataToRemoveLabel.size[1],$
+                                  VALUE   = sDataToRemoveLabel.value)
+wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
+                                UNAME     = sDataToRemoveText.uname,$
+                                XOFFSET   = sDataToRemoveText.size[0],$
+                                YOFFSET   = sDataToRemoveText.size[1],$
+                                SCR_XSIZE = sDataToRemoveText.size[2],$
+                                VALUE     = sDataToRemoveText.value,$
+                                /EDITABLE,$
+                                /ALIGN_LEFT)
 
 END
