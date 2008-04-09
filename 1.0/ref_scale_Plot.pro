@@ -96,7 +96,16 @@ ENDIF ELSE BEGIN                ;at least one file has to be ploted
        
        color_array = (*(*global).color_array)
        colorIndex = color_array[index_to_plot[i]]
-       
+       IF (ErrorBarStatus EQ 0) THEN BEGIN
+           IF (i EQ 0) THEN BEGIN
+               MainPlotColor = 100
+           ENDIF ELSE BEGIN
+               MainPlotColor = 255
+           ENDELSE
+       ENDIF ELSE BEGIN
+           MainPlotColor = colorIndex
+       ENDELSE
+    
        XYMinMax = retrieveXYMinMax(Event)
        xmin = float(XYMinMax[0])
        xmax = float(XYMinMax[1])
@@ -270,6 +279,9 @@ wset,view_plot_id
 IsXlin = getScale(Event,'X') ;_get
 IsYlin = getScale(Event,'Y') ;_get
 
+;check if plot will be with error bars or not
+ErrorBarStatus = getButtonValidated(Event, 'show_error_bar_group') ;_get
+
 IF (size EQ 1 AND $
    ListLongFileName[0] EQ '') THEN BEGIN
    
@@ -278,7 +290,8 @@ IF (size EQ 1 AND $
 
 ENDIF ELSE BEGIN
 
-    color_array = (*(*global).color_array)
+;color index of main plot
+
     FirstPass = 1
 
     flt0_ptr = (*global).flt0_ptr
@@ -287,12 +300,24 @@ ENDIF ELSE BEGIN
 
     for i=0,(size-1) do begin
 
+    color_array = (*(*global).color_array)
+    colorIndex = color_array[i]
+    IF (ErrorBarStatus EQ 0) THEN BEGIN
+        IF (i EQ 0) THEN BEGIN
+            MainPlotColor = 100
+        ENDIF ELSE BEGIN
+            MainPlotColor = 255
+        ENDELSE
+    ENDIF ELSE BEGIN
+        MainPlotColor = colorIndex
+    ENDELSE
+
         error_plot_status = 0
-;        CATCH, error_plot_status
+        CATCH, error_plot_status
 
         IF (error_plot_status NE 0) THEN BEGIN
 
-;            CATCH,/CANCEL
+            CATCH,/CANCEL
             text = 'ERROR plotting data'
             displayErrorMessage, Event, text ;_Gui
 
@@ -305,7 +330,7 @@ ENDIF ELSE BEGIN
             DEVICE, DECOMPOSED = 0
             loadct,5,/SILENT
             
-            colorIndex = color_array[i]
+
             IF (FirstPass EQ 1) THEN BEGIN
                 
                 flt1_first = flt1
@@ -316,26 +341,44 @@ ENDIF ELSE BEGIN
                         0:BEGIN
                             CASE (IsYlin) OF
                                 0: BEGIN
-                                    plot,flt0,flt1
+                                    plot, $
+                                      flt0, $
+                                      flt1, $
+                                      color=MainPlotColor
                                 END
                                 1: BEGIN
-                                    plot,flt0,flt1,/ylog
+                                    plot, $
+                                      flt0, $
+                                      flt1, $
+                                      /ylog, $
+                                      color=MainPlotColor
                                 END
                             ENDCASE
                         END
                         1: BEGIN
                             CASE (IsYlin) OF
                                 0: BEGIN
-                                    plot,flt0,flt1,/xlog
+                                    plot,flt0,flt1,/xlog,color=MainPlotColor
                                 END
                                 1: BEGIN
-                                    plot,flt0,flt1,/xlog,/ylog
+                                    plot, $
+                                      flt0, $
+                                      flt1, $
+                                      /xlog, $
+                                      /ylog, $
+                                      color=MainPlotColor
                                 END
                             ENDCASE
                         END
                     ENDCASE
 
-                    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
+                    IF (ErrorBarStatus EQ 0) THEN BEGIN
+                        errplot, $
+                          flt0, $
+                          flt1-flt2, $
+                          flt1+flt2, $
+                          color=colorIndex
+                    ENDIF
                     
 ;populate min/max x/y axis
                     min_xaxis = min(flt0,max=max_xaxis,/nan)
@@ -378,7 +421,8 @@ ENDIF ELSE BEGIN
                                       flt0, $
                                       flt1, $
                                       xrange=[xmin,xmax], $
-                                      yrange=[ymin,ymax]
+                                      yrange=[ymin,ymax],$
+                                      color=MainPlotColor
                                 END
                                 1: BEGIN
                                     plot, $
@@ -386,7 +430,8 @@ ENDIF ELSE BEGIN
                                       flt1, $
                                       /ylog, $
                                       xrange=[xmin,xmax], $
-                                      yrange=[ymin,ymax]
+                                      yrange=[ymin,ymax],$
+                                      color=MainPlotColor
                                 END
                             ENDCASE
                         END
@@ -398,7 +443,8 @@ ENDIF ELSE BEGIN
                                       flt1, $
                                       /xlog, $
                                       xrange=[xmin,xmax], $
-                                      yrange=[ymin,ymax]
+                                      yrange=[ymin,ymax],$
+                                      color=MainPlotColor
                                 END
                                 1: BEGIN
                                     plot, $
@@ -407,13 +453,20 @@ ENDIF ELSE BEGIN
                                       /xlog, $
                                       /ylog, $
                                       xrange=[xmin,xmax], $
-                                      yrange=[ymin,ymax]
+                                      yrange=[ymin,ymax],$
+                                      color=MainPlotColor
                                 END
                             ENDCASE
                         END
                     ENDCASE               
-                    errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                    
+
+                    IF (ErrorBarStatus EQ 0) THEN BEGIN
+                        errplot, flt0, $
+                          flt1-flt2, $
+                          flt1+flt2, $
+                          color=colorIndex
+                    ENDIF
+
                 ENDELSE
                 
                 FirstPass = 0
@@ -435,6 +488,7 @@ ENDIF ELSE BEGIN
                                   flt1, $
                                   xrange=[xmin,xmax], $
                                   yrange=[ymin,ymax], $
+                                  color=MainPlotColor,$
                                   /noerase
                             END
                             1: BEGIN
@@ -444,6 +498,7 @@ ENDIF ELSE BEGIN
                                   /ylog, $
                                   xrange=[xmin,xmax], $
                                   yrange=[ymin,ymax], $
+                                  color=MainPlotColor,$
                                   /noerase
                             END
                         ENDCASE
@@ -457,6 +512,7 @@ ENDIF ELSE BEGIN
                                   /xlog, $
                                   xrange=[xmin,xmax], $
                                   yrange=[ymin,ymax], $
+                                  color=MainPlotColor,$
                                   /noerase
                             END
                             1: BEGIN
@@ -467,14 +523,20 @@ ENDIF ELSE BEGIN
                                   /ylog, $
                                   xrange=[xmin,xmax], $
                                   yrange=[ymin,ymax], $
+                                  color=MainPlotColor,$
                                   /noerase
                             END
                         ENDCASE
                     END
                 ENDCASE            
 
-                errplot, flt0,flt1-flt2,flt1+flt2,color=colorIndex
-                
+                IF (ErrorBarStatus EQ 0) THEN BEGIN
+                    errplot, flt0, $
+                      flt1-flt2, $
+                      flt1+flt2, $
+                      color=colorIndex
+                ENDIF
+
             ENDELSE
             
         ENDELSE
