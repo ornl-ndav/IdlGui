@@ -199,6 +199,14 @@ PRO MAIN_BASE_event, Event
       Widget_Info(wWidget, FIND_BY_UNAME='step3_1decrease_button'): BEGIN
           Step3RescaleFile, Event, -0.01 ;_Step3
       END
+
+;-------------------------------------------------------------------------------
+;***** LOG BOOK ****************************************************************
+;-------------------------------------------------------------------------------
+;Send To Geek button
+      Widget_Info(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+          SendToGeek, Event ;_IDLsendToGeek__define
+      END
      
 ELSE:
   ENDCASE
