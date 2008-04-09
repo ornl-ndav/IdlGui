@@ -22,6 +22,7 @@ BranchArray   = StrArray[2]
 CurrentBranch =  VerArray + '.' + TagArray
 
 global = PTR_NEW({ $
+                   version          : VERSION,$
                    processing       : '(PROCESSING)',$
                    ok               : 'OK',$
                    failed           : 'FAILED',$

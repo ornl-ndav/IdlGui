@@ -8,11 +8,11 @@ FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
-    'LogBookPath'     : RETURN, (*global).LogBookPath
+    'LogBookPath'     : RETURN, '/SNS/users/LogBook/'
     'ApplicationName' : RETURN, 'plotROI'
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
-    'Version'         : RETURN, (*global).version
+    'version'         : RETURN, (*global).version
     ELSE:
 ENDCASE
 RETURN, 'NA'
@@ -178,8 +178,8 @@ spawn, 'hostname', hostname
 ;get message added by user
 message   = IDLsendToGeek_getMessage(Event)
 ;email logBook
-text = "'Log Book of plotROI "
-text += Version + " sent by " + ucams
+text = "'Log Book of plotROI ("
+text += Version + ") sent by " + ucams
 text += " from " + hostname + "."
 text += " Log Book is: " + FullFileName 
 text += ". Message is: "
@@ -206,7 +206,7 @@ ENDIF ELSE BEGIN
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
-    IDLsendToGeek_putLogBookText, Event, LogBookText
+    IDLsendToGeek_addLogBookText, Event, LogBookText
 ENDELSE
 END
 
