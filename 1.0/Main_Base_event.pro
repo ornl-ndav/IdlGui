@@ -75,6 +75,11 @@ PRO MAIN_BASE_event, Event
           ResetRescaleButton, Event ;_eventcb
        END
 
+;Event trigerred by with or without error bars
+      Widget_Info(wWidget, FIND_BY_UNAME='show_error_bar_group'): BEGIN
+          WithWithoutErrorBars, Event ;_eventcb
+       END
+
 ;-------------------------------------------------------------------------------
 ;***** STEP 1 - [LOAD FILES] ***************************************************
 ;-------------------------------------------------------------------------------
