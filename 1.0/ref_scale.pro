@@ -200,10 +200,12 @@ MakeGuiOutputFile, STEPS_TAB,$
                    Step1Size
 
 
-;MakeGuiSettings, STEPS_TAB ;remove_me
+MakeGuiLoadBatch, STEPS_TAB,$
+                  StepsTabSize
 
 ;Build LogBook Tab
-MakeGuiLogBook, STEPS_TAB, StepsTabSize
+MakeGuiLogBook, STEPS_TAB, $
+                StepsTabSize
 
 ;Build Main Base Components
 MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
