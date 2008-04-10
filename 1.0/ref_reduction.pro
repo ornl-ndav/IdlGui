@@ -25,26 +25,12 @@ branch      = strjoin(branchArray[0:1],'.')
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
-   debugger = 1
-endif else begin
+ENDIF ELSE BEGIN
    ucams = get_ucams()
-   debugger = 0
-   SWITCH (ucams) OF
-       'j35':
-       '2zr':
-       'pf9':
-       'mid':
-       'ceh':
-       'vuk':
-       'ks6':
-       'oswader':
-       'nhenry':
-       'jfb': debugger = 1
-       ELSE :
-   ENDSWITCH
-endelse
+ENDELSE
+debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 

@@ -26,26 +26,12 @@ branch      = strjoin(branchArray[0:1],'.')
 ;and set ucams to 'j35' if running on darwin
 
  
-if (!VERSION.os EQ 'darwin') then begin
-   ucams = 'j35'
-   debugger = 1
-endif else begin
-   ucams = get_ucams()
-   debugger = 0
-   SWITCH (ucams) OF
-       'j35':
-       '2zr':
-       'pf9':
-       'mid':
-       'ceh':
-       'vuk':
-       'ks6':
-       'oswader':
-       'nhenry':
-       'jfb': debugger = 1
-       ELSE :
-   ENDSWITCH
-endelse
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   ucams    = 'j35'
+ENDIF ELSE BEGIN
+   ucams    = get_ucams()
+ENDELSE
+debugger = 1 ;The world has access to the batch tab
 
 ;define global variables
 global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
