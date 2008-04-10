@@ -13,7 +13,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 .run MakeGuiStep2.pro
 .run MakeGuiStep3.pro
 .run MakeGuiOutputFile.pro
-.run MakeGuiSettings.pro
+.run MakeGuiLoadBatch.pro
 .run MakeGuiMainBaseComponents.pro
 .run MakeGuiLogBook.pro
 
