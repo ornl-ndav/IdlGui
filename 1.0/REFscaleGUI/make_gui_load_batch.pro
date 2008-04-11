@@ -55,5 +55,5 @@ wLoadBatchBase = WIDGET_BASE(STEPS_TAB,$
 END
 
 
-PRO MakeGuiLoadBatch
+PRO make_gui_load_batch
 END

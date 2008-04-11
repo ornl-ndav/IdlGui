@@ -86,5 +86,5 @@ STGinstance = obj_new('IDLsendToGeek', $
 END
 
 ;*******************************************************************************
-PRO MakeGuiLogBook
+PRO make_gui_log_book
 END

@@ -390,3 +390,6 @@ wStep3FltLabel = WIDGET_LABEL(wHiddenBase,$
                               VALUE   = sStep3FltLabel.value)
 END
 
+;-------------------------------------------------------------------------------
+PRO make_gui_step3
+END

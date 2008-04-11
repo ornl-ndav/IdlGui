@@ -76,3 +76,8 @@ OutputFileTextfield = WIDGET_TEXT(OutputFile_base,$
                                   /SCROLL)
                                   
 END
+
+
+;-------------------------------------------------------------------------------
+PRO make_gui_output_file
+END

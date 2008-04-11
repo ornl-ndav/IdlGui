@@ -43,7 +43,7 @@ cd, CurrentFolder + IdlUtilitiesPath
 
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
-.run MakeGuiStep1.pro
+.run make_gui_step1.pro
 .run MakeGuiStep2.pro
 .run MakeGuiStep3.pro
 .run MakeGuiOutputFile.pro
@@ -80,4 +80,4 @@ cd, CurrentFolder
 .run ref_scale_Tabs.pro
 .run ref_scale_eventcb.pro
 .run ref_scale.pro
-.run ref_scale_eventcb
+;.run ref_scale_eventcb
