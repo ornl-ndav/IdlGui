@@ -55,7 +55,7 @@
 ;
 ;   STORE_ARRAY in IDL Astronomy Library
 ;
-function array_delete, init, $
+function ArrayDelete, init, $
                        AT        = at0, $
                        LENGTH    = len0, $
                        COUNT     = count, $

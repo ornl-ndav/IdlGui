@@ -32,7 +32,7 @@
 ;
 ;===============================================================================
 
-PRO MAIN_BASE_event, Event
+PRO MAIN_BASE2_event, Event
 
 ;get global structure
   id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
