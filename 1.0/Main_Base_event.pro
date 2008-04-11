@@ -272,5 +272,5 @@ ELSE:
 END
 
 ;*******************************************************************************
-PRO Main_Base_event
+PRO procedure_main_base_event
 END
