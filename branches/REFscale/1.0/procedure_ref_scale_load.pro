@@ -253,7 +253,7 @@ END
 
 ;*******************************************************************************
 
-PRO ref_scale_Load
+PRO procedure_ref_scale_load
 END
 
 

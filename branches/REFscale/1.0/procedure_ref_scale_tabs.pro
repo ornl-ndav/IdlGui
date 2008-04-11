@@ -123,5 +123,5 @@ ENDIF
 END
 
 ;*******************************************************************************
-PRO ref_scale_Tabs
+PRO procedure_ref_scale_tabs
 END
