@@ -68,6 +68,7 @@ global = ptr_new ({ instrumentShortList   : ptr_new(0L),$
                     motors                : ptr_new(0L),$   ;full xml
                     untouched_motors      : ptr_new(0L),$   ;full untouched xml
                     motor_group           : ptr_new(0L),$   ;xml of selected group only
+                    group_leader          : 0L,$
                     version : VERSION })
 
 (*(*global).leaf_array) = { uname : ['leaf1',$
@@ -150,7 +151,13 @@ MakeGuiLoadingGeometry, $
   versionLight
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
+XManager, 'MAIN_BASE', $
+  MAIN_BASE, $
+  /NO_BLOCK, $
+  CLEANUP='gg_Cleanup', $
+  GROUP_LEADER=wGroup 
+
+(*global).group_leader = MAIN_BASE
 
 ;populate geometry droplist
 GeoArray = getGeometryList(instrumentShortList(instrumentIndex))
