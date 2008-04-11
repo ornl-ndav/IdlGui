@@ -66,3 +66,7 @@ endif else begin
 endelse
     return, float(string(finalArray))
 END
+
+;-------------------------------------------------------------------------------
+PRO procedure_get_numeric
+END
