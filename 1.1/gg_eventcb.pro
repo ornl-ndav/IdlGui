@@ -150,17 +150,27 @@ ENDIF ELSE BEGIN ;version complete
     cmd += ' -m ' + cvinfo_file
     cmd += ' -l ' + (*global).tmp_xml_file
     spawn, cmd
-    ReadXmlFile, Event  
+
+    read_error = 0
+    CATCH, read_error
+    IF (read_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        text = [!error_state.msg,'Please solve problem before trying again !']
+        parent_id = WIDGET_INFO(Event.top,FIND_BY_UNAME='loading_geometry_button')
+        void = DIALOG_MESSAGE(text,/ERROR,DIALOG_PARENT=parent_id)
+    ENDIF ELSE BEGIN
+        ReadXmlFile, Event  
 ;desactivate first base
-    activateFirstBase, Event, 0
+        activateFirstBase, Event, 0
 ;activate second base
-    activateSecondBase, Event, 1
+        activateSecondBase, Event, 1
 ;activate all widgets of base2
-    sensitive_widget, Event, 'input_geometry_base', 1
+        sensitive_widget, Event, 'input_geometry_base', 1
 ;enable loading button
-    sensitive_widget, Event, 'loading_geometry_button',1
+        sensitive_widget, Event, 'loading_geometry_button',1
 ;hide loading geometry processing label base
-    activateMap, Event, 'loading_geometry_processing_label_base' , 0
+        activateMap, Event, 'loading_geometry_processing_label_base' , 0
+    ENDELSE
 ENDELSE
 END
 
