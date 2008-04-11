@@ -84,7 +84,6 @@ CASE Event.id OF
 ;#1### cvinfo.xml #####
 ;cvinfo.xml text field
     widget_info(wWidget, FIND_BY_UNAME='cvinfo_text_field'): begin
-;        loading_geometry_button_status, Event ;in gg_GUIupdate.pro
         ValidateOrNotOutputGeometryFileBase, Event ;in gg_GUIupdate.pro
     end
 
