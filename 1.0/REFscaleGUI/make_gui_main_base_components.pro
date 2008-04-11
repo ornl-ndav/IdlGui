@@ -383,3 +383,7 @@ wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
                                 /ALIGN_LEFT)
 
 END
+
+;*******************************************************************************
+PRO MakeGuiMainBaseComponents
+END
