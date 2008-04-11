@@ -385,5 +385,5 @@ wDataToRemoveText = WIDGET_TEXT(wSettingsBase,$
 END
 
 ;*******************************************************************************
-PRO MakeGuiMainBaseComponents
+PRO make_gui_main_base_components
 END

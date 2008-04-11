@@ -822,3 +822,7 @@ END
 PRO ActivateSettingsBase, Event, Validate
 ActivateBase, Event, 'settings_base', Validate
 END
+
+;*******************************************************************************
+PRO ref_scale_Gui
+END
