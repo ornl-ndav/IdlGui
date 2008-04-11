@@ -105,10 +105,12 @@ PRO XDISPLAYFILE_event, event
                     WIDGET_CONTROL, event.top, $
                       TLB_SET_TITLE=title
                     
+                    ;done with <filename> button
+                    ;change contain
                     id = WIDGET_INFO(event.top,find_by_uname='EXIT')
                     title2 = 'Done with ' + state.filename
                     widget_control, id, set_value=title2
-                    
+
                     SaveNewFilename, Event, state.filename
 
                 ENDIF
@@ -685,14 +687,20 @@ PRO XDisplayFile, event, $
   ; Done button
   ;get only the last part of the full file name
 
-  IF n_elements(done_button) eq 0 THEN BEGIN
-      filename_array = strsplit(filename,'/',count=nbr,/extract)
+  IF N_ELEMENTS(done_button) eq 0 THEN BEGIN
+      filename_array = STRSPLIT(filename,'/', $
+                                COUNT=nbr, $
+                                /EXTRACT)
       short_filename = filename_array[nbr-1]
-      done_button = "Done with " + short_filename
+      done_button    = "Done with " + short_filename
   ENDIF
 
-  filequit = WIDGET_BUTTON(menu_bar, SEPARATOR=editable, $
-                           VALUE = extra+done_button, UVALUE = "EXIT", UNAME = 'EXIT')
+  filequit = WIDGET_BUTTON(menu_bar, $
+                           SEPARATOR = editable, $
+                           XSIZE     = 405,$
+                           VALUE     = extra + done_button, $
+                           UVALUE    = "EXIT", $
+                           UNAME     = 'EXIT')
   
                                 ; Create a text widget to display the text
   IF n_elements(font) gt 0 then begin
