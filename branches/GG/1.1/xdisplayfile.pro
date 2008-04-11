@@ -1,3 +1,16 @@
+PRO SaveNewFilename, Event, new_filename
+
+WIDGET_CONTROL, Event.top, GET_UVALUE=state
+old_event = state.event_str
+
+WIDGET_CONTROL, old_event.top, GET_UVALUE=global
+id = widget_info(old_event.top,find_by_uname='geometry_text_field')
+widget_control, id, set_value = new_filename
+
+END
+
+
+
 ; $Id: //depot/idl/IDL_63_RELEASE/idldir/lib/utilities/xdisplayfile.pro#1 $
 ;
 ; Copyright (c) 1991-2006, Research Systems, Inc.  All rights reserved.
@@ -80,23 +93,25 @@ PRO XDISPLAYFILE_event, event
         widget_control,id,get_uvalue=global
         (*global).new_geo_xml_filename  = state.filename
 		IF (STRLEN(state.filename) GT 0) THEN BEGIN
-            XDISPLAYFILE_write, state.filetext, state.filename
-            WIDGET_CONTROL, event.top, SET_UVALUE=state
-            geom_xml_file_title = (*global).geom_xml_file_title
+                    XDISPLAYFILE_write, state.filetext, state.filename
+                    WIDGET_CONTROL, event.top, SET_UVALUE=state
+                    geom_xml_file_title = (*global).geom_xml_file_title
+                    
+                                ;get only the last part of the full file name
+                    filename_array = strsplit(state.filename,'/',count=nbr,/extract)
+                    short_filename = filename_array[nbr-1]
+                    
+                    title = 'Done with ' + short_filename
+                    WIDGET_CONTROL, event.top, $
+                      TLB_SET_TITLE=title
+                    
+                    id = WIDGET_INFO(event.top,find_by_uname='EXIT')
+                    title2 = 'Done with ' + state.filename
+                    widget_control, id, set_value=title2
+                    
+                    SaveNewFilename, Event, state.filename
 
-            ;get only the last part of the full file name
-            filename_array = strsplit(state.filename,'/',count=nbr)
-            short_filename = filename_array[nbr-1]
-
-            title = 'Done with ' + short_filename
-            WIDGET_CONTROL, event.top, $
-              TLB_SET_TITLE=title
-            
-            id = WIDGET_INFO(event.top,find_by_uname='EXIT')
-            title2 = 'Done with ' + state.filename
-            widget_control, id, set_value=title2
-            
-		ENDIF
+                ENDIF
 		RETURN
 	END
 	"EXIT": BEGIN
@@ -151,7 +166,8 @@ PRO XDISPLAYFILE_event, event
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
                         id = widget_info(Event.top,find_by_uname='iteration_label')
-                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                        widget_control, id, set_value = '1/'+ $
+                          strcompress(NbrStrFound,/remove_all)
                     END
                     ELSE: BEGIN
                         message += 'has been located ' + $
@@ -160,7 +176,8 @@ PRO XDISPLAYFILE_event, event
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
                         id = widget_info(Event.top,find_by_uname='iteration_label')
-                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                        widget_control, id, set_value = '1/'+ $
+                          strcompress(NbrStrFound,/remove_all)
                     END
                 ENDCASE
                 id = widget_info(Event.top,find_by_uname='find_status')
@@ -384,7 +401,8 @@ PRO XDISPLAYFILE_event, event
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
                         id = widget_info(Event.top,find_by_uname='iteration_label')
-                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                        widget_control, id, set_value = '1/'+ $
+                          strcompress(NbrStrFound,/remove_all)
                     END
                     ELSE: BEGIN
                         message += 'has been located ' + $
@@ -393,7 +411,8 @@ PRO XDISPLAYFILE_event, event
                         id = widget_info(Event.top,find_by_uname='find_next')
                         widget_control, id, sensitive = 1
                         id = widget_info(Event.top,find_by_uname='iteration_label')
-                        widget_control, id, set_value = '1/'+strcompress(NbrStrFound,/remove_all)
+                        widget_control, id, set_value = '1/'+ $
+                          strcompress(NbrStrFound,/remove_all)
                     END
                 ENDCASE
                 id = widget_info(Event.top,find_by_uname='find_status')
@@ -480,12 +499,11 @@ PRO XDisplayFileGrowToScreen, tlb, text, height, nlines
     if (cur_y lt max_y) then low = mid else high = mid
     if ((old_low eq low) && (old_high eq high)) then break
   endwhile
-
 end
 
-
-
-PRO XDisplayFile, Event, $
+;-------------------------------------------------------------------------------
+;-------------------------------------------------------------------------------
+PRO XDisplayFile, event, $
                   FILENAME, $
                   TITLE = TITLE, $
                   GROUP = GROUP, $
@@ -500,6 +518,7 @@ PRO XDisplayFile, Event, $
                   WTEXT=filetext, $
                   BLOCK=block, $
                   RETURN_ID=return_id
+  
 ;+
 ; NAME:
 ;	XDISPLAYFILE
@@ -626,7 +645,8 @@ PRO XDisplayFile, Event, $
 
   ourGroup = 0L
   if KEYWORD_SET(MODAL) then begin
-    if N_ELEMENTS(GROUP) GT 0 then begin
+    if N_ELEMENTS(GROUP) GT 0 then BEGIN
+        print, 'here' ;remove_me
       filebase = WIDGET_BASE(TITLE = TITLE, $
 			/TLB_KILL_REQUEST_EVENTS, TLB_FRAME_ATTR=1, $
                         /BASE_ALIGN_LEFT, /COLUMN, $
@@ -766,7 +786,6 @@ PRO XDisplayFile, Event, $
                                         
   ENDIF
 
-
 if (keyword_set(grow_to_screen)) then $
   XDisplayFileGrowToScreen, filebase, filetext, height, nlines
 
@@ -789,10 +808,6 @@ state={ ourGroup       : ourGroup, $
 WIDGET_CONTROL, filebase, SET_UVALUE = state
 xmanager, "XDISPLAYFILE", filebase, GROUP_LEADER = GROUP, $
 	NO_BLOCK=(NOT(FLOAT(block)))
-
-id=widget_info(state.event_str.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
-(*global).new_geo_xml_filename  = state.filename
 
 end
 

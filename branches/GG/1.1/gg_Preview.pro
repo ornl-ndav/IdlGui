@@ -2,11 +2,9 @@ PRO gg_previewUpdateGeoXmlTextField, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-file_name = (*global).new_geo_xml_filename
-putInTextField, Event, 'geometry_text_field', file_name
+file_name = getGeometryFileName(Event)
+(*global).new_geo_xml_filename = file_name
 END
-
-
 
 
 
@@ -21,6 +19,7 @@ CASE type OF
         IF (full_file_name NE '') THEN BEGIN
             XDISPLAYFILE, Event, $
               full_file_name, $
+              GROUP = (*global).group_leader, $
               TITLE = title, $
               MODAL = 1,$
               /EDITABLE
@@ -32,6 +31,7 @@ CASE type OF
         IF (full_file_name NE '') THEN BEGIN
             XDISPLAYFILE, Event, $
               full_file_name, $
+              GROUP = (*global).group_leader, $
               TITLE = title
         ENDIF
     END
