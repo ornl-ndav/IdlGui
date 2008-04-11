@@ -1,3 +1,37 @@
+;===============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
+;
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
+;
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
+;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
+;
+; @author : j35 (bilheuxjm@ornl.gov)
+;
+;===============================================================================
+
 PRO determine_Geometry_path, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -13,6 +47,7 @@ IF (path_name NE '') THEN BEGIN
 ENDIF
 END
 
+;-------------------------------------------------------------------------------
 
 PRO gg_generate_light_command, Event ;in gg_eventcb
 putInTextField, Event, 'status_label', 'Create Geometry File ... (PROCESSING)'
@@ -51,12 +86,14 @@ ENDELSE
 sensitive_widget, Event, 'loading_geometry_button', 0
 END
 
+;-------------------------------------------------------------------------------
 
 PRO clearCvinfoBase, Event
 putInTextField, Event, 'cvinfo_run_number_field', ''
 putInTextField, Event, 'cvinfo_text_field', ''
 END
 
+;-------------------------------------------------------------------------------
 
 PRO putSelectedGeometryFileInTextField, Event ;in gg_eventcb.pro
 ;get Selected Geometry File
@@ -65,6 +102,7 @@ geometry_file = getGeometryFile(Event)
 putXmlGeometryFileInTextField, Event, geometry_file
 END
 
+;-------------------------------------------------------------------------------
 
 PRO ggEventcb_InstrumentSelection, Event
 ;get global structure
@@ -82,6 +120,7 @@ update_loading_geometry_gui_sensitivity, Event, sensitiveStatus
 instrumentShortList = (*(*global).instrumentShortList)
 END
 
+;-------------------------------------------------------------------------------
 
 PRO retrieve_cvinfo_file_name, Event
 ;get global structure
@@ -109,6 +148,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+;-------------------------------------------------------------------------------
 
 PRO populateNameOfOutputFile, Event, type
 ;get global structure
@@ -128,7 +168,7 @@ output_file_name    = instrument + output_geometry_ext + $
 putGeometryFileNameInTextField, Event, output_file_name
 END
 
-
+;-------------------------------------------------------------------------------
 
 ;Reach by the LOADING GEOMETRY button of the first base
 PRO load_geometry, Event
@@ -174,6 +214,7 @@ ENDIF ELSE BEGIN ;version complete
 ENDELSE
 END
 
+;-------------------------------------------------------------------------------
 
 ;Reach by the load new base geometry of base #2
 ;this will display a confirmation base
@@ -184,6 +225,7 @@ activateMap, Event, 'confirmation_base', 1
 sensitive_widget, Event, 'input_geometry_base', 0
 END
 
+;-------------------------------------------------------------------------------
 
 ;Reach by the YES button of the confirmation base
 PRO YesLoadNewGeometry, Event
@@ -195,6 +237,7 @@ activateMap, Event, 'loading_geometry_base',1
 activateMap, Event, 'input_geometry_base',0
 END
 
+;-------------------------------------------------------------------------------
 
 ;Reach by the NO button of the confirmation base
 PRO NoLoadNewGeometry, Event
@@ -204,6 +247,7 @@ activateMap, Event, 'confirmation_base', 0
 sensitive_widget, Event, 'input_geometry_base', 1
 END
 
+;-------------------------------------------------------------------------------
 
 ;Reached by the 'CREATE GEOMETRY FILE' button
 PRO CreateNewGeometryFile, Event      ;in gg_evenctb
@@ -285,11 +329,11 @@ ENDIF else begin                ;procedure worked
     ENDIF 
 ENDELSE
 
-
 ;Activate final_result_ok_button and final_result_error_button
 sensitive_widget, Event, 'final_result_ok_button', 1
 END
 
+;-------------------------------------------------------------------------------
 
 PRO reset_parameters, Event 
 ;get global structure
@@ -299,6 +343,7 @@ widget_control,id,get_uvalue=global
 sensitive_widget, Event, 'check_error_log_button',0
 END
 
+;-------------------------------------------------------------------------------
 
 PRO final_result_ok, Event
 ;activate confirmation base
@@ -315,7 +360,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;------------------------------------------------------------
+;-------------------------------------------------------------------------------
 
 pro MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
@@ -324,6 +369,8 @@ widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
 end
+
+;-------------------------------------------------------------------------------
 
 pro gg_eventcb, event
 end
