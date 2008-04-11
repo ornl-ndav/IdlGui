@@ -159,7 +159,7 @@ CASE retval OF
                 1: BEGIN
                     message += 'has been located 1 time'
                     id = widget_info(Event.top,find_by_uname='find_next')
-                    widget_control, id, sensitive = 1
+                    widget_control, id, sensitive = 0
                     id = widget_info(Event.top,find_by_uname='iteration_label')
                     widget_control, id, set_value = '1/'+ $
                       strcompress(NbrStrFound,/remove_all)
