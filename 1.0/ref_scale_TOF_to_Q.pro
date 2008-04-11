@@ -65,3 +65,7 @@ END
 (*(*global).flt0_xaxis) = Q
 
 END
+
+;-------------------------------------------------------------------------------
+PRO procedure_ref_scale_tof_to_q
+END

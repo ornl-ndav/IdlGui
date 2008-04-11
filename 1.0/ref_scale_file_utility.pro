@@ -117,5 +117,6 @@ ClearButtonId = widget_info(Event.top,find_by_uname='clear_button')
 widget_control, ClearButtonId, sensitive=ValidateButton
 END
 
-
-
+;-------------------------------------------------------------------------------
+PRO ref_scale_file_utility
+END
