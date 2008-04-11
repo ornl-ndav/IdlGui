@@ -98,7 +98,7 @@
 ; web site: http://www.opensource.org.
 ;
 ;###########################################################################
-FUNCTION Number_Formatter, number, DECIMALS=decimals
+FUNCTION number_formatter, number, DECIMALS=decimals
 
    On_Error, 2
 
@@ -273,3 +273,6 @@ FUNCTION Number_Formatter, number, DECIMALS=decimals
 END 
 
 ;-------------------------------------------------------------------------------
+
+PRO procedure_number_formatter
+END

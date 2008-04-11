@@ -55,12 +55,12 @@
 ;
 ;   STORE_ARRAY in IDL Astronomy Library
 ;
-function ArrayDelete, init, $
-                      AT        = at0, $
-                      LENGTH    = len0, $
-                      COUNT     = count, $
-                      EMPTY1    = empty1, $
-                      OVERWRITE = overwrite
+function array_delete, init, $
+                       AT        = at0, $
+                       LENGTH    = len0, $
+                       COUNT     = count, $
+                       EMPTY1    = empty1, $
+                       OVERWRITE = overwrite
 
   on_error, 2
   n1 = n_elements(init)   & sz1 = size(init)    & tp1 = sz1(sz1(0)+1)
@@ -101,3 +101,7 @@ function ArrayDelete, init, $
 
   return, out
 end
+
+;-------------------------------------------------------------------------------
+PRO procedure_array_delete
+END
