@@ -72,7 +72,6 @@ cd, CurrentFolder
 .run ref_scale_Arrays.pro
 .run ref_scale_TOF_to_Q.pro
 
-.run ref_scale_open_file.pro
 .run ref_scale_OpenFile.pro
 .run ref_scale_Plot.pro
 .run ref_scale_Load.pro
