@@ -824,5 +824,5 @@ ActivateBase, Event, 'settings_base', Validate
 END
 
 ;*******************************************************************************
-PRO ref_scale_Gui
+PRO procedure_ref_scale_gui
 END
