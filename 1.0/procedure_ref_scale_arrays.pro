@@ -38,7 +38,7 @@
 ;this function creates and update the Q1, Q2, SF... arrays when a file is added
 PRO CreateArrays, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;number of files loaded

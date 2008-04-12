@@ -34,7 +34,7 @@
 
 ;This function converts the TOF to Q 
 PRO convert_TOF_to_Q, Event, angleValue
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 flt0       = (*(*global).flt0_xaxis)

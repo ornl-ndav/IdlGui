@@ -37,7 +37,7 @@
 
 ;This function displays the OPEN FILE from IDL
 FUNCTION OpenFile, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
@@ -68,7 +68,7 @@ END
 
 ;This function is going to open and store the new fresh open files
 FUNCTION StoreFlts, Event, LongFileName, index
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IF (index EQ 0) THEN BEGIN

@@ -39,7 +39,7 @@
 PRO plot_loaded_file, Event, index
 
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;0 means that the fitting plot won't be seen
@@ -293,7 +293,7 @@ END
 PRO PlotLoadedFiles, Event
 
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ListLongFileName = (*(*global).ListOfLongFileName)
@@ -598,7 +598,7 @@ END
 
 PRO replot_main_plot, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IF (((*global).replot_me) EQ 1) THEN BEGIN
@@ -615,7 +615,7 @@ end
 PRO plot_rescale_CE_file, Event
 
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 draw_id = widget_info(Event.top, find_by_uname='plot_window')
@@ -715,7 +715,7 @@ END
 
 ;This function takes care of launching the plot function in the right mode
 PRO DoPlot, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;get index of current tab selected
 steps_tab_id = widget_info(Event.top, find_by_uname='steps_tab')
@@ -739,7 +739,7 @@ END
 ;*******************************************************************************
 ;Plot Qmin and Qmax
 PRO PlotQs, Event, X1, X2
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ymin = (*global).draw_ymin
 ymax = (*global).draw_ymax
@@ -763,7 +763,7 @@ END
 ;*******************************************************************************
 ;Plot Qmin or Qmax
 PRO PlotQ, Event, X1
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ymin = (*global).draw_ymin
 ymax = (*global).draw_ymax

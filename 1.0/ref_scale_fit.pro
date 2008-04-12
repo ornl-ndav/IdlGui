@@ -38,7 +38,7 @@
 PRO FitCEFunction, Event, flt0, flt1, flt2
 
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ; Compute the second degree polynomial fit to the data:
@@ -72,7 +72,7 @@ END
 PRO FitOrder_n_Function, Event, flt0, flt1, flt2, index, order_n
 
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ; Compute the second degree polynomial fit to the data:
