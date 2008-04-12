@@ -47,7 +47,7 @@ END
 ;and do the conversion if necessary (in degree)
 PRO get_angle_value_and_do_conversion, Event, angleValue
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;check status of deg/rad button

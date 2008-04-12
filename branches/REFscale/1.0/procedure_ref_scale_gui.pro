@@ -83,7 +83,7 @@ END
 ; 21 : distance empty and angle wrong
 ; 22 : distance wrong and angle wrong
 FUNCTION InputParameterStatus, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
  
 isTOFselected = getButtonValidated(Event,'InputFileFormat') ;_get
@@ -146,7 +146,7 @@ END
 
 ;This function will check if the LOAD button can be validated or no
 PRO CheckOpenButtonStatus, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 InputParameter = InputParameterStatus(Event)
@@ -200,7 +200,7 @@ END
 ;parameter (>0 will move it to the right, <0 to move it to the left)
 PRO MoveColorIndex_by_index, Event, index
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;get current color Index selected
@@ -239,7 +239,7 @@ MoveColorIndex_by_index, Event, index ;_Gui
 ;This function refresh the list displays in all the droplist (step1-2 and 3)
 PRO updateDropList, Event, ListOfFiles
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IF (ListOfFiles[0] EQ '') THEN BEGIN
@@ -282,7 +282,7 @@ END
 ;-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-
 ;This function automatically selects the last loaded file
 PRO SelectLastLoadedFile, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ListOfFiles = (*(*global).list_of_files)
 NbrOfFiles  = getSizeOfArray(ListOfFiles)
@@ -326,7 +326,7 @@ END
 
 ;This function updates the GUI (droplist, buttons...)
 PRO updateGUI, Event, ListOfFiles
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 updateDropList, Event, ListOfFiles ;_gui
@@ -358,7 +358,7 @@ END
 ;present in the list, in this case, it's not added
 PRO AddNewFileToDroplist, Event, ShortFileName, LongFileName
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ListOfFiles        = (*(*global).list_of_files)
@@ -401,7 +401,7 @@ END
 ;This functions displays the first few lines of the newly loaded file
 PRO display_info_about_selected_file, Event, LongFileName
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 no_file = 0
@@ -440,7 +440,7 @@ END
 
 PRO populateColorLabel, Event, LongFileName
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 SelectedIndex = getSelectedIndex(Event,'list_of_files_droplist') ;_get
@@ -464,7 +464,7 @@ PRO CreateDefaultXYMinMax, Event,$
                            min_yaxis,$
                            max_yaxis
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 XYMinMax = (*(*global).XYMinMax)
@@ -509,7 +509,7 @@ END
 ;droplist of files in step 1
 PRO display_info_about_file, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;get the long name of th selected file
@@ -540,7 +540,7 @@ END
 ;selected color
 PRO AssignColorToSelectedPlot, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 colorIndex  = getColorIndex(Event) ;_get
@@ -568,7 +568,7 @@ END
 ;Qmin and Qmax of the CE file
 PRO display_Q_values, Event, index, tab
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 Qmin_array = (*(*global).Qmin_array)
@@ -622,7 +622,7 @@ END
 ;*******************************************************************************
 
 PRO ClearCElabelStep2, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;name of CE file
 cd_label_id = widget_info(Event.top,find_by_uname='short_ce_file_name')
@@ -638,7 +638,7 @@ END
 ;This function clears the contain of all the text boxes
 PRO ClearAllTextBoxes, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;clear step2 
@@ -663,7 +663,7 @@ END
 
 ;This function removes the contain of the info file found in Step1
 PRO ClearFileInfoStep1, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 TextBoxId = widget_info(Event.top,FIND_BY_UNAME='file_info')
@@ -686,7 +686,7 @@ END
 
 ;reset the position of the color slider
 PRO ResetPositionOfSlider, Event 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 defaultColorSliderPosition = (*global).ColorSliderDefaultValue
@@ -739,7 +739,7 @@ END
 ;******************************************************************************
 ;This function updates the GUI (droplist, buttons...)
 PRO StepsUpdateGUI, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 nbr = getNbrOfFiles(Event)

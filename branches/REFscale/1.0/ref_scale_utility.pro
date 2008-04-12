@@ -39,7 +39,7 @@
 ;ListOfLongFileName)
 PRO ResetArrays, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 list_of_files      = strarr(1)
@@ -76,7 +76,7 @@ END
 ;This function remove the value at the index iIndex
 PRO RemoveIndexFromList, Event, iIndex
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 FileHistory        = (*(*global).FileHistory)
@@ -121,7 +121,7 @@ END
 ;given index iIndex
 PRO RemoveIndexFromArray, Event, iIndex
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;check size of array
@@ -150,7 +150,7 @@ END
 ;ie: is reset to 100/red
 PRO ReinitializeColorArray, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 color_array               = lonarr(1)
@@ -165,7 +165,7 @@ END
 ;This function clears the contain of all the droplists
 PRO ClearAllDropLists, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
  
 ;clear off list of file in droplist of step1

@@ -32,17 +32,17 @@
 ;
 ;===============================================================================
 
-PRO MAIN_BASE2_event, Event
+PRO MAIN_BASE_ref_scale_event, Event
 
 ;get global structure
-  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+  id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
   widget_control,id,get_uvalue=global
   
   wWidget =  Event.top          ;widget id
   
   CASE (Event.id) OF
       
-      Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
+      Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE_ref_scale'): BEGIN
       END
       
 ;-------------------------------------------------------------------------------
@@ -116,8 +116,7 @@ PRO MAIN_BASE2_event, Event
 
 ;-------------------------------------------------------------------------------
 ;***** STEP 1 - [LOAD FILES] ***************************************************
-;-------------------------------------------------------------------------------
-      
+;-------------------------------------------------------------------------------      
 ;Event of <Load File> button
       Widget_Info(wWidget, FIND_BY_UNAME='load_button'): BEGIN
           LoadFileButton, Event ;_Load

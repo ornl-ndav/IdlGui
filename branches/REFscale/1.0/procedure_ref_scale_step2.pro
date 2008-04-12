@@ -37,7 +37,7 @@
 
 PRO LoadCEFile, Event, CE_file_name, Q1, Q2
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 flt0_ptr = (*global).flt0_ptr
 flt1_ptr = (*global).flt1_ptr
@@ -79,7 +79,7 @@ END
 ;the fitted function for CE only
 PRO CalculateAverageFittedY, Event, Q1, Q2
 ;retrieve global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 CEcooef = (*(*global).CEcooef)
 ;y=ax+b
@@ -105,7 +105,7 @@ END
 
 ;This function save Q1, Q2 and SF of the Critical Edge file selected
 PRO Step2_fitCE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;get long name of CE file
 CE_LongFileName       = (*global).full_CE_name
@@ -152,7 +152,7 @@ END
 ;This function is the next step (after the fitting) to
 ;bring to 1 the average Q1 to Q2 part of CE
 PRO Step2_scaleCE, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;change the value of the ymax and ymin in the zoom box to 1.2 and 0
 putValueInTextField, Event, 'YaxisMaxTextField', (*global).rescaling_ymax ;_put
@@ -166,7 +166,7 @@ END
 
 ;when using automatic fitting and scaling of CE (step2)
 PRO run_full_step2, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 PROCESSING = (*global).processing
@@ -240,7 +240,7 @@ ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling)
       '-> Ybefore and Yafter are numeric : NO'
 ENDELSE   
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
 ;check if manual widgets can be validated or not
@@ -252,7 +252,7 @@ END
 ;*******************************************************************************
 
 PRO manualCEscaling, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 PROCESSING = (*global).processing
@@ -312,7 +312,7 @@ END
 ;This function is the next step (after the fitting) to
 ;bring to 1 the average Q1 to Q2 part of CE
 PRO manual_Step2_scaleCE, Event, Yafter
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;change the value of the ymax and ymin in the zoom box to 1.2 and 0
 putValueInTextField, Event, 'YaxisMaxTextField',  (Yafter + 0.2)    ;_put
@@ -352,7 +352,7 @@ END
 ;*******************************************************************************
 ;This is reach when the user left click on the plot of step2
 PRO Step2LeftClick, Event, XMinMax
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 (*global).left_mouse_pressed = 1
 CASE ((*global).Q_selection) OF
@@ -409,7 +409,7 @@ END
 ;*******************************************************************************
 ;This is reach when the user right click on the plot of step2
 PRO Step2RightClick, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 CASE ((*global).Q_selection) OF
     1: BEGIN
@@ -430,7 +430,7 @@ END
 ;*******************************************************************************
 ;This is reach when the user released the button on the plot of step2
 PRO Step2ReleaseClick, Event, XMinMax
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 IF ((*global).left_mouse_pressed EQ 1) THEN BEGIN
     CASE ((*global).Q_selection) OF
@@ -476,7 +476,7 @@ END
 ;*******************************************************************************
 ;This is reach when the user moves the mouse on the plot of step2
 PRO Step2MoveClick, Event, XMinMax
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 replot_main_plot, Event         ;_Plot
 IF ((*global).left_mouse_pressed) THEN BEGIN
@@ -532,7 +532,7 @@ END
 ;*******************************************************************************
 
 PRO saveQ,  Event, Q_NUMBER = Q_NUMBER, x, XMinMax
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;calculate true Q
 draw_xmin = (*global).draw_xmin
@@ -557,7 +557,7 @@ END
 ;This function determine what is the Qx (widget_draw x position ) of
 ;the Q given
 PRO saveQxFromQ, Event, Q_NUMBER=Q_NUMBER
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;Qx and Q
@@ -595,7 +595,7 @@ END
 ;*******************************************************************************
 ;This function only reach during step2 when Qmin and Qmax are edited
 PRO ManualNewQ, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;replot main plot
 (*global).replot_me = 1
@@ -627,7 +627,7 @@ END
 ;###############################################################################
 ;*******************************************************************************
 PRO ClearStep2GlobalVariable, Event 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;Qx
 (*global).Q1x = 0L

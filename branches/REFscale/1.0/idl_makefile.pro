@@ -44,40 +44,38 @@ cd, CurrentFolder + IdlUtilitiesPath
 ;Build REFscale GUI
 cd, CurrentFolder + '/REFscaleGUI/'
 .run make_gui_step1.pro
-.run MakeGuiStep2.pro
-.run MakeGuiStep3.pro
-.run MakeGuiOutputFile.pro
-.run MakeGuiLoadBatch.pro
-.run MakeGuiMainBaseComponents.pro
-.run MakeGuiLogBook.pro
+.run make_gui_step2.pro
+.run make_gui_step3.pro
+.run make_gui_output_file.pro
+.run make_gui_load_batch.pro
+.run make_gui_main_base_components.pro
+.run make_gui_log_book.pro
 
 ;Build main procedures
 cd, CurrentFolder
-.run number_formatter.pro
-.run ArrayDelete.pro
-.run getNumeric.pro
+.run procedure_array_delete.pro
+.run procedure_number_formatter.pro
+.run procedure_get_numeric.pro
 .run ref_scale_get.pro
 .run ref_scale_put.pro
 .run ref_scale_is.pro
-.run IDLsendToGeek__define.pro
+.run procedure_idl_send_to_geek.pro
 
-.run Main_Base_event.pro
+.run procedure_main_base_event.pro
 .run ref_scale_utility.pro
-.run ref_scale_Gui.pro
+.run procedure_ref_scale_gui.pro
 .run ref_scale_fit.pro
-.run ref_scale_Step3.pro
-.run ref_scale_Arrays.pro
+.run procedure_ref_scale_step3.pro
 .run ref_scale_math.pro
 .run ref_scale_file_utility.pro
-.run ref_scale_Arrays.pro
-.run ref_scale_TOF_to_Q.pro
+.run procedure_ref_scale_tof_to_q.pro
 
-.run ref_scale_OpenFile.pro
-.run ref_scale_Plot.pro
-.run ref_scale_Load.pro
-.run ref_scale_Step2.pro
+.run procedure_ref_scale_openfile.pro
+.run procedure_ref_scale_plot.pro
+.run procedure_ref_scale_load.pro
+.run procedure_ref_scale_step2.pro
 .run ref_scale_produce_output.pro
-.run ref_scale_Tabs.pro
+.run procedure_ref_scale_tabs.pro
 .run ref_scale_eventcb.pro
 .run ref_scale.pro
-;.run ref_scale_eventcb
+

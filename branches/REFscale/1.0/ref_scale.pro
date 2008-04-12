@@ -161,7 +161,7 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     (*global).input_path = '~/tmp/'
 ENDIF ELSE BEGIN
     (*global).input_path = '~' + ucams
-   (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
+    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
 ENDELSE
 
 MainBaseSize         = [50 , 50, 1200, 600]
@@ -182,7 +182,7 @@ MainTitle   = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
-                        UNAME     = 'MAIN_BASE',$
+                        UNAME     = 'MAIN_BASE_ref_scale',$
                         XOFFSET   = MainBaseSize[0],$
                         YOFFSET   = MainBaseSize[1],$
                         SCR_XSIZE = MainBaseSize[2], $
@@ -253,7 +253,7 @@ MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
 ;base, and call XMANAGER to manage everything.
 WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
+XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE, /NO_BLOCK
 
 ;; default tabs shown 
 ;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') 

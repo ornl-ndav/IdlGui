@@ -38,7 +38,7 @@
 ;files one after the other
 PRO Step3AutomaticRescaling, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IDLsendToGeek_addLogBookText, Event, '> Automatic Rescaling :' 
@@ -183,7 +183,7 @@ END
 ;array of the high Q file
 PRO Step3OutputFlt0Flt1, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;get selected index of droplist
@@ -272,7 +272,7 @@ END
 ;This function rescale manually the working file using the new SF 
 PRO Step3RescaleFile, Event, delta_SF
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
@@ -339,7 +339,7 @@ END
 ;This function rescale manually the working file using the new SF 
 PRO Step3RescaleFile2, Event, delta_SF
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IDLsendToGeek_addLogBookText, Event, '> Manual Rescaling :' 
@@ -441,7 +441,7 @@ END
 ;selected, in this case, it shows that the working file is the CE file
 PRO Step3DisplayLowQFileName, Event, indexSelected
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 IF (indexSelected EQ 0) THEN BEGIN
@@ -467,7 +467,7 @@ END
 ;This function displays the SF of the selected file
 PRO Step3_display_SF_values, Event,index
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 SF_array = (*(*global).SF_array)

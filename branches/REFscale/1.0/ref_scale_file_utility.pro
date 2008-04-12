@@ -4,7 +4,7 @@
 
 ;This function defines the new color and moves the slider if necessary
 PRO defineColorIndex, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 list_of_color_slider_id = widget_info(event.top,find_by_uname='list_of_color_slider')
 widget_control, list_of_color_slider_id, get_value = ColorIndex
@@ -25,7 +25,7 @@ END
 ;This function remove the short file name and keep
 ;the path and reset the default working path
 Function DEFINE_NEW_DEFAULT_WORKING_PATH, Event, file
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 path = get_path_to_file_name(file)
 (*global).input_path = path ;reset the default path
@@ -82,7 +82,7 @@ end
 
 ;This function reset various parameters when a new session is launched (full reset)
 PRO ResetAllOtherParameters, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 (*global).FirstTimePlotting = 1 ;next load will be the first one
 END
@@ -92,7 +92,7 @@ END
 
 
 PRO populateColorLabel, Event, LongFileName
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 SelectedIndex = getSelectedIndex(Event,'list_of_files_droplist')
 ListShortFileName = (*(*global).list_of_files)

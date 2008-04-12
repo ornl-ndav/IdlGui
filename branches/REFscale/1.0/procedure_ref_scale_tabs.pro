@@ -40,7 +40,7 @@
 
 PRO steps_tab, Event, isRefresh
 ;Retrieve Global variable
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 PrevTabSelect = (*global).PrevTabSelect ;previous tab selected

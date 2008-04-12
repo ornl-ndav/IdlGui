@@ -39,7 +39,7 @@
 ;Procedure that will return all the global variables for this routine
 FUNCTION idl_send_to_geek_getGlobalVariable, Event, var
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 CASE (var) OF
     'LogBookPath'     : RETURN, '/SNS/users/LogBook/'

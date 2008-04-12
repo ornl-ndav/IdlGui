@@ -39,7 +39,7 @@
 ;if CE file name is REF_L_2893.txt
 ;the output file name will be: REF_L_2893_CE_scaling.txt
 FUNCTION createOuputFileName, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 full_CE_name = (*global).full_CE_name
@@ -77,7 +77,7 @@ END
 ;Main function that will produce and display the output file.
 PRO ProduceOutputFile, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control, id, get_uvalue=global
 
 PROCESSING = (*global).processing
