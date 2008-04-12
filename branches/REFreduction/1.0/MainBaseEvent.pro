@@ -1012,6 +1012,11 @@ CASE Event.id OF
         BatchTab_LoadBatchFile, Event
     end
 
+;;Launch REFscale
+    widget_info(wWidget, FIND_BY_UNAME='launch_refscale_button'): BEGIN
+        BatchTab_LaunchREFscale, Event ;_BatchTab
+    end
+
 ;;Browse for path
     widget_info(wWidget, FIND_BY_UNAME='save_as_path'): begin
         BatchTab_BrowsePath, Event
