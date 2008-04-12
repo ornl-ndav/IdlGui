@@ -1443,6 +1443,7 @@ system_utilities
 cd, CurrentFolder + '/REFscaleGUI/'
 make_gui_step1
 make_gui_step2
+make_gui_step3
 make_gui_output_file
 make_gui_load_batch
 make_gui_main_base_components
@@ -1474,6 +1475,6 @@ procedure_ref_scale_step2
 ref_scale_produce_output
 procedure_ref_scale_tabs
 ref_scale_eventcb
+id = widget_info(event.top,find_by_uname='main_base')
 ref_scale
-
 END
