@@ -1428,4 +1428,52 @@ END
 
 
 
+;-------------------------------------------------------------------------------
+PRO BatchTab_LaunchREFscale, Event ;_Batch
 
+CurrentFolder = '~/SVN/IdlGui/branches/REFscale/1.0/'
+IdlUtilitiesPath = 'utilities'
+
+;Makefile that automatically compile the necessary modules
+;and create the VM file.
+cd, CurrentFolder + IdlUtilitiesPath
+system_utilities
+
+;Build REFscale GUI
+cd, CurrentFolder + '/REFscaleGUI/'
+make_gui_step1
+make_gui_step2
+make_gui_output_file
+make_gui_load_batch
+make_gui_main_base_components
+make_gui_log_book
+
+;Build main procedures
+cd, CurrentFolder
+procedure_array_delete
+procedure_number_formatter
+procedure_get_numeric
+ref_scale_get
+ref_scale_put
+ref_scale_is
+procedure_idl_send_to_geek
+
+procedure_main_base_event
+ref_scale_utility
+procedure_ref_scale_gui
+ref_scale_fit
+procedure_ref_scale_step3
+ref_scale_math
+ref_scale_file_utility
+procedure_ref_scale_tof_to_q
+
+procedure_ref_scale_openfile
+procedure_ref_scale_plot
+procedure_ref_scale_load
+procedure_ref_scale_step2
+ref_scale_produce_output
+procedure_ref_scale_tabs
+ref_scale_eventcb
+ref_scale
+
+END
