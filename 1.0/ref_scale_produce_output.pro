@@ -84,14 +84,15 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
 
-IDLsendToGeek_addLogBookText, Event, '> Create Output File Array :' 
+idl_send_to_geek_addLogBookText, Event, '> Create Output File Array :' 
 
 ;text string to output
 MasterText = ''
 
 ;create output file name
 outputFileName = createOuputFileName(Event) ;_produce_output
-IDLsendToGeek_addLogBookText, Event, '-> Output File Name : ' + outputFileName
+idl_send_to_geek_addLogBookText, Event, '-> Output File Name : ' + $
+  outputFileName
 
 ;display the name of the output file name
 putValueInLabel, Event, 'output_file_name_label_dynmaic', outputFileName ;_put
@@ -105,7 +106,7 @@ MasterText = MasterText[1:*]
 
 ;get the number of files to print out
 nbrFiles = getNbrElementsInDroplist(Event, 'list_of_files_droplist') ;_get
-IDLsendToGeek_addLogBookText, Event, '-> Number Of files : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Number Of files : ' + $
   STRCOMPRESS(nbrFiles,/REMOVE_ALL)
 
 ;get list of files
@@ -127,7 +128,7 @@ for i=0,(nbrFiles-1) do begin
    TextFileName = '## ' + fileName + '##'
    MasterText   = [MasterText,TextFileName]
 
-   IDLsendToGeek_addLogBookText, Event, '-> Working with File # ' + $
+   idl_send_to_geek_addLogBookText, Event, '-> Working with File # ' + $
      STRCOMPRESS(i,/REMOVE_ALL) + ' (' + fileName + ')'
 
    ;add the value of the angle (in degree)
@@ -169,19 +170,19 @@ ENDFOR
 ;output contain of output file in output_file_tab
 putValueInTextField, Event, 'output_file_text_field', MasterText ;_put
 
-IDLsendToGeek_addLogBookText, Event, '> Producing output file ... ' + $
+idl_send_to_geek_addLogBookText, Event, '> Producing output file ... ' + $
   PROCESSING
 output_error = 0
 CATCH, output_error
 IF (output_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
 ;create output file name
     createOutputFile, Event, outputFileName, MasterText ;_produce_output
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
 ;###############################################################################

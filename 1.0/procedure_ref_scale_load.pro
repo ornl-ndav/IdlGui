@@ -46,11 +46,11 @@ FormatFileSelected = getButtonValidated(Event,'InputFileFormat')
 IF (FormatFileSelected EQ 0) THEN BEGIN ;TOF
     LogBookMessage = '> Loading a TOF File :'
 ;Check if the log book is empty or not
-    LogBookText = IDLsendToGeek_getLogBookText(Event)
+    LogBookText = idl_send_to_geek_getLogBookText(Event)
     IF (LogBookText[0] EQ '') THEN BEGIN
-        IDLsendToGeek_putLogBookText, Event, LogBookMessage
+        idl_send_to_geek_putLogBookText, Event, LogBookMessage
     ENDIF ELSE BEGIN
-        IDLsendToGeek_addLogBookText, Event, LogBookMessage
+        idl_send_to_geek_addLogBookText, Event, LogBookMessage
     ENDELSE
 ;display the dMD and angle value base
     dMDAngleBaseId = widget_info(event.top,find_by_uname='dMD_angle_base')
@@ -62,13 +62,13 @@ ENDIF ELSE BEGIN                ;Q
 ;Check if the log book is empty or not
     LogBookText = idl_send_to_geek_getLogBookText(Event)
     IF (LogBookText[0] EQ '') THEN BEGIN
-        IDLsendToGeek_putLogBookText, Event, LogBookMessage
+        idl_send_to_geek_putLogBookText, Event, LogBookMessage
     ENDIF ELSE BEGIN
-        IDLsendToGeek_addLogBookText, Event, LogBookMessage
+        idl_send_to_geek_addLogBookText, Event, LogBookMessage
     ENDELSE
     LoadFile_Q, Event
 ENDELSE
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
@@ -87,7 +87,7 @@ FAILED     = (*global).failed
 ;launch the program that open the dialog_pickfile
 LongFileName = OpenFile(Event) 
 file_error = 0
-CATCH, file_error
+;CATCH, file_error
 
 IF (file_error NE 0) THEN BEGIN
     CATCH,/cancel
@@ -96,7 +96,7 @@ IF (file_error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
 ;continue only if a file has been selected
     IF (LongfileName NE '') then begin
-        IDLsendToGeek_addLogBookText, Event, '-> Long File Name  : ' + $
+        idl_send_to_geek_addLogBookText, Event, '-> Long File Name  : ' + $
           LongFileName
 ;get only the file name (without path) of file
         ShortFileName = get_file_name_only(LongFileName)    

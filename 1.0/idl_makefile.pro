@@ -54,6 +54,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 ;Build main procedures
 cd, CurrentFolder
 .run procedure_array_delete.pro
+.run procedure_ref_scale_arrays.pro
 .run procedure_number_formatter.pro
 .run procedure_get_numeric.pro
 .run ref_scale_get.pro

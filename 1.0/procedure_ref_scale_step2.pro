@@ -173,34 +173,34 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
 
-IDLsendToGeek_addLogBookText, Event, '> Automatic Fitting and Scaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Automatic Fitting and Scaling :' 
 
 ;display Qmin and Qmax values
 Qmin = getTextFieldValue(Event,'step2_q1_text_field')
 Qmax = getTextFieldValue(Event,'step2_q2_text_field')
-IDLsendToGeek_addLogBookText, Event, '-> Qmin : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Qmin : ' + $
   STRCOMPRESS(Qmin,/REMOVE_ALL)
-IDLsendToGeek_addLogBookText, Event, '-> Qmax : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Qmax : ' + $
   STRCOMPRESS(Qmax,/REMOVE_ALL)
 
-IDLsendToGeek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
+idl_send_to_geek_addLogBookText, Event, '-> Fitting ... ' + PROCESSING 
 fit_error = 0
 CATCH, fit_error
 IF (fit_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
 ENDIF ELSE BEGIN
     Step2_fitCE, Event          ;_Step2
-    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 
 ;show the scaling factor (but do not replot it)
 ;get the average Y value before
 Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field') ;_get
 Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field') ;_get
-IDLsendToGeek_addLogBookText, Event, '-> Ybefore : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Ybefore : ' + $
   STRCOMPRESS(Ybefore,/REMOVE_ALL)
-IDLsendToGeek_addLogBookText, Event, '-> Yafter  : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Yafter  : ' + $
   STRCOMPRESS(Yafter,/REMOVE_ALL)
 
 ;check if Ybefore is numeric or not
@@ -210,25 +210,25 @@ YafterIsNumeric  = isNumeric(Yafter) ;_is
 ;Ybefore and Yafter are numeric
 IF (YbeforeIsNumeric EQ 1 AND $
     YafterIsNumeric EQ 1) THEN BEGIN
-    IDLsendToGeek_addLogBookText, Event, $
+    idl_send_to_geek_addLogBookText, Event, $
       '-> Ybefore and Yafter are numeric : YES'
 
     putValueInLabel, Event, 'step2_qminqmax_error_label', '' ;_put
     
-    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
+    idl_send_to_geek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
     scale_error = 0
     CATCH, scale_error
     IF (scale_error NE 0) THEN BEGIN
         CATCH,/CANCEL
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
     ENDIF ELSE BEGIN
         Step2_scaleCE, Event    ;_Step2
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
     
 ;display SF in the log book
     SF = getTextFieldValue(Event, 'step2_sf_text_field')
-    IDLsendToGeek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
+    idl_send_to_geek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
     
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
@@ -236,7 +236,7 @@ ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling)
 ;display message in Q1 and Q2 boxe saying that auto stopped
     putValueInLabel, Event, 'step2_qminqmax_error_label', $
       '**ERROR: Select another range of Qs**'
-    IDLsendToGeek_addLogBookText, Event, $
+    idl_send_to_geek_addLogBookText, Event, $
       '-> Ybefore and Yafter are numeric : NO'
 ENDELSE   
 
@@ -245,7 +245,7 @@ widget_control,id,get_uvalue=global
 plotQs, Event, (*global).Q1x, (*global).Q2x ;_Plot
 ;check if manual widgets can be validated or not
 CheckManualModeStep2Buttons, Event
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
@@ -259,15 +259,15 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
 
-IDLsendToGeek_addLogBookText, Event, '> Manual Scaling :' 
+idl_send_to_geek_addLogBookText, Event, '> Manual Scaling :' 
 
 ;show the scaling factor (but do not replot it)
 ;get the average Y value before and after
 Ybefore = getTextFieldValue(Event, 'step2_y_before_text_field') ;_get
 Yafter  = getTextFieldValue(Event, 'step2_y_after_text_field') ;_get
-IDLsendToGeek_addLogBookText, Event, '-> Ybefore : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Ybefore : ' + $
   STRCOMPRESS(Ybefore,/REMOVE_ALL)
-IDLsendToGeek_addLogBookText, Event, '-> Yafter  : ' + $
+idl_send_to_geek_addLogBookText, Event, '-> Yafter  : ' + $
   STRCOMPRESS(Yafter,/REMOVE_ALL)
 
 ;check if Ybefore is numeric or not
@@ -276,23 +276,23 @@ YafterIsNumeric  = isNumeric(Yafter) ;_is
 ;Ybefore and Yafter are numeric
 IF (YbeforeIsNumeric EQ 1 AND $
     YafterIsNumeric EQ 1) THEN BEGIN
-    IDLsendToGeek_addLogBookText, Event, $
+    idl_send_to_geek_addLogBookText, Event, $
       '-> Ybefore and Yafter are numeric : YES'
     putValueInLabel, Event, 'step2_qminqmax_error_label', '' ;_put
 
-    IDLsendToGeek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
+    idl_send_to_geek_addLogBookText, Event, '-> Scaling ... ' + PROCESSING 
     scale_error = 0
     CATCH, scale_error
     IF (scale_error NE 0) THEN BEGIN
         CATCH,/CANCEL
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
     ENDIF ELSE BEGIN
         manual_Step2_scaleCE, Event, Yafter ;_Step2
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
     ENDELSE
 ;display SF in the log book
     SF = getTextFieldValue(Event, 'step2_sf_text_field')
-    IDLsendToGeek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
+    idl_send_to_geek_addLogBookText, Event, '-> Scaling Factor (SF) of Critcal ' + $
       'Edge (CE) File : ' + STRCOMPRESS(SF,/REMOVE_ALL)
     
 ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling) 
@@ -300,10 +300,10 @@ ENDIF ELSE BEGIN ;scaling factor can be calculated so second step (scaling)
 ;display message in Q1 and Q2 boxe saying that auto stopped
     putValueInLabel, Event, 'step2_qminqmax_error_label', $
       '**ERROR: Select another range of Qs**'
-    IDLsendToGeek_addLogBookText, Event, $
+    idl_send_to_geek_addLogBookText, Event, $
       '-> Ybefore and Yafter are numeric : NO'
 ENDELSE
-IDLsendToGeek_showLastLineLogBook, Event
+idl_send_to_geek_showLastLineLogBook, Event
 END
 
 ;###############################################################################
