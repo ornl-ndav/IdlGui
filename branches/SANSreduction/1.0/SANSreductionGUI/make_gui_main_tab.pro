@@ -36,24 +36,30 @@ PRO make_gui_main_tab, MAIN_BASE, MainBaseSize
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
-MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
+sMainTabSize = {size : [0,0,MainBaseSize[2],MainBaseSize[3]],$
+                uname : 'main_tab'}
 
 ;Tab titles
-TabTitles = { tab1 : ' LOAD DATA '}
+TabTitles = { tab1     : ' LOAD DATA ',$
+              log_book : 'LOG BOOK'}
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = 'main_tab',$
+                      UNAME     = sMainTabSize.uname,$
                       LOCATION  = 0,$
-                      XOFFSET   = MainTabSize[0],$
-                      YOFFSET   = MainTabSize[1],$
-                      SCR_XSIZE = MainTabSize[2],$
-                      SCR_YSIZE = MainTabSize[3],$
+                      XOFFSET   = sMainTabSize.size[0],$
+                      YOFFSET   = sMainTabSize.size[1],$
+                      SCR_XSIZE = sMainTabSize.size[2],$
+                      SCR_YSIZE = sMainTabSize.size[3],$
                       SENSITIVE = 1,$
                       /TRACKING_EVENTS)
 
 ;Build Load Data Tab
-make_gui_tab1, MAIN_TAB, MainTabSize, TabTitles
+make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles
+
+;Build LogBook
+make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
+
 
 END
 
