@@ -103,6 +103,11 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
+;show tab #2
+id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+
+
 END
 
 ;===============================================================================
