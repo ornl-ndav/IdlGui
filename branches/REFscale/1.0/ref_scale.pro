@@ -36,7 +36,7 @@ pro Build_GUI, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
 
 help, GROUP_LEADER
 
-Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  
+;Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  
 ;Load event callback routines
 
 ;define initial global values - these could be input via external file
@@ -181,16 +181,16 @@ ListOfFiles = ['                                                   ']
 MainTitle   = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
-MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
-                        UNAME     = 'MAIN_BASE_ref_scale',$
-                        XOFFSET   = MainBaseSize[0],$
-                        YOFFSET   = MainBaseSize[1],$
-                        SCR_XSIZE = MainBaseSize[2], $
-                        SCR_YSIZE = MainBaseSize[3], $
-                        TITLE     = MainTitle)
+MAIN_BASE_ref_scale = WIDGET_BASE(GROUP_LEADER = wGroup, $
+                        UNAME        = 'MAIN_BASE_ref_scale',$
+                        XOFFSET      = MainBaseSize[0],$
+                        YOFFSET      = MainBaseSize[1],$
+                        SCR_XSIZE    = MainBaseSize[2], $
+                        SCR_YSIZE    = MainBaseSize[3], $
+                        TITLE        = MainTitle)
 ;                        MBAR      = WID_BASE_0_MBAR)
 
-PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
+PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE_ref_scale,$
                           UNAME     = 'plot_window',$
                           XOFFSET   = PlotWindowSize[0],$
                           YOFFSET   = PlotWindowSize[1],$
@@ -200,7 +200,7 @@ PLOT_WINDOW = WIDGET_DRAW(MAIN_BASE,$
                           /BUTTON_EVENTS,$
                           /MOTION_EVENTS)
 
-STEPS_TAB = WIDGET_TAB(MAIN_BASE,$
+STEPS_TAB = WIDGET_TAB(MAIN_BASE_ref_scale,$
                        UNAME     = 'steps_tab',$
                        LOCATION  = 0,$
                        XOFFSET   = StepsTabSize[0],$
@@ -247,16 +247,16 @@ MakeGuiLogBook, STEPS_TAB, $
                 StepsTabSize
 
 ;Build Main Base Components
-MakeGuiMainBaseComponents, MAIN_BASE, StepsTabSize
+MakeGuiMainBaseComponents, MAIN_BASE_ref_scale, StepsTabSize
 
 ;Realize the widgets, set the user value of the top-level
 ;base, and call XMANAGER to manage everything.
-WIDGET_CONTROL, MAIN_BASE, /REALIZE
-WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
-XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE, /NO_BLOCK
+WIDGET_CONTROL, MAIN_BASE_ref_scale, /REALIZE
+WIDGET_CONTROL, MAIN_BASE_ref_scale, SET_UVALUE=global
+XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
 
 ;; default tabs shown 
-;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') 
+;id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
 ;widget_control, id1, set_tab_current = 5  ;remove_me (log book)
 
 ;logger message

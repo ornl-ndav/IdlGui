@@ -38,7 +38,7 @@
 ;reset full session
 PRO reset_all_button, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;reset all arrays
@@ -71,7 +71,7 @@ END
 ;*******************************************************************************
 
 PRO rescale_data_changed, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,GET_UVALUE=global
 (*global).replot_me  = 1
 (*global).replotQnew = 1 ;means we need to replot the Qs
@@ -82,7 +82,7 @@ END
 
 ;reset X and Y axis rescalling
 PRO ResetRescaleButton, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;repopulate Xmin, Xmax, Ymin and Ymax with first XYMinMax values
 putXYMinMax, Event, (*(*global).XYMinMax) ;_put
