@@ -44,6 +44,8 @@ filter    = (*global).nexus_filter
 title     = (*global).nexus_title
 path      = (*global).nexus_path
 
+IDLsendToGeek_putLogBookText, Event, '> Browsing a NeXus file :'
+
 FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
                                 extension, $
                                 filter, $
@@ -56,9 +58,13 @@ IF (FullNexusName NE '') THEN BEGIN
     putTab1NexusFileName, Event, FullNexusName
 ;change default path
     (*global).nexus_path = path
-
-ENDIF
-
+    message = '-> Full NeXus File Name: ' + FullNexusName
+ENDIF ELSE BEGIN
+;display name of nexus file name
+    putTab1NexusFileName, Event, ''
+    message = '-> No NeXus File Loaded'
+ENDELSE    
+IDLsendToGeek_addLogBookText, Event, message
 
 END
 
