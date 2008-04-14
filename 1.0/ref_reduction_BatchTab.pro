@@ -1475,6 +1475,5 @@ procedure_ref_scale_step2
 ref_scale_produce_output
 procedure_ref_scale_tabs
 ref_scale_eventcb
-id = widget_info(event.top,find_by_uname='main_base')
 ref_scale
 END
