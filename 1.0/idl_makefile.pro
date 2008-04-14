@@ -21,6 +21,8 @@ cd, CurrentFolder
 ;utils functions
 .run sans_reduction_put.pro
 .run IDLsendToGeek__define.pro
+.run IDLgetNexusData__define.pro
+.run sans_reduction_plot.pro
 
 ;procedures
 

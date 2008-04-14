@@ -32,9 +32,7 @@
 ;
 ;===============================================================================
 
-;This function browse a nexus file
-PRO browse_nexus, Event
-
+FUNCTION PlotData, Event, FullNexusName
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
@@ -43,51 +41,22 @@ WIDGET_CONTROL, id, GET_UVALUE=global
 PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
-extension  = (*global).nexus_extension
-filter     = (*global).nexus_filter
-title      = (*global).nexus_title
-path       = (*global).nexus_path
-
-IDLsendToGeek_putLogBookText, Event, '> Browsing and Plotting a NeXus file :'
-
-FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
-                                extension, $
-                                filter, $
-                                title,$
-                                GET_PATH=new_path,$
-                                path)
-
-IF (FullNexusName NE '') THEN BEGIN
-;display name of nexus file name
-    putTab1NexusFileName, Event, FullNexusName
-;change default path
-    (*global).nexus_path = path
-    message = '-> Full NeXus File Name: ' + FullNexusName
-    IDLsendToGeek_addLogBookText, Event, message
-    message = '-> Plot Data : ' + PROCESSING
-    IDLsendToGeek_addLogBookText, Event, message
-;plot Data
-    PlotDataResult = PlotData(Event, FullNexusName)
+    
+message    = '--> Retrieving Data ... ' + PROCESSING
+retrieve_error = 0
+CATCH, retrieve_error
+IF (retrieve_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    RETURN, 0
 ENDIF ELSE BEGIN
-;display name of nexus file name
-    putTab1NexusFileName, Event, ''
-    message = '-> No NeXus File Loaded'
-    IDLsendToGeek_addLogBookText, Event, message
-ENDELSE    
-
+    sInstance  = OBJ_NEW('IDLgetNexusMetadata',$
+                         FullNexusName,$
+                         NbrBank = 1,$
+                         BankData = 'bank1')
+    DataArray = sInstance->getData()
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+ENDELSE
+RETURN,1
 END
 
-;===============================================================================
-PRO MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;turn off hourglass
-widget_control,hourglass=0
-END
-
-;===============================================================================
-PRO sans_reduction_eventcb, event
-END
-
-;===============================================================================
