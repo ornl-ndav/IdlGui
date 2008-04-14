@@ -77,7 +77,7 @@ wLogBook = WIDGET_TEXT(wLogBookBase,$
 
 ;-------------------------------------------------------------------------------
 ;Send To Geek
-STGinstance = obj_new('IDLsendToGeek', $
+STGinstance = obj_new('idl_send_to_geek', $
                       XOFFSET   = sSTG.size[0],$
                       YOFFSET   = sSTG.size[1],$
                       XSIZE     = sSTG.size[2],$
