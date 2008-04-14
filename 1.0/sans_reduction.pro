@@ -71,7 +71,8 @@ MainBaseTitle  = 'SANS Data Reduction GUI'
 MainBaseSize   = [30,25,695,550]
 MainBaseTitle += ' - ' + VERSION
 
-;Build Main Base
+;===============================================================================
+;Build Main Base ===============================================================
 MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
                          SCR_XSIZE    = MainBaseSize[2],$
@@ -92,6 +93,9 @@ make_gui_main_tab, MAIN_BASE, MainBaseSize
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+;===============================================================================
+;===============================================================================
+
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
 logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
@@ -103,10 +107,13 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
+;Debugging only ----------------------------------------------------------------
+IF (DEBUGGING EQ 'yes' AND $
+    ucams EQ 'j35') THEN BEGIN
 ;show tab #2
-id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
-
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+ENDIF
 
 END
 
