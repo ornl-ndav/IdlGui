@@ -55,6 +55,9 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({ version         : VERSION,$
+                    processing      : '(PROCESSING)',$
+                    ok              : 'OK',$
+                    failed          : 'FAILED',$
                     nexus_extension : 'nxs',$
                     nexus_filter    : '*.nxs',$
                     nexus_title     : 'Browse NeXus File',$
@@ -112,7 +115,7 @@ IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
 ;show tab #2
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
 ENDIF
 
 END
