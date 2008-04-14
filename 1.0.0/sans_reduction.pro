@@ -1,36 +1,32 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;get the current folder
-cd, current=current_folder
+CD, CURRENT = current_folder
 
 VERSION = '(1.0.0)'
 
-;define initial global values - these could be input via external file or other means
+;define initial global values - these could be input via external
+;file or other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
-endif else begin
+ENDIF ELSE BEGIN
    ucams = get_ucams()
-endelse
-
-;Which version to load
-;1 is for version that never shows the base #2. It only allows user to
-;load the xml files and create the geometry file
-versionLight = 0
-;0 is for full version that displays the base #2.
+ENDELSE
 
 ;define global variables
-global = ptr_new ({ version : VERSION })
+global = PTR_NEW ({ version : VERSION })
 
-MainBaseTitle = 'SANS Data Reduction GUI'
-MainBaseSize  = [30,25,700,500]
+MainBaseTitle  = 'SANS Data Reduction GUI'
+MainBaseSize   = [30,25,700,500]
         
 MainBaseTitle += ' - ' + VERSION
+
 ;Build Main Base
-MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
+MAIN_BASE = WIDGET_BASE( GROUP_LEADER = wGroup,$
                          UNAME        = 'MAIN_BASE',$
                          SCR_XSIZE    = MainBaseSize[2],$
                          SCR_YSIZE    = MainBaseSize[3],$
@@ -42,14 +38,17 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          YPAD         = 2)
 
 ;attach global structure with widget ID of widget main base widget ID
-widget_control, MAIN_BASE, set_uvalue=global
+widget_control, MAIN_BASE, SET_UVALUE=global
+
+;Build Tab1
+make_gui_main_tab, MAIN_BASE, MainBaseSize
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 END
 
-
+;===============================================================================
 ; Empty stub procedure used for autoloading.
 PRO sans_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_

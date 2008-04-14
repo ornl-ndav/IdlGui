@@ -10,6 +10,8 @@ cd, IdlUtilitiesPath
 
 ;Build BSSreduction GUI
 cd, CurrentFolder + '/SANSreductionGUI/'
+.run make_gui_main_tab.PRO
+.run make_gui_tab1.pro
 
 ;Build all procedures
 cd, CurrentFolder
