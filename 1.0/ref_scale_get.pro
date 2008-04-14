@@ -100,7 +100,7 @@ END
 
 ;This function will retrieve the values of Xmin/max and Ymin/max
 FUNCTION retrieveXYMinMax, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 ;min-xaxis
@@ -148,7 +148,7 @@ END
 
 ;This functions gives the index of the color selected
 FUNCTION getColorIndex, Event
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 id = widget_info(event.top,find_by_uname='list_of_color_slider')
 widget_control, id, get_value = ColorIndex
@@ -160,7 +160,7 @@ END
 
 ;this function gives the long name of the file selected in the uname droplist
 FUNCTION getLongFileNameSelected, Event, uname
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 ;get the selected index of the load list droplist
 TextBoxIndex = getSelectedIndex(Event, uname) ;_get
@@ -177,7 +177,7 @@ END
 ;file (degrees)
 FUNCTION getAngleValue, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 angle_array = (*(*global).angle_array)
@@ -366,7 +366,7 @@ END
 ;into a 3 digit precision float
 Function getndigits, Event, angleValue
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
 
 angleDisplayPrecision = (*global).angleDisplayPrecision
@@ -391,7 +391,7 @@ END
 ;###############################################################################
 ;*******************************************************************************
 FUNCTION getDrawXMin, Event
-id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
 delta_x_draw = (*global).delta_x_draw
 ;retrieve xmin and xmax

@@ -61,7 +61,6 @@ cd, CurrentFolder
 .run ref_scale_is.pro
 .run procedure_idl_send_to_geek.pro
 
-.run procedure_main_base_event.pro
 .run ref_scale_utility.pro
 .run procedure_ref_scale_gui.pro
 .run ref_scale_fit.pro
@@ -76,6 +75,7 @@ cd, CurrentFolder
 .run procedure_ref_scale_step2.pro
 .run ref_scale_produce_output.pro
 .run procedure_ref_scale_tabs.pro
+.run procedure_main_base_event.pro
 .run ref_scale_eventcb.pro
 .run ref_scale.pro
 
