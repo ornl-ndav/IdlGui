@@ -1452,6 +1452,7 @@ make_gui_log_book
 ;Build main procedures
 cd, CurrentFolder
 procedure_array_delete
+procedure_ref_scale_arrays.pro
 procedure_number_formatter
 procedure_get_numeric
 ref_scale_get
