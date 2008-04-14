@@ -31,48 +31,17 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;===============================================================================
-
-;This function browse a nexus file
-PRO browse_nexus, Event
-
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
-
-extension = (*global).nexus_extension
-filter    = (*global).nexus_filter
-title     = (*global).nexus_title
-path      = (*global).nexus_path
-
-FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
-                                extension, $
-                                filter, $
-                                title,$
-                                GET_PATH=new_path,$
-                                path)
-
-IF (FullNexusName NE '') THEN BEGIN
-;display name of nexus file name
-    putTab1NexusFileName, Event, FullNexusName
-;change default path
-    (*global).nexus_path = path
-
-ENDIF
-
-
+PRO putTextFieldValue, Event, uname, text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=text
 END
+
+
+
 
 ;===============================================================================
-PRO MAIN_REALIZE, wWidget
-tlb = get_tlb(wWidget)
-;indicate initialization with hourglass icon
-widget_control,/hourglass
-;turn off hourglass
-widget_control,hourglass=0
-END
-
 ;===============================================================================
-PRO sans_reduction_eventcb, event
+PRO putTab1NexusFileName, Event, FileName
+putTextFieldValue, Event, 'archived_text_field', FileName
 END
-
 ;===============================================================================
