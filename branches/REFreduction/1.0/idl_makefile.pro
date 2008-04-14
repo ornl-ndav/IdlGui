@@ -44,7 +44,6 @@ cd, CurrentFolder + '/REFreductionGUI/'
 
 .run MakeGuiLogBookTab.pro
 
-
 ;Build main procedures
 cd, CurrentFolder
 .run ref_reduction_string.pro
