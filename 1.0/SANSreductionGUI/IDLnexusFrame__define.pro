@@ -53,7 +53,7 @@ END
 PRO IDLnexusFrame_make_frame, BaseID, frame_title, main_base_xsize
 title = WIDGET_LABEL(BaseID,$
                      XOFFSET = 20,$
-                     YOFFSET = 5,$
+                     YOFFSET = 0,$
                      VALUE   = frame_title)
 frame = WIDGET_LABEL(BaseID,$
                      XOFFSET   = 5,$
