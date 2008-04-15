@@ -54,14 +54,77 @@ ENDIF ELSE BEGIN
 ENDELSE
 
 ;define global variables
-global = PTR_NEW ({ version         : VERSION,$
-                    processing      : '(PROCESSING)',$
-                    ok              : 'OK',$
-                    failed          : 'FAILED',$
-                    nexus_extension : 'nxs',$
-                    nexus_filter    : '*.nxs',$
-                    nexus_title     : 'Browse NeXus File',$
-                    nexus_path      : '/SNS/'})
+global = PTR_NEW ({version:         VERSION,$
+                   processing:      '(PROCESSING)',$
+                   ok:              'OK',$
+                   failed:          'FAILED',$
+                   nexus_extension: 'nxs',$
+                   nexus_filter:    '*.nxs',$
+                   nexus_title:     'Browse NeXus File',$
+                   nexus_path:      '/SNS/',$
+                   ReducePara: {driver_name: $
+                                'new_driver_name_here',$
+                                overwrite_geo: $
+                                '--inst-geom',$
+                                detect_time_offset: $
+                                '--time-zero-offset-det',$
+                                monitor_time_offset: $
+                                '--time-zero-offset-mom',$
+                                monitor_efficiency: {flag: $
+                                                     '--mon-effc',$
+                                                     default: $
+                                                     1},$ ;on/OFF
+                                monitor_rebin: $
+                                '--mom-trans-bins',$
+                                roi_file: $
+                                '--roi-file'},$
+                   CorrectPara: {solv_buffer: {title: $
+                                               'Solvant Buffer Only',$
+                                               flag: $
+                                               '--solv'},$
+                                 empty_can:    {title: $
+                                                'Empty Can',$
+                                                flag: $
+                                                '--ecan'},$
+                                 open_beam:    {title: $
+                                                'Open Beam (shutter open)',$
+                                                flag: $
+                                                '--open'},$
+                                 dark_current: {title: $
+                                                'Dark Current (shutter ' + $
+                                                'closed)',$
+                                                flag: $
+                                                '--dkcur'}},$
+                   IntermPara: {bmon_wave: {title: $
+                                            'Beam Monitor after ' + $
+                                            'Conversion to Wavelength',$
+                                            flag: $
+                                            '--dump-bmon-wave'},$
+                                bmon_effc: {title: $
+                                            'Beam Monitor in Wavelenght' + $
+                                            ' after efficiency correction',$
+                                            flag: $
+                                            '--dump-bmon-effc'},$
+                                bmnon_wave: {title: $
+                                             'Combined Spectrum of Data' + $
+                                             ' after Beam Monitor ' + $
+                                             'Normalization',$
+                                             flag: $
+                                             '--dump-wave-bmnom'},$
+                                wave:        {title: $
+                                              'Data of Each Pixel after' + $
+                                              ' Wavelength Conversion' + $
+                                              ' (WARNING: HUGE FILE !)',$
+                                              flag: $
+                                              '--dump-wave'},$
+                                bmon_rebin : {title: $
+                                              'Monitor Spectrum after' + $
+                                              ' Rebin to Detector' + $
+                                              ' Wavelength Axis' + $
+                                              ' (WARNING: HUGE FILE !)',$
+                                              flag: $
+                                              '--dump-bmon-rebin'}}$
+                                 })
 
 ;debugging version of program
 IF (DEBUGGING EQ 'yes' AND $
