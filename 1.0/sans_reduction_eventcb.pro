@@ -64,17 +64,39 @@ IF (FullNexusName NE '') THEN BEGIN
     (*global).nexus_path = path
     message = '-> Full NeXus File Name: ' + FullNexusName
     IDLsendToGeek_addLogBookText, Event, message
-    message = '-> Plot Data : ' + PROCESSING
+    message = '-> Retrieving Data : ' + PROCESSING
     IDLsendToGeek_addLogBookText, Event, message
-;plot Data
-    PlotDataResult = PlotData(Event, FullNexusName)
+;retrieving data from NeXus file
+    retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
+    IF (retrieveStatus EQ 0) THEN BEGIN
+        IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
+    ENDIF ELSE BEGIN
+        sz_array = size(DataArray)
+        Ntof     = (sz_array)(1)
+        Y        = (sz_array)(2)
+        X        = (sz_array)(3)
+        IDLsendToGeek_addLogBookText, Event, '--> X    : ' + $
+          STRCOMPRESS(X,/REMOVE_ALL)
+        IDLsendToGeek_addLogBookText, Event, '--> Y    : ' + $
+          STRCOMPRESS(Y,/REMOVE_ALL)
+        IDLsendToGeek_addLogBookText, Event, '--> Ntof : ' + $
+          STRCOMPRESS(Ntof,/REMOVE_ALL)
+;plotting data
+        message = '-> Plotting NeXus  : ' + PROCESSING
+        IDLsendToGeek_addLogBookText, Event, message
+        plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
+        IF (plotDataResult EQ 0) THEN BEGIN ;failed
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+        ENDIF ELSE BEGIN
+            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        ENDELSE
+    ENDELSE
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
     message = '-> No NeXus File Loaded'
     IDLsendToGeek_addLogBookText, Event, message
 ENDELSE    
-
 END
 
 ;===============================================================================
