@@ -34,7 +34,14 @@
 
 
 ;***** Class constructor *******************************************************
-FUNCTION IDLnexusFrame::init
+FUNCTION IDLnexusFrame::init, $
+                      XOFF            = xoff,$
+                      YOFF            = yoff,$
+                      FRAME_TITLE     = frame_title,$
+                      LABEL_1         = label_1_value,$
+                      TF1_UNAME       = text_field_uname,$
+                      BROWSE_UNAME    = browse_button_uname,$
+                      FILE_NAME_UNAME = file_name_text_field_uname
                       
 RETURN, 1
 END
