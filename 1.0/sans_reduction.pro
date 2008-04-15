@@ -176,9 +176,13 @@ ENDELSE
 ;Debugging only ----------------------------------------------------------------
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
-;show tab #2
+;show tab #2 'REDUCE'
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
+;show tab #2 'PARAMETERS'
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
+
 ENDIF
 
 END

@@ -39,6 +39,55 @@ sBaseTab2 = { size:  tab_size,$
               uname: 'reduce_tab2_base',$
               title: tab_title}
 
+;- Overwrite Geometry ----------------------------------------------------------
+XYoff    = [10,20]
+sOG      = {size:  [XYoff[0],$
+                    XYoff[1]],$
+            value: '-> Overwrite Geometry'}
+XYoff    = [150,-6]
+sOGgroup = {size:  [XYoff[0],$
+                    sOG.size[1]+XYoff[1]],$
+            list:  ['YES','NO'],$
+            uname: 'overwrite_geometry_group'}
+XYoff    = [105,-3]
+sOGbase  = {size:  [sOGgroup.size[0]+XYoff[0],$
+                    sOGgroup.size[1]+XYoff[1],$
+                    420,35],$
+            uname: 'overwrite_geometry_base'}
+XYoff     = [0,0]
+sOGbutton = {size:  [XYoff[0],$
+                     XYoff[1],$
+                     sOGbase.size[2],$
+                     sOGbase.size[3]],$
+             value: 'BROWSE ...',$
+             uname: 'overwrite_geometry_button'}
+
+;- Time Zero offset (microS) ---------------------------------------------------
+XYoff = [0,45]
+sTZO  = {size:  [sOG.size[0]+XYoff[0],$
+                 sOG.size[1]+XYoff[1]],$
+         value: '-> Time Zero Offset (microS)  _________'}
+XYoff = [250,0]
+sTZO_detector_value = {size:  [sTZO.size[0]+XYoff[0],$
+                               sTZO.size[1]+XYoff[1]],$
+                       value: 'Detector:'}
+XYoff = [65,-5]
+sTZO_detector_field = {size:  [sTZO_detector_value.size[0]+XYoff[0],$
+                               sTZO_detector_value.size[1]+XYoff[1],$
+                               70,30],$
+                       value: '',$
+                       uname: 'time_zero_offset_detector_uname'}
+XYoff = [80,0]
+sTZO_beam_value = {size:  [sTZO_detector_field.size[0]+XYoff[0],$
+                           sTZO_detector_value.size[1]+XYoff[1]],$
+                       value: '_______  Beam Monitor:'}
+XYoff = [140,0]
+sTZO_beam_field = {size:  [sTZO_beam_value.size[0]+XYoff[0],$
+                           sTZO_detector_field.size[1]+XYoff[1],$
+                           sTZO_detector_field.size[2:3]],$
+                   value: '',$
+                   uname: 'time_zero_offset_beam_monitor_uname'}
+
 ;= Build Widgets ===============================================================
 BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
                        UNAME     = sBaseTab2.uname,$
@@ -47,6 +96,71 @@ BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
                        SCR_XSIZE = sBaseTab2.size[2],$
                        SCR_YSIZE = sBaseTab2.size[3],$
                        TITLE     = sBaseTab2.title)
+
+;- Overwrite Geometry ----------------------------------------------------------
+label = WIDGET_LABEL(BaseTab2,$
+                     XOFFSET = sOG.size[0],$
+                     YOFFSET = sOG.size[1],$
+                     VALUE   = sOG.value,$
+                     /ALIGN_LEFT)
+
+group = CW_BGROUP(BaseTab2,$
+                  sOGgroup.list,$
+                  XOFFSET   = sOGgroup.size[0],$
+                  YOFFSET   = sOGgroup.size[1],$
+                  ROW       = 1,$
+                  SET_VALUE = 1,$
+                  UNAME     = sOGgroup.uname,$
+                  /EXCLUSIVE)
+
+base = WIDGET_BASE(BaseTab2,$
+                   XOFFSET   = sOGbase.size[0],$
+                   YOFFSET   = sOGBase.size[1],$
+                   SCR_XSIZE = sOGbase.size[2],$
+                   SCR_YSIZE = sOGbase.size[3],$
+                   UNAME     = sOGbase.uname)
+
+button = WIDGET_BUTTON(base,$
+                       XOFFSET   = sOGbutton.size[0],$
+                       YOFFSET   = sOGbutton.size[1],$
+                       SCR_XSIZE = sOGbutton.size[2],$
+                       SCR_YSIZE = sOGbutton.size[3],$
+                       VALUE     = sOGbutton.value,$
+                       UNAME     = sOGbutton.uname)
+
+;- Time Zero offset (microS) ---------------------------------------------------
+label = WIDGET_LABEL(BaseTab2,$
+                     XOFFSET = sTZO.size[0],$
+                     YOFFSET = sTZO.size[1],$
+                     VALUE   = sTZO.value)
+
+label = WIDGET_LABEL(BaseTab2,$
+                     XOFFSET = sTZO_detector_value.size[0],$
+                     YOFFSET = sTZO_detector_value.size[1],$
+                     VALUE   = sTZO_detector_value.value)
+
+text = WIDGET_TEXT(BaseTab2,$
+                   XOFFSET   = sTZO_detector_field.size[0],$
+                   YOFFSET   = sTZO_detector_field.size[1],$
+                   SCR_XSIZE = sTZO_detector_field.size[2],$
+                   SCR_YSIZE = sTZO_detector_field.size[3],$
+                   VALUE     = sTZO_detector_field.value,$
+                   UNAME     = sTZO_detector_field.uname,$
+                   /EDITABLE)
+
+label = WIDGET_LABEL(BaseTab2,$
+                     XOFFSET = sTZO_beam_value.size[0],$
+                     YOFFSET = sTZO_beam_value.size[1],$
+                     VALUE   = sTZO_beam_value.value)
+
+text = WIDGET_TEXT(BaseTab2,$
+                   XOFFSET   = sTZO_beam_field.size[0],$
+                   YOFFSET   = sTZO_beam_field.size[1],$
+                   SCR_XSIZE = sTZO_beam_field.size[2],$
+                   SCR_YSIZE = sTZO_beam_field.size[3],$
+                   VALUE     = sTZO_beam_field.value,$
+                   UNAME     = sTZO_beam_field.uname,$
+                   /EDITABLE)
 
 
 
