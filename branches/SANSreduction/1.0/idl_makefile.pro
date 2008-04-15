@@ -13,6 +13,7 @@ cd, CurrentFolder + '/SANSreductionGUI/'
 .run IDLloadNexus__define.pro
 .run make_gui_main_tab.pro
 .run make_gui_tab1.pro
+.run make_gui_reduce_tab.pro
 .run make_gui_log_book.pro
 
 ;Build all procedures

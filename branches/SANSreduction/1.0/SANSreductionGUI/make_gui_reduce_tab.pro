@@ -32,37 +32,25 @@
 ;
 ;===============================================================================
 
-PRO make_gui_main_tab, MAIN_BASE, MainBaseSize
+PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
 
-;define widget variables
-;[xoffset, yoffset, scr_xsize, scr_ysize]
-sMainTabSize = {size : [0,0,MainBaseSize[2],MainBaseSize[3]],$
-                uname : 'main_tab'}
+;- base ------------------------------------------------------------------------
+sReduceBase = { size  : MainTabSize,$
+                title : TabTitles.reduce,$
+                uname : 'base_reduce'}
 
-;Tab titles
-TabTitles = { tab1     : ' LOAD DATA ',$
-              log_book : ' LOG BOOK ',$
-              reduce   : ' REDUCE '}
+;===============================================================================
+;= BUILD GUI ===================================================================
+;===============================================================================
 
-;build widgets
-MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
-                      UNAME     = sMainTabSize.uname,$
-                      LOCATION  = 0,$
-                      XOFFSET   = sMainTabSize.size[0],$
-                      YOFFSET   = sMainTabSize.size[1],$
-                      SCR_XSIZE = sMainTabSize.size[2],$
-                      SCR_YSIZE = sMainTabSize.size[3],$
-                      SENSITIVE = 1,$
-                      /TRACKING_EVENTS)
+;- base ------------------------------------------------------------------------
+wReduceBase = WIDGET_BASE(MAIN_TAB,$
+                        UNAME     = sReduceBase.uname,$
+                        XOFFSET   = sReduceBase.size[0],$
+                        YOFFSET   = sReduceBase.size[1],$
+                        SCR_XSIZE = sReduceBase.size[2],$
+                        SCR_YSIZE = sReduceBase.size[3],$
+                        TITLE     = sReduceBase.title)
 
-;Build Load Data Tab
-make_gui_tab1, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;Build REDUCE tab
-make_gui_reduce_tab, MAIN_TAB, sMainTabSize.size, TabTitles
-
-;Build LogBook
-make_gui_log_book, MAIN_TAB, sMainTabSize.size, TabTitles
 
 END
-
