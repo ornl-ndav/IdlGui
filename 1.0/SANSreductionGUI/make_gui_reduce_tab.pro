@@ -35,9 +35,15 @@
 PRO make_gui_reduce_tab, MAIN_TAB, MainTabSize, TabTitles
 
 ;- base ------------------------------------------------------------------------
-sReduceBase = { size  : MainTabSize,$
-                title : TabTitles.reduce,$
-                uname : 'base_reduce'}
+sReduceBase = { size:  MainTabSize,$
+                title: TabTitles.reduce,$
+                uname: 'base_reduce'}
+
+;- Tab titles ------------------------------------------------------------------
+sReduceTab = { size:   sReduceBase.size,$
+               uname:  'reduce_tab',$
+               title:  {tab1: ' LOAD FILES ',$
+                        tab2: ' PARAMETERS '}}
 
 ;===============================================================================
 ;= BUILD GUI ===================================================================
@@ -52,5 +58,21 @@ wReduceBase = WIDGET_BASE(MAIN_TAB,$
                         SCR_YSIZE = sReduceBase.size[3],$
                         TITLE     = sReduceBase.title)
 
+;- Reduce Tabs -----------------------------------------------------------------
+REDUCE_TAB = WIDGET_TAB(wReduceBase,$
+                        UNAME     = sReduceTab.uname,$
+                        LOCATION  = 0,$
+                        XOFFSET   = sReduceTab.size[0],$
+                        YOFFSET   = sReduceTab.size[1],$
+                        SCR_XSIZE = sReduceTab.size[2],$
+                        SCR_YSIZE = sReduceTab.size[3],$
+                        SENSITIVE = 1,$
+                        /TRACKING_EVENTS)
+
+;- Build LOAD FILES tab (tab #1) -----------------------------------------------
+make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
+
+;- Build PARAMETERS tab (tab #2) -----------------------------------------------
+make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
 
 END
