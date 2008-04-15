@@ -32,6 +32,52 @@
 ;
 ;===============================================================================
 
+PRO retrieveNexus, Event, FullNexusName
+
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+
+;retrieve infos
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+
+;display name of nexus file name
+help, FullNexusName
+putTab1NexusFileName, Event, FullNexusName
+message = '-> Full NeXus File Name: ' + FullNexusName
+IDLsendToGeek_addLogBookText, Event, message
+message = '-> Retrieving Data : ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, message
+;retrieving data from NeXus file
+retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
+IF (retrieveStatus EQ 0) THEN BEGIN
+    IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
+ENDIF ELSE BEGIN
+    sz_array = size(DataArray)
+    Ntof     = (sz_array)(1)
+    Y        = (sz_array)(2)
+    X        = (sz_array)(3)
+    IDLsendToGeek_addLogBookText, Event, '--> X    : ' + $
+      STRCOMPRESS(X,/REMOVE_ALL)
+    IDLsendToGeek_addLogBookText, Event, '--> Y    : ' + $
+      STRCOMPRESS(Y,/REMOVE_ALL)
+    IDLsendToGeek_addLogBookText, Event, '--> Ntof : ' + $
+      STRCOMPRESS(Ntof,/REMOVE_ALL)
+;plotting data
+    message = '-> Plotting NeXus  : ' + PROCESSING
+    IDLsendToGeek_addLogBookText, Event, message
+    plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
+    IF (plotDataResult EQ 0) THEN BEGIN ;failed
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+    ENDELSE
+ENDELSE
+END
+
+
 ;This function browse a nexus file
 PRO browse_nexus, Event
 
@@ -58,39 +104,10 @@ FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
                                 path)
 
 IF (FullNexusName NE '') THEN BEGIN
-;display name of nexus file name
-    putTab1NexusFileName, Event, FullNexusName
 ;change default path
     (*global).nexus_path = path
-    message = '-> Full NeXus File Name: ' + FullNexusName
-    IDLsendToGeek_addLogBookText, Event, message
-    message = '-> Retrieving Data : ' + PROCESSING
-    IDLsendToGeek_addLogBookText, Event, message
-;retrieving data from NeXus file
-    retrieveStatus = retrieveData(Event, FullNexusName, DataArray) ;_plot
-    IF (retrieveStatus EQ 0) THEN BEGIN
-        IDLsendToGeek_addLogBookText, Event, '-> Plotting the NeXus file FAILED'
-    ENDIF ELSE BEGIN
-        sz_array = size(DataArray)
-        Ntof     = (sz_array)(1)
-        Y        = (sz_array)(2)
-        X        = (sz_array)(3)
-        IDLsendToGeek_addLogBookText, Event, '--> X    : ' + $
-          STRCOMPRESS(X,/REMOVE_ALL)
-        IDLsendToGeek_addLogBookText, Event, '--> Y    : ' + $
-          STRCOMPRESS(Y,/REMOVE_ALL)
-        IDLsendToGeek_addLogBookText, Event, '--> Ntof : ' + $
-          STRCOMPRESS(Ntof,/REMOVE_ALL)
-;plotting data
-        message = '-> Plotting NeXus  : ' + PROCESSING
-        IDLsendToGeek_addLogBookText, Event, message
-        plotDataResult = plotData(Event, DataArray, X, Y) ;_plot
-        IF (plotDataResult EQ 0) THEN BEGIN ;failed
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
-        ENDIF ELSE BEGIN
-            IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-        ENDELSE
-    ENDELSE
+    print, FullNexusName
+    retrieveNexus, Event, FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
@@ -115,26 +132,26 @@ title      = (*global).nexus_title
 path       = (*global).nexus_path
 
 RunNumber = getRunNumber(Event)
-
 IF (RunNumber NE 0) THEN BEGIN
     IDLsendToGeek_putLogBookText, Event, '> Looking for Run Number ' + $
-    STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' ... ' + PROCESSING
-
+    STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
+    
     isNexusExist = 0
     full_nexus_name = find_full_nexus_name(Event,$
                                            RunNumber,$
                                            'SANS',$
                                            isNexusExist)
-    IF (isNexusExist EQ 1 AND $
-        full_nexus_name NE '') THEN BEGIN ;success
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
-        message = '-> NeXus File Name : ' + full_nexus_name
+    IF (isNexusExist EQ 1 AND $ 
+        full_nexus_name[0] NE '') THEN BEGIN ;success
+        message = '-> NeXus File Name : ' + full_nexus_name[0]
         IDLsendToGeek_addLogBookText, Event, message
-    ENDIF ELSE BEGIN
-        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+;retrieve data
+        retrieveNeXus, Event, full_nexus_name[0]
+    ENDIF ELSE BEGIN ;failed
+        message = '-> NeXus has not been found'
+        IDLsendToGeek_addLogBookText, Event, message
     ENDELSE
 ENDIF
-
 END
 
 
