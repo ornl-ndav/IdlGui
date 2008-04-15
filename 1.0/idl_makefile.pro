@@ -4,6 +4,7 @@ spawn, 'pwd', CurrentFolder
 IdlUtilitiesPath = CurrentFolder + '/utilities'
 cd, IdlUtilitiesPath
 .run system_utilities.pro
+.run nexus_utilities.pro
 
 ;Makefile that automatically compile the necessary modules
 ;and create the VM file.
@@ -25,6 +26,7 @@ cd, CurrentFolder
 
 ;utils functions
 .run sans_reduction_put.pro
+.run sans_reduction_get.pro
 .run IDLsendToGeek__define.pro
 .run IDLgetNexusData__define.pro
 .run sans_reduction_plot.pro

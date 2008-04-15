@@ -100,6 +100,50 @@ ENDELSE
 END
 
 ;===============================================================================
+PRO load_run_number, Event    
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+
+;retrieve infos
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
+extension  = (*global).nexus_extension
+filter     = (*global).nexus_filter
+title      = (*global).nexus_title
+path       = (*global).nexus_path
+
+RunNumber = getRunNumber(Event)
+
+IF (RunNumber NE 0) THEN BEGIN
+    IDLsendToGeek_putLogBookText, Event, '> Looking for Run Number ' + $
+    STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' ... ' + PROCESSING
+
+    isNexusExist = 0
+    full_nexus_name = find_full_nexus_name(Event,$
+                                           RunNumber,$
+                                           'SANS',$
+                                           isNexusExist)
+    IF (isNexusExist EQ 1 AND $
+        full_nexus_name NE '') THEN BEGIN ;success
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+        message = '-> NeXus File Name : ' + full_nexus_name
+        IDLsendToGeek_addLogBookText, Event, message
+    ENDIF ELSE BEGIN
+        IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED
+    ENDELSE
+ENDIF
+
+END
+
+
+
+
+
+
+
+;===============================================================================
 PRO MAIN_REALIZE, wWidget
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
