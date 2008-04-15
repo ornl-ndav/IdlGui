@@ -102,7 +102,7 @@ global = PTR_NEW ({version:         VERSION,$
                                             '--dump-bmon-wave'},$
                                 bmon_effc: {title: $
                                             'Beam Monitor in Wavelenght' + $
-                                            ' after efficiency correction',$
+                                            ' after Efficiency correction',$
                                             flag: $
                                             '--dump-bmon-effc'},$
                                 bmnon_wave: {title: $
@@ -179,9 +179,9 @@ IF (DEBUGGING EQ 'yes' AND $
 ;show tab #2 'REDUCE'
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
-;show tab #2 'PARAMETERS'
+;show tab #3 'Intermediate plots'
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
 
 ENDIF
 
