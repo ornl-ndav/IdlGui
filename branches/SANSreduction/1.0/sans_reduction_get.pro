@@ -32,33 +32,14 @@
 ;
 ;===============================================================================
 
-PRO MAIN_BASE_event, Event
- 
-;get global structure
-id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
-WIDGET_CONTROL, id, GET_UVALUE=global
+FUNCTION getTextFieldValue, Event, uname
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, GET_VALUE=value
+RETURN, value
+END
 
-wWidget = Event.top            ;widget id
-
-CASE Event.id OF
-    
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
-    END
-    
-;= TAB1 (LOAD DATA) ============================================================
-
-;- Run Number cw_field ---------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='run_number_cw_field'): BEGIN
-        load_run_number, Event     ;_eventcb
-    END
-
-;- Browse Button ---------------------------------------------------------------
-    WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
-        browse_nexus, Event ;_eventcb
-    END
-    
-    ELSE:
-    
-ENDCASE
-
+;-------------------------------------------------------------------------------
+;This function retrieves the run number of the First tab
+FUNCTION getRunNumber, Event
+RETURN, getTextFieldValue(Event,'run_number_cw_field')
 END
