@@ -32,7 +32,7 @@
 ;
 ;===============================================================================
 
-FUNCTION PlotData, Event, FullNexusName
+FUNCTION retrieveData, Event, FullNexusName, DataArray
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
@@ -42,7 +42,6 @@ PROCESSING = (*global).processing
 OK         = (*global).ok
 FAILED     = (*global).failed
     
-message    = '--> Retrieving Data ... ' + PROCESSING
 retrieve_error = 0
 CATCH, retrieve_error
 IF (retrieve_error NE 0) THEN BEGIN
@@ -54,9 +53,39 @@ ENDIF ELSE BEGIN
                          FullNexusName,$
                          NbrBank = 1,$
                          BankData = 'bank1')
-    DataArray = sInstance->getData()
+    DataArray = *(sInstance->getData())
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 RETURN,1
 END
 
+;-------------------------------------------------------------------------------
+;This function takes the histogram data from the NeXus file and plot it
+FUNCTION plotData, Event, DataArray, X, Y
+plotStatus = 1 ;by default, plot did work
+plot_error = 0
+CATCH, plot_error
+IF (plot_error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+    RETURN, 0
+ENDIF ELSE BEGIN
+;Integrate over TOF
+    dataXY   = TOTAL(DataArray,1)
+    tDataXY  = TRANSPOSE(dataXY)
+;Check if rebin is necessary or not
+    IF (X EQ 80) THEN BEGIN
+        xysize = 4
+    ENDIF ELSE BEGIN
+        xysize = 1
+    ENDELSE
+    rtDataXY = REBIN(tDataXY, xysize*X, xysize*Y, /SAMPLE)
+;plot data
+    DEVICE, DECOMPOSED = 0
+    LOADCT,5
+    id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+    WIDGET_CONTROL, id, GET_VALUE = id_value
+    WSET, id_value
+    TVSCL, rtDataXY, /DEVICE
+    RETURN, plotStatus
+ENDELSE
+END
