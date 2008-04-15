@@ -88,6 +88,72 @@ sTZO_beam_field = {size:  [sTZO_beam_value.size[0]+XYoff[0],$
                    value: '',$
                    uname: 'time_zero_offset_beam_monitor_uname'}
 
+;- Monitor Efficiency ---------------------------------------------------------
+XYoff = [6,40]
+sMEgroup = { size:  [XYoff[0],$
+                     sTZO_detector_value.size[1]+XYoff[1]],$
+             list:  ['ON','OFF'],$
+             value: 1.0,$
+             uname: 'monitor_efficiency_group',$
+             title: '-> Monitor Efficiency '}
+
+;- Q ---------------------------------------------------------------------------
+XYoff = [5,50]
+sQFrame = { size:  [XYoff[0],$
+                    sMEgroup.size[1]+XYoff[1],$
+                    tab_size[2]-20,$
+                    45],$
+            frame: 2}
+XYoff = [20,-8]
+sQTitle = { size:  [sQFrame.size[0]+XYoff[0],$
+                    sQFrame.size[1]+XYoff[1]],$
+            value: 'Q range'}
+;Qmin
+QXoff = 30
+XYoff = [QXoff,15]
+sQminLabel = { size:  [sQFrame.size[0]+XYoff[0],$
+                       sQFrame.size[1]+XYoff[1]],$
+               value: 'Min:'}
+XYoff = [30,-5]
+sQminText = {  size:  [sQminLabel.size[0]+XYoff[0],$
+                       sQminLabel.size[1]+XYoff[1],$
+                       70,30],$
+               value: '',$
+               uname: 'qmin_text_field'}
+
+;Qmax
+XYoff = [QXoff+5,0]
+sQmaxLabel = { size:  [sQminText.size[0]+sQminText.size[2]+XYoff[0],$
+                       sQminLabel.size[1]+XYoff[1]],$
+               value: 'Max:'}
+XYoff = [30,0]
+sQmaxText = {  size:  [sQmaxLabel.size[0]+XYoff[0],$
+                       sQminText.size[1]+XYoff[1],$
+                       sQminText.size[2:3]],$
+               value: '',$
+               uname: 'qmax_text_field'}
+
+;Qwidth
+XYoff = [Qxoff+5,0]
+sQwidthLabel = { size:  [sQmaxText.size[0]+sQminText.size[2]+XYoff[0],$
+                         sQminLabel.size[1]+XYoff[1]],$
+               value: 'Width:'}
+XYoff = [45,0]
+sQwidthText = {  size:  [sQwidthLabel.size[0]+XYoff[0],$
+                         sQminText.size[1]+XYoff[1],$
+                         sQminText.size[2:3]],$
+                 value: '',$
+               uname: 'qwidth_text_field'}
+
+;Q scale
+XYoff = [Qxoff+5,0]
+sQscaleGroup = { size:  [sQwidthText.size[0]+sQwidthText.size[2]+XYoff[0],$
+                         sQwidthText.size[1]+XYoff[1]],$
+                 list:  ['Linear','Logarithmic'],$
+                 value: 1.0,$
+                 uname: 'q_scale_group'}
+
+;===============================================================================
 ;= Build Widgets ===============================================================
 BaseTab2 = WIDGET_BASE(REDUCE_TAB,$
                        UNAME     = sBaseTab2.uname,$
@@ -162,7 +228,86 @@ text = WIDGET_TEXT(BaseTab2,$
                    UNAME     = sTZO_beam_field.uname,$
                    /EDITABLE)
 
+;- Monitor Efficiency ---------------------------------------------------------
+group = CW_BGROUP(BaseTab2,$
+                  sMEgroup.list,$
+                  XOFFSET    = sMEgroup.size[0],$
+                  YOFFSET    = sMEgroup.size[1],$
+                  ROW        = 1,$
+                  SET_VALUE  = sMEgroup.value,$
+                  UNAME      = sMEgroup.uname,$
+                  LABEL_LEFT = sMEgroup.title,$
+                  /EXCLUSIVE)
 
+;- Q ---------------------------------------------------------------------------
+wQTitle = WIDGET_LABEL(BaseTab2,$
+                       XOFFSET = sQTitle.size[0],$
+                       YOFFSET = sQTitle.size[1],$
+                       VALUE   = sQTitle.value)
+;Qmin
+wQminLabel = WIDGET_LABEL(BaseTab2,$
+                          XOFFSET = sQminLabel.size[0],$
+                          YOFFSET = sQminLabel.size[1],$
+                          VALUE   = sQminLabel.value)
 
+wQminText = WIDGET_TEXT(BaseTab2,$
+                        XOFFSET   = sQminText.size[0],$
+                        YOFFSET   = sQminText.size[1],$
+                        SCR_XSIZE = sQminText.size[2],$
+                        SCR_YSIZE = sQminText.size[3],$
+                        VALUE     = sQminText.value,$
+                        UNAME     = sQminText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
 
+;Qmax
+wQmaxLabel = WIDGET_LABEL(BaseTab2,$
+                          XOFFSET = sQmaxLabel.size[0],$
+                          YOFFSET = sQmaxLabel.size[1],$
+                          VALUE   = sQmaxLabel.value)
+
+wQmaxText = WIDGET_TEXT(BaseTab2,$
+                        XOFFSET   = sQmaxText.size[0],$
+                        YOFFSET   = sQmaxText.size[1],$
+                        SCR_XSIZE = sQmaxText.size[2],$
+                        SCR_YSIZE = sQmaxText.size[3],$
+                        VALUE     = sQmaxText.value,$
+                        UNAME     = sQmaxText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Qwidth
+wQwidthLabel = WIDGET_LABEL(BaseTab2,$
+                          XOFFSET = sQwidthLabel.size[0],$
+                          YOFFSET = sQwidthLabel.size[1],$
+                          VALUE   = sQwidthLabel.value)
+
+wQwidthText = WIDGET_TEXT(BaseTab2,$
+                        XOFFSET   = sQwidthText.size[0],$
+                        YOFFSET   = sQwidthText.size[1],$
+                        SCR_XSIZE = sQwidthText.size[2],$
+                        SCR_YSIZE = sQwidthText.size[3],$
+                        VALUE     = sQwidthText.value,$
+                        UNAME     = sQwidthText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Q scale
+wQscaleGroup =  CW_BGROUP(BaseTab2,$
+                          sQscaleGroup.list,$
+                          XOFFSET    = sQscaleGroup.size[0],$
+                          YOFFSET    = sQscaleGroup.size[1],$
+                          ROW        = 1,$
+                          SET_VALUE  = sQscaleGroup.value,$
+                          UNAME      = sQscaleGroup.uname,$
+                          /EXCLUSIVE)
+
+;Q frame
+wQFrame = WIDGET_LABEL(BaseTab2,$
+                       XOFFSET   = sQFrame.size[0],$
+                       YOFFSET   = sQFrame.size[1],$
+                       SCR_XSIZE = sQFrame.size[2],$
+                       SCR_YSIZE = sQFrame.size[3],$
+                       VALUE     = '',$
+                       FRAME     = sQFrame.frame)
 END
