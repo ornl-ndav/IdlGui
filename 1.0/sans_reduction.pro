@@ -63,7 +63,7 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_title:     'Browse NeXus File',$
                    nexus_path:      '/SNS/',$
                    ReducePara: {driver_name: $
-                                'new_driver_name_here',$
+                                'sas_reduction1',$
                                 overwrite_geo: $
                                 '--inst-geom',$
                                 detect_time_offset: $
