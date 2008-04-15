@@ -54,7 +54,7 @@ sInterPlot = { size:  [XYoff[0],$
                uname : 'intermediate_group_uname',$
                value : [0,0,0,0,0]}
 
-;- inter#2 hidding base
+;- inter#2 hidding base --------------------------------------------------------
 XYoff = [5,43]
 sInter2HiddingBase = { size:  [XYoff[0],$
                                XYoff[1],$
@@ -69,6 +69,73 @@ NotAvailableMessage = ' is NOT AVAILABLE !'
 sInter2HiddingLabel = { size:  [XYoff[0],$
                                 XYoff[1]],$
                         value: sInterPlot.list[1]+NotAvailableMessage}
+
+;- Base of --dump-wave-bmmom about lambda --------------------------------------
+XYoff = [0,150]
+sBaseLambda = { size:  [XYoff[0],$
+                        XYoff[1],$
+                        tab_size[2],$
+                        60],$
+                uname: 'lambda_base'}
+
+
+XYoff = [5,10]
+sLambdaFrame = { size:  [XYoff[0],$
+                         XYoff[1],$
+                         tab_size[2]-20,$
+                         45],$
+                 frame: 2}
+XYoff = [20,-8]
+sLambdaTitle = { size:  [sLambdaFrame.size[0]+XYoff[0],$
+                         sLambdaFrame.size[1]+XYoff[1]],$
+                 value: 'Lambda'}
+;Lambda min
+LambdaXoff = 30
+XYoff = [LambdaXoff,15]
+sLambdaminLabel = { size:  [sLambdaFrame.size[0]+XYoff[0],$
+                            sLambdaFrame.size[1]+XYoff[1]],$
+                    value: 'Min:'}
+XYoff = [30,-5]
+sLambdaminText = {  size:  [sLambdaminLabel.size[0]+XYoff[0],$
+                            sLambdaminLabel.size[1]+XYoff[1],$
+                            70,30],$
+                    value: '',$
+                    uname: 'lambda_min_text_field'}
+
+;Lambdamax
+XYoff = [LambdaXoff+5,0]
+sLambdamaxLabel = { size:  [sLambdaminText.size[0]+ $
+                            sLambdaminText.size[2]+XYoff[0],$
+                            sLambdaminLabel.size[1]+XYoff[1]],$
+                    value: 'Max:'}
+XYoff = [30,0]
+sLambdamaxText = {  size:  [sLambdamaxLabel.size[0]+XYoff[0],$
+                            sLambdaminText.size[1]+XYoff[1],$
+                            sLambdaminText.size[2:3]],$
+                    value: '',$
+                    uname: 'lambda_max_text_field'}
+
+;Lambdawidth
+XYoff = [Lambdaxoff+5,0]
+sLambdawidthLabel = { size:  [sLambdamaxText.size[0]+ $
+                              sLambdaminText.size[2]+XYoff[0],$
+                              sLambdaminLabel.size[1]+XYoff[1]],$
+                      value: 'Width:'}
+XYoff = [45,0]
+sLambdawidthText = {  size:  [sLambdawidthLabel.size[0]+XYoff[0],$
+                              sLambdaminText.size[1]+XYoff[1],$
+                              sLambdaminText.size[2:3]],$
+                      value: '',$
+                      uname: 'lambda_width_text_field'}
+
+;Lambda scale
+XYoff = [Lambdaxoff+5,0]
+sLambdascaleGroup = { size:  [sLambdawidthText.size[0]+ $
+                              sLambdawidthText.size[2]+XYoff[0],$
+                              sLambdawidthText.size[1]+XYoff[1]],$
+                      list:  ['Linear','Logarithmic'],$
+                      value: 1.0,$
+                      uname: 'lambda_scale_group'}
 
 ;===============================================================================
 ;= Build Widgets ===============================================================
@@ -103,5 +170,85 @@ InterGroup = CW_BGROUP(BaseTab3,$
                        UNAME     = sInterPlot.uname,$
                        SET_VALUE = sInterPlot.value,$
                        /NONEXCLUSIVE)
+
+;- Base of --dump-wave-bmmon about lambda --------------------------------------
+LambdaBase = WIDGET_BASE(BaseTab3,$
+                         XOFFSET   = sBaseLambda.size[0],$
+                         YOFFSET   = sBaseLambda.size[1],$
+                         SCR_XSIZE = sBaseLambda.size[2],$
+                         SCR_YSIZE = sBaseLambda.size[3],$
+                         UNAME     = sBaseLambda.uname)
+
+wQTitle = WIDGET_LABEL(LambdaBase,$
+                       XOFFSET = sLambdaTitle.size[0],$
+                       YOFFSET = sLambdaTitle.size[1],$
+                       VALUE   = sLambdaTitle.value)
+;Lambdamin
+wLambdaminLabel = WIDGET_LABEL(LambdaBase,$
+                          XOFFSET = sLambdaminLabel.size[0],$
+                          YOFFSET = sLambdaminLabel.size[1],$
+                          VALUE   = sLambdaminLabel.value)
+
+wLambdaminText = WIDGET_TEXT(LambdaBase,$
+                        XOFFSET   = sLambdaminText.size[0],$
+                        YOFFSET   = sLambdaminText.size[1],$
+                        SCR_XSIZE = sLambdaminText.size[2],$
+                        SCR_YSIZE = sLambdaminText.size[3],$
+                        VALUE     = sLambdaminText.value,$
+                        UNAME     = sLambdaminText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Lambdamax
+wLambdamaxLabel = WIDGET_LABEL(LambdaBase,$
+                          XOFFSET = sLambdamaxLabel.size[0],$
+                          YOFFSET = sLambdamaxLabel.size[1],$
+                          VALUE   = sLambdamaxLabel.value)
+
+wLambdamaxText = WIDGET_TEXT(LambdaBase,$
+                        XOFFSET   = sLambdamaxText.size[0],$
+                        YOFFSET   = sLambdamaxText.size[1],$
+                        SCR_XSIZE = sLambdamaxText.size[2],$
+                        SCR_YSIZE = sLambdamaxText.size[3],$
+                        VALUE     = sLambdamaxText.value,$
+                        UNAME     = sLambdamaxText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Lambdawidth
+wLambdawidthLabel = WIDGET_LABEL(LambdaBase,$
+                          XOFFSET = sLambdawidthLabel.size[0],$
+                          YOFFSET = sLambdawidthLabel.size[1],$
+                          VALUE   = sLambdawidthLabel.value)
+
+wLambdawidthText = WIDGET_TEXT(LambdaBase,$
+                        XOFFSET   = sLambdawidthText.size[0],$
+                        YOFFSET   = sLambdawidthText.size[1],$
+                        SCR_XSIZE = sLambdawidthText.size[2],$
+                        SCR_YSIZE = sLambdawidthText.size[3],$
+                        VALUE     = sLambdawidthText.value,$
+                        UNAME     = sLambdawidthText.uname,$
+                        /EDITABLE,$
+                        /ALIGN_LEFT)
+
+;Lambda scale
+wLambdascaleGroup =  CW_BGROUP(LambdaBase,$
+                          sLambdascaleGroup.list,$
+                          XOFFSET    = sLambdascaleGroup.size[0],$
+                          YOFFSET    = sLambdascaleGroup.size[1],$
+                          ROW        = 1,$
+                          SET_VALUE  = sLambdascaleGroup.value,$
+                          UNAME      = sLambdascaleGroup.uname,$
+                          /EXCLUSIVE)
+
+;Lambda frame
+wLambdaFrame = WIDGET_LABEL(LambdaBase,$
+                            XOFFSET   = sLambdaFrame.size[0],$
+                            YOFFSET   = sLambdaFrame.size[1],$
+                            SCR_XSIZE = sLambdaFrame.size[2],$
+                            SCR_YSIZE = sLambdaFrame.size[3],$
+                            VALUE     = '',$
+                            FRAME     = sLambdaFrame.frame)
+
 
 END
