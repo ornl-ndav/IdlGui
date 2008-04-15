@@ -40,10 +40,23 @@ sReduceBase = { size:  MainTabSize,$
                 uname: 'base_reduce'}
 
 ;- Tab titles ------------------------------------------------------------------
-sReduceTab = { size:   sReduceBase.size,$
+sReduceTab = { size:   [sReduceBase.size[0:2],$
+                        sReduceBase.size[3]-160],$
                uname:  'reduce_tab',$
                title:  {tab1: ' LOAD FILES ',$
                         tab2: ' PARAMETERS '}}
+
+;- Command Line status ---------------------------------------------------------
+XYoff = [2,30]
+sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
+                         sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
+                         sReduceTab.size[2]-10,$
+                         100],$
+                 uname: 'comamnd_line_preview'}
+XYoff = [5,-18]
+sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
+                              sCommandLine.size[1]+XYoff[1]],$
+                      value: 'Command Line Status:' }
 
 ;===============================================================================
 ;= BUILD GUI ===================================================================
@@ -51,12 +64,12 @@ sReduceTab = { size:   sReduceBase.size,$
 
 ;- base ------------------------------------------------------------------------
 wReduceBase = WIDGET_BASE(MAIN_TAB,$
-                        UNAME     = sReduceBase.uname,$
-                        XOFFSET   = sReduceBase.size[0],$
-                        YOFFSET   = sReduceBase.size[1],$
-                        SCR_XSIZE = sReduceBase.size[2],$
-                        SCR_YSIZE = sReduceBase.size[3],$
-                        TITLE     = sReduceBase.title)
+                          UNAME     = sReduceBase.uname,$
+                          XOFFSET   = sReduceBase.size[0],$
+                          YOFFSET   = sReduceBase.size[1],$
+                          SCR_XSIZE = sReduceBase.size[2],$
+                          SCR_YSIZE = sReduceBase.size[3],$
+                          TITLE     = sReduceBase.title)
 
 ;- Reduce Tabs -----------------------------------------------------------------
 REDUCE_TAB = WIDGET_TAB(wReduceBase,$
@@ -74,5 +87,22 @@ make_gui_reduce_tab1, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab1
 
 ;- Build PARAMETERS tab (tab #2) -----------------------------------------------
 make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
+
+;- Command Line status ---------------------------------------------------------
+wCommandLine = WIDGET_TEXT(wReduceBase,$
+                           XOFFSET   = sCommandLine.size[0],$
+                           YOFFSET   = sCommandLine.size[1],$
+                           SCR_XSIZE = sCommandLine.size[2],$
+                           SCR_YSIZE = sCommandLine.size[3],$
+                           UNAME     = sCommandLine.uname,$
+                           /WRAP,$
+                           /SCROLL)
+
+wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
+                                 XOFFSET = sCommandLineLabel.size[0],$
+                                 YOFFSET = sCommandLineLabel.size[1],$
+                                 VALUE   = sCommandLineLabel.value)
+
+
 
 END

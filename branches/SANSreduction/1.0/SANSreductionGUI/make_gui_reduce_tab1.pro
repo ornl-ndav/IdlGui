@@ -43,14 +43,14 @@ sBaseTab1 = { size:  tab_size,$
 sDataFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   main_base_uname: 'data_base_uname',$
                   xoff:            0,$
-                  yoff:            15,$
+                  yoff:            5,$
                   frame_title:     'Data File',$
                   label_1:         'Run Number:',$
                   tf1_uname:       'data_run_number_cw_field',$
                   browse_uname:    'data_browse_button',$
                   file_name_uname: 'data_file_name_text_field'}
 
-yoff = 95
+yoff = 70
 ;- Solvant Buffer Only ---------------------------------------------------------
 sSolvantFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      main_base_uname: 'solvant_base_uname',$
