@@ -63,7 +63,7 @@ sGobutton = { size:      [XYoff[0],$
                           240,30],$
               uname:     'go_data_reduction_button',$
               value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
-              sensitive: 1}
+              sensitive: 0}
 
 ;- Command Line status ---------------------------------------------------------
 XYoff = [2,30]
