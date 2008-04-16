@@ -89,6 +89,14 @@ IF (file_run NE '' AND $
     cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
+;- PARAMETERS  -----------------------------------------------------------------
+
+value_OF_group = getCWBgroupValue(Event, 'overwrite_geometry_group')
+
+
+
+
+
 ;- Put cmd in the text box -
 putCommandLine, Event, cmd
 
