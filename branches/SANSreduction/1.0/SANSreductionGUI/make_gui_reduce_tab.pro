@@ -69,7 +69,7 @@ sGobutton = { size:      [XYoff[0],$
 XYoff = [2,30]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                         sReduceTab.size[2]-10,$
+                         450,$
                          100],$
                  uname: 'comamnd_line_preview'}
 XYoff = [5,-18]
@@ -77,6 +77,14 @@ sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
                               sCommandLine.size[1]+XYoff[1]],$
                       value: 'Command Line Status' }
 
+;- DR gui status ---------------------------------------------------------------
+XYoff = [5,0]
+sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
+                         sCommandLine.size[1]+XYoff[1],$
+                         230,$
+                         sCommandLine.size[3]],$
+                 uname: 'data_reduction_gui_status'}
+                 
 ;===============================================================================
 ;= BUILD GUI ===================================================================
 ;===============================================================================
@@ -146,6 +154,14 @@ wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
                                  YOFFSET = sCommandLineLabel.size[1],$
                                  VALUE   = sCommandLineLabel.value)
 
-
+;- DR gui status ---------------------------------------------------------------
+wDRguiStatus = WIDGET_TEXT(wReduceBase,$
+                           UNAME     = sDRguiStatus.uname,$
+                           XOFFSET   = sDRguiStatus.size[0],$
+                           YOFFSET   = sDRguiStatus.size[1],$
+                           SCR_XSIZE = sDRguiStatus.size[2],$
+                           SCR_YSIZE = sDRguiStatus.size[3],$
+                           /SCROLL,$
+                           /WRAP)
 
 END
