@@ -57,7 +57,7 @@ filter    = (*global).geo_filter
 path      = (*global).geo_path
 title     = 'Please select a new Geometry file'
 
-IDLsendToGeek_putLogBookText, Event, '> Selecting a new Geometry File :'
+IDLsendToGeek_addLogBookText, Event, '> Selecting a new Geometry File :'
 
 FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
                                 extension, $
@@ -72,8 +72,9 @@ IF (FullNexusName NE '') THEN BEGIN
 ;put the full name of the new geometry file in the browsing button
     putNewButtonValue, Event, 'overwrite_geometry_button', FullNexusName
 ;put name of geoemetry file in the log book
-    IDLsendToGeek_putLogBookText, Event, '-> New geometry file is : ' + $
+    IDLsendToGeek_addLogBookText, Event, '-> New geometry file is : ' + $
       FullNexusName
+    (*global).inst_geom = FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
     putTab1NexusFileName, Event, ''
