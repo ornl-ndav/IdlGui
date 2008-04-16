@@ -90,6 +90,8 @@ IF (file_run NE '' AND $
 ENDIF 
 
 ;- PARAMETERS  -----------------------------------------------------------------
+
+;-geometry file to overwrite
 IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
     cmd += ' --inst-geom='
     IF ((*global).inst_geom NE '') THEN BEGIN
@@ -99,10 +101,57 @@ IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
     ENDELSE
 ENDIF
 
+;-time offsets of detector and beam monitor
+detectorTO = getTextFieldValue(Event,'time_zero_offset_detector_uname')
+IF (detectorTO NE '') THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.detect_time_offset + '=' + detectorTO
+ENDIF
 
+beamTO = getTextFieldValue(Event,'time_zero_offset_beam_monitor_uname')
+IF (beamTO NE '') THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.monitor_time_offset + '=' + beamTO
+ENDIF
 
+;-monitor efficiency
+IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN
+    cmd += ' ' + (*global).ReducePara.monitor_efficiency.flag
+ENDIF
 
-
+;-Q min, max, width and unit
+Qmin   = getTextFieldValue(Event,'qmin_text_field')
+Qmax   = getTextFieldValue(Event,'qmax_text_field')
+Qwidth = getTextFieldValue(Event,'qwidth_text_field')
+Qunits = getCWBgroupValue(Event,'q_scale_group')
+cmd += ' ' + (*global).ReducePara.monitor_rebin + '='
+IF (Qmin NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Qmin,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    cmd += '?'
+    cmd_status = 0
+    missing_arguments_text = [missing_arguments_text, '- Q minimum']
+ENDELSE
+cmd += ','
+IF (Qmax NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Qmax,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    cmd += '?'
+    cmd_status = 0
+    missing_arguments_text = [missing_arguments_text, '- Q maximum']
+ENDELSE
+cmd += ','
+IF (Qwidth NE '') THEN BEGIN
+    cmd += STRCOMPRESS(Qwidth,/REMOVE_ALL)
+ENDIF ELSE BEGIN
+    cmd += '?'
+    cmd_status = 0
+    missing_arguments_text = [missing_arguments_text, '- Q width']
+ENDELSE
+cmd += ','
+IF (Qunits EQ 0) THEN BEGIN
+    cmd += 'linear'
+ENDIF ELSE BEGIN
+    cmd += 'log'
+ENDELSE
 
 ;- Put cmd in the text box -
 putCommandLine, Event, cmd

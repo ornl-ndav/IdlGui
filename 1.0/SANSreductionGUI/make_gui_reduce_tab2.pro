@@ -215,6 +215,7 @@ text = WIDGET_TEXT(BaseTab2,$
                    SCR_YSIZE = sTZO_detector_field.size[3],$
                    VALUE     = sTZO_detector_field.value,$
                    UNAME     = sTZO_detector_field.uname,$
+                   /ALL_EVENTS,$
                    /EDITABLE)
 
 label = WIDGET_LABEL(BaseTab2,$
@@ -229,6 +230,7 @@ text = WIDGET_TEXT(BaseTab2,$
                    SCR_YSIZE = sTZO_beam_field.size[3],$
                    VALUE     = sTZO_beam_field.value,$
                    UNAME     = sTZO_beam_field.uname,$
+                   /ALL_EVENTS,$
                    /EDITABLE)
 
 ;- Monitor Efficiency ---------------------------------------------------------
@@ -260,6 +262,7 @@ wQminText = WIDGET_TEXT(BaseTab2,$
                         SCR_YSIZE = sQminText.size[3],$
                         VALUE     = sQminText.value,$
                         UNAME     = sQminText.uname,$
+                        /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
@@ -276,6 +279,7 @@ wQmaxText = WIDGET_TEXT(BaseTab2,$
                         SCR_YSIZE = sQmaxText.size[3],$
                         VALUE     = sQmaxText.value,$
                         UNAME     = sQmaxText.uname,$
+                        /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
@@ -292,6 +296,7 @@ wQwidthText = WIDGET_TEXT(BaseTab2,$
                         SCR_YSIZE = sQwidthText.size[3],$
                         VALUE     = sQwidthText.value,$
                         UNAME     = sQwidthText.uname,$
+                        /ALL_EVENTS,$
                         /EDITABLE,$
                         /ALIGN_LEFT)
 
