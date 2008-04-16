@@ -56,7 +56,77 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='browse_nexus_button'): BEGIN
         browse_nexus, Event ;_eventcb
     END
+
+;= TAB2 (REDUCE) ===============================================================
+
+;==== tab1 (LOAD FILES) ========================================================
+
+;----Data File -----------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'data_run_number_cw_field', $
+          'data_file_name_text_field'
+    END
     
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'data_browse_button',$
+          'data_file_name_text_field'
+    END
+    
+
+;----Solvant Buffer Only File --------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'solvant_run_number_cw_field',$
+          'solvant_file_name_text_field'
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'solvant_browse_button',$
+          'solvant_file_name_text_field'
+    END
+
+;----Empty Can  ----------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'empty_run_number_cw_field',$
+          'empty_file_name_text_field'
+    END
+    
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'empty_browse_button',$
+          'empty_file_name_text_field'
+    END
+
+;----Open Beam  ----------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='open_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'open_run_number_cw_field',$
+          'open_file_name_text_field'
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='open_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'open_browse_button',$
+          'open_file_name_text_field'
+    END
+
+;----Dark Current  -------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_run_number_cw_field'): BEGIN
+        LoadNeXus, Event, $
+          'dark_run_number_cw_field',$
+          'dark_file_name_text_field'
+    END
+
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'dark_browse_button',$
+          'dark_file_name_text_field'
+    END
+
     ELSE:
     
 ENDCASE

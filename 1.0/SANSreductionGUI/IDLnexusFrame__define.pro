@@ -78,7 +78,7 @@ field = CW_FIELD(base1,$
                  UNAME = cw_field_uname,$
                  TITLE = label,$
                  /RETURN_EVENTS,$
-                 /INTEGER,$
+                 /LONG,$
                  /ROW)
 END
 
@@ -118,9 +118,9 @@ FUNCTION IDLnexusFrame::init, $
                       YOFF            = yoff,$
                       FRAME_TITLE     = frame_title,$
                       LABEL_1         = label_1,$
-                      CWFIELD_UNAME   = text_field_uname,$
-                      BROWSE_UNAME    = browse_button_uname,$
-                      FILE_NAME_UNAME = file_name_text_field_uname
+                      CWFIELD_UNAME   = cwfield_uname,$
+                      BROWSE_UNAME    = browse_uname,$
+                      FILE_NAME_UNAME = file_name_uname
 
 ;Make Base
 BaseID = IDLnexusFrame_make_base(MAIN_BASE_ID, $

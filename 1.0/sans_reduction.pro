@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.0'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 
 ;define initial global values - these could be input via external
 ;file or other means
@@ -60,7 +60,7 @@ global = PTR_NEW ({version:         VERSION,$
                    failed:          'FAILED',$
                    nexus_extension: 'nxs',$
                    nexus_filter:    '*.nxs',$
-                   nexus_title:     'Browse NeXus File',$
+                   nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/SNS/',$
                    ReducePara: {driver_name: $
                                 'sas_reduction1',$
@@ -177,12 +177,11 @@ ENDELSE
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN
 ;show tab #2 'REDUCE'
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
 ;show tab #3 'Intermediate plots'
-    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
-
+;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
 ENDIF
 
 END
