@@ -47,6 +47,24 @@ sReduceTab = { size:   [sReduceBase.size[0:2],$
                         tab2: ' PARAMETERS ',$
                         tab3: ' INTERMEDIATE FILES'}}
 
+;- data reduction status -------------------------------------------------------
+XYoff = [160,3]
+sDRstatus = { size:  [XYoff[0],$
+                      sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
+                      270,22],$
+              uname: 'data_reduction_status_frame',$
+              value: 'DR status:',$
+              frame: 2}
+
+;- GO DATA REDUCTION button ----------------------------------------------------
+XYoff = [450,0]
+sGobutton = { size:      [XYoff[0],$
+                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
+                          240,30],$
+              uname:     'go_data_reduction_button',$
+              value:     '> >> >>> RUN DATA REDUCTION <<< << <',$
+              sensitive: 1}
+
 ;- Command Line status ---------------------------------------------------------
 XYoff = [2,30]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
@@ -57,7 +75,7 @@ sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
 XYoff = [5,-18]
 sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
                               sCommandLine.size[1]+XYoff[1]],$
-                      value: 'Command Line Status:' }
+                      value: 'Command Line Status' }
 
 ;===============================================================================
 ;= BUILD GUI ===================================================================
@@ -92,6 +110,26 @@ make_gui_reduce_tab2, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab2
 ;- Build INTERMEDIATE FILES tab (tab #3) ---------------------------------------
 make_gui_reduce_tab3, REDUCE_TAB, sReduceTab.size, sReduceTab.title.tab3
 
+;- data reduction status -------------------------------------------------------
+wDRstatus = WIDGET_LABEL(wReduceBase,$
+                         UNAME     = sDRstatus.uname,$
+                         XOFFSET   = sDRstatus.size[0],$
+                         YOFFSET   = sDRstatus.size[1],$
+                         SCR_XSIZE = sDRstatus.size[2],$
+                         SCR_YSIZE = sDRstatus.size[3],$
+                         VALUE     = sDRstatus.value,$
+                         FRAME     = sDRstatus.frame,$
+                         /ALIGN_LEFT)
+
+;- GO data reduction button ----------------------------------------------------
+wGoButton = WIDGET_BUTTON(wReduceBase,$
+                          XOFFSET   = sGoButton.size[0],$
+                          YOFFSET   = sGoButton.size[1],$
+                          SCR_XSIZE = sGoButton.size[2],$
+                          SCR_YSIZE = sGoButton.size[3],$
+                          UNAME     = sGoButton.uname,$
+                          VALUE     = sGoButton.value,$
+                          SENSITIVE = sGoButton.sensitive)
 
 ;- Command Line status ---------------------------------------------------------
 wCommandLine = WIDGET_TEXT(wReduceBase,$
