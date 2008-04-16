@@ -35,7 +35,7 @@
 FUNCTION getTextFieldValue, Event, uname
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
+RETURN, value[0]
 END
 
 ;-------------------------------------------------------------------------------

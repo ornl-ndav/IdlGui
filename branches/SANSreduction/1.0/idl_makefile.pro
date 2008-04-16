@@ -33,7 +33,7 @@ cd, CurrentFolder
 
 ;procedures
 .run sans_reduction_reduce_tab1.pro
-
+.run sans_reduction_command_line.pro
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_eventcb.pro

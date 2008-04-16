@@ -105,7 +105,8 @@ text_field = WIDGET_TEXT(BaseID,$
                          SCR_XSIZE = 410,$
                          SCR_YSIZE = 35,$
                          UNAME     = text_field_uname,$
-                         /EDITABLE)
+                         /EDITABLE,$
+                         /ALL_EVENTS)
 END
 
 ;*******************************************************************************

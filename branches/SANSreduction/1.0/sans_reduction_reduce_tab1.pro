@@ -128,4 +128,3 @@ ENDIF ELSE BEGIN
     IDLsendToGeek_addLogBookText, Event, message        
 ENDELSE
 END
-
