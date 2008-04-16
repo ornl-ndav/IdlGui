@@ -30,6 +30,7 @@ cd, CurrentFolder
 .run IDLsendToGeek__define.pro
 .run IDLgetNexusData__define.pro
 .run sans_reduction_plot.pro
+.run sans_reduction_gui.pro
 
 ;procedures
 .run sans_reduction_reduce_tab1.pro

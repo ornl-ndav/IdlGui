@@ -31,23 +31,14 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;===============================================================================
-PRO putTextFieldValue, Event, uname, text
+
+PRO activate_widget, Event, uname, activate_status
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=text
+WIDGET_CONTROL, id, SENSITIVE=activate_status
 END
 
-;===============================================================================
-;This function put the command line in the command line text box
-PRO putCommandLine, Event, cmd
-putTextFieldValue, Event, 'comamnd_line_preview', cmd
-END
-
-;===============================================================================
-PRO putTab1NexusFileName, Event, FileName
-putTextFieldValue, Event, 'archived_text_field', FileName
-END
-;===============================================================================
-
-PRO putMissingArguments, Event, text
-putTextFieldValue, Event, 'data_reduction_missing_arguments', text
+;-------------------------------------------------------------------------------
+;This function activates or not the GO DATA REDUCTION button
+PRO activate_go_data_reduction, Event, activate_status
+activate_widget, Event, 'go_data_reduction_button', activate_status
 END

@@ -38,7 +38,8 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
 
 ;default parameters
-cmd_status = 1 ;by default, cmd can be activated
+cmd_status             = 1      ;by default, cmd can be activated
+missing_arguments_text = ['']   ;list of missing arguments 
 
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
@@ -51,6 +52,8 @@ IF (file_run NE '' AND $
     FILE_TEST(file_run)) THEN BEGIN
     cmd += ' ' + file_run
 ENDIF ELSE BEGIN
+    cmd += ' ?'
+    missing_arguments_text = ['- Valid Data File']
     cmd_status = 0
 END
 
@@ -58,32 +61,41 @@ END
 file_run = getTextFieldValue(Event,'solvant_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run)) THEN BEGIN
-    cmd += ' ' + file_run
+    flag = (*global).CorrectPara.solv_buffer.flag
+    cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
 ;-Emtpy Can-
 file_run = getTextFieldValue(Event,'empty_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run)) THEN BEGIN
-    cmd += ' ' + file_run
+    flag = (*global).CorrectPara.empty_can.flag
+    cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
 ;-Open Beam-
 file_run = getTextFieldValue(Event,'open_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run)) THEN BEGIN
-    cmd += ' ' + file_run
+    flag = (*global).CorrectPara.open_beam.flag
+    cmd += ' ' + flag + '=' + file_run
 ENDIF 
 
 ;-Dark Current-
 file_run = getTextFieldValue(Event,'dark_file_name_text_field')
 IF (file_run NE '' AND $
     FILE_TEST(file_run)) THEN BEGIN
-    cmd += ' ' + file_run
+    flag = (*global).CorrectPara.dark_current.flag
+    cmd += ' ' + flag + '=' + file_run
 ENDIF 
-
 
 ;- Put cmd in the text box -
 putCommandLine, Event, cmd
+
+;- put list of  missing arguments
+putMissingArguments, Event, missing_arguments_text
+
+;- activate GO DATA REDUCTION BUTTON only if cmd_status is 1
+activate_go_data_reduction, Event, cmd_status
 
 END
