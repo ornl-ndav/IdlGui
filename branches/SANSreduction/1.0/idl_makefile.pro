@@ -32,6 +32,7 @@ cd, CurrentFolder
 .run sans_reduction_plot.pro
 
 ;procedures
+.run sans_reduction_reduce_tab1.pro
 
 ;main functions
 .run MainBaseEvent.pro

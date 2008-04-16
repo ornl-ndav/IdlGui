@@ -105,8 +105,7 @@ FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
 
 IF (FullNexusName NE '') THEN BEGIN
 ;change default path
-    (*global).nexus_path = path
-    print, FullNexusName
+    (*global).nexus_path = new_path
     retrieveNexus, Event, FullNexusName
 ENDIF ELSE BEGIN
 ;display name of nexus file name
