@@ -69,7 +69,7 @@ sGobutton = { size:      [XYoff[0],$
 XYoff = [2,30]
 sCommandLine = { size:  [sReduceBase.size[0]+XYoff[0],$
                          sReduceTab.size[1]+sReduceTab.size[3]+XYoff[1],$
-                         450,$
+                         500,$
                          100],$
                  uname: 'comamnd_line_preview'}
 XYoff = [5,-18]
@@ -78,12 +78,15 @@ sCommandLineLabel = { size:  [sCommandLine.size[0]+XYoff[0],$
                       value: 'Command Line Status' }
 
 ;- DR gui status ---------------------------------------------------------------
-XYoff = [5,0]
+XYoff = [5,20]
 sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
                          sCommandLine.size[1]+XYoff[1],$
-                         230,$
-                         sCommandLine.size[3]],$
-                 uname: 'data_reduction_gui_status'}
+                         180,$
+                         sCommandLine.size[3]-XYoff[1]],$
+                 uname: 'data_reduction_missing_arguments'}
+sDRguiLabel  = { size:  [sDRguiStatus.size[0]+30,$
+                         sDRguiStatus.size[1]-XYoff[1]],$
+                 value: 'Missing Arguments'}
                  
 ;===============================================================================
 ;= BUILD GUI ===================================================================
@@ -155,6 +158,11 @@ wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
                                  VALUE   = sCommandLineLabel.value)
 
 ;- DR gui status ---------------------------------------------------------------
+wDRguilabel = WIDGET_LABEL(wReduceBase,$
+                           XOFFSET = sDRguiLabel.size[0],$
+                           YOFFSET = sDRguiLabel.size[1],$
+                           VALUE   = sDRguiLabel.value)
+
 wDRguiStatus = WIDGET_TEXT(wReduceBase,$
                            UNAME     = sDRguiStatus.uname,$
                            XOFFSET   = sDRguiStatus.size[0],$
@@ -163,5 +171,6 @@ wDRguiStatus = WIDGET_TEXT(wReduceBase,$
                            SCR_YSIZE = sDRguiStatus.size[3],$
                            /SCROLL,$
                            /WRAP)
+
 
 END
