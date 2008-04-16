@@ -53,13 +53,14 @@ XYoff    = [105,-3]
 sOGbase  = {size:  [sOGgroup.size[0]+XYoff[0],$
                     sOGgroup.size[1]+XYoff[1],$
                     420,35],$
-            uname: 'overwrite_geometry_base'}
+            uname: 'overwrite_geometry_base',$
+            map  : 0}
 XYoff     = [0,0]
 sOGbutton = {size:  [XYoff[0],$
                      XYoff[1],$
                      sOGbase.size[2],$
                      sOGbase.size[3]],$
-             value: 'BROWSE ...',$
+             value: 'Select a Geometry File ...',$
              uname: 'overwrite_geometry_button'}
 
 ;- Time Zero offset (microS) ---------------------------------------------------
@@ -177,6 +178,7 @@ group = CW_BGROUP(BaseTab2,$
                   ROW       = 1,$
                   SET_VALUE = 1,$
                   UNAME     = sOGgroup.uname,$
+                  /NO_RELEASE,$
                   /EXCLUSIVE)
 
 base = WIDGET_BASE(BaseTab2,$
@@ -184,7 +186,8 @@ base = WIDGET_BASE(BaseTab2,$
                    YOFFSET   = sOGBase.size[1],$
                    SCR_XSIZE = sOGbase.size[2],$
                    SCR_YSIZE = sOGbase.size[3],$
-                   UNAME     = sOGbase.uname)
+                   UNAME     = sOGbase.uname,$
+                   MAP       = sOGbase.map)
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = sOGbutton.size[0],$

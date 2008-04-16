@@ -58,10 +58,13 @@ global = PTR_NEW ({version:         VERSION,$
                    processing:      '(PROCESSING)',$
                    ok:              'OK',$
                    failed:          'FAILED',$
+                   geo_extension:   'nxs',$
+                   geo_filter:      '*.nxs',$
+                   geo_path:        '/LENS/',$
                    nexus_extension: 'nxs',$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
-                   nexus_path:      '/SNS/',$
+                   nexus_path:      '/LENS/',$
                    ReducePara: {driver_name: $
                                 'sas_reduction1',$
                                 overwrite_geo: $

@@ -32,35 +32,55 @@
 ;
 ;===============================================================================
 
-PRO activate_widget, Event, uname, activate_status
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SENSITIVE=activate_status
+;This function checks if the user wants to overwrite the geometry or
+;not and activate the gui accordingly
+PRO GeometryGroupInteraction, Event 
+value_OF_group = getCWBgroupValue(Event, 'overwrite_geometry_group')
+IF (value_OF_group EQ 0) THEN BEGIN
+    map_gui = 1
+ENDIF ELSE BEGIN
+    map_gui = 0
+ENDELSE
+map_base, Event, 'overwrite_geometry_base', map_gui
 END
 
 ;-------------------------------------------------------------------------------
-;This function map or not the given base
-PRO map_base, Event, uname, map_status
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, MAP=map_status
-END
+;This function is reached by the browse button of the overwrite
+;geometry
+PRO BrowseGeometry, Event
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+;retrieve global paramters
+extension = (*global).geo_extension
+filter    = (*global).geo_filter
+path      = (*global).geo_path
+title     = 'Please select a new Geometry file'
 
-;-------------------------------------------------------------------------------
-;This function activates or not the GO DATA REDUCTION button
-PRO activate_go_data_reduction, Event, activate_status
-activate_widget, Event, 'go_data_reduction_button', activate_status
-END
+IDLsendToGeek_putLogBookText, Event, '> Selecting a new Geometry File :'
 
-;-------------------------------------------------------------------------------
-;This function returns the select value of the CW_BGROUP
-FUNCTION getCWBgroupValue, Event, uname
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, GET_VALUE=value
-RETURN, value
-END
+FullNexusName = BrowseRunNumber(Event, $       ;IDLloadNexus__define
+                                extension, $
+                                filter, $
+                                title,$
+                                GET_PATH=new_path,$
+                                path)
 
-;-------------------------------------------------------------------------------
-;This function put the full path of the file as the new button label
-PRO putNewButtonValue, Event, uname, value
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=value
+IF (FullNexusName NE '') THEN BEGIN
+;change default path
+    (*global).geo_path = new_path
+;put the full name of the new geometry file in the browsing button
+    putNewButtonValue, Event, 'overwrite_geometry_button', FullNexusName
+;put name of geoemetry file in the log book
+    IDLsendToGeek_putLogBookText, Event, '-> New geometry file is : ' + $
+      FullNexusName
+ENDIF ELSE BEGIN
+;display name of nexus file name
+    putTab1NexusFileName, Event, ''
+    message = '-> No new geometry file selected'
+    IDLsendToGeek_addLogBookText, Event, message
+ENDELSE    
+
+     
+
 END

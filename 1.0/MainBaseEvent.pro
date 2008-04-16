@@ -74,10 +74,6 @@ CASE Event.id OF
           'data_file_name_text_field'
     END
 
-;    WIDGET_INFO(wWidget, FIND_BY_UNAME='data_file_name_text_field'): BEGIN
-;        CheckCommandLine, Event	;_command_line
-;    END
-    
 ;----Solvant Buffer Only File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
@@ -90,10 +86,6 @@ CASE Event.id OF
           'solvant_browse_button',$
           'solvant_file_name_text_field'
     END
-
-;    WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_file_name_text_field'): BEGIN
-;        CheckCommandLine, Event	;_command_line
-;    END
 
 ;----Empty Can  ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_run_number_cw_field'): BEGIN
@@ -108,10 +100,6 @@ CASE Event.id OF
           'empty_file_name_text_field'
     END
 
-;    WIDGET_INFO(wWidget, FIND_BY_UNAME='empty_file_name_text_field'): BEGIN
-;        CheckCommandLine, Event	;_command_line
-;    END
-
 ;----Open Beam  ----------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='open_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
@@ -124,10 +112,6 @@ CASE Event.id OF
           'open_browse_button',$
           'open_file_name_text_field'
     END
-
-;   WIDGET_INFO(wWidget, FIND_BY_UNAME='open_file_name_text_field'): BEGIN
-;       CheckCommandLine, Event	;_command_line
-;   END
 
 ;----Dark Current  -------------------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_run_number_cw_field'): BEGIN
@@ -142,11 +126,21 @@ CASE Event.id OF
           'dark_file_name_text_field'
     END
 
-;    WIDGET_INFO(wWidget, FIND_BY_UNAME='dark_file_name_text_field'): BEGIN
-;        CheckCommandLine, Event	;_command_line
-;    END
+;==== tab2 (PARAMETERS) ========================================================
 
-;-------------------------------------------------------------------------------
+;---- YES or NO geometry cw_bgroup ---------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_group'): BEGIN
+        GeometryGroupInteraction, Event ;_reduce_tab2
+    END
+
+;---- Browse button of the overwrite geometry button ---------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
+        BrowseGeometry, Event ;_reduce_tab2
+    END
+
+
+
+
 
     ELSE:
     
