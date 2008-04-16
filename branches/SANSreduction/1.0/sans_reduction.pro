@@ -65,6 +65,7 @@ global = PTR_NEW ({version:         VERSION,$
                    nexus_filter:    '*.nxs',$
                    nexus_title:     'Browse for a Data NeXus File',$
                    nexus_path:      '/LENS/',$
+                   inst_geom:       '',$
                    ReducePara: {driver_name: $
                                 'sas_reduction1',$
                                 overwrite_geo: $

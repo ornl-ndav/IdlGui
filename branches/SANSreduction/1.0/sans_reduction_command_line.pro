@@ -90,8 +90,15 @@ IF (file_run NE '' AND $
 ENDIF 
 
 ;- PARAMETERS  -----------------------------------------------------------------
+IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
+    cmd += ' --inst-geom='
+    IF ((*global).inst_geom NE '') THEN BEGIN
+        cmd += (*global).inst_geom
+    ENDIF ELSE BEGIN
+        cmd += '?'
+    ENDELSE
+ENDIF
 
-value_OF_group = getCWBgroupValue(Event, 'overwrite_geometry_group')
 
 
 
