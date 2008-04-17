@@ -46,8 +46,17 @@ END
 PRO putTab1NexusFileName, Event, FileName
 putTextFieldValue, Event, 'archived_text_field', FileName
 END
-;===============================================================================
 
+;===============================================================================
 PRO putMissingArguments, Event, text
 putTextFieldValue, Event, 'data_reduction_missing_arguments', text
+END
+
+;===============================================================================
+;This function tells in the title of the missing arguments text_field
+;the number of missing arguments
+PRO putMissingArgNumber, Event, missing_argument_counter
+text = STRCOMPRESS(missing_argument_counter,/REMOVE_ALL) + ' missing(s) ' + $
+  'Arguments'
+putTextFieldValue, Event, 'missing_arguments_label', text
 END

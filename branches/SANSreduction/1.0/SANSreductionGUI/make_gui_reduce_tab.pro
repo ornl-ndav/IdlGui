@@ -84,9 +84,10 @@ sDRguiStatus = { size:  [sCommandLine.size[0]+sCommandLine.size[2]+XYoff[0],$
                          180,$
                          sCommandLine.size[3]-XYoff[1]],$
                  uname: 'data_reduction_missing_arguments'}
-sDRguiLabel  = { size:  [sDRguiStatus.size[0]+30,$
+sDRguiLabel  = { size:  [sDRguiStatus.size[0]+20,$
                          sDRguiStatus.size[1]-XYoff[1]],$
-                 value: 'Missing Arguments'}
+                 uname: 'missing_arguments_label',$
+                 value: '   Missing Arguments   '}
                  
 ;===============================================================================
 ;= BUILD GUI ===================================================================
@@ -161,7 +162,8 @@ wCommandLineLabel = WIDGET_LABEL(wReduceBase,$
 wDRguilabel = WIDGET_LABEL(wReduceBase,$
                            XOFFSET = sDRguiLabel.size[0],$
                            YOFFSET = sDRguiLabel.size[1],$
-                           VALUE   = sDRguiLabel.value)
+                           VALUE   = sDRguiLabel.value,$
+                           UNAME   = sDRguiLabel.uname)
 
 wDRguiStatus = WIDGET_TEXT(wReduceBase,$
                            UNAME     = sDRguiStatus.uname,$
