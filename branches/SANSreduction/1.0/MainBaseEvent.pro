@@ -143,10 +143,10 @@ CASE Event.id OF
         BrowseGeometry, Event ;_reduce_tab2
     END
 
-
-
-
-
+;= TAB3 (LOG BOOK) =============================================================
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='send_to_geek_button'): BEGIN
+        SendToGeek, Event       ;_IDLsendToGeek
+    END
 
     ELSE:
     
