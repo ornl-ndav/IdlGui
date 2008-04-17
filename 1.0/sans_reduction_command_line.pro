@@ -38,8 +38,9 @@ id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
 
 ;default parameters
-cmd_status             = 1      ;by default, cmd can be activated
-missing_arguments_text = ['']   ;list of missing arguments 
+cmd_status               = 1      ;by default, cmd can be activated
+missing_arguments_text   = ['']   ;list of missing arguments 
+missing_argument_counter = 0
 
 ;Check first tab
 cmd = (*global).ReducePara.driver_name ;driver to launch
@@ -55,6 +56,7 @@ ENDIF ELSE BEGIN
     cmd += ' ?'
     missing_arguments_text = ['- Valid Data File']
     cmd_status = 0
+    ++missing_argument_counter
 END
 
 ;-Solvant Buffer Only-
@@ -128,6 +130,7 @@ IF (Qmin NE '') THEN BEGIN
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
+    ++missing_argument_counter
     missing_arguments_text = [missing_arguments_text, '- Q minimum']
 ENDELSE
 cmd += ','
@@ -136,6 +139,7 @@ IF (Qmax NE '') THEN BEGIN
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
+    ++missing_argument_counter
     missing_arguments_text = [missing_arguments_text, '- Q maximum']
 ENDELSE
 cmd += ','
@@ -144,6 +148,7 @@ IF (Qwidth NE '') THEN BEGIN
 ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
+    ++missing_argument_counter
     missing_arguments_text = [missing_arguments_text, '- Q width']
 ENDELSE
 cmd += ','
@@ -153,11 +158,78 @@ ENDIF ELSE BEGIN
     cmd += 'log'
 ENDELSE
 
+;- INTERMEDIATE ----------------------------------------------------------------
+IntermPlots = getCWBgroupValue(Event,'intermediate_group_uname')
+;beam monitor after conversion to Wavelength
+IF (IntermPlots[0] EQ 1) THEN BEGIN 
+    cmd += ' ' + (*global).IntermPara.bmon_wave.flag
+ENDIF
+;beam monitor in Wavelength after efficiency correction
+IF (IntermPlots[1] EQ 1) THEN BEGIN
+    cmd += ' ' + (*global).IntermPara.bmon_effc.flag
+ENDIF
+;data of each pixel after wavelength conversion
+IF (IntermPlots[2] EQ 1) THEN BEGIN
+    cmd += ' ' + (*global).IntermPara.wave.flag
+ENDIF
+;monitor spectrum after rebin to detector wavelength axis
+IF (IntermPlots[3] EQ 1) THEN BEGIN
+    cmd += ' ' + (*global).IntermPara.bmon_rebin.flag
+ENDIF
+;combined spectrum of data after beam monitor normalization
+IF (IntermPlots[4] EQ 1) THEN BEGIN
+    cmd += ' ' + (*global).IntermPara.bmnon_wave.flag
+    map_status = 1
+;-Q min, max, width and unit
+    Lambdamin   = getTextFieldValue(Event,'lambda_min_text_field')
+    Lambdamax   = getTextFieldValue(Event,'lambda_max_text_field')
+    Lambdawidth = getTextFieldValue(Event,'lambda_width_text_field')
+    Lambdaunits = getCWBgroupValue(Event,'lambda_scale_group')
+    cmd += ' ' + (*global).ReducePara.monitor_rebin + '='
+    IF (Lambdamin NE '') THEN BEGIN
+        cmd += STRCOMPRESS(Lambdamin,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, '- Lambda minimum']
+    ENDELSE
+    cmd += ','
+    IF (Lambdamax NE '') THEN BEGIN
+        cmd += STRCOMPRESS(Lambdamax,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, '- Lambda maximum']
+    ENDELSE
+    cmd += ','
+    IF (Lambdawidth NE '') THEN BEGIN
+        cmd += STRCOMPRESS(Lambdawidth,/REMOVE_ALL)
+    ENDIF ELSE BEGIN
+        cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, '- Lambda width']
+    ENDELSE
+    cmd += ','
+    IF (Lambdaunits EQ 0) THEN BEGIN
+        cmd += 'linear'
+    ENDIF ELSE BEGIN
+        cmd += 'log'
+    ENDELSE
+ENDIF ELSE BEGIN
+    map_status = 0
+ENDELSE
+map_base, Event, 'lambda_base', map_status
+
 ;- Put cmd in the text box -
 putCommandLine, Event, cmd
 
 ;- put list of  missing arguments
 putMissingArguments, Event, missing_arguments_text
+;- tells how may missing arguments were found
+putMissingArgNumber, Event, missing_argument_counter
 
 ;- activate GO DATA REDUCTION BUTTON only if cmd_status is 1
 activate_go_data_reduction, Event, cmd_status

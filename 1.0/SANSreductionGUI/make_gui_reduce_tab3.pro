@@ -76,8 +76,8 @@ sBaseLambda = { size:  [XYoff[0],$
                         XYoff[1],$
                         tab_size[2],$
                         60],$
-                uname: 'lambda_base'}
-
+                uname: 'lambda_base',$
+                map:   0}
 
 XYoff = [5,10]
 sLambdaFrame = { size:  [XYoff[0],$
@@ -177,7 +177,8 @@ LambdaBase = WIDGET_BASE(BaseTab3,$
                          YOFFSET   = sBaseLambda.size[1],$
                          SCR_XSIZE = sBaseLambda.size[2],$
                          SCR_YSIZE = sBaseLambda.size[3],$
-                         UNAME     = sBaseLambda.uname)
+                         UNAME     = sBaseLambda.uname,$
+                         MAP       = sBaseLambda.map)
 
 wQTitle = WIDGET_LABEL(LambdaBase,$
                        XOFFSET = sLambdaTitle.size[0],$
