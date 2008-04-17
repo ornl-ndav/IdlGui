@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.0'
-DEBUGGING   = 'yes' ;yes/no
+DEBUGGING   = 'no' ;yes/no
 
 ;define initial global values - these could be input via external
 ;file or other means
@@ -176,6 +176,9 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
+
+;populate list of proposal
+
 
 ;Debugging only ----------------------------------------------------------------
 IF (DEBUGGING EQ 'yes' AND $
