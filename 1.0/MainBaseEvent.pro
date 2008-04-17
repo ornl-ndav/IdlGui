@@ -45,6 +45,10 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
     
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='main_tab'): BEGIN
+        tab_event, Event ;_eventcb
+    END
+
 ;= TAB1 (LOAD DATA) ============================================================
 
 ;- Run Number cw_field ---------------------------------------------------------

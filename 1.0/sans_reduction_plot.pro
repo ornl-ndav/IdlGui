@@ -62,7 +62,7 @@ END
 ;-------------------------------------------------------------------------------
 ;This function takes the histogram data from the NeXus file and plot it
 FUNCTION plotData, Event, DataArray, X, Y
-plotStatus = 1 ;by default, plot did work
+plotStatus = 1 ;by default, plot does work
 plot_error = 0
 CATCH, plot_error
 IF (plot_error NE 0) THEN BEGIN
@@ -88,4 +88,22 @@ ENDIF ELSE BEGIN
     TVSCL, rtDataXY, /DEVICE
     RETURN, plotStatus
 ENDELSE
+END
+
+;-------------------------------------------------------------------------------
+PRO refresh_plot, Event ;_plot
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;get global structure
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL, id, GET_UVALUE=global
+;retrieve parameters from global pointer
+X         = (*global).X
+IF (X NE 0) THEN BEGIN
+    DataArray = (*(*global).DataArray)
+    Y         = (*global).Y
+ENDIF
+result = plotData(Event, DataArray, X, Y)
+;turn off hourglass
+widget_control,hourglass=0
 END
