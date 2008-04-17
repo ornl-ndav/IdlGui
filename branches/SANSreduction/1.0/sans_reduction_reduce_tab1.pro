@@ -100,6 +100,12 @@ path       = (*global).nexus_path
 title = 'Browse for a '
 CASE (browse_button_uname) OF
     'data_browse_button':    title1 = 'Data NeXus file'
+    'roi_browse_button':     BEGIN
+        title1 = 'ROI file'
+        extension = (*global).roi_extension
+        filter    = (*global).roi_filter
+        path      = (*global).roi_path
+    END
     'solvant_browse_button': title1 = 'Solvant Buffer Only NeXus file'
     'empty_browse_button':   title1 = 'Empty Can NeXus file'
     'open_browse_button':    title1 = 'Open Beam (shutter open) NeXus file'

@@ -59,6 +59,14 @@ ENDIF ELSE BEGIN
     ++missing_argument_counter
 END
 
+;-ROI File-
+file_run = getTextFieldValue(Event,'roi_file_name_text_field')
+IF (file_run NE '' AND $
+    FILE_TEST(file_run)) THEN BEGIN
+    flag = (*global).CorrectPara.roi.flag
+    cmd += ' ' + flag + '=' + file_run
+ENDIF 
+
 ;-Solvant Buffer Only-
 file_run = getTextFieldValue(Event,'solvant_file_name_text_field')
 IF (file_run NE '' AND $

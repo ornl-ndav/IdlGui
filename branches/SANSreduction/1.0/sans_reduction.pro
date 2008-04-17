@@ -39,7 +39,7 @@ CD, CURRENT = current_folder
 
 APPLICATION = 'SANSreduction'
 VERSION     = '1.0.0'
-DEBUGGING   = 'no' ;yes/no
+DEBUGGING   = 'yes' ;yes/no
 
 ;define initial global values - these could be input via external
 ;file or other means
@@ -64,6 +64,9 @@ global = PTR_NEW ({version:         VERSION,$
                    processing:      '(PROCESSING)',$
                    ok:              'OK',$
                    failed:          'FAILED',$
+                   roi_extension:   '.dat',$
+                   roi_filter:      '*.dat',$
+                   roi_path:        '~/',$
                    geo_extension:   'nxs',$
                    geo_filter:      '*.nxs',$
                    geo_path:        '/LENS/',$
@@ -92,6 +95,10 @@ global = PTR_NEW ({version:         VERSION,$
                                                'Solvant Buffer Only',$
                                                flag: $
                                                '--solv'},$
+                                 roi:         {title: $
+                                               'ROI File',$
+                                               flag: $
+                                               '--roi-file'},$
                                  empty_can:    {title: $
                                                 'Empty Can',$
                                                 flag: $
@@ -189,9 +196,9 @@ IF (DEBUGGING EQ 'yes' AND $
 ;show tab #2 'REDUCE'
     id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='main_tab')
     WIDGET_CONTROL, id1, SET_TAB_CURRENT = 1 
-;show tab #3 'Intermediate plots'
-;    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
-;    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 2
+;show tab #1
+    id1 = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='reduce_tab')
+    WIDGET_CONTROL, id1, SET_TAB_CURRENT = 0
 ENDIF
 
 END
