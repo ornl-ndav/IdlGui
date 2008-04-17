@@ -64,3 +64,12 @@ PRO putNewButtonValue, Event, uname, value
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=value
 END
+
+;-------------------------------------------------------------------------------
+;This function clear off the display of the main plot
+PRO ClearMainPlot, Event
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME = 'draw_uname')
+WIDGET_CONTROL, id, GET_VALUE = id_value
+WSET, id_value
+ERASE
+END
