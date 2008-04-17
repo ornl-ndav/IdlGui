@@ -163,6 +163,8 @@ IF (RunNumber NE 0) THEN BEGIN
         putTextFieldValue, Event, $
           'data_file_name_text_field', $
           ''
+;clear display
+        ClearMainPlot, Event ;_gui
     ENDELSE
 ENDIF
 
