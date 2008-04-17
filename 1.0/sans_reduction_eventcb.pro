@@ -151,10 +151,18 @@ IF (RunNumber NE 0) THEN BEGIN
         IDLsendToGeek_addLogBookText, Event, message
 ;retrieve data
         retrieveNeXus, Event, full_nexus_name[0]
-    ENDIF ELSE BEGIN ;failed
+;put full path of nexus in reduce tab1
+        putTextFieldValue, Event, $
+          'data_file_name_text_field', $
+          full_nexus_name
+    ENDIF ELSE BEGIN            ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
         putTab1NexusFileName, Event, 'Nexus has not been found'
+;put full path of nexus in reduce tab1
+        putTextFieldValue, Event, $
+          'data_file_name_text_field', $
+          ''
     ENDELSE
 ENDIF
 
