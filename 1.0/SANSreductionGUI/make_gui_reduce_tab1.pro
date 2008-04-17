@@ -43,25 +43,43 @@ sBaseTab1 = { size:  tab_size,$
 sDataFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                   main_base_uname: 'data_base_uname',$
                   xoff:            0,$
-                  yoff:            5,$
+                  yoff:            0,$
                   frame_title:     'Data File',$
                   label_1:         'Run Number:',$
                   tf1_uname:       'data_run_number_cw_field',$
                   browse_uname:    'data_browse_button',$
                   file_name_uname: 'data_file_name_text_field'}
 
-yoff = 70
+;- ROI file --------------------------------------------------------------------
+XYoff = [0,70]
+sROIfileButton = { size:  [XYoff[0], $
+                           XYoff[1], $
+                           150, $
+                           35],$
+                   value: 'Select ROI file ... ',$
+                   uname: 'roi_browse_button'}
+XYoff = [0,0]
+sROIfileTextField = { size:  [sROIfileButton.size[0]+ $
+                              sROIfileButton.size[2]+ $
+                              XYoff[0],$
+                              sROIfileButton.size[1]+XYoff[1],$
+                              535, $
+                              35],$
+                      uname: 'roi_file_name_text_field'}
+
+yoff = 35
 ;- Solvant Buffer Only ---------------------------------------------------------
 sSolvantFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                      main_base_uname: 'solvant_base_uname',$
                      xoff:            0,$
-                     yoff:            sDataFileFrame.yoff+yoff,$
+                     yoff:            sROIfileTextField.size[1]+yoff,$
                      frame_title:     'Solvant Buffer Only',$
                      label_1:         'Run Number:',$
                      tf1_uname:       'solvant_run_number_cw_field',$
                      browse_uname:    'solvant_browse_button',$
                      file_name_uname: 'solvant_file_name_text_field'}
 
+yoff = 65
 ;- Empty Can -------------------------------------------------------------------
 sEmptyFileFrame = {main_base_xsize: sBaseTab1.size[2],$
                    main_base_uname: 'empty_base_uname',$
@@ -117,6 +135,24 @@ cDataFileFrame = OBJ_NEW('IDLnexusFrame',$
                          CWFIELD_UNAME   = sDataFileFrame.tf1_uname,$
                          BROWSE_UNAME    = sDataFileFrame.browse_uname,$
                          FILE_NAME_UNAME = sDataFileFrame.file_name_uname)
+
+;- ROI file --------------------------------------------------------------------
+wROIfileButton = WIDGET_BUTTON(BaseTab1,$
+                               XOFFSET   = sROIfileButton.size[0],$
+                               YOFFSET   = sROIfileButton.size[1],$
+                               SCR_XSIZE = sROIfileButton.size[2],$
+                               SCR_YSIZE = sROIfileButton.size[3],$
+                               UNAME     = sROIfileButton.uname,$
+                               VALUE     = sROIfileButton.value)
+wROIfileTextField = WIDGET_TEXT(BaseTab1,$
+                                XOFFSET   = sROIfileTextField.size[0],$
+                                YOFFSET   = sROIfileTextField.size[1],$
+                                SCR_XSIZE = sROIfileTextField.size[2],$
+                                SCR_YSIZE = sROIfileTextField.size[3],$
+                                UNAME     = sROIfileTextField.uname,$
+                                VALUE     = '',$
+                                /EDITABLE,$
+                                /ALL_EVENTS)
 
 ;- Solvant Buffer Only ---------------------------------------------------------
 cSolvantFileFrame = OBJ_NEW('IDLnexusFrame',$

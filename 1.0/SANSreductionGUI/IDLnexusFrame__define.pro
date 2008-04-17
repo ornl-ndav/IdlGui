@@ -44,7 +44,7 @@ base = WIDGET_BASE(MAIN_BASE,$
                    XOFFSET   = XOFF,$
                    YOFFSET   = YOFF,$
                    SCR_XSIZE = MAIN_BASE_XSIZE,$
-                   SCR_YSIZE = 70,$
+                   SCR_YSIZE = 65,$
                    FRAME     = 0)
 RETURN, base
 END
@@ -59,7 +59,7 @@ frame = WIDGET_LABEL(BaseID,$
                      XOFFSET   = 5,$
                      YOFFSET   = 13,$
                      SCR_XSIZE = main_base_xsize-20,$
-                     SCR_YSIZE = 50,$
+                     SCR_YSIZE = 40,$
                      FRAME     = 3,$
                      VALUE     = '')
 END
@@ -71,7 +71,7 @@ base1 = WIDGET_BASE(BaseID,$
                     XOFFSET   = 10,$
                     YOFFSET   = 20,$
                     SCR_XSIZE = 145,$
-                    SCR_YSIZE = 40,$
+                    SCR_YSIZE = 35,$
                     FRAME     = 0)
 field = CW_FIELD(base1,$
                  XSIZE = 8,$

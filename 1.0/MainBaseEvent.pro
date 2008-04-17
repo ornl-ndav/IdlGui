@@ -83,6 +83,13 @@ CASE Event.id OF
           'data_file_name_text_field'
     END
 
+;----ROI FIle ------------------------------------------------------------------
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='roi_browse_button'): BEGIN
+        BrowseNexus, Event, $
+          'roi_browse_button',$
+          'roi_file_name_text_field'
+    END
+
 ;----Solvant Buffer Only File --------------------------------------------------
     WIDGET_INFO(wWidget, FIND_BY_UNAME='solvant_run_number_cw_field'): BEGIN
         LoadNeXus, Event, $
