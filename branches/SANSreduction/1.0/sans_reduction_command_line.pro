@@ -54,7 +54,7 @@ IF (file_run NE '' AND $
     cmd += ' ' + file_run
 ENDIF ELSE BEGIN
     cmd += ' ?'
-    missing_arguments_text = ['- Valid Data File']
+    missing_arguments_text = ['- Valid Data File (LOAD FILES)']
     cmd_status = 0
     ++missing_argument_counter
 END
@@ -100,6 +100,10 @@ IF (getCWBgroupValue(Event,'overwrite_geometry_group') EQ 0) THEN BEGIN
         cmd += (*global).inst_geom
     ENDIF ELSE BEGIN
         cmd += '?'
+        cmd_status = 0
+        ++missing_argument_counter
+        missing_arguments_text = [missing_arguments_text, '- Instrument' + $
+                                  ' Geometry File (LOAD FILES)']
     ENDELSE
 ENDIF
 
@@ -131,7 +135,7 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q minimum']
+    missing_arguments_text = [missing_arguments_text, '- Q minimum (PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qmax NE '') THEN BEGIN
@@ -140,7 +144,7 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q maximum']
+    missing_arguments_text = [missing_arguments_text, '- Q maximum (PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qwidth NE '') THEN BEGIN
@@ -149,7 +153,7 @@ ENDIF ELSE BEGIN
     cmd += '?'
     cmd_status = 0
     ++missing_argument_counter
-    missing_arguments_text = [missing_arguments_text, '- Q width']
+    missing_arguments_text = [missing_arguments_text, '- Q width (PARAMETERS)']
 ENDELSE
 cmd += ','
 IF (Qunits EQ 0) THEN BEGIN
@@ -192,7 +196,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda minimum']
+        missing_arguments_text = [missing_arguments_text, '- Lambda minimum ' + $
+                                  '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','
     IF (Lambdamax NE '') THEN BEGIN
@@ -201,7 +206,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda maximum']
+        missing_arguments_text = [missing_arguments_text, '- Lambda maximum ' + $
+                                  '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','
     IF (Lambdawidth NE '') THEN BEGIN
@@ -210,7 +216,8 @@ IF (IntermPlots[4] EQ 1) THEN BEGIN
         cmd += '?'
         cmd_status = 0
         ++missing_argument_counter
-        missing_arguments_text = [missing_arguments_text, '- Lambda width']
+        missing_arguments_text = [missing_arguments_text, '- Lambda width ' + $
+                                  '(INTERMEDIATE FILES)']
     ENDELSE
     cmd += ','
     IF (Lambdaunits EQ 0) THEN BEGIN
