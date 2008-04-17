@@ -46,7 +46,7 @@ CASE (var) OF
     'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
-    'Version'         : RETURN, (*global).version
+    'version'         : RETURN, (*global).version
     ELSE:
 ENDCASE
 RETURN, 'NA'
@@ -192,7 +192,7 @@ END
 
 ;This function send by email a copy of the logBook
 PRO IDLsendToGeek_EmailLogBook, Event, FullFileName
-Version   = IDLsendToGeek_getGlobalVariable(Event,'version')
+version   = IDLsendToGeek_getGlobalVariable(Event,'version')
 ucams     = IDLsendToGeek_getGlobalVariable(Event,'ucams')
 ;add ucams 
 ucamsText = 'Ucams: ' + ucams
@@ -202,7 +202,7 @@ spawn, 'hostname', hostname
 message   = IDLsendToGeek_getMessage(Event)
 ;email logBook
 text = "'Log Book of plotROI "
-text += Version + " sent by " + ucams
+text += version + " sent by " + ucams
 text += " from " + hostname + "."
 text += " Log Book is: " + FullFileName 
 text += ". Message is: "
