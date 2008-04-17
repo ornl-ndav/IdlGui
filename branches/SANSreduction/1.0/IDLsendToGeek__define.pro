@@ -42,8 +42,8 @@ FUNCTION IDLsendToGeek_getGlobalVariable, Event, var
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 CASE (var) OF
-    'LogBookPath'     : RETURN, (*global).LogBookPath
-    'ApplicationName' : RETURN, 'plotROI'
+    'LogBookPath'     : RETURN, '/SNS/users/LogBook/'
+    'ApplicationName' : RETURN, (*global).application
     'LogBookUname'    : RETURN, 'log_book_text'
     'ucams'           : RETURN, (*global).ucams
     'Version'         : RETURN, (*global).version
@@ -229,7 +229,7 @@ ENDIF ELSE BEGIN
     SPAWN, cmd
 ;tell the user that the email has been sent
     LogBookText = 'LogBook has been sent successfully !'
-    IDLsendToGeek_putLogBookText, Event, LogBookText
+    IDLsendToGeek_addLogBookText, Event, LogBookText
 ENDELSE
 END
 
