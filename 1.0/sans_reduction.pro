@@ -177,9 +177,6 @@ ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
 
-;populate list of proposal
-
-
 ;Debugging only ----------------------------------------------------------------
 IF (DEBUGGING EQ 'yes' AND $
     ucams EQ 'j35') THEN BEGIN

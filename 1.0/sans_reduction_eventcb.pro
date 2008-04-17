@@ -44,7 +44,6 @@ OK         = (*global).ok
 FAILED     = (*global).failed
 
 ;display name of nexus file name
-help, FullNexusName
 putTab1NexusFileName, Event, FullNexusName
 message = '-> Full NeXus File Name: ' + FullNexusName
 IDLsendToGeek_addLogBookText, Event, message
@@ -117,6 +116,9 @@ END
 
 ;===============================================================================
 PRO load_run_number, Event    
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 ;get global structure
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
 WIDGET_CONTROL, id, GET_UVALUE=global
@@ -129,8 +131,9 @@ extension  = (*global).nexus_extension
 filter     = (*global).nexus_filter
 title      = (*global).nexus_title
 path       = (*global).nexus_path
+proposal   = getProposalSelected(Event, proposal_index)
+RunNumber  = getRunNumber(Event)
 
-RunNumber = getRunNumber(Event)
 IF (RunNumber NE 0) THEN BEGIN
     IDLsendToGeek_putLogBookText, Event, '> Looking for Run Number ' + $
     STRCOMPRESS(RunNumber,/REMOVE_ALL) + ' :'
@@ -139,7 +142,9 @@ IF (RunNumber NE 0) THEN BEGIN
     full_nexus_name = find_full_nexus_name(Event,$
                                            RunNumber,$
                                            'SANS',$
-                                           isNexusExist)
+                                           isNexusExist,$
+                                           proposal_index,$
+                                           proposal)
     IF (isNexusExist EQ 1 AND $ 
         full_nexus_name[0] NE '') THEN BEGIN ;success
         message = '-> NeXus File Name : ' + full_nexus_name[0]
@@ -149,8 +154,13 @@ IF (RunNumber NE 0) THEN BEGIN
     ENDIF ELSE BEGIN ;failed
         message = '-> NeXus has not been found'
         IDLsendToGeek_addLogBookText, Event, message
+        putTab1NexusFileName, Event, 'Nexus has not been found'
     ENDELSE
 ENDIF
+
+;turn off hourglass
+widget_control,hourglass=0
+
 END
 
 

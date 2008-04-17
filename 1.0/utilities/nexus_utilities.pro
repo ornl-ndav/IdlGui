@@ -23,13 +23,20 @@
 ;
 
 ;when we want only the archived one
-FUNCTION find_full_nexus_name, Event, run_number, instrument, isNexusExist
+FUNCTION find_full_nexus_name, Event, $
+                               run_number, $
+                               instrument, $
+                               isNexusExist, $
+                               proposal_index,$
+                               proposal
 
-
+;cmd = "findnexus --archive -i" + instrument 
 cmd  = '~/SVN/ASGIntegration/trunk/python/findnexus '
 cmd += '--archive -i' + instrument 
-;cmd = "findnexus --archive -i" + instrument 
-cmd += " " + strcompress(run_number,/remove_all)
+IF (proposal_index NE 0) THEN BEGIN
+    cmd += ' --proposal=' + proposal
+ENDIF
+cmd += ' ' + strcompress(run_number,/remove_all)
 cmd_txt = '-> cmd: ' + cmd
 IDLsendToGeek_addLogBookText, Event, cmd_txt
 spawn, cmd, full_nexus_name, err_listening

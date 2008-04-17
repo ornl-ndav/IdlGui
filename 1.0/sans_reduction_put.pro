@@ -68,3 +68,10 @@ ENDIF ELSE BEGIN
 ENDELSE
 putTextFieldValue, Event, 'missing_arguments_label', text
 END
+
+;-------------------------------------------------------------------------------
+;This function put the list of proposal in the proposal droplist
+PRO putProposalList, Event, ProposalList
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+WIDGET_CONTROL, id, SET_VALUE=ProposalList
+END
