@@ -31,40 +31,45 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;===============================================================================
-PRO putTextFieldValue, Event, uname, text
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
-WIDGET_CONTROL, id, SET_VALUE=text
-END
 
-;===============================================================================
-;This function put the command line in the command line text box
-PRO putCommandLine, Event, cmd
-putTextFieldValue, Event, 'comamnd_line_preview', cmd
-END
+PRO RunCommandLine, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;retrieve infos
+PROCESSING = (*global).processing
+OK         = (*global).ok
+FAILED     = (*global).failed
 
-;===============================================================================
-PRO putTab1NexusFileName, Event, FileName
-putTextFieldValue, Event, 'archived_text_field', FileName
-END
+status_text = 'Data Reduction ... ' + PROCESSING
+putTextFieldValue, Event, 'data_reduction_status_frame', status_text
 
-;===============================================================================
-PRO putMissingArguments, Event, text
-putTextFieldValue, Event, 'data_reduction_missing_arguments', text
-END
+;get command line to generate
+cmd = getTextFieldValue(Event,'comamnd_line_preview')
 
-;===============================================================================
-;This function tells in the title of the missing arguments text_field
-;the number of missing arguments
-PRO putMissingArgNumber, Event, missing_argument_counter
-text = STRCOMPRESS(missing_argument_counter,/REMOVE_ALL) + ' Missing'
-IF (missing_argument_counter EQ 0) THEN BEGIN
-    text = ''
+;display command line in log-book
+cmd_text = '> Command Line:'
+IDLsendToGeek_addLogBookText, Event, cmd_text
+cmd_text = '-> ' + cmd
+IDLsendToGeek_addLogBookText, Event, cmd_text
+cmd_text = '-> Running Command Line: ' + PROCESSING
+IDLsendToGeek_addLogBookText, Event, cmd_text
+
+spawn, cmd, listening, err_listening 
+
+IF (err_listening[0] NE '') THEN BEGIN
+;in log book
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
+    IDLsendToGeek_addLogBookText, Event, err_listening
+;in status dr frame
+    status_text = 'Data Reduction ... FAILED (check log book)!'
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
 ENDIF ELSE BEGIN
-    IF (missing_argument_counter EQ 1) THEN BEGIN
-        text += ' Argument'
-    ENDIF ELSE BEGIN
-        text += ' Arguments'
-    ENDELSE
+;in log book
+    IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, OK
+;in status dr frame
+    status_text = 'Data Reduction ... DONE WITH SUCCESS!'
+    putTextFieldValue, Event, 'data_reduction_status_frame', status_text
 ENDELSE
-putTextFieldValue, Event, 'missing_arguments_label', text
 END
+

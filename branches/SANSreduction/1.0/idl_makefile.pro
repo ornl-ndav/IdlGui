@@ -36,6 +36,8 @@ cd, CurrentFolder
 .run sans_reduction_reduce_tab1.PRO
 .run sans_reduction_reduce_tab2.pro
 .run sans_reduction_command_line.pro
+.run sans_reduction_run_commandline.pro
+
 ;main functions
 .run MainBaseEvent.pro
 .run sans_reduction_eventcb.pro
