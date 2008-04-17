@@ -59,6 +59,11 @@ CASE Event.id OF
 
 ;= TAB2 (REDUCE) ===============================================================
 
+;---- GO DATA REDUCTION button
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='go_data_reduction_button'): BEGIN
+        RunCommandLine, Event ;_run_commandline
+    END
+
 ;==== tab1 (LOAD FILES) ========================================================
 
 ;----Data File -----------------------------------------------------------------
@@ -137,6 +142,7 @@ CASE Event.id OF
     WIDGET_INFO(wWidget, FIND_BY_UNAME='overwrite_geometry_button'): BEGIN
         BrowseGeometry, Event ;_reduce_tab2
     END
+
 
 
 
