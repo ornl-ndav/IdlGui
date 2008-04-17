@@ -186,61 +186,64 @@ wQTitle = WIDGET_LABEL(LambdaBase,$
                        VALUE   = sLambdaTitle.value)
 ;Lambdamin
 wLambdaminLabel = WIDGET_LABEL(LambdaBase,$
-                          XOFFSET = sLambdaminLabel.size[0],$
-                          YOFFSET = sLambdaminLabel.size[1],$
-                          VALUE   = sLambdaminLabel.value)
+                               XOFFSET = sLambdaminLabel.size[0],$
+                               YOFFSET = sLambdaminLabel.size[1],$
+                               VALUE   = sLambdaminLabel.value)
 
 wLambdaminText = WIDGET_TEXT(LambdaBase,$
-                        XOFFSET   = sLambdaminText.size[0],$
-                        YOFFSET   = sLambdaminText.size[1],$
-                        SCR_XSIZE = sLambdaminText.size[2],$
-                        SCR_YSIZE = sLambdaminText.size[3],$
-                        VALUE     = sLambdaminText.value,$
-                        UNAME     = sLambdaminText.uname,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
+                             XOFFSET   = sLambdaminText.size[0],$
+                             YOFFSET   = sLambdaminText.size[1],$
+                             SCR_XSIZE = sLambdaminText.size[2],$
+                             SCR_YSIZE = sLambdaminText.size[3],$
+                             VALUE     = sLambdaminText.value,$
+                             UNAME     = sLambdaminText.uname,$
+                             /EDITABLE,$
+                             /ALL_EVENTS,$
+                             /ALIGN_LEFT)
 
 ;Lambdamax
 wLambdamaxLabel = WIDGET_LABEL(LambdaBase,$
-                          XOFFSET = sLambdamaxLabel.size[0],$
-                          YOFFSET = sLambdamaxLabel.size[1],$
-                          VALUE   = sLambdamaxLabel.value)
+                               XOFFSET = sLambdamaxLabel.size[0],$
+                               YOFFSET = sLambdamaxLabel.size[1],$
+                               VALUE   = sLambdamaxLabel.value)
 
 wLambdamaxText = WIDGET_TEXT(LambdaBase,$
-                        XOFFSET   = sLambdamaxText.size[0],$
-                        YOFFSET   = sLambdamaxText.size[1],$
-                        SCR_XSIZE = sLambdamaxText.size[2],$
-                        SCR_YSIZE = sLambdamaxText.size[3],$
-                        VALUE     = sLambdamaxText.value,$
-                        UNAME     = sLambdamaxText.uname,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
+                             XOFFSET   = sLambdamaxText.size[0],$
+                             YOFFSET   = sLambdamaxText.size[1],$
+                             SCR_XSIZE = sLambdamaxText.size[2],$
+                             SCR_YSIZE = sLambdamaxText.size[3],$
+                             VALUE     = sLambdamaxText.value,$
+                             UNAME     = sLambdamaxText.uname,$
+                             /EDITABLE,$
+                             /ALL_EVENTS,$
+                             /ALIGN_LEFT)
 
 ;Lambdawidth
 wLambdawidthLabel = WIDGET_LABEL(LambdaBase,$
-                          XOFFSET = sLambdawidthLabel.size[0],$
-                          YOFFSET = sLambdawidthLabel.size[1],$
-                          VALUE   = sLambdawidthLabel.value)
+                                 XOFFSET = sLambdawidthLabel.size[0],$
+                                 YOFFSET = sLambdawidthLabel.size[1],$
+                                 VALUE   = sLambdawidthLabel.value)
 
 wLambdawidthText = WIDGET_TEXT(LambdaBase,$
-                        XOFFSET   = sLambdawidthText.size[0],$
-                        YOFFSET   = sLambdawidthText.size[1],$
-                        SCR_XSIZE = sLambdawidthText.size[2],$
-                        SCR_YSIZE = sLambdawidthText.size[3],$
-                        VALUE     = sLambdawidthText.value,$
-                        UNAME     = sLambdawidthText.uname,$
-                        /EDITABLE,$
-                        /ALIGN_LEFT)
+                               XOFFSET   = sLambdawidthText.size[0],$
+                               YOFFSET   = sLambdawidthText.size[1],$
+                               SCR_XSIZE = sLambdawidthText.size[2],$
+                               SCR_YSIZE = sLambdawidthText.size[3],$
+                               VALUE     = sLambdawidthText.value,$
+                               UNAME     = sLambdawidthText.uname,$
+                               /EDITABLE,$
+                               /ALL_EVENTS,$
+                               /ALIGN_LEFT)
 
 ;Lambda scale
 wLambdascaleGroup =  CW_BGROUP(LambdaBase,$
-                          sLambdascaleGroup.list,$
-                          XOFFSET    = sLambdascaleGroup.size[0],$
-                          YOFFSET    = sLambdascaleGroup.size[1],$
-                          ROW        = 1,$
-                          SET_VALUE  = sLambdascaleGroup.value,$
-                          UNAME      = sLambdascaleGroup.uname,$
-                          /EXCLUSIVE)
+                               sLambdascaleGroup.list,$
+                               XOFFSET    = sLambdascaleGroup.size[0],$
+                               YOFFSET    = sLambdascaleGroup.size[1],$
+                               ROW        = 1,$
+                               SET_VALUE  = sLambdascaleGroup.value,$
+                               UNAME      = sLambdascaleGroup.uname,$
+                               /EXCLUSIVE)
 
 ;Lambda frame
 wLambdaFrame = WIDGET_LABEL(LambdaBase,$
