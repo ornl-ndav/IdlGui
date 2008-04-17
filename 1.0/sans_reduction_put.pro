@@ -56,7 +56,15 @@ END
 ;This function tells in the title of the missing arguments text_field
 ;the number of missing arguments
 PRO putMissingArgNumber, Event, missing_argument_counter
-text = STRCOMPRESS(missing_argument_counter,/REMOVE_ALL) + ' missing(s) ' + $
-  'Arguments'
+text = STRCOMPRESS(missing_argument_counter,/REMOVE_ALL) + ' Missing'
+IF (missing_argument_counter EQ 0) THEN BEGIN
+    text = ''
+ENDIF ELSE BEGIN
+    IF (missing_argument_counter EQ 1) THEN BEGIN
+        text += ' Argument'
+    ENDIF ELSE BEGIN
+        text += ' Arguments
+    ENDELSE
+ENDELSE
 putTextFieldValue, Event, 'missing_arguments_label', text
 END
