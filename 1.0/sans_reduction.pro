@@ -55,6 +55,8 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   application:     APPLICATION,$
+                   ucams:           ucams,$
                    DataArray:       ptr_new(0L),$
                    X:               0L,$
                    Y:               0L,$

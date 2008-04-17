@@ -116,6 +116,7 @@ sArchivedListAll = { base_size  : [RunNumberCwField.base_size[0]+ $
                      base_uname : 'archived_or_list_all_base',$
                      value      : ['ARCHIVED','LIST ALL'],$
                      deft_value : 0,$
+                     sensitive  : 0,$
                      uname      : 'archived_or_list_all'}
 
 ;Or label ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,7 +169,8 @@ wArchivedListAll = WIDGET_BASE(MainBase,$
                                YOFFSET   = sArchivedListAll.base_size[1],$
                                SCR_XSIZE = sArchivedListAll.base_size[2],$
                                SCR_YSIZE = sArchivedListAll.base_size[3],$
-                               UNAME     = sArchivedListAll.base_uname)
+                               UNAME     = sArchivedListAll.base_uname,$
+                               SENSITIVE = sArchivedListAll.sensitive)
 
 wArchivedGroup = CW_BGROUP(wArchivedListAll,$
                            sArchivedListAll.value,$
