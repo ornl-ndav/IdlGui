@@ -55,6 +55,10 @@ ENDELSE
 
 ;define global variables
 global = PTR_NEW ({version:         VERSION,$
+                   DataArray:       ptr_new(0L),$
+                   X:               0L,$
+                   Y:               0L,$
+                   PrevTabSelect:   0,$
                    processing:      '(PROCESSING)',$
                    ok:              'OK',$
                    failed:          'FAILED',$

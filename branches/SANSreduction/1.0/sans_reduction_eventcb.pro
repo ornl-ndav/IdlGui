@@ -167,14 +167,38 @@ IF (RunNumber NE 0) THEN BEGIN
         ClearMainPlot, Event ;_gui
     ENDELSE
 ENDIF
-
 ;turn off hourglass
 widget_control,hourglass=0
-
 END
 
 
+;-------------------------------------------------------------------------------
+;this function is trigerred each time the user changes tab
+PRO tab_event, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
+tab_id = widget_info(Event.top,FIND_BY_UNAME='main_tab')
+CurrTabSelect = widget_info(tab_id,/TAB_CURRENT)
+PrevTabSelect = (*global).PrevTabSelect
+
+IF (PrevTabSelect NE CurrTabSelect) THEN BEGIN
+    CASE (CurrTabSelect) OF
+    0: BEGIN ;first tab
+        refresh_plot, Event ;_plot
+    END
+    1: BEGIN ;reduce tab
+
+    END
+    2: BEGIN ;log book
+
+    END
+    ELSE:
+    ENDCASE
+    (*global).PrevTabSelect = CurrTabSelect
+ENDIF
+END
 
 
 
