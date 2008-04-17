@@ -82,7 +82,7 @@ global = PTR_NEW ({version:         VERSION,$
                                 detect_time_offset: $
                                 '--time-zero-offset-det',$
                                 monitor_time_offset: $
-                                '--time-zero-offset-mom',$
+                                '--time-zero-offset-mon',$
                                 monitor_efficiency: {flag: $
                                                      '--mon-effc',$
                                                      default: $
