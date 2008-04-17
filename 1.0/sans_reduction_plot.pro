@@ -92,6 +92,7 @@ END
 
 ;-------------------------------------------------------------------------------
 PRO refresh_plot, Event ;_plot
+print, 'here'
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;get global structure

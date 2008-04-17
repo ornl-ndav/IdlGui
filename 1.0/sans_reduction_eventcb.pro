@@ -58,6 +58,9 @@ ENDIF ELSE BEGIN
     Ntof     = (sz_array)(1)
     Y        = (sz_array)(2)
     X        = (sz_array)(3)
+    (*(*global).DataArray) = DataArray
+    (*global).X = X
+    (*global).Y = Y
     IDLsendToGeek_addLogBookText, Event, '--> X    : ' + $
       STRCOMPRESS(X,/REMOVE_ALL)
     IDLsendToGeek_addLogBookText, Event, '--> Y    : ' + $
