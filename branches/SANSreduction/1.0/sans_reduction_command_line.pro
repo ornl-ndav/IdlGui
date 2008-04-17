@@ -117,14 +117,26 @@ ENDIF
 
 ;-time offsets of detector and beam monitor
 detectorTO = getTextFieldValue(Event,'time_zero_offset_detector_uname')
+cmd += ' ' + (*global).ReducePara.detect_time_offset + '='
 IF (detectorTO NE '') THEN BEGIN
-    cmd += ' ' + (*global).ReducePara.detect_time_offset + '=' + detectorTO
-ENDIF
+    cmd += detectorTO + ',0'
+ENDIF ELSE BEGIN
+    cmd += '?'
+    cmd_status = 0
+    ++missing_argument_counter
+    missing_arguments_text = [missing_arguments_text, '- Detector Offset (PARAMETERS)']
+ENDELSE
 
 beamTO = getTextFieldValue(Event,'time_zero_offset_beam_monitor_uname')
+cmd += ' ' + (*global).ReducePara.monitor_time_offset + '='
 IF (beamTO NE '') THEN BEGIN
-    cmd += ' ' + (*global).ReducePara.monitor_time_offset + '=' + beamTO
-ENDIF
+    cmd += beamTO + ',0'
+ENDIF ELSE BEGIN
+    cmd += '?'
+    cmd_status = 0
+    ++missing_argument_counter
+    missing_arguments_text = [missing_arguments_text, '- Beam Monitor Offset (PARAMETERS)']
+ENDELSE
 
 ;-monitor efficiency
 IF (getCWBgroupValue(Event, 'monitor_efficiency_group') EQ 0) THEN BEGIN

@@ -52,11 +52,13 @@ cmd_text = '> Command Line:'
 IDLsendToGeek_addLogBookText, Event, cmd_text
 cmd_text = '-> ' + cmd
 IDLsendToGeek_addLogBookText, Event, cmd_text
-cmd_text = '-> Running Command Line: ' + PROCESSING
+cmd_text = '-> Running Command Line ... ' + PROCESSING
 IDLsendToGeek_addLogBookText, Event, cmd_text
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+;running command
 spawn, cmd, listening, err_listening 
-
 IF (err_listening[0] NE '') THEN BEGIN
 ;in log book
     IDLsendToGeek_ReplaceLogBookText, Event, PROCESSING, FAILED    
@@ -71,5 +73,7 @@ ENDIF ELSE BEGIN
     status_text = 'Data Reduction ... DONE WITH SUCCESS!'
     putTextFieldValue, Event, 'data_reduction_status_frame', status_text
 ENDELSE
+;turn off hourglass
+widget_control,hourglass=0
 END
 
