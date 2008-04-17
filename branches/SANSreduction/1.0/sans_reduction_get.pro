@@ -43,3 +43,11 @@ END
 FUNCTION getRunNumber, Event
 RETURN, getTextFieldValue(Event,'run_number_cw_field')
 END
+
+;-------------------------------------------------------------------------------
+FUNCTION getProposalSelected, Event, index
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+index = WIDGET_INFO(id, /droplist_select)
+WIDGET_CONTROL, id, GET_VALUE=list
+RETURN, list[index]
+END

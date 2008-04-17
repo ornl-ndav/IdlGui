@@ -38,14 +38,14 @@
 ;-------------------------------------------------------------------------------
 ;This function returns the list of proposal number of the given
 ;instrument
-FUNCTION  getListOfProposal, instrument
-FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
-                       COUNT=length,$
+FUNCTION  getListOfProposal, facility, instrument
+FileList = FILE_SEARCH('/' + facility + '/' + instrument + '/*', $
+                       COUNT= length,$
                        /TEST_DIRECTORY)
 ProposalList = STRARR(length+1)
 ProposalList[0] = 'PROPOSAL NUMBER UNDEFINED'
 FOR i=1,(length) DO BEGIN
-    ParseList = STRSPLIT(FileList[i-1],'/',/extract,COUNT=nbr)
+    ParseList = STRSPLIT(FileList[i-1],'/',/EXTRACT,COUNT=nbr)
     ProposalList[i] = ParseList[nbr-1]
 ENDFOR
 RETURN, ProposalList
@@ -91,7 +91,7 @@ sTitle    = { size  : [sFrame.size[0]+20,$
 ;Define Proposal Number ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 XYoff           = [sInput.xoffset+10, $
                    sInput.yoffset+15]
-ListOfProposal  = getListOfProposal(sInput.instrument)
+ListOfProposal  = getListOfProposal(sInput.facility, sInput.instrument)
 PropNbrDroplist = { size  : [XYoff[0],$
                              XYoff[1]],$
                     value : ListOfProposal,$

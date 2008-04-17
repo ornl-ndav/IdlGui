@@ -72,7 +72,8 @@ wDraw = WIDGET_DRAW(wTab1Base,$
 sNexus = {MainBase   : wTab1Base,$
           xoffset    : sNexus.size[0],$
           yoffset    : sNexus.size[1],$
-          instrument : 'sans'}
+          instrument : 'SANS',$
+          facility   : 'LENS'}
 nexus_instance = OBJ_NEW('IDLloadNexus', sNexus)
 
 
