@@ -4,19 +4,50 @@ PRO MakeGuiReduceInputTab6, ReduceInputTab, ReduceInputTabSettings
 ;                           Define size arrays
 ;***********************************************************************************
 
+;/////////////////////////////////////////////
+;Constant for Scaling the Final Data Spectrum/
+;/////////////////////////////////////////////
+yoff = 15
+CSFDSframe = { size : [5,yoff,730,50],$
+               frame : 4}
+XYoff1 = [10,-14]
+CSFDSbase = { size : [CSFDSframe.size[0]+XYoff1[0],$
+                      CSFDSframe.size[1]+XYoff1[1],$
+                      295,$
+                      30],$
+              button : { uname : 'csfds_button',$
+                         list : ['Constant for Scaling the Final Data Spectrum'],$
+                         value : 0}}
+
+XYoff2 = [10,25]
+CSFDSvalueLabel = { size : [CSFDSframe.size[0]+XYoff2[0],$
+                            CSFDSframe.size[1]+XYoff2[1]],$
+                    value : 'Value:',$
+                    uname : 'csfds_value_text_label',$
+                    sensitive : CSFDSbase.button.value}
+XYoff3 = [50,-5]
+CSFDSvalueText  = { size : [CSFDSvalueLabel.size[0]+XYoff3[0],$
+                            CSFDSvaluelabel.size[1]+XYoff3[1],$
+                            100,30],$
+                    uname : 'csfds_value_text',$
+                    sensitive : CSFDSbase.button.value}
+
 ;///////////////////////////////////////////////////
 ;Time Zero Slope Parameter (Angstroms/microseconds)/
 ;///////////////////////////////////////////////////
-yoff = 35
-TZSPframe = { size : [5,yoff,730,50],$
-                frame : 4}
+yoff = 80
+TZSPframe = { size : [CSFDSframe.size[0], $
+                      CSFDSframe.size[1]+yoff,$
+                      CSFDSframe.size[2:3]],$
+              frame : 4}
 XYoff1 = [10,-14]
 TZSPbase = { size : [TZSPframe.size[0]+XYoff1[0],$
                      TZSPframe.size[1]+XYoff1[1],$
                      330,$
                      30],$
              button : { uname : 'tzsp_button',$
-                        list : ['Time Zero Slope Parameter (Angstroms/microSeconds)'],$
+                        list : ['Time Zero Slope Parameter ' + $
+                                '(Angstroms/microSeconds)'],$
                         value : 0}}
 
 XYoff2 = [10,25]
@@ -48,7 +79,6 @@ TZSPerrorText  = { size : [TZSPerrorLabel.size[0]+XYoff5[0],$
 ;//////////////////////////////////////////
 ;Time Zero Offset Parameter (microseconds)/
 ;//////////////////////////////////////////
-yoff = 100
 TZOPframe = { size : [TZSPframe.size[0],$
                       TZSPframe.size[1]+yoff,$
                       TZSPframe.size[2:3]],$
@@ -249,6 +279,49 @@ tab6_base = WIDGET_BASE(ReduceInputTab,$
                         SCR_XSIZE = ReduceInputTabSettings.size[2],$
                         SCR_YSIZE = ReduceInputTabSettings.size[3],$
                         TITLE     = ReduceInputTabSettings.title[3])
+
+;/////////////////////////////////////////////
+;Constant for Scaling the Final Data Spectrum/
+;/////////////////////////////////////////////
+
+base = WIDGET_BASE(tab6_base,$
+                   XOFFSET   = CSFDSbase.size[0],$
+                   YOFFSET   = CSFDSbase.size[1],$
+                   SCR_XSIZE = CSFDSbase.size[2],$
+                   SCR_YSIZE = CSFDSbase.size[3])
+
+group = CW_BGROUP(base,$
+                  CSFDSbase.button.list,$
+                  UNAME      = CSFDSbase.button.uname,$
+                  SET_VALUE  = 0,$
+                  ROW        = 1,$
+                  /NONEXCLUSIVE)
+
+label = WIDGET_LABEL(tab6_base,$
+                     XOFFSET   = CSFDSvalueLabel.size[0],$
+                     YOFFSET   = CSFDSvalueLabel.size[1],$
+                     VALUE     = CSFDSvalueLabel.value,$
+                     SENSITIVE = CSFDSbase.button.value,$
+                     UNAME     = CSFDSvalueLabel.uname)
+
+text = WIDGET_TEXT(tab6_base,$
+                   XOFFSET   = CSFDSvalueText.size[0],$
+                   YOFFSET   = CSFDSvalueText.size[1],$
+                   SCR_XSIZE = CSFDSvalueText.size[2],$
+                   SCR_YSIZE = CSFDSvalueText.size[3],$
+                   UNAME     = CSFDSvalueText.uname,$
+                   SENSITIVE = CSFDSbase.button.value,$
+                   /EDITABLE,$
+                   /ALL_EVENTS,$
+                   /ALIGN_LEFT)
+
+frame  = WIDGET_LABEL(tab6_base,$
+                      XOFFSET   = CSFDSframe.size[0],$
+                      YOFFSET   = CSFDSframe.size[1],$
+                      SCR_XSIZE = CSFDSframe.size[2],$
+                      SCR_YSIZE = CSFDSframe.size[3],$
+                      FRAME     = CSFDSframe.frame,$
+                      VALUE     = '')
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Time Zero Slope Parameter (Angstroms/microseconds)\

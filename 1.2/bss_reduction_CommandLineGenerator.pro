@@ -221,7 +221,8 @@ IF (isButtonSelected(Event,'te_button') AND $
     
     IF (TEL EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Low Value that Bracket the Elastic Peak'
+        status_text = '   -Please provide a Low Value that Bracket the ' + $
+          'Elastic Peak'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -243,7 +244,8 @@ IF (isButtonSelected(Event,'te_button') AND $
     
     IF (TEH EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a High Value that Bracket the Elastic Peak'
+        status_text = '   -Please provide a High Value that Bracket the ' + $
+          'Elastic Peak'
         IF (tab3 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -399,7 +401,8 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_sd_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant Value for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Value for' 
         status_text += ' Sample Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -424,7 +427,8 @@ IF (isButtonSelected(Event,'tibc_for_sd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_sd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text = '   -Please provide a Time Independent Background ' + $
+          'Constant Error for' 
         status_text += ' Sample Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -459,7 +463,8 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_bd_value_text= TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant Value for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Value for' 
         status_text += ' Background Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -484,7 +489,8 @@ IF (isButtonSelected(Event,'tibc_for_bd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_bd_error_text= TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Error for' 
         status_text += ' Background Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -520,7 +526,8 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
         (*global).Configuration.Reduce.tab4.tibc_for_nd_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant Value for'
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Value for'
         status_text += ' Normalization Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -545,7 +552,8 @@ IF (isButtonSelected(Event,'tibc_for_nd_button')) THEN BEGIN
         (*global).Configuration.Reduce.tab4.tibc_for_nd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Error for' 
         status_text += ' Normalization Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -580,7 +588,8 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_ecd_value_text= TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant Value for'
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Value for'
         status_text += ' Empty Can Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -605,7 +614,8 @@ IF (isButtonSelected(Event,'tibc_for_ecd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_ecd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Error for' 
         status_text += ' Empty Can Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -641,7 +651,8 @@ IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_scatd_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Time Independent Background Constant Value for'
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Value for'
         status_text += ' Scattering Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -666,7 +677,8 @@ IF (isButtonSelected(Event,'tibc_for_scatd_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab4.tibc_for_scatd_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Time Independent Background Constant Error for' 
+        status_text = '   -Please provide a Time Independent Background' + $
+          ' Constant Error for' 
         status_text += ' Scattering Data'
         IF (tab4 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
@@ -709,7 +721,8 @@ IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.csbss_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Value'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the Sample Data Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -733,7 +746,8 @@ IF (isButtonSelected(Event,'csbss_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.csbss_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Error'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the Sample Data Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -769,7 +783,8 @@ IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.csn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the normalization Data Value'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the normalization Data Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -793,7 +808,8 @@ IF (isButtonSelected(Event,'csn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.csn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Normalization Data Error'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the Normalization Data Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -829,7 +845,8 @@ IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.bcs_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Associated Empty Container Value'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the Sample Data Associated Empty Container Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -853,7 +870,8 @@ IF (isButtonSelected(Event,'bcs_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.bcs_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Sample Data Associated Empty Container Error'
+        status_text = '   -Please provide a Constant To Scale Background ' + $
+          'for Subtraction from the Sample Data Associated Empty Container Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -889,7 +907,9 @@ IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.bcn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Normalization Data Associated Empty Container Value'
+        status_text = '   -Please provide a Constant To Scale Background' + $
+          ' for Subtraction from the Normalization Data Associated Empty ' + $
+          'Container Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -913,7 +933,9 @@ IF (isButtonSelected(Event,'bcn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.bcn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale Background for Subtraction from the Normalization Data Associated Empty Container Error'
+        status_text = '   -Please provide a Constant To Scale Background ' + $
+          'for Subtraction from the Normalization Data Associated Empty ' + $
+          'Container Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -949,7 +971,8 @@ IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.cs_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Sample Data Value'
+        status_text = '   -Please provide a Constant To Scale the Empty' + $
+          ' Container for Subtraction from the Sample Data Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -973,7 +996,8 @@ IF (isButtonSelected(Event,'cs_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.cs_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Sample Data Error'
+        status_text = '   -Please provide a Constant To Scale the Empty' + $
+          ' Container for Subtraction from the Sample Data Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1009,7 +1033,8 @@ IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.cn_value_text = Value
     IF (Value EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Normalization Data Value'
+        status_text = '   -Please provide a Constant To Scale the Empty' + $
+          ' Container for Subtraction from the Normalization Data Value'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1033,7 +1058,8 @@ IF (isButtonSelected(Event,'cn_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab5.cn_error_text = Error
     IF (Error EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Constant To Scale the Empty Container for Subtraction from the Normalization Data Error'
+        status_text = '   -Please provide a Constant To Scale the Empty' + $
+          ' Container for Subtraction from the Normalization Data Error'
         IF (tab5 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1059,12 +1085,42 @@ ENDIF
 TabName = 'Tab#6 - DATA CONTROL'
 tab6    = 0
 
+;constant for scaling the final data spectrum
+IF (isButtonSelected(Event,'csfds_button')) THEN BEGIN
+    cmd += ' --rescale-final='
+
+    Value = getTextFieldValue(Event,'csfds_value_text')
+    IF (Value EQ '') THEN BEGIN
+        cmd += '?'
+        status_text = '   -Please provide a Constant for Scaling the Final' + $
+          ' Data Spectrum'
+        IF (tab6 EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, '', 1
+            putInfoInCommandLineStatus, Event, '', 1
+        ENDIF
+        IF (tab6 EQ 0 AND $
+            StatusMessage EQ 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 0
+        ENDIF
+        IF (tab6 EQ 0 AND $
+            StatusMessage NE 0) THEN BEGIN
+            putInfoInCommandLineStatus, Event, TabName, 1
+        ENDIF
+        putInfoInCommandLineStatus, Event, status_text, 1
+        StatusMessage += 1
+        ++tab6
+    ENDIF ELSE BEGIN
+        cmd += strcompress(Value,/remove_all)
+    ENDELSE
+ENDIF
+
 ;get Time Zero Slope Parameter
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab6.tzsp_button = 1
 ENDIF ELSE BEGIN
     (*global).Configuration.Reduce.tab6.tzsp_button = 0
 ENDELSE
+
 IF (isButtonSelected(Event,'tzsp_button')) THEN BEGIN
     cmd += ' --time-zero-slope='
 
@@ -1265,7 +1321,8 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab6.gifw_value_text = TIBCV
     IF (TIBCV EQ '') THEN BEGIN
         cmd += '?'
-        status_text = '   -Please provide a Global Instrument Final Wavelength Value'
+        status_text = '   -Please provide a Global Instrument Final ' + $
+          'Wavelength Value'
         IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1289,7 +1346,8 @@ IF (isButtonSelected(Event,'gifw_button')) THEN BEGIN
     (*global).Configuration.Reduce.tab6.gifw_error_text = TIBCE
     IF (TIBCE EQ '') THEN BEGIN
         cmd += ',?'
-        status_text = '   -Please provide a Global Instrument Final Wavelength Error'
+        status_text = '   -Please provide a Global Instrument Final ' + $
+          'Wavelength Error'
         IF (tab6 EQ 0) THEN BEGIN
             putInfoInCommandLineStatus, Event, '', 1
             putInfoInCommandLineStatus, Event, '', 1
@@ -1523,7 +1581,8 @@ IF (isButtonSelected(Event,'wocpsamn_button') AND $
         
         IF (WABwidth EQ '') THEN BEGIN
             cmd += ',?'
-            status_text = '   -Please provide a Wavelength Histogram Bin Width Value'
+            status_text = '   -Please provide a Wavelength Histogram Bin ' + $
+              'Width Value'
             IF (tab7 EQ 0) THEN BEGIN
                 putInfoInCommandLineStatus, Event, '', 1
             ENDIF

@@ -677,6 +677,16 @@ CASE Event.id OF
     end    
 
 ;tab6
+    Widget_Info(wWidget, FIND_BY_UNAME='csfds_button'): begin
+        BSSreduction_Reduce_csfds_button, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
+    Widget_Info(wWidget, FIND_BY_UNAME='csfds_value_text'): begin
+        BSSreduction_Reduce_csfds_value_text, Event
+        BSSreduction_CommandLineGenerator, Event
+    end    
+
     Widget_Info(wWidget, FIND_BY_UNAME='tzsp_button'): begin
         BSSreduction_Reduce_tzsp_button, Event
         BSSreduction_CommandLineGenerator, Event

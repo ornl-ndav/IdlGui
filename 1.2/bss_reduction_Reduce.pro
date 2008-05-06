@@ -311,6 +311,15 @@ PRO BSSreduction_Reduce_cn_error_text, Event
 END
 ;****************** TAB 6 *************************
 
+;This function is reached by the csfds_button
+PRO BSSreduction_Reduce_csfds_button, Event
+BSSreduction_EnableOrNotFields, Event, 'csfds_button'
+END
+
+;This function is reached by csfds_value_text
+PRO BSSreduction_Reduce_csfds_value_text, Event
+END
+
 ;This function is reached by the tzsp_button
 PRO BSSreduction_Reduce_tzsp_button, Event
 BSSreduction_EnableOrNotFields, Event, 'tzsp_button'
