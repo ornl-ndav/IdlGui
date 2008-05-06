@@ -9,7 +9,8 @@ PRO MakeGuiReduceInputTab7, ReduceInputTab, ReduceInputTabSettings
 ;//////////////////////////////
 WAIOBase = { size  : [15,20,500,35],$
              button : { uname : 'waio_button',$
-                        list : [' Write All Intermediate Output (WARNING: VERGY LARGE FILES AND SLOW)']}}
+                        list : [' Write All Intermediate Output (WARNING: ' + $
+                                'VERGY LARGE FILES AND SLOW)']}}
 
 ;/////////////////////////////////////////////////
 ;Write out Calculated time-independent background/
@@ -19,7 +20,8 @@ WOCTIBbase = { size  : [WAIOBase.size[0], $
                         WAIOBase.size[1]+yoff, $
                         WAIOBase.size[2:3]],$
                button : { uname : 'woctib_button',$
-                          list : [' Write Out Calculated Time-Independent Background']}}
+                          list : [' Write Out Calculated Time-Independent ' + $
+                                  'Background']}}
 
 NA_WOCTIBbase = { size : [WOCTIBbase.size[0]+5,$
                           WOCTIBbase.size[1]-5,$
@@ -34,7 +36,8 @@ WOPWSbase = { size  : [WOCTIBbase.size[0], $
                        WOCTIBbase.size[1]+yoff, $
                        WOCTIBbase.size[2:3]],$
               button : { uname : 'wopws_button',$
-                         list : [' Write Out Pixel Wavelength Spectra (WARNING: VERGY LARGE FILE AND SLOW)']}}
+                         list : [' Write Out Pixel Wavelength Spectra ' + $
+                                 '(WARNING: VERGY LARGE FILE AND SLOW)']}}
 
 ;//////////////////////////////////////
 ;Write Out Monitor Wavelength Spectrum/
@@ -73,7 +76,8 @@ WORMSbase = { size  : [WOMESbase.size[0], $
                        WOMESbase.size[1]+yoff, $
                        WOMESbase.size[2:3]],$
               button : { uname : 'worms_button',$
-                         list : [' Write Out Rebinned Monitor Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
+                         list : [' Write Out Rebinned Monitor Spectra (WARNING:' + $
+                                 ' VERY LARGE FILE AND SLOW)']}}
 
 NA_WORMSbase = { size : [WORMSbase.size[0]+5,$
                          WORMSbase.size[1]-5,$
@@ -88,12 +92,14 @@ WOCPSAMNbase = { size  : [WORMSbase.size[0], $
                           WORMSbase.size[1]+yoff, $
                           WORMSbase.size[2:3]],$
               button : { uname : 'wocpsamn_button',$
-                         list : [' Write Out Combined Pixel Spectrum After Monitor Normalization']}}
+                         list : [' Write Out Combined Pixel Spectrum After ' + $
+                                 'Monitor Normalization']}}
 
 NA_WOCPSAMNbase = { size : [WOCPSAMNbase.size[0]+5,$
                             WOCPSAMNbase.size[1]-5,$
                             WOCPSAMNbase.size[2:3]],$
-                  value : 'Combined Pixel Spectrum After Monitor Normalization - NOT AVAILABLE',$
+                    value : 'Combined Pixel Spectrum After Monitor' + $
+                    ' Normalization - NOT AVAILABLE',$
                   uname : 'na_wocpsamnbase'}
 
 ;//////////////////////////
@@ -141,39 +147,24 @@ WHAtext3  = { size : [WHAlabel3.size[0]+xoff_LT,$
                       WHAtext1.size[2:3]],$
               uname : 'wa_bin_width_text'}
 
-;///////////////////////////////////////
-;Write Out Pixel Initial Energy Spectra/
-;///////////////////////////////////////
-yoff = 50
-WOPIESbase = { size  : [WHAbase.size[0], $
-                        WHAbase.size[1]+yoff, $
-                        WHAbase.size[2:3]],$
-              button : { uname : 'wopies_button',$
-                         list : [' Write Out Pixel Initial Energy Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
-
-;////////////////////////////////////////
-;Write Out Pixel Energy Transfer Spectra/
-;////////////////////////////////////////
-WOPETSbase = { size  : [WOPIESbase.size[0], $
-                        WOPIESbase.size[1]+yoff, $
-                        WOPIESbase.size[2:3]],$
-              button : { uname : 'wopets_button',$
-                         list : [' Write Out Pixel Energy Transfer Spectra (WARNING: VERY LARGE FILE AND SLOW)']}}
-
 ;/////////////////////////////////////////////////////////////
 ;Write Out Linearly Interpolated Direct Scattering Background/
 ;Info. Summed over all Pixel                                 /
 ;/////////////////////////////////////////////////////////////
-WOLIDSBbase = { size  : [WOPETSbase.size[0], $
-                         WOPETSbase.size[1]+yoff, $
-                         WOPETSbase.size[2:3]],$
+yoff = 50
+WOLIDSBbase = { size  : [WHAbase.size[0], $
+                        WHAbase.size[1]+yoff, $
+                        WHAbase.size[2:3]],$
                 button : { uname : 'wolidsb_button',$
-                         list : [' Write Out Linearly Interpolated Direct Scattering Background Information Summed over all Pixels']}}
+                           list : [' Write Out Linearly Interpolated Direct' + $
+                                   ' Scattering Background Information Summed' + $
+                                   ' over all Pixels']}}
 
 NA_WOLIDSBbase = { size : [WOLIDSBbase.size[0]+5,$
                            WOLIDSBbase.size[1]-5,$
                            WOLIDSBbase.size[2:3]],$
-                  value : 'Linearly Interpolated Direct Scatt. Back. Information Summed over all Pixels - NOT AVAILABLE',$
+                   value : 'Linearly Interpolated Direct Scatt. Back. ' + $
+                   'Information Summed over all Pixels - NOT AVAILABLE',$
                   uname : 'na_wolidsbbase'}
 
 ;***********************************************************************************
@@ -427,38 +418,6 @@ text3 = WIDGET_TEXT(base,$
                     /EDITABLE,$
                     /ALL_EVENTS,$
                     /ALIGN_LEFT)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write Out Pixel Initial Energy Spectra\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOPIESbase.size[0],$
-                   YOFFSET   = WOPIESbase.size[1],$
-                   SCR_XSIZE = WOPIESbase.size[2],$
-                   SCR_YSIZE = WOPIESbase.size[3])
-
-group = CW_BGROUP(base,$
-                  WOPIESbase.button.list,$
-                  UNAME      = WOPIESbase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
-
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-;Write Out Pixel Energy Transfer Spectra\
-;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-base = WIDGET_BASE(tab7_base,$
-                   XOFFSET   = WOPETSbase.size[0],$
-                   YOFFSET   = WOPETSbase.size[1],$
-                   SCR_XSIZE = WOPETSbase.size[2],$
-                   SCR_YSIZE = WOPETSbase.size[3])
-
-group = CW_BGROUP(base,$
-                  WOPETSbase.button.list,$
-                  UNAME      = WOPETSbase.button.uname,$
-                  /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
-                  ROW        = 1)
 
 ;\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 ;Write Out Linearly Interpolated Direct Scattering Background\
