@@ -33,15 +33,20 @@ ENDIF ELSE BEGIN
     success = 0
 ENDELSE
 
-if (success EQ 0) then begin
+IF (success EQ 0) THEN BEGIN
 
-    putTextAtEndOfLogBookLastLine, Event, FAILED + ' --> Wrong NeXus Format!', PROCESSING
+    putTextAtEndOfLogBookLastLine, Event, FAILED + $
+      ' --> Wrong NeXus Format!', PROCESSING
     (*global).NeXusFound = 0
     (*global).NexusFormatWrong = 1 ;wrong format
 ;desactivate button
     activate_status = 0
 
-endif else begin
+    text = 'Loading Run Number ' + STRCOMPRESS((*global).RunNumber,/REMOVE_ALL)
+    text += ' ... FAILED'
+    putMessageBoxInfo, Event, text
+
+ENDIF ELSE BEGIN
 
     (*global).NexusFormatWrong = 0 ;right format
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
@@ -50,12 +55,12 @@ endif else begin
     message = '  -> Plot Counts vs TOF of full selection ... ' + PROCESSING
     AppendLogBookMessage, Event, message
 
-    if ((*global).true_full_x_min EQ 0.0000001) then begin
+    IF ((*global).true_full_x_min EQ 0.0000001) THEN BEGIN
         BSSreduction_PlotCountsVsTofOfSelection, Event
-    endif else begin
+    ENDIF ELSE BEGIN
         BSSreduction_PlotCountsVsTofOfSelection_Light, Event
         BSSreduction_DisplayLinLogFullCountsVsTof, Event
-    endelse
+    ENDELSE
 
     putTextAtEndOfLogBookLastLine, Event, OK, PROCESSING
 
@@ -64,8 +69,12 @@ endif else begin
 
 ;activate button
     activate_status = 1
+    
+    text = 'Loading Run Number ' + STRCOMPRESS((*global).RunNumber,/REMOVE_ALL)
+    text += ' ... OK'
+    putMessageBoxInfo, Event, text
 
-endelse
+ENDELSE
 
 ;activate or not 'save_roi_file_button', 'roi_path_button',
 ;'roi_file_name_generator', 'load_roi_file_button'
