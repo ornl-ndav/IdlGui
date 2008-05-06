@@ -101,7 +101,7 @@ ENDELSE
 AIGFile = getTextFieldValue(Event,'aig_list_of_runs_text')
 (*global).Configuration.Reduce.tab2.aig_list_of_runs_text = AIGFile
 IF (AIGFile NE '') THEN BEGIN
-    cmd += ' --inst_geom=' + AIGFile
+    cmd += ' --inst-geom=' + AIGFile
 ENDIF
 
 ;get Output File Name
