@@ -221,7 +221,6 @@ FOR i=0,(sz_1-1) DO BEGIN
     ENDIF 
 ENDFOR
 
-print, sz_1
 ;check value that are <= Counts in bank2
 bank2_integrated_counts = (*(*global).bank2_sum)
 sz_2 = (size(bank2_integrated_counts))(1) * (size(bank2_integrated_counts))(2)
