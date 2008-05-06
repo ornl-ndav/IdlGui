@@ -36,17 +36,22 @@ FAILED = (*global).failed
 isNeXusExist = 0 ;by default, NeXus does not exist
 
 ;get run number
-RunNumber = getRunNumber(Event)
+RunNumber           = getRunNumber(Event)
+(*global).RunNumber = RunNumber
 
 IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
 
-    message = 'Loading run number ' + strcompress(RunNumber,/remove_all) + ':'
+    message = 'Loading Run Number ' + strcompress(RunNumber,/remove_all) + ':'
     InitialLogBookMessage = getLogBookText(Event)
     IF (InitialLogBookMessage[0] EQ '') THEN BEGIN
         PutLogBookMessage, Event, message
     ENDIF ELSE BEGIN
         AppendLogBookMessage, Event, message
     ENDELSE
+
+    text = 'Loading Run Number ' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+    text += ' ... (' + PROCESSING + ')'
+    putMessageBoxInfo, Event, text
 
     message = '  -> Checking if run number exists ... ' + PROCESSING
     AppendLogBookMessage, Event, message
@@ -74,12 +79,12 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         NexusFullName = strcompress(NexusFullPath[0],/remove_all)
         (*global).NexusFullName = NexusFullName
 
-        if (n_elements(config) EQ 0) then begin
+        IF (N_ELEMENTS(config) EQ 0) THEN BEGIN
 
 ;put nexus file name in data text field (Reduce tab#1)
             putReduceRawSampleDatafile, Event, NexusFullName
 
-        endif
+        ENDIF
 
     ENDIF ELSE BEGIN         ;tells that we didn't find the nexus file
         
@@ -87,6 +92,10 @@ IF (RunNumber NE '') THEN BEGIN ;continue only if there is a run number
         PutNexusNameInLabel, Event, 'N/A'
         putTextAtEndOfLogBookLastLine, Event, FAILED, PROCESSING
         
+        text = 'Loading Run Number ' + STRCOMPRESS(RunNumber,/REMOVE_ALL)
+        text += ' ... FAILED'
+        putMessageBoxInfo, Event, text
+
     ENDELSE
     
 ENDIF

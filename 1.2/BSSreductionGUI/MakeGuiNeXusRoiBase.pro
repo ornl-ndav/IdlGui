@@ -45,7 +45,8 @@ label = WIDGET_LABEL(ffbase,$
                      VALUE       = '',$
                      UNAME       = 'nexus_full_path_label',$
                      SCR_XSIZE   = 300,$
-                     SCR_YSIZE   = 30)
+                     SCR_YSIZE   = 30,$
+                     FRAME       = 0)
 
 ;Create Load roi file
 sbase = WIDGET_BASE(NeXusRoiTabBase,$
