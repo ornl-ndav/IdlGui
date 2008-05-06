@@ -177,7 +177,8 @@ DSBframe     = { size  : [5, $
 XYoff         = [10,-10]
 DSBlabel     = { size  : [DSBframe.size[0]+XYoff[0],$
                           DSBframe.size[1]+XYoff[1]],$
-                  value : 'Direct Scattering Background (Sample Data at Baseline T) File',$
+                 value : 'Direct Scattering Background (Sample Data at ' + $
+                 'Baseline T) File',$
                   uname : 'dsb_label'}
 
 XYoff             = [8,5]
