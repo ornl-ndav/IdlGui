@@ -1,7 +1,8 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-APPLICATION = 'BSSreductionSQE'
-VERSION     = '1.2.4'
+APPLICATION     = 'BSSreductionSQE'
+VERSION         = '1.2.4'
+DeployedVersion = 'yes'
 
 ;define initial global values - these could be input via external file or other means
 
@@ -16,6 +17,7 @@ endelse
 
 ;define global variables
 global = ptr_new ({ $
+                    DeployedVersion : DeployedVersion,$
                     DriverName : 'amorphous_reduction_sqe',$
                     DRstatusOK : 'Data Reduction ... DONE',$
                     DRstatusFAILED : 'Data Reduction ... ERROR! (-> Check Log Book)',$
@@ -305,13 +307,17 @@ XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='BSSreduction_Cleanup'
 id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
-;;default tabs shown
-id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-widget_control, id1, set_tab_current = 1 ;reduce
+IF (DeployedVersion EQ 'no') THEN BEGIN
 
-;;tab #7
-id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
-widget_control, id1, set_tab_current = 5
+;default tabs shown
+    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+    widget_control, id1, set_tab_current = 1 ;reduce
+    
+;tab #7
+    id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
+    widget_control, id1, set_tab_current = 5
+    
+ENDIF
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
