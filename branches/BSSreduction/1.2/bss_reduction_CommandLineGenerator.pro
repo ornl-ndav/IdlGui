@@ -1607,22 +1607,6 @@ ENDIF
 
 IF ((*global).Configuration.Reduce.tab7.waio_button NE 1) THEN BEGIN
 
-;Write out Pixel Initial Energy Spectra
-    IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
-        cmd += ' --dump-ei'
-        (*global).Configuration.Reduce.tab7.wopies_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.wopies_button = 0
-    ENDELSE
-    
-;Write out Pixel Energy Transfer Spectra
-    IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
-        cmd += ' --dump-energy'
-        (*global).Configuration.Reduce.tab7.wopets_button = 1
-    ENDIF ELSE BEGIN
-        (*global).Configuration.Reduce.tab7.wopets_button = 0
-    ENDELSE
-    
 ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
     IF (isButtonSelected(Event,'wolidsb_button')) THEN BEGIN
