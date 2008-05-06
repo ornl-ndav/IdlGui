@@ -20,6 +20,9 @@ CASE (type) OF
     'tibc_for_ecd_button': BEGIN
         text_unames = ['tibc_for_ecd_value_text','tibc_for_ecd_error_text']
     END
+    'csfds_button': BEGIN
+        text_unames = ['csfds_value_text']
+    END
     'tzsp_button': BEGIN
         text_unames = ['tzsp_value_text','tzsp_error_text']
     END
@@ -74,14 +77,13 @@ CASE (type) OF
     END
 ENDCASE
 
-IF ((size(text_unames))(1) GT 1) THEN BEGIN
+IF ((size(text_unames))(1) GE 1 AND $
+    text_unames[0] NE '') THEN BEGIN
     new_text_unames = [text_unames,text_unames + '_label']
-    
     sz=(size(new_text_unames))(1)
     FOR i=0,(sz-1) DO BEGIN
         activate_button, Event, new_text_unames[i], ActivateStatus
     ENDFOR
-
 ENDIF
 
 END
