@@ -37,9 +37,34 @@ PRO MakeGuiLoadBatch, STEPS_TAB, StepsTabSize
 ;*******************************************************************************
 ;Define Parameters
 ;*******************************************************************************
-sLoadBatchBase = { size  : [0,0,StepsTabSize[2:3]],$
-                   uname : 'load_batch_base',$
-                   title : 'BATCH'}
+sLoadBatchBase = { size:  [0,0,StepsTabSize[2:3]],$
+                   uname: 'load_batch_base',$
+                   title: 'BATCH'}
+
+;Load Batch File Button --------------------------------------------------------
+XYoff = [5,5]
+sLoadBatchButton = { size:  [XYoff[0],$
+                             XYoff[1],$
+                             135,30],$
+                     value: 'Load Batch File ...',$
+                     uname: 'load_batch_file_button'}
+
+;Load Batch File Text ----------------------------------------------------------
+XYoff = [5,0]
+sLoadBatchText = { size:  [sLoadBatchButton.size[0]+ $
+                           sLoadBatchButton.size[2]+XYoff[0],$
+                           sLoadBatchButton.size[1]+XYoff[1],$
+                           300,30],$
+                   uname: 'load_batch_file_text_field'}
+
+;Preview Button ----------------------------------------------------------------
+XYoff = [5,0]
+sPreviewBatch = { size:  [sLoadBatchText.size[0]+$
+                          sLoadBatchText.size[2]+XYoff[0],$
+                          sLoadBatchText.size[1],$
+                          70,30],$
+                  value: 'PREVIEW',$
+                  uname: 'batch_preview_button'}
 
 ;*******************************************************************************
 ;Build GUI
@@ -51,6 +76,38 @@ wLoadBatchBase = WIDGET_BASE(STEPS_TAB,$
                            SCR_XSIZE = sLoadBatchBase.size[2],$
                            SCR_YSIZE = sLoadBatchBase.size[3],$
                            TITLE     = sLoadBatchBase.title)
+
+;Load Batch File Button --------------------------------------------------------
+wLoadBatchButton = WIDGET_BUTTON(wLoadBatchBase,$
+                                 XOFFSET   = sLoadBatchButton.size[0],$
+                                 YOFFSET   = sLoadBatchButton.size[1],$
+                                 SCR_XSIZE = sLoadBatchButton.size[2],$
+                                 SCR_YSIZE = sLoadBatchButton.size[3],$
+                                 UNAME     = sLoadBatchButton.uname,$
+                                 VALUE     = sLoadBatchButton.value)
+
+;Load Batch File Text ----------------------------------------------------------
+wLoadBatchText = WIDGET_TEXT(wLoadBatchBase,$
+                             XOFFSET   = sLoadBatchText.size[0],$
+                             YOFFSET   = sLoadBatchText.size[1],$
+                             SCR_XSIZE = sLoadBatchText.size[2],$
+                             UNAME     = sLoadBatchText.uname,$
+                             /EDITABLE,$
+                             /ALIGN_LEFT)
+
+;Preview Button ----------------------------------------------------------------
+wPreviewBatch = WIDGET_BUTTON(wLoadBatchBase,$
+                              XOFFSET   = sPreviewBatch.size[0],$
+                              YOFFSET   = sPreviewBatch.size[1],$
+                              SCR_XSIZE = sPreviewBatch.size[2],$
+                              SCR_YSIZE = sPreviewBatch.size[3],$
+                              VALUE     = sPreviewBatch.value,$
+                              UNAME     = sPreviewBatch.uname)
+
+
+
+
+
 
 END
 
