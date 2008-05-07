@@ -1430,6 +1430,9 @@ END
 
 ;-------------------------------------------------------------------------------
 PRO BatchTab_LaunchREFscale, Event ;_Batch
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
 
 CurrentFolder = '~/SVN/IdlGui/branches/REFscale/1.0/'
 IdlUtilitiesPath = 'utilities'
@@ -1445,7 +1448,7 @@ make_gui_step1
 make_gui_step2
 make_gui_step3
 make_gui_output_file
-make_gui_load_batch
+make_gui_batch
 make_gui_main_base_components
 make_gui_log_book
 
@@ -1468,6 +1471,7 @@ procedure_ref_scale_step3
 ref_scale_math
 ref_scale_file_utility
 procedure_ref_scale_tof_to_q
+ref_scale_batch
 
 procedure_ref_scale_openfile
 procedure_ref_scale_plot
@@ -1476,5 +1480,8 @@ procedure_ref_scale_step2
 ref_scale_produce_output
 procedure_ref_scale_tabs
 ref_scale_eventcb
-ref_scale, BatchMode='yes'
+
+;get name of batch file
+ref_scale, BatchMode='yes', BatchFile=(*global).BatchFileName
+
 END
