@@ -47,7 +47,7 @@ cd, CurrentFolder + '/REFscaleGUI/'
 .run make_gui_step2.pro
 .run make_gui_step3.pro
 .run make_gui_output_file.pro
-.run make_gui_load_batch.pro
+.run make_gui_batch.pro
 .run make_gui_main_base_components.pro
 .run make_gui_log_book.pro
 
