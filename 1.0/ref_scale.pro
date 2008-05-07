@@ -32,7 +32,7 @@
 ;
 ;===============================================================================
 
-pro Build_GUI, BatchMode, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  
 ;Load event callback routines
@@ -264,6 +264,12 @@ XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
 ;- BATCH MODE ONLY -------------------------------------------------------------
 ;Show BATCH Tab if Batch Mode is used
 IF (BatchMode EQ 'yes') THEN BEGIN
+    IF (BatchFile NE '') THEN BEGIN
+        id = WIDGET_INFO(MAIN_BASE_ref_scale, $
+                         FIND_BY_UNAME='load_batch_file_text_field')
+        WIDGET_CONTROL, id, SET_VALUE=BatchFile
+    ENDIF
+;Show step 4
     id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
     widget_control, id1, set_tab_current = 4
 ENDIF
@@ -296,11 +302,15 @@ end
 ;
 ; Empty stub procedure used for autoloading.
 ;
-PRO ref_scale, BatchMode=BatchMode, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+PRO ref_scale, BatchMode    = BatchMode, $
+               BatchFile    = BatchFile, $
+               GROUP_LEADER = wGroup, $
+               _EXTRA       = _VWBExtra_
 IF (N_ELEMENTS(BatchMode) EQ 0) THEN BEGIN
     BatchMode = 'no'
+    BatchFile = ''
 ENDIF ELSE BEGIN
     BatchMode = 'yes'
 ENDELSE
-Build_GUI, BatchMode, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
 END
