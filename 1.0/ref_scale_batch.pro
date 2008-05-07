@@ -45,6 +45,7 @@ BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to Load ...',$
                                 /MUST_EXIST)
 
 IF (BatchFileName NE '') THEN BEGIN
+    (*global).BatchFileName = BatchFileName
     LogText = '> Loading Batch File:'
     idl_send_to_geek_addLogBookText, Event, LogText
     LogText = '-> File Name : ' + BatchFileName
@@ -54,7 +55,6 @@ IF (BatchFileName NE '') THEN BEGIN
     idl_send_to_geek_addLogBookText, Event, LogText
 ;put name of batch file in text field
     putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
-
 ;     BatchTable = PopulateBatchTable(Event, BatchFileName)
 ;     (*(*global).BatchTable) = BatchTable
 ;     DisplayBatchTable, Event, BatchTable
@@ -77,11 +77,18 @@ IF (BatchFileName NE '') THEN BEGIN
 ; ;enable or not the REPOPULATE Button
 ;     CheckRepopulateButton, Event
 ENDIF 
-
 END
 
 ;===============================================================================
+PRO ref_scale_PreviewBatchFile, Event
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
+WIDGET_CONTROL,id,GET_UVALUE=global
+;retrieve BatchFileName
+BatchFileName = (*global).BatchFileName
+XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
+END
 
+;===============================================================================
 PRO ref_scale_batch
 END
 
