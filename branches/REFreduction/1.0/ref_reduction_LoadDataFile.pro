@@ -286,7 +286,7 @@ instrument = (*global).instrument
 (*global).data_run_number = DataRunNumber
 ;store full path to NeXus
 (*global).data_full_nexus_name = full_nexus_name
-RefReduction_NXsummary, Event, full_nexus_name, 'data_file_info_text'
+RefReduction_NXsummaryBatch, Event, full_nexus_name, 'data_file_info_text'
 ;check format of NeXus file
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1

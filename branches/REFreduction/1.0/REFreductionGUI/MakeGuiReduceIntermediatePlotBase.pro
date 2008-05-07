@@ -1,4 +1,7 @@
-PRO MakeGuiReduceIntermediatePlotBase, Event, REDUCE_BASE, IndividualBaseWidth, PlotsTitle
+PRO MakeGuiReduceIntermediatePlotBase, Event, $
+                                       REDUCE_BASE, $
+                                       IndividualBaseWidth, $
+                                       PlotsTitle
 
 InterLabelTitle = 'I N T E R M E D I A T E   P L O T S'
 InterLabelSize = [IndividualBasewidth+20,10]

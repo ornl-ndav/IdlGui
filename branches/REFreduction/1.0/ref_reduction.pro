@@ -1,11 +1,8 @@
 PRO BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
 Resolve_Routine, 'ref_reduction_eventcb',$
   /COMPILE_FULL_FILE            ; Load event callback routines
-
 ;build the Instrument Selection base
 MakeGuiInstrumentSelection, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
 END
 
 
@@ -17,8 +14,8 @@ VERSION     = '1.0.25'
 loadct,5
 
 ;get branch number
-branchArray = strsplit(VERSION,'.',/EXTRACT)
-branch      = strjoin(branchArray[0:1],'.')
+branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
+branch      = STRJOIN(branchArray[0:1],'.')
 
 ;define initial global values - these could be input via external file
 ;or other means
@@ -33,195 +30,194 @@ ENDELSE
 debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
-global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
+global = PTR_NEW ({$ 
+                    instrument: strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                  branch : branch,$
-                  batch_data_runs : ptr_new(0L),$
-                    nbrIntermediateFiles : 8,$
-                    batch_process : 'data',$
-                    batch_norm_runs : ptr_new(0L),$
-                    batch_percent_error : 0.01,$ ;1% difference acceptebale
-                                ;between angle, s1 and s2
-                    batch_DataNexus : ptr_new(0L),$
-                    batch_NormNexus : ptr_new(0L),$
-                    batch_split2 : '',$ 
-                    batch_part2 : '',$
-                    batch_new_cmd : '',$
-                    cmd_batch_length : 60,$
-                    debugger : debugger,$
-                    PrevBatchRowSelected : 0,$
-                    BatchDefaultPath : '~/',$
-                    BatchDefaultFileFilter : '*_Batch_Run*.txt',$
-                    BatchFileName : '',$
-                    PreviousRunReductionValidated : 0,$  
-                    BatchTable : ptr_new(0L),$ ;big array of batch table
-                    isHDF5format : 1,$
-                    DataRunNumber : '',$
-                    NormRunNumber : '',$
-                    archived_data_flag : 1,$
-                    archived_norm_flag : 1,$
-                    dr_output_path : '~/',$
-;output path define in the REDUCE tab
-  cl_output_path : '~/REFreduction_CL/',$
+                    branch: branch,$
+                    batch_data_runs: ptr_new(0L),$
+                    nbrIntermediateFiles: 8,$
+                    batch_process: 'data',$
+                    batch_norm_runs: ptr_new(0L),$
+                    batch_percent_error: 0.01,$ 
+;1% difference acceptebale between angle, s1 and s2
+                    batch_DataNexus: ptr_new(0L),$
+                    batch_NormNexus: ptr_new(0L),$
+                    batch_split2: '',$ 
+                    batch_part2: '',$
+                    batch_new_cmd: '',$
+                    cmd_batch_length: 60,$
+                    debugger: debugger,$
+                    PrevBatchRowSelected: 0,$
+                    BatchDefaultPath: '~/',$
+                    BatchDefaultFileFilter: '*_Batch_Run*.txt',$
+                    BatchFileName: '',$
+                    PreviousRunReductionValidated: 0,$  
+                    BatchTable: ptr_new(0L),$ ;big array of batch table
+                    isHDF5format: 1,$
+                    DataRunNumber: '',$
+                    NormRunNumber: '',$
+                    archived_data_flag: 1,$
+                    archived_norm_flag: 1,$
+                    dr_output_path: '~/',$ ;output path define in the REDUCE tab
+                    cl_output_path: '~/REFreduction_CL/',$ 
 ;default path where to put the command line output file
-  cl_file_ext1    : 'REFreduction_CL_',$
+                    cl_file_ext1: 'REFreduction_CL_',$ 
 ;default first part of output command line file
-  cl_file_ext2    : '.txt',$
+                    cl_file_ext2: '.txt',$ 
 ;default extension of output command line file
-  cl_file_ext3    : '*-04:00.txt',$
+                    cl_file_ext3: '*-04:00.txt',$ 
 ;default extension of output command line used in dialog_pickfile
-                   cl_output_name : '',$
+                    cl_output_name: '',$ 
 ;name of file that will contain a copy of the command line 
-                   nexus_bank1_path : '/entry/bank1/data',$ ;nxdir path to bank1 data
-                     bank1_data : ptr_new(0L),$ ;
-                     bank1_norm : ptr_new(0L),$ ;
-                     miniVersion : 0,$
-;1 if this is the miniVersion and 0 if it's not
-                   FilesToPlotList : ptr_new(0L),$ 
+                    nexus_bank1_path: '/entry/bank1/data',$ ;nxdir path to bank1 data
+                    bank1_data: ptr_new(0L),$ ;
+                    bank1_norm: ptr_new(0L),$ ;
+                    miniVersion: 0,$ ;1 if this is the miniVersion and 0 if it's not
+                    FilesToPlotList: ptr_new(0L),$ 
 ;list of files to plot (main,rmd and intermediate files)
-                   PreviewFileNbrLine : 40,$ 
+                   PreviewFileNbrLine: 40,$ 
 ;nbr of line to get from intermediates files
-                   DataReductionStatus : 'ERROR',$ 
+                   DataReductionStatus: 'ERROR',$ 
 ; status of the data reduction 'OK' or 'ERROR'
-                   PlotsTitle : ptr_new(0L),$ 
+                   PlotsTitle: ptr_new(0L),$ 
 ;title of all the plots (main and intermediate)
-                   MainPlotTitle : '',$ 
+                   MainPlotTitle: '',$ 
 ;title of main data reduction
-                   IntermPlots : intarr(8),$ 
+                   IntermPlots: intarr(8),$ 
 ;0 for inter. plot no desired, 1 for desired
-                   CurrentPlotsFullFileName:ptr_new(0L),$ 
+                   CurrentPlotsFullFileName: ptr_new(0L),$ 
 ;full path name of the plot currently plotted
-                   OutputFileName : '',$ 
+                   OutputFileName: '',$ 
 ; ex: REF_L_2000_2007-08-31T09:28:59-04:00.txt
-                   IsoTimeStamp : '',$ 
+                   IsoTimeStamp: '',$ 
 ; ex: 2007-08-31T09:28:59-04:00
-                   ExtOfAllPlots : ptr_new(0L),$ 
+                   ExtOfAllPlots: ptr_new(0L),$ 
 ;extension of all the files created
-                   PrevTabSelect : 0,$ 
+                   PrevTabSelect: 0,$ 
 ;name of previous main tab selected
                    PrevDataZoomTabSelect: 0,$
 ;name of previous zoom/NXsummary tab selected (data)
                    PrevNormZoomTabSelect: 0,$
 ;name of previous zoom/NXsummary tab selected (normalization)
-                   DataNeXusFound : 0, $ 
+                   DataNeXusFound: 0, $ 
 ;no data nexus found by default
-                   NormNeXusFound : 0, $ 
+                   NormNeXusFound: 0, $ 
 ;no norm nexus found by default
-                   data_full_nexus_name : '',$ 
+                   data_full_nexus_name: '',$ 
 ;full path to data nexus file
-                   norm_full_nexus_name : '',$ 
+                   norm_full_nexus_name: '',$ 
 ;full path to norm nexus file
-                   xsize_1d_draw : 2*304L,$ 
+                   xsize_1d_draw: 2*304L,$ 
 ;size of 1D draw (should be Ntof)
-                   REF_L : 'REF_L',$ 
+                   REF_L: 'REF_L',$ 
 ;name of REF_L instrument
-                   REF_M : 'REF_M',$ 
+                   REF_M: 'REF_M',$ 
 ;name of REF_M instrument
-                   Nx_REF_L : 256L,$ 
+                   Nx_REF_L: 256L,$ 
 ;Nx for REF_L instrument
-                   Ny_REF_L : 304L,$ 
+                   Ny_REF_L: 304L,$ 
 ;Ny for REF_L instrument
-                   Nx_REF_M : 304L,$ 
+                   Nx_REF_M: 304L,$ 
 ;Nx for REF_M instrument
-                   Ny_REF_M : 256L,$ 
+                   Ny_REF_M: 256L,$ 
 ;Ny for REF_M instrument
-                   Ntof_DATA : 0L, $ 
+                   Ntof_DATA: 0L, $ 
 ;TOF for data file
-                   Ntof_NORM : 0L, $ 
+                   Ntof_NORM: 0L, $ 
 ;TOF for norm file
-                   failed : 'FAILED',$
+                   failed: 'FAILED',$
 ;failed message to display
-                   processing_message : '(PROCESSING)',$ 
+                   processing_message: '(PROCESSING)',$ 
 ;processing message to display
-                   data_tmp_dat_file : 'tmp_data.dat',$ 
+                   data_tmp_dat_file: 'tmp_data.dat',$ 
 ;default name of tmp binary data file
-                   full_data_tmp_dat_file : '',$ 
+                   full_data_tmp_dat_file: '',$ 
 ;full path of tmp .dat file for data
-                   norm_tmp_dat_file : 'tmp_norm.dat',$ 
+                   norm_tmp_dat_file: 'tmp_norm.dat',$ 
 ;default name of tmp binary norm file
-                   full_norm_tmp_dat_file : '',$ 
+                   full_norm_tmp_dat_file: '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path : '~/',$ 
+                   working_path: '~/',$ 
 ;where the tmp file will be created
-                   ucams : ucams, $ 
+                   ucams: ucams, $ 
 ;ucams of the current user
                    data_run_number: 0L,$ 
 ;run number of the data file loaded and plotted
                    norm_run_number: 0L,$ 
 ;run number of the norm. file loaded and plotted
-                   DATA_DD_ptr : ptr_new(0L),$ 
+                   DATA_DD_ptr: ptr_new(0L),$ 
 ;detector view of DATA (2D)
-                   DATA_D_ptr : ptr_new(0L),$ 
+                   DATA_D_ptr: ptr_new(0L),$ 
 ;(ntot,Ny,Nx) array of DATA
-                   DATA_D_Total_ptr : ptr_new(0L),$
+                   DATA_D_Total_ptr: ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-                   NORM_D_Total_ptr : ptr_new(0L),$
+                   NORM_D_Total_ptr: ptr_new(0L),$
 ;img=total(img,x) x=2 for REF_M and x=3 for REF_L
-                   NORM_DD_ptr : ptr_new(0L),$ 
+                   NORM_DD_ptr: ptr_new(0L),$ 
 ;detector view of NORMALIZATION (2D)
-                   NORM_D_ptr : ptr_new(0L),$ 
+                   NORM_D_ptr: ptr_new(0L),$ 
 ;(Ntof,Ny,Nx) array of NORMALIZATION
-                   tvimg_data_ptr : ptr_new(0L),$ 
+                   tvimg_data_ptr: ptr_new(0L),$ 
 ;rebin data img
-                   tvimg_norm_ptr : ptr_new(0L),$ 
+                   tvimg_norm_ptr: ptr_new(0L),$ 
 ;rebin norm img
-                   back_selection_color : 250L,$ 
+                   back_selection_color: 250L,$ 
 ;color of background selection
-                   peak_selection_color : 100L,$
+                   peak_selection_color: 100L,$
 ;color of peak exclusion
-                   data_back_selection : ptr_new(0L),$ 
+                   data_back_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for data background
-                   norm_back_selection : ptr_new(0L),$ 
+                   norm_back_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for norm background
-                   data_peak_selection : ptr_new(0L),$ 
+                   data_peak_selection: ptr_new(0L),$ 
 ;Ymin and Ymax for data peak
-                   norm_peak_selection : ptr_new(0L),$
+                   norm_peak_selection: ptr_new(0L),$
 ;Ymin and Ymax for norm peak
-                   data_back_roi_ext : '_data_roi.dat',$ 
+                   data_back_roi_ext: '_data_roi.dat',$ 
 ;extension file name of back data ROI
-                   norm_back_roi_ext : '_norm_roi.dat',$
+                   norm_back_roi_ext: '_norm_roi.dat',$
 ;extension file name of back norm ROI
-                   load_back_roi_ext : '_roi.dat',$
+                   load_back_roi_ext: '_roi.dat',$
 ;filter used to load background ROI files for data and norm
-                   roi_file_preview_nbr_line : 20L,$ 
+                   roi_file_preview_nbr_line: 20L,$ 
 ;nbr of line to display in preview
-                   select_data_status : 0,$ 
+                   select_data_status: 0,$ 
 ;Status of the data selection (see below)
-                   select_norm_status : 0,$ 
+                   select_norm_status: 0,$ 
 ;Status of the norm selection (see below)
-                   select_zoom_status : 0,$
+                   select_zoom_status: 0,$
 ;Status of the zoom (0=no zoom; 1=zoom)
-                   flt0_ptr : ptrarr(8,/allocate_heap),$ 
+                   flt0_ptr: ptrarr(8,/allocate_heap),$ 
 ;arrays of all the x-axis
-                   flt1_ptr : ptrarr(8,/allocate_heap),$ 
+                   flt1_ptr: ptrarr(8,/allocate_heap),$ 
 ;arrays of all the y-axis
-                   flt2_ptr : ptrarr(8,/allocate_heap),$ 
+                   flt2_ptr: ptrarr(8,/allocate_heap),$ 
 ;arrays of all the y-error data
-                   fltPreview_ptr : ptrarr(8,/allocate_heap),$
+                   fltPreview_ptr: ptrarr(8,/allocate_heap),$
 ;metadata of all files
-                   InstrumentGeometryPath : '',$
+                   InstrumentGeometryPath: '',$
 ;default path where to get the instrument geometry to overwrite
-                   InstrumentDataGeometryFileName : '',$
+                   InstrumentDataGeometryFileName: '',$
 ;full path to instrument geometry to overwrite
-                   InstrumentNormGeometryFileName : '',$
+                   InstrumentNormGeometryFileName: '',$
 ;full path to instrument geometry to overwrite
                    DataZoomFactor: 2L,$
 ;scale factor for zoom of 1D Data
                    NormalizationZoomFactor: 2L,$
 ;scale factor for zoom of 1D Normalization
-                   DataX : 0L,$
+                   DataX: 0L,$
 ;last x position of cursor in data 1d drawfor zoom                     
-                   DataY : 0L,$
+                   DataY: 0L,$
 ;last y position of cursor in data 1d drawfor zoom                     
-                   NormX : 0L,$
+                   NormX: 0L,$
 ;last x position of cursor in norm. 1d draw for zoom                     
-                   NormY : 0L,$
+                   NormY: 0L,$
 ;last x position of cursor in norm 1d draw for zoom                     
-                   LogBookPath : '/SNS/users/LogBook/',$
+                   LogBookPath: '/SNS/users/LogBook/',$
 ;path where to put the log book
-                   MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
+                   MacNexusFile: '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
 ;full path to NeXus file on the mac
-                   MacNXsummary : '~/local/nxsummary_4146.txt',$
+                   MacNXsummary: '~/local/nxsummary_4146.txt',$
 ;full path to NXsummary file that will be read on Mac (instead of
 ;using NXsummary)
                    PreviousDataNexusListSelected: 0,$
@@ -232,96 +228,96 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;initial value of the contrast data droplist
                    PreviousDataContrastDroplistIndex: 5,$
 ;previous value of data contrast droplist
-                   PreviousDataContrastBottomSliderIndex : 0,$
+                   PreviousDataContrastBottomSliderIndex: 0,$
 ;previous value of data contrast bottom color slider
-                   PreviousDataContrastNumberSliderIndex : 255,$
+                   PreviousDataContrastNumberSliderIndex: 255,$
 ;previous value of data contrast number of color slider
                    InitialNormContrastDropList: 5,$
 ;initial value of the contrast norm droplist
                    PreviousNormContrastDroplistIndex: 5,$
 ;previous value of norm contrast droplist
-                   PreviousNormContrastBottomSliderIndex : 0,$
+                   PreviousNormContrastBottomSliderIndex: 0,$
 ;previous value of norm contrast bottom color slider
-                   PreviousNormContrastNumberSliderIndex : 255,$
+                   PreviousNormContrastNumberSliderIndex: 255,$
 ;previous value of norm contrast number of color slider
-                   DataXYZminmaxArray : ptr_new(0L),$
+                   DataXYZminmaxArray: ptr_new(0L),$
 ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
 ;Plot1DDdataFile.pro
-                   NormXYZminmaxArray : ptr_new(0L),$
+                   NormXYZminmaxArray: ptr_new(0L),$
 ;xmin, xmax, ymin, ymax, zmin, zmax of data (loaded in
 ;Plot1DDNormalizationFile.pro
-                   PrevData1D3DAx : 30L,$
+                   PrevData1D3DAx: 30L,$
 ;previous Ax value of Data 1D_3D plot
-                   PrevData1D3DAz : 30L,$
+                   PrevData1D3DAz: 30L,$
 ;previsou Az value of data 1D_3D plot
-                   PrevData2D3DAx : 30L,$
+                   PrevData2D3DAx: 30L,$
 ;previous Ax value of Data 2D_3D plot
-                   PrevData2D3DAz : 30L,$
+                   PrevData2D3DAz: 30L,$
 ;previsou Az value of data 2D_3D plot
-                   DefaultData1D3DAx : 30L, $
+                   DefaultData1D3DAx: 30L, $
 ;default Ax vlaue of data 1D_3D plot
-                   DefaultData1D3DAz : 30L, $
+                   DefaultData1D3DAz: 30L, $
 ;default Az value of data 1D_3D plot
-                   DefaultData2D3DAx : 30L, $
+                   DefaultData2D3DAx: 30L, $
 ;default Ax vlaue of data 2D_3D plot
-                   DefaultData2D3DAz : 30L, $
+                   DefaultData2D3DAz: 30L, $
 ;default Az value of data 2D_3D plot
-                   PrevNorm1D3DAx : 30L,$
+                   PrevNorm1D3DAx: 30L,$
 ;previous Ax value of norm 1D_3D plot
-                   PrevNorm1D3DAz : 30L,$
+                   PrevNorm1D3DAz: 30L,$
 ;previsou Az value of norm 1D_3D plot
-                   PrevNorm2D3DAx : 30L,$
+                   PrevNorm2D3DAx: 30L,$
 ;previous Ax value of NORM 2D_3D plot
-                   PrevNorm2D3DAz : 30L,$
+                   PrevNorm2D3DAz: 30L,$
 ;previsou Az value of NORM 2D_3D plot
-                   DefaultNorm1D3DAx : 30L, $
+                   DefaultNorm1D3DAx: 30L, $
 ;default Ax vlaue of norm 1D_3D plot
-                   DefaultNorm1D3DAz : 30L, $
+                   DefaultNorm1D3DAz: 30L, $
 ;default Az value of norm 1D_3D plot
-                   DefaultNorm2D3DAx : 30L, $
+                   DefaultNorm2D3DAx: 30L, $
 ;default Ax vlaue of norm 2D_3D plot
-                   DefaultNorm2D3DAz : 30L, $
+                   DefaultNorm2D3DAz: 30L, $
 ;default Az value of norm 2D_3D plot
-                   InitialData1d3dContrastDropList : 5,$
+                   InitialData1d3dContrastDropList: 5,$
 ;default value of the data loadct 1d_3d plot
-                   InitialData2d3dContrastDropList : 5,$
+                   InitialData2d3dContrastDropList: 5,$
 ;default value of the data loadct 2d_3d plot
-                   PrevData1d3dContrastDropList : 5,$
+                   PrevData1d3dContrastDropList: 5,$
 ;previous value of the data loadct 1d_3d plot
-                   PrevData2d3dContrastDropList : 5,$
+                   PrevData2d3dContrastDropList: 5,$
 ;previous value of the data loadct 2d_3d plot
-                   InitialNorm1d3dContrastDropList : 5,$
+                   InitialNorm1d3dContrastDropList: 5,$
 ;default value of the norm loadct 1d_3d plot
-                   InitialNorm2d3dContrastDropList : 5,$
+                   InitialNorm2d3dContrastDropList: 5,$
 ;default value of the norm loadct 2d_3d plot
-                   PrevNorm1d3dContrastDropList : 5,$
+                   PrevNorm1d3dContrastDropList: 5,$
 ;previous value of the norm loadct 1d_3d plot
-                   PrevNorm2d3dContrastDropList : 5,$
+                   PrevNorm2d3dContrastDropList: 5,$
 ;previous value of the norm loadct 2d_3d plot
-                   Data_1d_3d_min_max : ptr_new(0L),$
+                   Data_1d_3d_min_max: ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 1d_3d)
-                   Data_2d_3d_min_max : ptr_new(0L),$
+                   Data_2d_3d_min_max: ptr_new(0L),$
 ;[min,max] values of the data img array (used to reset z in 2d_3d)
-                   Normalization_1d_3d_min_max : ptr_new(0L),$
+                   Normalization_1d_3d_min_max: ptr_new(0L),$
 ;[min,max] values of the normalization img array (used to reset z in 1d_3d)
-                   Normalization_2d_3d_min_max : ptr_new(0L),$
+                   Normalization_2d_3d_min_max: ptr_new(0L),$
 ;[min,max] values of the normalization img array (used to reset z in
 ;2d_3d)
-                   DataXMouseSelection : 0L,$
+                   DataXMouseSelection: 0L,$
 ;Previous x position of data left click
-                   NormXMouseSelection : 0L,$
+                   NormXMouseSelection: 0L,$
 ;Previous x position of normalization left click
-                   DataHiddenWidgetTextId : 0L, $
+                   DataHiddenWidgetTextId: 0L, $
 ;ID of Data Hidden Widget Text
-                   DataHiddenWidgetTextUname : '',$
+                   DataHiddenWidgetTextUname: '',$
 ;uname of data hidden widget text
-                   NormHiddenWidgetTextId : 0L,$
+                   NormHiddenWidgetTextId: 0L,$
 ;ID of Norm Hidden Widget Text
-                   NormHiddenWidgetTextUname : '',$
+                   NormHiddenWidgetTextUname: '',$
 ;uname of Norm hidden widget text
-                   UpDownMessage : '',$
+                   UpDownMessage: '',$
 ;Message to display when left click main plot
-                   REFreductionVersion : ''$
+                   REFreductionVersion: ''$
 ;Version of REFreduction Tool
                    })
                    
@@ -347,7 +343,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
 
-(*global).UpDownMessage = 'Use U(up) or D(down) to move selection vertically pixel per pixel.' 
+(*global).UpDownMessage = 'Use U(up) or D(down) to move selection' + $
+  ' vertically pixel per pixel.' 
 (*global).REFreductionVersion = VERSION
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$

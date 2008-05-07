@@ -265,7 +265,7 @@ instrument = (*global).instrument
 (*global).norm_run_number = NormRunNumber
 ;store full path to NeXus
 (*global).norm_full_nexus_name = full_nexus_name
-RefReduction_NXsummary, Event, full_nexus_name, 'normalization_file_info_text'
+RefReduction_NXsummaryBatch, Event, full_nexus_name, 'normalization_file_info_text'
 IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
     (*global).isHDF5format = 1
 ;dump binary data into local directory of user
