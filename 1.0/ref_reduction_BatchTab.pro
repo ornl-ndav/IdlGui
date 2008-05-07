@@ -1452,7 +1452,7 @@ make_gui_log_book
 ;Build main procedures
 cd, CurrentFolder
 procedure_array_delete
-procedure_ref_scale_arrays.pro
+procedure_ref_scale_arrays
 procedure_number_formatter
 procedure_get_numeric
 ref_scale_get
@@ -1476,5 +1476,5 @@ procedure_ref_scale_step2
 ref_scale_produce_output
 procedure_ref_scale_tabs
 ref_scale_eventcb
-ref_scale
+ref_scale, BatchMode='yes'
 END

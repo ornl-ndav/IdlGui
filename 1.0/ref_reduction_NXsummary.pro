@@ -43,3 +43,24 @@ ENDIF ELSE BEGIN
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 ENDELSE
 END
+
+
+
+
+PRO RefReduction_NXsummaryBatch, Event, FileName, TextFieldUname
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    cmd = 'head -n 22 ' + (*global).MacNXsummary
+ENDIF ELSE BEGIN
+    cmd = 'nxsummary ' + FileName + ' --verbose '
+ENDELSE
+
+;run nxsummary command
+spawn, cmd, listening, err_listening
+IF (err_listening[0] EQ '') THEN BEGIN
+ENDIF ELSE BEGIN
+ENDELSE
+END

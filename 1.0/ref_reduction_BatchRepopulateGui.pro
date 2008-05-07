@@ -244,7 +244,7 @@ populate_error = 0
 CATCH, populate_error
 IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    print, 'error'
+;    print, 'error' ;remove_me
 ENDIF ELSE BEGIN
     guiClassInstance = obj_new('IDLupdateGui',sRepopulateGui)
     text = '-> Repopulating GUI ... END'

@@ -29,7 +29,7 @@ END
 
 ;-------------------------------------------------------------------------------
 PRO UpdateMainDataNexusFileName, Event, MainDataNexusFileName, DataRunNumber
-REFreduction_OpenPlotDataNexus, Event, DataRunNumber, MainDataNexusFileName
+REFreduction_OpenPlotDataNexus,Event, DataRunNumber, MainDataNexusFileName
 END
 
 ;-------------------------------------------------------------------------------
@@ -346,7 +346,8 @@ ENDELSE
 text = '--> Load Data ROI File ....................................... ' $
   + PROCESSING
 putLogBookMessage, Event, text, APPEND=1
-IF (structure.DataRoiFilename EQ '') THEN BEGIN
+IF (structure.DataRoiFilename EQ '' OR $
+    FILE_TEST(structure.DataRoiFilename) NE 1) THEN BEGIN
     AppendReplaceLogBookMessage, Event, NO, PROCESSING
     ++NbrError
     ++DataError
@@ -428,7 +429,8 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
     text = '--> Load Normalization ROI File .............................. ' + $
       PROCESSING
     putLogBookMessage, Event, text, APPEND=1
-    IF (structure.NormRoiFileName EQ '') THEN BEGIN
+    IF (structure.NormRoiFileName EQ '' OR $
+        FILE_TEST(structure.NormRoiFilename) NE 1) THEN BEGIN
         AppendReplaceLogBookMessage, Event, NO, PROCESSING
         ++NbrError
         ++NormError
