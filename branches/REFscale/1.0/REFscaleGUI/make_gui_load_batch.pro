@@ -39,7 +39,7 @@ PRO MakeGuiLoadBatch, STEPS_TAB, StepsTabSize
 ;*******************************************************************************
 sLoadBatchBase = { size  : [0,0,StepsTabSize[2:3]],$
                    uname : 'load_batch_base',$
-                   title : 'LOAD BATCH'}
+                   title : 'BATCH'}
 
 ;*******************************************************************************
 ;Build GUI
