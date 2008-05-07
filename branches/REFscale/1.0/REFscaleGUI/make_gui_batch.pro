@@ -103,11 +103,6 @@ wPreviewBatch = WIDGET_BUTTON(wLoadBatchBase,$
                               VALUE     = sPreviewBatch.value,$
                               UNAME     = sPreviewBatch.uname)
 
-
-
-
-
-
 END
 
 
