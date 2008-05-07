@@ -92,7 +92,6 @@ wLoadBatchText = WIDGET_TEXT(wLoadBatchBase,$
                              YOFFSET   = sLoadBatchText.size[1],$
                              SCR_XSIZE = sLoadBatchText.size[2],$
                              UNAME     = sLoadBatchText.uname,$
-                             /EDITABLE,$
                              /ALIGN_LEFT)
 
 ;Preview Button ----------------------------------------------------------------
