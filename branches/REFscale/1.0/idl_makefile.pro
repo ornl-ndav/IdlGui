@@ -76,6 +76,8 @@ cd, CurrentFolder
 .run procedure_ref_scale_step2.pro
 .run ref_scale_produce_output.pro
 .run procedure_ref_scale_tabs.pro
+.run ref_scale_batch.pro
+
 .run procedure_main_base_event.pro
 .run ref_scale_eventcb.pro
 .run ref_scale.pro

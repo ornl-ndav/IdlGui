@@ -62,71 +62,74 @@ CurrentBranch =  VerArray + '.' + TagArray
 
 global = $
   PTR_NEW({ $
-            version          : VERSION,$
-            processing       : '(PROCESSING)',$
-            ok               : 'OK',$
-            failed           : 'FAILED',$
-            delta_x_draw     : 0.01,$
-            Q1x              : 0L,$ ;event.x for Q1
-            Q2x              : 0L,$ ;event.x for Q2
-            draw_xmin        : 60L,$
-            draw_xmax        : 632L,$
-            draw_ymin        : 40L,$
-            draw_ymax        : 570L,$
-            qminmax_label    : 'Enter or Select Qmin and Qmax',$
-            Q_selection      : 0,$ ;1 or 2
-            left_mouse_pressed : 0,$
-            Q1               : 0.,$ ;Qmin or Qmax
-            Q2               : 0.,$ ;Qmin or Qmax
-            X                : 0,$ ;current event.x of Q1 or Q2
-            Y                : 0,$ ;current event.y of Q1 or Q2
-            angleDisplayPrecision: 1000L,$ ;the precision of the angle value displayed
-            replot_me        : 1,$ ;to replot main plot will be 0 just after being replot
-            replotQnew       : 0,$
-            flt0_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
-            flt1_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
-            flt2_ptr         : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
-            flt0_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
-            flt1_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
-            flt2_rescale_ptr : ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
-            fit_cooef_ptr    : ptrarr(20,/allocate_heap),$ 
-            flt0_range       : ptrarr(2,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
-            rescaling_ymax : 1.2,$ ;ymax when rescalling data
-            rescaling_ymin : 0,$ ;ymin when rescalling data
-            full_CE_name   : '',$ ;full path to CE file
-            short_CE_name  : '',$ ;short path to CE file
-            h_over_mn      : 0.0039554,$ ;h/mass of neutron in USI                   
-            FirstTimePlotting : 1,$ ;1 if first plot, 0 if not
-            NbrInfoLineToDisplay : 12,$ ;the number of line to display in info box
-            distanceMD     : 14.85,$ ;distance Moderator-Detector (m)
-            XYMinMax       : ptr_new(0L),$
-            ucams          : '',$ ;remote user ucams
-            file_extension : '.txt',$ ;file extension of file to load
-            input_path     : '',$ ;default path to file to load
-            PrevTabSelect  : 0,$ ;value of previous tab selected
-            angleValue     : float(0),$ ;current value of the angle (float)
-            CEcooef        : ptr_new(0L),$ ;the fitting coeff of the CE file
-            flt0_CE_range  : ptr_new(0L),$ ;flt0 between Q1 and Q2 for CE file
-            CE_scaling_factor : float(0),$ ;The CE scaling factor to go from Y to 1
+            BatchDefaultPath:       '~/',$
+            BatchDefaultFileFilter: '*_Batch_Run*.txt',$
+            BatchFileName:          '',$
+            version:                VERSION,$
+            processing:             '(PROCESSING)',$
+            ok:                     'OK',$
+            failed:                 'FAILED',$
+            delta_x_draw:           0.01,$
+            Q1x:                    0L,$ ;event.x for Q1
+            Q2x:                    0L,$ ;event.x for Q2
+            draw_xmin:              60L,$
+            draw_xmax:              632L,$
+            draw_ymin:              40L,$
+            draw_ymax:              570L,$
+            qminmax_label:          'Enter or Select Qmin and Qmax',$
+            Q_selection:            0,$ ;1 or 2
+            left_mouse_pressed:     0,$
+            Q1:                     0.,$ ;Qmin or Qmax
+            Q2:                     0.,$ ;Qmin or Qmax
+            X:                      0,$ ;current event.x of Q1 or Q2
+            Y:                      0,$ ;current event.y of Q1 or Q2
+            angleDisplayPrecision:  1000L,$ ;the precision of the angle value displayed
+            replot_me: 1,$ ;to replot main plot will be 0 just after being replot
+            replotQnew: 0,$
+            flt0_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis
+            flt1_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis
+            flt2_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis
+            flt0_rescale_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the x-axis after rescaling
+            flt1_rescale_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-axis after rescaling
+            flt2_rescale_ptr: ptrarr(20,/allocate_heap),$ ;arrays of all the y-error-axis after rescaling
+            fit_cooef_ptr: ptrarr(20,/allocate_heap),$ 
+            flt0_range: ptrarr(2,/allocate_heap) ,$ ;flt0 between Q1 and Q2 for lowQ and hihgQ files
+            rescaling_ymax: 1.2,$ ;ymax when rescalling data
+            rescaling_ymin: 0,$ ;ymin when rescalling data
+            full_CE_name: '',$ ;full path to CE file
+            short_CE_name: '',$ ;short path to CE file
+            h_over_mn: 0.0039554,$ ;h/mass of neutron in USI                   
+            FirstTimePlotting: 1,$ ;1 if first plot, 0 if not
+            NbrInfoLineToDisplay: 12,$ ;the number of line to display in info box
+            distanceMD: 14.85,$ ;distance Moderator-Detector (m)
+            XYMinMax: ptr_new(0L),$
+            ucams: '',$ ;remote user ucams
+            file_extension: '.txt',$ ;file extension of file to load
+            input_path: '',$ ;default path to file to load
+            PrevTabSelect: 0,$ ;value of previous tab selected
+            angleValue: float(0),$ ;current value of the angle (float)
+            CEcooef: ptr_new(0L),$ ;the fitting coeff of the CE file
+            flt0_CE_range: ptr_new(0L),$ ;flt0 between Q1 and Q2 for CE file
+            CE_scaling_factor: float(0),$ ;The CE scaling factor to go from Y to 1
             metadata_CE_file: ptr_new(0L),$ ;first part of the CE input file
-            flt0_xaxis     : ptr_new(0L),$ ;x-axis of loaded file
-            flt1_yaxis     : ptr_new(0L),$ ;y-axis of loaded file
-            flt2_yaxis_err : ptr_new(0L),$ ;y-axis error of loaded file
-            FileHistory    : ptr_new(0L),$ ;#0:CE file #1:next file...etc
-            list_of_files  : ptr_new(0L),$ ;list of files loaded
-            NbrFilesLoaded : 0,$ ;number of files loaded
-            Q1_array       : ptr_new(0L),$ ;Q1 array
-            Q2_array       : ptr_new(0L),$ ;Q2 array
-            SF_array       : ptr_new(0L),$ ;Scalling factor array
-            angle_array    : ptr_new(0L),$ ;Angle value
-            color_array    : ptr_new(0L),$ ;index of color for each file 
-            Qmin_array     : ptr_new(0L),$ ;list of Qmin
-            Qmax_array     : ptr_new(0L),$ ;list of Qmax
-            ColorSliderDefaultValue : 25,$ ;default index value of color slider
-            PreviousColorIndex : 25,$ ;color index of previous run
-            ListOfLongFileName : ptr_new(0L),$ ;list of path of file loaded
-            show_CE_fit      : 0,$ ;0 means the step2 has not been performed
-            show_other_fit   : 0$ ;0 means that the step3 has not been done yet
+            flt0_xaxis: ptr_new(0L),$ ;x-axis of loaded file
+            flt1_yaxis: ptr_new(0L),$ ;y-axis of loaded file
+            flt2_yaxis_err: ptr_new(0L),$ ;y-axis error of loaded file
+            FileHistory: ptr_new(0L),$ ;#0:CE file #1:next file...etc
+            list_of_files: ptr_new(0L),$ ;list of files loaded
+            NbrFilesLoaded: 0,$ ;number of files loaded
+            Q1_array: ptr_new(0L),$ ;Q1 array
+            Q2_array: ptr_new(0L),$ ;Q2 array
+            SF_array: ptr_new(0L),$ ;Scalling factor array
+            angle_array: ptr_new(0L),$ ;Angle value
+            color_array: ptr_new(0L),$ ;index of color for each file 
+            Qmin_array: ptr_new(0L),$ ;list of Qmin
+            Qmax_array: ptr_new(0L),$ ;list of Qmax
+            ColorSliderDefaultValue: 25,$ ;default index value of color slider
+            PreviousColorIndex: 25,$ ;color index of previous run
+            ListOfLongFileName: ptr_new(0L),$ ;list of path of file loaded
+            show_CE_fit: 0,$ ;0 means the step2 has not been performed
+            show_other_fit: 0$ ;0 means that the step3 has not been done yet
 })
 
 CEcooef          = LONARR(3)
