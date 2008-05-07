@@ -21,183 +21,184 @@ text = '-> cmd : ' + cmd
 putLogBookMessage, Event, text, APPEND=1
 
 ;Start retrieving information
-text = '------------------------------------------------------------------------' + $
-  '---------------------------------------------------------'
+text = '---------------------------------------------------------------------' + $
+  '------------------------------------------------------------'
 putLogBookMessage, Event, text, APPEND=1
-text = '-------------------------------------------- Informations retrieved from' + $
-  ' cmd ----------------------------------------------------'
+text = '-------------------------------------------- Informations retrieved ' + $
+  'from cmd ----------------------------------------------------'
 putLogBookMessage, Event, text, APPEND=1
-text = '------------------------------------------------------------------------' + $
-  '---------------------------------------------------------'
+text = '--------------------------------------------------------------------' + $
+  '-------------------------------------------------------------'
 putLogBookMessage, Event, text, APPEND=1
 
 MainDataNexusFileName = ClassInstance->getMainDataNexusFileName()
-text = '--> Main Data Nexus File Name (MainDataNexusFileName) ................. ' + $
-  MainDataNexusFileName
+text = '--> Main Data Nexus File Name (MainDataNexusFileName) ..............' + $
+  '... ' + MainDataNexusFileName
 putLogBookMessage, Event, text, APPEND=1
 
 MainDataRunNumber = ClassInstance->getMainDataRunNumber()
-text = '--> Main Data Run Number (MainDataRunNumber) .......................... ' + $
-  MainDataRunNumber
+text = '--> Main Data Run Number (MainDataRunNumber) .......................' + $
+  '... ' + MainDataRunNumber
 putLogBookMessage, Event, text, APPEND=1
 
 AllDataNexusFileName = ClassInstance->getAllDataNexusFileName()
-text = '--> List of All Data Nexus File Names (AllDataNexusFileName) .......... ' + $
-  AllDataNexusFileName
+text = '--> List of All Data Nexus File Names (AllDataNexusFileName) .......' + $
+  '... ' + AllDataNexusFileName
 putLogBookMessage, Event, text, APPEND=1
 
 DataRoiFileName = ClassInstance->getDataRoiFileName()
-text = '--> Data ROI Full File Name (DataRoiFileName) ......................... ' + $
-  DataRoiFileName
+text = '--> Data ROI Full File Name (DataRoiFileName) ......................' + $
+  '... ' + DataRoiFileName
 putLogBookMessage, Event, text, APPEND=1
 
 DataPeakExclYArray = ClassInstance->getDataPeakExclYArray()
-text = '--> Data Peak Exclusion Ymin (DataPeakExclYArray[0]) .................. ' + $
-  DataPeakExclYArray[0]
+text = '--> Data Peak Exclusion Ymin (DataPeakExclYArray[0]) ...............' + $
+  '... ' + DataPeakExclYArray[0]
 putLogBookMessage, Event, text, APPEND=1
-text = '--> Data Peak Exclusion Ymax (DataPeakExclYArray[1]) .................. ' + $
-  DataPeakExclYArray[1]
+text = '--> Data Peak Exclusion Ymax (DataPeakExclYArray[1]) ...............' + $
+  '... ' + DataPeakExclYArray[1]
 putLogBookMessage, Event, text, APPEND=1
 
 MainNormNexusFileName = ClassInstance->getMainNormNexusFileName()
-text = '--> Main Normalization File Name (MainNormNexusFileName) .............. ' + $
-  MainNormNexusFileName
+text = '--> Main Normalization File Name (MainNormNexusFileName) ...........' + $
+  '... ' + MainNormNexusFileName
 putLogBookMessage, Event, text, APPEND=1
 
 MainNormRunNumber = ClassInstance->getMainNormRunNumber()
-text = '--> Main Normalization Run Number (MainNormRunNumber) ................. ' + $
-MainNormRunNumber
+text = '--> Main Normalization Run Number (MainNormRunNumber) ..............' + $
+  '... ' + MainNormRunNumber
 putLogBookMessage, Event, text, APPEND=1
 
 AllNormNexusFileName = ClassInstance->getAllNormNexusFileName()
-text = '--> List of All Norm Nexus File Names (AllNormNexusFileName) .......... ' + $
-  AllNormNexusFileName
+text = '--> List of All Norm Nexus File Names (AllNormNexusFileName) .......' + $
+  '... ' + AllNormNexusFileName
 putLogBookMessage, Event, text, APPEND=1
 
 NormRoiFileName = ClassInstance->getNormRoiFileName()
-text = '--> Normalization ROI Full File Name (NormRoiFileName) ................ ' + $
-  NormRoiFileName
+text = '--> Normalization ROI Full File Name (NormRoiFileName) .............' + $
+  '... ' + NormRoiFileName
 putLogBookMessage, Event, text, APPEND=1
 
 NormPeakExclYArray = ClassInstance->getNormPeakExclYArray()
-text = '--> Norm Peak Exclusion Ymin (NormPeakExclYArray[0]) .................. ' + $
-  NormPeakExclYArray[0]
+text = '--> Norm Peak Exclusion Ymin (NormPeakExclYArray[0]) ...............' + $
+  '... ' + NormPeakExclYArray[0]
 putLogBookMessage, Event, text, APPEND=1
-text = '--> Norm Peak Exclusion Ymax (NormPeakExclYArray[1]) .................. ' + $
-  NormPeakExclYArray[1]
+text = '--> Norm Peak Exclusion Ymax (NormPeakExclYArray[1]) ...............' + $
+  '... ' + NormPeakExclYArray[1]
 putLogBookMessage, Event, text, APPEND=1
 
 DataBackgroundFlag = ClassInstance->getDataBackgroundFlag()
-text = '--> With Data Background (DataBackgroundFlag) ? ....................... ' + $
-  DataBackgroundFlag
+text = '--> With Data Background (DataBackgroundFlag) ? ....................' + $
+  '... ' + DataBackgroundFlag
 putLogBookMessage, Event, text, APPEND=1
 
 NormBackgroundFlag = ClassInstance->getNormBackgroundFlag() 
-text = '--> With Normalization Background (NormBackgroundFlag) ? .............. ' + $
-  NormBackgroundFlag
+text = '--> With Normalization Background (NormBackgroundFlag) ? ...........' + $
+  '... ' + NormBackgroundFlag
 putLogBookMessage, Event, text, APPEND=1
 
 Qmin = ClassInstance->getQmin()
-text = '--> Qmin (Qmin) ....................................................... ' + $
-  Qmin
+text = '--> Qmin (Qmin) ....................................................' + $
+  '... ' + Qmin
 putLogBookMessage, Event, text, APPEND=1
 
 Qmax = ClassInstance->getQmax()
-text = '--> Qmax (Qmax) ....................................................... ' + $
-  Qmax
+text = '--> Qmax (Qmax) ....................................................' + $
+  '... ' + Qmax
 putLogBookMessage, Event, text, APPEND=1
 
 Qwidth = ClassInstance->getQwidth()
-text = '--> Qwidth (Qwidth) ....................................................' + $
-  Qwidth
+text = '--> Qwidth (Qwidth) ................................................' + $
+  '... ' + Qwidth
 putLogBookMessage, Event, text, APPEND=1
 
 Qtype = ClassInstance->getQtype()
-text = '--> Qtype (Qtype) ..................................................... ' + $
-  Qtype
+text = '--> Qtype (Qtype) ..................................................' + $
+  '... ' + Qtype
 putLogBookMessage, Event, text, APPEND=1
 
 AngleValue = ClassInstance->getAngleValue()                        
-text = '--> Angle Value (AngleValue) .......................................... ' + $
-  AngleValue
+text = '--> Angle Value (AngleValue) .......................................' + $
+  '... ' + AngleValue
 putLogBookMessage, Event, text, APPEND=1
 
 AngleError = ClassInstance->getAngleError()
-text = '--> Angle Error (AngleError) .......................................... ' + $
-  AngleError
+text = '--> Angle Error (AngleError) .......................................' + $
+  '... ' + AngleError
 putLogBookMessage, Event, text, APPEND=1
 
 AngleUnits = ClassInstance->getAngleUnits()
-text = '--> Angle Units (AngleUnits) .......................................... ' + $
-  AngleUnits
+text = '--> Angle Units (AngleUnits) .......................................' + $
+  '... ' + AngleUnits
 putLogBookMessage, Event, text, APPEND=1
 
 FilteringDataFlag = ClassInstance->getFilteringDataFlag()
-text = '--> With Filtering Data (FilteringDataFlag) ? ......................... ' + $
-  FilteringDataFlag
+text = '--> With Filtering Data (FilteringDataFlag) ? ......................' + $
+  '... ' + FilteringDataFlag
 putLogBookMessage, Event, text, APPEND=1
 
 DeltaToverTFlag = ClassInstance->getDeltaTOverTFlag()
-text = '--> With dt/t (DeltaToverTFlag) ? ..................................... ' + $
-  DeltaToverTFlag
+text = '--> With dt/t (DeltaToverTFlag) ? ..................................' + $
+  '... ' + DeltaToverTFlag
 
 OverwriteDataInstrGeoFlag = ClassInstance->getOverwriteDataInstrGeoFlag()
-text = '--> With Overwrite Data Instr. Geo. (OverwriteDataInstrGeoFlag) ....... ' + $
-  OverwriteDataInstrGeoFlag
+text = '--> With Overwrite Data Instr. Geo. (OverwriteDataInstrGeoFlag) ....' + $
+  '... ' + OverwriteDataInstrGeoFlag
 putLogBookMessage, Event, text, APPEND=1
 
 DataInstrGeoFileName = ClassInstance->getDataInstrGeoFileName()
-text = '--> Data Instrument Geometry File Name (DataInstrGeoFileName) ......... ' + $
-  DataInstrGeoFileName
+text = '-- Data Instrument Geometry File Name (DataInstrGeoFileName) .......' + $
+  '... ' + DataInstrGeoFileName
 putLogBookMessage, Event, text, APPEND=1
 
 OverwriteNormInstrGeoFlag = ClassInstance->getOverwriteNormInstrGeoFlag()
-text = '--> With Overwrite Norm Instr. Geo. (OverwriteNormInstrGeoFlag) ....... ' + $
-  OverwriteNormInstrGeoFlag
+text = '--> With Overwrite Norm Instr. Geo. (OverwriteNormInstrGeoFlag) ....' + $
+  '... ' + OverwriteNormInstrGeoFlag
 putLogBookMessage, Event, text, APPEND=1
 
 NormInstrGeoFileName = ClassInstance->getNormInstrGeoFileName()
-text = '--> Norm Instrument Geometry File Name (NormInstrGeoFileName) ......... ' + $
-  NormInstrGeoFileName
+text = '--> Norm Instrument Geometry File Name (NormInstrGeoFileName) ......' + $
+  '... ' + NormInstrGeoFileName
 putLogBookMessage, Event, text, APPEND=1
 
 OutputPath = ClassInstance->getOutputPath()
-text = '--> Output Path (OutputPath) .......................................... ' + $
-  OutputPath
+text = '--> Output Path (OutputPath) .......................................' + $
+  '... ' + OutputPath
 putLogBookMessage, Event, text, APPEND=1
 
 OutputFileName = ClassInstance->getOutputFileName()
-text = '--> Output File Name (OutputFileName) ................................. ' + $
-  OutputFileName
+text = '--> Output File Name (OutputFileName) ..............................' + $
+  '... ' + OutputFileName
 putLogBookMessage, Event, text, APPEND=1
 
 DataNormCombinedSpecFlag = ClassInstance->getDataNormCombinedSpecFlag()
-text = '--> With Data/Norm. Comb. Spec. TOF plot (DataNormCombinedSpecFlag) ... ' + $
-  DataNormCombinedSpecFlag
+text = '--> With Data/Norm. Comb. Spec. TOF plot (DataNormCombinedSpecFlag) ' + $
+  '... ' + DataNormCombinedSpecFlag
 
 putLogBookMessage, Event, text, APPEND=1
 DataNormCombinedBackFlag = ClassInstance->getDataNormCombinedBackFlag()
-text = '--> With Data/Norm. Comb. Back. TOF plot (DataNormCombinedBackFlag) ... ' + $
-  DataNormCombinedBackFlag
+text = '--> With Data/Norm. Comb. Back. TOF plot (DataNormCombinedBackFlag) ' + $
+  '... ' + DataNormCombinedBackFlag
 putLogBookMessage, Event, text, APPEND=1
 
 DataNormCombinedSubFlag = ClassInstance->getDataNormCombinedSubFlag()
-text = '--> With Data/Norm. Comb. Sub. TOF plot (DataNormCombinedSubFlag) ..... ' + $
-  DataNormCombinedSubFlag
+text = '--> With Data/Norm. Comb. Sub. TOF plot (DataNormCombinedSubFlag) ..' + $
+  '... ' + DataNormCombinedSubFlag
 putLogBookMessage, Event, text, APPEND=1
 
 RvsTOFFlag = ClassInstance->getRvsTOFFlag()
-text = '--> With R versus TOF plot (RvsTOFFlag) ............................... ' + $
-  RvsTOFFlag
+text = '--> With R versus TOF plot (RvsTOFFlag) ............................' + $
+  '... ' + RvsTOFFlag
 putLogBookMessage, Event, text, APPEND=1
 
 RvsTOFcombinedFlag = ClassInstance->getRvsTOFcombinedFlag()
-text = '--> With R versus TOF combined plot (RvsTOFcombinedFlag) .............. ' + $
+text = '--> With R versus TOF combined plot (RvsTOFcombinedFlag) ...........' + $
+  '... ' + $
   RvsTOFcombinedFlag
 putLogBookMessage, Event, text, APPEND=1
 
-text = '------------------------------------------------------------------------' + $
-  '--------------------------------------------------------'
+text = '--------------------------------------------------------------------' + $
+  '------------------------------------------------------------'
 putLogBookMessage, Event, text, APPEND=1
 
 ;Create a structure that will contain all the information
