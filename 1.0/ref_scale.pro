@@ -32,9 +32,7 @@
 ;
 ;===============================================================================
 
-pro Build_GUI, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument, user
-
-help, GROUP_LEADER
+pro Build_GUI, BatchMode, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;Resolve_Routine, 'ref_scale_eventcb',/COMPILE_FULL_FILE  
 ;Load event callback routines
@@ -44,14 +42,17 @@ help, GROUP_LEADER
 
 ;get ucams of user if running on linux 
 ;and set ucams to 'j35' if running on darwin
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
-endif else begin
+ENDIF ELSE BEGIN
    ucams = get_ucams()
-endelse
+ENDELSE
 
-APPLICATIoN   = 'REFscale' 
+;===========================
+APPLICATION   = 'REFscale' 
 VERSION       = '1.0.9'
+DEBUGGER      = 'yes'
+;===========================
 
 StrArray      = strsplit(VERSION,'.',/extract)
 VerArray      = StrArray[0]
@@ -255,9 +256,26 @@ WIDGET_CONTROL, MAIN_BASE_ref_scale, /REALIZE
 WIDGET_CONTROL, MAIN_BASE_ref_scale, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
 
-;; default tabs shown 
-;id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
-;widget_control, id1, set_tab_current = 5  ;remove_me (log book)
+
+;-------------------------------------------------------------------------------
+;- BATCH MODE ONLY -------------------------------------------------------------
+;Show BATCH Tab if Batch Mode is used
+IF (BatchMode EQ 'yes') THEN BEGIN
+    id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
+    widget_control, id1, set_tab_current = 4
+ENDIF
+;- END OF BATCH MODE ONLY -----------------------------------------------------
+;------------------------------------------------------------------------------
+
+
+;------------------------------------------------------------------------------
+;- DEBUGGER MODE ONLY ---------------------------------------------------------
+IF (DEBUGGER EQ 'yes') THEN BEGIN
+    id1 = widget_info(MAIN_BASE_ref_scale, find_by_uname='steps_tab') 
+    widget_control, id1, set_tab_current = 4
+ENDIF
+;- END OF DEBUGGER MODE ONLY --------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
@@ -275,6 +293,11 @@ end
 ;
 ; Empty stub procedure used for autoloading.
 ;
-pro ref_scale, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-Build_GUI, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
-end
+PRO ref_scale, BatchMode=BatchMode, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
+IF (N_ELEMENTS(BatchMode) EQ 0) THEN BEGIN
+    BatchMode = 'no'
+ENDIF ELSE BEGIN
+    BatchMode = 'yes'
+ENDELSE
+Build_GUI, BatchMode, GROUP_LEADER=wGgroup, _EXTRA=_VWBExtra
+END
