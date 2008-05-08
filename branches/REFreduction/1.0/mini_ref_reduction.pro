@@ -20,7 +20,8 @@ loadct,5
 branchArray = strsplit(VERSION,'.',/EXTRACT)
 branch      = strjoin(branchArray[0:1],'.')
 
-;define initial global values - these could be input via external file or other means
+;define initial global values - these could be input via external file or
+;other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -346,7 +347,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
 
-(*global).UpDownMessage = 'Use U(up) or D(down) to move selection vertically pixel per pixel.' 
+(*global).UpDownMessage = 'Use U(up) or D(down) to move selection ' + $
+  'vertically pixel per pixel.' 
 (*global).REFreductionVersion = VERSION
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$
@@ -385,21 +387,25 @@ ExtOfAllPlots = ['.txt',$
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,880,677]
+;MainBaseSize  = [50,50,905,685]
+MainBaseSize  = [50,50,905,685]
 
 MainBaseTitle = 'miniReflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 ;Build Main Base
-MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
-                        UNAME        = 'MAIN_BASE',$
-                        SCR_XSIZE    = MainBaseSize[2],$
-                        SCR_YSIZE    = MainBaseSize[3],$
-                        XOFFSET      = MainBaseSize[0],$
-                        YOFFSET      = MainBaseSize[1],$
-                        TITLE        = MainBaseTitle,$
-                        SPACE        = 0,$
-                        XPAD         = 0,$
-                        MBAR         = WID_BASE_0_MBAR)
+MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
+                        UNAME         = 'MAIN_BASE',$
+                        ;SCR_XSIZE     = MainBaseSize[2],$
+                        ;SCR_YSIZE     = MainBaseSize[3],$
+                        XOFFSET       = MainBaseSize[0],$
+                        YOFFSET       = MainBaseSize[1],$
+                        TITLE         = MainBaseTitle,$
+                        SPACE         = 0,$
+                        XPAD          = 0,$
+                        MBAR          = WID_BASE_0_MBAR,$
+                        X_SCROLL_SIZE = MainBaseSize[2],$
+                        Y_SCROLL_SIZE = 600,$
+                        /SCROLL)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
@@ -462,13 +468,17 @@ widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData2d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm2d3DContrastDropList
 
 ;initialize CommandLineOutput widgets (path and file name)
 id = widget_info(Main_base, find_by_uname='cl_directory_text')
@@ -500,10 +510,12 @@ widget_control, id1, set_tab_current = 3 ;batch mode(3)
 ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
 
 ;  to get the manual mode
-; id6 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab1_base')
+; id6 = widget_info(MAIN_BASE, find_by_uname=
+; 'normalization2d_rescale_tab1_base')
 ; widget_control, id6, map=0
 
-; id5 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab2_base')
+; id5 = widget_info(MAIN_BASE, find_by_uname=
+; 'normalization2d_rescale_tab2_base')
 ; widget_control, id5, map=1
 
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
@@ -559,13 +571,10 @@ IF (error NE 0) THEN BEGIN
 ENDIF ELSE BEGIN
     spawn, logger_message
 ENDELSE
-
 END
 
-
 ; Empty stub procedure used for autoloading.
-pro mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
+PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;check instrument here
 spawn, 'hostname',listening
 CASE (listening) OF
@@ -575,12 +584,12 @@ CASE (listening) OF
     else: instrument = 'UNDEFINED'
 ENDCASE
 
-if (instrument EQ 'UNDEFINED') then begin
+IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-endif else begin
+ENDIF ELSE BEGIN
     BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-endelse
-end
+ENDELSE
+END
 
 
 
