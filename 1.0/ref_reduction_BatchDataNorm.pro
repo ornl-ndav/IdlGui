@@ -136,6 +136,21 @@ PRO  Continue_ChangeDataRunNumber, Event, $
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
+;Update values of S1, S2 and AngleValue
+DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+entry = obj_new('IDLgetMetadata',DataNexus)
+AngleValue = strcompress(entry->getAngle())
+S1Value    = strcompress(entry->getS1())
+S2Value    = strcompress(entry->getS2())
+
+UpdateAngleField, Event, AngleValue
+UpdateS1Field, Event, S1Value
+UpdateS2Field, Event, S2Value
+
+BatchTable[3,RowSelected] = AngleValue
+BatchTable[4,RowSelected] = S1Value
+BatchTable[5,RowSelected] = S2Value
+
 DataRunsJoined = strjoin(data_runs,',')
 BatchTable[1,RowSelected] = DatarunsJoined
 IF (DataNexus[0] NE '') THEN BEGIN
