@@ -995,7 +995,6 @@ CASE Event.id OF
 ;;Delete Active
     widget_info(wWidget, FIND_BY_UNAME='delete_active_button'): begin
         BatchTab_WarningDeleteActive, Event
-;        BatchTab_DeleteActive, Event
     end
 
 ;;Run Active live
