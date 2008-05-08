@@ -301,6 +301,15 @@ dLoadBatchButton = { size  : [dSaveasLabel.size[0]+XYoff[0],$
                      uname : 'load_batch_button',$
                      value : 'LOAD BATCH FILE'}
 
+;Launch REFscale button
+XYoff = [0,0]
+dLaunchREFscaleButton = { size  : [dLoadBatchButton.size[0]+ $
+                                   dLoadBatchButton.size[2]+XYoff[0],$
+                                   dLoadBatchButton.size[1]+XYoff[1],$
+                                   dLoadBatchButton.size[2:3]],$
+                          uname : 'launch_refscale_button',$
+                          value : 'LAUNCH REFscale'}
+
 ;******************************************************************************
 ;                                Build GUI
 ;******************************************************************************
@@ -651,6 +660,18 @@ wLoadBatchButton = WIDGET_BUTTON(BATCH_BASE,$
                            SCR_YSIZE = dLoadBatchButton.size[3],$
                            UNAME     = dLoadBatchButton.uname,$
                            VALUE     = dLoadBatchButton.value)
+
+;\\\\\\\\\\\\\\\\\\\\\\\
+;Launch REFscale Button\
+;\\\\\\\\\\\\\\\\\\\\\\\
+wLaunchREFscalebutton = $
+  WIDGET_BUTTON(BATCH_BASE,$
+                XOFFSET   = dLaunchREFscalebutton.size[0],$
+                YOFFSET   = dLaunchREFscalebutton.size[1],$
+                SCR_XSIZE = dLaunchREFscalebutton.size[2],$
+                SCR_YSIZE = dLaunchREFscalebutton.size[3],$
+                UNAME     = dLaunchREFscalebutton.uname,$
+                VALUE     = dLaunchREFscalebutton.value)
 
 ;\\\\\\\\\\\\\\
 ;save as label\
