@@ -5,7 +5,7 @@ putLabelValue, Event, 'pro_top_label', message
 MapBase, Event, 'processing_base', 1
 
 ;indicate initialization with hourglass icon
-widget_control,/hourglass
+widget_control,/HOURGLASS
 
 ;get cmd of current selected row
 cmd = getTextFieldValue(Event,'cmd_status_preview')

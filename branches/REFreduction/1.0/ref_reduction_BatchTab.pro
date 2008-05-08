@@ -103,7 +103,9 @@ ENDIF ELSE BEGIN
                     '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
                     '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
                     ELSE         : BEGIN
-                        CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
+                        CommentArray= strsplit(SplitArray[0],'#', $
+                                               /extract, $
+                                               COUNT=nbr)
                         SplitArray[0] =CommentArray[0]
                         cmd           = strjoin(SplitArray,' ')
 ;check if "-o none" is there or not
