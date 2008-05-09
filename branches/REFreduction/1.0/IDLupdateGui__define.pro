@@ -356,6 +356,9 @@ ENDIF ELSE BEGIN
     AppendReplaceLogBookMessage, Event, OK, PROCESSING
 ENDELSE
 
+;Activate LOAD DATA ROI file
+ActivateWidget, Event, 'data_roi_load_button', 1
+
 ;work on DataPeakExclYmin and DataPeakExclYmax
 text = '--> Load Data Peak Exclusion Ymin and Ymax ................... ' $
   + PROCESSING
@@ -439,6 +442,10 @@ IF (structure.MainNormRunNumber NE '') THEN BEGIN
         AppendReplaceLogBookMessage, Event, OK, PROCESSING
     ENDELSE
     
+;Activate LOAD Normalization ROI file
+    ActivateWidget, Event, 'normalization_roi_load_button', 1
+
+
 ;work on NormPeakExclYmin and NormPeakExclYmax
     text = '--> Load Normalizaion Peak Exclusion Ymin and Ymax ........... ' + $
       PROCESSING

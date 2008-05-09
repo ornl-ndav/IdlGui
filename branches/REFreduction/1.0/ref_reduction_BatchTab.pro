@@ -185,7 +185,9 @@ file_error = 0
 CATCH, file_error
 IF (file_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    AppendReplaceLogBookMessage, Event, (*global).FAILED, (*global).processing_message
+    AppendReplaceLogBookMessage, Event, $
+      (*global).FAILED, $
+      (*global).processing_message
 ENDIF ELSE BEGIN
 ;create output file
     openw,1,FullFileName
@@ -1086,7 +1088,8 @@ IF (NbrProcess NE 0) THEN BEGIN
               '/' + strcompress(NbrProcess,/remove_all) + ')'
             putTextFieldValue, Event, 'progress_bar_label', info, 0
 
-            LogText = '-> Running command ' + strcompress(ProcessToRun,/remove_all) $
+            LogText = '-> Running command ' + $
+              strcompress(ProcessToRun,/remove_all) $
               + '/' + strcompress(NbrProcess,/remove_all) 
             putLogBookMessage, Event, LogText, APPEND=1
             LogText = '--> Command is: ' + BatchTable[7,i]
