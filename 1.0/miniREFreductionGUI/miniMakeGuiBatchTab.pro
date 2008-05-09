@@ -663,14 +663,14 @@ wLoadBatchButton = WIDGET_BUTTON(BATCH_BASE,$
 ;\\\\\\\\\\\\\\\\\\\\\\\
 ;Launch REFscale Button\
 ;\\\\\\\\\\\\\\\\\\\\\\\
-wLaunchREFscalebutton = $
-  WIDGET_BUTTON(BATCH_BASE,$
-                XOFFSET   = dLaunchREFscalebutton.size[0],$
-                YOFFSET   = dLaunchREFscalebutton.size[1],$
-                SCR_XSIZE = dLaunchREFscalebutton.size[2],$
-                SCR_YSIZE = dLaunchREFscalebutton.size[3],$
-                UNAME     = dLaunchREFscalebutton.uname,$
-                VALUE     = dLaunchREFscalebutton.value)
+; wLaunchREFscalebutton = $
+;   WIDGET_BUTTON(BATCH_BASE,$
+;                 XOFFSET   = dLaunchREFscalebutton.size[0],$
+;                 YOFFSET   = dLaunchREFscalebutton.size[1],$
+;                 SCR_XSIZE = dLaunchREFscalebutton.size[2],$
+;                 SCR_YSIZE = dLaunchREFscalebutton.size[3],$
+;                 UNAME     = dLaunchREFscalebutton.uname,$
+;                 VALUE     = dLaunchREFscalebutton.value)
 
 ;\\\\\\\\\\\\\\
 ;save as label\
