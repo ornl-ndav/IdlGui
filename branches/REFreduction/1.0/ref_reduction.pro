@@ -9,8 +9,10 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-APPLICATION = 'REFreductionHigh'
-VERSION     = '1.0.25'
+APPLICATION      = 'REFreductionHigh'
+VERSION          = '1.0.25'
+DEPLOYED_VERSION = 'no'
+
 loadct,5
 
 ;get branch number
@@ -497,9 +499,15 @@ IF (ucams EQ 'j35') THEN BEGIN
     widget_control, id, /editable
 ENDIF
 
+
+IF (DEPLOYED_VERSION EQ 'no') THEN BEGIN
+
 ; default tabs shown
-;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 3 ;batch mode(3)
+id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+widget_control, id1, set_tab_current = 3 ;batch mode(3)
+
+;change default location of Batch file
+(*global).BatchDefaultPath = '/SNS/REF_L/shared/'
 
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1  ;NORMALIZATION
@@ -550,6 +558,9 @@ ENDIF
  
 ; id = widget_info(Main_base,find_by_uname='save_as_file_name')
 ; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+
+ENDIF ;end of deployed_version
+
 
 ;logger message
 logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
