@@ -1,37 +1,36 @@
+;===============================================================================
+; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+; ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+; LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+; CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+; SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+; CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+; LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+; OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+; DAMAGE.
 ;
-;                     SNS IDL GUI tools
-;           A part of the SNS Analysis Software Suite.
+; Copyright (c) 2006, Spallation Neutron Source, Oak Ridge National Lab,
+; Oak Ridge, TN 37831 USA
+; All rights reserved.
 ;
-;                  Spallation Neutron Source
-;          Oak Ridge National Laboratory, Oak Ridge TN.
+; Redistribution and use in source and binary forms, with or without
+; modification, are permitted provided that the following conditions are met:
 ;
+; - Redistributions of source code must retain the above copyright notice,
+;   this list of conditions and the following disclaimer.
+; - Redistributions in binary form must reproduce the above copyright notice,
+;   this list of conditions and the following disclaimer in the documentation
+;   and/or other materials provided with the distribution.
+; - Neither the name of the Spallation Neutron Source, Oak Ridge National
+;   Laboratory nor the names of its contributors may be used to endorse or
+;   promote products derived from this software without specific prior written
+;   permission.
 ;
-;                             NOTICE
+; @author : j35 (bilheuxjm@ornl.gov)
 ;
-; For this software and its associated documentation, permission is granted
-; to reproduce, prepare derivative works, and distribute copies to the public
-; for any purpose and without fee.
-;
-; This material was prepared as an account of work sponsored by an agency of
-; the United States Government.  Neither the United States Government nor the
-; United States Department of Energy, nor any of their employees, makes any
-; warranty, express or implied, or assumes any legal liability or
-; responsibility for the accuracy, completeness, or usefulness of any
-; information, apparatus, product, or process disclosed, or represents that
-; its use would not infringe privately owned rights.
-;
-;
-
-;;
-; $Id$
-;
-; \file /gui/utilities/system_utilities.pro
-
-
-;;
-; \defgroup get_ucams
-; \{
-;;
+;===============================================================================
 
 ;;
 ; \brief This function outputs the ucams of the user by
