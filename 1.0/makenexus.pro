@@ -74,40 +74,41 @@ CASE (hostname) OF
 ENDCASE 
 
 ;define global variables
-global = ptr_new ({ program_name          : 'MakeNeXus',$
-                    NbrPolaStates         : 1,$
-                    binType               : 'linear',$
-                    BinOffset             : 0.0,$
-                    BinMax                : 0L,$
-                    BinWidth              : 200L,$
-                    prenexus_found_nbr    : 0,$
-                    validate_go           : 0,$
-                    RunNumber             : '',$
-                    RunNumberArray        : ptr_new(0L),$
-                    Instrument            : '',$
-                    MainBaseXoffset       : 0,$
-                    MainBaseYoffset       : 0,$
-                    Event_to_Histo_Mapped : 'Event_to_Histo_Mapped',$
-                    mac : { prenexus_path : '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
-                            mapping_file  : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
-                            geometry_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
-                            translation_file : '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
-                    instrumentShortList   : ptr_new(0L),$
-                    LogBookPath           : '/SNS/users/LogBook/',$
-                    hostname              : hostname,$
-                    ucams                 : ucams,$
-                    geek                  : 'j35',$
-                    prenexus_path         : '',$
-                    prenexus_path_array   : ptr_new(0L),$
-                    RunNumber_array       : ptr_new(0L),$
-                    output_path_1         : '~/local',$
-                    staging_folder        : '~/local/.makenexus_staging',$
-                    processing            : '(PROCESSING)',$
-                    ok                    : 'OK',$
-                    failed                : 'FAILED',$
-                    NbrPhase              : 0,$
-                    runinfo_ext           : '_runinfo.xml',$
-                    version               : VERSION })
+global = ptr_new ({ program_name:           'MakeNeXus',$
+                    ArchivedCommand:        '/usr/local/bin/sns-nexus-live-catalog',$
+                    NbrPolaStates:          1,$
+                    binType:                'linear',$
+                    BinOffset:              0.0,$
+                    BinMax:                 0L,$
+                    BinWidth:               200L,$
+                    prenexus_found_nbr:     0,$
+                    validate_go:            0,$
+                    RunNumber:              '',$
+                    RunNumberArray:         ptr_new(0L),$
+                    Instrument:             '',$
+                    MainBaseXoffset:        0,$
+                    MainBaseYoffset:        0,$
+                    Event_to_Histo_Mapped:  'Event_to_Histo_Mapped',$
+                    mac : { prenexus_path:  '/REF_L-DAS-FS/2008_1_2_SCI/REF_L_2000/',$
+                            mapping_file:   '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_TS_2006_08_08.dat',$
+                            geometry_file:  '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
+                            translation_file: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
+                    instrumentShortList:  ptr_new(0L),$
+                    LogBookPath:          '/SNS/users/LogBook/',$
+                    hostname:             hostname,$
+                    ucams:                ucams,$
+                    geek:                 'j35',$
+                    prenexus_path:        '',$
+                    prenexus_path_array:  ptr_new(0L),$
+                    RunNumber_array:      ptr_new(0L),$
+                    output_path_1:        '~/local',$
+                    staging_folder:       '~/local/.makenexus_staging',$
+                    processing:           '(PROCESSING)',$
+                    ok:                   'OK',$
+                    failed:               'FAILED',$
+                    NbrPhase:             0,$
+                    runinfo_ext:          '_runinfo.xml',$
+                    version:              VERSION })
 
 
 (*(*global).prenexus_path_array) = strarr(1)

@@ -32,5 +32,59 @@
 ;
 ;===============================================================================
 
+FUNCTION ReformatStagingFolder, StagingFolder, ucams
+IF (STRMATCH(StagingFolder,'*~*')) THEN BEGIN
+    StrArray = STRSPLIT(StagingFolder,'~',/EXTRACT, COUNT=length)
+    IF (length GT 1) THEN BEGIN
+        StagingFolder = StrArray[0] + '~' + ucams + StrArray[1]
+    ENDIF ELSE BEGIN
+        StagingFolder = '~' + ucams + StrArray[0]
+    ENDELSE
+ENDIF
+RETURN, StagingFolder
+END
+  
+;------------------------------------------------------------------------------
 PRO  archived_nexus, Event
+
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+
+;retrieve parameters
+CommandToRun  = (*global).ArchivedCommand
+Ucams         = (*global).ucams
+StagingFolder = getOutputPath(Event)
+FolderName    = (*global).RunNumber
+
+message = ''
+message = '-*-*-*-*-*-*-*-*-*- Archiving NeXus file(s) -*-*-*-*-*-*-*-*-*-'
+AppendMyLogBook, Event, message
+text = 'Command to run (CommandToRun) : ' + CommandToRun
+AppendMyLogBook, Event, text
+text = 'Ucams                         : ' + Ucams
+AppendMyLogBook, Event, text
+text = 'Staging Folder (StagingFolder):'
+AppendMyLogBook, Event, text
+text = '  -> Before reformatting      : ' + StagingFolder
+AppendMyLogBook, Event, text
+;if ~ is part of the StagingFolder, replace it by ~<ucams>
+StagingFolder = ReformatStagingFolder(StagingFolder, ucams)
+text = '  -> After reformatting       : ' + StagingFolder
+AppendMyLogBook, Event, text
+text = 'Folder name (FolderName)      : ' + FolderName
+AppendMyLogBook, Event, text
+
+AppendMyLogBook, Event, '--- Running Command ---'
+archived_cmd = CommandToRun + ' ' + StagingFolder + FolderName
+text = 'Command To Archived: ' + archived_cmd + ' ... ' + (*global).processing
+AppendMyLogBook, Event, text
+
+spawn, archived_cmd, listening, err_listening
+IF (err_listening[0] NE '') THEN BEGIN
+    putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
+    AppendMyLogBook, Event, text
+ENDIF ELSE BEGIN
+    putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
+    AppendMyLogBook, Event, text
+ENDELSE
 END
