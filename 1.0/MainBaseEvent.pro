@@ -41,6 +41,11 @@ CASE Event.id OF
         validateCreateNexusButton, Event, 1
     end
 
+;Archived NeXus
+    widget_info(wWidget, FIND_BY_UNAME='archived_button'): begin
+        archived_nexus, Event ;_archived
+    end
+
 ;Send to Geek
     widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
        makenexus_LogBookInterface, Event

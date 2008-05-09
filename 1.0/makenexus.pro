@@ -117,7 +117,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
 
-MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex, ArchivedUser
 
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup' 

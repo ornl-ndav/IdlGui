@@ -97,7 +97,7 @@ button_list = { list : ['Copy -> Instrument Shared Folder',$
 
 XYoff = [0,45]
 IF (ArchivedUser) THEN BEGIN
-    XSIZE = 350
+    XSIZE = 300
 ENDIF ELSE BEGIN
     XSIZE = 430
 ENDELSE
@@ -106,6 +106,19 @@ go_button = { size  : [shared_base.size[0]+XYoff[0],$
                        XSIZE,30],$
               uname : 'create_nexus_button',$
               value : 'C R E A T E   N E X U S'}
+
+IF (ArchivedUser) THEN BEGIN
+    XYoff = [0,0]
+    sArchivedButton = { size:      [go_button.size[0]+$
+                                    go_button.size[2]+$
+                                    XYoff[0],$
+                                    go_button.size[1]+XYoff[1],$
+                                    135,30],$
+                        uname:     'archived_button',$
+                        value:     'ARCHIVED NEXUS',$
+                        sensitive: 1}
+ENDIF
+
 
 ;------------------------------------------------------------------------------
 
@@ -259,6 +272,7 @@ group = CW_BGROUP(base_shared,$
                   SET_VALUE  = [0,0],$
                   ROW        = 1)
 
+;------------------------------------------------------------------------------
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = go_button.size[0],$
                        YOFFSET   = go_button.size[1],$
@@ -268,6 +282,19 @@ button = WIDGET_BUTTON(base,$
                        VALUE     = go_button.value,$
                        SENSITIVE = 0)
 
+;------------------------------------------------------------------------------
+IF (ArchivedUser) THEN BEGIN
+    wArchivedButton = WIDGET_BUTTON(base,$
+                                    XOFFSET = sArchivedButton.size[0],$
+                                    YOFFSET = sArchivedButton.size[1],$
+                                    SCR_XSIZE = sArchivedButton.size[2],$
+                                    SCR_YSIZE = sArchivedButton.size[3],$
+                                    VALUE     = sArchivedButton.value,$
+                                    UNAME     = sArchivedButton.uname,$
+                                    SENSITIVE = sArchivedButton.sensitive)
+ENDIF
+
+;------------------------------------------------------------------------------
 text = WIDGET_TEXT(base,$
                    XOFFSET   = log_book.size[0],$
                    YOFFSET   = log_book.size[1],$
