@@ -1,49 +1,41 @@
 ;This functions save the metadata of the files
 PRO RefReduction_SaveFileInfo, Event, FilesToPlotList, NbrLine
-
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id = WIDGET_INFO(EVENT.TOP, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
-sz = size(FilesToPLotList)
+sz = SIZE(FilesToPLotList)
 FileNbr = sz(1)
 
 fltPreview_ptr = (*global).fltPreview_ptr
 
-for j=0,(FileNbr-1) do begin
-    
+FOR j=0,(FileNbr-1) DO BEGIN
     WriteError = 0
     CATCH, WriteError
-    if (WriteError NE 0) then begin
-    endif else begin
-
+    IF (WriteError NE 0) THEN BEGIN
+    ENDIF ELSE BEGIN
         no_file = 0
         catch, no_file
-        if (no_file NE 0) then begin
-            catch,/cancel
+        IF (no_file NE 0) THEN BEGIN
+            CATCH,/CANCEL
             plot_file_found = 0    
-        endif else begin
-            openr,u,FilesToPlotList[j],/get
-            fs = fstat(u)
+        ENDIF ELSE BEGIN
+            OPENR,u,FilesToPlotList[j],/GET
+            fs = FSTAT(u)
 ;define an empty string variable to hold results from reading the file
             tmp = ''
-            info_array = strarr(NbrLine)
-            for i=0,((*global).PreviewFileNbrLine-1) do begin
-                readf,u,tmp
+            info_array = STRARR(NbrLine)
+            FOR i=0,((*global).PreviewFileNbrLine-1) DO BEGIN
+                READF,u,tmp
                 info_array[i] = tmp
-            endfor
-            close,u
-            free_lun,u
-        endelse
-
+            ENDFOR
+            CLOSE,u
+            FREE_LUN,u
+        ENDELSE
         *fltPreview_ptr[j] = info_array
-
-    endelse ;end of Catch if statement
-
-endfor
-
+    ENDELSE ;end of Catch if statement
+ENDFOR
 (*global).fltPreview_ptr = fltPreview_ptr
-
 END
 
 
@@ -51,32 +43,29 @@ END
 
 ;This functions save the metadata of the XML file
 PRO RefReduction_SaveXmlInfo, Event, xmlFile
-
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id = WIDGET_INFO(EVENT.TOP, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 fltPreview_ptr = (*global).fltPreview_ptr
 
 no_file = 0
 catch, no_file
-if (no_file NE 0) then begin
-    catch,/cancel
+IF (no_file NE 0) THEN BEGIN
+    CATCH,/CANCEL
     plot_file_found = 0    
-endif else begin
-    openr,u,xmlFile,/get
+ENDIF ELSE BEGIN
+    OPENR,u,xmlFile,/GET
 ;define an empty string variable to hold results from reading the file
     tmp = ''
-    info_array = strarr(1) 
-    while (NOT eof(u)) do begin
-        readf,u,tmp
+    info_array = STRARR(1) 
+    WHILE (NOT EOF(u)) DO BEGIN
+        READF,u,tmp
         info_array = [info_array,tmp]
-    endwhile
-    close,u
-    free_lun,u
-endelse
-
+    ENDWHILE
+    CLOSE,u
+    FREE_LUN,u
+ENDELSE
 *fltPreview_ptr[1] = info_array
 (*global).fltPreview_ptr = fltPreview_ptr
-
 END

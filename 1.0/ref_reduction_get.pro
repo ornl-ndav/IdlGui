@@ -24,6 +24,19 @@ return, getTextFieldValue(Event, 'normalization_log_book_text_field')
 END
 
 
+FUNCTION getOutputPathFromButton, Event
+id = widget_info(Event.top,find_by_uname='of_button')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+FUNCTION getOutputFileName, Event
+id = widget_info(Event.top,find_by_uname='of_text')
+widget_control, id, get_value=value
+RETURN, value
+END
+
+
 ;This function returns the result of cw_bgroup
 FUNCTION getCWBgroupValue, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
@@ -71,6 +84,7 @@ widget_control, id, get_value=list
 return, list[index_selected]
 END
 
+;-------------------------------------------------------------------------------
 
 ;This function returns the full path name of all the file to plot
 FUNCTION getListOfFilestoPlot, Event, $
@@ -87,32 +101,40 @@ widget_control,id,get_uvalue=global
 FilesToPlotList = strarr(1)
 
 ;base name    ex: REF_L_3000
-path      = (*global).dr_output_path
-file_name = (*global).OutputFileName
-base_name = path + file_name
+;path      = (*global).dr_output_path
+;print, 'path: ' + path ;REMOVE_ME
+;file_name = (*global).OutputFileName
+;print, 'file_name: ' + file_name ;REMOVE_ME
+;base_name = path + file_name
+
+TxtFileName   = getOutputFileName(Event)
+TxtFilePath   = getOutputPathFromButton(Event)
+BaseNameArray = STRSPLIT(TxtFileName,'.txt',/extract)
+BaseName      = BaseNameArray[0]
+FullBaseName  = TxtFilePath + BaseName
 
 ;main data reduction plot (.txt)
-
-MainFile = base_name + ExtOfAllPlots[0]
+MainFile = FullBaseName + ExtOfAllPlots[0]
 FilesToPlotList[0] = MainFile
 
 ;xml file (.rdc)
-XmlFile = base_name + ExtOfAllPlots[1]
+XmlFile = FullBaseName + ExtOfAllPlots[1]
 FilesToPlotList = [FilesToPlotList,XmlFile]
 
 ;other intermediate files
 sz=size(IntermPlots)
 Nbr = sz[1]
-for i=0,(Nbr-1) do begin
-    if (IntermPlots[i] EQ 1) then begin
-        FileName = Base_name + '_' + IsoTimeStamp + ExtOfAllPlots[i+1]
+FOR i=0,(Nbr-1) DO BEGIN
+    IF (IntermPlots[i] EQ 1) THEN BEGIN
+        FileName = FullBaseName + ExtOfAllPlots[i+1]
         FilesToPlotList = [FilesToPlotList,FileName]
-    endif
-endfor
+    ENDIF
+ENDFOR
 
-return, FilesToPlotList
+RETURN, FilesToPlotList
 END
 
+;-------------------------------------------------------------------------------
 
 ;this function returns only the file name (whitout the path)
 FUNCTION getFileNameOnly, file
@@ -154,19 +176,6 @@ IF ((*global).miniVersion EQ 1) THEN BEGIN
 ENDIF ELSE BEGIN
     RETURN, 2
 ENDELSE
-END
-
-
-FUNCTION getOutputPath, Event
-id = widget_info(Event.top,find_by_uname='of_button')
-widget_control, id, get_value=value
-RETURN, value
-END
-
-FUNCTION getOutputFileName, Event
-id = widget_info(Event.top,find_by_uname='of_text')
-widget_control, id, get_value=value
-RETURN, value
 END
 
 

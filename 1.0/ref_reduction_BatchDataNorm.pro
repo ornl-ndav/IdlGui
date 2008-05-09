@@ -24,7 +24,7 @@ IF (error NE 0) THEN BEGIN
     (*global).batch_process = 'data'
 ;turn off hourglass
     widget_control,hourglass=0
-qENDIF ELSE BEGIN
+ENDIF ELSE BEGIN
 ;Display processing base
     MapBase, Event, 'processing_base', 1
 ;current row selected
