@@ -1154,7 +1154,7 @@ FOR i=0,NbrRow DO BEGIN
         ++NbrProcess
     ENDIF
 ENDFOR
-ProcessToRun = 0
+ProcessToRun = 1
 IF (NbrProcess NE 0) THEN BEGIN
     FOR i=0,NbrRow DO BEGIN
         IF (BatchTable[0,i] EQ '> YES <' OR $
