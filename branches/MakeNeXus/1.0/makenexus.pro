@@ -11,11 +11,22 @@ VERSION     = '1.0.7'
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
-if (!VERSION.os EQ 'darwin') then begin
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
    ucams = 'j35'
-endif else begin
+ENDIF ELSE BEGIN
    ucams = get_ucams()
-endelse
+ENDELSE
+
+;Check if users can archived
+ArchivedUser = 0
+SWITCH (ucams) OF
+    'j35':
+    'mid':
+    'vl2':
+    'ha9':
+    '1qg': ArchivedUser = 1
+    ELSE:
+ENDSWITCH
 
 ;get hostname
 spawn, 'hostname', hostname
@@ -107,6 +118,7 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
 widget_control, MAIN_BASE, set_uvalue=global
 
 MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='makenexus_Cleanup' 
 

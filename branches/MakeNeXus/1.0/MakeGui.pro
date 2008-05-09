@@ -1,9 +1,12 @@
-PRO MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex
+PRO MakeGui, MAIN_BASE, $
+             MainBaseSize, $
+             InstrumentList, $
+             InstrumentIndex, $
+             ArchivedUser
 
-;***********************************************************************************
+;******************************************************************************
 ;                           Define size arrays
-;***********************************************************************************
-
+;******************************************************************************
 base = { size  : [0,0,MainBaseSize[2:3]],$
          uname : 'first_base'} 
 
@@ -45,9 +48,14 @@ button_list = { list : ['Copy -> Instrument Shared Folder',$
                 uname : 'shared_button'}
 
 XYoff = [0,45]
+IF (ArchivedUser) THEN BEGIN
+    XSIZE = 350
+ENDIF ELSE BEGIN
+    XSIZE = 430
+ENDELSE
 go_button = { size  : [shared_base.size[0]+XYoff[0],$
                        shared_base.size[1]+XYoff[1],$
-                       430,30],$
+                       XSIZE,30],$
               uname : 'create_nexus_button',$
               value : 'C R E A T E   N E X U S'}
 
@@ -80,9 +88,9 @@ my_log_book = { size  : [log_book.size[0]+XYoff[0],$
                          830,200],$
                 uname : 'my_log_book'}
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 base = WIDGET_BASE(MAIN_BASE,$
                    UNAME     = base.uname,$
                    XOFFSET   = 0,$
