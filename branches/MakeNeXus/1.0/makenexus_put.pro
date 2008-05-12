@@ -90,7 +90,8 @@ id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, get_value=InitialStrarr
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(MessageToRemove) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(MessageToRemove) EQ 0) then BEGIN $
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -122,7 +123,8 @@ id = widget_info(Event.top,find_by_uname='my_log_book')
 widget_control, id, get_value=InitialStrarr
 ;get size of InitialStrarr
 ArrSize = (size(InitialStrarr))(1)
-if (n_elements(MessageToRemove) EQ 0) then begin ;do not remove anything from last line
+if (n_elements(MessageToRemove) EQ 0) then BEGIN $
+;do not remove anything from last line
     if (ArrSize GE 2) then begin
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]

@@ -145,7 +145,7 @@ ENDIF ELSE BEGIN
 
             ENDIF ELSE BEGIN
                 putLogBook, Event, message + 'FAILED'
-                (*(*global).prenexus_path_array) = (*global).prenexus_path            
+                (*(*global).prenexus_path_array) = (*global).prenexus_path     
             ENDELSE
         ENDIF ELSE BEGIN        ;more than 1 run
             message = 'Checking if Runs ' + strcompress(RunNumber,/remove_all)
@@ -159,13 +159,15 @@ ENDIF ELSE BEGIN
             validate_go        = 0
             FOR i=0,(sz-1) DO BEGIN
                 RunNumber = RunNumberArray[i]
-                message = "Does Run Number " + strcompress(RunNumber,/remove_all)
+                message = "Does Run Number " + $
+                  strcompress(RunNumber,/remove_all)
                 message += " exist ? ... " + processing
                                 ;check if runNumber exist
                 appendLogBook, Event, message
                 result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
                 IF (i EQ 0) THEN BEGIN
-                    (*(*global).prenexus_path_array)[0] = (*global).prenexus_path
+                    (*(*global).prenexus_path_array)[0] = $
+                      (*global).prenexus_path
                     (*(*global).RunNumber_array)[0]     = RunNumber
 
                     IF (result) THEN BEGIN
@@ -174,10 +176,12 @@ ENDIF ELSE BEGIN
                     ENDIF
 
                 ENDIF ELSE BEGIN
-                (*(*global).prenexus_path_array) = [(*(*global).prenexus_path_array), $
-                                                    (*global).prenexus_path]
-                (*(*global).RunNumber_array)     = [(*(*global).RunNumber_array),$
-                                                    RunNumber]
+                    (*(*global).prenexus_path_array) = $
+                      [(*(*global).prenexus_path_array), $
+                       (*global).prenexus_path]
+                    (*(*global).RunNumber_array)     = $
+                      [(*(*global).RunNumber_array),$
+                       RunNumber]
                 ENDELSE
                 IF(result) THEN BEGIN 
                     at_least_one_found = 1
@@ -367,22 +371,28 @@ FOR j=0,(sz-1) DO BEGIN
 ;STEP8_global : define the variables used in the second part
 ;####### Translation of files
         message = '>(3/' + CNstruct.NbrSteps + ') Translating files '
-        AppendMyLogBook, Event, 'PHASE 3/' + CNstruct.NbrSteps + ': TRANSLATING FILES'
+        AppendMyLogBook, Event, 'PHASE 3/' + CNstruct.NbrSteps + $
+          ': TRANSLATING FILES'
         DefineGeneralVariablePart2, Event, CNstruct
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
 ;STEP9_global ; define polarization state (single or multi)
-        text = '> Checking if p0 state file exist: ' + CNstruct.p0_mapped_file_name $
+        text = '> Checking if p0 state file exist: ' + $
+          CNstruct.p0_mapped_file_name $
           + ' or ' + CNstruct.p0_file_name + ' ... ' + CNstruct.PROCESSING
         AppendMyLogBook, Event, text
         TranslationError = 0 ;by default, everything is going to run smoothly
         IF (!VERSION.os NE 'darwin' AND $
             (FILE_TEST(CNstruct.p0_mapped_file_name) OR $
-             FILE_TEST(CNstruct.p0_file_name))) THEN BEGIN ;multi_polarization state
+             FILE_TEST(CNstruct.p0_file_name))) THEN BEGIN 
+;multi_polarization state
             
-            CNStruct.multi_pola_state = 1 ;we are working with the multi_polarization state
+            CNStruct.multi_pola_state = 1 
+;we are working with the multi_polarization state
+
             putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-            AppendMyLogBook, Event, '=> Entering the multi-polarization state mode'
+            AppendMyLogBook, Event, $
+              '=> Entering the multi-polarization state mode'
             AppendMyLogBook, Event, ''
             message += '(Multi-Polarization): ... ' + CNstruct.PROCESSING
             appendLogBook, Event, message
@@ -393,9 +403,11 @@ FOR j=0,(sz-1) DO BEGIN
             WHILE (CNstruct.anotherState) DO BEGIN
                 message = '-> Polarization state file #' + $
                   strcompress(CNstruct.polaIndex,/remove_all)
-                CNstruct.CurrentPolaStateFileName = CNstruct.base_name + '_p' + $
+                CNstruct.CurrentPolaStateFileName = CNstruct.base_name + $
+                  '_p' + $
                   strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
-                CNstruct.CurrentMappedPolaStateFileName = CNstruct.base_name + '_p' + $
+                CNstruct.CurrentMappedPolaStateFileName = $
+                  CNstruct.base_name + '_p' + $
                   strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
                 message += ' is: ' + CNstruct.CurrentMappedPolaStateFileName
                 message += ' or ' + CNstruct.CurrentPolaStateFileName
@@ -404,37 +416,44 @@ FOR j=0,(sz-1) DO BEGIN
 ;renaming file into generic histogram mapped file
                 error_status = MultiPola_renamingHistoFile(Event,CNstruct)
                 IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+                  GOTO, ERROR1  ;phase
                 
 ;merging xml files
                 error_status = MultiPola_mergingFile(Event,CNstruct)
                 IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+                  GOTO, ERROR1  ;phase
                 
 ;translating the file
                 error_status = MultiPola_translatingFile(Event,CNstruct)
                 IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+                  GOTO, ERROR1  ;phase
                 
 ;renaming nexus file
                 error_status = MultiPola_renamingFile(Event,CNstruct)
                 IF (error_status) THEN GOTO, ERROR
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+                  GOTO, ERROR1  ;phase
                 
 ;checking if there is another pola. (check if nexus exist)
                 ++CNstruct.polaIndex
                 file_name = CNstruct.base_name + '_p' + $
                   strcompress(CNstruct.PolaIndex,/remove_all) + '.dat'
                 file_name_mapped = CNstruct.base_name + $
-                  '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + '_mapped.dat'
-                IF (FILE_TEST(file_name) OR FILE_TEST(file_name_mapped)) THEN BEGIN
+                  '_p' + strcompress(CNstruct.PolaIndex,/remove_all) + $
+                  '_mapped.dat'
+                IF (FILE_TEST(file_name) OR $
+                    FILE_TEST(file_name_mapped)) THEN BEGIN
                     CNstruct.anotherState = 1 ;YES, CONTINUE
                 ENDIF ELSE BEGIN
                     CNstruct.anotherState = 0 ;NO, STOP NOW
                 ENDELSE
                 AppendMyLogBook, Event, ''
                 
-                IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1 ;phase
+                IF (UpdateProgressBar(CNstruct,progressBar)) THEN $
+                  GOTO, ERROR1  ;phase
                 
             ENDWHILE
             
@@ -486,7 +505,8 @@ FOR j=0,(sz-1) DO BEGIN
         text = ['']
         error_status = MovingFiles(Event,CNstruct,text)
         IF (error_status) THEN GOTO, ERROR
-        putTextAtEndOfLogBook, Event, CNstruct.OK, CNstruct.PROCESSING ;moving files worked
+        putTextAtEndOfLogBook, Event, CNstruct.OK, $
+          CNstruct.PROCESSING   ;moving files worked
         AppendLogBook, Event, text
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
@@ -511,9 +531,11 @@ END
 
 error1: BEGIN
     AppendMyLogBook, Event, ''
-    AppendMyLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    AppendMyLogBook, Event, $
+      '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
     appendLogBook, Event, ''
-    appendLogBook, Event, '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
+    appendLogBook, Event, $
+      '*** TRANSLATION PROCESS HAS BEEN INTERRUPTED BY USER ***'
     validateCreateNexusButton, Event, 1
     progressBar->Destroy
     Obj_Destroy, progressBar

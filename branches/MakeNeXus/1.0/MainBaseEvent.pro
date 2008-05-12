@@ -47,19 +47,19 @@ CASE Event.id OF
     
 ;Instrument
     widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
-        run_number, Event       ;in makenexus_eventcb.pro
+        run_number, Event       ;in _eventcb.pro
         validateOrNotGoButton, Event
     end
 
 ;Run Number 
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
-        run_number, Event       ;in makenexus_eventcb.pro
+        run_number, Event       ;in _eventcb.pro
         validateOrNotGoButton, Event
     end
     
 ;Output path
     widget_info(wWidget, FIND_BY_UNAME='output_button'): begin
-        output_path, Event      ;in makenexus_eventcb.pro
+        output_path, Event      ;in _eventcb.pro
         validateOrNotGoButton, Event
     end
     
@@ -71,13 +71,15 @@ CASE Event.id OF
 ;Create NeXus
     widget_info(wWidget, FIND_BY_UNAME='create_nexus_button'): begin
         validateCreateNexusButton, Event, 0
-        status = CreateNexus(Event)
+        status = CreateNexus(Event) ;_eventcb.pro
+        ValidateArchivedButton, Event, status
         validateCreateNexusButton, Event, 1
     end
 
 ;Archived NeXus
     widget_info(wWidget, FIND_BY_UNAME='archived_button'): begin
         archived_nexus, Event ;_archived
+        ValidateArchivedButton, Event, 0
     end
 
 ;Send to Geek
