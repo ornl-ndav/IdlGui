@@ -44,5 +44,5 @@ all:
 install:
 	cp makenexus.sav /SNS/software/idltools/sav/
 	cp MakeNeXus /SNS/software/idltools/
-
+	cp makenexusHELP/*.* /SNS/software/idltools/help/MakeNeXus/
 

@@ -547,18 +547,32 @@ error1: BEGIN
     Obj_Destroy, progressBar
     RETURN, 0
 END
-
 END
 
+;------------------------------------------------------------------------------
+PRO start_help          ;_eventcb
+ONLINE_HELP, book='/SNS/software/idltools/help/MakeNeXus/makenexus.adp'
+END
 
-pro MAIN_REALIZE, wWidget
+;------------------------------------------------------------------------------
+PRO start_my_help, Event          ;_eventcb
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+BRANCH = (*global).branch
+ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/MakeNeXus/' + $
+  BRANCH + '/makenexusHELP/makenexus.adp'
+END
+
+;------------------------------------------------------------------------------
+PRO MAIN_REALIZE, wWidget
 ;Device, Decomposed=0
 tlb = get_tlb(wWidget)
 ;indicate initialization with hourglass icon
 widget_control,/hourglass
 ;turn off hourglass
 widget_control,hourglass=0
-end
+END
 
 pro makenexus_eventcb, event
 end
