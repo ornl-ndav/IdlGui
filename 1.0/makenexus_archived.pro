@@ -82,9 +82,7 @@ AppendMyLogBook, Event, text
 spawn, archived_cmd, listening, err_listening
 IF (err_listening[0] NE '') THEN BEGIN
     putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
-    AppendMyLogBook, Event, text
 ENDIF ELSE BEGIN
     putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
-    AppendMyLogBook, Event, text
 ENDELSE
 END

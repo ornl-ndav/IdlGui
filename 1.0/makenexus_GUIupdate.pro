@@ -32,11 +32,18 @@
 ;
 ;===============================================================================
 
+PRO validateButton, Event, Uname, status
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SENSITIVE=status
+END
+
+;-------------------------------------------------------------------------------
 PRO validateCreateNexusButton, Event, validate_status
 id = widget_info(event.top,find_by_uname='create_nexus_button')
 widget_control, id, sensitive=validate_status
 END
 
+;-------------------------------------------------------------------------------
 PRO validateSendToGeek, Event, validate_status
 uname_array = ['send_to_geek_button',$
                'send_to_geek_label',$
@@ -48,13 +55,21 @@ FOR i=0,(sz-1) DO BEGIN
 ENDFOR
 END
 
+;-------------------------------------------------------------------------------
 PRO resetRunNumberField, Event
 id = widget_info(event.top,find_by_uname='run_number_cw_field')
 widget_control, id, set_value=''
 END
 
+;-------------------------------------------------------------------------------
 PRO setHistogrammingTypeValue, Event, index
 id = widget_info(Event.top,find_by_uname='bin_type_droplist')
 widget_control, id, set_droplist_select=index
 END
+
+;-------------------------------------------------------------------------------
+PRO ValidateArchivedButton, Event, status
+validateButton, Event, 'archived_button', status
+END
+
 

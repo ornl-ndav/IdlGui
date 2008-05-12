@@ -150,7 +150,7 @@ IF (ArchivedUser) THEN BEGIN
                                     135,30],$
                         uname:     'archived_button',$
                         value:     'ARCHIVED NEXUS',$
-                        sensitive: 1}
+                        sensitive: 0}
 ENDIF
 
 
