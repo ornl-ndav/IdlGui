@@ -98,7 +98,7 @@ global = ptr_new ({ program_name:           'MakeNeXus',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 'j35',$
+                    geek:                 ['j35','pf9','2zr'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
@@ -128,12 +128,14 @@ instrumentShortList = ['',$
                        'ARCS']
 (*(*global).instrumentShortList) = instrumentShortList
 
-IF ((*global).ucams NE (*global).geek) THEN BEGIN
+IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN
     MainBaseSize  = [700,500,450,422]
+    MainBaseTitle = 'Make NeXus - ' + VERSION
 endif else begin
     MainBaseSize  = [100,50,850,630]
+    MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
 endelse
-MainBaseTitle = 'Make NeXus - ' + VERSION
+
 
 (*global).MainBaseXoffset = MainBaseSize[0]
 (*global).MainBaseYoffset = MainBaseSize[1]
