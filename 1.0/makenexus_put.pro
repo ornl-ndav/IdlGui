@@ -100,7 +100,8 @@ if (n_elements(MessageToRemove) EQ 0) then BEGIN $
     endelse
 endif else begin                ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],MessageToRemove)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           MessageToRemove)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin
@@ -133,7 +134,8 @@ if (n_elements(MessageToRemove) EQ 0) then BEGIN $
     endelse
 endif else begin                ;remove given string from last line
     if (ArrSize GE 2) then begin
-        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],MessageToRemove)
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                           MessageToRemove)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
     endif else begin

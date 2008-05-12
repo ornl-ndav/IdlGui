@@ -85,6 +85,7 @@ global = ptr_new ({ program_name:           'MakeNeXus',$
                     validate_go:            0,$
                     RunNumber:              '',$
                     RunNumberArray:         ptr_new(0L),$
+                    RunsToArchived:         ptr_new(0L),$
                     Instrument:             '',$
                     MainBaseXoffset:        0,$
                     MainBaseYoffset:        0,$

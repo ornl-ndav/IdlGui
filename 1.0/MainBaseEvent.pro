@@ -79,7 +79,7 @@ CASE Event.id OF
 ;Archived NeXus
     widget_info(wWidget, FIND_BY_UNAME='archived_button'): begin
         archived_nexus, Event ;_archived
-        ValidateArchivedButton, Event, 0
+        ValidateArchivedButton, Event, 0 ;_archived.pro
     end
 
 ;Send to Geek
