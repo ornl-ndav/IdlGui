@@ -73,7 +73,6 @@ CASE Event.id OF
         validateCreateNexusButton, Event, 0
         status = CreateNexus(Event) ;_eventcb.pro
         ValidateArchivedButton, Event, status
-        validateCreateNexusButton, Event, 1
     end
 
 ;Archived NeXus
@@ -90,5 +89,16 @@ CASE Event.id OF
     ELSE:
     
 ENDCASE
+
+;Histogram Widgets
+SWITCH (Event.id) OF
+    widget_info(wWidget, FIND_BY_UNAME='time_offset'):
+    widget_info(wWidget, FIND_BY_UNAME='time_max'):
+    widget_info(wWidget, FIND_BY_UNAME='time_bin'):
+    widget_info(wWidget, FIND_BY_UNAME='bin_type_droplist'): BEGIN
+        validateOrNotGoButton, Event
+    END
+    ELSE:
+ENDSWITCH
 
 END
