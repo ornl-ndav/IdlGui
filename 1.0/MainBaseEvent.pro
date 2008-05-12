@@ -79,15 +79,25 @@ CASE Event.id OF
 
 ;Archived NeXus
     widget_info(wWidget, FIND_BY_UNAME='archived_button'): begin
-        archived_nexus, Event ;_archived
+        archived_nexus, Event   ;_archived
         ValidateArchivedButton, Event, 0 ;_archived.pro
     end
-
+    
 ;Send to Geek
     widget_info(wWidget, FIND_BY_UNAME='send_to_geek_button'): begin
-       makenexus_LogBookInterface, Event
+        makenexus_LogBookInterface, Event
     end
-
+    
+;HELP BUTTON
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='help_button'): BEGIN
+        start_help              ;_eventcb
+    END
+    
+;MY HELP BUTTON
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='my_help_button'): BEGIN
+        start_my_help, Event           ;_eventcb
+    END
+    
     ELSE:
     
 ENDCASE

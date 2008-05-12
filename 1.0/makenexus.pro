@@ -77,6 +77,7 @@ ENDCASE
 
 ;define global variables
 global = ptr_new ({ program_name:           'MakeNeXus',$
+                    branch:                 '1.0',$
                     ArchivedCommand:        '/usr/local/bin/sns-nexus-live-catalog',$
                     archivedUser:           archivedUser,$
                     NbrPolaStates:          1,$
@@ -153,10 +154,27 @@ MAIN_BASE = Widget_Base( GROUP_LEADER = wGroup,$
                          TITLE        = MainBaseTitle,$
                          SPACE        = 0,$
                          XPAD         = 0,$
-                         YPAD         = 2)
+                         YPAD         = 2,$
+                         MBAR         = WID_BASE_0_MBAR)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, set_uvalue=global
+
+;HELP MENU in Menu Bar
+HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+                          UNAME = 'help_menu',$
+                          VALUE = 'HELP',$
+                          /MENU)
+                          
+HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+                            VALUE = 'HELP',$
+                            UNAME = 'help_button')
+
+IF (ucams EQ 'j35') THEN BEGIN
+    MY_HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+                                   VALUE = 'LOCAL_HELP',$
+                                   UNAME = 'my_help_button')
+ENDIF
 
 MakeGui, MAIN_BASE, MainBaseSize, InstrumentList, InstrumentIndex, ArchivedUser
 
