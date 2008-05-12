@@ -89,8 +89,15 @@ FOR i=0,(sz-1) DO BEGIN
         AppendMyLogBook, Event, text
         
         spawn, archived_cmd, listening, err_listening
-        IF (err_listening[0] NE '') THEN BEGIN
+        IF (err_listening[0] NE '' AND $
+            listening NE '') THEN BEGIN
             putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
+            message = 'ERROR message (listening) is:'
+            AppendMyLogBook, Event, message
+            AppendMyLogBook, Event, listening
+            message = 'ERROR message (err_listening) is:'
+            AppendMyLogBook, Event, message
+            AppendMyLogBook, Event, err_listening
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
         ENDELSE
