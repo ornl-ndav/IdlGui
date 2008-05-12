@@ -51,6 +51,8 @@ ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
 
+ucams = 'pf9'
+
 ;Check if users can archived
 ArchivedUser = 0
 SWITCH (ucams) OF
@@ -76,6 +78,7 @@ ENDCASE
 ;define global variables
 global = ptr_new ({ program_name:           'MakeNeXus',$
                     ArchivedCommand:        '/usr/local/bin/sns-nexus-live-catalog',$
+                    archivedUser:           archivedUser,$
                     NbrPolaStates:          1,$
                     binType:                'linear',$
                     BinOffset:              0.0,$

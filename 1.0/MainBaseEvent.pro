@@ -72,7 +72,9 @@ CASE Event.id OF
     widget_info(wWidget, FIND_BY_UNAME='create_nexus_button'): begin
         validateCreateNexusButton, Event, 0
         status = CreateNexus(Event) ;_eventcb.pro
-        ValidateArchivedButton, Event, status
+        IF ((*global).ArchivedUser) THEN BEGIN
+            ValidateArchivedButton, Event, status
+        ENDIF
     end
 
 ;Archived NeXus
