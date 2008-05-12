@@ -256,6 +256,7 @@ prenexus_path_array = (*(*global).prenexus_path_array)
 run_number_array    = (*(*global).RunNumber_array)
 prenexus_found_nbr  = (*global).prenexus_found_nbr
 sz = (size(prenexus_path_array))(1)
+RunsToArchived      = intarr(sz)
 
 FOR j=0,(sz-1) DO BEGIN
 
@@ -515,9 +516,14 @@ FOR j=0,(sz-1) DO BEGIN
         
     ENDIF                      ;END of if that prenexus has been found
     
+    RunsToArchived[j]= run_number_array[j]
+
 ENDFOR                          ;END of loop for each iteration
 
-return, 1
+
+(*(*global).RunsToArchived) = RunsToArchived
+
+RETURN, 1
         
 ;GOTO
 
@@ -526,7 +532,7 @@ error: BEGIN
     validateCreateNexusButton, Event, 0
     progressBar->Destroy
     Obj_Destroy, progressBar
-    return, 0
+    RETURN, 0
 END
 
 error1: BEGIN
@@ -539,7 +545,7 @@ error1: BEGIN
     validateCreateNexusButton, Event, 1
     progressBar->Destroy
     Obj_Destroy, progressBar
-    return, 0
+    RETURN, 0
 END
 
 END

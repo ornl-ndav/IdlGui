@@ -45,44 +45,58 @@ RETURN, StagingFolder
 END
   
 ;------------------------------------------------------------------------------
-PRO  archived_nexus, Event
+PRO archived_nexus, Event
 
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 ;retrieve parameters
-CommandToRun  = (*global).ArchivedCommand
-Ucams         = (*global).ucams
-StagingFolder = getOutputPath(Event)
-FolderName    = (*global).RunNumber
+CommandToRun        = (*global).ArchivedCommand
+Ucams               = (*global).ucams
+StagingFolderBefore = getOutputPath(Event)
+Runs                = (*(*global).RunsToArchived)
+sz                  = (size(Runs))(1)
+;if ~ is part of the StagingFolder, replace it by ~<ucams>
+StagingFolderAfter  = ReformatStagingFolder(StagingFolderBefore, ucams)
 
 message = ''
 message = '-*-*-*-*-*-*-*-*-*- Archiving NeXus file(s) -*-*-*-*-*-*-*-*-*-'
 AppendMyLogBook, Event, message
-text = 'Command to run (CommandToRun) : ' + CommandToRun
-AppendMyLogBook, Event, text
-text = 'Ucams                         : ' + Ucams
-AppendMyLogBook, Event, text
-text = 'Staging Folder (StagingFolder):'
-AppendMyLogBook, Event, text
-text = '  -> Before reformatting      : ' + StagingFolder
-AppendMyLogBook, Event, text
-;if ~ is part of the StagingFolder, replace it by ~<ucams>
-StagingFolder = ReformatStagingFolder(StagingFolder, ucams)
-text = '  -> After reformatting       : ' + StagingFolder
-AppendMyLogBook, Event, text
-text = 'Folder name (FolderName)      : ' + FolderName
-AppendMyLogBook, Event, text
-
-AppendMyLogBook, Event, '--- Running Command ---'
-archived_cmd = CommandToRun + ' ' + StagingFolder + FolderName
-text = 'Command To Archived: ' + archived_cmd + ' ... ' + (*global).processing
-AppendMyLogBook, Event, text
-
-spawn, archived_cmd, listening, err_listening
-IF (err_listening[0] NE '') THEN BEGIN
-    putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
-ENDIF ELSE BEGIN
-    putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
-ENDELSE
+FOR i=0,(sz-1) DO BEGIN
+    IF (Runs[i] NE 0) THEN BEGIN
+        text = 'Archiving Runs                : ' + STRCOMPRESS(Runs[i], $
+                                                                /REMOVE_ALL)
+        AppendMyLogBook, Event, text
+        text = 'Command to run (CommandToRun) : ' + CommandToRun
+        AppendMyLogBook, Event, text
+        text = 'Ucams                         : ' + Ucams
+        AppendMyLogBook, Event, text
+        text = 'Staging Folder (StagingFolder):'
+        AppendMyLogBook, Event, text
+        text = '  -> Before reformatting      : ' + StagingFolderBefore
+        AppendMyLogBook, Event, text
+        text = '  -> After reformatting       : ' + StagingFolderAfter
+        AppendMyLogBook, Event, text
+        text = 'Folder name (FolderName)      : ' + STRCOMPRESS(Runs[i], $
+                                                                /REMOVE_ALL)
+        AppendMyLogBook, Event, text
+        
+        AppendMyLogBook, Event, '--- Running Command ---'
+        archived_cmd = CommandToRun + ' ' + StagingFolderAfter + $
+          STRCOMPRESS(Runs[i],/REMOVE_ALL)
+        text = 'Command To Archived: ' + archived_cmd + ' ... ' + $
+          (*global).processing
+        AppendMyLogBook, Event, text
+        
+        spawn, archived_cmd, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
+        ENDIF ELSE BEGIN
+            putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
+        ENDELSE
+    ENDIF
+    message = '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
+    AppendMyLogBook, Event, message
+ENDFOR
 END
+    
