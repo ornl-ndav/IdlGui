@@ -237,7 +237,8 @@ wOffsetText = WIDGET_TEXT(BinningBase,$
                           SCR_YSIZE = offsetText.size[3],$
                           VALUE     = offsetText.value,$
                           UNAME     = offsetText.uname,$
-                          /editable)
+                          /ALL_EVENTS,$
+                          /EDITABLE)
 
 wMaxLabel = WIDGET_LABEL(BinningBase,$
                             XOFFSET = maxLabel.size[0],$
@@ -251,7 +252,8 @@ wMaxText = WIDGET_TEXT(BinningBase,$
                           SCR_YSIZE = maxText.size[3],$
                           VALUE     = maxText.value,$
                           UNAME     = maxText.uname,$
-                          /editable)
+                          /ALL_EVENTS,$
+                          /EDITABLE)
 
 wbinLabel = WIDGET_LABEL(BinningBase,$
                             XOFFSET = binLabel.size[0],$
@@ -265,7 +267,8 @@ wbinText = WIDGET_TEXT(BinningBase,$
                           SCR_YSIZE = binText.size[3],$
                           VALUE     = binText.value,$
                           UNAME     = binText.uname,$
-                          /editable)
+                          /ALL_EVENTS,$
+                          /EDITABLE)
 
 wDroplist2 = WIDGET_DROPLIST(BinningBase,$
                              VALUE     = binTypeDroplist.list,$
@@ -274,6 +277,8 @@ wDroplist2 = WIDGET_DROPLIST(BinningBase,$
                              UNAME     = binTypeDroplist.uname,$
                              SENSITIVE = 1,$
                              /DYNAMIC_RESIZE)
+
+;- Main Output Path ------------------------------------------------------------
 
 button = WIDGET_BUTTON(base,$
                        XOFFSET   = output_button.size[0],$
