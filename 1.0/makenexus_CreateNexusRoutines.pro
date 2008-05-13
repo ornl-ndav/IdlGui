@@ -537,7 +537,7 @@ ENDIF ELSE BEGIN
         spawn, cmd, listening, renaming_error
         IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
             putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
-            AppendMyLogBook, Event, err_listening
+            AppendMyLogBook, Event, renaming_error
             error_status = 1
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
@@ -569,7 +569,7 @@ ENDIF ELSE BEGIN
     IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN 
 ;problem during merging
         putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
-        AppendMyLogBook, Event, err_listening
+        AppendMyLogBook, Event, merging_error
         error_status = 1
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
@@ -600,7 +600,7 @@ ENDIF ELSE BEGIN
     spawn, cmd, listening, translation_error
     IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
         putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
-        AppendMyLogBook, Event, err_listening
+        AppendMyLogBook, Event, translation_error
         error_status = 1
     ENDIF ELSE BEGIN
         putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
