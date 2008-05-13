@@ -70,6 +70,9 @@ CASE (hostname) OF
     'mrac'        : instrumentIndex = 3
     'bac.sns.gov' : instrumentIndex = 1
     'bac2'        : instrumentIndex = 1
+    'arcs1'       : instrumentIndex = 4
+    'arcs2'       : instrumentIndex = 4
+    'cncs'        : instrumentIndex = 5
     else          : instrumentIndex = 0
 ENDCASE 
 
@@ -121,13 +124,15 @@ InstrumentList = ['Select your instrument...',$
                   'Backscattering',$
                   'Liquids Reflectometer',$
                   'Magnetism Reflectometer',$
-                  'ARCS']
+                  'ARCS',$
+                  'CNCS']
 
 instrumentShortList = ['',$
                        'BSS',$
                        'REF_L',$
                        'REF_M',$
-                       'ARCS']
+                       'ARCS',$
+                       'CNCS']
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN

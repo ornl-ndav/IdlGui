@@ -39,11 +39,14 @@ case instrument of
     'REF_M': beam_line = '4A'
     'BSS'  : beam_line = '2'
     'ARCS' : beam_line = '18'
+    'CNCS' : beam_line = '5'
+    ELSE   : beam_line = '?'
 endcase
 
 path_to_files_base = "/SNS/" + instrument
 path_array = [path_to_files_base + "/2006_1_" + beam_line + "_CAL/calibrations/",$
-              path_to_files_base + "/2008_1_" + beam_line + "_CAL/calibrations/"]
+              path_to_files_base + "/2008_1_" + beam_line + "_CAL/calibrations/",$
+              path_to_files_base + "/2008_2_" + beam_line + "_CAL/calibrations/"]
 sz = (size(path_array))(1)
 
 ;generic file names

@@ -87,7 +87,8 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
     putTextAtEndOfMyLogBook, Event, OK, PROCESSING
 ENDIF ELSE BEGIN    
-    AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + ') exists:'
+    AppendMyLogBook, Event, '-> Checking if staging folder (' + stagingArea + $
+      ') exists:'
     IF (FILE_TEST(stagingArea,/DIRECTORY)) THEN BEGIN
         AppendMyLogBook, Event, '--> Folder exists and needs to be cleaned up'
         cmd = 'rm ' + stagingArea + '/*.* -f '
@@ -143,7 +144,8 @@ error_status = 0
 ;name of event file
 event_file = base_file_name + '_neutron_event.dat'
 
-message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + processing
+message = '>(1/'+NbrSteps+') Creating Histo. Mapped Files .............. ' + $
+  processing
 appendLogBook, Event, message
 cmd = (*global).Event_to_Histo_Mapped 
 cmd += ' -a ' + stagingArea + ' ' + event_file
@@ -162,6 +164,7 @@ CASE (instrument) OF
     END
     'REF_L' : pixel_offset = 77824
     'ARCS'  : pixel_offset = 117760
+    'CNCS'  : pixel_offset = 51200
     ELSE    : pixel_offset = '?'
 ENDCASE
 
@@ -242,7 +245,8 @@ stagingArea   = CNstruct.stagingArea
 prenexus_path = CNstruct.prenexus_path
 
 error_status = 0
-message = '>(2/'+NbrSteps+') Importing staging files ................... ' + processing
+message = '>(2/'+NbrSteps+') Importing staging files ................... ' + $
+  processing
 appendLogBook, Event, message
 appendMyLogBook, Event, ''
 AppendMyLogBook, Event, 'PHASE 2/' + NbrSteps + ': IMPORT FILES'
@@ -425,7 +429,8 @@ cmd = 'TS_merge_preNeXus.sh ' + CNstruct.translation_file + ' ' $
 cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
 AppendMyLogBook, Event, cmd_text
 spawn, cmd, listening, merging_error
-IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
+IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN 
+;problem during merging
     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
     AppendMyLogBook, Event, merging_error
     error_status = 1
@@ -488,8 +493,10 @@ if (CNstruct.PolaIndex EQ 0) THEN BEGIN
     *CNstruct.ShortNexusToMove = [CNstruct.ShortNexusName + '_p0.nxs']
 ENDIF ELSE BEGIN
     *CNstruct.NexusToMove = [*CNstruct.NexusToMove,CNstruct.nexus_file_name]
-    *CNstruct.ShortNexusToMove = [*CNstruct.ShortNexusToMove, CNstruct.ShortNexusName + '_p' + $
-                                 strcompress(CNstruct.polaIndex,/remove_all) + '.nxs']
+    *CNstruct.ShortNexusToMove = [*CNstruct.ShortNexusToMove, $
+                                  CNstruct.ShortNexusName + '_p' + $
+                                  strcompress(CNstruct.polaIndex,/remove_all) $
+                                  + '.nxs']
 ENDELSE
 RETURN, error_status
 END
@@ -514,14 +521,16 @@ END
 FUNCTION SinglePola_renaimingHistoFile, Event,CNstruct
 error_status = 0
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
+    AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into' + $
+      ' *_histo_mapped.dat'
     cmd = 'mv ' + CNstruct.base_ext_name + ' ' + CNstruct.base_histo_name
     cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
     AppendMyLogBook, Event, cmd_text
     putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
 ENDIF ELSE BEGIN
     IF (~FILE_TEST(CNstruct.base_histo_name)) THEN BEGIN
-        AppendMyLogBook, Event, '-> Renaming main *_histo.dat file into *_histo_mapped.dat'
+        AppendMyLogBook, Event, '-> Renaming main *_histo.dat file ' + $
+          'into *_histo_mapped.dat'
         cmd = 'mv ' + CNstruct.base_ext_name + ' ' + CNstruct.base_histo_name
         cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
         AppendMyLogBook, Event, cmd_text
@@ -534,7 +543,8 @@ ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
         ENDELSE
     ENDIF ELSE BEGIN
-        AppendMyLogBook, Event, '-> final histo_mapped file name is already there (*_histo_mapped.dat)'
+        AppendMyLogBook, Event, '-> final histo_mapped file name ' + $
+          'is already there (*_histo_mapped.dat)'
     ENDELSE
 
 ENDELSE
@@ -556,7 +566,8 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     putTextAtEndOfMyLogBook, Event, CNstruct.OK, CNstruct.PROCESSING
 ENDIF ELSE BEGIN
     spawn, cmd, listening, merging_error
-    IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN ;problem during merging
+    IF (strmatch(merging_error[0],'*java.lang.Error*')) THEN BEGIN 
+;problem during merging
         putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
         AppendMyLogBook, Event, err_listening
         error_status = 1
@@ -573,7 +584,8 @@ END
 FUNCTION SinglePola_translatingFiles, Event, CNstruct
 error_status = 0
 AppendMyLogBook, Event, '-> Translating the files:'
-CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + CNstruct.instrument + '_' + $
+CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + CNstruct.instrument $
+  + '_' + $
   CNstruct.RunNumber + '.nxt'
 AppendMyLogBook, Event, ' Translation file: ' + CNstruct.nxtTranslationFile 
 cmd = 'nxtranslate ' + CNstruct.nxtTranslationFile + ' --hdf5'
@@ -602,10 +614,12 @@ END
 
 ;move final nexus file(s) into predefined location(s)
 PRO MovingNexusFileMessage, Event, CNStruct
-message = '>(4/' + CNstruct.NbrSteps + ') Moving NeXus to Final Location ............ ' + $
+message = '>(4/' + CNstruct.NbrSteps + ') Moving NeXus to Final' + $
+  ' Location ............ ' + $
   CNstruct.processing
 appendLogBook, Event, message
-AppendMyLogBook, Event, 'PHASE 4/' + CNstruct.NbrSteps + ': MOVING FILES TO THEIR FINAL LOCATION'
+AppendMyLogBook, Event, 'PHASE 4/' + CNstruct.NbrSteps + $
+  ': MOVING FILES TO THEIR FINAL LOCATION'
 IF (CNstruct.multi_pola_state) THEN BEGIN
     sz = (size(*CNstruct.NexusToMove))(1)
     FOR i=0,(sz-1) DO BEGIN
@@ -629,7 +643,8 @@ PRO GetDestinationFolder, Event, CNstruct
 ;Main output path
 CNstruct.output_path = getTextFieldValue(Event, 'output_path_text')
 IF (CNstruct.output_path NE '') THEN BEGIN
-    message = '-> Check if there is a Main Output Path ... YES (' + CNstruct.output_path + ')'
+    message = '-> Check if there is a Main Output Path ... YES (' + $
+      CNstruct.output_path + ')'
     AppendMyLogBook, Event, message
     message = '--> Check if output path exists ........... ' + CNstruct.PROCESSING
     AppendMyLogBook, Event, message
@@ -685,7 +700,8 @@ END
 PRO getProposalSharedFolder, Event, CNstruct
 IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
     CNstruct.proposalNumber = getProposalNumber(Event, CNstruct.prenexus_path)
-    CNstruct.ProposalSharedFolder = '/SNS/' + CNstruct.instrument + '/' + CNstruct.proposalNumber
+    CNstruct.ProposalSharedFolder = '/SNS/' + CNstruct.instrument + '/' + $
+      CNstruct.proposalNumber
     CNstruct.ProposalSharedFolder += '/shared/'
     message = '-> Check if Proposal Shared Folder is selected ..... YES (' +$
       CNstruct.ProposalSharedFolder + ')'
