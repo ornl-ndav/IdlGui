@@ -88,7 +88,7 @@ FOR i=0,(sz-1) DO BEGIN
           (*global).processing
         AppendMyLogBook, Event, text
         
-        spawn, archived_cmd, listening, err_listening
+        spawn, 'xterm -e ' + archived_cmd, listening, err_listening
         IF (err_listening[0] NE '' AND $
             listening NE '') THEN BEGIN
             putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
