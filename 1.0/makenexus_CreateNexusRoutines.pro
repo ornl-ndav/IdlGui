@@ -639,9 +639,10 @@ END
 
 ;###############################################################################
 
-PRO GetDestinationFolder, Event, CNstruct
+FUNCTION GetDestinationFolder, Event, CNstruct
 ;Main output path
 CNstruct.output_path = getTextFieldValue(Event, 'output_path_text')
+status = 1
 IF (CNstruct.output_path NE '') THEN BEGIN
     message = '-> Check if there is a Main Output Path ... YES (' + $
       CNstruct.output_path + ')'
@@ -656,19 +657,43 @@ IF (CNstruct.output_path NE '') THEN BEGIN
         ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
             CNstruct.output_path = ''
+            status = 0
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if there is a Main Output Path ... NO'
     AppendMyLogBook, Event, message
+    status = 0
 ENDELSE
 AppendMyLogBook, Event, ''
+RETURN, status
+END
+
+;###############################################################################
+
+FUNCTION CheckDestinationFolder, Event
+;Main output path
+output_path = getTextFieldValue(Event, 'output_path_text')
+status = 1
+IF (output_path NE '') THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    ENDIF ELSE BEGIN
+        IF (FILE_TEST(output_path,/DIRECTORY)) THEN BEGIN
+        ENDIF ELSE BEGIN
+            status = 0
+        ENDELSE
+    ENDELSE
+ENDIF ELSE BEGIN
+    status = 0
+ENDELSE
+RETURN, status
 END
 
 ;###############################################################################
 
 ;get instrument Shared Folder
-PRO getInstrumentSharedFolder, Event, CNstruct
+FUNCTION getInstrumentSharedFolder, Event, CNstruct
+status = 1
 IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
     CNstruct.InstrSharedFolder = '/SNS/' + CNstruct.instrument + '/shared/'
     message = '-> Check if Instrument Shared Folder is selected ... YES (' + $
@@ -685,19 +710,43 @@ IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
             message = '--> Check if Instrument Shared Folder exists ....... NO'
             AppendMyLogBook, Event, message
             CNstruct.InstrSharedFolder = ''
+            status = 0
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Instrument Shared Folder is selected ... NO'
     AppendMyLogBook, Event, message
     CNstruct.InstrSharedFolder = ''
+    status = 0
 ENDELSE
 AppendMyLogBook, Event, ''
+RETURN, status
 END
 
 ;###############################################################################
 
-PRO getProposalSharedFolder, Event, CNstruct
+;get instrument Shared Folder
+FUNCTION CheckInstrumentSharedFolder, Event
+status = 1
+IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    ENDIF ELSE BEGIN
+        IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
+        ENDIF ELSE BEGIN
+            status = 0
+        ENDELSE
+    ENDELSE
+ENDIF ELSE BEGIN
+    status = 0
+ENDELSE
+AppendMyLogBook, Event, ''
+RETURN, status
+END
+
+;###############################################################################
+
+FUNCTION getProposalSharedFolder, Event, CNstruct
+status = 1
 IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
     CNstruct.proposalNumber = getProposalNumber(Event, CNstruct.prenexus_path)
     CNstruct.ProposalSharedFolder = '/SNS/' + CNstruct.instrument + '/' + $
@@ -717,14 +766,36 @@ IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
             message = '--> Check if Proposal Shared Folder exists ......... NO'
             AppendMyLogBook, Event, message
             CNstruct.ProposalSharedFolder = ''
+            status = 0
         ENDELSE
     ENDELSE
 ENDIF ELSE BEGIN
     message = '-> Check if Proposal Shared Folder is selected ..... NO'
     AppendMyLogBook, Event, message
     CNstruct.ProposalSharedFolder = ''
+    status = 0
 ENDELSE
 AppendMyLogBook, Event, ''
+RETURN, status
+END
+
+;###############################################################################
+
+FUNCTION CheckProposalSharedFolder, Event
+status = 1
+IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
+    IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    ENDIF ELSE BEGIN
+        IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
+        ENDIF ELSE BEGIN
+            status = 0
+        ENDELSE
+    ENDELSE
+ENDIF ELSE BEGIN
+    status = 0
+ENDELSE
+AppendMyLogBook, Event, ''
+RETURN, status
 END
 
 ;###############################################################################

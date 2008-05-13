@@ -209,8 +209,7 @@ ENDELSE
 (*global).validate_go = validate_go
 END
 
-
-
+;-------------------------------------------------------------------------------
 
 PRO output_path, Event ;in makenexus_eventcb.pro
 ;get global structure
@@ -228,6 +227,7 @@ IF (OutputPath NE '') THEN BEGIN
 ENDIF
 END
 
+;-------------------------------------------------------------------------------
 
 PRO validateOrNotGoButton, Event
 ;get global structure
@@ -238,13 +238,21 @@ IF ((*global).validate_go) THEN BEGIN
 ENDIF ELSE BEGIN
     validate_status = 0
 ENDELSE
+;check if output path required exists or not
+;get destination folders
+folder1_status = CheckDestinationFolder(Event)
+folder2_status = CheckInstrumentSharedFolder(Event)
+folder3_status = CheckProposalSharedFolder(Event)
+folder_status = folder1_status + folder2_status + folder3_status
+IF (folder_status EQ 0) THEN BEGIN
+    validate_status = 0
+ENDIF
 ;validate go button
 validateCreateNexusButton, Event, validate_status
 validateSendToGeek, Event, validate_status
-
 END
 
-
+;-------------------------------------------------------------------------------
 
 FUNCTION CreateNexus, Event
 ;get global structure
@@ -491,24 +499,33 @@ FOR j=0,(sz-1) DO BEGIN
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
 ;get destination folders
-        GetDestinationFolder, Event, CNstruct
+        folder1_status = GetDestinationFolder(Event, CNstruct)
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
 ;get instrument Shared Folder
-        getInstrumentSharedFolder, Event, CNstruct
+        folder2_status = getInstrumentSharedFolder(Event, CNstruct)
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
 ;Proposal Shared Folder
-        getProposalSharedFolder, Event, CNstruct
+        folder3_status = getProposalSharedFolder(Event, CNstruct)
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
+        folder_status = folder1_status + folder2_status + folder3_status
 ;Move files
-        text = ['']
-        error_status = MovingFiles(Event,CNstruct,text)
-        IF (error_status) THEN GOTO, ERROR
-        putTextAtEndOfLogBook, Event, CNstruct.OK, $
-          CNstruct.PROCESSING   ;moving files worked
-        AppendLogBook, Event, text
+        IF (folder_status NE 0) THEN BEGIN
+            text = ['']
+            error_status = MovingFiles(Event,CNstruct,text)
+            IF (error_status) THEN GOTO, ERROR
+            putTextAtEndOfLogBook, Event, CNstruct.OK, $
+              CNstruct.PROCESSING ;moving files worked
+            AppendLogBook, Event, text
+        ENDIF ELSE BEGIN
+            message = '-> None of the output folders selected exist or are' + $
+              ' valid !'
+            AppendMyLogBook, Event, message
+            GOTO, ERROR
+        ENDELSE
+            
         IF (UpdateProgressBar(CNstruct,progressBar)) THEN GOTO, ERROR1
         
         progressBar->Destroy
