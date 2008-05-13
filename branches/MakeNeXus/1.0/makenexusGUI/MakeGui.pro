@@ -295,6 +295,7 @@ text = WIDGET_TEXT(base,$
                    SCR_YSIZE = output_text.size[3],$
                    VALUE     = output_text.value,$
                    UNAME     = output_text.uname,$
+                   /ALL_EVENTS,$
                    /EDITABLE)
 
 base_shared = WIDGET_BASE(base,$
