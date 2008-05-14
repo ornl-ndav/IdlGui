@@ -315,7 +315,6 @@ RETURN, strcompress(value,/remove_all)
 END
 
 ;-------------------------------------------------------------------------------
-
 FUNCTION getListOfProposal, instrument
 FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
                        COUNT=length,$
@@ -328,8 +327,8 @@ FOR i=1,(length) DO BEGIN
 ENDFOR
 RETURN, ProposalList
 END
-;-------------------------------------------------------------------------------
 
+;-------------------------------------------------------------------------------
 FUNCTION getProposalSelected, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 index = WIDGET_INFO(id, /DROPLIST_SELECT)
@@ -337,3 +336,16 @@ IF (index EQ 0) THEN RETURN, ''
 WIDGET_CONTROL, id, GET_VALUE=list
 RETURN, list[index]
 END
+
+;-------------------------------------------------------------------------------
+FUNCTION get_up_to_date_geo_tran_map_file, instrument
+cmd = 'findcalib -i' + instrument
+spawn, cmd, listening, err_listening
+IF (err_listening[0] NE '') THEN BEGIN
+    RETURN = STRARR(3)
+ENDIF ELSE BEGIN
+    RETURN, listening
+ENDELSE
+END
+
+;-------------------------------------------------------------------------------
