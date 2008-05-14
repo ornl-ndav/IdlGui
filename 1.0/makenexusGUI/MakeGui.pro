@@ -44,29 +44,36 @@ PRO MakeGui, MAIN_BASE, $
 base = { size  : [0,0,MainBaseSize[2:3]],$
          uname : 'first_base'} 
 
-XYoff = [10,10]
+;proposal droplist
+XYoff = [5,0]
+sProposalDroplist = { size:  [XYoff[0],$
+                              XYoff[1]],$
+                      list: ['      Proposal ?      '],$
+                      uname: 'proposal_droplist'};
+
+XYoff = [190,0]                      
 run_number_base = { size  : [XYoff[0],$
                              XYoff[1],$
-                             240,$
+                             140,$
                              35],$
                     uname : 'run_number_cw_field',$
-                    xsize : 27,$
-                    title : 'Runs #:'}
+                    xsize : 14,$
+                    title : 'Runs'}
 
-XYOff = [235,0]
+XYOff = [137,0]
 instrumentDroplist = { size : [run_number_base.size[0]+XYoff[0],$
                                run_number_base.size[1]+XYoff[1]],$
                        uname : 'instrument_droplist'}
 
 ;///////////////HISTOGRAMMING PARAMETERS BASE/////////////////////
-XYoff = [0,40]
-BinningBase = { size  : [run_number_base.size[0]+XYoff[0],$
+XYoff = [10,40]
+BinningBase = { size  : [base.size[0]+XYoff[0],$
                          run_number_base.size[1]+XYoff[1],$
                          430,40],$
                 uname : 'binning_base',$
                 frame : 1}
                          
-XYoff = [0,10]
+XYoff = [5,10]
 offsetLabel = { size  : [XYoff[0],$
                          XYoff[1]],$
                 value : 'Time Min.:'}
@@ -194,7 +201,13 @@ base = WIDGET_BASE(MAIN_BASE,$
                    YOFFSET   = 0,$
                    SCR_XSIZE = base.size[2],$
                    SCR_YSIZE = base.size[3],$
-                   map=1)  ;REMOVE 0 and put back 1
+                   map=1)
+
+wProposalDroplist = WIDGET_DROPLIST(base,$
+                                    VALUE   = sProposalDroplist.list,$
+                                    XOFFSET = sProposalDroplist.size[0],$
+                                    YOFFSET = sProposalDroplist.size[1],$
+                                    UNAME   = sProposalDroplist.uname)
 
 run_base = WIDGET_BASE(base,$
                        XOFFSET   = run_number_base.size[0],$
