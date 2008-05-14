@@ -151,7 +151,9 @@ ENDIF ELSE BEGIN
         obj3=obj2->item(0)
         obj3b=obj3->getattributes()
         obj3c=obj3b->getnameditem('number')
-        return, fix(obj3c->getvalue())
+        result = STRCOMPRESS(obj3c->getvalue())
+        OBJ_DESTROY, oDocList
+        RETURN, result
     ENDELSE
 ENDELSE
 END
@@ -175,7 +177,9 @@ ENDIF ELSE BEGIN
         obj4a=obj4->item(0)
         obj4b=obj4a->getattributes()
         obj4c=obj4b->getnameditem('scale')
-        return, strcompress(obj4c->getvalue())
+        result = STRCOMPRESS(obj4c->getvalue())
+        OBJ_DESTROY, oDocList
+        RETURN, result
     ENDELSE
 ENDELSE
 END
@@ -199,7 +203,9 @@ ENDIF ELSE BEGIN
         obj4a=obj4->item(0)
         obj4b=obj4a->getattributes()
         obj4c=obj4b->getnameditem('startbin')
-        return, strcompress(obj4c->getvalue())
+        result = STRCOMPRESS(obj4c->getvalue())
+        OBJ_DESTROY, oDocList
+        RETURN, result
     ENDELSE
 ENDELSE
 END
@@ -223,7 +229,9 @@ ENDIF ELSE BEGIN
         obj4a=obj4->item(0)
         obj4b=obj4a->getattributes()
         obj4c=obj4b->getnameditem('endbin')
-        return, strcompress(obj4c->getvalue())
+        result = STRCOMPRESS(obj4c->getvalue())
+        OBJ_DESTROY, oDocList
+        RETURN, result
     ENDELSE
 ENDELSE
 END
@@ -247,7 +255,9 @@ ENDIF ELSE BEGIN
         obj4a=obj4->item(0)
         obj4b=obj4a->getattributes()
         obj4c=obj4b->getnameditem('width')
-        return, strcompress(obj4c->getvalue())
+        result = STRCOMPRESS(obj4c->getvalue())
+        OBJ_DESTROY, oDocList
+        RETURN, result
     ENDELSE
 ENDELSE
 END
@@ -270,7 +280,9 @@ ENDIF ELSE BEGIN
         obj2=obj1->GetElementsByTagName('MaxScatPixelID')
         obj3=obj2->item(0)
         obj4=obj3->GetFirstChild()
-        RETURN, STRCOMPRESS(obj4->getNodevalue(),/REMOVE_ALL)
+        result = STRCOMPRESS(obj4->getNodevalue(),/REMOVE_ALL)
+        OBJ_DESTROY, oDoc
+        RETURN, result
     ENDELSE
 ENDELSE
 END
