@@ -37,111 +37,133 @@
 ;returns the result.
 FUNCTION removeStringFromText, initialText, TextToRemove
 ;find where the 'textToRemove' starts
-step1 = strpos(initialText,TexttoRemove)
+step1 = STRPOS(initialText,TexttoRemove)
 ;keep the text from the start of the line to the step1 position
-step2 = strmid(initialText,0,step1)
-return, step2
+step2 = STRMID(initialText,0,step1)
+RETURN, step2
 END
+
+;-------------------------------------------------------------------------------
 
 PRO putTextField, Event, uname, text
-id = widget_info(Event.top,find_by_uname=uname)
-widget_control, id, set_value=text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
+WIDGET_CONTROL, id, SET_VALUE=text
 END
 
-
+;-------------------------------------------------------------------------------
 
 ;MAIN FUNCTIONS
 PRO putLogBook, Event, text
-id = widget_info(Event.top,find_by_uname='log_book')
-widget_control, id, set_value = text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
+WIDGET_CONTROL, id, SET_VALUE = text
 END
+
+;-------------------------------------------------------------------------------
 
 PRO putMyLogBook, Event, text
-id = widget_info(Event.top,find_by_uname='my_log_book')
-widget_control, id, set_value = text
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
+WIDGET_CONTROL, id, SET_VALUE = text
 END
+
+;-------------------------------------------------------------------------------
 
 PRO appendLogBook, Event, text
-id = widget_info(Event.top,find_by_uname='log_book')
-widget_control, id, set_value = text, /append
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
+WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
 END
+
+;-------------------------------------------------------------------------------
 
 PRO appendMyLogBook, Event, text
-id = widget_info(Event.top,find_by_uname='my_log_book')
-widget_control, id, set_value = text, /append
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
+WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
 END
+
+;-------------------------------------------------------------------------------
 
 PRO putOutputPath, Event, OutputPath
-id = widget_info(Event.top,find_by_uname='output_path_text')
-widget_control, id, set_value=strcompress(OutputPath,/remove_all)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_path_text')
+WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(OutputPath,/REMOVE_ALL)
 END
 
+;-------------------------------------------------------------------------------
+
 PRO putOutputPath2, Event, OutputPath
-id = widget_info(Event.top,find_by_uname='output_path_text2')
-widget_control, id, set_value=strcompress(OutputPath,/remove_all)
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_path_text2')
+WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(OutputPath,/REMOVE_ALL)
 END
+
+;-------------------------------------------------------------------------------
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
 ;removed before adding the new MessageToAdd
 PRO putTextAtEndOfLogBook, Event, MessageToAdd, MessageToRemove
-id = widget_info(Event.top,find_by_uname='log_book')
-widget_control, id, get_value=InitialStrarr
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
+WIDGET_CONTROL, id, GET_VALUE=InitialStrarr
 ;get size of InitialStrarr
-ArrSize = (size(InitialStrarr))(1)
-if (n_elements(MessageToRemove) EQ 0) then BEGIN $
+ArrSize = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(MessageToRemove) EQ 0) THEN BEGIN $
 ;do not remove anything from last line
-    if (ArrSize GE 2) then begin
+    IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
-    endif else begin
+    ENDIF ELSE BEGIN
         FinalStrarr = InitialStrarr + MessageToAdd
-    endelse
-endif else begin                ;remove given string from last line
-    if (ArrSize GE 2) then begin
+    ENDELSE
+ENDIF ELSE BEGIN                ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
                                            MessageToRemove)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
-    endif else begin
+    ENDIF ELSE BEGIN
         NewInitialStrarr = removeStringFromText(InitialStrarr,MessageToRemove)
         FinalStrarr = NewInitialStrarr + MessageToAdd
-    endelse
-endelse
+    ENDELSE
+ENDELSE
 putLogBook, Event, FinalStrarr
 END
 
-
-
+;-------------------------------------------------------------------------------
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
 ;If the optional RemoveString is present, the given String will be
 ;removed before adding the new MessageToAdd
 PRO putTextAtEndOfMyLogBook, Event, MessageToAdd, MessageToRemove
-id = widget_info(Event.top,find_by_uname='my_log_book')
-widget_control, id, get_value=InitialStrarr
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
+WIDGET_CONTROL, id, GET_VALUE=InitialStrarr
 ;get size of InitialStrarr
-ArrSize = (size(InitialStrarr))(1)
-if (n_elements(MessageToRemove) EQ 0) then BEGIN $
+ArrSize = (SIZE(InitialStrarr))(1)
+IF (N_ELEMENTS(MessageToRemove) EQ 0) THEN BEGIN $
 ;do not remove anything from last line
-    if (ArrSize GE 2) then begin
+    IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
-    endif else begin
+    ENDIF ELSE BEGIN
         FinalStrarr = InitialStrarr + MessageToAdd
-    endelse
-endif else begin                ;remove given string from last line
-    if (ArrSize GE 2) then begin
+    ENDELSE
+ENDIF ELSE BEGIN                ;remove given string from last line
+    IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1], $
                                            MessageToRemove)
         NewLastLine += MessageToAdd
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
-    endif else begin
+    ENDIF ELSE BEGIN
         NewInitialStrarr = removeStringFromText(InitialStrarr,MessageToRemove)
         FinalStrarr = NewInitialStrarr + MessageToAdd
-    endelse
-endelse
+    ENDELSE
+ENDELSE
 putMyLogBook, Event, FinalStrarr
 END
+
+;-------------------------------------------------------------------------------
+
+PRO putListOfProposal, Event, List
+id = WIDGET_INFO(Event.top, FIND_BY_UNAME='proposal_droplist')
+WIDGET_CONTROL, id, SET_VALUE=List
+END
+
+;-------------------------------------------------------------------------------

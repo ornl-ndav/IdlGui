@@ -44,22 +44,34 @@ CASE Event.id OF
     
     Widget_Info(wWidget, FIND_BY_UNAME='MAIN_BASE'): BEGIN
     END
+
+;Proposal Folder
+    widget_info(wWidget, FIND_BY_UNAME='proposal_droplist'): begin
+;        print, getProposalSelected(Event)
+    end
     
 ;Instrument
-    widget_info(wWidget, FIND_BY_UNAME='instrument_droplist'): begin
-        run_number, Event       ;in _eventcb.pro
-        validateOrNotGoButton, Event
-    end
+    WIDGET_INFO(wWidget, FIND_BY_UNAME='instrument_droplist'): BEGIN
+        repopulateProposalList, Event ;in _eventcb
+        instrument      = getInstrument(Event)
+        ListOfProposal  = getListOfProposal(instrument)
+        IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
+            putLogBook, Event, 'Please Select another instrument !'
+        ENDIF ELSE BEGIN
+            run_number, Event   ;in _eventcb
+            validateOrNotGoButton, Event
+        ENDELSE
+    END
 
 ;Run Number 
     widget_info(wWidget, FIND_BY_UNAME='run_number_cw_field'): begin
-        run_number, Event       ;in _eventcb.pro
+        run_number, Event       ;in _eventcb
         validateOrNotGoButton, Event
     end
     
 ;Output path
     widget_info(wWidget, FIND_BY_UNAME='output_button'): begin
-        output_path, Event      ;in _eventcb.pro
+        output_path, Event      ;in _eventcb
         validateOrNotGoButton, Event
     end
     
@@ -71,7 +83,7 @@ CASE Event.id OF
 ;Create NeXus
     widget_info(wWidget, FIND_BY_UNAME='create_nexus_button'): begin
         validateCreateNexusButton, Event, 0
-        status = CreateNexus(Event) ;_eventcb.pro
+        status = CreateNexus(Event) ;_eventcb
         IF ((*global).ArchivedUser) THEN BEGIN
             ValidateArchivedButton, Event, status
         ENDIF
@@ -80,7 +92,7 @@ CASE Event.id OF
 ;Archived NeXus
     widget_info(wWidget, FIND_BY_UNAME='archived_button'): begin
         archived_nexus, Event   ;_archived
-        ValidateArchivedButton, Event, 0 ;_archived.pro
+        ValidateArchivedButton, Event, 0 ;_archived
     end
     
 ;Send to Geek

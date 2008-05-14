@@ -108,7 +108,8 @@ PutMyLogBook, Event, ''
 putTextField, Event, 'send_to_geek_text',''
 
 ;get run number
-RunNumber = getRunNumber(Event)
+RunNumber      = getRunNumber(Event)
+
 validate_go = 0               
 IF (RunNumber EQ 0) THEN BEGIN
     message = 'Please Enter a Run Number'
@@ -116,7 +117,8 @@ IF (RunNumber EQ 0) THEN BEGIN
 ENDIF ELSE BEGIN
 ;get instrument
     Instrument = getInstrument(Event)
-    IF (instrument NE '' ) THEN BEGIN    
+    IF (instrument NE '' ) THEN BEGIN
+        ProposalFolder       = getProposalSelected(Event)
         (*global).Instrument = Instrument
         ;reinitialize prenexus_path_array
         (*(*global).prenexus_path_array) = strarr(1)
@@ -131,7 +133,10 @@ ENDIF ELSE BEGIN
             text = message + processing
             putLogBook, Event, text
 ;check if runNumber exist
-            result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+            result=isPreNexusExistOnDas(Event, $
+                                        RunNumber, $
+                                        Instrument, $
+                                        ProposalFolder)
             IF (result) THEN BEGIN ;prenexus exist
                 putLogBook, Event, message + 'DONE'
                 message = 'Run Number ' + RunNumber + ' --- OK'
@@ -567,11 +572,24 @@ END
 END
 
 ;------------------------------------------------------------------------------
+
+PRO repopulateProposalList, Event
+instrument      = getInstrument(Event)
+ListOfProposal  = getListOfProposal(instrument)
+IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
+    ListOfProposal = ['INSTRUMENT NOT VISIBLE']
+ENDIF
+putListOfProposal, Event, ListOfProposal
+END
+
+;------------------------------------------------------------------------------
+
 PRO start_help          ;_eventcb
 ONLINE_HELP, book='/SNS/software/idltools/help/MakeNeXus/makenexus.adp'
 END
 
 ;------------------------------------------------------------------------------
+
 PRO start_my_help, Event          ;_eventcb
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -582,6 +600,7 @@ ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/MakeNeXus/' + $
 END
 
 ;------------------------------------------------------------------------------
+
 PRO MAIN_REALIZE, wWidget
 ;Device, Decomposed=0
 tlb = get_tlb(wWidget)

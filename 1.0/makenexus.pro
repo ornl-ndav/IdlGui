@@ -102,6 +102,7 @@ global = ptr_new ({ program_name:           'MakeNeXus',$
                             geometry_file:  '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2006_geom.nxs',$
                             translation_file: '/SNS/REF_M/2006_1_4A_CAL/calibrations/REF_M_2007_08_08.nxt'},$
                     instrumentShortList:  ptr_new(0L),$
+                    instrumentIndex:      0L,$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
@@ -121,6 +122,7 @@ global = ptr_new ({ program_name:           'MakeNeXus',$
 
 (*(*global).prenexus_path_array) = strarr(1)
 (*(*global).RunNumber_array)     = strarr(1)
+(*global).instrumentIndex        = instrumentIndex
 
 InstrumentList = ['Instrument ?',$
                   'BASIS',$
@@ -201,6 +203,11 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
     id = widget_info(MAIN_BASE,find_by_uname='run_number_cw_field')
     widget_control,id,set_value='2000'   
 ENDIF 
+
+;populate the Instrument Droplist
+ListOfProposal = getListOfProposal(instrumentShortList[InstrumentIndex])
+id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME='proposal_droplist')
+WIDGET_CONTROL, id, SET_VALUE=ListOfProposal
 
 ;;REMOVE ME
 ;;set the instrument droplist
