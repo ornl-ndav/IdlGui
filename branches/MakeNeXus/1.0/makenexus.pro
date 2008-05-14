@@ -51,7 +51,7 @@ ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
 
-ucams = 'pf9'
+ucams = 'dfd'
 
 ;Check if users can archived
 ArchivedUser = 0
@@ -140,7 +140,7 @@ instrumentShortList = ['',$
 (*(*global).instrumentShortList) = instrumentShortList
 
 IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
-    MainBaseSize  = [700,500,450,422]
+    MainBaseSize  = [700,500,450,410]
     MainBaseTitle = 'Make NeXus - ' + VERSION
 ENDIF ELSE BEGIN
     MainBaseSize  = [100,50,850,630]
