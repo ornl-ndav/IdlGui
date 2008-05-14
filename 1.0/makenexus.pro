@@ -35,7 +35,7 @@
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 ;get the current folder
-cd, current=current_folder
+CD, CURRENT=current_folder
 
 APPLICATION = 'MakeNeXus'
 VERSION     = '1.0.8'
@@ -50,6 +50,8 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
 ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
+
+ucams = 'pf9'
 
 ;Check if users can archived
 ArchivedUser = 0
@@ -103,7 +105,7 @@ global = ptr_new ({ program_name:           'MakeNeXus',$
                     LogBookPath:          '/SNS/users/LogBook/',$
                     hostname:             hostname,$
                     ucams:                ucams,$
-                    geek:                 ['j35','pf9','2zr'],$
+                    geek:                 ['j35','pf9','2zr','mid'],$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
@@ -135,13 +137,17 @@ instrumentShortList = ['',$
                        'CNCS']
 (*(*global).instrumentShortList) = instrumentShortList
 
-IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN
+IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
     MainBaseSize  = [700,500,450,422]
     MainBaseTitle = 'Make NeXus - ' + VERSION
-endif else begin
+ENDIF ELSE BEGIN
     MainBaseSize  = [100,50,850,630]
-    MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
-endelse
+    IF (WHERE(ucams EQ ['j35','mid']) NE -1) THEN BEGIN
+        MainBaseTitle = 'Make NeXus (Super_Extra_Power Mode) - ' + VERSION
+    ENDIF ELSE BEGIN
+        MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
+    ENDELSE
+ENDELSE
 
 
 (*global).MainBaseXoffset = MainBaseSize[0]
