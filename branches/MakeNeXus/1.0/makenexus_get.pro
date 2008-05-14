@@ -281,3 +281,25 @@ RETURN, strcompress(value,/remove_all)
 END
 
 ;-------------------------------------------------------------------------------
+
+FUNCTION getListOfProposal, instrument
+FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
+                       COUNT=length,$
+                       /TEST_DIRECTORY)
+ProposalList = STRARR(length+1)
+ProposalList[0] = 'ALL PROPOSAL FOLDERS'
+FOR i=1,(length) DO BEGIN
+    ParseList = STRSPLIT(FileList[i-1],'/',/extract,COUNT=nbr)
+    ProposalList[i] = ParseList[nbr-1]
+ENDFOR
+RETURN, ProposalList
+END
+;-------------------------------------------------------------------------------
+
+FUNCTION getProposalSelected, Event
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+index = WIDGET_INFO(id, /DROPLIST_SELECT)
+IF (index EQ 0) THEN RETURN, ''
+WIDGET_CONTROL, id, GET_VALUE=list
+RETURN, list[index]
+END

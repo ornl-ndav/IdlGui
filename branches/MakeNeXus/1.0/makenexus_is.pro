@@ -43,19 +43,22 @@ END
 ;###### PARTICULAR FUNCTIONS #########
 ;this function returns 1 if the prenexus exist and 0 if 
 ;it does not exist
-FUNCTION isPreNexusExistOnDas, Event, RunNumber, Instrument
+FUNCTION isPreNexusExistOnDas, Event, RunNumber, Instrument, proposalFolder
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    (*global).prenexus_path = (*global).mac.prenexus_path
+    (*global).prenexus_path      = (*global).mac.prenexus_path
     (*global).prenexus_found_nbr = 1
-    return, 1
-ENDIF eLSE BEGIN
+    RETURN, 1
+ENDIF ELSE BEGIN
     defaultPath = instrument + '-DAS-FS'
     cmd = 'findnexus --prenexus --listall --prefix=' $
       + defaultPath + ' -i' + Instrument
     cmd += ' ' + RunNumber
+    IF (proposalFolder NE '') THEN BEGIN
+        cmd += ' --proposal=' + proposalFolder
+    ENDIF
     spawn, cmd, listening
     sz = (size(listening))(1)
     FOR i=0,(sz-1) DO BEGIN
