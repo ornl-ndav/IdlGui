@@ -401,7 +401,7 @@ ENDIF
 
 new_cmd += ' ' + split2 + part2
 ;change the --output flag in the cmd
-new_cmd = UpdateOutputFlag(Event, new_cmd, NormRunsJoined[0])
+;new_cmd = UpdateOutputFlag(Event, new_cmd, NormRunsJoined[0])
 ;put new_cmd back in the BatchTable
 BatchTable[7,RowSelected] = new_cmd
 ;update DATE field with new date/time stamp
