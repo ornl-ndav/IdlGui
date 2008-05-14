@@ -827,8 +827,10 @@ IF (CNstruct.output_path NE '' OR $
 ;output_path/RunNumber/preNeXus/*.nxt
 ;create NeXus and preNeXus folders
                 AppendMyLogBook, Event, 'Iteration #0:'
-                CNstruct.NeXus_folder    = CNstruct.output_path + CNstruct.RunNumber + '/NeXus/'
-                CNstruct.preNeXus_folder = CNstruct.output_path + CNstruct.RunNumber + '/preNeXus/'
+                CNstruct.NeXus_folder    = CNstruct.output_path + $
+                  CNstruct.RunNumber + '/NeXus/'
+                CNstruct.preNeXus_folder = CNstruct.output_path + $
+                  CNstruct.RunNumber + '/preNeXus/'
                 
                 AppendMyLogBook, Event, 'Checking if NeXus Folder (' + $
                   CNstruct.NeXus_folder + $
@@ -837,33 +839,43 @@ IF (CNstruct.output_path NE '' OR $
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
                     AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
                     cmd_rm = 'rm -f ' + CNstruct.NeXus_folder + '*.nxs'
-                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
+                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
+                      CNstruct.PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
                     IF (FILE_TEST(CNstruct.NeXus_folder,/DIRECTORY)) THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-                        AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
+                        putTextAtEndOfMyLogBook, Event, 'YES', $
+                          CNstruct.PROCESSING
+                        AppendMyLogBook, Event, '-> Remove Content of ' + $
+                          'NeXus folder:'
                         cmd_rm = 'rm -f ' + CNstruct.neXus_folder + '*.nxs'
-                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
+                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
+                          CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_rm_text
                         spawn, cmd_rm, listening
                         IF (listening[0] EQ '') THEN BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                              CNstruct.PROCESSING
                         ENDIF ELSE BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                              CNstruct.PROCESSING
                         ENDELSE
                     ENDIF ELSE BEGIN
                         putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
                         cmd_spawn = 'mkdir -p ' + CNstruct.Nexus_folder 
                         AppendMyLogBook, Event, 'Create NeXus folder:'
-                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + CNstruct.PROCESSING
+                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + $
+                          CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_spawn_text
                         spawn, cmd_spawn, listening
                         IF (listening[0] EQ '') THEN BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                              CNstruct.PROCESSING
                         ENDIF ELSE BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                              CNstruct.PROCESSING
                         ENDELSE
                     ENDELSE
                     AppendMyLogBook, Event, ''
@@ -874,35 +886,47 @@ IF (CNstruct.output_path NE '' OR $
                   ') exists ... ' + CNstruct.PROCESSING
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-                    AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
+                    AppendMyLogBook, Event, '-> Remove Content of preNeXus ' + $
+                      'folder:'
                     cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
-                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
+                    cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
+                      CNstruct.PROCESSING
                     AppendMyLogBook, Event, cmd_rm_text
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
-                    IF (FILE_TEST(CNstruct.preNeXus_folder,/DIRECTORY)) THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-                        AppendMyLogBook, Event, '-> Remove Content of preNeXus folder:'
+                    IF (FILE_TEST(CNstruct.preNeXus_folder,/DIRECTORY)) THEN $
+                      BEGIN
+                        putTextAtEndOfMyLogBook, Event, 'YES', $
+                          CNstruct.PROCESSING
+                        AppendMyLogBook, Event, '-> Remove Content of preNeXus ' + $
+                          'folder:'
                         cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
-                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + CNstruct.PROCESSING
+                        cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
+                          CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_rm_text
                         spawn, cmd_rm, listening
                         IF (listening[0] EQ '') THEN BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                              CNstruct.PROCESSING
                         ENDIF ELSE BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                              CNstruct.PROCESSING
                         ENDELSE
                     ENDIF ELSE BEGIN
                         putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
                         cmd_spawn = 'mkdir -p ' + CNstruct.preNexus_folder 
                         AppendMyLogBook, Event, 'Create preNeXus folder:'
-                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + CNstruct.PROCESSING
+                        cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + $
+                          CNstruct.PROCESSING
                         AppendMyLogBook, Event, cmd_spawn_text
                         spawn, cmd_spawn, listening
                         IF (listening[0] EQ '') THEN BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                              CNstruct.PROCESSING
                         ENDIF ELSE BEGIN
-                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                              CNstruct.PROCESSING
                         ENDELSE
                     ENDELSE
                     AppendMyLogBook, Event, ''
@@ -916,31 +940,38 @@ IF (CNstruct.output_path NE '' OR $
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
                     spawn, cmd_xml, listening
                     IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                          CNstruct.PROCESSING
                     ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
                 
                 AppendMyLogBook, Event, $
-                  'Copy beamtimeinfo.xml and cvlist.xml files from DAS/preNeXus folder:'
+                  'Copy beamtimeinfo.xml and cvlist.xml files from ' + $
+                  'DAS/preNeXus folder:'
                 cmd_xml = 'cp ' + CNStruct.prenexus_path + '/../*.xml' $
                   + ' ' + CNstruct.preNeXus_folder
                 cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
                     spawn, cmd_xml, listening
                     IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                          CNstruct.PROCESSING
                     ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
@@ -948,15 +979,18 @@ IF (CNstruct.output_path NE '' OR $
 ;copy .nxt file from stagingArea
                 AppendMyLogBook, Event, $
                   'Copy translation file from Staging Area:'
-                cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + CNstruct.preNeXus_folder
+                cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + $
+                  CNstruct.preNeXus_folder
                 cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_nxt_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
                     spawn, cmd_nxt, listening
                     IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
                     ENDIF ELSE BEGIN
                         putTextAtEndOfMyLogBook, Event, FAILED , PROCESSING
                     ENDELSE
@@ -971,13 +1005,16 @@ IF (CNstruct.output_path NE '' OR $
                 cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_dat_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                 ENDIF ELSE BEGIN
                     spawn, cmd_dat, listening
                     IF (listening[0] EQ '') THEN BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                          CNstruct.PROCESSING
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                          CNstruct.PROCESSING
                     ENDELSE
                 ENDELSE
                 AppendMyLogBook, Event, ''
@@ -987,19 +1024,24 @@ IF (CNstruct.output_path NE '' OR $
             cmd1_text = 'cmd: ' + cmd1 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd1_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                msg = '> ' + CNstruct.NeXus_folder + (*CNstruct.ShortNexusToMove)[i] + $
+                putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                  CNstruct.PROCESSING
+                msg = '> ' + CNstruct.NeXus_folder + $
+                  (*CNstruct.ShortNexusToMove)[i] + $
                   ' (For Archive)'
                 text = [text, msg]
             ENDIF ELSE BEGIN
                 spawn, cmd1, listening
                 IF (listening[0] EQ '') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
-                    msg = '> ' + CNstruct.NeXus_folder + (*CNstruct.ShortNexusToMove)[i] + $
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
+                    msg = '> ' + CNstruct.NeXus_folder + $
+                      (*CNstruct.ShortNexusToMove)[i] + $
                       ' (For Archive)'
                     text = [text, msg]
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                      CNstruct.PROCESSING
                 ENDELSE
             ENDELSE
         ENDIF
@@ -1009,17 +1051,22 @@ IF (CNstruct.output_path NE '' OR $
             cmd2_text = 'cmd: ' + cmd2 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd2_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                  CNstruct.PROCESSING
                 text = [text,'> ' + $
-                                 CNstruct.InstrSharedFolder + (*CNstruct.ShortNexusToMove)[i]]
+                        CNstruct.InstrSharedFolder + $
+                        (*CNstruct.ShortNexusToMove)[i]]
             ENDIF ELSE BEGIN
                 spawn, cmd2, listening
                 IF (listening[0] EQ '') THEN BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                     text = [text,'> ' + $
-                                     CNstruct.InstrSharedFolder + (*CNstruct.ShortNexusToMove)[i]]
+                            CNstruct.InstrSharedFolder + $
+                            (*CNstruct.ShortNexusToMove)[i]]
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                      CNstruct.PROCESSING
                 ENDELSE
             ENDELSE
         ENDIF
@@ -1029,17 +1076,20 @@ IF (CNstruct.output_path NE '' OR $
             cmd3_text = 'cmd: ' + cmd3 + ' ... ' + CNstruct.PROCESSING
             AppendMyLogBook, Event, cmd3_text
             IF (!VERSION.os EQ 'darwin') THEN BEGIN
-                putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                  CNstruct.PROCESSING
                 text = [text,'> ' + CNstruct.ProposalSharedFolder + $
                         (*CNstruct.ShortNexusToMove)[i]]
             ENDIF ELSE BEGIN
                 spawn, cmd3, listening
                 IF (listening[0] EQ '') THEN BEGIN ;it worked
-                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
+                      CNstruct.PROCESSING
                     text = [text,'> ' + CNstruct.ProposalSharedFolder+ $
                             (*CNstruct.ShortNexusToMove)[i]]
                 ENDIF ELSE BEGIN
-                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , CNstruct.PROCESSING
+                    putTextAtEndOfMyLogBook, Event, CNstruct.FAILED , $
+                      CNstruct.PROCESSING
 		                ENDELSE
             ENDELSE
         ENDIF
@@ -1052,6 +1102,3 @@ RETURN, error_status
 END
 ;###############################################################################
 
-;###############################################################################
-
-;###############################################################################
