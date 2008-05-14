@@ -253,6 +253,28 @@ ENDELSE
 END
 
 ;-------------------------------------------------------------------------------
+;Gives the total number of pixels
+FUNCTION getTotalNbrPixel, base_file_name
+file_name = base_file_name + '_runinfo.xml'
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+    RETURN, '77824' ;REF_L
+ENDIF ELSE BEGIN
+    oDoc = OBJ_NEW('IDLffXMLDOMDocument',filename=file_name)
+    no_error = 0
+    CATCH, no_error
+    IF (no_error NE 0) THEN BEGIN
+        RETURN, 0
+    ENDIF ELSE BEGIN
+        oDocList = oDoc->GetElementsByTagName('DetectorInfo')
+        obj1 = oDocList->item(0)
+        obj2=obj1->GetElementsByTagName('MaxScatPixelID')
+        obj3=obj2->item(0)
+        obj4=obj3->GetFirstChild()
+        RETURN, STRCOMPRESS(obj4->getNodevalue(),/REMOVE_ALL)
+    ENDELSE
+ENDELSE
+END
+
 FUNCTION getBinType, Event
 id = widget_info(Event.top,find_by_uname='bin_type_droplist')
 index = widget_info(id, /droplist_select)

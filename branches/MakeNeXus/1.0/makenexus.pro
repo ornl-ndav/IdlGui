@@ -51,8 +51,6 @@ ENDIF ELSE BEGIN
    ucams = get_ucams()
 ENDELSE
 
-ucams = 'dfd'
-
 ;Check if users can archived
 ArchivedUser = 0
 SWITCH (ucams) OF

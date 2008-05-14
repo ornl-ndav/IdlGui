@@ -153,23 +153,19 @@ cmd += ' -a ' + stagingArea + ' ' + event_file
 ;NbrPhase
 NbrPolaStates = (*global).NbrPolaStates
 cmd += ' -N ' + strcompress(NbrPolaStates,/remove_all)
-pixel_offset = 0
-CASE (instrument) OF
-    'BSS'   : pixel_offset = 9216
-    'REF_M' : BEGIN
-        FOR i=0,(NbrPolaStates-1) DO BEGIN
-            cmd += ' -P ' + strcompress(pixel_offset,/remove_all)
-            pixel_offset += 77824
-        ENDFOR
-    END
-    'REF_L' : pixel_offset = 77824
-    'ARCS'  : pixel_offset = 117760
-    'CNCS'  : pixel_offset = 51200
-    ELSE    : pixel_offset = '?'
-ENDCASE
+
+;special case for REF_M
+TotalNbrPixel = 0
+IF (instrument EQ 'REF_M') THEN BEGIN
+    FOR i=0,(NbrPolaStates-1) DO BEGIN
+        cmd += ' -P ' + strcompress(TotalNbrPixel,/remove_all)
+        TotalNbrPixel += 77824
+    ENDFOR
+ENDIF
 
 ;total number of pixels
-cmd += ' -p ' + strcompress(pixel_offset,/remove_all)
+TotalNbrPixel = getTotalNbrPixel(base_file_name)
+cmd += ' -p ' + strcompress(TotalNbrPixel,/remove_all)
 
 ;BinningType
 IF (getBinType(Event) EQ 0) THEN BEGIN ;linear
