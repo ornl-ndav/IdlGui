@@ -169,7 +169,10 @@ ENDIF ELSE BEGIN
                 message += " exist ? ... " + processing
                                 ;check if runNumber exist
                 appendLogBook, Event, message
-                result=isPreNexusExistOnDas(Event, RunNumber, Instrument)
+                result=isPreNexusExistOnDas(Event, $
+                                            RunNumber, $
+                                            Instrument, $
+                                            ProposalFolder)
                 IF (i EQ 0) THEN BEGIN
                     (*(*global).prenexus_path_array)[0] = $
                       (*global).prenexus_path
