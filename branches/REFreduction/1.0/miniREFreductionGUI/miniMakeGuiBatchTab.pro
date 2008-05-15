@@ -96,7 +96,7 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
 XYoff  = [5,15]
 dFrame = { size  : [0+XYoff[0],$
                     dTable.size[1]+dTable.size[3]+XYoff[1],$
-                    860,$
+                    885,$
                     200],$
            frame : 1}
 
@@ -108,7 +108,7 @@ dTitle = { size  : [(long(dFrame.size[2])-STRLEN(title)*5)/2L,$
            value : title}
                     
 ;Active or not
-XYoff = [10,20]
+XYoff = [10,15]
 dActive = { size  : [dFrame.size[0]+XYoff[0],$
                      dFrame.size[1]+XYoff[1]],$
             title : 'ACTIVE:',$
@@ -161,10 +161,10 @@ dS2Label = { size  : [dS1Label.size[0]+dS1Label.size[2]+XYoff[0],$
              value : 'Slit 2 : ? mm'}
 
 ;Repopulate GUI
-XYoff = [190,40]
+XYoff = [150,40]
 dPopulateGui = { size  : [dActive.size[0]+XYoff[0],$
                           dActive.size[1]+XYoff[1],$
-                          200,25],$
+                          300,25],$
                  value : 'R E P O P U L A T E   G U I',$
                  uname : 'repopulate_gui',$
                  sensitive : 0}
@@ -177,8 +177,8 @@ dCMDlineLabel = { size  : [dFrame.size[0]+XYoff[0],$
 XYoff = [0,25]
 dCMDlineText = { size  : [dCMDlineLabel.size[0]+XYoff[0],$
                           dCMDlineLabel.size[1]+XYoff[1],$
-                          dFrame.size[2]-20,$
-                          100],$
+                          dFrame.size[2]-15,$
+                          110],$
                  uname : 'cmd_status_preview'}
                           
 ;/////////////////////////////////////////////////////////
