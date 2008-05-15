@@ -39,8 +39,8 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Norm1DSelectionList    = ['Select Back.   ',$
-                          'Select Peak    ',$
+Norm1DSelectionList    = ['Select Back. ',$
+                          'Select Peak  ',$
                           'Zoom ']
 Norm1DSelectionBaseSize = [5, $
                            0, $
@@ -255,8 +255,8 @@ Norm1DSelection = CW_BGROUP(Norm1DSelectionBase,$
                             XOFFSET   = Norm1DSelectionSize[0],$
                             YOFFSET   = Norm1DSelectionSize[1],$
                             SET_VALUE = 0.0,$
-                            row       = 1,$
-                            FONT      = 'lucidasans-10',$
+                            ROW       = 1,$
+;                            FONT      = 'lucidasans-10',$
                             UNAME     = 'normalization_1d_selection')
 
 NormYminLabel = WIDGET_LABEL(BackPeakBase,$
