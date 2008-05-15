@@ -178,6 +178,12 @@ RETURN, FullFileName
 END
 
 
+FUNCTION getReduceRoiFullFileName, Event
+FullFileName = getTextFieldValue(Event, 'proif_text')
+RETURN, FullFileName
+END
+
+
 FUNCTION getCurrentSelectedMainTab, Event
 id = widget_info(Event.top,find_by_uname='main_tab')
 RETURN, widget_info(id, /tab_current)

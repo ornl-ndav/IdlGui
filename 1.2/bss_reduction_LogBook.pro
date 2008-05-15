@@ -13,7 +13,7 @@ FullFileName += TimeStamp + '.log'
 
 ;copy ROI files into /SNS/<instrument>/shared folder
 shared_path = '/SNS/' + (*global).instrument + '/shared/'
-RoiFileName = getRoiFullFileName(Event)
+RoiFileName = getReduceRoiFullFileName(Event)
 ;change permisison of file and copy roi files into share folder 
 chmod_cmd = 'chmod 755 ' + RoiFileName
 cp_cmd    = 'cp ' + RoiFileName + ' ' + shared_path
