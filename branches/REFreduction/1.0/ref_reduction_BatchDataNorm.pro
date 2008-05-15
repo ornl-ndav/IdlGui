@@ -506,4 +506,41 @@ ENDELSE
 END
 
 ;*******************************************************************************
+
+PRO SaveDataNormInputValues, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;get Data Input value
+DataInputField = getTextFieldValue(Event,'batch_data_run_field_status')
+NormInputField = getTextFieldValue(Event,'batch_norm_run_field_status')
+(*global).CurrentBatchDataInput = DataInputField
+(*global).CurrentBatchNormInput = NormInputField
+END
+
+;*******************************************************************************
+
+PRO DataNormFieldInput, Event
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+;get Current Data and Norm Input value
+CurrentDataInputField = getTextFieldValue(Event,'batch_data_run_field_status')
+CurrentNormInputField = getTextFieldValue(Event,'batch_norm_run_field_status')
+;get save Data and Norm Input values)
+SaveDataInputField = (*global).CurrentBatchDataInput
+SaveNormInputField = (*global).CurrentBatchNormInput
+;check if they are different or not
+IF (CurrentDataInputField NE SaveDataInputField OR $
+    CurrentNormInputField NE SaveNormInputField) THEN BEGIN ;display message
+    message = 'Data and/or Norm. fields have been modifed. Do you want to validate' + $
+      ' the changes ?'
+    result = DIALOG_MESSAGE(message, /QUESTION, TITLE='Validate or not changes ?')
+    IF (result EQ 'Yes') THEN BEGIN
+        BatchTab_ChangeDataNormRunNumber, Event
+        SaveDataNormInputValues, Event ;_batchDataNorm
+    ENDIF
+ENDIF
+END
+
 ;*******************************************************************************

@@ -37,9 +37,11 @@ ENDELSE
 debugger = 1 ;The world has access to the batch tab
 
 ;define global variables
-global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
+global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
-                    branch : branch,$
+                    CurrentBatchDataInput: '',$
+                    CurrentBatchNormInput: '',$
+                    branch: branch,$
                     batch_data_runs : ptr_new(0L),$
                     nbrIntermediateFiles : 8,$
                     batch_process : 'data',$
