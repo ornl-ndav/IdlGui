@@ -54,6 +54,8 @@ ENDELSE
 ;Check if users can archived
 ArchivedUser = 0
 SWITCH (ucams) OF
+    '2zr':
+    'pf9':
     'j35':
     'mid':
     'vl2':
@@ -142,11 +144,7 @@ IF (WHERE(ucams EQ (*global).geek) EQ -1) THEN BEGIN ;normal user
     MainBaseTitle = 'Make NeXus - ' + VERSION
 ENDIF ELSE BEGIN
     MainBaseSize  = [100,50,850,630]
-    IF (WHERE(ucams EQ ['j35','mid']) NE -1) THEN BEGIN
-        MainBaseTitle = 'Make NeXus (Super_Extra_Power Mode) - ' + VERSION
-    ENDIF ELSE BEGIN
-        MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
-    ENDELSE
+    MainBaseTitle = 'Make NeXus (SuperPower Mode) - ' + VERSION
 ENDELSE
 
 
