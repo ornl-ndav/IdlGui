@@ -1184,9 +1184,4 @@ SWITCH Event.id OF
     Else:
 ENDSWITCH
 
-;FOR BATCH TAB
-;check if Data and Norm have new values, if yes, ask user to validate
-;changes or no
-DataNormFieldInput, Event       ;_BatchDataNorm
-
 END
