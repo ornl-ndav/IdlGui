@@ -1,5 +1,5 @@
 PRO MAIN_BASE_event, Event
- 
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -944,7 +944,8 @@ CASE Event.id OF
 
 ;;Main table
     widget_info(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
-	BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
+        DataNormFieldInput, Event
+        BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
     end
     
 ;;Activate or not
@@ -955,10 +956,12 @@ CASE Event.id OF
 ;;Change Data Run number
     widget_info(wWidget, FIND_BY_UNAME='batch_data_run_field_status'): begin
         BatchTab_ChangeDataNormRunNumber, Event
+        SaveDataNormInputValues, Event ;_batchDataNorm
     end
 
 ;;Repopulate GUI
     widget_info(wWidget, FIND_BY_UNAME='repopulate_gui'): begin
+        DataNormFieldInput, Event
         RepopulateGUI, Event ;_BatchRepopulateGui
     end    
 
@@ -975,6 +978,7 @@ CASE Event.id OF
 ;;Change Normalization Run number
     widget_info(wWidget, FIND_BY_UNAME='batch_norm_run_field_status'): begin
         BatchTab_ChangeDataNormRunNumber, Event
+        SaveDataNormInputValues, Event ;_batchDataNorm
     end
 
 ;;Move Up Selection
@@ -990,11 +994,13 @@ CASE Event.id OF
 ;;Delete Selection
     widget_info(wWidget, FIND_BY_UNAME='delete_selection_button'): begin
         BatchTab_DeleteSelection, Event
+        SaveDataNormInputValues, Event
     end
 
 ;;Delete Active
     widget_info(wWidget, FIND_BY_UNAME='delete_active_button'): begin
         BatchTab_WarningDeleteActive, Event
+        SaveDataNormInputValues, Event
     end
 
 ;;Run Active live
@@ -1010,6 +1016,7 @@ CASE Event.id OF
 ;;Load Batch File
     widget_info(wWidget, FIND_BY_UNAME='load_batch_button'): begin
         BatchTab_LoadBatchFile, Event
+        SaveDataNormInputValues, Event
     end
 
 ;;Launch REFscale
@@ -1176,5 +1183,10 @@ SWITCH Event.id OF
     end
     Else:
 ENDSWITCH
+
+;FOR BATCH TAB
+;check if Data and Norm have new values, if yes, ask user to validate
+;changes or no
+DataNormFieldInput, Event       ;_BatchDataNorm
 
 END

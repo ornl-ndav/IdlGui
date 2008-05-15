@@ -847,6 +847,7 @@ IF (rowSelected NE (*global).PrevBatchRowSelected) THEN BEGIN
 ENDIF
 ;enable or not the REPOPULATE Button
 CheckRepopulateButton, Event
+SaveDataNormInputValues, Event  ;_batchDataNorm
 END
 
 

@@ -33,6 +33,8 @@ debugger = 1 ;the world has access to the batch tab now
 
 ;define global variables
 global = PTR_NEW ({$ 
+                    CurrentBatchDataInput: '',$
+                    CurrentBatchNormInput: '',$
                     instrument: strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
                     branch: branch,$
