@@ -263,6 +263,7 @@ displayValueLabelYesNo = widget_label(STEP3_BASE,$
 displayValueYesNoList = ['yes','no']
 displayValueYesNo = cw_bgroup(STEP3_BASE,$
                               displayValueYesNoList,$
+
                               uname='display_value_yes_no',$
                               xoffset=displayValueYesNoSize[0],$
                               yoffset=displayValueYesNoSize[1],$

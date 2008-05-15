@@ -12,12 +12,15 @@ endif else begin
    ucams = get_ucams()
 endelse
 
-VERSION     = ' (version: 1.0.6)'
-VerArray    = strsplit(VERSION,':',/extract)
-TagArray    = strsplit(VerArray[1],')',/extract)
-BranchArray = strsplit(TagArray[0],'.',/extract)
-CurrentBranch =  strcompress(BranchArray[0],/remove_all) + '.' + $
-  strcompress(BranchArray[1],/remove_all)
+
+APPLICATIoN  = 'REFscale' 
+VERSION      = '1.0.7'
+
+StrArray    = strsplit(VERSION,'.',/extract)
+VerArray    = StrArray[0]
+TagArray    = StrArray[1]
+BranchArray = StrArray[2]
+CurrentBranch =  VerArray + '.' + TagArray
 
 global = ptr_new({ $
                    delta_x_draw     : 0.01,$
@@ -115,7 +118,7 @@ if (!VERSION.os EQ 'darwin') then begin
     (*global).input_path = '~/tmp/'
 endif else begin
     (*global).input_path = '~' + ucams
-    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
+;    (*global).input_path = '/SNS/REF_L/shared/' ;REMOVE_ME
 endelse
 
 ;MainBaseSize         = [50 , 500, 1200, 600] ;remove_comments
@@ -129,11 +132,11 @@ distance_L_L         = 130
 distanceVertical_L_L = 35
 
 ;Define titles
-Step1Title = 'LOAD FILES'
-Step2Title = 'WORK ON CRITICAL EDGE FILE'
-Step3Title = 'WORK ON OTHER FILES'
+Step1Title = 'STEP1: Load'
+Step2Title = 'STEP2: Critical Edge'
+Step3Title = 'STEP3: Other Files'
 ListOfFiles  = ['                                                   ']  
-MainTitle = "REFLECTOMETER RESCALING PROGRAM" + VERSION
+MainTitle = "REFLECTOMETER RESCALING PROGRAM - " + VERSION
 
 ;Build Main Base
 MAIN_BASE = WIDGET_BASE(GROUP_LEADER=wGroup, $
@@ -205,9 +208,20 @@ WIDGET_CONTROL, MAIN_BASE, /REALIZE
 WIDGET_CONTROL, MAIN_BASE, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
-; default tabs shown 
-id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
-widget_control, id1, set_tab_current = 1  ;remove_me
+;; default tabs shown 
+;id1 = widget_info(MAIN_BASE, find_by_uname='steps_tab') ;remove_me
+;widget_control, id1, set_tab_current = 1  ;remove_me
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 
 end
 
