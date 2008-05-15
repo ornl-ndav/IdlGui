@@ -130,7 +130,7 @@ global = ptr_new ({ $
                     Ny : 64,$
                     Xfactor : 13,$ ;coefficient in X direction for rebining img
                     Yfactor : 5,$ ; coefficient in Y direction for rebining img
-                    LogBookPath : '/SNS/users/j35/IDL_LogBook/',$ ;path where to put the log book
+                    LogBookPath : '/SNS/users/LogBook/',$ ;path where to put the log book
                     DefaultPath : '~/local/BSS/',$ ;default path where to look for the file
                     DefaultFilter : '*.nxs',$ ;default filter for the nexus file
                     Configuration : { Input : {nexus_run_number    : '',$
