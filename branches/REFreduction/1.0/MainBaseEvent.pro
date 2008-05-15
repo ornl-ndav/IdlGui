@@ -944,9 +944,12 @@ CASE Event.id OF
 
 ;;Main table
     widget_info(wWidget, FIND_BY_UNAME='batch_table_widget'): begin
-        DataNormFieldInput, Event
-        BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
-    end
+        status = 0
+        DataNormFieldInput, Event, status ;_BatchDataNorm
+        IF (status) THEN BEGIN
+            BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
+        ENDIF
+    END
     
 ;;Activate or not
     widget_info(wWidget, FIND_BY_UNAME='batch_run_active_status'): begin

@@ -1,5 +1,5 @@
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
 
 ;Start working with DATA field
 PRO BatchTab_ChangeDataNormRunNumber, Event
@@ -48,7 +48,8 @@ ENDIF ELSE BEGIN
 ;get data run cw_field
     data_runs = getTextFieldValue(Event,'batch_data_run_field_status')
     IF (data_runs NE '') THEN BEGIN
-        DataNexus = getNexusFromRunArray(Event, data_runs, (*global).instrument)
+        DataNexus = getNexusFromRunArray(Event, data_runs, $
+                                         (*global).instrument)
         (*(*global).batch_data_runs) = data_runs
         (*(*global).batch_DataNexus) = DataNexus
 ;check that the NeXus have the same angle, S1 and S2 values
@@ -99,7 +100,8 @@ ENDIF ELSE BEGIN
 ;change size of processing base
                 SetBaseYSize, Event, 'processing_base', 365
 ;change top label
-                value = 'PROCESSING  NEW  DATA  INPUT  . . .  CONTINUE OR NOT ? '
+                value = 'PROCESSING  NEW  DATA  INPUT  . . .  CONTINUE ' + $
+                  'OR NOT ? '
                 putLabelValue, Event, 'pro_top_label', value
             ENDIF ELSE BEGIN
                 Continue_ChangeDataRunNumber, Event, $
@@ -132,14 +134,15 @@ ENDIF ELSE BEGIN
         GenerateBatchFileName, Event
 ;turn off hourglass
         widget_control,hourglass=0
-        value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
+        value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E  ' + $
+          ' W A I T ) '
         putLabelValue, Event, 'pro_top_label', value
         (*global).batch_process = 'data'
     ENDELSE
 ENDELSE ;end of CATCH statement
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO  Continue_ChangeDataRunNumberForOneRun, Event, $
                                             RowSelected,$
@@ -201,7 +204,7 @@ ChangeNormRunNumber, Event
 
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO  Continue_ChangeDataRunNumber, Event, $
                                    RowSelected,$
@@ -245,10 +248,9 @@ putLabelValue, Event, 'pro_top_label', value
 
 ;continue with normalization
 ChangeNormRunNumber, Event
-
 END
 
-;*******************************************************************************
+;******************************************************************************
 pro ChangeNormRunNumber, Event
 
 ;indicate initialization with hourglass icon
@@ -369,10 +371,11 @@ ENDIF ELSE BEGIN ;no normalization file
     value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
     putLabelValue, Event, 'pro_top_label', value
     (*global).batch_process = 'data'
+    BatchTab_WidgetTable, Event ;in ref_reduction_BatchTab.pro
 ENDELSE
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO Continue_ChangeNormRunNumber, Event,$
                                   RowSelected,$
@@ -422,9 +425,10 @@ widget_control,hourglass=0
 value = 'PROCESSING  NEW  DATA  INPUT  . . .  ( P L E A S E   W A I T ) '
 putLabelValue, Event, 'pro_top_label', value
 (*global).batch_process = 'data'
+BatchTab_WidgetTable, Event     ;in ref_reduction_BatchTab.pro
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO BatchTab_ContinueProcessing, Event
 ;get global structure
@@ -481,7 +485,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO BatchTab_StopProcessing, Event
 ;get global structure
@@ -505,7 +509,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;*******************************************************************************
+;******************************************************************************
 
 PRO SaveDataNormInputValues, Event
 ;get global structure
@@ -518,9 +522,9 @@ NormInputField = getTextFieldValue(Event,'batch_norm_run_field_status')
 (*global).CurrentBatchNormInput = NormInputField
 END
 
-;*******************************************************************************
+;******************************************************************************
 
-PRO DataNormFieldInput, Event
+PRO DataNormFieldInput, Event, status
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -533,14 +537,20 @@ SaveNormInputField = (*global).CurrentBatchNormInput
 ;check if they are different or not
 IF (CurrentDataInputField NE SaveDataInputField OR $
     CurrentNormInputField NE SaveNormInputField) THEN BEGIN ;display message
-    message = 'Data and/or Norm. fields have been modifed. Do you want to validate' + $
-      ' the changes ?'
-    result = DIALOG_MESSAGE(message, /QUESTION, TITLE='Validate or not changes ?')
+    message = 'Data and/or Norm. fields have been modifed. Do you want to ' + $
+      'validate the changes ?'
+    result = DIALOG_MESSAGE(message, /QUESTION, TITLE='Validate or not ' + $
+                            'changes ?')
     IF (result EQ 'Yes') THEN BEGIN
         BatchTab_ChangeDataNormRunNumber, Event
         SaveDataNormInputValues, Event ;_batchDataNorm
-    ENDIF
-ENDIF
+        status = 0
+    ENDIF ELSE BEGIN
+        status = 1
+    ENDELSE
+ENDIF ELSE BEGIN
+    status = 1
+ENDELSE
 END
 
-;*******************************************************************************
+;******************************************************************************

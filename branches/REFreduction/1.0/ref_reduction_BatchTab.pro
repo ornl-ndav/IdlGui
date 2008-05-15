@@ -992,7 +992,7 @@ GenerateBatchFileName, Event
 CheckRepopulateButton, Event
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;Display a warning banner that inform the user that he is about to
 ;clear all the active fields
 PRO BatchTab_WarningDeleteActive, Event
@@ -1006,7 +1006,7 @@ IF (result EQ 'Yes') THEN BEGIN
 ENDIF
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This method will remove from the main table all the row that have
 ;been activated
 PRO BatchTab_DeleteActive, Event
@@ -1042,7 +1042,7 @@ GenerateBatchFileName, Event
 CheckRepopulateButton, Event
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO BatchTab_RunActive, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -1280,7 +1280,7 @@ END
 
 
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This function is reached each time the Batch Tab is reached by the
 ;user. In this function, the table will be updated with info from the
 ;current run.
@@ -1447,7 +1447,7 @@ END
 
 
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO BatchTab_LaunchREFscale, Event ;_Batch
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
