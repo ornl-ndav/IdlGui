@@ -126,7 +126,7 @@ IF (RoiFullFileName NE '') THEN BEGIN
         LogBookText = 'Loading ROI file: ' + RoiFullFileName
         AppendLogBookMessage, Event, LogBookText
 
-;remove name of file loaded from Loaded ROI text
+;put name of file loaded from in loaded ROI text field
         putLoadedRoiFileName, Event, RoiFullFileName
 
 ;Read ROI file
@@ -143,6 +143,10 @@ IF (RoiFullFileName NE '') THEN BEGIN
             message = 'ROI File Loading -> SUCCESS !'
             LogBookMessage = '   -> ROI File has been loaded with SUCCESS !'
             AppendLogBookMessage, Event, LogBookMessage
+
+;add full file name in REDUCE tab
+            putReduceRoiFileName, Event, RoiFullFileName
+
         ENDELSE
 
     ENDELSE
