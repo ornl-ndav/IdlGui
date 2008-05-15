@@ -31,8 +31,6 @@ global = ptr_new ({ $
                                          womes_button    : 0,$
                                          worms_button    : 0,$
                                          wocpsamn_button : 0,$
-                                         wopies_button   : 0,$
-                                         wopets_button   : 0,$
                                          wolidsb_button  : 0},$
                     NameOfOutputPlots : {woctib_button   : $
                                          'Calculated Time-Independent Background', $

@@ -73,20 +73,6 @@ ENDIF ELSE BEGIN
     wocpsamn_status = 0
 ENDELSE
 
-;Write out Pixel Initial Energy Spectra
-IF (isButtonSelected(Event,'wopies_button')) THEN BEGIN
-    wopies_status = 1
-ENDIF ELSE BEGIN
-    wopies_status = 0
-ENDELSE
-
-;Write out Pixel Energy Transfer Spectra
-IF (isButtonSelected(Event,'wopets_button')) THEN BEGIN
-    wopets_status = 1
-ENDIF ELSE BEGIN
-    wopets_status = 0
-ENDELSE
-
 ;Write out Linearly Interpolated Direct Scattering Back. Info. Summed
 ;over all Pixels
 IF (isButtonSelected(Event,'wolidsb_button') AND $
@@ -104,8 +90,6 @@ ListOfOutputPlots.womws_button    = womws_status
 ListOfOutputPlots.womes_button    = womes_status
 ListOfOutputPlots.worms_button    = worms_status
 ListOfOutputPlots.wocpsamn_button = wocpsamn_status
-ListOfOutputPlots.wopies_button   = wopies_status
-ListOfOutputPlots.wopets_button   = wopets_status
 ListOfOutputPlots.wolidsb_button  = wolidsb_status
 (*global).ListOfOutputPlots = ListOfOutputPlots
 

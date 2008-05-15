@@ -68,7 +68,7 @@ ENDIF ELSE BEGIN
     
     BSSreduction_DisplayXmlConfigFile, Event, xmlConfigFile
     
-                                ;update list of intermediate plots in OUTPUT tab droplist
+;update list of intermediate plots in OUTPUT tab droplist
     BSSreduction_IntermediatePlotsUpdateDroplist, Event
     
 ENDELSE
