@@ -182,7 +182,7 @@ group = CW_BGROUP(base,$
                   VerboseBASE.button.list,$
                   UNAME      = VerboseBase.button.uname,$
                   /NONEXCLUSIVE,$
-                  SET_VALUE  = 0,$
+                  SET_VALUE  = 1,$
                   ROW        = 1,$
                   LABEL_LEFT = VerboseBase.button.value)
                   
