@@ -39,8 +39,8 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['Select Back.',$
-                          'Select Peak ',$
+Data1DSelectionList    = ['Select Back. ',$
+                          'Select Peak  ',$
                           'Zoom']
 Data1DSelectionBaseSize = [5, $
                            0, $
@@ -255,7 +255,7 @@ Data1DSelection = CW_BGROUP(Data1DSelectionBase,$
                             YOFFSET     = Data1DSelectionSize[1],$
                             SET_VALUE   = 0.0,$
                             ROW         = 1,$
-                            FONT        = 'lucidasans-10',$
+;                            FONT        = 'lucidasans-10',$
                             UNAME       = 'data_1d_selection',$
                             /EXCLUSIVE,$
                             /RETURN_NAME)
