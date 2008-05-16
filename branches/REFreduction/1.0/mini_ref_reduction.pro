@@ -13,7 +13,7 @@ END
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
 APPLICATION       = 'REFreductionLow'
-VERSION           = '1.0.26'
+VERSION           = '1.0.27'
 DEBUGGING_VERSION = 'no'
 
 loadct,5
