@@ -12,15 +12,20 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-APPLICATION       = 'REFreductionLow'
-VERSION           = '1.0.27'
-DEBUGGING_VERSION = 'no'
+;=======================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION        = 'REFreductionLow'
+VERSION            = '1.0.27'
+DEBUGGING_VERSION  = 'no'
+WITH_LAUNCH_SWITCH = 'no'
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;=======================================
 
-loadct,5
+LOADCT,5
 
 ;get branch number
-branchArray = strsplit(VERSION,'.',/EXTRACT)
-branch      = strjoin(branchArray[0:1],'.')
+branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
+branch      = STRJOIN(branchArray[0:1],'.')
 
 ;define initial global values - these could be input via external file or
 ;other means
@@ -34,7 +39,6 @@ IF (!VERSION.os EQ 'darwin') THEN BEGIN
 ENDIF ELSE BEGIN
    ucams    = get_ucams()
 ENDELSE
-debugger = 1 ;The world has access to the batch tab
 
 ;define global variables
 global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$ 
@@ -53,7 +57,7 @@ global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$
                     batch_part2 : '',$
                     batch_new_cmd : '',$
                     cmd_batch_length : 50,$
-                    debugger : debugger,$
+                    debugger : 1,$ ;give world access to batch
                     PrevBatchRowSelected : 0,$
                     BatchDefaultPath: '~/',$
                     BatchDefaultFileFilter : '*_Batch_Run*.txt',$
@@ -437,13 +441,15 @@ endif else begin
     xoff = 1030
 endelse
 
+structure = {with_launch_button: WITH_LAUNCH_SWITCH}
+
 ;Build main GUI
 miniMakeGuiMainTab, $
   MAIN_BASE, $
   MainBaseSize, $
   instrument, $
   PlotsTitle,$
-  debugger
+  structure
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$

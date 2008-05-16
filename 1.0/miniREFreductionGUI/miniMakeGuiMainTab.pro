@@ -1,4 +1,8 @@
-PRO miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle, debugger
+PRO miniMakeGuiMainTab, MAIN_BASE, $
+                        MainBaseSize, $
+                        instrument, $
+                        PlotsTitle, $
+                        structure
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -31,10 +35,8 @@ miniMakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 ;build PLOTS tab
 miniMakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
-IF (debugger) THEN BEGIN
-;;build BATCH MODE tab
-    miniMakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
-ENDIF
+;build BATCH MODE tab
+miniMakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
 
 ;build LOG_BOOK tab
 miniMakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle

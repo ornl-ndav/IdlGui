@@ -9,9 +9,10 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-APPLICATION       = 'REFreductionHigh'
-VERSION           = '1.0.27'
-DEBUGGING_VERSION = 'no'
+APPLICATION        = 'REFreductionHigh'
+VERSION            = '1.0.27'
+DEBUGGING_VERSION  = 'no'
+WITH_LAUNCH_SWITCH = 'no'
 
 loadct,5
 
@@ -436,11 +437,13 @@ ENDIF
 ;     END
 ; ENDSWITCH
 
+structure = {with_launch_button: WITH_LAUNCH_SWITCH}
+
 MakeGuiMainTab, MAIN_BASE, $
   MainBaseSize, $
   instrument, $
   PlotsTitle, $
-  debugger
+  structure
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$

@@ -1,9 +1,15 @@
-PRO miniMakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle
+PRO miniMakeGuiBatchTab, MAIN_TAB, $
+                         MainTabSize, $
+                         BatchTabTitle, $
+                         structure
 
-;*******************************************************************************
+;check if we want LAUNCH REFSCALE button or not
+with_launch_button = structure.with_launch_button 
+
+;******************************************************************************
 ;                           Define size arrays
 ;                 [xoffset, yoffset, scr_xsize, scr_ysize]
-;*******************************************************************************
+;******************************************************************************
 ;Main Base
 BatchTab = { size  : [0,0,MainTabSize[2],MainTabSize[3]],$
              uname : 'batch_base',$
@@ -230,7 +236,8 @@ dRunButton = { size      : [dDeleteButton.size[0]+ $
 
 ;RUN ACTIVE in BACKGROUND
 XYoff = [5,0]
-dRunBackgroundButton = { size      : [dRunButton.size[0]+dRunButton.size[2]+XYoff[0],$
+dRunBackgroundButton = { size      : [dRunButton.size[0]+ $
+                                      dRunButton.size[2]+XYoff[0],$
                                       dRunButton.size[1]+XYoff[1],$
                                       dRunButton.size[2],$
                                       dRunButton.size[3]],$
@@ -308,9 +315,9 @@ dLaunchREFscaleButton = { size  : [dLoadBatchButton.size[0]+ $
                           uname : 'launch_refscale_button',$
                           value : 'LAUNCH REFscale'}
 
-;*******************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;*******************************************************************************
+;******************************************************************************
 BATCH_BASE = WIDGET_BASE(MAIN_TAB,$
                          UNAME     = BatchTab.uname,$
                          TITLE     = BatchTab.title,$
@@ -612,8 +619,8 @@ wRunButtonBackground = WIDGET_BUTTON(BATCH_BASE,$
                                      SCR_YSIZE = dRunBackgroundButton.size[3],$
                                      UNAME     = dRunBackgroundButton.uname,$
                                      VALUE     = dRunBackgroundButton.value,$
-                                     SENSITIVE = dRunBackgroundButton.sensitive)
-
+                                     SENSITIVE = $
+                                     dRunBackgroundButton.sensitive)
 
 ;\\\\\\\\\\\\\
 ;Progress Bar\
@@ -659,19 +666,20 @@ wLoadBatchButton = WIDGET_BUTTON(BATCH_BASE,$
                            UNAME     = dLoadBatchButton.uname,$
                            VALUE     = dLoadBatchButton.value)
 
-
+IF (with_launch_button EQ 'yes') THEN BEGIN
 ;\\\\\\\\\\\\\\\\\\\\\\\
 ;Launch REFscale Button\
 ;\\\\\\\\\\\\\\\\\\\\\\\
-; wLaunchREFscalebutton = $
-;   WIDGET_BUTTON(BATCH_BASE,$
-;                 XOFFSET   = dLaunchREFscalebutton.size[0],$
-;                 YOFFSET   = dLaunchREFscalebutton.size[1],$
-;                 SCR_XSIZE = dLaunchREFscalebutton.size[2],$
-;                 SCR_YSIZE = dLaunchREFscalebutton.size[3],$
-;                 UNAME     = dLaunchREFscalebutton.uname,$
-;                 VALUE     = dLaunchREFscalebutton.value)
-
+    wLaunchREFscalebutton = $
+      WIDGET_BUTTON(BATCH_BASE,$
+                    XOFFSET   = dLaunchREFscalebutton.size[0],$
+                    YOFFSET   = dLaunchREFscalebutton.size[1],$
+                    SCR_XSIZE = dLaunchREFscalebutton.size[2],$
+                    SCR_YSIZE = dLaunchREFscalebutton.size[3],$
+                    UNAME     = dLaunchREFscalebutton.uname,$
+                    VALUE     = dLaunchREFscalebutton.value)
+ENDIF
+    
 ;\\\\\\\\\\\\\\
 ;save as label\
 ;\\\\\\\\\\\\\\
