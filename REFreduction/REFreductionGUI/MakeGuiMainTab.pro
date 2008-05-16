@@ -1,4 +1,8 @@
-PRO MakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+PRO MakeGuiMainTab, MAIN_BASE, $
+                    MainBaseSize, $
+                    instrument, $
+                    PlotsTitle, $
+                    structure
 
 ;define widget variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
@@ -8,8 +12,9 @@ MainTabSize = [0,0,MainBaseSize[2],MainBaseSize[3]]
 LoadTabTitle     = '       LOAD       ' 
 ReduceTabTitle   = '      REDUCE      ' 
 PlotsTabTitle    = '       PLOTS      ' 
+BatchTabTitle    = '    BATCH MODE    ' 
 LogBookTabTitle  = '     LOG BOOK     ' 
-SettingsTabTitle = '     SETTINGS     ' 
+
 
 ;build widgets
 MAIN_TAB = WIDGET_TAB(MAIN_BASE,$
@@ -34,11 +39,12 @@ MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 ;build PLOTS tab
 MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
+;build BATCH MODE tab
+MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
+
 ;build LOG_BOOK tab
 MakeGuiLogBookTab, MAIN_TAB, MainTabSize, LogBookTabTitle
 
-;;build SETTINGS tab
-;MakeGuiSettingsTab, MAIN_TAB, MainTabSize, SettingsTabTitle
 
 
 END

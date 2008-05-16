@@ -88,7 +88,7 @@ endif else begin
     message = 'File currently displayed: ' + FullFileName
     putTextFieldValue, event, 'plots_error_message', message, 0
 
-;Hide error message base    
+;Show error message base    
     MapStatus = 1
 
     plot,flt0,flt1

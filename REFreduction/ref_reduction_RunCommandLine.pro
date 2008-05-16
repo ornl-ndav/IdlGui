@@ -6,6 +6,20 @@ widget_control,id,get_uvalue=global
 
 PROCESSING = (*global).processing_message ;processing message
 
+status_text = 'Data Reduction ........ ' + PROCESSING
+putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
+
+;check the run numbers and replace them by full nexus path
+;check first DATA run numbers
+ReplaceDataRunNumbersByFullPath, Event
+;check second NORM run numbers
+IF (isReductionWithNormalization(Event)) THEN BEGIN
+    ReplaceNormRunNumbersByFullPath, Event
+ENDIF
+
+;re-run the CommandLineGenerator
+REFreduction_CommandLineGenerator, Event
+
 ;get command line to generate
 cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
 
@@ -16,23 +30,6 @@ cmd_text = ' -> ' + cmd
 putLogBookMessage, Event, cmd_text, Append=1
 cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
-
-status_text = 'Data Reduction ........ ' + PROCESSING
-putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
-
-;add called to SLURM if hostname is not heater,lrac or mrac
-spawn, 'hostname',listening
-CASE (listening) OF
-    'lrac': 
-    'mrac': 
-    else: BEGIN
-        if ((*global).instrument EQ (*global).REF_L) then begin
-            cmd = 'srun -p lracq ' + cmd
-        endif else begin
-            cmd = 'srun -p mracq ' + cmd
-        endelse
-    END
-ENDCASE
 
 spawn, cmd, listening, err_listening
 
@@ -59,6 +56,12 @@ endif else begin
     status_text = 'Data Reduction ........ DONE'
     putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
 
-end
+    IF ((*global).debugger) THEN BEGIN
+;We can retrieve info for Batch Tab
+        RetrieveBatchInfoAtLoading, Event
+    ENDIF
+    PopulateBatchTableWithCMDinfo, Event, cmd
+
+END
 
 END

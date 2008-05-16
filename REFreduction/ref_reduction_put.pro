@@ -124,6 +124,33 @@ END
 
 
 
+PRO AppendReplaceLogBookMessage, Event, MessageToAdd, RemoveString
+InitialStrarr = getLogBookText(Event)
+;get size of InitialStrarr
+ArrSize = (size(InitialStrarr))(1)
+if (n_elements(RemoveString) EQ 0) then begin ;do not remove anything from last line
+    if (ArrSize GE 2) then begin
+        NewLastLine = InitialStrarr[ArrSize-1] + MessageToAdd
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    endif else begin
+        FinalStrarr = InitialStrarr + MessageToAdd
+    endelse
+endif else begin ;remove given string from last line
+    if (ArrSize GE 2) then begin
+        NewLastLine = removeStringFromText(InitialStrarr[ArrSize-1],RemoveString)
+        NewLastLine += MessageToAdd
+        FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
+    endif else begin
+        NewInitialStrarr = removeStringFromText(InitialStrarr,RemoveString)
+        FinalStrarr = NewInitialStrarr + MessageToAdd
+    endelse
+endelse
+;put it back in uname text field
+putLogBookMessage, Event, FinalStrarr
+END
+
+
+
 ;Add the given message at the end of the last string array element and
 ;put it back in the DataLogBook text field given
 PRO putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd, RemoveString
@@ -454,13 +481,11 @@ CASE (PeakSelection[0]) OF
                    'norm_exclusion_high_bin_text', $
                    strcompress(Ymax/coeff), $
                    0
-            end
-        endcase
-    end
-endcase
-
+            END
+        ENDCASE
+    END
+ENDCASE
 END
-
 
 ;Put the given string in the Reduction status text field
 PRO putInfoInReductionStatus, Event, string, append
@@ -472,9 +497,14 @@ putTextFieldValue, $
 END
 
 
-
 ;Put array in droplist specified
 PRO putArrayInDropList, Event, arrayString, uname
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, set_value=arrayString
+END
+
+
+;Put name of file in widget_text 'save_as_file_name'
+PRO putBatchFileName, Event, FileName
+putTextFieldValue, Event, 'save_as_file_name', FileName, 0
 END

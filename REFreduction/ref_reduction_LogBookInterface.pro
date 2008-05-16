@@ -51,8 +51,14 @@ spawn, 'hostname', hostname
 message = getTextFieldValue(Event, 'log_book_output_text_field')
 
 ;email logBook
-text = "'Log Book of RefReduction ("
-text += (*global).REFreductionVersion + ") sent by " + (*global).ucams
+
+text = "'Log Book of REFreduction "
+IF ((*global).miniVersion EQ 0) THEN BEGIN
+    text += "- low resolution version - "
+ENDIF ELSE BEGIN
+    text += "- high resolution version - "
+ENDELSE
+text += (*global).REFreductionVersion + " sent by " + (*global).ucams
 text += " (" + (*global).instrument + ") from " + hostname + "."
 text += " Log Book is: " + FullFileName 
 text += ". Message is: "
@@ -70,36 +76,148 @@ spawn, cmd
 ;copy ROI files into /SNS/<instrument>/shared folder
 shared_path = '/SNS/' + (*global).instrument + '/shared/'
 ;get DATA and NORM ROI files name
-data_roi_file_name = getTextFieldValue(Event, 'reduce_data_region_of_interest_file_name')
-norm_roi_file_name = getTextFieldValue(Event, 'reduce_normalization_region_of_interest_file_name')
+data_roi_file_name = getTextFieldValue(Event, $
+                                       'reduce_data_region_of_interest_file_name')
+norm_roi_file_name = $
+  getTextFieldValue(Event, $
+                    'reduce_normalization_region_of_interest_file_name')
 ;copy roi files into share folder
-cp_cmd_data = 'cp ' + data_roi_file_name + ' ' + shared_path
-cp_cmd_norm = 'cp ' + norm_roi_file_name + ' ' + shared_path
+chmod_cmd_data = 'chmod 755 ' + data_roi_file_name
+cp_cmd_data    = 'cp ' + data_roi_file_name + ' ' + shared_path
+chmod_cmd_norm = 'chmod 755 ' + norm_roi_file_name
+cp_cmd_norm    = 'cp ' + norm_roi_file_name + ' ' + shared_path
 
+;change permission of file first
 roi_data_error = 0
 CATCH, roi_data_error
 IF (roi_data_error NE 0) THEN BEGIN
-    catch,/cancel
-    LogBookText = 'Copy of ' + data_roi_file_name + ' in ' + shared_path + ' ... FAILED' 
+    CATCH,/CANCEL
+    LogBookText = 'Change permission of ' + data_roi_file_name + ' to 755 ' + $
+      ' ... FAILED' 
     putLogBookMessage, Event, LogBookText, Append=1
 ENDIF ELSE BEGIN
-    spawn, cp_cmd_data, listening
-    LogBookText = 'Copy of ' + data_roi_file_name + ' in ' + shared_path + ' ... OK' 
+    spawn, chmod_cmd_data, listening, err_listening
+    IF (err_listening[0] NE '') THEN BEGIN
+        LogBookText = 'Change permission of ' + data_roi_file_name + $
+          ' to 755 ... FAILED' 
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE BEGIN
+        LogBookText = 'Change permission of ' + data_roi_file_name + $
+          ' to 755 ... OK' 
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDELSE
+ENDELSE
+
+;copy file into final folder
+CATCH, roi_data_error
+IF (roi_data_error NE 0) THEN BEGIN
+    catch,/cancel
+    LogBookText = 'Copy of ' + data_roi_file_name + ' in ' + $
+      shared_path + ' ... FAILED' 
     putLogBookMessage, Event, LogBookText, Append=1
+ENDIF ELSE BEGIN
+    spawn, cp_cmd_data, listening, err_listening
+    IF (err_listening[0] NE '') THEN BEGIN
+        LogBookText = 'Copy of ' + data_roi_file_name + ' in ' + $
+          shared_path + ' ... FAILED' 
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE BEGIN
+        LogBookText = 'Copy of ' + data_roi_file_name + ' in ' + $
+          shared_path + ' ... OK' 
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDELSE
 ENDELSE
 
 IF (norm_roi_file_name NE '') THEN BEGIN
+;change permission of file
     roi_norm_error = 0
     CATCH, roi_norm_error
     IF (roi_norm_error NE 0) THEN BEGIN
         catch,/cancel
-        LogBookText = 'Copy of ' + norm_roi_file_name + ' in ' + shared_path + ' ... FAILED' 
+        LogBookText = 'Change permission of ' + norm_roi_file_name + ' to 755 ' $
+          + ' ... FAILED' 
         putLogBookMessage, Event, LogBookText, Append=1
     ENDIF ELSE BEGIN
-        spawn, cp_cmd_norm, listening
-        LogBookText = 'Copy of ' + norm_roi_file_name + ' in ' + shared_path + ' ... OK' 
-        putLogBookMessage, Event, LogBookText, Append=1
+        spawn, chmod_cmd_norm, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            LogBookText = 'Change permission of ' + norm_roi_file_name + $
+              ' to 755 ... FAILED' 
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDIF ELSE BEGIN
+            LogBookText = 'Change permission of ' + norm_roi_file_name + $
+              ' to 755 ... OK' 
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDELSE
     ENDELSE
+
+;copy file
+    roi_norm_error = 0
+    CATCH, roi_norm_error
+    IF (roi_norm_error NE 0) THEN BEGIN
+        catch,/cancel
+        LogBookText = 'Copy of ' + norm_roi_file_name + ' in ' + $
+          shared_path + ' ... FAILED' 
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE BEGIN
+        spawn, cp_cmd_norm, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            LogBookText = 'Copy of ' + norm_roi_file_name + ' in ' + $
+              shared_path + ' ... FAILED' 
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDIF ELSE BEGIN
+            LogBookText = 'Copy of ' + norm_roi_file_name + ' in ' + $
+              shared_path + ' ... OK' 
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDELSE
+    ENDELSE
+ENDIF
+
+;copy Batch File Name if any
+IF ((*global).BatchFileName NE '') THEN BEGIN
+;change permission of file
+    BatchFileName = (*global).BatchFileName
+    chmod_cmd_batch = 'chmod 755 ' + BatchFileName
+    batch_error = 0
+    CATCH, batch_error
+    IF (batch_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        LogBookText = 'Change permission of ' + BatchFileName + ' to 755 ' $
+          + ' ... FAILED'
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE Begin
+        spawn, chmod_cmd_batch, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            LogBookText = 'Change permission of ' + BatchFileName + ' to 755 ' $
+              + ' ... FAILED'
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDIF ELSE BEGIN
+            LogBookText = 'Change permission of ' + BatchFileName + ' to 755 ' $
+              + ' ... OK'
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDELSE
+    ENDELSE
+
+;copy of file
+    cp_cmd_batch = 'cp ' + (*global).BatchFileName + '  ' + shared_path
+    batch_error = 0
+    CATCH, batch_error
+    IF (batch_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        LogBookText = 'Copy of ' + (*global).BatchFileName + ' in ' + $
+          shared_path + ' ... FAILED'
+        putLogBookMessage, Event, LogBookText, Append=1
+    ENDIF ELSE Begin
+        spawn, cp_cmd_batch, listening, err_listening
+        IF (err_listening[0] NE '') THEN BEGIN
+            LogBookText = 'Copy of ' + (*global).BatchFileName + ' in ' + $
+              shared_path + ' ... FAILED'
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDIF ELSE BEGIN
+            LogBookText = 'Copy of ' + (*global).BatchFileName + ' in ' + $
+              shared_path + ' ... OK'
+            putLogBookMessage, Event, LogBookText, Append=1
+        ENDELSE
+     ENDELSE
 ENDIF
 
 ;tell the user that the email has been sent

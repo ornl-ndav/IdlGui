@@ -15,9 +15,10 @@ isNeXusFound = 0                ;by default, NeXus not found
 
 if (DataRunNumber NE '') then begin ;data run number is not empty
     
+    (*global).DataRunNumber = strcompress(DataRunNumber,/remove_all)
+
 ;check if user wants archived or all nexus runs
     if (~isArchivedDataNexusDesired(Event)) then begin ;get full list of Nexus
-        
         LogBookText = '-> Retrieving full list of DATA Run Number: ' + DataRunNumber
         text = getLogBookText(Event)
         if (text[0] EQ '') then begin
@@ -83,7 +84,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;display info in log book
                 LogBookText = getLogBookText(Event)        
                 Message = 'OK'
-                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
+                putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, $
+                  PROCESSING
                 LogText = '----> Found ' + strcompress(sz,/remove_all)
                 LogText += ' NeXus files:'
                 putLogBookMessage,Event, LogText,Append=1
@@ -91,6 +93,14 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                     text = '       ' + full_list_of_nexus_name[i]
                     putLogBookMessage, Event,text,Append=1
                 endfor
+
+;display nxsummary of first file in 'data_list_nexus_base'
+                RefReduction_NXsummary, $
+                  Event, $
+                  full_list_of_nexus_name[0], $
+                  'data_list_nexus_nxsummary_text_field'
+                
+;Inform user that program is waiting for his action
                 LogText = '----> Selecting one NeXus file from the list ..... ' $
                   + PROCESSING
                 putLogBookMessage,Event,LogText,Append=1
@@ -106,12 +116,6 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
                 text += ' NeXus file found .....'
                 putDataLogBookMessage, Event, text, Append=1
 
-;display nxsummary of first file in 'data_list_nexus_base'
-                RefReduction_NXsummary, $
-                  Event, $
-                  full_list_of_nexus_name[0], $
-                  'data_list_nexus_nxsummary_text_field'
-                
             endif else begin    ;proceed as before
                 
                 OpenDataNexusFile, Event, DataRunNumber, full_list_of_nexus_name
@@ -135,8 +139,8 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
 ;indicate reading data with hourglass icon
         widget_control,/hourglass
         
-        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING
-        putLogBookMessage, Event, LogBookText, Append=1
+        LogBookText = '----> Checking if NeXus run number exist ..... ' + PROCESSING  ;REMOVE_ME YEAH!
+        putLogBookMessage, Event, LogBookText, Append=1  
         
 ;check if nexus exist and if it does, returns the full path
         
@@ -176,7 +180,7 @@ if (DataRunNumber NE '') then begin ;data run number is not empty
             
             NbrNexus = 1
             OpenDataNexusFile, Event, DataRunNumber, full_nexus_name
-            
+        
         endelse
         
     endelse
@@ -211,11 +215,11 @@ instrument = (*global).instrument
 ;store full path to NeXus
 (*global).data_full_nexus_name = full_nexus_name
 
-;display run number in REDUCE tab
+;display full nexus name in REDUCE tab
 putTextFieldValue, $
   event, $
   'reduce_data_runs_text_field', $
-  strcompress(DataRunNumber,/remove_all), $
+  strcompress(full_nexus_name,/remove_all), $
   0                             ;do not append
 
 ;tells the user that the NeXus file has been found
@@ -233,15 +237,77 @@ LogBookText = getLogBookText(Event)
 Message = 'OK'
 putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
 
+;check format of NeXus file
+IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    (*global).isHDF5format = 1
+    LogBookText = '----> Is format of NeXus hdf5 ? YES'
+    putLogBookMessage, Event, LogBookText, Append=1
 ;dump binary data into local directory of user
-working_path = (*global).working_path
-LogBookText = '----> Dump binary data at this location: ' + working_path
-putLogBookMessage, Event, LogBookText, Append=1
-REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
+    working_path = (*global).working_path
+    LogBookText = '----> Dump binary data at this location: ' + working_path
+    putLogBookMessage, Event, LogBookText, Append=1
+    REFReduction_DumpBinaryData, Event, full_nexus_name, working_path
+    IF ((*global).isHDF5format) THEN BEGIN
 ;create name of BackgroundROIFile and put it in its box
-REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
-  instrument, $
-  working_path, $
-  DataRunNumber
+        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+          instrument, $
+          working_path, $
+          DataRunNumber
+    ENDIF
+ENDIF ELSE BEGIN
 
+    (*global).isHDF5format = 0
+    LogBookText = '---- Is format of NeXus hdf5 ? NO'
+    putLogBookMessage, Event, LogBookText, Append=1
+    LogBookText = ' !!! REFreduction does not support this file format. '
+    LogBookText += 'Please use rebinNeXus to create a hdf5 nexus file !!!'
+    putLogBookMessage, Event, LogBookText, Append=1
+
+    ;tells the data log book that the format is wrong
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+
+ENDELSE
+
+END
+
+;Same as previous function but this one is reached by the batch run so
+;without any log book messages
+PRO OpenDataNeXusFile_batch, Event, DataRunNumber, full_nexus_name
+;get global structure
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+widget_control,id,get_uvalue=global
+instrument = (*global).instrument
+;store run number of data file
+(*global).data_run_number = DataRunNumber
+;store full path to NeXus
+(*global).data_full_nexus_name = full_nexus_name
+RefReduction_NXsummaryBatch, Event, full_nexus_name, 'data_file_info_text'
+;check format of NeXus file
+IF (H5F_IS_HDF5(full_nexus_name)) THEN BEGIN
+    (*global).isHDF5format = 1
+;dump binary data into local directory of user
+    working_path = (*global).working_path
+    REFReduction_DumpBinaryData_batch, Event, full_nexus_name, working_path
+    IF ((*global).isHDF5format) THEN BEGIN
+;create name of BackgroundROIFile and put it in its box
+        REFreduction_CreateDefaultDataBackgroundROIFileName, Event, $
+          instrument, $
+          working_path, $
+          DataRunNumber
+    ENDIF
+ENDIF ELSE BEGIN
+    (*global).isHDF5format = 0
+    ;tells the data log book that the format is wrong
+    InitialStrarr = getDataLogBookText(Event)
+    putTextAtEndOfDataLogBookLastLine, $
+      Event, $
+      InitialStrarr, $
+      (*global).failed, $
+      PROCESSING
+ENDELSE
 END

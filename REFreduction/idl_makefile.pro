@@ -7,6 +7,7 @@ IdlUtilitiesPath = "utilities/"
 cd, CurrentFolder + '/utilities'
 .run system_utilities.pro
 .run nexus_utilities.pro
+.run math_conversion.pro
 
 ;Build REFreduction GUI
 cd, CurrentFolder + '/REFreductionGUI/'
@@ -39,41 +40,9 @@ cd, CurrentFolder + '/REFreductionGUI/'
 .run MakeGuiPlotsTab.pro
 .run MakeGuiPlotsMainIntermediatesBases.pro
 
+.run MakeGuiBatchTab.pro
+
 .run MakeGuiLogBookTab.pro
-.run MakeGuiSettingsTab.pro
-
-;Build miniREFreduction GUI
-cd, CurrentFolder + '/miniREFreductionGUI/'
-.run miniMakeGuiMainTab.pro
-.run miniMakeGuiLoadTab.pro
-.run miniMakeGuiLoadDataNormalizationTab.pro
-.run miniMakeGuiLoadDataTab.pro
-.run miniMakeGuiLoadData1D2DTab.pro
-.run miniMakeGuiLoadData1DTab.pro
-.run miniMakeGuiLoadData1D_3D_Tab.pro
-.run miniMakeGuiLoadData2DTab.pro
-.run miniMakeGuiLoadData2D_3D_Tab.pro
-.run miniMakeGuiLoadNormalizationTab.pro
-.run miniMakeGuiLoadNormalization1D2DTab.pro
-.run miniMakeGuiLoadNormalization1DTab.pro
-.run miniMakeGuiLoadNormalization1D_3D_Tab.pro
-.run miniMakeGuiLoadNormalization2DTab.pro
-.run miniMakeGuiLoadNormalization2D_3D_Tab.pro
-
-.run miniMakeGuiReduceTab.pro
-.run miniMakeGuiReduceDataBase.pro
-.run miniMakeGuiReduceNormalizationBase.pro
-.run miniMakeGuiReduceQbase.pro
-.run miniMakeGuiReduceDetectorBase.pro
-.run miniMakeGuiReduceIntermediatePlotBase.pro
-.run miniMakeGuiReduceOther.pro
-.run miniMakeGuiReduceInfo.pro
-
-.run miniMakeGuiPlotsTab.pro
-.run miniMakeGuiPlotsMainIntermediatesBases.pro
-
-.run miniMakeGuiLogBookTab.pro
-.run miniMakeGuiSettingsTab.pro
 
 ;Build main procedures
 cd, CurrentFolder
@@ -117,6 +86,7 @@ cd, CurrentFolder
 .run ref_reduction_UpdatePlotsTabGui.pro
 .run ref_reduction_CommandLineIntermediatePlotsGenerator.pro
 .run ref_reduction_CommandLineGenerator.pro
+.run ref_reduction_ReplaceRunNumber.pro
 .run ref_reduction_RunCommandLine.pro
 .run ref_reduction_LoadMainOutputFile.pro
 .run ref_reduction_LoadXmlOutputFile.pro
@@ -126,9 +96,18 @@ cd, CurrentFolder
 .run ref_reduction_SaveFileInfo.pro
 .run ref_reduction_OverwriteInstrumentGeometry.pro
 .run ref_reduction_CL.pro
+.run ref_reduction_OutputPath.pro
+
+.run IDLgetMetadata__define.pro
+.run ref_reduction_BatchTab.pro
+.run ref_reduction_BatchDataNorm.pro
+.run IDLparseCommandLine__define.pro
+.run IDLupdateGui__define.pro
+.run ref_reduction_BatchRepopulateGui.pro
 
 .run ref_reduction_LogBookInterface.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
 .run ref_reduction.pro
+
