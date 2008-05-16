@@ -1211,6 +1211,8 @@ IF (BatchFileName NE '') THEN BEGIN
         LogText = '> Application was unable to open the batch file '
         LogText += BatchFileName
         putLogBookMessage, Event, LogText, APPEND=1
+        spawn, 'ls -l ' + BatchFileName, listening
+        putLogBookMessage, Event, listening, APPEND=1
     ENDIF ELSE BEGIN
         LogText = '> Loading Batch File:'
         putLogBookMessage, Event, LogText, APPEND=1
