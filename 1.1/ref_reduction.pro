@@ -9,10 +9,14 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
+;=======================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
 APPLICATION        = 'REFreductionHigh'
 VERSION            = '1.1.0'
 DEBUGGING_VERSION  = 'no'
 WITH_LAUNCH_SWITCH = 'yes'
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;=======================================
 
 loadct,5
 
