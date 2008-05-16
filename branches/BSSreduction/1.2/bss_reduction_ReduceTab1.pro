@@ -305,13 +305,7 @@ IF (RoiFullFileName NE '') THEN BEGIN
     message = ' -> ' + message1 + ' :'
     AppendLogBookMessage, Event, message
 
-;get current text in text_field
-    CurrentText = getTextFieldValue(Event, uname1)
-    IF (CurrentText EQ '') THEN BEGIN
-        PutTextInTextField, Event, uname1, RoiFullFileName
-    ENDIF ELSE BEGIN
-        AppendTextInTextField, Event, uname1, ',' + RoiFullFileName
-    ENDELSE
+    PutTextInTextField, Event, uname1, RoiFullFileName
     
     newText = getTextFieldValue(Event, uname1)
     IF (newText EQ '') THEN BEGIN
