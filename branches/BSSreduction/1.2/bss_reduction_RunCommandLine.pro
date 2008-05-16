@@ -8,6 +8,16 @@ PROCESSING = (*global).processing
 
 ;get command line to generate
 cmd = getTextFieldValue(Event,'command_line_generator_text')
+;;add called to SLURM
+
+;check instrument here
+spawn, 'hostname',listening
+CASE (listening) OF
+    'bac.sns.gov': srun = 'bac1q'
+    'bac2':        srun = 'bac2q'
+    ELSE:          srun = 'bss'
+ENDCASE
+cmd = 'srun -p ' + srun + ' ' + cmd
 
 ;display command line in log-book
 cmd_text = 'Running Command Line:'
@@ -20,8 +30,6 @@ AppendLogBookMessage, Event, cmd_text
 status_text = 'Data Reduction ... ' + PROCESSING
 putDRstatusInfo, Event, status_text
 
-;;add called to SLURM
-cmd = 'srun -p bss ' + cmd
 ;;indicate initialization with hourglass icon
 widget_control,/hourglass
 

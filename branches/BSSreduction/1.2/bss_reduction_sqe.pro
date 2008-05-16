@@ -231,13 +231,13 @@ global = ptr_new ({ $
                                                          wopets_button: 0,$
                                                          wolidsb_button: 0,$
                                                          wodwsm_button: 0}}}$
-                  })
-
+                      })
+                    
 Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
 
-XYfactor                    = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
-default_pixel_excluded      = intarr((*global).pixel_excluded_size)
+XYfactor               = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
+default_pixel_excluded = intarr((*global).pixel_excluded_size)
 
 ;default exclusion are tubes 56-63 and 120-127
 for j=0,1 do begin
