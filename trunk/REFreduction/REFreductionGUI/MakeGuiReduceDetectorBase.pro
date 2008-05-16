@@ -28,7 +28,7 @@ DetectorErrorTextFieldSize = [DetectorErrorLabelSize[0]+d_L_T,$
 
 ;Detector units
 d_L_L = 130
-DetectorUnitsBGroupList = [' degree ',' radian ']
+DetectorUnitsBGroupList = [' degrees',' radians']
 DetectorUnitsBGroupSize = [DetectorErrorLabelSize[0]+d_L_L,$
                            DetectorErrorTextFieldSize[1]]
                     

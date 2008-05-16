@@ -82,10 +82,10 @@ endelse
 END
 
 
-Function isWithDeltaToverT, Event
+Function isWithDToT, Event
 id = widget_info(Event.top,find_by_uname='delta_t_over_t_cwbgroup')
-widget_control, id, get_value=isWithDeltaToverT
-if (isWithDeltaToverT EQ 0) then begin
+widget_control, id, get_value= status
+if (status EQ 0) then begin
     return, 1
 endif else begin
     return, 0
@@ -240,3 +240,4 @@ id = widget_info(Event.top,find_by_uname='normalization2d_z_axis_scale')
 index = widget_info(id, /droplist_select)
 return, index
 END
+

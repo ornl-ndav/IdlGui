@@ -13,4 +13,5 @@ install:
 	cp ref_reduction /SNS/software/idltools/
 	cp mini_ref_reduction.sav /SNS/software/idltools/sav/
 	cp mini_ref_reduction /SNS/software/idltools/
+	cp REFreductionHELP/*.* /SNS/software/idltools/help/REFreduction/
 

@@ -7,7 +7,7 @@ PRO miniMakeGuiLoadData1DTab, D_DD_Tab, $
 ;define 3 tabs (Back/Signal Selection, Contrast and Rescale)
 
 BackPeakRescaleTabSize = [4, $
-                          305, $;610
+                          310, $;610
                           310, $
                           242] ;253
 
@@ -39,9 +39,9 @@ BaseLengthYmax = 120
 BaseHeight = 35
 
 ;cw_bgroup of selection (back or signal)
-Data1DSelectionList    = ['Select Back.   ',$
-                          'Select Peak    ',$
-                          'Zoom ']
+Data1DSelectionList    = ['Select Back. ',$
+                          'Select Peak  ',$
+                          'Zoom']
 Data1DSelectionBaseSize = [5, $
                            0, $
                            400, $
@@ -212,12 +212,15 @@ load_data_D_tab_base = WIDGET_BASE(D_DD_Tab,$
                                    SCR_YSIZE = D_DD_TabSize[3])
 
 load_data_D_draw = WIDGET_DRAW(load_data_D_tab_base,$
-                               XOFFSET   = GlobalLoadGraphs[0],$
-                               YOFFSET   = GlobalLoadGraphs[1],$
-                               SCR_XSIZE = GlobalLoadGraphs[2],$
-                               SCR_YSIZE = GlobalLoadGraphs[3],$
-                               UNAME     = 'load_data_D_draw',$
-                               RETAIN    = 2,$
+                               XOFFSET       = 0,$
+                               YOFFSET       = 0,$
+                               X_SCROLL_SIZE = GlobalLoadGraphs[2]-20,$
+                               Y_SCROLL_SIZE = GlobalLoadGraphs[3]-24,$
+                               XSIZE         = GlobalLoadGraphs[2]-20,$
+                               YSIZE         = GLobalLoadGraphs[3]-24,$
+                               UNAME         = 'load_data_D_draw',$
+                               RETAIN        = 2,$
+                               /SCROLL,$
                                /BUTTON_EVENTS,$
                                /MOTION_EVENTS)
 
@@ -252,7 +255,7 @@ Data1DSelection = CW_BGROUP(Data1DSelectionBase,$
                             YOFFSET     = Data1DSelectionSize[1],$
                             SET_VALUE   = 0.0,$
                             ROW         = 1,$
-                            FONT        = 'lucidasans-10',$
+;                            FONT        = 'lucidasans-10',$
                             UNAME       = 'data_1d_selection',$
                             /EXCLUSIVE,$
                             /RETURN_NAME)
