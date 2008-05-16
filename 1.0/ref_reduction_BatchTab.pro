@@ -208,7 +208,7 @@ IF (file_error EQ 0) THEN BEGIN
         LogText = '-> Give execute permission to file created ... FAILED'
     ENDIF ELSE BEGIN
 ;give execute permission to file created
-        cmd = 'chmod 700 ' + FullFileName
+        cmd = 'chmod 755 ' + FullFileName
         spawn, cmd, listening
         LogText = '-> Give execute permission to file created ... OK'
         (*global).BatchFileName = FullFileName
@@ -1204,34 +1204,43 @@ BatchFileName = DIALOG_PICKFILE(TITLE    = 'Pick Batch File to load ...',$
                                 GET_PATH = new_path,$
                                 /MUST_EXIST)
 IF (BatchFileName NE '') THEN BEGIN
-    LogText = '> Loading Batch File:'
-    putLogBookMessage, Event, LogText, APPEND=1
-    LogText = '-> File Name : ' + BatchFileName
-    putLogBookMessage, Event, LogText, APPEND=1
-    (*global).BatchDefaultPath = new_path
-    LogText = '-> Populate Batch Table ... ' + (*global).processing_message
-    putLogBookMessage, Event, LogText, APPEND=1
-    BatchTable = PopulateBatchTable(Event, BatchFileName)
-    (*(*global).BatchTable) = BatchTable
-    DisplayBatchTable, Event, BatchTable
-    (*global).BatchFileName = BatchFileName
+    batch_error = 0
+    CATCH, batch_error
+    IF (batch_error NE 0) THEN BEGIN
+        CATCH,/CANCEL
+        LogText = '> Application was unable to open the batch file '
+        LogText += BatchFileName
+        putLogBookMessage, Event, LogText, APPEND=1
+    ENDIF ELSE BEGIN
+        LogText = '> Loading Batch File:'
+        putLogBookMessage, Event, LogText, APPEND=1
+        LogText = '-> File Name : ' + BatchFileName
+        putLogBookMessage, Event, LogText, APPEND=1
+        (*global).BatchDefaultPath = new_path
+        LogText = '-> Populate Batch Table ... ' + (*global).processing_message
+        putLogBookMessage, Event, LogText, APPEND=1
+        BatchTable = PopulateBatchTable(Event, BatchFileName)
+        (*(*global).BatchTable) = BatchTable
+        DisplayBatchTable, Event, BatchTable
+        (*global).BatchFileName = BatchFileName
 ;this function updates the widgets (button) of the tab
-    UpdateBatchTabGui, Event
-    RowSelected = (*global).PrevBatchRowSelected
+        UpdateBatchTabGui, Event
+        RowSelected = (*global).PrevBatchRowSelected
 ;Update info of selected row
-    DisplayInfoOfSelectedRow, Event, RowSelected
+        DisplayInfoOfSelectedRow, Event, RowSelected
 ;display path and file name of file in SAVE AS widgets
-    FileArray = getFilePathAndName(BatchFileName)
-    FilePath  = FileArray[0]
-    FileName  = FileArray[1]
+        FileArray = getFilePathAndName(BatchFileName)
+        FilePath  = FileArray[0]
+        FileName  = FileArray[1]
 ;put path in PATH button
-    (*global).BatchDefaultPath = FilePath
-    ;change name of button
-    putBatchFolderName, Event, FilePath
+        (*global).BatchDefaultPath = FilePath
+                                ;change name of button
+        putBatchFolderName, Event, FilePath
 ;put name of file in widget_text
-    putBatchFileName, Event, FileName
+        putBatchFileName, Event, FileName
 ;enable or not the REPOPULATE Button
-    CheckRepopulateButton, Event
+        CheckRepopulateButton, Event
+    ENDELSE
 ENDIF 
 END
 
