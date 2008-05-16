@@ -12,24 +12,64 @@ END
 
 PRO BuildGui, instrument, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
-VERSION = ' (version: 1.0.9)'
-loadct,5
+;=======================================
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+APPLICATION        = 'REFreductionLow'
+VERSION            = '1.0.27'
+DEBUGGING_VERSION  = 'no'
+WITH_LAUNCH_SWITCH = 'no'
+;VVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV
+;=======================================
 
-;define initial global values - these could be input via external file or other means
+LOADCT,5
+
+;get branch number
+branchArray = STRSPLIT(VERSION,'.',/EXTRACT)
+branch      = STRJOIN(branchArray[0:1],'.')
+
+;define initial global values - these could be input via external file or
+;other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
 
  
-if (!VERSION.os EQ 'darwin') then begin
-   ucams = 'j35'
-endif else begin
-   ucams = get_ucams()
-endelse
+IF (!VERSION.os EQ 'darwin') THEN BEGIN
+   ucams    = 'j35'
+ENDIF ELSE BEGIN
+   ucams    = get_ucams()
+ENDELSE
 
 ;define global variables
-global = ptr_new ({instrument : strcompress(instrument,/remove_all),$ 
+global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$ 
 ;name of the current selected REF instrument
+                    CurrentBatchDataInput: '',$
+                    CurrentBatchNormInput: '',$
+                    branch: branch,$
+                    batch_data_runs : ptr_new(0L),$
+                    nbrIntermediateFiles : 8,$
+                    batch_process : 'data',$
+                    batch_norm_runs : ptr_new(0L),$
+                    batch_NormNexus : ptr_new(0L),$
+                    batch_DataNexus : ptr_new(0L),$
+                    batch_percent_error : 0.01,$ ;1% difference acceptebale between angle, s1 and s2
+                    batch_split2 : '',$ 
+                    batch_part2 : '',$
+                    batch_new_cmd : '',$
+                    cmd_batch_length : 50,$
+                    debugger : 1,$ ;give world access to batch
+                    PrevBatchRowSelected : 0,$
+                    BatchDefaultPath: '~/',$
+                    BatchDefaultFileFilter : '*_Batch_Run*.txt',$
+                    BatchFileName : '',$
+                    DataRunNumber : '',$
+                    PreviousRunReductionValidated : 0,$  
+                    BatchTable : ptr_new(0L),$ ;big array of batch table
+                    isHDF5format : 1,$
+                    dr_output_path : '~/',$
+                    archived_data_flag : 1,$
+                    archived_norm_flag : 1,$
+;output path define in the REDUCE tab
                    cl_output_path : '~/REFreduction_CL/',$
 ;default path where to put the command line output file
                    cl_file_ext1    : 'REFreduction_CL_',$
@@ -55,7 +95,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;title of all the plots (main and intermediate)
                    MainPlotTitle : '',$ 
 ;title of main data reduction
-                   IntermPlots : intarr(7),$ 
+                   IntermPlots : intarr(8),$ 
 ;0 for inter. plot no desired, 1 for desired
                    CurrentPlotsFullFileName:ptr_new(0L),$ 
 ;full path name of the plot currently plotted
@@ -97,6 +137,8 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;TOF for data file
                    Ntof_NORM : 0L, $ 
 ;TOF for norm file
+                   failed : 'FAILED',$
+;failed message to display
                    processing_message : '(PROCESSING)',$ 
 ;processing message to display
                    data_tmp_dat_file : 'tmp_data.dat',$ 
@@ -107,7 +149,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;default name of tmp binary norm file
                    full_norm_tmp_dat_file : '',$ 
 ;full path of tmp .dat file for normalization
-                   working_path : '~/local/',$ 
+                   working_path : '~/',$ 
 ;where the tmp file will be created
                    ucams : ucams, $ 
 ;ucams of the current user
@@ -183,7 +225,7 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;last x position of cursor in norm. 1d draw for zoom                     
                    NormY : 0L,$
 ;last x position of cursor in norm 1d draw for zoom                     
-                   LogBookPath : '/SNS/users/j35/IDL_LogBook/',$
+                   LogBookPath : '/SNS/users/LogBook/',$
 ;path where to put the log book
                    MacNexusFile : '~/SNS/REF_L/IPTS-231/1/4146/NeXus/REF_L_4146.nxs',$
 ;full path to NeXus file on the mac
@@ -291,6 +333,9 @@ global = ptr_new ({instrument : strcompress(instrument,/remove_all),$
 ;Version of REFreduction Tool
                    })
 
+BatchTable = strarr(8,20)
+(*(*global).BatchTable) = BatchTable
+
 ;------------------------------------------------------------------------
 ;explanation of the select_data_status and select_norm_status
 ;0 nothing has been done yet
@@ -310,7 +355,8 @@ full_norm_tmp_dat_file = (*global).working_path + (*global).norm_tmp_dat_file
 (*(*global).norm_back_selection) = [-1,-1]
 (*(*global).norm_peak_selection) = [-1,-1]
 
-(*global).UpDownMessage = 'Use U(up) or D(down) to move selection vertically pixel per pixel.' 
+(*global).UpDownMessage = 'Use U(up) or D(down) to move selection ' + $
+  'vertically pixel per pixel.' 
 (*global).REFreductionVersion = VERSION
 
 PlotsTitle = ['Data Combined Specular TOF Plot',$
@@ -320,6 +366,7 @@ PlotsTitle = ['Data Combined Specular TOF Plot',$
               'Norm. Combined Background TOF Plot',$
               'Norm. Combined Subtracted TOF Plot',$
               'R vs TOF Plot',$
+              'R vs TOF Combined Plot',$
               'XML output file']
 (*(*global).PlotsTitle) = PlotsTitle
 MainPlotTitle = 'Main Data Reduction Plot'
@@ -341,30 +388,51 @@ ExtOfAllPlots = ['.txt',$
                  '_norm.sdc',$
                  '_norm.bkg',$
                  '_norm.sub',$
-                 '.rtof']
+                 '.rtof',$
+                 '.crtof']
 (*(*global).ExtOfAllPlots) = ExtOfAllPlots
 
 ;define Main Base variables
 ;[xoffset, yoffset, scr_xsize, scr_ysize]
 
-MainBaseSize  = [50,50,880,677]
+;MainBaseSize  = [50,50,905,685]
+MainBaseSize  = [50,50,905,685]
 
-MainBaseTitle = 'miniReflectometer Data Reduction Package'
+MainBaseTitle = 'miniReflectometer Data Reduction Package - '
 MainBaseTitle += VERSION
 ;Build Main Base
-MAIN_BASE = WIDGET_BASE(GROUP_LEADER = wGroup,$
-                        UNAME        = 'MAIN_BASE',$
-                        SCR_XSIZE    = MainBaseSize[2],$
-                        SCR_YSIZE    = MainBaseSize[3],$
-                        XOFFSET      = MainBaseSize[0],$
-                        YOFFSET      = MainBaseSize[1],$
-                        TITLE        = MainBaseTitle,$
-                        SPACE        = 0,$
-                        XPAD         = 0)
-
+MAIN_BASE = WIDGET_BASE(GROUP_LEADER  = wGroup,$
+                        UNAME         = 'MAIN_BASE',$
+                        ;SCR_XSIZE     = MainBaseSize[2],$
+                        ;SCR_YSIZE     = MainBaseSize[3],$
+                        XOFFSET       = MainBaseSize[0],$
+                        YOFFSET       = MainBaseSize[1],$
+                        TITLE         = MainBaseTitle,$
+                        SPACE         = 0,$
+                        XPAD          = 0,$
+                        MBAR          = WID_BASE_0_MBAR,$
+                        X_SCROLL_SIZE = MainBaseSize[2],$
+                        Y_SCROLL_SIZE = 600,$
+                        /SCROLL)
 
 ;attach global structure with widget ID of widget main base widget ID
 widget_control, MAIN_BASE, SET_UVALUE=global
+
+;HELP MENU in Menu Bar
+HELP_MENU = WIDGET_BUTTON(WID_BASE_0_MBAR,$
+                          UNAME = 'help_menu',$
+                          VALUE = 'HELP',$
+                          /MENU)
+                          
+HELP_BUTTON = WIDGET_BUTTON(HELP_MENU,$
+                            VALUE = 'HELP',$
+                            UNAME = 'help_button')
+
+IF (ucams EQ 'j35') THEN BEGIN
+    my_help_button = WIDGET_BUTTON(HELP_MENU,$
+                                   VALUE = 'MY HELP',$
+                                   UNAME = 'my_help_button')
+ENDIF
 
 ;add version to program
 if ((*global).miniVersion) then begin
@@ -373,8 +441,15 @@ endif else begin
     xoff = 1030
 endelse
 
+structure = {with_launch_button: WITH_LAUNCH_SWITCH}
+
 ;Build main GUI
-miniMakeGuiMainTab, MAIN_BASE, MainBaseSize, instrument, PlotsTitle
+miniMakeGuiMainTab, $
+  MAIN_BASE, $
+  MainBaseSize, $
+  instrument, $
+  PlotsTitle,$
+  structure
 
 ;hidden widget_text
 DataHiddenWidgetText = WIDGET_TEXT(MAIN_BASE,$
@@ -403,13 +478,17 @@ widget_control, id, set_droplist_select=(*global).InitialDataContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_contrast_droplist')
 widget_control, id, set_droplist_select=(*global).InitialNormContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_1d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm1d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm1d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='data_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialData2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialData2d3DContrastDropList
 id = widget_info(Main_base,Find_by_Uname='normalization_loadct_2d_3d_droplist')
-widget_control, id, set_droplist_select=(*global).InitialNorm2d3DContrastDropList
+widget_control, id, set_droplist_select= $
+  (*global).InitialNorm2d3DContrastDropList
 
 ;initialize CommandLineOutput widgets (path and file name)
 id = widget_info(Main_base, find_by_uname='cl_directory_text')
@@ -425,32 +504,94 @@ IF (ucams EQ 'j35' OR $
     widget_control, id, /editable
 ENDIF
 
-;; default tabs shown
-;id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-;widget_control, id1, set_tab_current = 1 ;reduce
- 
+IF (ucams EQ 'j35') THEN BEGIN
+    id = widget_info(MAIN_BASE,find_by_uname='cmd_status_preview')
+    widget_control, id, /editable
+ENDIF
+
+IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
+
+; default tabs shown
+    id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
+    widget_control, id1, set_tab_current = 3 ;batch mode(3)
+    
+;change default location of Batch file
+    (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
+
 ; id2 = widget_info(MAIN_BASE, find_by_uname='data_normalization_tab')
 ; widget_control, id2, set_tab_current = 1 ;NORMALIZATION
-
+    
 ; id3 = widget_info(MAIN_BASE, find_by_uname='load_normalization_d_dd_tab')
 ; widget_control, id3, set_tab_current = 3 ;Y vs X (3D)
 
 ;  to get the manual mode
-; id6 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab1_base')
+; id6 = widget_info(MAIN_BASE, find_by_uname=
+; 'normalization2d_rescale_tab1_base')
 ; widget_control, id6, map=0
 
-; id5 = widget_info(MAIN_BASE, find_by_uname='normalization2d_rescale_tab2_base')
+; id5 = widget_info(MAIN_BASE, find_by_uname=
+; 'normalization2d_rescale_tab2_base')
 ; widget_control, id5, map=1
 
 ;id4 = widget_info(MAIN_BASE, find_by_uname='data_back_peak_rescale_tab')
 ;widget_control, id4, set_tab_current = 2 ;SCALE/RANGE
 
+;BatchTable [*,0] = ['YES', $
+;                    '5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,1] = ['NO', $
+;                    '7545,5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,2] = ['NO', $
+;                    '6000,7000,5225,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; BatchTable[*,3] = ['> YES <', $
+;                    '5225,10000,5454', $
+;                    '3443', $
+;                    '0.345', $
+;                    '0.15', $
+;                    '0.15', $
+;                    '2008y_02m_19d_01h_15mn', $
+;                    'reflect_reduction 5225 5454 --norm=3443']
+; (*(*global).BatchTable) = BatchTable
+
+; id = widget_info(Main_base,find_by_uname='batch_table_widget')
+; widget_control, id, set_value=BatchTable
+ 
+; id = widget_info(Main_base,find_by_uname='save_as_file_name')
+; widget_control, id, set_value='REF_L_Batch_Run4000_2008y_02m_26d.txt'
+
+ENDIF ;end of debugging_version statement
+
+;logger message
+logger_message  = '/usr/bin/logger -p local5.notice IDLtools '
+logger_message += APPLICATION + '_' + VERSION + ' ' + ucams
+error = 0
+CATCH, error
+IF (error NE 0) THEN BEGIN
+    CATCH,/CANCEL
+ENDIF ELSE BEGIN
+    spawn, logger_message
+ENDELSE
 END
 
-
 ; Empty stub procedure used for autoloading.
-pro mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-
+PRO mini_ref_reduction, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 ;check instrument here
 spawn, 'hostname',listening
 CASE (listening) OF
@@ -460,12 +601,12 @@ CASE (listening) OF
     else: instrument = 'UNDEFINED'
 ENDCASE
 
-if (instrument EQ 'UNDEFINED') then begin
+IF (instrument EQ 'UNDEFINED') THEN BEGIN
     BuildInstrumentGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
-endif else begin
+ENDIF ELSE BEGIN
     BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_, instrument
-endelse
-end
+ENDELSE
+END
 
 
 
