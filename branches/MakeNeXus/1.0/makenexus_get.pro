@@ -316,15 +316,20 @@ END
 
 ;------------------------------------------------------------------------------
 FUNCTION getListOfProposal, instrument
-FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
-                       COUNT=length,$
-                       /TEST_DIRECTORY)
-ProposalList = STRARR(length+1)
-ProposalList[0] = 'ALL PROPOSAL FOLDERS'
-FOR i=1,(length) DO BEGIN
-    ParseList = STRSPLIT(FileList[i-1],'/',/extract,COUNT=nbr)
-    ProposalList[i] = ParseList[nbr-1]
-ENDFOR
+prefix = '/' + instrument + '-DAS-FS/'
+cmd_ls = 'ls -dt ' + prefix + '/*/'
+spawn, cmd_ls, listening, err_listening
+IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
+    sz = (size(listening))(1)
+    ProposalList = STRARR(sz+1)
+    FOR i=0,(sz-1) DO BEGIN
+        str_array = STRSPLIT(listening[i],prefix+'*',/EXTRACT,/REGEX)
+        ProposalList[i]=str_array[0]
+    ENDFOR
+    ProposalList[sz] = 'ALL PROPOSAL FOLDERS'
+ENDIF ELSE BEGIN
+    ProposalList = 'FOLDER IS EMPTY !'
+ENDELSE
 RETURN, ProposalList
 END
 
@@ -332,8 +337,9 @@ END
 FUNCTION getProposalSelected, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 index = WIDGET_INFO(id, /DROPLIST_SELECT)
-IF (index EQ 0) THEN RETURN, ''
 WIDGET_CONTROL, id, GET_VALUE=list
+sz = (size(list))(1)
+IF (index EQ (sz-1)) THEN RETURN, ''
 RETURN, list[index]
 END
 
