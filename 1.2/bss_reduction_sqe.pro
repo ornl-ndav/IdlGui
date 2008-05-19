@@ -236,7 +236,8 @@ global = ptr_new ({ $
 Device, /decomposed
 loadct, (*global).DefaultLoadctMainPlot
 
-XYfactor               = {Xfactor:(*global).Xfactor, Yfactor:(*global).Yfactor}
+XYfactor               = {Xfactor:(*global).Xfactor, $
+                          Yfactor:(*global).Yfactor}
 default_pixel_excluded = intarr((*global).pixel_excluded_size)
 
 ;default exclusion are tubes 56-63 and 120-127
@@ -306,15 +307,18 @@ id = widget_info(Main_base,Find_by_Uname='color_slider')
 widget_control, id, set_value = (*global).ColorVerticalGrid
 
 IF (DeployedVersion EQ 'no') THEN BEGIN
-
 ;default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
     widget_control, id1, set_tab_current = 1 ;reduce
-    
 ;tab #7
     id1 = widget_info(MAIN_BASE, find_by_uname='reduce_input_tab')
     widget_control, id1, set_tab_current = 5
-    
+ENDIF
+
+;give extra power to j35
+IF (ucams EQ 'j35') THEN BEGIN
+    id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME= 'command_line_generator_text')
+    WIDGET_CONTROL, id, /EDITABLE
 ENDIF
 
 ;logger message
