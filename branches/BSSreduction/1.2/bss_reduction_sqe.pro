@@ -316,7 +316,8 @@ IF (DeployedVersion EQ 'no') THEN BEGIN
 ENDIF
 
 ;give extra power to j35
-IF (ucams EQ 'j35') THEN BEGIN
+IF (ucams EQ 'j35' OR $
+    ucams EQ '2zr') THEN BEGIN
     id = WIDGET_INFO(MAIN_BASE, FIND_BY_UNAME= 'command_line_generator_text')
     WIDGET_CONTROL, id, /EDITABLE
 ENDIF
