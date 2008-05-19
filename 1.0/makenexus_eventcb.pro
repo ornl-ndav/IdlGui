@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO populateHistogrammingBase, Event, RunNumber, Instrument
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -219,7 +219,7 @@ ENDELSE
 (*global).validate_go = validate_go
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO output_path, Event ;in makenexus_eventcb.pro
 ;get global structure
@@ -237,7 +237,7 @@ IF (OutputPath NE '') THEN BEGIN
 ENDIF
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO validateOrNotGoButton, Event
 ;get global structure
@@ -262,7 +262,7 @@ validateCreateNexusButton, Event, validate_status
 validateSendToGeek, Event, validate_status
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 FUNCTION CreateNexus, Event
 ;get global structure
@@ -530,8 +530,8 @@ FOR j=0,(sz-1) DO BEGIN
               CNstruct.PROCESSING ;moving files worked
             AppendLogBook, Event, text
         ENDIF ELSE BEGIN
-            message = '-> None of the output folders selected exist or are' + $
-              ' valid !'
+            message = '-> None of the output folders selected exist or ' + $
+              'are valid !'
             AppendMyLogBook, Event, message
             GOTO, ERROR
         ENDELSE
@@ -589,6 +589,24 @@ END
 
 ;------------------------------------------------------------------------------
 
+PRO refreshProposalList, Event
+;get current proposal selected
+currentProposalSelected = getProposalSelected(Event)
+instrument              = getInstrument(Event)
+ListOfProposal          = getListOfProposal(instrument)
+IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
+    ListOfProposal = ['INSTRUMENT NOT VISIBLE']
+ENDIF
+;find new index of proposal
+index = getIndexOfProposalInNewList(ListOfProposal,currentProposalSelected)
+;refresh list of proposal
+putListOfProposal, Event, ListOfProposal
+;select index
+setProposalDroplistIndex, Event, index
+END
+
+;------------------------------------------------------------------------------
+
 PRO start_help          ;_eventcb
 ONLINE_HELP, book='/SNS/software/idltools/help/MakeNeXus/makenexus.adp'
 END
@@ -615,6 +633,8 @@ widget_control,/hourglass
 widget_control,hourglass=0
 END
 
-pro makenexus_eventcb, event
-end
+;------------------------------------------------------------------------------
+
+PRO makenexus_eventcb, event
+END
 

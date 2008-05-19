@@ -82,3 +82,8 @@ WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=(sz-10)
 END
 
 ;------------------------------------------------------------------------------
+;This function set the index of the droplist
+PRO setProposalDroplistIndex, Event, index
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
+WIDGET_CONTROL, id, SET_DROPLIST_SELECT=index
+END
