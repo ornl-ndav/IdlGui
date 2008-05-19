@@ -1,15 +1,20 @@
-PRO MakeGuiSelectionTab, MAIN_TAB, MainTabSize, MainSelectionTitle, XYfactor, MainBase
+PRO MakeGuiSelectionTab, MAIN_TAB, $
+                         MainTabSize, $
+                         MainSelectionTitle, $
+                         XYfactor, $
+                         MainBase
 
-;***********************************************************************************
+;******************************************************************************
 ;                             Define size arrays
-;***********************************************************************************
+;******************************************************************************
 
 ;Message box
 MessageTextSize = [755,240,430,30]
 
 CountsVsTofLabelSize  = [890,290]
 CountsVsTofLabel1Size = [780,288]
-CountsVsTofLabelTitle = ' C O U N T S (                             ) vs   T O F'
+CountsVsTofLabelTitle = ' C O U N T S (                             ) vs ' + $
+  '  T O F'
 
 CountsVsTofSize = [5,$
                    35,$
@@ -130,7 +135,8 @@ FullResetColorButtonTitle  = 'F U L L  R E S E T'
 
 ColorSliderBaseSize   = [10,67-yoff,415,45]
 ColorSliderLabelSize  = [13,0,420,30]
-ColorSliderLabelTitle = ' 0           50       100        150          200         250 '
+ColorSliderLabelTitle = ' 0           50       100        150          ' + $
+  '200         250 '
 ColorSliderSize       = [10,25,390,20]
 LoadctDropListSize    = [120,5,300,30]
 LoadctList = ['Black/White Linear',$
@@ -175,9 +181,9 @@ LoadctList = ['Black/White Linear',$
               'Rainbow + White',$
               'Rainbow + Black']
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 
 SelectionBase = WIDGET_BASE(MAIN_TAB,$
                             XOFFSET   = 0,$
@@ -308,10 +314,14 @@ CountsVsTofBankLabel = WIDGET_LABEL (CountsVsTofTab2,$
 
 CountsVsTofPixelLabel = WIDGET_LABEL (CountsVsTofTab2,$
                                       UNAME     = 'counts_vs_tof_pixel_label',$
-                                      XOFFSET   = CountsVsTofPixelLabelSize[0],$
-                                      YOFFSET   = CountsVsTofPixelLabelSize[1],$
-                                      SCR_XSIZE = CountsVsTofPixelLabelSize[2],$
-                                      SCR_YSIZE = CountsVsTofPixelLabelSize[3],$
+                                      XOFFSET   = $
+                                      CountsVsTofPixelLabelSize[0],$
+                                      YOFFSET   = $
+                                      CountsVsTofPixelLabelSize[1],$
+                                      SCR_XSIZE = $
+                                      CountsVsTofPixelLabelSize[2],$
+                                      SCR_YSIZE = $
+                                      CountsVsTofPixelLabelSize[3],$
                                       VALUE     = 'Pixel:')
 
 ;NeXus/ROI & SELECTION tab
@@ -326,10 +336,16 @@ NeXusRoiSelectionTab = WIDGET_TAB(SelectionBase,$
                                   /TRACKING_EVENTS)
 
 ;make NeXus/ROI tab (tab#1)
-MakeGuiNeXusRoiBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, OpenNeXusTitle
+MakeGuiNeXusRoiBase, $
+  NeXusRoiSelectionTab, $
+  OpenNeXusSelectionTab, $
+  OpenNeXusTitle
 
 ;make Selection tab (tab#2)
-MakeGuiSelectionBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, SelectionTitle
+MakeGuiSelectionBase, $
+  NeXusRoiSelectionTab, $
+  OpenNeXusSelectionTab, $
+  SelectionTitle
 
 ;X, Y and pixelID info box
 XYPixelIDBase = WIDGET_BASE(SelectionBase,$
