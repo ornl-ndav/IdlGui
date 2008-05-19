@@ -601,8 +601,6 @@ ENDIF
 index = getIndexOfProposalInNewList(ListOfProposal,currentProposalSelected)
 ;refresh list of proposal
 putListOfProposal, Event, ListOfProposal
-;select index
-setProposalDroplistIndex, Event, index
 END
 
 ;------------------------------------------------------------------------------

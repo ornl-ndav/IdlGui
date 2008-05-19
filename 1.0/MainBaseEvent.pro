@@ -47,8 +47,13 @@ CASE Event.id OF
 
 ;Proposal Folder
     widget_info(wWidget, FIND_BY_UNAME='proposal_droplist'): begin
-        refreshProposalList, Event ;in _eventcb
-    end
+        IF ((*global).EnteringProposal EQ 1) THEN BEGIN
+            (*global).EnteringProposal = 0
+            refreshProposalList, Event ;in _eventcb
+        ENDIF ELSE BEGIN
+            (*global).EnteringProposal = 1
+        ENDELSE
+    END
     
 ;Instrument
     WIDGET_INFO(wWidget, FIND_BY_UNAME='instrument_droplist'): BEGIN

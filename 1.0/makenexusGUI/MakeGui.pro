@@ -207,7 +207,8 @@ wProposalDroplist = WIDGET_DROPLIST(base,$
                                     VALUE   = sProposalDroplist.list,$
                                     XOFFSET = sProposalDroplist.size[0],$
                                     YOFFSET = sProposalDroplist.size[1],$
-                                    UNAME   = sProposalDroplist.uname)
+                                    UNAME   = sProposalDroplist.uname,$
+                                    /TRACKING_EVENTS)
 
 run_base = WIDGET_BASE(base,$
                        XOFFSET   = run_number_base.size[0],$
