@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,19 +30,19 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 FUNCTION getRunNumber, Event
 id = widget_info(Event.top,find_by_uname='run_number_cw_field')
 widget_control, id, get_value=RunNumber
 RETURN, strcompress(RunNumber,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION StringSplit, delimiter, text
 RETURN, strsplit(text, delimiter,/extract)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION CreateList, text2
 ON_IOERROR, L1 ;in case one of the variable can't be converted
 ;into an int
@@ -58,7 +58,7 @@ return, [val1,val2]
 L1: return, ''
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getListOfRuns, RunNumber
 ;parse according to ','
 text1 = StringSplit(',',RunNumber)
@@ -89,7 +89,7 @@ ENDFOR
 return, strcompress(List,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getInstrument, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -100,41 +100,41 @@ instrumentShortList = (*(*global).instrumentShortList)
 RETURN, instrumentShortList[index]
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getOutputPath, Event
 id = widget_info(Event.top,find_by_uname='output_path_text')
 widget_control, id, get_value=outputPath
 RETURN,strcompress(outputPath,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getLogBookText, Event
 id = widget_info(Event.top,find_by_uname='log_book')
 widget_control, id, get_value=text
 RETURN, text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getMyLogBookText, Event
 id = widget_info(Event.top,find_by_uname='my_log_book')
 widget_control, id, get_value=text
 RETURN, text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getTextFieldValue, Event, uname
 id = widget_info(Event.top,find_by_uname=uname)
 widget_control, id, get_value=value
 RETURN, value
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getProposalNumber, Event, prenexus_path
 textSplit = strsplit(prenexus_path,'/',/extract)
 RETURN, textSplit[1]
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getNbrPolaState, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 0
@@ -158,7 +158,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinTypeFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, 'linear'
@@ -184,7 +184,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinOffsetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '0'
@@ -210,7 +210,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinMaxSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '100000'
@@ -236,7 +236,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinWidthSetFromDas, Event, file_name
 IF (!VERSION.os EQ 'darwin') THEN BEGIN
     return, '200'
@@ -262,7 +262,7 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;Gives the total number of pixels
 FUNCTION getTotalNbrPixel, base_file_name
 file_name = base_file_name + '_runinfo.xml'
@@ -293,28 +293,28 @@ index = widget_info(id, /droplist_select)
 RETURN, index
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinWidth, Event
 id = widget_info(Event.top,find_by_uname='time_bin')
 widget_control, id, get_value=value
 RETURN, strcompress(value,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinOffset, Event
 id = widget_info(Event.top,find_by_uname='time_offset')
 widget_control, id, get_value=value
 RETURN, strcompress(value,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getBinMax, Event
 id = widget_info(Event.top,find_by_uname='time_max')
 widget_control, id, get_value=value
 RETURN, strcompress(value,/remove_all)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getListOfProposal, instrument
 FileList = FILE_SEARCH('/SNS/'+instrument+'/*', $
                        COUNT=length,$
@@ -328,7 +328,7 @@ ENDFOR
 RETURN, ProposalList
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION getProposalSelected, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='proposal_droplist')
 index = WIDGET_INFO(id, /DROPLIST_SELECT)
@@ -337,7 +337,7 @@ WIDGET_CONTROL, id, GET_VALUE=list
 RETURN, list[index]
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION get_up_to_date_geo_tran_map_file, instrument
 cmd = 'findcalib -i' + instrument
 spawn, cmd, listening, err_listening
@@ -348,4 +348,19 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+FUNCTION getIndexOfProposalInNewList, ListOfProposal, currentProposalSelected
+sz = (size(ListOfProposal))(1)
+IF (sz GT 1) THEN BEGIN
+FOR i=0,(sz-1) DO BEGIN
+    IF (ListOfProposal[i] EQ currentProposalSelected) THEN BEGIN
+        RETURN, i
+    ENDIF
+ENDFOR
+ENDIF ELSE BEGIN
+    RETURN, 0
+ENDELSE
+RETURN, 0
+END
+
+
