@@ -94,7 +94,7 @@ global = ptr_new ({ $
                     previous_counts_vs_tof_tab : 0,$ ;default counts vs tof tab is 0
                     RunNumber : 0L, $ ;NeXus run number
                     NexusFullName : '',$ ;Full nexus file name
-                    roi_path : '~/local/',$ ;path where to save the ROI file
+                    roi_path : '~/',$ ;path where to save the ROI file
                     SavedRoiFullFileName : '',$ ;full file name of ROI file
                     counts_vs_tof_path : '~/local/',$ ;path where to save the counts vs tof ascii file
                     roi_ext : '_ROI.dat' ,$ ;extension of ROI files
