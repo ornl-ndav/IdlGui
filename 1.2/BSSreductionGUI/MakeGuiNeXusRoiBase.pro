@@ -1,8 +1,8 @@
 PRO MakeGuiNeXusRoiBase, NeXusRoiSelectionTab, OpenNeXusSelectionTab, title
 
-;***********************************************************************************
+;******************************************************************************
 ;                                Build GUI
-;***********************************************************************************
+;******************************************************************************
 
 NeXusRoiTabBase = WIDGET_BASE(NeXusRoiSelectionTab,$
                               XOFFSET   = 0,$
@@ -90,7 +90,7 @@ fbase = WIDGET_BASE(NeXusRoiTabBase,$
                     /BASE_ALIGN_CENTER)
 
 button = WIDGET_BUTTON(fbase,$
-                       VALUE     = '~/local/',$
+                       VALUE     = '~/',$
                        UNAME     = 'roi_path_button',$
                        SCR_XSIZE = 335,$
                        SCR_YSIZE = 30,$
