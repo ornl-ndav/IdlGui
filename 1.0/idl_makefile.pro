@@ -54,7 +54,6 @@ cd, CurrentFolder
 .run makenexus_put.pro
 .run makenexus_is.pro
 .run makenexus_GUIupdate.pro
-.run makenexus_utilities.pro
 .run makenexus_LogBookInterface.pro
 .run showprogress__define.pro
 

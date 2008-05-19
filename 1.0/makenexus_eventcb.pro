@@ -89,6 +89,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
+
+
 ;this function will check if the prenexus can be found
 PRO run_number, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -249,8 +251,8 @@ ENDELSE
 ;check if output path required exists or not
 ;get destination folders
 folder1_status = CheckDestinationFolder(Event)
-folder2_status = CheckInstrumentSharedFolder(Event)
-folder3_status = CheckProposalSharedFolder(Event)
+folder2_status = isInstrSharedFolderSelected(Event)
+folder3_status = isProposalSharedFolderSelected(Event)
 folder_status = folder1_status + folder2_status + folder3_status
 IF (folder_status EQ 0) THEN BEGIN
     validate_status = 0

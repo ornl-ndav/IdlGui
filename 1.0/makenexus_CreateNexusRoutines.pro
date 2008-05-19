@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO DefineGeneralVariablePart1, Event, CNstruct
 
@@ -70,7 +70,7 @@ END
 
 
 
-;###############################################################################
+;##############################################################################
 FUNCTION CreateStagingArea, Event, CNstruct
 
 ;retrieve parameters
@@ -102,7 +102,8 @@ ENDIF ELSE BEGIN
             putTextAtEndOfMyLogBook, Event, OK, PROCESSING
         ENDELSE
     ENDIF ELSE BEGIN
-        AppendMyLogBook, Event, '--> Folder does not exist and needs to be created'
+        AppendMyLogBook, Event, '--> Folder does not exist and needs to ' + $
+          'be created'
         cmd = 'mkdir ' + stagingArea
         cmd_text = '   cmd: ' + cmd
         AppendMyLogBook, Event, cmd_text + ' ... ' + PROCESSING
@@ -121,7 +122,7 @@ END
 
 
 
-;###############################################################################
+;##############################################################################
 
 
 
@@ -228,7 +229,7 @@ ENDELSE
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION CopyPreNexus, Event,CNstruct
 
@@ -270,7 +271,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION ImportXml, Event, CNstruct
 
@@ -304,7 +305,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 PRO GetGeoMapTranFile, Event, CNstruct
                                  
@@ -327,7 +328,7 @@ AppendMyLogBook, Event, text
 
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION CopyTranMapFiles, Event, CNstruct
 
@@ -363,7 +364,7 @@ putTextAtEndOfLogBook, Event, OK, PROCESSING
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 PRO DefineGeneralVariablePart2, Event, CNstruct
 
@@ -380,14 +381,15 @@ AppendMyLogBook, Event, '-> base_name           : ' + CNstruct.base_name
 AppendMyLogBook, Event, '-> base_ext_name       : ' + CNstruct.base_ext_name
 AppendMyLogBook, Event, '-> base_histo_name     : ' + CNstruct.base_histo_name
 AppendMyLogBook, Event, '-> p0_file_name        : ' + CNstruct.p0_file_name
-AppendMyLogBook, Event, '-> p0_mapped_file_name : ' + CNstruct.p0_mapped_file_name
+AppendMyLogBook, Event, '-> p0_mapped_file_name : ' + $
+  CNstruct.p0_mapped_file_name
 AppendMyLogBook, Event, '-> base_nexus          : ' + CNstruct.base_nexus
 AppendMyLogBook, Event, '-> ShortNexusName      : ' + CNstruct.ShortNexusName
 AppendMyLogBook, Event, ''
 
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION MultiPola_renamingHistoFile, Event, CNstruct
 error_status = 0
@@ -415,7 +417,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION MultiPola_mergingFile, Event, CNstruct
 
@@ -438,12 +440,13 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION MultiPola_translatingFile, Event, CNstruct
 
 AppendMyLogBook, Event, '--> Translating the files:'
-CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + CNstruct.instrument $
+CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + $
+  CNstruct.instrument $
   + '_' + CNstruct.RunNumber + '.nxt'
 AppendMyLogBook, Event, ' Translation file: ' + CNstruct.nxtTranslationFile
 cmd = 'nxtranslate ' + CNstruct.nxtTranslationFile + ' --hdf5 '
@@ -452,7 +455,8 @@ AppendMyLogBook, Event, cmd_text
 ;move to staging area
 CD, CNstruct.stagingArea
 spawn, cmd, listening, translation_error
-IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
+IF (translation_error[0] NE '') THEN BEGIN 
+;a problem in the translation occured
     putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
     AppendMyLogBook, Event, err_listening
     error_status = 1
@@ -464,7 +468,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION MultiPola_renamingFile, Event, CNstruct
 
@@ -497,19 +501,20 @@ ENDELSE
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 PRO SinglePola_message, Event, CNstruct
 
 CNstruct.multi_pola_state = 0            ;we are working in normal mode
 putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
 AppendMyLogBook, Event, ''
-AppendMyLogBook, Event, 'Working with the normal mode (no multi-polarization states)'
+AppendMyLogBook, Event, 'Working with the normal mode ' + $
+  '(no multi-polarization states)'
 AppendMyLogBook, Event, ''
 
 END
 
-;###############################################################################
+;##############################################################################
 
 ;change name of histo from <instr>_<run_number>_neutron_histo.dat to
 ;<instr>_<run_number>_neutron_histo_mapped.dat
@@ -531,8 +536,10 @@ ENDIF ELSE BEGIN
         cmd_text = 'cmd: ' + cmd + ' ... ' + CNstruct.PROCESSING
         AppendMyLogBook, Event, cmd_text
         spawn, cmd, listening, renaming_error
-        IF (renaming_error[0] NE '') THEN BEGIN ;a problem in the renaming occured
-            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
+        IF (renaming_error[0] NE '') THEN BEGIN $
+;a problem in the renaming occured
+            putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, $
+              CNstruct.PROCESSING
             AppendMyLogBook, Event, renaming_error
             error_status = 1
         ENDIF ELSE BEGIN
@@ -548,7 +555,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION SinglePola_mergingXmlFiles, Event, CNstruct
 error_status = 0
@@ -575,12 +582,13 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION SinglePola_translatingFiles, Event, CNstruct
 error_status = 0
 AppendMyLogBook, Event, '-> Translating the files:'
-CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + CNstruct.instrument $
+CNstruct.nxtTranslationFile = CNstruct.stagingArea + '/' + $
+  CNstruct.instrument $
   + '_' + $
   CNstruct.RunNumber + '.nxt'
 AppendMyLogBook, Event, ' Translation file: ' + CNstruct.nxtTranslationFile 
@@ -594,7 +602,8 @@ ENDIF ELSE BEGIN
 ;move to staging area
     CD, CNstruct.stagingArea
     spawn, cmd, listening, translation_error
-    IF (translation_error[0] NE '') THEN BEGIN ;a problem in the translation occured
+    IF (translation_error[0] NE '') THEN BEGIN 
+;a problem in the translation occured
         putTextAtEndOfMyLogBook, Event, CNstruct.FAILED, CNstruct.PROCESSING
         AppendMyLogBook, Event, translation_error
         error_status = 1
@@ -606,7 +615,7 @@ AppendMyLogBook, Event, ''
 RETURN, error_status
 END
 
-;###############################################################################
+;##############################################################################
 
 ;move final nexus file(s) into predefined location(s)
 PRO MovingNexusFileMessage, Event, CNStruct
@@ -633,7 +642,7 @@ ENDELSE
 AppendMyLogBook, Event, ''
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION GetDestinationFolder, Event, CNstruct
 ;Main output path
@@ -643,7 +652,8 @@ IF (CNstruct.output_path NE '') THEN BEGIN
     message = '-> Check if there is a Main Output Path ... YES (' + $
       CNstruct.output_path + ')'
     AppendMyLogBook, Event, message
-    message = '--> Check if output path exists ........... ' + CNstruct.PROCESSING
+    message = '--> Check if output path exists ........... ' + $
+      CNstruct.PROCESSING
     AppendMyLogBook, Event, message
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
         putTextAtEndOfMyLogBook, Event, 'YES' , CNstruct.PROCESSING
@@ -665,7 +675,7 @@ AppendMyLogBook, Event, ''
 RETURN, status
 END
 
-;###############################################################################
+;##############################################################################
 
 FUNCTION CheckDestinationFolder, Event
 ;Main output path
@@ -685,7 +695,7 @@ ENDELSE
 RETURN, status
 END
 
-;###############################################################################
+;##############################################################################
 
 ;get instrument Shared Folder
 FUNCTION getInstrumentSharedFolder, Event, CNstruct
@@ -700,7 +710,8 @@ IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
         AppendMyLogBook, Event, message
     ENDIF ELSE BEGIN
         IF (FILE_TEST(CNstruct.InstrSharedFolder,/DIRECTORY)) THEN BEGIN
-            message = '--> Check if Instrument Shared Folder exists ....... YES'
+            message = '--> Check if Instrument Shared Folder exists ' + $
+              '....... YES'
             AppendMyLogBook, Event, message
         ENDIF ELSE BEGIN
             message = '--> Check if Instrument Shared Folder exists ....... NO'
@@ -719,27 +730,7 @@ AppendMyLogBook, Event, ''
 RETURN, status
 END
 
-;###############################################################################
-
-;get instrument Shared Folder
-FUNCTION CheckInstrumentSharedFolder, Event
-status = 1
-IF (isInstrSharedFolderSelected(Event)) THEN BEGIN
-    IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ENDIF ELSE BEGIN
-        IF (FILE_TEST(InstrSharedFolder,/DIRECTORY)) THEN BEGIN
-        ENDIF ELSE BEGIN
-            status = 0
-        ENDELSE
-    ENDELSE
-ENDIF ELSE BEGIN
-    status = 0
-ENDELSE
-AppendMyLogBook, Event, ''
-RETURN, status
-END
-
-;###############################################################################
+;##############################################################################
 
 FUNCTION getProposalSharedFolder, Event, CNstruct
 status = 1
@@ -752,11 +743,13 @@ IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
       CNstruct.ProposalSharedFolder + ')'
     AppendMyLogBook, Event, message
     IF (!VERSION.os EQ 'darwin') THEN BEGIN
-            message = '--> Check if Proposal Shared Folder exists ......... YES'
+        message = '--> Check if Proposal Shared Folder exists ' + $
+          '......... YES'
             AppendMyLogBook, Event, message        
     ENDIF ELSE BEGIN
         IF (FILE_TEST(CNstruct.ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
-            message = '--> Check if Proposal Shared Folder exists ......... YES'
+            message = '--> Check if Proposal Shared Folder exists ' + $
+              '......... YES'
             AppendMyLogBook, Event, message
         ENDIF ELSE BEGIN
             message = '--> Check if Proposal Shared Folder exists ......... NO'
@@ -775,26 +768,7 @@ AppendMyLogBook, Event, ''
 RETURN, status
 END
 
-;###############################################################################
-
-FUNCTION CheckProposalSharedFolder, Event
-status = 1
-IF (isProposalSharedFolderSelected(Event)) THEN BEGIN
-    IF (!VERSION.os EQ 'darwin') THEN BEGIN
-    ENDIF ELSE BEGIN
-        IF (FILE_TEST(ProposalSharedFolder,/DIRECTORY)) THEN BEGIN
-        ENDIF ELSE BEGIN
-            status = 0
-        ENDELSE
-    ENDELSE
-ENDIF ELSE BEGIN
-    status = 0
-ENDELSE
-AppendMyLogBook, Event, ''
-RETURN, status
-END
-
-;###############################################################################
+;##############################################################################
 
 FUNCTION MovingFiles, Event, CNstruct, text
 error_status = 0
@@ -837,7 +811,8 @@ IF (CNstruct.output_path NE '' OR $
                   ') exists ... ' + CNstruct.PROCESSING
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-                    AppendMyLogBook, Event, '-> Remove Content of NeXus folder:'
+                    AppendMyLogBook, Event, '-> Remove Content of ' + $
+                      'NeXus folder:'
                     cmd_rm = 'rm -f ' + CNstruct.NeXus_folder + '*.nxs'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
                       CNstruct.PROCESSING
@@ -863,7 +838,8 @@ IF (CNstruct.output_path NE '' OR $
                               CNstruct.PROCESSING
                         ENDELSE
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, 'NO', $
+                          CNstruct.PROCESSING
                         cmd_spawn = 'mkdir -p ' + CNstruct.Nexus_folder 
                         AppendMyLogBook, Event, 'Create NeXus folder:'
                         cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + $
@@ -886,8 +862,8 @@ IF (CNstruct.output_path NE '' OR $
                   ') exists ... ' + CNstruct.PROCESSING
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, 'YES', CNstruct.PROCESSING
-                    AppendMyLogBook, Event, '-> Remove Content of preNeXus ' + $
-                      'folder:'
+                    AppendMyLogBook, Event, '-> Remove Content of ' + $
+                      'preNeXus folder:'
                     cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
                     cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
                       CNstruct.PROCESSING
@@ -899,8 +875,8 @@ IF (CNstruct.output_path NE '' OR $
                       BEGIN
                         putTextAtEndOfMyLogBook, Event, 'YES', $
                           CNstruct.PROCESSING
-                        AppendMyLogBook, Event, '-> Remove Content of preNeXus ' + $
-                          'folder:'
+                        AppendMyLogBook, Event, '-> Remove Content of ' + $
+                          'preNeXus folder:'
                         cmd_rm = 'rm -f ' + CNstruct.preNeXus_folder + '*.*'
                         cmd_rm_text = 'cmd: ' + cmd_rm + ' ... ' + $
                           CNstruct.PROCESSING
@@ -914,7 +890,8 @@ IF (CNstruct.output_path NE '' OR $
                               CNstruct.PROCESSING
                         ENDELSE
                     ENDIF ELSE BEGIN
-                        putTextAtEndOfMyLogBook, Event, 'NO', CNstruct.PROCESSING
+                        putTextAtEndOfMyLogBook, Event, 'NO', $
+                          CNstruct.PROCESSING
                         cmd_spawn = 'mkdir -p ' + CNstruct.preNexus_folder 
                         AppendMyLogBook, Event, 'Create preNeXus folder:'
                         cmd_spawn_text = 'cmd: ' + cmd_spawn + ' ... ' + $
@@ -934,10 +911,12 @@ IF (CNstruct.output_path NE '' OR $
                 
 ;copy *.xml files from prenexus path
                 AppendMyLogBook, Event, $
-                  'Copy runinfo.xml, cvinfo.xml ... files from DAS/preNeXus folder:'
+                  'Copy runinfo.xml, cvinfo.xml ... files from ' + $
+                  'DAS/preNeXus folder:'
                 cmd_xml = 'cp ' + CNstruct.prenexus_path + '/*.xml' $
                   + ' ' + CNstruct.preNeXus_folder
-                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
+                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + $
+                  CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
@@ -959,7 +938,8 @@ IF (CNstruct.output_path NE '' OR $
                   'DAS/preNeXus folder:'
                 cmd_xml = 'cp ' + CNStruct.prenexus_path + '/../*.xml' $
                   + ' ' + CNstruct.preNeXus_folder
-                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + CNstruct.PROCESSING
+                cmd_xml_text = 'cmd: ' + cmd_xml + ' ... ' + $
+                  CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_xml_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
@@ -981,7 +961,8 @@ IF (CNstruct.output_path NE '' OR $
                   'Copy translation file from Staging Area:'
                 cmd_nxt = 'cp ' + CNstruct.StagingArea + '/*.nxt' + ' ' + $
                   CNstruct.preNeXus_folder
-                cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + CNstruct.PROCESSING
+                cmd_nxt_text = 'cmd: ' + cmd_nxt + ' ... ' + $
+                  CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_nxt_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
@@ -1002,7 +983,8 @@ IF (CNstruct.output_path NE '' OR $
                   'Copy *.dat files from DAS/preNeXus folder:'
                 cmd_dat = 'cp ' + CNstruct.prenexus_path + '/*.dat' + ' ' + $
                   CNstruct.preNeXus_folder
-                cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + CNstruct.PROCESSING
+                cmd_dat_text = 'cmd: ' + cmd_dat + ' ... ' + $
+                  CNstruct.PROCESSING
                 AppendMyLogBook, Event, cmd_dat_text
                 IF (!VERSION.os EQ 'darwin') THEN BEGIN
                     putTextAtEndOfMyLogBook, Event, CNstruct.OK , $
@@ -1100,5 +1082,5 @@ IF (CNstruct.output_path NE '' OR $
 ENDIF
 RETURN, error_status
 END
-;###############################################################################
+;##############################################################################
 
