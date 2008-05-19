@@ -1,5 +1,7 @@
 PRO BSSreduction_RunCommandLine, Event
 
+activate_button, event, 'submit_button', 0
+
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
@@ -45,6 +47,9 @@ IF (err_listening[0] NE '') THEN BEGIN
     MessageToRemove = PROCESSING
     putTextAtEndOfLogBookLastLine, Event, MessageToAdd, MessageToRemove
 
+;display listening
+    AppendLogBookMessage, Event, listening
+
 ;display err_listening
     AppendLogBookMessage, Event, err_listening
     
@@ -83,5 +88,7 @@ ENDELSE
 
 ;turn off hourglass
 widget_control,hourglass=0
+
+activate_button, event, 'submit_button', 1
 
 END
