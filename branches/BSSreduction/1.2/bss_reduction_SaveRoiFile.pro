@@ -1,25 +1,54 @@
+FUNCTION GenerateDateStamp
+dateUnformated = SYSTIME()    
+DateArray      = STRSPLIT(dateUnformated,' ',/EXTRACT) 
+DateIso        = STRCOMPRESS(DateArray[4]) + 'y_'
+month = 0
+CASE (DateArray[1]) OF
+    'Jan':month='01m'
+    'Feb':month='02m'
+    'Mar':month='03m'
+    'Apr':month='04m'
+    'May':month='05m'
+    'Jun':month='06m'
+    'Jul':month='07m'
+    'Aug':month='08m'
+    'Sep':month='09m'
+    'Oct':month='10m'
+    'Nov':month='11m'
+    'Dec':month='12m'
+ENDCASE
+DateIso += strcompress(month,/remove_all) + '_'
+DateIso += strcompress(DateArray[2],/remove_all) + 'd_'
+;change format of time
+time = strsplit(DateArray[3],':',/extract)
+DateIso += strcompress(time[0],/remove_all) + 'h_'
+DateIso += strcompress(time[1],/remove_all) + 'mn'
+RETURN, DateIso
+END
+
+
+
+
+
 PRO BSSreduction_CreateRoiFileName, Event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
-
-path = (*global).roi_path
+path       = (*global).roi_path
 first_part = 'BASIS_'
-
-RunNumber = (*global).RunNumber
+RunNumber  = (*global).RunNumber
 IF (RunNumber NE '') THEN BEGIN
-    first_part += strcompress(RunNumber,/remove_all) + '_'
+    first_part += STRCOMPRESS(RunNumber,/REMOVE_ALL) + '_'
 ENDIF
-
-get_iso8601, second_part
+DateIso  = GenerateDateStamp()
 ext_part = (*global).roi_ext
-
-name = path + first_part + second_part + ext_part
-
+name     = path + first_part + DateIso + ext_part
 ;put new name into field
 putRoiFileName, Event, name
-
 END
+
+
+
 
 
 
