@@ -123,7 +123,7 @@ output_text = { size  : [output_button.size[0]+XYoff[0],$
                          output_button.size[1]+XYoff[1],$
                          305,35],$
                 uname : 'output_path_text',$
-                value : '~/local/'}
+                value : '~/'}
 
 XYoff = [0,40]
 shared_base = { size : [output_button.size[0]+XYoff[0],$
