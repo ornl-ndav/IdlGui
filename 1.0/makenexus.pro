@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO BuildGui, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
@@ -40,7 +40,8 @@ CD, CURRENT=current_folder
 APPLICATION = 'MakeNeXus'
 VERSION     = '1.0.9'
 
-;define initial global values - these could be input via external file or other means
+;define initial global values - these could be input via external file or
+;other means
 
 ;get ucams of user if running on linux
 ;and set ucams to 'j35' if running on darwin
@@ -111,7 +112,7 @@ global = ptr_new ({ EnteringProposal:       1,$
                     prenexus_path:        '',$
                     prenexus_path_array:  ptr_new(0L),$
                     RunNumber_array:      ptr_new(0L),$
-                    output_path_1:        '~/local',$
+                    output_path_1:        '~/',$
                     staging_folder:       '~/local/.makenexus_staging',$
                     processing:           '(PROCESSING)',$
                     ok:                   'OK',$
