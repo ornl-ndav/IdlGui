@@ -20,6 +20,9 @@ ENDIF
 ;re-run the CommandLineGenerator
 REFreduction_CommandLineGenerator, Event
 
+;disable RunCommandLine
+ActivateWidget, Event,'start_data_reduction_button', 0
+
 ;get command line to generate
 cmd = getTextFieldValue(Event,'reduce_cmd_line_preview')
 
@@ -33,8 +36,8 @@ putLogBookMessage, Event, cmd_text, Append=1
 
 spawn, cmd, listening, err_listening
 
-if (err_listening[0] NE '') then begin
-
+IF (err_listening[0] NE '') THEN BEGIN
+    
     (*global).DataReductionStatus = 'ERROR'
     LogBookText = getLogBookText(Event)
     Message = '* ERROR! *'
@@ -42,26 +45,31 @@ if (err_listening[0] NE '') then begin
     ErrorLabel = 'ERROR MESSAGE:'
     putLogBookMessage, Event, ErrorLabel, Append=1
     putLogBookMessage, Event, err_listening, Append=1
-
+    
     status_text = 'Data Reduction ........ ERROR! (-> Check Log Book)'
-    putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
-
-endif else begin
-
+    putTextFieldValue, event, 'data_reduction_status_text_field', $
+      status_text, 0
+    
+ENDIF ELSE BEGIN
+    
     (*global).DataReductionStatus = 'OK'
     LogBookText = getLogBookText(Event)
     Message = 'Done'
     putTextAtEndOfLogBookLastLine, Event, LogBookText, Message, PROCESSING
-
+    
     status_text = 'Data Reduction ........ DONE'
-    putTextFieldValue, event, 'data_reduction_status_text_field', status_text, 0
-
+    putTextFieldValue, event, 'data_reduction_status_text_field', $
+      status_text, 0
+    
     IF ((*global).debugger) THEN BEGIN
 ;We can retrieve info for Batch Tab
         RetrieveBatchInfoAtLoading, Event
     ENDIF
     PopulateBatchTableWithCMDinfo, Event, cmd
+    
+ENDELSE
 
-END
+;disable RunCommandLine
+ActivateWidget, Event,'start_data_reduction_button', 1
 
 END

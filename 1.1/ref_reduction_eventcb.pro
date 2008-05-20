@@ -14,7 +14,9 @@ if (prevDataNexusIndex NE currDataNexusIndex) then begin
     (*global).PreviousDataNexusListSelected = currDataNexusIndex
 
 ;get full name of index selected
-    currFullDataNexusName = getDropListSelectedValue(Event, 'data_list_nexus_droplist')
+    currFullDataNexusName = $
+      getDropListSelectedValue(Event, $
+                               'data_list_nexus_droplist')
 
 ;display NXsummary of that file
     RefReduction_NXsummary, $
@@ -34,8 +36,9 @@ id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
 prevNormNexusIndex = (*global).PreviousNormNexusListSelected
-currNormNexusIndex = getDropListSelectedIndex(Event, $
-                                              'normalization_list_nexus_droplist')
+currNormNexusIndex = $
+  getDropListSelectedIndex(Event, $
+                           'normalization_list_nexus_droplist')
 
 if (prevNormNexusIndex NE currNormNexusIndex) then begin
 
@@ -125,14 +128,16 @@ widget_control,id,get_uvalue=global
 widget_control,/hourglass
 
 ;get full name of index selected
-currFullDataNexusName = getDropListSelectedValue(Event, 'data_list_nexus_droplist')
+currFullDataNexusName = $
+  getDropListSelectedValue(Event, 'data_list_nexus_droplist')
 
 ;display message in data log book
 InitialStrarr = getDataLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfDataLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-DataLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+DataLogBookMessage = 'Opening selected file ..... ' + $
+  (*global).processing_message
 putDataLogBookMessage, Event, DataLogBookMessage, Append=1
 
 ;map=0 the base
@@ -208,29 +213,33 @@ widget_control,id,get_uvalue=global
 widget_control,/hourglass
 
 ;get full name of index selected
-currFullNormNexusName = getDropListSelectedValue(Event, $
-                                                 'normalization_list_nexus_droplist')
+currFullNormNexusName = $
+  getDropListSelectedValue(Event, $
+                           'normalization_list_nexus_droplist')
 
 ;display message in data log book
 InitialStrarr = getNormalizationLogBookText(Event)
 MessageToAdd = ' OK'
 putTextAtEndOfNormalizationLogBookLastLine, Event, InitialStrarr, MessageToAdd
 
-NormLogBookMessage = 'Opening selected file ..... ' + (*global).processing_message
+NormLogBookMessage = 'Opening selected file ..... ' + $
+  (*global).processing_message
 putNormalizationLogBookMessage, Event, NormLogBookMessage, Append=1
 
 ;map=0 the base
 MapBase, Event, 'norm_list_nexus_base', 0
 
 ;get data run number
-NormRunNumber = getTextFieldValue(Event,'load_normalization_run_number_text_field')
+NormRunNumber = getTextFieldValue(Event, $
+                                  'load_normalization_run_number_text_field')
 
 ;Open That NeXus file
 OpenNormNexusFile, Event, NormRunNumber, currFullNormNexusName
 
 IF ((*global).isHDF5format) THEN BEGIN
 
-    REFreduction_Plot1D2DNormalizationFile, Event ;then plot data file (1D and 2D)
+    REFreduction_Plot1D2DNormalizationFile, Event 
+;then plot data file (1D and 2D)
     
 ;get global structure
     id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -299,7 +308,8 @@ widget_control,id,get_uvalue=global
 ;first run the command line
 RefReduction_RunCommandLine, Event
 
-IF ((*global).DataReductionStatus EQ 'OK') then begin ;data reduction was successful
+IF ((*global).DataReductionStatus EQ 'OK') then begin 
+;data reduction was successful
     
     instrument      = (*global).instrument
     IntermPlots     = (*global).IntermPlots
@@ -435,7 +445,8 @@ PRO REFreduction_NormNxsummaryZoomTab, Event
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 
-tab_id = widget_info(Event.top,find_by_uname='normalization_nxsummary_zoom_tab')
+tab_id = widget_info(Event.top, $
+                     find_by_uname='normalization_nxsummary_zoom_tab')
 CurrTabSelect = widget_info(tab_id,/tab_current)
 PrevTabSelect = (*global).PrevNormZoomTabSelect
 
@@ -462,7 +473,8 @@ END
 ;this function is reached by the LOAD button for the DATA file
 PRO REFreductionEventcb_LoadAndPlotDataFile, Event
 
-REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus ;first Load the data file
+REFreduction_LoadDataFile, Event, isNeXusFound, NbrNexus 
+;first Load the data file
 
 ;get global structure
 widget_control,Event.top,get_uvalue=global
@@ -472,9 +484,11 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
     
     IF (isNeXusFound) THEN BEGIN
         
-        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
+        IF ((*global).isHDF5format) THEN BEGIN 
+;continue only if it's a HDF5 file
             
-            REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+            REFreduction_Plot1D2DDataFile, Event 
+;then plot data file (1D and 2D)
             
 ;get global structure
             id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -490,7 +504,8 @@ IF (isArchivedDataNexusDesired(Event)) THEN BEGIN
             
 ;display full path to NeXus in Data log book
             full_nexus_name = (*global).data_full_nexus_name
-            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            text = '(Nexus path: ' + $
+              strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
         ENDIF
@@ -500,10 +515,12 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
     
     IF (NbrNexus EQ 1) THEN BEGIN
 
-        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file  
+        IF ((*global).isHDF5format) THEN BEGIN 
+;continue only if it's a HDF5 file  
 
 ;check also format of file loaded in the list            
-            REFreduction_Plot1D2DDataFile, Event ;then plot data file (1D and 2D)
+            REFreduction_Plot1D2DDataFile, Event 
+;then plot data file (1D and 2D)
             
 ;get global structure
             id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
@@ -519,7 +536,8 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             
 ;display full path to NeXus in Data log book
             full_nexus_name = (*global).data_full_nexus_name
-            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            text = '(Nexus path: ' + $
+              strcompress(full_nexus_name,/remove_all) + ')'
             putDataLogBookMessage, Event, text, Append=1
             
         ENDIF
@@ -545,7 +563,8 @@ REFreduction_LoadNormalizationFile, Event, isNeXusFound, NbrNexus
 if (isArchivedNormNexusDesired(Event)) then begin 
     if (isNeXusFound) then begin 
         
-        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
+        IF ((*global).isHDF5format) THEN BEGIN 
+;continue only if it's a HDF5 file
             
 ; then plot data file (1D and 2D)
             REFreduction_Plot1D2DNormalizationFile, Event 
@@ -560,7 +579,8 @@ if (isArchivedNormNexusDesired(Event)) then begin
             
 ;display full path to NeXus in Norm log book
             full_nexus_name = (*global).norm_full_nexus_name
-            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            text = '(Nexus path: ' + $
+              strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
 
         ENDIF
@@ -571,7 +591,8 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
 
     IF (NbrNexus EQ 1) THEN BEGIN
 
-        IF ((*global).isHDF5format) THEN BEGIN ;continue only if it's a HDF5 file
+        IF ((*global).isHDF5format) THEN BEGIN 
+;continue only if it's a HDF5 file
 
 ;the plot norm file (1D and 2D)
             REFreduction_Plot1D2DNormalizationFile, Event 
@@ -590,7 +611,8 @@ ENDIF ELSE BEGIN                ;get full list of nexus file
             
 ;display full path to NeXus in Norm log book
             full_nexus_name = (*global).norm_full_nexus_name
-            text = '(Nexus path: ' + strcompress(full_nexus_name,/remove_all) + ')'
+            text = '(Nexus path: ' + $
+              strcompress(full_nexus_name,/remove_all) + ')'
             putNormalizationLogBookMessage, Event, text, Append=1
 
         ENDIF
@@ -707,7 +729,8 @@ widget_control,id,get_uvalue=global
 if ((*global).NormNexusFound) then begin
 
     prevIndex = (*global).PreviousNormContrastDroplistIndex
-    currIndex = getDropListSelectedIndex(Event,'normalization_contrast_droplist')
+    currIndex = getDropListSelectedIndex(Event, $
+                                         'normalization_contrast_droplist')
 
     if (prevIndex Ne currIndex) then begin
         REFreduction_refreshNormPlot, Event
@@ -793,18 +816,19 @@ REFreduction_NormBackgroundPeakSelection, Event
 END
 
 
-;HELP --------------------------------------------------------------------------
+;HELP -------------------------------------------------------------------------
 PRO start_help 
 ONLINE_HELP, book='/SNS/software/idltools/help/REFreduction/ref_reduction.adp'
 END
 
-;MY HELP -----------------------------------------------------------------------
+;MY HELP ----------------------------------------------------------------------
 PRO start_my_help, event
 ;get global structure
 id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
 widget_control,id,get_uvalue=global
 BRANCH = (*global).branch
-ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/REFreduction/' + BRANCH + '/REFreductionHELP/ref_reduction.adp'
+ONLINE_HELP, book='/SNS/users/j35/SVN/IdlGui/branches/REFreduction/' + $
+  BRANCH + '/REFreductionHELP/ref_reduction.adp'
 END
 
 
