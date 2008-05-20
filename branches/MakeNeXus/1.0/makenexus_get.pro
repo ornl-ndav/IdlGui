@@ -328,7 +328,7 @@ IF (err_listening[0] EQ '') THEN BEGIN ;at least one folder found
     ENDFOR
     ProposalList[sz] = 'ALL PROPOSAL FOLDERS'
 ENDIF ELSE BEGIN
-    ProposalList = 'FOLDER IS EMPTY !'
+    ProposalList = ['FOLDER IS EMPTY !']
 ENDELSE
 RETURN, ProposalList
 END
