@@ -73,12 +73,21 @@ validateButton, Event, 'archived_button', status
 END
 
 ;------------------------------------------------------------------------------
-;This procedure allows the debugger to see the bottom of the log book
+;This procedure allows the debugger to see the bottom of my log book
 PRO showLastLogBookLine, Event
 LogBook = getMyLogBookText(Event)
-sz = (SIZE(LogBook))(1)
-id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
+sz      = (SIZE(LogBook))(1)
+id      = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
 WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=(sz-10)
+END
+
+;------------------------------------------------------------------------------
+;This procedure allows the debugger to see the bottom of the log book
+PRO showLastUserLogBookLine, Event
+LogBook = getLogBookText(Event)
+sz      = (SIZE(LogBook))(1)
+id      = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
+WIDGET_CONTROL, id, SET_TEXT_TOP_LINE=(sz-5)
 END
 
 ;------------------------------------------------------------------------------

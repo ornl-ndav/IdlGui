@@ -47,8 +47,8 @@ END
 ;------------------------------------------------------------------------------
 PRO archived_nexus, Event
 
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
-widget_control,id,get_uvalue=global
+id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE')
+WIDGET_CONTROL,id,GET_UVALUE=global
 
 ;retrieve parameters
 CommandToRun        = (*global).ArchivedCommand
@@ -56,54 +56,73 @@ Ucams               = (*global).ucams
 StagingFolderBefore = getOutputPath(Event)
 Runs                = (*(*global).RunsToArchived)
 sz                  = (size(Runs))(1)
+;general parameters
+OK         = (*global).ok
+FAILED     = (*global).failed
+PROCESSING = (*global).processing
+
 ;if ~ is part of the StagingFolder, replace it by ~<ucams>
 StagingFolderAfter  = ReformatStagingFolder(StagingFolderBefore, ucams)
 
 message = ''
+AppendMyLogBook, Event, message
 message = '-*-*-*-*-*-*-*-*-*- Archiving NeXus file(s) -*-*-*-*-*-*-*-*-*-'
 AppendMyLogBook, Event, message
+message = '> General Parameters:'
+AppendMyLogBook, Event, message
+text    = '-> Ucams: ' + Ucams
+AppendMyLogBook, Event, text
+text    = '-> General Command to Run (CommandToRun): ' + CommandToRun
+AppendMyLogBook, Event, text
+text    = '-> Staging Folder (StagingFolder):'
+AppendMyLogBook, Event, text
+text    = '--> Before reformatting: ' + StagingFolderBefore
+AppendMyLogBook, Event, text
+text    = '--> After reformatting : ' + StagingFolderAfter
+AppendMyLogBook, Event, text
+message = ''
+AppendLogBook, Event, message
+message = '#### ARCHIVING RUNS ####'
+AppendLogBook, Event, message
+text    = '-> Please Enter your ucams password in the shell' + $
+  ' window just after PASSWORD: and then press ENTER: ... '
+appendLogBook, Event, text
+
 FOR i=0,(sz-1) DO BEGIN
     IF (Runs[i] NE 0) THEN BEGIN
-        text = 'Archiving Runs                : ' + STRCOMPRESS(Runs[i], $
-                                                                /REMOVE_ALL)
+        message = ''
+        AppendMyLogBook, Event, message
+        text = '-> Archiving Runs         : ' + STRCOMPRESS(Runs[i], $
+                                                               /REMOVE_ALL)
         AppendMyLogBook, Event, text
-        text = 'Command to run (CommandToRun) : ' + CommandToRun
-        AppendMyLogBook, Event, text
-        text = 'Ucams                         : ' + Ucams
-        AppendMyLogBook, Event, text
-        text = 'Staging Folder (StagingFolder):'
-        AppendMyLogBook, Event, text
-        text = '  -> Before reformatting      : ' + StagingFolderBefore
-        AppendMyLogBook, Event, text
-        text = '  -> After reformatting       : ' + StagingFolderAfter
-        AppendMyLogBook, Event, text
-        text = 'Folder name (FolderName)      : ' + STRCOMPRESS(Runs[i], $
-                                                                /REMOVE_ALL)
-        AppendMyLogBook, Event, text
-        
-        AppendMyLogBook, Event, '--- Running Command ---'
         archived_cmd = CommandToRun + ' ' + StagingFolderAfter + $
           STRCOMPRESS(Runs[i],/REMOVE_ALL)
-        text = 'Command To Archived: ' + archived_cmd + ' ... ' + $
-          (*global).processing
+        text = '-> Command to Archived Run: ' + archived_cmd + ' ... ' + $
+          PROCESSING
         AppendMyLogBook, Event, text
-        
+;Running command
         spawn, 'xterm -e ' + archived_cmd, listening, err_listening
+        text = '-> Archiving Run ' + STRCOMPRESS(Runs[i]) + ' ... ' + $
+          (*global).processing
+        AppendLogBook, Event, text
         IF (err_listening[0] NE '' AND $
             listening NE '') THEN BEGIN
-            putTextAtEndOfMyLogBook, Event, (*global).failed, (*global).processing
-            message = 'ERROR message (listening) is:'
+            putTextAtEndOfMyLogBook, Event, FAILED, PROCESSING
+            message = '-->ERROR message (listening) is:'
             AppendMyLogBook, Event, message
             AppendMyLogBook, Event, listening
-            message = 'ERROR message (err_listening) is:'
+            message = '--> ERROR message (err_listening) is:'
             AppendMyLogBook, Event, message
             AppendMyLogBook, Event, err_listening
+            putTextAtEndOfLogBook, Event, FAILED, PROCESSING
         ENDIF ELSE BEGIN
-            putTextAtEndOfMyLogBook, Event, (*global).ok, (*global).processing
+            putTextAtEndOfMyLogBook, Event, OK, PROCESSING
+            putTextAtEndOfLogBook, Event, OK, PROCESSING
         ENDELSE
     ENDIF
     message = '-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-'
     AppendMyLogBook, Event, message
 ENDFOR
+showLastUserLogBookLine, Event
 END
     
