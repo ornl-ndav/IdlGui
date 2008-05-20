@@ -240,15 +240,58 @@ XYfactor               = {Xfactor:(*global).Xfactor, $
                           Yfactor:(*global).Yfactor}
 default_pixel_excluded = intarr((*global).pixel_excluded_size)
 
-;default exclusion are tubes 56-63 and 120-127
-for j=0,1 do begin
-    for i=3584L,4095L do begin
+;Define Default Exclusion ROI file
+FOR j=0,1 DO BEGIN ;bank1 and bank2
+;Exclude tubes 56-63 and 120-127
+    FOR i=3584L,4095L DO BEGIN
         default_pixel_excluded[i+j*4096L]=1
-    endfor
-endfor
+    ENDFOR
+ENDFOR
+
+meth = 1
+
+IF (meth EQ 1) THEN BEGIN
+    
+    list1 = indgen(5)           ;row 0-5
+    list2 = indgen(63-48)+49    ;row 49-63
+    list3 = indgen(15)+4096L    ;row 64-78
+    list4 = indgen(63-57)+58+4096L ;row 122-127
+    
+    FOR i=1,55 DO BEGIN
+        list1 = [list1, indgen(5) + i*64]
+        list2 = [list2, indgen(63-48)+49 + i*64]
+        list3 = [list3, indgen(15)+4096L + i*64]
+        list4 = [list4, indgen(63-57)+58+4096L + i*64]
+    ENDFOR
+    
+    default_pixel_excluded[[list1,list2,list3,list4]] = 1
+    
+ENDIF ELSE BEGIN
+    
+    FOR i=0,55 DO BEGIN
+;Exclude Rows 0-5 of bank1
+        FOR j=0,5 DO BEGIN
+            default_pixel_excluded[i*64+j]=1
+        ENDFOR
+;Exclude Rows 49-63 of bank1
+        FOR j=49,63 DO BEGIN
+            default_pixel_excluded[i*64+j]=1
+        ENDFOR
+;Exclude Rows 64-78 of bank2
+        FOR j=0,14 DO BEGIN
+            default_pixel_excluded[i*64+j+4096L]=1
+        ENDFOR
+;Exclude Rows 122-127 of bank2
+        FOR j=58,63 DO BEGIN
+            default_pixel_excluded[i*64+j+4096L]=1
+        ENDFOR
+    ENDFOR
+
+ENDELSE
+
 (*(*global).default_pixel_excluded) = default_pixel_excluded
-(*(*global).pixel_excluded) = default_pixel_excluded
-(*(*global).pixel_excluded_base) = default_pixel_excluded
+(*(*global).pixel_excluded)         = default_pixel_excluded
+(*(*global).pixel_excluded_base)    = default_pixel_excluded
 
 (*(*global).WidgetsToActivate) = ['load_roi_file_button',$
                                   'save_roi_file_button',$

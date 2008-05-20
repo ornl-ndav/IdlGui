@@ -67,6 +67,9 @@ ENDIF ELSE BEGIN
 ;populate ROI file name
     BSSreduction_CreateRoiFileName, Event
 
+;plot ROI
+    PlotIncludedPixels, Event
+
 ;activate button
     activate_status = 1
     
