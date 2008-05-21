@@ -6,8 +6,8 @@
 FUNCTION getGlobalVariable, var
 CASE (var) OF
 ;number of columns in the Table (active/data/norm/s1/s2...)
-    'ColumnIndexes' : RETURN, 7 
-    'NbrColumn'     : RETURN, 8
+    'ColumnIndexes' : RETURN, 8 
+    'NbrColumn'     : RETURN, 9
     'RowIndexes'    : RETURN, 19
     'NbrRow'        : RETURN, 20
     'BatchFileHeadingLines' : RETURN, 3
