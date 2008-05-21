@@ -1,8 +1,8 @@
 FUNCTION BrowseRunNumber, Event, $
-                     default_extension, $
-                     filter,$
-                     title,$
-                     path
+                          default_extension, $
+                          filter,$
+                          title,$
+                          path
 
 full_file_name = DIALOG_PICKFILE(DEFAULT_EXTENSION = default_extension,$
                                  FILTER            = filter,$
