@@ -44,12 +44,12 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
       Event,$
       'reduce_data_region_of_interest_file_name',$
       file_name,$
-      0 ;do not append
-
+      0                         ;do not append
+    
 ;display preview message
     Message = 'Preview of ' + file_name
     putLabelValue, Event, 'left_data_interaction_help_message_help', Message
-
+    
 ;get instrument
     instrument = (*global).instrument
     
@@ -142,7 +142,8 @@ if (YNbr LE 1) then begin
     
 ;display error message saying that selection is invalid
 Message = '* E R R O R *'
-putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
+putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+  Message
 
 Message = 'Normalization Background Selection is invalid !'
 putTextFieldValue, $
@@ -168,7 +169,8 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
 
 ;display preview message
     Message = 'Preview of ' + file_name
-    putLabelValue, Event, 'left_normalization_interaction_help_message_help', Message
+    putLabelValue, Event, 'left_normalization_interaction_help_message_help', $
+      Message
 
 ;get instrument
     instrument = (*global).instrument
@@ -181,7 +183,8 @@ endif else begin ;enough Y between Ymax and Ymin to create outpur roi file
         message = 'ERROR: The ROI file can not be saved at this location ('
         message += file_name + ')'
         putLogbookMessage, Event, message, Append=1
-        norm_message = 'ERROR saving the Normalization ROI file (check LogBook)'
+        norm_message = 'ERROR saving the Normalization ROI file ' + $
+          '(check LogBook)'
         putNormalizationLogBookMessage, Event, norm_message, Append=1
     ENDIF ELSE BEGIN
         
