@@ -622,6 +622,25 @@ END
 
 ;------------------------------------------------------------------------------
 
+PRO InstrumentMessageBox, Event, instrument
+
+RunNumber = getRunNumber(Event)
+IF (RunNumber NE 0) THEN BEGIN
+    message  = 'Do you want to search for run number ' + STRCOMPRESS(RunNumber)
+    message += ' for this instrument (' + instrument + ') ?'
+    title    = 'Please answer ...'
+    result  = DIALOG_MESSAGE(message, /QUESTION, TITLE=title)
+    IF (result EQ 'Yes') THEN BEGIN
+        run_number, Event       ;in _eventcb
+        validateOrNotGoButton, Event
+    ENDIF ELSE BEGIN ;remove run number from cw_field
+        putTextField, Event, 'run_number_cw_field',''
+    ENDELSE
+ENDIF
+END
+
+;------------------------------------------------------------------------------
+
 PRO MAIN_REALIZE, wWidget
 ;Device, Decomposed=0
 tlb = get_tlb(wWidget)

@@ -63,8 +63,8 @@ CASE Event.id OF
         IF ((size(ListOfProposal))(1) EQ 1) THEN BEGIN
             putLogBook, Event, 'Please Select another instrument !'
         ENDIF ELSE BEGIN
-            run_number, Event   ;in _eventcb
-            validateOrNotGoButton, Event
+            putLogBook, Event, ''
+            InstrumentMessageBox, Event, instrument ;_eventcb
         ENDELSE
     END
 
