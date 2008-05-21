@@ -53,7 +53,7 @@ PRO XDISPLAYFILE_write, wText, filename
   WIDGET_CONTROL, /HOURGLASS
   OPENW, unit, FILENAME, /GET_LUN, ERROR=i		;open the file and then
   IF (i lt 0) THEN BEGIN		;OK?
-	a = [ !error_state.msg, filename + ' could not be opened for writing.']  ;No
+	a = [ !error_state.msg, filename + ' could not be opened for writing.']
 	void = DIALOG_MESSAGE(a, /ERROR, DIALOG_PARENT=wText)
   ENDIF ELSE BEGIN
 	WIDGET_CONTROL, wText, GET_VALUE=txtArray
