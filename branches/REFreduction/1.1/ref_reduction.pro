@@ -330,7 +330,7 @@ global = PTR_NEW ({$
 ;Version of REFreduction Tool
                    })
                    
-BatchTable = strarr(8,20)
+BatchTable = strarr(9,20)
 (*(*global).BatchTable) = BatchTable
                    
 ;------------------------------------------------------------------------
