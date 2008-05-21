@@ -34,15 +34,20 @@
 ;
 ;      CANCELBUTTON: Set this keyword if a Cancel button is desired.
 ;      DELAY: The total time the widget should be on the display in AutoUpDate
-;           mode. The keyword applies only to AutoUpDate mode. Default is 5 seconds.
-;      STEPS: The number of steps to take in AutoUpDate mode. The keyword applies only
+;           mode. The keyword applies only to AutoUpDate mode. Default
+;           is 5 seconds.
+;      STEPS: The number of steps to take in AutoUpDate mode. The keyword
+;      applies only
 ;           to AutoUpDate mode.
-;      MESSAGE: The text of the label above the progress bar. Default is "Operation
+;      MESSAGE: The text of the label above the progress bar. Default is
+;      "Operation
 ;           in Progress...".
 ;      TITLE: ; The text of the top-level base title bar. Default is ""
 ;      COLOR: The color to draw the progress bar.
-;      XSIZE: The XSize of the progress bar in Device coordinates. Default is 150.
-;      YSIZE: The YSize of the progress bar in Device coordinates. Default is 10.
+;      XSIZE: The XSize of the progress bar in Device coordinates. Default is
+;      150.
+;      YSIZE: The YSize of the progress bar in Device coordinates. Default is
+;      10.
 ;      AUTOUPDATE: Set this keyword to be in AutoUpDate mode.
 
 ;
@@ -53,7 +58,8 @@
 ;       widget is used to generate update events. Nothing can be going on
 ;       concurrently in AutoUpDate mode. To enter AutoUpDate mode, type this:
 ;
-;          progressBar = Obj_New("SHOWPROGRESS", /AutoUpDate, Delay=2, Steps=10)
+;          progressBar = Obj_New("SHOWPROGRESS", /AutoUpDate, Delay=2,
+;          Steps=10)
 ;          progressBar->Start
 ;          Obj_Destroy, progressBar
 ;
@@ -79,7 +85,8 @@
 ;       at the end of this file.
 ;
 ;       Note that the object itself is not destroyed when calling the DESTROY
-;       method. You must explicitly destroy the object, as in the example above.
+;       method. You must explicitly destroy the object, as in the example
+;       above.
 ;
 ; METHODS:
 ;
@@ -89,11 +96,13 @@
 ;          cancelled = progressBar->CheckCancel()
 ;          IF cancelled THEN progressBar->Destroy
 ;
-;       DESTROY: Destroys the ShowProgress widgets. It does NOT destroy the object.
+;       DESTROY: Destroys the ShowProgress widgets. It does NOT destroy the
+;       object.
 ;
 ;          progressBar->Destroy
 ;
-;       GETPROPERTY: Gets the properties that can be set in the INIT method, including
+;       GETPROPERTY: Gets the properties that can be set in the INIT method,
+;       including
 ;          the parent widget ID.
 ;
 ;          progressBar->GetProperty, Steps=currentNSteps, Delay=currentDelay
@@ -108,16 +117,18 @@
 ;
 ;       SETPROPERTY: Allows the user to set the INIT parameter via keywords.
 ;
-;          progressBar->SetProperty, Color=244, XSize=200, Message='Please Wait...'
+;          progressBar->SetProperty, Color=244, XSize=200, Message='Please
+;          Wait...'
 ;
-;       START: Puts the ShowProgress bar on the display. In AutoUpDate mode, the
+;       START: Puts the ShowProgress bar on the display. In AutoUpDate mode,
+;       the
 ;          widget starts to automatically update.
 ;
 ;          progressBar->Start
 ;
-;       UPDATE: Updates the progress bar. Requires on argument, a number between 0
-;          and 100 that indicates the percent of progress bar that should be filled
-;          with a color.
+;       UPDATE: Updates the progress bar. Requires on argument, a number
+;       between 0 and 100 that indicates the percent of progress bar that
+;       should be filled with a color.
 ;
 ;          progressBar->Update, 50
 ;
@@ -132,88 +143,73 @@
 ;          receiving events on my Windows NT 4.0, SP 4 system running IDL 5.2,
 ;          IDL 5.2.1, or IDL 5.3 (beta).
 ;
-;       Note that if you specify a CANCEL button the Show Progress program CANNOT
-;       run as a MODAL widget program. Thus, user *may* be able to generate events
-;       in the calling program while this program is running.
+;       Note that if you specify a CANCEL button the Show Progress program
+;       CANNOT run as a MODAL widget program. Thus, user *may* be able to
+;       generate events in the calling program while this program is running.
 ;
 ; MODIFICATION HISTORY:
 ;       Written by:  David Fanning, 26 July 1999.
-;       Added code so that the current graphics window doesn't change. 1 September 1999. DWF.
+;       Added code so that the current graphics window doesn't change. 1
+;       September 1999. DWF.
 ;       Added yet more code for the same purpose. 3 September 1999. DWF.
-;       Added a CANCEL button and made other minor modifications. 12 Oct 1999. DWF.
+;       Added a CANCEL button and made other minor modifications. 12 Oct
+;       1999. DWF.
 ;-
 
 
 FUNCTION ShowProgress::CheckCancel
-
 ; This method checks for a CANCEL Button event. It returns 1
 ; if an event has occurred and 0 otherwise.
-
 RETURN, self.cancel
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::SetLabel, newlabel
-
 ; This method allows the widget label to be changed while
 ; the program is on the display.
-
 IF N_Elements(newlabel) EQ 0 THEN newlabel = ""
 Widget_Control, self.labelID, Set_Value=newlabel
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::SetCancel, value
-
 ; This method sets the Cancel flag.
-
 IF N_Elements(value) EQ 0 THEN value = 1
 self.cancel = value
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::SetColor, color
-
 ; This method sets the Cancel flag.
-
 IF N_Elements(color) EQ 0 THEN color = !P.Color
 self.color = color
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::Destroy
-
 ; This method takes the widget off the display.
-
 Widget_Control, self.tlb, Destroy=1
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::UpDate, percent
-
 ; This method updates the display. It should be called with
 ; manual operation. PERCENT should be a value between 0 and 100.
-
 Catch, theError
 IF theError NE 0 THEN BEGIN
     Catch, /Cancel
-
       ; Catch a WSET error silently.
-
     IF !Error_State.Code EQ -386 THEN RETURN
     Message, !Error_State.Msg, /Informational
     RETURN
 ENDIF
-
 percent = 0 > percent < 100
-
-   ; Update the progress box.
-
+; Update the progress box.
 thisWindow = !D.Window
 WSet, self.wid
 x1 = 0
@@ -222,36 +218,27 @@ x2 = Fix(self.xsize  * (percent/100.0))
 y2 = self.ysize
 Polyfill, [x1, x1, x2, x2, x1], [y1, y2, y2, y1, y1], /Device, Color=self.color
 IF thisWindow GE 0 AND thisWindow NE self.wid THEN WSet, thisWindow
-
-   ; Check for a CANCEL button event.
-
+; Check for a CANCEL button event.
 IF Widget_Info(self.cancelID, /Valid_ID) THEN BEGIN
    event = Widget_Event(self.cancelID, /NoWait)
    name = Tag_Names(event, /Structure_Name)
    IF name EQ 'WIDGET_BUTTON' THEN self.cancel = 1
 ENDIF
+END
 
-END; -----------------------------------------------------------------------------
-
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::Timer_Events, event
-
 ; This method processes the widget TIMER events.
-
 Catch, theError
 IF theError NE 0 THEN BEGIN
     Catch, /Cancel
-
-      ; Catch a WSET error silently.
-
+; Catch a WSET error silently.
     IF !Error_State.Code EQ -386 THEN RETURN
     Message, !Error_State.Msg, /Informational
     RETURN
 ENDIF
-
-   ; Do it the specified number of times, then quit.
-
+; Do it the specified number of times, then quit.
 self.count = self.count + 1
 IF self.count GE self.nsteps THEN BEGIN
    thisWindow = !D.Window
@@ -263,9 +250,7 @@ IF self.count GE self.nsteps THEN BEGIN
    IF thisWindow GE 0 AND thisWindow NE selfWindow THEN WSet, thisWindow
    RETURN
 ENDIF
-
-   ; If time gets away from you, then quit.
-
+; If time gets away from you, then quit.
 theTime = Systime(1) - self.startTime
 IF theTime GT self.delay THEN BEGIN
    thisWindow = !D.Window
@@ -276,130 +261,94 @@ IF theTime GT self.delay THEN BEGIN
    IF thisWindow GE 0 AND thisWindow NE selfWindow THEN WSet, thisWindow
    RETURN
 ENDIF
-
-   ; Update the progress box.
-
+; Update the progress box.
 thisSize = (self.xsize / self.nsteps) * self.count
 thisSize = Float(thisSize) / self.xsize * 100
 self->Update, thisSize
-
-   ; Set the next timer event if the CANCEL button is not set.
-
+; Set the next timer event if the CANCEL button is not set.
 IF self.cancel EQ 1 THEN BEGIN
    self->Destroy
 ENDIF ELSE BEGIN
    Widget_Control, self.tlb, Timer=self.step
 ENDELSE
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress_Event, event
-
 ; This is the event handler for the program. It simply calls
 ; the event handling method.
-
 Widget_Control, event.top, Get_UValue=self
 thisEvent = Tag_Names(event, /Structure_Name)
 IF thisEvent EQ 'WIDGET_BUTTON' THEN self->SetCancel, 1 ELSE $
    self->Timer_Events, event
-END; -----------------------------------------------------------------------------
+END
 
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::Start
-
 ; This is the method that puts the timer on the display and gets
 ; things going. The initial timer event is set here.
-
-   ; Find the window index number of any open display window.
-
+; Find the window index number of any open display window.
 thisWindow = !D.Window
-
-   ; Realize the widget.
-
+; Realize the widget.
 Widget_Control, self.tlb, /Realize
-
-   ; Set an initial start time.
-
+; Set an initial start time.
 self.startTime = Systime(1)
-
-   ; Get the window index number of the draw widget.
-
+; Get the window index number of the draw widget.
 Widget_Control, self.drawID, Get_Value=wid
 self.wid = wid
-
-   ; Back to the open display window.
-
+; Back to the open display window.
 IF thisWindow GE 0 THEN WSet, thisWindow
-
 IF self.autoupdate THEN BEGIN
-
-      ; Set the first timer event.
-
-   Widget_Control, self.tlb, Timer=self.step
-
-      ; Register with XMANAGER so you can receive events.
-
+; Set the first timer event.
+    Widget_Control, self.tlb, Timer=self.step
+; Register with XMANAGER so you can receive events.
    XManager, 'showprogress', self.tlb, Cleanup='ShowProgress_CleanUp'
-
 ENDIF ELSE BEGIN
-
    IF Widget_Info(self.parent, /Valid_ID) THEN $
       Widget_Control, self.parent, Sensitive=0
    self->Update, 0
    Widget_Control, self.tlb, Kill_Notify='ShowProgress_CleanUp'
-
 ENDELSE
+END
 
-END; -----------------------------------------------------------------------------
-
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress_Cleanup, tlb
-
 ; This is the cleanup method for the widget. The idea
 ; here is to reinitialize the widget after the old
 ; widget has been destroyed. This is necessary, because
 ; it is not possible to MAP and UNMAP a modal widget.
-
 Widget_Control, tlb, Get_UValue=self
 self->ReInitialize
+END
 
-END; -----------------------------------------------------------------------------
-
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::ReInitialize
-
 ; This method just reinitializes the ShowProgress widget after the
 ; previous one has been destroyed. This is called from the widget's
 ; CLEANUP routine.
-
 IF NOT Float(self.autoupdate) THEN BEGIN
    IF Widget_Info(self.parent, /Valid_ID) THEN $
       Widget_Control, self.parent, Sensitive=1, /Clear_Events
 ENDIF
-
-   ; Create the widgets.
-
+; Create the widgets.
 Device, Get_Screen_Size=sizes
-
 xlocation = (sizes(0) / 2.0) - 75
 ylocation = (sizes(1) / 2.0) + 25
-
-   ; Define the top-level base. Make it unsizeable.
-   ; Give it a title. Make its children centered in it.
-
+; Define the top-level base. Make it unsizeable.
+; Give it a title. Make its children centered in it.
 ;tlb = Widget_Base(Column=1, Title=title, TLB_Frame_Attr=1, $
 ;   Base_Align_Center=1, XOffSet=xlocation, YOffSet=ylocation)
-
-
 IF self.parent EQ -1 THEN BEGIN
     self.tlb = Widget_Base(Title=self.title, Column=1, Base_Align_Center=1, $
                           xoffset = xlocation, yoffset = ylocation)
 ENDIF ELSE BEGIN
    IF self.cancelButton THEN modal = 0 ELSE modal = 1
-   self.tlb = Widget_Base(Group_Leader=self.parent, Modal=modal, Title=self.title, $
+   self.tlb = Widget_Base(Group_Leader=self.parent, Modal=modal, $
+                          Title=self.title, $
       Column=1, Base_Align_Center=1, Floating=1,$
                          xoffset = xlocation, yoffset = ylocation)
 ENDELSE
@@ -408,45 +357,35 @@ self.drawID = Widget_Draw(self.tlb, XSize=self.xsize, YSize=self.ysize)
 IF self.cancel THEN BEGIN
    self.cancelID = Widget_Button(self.tlb, Value='Cancel Translation')
 ENDIF ELSE self.cancelID = -1L
-
 Widget_Control, self.tlb, Set_UValue=self
-
-   ; Center the top-level base.
-
+; Center the top-level base.
 Device, Get_Screen_Size=screenSize
 xCenter = screenSize(0) / 2
 yCenter = screenSize(1) / 2
-
 geom = Widget_Info(self.tlb, /Geometry)
 xHalfSize = geom.Scr_XSize / 2
 yHalfSize = geom.Scr_YSize / 2
-
 Widget_Control, self.tlb, XOffset = xCenter-xHalfSize, $
    YOffset = yCenter-yHalfSize
-
-   ; Reset the counter.
-
+; Reset the counter.
 self.count = 0
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::Cleanup
-
 ; This CLEANUP method is not usually required, since other widget
 ; programs are destroying the widget, but is here for completeness.
-
 IF Widget_Info(self.tlb, /Valid_ID) THEN Widget_Control, self.tlb, /Destroy
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::GetProperty, Parent=parent, Delay=delay, Steps=nsteps, $
    Message=message, Title=title, Color=color, XSize=xsize, $
    YSize=ysize, AutoUpdate=autoupdate
-
-   ; This method allows you to get all the properties available in the INIT method.
-
+; This method allows you to get all the properties available in the INIT
+; method.
 parent = self.parent
 delay = self.delay
 nsteps = self.nsteps
@@ -456,16 +395,15 @@ color = self.color
 xsize = self.xsize
 ysize = self.ysize
 autoupdate = self.autoupdate
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress::SetProperty, Parent=parent, Delay=delay, Steps=nsteps, $
    Message=message, Title=title, Color=color, XSize=xsize, $
    YSize=ysize, AutoUpdate=autoupdate
-
-   ; This method allows you to set all the properties available in the INIT method.
-
+; This method allows you to set all the properties available in the INIT
+; method.
 IF N_Elements(parent) NE 0 THEN BEGIN
     self.parent = parent
    Widget_Control, self.tlb, /Destroy
@@ -482,27 +420,27 @@ IF N_Elements(xsize) NE 0 THEN self.xsize = xsize
 IF N_Elements(ysize) NE 0 THEN self.ysize = ysize
 IF N_Elements(autoupdate) NE 0 THEN self.autoupdate = autoupdate
 Widget_Control, self.tlb, /Destroy
-END; -----------------------------------------------------------------------------
+END
 
-
+;-----------------------------------------------------------------------------
 
 FUNCTION ShowProgress::Init, $
-   parent, $                    ; The widget ID of the group leader.
-   CancelButton=cancelButton, $ ; This keyword is set if a cancel button is required.
-   Delay=delay, $        ; The total time the widget should be on the display in AutoUpDate mode.
-   Steps=nsteps, $       ; The number of steps to take in AutoUpDate mode.
-   Message=message, $    ; The text of the label above the progress bar.
-   Title=title, $        ; The text of the top-level base title bar.
-   Color=color, $        ; The color to draw the progress bar.
-   XSize=xsize, $        ; The XSize of the progress bar in Device coordinates.
-   YSize=ysize, $        ; The YSize of the progress bar in Device coordinates.
-   AutoUpdate=autoupdate,$ ; Set this keyword to be in AutoUpDate mode.
-   Xoffset=xoffset,$     ; The Xoffset of the progress bar base
-   Yoffset=yoffset       ; The Yoffset of the progress bar base
+                     parent, $  ; The widget ID of the group leader.
+                     CancelButton=cancelButton, $ ; This keyword is set if a cancel button is required.
+                     Delay=delay, $ ; The total time the widget should be on the display in AutoUpDate mode.
+                     Steps=nsteps, $ ; The number of steps to take in AutoUpDate mode.
+                     Message=message, $ ; The text of the label above the progress bar.
+                     Title=title, $ ; The text of the top-level base title bar.
+                     Color=color, $ ; The color to draw the progress bar.
+                     XSize=xsize, $ ; The XSize of the progress bar in Device coordinates.
+                     YSize=ysize, $ ; The YSize of the progress bar in Device coordinates.
+                     AutoUpdate=autoupdate,$ ; Set this keyword to be in AutoUpDate mode.
+                     Xoffset=xoffset,$ ; The Xoffset of the progress bar base
+                     Yoffset=yoffset ; The Yoffset of the progress bar base
 
-   ; A group leader widget (i.e., a parent parameter) is REQUIRED for MODAL operation.
+                                ; A group leader widget (i.e., a parent parameter) is REQUIRED for MODAL operation.
 
-   ; Check keywords.
+                                ; Check keywords.
 
 IF N_Elements(delay) EQ 0 THEN delay = 5
 IF N_Elements(nsteps) EQ 0 THEN nsteps = 10
@@ -510,7 +448,7 @@ IF N_Elements(nsteps) EQ 0 THEN nsteps = 10
 IF N_Elements(message) EQ 0 THEN message = "Operation in progress..."
 IF N_Elements(title) EQ 0 THEN title = ""
 IF N_Elements(color) EQ 0 THEN color = !P.Color
-IF N_Elements(xsize) EQ 0 THEN xsize = 150
+IF N_Elements(xsize) EQ 0 THEN xsize = 200
 IF N_Elements(ysize) EQ 0 THEN ysize = 10
 Device, Get_Screen_Size=sizes
 IF N_Elements(xoffset) EQ 0 THEN $
@@ -520,7 +458,7 @@ IF N_Elements(yoffset) EQ 0 THEN $
 
 self.autoupdate = Keyword_Set(autoupdate)
 
-   ; Update self structure.
+; Update self structure.
 
 self.delay = delay
 self.step = theStep
@@ -534,7 +472,7 @@ self.count = 0
 self.cancel = 0
 self.cancelButton = Keyword_Set(cancelButton)
 
-   ; Create the widgets.
+; Create the widgets.
 
 IF N_Elements(parent) EQ 0 THEN BEGIN
    self.tlb = Widget_Base(Title=self.title, Column=1, Base_Align_Center=1)
@@ -570,8 +508,9 @@ Widget_Control, self.tlb, XOffset = xlocation, $
    YOffset = ylocation
 
 RETURN, 1
-END; -----------------------------------------------------------------------------
+END
 
+;-----------------------------------------------------------------------------
 
 PRO ShowProgress__Define
 
@@ -599,12 +538,9 @@ PRO ShowProgress__Define
              step:0.0 $         ; The time delay between steps.
              }
 
-END; -----------------------------------------------------------------------------
+END
 
-
-
-
-
+;-----------------------------------------------------------------------------
 
 FUNCTION UpdateProgressBar, CNstruct, progressBar
 
@@ -621,4 +557,4 @@ ENDIF
 progressBar->Update,percentDone
 return, 0
 END
-;###############################################################################
+;##############################################################################

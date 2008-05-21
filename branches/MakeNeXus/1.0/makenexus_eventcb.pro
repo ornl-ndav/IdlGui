@@ -289,8 +289,13 @@ FOR j=0,(sz-1) DO BEGIN
           (*global).Instrument
         
 ;define progress bar object
-        title = 'Translation ... ' + strcompress(j+1,/remove_all)
+        title = 'Translation: ' + strcompress(j+1,/remove_all)
         title += '/' + strcompress(prenexus_found_nbr,/remove_all)
+        IF (prenexus_found_nbr GT 1) THEN BEGIN
+            title += ' runs'
+        ENDIF ELSE BEGIN
+            title += ' run'
+        ENDELSE
         progressBar = Obj_New("SHOWPROGRESS", $
                               Xoffset =(*global).MainBaseXoffset + 200, $
                               Yoffset =(*global).MainBaseYoffset + 50, $
