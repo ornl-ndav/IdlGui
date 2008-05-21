@@ -77,12 +77,13 @@ ProNoButton = { size  : [ProYesButton.size[0]+ProYesButton.size[2]+XYoff[0],$
 ;////////////////////////////////////////////////////////
 ;Table Widget
 NbrRow = 20
-RowAlign   = [1,0,0,1,1,1,1,0]
-TableAlign = intarr(8,NbrRow)
+RowAlign   = [1,0,0,1,1,1,1,1,0]
+sz         = (size(RowAlign))(1)
+TableAlign = intarr(sz,NbrRow)
 FOR i=0,(NbrRow-1) DO BEGIN
     TableAlign(*,i)=RowAlign
 ENDFOR
-dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
+dTable = { size      : [0,0,MainTabSize[2],320,sz,20],$
            uname     : 'batch_table_widget',$
            sensitive : 1,$
            label     : ['ACTIVE', $
@@ -92,9 +93,10 @@ dTable = { size      : [0,0,MainTabSize[2],320,8,20],$
                         'S1 (mm)', $
                         'S2 (mm)', $
                         'DATE',$
+                        'SF',$
                         'Command Line                                   '],$
            align        : TableAlign,$
-           column_width : [50,140,140,80,70,70,155,360]}
+           column_width : [50,140,140,80,70,70,155,60,360]}
 
 ;/////////////////////////////////////////////////////////
 ;Frame that will display the content of the selected run #
