@@ -1,21 +1,3 @@
-;***** Class Constructor *****
-FUNCTION IDLnexusUtilities::init, $
-                          run_number,$
-                          instrument = instrument
-
-;store run number
-IF (n_elements(run_number) EQ 0) THEN RETURN, 0
-self.run_number = strcompress(run_number,/remove_all)
-
-;get instrument
-IF (n_elements(instrument) EQ 0) THEN BEGIN
-    instrument = self->hostname()
-    IF (instrument EQ '') THEN RETURN, 0
-ENDIF
-self.instrument = strcompress(instrument,/remove_all)
-
-RETURN,1
-END
                           
 ;***** Class Destructor *****
 PRO IDLnexusUtilities::cleanup
@@ -99,6 +81,25 @@ CASE (listening) OF
     'mrac'       : return, 'REF_M'
     ELSE         : return, ''
 ENDCASE
+END
+
+;***** Class Constructor *******************************************************
+FUNCTION IDLnexusUtilities::init, $
+                          run_number,$
+                          instrument = instrument
+
+;store run number
+IF (n_elements(run_number) EQ 0) THEN RETURN, 0
+self.run_number = strcompress(run_number,/remove_all)
+
+;get instrument
+IF (n_elements(instrument) EQ 0) THEN BEGIN
+    instrument = self->hostname()
+    IF (instrument EQ '') THEN RETURN, 0
+ENDIF
+self.instrument = strcompress(instrument,/remove_all)
+
+RETURN,1
 END
 
 ;***** Class Define Method *****

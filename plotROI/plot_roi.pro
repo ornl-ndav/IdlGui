@@ -85,7 +85,7 @@ widget_control, MAIN_BASE, set_uvalue=global
 MakeGuiMainBase, MAIN_BASE
 
 Widget_Control, /REALIZE, MAIN_BASE
-XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK, CLEANUP='gg_Cleanup' 
+XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
 END
 

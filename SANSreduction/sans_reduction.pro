@@ -47,6 +47,8 @@ widget_control, MAIN_BASE, set_uvalue=global
 Widget_Control, /REALIZE, MAIN_BASE
 XManager, 'MAIN_BASE', MAIN_BASE, /NO_BLOCK
 
+
+
 END
 
 
