@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO ref_scale_LoadBatchFile, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
@@ -79,7 +79,7 @@ IF (BatchFileName NE '') THEN BEGIN
 ENDIF 
 END
 
-;===============================================================================
+;==============================================================================
 PRO ref_scale_PreviewBatchFile, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
@@ -88,9 +88,9 @@ BatchFileName = getBatchFileName(Event)
 XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
 END
 
-;===============================================================================
+;==============================================================================
 PRO ref_scale_batch
 END
 
-;===============================================================================
+;==============================================================================
 
