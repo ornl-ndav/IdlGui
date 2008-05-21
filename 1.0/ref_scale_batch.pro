@@ -84,7 +84,7 @@ PRO ref_scale_PreviewBatchFile, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
 ;retrieve BatchFileName
-BatchFileName = (*global).BatchFileName
+BatchFileName = getBatchFileName(Event)
 XDISPLAYFILE, BatchFileName, TITLE='Preview of ' + BatchFileName
 END
 
