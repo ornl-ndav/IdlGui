@@ -102,6 +102,7 @@ ENDIF ELSE BEGIN
                     '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
                     '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
                     '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+                    '#SF'        : BatchTable[7,BatchIndex] = SplitArray[1]
                     ELSE         : BEGIN
                         CommentArray= strsplit(SplitArray[0],'#', $
                                                /extract, $
@@ -122,7 +123,7 @@ ENDIF ELSE BEGIN
                         IF (length NE 0) THEN BEGIN 
                             cmd = cmd_array[0] + ' ' + cmd_array[1]
                         ENDIF
-                        BatchTable[7,BatchIndex] = cmd
+                        BatchTable[8,BatchIndex] = cmd
                     END
                 ENDCASE
                 ++FileIndex
@@ -173,6 +174,7 @@ IF (BatchTable[0,i] NE '') THEN BEGIN
     text    = [text,'#S1(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#S2(mm) : ' + BatchTable[k++,i]]
     text    = [text,'#Date : ' + BatchTable[k++,i]]
+    text    = [text,'#SF : ' + BatchTable[k++,i]]
 ;add --batch flag to command line
     cmd_array = strsplit(BatchTable[k++,i], 'srun ', /EXTRACT, /REGEX)
     cmd       = 'srun --batch -o none' + cmd_array[0]
@@ -548,11 +550,10 @@ id = widget_info(Event.top,find_by_uname='batch_table_widget')
 ;display only the first part of the cmd line
 NbrRow = getGlobalVariable('NbrRow')
 length = (*global).cmd_batch_length
-
 FOR i=0,(NbrRow-1) DO BEGIN
-    sz = STRLEN(BatchTable[7,i])
+    sz = STRLEN(BatchTable[8,i])
     IF (sz GT length) THEN BEGIN
-        NewBatchTable[7,i] = STRMID(BatchTable[7,i],0,length) + '  (...) '
+        NewBatchTable[8,i] = STRMID(BatchTable[8,i],0,length) + '  (...) '
     ENDIF
 ENDFOR
 widget_control, id, set_value=NewBatchTable
@@ -561,7 +562,7 @@ END
 
 ;This function reset all the structure fields of the current index
 PRO ClearStructureFields, BatchTable, CurrentBatchTableIndex
-resetArray = strarr(8)
+resetArray = strarr(9)
 BatchTable[*,CurrentBatchTableIndex] = resetArray
 END
 
@@ -742,7 +743,7 @@ ENDIF ELSE BEGIN
     UpdateS1Field,    Event, BatchTable[4,RowSelected]
     UpdateS2Field,    Event, BatchTable[5,RowSelected]
 ;UpdateDateField,  Event, BatchTable[6,RowSelected]
-    UpdateCMDField,   Event, BatchTable[7,RowSelected]
+    UpdateCMDField,   Event, BatchTable[8,RowSelected]
 
 ENDELSE
 
@@ -795,7 +796,7 @@ BatchTable[0,0] = '> YES <'
 norm_run_number = (*global).norm_run_number
 IF (norm_run_number EQ 0) THEN norm_run_number = ''
 BatchTable[2,0] = strcompress(norm_run_number,/remove_all)
-BatchTable[7,0] = 'N/A'
+BatchTable[8,0] = 'N/A'
 END
 
 
@@ -807,7 +808,7 @@ widget_control,id,get_uvalue=global
 BatchTable = (*(*global).BatchTable)
 workingRow = getCurrentWorkingRow(Event)
 IF (workingRow NE -1) THEN BEGIN
-    BatchTable[7,workingRow]=cmd
+    BatchTable[8,workingRow]=cmd
 ENDIF
 (*(*global).BatchTable) = BatchTable
 END
@@ -1093,7 +1094,7 @@ IF (NbrProcess NE 0) THEN BEGIN
               strcompress(ProcessToRun,/remove_all) $
               + '/' + strcompress(NbrProcess,/remove_all) 
             putLogBookMessage, Event, LogText, APPEND=1
-            LogText = '--> Command is: ' + BatchTable[7,i]
+            LogText = '--> Command is: ' + BatchTable[8,i]
             putLogBookMessage, Event, LogText, APPEND=1
             LogText = '--> Running ... ' + (*global).processing_message
             putLogBookMessage, Event, LogText, APPEND=1
@@ -1104,7 +1105,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                 AppendReplaceLogBookMessage, Event, (*global).FAILED, $
                   (*global).processing_message
             ENDIF ELSE BEGIN
-                spawn, BatchTable[7,i], listening, err_listening
+                spawn, BatchTable[8,i], listening, err_listening
                 IF (err_listening[0] NE '') THEN BEGIN
                     AppendReplaceLogBookMessage, Event, (*global).FAILED, $
                       (*global).processing_message
@@ -1173,7 +1174,7 @@ IF (NbrProcess NE 0) THEN BEGIN
                   (*global).processing_message
             ENDIF ELSE BEGIN
                 ;add --batch just after srun
-                cmd       = BatchTable[7,i]
+                cmd       = BatchTable[8,i]
                 cmd_array = STRSPLIT(cmd,'srun',/extract,/regex)
                 cmd       = 'srun --batch -o none' + cmd_array[0]
                 LogText = '--> Command is: ' + cmd

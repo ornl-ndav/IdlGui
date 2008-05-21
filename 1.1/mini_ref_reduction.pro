@@ -333,7 +333,7 @@ global = ptr_new ({ instrument: strcompress(instrument,/remove_all),$
 ;Version of REFreduction Tool
                    })
 
-BatchTable = strarr(8,20)
+BatchTable = strarr(9,20)
 (*(*global).BatchTable) = BatchTable
 
 ;------------------------------------------------------------------------
