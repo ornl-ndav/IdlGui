@@ -248,47 +248,20 @@ FOR j=0,1 DO BEGIN ;bank1 and bank2
     ENDFOR
 ENDFOR
 
-meth = 1
+list1 = indgen(6)               ;row 0-6
+list2 = indgen(63-48)+49        ;row 49-63
+list3 = indgen(15)+4096L        ;row 64-78
+list4 = indgen(63-57)+58+4096L  ;row 122-127
 
-IF (meth EQ 1) THEN BEGIN
-    
-    list1 = indgen(5)           ;row 0-5
-    list2 = indgen(63-48)+49    ;row 49-63
-    list3 = indgen(15)+4096L    ;row 64-78
-    list4 = indgen(63-57)+58+4096L ;row 122-127
-    
-    FOR i=1,55 DO BEGIN
-        list1 = [list1, indgen(5) + i*64]
-        list2 = [list2, indgen(63-48)+49 + i*64]
-        list3 = [list3, indgen(15)+4096L + i*64]
-        list4 = [list4, indgen(63-57)+58+4096L + i*64]
-    ENDFOR
-    
-    default_pixel_excluded[[list1,list2,list3,list4]] = 1
-    
-ENDIF ELSE BEGIN
-    
-    FOR i=0,55 DO BEGIN
-;Exclude Rows 0-5 of bank1
-        FOR j=0,5 DO BEGIN
-            default_pixel_excluded[i*64+j]=1
-        ENDFOR
-;Exclude Rows 49-63 of bank1
-        FOR j=49,63 DO BEGIN
-            default_pixel_excluded[i*64+j]=1
-        ENDFOR
-;Exclude Rows 64-78 of bank2
-        FOR j=0,14 DO BEGIN
-            default_pixel_excluded[i*64+j+4096L]=1
-        ENDFOR
-;Exclude Rows 122-127 of bank2
-        FOR j=58,63 DO BEGIN
-            default_pixel_excluded[i*64+j+4096L]=1
-        ENDFOR
-    ENDFOR
+FOR i=1,55 DO BEGIN
+    list1 = [list1, indgen(6) + i*64]
+    list2 = [list2, indgen(63-48)+49 + i*64]
+    list3 = [list3, indgen(15)+4096L + i*64]
+    list4 = [list4, indgen(63-57)+58+4096L + i*64]
+ENDFOR
 
-ENDELSE
-
+default_pixel_excluded[[list1,list2,list3,list4]] = 1
+    
 (*(*global).default_pixel_excluded) = default_pixel_excluded
 (*(*global).pixel_excluded)         = default_pixel_excluded
 (*(*global).pixel_excluded_base)    = default_pixel_excluded
