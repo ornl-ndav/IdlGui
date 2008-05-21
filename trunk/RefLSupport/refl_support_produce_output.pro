@@ -81,7 +81,7 @@ for i=0,(nbrFiles-1) do begin
    flt1 = flt1(index)
    flt2 = flt2(index)
      
-   ;remove data where DeltaR>R
+   ;remove data where (DeltaR)^2>=R^2
    index = getArrayRangeOfErrorGEValue(flt1, flt2)
    flt0 = flt0(index)
    flt1 = flt1(index)

@@ -243,12 +243,12 @@ PRO MAIN_BASE_ref_scale_event, Event
 ;-------------------------------------------------------------------------------
 ;Load Batch File Button
       Widget_Info(wWidget, FIND_BY_UNAME='load_batch_file_button'): BEGIN
-          ref_scale_LoadBatchFile, Event
+          ref_scale_LoadBatchFile, Event ;_batch
       END
 
 ;Preview Batch File Button
       Widget_Info(wWidget, FIND_BY_UNAME='batch_preview_button'): BEGIN
-          ref_scale_PreviewBatchFile, Event
+          ref_scale_PreviewBatchFile, Event ;_batch
       END
 
 ;-------------------------------------------------------------------------------
