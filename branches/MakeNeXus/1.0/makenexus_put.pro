@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;HELPER FUNCTIONS
 ;this function removes from the intial text the given TextToRemove and 
@@ -43,14 +43,14 @@ step2 = STRMID(initialText,0,step1)
 RETURN, step2
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO putTextField, Event, uname, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=uname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;MAIN FUNCTIONS
 PRO putLogBook, Event, text
@@ -58,42 +58,42 @@ id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
 WIDGET_CONTROL, id, SET_VALUE = text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO putMyLogBook, Event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
 WIDGET_CONTROL, id, SET_VALUE = text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO appendLogBook, Event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='log_book')
 WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO appendMyLogBook, Event, text
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='my_log_book')
 WIDGET_CONTROL, id, SET_VALUE = text, /APPEND
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO putOutputPath, Event, OutputPath
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_path_text')
 WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(OutputPath,/REMOVE_ALL)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO putOutputPath2, Event, OutputPath
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='output_path_text2')
 WIDGET_CONTROL, id, SET_VALUE=STRCOMPRESS(OutputPath,/REMOVE_ALL)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
@@ -126,7 +126,7 @@ ENDELSE
 putLogBook, Event, FinalStrarr
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;Add the given message at the end of the last string array element and
 ;put it back in the LogBook text field given
@@ -159,11 +159,11 @@ ENDELSE
 putMyLogBook, Event, FinalStrarr
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 PRO putListOfProposal, Event, List
 id = WIDGET_INFO(Event.top, FIND_BY_UNAME='proposal_droplist')
 WIDGET_CONTROL, id, SET_VALUE=List
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
