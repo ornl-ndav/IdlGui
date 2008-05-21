@@ -104,8 +104,8 @@ cd, CurrentFolder
 .run IDLparseCommandLine__define.pro
 .run IDLupdateGui__define.pro
 .run ref_reduction_BatchRepopulateGui.pro
-
 .run ref_reduction_LogBookInterface.pro
+.run IDLcreateXML__define.pro
 
 .run MainBaseEvent.pro
 .run ref_reduction_eventcb.pro
