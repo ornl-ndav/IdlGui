@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,18 +30,18 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 PRO MakeGuiLoadBatch, STEPS_TAB, StepsTabSize
 
-;*******************************************************************************
+;******************************************************************************
 ;Define Parameters
-;*******************************************************************************
+;******************************************************************************
 sLoadBatchBase = { size:  [0,0,StepsTabSize[2:3]],$
                    uname: 'load_batch_base',$
                    title: 'BATCH'}
 
-;Load Batch File Button --------------------------------------------------------
+;Load Batch File Button -------------------------------------------------------
 XYoff = [5,5]
 sLoadBatchButton = { size:  [XYoff[0],$
                              XYoff[1],$
@@ -49,7 +49,7 @@ sLoadBatchButton = { size:  [XYoff[0],$
                      value: 'Load Batch File ...',$
                      uname: 'load_batch_file_button'}
 
-;Load Batch File Text ----------------------------------------------------------
+;Load Batch File Text ---------------------------------------------------------
 XYoff = [5,0]
 sLoadBatchText = { size:  [sLoadBatchButton.size[0]+ $
                            sLoadBatchButton.size[2]+XYoff[0],$
@@ -57,7 +57,7 @@ sLoadBatchText = { size:  [sLoadBatchButton.size[0]+ $
                            300,30],$
                    uname: 'load_batch_file_text_field'}
 
-;Preview Button ----------------------------------------------------------------
+;Preview Button ---------------------------------------------------------------
 XYoff = [5,0]
 sPreviewBatch = { size:  [sLoadBatchText.size[0]+$
                           sLoadBatchText.size[2]+XYoff[0],$
@@ -66,9 +66,52 @@ sPreviewBatch = { size:  [sLoadBatchText.size[0]+$
                   value: 'PREVIEW',$
                   uname: 'batch_preview_button'}
 
-;*******************************************************************************
+;Batch Table ------------------------------------------------------------------
+XYoff = [0,5]
+NbrRow = 20
+RowAlign   = [0,0,1,1]
+TableAlign = INTARR(4,NbrRow)
+FOR i=0,(NbrRow-1) DO BEGIN
+    TableAlign(*,i)=RowAlign
+ENDFOR
+dTable = { size      : [XYoff[0], $
+                        sLoadBatchButton.size[1]+sLoadBatchButton.size[3]+ $
+                        XYoff[1], $
+                        StepsTabSize[2]-5, $
+                        300, $
+                        4, $
+                        NbrRow],$
+           uname     : 'ref_scale_batch_table_widget',$
+           sensitive : 1,$
+           label     : ['DATA RUNS', $
+                        'NORM. RUNS',$
+                        'SF',$
+                        'DATE'],$
+           align        : TableAlign,$
+           column_width : [140,140,60,160]}
+
+;Refresh bash file button -----------------------------------------------------
+XYoff = [0,5]
+sRefreshButton = { size:       [XYoff[0],$
+                                dTable.size[1]+dTable.size[3]+XYoff[1],$
+                                140],$
+                   uname:     'ref_scale_refresh_bash_file',$
+                   value:     'REFRESH BASH FILE',$
+                   sensitive: 0}
+
+;Bash File Name ---------------------------------------------------------------
+XYoff = [5,3]
+sBashFileName = { size:   [sRefreshButton.size[0]+ $
+                           sRefreshButton.size[2]+XYoff[0],$
+                           sRefreshButton.size[1]+XYoff[1],$
+                           375],$
+                  frame:   1,$
+                  value:   'dfdfddffdfdfdfdfddfdfdf',$
+                  uname:   'ref_scale_bash_file_name'}
+
+;******************************************************************************
 ;Build GUI
-;*******************************************************************************
+;******************************************************************************
 wLoadBatchBase = WIDGET_BASE(STEPS_TAB,$
                            UNAME     = sLoadBatchBase.uname,$
                            XOFFSET   = sLoadBatchBase.size[0],$
@@ -77,7 +120,7 @@ wLoadBatchBase = WIDGET_BASE(STEPS_TAB,$
                            SCR_YSIZE = sLoadBatchBase.size[3],$
                            TITLE     = sLoadBatchBase.title)
 
-;Load Batch File Button --------------------------------------------------------
+;Load Batch File Button -------------------------------------------------------
 wLoadBatchButton = WIDGET_BUTTON(wLoadBatchBase,$
                                  XOFFSET   = sLoadBatchButton.size[0],$
                                  YOFFSET   = sLoadBatchButton.size[1],$
@@ -86,7 +129,7 @@ wLoadBatchButton = WIDGET_BUTTON(wLoadBatchBase,$
                                  UNAME     = sLoadBatchButton.uname,$
                                  VALUE     = sLoadBatchButton.value)
 
-;Load Batch File Text ----------------------------------------------------------
+;Load Batch File Text ---------------------------------------------------------
 wLoadBatchText = WIDGET_TEXT(wLoadBatchBase,$
                              XOFFSET   = sLoadBatchText.size[0],$
                              YOFFSET   = sLoadBatchText.size[1],$
@@ -94,7 +137,7 @@ wLoadBatchText = WIDGET_TEXT(wLoadBatchBase,$
                              UNAME     = sLoadBatchText.uname,$
                              /ALIGN_LEFT)
 
-;Preview Button ----------------------------------------------------------------
+;Preview Button ---------------------------------------------------------------
 wPreviewBatch = WIDGET_BUTTON(wLoadBatchBase,$
                               XOFFSET   = sPreviewBatch.size[0],$
                               YOFFSET   = sPreviewBatch.size[1],$
@@ -103,8 +146,47 @@ wPreviewBatch = WIDGET_BUTTON(wLoadBatchBase,$
                               VALUE     = sPreviewBatch.value,$
                               UNAME     = sPreviewBatch.uname)
 
+
+;Table Widget -----------------------------------------------------------------
+wTable = WIDGET_TABLE(wLoadBatchBase,$
+                      XOFFSET       = dTable.size[0],$
+                      YOFFSET       = dTable.size[1],$
+                      SCR_XSIZE     = dTable.size[2],$
+                      SCR_YSIZE     = dTable.size[3],$
+                      XSIZE         = dTable.size[4],$
+                      YSIZE         = dTable.size[5],$
+                      UNAME         = dTable.uname,$
+                      SENSITIVE     = dTable.sensitive,$
+                      COLUMN_LABELS = dTable.label,$
+                      COLUMN_WIDTHS = dTable.column_width,$
+                      ALIGNMENT     = dTable.align,$
+                      /NO_ROW_HEADERS,$
+                      /ROW_MAJOR,$
+                      /RESIZEABLE_COLUMNS,$
+                      /ALL_EVENTS)
+
+
+;Refresh Bash File Button -----------------------------------------------------
+wRefreshButton = WIDGET_BUTTON(wLoadBatchBase,$
+                               XOFFSET   = sRefreshButton.size[0],$
+                               YOFFSET   = sRefreshButton.size[1],$
+                               SCR_XSIZE = sRefreshButton.size[2],$
+                               UNAME     = sRefreshButton.uname,$
+                               VALUE     = sRefreshButton.value,$
+                               SENSITIVE = sRefreshButton.sensitive)
+
+;Bash File Name ---------------------------------------------------------------
+wBashFileName = WIDGET_LABEL(wLoadBatchBase,$
+                             XOFFSET = sBashFileName.size[0],$
+                             YOFFSET = sBashFileName.size[1],$
+                             SCR_XSIZE = sBashFileName.size[2],$
+                             UNAME     = sBashFileName.uname,$
+                             VALUE     = sBashFileName.value,$
+                             FRAME     = sBashFileName.frame,$
+                             /ALIGN_LEFT)
+
 END
 
-
+;------------------------------------------------------------------------------
 PRO make_gui_batch
 END
