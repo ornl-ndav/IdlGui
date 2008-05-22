@@ -1,6 +1,6 @@
 FUNCTION find_full_nexus_name, Event, run_number, isNexusExist
 
-cmd = "findnexus -iBSS -prefix=/SNS/BSS/"
+cmd = "findnexus -iBSS --prefix=/SNS/BSS/"
 cmd += " " + strcompress(run_number,/remove_all)
 spawn, cmd, full_nexus_name, err_listening
 ;check if nexus exists
