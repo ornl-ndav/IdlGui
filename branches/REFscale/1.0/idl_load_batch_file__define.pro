@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,26 +30,81 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
+;**********************************************************************
+;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
+;**********************************************************************
+
+;Procedure that will return all the global variables for this routine
+FUNCTION getGlobalVariable, var
+CASE (var) OF
+;number of columns in the Table (active/data/norm/s1/s2...)
+    'ColumnIndexes'         : RETURN, 8 
+    'NbrColumn'             : RETURN, 9
+    'RowIndexes'            : RETURN, 19
+    'NbrRow'                : RETURN, 20
+    'BatchFileHeadingLines' : RETURN, 3
+ELSE:
+ENDCASE
+RETURN, 'NA'
+END
+
+;------------------------------------------------------------------------------
+FUNCTION getNbrLines, FileName
+cmd = 'wc -l ' + FileName
+spawn, cmd, result
+Split = STRSPLIT(result[0],' ',/EXTRACT)
+RETURN, Split[0]
+END
+
+;------------------------------------------------------------------------------
+FUNCTION PopulateFileArray, BatchFileName, NbrLine
+OPENR, u, BatchFileName, /GET
+onebyte   = 0b
+tmp       = ''
+i         = 0
+NbrLine   = getNbrLines(BatchFileName)
+FileArray = STRARR(NbrLine)
+WHILE (NOT eof(u)) DO BEGIN
+    READU,u,onebyte
+    fs = FSTAT(u)
+    IF (fs.cur_ptr EQ 0) THEN BEGIN
+        POINT_LUN,u,0
+    ENDIF ELSE BEGIN
+        POINT_LUN,u,fs.cur_ptr - 1
+    ENDELSE
+    READF,u,tmp
+    FileArray[i++] = tmp
+ENDWHILE
+CLOSE, u
+FREE_LUN,u
+NbrElement = i                  ;nbr of lines
+RETURN, FileArray
+END
+
+;------------------------------------------------------------------------------
 FUNCTION PopulateBatchTable, Event, BatchFileName
 ;get global structure
-id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE')
+id=widget_info(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 widget_control,id,get_uvalue=global
+;retrieve parameters
+OK         = (*global).ok
+FAILED     = (*global).failed
+PROCESSING = (*global).processing
+
 populate_error = 0
 ;CATCH, populate_error
-NbrColumn = getGlobalVariable('NbrColumn')
-NbrRow    = getGlobalVariable('NbrRow')
-BatchTable = strarr(NbrColumn,NbrRow)
-FileArray = strarr(1)
+NbrColumn  = getGlobalVariable('NbrColumn')
+NbrRow     = getGlobalVariable('NbrRow')
+BatchTable = STRARR(NbrColumn,NbrRow)
+FileArray  = STRARR(1)
 IF (populate_error NE 0) THEN BEGIN
     CATCH,/CANCEL
-    AppendReplaceLogBookMessage, Event, $
-      (*global).FAILED, $
-      (*global).processing_message
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, FAILED
     LogText = '-> FileArray:'
-    putLogBookMessage, Event, LogText, APPEND=1
-    putLogBookMessage, Event, FileArray, APPEND=1
+    idl_send_to_geek_addLogBookText, Event, LogText
+    idl_send_to_geek_addLogBookText, Event, FileArray
 ENDIF ELSE BEGIN
     NbrLine   = 0
     FileArray = PopulateFileArray(BatchFileName, NbrLine)
@@ -65,7 +120,7 @@ ENDIF ELSE BEGIN
                 ++BatchIndex
                 ++FileIndex
             ENDIF ELSE BEGIN
-                SplitArray = strsplit(FileArray[FileIndex],' : ',/extract)
+                SplitArray = STRSPLIT(FileArray[FileIndex],' : ',/EXTRACT)
                 CASE (SplitArray[0]) OF
                     '#Active'    : BatchTable[0,BatchIndex] = SplitArray[1]
                     '#Data_Runs' : BatchTable[1,BatchIndex] = SplitArray[1]
@@ -83,8 +138,11 @@ ENDIF ELSE BEGIN
                     '#S1(mm)'    : BatchTable[4,BatchIndex] = SplitArray[1]
                     '#S2(mm)'    : BatchTable[5,BatchIndex] = SplitArray[1]
                     '#Date'      : BatchTable[6,BatchIndex] = SplitArray[1]
+                    '#SF'        : BatchTable[7,BatchIndex] = SplitArray[1]
                     ELSE         : BEGIN
-                        CommentArray= strsplit(SplitArray[0],'#',/extract, COUNT=nbr)
+                        CommentArray= STRSPLIT(SplitArray[0],'#', $
+                                               /EXTRACT, $
+                                               COUNT=nbr)
                         SplitArray[0] =CommentArray[0]
                         cmd           = strjoin(SplitArray,' ')
 ;check if "-o none" is there or not
@@ -101,26 +159,24 @@ ENDIF ELSE BEGIN
                         IF (length NE 0) THEN BEGIN 
                             cmd = cmd_array[0] + ' ' + cmd_array[1]
                         ENDIF
-                        BatchTable[7,BatchIndex] = cmd
+                        BatchTable[8,BatchIndex] = cmd
                     END
                 ENDCASE
                 ++FileIndex
             ENDELSE
         ENDELSE
     ENDWHILE
-    AppendReplaceLogBookMessage, Event, 'OK', (*global).processing_message
+    idl_send_to_geek_ReplaceLogBookText, Event, PROCESSING, OK
 ENDELSE
 RETURN, BatchTable
 END
 
-;*******************************************************************************
-;***** Class constructor *******************************************************
-FUNCTION idl_load_batch_file::init, batch_file_name
+;******************************************************************************
+;***** Class constructor ******************************************************
+FUNCTION idl_load_batch_file::init, batch_file_name, Event
+help, batch_file_name
 IF (FILE_TEST(batch_file_name)) THEN BEGIN ;only if file exist
-
-
-
-
+    BatchTable = PopulateBatchTable(Event, batch_file_name)
 
     RETURN,1
 ENDIF ELSE BEGIN
@@ -128,12 +184,12 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;*******************************************************************************
-;******  Class Define ****;*****************************************************
+;******************************************************************************
+;******  Class Define ****;****************************************************
 PRO idl_load_batch_file__define
-struct = {ild_load_batch_file,$
+struct = {idl_load_batch_file,$
           value: ''}
 END
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
 

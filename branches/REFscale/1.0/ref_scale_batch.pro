@@ -55,6 +55,10 @@ IF (BatchFileName NE '') THEN BEGIN
     idl_send_to_geek_addLogBookText, Event, LogText
 ;put name of batch file in text field
     putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
+;retrieve BatchTable
+    iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
+
+
 ;     BatchTable = PopulateBatchTable(Event, BatchFileName)
 ;     (*(*global).BatchTable) = BatchTable
 ;     DisplayBatchTable, Event, BatchTable
