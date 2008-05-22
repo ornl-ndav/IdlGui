@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 pro Build_GUI, BatchMode, BatchFile, GROUP_LEADER=wGroup, _EXTRA=_VWBExtra_
 
@@ -260,8 +260,8 @@ WIDGET_CONTROL, MAIN_BASE_ref_scale, SET_UVALUE=global
 XMANAGER, 'MAIN_BASE_ref_scale', MAIN_BASE_ref_scale, /NO_BLOCK
 
 
-;-------------------------------------------------------------------------------
-;- BATCH MODE ONLY -------------------------------------------------------------
+;------------------------------------------------------------------------------
+;- BATCH MODE ONLY ------------------------------------------------------------
 ;Show BATCH Tab if Batch Mode is used
 IF (BatchMode EQ 'yes') THEN BEGIN
     IF (BatchFile NE '') THEN BEGIN

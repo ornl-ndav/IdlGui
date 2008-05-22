@@ -1,4 +1,4 @@
-;===============================================================================
+;==============================================================================
 ; THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
 ; AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
 ; IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -30,7 +30,7 @@
 ;
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
-;===============================================================================
+;==============================================================================
 
 ;**********************************************************************
 ;GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL - GLOBAL
@@ -52,7 +52,7 @@ ENDCASE
 RETURN, 'NA'
 END
 
-;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 ;Change the format from Thu Aug 23 16:15:23 2007
 ;to 2007y_08m_23d_16h_15mn_23s
 FUNCTION idl_send_to_geek_GenerateIsoTimeStamp
@@ -84,7 +84,7 @@ DateIso += STRCOMPRESS(time[2],/REMOVE_ALL) + 's'
 RETURN, DateIso
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION idl_send_to_geek_getLogBookText, Event
 LogBookUname = idl_send_to_geek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
@@ -92,21 +92,21 @@ WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO idl_send_to_geek_putLogBookText, Event, text
 LogBookUname = idl_send_to_geek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO idl_send_to_geek_addLogBookText, Event, text
 LogBookUname = idl_send_to_geek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
 WIDGET_CONTROL, id, SET_VALUE=text, /APPEND
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO idl_send_to_geek_showLastLineLogBook, Event
 LogBookUname = idl_send_to_geek_getGlobalVariable(Event,'LogBookUname')
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME=LogBookUname)
@@ -117,7 +117,7 @@ IF (sz GT 23) THEN BEGIN
 ENDIF
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;this function removes from the intial text the given TextToRemove and 
 ;returns the result.
 FUNCTION removeStringFromText, initialText, TextToRemove
@@ -128,12 +128,13 @@ step2 = strmid(initialText,0,step1)
 RETURN, step2
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO idl_send_to_geek_ReplaceLogBookText, Event, OLD_STRING, NEW_STRING
 
 InitialStrarr = idl_send_to_geek_getLogBookText(Event)
 ArrSize       = (SIZE(InitialStrarr))(1)
-IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN ;do not remove anything from last line
+IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN $
+;do not remove anything from last line
     IF (ArrSize GE 2) THEN BEGIN
         NewLastLine = InitialStrarr[ArrSize-1] + NEW_STRING
         FinalStrarr = [InitialStrarr[0:ArrSize-2],NewLastLine]
@@ -142,7 +143,8 @@ IF (N_ELEMENTS(OLD_STRING) EQ 0) THEN BEGIN ;do not remove anything from last li
     ENDELSE
 ENDIF ELSE BEGIN ;remove given string from last line
     IF (ArrSize GE 2) THEN BEGIN
-        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1],OLD_STRING)
+        NewLastLine  = removeStringFromText(InitialStrarr[ArrSize-1], $
+                                            OLD_STRING)
         NewLastLine += NEW_STRING
         FinalStrarr  = [InitialStrarr[0:ArrSize-2],NewLastLine]
     ENDIF ELSE BEGIN
@@ -153,15 +155,15 @@ ENDELSE
 idl_send_to_geek_putLogBookText, Event, FinalStrarr
 END
 
-;-------- SEND TO GEEK ---------------------------------------------------------
-;-------------------------------------------------------------------------------
+;-------- SEND TO GEEK --------------------------------------------------------
+;------------------------------------------------------------------------------
 FUNCTION idl_send_to_geek_getMessage, Event
 id = WIDGET_INFO(Event.top,FIND_BY_UNAME='sent_to_geek_text_field')
 WIDGET_CONTROL, id, GET_VALUE=value
 RETURN, value
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 PRO SendToGeek, Event
 ;create full name of log Book file
 LogBookPath   = idl_send_to_geek_getGlobalVariable(Event,'LogBookPath')
@@ -234,7 +236,8 @@ If (no_error NE 0) THEN BEGIN
       'Please email j35@ornl.gov!'
     idl_send_to_geek_putLogBookText, Event, LogBookText
 ENDIF ELSE BEGIN
-    application    = idl_send_to_geek_getGlobalVariable(Event,'ApplicationName')
+    application    = idl_send_to_geek_getGlobalVariable(Event, $
+                                                        'ApplicationName')
     subject        = application + " LogBook"
     cmd  =  'echo ' + text + '| mail -s "' + subject + '" j35@ornl.gov'
     SPAWN, cmd
@@ -244,8 +247,8 @@ ENDIF ELSE BEGIN
 ENDELSE
 END
 
-;===============================================================================
-;===============================================================================
+;==============================================================================
+;==============================================================================
 ;This method defines the send_to_geek_base
 FUNCTION MakeBase, MainBase,$ 
                    XOFFSET, $
@@ -264,7 +267,7 @@ END
 
 
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This method plots the Frame and adds the title 
 PRO MakeFrame, STGbase, $
                XSIZE, $
@@ -297,7 +300,7 @@ wFrame = WIDGET_LABEL(STGbase,$
                       FRAME     = sFrame.frame)
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 ;This method adds the label, text_fiels and button
 PRO MakeContain, STGbase, Xsize
 
@@ -343,9 +346,9 @@ wButton = WIDGET_BUTTON(STGbase,$
                        
 END
 
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 FUNCTION idl_send_to_geek::init, $
                       XOFFSET   = XOFFSET,$
@@ -378,15 +381,15 @@ MakeFrame, STGbase, $
 RETURN, 1
 END
 
-;*******************************************************************************
-;******  Class Define **********************************************************
-;*******************************************************************************
+;******************************************************************************
+;******  Class Define *********************************************************
+;******************************************************************************
 PRO idl_send_to_geek__define
 STRUCT = { idl_send_to_geek,$
            var : ''}
 END
-;*******************************************************************************
-;*******************************************************************************
+;******************************************************************************
+;******************************************************************************
 
 PRO procedure_idl_send_to_geek
 END
