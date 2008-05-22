@@ -172,12 +172,16 @@ RETURN, BatchTable
 END
 
 ;******************************************************************************
+;This function returns the BatchTable
+FUNCTION idl_load_batch_file::getBatchTable
+RETURN, self.BatchTable
+END
+
+;******************************************************************************
 ;***** Class constructor ******************************************************
 FUNCTION idl_load_batch_file::init, batch_file_name, Event
-help, batch_file_name
 IF (FILE_TEST(batch_file_name)) THEN BEGIN ;only if file exist
-    BatchTable = PopulateBatchTable(Event, batch_file_name)
-
+    self.BatchTable = PopulateBatchTable(Event, batch_file_name)
     RETURN,1
 ENDIF ELSE BEGIN
     RETURN,0
@@ -188,7 +192,8 @@ END
 ;******  Class Define ****;****************************************************
 PRO idl_load_batch_file__define
 struct = {idl_load_batch_file,$
-          value: ''}
+          BatchTable: STRARR(9,20),$
+          value:      ''}
 END
 ;******************************************************************************
 ;******************************************************************************
