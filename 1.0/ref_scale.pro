@@ -62,6 +62,7 @@ CurrentBranch =  VerArray + '.' + TagArray
 
 global = $
   PTR_NEW({ $
+            BatchTable:             ptr_new(0L),$
             BatchDefaultPath:       '~/',$
             BatchDefaultFileFilter: '*_Batch_Run*.txt',$
             BatchFileName:          '',$

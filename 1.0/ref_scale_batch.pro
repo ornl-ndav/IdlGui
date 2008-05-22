@@ -31,7 +31,29 @@
 ; @author : j35 (bilheuxjm@ornl.gov)
 ;
 ;==============================================================================
+;This function put the BatchTable in the table of the Batch Tab
+PRO DisplayBatchTable, Event, NewTable
+;new BatchTable
+NewBatchTable = NewTable
+id = WIDGET_INFO(Event.top,FIND_BY_UNAME='ref_scale_batch_table_widget')
+widget_control, id, set_value=NewBatchTable
+END
 
+;This function retrieves from the big BatchTable, only the information
+;that will be displayed in the table of the Batch tab
+;==============================================================================
+PRO UpdateBatchTable, Event, BatchTable
+;display information from column 2/3/8/7 (in this order)
+NewTable = STRARR(4,20)
+NewTable[0,*] = BatchTable[1,*]
+NewTable[1,*] = BatchTable[2,*]
+NewTable[2,*] = BatchTable[7,*]
+NewTable[3,*] = BatchTable[6,*]
+;repopulate Table
+DisplayBatchTable, Event, NewTable
+END
+
+;==============================================================================
 PRO ref_scale_LoadBatchFile, Event
 id=WIDGET_INFO(Event.top, FIND_BY_UNAME='MAIN_BASE_ref_scale')
 WIDGET_CONTROL,id,GET_UVALUE=global
@@ -57,10 +79,12 @@ IF (BatchFileName NE '') THEN BEGIN
     putValueInTextField, Event, 'load_batch_file_text_field', BatchFileName
 ;retrieve BatchTable
     iTable = OBJ_NEW('idl_load_batch_file', BatchFileName, Event)
+    BatchTable = iTable->getBatchTable()
+     (*(*global).BatchTable) = BatchTable
+;Update Batch Tab and put BatchTable there
+     UpdateBatchTable, Event, BatchTable
 
 
-;     BatchTable = PopulateBatchTable(Event, BatchFileName)
-;     (*(*global).BatchTable) = BatchTable
 ;     DisplayBatchTable, Event, BatchTable
 ;     (*global).BatchFileName = BatchFileName
 ; ;this function updates the widgets (button) of the tab
