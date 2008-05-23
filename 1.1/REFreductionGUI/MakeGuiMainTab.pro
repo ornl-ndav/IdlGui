@@ -36,8 +36,8 @@ MakeGuiLoadTab, MAIN_TAB, MainTabSize, LoadTabTitle, instrument
 ;build REDUCE tab
 MakeGuiReduceTab, MAIN_TAB, MainTabSize, ReduceTabTitle, PlotsTitle
 
-;build PLOTS tab
-MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
+;;build PLOTS tab
+;MakeGuiPlotsTab, MAIN_TAB, MainTabSize, PlotsTabTitle, PlotsTitle
 
 ;build BATCH MODE tab
 MakeGuiBatchTab, MAIN_TAB, MainTabSize, BatchTabTitle, structure
