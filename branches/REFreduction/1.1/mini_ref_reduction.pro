@@ -513,7 +513,7 @@ IF (DEBUGGING_VERSION EQ 'yes') THEN BEGIN
 
 ; default tabs shown
     id1 = widget_info(MAIN_BASE, find_by_uname='main_tab')
-    widget_control, id1, set_tab_current = 3 ;batch mode(3)
+    widget_control, id1, set_tab_current = 2 ;batch mode(2)
     
 ;change default location of Batch file
     (*global).BatchDefaultPath = '/SNS/REF_L/shared/'
