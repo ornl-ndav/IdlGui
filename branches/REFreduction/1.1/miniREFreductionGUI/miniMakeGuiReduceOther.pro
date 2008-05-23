@@ -7,7 +7,8 @@ cwbgroup2_list = [' Yes '   ,' No'    ]
 ;filtering data
 FDLsize        = [15,455]
 FDLtitle       = 'Filtering Data:'
-FDCWBgroupSize = [220,FDLsize[1]-5]
+x_group_off  = 15
+FDCWBgroupSize = [220+x_group_off,FDLsize[1]-5]
 
 d_vertical_L_L = 30
 ;Store dt/t
@@ -17,21 +18,43 @@ DToTLtitle       = 'dt/t:'
 DToTCWBgroupSize = [FDCWBgroupSize[0],$
                     DToTLsize[1]-5]
 
+;OUTPUT PATH AND FILE NAME
+XYoff    = [130,10]
+OPFlabel = { size  : [FDCWBgroupSize[0]+XYoff[0],$ $
+                      FDCWBgroupSize[1]+XYoff[1]],$
+             value : 'Output path:'}
+XYoff    = [80,-5]
+OPbutton = { size  : [OPFlabel.size[0]+XYoff[0],$
+                      OPFlabel.size[1]+XYoff[1],$
+                      120,30],$
+             value : '~/',$
+             uname : 'of_button'}
+XYoff    = [0,30]
+OFlabel  = { size  : [OPFlabel.size[0]+XYoff[0],$
+                      OPFlabel.size[1]+XYoff[1]],$
+             value : 'File Name:'}
+XYoff    = [80,-5]
+OFtext   = { size  : [OFlabel.size[0]+XYoff[0],$
+                      OFlabel.size[1]+XYoff[1],$
+                      120,30],$
+             value : '',$
+             uname : 'of_text'}
+
 ;overwrite data instrument geometry
 yoff = 0
 OIGLsize        = [FDLsize[0],$
                    DToTLsize[1]+d_vertical_L_L+yoff]
 OIGLtitle       = 'Overwrite Data Instrument Geometry:'
 xoff = 20
-OIGCWBgroupSize = [FDCWBgroupSize[0]+15,$
+OIGCWBgroupSize = [FDCWBgroupSize[0],$
                    OIGLsize[1]-5]
 d_group_base = 130
 OIGBsize     = [OIGCWBgroupSize[0]+$
                 d_group_base-25,$
-                OIGCWBgroupSize[1]-5,$
+                OIGCWBgroupSize[1]+5,$
                 230,30]
 
-OIGButtonsize  = [0,5,230,25]
+OIGButtonsize  = [0,0,230,25]
 OIGButtontitle = 'Select a Data Instr. Geometry File'
 
 ;overwrite norm instrument geometry
@@ -130,7 +153,7 @@ FilteringDataLabel = WIDGET_LABEL(REDUCE_BASE,$
                                   VALUE   = FDLtitle)
 
 FilteringDataCWBgroup = CW_BGROUP(REDUCE_BASE,$
-                                  CWBGROUP_list,$
+                                  cwbgroup2_list,$
                                   XOFFSET   = FDCWBgroupSize[0],$
                                   YOFFSET   = FDCWBgroupSize[1],$
                                   ROW       = 1,$
@@ -145,13 +168,42 @@ DeltaToverTLabel = WIDGET_LABEL(REDUCE_BASE,$
                                 VALUE   = DToTLtitle)
 
 DeltaToverTCWBgroup = CW_BGROUP(REDUCE_BASE,$
-                                CWBGROUP_list,$
+                                cwbgroup2_list,$
                                 XOFFSET   = DToTCWBgroupSize[0],$
                                 YOFFSET   = DToTCWBgroupSize[1],$
                                 ROW       = 1,$
                                 SET_VALUE = 1,$
                                 UNAME     = 'delta_t_over_t_cwbgroup',$
                                 /EXCLUSIVE)
+
+;output path and file name
+label = WIDGET_LABEL(REDUCE_BASE,$
+                     XOFFSET = OPFlabel.size[0],$
+                     YOFFSET = OPFlabel.size[1],$
+                     VALUE   = OPFlabel.value)
+
+button = WIDGET_BUTTON(REDUCE_BASE,$
+                       XOFFSET   = OPbutton.size[0],$
+                       YOFFSET   = OPbutton.size[1],$
+                       SCR_XSIZE = OPbutton.size[2],$
+                       SCR_YSIZE = OPbutton.size[3],$
+                       VALUE     = OPbutton.value,$
+                       UNAME     = OPbutton.uname)
+
+label = WIDGET_LABEL(REDUCE_BASE,$
+                     XOFFSET = OFlabel.size[0],$
+                     YOFFSET = OFlabel.size[1],$
+                     VALUE   = OFlabel.value)
+
+text = WIDGET_TEXT(REDUCE_BASE,$
+                   XOFFSET = OFtext.size[0],$
+                   YOFFSET = OFtext.size[1],$
+                   SCR_XSIZE = OFtext.size[2],$
+                   SCR_YSIZE = OFtext.size[3],$
+                   VALUE     = OFtext.value,$
+                   UNAME     = OFtext.uname,$
+                   /EDITABLE,$
+                   /ALIGN_LEFT)
 
 ;overwrite data instrument geometry
 OverwriteInstrumentGeometryLabel = $
