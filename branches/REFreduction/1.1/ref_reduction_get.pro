@@ -134,7 +134,7 @@ ENDFOR
 RETURN, FilesToPlotList
 END
 
-;-------------------------------------------------------------------------------
+;------------------------------------------------------------------------------
 
 ;this function returns only the file name (whitout the path)
 FUNCTION getFileNameOnly, file

@@ -1504,6 +1504,7 @@ ref_scale_file_utility
 procedure_ref_scale_tof_to_q
 ref_scale_batch
 idl_load_batch_file__define
+idl_parse_command_line__define
 
 procedure_ref_scale_openfile
 procedure_ref_scale_plot
