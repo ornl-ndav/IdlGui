@@ -34,6 +34,9 @@ putLogBookMessage, Event, cmd_text, Append=1
 cmd_text = '......... ' + PROCESSING
 putLogBookMessage, Event, cmd_text, Append=1
 
+;indicate initialization with hourglass icon
+widget_control,/hourglass
+
 spawn, cmd, listening, err_listening
 
 IF (err_listening[0] NE '') THEN BEGIN
@@ -71,5 +74,8 @@ ENDELSE
 
 ;disable RunCommandLine
 ActivateWidget, Event,'start_data_reduction_button', 1
+
+;turn off hourglass
+widget_control,hourglass=0
 
 END
